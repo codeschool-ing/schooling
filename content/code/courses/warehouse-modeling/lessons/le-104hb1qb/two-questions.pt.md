@@ -74,7 +74,7 @@ Timing is on.
 Time: 1607.639 ms (00:01.608)
 ```
 
-Oito linhas de resposta. Para produzi-las, o PostgreSQL leu as 893.235 linhas de pedido e todos os
+Oito linhas de resposta. Para produzi-las, o PostgreSQL leu as 895.334 linhas de pedido e todos os
 pedidos a que elas pertencem, e levou 1,6 segundo numa máquina ociosa, sem ninguém mais pedindo
 nada.
 

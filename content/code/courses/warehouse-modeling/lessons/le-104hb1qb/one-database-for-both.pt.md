@@ -19,7 +19,7 @@ ao lado dos caixas, e os dois disputam as mesmas três coisas:
 - **Processadores.** Um relatório é um processo a toda velocidade durante toda a execução. Dez
   gerentes abrindo um painel às nove da manhã de segunda são dez.
 
-Nada disso é fatal com 893 mil linhas. **Cresce com o histórico, e os caixas não crescem.** Um
+Nada disso é fatal com 895 mil linhas. **Cresce com o histórico, e os caixas não crescem.** Um
 caixa grava as mesmas quatro linhas no quinto ano e no primeiro; o relatório lê cinco anos em vez
 de dois. Uma carga fica mais pesada todo mês enquanto a outra fica parada, e por isso essa
 discussão costuma ser perdida devagar, e não de uma vez.

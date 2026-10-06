@@ -73,7 +73,7 @@ Timing is on.
 Time: 1607.639 ms (00:01.608)
 ```
 
-Eight rows of answer. To produce them, PostgreSQL read all 893,235 order lines and every order they
+Eight rows of answer. To produce them, PostgreSQL read all 895,334 order lines and every order they
 belong to, and it took 1.6 seconds on an idle machine with nothing else asking.
 
 ```schooling-figure

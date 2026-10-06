@@ -26,7 +26,7 @@
 #   written   every row of data. lab/generate.py draws two years of trade,
 #             2024-01-01 to 2025-12-31, from random.Random with fixed seeds:
 #             3,000 books by 1,800 authors, 40,000 customers, about 577,000
-#             orders and 893,000 order lines, month-end stock counts and 120
+#             orders and 895,000 order lines, month-end stock counts and 120
 #             author events. The names come from word lists, the ISBNs are
 #             made with a valid check digit and looked up nowhere, and the
 #             e-mail addresses are under the domains reserved for examples.

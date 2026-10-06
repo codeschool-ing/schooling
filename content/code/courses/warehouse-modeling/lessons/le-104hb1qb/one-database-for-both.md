@@ -18,7 +18,7 @@ would run beside the tills, and the two compete for the same three things:
 - **Processors.** One report is one process at full speed for its whole run. Ten managers opening a
   dashboard at nine on Monday morning are ten.
 
-None of that is fatal at 893,000 lines. **It grows with the history, and the tills do not.** A till
+None of that is fatal at 895,000 lines. **It grows with the history, and the tills do not.** A till
 writes the same four rows in year five as in year one; the report reads five years instead of
 two. The one workload gets heavier every month while the other stays still, which is why this
 argument is usually lost slowly rather than all at once.
