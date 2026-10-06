@@ -1,0 +1,381 @@
+{
+  "ex-jt9zknv0": {
+    "prompt": "Quando os projetistas de Go começaram, em 2007, que velocidade quiseram resolver primeiro?",
+    "hint": "Os 45 minutos da palestra foram gastos antes de qualquer coisa rodar.",
+    "choices": [
+      {
+        "text": "A velocidade do build, do código-fonte até um programa que roda",
+        "why": "Isso. Um programa C++ levava 45 minutos para compilar; programas Go rodarem rápido veio junto, mas a queixa era o build."
+      },
+      {
+        "text": "A velocidade com que um programa roda depois de iniciado",
+        "why": "É o que quase todo mundo ouve em \"Go é rápido\", e a seção abre corrigindo isso: o build veio primeiro."
+      },
+      {
+        "text": "A velocidade de digitar, com palavras-chave mais curtas",
+        "why": "Nada na história trata de digitação; as palavras-chave são poucas, não curtas."
+      },
+      {
+        "text": "A velocidade da rede entre os data centers do Google",
+        "why": "A rede foi um motivo para a concorrência embutida, mas nenhuma linguagem deixa uma rede mais rápida."
+      }
+    ]
+  },
+  "ex-8avsf8y5": {
+    "prompt": "Na medição de 2007, cerca de 4,2 MB de código C++ chegavam ao compilador como mais de 8 GB depois de expandido cada `#include`. A palestra arredonda a inflação para quantos bytes de entrada por byte de código-fonte?",
+    "hint": "Divida 8 GB por 4,2 MB, ou lembre a frase em negrito.",
+    "unit": "bytes"
+  },
+  "ex-fvpet9xr": {
+    "prompt": "Compilar `cmd/go` com o cache vazio imprimiu `real 0m21.332s` e `user 0m57.345s`. Por que `user` é maior que `real`?",
+    "hint": "O `nproc` imprimiu 4 logo antes.",
+    "choices": [
+      {
+        "text": "`user` também conta o tempo esperando o proxy de módulos",
+        "why": "Compilar `cmd/go` não precisa de nada da rede; e espera nem é tempo de processador."
+      },
+      {
+        "text": "Vários pacotes foram compilados de uma vez, um por processador",
+        "why": "Isso. `user` soma o tempo de processador dos quatro, então pode passar do tempo do relógio."
+      },
+      {
+        "text": "`user` inclui também o segundo build, o do cache",
+        "why": "Cada `time` mede um comando; o segundo build imprimiu o próprio `0.837s`."
+      },
+      {
+        "text": "O relógio da máquina virtual anda mais devagar que o tempo real",
+        "why": "`real` é o relógio de parede. A diferença vem de trabalho feito em paralelo, não de um relógio lento."
+      }
+    ]
+  },
+  "ex-hqdp27jf": {
+    "prompt": "Em Go, um import que o arquivo não usa é ___ de compilação, não aviso.",
+    "hint": "A lição 4 mostrou o build falhando com status de saída 1.",
+    "blanks": [
+      {
+        "accept": [
+          "erro"
+        ]
+      }
+    ]
+  },
+  "ex-q9ggw2zn": {
+    "prompt": "Dois pacotes de um programa Go importam o pacote `B`. Segundo a palestra de 2012, o que o compilador lê quando encontra `import \"B\"`?",
+    "hint": "Compare com o que o `#include` faz.",
+    "choices": [
+      {
+        "text": "O código-fonte de `B`, colado em cada arquivo que o importa",
+        "why": "Esse é o `#include`, o comportamento de C e C++ que produziu os 8 gigabytes."
+      },
+      {
+        "text": "O código-fonte de `B` e de tudo que `B` importa, de novo",
+        "why": "Reler a árvore inteira é o custo que Go foi projetado para evitar."
+      },
+      {
+        "text": "Um arquivo: a forma compilada de `B`, feita quando `B` foi compilado",
+        "why": "Isso. Ela já traz o que um usuário de `B` precisa saber das dependências do próprio `B`."
+      },
+      {
+        "text": "Nada até o programa rodar, quando `B` é carregado",
+        "why": "Go resolve imports ao compilar; o binário da seção 02 não tinha nada para carregar ao rodar."
+      }
+    ]
+  },
+  "ex-437pkhn1": {
+    "prompt": "O que o `file why` disse sobre como o binário Go é ligado?",
+    "hint": "Olhe as palavras depois de `version 1 (SYSV)`.",
+    "choices": [
+      {
+        "text": "`dynamically linked`, com um interpretador",
+        "why": "Esse foi o `lookup`, o programa que usou `net` com o cgo ligado."
+      },
+      {
+        "text": "`statically linked`",
+        "why": "Isso. E o `ldd` concordou: `not a dynamic executable`."
+      },
+      {
+        "text": "Ligado a `libc.so.6` e a mais nada",
+        "why": "O `readelf -d why` não achou seção dinâmica, então ele não nomeia biblioteca alguma, nem a `libc`."
+      },
+      {
+        "text": "Não ligado: é bytecode que o runtime de Go interpreta",
+        "why": "Go não tem interpretador. O `file` o chamou de executável ELF para x86-64, que é código de máquina."
+      }
+    ]
+  },
+  "ex-ghh1vp03": {
+    "prompt": "Você copia `why` para outra máquina Linux com processador x86-64 e sem Go instalado, e o executa. O que acontece?",
+    "hint": "O que o `readelf -d why` encontrou?",
+    "choices": [
+      {
+        "text": "Ele para e pede que o runtime de Go seja instalado",
+        "why": "O runtime está dentro do arquivo; é a maior parte dos 2.342.001 bytes."
+      },
+      {
+        "text": "Ele imprime o sistema da outra máquina, lido ao iniciar",
+        "why": "`runtime.GOOS` e `runtime.GOARCH` são fixados na compilação; ele imprime aquilo para o qual foi gerado."
+      },
+      {
+        "text": "Ele imprime `compiled for linux/amd64 by go1.27.1`, sem precisar de mais nada",
+        "why": "Isso. Ele precisa de um kernel Linux naquele processador e de mais nada."
+      },
+      {
+        "text": "Ele falha se a máquina tiver instalada uma versão diferente da `libc.so.6`",
+        "why": "Esse é o risco do `/bin/ls`, que nomeia a `libc.so.6`. O `why` não nomeia biblioteca nenhuma."
+      }
+    ]
+  },
+  "ex-e1srr0q8": {
+    "prompt": "Quais destes, juntos, fizeram do `lookup` um binário ligado dinamicamente no laboratório? Marque todos os que se aplicam.",
+    "hint": "O `go env CGO_ENABLED` e o `go doc net` deram cada um metade.",
+    "choices": [
+      {
+        "text": "Ele importa `net`, que pode resolver nomes por rotinas da biblioteca C",
+        "why": "Sim: o `go doc net`, em Name Resolution, cita `getaddrinfo` como uma delas."
+      },
+      {
+        "text": "O cgo estava ligado, porque um compilador C, o `gcc`, está no `PATH` do laboratório",
+        "why": "Sim. O `go env CGO_ENABLED` imprimiu 1, e com `CGO_ENABLED=0` o mesmo código gerou um binário estático."
+      },
+      {
+        "text": "Ele foi gerado para `GOOS=linux`, e builds para Linux são dinâmicos",
+        "why": "O `why` também foi gerado para Linux e saiu `statically linked`."
+      },
+      {
+        "text": "O binário passou de 2 MB, e acima disso o ligador compartilha bibliotecas",
+        "why": "Tamanho não decide nada: o `why` tinha 2.342.001 bytes e era estático."
+      }
+    ]
+  },
+  "ex-jdyx2ewx": {
+    "prompt": "Para gerar um programa para Windows nesta máquina Linux, você define a variável de ambiente `___` como `windows` no comando `go build`.",
+    "hint": "A parceira dela escolhe o processador.",
+    "blanks": [
+      {
+        "accept": [
+          "GOOS"
+        ]
+      }
+    ]
+  },
+  "ex-wcdc655z": {
+    "prompt": "Um colega gera uma ferramenta Go que usa `net` num notebook com `gcc` instalado e a copia para uma imagem de contêiner que tem esse arquivo e mais nada. Ela não inicia. Pela seção 02, o que resolve?",
+    "hint": "O que o `readelf -d lookup` nomeou, e onde esse arquivo estaria?",
+    "choices": [
+      {
+        "text": "Instalar Go na imagem ao lado da ferramenta",
+        "why": "A peça que falta é a `libc.so.6`, não Go: um binário Go carrega o próprio runtime."
+      },
+      {
+        "text": "Gerar de novo com `CGO_ENABLED=0` no ambiente",
+        "why": "Isso. Foi o que deu um `lookup` `statically linked`, que não precisa de biblioteca nenhuma da imagem."
+      },
+      {
+        "text": "Gerar de novo com `GOOS=linux GOARCH=amd64` explícitos",
+        "why": "Esses já são os valores do notebook aqui; escrevê-los não muda nada no cgo."
+      },
+      {
+        "text": "Rodar com `go run` dentro do contêiner, em vez disso",
+        "why": "O `go run` precisa do comando go e do código-fonte, e a imagem não tem nenhum dos dois."
+      }
+    ]
+  },
+  "ex-dv9f9g88": {
+    "prompt": "Por que o `./why-arm64` falhou no laboratório com `Exec format error`?",
+    "hint": "O `file` descreveu esse binário sem problema.",
+    "choices": [
+      {
+        "text": "O build cruzado falhou no meio e deixou um arquivo danificado",
+        "why": "O `file` o leu como um `ELF 64-bit LSB executable, ARM aarch64` completo; nada estava danificado."
+      },
+      {
+        "text": "Binários ARM precisam de Go instalado na máquina que os roda",
+        "why": "Nenhum binário Go precisa de Go instalado; este também dizia `statically linked`."
+      },
+      {
+        "text": "O arquivo tem código de máquina ARM e este processador é x86-64",
+        "why": "Isso. O kernel recusou código para um processador que não é o dele, o que prova que o build cruzado funcionou."
+      },
+      {
+        "text": "Programas gerados com `GOOS` definido precisam ser assinados antes de rodar",
+        "why": "Nada no comando go assina coisa alguma; o erro veio do kernel lendo o formato."
+      }
+    ]
+  },
+  "ex-wsywmkc9": {
+    "prompt": "Quantos pares de sistema operacional e processador o `go tool dist list | wc -l` contou?",
+    "hint": "Cada linha é um par `GOOS/GOARCH`.",
+    "unit": "alvos"
+  },
+  "ex-a0bdy1yy": {
+    "prompt": "Quantas palavras-chave o programa sobre `go/token` contou?",
+    "hint": "A segunda linha da saída.",
+    "choices": [
+      {
+        "text": "37",
+        "why": "Essa é a contagem do C99, da palestra de 2012."
+      },
+      {
+        "text": "25",
+        "why": "Isso: `25 keywords`, de `break` a `var`."
+      },
+      {
+        "text": "84",
+        "why": "Essa é a contagem do C++11, da mesma palestra."
+      },
+      {
+        "text": "26",
+        "why": "Isso conta `any`, que é um nome predeclarado como `int`, e não palavra-chave; ela não está na lista."
+      }
+    ]
+  },
+  "ex-4k541v50": {
+    "prompt": "Quais destas palavras NÃO são palavras-chave em Go, pela lista que o programa imprimiu? Marque todas as que se aplicam.",
+    "hint": "Leia as 25 palavras de novo.",
+    "choices": [
+      {
+        "text": "`class`",
+        "why": "Isso, ela não está na lista; você poderia chamar uma variável de `class`."
+      },
+      {
+        "text": "`defer`",
+        "why": "`defer` está na lista, entre `default` e `else`; a lição 36 a explica."
+      },
+      {
+        "text": "`while`",
+        "why": "Isso. Go tem um laço só, o `for`."
+      },
+      {
+        "text": "`chan`",
+        "why": "`chan` é palavra-chave: declara um canal, a concorrência da seção 01."
+      },
+      {
+        "text": "`try`",
+        "why": "Isso. Sem exceções, não há nada para um `try` começar."
+      }
+    ]
+  },
+  "ex-gbtk9xhm": {
+    "prompt": "`items * price`, com `items` um `int` e `price` um `float64`, não compilou. Que linha compila e multiplica os dois?",
+    "hint": "Converta antes do operador, não depois.",
+    "choices": [
+      {
+        "text": "`float64(items * price)`, convertendo o resultado",
+        "why": "A multiplicação dentro dos parênteses ainda mistura `int` e `float64`, então é o mesmo erro."
+      },
+      {
+        "text": "`float64(items) * price`, convertendo `items` antes",
+        "why": "Isso. Os dois lados são `float64` depois que você mesmo escreveu a conversão."
+      },
+      {
+        "text": "O mesmo `items * price`: o erro era só um aviso",
+        "why": "O `echo $?` imprimiu 1 e nenhum binário foi gerado. Go não tem avisos assim."
+      },
+      {
+        "text": "`items * price` depois de subir a linha `go` do `go.mod`",
+        "why": "Nenhuma versão de Go converte entre os dois por você; a regra faz parte da linguagem."
+      }
+    ]
+  },
+  "ex-5v0z9tt4": {
+    "prompt": "Uma programadora Java lê uma função Go que pode falhar e procura para onde vai a falha. Pela seção 03, para onde ela vai?",
+    "hint": "O `net.LookupHost` imprimiu duas coisas.",
+    "choices": [
+      {
+        "text": "Ela é lançada, e o `try` mais próximo acima na pilha a captura",
+        "why": "Esse é o modelo de Java. Go não tem `try`, então nada é lançado além de quem chamou."
+      },
+      {
+        "text": "Ela vai para o log, e a função devolve zero em silêncio",
+        "why": "Nada vai para o log por você; o valor é devolvido para quem chamou decidir."
+      },
+      {
+        "text": "Ela entra em pânico, e `main` captura todo pânico",
+        "why": "`panic` é para bugs, lição 36, e `main` não captura nada por conta própria."
+      },
+      {
+        "text": "Ela volta como valor, e quem chamou a verifica",
+        "why": "Isso. O `LookupHost` devolveu os endereços e um erro, que era `<nil>` porque nada falhou."
+      }
+    ]
+  },
+  "ex-31pac386": {
+    "prompt": "Associe cada recurso que Go deixa de fora ao que você usa no lugar.",
+    "hint": "A seção 03 aponta uma lição para cada um.",
+    "pairs": [
+      {
+        "left": "Classes e herança",
+        "right": "Tipos montados pondo outros tipos dentro deles"
+      },
+      {
+        "left": "Exceções",
+        "right": "Erros devolvidos como valores comuns"
+      },
+      {
+        "left": "Conversões numéricas implícitas",
+        "right": "Uma conversão que você escreve, como `float64(n)`"
+      },
+      {
+        "left": "Um laço `while`",
+        "right": "`for`, em três formas"
+      }
+    ],
+    "right_distractors": [
+      "Um bloco `try` opcional"
+    ]
+  },
+  "ex-08pf5dz7": {
+    "prompt": "Ponha estes momentos da história de Go em ordem, do mais antigo para o mais recente.",
+    "hint": "A seção 01 data cada um.",
+    "items": [
+      "Griesemer, Pike e Thompson rascunham objetivos num quadro branco",
+      "A linguagem vira um projeto de tempo integral",
+      "Go vira um projeto público, de código aberto",
+      "Rob Pike dá a palestra na SPLASH com os números de build"
+    ]
+  },
+  "ex-3t28d78b": {
+    "prompt": "Uma equipe precisa entregar uma ferramenta de linha de comando para notebooks Windows, Macs com processador Apple e servidores Linux ARM. A única máquina de build é Linux em x86-64, e a ferramenta não usa C. O que esta lição sugere?",
+    "hint": "A seção 02 gerou três binários sem sair de uma máquina.",
+    "choices": [
+      {
+        "text": "Um build só, porque um binário Go roda em qualquer sistema",
+        "why": "Um binário é para um sistema só: o `why-arm64` não rodou em x86-64."
+      },
+      {
+        "text": "Três `go build` naquela máquina, com `GOOS` e `GOARCH` definidos para cada um",
+        "why": "Isso: `windows/amd64`, `darwin/arm64` e `linux/arm64`, os três da seção 02."
+      },
+      {
+        "text": "Três máquinas de build, porque um binário tem de ser compilado onde roda",
+        "why": "A seção 02 compilou para três sistemas que não tinha; o toolchain traz todos os alvos."
+      },
+      {
+        "text": "Entregar o código-fonte, para cada usuário rodar com `go run`",
+        "why": "Isso exige Go em todo notebook e servidor, que é a instalação que um arquivo só evita."
+      }
+    ]
+  },
+  "ex-bbyz0z3k": {
+    "prompt": "Quais destas valem para o binário `why`? Marque todas as que se aplicam.",
+    "hint": "Junte o que o `wc -c`, o `readelf` e o próprio código do programa mostraram.",
+    "choices": [
+      {
+        "text": "A maior parte dos 2.342.001 bytes é o runtime de Go, não o programa",
+        "why": "Sim. O código-fonte tinha 201 bytes; o resto é o que todo programa Go carrega."
+      },
+      {
+        "text": "Precisa da `libc.so.6` para iniciar, como o `/bin/ls`",
+        "why": "O `readelf -d why` não achou seção dinâmica: ele não nomeia biblioteca alguma."
+      },
+      {
+        "text": "O `linux/amd64` que ele imprime foi fixado na compilação",
+        "why": "Sim. `runtime.GOOS` e `runtime.GOARCH` descrevem o alvo do build, não a máquina onde ele roda."
+      },
+      {
+        "text": "Roda sem mudança num servidor Linux ARM",
+        "why": "É código de máquina x86-64. Um servidor ARM precisa do build com `GOARCH=arm64`."
+      }
+    ]
+  }
+}
