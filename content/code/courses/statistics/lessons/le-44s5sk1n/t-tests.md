@@ -1,0 +1,45 @@
+---
+title: Two groups, and pairs
+version: 1
+---
+
+## Two separate groups: Welch's t test
+
+Are deliveries to Centro faster than deliveries to Cambuí? Horta has 30 of each.
+
+| | mean | standard deviation |
+|---|---|---|
+| Centro | 30.60 minutes | 5.01 |
+| Cambuí | 31.95 minutes | 4.56 |
+
+The null hypothesis is that the two neighbourhoods have the same true mean, and the alternative, two-sided, that they differ. The test statistic is the difference between the two sample means, divided by the standard error of that difference: **t = (*x̄*₁ − *x̄*₂) ÷ √(*s*₁²/*n*₁ + *s*₂²/*n*₂)**.
+
+For Centro and Cambuí, t = **−1.09**, and the two-sided p-value is **0.28**. The 1.35-minute difference is well within what chance produces with 30 deliveries each, so the null is not rejected, as lesson 6's overlapping boxplots suggested.
+
+This version, due to the statistician Bernard Welch, does not assume the two groups have the same spread, and it is the safe default. An older version assumes equal spreads; when they really are equal the two agree closely, and when they are not, Welch's is right. In a spreadsheet, the last argument of `T.TEST` chooses the version, and 3 is Welch's:
+
+```localised
+=T.TEST(A2:A31, B2:B31, 2, 3)      0.279605274335527
+```
+
+The third argument, 2, asks for a two-sided p-value.
+
+Against Taquaral, Cambuí's deliveries are a different story: t = −5.33 and p = 0.000002. Taquaral is about six minutes further from the warehouse in travel time, and the test has no trouble seeing it.
+
+## The same units twice: the paired t test
+
+Horta sends ten couriers on a route-planning course and compares each courier's mean delivery time in the month before and the month after.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 460 300\" role=\"img\" data-fig=\"l16-paired\" aria-label=\"Ten couriers, each drawn as a line from their mean delivery time in the month before the training, on the left, to the month after, on the right. The couriers differ from one another by several minutes, from about 33 to 42. 8 of the 10 lines slope down; the average change is a fall of 1.21 minutes.\"><path d=\"M80.0 40.0 L80.0 260.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M80.0 243.1 L400.0 243.1\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 243.1 L80.0 243.1\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"243.1\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">32</text><path d=\"M80.0 209.2 L400.0 209.2\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 209.2 L80.0 209.2\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"209.2\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">34</text><path d=\"M80.0 175.4 L400.0 175.4\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 175.4 L80.0 175.4\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"175.4\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">36</text><path d=\"M80.0 141.5 L400.0 141.5\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 141.5 L80.0 141.5\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"141.5\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">38</text><path d=\"M80.0 107.7 L400.0 107.7\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 107.7 L80.0 107.7\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"107.7\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">40</text><path d=\"M80.0 73.8 L400.0 73.8\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 73.8 L80.0 73.8\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"73.8\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">42</text><path d=\"M80.0 40.0 L400.0 40.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M76.0 40.0 L80.0 40.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72.0\" y=\"40.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">44</text><text x=\"80.0\" y=\"26.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">minutes</text><path d=\"M112.0 119.5 L368.0 141.5\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"119.5\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"141.5\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 111.1 L368.0 155.1\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"111.1\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"155.1\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 109.4 L368.0 114.5\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"109.4\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"114.5\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 217.7 L368.0 238.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"217.7\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"238.0\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 68.8 L368.0 90.8\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"68.8\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"90.8\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 183.8 L368.0 155.1\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"183.8\" r=\"4\" fill=\"var(--amber)\"></circle><circle cx=\"368.0\" cy=\"155.1\" r=\"4\" fill=\"var(--amber)\"></circle><path d=\"M112.0 166.9 L368.0 229.5\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"166.9\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"229.5\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 68.8 L368.0 112.8\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"68.8\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"112.8\" r=\"4\" fill=\"var(--phosphor)\"></circle><path d=\"M112.0 134.8 L368.0 117.8\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"134.8\" r=\"4\" fill=\"var(--amber)\"></circle><circle cx=\"368.0\" cy=\"117.8\" r=\"4\" fill=\"var(--amber)\"></circle><path d=\"M112.0 126.3 L368.0 156.8\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\"></path><circle cx=\"112.0\" cy=\"126.3\" r=\"4\" fill=\"var(--phosphor)\"></circle><circle cx=\"368.0\" cy=\"156.8\" r=\"4\" fill=\"var(--phosphor)\"></circle><text x=\"112.0\" y=\"278.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">before</text><text x=\"368.0\" y=\"278.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">after</text></svg>", "caption": "The couriers differ from each other far more than each one changes. Pairing compares each courier with themselves, and removes that difference from the noise."}
+```
+
+The couriers differ from one another by several minutes; the course changes each of them by much less. If the before and after columns are treated as two separate groups, that variation between couriers swamps the change, and Welch's test gives p = **0.35**.
+
+The right test works on the **ten differences**, after minus before. Their mean is −1.21 minutes and their standard deviation 1.65, so t = −1.21 ÷ (1.65 ÷ √10) = **−2.31**, with 9 degrees of freedom, and the two-sided p-value is **0.046**. Pairing removed the differences between couriers from the noise, and what was left showed the change.
+
+```localised
+=T.TEST(C2:C11, D2:D11, 2, 1)      0.0459362582490663
+```
+
+The same twenty numbers gave p = 0.35 analysed the wrong way and p = 0.046 analysed the right way. **Whenever the same units are measured twice, use the paired test**, because the data's own structure is information.
