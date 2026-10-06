@@ -26,6 +26,8 @@
 //   --step KIND      after a pause, step over|into|out and print again
 //   --network        list every request the page made
 //   --profile        record a CPU profile and print where the time went
+//   --file           open the page from file:// instead of the server, as a
+//                    file double-clicked on a desktop would be
 import { chromium } from "playwright";
 import { createServer } from "./serve.mjs";
 import fs from "node:fs";
@@ -48,6 +50,7 @@ while (args.length) {
   else if (a === "--step") opt.step.push(args.shift());
   else if (a === "--network") opt.network = true;
   else if (a === "--profile") opt.profile = true;
+  else if (a === "--file") opt.file = true;
   else { console.error(`page: unknown option ${a}`); process.exit(2); }
 }
 
@@ -130,7 +133,7 @@ if (opt.profile) {
   await cdp.send("Profiler.start");
 }
 
-await page.goto(`${origin}/${file}`);
+await page.goto(opt.file ? `file://${path.resolve(root, file)}` : `${origin}/${file}`);
 for (const action of opt.do) {
   say(`-- ${action}`);
   const [verb, ...rest] = action.split(" ");
