@@ -1,0 +1,342 @@
+{
+  "ex-r1wk121e": {
+    "prompt": "No banco com SHA-256 simples, o que o `vcrypt audit` revelou sem reverter nada?",
+    "hint": "Conte os valores diferentes.",
+    "choices": [
+      {
+        "text": "A senha da Ana",
+        "why": "Nada foi revertido."
+      },
+      {
+        "text": "Quais contas compartilham a mesma senha",
+        "why": "Certo: senhas iguais, valores iguais."
+      },
+      {
+        "text": "O tamanho de cada senha do banco",
+        "why": "Os resumos têm 64 dígitos qualquer que seja a senha."
+      },
+      {
+        "text": "A chave usada para calcular os hashes",
+        "why": "O SHA-256 não tem chave."
+      }
+    ]
+  },
+  "ex-jh621nnk": {
+    "prompt": "`printf 'Vereda@2026' | sha256sum` imprimiu exatamente o valor guardado da Ana. Por que isso importa para um banco que vaza?",
+    "hint": "Quem mais obtém esse mesmo valor?",
+    "choices": [
+      {
+        "text": "Mostra que o banco não estava cifrado em repouso",
+        "why": "Cifragem em repouso é outra questão."
+      },
+      {
+        "text": "Listas pré-calculadas funcionam contra ele",
+        "why": "Certo: o resumo é o mesmo em todo sistema."
+      },
+      {
+        "text": "Prova que o SHA-256 foi quebrado",
+        "why": "O SHA-256 funcionou exatamente como projetado."
+      },
+      {
+        "text": "Revela a pimenta do servidor",
+        "why": "Não há pimenta neste banco."
+      }
+    ]
+  },
+  "ex-nn9dxf52": {
+    "prompt": "Quantos valores guardados diferentes há no banco com SHA-256 simples das oito contas?",
+    "hint": "A primeira linha da auditoria."
+  },
+  "ex-bj8113sj": {
+    "prompt": "Um sal é secreto?",
+    "hint": "Onde ele fica guardado?",
+    "choices": [
+      {
+        "text": "Sim, precisa ficar longe dos hashes",
+        "why": "Isso descreve uma pimenta."
+      },
+      {
+        "text": "Não, fica junto do hash",
+        "why": "Certo: ele é necessário para verificar."
+      },
+      {
+        "text": "Só no bcrypt",
+        "why": "Nenhum esquema mantém o sal em segredo."
+      },
+      {
+        "text": "Sim, é a chave de cifragem da senha",
+        "why": "Nada é cifrado; ele é misturado antes do hash."
+      }
+    ]
+  },
+  "ex-nhgyfnvp": {
+    "prompt": "O SHA-256 com sal eliminou os valores compartilhados. Que problema do banco simples ele deixa intocado?",
+    "hint": "Quão rápido é cada palpite?",
+    "choices": [
+      {
+        "text": "Listas pré-calculadas",
+        "why": "Uma lista teria de ser calculada por sal; isso está resolvido."
+      },
+      {
+        "text": "Senhas iguais ficarem visíveis",
+        "why": "A auditoria não achou nenhuma."
+      },
+      {
+        "text": "Os bilhões de palpites por segundo",
+        "why": "Certo: um hash rápido com sal continua rápido."
+      },
+      {
+        "text": "O tamanho da linha guardada",
+        "why": "O tamanho nunca foi um problema."
+      }
+    ]
+  },
+  "ex-66rhyfe3": {
+    "prompt": "Um sistema dá a cada usuário um sal no cadastro e o mantém em todas as senhas seguintes. O que um observador de bancos sucessivos descobre?",
+    "hint": "Mesmo sal, mesma senha, mesmo valor.",
+    "choices": [
+      {
+        "text": "A senha de cada usuário, a partir de dois bancos",
+        "why": "Dois valores não revelam uma senha."
+      },
+      {
+        "text": "Quando um usuário volta a uma senha anterior",
+        "why": "Certo: um sal é novo a cada troca."
+      },
+      {
+        "text": "Quais usuários compartilham uma senha",
+        "why": "Usuários diferentes continuam com sais diferentes."
+      },
+      {
+        "text": "Nada",
+        "why": "A reutilização fica visível."
+      }
+    ]
+  },
+  "ex-dd1e163z": {
+    "prompt": "Associe cada prefixo guardado ao seu algoritmo.",
+    "hint": "Das três linhas da captura.",
+    "pairs": [
+      {
+        "left": "$argon2id$v=19$",
+        "right": "Argon2id"
+      },
+      {
+        "left": "$2b$12$",
+        "right": "bcrypt"
+      },
+      {
+        "left": "pbkdf2-sha256$600000$",
+        "right": "PBKDF2"
+      }
+    ],
+    "right_distractors": [
+      "SHA-3"
+    ]
+  },
+  "ex-g6qfz3vw": {
+    "prompt": "O que torna o Argon2id mais difícil para GPUs e chips dedicados do que o PBKDF2?",
+    "hint": "O m de m=19456.",
+    "choices": [
+      {
+        "text": "Cada palpite exige um bloco de memória",
+        "why": "Certo: memória é o que eles não multiplicam barato."
+      },
+      {
+        "text": "Usa um sal mais longo",
+        "why": "Os dois usam sais de 16 bytes aqui."
+      },
+      {
+        "text": "É um algoritmo secreto",
+        "why": "É a RFC 9106."
+      },
+      {
+        "text": "Usa SHA-512 em vez de SHA-256",
+        "why": "O Argon2 usa BLAKE2 internamente; não é esse o motivo."
+      }
+    ]
+  },
+  "ex-j9wdfnjh": {
+    "prompt": "A partir de quantos bytes de uma senha o bcrypt ignora o resto?",
+    "hint": "Um dos dois limites do bcrypt.",
+    "unit": "bytes"
+  },
+  "ex-faqe8g9e": {
+    "prompt": "Por que os parâmetros de custo vão escritos em cada string guardada, em vez de só na configuração da aplicação?",
+    "hint": "O que acontece no dia em que o custo aumenta?",
+    "choices": [
+      {
+        "text": "Para o atacante saber quão difícil será cada palpite",
+        "why": "Isso é efeito colateral, não o motivo."
+      },
+      {
+        "text": "Porque os padrões proíbem arquivos de configuração",
+        "why": "Nenhum padrão diz isso."
+      },
+      {
+        "text": "Para deixar a linha guardada mais longa e difícil de ler",
+        "why": "Tamanho não acrescenta nada."
+      },
+      {
+        "text": "Os hashes antigos continuam dizendo como verificá-los",
+        "why": "Certo: aumentar o custo não os quebra."
+      }
+    ]
+  },
+  "ex-nsv2ejy7": {
+    "prompt": "Onde a Vereda deveria guardar a pimenta?",
+    "hint": "Não onde o banco está.",
+    "choices": [
+      {
+        "text": "Numa coluna da tabela de usuários",
+        "why": "Aí um vazamento da tabela a inclui."
+      },
+      {
+        "text": "Num gerenciador de segredos ou num HSM",
+        "why": "Certo: longe do banco."
+      },
+      {
+        "text": "No repositório da aplicação",
+        "why": "A aula 17 diz por que não."
+      },
+      {
+        "text": "Ao lado de cada hash, como um sal",
+        "why": "Aí ela seria um sal."
+      }
+    ]
+  },
+  "ex-ph3c92mp": {
+    "prompt": "Um atacante obtém o `store-peppered.txt` por uma injeção no banco, mas não a pimenta. O que ele consegue fazer com a senha certa da Ana?",
+    "hint": "O terceiro comando da captura da pimenta.",
+    "choices": [
+      {
+        "text": "Confirmá-la, devagar",
+        "why": "Sem a pimenta ela nem verifica."
+      },
+      {
+        "text": "Recuperar a pimenta a partir da linha da Ana",
+        "why": "A pimenta não está na linha."
+      },
+      {
+        "text": "Nada: até um palpite certo falha",
+        "why": "Certo."
+      },
+      {
+        "text": "Entrar como a Ana diretamente",
+        "why": "O banco não guarda sessão."
+      }
+    ]
+  },
+  "ex-2nse5n44": {
+    "prompt": "A pimenta é um segredo para o sistema inteiro, enquanto o ___ é diferente para cada conta e não é secreto.",
+    "hint": "Aula 5, seção 03.",
+    "blanks": [
+      {
+        "accept": [
+          "sal"
+        ]
+      }
+    ]
+  },
+  "ex-c9pt9y5q": {
+    "prompt": "A verificação disse `rehash now: stored m=7168,t=1 is below the policy`. Quando a aplicação consegue calcular o hash novo?",
+    "hint": "Ela precisa da senha.",
+    "choices": [
+      {
+        "text": "Num job noturno sobre o banco inteiro",
+        "why": "Ninguém conhece as senhas para recalculá-las."
+      },
+      {
+        "text": "Agora mesmo, durante este login",
+        "why": "Certo: o único momento em que ela tem a senha."
+      },
+      {
+        "text": "Só depois que o usuário redefinir a senha",
+        "why": "Nenhuma redefinição é necessária."
+      },
+      {
+        "text": "Nunca: hashes antigos ficam como estão",
+        "why": "Deixá-los é como hashes fracos se acumulam."
+      }
+    ]
+  },
+  "ex-sy3pcaz3": {
+    "prompt": "Por que o `vcrypt verify` respondeu a uma conta inexistente, `ana.lim`, com as mesmas palavras de uma senha errada?",
+    "hint": "O que uma resposta diferente contaria a um estranho?",
+    "choices": [
+      {
+        "text": "Porque a ferramenta não confere se a conta existe",
+        "why": "Confere: ela procurou o usuário primeiro."
+      },
+      {
+        "text": "Para economizar um cálculo de Argon2id",
+        "why": "Economizar faria os caminhos diferirem no tempo."
+      },
+      {
+        "text": "Para não expor quem é cadastrado",
+        "why": "Certo: no portal de uma clínica isso é um fato de saúde."
+      },
+      {
+        "text": "Porque ana.lim é parecido com ana.lima",
+        "why": "A resposta é a mesma para qualquer nome inexistente."
+      }
+    ]
+  },
+  "ex-nzpbkj6q": {
+    "prompt": "Ordene estas formas de guardar uma senha da mais fraca para a mais forte.",
+    "hint": "Cada passo corrige mais um problema.",
+    "items": [
+      "SHA-256 simples",
+      "SHA-256 com sal",
+      "Argon2id com sal",
+      "Argon2id com sal e pimenta num HSM"
+    ]
+  },
+  "ex-e1ardntw": {
+    "prompt": "A Vereda vai do bcrypt para o Argon2id. Quais passos fazem parte da migração? Marque todas as que se aplicam.",
+    "hint": "Os dois aceitos na entrada.",
+    "choices": [
+      {
+        "text": "Aceitar hashes bcrypt e Argon2id ao verificar",
+        "why": "Sim: contas antigas continuam entrando."
+      },
+      {
+        "text": "Gravar Argon2id sempre que um hash bcrypt verificar",
+        "why": "Sim: a atualização no login."
+      },
+      {
+        "text": "Depois de um prazo, exigir redefinição das contas ainda em bcrypt",
+        "why": "Sim: nenhum hash fraco fica para sempre."
+      },
+      {
+        "text": "Converter todo hash bcrypt para Argon2id num lote",
+        "why": "Impossível sem as senhas."
+      }
+    ]
+  },
+  "ex-9wyqhhh1": {
+    "prompt": "Associe cada defesa ao problema que ela responde.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "um sal por conta",
+        "right": "listas pré-calculadas"
+      },
+      {
+        "left": "o custo do Argon2id",
+        "right": "bilhões de palpites por segundo"
+      },
+      {
+        "left": "uma pimenta",
+        "right": "um banco vazado sem mais nada"
+      },
+      {
+        "left": "a mesma resposta para conta inexistente",
+        "right": "descobrir quem tem conta"
+      }
+    ],
+    "right_distractors": [
+      "uma senha fraca"
+    ]
+  }
+}

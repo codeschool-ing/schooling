@@ -66,6 +66,7 @@ w = lambda p, s: open(p, "w").write(s)
 w("keys/aes-256.hex", drbg.stream("aes-256", 32).hex() + "\n")
 w("keys/aes-256-b.hex", drbg.stream("aes-256-b", 32).hex() + "\n")
 w("keys/aes-128.hex", drbg.stream("aes-128", 16).hex() + "\n")
+w("keys/pepper.hex", drbg.stream("pepper", 32).hex() + "\n")
 w("keys/iv-a.hex", drbg.stream("iv-a", 16).hex() + "\n")
 w("keys/iv-b.hex", drbg.stream("iv-b", 16).hex() + "\n")
 for label, bits in (("rsa-2048", 2048), ("rsa-3072", 3072)):
@@ -104,6 +105,20 @@ data() {
       esac >> "$LAB/data/slots.dat"
     done
   done
+  # Eight staff accounts of the portal, with passwords the course wrote to
+  # be bad in the usual ways: three people chose the same one, two more
+  # share another. Nobody real has these passwords for anything.
+  cat > "$LAB/data/users.csv" <<'TXT'
+user,password
+ana.lima,Vereda@2026
+bruno.reis,fisio123
+carla.souza,Vereda@2026
+diego.alves,correct horse battery staple
+elisa.prado,fisio123
+fabio.nunes,Vereda@2026
+gabi.torres,m4r3-alta-em-ub@tub@
+hugo.matos,Primavera#2026
+TXT
   cat > "$LAB/data/referral.txt" <<'TXT'
 Referral 2026-0417. Patient: Marina Duarte, 41.
 Lower back pain after lifting, eight weeks. Eight sessions of physiotherapy.

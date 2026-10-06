@@ -95,6 +95,51 @@ def cmd_avalanche(a):
     print(f"{diff} of 256 bits differ")
 
 
+def _pepper(path):
+    return hexkey(path) if path else None
+
+
+def cmd_store(a):
+    from . import passwords
+    cost = None
+    if a.cost:
+        cost = tuple(int(x) for x in a.cost.split(",")) if a.scheme == "argon2id" else int(a.cost)
+    for line in open(a.users):
+        user, password = line.rstrip("\n").split(",", 1)
+        if user == "user":
+            continue
+        print(f"{user}:{passwords.store(a.scheme, user, password, _pepper(a.pepper), cost)}")
+
+
+def cmd_audit(a):
+    groups = {}
+    for line in open(a.store):
+        user, h = line.rstrip("\n").split(":", 1)
+        groups.setdefault(h, []).append(user)
+    shared = [u for u in groups.values() if len(u) > 1]
+    total = sum(len(u) for u in groups.values())
+    print(f"{total} accounts, {len(groups)} different stored values")
+    for users in shared:
+        print(f"  {len(users)} accounts share one value: {', '.join(users)}")
+    if not shared:
+        print("  no two accounts share a stored value")
+
+
+def cmd_verify(a):
+    from . import passwords
+    for line in open(a.store):
+        user, h = line.rstrip("\n").split(":", 1)
+        if user == a.user:
+            ok, weak = passwords.verify(h, a.password, _pepper(a.pepper))
+            if not ok:
+                print(f"{a.user}: wrong password")
+                sys.exit(1)
+            print(f"{a.user}: password accepted" + (f"; rehash now: {weak}" if weak else ""))
+            return
+    print(f"{a.user}: wrong password")  # the same answer as a wrong password, on purpose
+    sys.exit(1)
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -128,6 +173,21 @@ def main():
     s.add_argument("first")
     s.add_argument("second")
     s.set_defaults(fn=cmd_avalanche)
+    s = sub.add_parser("store", help="store every password in a users file with one scheme")
+    s.add_argument("scheme", choices=("sha256", "salted-sha256", "pbkdf2", "bcrypt", "argon2id"))
+    s.add_argument("users")
+    s.add_argument("--pepper")
+    s.add_argument("--cost", help="iterations (pbkdf2), cost (bcrypt) or m,t,p (argon2id)")
+    s.set_defaults(fn=cmd_store)
+    s = sub.add_parser("audit", help="count accounts that share a stored value")
+    s.add_argument("store")
+    s.set_defaults(fn=cmd_audit)
+    s = sub.add_parser("verify", help="check one password against a store")
+    s.add_argument("store")
+    s.add_argument("user")
+    s.add_argument("password")
+    s.add_argument("--pepper")
+    s.set_defaults(fn=cmd_verify)
     a = p.parse_args()
     a.fn(a)
 
