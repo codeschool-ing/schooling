@@ -12,7 +12,6 @@
 # What is STAGED rather than typed: the files ana wrote (put below), whose
 # contents the lesson shows in full.
 #
-# Recorded on Ubuntu 24.04 with Node.js 22.22.0 and Chromium 141, every page
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0 and Chromium 141,
 # TZ=America/Sao_Paulo.
 

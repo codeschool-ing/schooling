@@ -13,7 +13,6 @@
 # contents the lesson shows in full.
 #
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0 and Chromium 141, every page
-# Recorded on Ubuntu 24.04 with Node.js 22.22.0 and Chromium 141, every page
 # opened with the lab's page command, TZ=America/Sao_Paulo.
 
 set -uo pipefail

@@ -15,6 +15,10 @@
 #                        they say is what the browser said.
 #   serve                the same web server on its own (lab/serve.mjs), for a
 #                        program in node to fetch from: lesson 16
+#   npm, pnpm, yarn      the three package managers of lesson 21: npm as it
+#                        ships with Node.js 22.22.0 (10.9.4), pnpm 10.28.0 and
+#                        Yarn 4.10.3, the last two installed here at those
+#                        versions so that no other copy on the machine answers
 #   127.0.0.1:4873       a private npm registry, Verdaccio, holding only the
 #                        packages the lab publishes into it: lesson 21. It
 #                        reaches nothing outside the machine.
@@ -30,14 +34,14 @@
 #   sudo bash lab.sh exec USER 'command'
 #
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0, Playwright 1.56.0 (Chromium
-# 141) and Verdaccio 6.1.6, TZ=America/Sao_Paulo.
+# 141), Verdaccio 6.1.6, pnpm 10.28.0 and Yarn 4.10.3, TZ=America/Sao_Paulo.
 set -euo pipefail
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 OPT=/opt/jslab
 NODE_DIR=${NODE_DIR:-$(dirname "$(command -v node)")}
 TZ_LAB=America/Sao_Paulo
-JSLIBS="playwright@1.56.0 verdaccio@6.1.6"
+JSLIBS="playwright@1.56.0 verdaccio@6.1.6 pnpm@10.28.0 @yarnpkg/cli-dist@4.10.3"
 REG=/var/lib/jslab-registry
 ENVFILE=/etc/jslab.env
 
@@ -58,6 +62,7 @@ NO_COLOR=1
 NO_UPDATE_NOTIFIER=1
 npm_config_update_notifier=false
 npm_config_fund=false
+YARN_ENABLE_TELEMETRY=0
 ENV
 }
 
@@ -73,7 +78,9 @@ install_lab() {
   ln -sfn $OPT/node_modules $OPT/lab/node_modules
   printf '#!/bin/sh\nexec node %s/lab/page.mjs "$@"\n' $OPT > $OPT/bin/page
   printf '#!/bin/sh\nexec node %s/lab/serve.mjs "$@"\n' $OPT > $OPT/bin/serve
-  chmod 0755 $OPT/bin/page $OPT/bin/serve
+  printf '#!/bin/sh\nexec node %s/node_modules/pnpm/bin/pnpm.cjs "$@"\n' $OPT > $OPT/bin/pnpm
+  printf '#!/bin/sh\nexec node %s/node_modules/@yarnpkg/cli-dist/bin/yarn.js "$@"\n' $OPT > $OPT/bin/yarn
+  chmod 0755 $OPT/bin/page $OPT/bin/serve $OPT/bin/pnpm $OPT/bin/yarn
 }
 
 build_user() {
@@ -81,7 +88,8 @@ build_user() {
 }
 
 reset_home() {
-  rm -rf /home/ana/js /home/ana/.page-profile /home/ana/.npm /home/ana/.npmrc
+  rm -rf /home/ana/js /home/ana/.page-profile /home/ana/.npm /home/ana/.npmrc \
+    /home/ana/.yarn /home/ana/.yarnrc.yml /home/ana/.local/share/pnpm /home/ana/.cache/pnpm
   runuser -u ana -- mkdir -p /home/ana/js
 }
 
@@ -89,6 +97,7 @@ reset_home() {
 # user "lab", and nothing in it was downloaded from anywhere.
 start_registry() {
   stop_registry
+  rm -rf $REG/storage $REG/htpasswd   # every run starts with no packages and no users
   mkdir -p $REG/storage
   cat > $REG/config.yaml <<YAML
 storage: $REG/storage
