@@ -62,7 +62,8 @@ run 'kind create cluster --name study --config cluster.yaml'
 block fail-docker
 run 'DOCKER_HOST=unix:///run/nothing.sock kind create cluster --name other 2>&1 | tail -n 1'
 block fail-port
-quiet '(setsid python3 -m http.server 8080 --bind 0.0.0.0 >/dev/null 2>&1 </dev/null &); sleep 1'
+python3 -m http.server 8080 --bind 0.0.0.0 >/dev/null 2>&1 </dev/null & WEB=$!
+quiet 'sleep 1'
 put ports.yaml <<'CODE'
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -80,8 +81,8 @@ nodes:
   - containerPort: 30080
     hostPort: 8080
 CODE
-run 'kind create cluster --name ports --config ports.yaml 2>&1 | grep -o "Bind for .*"'
-quiet 'pkill -f "http.server 8080"'
+run 'kind create cluster --name ports --config ports.yaml 2>&1 | grep -o "failed to bind host port.*"'
+kill "$WEB"
 quiet 'kind delete cluster --name ports'
 block fail-context
 run 'kind delete cluster --name study'

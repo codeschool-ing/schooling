@@ -1,0 +1,298 @@
+[
+  {
+    "id": "ex-975avk2v",
+    "version": 1,
+    "section": "control-plane",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which component of the control plane is the only one that reads and writes etcd?",
+    "hint": "Every other component reaches the data through it.",
+    "choices": [
+      {
+        "text": "The scheduler",
+        "correct": false,
+        "why": "The scheduler writes a pod's node through the API server, like everyone else."
+      },
+      {
+        "text": "The controller manager",
+        "correct": false,
+        "why": "Its controllers create objects through the API server; they never open etcd."
+      },
+      {
+        "text": "The API server",
+        "correct": true,
+        "why": "Right. Its `--etcd-servers` flag points at etcd, and every check it makes depends on there being no other door."
+      },
+      {
+        "text": "The kubelet on the control-plane node",
+        "correct": false,
+        "why": "That kubelet runs etcd as a static pod; it does not read its data."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1kqbtnf",
+    "version": 1,
+    "section": "control-plane",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The control plane's components are pods, yet pods are created through the API server. How does the API server start on a fresh node?",
+    "hint": "Look at what `ls /etc/kubernetes/manifests` printed.",
+    "choices": [
+      {
+        "text": "kubeadm starts it directly and keeps it running",
+        "correct": false,
+        "why": "kubeadm writes the files and exits; it does not supervise anything."
+      },
+      {
+        "text": "The kubelet runs it from a file on disk",
+        "correct": true,
+        "why": "Right. The kubelet watches that directory and needs no API server to run what is in it."
+      },
+      {
+        "text": "etcd starts it when the database comes up",
+        "correct": false,
+        "why": "etcd stores data and starts nothing; it is a static pod too."
+      },
+      {
+        "text": "The scheduler places it on the control-plane node",
+        "correct": false,
+        "why": "The scheduler works through the API server, so it cannot be what starts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrsrvprr",
+    "version": 1,
+    "section": "control-plane",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every object is stored in etcd under a key that begins with `/___/`, followed by its type, namespace and name.",
+    "hint": "The keys etcdctl listed.",
+    "blanks": [
+      {
+        "accept": [
+          "registry"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vvph2hza",
+    "version": 1,
+    "section": "node-components",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the kubelet a systemd service on the node rather than a pod?",
+    "hint": "Ask what would have to start it.",
+    "choices": [
+      {
+        "text": "Pods cannot run on worker nodes",
+        "correct": false,
+        "why": "Ana's pods ran on both workers."
+      },
+      {
+        "text": "It needs more memory than any pod is allowed to have",
+        "correct": false,
+        "why": "Memory has nothing to do with it; the question is what starts it."
+      },
+      {
+        "text": "kube-proxy refuses to route to it otherwise",
+        "correct": false,
+        "why": "kube-proxy routes Service traffic to pods, not to the kubelet."
+      },
+      {
+        "text": "It is what runs pods, so nothing could run it",
+        "correct": true,
+        "why": "Right. The kubelet asks the runtime to start pods; something below it, systemd here, has to start the kubelet."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dveqzbb",
+    "version": 1,
+    "section": "node-components",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each node component with the question it answers.",
+    "hint": "Four things run on every node.",
+    "pairs": [
+      {
+        "left": "kubelet",
+        "right": "Which pods should run here, and are they running?"
+      },
+      {
+        "left": "containerd",
+        "right": "How is a container actually started?"
+      },
+      {
+        "left": "kube-proxy",
+        "right": "Which pod does a Service address lead to?"
+      },
+      {
+        "left": "CNI plugin",
+        "right": "What address and routes does a new pod get?"
+      }
+    ],
+    "right_distractors": [
+      "Which node should an unscheduled pod go to?"
+    ]
+  },
+  {
+    "id": "ex-vb9t2mnd",
+    "version": 1,
+    "section": "node-components",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague reads the name kube-proxy and concludes every request to a Service passes through that process. What would show them otherwise?",
+    "hint": "Where does kube-proxy put its work?",
+    "choices": [
+      {
+        "text": "`crictl ps`, which shows kube-proxy as a container",
+        "correct": false,
+        "why": "Being a container says nothing about whether traffic flows through it."
+      },
+      {
+        "text": "The node's kernel rules, which rewrite the packets themselves",
+        "correct": true,
+        "why": "Right. kube-proxy writes iptables or nftables rules and steps aside; lesson 17 reads them."
+      },
+      {
+        "text": "`systemctl is-active`, which shows it is not a service",
+        "correct": false,
+        "why": "Whether systemd runs it is unrelated to the path a packet takes."
+      },
+      {
+        "text": "The CNI directory, which holds its routes",
+        "correct": false,
+        "why": "That directory configures the network plugin, not kube-proxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9ambt1m",
+    "version": 1,
+    "section": "the-chain",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the components that acted on Ana's new deployment, as the events recorded them.",
+    "hint": "The events were sorted by when they were written.",
+    "items": [
+      "The deployment controller makes a ReplicaSet",
+      "The ReplicaSet controller makes a pod with no node",
+      "The scheduler writes a node into the pod",
+      "The kubelet on that node starts the container"
+    ],
+    "trap": "Each step needs the object the previous one wrote: no pod before its ReplicaSet, no container before a node is chosen."
+  },
+  {
+    "id": "ex-vfhm6vda",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the scheduler stopped, Ana scaled the shop from one copy to three. What did `kubectl get pods` show?",
+    "hint": "Which steps of the chain still had someone to do them?",
+    "choices": [
+      {
+        "text": "Only the original pod, since scaling was refused",
+        "correct": false,
+        "why": "`deployment.apps/shop scaled` was printed; the API server accepted the change."
+      },
+      {
+        "text": "The original pod running and two new ones `Pending`",
+        "correct": true,
+        "why": "Right. The controllers made the pods; nobody chose a node for them."
+      },
+      {
+        "text": "Three pods `Running`, all on the control-plane node",
+        "correct": false,
+        "why": "Without a scheduler no pod gets a node, on the control plane or anywhere."
+      },
+      {
+        "text": "No pods at all: the running one stopped too",
+        "correct": false,
+        "why": "The running pod kept running; a scheduler is only needed to place new ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzk929ve",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The API server of a cluster goes down for ten minutes. During that time, what happens to the shop's pods that were already running?",
+    "hint": "Who keeps a running pod running?",
+    "choices": [
+      {
+        "text": "They stop, because the kubelet loses its instructions",
+        "correct": false,
+        "why": "The kubelet keeps the pods it already has; it only cannot learn of new ones."
+      },
+      {
+        "text": "They are moved to the nodes that can still reach etcd",
+        "correct": false,
+        "why": "Nodes never reach etcd, and nothing can move a pod while the API server is down."
+      },
+      {
+        "text": "They keep serving, and nothing about them can change",
+        "correct": true,
+        "why": "Right. A control plane that stops is a cluster that cannot change, not one that stops serving."
+      },
+      {
+        "text": "They restart in a loop until the API server returns",
+        "correct": false,
+        "why": "Nothing restarts them; their containers keep the processes they have."
+      }
+    ]
+  },
+  {
+    "id": "ex-sec1yaq6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these run as pods on the laptop's cluster? Choose all that apply.",
+    "hint": "One of them cannot, and one is a database inside a pod.",
+    "choices": [
+      {
+        "text": "kube-apiserver",
+        "correct": true,
+        "why": "Right: a static pod on the control-plane node."
+      },
+      {
+        "text": "etcd",
+        "correct": true,
+        "why": "Right: also a static pod."
+      },
+      {
+        "text": "kubelet",
+        "correct": false,
+        "why": "It is a systemd service; it is what runs pods."
+      },
+      {
+        "text": "kube-proxy",
+        "correct": true,
+        "why": "Right: one per node, from a DaemonSet."
+      },
+      {
+        "text": "containerd",
+        "correct": false,
+        "why": "The runtime is a service the kubelet talks to."
+      }
+    ]
+  }
+]
