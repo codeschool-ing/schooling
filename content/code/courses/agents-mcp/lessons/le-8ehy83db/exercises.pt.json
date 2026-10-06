@@ -1,0 +1,263 @@
+{
+  "ex-xn90sd1x": {
+    "prompt": "Quantos tokens de entrada os três pedidos da execução sem cache levaram ao todo?",
+    "unit": "tokens"
+  },
+  "ex-18v15b38": {
+    "prompt": "Por que cada pedido levou cerca de 2.350 tokens antes de qualquer parte da conversa?",
+    "choices": [
+      {
+        "text": "Porque o labllm enche todo pedido",
+        "why": "O labllm conta o que recebe."
+      },
+      {
+        "text": "As ferramentas e o prompt de sistema com as políticas vão toda vez",
+        "why": "Certo. A API não guarda nada entre pedidos."
+      },
+      {
+        "text": "Porque a resposta do modelo conta como entrada",
+        "why": "A resposta é saída, 93 tokens ao todo."
+      },
+      {
+        "text": "Por causa do cache",
+        "why": "Esta execução não tinha cache."
+      }
+    ]
+  },
+  "ex-1vr5f0ry": {
+    "prompt": "Por que o pedido 3 levou cerca de 3.200 ms quando os pedidos 1 e 2 levaram cerca de 600?",
+    "choices": [
+      {
+        "text": "Ele levou mais tokens de entrada",
+        "why": "O labllm não gasta tempo com entrada; a diferença foi de 41 tokens."
+      },
+      {
+        "text": "Porque o search_help rodou durante ele",
+        "why": "Ferramentas rodam entre pedidos, não durante."
+      },
+      {
+        "text": "Porque o fornecedor estava sobrecarregado e o repetiu uma vez, sem o programa notar",
+        "why": "Nenhuma nova tentativa aconteceu nesta execução."
+      },
+      {
+        "text": "Ele escreveu a resposta de 75 tokens",
+        "why": "Certo. 200 ms mais 75 × 40 ms."
+      }
+    ]
+  },
+  "ex-pzp1ms83": {
+    "prompt": "O que o streaming muda para a pessoa que espera?",
+    "choices": [
+      {
+        "text": "O tempo total, que cai pela metade",
+        "why": "O trabalho é o mesmo; só muda quando as primeiras palavras aparecem."
+      },
+      {
+        "text": "Quando as primeiras palavras aparecem",
+        "why": "Certo. Depois do tempo até o primeiro token, não depois da resposta inteira."
+      },
+      {
+        "text": "O número de tokens",
+        "why": "Os mesmos tokens são escritos."
+      },
+      {
+        "text": "O preço por token, porque tokens em stream são cobrados a uma taxa menor pela maioria dos fornecedores",
+        "why": "Nada na aula diz isso."
+      }
+    ]
+  },
+  "ex-dtt9j5yz": {
+    "prompt": "Quantos milissegundos a execução inteira levou com o scripted-mini?",
+    "unit": "ms"
+  },
+  "ex-vsvcm4hh": {
+    "prompt": "O que a troca para o scripted-mini não mudou?",
+    "choices": [
+      {
+        "text": "O tempo para escrever a resposta",
+        "why": "Caiu de 3.208 ms para 957."
+      },
+      {
+        "text": "O tempo total",
+        "why": "Caiu para 1.939 ms."
+      },
+      {
+        "text": "Os tokens: 7.440 de entrada e 93 de saída",
+        "why": "Certo. A velocidade mudou; a forma da conta não."
+      },
+      {
+        "text": "O tempo por token de saída, que fica em 40 ms para todo modelo do laboratório",
+        "why": "É 10 ms para o scripted-mini."
+      }
+    ]
+  },
+  "ex-ve0xd5gq": {
+    "prompt": "Na segunda execução com cache, o que aconteceu com o prefixo no pedido 1?",
+    "choices": [
+      {
+        "text": "Foi lido do cache, dentro dos 300 segundos",
+        "why": "Certo. Nenhuma escrita naquela execução."
+      },
+      {
+        "text": "Foi escrito de novo",
+        "why": "Isso foi na primeira execução."
+      },
+      {
+        "text": "Ficou fora do pedido",
+        "why": "O pedido ainda o leva; o fornecedor o cobra como leitura."
+      },
+      {
+        "text": "Foi ignorado",
+        "why": "Foi lido, 2.347 tokens."
+      }
+    ]
+  },
+  "ex-tvzfch6w": {
+    "prompt": "Por que o --stamp deixou o cache pior que nenhum cache?",
+    "choices": [
+      {
+        "text": "Porque carimbos de hora não são permitidos em prompts de sistema",
+        "why": "São permitidos; eles mudam o prefixo."
+      },
+      {
+        "text": "Porque deixou o prompt muito mais longo, passando da janela de contexto",
+        "why": "Ele acrescentou poucos tokens."
+      },
+      {
+        "text": "Porque o labllm esquece o cache quando uma execução termina",
+        "why": "A segunda execução com cache o leu da primeira."
+      },
+      {
+        "text": "A frente do prefixo mudou, então todo pedido o escreveu de novo",
+        "why": "Certo. 7.074 tokens escritos e nenhum lido; escritas custam mais que entrada comum."
+      }
+    ]
+  },
+  "ex-k3dnd4nf": {
+    "prompt": "Ponha as partes de um pedido na ordem em que o cache de um fornecedor as lê, da primeira à última.",
+    "hint": "Uma mudança perto da frente quebra tudo o que vem depois.",
+    "items": [
+      "as ferramentas",
+      "o prompt de sistema",
+      "as mensagens"
+    ]
+  },
+  "ex-1514y2d9": {
+    "prompt": "Como voltou a resposta com max_tokens=8?",
+    "choices": [
+      {
+        "text": "Um erro, levantado pelo SDK",
+        "why": "O pedido deu certo."
+      },
+      {
+        "text": "Meia frase, com stop_reason max_tokens",
+        "why": "Certo. Um programa tem de conferir o stop_reason."
+      },
+      {
+        "text": "A resposta inteira, já que o limite só vale para chamadas de ferramenta e não para texto",
+        "why": "Vale para toda resposta."
+      },
+      {
+        "text": "Uma resposta vazia",
+        "why": "Ela tinha 8 tokens de texto."
+      }
+    ]
+  },
+  "ex-18f19s2b": {
+    "prompt": "Um prompt mais longo que a janela do modelo recebeu o status HTTP ___ antes de qualquer trabalho.",
+    "blanks": [
+      {
+        "accept": [
+          "400"
+        ]
+      }
+    ]
+  },
+  "ex-14gvw2w6": {
+    "prompt": "Por que a chamada com duas falhas 529 deu certo?",
+    "choices": [
+      {
+        "text": "Porque o labllm ignorou a configuração",
+        "why": "O log mostra 529 529 200."
+      },
+      {
+        "text": "Porque 529 não é um erro",
+        "why": "É o status de um fornecedor sobrecarregado."
+      },
+      {
+        "text": "O SDK repetiu duas vezes sozinho",
+        "why": "Certo. Com três falhas ele desistiu e levantou OverloadedError."
+      },
+      {
+        "text": "Porque o limits.py captura o erro e chama de novo até o fornecedor responder, sem limite",
+        "why": "O limits.py faz uma chamada; as novas tentativas foram do SDK."
+      }
+    ]
+  },
+  "ex-h962gzjy": {
+    "prompt": "Quais destes pertencem ao orçamento próprio de um agente? Escolha todos os que valem.",
+    "choices": [
+      {
+        "text": "Um limite de passos",
+        "why": "Certo."
+      },
+      {
+        "text": "Um orçamento de tokens por execução, somado do usage",
+        "why": "Certo."
+      },
+      {
+        "text": "Um orçamento de tempo para a pessoa que espera",
+        "why": "Certo."
+      },
+      {
+        "text": "A janela de contexto do fornecedor",
+        "why": "Esse é o limite do fornecedor, não do agente."
+      }
+    ]
+  },
+  "ex-50h60dtd": {
+    "prompt": "Como deve terminar uma execução que bate no orçamento?",
+    "choices": [
+      {
+        "text": "Em silêncio, com o texto que o modelo tinha escrito até ali",
+        "why": "Um limite que só corta esconde o problema que achou."
+      },
+      {
+        "text": "Aumentando o orçamento e continuando até o modelo terminar a resposta",
+        "why": "Então não era orçamento."
+      },
+      {
+        "text": "Com um motivo, uma mensagem e um encaminhamento a uma pessoa",
+        "why": "Certo. Como as execuções travadas da aula 7."
+      },
+      {
+        "text": "Tentando de novo",
+        "why": "Uma nova tentativa gasta mais do que acabou."
+      }
+    ]
+  },
+  "ex-5r5akwjp": {
+    "prompt": "Associe cada limite ao que voltou ao programa nesta aula.",
+    "pairs": [
+      {
+        "left": "max_tokens=8",
+        "right": "meia frase, stop_reason max_tokens"
+      },
+      {
+        "left": "um prompt além da janela",
+        "right": "HTTP 400 antes de qualquer trabalho"
+      },
+      {
+        "left": "três respostas 529 seguidas",
+        "right": "OverloadedError"
+      }
+    ],
+    "right_distractors": [
+      "uma resposta vazia com status 200"
+    ]
+  },
+  "ex-26yrytk8": {
+    "prompt": "Quantos tokens a segunda execução com cache leu do cache, nos três pedidos?",
+    "unit": "tokens"
+  }
+}
