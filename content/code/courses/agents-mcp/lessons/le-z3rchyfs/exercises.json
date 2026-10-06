@@ -1,0 +1,494 @@
+[
+  {
+    "id": "ex-a8947qqg",
+    "version": 1,
+    "section": "the-same-tool-three-times",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the three hosts' first requests show about get_order?",
+    "choices": [
+      {
+        "text": "That all three providers use one format, so the hosts sent identical declarations",
+        "correct": false,
+        "why": "The keys differ: parameters, input_schema, parameters_json_schema."
+      },
+      {
+        "text": "The same tool in three formats",
+        "correct": true,
+        "why": "Right. One per provider: Chat Completions, Messages, Gemini."
+      },
+      {
+        "text": "That only one host found the tool",
+        "correct": false,
+        "why": "All three sent it, and all three answered."
+      },
+      {
+        "text": "That MCP rewrote the tool's description",
+        "correct": false,
+        "why": "The server's description reached all three; one host wrapped it in markers."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3c7g2p9",
+    "version": 1,
+    "section": "the-same-tool-three-times",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without a shared protocol, how many adapters do three hosts and two tool providers need?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "adapters"
+  },
+  {
+    "id": "ex-v8391m9m",
+    "version": 1,
+    "section": "one-server-three-hosts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did the three hosts get get_order in this lesson?",
+    "choices": [
+      {
+        "text": "Each copied shop_mcp.py's function into its own code",
+        "correct": false,
+        "why": "None of them contains a line of get_order."
+      },
+      {
+        "text": "Through a cloud registry that hosts the tool for them",
+        "correct": false,
+        "why": "The server ran on this machine, started by each host."
+      },
+      {
+        "text": "Through labllm, which forwards tool calls",
+        "correct": false,
+        "why": "labllm is the model provider; it never runs tools."
+      },
+      {
+        "text": "Each started the same MCP server and asked it",
+        "correct": true,
+        "why": "Right. One server, three clients, no change to the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5c83567",
+    "version": 1,
+    "section": "one-server-three-hosts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which connection in this lesson's runs is MCP?",
+    "choices": [
+      {
+        "text": "The one between each host and labllm",
+        "correct": false,
+        "why": "That wire is each provider's own API."
+      },
+      {
+        "text": "Both, since MCP replaces the provider APIs",
+        "correct": false,
+        "why": "The provider wire stayed in three formats."
+      },
+      {
+        "text": "The one between each host and shop_mcp.py",
+        "correct": true,
+        "why": "Right. The same whoever the host is; the server never sees the model."
+      },
+      {
+        "text": "Neither; MCP only exists over HTTP",
+        "correct": false,
+        "why": "These ran over stdio, one of MCP's two transports."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp7bbrth",
+    "version": 1,
+    "section": "one-server-three-hosts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `tee` do in the command hosts.py uses to start the server?",
+    "choices": [
+      {
+        "text": "It copies what the client writes to the server into a file",
+        "correct": true,
+        "why": "Right. That copy is what section 04 reads."
+      },
+      {
+        "text": "It filters out messages the server should not see, such as anything larger than a line",
+        "correct": false,
+        "why": "It passes everything through unchanged."
+      },
+      {
+        "text": "It encrypts the stdio channel",
+        "correct": false,
+        "why": "tee copies; it does not encrypt."
+      },
+      {
+        "text": "It starts a second server as a backup",
+        "correct": false,
+        "why": "Only one server runs per host."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx96xfpq",
+    "version": 1,
+    "section": "two-revisions-one-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the OpenAI SDK's MCP client send first?",
+    "choices": [
+      {
+        "text": "initialize, with version 2025-11-25, like the other two",
+        "correct": false,
+        "why": "That was the Claude and Google clients."
+      },
+      {
+        "text": "tools/call, without asking for the list first",
+        "correct": false,
+        "why": "It listed the tools before calling one."
+      },
+      {
+        "text": "server/discover, with version 2026-07-28",
+        "correct": true,
+        "why": "Right. No handshake; the version travels on every request."
+      },
+      {
+        "text": "ping",
+        "correct": false,
+        "why": "ping was removed in 2026-07-28."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnzt9crb",
+    "version": 1,
+    "section": "two-revisions-one-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why could the Claude and Google hosts use a server built with mcp 2.3.0?",
+    "choices": [
+      {
+        "text": "Because 2025-11-25 and 2026-07-28 are the same protocol under two names",
+        "correct": false,
+        "why": "2026-07-28 removed the handshake that 2025-11-25 needs."
+      },
+      {
+        "text": "The server is dual-era: it answers legacy and modern clients",
+        "correct": true,
+        "why": "Right. It answered initialize as well as server/discover."
+      },
+      {
+        "text": "Because their hosts upgraded the server automatically",
+        "correct": false,
+        "why": "Hosts do not change a server; they connect to it."
+      },
+      {
+        "text": "Because tee translated the messages",
+        "correct": false,
+        "why": "tee only copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahy7afyy",
+    "version": 1,
+    "section": "two-revisions-one-server",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each client to the protocol version it used.",
+    "pairs": [
+      {
+        "left": "the OpenAI SDK's client",
+        "right": "2026-07-28"
+      },
+      {
+        "left": "the Claude Code CLI's client",
+        "right": "2025-11-25, with initialize"
+      },
+      {
+        "left": "the session typed by hand in ai-dev lesson 7",
+        "right": "2025-06-18"
+      }
+    ],
+    "right_distractors": [
+      "2024-01-01"
+    ]
+  },
+  {
+    "id": "ex-sa70b3pt",
+    "version": 1,
+    "section": "what-mcp-covers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which primitive is chosen by the person, typically as something like a slash command?",
+    "choices": [
+      {
+        "text": "Prompts",
+        "correct": true,
+        "why": "Right. Templates with arguments that a person picks."
+      },
+      {
+        "text": "Tools, which the model asks for and the host allows",
+        "correct": false,
+        "why": "Tools are asked for by the model."
+      },
+      {
+        "text": "Resources",
+        "correct": false,
+        "why": "Resources are data the host reads and gives the model."
+      },
+      {
+        "text": "Sampling, the server asking the client's model for text",
+        "correct": false,
+        "why": "Sampling is a client feature, and deprecated in 2026-07-28."
+      }
+    ]
+  },
+  {
+    "id": "ex-y1drkrt9",
+    "version": 1,
+    "section": "what-mcp-covers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which features does the 2026-07-28 revision list as deprecated? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Roots",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sampling",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Tools",
+        "correct": false,
+        "why": "Tools are a core primitive."
+      },
+      {
+        "text": "The HTTP+SSE transport",
+        "correct": true,
+        "why": "Right. Streamable HTTP replaces it."
+      },
+      {
+        "text": "The stdio transport",
+        "correct": false,
+        "why": "stdio is one of the two transports."
+      }
+    ]
+  },
+  {
+    "id": "ex-6aze5c0w",
+    "version": 1,
+    "section": "what-mcp-covers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the 2026-07-28 revision, how does a server get a confirmation from the person in the middle of a request?",
+    "choices": [
+      {
+        "text": "It sends its own request to the client over a connection kept open",
+        "correct": false,
+        "why": "That was how earlier revisions did it."
+      },
+      {
+        "text": "It waits until the client calls server/discover again",
+        "correct": false,
+        "why": "server/discover advertises versions and capabilities; it carries no answers."
+      },
+      {
+        "text": "It cannot; MCP has no way to ask",
+        "correct": false,
+        "why": "Multi round-trip requests are that way."
+      },
+      {
+        "text": "It returns an input_required result, and the client retries with the answers",
+        "correct": true,
+        "why": "Right. That is a multi round-trip request."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpw08aa4",
+    "version": 1,
+    "section": "what-it-leaves-to-the-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the Claude host's model see mcp__shop__get_order while the others saw get_order?",
+    "choices": [
+      {
+        "text": "Because the server named it differently for each client",
+        "correct": false,
+        "why": "The server sent the same tool list to all three."
+      },
+      {
+        "text": "That choice belongs to whoever embeds the client, not the protocol",
+        "correct": true,
+        "why": "Right. Prefixing keeps two servers' tools apart; MCP leaves it to the host."
+      },
+      {
+        "text": "Because Anthropic's API requires a prefix on every tool",
+        "correct": false,
+        "why": "Lesson 4's tools reached the Messages API without one."
+      },
+      {
+        "text": "Because the 2025-11-25 revision renames tools",
+        "correct": false,
+        "why": "Revisions do not rename tools; the Google host used the same revision and kept the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ft28k49",
+    "version": 1,
+    "section": "what-it-leaves-to-the-host",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did the Google host do with the server's tool description?",
+    "choices": [
+      {
+        "text": "Deleted it, sending only the name",
+        "correct": false,
+        "why": "The description was there, between markers."
+      },
+      {
+        "text": "Translated it into the model's language",
+        "correct": false,
+        "why": "The text was unchanged."
+      },
+      {
+        "text": "Wrapped it between markers that label it untrusted",
+        "correct": true,
+        "why": "Right. It tells the model whose words those are; it does not make it ignore them."
+      },
+      {
+        "text": "Checked it against a list of approved descriptions kept by Google",
+        "correct": false,
+        "why": "No list was consulted; the text was wrapped and sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4np6r9r",
+    "version": 1,
+    "section": "what-it-leaves-to-the-host",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many times did the OpenAI host's client call tools/list in one run?",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-x4aeh4b0",
+    "version": 1,
+    "section": "when-to-reach-for-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is an in-process function tool the better choice than an MCP server?",
+    "choices": [
+      {
+        "text": "When the tool belongs to another team that changes it often",
+        "correct": false,
+        "why": "That is a reason for a server, not against one."
+      },
+      {
+        "text": "When the person chooses which tools to install",
+        "correct": false,
+        "why": "That is what made MCP common."
+      },
+      {
+        "text": "When the tool must run next to a database under its own account",
+        "correct": false,
+        "why": "A remote server is how that is done."
+      },
+      {
+        "text": "One agent owns its tools",
+        "correct": true,
+        "why": "Right. A server adds a process, a protocol and a boundary for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hq865m1",
+    "version": 1,
+    "section": "when-to-reach-for-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a remote server also a security argument?",
+    "choices": [
+      {
+        "text": "Because remote servers cannot be prompted",
+        "correct": false,
+        "why": "Their descriptions still reach the model."
+      },
+      {
+        "text": "It runs with exactly the access it needs, under its own account, not the host's",
+        "correct": true,
+        "why": "Right. Least privilege drawn as a process boundary."
+      },
+      {
+        "text": "Because HTTP is encrypted and stdio is not",
+        "correct": false,
+        "why": "Encryption is a transport detail; the argument is about access."
+      },
+      {
+        "text": "Because its vendor reviews its descriptions first",
+        "correct": false,
+        "why": "Nothing guarantees that."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4hhbt0f",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the messages the Google host's client sent in order.",
+    "hint": "A legacy client agrees a version before anything else.",
+    "items": [
+      "initialize",
+      "notifications/initialized",
+      "tools/list",
+      "tools/call"
+    ]
+  },
+  {
+    "id": "ex-bk7yk8wn",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every 2026-07-28 server must implement the method `___`, which says what versions and capabilities it supports.",
+    "blanks": [
+      {
+        "accept": [
+          "server/discover"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
