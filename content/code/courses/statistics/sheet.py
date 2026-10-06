@@ -1235,6 +1235,90 @@ def l17():
          f'{pearson(it + [1], bk + [400.0]):.4f} {spearman(it + [1], bk + [400.0]):.4f}')
 
 
+# Free-delivery coupons, lesson 18: sent mostly to the far neighbourhood, so a
+# coupon goes with a long delivery without causing one.
+COUPON_SHARE = {'Centro': 0.10, 'Cambuí': 0.15, 'Taquaral': 0.30, 'Barão Geraldo': 0.60}
+
+
+def _coupons():
+    d = Draw(1800)
+    return [1 if d.r.random() < COUPON_SHARE[r['hood']] else 0 for r in DELIVERIES]
+
+
+COUPONS = _coupons()
+
+# On time or late, by vehicle and distance, lesson 18: Simpson's paradox.
+# (vehicle, band) -> (on time, deliveries)
+SIMPSON = {('motorbike', 'near'): (88, 94), ('motorbike', 'far'): (201, 276),
+           ('bicycle', 'near'): (241, 280), ('bicycle', 'far'): (52, 76)}
+
+
+def walk(d, n=36):
+    x, out = 0.0, []
+    for _ in range(n):
+        x += d.normal(0, 1)
+        out.append(x)
+    return out
+
+
+def walk_pairs(reps=1000, seed=1801):
+    d = Draw(seed)
+    return [pearson(walk(d), walk(d)) for _ in range(reps)]
+
+
+def noise_pairs(reps=1000, seed=1802):
+    d = Draw(seed)
+    return [pearson([d.normal(0, 1) for _ in range(36)], [d.normal(0, 1) for _ in range(36)])
+            for _ in range(reps)]
+
+
+@lesson(18)
+def l18():
+    mins = [r['minutes'] for r in DELIVERIES]
+    w = [m for m, c in zip(mins, COUPONS) if c]
+    wo = [m for m, c in zip(mins, COUPONS) if not c]
+    show('coupons: n with, mean with, mean without, difference',
+         f'{len(w)} {mean(w):.2f} {mean(wo):.2f} {mean(w) - mean(wo):.2f}')
+    t, df, p = welch(w, wo)
+    show('Welch coupon vs none: t, df, p', f'{t:.3f} {df:.1f} {p:.2e}')
+    show('r coupon-minutes', f'{pearson(COUPONS, mins):.4f}')
+    diffs = []
+    for h, _, _ in HOODS:
+        rows = [(r['minutes'], c) for r, c in zip(DELIVERIES, COUPONS) if r['hood'] == h]
+        a = [m for m, c in rows if c]
+        b = [m for m, c in rows if not c]
+        diffs.append(mean(a) - mean(b))
+        show(f'{h}: with n, mean, without n, mean, diff',
+             f'{len(a)} {mean(a):.2f} {len(b)} {mean(b):.2f} {mean(a) - mean(b):.2f}')
+    km = [r['km'] for r in DELIVERIES]
+    items = [r['items'] for r in DELIVERIES]
+    rain = [r['rain'] for r in DELIVERIES]
+    beta, r2, _, _ = ols(list(zip(COUPONS, km)), mins)
+    show('minutes ~ coupon + km: coefficients', [round(b, 3) for b in beta])
+    beta, r2, _, _ = ols(list(zip(COUPONS,)), mins)
+    show('minutes ~ coupon: coefficients', [round(b, 3) for b in beta])
+    beta, r2, _, _ = ols(list(zip(COUPONS, km, items, rain)), mins)
+    show('minutes ~ coupon + km + items + rain', [round(b, 3) for b in beta])
+    for v in ('motorbike', 'bicycle'):
+        tot_on = sum(SIMPSON[(v, b)][0] for b in ('near', 'far'))
+        tot = sum(SIMPSON[(v, b)][1] for b in ('near', 'far'))
+        parts = ' '.join(f'{b} {SIMPSON[(v, b)][0]}/{SIMPSON[(v, b)][1]} = {SIMPSON[(v, b)][0] / SIMPSON[(v, b)][1]:.4f}'
+                         for b in ('near', 'far'))
+        show(f'{v}', f'{parts} | total {tot_on}/{tot} = {tot_on / tot:.4f}')
+    wp = walk_pairs()
+    show('1000 pairs of independent 36-step walks: share |r| > 0.5, > 0.7, median |r|',
+         f'{sum(abs(r) > 0.5 for r in wp) / 1000:.3f} {sum(abs(r) > 0.7 for r in wp) / 1000:.3f} {median([abs(r) for r in wp]):.3f}')
+    npairs = noise_pairs()
+    show('1000 pairs of independent noise, 36 each: share |r| > 0.5, median |r|',
+         f'{sum(abs(r) > 0.5 for r in npairs) / 1000:.3f} {median([abs(r) for r in npairs]):.3f}')
+    d = Draw(1803)
+    a, b = walk(d), walk(d)
+    show('the drawn pair: r', f'{pearson(a, b):.4f}')
+    da = [y - x for x, y in zip(a, a[1:])]
+    db = [y - x for x, y in zip(b, b[1:])]
+    show('the drawn pair, month-on-month changes: r', f'{pearson(da, db):.4f}')
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:

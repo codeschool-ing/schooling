@@ -1,0 +1,32 @@
+---
+title: Chance, drift and the data you never saw
+version: 1
+---
+
+Two more ways to find a correlation that the world does not contain.
+
+## Coincidence
+
+Search through enough pairs of variables and some will correlate by chance. Lesson 14 showed that 20 tests on nothing produce a "significant" result about two times in three. The same holds for correlations: compute the correlation between every pair of a hundred columns, and dozens will look impressive.
+
+## Drift: the trap in data over time
+
+Data collected over time has a special danger. Here are two monthly series, each made by adding an independent random step every month:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 600 280\" role=\"img\" data-fig=\"l18-walks\" aria-label=\"Two lines over 36 months, each built by adding a random step every month, independently of the other. One drifts upwards and the other downwards, and their correlation is −0.79.\"><path d=\"M50.0 230.0 L510.0 230.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M50.0 230.0 L50.0 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"50.0\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">1</text><path d=\"M115.7 230.0 L115.7 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"115.7\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">6</text><path d=\"M194.6 230.0 L194.6 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"194.6\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">12</text><path d=\"M273.4 230.0 L273.4 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"273.4\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">18</text><path d=\"M352.3 230.0 L352.3 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"352.3\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">24</text><path d=\"M431.1 230.0 L431.1 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"431.1\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">30</text><path d=\"M510.0 230.0 L510.0 234.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"510.0\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">36</text><text x=\"280.0\" y=\"261.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">month</text><path d=\"M50.0 30.0 L50.0 230.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M50.0 134.6 L63.1 120.2 L76.3 139.0 L89.4 143.1 L102.6 156.0 L115.7 144.6 L128.9 142.3 L142.0 149.1 L155.1 147.6 L168.3 145.6 L181.4 141.3 L194.6 117.4 L207.7 101.4 L220.9 105.8 L234.0 106.6 L247.1 103.1 L260.3 125.5 L273.4 130.4 L286.6 127.4 L299.7 143.6 L312.9 133.8 L326.0 129.4 L339.1 107.8 L352.3 109.5 L365.4 108.6 L378.6 101.3 L391.7 85.3 L404.9 86.3 L418.0 100.2 L431.1 109.5 L444.3 98.5 L457.4 83.5 L470.6 65.1 L483.7 57.0 L496.9 49.5 L510.0 59.8\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><path d=\"M50.0 118.8 L63.1 105.3 L76.3 109.2 L89.4 76.2 L102.6 71.4 L115.7 77.2 L128.9 71.5 L142.0 78.6 L155.1 87.6 L168.3 80.1 L181.4 107.7 L194.6 123.6 L207.7 104.3 L220.9 104.4 L234.0 104.5 L247.1 102.5 L260.3 93.6 L273.4 120.2 L286.6 138.4 L299.7 138.8 L312.9 152.8 L326.0 148.9 L339.1 142.2 L352.3 158.5 L365.4 166.1 L378.6 187.1 L391.7 175.9 L404.9 176.5 L418.0 212.2 L431.1 203.6 L444.3 189.5 L457.4 207.8 L470.6 202.8 L483.7 196.6 L496.9 200.0 L510.0 199.0\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\" stroke-dasharray=\"6 3\"></path><text x=\"518.0\" y=\"59.8\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">series A</text><text x=\"518.0\" y=\"199.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">series B</text></svg>", "caption": "Two series with nothing in common. Each wanders on its own, and because both drift, they correlate strongly. Their month-to-month changes have a correlation of 0.07."}
+```
+
+Neither knows the other exists, and their correlation is **−0.79**. This is not a rare draw. In 1,000 simulated pairs of such series, 36 months each, **40%** had a correlation beyond ±0.5. Among 1,000 pairs of independent values that did not drift, the share was 0.3%.
+
+The reason is that a series that drifts has a trend, and any two trends correlate: both going up, both going down, or one each way. If Horta's monthly orders and the price of rice both rose over the same three years, that alone would not make rice prices a driver of orders.
+
+The usual defence is to correlate the **changes** instead of the levels: how much each series moved from one month to the next. For the two series above, the correlation of their monthly changes is **0.07**.
+
+## Selection: who got into the data
+
+**Survivorship.** In the Second World War, analysts studied the bullet holes on bombers returning from missions, to decide where to add armour. The statistician Abraham Wald pointed out that the planes hit in other places were the ones that never came back. The data contained only survivors, and the holes showed where a plane could be hit and still fly.
+
+**Self-selection.** Horta's ratings come from customers who chose to leave one. If annoyed customers rate more often than satisfied ones, the average rating is lower than the average experience. A correlation between, say, order size and rating among those who rated may not exist among all customers.
+
+The question to ask is: **how did these rows get into my data, and who is missing?**

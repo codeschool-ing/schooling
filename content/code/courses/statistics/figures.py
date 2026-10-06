@@ -2246,6 +2246,221 @@ def l17_lever(lang):
     return f, t['cap']
 
 
+# ----------------------------------------------------------------- lesson 18
+
+def node(f, cx, cy, w, label, h=34, stroke='--phosphor', weight='600'):
+    f.rect(cx - w / 2, cy - h / 2, w, h, stroke=stroke, fill='--panel', rx=6)
+    f.text(cx, cy, label, size=11, weight=weight)
+
+
+@figure('l18-confounder', 18)
+def l18_confounder(lang):
+    r = S.pearson(S.COUPONS, [d['minutes'] for d in S.DELIVERIES])
+    t = {'en': dict(
+        label=f'A diagram of three boxes. Distance sits at the top, with an arrow down to coupon on '
+              f'the left, labelled coupons are sent to far neighbourhoods, and an arrow down to '
+              f'minutes on the right, labelled far takes longer. Between coupon and minutes there '
+              f'is a dashed line with no arrowhead, labelled correlation {num("en", r, 2)}, no '
+              f'cause.',
+        dist='distance', coupon='coupon', mins='minutes',
+        a='sent to far neighbourhoods', b='far takes longer',
+        c=f'r = {num("en", r, 2)}, no arrow',
+        cap='Distance is a common cause of both. It makes a coupon more likely and a delivery '
+            'longer, so coupons and long deliveries go together without either causing the '
+            'other.'),
+        'pt': dict(
+        label=f'Um diagrama de três caixas. Distância fica no alto, com uma seta descendo para cupom '
+              f'à esquerda, rotulada cupons vão para bairros distantes, e uma seta descendo para '
+              f'minutos à direita, rotulada longe demora mais. Entre cupom e minutos há uma linha '
+              f'tracejada sem ponta de seta, rotulada correlação {num("pt", r, 2)}, sem causa.',
+        dist='distância', coupon='cupom', mins='minutos',
+        a='vão para bairros distantes', b='longe demora mais',
+        c=f'r = {num("pt", r, 2)}, sem seta',
+        cap='A distância é causa comum dos dois. Ela torna um cupom mais provável e uma entrega '
+            'mais longa, então cupons e entregas longas andam juntos sem que um cause o outro.')}[lang]
+    f = Fig('l18-confounder', 600, 250, t['label'])
+    node(f, 300, 40, 140, t['dist'])
+    node(f, 110, 190, 130, t['coupon'])
+    node(f, 490, 190, 130, t['mins'])
+    f.line(260, 57, 140, 171, stroke='--paper', width=1.6, arrow=True)
+    f.line(340, 57, 460, 171, stroke='--paper', width=1.6, arrow=True)
+    f.text(186, 104, t['a'], size=10, anchor='end')
+    f.text(414, 104, t['b'], size=10, anchor='start')
+    f.line(178, 190, 422, 190, stroke='--amber', width=1.6, dash='6 4')
+    f.text(300, 178, t['c'], size=10, fill='--amber')
+    return f, t['cap']
+
+
+@figure('l18-coupon', 18)
+def l18_coupon(lang):
+    mins = [r['minutes'] for r in S.DELIVERIES]
+    rows = [('all', [(m, c) for m, c in zip(mins, S.COUPONS)])]
+    for h, _, _ in S.HOODS:
+        rows.append((h, [(r['minutes'], c) for r, c in zip(S.DELIVERIES, S.COUPONS) if r['hood'] == h]))
+    t = {'en': dict(
+        label='Mean delivery minutes with and without a coupon, for all 120 deliveries and then for '
+              'each neighbourhood. Overall, deliveries with a coupon average about 46 minutes and '
+              'those without about 36, ten minutes apart. Within each neighbourhood the two means '
+              'sit within about two minutes of each other.',
+        all='all 120', x='mean minutes', w='with coupon', wo='without',
+        cap='Overall, a coupon goes with deliveries ten minutes longer. Within each neighbourhood '
+            'the gap all but disappears: the ten minutes were distance, not the coupon.'),
+        'pt': dict(
+        label='Média de minutos de entrega com e sem cupom, para as 120 entregas e depois para cada '
+              'bairro. No geral, entregas com cupom têm média de uns 46 minutos e as sem, uns 36, '
+              'dez minutos de distância. Dentro de cada bairro as duas médias ficam a uns dois '
+              'minutos uma da outra.',
+        all='todas as 120', x='média de minutos', w='com cupom', wo='sem',
+        cap='No geral, um cupom anda com entregas dez minutos mais longas. Dentro de cada bairro a '
+            'diferença quase some: os dez minutos eram a distância, não o cupom.')}[lang]
+    f = Fig('l18-coupon', 600, 300, t['label'])
+    p = Plot(f, 150, 40, 580, 240, 25, 60, 0, 5)
+    p.xaxis(range(25, 61, 5), label=t['x'])
+    for i, (name, data) in enumerate(rows):
+        y = 58 + i * 40 + (8 if i else 0)
+        a = S.mean([m for m, c in data if c])
+        b = S.mean([m for m, c in data if not c])
+        f.line(p.x0, y, p.x1, y, stroke='--wire', width=1)
+        f.line(p.sx(min(a, b)), y, p.sx(max(a, b)), y, stroke='--paper-dim', width=2)
+        f.circle(p.sx(b), y, 5, fill='--panel', stroke='--paper', width=1.6)
+        f.circle(p.sx(a), y, 5, fill='--amber', stroke='--amber')
+        f.text(p.x0 - 10, y, t['all'] if name == 'all' else name, size=10.5, anchor='end',
+               weight='600' if name == 'all' else None)
+    f.circle(160, 20, 5, fill='--amber', stroke='--amber')
+    f.text(171, 20, t['w'], size=10, anchor='start')
+    f.circle(280, 20, 5, fill='--panel', stroke='--paper', width=1.6)
+    f.text(291, 20, t['wo'], size=10, anchor='start')
+    return f, t['cap']
+
+
+@figure('l18-simpson', 18)
+def l18_simpson(lang):
+    V = ('motorbike', 'bicycle')
+    rate = {}
+    for v in V:
+        for b in ('near', 'far'):
+            on, n = S.SIMPSON[(v, b)]
+            rate[(v, b)] = on / n
+        on = sum(S.SIMPSON[(v, b)][0] for b in ('near', 'far'))
+        n = sum(S.SIMPSON[(v, b)][1] for b in ('near', 'far'))
+        rate[(v, 'all')] = on / n
+    t = {'en': dict(
+        label=f'On-time rates for motorbikes and bicycles. Near: motorbike '
+              f'{num("en", 100 * rate[("motorbike", "near")], 1)}%, bicycle '
+              f'{num("en", 100 * rate[("bicycle", "near")], 1)}%. Far: motorbike '
+              f'{num("en", 100 * rate[("motorbike", "far")], 1)}%, bicycle '
+              f'{num("en", 100 * rate[("bicycle", "far")], 1)}%. All deliveries: motorbike '
+              f'{num("en", 100 * rate[("motorbike", "all")], 1)}%, bicycle '
+              f'{num("en", 100 * rate[("bicycle", "all")], 1)}%.',
+        groups={'near': 'near', 'far': 'far', 'all': 'all deliveries'},
+        v={'motorbike': 'motorbike', 'bicycle': 'bicycle'}, y='on time (%)',
+        cap='Motorbikes are on time more often near and more often far, and less often overall. '
+            'They do most of the far deliveries, where everybody is late more often.'),
+        'pt': dict(
+        label=f'Taxas de pontualidade de motos e bicicletas. Perto: moto '
+              f'{num("pt", 100 * rate[("motorbike", "near")], 1)}%, bicicleta '
+              f'{num("pt", 100 * rate[("bicycle", "near")], 1)}%. Longe: moto '
+              f'{num("pt", 100 * rate[("motorbike", "far")], 1)}%, bicicleta '
+              f'{num("pt", 100 * rate[("bicycle", "far")], 1)}%. Todas as entregas: moto '
+              f'{num("pt", 100 * rate[("motorbike", "all")], 1)}%, bicicleta '
+              f'{num("pt", 100 * rate[("bicycle", "all")], 1)}%.',
+        groups={'near': 'perto', 'far': 'longe', 'all': 'todas as entregas'},
+        v={'motorbike': 'moto', 'bicycle': 'bicicleta'}, y='no prazo (%)',
+        cap='As motos chegam no prazo mais vezes perto e mais vezes longe, e menos vezes no total. '
+            'Elas fazem a maior parte das entregas longas, onde todo mundo atrasa mais.')}[lang]
+    f = Fig('l18-simpson', 600, 300, t['label'])
+    p = Plot(f, 70, 50, 580, 250, 0, 3, 50, 100)
+    p.yaxis(range(50, 101, 10), label=t['y'])
+    for gi, g in enumerate(('near', 'far', 'all')):
+        for vi, v in enumerate(V):
+            x0 = gi + 0.18 + vi * 0.32
+            x1 = x0 + 0.28
+            val = 100 * rate[(v, g)]
+            fill = '--phosphor-dim' if v == 'motorbike' else '--scan'
+            stroke = '--phosphor' if v == 'motorbike' else '--paper-dim'
+            f.path(f'M{p.sx(x0):.1f} {p.y1:.1f} L{p.sx(x0):.1f} {p.sy(val):.1f} L{p.sx(x1):.1f} '
+                   f'{p.sy(val):.1f} L{p.sx(x1):.1f} {p.y1:.1f} Z', stroke=stroke, width=1.2, fill=fill)
+            f.text(p.sx((x0 + x1) / 2), p.sy(val) - 9, num(lang, val, 1), size=9.5)
+        f.text(p.sx(gi + 0.5), p.y1 + 16, t['groups'][g], size=10.5, weight='600')
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    f.rect(330, 12, 12, 12, stroke='--phosphor', fill='--phosphor-dim', rx=1)
+    f.text(348, 18, t['v']['motorbike'], size=10, anchor='start')
+    f.rect(440, 12, 12, 12, stroke='--paper-dim', fill='--scan', rx=1)
+    f.text(458, 18, t['v']['bicycle'], size=10, anchor='start')
+    return f, t['cap']
+
+
+@figure('l18-walks', 18)
+def l18_walks(lang):
+    d = S.Draw(1803)
+    a, b = S.walk(d), S.walk(d)
+    r = S.pearson(a, b)
+    lo, hi = min(a + b), max(a + b)
+    t = {'en': dict(
+        label=f'Two lines over 36 months, each built by adding a random step every month, '
+              f'independently of the other. One drifts upwards and the other downwards, and their '
+              f'correlation is {"−" if r < 0 else ""}{num("en", abs(r), 2)}.',
+        x='month', a='series A', b='series B',
+        cap='Two series with nothing in common. Each wanders on its own, and because both drift, '
+            'they correlate strongly. Their month-to-month changes have a correlation of 0.07.'),
+        'pt': dict(
+        label=f'Duas linhas ao longo de 36 meses, cada uma construída somando um passo aleatório '
+              f'por mês, independente da outra. Uma deriva para cima e a outra para baixo, e a '
+              f'correlação entre elas é {"−" if r < 0 else ""}{num("pt", abs(r), 2)}.',
+        x='mês', a='série A', b='série B',
+        cap='Duas séries sem nada em comum. Cada uma vagueia por conta própria, e, como as duas '
+            'derivam, elas se correlacionam forte. As variações de um mês para o outro têm '
+            'correlação de 0,07.')}[lang]
+    f = Fig('l18-walks', 600, 280, t['label'])
+    p = Plot(f, 50, 30, 510, 230, 1, 36, math.floor(lo) - 1, math.ceil(hi) + 1)
+    p.xaxis([1, 6, 12, 18, 24, 30, 36], label=t['x'])
+    f.line(p.x0, p.y0, p.x0, p.y1, stroke='--paper-dim')
+    f.path('M' + ' L'.join(f'{p.sx(i + 1):.1f} {p.sy(v):.1f}' for i, v in enumerate(a)),
+           stroke='--phosphor', width=2)
+    f.path('M' + ' L'.join(f'{p.sx(i + 1):.1f} {p.sy(v):.1f}' for i, v in enumerate(b)),
+           stroke='--amber', width=2, dash='6 3')
+    f.text(p.sx(36) + 8, p.sy(a[-1]), t['a'], size=10, anchor='start', fill='--paper')
+    f.text(p.sx(36) + 8, p.sy(b[-1]), t['b'], size=10, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l18-randomise', 18)
+def l18_randomise(lang):
+    t = {'en': dict(
+        label='The same three boxes as before, plus a coin. The coin has an arrow to coupon. The '
+              'arrow from distance to coupon is crossed out. Distance still has an arrow to '
+              'minutes. Any arrow left from coupon to minutes would now be the coupon\'s own '
+              'effect.',
+        dist='distance', coupon='coupon', mins='minutes', coin='coin toss',
+        q='its own effect, if any',
+        cap='When a coin decides who gets a coupon, distance can no longer decide it. Far and near '
+            'customers get coupons equally often, so any difference left in minutes is the '
+            'coupon\'s.'),
+        'pt': dict(
+        label='As mesmas três caixas de antes, mais uma moeda. A moeda tem uma seta para cupom. A '
+              'seta de distância para cupom está riscada. A distância ainda tem uma seta para '
+              'minutos. Uma seta que sobre de cupom para minutos seria agora o efeito do próprio '
+              'cupom.',
+        dist='distância', coupon='cupom', mins='minutos', coin='sorteio',
+        q='o efeito dele, se houver',
+        cap='Quando uma moeda decide quem recebe cupom, a distância não pode mais decidir. '
+            'Clientes longe e perto recebem cupons com a mesma frequência, então qualquer '
+            'diferença que sobre nos minutos é do cupom.')}[lang]
+    f = Fig('l18-randomise', 600, 250, t['label'])
+    node(f, 300, 40, 140, t['dist'])
+    node(f, 110, 190, 130, t['coupon'])
+    node(f, 490, 190, 130, t['mins'])
+    node(f, 80, 40, 120, t['coin'], stroke='--amber')
+    f.line(90, 57, 105, 171, stroke='--amber', width=1.6, arrow=True)
+    f.line(260, 57, 140, 171, stroke='--paper-dim', width=1.2, dash='3 3')
+    f.line(188, 104, 212, 124, stroke='--amber', width=2.2)
+    f.line(212, 104, 188, 124, stroke='--amber', width=2.2)
+    f.line(340, 57, 460, 171, stroke='--paper', width=1.6, arrow=True)
+    f.line(178, 190, 422, 190, stroke='--paper', width=1.6, dash='6 4', arrow=True)
+    f.text(300, 178, t['q'], size=10)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

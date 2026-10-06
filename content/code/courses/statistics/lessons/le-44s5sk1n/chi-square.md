@@ -3,7 +3,7 @@ title: "Counts in a table: the chi-square test"
 version: 1
 ---
 
-Horta tests a new checkout page. Of 2,000 visitors who saw the old page, 220 bought something; of 2,000 who saw the new one, 262 did.
+Horta tests a new checkout page, showing each visitor the old page or the new one at random. Of 2,000 visitors who saw the old page, 220 bought something; of 2,000 who saw the new one, 262 did.
 
 | | bought | did not | total |
 |---|---|---|---|

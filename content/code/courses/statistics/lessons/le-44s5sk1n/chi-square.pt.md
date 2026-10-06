@@ -3,7 +3,7 @@ title: "Contagens numa tabela: o teste qui-quadrado"
 version: 1
 ---
 
-A Horta testa uma nova página de pagamento. Dos 2.000 visitantes que viram a página antiga, 220 compraram
+A Horta testa uma nova página de pagamento, mostrando a cada visitante a página antiga ou a nova por sorteio. Dos 2.000 visitantes que viram a página antiga, 220 compraram
 algo; dos 2.000 que viram a nova, 262 compraram.
 
 | | comprou | não comprou | total |
