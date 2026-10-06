@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-2hj7zvq9",
+    "version": 1,
+    "section": "spread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six copies, two zones. Why does a topology spread constraint place all six where one-per-zone anti-affinity would place two?",
+    "hint": "What does each rule forbid?",
+    "choices": [
+      {
+        "text": "Spread constraints ignore zones",
+        "correct": false,
+        "why": "It counted per zone: three and three."
+      },
+      {
+        "text": "It limits the difference",
+        "correct": true,
+        "why": "Right. Three and three differ by zero."
+      },
+      {
+        "text": "It overrides requests",
+        "correct": false,
+        "why": "Requests still apply."
+      },
+      {
+        "text": "It creates new zones",
+        "correct": false,
+        "why": "Zones are node labels; nothing creates them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccb5f0wa",
+    "version": 1,
+    "section": "spread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `maxSkew: 1` and four copies in zone b and three in zone a, where must an eighth copy go?",
+    "hint": "Five against three would be a difference of two.",
+    "choices": [
+      {
+        "text": "Zone b",
+        "correct": false,
+        "why": "That makes five against three."
+      },
+      {
+        "text": "Zone a",
+        "correct": true,
+        "why": "Right. Four and four."
+      },
+      {
+        "text": "Either",
+        "correct": false,
+        "why": "Only zone a keeps the difference at 1 or less."
+      },
+      {
+        "text": "Nowhere; it waits",
+        "correct": false,
+        "why": "Zone a is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcne5nww",
+    "version": 1,
+    "section": "spread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `whenUnsatisfiable: ScheduleAnyway` change?",
+    "hint": "Requirement or preference?",
+    "choices": [
+      {
+        "text": "It ignores the constraint completely",
+        "correct": false,
+        "why": "The scheduler still prefers the even spread."
+      },
+      {
+        "text": "It evicts pods to restore the spread",
+        "correct": false,
+        "why": "Constraints never evict."
+      },
+      {
+        "text": "It raises `maxSkew` to 2",
+        "correct": false,
+        "why": "The skew is unchanged."
+      },
+      {
+        "text": "The pod is placed anyway",
+        "correct": true,
+        "why": "Right. It becomes a preference."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhtpa9m5",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did two `batch` pods become `Pending` when `checkout` arrived?",
+    "hint": "The events named them `Preempted`.",
+    "choices": [
+      {
+        "text": "Checkout preempted them",
+        "correct": true,
+        "why": "Right. Higher priority preempted lower; the replacements had nowhere to go."
+      },
+      {
+        "text": "Batch hit its quota",
+        "correct": false,
+        "why": "There was no quota in this namespace."
+      },
+      {
+        "text": "The batch image failed to pull",
+        "correct": false,
+        "why": "Two batch pods were still running from it."
+      },
+      {
+        "text": "Batch pods restart every hour",
+        "correct": false,
+        "why": "Nothing like that was configured."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mg7adht",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A class has `preemptionPolicy: Never`. What does it still get?",
+    "hint": "Priority has two effects.",
+    "choices": [
+      {
+        "text": "The right to evict lower pods",
+        "correct": false,
+        "why": "That is exactly what `Never` removes."
+      },
+      {
+        "text": "Immunity from being preempted",
+        "correct": false,
+        "why": "Higher classes can still evict it."
+      },
+      {
+        "text": "A place ahead in the queue",
+        "correct": true,
+        "why": "Right. It goes first, but kills nobody."
+      },
+      {
+        "text": "Extra CPU on the node",
+        "correct": false,
+        "why": "Priority grants no resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-maqea5es",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every team in a cluster sets its pods to the highest PriorityClass. What is the effect?",
+    "hint": "Priority is relative.",
+    "choices": [
+      {
+        "text": "Everything runs faster",
+        "correct": false,
+        "why": "Priority does not change speed."
+      },
+      {
+        "text": "No priorities at all",
+        "correct": true,
+        "why": "Right. When all are equal, nothing preempts anything."
+      },
+      {
+        "text": "The cluster refuses the pods",
+        "correct": false,
+        "why": "It accepts them unless access to the class is restricted."
+      },
+      {
+        "text": "System pods are evicted",
+        "correct": false,
+        "why": "The `system-` classes are far higher."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8xsh73v",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each goal with the tool for it.",
+    "hint": "Lessons 29 to 31.",
+    "pairs": [
+      {
+        "left": "Copies evenly across zones, any number of them",
+        "right": "Topology spread constraint"
+      },
+      {
+        "left": "Never two copies on the same node",
+        "right": "Pod anti-affinity"
+      },
+      {
+        "left": "Checkout runs even when the cluster is full",
+        "right": "PriorityClass"
+      }
+    ],
+    "right_distractors": [
+      "ResourceQuota"
+    ]
+  },
+  {
+    "id": "ex-mn37v6hp",
+    "version": 1,
+    "section": "spread",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The largest difference allowed between the fullest and the emptiest domain is `___`.",
+    "hint": "It was 1 in the capture.",
+    "blanks": [
+      {
+        "accept": [
+          "maxSkew"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
