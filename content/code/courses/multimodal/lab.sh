@@ -69,7 +69,7 @@ LOGDIR=/var/log/labmm
 PYLIBS="sherpa-onnx==1.13.8 mediapipe==1.0.1 numpy==2.4.6 pillow==12.3.0 soundfile==0.14.0
   jiwer==4.0.0 openai==2.54.0 google-genai==2.28.0 tiktoken==0.14.0 onnxruntime==1.30.0
   tokenizers==0.23.2 langchain-core==1.6.6 langchain-openai==1.6.7 llama-index-core==0.14.25
-  llama-index-llms-openai==0.8.2"
+  llama-index-llms-openai==0.8.2 num2words==0.5.14"
 APT="ffmpeg tesseract-ocr tesseract-ocr-por espeak-ng libegl1 libgles2 fonts-dejavu-core"
 
 # Every model, where it comes from, and the SHA-256 it has to have. A .tar.bz2
