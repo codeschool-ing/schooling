@@ -10,16 +10,17 @@ assistant started giving the new answer.
 ## With retrieval: re-embed what changed
 
 In a RAG system the new policy is a new document. Cutting it into sections and embedding them is the
-whole of the change, and `reindex_cost.py` times it on this machine:
+whole of the change, and `reindex_cost.py` counts and times it on this machine, rounding the time
+up to the second because it changes a little from run to run:
 
 ```
 ana@lab:~/rag$ python reindex_cost.py
-the returns policy     9 sections  0.44 s
-every document        92 sections  6.40 s
+the returns policy     9 sections    973 tokens  under 1 s
+every document        92 sections   7855 tokens  under 7 s
 ```
 
-**Under half a second for the policy that changed, six and a half seconds for the entire corpus**,
-on one processor core with a small model. A hosted embedding model would add network time and a few
+**Under a second for the policy that changed, under seven for the entire corpus**, on one processor
+core with a small model, and 973 tokens against 7,855, which is what a hosted provider would bill. A hosted embedding model would add network time and a few
 cents; neither changes the order of magnitude. The new answer is live from the next question, and the
 old one is gone the moment the old chunks leave the index, which is the subject of the section on
 deleting.

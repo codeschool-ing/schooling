@@ -18,12 +18,19 @@
 #     eval.jsonl           30 questions with the passages that answer them and
 #                          the words a right answer contains, 4 of them with
 #                          no answer in the documents (lessons 4 to 8)
+#     identifiers.jsonl    6 questions whose answers turn on an exact code or
+#                          number, where lexical search earns its place
+#                          (lesson 6)
 #     chat-a.jsonl         twelve messages from one customer, and
 #     chat-b.jsonl         four from another (lessons 13, 15 and 16)
 #     listings.jsonl       six marketplace listings written by sellers, one of
 #                          them carrying an instruction (lesson 16)
 #     querylog.jsonl       500 questions over a week, drawn by lab/querylog.py
 #                          (lesson 17)
+#   lab/code/*.py          the programs the lessons build and later ones
+#                          reuse (chunking, ingest, search, answer, verify,
+#                          evaluate, rag), copied into ~/rag by each lesson's
+#                          captures.sh rather than installed here
 #   /opt/rag               Python 3.11 in a virtual environment with the
 #                          frameworks and SDKs the lessons import, pinned in
 #                          RAGLIBS, and minilm.py from embeddings-vectors

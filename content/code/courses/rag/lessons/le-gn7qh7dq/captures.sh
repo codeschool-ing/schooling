@@ -12,6 +12,8 @@
 # Nothing is staged. Every reply comes from extract-1, the lab's stand-in
 # generator, which is not a language model (lab/labgen.py says what it does);
 # every similarity was computed on this machine with all-MiniLM-L6-v2.
+# reindex_cost.py prints its time rounded up to the whole second, because the
+# exact figure changes from run to run and the rounded one does not.
 #
 # Recorded on Ubuntu 24.04, Python 3.11, PostgreSQL 16 with pgvector 0.6.0,
 # TZ=America/Sao_Paulo, on 2026-10-06.
@@ -93,10 +95,14 @@ print("training tokens per epoch:", total)
 EOF_FILE
 put reindex_cost.py <<'EOF_FILE'
 import glob
+import math
 import re
 import time
 
+import tiktoken
 from minilm import embed
+
+enc = tiktoken.get_encoding("cl100k_base")
 
 
 def cut(path):
@@ -108,7 +114,9 @@ every = [part for path in sorted(glob.glob("data/docs/*.md")) for part in cut(pa
 for label, parts in (("the returns policy", one), ("every document", every)):
     start = time.perf_counter()
     embed(parts)
-    print(f"{label:20} {len(parts):3} sections  {time.perf_counter() - start:.2f} s")
+    seconds = time.perf_counter() - start
+    tokens = sum(len(enc.encode(p)) for p in parts)
+    print(f"{label:20} {len(parts):3} sections  {tokens:5} tokens  under {math.ceil(seconds)} s")
 EOF_FILE
 put context_tokens.py <<'EOF_FILE'
 import json

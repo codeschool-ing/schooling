@@ -23,6 +23,7 @@ chat-b.jsonl
 docs
 eval.jsonl
 help.jsonl
+identifiers.jsonl
 listings.jsonl
 querylog.jsonl
 ana@lab:~/rag$ wc -l data/*.jsonl
@@ -30,9 +31,10 @@ ana@lab:~/rag$ wc -l data/*.jsonl
     4 data/chat-b.jsonl
    30 data/eval.jsonl
    40 data/help.jsonl
+    6 data/identifiers.jsonl
     6 data/listings.jsonl
   500 data/querylog.jsonl
-  592 total
+  598 total
 ```
 
 `docs/` is the corpus: thirteen documents of the kind every company has and no model has read.
@@ -85,7 +87,8 @@ a whole document. Three of them are for staff only, and one only for the finance
 about keeping them that way.
 
 The `.jsonl` files are the rest of the course's fixtures: `eval.jsonl` is thirty questions with the
-passages that answer them, for lesson 8; the two chats are for the lessons on memory and isolation;
+passages that answer them, for lesson 8, and `identifiers.jsonl` six more whose answers turn on an
+exact code or number, for lesson 6; the two chats are for the lessons on memory and isolation;
 the listings and the query log are for lessons 16 and 17. `help.jsonl` is the help centre from
 `embeddings-vectors`, copied as it was.
 
