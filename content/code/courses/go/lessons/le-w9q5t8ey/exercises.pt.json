@@ -1,0 +1,394 @@
+{
+  "ex-78ykxy01": {
+    "prompt": "Em `type Employee struct { Person; Company string }`, qual é o nome do campo cujo tipo é `Person`?",
+    "hint": "Como a seção 01 o preencheu no literal?",
+    "choices": [
+      {
+        "text": "Nenhum, então só os campos promovidos dele são alcançáveis",
+        "why": "`e.Person` funcionou na seção 01 e deu o valor de dentro inteiro; o campo tem nome."
+      },
+      {
+        "text": "`person`, em minúsculas, porque ninguém o escreveu",
+        "why": "O nome é exatamente o nome do tipo, com a maiúscula e tudo."
+      },
+      {
+        "text": "`Person`, pelo nome do tipo, que é como todo campo embutido se chama",
+        "why": "Isso. Um campo embutido leva o nome do seu tipo, e é por isso que `Person:` funciona num literal."
+      },
+      {
+        "text": "`_`, como qualquer outro campo sem nome",
+        "why": "`_` é um nome que você escreve de propósito para descartar algo; um campo embutido recebe o nome do tipo."
+      }
+    ]
+  },
+  "ex-5mbth1ga": {
+    "prompt": "`e` é um `Employee` que embute `Person`. Depois de `e.Name = \"Ana Lima\"`, o que `fmt.Println(e.Person.Name)` imprime?",
+    "hint": "Quantos campos `Name` o `e` tem?",
+    "choices": [
+      {
+        "text": "O nome antigo, porque `e.Name` é uma cópia do campo promovida para `Employee`",
+        "why": "A promoção não copia nada; o `%+v` não mostrou nenhum `Name` fora de `Person`."
+      },
+      {
+        "text": "`Ana Lima`",
+        "why": "Isso. `e.Name` e `e.Person.Name` são um campo só, escrito de dois jeitos."
+      },
+      {
+        "text": "Uma linha vazia, já que a atribuição criou um `Name` novo no nível de fora",
+        "why": "Atribuir nunca acrescenta campo a uma struct; os campos são fixados pelo tipo."
+      },
+      {
+        "text": "Nada: a grafia curta pode ser lida mas não receber atribuição",
+        "why": "A seção 01 atribuiu por ela e a mudança apareceu em `e.Person.Name`."
+      }
+    ]
+  },
+  "ex-eyw52v6r": {
+    "prompt": "Os campos de uma struct embutida são ___ para a struct de fora, e é por isso que `e.Name` encontra `e.Person.Name`.",
+    "hint": "A palavra que a seção 01 pôs em negrito na nota sobre `e.Name`.",
+    "blanks": [
+      {
+        "accept": [
+          "promovidos",
+          "promovidas"
+        ]
+      }
+    ]
+  },
+  "ex-924bwvfk": {
+    "prompt": "O `go.mod` de um módulo diz `go 1.26`, e ele é compilado com o Go 1.27.1. O que acontece com `Employee{Name: \"Ana\", Company: \"Acme\"}`?",
+    "hint": "A seção 01 rodou `go mod edit -go=1.26` e compilou de novo.",
+    "choices": [
+      {
+        "text": "Compila, já que o toolchain que faz o build é o 1.27.1",
+        "why": "O toolchain é novo o bastante, mas a linha `go` define a versão da linguagem compilada, e a 1.26 não tem esse literal."
+      },
+      {
+        "text": "Compila, e preenche um campo novo `Name` que pertence a `Employee`",
+        "why": "Um literal não cria campos; `Name` é de `Person`, alcançado pela promoção."
+      },
+      {
+        "text": "É recusado: campo promovido em literal exige go1.27 ou mais novo",
+        "why": "Isso. A mensagem termina até com `check go.mod`."
+      },
+      {
+        "text": "O comando go primeiro baixa o Go 1.26 para compilar",
+        "why": "Uma linha `go` mais antiga nunca faz o comando go buscar um toolchain mais velho; ele compila com o que tem, naquela versão da linguagem."
+      }
+    ]
+  },
+  "ex-50jtbk4d": {
+    "prompt": "Com `type Employee struct { Person; Company string }` e um módulo `go 1.27.1`, quais literais compilam? Marque todos os que se aplicam.",
+    "hint": "Um deles mistura as duas formas para a mesma struct.",
+    "choices": [
+      {
+        "text": "`Employee{Person: Person{Name: \"Ana\"}, Company: \"Acme\"}`",
+        "why": "Sim. A forma longa nomeia o campo embutido e lhe dá um `Person` inteiro."
+      },
+      {
+        "text": "`Employee{Name: \"Ana\", Company: \"Acme\"}`",
+        "why": "Sim. Desde o Go 1.27 um literal pode nomear campos promovidos diretamente."
+      },
+      {
+        "text": "`Employee{Person: Person{Name: \"Ana\"}, Email: \"a@x\"}`",
+        "why": "Recusado: `cannot specify promoted field Email and enclosing embedded field Person`."
+      },
+      {
+        "text": "`Employee{Person.Name: \"Ana\"}`",
+        "why": "A chave num literal de struct é um nome de campo, e `Person.Name` não é um: `invalid field name Person.Name in struct literal`."
+      }
+    ]
+  },
+  "ex-pqkbfvyc": {
+    "prompt": "`type Circle struct { Point; Radius int }`, em que `Point` tem os campos `X` e `Y`. O que `fmt.Printf(\"%+v\\n\", Circle{X: 1, Y: 2, Radius: 3})` imprime?",
+    "hint": "Onde `X` e `Y` moram de fato?",
+    "choices": [
+      {
+        "text": "`{X:1 Y:2 Radius:3}`",
+        "why": "Isso seria verdade se a promoção achatasse a struct; ela só encurta a grafia."
+      },
+      {
+        "text": "`{Point:{X:1 Y:2} Radius:3}`",
+        "why": "Isso. O literal nomeou campos promovidos, mas o valor continua guardando um `Point` inteiro."
+      },
+      {
+        "text": "`{Circle:{X:1 Y:2} Radius:3}`",
+        "why": "O campo embutido leva o nome do seu próprio tipo, `Point`, não o do tipo de fora."
+      },
+      {
+        "text": "Nada, porque `X` e `Y` não são campos de `Circle` e o literal é recusado",
+        "why": "Antes do Go 1.27 seria recusado; no 1.27.1 campos promovidos podem ser nomeados num literal."
+      }
+    ]
+  },
+  "ex-h1sb7j9h": {
+    "prompt": "`greet` recebe um `Person`, e `e` é um `Employee` que embute `Person`. Por que `greet(e)` é recusado?",
+    "hint": "Leia o erro: `cannot use e (variable of struct type Employee) as Person value`.",
+    "choices": [
+      {
+        "text": "Porque Go quer uma conversão explícita antes, `Person(e)`",
+        "why": "A conversão também é recusada: os dois tipos struct têm campos diferentes."
+      },
+      {
+        "text": "Porque `Employee` traz um campo, `Company`, com o qual `greet` não saberia o que fazer",
+        "why": "Os campos a mais não são o motivo; uma struct com exatamente os campos de `Person`, sob outro nome de tipo, é recusada igual."
+      },
+      {
+        "text": "Porque são dois tipos diferentes, e embutir não faz de um o outro",
+        "why": "Isso. Um `Employee` tem um `Person` dentro; ele não é um `Person`."
+      },
+      {
+        "text": "Porque a chamada precisa de `&e`, um ponteiro para o funcionário",
+        "why": "Um ponteiro para `Employee` também não é um `Person`; os tipos diferem do mesmo jeito."
+      }
+    ]
+  },
+  "ex-bbfp55hh": {
+    "prompt": "`e.Name` vale `\"Ana\"`. Depois de `c := e` e `c.Name = \"Bia\"`, o que `fmt.Println(e.Name)` imprime?",
+    "hint": "Onde o `Person` fica guardado?",
+    "choices": [
+      {
+        "text": "`Bia`, porque os dois funcionários apontam para o mesmo `Person`",
+        "why": "Essa é a imagem de uma referência. O `Person` fica dentro do `Employee`, então `c := e` o copiou."
+      },
+      {
+        "text": "`Ana`",
+        "why": "Isso. Copiar a struct de fora copiou o `Person` de dentro, e `c` mudou a própria cópia."
+      },
+      {
+        "text": "Uma string vazia, já que `c := e` tirou a pessoa de `e`",
+        "why": "Atribuição em Go copia; nada é tirado de `e`."
+      },
+      {
+        "text": "Nada, pois uma struct com campo embutido não pode ser copiada com `:=`",
+        "why": "Pode, e a seção 02 fez exatamente isso."
+      }
+    ]
+  },
+  "ex-9c07nd5w": {
+    "prompt": "`greet` quer o valor de dentro de um `Employee` chamado `e`. A chamada que compila é `greet(e.___)`.",
+    "hint": "O nome do campo embutido.",
+    "blanks": [
+      {
+        "accept": [
+          "Person"
+        ]
+      }
+    ]
+  },
+  "ex-jdccw4ym": {
+    "prompt": "`Server`, `Worker` e `Job` embutem cada um uma struct `Logger`. Você quer uma função que aceite qualquer um dos três. O que Go oferece para isso?",
+    "hint": "A seção 02 nomeou a metade da herança que embutir não cobre.",
+    "choices": [
+      {
+        "text": "Um parâmetro `Logger`, que aceita qualquer struct que embuta `Logger`",
+        "why": "Essa é exatamente a chamada que a seção 02 viu ser recusada; um parâmetro de tipo struct só aceita esse tipo."
+      },
+      {
+        "text": "Uma interface, o assunto da lição 27",
+        "why": "Isso. Deixar tipos diferentes ocuparem o lugar uns dos outros é para isso que servem as interfaces."
+      },
+      {
+        "text": "Nada: escreva três funções, uma por tipo",
+        "why": "Go tem uma ferramenta para isso; a seção aponta para a lição 27."
+      },
+      {
+        "text": "Converter cada valor com `Logger(x)` antes da chamada",
+        "why": "Uma struct só converte para um tipo com campos idênticos, o que `Server` não é. `x.Logger` entregaria a parte, perdendo o resto."
+      }
+    ]
+  },
+  "ex-ezw5zk0b": {
+    "prompt": "`greet(e.Person)` executa. Dentro de `greet`, o código consegue ler o `Company` do funcionário?",
+    "hint": "O que exatamente `greet` recebeu?",
+    "choices": [
+      {
+        "text": "Sim, por `p.Company`, porque a promoção também funciona para cima",
+        "why": "A promoção só olha para baixo, dentro das structs embutidas; um `Person` não tem nada acima."
+      },
+      {
+        "text": "Sim, por uma ligação escondida do `Person` de volta ao seu `Employee`",
+        "why": "Essa ligação não existe: a parte nunca fica sabendo do todo."
+      },
+      {
+        "text": "Só se `Company` for exportado",
+        "why": "Exportar decide quais pacotes veem um nome, não se um `Person` tem empresa."
+      },
+      {
+        "text": "Não: ela tem uma cópia de um `Person`, e um `Person` não tem empresa",
+        "why": "Isso. Nada dentro da parte sabe que ela foi recortada de um `Employee`."
+      }
+    ]
+  },
+  "ex-da5xz5xc": {
+    "prompt": "`Person` e `Company` têm os dois um campo `Name`, e `Employee` embute os dois. O que o compilador recusa?",
+    "hint": "A seção 03 aponta o que não foi recusado.",
+    "choices": [
+      {
+        "text": "A declaração de `Employee`, já que ela guarda dois campos chamados `Name`",
+        "why": "O tipo compilou; dois `Name` na mesma profundidade são aceitos até alguém usar a grafia curta."
+      },
+      {
+        "text": "Toda linha que usa `e.Name`, e só essas linhas",
+        "why": "Isso: `ambiguous selector e.Name`, na linha que o usa."
+      },
+      {
+        "text": "`e.Person.Name` e `e.Company.Name`",
+        "why": "As grafias longas são exatas, e são a correção."
+      },
+      {
+        "text": "Nada: `e.Name` lê a struct que foi embutida primeiro",
+        "why": "A ordem de declaração nunca pode decidir; o compilador recusa em vez disso."
+      }
+    ]
+  },
+  "ex-0ghyzvnx": {
+    "prompt": "`Employee` embute `Person` e `Company`, ambos com um campo `Email`, e declara um `Email` próprio. O que `e.Email` lê?",
+    "hint": "Qual dos três é o mais raso?",
+    "choices": [
+      {
+        "text": "O de `Person`, porque `Person` é embutido primeiro",
+        "why": "A ordem nunca decide; a profundidade decide."
+      },
+      {
+        "text": "Nada: três campos com um nome tornam `e.Email` ambíguo",
+        "why": "Só campos na mesma profundidade são ambíguos, e o `Email` do próprio `Employee` está sozinho na profundidade zero."
+      },
+      {
+        "text": "O campo do nível de fora, que está na profundidade zero",
+        "why": "Isso. Ele está na profundidade zero, mais raso que os dois dentro das structs embutidas."
+      },
+      {
+        "text": "O de `Company`, porque o último campo declarado vence",
+        "why": "A ordem de declaração não tem papel nenhum na busca."
+      }
+    ]
+  },
+  "ex-fgsfr8cp": {
+    "prompt": "O `json.Marshal` recebe esse mesmo `Employee`, cujos `Person` e `Company` têm os dois um `Name`. O que volta?",
+    "hint": "A terceira regra da documentação termina com `no error occurs`.",
+    "choices": [
+      {
+        "text": "Um erro que nomeia o campo ambíguo",
+        "why": "`err` veio `nil`; é isso que torna este caso perigoso."
+      },
+      {
+        "text": "Duas chaves `\"Name\"`, a da empresa depois da da pessoa",
+        "why": "O codificador aplica a regra de profundidade do seletor e não escreve nenhuma."
+      },
+      {
+        "text": "Um objeto sem chave `\"Name\"` nenhuma, e erro `nil`",
+        "why": "Isso. Os dois campos ambíguos são ignorados, e nada avisa."
+      },
+      {
+        "text": "Um erro de compilação, porque o codificador obedece à mesma regra do compilador",
+        "why": "O programa nunca escreve `e.Name`, então o compilador não tem o que recusar; o codificador trabalha em tempo de execução."
+      }
+    ]
+  },
+  "ex-48821z13": {
+    "prompt": "O `Employee` da seção 03 embute `Person` e `Company` e declara `Email`. Quantos campos `string` um valor `Employee` guarda ao todo, contando os de dentro das structs embutidas?",
+    "hint": "Campos escondidos continuam guardados.",
+    "unit": "campos"
+  },
+  "ex-dkw3589p": {
+    "prompt": "Um programa embute só `Person` em `Employee` e lê `e.Name` em doze lugares. Alguém acrescenta `Name string` ao próprio `Employee`. O que acontece no próximo build?",
+    "hint": "Compare a profundidade do campo novo com a do antigo.",
+    "choices": [
+      {
+        "text": "Compila, e os doze passam a ler o campo novo",
+        "why": "Isso. O campo novo é mais raso, então vence sem aviso; esse é o lado que as regras não protegem."
+      },
+      {
+        "text": "Doze erros `ambiguous selector e.Name`",
+        "why": "Isso acontece quando o segundo `Name` está na mesma profundidade, como quando uma segunda struct embutida traz um."
+      },
+      {
+        "text": "Compila, e `e.Name` continua lendo o de `Person`, que estava lá antes",
+        "why": "Qual campo veio antes não conta; a profundidade decide."
+      },
+      {
+        "text": "A declaração de `Employee` é recusada como campo duplicado",
+        "why": "Os dois `Name` estão em profundidades diferentes, e até dois na mesma profundidade compilam até serem usados."
+      }
+    ]
+  },
+  "ex-zs6wnqaa": {
+    "prompt": "A seção 03 escreveu ``Company `json:\"company\"` `` em `Employee`. O que a tag mudou?",
+    "hint": "Veja onde `Acme` aparece na saída.",
+    "choices": [
+      {
+        "text": "Tirou `Company` do JSON",
+        "why": "Isso é o que a tag `\"-\"` faz; aqui `Acme` continua na saída."
+      },
+      {
+        "text": "Renomeou a chave `\"Name\"` da empresa para `\"company\"`",
+        "why": "A tag está no campo embutido, então dá nome à struct inteira, não a um dos campos dela."
+      },
+      {
+        "text": "A empresa virou um objeto sob `\"company\"`, então `Name` deixou de ser ambíguo",
+        "why": "Isso. Um campo embutido com nome não é achatado, e o `Name` de `Person` voltou."
+      },
+      {
+        "text": "Fez o `json.Marshal` informar o conflito como erro",
+        "why": "Nada faz o codificador informar isso; a tag tirou o conflito de cena."
+      }
+    ]
+  },
+  "ex-0ejnm4cx": {
+    "prompt": "Ponha os lugares onde `e.X` é procurado na ordem em que a busca os tenta.",
+    "hint": "Do mais raso para o mais fundo.",
+    "items": [
+      "Os campos declarados no próprio tipo struct de `e`",
+      "Os campos das structs embutidas nele",
+      "Os campos das structs embutidas nessas"
+    ]
+  },
+  "ex-v9y601by": {
+    "prompt": "Para o `Employee` da seção 03 (ele embute `Person` e `Company` e declara o próprio `Email`), ligue cada expressão ao que ela dá.",
+    "hint": "Profundidade primeiro; empate é erro.",
+    "pairs": [
+      {
+        "left": "`e.Email`",
+        "right": "`ana@acme.example`"
+      },
+      {
+        "left": "`e.Person.Email`",
+        "right": "`ana@example.com`"
+      },
+      {
+        "left": "`e.Company.Name`",
+        "right": "`Acme`"
+      },
+      {
+        "left": "`e.Name`",
+        "right": "Um erro de compilação: seletor ambíguo"
+      }
+    ],
+    "right_distractors": [
+      "`Ana`"
+    ]
+  },
+  "ex-8fqbgrk9": {
+    "prompt": "Quais destas são verdadeiras sobre um `Employee` que embute `Person`? Marque todas as que se aplicam.",
+    "hint": "Duas tratam do que é guardado e do que é promovido; duas tratam de tipos.",
+    "choices": [
+      {
+        "text": "Copiar um `Employee` copia o `Person` de dentro dele",
+        "why": "Sim. O `Person` fica guardado dentro, campo por campo."
+      },
+      {
+        "text": "Um `Employee` pode ser atribuído a uma variável do tipo `Person`",
+        "why": "Não. `var p Person = e` é recusado igual a `greet(e)`; escreva `e.Person`."
+      },
+      {
+        "text": "Um método declarado em `Person` pode ser chamado num `Employee`",
+        "why": "Sim. Métodos são promovidos como campos; a lição 25 mostra isso."
+      },
+      {
+        "text": "O `json.Marshal` informa erro quando dois campos embutidos colidem",
+        "why": "Não. Ele descarta os dois e devolve erro `nil`."
+      }
+    ]
+  }
+}

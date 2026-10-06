@@ -1,0 +1,579 @@
+[
+  {
+    "id": "ex-78ykxy01",
+    "version": 1,
+    "section": "embedding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `type Employee struct { Person; Company string }`, what is the name of the field whose type is `Person`?",
+    "hint": "How did section 01 set it in the literal?",
+    "choices": [
+      {
+        "text": "It has none, so only its promoted fields can be reached",
+        "correct": false,
+        "why": "`e.Person` worked in section 01 and gave the whole inner value; the field has a name."
+      },
+      {
+        "text": "`person`, in lower case, because nobody wrote it",
+        "correct": false,
+        "why": "The name is the type's name exactly, capital letter included."
+      },
+      {
+        "text": "`Person`, after its type, which is how every embedded field is named",
+        "correct": true,
+        "why": "Right. An embedded field is named after its type, which is why `Person:` works in a literal."
+      },
+      {
+        "text": "`_`, like any other field without a name",
+        "correct": false,
+        "why": "`_` is a name you write on purpose to discard something; an embedded field gets its type's name."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mbth1ga",
+    "version": 1,
+    "section": "embedding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`e` is an `Employee` embedding `Person`. After `e.Name = \"Ana Lima\"`, what does `fmt.Println(e.Person.Name)` print?",
+    "hint": "How many `Name` fields does `e` have?",
+    "choices": [
+      {
+        "text": "The old name, because `e.Name` is a copy of the field promoted into `Employee`",
+        "correct": false,
+        "why": "Promotion copies nothing; `%+v` showed no `Name` outside `Person`."
+      },
+      {
+        "text": "`Ana Lima`",
+        "correct": true,
+        "why": "Right. `e.Name` and `e.Person.Name` are one field written two ways."
+      },
+      {
+        "text": "An empty line, since the assignment made a new `Name` at the outer level",
+        "correct": false,
+        "why": "Assigning never adds a field to a struct; the fields are fixed by the type."
+      },
+      {
+        "text": "Nothing: the short spelling can be read but not assigned to",
+        "correct": false,
+        "why": "Section 01 assigned through it and the change showed up in `e.Person.Name`."
+      }
+    ]
+  },
+  {
+    "id": "ex-eyw52v6r",
+    "version": 1,
+    "section": "embedding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The fields of an embedded struct are ___ to the outer struct, which is why `e.Name` finds `e.Person.Name`.",
+    "hint": "The word section 01 put in bold in the note on `e.Name`.",
+    "blanks": [
+      {
+        "accept": [
+          "promoted"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-924bwvfk",
+    "version": 1,
+    "section": "embedding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A module's `go.mod` says `go 1.26`, and it is built with Go 1.27.1. What happens to `Employee{Name: \"Ana\", Company: \"Acme\"}`?",
+    "hint": "Section 01 ran `go mod edit -go=1.26` and built again.",
+    "choices": [
+      {
+        "text": "It compiles, since the toolchain doing the build is 1.27.1",
+        "correct": false,
+        "why": "The toolchain is new enough, but the `go` line sets the language version it compiles, and 1.26 has no such literal."
+      },
+      {
+        "text": "It compiles, and sets a new field `Name` that belongs to `Employee`",
+        "correct": false,
+        "why": "A literal cannot create fields; `Name` is `Person`'s, reached through promotion."
+      },
+      {
+        "text": "It is refused: a promoted field in a literal requires go1.27 or later",
+        "correct": true,
+        "why": "Right. The message even ends with `check go.mod`."
+      },
+      {
+        "text": "The go command first downloads Go 1.26 to build it",
+        "correct": false,
+        "why": "An older `go` line never makes the go command fetch an older toolchain; it compiles with the one it has, as that language version."
+      }
+    ]
+  },
+  {
+    "id": "ex-50jtbk4d",
+    "version": 1,
+    "section": "embedding",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `type Employee struct { Person; Company string }` and a `go 1.27.1` module, which literals compile? Choose all that apply.",
+    "hint": "One of them mixes the two forms for the same struct.",
+    "choices": [
+      {
+        "text": "`Employee{Person: Person{Name: \"Ana\"}, Company: \"Acme\"}`",
+        "correct": true,
+        "why": "Yes. The long form names the embedded field and gives it a whole `Person`."
+      },
+      {
+        "text": "`Employee{Name: \"Ana\", Company: \"Acme\"}`",
+        "correct": true,
+        "why": "Yes. Since Go 1.27 a literal can name promoted fields directly."
+      },
+      {
+        "text": "`Employee{Person: Person{Name: \"Ana\"}, Email: \"a@x\"}`",
+        "correct": false,
+        "why": "Refused: `cannot specify promoted field Email and enclosing embedded field Person`."
+      },
+      {
+        "text": "`Employee{Person.Name: \"Ana\"}`",
+        "correct": false,
+        "why": "A key in a struct literal is a field name, and `Person.Name` is not one: `invalid field name Person.Name in struct literal`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqkbfvyc",
+    "version": 1,
+    "section": "embedding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`type Circle struct { Point; Radius int }`, where `Point` has fields `X` and `Y`. What does `fmt.Printf(\"%+v\\n\", Circle{X: 1, Y: 2, Radius: 3})` print?",
+    "hint": "Where do `X` and `Y` really live?",
+    "choices": [
+      {
+        "text": "`{X:1 Y:2 Radius:3}`",
+        "correct": false,
+        "why": "That would be true if promotion flattened the struct; it only shortens the spelling."
+      },
+      {
+        "text": "`{Point:{X:1 Y:2} Radius:3}`",
+        "correct": true,
+        "why": "Right. The literal named promoted fields, but the value still holds a whole `Point`."
+      },
+      {
+        "text": "`{Circle:{X:1 Y:2} Radius:3}`",
+        "correct": false,
+        "why": "The embedded field is named after its own type, `Point`, not after the outer one."
+      },
+      {
+        "text": "Nothing, because `X` and `Y` are not fields of `Circle` and the literal is refused",
+        "correct": false,
+        "why": "Before Go 1.27 it would have been refused; in 1.27.1 promoted fields may be named in a literal."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1sb7j9h",
+    "version": 1,
+    "section": "not-inheritance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`greet` takes a `Person`, and `e` is an `Employee` that embeds `Person`. Why is `greet(e)` refused?",
+    "hint": "Read the error: `cannot use e (variable of struct type Employee) as Person value`.",
+    "choices": [
+      {
+        "text": "Because Go wants an explicit conversion first, `Person(e)`",
+        "correct": false,
+        "why": "The conversion is refused as well: the two struct types have different fields."
+      },
+      {
+        "text": "Because `Employee` carries a field, `Company`, that `greet` would not know what to do with",
+        "correct": false,
+        "why": "Extra fields are not the reason; a struct with exactly `Person`'s fields under another type name is refused the same way."
+      },
+      {
+        "text": "Because they are two different types, and embedding does not make one the other",
+        "correct": true,
+        "why": "Right. An `Employee` has a `Person` inside it; it is not a `Person`."
+      },
+      {
+        "text": "Because the call needs `&e`, a pointer to the employee",
+        "correct": false,
+        "why": "A pointer to an `Employee` is not a `Person` either; the types differ either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbfp55hh",
+    "version": 1,
+    "section": "not-inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`e.Name` is `\"Ana\"`. After `c := e` and `c.Name = \"Bia\"`, what does `fmt.Println(e.Name)` print?",
+    "hint": "Where is the `Person` stored?",
+    "choices": [
+      {
+        "text": "`Bia`, because both employees point at the same `Person`",
+        "correct": false,
+        "why": "That is the picture of a reference. The `Person` is stored inside the `Employee`, so `c := e` copied it."
+      },
+      {
+        "text": "`Ana`",
+        "correct": true,
+        "why": "Right. Copying the outer struct copied the `Person` inside it, and `c` changed its own copy."
+      },
+      {
+        "text": "An empty string, since `c := e` moved the person out of `e`",
+        "correct": false,
+        "why": "Assignment in Go copies; nothing is moved out of `e`."
+      },
+      {
+        "text": "Nothing, as a struct with an embedded field cannot be copied with `:=`",
+        "correct": false,
+        "why": "It can, and section 02 did exactly this."
+      }
+    ]
+  },
+  {
+    "id": "ex-9c07nd5w",
+    "version": 1,
+    "section": "not-inheritance",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`greet` wants the inner value of an `Employee` called `e`. The call that compiles is `greet(e.___)`.",
+    "hint": "The embedded field's name.",
+    "blanks": [
+      {
+        "accept": [
+          "Person"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jdccw4ym",
+    "version": 1,
+    "section": "not-inheritance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Server`, `Worker` and `Job` each embed a `Logger` struct. You want one function that accepts any of the three. What does Go offer for that?",
+    "hint": "Section 02 named the half of inheritance that embedding does not cover.",
+    "choices": [
+      {
+        "text": "A `Logger` parameter, which takes any struct that embeds `Logger`",
+        "correct": false,
+        "why": "That is exactly the call section 02 saw refused; a parameter of a struct type takes that type only."
+      },
+      {
+        "text": "An interface, the subject of lesson 27",
+        "correct": true,
+        "why": "Right. Letting different types stand in for one another is what interfaces are for."
+      },
+      {
+        "text": "Nothing: write three functions, one per type",
+        "correct": false,
+        "why": "Go does have a tool for it; the section points to lesson 27."
+      },
+      {
+        "text": "Converting each value with `Logger(x)` before the call",
+        "correct": false,
+        "why": "A struct converts only to a type with identical fields, which `Server` is not. `x.Logger` would hand over the part, losing the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezw5zk0b",
+    "version": 1,
+    "section": "not-inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`greet(e.Person)` runs. Inside `greet`, can the code read the employee's `Company`?",
+    "hint": "What exactly did `greet` receive?",
+    "choices": [
+      {
+        "text": "Yes, through `p.Company`, because promotion also works upwards",
+        "correct": false,
+        "why": "Promotion only looks down into embedded structs; a `Person` has nothing above it."
+      },
+      {
+        "text": "Yes, through a hidden link from the `Person` back to its `Employee`",
+        "correct": false,
+        "why": "There is no such link: the part never learns about the whole."
+      },
+      {
+        "text": "Only if `Company` is exported",
+        "correct": false,
+        "why": "Exporting decides which packages see a name, not whether a `Person` has a company."
+      },
+      {
+        "text": "No: it has a copy of a `Person`, and a `Person` has no company",
+        "correct": true,
+        "why": "Right. Nothing inside the part knows it was cut out of an `Employee`."
+      }
+    ]
+  },
+  {
+    "id": "ex-da5xz5xc",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Person` and `Company` both have a `Name` field, and `Employee` embeds both. What does the compiler refuse?",
+    "hint": "Section 03 points out what was not refused.",
+    "choices": [
+      {
+        "text": "The declaration of `Employee`, since it holds two fields called `Name`",
+        "correct": false,
+        "why": "The type compiled; two `Name`s at the same depth are fine until somebody uses the short spelling."
+      },
+      {
+        "text": "Every line that uses `e.Name`, and only those lines",
+        "correct": true,
+        "why": "Right: `ambiguous selector e.Name`, on the line that uses it."
+      },
+      {
+        "text": "`e.Person.Name` and `e.Company.Name`",
+        "correct": false,
+        "why": "The long spellings are exact, and they are the fix."
+      },
+      {
+        "text": "Nothing: `e.Name` reads whichever struct was embedded first",
+        "correct": false,
+        "why": "The order of declaration is never allowed to decide; the compiler refuses instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ghyzvnx",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Employee` embeds `Person` and `Company`, both with an `Email` field, and declares an `Email` of its own. What does `e.Email` read?",
+    "hint": "Which of the three is shallowest?",
+    "choices": [
+      {
+        "text": "`Person`'s, because `Person` is embedded first",
+        "correct": false,
+        "why": "Order never decides; depth does."
+      },
+      {
+        "text": "Nothing: three fields of one name make `e.Email` ambiguous",
+        "correct": false,
+        "why": "Only fields at the same depth are ambiguous, and `Employee`'s own `Email` is alone at depth zero."
+      },
+      {
+        "text": "The `Email` declared in `Employee` itself, at depth zero",
+        "correct": true,
+        "why": "Right. It is at depth zero, shallower than the two inside the embedded structs."
+      },
+      {
+        "text": "`Company`'s, because the last field declared wins",
+        "correct": false,
+        "why": "Declaration order plays no part in the search."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgsfr8cp",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`json.Marshal` is given that same `Employee`, whose `Person` and `Company` both have a `Name`. What comes back?",
+    "hint": "The documentation's third rule ends with `no error occurs`.",
+    "choices": [
+      {
+        "text": "An error that names the ambiguous field",
+        "correct": false,
+        "why": "`err` was `nil`; that is what makes this one dangerous."
+      },
+      {
+        "text": "Two `\"Name\"` keys, the company's after the person's",
+        "correct": false,
+        "why": "The encoder applies the selector's depth rule and writes neither."
+      },
+      {
+        "text": "An object with no `\"Name\"` key at all, and a `nil` error",
+        "correct": true,
+        "why": "Right. Both ambiguous fields are ignored, and nothing says so."
+      },
+      {
+        "text": "A compile error, because the encoder obeys the same rule as the compiler",
+        "correct": false,
+        "why": "The program never names `e.Name`, so the compiler has nothing to refuse; the encoder works at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-48821z13",
+    "version": 1,
+    "section": "conflicts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `Employee` of section 03 embeds `Person` and `Company` and declares `Email`. How many `string` fields does an `Employee` value hold in all, counting the ones inside its embedded structs?",
+    "hint": "Hidden fields are still stored.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "fields"
+  },
+  {
+    "id": "ex-dkw3589p",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program embeds only `Person` in `Employee` and reads `e.Name` in twelve places. Somebody adds `Name string` to `Employee` itself. What happens at the next build?",
+    "hint": "Compare the depth of the new field with the old one.",
+    "choices": [
+      {
+        "text": "It compiles, and all twelve now read the new field",
+        "correct": true,
+        "why": "Right. The new field is shallower, so it wins without a word; this is the direction the rules do not protect."
+      },
+      {
+        "text": "Twelve `ambiguous selector e.Name` errors",
+        "correct": false,
+        "why": "That happens when the second `Name` is at the same depth, as when a second embedded struct brings one."
+      },
+      {
+        "text": "It compiles, and `e.Name` keeps reading `Person`'s, which was there first",
+        "correct": false,
+        "why": "Which field came first plays no part; depth decides."
+      },
+      {
+        "text": "The declaration of `Employee` is refused as a duplicate field",
+        "correct": false,
+        "why": "The two `Name`s are at different depths, and even two at the same depth compile until used."
+      }
+    ]
+  },
+  {
+    "id": "ex-zs6wnqaa",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Section 03 wrote ``Company `json:\"company\"` `` in `Employee`. What did the tag change?",
+    "hint": "Look at where `Acme` appears in the output.",
+    "choices": [
+      {
+        "text": "It left `Company` out of the JSON",
+        "correct": false,
+        "why": "That is what the tag `\"-\"` does; here `Acme` is still in the output."
+      },
+      {
+        "text": "It renamed the company's `\"Name\"` key to `\"company\"`",
+        "correct": false,
+        "why": "The tag is on the embedded field, so it names the whole struct, not one of its fields."
+      },
+      {
+        "text": "The company became an object under `\"company\"`, so `Name` was no longer ambiguous",
+        "correct": true,
+        "why": "Right. A named embedded field is not flattened, and `Person`'s `Name` came back."
+      },
+      {
+        "text": "It made `json.Marshal` report the clash as an error",
+        "correct": false,
+        "why": "Nothing makes the encoder report it; the tag removed the clash itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ejnm4cx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the places `e.X` is looked for in the order the search tries them.",
+    "hint": "Shallowest first.",
+    "items": [
+      "The fields declared in `e`'s own struct type",
+      "The fields of the structs embedded in it",
+      "The fields of the structs embedded in those"
+    ]
+  },
+  {
+    "id": "ex-v9y601by",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For section 03's `Employee` (it embeds `Person` and `Company` and declares its own `Email`), match each expression to what it gives.",
+    "hint": "Depth first; a tie is an error.",
+    "pairs": [
+      {
+        "left": "`e.Email`",
+        "right": "`ana@acme.example`"
+      },
+      {
+        "left": "`e.Person.Email`",
+        "right": "`ana@example.com`"
+      },
+      {
+        "left": "`e.Company.Name`",
+        "right": "`Acme`"
+      },
+      {
+        "left": "`e.Name`",
+        "right": "A compile error: ambiguous selector"
+      }
+    ],
+    "right_distractors": [
+      "`Ana`"
+    ]
+  },
+  {
+    "id": "ex-8fqbgrk9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of an `Employee` that embeds `Person`? Choose all that apply.",
+    "hint": "Two are about what is stored and what is promoted; two are about types.",
+    "choices": [
+      {
+        "text": "Copying an `Employee` copies the `Person` inside it",
+        "correct": true,
+        "why": "Yes. The `Person` is stored inside, field by field."
+      },
+      {
+        "text": "An `Employee` can be assigned to a variable of type `Person`",
+        "correct": false,
+        "why": "No. `var p Person = e` is refused just like `greet(e)`; write `e.Person`."
+      },
+      {
+        "text": "A method declared on `Person` can be called on an `Employee`",
+        "correct": true,
+        "why": "Yes. Methods are promoted like fields; lesson 25 shows it."
+      },
+      {
+        "text": "`json.Marshal` reports an error when two embedded fields clash",
+        "correct": false,
+        "why": "No. It drops both and returns a `nil` error."
+      }
+    ]
+  }
+]
