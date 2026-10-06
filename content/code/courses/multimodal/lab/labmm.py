@@ -406,7 +406,7 @@ class Handler(BaseHTTPRequestHandler):
         for k in range(n):
             raw = encode(card((w, h), lines + [f"image {k + 1} of {n}"]), fmt)
             data.append({"b64_json": base64.b64encode(raw).decode()})
-        record.update(model=req["model"], prompt=prompt, size=f"{w}x{h}", n=n,
+        record.update(model=req["model"], prompt=prompt, size=f"{w}x{h}", images=n,
                       bytes=[len(base64.b64decode(d["b64_json"])) for d in data])
         self.send_json(200, {"created": int(time.time()), "data": data, "output_format": fmt,
                              "size": f"{w}x{h}", "quality": req.get("quality") or "auto"})
