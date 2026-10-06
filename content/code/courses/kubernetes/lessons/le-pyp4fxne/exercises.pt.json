@@ -1,0 +1,192 @@
+{
+  "ex-qw1mewdw": {
+    "prompt": "Sem security context nenhum, como qual usuário o processo do busybox rodou?",
+    "hint": "`kubectl exec plain -- id`.",
+    "choices": [
+      {
+        "text": "nobody, o usuário sem privilégios",
+        "why": "O `id` imprimiu uid 0."
+      },
+      {
+        "text": "root",
+        "why": "Isso: uid 0, com catorze capabilities."
+      },
+      {
+        "text": "Um usuário aleatório escolhido pelo kubelet",
+        "why": "O kubelet não escolhe nada se não for mandado."
+      },
+      {
+        "text": "O usuário que rodou o kubectl",
+        "why": "O seu usuário local nunca chega ao nó."
+      }
+    ]
+  },
+  "ex-4xw45rmd": {
+    "prompt": "`hardened` definiu `readOnlyRootFilesystem: true`, e mesmo assim `touch /tmp/scratch` funcionou. Por quê?",
+    "hint": "Olhe `volumes`.",
+    "choices": [
+      {
+        "text": "`/tmp` é sempre gravável no Linux",
+        "why": "`/etc` foi recusado; `/tmp` também seria sem uma montagem."
+      },
+      {
+        "text": "Um `emptyDir` está montado ali",
+        "why": "Isso. Um volume não faz parte do sistema de arquivos da imagem."
+      },
+      {
+        "text": "O usuário 10001 é dono de `/tmp`",
+        "why": "Ser dono não vence uma montagem somente leitura."
+      },
+      {
+        "text": "A configuração só cobre `/etc`",
+        "why": "Ela cobre o sistema de arquivos raiz inteiro."
+      }
+    ]
+  },
+  "ex-xq4gc3kj": {
+    "prompt": "`web` tinha `runAsNonRoot: true` e a imagem `nginx:1.29`. Por que parou em `CreateContainerConfigError`?",
+    "hint": "Leia a mensagem de espera.",
+    "choices": [
+      {
+        "text": "A imagem não pôde ser baixada",
+        "why": "Isso seria `ErrImagePull`."
+      },
+      {
+        "text": "Os Pod Security Standards o recusaram",
+        "why": "O pod foi criado; o kubelet se recusou a subir o container."
+      },
+      {
+        "text": "A imagem roda como root",
+        "why": "Isso, e nada no pod nomeava outro usuário."
+      },
+      {
+        "text": "O nginx precisa da porta 80, que não-root não ocupa",
+        "why": "Nem chegou lá; foi recusado antes de subir."
+      }
+    ]
+  },
+  "ex-gv23ghrh": {
+    "prompt": "Qual nível dos Pod Security Standards recusa um container que roda como root?",
+    "hint": "O pod `plain` em `payments`.",
+    "choices": [
+      {
+        "text": "privileged",
+        "why": "Ele não recusa nada."
+      },
+      {
+        "text": "baseline",
+        "why": "Baseline bloqueia escaladas conhecidas, não o root em si."
+      },
+      {
+        "text": "restricted",
+        "why": "Isso. Ele exige `runAsNonRoot`."
+      },
+      {
+        "text": "Nenhum deles",
+        "why": "Restricted recusou `plain` exatamente por isso."
+      }
+    ]
+  },
+  "ex-yegwpfnf": {
+    "prompt": "Você rotula um namespace movimentado com `enforce=restricted`. O que acontece com os pods que já rodam nele?",
+    "hint": "O dry run imprimiu avisos e não rotulou nada.",
+    "choices": [
+      {
+        "text": "Continuam rodando; pods novos são conferidos",
+        "why": "Isso. O nível vale para pods novos, e o rótulo imprime avisos sobre os que existem."
+      },
+      {
+        "text": "Os que não cumprem são despejados na hora",
+        "why": "Nada é despejado por um rótulo."
+      },
+      {
+        "text": "O rótulo é recusado até eles cumprirem",
+        "why": "O rótulo é aceito, com um aviso."
+      },
+      {
+        "text": "São reiniciados com as regras novas aplicadas",
+        "why": "Um rótulo não reinicia nada."
+      }
+    ]
+  },
+  "ex-2fhc7jv7": {
+    "prompt": "Por que `kubectl create deployment web --image=nginx` foi recusado por `no-latest-tag`?",
+    "hint": "Que tag um nome sem tag recebe?",
+    "choices": [
+      {
+        "text": "O nginx não é permitido de jeito nenhum",
+        "why": "`nginx:1.29` foi aceito logo depois."
+      },
+      {
+        "text": "Não tem dois-pontos, então não tem tag",
+        "why": "Isso. Um nome puro quer dizer `latest`, e a expressão exige dois-pontos."
+      },
+      {
+        "text": "Os Pod Security Standards o recusaram",
+        "why": "A mensagem citou a ValidatingAdmissionPolicy."
+      },
+      {
+        "text": "O binding só permite o namespace default",
+        "why": "O binding não tinha restrição de namespace."
+      }
+    ]
+  },
+  "ex-503xvftx": {
+    "prompt": "Que imagem a expressão de `no-latest-tag` deixaria passar, embora não tenha tag?",
+    "hint": "Onde mais um dois-pontos pode aparecer num nome de imagem?",
+    "choices": [
+      {
+        "text": "`nginx`",
+        "why": "Sem dois-pontos, então é recusada."
+      },
+      {
+        "text": "`nginx:latest`",
+        "why": "Termina em `:latest`, então é recusada."
+      },
+      {
+        "text": "`registry.local:5000/shop`",
+        "why": "Isso. Os dois-pontos são da porta."
+      },
+      {
+        "text": "`shop:1.0`",
+        "why": "Essa tem tag, e deve passar."
+      }
+    ]
+  },
+  "ex-n5snt288": {
+    "prompt": "Ligue cada campo ao que ele tira.",
+    "hint": "A tabela da primeira seção.",
+    "pairs": [
+      {
+        "left": "`capabilities.drop: [\"ALL\"]`",
+        "right": "Toda capability do kernel"
+      },
+      {
+        "left": "`readOnlyRootFilesystem: true`",
+        "right": "Escrever nos arquivos da imagem"
+      },
+      {
+        "left": "`allowPrivilegeEscalation: false`",
+        "right": "Ganhar privilégios por binários set-uid"
+      },
+      {
+        "left": "`runAsNonRoot: true`",
+        "right": "Subir como usuário 0"
+      }
+    ],
+    "right_distractors": [
+      "Acesso à rede"
+    ]
+  },
+  "ex-zmx77xsr": {
+    "prompt": "Para ser avisado das violações sem recusar nada, rotule o namespace com o modo ___.",
+    "hint": "Um entre enforce, warn e audit.",
+    "blanks": [
+      {
+        "accept": [
+          "warn"
+        ]
+      }
+    ]
+  }
+}
