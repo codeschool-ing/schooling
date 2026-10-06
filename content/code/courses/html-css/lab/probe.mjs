@@ -1,0 +1,269 @@
+/* probe opens a page in Chromium and prints what the browser made of it.
+ *
+ * Every number in this course that describes a rendered page was printed by
+ * this file: a box's position and size, a computed value, which element sits
+ * on top at a point, what a form would send. It asks the browser the same
+ * questions the Elements panel of DevTools answers when you click on
+ * something, and prints the answers as text so that a lesson can quote them.
+ *
+ *   probe [--width W] [--height H] [--dpr D] [--mobile] PAGE STEP...
+ *
+ * --mobile behaves like a phone's browser: it honours the viewport meta tag,
+ * and without one it lays the page out 980 pixels wide and shrinks it to fit.
+ *
+ * The steps run in order, against one page, and each prints its own lines:
+ *
+ *   mode                  the rendering mode, standards or quirks
+ *   dom                   the document as the parser built it
+ *   title                 the document's title
+ *   window                the window's inner size and its device pixel ratio
+ *   text SEL              the text of every element SEL matches
+ *   box SEL               position and size of every element SEL matches
+ *   style SEL PROP,...    computed values of the named properties
+ *   tree [SEL]            the accessibility tree, as Playwright writes it
+ *   axe                   the axe-core rules the page fails
+ *   validity SEL          a form field's validity and its message
+ *   send SEL              presses SEL and prints the request the form made
+ *   top X Y               the element painted on top at a point
+ *   img SEL               which file an <img> chose, and its pixel size
+ *   fetched               every file the page has asked for so far
+ *   scroll Y              scrolls the page to Y
+ *   at MS                 freezes every animation at MS milliseconds
+ *   width W               resizes the window to W pixels wide
+ *   overflow              whether the page is wider than the window
+ *   fill SEL TEXT · check SEL · click SEL · hover SEL · focus SEL · tab
+ *   shot FILE             a screenshot, for the author to look at
+ *
+ * The page is opened from disk. Nothing is fetched from a network: a request
+ * that is not a file is answered with an empty 204 and listed by `fetched`.
+ */
+import { chromium } from 'playwright';
+import { resolve, basename } from 'node:path';
+
+const require = (await import('node:module')).createRequire(import.meta.url);
+
+const argv = process.argv.slice(2);
+const opt = { width: 1024, height: 768, dpr: 1, mobile: false };
+while (argv[0]?.startsWith('--')) {
+  const k = argv.shift().slice(2);
+  if (k === 'mobile') opt.mobile = true;
+  else opt[k] = Number(argv.shift());
+}
+const file = argv.shift();
+if (!file) {
+  console.error('usage: probe [--width W] [--height H] [--dpr D] [--mobile] PAGE STEP...');
+  process.exit(2);
+}
+
+const n = (v) => String(Math.round(v * 100) / 100);
+const pad = (s, w) => (s.length >= w ? s + ' ' : s + ' '.repeat(w - s.length));
+
+const browser = await chromium.launch();
+const context = await browser.newContext({
+  viewport: { width: opt.width, height: opt.height },
+  deviceScaleFactor: opt.dpr,
+  isMobile: opt.mobile,
+  hasTouch: opt.mobile,
+});
+const page = await context.newPage();
+const fetched = [];
+let sent = null;
+let opened = false;
+await page.route('**/*', async (route) => {
+  const req = route.request();
+  const url = new URL(req.url());
+  if (!opened && req.isNavigationRequest()) {
+    opened = true;
+    return route.continue();
+  }
+  if (url.protocol === 'file:' && req.method() === 'GET' && !req.isNavigationRequest()) {
+    fetched.push(basename(url.pathname) + url.search);
+    return route.continue();
+  }
+  /* Anything else is a request the page made somewhere: a form being sent,
+     usually. It is recorded and answered with nothing, so that the page stays
+     where it is and no network is involved. */
+  sent = { method: req.method(), url: '/' + url.pathname.split('/').pop() + url.search,
+           body: req.postData(), type: req.headers()['content-type'] };
+  fetched.push(url.pathname.split('/').pop() + url.search);
+  return route.fulfill({ status: 204, body: '' });
+});
+page.on('pageerror', (e) => console.log('page error: ' + e.message));
+
+await page.goto('file://' + resolve(file));
+await page.evaluate(() => document.fonts.ready);
+
+/* What an element is called in the output: its tag, then its id or its first
+   class, then its position among the matches when there is more than one. */
+const label = (el) => el.evaluate((e) => {
+  let s = e.tagName.toLowerCase();
+  if (e.id) s += '#' + e.id;
+  else if (e.classList.length) s += '.' + [...e.classList].join('.');
+  return s;
+});
+
+const steps = {
+  async mode() {
+    console.log('compatMode: ' + (await page.evaluate(() => document.compatMode)));
+  },
+  async title() {
+    console.log('title: ' + JSON.stringify(await page.title()));
+  },
+  async window() {
+    const v = await page.evaluate(() => [innerWidth, innerHeight, devicePixelRatio]);
+    console.log(`window: ${v[0]}×${v[1]}, device pixel ratio ${v[2]}`);
+  },
+  async text(sel) {
+    for (const el of await page.$$(sel)) {
+      console.log(`${await label(el)}  ${JSON.stringify(await el.evaluate((e) => e.textContent))}`);
+    }
+  },
+  async json(sel) {
+    const out = [];
+    for (const el of await page.$$(sel)) {
+      const b = await el.evaluate((e) => {
+        const r = e.getBoundingClientRect();
+        return { x: r.x + scrollX, y: r.y + scrollY, w: r.width, h: r.height };
+      });
+      out.push({ label: await label(el), ...b });
+    }
+    console.log(JSON.stringify(out));
+  },
+  async dom() {
+    console.log(await page.evaluate(() => document.documentElement.outerHTML));
+  },
+  async box(sel) {
+    const els = await page.$$(sel);
+    if (!els.length) console.log(sel + ': nothing matches');
+    const rows = [];
+    for (const el of els) {
+      const b = await el.evaluate((e) => {
+        const r = e.getBoundingClientRect();
+        return { x: r.x + scrollX, y: r.y + scrollY, w: r.width, h: r.height };
+      });
+      rows.push([await label(el), b]);
+    }
+    const w = Math.max(...rows.map((r) => r[0].length)) + 2;
+    for (const [l, b] of rows) {
+      console.log(pad(l, w) + `x ${pad(n(b.x), 7)}y ${pad(n(b.y), 7)}width ${pad(n(b.w), 7)}height ${n(b.h)}`);
+    }
+  },
+  async style(sel, props) {
+    const els = await page.$$(sel);
+    if (!els.length) console.log(sel + ': nothing matches');
+    for (const el of els) {
+      const vals = await el.evaluate((e, ps) => {
+        const cs = getComputedStyle(e);
+        return ps.map((p) => [p, cs.getPropertyValue(p)]);
+      }, props.split(','));
+      const l = await label(el);
+      for (const [p, v] of vals) console.log(`${l}  ${p}: ${v}`);
+    }
+  },
+  async tree(sel = 'body') {
+    console.log(await page.locator(sel).first().ariaSnapshot());
+  },
+  async axe() {
+    await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
+    const r = await page.evaluate(() => window.axe.run(document, {
+      runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] },
+    }));
+    if (!r.violations.length) console.log('axe: no violations');
+    for (const v of r.violations) {
+      console.log(`${v.id} (${v.impact}, ${v.nodes.length} element${v.nodes.length > 1 ? 's' : ''}): ${v.help}`);
+    }
+  },
+  async validity(sel) {
+    for (const el of await page.$$(sel)) {
+      const v = await el.evaluate((e) => {
+        const flags = [];
+        for (const k in e.validity) if (e.validity[k]) flags.push(k);
+        return { value: e.value, flags, msg: e.validationMessage };
+      });
+      console.log(`${await label(el)}  value ${JSON.stringify(v.value)}  ${v.flags.join(' ')}` +
+        (v.msg ? `\n  message: ${v.msg}` : ''));
+    }
+  },
+  async send(sel) {
+    sent = null;
+    await page.click(sel);
+    await page.waitForTimeout(300);
+    if (!sent) {
+      const invalid = await page.evaluate(() =>
+        [...document.querySelectorAll(':invalid')].filter((e) => e.tagName !== 'FORM')
+          .map((e) => (e.name || e.id || e.tagName.toLowerCase()) + ': ' + e.validationMessage));
+      console.log('nothing was sent');
+      for (const i of invalid) console.log('  invalid ' + i);
+      return;
+    }
+    console.log(`${sent.method} ${sent.url}`);
+    if (sent.type) console.log('Content-Type: ' + sent.type);
+    if (sent.body) console.log(sent.body);
+  },
+  async top(x, y) {
+    const t = await page.evaluateHandle(([a, b]) => document.elementFromPoint(a, b), [Number(x), Number(y)]);
+    const el = t.asElement();
+    console.log(`at ${x},${y}: ` + (el ? await label(el) : 'nothing'));
+  },
+  async img(sel) {
+    for (const el of await page.$$(sel)) {
+      const v = await el.evaluate(async (e) => {
+        if (!e.complete) await new Promise((r) => e.addEventListener('load', r, { once: true }));
+        return { src: e.currentSrc.split('/').pop(), w: e.naturalWidth, h: e.naturalHeight,
+                 rw: e.getBoundingClientRect().width };
+      });
+      console.log(`${await label(el)}  chose ${v.src} (${v.w}×${v.h}), drawn ${n(v.rw)} wide`);
+    }
+  },
+  async fetched() {
+    console.log(fetched.length ? fetched.join('\n') : 'nothing fetched');
+  },
+  async scroll(y) {
+    await page.evaluate((v) => window.scrollTo(0, v), Number(y));
+    await page.waitForTimeout(100);
+  },
+  async at(ms) {
+    await page.evaluate((t) => {
+      for (const a of document.getAnimations()) { a.pause(); a.currentTime = t; }
+    }, Number(ms));
+  },
+  async width(w) {
+    await page.setViewportSize({ width: Number(w), height: opt.height });
+    await page.waitForTimeout(100);
+  },
+  async overflow() {
+    const v = await page.evaluate(() => ({
+      s: document.documentElement.scrollWidth, c: document.documentElement.clientWidth }));
+    console.log(v.s > v.c ? `page is ${v.s} wide in a ${v.c} window: it scrolls sideways`
+                          : `page fits: ${v.s} wide in a ${v.c} window`);
+  },
+  async fill(sel, text) { await page.fill(sel, text); },
+  async check(sel) { await page.check(sel); },
+  async click(sel) { await page.click(sel); await page.waitForTimeout(100); },
+  async hover(sel) { await page.hover(sel); await page.waitForTimeout(50); },
+  async focus(sel) { await page.focus(sel); },
+  async tab() {
+    await page.keyboard.press('Tab');
+    const l = await page.evaluate(() => {
+      const e = document.activeElement;
+      return e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + ' "' + (e.textContent || e.value || '').trim().slice(0, 40) + '"';
+    });
+    console.log('focus: ' + l);
+  },
+  async shot(f) { await page.screenshot({ path: f, fullPage: true }); },
+};
+
+const arity = { text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
+  at: 1, width: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
+try {
+  while (argv.length) {
+    const name = argv.shift();
+    if (!steps[name]) throw new Error('unknown step ' + name);
+    let args = [];
+    if (arity[name] === -1) { if (argv[0] && !steps[argv[0]]) args = [argv.shift()]; }
+    else args = argv.splice(0, arity[name] || 0);
+    await steps[name](...args);
+  }
+} finally {
+  await browser.close();
+}
