@@ -1,0 +1,473 @@
+{
+  "ex-9dw0x3g3": {
+    "prompt": "Com o caminho de títulos na frente, quantas das 26 perguntas com resposta os pedaços estruturados de 60 palavras acharam?",
+    "hint": "A segunda linha do header.py.",
+    "unit": "perguntas"
+  },
+  "ex-j7gy6eqr": {
+    "prompt": "Por que o caminho ajudou mais os pedaços de 60 palavras que os de 120?",
+    "hint": "Quais perdem mais ao serem cortados?",
+    "choices": [
+      {
+        "text": "O caminho tem mais de 60 palavras",
+        "why": "São uma dúzia de palavras."
+      },
+      {
+        "text": "Pedaços maiores ignoram títulos",
+        "why": "Os dois tamanhos tiveram o mesmo caminho no embedding."
+      },
+      {
+        "text": "Pedaços pequenos perdem mais no corte",
+        "why": "Certo: um pedaço de 120 palavras já leva mais do próprio contexto."
+      },
+      {
+        "text": "Os pedaços de 120 palavras foram truncados",
+        "why": "120 palavras ficam abaixo do limite de 219 palavras que a aula 4 mediu."
+      }
+    ]
+  },
+  "ex-s70a89j6": {
+    "prompt": "Uma equipe gera os embeddings dos pedaços com um modelo e, para economizar, os das perguntas com um modelo mais barato de mesma dimensão. O que acontece?",
+    "hint": "Mesmo tamanho, mesmo espaço?",
+    "choices": [
+      {
+        "text": "As notas parecem similaridades e não significam nada",
+        "why": "Certo: dois modelos, dois espaços. A verificação recusa mais de um modelo."
+      },
+      {
+        "text": "Funciona, já que os vetores têm o mesmo comprimento",
+        "why": "Comprimento igual não torna os espaços iguais; os números significam coisas diferentes."
+      },
+      {
+        "text": "O banco recusa a consulta",
+        "why": "O pgvector compara quaisquer dois vetores de mesma dimensão."
+      },
+      {
+        "text": "A recuperação piora um pouco mas continua usável",
+        "why": "Não há significado parcial entre dois espaços."
+      }
+    ]
+  },
+  "ex-2v7svj71": {
+    "prompt": "Por que a tabela guarda path e text em colunas separadas se os dois entram no embedding?",
+    "hint": "Onde o caminho aparece depois?",
+    "choices": [
+      {
+        "text": "Para deixar o caminho fora do hash",
+        "why": "O hash cobre caminho e texto juntos."
+      },
+      {
+        "text": "Para imprimi-lo uma vez, como cabeçalho",
+        "why": "Certo, em vez de repeti-lo dentro do texto de cada pedaço."
+      },
+      {
+        "text": "O pgvector não guarda texto com mais de uma linha",
+        "why": "Colunas de texto guardam qualquer tamanho."
+      },
+      {
+        "text": "O caminho muda a cada execução",
+        "why": "Ele só muda quando um título muda."
+      }
+    ]
+  },
+  "ex-8svskkaa": {
+    "prompt": "Quantas requisições de embedding a primeira execução do ingest.py fez para 137 pedaços?",
+    "hint": "O wc -l do registro de requisições.",
+    "unit": "requisições"
+  },
+  "ex-hvksd1ag": {
+    "prompt": "O labembed recusou a primeira requisição duas vezes com 429. Por que o ingest.py ainda gerou os 137 embeddings?",
+    "hint": "Quem tentou de novo?",
+    "choices": [
+      {
+        "text": "O ingest.py captura o 429 e dorme um segundo",
+        "why": "O ingest.py não tem tratamento de erro próprio."
+      },
+      {
+        "text": "O lote recusado foi pulado e gerado depois",
+        "why": "Nada foi pulado; a mesma requisição deu certo na nova tentativa."
+      },
+      {
+        "text": "O labgen guardou em cache os vetores da execução anterior",
+        "why": "O labgen repassa pedidos de embedding; não guarda nada em cache."
+      },
+      {
+        "text": "O SDK tentou de novo sozinho, dentro do max_retries",
+        "why": "Certo: três tentativas, e o programa nunca soube."
+      }
+    ]
+  },
+  "ex-v8jfg641": {
+    "prompt": "Uma indexação noturna de dois milhões de pedaços morre no lote 40.000 depois de esgotar as tentativas. Com o projeto do ingest.py, qual é a recuperação mais barata?",
+    "hint": "O que uma segunda execução gera?",
+    "choices": [
+      {
+        "text": "Trocar para um lote maior e rodar do zero",
+        "why": "Do zero é o desperdício; o tamanho do lote não muda isso."
+      },
+      {
+        "text": "Rodá-lo de novo",
+        "why": "Certo: ids que já estão na tabela ficam, e só o que falta é mandado. (Como está escrito, o ingest.py faz commit no fim; uma execução real faria por lote.)"
+      },
+      {
+        "text": "Diminuir o tamanho do pedaço para haver menos lotes",
+        "why": "Pedaços menores querem dizer mais pedaços, e ids novos para todos."
+      },
+      {
+        "text": "Apagar a tabela e começar de novo com mais tentativas",
+        "why": "Isso refaz os 40.000 lotes já pagos."
+      }
+    ]
+  },
+  "ex-4wmajhy4": {
+    "prompt": "Qual coluna deixa a aula 14 esconder documentos do financeiro de um atendente?",
+    "hint": "Para quem o documento é.",
+    "choices": [
+      {
+        "text": "owner",
+        "why": "owner diz quem o mantém verdadeiro, não quem pode lê-lo."
+      },
+      {
+        "text": "model",
+        "why": "model diz qual modelo de embeddings fez o vetor."
+      },
+      {
+        "text": "status",
+        "why": "status diz se está em vigor."
+      },
+      {
+        "text": "audience",
+        "why": "Certo: copiada do cabeçalho de cada documento."
+      }
+    ]
+  },
+  "ex-0nzth3aj": {
+    "prompt": "Ligue cada coluna ao uso que a aula dá a ela.",
+    "hint": "Toda coluna tem um leitor.",
+    "pairs": [
+      {
+        "left": "tokens",
+        "right": "o orçamento de contexto e o custo por consulta"
+      },
+      {
+        "left": "model",
+        "right": "conferir que todo vetor veio de um modelo"
+      },
+      {
+        "left": "path",
+        "right": "o cabeçalho da fonte no prompt"
+      },
+      {
+        "left": "status",
+        "right": "filtrar o que não está mais em vigor"
+      }
+    ],
+    "right_distractors": [
+      "decidir a ordem dos resultados da busca"
+    ]
+  },
+  "ex-gbbzq09y": {
+    "prompt": "Em quantos pedaços o regulamento de devoluções virou?",
+    "hint": "A consulta com GROUP BY.",
+    "unit": "pedaços"
+  },
+  "ex-x6qssy8e": {
+    "prompt": "Os pedaços do regulamento somam 918 tokens, contra 1.113 do arquivo na aula 1. Para onde foi a diferença?",
+    "hint": "O que está em path e não em text?",
+    "choices": [
+      {
+        "text": "Parágrafos duplicados removidos pelo hash",
+        "why": "O hash não remove nada de um documento."
+      },
+      {
+        "text": "Cabeçalho, título e títulos de seção",
+        "why": "Certo: ficam em path, não contados em text."
+      },
+      {
+        "text": "Perdida no corte de 256 pedaços",
+        "why": "Pedaços de 60 palavras ficam bem abaixo do limite."
+      },
+      {
+        "text": "Palavras contadas duas vezes na aula 1",
+        "why": "A aula 1 contou o arquivo uma vez."
+      }
+    ]
+  },
+  "ex-ek10rxbp": {
+    "prompt": "Do que é feito o id de um pedaço?",
+    "hint": "Um hash, e mais uma coisa.",
+    "choices": [
+      {
+        "text": "Um contador que sobe a cada inserção",
+        "why": "Um contador daria um id novo a texto igual em toda execução."
+      },
+      {
+        "text": "Só o caminho de títulos",
+        "why": "Três pedaços têm o caminho de The return window."
+      },
+      {
+        "text": "A posição do pedaço no documento",
+        "why": "Posições mudam quando se acrescenta um parágrafo; ids não podem."
+      },
+      {
+        "text": "O id do documento e um hash do caminho e do texto",
+        "why": "Certo: mesmo texto, mesmo id."
+      }
+    ]
+  },
+  "ex-1zvz2jtz": {
+    "prompt": "Depois que a frase do reembolso foi editada, quantos pedaços o ingest.py gerou?",
+    "hint": "embedded: …",
+    "unit": "pedaço"
+  },
+  "ex-3d25ddjh": {
+    "prompt": "Que mudança deixaria todos os ids iguais e todos os vetores errados?",
+    "hint": "O id não diz nada sobre ela.",
+    "choices": [
+      {
+        "text": "Trocar de modelo de embeddings",
+        "why": "Certo; a coluna model existe para a troca ser deliberada."
+      },
+      {
+        "text": "Editar um título",
+        "why": "O caminho entra no hash, então os ids mudam."
+      },
+      {
+        "text": "Acrescentar um parágrafo",
+        "why": "Os pedaços em volta mudam de texto e ganham ids novos."
+      },
+      {
+        "text": "Apagar um documento",
+        "why": "Os ids dele são removidos; o resto fica intocado e certo."
+      }
+    ]
+  },
+  "ex-ry61mk9n": {
+    "prompt": "Uma redatora acrescenta um parágrafo longo no topo da política de entrega. Por que o ingest.py pode refazer vários pedaços, e não um?",
+    "hint": "Como o structured() junta parágrafos?",
+    "choices": [
+      {
+        "text": "O parágrafo novo passa de 256 pedaços",
+        "why": "O tamanho não tem nada a ver com quais ids mudam."
+      },
+      {
+        "text": "Os pedaços seguintes mudam",
+        "why": "Certo: pedaços mudam de texto sem ninguém editá-los."
+      },
+      {
+        "text": "O hash cobre o documento inteiro",
+        "why": "Ele cobre caminho e texto de um pedaço."
+      },
+      {
+        "text": "Toda edição refaz o documento inteiro",
+        "why": "Só pedaços cujo texto mudou ganham ids novos."
+      }
+    ]
+  },
+  "ex-drwdew8v": {
+    "prompt": "Marcar os termos do vale-presente como substituídos gerou quantos embeddings?",
+    "hint": "O texto mudou?",
+    "choices": [
+      {
+        "text": "Cinco, um por pedaço do documento",
+        "why": "O status não entra no hash."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Certo: mesmo texto, mesmos ids; só os metadados foram reescritos."
+      },
+      {
+        "text": "Todos os 137, já que o corpus mudou",
+        "why": "Texto igual nunca é refeito."
+      },
+      {
+        "text": "Doze, todo pedaço substituído",
+        "why": "Doze é a contagem de substituídos, não de embeddings."
+      }
+    ]
+  },
+  "ex-91pmtc23": {
+    "prompt": "Depois de marcar um documento como substituído, por que um cliente ainda vê os pedaços dele até a aula 14?",
+    "hint": "O que uma marca faz sozinha?",
+    "choices": [
+      {
+        "text": "O ingest.py ainda não rodou",
+        "why": "Ele rodou, e o status está na tabela."
+      },
+      {
+        "text": "Pedaços substituídos mantêm os embeddings antigos",
+        "why": "Mantêm, corretamente; o texto é o mesmo."
+      },
+      {
+        "text": "O índice HNSW guarda o status antigo em cache",
+        "why": "O índice guarda vetores, não status."
+      },
+      {
+        "text": "A busca ainda não filtra pelo status",
+        "why": "Certo: a marca é dado até uma consulta usá-la."
+      }
+    ]
+  },
+  "ex-txes64ky": {
+    "prompt": "Um colega insere à mão na tabela um pedaço de correção, sem documento por trás. O que a aula diz que dá errado?",
+    "hint": "Quem o remove?",
+    "choices": [
+      {
+        "text": "O pgvector recusa linhas sem doc_id",
+        "why": "Qualquer string de doc_id é aceita."
+      },
+      {
+        "text": "Nenhuma execução do ingest.py jamais o removeria",
+        "why": "Removeria: o id dele é um que nenhum documento produz, então a próxima execução o apaga."
+      },
+      {
+        "text": "A próxima execução o apaga",
+        "why": "Certo, em silêncio: um id que nenhum documento produz é apagado. Os arquivos são a verdade; corrija o documento."
+      },
+      {
+        "text": "O embedding dele vem do modelo errado",
+        "why": "Talvez, mas não é o problema que a aula nomeia."
+      }
+    ]
+  },
+  "ex-h292p94n": {
+    "prompt": "Ligue cada mudança ao que o ingest.py e a aula fazem com ela.",
+    "hint": "Manter, remover ou refazer?",
+    "pairs": [
+      {
+        "left": "Um regulamento de devoluções substituído",
+        "right": "marcar como substituído e manter"
+      },
+      {
+        "left": "Dados pessoais sob pedido de exclusão",
+        "right": "apagar o documento"
+      },
+      {
+        "left": "Um status novo com o mesmo texto",
+        "right": "reescrever os metadados, sem embedding"
+      },
+      {
+        "left": "Uma frase editada",
+        "right": "refazer o embedding de um pedaço"
+      }
+    ],
+    "right_distractors": [
+      "refazer o embedding do corpus inteiro"
+    ]
+  },
+  "ex-c3h9602p": {
+    "prompt": "Por que o índice tem de ser construído com vector_cosine_ops?",
+    "hint": "A busca ordena por <=>.",
+    "choices": [
+      {
+        "text": "Combina com o operador <=>",
+        "why": "Certo: um índice para outro operador é ignorado, sem erro."
+      },
+      {
+        "text": "Cosseno é a única distância que o HNSW suporta",
+        "why": "O HNSW suporta L2, produto interno e cosseno."
+      },
+      {
+        "text": "É mais rápido que as outras classes de operador",
+        "why": "Velocidade não é o motivo; combinar é."
+      },
+      {
+        "text": "O pgvector exige isso para 384 dimensões",
+        "why": "Qualquer classe de operador funciona com qualquer dimensão."
+      }
+    ]
+  },
+  "ex-1d44na1m": {
+    "prompt": "Por que a captura definiu enable_seqscan = off antes do EXPLAIN?",
+    "hint": "130 linhas.",
+    "choices": [
+      {
+        "text": "Varreduras sequenciais dão resultados errados com vetores",
+        "why": "A varredura sequencial é exata; o índice é que é aproximado."
+      },
+      {
+        "text": "Índices HNSW só são usados quando ele está desligado",
+        "why": "O planejador os usa quando saem mais baratos."
+      },
+      {
+        "text": "Faz o índice ser construído mais depressa",
+        "why": "Afeta o planejamento de consultas, não a construção."
+      },
+      {
+        "text": "Para o EXPLAIN mostrar o índice em uso",
+        "why": "Certo: com 130 linhas o planejador prefere ler a tabela. Não é configuração para deixar ligada."
+      }
+    ]
+  },
+  "ex-p8xhb8h8": {
+    "prompt": "Por que o check_index.py falhou no fim da aula?",
+    "hint": "O que foi apagado?",
+    "choices": [
+      {
+        "text": "A pergunta do vale-presente achou a seção errada",
+        "why": "Essa verificação passou; não foi impressa."
+      },
+      {
+        "text": "Dois modelos foram misturados",
+        "why": "Um modelo do começo ao fim."
+      },
+      {
+        "text": "Um vetor tinha o tamanho errado",
+        "why": "Todo vetor tem 384."
+      },
+      {
+        "text": "12 documentos, esperados 13",
+        "why": "Certo: o regulamento de 2025 tinha sido apagado, e a verificação disse isso."
+      }
+    ]
+  },
+  "ex-3a3041t3": {
+    "prompt": "Ponha em ordem o fim de uma indexação.",
+    "hint": "A verificação decide se o resto acontece.",
+    "items": [
+      "O ingest.py escreve os pedaços",
+      "O check_index.py roda contra o índice",
+      "Uma saída diferente de zero para a execução",
+      "Senão, o índice novo entra no ar"
+    ]
+  },
+  "ex-ncssbb3q": {
+    "prompt": "O melhor teste para copiar para todo lugar é uma pergunta cuja ___ é conhecida, com o pedaço que tem de vir primeiro nomeado de antemão.",
+    "hint": "O que a pergunta do vale-presente tem.",
+    "blanks": [
+      {
+        "accept": [
+          "resposta",
+          "resposta certa",
+          "resposta esperada"
+        ]
+      }
+    ]
+  },
+  "ex-45dzvewz": {
+    "prompt": "Quais destes as execuções desta aula mostraram? Escolha todos os que se aplicam.",
+    "hint": "Confira cada um contra uma captura.",
+    "choices": [
+      {
+        "text": "Uma segunda execução sem mudanças não gerou nada",
+        "why": "Sim: embedded 0, kept 137."
+      },
+      {
+        "text": "Duas requisições recusadas fizeram a execução falhar",
+        "why": "Não: o SDK tentou de novo e os 137 foram gerados."
+      },
+      {
+        "text": "O caminho na frente fez pedaços de 60 palavras acharem as 26",
+        "why": "Sim: antes eram 24."
+      },
+      {
+        "text": "Marcar um documento como substituído o refez",
+        "why": "Não: embedded 0."
+      },
+      {
+        "text": "Apagar o arquivo de 2025 removeu seus sete pedaços",
+        "why": "Sim: removed 7, nenhum restante."
+      }
+    ]
+  }
+}

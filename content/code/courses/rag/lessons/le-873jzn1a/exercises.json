@@ -1,0 +1,702 @@
+[
+  {
+    "id": "ex-9dw0x3g3",
+    "version": 1,
+    "section": "what-gets-embedded",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the heading path in front, how many of the 26 answerable questions did structured 60-word chunks find?",
+    "hint": "header.py's second line.",
+    "value": 26,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-j7gy6eqr",
+    "version": 1,
+    "section": "what-gets-embedded",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the path help the 60-word chunks more than the 120-word ones?",
+    "hint": "Which lose more when cut?",
+    "choices": [
+      {
+        "text": "The path is longer than 60 words",
+        "correct": false,
+        "why": "It is a dozen words."
+      },
+      {
+        "text": "Bigger chunks ignore headings",
+        "correct": false,
+        "why": "Both sizes were embedded with the same path."
+      },
+      {
+        "text": "Small chunks lose more when cut",
+        "correct": true,
+        "why": "Right: a 120-word chunk already carries more of its own context."
+      },
+      {
+        "text": "120-word chunks were truncated",
+        "correct": false,
+        "why": "120 words is under the 219-word limit lesson 4 measured."
+      }
+    ]
+  },
+  {
+    "id": "ex-s70a89j6",
+    "version": 1,
+    "section": "what-gets-embedded",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team embeds its chunks with one model and, to save money, embeds questions with a cheaper model of the same dimension. What happens?",
+    "hint": "Same size, same space?",
+    "choices": [
+      {
+        "text": "Scores look like similarities and mean nothing",
+        "correct": true,
+        "why": "Right: two models, two spaces. The check refuses more than one model."
+      },
+      {
+        "text": "It works, since the vectors have the same length",
+        "correct": false,
+        "why": "Equal length does not make the spaces the same; the numbers mean different things."
+      },
+      {
+        "text": "The database refuses the query",
+        "correct": false,
+        "why": "pgvector compares any two vectors of the same dimension."
+      },
+      {
+        "text": "Retrieval gets slightly worse but stays usable",
+        "correct": false,
+        "why": "There is no partial meaning across two spaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-2v7svj71",
+    "version": 1,
+    "section": "what-gets-embedded",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the table store path and text in separate columns when both go into the embedding?",
+    "hint": "Where does the path appear later?",
+    "choices": [
+      {
+        "text": "To keep the path out of the hash",
+        "correct": false,
+        "why": "The hash covers path and text together."
+      },
+      {
+        "text": "To print it once, as the source header",
+        "correct": true,
+        "why": "Right, instead of repeating it inside every chunk's text."
+      },
+      {
+        "text": "pgvector cannot store text longer than one line",
+        "correct": false,
+        "why": "Text columns hold any length."
+      },
+      {
+        "text": "The path changes every run",
+        "correct": false,
+        "why": "It changes only when a heading does."
+      }
+    ]
+  },
+  {
+    "id": "ex-8svskkaa",
+    "version": 1,
+    "section": "calling-the-provider",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many embedding requests did the first ingest.py run make for 137 chunks?",
+    "hint": "wc -l of the request log.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-hvksd1ag",
+    "version": 1,
+    "section": "calling-the-provider",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "labembed refused the first request twice with 429. Why did ingest.py still embed all 137 chunks?",
+    "hint": "Who retried?",
+    "choices": [
+      {
+        "text": "ingest.py catches 429 and sleeps for one second",
+        "correct": false,
+        "why": "ingest.py has no error handling of its own."
+      },
+      {
+        "text": "The refused batch was skipped and embedded later",
+        "correct": false,
+        "why": "Nothing was skipped; the same request succeeded on retry."
+      },
+      {
+        "text": "labgen cached the vectors from the earlier run",
+        "correct": false,
+        "why": "labgen passes embedding requests on; it caches nothing."
+      },
+      {
+        "text": "The SDK retried by itself, within max_retries",
+        "correct": true,
+        "why": "Right: three attempts, and the program never knew."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8jfg641",
+    "version": 1,
+    "section": "calling-the-provider",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An overnight indexing run of two million chunks dies at batch 40,000 after exhausting its retries. With ingest.py's design, what is the cheapest recovery?",
+    "hint": "What does a second run embed?",
+    "choices": [
+      {
+        "text": "Switch to a bigger batch size and rerun from zero",
+        "correct": false,
+        "why": "From zero is the waste; batch size does not change it."
+      },
+      {
+        "text": "Run it again",
+        "correct": true,
+        "why": "Right: ids already in the table are kept, and only what is missing is sent. (As written, ingest.py commits at the end; a real run would commit per batch.)"
+      },
+      {
+        "text": "Lower the chunk size so there are fewer batches",
+        "correct": false,
+        "why": "Smaller chunks mean more chunks, and new ids for all of them."
+      },
+      {
+        "text": "Drop the table and start again with more retries",
+        "correct": false,
+        "why": "That re-embeds the 40,000 batches already paid for."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wmajhy4",
+    "version": 1,
+    "section": "the-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which column lets lesson 14 hide finance documents from a support agent?",
+    "hint": "Who the document is for.",
+    "choices": [
+      {
+        "text": "owner",
+        "correct": false,
+        "why": "owner says who keeps it true, not who may read it."
+      },
+      {
+        "text": "model",
+        "correct": false,
+        "why": "model says which embedding model made the vector."
+      },
+      {
+        "text": "status",
+        "correct": false,
+        "why": "status says whether it is current."
+      },
+      {
+        "text": "audience",
+        "correct": true,
+        "why": "Right: copied from each document's front matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nzth3aj",
+    "version": 1,
+    "section": "the-table",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each column to the lesson's use for it.",
+    "hint": "Each column has a reader.",
+    "pairs": [
+      {
+        "left": "tokens",
+        "right": "the context budget and cost per query"
+      },
+      {
+        "left": "model",
+        "right": "checking every vector came from one model"
+      },
+      {
+        "left": "path",
+        "right": "the source header in the prompt"
+      },
+      {
+        "left": "status",
+        "right": "filtering out what is no longer current"
+      }
+    ],
+    "right_distractors": [
+      "deciding the order of the search results"
+    ]
+  },
+  {
+    "id": "ex-gbbzq09y",
+    "version": 1,
+    "section": "the-table",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Into how many chunks did the returns policy go?",
+    "hint": "The GROUP BY query.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": "chunks"
+  },
+  {
+    "id": "ex-x6qssy8e",
+    "version": 1,
+    "section": "the-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The returns policy's chunks add up to 918 tokens, against 1,113 for the file in lesson 1. Where did the difference go?",
+    "hint": "What is in path rather than text?",
+    "choices": [
+      {
+        "text": "Duplicate paragraphs removed by the hash",
+        "correct": false,
+        "why": "The hash removes nothing from a document."
+      },
+      {
+        "text": "Front matter, title and headings",
+        "correct": true,
+        "why": "Right: kept in path, not counted in text."
+      },
+      {
+        "text": "Lost to truncation at 256 pieces",
+        "correct": false,
+        "why": "Chunks of 60 words are far under the limit."
+      },
+      {
+        "text": "Words counted twice in lesson 1",
+        "correct": false,
+        "why": "Lesson 1 counted the file once."
+      }
+    ]
+  },
+  {
+    "id": "ex-ek10rxbp",
+    "version": 1,
+    "section": "ids-and-updates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a chunk's id made of?",
+    "hint": "A hash, and one more thing.",
+    "choices": [
+      {
+        "text": "A counter that increases on every insert",
+        "correct": false,
+        "why": "A counter would give unchanged text a new id on every run."
+      },
+      {
+        "text": "The heading path alone",
+        "correct": false,
+        "why": "Three chunks share The return window's path."
+      },
+      {
+        "text": "The position of the chunk in the document",
+        "correct": false,
+        "why": "Positions shift when a paragraph is added; ids must not."
+      },
+      {
+        "text": "The document's id and a hash of path and text",
+        "correct": true,
+        "why": "Right: same text, same id."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zvz2jtz",
+    "version": 1,
+    "section": "ids-and-updates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the refund sentence was edited, how many chunks did ingest.py embed?",
+    "hint": "embedded: …",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "chunk"
+  },
+  {
+    "id": "ex-3d25ddjh",
+    "version": 1,
+    "section": "ids-and-updates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change would leave every id the same and every vector wrong?",
+    "hint": "The id says nothing about it.",
+    "choices": [
+      {
+        "text": "Switching to a different embedding model",
+        "correct": true,
+        "why": "Right; the model column is there to make the switch deliberate."
+      },
+      {
+        "text": "Editing a heading",
+        "correct": false,
+        "why": "The path is in the hash, so the ids change."
+      },
+      {
+        "text": "Adding a paragraph",
+        "correct": false,
+        "why": "The chunks around it change text and get new ids."
+      },
+      {
+        "text": "Deleting a document",
+        "correct": false,
+        "why": "Its ids are removed; the rest are untouched and right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ry61mk9n",
+    "version": 1,
+    "section": "ids-and-updates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A writer adds a long paragraph at the top of the shipping policy. Why might ingest.py re-embed several chunks, not one?",
+    "hint": "How does structured() pack paragraphs?",
+    "choices": [
+      {
+        "text": "The new paragraph exceeds 256 pieces",
+        "correct": false,
+        "why": "Size has nothing to do with which ids change."
+      },
+      {
+        "text": "Later chunks shift",
+        "correct": true,
+        "why": "Right: chunks change text without anyone editing them."
+      },
+      {
+        "text": "The hash covers the whole document",
+        "correct": false,
+        "why": "It covers one chunk's path and text."
+      },
+      {
+        "text": "Every edit re-embeds the whole document",
+        "correct": false,
+        "why": "Only chunks whose text changed get new ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-drwdew8v",
+    "version": 1,
+    "section": "superseding-and-deleting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Marking the gift card terms superseded embedded how many chunks?",
+    "hint": "Did the text change?",
+    "choices": [
+      {
+        "text": "Five, one per chunk of the document",
+        "correct": false,
+        "why": "The status is not in the hash."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: same text, same ids; only the metadata was rewritten."
+      },
+      {
+        "text": "All 137, since the corpus changed",
+        "correct": false,
+        "why": "Unchanged text is never re-embedded."
+      },
+      {
+        "text": "Twelve, every superseded chunk",
+        "correct": false,
+        "why": "Twelve is the superseded count, not an embedding count."
+      }
+    ]
+  },
+  {
+    "id": "ex-91pmtc23",
+    "version": 1,
+    "section": "superseding-and-deleting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After marking a document superseded, why does a customer still see its chunks until lesson 14?",
+    "hint": "What does a mark do by itself?",
+    "choices": [
+      {
+        "text": "ingest.py has not run yet",
+        "correct": false,
+        "why": "It ran, and the status is in the table."
+      },
+      {
+        "text": "Superseded chunks keep their old embeddings",
+        "correct": false,
+        "why": "They keep them correctly; the text is the same."
+      },
+      {
+        "text": "The HNSW index caches the old status",
+        "correct": false,
+        "why": "The index holds vectors, not statuses."
+      },
+      {
+        "text": "The search does not filter on status yet",
+        "correct": true,
+        "why": "Right: the mark is data until a query uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-txes64ky",
+    "version": 1,
+    "section": "superseding-and-deleting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague inserts a correction chunk into the table by hand, with no document behind it. What does the lesson say goes wrong?",
+    "hint": "Who removes it?",
+    "choices": [
+      {
+        "text": "pgvector refuses rows without a doc_id",
+        "correct": false,
+        "why": "Any doc_id string is accepted."
+      },
+      {
+        "text": "No run of ingest.py would ever remove it",
+        "correct": false,
+        "why": "It would: its id is one no document produces, so the next run deletes it."
+      },
+      {
+        "text": "The next run deletes it",
+        "correct": true,
+        "why": "Right, silently: an id no document produces is deleted. The files are the truth; fix the document."
+      },
+      {
+        "text": "Its embedding comes from the wrong model",
+        "correct": false,
+        "why": "It might, but that is not the problem the lesson names."
+      }
+    ]
+  },
+  {
+    "id": "ex-h292p94n",
+    "version": 1,
+    "section": "superseding-and-deleting",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change to what ingest.py and the lesson do with it.",
+    "hint": "Keep, remove, or re-embed?",
+    "pairs": [
+      {
+        "left": "A replaced returns policy",
+        "right": "mark it superseded and keep it"
+      },
+      {
+        "left": "Personal data under an erasure request",
+        "right": "delete the document"
+      },
+      {
+        "left": "A new status with the same text",
+        "right": "rewrite the metadata, embed nothing"
+      },
+      {
+        "left": "One edited sentence",
+        "right": "embed one chunk again"
+      }
+    ],
+    "right_distractors": [
+      "re-embed the whole corpus"
+    ]
+  },
+  {
+    "id": "ex-c3h9602p",
+    "version": 1,
+    "section": "the-index",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why must the index be built with vector_cosine_ops?",
+    "hint": "The search orders by <=>.",
+    "choices": [
+      {
+        "text": "It matches the <=> operator",
+        "correct": true,
+        "why": "Right: an index built for another operator is ignored, without an error."
+      },
+      {
+        "text": "Cosine is the only distance HNSW supports",
+        "correct": false,
+        "why": "HNSW supports L2, inner product and cosine."
+      },
+      {
+        "text": "It is faster than the other operator classes",
+        "correct": false,
+        "why": "Speed is not the reason; matching is."
+      },
+      {
+        "text": "pgvector requires it for 384 dimensions",
+        "correct": false,
+        "why": "Any operator class works for any dimension."
+      }
+    ]
+  },
+  {
+    "id": "ex-1d44na1m",
+    "version": 1,
+    "section": "the-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the capture set enable_seqscan = off before EXPLAIN?",
+    "hint": "130 rows.",
+    "choices": [
+      {
+        "text": "Sequential scans give wrong results with vectors",
+        "correct": false,
+        "why": "A sequential scan is exact; it is the index that is approximate."
+      },
+      {
+        "text": "HNSW indexes are only used when it is off",
+        "correct": false,
+        "why": "The planner uses them when they are cheaper."
+      },
+      {
+        "text": "It makes the index build faster",
+        "correct": false,
+        "why": "It affects query planning, not building."
+      },
+      {
+        "text": "So EXPLAIN shows the index is usable",
+        "correct": true,
+        "why": "Right: at 130 rows the planner prefers reading the table. It is not a setting to leave on."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8xhb8h8",
+    "version": 1,
+    "section": "checking-the-load",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did check_index.py fail at the end of the lesson?",
+    "hint": "What was deleted?",
+    "choices": [
+      {
+        "text": "The gift card question found the wrong section",
+        "correct": false,
+        "why": "That check passed; it was not printed."
+      },
+      {
+        "text": "Two models were mixed",
+        "correct": false,
+        "why": "One model throughout."
+      },
+      {
+        "text": "A vector had the wrong size",
+        "correct": false,
+        "why": "Every vector is 384."
+      },
+      {
+        "text": "12 documents, expected 13",
+        "correct": true,
+        "why": "Right: the 2025 policy had been deleted, and the check said so."
+      }
+    ]
+  },
+  {
+    "id": "ex-3a3041t3",
+    "version": 1,
+    "section": "checking-the-load",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the end of an indexing run in order.",
+    "hint": "The check decides whether the rest happens.",
+    "items": [
+      "ingest.py writes the chunks",
+      "check_index.py runs against the index",
+      "A non-zero exit stops the run",
+      "Otherwise the new index goes live"
+    ]
+  },
+  {
+    "id": "ex-ncssbb3q",
+    "version": 1,
+    "section": "checking-the-load",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The best test to copy everywhere is a question whose ___ is known, with the chunk that must come first named in advance.",
+    "hint": "What the gift card question has.",
+    "blanks": [
+      {
+        "accept": [
+          "answer",
+          "correct answer",
+          "expected answer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-45dzvewz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a capture.",
+    "choices": [
+      {
+        "text": "A second run with nothing changed embedded nothing",
+        "correct": true,
+        "why": "Yes: embedded 0, kept 137."
+      },
+      {
+        "text": "Two refused requests made the run fail",
+        "correct": false,
+        "why": "No: the SDK retried and all 137 were embedded."
+      },
+      {
+        "text": "The path in front made 60-word chunks find all 26",
+        "correct": true,
+        "why": "Yes: up from 24."
+      },
+      {
+        "text": "Marking a document superseded re-embedded it",
+        "correct": false,
+        "why": "No: embedded 0."
+      },
+      {
+        "text": "Deleting the 2025 policy file removed its seven chunks",
+        "correct": true,
+        "why": "Yes: removed 7, none left."
+      }
+    ]
+  }
+]
