@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-t64gsap9",
+    "version": 1,
+    "section": "copies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func double(n int) { n = n * 2 }` is called as `double(n)` with `n := 21`. What does `n` hold afterwards?",
+    "hint": "Whose variable did the function double?",
+    "choices": [
+      {
+        "text": "42, because the function doubled it",
+        "correct": false,
+        "why": "It doubled its own `n`, a variable made for the call. The caller's `n` was never handed over."
+      },
+      {
+        "text": "Nothing: assigning to a parameter is a compile error",
+        "correct": false,
+        "why": "A parameter is an ordinary local variable, and `double` compiled and ran in section 02."
+      },
+      {
+        "text": "21, because the function doubled a copy of it",
+        "correct": true,
+        "why": "Right. The call copied 21 into the function's own `n`; the first line of output was 21."
+      },
+      {
+        "text": "0, since a parameter is reset when the function returns",
+        "correct": false,
+        "why": "Nothing resets the caller's variable; it keeps the 21 it had, because only its value left it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcngpbms",
+    "version": 1,
+    "section": "copies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Player` has a field `Last [3]int`. After `bia := ana` and `bia.Last[1] = 50`, what is `ana.Last`?",
+    "hint": "Is an array field part of the struct, or somewhere else?",
+    "choices": [
+      {
+        "text": "`[0 50 0]`, because the two structs share their array",
+        "correct": false,
+        "why": "That would be true of a slice field. An array field is inside the struct and was copied with it."
+      },
+      {
+        "text": "`[0 0 0]`",
+        "correct": true,
+        "why": "Right. Copying a struct copied its array, so writing into `bia`'s left `ana`'s alone."
+      },
+      {
+        "text": "`[50 50 50]`",
+        "correct": false,
+        "why": "`bia.Last[1] = 50` writes one element, and of `bia`'s array at that."
+      },
+      {
+        "text": "A compile error, since a struct holding an array cannot be assigned",
+        "correct": false,
+        "why": "`bia := ana` compiled in section 02; a struct is assigned whole whatever its fields are."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztsefrz5",
+    "version": 1,
+    "section": "copies",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A parameter is an ordinary local ___ that the call fills in with a copy of the argument.",
+    "hint": "The function can read it, change it and throw it away.",
+    "blanks": [
+      {
+        "accept": [
+          "variable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8atz0gxb",
+    "version": 1,
+    "section": "copies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`win(p Player) Player` changes `p.Score` and returns `p`; the caller writes `ana = win(ana)`. What does this shape give the reader of the call?",
+    "hint": "Look at the left-hand side of the call.",
+    "choices": [
+      {
+        "text": "It saves the copy that passing `ana` would cost",
+        "correct": false,
+        "why": "It makes three copies, not fewer: into `p`, out as the result, and into `ana`."
+      },
+      {
+        "text": "Nothing extra: it is the one way Go lets a function change a value for its caller",
+        "correct": false,
+        "why": "There is a second way, passing the address, which lesson 23 is about."
+      },
+      {
+        "text": "The assignment shows, at the call, that `ana` changes",
+        "correct": true,
+        "why": "Right. Nobody has to open `win` to know `ana` is replaced."
+      },
+      {
+        "text": "It makes `win` run faster than a function that returns no value",
+        "correct": false,
+        "why": "Returning a value adds a copy; the benefit is legibility, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-50k2ypnd",
+    "version": 1,
+    "section": "copies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function receives `players []Player` and runs `for _, p := range players { p.Score = 0 }`. What happens to the caller's players?",
+    "hint": "What is `p` on each turn of the loop?",
+    "choices": [
+      {
+        "text": "Every score becomes 0, as the array is shared",
+        "correct": false,
+        "why": "The array is shared, but the loop never writes into it: it writes into `p`."
+      },
+      {
+        "text": "Nothing: `p` is a copy of each element, and the loop changes the copy",
+        "correct": true,
+        "why": "Right. `range` hands over a copy of each element, the same copy a call makes; `players[i].Score = 0` would reach the array."
+      },
+      {
+        "text": "Only the first player changes, since the copy is made once",
+        "correct": false,
+        "why": "A copy is made on every turn, and none of them is the element."
+      },
+      {
+        "text": "It does not compile, because `p` cannot be assigned to",
+        "correct": false,
+        "why": "`p` is an ordinary variable and assigning to its field compiles; it just changes nothing outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-dphepvsk",
+    "version": 1,
+    "section": "headers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the lab's machine, how many bytes does `unsafe.Sizeof` report for a variable of type `map[string]int` that holds a million keys?",
+    "hint": "What does a map variable hold?",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-anh4v42j",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`replace(m map[string]int)` runs `m = map[string]int{\"carla\": 3}`. The caller passed `ages`, holding `ana` and `bia`. What does the caller's `ages` hold afterwards?",
+    "hint": "Did the function write through the pointer, or replace it?",
+    "choices": [
+      {
+        "text": "`carla` alone, because maps are passed by reference",
+        "correct": false,
+        "why": "That is what pass by reference would do, and the program printed the opposite."
+      },
+      {
+        "text": "`ana`, `bia` and `carla`, because both maps merge",
+        "correct": false,
+        "why": "Nothing merges maps; `carla` went into a new table only `m` pointed at."
+      },
+      {
+        "text": "Nothing: `ages` is nil after the call",
+        "correct": false,
+        "why": "The caller's variable was not touched at all, so it still points at its table."
+      },
+      {
+        "text": "`ana` and `bia`, as before the call",
+        "correct": true,
+        "why": "Right. The assignment changed `m`, the function's copy of the pointer, and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-8r9ycse0",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`load(m map[string]int)` does `if m == nil { m = make(map[string]int) }` and adds a key. The caller declared `var ages map[string]int`, called `load(ages)`, then wrote `ages[\"bia\"] = 2` and the program panicked. Why?",
+    "hint": "Which variable did `make` go into?",
+    "choices": [
+      {
+        "text": "`load` emptied the map when it returned",
+        "correct": false,
+        "why": "Returning empties nothing; the map `load` made was simply never stored where the caller looks."
+      },
+      {
+        "text": "The new map went into `load`'s own variable, and `ages` stayed nil",
+        "correct": true,
+        "why": "Right. The program printed `true` for `ages == nil`, and writing to a nil map panics."
+      },
+      {
+        "text": "Maps made inside a function are freed when it returns",
+        "correct": false,
+        "why": "A map lives as long as something points at it; nothing in `main` did."
+      },
+      {
+        "text": "A map has to be made with `make` in the same function that writes to it",
+        "correct": false,
+        "why": "The fixed `load` made the map and `main` wrote to it, once the map was returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4te3a4w",
+    "version": 1,
+    "section": "headers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each type with what a copy of its value shares with the original.",
+    "hint": "Section 03's table, the last column.",
+    "pairs": [
+      {
+        "left": "slice",
+        "right": "the elements of an array, but not the length"
+      },
+      {
+        "left": "map",
+        "right": "the whole table, keys added through either copy included"
+      },
+      {
+        "left": "string",
+        "right": "bytes that nobody can change"
+      },
+      {
+        "left": "interface holding a struct",
+        "right": "a struct copied in when it was stored"
+      }
+    ],
+    "right_distractors": [
+      "the caller's variable itself, which it renames"
+    ]
+  },
+  {
+    "id": "ex-1y5av03n",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`var v any = ana` stores a `Player` whose score is 10; then `ana.Score = 99`. What does `fmt.Println(v)` print?",
+    "hint": "An interface value is two words. What does the second point at?",
+    "choices": [
+      {
+        "text": "`{Ana 99}`, because an interface points at the variable it was given",
+        "correct": false,
+        "why": "It points at a stored value, and the stored value was a copy taken at `v = ana`."
+      },
+      {
+        "text": "`{Ana 10}`",
+        "correct": true,
+        "why": "Right. Storing a struct in an interface copied it; the run printed `{Ana 10} {Ana 99}`."
+      },
+      {
+        "text": "`<nil>`, since `any` holds no fields",
+        "correct": false,
+        "why": "`any` holds whatever was stored in it, fields and all."
+      },
+      {
+        "text": "Nothing: assigning a struct to `any` does not compile",
+        "correct": false,
+        "why": "Every type satisfies `any`, so the assignment compiles; lesson 28 is about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dezmpqwc",
+    "version": 1,
+    "section": "headers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function receives `m map[string]int`. Which of these does the caller see after the function returns? Choose all that apply.",
+    "hint": "Through the pointer, or to the pointer?",
+    "choices": [
+      {
+        "text": "`m[\"bia\"] = 2`",
+        "correct": true,
+        "why": "Yes: it writes into the table both copies point at."
+      },
+      {
+        "text": "`delete(m, \"ana\")`",
+        "correct": true,
+        "why": "Yes: deleting goes through the pointer to the same table, like adding."
+      },
+      {
+        "text": "`m = map[string]int{}`",
+        "correct": false,
+        "why": "No: that changes which table `m` points at, and `m` is the function's own copy."
+      },
+      {
+        "text": "`m = nil`",
+        "correct": false,
+        "why": "No: the caller's variable keeps its pointer whatever the function assigns to `m`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8qkrx3x",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function only needs to read a few elements of a `[1_000_000]int`. What is the usual way to stop every call copying 8,000,000 bytes?",
+    "hint": "What did `viaSlice` take?",
+    "choices": [
+      {
+        "text": "Declare the array as a global variable and stop passing it",
+        "correct": false,
+        "why": "That avoids the copy by making every function depend on one variable, which is a different problem."
+      },
+      {
+        "text": "Mark the function `//go:noinline`",
+        "correct": false,
+        "why": "That directive stops inlining, which keeps the copy; the benchmark used it so the copy would be measured."
+      },
+      {
+        "text": "Pass a slice over the array, 24 bytes",
+        "correct": true,
+        "why": "Right. The slice took 2.026 ns where the array took 350,746 ns, and it shares the elements."
+      },
+      {
+        "text": "Split it into a thousand smaller arrays",
+        "correct": false,
+        "why": "Passing all of them would still copy every byte; the size of the copy is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma1ywq95",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Point` (16 bytes) took 1.954 ns per call and `Record` (1,024 bytes) took 15.51 ns. What does the pair show?",
+    "hint": "Compare the ratio of bytes with the ratio of times.",
+    "choices": [
+      {
+        "text": "The cost grows with the bytes, and both are small next to the 8 MB array",
+        "correct": true,
+        "why": "Right. Sixty-four times the bytes cost about eight times the time, and both stay in nanoseconds."
+      },
+      {
+        "text": "Any struct over 16 bytes must be passed by pointer",
+        "correct": false,
+        "why": "15.51 ns is nothing a program notices outside a very hot loop; the section says to pass small structs by value."
+      },
+      {
+        "text": "Copying is free, since both are under a microsecond",
+        "correct": false,
+        "why": "The array line shows it is not: 350,746 ns for one copy."
+      },
+      {
+        "text": "The time is the cost of the call alone, which is the same whatever the size",
+        "correct": false,
+        "why": "The times differ with the size; only at 16 or 24 bytes is the call the whole cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-37vtgpxv",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each measured function in `~/byvalue-cost` carry `//go:noinline`?",
+    "hint": "What would the compiler do with a one-line function otherwise?",
+    "choices": [
+      {
+        "text": "It is a comment for the reader, ignored by the compiler",
+        "correct": false,
+        "why": "With no space after the slashes it is a directive the compiler obeys."
+      },
+      {
+        "text": "`testing.Benchmark` refuses to time a function without it",
+        "correct": false,
+        "why": "`testing.Benchmark` times whatever its function does; the directive is about the compiler."
+      },
+      {
+        "text": "It makes the copy faster, so the numbers come out smaller",
+        "correct": false,
+        "why": "It keeps the copy exactly as it is; that is the point."
+      },
+      {
+        "text": "So the call, and the copy it makes, is not pasted into the loop and optimised away",
+        "correct": true,
+        "why": "Right. An inlined one-line function lets the compiler skip the copy that was being timed."
+      }
+    ]
+  },
+  {
+    "id": "ex-chwm9emr",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague changes every function that takes a three-field `Customer` struct to take a pointer instead, \"for speed\". What does this lesson's measurement say about that?",
+    "hint": "Where does a three-field struct sit in the table?",
+    "choices": [
+      {
+        "text": "It is right: a pointer is 8 bytes, so each call becomes about twice as fast",
+        "correct": false,
+        "why": "At this size the time is the call's, not the copy's, so halving the bytes saves nearly nothing."
+      },
+      {
+        "text": "It buys almost no time and gives up the copy that kept callers safe",
+        "correct": true,
+        "why": "Right. A small struct copies at about the cost of the call, and lesson 24 shows a pointer has costs of its own."
+      },
+      {
+        "text": "It changes nothing, because Go passes structs by pointer already",
+        "correct": false,
+        "why": "Go copies a struct into the parameter; section 02 showed the caller's struct unchanged."
+      },
+      {
+        "text": "It is required once a struct holds a string field",
+        "correct": false,
+        "why": "A string field is 16 bytes and is copied like any other; nothing requires a pointer."
+      }
+    ]
+  },
+  {
+    "id": "ex-0syd30ka",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the copies in `ana = win(ana)` in the order they happen, where `win(p Player) Player` increments `p.Score` and returns `p`.",
+    "hint": "The call comes before the body, and the assignment comes last.",
+    "items": [
+      "`ana` is copied into the parameter `p`",
+      "`win` increments `p.Score`, its own copy",
+      "`p` is copied out as the result",
+      "the result is copied into `ana`"
+    ]
+  },
+  {
+    "id": "ex-w54kdsp4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func reset(s []int) { s = nil }` is called as `reset(nums)` with `nums` holding `[1 2 3]`. What is `nums` afterwards?",
+    "hint": "It is `replace` from section 03, with a slice.",
+    "choices": [
+      {
+        "text": "`[]`, because a slice is passed by reference",
+        "correct": false,
+        "why": "A slice is passed as a copy of its three words, and `s = nil` changed only the copy."
+      },
+      {
+        "text": "`[1 2 3]`",
+        "correct": true,
+        "why": "Right. Assigning to the parameter replaces the function's copy and leaves the caller's slice as it was."
+      },
+      {
+        "text": "`[0 0 0]`, since the array is shared and `nil` zeroes it",
+        "correct": false,
+        "why": "`nil` is not written into any element; it is a new value for `s` alone."
+      },
+      {
+        "text": "A panic, because the array behind `nums` was freed",
+        "correct": false,
+        "why": "`nums` still points at its array, so the array is alive and nothing panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-vff2s6kq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func zero(s []int) { for i := range s { s[i] = 0 } }` is called as `zero(nums)` with `nums` holding `[1 2 3]`. What is `nums` afterwards?",
+    "hint": "This loop writes through `s[i]`, not into a loop variable.",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, because Go passes everything to a function by value",
+        "correct": false,
+        "why": "It does, and the value copied holds a pointer to the caller's array; writes through it land there."
+      },
+      {
+        "text": "`[]`, since zeroing a slice empties it",
+        "correct": false,
+        "why": "Writing zeros into elements keeps the length at 3."
+      },
+      {
+        "text": "`[0 0 0]`, because `s[i]` writes into the array `nums` uses",
+        "correct": true,
+        "why": "Right. The copy of the slice points at the same array, as lesson 11's `setFirst` showed."
+      },
+      {
+        "text": "`[0 2 3]`, as only the first write reaches the caller",
+        "correct": false,
+        "why": "Every `s[i]` goes through the same pointer, so every element is reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-34f12yz2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each function changes its parameter as shown. Which of them change something the caller sees? Choose all that apply. (`Team` is `struct { Members []string }`.)",
+    "hint": "Ask what each value points at.",
+    "choices": [
+      {
+        "text": "`func a(p Player) { p.Score = 0 }`",
+        "correct": false,
+        "why": "No: `p` is a whole copy of the struct, and its fields point at nothing of the caller's."
+      },
+      {
+        "text": "`func b(t Team) { t.Members[0] = \"Bia\" }`",
+        "correct": true,
+        "why": "Yes: the struct was copied, and its slice field still points at the caller's array."
+      },
+      {
+        "text": "`func c(a [3]int) { a[0] = 0 }`",
+        "correct": false,
+        "why": "No: an array is copied element by element, as lesson 11 showed with `zero`."
+      },
+      {
+        "text": "`func d(m map[string]int) { m[\"x\"] = 1 }`",
+        "correct": true,
+        "why": "Yes: the map value is a pointer to one table, and the key goes into it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2aa0hzyh",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Go passes every argument by ___; for a map, what gets copied is a pointer to the table.",
+    "hint": "The opposite of \"by reference\".",
+    "blanks": [
+      {
+        "accept": [
+          "value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
