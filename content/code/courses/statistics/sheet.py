@@ -476,6 +476,44 @@ def l4():
     show('twelve baskets: mean', mean(twelve))
 
 
+@lesson(5)
+def l5():
+    for name, xs in (('Lia', LIA), ('Davi', DAVI)):
+        m = mean(xs)
+        show(f'{name}: mean', m)
+        show(f'{name}: range', max(xs) - min(xs))
+        show(f'{name}: deviations', [x - m for x in xs])
+        show(f'{name}: squared deviations', [(x - m) ** 2 for x in xs])
+        show(f'{name}: sum of squares', sum((x - m) ** 2 for x in xs))
+        show(f'{name}: sample variance', var(xs))
+        show(f'{name}: sample sd', sd(xs))
+        show(f'{name}: population variance', var(xs, False))
+        show(f'{name}: population sd', sd(xs, False))
+        show(f'{name}: mean absolute deviation', mean([abs(x - m) for x in xs]))
+        show(f'{name}: share within one sd of the mean', sum(1 for x in xs if abs(x - m) <= sd(xs)) / len(xs))
+    mins = column('minutes')
+    show('twelve minutes: sd', sd(mins))
+    show('twelve minutes: range', max(mins) - min(mins))
+    show('twelve minutes: within one sd', sum(1 for x in mins if abs(x - mean(mins)) <= sd(mins)))
+    bk = column('basket')
+    show('twelve baskets: sd', sd(bk))
+    show('twelve baskets: cv', sd(bk) / mean(bk))
+    show('twelve minutes: cv', sd(mins) / mean(mins))
+    items = column('items')
+    show('twelve items: mean, sd, cv', f'{mean(items):.4f} {sd(items):.4f} {sd(items) / mean(items):.4f}')
+    b = BASKETS
+    show('400 baskets: sd', sd(b))
+    show('400 baskets: cv', sd(b) / mean(b))
+    show('400 baskets: within one sd of the mean', sum(1 for x in b if abs(x - mean(b)) <= sd(b)) / len(b))
+    # Bessel, on a population of three, every ordered sample of two drawn with replacement
+    pop = [30, 35, 43]
+    show('population of three: mean', mean(pop))
+    show('population of three: variance', var(pop, False))
+    pairs = [(a, b) for a in pop for b in pop]
+    show('samples of two: mean of the n-1 variances', mean([var(list(q)) for q in pairs]))
+    show('samples of two: mean of the n variances', mean([var(list(q), False) for q in pairs]))
+
+
 def main():
     picked = [int(a) for a in sys.argv[1:]] or sorted(SHEET)
     for n in picked:

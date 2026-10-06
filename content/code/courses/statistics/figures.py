@@ -610,6 +610,79 @@ def l04_baskets_histogram(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 5
+
+@figure('l05-two-couriers', 5)
+def l05_two_couriers(lang):
+    t = {'en': dict(
+        label='Two rows of dots on the same scale, 20 to 50 minutes. Lia’s eight deliveries sit '
+              'between 33 and 36. Davi’s eight are scattered from 22 to 44. A dashed line at 35 '
+              'marks the mean, which is the same for both.',
+        axis='delivery time, in minutes', mean='mean 35 for both',
+        cap='The same mean, and two very different couriers to depend on. The mean alone cannot '
+            'tell them apart.'),
+        'pt': dict(
+        label='Duas fileiras de pontos na mesma escala, de 20 a 50 minutos. As oito entregas da Lia '
+              'ficam entre 33 e 36. As oito do Davi se espalham de 22 a 44. Uma linha tracejada em '
+              '35 marca a média, que é a mesma para os dois.',
+        axis='tempo de entrega, em minutos', mean='média 35 para os dois',
+        cap='A mesma média, e dois entregadores bem diferentes para confiar. A média sozinha não '
+            'consegue distingui-los.')}[lang]
+    f = Fig('l05-two-couriers', 640, 210, t['label'])
+    p = Plot(f, 90, 40, 610, 160, 20, 50, 0, 1)
+    p.xaxis(range(20, 51, 5), label=t['axis'])
+    for row, (name, xs) in enumerate((('Lia', S.LIA), ('Davi', S.DAVI))):
+        y = 70 + row * 50
+        f.text(20, y, name, size=11, anchor='start', weight='600')
+        f.line(p.x0, y, p.x1, y, stroke='--wire', width=1)
+        seen = {}
+        for x in xs:
+            k = seen.get(x, 0)
+            seen[x] = k + 1
+            f.circle(p.sx(x), y - 13 * k, 5.5, fill='--phosphor', stroke='--paper', width=0.8)
+    p.vline(35, t['mean'], stroke='--amber', top=34)
+    return f, t['cap']
+
+
+@figure('l05-deviations', 5)
+def l05_deviations(lang):
+    xs = S.DAVI
+    t = {'en': dict(
+        label='Davi’s eight delivery times, each joined to the mean of 35 by a horizontal line. '
+              'Below each line, its deviation and the square of it: minus 13 squared is 169, minus '
+              '9 is 81, minus 4 is 16, 0 is 0, 3 is 9, 5 is 25, 9 is 81 and 9 is 81. The squares '
+              'add up to 462.',
+        axis='minutes', dev='deviation', sq='squared', total='sum of squares 462',
+        cap='Each deviation is a distance from the mean. Squared, the negative ones stop '
+            'cancelling the positive ones, and the far values weigh much more than the near ones.'),
+        'pt': dict(
+        label='Os oito tempos de entrega do Davi, cada um ligado à média de 35 por uma linha '
+              'horizontal. Abaixo de cada linha, o desvio e o quadrado dele: menos 13 ao quadrado '
+              'dá 169, menos 9 dá 81, menos 4 dá 16, 0 dá 0, 3 dá 9, 5 dá 25, 9 dá 81 e 9 dá 81. Os '
+              'quadrados somam 462.',
+        axis='minutos', dev='desvio', sq='ao quadrado', total='soma dos quadrados 462',
+        cap='Cada desvio é uma distância até a média. Ao quadrado, os negativos param de anular os '
+            'positivos, e os valores distantes pesam muito mais que os próximos.')}[lang]
+    f = Fig('l05-deviations', 640, 330, t['label'])
+    p = Plot(f, 130, 30, 610, 280, 20, 50, 0, 1)
+    p.xaxis(range(20, 51, 5), label=t['axis'])
+    f.line(p.sx(35), 24, p.sx(35), p.y1, stroke='--amber', width=1.4, dash='4 3')
+    f.text(20, 18, t['dev'], size=9.5, anchor='start', fill='--paper-dim', weight='600')
+    f.text(80, 18, t['sq'], size=9.5, anchor='start', fill='--paper-dim', weight='600')
+    for i, x in enumerate(xs):
+        y = 40 + i * 28
+        d = x - 35
+        col = '--phosphor' if d < 0 else '--amber'
+        if d:
+            f.line(p.sx(35), y, p.sx(x), y, stroke=col, width=2)
+        f.circle(p.sx(x), y, 5, fill=col, stroke='--paper', width=0.8)
+        f.text(40, y, f'{d:+d}'.replace('+0', '0').replace('-', '−'), size=10, anchor='end',
+               mono=True, fill=col)
+        f.text(115, y, str(d * d), size=10, anchor='end', mono=True)
+    f.text(20, p.y1 + 31, t['total'], size=10, anchor='start', weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
