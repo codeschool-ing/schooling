@@ -1,0 +1,980 @@
+[
+  {
+    "id": "ex-tj3579sn",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the store fixture, when does the code after yield run?",
+    "choices": [
+      {
+        "text": "Before the test, as part of setup",
+        "correct": false,
+        "why": "Setup is the part before yield."
+      },
+      {
+        "text": "After the test, passed or failed alike",
+        "correct": true,
+        "why": "Right. Teardown runs either way, so the connection is closed even after a failure."
+      },
+      {
+        "text": "After the test, and only when it passed",
+        "correct": false,
+        "why": "A failing assertion does not skip the fixture's teardown."
+      },
+      {
+        "text": "Once at the end of the whole session",
+        "correct": false,
+        "why": "That would be a session-scoped fixture; this one is per function."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh2773xk",
+    "version": 1,
+    "section": "fixtures",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the --setup-show run of the three store tests, how many times was the store fixture set up?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ynhhh5cw",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a close() at the end of a test body less reliable than teardown after yield?",
+    "choices": [
+      {
+        "text": "Because close() is slower inside a test",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "Because pytest deletes the test body after it runs",
+        "correct": false,
+        "why": "pytest deletes nothing of the kind."
+      },
+      {
+        "text": "A failed assertion stops the test before the close",
+        "correct": true,
+        "why": "Right. Lines after the failing assert are skipped; the fixture's teardown is not."
+      },
+      {
+        "text": "Because SQLite refuses a close from test code",
+        "correct": false,
+        "why": "SQLite does not know who calls close."
+      }
+    ]
+  },
+  {
+    "id": "ex-f610t1gt",
+    "version": 1,
+    "section": "fixtures",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A fixture defined in a file named ___ is available to every test file beside it without an import.",
+    "blanks": [
+      {
+        "accept": [
+          "conftest.py",
+          "conftest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cttq3e85",
+    "version": 1,
+    "section": "scope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The store fixture was made module-scoped while still asking for tmp_path. What did pytest do?",
+    "choices": [
+      {
+        "text": "Refused it: ScopeMismatch",
+        "correct": true,
+        "why": "Right. A module fixture cannot depend on a function fixture it would outlive."
+      },
+      {
+        "text": "Ran the tests, each sharing one tmp_path",
+        "correct": false,
+        "why": "It never got that far."
+      },
+      {
+        "text": "Silently widened tmp_path to module scope",
+        "correct": false,
+        "why": "pytest does not change a fixture's scope for you."
+      },
+      {
+        "text": "Skipped the store tests with a warning",
+        "correct": false,
+        "why": "It reported errors, not skips."
+      }
+    ]
+  },
+  {
+    "id": "ex-th2nmg2c",
+    "version": 1,
+    "section": "scope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the module-scoped store, test_a_new_store_has_no_quotes failed in the full file and passed alone. Why?",
+    "choices": [
+      {
+        "text": "Because -k runs tests with a fresh Python",
+        "correct": false,
+        "why": "It is the same interpreter; the difference is what ran before."
+      },
+      {
+        "text": "Earlier tests had filled the shared store",
+        "correct": true,
+        "why": "Right. Alone, nothing ran before it, so the store was empty."
+      },
+      {
+        "text": "Because recent is broken for ten rows",
+        "correct": false,
+        "why": "recent works; the store simply was not empty."
+      },
+      {
+        "text": "Because the CHECK constraint failed in that test",
+        "correct": false,
+        "why": "That test inserts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-b354m6en",
+    "version": 1,
+    "section": "scope",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In that run, how many ids did the shared store hold when the new test read it?",
+    "hint": "The failed CHECK insert wrote nothing.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-dw6rbsr6",
+    "version": 1,
+    "section": "scope",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is widening a fixture's scope safe, by the lesson's rule? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It is measurably expensive to build",
+        "correct": true,
+        "why": "Right. That is the first condition."
+      },
+      {
+        "text": "Tests cannot change it, or each undoes its changes",
+        "correct": true,
+        "why": "Right. That is the second condition."
+      },
+      {
+        "text": "It is used by more than three tests",
+        "correct": false,
+        "why": "A count of users says nothing about shared state."
+      },
+      {
+        "text": "The tests that use it currently pass",
+        "correct": false,
+        "why": "They passed in the capture too, until one was added."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw5tdqbn",
+    "version": 1,
+    "section": "tmp-path",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many quotes.db files did the three store tests leave under pytest-current?",
+    "choices": [
+      {
+        "text": "One, shared by the three tests",
+        "correct": false,
+        "why": "Each test had its own directory."
+      },
+      {
+        "text": "Three, one per test directory",
+        "correct": true,
+        "why": "Right. One database per test, none shared."
+      },
+      {
+        "text": "None; tmp_path is deleted at once",
+        "correct": false,
+        "why": "pytest keeps the last three runs on purpose."
+      },
+      {
+        "text": "Six, because each test also keeps a backup",
+        "correct": false,
+        "why": "There are no backups."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pk64erp",
+    "version": 1,
+    "section": "tmp-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does pytest keep the last three runs' directories instead of deleting them at once?",
+    "choices": [
+      {
+        "text": "To make the next run faster by reusing files",
+        "correct": false,
+        "why": "Each run starts with new, empty directories."
+      },
+      {
+        "text": "Because deleting files during a run is not allowed by Linux",
+        "correct": false,
+        "why": "Linux allows it; this is a choice."
+      },
+      {
+        "text": "So a failed test's files are still there to inspect",
+        "correct": true,
+        "why": "Right. And older runs are deleted, so the disk does not fill up."
+      },
+      {
+        "text": "So that tests of different users share data",
+        "correct": false,
+        "why": "The directory is per user, which keeps them apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp5e977s",
+    "version": 1,
+    "section": "tmp-path",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each shared resource with its per-test version.",
+    "pairs": [
+      {
+        "left": "a fixed file path",
+        "right": "tmp_path"
+      },
+      {
+        "left": "port 8080",
+        "right": "port 0"
+      },
+      {
+        "left": "an environment variable left set",
+        "right": "monkeypatch.setenv"
+      }
+    ],
+    "right_distractors": [
+      "scope=\"session\""
+    ]
+  },
+  {
+    "id": "ex-ezs9j2rw",
+    "version": 1,
+    "section": "shared-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which design breaks when the code under test commits on its own?",
+    "choices": [
+      {
+        "text": "One transaction per test, rolled back",
+        "correct": true,
+        "why": "Right. A commit inside the code ends the transaction the fixture meant to roll back."
+      },
+      {
+        "text": "A fresh schema per test run",
+        "correct": false,
+        "why": "That design catches commit-time behaviour."
+      },
+      {
+        "text": "Tests that only look at their own rows",
+        "correct": false,
+        "why": "Commits do not hurt tests that read only their own rows."
+      },
+      {
+        "text": "A separate SQLite file per test",
+        "correct": false,
+        "why": "Each file is its own database, and commits stay inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdwkvk0q",
+    "version": 1,
+    "section": "shared-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this repository's CLAUDE.md forbid seeding a fixed unique value in a test?",
+    "choices": [
+      {
+        "text": "Because unique indexes slow PostgreSQL down",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Because fixed values are a security risk",
+        "correct": false,
+        "why": "The rule is about collisions, not secrets."
+      },
+      {
+        "text": "Because go test refuses to insert the same value twice",
+        "correct": false,
+        "why": "The database refuses it, and only when two packages race."
+      },
+      {
+        "text": "Two packages running in parallel collide on the unique index",
+        "correct": true,
+        "why": "Right. Which one loses is a matter of timing."
+      }
+    ]
+  },
+  {
+    "id": "ex-dw6eqjx2",
+    "version": 1,
+    "section": "shared-database",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Scope every assertion to the rows the test wrote: WHERE tenant_id = $1, not count( ___ ).",
+    "blanks": [
+      {
+        "accept": [
+          "*"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gj9ngg96",
+    "version": 1,
+    "section": "factories",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a_quote(cep=\"0131010\") return?",
+    "choices": [
+      {
+        "text": "An error, because the CEP is invalid",
+        "correct": false,
+        "why": "The factory does not validate; the database does, later."
+      },
+      {
+        "text": "The default quote, with that CEP",
+        "correct": true,
+        "why": "Right. Overrides replace defaults; the rest stays valid."
+      },
+      {
+        "text": "A quote with only a cep field",
+        "correct": false,
+        "why": "The other three fields keep their defaults."
+      },
+      {
+        "text": "The id of a saved row",
+        "correct": false,
+        "why": "The factory builds a dictionary; store.save writes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvbvs56b",
+    "version": 1,
+    "section": "factories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the factory build created_at from a counter?",
+    "choices": [
+      {
+        "text": "To match the real time the test ran",
+        "correct": false,
+        "why": "It is a fixed date with a varying minute, not the real time."
+      },
+      {
+        "text": "Because SQLite requires unique timestamps",
+        "correct": false,
+        "why": "SQLite has no such rule; the store sorts by it."
+      },
+      {
+        "text": "So two quotes built in a row never share one",
+        "correct": true,
+        "why": "Right. The store sorts by created_at, so ties would make order depend on the id."
+      },
+      {
+        "text": "To make each run of the suite produce different data",
+        "correct": false,
+        "why": "The counter restarts every run; the data is the same each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-98tkt5qd",
+    "version": 1,
+    "section": "factories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A carrier column is added to quotes. How many store tests have to change, with the factory in place?",
+    "choices": [
+      {
+        "text": "All three, because each saves a quote",
+        "correct": false,
+        "why": "Each saves through a_quote, which gets one new default."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. Only a test about carriers would name the new field."
+      },
+      {
+        "text": "Only the CHECK test",
+        "correct": false,
+        "why": "The CHECK test is about the CEP."
+      },
+      {
+        "text": "Two, the ones that compare ids",
+        "correct": false,
+        "why": "Comparing ids does not involve the new column."
+      }
+    ]
+  },
+  {
+    "id": "ex-gped09gd",
+    "version": 1,
+    "section": "what-to-show",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a mystery guest?",
+    "choices": [
+      {
+        "text": "A test that nobody remembers writing",
+        "correct": false,
+        "why": "Authorship is not the issue."
+      },
+      {
+        "text": "A fixture that runs without being requested",
+        "correct": false,
+        "why": "Fixtures run when named; the term is about data."
+      },
+      {
+        "text": "Hidden data the result depends on",
+        "correct": true,
+        "why": "Right. The test passes and nobody can tell why its expected value is right."
+      },
+      {
+        "text": "A user account created only for testing",
+        "correct": false,
+        "why": "That is test data, not the smell."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys0bfr93",
+    "version": 1,
+    "section": "what-to-show",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of value with where it belongs.",
+    "pairs": [
+      {
+        "left": "The assertion depends on it",
+        "right": "In the test, by name"
+      },
+      {
+        "left": "Any valid value will do",
+        "right": "In the factory's default"
+      },
+      {
+        "left": "Must differ from another test's",
+        "right": "Generated by the factory"
+      }
+    ],
+    "right_distractors": [
+      "In a global variable"
+    ]
+  },
+  {
+    "id": "ex-c7ynvcm7",
+    "version": 1,
+    "section": "what-to-show",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "test_heavy_parcel uses a_quote() with no overrides and asserts 2190. The factory's default weight changes to 800 g for another test. What happens?",
+    "hint": "800 g is one extra band, not two.",
+    "choices": [
+      {
+        "text": "Nothing; the factory is only used by store tests",
+        "correct": false,
+        "why": "This test uses it too, and depends on its weight."
+      },
+      {
+        "text": "It fails, for a reason none of its own lines show",
+        "correct": true,
+        "why": "Right. 800 g costs 1740, and the 1200 g it relied on lived in another file."
+      },
+      {
+        "text": "It passes, since 800 g and 1200 g are in the same band",
+        "correct": false,
+        "why": "800 g is one extra band, 1200 g two."
+      },
+      {
+        "text": "pytest warns that the factory changed",
+        "correct": false,
+        "why": "pytest knows nothing about factories."
+      }
+    ]
+  },
+  {
+    "id": "ex-syd6tnty",
+    "version": 1,
+    "section": "data-tables",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When zone N's base went from 2990 to 3090, how many rows of the published table failed?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jdj7q7mt",
+    "version": 1,
+    "section": "data-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The table test fails after a price change in the code. What does the failure establish?",
+    "choices": [
+      {
+        "text": "That the code is wrong and must be reverted",
+        "correct": false,
+        "why": "Maybe the change was intended and the table is what must move."
+      },
+      {
+        "text": "That the CSV is wrong and must be regenerated",
+        "correct": false,
+        "why": "Regenerating without reading accepts whatever the code does."
+      },
+      {
+        "text": "That code and table disagree",
+        "correct": true,
+        "why": "Right. The test cannot know; it stops the two drifting apart silently."
+      },
+      {
+        "text": "That the carrier changed its prices",
+        "correct": false,
+        "why": "The table is the shop's, not the carrier's."
+      }
+    ]
+  },
+  {
+    "id": "ex-r14t7h4s",
+    "version": 1,
+    "section": "data-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep the shop's table in a CSV rather than a list inside the test?",
+    "choices": [
+      {
+        "text": "The team that owns the numbers can review it",
+        "correct": true,
+        "why": "Right. A file the business opens keeps the promise and the code in one place."
+      },
+      {
+        "text": "CSV files are parsed faster than Python lists",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "parametrize only accepts data from files",
+        "correct": false,
+        "why": "Lesson 1 passed it a list."
+      },
+      {
+        "text": "So the tests can be skipped when the file is absent",
+        "correct": false,
+        "why": "A missing file would be an error, not a skip."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwwr3pmt",
+    "version": 1,
+    "section": "data-tables",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Expected output stored beside the code and compared on every run is often called a golden file or a ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "snapshot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qb5j9by0",
+    "version": 1,
+    "section": "determinism",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson call a test that passes or fails with no change in between?",
+    "choices": [
+      {
+        "text": "Skipped",
+        "correct": false,
+        "why": "A skipped test does not run."
+      },
+      {
+        "text": "Flaky",
+        "correct": true,
+        "why": "Right. It trains everybody to re-run until green."
+      },
+      {
+        "text": "Golden",
+        "correct": false,
+        "why": "A golden file is stored expected output."
+      },
+      {
+        "text": "Parametrised",
+        "correct": false,
+        "why": "That is one test run over many rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kttkmky",
+    "version": 1,
+    "section": "determinism",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does dispatch_date take the moment as an argument instead of reading the clock?",
+    "choices": [
+      {
+        "text": "Because reading the clock is slow in Python",
+        "correct": false,
+        "why": "It is fast; the problem is that it changes."
+      },
+      {
+        "text": "Because datetime.now cannot take a time zone",
+        "correct": false,
+        "why": "It can; that is not the reason."
+      },
+      {
+        "text": "Because the HTTP layer has no clock",
+        "correct": false,
+        "why": "The outer layer is exactly where the real clock is read."
+      },
+      {
+        "text": "So tests give the same answer at any hour",
+        "correct": true,
+        "why": "Right. The clock becomes an input, like the carrier in lesson 2."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w32hk1h",
+    "version": 1,
+    "section": "determinism",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are sources of non-determinism the lesson names? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Iterating over a set",
+        "correct": true,
+        "why": "Right. Its order is not guaranteed."
+      },
+      {
+        "text": "Reading os.environ without the test setting it",
+        "correct": true,
+        "why": "Right. The answer depends on the machine."
+      },
+      {
+        "text": "Comparing two integers with ==",
+        "correct": false,
+        "why": "Integer comparison is exact."
+      },
+      {
+        "text": "random without a fixed seed",
+        "correct": true,
+        "why": "Right. Different numbers each run."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpn5qs9n",
+    "version": 1,
+    "section": "properties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Against the naive split, what smallest failing input did Hypothesis report?",
+    "choices": [
+      {
+        "text": "10000 cents in 3 instalments",
+        "correct": false,
+        "why": "That is lesson 1's example, which the naive version splits into 3333, 3333, 3334."
+      },
+      {
+        "text": "2 cents in 4 instalments",
+        "correct": true,
+        "why": "Right. round(0.5) is 0, so the parts are 0, 0, 0 and 2."
+      },
+      {
+        "text": "0 cents in 1 instalment",
+        "correct": false,
+        "why": "That splits into [0], which holds both properties."
+      },
+      {
+        "text": "1 cent in 24 instalments",
+        "correct": false,
+        "why": "Hypothesis shrank to a smaller example than that."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s27xatv",
+    "version": 1,
+    "section": "properties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the sum property still pass against the naive split?",
+    "choices": [
+      {
+        "text": "Because Hypothesis only tried totals divisible by the parts",
+        "correct": false,
+        "why": "It tried a hundred varied inputs."
+      },
+      {
+        "text": "Because the property is written wrongly",
+        "correct": false,
+        "why": "It is correct; it is simply true of this version."
+      },
+      {
+        "text": "The last part absorbs the remainder",
+        "correct": true,
+        "why": "Right. The bug is in how evenly it spreads, which the other property checks."
+      },
+      {
+        "text": "Because round() always rounds down in Python",
+        "correct": false,
+        "why": "Python rounds halves to the even number, which is how 0.5 became 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yzj3kg1",
+    "version": 1,
+    "section": "properties",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Hypothesis reduces a failing input to the simplest one that still fails. That step is called ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "shrinking",
+          "shrink"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w9yhy5et",
+    "version": 1,
+    "section": "personal-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do shipquote's tests use bia@example.org?",
+    "choices": [
+      {
+        "text": "Because it belongs to a tester at the shop",
+        "correct": false,
+        "why": "It belongs to nobody."
+      },
+      {
+        "text": "That domain is reserved by RFC 2606 for this use",
+        "correct": true,
+        "why": "Right. RFC 2606 reserves it with example.com and example.net."
+      },
+      {
+        "text": "Because SMTP refuses addresses at other domains in tests",
+        "correct": false,
+        "why": "SMTP knows nothing about tests."
+      },
+      {
+        "text": "Because the LGPD requires every test address to use .org",
+        "correct": false,
+        "why": "The law says nothing about domains."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8ktehqg",
+    "version": 1,
+    "section": "personal-data",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the lesson's answers to 'we need production data', from most to least preferred.",
+    "items": [
+      "Reproduce the shape, not the data",
+      "Anonymise before copying",
+      "Bring the test to the data"
+    ],
+    "trap": "Anonymising still copies data, so writing a factory case for the shape comes first."
+  },
+  {
+    "id": "ex-1n85fq70",
+    "version": 1,
+    "section": "personal-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A failing test prints the whole customer record it used, in a CI log many people read. The record came from a production copy. Which problem is the lesson's main concern?",
+    "choices": [
+      {
+        "text": "The log is too long to read",
+        "correct": false,
+        "why": "Length is a nuisance, not the risk."
+      },
+      {
+        "text": "Personal data has been published to everyone who reads the log",
+        "correct": true,
+        "why": "Right. Test data should be made, so there is nothing personal to print."
+      },
+      {
+        "text": "The test is flaky",
+        "correct": false,
+        "why": "Nothing suggests it passes and fails at random."
+      },
+      {
+        "text": "The record is not in the factory format",
+        "correct": false,
+        "why": "Format is beside the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcfqdyd6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A suite shares one PostgreSQL. A test asserts SELECT count(*) FROM quotes = 1 after saving one quote. It passes locally and fails in CI. What is the fix the lesson recommends?",
+    "choices": [
+      {
+        "text": "TRUNCATE quotes at the start of the test",
+        "correct": false,
+        "why": "That deletes other tests' rows halfway through their run."
+      },
+      {
+        "text": "Retry the test until it passes",
+        "correct": false,
+        "why": "That hides the failure, which is what flakiness teaches."
+      },
+      {
+        "text": "Assert by the id save returned",
+        "correct": true,
+        "why": "Right. Scope the assertion to the rows the test wrote."
+      },
+      {
+        "text": "Run the CI suite one package at a time",
+        "correct": false,
+        "why": "It slows the suite and leaves the test fragile."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0n3w43s",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to the problem it solves in this lesson.",
+    "pairs": [
+      {
+        "left": "a factory",
+        "right": "Noise in every test's data"
+      },
+      {
+        "left": "tmp_path",
+        "right": "Files shared between tests"
+      },
+      {
+        "left": "a fixed seed",
+        "right": "Random data that cannot be replayed"
+      },
+      {
+        "left": "Hypothesis",
+        "right": "Cases nobody thought of"
+      }
+    ]
+  },
+  {
+    "id": "ex-bfvnqvy9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test of a report reads datetime.now() and asserts the report's title says 'Monday'. What will it do?",
+    "choices": [
+      {
+        "text": "Pass every day, since the title is generated",
+        "correct": false,
+        "why": "Generated from the clock, which changes."
+      },
+      {
+        "text": "Pass on Mondays and fail the rest of the week",
+        "correct": true,
+        "why": "Right. The clock is an input it does not control."
+      },
+      {
+        "text": "Fail on every day of the week",
+        "correct": false,
+        "why": "On Mondays it passes."
+      },
+      {
+        "text": "Be skipped by pytest as non-deterministic",
+        "correct": false,
+        "why": "pytest does not detect that."
+      }
+    ]
+  }
+]

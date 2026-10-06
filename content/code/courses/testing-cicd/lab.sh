@@ -689,6 +689,105 @@ EOF
 }
 commit_6() { at 2026-09-14T10:30:00-03:00 'Send e-mail over SMTP, and mock the mailer by its real shape'; }
 
+# ---- step 7: Build test data with a factory, a table and a property
+step_7() {
+  mkdir -p tests/data
+  cat > tests/factories.py <<'EOF'
+"""Test data with sensible defaults: a test names only what it is about."""
+from itertools import count
+
+_ids = count(1)
+
+
+def a_quote(**overrides):
+    """A valid quote row; override the fields the test cares about."""
+    n = next(_ids)
+    quote = {
+        "cep": "01310100",
+        "weight_g": 1200,
+        "cents": 2190,
+        "created_at": f"2026-10-05T13:{n % 60:02d}:00-03:00",
+    }
+    quote.update(overrides)
+    return quote
+EOF
+  cat > tests/test_store.py <<'EOF'
+import sqlite3
+
+import pytest
+
+from tests.factories import a_quote
+
+pytestmark = pytest.mark.integration
+
+
+def test_a_saved_quote_comes_back_by_id(store):
+    quote_id = store.save(**a_quote(cents=2190))
+    assert store.get(quote_id)["cents"] == 2190
+
+
+def test_recent_lists_the_newest_first(store):
+    first = store.save(**a_quote(created_at="2026-10-05T13:30:00-03:00"))
+    second = store.save(**a_quote(created_at="2026-10-05T13:31:00-03:00"))
+    assert store.recent(2) == [second, first]
+
+
+def test_the_database_refuses_a_cep_of_the_wrong_length(store):
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK constraint failed"):
+        store.save(**a_quote(cep="0131010"))
+EOF
+  cat > tests/data/quotes.csv <<'EOF'
+cep,weight_g,subtotal_cents,cents
+01310-100,300,5000,1290
+01310-100,1200,5000,2190
+20040-002,300,5000,1590
+40010-000,2600,5000,4740
+69005-010,300,5000,2990
+69005-010,5000,5000,7040
+70040-010,800,5000,2640
+80010-000,300,19900,0
+EOF
+  cat > tests/test_quote_table.py <<'EOF'
+"""The price table the shop publishes, one row per case, checked as data."""
+import csv
+from pathlib import Path
+
+import pytest
+
+from shipquote.quote import freight
+
+ROWS = list(csv.DictReader(open(Path(__file__).parent / "data" / "quotes.csv")))
+
+
+@pytest.mark.parametrize("row", ROWS, ids=lambda r: f"{r['cep']}-{r['weight_g']}g")
+def test_the_published_table(row):
+    cents = freight(row["cep"], int(row["weight_g"]), int(row["subtotal_cents"]))
+    assert cents == int(row["cents"])
+EOF
+  cat > tests/test_money_properties.py <<'EOF'
+"""Properties of split that hold for every total and every number of parts."""
+from hypothesis import given
+from hypothesis import strategies as st
+
+from shipquote.money import split
+
+totals = st.integers(min_value=0, max_value=10_000_000)
+parts = st.integers(min_value=1, max_value=24)
+
+
+@given(totals, parts)
+def test_the_instalments_add_back_up(cents, n):
+    assert sum(split(cents, n)) == cents
+
+
+@given(totals, parts)
+def test_no_instalment_is_more_than_a_cent_from_another(cents, n):
+    instalments = split(cents, n)
+    assert max(instalments) - min(instalments) <= 1
+EOF
+}
+commit_7() { at 2026-09-17T15:00:00-03:00 'Build test data with a factory, a table and a property'; }
+
 steps() {
   echo ' 1  2026-09-01  Money in cents, with its first tests'
   echo ' 2  2026-09-02  Price a parcel by zone and weight'
@@ -696,8 +795,9 @@ steps() {
   echo ' 4  2026-09-08  Ask the carrier first, and confirm orders by e-mail'
   echo ' 5  2026-09-10  Say which day an order leaves the warehouse'
   echo ' 6  2026-09-14  Send e-mail over SMTP, and mock the mailer by its real shape'
+  echo ' 7  2026-09-17  Build test data with a factory, a table and a property'
 }
-LAST=6
+LAST=7
 
 venv() {
   local dir=$1 py=${2:-3.13}
