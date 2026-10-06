@@ -1,0 +1,1758 @@
+#!/usr/bin/env python3
+"""Every number the statistics course quotes, computed rather than typed.
+
+The course asks nobody to program, and it still quotes a few hundred numbers:
+a mean, a standard error, a p-value, the slope of a line. Each of them comes
+from this file. The data is the course's own — a small online grocer called
+Horta, with invented orders, invented staff and an invented checkout test — and
+the larger samples are drawn from a seeded generator, so running this next
+year prints the same sheet.
+
+    python3 numbers.py          # the whole sheet
+    python3 numbers.py 5        # what lesson 5 quotes
+
+Standard library only. The distributions (normal, t, chi-square, F) are written
+out below rather than imported, and were checked against SciPy 1.18.1 when the
+course was written; `check()` at the bottom repeats that comparison wherever
+SciPy happens to be installed, and says so when it is not.
+
+THE GENERATOR USES `random()` AND NOTHING ELSE. Python promises that `random()`
+gives the same sequence for the same seed across versions; it promises nothing
+about `gauss`, `choices` or `shuffle`, so the normal draws are Box-Muller over
+`random()` and every pick is an index computed from it.
+"""
+import math
+import random
+import sys
+
+# ---------------------------------------------------------------- helpers
+
+
+def mean(xs):
+    return sum(xs) / len(xs)
+
+
+def median(xs):
+    s = sorted(xs)
+    n = len(s)
+    return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2
+
+
+def modes(xs):
+    counts = {}
+    for x in xs:
+        counts[x] = counts.get(x, 0) + 1
+    top = max(counts.values())
+    return sorted(k for k, v in counts.items() if v == top), top
+
+
+def var(xs, sample=True):
+    m = mean(xs)
+    return sum((x - m) ** 2 for x in xs) / (len(xs) - (1 if sample else 0))
+
+
+def sd(xs, sample=True):
+    return math.sqrt(var(xs, sample))
+
+
+def quantile(xs, p):
+    """The spreadsheet's QUARTILE.INC and PERCENTILE.INC: position p*(n-1)."""
+    s = sorted(xs)
+    h = p * (len(s) - 1)
+    lo = math.floor(h)
+    hi = min(lo + 1, len(s) - 1)
+    return s[lo] + (h - lo) * (s[hi] - s[lo])
+
+
+def quantile_exc(xs, p):
+    """QUARTILE.EXC: position p*(n+1), counted from one."""
+    s = sorted(xs)
+    h = p * (len(s) + 1) - 1
+    lo = math.floor(h)
+    return s[lo] + (h - lo) * (s[lo + 1] - s[lo])
+
+
+def skewness(xs):
+    """The adjusted sample skewness a spreadsheet's SKEW returns."""
+    n, m, s = len(xs), mean(xs), sd(xs)
+    return n / ((n - 1) * (n - 2)) * sum(((x - m) / s) ** 3 for x in xs)
+
+
+def kurtosis(xs):
+    """The sample excess kurtosis a spreadsheet's KURT returns."""
+    n, m, s = len(xs), mean(xs), sd(xs)
+    a = n * (n + 1) / ((n - 1) * (n - 2) * (n - 3))
+    b = 3 * (n - 1) ** 2 / ((n - 2) * (n - 3))
+    return a * sum(((x - m) / s) ** 4 for x in xs) - b
+
+
+def ranks(xs):
+    """Average ranks, ties sharing the mean of the places they occupy."""
+    order = sorted(range(len(xs)), key=lambda i: xs[i])
+    r = [0.0] * len(xs)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and xs[order[j + 1]] == xs[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            r[order[k]] = (i + j) / 2 + 1
+        i = j + 1
+    return r
+
+
+def pearson(xs, ys):
+    mx, my = mean(xs), mean(ys)
+    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    sxx = sum((x - mx) ** 2 for x in xs)
+    syy = sum((y - my) ** 2 for y in ys)
+    return sxy / math.sqrt(sxx * syy)
+
+
+def spearman(xs, ys):
+    return pearson(ranks(xs), ranks(ys))
+
+
+def line(xs, ys):
+    """Least squares: intercept, slope."""
+    mx, my = mean(xs), mean(ys)
+    b = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
+    return my - b * mx, b
+
+
+def solve(a, b):
+    """Gaussian elimination with partial pivoting, for the normal equations."""
+    n = len(a)
+    m = [row[:] + [b[i]] for i, row in enumerate(a)]
+    for c in range(n):
+        p = max(range(c, n), key=lambda r: abs(m[r][c]))
+        m[c], m[p] = m[p], m[c]
+        for r in range(n):
+            if r != c:
+                f = m[r][c] / m[c][c]
+                for k in range(c, n + 1):
+                    m[r][k] -= f * m[c][k]
+    return [m[i][n] / m[i][i] for i in range(n)]
+
+
+def ols(rows, ys):
+    """Multiple regression. rows are the predictors without the constant."""
+    x = [[1.0] + list(r) for r in rows]
+    k = len(x[0])
+    xtx = [[sum(x[i][a] * x[i][b] for i in range(len(x))) for b in range(k)] for a in range(k)]
+    xty = [sum(x[i][a] * ys[i] for i in range(len(x))) for a in range(k)]
+    beta = solve(xtx, xty)
+    fitted = [sum(b * v for b, v in zip(beta, r)) for r in x]
+    ss_res = sum((y - f) ** 2 for y, f in zip(ys, fitted))
+    my = mean(ys)
+    ss_tot = sum((y - my) ** 2 for y in ys)
+    r2 = 1 - ss_res / ss_tot
+    n = len(ys)
+    adj = 1 - (1 - r2) * (n - 1) / (n - k)
+    return beta, r2, adj, fitted
+
+
+# ------------------------------------------------------- the distributions
+
+
+def normal_cdf(z):
+    return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+
+
+def normal_pdf(z):
+    return math.exp(-z * z / 2) / math.sqrt(2 * math.pi)
+
+
+def normal_inv(p):
+    lo, hi = -10.0, 10.0
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        if normal_cdf(mid) < p:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
+
+
+def _betacf(a, b, x):
+    # Lentz's continued fraction for the incomplete beta function.
+    tiny = 1e-300
+    qab, qap, qam = a + b, a + 1, a - 1
+    c, d = 1.0, 1 - qab * x / qap
+    d = 1 / (d if abs(d) > tiny else tiny)
+    h = d
+    for m in range(1, 1000):
+        m2 = 2 * m
+        aa = m * (b - m) * x / ((qam + m2) * (a + m2))
+        d = 1 + aa * d
+        d = 1 / (d if abs(d) > tiny else tiny)
+        c = 1 + aa / c
+        c = c if abs(c) > tiny else tiny
+        h *= d * c
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
+        d = 1 + aa * d
+        d = 1 / (d if abs(d) > tiny else tiny)
+        c = 1 + aa / c
+        c = c if abs(c) > tiny else tiny
+        delta = d * c
+        h *= delta
+        if abs(delta - 1) < 1e-15:
+            break
+    return h
+
+
+def betainc(a, b, x):
+    """The regularised incomplete beta function I_x(a, b)."""
+    if x <= 0:
+        return 0.0
+    if x >= 1:
+        return 1.0
+    lbeta = math.lgamma(a + b) - math.lgamma(a) - math.lgamma(b)
+    front = math.exp(lbeta + a * math.log(x) + b * math.log(1 - x))
+    if x < (a + 1) / (a + b + 2):
+        return front * _betacf(a, b, x) / a
+    return 1 - front * _betacf(b, a, 1 - x) / b
+
+
+def gammainc(s, x):
+    """The regularised lower incomplete gamma function P(s, x)."""
+    return 1 - gammaincc(s, x)
+
+
+def gammaincc(s, x):
+    """The regularised upper incomplete gamma function Q(s, x), computed directly so that a
+    tiny tail does not vanish into 1 - P."""
+    if x <= 0:
+        return 1.0
+    if x < s + 1:
+        term = total = 1 / s
+        k = s
+        for _ in range(10000):
+            k += 1
+            term *= x / k
+            total += term
+            if abs(term) < abs(total) * 1e-16:
+                break
+        return 1 - total * math.exp(-x + s * math.log(x) - math.lgamma(s))
+    # continued fraction for the upper half
+    tiny = 1e-300
+    b = x + 1 - s
+    c = 1 / tiny
+    d = 1 / b
+    h = d
+    for i in range(1, 10000):
+        an = -i * (i - s)
+        b += 2
+        d = an * d + b
+        d = 1 / (d if abs(d) > tiny else tiny)
+        c = b + an / c
+        c = c if abs(c) > tiny else tiny
+        delta = d * c
+        h *= delta
+        if abs(delta - 1) < 1e-16:
+            break
+    return math.exp(-x + s * math.log(x) - math.lgamma(s)) * h
+
+
+def t_cdf(t, df):
+    x = df / (df + t * t)
+    tail = 0.5 * betainc(df / 2, 0.5, x)
+    return 1 - tail if t > 0 else tail
+
+
+def t_inv(p, df):
+    lo, hi = -100.0, 100.0
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        if t_cdf(mid, df) < p:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
+
+
+def chi2_sf(x, df):
+    return gammaincc(df / 2, x / 2)
+
+
+def f_sf(f, d1, d2):
+    return betainc(d2 / 2, d1 / 2, d2 / (d2 + d1 * f))
+
+
+def binom_pmf(k, n, p):
+    return math.comb(n, k) * p ** k * (1 - p) ** (n - k)
+
+
+def poisson_pmf(k, lam):
+    return math.exp(-lam) * lam ** k / math.factorial(k)
+
+
+def welch(xs, ys):
+    """Welch's two-sample t test: t, degrees of freedom, two-sided p."""
+    nx, ny = len(xs), len(ys)
+    vx, vy = var(xs) / nx, var(ys) / ny
+    t = (mean(xs) - mean(ys)) / math.sqrt(vx + vy)
+    df = (vx + vy) ** 2 / (vx ** 2 / (nx - 1) + vy ** 2 / (ny - 1))
+    return t, df, 2 * t_cdf(-abs(t), df)
+
+
+def paired_t(before, after):
+    diffs = [a - b for b, a in zip(before, after)]
+    n = len(diffs)
+    t = mean(diffs) / (sd(diffs) / math.sqrt(n))
+    return t, n - 1, 2 * t_cdf(-abs(t), n - 1), mean(diffs), sd(diffs)
+
+
+def chi_square(table):
+    """Pearson's chi-square test of independence on a table of counts, no continuity correction."""
+    rows = [sum(r) for r in table]
+    cols = [sum(c) for c in zip(*table)]
+    total = sum(rows)
+    expected = [[r * c / total for c in cols] for r in rows]
+    stat = sum((o - e) ** 2 / e for ro, re in zip(table, expected) for o, e in zip(ro, re))
+    df = (len(rows) - 1) * (len(cols) - 1)
+    return stat, df, chi2_sf(stat, df), expected
+
+
+def anova(groups):
+    allv = [x for g in groups for x in g]
+    grand = mean(allv)
+    ssb = sum(len(g) * (mean(g) - grand) ** 2 for g in groups)
+    ssw = sum((x - mean(g)) ** 2 for g in groups for x in g)
+    dfb, dfw = len(groups) - 1, len(allv) - len(groups)
+    f = (ssb / dfb) / (ssw / dfw)
+    return f, dfb, dfw, f_sf(f, dfb, dfw), ssb, ssw
+
+
+def mann_whitney(xs, ys):
+    """U statistic for xs, and the two-sided p-value from the normal approximation with ties."""
+    allv = xs + ys
+    r = ranks(allv)
+    n1, n2 = len(xs), len(ys)
+    r1 = sum(r[:n1])
+    u = r1 - n1 * (n1 + 1) / 2
+    mu = n1 * n2 / 2
+    n = n1 + n2
+    ties = {}
+    for v in allv:
+        ties[v] = ties.get(v, 0) + 1
+    tie_term = sum(t ** 3 - t for t in ties.values())
+    sigma = math.sqrt(n1 * n2 / 12 * ((n + 1) - tie_term / (n * (n - 1))))
+    z = (u - mu) / sigma
+    return u, z, 2 * normal_cdf(-abs(z))
+
+
+def kruskal(groups):
+    allv = [x for g in groups for x in g]
+    r = ranks(allv)
+    n = len(allv)
+    h, i = 0.0, 0
+    for g in groups:
+        rs = r[i:i + len(g)]
+        i += len(g)
+        h += sum(rs) ** 2 / len(g)
+    h = 12 / (n * (n + 1)) * h - 3 * (n + 1)
+    ties = {}
+    for v in allv:
+        ties[v] = ties.get(v, 0) + 1
+    h /= 1 - sum(t ** 3 - t for t in ties.values()) / (n ** 3 - n)
+    df = len(groups) - 1
+    return h, df, chi2_sf(h, df)
+
+
+def wilcoxon(before, after):
+    """Signed-rank test, normal approximation; zero differences dropped."""
+    d = [a - b for b, a in zip(before, after) if a != b]
+    r = ranks([abs(x) for x in d])
+    wplus = sum(rk for rk, x in zip(r, d) if x > 0)
+    n = len(d)
+    mu = n * (n + 1) / 4
+    ties = {}
+    for x in d:
+        ties[abs(x)] = ties.get(abs(x), 0) + 1
+    sigma = math.sqrt(n * (n + 1) * (2 * n + 1) / 24 - sum(t ** 3 - t for t in ties.values()) / 48)
+    z = (wplus - mu) / sigma
+    return wplus, z, 2 * normal_cdf(-abs(z))
+
+
+# ------------------------------------------------------------ the generator
+
+
+class Draw:
+    """Seeded draws built on `random()` alone — see the module's docstring."""
+
+    def __init__(self, seed):
+        self.r = random.Random(seed)
+        self.spare = None
+
+    def uniform(self, a, b):
+        return a + (b - a) * self.r.random()
+
+    def normal(self, mu=0.0, sigma=1.0):
+        if self.spare is not None:
+            z, self.spare = self.spare, None
+            return mu + sigma * z
+        u1 = 1.0 - self.r.random()
+        u2 = self.r.random()
+        rad = math.sqrt(-2 * math.log(u1))
+        self.spare = rad * math.sin(2 * math.pi * u2)
+        return mu + sigma * rad * math.cos(2 * math.pi * u2)
+
+    def lognormal(self, mu, sigma):
+        return math.exp(self.normal(mu, sigma))
+
+    def index(self, n):
+        return min(int(self.r.random() * n), n - 1)
+
+    def pick(self, xs):
+        return xs[self.index(len(xs))]
+
+    def sample(self, xs, k):
+        pool = list(xs)
+        out = []
+        for _ in range(k):
+            out.append(pool.pop(self.index(len(pool))))
+        return out
+
+
+def r2(x):
+    return round(x + 0.0, 2)
+
+
+# ------------------------------------------------------------------- the data
+
+# Twelve of Horta's orders, the table lessons 1 to 3 work from. Written by hand.
+ORDERS = [
+    # order    neighbourhood    payment items basket  minutes rating postcode   temp
+    ('H-1041', 'Cambuí',        'pix',   7,  86.40, 34.5, 5, '13025-320', 27),
+    ('H-1042', 'Taquaral',      'card',  3,  31.90, 41.0, 4, '13076-010', 27),
+    ('H-1043', 'Barão Geraldo', 'pix',  12, 154.75, 52.5, 3, '13084-180', 28),
+    ('H-1044', 'Cambuí',        'cash',  2,  18.50, 29.0, 5, '13025-120', 28),
+    ('H-1045', 'Centro',        'card',  5,  62.30, 38.5, 4, '13013-050', 29),
+    ('H-1046', 'Taquaral',      'pix',   9, 118.20, 44.0, 2, '13076-210', 29),
+    ('H-1047', 'Cambuí',        'pix',   4,  47.80, 31.5, 5, '13024-040', 30),
+    ('H-1048', 'Barão Geraldo', 'card', 15, 212.60, 61.0, 4, '13083-300', 30),
+    ('H-1049', 'Centro',        'pix',   6,  74.10, 36.0, 4, '13010-110', 26),
+    ('H-1050', 'Taquaral',      'card',  1,  12.90, 27.5, 1, '13076-150', 26),
+    ('H-1051', 'Cambuí',        'pix',   8,  95.00, 39.0, 5, '13025-200', 25),
+    ('H-1052', 'Centro',        'cash',  3,  35.60, 33.0, 3, '13015-020', 25),
+]
+COL = {name: i for i, name in enumerate(
+    ['order', 'neighbourhood', 'payment', 'items', 'basket', 'minutes', 'rating', 'postcode', 'temp'])}
+
+
+def column(name):
+    return [row[COL[name]] for row in ORDERS]
+
+
+# Horta's monthly pay, in reais, lesson 4. Eight staff and the founder.
+SALARIES = [2100, 2100, 2250, 2300, 2400, 2600, 2900, 3400, 28000]
+
+# Two couriers, eight deliveries each, in minutes: lesson 5.
+LIA = [33, 34, 35, 35, 35, 36, 36, 36]
+DAVI = [22, 26, 31, 35, 38, 40, 44, 44]
+
+
+# Four hundred baskets from one month, lessons 4 onwards: right-skewed, as money is.
+def _baskets():
+    d = Draw(400)
+    return [round(d.lognormal(4.22, 0.6), 2) for _ in range(400)]
+
+
+BASKETS = _baskets()
+
+
+# A hundred and twenty deliveries, thirty per neighbourhood, lessons 6 onwards. Each
+# has a distance, a number of items, whether it rained, and the minutes it took.
+HOODS = [('Centro', 1.0, 3.0), ('Cambuí', 2.0, 4.5), ('Taquaral', 4.0, 7.0),
+         ('Barão Geraldo', 9.0, 14.0)]
+
+
+def _deliveries():
+    d = Draw(120)
+    out = []
+    for hood, lo, hi in HOODS:
+        for _ in range(30):
+            km = round(d.uniform(lo, hi), 1)
+            items = 1 + d.index(15)
+            rain = 1 if d.r.random() < 0.15 else 0
+            minutes = 22 + 2.4 * km + 0.35 * items + 7 * rain + d.normal(0, 3.5)
+            out.append({'hood': hood, 'km': km, 'items': items, 'rain': rain,
+                        'minutes': round(minutes * 2) / 2})
+    return out
+
+
+DELIVERIES = _deliveries()
+
+
+# Two hundred 1 kg bags of rice from a filling machine, lesson 7: symmetric.
+def _bags():
+    d = Draw(200)
+    return [round(d.normal(1003, 6), 1) for _ in range(200)]
+
+
+BAGS = _bags()
+
+
+# A hundred scores on an easy internal test, out of 100, lesson 7: a tail on the left.
+def _scores():
+    d = Draw(100)
+    return [max(0, round(100 - d.lognormal(math.log(12), 0.6))) for _ in range(100)]
+
+
+SCORES = _scores()
+
+
+# The time of day of 500 orders, in hours after midnight, lesson 7: lunch and dinner.
+def _hours():
+    d = Draw(500)
+    out = []
+    for i in range(500):
+        if d.r.random() < 0.45:
+            h = d.normal(12.0, 1.1)
+        else:
+            h = d.normal(19.6, 1.2)
+        out.append(round(min(23.99, max(7.0, h)), 2))
+    return out
+
+
+ORDER_HOURS = _hours()
+
+
+# Complaints received per day over 60 days, lesson 8: drawn from a Poisson with mean 2.4.
+def _complaints():
+    d = Draw(60)
+    out = []
+    for _ in range(60):
+        limit, k, prod = math.exp(-2.4), 0, d.r.random()
+        while prod > limit:
+            k += 1
+            prod *= d.r.random()
+        out.append(k)
+    return out
+
+
+COMPLAINTS = _complaints()
+
+
+def binom_cdf(k, n, p):
+    return sum(binom_pmf(i, n, p) for i in range(k + 1))
+
+
+def poisson_cdf(k, lam):
+    return sum(poisson_pmf(i, lam) for i in range(k + 1))
+
+
+def five(xs):
+    return (min(xs), quantile(xs, 0.25), median(xs), quantile(xs, 0.75), max(xs))
+
+
+def trimmed(xs, share):
+    s = sorted(xs)
+    k = int(len(s) * share)
+    return mean(s[k:len(s) - k])
+
+
+# ------------------------------------------------------------------ the sheet
+
+SHEET = {}
+
+
+def lesson(n):
+    def wrap(f):
+        SHEET[n] = f
+        return f
+    return wrap
+
+
+def show(label, value):
+    if isinstance(value, float):
+        value = f'{value:.4f}'
+    print(f'  {label:<52} {value}')
+
+
+@lesson(1)
+def l1():
+    pay = column('payment')
+    for k in ['pix', 'card', 'cash']:
+        show(f'payment {k}: count, share', f'{pay.count(k)}  {pay.count(k) / len(pay):.4f}')
+    hood = column('neighbourhood')
+    for k in ['Cambuí', 'Taquaral', 'Barão Geraldo', 'Centro']:
+        show(f'neighbourhood {k}: count', hood.count(k))
+    show('mean of the postcodes, digits only (meaningless)',
+         mean([int(p.replace('-', '')) for p in column('postcode')]))
+    show('total basket', sum(column('basket')))
+
+
+@lesson(2)
+def l2():
+    ratings = column('rating')
+    show('ratings: mean', mean(ratings))
+    show('ratings: median', median(ratings))
+    show('ratings: counts 1..5', [ratings.count(k) for k in range(1, 6)])
+    # temperatures: 27 C against 13.5 C is not "twice as hot"
+    show('27 C in kelvin', 27 + 273.15)
+    show('13.5 C in kelvin', 13.5 + 273.15)
+    show('ratio of the kelvins', (27 + 273.15) / (13.5 + 273.15))
+    show('27 C in fahrenheit', 27 * 9 / 5 + 32)
+    show('13.5 C in fahrenheit', 13.5 * 9 / 5 + 32)
+    # payment coded 1=pix 2=card 3=cash, and averaged anyway
+    code = {'pix': 1, 'card': 2, 'cash': 3}
+    show('mean of the payment codes (meaningless)', mean([code[p] for p in column('payment')]))
+
+
+@lesson(3)
+def l3():
+    for name in ['minutes', 'basket', 'items', 'rating']:
+        xs = column(name)
+        show(f'{name}: sum', sum(xs))
+        show(f'{name}: mean', mean(xs))
+        show(f'{name}: median', median(xs))
+        show(f'{name}: sorted', sorted(xs))
+        show(f'{name}: modes, count', modes(xs))
+    show('payment: modes, count', modes(column('payment')))
+    # two stores, averaged wrongly and rightly
+    show('store A 300 orders mean 80, store B 100 orders mean 40: weighted', (300 * 80 + 100 * 40) / 400)
+    show('the same, unweighted', (80 + 40) / 2)
+    # a frequency table of items per order, lesson 3's grouped mean
+    freq = {1: 14, 2: 22, 3: 31, 4: 18, 5: 9, 6: 6}
+    n = sum(freq.values())
+    show('frequency table n', n)
+    show('frequency table mean', sum(k * v for k, v in freq.items()) / n)
+    cum = 0
+    for k in sorted(freq):
+        cum += freq[k]
+        show(f'cumulative count to {k}', cum)
+
+
+@lesson(4)
+def l4():
+    show('salaries: mean', mean(SALARIES))
+    show('salaries: median', median(SALARIES))
+    show('salaries without the founder: mean', mean(SALARIES[:-1]))
+    show('salaries without the founder: median', median(SALARIES[:-1]))
+    show('staff below the mean', sum(1 for s in SALARIES if s < mean(SALARIES)))
+    show('payroll total', sum(SALARIES))
+    show('mean x 9', mean(SALARIES) * 9)
+    cut = sorted(SALARIES)[1:-1]
+    show('trimmed mean, one off each end', mean(cut))
+    show('median x 9', median(SALARIES) * 9)
+    b = BASKETS
+    show('400 baskets: mean', mean(b))
+    show('400 baskets: median', median(b))
+    show('400 baskets: min, max', f'{min(b)}  {max(b)}')
+    show('400 baskets: share below the mean', sum(1 for x in b if x < mean(b)) / len(b))
+    show('400 baskets: 10% trimmed mean', trimmed(b, 0.10))
+    show('400 baskets: 5% trimmed mean', trimmed(b, 0.05))
+    show('400 baskets: total', sum(b))
+    show('400 baskets: top 10% share of total', sum(sorted(b)[-40:]) / sum(b))
+    show('400 baskets: count above 200', sum(1 for x in b if x > 200))
+    # the typo: 212.60 typed as 2126.00 in the twelve
+    twelve = column('basket')
+    typo = [2126.00 if x == 212.60 else x for x in twelve]
+    show('twelve baskets with the typo: mean', mean(typo))
+    show('twelve baskets with the typo: median', median(typo))
+    show('twelve baskets: mean', mean(twelve))
+
+
+@lesson(5)
+def l5():
+    for name, xs in (('Lia', LIA), ('Davi', DAVI)):
+        m = mean(xs)
+        show(f'{name}: mean', m)
+        show(f'{name}: range', max(xs) - min(xs))
+        show(f'{name}: deviations', [x - m for x in xs])
+        show(f'{name}: squared deviations', [(x - m) ** 2 for x in xs])
+        show(f'{name}: sum of squares', sum((x - m) ** 2 for x in xs))
+        show(f'{name}: sample variance', var(xs))
+        show(f'{name}: sample sd', sd(xs))
+        show(f'{name}: population variance', var(xs, False))
+        show(f'{name}: population sd', sd(xs, False))
+        show(f'{name}: mean absolute deviation', mean([abs(x - m) for x in xs]))
+        show(f'{name}: share within one sd of the mean', sum(1 for x in xs if abs(x - m) <= sd(xs)) / len(xs))
+    mins = column('minutes')
+    show('twelve minutes: sd', sd(mins))
+    show('twelve minutes: range', max(mins) - min(mins))
+    show('twelve minutes: within one sd', sum(1 for x in mins if abs(x - mean(mins)) <= sd(mins)))
+    bk = column('basket')
+    show('twelve baskets: sd', sd(bk))
+    show('twelve baskets: cv', sd(bk) / mean(bk))
+    show('twelve minutes: cv', sd(mins) / mean(mins))
+    items = column('items')
+    show('twelve items: mean, sd, cv', f'{mean(items):.4f} {sd(items):.4f} {sd(items) / mean(items):.4f}')
+    b = BASKETS
+    show('400 baskets: sd', sd(b))
+    show('400 baskets: cv', sd(b) / mean(b))
+    show('400 baskets: within one sd of the mean', sum(1 for x in b if abs(x - mean(b)) <= sd(b)) / len(b))
+    # Bessel, on a population of three, every ordered sample of two drawn with replacement
+    pop = [30, 35, 43]
+    show('population of three: mean', mean(pop))
+    show('population of three: variance', var(pop, False))
+    pairs = [(a, b) for a in pop for b in pop]
+    show('samples of two: mean of the n-1 variances', mean([var(list(q)) for q in pairs]))
+    show('samples of two: mean of the n variances', mean([var(list(q), False) for q in pairs]))
+
+
+@lesson(6)
+def l6():
+    mins = column('minutes')
+    show('twelve minutes sorted', sorted(mins))
+    show('Q1, Q3 inclusive', f'{quantile(mins, .25)}  {quantile(mins, .75)}')
+    show('Q1, Q3 exclusive', f'{quantile_exc(mins, .25)}  {quantile_exc(mins, .75)}')
+    lo, hi = sorted(mins)[:6], sorted(mins)[6:]
+    show('Q1, Q3 median of halves', f'{median(lo)}  {median(hi)}')
+    q1, q3 = quantile(mins, .25), quantile(mins, .75)
+    iqr = q3 - q1
+    show('IQR inclusive', iqr)
+    show('fences', f'{q1 - 1.5 * iqr}  {q3 + 1.5 * iqr}')
+    show('90th percentile inclusive', quantile(mins, .9))
+    show('share at or below 44', sum(1 for x in mins if x <= 44) / 12)
+    b = BASKETS
+    show('400 baskets five', [round(v, 2) for v in five(b)])
+    bq1, bq3 = quantile(b, .25), quantile(b, .75)
+    show('400 baskets IQR', bq3 - bq1)
+    show('400 baskets upper fence', bq3 + 1.5 * (bq3 - bq1))
+    show('400 baskets beyond upper fence', sum(1 for x in b if x > bq3 + 1.5 * (bq3 - bq1)))
+    show('400 baskets largest within fence', max(x for x in b if x <= bq3 + 1.5 * (bq3 - bq1)))
+    show('400 baskets 90th, 95th percentile', f'{quantile(b, .9):.4f}  {quantile(b, .95):.4f}')
+    show('400 baskets sd', sd(b))
+    for hood, _, _ in HOODS:
+        xs = [r['minutes'] for r in DELIVERIES if r['hood'] == hood]
+        f = five(xs)
+        q1, q3 = f[1], f[3]
+        out = [x for x in xs if x > q3 + 1.5 * (q3 - q1) or x < q1 - 1.5 * (q3 - q1)]
+        show(f'{hood}: five, IQR, outliers', f'{[round(v, 3) for v in f]}  {q3 - q1:.3f}  {out}')
+        show(f'{hood}: mean, sd', f'{mean(xs):.3f} {sd(xs):.3f}')
+
+
+@lesson(7)
+def l7():
+    for name, xs in (('bags', BAGS), ('baskets', BASKETS), ('scores', SCORES)):
+        m, md, s_ = mean(xs), median(xs), sd(xs)
+        show(f'{name}: n, min, max', f'{len(xs)}  {min(xs)}  {max(xs)}')
+        show(f'{name}: mean, median, sd', f'{m:.4f}  {md:.4f}  {s_:.4f}')
+        show(f'{name}: skewness (SKEW)', skewness(xs))
+        show(f'{name}: excess kurtosis (KURT)', kurtosis(xs))
+        show(f'{name}: Pearson median skewness 3(mean-median)/sd', 3 * (m - md) / s_)
+    allm = [r['minutes'] for r in DELIVERIES]
+    show('120 deliveries: five', five(allm))
+    show('120 deliveries: mean, sd', f'{mean(allm):.4f} {sd(allm):.4f}')
+    show('120 deliveries: skew, kurt', f'{skewness(allm):.4f} {kurtosis(allm):.4f}')
+    edges = list(range(20, 72, 4))
+    counts = [sum(1 for x in allm if edges[i] <= x < edges[i + 1]) for i in range(len(edges) - 1)]
+    show('120 deliveries: counts in 4-minute bins from 20', counts)
+    h = ORDER_HOURS
+    show('order hours: min, max', f'{min(h)} {max(h)}')
+    show('order hours: mean, median', f'{mean(h):.4f} {median(h):.4f}')
+    show('order hours: five', [round(v, 2) for v in five(h)])
+    show('order hours: counts per hour 7..23', [sum(1 for x in h if k <= x < k + 1) for k in range(7, 24)])
+    show('order hours: between 15 and 16', sum(1 for x in h if 15 <= x < 16))
+    show('order hours: skew, kurt', f'{skewness(h):.4f} {kurtosis(h):.4f}')
+
+
+@lesson(8)
+def l8():
+    # uniform: a courier arrives at a random moment between 18:00 and 18:30
+    show('uniform 0..30: P(wait > 20)', 10 / 30)
+    show('uniform 0..30: mean, sd', f'{15} {30 / math.sqrt(12):.4f}')
+    # binomial: 10 deliveries, each late with probability 0.15
+    n, p = 10, 0.15
+    for k in range(0, 6):
+        show(f'binomial(10, 0.15): P(X = {k})', binom_pmf(k, n, p))
+    show('binomial: P(X >= 3)', 1 - binom_cdf(2, n, p))
+    show('binomial: P(X <= 2)', binom_cdf(2, n, p))
+    show('binomial: mean, sd', f'{n * p:.4f} {math.sqrt(n * p * (1 - p)):.4f}')
+    show('C(10, 2)', math.comb(10, 2))
+    # poisson: complaints per day, mean 2.4
+    lam = 2.4
+    for k in range(0, 9):
+        show(f'poisson(2.4): P(X = {k})', poisson_pmf(k, lam))
+    show('poisson: P(X >= 5)', 1 - poisson_cdf(4, lam))
+    show('poisson: P(X = 0) over a week of 7 days (rate 16.8)', poisson_pmf(0, 16.8))
+    c = COMPLAINTS
+    show('60 days: counts 0..8', [c.count(k) for k in range(9)])
+    show('60 days: expected counts 0..8', [round(60 * poisson_pmf(k, lam), 2) for k in range(9)])
+    show('60 days: mean, variance', f'{mean(c):.4f} {var(c):.4f}')
+    show('60 days: max', max(c))
+    # normal: bags with mean 1003 and sd 6
+    mu, sg = 1003, 6
+    show('normal: within 1, 2, 3 sd', f'{normal_cdf(1) - normal_cdf(-1):.4f} {normal_cdf(2) - normal_cdf(-2):.4f} '
+         f'{normal_cdf(3) - normal_cdf(-3):.4f}')
+    show('bags: z of 995', (995 - mu) / sg)
+    show('bags: P(bag < 995)', normal_cdf((995 - mu) / sg))
+    show('bags: P(bag > 1015)', 1 - normal_cdf((1015 - mu) / sg))
+    show('bags: weight that 99% exceed', mu + sg * normal_inv(0.01))
+    show('bags: z for 1%', normal_inv(0.01))
+    show('bags: observed share < 995 in the 200', sum(1 for x in BAGS if x < 995) / 200)
+    show('bags: observed within 1 sd of the sample mean', sum(1 for x in BAGS if abs(x - mean(BAGS)) <= sd(BAGS)) / 200)
+    show('z of a 52-minute delivery with mean 38.96 and sd 9.77', (52 - 38.96) / 9.77)
+
+
+def mad(xs):
+    m = median(xs)
+    return median([abs(x - m) for x in xs])
+
+
+def robust_z(x, xs):
+    return 0.6745 * (x - median(xs)) / mad(xs)
+
+
+@lesson(9)
+def l9():
+    twelve = column('basket')
+    typo = [2126.00 if x == 212.60 else x for x in twelve]
+    m, s_ = mean(typo), sd(typo)
+    show('typo: mean, sd', f'{m:.4f} {s_:.4f}')
+    show('typo: z of 2126.00', (2126 - m) / s_)
+    show('typo: largest other z', max((x - m) / s_ for x in typo if x != 2126))
+    show('max possible z with n = 12, (n-1)/sqrt(n)', 11 / math.sqrt(12))
+    show('max possible z with n = 10', 9 / math.sqrt(10))
+    two = [2126.00 if x == 212.60 else 1547.50 if x == 154.75 else x for x in twelve]
+    m2, s2 = mean(two), sd(two)
+    show('two typos: mean, sd', f'{m2:.4f} {s2:.4f}')
+    show('two typos: z of 2126.00, 1547.50', f'{(2126 - m2) / s2:.4f} {(1547.5 - m2) / s2:.4f}')
+    show('two typos: median, MAD', f'{median(two):.4f} {mad(two):.4f}')
+    show('two typos: robust z of 2126.00, 1547.50', f'{robust_z(2126, two):.4f} {robust_z(1547.5, two):.4f}')
+    show('two typos: robust z of 95.00 and 12.90', f'{robust_z(95.0, two):.4f} {robust_z(12.9, two):.4f}')
+    show('twelve correct: median, MAD', f'{median(twelve):.4f} {mad(twelve):.4f}')
+    show('twelve correct: robust z of 212.60', robust_z(212.6, twelve))
+    show('twelve correct: z of 212.60', (212.6 - mean(twelve)) / sd(twelve))
+    show('two typos: abs deviations sorted', sorted(round(abs(x - median(two)), 2) for x in two))
+    b = BASKETS
+    p95 = quantile(b, 0.95)
+    w = [min(x, p95) for x in b]
+    show('400: 95th percentile', p95)
+    show('400: winsorised at the 95th: mean', mean(w))
+    show('400: mean without the 17 beyond the fence', mean([x for x in b if x <= quantile(b, .75) + 1.5 * (quantile(b, .75) - quantile(b, .25))]))
+    show('400: count |z| > 3', sum(1 for x in b if abs(x - mean(b)) / sd(b) > 3))
+    show('400: robust z > 3.5 count', sum(1 for x in b if robust_z(x, b) > 3.5))
+    show('400: median, MAD', f'{median(b):.4f} {mad(b):.4f}')
+    show('400: three largest', sorted(b)[-3:])
+
+
+@lesson(10)
+def l10():
+    b = BASKETS
+    show('400 baskets as a population: mean, sd (population)', f'{mean(b):.4f} {sd(b, False):.4f}')
+    d = Draw(1010)
+    three = [mean(d.sample(b, 40)) for _ in range(3)]
+    show('three random samples of 40: means', [round(x, 2) for x in three])
+    means = [mean(d.sample(b, 40)) for _ in range(1000)]
+    show('1000 samples of 40: mean of the means, sd of the means', f'{mean(means):.4f} {sd(means):.4f}')
+    show('1000 samples of 40: min, max of the means', f'{min(means):.2f} {max(means):.2f}')
+    # stratified against simple random, on the 120 deliveries
+    allm = [r['minutes'] for r in DELIVERIES]
+    show('120 deliveries: population mean', mean(allm))
+    groups = {h: [r['minutes'] for r in DELIVERIES if r['hood'] == h] for h, _, _ in HOODS}
+    d2 = Draw(1011)
+    srs = [mean(d2.sample(allm, 20)) for _ in range(1000)]
+    strat = []
+    for _ in range(1000):
+        pick = []
+        for h in groups:
+            pick += d2.sample(groups[h], 5)
+        strat.append(mean(pick))
+    show('SRS of 20: sd of the sample means', sd(srs))
+    show('stratified 5 per neighbourhood: sd of the sample means', sd(strat))
+    show('SRS of 20: share of means more than 3 minutes off', sum(1 for x in srs if abs(x - mean(allm)) > 3) / 1000)
+    show('stratified: share of means more than 3 minutes off', sum(1 for x in strat if abs(x - mean(allm)) > 3) / 1000)
+    # cluster: pick 1 neighbourhood at random and take 20 of its deliveries
+    clus = []
+    hoods = list(groups)
+    for _ in range(1000):
+        h = d2.pick(hoods)
+        clus.append(mean(d2.sample(groups[h], 20)))
+    show('cluster, one neighbourhood: sd of the sample means', sd(clus))
+    # convenience: the 20 deliveries nearest the warehouse (Centro and Cambuí only)
+    near = groups['Centro'] + groups['Cambuí']
+    show('convenience, Centro and Cambuí only: mean', mean(near))
+    conv = [mean(d2.sample(near, 20)) for _ in range(1000)]
+    show('convenience samples of 20: mean of the means', mean(conv))
+    # bigger convenience samples do not fix bias
+    show('all 60 near deliveries: mean (bias stays)', mean(near))
+
+
+def sample_means(pop, n, reps, seed):
+    """Means of `reps` samples of size n drawn WITH replacement, so draws are independent."""
+    d = Draw(seed)
+    return [mean([pop[d.index(len(pop))] for _ in range(n)]) for _ in range(reps)]
+
+
+CLT_N = (1, 2, 5, 10, 30, 100)
+
+
+@lesson(11)
+def l11():
+    b = BASKETS
+    sig = sd(b, False)
+    show('population: mean, sigma, skewness', f'{mean(b):.4f} {sig:.4f} {skewness(b):.4f}')
+    for n in CLT_N:
+        ms = sample_means(b, n, 2000, 1100 + n)
+        show(f'n = {n:>3}: mean of means, sd of means, sigma/sqrt(n), skew',
+             f'{mean(ms):.4f} {sd(ms):.4f} {sig / math.sqrt(n):.4f} {skewness(ms):.4f}')
+        within = sum(1 for m in ms if abs(m - mean(b)) <= 2 * sig / math.sqrt(n)) / len(ms)
+        show(f'n = {n:>3}: share within 2 sigma/sqrt(n) of the mean', within)
+    # dice: the sum of k dice
+    show('one die: mean, sd', f'{3.5} {math.sqrt(35 / 12):.4f}')
+    # medians of samples of 30, for contrast
+    d = Draw(1199)
+    meds = [median([b[d.index(400)] for _ in range(30)]) for _ in range(2000)]
+    show('medians of samples of 30: mean, sd', f'{mean(meds):.4f} {sd(meds):.4f}')
+
+
+# The one sample lesson 12 works from: 40 baskets drawn at random from the 400.
+SAMPLE40 = Draw(1200).sample(BASKETS, 40)
+
+
+# Twenty-five deliveries after Horta switched on a new routing system, lessons 13 and 14.
+# Before the switch, deliveries averaged 40 minutes.
+def _routing():
+    d = Draw(1300)
+    return [round(d.normal(37.6, 6.0) * 2) / 2 for _ in range(25)]
+
+
+ROUTING = _routing()
+
+
+# Ten couriers' mean delivery time in the month before and the month after a route
+# training, lesson 16: a paired comparison.
+def _training():
+    d = Draw(1600)
+    before = [round(d.normal(40, 4), 1) for _ in range(10)]
+    after = [round(b - 1.5 + d.normal(0, 1.4), 1) for b in before]
+    return before, after
+
+
+TRAIN_BEFORE, TRAIN_AFTER = _training()
+
+# The checkout test, lesson 16: visitors and purchases on each version of the page.
+CHECKOUT = [[220, 1780], [262, 1738]]
+
+
+def t_interval(xs, level=0.95):
+    n, m, s_ = len(xs), mean(xs), sd(xs)
+    t = t_inv(1 - (1 - level) / 2, n - 1)
+    return m - t * s_ / math.sqrt(n), m + t * s_ / math.sqrt(n)
+
+
+@lesson(12)
+def l12():
+    x = SAMPLE40
+    n, m, s_ = len(x), mean(x), sd(x)
+    se = s_ / math.sqrt(n)
+    show('sample of 40: mean, sd, SE', f'{m:.4f} {s_:.4f} {se:.4f}')
+    show('z interval 95%', f'{m - 1.96 * se:.4f} {m + 1.96 * se:.4f}')
+    show('t(0.975, 39)', t_inv(0.975, 39))
+    lo, hi = t_interval(x)
+    show('t interval 95%', f'{lo:.4f} {hi:.4f}')
+    show('t interval 95% margin', (hi - lo) / 2)
+    show('true mean inside?', lo <= mean(BASKETS) <= hi)
+    lo90, hi90 = t_interval(x, 0.90)
+    lo99, hi99 = t_interval(x, 0.99)
+    show('90% interval', f'{lo90:.4f} {hi90:.4f}')
+    show('99% interval', f'{lo99:.4f} {hi99:.4f}')
+    show('z for 90, 95, 99', f'{normal_inv(0.95):.4f} {normal_inv(0.975):.4f} {normal_inv(0.995):.4f}')
+    # coverage: 20 samples for the figure, then 1000
+    d = Draw(1201)
+    twenty = [t_interval(d.sample(BASKETS, 40)) for _ in range(20)]
+    misses = [i for i, (a, b_) in enumerate(twenty) if not a <= mean(BASKETS) <= b_]
+    show('20 intervals: misses at', misses)
+    many = [t_interval(d.sample(BASKETS, 40)) for _ in range(1000)]
+    show('1000 intervals: share containing the true mean', sum(1 for a, b_ in many if a <= mean(BASKETS) <= b_) / 1000)
+    # small sample: Davi's eight deliveries
+    show('Davi: t(0.975, 7)', t_inv(0.975, 7))
+    lo, hi = t_interval(DAVI)
+    show('Davi: 95% t interval', f'{lo:.4f} {hi:.4f}')
+    show('Davi: margin', (hi - lo) / 2)
+    show('Davi: z-based margin (wrong for n = 8)', 1.96 * sd(DAVI) / math.sqrt(8))
+    for df in (2, 5, 10, 30, 100):
+        show(f't(0.975, {df})', t_inv(0.975, df))
+    # a proportion: 248 of 400 surveyed customers satisfied
+    k, nn = 248, 400
+    ph = k / nn
+    sep = math.sqrt(ph * (1 - ph) / nn)
+    show('survey: p-hat, SE', f'{ph:.4f} {sep:.4f}')
+    show('survey: 95% interval', f'{ph - 1.96 * sep:.4f} {ph + 1.96 * sep:.4f}')
+    show('survey: margin', 1.96 * sep)
+    # sample sizes
+    show('n for a margin of 3 points at p = 0.5', (1.96 ** 2) * 0.25 / 0.03 ** 2)
+    show('n for a margin of 5 points at p = 0.5', (1.96 ** 2) * 0.25 / 0.05 ** 2)
+    show('n for a margin of R$ 5 with s = 59', (1.96 * 59 / 5) ** 2)
+    show('n for a margin of R$ 10 with s = 59', (1.96 * 59 / 10) ** 2)
+
+
+@lesson(13)
+def l13():
+    x = ROUTING
+    n, m, s_ = len(x), mean(x), sd(x)
+    se = s_ / math.sqrt(n)
+    t = (m - 40) / se
+    show('routing: n, mean, sd, SE', f'{n} {m:.4f} {s_:.4f} {se:.4f}')
+    show('routing: values sorted', sorted(x))
+    show('routing: t against 40', t)
+    show('one-sided 5% critical value, df 24', t_inv(0.05, 24))
+    show('two-sided 5% critical values, df 24', t_inv(0.975, 24))
+    show('one-sided p', t_cdf(t, n - 1))
+    show('two-sided p', 2 * t_cdf(-abs(t), n - 1))
+    # bags: is the machine on target at 1000 g? first 15 bags
+    b15 = BAGS[:15]
+    m15, s15 = mean(b15), sd(b15)
+    t15 = (m15 - 1000) / (s15 / math.sqrt(15))
+    show('15 bags: mean, sd, t against 1000', f'{m15:.4f} {s15:.4f} {t15:.4f}')
+    show('15 bags: two-sided critical, df 14', t_inv(0.975, 14))
+    show('15 bags: two-sided p', 2 * t_cdf(-abs(t15), 14))
+    # alpha 1%: critical
+    show('one-sided 1% critical, df 24', t_inv(0.01, 24))
+
+
+def null_batches():
+    """1000 batches of 20 tests of tweaks that do nothing; false alarms per batch."""
+    d = Draw(1401)
+    out = []
+    for _ in range(1000):
+        k = 0
+        for _ in range(20):
+            a_ = [BASKETS[d.index(400)] for _ in range(50)]
+            b_ = [BASKETS[d.index(400)] for _ in range(50)]
+            k += welch(a_, b_)[2] < 0.05
+        out.append(k)
+    return out
+
+
+@lesson(14)
+def l14():
+    x = ROUTING
+    n, m, s_ = len(x), mean(x), sd(x)
+    se = s_ / math.sqrt(n)
+    t = (m - 40) / se
+    show('routing: t, one-sided p, two-sided p', f'{t:.4f} {t_cdf(t, n - 1):.4f} {2 * t_cdf(-abs(t), n - 1):.4f}')
+    c = t_inv(0.975, n - 1)
+    show('routing: 95% interval', f'{m - c * se:.4f} {m + c * se:.4f}')
+    b15 = BAGS[:15]
+    t15 = (mean(b15) - 1000) / (sd(b15) / math.sqrt(15))
+    show('bags: two-sided p', 2 * t_cdf(-abs(t15), 14))
+    # p-values just either side of 0.05: t values with 24 df
+    for p_ in (0.049, 0.051):
+        show(f't giving one-sided p = {p_}', t_inv(p_, 24))
+    # twenty tweaks that do nothing: two groups of 50 baskets each, drawn from the same 400
+    d = Draw(1400)
+    ps = []
+    for _ in range(20):
+        a_ = [BASKETS[d.index(400)] for _ in range(50)]
+        b_ = [BASKETS[d.index(400)] for _ in range(50)]
+        ps.append(welch(a_, b_)[2])
+    show('20 null tweaks: p-values', [round(v, 3) for v in ps])
+    show('20 null tweaks: count below 0.05', sum(1 for v in ps if v < 0.05))
+    show('20 null tweaks: smallest p', min(ps))
+    show('P(at least one of 20 below 0.05)', 1 - 0.95 ** 20)
+    show('Bonferroni level for 20 tests', 0.05 / 20)
+    counts = null_batches()
+    show('1000 batches of 20 null tweaks: share with at least one p < 0.05', sum(1 for c in counts if c) / 1000)
+    show('1000 batches: how many batches had 0, 1, 2, 3, 4+ false alarms',
+         [counts.count(k) for k in range(4)] + [sum(1 for c in counts if c >= 4)])
+    show('1000 batches: total false alarms out of 20000 tests', sum(counts))
+    show('binomial(20, 0.05) for 0..3', [round(binom_pmf(k, 20, 0.05), 4) for k in range(4)])
+
+
+def simulated_power(delta, n, sigma=6.0, reps=4000, seed=1500, alpha=0.05):
+    """Share of one-sided t tests of mu = 40 that reject, when the true mean is 40 - delta."""
+    d = Draw(seed)
+    crit = t_inv(alpha, n - 1)
+    hits, means = 0, []
+    for _ in range(reps):
+        xs = [d.normal(40 - delta, sigma) for _ in range(n)]
+        t = (mean(xs) - 40) / (sd(xs) / math.sqrt(n))
+        if t < crit:
+            hits += 1
+            means.append(mean(xs))
+    return hits / reps, means
+
+
+def normal_power(delta, n, sigma=6.0, alpha=0.05):
+    return normal_cdf(delta / (sigma / math.sqrt(n)) - normal_inv(1 - alpha))
+
+
+def n_for_power(delta, sigma=6.0, alpha=0.05, power=0.8):
+    return ((normal_inv(1 - alpha) + normal_inv(power)) * sigma / delta) ** 2
+
+
+@lesson(15)
+def l15():
+    show('z for alpha 0.05 one-sided, z for power 0.80', f'{normal_inv(0.95):.4f} {normal_inv(0.80):.4f}')
+    for delta in (1, 2, 3):
+        pw, means = simulated_power(delta, 25, seed=1500 + delta)
+        show(f'n = 25, true gain {delta}: simulated power, normal approx', f'{pw:.4f} {normal_power(delta, 25):.4f}')
+        show(f'n = 25, true gain {delta}: mean estimate among the significant', f'{40 - mean(means):.4f}')
+    for delta in (1, 2):
+        show(f'n for 80% power, gain {delta}', n_for_power(delta))
+        show(f'n for 90% power, gain {delta}', n_for_power(delta, power=0.9))
+    pw, _ = simulated_power(2, 58, seed=1510)
+    show('n = 58, gain 2: simulated power', pw)
+    pw, _ = simulated_power(0, 25, seed=1511)
+    show('n = 25, no gain: simulated rejection rate (alpha)', pw)
+    pw, _ = simulated_power(2, 25, seed=1512, alpha=0.01)
+    show('n = 25, gain 2, alpha 0.01: simulated power', pw)
+    show('normal approx power n=25 gain 2 alpha 0.01', normal_power(2, 25, alpha=0.01))
+
+
+@lesson(16)
+def l16():
+    g = {h: [r['minutes'] for r in DELIVERIES if r['hood'] == h] for h, _, _ in HOODS}
+    c, k = g['Centro'], g['Cambuí']
+    show('Centro, Cambuí: mean, sd', f'{mean(c):.4f} {sd(c):.4f} | {mean(k):.4f} {sd(k):.4f}')
+    t, df, p = welch(c, k)
+    show('Welch Centro vs Cambuí: t, df, p', f'{t:.4f} {df:.4f} {p:.4f}')
+    t, df, p = welch(k, g['Taquaral'])
+    show('Welch Cambuí vs Taquaral: t, df, p', f'{t:.4f} {df:.4f} {p:.6f}')
+    show('training before', TRAIN_BEFORE)
+    show('training after', TRAIN_AFTER)
+    t, df, p, md, sdd = paired_t(TRAIN_BEFORE, TRAIN_AFTER)
+    show('paired t: t, df, p, mean diff, sd diff', f'{t:.4f} {df} {p:.4f} {md:.4f} {sdd:.4f}')
+    t, df, p = welch(TRAIN_AFTER, TRAIN_BEFORE)
+    show('the same data as independent groups (wrong): t, df, p', f'{t:.4f} {df:.4f} {p:.4f}')
+    stat, df, p, e = chi_square(CHECKOUT)
+    show('checkout: rates', f'{220 / 2000:.4f} {262 / 2000:.4f}')
+    show('checkout chi-square: stat, df, p', f'{stat:.4f} {df} {p:.4f}')
+    show('checkout expected', [[round(v, 1) for v in row] for row in e])
+    # goodness of fit for complaints, grouping 5+ together
+    obs = [COMPLAINTS.count(k_) for k_ in range(5)] + [sum(1 for x in COMPLAINTS if x >= 5)]
+    exp_ = [60 * poisson_pmf(k_, 2.4) for k_ in range(5)]
+    exp_.append(60 - sum(exp_))
+    gof = sum((o - e_) ** 2 / e_ for o, e_ in zip(obs, exp_))
+    show('complaints: observed 0..4, 5+', obs)
+    show('complaints: expected', [round(v, 2) for v in exp_])
+    show('complaints goodness of fit: stat, df 5, p', f'{gof:.4f} {chi2_sf(gof, 5):.4f}')
+    f, dfb, dfw, p, ssb, ssw = anova(list(g.values()))
+    show('ANOVA four neighbourhoods: F, df, p', f'{f:.4f} {dfb} {dfw} {p:.3e}')
+    show('ANOVA: SS between, SS within, MS between, MS within', f'{ssb:.4f} {ssw:.4f} {ssb / dfb:.4f} {ssw / dfw:.4f}')
+    f, dfb, dfw, p, _, _ = anova([c, k])
+    show('ANOVA Centro and Cambuí only: F, p', f'{f:.4f} {p:.4f}')
+    u, z, p = mann_whitney(c, k)
+    show('Mann-Whitney Centro vs Cambuí: U, z, p', f'{u} {z:.4f} {p:.4f}')
+    h, df, p = kruskal(list(g.values()))
+    show('Kruskal-Wallis four neighbourhoods: H, df, p', f'{h:.4f} {df} {p:.3e}')
+    w, z, p = wilcoxon(TRAIN_BEFORE, TRAIN_AFTER)
+    show('Wilcoxon training: W+, z, p', f'{w} {z:.4f} {p:.4f}')
+    # baskets by payment: pix vs card, from the 400? use halves of the 400 as an illustration
+    show('baskets: median of the first 200, last 200', f'{median(BASKETS[:200]):.2f} {median(BASKETS[200:]):.2f}')
+
+
+# Anscombe's quartet (F. J. Anscombe, "Graphs in statistical analysis", 1973): four
+# sets of eleven points with the same means, spreads, correlation and line.
+ANSCOMBE_X = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
+ANSCOMBE = [
+    (ANSCOMBE_X, [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]),
+    (ANSCOMBE_X, [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74]),
+    (ANSCOMBE_X, [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73]),
+    ([8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8],
+     [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]),
+]
+
+
+def r_test(r, n):
+    """t statistic and two-sided p for a correlation of r on n pairs."""
+    t = r * math.sqrt(n - 2) / math.sqrt(1 - r * r)
+    return t, 2 * (1 - t_cdf(abs(t), n - 2))
+
+
+# Discount and orders, lesson 17: rising and flattening, a curve with no reversal.
+DISCOUNT = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+DISCOUNT_ORDERS = [round(400 + 260 * (1 - math.exp(-d / 4))) for d in DISCOUNT]
+
+# Gallery of correlations, lesson 17: sixty pairs at each target, from one seed each.
+GALLERY_R = (-0.9, -0.5, 0.0, 0.3, 0.7, 0.95)
+
+
+def gallery(rho, n=60, seed=1700):
+    """Sixty pairs whose sample correlation is exactly rho: the noise is made
+    uncorrelated with x before it is mixed in, so the picture shows the target."""
+    d = Draw(seed + int(round(rho * 100)))
+    xs = [d.normal(0, 1) for _ in range(n)]
+    es = [d.normal(0, 1) for _ in range(n)]
+    mx, me = mean(xs), mean(es)
+    xs = [x - mx for x in xs]
+    es = [e - me for e in es]
+    b = sum(x * e for x, e in zip(xs, es)) / sum(x * x for x in xs)
+    es = [e - b * x for x, e in zip(xs, es)]
+    sx, se = math.sqrt(sum(x * x for x in xs)), math.sqrt(sum(e * e for e in es))
+    xs = [x / sx * math.sqrt(n) for x in xs]
+    es = [e / se * math.sqrt(n) for e in es]
+    return xs, [rho * x + math.sqrt(1 - rho * rho) * e for x, e in zip(xs, es)]
+
+
+@lesson(17)
+def l17():
+    km = [r['km'] for r in DELIVERIES]
+    mins = [r['minutes'] for r in DELIVERIES]
+    items = [r['items'] for r in DELIVERIES]
+    rain = [r['rain'] for r in DELIVERIES]
+    show('120 deliveries: r km-minutes, rho', f'{pearson(km, mins):.4f} {spearman(km, mins):.4f}')
+    show('r items-minutes, rain-minutes, km-items', f'{pearson(items, mins):.4f} {pearson(rain, mins):.4f} {pearson(km, items):.4f}')
+    t, p = r_test(pearson(km, mins), 120)
+    show('test of r km-minutes: t, p', f'{t:.4f} {p:.3e}')
+    t, p = r_test(pearson(items, mins), 120)
+    show('test of r items-minutes: t, p', f'{t:.4f} {p:.4f}')
+    show('r squared km-minutes', f'{pearson(km, mins) ** 2:.4f}')
+    it, bk = column('items'), column('basket')
+    mi, mb = mean(it), mean(bk)
+    show('12 orders items, basket: means, sds', f'{mi:.4f} {mb:.4f} {sd(it):.4f} {sd(bk):.4f}')
+    sxy = sum((x - mi) * (y - mb) for x, y in zip(it, bk))
+    show('sum of products, covariance', f'{sxy:.4f} {sxy / 11:.4f}')
+    show('r items-basket, rho', f'{pearson(it, bk):.6f} {spearman(it, bk):.6f}')
+    show('items-basket products per order', [round((x - mi) * (y - mb), 2) for x, y in zip(it, bk)])
+    mn, rt = column('minutes'), column('rating')
+    show('12 orders minutes-rating r, rho', f'{pearson(mn, rt):.4f} {spearman(mn, rt):.4f}')
+    show('ranks of minutes', ranks(mn))
+    show('ranks of rating', ranks(rt))
+    for i, (xs, ys) in enumerate(ANSCOMBE, 1):
+        a, b = line(xs, ys)
+        show(f'Anscombe {i}: mean x, mean y, sd y, r, line, rho',
+             f'{mean(xs):.2f} {mean(ys):.3f} {sd(ys):.4f} {pearson(xs, ys):.4f} {a:.3f}+{b:.4f}x {spearman(xs, ys):.4f}')
+    show('discount orders', DISCOUNT_ORDERS)
+    show('discount r, rho', f'{pearson(DISCOUNT, DISCOUNT_ORDERS):.4f} {spearman(DISCOUNT, DISCOUNT_ORDERS):.4f}')
+    xs = list(range(-5, 6))
+    show('parabola x^2 on -5..5: r', f'{pearson(xs, [x * x for x in xs]):.4f}')
+    for rho in GALLERY_R:
+        gx, gy = gallery(rho)
+        show(f'gallery {rho}: r', f'{pearson(gx, gy):.4f}')
+    cen = [r for r in DELIVERIES if r['hood'] == 'Centro']
+    ck, cm = [r['km'] for r in cen], [r['minutes'] for r in cen]
+    show('Centro: r, rho', f'{pearson(ck, cm):.4f} {spearman(ck, cm):.4f}')
+    ck2, cm2 = ck + [1.6], cm + [95.0]
+    show('Centro plus a 95-minute breakdown at 1.6 km: r, rho', f'{pearson(ck2, cm2):.4f} {spearman(ck2, cm2):.4f}')
+    near = [r for r in DELIVERIES if r['hood'] in ('Centro', 'Cambuí')]
+    show('Centro and Cambuí only: r km-minutes, km range',
+         f'{pearson([r["km"] for r in near], [r["minutes"] for r in near]):.4f} {min(r["km"] for r in near)} {max(r["km"] for r in near)}')
+    show('all: km range', f'{min(km)} {max(km)}')
+    # a leverage point that MAKES a correlation: ten unrelated points and one far away
+    d = Draw(1717)
+    lx = [round(d.uniform(1, 3), 1) for _ in range(10)]
+    ly = [round(d.uniform(30, 36), 1) for _ in range(10)]
+    show('ten unrelated points: r', f'{pearson(lx, ly):.4f}')
+    show('plus one at (12, 60): r, rho', f'{pearson(lx + [12], ly + [60]):.4f} {spearman(lx + [12], ly + [60]):.4f}')
+    show('lever points', list(zip(lx, ly)))
+    show('12 orders plus a 1-item R$ 400 gift box: r, rho',
+         f'{pearson(it + [1], bk + [400.0]):.4f} {spearman(it + [1], bk + [400.0]):.4f}')
+
+
+# Free-delivery coupons, lesson 18: sent mostly to the far neighbourhood, so a
+# coupon goes with a long delivery without causing one.
+COUPON_SHARE = {'Centro': 0.10, 'Cambuí': 0.15, 'Taquaral': 0.30, 'Barão Geraldo': 0.60}
+
+
+def _coupons():
+    d = Draw(1800)
+    return [1 if d.r.random() < COUPON_SHARE[r['hood']] else 0 for r in DELIVERIES]
+
+
+COUPONS = _coupons()
+
+# On time or late, by vehicle and distance, lesson 18: Simpson's paradox.
+# (vehicle, band) -> (on time, deliveries)
+SIMPSON = {('motorbike', 'near'): (88, 94), ('motorbike', 'far'): (201, 276),
+           ('bicycle', 'near'): (241, 280), ('bicycle', 'far'): (52, 76)}
+
+
+def walk(d, n=36):
+    x, out = 0.0, []
+    for _ in range(n):
+        x += d.normal(0, 1)
+        out.append(x)
+    return out
+
+
+def walk_pairs(reps=1000, seed=1801):
+    d = Draw(seed)
+    return [pearson(walk(d), walk(d)) for _ in range(reps)]
+
+
+def noise_pairs(reps=1000, seed=1802):
+    d = Draw(seed)
+    return [pearson([d.normal(0, 1) for _ in range(36)], [d.normal(0, 1) for _ in range(36)])
+            for _ in range(reps)]
+
+
+@lesson(18)
+def l18():
+    mins = [r['minutes'] for r in DELIVERIES]
+    w = [m for m, c in zip(mins, COUPONS) if c]
+    wo = [m for m, c in zip(mins, COUPONS) if not c]
+    show('coupons: n with, mean with, mean without, difference',
+         f'{len(w)} {mean(w):.2f} {mean(wo):.2f} {mean(w) - mean(wo):.2f}')
+    t, df, p = welch(w, wo)
+    show('Welch coupon vs none: t, df, p', f'{t:.3f} {df:.1f} {p:.2e}')
+    show('r coupon-minutes', f'{pearson(COUPONS, mins):.4f}')
+    diffs = []
+    for h, _, _ in HOODS:
+        rows = [(r['minutes'], c) for r, c in zip(DELIVERIES, COUPONS) if r['hood'] == h]
+        a = [m for m, c in rows if c]
+        b = [m for m, c in rows if not c]
+        diffs.append(mean(a) - mean(b))
+        show(f'{h}: with n, mean, without n, mean, diff',
+             f'{len(a)} {mean(a):.2f} {len(b)} {mean(b):.2f} {mean(a) - mean(b):.2f}')
+    km = [r['km'] for r in DELIVERIES]
+    items = [r['items'] for r in DELIVERIES]
+    rain = [r['rain'] for r in DELIVERIES]
+    beta, r2, _, _ = ols(list(zip(COUPONS, km)), mins)
+    show('minutes ~ coupon + km: coefficients', [round(b, 3) for b in beta])
+    beta, r2, _, _ = ols(list(zip(COUPONS,)), mins)
+    show('minutes ~ coupon: coefficients', [round(b, 3) for b in beta])
+    beta, r2, _, _ = ols(list(zip(COUPONS, km, items, rain)), mins)
+    show('minutes ~ coupon + km + items + rain', [round(b, 3) for b in beta])
+    for v in ('motorbike', 'bicycle'):
+        tot_on = sum(SIMPSON[(v, b)][0] for b in ('near', 'far'))
+        tot = sum(SIMPSON[(v, b)][1] for b in ('near', 'far'))
+        parts = ' '.join(f'{b} {SIMPSON[(v, b)][0]}/{SIMPSON[(v, b)][1]} = {SIMPSON[(v, b)][0] / SIMPSON[(v, b)][1]:.4f}'
+                         for b in ('near', 'far'))
+        show(f'{v}', f'{parts} | total {tot_on}/{tot} = {tot_on / tot:.4f}')
+    wp = walk_pairs()
+    show('1000 pairs of independent 36-step walks: share |r| > 0.5, > 0.7, median |r|',
+         f'{sum(abs(r) > 0.5 for r in wp) / 1000:.3f} {sum(abs(r) > 0.7 for r in wp) / 1000:.3f} {median([abs(r) for r in wp]):.3f}')
+    npairs = noise_pairs()
+    show('1000 pairs of independent noise, 36 each: share |r| > 0.5, median |r|',
+         f'{sum(abs(r) > 0.5 for r in npairs) / 1000:.3f} {median([abs(r) for r in npairs]):.3f}')
+    d = Draw(1803)
+    a, b = walk(d), walk(d)
+    show('the drawn pair: r', f'{pearson(a, b):.4f}')
+    da = [y - x for x, y in zip(a, a[1:])]
+    db = [y - x for x, y in zip(b, b[1:])]
+    show('the drawn pair, month-on-month changes: r', f'{pearson(da, db):.4f}')
+
+
+def inverse(a):
+    n = len(a)
+    return [solve(a, [1.0 if i == j else 0.0 for i in range(n)]) for j in range(n)]
+
+
+def ols_full(rows, ys):
+    """Coefficients, their standard errors, t, p, R², adjusted R², residual sd."""
+    beta, r2, adj, fitted = ols(rows, ys)
+    x = [[1.0] + list(r) for r in rows]
+    n, k = len(x), len(x[0])
+    xtx = [[sum(x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+    inv = inverse(xtx)  # columns, but xtx is symmetric so rows work too
+    sse = sum((y - f) ** 2 for y, f in zip(ys, fitted))
+    s2 = sse / (n - k)
+    se = [math.sqrt(s2 * inv[j][j]) for j in range(k)]
+    ts = [b / s for b, s in zip(beta, se)]
+    ps = [2 * (1 - t_cdf(abs(t), n - k)) for t in ts]
+    return dict(beta=beta, se=se, t=ts, p=ps, r2=r2, adj=adj, s=math.sqrt(s2), fitted=fitted,
+                sse=sse, df=n - k)
+
+
+def noise_columns(n, k, seed=1900):
+    d = Draw(seed)
+    return [[d.normal(0, 1) for _ in range(n)] for _ in range(k)]
+
+
+@lesson(19)
+def l19():
+    km = [r['km'] for r in DELIVERIES]
+    mins = [r['minutes'] for r in DELIVERIES]
+    items = [r['items'] for r in DELIVERIES]
+    rain = [r['rain'] for r in DELIVERIES]
+    it, bk = column('items'), column('basket')
+    a, b = line(it, bk)
+    show('12 orders: basket = a + b items', f'{a:.4f} {b:.4f}')
+    show('b = r sy/sx', f'{pearson(it, bk) * sd(bk) / sd(it):.4f}')
+    show('predicted basket at 10 items', f'{a + 10 * b:.2f}')
+    fit = ols_full([(k,) for k in km], mins)
+    show('minutes ~ km: a, b, se, t, R2, s', f'{fit["beta"][0]:.4f} {fit["beta"][1]:.4f} {fit["se"][1]:.4f} {fit["t"][1]:.3f} {fit["r2"]:.4f} {fit["s"]:.4f}')
+    a2, b2 = fit['beta']
+    show('predictions at 2, 6, 13, 30 km', [round(a2 + b2 * k, 2) for k in (2, 6, 13, 30)])
+    my = mean(mins)
+    sst = sum((y - my) ** 2 for y in mins)
+    ssr = sum((f - my) ** 2 for f in fit['fitted'])
+    show('SST, SSR, SSE, SSR/SST', f'{sst:.2f} {ssr:.2f} {fit["sse"]:.2f} {ssr / sst:.4f}')
+    show('sd of minutes', f'{sd(mins):.4f}')
+    res = [y - f for y, f in zip(mins, fit['fitted'])]
+    show('residual: min, max, mean', f'{min(res):.3f} {max(res):.3f} {mean(res):.2e}')
+    # the first few deliveries, for a worked residual
+    for i in range(3):
+        show(f'delivery {i}: km, minutes, fitted, residual', f'{km[i]} {mins[i]} {fit["fitted"][i]:.2f} {res[i]:.2f}')
+    m = ols_full(list(zip(km, items, rain)), mins)
+    show('minutes ~ km + items + rain: beta', [round(v, 4) for v in m['beta']])
+    show('  se', [round(v, 4) for v in m['se']])
+    show('  t', [round(v, 3) for v in m['t']])
+    show('  p', [f'{v:.2e}' for v in m['p']])
+    show('  R2, adj, s', f'{m["r2"]:.4f} {m["adj"]:.4f} {m["s"]:.4f}')
+    show('  prediction 6 km, 8 items, rain', f'{m["beta"][0] + 6 * m["beta"][1] + 8 * m["beta"][2] + m["beta"][3]:.2f}')
+    show('  prediction 6 km, 8 items, dry', f'{m["beta"][0] + 6 * m["beta"][1] + 8 * m["beta"][2]:.2f}')
+    for name, xs in (('items', items), ('rain', rain)):
+        s1 = ols_full([(v,) for v in xs], mins)
+        show(f'minutes ~ {name} alone: b, R2', f'{s1["beta"][1]:.4f} {s1["r2"]:.4f}')
+    hoods = [r['hood'] for r in DELIVERIES]
+    dums = [(1 if h == 'Cambuí' else 0, 1 if h == 'Taquaral' else 0, 1 if h == 'Barão Geraldo' else 0) for h in hoods]
+    d1 = ols_full(dums, mins)
+    show('minutes ~ hood dummies (Centro base): beta', [round(v, 4) for v in d1['beta']])
+    show('  R2', f'{d1["r2"]:.4f}')
+    for h, _, _ in HOODS:
+        show(f'  mean {h}', f'{mean([m_ for m_, hh in zip(mins, hoods) if hh == h]):.4f}')
+    d2 = ols_full([(k,) + dd for k, dd in zip(km, dums)], mins)
+    show('minutes ~ km + hood dummies: beta', [round(v, 4) for v in d2['beta']])
+    show('  se', [round(v, 4) for v in d2['se']])
+    show('  p', [f'{v:.3f}' for v in d2['p']])
+    show('  R2, adj', f'{d2["r2"]:.4f} {d2["adj"]:.4f}')
+    c = ols_full(list(zip(COUPONS, km)), mins)
+    show('minutes ~ coupon + km: beta, se, p coupon', f'{[round(v, 3) for v in c["beta"]]} {c["se"][1]:.3f} {c["p"][1]:.3f}')
+    c0 = ols_full([(v,) for v in COUPONS], mins)
+    show('minutes ~ coupon: beta, p', f'{[round(v, 3) for v in c0["beta"]]} {c0["p"][1]:.2e}')
+    noise = noise_columns(120, 30)
+    base = list(zip(km, items, rain))
+    rows = []
+    for k in (0, 5, 10, 20, 30):
+        X = [tuple(base[i]) + tuple(noise[j][i] for j in range(k)) for i in range(120)]
+        f_ = ols_full(X, mins)
+        rows.append((k, round(f_['r2'], 4), round(f_['adj'], 4)))
+    show('noise predictors added: k, R2, adj', rows)
+    # train on the first 15 of each neighbourhood, test on the rest
+    train = [i for i in range(120) if i % 30 < 15]
+    test = [i for i in range(120) if i % 30 >= 15]
+    for k in (0, 30):
+        X = [tuple(base[i]) + tuple(noise[j][i] for j in range(k)) for i in range(120)]
+        f_ = ols_full([X[i] for i in train], [mins[i] for i in train])
+        pred = [f_['beta'][0] + sum(bb * v for bb, v in zip(f_['beta'][1:], X[i])) for i in test]
+        err = math.sqrt(mean([(mins[i] - p_) ** 2 for i, p_ in zip(test, pred)]))
+        tr_err = math.sqrt(f_['sse'] / len(train))
+        show(f'train/test with {k} noise columns: train R2, train rmse, test rmse', f'{f_["r2"]:.4f} {tr_err:.3f} {err:.3f}')
+
+
+# Two hundred orders, lesson 20: each customer shops at a price level of their own,
+# so a basket's spread grows in proportion to the number of items in it.
+def _big_orders():
+    d = Draw(2000)
+    out = []
+    for _ in range(200):
+        items = 1 + d.index(20)
+        out.append((items, round(items * d.lognormal(2.35, 0.3), 2)))
+    return out
+
+
+BIG_ORDERS = _big_orders()
+
+
+# One day's 60 deliveries in the order they left, lesson 20: traffic builds to a peak
+# at lunch and another in the evening, and distance alone cannot see it.
+def _day():
+    d = Draw(2001)
+    out = []
+    for i in range(60):
+        hour = 10 + 10 * i / 59
+        km = round(d.uniform(1, 12), 1)
+        traffic = 6 * math.exp(-((hour - 12.5) / 1.2) ** 2) + 7 * math.exp(-((hour - 18.5) / 1.1) ** 2)
+        minutes = 22 + 2.4 * km + traffic + d.normal(0, 2.5)
+        out.append({'hour': round(hour, 2), 'km': km, 'minutes': round(minutes * 2) / 2,
+                    'rush': 1 if (11.5 <= hour <= 13.5 or 17.5 <= hour <= 19.5) else 0})
+    return out
+
+
+DAY = _day()
+
+
+def lag1(xs):
+    m = mean(xs)
+    return sum((a - m) * (b - m) for a, b in zip(xs, xs[1:])) / sum((a - m) ** 2 for a in xs)
+
+
+def cooks(rows, ys):
+    """Cook's distance and leverage for each point."""
+    fit = ols_full(rows, ys)
+    x = [[1.0] + list(r) for r in rows]
+    n, k = len(x), len(x[0])
+    xtx = [[sum(x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+    inv = inverse(xtx)
+    out = []
+    for i in range(n):
+        h = sum(x[i][a] * inv[a][b] * x[i][b] for a in range(k) for b in range(k))
+        e = ys[i] - fit['fitted'][i]
+        out.append((e * e / (k * fit['s'] ** 2) * h / (1 - h) ** 2, h))
+    return out
+
+
+@lesson(20)
+def l20():
+    D = DELIVERIES
+    mins = [r['minutes'] for r in D]
+    km = [r['km'] for r in D]
+    full = ols_full([(r['km'], r['items'], r['rain']) for r in D], mins)
+    res = [y - f for y, f in zip(mins, full['fitted'])]
+    show('full model residuals: sd, skew, kurt, min, max', f'{sd(res):.3f} {skewness(res):.3f} {kurtosis(res):.3f} {min(res):.2f} {max(res):.2f}')
+    simple = ols_full([(k,) for k in km], mins)
+    rs = [y - f for y, f in zip(mins, simple['fitted'])]
+    show('km-only residuals: skew, kurt', f'{skewness(rs):.3f} {kurtosis(rs):.3f}')
+    show('km-only residuals: mean for rain, dry', f'{mean([e for e, r in zip(rs, D) if r["rain"]]):.2f} {mean([e for e, r in zip(rs, D) if not r["rain"]]):.2f}')
+    show('first delivery residual, km-only', f'{rs[0]:.4f}')
+    # linearity: discount
+    a, b = line(DISCOUNT, DISCOUNT_ORDERS)
+    rl = [y - a - b * x for x, y in zip(DISCOUNT, DISCOUNT_ORDERS)]
+    show('discount line: a, b, R2', f'{a:.2f} {b:.3f} {pearson(DISCOUNT, DISCOUNT_ORDERS) ** 2:.4f}')
+    show('discount line residuals', [round(e, 1) for e in rl])
+    lx = [math.log(1 + x) for x in DISCOUNT]
+    a2, b2 = line(lx, DISCOUNT_ORDERS)
+    rl2 = [y - a2 - b2 * x for x, y in zip(lx, DISCOUNT_ORDERS)]
+    show('orders ~ ln(1 + discount): a, b, R2', f'{a2:.2f} {b2:.3f} {pearson(lx, DISCOUNT_ORDERS) ** 2:.4f}')
+    show('  residuals', [round(e, 1) for e in rl2])
+    q = ols_full([(x, x * x) for x in DISCOUNT], DISCOUNT_ORDERS)
+    show('orders ~ d + d^2: beta, R2', f'{[round(v, 3) for v in q["beta"]]} {q["r2"]:.4f}')
+    show('  residuals', [round(y - f, 1) for y, f in zip(DISCOUNT_ORDERS, q['fitted'])])
+    # heteroscedasticity
+    it = [o[0] for o in BIG_ORDERS]
+    bk = [o[1] for o in BIG_ORDERS]
+    h = ols_full([(v,) for v in it], bk)
+    rh = [y - f for y, f in zip(bk, h['fitted'])]
+    lo = [e for e, v in zip(rh, it) if v <= 5]
+    hi = [e for e, v in zip(rh, it) if v >= 16]
+    show('basket ~ items: a, b, R2', f'{h["beta"][0]:.3f} {h["beta"][1]:.3f} {h["r2"]:.4f}')
+    show('  residual sd for 1-5 items, 16-20 items, counts', f'{sd(lo):.2f} {sd(hi):.2f} {len(lo)} {len(hi)}')
+    ll = ols_full([(math.log(v),) for v in it], [math.log(y) for y in bk])
+    rll = [math.log(y) - f for y, f in zip(bk, ll['fitted'])]
+    lo2 = [e for e, v in zip(rll, it) if v <= 5]
+    hi2 = [e for e, v in zip(rll, it) if v >= 16]
+    show('ln basket ~ ln items: a, b, R2', f'{ll["beta"][0]:.4f} {ll["beta"][1]:.4f} {ll["r2"]:.4f}')
+    show('  residual sd for 1-5 items, 16-20 items', f'{sd(lo2):.4f} {sd(hi2):.4f}')
+    pi = [y / v for v, y in zip(it, bk)]
+    show('price per item: mean, sd', f'{mean(pi):.2f} {sd(pi):.2f}')
+    # independence
+    dk = [r['km'] for r in DAY]
+    dm = [r['minutes'] for r in DAY]
+    f1 = ols_full([(k,) for k in dk], dm)
+    r1 = [y - f for y, f in zip(dm, f1['fitted'])]
+    show('day: minutes ~ km: beta, R2, s, lag-1 autocorrelation', f'{[round(v, 3) for v in f1["beta"]]} {f1["r2"]:.4f} {f1["s"]:.3f} {lag1(r1):.3f}')
+    f2 = ols_full([(r['km'], r['rush']) for r in DAY], dm)
+    r2_ = [y - f for y, f in zip(dm, f2['fitted'])]
+    show('day: minutes ~ km + rush: beta, R2, s, lag-1', f'{[round(v, 3) for v in f2["beta"]]} {f2["r2"]:.4f} {f2["s"]:.3f} {lag1(r2_):.3f}')
+    show('day: se of km slope, simple vs with rush', f'{f1["se"][1]:.4f} {f2["se"][1]:.4f}')
+    show('rush count', sum(r['rush'] for r in DAY))
+    # influence
+    d = Draw(1717)
+    lx_ = [round(d.uniform(1, 3), 1) for _ in range(10)] + [12]
+    ly_ = [round(d.uniform(30, 36), 1) for _ in range(10)] + [60]
+    c = cooks([(v,) for v in lx_], ly_)
+    show('lever: Cook D and leverage of the lone point', f'{c[-1][0]:.3f} {c[-1][1]:.3f}')
+    show('lever: largest Cook D among the ten', f'{max(v[0] for v in c[:-1]):.3f}')
+    a3, b3 = line(lx_, ly_)
+    a4, b4 = line(lx_[:-1], ly_[:-1])
+    show('lever: slope with, without', f'{b3:.3f} {b4:.3f}')
+    c120 = cooks([(r['km'], r['items'], r['rain']) for r in D], mins)
+    big = max(range(120), key=lambda i: c120[i][0])
+    show('120: largest Cook D, index, its row, leverage', f'{c120[big][0]:.4f} {big} {D[big]} {c120[big][1]:.4f}')
+    show('120: count with D > 4/n', sum(1 for v in c120 if v[0] > 4 / 120))
+    show('120: mean leverage (k/n)', f'{mean([v[1] for v in c120]):.4f}')
+    # an outlier in y with low leverage: 240 typed for delivery 10's 24.0
+    m2 = mins[:]
+    m2[10] = 240.0
+    t = ols_full([(r['km'], r['items'], r['rain']) for r in D], m2)
+    ct = cooks([(r['km'], r['items'], r['rain']) for r in D], m2)
+    show('typo 240 for delivery 10: original minutes, beta, R2, Cook D, leverage',
+         f'{mins[10]} {[round(v, 3) for v in t["beta"]]} {t["r2"]:.4f} {ct[10][0]:.3f} {ct[10][1]:.4f}')
+
+
+# Four hundred orders, lesson 21: whether the customer complained, against how long
+# the delivery took and whether it was their first order.
+def _complaint_orders():
+    d = Draw(2100)
+    out = []
+    for _ in range(400):
+        minutes = round(d.uniform(20, 70) * 2) / 2
+        first = 1 if d.r.random() < 0.3 else 0
+        z = -8.0 + 0.14 * minutes + 0.9 * first
+        p = 1 / (1 + math.exp(-z))
+        out.append({'minutes': minutes, 'first': first, 'complained': 1 if d.r.random() < p else 0})
+    return out
+
+
+COMPLAINT_ORDERS = _complaint_orders()
+
+
+def logistic(rows, ys, iters=50):
+    """Logistic regression by Newton-Raphson: coefficients, standard errors, log-likelihood."""
+    x = [[1.0] + list(r) for r in rows]
+    n, k = len(x), len(x[0])
+    beta = [0.0] * k
+    for _ in range(iters):
+        p = [1 / (1 + math.exp(-sum(b * v for b, v in zip(beta, xi)))) for xi in x]
+        grad = [sum((ys[i] - p[i]) * x[i][a] for i in range(n)) for a in range(k)]
+        hess = [[sum(p[i] * (1 - p[i]) * x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+        step = solve(hess, grad)
+        beta = [b + s for b, s in zip(beta, step)]
+        if max(abs(s) for s in step) < 1e-12:
+            break
+    p = [1 / (1 + math.exp(-sum(b * v for b, v in zip(beta, xi)))) for xi in x]
+    hess = [[sum(p[i] * (1 - p[i]) * x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+    inv = inverse(hess)
+    se = [math.sqrt(inv[j][j]) for j in range(k)]
+    ll = sum(y * math.log(q) + (1 - y) * math.log(1 - q) for y, q in zip(ys, p))
+    return dict(beta=beta, se=se, p=p, ll=ll)
+
+
+def confusion(ys, ps, cut):
+    tp = sum(1 for y, q in zip(ys, ps) if y and q >= cut)
+    fn = sum(1 for y, q in zip(ys, ps) if y and q < cut)
+    fp = sum(1 for y, q in zip(ys, ps) if not y and q >= cut)
+    tn = sum(1 for y, q in zip(ys, ps) if not y and q < cut)
+    return tp, fn, fp, tn
+
+
+@lesson(21)
+def l21():
+    O = COMPLAINT_ORDERS
+    ys = [o['complained'] for o in O]
+    mins = [o['minutes'] for o in O]
+    first = [o['first'] for o in O]
+    show('400 orders: complaints, first orders', f'{sum(ys)} {sum(first)}')
+    for lo, hi in ((20, 30), (30, 40), (40, 50), (50, 60), (60, 70.01)):
+        sel = [y for y, m in zip(ys, mins) if lo <= m < hi]
+        show(f'  complaint rate {lo}-{int(hi)} min', f'{sum(sel)}/{len(sel)} = {sum(sel) / len(sel):.3f}')
+    a, b = line(mins, ys)
+    show('straight line on 0/1: a, b; predictions at 20, 45, 70, 80', f'{a:.4f} {b:.5f} {[round(a + b * m, 3) for m in (20, 45, 70, 80)]}')
+    m1 = logistic([(m,) for m in mins], ys)
+    show('logit ~ minutes: beta, se', f'{[round(v, 4) for v in m1["beta"]]} {[round(v, 4) for v in m1["se"]]}')
+    b0, b1 = m1['beta']
+    show('  odds ratio per minute, per 10 minutes', f'{math.exp(b1):.4f} {math.exp(10 * b1):.4f}')
+    for m in (30, 40, 45, 50, 60):
+        z = b0 + b1 * m
+        show(f'  at {m} min: log-odds, odds, p', f'{z:.4f} {math.exp(z):.4f} {1 / (1 + math.exp(-z)):.4f}')
+    show('  minutes where p = 0.5', f'{-b0 / b1:.2f}')
+    m2 = logistic(list(zip(mins, first)), ys)
+    show('logit ~ minutes + first: beta, se', f'{[round(v, 4) for v in m2["beta"]]} {[round(v, 4) for v in m2["se"]]}')
+    c0, c1, c2 = m2['beta']
+    show('  OR minute, OR 10 min, OR first', f'{math.exp(c1):.4f} {math.exp(10 * c1):.4f} {math.exp(c2):.4f}')
+    show('  95% CI for OR first', f'{math.exp(c2 - 1.96 * m2["se"][2]):.3f} {math.exp(c2 + 1.96 * m2["se"][2]):.3f}')
+    show('  z and p for first', f'{c2 / m2["se"][2]:.3f} {2 * (1 - normal_cdf(abs(c2 / m2["se"][2]))):.2e}')
+    for m in (45,):
+        for f_ in (0, 1):
+            z = c0 + c1 * m + c2 * f_
+            show(f'  p at {m} min, first={f_}', f'{1 / (1 + math.exp(-z)):.4f} odds {math.exp(z):.4f}')
+    for cut in (0.5, 0.2):
+        tp, fn, fp, tn = confusion(ys, m2['p'], cut)
+        show(f'  cut {cut}: tp fn fp tn', f'{tp} {fn} {fp} {tn}')
+        show(f'    accuracy, sensitivity, specificity, precision',
+             f'{(tp + tn) / 400:.4f} {tp / (tp + fn):.4f} {tn / (tn + fp):.4f} {tp / (tp + fp):.4f}')
+    show('  always "no complaint" accuracy', f'{1 - sum(ys) / 400:.4f}')
+    show('  log-likelihoods: null, m1, m2', f'{sum(y * math.log(sum(ys) / 400) + (1 - y) * math.log(1 - sum(ys) / 400) for y in ys):.3f} {m1["ll"]:.3f} {m2["ll"]:.3f}')
+
+
+# A year of deliveries in two kinds of insulated bag, lesson 22: so many that a
+# third of a minute is unmistakable, and still a third of a minute.
+def _bags_year(n=100000):
+    d = Draw(2200)
+    old = [d.normal(40.0, 10.5) for _ in range(n)]
+    new = [d.normal(39.7, 10.5) for _ in range(n)]
+    return old, new
+
+
+# A new version of the courier app tried on 5,000 deliveries each way, lesson 22: no
+# difference, measured well enough to say so.
+def _app_trial(n=5000):
+    d = Draw(2201)
+    old = [d.normal(40.0, 10.5) for _ in range(n)]
+    new = [d.normal(40.0, 10.5) for _ in range(n)]
+    return old, new
+
+
+def diff_ci(xs, ys, level=0.95):
+    """Difference of means ys − xs, its standard error and a Welch interval."""
+    vx, vy = var(xs) / len(xs), var(ys) / len(ys)
+    se = math.sqrt(vx + vy)
+    df = (vx + vy) ** 2 / (vx ** 2 / (len(xs) - 1) + vy ** 2 / (len(ys) - 1))
+    q = t_inv(1 - (1 - level) / 2, df)
+    dlt = mean(ys) - mean(xs)
+    return dlt, se, dlt - q * se, dlt + q * se
+
+
+def cohen_d(xs, ys):
+    nx, ny = len(xs), len(ys)
+    sp = math.sqrt(((nx - 1) * var(xs) + (ny - 1) * var(ys)) / (nx + ny - 2))
+    return (mean(ys) - mean(xs)) / sp
+
+
+@lesson(22)
+def l22():
+    old, new = _bags_year()
+    dlt, se, lo, hi = diff_ci(old, new)
+    t, df, p = welch(new, old)
+    show('bags: means, sds', f'{mean(old):.3f} {mean(new):.3f} {sd(old):.3f} {sd(new):.3f}')
+    show('bags: diff, se, 95% CI', f'{dlt:.3f} {se:.4f} {lo:.3f} {hi:.3f}')
+    show('bags: t, df, p', f'{t:.3f} {df:.0f} {p:.3e}')
+    z = abs(dlt) / se
+    show('bags: two-sided normal p (for tiny values)', f'{math.erfc(z / math.sqrt(2)):.3e}')
+    show('bags: Cohen d', f'{cohen_d(old, new):.4f}')
+    mo = median(old)
+    show('bags: share of new-bag deliveries faster than the old median', f'{sum(1 for x in new if x < mo) / len(new):.4f}')
+    # the same true difference with 50 deliveries each
+    d = Draw(2202)
+    o50 = [d.normal(40.0, 10.5) for _ in range(50)]
+    n50 = [d.normal(39.7, 10.5) for _ in range(50)]
+    t, df, p = welch(n50, o50)
+    dl, se5, lo5, hi5 = diff_ci(o50, n50)
+    show('same effect, 50 each: diff, CI, p', f'{dl:.3f} {lo5:.3f} {hi5:.3f} {p:.3f}')
+    # p for a fixed true difference as n grows
+    for n in (50, 500, 5000, 50000, 100000):
+        se_ = 10.5 * math.sqrt(2 / n)
+        z = 0.3 / se_
+        show(f'expected z and p for 0.3 min, n = {n} each', f'{z:.3f} {math.erfc(z / math.sqrt(2)):.3e}')
+    # training, routing, checkout effect sizes
+    tdiff = [a - b for a, b in zip(TRAIN_AFTER, TRAIN_BEFORE)]
+    show('training: mean diff, sd diff, dz', f'{mean(tdiff):.3f} {sd(tdiff):.3f} {mean(tdiff) / sd(tdiff):.3f}')
+    t, df, p, md, sdd = paired_t(TRAIN_BEFORE, TRAIN_AFTER)
+    show('training paired CI', f'{md - t_inv(0.975, 9) * sdd / math.sqrt(10):.3f} {md + t_inv(0.975, 9) * sdd / math.sqrt(10):.3f}')
+    show('routing: d against 40', f'{(mean(ROUTING) - 40) / sd(ROUTING):.3f}')
+    lo_r, hi_r = t_interval(ROUTING)
+    show('routing: CI for mean, for difference from 40', f'{lo_r:.3f} {hi_r:.3f} | {lo_r - 40:.3f} {hi_r - 40:.3f}')
+    show('checkout: rates, difference, relative lift', f'{220 / 2000:.4f} {262 / 2000:.4f} {262 / 2000 - 220 / 2000:.4f} {(262 - 220) / 220:.4f}')
+    p1, p2 = 220 / 2000, 262 / 2000
+    se_c = math.sqrt(p1 * (1 - p1) / 2000 + p2 * (1 - p2) / 2000)
+    show('checkout: difference CI', f'{p2 - p1 - 1.96 * se_c:.4f} {p2 - p1 + 1.96 * se_c:.4f}')
+    # rain effect from lesson 19's model
+    D = DELIVERIES
+    m = ols_full([(r['km'], r['items'], r['rain']) for r in D], [r['minutes'] for r in D])
+    q = t_inv(0.975, m['df'])
+    show('rain coefficient CI', f'{m["beta"][3]:.3f} {m["beta"][3] - q * m["se"][3]:.3f} {m["beta"][3] + q * m["se"][3]:.3f}')
+    ao, an = _app_trial()
+    dlt, se, lo, hi = diff_ci(ao, an)
+    t, df, p = welch(an, ao)
+    show('app: diff, CI, p', f'{dlt:.3f} {lo:.3f} {hi:.3f} {p:.3f}')
+    # TOST against ±1 minute for the app
+    t1 = (dlt + 1) / se
+    t2 = (1 - dlt) / se
+    show('app: TOST z lower, upper, p', f'{t1:.3f} {t2:.3f} {max(1 - normal_cdf(t1), 1 - normal_cdf(t2)):.2e}')
+    # orders per week: Horta's scale for the bag saving
+    show('minutes saved a year by the bag: 0.3 x 100000', f'{0.3 * 100000:.0f} min = {0.3 * 100000 / 60:.0f} h')
+
+
+def check():
+    """Compare the distributions written out above with SciPy's, where SciPy is installed."""
+    try:
+        from scipy import stats
+    except ImportError:
+        print('SciPy is not installed here, so the distributions were not compared')
+        return
+    worst = 0.0
+    for z in (-3, -1.96, -0.5, 0, 1.2, 2.58):
+        worst = max(worst, abs(normal_cdf(z) - stats.norm.cdf(z)))
+    for df in (1, 3, 7, 19, 39, 120):
+        for t in (-2.5, -1, 0.3, 2.0227, 4):
+            worst = max(worst, abs(t_cdf(t, df) - stats.t.cdf(t, df)))
+        worst = max(worst, abs(t_inv(0.975, df) - stats.t.ppf(0.975, df)))
+    for df in (1, 2, 4, 9):
+        for x in (0.5, 3.84, 9.49, 20):
+            worst = max(worst, abs(chi2_sf(x, df) - stats.chi2.sf(x, df)))
+    for d1, d2 in ((2, 27), (3, 116), (1, 10)):
+        for f in (0.5, 3.35, 12):
+            worst = max(worst, abs(f_sf(f, d1, d2) - stats.f.sf(f, d1, d2)))
+    print(f'largest difference from SciPy: {worst:.2e}')
+
+
+def main():
+    if sys.argv[1:] == ['check']:
+        check()
+        return
+    picked = [int(a) for a in sys.argv[1:]] or sorted(SHEET)
+    for n in picked:
+        print(f'lesson {n}')
+        SHEET[n]()
+        print()
+
+
+if __name__ == '__main__':
+    main()

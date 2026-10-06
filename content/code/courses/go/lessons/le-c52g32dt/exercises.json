@@ -1,0 +1,562 @@
+[
+  {
+    "id": "ex-s9hxeka1",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`a` is a `[3]int` and `b` is a `[4]int`. Why is `a = b` refused?",
+    "hint": "What does `%T` print for an array?",
+    "choices": [
+      {
+        "text": "Because `a` would have to grow, which takes `append`",
+        "correct": false,
+        "why": "Arrays never grow, with `append` or anything else; the assignment fails on the types."
+      },
+      {
+        "text": "The length is part of an array's type, so `[3]int` and `[4]int` are different types",
+        "correct": true,
+        "why": "Right. `[3]int` and `[4]int` are as different as `int` and `string`."
+      },
+      {
+        "text": "Because the fourth element of `b` would be lost",
+        "correct": false,
+        "why": "The compiler does not weigh what would be lost; `[2]int` into `[3]int` is refused just the same."
+      },
+      {
+        "text": "Because arrays cannot be assigned at all, only copied element by element",
+        "correct": false,
+        "why": "`b := a` worked in section 02 and copied the whole array; the lengths are what differ here."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayamxz9v",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a := [3]int{1, 2, 3}`, then `b := a` and `b[0] = 99`. What does `fmt.Println(a)` print?",
+    "hint": "What did `b := a` make?",
+    "choices": [
+      {
+        "text": "`[99 2 3]`, because `a` and `b` are two names for one array",
+        "correct": false,
+        "why": "That is how two slices of one array behave. Assigning an array copies it."
+      },
+      {
+        "text": "`[1 2 3]`, because `b` is a copy of every element",
+        "correct": true,
+        "why": "Right. `b` is a second array, so changing it leaves `a` alone."
+      },
+      {
+        "text": "`[99 99 99]`",
+        "correct": false,
+        "why": "An assignment to `b[0]` writes one element, of `b`, and nothing else."
+      },
+      {
+        "text": "A compile error",
+        "correct": false,
+        "why": "An array can be copied with `:=`, and that is exactly what happened here."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs1ypnam",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func zero(a [3]int) { a[0] = 0 }` is called as `zero(a)` with `a` holding `[1 2 3]`. What does `a` hold afterwards?",
+    "hint": "The function received something. What?",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, because the function changed its own copy",
+        "correct": true,
+        "why": "Right. Passing an array copies every element into the parameter."
+      },
+      {
+        "text": "`[0 2 3]`, because a function changes what it is given",
+        "correct": false,
+        "why": "With a slice it would. An array arrives as a copy."
+      },
+      {
+        "text": "`[0 0 0]`",
+        "correct": false,
+        "why": "`a[0] = 0` sets one element, and of the copy at that."
+      },
+      {
+        "text": "The call is refused, since arrays are not allowed as parameters",
+        "correct": false,
+        "why": "`zero` compiled and ran in section 02; arrays are ordinary parameters."
+      }
+    ]
+  },
+  {
+    "id": "ex-whn5076b",
+    "version": 1,
+    "section": "arrays",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n := 4` followed by `var c [n]int` is refused with `invalid array length n`, because an array's length has to be a ___.",
+    "hint": "Something the compiler knows before the program runs.",
+    "blanks": [
+      {
+        "accept": [
+          "constant",
+          "const"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tayqrp8t",
+    "version": 1,
+    "section": "arrays",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of Go arrays? Choose all that apply.",
+    "hint": "Section 02 printed each of them.",
+    "choices": [
+      {
+        "text": "Two arrays of the same type can be compared with `==`",
+        "correct": true,
+        "why": "Yes: element by element, and `a == [3]int{1, 2, 3}` printed `true`."
+      },
+      {
+        "text": "`append` makes an array one element longer",
+        "correct": false,
+        "why": "An array's length is in its type and never changes; `append` works on slices."
+      },
+      {
+        "text": "A constant index past the end is a compile error",
+        "correct": true,
+        "why": "Yes: `a[3]` on a `[3]int` was refused with `index 3 out of bounds [0:3]`."
+      },
+      {
+        "text": "Passing one to a function lets the function change the caller's elements",
+        "correct": false,
+        "why": "The function receives a copy; `zero(a)` left `a` as it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-29f7paev",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func sum(a [3]int) int` adds three numbers, and you have `s := []int{1, 2, 3}`. What does `sum(s)` do?",
+    "hint": "Compare the two types as `%T` would print them.",
+    "choices": [
+      {
+        "text": "It returns 6, since `s` has exactly three elements",
+        "correct": false,
+        "why": "The length of `s` is a value it carries, not part of its type, so the compiler cannot rely on it."
+      },
+      {
+        "text": "It compiles and panics if `s` has fewer than three elements",
+        "correct": false,
+        "why": "Nothing is deferred to run time here; the call never compiles."
+      },
+      {
+        "text": "The compiler refuses it: a `[]int` and a `[3]int` are different types",
+        "correct": true,
+        "why": "Right. The lab said `cannot use s (variable of type []int) as [3]int value in argument to sum`."
+      },
+      {
+        "text": "It compiles, and the function receives the slice's three words",
+        "correct": false,
+        "why": "A slice's three words are what a `[]int` parameter would receive; this parameter wants an array."
+      }
+    ]
+  },
+  {
+    "id": "ex-h878rsxr",
+    "version": 1,
+    "section": "slices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`a` is a `[5]int` and `s := a[1:3]`. What are `len(s)` and `cap(s)`?",
+    "hint": "The capacity runs to the end of the array.",
+    "choices": [
+      {
+        "text": "3 and 5",
+        "correct": false,
+        "why": "3 counts index 3 as included, and 5 is the array's length, not the slice's capacity."
+      },
+      {
+        "text": "2 and 2",
+        "correct": false,
+        "why": "The capacity does not stop at the length; the array goes on past index 2."
+      },
+      {
+        "text": "2 and 4",
+        "correct": true,
+        "why": "Right. Indices 1 and 2 make the length; from index 1 to the end of the array is 4."
+      },
+      {
+        "text": "2 and 5",
+        "correct": false,
+        "why": "The capacity counts from where the slice starts, index 1, not from the array's start."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tzgbs2a",
+    "version": 1,
+    "section": "slices",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a` is a `[8]int` and `s := a[2:5]`. What is `cap(s)`?",
+    "hint": "From where `s` starts to the end of `a`.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "elements"
+  },
+  {
+    "id": "ex-saej68w0",
+    "version": 1,
+    "section": "slices",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a := [5]int{10, 20, 30, 40, 50}` and `s := a[1:3]`. After `s[0] = 99`, what does `fmt.Println(a)` print?",
+    "hint": "Was anything copied when `s` was made?",
+    "choices": [
+      {
+        "text": "`[10 20 30 40 50]`, because `s` is a copy of two elements",
+        "correct": false,
+        "why": "Slicing copies no elements; `s` points into `a`."
+      },
+      {
+        "text": "`[99 20 30 40 50]`",
+        "correct": false,
+        "why": "That takes `s[0]` for the array's first element, but `s` starts at index 1 of `a`."
+      },
+      {
+        "text": "`[10 99 30 40 50]`: `s[0]` is `a[1]`",
+        "correct": true,
+        "why": "Right. `s[0]` and `a[1]` are the same element, and `&s[0] == &a[1]` printed `true`."
+      },
+      {
+        "text": "A compile error, since a slice of an array is read-only",
+        "correct": false,
+        "why": "Slices of arrays are as writable as the array; the assignment compiled and ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2eq4tkr",
+    "version": 1,
+    "section": "slices",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `s := a[1:3]` and `t := a[2:5]` over the same array, which pair of expressions names one element?",
+    "hint": "Work out which index of `a` each one is.",
+    "choices": [
+      {
+        "text": "`s[0]` and `t[0]`",
+        "correct": false,
+        "why": "`s[0]` is `a[1]` and `t[0]` is `a[2]`: two different elements."
+      },
+      {
+        "text": "`s[1]` and `t[0]`",
+        "correct": true,
+        "why": "Right. Both are `a[2]`, which is why writing 77 through `t` changed what `s` printed."
+      },
+      {
+        "text": "`s[1]` and `t[1]`",
+        "correct": false,
+        "why": "`t[1]` is `a[3]`, one past `s[1]`."
+      },
+      {
+        "text": "None, because each slice gets its own copy of the elements it shows",
+        "correct": false,
+        "why": "Slicing copies nothing; both slices look into `a`."
+      }
+    ]
+  },
+  {
+    "id": "ex-sb0r3jz4",
+    "version": 1,
+    "section": "slices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a slice value itself hold?",
+    "hint": "The figure drew it.",
+    "choices": [
+      {
+        "text": "Its elements, in an array that grows when it fills up",
+        "correct": false,
+        "why": "That is the \"dynamic array\" picture. The elements live in an array the slice points into."
+      },
+      {
+        "text": "A copy of the elements between its two indices",
+        "correct": false,
+        "why": "Nothing is copied when a slice is made; `s[0] = 99` changed the array."
+      },
+      {
+        "text": "A pointer into an array, a length and a capacity, and no elements",
+        "correct": true,
+        "why": "Right. Three words, and no elements of its own."
+      },
+      {
+        "text": "The array's name and the two indices it was sliced with",
+        "correct": false,
+        "why": "A slice literal's array has no name at all; the slice holds a pointer, not a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve9p955g",
+    "version": 1,
+    "section": "slices",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a` is a `[5]int` and `s := a[1:3]`. Match each expression to what the lab printed for it.",
+    "hint": "One of them comes from section 04.",
+    "pairs": [
+      {
+        "left": "`len(s)`",
+        "right": "`2`"
+      },
+      {
+        "left": "`cap(s)`",
+        "right": "`4`"
+      },
+      {
+        "left": "the type of `s`, with `%T`",
+        "right": "`[]int`"
+      },
+      {
+        "left": "`&s[0] == &a[1]`",
+        "right": "`true`"
+      }
+    ],
+    "right_distractors": [
+      "`[2]int`"
+    ]
+  },
+  {
+    "id": "ex-v2b83qny",
+    "version": 1,
+    "section": "slices",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need to know whether two `[]int` hold the same numbers in the same order. What do you write?",
+    "hint": "`==` was refused for slices.",
+    "choices": [
+      {
+        "text": "`s == u`",
+        "correct": false,
+        "why": "Refused: `slice can only be compared to nil`."
+      },
+      {
+        "text": "`&s[0] == &u[0]`",
+        "correct": false,
+        "why": "That asks whether both start at the same element of one array, which two equal slices need not do."
+      },
+      {
+        "text": "`slices.Equal(s, u)`",
+        "correct": true,
+        "why": "Right. It compares the lengths, then the elements in order."
+      },
+      {
+        "text": "`len(s) == len(u) && cap(s) == cap(u)`",
+        "correct": false,
+        "why": "Equal lengths and capacities say nothing about the numbers inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-53t5sp5q",
+    "version": 1,
+    "section": "what-is-passed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`addFour(s []int)` runs `s = append(s, 4)`. After `addFour(nums)`, with `nums` holding three elements, what is `len(nums)`?",
+    "hint": "Whose `s` did the assignment change?",
+    "choices": [
+      {
+        "text": "4, because `append` added to the array `nums` uses",
+        "correct": false,
+        "why": "Even when the array has room, the caller's length is in the caller's slice, which nothing changed."
+      },
+      {
+        "text": "3, the length it had before the call",
+        "correct": true,
+        "why": "Right. The function assigned to its own copy; the caller's slice still says length 3."
+      },
+      {
+        "text": "4, because slices are passed by reference",
+        "correct": false,
+        "why": "A slice is passed as a copy of three words; lesson 22 takes that picture apart."
+      },
+      {
+        "text": "0, since `append` empties the slice it is handed",
+        "correct": false,
+        "why": "`append` never removes anything; inside, `s` had four elements."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6nx6t4j",
+    "version": 1,
+    "section": "what-is-passed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`setFirst(s []int)` runs `s[0] = 100`. What does the caller's `nums`, `[1 2 3]` before the call, hold afterwards?",
+    "hint": "Where does the copy's pointer lead?",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, because the function received a copy",
+        "correct": false,
+        "why": "It did, but a copy of three words, and the pointer in it leads to the caller's array."
+      },
+      {
+        "text": "`[100 2 3]`, because the write went through to the shared array",
+        "correct": true,
+        "why": "Right. The copy's pointer leads to the caller's array, and the element was written there."
+      },
+      {
+        "text": "`[100 1 2 3]`",
+        "correct": false,
+        "why": "Assigning to `s[0]` replaces an element; it does not insert one."
+      },
+      {
+        "text": "Nothing: the compiler refuses writing to a parameter's elements",
+        "correct": false,
+        "why": "It compiled, ran and printed `[100 2 3]`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q8x8q0j",
+    "version": 1,
+    "section": "what-is-passed",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To add 4 to the end of `nums` and keep the result, write `nums = ___(nums, 4)`.",
+    "hint": "A built-in function; the compiler refuses a call to it that throws the result away.",
+    "blanks": [
+      {
+        "accept": [
+          "append"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zpf4ptxv",
+    "version": 1,
+    "section": "what-is-passed",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the lab's amd64 machine an `int` is 8 bytes. How many bytes does `unsafe.Sizeof` report for a `[500]int`?",
+    "hint": "A `[1000]int` was 8000.",
+    "value": 4000,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-6bqvvx9f",
+    "version": 1,
+    "section": "what-is-passed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func reset(s []int) { s = []int{} }` is called as `reset(nums)`, with `nums` holding `[1 2 3]`. What does `nums` hold afterwards?",
+    "hint": "The assignment is to the parameter itself, not to an element.",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, as before the call",
+        "correct": true,
+        "why": "Right. Assigning a new slice to `s` changes the function's copy and nothing the caller holds."
+      },
+      {
+        "text": "`[]`, because the caller's slice now points at an empty array",
+        "correct": false,
+        "why": "Only the copy points there. The caller's three words were never written."
+      },
+      {
+        "text": "`[0 0 0]`",
+        "correct": false,
+        "why": "That would need the elements reset to zero, and none was written; `setFirst` changed one by indexing, and `reset` never indexes."
+      },
+      {
+        "text": "A compile error: `s` is assigned and never used",
+        "correct": false,
+        "why": "Parameters are exempt from that rule; the lab compiled it and `nums` printed `[1 2 3]`."
+      }
+    ]
+  },
+  {
+    "id": "ex-81f287sq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these by how many bytes a function call copies to pass one, most first, on the lab's amd64 machine.",
+    "hint": "An array is copied whole; a slice is three words whatever it shows.",
+    "items": [
+      "A `[1000]int`",
+      "A `[10]int`",
+      "A `[]int` over a million elements",
+      "An `int`"
+    ]
+  },
+  {
+    "id": "ex-bjjrg5t1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func withFour(s []int) []int { return append(s, 4) }`. A colleague writes `withFour(nums)` on a line of its own, with no assignment. What happens?",
+    "hint": "The compiler's refusal was for one particular function.",
+    "choices": [
+      {
+        "text": "It is refused as `is not used`, like a bare `append` call",
+        "correct": false,
+        "why": "That check is for built-ins like `append`. Your own function's result may be thrown away, and the lab compiled it."
+      },
+      {
+        "text": "It compiles, and `nums` keeps its old length",
+        "correct": true,
+        "why": "Right. The longer slice was returned to nobody, which is the bug returning the slice was meant to prevent."
+      },
+      {
+        "text": "It compiles, and `nums` gains the 4 because `append` ran on it",
+        "correct": false,
+        "why": "`append` ran on the function's copy; the caller's length changes only if the caller stores the result."
+      },
+      {
+        "text": "It panics at run time, because the returned slice was not stored",
+        "correct": false,
+        "why": "Nothing checks that at run time; the program ran and printed `[1 2 3] 3`."
+      }
+    ]
+  }
+]

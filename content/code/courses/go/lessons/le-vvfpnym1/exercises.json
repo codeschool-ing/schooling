@@ -1,0 +1,579 @@
+[
+  {
+    "id": "ex-j5p6fmg2",
+    "version": 1,
+    "section": "structs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`b := Book{Title: \"Dom Casmurro\"}`. What is in `b.Pages`, which the literal does not name?",
+    "hint": "Lesson 6 printed a struct nobody filled in.",
+    "choices": [
+      {
+        "text": "Nothing: reading it panics until it is set",
+        "correct": false,
+        "why": "Every field of a struct always holds a value; there is no unset state to panic about."
+      },
+      {
+        "text": "`0`, the zero value of `int`",
+        "correct": true,
+        "why": "Right. Fields a literal leaves out get their type's zero value; `%+v` printed `Pages:0`."
+      },
+      {
+        "text": "The code does not compile: a literal must name every field",
+        "correct": false,
+        "why": "A literal with field names may name any subset of them; only an unkeyed literal must give every value."
+      },
+      {
+        "text": "Whatever value a constructor for `Book` sets",
+        "correct": false,
+        "why": "Go runs no constructor when a struct is made. Zero is all there is unless your code sets more."
+      }
+    ]
+  },
+  {
+    "id": "ex-9nwbcmzf",
+    "version": 1,
+    "section": "structs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`type Book struct { Title string; Tags []string }`. What does `a == b` do for two `Book` values?",
+    "hint": "A struct is comparable only if every field is.",
+    "choices": [
+      {
+        "text": "Compares `Title` and skips the slice",
+        "correct": false,
+        "why": "Go never compares part of a struct; either every field is compared or the operator is refused."
+      },
+      {
+        "text": "Compares both fields, the slice element by element",
+        "correct": false,
+        "why": "Slices have no `==` at all, so a struct holding one cannot use the struct's `==` either."
+      },
+      {
+        "text": "It does not compile, because of the slice field",
+        "correct": true,
+        "why": "Right: `struct containing []string cannot be compared`. One slice field is enough to lose `==`."
+      },
+      {
+        "text": "It compiles and panics when the program runs",
+        "correct": false,
+        "why": "The type is known at compile time, so the refusal comes from the compiler, not at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-d176cd1t",
+    "version": 1,
+    "section": "structs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To print each field's name in front of its value, `fmt.Printf` takes the verb `___`.",
+    "hint": "`%v` with one more character.",
+    "blanks": [
+      {
+        "accept": [
+          "%+v"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zez9kdhs",
+    "version": 1,
+    "section": "structs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go vet` reported `net.TCPAddr{ip, 8080, \"\"}` and would not report `Point{3, 4}` for your own `Point`. Why the difference?",
+    "hint": "Who can change each type, and who would have to fix the literal?",
+    "choices": [
+      {
+        "text": "A field added to another package's type breaks your literal; your own type changes with your code",
+        "correct": true,
+        "why": "Right. The check covers struct types imported from another package, whose authors decide when fields are added."
+      },
+      {
+        "text": "Unkeyed literals are always wrong, and vet only has time for the standard library",
+        "correct": false,
+        "why": "Any imported package counts, not only the standard library, and your own small types are a reasonable place for them."
+      },
+      {
+        "text": "An unkeyed literal of `TCPAddr` compiles to a different value",
+        "correct": false,
+        "why": "It produced `127.0.0.1:8080` as intended; the warning is about the future, not today's value."
+      },
+      {
+        "text": "`Point` has only two fields",
+        "correct": false,
+        "why": "The number of fields is not what vet counts; it asks where the type was declared."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xgavt02",
+    "version": 1,
+    "section": "structs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these types can be the key of a map? Choose all that apply.",
+    "hint": "Lesson 14's rule, applied field by field.",
+    "choices": [
+      {
+        "text": "`struct{ X, Y int }`",
+        "correct": true,
+        "why": "Yes. Both fields are comparable, so the struct is; `map[Point]int` counted visits."
+      },
+      {
+        "text": "`struct{ Title string; Tags []string }`",
+        "correct": false,
+        "why": "No. The slice field makes the whole struct incomparable."
+      },
+      {
+        "text": "`[2]struct{ X, Y int }`",
+        "correct": true,
+        "why": "Yes. An array of comparable elements is comparable, and these elements are."
+      },
+      {
+        "text": "`struct{ Name string; Seen map[string]bool }`",
+        "correct": false,
+        "why": "No. A map field can only be compared to `nil`, so the struct cannot be compared at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-479gzvkp",
+    "version": 1,
+    "section": "json-out",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `User` has a field `age int`, lower case. What does `json.Marshal` do with it?",
+    "hint": "The output had no `age` in it. What did `err` say?",
+    "choices": [
+      {
+        "text": "Writes it under the key `age`",
+        "correct": false,
+        "why": "The output had no `age` key at all."
+      },
+      {
+        "text": "Returns an error naming the field",
+        "correct": false,
+        "why": "`err` printed `<nil>`. Nothing reports the missing field."
+      },
+      {
+        "text": "Leaves it out, and reports nothing",
+        "correct": true,
+        "why": "Right. Another package cannot see a lower-case name, so the field is skipped in silence."
+      },
+      {
+        "text": "Writes it as `null`, since its value cannot be read",
+        "correct": false,
+        "why": "`null` was what the nil slice `Tags` gave. `age` did not appear in any form."
+      }
+    ]
+  },
+  {
+    "id": "ex-chk1y184",
+    "version": 1,
+    "section": "json-out",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the tag `json:\"-\"` on a `Password` field do?",
+    "hint": "Compare the plain `User` with the tagged one.",
+    "choices": [
+      {
+        "text": "Writes the field under the key `-`",
+        "correct": false,
+        "why": "A tag of exactly `-` means the opposite: the field is not written. The documentation gives a different spelling for a key named `-`."
+      },
+      {
+        "text": "Leaves the field out only when it is empty",
+        "correct": false,
+        "why": "That is `omitempty`. With `-`, `hunter2` was not written either."
+      },
+      {
+        "text": "Writes the field with its value masked",
+        "correct": false,
+        "why": "`encoding/json` has no masking; the key is simply absent."
+      },
+      {
+        "text": "Keeps it out of the JSON always",
+        "correct": true,
+        "why": "Right. The password set to `hunter2` did not appear in either output."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0e2rvr3",
+    "version": 1,
+    "section": "json-out",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tag to what `json.Marshal` does with the field.",
+    "hint": "The first word is a name; what follows the comma is an option.",
+    "pairs": [
+      {
+        "left": "`json:\"name\"`",
+        "right": "Written under the key `name`"
+      },
+      {
+        "left": "`json:\"email,omitempty\"`",
+        "right": "Written as `email`, or left out when empty"
+      },
+      {
+        "left": "`json:\"-\"`",
+        "right": "Never written"
+      },
+      {
+        "left": "`json:\"ended,omitzero\"`",
+        "right": "Written as `ended`, or left out when it holds its type's zero value"
+      }
+    ],
+    "right_distractors": [
+      "Written in upper case"
+    ]
+  },
+  {
+    "id": "ex-zkpdwb1j",
+    "version": 1,
+    "section": "json-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field `Name string` has the tag `json: \"name\"`, with a space after the colon. What happens?",
+    "hint": "Which tool read the tags in the section?",
+    "choices": [
+      {
+        "text": "The compiler refuses the tag",
+        "correct": false,
+        "why": "To the compiler a tag is a string like any other; `go run` built and ran it."
+      },
+      {
+        "text": "Key `Name`, and `go vet` flags the tag",
+        "correct": true,
+        "why": "Right. The tag is unreadable, so the default name is used, and vet says `bad syntax for struct tag value`."
+      },
+      {
+        "text": "The key comes out as `name`; the space is ignored",
+        "correct": false,
+        "why": "The output was `{\"Name\":\"Ana\",…}`: the space made the whole tag unreadable."
+      },
+      {
+        "text": "`json.Marshal` returns an error about the tag",
+        "correct": false,
+        "why": "It returned the JSON with no complaint; only `go vet` complained."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzx4kpbh",
+    "version": 1,
+    "section": "json-out",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A field `Deadline time.Time` tagged `json:\"deadline,omitempty\"` is left at its zero value. What does `json.Marshal` write?",
+    "hint": "Is a struct ever \"empty\" in `omitempty`'s sense?",
+    "choices": [
+      {
+        "text": "Nothing, because the zero time is empty",
+        "correct": false,
+        "why": "`omitempty` knows false, 0, nil and length zero. A struct is none of those, so it is written."
+      },
+      {
+        "text": "`\"deadline\": null`",
+        "correct": false,
+        "why": "A `time.Time` is a struct value, never nil, so it cannot come out as `null`."
+      },
+      {
+        "text": "`\"deadline\":\"0001-01-01T00:00:00Z\"`",
+        "correct": true,
+        "why": "Right. That is what happened to `started`; `ended`, tagged `omitzero` instead, was left out."
+      },
+      {
+        "text": "An empty string, `\"deadline\":\"\"`",
+        "correct": false,
+        "why": "The zero time is written as a real instant, the first of year 1, not as an empty string."
+      }
+    ]
+  },
+  {
+    "id": "ex-dz5jqfy9",
+    "version": 1,
+    "section": "json-out",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A struct has `ID int` tagged `json:\"id\"` = 0, `Note string` tagged `json:\"note,omitempty\"` = \"\", `token string` = \"abc\", `Tags []string` tagged `json:\"tags,omitempty\"` = `[]string{\"x\"}` and `Score int` tagged `json:\"score\"` = 0. How many keys does `json.Marshal` write?",
+    "hint": "Without `omitempty`, a zero is still written.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "keys"
+  },
+  {
+    "id": "ex-9qecwh6s",
+    "version": 1,
+    "section": "json-out",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the three parts of a tagged struct field in the order they are written.",
+    "hint": "The same order as a `var` declaration, plus one.",
+    "items": [
+      "The field's name, `Email`",
+      "Its type, `string`",
+      "The tag, `json:\"email,omitempty\"` in backquotes"
+    ]
+  },
+  {
+    "id": "ex-rk317svp",
+    "version": 1,
+    "section": "json-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`json.Unmarshal` reads `{\"name\": \"Bia\", \"nickname\": \"b\"}` into a `User` with no `nickname` field. What happens to `\"nickname\"`?",
+    "hint": "What did `err` print?",
+    "choices": [
+      {
+        "text": "`Unmarshal` returns `json: unknown field \"nickname\"`",
+        "correct": false,
+        "why": "That message only came from a `Decoder` told to `DisallowUnknownFields`. Plain `Unmarshal` returned nil."
+      },
+      {
+        "text": "It is skipped, and the error is nil",
+        "correct": true,
+        "why": "Right. Unknown keys are ignored by default."
+      },
+      {
+        "text": "It is stored in the closest field, `Name`",
+        "correct": false,
+        "why": "`Name` received `Bia`. Matching ignores case, nothing more."
+      },
+      {
+        "text": "The program panics",
+        "correct": false,
+        "why": "Nothing panicked; the run printed the struct and `<nil>`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqpsksy6",
+    "version": 1,
+    "section": "json-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field is tagged `json:\"name\"` and the JSON says `\"NAME\": \"Bia\"`. What does `encoding/json` put in the field?",
+    "hint": "It prefers an exact match. What if there is none?",
+    "choices": [
+      {
+        "text": "Nothing: the key must match the tag exactly",
+        "correct": false,
+        "why": "That is version 2's rule. `encoding/json` filled `Name` with `Bia`."
+      },
+      {
+        "text": "`BIA`, upper-cased to match the key",
+        "correct": false,
+        "why": "Only the key is compared without case; the value is copied as it is."
+      },
+      {
+        "text": "`Bia`",
+        "correct": true,
+        "why": "Right. With no exact match, a key differing only in case is accepted."
+      },
+      {
+        "text": "An error about the case of the key",
+        "correct": false,
+        "why": "`err` was nil. Case is not something `encoding/json` complains about."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwaznaxz",
+    "version": 1,
+    "section": "json-in",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `dec := json.NewDecoder(r)`, calling `dec.___()` makes `Decode` refuse keys that match no field.",
+    "hint": "It names the thing it disallows.",
+    "blanks": [
+      {
+        "accept": [
+          "DisallowUnknownFields"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pc2r9bb5",
+    "version": 1,
+    "section": "json-in",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody writes `json.Unmarshal(data, u)`, forgetting the `&`. What happens?",
+    "hint": "Separate the compiler, the run and `go vet`.",
+    "choices": [
+      {
+        "text": "The compiler refuses a non-pointer argument",
+        "correct": false,
+        "why": "`Unmarshal` accepts a value of any type, so the compiler has nothing to object to."
+      },
+      {
+        "text": "It fills a copy of `u`, and `u` stays empty with a nil error",
+        "correct": false,
+        "why": "The error was not nil: it said `json: Unmarshal(non-pointer main.User)`."
+      },
+      {
+        "text": "An error at run time, which `go vet` predicts",
+        "correct": true,
+        "why": "Right: `call of Unmarshal passes non-pointer as second argument`."
+      },
+      {
+        "text": "It panics with a nil dereference",
+        "correct": false,
+        "why": "There is no nil pointer involved; `Unmarshal` checks its argument and returns an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-jej6k59g",
+    "version": 1,
+    "section": "json-in",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`User` has one field, `Name string` tagged `json:\"name\"`. Which inputs make `json.Unmarshal` return an error? Choose all that apply.",
+    "hint": "Unknown and missing keys are not errors.",
+    "choices": [
+      {
+        "text": "`{\"name\": 42}`",
+        "correct": true,
+        "why": "Yes: `cannot unmarshal number into Go struct field User.name of type string`."
+      },
+      {
+        "text": "`{\"name\": \"Bia\", \"age\": 30}`",
+        "correct": false,
+        "why": "No. `age` matches no field and is skipped."
+      },
+      {
+        "text": "`{}`",
+        "correct": false,
+        "why": "No. A missing key leaves the field at zero, which is not an error."
+      },
+      {
+        "text": "`{\"name\": \"Bia\",}`",
+        "correct": true,
+        "why": "Yes. A comma before the closing brace is not JSON: `invalid character '}'`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9e71j8p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service reads its configuration with `json.Unmarshal` into a struct with `Timeout int` tagged `json:\"timeout\"`. An operator types `\"timeuot\": 30`. What happens, and what would have caught it?",
+    "hint": "The key matches no field. What does the default do with such a key?",
+    "choices": [
+      {
+        "text": "`Unmarshal` returns an error naming `timeuot`, and the service refuses to start until somebody fixes the file",
+        "correct": false,
+        "why": "Plain `Unmarshal` skips unknown keys and returns nil; only a strict `Decoder` names them."
+      },
+      {
+        "text": "`Timeout` gets 30, since key matching is forgiving",
+        "correct": false,
+        "why": "It forgives case, not spelling: `timeuot` and `timeout` are different words."
+      },
+      {
+        "text": "`Timeout` stays 0, no error; `DisallowUnknownFields` would refuse it",
+        "correct": true,
+        "why": "Right. A file a person typed is the case the section gave for refusing unknown keys."
+      },
+      {
+        "text": "`go vet` reports the misspelt key",
+        "correct": false,
+        "why": "vet reads the Go source, tags included; it never sees a JSON file read at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps2w07cb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same `{\"NAME\": \"Bia\"}` goes through `jsonv2.Unmarshal` from `encoding/json/v2`, into a field tagged `json:\"name\"`. What comes back?",
+    "hint": "Version 2 changed one rule about names.",
+    "choices": [
+      {
+        "text": "`Name` is `Bia`, as with `encoding/json`",
+        "correct": false,
+        "why": "The run printed `{Name: Tags:[]}` for version 2: it matches names exactly."
+      },
+      {
+        "text": "`Name` stays empty, and the error is nil",
+        "correct": true,
+        "why": "Right. `NAME` is not `name` to version 2, and an unknown key is still not an error by default."
+      },
+      {
+        "text": "An error about an unknown member",
+        "correct": false,
+        "why": "Version 2 also ignores unknown keys unless told otherwise; both errors printed `<nil>`."
+      },
+      {
+        "text": "It does not compile: both packages are named `json` in their package clause",
+        "correct": false,
+        "why": "Importing the second one as `jsonv2` gives it another name, and the program ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-29pdg4cc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Tags []string` tagged `json:\"tags\"` is nil, and `encoding/json` writes `\"tags\":null`. The reader expects a list. What makes it write `[]`?",
+    "hint": "Lesson 12 marshalled both kinds of empty slice.",
+    "choices": [
+      {
+        "text": "Adding `omitempty` to the tag",
+        "correct": false,
+        "why": "`omitempty` removes the key altogether, which a reader expecting a list handles no better than `null`."
+      },
+      {
+        "text": "Setting it to `[]string{}` before marshalling",
+        "correct": true,
+        "why": "Right. An empty slice that is not nil is written as `[]`; only the nil one becomes `null`."
+      },
+      {
+        "text": "Nothing: `encoding/json` writes every empty slice as `null`",
+        "correct": false,
+        "why": "Lesson 12 printed `null []`: the nil slice and the empty one come out differently."
+      },
+      {
+        "text": "Tagging it `json:\"tags,omitzero\"` instead of `json:\"tags\"`",
+        "correct": false,
+        "why": "A nil slice is its type's zero value, so `omitzero` drops the key instead of writing `[]`."
+      }
+    ]
+  }
+]

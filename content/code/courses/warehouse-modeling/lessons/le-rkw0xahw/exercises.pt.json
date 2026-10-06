@@ -1,0 +1,513 @@
+{
+  "ex-b34c3k6p": {
+    "prompt": "O que uma frase de granularidade diz?",
+    "hint": "Não as colunas.",
+    "choices": [
+      {
+        "text": "O que uma linha da tabela representa",
+        "why": "Isso. Um evento ou estado do negócio, nas palavras dele."
+      },
+      {
+        "text": "Que colunas a tabela fato tem",
+        "why": "As colunas decorrem da granularidade; ela não é uma lista delas."
+      },
+      {
+        "text": "Com que frequência a tabela é carregada, e de que origem",
+        "why": "Isso é uma agenda, assunto de `pipelines-etl`."
+      },
+      {
+        "text": "Por que índice a tabela é ordenada",
+        "why": "Ordem física é a lição 8; não define uma linha."
+      }
+    ]
+  },
+  "ex-dkcxewat": {
+    "prompt": "Por que Kimball recomenda a granularidade atômica, a mais fina que a origem registra?",
+    "hint": "Uma consulta consegue devolver o detalhe que foi somado?",
+    "choices": [
+      {
+        "text": "Tabelas atômicas são as menores",
+        "why": "São as maiores; esse é o preço."
+      },
+      {
+        "text": "Ferramentas só leem tabelas atômicas",
+        "why": "Elas leem qualquer tabela; agregadas também."
+      },
+      {
+        "text": "Detalhe somado não volta mais",
+        "why": "Isso. Uma tabela de pedidos inteiros nunca diria que livro foi vendido."
+      },
+      {
+        "text": "Torna chaves substitutas desnecessárias",
+        "why": "Granularidade e chaves são decisões separadas."
+      }
+    ]
+  },
+  "ex-5h7bvgcy": {
+    "prompt": "Que coluna reprova no teste de granularidade da `fact_sales`, uma linha por item de pedido?",
+    "hint": "Exatamente um valor por linha naquela granularidade.",
+    "choices": [
+      {
+        "text": "O departamento do livro",
+        "why": "Um por item, por meio do livro."
+      },
+      {
+        "text": "O frete do pedido",
+        "why": "Isso. Um por pedido, então se repete em cada item."
+      },
+      {
+        "text": "A promoção aplicada ao item",
+        "why": "Um por item: cada item tem no máximo uma promoção."
+      },
+      {
+        "text": "A loja onde o pedido foi feito",
+        "why": "Um por item, já que cada pedido é de uma loja."
+      }
+    ]
+  },
+  "ex-qfbs1qbg": {
+    "prompt": "Somado pelos itens, o frete dá 236.410.850 centavos; a rede cobrou 225.246.280. Em quantos reais a soma por item exagera?",
+    "hint": "Subtraia, e divida por cem.",
+    "unit": "BRL"
+  },
+  "ex-hdr1bzzb": {
+    "prompt": "Por que copiar o frete em cada item não gerou erro nenhum?",
+    "hint": "Cada linha, lida sozinha, é verdadeira.",
+    "choices": [
+      {
+        "text": "O DuckDB esconde avisos por padrão",
+        "why": "Não havia aviso a esconder."
+      },
+      {
+        "text": "A junção pulou pedidos sem frete",
+        "why": "Esses carregam zero; não mudam nada."
+      },
+      {
+        "text": "O frete fica em reais, não centavos",
+        "why": "Está em centavos, como todo valor aqui."
+      },
+      {
+        "text": "Toda linha é verdade; só a soma erra",
+        "why": "Isso. O frete do pedido é mesmo R$ 14,90; somá-lo por item é o erro."
+      }
+    ]
+  },
+  "ex-1tz167jk": {
+    "prompt": "Depois do rateio, quanto somam as partes de frete dos três itens do pedido 112406?",
+    "hint": "372, 338 e 780.",
+    "choices": [
+      {
+        "text": "1.489 centavos, um perdido no arredondamento",
+        "why": "Os centavos que sobram são distribuídos, então nenhum se perde."
+      },
+      {
+        "text": "4.470 centavos, o frete três vezes",
+        "why": "Esse é o erro da seção anterior."
+      },
+      {
+        "text": "1.490 centavos, o frete exato",
+        "why": "Isso. As partes somam o que foi cobrado."
+      },
+      {
+        "text": "1.491 centavos, um somado no arredondamento",
+        "why": "Arredondar para baixo primeiro torna isso impossível."
+      }
+    ]
+  },
+  "ex-8aqn37n7": {
+    "prompt": "Por que o rateio arredonda toda parte para baixo e depois distribui os centavos que sobram, em vez de arredondar cada parte para o centavo mais próximo?",
+    "hint": "Três partes de 496,67 cada.",
+    "choices": [
+      {
+        "text": "Três partes arredondadas sozinhas dão 1.491",
+        "why": "Isso. Três partes de 496,67 viram 497 cada, 1.491 no total."
+      },
+      {
+        "text": "Arredondar para baixo é mais rápido",
+        "why": "Velocidade não é a preocupação; o total é."
+      },
+      {
+        "text": "A lei exige arredondar as partes para baixo",
+        "why": "Nenhuma lei envolvida; só aritmética."
+      },
+      {
+        "text": "Floats não podem ser arredondados em SQL",
+        "why": "Podem; o problema é a soma."
+      }
+    ]
+  },
+  "ex-16yw0zbf": {
+    "prompt": "Quais destas são bases legítimas para ratear o frete de um pedido entre os itens? Marque todas as que se aplicam.",
+    "hint": "Cada uma dá uma resposta diferente para \"frete por departamento\".",
+    "choices": [
+      {
+        "text": "Proporcional ao valor de cada item",
+        "why": "Sim. A regra usada aqui."
+      },
+      {
+        "text": "Proporcional ao peso de cada livro",
+        "why": "Sim. Mais perto do que a transportadora cobra."
+      },
+      {
+        "text": "Uma parte igual por item",
+        "why": "Sim. Simples, e ainda fecha a conta."
+      },
+      {
+        "text": "O frete inteiro no primeiro item",
+        "why": "Fecha a conta, mas não diz nada sobre os outros itens; ninguém leria frete por departamento a partir disso."
+      }
+    ]
+  },
+  "ex-htf0h7br": {
+    "prompt": "`fact_sales` e `fact_payments` são ligadas por `order_id`, e os pagamentos mais que dobram. Como isso se chama?",
+    "hint": "Linhas de um lado repetidas a cada par do outro.",
+    "choices": [
+      {
+        "text": "Um produto cartesiano das duas tabelas inteiras",
+        "why": "Isso ligaria toda linha a toda linha, não só dentro de um pedido."
+      },
+      {
+        "text": "Partidas dobradas",
+        "why": "Um método contábil; nada a ver com junções."
+      },
+      {
+        "text": "Uma dimensão de mudança lenta",
+        "why": "Esse é o assunto da lição 5."
+      },
+      {
+        "text": "Fan-out (leque)",
+        "why": "Isso. Duas granularidades ligadas por uma chave única em nenhuma."
+      }
+    ]
+  },
+  "ex-nxnkpc7y": {
+    "prompt": "A rede recebeu 9.799.636.132 centavos e vendeu 9.574.389.852 centavos em livros. Quantos reais é a diferença?",
+    "hint": "É o frete.",
+    "unit": "BRL"
+  },
+  "ex-ta8y0g3j": {
+    "prompt": "A Ana precisa de \"livros vendidos contra dinheiro recebido, por mês\". Que plano está certo?",
+    "hint": "Some primeiro, junte depois.",
+    "choices": [
+      {
+        "text": "Ligar itens a pagamentos, depois somar os dois por mês",
+        "why": "Esse é o fan-out que a seção mediu."
+      },
+      {
+        "text": "Somar cada um por mês, depois ligar os dois resultados",
+        "why": "Isso. Uma linha por mês de cada lado, ligadas uma a uma."
+      },
+      {
+        "text": "Pôr uma coluna `payment_cents` em cada item de venda",
+        "why": "Um pagamento não tem valor único por item: o erro do frete de novo."
+      },
+      {
+        "text": "Usar `DISTINCT` nas linhas ligadas",
+        "why": "Dois pagamentos iguais virariam um; esconde o fan-out sem garantia."
+      }
+    ]
+  },
+  "ex-pyg2na4z": {
+    "prompt": "Por que `order_id` fica na `fact_sales` sem tabela dimensão por trás?",
+    "hint": "O que a `dim_order` guardaria?",
+    "choices": [
+      {
+        "text": "Uma dimensão de pedidos guardaria só o número",
+        "why": "Isso. Todo o resto sobre um pedido já está nos itens."
+      },
+      {
+        "text": "Números de pedido são grandes demais para chaves",
+        "why": "O tamanho não tem nada a ver com isso."
+      },
+      {
+        "text": "Kimball proíbe tabelas de uma coluna só",
+        "why": "Nada proíbe; ela só seria inútil."
+      },
+      {
+        "text": "Ficou ali por engano",
+        "why": "Está de propósito: agrupa itens e leva de volta aos cupons."
+      }
+    ]
+  },
+  "ex-mxp6gtjk": {
+    "prompt": "Uma chave de dimensão guardada na linha fato sem tabela dimensão por trás, como um número de pedido, se chama dimensão ___.",
+    "hint": "O adjetivo de Kimball.",
+    "blanks": [
+      {
+        "accept": [
+          "degenerada",
+          "degenerate"
+        ]
+      }
+    ]
+  },
+  "ex-a2mdhmwk": {
+    "prompt": "Qual destas é uma chave natural?",
+    "hint": "Vem do negócio ou de um sistema de origem.",
+    "choices": [
+      {
+        "text": "`customer_key` na `dim_customer`",
+        "why": "Essa o warehouse atribuiu: uma substituta."
+      },
+      {
+        "text": "`book_key` na `fact_sales`",
+        "why": "Uma substituta, apontando para a `dim_book`."
+      },
+      {
+        "text": "O ISBN de um livro",
+        "why": "Isso. Pertence ao mundo editorial, não ao warehouse."
+      },
+      {
+        "text": "Um número de linha dentro de uma consulta",
+        "why": "Isso não identifica nada fora da consulta."
+      }
+    ]
+  },
+  "ex-paz6aeev": {
+    "prompt": "Quais destas acontecem com chaves naturais ao longo da vida de um warehouse? Marque todas as que se aplicam.",
+    "hint": "Quatro foram citadas.",
+    "choices": [
+      {
+        "text": "Um cliente muda de e-mail",
+        "why": "Sim. 825 vezes no histórico da rede."
+      },
+      {
+        "text": "Um novo sistema de caixa numera os clientes do um de novo",
+        "why": "Sim. O 2123 antigo e o novo viram pessoas diferentes."
+      },
+      {
+        "text": "Um código é reaproveitado para outro produto",
+        "why": "Sim. Fatos de antes e de depois apontam para uma chave."
+      },
+      {
+        "text": "O warehouse renumera as próprias chaves toda noite",
+        "why": "Não. Linhas antigas mantêm as chaves; esse é o ponto de ser dono delas."
+      }
+    ]
+  },
+  "ex-ygdh6vcp": {
+    "prompt": "O cliente 2123 tem duas chaves substitutas. Por que a chave natural não consegue isso?",
+    "hint": "Quantos valores por cliente?",
+    "choices": [
+      {
+        "text": "Chaves naturais são longas demais",
+        "why": "O tamanho importa para espaço, não para versões."
+      },
+      {
+        "text": "Um valor por cliente não guarda duas versões",
+        "why": "Isso. Cada venda aponta para a versão vigente quando aconteceu."
+      },
+      {
+        "text": "Dois clientes diferentes compartilham o número 2123 na origem",
+        "why": "Não. 2123 é um cliente que se mudou."
+      },
+      {
+        "text": "A origem a apagou",
+        "why": "Não. Ela continua lá, com a cidade nova."
+      }
+    ]
+  },
+  "ex-vrefvj42": {
+    "prompt": "A coluna de e-mail em Parquet ocupou 4.129.699 bytes e a chave inteira 2.480.761. Quantas vezes maior é a coluna de e-mail? Dê duas casas decimais.",
+    "hint": "Divida."
+  },
+  "ex-mrvms3c0": {
+    "prompt": "Um colega propõe chaves de loja cujo primeiro dígito é a região: 1 para o Sudeste, 2 para o Sul. O que dá errado?",
+    "hint": "E se uma loja for remanejada?",
+    "choices": [
+      {
+        "text": "Nada dá errado; uma chave que diz a região é mais fácil de ler",
+        "why": "Legível até o significado mudar, e aí ela mente."
+      },
+      {
+        "text": "Chaves com 1 ficam primeiro",
+        "why": "A ordenação é inofensiva."
+      },
+      {
+        "text": "Inteiros não podem começar com 2",
+        "why": "Podem."
+      },
+      {
+        "text": "Mudar a região deixa errada a chave de cada fato",
+        "why": "Isso. Uma chave que codifica algo fica falsa quando esse algo muda."
+      }
+    ]
+  },
+  "ex-3dcg3mdn": {
+    "prompt": "Vendas de balcão não têm cliente. O que a `fact_sales` põe no `customer_key` delas?",
+    "hint": "Uma linha que diz isso.",
+    "choices": [
+      {
+        "text": "NULL",
+        "why": "Uma chave vazia some de toda junção interna."
+      },
+      {
+        "text": "A chave do último cliente que comprou",
+        "why": "Isso daria a venda à pessoa errada."
+      },
+      {
+        "text": "0, a chave da linha *Walk-in, not identified*",
+        "why": "Isso. O membro desconhecido mantém as linhas em toda junção."
+      },
+      {
+        "text": "Uma chave nova para cada venda de balcão",
+        "why": "Isso inventa um cliente por venda."
+      }
+    ]
+  },
+  "ex-ww422hbh": {
+    "prompt": "Com chaves vazias, quantos itens de venda somem de uma junção com a `dim_customer`?",
+    "hint": "887.477 contra 658.707."
+  },
+  "ex-w812hfab": {
+    "prompt": "Por que uma chave vazia some de uma junção interna, mesmo contra outra chave vazia?",
+    "hint": "Quanto é NULL = NULL?",
+    "choices": [
+      {
+        "text": "NULL não é igual a nada, nem a si mesmo",
+        "why": "Isso. A comparação dá desconhecido, e a junção só mantém pares verdadeiros."
+      },
+      {
+        "text": "O DuckDB apaga linhas com chave NULL na carga",
+        "why": "Elas estão lá; é a junção que as descarta."
+      },
+      {
+        "text": "Porque a dimensão não tem linha NULL",
+        "why": "Mesmo que tivesse, NULL não a encontraria."
+      },
+      {
+        "text": "Junções internas pulam o primeiro milhão de linhas",
+        "why": "Essa regra não existe."
+      }
+    ]
+  },
+  "ex-7aphzx8v": {
+    "prompt": "Por que os autores não podem ser uma coluna da `fact_sales`?",
+    "hint": "O teste da granularidade.",
+    "choices": [
+      {
+        "text": "Nomes de autor são dado pessoal, que uma tabela fato não deveria carregar",
+        "why": "Isso é assunto da lição 12, e não o motivo aqui."
+      },
+      {
+        "text": "Autores mudam com frequência demais",
+        "why": "Os autores de um livro raramente mudam."
+      },
+      {
+        "text": "A tabela fato já tem colunas demais",
+        "why": "Tem onze; esse não é o problema."
+      },
+      {
+        "text": "Um item chega a ter três autores, não um valor",
+        "why": "Isso. Um livro, e até três autores."
+      }
+    ]
+  },
+  "ex-n129z509": {
+    "prompt": "Pela ponte sem pesos, as vendas dão R$ 111.745.133,05; a rede vendeu R$ 95.743.898,52. Quantos reais são contados duas vezes ou mais?",
+    "hint": "Subtraia.",
+    "unit": "BRL"
+  },
+  "ex-yv6wen6s": {
+    "prompt": "Os pesos de cada livro na `bridge_book_author` somam 1. O que isso garante?",
+    "hint": "Multiplique cada venda pelo peso e some.",
+    "choices": [
+      {
+        "text": "Cada autor fica com a mesma receita no total",
+        "why": "Não. Autores de mais vendidos ainda ficam com mais."
+      },
+      {
+        "text": "As partes ponderadas dos autores somam as vendas",
+        "why": "Isso. O total ponderado bateu com R$ 95.743.898,52."
+      },
+      {
+        "text": "Nenhum livro pode ter mais de um autor",
+        "why": "468 livros têm mais de um."
+      },
+      {
+        "text": "A ponte tem uma linha por livro",
+        "why": "Tem uma linha por par de livro e autor."
+      }
+    ]
+  },
+  "ex-d93w6snp": {
+    "prompt": "O time de eventos quer saber de quais autores os livros vendem mais, para escolher quem convidar. Que coluna deve ler?",
+    "hint": "Rateio ou impacto?",
+    "choices": [
+      {
+        "text": "A sem peso, que mede o impacto",
+        "why": "Isso. Impacto, que não deve ser totalizado."
+      },
+      {
+        "text": "A ponderada, porque fecha a conta",
+        "why": "Fechar a conta importa para direitos, não para escolher convidado."
+      },
+      {
+        "text": "Nenhuma; autores não podem ser ordenados",
+        "why": "As duas colunas os ordenam; respondem a perguntas diferentes."
+      },
+      {
+        "text": "O total da coluna sem peso",
+        "why": "Esse total sai dezesseis milhões alto demais e não significa nada."
+      }
+    ]
+  },
+  "ex-zq6xg91a": {
+    "prompt": "Ligue cada problema da lição ao seu reparo.",
+    "hint": "Quatro problemas, quatro reparos, um a mais.",
+    "pairs": [
+      {
+        "left": "Frete contado uma vez por item",
+        "right": "Ratear, ou manter na granularidade do pedido"
+      },
+      {
+        "left": "Vendas de balcão somem das junções",
+        "right": "Um membro desconhecido, chave 0"
+      },
+      {
+        "left": "O e-mail de um cliente muda",
+        "right": "Uma chave substituta do warehouse"
+      },
+      {
+        "left": "Receita por autor soma demais",
+        "right": "Uma ponte com pesos"
+      }
+    ],
+    "right_distractors": [
+      "Uma dimensão de autores em floco de neve"
+    ]
+  },
+  "ex-t6tx17je": {
+    "prompt": "Ponha os passos do rateio na ordem em que o SQL os executa.",
+    "hint": "Exato, depois piso, depois distribuir.",
+    "items": [
+      "Calcular a parte exata do frete de cada item",
+      "Arredondar toda parte para baixo, em centavos inteiros",
+      "Contar os centavos que sobram em cada pedido",
+      "Dá-los, um a cada, aos maiores restos"
+    ],
+    "trap": "Distribuir os centavos antes de arredondar para baixo é o erro: não sobra nada até as partes serem truncadas."
+  },
+  "ex-ew3a9xbp": {
+    "prompt": "O warehouse de um hospital tem uma linha por internação, e um paciente pode ter vários diagnósticos por internação. A diretoria quer internações por diagnóstico, somando o número de internações. O que o modelo deve usar?",
+    "hint": "Um fato encontrando um conjunto, com partes que fecham.",
+    "choices": [
+      {
+        "text": "Uma coluna de diagnóstico na linha da internação",
+        "why": "Uma internação tem vários; a coluna reprova na granularidade."
+      },
+      {
+        "text": "Uma linha fato por diagnóstico, contando cada uma inteira",
+        "why": "Contar inteiro soma mais que as internações."
+      },
+      {
+        "text": "Uma ponte de pares internação e diagnóstico com pesos",
+        "why": "Isso. Contagens ponderadas fecham com as internações; sem peso dão impacto."
+      },
+      {
+        "text": "Só o primeiro diagnóstico, ignorando o resto",
+        "why": "Fecha a conta jogando fora aquilo sobre o que a diretoria perguntou."
+      }
+    ]
+  }
+}

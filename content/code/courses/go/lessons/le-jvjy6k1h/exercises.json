@@ -1,0 +1,561 @@
+[
+  {
+    "id": "ex-ewhcgkf1",
+    "version": 1,
+    "section": "unwrap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`readConfig` returns `fmt.Errorf(\"read config: %w\", err)`. What is that return value?",
+    "hint": "Section 02's loop printed it, and then printed what was inside it.",
+    "choices": [
+      {
+        "text": "A longer string with both messages joined",
+        "correct": false,
+        "why": "The message is longer, but the value is an error, a `*fmt.wrapError`, and the loop found `err` inside it."
+      },
+      {
+        "text": "A new error that holds `err` and adds words",
+        "correct": true,
+        "why": "Right. `errors.Unwrap` on it gave back the `*fs.PathError` that `os.ReadFile` returned, whole."
+      },
+      {
+        "text": "`err` itself, with its message changed in place to start with `read config`",
+        "correct": false,
+        "why": "Nothing changed `err`: the loop printed the `*fs.PathError` with its own message, `open settings.json: ...`, untouched."
+      },
+      {
+        "text": "A copy of `err`, of the same type, with a new message",
+        "correct": false,
+        "why": "The type changed: the loop printed `*fmt.wrapError` for it, and `*fs.PathError` one line further down."
+      }
+    ]
+  },
+  {
+    "id": "ex-505cvs6n",
+    "version": 1,
+    "section": "unwrap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does `errors.Unwrap(e)` return `nil`?",
+    "hint": "It calls one method, if it can.",
+    "choices": [
+      {
+        "text": "When `e` is the outermost error of a chain",
+        "correct": false,
+        "why": "The outermost link is the one with the most inside it; the loop unwrapped it first."
+      },
+      {
+        "text": "When `e` was made with `%w`",
+        "correct": false,
+        "why": "That is exactly the case where it returns something: `%w` gives the error an `Unwrap` method."
+      },
+      {
+        "text": "When `e` has no method `Unwrap() error`",
+        "correct": true,
+        "why": "Right. `syscall.Errno` has no such method, which is why the loop stopped after it."
+      },
+      {
+        "text": "When the message of `e` is empty",
+        "correct": false,
+        "why": "`errors.Unwrap` never reads the message; it looks for a method."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk6aekb1",
+    "version": 1,
+    "section": "unwrap",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the links of the error `start` returned in the order section 02's loop printed them.",
+    "hint": "The loop begins with what `main` received.",
+    "items": [
+      "`*fmt.wrapError` with `start server: ...`",
+      "`*fmt.wrapError` with `read config: ...`",
+      "`*fs.PathError` with `open settings.json: ...`",
+      "`syscall.Errno`, `no such file or directory`"
+    ]
+  },
+  {
+    "id": "ex-6wh7k75h",
+    "version": 1,
+    "section": "unwrap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`both := errors.Join(fs.ErrNotExist, fs.ErrPermission)`. What does `errors.Unwrap(both)` return?",
+    "hint": "A joined error has an `Unwrap` method, but which one?",
+    "choices": [
+      {
+        "text": "`fs.ErrNotExist`, the first error given to `Join`",
+        "correct": false,
+        "why": "That assumes it unwraps one link at a time from a list; it does not touch a list at all."
+      },
+      {
+        "text": "`nil`",
+        "correct": true,
+        "why": "Right. The joined error's method is `Unwrap() []error`, and `errors.Unwrap` only calls `Unwrap() error`."
+      },
+      {
+        "text": "A slice with both errors",
+        "correct": false,
+        "why": "The joined error's own method returns that slice, but `errors.Unwrap` returns an `error`, and gave `<nil>`."
+      },
+      {
+        "text": "`fs.ErrPermission`, the last error given to `Join`",
+        "correct": false,
+        "why": "The order is not the problem: `errors.Unwrap` does not open a list of errors at either end."
+      }
+    ]
+  },
+  {
+    "id": "ex-6akbqrhz",
+    "version": 1,
+    "section": "unwrap",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program wraps the error from `os.ReadFile` of a missing file with `%w` three times, in three functions, instead of twice. How many lines does section 02's loop print, not counting the `fmt.Println(err)` line before it?",
+    "hint": "Count the wrappers, then what `os.ReadFile` itself returned.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-k6cq9tg4",
+    "version": 1,
+    "section": "errors-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In section 03, `err == fs.ErrNotExist` printed `false` although the file was missing. Why?",
+    "hint": "What is the value `start` returned?",
+    "choices": [
+      {
+        "text": "`==` compares the two messages, and they differ",
+        "correct": false,
+        "why": "`==` compares the values, not their text; and two different values with the same text would still be unequal."
+      },
+      {
+        "text": "`err` is the outermost wrapper, a different value",
+        "correct": true,
+        "why": "Right. `==` looks at that one value, and it is a `*fmt.wrapError`, whatever it holds."
+      },
+      {
+        "text": "Errors cannot be compared with `==`; it only works for `nil`",
+        "correct": false,
+        "why": "The comparison compiled and ran, and section 03 also compared an `Errno` with `==` and got `true`."
+      },
+      {
+        "text": "`fs.ErrNotExist` belongs to `io/fs`, and `os` has its own",
+        "correct": false,
+        "why": "`os.ErrNotExist` is `fs.ErrNotExist` under another name, as `go doc` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-b85mbs5q",
+    "version": 1,
+    "section": "errors-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`errors.___(err, fs.ErrNotExist)` walks every link of the chain looking for the missing-file error.",
+    "hint": "It answers true or false.",
+    "blanks": [
+      {
+        "accept": [
+          "Is"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-17a3yqkt",
+    "version": 1,
+    "section": "errors-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the chain of a missing `settings.json`, what does `errors.Is(err, fs.ErrPermission)` return?",
+    "hint": "Is a missing file a permission problem?",
+    "choices": [
+      {
+        "text": "`true`, because the chain holds an error",
+        "correct": false,
+        "why": "`errors.Is` does not ask whether there is an error, but whether this particular one is in there."
+      },
+      {
+        "text": "`true`, because every file-system error matches every `fs` variable",
+        "correct": false,
+        "why": "`syscall.ENOENT`'s `Is` method says yes to `fs.ErrNotExist` only; it is answered per target."
+      },
+      {
+        "text": "`false`",
+        "correct": true,
+        "why": "Right. Section 03 printed `permission    false`: no link is, or claims to be, a permission error."
+      },
+      {
+        "text": "It panics, since the target is not in the chain",
+        "correct": false,
+        "why": "A target that is not there is the ordinary `false` case; nothing panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6xw7rn9",
+    "version": 1,
+    "section": "errors-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The chain's last link is `syscall.ENOENT`, which is not equal to `fs.ErrNotExist`. Why does `errors.Is(err, fs.ErrNotExist)` still say `true`?",
+    "hint": "Equality is one of two ways a link can match.",
+    "choices": [
+      {
+        "text": "`errors.Is` compares the messages, and both say the file is missing",
+        "correct": false,
+        "why": "The messages differ, `file does not exist` against `no such file or directory`, and `Is` does not read them."
+      },
+      {
+        "text": "`syscall.Errno` has an `Is` method that says yes to it",
+        "correct": true,
+        "why": "Right. A link matches if it equals the target or its own `Is` method claims it; `ENOENT.Is(fs.ErrNotExist)` printed `true`."
+      },
+      {
+        "text": "`fs.ErrNotExist` and `syscall.ENOENT` are one variable",
+        "correct": false,
+        "why": "That is true of `os.ErrNotExist`; `inner == fs.ErrNotExist` printed `false` for `ENOENT`."
+      },
+      {
+        "text": "`errors.Is` skips the last link and only checks wrappers",
+        "correct": false,
+        "why": "It checks every link, the last one included; that last one is where the match came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-csrzra77",
+    "version": 1,
+    "section": "errors-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague changes `%w` to `%v` in `readConfig` to \"tidy the message\". The program prints exactly the same text. What breaks?",
+    "hint": "Who looks at an error other than a person?",
+    "choices": [
+      {
+        "text": "Nothing: the message is identical, so the error is too",
+        "correct": false,
+        "why": "Section 03 printed the same first line and a two-link chain; equal text is not an equal chain."
+      },
+      {
+        "text": "The build: `%v` cannot format an error value",
+        "correct": false,
+        "why": "`%v` formats any value, an error included; the program compiled and ran."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)` turns false, so the defaults branch never runs",
+        "correct": true,
+        "why": "Right. The `*fs.PathError` and the `Errno` are gone from the chain, and the code that inspected it takes the other branch."
+      },
+      {
+        "text": "Only the type printed by `%T`, which no code reads",
+        "correct": false,
+        "why": "The type changed to `*errors.errorString`, and every function that walks the chain reads exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd50gh21",
+    "version": 1,
+    "section": "errors-as",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does section 04 write `errors.As(err, &pe)` rather than `errors.As(err, pe)`?",
+    "hint": "What does `As` do with what it finds?",
+    "choices": [
+      {
+        "text": "`As` writes the link it finds into the variable",
+        "correct": true,
+        "why": "Right. Without the `&` it had nowhere to write, and the program panicked."
+      },
+      {
+        "text": "The `&` makes the call faster by not copying `pe`",
+        "correct": false,
+        "why": "`pe` is one pointer; copying it costs nothing. The `&` is about where the result goes."
+      },
+      {
+        "text": "The `&` tells `As` to look deeper than one link",
+        "correct": false,
+        "why": "`As` always walks the whole chain; the `&` changes nothing about the search."
+      },
+      {
+        "text": "Both work; `&pe` is the usual style",
+        "correct": false,
+        "why": "Without it, `go vet` reported the call and the program panicked: `target must be a non-nil pointer`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7c6v4fgd",
+    "version": 1,
+    "section": "errors-as",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`errors.AsType[fs.PathError](err)` does not compile. What does the error message blame?",
+    "hint": "Which type has the `Error` method?",
+    "choices": [
+      {
+        "text": "`AsType` accepts only interface types between its brackets, never a struct type",
+        "correct": false,
+        "why": "`*fs.PathError` is a pointer to a struct and works; the constraint is `error`, not \"an interface\"."
+      },
+      {
+        "text": "`fs.PathError` is unexported",
+        "correct": false,
+        "why": "Its capital P exports it, and `go doc` printed its fields."
+      },
+      {
+        "text": "`Error` has a pointer receiver, so only the pointer is an `error`",
+        "correct": true,
+        "why": "Right. Only `*fs.PathError` satisfies `error`, which is lesson 26's method-set rule."
+      },
+      {
+        "text": "A type from another package cannot be a type argument",
+        "correct": false,
+        "why": "`*fs.PathError`, from the same package, worked in the same position one program earlier."
+      }
+    ]
+  },
+  {
+    "id": "ex-3f2swvp3",
+    "version": 1,
+    "section": "errors-as",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each function to what it gives back.",
+    "hint": "Two of them answer the same question in different shapes.",
+    "pairs": [
+      {
+        "left": "`errors.Unwrap(err)`",
+        "right": "the next link, or `nil`"
+      },
+      {
+        "left": "`errors.Is(err, target)`",
+        "right": "a `bool`: is this value in the chain"
+      },
+      {
+        "left": "`errors.As(err, &v)`",
+        "right": "a `bool`, and `v` filled with the first link of its type"
+      },
+      {
+        "left": "`errors.AsType[T](err)`",
+        "right": "the first link of type `T`, and a `bool`"
+      }
+    ],
+    "right_distractors": [
+      "the message with the context removed"
+    ]
+  },
+  {
+    "id": "ex-gfqvab7w",
+    "version": 1,
+    "section": "errors-as",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A command must tell the user which file it could not open, and the error it holds reads `start server: read config: open settings.json: no such file or directory`. Which way of getting `settings.json` keeps working when somebody adds another layer of context?",
+    "hint": "The path is a field somewhere in the chain.",
+    "choices": [
+      {
+        "text": "Split the message on `\": \"` and take the third piece",
+        "correct": false,
+        "why": "A new layer adds one more piece in front, and the third piece becomes `read config`."
+      },
+      {
+        "text": "`err.(*fs.PathError)`, then its `Path`",
+        "correct": false,
+        "why": "The assertion sees only the outside value; section 04 printed `assertion: false` before any layer was added."
+      },
+      {
+        "text": "`errors.AsType[*fs.PathError](err)`, then `.Path` of the result",
+        "correct": true,
+        "why": "Right. It walks the chain to the `*fs.PathError` however deep it sits, and reads a field rather than text."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)`, then the word after `open`",
+        "correct": false,
+        "why": "`Is` only says the file is missing; the name still comes from parsing a message that may change."
+      }
+    ]
+  },
+  {
+    "id": "ex-1thx49vc",
+    "version": 1,
+    "section": "errors-as",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var pe *fs.PathError` and then `errors.As(err, pe)`, with no `&`. Which of these are true? Select all that apply.",
+    "hint": "Three tools looked at it in section 04.",
+    "choices": [
+      {
+        "text": "It compiles",
+        "correct": true,
+        "why": "Yes. The target parameter is `any`, so the compiler accepts any value there."
+      },
+      {
+        "text": "`go vet` always reports the call",
+        "correct": true,
+        "why": "Yes: `second argument to errors.As must be a non-nil pointer ...`, with exit status 1."
+      },
+      {
+        "text": "It returns `false` quietly and the program goes on",
+        "correct": false,
+        "why": "It panics with `errors: target must be a non-nil pointer`, and the program stops with status 2."
+      },
+      {
+        "text": "The compiler refuses it with a type error",
+        "correct": false,
+        "why": "That is what `AsType` buys you; `As` takes `any`, and `any` accepts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-38m0429r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library you call now returns `fmt.Errorf(\"load %s: %w\", name, err)` around an `os.Open` error. Your old code checks `os.IsNotExist(err)` and has stopped noticing missing files. What is the fix?",
+    "hint": "Read what `go doc os.IsNotExist` says new code should use.",
+    "choices": [
+      {
+        "text": "Ask the library to wrap with `%v` instead",
+        "correct": false,
+        "why": "With `%v` there is no chain at all, and `os.IsNotExist` still sees a `*errors.errorString`."
+      },
+      {
+        "text": "Replace it with `errors.Is(err, fs.ErrNotExist)`",
+        "correct": true,
+        "why": "Right. `errors.Is` walks the chain; `os.IsNotExist` predates wrapping and looks at the outside only."
+      },
+      {
+        "text": "Compare `err == os.ErrNotExist`",
+        "correct": false,
+        "why": "`==` sees the outermost wrapper, exactly like `os.IsNotExist`, and is false for the same reason."
+      },
+      {
+        "text": "Compare `errors.Unwrap(err) == fs.ErrNotExist`",
+        "correct": false,
+        "why": "One unwrap reaches the `*fs.PathError`, which is not `fs.ErrNotExist`; it matches only through `Is` further down."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks21s8hj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`err` came from `os.ReadFile` on a missing file. Which of these return an error in which `errors.Is(..., fs.ErrNotExist)` still finds it? Select all that apply.",
+    "hint": "Which of them keep `err` itself, and which keep only its text?",
+    "choices": [
+      {
+        "text": "`fmt.Errorf(\"load: %w\", err)`",
+        "correct": true,
+        "why": "Yes. `%w` keeps `err` as the next link."
+      },
+      {
+        "text": "`errors.Join(err, cleanupErr)`",
+        "correct": true,
+        "why": "Yes. A joined error is a tree, and `errors.Is` walks every branch of it."
+      },
+      {
+        "text": "`fmt.Errorf(\"load: %v\", err)`",
+        "correct": false,
+        "why": "`%v` copies the text into a `*errors.errorString` and drops `err`, as section 03's cut chain showed."
+      },
+      {
+        "text": "`errors.New(\"load: \" + err.Error())`",
+        "correct": false,
+        "why": "Same as `%v`: a new error holding a string, with nothing to unwrap."
+      }
+    ]
+  },
+  {
+    "id": "ex-pm6t4dgk",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Any error type becomes a wrapper by having a method `___() error` that returns the error it holds.",
+    "hint": "Section 02's `*fmt.wrapError` and `*fs.PathError` both have it.",
+    "blanks": [
+      {
+        "accept": [
+          "Unwrap"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xpadkj3j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your package has `type QuotaError struct{ User string }` with `Error` on `*QuotaError`, and callers wrap it twice with `%w`. How does the top of the program read `User`?",
+    "hint": "It is the same question as the path in `*fs.PathError`.",
+    "choices": [
+      {
+        "text": "`errors.Is(err, &QuotaError{})`, and then read the `User` field of the error",
+        "correct": false,
+        "why": "`Is` compares values, and a freshly made pointer equals no link; even a `true` would hand you no field."
+      },
+      {
+        "text": "`errors.Unwrap(err).(*QuotaError)`",
+        "correct": false,
+        "why": "One unwrap removes one layer of two, so the assertion meets the second wrapper."
+      },
+      {
+        "text": "`errors.AsType[*QuotaError](err)` and the `User` of the result",
+        "correct": true,
+        "why": "Right. It finds the link by type at any depth, exactly as with `*fs.PathError`."
+      },
+      {
+        "text": "`err.(*QuotaError)` straight away",
+        "correct": false,
+        "why": "The outside value is a `*fmt.wrapError`, and the assertion looks at nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtkd15mp",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `%v` in `readConfig` and `%w` in `start`, how many links did section 03's loop print?",
+    "hint": "Count the lines with a type in front.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "links"
+  }
+]

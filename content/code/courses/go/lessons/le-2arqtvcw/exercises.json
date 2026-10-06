@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-ancj44dk",
+    "version": 1,
+    "section": "before",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`diff` compared `SumInts` with `SumFloats` line by line. What did it find different?",
+    "hint": "It printed two lines from each side.",
+    "choices": [
+      {
+        "text": "The loop, because a float needs another form of `range`",
+        "correct": false,
+        "why": "`range` works the same over any slice; the loop lines were identical and `diff` did not print them."
+      },
+      {
+        "text": "Only the types, in the signature and in `var total`",
+        "correct": true,
+        "why": "Right. Two lines differ, and in both of them the only change is `int` against `float64`."
+      },
+      {
+        "text": "The `return`, which converts the result to the right type",
+        "correct": false,
+        "why": "`return total` is the same text in both; `total` already has the result's type."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "`diff` printed `1,2c1,2` and the two pairs of lines; identical text would print nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wvx5h7h",
+    "version": 1,
+    "section": "before",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SumAny([]any{3, stock})`, with `stock` an `int64`, is wrong. Who found the mistake?",
+    "hint": "`go vet && go run .` was the command.",
+    "choices": [
+      {
+        "text": "The compiler, which refused to build `[]any{3, stock}`",
+        "correct": false,
+        "why": "That literal is a valid `[]any`; any value goes into one, so the program was built."
+      },
+      {
+        "text": "`go vet`, which reported the `int64`",
+        "correct": false,
+        "why": "`go vet` printed nothing and exited 0, which is why `go run` went ahead."
+      },
+      {
+        "text": "The program itself, by the `default` case's panic",
+        "correct": true,
+        "why": "Right: `panic: SumAny: cannot add int64`, at run time, on the call that happened to pass the wrong type."
+      },
+      {
+        "text": "Nobody: the `int64` was converted to `float64` and added",
+        "correct": false,
+        "why": "Nothing converts it; the type switch had cases for `int` and `float64` only, and the `default` panicked."
+      }
+    ]
+  },
+  {
+    "id": "ex-kz0v5hjk",
+    "version": 1,
+    "section": "before",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ages` is a `[]int`. Why does the compiler refuse `SumAny(ages)` when `SumAny` takes `[]any`?",
+    "hint": "The same refusal happened to `fmt.Println` in lesson 21.",
+    "choices": [
+      {
+        "text": "A `[]int` is not a `[]any`, and Go never converts one slice type into another",
+        "correct": true,
+        "why": "Right. Each `int` could become an `any`, but the slice as a whole is a different type, so the caller copies."
+      },
+      {
+        "text": "`SumAny` only accepts `float64` values",
+        "correct": false,
+        "why": "Its type switch has an `int` case, and `SumAny(boxed)` added three `int`s to get 71."
+      },
+      {
+        "text": "The call needs `ages...` to spread the slice",
+        "correct": false,
+        "why": "`...` is for variadic parameters; `SumAny` has an ordinary slice parameter, and the types would still differ."
+      },
+      {
+        "text": "The type switch has no case for `[]int`",
+        "correct": false,
+        "why": "The switch runs at run time, on each element; the refusal came from the compiler, before anything ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcbmg0q6",
+    "version": 1,
+    "section": "before",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compared with writing `SumInts` and `SumFloats`, what does the `SumAny` version cost? Choose every one that applies.",
+    "hint": "Think of the panic, the `%T` line and the `boxed` loop.",
+    "choices": [
+      {
+        "text": "A wrong type is found only when the program runs",
+        "correct": true,
+        "why": "Yes: the `int64` reached the `default` case and panicked."
+      },
+      {
+        "text": "The result is a `float64` whatever went in",
+        "correct": true,
+        "why": "Yes: three `int`s gave `71 float64`."
+      },
+      {
+        "text": "A caller with a `[]int` must copy it into a `[]any` first",
+        "correct": true,
+        "why": "Yes: that is the `boxed` loop, after the compiler refused `SumAny(ages)`."
+      },
+      {
+        "text": "It has to be written again for each new type",
+        "correct": false,
+        "why": "That is the cost of the copies. `SumAny` is written once; a new type means a new `case`, not a new function."
+      }
+    ]
+  },
+  {
+    "id": "ex-dv8anjgc",
+    "version": 1,
+    "section": "before",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each function of the standard library to the way it handles several types.",
+    "hint": "`go doc` showed every one of these signatures.",
+    "pairs": [
+      {
+        "left": "`sort.Ints`",
+        "right": "one copy written for each element type"
+      },
+      {
+        "left": "`sort.Slice`",
+        "right": "takes `any` and finds out at run time"
+      },
+      {
+        "left": "`sort.Sort`",
+        "right": "asks the type for `Len`, `Less` and `Swap`"
+      },
+      {
+        "left": "`slices.Sort`",
+        "right": "one function with type parameters"
+      }
+    ],
+    "right_distractors": [
+      "converts every slice to `[]float64` first"
+    ]
+  },
+  {
+    "id": "ex-xgq952z1",
+    "version": 1,
+    "section": "before",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can no ordinary interface say \"a type you can add with `+`\"?",
+    "hint": "What does an ordinary interface list?",
+    "choices": [
+      {
+        "text": "Interfaces cannot hold numbers, only structs",
+        "correct": false,
+        "why": "An `any` held `3` and `1.5` in `SumAny`; an interface can hold a value of any type."
+      },
+      {
+        "text": "It can: `int` and `float64` already have an `Add` method",
+        "correct": false,
+        "why": "They have no methods at all, and lesson 25 showed you cannot add one to a type from outside your package."
+      },
+      {
+        "text": "It lists methods, and `+` is an operator",
+        "correct": true,
+        "why": "Right. That is the gap `sort.Sort` works around with `Less`, and what a type parameter's list of types fills."
+      },
+      {
+        "text": "Go forbids interface parameters on functions that do arithmetic",
+        "correct": false,
+        "why": "No such rule exists; `SumAny` took `any` values and did arithmetic after a type switch."
+      }
+    ]
+  },
+  {
+    "id": "ex-y390n6d5",
+    "version": 1,
+    "section": "what-they-solve",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a type parameter, such as the `T` in `func Sum[T int | float64](xs []T) T`?",
+    "hint": "The section starts by naming the wrong guess.",
+    "choices": [
+      {
+        "text": "Another way of writing `any`: it takes a value of every type",
+        "correct": false,
+        "why": "That is the usual first guess and the reverse of the truth: `Sum` refused `int64` and `string` at compile time."
+      },
+      {
+        "text": "A type decided at run time from the value passed",
+        "correct": false,
+        "why": "Nothing is decided at run time; the compiler works `T` out from the argument when it builds the call."
+      },
+      {
+        "text": "A name for a type the caller picks, checked at every call",
+        "correct": true,
+        "why": "Right. The list after it says which types it may be, and each call is checked against that list."
+      },
+      {
+        "text": "A conversion, written in brackets",
+        "correct": false,
+        "why": "Conversions are `T(x)`, lesson 10; the brackets declare a parameter, and no value is converted."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc56kpy7",
+    "version": 1,
+    "section": "what-they-solve",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ints := Sum([]int{3, 4, 5})`. What did `%T` print for `ints`?",
+    "hint": "The result is declared as `T`.",
+    "choices": [
+      {
+        "text": "`float64`",
+        "correct": false,
+        "why": "That was `SumAny`, which had to pick one result type for every input."
+      },
+      {
+        "text": "`int`",
+        "correct": true,
+        "why": "Right: `12 int`. `T` was `int` for that call, and the result is a `T`."
+      },
+      {
+        "text": "`T`",
+        "correct": false,
+        "why": "`T` exists only in the source; at the call it stands for a real type, and that is what `%T` prints."
+      },
+      {
+        "text": "`interface {}`",
+        "correct": false,
+        "why": "No interface is involved; the value was never boxed into an `any`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bsgg4760",
+    "version": 1,
+    "section": "what-they-solve",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `func Sum[T int | float64](xs []T) T`, the list `int | float64` is the type parameter's ___.",
+    "hint": "Lesson 31 is about writing them.",
+    "blanks": [
+      {
+        "accept": [
+          "constraint"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dah30fsc",
+    "version": 1,
+    "section": "what-they-solve",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to `Sum([]int64{3, stock})` with `Sum` declared as `[T int | float64]`?",
+    "hint": "The same `int64` made `SumAny` panic.",
+    "choices": [
+      {
+        "text": "It runs and returns a `float64`",
+        "correct": false,
+        "why": "The result is a `T`, and no `T` was found: the call never compiled."
+      },
+      {
+        "text": "Refused: `int64 does not satisfy int | float64`",
+        "correct": true,
+        "why": "Right. The compiler checks each call against the list, so the mistake never reaches a running program."
+      },
+      {
+        "text": "It panics at run time, like `SumAny` did",
+        "correct": false,
+        "why": "That is the failure type parameters remove; this one is found before the program exists."
+      },
+      {
+        "text": "It converts each `int64` to `int` and adds them",
+        "correct": false,
+        "why": "Go converts nothing implicitly, lesson 10; an `int64` is simply not in the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-asc4ww70",
+    "version": 1,
+    "section": "what-they-solve",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague widens the list to `[T int | float64 | string]`. What does `Sum([]string{\"a\", \"b\"})` do now?",
+    "hint": "What does `+` do to two strings?",
+    "choices": [
+      {
+        "text": "Refused: `+` is not defined on strings",
+        "correct": false,
+        "why": "`+` joins strings, so every type in the new list has one and the body still compiles."
+      },
+      {
+        "text": "Compiles, and returns `\"ab\"`",
+        "correct": true,
+        "why": "Right. `total` starts as `\"\"` and `+=` joins; whether that is a sum is exactly what the list decides."
+      },
+      {
+        "text": "Compiles, then panics when it reaches the strings",
+        "correct": false,
+        "why": "Nothing is checked at run time in `Sum`; a call that compiles has already been checked."
+      },
+      {
+        "text": "Returns `0`, because `var total T` starts at zero",
+        "correct": false,
+        "why": "The zero value of a `string` is `\"\"`, not `0`, and the loop then adds to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej02gthm",
+    "version": 1,
+    "section": "what-they-solve",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many type parameters does `func Sort[S ~[]E, E cmp.Ordered](x S)` declare?",
+    "hint": "Count the names in the square brackets, not the parameters in the round ones.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "type parameters"
+  },
+  {
+    "id": "ex-de6gz4b6",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `ShowAll(room, wait)` refused, when `ShowEach(room, wait)` compiled?",
+    "hint": "Read the message: `does not match inferred type Celsius for T`.",
+    "choices": [
+      {
+        "text": "`time.Duration` has no `String` method",
+        "correct": false,
+        "why": "It has one: `ShowEach` printed `1m30s` with it."
+      },
+      {
+        "text": "`T` is one type per call, and the first argument made it `Celsius`",
+        "correct": true,
+        "why": "Right. `wait` is a `time.Duration`, a different type, so it cannot also be the `T` of that call."
+      },
+      {
+        "text": "A variadic parameter may not have a type parameter as its element type, so every such call is refused",
+        "correct": false,
+        "why": "`ShowAll(room, room+1)` compiled and ran with exactly that signature."
+      },
+      {
+        "text": "`fmt.Stringer` cannot be used as a constraint",
+        "correct": false,
+        "why": "It can; any interface can be a constraint, and `ShowAll` compiled once its call had one type."
+      }
+    ]
+  },
+  {
+    "id": "ex-tasvzq1a",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which order of work does the section recommend?",
+    "hint": "What was the evidence in section 02?",
+    "choices": [
+      {
+        "text": "Make every function generic from the start, since a type parameter costs nothing and may help one day",
+        "correct": false,
+        "why": "It costs readability on every line, and a parameter that only ever stands for one type buys nothing back."
+      },
+      {
+        "text": "Take `any` first, and switch to generics once it panics",
+        "correct": false,
+        "why": "That waits for a run-time failure to make a decision the compiler could have made."
+      },
+      {
+        "text": "Write it for one type; go generic when a second copy differs only in types",
+        "correct": true,
+        "why": "Right. The duplication is the evidence, as the `diff` of `SumInts` and `SumFloats` was."
+      },
+      {
+        "text": "Leave generics to the standard library and never write one",
+        "correct": false,
+        "why": "The section says when to write one: containers and algorithms that would otherwise be copied per type."
+      }
+    ]
+  },
+  {
+    "id": "ex-sevfb1m4",
+    "version": 1,
+    "section": "when-not",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are good candidates for a type parameter? Choose every one that applies.",
+    "hint": "Does the code care what the type is, or only what it can do?",
+    "choices": [
+      {
+        "text": "A function that returns the last element of any slice",
+        "correct": true,
+        "why": "Yes: an algorithm whose logic is the same for every element type, with `T` linking the slice to the result."
+      },
+      {
+        "text": "A queue holding values of one type the caller chooses",
+        "correct": true,
+        "why": "Yes: a container, the other case the section names."
+      },
+      {
+        "text": "A function that only calls `Write` on whatever it is given",
+        "correct": false,
+        "why": "That is behaviour: a plain `io.Writer` parameter says it and accepts more callers."
+      },
+      {
+        "text": "A helper that is only ever called with a `map[string]int`",
+        "correct": false,
+        "why": "Every caller uses one type, which is the second sign of a type parameter earning nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-fghvkfyp",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section say about `func Log[T fmt.Stringer](v T)`?",
+    "hint": "How many times does `T` appear in the signature?",
+    "choices": [
+      {
+        "text": "The compiler refuses it: a constraint may not contain a method",
+        "correct": false,
+        "why": "`ShowAll[T fmt.Stringer]` compiled; an interface with methods is an ordinary constraint."
+      },
+      {
+        "text": "It accepts more types than `func Log(v fmt.Stringer)`",
+        "correct": false,
+        "why": "It accepts the same ones, one type per call, which is fewer when there are several values."
+      },
+      {
+        "text": "It checks the type at run time, like `SumAny`",
+        "correct": false,
+        "why": "Constraints are checked at compile time; the run-time check comes back only with a type switch in the body."
+      },
+      {
+        "text": "`T` appears once, so it does the job of `func Log(v fmt.Stringer)`",
+        "correct": true,
+        "why": "Right. A type parameter used once links nothing to anything, and the plain interface reads more easily."
+      }
+    ]
+  },
+  {
+    "id": "ex-ch0p8dek",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of section 02 and section 03 in the order the lesson took them.",
+    "hint": "The evidence comes before the generic function.",
+    "items": [
+      "Write `SumInts` for the one type you have",
+      "A second copy, `SumFloats`, appears",
+      "`diff` shows that only the types differ",
+      "Write `Sum[T int | float64]` once and delete both copies"
+    ]
+  },
+  {
+    "id": "ex-j6yqss89",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`names` is a `[]string`. What happens to `sort.Slice(&names, less)`?",
+    "hint": "What type is the first parameter of `sort.Slice`?",
+    "choices": [
+      {
+        "text": "The compiler refuses it, because a `*[]string` is a pointer to a slice and not a slice",
+        "correct": false,
+        "why": "The parameter is `any`, and a pointer is as good an `any` as 42 was; the compiler has nothing to refuse."
+      },
+      {
+        "text": "It sorts `names` through the pointer",
+        "correct": false,
+        "why": "`sort.Slice` wants the slice itself; its documentation says it panics if `x` is not a slice."
+      },
+      {
+        "text": "It compiles, passes `go vet`, and panics when it runs",
+        "correct": true,
+        "why": "Right. It is the 42 of section 02 in a form somebody would really write, and only running it finds out."
+      },
+      {
+        "text": "`go vet` reports the pointer before it runs",
+        "correct": false,
+        "why": "`go vet` passed `sort.Slice(42, ...)` in section 02, and it passes a pointer the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yk1cn7a",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`slices.Sort` sorts a slice of any element type that satisfies `cmp.___`, the constraint for types that `<` works on.",
+    "hint": "It is the last word of the signature's brackets.",
+    "blanks": [
+      {
+        "accept": [
+          "Ordered"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n7hf9vk2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are `sort.Ints` and `sort.Float64s` still in the standard library?",
+    "hint": "Read the note in `go doc sort.Ints`, and remember lesson 2.",
+    "choices": [
+      {
+        "text": "Code that calls them must keep compiling",
+        "correct": true,
+        "why": "Right. The Go 1 promise keeps them, and their bodies now simply call `slices.Sort`."
+      },
+      {
+        "text": "They run faster than `slices.Sort` on their own types",
+        "correct": false,
+        "why": "They cannot: the note says each one simply calls `slices.Sort`."
+      },
+      {
+        "text": "`slices.Sort` cannot sort a slice of a basic type like `int`",
+        "correct": false,
+        "why": "`~/generics-std` sorted `[]int{41, 7, 23}` with it."
+      },
+      {
+        "text": "Only they put NaN values first when sorting floats",
+        "correct": false,
+        "why": "`go doc slices.Sort` says the same about NaNs, and `Float64s` calls it."
+      }
+    ]
+  }
+]

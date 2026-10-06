@@ -1,0 +1,379 @@
+{
+  "ex-3nxcvz2q": {
+    "prompt": "Dentro de `func sum(nums ...int) int`, qual é o tipo de `nums`?",
+    "hint": "`show` imprimiu com `%T`.",
+    "choices": [
+      {
+        "text": "`int`, guardando um argumento por vez",
+        "why": "A função roda uma vez por chamada, não uma por argumento; todos os argumentos chegam juntos."
+      },
+      {
+        "text": "`[]int`",
+        "why": "Isso. Dentro da função um parâmetro `...T` é sempre uma slice comum de `T`, e `%T` imprimiu `[]int`."
+      },
+      {
+        "text": "`[...]int`, um array do tamanho da chamada",
+        "why": "`[...]` dimensiona um literal de array; um parâmetro variádico é uma slice, e `nums == nil` chegou a dar true em `show()`."
+      },
+      {
+        "text": "Um tipo variádico especial, que precisa ser convertido antes do uso",
+        "why": "Esse tipo não existe: `sum` percorreu `nums` diretamente, como qualquer slice."
+      }
+    ]
+  },
+  "ex-wd38bfnn": {
+    "prompt": "O que `nums` guarda quando `sum()` é chamada sem argumentos?",
+    "hint": "`show()` imprimiu quatro fatos sobre ele.",
+    "choices": [
+      {
+        "text": "Nada: chamar uma função variádica sem argumentos é erro de compilação",
+        "why": "Zero é uma quantidade permitida de argumentos; `sum()` compilou e devolveu 0."
+      },
+      {
+        "text": "Uma slice vazia que não é `nil`",
+        "why": "É o que `sum([]int{}...)` daria; sem argumento nenhum, `show()` imprimiu `nil=true`."
+      },
+      {
+        "text": "Uma slice `nil` de comprimento 0",
+        "why": "Isso: `[]int [] len=0 nil=true`. Percorrê-la não faz nada, então `sum()` dá 0."
+      },
+      {
+        "text": "Uma slice com um zero, `[0]`",
+        "why": "Nenhum elemento é inventado; o comprimento impresso foi 0."
+      }
+    ]
+  },
+  "ex-r75hbbx4": {
+    "prompt": "`scores` é um `[]int`. Para passá-lo a `func sum(nums ...int) int`, escreva `sum(scores___)`.",
+    "hint": "Sem isso, a slice é um argumento só, do tipo errado.",
+    "blanks": [
+      {
+        "accept": [
+          "..."
+        ]
+      }
+    ]
+  },
+  "ex-1r6eyc2c": {
+    "prompt": "`words` é um `[]string`. Por que `fmt.Println(words...)` é recusado, se `Println` recebe `...any`?",
+    "hint": "Que tipo deve ter uma slice passada com `...`?",
+    "choices": [
+      {
+        "text": "`Println` aceita só uma slice por chamada, e `words` conta como várias",
+        "why": "Esse limite não existe; a mensagem diz que os tipos diferem: `[]string` contra `[]any`."
+      },
+      {
+        "text": "Strings não podem ser impressas por um parâmetro variádico do tipo `any`",
+        "why": "`fmt.Println(words[0], words[1])` funciona; cada string vira um `any` por conta própria."
+      },
+      {
+        "text": "`words...` passa a própria slice, e um `[]string` não é um `[]any`",
+        "why": "Isso: `cannot use words (variable of type []string) as []any value`."
+      },
+      {
+        "text": "`...` só funciona com as slices da própria biblioteca padrão",
+        "why": "`sum(scores...)` passou uma slice declarada em `main`; o que importa é o tipo do elemento."
+      }
+    ]
+  },
+  "ex-s8rv2zm9": {
+    "prompt": "`func clamp(vals ...int)` põe 100 em todo elemento acima de 100. Quem chama faz `readings := []int{50, 180}` e depois `clamp(readings...)`. Quanto vale `readings` depois?",
+    "hint": "Com `...`, uma slice nova é montada para a chamada?",
+    "choices": [
+      {
+        "text": "`[50 100]`",
+        "why": "Isso. `readings...` passa a própria slice de quem chama, então escrever em `vals[1]` escreve no array dele, como `double(scores...)` fez."
+      },
+      {
+        "text": "`[50 180]`, já que uma função recebe cópias dos argumentos",
+        "why": "Ela recebe uma cópia das três palavras da slice, e o ponteiro nelas leva ao mesmo array."
+      },
+      {
+        "text": "`[50 180]`, porque Go monta uma slice nova a cada chamada variádica",
+        "why": "Só quando os argumentos são listados um a um: `double(a, b, c)` deixou `a`, `b` e `c` intactos."
+      },
+      {
+        "text": "Não compila: um parâmetro variádico é só de leitura",
+        "why": "Nada o torna só de leitura; `double` escreveu `nums[i] *= 2` e compilou."
+      }
+    ]
+  },
+  "ex-rncgzwbh": {
+    "prompt": "Qual destas declarações o compilador recusa?",
+    "hint": "Onde o `...` pode ficar?",
+    "choices": [
+      {
+        "text": "`func label(unit string, nums ...int) string`",
+        "why": "Válida: o parâmetro variádico é o último, então todo argumento depois do primeiro é um número."
+      },
+      {
+        "text": "`func label(nums ...int, unit string) string`",
+        "why": "Isso: `can only use ... with final parameter`. Nada diria onde `nums` termina."
+      },
+      {
+        "text": "`func label(nums ...int) string`",
+        "why": "Válida: uma função pode ter um parâmetro variádico e nada mais, como `sum`."
+      },
+      {
+        "text": "`func label(unit, sep string, nums ...float64) string`",
+        "why": "Válida: o agrupamento funciona antes de um parâmetro variádico, e o tipo dele pode ser qualquer um."
+      }
+    ]
+  },
+  "ex-y91zwr1c": {
+    "prompt": "`twice := func(n int) int { return 2 * n }`. O que `fmt.Printf(\"%T\\n\", twice)` imprime?",
+    "hint": "Um tipo função é a assinatura sem os nomes.",
+    "choices": [
+      {
+        "text": "`func`",
+        "why": "Todo tipo função é mais específico que isso: o que recebe e o que devolve fazem parte dele."
+      },
+      {
+        "text": "`int`, o tipo do que ela devolve",
+        "why": "Esse é o tipo de `twice(3)`, uma chamada; `twice` sozinha é a função."
+      },
+      {
+        "text": "`func(int) int`",
+        "why": "Isso. Toda função que recebe um `int` e devolve um tem esse tipo, `square` inclusive, e é por isso que as duas cabem em `apply`."
+      },
+      {
+        "text": "`func(n int) int`, com o nome do parâmetro",
+        "why": "Nomes não fazem parte de um tipo função; qualquer função que recebe um `int` e devolve um tem esse tipo."
+      }
+    ]
+  },
+  "ex-gsmn7xw5": {
+    "prompt": "`apply(nums []int, f func(int) int)` é chamada como `apply(nums, square(2))`. O que acontece?",
+    "hint": "O que é `square(2)`: uma função, ou o que ela devolveu?",
+    "choices": [
+      {
+        "text": "`apply` eleva cada elemento ao quadrado, a partir de 2",
+        "why": "`square(2)` já rodou quando `apply` é chamada; o que chega é o resultado, o `int` 4."
+      },
+      {
+        "text": "Não compila: `square(2)` é um `int`",
+        "why": "Isso. Os parênteses chamam a função; para passá-la, escreva `square` sem eles."
+      },
+      {
+        "text": "Compila e todo elemento vira 4",
+        "why": "Go não transforma um valor numa função que o devolve; os tipos não batem, então a chamada é recusada."
+      },
+      {
+        "text": "Compila, e entra em pânico na primeira vez que `apply` chama `f`",
+        "why": "A diferença é pega na compilação, antes de qualquer coisa rodar."
+      }
+    ]
+  },
+  "ex-ck7387ge": {
+    "prompt": "Associe cada trecho de código ao que ele é.",
+    "hint": "Parênteses depois de um nome a chamam.",
+    "pairs": [
+      {
+        "left": "`func(int) int`",
+        "right": "um tipo função"
+      },
+      {
+        "left": "`func(n int) int { return n + 10 }`",
+        "right": "uma função literal"
+      },
+      {
+        "left": "`apply(nums, square)`",
+        "right": "uma função nomeada passada como valor"
+      },
+      {
+        "left": "`square(3)`",
+        "right": "uma chamada, cujo valor é um `int`"
+      }
+    ],
+    "right_distractors": [
+      "um parâmetro variádico"
+    ]
+  },
+  "ex-fng863a4": {
+    "prompt": "`var onDone func()` é declarada e depois chamada com `onDone()`, sem nada atribuído no meio. O que acontece?",
+    "hint": "Qual é o valor zero de um tipo função?",
+    "choices": [
+      {
+        "text": "Nada: chamar uma função `nil` não faz nada",
+        "why": "Algumas linguagens pulam um callback ausente; Go entra em pânico, e `not reached` nunca foi impresso."
+      },
+      {
+        "text": "O compilador recusa a chamada",
+        "why": "Se uma variável guarda uma função só se sabe na execução, então compila."
+      },
+      {
+        "text": "Compila, e a chamada entra em pânico com uma desreferência de ponteiro nil",
+        "why": "Isso: `invalid memory address or nil pointer dereference`, exit status 2. Confira `!= nil` antes."
+      },
+      {
+        "text": "`onDone` devolve o seu valor zero",
+        "why": "`func()` não devolve nada, e não há função ali para rodar."
+      }
+    ]
+  },
+  "ex-ha11wtxq": {
+    "prompt": "Você quer um registro que mapeie cada função de callback para quantas vezes ela rodou, `map[func()]int`. O que o compilador diz?",
+    "hint": "Que valores podem ser comparados com `==`?",
+    "choices": [
+      {
+        "text": "Nada: duas variáveis com a mesma função são iguais",
+        "why": "`f == g` foi recusado mesmo com as duas guardando `square`: funções só se comparam com `nil`."
+      },
+      {
+        "text": "Compila, mas toda busca falha",
+        "why": "A recusa vem antes, na compilação; o próprio tipo do map é inválido."
+      },
+      {
+        "text": "Compila, desde que só funções com nome sejam guardadas, nunca literais",
+        "why": "Com nome ou não, o tipo é `func()`, e a regra é sobre o tipo."
+      },
+      {
+        "text": "Recusa o tipo do map: uma função nunca é uma chave válida",
+        "why": "Isso: `invalid map key type func()`. A regra da lição 14 encontra a desta lição."
+      }
+    ]
+  },
+  "ex-kb0677bt": {
+    "prompt": "`words` é `[]string{\"pear\", \"fig\", \"banana\"}`, ordenada com `slices.SortFunc(words, func(a, b string) int { return cmp.Compare(len(a), len(b)) })`. Ponha as palavras na ordem em que a ordenação as deixa.",
+    "hint": "Negativo quer dizer que `a` vem antes.",
+    "items": [
+      "`fig`",
+      "`pear`",
+      "`banana`"
+    ]
+  },
+  "ex-m3mw3v1z": {
+    "prompt": "`next := counter()` e depois `fmt.Println(next(), next(), next())` imprime `1 2 3`. Por que a contagem sobrevive entre as chamadas?",
+    "hint": "Onde `n` é declarada, e quem ainda se refere a ela?",
+    "choices": [
+      {
+        "text": "`n` é uma variável global compartilhada pelo programa inteiro",
+        "why": "`n` é local de `counter`; um segundo `counter()` criou um segundo `n`, e `other()` começou em 1."
+      },
+      {
+        "text": "A função devolvida mantém `n` existindo após o fim de `counter`",
+        "why": "Isso. Uma closure guarda as variáveis que usa, enquanto o valor de função existir."
+      },
+      {
+        "text": "Go lembra o último resultado de toda função",
+        "why": "Nada disso; `square(3)` dá 9 toda vez. O estado é a variável `n`."
+      },
+      {
+        "text": "`n++` é um contador estático, como em C",
+        "why": "Go não tem variáveis locais estáticas; o estado vive numa variável que a closure guarda."
+      }
+    ]
+  },
+  "ex-rxce86bv": {
+    "prompt": "O que isto imprime?\n\n```go\nx := 10\nf := func() int { return x * 2 }\nx = 5\nfmt.Println(f())\n```",
+    "hint": "`f` guarda `x`, ou o valor que `x` tinha quando `f` foi criada?",
+    "unit": "valor impresso"
+  },
+  "ex-jbvw0brp": {
+    "prompt": "`d1, _ := account()` e depois `_, b2 := account()`. Depois de `d1(50)`, o que `b2()` devolve?",
+    "hint": "Quantas variáveis `total` existem agora?",
+    "choices": [
+      {
+        "text": "50, porque `deposit` e `balance` sempre compartilham `total`",
+        "why": "Compartilham quando vêm da mesma chamada. Duas chamadas executaram `total := 0` duas vezes."
+      },
+      {
+        "text": "0: nada chegou ao segundo `total`",
+        "why": "Isso. Cada chamada a `account` cria um `total` novo; `d1` mudou só o primeiro, e `b2` lê o segundo."
+      },
+      {
+        "text": "Não compila: `_` não pode receber uma função",
+        "why": "`_` descarta um valor de qualquer tipo, funções inclusive."
+      },
+      {
+        "text": "Entra em pânico, porque o primeiro `balance` foi descartado",
+        "why": "Descartar uma closure não faz nada à outra; `b2` é uma função que funciona sobre o seu próprio `total`."
+      }
+    ]
+  },
+  "ex-jsfrz3p6": {
+    "prompt": "Com `go 1.21` no `go.mod`, três closures criadas em `for _, name := range` imprimem `hello, caio` três vezes. Qual é a causa?",
+    "hint": "Conte as variáveis chamadas `name`.",
+    "choices": [
+      {
+        "text": "As closures são chamadas antes de o loop começar",
+        "why": "Foram chamadas depois que ele terminou, que é justamente quando a única variável tinha o último valor."
+      },
+      {
+        "text": "`range` sobre uma slice de strings devolve o último elemento toda vez",
+        "why": "O loop viu ana, bia e caio; guardou todos na mesma variável, um depois do outro."
+      },
+      {
+        "text": "O loop tem um só `name`, as três closures o guardam, e ele termina valendo \"caio\"",
+        "why": "Isso. Sob `go 1.21` a variável do loop é declarada uma vez e reatribuída a cada volta."
+      },
+      {
+        "text": "Um bug do compilador do Go 1.21, corrigido no 1.22",
+        "why": "Era o comportamento definido da linguagem, e o go1.27.1 ainda o produz num módulo em `go 1.21`."
+      }
+    ]
+  },
+  "ex-bve2v6ta": {
+    "prompt": "Com a linha `go` em 1.22 ou mais, cada volta de um loop `for` declara uma variável de loop ___, então `x := x` no corpo deixa de ser necessário.",
+    "hint": "O contrário de uma variável reatribuída a cada volta.",
+    "blanks": [
+      {
+        "accept": [
+          "nova",
+          "própria",
+          "separada",
+          "diferente"
+        ]
+      }
+    ]
+  },
+  "ex-seg25srt": {
+    "prompt": "O `go.mod` de um módulo diz `go 1.20`. O que `fs[0](10)` devolve?\n\n```go\nvar fs []func(int) int\nfor i := 1; i <= 3; i++ {\n\tfs = append(fs, func(n int) int { return n * i })\n}\n```",
+    "hint": "Antes do 1.22 há um só `i`. Que valor ele tem quando o loop termina?",
+    "unit": "valor devolvido"
+  },
+  "ex-cj0nj2me": {
+    "prompt": "Quais destas afirmações sobre closures são verdadeiras? Escolha todas as que forem.",
+    "hint": "Pense em `counter`, `account` e `show`.",
+    "choices": [
+      {
+        "text": "Uma closure vê mudanças feitas numa variável capturada depois que a closure foi criada",
+        "why": "Verdadeira: `show` imprimiu `x is 2` embora tenha sido criada quando `x` valia 1."
+      },
+      {
+        "text": "Duas closures criadas numa mesma chamada podem compartilhar uma variável",
+        "why": "Verdadeira: `deposit` e `balance` de um mesmo `account()` compartilham `total`."
+      },
+      {
+        "text": "Uma variável capturada é liberada quando a função que a declarou retorna",
+        "why": "Falsa: `n` sobreviveu a `counter` e continuou contando; a lição 24 diz onde ela mora."
+      },
+      {
+        "text": "Cada chamada a uma closure recomeça as variáveis capturadas dos valores iniciais",
+        "why": "Falsa: `next()` deu 1, 2, 3, então o estado passou de uma chamada para a outra."
+      }
+    ]
+  },
+  "ex-e50pzbgr": {
+    "prompt": "`func logf(prefix string, args ...any)` contém `fmt.Println(prefix, args...)`. O que o compilador diz?",
+    "hint": "`args` já é um `[]any`. O que mais há nessa lista de argumentos?",
+    "choices": [
+      {
+        "text": "Nada: `args` é um `[]any`, exatamente o que `...any` quer",
+        "why": "O tipo está certo, mas `args...` precisa ser a parte variádica inteira, e `prefix` está na frente dela."
+      },
+      {
+        "text": "Recusa: `args...` não pode vir depois de um valor listado",
+        "why": "Isso: `too many arguments in call to fmt.Println`, `have (string, []any...)`. A slice é passada como está, então nada mais pode se juntar a ela."
+      },
+      {
+        "text": "Compila e imprime `prefix` seguido da slice entre colchetes",
+        "why": "Isso seria `fmt.Println(prefix, args)`, sem os pontos, que compila."
+      },
+      {
+        "text": "Recusa a declaração `args ...any`, já que `any` não pode ser variádico",
+        "why": "O próprio `Println` é declarado `a ...any`; qualquer tipo pode vir depois dos pontos."
+      }
+    ]
+  }
+}

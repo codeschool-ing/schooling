@@ -1,0 +1,568 @@
+[
+  {
+    "id": "ex-8y798g8d",
+    "version": 1,
+    "section": "init",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `go mod init example.com/accents` ask of the network?",
+    "hint": "Section 02 says what the path is checked for.",
+    "choices": [
+      {
+        "text": "It asks `example.com` whether the name is free",
+        "correct": false,
+        "why": "Nothing visits the path; `example.com` is reserved for examples and answers nobody's go command."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The path is a name, checked for its shape; it becomes an address only when somebody downloads the module."
+      },
+      {
+        "text": "It reserves the path on the module proxy",
+        "correct": false,
+        "why": "The proxy serves published modules; nothing is registered there by `init`."
+      },
+      {
+        "text": "It records the new module in the checksum database",
+        "correct": false,
+        "why": "The database holds hashes of versions somebody downloaded; a module nobody has fetched is not in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s3b740y",
+    "version": 1,
+    "section": "init",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague names a module `tools`, and another module imports its package `tools/lint`. What does `go build` in the second module do?",
+    "hint": "Where did the go command look for `hello/greet`?",
+    "choices": [
+      {
+        "text": "Downloads `tools` from the module proxy and builds",
+        "correct": false,
+        "why": "A first element with no dot is never sent to the proxy at all."
+      },
+      {
+        "text": "Fails: `tools/lint` is not in the standard library",
+        "correct": true,
+        "why": "Right. A path whose first element has no dot is looked up in `/usr/local/go/src`, as `hello/greet` was."
+      },
+      {
+        "text": "Builds, because any module path of the right shape can be imported",
+        "correct": false,
+        "why": "The right shape is enough for `init`, not for an import from another module."
+      },
+      {
+        "text": "Asks for `go mod tidy`, which then adds a `require` line",
+        "correct": false,
+        "why": "There is no module to require: the go command treats the path as part of the standard library."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny9e870r",
+    "version": 1,
+    "section": "init",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Docker's latest version printed as `v28.5.2+___`, because its repository is past v1 and has no `go.mod`.",
+    "hint": "A word that says the version carries none of a module's promises.",
+    "blanks": [
+      {
+        "accept": [
+          "incompatible"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sdsaed3z",
+    "version": 1,
+    "section": "init",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You will publish a library at `github.com/ana/textkit` next month, and the repository does not exist yet. What should `go mod init` get today?",
+    "hint": "What does renaming a module cost later?",
+    "choices": [
+      {
+        "text": "An `example.com` path, renamed on publishing day",
+        "correct": false,
+        "why": "Renaming means editing every import of the module's packages; choosing the real path now costs nothing."
+      },
+      {
+        "text": "A short word with no dot, quicker to type",
+        "correct": false,
+        "why": "A first element with no dot is read as the standard library, so nobody else could import it."
+      },
+      {
+        "text": "The address it will be published at",
+        "correct": true,
+        "why": "Right. `init` checks only the shape, and the path is where the go command will look once it is published."
+      },
+      {
+        "text": "The full URL, with `https://` in front",
+        "correct": false,
+        "why": "A module path has no scheme; `init` refuses characters a path may not contain, as it refused the space."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cj9f6yz",
+    "version": 1,
+    "section": "init",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1 printed `github.com/prometheus/prometheus v0.315.0`. Which of these are true? Choose all that apply.",
+    "hint": "Read the version as MAJOR.MINOR.PATCH.",
+    "choices": [
+      {
+        "text": "Its major version is 0",
+        "correct": true,
+        "why": "Yes: `v0.315.0` is major 0, minor 315, patch 0."
+      },
+      {
+        "text": "It promises no compatibility from one release to the next",
+        "correct": true,
+        "why": "Yes. Major 0 makes no compatibility promise at all."
+      },
+      {
+        "text": "Its path should end in `/v0`",
+        "correct": false,
+        "why": "The suffix starts at major 2; v0 and v1 paths carry none."
+      },
+      {
+        "text": "It is marked `+incompatible`",
+        "correct": false,
+        "why": "That mark is for repositories tagged v2 or above with no `go.mod`; this version is major 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-0eb38ps3",
+    "version": 1,
+    "section": "tidy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a Go module first say that it depends on `golang.org/x/text`?",
+    "hint": "What did `go mod tidy` read before it wrote anything?",
+    "choices": [
+      {
+        "text": "In `go.sum`, which lists every dependency's hash",
+        "correct": false,
+        "why": "`go.sum` is written after the dependency is found; it records bytes, not intentions."
+      },
+      {
+        "text": "In an `import` line of a `.go` file",
+        "correct": true,
+        "why": "Right. The import is the declaration, and `tidy` writes `go.mod` to match it."
+      },
+      {
+        "text": "In a manifest you edit before writing the import",
+        "correct": false,
+        "why": "That is the habit of other package managers; `go.mod` was written by `tidy` from the import."
+      },
+      {
+        "text": "In `go.work`, beside the module",
+        "correct": false,
+        "why": "A workspace says how local modules are arranged on disk; it requires nothing from the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-715qbya9",
+    "version": 1,
+    "section": "tidy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go.sum` has two lines for `golang.org/x/text v0.42.0`. What does the one written `v0.42.0/go.mod h1:...` hash?",
+    "hint": "The other line covers the module's files.",
+    "choices": [
+      {
+        "text": "Your own module's `go.mod`",
+        "correct": false,
+        "why": "Your `go.mod` is not downloaded, so there is nothing to compare it with."
+      },
+      {
+        "text": "The same zip again, with a stronger method",
+        "correct": false,
+        "why": "Both lines say `h1:`, the same method; they cover different files."
+      },
+      {
+        "text": "The `go.mod` file of `golang.org/x/text` alone",
+        "correct": true,
+        "why": "Right. The first line hashes the module's files, the second only its `go.mod`."
+      },
+      {
+        "text": "The list of versions the proxy offered for the module",
+        "correct": false,
+        "why": "A list changes every release; `go.sum` holds hashes that never change for a version."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfkq25vw",
+    "version": 1,
+    "section": "tidy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the go command ask `sum.golang.org` about a module version?",
+    "hint": "`modfetch/fetch.go` decides it.",
+    "choices": [
+      {
+        "text": "On every build, before compiling any dependency",
+        "correct": false,
+        "why": "After the first time, builds compare the cache with `go.sum` and ask no one."
+      },
+      {
+        "text": "When it meets a hash that `go.sum` does not have yet",
+        "correct": true,
+        "why": "Right. Once the hash is in `go.sum`, `go.sum` is the reference."
+      },
+      {
+        "text": "Only when you run `go mod verify`",
+        "correct": false,
+        "why": "`verify` checks the cache against what was downloaded; the database is consulted while downloading."
+      },
+      {
+        "text": "Never: it exists for people to query with `curl`",
+        "correct": false,
+        "why": "`go env GOSUMDB` named it because the go command uses it; `curl` only showed what it answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c3h22ea",
+    "version": 1,
+    "section": "tidy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate deletes `go.sum` from the repository to reduce noise. What happens when the next person clones it and runs `go build`?",
+    "hint": "The build needs a hash for every module it compiles.",
+    "choices": [
+      {
+        "text": "It builds as before, since `go.mod` still names the versions",
+        "correct": false,
+        "why": "A version names which release, not which bytes; the build refuses a module with no hash."
+      },
+      {
+        "text": "It stops at `missing go.sum entry` until somebody runs `go mod tidy`",
+        "correct": true,
+        "why": "Right, and that `tidy` takes the hashes afresh from whatever is downloaded that day, checked only by the database."
+      },
+      {
+        "text": "It prints `SECURITY ERROR`, as when a hash was changed",
+        "correct": false,
+        "why": "`SECURITY ERROR` needs two hashes that disagree; with no `go.sum` there is only one."
+      },
+      {
+        "text": "It downloads the newest versions, since nothing pins them",
+        "correct": false,
+        "why": "`go.mod` pins the versions; `go.sum` only pins their bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-qs1tsryq",
+    "version": 1,
+    "section": "tidy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your module requires `example.com/a v1.2.0`. Another module you require needs `example.com/a v1.4.0`, and the latest release of `a` is v1.6.0. Which version does the build use?",
+    "hint": "The highest of the stated minimums.",
+    "choices": [
+      {
+        "text": "v1.6.0, the latest",
+        "correct": false,
+        "why": "Minimal version selection never picks a version nobody asked for; `x/tools` stayed at v0.49.0 with v0.51.0 out."
+      },
+      {
+        "text": "v1.2.0, because your own `go.mod` wins",
+        "correct": false,
+        "why": "The other module does not work below v1.4.0, and the rule takes every module's minimum into account."
+      },
+      {
+        "text": "v1.4.0",
+        "correct": true,
+        "why": "Right. Each module states the lowest version it works with, and the go command takes the highest of those."
+      },
+      {
+        "text": "None: the build stops and asks you to choose one of the two",
+        "correct": false,
+        "why": "Two minimums are not a conflict; the higher one satisfies both modules."
+      }
+    ]
+  },
+  {
+    "id": "ex-427s1q48",
+    "version": 1,
+    "section": "tidy",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what the first `go mod tidy` did for `golang.org/x/text`.",
+    "hint": "The figure in section 03 draws it.",
+    "items": [
+      "Read `main.go` and found an import no module provides",
+      "Asked the proxy which module provides the package, and its latest version",
+      "Hashed the downloaded files",
+      "Checked the hash against the checksum database",
+      "Wrote the `require` line and `go.sum`"
+    ]
+  },
+  {
+    "id": "ex-09ce3tj3",
+    "version": 1,
+    "section": "tidy",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go mod tidy -___` prints the changes `tidy` would make, changes nothing, and exits 1 if there are any.",
+    "hint": "The flag's name is the name of the format it prints.",
+    "blanks": [
+      {
+        "accept": [
+          "diff"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ehabr3rz",
+    "version": 1,
+    "section": "vendor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `go mod vendor` copy into `vendor/`?",
+    "hint": "Count the files `find` listed.",
+    "choices": [
+      {
+        "text": "The whole of `golang.org/x/text`, every package in it",
+        "correct": false,
+        "why": "The module has 487 files; `vendor` got 14."
+      },
+      {
+        "text": "The packages the build needs, with the licence files",
+        "correct": true,
+        "why": "Right: `norm`, the `transform` it imports, `LICENSE` and `PATENTS`, and an index, `modules.txt`."
+      },
+      {
+        "text": "A link to the module cache",
+        "correct": false,
+        "why": "The point of `vendor` is to build with no cache at all; it holds real files."
+      },
+      {
+        "text": "The hashes from `go.sum`, to check the cache against",
+        "correct": false,
+        "why": "The hashes stay in `go.sum`; `vendor` holds source code."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1c2zkgv",
+    "version": 1,
+    "section": "vendor",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go mod vendor` copied 14 files of a module that has 487. About what percentage of the module's files is that? Give a whole number.",
+    "hint": "Divide 14 by 487 and multiply by 100.",
+    "value": 3,
+    "tolerance": 1,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-tcxyebkz",
+    "version": 1,
+    "section": "vendor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/mods-vendor`, `go list -m all` failed with `can't compute 'all' using the vendor directory`. Why?",
+    "hint": "What does `vendor` hold, and what does `all` ask about?",
+    "choices": [
+      {
+        "text": "The vendor directory was out of date with `go.mod`",
+        "correct": false,
+        "why": "That failure is `inconsistent vendoring`, and it came later, after `go mod edit`."
+      },
+      {
+        "text": "`GOPROXY=off` was still in effect from the build before",
+        "correct": false,
+        "why": "A variable set in front of one command lasts for that command only."
+      },
+      {
+        "text": "The `vendor` copy holds packages, not the module graph",
+        "correct": true,
+        "why": "Right. The graph of section 03 is not in it, and `-mod=mod` reads the module cache instead."
+      },
+      {
+        "text": "`go list` cannot read modules once they are vendored",
+        "correct": false,
+        "why": "`go list -f \"{{.Dir}}\"` worked a line earlier and pointed into `vendor`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpjeh3qv",
+    "version": 1,
+    "section": "vendor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A build machine has no network and an empty module cache. Which module will `go build` compile there with no flags?",
+    "hint": "What did `GOPROXY=off GOMODCACHE=/nowhere` prove?",
+    "choices": [
+      {
+        "text": "One with `go.mod` and `go.sum` committed",
+        "correct": false,
+        "why": "`go.sum` checks bytes it must still fetch; with no network and no cache there is nothing to check."
+      },
+      {
+        "text": "One with an up-to-date `vendor` and a `go` line of 1.14 or later",
+        "correct": true,
+        "why": "Right. The build reads `vendor` by itself, and `~/mods-vendor` built with downloads forbidden."
+      },
+      {
+        "text": "One whose dependencies are recorded in a `go.work` file",
+        "correct": false,
+        "why": "A workspace points at local module directories; it does not bring a downloaded dependency along."
+      },
+      {
+        "text": "Any module, as long as `-mod=mod` is set in `GOFLAGS`",
+        "correct": false,
+        "why": "`-mod=mod` is the setting that ignores `vendor` and asks for the module cache, which is empty here."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z7ak0dd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each command to what it did in this lesson.",
+    "hint": "One command per section, and one more from section 03.",
+    "pairs": [
+      {
+        "left": "`go mod init`",
+        "right": "Wrote a `go.mod` with a `module` and a `go` line"
+      },
+      {
+        "left": "`go mod tidy`",
+        "right": "Made `go.mod` and `go.sum` match the imports"
+      },
+      {
+        "left": "`go mod vendor`",
+        "right": "Copied the needed packages into the module"
+      },
+      {
+        "left": "`go mod verify`",
+        "right": "Checked that the cache had not changed since the download"
+      }
+    ],
+    "right_distractors": [
+      "Upgraded every dependency to its latest release"
+    ]
+  },
+  {
+    "id": "ex-zq2jhwm2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana commits `~/mods-accents` to a repository. Which belong in the commit? Choose all that apply.",
+    "hint": "Which files would the next person's build need?",
+    "choices": [
+      {
+        "text": "`go.mod`",
+        "correct": true,
+        "why": "Yes: it names the module and the versions it requires."
+      },
+      {
+        "text": "`go.sum`",
+        "correct": true,
+        "why": "Yes. Without it the next build stops at `missing go.sum entry`, and the hashes have to be taken again."
+      },
+      {
+        "text": "`~/go/pkg/mod/golang.org/x/text@v0.42.0`",
+        "correct": false,
+        "why": "That is the module cache, outside the module and shared by every module on the machine."
+      },
+      {
+        "text": "The binary `go build` left beside `main.go`",
+        "correct": false,
+        "why": "A binary is rebuilt from the source; the repository holds what it is built from."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0whmfyd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A vendored module's requirement moved from v0.42.0 to v0.41.0, and `go build` now reports `inconsistent vendoring`. What fixes it?",
+    "hint": "The new version needs hashes first, then a copy.",
+    "choices": [
+      {
+        "text": "Deleting `vendor/modules.txt` so the check has nothing to compare",
+        "correct": false,
+        "why": "Without the index the go command cannot tell what `vendor` holds, and the copy is still of v0.42.0."
+      },
+      {
+        "text": "`go mod tidy` first, then `go mod vendor` again",
+        "correct": true,
+        "why": "Right: `tidy` adds the new version's lines to `go.sum`, and `vendor` copies it."
+      },
+      {
+        "text": "Editing the version in `modules.txt` by hand",
+        "correct": false,
+        "why": "The index would then describe v0.41.0 while the files beside it are still v0.42.0."
+      },
+      {
+        "text": "Building with `-mod=vendor` to force the copy to be used",
+        "correct": false,
+        "why": "The vendor directory was already in use; that is why the mismatch was found."
+      }
+    ]
+  },
+  {
+    "id": "ex-1x7s92hr",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The rule that picks the highest of the versions each module asks for, and nothing newer, is minimal version ___.",
+    "hint": "The English name has three words.",
+    "blanks": [
+      {
+        "accept": [
+          "selection"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
