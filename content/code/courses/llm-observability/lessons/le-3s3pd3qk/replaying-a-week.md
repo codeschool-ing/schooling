@@ -33,7 +33,7 @@ lesson 5 is about what those reactions look like in the data.
       "note": "One customer: ask, maybe rate, maybe ask again in other words, maybe ask for a person. The generator is seeded with the request's id, so a rerun decides the same way."
     },
     {
-      "code": "telemetry.setup(a.spans)\nrows = [r for r in map(json.loads, open(a.traffic)) if a.since <= r[\"at\"] < a.until]\nwith ThreadPoolExecutor(a.workers) as pool:\n    list(pool.map(person, rows))\nprint(f\"replayed {len(rows)} requests from {a.traffic}: {counts['requests']} asked, \"\n      f\"{counts['errors']} failed, {counts['feedback']} feedback events\")",
+      "code": "telemetry.setup(a.spans, processors=[getattr(importlib.import_module(m), c)() for m, c in\n                                     (x.split(\":\") for x in a.processor)])\nrows = [r for r in map(json.loads, open(a.traffic)) if a.since <= r[\"at\"] < a.until]\nwith ThreadPoolExecutor(a.workers) as pool:\n    list(pool.map(person, rows))\nprint(f\"replayed {len(rows)} requests from {a.traffic}: {counts['requests']} asked, \"\n      f\"{counts['errors']} failed, {counts['feedback']} feedback events\")",
       "note": "Eight at a time, because a week played one request after another would take an hour."
     }
   ]

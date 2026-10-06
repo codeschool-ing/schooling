@@ -1,6 +1,6 @@
 """replay.py: a week of data/traffic.jsonl through the assistant, in a few minutes.
 
-    python replay.py [--from 2026-09-28] [--to 2026-10-05] [--workers 8]
+    python replay.py [--from 2026-09-28] [--to 2026-10-05] [--workers 8] [--processor MODULE:CLASS]
 
 Each request runs for real: the embedding, the search, the streamed reply, all
 measured. What is simulated is the calendar and the people. The calendar:
@@ -23,6 +23,7 @@ Feedback is appended to feedback.jsonl, keyed by the trace id of the reply it
 is about.
 """
 import argparse
+import importlib
 import json
 import random
 import threading
@@ -38,6 +39,7 @@ p.add_argument("--from", dest="since", default="0000")
 p.add_argument("--to", dest="until", default="9999")
 p.add_argument("--workers", type=int, default=8)
 p.add_argument("--spans", default="spans.jsonl")
+p.add_argument("--processor", action="append", default=[], help="MODULE:CLASS, a span processor to add")
 a = p.parse_args()
 
 TOPICS = json.load(open("data/topics.json"))
@@ -99,7 +101,8 @@ def person(row):
                kind="escalate", value="asked for a person")
 
 
-telemetry.setup(a.spans)
+telemetry.setup(a.spans, processors=[getattr(importlib.import_module(m), c)() for m, c in
+                                     (x.split(":") for x in a.processor)])
 rows = [r for r in map(json.loads, open(a.traffic)) if a.since <= r["at"] < a.until]
 with ThreadPoolExecutor(a.workers) as pool:
     list(pool.map(person, rows))

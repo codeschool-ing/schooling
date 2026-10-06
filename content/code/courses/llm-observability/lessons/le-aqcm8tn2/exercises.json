@@ -1,0 +1,692 @@
+[
+  {
+    "id": "ex-tr0ze6zz",
+    "version": 1,
+    "section": "what-these-tools-add",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an LLM observability platform know that a general tracing backend does not?",
+    "choices": [
+      {
+        "text": "How long each span took",
+        "correct": false,
+        "why": "Every tracing backend knows that."
+      },
+      {
+        "text": "Which spans belong to which trace",
+        "correct": false,
+        "why": "That is the definition of a trace, known to all of them."
+      },
+      {
+        "text": "What a model call is",
+        "correct": true,
+        "why": "Right: its prompt, reply, tokens and price, and around it users, sessions, scores, datasets and prompts."
+      },
+      {
+        "text": "Whether a span ended in error",
+        "correct": false,
+        "why": "Status is part of every span."
+      }
+    ]
+  },
+  {
+    "id": "ex-2sqa896p",
+    "version": 1,
+    "section": "what-these-tools-add",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A search span with no input is unreadable in tree.py. What happens to it in Langfuse?",
+    "choices": [
+      {
+        "text": "Langfuse fills in the input from the prompt",
+        "correct": false,
+        "why": "It shows what it was given; nothing more."
+      },
+      {
+        "text": "Langfuse refuses spans without an input attribute",
+        "correct": false,
+        "why": "It accepted every span the assistant sent."
+      },
+      {
+        "text": "It is merged into the generation that follows it",
+        "correct": false,
+        "why": "Observations stay separate."
+      },
+      {
+        "text": "It is just as unreadable, on a nicer screen",
+        "correct": true,
+        "why": "Right. Deciding what to record is the application's work."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5x1d248",
+    "version": 1,
+    "section": "langfuse-in-the-lab",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Langfuse container to what it holds or does.",
+    "pairs": [
+      {
+        "left": "clickhouse",
+        "right": "traces, observations and scores"
+      },
+      {
+        "left": "postgres",
+        "right": "projects, keys, model prices"
+      },
+      {
+        "left": "redis",
+        "right": "the queue between web and worker"
+      },
+      {
+        "left": "minio",
+        "right": "every batch, as it arrived"
+      }
+    ],
+    "right_distractors": [
+      "the model's weights"
+    ]
+  },
+  {
+    "id": "ex-rrsxazxc",
+    "version": 1,
+    "section": "langfuse-in-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the captures wait twenty seconds after each replay before asking Langfuse's API?",
+    "choices": [
+      {
+        "text": "The worker files spans later",
+        "correct": true,
+        "why": "Right: they are queued, then filed, then visible. Sent now is not in the API now."
+      },
+      {
+        "text": "Because Langfuse limits each project to one request every twenty seconds",
+        "correct": false,
+        "why": "There is no such limit; the API answered at once."
+      },
+      {
+        "text": "Because the replay keeps running in the background",
+        "correct": false,
+        "why": "replay.py finishes before the prompt returns."
+      },
+      {
+        "text": "Because ClickHouse restarts after every batch",
+        "correct": false,
+        "why": "It stays up throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8txdqmf",
+    "version": 1,
+    "section": "langfuse-in-the-lab",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A small team with no one to run databases must keep customer text inside the company. What follows from this lesson?",
+    "choices": [
+      {
+        "text": "Use a hosted service, since running six containers is too much",
+        "correct": false,
+        "why": "Data comes first: hosted means the text leaves."
+      },
+      {
+        "text": "Self-host, and accept that running it is now somebody's job",
+        "correct": true,
+        "why": "Right. The data question settles it; the operating work has to be found."
+      },
+      {
+        "text": "Stop tracing",
+        "correct": false,
+        "why": "That throws away everything lessons 1 to 5 built."
+      },
+      {
+        "text": "Send only the token counts to a hosted service and keep nothing else",
+        "correct": false,
+        "why": "Then the text needed for debugging is kept nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-08z4mg6p",
+    "version": 1,
+    "section": "sending-spans",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the assistant need to start sending its spans to Langfuse?",
+    "choices": [
+      {
+        "text": "The Langfuse SDK in every function",
+        "correct": false,
+        "why": "No code changed."
+      },
+      {
+        "text": "A rewrite of its spans in Langfuse's format",
+        "correct": false,
+        "why": "Langfuse reads OpenTelemetry directly."
+      },
+      {
+        "text": "Two environment variables",
+        "correct": true,
+        "why": "Right: the OTLP endpoint and its header. telemetry.py adds the exporter when the endpoint is set."
+      },
+      {
+        "text": "A new exporter written for the course",
+        "correct": false,
+        "why": "It is the SDK's own OTLP exporter."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjk3nzzc",
+    "version": 1,
+    "section": "sending-spans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Langfuse classify the root span ask as a GENERATION?",
+    "choices": [
+      {
+        "text": "Because it was the longest span",
+        "correct": false,
+        "why": "Duration plays no part in the classification."
+      },
+      {
+        "text": "Because it is the root",
+        "correct": false,
+        "why": "Roots are spans unless something says otherwise."
+      },
+      {
+        "text": "Because Langfuse treats every trace as one generation",
+        "correct": false,
+        "why": "It listed embed and search as other types."
+      },
+      {
+        "text": "Because it carries gen_ai.request.model",
+        "correct": true,
+        "why": "Right. A span with a model on it looks like a model call to a tool reading the convention literally."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnvbvtdd",
+    "version": 1,
+    "section": "sending-spans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Langfuse found the session but not the user. Why?",
+    "choices": [
+      {
+        "text": "The pseudonym was encrypted",
+        "correct": false,
+        "why": "It was a plain value; the name was the problem."
+      },
+      {
+        "text": "session.id is a name it reads; user.hash is not",
+        "correct": true,
+        "why": "Right. Unknown names are kept as metadata and used for nothing."
+      },
+      {
+        "text": "The replay had no users",
+        "correct": false,
+        "why": "Every request carries a user."
+      },
+      {
+        "text": "Users need a Langfuse account each",
+        "correct": false,
+        "why": "A trace's user is just a value."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1z7w5eq",
+    "version": 1,
+    "section": "sending-spans",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Langfuse shows times in UTC. A trace at 03:03 on its screen happened at what hour in São Paulo? Give the hour, 0 to 23.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "h"
+  },
+  {
+    "id": "ex-ta3pe6jg",
+    "version": 1,
+    "section": "speaking-its-language",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are Langfuse's names added by a processor at the edge rather than written by assistant.py?",
+    "choices": [
+      {
+        "text": "They are one tool's names",
+        "correct": true,
+        "why": "Right: noise anywhere else. A small adapter keeps the choice of tool reversible."
+      },
+      {
+        "text": "Because assistant.py cannot set attributes after it has started",
+        "correct": false,
+        "why": "It sets app.reply at the end of every request."
+      },
+      {
+        "text": "Because processors run faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Because Langfuse forbids them in application code",
+        "correct": false,
+        "why": "It documents them for exactly that use."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4ehjsq2",
+    "version": 1,
+    "section": "speaking-its-language",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why could the processor copy the question into langfuse.trace.input but not the reply into the output?",
+    "choices": [
+      {
+        "text": "The reply is too long for an attribute",
+        "correct": false,
+        "why": "It already sits in app.reply."
+      },
+      {
+        "text": "The reply comes at the end",
+        "correct": true,
+        "why": "Right. on_start sees what the span was created with, and at the end the span is read-only in the Python SDK."
+      },
+      {
+        "text": "Langfuse ignores outputs from OpenTelemetry",
+        "correct": false,
+        "why": "It reads langfuse.trace.output when present."
+      },
+      {
+        "text": "The reply is redacted",
+        "correct": false,
+        "why": "Redaction changes text; it does not prevent copying."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkqw5ey1",
+    "version": 1,
+    "section": "prices-and-scores",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Saturday's traces still cost 0 after the prices were added. Why?",
+    "choices": [
+      {
+        "text": "Saturday's traces had no generations",
+        "correct": false,
+        "why": "Most of them called the model."
+      },
+      {
+        "text": "The Saturday price was zero in prices.json",
+        "correct": false,
+        "why": "It was 1.50 and 6.00."
+      },
+      {
+        "text": "Weekend traffic is free",
+        "correct": false,
+        "why": "No such rule exists anywhere in the lab."
+      },
+      {
+        "text": "Langfuse prices a generation when it is received",
+        "correct": true,
+        "why": "Right. Adding a price later does not reprice what is stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-6k0b3ymt",
+    "version": 1,
+    "section": "prices-and-scores",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Langfuse's total for Friday was 0.101728 and costs.py's 0.10177554. What was the difference?",
+    "choices": [
+      {
+        "text": "The embeddings, which Langfuse had no price for",
+        "correct": true,
+        "why": "Right. The difference names what one of the two was missing."
+      },
+      {
+        "text": "Rounding in Langfuse's floating point",
+        "correct": false,
+        "why": "Rounding does not produce five-millionths of a dollar on this many requests."
+      },
+      {
+        "text": "Saturday's traces leaking into Friday",
+        "correct": false,
+        "why": "Saturday's cost 0 in Langfuse and were not in spans.jsonl."
+      },
+      {
+        "text": "The price cut not being applied",
+        "correct": false,
+        "why": "Both systems applied the October price."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgxttcnz",
+    "version": 1,
+    "section": "prices-and-scores",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why could the thumbs be sent as scores with a simple loop?",
+    "choices": [
+      {
+        "text": "Langfuse matches them to traces by time",
+        "correct": false,
+        "why": "It matches by the trace id it is given."
+      },
+      {
+        "text": "The scores were attached to the sessions only",
+        "correct": false,
+        "why": "They were attached to traces."
+      },
+      {
+        "text": "They already had the trace id",
+        "correct": true,
+        "why": "Right, and OpenTelemetry's trace id is Langfuse's. Joined by id from the start."
+      },
+      {
+        "text": "Thumbs are a built-in Langfuse feature that needs no ids",
+        "correct": false,
+        "why": "Every score names what it is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk2n7jvx",
+    "version": 1,
+    "section": "prices-and-scores",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A value attached to a trace in Langfuse, such as a thumb or a judge's verdict, is called a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "score"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8skhxmxc",
+    "version": 1,
+    "section": "langsmith",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was LangSmith's SDK pointed at a recorder rather than at LangSmith?",
+    "choices": [
+      {
+        "text": "The SDK cannot talk to LangSmith from Python",
+        "correct": false,
+        "why": "It is a Python SDK made for that."
+      },
+      {
+        "text": "The service is hosted",
+        "correct": true,
+        "why": "Right, and self-hosting is for enterprise customers. What the recorder keeps is exactly what would have left."
+      },
+      {
+        "text": "The recorder is faster",
+        "correct": false,
+        "why": "Speed was never the reason."
+      },
+      {
+        "text": "LangSmith only accepts LangChain programs",
+        "correct": false,
+        "why": "@traceable works on any function."
+      }
+    ]
+  },
+  {
+    "id": "ex-yaben2zm",
+    "version": 1,
+    "section": "langsmith",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the LangSmith SDK send without redaction? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "The customer's e-mail address, in the inputs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The model's whole reply",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The environment variables that configured it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The OpenAI API key",
+        "correct": false,
+        "why": "Nothing in the recorded bodies carried it."
+      }
+    ]
+  },
+  {
+    "id": "ex-krq6m2sh",
+    "version": 1,
+    "section": "langsmith",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In LangSmith's terms, what are a post and a patch of the same run?",
+    "choices": [
+      {
+        "text": "Two retries of one request",
+        "correct": false,
+        "why": "Nothing failed; both are part of every run."
+      },
+      {
+        "text": "Two different runs that share an id by accident",
+        "correct": false,
+        "why": "Same id, same run, on purpose."
+      },
+      {
+        "text": "The run's start with inputs, and its end with outputs",
+        "correct": true,
+        "why": "Right. A run is sent twice."
+      },
+      {
+        "text": "An upload and its compressed copy",
+        "correct": false,
+        "why": "Compression was turned off."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8t7qxz7",
+    "version": 1,
+    "section": "langsmith",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With hide_inputs set to redact(str(v)), what went wrong with the model run's messages?",
+    "choices": [
+      {
+        "text": "The address was still there",
+        "correct": false,
+        "why": "It was replaced by [email]."
+      },
+      {
+        "text": "The run was not sent at all",
+        "correct": false,
+        "why": "sent.py printed it."
+      },
+      {
+        "text": "The model's reply was redacted too",
+        "correct": false,
+        "why": "hide_outputs did run, but the reply had nothing to remove."
+      },
+      {
+        "text": "The list of messages became the text of a list",
+        "correct": true,
+        "why": "Right. A careful hook redacts inside the structure."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8kze69q",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question does this lesson put first when choosing between the two platforms?",
+    "choices": [
+      {
+        "text": "Where the data is allowed to go",
+        "correct": true,
+        "why": "Right. Every trace carries what customers typed."
+      },
+      {
+        "text": "Which has more features",
+        "correct": false,
+        "why": "Features come last."
+      },
+      {
+        "text": "Which one the team has used before",
+        "correct": false,
+        "why": "Familiarity is not on the list."
+      },
+      {
+        "text": "Which is cheaper per trace",
+        "correct": false,
+        "why": "Price matters after data and operation."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ecwner",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What made the choice of tool reversible in this lesson?",
+    "choices": [
+      {
+        "text": "Langfuse's export feature",
+        "correct": false,
+        "why": "Export helps leave a tool; it does not keep the code free of it."
+      },
+      {
+        "text": "Running both tools at once",
+        "correct": false,
+        "why": "Running both doubles the work and decides nothing."
+      },
+      {
+        "text": "Using LangChain everywhere",
+        "correct": false,
+        "why": "The assistant does not use LangChain at all."
+      },
+      {
+        "text": "OpenTelemetry in the code, and the tool's names in a small adapter",
+        "correct": true,
+        "why": "Right. The same spans went to a file and to Langfuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-nr16d9n6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of one span into Langfuse's API in order.",
+    "items": [
+      "the exporter sends it over OTLP to web",
+      "web keeps the batch in object storage and queues a job",
+      "the worker files it into ClickHouse",
+      "the API returns it"
+    ]
+  },
+  {
+    "id": "ex-7ngjgdcd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each word to the tool that uses it for the same idea.",
+    "pairs": [
+      {
+        "left": "observation",
+        "right": "Langfuse's word for a span"
+      },
+      {
+        "left": "run",
+        "right": "LangSmith's word for a span"
+      },
+      {
+        "left": "generation",
+        "right": "a span Langfuse takes for a model call"
+      }
+    ],
+    "right_distractors": [
+      "OpenTelemetry's word for a reply"
+    ]
+  },
+  {
+    "id": "ex-jm743hy3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report by day from Langfuse and one from bill.py disagree at every midnight. Which is right?",
+    "choices": [
+      {
+        "text": "Langfuse, because it computes cost at ingestion",
+        "correct": false,
+        "why": "When cost is computed has nothing to do with which day it lands on."
+      },
+      {
+        "text": "bill.py, because it uses Decimal",
+        "correct": false,
+        "why": "Precision is not the difference here."
+      },
+      {
+        "text": "Both of them",
+        "correct": true,
+        "why": "Right. One counts UTC days and the other São Paulo's: same events, different midnights."
+      },
+      {
+        "text": "Neither: one of them dropped spans",
+        "correct": false,
+        "why": "The totals agreed to within the embeddings."
+      }
+    ]
+  }
+]

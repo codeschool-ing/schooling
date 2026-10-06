@@ -33,7 +33,7 @@ decidido por regras que o curso escreveu, e a aula 5 trata de como essas reaçõ
       "note": "Um cliente: pergunta, talvez dá nota, talvez pergunta de novo com outras palavras, talvez pede uma pessoa. O gerador tem como semente o id do pedido, então uma nova execução decide do mesmo jeito."
     },
     {
-      "code": "telemetry.setup(a.spans)\nrows = [r for r in map(json.loads, open(a.traffic)) if a.since <= r[\"at\"] < a.until]\nwith ThreadPoolExecutor(a.workers) as pool:\n    list(pool.map(person, rows))\nprint(f\"replayed {len(rows)} requests from {a.traffic}: {counts['requests']} asked, \"\n      f\"{counts['errors']} failed, {counts['feedback']} feedback events\")",
+      "code": "telemetry.setup(a.spans, processors=[getattr(importlib.import_module(m), c)() for m, c in\n                                     (x.split(\":\") for x in a.processor)])\nrows = [r for r in map(json.loads, open(a.traffic)) if a.since <= r[\"at\"] < a.until]\nwith ThreadPoolExecutor(a.workers) as pool:\n    list(pool.map(person, rows))\nprint(f\"replayed {len(rows)} requests from {a.traffic}: {counts['requests']} asked, \"\n      f\"{counts['errors']} failed, {counts['feedback']} feedback events\")",
       "note": "Oito de cada vez, porque uma semana tocada pedido após pedido levaria uma hora."
     }
   ]
