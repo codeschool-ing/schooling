@@ -1,0 +1,198 @@
+[
+  {
+    "id": "ex-1cygxwna",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after `kubectl apply -k shop`, `kubectl diff -k shop` printed nothing and exited with 0. What does that say?",
+    "hint": "0 and 1 are the two answers.",
+    "choices": [
+      {
+        "text": "The diff failed",
+        "correct": false,
+        "why": "A failure would be another status, with a message."
+      },
+      {
+        "text": "No difference",
+        "correct": true,
+        "why": "Right: the cluster matches the files."
+      },
+      {
+        "text": "The Deployment was deleted",
+        "correct": false,
+        "why": "It was just created."
+      },
+      {
+        "text": "Git has uncommitted changes",
+        "correct": false,
+        "why": "`kubectl diff` does not read git."
+      }
+    ]
+  },
+  {
+    "id": "ex-20zgk68x",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody ran `kubectl scale deployment shop --replicas=5`, and the repository says 2. What is that called, and what undid it?",
+    "hint": "The section's title.",
+    "choices": [
+      {
+        "text": "A rollback, undone by `git revert`",
+        "correct": false,
+        "why": "Nothing was rolled back; git was not involved."
+      },
+      {
+        "text": "Drift, undone by an apply",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Autoscaling, undone by the HPA",
+        "correct": false,
+        "why": "There was no HPA."
+      },
+      {
+        "text": "A merge conflict, undone by a commit",
+        "correct": false,
+        "why": "No branch was merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-md65h563",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `kubectl rollout undo` a problem in a GitOps setup, even though it works?",
+    "hint": "What does the repository still say?",
+    "choices": [
+      {
+        "text": "It is slower than a commit",
+        "correct": false,
+        "why": "It is faster."
+      },
+      {
+        "text": "It deletes the ReplicaSets",
+        "correct": false,
+        "why": "It keeps them."
+      },
+      {
+        "text": "GitOps tools block kubectl",
+        "correct": false,
+        "why": "They do not block it; they correct after it."
+      },
+      {
+        "text": "Git still names the bad version",
+        "correct": true,
+        "why": "Right. The next sync brings it back."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7qht18z",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a pull-based GitOps setup, how does a new image tag reach the cluster?",
+    "hint": "Who holds the cluster's credentials?",
+    "choices": [
+      {
+        "text": "The CI server runs `kubectl apply`",
+        "correct": false,
+        "why": "That is push; it needs cluster credentials in CI."
+      },
+      {
+        "text": "CI commits it; the tool pulls it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The kubelet polls the registry",
+        "correct": false,
+        "why": "The kubelet pulls images it is told to run, nothing else."
+      },
+      {
+        "text": "Developers apply it from laptops",
+        "correct": false,
+        "why": "That is what GitOps replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kz15ycb",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A manifest is removed from the repository. What does plain `kubectl apply -k` do with the object in the cluster?",
+    "hint": "Lesson 38's leftover ConfigMap.",
+    "choices": [
+      {
+        "text": "Deletes it",
+        "correct": false,
+        "why": "Only pruning deletes."
+      },
+      {
+        "text": "Marks it orphaned",
+        "correct": false,
+        "why": "Nothing is marked."
+      },
+      {
+        "text": "Leaves it running",
+        "correct": true,
+        "why": "Right. Pruning is a separate, deliberate setting."
+      },
+      {
+        "text": "Refuses to apply",
+        "correct": false,
+        "why": "The apply succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhsh6z5t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order a release done the GitOps way.",
+    "hint": "Git first, the cluster last.",
+    "items": [
+      "Change the manifest in a branch",
+      "Review and merge the pull request",
+      "The tool sees a difference between git and the cluster",
+      "The tool applies it, and the diff is empty again"
+    ],
+    "trap": "The tool only acts on what is merged, and it can only see a difference after the merge."
+  },
+  {
+    "id": "ex-x5g1164j",
+    "version": 1,
+    "section": "drift",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To undo a bad release in git without rewriting history, use `git ___`.",
+    "hint": "It made the commit `Revert \"shop 1.1\"`.",
+    "blanks": [
+      {
+        "accept": [
+          "revert"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
