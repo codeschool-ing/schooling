@@ -385,13 +385,27 @@ class Handler(BaseHTTPRequestHandler):
         return n
 
     def produce(self, req):
-        """The reply as content blocks, each carrying its tokens, and why it stopped."""
+        """The reply as content blocks, each carrying its tokens, and why it stopped.
+
+        A stop sequence ends the reply where it first appears in the text, as it
+        does at a provider: the sequence itself is not returned, and nothing
+        after it is, tool calls included."""
         r = scripted(req.get("system"), req["messages"], req.get("tools"))
         blocks, used, limit = [], 0, req["max_tokens"]
         reason = "end_turn"
+        stops = req.get("stop_sequences") or []
         for b in r["reply"]:
             if b["type"] == "text":
-                pieces = split_text(b["text"])
+                text, hit = b["text"], None
+                for s in stops:
+                    k = text.find(s)
+                    if k >= 0 and (hit is None or k < text.find(hit)):
+                        hit = s
+                if hit is not None:
+                    blocks.append(("text", split_text(text[:text.find(hit)])))
+                    self.stopped_on = hit
+                    return blocks, "stop_sequence", r["id"]
+                pieces = split_text(text)
                 if used + len(pieces) > limit:
                     blocks.append(("text", pieces[:limit - used]))
                     return blocks, "max_tokens", r["id"]
@@ -429,6 +443,7 @@ class Handler(BaseHTTPRequestHandler):
         n_out = sum(len(b[-1]) for b in blocks)
         usage = self.usage(req, n_in, n_out)
         record["usage"] = usage
+        stop_seq = getattr(self, "stopped_on", None) if reason == "stop_sequence" else None
         if not req.get("stream"):
             self.wait(req["model"], n_out)
             content = []
@@ -439,7 +454,7 @@ class Handler(BaseHTTPRequestHandler):
                     content.append({"type": "tool_use", "id": next(tool_ids), "name": b[1], "input": b[2]})
             return self.send_json(200, {
                 "id": msg_id, "type": "message", "role": "assistant", "model": req["model"],
-                "content": content, "stop_reason": reason, "stop_sequence": None, "usage": usage})
+                "content": content, "stop_reason": reason, "stop_sequence": stop_seq, "usage": usage})
         self.start_stream()
         time.sleep(FIRST_TOKEN)
         per = MODELS[req["model"]]["per_token"]
@@ -463,7 +478,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.event("content_block_delta", {"type": "content_block_delta", "index": i,
                                                        "delta": {"type": "input_json_delta", "partial_json": chunk}})
             self.event("content_block_stop", {"type": "content_block_stop", "index": i})
-        self.event("message_delta", {"type": "message_delta", "delta": {"stop_reason": reason, "stop_sequence": None},
+        self.event("message_delta", {"type": "message_delta", "delta": {"stop_reason": reason, "stop_sequence": stop_seq},
                                      "usage": {"output_tokens": n_out}})
         self.event("message_stop", {"type": "message_stop"})
 
@@ -499,8 +514,10 @@ class Handler(BaseHTTPRequestHandler):
         tools = [{"name": t["function"]["name"], "description": t["function"].get("description", ""),
                   "input_schema": t["function"].get("parameters", {})} for t in req.get("tools") or []]
         limit = req.get("max_completion_tokens") or req.get("max_tokens") or 1024
+        stop = req.get("stop")
         inner = {"model": req.get("model"), "max_tokens": limit, "messages": conv,
-                 "system": system or None, "tools": tools or None}
+                 "system": system or None, "tools": tools or None,
+                 "stop_sequences": [stop] if isinstance(stop, str) else stop}
         n_in = self.check(inner)
         blocks, reason, rule = self.produce(inner)
         record["model"], record["rule"] = inner["model"], rule
@@ -509,7 +526,7 @@ class Handler(BaseHTTPRequestHandler):
         calls = [{"id": "call_lab_%04d_%d" % (self.n, i), "type": "function",
                   "function": {"name": b[1], "arguments": json.dumps(b[2], ensure_ascii=False)}}
                  for i, b in enumerate(blocks, 1) if b[0] == "tool_use"]
-        finish = {"end_turn": "stop", "max_tokens": "length", "tool_use": "tool_calls"}[reason]
+        finish = {"end_turn": "stop", "stop_sequence": "stop", "max_tokens": "length", "tool_use": "tool_calls"}[reason]
         usage = {"prompt_tokens": n_in, "completion_tokens": n_out, "total_tokens": n_in + n_out}
         record["usage"] = usage
         cid = "chatcmpl-lab%04d" % self.n
