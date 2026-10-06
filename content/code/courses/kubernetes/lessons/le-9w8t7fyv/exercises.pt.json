@@ -1,0 +1,198 @@
+{
+  "ex-115chjvg": {
+    "prompt": "Como um pod escolhe o scheduler que o posiciona?",
+    "hint": "Um campo na spec do pod.",
+    "choices": [
+      {
+        "text": "Com um rótulo no namespace",
+        "why": "O namespace não tem voz nisso."
+      },
+      {
+        "text": "Com um seletor de nó",
+        "why": "Isso estreita os nós, não o scheduler."
+      },
+      {
+        "text": "`spec.schedulerName`",
+        "why": "Isso."
+      },
+      {
+        "text": "O primeiro scheduler que o vê ganha",
+        "why": "Cada scheduler ignora pods que nomeiam outro."
+      }
+    ]
+  },
+  "ex-hc1371dm": {
+    "prompt": "Qual configuração faz o `NodeResourcesFit` preferir o nó mais cheio?",
+    "hint": "O padrão é o contrário.",
+    "choices": [
+      {
+        "text": "`LeastAllocated`",
+        "why": "Esse é o padrão, que prefere espaço."
+      },
+      {
+        "text": "`MostAllocated`",
+        "why": "Isso."
+      },
+      {
+        "text": "`RequestedToCapacityRatio` em zero",
+        "why": "Essa estratégia recebe uma curva, não um zero."
+      },
+      {
+        "text": "`leaderElect: false`",
+        "why": "Isso é sobre rodar uma cópia só."
+      }
+    ]
+  },
+  "ex-fjedngzp": {
+    "prompt": "Por que um time empacotaria pods no menor número de nós possível?",
+    "hint": "Pense no autoscaler de nós da lição 34.",
+    "choices": [
+      {
+        "text": "Pods empacotados iniciam mais rápido",
+        "why": "O tempo de início não depende dos vizinhos."
+      },
+      {
+        "text": "Os nós esvaziados são removidos",
+        "why": "Isso, e menos nós custam menos."
+      },
+      {
+        "text": "Sobrevive melhor à perda de um nó",
+        "why": "É o contrário: um nó guarda tudo."
+      },
+      {
+        "text": "Empacotar é obrigatório para jobs em lote",
+        "why": "Nada exige isso."
+      }
+    ]
+  },
+  "ex-wrm4x3yk": {
+    "prompt": "Um pod está Pending há dez minutos e `kubectl get events` não mostra nada sobre ele. Qual a primeira coisa a verificar?",
+    "hint": "Quem teria escrito um evento?",
+    "choices": [
+      {
+        "text": "Se os nós têm espaço",
+        "why": "Um cluster cheio gera um evento `FailedScheduling`."
+      },
+      {
+        "text": "Se a imagem existe",
+        "why": "Baixar só começa num nó."
+      },
+      {
+        "text": "Se uma quota o bloqueia",
+        "why": "Uma quota recusa o pod antes de ele existir."
+      },
+      {
+        "text": "O `schedulerName` dele",
+        "why": "Isso: sem scheduler, sem eventos."
+      }
+    ]
+  },
+  "ex-nxp0dsyp": {
+    "prompt": "Um nó tem 4 CPUs livres. Com `MostAllocated`, quantos pods pedindo `500m` o segundo scheduler pode pôr nele antes de ter de usar outro nó?",
+    "hint": "4000m ÷ 500m.",
+    "unit": "pods"
+  },
+  "ex-z2qyxjwg": {
+    "prompt": "Um webhook validador com `failurePolicy: Fail` está fora do ar. O que acontece com as escritas que ele casa?",
+    "hint": "Fail é sobre a escrita, não sobre o webhook.",
+    "choices": [
+      {
+        "text": "Elas são recusadas com um erro",
+        "why": "Isso."
+      },
+      {
+        "text": "Elas passam sem verificação",
+        "why": "Isso é `failurePolicy: Ignore`."
+      },
+      {
+        "text": "Elas esperam ele voltar",
+        "why": "O API server não enfileira escritas."
+      },
+      {
+        "text": "O API server o reinicia",
+        "why": "Ele não gerencia webhooks."
+      }
+    ]
+  },
+  "ex-jednvfgn": {
+    "prompt": "Você precisa recusar imagens com a tag `latest`. Que porta não precisa de nada rodando?",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "Um webhook de admissão validador",
+        "why": "Ele é um serviço a manter rodando."
+      },
+      {
+        "text": "Um extender do scheduler",
+        "why": "Ele vê posicionamento, não escritas."
+      },
+      {
+        "text": "Uma ValidatingAdmissionPolicy",
+        "why": "Isso, uma expressão no API server."
+      },
+      {
+        "text": "Uma API agregada",
+        "why": "Ela serve recursos, não verificações."
+      }
+    ]
+  },
+  "ex-gptkwf30": {
+    "prompt": "Que pergunta é respondida por uma API agregada e não pelo etcd?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "`kubectl get deployments`",
+        "why": "Guardado pelo API server no etcd."
+      },
+      {
+        "text": "`kubectl top pods`",
+        "why": "Isso, o metrics-server responde."
+      },
+      {
+        "text": "`kubectl get crd`",
+        "why": "CRDs vivem no etcd."
+      },
+      {
+        "text": "`kubectl get events`",
+        "why": "Eventos são guardados no etcd."
+      }
+    ]
+  },
+  "ex-t04pgnmk": {
+    "prompt": "Ligue cada extensão a onde o código dela roda.",
+    "hint": "A tabela da última seção.",
+    "pairs": [
+      {
+        "left": "Webhook de admissão",
+        "right": "Um serviço HTTPS que você roda"
+      },
+      {
+        "left": "ValidatingAdmissionPolicy",
+        "right": "Dentro do API server"
+      },
+      {
+        "left": "API agregada",
+        "right": "Um API server inteiro atrás de um Service"
+      },
+      {
+        "left": "Segundo perfil do scheduler",
+        "right": "Um processo `kube-scheduler`"
+      }
+    ],
+    "right_distractors": [
+      "Dentro do etcd"
+    ]
+  },
+  "ex-ts05253x": {
+    "prompt": "Para ver as APIs servidas por alguém que não o API server: `kubectl get ___ | grep -v Local`.",
+    "hint": "O tipo que registra um grupo de API.",
+    "blanks": [
+      {
+        "accept": [
+          "apiservices",
+          "apiservice"
+        ]
+      }
+    ]
+  }
+}
