@@ -58,5 +58,5 @@ namespace/default labeled (server dry run)
 namespace com `warn` primeiro, leia o que ele relata por um tempo, e só então acrescente `enforce`.
 
 Pods não são a única porta de entrada. Com `warn` ligado, o template de pod de um Deployment também é
-conferido e o aviso volta na hora; `enforce` age só sobre pods, então a recusa dele acontece quando o
+conferido e o aviso volta na hora. O `enforce` age só sobre pods, então a recusa dele acontece quando o
 ReplicaSet tenta criá-los, e aparece como evento nele, como as recusas de cota da lição 20.

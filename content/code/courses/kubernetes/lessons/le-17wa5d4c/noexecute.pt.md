@@ -42,7 +42,7 @@ shop-774b84ff8c-krnt6   Marking for deletion Pod default/shop-774b84ff8c-krnt6
 ```
 
 `TaintManagerEviction`: o controller que observa taints `NoExecute` apagou cada pod. Essa é a versão
-bruta de tirar um nó de serviço; a lição 32 mostra o `kubectl drain`, que faz o mesmo trabalho
+bruta de tirar um nó de serviço. A lição 32 mostra o `kubectl drain`, que faz o mesmo trabalho
 respeitando um orçamento de quantas cópias podem estar fora ao mesmo tempo, e que teria se recusado a
 deixar a loja sem nenhuma.
 

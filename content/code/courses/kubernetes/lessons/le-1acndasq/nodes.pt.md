@@ -76,7 +76,7 @@ search-646fd449f9-zs8c5   0/1     Pending   0          8s
 
 **O pod novo espera em `Pending`, e os três antigos continuam rodando.** O rollout do Deployment cria
 um pod novo antes de remover um antigo, então um template que ninguém consegue alocar para o rollout
-no primeiro passo, e a versão antiga continua atendendo; a lição 35 é sobre esse comportamento. O
+no primeiro passo, e a versão antiga continua atendendo. A lição 35 é sobre esse comportamento. O
 evento do scheduler diz o que falta:
 
 ```

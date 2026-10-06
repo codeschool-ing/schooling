@@ -29,7 +29,7 @@ backups   bk           shop.example.test/v1   true         Backup
 O API server agora serve `backups` no grupo `shop.example.test`, versão `v1`. **Nada foi compilado,
 reiniciado ou instalado além desse único objeto.** O tipo novo é guardado no etcd como qualquer outro,
 tem a sua própria URL na API, e funciona com `kubectl get`, `describe`, `delete`, `-o yaml`, regras de
-RBAC e `watch`, tudo de graça, porque o API server trata essas coisas do mesmo jeito para todo tipo.
+RBAC e `watch`. Tudo isso vem de graça, porque o API server trata essas coisas do mesmo jeito para todo tipo.
 
 É assim que a maior parte do ecossistema Kubernetes estende o cluster. A Gateway API da lição 16 é um
 conjunto de CRDs; também são os certificados do cert-manager, as aplicações do Argo CD, as regras de

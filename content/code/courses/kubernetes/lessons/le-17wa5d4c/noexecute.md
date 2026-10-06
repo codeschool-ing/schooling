@@ -41,8 +41,7 @@ shop-774b84ff8c-f7xmw   Marking for deletion Pod default/shop-774b84ff8c-f7xmw
 shop-774b84ff8c-krnt6   Marking for deletion Pod default/shop-774b84ff8c-krnt6
 ```
 
-`TaintManagerEviction`: the controller that watches `NoExecute` taints deleted each pod. This is the
-blunt version of taking a node out of service; lesson 32 shows `kubectl drain`, which does the same
+`TaintManagerEviction`: the controller that watches `NoExecute` taints deleted each pod. This is the blunt version of taking a node out of service. Lesson 32 shows `kubectl drain`, which does the same
 job while respecting a budget for how many copies may be down at once, and which would have refused
 to leave the shop with none.
 

@@ -58,6 +58,5 @@ namespace/default labeled (server dry run)
 names `plain` and why. **A dry run on the server is the safe way to roll this out**: label each
 namespace with `warn` first, read what it reports for a while, and only then add `enforce`.
 
-Pods are not the only way in. With `warn` on, a Deployment's pod template is checked too and the
-warning comes back at once; `enforce` acts on pods only, so its refusal happens when the ReplicaSet
+Pods are not the only way in. With `warn` on, a Deployment's pod template is checked too and the warning comes back at once. `enforce` acts on pods only, so its refusal happens when the ReplicaSet
 tries to create them, and shows up as an event on it, like the quota refusals in lesson 20.

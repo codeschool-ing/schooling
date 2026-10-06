@@ -89,7 +89,7 @@ no longer answers the selector, so it no longer counts, and the controller made 
 number back to three. The relabelled pod is an orphan: no Service selecting `app: web` sends it
 traffic, nothing will replace it if it dies, and nothing will delete it either. **That is a useful
 trick in an incident** — take a misbehaving pod out of rotation without killing it, so its state is
-still there to inspect — and a hazard when it happens by accident, because an edited label in a
+still there to inspect — and a hazard when it happens by accident. An edited label in a
 template can strand a fleet of pods that keep running and keep costing money.
 
 ```schooling-figure

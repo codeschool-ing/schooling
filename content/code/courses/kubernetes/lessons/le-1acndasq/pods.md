@@ -119,6 +119,5 @@ benefit from being close, such as a cache next to the service that reads it.
 ```
 
 These rules cost the scheduler work. For every pod placed, it has to look at the pods on every
-candidate node, so in a cluster of thousands of nodes, anti-affinity on everything slows scheduling
-down; the topology spread constraints of lesson 31 are the cheaper tool when the goal is only to
+candidate node, so in a cluster of thousands of nodes, anti-affinity on everything slows scheduling down. The topology spread constraints of lesson 31 are the cheaper tool when the goal is only to
 spread.

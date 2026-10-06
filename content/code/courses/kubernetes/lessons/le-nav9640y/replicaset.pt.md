@@ -89,7 +89,7 @@ intocado, mas não responde mais ao seletor, então não conta mais, e o control
 para levar o número de volta a três. O pod com label trocado é um órfão: nenhum Service que seleciona
 `app: web` manda tráfego para ele, nada o substitui se ele morrer, e nada o apaga também. **É um
 truque útil num incidente** (tirar um pod problemático da rotação sem matá-lo, para o estado dele
-continuar lá para ser examinado) e um perigo quando acontece sem querer, porque um label editado num
+continuar lá para ser examinado) e um perigo quando acontece sem querer. Um label editado num
 modelo pode deixar para trás uma frota de pods que continuam rodando e custando dinheiro.
 
 ```schooling-figure

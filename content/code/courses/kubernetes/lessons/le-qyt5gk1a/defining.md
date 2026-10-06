@@ -29,8 +29,7 @@ backups   bk           shop.example.test/v1   true         Backup
 The API server now serves `backups` in the group `shop.example.test`, version `v1`. **Nothing was
 compiled, restarted or installed besides that one object.** The new kind is stored in etcd like every
 other, has its own URL in the API, and works with `kubectl get`, `describe`, `delete`, `-o yaml`,
-RBAC rules, and `watch`, all for free, because the API server handles them the same way for every
-kind.
+RBAC rules, and `watch`. All of that comes free, because the API server handles it the same way for every kind.
 
 That is how most of the Kubernetes ecosystem extends the cluster. The Gateway API of lesson 16 is a
 set of CRDs; so are cert-manager's certificates, Argo CD's applications, Prometheus's alert rules and

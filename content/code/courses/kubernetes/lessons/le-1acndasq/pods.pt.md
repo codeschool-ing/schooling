@@ -117,6 +117,5 @@ estar perto, como um cache ao lado do serviço que o lê.
 ```
 
 Essas regras custam trabalho ao scheduler. Para cada pod alocado, ele precisa olhar os pods de cada nó
-candidato, então num cluster de milhares de nós, anti-afinidade em tudo deixa o agendamento mais lento;
-as topology spread constraints da lição 31 são a ferramenta mais barata quando o objetivo é só
+candidato, então num cluster de milhares de nós, anti-afinidade em tudo deixa o agendamento mais lento. As topology spread constraints da lição 31 são a ferramenta mais barata quando o objetivo é só
 espalhar.
