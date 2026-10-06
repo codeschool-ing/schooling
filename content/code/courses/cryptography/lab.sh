@@ -67,6 +67,7 @@ w("keys/aes-256.hex", drbg.stream("aes-256", 32).hex() + "\n")
 w("keys/aes-256-b.hex", drbg.stream("aes-256-b", 32).hex() + "\n")
 w("keys/aes-128.hex", drbg.stream("aes-128", 16).hex() + "\n")
 w("keys/pepper.hex", drbg.stream("pepper", 32).hex() + "\n")
+w("keys/webhook.hex", drbg.stream("webhook", 32).hex() + "\n")
 w("keys/iv-a.hex", drbg.stream("iv-a", 16).hex() + "\n")
 w("keys/iv-b.hex", drbg.stream("iv-b", 16).hex() + "\n")
 for label, bits in (("rsa-2048", 2048), ("rsa-3072", 3072)):
@@ -80,6 +81,34 @@ for who in ("ana", "bruno"):
     keys.write_private(k, f"keys/x25519-{who}.key"); keys.write_public(k, f"keys/x25519-{who}.pub")
 pki.build("pki")
 import hashlib, os
+from vlab import webhook
+from cryptography.hazmat.primitives import serialization
+# Ana's Ed25519 key again, in OpenSSH's format, for ssh-keygen -Y in lesson 6.
+k = keys.ed25519_key("keys/ed25519-ana")
+open("keys/ana_ssh", "wb").write(k.private_bytes(serialization.Encoding.PEM,
+    serialization.PrivateFormat.OpenSSH, serialization.NoEncryption()))
+os.chmod("keys/ana_ssh", 0o600)
+pub = k.public_key().public_bytes(serialization.Encoding.OpenSSH, serialization.PublicFormat.OpenSSH).decode()
+open("keys/ana_ssh.pub", "w").write(pub + " ana@vereda.example\n")
+open("data/allowed_signers", "w").write("ana@vereda.example " + pub + "\n")
+# Four deliveries from the payment gateway, as lesson 6 receives them. The
+# lab's present is 1781535600 (2026-06-15 12:00 in Sao Paulo).
+os.makedirs("data/webhooks", exist_ok=True)
+key = drbg.stream("webhook", 32)
+NOW = 1781535600
+events = {
+    "evt-1": (NOW - 42, b'{"event":"payment.confirmed","booking":4471,"amount":12000}', None),
+    "evt-2": (NOW - 37, b'{"event":"payment.confirmed","booking":4472,"amount":15000}', b'{"event":"payment.confirmed","booking":4472,"amount":1500}'),
+    "evt-3": (NOW - 86400, b'{"event":"payment.confirmed","booking":4471,"amount":12000}', None),
+    "evt-4": (NOW - 12, b'{"event":"refund.issued","booking":4471,"amount":12000}', "nokey"),
+}
+for name, (t, body, delivered) in events.items():
+    header = webhook.sign(key, t, body)
+    if delivered == "nokey":
+        header = webhook.sign(b"a key that is not the gateway's", t, body)
+        delivered = None
+    open(f"data/webhooks/{name}.json", "wb").write(delivered or body)
+    open(f"data/webhooks/{name}.sig", "w").write(header + "\n")
 os.makedirs("data/release", exist_ok=True)
 open("data/release/portal-2.4.1.tar", "wb").write(drbg.stream("release/portal-2.4.1", 20480))
 open("data/release/NOTES.txt", "w").write("Vereda portal 2.4.1: booking reminders by SMS.\n")

@@ -140,6 +140,16 @@ def cmd_verify(a):
     sys.exit(1)
 
 
+def cmd_webhook(a):
+    from . import webhook
+    key = hexkey(a.key)
+    for path in a.events:
+        body = read(path)
+        header = open(path[:-len(".json")] + ".sig").read() if path.endswith(".json") else ""
+        ok, why = webhook.verify(key, header, body, a.now)
+        print(f"{path.split('/')[-1]:<12} {'ACCEPT' if ok else 'REJECT'}  {why}")
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -188,6 +198,11 @@ def main():
     s.add_argument("password")
     s.add_argument("--pepper")
     s.set_defaults(fn=cmd_verify)
+    s = sub.add_parser("webhook", help="verify webhook deliveries: body.json with its header in body.sig")
+    s.add_argument("--key", required=True)
+    s.add_argument("--now", type=int, required=True, help="the receiver's clock, as epoch seconds")
+    s.add_argument("events", nargs="+")
+    s.set_defaults(fn=cmd_webhook)
     a = p.parse_args()
     a.fn(a)
 

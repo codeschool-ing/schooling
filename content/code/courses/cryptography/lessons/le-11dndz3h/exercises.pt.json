@@ -1,0 +1,308 @@
+{
+  "ex-p4zx0h57": {
+    "prompt": "Por que o SHA-256 mandado ao lado do aviso de pagamento não o protegeu?",
+    "hint": "Quem consegue calcular um hash?",
+    "choices": [
+      {
+        "text": "O SHA-256 é fraco demais para JSON",
+        "why": "O hash funcionou; ele não tinha chave."
+      },
+      {
+        "text": "Quem alterou o corpo recalculou o hash também",
+        "why": "Certo: um hash não tem chave."
+      },
+      {
+        "text": "O resumo era curto demais para cobrir o campo do valor",
+        "why": "O resumo cobre cada byte."
+      },
+      {
+        "text": "JSON não pode ter hash calculado de forma confiável",
+        "why": "Bytes são bytes."
+      }
+    ]
+  },
+  "ex-ghj722jk": {
+    "prompt": "Associe cada propriedade ao mecanismo que a dá.",
+    "hint": "Um mecanismo não dá nenhuma delas.",
+    "pairs": [
+      {
+        "left": "detectar corrupção acidental",
+        "right": "um checksum simples"
+      },
+      {
+        "left": "detectar adulteração, entre duas partes que compartilham uma chave",
+        "right": "HMAC"
+      },
+      {
+        "left": "provar a um terceiro quem enviou",
+        "right": "uma assinatura digital"
+      }
+    ],
+    "right_distractors": [
+      "Base64"
+    ]
+  },
+  "ex-39gpw395": {
+    "prompt": "O gateway e a Vereda compartilham uma chave secreta. O que um HMAC entre eles não consegue provar a um tribunal?",
+    "hint": "Quem mais tem a chave?",
+    "choices": [
+      {
+        "text": "Que a mensagem não foi alterada no caminho",
+        "why": "Isso ele prova, a quem tem a chave."
+      },
+      {
+        "text": "Qual dos dois a produziu",
+        "why": "Certo: qualquer um poderia; não há não repúdio."
+      },
+      {
+        "text": "Que a chave tinha 256 bits",
+        "why": "O tamanho da chave não é o que um tribunal pergunta."
+      },
+      {
+        "text": "Quando a mensagem foi recebida",
+        "why": "Nenhum dos dois prova o momento do recebimento."
+      }
+    ]
+  },
+  "ex-kycf1fy4": {
+    "prompt": "Do que um atacante que muda o valor para 120 precisa para produzir uma etiqueta HMAC válida?",
+    "hint": "A terceira captura usou a errada.",
+    "choices": [
+      {
+        "text": "Só o corpo novo",
+        "why": "O corpo sozinho dá qualquer etiqueta menos a certa."
+      },
+      {
+        "text": "A etiqueta antiga e o corpo novo",
+        "why": "A etiqueta antiga não ajuda com um corpo novo."
+      },
+      {
+        "text": "A chave compartilhada",
+        "why": "Certo: sem ela não há caminho para a etiqueta certa."
+      },
+      {
+        "text": "O certificado TLS da Vereda",
+        "why": "O TLS não tem nada a ver com esta etiqueta."
+      }
+    ]
+  },
+  "ex-83bbc1qb": {
+    "prompt": "Por que SHA-256(chave + mensagem) não é um substituto seguro do HMAC-SHA256?",
+    "hint": "Aula 4, seção 03.",
+    "choices": [
+      {
+        "text": "A chave apareceria na saída",
+        "why": "A saída é um resumo; a chave não aparece."
+      },
+      {
+        "text": "O SHA-256 não aceita entradas maiores que seu bloco",
+        "why": "Ele aceita qualquer tamanho."
+      },
+      {
+        "text": "Permite extensão de comprimento",
+        "why": "Certo: extensão de comprimento, que as duas passadas do HMAC impedem."
+      },
+      {
+        "text": "Seria mais lento que o HMAC",
+        "why": "Seria mais ou menos tão rápido."
+      }
+    ]
+  },
+  "ex-a02nb6y3": {
+    "prompt": "A saída de um HMAC, mandada com a mensagem para o receptor conferir, se chama ___.",
+    "hint": "Etiqueta, ou a palavra em inglês de três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "etiqueta",
+          "tag"
+        ]
+      }
+    ]
+  },
+  "ex-8ryamnrv": {
+    "prompt": "Das quatro entregas em `data/webhooks`, quantas o portal aceitou?",
+    "hint": "Conte os ACCEPT."
+  },
+  "ex-wxxdt6em": {
+    "prompt": "Associe cada entrega ao motivo de ter sido recusada ou aceita.",
+    "hint": "evt-2 e evt-4 compartilham um motivo.",
+    "pairs": [
+      {
+        "left": "evt-1",
+        "right": "genuína, assinada 42 s antes"
+      },
+      {
+        "left": "evt-2",
+        "right": "corpo alterado depois da assinatura"
+      },
+      {
+        "left": "evt-3",
+        "right": "uma mensagem válida mandada de novo um dia depois"
+      },
+      {
+        "left": "evt-4",
+        "right": "assinada com uma chave que não é a do gateway"
+      }
+    ]
+  },
+  "ex-365m2pcb": {
+    "prompt": "Por que o carimbo de tempo `t` vai dentro dos bytes que o gateway assina, e não só no cabeçalho?",
+    "hint": "O que alguém poderia fazer com um campo não assinado?",
+    "choices": [
+      {
+        "text": "Para que alterá-lo quebre a etiqueta",
+        "why": "Certo: e assim a hora antiga da evt-3 não pode ser renovada."
+      },
+      {
+        "text": "Para o receptor ordenar as entregas por horário",
+        "why": "Ordenar não precisa de assinatura."
+      },
+      {
+        "text": "Porque o HMAC precisa de um número na entrada",
+        "why": "O HMAC aceita quaisquer bytes."
+      },
+      {
+        "text": "Para deixar a etiqueta mais longa",
+        "why": "A etiqueta tem 256 bits seja o que for que entre."
+      }
+    ]
+  },
+  "ex-j21q7snb": {
+    "prompt": "Um tratador interpreta o JSON do webhook, registra o valor e depois confere a etiqueta HMAC com `==`. Quais duas mudanças importam mais?",
+    "hint": "Ordem e comparação.",
+    "choices": [
+      {
+        "text": "Usar SHA-512 e uma chave mais longa",
+        "why": "O algoritmo está bom."
+      },
+      {
+        "text": "Registrar o corpo inteiro, e repetir as verificações que falharem",
+        "why": "Repetir uma verificação que falhou não a faz passar legitimamente."
+      },
+      {
+        "text": "Conferir a etiqueta primeiro, com comparação em tempo constante",
+        "why": "Certo: nada de um estranho é lido antes da verificação."
+      },
+      {
+        "text": "Aceitar só entregas da faixa de IPs do gateway",
+        "why": "Útil como camada extra, não como substituto da etiqueta."
+      }
+    ]
+  },
+  "ex-bggj5nq1": {
+    "prompt": "O que o `data/allowed_signers` decide?",
+    "hint": "Uma chave pública não diz de quem é.",
+    "choices": [
+      {
+        "text": "Quais arquivos a Ana pode assinar",
+        "why": "Ele não diz nada sobre arquivos."
+      },
+      {
+        "text": "Qual chave conta como da Ana",
+        "why": "Certo: amarra um nome a uma chave."
+      },
+      {
+        "text": "Onde fica a chave privada da Ana",
+        "why": "Chaves privadas nunca aparecem nele."
+      },
+      {
+        "text": "O algoritmo de hash usado para assinar",
+        "why": "Isso está no bloco de assinatura."
+      }
+    ]
+  },
+  "ex-2vyq9er9": {
+    "prompt": "Para que serve o namespace `-n file`?",
+    "hint": "O Git usa outro.",
+    "choices": [
+      {
+        "text": "Nomeia o arquivo que está sendo assinado, para registro",
+        "why": "O arquivo é passado separadamente."
+      },
+      {
+        "text": "Escolhe o tipo de chave",
+        "why": "A chave decide o tipo dela."
+      },
+      {
+        "text": "Comprime a assinatura",
+        "why": "Nada é comprimido."
+      },
+      {
+        "text": "Amarra a assinatura a um único propósito",
+        "why": "Certo: uma assinatura de arquivo não passa como assinatura de commit."
+      }
+    ]
+  },
+  "ex-tgc4jr7h": {
+    "prompt": "Cinco serviços internos verificam tokens de login. Hoje todos compartilham uma chave HMAC. O que muda trocar por uma assinatura, feita só pelo serviço de login?",
+    "hint": "Quem consegue fabricar um token em cada projeto?",
+    "choices": [
+      {
+        "text": "Os tokens passam a ser cifrados",
+        "why": "Uma assinatura não esconde nada."
+      },
+      {
+        "text": "A verificação fica mais rápida",
+        "why": "Verificar assinatura é mais lento que HMAC."
+      },
+      {
+        "text": "Quem verifica perde o poder de fabricar tokens",
+        "why": "Certo: assinar e verificar viram poderes separados."
+      },
+      {
+        "text": "Os tokens deixam de precisar de validade",
+        "why": "Continuam precisando."
+      }
+    ]
+  },
+  "ex-xrqjr03a": {
+    "prompt": "Quantos bytes tem a assinatura Ed25519 dentro de um bloco de assinatura SSH?",
+    "hint": "A aula 2 mediu.",
+    "unit": "bytes"
+  },
+  "ex-29d25xjb": {
+    "prompt": "Ponha na ordem certa as verificações do receptor sobre um webhook.",
+    "hint": "Agir por último.",
+    "items": [
+      "ler t e v1 do cabeçalho",
+      "recalcular o HMAC sobre t, um ponto e o corpo",
+      "comparar em tempo constante",
+      "conferir t contra a janela",
+      "interpretar o JSON e agir"
+    ]
+  },
+  "ex-1pd5xt4b": {
+    "prompt": "Quais situações pedem uma assinatura em vez de um HMAC? Marque todas as que se aplicam.",
+    "hint": "Quem verifica, e quem não pode conseguir produzir?",
+    "choices": [
+      {
+        "text": "Uma imagem de firmware conferida por todo dispositivo em campo",
+        "why": "Sim: os dispositivos precisam verificar sem conseguir assinar."
+      },
+      {
+        "text": "Um cookie emitido e conferido pelo mesmo servidor",
+        "why": "HMAC: quem emite é quem verifica."
+      },
+      {
+        "text": "Uma nota fiscal que um cliente pode contestar depois",
+        "why": "Sim: um terceiro precisa saber quem assinou."
+      },
+      {
+        "text": "Um gateway avisando um lojista com quem compartilha uma chave",
+        "why": "HMAC é a escolha de costume e basta."
+      }
+    ]
+  },
+  "ex-mq3jfwd1": {
+    "prompt": "Comparar duas etiquetas não pode parar na primeira diferença; isso se chama comparação em ___ constante.",
+    "hint": "Aula 6, seção 04.",
+    "blanks": [
+      {
+        "accept": [
+          "tempo"
+        ]
+      }
+    ]
+  }
+}
