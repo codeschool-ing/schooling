@@ -22,7 +22,11 @@
  *   window                the window's inner size and its device pixel ratio
  *   text SEL              the text of every element SEL matches
  *   box SEL               position and size of every element SEL matches
- *   style SEL PROP,...    computed values of the named properties
+ *   match SEL             which elements a selector matches
+ *   style SEL PROP,...    computed values of the named properties; SEL may end
+ *                         in ::before, ::after or ::marker
+ *   rules SEL PROP        every rule that sets PROP on the element, in cascade
+ *                         order, as the Styles panel of DevTools lists them
  *   tree [SEL]            the accessibility tree, as Playwright writes it
  *   axe                   the axe-core rules the page fails
  *   describe SEL          role, name, description and states, as a screen reader gets them
@@ -75,6 +79,7 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 const fetched = [];
+const sheets = new Map();
 let sent = null;
 let opened = false;
 const held = [];
@@ -163,7 +168,65 @@ const steps = {
       console.log(pad(l, w) + `x ${pad(n(b.x), 7)}y ${pad(n(b.y), 7)}width ${pad(n(b.w), 7)}height ${n(b.h)}`);
     }
   },
+  async match(sel) {
+    const els = await page.$$(sel);
+    console.log(`${sel}  matches ${els.length}`);
+    for (const el of els) {
+      const t = await el.evaluate((e) => e.textContent.replace(/\s+/g, ' ').trim());
+      console.log(`  ${await label(el)}  "${t.length > 36 ? t.slice(0, 35) + '…' : t}"`);
+    }
+  },
+  /* Every rule that sets PROP on the element, in the order the cascade
+     considers them, with the selector's specificity and where it came from.
+     The last one listed that is not crossed out is the one that applies, which
+     is the same list the Styles panel of DevTools draws, read from the same
+     place: Chromium's DevTools protocol. */
+  async rules(sel, prop) {
+    const cdp = await page.context().newCDPSession(page);
+    cdp.on('CSS.styleSheetAdded', (e) => sheets.set(e.header.styleSheetId,
+      e.header.isInline ? '<style> in the page' : basename(e.header.sourceURL)));
+    await cdp.send('DOM.enable');
+    await cdp.send('CSS.enable');
+    const { root } = await cdp.send('DOM.getDocument', { depth: -1 });
+    const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: sel });
+    const m = await cdp.send('CSS.getMatchedStylesForNode', { nodeId });
+    const out = [];
+    for (const r of m.matchedCSSRules || []) {
+      for (const d of r.rule.style.cssProperties) {
+        if (d.name !== prop || d.disabled || d.value === undefined || !d.range && r.rule.origin !== 'user-agent') continue;
+        const sels = r.rule.selectorList.selectors;
+        const s = sels[r.matchingSelectors[r.matchingSelectors.length - 1]];
+        const sp = s.specificity ? `(${s.specificity.a},${s.specificity.b},${s.specificity.c})` : '';
+        const where = r.rule.origin === 'user-agent' ? 'browser default'
+          : (r.rule.styleSheetId && r.rule.origin === 'regular' ? sheetName(m, r) : r.rule.origin);
+        const layer = (r.rule.layers || []).map((l) => l.text).filter(Boolean).join('.');
+        out.push({ text: `${s.text} ${sp}`, value: d.value + (d.important && !d.value.includes('!important') ? ' !important' : ''), where: where + (layer ? ' @layer ' + layer : ''), important: !!d.important });
+      }
+    }
+    if (m.inlineStyle) for (const d of m.inlineStyle.cssProperties) {
+      if (d.name === prop && d.range) out.push({ text: 'style attribute', value: d.value + (d.important && !d.value.includes('!important') ? ' !important' : ''), where: 'inline', important: !!d.important });
+    }
+    if (!out.length) { console.log(`${sel}  no rule sets ${prop}`); return; }
+    const winner = await page.$eval(sel, (e, p) => getComputedStyle(e).getPropertyValue(p), prop);
+    const w = Math.max(...out.map((o) => o.text.length)) + 2;
+    for (const o of out) console.log(pad(o.text, w) + pad(`${prop}: ${o.value}`, 32) + o.where);
+    console.log(`computed ${prop}: ${winner}`);
+    function sheetName(mm, rr) { return sheets.get(rr.rule.styleSheetId) || 'stylesheet'; }
+  },
   async style(sel, props) {
+    const pseudo = sel.match(/(::[a-z-]+)$/);
+    if (pseudo) {
+      const base = sel.slice(0, -pseudo[1].length);
+      for (const el of await page.$$(base)) {
+        const vals = await el.evaluate((e, [ps, pe]) => {
+          const cs = getComputedStyle(e, pe);
+          return ps.map((p) => [p, cs.getPropertyValue(p)]);
+        }, [props.split(','), pseudo[1]]);
+        const l = await label(el);
+        for (const [p, v] of vals) console.log(`${l}${pseudo[1]}  ${p}: ${v}`);
+      }
+      return;
+    }
     const els = await page.$$(sel);
     if (!els.length) console.log(sel + ': nothing matches');
     for (const el of els) {
@@ -298,7 +361,7 @@ const steps = {
   async shot(f) { await page.screenshot({ path: f, fullPage: true }); },
 };
 
-const arity = { describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
+const arity = { match: 1, rules: 2, describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
   at: 1, width: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
 try {
   while (argv.length) {
