@@ -790,6 +790,142 @@ EOF
 }
 commit_7() { at 2026-09-17T15:00:00-03:00 'Build test data with a factory, a table and a property'; }
 
+# ---- step 8: Run the checks on GitHub Actions and on GitLab CI
+step_8() {
+  mkdir -p .github/workflows
+  cat > .github/workflows/ci.yml <<'EOF'
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fast:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q -m "not integration and not functional and not acceptance"
+
+  suite:
+    needs: fast
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+        tz: ["America/Sao_Paulo", "UTC"]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Tests in ${{ matrix.tz }}
+        shell: bash
+        env:
+          TZ: ${{ matrix.tz }}
+        run: |
+          set -euo pipefail
+          coverage run -p -m pytest -q --junitxml=junit.xml
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: results-${{ strategy.job-index }}
+          path: |
+            junit.xml
+            .coverage.*
+          include-hidden-files: true
+
+  coverage:
+    needs: suite
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install coverage==7.16.2
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: results-*
+          merge-multiple: true
+      - run: coverage combine && coverage report
+EOF
+  cat > .gitlab-ci.yml <<'EOF'
+stages: [fast, test, report]
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+default:
+  image: python:3.13-slim
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  key:
+    files: [requirements-dev.txt]
+  paths: [.cache/pip]
+
+fast:
+  stage: fast
+  script:
+    - pip install -q -r requirements-dev.txt
+    - python -m pytest -q -m "not integration and not functional and not acceptance"
+
+suite:
+  stage: test
+  image: python:${PYTHON}-slim
+  parallel:
+    matrix:
+      - PYTHON: ["3.11", "3.12", "3.13"]
+        TZ: ["America/Sao_Paulo", "UTC"]
+  script:
+    - pip install -q -r requirements-dev.txt
+    - coverage run -p -m pytest -q --junitxml=junit.xml
+  artifacts:
+    when: always
+    paths: [".coverage.*"]
+    reports:
+      junit: junit.xml
+
+coverage:
+  stage: report
+  when: always
+  script:
+    - pip install -q coverage==7.16.2
+    - coverage combine
+    - coverage report
+  coverage: '/^TOTAL.*\s(\d+)%$/'
+EOF
+}
+commit_8() { at 2026-09-22T10:00:00-03:00 'Run the checks on GitHub Actions and on GitLab CI'; }
+
 steps() {
   echo ' 1  2026-09-01  Money in cents, with its first tests'
   echo ' 2  2026-09-02  Price a parcel by zone and weight'
@@ -798,8 +934,9 @@ steps() {
   echo ' 5  2026-09-10  Say which day an order leaves the warehouse'
   echo ' 6  2026-09-14  Send e-mail over SMTP, and mock the mailer by its real shape'
   echo ' 7  2026-09-17  Build test data with a factory, a table and a property'
+  echo ' 8  2026-09-22  Run the checks on GitHub Actions and on GitLab CI'
 }
-LAST=7
+LAST=8
 
 venv() {
   local dir=$1 py=${2:-3.13}
