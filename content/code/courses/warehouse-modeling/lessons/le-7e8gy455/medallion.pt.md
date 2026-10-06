@@ -1,0 +1,32 @@
+---
+title: Bronze, prata e ouro
+version: 1
+---
+
+Um lakehouse precisa de um arranjo para o caminho dos dados, dos arquivos crus até tabelas em que as pessoas possam
+confiar, e o mais comum tem um nome que soa como marketing e descreve uma disciplina real: a **arquitetura medalhão**
+(medallion), três camadas com nomes de medalhas.
+
+- **Bronze: como chegou.** Arquivos crus e tabelas cruas, uma por origem, guardados exatamente como recebidos, com a
+  hora da carga. A exportação CSV da seção 2 é bronze. Nada é corrigido aqui, para que tudo possa ser reprocessado
+  depois a partir do original.
+- **Prata: limpo e conformado.** Uma tabela por entidade, com tipos impostos, duplicatas removidas, colunas renomeadas
+  para um padrão só, e linhas ruins postas de lado em vez de descartadas. O `client_id` do site vira `customer_id`
+  aqui, uma vez, e todo leitor depois desta camada vê um nome só.
+- **Ouro: modelado para perguntas.** Tabelas fato e dimensões, agregados para painéis: as lições 2 a 6, construídas a
+  partir da prata.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"Quatro caixas da esquerda para a direita ligadas por setas: origens; bronze, como chegou; prata, limpo e conformado; ouro, modelado para perguntas. Embaixo de cada camada, o que ela é neste curso: bronze é a pasta de extração e o esquema de staging, prata é a limpeza da carga, ouro é a estrela de tabelas fato e dimensões.\"><defs><marker id=\"ah-medallion\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20\" y=\"50\" width=\"160\" height=\"90\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"100\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"13\" fill=\"var(--paper)\" font-weight=\"600\">origens</text><text x=\"100\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">como os sistemas gravam</text><text x=\"100\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">Postgres, site</text><line x1=\"180\" y1=\"95\" x2=\"195\" y2=\"95\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#ah-medallion)\"></line><rect x=\"195\" y=\"50\" width=\"160\" height=\"90\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"275\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"13\" fill=\"var(--paper)\" font-weight=\"600\">bronze</text><text x=\"275\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">como chegou</text><text x=\"275\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">extract/, staging</text><line x1=\"355\" y1=\"95\" x2=\"370\" y2=\"95\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#ah-medallion)\"></line><rect x=\"370\" y=\"50\" width=\"160\" height=\"90\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\"></rect><text x=\"450\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"13\" fill=\"var(--paper)\" font-weight=\"600\">prata</text><text x=\"450\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">limpo, conformado</text><text x=\"450\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">as conferências da carga</text><line x1=\"530\" y1=\"95\" x2=\"545\" y2=\"95\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#ah-medallion)\"></line><rect x=\"545\" y=\"50\" width=\"160\" height=\"90\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"625\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"13\" fill=\"var(--paper)\" font-weight=\"600\">ouro</text><text x=\"625\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">modelado para perguntas</text><text x=\"625\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">a estrela</text><text x=\"360\" y=\"28\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">cada camada é reconstruída a partir da anterior</text><text x=\"20\" y=\"155\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">neste curso</text><line x1=\"130\" y1=\"155\" x2=\"700\" y2=\"155\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"4 4\"></line></svg>", "caption": "Bronze, prata e ouro, e onde o warehouse deste curso fica nelas.", "same": ["bronze", "extract/, staging"]}
+```
+
+Postas ao lado deste curso, as camadas se encaixam direto. Bronze é a pasta `extract/` e o esquema `staging` de Ana;
+prata é o que a carga faz entre o staging e o modelo; ouro é a estrela. **O modelo dimensional não sumiu quando o
+warehouse foi para o lake; virou a camada ouro.**
+
+O que as camadas medalhão acrescentam é uma regra sobre onde cada tipo de trabalho acontece, para que nenhum seja feito duas
+vezes ou pulado. A limpeza acontece na entrada da prata e em nenhum outro lugar; as definições de negócio,
+como o que significa receita, acontecem na entrada do ouro e em nenhum outro lugar. Um lakehouse sem essa regra tende
+a criar três versões ligeiramente diferentes da mesma limpeza, nos notebooks de três times.
+
+O data mesh, na lição 11, pergunta quem é dono de cada uma dessas camadas quando a organização é grande.

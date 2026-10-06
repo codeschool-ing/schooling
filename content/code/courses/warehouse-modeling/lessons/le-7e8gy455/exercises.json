@@ -1,0 +1,797 @@
+[
+  {
+    "id": "ex-beasat3w",
+    "version": 1,
+    "section": "the-lake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did Ana do before DuckDB could answer a question about the orders file in the lake?",
+    "hint": "Look at the first command.",
+    "choices": [
+      {
+        "text": "Copied the file into a folder in the lake, as it was",
+        "correct": true,
+        "why": "Right. DuckDB read it in place and worked out the types from its contents."
+      },
+      {
+        "text": "Created a table and loaded the file",
+        "correct": false,
+        "why": "No table was created; that is the warehouse's way."
+      },
+      {
+        "text": "Converted it to Parquet so that any engine could read it",
+        "correct": false,
+        "why": "It stayed a CSV."
+      },
+      {
+        "text": "Registered it in a catalogue",
+        "correct": false,
+        "why": "Nothing was registered; that is part of how a swamp starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxag4sf3",
+    "version": 1,
+    "section": "the-lake",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the section count as the lake's offer? Choose all that apply.",
+    "hint": "Three bullets.",
+    "choices": [
+      {
+        "text": "A new source is a folder, not a project",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Cheap storage for any kind of file",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Many engines reading the same files",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Every file checked against a model on arrival",
+        "correct": false,
+        "why": "That is schema on write, the warehouse's way."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rdedsvg",
+    "version": 1,
+    "section": "schema-on-read",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A warehouse checks data when it is loaded: schema on write. A lake leaves it to each reader: schema on ___.",
+    "hint": "The opposite of write.",
+    "blanks": [
+      {
+        "accept": [
+          "read"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8gw86p6g",
+    "version": 1,
+    "section": "schema-on-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `union_by_name = true`, the query over both files returned 586,584 orders and no error. What was wrong with it?",
+    "hint": "Count the customers.",
+    "choices": [
+      {
+        "text": "It counted the old file twice, once under each column name",
+        "correct": false,
+        "why": "The count is the old 577,468 plus the new week."
+      },
+      {
+        "text": "The shipping column was summed as text and came out as zero",
+        "correct": false,
+        "why": "That query did not sum shipping."
+      },
+      {
+        "text": "The new week's orders all lost their customer, which sat in client_id",
+        "correct": true,
+        "why": "Right. Its customer was in `client_id`, a column the query never named."
+      },
+      {
+        "text": "DuckDB silently dropped the rows whose types did not match",
+        "correct": false,
+        "why": "No rows were dropped; a column was left empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbzab0fv",
+    "version": 1,
+    "section": "schema-on-read",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of 586,584 orders, 430,221 had a customer. How many orders had none?",
+    "hint": "Subtract.",
+    "value": 156363,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qhgf25w3",
+    "version": 1,
+    "section": "the-swamp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job writing twenty Parquet files to a plain folder dies after the eleventh. What do readers see?",
+    "hint": "A folder has no transactions.",
+    "choices": [
+      {
+        "text": "Nothing until the job is rerun, because the folder is locked",
+        "correct": false,
+        "why": "A folder has no lock."
+      },
+      {
+        "text": "Eleven files, as if complete",
+        "correct": true,
+        "why": "Right. A partial load looks like a whole one."
+      },
+      {
+        "text": "An error on read",
+        "correct": false,
+        "why": "Nothing knows which files were meant to be there."
+      },
+      {
+        "text": "The previous version of the data, restored by the storage service",
+        "correct": false,
+        "why": "Object storage does not know which files make a version."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyqkdk5q",
+    "version": 1,
+    "section": "the-swamp",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each swamp failure to what it looks like.",
+    "hint": "Five of the six in the section.",
+    "pairs": [
+      {
+        "left": "No transactions",
+        "right": "A half-written load read as complete"
+      },
+      {
+        "left": "No updates",
+        "right": "A one-row fix rewriting a file"
+      },
+      {
+        "left": "No history",
+        "right": "Yesterday's folder cannot be read"
+      },
+      {
+        "left": "Small files",
+        "right": "Half a million files a year"
+      },
+      {
+        "left": "No catalogue",
+        "right": "A folder called orders_v2_final"
+      }
+    ]
+  },
+  {
+    "id": "ex-bb05q1zx",
+    "version": 1,
+    "section": "what-a-table-format-adds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an open table format add to a folder of Parquet files?",
+    "hint": "One thing beside the data.",
+    "choices": [
+      {
+        "text": "A server that every reader and writer connects to",
+        "correct": false,
+        "why": "Delta needs no server; the lab ran none."
+      },
+      {
+        "text": "A new file format that replaces Parquet",
+        "correct": false,
+        "why": "The data stays ordinary Parquet."
+      },
+      {
+        "text": "An index of every row's position in every file",
+        "correct": false,
+        "why": "It lists files and their statistics, not rows."
+      },
+      {
+        "text": "A log of commits",
+        "correct": true,
+        "why": "Right. Each commit says which files it added and removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-184s6cjn",
+    "version": 1,
+    "section": "what-a-table-format-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a job that dies halfway through a Delta write leave no partial table?",
+    "hint": "What does a reader read first?",
+    "choices": [
+      {
+        "text": "The library deletes the files it wrote when the process ends",
+        "correct": false,
+        "why": "A process that dies cleans nothing up."
+      },
+      {
+        "text": "Object storage rolls the folder back to its state before the job",
+        "correct": false,
+        "why": "Object storage knows nothing about the job."
+      },
+      {
+        "text": "Its new files were never named in a commit, and readers follow only the log",
+        "correct": true,
+        "why": "Right. Readers follow the log, so uncommitted files are invisible."
+      },
+      {
+        "text": "Each file is written inside its own database transaction",
+        "correct": false,
+        "why": "There is no database; there is a log."
+      }
+    ]
+  },
+  {
+    "id": "ex-taqjn7p0",
+    "version": 1,
+    "section": "what-a-table-format-adds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each format to where it came from.",
+    "hint": "Three companies.",
+    "pairs": [
+      {
+        "left": "Delta Lake",
+        "right": "Databricks"
+      },
+      {
+        "left": "Apache Iceberg",
+        "right": "Netflix"
+      },
+      {
+        "left": "Apache Hudi",
+        "right": "Uber"
+      }
+    ]
+  },
+  {
+    "id": "ex-jpr6nm80",
+    "version": 1,
+    "section": "delta-by-hand",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana wrote 404,067 rows of 2024 and 483,410 of 2025. How many rows does the table hold after commit 1?",
+    "hint": "Add.",
+    "value": 887477,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-scv0bhgr",
+    "version": 1,
+    "section": "delta-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of the folder is the table, rather than the data?",
+    "hint": "Two kinds of file.",
+    "choices": [
+      {
+        "text": "The JSON files in _delta_log, one per commit",
+        "correct": true,
+        "why": "Right. Without them the folder is a pile of Parquet."
+      },
+      {
+        "text": "The folders named year=2024 and year=2025",
+        "correct": false,
+        "why": "Those are partitions, and the log records them too."
+      },
+      {
+        "text": "The Parquet files, because their footers list the schema",
+        "correct": false,
+        "why": "A Parquet file knows only itself."
+      },
+      {
+        "text": "The newest Parquet files",
+        "correct": false,
+        "why": "Newest is not current: after an update the old file stays beside the new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cj94fr8",
+    "version": 1,
+    "section": "the-transaction-log",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the actions of Ana's commit 0 in the order they appear in the file.",
+    "hint": "Who wrote it comes first; the data file last.",
+    "items": [
+      "commitInfo",
+      "protocol",
+      "metaData",
+      "add"
+    ],
+    "trap": "`add` last: the file joins a table whose schema the earlier lines have already declared."
+  },
+  {
+    "id": "ex-1g766f0h",
+    "version": 1,
+    "section": "the-transaction-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two writers try to create commit 2 at the same moment. What happens?",
+    "hint": "A commit is one file appearing.",
+    "choices": [
+      {
+        "text": "Both succeed",
+        "correct": false,
+        "why": "Only one file can be commit 2."
+      },
+      {
+        "text": "The table is locked until an administrator chooses one of them",
+        "correct": false,
+        "why": "Nobody has to choose; the storage does."
+      },
+      {
+        "text": "The later one overwrites the earlier one's commit file",
+        "correct": false,
+        "why": "Creating the file is atomic, so the second finds it taken."
+      },
+      {
+        "text": "One wins; the other rereads and retries",
+        "correct": true,
+        "why": "Right. No server is needed between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9k4ejb6",
+    "version": 1,
+    "section": "the-transaction-log",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table with thousands of commits writes a ___ now and then, a Parquet file with the state as of that commit, so readers need not replay from zero.",
+    "hint": "Where a reader starts.",
+    "blanks": [
+      {
+        "accept": [
+          "checkpoint"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eyxehpw2",
+    "version": 1,
+    "section": "updates",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's update changed 1 row and copied 404,066. How many rows did the new 2024 file hold?",
+    "hint": "Changed plus copied.",
+    "value": 404067,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hrz4bd4m",
+    "version": 1,
+    "section": "updates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did a one-row correction copy 404,066 rows?",
+    "hint": "Parquet files are written once.",
+    "choices": [
+      {
+        "text": "Delta rewrites every file in the table on every commit, to keep statistics exact",
+        "correct": false,
+        "why": "The 2025 file was not touched."
+      },
+      {
+        "text": "Copy on write rewrites the file",
+        "correct": true,
+        "why": "Right. The file holding the row was read and written again whole."
+      },
+      {
+        "text": "The predicate matched the whole year because order ids repeat each year",
+        "correct": false,
+        "why": "One row was updated."
+      },
+      {
+        "text": "The library made a backup copy before changing anything",
+        "correct": false,
+        "why": "The old file is the backup; it was left where it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhcerxzm",
+    "version": 1,
+    "section": "updates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What do deletion vectors change about a delete?",
+    "hint": "Merge on read.",
+    "choices": [
+      {
+        "text": "They record row positions to ignore, and leave the rewrite for a later compaction",
+        "correct": true,
+        "why": "Right. The rewrite waits for a compaction."
+      },
+      {
+        "text": "They remove the rows from the file in place, without rewriting it",
+        "correct": false,
+        "why": "A Parquet file is not edited in place."
+      },
+      {
+        "text": "They delete the old file from disk at once, so no vacuum is needed",
+        "correct": false,
+        "why": "Nothing is deleted from disk by a commit."
+      },
+      {
+        "text": "They make every reader rewrite the file the first time it reads it",
+        "correct": false,
+        "why": "Readers skip the positions; they do not rewrite."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fgwe0k4",
+    "version": 1,
+    "section": "time-travel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which is the last version of Ana's table that still has the till error?",
+    "hint": "The update was commit 2.",
+    "choices": [
+      {
+        "text": "Version 2, the current one, because the old file is still on disk",
+        "correct": false,
+        "why": "Version 2 reads the corrected file."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "Old versions keep their files."
+      },
+      {
+        "text": "Version 1, the one before the update",
+        "correct": true,
+        "why": "Right. 9,574,389,852, before the correction."
+      },
+      {
+        "text": "Version 0",
+        "correct": false,
+        "why": "It has the error, but version 1 is later and has it too."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc0fpnp8",
+    "version": 1,
+    "section": "time-travel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a real vacuum with zero retention, which versions of Ana's table can still be read?",
+    "hint": "Which file goes?",
+    "choices": [
+      {
+        "text": "All three",
+        "correct": false,
+        "why": "The log lists a file that no longer exists."
+      },
+      {
+        "text": "Only version 2",
+        "correct": true,
+        "why": "Right. Versions 0 and 1 both need the original 2024 file."
+      },
+      {
+        "text": "Versions 1 and 2, because version 0 had no 2025 file",
+        "correct": false,
+        "why": "Version 1 needs the original 2024 file too."
+      },
+      {
+        "text": "None, until the table is rewritten from the warehouse",
+        "correct": false,
+        "why": "The current version's files are kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsvv9sdg",
+    "version": 1,
+    "section": "time-travel",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer asks to be forgotten and is deleted from a Delta table today. When are they gone from the disk?",
+    "hint": "Old files stay.",
+    "choices": [
+      {
+        "text": "Today, when the delete is committed",
+        "correct": false,
+        "why": "The commit only stops listing the old files."
+      },
+      {
+        "text": "Never, because Delta keeps every version for ever by design",
+        "correct": false,
+        "why": "Vacuum exists to remove them."
+      },
+      {
+        "text": "When the next checkpoint is written, since it replaces the log",
+        "correct": false,
+        "why": "A checkpoint summarises the log; it deletes no data file."
+      },
+      {
+        "text": "After a vacuum",
+        "correct": true,
+        "why": "Right. Until then old versions still hold the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvv3q4y4",
+    "version": 1,
+    "section": "schema-enforcement",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana appended a row with 13 columns to a 12-column Delta table without `schema_mode`. What did the history show afterwards?",
+    "hint": "Where did the refusal happen?",
+    "choices": [
+      {
+        "text": "A commit 3 marked as failed, with the error message",
+        "correct": false,
+        "why": "Refused writes leave no commit at all."
+      },
+      {
+        "text": "A commit 3 that dropped the extra column and appended the rest",
+        "correct": false,
+        "why": "Nothing was appended."
+      },
+      {
+        "text": "Still ending at commit 2: the write was refused before any commit",
+        "correct": true,
+        "why": "Right. The write was refused before the commit."
+      },
+      {
+        "text": "A commit 3 adding the column, with no rows",
+        "correct": false,
+        "why": "That needs `schema_mode=\"merge\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddvg3k8w",
+    "version": 1,
+    "section": "schema-enforcement",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would a Delta table's schema check stop? Choose all that apply.",
+    "hint": "It checks shape, not meaning.",
+    "choices": [
+      {
+        "text": "A batch with an extra column",
+        "correct": true,
+        "why": "Yes, as the capture showed."
+      },
+      {
+        "text": "A batch with text where a number is declared",
+        "correct": true,
+        "why": "Yes, a type mismatch."
+      },
+      {
+        "text": "Prices in reais written into a column meant for centavos",
+        "correct": false,
+        "why": "Same type, wrong meaning: it passes."
+      },
+      {
+        "text": "A renamed source column already mapped to the table's own name",
+        "correct": false,
+        "why": "The table sees its own name: it passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rdvzgqa",
+    "version": 1,
+    "section": "iceberg-and-hudi",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each idea to the format the section ties it to.",
+    "hint": "Two each, roughly.",
+    "pairs": [
+      {
+        "left": "Hidden partitioning",
+        "right": "Iceberg"
+      },
+      {
+        "left": "Streams of updates from change data capture",
+        "right": "Hudi"
+      },
+      {
+        "left": "A flat JSON log, one file per commit",
+        "right": "Delta Lake"
+      }
+    ]
+  },
+  {
+    "id": "ex-d67bnc0v",
+    "version": 1,
+    "section": "iceberg-and-hudi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does choosing Iceberg over Delta change in the star of lessons 2 to 6?",
+    "hint": "Format against model.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The formats differ in metadata; facts and dimensions are the same."
+      },
+      {
+        "text": "Dimensions must be stored as manifests rather than tables",
+        "correct": false,
+        "why": "Manifests list data files; they are not a modelling choice."
+      },
+      {
+        "text": "Type 2 history moves into the format's time travel",
+        "correct": false,
+        "why": "Time travel is about table versions, not about when a customer moved."
+      },
+      {
+        "text": "Surrogate keys are replaced by Iceberg's column ids",
+        "correct": false,
+        "why": "Column ids name columns, not rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-97p5ke0t",
+    "version": 1,
+    "section": "medallion",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the medallion layers in the order data passes through them.",
+    "hint": "Metals, cheapest first.",
+    "items": [
+      "bronze: as it arrived",
+      "silver: cleaned and conformed",
+      "gold: modelled for questions"
+    ],
+    "trap": "Cleaning before modelling: gold is built from silver, never straight from bronze."
+  },
+  {
+    "id": "ex-6f56acy6",
+    "version": 1,
+    "section": "medallion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which layer does the website's `client_id` become `customer_id`?",
+    "hint": "Once, and nowhere else.",
+    "choices": [
+      {
+        "text": "Bronze, so the raw file is corrected as soon as it lands",
+        "correct": false,
+        "why": "Bronze keeps the file as received."
+      },
+      {
+        "text": "Gold",
+        "correct": false,
+        "why": "Then the fix would be repeated per table."
+      },
+      {
+        "text": "In each dashboard's query",
+        "correct": false,
+        "why": "That is the swamp's way: every reader separately."
+      },
+      {
+        "text": "Silver",
+        "correct": true,
+        "why": "Right. Every reader after it sees one name."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8mtmdfv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job overwrites a Delta table's 2025 partition. On Tuesday a report reads wrong numbers; Wednesday's load already ran. What answers \"what did Monday's report read?\"",
+    "hint": "Versions, and how long they last.",
+    "choices": [
+      {
+        "text": "Reading the raw files of the 2025 folder in order of their timestamps",
+        "correct": false,
+        "why": "The folder holds files from several versions; only the log says which belonged together."
+      },
+      {
+        "text": "Reading the version that was current on Monday",
+        "correct": true,
+        "why": "Right, as long as no vacuum has removed its files."
+      },
+      {
+        "text": "Rerunning Monday's load",
+        "correct": false,
+        "why": "The source has moved on since Monday."
+      },
+      {
+        "text": "Nothing, because an overwrite deletes the previous files immediately",
+        "correct": false,
+        "why": "An overwrite is a commit; old files stay until a vacuum."
+      }
+    ]
+  },
+  {
+    "id": "ex-fks671as",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team keeps raw CSVs in a bucket and every analyst cleans them in a notebook. Which change from this lesson fixes the most?",
+    "hint": "Where cleaning happens.",
+    "choices": [
+      {
+        "text": "A silver layer, cleaned once into tables with a schema, that every analyst reads",
+        "correct": true,
+        "why": "Right. One clean-up, in a table with a schema."
+      },
+      {
+        "text": "Converting the CSVs to Parquet in place, keeping the notebooks",
+        "correct": false,
+        "why": "Faster reads; still one clean-up per analyst."
+      },
+      {
+        "text": "Turning on versioning in the bucket so every file keeps its history",
+        "correct": false,
+        "why": "History of files is not a table, and cleaning stays repeated."
+      },
+      {
+        "text": "Moving the notebooks to a bigger cluster so clean-ups run faster",
+        "correct": false,
+        "why": "Faster duplication is still duplication."
+      }
+    ]
+  }
+]
