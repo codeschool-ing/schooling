@@ -926,6 +926,105 @@ EOF
 }
 commit_8() { at 2026-09-22T10:00:00-03:00 'Run the checks on GitHub Actions and on GitLab CI'; }
 
+# ---- step 9: Build one artifact, deploy it, and check it answers  [v1.4.0]
+step_9() {
+  mkdir -p ops
+  cat > ops/build.sh <<'EOF'
+#!/usr/bin/env bash
+# Build the release artifact: the committed tree at HEAD with its version
+# stamped in, as one tarball, and the SHA-256 that names those exact bytes.
+# The version is the tag on HEAD without its "v", or dev-<commit> if none.
+set -euo pipefail
+tag=$(git describe --tags --exact-match 2>/dev/null || true)
+version=${tag#v}
+version=${version:-dev-$(git rev-parse --short HEAD)}
+name=shipquote-$version
+mkdir -p dist
+git archive --format=tar.gz --prefix="$name/" \
+  --add-virtual-file="$name/shipquote/VERSION:$version" \
+  -o "dist/$name.tar.gz" HEAD
+(cd dist && sha256sum "$name.tar.gz" > "$name.tar.gz.sha256")
+echo "dist/$name.tar.gz"
+EOF
+  cat > ops/smoke.sh <<'EOF'
+#!/usr/bin/env bash
+# The smoke test: is the deployed program up, and is it the version we meant?
+#   ops/smoke.sh http://127.0.0.1:8200 1.4.0
+set -uo pipefail
+url=$1 want=$2
+health=$(curl -s --max-time 2 "$url/health") || { echo "smoke: $url does not answer"; exit 1; }
+[ "$health" = '{"status": "ok"}' ] || { echo "smoke: /health said $health"; exit 1; }
+version=$(curl -s --max-time 2 "$url/version")
+case $version in
+  *"\"version\": \"$want\""*) echo "smoke: $url is up and running $want" ;;
+  *) echo "smoke: $url runs $version, expected $want"; exit 1 ;;
+esac
+EOF
+  cat > ops/deploy.sh <<'EOF'
+#!/usr/bin/env bash
+# Deploy one built artifact to one environment, then smoke-test it.
+#   ops/deploy.sh staging dist/shipquote-1.4.0.tar.gz
+# An environment is a directory under ~/envs holding its own config.env;
+# every release is unpacked beside the others, and `current` points at one.
+set -euo pipefail
+env=$1 artifact=$2
+root=${SHIPQUOTE_ENVS:-$HOME/envs}/$env
+[ -f "$root/config.env" ] || { echo "deploy: $root/config.env does not exist" >&2; exit 1; }
+(cd "$(dirname "$artifact")" && sha256sum --check --quiet "$(basename "$artifact").sha256")
+name=$(basename "$artifact" .tar.gz)
+version=${name#shipquote-}
+mkdir -p "$root/releases"
+tar -xzf "$artifact" -C "$root/releases"
+[ -L "$root/current" ] && ln -sfn "$(readlink "$root/current")" "$root/previous"
+ln -sfn "releases/$name" "$root/current"
+"$(dirname "$0")/restart.sh" "$env"
+set -a; . "$root/config.env"; set +a
+"$(dirname "$0")/smoke.sh" "http://127.0.0.1:$SHIPQUOTE_PORT" "$version"
+EOF
+  cat > ops/restart.sh <<'EOF'
+#!/usr/bin/env bash
+# Stop the environment's running process, if any, and start `current` with
+# the environment's own configuration.
+set -euo pipefail
+env=$1
+root=${SHIPQUOTE_ENVS:-$HOME/envs}/$env
+if [ -f "$root/pid" ] && kill -0 "$(cat "$root/pid")" 2>/dev/null; then
+  kill "$(cat "$root/pid")"
+  while kill -0 "$(cat "$root/pid")" 2>/dev/null; do sleep 0.1; done
+fi
+set -a; . "$root/config.env"; set +a
+export SHIPQUOTE_ENV=$env
+cd "$root/current"
+setsid python3 -m shipquote.app >> "$root/app.log" 2>&1 < /dev/null &
+echo $! > "$root/pid"
+for _ in $(seq 50); do
+  curl -s --max-time 1 "http://127.0.0.1:$SHIPQUOTE_PORT/health" > /dev/null && exit 0
+  sleep 0.1
+done
+echo "restart: $env did not answer on port $SHIPQUOTE_PORT" >&2
+exit 1
+EOF
+  cat > ops/rollback.sh <<'EOF'
+#!/usr/bin/env bash
+# Point the environment back at the release it ran before, restart, smoke.
+set -euo pipefail
+env=$1
+root=${SHIPQUOTE_ENVS:-$HOME/envs}/$env
+[ -L "$root/previous" ] || { echo "rollback: $env has no previous release" >&2; exit 1; }
+before=$(readlink "$root/previous")
+ln -sfn "$(readlink "$root/current")" "$root/previous"
+ln -sfn "$before" "$root/current"
+"$(dirname "$0")/restart.sh" "$env"
+set -a; . "$root/config.env"; set +a
+"$(dirname "$0")/smoke.sh" "http://127.0.0.1:$SHIPQUOTE_PORT" "${before#releases/shipquote-}"
+EOF
+  chmod +x ops/*.sh
+}
+commit_9() {
+  at 2026-09-24T11:00:00-03:00 'Build one artifact, deploy it, and check it answers'
+  GIT_COMMITTER_DATE=2026-09-24T11:00:00-03:00 git tag -a v1.4.0 -m 'shipquote 1.4.0'
+}
+
 steps() {
   echo ' 1  2026-09-01  Money in cents, with its first tests'
   echo ' 2  2026-09-02  Price a parcel by zone and weight'
@@ -935,8 +1034,9 @@ steps() {
   echo ' 6  2026-09-14  Send e-mail over SMTP, and mock the mailer by its real shape'
   echo ' 7  2026-09-17  Build test data with a factory, a table and a property'
   echo ' 8  2026-09-22  Run the checks on GitHub Actions and on GitLab CI'
+  echo ' 9  2026-09-24  Build one artifact, deploy it, and check it answers  [v1.4.0]'
 }
-LAST=8
+LAST=9
 
 venv() {
   local dir=$1 py=${2:-3.13}
