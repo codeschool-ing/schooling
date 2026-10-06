@@ -1319,6 +1319,104 @@ def l18():
     show('the drawn pair, month-on-month changes: r', f'{pearson(da, db):.4f}')
 
 
+def inverse(a):
+    n = len(a)
+    return [solve(a, [1.0 if i == j else 0.0 for i in range(n)]) for j in range(n)]
+
+
+def ols_full(rows, ys):
+    """Coefficients, their standard errors, t, p, R², adjusted R², residual sd."""
+    beta, r2, adj, fitted = ols(rows, ys)
+    x = [[1.0] + list(r) for r in rows]
+    n, k = len(x), len(x[0])
+    xtx = [[sum(x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+    inv = inverse(xtx)  # columns, but xtx is symmetric so rows work too
+    sse = sum((y - f) ** 2 for y, f in zip(ys, fitted))
+    s2 = sse / (n - k)
+    se = [math.sqrt(s2 * inv[j][j]) for j in range(k)]
+    ts = [b / s for b, s in zip(beta, se)]
+    ps = [2 * (1 - t_cdf(abs(t), n - k)) for t in ts]
+    return dict(beta=beta, se=se, t=ts, p=ps, r2=r2, adj=adj, s=math.sqrt(s2), fitted=fitted,
+                sse=sse, df=n - k)
+
+
+def noise_columns(n, k, seed=1900):
+    d = Draw(seed)
+    return [[d.normal(0, 1) for _ in range(n)] for _ in range(k)]
+
+
+@lesson(19)
+def l19():
+    km = [r['km'] for r in DELIVERIES]
+    mins = [r['minutes'] for r in DELIVERIES]
+    items = [r['items'] for r in DELIVERIES]
+    rain = [r['rain'] for r in DELIVERIES]
+    it, bk = column('items'), column('basket')
+    a, b = line(it, bk)
+    show('12 orders: basket = a + b items', f'{a:.4f} {b:.4f}')
+    show('b = r sy/sx', f'{pearson(it, bk) * sd(bk) / sd(it):.4f}')
+    show('predicted basket at 10 items', f'{a + 10 * b:.2f}')
+    fit = ols_full([(k,) for k in km], mins)
+    show('minutes ~ km: a, b, se, t, R2, s', f'{fit["beta"][0]:.4f} {fit["beta"][1]:.4f} {fit["se"][1]:.4f} {fit["t"][1]:.3f} {fit["r2"]:.4f} {fit["s"]:.4f}')
+    a2, b2 = fit['beta']
+    show('predictions at 2, 6, 13, 30 km', [round(a2 + b2 * k, 2) for k in (2, 6, 13, 30)])
+    my = mean(mins)
+    sst = sum((y - my) ** 2 for y in mins)
+    ssr = sum((f - my) ** 2 for f in fit['fitted'])
+    show('SST, SSR, SSE, SSR/SST', f'{sst:.2f} {ssr:.2f} {fit["sse"]:.2f} {ssr / sst:.4f}')
+    show('sd of minutes', f'{sd(mins):.4f}')
+    res = [y - f for y, f in zip(mins, fit['fitted'])]
+    show('residual: min, max, mean', f'{min(res):.3f} {max(res):.3f} {mean(res):.2e}')
+    # the first few deliveries, for a worked residual
+    for i in range(3):
+        show(f'delivery {i}: km, minutes, fitted, residual', f'{km[i]} {mins[i]} {fit["fitted"][i]:.2f} {res[i]:.2f}')
+    m = ols_full(list(zip(km, items, rain)), mins)
+    show('minutes ~ km + items + rain: beta', [round(v, 4) for v in m['beta']])
+    show('  se', [round(v, 4) for v in m['se']])
+    show('  t', [round(v, 3) for v in m['t']])
+    show('  p', [f'{v:.2e}' for v in m['p']])
+    show('  R2, adj, s', f'{m["r2"]:.4f} {m["adj"]:.4f} {m["s"]:.4f}')
+    show('  prediction 6 km, 8 items, rain', f'{m["beta"][0] + 6 * m["beta"][1] + 8 * m["beta"][2] + m["beta"][3]:.2f}')
+    show('  prediction 6 km, 8 items, dry', f'{m["beta"][0] + 6 * m["beta"][1] + 8 * m["beta"][2]:.2f}')
+    for name, xs in (('items', items), ('rain', rain)):
+        s1 = ols_full([(v,) for v in xs], mins)
+        show(f'minutes ~ {name} alone: b, R2', f'{s1["beta"][1]:.4f} {s1["r2"]:.4f}')
+    hoods = [r['hood'] for r in DELIVERIES]
+    dums = [(1 if h == 'Cambuí' else 0, 1 if h == 'Taquaral' else 0, 1 if h == 'Barão Geraldo' else 0) for h in hoods]
+    d1 = ols_full(dums, mins)
+    show('minutes ~ hood dummies (Centro base): beta', [round(v, 4) for v in d1['beta']])
+    show('  R2', f'{d1["r2"]:.4f}')
+    for h, _, _ in HOODS:
+        show(f'  mean {h}', f'{mean([m_ for m_, hh in zip(mins, hoods) if hh == h]):.4f}')
+    d2 = ols_full([(k,) + dd for k, dd in zip(km, dums)], mins)
+    show('minutes ~ km + hood dummies: beta', [round(v, 4) for v in d2['beta']])
+    show('  se', [round(v, 4) for v in d2['se']])
+    show('  p', [f'{v:.3f}' for v in d2['p']])
+    show('  R2, adj', f'{d2["r2"]:.4f} {d2["adj"]:.4f}')
+    c = ols_full(list(zip(COUPONS, km)), mins)
+    show('minutes ~ coupon + km: beta, se, p coupon', f'{[round(v, 3) for v in c["beta"]]} {c["se"][1]:.3f} {c["p"][1]:.3f}')
+    c0 = ols_full([(v,) for v in COUPONS], mins)
+    show('minutes ~ coupon: beta, p', f'{[round(v, 3) for v in c0["beta"]]} {c0["p"][1]:.2e}')
+    noise = noise_columns(120, 30)
+    base = list(zip(km, items, rain))
+    rows = []
+    for k in (0, 5, 10, 20, 30):
+        X = [tuple(base[i]) + tuple(noise[j][i] for j in range(k)) for i in range(120)]
+        f_ = ols_full(X, mins)
+        rows.append((k, round(f_['r2'], 4), round(f_['adj'], 4)))
+    show('noise predictors added: k, R2, adj', rows)
+    # train on the first 15 of each neighbourhood, test on the rest
+    train = [i for i in range(120) if i % 30 < 15]
+    test = [i for i in range(120) if i % 30 >= 15]
+    for k in (0, 30):
+        X = [tuple(base[i]) + tuple(noise[j][i] for j in range(k)) for i in range(120)]
+        f_ = ols_full([X[i] for i in train], [mins[i] for i in train])
+        pred = [f_['beta'][0] + sum(bb * v for bb, v in zip(f_['beta'][1:], X[i])) for i in test]
+        err = math.sqrt(mean([(mins[i] - p_) ** 2 for i, p_ in zip(test, pred)]))
+        tr_err = math.sqrt(f_['sse'] / len(train))
+        show(f'train/test with {k} noise columns: train R2, train rmse, test rmse', f'{f_["r2"]:.4f} {tr_err:.3f} {err:.3f}')
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:

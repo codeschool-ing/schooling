@@ -2461,6 +2461,226 @@ def l18_randomise(lang):
     return f, t['cap']
 
 
+# ----------------------------------------------------------------- lesson 19
+
+def _kmfit():
+    km = [r['km'] for r in S.DELIVERIES]
+    mn = [r['minutes'] for r in S.DELIVERIES]
+    a, b = S.line(km, mn)
+    return km, mn, a, b
+
+
+@figure('l19-residuals', 19)
+def l19_residuals(lang):
+    km, mn, a, b = _kmfit()
+    pick = [i for i in range(120) if i % 6 == 0]
+    t = {'en': dict(
+        label=f'Twenty of the deliveries, distance across and minutes up, with the least-squares '
+              f'line through all 120, minutes = {num("en", a, 2)} + {num("en", b, 2)} × km. A short '
+              f'vertical segment joins each point to the line: its residual. Points above the line '
+              f'took longer than predicted, points below were quicker.',
+        x='distance (km)', y='minutes', res='residual',
+        cap='The least-squares line is the one that makes the sum of the squared residuals, the '
+            'vertical gaps, as small as it can be.'),
+        'pt': dict(
+        label=f'Vinte das entregas, distância na horizontal e minutos na vertical, com a reta de '
+              f'mínimos quadrados pelas 120, minutos = {num("pt", a, 2)} + {num("pt", b, 2)} × km. Um '
+              f'segmento vertical curto liga cada ponto à reta: o resíduo dele. Pontos acima da reta '
+              f'demoraram mais que o previsto, pontos abaixo foram mais rápidos.',
+        x='distância (km)', y='minutos', res='resíduo',
+        cap='A reta de mínimos quadrados é a que deixa a soma dos resíduos ao quadrado, as '
+            'distâncias verticais, a menor possível.')}[lang]
+    f = Fig('l19-residuals', 600, 320, t['label'])
+    p = Plot(f, 70, 36, 580, 260, 0, 14, 20, 70)
+    p.yaxis(range(20, 71, 10), label=t['y'])
+    p.xaxis(range(0, 15, 2), label=t['x'])
+    f.line(p.sx(0.5), p.sy(a + 0.5 * b), p.sx(14), p.sy(a + 14 * b), stroke='--amber', width=2)
+    for i in pick:
+        f.line(p.sx(km[i]), p.sy(mn[i]), p.sx(km[i]), p.sy(a + b * km[i]), stroke='--paper', width=1.2)
+    dots(f, p, [km[i] for i in pick], [mn[i] for i in pick], r=3.6)
+    # label the largest residual among those drawn
+    j = max(pick, key=lambda i: mn[i] - a - b * km[i])
+    f.text(p.sx(km[j]) - 8, p.sy((mn[j] + a + b * km[j]) / 2), t['res'], size=10, anchor='end')
+    return f, t['cap']
+
+
+@figure('l19-slope', 19)
+def l19_slope(lang):
+    km, mn, a, b = _kmfit()
+    t = {'en': dict(
+        label=f'All 120 deliveries as faint points, with the fitted line. A right-angled triangle '
+              f'under the line runs from 4 km to 8 km, 4 km across, and rises '
+              f'{num("en", 4 * b, 2)} minutes. The line meets the vertical axis at '
+              f'{num("en", a, 2)} minutes.',
+        x='distance (km)', y='minutes', run='+4 km', rise=f'+{num("en", 4 * b, 1)} min',
+        icpt=f'intercept {num("en", a, 1)}',
+        cap=f'The slope is the rise per kilometre: {num("en", b, 2)} minutes. The intercept is '
+            f'where the line meets zero kilometres, {num("en", a, 1)} minutes: roughly the time '
+            f'spent before and after the ride.'),
+        'pt': dict(
+        label=f'As 120 entregas como pontos claros, com a reta ajustada. Um triângulo retângulo sob '
+              f'a reta vai de 4 km a 8 km, 4 km de base, e sobe {num("pt", 4 * b, 2)} minutos. A '
+              f'reta encontra o eixo vertical em {num("pt", a, 2)} minutos.',
+        x='distância (km)', y='minutos', run='+4 km', rise=f'+{num("pt", 4 * b, 1)} min',
+        icpt=f'intercepto {num("pt", a, 1)}',
+        cap=f'A inclinação é a subida por quilômetro: {num("pt", b, 2)} minutos. O intercepto é '
+            f'onde a reta encontra zero quilômetro, {num("pt", a, 1)} minutos: mais ou menos o '
+            f'tempo gasto antes e depois do trajeto.')}[lang]
+    f = Fig('l19-slope', 600, 320, t['label'])
+    p = Plot(f, 70, 36, 580, 260, 0, 14, 20, 70)
+    p.yaxis(range(20, 71, 10), label=t['y'])
+    p.xaxis(range(0, 15, 2), label=t['x'])
+    for x, y in zip(km, mn):
+        f.circle(p.sx(x), p.sy(y), 2.4, fill=None, stroke='--paper-dim', width=0.8)
+    f.line(p.sx(0), p.sy(a), p.sx(14), p.sy(a + 14 * b), stroke='--amber', width=2)
+    x1, x2 = 4, 8
+    f.line(p.sx(x1), p.sy(a + b * x1), p.sx(x2), p.sy(a + b * x1), stroke='--paper', width=1.6)
+    f.line(p.sx(x2), p.sy(a + b * x1), p.sx(x2), p.sy(a + b * x2), stroke='--paper', width=1.6)
+    f.text(p.sx(6), p.sy(a + b * x1) + 13, t['run'], size=10, weight='600')
+    f.text(p.sx(x2) + 8, p.sy(a + b * 6), t['rise'], size=10, weight='600', anchor='start')
+    f.circle(p.sx(0), p.sy(a), 4.5, fill='--amber', stroke='--amber')
+    f.line(p.sx(0.15), p.sy(a) - 6, p.sx(0.5), p.sy(52) + 8, stroke='--amber', width=1)
+    f.text(p.sx(0.3), p.sy(52), t['icpt'], size=10, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l19-extrapolate', 19)
+def l19_extrapolate(lang):
+    km, mn, a, b = _kmfit()
+    top = max(km)
+    t = {'en': dict(
+        label=f'The 120 deliveries cover 1 to {num("en", top, 1)} km. The fitted line is drawn '
+              f'solid over that range and dashed beyond it, out to 30 km, where it predicts '
+              f'{num("en", a + 30 * b, 1)} minutes. The region beyond the data is shaded and '
+              f'labelled no data here.',
+        x='distance (km)', y='minutes', none='no data here', q=f'{num("en", a + 30 * b, 1)}?',
+        cap='Inside the range of the data the line is a summary of what happened. Outside it, the '
+            'line is a guess that the same pattern continues, and nothing in the data can say '
+            'whether it does.'),
+        'pt': dict(
+        label=f'As 120 entregas cobrem de 1 a {num("pt", top, 1)} km. A reta ajustada está cheia '
+              f'nessa faixa e tracejada além dela, até 30 km, onde prevê '
+              f'{num("pt", a + 30 * b, 1)} minutos. A região além dos dados está sombreada e '
+              f'rotulada sem dados aqui.',
+        x='distância (km)', y='minutos', none='sem dados aqui', q=f'{num("pt", a + 30 * b, 1)}?',
+        cap='Dentro da faixa dos dados a reta resume o que aconteceu. Fora dela, a reta é um '
+            'palpite de que o mesmo padrão continua, e nada nos dados consegue dizer se continua.')}[lang]
+    f = Fig('l19-extrapolate', 600, 300, t['label'])
+    p = Plot(f, 70, 36, 580, 240, 0, 32, 20, 110)
+    f.path(f'M{p.sx(top):.1f} {p.y0:.1f} L{p.x1:.1f} {p.y0:.1f} L{p.x1:.1f} {p.y1:.1f} '
+           f'L{p.sx(top):.1f} {p.y1:.1f} Z', stroke=None, width=0, fill='--scan')
+    p.yaxis(range(20, 111, 20), label=t['y'])
+    p.xaxis(range(0, 33, 4), label=t['x'])
+    dots(f, p, km, mn, r=2.2)
+    f.line(p.sx(1), p.sy(a + b), p.sx(top), p.sy(a + b * top), stroke='--amber', width=2)
+    f.line(p.sx(top), p.sy(a + b * top), p.sx(30), p.sy(a + 30 * b), stroke='--amber', width=2, dash='6 4')
+    f.circle(p.sx(30), p.sy(a + 30 * b), 4.5, fill='--panel', stroke='--amber', width=2)
+    f.text(p.sx(30) - 10, p.sy(a + 30 * b) - 2, t['q'], size=10.5, anchor='end', weight='600', fill='--amber')
+    f.text(p.sx(23), p.y1 - 18, t['none'], size=11, weight='600')
+    return f, t['cap']
+
+
+@figure('l19-rain-lines', 19)
+def l19_rain_lines(lang):
+    D = S.DELIVERIES
+    m = S.ols_full([(r['km'], r['items'], r['rain']) for r in D], [r['minutes'] for r in D])
+    b0, bk, bi, br = m['beta']
+    t = {'en': dict(
+        label=f'The 120 deliveries, distance across and minutes up, with dry deliveries as hollow '
+              f'points and rainy ones as solid points. Two parallel lines show the model\'s '
+              f'prediction for an 8-item order: the lower for dry weather, the upper for rain, '
+              f'{num("en", br, 1)} minutes higher at every distance.',
+        x='distance (km)', y='minutes', dry='dry', wet='rain', gap=f'+{num("en", br, 1)} min',
+        cap='With distance, items and rain in one model, each coefficient is the change in '
+            'minutes for that variable alone, with the others held fixed. Rain shifts the whole '
+            'line up.'),
+        'pt': dict(
+        label=f'As 120 entregas, distância na horizontal e minutos na vertical, com as entregas sem '
+              f'chuva como pontos vazados e as com chuva como pontos cheios. Duas retas paralelas '
+              f'mostram a previsão do modelo para um pedido de 8 itens: a de baixo para tempo seco, a '
+              f'de cima para chuva, {num("pt", br, 1)} minutos acima em qualquer distância.',
+        x='distância (km)', y='minutos', dry='seco', wet='chuva', gap=f'+{num("pt", br, 1)} min',
+        cap='Com distância, itens e chuva num só modelo, cada coeficiente é a mudança em minutos '
+            'por aquela variável sozinha, com as outras fixas. A chuva desloca a reta inteira para '
+            'cima.')}[lang]
+    f = Fig('l19-rain-lines', 600, 320, t['label'])
+    p = Plot(f, 70, 36, 580, 260, 0, 14, 20, 75)
+    p.yaxis(range(20, 76, 10), label=t['y'])
+    p.xaxis(range(0, 15, 2), label=t['x'])
+    for r in D:
+        if r['rain']:
+            f.circle(p.sx(r['km']), p.sy(r['minutes']), 3, fill='--amber', stroke='--amber', width=0.8)
+        else:
+            f.circle(p.sx(r['km']), p.sy(r['minutes']), 2.6, fill=None, stroke='--paper-dim', width=1)
+    base = b0 + 8 * bi
+    f.line(p.sx(0.5), p.sy(base + 0.5 * bk), p.sx(14), p.sy(base + 14 * bk), stroke='--phosphor', width=2)
+    f.line(p.sx(0.5), p.sy(base + br + 0.5 * bk), p.sx(14), p.sy(base + br + 14 * bk), stroke='--amber', width=2)
+    f.text(p.sx(8.6), p.sy(base + 8.6 * bk) + 16, t['dry'], size=10.5, weight='600', fill='--phosphor')
+    f.text(p.sx(8.6), p.sy(base + br + 8.6 * bk) - 16, t['wet'], size=10.5, weight='600', fill='--amber')
+    xg = 7.6
+    f.line(p.sx(xg), p.sy(base + xg * bk), p.sx(xg), p.sy(base + br + xg * bk), stroke='--paper', width=1.4, arrow=True)
+    f.text(p.sx(xg) + 8, p.sy(base + br * 0.4 + xg * bk), t['gap'], size=10, anchor='start', weight='600')
+    return f, t['cap']
+
+
+@figure('l19-overfit', 19)
+def l19_overfit(lang):
+    D = S.DELIVERIES
+    mins = [r['minutes'] for r in D]
+    base = [(r['km'], r['items'], r['rain']) for r in D]
+    noise = S.noise_columns(120, 30)
+    train = [i for i in range(120) if i % 30 < 15]
+    test = [i for i in range(120) if i % 30 >= 15]
+    out = []
+    for k in (0, 30):
+        X = [tuple(base[i]) + tuple(noise[j][i] for j in range(k)) for i in range(120)]
+        f_ = S.ols_full([X[i] for i in train], [mins[i] for i in train])
+        pred = [f_['beta'][0] + sum(bb * v for bb, v in zip(f_['beta'][1:], X[i])) for i in test]
+        te = math.sqrt(S.mean([(mins[i] - p_) ** 2 for i, p_ in zip(test, pred)]))
+        tr = math.sqrt(f_['sse'] / len(train))
+        out.append((tr, te))
+    t = {'en': dict(
+        label=f'Typical prediction error, in minutes, for two models fitted to 60 deliveries and '
+              f'then tried on the other 60. With distance, items and rain: '
+              f'{num("en", out[0][0], 2)} on the deliveries it was fitted to and '
+              f'{num("en", out[0][1], 2)} on new ones. With 30 columns of random noise added: '
+              f'{num("en", out[1][0], 2)} on its own deliveries and {num("en", out[1][1], 2)} on '
+              f'new ones.',
+        g=['3 real predictors', '+ 30 of noise'], fit='fitted deliveries', new='new deliveries',
+        y='typical error (minutes)',
+        cap='The model stuffed with noise fits its own data better and predicts new data far '
+            'worse. It has learnt the accidents of 60 particular deliveries.'),
+        'pt': dict(
+        label=f'Erro típico de previsão, em minutos, de dois modelos ajustados a 60 entregas e '
+              f'depois testados nas outras 60. Com distância, itens e chuva: '
+              f'{num("pt", out[0][0], 2)} nas entregas em que foi ajustado e '
+              f'{num("pt", out[0][1], 2)} em entregas novas. Com 30 colunas de ruído aleatório '
+              f'acrescentadas: {num("pt", out[1][0], 2)} nas próprias entregas e '
+              f'{num("pt", out[1][1], 2)} nas novas.',
+        g=['3 preditores reais', '+ 30 de ruído'], fit='entregas do ajuste', new='entregas novas',
+        y='erro típico (minutos)',
+        cap='O modelo recheado de ruído se ajusta melhor aos próprios dados e prevê dados novos '
+            'muito pior. Ele aprendeu os acidentes de 60 entregas em particular.')}[lang]
+    f = Fig('l19-overfit', 600, 300, t['label'])
+    p = Plot(f, 70, 50, 580, 250, 0, 2, 0, 7)
+    p.yaxis(range(0, 8), label=t['y'])
+    for gi in range(2):
+        for k, (val, fill, stroke) in enumerate(((out[gi][0], '--phosphor-dim', '--phosphor'),
+                                                 (out[gi][1], '--amber', '--amber'))):
+            x0 = gi + 0.22 + k * 0.3
+            x1 = x0 + 0.26
+            f.path(f'M{p.sx(x0):.1f} {p.y1:.1f} L{p.sx(x0):.1f} {p.sy(val):.1f} L{p.sx(x1):.1f} '
+                   f'{p.sy(val):.1f} L{p.sx(x1):.1f} {p.y1:.1f} Z', stroke=stroke, width=1.2, fill=fill)
+            f.text(p.sx((x0 + x1) / 2), p.sy(val) - 9, num(lang, val, 2), size=10)
+        f.text(p.sx(gi + 0.5), p.y1 + 16, t['g'][gi], size=10.5, weight='600')
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    f.rect(330, 12, 12, 12, stroke='--phosphor', fill='--phosphor-dim', rx=1)
+    f.text(348, 18, t['fit'], size=10, anchor='start')
+    f.rect(470, 12, 12, 12, stroke='--amber', fill='--amber', rx=1)
+    f.text(488, 18, t['new'], size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
