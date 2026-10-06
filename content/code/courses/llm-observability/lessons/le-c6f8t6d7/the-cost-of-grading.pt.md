@@ -9,15 +9,15 @@ vem do mesmo lugar que o preço de servir, pelo mesmo `costs.py` que a aula 3 es
 
 ```
 ana@lab:~/obs$ python judge_cost.py
-judge calls   1854   input  455969   output  81566   US$ 0.312893   per call 0.00016877
+judge calls   1865   input  459293   output  82050   US$ 0.314997   per call 0.00016890
 assistant     1345   input  281072   output  46663   US$ 0.822803   per request 0.00061175
 ```
 
-As 1.854 chamadas são tudo o que esta aula avaliou: a semana inteira uma vez (1.221), as três amostras
-(118, 120 e 393) e os dois critérios da primeira resposta. Juntas custaram **US$ 0,31**, contra
+As 1.865 chamadas são tudo o que esta aula avaliou: a semana inteira uma vez (1.221), as três amostras
+(129, 120 e 393) e os dois critérios da primeira resposta. Juntas custaram **US$ 0,31**, contra
 **US$ 0,82** das 1.345 requisições que o assistente serviu na mesma semana.
 
-Por chamada a comparação fica mais nítida. **Um julgamento custa 0,00016877 dólar; uma resposta custou
+Por chamada a comparação fica mais nítida. **Um julgamento custa 0,00016890 dólar; uma resposta custou
 0,00061175.** Avaliar uma resposta num critério acrescenta 28% ao que custou escrevê-la. Duas coisas
 fixam esse número, e as duas podem mudar:
 
@@ -31,7 +31,7 @@ fixam esse número, e as duas podem mudar:
 
 ## Para onde vai o dinheiro
 
-A conta de servir da semana foi US$ 0,82, e um julgamento custa 0,00016877. A aritmética de uma
+A conta de servir da semana foi US$ 0,82, e um julgamento custa 0,00016890. A aritmética de uma
 política é curta:
 
 | Política | Chamadas ao juiz na semana | Avaliar como parte de servir |

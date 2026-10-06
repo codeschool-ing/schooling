@@ -9,15 +9,15 @@ comes from the same place as the price of serving, by the same `costs.py` that l
 
 ```
 ana@lab:~/obs$ python judge_cost.py
-judge calls   1854   input  455969   output  81566   US$ 0.312893   per call 0.00016877
+judge calls   1865   input  459293   output  82050   US$ 0.314997   per call 0.00016890
 assistant     1345   input  281072   output  46663   US$ 0.822803   per request 0.00061175
 ```
 
-The 1,854 calls are everything this lesson graded: the whole week once (1,221), the three samples
-(118, 120 and 393) and the two criteria of the first reply. Together they cost **US$0.31**, against
+The 1,865 calls are everything this lesson graded: the whole week once (1,221), the three samples
+(129, 120 and 393) and the two criteria of the first reply. Together they cost **US$0.31**, against
 **US$0.82** for the 1,345 requests the assistant served in the same week.
 
-Per call the comparison is sharper. **One judgement costs 0.00016877 dollars; one reply cost
+Per call the comparison is sharper. **One judgement costs 0.00016890 dollars; one reply cost
 0.00061175.** Grading one reply on one criterion adds 28% to what it cost to write. Two things set that
 number, and both can be moved:
 
@@ -31,7 +31,7 @@ number, and both can be moved:
 
 ## Where the money goes
 
-The week's serving bill was US$0.82, and one judgement costs 0.00016877. The arithmetic of a policy
+The week's serving bill was US$0.82, and one judgement costs 0.00016890. The arithmetic of a policy
 is short:
 
 | Policy | Judge calls in the week | Grading as a share of serving |

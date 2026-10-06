@@ -33,7 +33,7 @@ n =  4000   a pass rate of 70% is known to within  1.4%
 ±4.5; a thousand, ±2.8. That arithmetic decides most practical questions:
 
 - **To see a fall of 14 points**, as this week's release caused, a hundred replies per release would
-  have done, just. The uniform tenth had 71 and 47, which is why its intervals overlapped.
+  have done, just. The uniform tenth had 92 and 37, which is why its intervals overlapped.
 - **To see a fall of 3 points**, nearly two thousand per period are needed, because both rates carry
   an error and the two add up. At this shop's volume that is more than a week of traffic, and judging
   all of it may be cheaper than waiting.
@@ -45,6 +45,6 @@ n =  4000   a pass rate of 70% is known to within  1.4%
 "Did the release make it worse" is a question about two rates, and the honest answer comes from two
 intervals: if they do not overlap, yes; if they overlap a lot, the sample cannot say. With the whole week,
 73.5% to 79.4% against 57.6% to 66.7%: no overlap, the release made relevance worse by judge-1's
-measure. With the uniform tenth, 66.5% to 85.6% against 51.7% to 77.8%: a large overlap, and the right
+measure. With the uniform tenth, 65.3% to 82.7% against 40.9% to 71.3%: a large overlap, and the right
 report is "probably worse, not shown". Lesson 14 does this properly for a change tested before release,
 on the evaluation set, with a test made for two measurements of the same questions.

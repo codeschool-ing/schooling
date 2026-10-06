@@ -33,7 +33,7 @@ n =  4000   a pass rate of 70% is known to within  1.4%
 ±4,5; mil, ±2,8. Essa aritmética decide a maior parte das perguntas práticas:
 
 - **Para ver uma queda de 14 pontos**, como a desta semana, cem respostas por versão teriam bastado, por
-  pouco. O décimo uniforme teve 71 e 47, e é por isso que os seus intervalos se sobrepuseram.
+  pouco. O décimo uniforme teve 92 e 37, e é por isso que os seus intervalos se sobrepuseram.
 - **Para ver uma queda de 3 pontos**, são precisas quase duas mil por período, porque as duas taxas têm
   erro e os dois se somam. No volume desta loja isso é mais de uma semana de tráfego, e avaliar tudo
   pode sair mais barato do que esperar.
@@ -45,6 +45,6 @@ n =  4000   a pass rate of 70% is known to within  1.4%
 "A versão piorou?" é uma pergunta sobre duas taxas, e a resposta honesta vem de dois intervalos: se não
 se sobrepõem, sim; se se sobrepõem muito, a amostra não sabe dizer. Com a semana inteira, 73,5% a 79,4%
 contra 57,6% a 66,7%: nenhuma sobreposição, a versão piorou a relevância pela medida do judge-1. Com o
-décimo uniforme, 66,5% a 85,6% contra 51,7% a 77,8%: uma sobreposição grande, e o relato certo é
+décimo uniforme, 65,3% a 82,7% contra 40,9% a 71,3%: uma sobreposição grande, e o relato certo é
 "provavelmente pior, não demonstrado". A aula 14 faz isso como deve ser para uma mudança testada antes
 de ir ao ar, no conjunto de avaliação, com um teste feito para duas medições das mesmas perguntas.

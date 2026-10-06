@@ -126,6 +126,9 @@ def tag(text, name):
     return m.group(1).strip() if m else None
 
 
+SENTENCE = re.compile(r"(?<=[.!?\]])\s+(?=[A-Z])")   # a reply is prose: split it where checks.py does
+
+
 def clean(text):
     return re.sub(r"\s*\[\d+\]", "", text).strip()
 
@@ -139,7 +142,7 @@ def judge(system, conv):
                       "judge-1 needs a system prompt naming a Criterion and <question> and <reply>")
     crit = crit.group(1).lower()
     if crit == "faithfulness":
-        claims = [] if reply.startswith(REFUSAL) else [clean(s) for s in sentences(reply)]
+        claims = [] if reply.startswith(REFUSAL) else [c for c in map(clean, SENTENCE.split(reply.strip())) if c]
         found = split_sources(tag(last, "sources") or "")[0]
         source = [s for _, body in found for s in sentences(body)] or sentences(tag(last, "sources") or "")
         if not claims:

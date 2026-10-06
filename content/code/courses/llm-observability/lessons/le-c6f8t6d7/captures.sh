@@ -21,6 +21,12 @@
 # sample can be, and those are properties of sampling, not of the judge.
 # judge-1's price is the course's, from prices.json.
 #
+# THE UNIFORM SAMPLE IS A DIFFERENT TENTH ON EVERY RUN OF THIS SCRIPT. It is
+# chosen by a hash of the trace id, so grading the same spans twice picks the
+# same replies; but the replay gives every request a fresh random trace id, so
+# a new replay is a new tenth, and its numbers move inside their intervals.
+# Every other block is the same on every run.
+#
 # Recorded on Ubuntu 24.04, Python 3.11, TZ=America/Sao_Paulo, on 2026-10-06.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
