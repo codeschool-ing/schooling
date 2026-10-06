@@ -61,6 +61,6 @@ Isso se chama **vocabulário fechado**, e é o limite que define um detector cl�
 
 ## Quando um detector é a ferramenta certa
 
-Quando as classes que importam estão na lista, ou você pode treiná-lo com as suas (o Model Maker do MediaPipe retreina este modelo com imagens que você rotula), um detector é barato, rápido, roda no aparelho e devolve geometria: você recebe o *onde*, que uma frase de um modelo de visão e linguagem não entrega numa forma que um programa use. Contar pessoas numa fila, achar o produto na foto de um cliente antes de recortá-la, borrar todo rosto antes de guardar uma imagem: tudo isso é trabalho de detector.
+Quando as classes que importam estão na lista, ou você pode treiná-lo com as suas (o Model Maker do MediaPipe retreina este modelo com imagens que você rotula), um detector é barato, rápido, roda no aparelho e devolve geometria. Você recebe o *onde*, que uma frase de um modelo de visão e linguagem não entrega numa forma que um programa use. Contar pessoas numa fila, achar o produto na foto de um cliente antes de recortá-la, borrar todo rosto antes de guardar uma imagem: tudo isso é trabalho de detector.
 
 Quando a pergunta é aberta (*o que há de errado com este livro?*) a lista fechada é o instrumento errado, e a próxima seção trata do instrumento sem lista.

@@ -35,6 +35,6 @@ input_cost_per_image                       0.167
 
 Two things follow from that table.
 
-**The size of the file is in none of the units.** A transcription is billed by its seconds whether they arrive as a 1.7 MB WAV or a 120 KB Opus file; a picture is billed by its tokens, which come from its width and height after the provider resizes it, not from its bytes. Bytes matter for the limits and for the time a request takes, and the later sections measure both, but they are not what the bill counts.
+**The size of the file is in none of the units.** A transcription is billed by its seconds whether they arrive as a 1.7 MB WAV or a 120 KB Opus file; a picture is billed by its tokens, which come from its width and height after the provider resizes it, not from its bytes. Bytes matter for the limits and for the time a request takes, and the next three sections measure both, but they are not what the bill counts.
 
 **Each unit needs its own estimate.** A budget written as "tokens per user" does not cover a speech model billed per character or a transcription billed per second. The sheet is the place to read every unit in one format, and `ai-models` lesson 6 already said what it is not: a bill. Prices change, and the provider's own usage page is what a shop reconciles against.

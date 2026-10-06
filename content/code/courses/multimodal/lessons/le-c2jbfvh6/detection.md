@@ -61,6 +61,6 @@ This is called a **closed vocabulary**, and it is the defining limit of a classi
 
 ## When a detector is the right tool
 
-When the classes you care about are in its list, or you can train it on yours (MediaPipe's Model Maker retrains this model on pictures you label), a detector is cheap, fast, runs on the device and returns geometry: you get *where*, which a sentence from a vision-language model does not give you in a form a program can use. Counting people in a queue, finding the product in a customer's photo before cropping it, blurring every face before an image is stored: all of these are detector jobs.
+When the classes you care about are in its list, or you can train it on yours (MediaPipe's Model Maker retrains this model on pictures you label), a detector is cheap, fast, runs on the device and returns geometry. You get *where*, which a sentence from a vision-language model does not give you in a form a program can use. Counting people in a queue, finding the product in a customer's photo before cropping it, blurring every face before an image is stored: all of these are detector jobs.
 
 When the question is open (*what is wrong with this book?*) the closed list is the wrong instrument, and the next section is about the instrument with no list.

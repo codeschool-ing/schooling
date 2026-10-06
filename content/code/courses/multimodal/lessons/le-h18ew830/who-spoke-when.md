@@ -3,7 +3,7 @@ title: Who spoke when
 version: 1
 ---
 
-**Speaker diarization** answers *who spoke when*, without knowing who anybody is. Its output is a list of time spans, each with a label like `speaker_0`; it is your job to decide that `speaker_0` is the shop's agent. It is three models in a row: **segmentation** (pyannote's model finds where speech changes hands, frame by frame), **embedding** (3D-Speaker's ERes2Net turns each piece of speech into a vector that describes the voice, the way a text embedding describes meaning), and **clustering** (pieces whose vectors are close enough are put under one label).
+**Speaker diarization** answers *who spoke when*, without knowing who anybody is. Its output is a list of time spans, each with a label like `speaker_0`; it is your job to decide that `speaker_0` is the shop's agent. It is three models in a row. First *segmentation*: pyannote's model finds where speech changes hands, frame by frame. Then *embedding*: 3D-Speaker's ERes2Net turns each piece of speech into a vector that describes the voice, the way a text embedding describes meaning. Last *clustering*: pieces whose vectors are close enough are put under one label.
 
 The lab scores it the way it scores everything, against who really spoke:
 

@@ -62,4 +62,4 @@ jpeg q75, short side 512       26832     425     76%     4/11
 
 **Descer abaixo do tamanho da regra economizou tokens e perdeu a nota.** Em 512 a cópia custa 425 tokens, 62% a menos, e só 4 dos 11 valores voltaram certos. Um modelo lendo essa cópia estaria lendo o mesmo borrão.
 
-Então a regra para imagens é curta. **Reduza até o que o provedor vai usar de qualquer jeito**, o que economiza tempo de envio e bytes diante de um limite, e **não mais que isso, a não ser que uma medida na tarefa diga que a cópia menor ainda responde**. "Ainda responde" é sobre a tarefa: aqui, os valores. Bytes economizados são fáceis de ver, e as respostas perdidas só aparecem numa conferência como esta.
+Então a regra para imagens é curta. **Reduza até o que o provedor vai usar de qualquer jeito**, o que economiza tempo de envio e bytes diante de um limite. Não vá além disso, a não ser que uma medida na tarefa diga que a cópia menor ainda responde. "Ainda responde" é sobre a tarefa: aqui, os valores. Bytes economizados são fáceis de ver, e as respostas perdidas só aparecem numa conferência como esta.

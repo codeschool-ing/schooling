@@ -26,4 +26,4 @@ A few habits make these prompts work better, and none of them is a secret phrase
 
 **Length has a ceiling.** Many open models read the prompt through the CLIP text encoder, which takes 77 tokens and ignores the rest, so the end of a long prompt is not read at all. Newer models use larger text encoders and read much more. Either way, the parts that matter go first.
 
-**Text inside the picture is its own request.** If the banner needs words on it, put them in quotes and keep them short ("a chalkboard sign that says \"Used books\""), or, better, leave the space empty and add the words in the newsletter, where they are real text that can be read aloud by a screen reader (lesson 14).
+**Text inside the picture is its own request.** If the banner needs words on it, put them in quotes and keep them short ("a chalkboard sign that says \"Used books\""). Better still, leave the space empty and add the words in the newsletter, where they are real text that can be read aloud by a screen reader (lesson 14).

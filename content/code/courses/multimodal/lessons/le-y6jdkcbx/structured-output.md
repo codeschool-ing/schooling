@@ -48,7 +48,7 @@ checks: Bleak House: 6 x 3290 is not 16450
 
 **Both readings were written by the course**, and the second one carries a mistake on purpose: it says 6 copies of *Bleak House* where the page says 5, the kind of digit a blurred scan invites. The schema accepted it, because 6 is a perfectly good integer. **The arithmetic caught it**: 6 × 32.90 is not 164.50.
 
-That is the whole lesson of this section. **A schema guarantees the shape of an answer, never its truth.** It turns "the model returned a paragraph and I have to dig the total out of it" into "the model returned an `Invoice` or the call failed", which is a great improvement for the program, and it says nothing at all about whether the numbers are the ones on the page.
+That is the whole lesson of this section. **A schema guarantees the shape of an answer, never its truth.** It turns "the model returned a paragraph and I have to dig the total out of it" into "the model returned an `Invoice` or the call failed". That is a great improvement for the program, and it says nothing at all about whether the numbers are the ones on the page.
 
 ## Two readers are better than one
 

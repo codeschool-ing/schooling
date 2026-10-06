@@ -70,7 +70,7 @@ ana@lab:~/mm$ python -c "import json; [print(s[\"slide\"], s[\"start\"], s[\"end
 7 26.44 32.6 Refunds
 ```
 
-**Uma taxa fixa** pega um quadro de tanto em tanto tempo. Um a cada 5 segundos deu 7 quadros e viu 6 dos 7 títulos; um por segundo deu 33 quadros e viu os mesmos 6. Os dois perderam o slide 5, o cartão que fica na tela de 20,72 a 21,12 segundos. Para a taxa de 5 segundos o motivo é simples: as batidas em 20 e 25 caem dos dois lados de uma janela de 0,4 segundo. A taxa de 1 segundo tem uma batida em 21,0, dentro do cartão, e mesmo assim o perdeu, por causa do jeito como o filtro `fps` do ffmpeg escolhe um quadro para cada batida: todo quadro de entrada de 20,5 a 21,5 segundos é arredondado para a batida de 21, e o filtro fica com o último deles, um quadro do slide seguinte. Pedir exatamente aquele instante mostra o que havia lá:
+**Uma taxa fixa** pega um quadro de tanto em tanto tempo. Um a cada 5 segundos deu 7 quadros e viu 6 dos 7 títulos; um por segundo deu 33 quadros e viu os mesmos 6. Os dois perderam o slide 5, o cartão que fica na tela de 20,72 a 21,12 segundos. Para a taxa de 5 segundos o motivo é simples: as batidas em 20 e 25 caem dos dois lados de uma janela de 0,4 segundo. A taxa de 1 segundo tem uma batida em 21,0, dentro do cartão, e mesmo assim o perdeu. O motivo é o jeito como o filtro `fps` do ffmpeg escolhe um quadro para cada batida: todo quadro de entrada de 20,5 a 21,5 segundos é arredondado para a batida de 21, e o filtro fica com o último deles, um quadro do slide seguinte. Pedir exatamente aquele instante mostra o que havia lá:
 
 ```
 ana@lab:~/mm$ ffmpeg -nostdin -loglevel error -y -ss 21 -i media/returns.mp4 -frames:v 1 /tmp/at21.png && tesseract /tmp/at21.png - --psm 6 2>/dev/null | head -2

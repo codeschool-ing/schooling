@@ -38,7 +38,7 @@ voicemail-pt.json
 voicemail-pt.txt
 ana@lab:~/mm$ du -sh /opt/multimodal/share /opt/multimodal/lib /opt/multimodal/media
 1.1G	/opt/multimodal/share
-932M	/opt/multimodal/lib
+933M	/opt/multimodal/lib
 5.0M	/opt/multimodal/media
 ana@lab:~/mm$ python -c "import mmlab; print([n for n in dir(mmlab) if callable(getattr(mmlab, n)) and not n.startswith(\"_\") and n[0].islower() and n not in (\"np\", \"os\", \"subprocess\", \"sherpa_onnx\")])"
 ['denoiser', 'detector', 'diarizer', 'piper', 'read_audio', 'speech_segments', 'transcribe', 'whisper']
@@ -72,7 +72,7 @@ ana@lab:~/mm$ cd /opt/multimodal/share && du -sh sherpa-onnx-whisper-* vits-pipe
 432M	sherpa-onnx-whisper-base
 ```
 
-Uns 2 GB ao todo: 1,1 GB de modelos e arquivos compartilhados e 932 MB de bibliotecas, que é a linha do `du` lá em cima. As duas pastas do Whisper são grandes porque cada uma guarda o modelo duas vezes, em precisão completa e em int8; a aula 11 compara as duas. A montagem precisa da rede uma vez, para baixar as bibliotecas do PyPI e do npm e os modelos dos releases do sherpa-onnx no GitHub, do bucket do MediaPipe e do bucket do Chroma. Todo modelo é conferido contra um SHA-256 escrito no `lab.sh` antes de ser usado.
+Uns 2 GB ao todo: 1,1 GB de modelos e arquivos compartilhados e 933 MB de bibliotecas, que é a linha do `du` lá em cima. As duas pastas do Whisper são grandes porque cada uma guarda o modelo duas vezes, em precisão completa e em int8; a aula 11 compara as duas. A montagem precisa da rede uma vez, para baixar as bibliotecas do PyPI e do npm e os modelos dos releases do sherpa-onnx no GitHub, do bucket do MediaPipe e do bucket do Chroma. Todo modelo é conferido contra um SHA-256 escrito no `lab.sh` antes de ser usado.
 
 | caminho | o que exige | |
 |---|---|---|

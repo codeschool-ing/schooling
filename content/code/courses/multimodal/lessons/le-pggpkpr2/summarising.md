@@ -31,7 +31,7 @@ one per scene     7 frames    7,735 tokens high     595 low
 the timeline   as text          334 tokens
 ```
 
-The image numbers come from the tile rule OpenAI published for GPT-4o, as implemented in the lab's stand-in: a 1280 by 720 frame is six tiles of 512 pixels, 85 + 6 × 170 = 1,105 tokens at high detail, and 85 at low detail, where the model sees a small copy. Nothing was sent anywhere; the program only counts.
+The image numbers come from the tile rule OpenAI published for GPT-4o, as implemented in the lab's stand-in. A 1280 by 720 frame is six tiles of 512 pixels, 85 + 6 × 170 = 1,105 tokens at high detail, and 85 at low detail, where the model sees a small copy. Nothing was sent anywhere; the program only counts.
 
 - **Every frame** is 900,575 tokens at high detail, for a 32-second video. Nobody does this, and the number is there to show why.
 - **One frame a second** is 36,465 tokens, and it missed the card.

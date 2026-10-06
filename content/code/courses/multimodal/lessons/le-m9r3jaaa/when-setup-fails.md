@@ -28,7 +28,7 @@ ana@lab:~/mm$ echo "e77603ac0c23dac3227dd2d7135b3a585cbee2679048aecfa886657d3ae1
 
 `FAILED` on the copy and `OK` on the original. Delete the file and run `lab.sh up` again; it fetches only what is missing.
 
-**A system library is missing.** MediaPipe draws through OpenGL even on a machine with no screen, and on a minimal Ubuntu it stops with `OSError: libEGL.so.1: cannot open shared object file: No such file or directory`, which is what it said on the machine this course was built on before `libegl1` was installed. `lab.sh up` installs `libegl1` and `libgles2` for that reason, along with ffmpeg, Tesseract and the DejaVu fonts the media is drawn with.
+**A system library is missing.** MediaPipe draws through OpenGL even on a machine with no screen, and on a minimal Ubuntu it stops with `OSError: libEGL.so.1: cannot open shared object file: No such file or directory`. That is what it said on the machine this course was built on, before `libegl1` was installed. `lab.sh up` installs `libegl1` and `libgles2` for that reason, along with ffmpeg, Tesseract and the DejaVu fonts the media is drawn with.
 
 **The disk is full.** The lab needs about 2 GB. `df -h /opt /home` says how much is left, and `/opt/multimodal/media` can be deleted and rebuilt at any time, since the next `reset` draws it again.
 

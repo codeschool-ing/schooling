@@ -3,7 +3,7 @@ title: Captions from recognition, held to three rules
 version: 1
 ---
 
-Lesson 4's returns video has a narration, and lesson 10 showed Whisper returning `vtt` directly. A caption file is more than a transcript with times, though: a viewer has to read each cue before it goes. Subtitle style guides agree on the shape of the rules, and these numbers are the ones Netflix's English guide uses for adult programmes: at most **42 characters per line**, at most **2 lines** per cue, and at most **20 characters per second** of reading.
+Lesson 4's returns video has a narration, and lesson 10 showed Whisper returning `vtt` directly. A caption file is more than a transcript with times, though: a viewer has to read each cue before it goes. Subtitle style guides agree on the shape of the rules, and these numbers are the ones Netflix's English guide uses for adult programmes: at most 42 characters per line, at most 2 lines per cue, and at most 20 characters per second of reading.
 
 ```python
 """The three rules every caption cue is held to, and the two helpers both caption programs share."""
@@ -115,4 +115,4 @@ ana@lab:~/mm$ python recut.py
 11 cues, 9 over 20 chars/s, 0 lines over 42
 ```
 
-**No line is over 42 now, and 9 of the 11 cues are still over 20 characters a second.** Cutting a cue in two halves its text and its time together, so the rate does not move. Only two things move it: fewer words, which is what an **edited** caption does against a **verbatim** one, or more time, by letting a cue stay on screen into the pause after it. Both are decisions about the text, and both are the captioner's. The breaks are not a person's either: "the / book" leaves one word alone on a line, which a reader stumbles on.
+**No line is over 42 now, and 9 of the 11 cues are still over 20 characters a second.** Cutting a cue in two halves its text and its time together, so the rate does not move. Only two things move it: fewer words, which is what an *edited* caption does against a *verbatim* one, or more time, by letting a cue stay on screen into the pause after it. Both are decisions about the text, and both are the captioner's. The breaks are not a person's either: "the / book" leaves one word alone on a line, which a reader stumbles on.

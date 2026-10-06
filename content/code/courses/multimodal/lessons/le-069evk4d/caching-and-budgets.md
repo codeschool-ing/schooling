@@ -50,7 +50,7 @@ ana@lab:~/mm$ grep -c chat/completions /var/log/labmm/requests.jsonl
 2
 ```
 
-Three questions, two requests in labmm's log. The second "What is the total?" came from the cache. The third question means the same thing in other words and **missed**, because the key is the exact prompt: a cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and it can then return an answer to a question that only looked similar. The reply itself is lesson 8's rule `l08-invoice-high`, written by the course.
+Three questions, two requests in labmm's log. The second "What is the total?" came from the cache. The third question means the same thing in other words and **missed**, because the key is the exact prompt. A cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and then it can return an answer to a question that only looked similar. The reply itself is lesson 8's rule `l08-invoice-high`, written by the course.
 
 A cache holds the provider's answers, which can hold personal data from the pictures. It needs the same retention and erasure rules as the pictures do.
 

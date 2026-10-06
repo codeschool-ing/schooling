@@ -3,7 +3,7 @@ title: Legendas a partir do reconhecimento, com três regras
 version: 1
 ---
 
-O vídeo de devoluções da aula 4 tem narração, e a aula 10 mostrou o Whisper devolvendo `vtt` direto. Um arquivo de legendas é mais que uma transcrição com tempos, porém: quem assiste precisa ler cada trecho antes que ele suma. Os guias de estilo de legendagem concordam no formato das regras, e estes números são os que o guia de inglês da Netflix usa para programas adultos: no máximo **42 caracteres por linha**, no máximo **2 linhas** por trecho, e no máximo **20 caracteres por segundo** de leitura.
+O vídeo de devoluções da aula 4 tem narração, e a aula 10 mostrou o Whisper devolvendo `vtt` direto. Um arquivo de legendas é mais que uma transcrição com tempos, porém: quem assiste precisa ler cada trecho antes que ele suma. Os guias de estilo de legendagem concordam no formato das regras, e estes números são os que o guia de inglês da Netflix usa para programas adultos: no máximo 42 caracteres por linha, no máximo 2 linhas por trecho, e no máximo 20 caracteres por segundo de leitura.
 
 ```python
 """The three rules every caption cue is held to, and the two helpers both caption programs share."""
@@ -115,4 +115,4 @@ ana@lab:~/mm$ python recut.py
 11 cues, 9 over 20 chars/s, 0 lines over 42
 ```
 
-**Nenhuma linha passa de 42 agora, e 9 dos 11 trechos ainda passam de 20 caracteres por segundo.** Cortar um trecho em dois divide o texto e o tempo juntos, então a velocidade não muda. Só duas coisas a mudam: menos palavras, que é o que uma legenda **editada** faz diante de uma **literal**, ou mais tempo, deixando o trecho na tela até a pausa seguinte. As duas são decisões sobre o texto, e as duas são de quem legenda. As quebras também não são de uma pessoa: "the / book" deixa uma palavra sozinha numa linha, e quem lê tropeça nela.
+**Nenhuma linha passa de 42 agora, e 9 dos 11 trechos ainda passam de 20 caracteres por segundo.** Cortar um trecho em dois divide o texto e o tempo juntos, então a velocidade não muda. Só duas coisas a mudam: menos palavras, que é o que uma legenda *editada* faz diante de uma *literal*, ou mais tempo, deixando o trecho na tela até a pausa seguinte. As duas são decisões sobre o texto, e as duas são de quem legenda. As quebras também não são de uma pessoa: "the / book" deixa uma palavra sozinha numa linha, e quem lê tropeça nela.

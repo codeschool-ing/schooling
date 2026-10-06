@@ -50,7 +50,7 @@ ana@lab:~/mm$ grep -c chat/completions /var/log/labmm/requests.jsonl
 2
 ```
 
-Três perguntas, dois pedidos no log do labmm. O segundo "What is the total?" veio do cache. A terceira pergunta quer dizer a mesma coisa com outras palavras e **errou o cache**, porque a chave é o prompt exato: um cache por significado é possível, gerando o embedding do prompt como a aula 12 fez com os pedaços, e ele pode então devolver a resposta de uma pergunta que só parecia parecida. A resposta em si é a regra `l08-invoice-high` da aula 8, escrita pelo curso.
+Três perguntas, dois pedidos no log do labmm. O segundo "What is the total?" veio do cache. A terceira pergunta quer dizer a mesma coisa com outras palavras e **errou o cache**, porque a chave é o prompt exato. Um cache por significado é possível, gerando o embedding do prompt como a aula 12 fez com os pedaços, e aí ele pode devolver a resposta de uma pergunta que só parecia parecida. A resposta em si é a regra `l08-invoice-high` da aula 8, escrita pelo curso.
 
 Um cache guarda as respostas do provedor, que podem conter dados pessoais das imagens. Ele precisa das mesmas regras de retenção e de exclusão que as imagens.
 

@@ -38,7 +38,7 @@ voicemail-pt.json
 voicemail-pt.txt
 ana@lab:~/mm$ du -sh /opt/multimodal/share /opt/multimodal/lib /opt/multimodal/media
 1.1G	/opt/multimodal/share
-932M	/opt/multimodal/lib
+933M	/opt/multimodal/lib
 5.0M	/opt/multimodal/media
 ana@lab:~/mm$ python -c "import mmlab; print([n for n in dir(mmlab) if callable(getattr(mmlab, n)) and not n.startswith(\"_\") and n[0].islower() and n not in (\"np\", \"os\", \"subprocess\", \"sherpa_onnx\")])"
 ['denoiser', 'detector', 'diarizer', 'piper', 'read_audio', 'speech_segments', 'transcribe', 'whisper']
@@ -72,7 +72,7 @@ ana@lab:~/mm$ cd /opt/multimodal/share && du -sh sherpa-onnx-whisper-* vits-pipe
 432M	sherpa-onnx-whisper-base
 ```
 
-About 2 GB in all: 1.1 GB of models and shared files and 932 MB of libraries, which is the `du` line above. Whisper's two folders are large because each holds the model twice, at full precision and at int8; lesson 11 compares them. The build needs the network once, to fetch the libraries from PyPI and npm and the models from sherpa-onnx's GitHub releases, MediaPipe's bucket and Chroma's bucket. Every model is checked against a SHA-256 written in `lab.sh` before it is used.
+About 2 GB in all: 1.1 GB of models and shared files and 933 MB of libraries, which is the `du` line above. Whisper's two folders are large because each holds the model twice, at full precision and at int8; lesson 11 compares them. The build needs the network once, to fetch the libraries from PyPI and npm and the models from sherpa-onnx's GitHub releases, MediaPipe's bucket and Chroma's bucket. Every model is checked against a SHA-256 written in `lab.sh` before it is used.
 
 | path | what it takes | |
 |---|---|---|

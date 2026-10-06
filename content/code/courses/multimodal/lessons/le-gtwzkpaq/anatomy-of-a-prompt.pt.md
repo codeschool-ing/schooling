@@ -26,6 +26,6 @@ Alguns hábitos fazem esses prompts funcionarem melhor, e nenhum deles é frase 
 
 **O tamanho tem teto.** Muitos modelos abertos leem o prompt pelo codificador de texto CLIP, que aceita 77 tokens e ignora o resto, então o fim de um prompt longo nem é lido. Modelos mais novos usam codificadores maiores e leem muito mais. De um jeito ou de outro, as partes que importam vêm primeiro.
 
-**Texto dentro da imagem é um pedido à parte.** Se o banner precisa de palavras, ponha-as entre aspas e curtas ("a chalkboard sign that says \"Used books\""), ou, melhor, deixe o espaço vazio e acrescente as palavras na newsletter, onde são texto de verdade que um leitor de tela consegue ler em voz alta (aula 14).
+**Texto dentro da imagem é um pedido à parte.** Se o banner precisa de palavras, ponha-as entre aspas e curtas ("a chalkboard sign that says \"Used books\""). Melhor ainda, deixe o espaço vazio e acrescente as palavras na newsletter, onde são texto de verdade que um leitor de tela consegue ler em voz alta (aula 14).
 
 Os prompts ficam em inglês porque os modelos citados aprenderam sobretudo com legendas em inglês; a maioria aceita português, e o mesmo método de variar uma parte por vez serve para descobrir se, no modelo que você usa, a língua muda o resultado.

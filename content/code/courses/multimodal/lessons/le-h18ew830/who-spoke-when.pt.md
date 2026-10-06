@@ -3,7 +3,7 @@ title: Quem falou quando
 version: 1
 ---
 
-A **diarização de falantes** responde *quem falou quando*, sem saber quem é quem. A saída é uma lista de intervalos de tempo, cada um com um rótulo como `speaker_0`; decidir que `speaker_0` é o atendente da loja é trabalho seu. São três modelos em fila: **segmentação** (o modelo do pyannote acha onde a fala troca de mãos, quadro a quadro), **embedding** (o ERes2Net do 3D-Speaker transforma cada pedaço de fala num vetor que descreve a voz, como um embedding de texto descreve o sentido), e **agrupamento** (pedaços cujos vetores estão próximos o bastante ficam sob um rótulo).
+A **diarização de falantes** responde *quem falou quando*, sem saber quem é quem. A saída é uma lista de intervalos de tempo, cada um com um rótulo como `speaker_0`; decidir que `speaker_0` é o atendente da loja é trabalho seu. São três modelos em fila. Primeiro a *segmentação*: o modelo do pyannote acha onde a fala troca de mãos, quadro a quadro. Depois o *embedding*: o ERes2Net do 3D-Speaker transforma cada pedaço de fala num vetor que descreve a voz, como um embedding de texto descreve o sentido. Por último o *agrupamento*: pedaços cujos vetores estão próximos o bastante ficam sob um rótulo.
 
 O laboratório pontua isso como pontua tudo, contra quem realmente falou:
 

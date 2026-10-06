@@ -31,7 +31,7 @@ one per scene     7 frames    7,735 tokens high     595 low
 the timeline   as text          334 tokens
 ```
 
-Os números de imagem vêm da regra de blocos que a OpenAI publicou para o GPT-4o, como implementada no substituto do laboratório: um quadro de 1280 por 720 são seis blocos de 512 pixels, 85 + 6 × 170 = 1.105 tokens em alto detalhe, e 85 em baixo detalhe, em que o modelo vê uma cópia pequena. Nada foi enviado a lugar nenhum; o programa só conta.
+Os números de imagem vêm da regra de blocos que a OpenAI publicou para o GPT-4o, como implementada no substituto do laboratório. Um quadro de 1280 por 720 são seis blocos de 512 pixels, 85 + 6 × 170 = 1.105 tokens em alto detalhe, e 85 em baixo detalhe, em que o modelo vê uma cópia pequena. Nada foi enviado a lugar nenhum; o programa só conta.
 
 - **Todos os quadros** são 900.575 tokens em alto detalhe, para um vídeo de 32 segundos. Ninguém faz isso, e o número está aqui para mostrar por quê.
 - **Um quadro por segundo** são 36.465 tokens, e perdeu o cartão.

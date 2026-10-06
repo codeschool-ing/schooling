@@ -62,4 +62,4 @@ jpeg q75, short side 512       26832     425     76%     4/11
 
 **Going below the rule's size saved tokens and lost the invoice.** At 512 the copy costs 425 tokens, 62% fewer, and only 4 of the 11 amounts came back right. A model reading that copy would be reading the same blur.
 
-So the rule for pictures is short. **Resize down to what the provider will use anyway**, which saves upload time and bytes against a limit, and **no further unless a measurement on the task says the smaller copy still answers**. "Still answers" is about the task: here, the amounts. Bytes saved are easy to see, and the answers lost are only visible to a check like this one.
+So the rule for pictures is short. **Resize down to what the provider will use anyway**, which saves upload time and bytes against a limit. Go no further unless a measurement on the task says the smaller copy still answers. "Still answers" is about the task: here, the amounts. Bytes saved are easy to see, and the answers lost are only visible to a check like this one.

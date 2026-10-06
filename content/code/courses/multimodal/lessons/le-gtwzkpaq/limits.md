@@ -30,4 +30,4 @@ Two of these matter to an ordinary shop every week:
 
 ## Designing around both
 
-Treat every generated picture as a **draft that a person approves** before it is published, and write down why it was approved. That is not only caution: the approval column of section 04's log is the cheapest place for it, and it is what a shop would show anybody who asked where a picture came from.
+Treat every generated picture as a **draft that a person approves** before it is published, and write down why it was approved. The approval column of section 04's log is the cheapest place for that record, and it is what a shop would show anybody who asked where a picture came from.

@@ -48,7 +48,7 @@ checks: Bleak House: 6 x 3290 is not 16450
 
 **As duas leituras foram escritas pelo curso**, e a segunda carrega um erro de propósito: diz 6 exemplares de *Bleak House* onde a página diz 5, o tipo de dígito que um escaneado borrado convida. O schema aceitou, porque 6 é um inteiro perfeitamente válido. **A aritmética pegou**: 6 × 32,90 não dá 164,50.
 
-Essa é a lição inteira desta seção. **Um schema garante o formato de uma resposta, nunca a verdade dela.** Ele transforma "o modelo devolveu um parágrafo e eu preciso garimpar o total" em "o modelo devolveu um `Invoice` ou a chamada falhou", uma grande melhora para o programa, e não diz absolutamente nada sobre os números serem os da página.
+Essa é a lição inteira desta seção. **Um schema garante o formato de uma resposta, nunca a verdade dela.** Ele transforma "o modelo devolveu um parágrafo e eu preciso garimpar o total" em "o modelo devolveu um `Invoice` ou a chamada falhou". É uma grande melhora para o programa, e não diz absolutamente nada sobre os números serem os da página.
 
 ## Dois leitores são melhores que um
 

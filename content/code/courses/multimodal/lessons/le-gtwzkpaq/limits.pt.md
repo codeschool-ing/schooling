@@ -30,4 +30,4 @@ Duas dessas importam a uma loja comum toda semana:
 
 ## Contornar os dois no desenho
 
-Trate toda imagem gerada como um **rascunho que uma pessoa aprova** antes de publicar, e anote por que foi aprovada. Isso não é só cautela: a coluna de aprovação do registro da seção 04 é o lugar mais barato para isso, e é o que a loja mostraria a quem perguntasse de onde veio uma imagem.
+Trate toda imagem gerada como um **rascunho que uma pessoa aprova** antes de publicar, e anote por que foi aprovada. A coluna de aprovação do registro da seção 04 é o lugar mais barato para esse registro, e é o que a loja mostraria a quem perguntasse de onde veio uma imagem.

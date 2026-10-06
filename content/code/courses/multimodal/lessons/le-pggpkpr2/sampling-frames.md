@@ -70,7 +70,7 @@ ana@lab:~/mm$ python -c "import json; [print(s[\"slide\"], s[\"start\"], s[\"end
 7 26.44 32.6 Refunds
 ```
 
-**A fixed rate** takes a frame every so often. One every 5 seconds gave 7 frames and saw 6 of the 7 titles; one a second gave 33 frames and saw the same 6. Both missed slide 5, the card that is up from 20.72 to 21.12 seconds. For the 5-second rate the reason is plain: its ticks at 20 and 25 fall either side of a window 0.4 seconds wide. The 1-second rate has a tick at 21.0, inside the card, and still missed it, because of how ffmpeg's `fps` filter picks a frame for each tick: every input frame from 20.5 to 21.5 seconds rounds to the tick at 21, and the filter keeps the last of them, a frame of the next slide. Asking for exactly that moment shows what was there:
+**A fixed rate** takes a frame every so often. One every 5 seconds gave 7 frames and saw 6 of the 7 titles; one a second gave 33 frames and saw the same 6. Both missed slide 5, the card that is up from 20.72 to 21.12 seconds. For the 5-second rate the reason is plain: its ticks at 20 and 25 fall either side of a window 0.4 seconds wide. The 1-second rate has a tick at 21.0, inside the card, and still missed it. The reason is how ffmpeg's `fps` filter picks a frame for each tick: every input frame from 20.5 to 21.5 seconds rounds to the tick at 21, and the filter keeps the last of them, a frame of the next slide. Asking for exactly that moment shows what was there:
 
 ```
 ana@lab:~/mm$ ffmpeg -nostdin -loglevel error -y -ss 21 -i media/returns.mp4 -frames:v 1 /tmp/at21.png && tesseract /tmp/at21.png - --psm 6 2>/dev/null | head -2
