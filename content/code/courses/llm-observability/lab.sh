@@ -42,6 +42,7 @@
 #
 #   real       OpenTelemetry's SDK and exporters; Arize Phoenix; Langfuse,
 #              server and SDK; the LangSmith SDK; DeepEval; RAGAS; pytest;
+#              Microsoft Presidio with spaCy's en_core_web_lg;
 #              PostgreSQL with pgvector; all-MiniLM-L6-v2. Every number a
 #              lesson prints from them was computed on this machine.
 #   the lab's  labobs. NO LANGUAGE MODEL WAS REACHABLE from this machine, and
@@ -88,7 +89,10 @@ OBSLIBS="numpy==2.4.6 onnxruntime==1.30.0 tokenizers==0.23.2 tiktoken==0.14.0
   psycopg[binary]==3.3.6 pgvector==0.3.6 openai==3.24.0 opentelemetry-sdk==1.45.0
   opentelemetry-exporter-otlp-proto-http==1.45.0 openinference-instrumentation-openai==0.1.63
   arize-phoenix==20.18.0 langfuse==4.17.0 langsmith==0.14.4 deepeval==4.2.8 ragas==0.3.1
-  langchain-openai==1.6.7 pytest==9.1.1 prometheus-client==0.26.0"
+  langchain-openai==1.6.7 pytest==9.1.1 prometheus-client==0.26.0
+  presidio-analyzer==2.2.364 presidio-anonymizer==2.2.364"
+# The language model Presidio finds names with (lesson 2), from spaCy's own releases.
+SPACY_MODEL=https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl
 
 # The environment every command of ana's runs in. The keys are the lab's and
 # open nothing anywhere else.
@@ -118,6 +122,7 @@ build_venv() {
   [ -x $VENV/bin/python ] || python3 -m venv $VENV
   # shellcheck disable=SC2086
   $VENV/bin/pip install -q $OBSLIBS
+  $VENV/bin/pip install -q "$SPACY_MODEL"
   install_lab
 }
 
