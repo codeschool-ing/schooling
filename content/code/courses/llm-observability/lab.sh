@@ -20,6 +20,8 @@
 #     data/labels.jsonl     two people's labels of 60 replies against them:
 #                           ALL WRITTEN BY THE COURSE (lesson 10), from
 #                           lab/rubrics and lab/labels.jsonl
+#     data/eval-additions.jsonl  twelve cases lesson 13 adds to the set, WRITTEN
+#                           BY THE COURSE from what the replayed week doubted
 #     prices.json           what a token costs, WRITTEN BY THE COURSE
 #     releases.json         which settings the assistant ran with, and from
 #                           when: a release on 2 October raised the floor
@@ -189,7 +191,7 @@ build_obs() {
   install -o ana -g ana -m 0644 "$HERE"/lab/prices.json "$HERE"/lab/releases.json $OBS/
   install -d -o ana -g ana $OBS/data/rubrics
   install -o ana -g ana -m 0644 "$HERE"/lab/rubrics/*.md $OBS/data/rubrics/
-  install -o ana -g ana -m 0644 "$HERE"/lab/labels.jsonl $OBS/data/
+  install -o ana -g ana -m 0644 "$HERE"/lab/labels.jsonl "$HERE"/lab/eval-additions.jsonl $OBS/data/
   runuser -u ana -- python3 "$HERE/lab/traffic.py" $OBS/data/traffic.jsonl
 }
 
