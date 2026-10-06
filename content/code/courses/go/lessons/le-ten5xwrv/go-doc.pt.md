@@ -27,7 +27,7 @@ Leia na ordem em que aparece, porque cada parte responde a uma pergunta diferent
 - **A assinatura** é a frase mais precisa da resposta. `a ...any` quer dizer qualquer número de
   argumentos de qualquer tipo, o que a lição 21 explica, e `(n int, err error)` quer dizer que
   `Println` devolve dois valores: quantos bytes escreveu e se a escrita falhou. O programa da seção
-  01 ignorou os dois, o que é normal para imprimir num terminal e errado para escrever num arquivo.
+  02 ignorou os dois, o que é normal para imprimir num terminal e errado para escrever num arquivo.
 - **O comentário** é o que o autor escreveu acima da função, sem edição. Repare que ele diz o que
   `Println` faz com os espaços entre os operandos. É o tipo de detalhe que o resumo da web deixa de
   fora.

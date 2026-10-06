@@ -14,7 +14,7 @@ escrever.** Aqui está ele inteiro, num diretório só dele, `~/hello`:
   "parts": [
     {
       "code": "// Command hello prints a greeting.\n",
-      "note": "**Um comentário logo acima da cláusula `package` é a documentação do pacote.** Num programa ele começa, por convenção, com a palavra `Command` e o nome do programa, e o `go doc` o imprime (seção 03)."
+      "note": "**Um comentário logo acima da cláusula `package` é a documentação do pacote.** Num programa ele começa, por convenção, com a palavra `Command` e o nome do programa, e o `go doc` o imprime (seção 04)."
     },
     {
       "code": "package main\n",
@@ -22,7 +22,7 @@ escrever.** Aqui está ele inteiro, num diretório só dele, `~/hello`:
     },
     {
       "code": "\nimport \"fmt\"\n",
-      "note": "**O que o arquivo usa de fora, pelo caminho de importação.** `fmt` é o pacote de formatação da biblioteca padrão. Importar algo que o arquivo não usa é erro de compilação, não aviso; a seção 04 mostra."
+      "note": "**O que o arquivo usa de fora, pelo caminho de importação.** `fmt` é o pacote de formatação da biblioteca padrão. Importar algo que o arquivo não usa é erro de compilação, não aviso; a seção 05 mostra."
     },
     {
       "code": "\nfunc main() {\n\tfmt.Println(\"Hello, Go\")\n}\n",
@@ -33,7 +33,7 @@ escrever.** Aqui está ele inteiro, num diretório só dele, `~/hello`:
 ```
 
 A indentação dentro de `main` é uma tabulação, não espaços. Ninguém escolheu isso à mão: é o que o
-`gofmt` escreve, e a seção 04 explica por que todo arquivo Go do mundo é diagramado pelo mesmo
+`gofmt` escreve, e a seção 05 explica por que todo arquivo Go do mundo é diagramado pelo mesmo
 programa.
 
 ## Executando

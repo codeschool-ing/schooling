@@ -27,7 +27,7 @@ Read it in the order it is printed, because each part answers a different questi
 - **The signature** is the most precise sentence in the answer. `a ...any` means any number of
   arguments of any type, which lesson 21 explains, and `(n int, err error)` means `Println`
   returns two values: how many bytes it wrote and whether writing failed. The program in section
-  01 ignored both, which is normal for printing to a terminal and wrong for writing to a file.
+  02 ignored both, which is normal for printing to a terminal and wrong for writing to a file.
 - **The comment** is what the author wrote above the function, unedited. Notice that it says what
   `Println` does with spaces between operands. That is the kind of detail the web summary leaves
   out.

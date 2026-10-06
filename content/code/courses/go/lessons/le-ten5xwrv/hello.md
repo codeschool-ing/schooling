@@ -14,7 +14,7 @@ is the whole thing, in a directory of its own, `~/hello`:
   "parts": [
     {
       "code": "// Command hello prints a greeting.\n",
-      "note": "**A comment above the package clause is the package's documentation.** For a program it starts with the word `Command` and the program's name, by convention, and `go doc` prints it (section 03)."
+      "note": "**A comment above the package clause is the package's documentation.** For a program it starts with the word `Command` and the program's name, by convention, and `go doc` prints it (section 04)."
     },
     {
       "code": "package main\n",
@@ -22,7 +22,7 @@ is the whole thing, in a directory of its own, `~/hello`:
     },
     {
       "code": "\nimport \"fmt\"\n",
-      "note": "**What the file uses from elsewhere, named by import path.** `fmt` is the standard library's formatting package. An import the file does not use is a compile error, not a warning; section 04 shows it."
+      "note": "**What the file uses from elsewhere, named by import path.** `fmt` is the standard library's formatting package. An import the file does not use is a compile error, not a warning; section 05 shows it."
     },
     {
       "code": "\nfunc main() {\n\tfmt.Println(\"Hello, Go\")\n}\n",
@@ -33,7 +33,7 @@ is the whole thing, in a directory of its own, `~/hello`:
 ```
 
 The indentation inside `main` is a tab, not spaces. Nobody chose that by hand: it is what `gofmt`
-writes, and section 04 is about why every Go file in the world is laid out by the same program.
+writes, and section 05 is about why every Go file in the world is laid out by the same program.
 
 ## Running it
 
