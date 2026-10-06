@@ -32,7 +32,7 @@
  *   describe SEL          role, name, description and states, as a screen reader gets them
  *   validity SEL          a form field's validity and its message
  *   send SEL              presses SEL and prints the request the form made
- *   top X Y               the element painted on top at a point
+ *   top X Y               the element painted on top at a point of the window
  *   img SEL               which file an <img> chose, and its pixel size
  *   fetched               every file the page has asked for so far, once each
  *   release               lets the images held by --hold-images arrive
@@ -299,7 +299,9 @@ const steps = {
   async top(x, y) {
     const t = await page.evaluateHandle(([a, b]) => document.elementFromPoint(a, b), [Number(x), Number(y)]);
     const el = t.asElement();
-    console.log(`at ${x},${y}: ` + (el ? await label(el) : 'nothing'));
+    if (!el) { console.log(`at ${x},${y}: nothing`); return; }
+    const txt = await el.evaluate((e) => e.textContent.replace(/\s+/g, ' ').trim());
+    console.log(`at ${x},${y}: ${await label(el)}  "${txt.length > 36 ? txt.slice(0, 35) + '…' : txt}"`);
   },
   async img(sel) {
     for (const el of await page.$$(sel)) {
