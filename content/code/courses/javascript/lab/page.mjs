@@ -15,7 +15,7 @@
 // happened to the page and in which order.
 //
 // Options, applied in order after the page has loaded:
-//   --do 'click SEL' | 'fill SEL TEXT' | 'press KEY' | 'focus SEL'
+//   --do 'click SEL' | 'fill SEL TEXT' (SEL without spaces) | 'press KEY' | 'focus SEL'
 //        | 'wait MS' | 'reload' | 'newtab' | 'eval CODE'
 //   --dom SEL        at the end, print SEL's outerHTML
 //   --wait MS        how long to let timers run after the last action (300)
@@ -139,10 +139,10 @@ for (const action of opt.do) {
   const [verb, ...rest] = action.split(" ");
   const sel = rest[0];
   const text = rest.slice(1).join(" ");
-  if (verb === "click") await page.click(sel);
+  if (verb === "click") await page.click(rest.join(" "));
   else if (verb === "fill") await page.fill(sel, text);
   else if (verb === "press") await page.keyboard.press(sel);
-  else if (verb === "focus") await page.focus(sel);
+  else if (verb === "focus") await page.focus(rest.join(" "));
   else if (verb === "wait") await page.waitForTimeout(Number(sel));
   else if (verb === "reload") await page.reload();
   else if (verb === "newtab") { page = await context.newPage(); watch(page); await page.goto(`${origin}/${file}`); }
