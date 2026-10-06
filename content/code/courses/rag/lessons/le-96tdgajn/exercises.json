@@ -1,0 +1,693 @@
+[
+  {
+    "id": "ex-gqcww01y",
+    "version": 1,
+    "section": "why-chunk",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the returns policy's 884 words, how many does all-MiniLM-L6-v2 read?",
+    "hint": "truncation.py's second line.",
+    "value": 219,
+    "tolerance": 0,
+    "unit": "words"
+  },
+  {
+    "id": "ex-abfdm91r",
+    "version": 1,
+    "section": "why-chunk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Appending \"Returns are never accepted.\" to the end of the policy left its vector unchanged. Why?",
+    "hint": "Where does the tokenizer stop?",
+    "choices": [
+      {
+        "text": "The vector was cached from the first run",
+        "correct": false,
+        "why": "Nothing is cached; both were computed in the same call."
+      },
+      {
+        "text": "It was past the 256th piece",
+        "correct": true,
+        "why": "Right: same input after truncation, similarity 1.0000."
+      },
+      {
+        "text": "The model ignores negative sentences",
+        "correct": false,
+        "why": "A negative sentence inside the limit would be read like any other."
+      },
+      {
+        "text": "The sentence is too short to matter in an average",
+        "correct": false,
+        "why": "Any word inside the limit moves the average a little; this one was outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-ch7ts286",
+    "version": 1,
+    "section": "why-chunk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is NOT one of the lesson's reasons to cut documents into chunks?",
+    "hint": "Three reasons: a limit, an average, a budget.",
+    "choices": [
+      {
+        "text": "The embedding model reads only so many pieces",
+        "correct": false,
+        "why": "That is the first reason."
+      },
+      {
+        "text": "Vector databases refuse long texts",
+        "correct": true,
+        "why": "Right: the database stores whatever it is given; the limits are the model's and the prompt's."
+      },
+      {
+        "text": "Whatever is retrieved is paid for in the prompt",
+        "correct": false,
+        "why": "That is the third."
+      },
+      {
+        "text": "A long text's vector is about none of its topics in particular",
+        "correct": false,
+        "why": "That is the second."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpqe55sz",
+    "version": 1,
+    "section": "fixed-size",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the 60-word chunks of the returns policy start and end?",
+    "hint": "Read chunk 3's first words.",
+    "choices": [
+      {
+        "text": "At full stops, rounded to the nearest sentence",
+        "correct": false,
+        "why": "No rounding: the cut lands where the count says."
+      },
+      {
+        "text": "In the middle of sentences",
+        "correct": true,
+        "why": "Right: every boundary in the capture is mid-sentence."
+      },
+      {
+        "text": "At the `## ` headings",
+        "correct": false,
+        "why": "That is the sections strategy."
+      },
+      {
+        "text": "At the start of each paragraph",
+        "correct": false,
+        "why": "fixed counts words and ignores paragraphs."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n8mmy5x",
+    "version": 1,
+    "section": "fixed-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team indexes transcripts of support calls, with no punctuation or paragraphs. Which strategy does the lesson suggest?",
+    "hint": "There is no structure to follow.",
+    "choices": [
+      {
+        "text": "Cutting at the headings",
+        "correct": false,
+        "why": "A transcript has no headings."
+      },
+      {
+        "text": "Structured chunks, packed by paragraph",
+        "correct": false,
+        "why": "There are no paragraphs to pack."
+      },
+      {
+        "text": "One chunk per call, whatever its length",
+        "correct": false,
+        "why": "Long calls would be truncated after the model's limit."
+      },
+      {
+        "text": "Fixed-size chunks with 10 to 20 per cent overlap",
+        "correct": true,
+        "why": "Right, or semantic cuts with a size limit; both work without structure."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hyyqwtp",
+    "version": 1,
+    "section": "fixed-size",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fixed-size chunking guarantees every chunk is under the embedding model's ___, as long as the size is set below it.",
+    "hint": "256 pieces, for MiniLM.",
+    "blanks": [
+      {
+        "accept": [
+          "limit",
+          "maximum",
+          "input limit",
+          "max length",
+          "token limit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vzp7bx3v",
+    "version": 1,
+    "section": "overlap",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With 60-word chunks and 15 words of overlap, how many chunks did the returns policy make?",
+    "hint": "The first line of the second run.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "chunks"
+  },
+  {
+    "id": "ex-nnd5wjar",
+    "version": 1,
+    "section": "overlap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With overlap, chunk 4 still ended in the middle of \"Select the books you are\". Why did that no longer matter?",
+    "hint": "Where does chunk 5 start?",
+    "choices": [
+      {
+        "text": "Chunk 5 holds the sentence whole",
+        "correct": true,
+        "why": "Right: a second copy of the text, with no cut in it."
+      },
+      {
+        "text": "Chunk 4 was merged with chunk 5",
+        "correct": false,
+        "why": "Nothing merges; both chunks are in the index."
+      },
+      {
+        "text": "The cut was moved to the end of the sentence",
+        "correct": false,
+        "why": "The cut stayed where the count put it."
+      },
+      {
+        "text": "Sentences in numbered lists are kept whole",
+        "correct": false,
+        "why": "fixed knows nothing about lists."
+      }
+    ]
+  },
+  {
+    "id": "ex-eab1gggg",
+    "version": 1,
+    "section": "overlap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Overlap raised the found count from 19 to 23 of 26. What new problem does it bring to the prompt?",
+    "hint": "Neighbouring chunks share fifteen words.",
+    "choices": [
+      {
+        "text": "Some sentences arrive twice",
+        "correct": true,
+        "why": "Right; lesson 12 removes such duplicates."
+      },
+      {
+        "text": "Chunks exceed the embedding model's limit",
+        "correct": false,
+        "why": "They are still 60 words."
+      },
+      {
+        "text": "The citations point at the wrong document",
+        "correct": false,
+        "why": "Both chunks come from the same document."
+      },
+      {
+        "text": "The prompt loses the question",
+        "correct": false,
+        "why": "Nothing about overlap touches the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b7bn6sh",
+    "version": 1,
+    "section": "structure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the heading path give a chunk that its own text lacks?",
+    "hint": "The damaged-books chunk says \"a book\" and \"14 days\".",
+    "choices": [
+      {
+        "text": "An embedding that ignores the 256-piece limit",
+        "correct": false,
+        "why": "Nothing escapes the limit."
+      },
+      {
+        "text": "What it is about and where it came from",
+        "correct": true,
+        "why": "Right: the chunk becomes self-describing."
+      },
+      {
+        "text": "A guarantee that it is the current version",
+        "correct": false,
+        "why": "A path names a section, not a status; lesson 5 stores status separately."
+      },
+      {
+        "text": "A smaller size, so it fits more easily in the prompt",
+        "correct": false,
+        "why": "The path adds a few words; it does not shrink anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-za35h74f",
+    "version": 1,
+    "section": "structure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does structured() keep the steps of How to start a return and \"Returns are free\" in one chunk?",
+    "hint": "117 words, one section.",
+    "choices": [
+      {
+        "text": "It looks for the word \"free\" and keeps it with the steps",
+        "correct": false,
+        "why": "It knows nothing about words; only paragraphs and sections."
+      },
+      {
+        "text": "They fit under 120 words inside one section",
+        "correct": true,
+        "why": "Right: paragraphs are packed until the next one would pass the size."
+      },
+      {
+        "text": "Numbered lists are never split",
+        "correct": false,
+        "why": "A list is paragraphs to it; this one happened to fit."
+      },
+      {
+        "text": "The semantic similarity between them is high",
+        "correct": false,
+        "why": "structured() embeds nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-daa19bz4",
+    "version": 1,
+    "section": "structure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A document is one 900-word paragraph with no headings. What does structured(text, 120) produce?",
+    "hint": "A paragraph is never split, and sections need a heading.",
+    "choices": [
+      {
+        "text": "One 900-word chunk, mostly unread by the model",
+        "correct": false,
+        "why": "Close, but with no `## ` heading there is no section at all to cut."
+      },
+      {
+        "text": "A chunk per sentence",
+        "correct": false,
+        "why": "It does not split sentences."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: sections() returns nothing without a `## ` heading, so no chunk is made. The recursive version handles this."
+      },
+      {
+        "text": "Eight chunks of about 120 words",
+        "correct": false,
+        "why": "That is fixed-size behaviour; structured never splits a paragraph."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw0cmcrr",
+    "version": 1,
+    "section": "structure",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the separators of a recursive splitter in the order it tries them.",
+    "hint": "Coarsest first.",
+    "items": [
+      "a section break",
+      "a blank line",
+      "a line break",
+      "a sentence end",
+      "a word"
+    ]
+  },
+  {
+    "id": "ex-9mp2javw",
+    "version": 1,
+    "section": "semantic-boundaries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does semantic chunking cut?",
+    "hint": "It compares neighbours.",
+    "choices": [
+      {
+        "text": "At each heading",
+        "correct": false,
+        "why": "It strips the headings and never looks at them."
+      },
+      {
+        "text": "Every fixed number of sentences",
+        "correct": false,
+        "why": "No count is involved."
+      },
+      {
+        "text": "Where two neighbouring sentences are least alike",
+        "correct": true,
+        "why": "Right: the lowest quarter of similarities, here."
+      },
+      {
+        "text": "Where the question's similarity is highest",
+        "correct": false,
+        "why": "Cutting happens before any question exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3btegv0",
+    "version": 1,
+    "section": "semantic-boundaries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many words was the longest chunk semantic chunking made from the returns policy?",
+    "hint": "Chunk 12.",
+    "value": 223,
+    "tolerance": 0,
+    "unit": "words"
+  },
+  {
+    "id": "ex-tey0k02e",
+    "version": 1,
+    "section": "semantic-boundaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why were the four numbered steps of starting a return split across three semantic chunks?",
+    "hint": "Each step is a different action.",
+    "choices": [
+      {
+        "text": "Different actions read as different topics",
+        "correct": true,
+        "why": "Right: they belong together and do not resemble each other."
+      },
+      {
+        "text": "The steps are longer than 256 pieces",
+        "correct": false,
+        "why": "Each step is a sentence or two."
+      },
+      {
+        "text": "The list markers broke the sentence splitter",
+        "correct": false,
+        "why": "The lookbehind keeps markers attached; chunks 6 to 8 start with them."
+      },
+      {
+        "text": "The quantile was set too high",
+        "correct": false,
+        "why": "A lower quantile cuts less everywhere; the steps would still be the weak links."
+      }
+    ]
+  },
+  {
+    "id": "ex-trvrs5sy",
+    "version": 1,
+    "section": "choosing-a-size",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the 26 answerable questions did structured 120-word chunks find?",
+    "hint": "compare.py.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-kcqdbpzc",
+    "version": 1,
+    "section": "choosing-a-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fixed 240-word chunks found 24 of 26. Why does the lesson call them the worst trade in the table?",
+    "hint": "Look at the last column.",
+    "choices": [
+      {
+        "text": "Too many tokens per question",
+        "correct": true,
+        "why": "Right: 531 more tokens on every question, for one answer fewer than structured 120."
+      },
+      {
+        "text": "They found the answers by accident",
+        "correct": false,
+        "why": "Nothing in the table points to luck; the cost is the argument."
+      },
+      {
+        "text": "They exceed the embedding model's limit",
+        "correct": false,
+        "why": "Close to it, but 194 words average; the cost is the argument."
+      },
+      {
+        "text": "They make citations impossible",
+        "correct": false,
+        "why": "A big chunk can still be cited."
+      }
+    ]
+  },
+  {
+    "id": "ex-0yat4wb6",
+    "version": 1,
+    "section": "choosing-a-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague sees structured 120 at 25/26 and sections at 25/26, and structured 60 at 24/26, and concludes structured 60 is worse. What does the lesson say?",
+    "hint": "How much is one question worth here?",
+    "choices": [
+      {
+        "text": "One question in 26 is too small a difference to decide on",
+        "correct": true,
+        "why": "Right, and structured 60 also has the cheapest context of the three."
+      },
+      {
+        "text": "The test set is wrong and should be rewritten",
+        "correct": false,
+        "why": "It is small, not wrong; act on the large differences."
+      },
+      {
+        "text": "Agree: any difference in found count decides",
+        "correct": false,
+        "why": "With 26 questions, one is four points; too small to decide on."
+      },
+      {
+        "text": "Structured 60 is better because it has more chunks",
+        "correct": false,
+        "why": "More chunks is a cost, not a quality."
+      }
+    ]
+  },
+  {
+    "id": "ex-q72japcv",
+    "version": 1,
+    "section": "choosing-a-size",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each strategy to what compare.py measured for it.",
+    "hint": "Found, then tokens.",
+    "pairs": [
+      {
+        "left": "fixed, 30 words",
+        "right": "15 found, 108 tokens"
+      },
+      {
+        "left": "fixed, 240 words",
+        "right": "24 found, 768 tokens"
+      },
+      {
+        "left": "structured, 60 words",
+        "right": "24 found, 170 tokens"
+      },
+      {
+        "left": "semantic",
+        "right": "20 found, 333 tokens"
+      }
+    ],
+    "right_distractors": [
+      "26 found, 108 tokens"
+    ]
+  },
+  {
+    "id": "ex-cxpppgq8",
+    "version": 1,
+    "section": "small-to-big",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does small-to-big retrieval search, and what does it return?",
+    "hint": "The name says both.",
+    "choices": [
+      {
+        "text": "Searches sections, returns sentences",
+        "correct": false,
+        "why": "The other way round."
+      },
+      {
+        "text": "Searches small units, returns their parents",
+        "correct": true,
+        "why": "Right: precise search, enough context."
+      },
+      {
+        "text": "Searches whole documents, returns a summary",
+        "correct": false,
+        "why": "No summaries are involved."
+      },
+      {
+        "text": "Searches and returns the same chunks",
+        "correct": false,
+        "why": "That is ordinary retrieval."
+      }
+    ]
+  },
+  {
+    "id": "ex-sq7ep3kt",
+    "version": 1,
+    "section": "small-to-big",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did small-to-big not beat plain section search on this corpus?",
+    "hint": "What are Marginalia's sections like?",
+    "choices": [
+      {
+        "text": "It returned fewer tokens",
+        "correct": false,
+        "why": "It returned slightly more, 272 against 260."
+      },
+      {
+        "text": "The sections are short and about one thing, so their vectors are already precise",
+        "correct": true,
+        "why": "Right; it earns its place on long, mixed sections."
+      },
+      {
+        "text": "Parents were looked up wrongly",
+        "correct": false,
+        "why": "The lookup is by stored number and works."
+      },
+      {
+        "text": "Sentences are too short to embed",
+        "correct": false,
+        "why": "They embed fine; 319 of them were searched."
+      }
+    ]
+  },
+  {
+    "id": "ex-25c4dbxf",
+    "version": 1,
+    "section": "small-to-big",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "LlamaIndex's name for returning the matched sentence with a few sentences either side is a sentence ___.",
+    "hint": "Like a frame around the hit.",
+    "blanks": [
+      {
+        "accept": [
+          "window"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b120221s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson say to keep after choosing a chunking strategy?",
+    "hint": "The corpus will change.",
+    "choices": [
+      {
+        "text": "The numbers that justified the choice",
+        "correct": true,
+        "why": "Right, so it can be made again when the corpus changes."
+      },
+      {
+        "text": "The embedding model's weights",
+        "correct": false,
+        "why": "Those are the provider's, not a chunking decision."
+      },
+      {
+        "text": "Only the winning strategy's code, deleting the rest",
+        "correct": false,
+        "why": "The comparison is what lets the decision be revisited."
+      },
+      {
+        "text": "A copy of every chunk ever made",
+        "correct": false,
+        "why": "The index keeps the current chunks; old ones are not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfn3d8bk",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did the lesson measure as true on this corpus? Choose all that apply.",
+    "hint": "Check each against compare.py and truncation.py.",
+    "choices": [
+      {
+        "text": "Overlap improved fixed 60-word chunks",
+        "correct": true,
+        "why": "Yes: 19 to 23."
+      },
+      {
+        "text": "Text after the 256th piece does not change the vector",
+        "correct": true,
+        "why": "Yes: similarity 1.0000 with a sentence appended."
+      },
+      {
+        "text": "Semantic chunking found more than cutting at headings",
+        "correct": false,
+        "why": "No: 20 against 25."
+      },
+      {
+        "text": "Thirty-word chunks found the most answers",
+        "correct": false,
+        "why": "No: the fewest, 15."
+      },
+      {
+        "text": "Structured 60 had the cheapest context of those above 15",
+        "correct": true,
+        "why": "Yes: 170 tokens for 24."
+      }
+    ]
+  }
+]

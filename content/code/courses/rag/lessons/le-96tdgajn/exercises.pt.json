@@ -1,0 +1,462 @@
+{
+  "ex-gqcww01y": {
+    "prompt": "Das 884 palavras do regulamento de devoluções, quantas o all-MiniLM-L6-v2 lê?",
+    "hint": "A segunda linha do truncation.py.",
+    "unit": "palavras"
+  },
+  "ex-abfdm91r": {
+    "prompt": "Acrescentar \"Returns are never accepted.\" ao fim do regulamento deixou o vetor dele igual. Por quê?",
+    "hint": "Onde o tokenizador para?",
+    "choices": [
+      {
+        "text": "O vetor ficou em cache da primeira execução",
+        "why": "Nada fica em cache; os dois foram calculados na mesma chamada."
+      },
+      {
+        "text": "Ficou depois do 256º pedaço",
+        "why": "Certo: mesma entrada depois do corte, similaridade 1,0000."
+      },
+      {
+        "text": "O modelo ignora frases negativas",
+        "why": "Uma frase negativa dentro do limite seria lida como qualquer outra."
+      },
+      {
+        "text": "A frase é curta demais para pesar numa média",
+        "why": "Qualquer palavra dentro do limite mexe um pouco na média; esta estava fora."
+      }
+    ]
+  },
+  "ex-ch7ts286": {
+    "prompt": "Qual destes NÃO é um dos motivos da aula para cortar documentos em pedaços?",
+    "hint": "Três motivos: um limite, uma média, um orçamento.",
+    "choices": [
+      {
+        "text": "O modelo de embeddings só lê um tanto de pedaços",
+        "why": "Esse é o primeiro motivo."
+      },
+      {
+        "text": "Bancos vetoriais recusam textos longos",
+        "why": "Certo: o banco guarda o que receber; os limites são do modelo e do prompt."
+      },
+      {
+        "text": "O que for recuperado é pago no prompt",
+        "why": "Esse é o terceiro."
+      },
+      {
+        "text": "O vetor de um texto longo não é sobre nenhum dos assuntos em particular",
+        "why": "Esse é o segundo."
+      }
+    ]
+  },
+  "ex-dpqe55sz": {
+    "prompt": "Onde os pedaços de 60 palavras do regulamento começaram e terminaram?",
+    "hint": "Leia as primeiras palavras do pedaço 3.",
+    "choices": [
+      {
+        "text": "Nos pontos finais, arredondados para a frase mais próxima",
+        "why": "Sem arredondamento: o corte cai onde a conta manda."
+      },
+      {
+        "text": "No meio de frases",
+        "why": "Certo: todas as fronteiras da captura caem no meio de uma frase."
+      },
+      {
+        "text": "Nos títulos `## `",
+        "why": "Essa é a estratégia por seções."
+      },
+      {
+        "text": "No começo de cada parágrafo",
+        "why": "O fixed conta palavras e ignora parágrafos."
+      }
+    ]
+  },
+  "ex-7n8mmy5x": {
+    "prompt": "Uma equipe indexa transcrições de ligações de atendimento, sem pontuação nem parágrafos. Que estratégia a aula sugere?",
+    "hint": "Não há estrutura para seguir.",
+    "choices": [
+      {
+        "text": "Cortar nos títulos",
+        "why": "Uma transcrição não tem títulos."
+      },
+      {
+        "text": "Pedaços estruturados, juntados por parágrafo",
+        "why": "Não há parágrafos para juntar."
+      },
+      {
+        "text": "Um pedaço por ligação, de qualquer tamanho",
+        "why": "Ligações longas seriam truncadas depois do limite do modelo."
+      },
+      {
+        "text": "Pedaços de tamanho fixo com 10 a 20 por cento de sobreposição",
+        "why": "Certo, ou cortes semânticos com limite de tamanho; os dois funcionam sem estrutura."
+      }
+    ]
+  },
+  "ex-3hyyqwtp": {
+    "prompt": "O corte de tamanho fixo garante que todo pedaço fica abaixo do ___ do modelo de embeddings, desde que o tamanho seja posto abaixo dele.",
+    "hint": "256 pedaços, no MiniLM.",
+    "blanks": [
+      {
+        "accept": [
+          "limite",
+          "máximo",
+          "maximo",
+          "limite de entrada"
+        ]
+      }
+    ]
+  },
+  "ex-vzp7bx3v": {
+    "prompt": "Com pedaços de 60 palavras e 15 de sobreposição, quantos pedaços o regulamento rendeu?",
+    "hint": "A primeira linha da segunda execução.",
+    "unit": "pedaços"
+  },
+  "ex-nnd5wjar": {
+    "prompt": "Com sobreposição, o pedaço 4 ainda terminava no meio de \"Select the books you are\". Por que isso deixou de importar?",
+    "hint": "Onde começa o pedaço 5?",
+    "choices": [
+      {
+        "text": "O pedaço 5 tem a frase inteira",
+        "why": "Certo: uma segunda cópia do texto, sem corte."
+      },
+      {
+        "text": "O pedaço 4 foi fundido com o pedaço 5",
+        "why": "Nada se funde; os dois pedaços estão no índice."
+      },
+      {
+        "text": "O corte foi movido para o fim da frase",
+        "why": "O corte ficou onde a conta o pôs."
+      },
+      {
+        "text": "Frases em listas numeradas são mantidas inteiras",
+        "why": "O fixed não sabe nada de listas."
+      }
+    ]
+  },
+  "ex-eab1gggg": {
+    "prompt": "A sobreposição levou as achadas de 19 para 23 de 26. Que problema novo ela traz ao prompt?",
+    "hint": "Pedaços vizinhos têm quinze palavras em comum.",
+    "choices": [
+      {
+        "text": "Algumas frases chegam duas vezes",
+        "why": "Certo; a aula 12 tira essas duplicatas."
+      },
+      {
+        "text": "Os pedaços passam do limite do modelo de embeddings",
+        "why": "Continuam com 60 palavras."
+      },
+      {
+        "text": "As citações apontam para o documento errado",
+        "why": "Os dois pedaços vêm do mesmo documento."
+      },
+      {
+        "text": "O prompt perde a pergunta",
+        "why": "Nada na sobreposição mexe na pergunta."
+      }
+    ]
+  },
+  "ex-0b7bn6sh": {
+    "prompt": "O que o caminho de títulos dá a um pedaço que o próprio texto dele não tem?",
+    "hint": "O pedaço dos livros danificados diz \"a book\" e \"14 days\".",
+    "choices": [
+      {
+        "text": "Um embedding que ignora o limite de 256 pedaços",
+        "why": "Nada escapa do limite."
+      },
+      {
+        "text": "Do que trata e de onde veio",
+        "why": "Certo: o pedaço passa a se descrever sozinho."
+      },
+      {
+        "text": "Uma garantia de que é a versão atual",
+        "why": "Um caminho nomeia uma seção, não um status; a aula 5 guarda o status à parte."
+      },
+      {
+        "text": "Um tamanho menor, para caber mais fácil no prompt",
+        "why": "O caminho acrescenta algumas palavras; não encolhe nada."
+      }
+    ]
+  },
+  "ex-za35h74f": {
+    "prompt": "Por que o structured() mantém os passos de How to start a return e \"Returns are free\" num pedaço só?",
+    "hint": "117 palavras, uma seção.",
+    "choices": [
+      {
+        "text": "Ele procura a palavra \"free\" e a mantém com os passos",
+        "why": "Ele não sabe nada de palavras; só parágrafos e seções."
+      },
+      {
+        "text": "Cabem em menos de 120 palavras dentro de uma seção",
+        "why": "Certo: parágrafos são juntados até o próximo passar do tamanho."
+      },
+      {
+        "text": "Listas numeradas nunca são partidas",
+        "why": "Para ele uma lista são parágrafos; esta coube por acaso."
+      },
+      {
+        "text": "A similaridade semântica entre eles é alta",
+        "why": "O structured() não gera embedding de nada."
+      }
+    ]
+  },
+  "ex-daa19bz4": {
+    "prompt": "Um documento é um único parágrafo de 900 palavras sem títulos. O que o structured(text, 120) produz?",
+    "hint": "Um parágrafo nunca é partido, e seções precisam de um título.",
+    "choices": [
+      {
+        "text": "Um pedaço de 900 palavras, quase todo sem ser lido",
+        "why": "Perto, mas sem título `## ` não há seção nenhuma para cortar."
+      },
+      {
+        "text": "Um pedaço por frase",
+        "why": "Ele não separa frases."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo: o sections() não devolve nada sem um título `## `, então nenhum pedaço é feito. A versão recursiva trata disso."
+      },
+      {
+        "text": "Oito pedaços de umas 120 palavras",
+        "why": "Esse é o comportamento do tamanho fixo; o structured nunca parte um parágrafo."
+      }
+    ]
+  },
+  "ex-jw0cmcrr": {
+    "prompt": "Ponha os separadores de um divisor recursivo na ordem em que ele os tenta.",
+    "hint": "O mais grosso primeiro.",
+    "items": [
+      "uma quebra de seção",
+      "uma linha em branco",
+      "uma quebra de linha",
+      "um fim de frase",
+      "uma palavra"
+    ]
+  },
+  "ex-9mp2javw": {
+    "prompt": "Onde o corte semântico corta?",
+    "hint": "Ele compara vizinhas.",
+    "choices": [
+      {
+        "text": "Em cada título",
+        "why": "Ele tira os títulos e nunca olha para eles."
+      },
+      {
+        "text": "A cada número fixo de frases",
+        "why": "Não há contagem envolvida."
+      },
+      {
+        "text": "Onde duas frases vizinhas se parecem menos",
+        "why": "Certo: o quarto mais baixo de similaridades, aqui."
+      },
+      {
+        "text": "Onde a similaridade da pergunta é mais alta",
+        "why": "O corte acontece antes de existir qualquer pergunta."
+      }
+    ]
+  },
+  "ex-v3btegv0": {
+    "prompt": "Quantas palavras tinha o maior pedaço que o corte semântico fez do regulamento?",
+    "hint": "O pedaço 12.",
+    "unit": "palavras"
+  },
+  "ex-tey0k02e": {
+    "prompt": "Por que os quatro passos numerados de começar uma devolução foram divididos em três pedaços semânticos?",
+    "hint": "Cada passo é uma ação diferente.",
+    "choices": [
+      {
+        "text": "Ações diferentes parecem assuntos diferentes",
+        "why": "Certo: andam juntas e não se parecem."
+      },
+      {
+        "text": "Os passos têm mais de 256 pedaços",
+        "why": "Cada passo é uma ou duas frases."
+      },
+      {
+        "text": "Os marcadores de lista quebraram o separador de frases",
+        "why": "O lookbehind mantém os marcadores presos; os pedaços 6 a 8 começam com eles."
+      },
+      {
+        "text": "O quantil estava alto demais",
+        "why": "Um quantil menor corta menos em todo lugar; os passos ainda seriam os elos fracos."
+      }
+    ]
+  },
+  "ex-trvrs5sy": {
+    "prompt": "Quantas das 26 perguntas com resposta os pedaços estruturados de 120 palavras acharam?",
+    "hint": "O compare.py.",
+    "unit": "perguntas"
+  },
+  "ex-kcqdbpzc": {
+    "prompt": "Pedaços fixos de 240 palavras acharam 24 de 26. Por que a aula os chama da pior troca da tabela?",
+    "hint": "Olhe a última coluna.",
+    "choices": [
+      {
+        "text": "Tokens demais por pergunta",
+        "why": "Certo: 531 tokens a mais em toda pergunta, por uma resposta a menos que o estruturado 120."
+      },
+      {
+        "text": "Acharam as respostas por acaso",
+        "why": "Nada na tabela indica sorte; o custo é o argumento."
+      },
+      {
+        "text": "Eles passam do limite do modelo de embeddings",
+        "why": "Perto dele, mas com 194 palavras em média; o custo é o argumento."
+      },
+      {
+        "text": "Tornam as citações impossíveis",
+        "why": "Um pedaço grande ainda pode ser citado."
+      }
+    ]
+  },
+  "ex-0yat4wb6": {
+    "prompt": "Um colega vê o estruturado 120 com 25/26, as seções com 25/26 e o estruturado 60 com 24/26, e conclui que o estruturado 60 é pior. O que a aula diz?",
+    "hint": "Quanto vale uma pergunta aqui?",
+    "choices": [
+      {
+        "text": "Uma pergunta em 26 é diferença pequena demais para decidir",
+        "why": "Certo, e o estruturado 60 também tem o contexto mais barato dos três."
+      },
+      {
+        "text": "O conjunto de teste está errado e deveria ser reescrito",
+        "why": "Ele é pequeno, não errado; aja sobre as diferenças grandes."
+      },
+      {
+        "text": "Concordar: qualquer diferença na contagem decide",
+        "why": "Com 26 perguntas, uma são quatro pontos; pouco para decidir."
+      },
+      {
+        "text": "O estruturado 60 é melhor porque tem mais pedaços",
+        "why": "Mais pedaços é custo, não qualidade."
+      }
+    ]
+  },
+  "ex-q72japcv": {
+    "prompt": "Ligue cada estratégia ao que o compare.py mediu para ela.",
+    "hint": "Achadas, depois tokens.",
+    "pairs": [
+      {
+        "left": "fixo, 30 palavras",
+        "right": "15 achadas, 108 tokens"
+      },
+      {
+        "left": "fixo, 240 palavras",
+        "right": "24 achadas, 768 tokens"
+      },
+      {
+        "left": "estruturado, 60 palavras",
+        "right": "24 achadas, 170 tokens"
+      },
+      {
+        "left": "semântico",
+        "right": "20 achadas, 333 tokens"
+      }
+    ],
+    "right_distractors": [
+      "26 achadas, 108 tokens"
+    ]
+  },
+  "ex-cxpppgq8": {
+    "prompt": "O que a recuperação do pequeno para o grande busca, e o que devolve?",
+    "hint": "O nome diz as duas coisas.",
+    "choices": [
+      {
+        "text": "Busca seções, devolve frases",
+        "why": "Ao contrário."
+      },
+      {
+        "text": "Busca unidades pequenas, devolve os pais delas",
+        "why": "Certo: busca precisa, contexto suficiente."
+      },
+      {
+        "text": "Busca documentos inteiros, devolve um resumo",
+        "why": "Não há resumos envolvidos."
+      },
+      {
+        "text": "Busca e devolve os mesmos pedaços",
+        "why": "Essa é a recuperação comum."
+      }
+    ]
+  },
+  "ex-sq7ep3kt": {
+    "prompt": "Por que o pequeno-para-grande não venceu a busca simples por seções neste corpus?",
+    "hint": "Como são as seções da Marginalia?",
+    "choices": [
+      {
+        "text": "Devolveu menos tokens",
+        "why": "Devolveu um pouco mais, 272 contra 260."
+      },
+      {
+        "text": "As seções são curtas e tratam de uma coisa, então os vetores já são precisos",
+        "why": "Certo; ele vale a pena em seções longas e misturadas."
+      },
+      {
+        "text": "Os pais foram consultados errado",
+        "why": "A consulta é por número guardado e funciona."
+      },
+      {
+        "text": "Frases são curtas demais para virar embedding",
+        "why": "Viram embedding normalmente; 319 foram buscadas."
+      }
+    ]
+  },
+  "ex-25c4dbxf": {
+    "prompt": "O nome no LlamaIndex para devolver a frase encontrada com algumas frases de cada lado é sentence ___.",
+    "hint": "Como uma moldura em volta do acerto.",
+    "blanks": [
+      {
+        "accept": [
+          "window",
+          "janela"
+        ]
+      }
+    ]
+  },
+  "ex-b120221s": {
+    "prompt": "O que a aula manda guardar depois de escolher uma estratégia de corte?",
+    "hint": "O corpus vai mudar.",
+    "choices": [
+      {
+        "text": "Os números que justificaram a escolha",
+        "why": "Certo, para poder refazê-la quando o corpus mudar."
+      },
+      {
+        "text": "Os pesos do modelo de embeddings",
+        "why": "Esses são do provedor, não uma decisão de corte."
+      },
+      {
+        "text": "Só o código da estratégia vencedora, apagando o resto",
+        "why": "A comparação é o que permite rever a decisão."
+      },
+      {
+        "text": "Uma cópia de todo pedaço já feito",
+        "why": "O índice guarda os pedaços atuais; os antigos não são o ponto."
+      }
+    ]
+  },
+  "ex-tfn3d8bk": {
+    "prompt": "Quais destes a aula mediu como verdadeiros neste corpus? Escolha todos os que se aplicam.",
+    "hint": "Confira cada um contra o compare.py e o truncation.py.",
+    "choices": [
+      {
+        "text": "A sobreposição melhorou os pedaços fixos de 60 palavras",
+        "why": "Sim: de 19 para 23."
+      },
+      {
+        "text": "Texto depois do 256º pedaço não muda o vetor",
+        "why": "Sim: similaridade 1,0000 com uma frase acrescentada."
+      },
+      {
+        "text": "O corte semântico achou mais que cortar nos títulos",
+        "why": "Não: 20 contra 25."
+      },
+      {
+        "text": "Pedaços de trinta palavras acharam mais respostas",
+        "why": "Não: o menor número, 15."
+      },
+      {
+        "text": "O estruturado 60 teve o contexto mais barato dos acima de 15",
+        "why": "Sim: 170 tokens para 24."
+      }
+    ]
+  }
+}

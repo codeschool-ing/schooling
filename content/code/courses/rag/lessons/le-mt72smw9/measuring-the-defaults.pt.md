@@ -1,0 +1,52 @@
+---
+title: Medindo os padrões
+version: 1
+---
+
+Cada parte desta aula até aqui foi lida: uma assinatura, um prompt impresso, uma contagem de linhas.
+A afirmação de que um padrão é pior que uma escolha medida precisa de mais uma coisa, uma medição, e a
+aula 4 já tem o método. Para cada uma das 26 perguntas com resposta do `eval.jsonl`, pegue os três
+trechos que um pipeline recupera, veja se um dos fatos da pergunta está dentro deles, e conte os
+tokens que eles poriam no prompt. O `frameworks.py` faz isso para sete pipelines, todos com o mesmo
+modelo de embeddings, então as únicas diferenças são como o texto foi cortado e o que é devolvido:
+
+```
+ana@lab:~/rag$ python frameworks.py
+pipeline                            found  tokens
+LangChain, 4000 characters          23/26    1943
+LangChain, 400 characters           24/26     211
+LlamaIndex, defaults                22/26    2044
+LlamaIndex, sentences alone         21/26      96
+LlamaIndex, sentence window         26/26     521
+LlamaIndex, auto-merging            25/26     581
+lesson 5's index                    26/26     168
+```
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 340\" role=\"img\" aria-label=\"Um gráfico de dispersão de sete pipelines: tokens recuperados por pergunta contra perguntas cuja resposta foi recuperada, de 26. LangChain com 4.000 caracteres: 1.943 tokens, 23. LangChain com 400 caracteres: 211, 24. LlamaIndex com os padrões: 2.044, 22. Frases sozinhas: 96, 21. Janela de frases: 521, 26. Auto-merging: 581, 25. Índice da aula 5: 168, 26.\"><path d=\"M70 280 L690 280\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M70 280 L70 40\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M70.0 280 L70.0 285\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"70.0\" y=\"298\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0</text><path d=\"M210.9090909090909 280 L210.9090909090909 285\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"210.9090909090909\" y=\"298\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">500</text><path d=\"M351.8181818181818 280 L351.8181818181818 285\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"351.8181818181818\" y=\"298\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">1000</text><path d=\"M492.72727272727275 280 L492.72727272727275 285\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"492.72727272727275\" y=\"298\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">1500</text><path d=\"M633.6363636363636 280 L633.6363636363636 285\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"633.6363636363636\" y=\"298\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">2000</text><path d=\"M65 280.0 L70 280.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"280.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">20</text><path d=\"M65 240.0 L70 240.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"240.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">21</text><path d=\"M65 200.0 L70 200.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"200.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">22</text><path d=\"M65 160.0 L70 160.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"160.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">23</text><path d=\"M65 120.0 L70 120.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"120.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">24</text><path d=\"M65 80.0 L70 80.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"80.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">25</text><path d=\"M65 40.0 L70 40.0\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"61\" y=\"40.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">26</text><text x=\"380.0\" y=\"322\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">tokens recuperados por pergunta</text><text x=\"70\" y=\"20\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">perguntas cuja resposta foi recuperada, de 26</text><circle cx=\"617.6\" cy=\"160.0\" r=\"5\" fill=\"var(--paper-dim)\"></circle><text x=\"607.5727272727273\" y=\"160.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">LangChain 4000</text><circle cx=\"129.5\" cy=\"120.0\" r=\"5\" fill=\"var(--paper-dim)\"></circle><text x=\"139.46363636363637\" y=\"120.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">LangChain 400</text><circle cx=\"646.0\" cy=\"200.0\" r=\"5\" fill=\"var(--paper-dim)\"></circle><text x=\"636.0363636363636\" y=\"200.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">LlamaIndex padrão</text><circle cx=\"97.1\" cy=\"240.0\" r=\"5\" fill=\"var(--paper-dim)\"></circle><text x=\"107.05454545454546\" y=\"240.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">frases sozinhas</text><circle cx=\"216.8\" cy=\"40.0\" r=\"5\" fill=\"var(--paper-dim)\"></circle><text x=\"226.8272727272727\" y=\"40.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">janela de frases</text><circle cx=\"233.7\" cy=\"80.0\" r=\"5\" fill=\"var(--paper-dim)\"></circle><text x=\"243.73636363636365\" y=\"80.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">auto-merging</text><circle cx=\"117.3\" cy=\"40.0\" r=\"5\" fill=\"var(--phosphor)\"></circle><text x=\"125.34545454545454\" y=\"56.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">índice da aula 5</text></svg>", "caption": "Para cima e para a esquerda é melhor. Os padrões dos dois frameworks ficam embaixo à direita, pagando mais de dez vezes os tokens do índice da aula 5 para achar menos respostas; ajustados, eles vão para a esquerda.", "same": ["LangChain 4000", "LangChain 400", "auto-merging"]}
+```
+
+**Os dois padrões são a pior troca da tabela.** O LangChain com 4.000 caracteres achou 23 e os padrões
+do LlamaIndex acharam 22, mandando uns 2.000 tokens por pergunta. O índice da aula 5 achou as 26 com
+168. Pedaços grandes deviam tornar impossível perder uma resposta, já que cada um guarda quase um
+documento inteiro. Eles perderam mais, e a aula 3 de `embeddings-vectors` tem o motivo: o
+all-MiniLM-L6-v2 lê no máximo 256 pedaços de palavra, então um pedaço de 491 palavras é buscado pelas
+suas primeiras duzentas e poucas, e uma resposta mais abaixo está no pedaço e é invisível para a
+busca.
+
+**Ajustados, os dois frameworks chegam perto.** O divisor do LangChain com 400 caracteres achou 24 com
+211 tokens, o mesmo território das linhas de 60 palavras da aula 4. A janela de frases achou as 26,
+com 521 tokens, o triplo do preço da aula 5 pelo mesmo placar: a precisão de uma frase e o contexto de
+um parágrafo, pagos com o parágrafo. O auto-merging achou 25 com 581. As frases sozinhas foram a linha
+mais barata e a que menos achou, e é por isso que as duas técnicas existem.
+
+Duas cautelas sobre o que esta tabela pode dizer. Trinta perguntas sobre treze documentos, como a aula
+8 avisou, separam uma diferença de 22 contra 26 e não dizem nada sobre 25 contra 26. E ela mede só a
+recuperação, a metade que os padrões de um framework decidem; o que o modelo faz com o texto
+recuperado é a outra metade da aula 8, e o prompt que um framework manda é um padrão à parte, que as
+seções anteriores leram.
+
+**Nenhum desses números pertence ao LangChain ou ao LlamaIndex.** Eles pertencem às configurações, e
+as configurações pertencem a este acervo: os tamanhos da aula 4 foram escolhidos por este mesmo teste,
+e um framework ajustado com o teste chega ao mesmo lugar. Um framework pode carregar uma configuração
+medida e não pode escolhê-la, porque escolher precisa das perguntas, e só a equipe as tem.

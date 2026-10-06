@@ -1,0 +1,713 @@
+[
+  {
+    "id": "ex-r3trtjd5",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a reader's role come from?",
+    "hint": "Never from the question.",
+    "choices": [
+      {
+        "text": "The words of the question",
+        "correct": false,
+        "why": "Then a question could choose its permissions."
+      },
+      {
+        "text": "A field the client sends with the request",
+        "correct": false,
+        "why": "The client could send anything."
+      },
+      {
+        "text": "The session",
+        "correct": true,
+        "why": "Right: the signed-in account and its permissions."
+      },
+      {
+        "text": "The document the search finds first",
+        "correct": false,
+        "why": "That would decide access after reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0zqkeya",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does audiences() return for a role nobody wrote into ROLES?",
+    "hint": "Fail closed.",
+    "choices": [
+      {
+        "text": "An empty list",
+        "correct": true,
+        "why": "Right: an unknown role reads nothing."
+      },
+      {
+        "text": "An error that stops the server",
+        "correct": false,
+        "why": "It returns quietly; the search finds nothing."
+      },
+      {
+        "text": "Every audience, so nothing breaks",
+        "correct": false,
+        "why": "That opens the door on a typo."
+      },
+      {
+        "text": "Only public",
+        "correct": false,
+        "why": "The code returns an empty list."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sxejjbm",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For \"When does an order get held for manual fraud review?\", which reader got 0.82 in the reply?",
+    "hint": "Whose document holds it?",
+    "choices": [
+      {
+        "text": "All three",
+        "correct": false,
+        "why": "That was lesson 2's leak."
+      },
+      {
+        "text": "The support agent",
+        "correct": false,
+        "why": "The agent's sources had no finance chunk."
+      },
+      {
+        "text": "The customer",
+        "correct": false,
+        "why": "The customer got the refusal."
+      },
+      {
+        "text": "Finance",
+        "correct": true,
+        "why": "Right: only finance may read that document."
+      }
+    ]
+  },
+  {
+    "id": "ex-wydnf3pe",
+    "version": 1,
+    "section": "filter-inside-the-search",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the agent's search ran first and the finance row was dropped afterwards, how many sources were left?",
+    "hint": "after.py.",
+    "choices": [
+      {
+        "text": "One",
+        "correct": false,
+        "why": "Only one row was dropped."
+      },
+      {
+        "text": "Three",
+        "correct": false,
+        "why": "One of the three was finance."
+      },
+      {
+        "text": "None",
+        "correct": false,
+        "why": "Two were allowed."
+      },
+      {
+        "text": "Two",
+        "correct": true,
+        "why": "Right: the finance chunk took a place and was thrown away."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfv95dwk",
+    "version": 1,
+    "section": "filter-inside-the-search",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Besides losing places, what is wrong with dropping forbidden rows after the search?",
+    "hint": "Where is the text in between?",
+    "choices": [
+      {
+        "text": "It is slower than the WHERE",
+        "correct": false,
+        "why": "Speed is not the second problem."
+      },
+      {
+        "text": "The model sees the dropped rows anyway",
+        "correct": false,
+        "why": "They are dropped before the prompt."
+      },
+      {
+        "text": "Logs and caches leak the text",
+        "correct": true,
+        "why": "Right: with the WHERE it is never read out."
+      },
+      {
+        "text": "PostgreSQL refuses to return forbidden rows",
+        "correct": false,
+        "why": "Without a policy it returns them."
+      }
+    ]
+  },
+  {
+    "id": "ex-hf72prww",
+    "version": 1,
+    "section": "the-database-enforces-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With rag.audiences not set, how many rows does the assistant role see?",
+    "hint": "Null matches nothing.",
+    "choices": [
+      {
+        "text": "All of them",
+        "correct": false,
+        "why": "The policy hides every row."
+      },
+      {
+        "text": "Only the ones the last request saw",
+        "correct": false,
+        "why": "The setting ends with each transaction."
+      },
+      {
+        "text": "Only public ones",
+        "correct": false,
+        "why": "Public needs to be set too."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: it fails closed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kb5rp8cs",
+    "version": 1,
+    "section": "the-database-enforces-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is rag.audiences set with set_config(..., true)?",
+    "hint": "Pooled connections.",
+    "choices": [
+      {
+        "text": "Because the policy only reads booleans",
+        "correct": false,
+        "why": "It reads a comma-separated list."
+      },
+      {
+        "text": "To make the search use the index",
+        "correct": false,
+        "why": "Unrelated to indexes."
+      },
+      {
+        "text": "The true makes it permanent",
+        "correct": false,
+        "why": "It makes it end with the transaction."
+      },
+      {
+        "text": "So it ends with the transaction",
+        "correct": true,
+        "why": "Right: no inherited permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0mvk9dp",
+    "version": 1,
+    "section": "the-database-enforces-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does access.search keep its WHERE now that the database has a policy?",
+    "hint": "Two layers, two jobs.",
+    "choices": [
+      {
+        "text": "The policy only works on writes",
+        "correct": false,
+        "why": "It is FOR SELECT."
+      },
+      {
+        "text": "pgvector ignores policies",
+        "correct": false,
+        "why": "Policies apply to every query."
+      },
+      {
+        "text": "Correctness and speed",
+        "correct": true,
+        "why": "Right: the policy makes a forgotten WHERE safe."
+      },
+      {
+        "text": "The policy cannot read arrays",
+        "correct": false,
+        "why": "It compares with ANY."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv7wvbc8",
+    "version": 1,
+    "section": "the-database-enforces-it",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PostgreSQL's mechanism that hides rows from a role whatever the query says is row-level ________.",
+    "hint": "ENABLE ROW LEVEL ...",
+    "blanks": [
+      {
+        "accept": [
+          "security"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j36ayd76",
+    "version": 1,
+    "section": "filters-and-the-index",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Through the HNSW index, how many of the five finance rows asked for came back?",
+    "hint": "sequential scan off.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-s3npsvfv",
+    "version": 1,
+    "section": "filters-and-the-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can an HNSW index return fewer rows than the LIMIT under a strict filter?",
+    "hint": "What does the index know?",
+    "choices": [
+      {
+        "text": "Indexes store only public rows",
+        "correct": false,
+        "why": "It indexes every row."
+      },
+      {
+        "text": "The filter runs after the index",
+        "correct": true,
+        "why": "Right: ef_search is 40 by default."
+      },
+      {
+        "text": "It refuses queries with a WHERE",
+        "correct": false,
+        "why": "It runs them."
+      },
+      {
+        "text": "The LIMIT applies before the ORDER BY",
+        "correct": false,
+        "why": "Not in SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2msw9af",
+    "version": 1,
+    "section": "filters-and-the-index",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each remedy to how it gets enough rows past a strict filter.",
+    "hint": "Three remedies.",
+    "pairs": [
+      {
+        "left": "exact search on the subset",
+        "right": "compares every row that passes the filter"
+      },
+      {
+        "left": "a partial index per audience",
+        "right": "walks a graph holding only that audience"
+      },
+      {
+        "left": "iterative index scans",
+        "right": "keeps walking until enough rows pass"
+      }
+    ]
+  },
+  {
+    "id": "ex-3b00wmhz",
+    "version": 1,
+    "section": "narrowing-never-widens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A customer asks to search only the finance documents. What comes back?",
+    "hint": "The intersection.",
+    "choices": [
+      {
+        "text": "An error saying the scope is forbidden",
+        "correct": false,
+        "why": "It quietly matches no row."
+      },
+      {
+        "text": "Every public document",
+        "correct": false,
+        "why": "The narrowing still applies."
+      },
+      {
+        "text": "The finance documents",
+        "correct": false,
+        "why": "The role does not allow them."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: public and finance do not overlap."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1z8fnz5",
+    "version": 1,
+    "section": "narrowing-never-widens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A self-querying retriever writes a filter on audience from the question. What does the lesson say about that?",
+    "hint": "Scope or permission?",
+    "choices": [
+      {
+        "text": "A reader choosing permissions",
+        "correct": true,
+        "why": "Right: audience is not on the list of fields a model may name."
+      },
+      {
+        "text": "It is fine if the model is accurate",
+        "correct": false,
+        "why": "Accuracy does not grant permission."
+      },
+      {
+        "text": "It replaces the need for a WHERE",
+        "correct": false,
+        "why": "Never."
+      },
+      {
+        "text": "It speeds up the search",
+        "correct": false,
+        "why": "Speed is not the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-svz0m0zs",
+    "version": 1,
+    "section": "narrowing-never-widens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may a model-written filter set, according to the lesson?",
+    "hint": "A scope, not a permission.",
+    "choices": [
+      {
+        "text": "status",
+        "correct": false,
+        "why": "That decides what is current, not the reader's scope."
+      },
+      {
+        "text": "audience",
+        "correct": false,
+        "why": "That is a permission."
+      },
+      {
+        "text": "updated",
+        "correct": true,
+        "why": "Right: a date is a scope."
+      },
+      {
+        "text": "the role",
+        "correct": false,
+        "why": "The role comes from the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rhyyete",
+    "version": 1,
+    "section": "what-a-customer-must-not-learn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the refusal the right reply to the customer's question about refund flags?",
+    "hint": "From where the customer stands.",
+    "choices": [
+      {
+        "text": "The model was told to keep secrets",
+        "correct": false,
+        "why": "The text never reached the model."
+      },
+      {
+        "text": "The finance document was deleted",
+        "correct": false,
+        "why": "Finance still read it."
+      },
+      {
+        "text": "Customers may not ask about refunds",
+        "correct": false,
+        "why": "They may; the returns policy answers many such questions."
+      },
+      {
+        "text": "Nothing they may read answers it",
+        "correct": true,
+        "why": "Right: and it reveals nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-r54k6a0g",
+    "version": 1,
+    "section": "what-a-customer-must-not-learn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would \"that information is restricted\" be a worse reply?",
+    "hint": "What does it reveal?",
+    "choices": [
+      {
+        "text": "It cannot be cited as a numbered source",
+        "correct": false,
+        "why": "Citation is not the point."
+      },
+      {
+        "text": "It says something exists to be found",
+        "correct": true,
+        "why": "Right: on a fraud control, that is itself a leak."
+      },
+      {
+        "text": "It is too long",
+        "correct": false,
+        "why": "Length is not the issue."
+      },
+      {
+        "text": "It breaks the citation check of lesson 7",
+        "correct": false,
+        "why": "Not the argument made."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv6p39t4",
+    "version": 1,
+    "section": "what-a-customer-must-not-learn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the permission hold however the customer rephrases the question?",
+    "hint": "Where is the boundary?",
+    "choices": [
+      {
+        "text": "It sits on the chunks",
+        "correct": true,
+        "why": "Right: not on the words."
+      },
+      {
+        "text": "The floor is raised for customers",
+        "correct": false,
+        "why": "The floor is the same for everyone."
+      },
+      {
+        "text": "Rephrased questions are refused by labgen",
+        "correct": false,
+        "why": "labgen has no such rule."
+      },
+      {
+        "text": "The model recognises indirect questions",
+        "correct": false,
+        "why": "The model never sees the finance text."
+      }
+    ]
+  },
+  {
+    "id": "ex-ky3s7g2k",
+    "version": 1,
+    "section": "testing-the-boundary",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows outside the role did the careless search return in the audit?",
+    "hint": "--careless.",
+    "value": 210,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-g668m61f",
+    "version": 1,
+    "section": "testing-the-boundary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why run the audit once against a deliberately careless search?",
+    "hint": "A test that never fails.",
+    "choices": [
+      {
+        "text": "Because the policy needs it",
+        "correct": false,
+        "why": "The policy is unaffected."
+      },
+      {
+        "text": "To make CI slower",
+        "correct": false,
+        "why": "Not a goal."
+      },
+      {
+        "text": "To measure recall",
+        "correct": false,
+        "why": "It counts leaks."
+      },
+      {
+        "text": "To see it fail once",
+        "correct": true,
+        "why": "Right: 0 against 210."
+      }
+    ]
+  },
+  {
+    "id": "ex-609563cw",
+    "version": 1,
+    "section": "testing-the-boundary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the audit not prove the database policy works?",
+    "hint": "Which layer filters first?",
+    "choices": [
+      {
+        "text": "The WHERE filters before the policy is needed",
+        "correct": true,
+        "why": "Right: test each layer alone."
+      },
+      {
+        "text": "It uses too few questions",
+        "correct": false,
+        "why": "Count is not why."
+      },
+      {
+        "text": "Policies cannot be tested",
+        "correct": false,
+        "why": "The row counts test it."
+      },
+      {
+        "text": "The audit runs as the loader, which bypasses it",
+        "correct": false,
+        "why": "It runs as assistant."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0j0jyvd",
+    "version": 1,
+    "section": "deleting-means-gone",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the deletion check in order.",
+    "hint": "Before, delete, after.",
+    "items": [
+      "Count the document's chunks and its search results",
+      "Remove the file",
+      "Run the loader, which removes the chunks it no longer wants",
+      "Count again and require zero"
+    ]
+  },
+  {
+    "id": "ex-qvqws4kw",
+    "version": 1,
+    "section": "deleting-means-gone",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many chunks did ingest.py remove when the runbook was deleted?",
+    "hint": "removed: …",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "chunks"
+  },
+  {
+    "id": "ex-eyta7rkh",
+    "version": 1,
+    "section": "deleting-means-gone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which place does the lesson say still holds a deleted document's sentences after the index is clean?",
+    "hint": "Lesson 9 wrote one line per query.",
+    "choices": [
+      {
+        "text": "The roles dictionary",
+        "correct": false,
+        "why": "It holds no text."
+      },
+      {
+        "text": "The embedding model's weights",
+        "correct": false,
+        "why": "The model never learnt the corpus."
+      },
+      {
+        "text": "The query log's replies",
+        "correct": true,
+        "why": "Right: and caches, memories and backups."
+      },
+      {
+        "text": "The policy",
+        "correct": false,
+        "why": "It holds no text."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzc75afb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does the lesson's design guarantee? Choose all that apply.",
+    "hint": "Session, WHERE, policy.",
+    "choices": [
+      {
+        "text": "A query without a WHERE, run as assistant, sees only allowed rows",
+        "correct": true,
+        "why": "Yes: the policy."
+      },
+      {
+        "text": "An HNSW index always returns LIMIT rows",
+        "correct": false,
+        "why": "It returned 3 of 5."
+      },
+      {
+        "text": "An unknown role reads nothing",
+        "correct": true,
+        "why": "Yes: empty list, no rows."
+      },
+      {
+        "text": "A deleted document's chunks leave the table on the next load",
+        "correct": true,
+        "why": "Yes: 7 removed."
+      },
+      {
+        "text": "A reader can widen their scope with a parameter",
+        "correct": false,
+        "why": "Narrowing only."
+      }
+    ]
+  }
+]

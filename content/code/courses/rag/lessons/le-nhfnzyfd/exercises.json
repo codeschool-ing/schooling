@@ -1,0 +1,678 @@
+[
+  {
+    "id": "ex-ykm6w9qj",
+    "version": 1,
+    "section": "the-test-set",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a fact in eval.jsonl?",
+    "hint": "It is short and exact.",
+    "choices": [
+      {
+        "text": "The reply the model gave last time",
+        "correct": false,
+        "why": "Facts come from the documents, not from replies."
+      },
+      {
+        "text": "Exact words from the answer",
+        "correct": true,
+        "why": "Right: a few words the answering passage contains exactly, which a program checks."
+      },
+      {
+        "text": "A label saying whether the question is hard",
+        "correct": false,
+        "why": "Difficulty is not recorded."
+      },
+      {
+        "text": "A summary of the document",
+        "correct": false,
+        "why": "It is a few words, not a summary."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tz0yycb",
+    "version": 1,
+    "section": "the-test-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are questions written by the documents' authors a weak test set?",
+    "hint": "Whose words do they use?",
+    "choices": [
+      {
+        "text": "Authors cannot write unanswerable questions",
+        "correct": false,
+        "why": "They can; the problem is the vocabulary."
+      },
+      {
+        "text": "They are too long to embed",
+        "correct": false,
+        "why": "Length is not the issue."
+      },
+      {
+        "text": "They are always in English",
+        "correct": false,
+        "why": "Language is a separate concern."
+      },
+      {
+        "text": "They reuse the documents' words",
+        "correct": true,
+        "why": "Right: so they flatter any search; real users ask in their own words."
+      }
+    ]
+  },
+  {
+    "id": "ex-bq4gpsvd",
+    "version": 1,
+    "section": "the-test-set",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many questions does evaluate.py hold out?",
+    "hint": "Every third by id.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-y6ap43wq",
+    "version": 1,
+    "section": "the-test-set",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team tries twenty prompt variants and keeps the one with the best held-out score. What has it lost?",
+    "hint": "What is the held-out part for?",
+    "choices": [
+      {
+        "text": "Nothing, since held-out is the honest score",
+        "correct": false,
+        "why": "It stopped being honest when it was used to choose."
+      },
+      {
+        "text": "The dev split",
+        "correct": false,
+        "why": "The dev split was simply not used."
+      },
+      {
+        "text": "Its retrieval metrics",
+        "correct": false,
+        "why": "Prompts do not change retrieval."
+      },
+      {
+        "text": "A held-out set",
+        "correct": true,
+        "why": "Right: a team that tunes on held-out has no held-out."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr65dqzp",
+    "version": 1,
+    "section": "retrieval-metrics",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What was recall@1 on the dev split? Give the number of questions, out of 18.",
+    "hint": "The retrieval line.",
+    "value": 13,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-kgt9sjfj",
+    "version": 1,
+    "section": "retrieval-metrics",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five answerable questions had their answer second and thirteen first. What is the mean reciprocal rank over the 18? Two decimals.",
+    "hint": "(13 × 1 + 5 × 1/2) / 18.",
+    "value": 0.86,
+    "tolerance": 0.005,
+    "unit": "MRR"
+  },
+  {
+    "id": "ex-edyw83vv",
+    "version": 1,
+    "section": "retrieval-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is MRR a better number than recall@3 for tuning a reranker?",
+    "hint": "A reranker moves answers within the top three.",
+    "choices": [
+      {
+        "text": "It measures the replies, not the search",
+        "correct": false,
+        "why": "It is a retrieval metric."
+      },
+      {
+        "text": "It rewards climbing to first",
+        "correct": true,
+        "why": "Right: it moves when an answer climbs from third to first; recall@3 counts both as a hit."
+      },
+      {
+        "text": "It counts unanswerable questions",
+        "correct": false,
+        "why": "Both are computed over answerable questions."
+      },
+      {
+        "text": "It is cheaper to compute",
+        "correct": false,
+        "why": "Both are trivial to compute."
+      }
+    ]
+  },
+  {
+    "id": "ex-12pthc2y",
+    "version": 1,
+    "section": "retrieval-metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Recall@3 is 18 of 18 and correctness 15 of 20. What does that pair say?",
+    "hint": "Where can the failures be?",
+    "choices": [
+      {
+        "text": "The search is the bottleneck",
+        "correct": false,
+        "why": "It found every answer within three."
+      },
+      {
+        "text": "The test set is too small to say anything",
+        "correct": false,
+        "why": "Small, but the split between the two numbers is clear."
+      },
+      {
+        "text": "The failures are after retrieval",
+        "correct": true,
+        "why": "Right: in generation, the floor, or the test itself."
+      },
+      {
+        "text": "k should be raised to five",
+        "correct": false,
+        "why": "The answers are already inside three."
+      }
+    ]
+  },
+  {
+    "id": "ex-653ss9c6",
+    "version": 1,
+    "section": "answer-metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is an unanswerable question counted as correct?",
+    "hint": "What should happen to it?",
+    "choices": [
+      {
+        "text": "Never; they are excluded",
+        "correct": false,
+        "why": "They are counted, in refused rightly and in correct."
+      },
+      {
+        "text": "When it is refused",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "When the reply is short",
+        "correct": false,
+        "why": "Length is not measured."
+      },
+      {
+        "text": "When the reply cites at least one source",
+        "correct": false,
+        "why": "Citing anything is wrong for a question with no answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qrxwxpf",
+    "version": 1,
+    "section": "answer-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call e05 a failure of the test rather than of the pipeline?",
+    "hint": "Read the reply.",
+    "choices": [
+      {
+        "text": "The answer was not retrieved",
+        "correct": false,
+        "why": "It ranked first."
+      },
+      {
+        "text": "The question has no answer in the documents",
+        "correct": false,
+        "why": "It does, in two documents."
+      },
+      {
+        "text": "The reply was unfaithful",
+        "correct": false,
+        "why": "It was quoted."
+      },
+      {
+        "text": "The reply answers it, without the fact's words",
+        "correct": true,
+        "why": "Right: refunded only if not downloaded answers no."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dxzn24v",
+    "version": 1,
+    "section": "answer-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For e25, why did the finance document come first?",
+    "hint": "Look at the evaluation's filter.",
+    "choices": [
+      {
+        "text": "The handbook was not in the index",
+        "correct": false,
+        "why": "It came second."
+      },
+      {
+        "text": "Finance documents are always ranked first",
+        "correct": false,
+        "why": "Nothing ranks by audience."
+      },
+      {
+        "text": "The question asked for finance documents",
+        "correct": false,
+        "why": "It asked about an agent's limit."
+      },
+      {
+        "text": "No audience filter here",
+        "correct": true,
+        "why": "Right: the evaluation filters on status only. The leak lesson 2 described, closed in lesson 14."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1ghhc63",
+    "version": 1,
+    "section": "answer-metrics",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each wrong reply on the dev split to where it failed.",
+    "hint": "Rank, refusal, reply, test.",
+    "pairs": [
+      {
+        "left": "e04, a signed copy",
+        "right": "generation: the right source was there and another sentence was quoted"
+      },
+      {
+        "left": "e05, a downloaded e-book",
+        "right": "the test: a right reply without the fact's words"
+      },
+      {
+        "left": "e14, paying in instalments",
+        "right": "the floor: refused below 0.5"
+      }
+    ],
+    "right_distractors": [
+      "retrieval: the answer was not in the top three"
+    ]
+  },
+  {
+    "id": "ex-a7z1fnht",
+    "version": 1,
+    "section": "answer-metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which cheap replacement for the fact test survives a model's paraphrase best?",
+    "hint": "Some words never change.",
+    "choices": [
+      {
+        "text": "Requiring the whole source sentence",
+        "correct": false,
+        "why": "That fails every paraphrase."
+      },
+      {
+        "text": "Checking only numbers and identifiers",
+        "correct": true,
+        "why": "Right: 9.90 and 12% survive paraphrase."
+      },
+      {
+        "text": "Checking the reply's length",
+        "correct": false,
+        "why": "Length says nothing about correctness."
+      },
+      {
+        "text": "Checking that the reply has a citation",
+        "correct": false,
+        "why": "That is a different property."
+      }
+    ]
+  },
+  {
+    "id": "ex-2atbgpf1",
+    "version": 1,
+    "section": "judging-with-a-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was no model judge run in this lesson?",
+    "hint": "What can extract-1 do?",
+    "choices": [
+      {
+        "text": "Judges are too expensive for thirty questions",
+        "correct": false,
+        "why": "Thirty calls would be cheap."
+      },
+      {
+        "text": "Judges are always wrong",
+        "correct": false,
+        "why": "They are biased, and useful once calibrated."
+      },
+      {
+        "text": "The fact test is enough for real models",
+        "correct": false,
+        "why": "It fails their paraphrases."
+      },
+      {
+        "text": "The lab had nothing able to judge",
+        "correct": true,
+        "why": "Right: extract-1 copies sentences, and no real model was reachable."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq3zp43y",
+    "version": 1,
+    "section": "judging-with-a-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the lesson suggest dealing with a judge's position bias when comparing two replies?",
+    "hint": "Ask twice.",
+    "choices": [
+      {
+        "text": "Use the same model as judge and as generator",
+        "correct": false,
+        "why": "That adds self-preference."
+      },
+      {
+        "text": "Swap the order and ask again",
+        "correct": true,
+        "why": "Right: count a preference only if it survives the swap."
+      },
+      {
+        "text": "Always show the better reply first",
+        "correct": false,
+        "why": "That builds the bias into the result."
+      },
+      {
+        "text": "Use a longer rubric",
+        "correct": false,
+        "why": "Length of rubric does not cure position bias."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rz4cf35",
+    "version": 1,
+    "section": "judging-with-a-model",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the calibration of a judge in order.",
+    "hint": "A person first.",
+    "items": [
+      "A person labels fifty replies",
+      "The judge labels the same fifty",
+      "Count the agreement and see which way the disagreements lean",
+      "Use the judge, or fix its prompt and measure again"
+    ]
+  },
+  {
+    "id": "ex-1kaxhksw",
+    "version": 1,
+    "section": "judging-with-a-model",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Using a second model to decide whether a reply is correct is called LLM-as-___.",
+    "hint": "A role in a courtroom.",
+    "blanks": [
+      {
+        "accept": [
+          "judge"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c28jv28x",
+    "version": 1,
+    "section": "comparing-pipelines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the floor at 0.44 the total stayed at 15 of 20. What changed underneath?",
+    "hint": "e14.",
+    "choices": [
+      {
+        "text": "A wrong answer became right",
+        "correct": false,
+        "why": "The instalments reply was still wrong."
+      },
+      {
+        "text": "A refusal became a wrong answer",
+        "correct": true,
+        "why": "Right: worse for a customer, the same in the total."
+      },
+      {
+        "text": "Nothing changed",
+        "correct": false,
+        "why": "e14 changed."
+      },
+      {
+        "text": "Both unanswerable questions were answered",
+        "correct": false,
+        "why": "Both were still refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-neb40gea",
+    "version": 1,
+    "section": "comparing-pipelines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team changes the chunk size and the floor in one commit, and correctness rises from 15 to 17. What can it conclude?",
+    "hint": "One number, two changes.",
+    "choices": [
+      {
+        "text": "The test set must be wrong",
+        "correct": false,
+        "why": "Nothing suggests that."
+      },
+      {
+        "text": "The pair helped, not which change",
+        "correct": true,
+        "why": "Right: change one thing at a time."
+      },
+      {
+        "text": "Both changes helped",
+        "correct": false,
+        "why": "One may have helped and the other hurt."
+      },
+      {
+        "text": "The chunk size helped",
+        "correct": false,
+        "why": "Nothing separates the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebz13h2c",
+    "version": 1,
+    "section": "comparing-pipelines",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many dev questions were correct with k = 1?",
+    "hint": "One fewer than with three.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-xrjfysma",
+    "version": 1,
+    "section": "a-test-that-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did evaluate.py do when correctness fell below the bar?",
+    "hint": "Read the last line.",
+    "choices": [
+      {
+        "text": "Exited with status 1",
+        "correct": true,
+        "why": "Right: so a CI job blocks the change."
+      },
+      {
+        "text": "Printed a warning and exited 0",
+        "correct": false,
+        "why": "It exited 1."
+      },
+      {
+        "text": "Deleted the held-out split",
+        "correct": false,
+        "why": "Nothing is deleted."
+      },
+      {
+        "text": "Lowered the floor automatically",
+        "correct": false,
+        "why": "It changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qq1vg7c",
+    "version": 1,
+    "section": "a-test-that-fails",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many held-out questions were correct with the floor at 0.7?",
+    "hint": "It failed the 70% bar.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-m8vr8gh3",
+    "version": 1,
+    "section": "a-test-that-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the floor at 0.7, recall@3 stayed at 8 of 8. Why did correctness fall?",
+    "hint": "The floor acts after the search.",
+    "choices": [
+      {
+        "text": "Answerable questions got refused",
+        "correct": true,
+        "why": "Right: the floor refused those scoring 0.5 to 0.7; retrieval unchanged, answers lost."
+      },
+      {
+        "text": "The unanswerable questions were answered",
+        "correct": false,
+        "why": "Both were refused."
+      },
+      {
+        "text": "extract-1 became stricter",
+        "correct": false,
+        "why": "Its rules did not change."
+      },
+      {
+        "text": "The search returned different chunks",
+        "correct": false,
+        "why": "Recall did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-6q4jhj8s",
+    "version": 1,
+    "section": "a-test-that-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson suggest separate bars for identifier questions and customer questions?",
+    "hint": "Lesson 6's table.",
+    "choices": [
+      {
+        "text": "Customer questions need a judge",
+        "correct": false,
+        "why": "Not in this lab; the reason is different trade-offs."
+      },
+      {
+        "text": "Identifier questions are easier",
+        "correct": false,
+        "why": "They are not easier; they are different."
+      },
+      {
+        "text": "The two sets have different files",
+        "correct": false,
+        "why": "Files are not the reason."
+      },
+      {
+        "text": "It helps one kind, hurts another",
+        "correct": true,
+        "why": "Right: hybrid search did exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-dk9bfm7q",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a capture.",
+    "choices": [
+      {
+        "text": "Every answer was retrieved within the top three on dev",
+        "correct": true,
+        "why": "Yes: recall@3 18 of 18."
+      },
+      {
+        "text": "Lowering the floor to 0.44 improved correctness",
+        "correct": false,
+        "why": "No: the total stayed and e14 got worse."
+      },
+      {
+        "text": "A floor of 0.7 failed the build",
+        "correct": true,
+        "why": "Yes: exit 1."
+      },
+      {
+        "text": "A model judge agreed with the fact test",
+        "correct": false,
+        "why": "No judge was run."
+      },
+      {
+        "text": "Held-out scored 9 of 10 correct with the chosen settings",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  }
+]

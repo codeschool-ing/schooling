@@ -1,0 +1,724 @@
+[
+  {
+    "id": "ex-d8cvcmrw",
+    "version": 1,
+    "section": "the-whole-program",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In rag.py, where does the question's vector come from?",
+    "hint": "Not a local copy of the model.",
+    "choices": [
+      {
+        "text": "The chat model's reply",
+        "correct": false,
+        "why": "The chat model runs after the search."
+      },
+      {
+        "text": "pgvector computes it from the question text",
+        "correct": false,
+        "why": "pgvector stores and compares vectors; it embeds nothing."
+      },
+      {
+        "text": "A local MiniLM loaded by the program",
+        "correct": false,
+        "why": "That was search.py; rag.py asks the provider."
+      },
+      {
+        "text": "The provider's embedding endpoint",
+        "correct": true,
+        "why": "Right: the same SDK serves both models."
+      }
+    ]
+  },
+  {
+    "id": "ex-gz4jyxch",
+    "version": 1,
+    "section": "the-whole-program",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does rag.py have no reranker?",
+    "hint": "What did lesson 6 measure?",
+    "choices": [
+      {
+        "text": "Rerankers do not work on results that pgvector returns",
+        "correct": false,
+        "why": "A reranker runs after any search."
+      },
+      {
+        "text": "The SDK cannot call two models",
+        "correct": false,
+        "why": "It already calls two."
+      },
+      {
+        "text": "The lab's reranker measured as a wash",
+        "correct": true,
+        "why": "Right: a step is added when a measurement asks for it."
+      },
+      {
+        "text": "Reranking would break the citations",
+        "correct": false,
+        "why": "Citations number whatever order is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6kr46ka",
+    "version": 1,
+    "section": "the-whole-program",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team points rag.py at a real provider and changes the embedding model to the provider's own, leaving the index as it is. What happens?",
+    "hint": "Which model built the index?",
+    "choices": [
+      {
+        "text": "Questions meet vectors from another model",
+        "correct": true,
+        "why": "Right: the index must be rebuilt with the new model first."
+      },
+      {
+        "text": "pgvector refuses the query",
+        "correct": false,
+        "why": "Only if the dimensions differ; the meanings still would."
+      },
+      {
+        "text": "The floor adjusts itself",
+        "correct": false,
+        "why": "Nothing adjusts the floor."
+      },
+      {
+        "text": "It works, since only the chat model matters",
+        "correct": false,
+        "why": "The question's vector must come from the index's model."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj1dpc2q",
+    "version": 1,
+    "section": "the-anthropic-sdk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a text block's citation carry in the Anthropic reply?",
+    "hint": "Read the printed line.",
+    "choices": [
+      {
+        "text": "The document, its title and a character range",
+        "correct": true,
+        "why": "Right: char_location."
+      },
+      {
+        "text": "A confidence score",
+        "correct": false,
+        "why": "No score is returned."
+      },
+      {
+        "text": "A number the reader looks up in the numbered prompt",
+        "correct": false,
+        "why": "That is the Chat Completions approach."
+      },
+      {
+        "text": "The embedding of the cited sentence",
+        "correct": false,
+        "why": "No vectors in citations."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzrmdn54",
+    "version": 1,
+    "section": "the-anthropic-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the Anthropic request use 187 input tokens against 314 through rag.py?",
+    "hint": "Who asks for the citations?",
+    "choices": [
+      {
+        "text": "Anthropic counts tokens with a different encoding",
+        "correct": false,
+        "why": "labgen counts both the same way."
+      },
+      {
+        "text": "Streaming was used",
+        "correct": false,
+        "why": "Neither request streamed."
+      },
+      {
+        "text": "The API asks for citations itself",
+        "correct": true,
+        "why": "Right: the instruction to cite by number is gone."
+      },
+      {
+        "text": "Fewer sources were retrieved",
+        "correct": false,
+        "why": "The same retrieve() ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-mttm8zz9",
+    "version": 1,
+    "section": "the-anthropic-sdk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With provider citations giving exact character ranges, what does the lesson say a legal pipeline should still do?",
+    "hint": "A span is a claim too.",
+    "choices": [
+      {
+        "text": "Confirm the text is in the source at those characters",
+        "correct": true,
+        "why": "Right: one string comparison with the span in hand."
+      },
+      {
+        "text": "Switch back to Chat Completions",
+        "correct": false,
+        "why": "The format is not the issue."
+      },
+      {
+        "text": "Nothing more; the provider guarantees the span",
+        "correct": false,
+        "why": "The span is where the provider says the text came from."
+      },
+      {
+        "text": "Re-embed the cited sentence",
+        "correct": false,
+        "why": "Similarity is not the check needed here."
+      }
+    ]
+  },
+  {
+    "id": "ex-hms9r7sw",
+    "version": 1,
+    "section": "streaming",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In how many pieces did the streamed reply arrive?",
+    "hint": "stream.py's last line.",
+    "value": 37,
+    "tolerance": 0,
+    "unit": "pieces"
+  },
+  {
+    "id": "ex-fsv1s16q",
+    "version": 1,
+    "section": "streaming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does streaming NOT shorten?",
+    "hint": "Nothing streams until the prompt exists.",
+    "choices": [
+      {
+        "text": "The wait for the whole reply to be written",
+        "correct": false,
+        "why": "It hides that wait by showing words as they come."
+      },
+      {
+        "text": "The retrieval time",
+        "correct": true,
+        "why": "Right: the search still finishes before anything streams."
+      },
+      {
+        "text": "The time to the first word on screen",
+        "correct": false,
+        "why": "That is exactly what it shortens."
+      },
+      {
+        "text": "The time the customer stares at a blank box",
+        "correct": false,
+        "why": "That is what it improves."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt0v5a30",
+    "version": 1,
+    "section": "streaming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a streamed reply complicate lesson 7's citation check?",
+    "hint": "When is the reply whole?",
+    "choices": [
+      {
+        "text": "The SDK forbids reading a streamed reply twice",
+        "correct": false,
+        "why": "The program can keep the text it printed."
+      },
+      {
+        "text": "It needs the whole reply, which arrives last",
+        "correct": true,
+        "why": "Right: show as it arrives, then annotate, or hold it back."
+      },
+      {
+        "text": "Streamed replies have no citations",
+        "correct": false,
+        "why": "They do; the markers stream with the text."
+      },
+      {
+        "text": "Streaming changes the sources",
+        "correct": false,
+        "why": "The sources are fixed before streaming starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-ct5mf32z",
+    "version": 1,
+    "section": "streaming",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To receive token counts in a streamed Chat Completions reply, the request sets stream_options with include____.",
+    "hint": "What the counts are called.",
+    "blanks": [
+      {
+        "accept": [
+          "_usage",
+          "usage"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z1wwknw8",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With two refusals injected, why did rag.py still answer?",
+    "hint": "max_retries=3.",
+    "choices": [
+      {
+        "text": "The search ran without a vector",
+        "correct": false,
+        "why": "No vector, no search."
+      },
+      {
+        "text": "rag.py caught the error and used a cached vector",
+        "correct": false,
+        "why": "There is no cache in rag.py."
+      },
+      {
+        "text": "The SDK retried within its budget",
+        "correct": true,
+        "why": "Right: refused twice, succeeded on the third attempt."
+      },
+      {
+        "text": "labgen ignored the injected failures for chat",
+        "correct": false,
+        "why": "The failures landed on the embedding call."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhtkkq1h",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With five refusals and max_retries=2, why was the chat endpoint never called?",
+    "hint": "What failed first?",
+    "choices": [
+      {
+        "text": "fragile.py only embeds",
+        "correct": false,
+        "why": "It calls rag.ask, which does both."
+      },
+      {
+        "text": "labgen refuses chat requests during a rate limit",
+        "correct": false,
+        "why": "It never got that far."
+      },
+      {
+        "text": "The floor refused the question",
+        "correct": false,
+        "why": "There was no score to compare."
+      },
+      {
+        "text": "The embedding call gave up first",
+        "correct": true,
+        "why": "Right: no vector, nothing to search with."
+      }
+    ]
+  },
+  {
+    "id": "ex-argsqcp9",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The chat call fails after a successful search. What does the lesson suggest showing the customer?",
+    "hint": "Half of it worked.",
+    "choices": [
+      {
+        "text": "The refusal sentence",
+        "correct": false,
+        "why": "That says the documents do not cover it, which is false."
+      },
+      {
+        "text": "A loop of retries that runs until one succeeds",
+        "correct": false,
+        "why": "Unbounded retries leave the customer waiting."
+      },
+      {
+        "text": "A stack trace, so the customer can report it",
+        "correct": false,
+        "why": "That is an accident, not a decision."
+      },
+      {
+        "text": "The retrieved articles, with no answer",
+        "correct": true,
+        "why": "Right: the sources are known and useful."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jd2z8j8",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to whether the SDK retries it.",
+    "hint": "Retry what can succeed.",
+    "pairs": [
+      {
+        "left": "429, too many requests",
+        "right": "retried"
+      },
+      {
+        "left": "401, a refused key",
+        "right": "not retried"
+      },
+      {
+        "left": "a dropped connection",
+        "right": "retried, as a connection error"
+      },
+      {
+        "left": "400, a malformed request",
+        "right": "not retried, since repeating cannot help"
+      }
+    ]
+  },
+  {
+    "id": "ex-sq42nqm4",
+    "version": 1,
+    "section": "the-token-budget",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a budget of 250, how many tokens did the prompt use?",
+    "hint": "One source kept.",
+    "value": 169,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-b9554pxm",
+    "version": 1,
+    "section": "the-token-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does budget.py drop whole sources instead of cutting the last one to fit?",
+    "hint": "Which half would go?",
+    "choices": [
+      {
+        "text": "It is faster to drop than to cut",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "A half source loses its second half, the exception",
+        "correct": true,
+        "why": "Right: every source stays intact."
+      },
+      {
+        "text": "Cutting text breaks the tokenizer",
+        "correct": false,
+        "why": "Any text can be tokenized."
+      },
+      {
+        "text": "Providers refuse partial sources",
+        "correct": false,
+        "why": "A provider cannot tell."
+      }
+    ]
+  },
+  {
+    "id": "ex-v947hjp5",
+    "version": 1,
+    "section": "the-token-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "budget.py counted 358 tokens with all three sources, while the provider reports 314 prompt tokens for the same question through rag.py. What does the lesson conclude?",
+    "hint": "Close enough for what?",
+    "choices": [
+      {
+        "text": "The provider overcharges",
+        "correct": false,
+        "why": "The provider's count was lower."
+      },
+      {
+        "text": "The local count is wrong and should not be used",
+        "correct": false,
+        "why": "It is close enough to budget with."
+      },
+      {
+        "text": "Tokens cannot be counted before sending",
+        "correct": false,
+        "why": "budget.py did exactly that."
+      },
+      {
+        "text": "Budget with a margin, never to the last token",
+        "correct": true,
+        "why": "Right: overheads differ between a local count and the provider's."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv4avjd5",
+    "version": 1,
+    "section": "the-token-budget",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson want a budget far below the model's window?",
+    "hint": "Lesson 1's three reasons.",
+    "choices": [
+      {
+        "text": "Models refuse prompts above half their window",
+        "correct": false,
+        "why": "They accept anything that fits."
+      },
+      {
+        "text": "Price, time and distraction hold at any size",
+        "correct": true,
+        "why": "Right: the window is a maximum, not a target."
+      },
+      {
+        "text": "Larger prompts are cached less",
+        "correct": false,
+        "why": "Caching is lesson 17's subject and not the reason."
+      },
+      {
+        "text": "pgvector cannot return more chunks",
+        "correct": false,
+        "why": "It returns whatever LIMIT asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-esmescem",
+    "version": 1,
+    "section": "logging-every-query",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which field of the query log lets the floor be adjusted from real questions?",
+    "hint": "The floor is a score.",
+    "choices": [
+      {
+        "text": "completion_tokens",
+        "correct": false,
+        "why": "That is cost."
+      },
+      {
+        "text": "cited",
+        "correct": false,
+        "why": "That shows which chunks are used."
+      },
+      {
+        "text": "reply",
+        "correct": false,
+        "why": "The reply helps review, not the floor."
+      },
+      {
+        "text": "sources, with their scores",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-62c88gn1",
+    "version": 1,
+    "section": "logging-every-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson treat the query log as personal data?",
+    "hint": "What do customers type into support chats?",
+    "choices": [
+      {
+        "text": "It contains embeddings",
+        "correct": false,
+        "why": "It contains chunk ids and scores, not vectors."
+      },
+      {
+        "text": "The provider requires it",
+        "correct": false,
+        "why": "It is the law and the privacy notice, not the provider."
+      },
+      {
+        "text": "Every log is personal data",
+        "correct": false,
+        "why": "This one is because of what customers type."
+      },
+      {
+        "text": "Questions hold names, order numbers and addresses",
+        "correct": true,
+        "why": "Right: it needs retention, deletion and restricted access."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh9ffvp5",
+    "version": 1,
+    "section": "logging-every-query",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A chunk has not been cited once in a month of logged queries. What does the lesson say that tells you?",
+    "hint": "Two possibilities.",
+    "choices": [
+      {
+        "text": "The floor is too low",
+        "correct": false,
+        "why": "A low floor admits more chunks, not fewer."
+      },
+      {
+        "text": "Nobody asks, or the search never finds it",
+        "correct": true,
+        "why": "Right: both are worth knowing."
+      },
+      {
+        "text": "It should be deleted from the index at once",
+        "correct": false,
+        "why": "It may be about something rare and still right."
+      },
+      {
+        "text": "Its stored embedding has been corrupted somewhere",
+        "correct": false,
+        "why": "Possible but not what the lesson draws from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb7hrh1r",
+    "version": 1,
+    "section": "logging-every-query",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "rag.py appends one JSON line per query to the file queries.___.",
+    "hint": "JSON Lines.",
+    "blanks": [
+      {
+        "accept": [
+          "jsonl"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-amzcqsej",
+    "version": 1,
+    "section": "logging-every-query",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what ask() in rag.py does in order.",
+    "hint": "The log line is last.",
+    "items": [
+      "Retrieve the sources above the floor",
+      "Generate a reply, or refuse if there are none",
+      "Collect the cited source numbers",
+      "Append the record to queries.jsonl"
+    ]
+  },
+  {
+    "id": "ex-6ez2nwez",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change to rag.py would lesson 9 call premature?",
+    "hint": "Steps are added when a measurement asks.",
+    "choices": [
+      {
+        "text": "A semantic cache before repeats are measured",
+        "correct": true,
+        "why": "Right: lesson 17 measures that first."
+      },
+      {
+        "text": "Setting an explicit timeout on the client it creates",
+        "correct": false,
+        "why": "The default timeout is nobody's choice; setting one is not premature."
+      },
+      {
+        "text": "Refusing questions whose best source is below the floor",
+        "correct": false,
+        "why": "That was measured in lessons 6 to 8."
+      },
+      {
+        "text": "Logging each query with its sources and scores",
+        "correct": false,
+        "why": "The log is what later measurements need."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dde3xks",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a capture.",
+    "choices": [
+      {
+        "text": "Anthropic citations with character ranges",
+        "correct": true,
+        "why": "Yes: characters 0-62."
+      },
+      {
+        "text": "A budget of 250 keeping one source of three",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A streamed reply's first token arriving in under 100 ms",
+        "correct": false,
+        "why": "No timing was quoted."
+      },
+      {
+        "text": "Two refused embedding requests absorbed by the SDK",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A real Claude model writing its own sentences",
+        "correct": false,
+        "why": "No: the replies are extract-1's."
+      }
+    ]
+  }
+]
