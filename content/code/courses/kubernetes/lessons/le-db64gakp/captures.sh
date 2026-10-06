@@ -9,10 +9,12 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed:
-#   - two clusters, one after the other. The first is the usual one, whose
-#     network plugin, kindnet, does not enforce network policies. The second is
-#     made from lab/cluster-calico.yaml and runs Calico v3.32.1 instead, from
-#     Calico's own manifest (lab.sh calico).
+#   - two clusters, one after the other. The first is the usual one, with
+#     kind's network plugin, kindnet. Kindnet carries a network-policy engine
+#     built on nftables, and on the machine this was recorded on the kernel
+#     refused it: the engine logged the error and enforced nothing, which the
+#     lesson shows. The second cluster is made from lab/cluster-calico.yaml and
+#     runs Calico v3.32.1 instead, from Calico's own manifest (lab.sh calico).
 #   - the namespaces, the shop and the busybox pods that ask it questions.
 # Pod addresses and names differ on every run.
 #
@@ -50,6 +52,7 @@ run 'kubectl get pods -n kube-system -l app=kindnet -o name'
 run 'kubectl apply -f deny-all.yaml'
 quiet 'sleep 5'
 run 'kubectl -n other exec stranger -- wget -qO- -T 3 shop.shop'
+run "kubectl -n kube-system logs \$(kubectl -n kube-system get pods -l app=kindnet -o name | head -n 1) | grep -A 1 'syncing nftables'"
 fresh "$COURSE/lab/cluster-calico.yaml"
 setup
 
@@ -136,3 +139,34 @@ run 'kubectl apply -f deny-egress.yaml'
 quiet 'sleep 5'
 run 'kubectl -n shop exec front -- wget -qO- -T 3 shop'
 run 'kubectl -n shop exec front -- wget -qO- -T 3 shop.shop.svc.cluster.local'
+block dns
+put allow-dns.yaml <<'CODE'
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: front-dns
+  namespace: shop
+spec:
+  podSelector:
+    matchLabels:
+      app: front
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+CODE
+run 'kubectl apply -f allow-dns.yaml'
+quiet 'sleep 5'
+run 'kubectl -n shop exec front -- wget -qO- -T 3 shop'
+run 'kubectl -n shop exec front -- wget -qO- -T 3 http://kubernetes.default:443'

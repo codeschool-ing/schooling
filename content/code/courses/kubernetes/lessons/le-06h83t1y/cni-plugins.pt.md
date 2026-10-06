@@ -81,14 +81,15 @@ nuvem.
 
 | plugin | como os pods se alcançam | aplica política de rede | comum onde |
 |---|---|---|---|
-| kindnet | rotas entre nós numa rede só | não | clusters kind |
+| kindnet | rotas entre nós numa rede só | sim, onde o kernel aceita o seu motor de nftables | clusters kind |
 | Flannel | rede sobreposta VXLAN, ou rotas | não | clusters pequenos, o k3s por padrão |
 | Calico | rotas com BGP, ou rede sobreposta; eBPF disponível | sim | em data centers próprios e em nuvens |
 | Cilium | eBPF no kernel, rede sobreposta ou rotas | sim, até o nível HTTP | clusters que querem observabilidade e política juntas |
 | o da própria nuvem (AWS VPC CNI, Azure CNI, o do GKE) | os pods recebem endereços da rede da nuvem | com um complemento ou embutido | clusters gerenciados |
 
 **A coluna que decide a maioria das escolhas é a de política.** Um plugin que não aplica políticas de
-rede as aceita e as ignora, e nada avisa; a lição 24 mostra exatamente isso neste cluster e depois
-instala o Calico para torná-las reais. As outras diferenças (rede sobreposta ou não, eBPF ou iptables)
+rede as aceita e as ignora, e nada avisa; a lição 24 mostra como isso fica na máquina deste
+laboratório, onde o motor do kindnet não conseguiu subir, e depois instala o Calico para torná-las
+reais. As outras diferenças (rede sobreposta ou não, eBPF ou iptables)
 importam para desempenho e depuração, e raramente são o que faz uma equipe trocar de plugin num
 cluster já rodando, uma migração que ninguém faz por pouca coisa.

@@ -80,14 +80,15 @@ with BGP. Cloud plugins take a third way and give pods addresses from the cloud'
 
 | plugin | how pods reach each other | enforces network policy | common where |
 |---|---|---|---|
-| kindnet | routes between nodes on one network | no | kind clusters |
+| kindnet | routes between nodes on one network | yes, where the kernel supports its nftables engine | kind clusters |
 | Flannel | VXLAN overlay, or routes | no | small clusters, k3s by default |
 | Calico | routes with BGP, or an overlay; eBPF available | yes | on-premises and clouds alike |
 | Cilium | eBPF in the kernel, overlay or routes | yes, up to HTTP level | clusters that want observability and policy together |
 | a cloud's own (AWS VPC CNI, Azure CNI, GKE's) | pods get addresses from the cloud network | with an add-on or built in | managed clusters |
 
 **The column that decides most choices is the policy one.** A plugin that does not enforce network
-policies accepts them and ignores them, and nothing warns you; lesson 24 shows exactly that on this
-cluster and then installs Calico to make them real. The other differences — overlay or not, eBPF or
+policies accepts them and ignores them, and nothing warns you; lesson 24 shows what that looks like on
+this lab's machine, where kindnet's engine could not start, and then installs Calico to make them
+real. The other differences — overlay or not, eBPF or
 iptables — matter for performance and debugging, and they are rarely what makes a team change plugin
 on a cluster that is already running, which is a migration nobody undertakes lightly.

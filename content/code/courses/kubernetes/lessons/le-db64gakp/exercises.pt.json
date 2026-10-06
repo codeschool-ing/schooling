@@ -1,0 +1,180 @@
+{
+  "ex-x425pwnq": {
+    "prompt": "No primeiro cluster, `deny-all` foi criada sem erro e `stranger` mesmo assim alcançou a loja. Por quê?",
+    "hint": "Quem aplica uma NetworkPolicy?",
+    "choices": [
+      {
+        "text": "A política tinha um erro de sintaxe",
+        "why": "O API server a conferiu e a aceitou."
+      },
+      {
+        "text": "Políticas só valem para pods novos",
+        "why": "O Calico aplicou o mesmo arquivo a pods já rodando na hora."
+      },
+      {
+        "text": "Nada a aplicava",
+        "why": "Isso. Quem aplica políticas é o plugin de rede; o motor do kindnet falhou neste kernel, e o API server só as guarda."
+      },
+      {
+        "text": "`stranger` estava no mesmo namespace",
+        "why": "Ele estava em `other`."
+      }
+    ]
+  },
+  "ex-7beqavvw": {
+    "prompt": "Depois de `deny-all` no cluster com Calico, por que `front`, no mesmo namespace da loja, também estourou o tempo?",
+    "hint": "`podSelector: {}`.",
+    "choices": [
+      {
+        "text": "O seletor vazio também pega `front`",
+        "why": "Isso. Ela seleciona todo pod de `shop` e não permite nada entrando; um namespace não dá exceção aos próprios pods."
+      },
+      {
+        "text": "O Calico bloqueia toda conexão por padrão",
+        "why": "Antes da política, `stranger` recebeu resposta."
+      },
+      {
+        "text": "`front` não tinha rótulo para uma regra casar",
+        "why": "Tinha `app=front`, e nenhuma regra o permitia ainda."
+      },
+      {
+        "text": "A consulta DNS de `shop` foi bloqueada",
+        "why": "Falhas de DNS dizem `bad address`; isto foi estouro de tempo."
+      }
+    ]
+  },
+  "ex-et7hv0en": {
+    "prompt": "`allow-front` cita a porta 8080, enquanto o Service da loja escuta na 80. Por que 8080?",
+    "hint": "Que pacote a política vê?",
+    "choices": [
+      {
+        "text": "A porta 80 exige root dentro do container",
+        "why": "Isso é sobre o container, não sobre a política."
+      },
+      {
+        "text": "O pod a recebe na 8080",
+        "why": "Isso. A política é conferida no pod, depois de o Service traduzir 80 em 8080."
+      },
+      {
+        "text": "Políticas não podem citar a porta 80",
+        "why": "Qualquer porta pode ser citada."
+      },
+      {
+        "text": "8080 cobre as duas portas",
+        "why": "Uma regra de porta cita exatamente uma porta."
+      }
+    ]
+  },
+  "ex-05kqm4zn": {
+    "prompt": "Um namespace tem `deny-all` e `allow-front`. Alguém acrescenta uma terceira política que permite a loja de qualquer lugar. O que acontece com `deny-all`?",
+    "hint": "Uma política consegue tirar o que outra concede?",
+    "choices": [
+      {
+        "text": "Ela vence, porque foi aplicada primeiro",
+        "why": "A ordem não entra."
+      },
+      {
+        "text": "O API server recusa a política nova como conflito",
+        "why": "Não existem conflitos; permissões se somam."
+      },
+      {
+        "text": "As duas são ignoradas",
+        "why": "Cada uma continua selecionando pods; as permissões só se somam."
+      },
+      {
+        "text": "Continua valendo, e a loja se abre",
+        "why": "Isso. Ela continua selecionando os pods, e uma conexão é permitida se qualquer política a permitir."
+      }
+    ]
+  },
+  "ex-smsc30zx": {
+    "prompt": "Por que selecionar um namespace por `purpose: monitoring` é mais arriscado do que por `kubernetes.io/metadata.name`?",
+    "hint": "Quem consegue mudar cada rótulo?",
+    "choices": [
+      {
+        "text": "Rótulos próprios são ignorados pelo Calico",
+        "why": "O Calico o respeitou no momento em que foi posto."
+      },
+      {
+        "text": "Quem pode rotulá-lo pode abrir o caminho",
+        "why": "Isso. O rótulo de nome é posto pelo Kubernetes e não pode ser mudado."
+      },
+      {
+        "text": "É mais lento de avaliar",
+        "why": "Velocidade não é a questão."
+      },
+      {
+        "text": "Casa com pods em vez de namespaces",
+        "why": "É um `namespaceSelector`."
+      }
+    ]
+  },
+  "ex-ff82ngwy": {
+    "prompt": "Depois de `front-egress`, `wget shop` de `front` falhou com `bad address 'shop'`. O que foi bloqueado?",
+    "hint": "O que acontece antes da conexão?",
+    "choices": [
+      {
+        "text": "A porta 8080 da própria loja",
+        "why": "Essa era permitida por `front-egress`."
+      },
+      {
+        "text": "A consulta DNS ao CoreDNS",
+        "why": "Isso. A porta 53 para `kube-system` não tinha saída permitida."
+      },
+      {
+        "text": "O ClusterIP do Service",
+        "why": "Nenhum endereço chegou a ser consultado, então nenhum foi bloqueado."
+      },
+      {
+        "text": "A entrada em `front`",
+        "why": "Nada restringe o tráfego entrando em `front`."
+      }
+    ]
+  },
+  "ex-375dn096": {
+    "prompt": "Em `front-dns`, o `namespaceSelector` e o `podSelector` ficam numa única entrada `to`. O que duas entradas separadas, cada uma com o seu hífen, permitiriam?",
+    "hint": "Dentro de uma entrada eles se combinam; entre entradas, se somam.",
+    "choices": [
+      {
+        "text": "A mesma coisa",
+        "why": "Entradas separadas são alternativas, não uma regra combinada."
+      },
+      {
+        "text": "Nada",
+        "why": "Cada entrada permitiria algo sozinha."
+      },
+      {
+        "text": "Qualquer pod `kube-dns` em qualquer lugar, ou qualquer pod de `kube-system`",
+        "why": "Isso. Duas entradas são um OU, e bem mais amplo."
+      },
+      {
+        "text": "Só pods em `shop`",
+        "why": "Nenhuma das entradas cita `shop`."
+      }
+    ]
+  },
+  "ex-e7q4vgxn": {
+    "prompt": "Ponha em ordem os passos que limitaram `front` à loja e ao DNS mantendo-o funcionando.",
+    "hint": "A ordem das capturas.",
+    "items": [
+      "Instalar um plugin que aplique políticas",
+      "Permitir `front` entrando na loja na 8080",
+      "Restringir a saída de `front` à loja",
+      "Permitir a saída de `front` para o `kube-dns` na 53"
+    ],
+    "trap": "Sem um plugin que as aplique, nenhum passo seguinte muda nada; e a regra de DNS só é necessária depois que a saída é restringida."
+  },
+  "ex-akgp5k4r": {
+    "prompt": "Uma política com `podSelector: {}` seleciona ___ pod do seu namespace.",
+    "hint": "Um seletor vazio casa sem condições.",
+    "blanks": [
+      {
+        "accept": [
+          "todo",
+          "cada",
+          "qualquer"
+        ]
+      }
+    ]
+  }
+}
