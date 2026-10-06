@@ -10,6 +10,8 @@
 #   bash lab.sh stage N [DIR]   rebuild DIR (default ~/shipquote) with steps 1..N
 #   bash lab.sh venv DIR [PY]   a virtual environment in DIR/.venv with the pins
 #   bash lab.sh carrier DIR     write the carrier stand-in to DIR/server.py
+#   bash lab.sh ci DIR          a bare repository in DIR/shipquote.git whose
+#                               post-receive hook is the lab's CI
 #   bash lab.sh steps           list the steps
 #
 # THE HISTORY IS STAGED, NOT LIVED. Every commit carries the date written beside
@@ -853,6 +855,67 @@ ThreadingHTTPServer(("127.0.0.1", int(os.environ.get("CARRIER_PORT", "9090"))),
 EOF
 }
 
+# ---- the lab's CI: a bare repository whose post-receive hook runs the suite
+ci() {
+  local dir=$1
+  rm -rf "$dir/shipquote.git" "$dir/runs"
+  mkdir -p "$dir"
+  git init -q --bare -b main "$dir/shipquote.git"
+  cat > "$dir/shipquote.git/hooks/post-receive" <<'EOF'
+#!/usr/bin/env bash
+# The lab's whole CI. On every push to main: a clean checkout of the pushed
+# commit, then the test suite once per Python version and per time zone. What
+# it prints reaches the person who pushed, each line prefixed with "remote:".
+set -uo pipefail
+PYTHONS=${CI_PYTHONS:-"3.11 3.12 3.13"}
+ZONES=${CI_ZONES:-"America/Sao_Paulo UTC"}
+RUNS=$(cd "$(dirname "$0")/../.." && pwd)/runs
+
+while read -r old new ref; do
+  if [ "$ref" != refs/heads/main ]; then
+    echo "ci: ${ref#refs/heads/} is not main, nothing to run"
+    continue
+  fi
+  mkdir -p "$RUNS"
+  n=$(( $(ls "$RUNS" | wc -l) + 1 ))
+  run=$RUNS/$n
+  mkdir "$run"
+  work=$(mktemp -d)
+  git archive "$new" | tar -x -C "$work"
+  echo "ci: run $n, commit ${new:0:7}, checked out clean"
+  failed=0
+  for py in $PYTHONS; do
+    venv=$work/.venv-$py
+    if ! { uv venv -q -p "$py" "$venv" &&
+           VIRTUAL_ENV=$venv uv pip install -q -r "$work/requirements-dev.txt"; } \
+         > "$run/install-$py.log" 2>&1; then
+      echo "ci: python $py could not be installed, see install-$py.log"
+      failed=1
+      continue
+    fi
+    for tz in $ZONES; do
+      cell="py$py-${tz//\//-}"
+      if (cd "$work" && TZ=$tz "$venv/bin/python" -m pytest -q -p no:cacheprovider \
+            --junitxml="$run/$cell.xml" > "$run/$cell.log" 2>&1); then
+        result=pass
+      else
+        result=FAIL
+        failed=1
+      fi
+      printf 'ci: %-5s %-18s %-4s  %s\n' "$py" "$tz" "$result" "$(tail -1 "$run/$cell.log")"
+    done
+  done
+  rm -rf "$work"
+  if [ "$failed" = 0 ]; then
+    echo "ci: run $n passed"
+  else
+    echo "ci: run $n FAILED, logs in $run"
+  fi
+done
+EOF
+  chmod +x "$dir/shipquote.git/hooks/post-receive"
+}
+
 case ${1:-} in
   stage)
     n=$2; [ "$n" = last ] && n=$LAST
@@ -861,6 +924,7 @@ case ${1:-} in
     for i in $(seq 1 "$n"); do "step_$i"; git add -A; "commit_$i"; done ;;
   venv) venv "$2" "${3:-3.13}" ;;
   carrier) carrier "$2" ;;
+  ci) ci "$2" ;;
   steps) steps ;;
-  *) echo "usage: lab.sh stage N|last [DIR] | venv DIR [PY] | carrier DIR | steps" >&2; exit 2 ;;
+  *) echo "usage: lab.sh stage N|last [DIR] | venv DIR [PY] | carrier DIR | ci DIR | steps" >&2; exit 2 ;;
 esac
