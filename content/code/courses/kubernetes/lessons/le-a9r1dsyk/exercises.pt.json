@@ -1,0 +1,193 @@
+{
+  "ex-asa8srd8": {
+    "prompt": "O sidecar buscou a página da loja em `localhost:8080`. Por que `localhost` chega à loja?",
+    "hint": "O que os containers de um pod compartilham?",
+    "choices": [
+      {
+        "text": "O kube-proxy encaminha o localhost para o Service do pod",
+        "why": "Não há Service nenhum aqui; o kube-proxy não participa."
+      },
+      {
+        "text": "Eles compartilham um namespace de rede",
+        "why": "Isso. Uma interface, um endereço, um localhost para todo container do pod."
+      },
+      {
+        "text": "O sidecar roda dentro do container da loja",
+        "why": "São containers separados, de imagens separadas; só os namespaces são compartilhados."
+      },
+      {
+        "text": "O volume emptyDir carrega as requisições",
+        "why": "O volume guarda arquivos; a requisição foi pela rede, até o localhost."
+      }
+    ]
+  },
+  "ex-w8r31vcj": {
+    "prompt": "`kubectl get pod web` mostrou `READY 2/2` para um pod com três containers. Por que dois?",
+    "hint": "Um deles não deveria estar rodando.",
+    "choices": [
+      {
+        "text": "Um container não conseguiu subir",
+        "why": "O pod estava `Running` sem reinícios; nada tinha falhado."
+      },
+      {
+        "text": "O sidecar não conta porque não tem porta",
+        "why": "Portas não têm nada a ver com a contagem; o sidecar é um dos dois."
+      },
+      {
+        "text": "O container de inicialização já tinha terminado, e só os que rodam contam",
+        "why": "Isso. O próprio status dele dizia `Completed`."
+      },
+      {
+        "text": "Pods contam containers por nó, e dois cabem naquele nó",
+        "why": "Todos os containers de um pod ficam no mesmo nó; a contagem é dos containers do pod."
+      }
+    ]
+  },
+  "ex-z5tw97hp": {
+    "prompt": "Uma equipe quer pôr a aplicação web e o PostgreSQL dela num pod só, 'para ficarem sempre juntos'. Qual é a melhor objeção?",
+    "hint": "Pergunte se eles precisam viver e morrer juntos.",
+    "choices": [
+      {
+        "text": "Um pod não comporta mais de dois containers",
+        "why": "O pod desta lição tinha três."
+      },
+      {
+        "text": "O PostgreSQL não consegue escutar em localhost",
+        "why": "Consegue; um localhost compartilhado não é o problema."
+      },
+      {
+        "text": "Dois containers de um pod rodam em nós diferentes",
+        "why": "Os containers de um pod sempre rodam no mesmo nó."
+      },
+      {
+        "text": "Escalam, falham e atualizam de jeitos diferentes",
+        "why": "Isso. Três cópias da aplicação seriam três bancos; eles pertencem a dois controladores."
+      }
+    ]
+  },
+  "ex-8k3250xh": {
+    "prompt": "Depois de o sidecar ser parado pelo nó, o que o `kubectl get pod web` mostrou?",
+    "hint": "Olhe RESTARTS e AGE juntos.",
+    "choices": [
+      {
+        "text": "O mesmo pod, com um reinício",
+        "why": "Isso: `RESTARTS 1 (8s ago)`, e a idade continuou contando desde a criação do pod."
+      },
+      {
+        "text": "Um pod novo, com nome e endereço novos",
+        "why": "Um reinício de container mantém o pod; só um pod apagado é substituído."
+      },
+      {
+        "text": "O pod em `Pending` até o escalonador colocá-lo de novo",
+        "why": "O kubelet reinicia o container onde ele está; o escalonador nem é consultado."
+      },
+      {
+        "text": "O pod `Completed`, já que um container tinha saído",
+        "why": "Com `restartPolicy: Always` uma saída é um reinício, não um fim."
+      }
+    ]
+  },
+  "ex-nfrsqz80": {
+    "prompt": "Ligue cada `restartPolicy` ao que acontece quando um container sai.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "`Always`",
+        "right": "Reiniciado, seja qual for o código de saída"
+      },
+      {
+        "left": "`OnFailure`",
+        "right": "Reiniciado só depois de um erro"
+      },
+      {
+        "left": "`Never`",
+        "right": "Deixado parado"
+      }
+    ],
+    "right_distractors": [
+      "Levado para outro nó"
+    ]
+  },
+  "ex-vwjseckk": {
+    "prompt": "Um container cai um segundo depois de subir, de novo e de novo. O que o kubelet faz ao longo do tempo?",
+    "hint": "O status do pod ganha um nome para a espera.",
+    "choices": [
+      {
+        "text": "O reinicia o mais rápido que pode, para sempre",
+        "why": "Ele espera mais a cada vez, até cinco minutos."
+      },
+      {
+        "text": "Desiste depois de três tentativas e apaga o pod",
+        "why": "O kubelet nunca apaga o pod; continua tentando com esperas maiores."
+      },
+      {
+        "text": "Espera mais antes de cada reinício, mostrando `CrashLoopBackOff`",
+        "why": "Isso: dez segundos, vinte, quarenta, até cinco minutos."
+      },
+      {
+        "text": "Leva o pod para um nó mais saudável",
+        "why": "O kubelet só age no próprio nó; não consegue mover nada."
+      }
+    ]
+  },
+  "ex-9wwr5j2c": {
+    "prompt": "A Ana apagou o pod solto `web`. O que tornou isso diferente de apagar um pod de um Deployment?",
+    "hint": "Quem estava contando?",
+    "choices": [
+      {
+        "text": "Um pod solto não pode ser apagado enquanto roda",
+        "why": "Ele foi apagado rodando; o comando funcionou."
+      },
+      {
+        "text": "Os containers dele continuaram rodando no nó, sem pod nenhum",
+        "why": "Apagar um pod para os containers dele."
+      },
+      {
+        "text": "Nenhum controlador percebeu, então nada o substituiu",
+        "why": "Isso: `No resources found`. Ninguém tinha prometido que o pod existiria."
+      },
+      {
+        "text": "Ele foi movido para o namespace `kube-system`",
+        "why": "Objetos apagados não são movidos para lugar nenhum."
+      }
+    ]
+  },
+  "ex-kkw371xr": {
+    "prompt": "Quais destes um container perde quando o kubelet o reinicia no mesmo pod? Marque todos que se aplicam.",
+    "hint": "O que pertence ao container, e o que pertence ao pod?",
+    "choices": [
+      {
+        "text": "Arquivos que escreveu no próprio sistema de arquivos",
+        "why": "Isso: um container reiniciado começa da imagem de novo."
+      },
+      {
+        "text": "O endereço IP do pod",
+        "why": "O endereço pertence ao pod e fica."
+      },
+      {
+        "text": "Arquivos no emptyDir do pod",
+        "why": "O emptyDir pertence ao pod e sobrevive ao reinício."
+      },
+      {
+        "text": "O que tinha na memória",
+        "why": "Isso: é um processo novo."
+      },
+      {
+        "text": "O nome do pod",
+        "why": "O pod é o mesmo objeto, então o nome também."
+      }
+    ]
+  },
+  "ex-w54w0k1h": {
+    "prompt": "Ponha em ordem a vida do pod desta lição.",
+    "hint": "O container de inicialização vem antes de qualquer outra coisa rodar.",
+    "items": [
+      "O pod é escalonado num nó",
+      "O container de inicialização escreve a saudação e sai",
+      "A loja e o sidecar sobem lado a lado",
+      "O sidecar é parado e o kubelet o reinicia",
+      "O pod é apagado e nada o substitui"
+    ],
+    "trap": "Os containers em `containers` só sobem depois de todos os de inicialização terminarem, e nada vem depois da remoção de um pod solto."
+  }
+}
