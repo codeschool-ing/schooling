@@ -13,7 +13,9 @@
 # generator, which is not a language model (lab/labgen.py says what it does);
 # every similarity was computed on this machine with all-MiniLM-L6-v2.
 # reindex_cost.py prints its time rounded up to the whole second, because the
-# exact figure changes from run to run and the rounded one does not.
+# exact figure changes from run to run and the rounded one does not on an idle
+# machine. It is still a timing: run beside another heavy job, the second line
+# once read "under 8 s".
 #
 # Recorded on Ubuntu 24.04, Python 3.11, PostgreSQL 16 with pgvector 0.6.0,
 # TZ=America/Sao_Paulo, on 2026-10-06.
