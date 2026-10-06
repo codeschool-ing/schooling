@@ -1,0 +1,244 @@
+[
+  {
+    "id": "ex-2cjb1g5e",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `shop.yaml`, what makes a pod count as one of the Deployment's three copies?",
+    "hint": "The pod is never listed by name anywhere.",
+    "choices": [
+      {
+        "text": "Its labels match the selector",
+        "correct": true,
+        "why": "Right. The template stamps `app: shop` and the selector counts every pod that carries it."
+      },
+      {
+        "text": "Its name begins with the Deployment's name",
+        "correct": false,
+        "why": "Names are generated and never consulted for ownership; labels and owner references are."
+      },
+      {
+        "text": "It runs the image named in the template",
+        "correct": false,
+        "why": "Many unrelated pods can run the same image; the selector looks at labels only."
+      },
+      {
+        "text": "It listens on the port given in `containerPort`",
+        "correct": false,
+        "why": "That field documents a port and plays no part in ownership."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x8fbhkb",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `containerPort: 8080` do in the Deployment?",
+    "hint": "The shop would listen on 8080 without it.",
+    "choices": [
+      {
+        "text": "Opens port 8080 on the node",
+        "correct": false,
+        "why": "Nothing in a Deployment opens a node's port; a NodePort Service does."
+      },
+      {
+        "text": "Tells the shop which port to listen on",
+        "correct": false,
+        "why": "The program chooses its port; the shop reads its own `PORT` setting."
+      },
+      {
+        "text": "It documents the port the container listens on, and opens nothing",
+        "correct": true,
+        "why": "Right. It informs readers and tools; the Service's `targetPort` is what sends traffic there."
+      },
+      {
+        "text": "Publishes the shop to the internet",
+        "correct": false,
+        "why": "The pods were unreachable from the laptop until a port-forward or a NodePort was added."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qny3shj",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana changes the template's label to `app: store` and applies, leaving the selector at `app: shop`. What happens?",
+    "hint": "The selector has to match the template.",
+    "choices": [
+      {
+        "text": "The Service follows the new label",
+        "correct": false,
+        "why": "The Service selects `app: shop` too, and nothing rewrites it."
+      },
+      {
+        "text": "The API server refuses the Deployment",
+        "correct": true,
+        "why": "Right. A selector that does not match its own template is rejected before anything runs."
+      },
+      {
+        "text": "Three new pods start, and the old three keep running",
+        "correct": false,
+        "why": "That would need the object to be accepted first, and it is not."
+      },
+      {
+        "text": "The pods are renamed to match",
+        "correct": false,
+        "why": "Labels and names are separate; nothing renames a pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs330pr2",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Service, `port: 80` is what clients use, and `___: 8080` says which port of the pod the traffic goes to.",
+    "hint": "The field's name says where the traffic is aimed.",
+    "blanks": [
+      {
+        "accept": [
+          "targetPort"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1hedcc20",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command opened a tunnel from the laptop's port 8081 to the shop?",
+    "hint": "It stops when the command stops.",
+    "choices": [
+      {
+        "text": "`kubectl apply -f shop-nodeport.yaml`",
+        "correct": false,
+        "why": "That opened 30080 on every node, which is not a tunnel and does not stop with a command."
+      },
+      {
+        "text": "`kubectl rollout status deployment/shop`",
+        "correct": false,
+        "why": "That only waits for the pods to become available."
+      },
+      {
+        "text": "`kubectl port-forward service/shop 8081:80`",
+        "correct": true,
+        "why": "Right: a tool for a person, carried through the API server and the kubelet."
+      },
+      {
+        "text": "`kubectl get service shop`",
+        "correct": false,
+        "why": "That lists the Service; it changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-bem7bhdw",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl get service shop-public` showed `80:30080/TCP`. What does that mean?",
+    "hint": "Two places where the Service answers.",
+    "choices": [
+      {
+        "text": "Port 80 inside the pod, 30080 on the laptop",
+        "correct": false,
+        "why": "The pod listens on 8080, and the laptop's port was 8080 by the cluster's mapping."
+      },
+      {
+        "text": "Port 80 on the Service's address, and 30080 on every node",
+        "correct": true,
+        "why": "Right. A NodePort Service is also a ClusterIP one, with a port opened on each node."
+      },
+      {
+        "text": "Requests on 80 are redirected to 30080 with an HTTP status",
+        "correct": false,
+        "why": "Nothing answers with a redirect; the packets are rewritten in the kernel."
+      },
+      {
+        "text": "Only the node running a pod listens on 30080",
+        "correct": false,
+        "why": "Every node does; the requests arrived at the control-plane node, which runs none of the shop's pods."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv0bvh23",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Six requests went to `localhost:8080`. How many different pods answered them?",
+    "hint": "Count the distinct names after `on`.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "pods"
+  },
+  {
+    "id": "ex-52xx1pjj",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's log showed the NodePort requests arriving `from 172.18.0.2`. Why not from the laptop's own address?",
+    "hint": "Which node did the requests reach first, and does the pod run there?",
+    "choices": [
+      {
+        "text": "The laptop and the control-plane node share one address",
+        "correct": false,
+        "why": "The node is a container with an address of its own on Docker's network."
+      },
+      {
+        "text": "The shop logs the node it runs on, not the client",
+        "correct": false,
+        "why": "The pods run on the workers, and the port-forward line shows a different source."
+      },
+      {
+        "text": "The first node rewrote the source, then forwarded it",
+        "correct": true,
+        "why": "Right. That lets the reply come back through the same node; lesson 17 shows the setting that keeps the original."
+      },
+      {
+        "text": "Every request inside a cluster is proxied through etcd",
+        "correct": false,
+        "why": "etcd stores objects; it carries no traffic at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwx2a85e",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened between `kubectl apply -f shop.yaml` and the first answer through the NodePort.",
+    "hint": "Objects first, then pods, then a way in.",
+    "items": [
+      "The API server stores the Deployment and the Service",
+      "Three pods are scheduled onto the workers",
+      "The pods become available and the rollout completes",
+      "A NodePort Service opens 30080 on every node",
+      "A request to the laptop's 8080 reaches one of the pods"
+    ],
+    "trap": "No request can be answered before a pod is available, and none can arrive from outside before the NodePort exists."
+  }
+]

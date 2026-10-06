@@ -59,6 +59,7 @@ HELM=v4.3.0
 METRICS_SERVER=v0.9.0
 CLOUD_PROVIDER_KIND=v0.12.0
 CALICO=v3.32.1
+GATEWAY_API=v1.4.0   # the version Traefik v3.6 is built against
 # Images every cluster gets on creation. A lesson that needs more loads them.
 BASE_IMAGES="shop:1.0 shop:1.1 shop:2.0 busybox:1.37 nginx:1.29"
 export PATH=$OPT/bin:$PATH
@@ -123,8 +124,14 @@ tools() {
   wrap metrics-server "$METRICS_SERVER" "$OPT/bin/metrics-server"
   [ -f "$OPT/manifests/calico.yaml" ] || curl -sSfo "$OPT/manifests/calico.yaml" \
     "https://raw.githubusercontent.com/projectcalico/calico/$CALICO/manifests/calico.yaml"
+  if [ ! -d "$OPT/manifests/gateway-api-$GATEWAY_API" ]; then
+    dir=$(GOTOOLCHAIN=auto go mod download -json "sigs.k8s.io/gateway-api@$GATEWAY_API" | jq -r .Dir)
+    mkdir -p "$OPT/manifests/gateway-api-$GATEWAY_API"
+    cp "$dir"/config/crd/standard/*.yaml "$OPT/manifests/gateway-api-$GATEWAY_API/"
+  fi
   pull "$NODE"
-  for i in busybox:1.37 nginx:1.29; do pull "$i"; done
+  for i in busybox:1.37 nginx:1.29 traefik:v3.6 envoyproxy/envoy:v1.36.2 postgres:18 \
+    calico/cni:$CALICO calico/node:$CALICO calico/kube-controllers:$CALICO; do pull "$i"; done
   shop_images
 }
 
