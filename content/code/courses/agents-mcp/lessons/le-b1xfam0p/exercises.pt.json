@@ -1,0 +1,411 @@
+{
+  "ex-v7qhyz72": {
+    "prompt": "Por que este curso escreve o laço à mão antes de usar qualquer SDK?",
+    "choices": [
+      {
+        "text": "Porque os SDKs não são confiáveis o bastante para sistemas em produção",
+        "why": "A aula diz que vale a pena usá-los; o ponto é saber lê-los."
+      },
+      {
+        "text": "Para que as partes de cada SDK sejam reconhecíveis",
+        "why": "Certo. Todo SDK tem um decorador de ferramentas, um adaptador, um laço com limites, erros e um rastro."
+      },
+      {
+        "text": "Porque laços escritos à mão são sempre mais rápidos que os de dentro dos SDKs",
+        "why": "Velocidade não é o argumento; entender e poder mudar são."
+      },
+      {
+        "text": "Porque o laboratório não instala SDKs",
+        "why": "O laboratório instala três SDKs de agente, usados nas aulas 8 a 10."
+      }
+    ]
+  },
+  "ex-a6nw7y5b": {
+    "prompt": "O que o `@tool` faz com uma função sem docstring?",
+    "choices": [
+      {
+        "text": "Usa o nome da função como descrição",
+        "why": "Um nome não é uma explicação; o minagent recusa em vez de adivinhar."
+      },
+      {
+        "text": "Pede ao modelo que escreva uma descrição na primeira vez que a ferramenta é oferecida",
+        "why": "Nada consulta um modelo na importação."
+      },
+      {
+        "text": "Levanta ValueError",
+        "why": "Certo. A docstring é o que o modelo lê, então uma ferramenta sem ela é recusada quando o código é escrito."
+      },
+      {
+        "text": "Deixa a descrição vazia e segue como se nada faltasse",
+        "why": "Uma descrição vazia faz o modelo adivinhar para que a ferramenta serve."
+      }
+    ]
+  },
+  "ex-jx89eh0g": {
+    "prompt": "Como o marginalia.py dá um padrão ao order_id do get_order?",
+    "choices": [
+      {
+        "text": "Com Annotated[str, {\"pattern\": ...}] no tipo dele",
+        "why": "Certo. O schema_for mistura o dicionário no esquema da string."
+      },
+      {
+        "text": "Com uma expressão regular na docstring que o decorador interpreta",
+        "why": "A docstring vira a descrição; nada a interpreta."
+      },
+      {
+        "text": "Com um Literal listando todo id de pedido do banco",
+        "why": "Isso copiaria o banco para o esquema, e ficaria velho no próximo pedido."
+      },
+      {
+        "text": "Não dá; a função confere",
+        "why": "O padrão está no esquema, então o validador recusa M1047 antes de a função rodar."
+      }
+    ]
+  },
+  "ex-btcrr1qz": {
+    "prompt": "Por que o schema_for recusa um parâmetro `dict` em vez de mapeá-lo para `{\"type\": \"object\"}`?",
+    "choices": [
+      {
+        "text": "Porque JSON Schema não tem tipo objeto",
+        "why": "Tem; o problema é o que um objeto sem restrições confere."
+      },
+      {
+        "text": "Porque dicionários Python não podem ser mandados como argumentos de ferramenta",
+        "why": "Argumentos de ferramenta são objetos JSON; um dict viajaria sem problema."
+      },
+      {
+        "text": "Porque o modelo se recusaria a chamar uma ferramenta com parâmetro dict",
+        "why": "Modelos chamam ferramentas assim; isso é parte do perigo."
+      },
+      {
+        "text": "Um objeto sem forma declarada aceita qualquer coisa",
+        "why": "Certo. Recusar na importação obriga o autor a escrever um esquema de verdade."
+      }
+    ]
+  },
+  "ex-ccp4qszc": {
+    "prompt": "Qual classe do minagent importa o SDK da anthropic?",
+    "choices": [
+      {
+        "text": "Agent, já que ela manda os pedidos",
+        "why": "O Agent chama model.complete e nunca toca no SDK de um fornecedor."
+      },
+      {
+        "text": "Reply, já que ela interpreta as respostas",
+        "why": "O Reply é uma dataclass simples, sem importações próprias."
+      },
+      {
+        "text": "Só a AnthropicModel",
+        "why": "Certo. Uma classe conhece o protocolo, então trocar de fornecedor ou falsificar o modelo não mexe em mais nada."
+      },
+      {
+        "text": "Tool, já que as definições de ferramenta estão no formato da Anthropic",
+        "why": "O Tool monta um dict nesse formato; não importa nada."
+      }
+    ]
+  },
+  "ex-8c5qmd2s": {
+    "prompt": "A aula admite que a costura do adaptador não é perfeitamente limpa. Por quê?",
+    "choices": [
+      {
+        "text": "A conversa dentro do Agent.run é guardada no formato de blocos da Anthropic",
+        "why": "Certo. Um adaptador para a OpenAI traduziria a conversa além da resposta."
+      },
+      {
+        "text": "Porque a AnthropicModel pega exceções que o Agent deveria ver",
+        "why": "Ela não pega nada; as exceções se propagam."
+      },
+      {
+        "text": "Porque o Reply não tem campo para o motivo de parada",
+        "why": "O Reply tem stop."
+      },
+      {
+        "text": "Porque os testes precisam usar o labllm",
+        "why": "Os testes usam o FakeModel e nenhum labllm."
+      }
+    ]
+  },
+  "ex-t0awz3kq": {
+    "prompt": "Associe cada peça do Agent.run à aula de onde ela vem.",
+    "pairs": [
+      {
+        "left": "A conversa reenviada inteira a cada passo",
+        "right": "Aula 1"
+      },
+      {
+        "left": "A guarda de repetição e o rastro",
+        "right": "Aula 3"
+      },
+      {
+        "left": "Validação e erros como resultados",
+        "right": "Aula 4"
+      },
+      {
+        "left": "Orçamentos conferidos antes do pedido",
+        "right": "Aula 5"
+      }
+    ],
+    "right_distractors": [
+      "Aula 9"
+    ]
+  },
+  "ex-1ej5qgpq": {
+    "prompt": "O que o contador `failing` acrescenta que o limite de passos não acrescenta?",
+    "choices": [
+      {
+        "text": "Ele conta os tokens gastos em chamadas que falharam e os soma ao orçamento de tokens",
+        "why": "Tokens são contados por `used`; o failing conta passos."
+      },
+      {
+        "text": "Ele repete chamadas que falharam automaticamente, até três vezes cada",
+        "why": "Nada no run repete uma chamada; o modelo decide o que chamar em seguida."
+      },
+      {
+        "text": "Encerra uma execução travada em erros muito antes disso",
+        "why": "Certo. Três passos seguidos só com erros é um modelo travado, permita o limite o que permitir."
+      },
+      {
+        "text": "Ele esconde erros do rastro",
+        "why": "Todo erro é registrado."
+      }
+    ]
+  },
+  "ex-ayrgzpq5": {
+    "prompt": "Na execução do reembolso, por que o shop.refund nunca rodou?",
+    "choices": [
+      {
+        "text": "Porque o valor do reembolso era maior que o saldo a reembolsar",
+        "why": "3890 centavos é menos que os 7780 que sobram no M-1047."
+      },
+      {
+        "text": "Porque o esquema recusou o motivo",
+        "why": "O motivo não tem regra de tamanho no esquema do minagent, e passou."
+      },
+      {
+        "text": "Porque o labllm bloqueou a chamada",
+        "why": "O labllm só devolveu o pedido do modelo; quem decidiu foi o hospedeiro."
+      },
+      {
+        "text": "É uma escrita, e ninguém a confirmou",
+        "why": "Certo. O run.py não passa callback de confirmação, então o call recusa toda escrita."
+      }
+    ]
+  },
+  "ex-5crmqv2b": {
+    "prompt": "Por que o minagent recusa uma chamada repetida com uma mensagem em vez de parar a execução, como fez a aula 3?",
+    "choices": [
+      {
+        "text": "Para dar ao modelo uma chance de usar o resultado que ele já tem",
+        "why": "Certo. E se ele continuar falhando, a parada por falta de progresso encerra a execução mesmo assim."
+      },
+      {
+        "text": "Porque parar uma execução não é possível de dentro do call",
+        "why": "O call devolve um valor; o run decide. Os dois desenhos são possíveis."
+      },
+      {
+        "text": "Porque chamadas repetidas são sempre inofensivas e não há motivo para parar",
+        "why": "Uma escrita repetida está longe de ser inofensiva; a guarda a pega."
+      },
+      {
+        "text": "Para economizar tokens",
+        "why": "Uma recusa custa um pedido; o motivo é a recuperação."
+      }
+    ]
+  },
+  "ex-exgmf3p1": {
+    "prompt": "A passagem da execução travada disse 'Nothing found yet.' De onde vem essa frase?",
+    "choices": [
+      {
+        "text": "Da última resposta do modelo, que admitiu não ter achado nada",
+        "why": "A última resposta do modelo foi uma chamada; quem monta a passagem é o stop."
+      },
+      {
+        "text": "Do plano, que não tinha passos feitos",
+        "why": "O minagent não guarda plano."
+      },
+      {
+        "text": "Do stop, porque nenhuma chamada do rastro deu certo",
+        "why": "Certo. A passagem lista as chamadas bem-sucedidas, e não houve nenhuma."
+      },
+      {
+        "text": "Da mensagem de erro do labllm",
+        "why": "O labllm devolveu respostas, não erros, naquela execução."
+      }
+    ]
+  },
+  "ex-bthf2s02": {
+    "prompt": "Com o labllm configurado para falhar duas vezes, quantos pedidos responderam 529 antes do primeiro 200 no log?",
+    "unit": "pedidos"
+  },
+  "ex-9x807xna": {
+    "prompt": "Quem repetiu os dois pedidos que falharam?",
+    "choices": [
+      {
+        "text": "O laço do minagent, que repete todo passo que falhou",
+        "why": "O Agent.run não tem nova tentativa; a exceção teria se propagado."
+      },
+      {
+        "text": "O SDK da anthropic, por padrão",
+        "why": "Certo. O max_retries padrão é 2, com espera crescente, para 408, 409, 429 e 5xx."
+      },
+      {
+        "text": "O labllm, que responde 200 depois de falhar o número configurado de vezes",
+        "why": "O labllm falha como mandaram; alguém precisou mandar os pedidos de novo."
+      },
+      {
+        "text": "A ana, à mão",
+        "why": "Ela rodou o comando uma vez."
+      }
+    ]
+  },
+  "ex-0nqaxjye": {
+    "prompt": "Por que a aula desaconselha acrescentar um laço de novas tentativas no agente por cima das do SDK?",
+    "choices": [
+      {
+        "text": "Porque duas camadas multiplicam as tentativas, e uma pane longa é mais bem atendida por um resultado parado",
+        "why": "Certo. Três tentativas em cada uma de duas camadas são nove pedidos, e um cliente espera por todas."
+      },
+      {
+        "text": "Porque o SDK se recusa a ser embrulhado em outro laço de novas tentativas",
+        "why": "Nada no SDK detecta um embrulho."
+      },
+      {
+        "text": "Porque uma pane do fornecedor deve ser informada ao modelo como resultado de ferramenta",
+        "why": "Uma pane não é algo que o modelo conserta, então não é resultado de ferramenta."
+      },
+      {
+        "text": "Porque novas tentativas nunca são úteis",
+        "why": "As novas tentativas do SDK são a primeira camada recomendada."
+      }
+    ]
+  },
+  "ex-841x3q75": {
+    "prompt": "Na execução de devolução do Drácula, quantos tokens de entrada o pedido do passo 4 carregou?",
+    "unit": "tokens"
+  },
+  "ex-6qrn7eag": {
+    "prompt": "O get_order do passo 1 levou 0 ms. Por que tão rápido?",
+    "choices": [
+      {
+        "text": "Porque o shop.db estava em cache na memória por uma execução anterior",
+        "why": "A função nem rodou, com cache ou sem."
+      },
+      {
+        "text": "Porque o labllm a respondeu no lugar do hospedeiro",
+        "why": "Ferramentas rodam no hospedeiro; o labllm nunca roda ferramenta."
+      },
+      {
+        "text": "Porque o rastro arredonda para zero tudo abaixo de um segundo",
+        "why": "O rastro registra milissegundos; outros passos mostram 1 ms e 1053 ms."
+      },
+      {
+        "text": "O esquema recusou M1047 antes",
+        "why": "Certo. Validar é trabalho de microssegundos, e nenhuma consulta aconteceu."
+      }
+    ]
+  },
+  "ex-zq3g6hrb": {
+    "prompt": "Quais campos cada linha do trace.jsonl carrega? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "O tempo do modelo no passo",
+        "why": "Sim: model_ms."
+      },
+      {
+        "text": "Os argumentos de cada chamada e se ela falhou",
+        "why": "Sim: args e error, por chamada."
+      },
+      {
+        "text": "O começo do resultado de cada ferramenta",
+        "why": "Sim: os primeiros 120 caracteres."
+      },
+      {
+        "text": "O prompt de sistema completo",
+        "why": "Não. O prompt de sistema é o mesmo em todo passo; o rastro não o repete."
+      }
+    ]
+  },
+  "ex-jc68yt5x": {
+    "prompt": "O que torna possível testar o laço do minagent sem modelo nenhum?",
+    "choices": [
+      {
+        "text": "O laço só precisa de algo com um método complete que devolva um Reply",
+        "why": "Certo. O FakeModel são oito linhas que repetem respostas que o teste escreveu."
+      },
+      {
+        "text": "O labllm roda dentro do pytest durante os testes",
+        "why": "Nenhum labllm roda durante os testes."
+      },
+      {
+        "text": "O SDK da anthropic tem um modo de teste que devolve respostas prontas",
+        "why": "Os testes nunca constroem o SDK."
+      },
+      {
+        "text": "Os testes simulam a rede",
+        "why": "Nada é simulado; nenhuma rede está envolvida."
+      }
+    ]
+  },
+  "ex-tsqxtaf9": {
+    "prompt": "O que os testes com modelo falso provam, e o que não provam?",
+    "choices": [
+      {
+        "text": "Provam que o modelo responde certo; não provam que as ferramentas funcionam",
+        "why": "É o contrário: as ferramentas e as guardas são o que eles testam."
+      },
+      {
+        "text": "Que o hospedeiro está correto, não quão bem um modelo real o usa",
+        "why": "Certo. Execuções de avaliação sobre muitas mensagens reais medem o segundo; a aula 18 as constrói."
+      },
+      {
+        "text": "Provam tudo de que um agente precisa, então nenhum outro teste é necessário",
+        "why": "Eles não dizem nada sobre as escolhas de um modelo real."
+      },
+      {
+        "text": "Não provam nada, por serem falsos",
+        "why": "O hospedeiro que eles testam é código real, e as garantias são reais."
+      }
+    ]
+  },
+  "ex-1a20zhd8": {
+    "prompt": "Qual destes falta ao minagent e um SDK de agente costuma oferecer?",
+    "choices": [
+      {
+        "text": "Um limite de passos",
+        "why": "O minagent tem max_steps."
+      },
+      {
+        "text": "Validação de argumentos por esquema",
+        "why": "O minagent valida toda chamada."
+      },
+      {
+        "text": "Um rastro de cada passo",
+        "why": "O minagent escreve o trace.jsonl."
+      },
+      {
+        "text": "Sessões que guardam uma conversa entre execuções",
+        "why": "Certo. A conversa do minagent vive por uma execução."
+      }
+    ]
+  },
+  "ex-f968wfcz": {
+    "prompt": "Ponha em ordem as verificações do Agent.call.",
+    "items": [
+      "A ferramenta é conhecida?",
+      "Esta mesma chamada já foi feita?",
+      "Os argumentos passam no esquema?",
+      "Se escreve, uma pessoa confirmou?",
+      "Rodar, pegando só erros esperados"
+    ]
+  },
+  "ex-yj61ynr0": {
+    "prompt": "No minagent, uma ferramenta declarada com `@tool(writes=___)` nunca roda sem confirmação.",
+    "blanks": [
+      {
+        "accept": [
+          "True"
+        ]
+      }
+    ]
+  }
+}
