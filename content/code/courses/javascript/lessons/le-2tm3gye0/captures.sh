@@ -14,7 +14,7 @@
 #
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0 and Chromium 141,
 # TZ=America/Sao_Paulo.
-set -uo pipefail
+
 set -uo pipefail
 cd "$(dirname "$0")"
 LAB_SH=${LAB_SH:-../../lab.sh}
