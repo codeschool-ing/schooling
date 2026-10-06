@@ -1,0 +1,727 @@
+[
+  {
+    "id": "ex-85775tbm",
+    "version": 1,
+    "section": "prototypes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ana` was made with `Object.create(reader)` and has no `greet`. Why does `ana.greet()` work?",
+    "hint": "Where does a lookup go when the object lacks the property?",
+    "choices": [
+      {
+        "text": "`Object.create` copied `greet` into `ana`",
+        "correct": false,
+        "why": "`Object.hasOwn(ana, \"greet\")` was `false`."
+      },
+      {
+        "text": "The lookup found it on `reader`",
+        "correct": true,
+        "why": "Right. `reader` is `ana`'s prototype."
+      },
+      {
+        "text": "Every object has a `greet` method built in",
+        "correct": false,
+        "why": "No built-in object has one."
+      },
+      {
+        "text": "`greet` is a global function",
+        "correct": false,
+        "why": "It was written inside `reader`."
+      }
+    ]
+  },
+  {
+    "id": "ex-scfh5eee",
+    "version": 1,
+    "section": "prototypes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `greet`, found on `reader` but called as `ana.greet()`, what is `this`?",
+    "hint": "Lesson 6's rule still decides.",
+    "choices": [
+      {
+        "text": "`reader`, where the method was found",
+        "correct": false,
+        "why": "Where it was found does not matter; how it was called does."
+      },
+      {
+        "text": "`ana`",
+        "correct": true,
+        "why": "Right: the object before the dot. It printed `hello from ana`."
+      },
+      {
+        "text": "`undefined`, because it is inherited",
+        "correct": false,
+        "why": "Inherited methods get `this` like any other."
+      },
+      {
+        "text": "The global object",
+        "correct": false,
+        "why": "That is a plain call in sloppy mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-at2bex43",
+    "version": 1,
+    "section": "prototypes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ana.shelves.push(\"Romance\")` changed what `bia.shelves` shows, but `bia.shelves = [\"Poetry\"]` did not change `ana`'s. Why the difference?",
+    "hint": "One is a read, one is a write.",
+    "choices": [
+      {
+        "text": "`push` copies the array to every object that shares it",
+        "correct": false,
+        "why": "There is one array, on the prototype."
+      },
+      {
+        "text": "`bia` was created after `ana`",
+        "correct": false,
+        "why": "Order of creation does not matter."
+      },
+      {
+        "text": "Lookups go up the chain; an assignment goes on `bia`",
+        "correct": true,
+        "why": "Right. That is why prototypes hold methods, not data."
+      },
+      {
+        "text": "Arrays on prototypes cannot be reassigned",
+        "correct": false,
+        "why": "The assignment worked; it went on `bia`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2b9ykrm",
+    "version": 1,
+    "section": "prototypes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Giving an object its own property with the same name as one on its prototype is said to ___ the inherited one.",
+    "hint": "The word lesson 3 used for names.",
+    "blanks": [
+      {
+        "accept": [
+          "shadow",
+          "hide"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k8a2d0fd",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is at the end of every prototype chain?",
+    "hint": "`Object.prototype` has a prototype too.",
+    "choices": [
+      {
+        "text": "`null`",
+        "correct": true,
+        "why": "Right. The walk stops there."
+      },
+      {
+        "text": "`Object.prototype`",
+        "correct": false,
+        "why": "It is the last object, and its own prototype is `null`."
+      },
+      {
+        "text": "`undefined`",
+        "correct": false,
+        "why": "That is what a failed lookup returns, not the end of the chain."
+      },
+      {
+        "text": "`Array.prototype`",
+        "correct": false,
+        "why": "That is one step in an array's chain."
+      }
+    ]
+  },
+  {
+    "id": "ex-ea1zkcs0",
+    "version": 1,
+    "section": "the-chain",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the prototype chain of `[\"Iracema\"]` in order, starting from the array.",
+    "hint": "The first line of `chain.js`'s output.",
+    "items": [
+      "The array itself",
+      "`Array.prototype`",
+      "`Object.prototype`",
+      "`null`"
+    ],
+    "trap": "`Object.prototype` is the last object, not the end: its own prototype is `null`."
+  },
+  {
+    "id": "ex-rqseh85y",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`list.map === Array.prototype.map` printed `true`. What does that show?",
+    "hint": "Is `map` copied onto every array?",
+    "choices": [
+      {
+        "text": "Each array gets its own copy, which happens to be equal",
+        "correct": false,
+        "why": "Two functions are `===` only if they are one function."
+      },
+      {
+        "text": "`list` was created by copying `Array.prototype`",
+        "correct": false,
+        "why": "Nothing was copied; the array links to it."
+      },
+      {
+        "text": "There is one `map`, found by walking up one step",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`map` is a global function",
+        "correct": false,
+        "why": "It lives on `Array.prototype`."
+      }
+    ]
+  },
+  {
+    "id": "ex-z70m32z9",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the difference between `Book.prototype` and `Object.getPrototypeOf(Book)`?",
+    "hint": "One is an ordinary property of the function.",
+    "choices": [
+      {
+        "text": "None: they are two ways to read the same link",
+        "correct": false,
+        "why": "That confusion is the one the section warns about."
+      },
+      {
+        "text": "The first becomes the prototype of Book's instances; the second is Book's own prototype",
+        "correct": true,
+        "why": "Right. `Book` is a function, and its prototype is `Function.prototype`."
+      },
+      {
+        "text": "`Book.prototype` is the old name and `getPrototypeOf` the new one",
+        "correct": false,
+        "why": "The old name for the link is `__proto__`."
+      },
+      {
+        "text": "The first is `null` until an instance is created",
+        "correct": false,
+        "why": "It exists as soon as the function does."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w4gwjty",
+    "version": 1,
+    "section": "constructor-functions",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four steps of `new Book(\"Iracema\", 1865)` in order.",
+    "hint": "The object exists before the function runs.",
+    "items": [
+      "Create an empty object",
+      "Set its prototype to `Book.prototype`",
+      "Call `Book` with `this` as the new object",
+      "Return the object"
+    ],
+    "trap": "The prototype is linked before `Book` runs, so methods are already reachable inside the constructor."
+  },
+  {
+    "id": "ex-y8gdy5mq",
+    "version": 1,
+    "section": "constructor-functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `Object.keys(b)` list only `title` and `year`, not `describe`?",
+    "hint": "Where was `describe` put?",
+    "choices": [
+      {
+        "text": "`Object.keys` never lists functions",
+        "correct": false,
+        "why": "It lists any own property, functions included."
+      },
+      {
+        "text": "`describe` is on `Book.prototype`",
+        "correct": true,
+        "why": "Right, shared by every book."
+      },
+      {
+        "text": "`describe` was added after `b` was created",
+        "correct": false,
+        "why": "It was added before, and placement is what matters."
+      },
+      {
+        "text": "`Object.keys` sorts functions to the end and cuts them",
+        "correct": false,
+        "why": "It does not sort or cut."
+      }
+    ]
+  },
+  {
+    "id": "ex-eghxmjyt",
+    "version": 1,
+    "section": "constructor-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book(\"Dom Casmurro\", 1899)`, without `new`, threw in strict mode. What would it have done without strict mode?",
+    "hint": "In a plain sloppy call, `this` is the global object.",
+    "choices": [
+      {
+        "text": "Returned a new book anyway",
+        "correct": false,
+        "why": "Without `new` nothing creates an object."
+      },
+      {
+        "text": "Thrown the same error",
+        "correct": false,
+        "why": "`this` would not be `undefined`, so nothing would throw."
+      },
+      {
+        "text": "Created global variables `title` and `year`",
+        "correct": true,
+        "why": "Right, which is worse than the error."
+      },
+      {
+        "text": "Returned `Book.prototype`",
+        "correct": false,
+        "why": "The function returns nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tswy1naz",
+    "version": 1,
+    "section": "classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `typeof Book` print for the class `Book`?",
+    "hint": "A class is built on what the last section used.",
+    "choices": [
+      {
+        "text": "`\"class\"`",
+        "correct": false,
+        "why": "`typeof` has no such answer."
+      },
+      {
+        "text": "`\"object\"`",
+        "correct": false,
+        "why": "Instances are objects; the class is something else."
+      },
+      {
+        "text": "`\"function\"`",
+        "correct": true,
+        "why": "Right. A class is a constructor function underneath."
+      },
+      {
+        "text": "`\"prototype\"`",
+        "correct": false,
+        "why": "That is not a `typeof` answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-68fp5hfq",
+    "version": 1,
+    "section": "classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a method written in a class body, such as `describe()`, end up?",
+    "hint": "`Object.hasOwn(Book.prototype, \"describe\")`.",
+    "choices": [
+      {
+        "text": "On every instance, copied by the constructor",
+        "correct": false,
+        "why": "The instance's keys were only `title` and `year`."
+      },
+      {
+        "text": "On `Book.prototype`",
+        "correct": true,
+        "why": "Right, shared by all books."
+      },
+      {
+        "text": "On the class itself, like `fromLine`",
+        "correct": false,
+        "why": "That is where `static` methods go."
+      },
+      {
+        "text": "In a private field",
+        "correct": false,
+        "why": "Private fields start with `#`."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0t011dv",
+    "version": 1,
+    "section": "classes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the `Book` class with what it is.",
+    "hint": "Look at the notes beside the example.",
+    "pairs": [
+      {
+        "left": "`constructor(title, year)`",
+        "right": "Sets each instance's own properties"
+      },
+      {
+        "left": "`get age()`",
+        "right": "Computed each time `b.age` is read"
+      },
+      {
+        "left": "`static fromLine(line)`",
+        "right": "Called on the class, `Book.fromLine(…)`"
+      },
+      {
+        "left": "`describe()`",
+        "right": "Shared by every book through the prototype"
+      }
+    ],
+    "right_distractors": [
+      "Visible only inside the class"
+    ]
+  },
+  {
+    "id": "ex-17zsx58m",
+    "version": 1,
+    "section": "classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book(\"Iracema\")` with a class threw `Class constructor Book cannot be invoked without 'new'`. What does that guarantee over the old constructor function?",
+    "hint": "Compare with the last section's error.",
+    "choices": [
+      {
+        "text": "A clear refusal at the call, never globals",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That the class can be called both ways",
+        "correct": false,
+        "why": "It refused the call without `new`."
+      },
+      {
+        "text": "That the instance is created even without `new`",
+        "correct": false,
+        "why": "Nothing was created."
+      },
+      {
+        "text": "That `this` becomes the class itself",
+        "correct": false,
+        "why": "The call did not run at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4xj445r",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is an `EBook` also `instanceof Book`?",
+    "hint": "Look at the figure.",
+    "choices": [
+      {
+        "text": "`extends` copies Book's methods into EBook",
+        "correct": false,
+        "why": "Nothing is copied; the chain is linked."
+      },
+      {
+        "text": "Every class is an instance of every other",
+        "correct": false,
+        "why": "`instanceof` checks a specific chain."
+      },
+      {
+        "text": "`Book.prototype` is on its prototype chain",
+        "correct": true,
+        "why": "Right. `instanceof` walks that chain."
+      },
+      {
+        "text": "`super()` makes it a Book and then an EBook",
+        "correct": false,
+        "why": "It is one object with one chain."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv324z6c",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `super.describe()` do inside `EBook`'s `describe`?",
+    "hint": "The class it extends.",
+    "choices": [
+      {
+        "text": "Calls `EBook`'s `describe` again, recursively",
+        "correct": false,
+        "why": "That would never end; `super` skips past `EBook`."
+      },
+      {
+        "text": "Calls `Book`'s version",
+        "correct": true,
+        "why": "Right, and `EBook` adds the size to it."
+      },
+      {
+        "text": "Calls the constructor of `Book`",
+        "correct": false,
+        "why": "That is `super(…)` with no method name."
+      },
+      {
+        "text": "Calls `Object.prototype.toString`",
+        "correct": false,
+        "why": "It calls the parent's `describe`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ynbrcs3",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `no-super.js` fail?",
+    "hint": "Read the message.",
+    "choices": [
+      {
+        "text": "`EBook` needs its own `title` parameter",
+        "correct": false,
+        "why": "It had one."
+      },
+      {
+        "text": "`extends` cannot be used with a constructor",
+        "correct": false,
+        "why": "It can; the order inside was wrong."
+      },
+      {
+        "text": "`super` must be the last line of the constructor",
+        "correct": false,
+        "why": "It must come before any use of `this`, not last."
+      },
+      {
+        "text": "`this` was used before `super` ran",
+        "correct": true,
+        "why": "Right. The object does not exist until the parent's constructor has run."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k7k9s75",
+    "version": 1,
+    "section": "inheritance",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Defining a method on a subclass with the same name as one on its parent is called ___ it.",
+    "hint": "The lookup finds the subclass's first.",
+    "blanks": [
+      {
+        "accept": [
+          "overriding",
+          "override"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-37w6d988",
+    "version": 1,
+    "section": "private-fields",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these shows `#balanceCents` from outside the class?",
+    "hint": "Private fields are listed nowhere.",
+    "choices": [
+      {
+        "text": "`Object.keys(acc)`",
+        "correct": false,
+        "why": "It printed `[ 'owner' ]`."
+      },
+      {
+        "text": "`JSON.stringify(acc)`",
+        "correct": false,
+        "why": "It printed only the owner."
+      },
+      {
+        "text": "`console.log(acc)`",
+        "correct": false,
+        "why": "It printed `Account { owner: 'ana' }`."
+      },
+      {
+        "text": "None of them; only code in the class reaches it",
+        "correct": true,
+        "why": "Right. The getter is the class's way to share it."
+      }
+    ]
+  },
+  {
+    "id": "ex-68xv3thk",
+    "version": 1,
+    "section": "private-fields",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`acc.#balanceCents` written outside the class: when is the problem found?",
+    "hint": "It was a `SyntaxError`.",
+    "choices": [
+      {
+        "text": "When the line runs, as a `TypeError`",
+        "correct": false,
+        "why": "The error was a `SyntaxError`."
+      },
+      {
+        "text": "Before anything runs, as the file is read",
+        "correct": true,
+        "why": "Right. The program did not start."
+      },
+      {
+        "text": "Never: it returns `undefined`",
+        "correct": false,
+        "why": "That is what a missing ordinary property does."
+      },
+      {
+        "text": "Only in strict mode",
+        "correct": false,
+        "why": "It is a syntax error in any mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-6khdvxx7",
+    "version": 1,
+    "section": "private-fields",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`acc.balance = 5` left the balance at 1990, with no error. Why?",
+    "hint": "`balance` has a getter and nothing else.",
+    "choices": [
+      {
+        "text": "The assignment created a private field `#balance`",
+        "correct": false,
+        "why": "Private fields can only be declared in the class body."
+      },
+      {
+        "text": "Five cents is below the minimum deposit",
+        "correct": false,
+        "why": "The assignment never reached `deposit`."
+      },
+      {
+        "text": "A getter with no setter takes no assignment, and a sloppy file stays silent",
+        "correct": true,
+        "why": "Right. Lesson 20 shows it throwing in strict mode."
+      },
+      {
+        "text": "`balance` was frozen by `deposit`",
+        "correct": false,
+        "why": "Nothing was frozen."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybpgp8gp",
+    "version": 1,
+    "section": "private-fields",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`increment = () => {…}` as a class field kept `this` when called as `press()`. What is the cost the section names?",
+    "hint": "Compare `new Counter().increment === c.increment`.",
+    "choices": [
+      {
+        "text": "It cannot read private fields",
+        "correct": false,
+        "why": "An arrow field in the class body can."
+      },
+      {
+        "text": "It runs more slowly than a method",
+        "correct": false,
+        "why": "The section names memory, not speed."
+      },
+      {
+        "text": "One copy per instance, not one shared",
+        "correct": true,
+        "why": "Right. The comparison printed `false`."
+      },
+      {
+        "text": "It cannot be removed as a listener",
+        "correct": false,
+        "why": "One stable reference per object makes removal easy."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sgw9jxc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague says \"classes in JavaScript replaced prototypes\". What would you correct?",
+    "hint": "`typeof Book` and `Book.prototype`.",
+    "choices": [
+      {
+        "text": "Nothing: classes do not use prototypes",
+        "correct": false,
+        "why": "A class's methods sit on its `prototype`."
+      },
+      {
+        "text": "Classes are syntax over the same prototype chain",
+        "correct": true,
+        "why": "Right. A class is a function, and its methods live on its prototype."
+      },
+      {
+        "text": "Prototypes are only used by arrays now",
+        "correct": false,
+        "why": "Every object has a prototype or `null`."
+      },
+      {
+        "text": "Classes copy their methods into each instance instead",
+        "correct": false,
+        "why": "`Object.keys` showed they do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-hz1fg4rt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many objects are on the chain from `e`, the e-book, up to and including `Object.prototype`?",
+    "hint": "Count the boxes in the figure, leaving out `null`.",
+    "value": 4,
+    "tolerance": 0
+  }
+]
