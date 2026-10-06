@@ -23,9 +23,16 @@
 //   --grant PERM     grant a permission (notifications, geolocation)
 //   --fresh          forget everything the profile stored (localStorage)
 //   --break F:LINE   pause at a line, print the stack and the local scope
+//   --break debugger pause only at `debugger;` statements in the page
+//   --break uncaught pause where an exception nobody catches is thrown
+//   --if COND        only pause there when COND is true (a conditional breakpoint)
 //   --step KIND      after a pause, step over|into|out and print again
 //   --network        list every request the page made
-//   --profile        record a CPU profile and print where the time went
+//   --waterfall      at the end, every request on a time line from the first
+//                    one, rounded to 100 ms: when it started and how long it
+//                    took, drawn as a bar of # (one per 100 ms)
+//   --profile        record a CPU profile and print where the busy time went,
+//                    by function: its own time, not the time of what it called
 //   --file           open the page from file:// instead of the server, as a
 //                    file double-clicked on a desktop would be
 import { chromium } from "playwright";
@@ -47,8 +54,10 @@ while (args.length) {
   else if (a === "--grant") opt.grant.push(args.shift());
   else if (a === "--fresh") opt.fresh = true;
   else if (a === "--break") opt.break = args.shift();
+  else if (a === "--if") opt.if = args.shift();
   else if (a === "--step") opt.step.push(args.shift());
   else if (a === "--network") opt.network = true;
+  else if (a === "--waterfall") opt.waterfall = true;
   else if (a === "--profile") opt.profile = true;
   else if (a === "--file") opt.file = true;
   else { console.error(`page: unknown option ${a}`); process.exit(2); }
@@ -97,15 +106,39 @@ if (opt.network) {
   });
 }
 
+const timeline = [];
+if (opt.waterfall) {
+  const t = new Map();
+  page.on("request", (r) => t.set(r, { start: Date.now(), r }));
+  const end = (r) => { const e = t.get(r); if (e) { e.end = Date.now(); timeline.push(e); } };
+  page.on("requestfinished", end);
+  page.on("requestfailed", end);
+}
+
 let cdp;
 if (opt.break || opt.profile) cdp = await context.newCDPSession(page);
+
+// A value as the Scope pane draws it: an object with its first properties,
+// an array with its length, an element by its tag.
+function shown(v) {
+  if (!v) return "(uninitialised)";
+  if (v.type === "undefined") return "undefined";
+  if (v.type === "string") return JSON.stringify(v.value);
+  if (v.type !== "object" || v.subtype === "null") return v.description ?? String(v.value);
+  const pv = v.preview;
+  if (!pv || v.subtype === "node") return v.description;
+  const item = (p) => (p.type === "string" ? JSON.stringify(p.value) : p.type === "object" ? "{…}" : p.value);
+  const more = pv.overflow ? ", …" : "";
+  if (v.subtype === "array") return `${v.description} [${pv.properties.map(item).join(", ")}${more}]`;
+  return `{${pv.properties.map((p) => `${p.name}: ${item(p)}`).join(", ")}${more}}`;
+}
 
 async function scopeOf(frame) {
   const out = [];
   for (const s of frame.scopeChain) {
     if (s.type === "global") continue;
-    const { result } = await cdp.send("Runtime.getProperties", { objectId: s.object.objectId, ownProperties: true });
-    const vars = result.map((p) => `${p.name} = ${p.value ? (p.value.description ?? JSON.stringify(p.value.value)) : "?"}`);
+    const { result } = await cdp.send("Runtime.getProperties", { objectId: s.object.objectId, ownProperties: true, generatePreview: true });
+    const vars = result.map((p) => `${p.name} = ${shown(p.value)}`);
     out.push(`  ${s.type} scope: ${vars.join(", ") || "(empty)"}`);
   }
   return out;
@@ -113,13 +146,18 @@ async function scopeOf(frame) {
 
 if (opt.break) {
   const [bf, bl] = opt.break.split(":");
+  const urls = new Map();
+  cdp.on("Debugger.scriptParsed", (ev) => urls.set(ev.scriptId, ev.url));
   await cdp.send("Debugger.enable");
-  await cdp.send("Debugger.setBreakpointByUrl", { lineNumber: Number(bl) - 1, urlRegex: `${bf.replace(/[.]/g, "\\.")}$` });
+  if (opt.break === "uncaught") await cdp.send("Debugger.setPauseOnExceptions", { state: "uncaught" });
+  else if (opt.break !== "debugger")
+    await cdp.send("Debugger.setBreakpointByUrl", { lineNumber: Number(bl) - 1, urlRegex: `${bf.replace(/[.]/g, "\\.")}$`, condition: opt.if ?? "" });
   const steps = [...opt.step];
   cdp.on("Debugger.paused", async (ev) => {
     const top = ev.callFrames[0];
-    say(`paused at ${path.basename(top.url)}:${top.location.lineNumber + 1}`);
-    say("  call stack: " + ev.callFrames.map((f) => `${f.functionName || "(anonymous)"} ${path.basename(f.url)}:${f.location.lineNumber + 1}`).join("  <  "));
+    const at = (f) => `${path.basename(urls.get(f.location.scriptId) ?? "")}:${f.location.lineNumber + 1}`;
+    say(`paused at ${at(top)}${ev.reason === "exception" || ev.reason === "promiseRejection" ? `, on ${ev.data?.description?.split("\n")[0]}` : ""}`);
+    say("  call stack: " + ev.callFrames.map((f) => `${f.functionName || "(anonymous)"} ${at(f)}`).join("  <  "));
     for (const l of await scopeOf(top)) say(l);
     const next = steps.shift();
     if (next) { say(`-- step ${next}`); await cdp.send(`Debugger.step${next[0].toUpperCase()}${next.slice(1)}`); }
@@ -163,11 +201,25 @@ if (opt.profile) {
     const k = `${name}  ${where}`.trim();
     self.set(k, (self.get(k) || 0) + (dt[i] || 0));
   });
-  const total = [...self.values()].reduce((a, b) => a + b, 0);
-  say("self time   function");
-  for (const [k, us] of [...self].sort((a, b) => b[1] - a[1]).slice(0, 6))
-    say(`${(us / 1000).toFixed(1).padStart(7)} ms  ${k}`);
-  say(`${(total / 1000).toFixed(1).padStart(7)} ms  in total`);
+  // Time the page spent waiting for something to do is not time anything
+  // cost, so the shares are of the time the browser was busy.
+  self.delete("(idle)");
+  const busy = [...self.values()].reduce((a, b) => a + b, 0);
+  say("share  self time  function");
+  for (const [k, us] of [...self].sort((a, b) => b[1] - a[1]).slice(0, 5))
+    say(`${String(Math.round((100 * us) / busy)).padStart(4)}%  ${(us / 1000).toFixed(0).padStart(6)} ms  ${k}`);
+  say(`       ${(busy / 1000).toFixed(0).padStart(6)} ms  busy in total`);
+}
+
+if (opt.waterfall) {
+  const first = Math.min(...timeline.map((e) => e.start));
+  const tenth = (ms) => Math.round(ms / 100);
+  say("start  took    request");
+  for (const e of timeline.sort((a, b) => a.start - b.start)) {
+    const s0 = tenth(e.start - first), d = tenth(e.end - e.start);
+    const what = `${e.r.method()} ${e.r.url().replace(origin, "")}`;
+    say(`${String(s0 * 100).padStart(5)}  ${String(d * 100).padStart(4)}  ${what.padEnd(28)} ${" ".repeat(s0)}${"#".repeat(Math.max(d, 1))}`);
+  }
 }
 
 if (opt.dom) {
