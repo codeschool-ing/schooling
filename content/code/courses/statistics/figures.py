@@ -1721,6 +1721,135 @@ def l14_duality(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 15
+
+@figure('l15-errors', 15)
+def l15_errors(lang):
+    t = {'en': dict(
+        label='A two-by-two table. Columns: the test rejects the null, or does not. Rows: in truth '
+              'there is no effect, or there is one. No effect and rejected: a type I error, a false '
+              'alarm, with probability alpha. No effect and not rejected: correct. A real effect '
+              'and rejected: correct, with probability equal to the power. A real effect and not '
+              'rejected: a type II error, a missed effect, with probability beta.',
+        cols=('the test rejects the null', 'the test keeps the null'),
+        rows=('in truth, no effect', 'in truth, a real effect'),
+        cells=(('type I error', 'a false alarm: α'), ('correct', 'probability 1 − α'),
+               ('correct', 'the power: 1 − β'), ('type II error', 'a missed effect: β')),
+        cap='Two ways to be right and two ways to be wrong. α is chosen; β depends on how big the '
+            'effect is and how much data there is.'),
+        'pt': dict(
+        label='Uma tabela dois por dois. Colunas: o teste rejeita a nula, ou não. Linhas: na verdade '
+              'não há efeito, ou há. Sem efeito e rejeitada: um erro tipo I, um alarme falso, com '
+              'probabilidade alfa. Sem efeito e não rejeitada: correto. Efeito real e rejeitada: '
+              'correto, com probabilidade igual ao poder. Efeito real e não rejeitada: um erro tipo '
+              'II, um efeito perdido, com probabilidade beta.',
+        cols=('o teste rejeita a nula', 'o teste mantém a nula'),
+        rows=('na verdade, sem efeito', 'na verdade, efeito real'),
+        cells=(('erro tipo I', 'um alarme falso: α'), ('correto', 'probabilidade 1 − α'),
+               ('correto', 'o poder: 1 − β'), ('erro tipo II', 'um efeito perdido: β')),
+        cap='Dois jeitos de acertar e dois de errar. α se escolhe; β depende do tamanho do efeito e '
+            'de quantos dados existem.')}[lang]
+    f = Fig('l15-errors', 640, 230, t['label'])
+    x0, w, h = 190, 215, 70
+    for j, c in enumerate(t['cols']):
+        f.text(x0 + w * j + w / 2, 22, c, size=10.5, weight='600')
+    for i, r in enumerate(t['rows']):
+        y = 40 + i * (h + 10)
+        f.text(20, y + h / 2, r, size=10.5, anchor='start', weight='600')
+        for j in range(2):
+            name, sub = t['cells'][i * 2 + j]
+            bad = (i, j) in ((0, 0), (1, 1))
+            f.rect(x0 + w * j + 4, y, w - 8, h, stroke='--amber' if bad else '--phosphor',
+                   fill='--panel')
+            f.text(x0 + w * j + w / 2, y + 26, name, size=11.5, weight='600',
+                   fill='--amber' if bad else '--paper')
+            f.text(x0 + w * j + w / 2, y + 46, sub, size=10, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l15-overlap', 15)
+def l15_overlap(lang):
+    se = 6 / 5
+    crit = 40 + S.t_inv(0.05, 24) * se
+    pdf0 = lambda x: S.normal_pdf((x - 40) / se) / se
+    pdf1 = lambda x: S.normal_pdf((x - 38) / se) / se
+    power = S.normal_cdf((crit - 38) / se)
+    t = {'en': dict(
+        label=f'Two bell curves of the sample mean of 25 deliveries, each with a standard error of '
+              f'1.2 minutes. The right one, centred on 40, is what the null hypothesis predicts. The '
+              f'left one, centred on 38, is what a real two-minute improvement would produce. A line '
+              f'at {num("en", crit, 2)} minutes marks the critical value. Under the null, the area '
+              f'left of it is 5%: alpha. Under the improvement, the area left of it is about '
+              f'{100 * power:.0f}%: the power. The rest of the left curve, to the right of the line, '
+              f'is beta.',
+        h0='if nothing changed', h1='if 2 minutes faster', crit=f'reject below {num("en", crit, 2)}',
+        x='mean of 25 deliveries, in minutes', a='α', pw=f'power ≈ {100 * power:.0f}%', b='β',
+        cap='The same line cuts both curves. Moving it left lowers α and raises β; only more data, '
+            'which narrows both curves, lowers both at once.'),
+        'pt': dict(
+        label=f'Duas curvas em sino da média amostral de 25 entregas, cada uma com erro padrão de 1,2 '
+              f'minuto. A da direita, centrada em 40, é o que a hipótese nula prevê. A da esquerda, '
+              f'centrada em 38, é o que uma melhora real de dois minutos produziria. Uma linha em '
+              f'{num("pt", crit, 2)} minutos marca o valor crítico. Sob a nula, a área à esquerda dela '
+              f'é 5%: alfa. Sob a melhora, a área à esquerda dela é cerca de {100 * power:.0f}%: o '
+              f'poder. O resto da curva da esquerda, à direita da linha, é beta.',
+        h0='se nada mudou', h1='se 2 minutos mais rápido', crit=f'rejeitar abaixo de {num("pt", crit, 2)}',
+        x='média de 25 entregas, em minutos', a='α', pw=f'poder ≈ {100 * power:.0f}%', b='β',
+        cap='A mesma linha corta as duas curvas. Movê-la para a esquerda baixa α e sobe β; só mais '
+            'dados, que estreitam as duas curvas, baixam os dois de uma vez.')}[lang]
+    f = Fig('l15-overlap', 660, 300, t['label'])
+    p = Plot(f, 30, 60, 640, 240, 33, 45, 0, pdf0(40) * 1.1)
+    p.curve(pdf1, 33, crit, fill='--phosphor-dim')
+    p.curve(pdf0, 33, crit, fill='--amber')
+    p.curve(pdf0, 33, 45, stroke='--paper', width=2)
+    p.curve(pdf1, 33, 45, stroke='--phosphor', width=2, dash='6 3')
+    p.xaxis(range(33, 46), label=t['x'])
+    f.line(p.sx(crit), p.y1, p.sx(crit), 46, stroke='--amber', width=1.6, dash='4 3')
+    f.text(p.sx(crit), 38, t['crit'], size=10, fill='--amber', weight='600')
+    f.text(p.sx(41.6), p.sy(pdf0(41.6)) - 12, t['h0'], size=10, anchor='start')
+    f.text(p.sx(36.3), p.sy(pdf1(36.3)) - 12, t['h1'], size=10, anchor='end', fill='--phosphor')
+    f.text(p.sx(36.8), p.sy(0.06), t['pw'], size=10.5, anchor='end', fill='--phosphor', weight='600')
+    f.text(p.sx(38.6), p.sy(0.035), t['b'], size=12, anchor='start', fill='--phosphor', weight='600')
+    return f, t['cap']
+
+
+@figure('l15-power-curve', 15)
+def l15_power_curve(lang):
+    t = {'en': dict(
+        label='Three curves of power against the number of deliveries, from 5 to 300, for true '
+              'improvements of 1, 2 and 3 minutes, with a standard deviation of 6 minutes and a '
+              'one-sided test at 5%. A dashed line marks 80% power. The 3-minute curve crosses it at '
+              'about 25 deliveries, the 2-minute curve at about 56, and the 1-minute curve at about '
+              '223.',
+        y='power', x='deliveries in the trial', g='{} min faster', eighty='80%',
+        cap='The smaller the effect, the more data it takes to see it. Halving the effect '
+            'quadruples the sample needed.'),
+        'pt': dict(
+        label='Três curvas de poder em função do número de entregas, de 5 a 300, para melhoras '
+              'verdadeiras de 1, 2 e 3 minutos, com desvio padrão de 6 minutos e um teste unilateral a '
+              '5%. Uma linha tracejada marca 80% de poder. A curva de 3 minutos a cruza em cerca de 25 '
+              'entregas, a de 2 minutos em cerca de 56 e a de 1 minuto em cerca de 223.',
+        y='poder', x='entregas no teste', g='{} min mais rápido', eighty='80%',
+        cap='Quanto menor o efeito, mais dados para enxergá-lo. Cortar o efeito pela metade '
+            'quadruplica a amostra necessária.')}[lang]
+    f = Fig('l15-power-curve', 620, 290, t['label'])
+    p = Plot(f, 70, 40, 590, 230, 0, 300, 0, 1)
+    p.yaxis([0, 0.2, 0.4, 0.6, 0.8, 1.0], fmt=lambda v: f'{int(round(v * 100))}%', label=t['y'])
+    p.xaxis(range(0, 301, 50), label=t['x'])
+    f.line(p.x0, p.sy(0.8), p.x1, p.sy(0.8), stroke='--paper-dim', width=1.2, dash='4 3')
+    styles = {1: ('--amber', '2 3'), 2: ('--phosphor', None), 3: ('--paper', '6 3')}
+    for g in (1, 2, 3):
+        col, dash = styles[g]
+        p.curve(lambda n, g=g: S.normal_power(g, n), 5, 300, stroke=col, width=2.2, dash=dash)
+    for i, g in enumerate((3, 2, 1)):
+        col, dash = styles[g]
+        y = p.sy(0.32) + i * 18
+        f.line(p.sx(205), y, p.sx(225), y, stroke=col, width=2.2, dash=dash)
+        f.text(p.sx(230), y, t['g'].format(g), size=10, anchor='start',
+               fill='--paper' if col == '--paper' else col)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

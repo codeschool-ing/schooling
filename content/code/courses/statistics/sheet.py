@@ -954,6 +954,47 @@ def l14():
     show('binomial(20, 0.05) for 0..3', [round(binom_pmf(k, 20, 0.05), 4) for k in range(4)])
 
 
+def simulated_power(delta, n, sigma=6.0, reps=4000, seed=1500, alpha=0.05):
+    """Share of one-sided t tests of mu = 40 that reject, when the true mean is 40 - delta."""
+    d = Draw(seed)
+    crit = t_inv(alpha, n - 1)
+    hits, means = 0, []
+    for _ in range(reps):
+        xs = [d.normal(40 - delta, sigma) for _ in range(n)]
+        t = (mean(xs) - 40) / (sd(xs) / math.sqrt(n))
+        if t < crit:
+            hits += 1
+            means.append(mean(xs))
+    return hits / reps, means
+
+
+def normal_power(delta, n, sigma=6.0, alpha=0.05):
+    return normal_cdf(delta / (sigma / math.sqrt(n)) - normal_inv(1 - alpha))
+
+
+def n_for_power(delta, sigma=6.0, alpha=0.05, power=0.8):
+    return ((normal_inv(1 - alpha) + normal_inv(power)) * sigma / delta) ** 2
+
+
+@lesson(15)
+def l15():
+    show('z for alpha 0.05 one-sided, z for power 0.80', f'{normal_inv(0.95):.4f} {normal_inv(0.80):.4f}')
+    for delta in (1, 2, 3):
+        pw, means = simulated_power(delta, 25, seed=1500 + delta)
+        show(f'n = 25, true gain {delta}: simulated power, normal approx', f'{pw:.4f} {normal_power(delta, 25):.4f}')
+        show(f'n = 25, true gain {delta}: mean estimate among the significant', f'{40 - mean(means):.4f}')
+    for delta in (1, 2):
+        show(f'n for 80% power, gain {delta}', n_for_power(delta))
+        show(f'n for 90% power, gain {delta}', n_for_power(delta, power=0.9))
+    pw, _ = simulated_power(2, 58, seed=1510)
+    show('n = 58, gain 2: simulated power', pw)
+    pw, _ = simulated_power(0, 25, seed=1511)
+    show('n = 25, no gain: simulated rejection rate (alpha)', pw)
+    pw, _ = simulated_power(2, 25, seed=1512, alpha=0.01)
+    show('n = 25, gain 2, alpha 0.01: simulated power', pw)
+    show('normal approx power n=25 gain 2 alpha 0.01', normal_power(2, 25, alpha=0.01))
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:
