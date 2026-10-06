@@ -1,0 +1,391 @@
+{
+  "ex-jkrbnjk5": {
+    "prompt": "O que é `error` em Go?",
+    "hint": "O `go doc builtin.error` imprimiu a declaração inteira.",
+    "choices": [
+      {
+        "text": "Uma palavra-chave que marca uma função como capaz de lançar",
+        "why": "Go não tem throw, e `error` não é palavra-chave: é um tipo que a linguagem declara."
+      },
+      {
+        "text": "Uma string com a mensagem",
+        "why": "A mensagem vem de um método; o valor em si pode ser de qualquer tipo, como `*fs.PathError`."
+      },
+      {
+        "text": "Uma interface com um método, `Error() string`",
+        "why": "Isso. Qualquer tipo com esse método é um `error`, e nil quer dizer nenhum erro."
+      },
+      {
+        "text": "Uma struct do pacote `errors` com um campo de mensagem",
+        "why": "Ele é predeclarado, no universo e não num pacote, e não tem campo nenhum, só um método."
+      }
+    ]
+  },
+  "ex-5djb8cwz": {
+    "prompt": "Em `~/errors`, `err` foi declarada uma vez, como `error`. Por que o `%T` imprimiu `*fs.PathError` numa linha e `*strconv.NumError` em outra?",
+    "hint": "Um valor de interface tem duas palavras.",
+    "choices": [
+      {
+        "text": "O `:=` redeclarou `err` com um tipo novo na segunda chamada",
+        "why": "O `:=` com um nome que já existe só atribui; `err` manteve o tipo `error` o tempo todo."
+      },
+      {
+        "text": "O `%T` imprime o tipo guardado dentro da interface, e cada chamada guardou um diferente",
+        "why": "Isso. O tipo da variável é `error`; a palavra do tipo dentro dela muda com o que foi guardado."
+      },
+      {
+        "text": "Go converte o erro para o tipo da função que o devolveu, então cada chamada dá a `err` um tipo novo",
+        "why": "Nada foi convertido. `os.Open` e `Atoi` devolveram cada um um ponteiro do seu próprio tipo, dentro da interface `error`."
+      },
+      {
+        "text": "O `%T` lê o nome do pacote na mensagem do erro",
+        "why": "A mensagem do primeiro erro nem cita `fs`; o `%T` lê o tipo, não o texto."
+      }
+    ]
+  },
+  "ex-3awxcq1x": {
+    "prompt": "`fmt.Println(err)` imprimiu `open notes.txt: no such file or directory`. De onde veio esse texto?",
+    "hint": "O `fmt` verifica que tipo de valor recebeu.",
+    "choices": [
+      {
+        "text": "Do método `Error` do erro, que o `fmt` chama",
+        "why": "Isso. Chamar `err.Error()` diretamente imprimiu o mesmo texto para o erro do `Atoi`."
+      },
+      {
+        "text": "Do sistema operacional, que o imprime no terminal",
+        "why": "O sistema informa um código; a frase é montada pelo `*fs.PathError` e impressa pelo programa."
+      },
+      {
+        "text": "De um campo chamado `Message` que todo erro carrega",
+        "why": "`error` não tem campos; `PathError` tem `Op`, `Path` e `Err`, e nenhum deles é a frase inteira."
+      },
+      {
+        "text": "Do próprio `fmt`, que conhece o texto de cada falha",
+        "why": "O `fmt` não sabe nada sobre arquivos; ele pede o texto ao valor."
+      }
+    ]
+  },
+  "ex-gfesxebe": {
+    "prompt": "Uma função avisa que nada deu errado devolvendo um `error` igual a `___`.",
+    "hint": "O comentário de documentação do tipo embutido termina com isso.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ]
+      }
+    ]
+  },
+  "ex-ahb6zrq3": {
+    "prompt": "`n, err := strconv.Atoi(\"12a\")` deu a `n` o valor 0. O que quem chama deve concluir sobre esse 0?",
+    "hint": "Olhe o `err` primeiro.",
+    "choices": [
+      {
+        "text": "Que o texto continha o número zero",
+        "why": "Essa é a armadilha: `\"0\"` daria 0 com erro nil, e aqui o erro não é nil."
+      },
+      {
+        "text": "Que o `Atoi` devolve 0 para um texto que entendeu em parte",
+        "why": "Ele não leu `12` e parou; recusou a entrada inteira, como a mensagem diz."
+      },
+      {
+        "text": "Nada: ao lado de um erro não nil, o valor não é resposta",
+        "why": "Isso. Uma função com dois resultados devolve dois, e o primeiro não quer dizer nada quando o segundo é um erro."
+      },
+      {
+        "text": "Que a conversão estourou e foi zerada",
+        "why": "O erro disse `invalid syntax`, não um problema de faixa; e em qualquer caso o 0 não é resposta."
+      }
+    ]
+  },
+  "ex-7v9w92zv": {
+    "prompt": "O que o bloco sob `if err != nil` faz em Go idiomático?",
+    "hint": "A lição 19 recomendou um formato para casos especiais.",
+    "choices": [
+      {
+        "text": "Captura o erro para que as linhas depois da chamada rodem mesmo assim",
+        "why": "Nada é capturado: o erro já é um valor, e as linhas depois dele são o caminho de sucesso."
+      },
+      {
+        "text": "Repete a chamada até `err` virar nil",
+        "why": "Repetir é uma forma possível de tratar um erro, escrita à mão; não é o que o bloco significa."
+      },
+      {
+        "text": "Trata a falha e sai, devolvendo ou encerrando o programa",
+        "why": "Isso. O caminho de sucesso então desce pela margem esquerda, embaixo dele."
+      },
+      {
+        "text": "Registra o erro em log, e a função segue",
+        "why": "Registrar e seguir é como o `~/errors-ignore` vendeu um ingresso de graça, só que com uma linha de log."
+      }
+    ]
+  },
+  "ex-zr478j7f": {
+    "prompt": "A função de preço da lição 19 respondia a uma idade inválida com `-1`. Por que a versão em `~/errors-idiom` devolve um `error`?",
+    "hint": "O que o `./price 8` imprimiu?",
+    "choices": [
+      {
+        "text": "Porque Go recusa números negativos como resultado",
+        "why": "Qualquer `int` pode ser devolvido, `-1` inclusive; a versão da lição 19 compilou e rodou."
+      },
+      {
+        "text": "Porque assim uma falha não passa por um preço",
+        "why": "Isso. O ingresso de criança é um 0 de verdade, e um número substituto só funciona enquanto todo quem chama lembra dele."
+      },
+      {
+        "text": "Porque um `error` é mais rápido de comparar do que um `int`",
+        "why": "Velocidade nunca foi o motivo; comparar uma interface não é mais barato que comparar um inteiro."
+      },
+      {
+        "text": "Porque o `os.Exit` precisa de um erro para definir o status",
+        "why": "O `os.Exit` recebe um `int`; o `main` escolheu 1 sozinho depois de ver o erro."
+      }
+    ]
+  },
+  "ex-j26n7dce": {
+    "prompt": "`./price -4 2>/dev/null; echo $?` imprimiu só `1`. O que isso mostra?",
+    "hint": "O `2>` nomeia uma das saídas do programa.",
+    "choices": [
+      {
+        "text": "Que `price` aceitou `-4` e não imprimiu nada, então a execução deu certo",
+        "why": "Uma idade aceita imprime um preço e sai com 0, como o `./price 30` fez."
+      },
+      {
+        "text": "Que redirecionar para o `/dev/null` mudou o status de saída de 0 para 1",
+        "why": "Redirecionar uma saída nunca muda o status; a mesma execução sem isso também deu 1."
+      },
+      {
+        "text": "Que a mensagem foi para a saída padrão",
+        "why": "Então ela continuaria na tela; só a saída de erro foi jogada fora."
+      },
+      {
+        "text": "Que falhou, e a mensagem foi para a saída de erro",
+        "why": "Isso. A mensagem é para uma pessoa; um script lê o status."
+      }
+    ]
+  },
+  "ex-xj6xkhvd": {
+    "prompt": "Em `~/errors-ignore` os dois erros foram descartados com `_`. O que o `go run . thirty` imprimiu?",
+    "hint": "Um `Atoi` que falhou devolve um número mesmo assim.",
+    "choices": [
+      {
+        "text": "`strconv.Atoi: parsing \"thirty\": invalid syntax`",
+        "why": "Essa mensagem só aparece quando algo imprime o erro, e o `_` a jogou fora."
+      },
+      {
+        "text": "`0`, o ingresso grátis de criança",
+        "why": "Isso. O `Atoi` devolveu 0 ao lado do erro, e o 0 entrou em `price` como idade."
+      },
+      {
+        "text": "Nada, porque o programa entrou em pânico",
+        "why": "Um erro descartado não para nada; o programa seguiu e imprimiu um preço."
+      },
+      {
+        "text": "`20`, o preço de adulto, porque a idade nunca foi definida",
+        "why": "A idade foi definida, com o 0 que o `Atoi` devolveu, e 0 é menor que 12."
+      }
+    ]
+  },
+  "ex-8bt9ye75": {
+    "prompt": "No `main`, depois de `age, err := strconv.Atoi(...)`, a linha `p, err ___ price(age, false)` compila porque `p` é novo e `err` só recebe um valor.",
+    "hint": "A regra da lição 5 sobre vários nomes à esquerda.",
+    "blanks": [
+      {
+        "accept": [
+          ":="
+        ]
+      }
+    ]
+  },
+  "ex-axxc1ep9": {
+    "prompt": "Coloque as linhas de um passo do idioma na ordem em que aparecem no `main`.",
+    "hint": "Chamar, testar, sair, e só então usar o valor.",
+    "items": [
+      "`age, err := strconv.Atoi(os.Args[1])`",
+      "`if err != nil {`",
+      "`fmt.Fprintln(os.Stderr, err)`",
+      "`os.Exit(1)`",
+      "`p, err := price(age, false)`"
+    ]
+  },
+  "ex-4m5bwnmg": {
+    "prompt": "O que faz `*LineError` poder ser usado como `error`?",
+    "hint": "Conte os métodos que `error` exige.",
+    "choices": [
+      {
+        "text": "Uma linha `implements error` ao lado do tipo",
+        "why": "Go não tem `implements`; nada em `~/errors-custom` declara isso."
+      },
+      {
+        "text": "Embutir o tipo `error` na struct",
+        "why": "A struct só tem `Line` e `Msg`; nada é embutido."
+      },
+      {
+        "text": "Ser declarado no pacote `errors`",
+        "why": "Ele é declarado em `main`, e os tipos de erro da seção 02 ficam em `io/fs` e `strconv`."
+      },
+      {
+        "text": "O método `Error() string`",
+        "why": "Isso. Ter esse único método é o requisito inteiro."
+      }
+    ]
+  },
+  "ex-jcjysmgp": {
+    "prompt": "Quando vale a pena escrever um tipo seu, como `LineError`, em vez de uma mensagem simples?",
+    "hint": "Quem lê os campos?",
+    "choices": [
+      {
+        "text": "Sempre que uma função pode falhar, para que todo erro que ela devolve tenha um tipo próprio",
+        "why": "Todo erro já tem um tipo; `price` falhou com uma frase e não precisou de mais nada."
+      },
+      {
+        "text": "Quando quem chama precisa de dados sobre a falha, como o número da linha",
+        "why": "Isso. Os campos carregam os dados e o método `Error` monta a mensagem a partir deles."
+      },
+      {
+        "text": "Quando a mensagem tem mais de uma linha",
+        "why": "O tamanho não tem nada a ver; `line 2: no = in host localhost` é uma linha curta."
+      },
+      {
+        "text": "Só quando o erro precisa parar o programa",
+        "why": "Se o programa para é decisão de quem chama, seja qual for o tipo do erro."
+      }
+    ]
+  },
+  "ex-9szv5nyz": {
+    "prompt": "Em `~/errors-nil`, `check` devolveu `nil` e `load` o devolveu como `error`. Por que `err == nil` deu false?",
+    "hint": "Um valor de interface tem duas palavras.",
+    "choices": [
+      {
+        "text": "Porque `check` devolveu um ponteiro para um `LineError` vazio",
+        "why": "O ponteiro era nil; nada foi alocado, e é por isso que chamar `Error` acessou nil."
+      },
+      {
+        "text": "Porque o `go vet` mudou o valor antes da execução",
+        "why": "O `go vet` só lê código, e não achou nada para dizer."
+      },
+      {
+        "text": "Porque o `*LineError` nil guardado preenche a palavra do tipo",
+        "why": "Isso. A interface guardava `*main.LineError` e um ponteiro nil, e ela só é nil quando os dois estão vazios."
+      },
+      {
+        "text": "Porque o `nil` de um pacote nunca é igual ao `nil` de outro",
+        "why": "Não existe nil por pacote; o que difere é o tipo guardado na interface."
+      }
+    ]
+  },
+  "ex-0hhgfrs1": {
+    "prompt": "A função `func find(id int) *NotFound` de um colega devolve `nil` no sucesso, e quem chama escreve `err := find(id)` e depois `if err != nil`. Quais mudanças impedem quem chama de ver uma falha que não aconteceu? Escolha todas as que se aplicam.",
+    "hint": "Onde o nil tipado entra numa interface?",
+    "choices": [
+      {
+        "text": "Declarar o resultado de `find` como `error` e devolver um `nil` literal",
+        "why": "Sim: é o conserto de `~/errors-nilfix`, uma interface nil desde o começo."
+      },
+      {
+        "text": "Nada, desde que quem chama use `err :=`, porque aí `err` é um `*NotFound`",
+        "why": "Esse caller está seguro hoje, mas o primeiro que repassar `err` como `error`, como `load`, vê uma falha."
+      },
+      {
+        "text": "Rodar o `go vet`, que aponta o nil tipado",
+        "why": "O `go vet && go run .` rodou o programa em `~/errors-nil`: o vet não apontou nada."
+      },
+      {
+        "text": "Dar a `Error` um receptor de valor em vez de ponteiro",
+        "why": "O receptor não é o problema: qualquer `*NotFound` nil guardado num `error` ainda preenche a palavra do tipo."
+      }
+    ]
+  },
+  "ex-dxr1tjem": {
+    "prompt": "Ligue cada valor guardado em `var err error` ao que `err == nil` dá.",
+    "hint": "As duas palavras vazias, ou não.",
+    "pairs": [
+      {
+        "left": "Nada atribuído",
+        "right": "`true`"
+      },
+      {
+        "left": "Um `*LineError` que é nil",
+        "right": "`false`, com um ponteiro nil dentro"
+      },
+      {
+        "left": "`&LineError{Line: 2}`",
+        "right": "`false`, com um erro de verdade dentro"
+      }
+    ],
+    "right_distractors": [
+      "`true`, porque o ponteiro é nil"
+    ]
+  },
+  "ex-4q0j7wrp": {
+    "prompt": "Uma função abre um arquivo e, quando o `os.Open` falha, faz `log.Println(err)` e segue lendo do `*os.File` que recebeu. O que há de errado nisso?",
+    "hint": "O que era `f` em `~/errors` quando o arquivo não existia?",
+    "choices": [
+      {
+        "text": "Nada, desde que o erro seja registrado em algum lugar",
+        "why": "Registrar avisa uma pessoa; a função ainda segue com um valor que não é resposta."
+      },
+      {
+        "text": "Quando há erro, o valor recebido é `nil`, e a leitura acontece sem nada para ler",
+        "why": "Isso. O `~/errors` imprimiu `<nil>` para o arquivo; o bloco devia sair, não registrar e seguir."
+      },
+      {
+        "text": "O `log.Println` não consegue imprimir um `error`",
+        "why": "Ele imprime como o `fmt.Println`, chamando `Error`."
+      },
+      {
+        "text": "Go para a função no `os.Open` que falhou, então a leitura nunca roda",
+        "why": "Nada para sozinho; a falha é um valor, e as linhas depois dela rodam a menos que o código saia."
+      }
+    ]
+  },
+  "ex-4je1c4ce": {
+    "prompt": "`parse(s string) (int, error)` lê uma temperatura, e todo `int` é uma temperatura possível, negativos inclusive. Um colega propõe devolver `-9999` para entrada inválida em vez de um erro. Qual é a objeção mais forte?",
+    "hint": "O ingresso grátis de criança da seção 03.",
+    "choices": [
+      {
+        "text": "Números negativos não podem ser devolvidos por uma função que também devolve um `error`",
+        "why": "Qualquer `int` pode ser devolvido ao lado de um erro; o problema é o que o número quer dizer."
+      },
+      {
+        "text": "`-9999` é lento demais para comparar",
+        "why": "Comparar inteiros não custa nada digno de nota; velocidade nunca foi a objeção."
+      },
+      {
+        "text": "Programas Go nunca usam valores especiais",
+        "why": "Alguns usam, como o `-1` da lição 19; é um hábito que só funciona enquanto sobra um número."
+      },
+      {
+        "text": "É uma temperatura válida, então quem chama não distingue falha de leitura, e nada obriga ninguém a verificar",
+        "why": "Isso. Quando todo valor é resposta, não sobra número para dizer falhou; um `error` ao lado é inconfundível."
+      }
+    ]
+  },
+  "ex-tsbjdhd7": {
+    "prompt": "Contando em `/usr/local/go/src`, sem os testes, quantas linhas da biblioteca padrão do Go 1.27.1 contêm `if err != nil`?",
+    "hint": "A seção 03 começou com a contagem.",
+    "unit": "linhas"
+  },
+  "ex-7kpy1dra": {
+    "prompt": "Quais destas são verdadeiras sobre um `error` em Go? Escolha todas as que se aplicam.",
+    "hint": "Seções 02 e 04.",
+    "choices": [
+      {
+        "text": "É um valor de interface: um tipo e um ponteiro",
+        "why": "Sim. A lição 22 mediu 16 bytes, e o `%T` lê a metade do tipo."
+      },
+      {
+        "text": "Devolver um faz as linhas seguintes de quem chama pularem até um tratador",
+        "why": "Isso é uma exceção; um erro é um valor, e a próxima linha de quem chama roda."
+      },
+      {
+        "text": "`if err { }` não compila",
+        "why": "Sim: `non-boolean condition in if statement`, a recusa da lição 8."
+      },
+      {
+        "text": "A mensagem dele fica num campo que o `fmt` lê",
+        "why": "O `fmt` chama o método `Error`; `LineError` monta o texto a partir de `Line` e `Msg` a cada vez."
+      }
+    ]
+  }
+}
