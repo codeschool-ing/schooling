@@ -1,0 +1,373 @@
+{
+  "ex-as5pne02": {
+    "prompt": "O servidor da Vereda publica sua chave pública. Quem pode ter uma cópia dela?",
+    "hint": "O nome diz.",
+    "choices": [
+      {
+        "text": "Qualquer um",
+        "why": "Certo: é isso que pública quer dizer aqui."
+      },
+      {
+        "text": "Só clientes que já entraram no portal antes",
+        "why": "Entrar no portal não tem nada a ver; ela é feita para ser distribuída."
+      },
+      {
+        "text": "Só a autoridade certificadora que a emitiu",
+        "why": "A AC assina um certificado; a chave é para todos."
+      },
+      {
+        "text": "Só os próprios servidores e a equipe da Vereda",
+        "why": "Isso seria a chave privada."
+      }
+    ]
+  },
+  "ex-xtdk3fgr": {
+    "prompt": "`openssl pkey -in ed25519-ana.key -pubout` reconstruiu o arquivo `.pub` exatamente. O que isso mostra?",
+    "hint": "Qual sentido funcionou?",
+    "choices": [
+      {
+        "text": "Que a chave pública pode ser transformada de volta na privada",
+        "why": "O comando foi no outro sentido."
+      },
+      {
+        "text": "A chave privada contém a pública",
+        "why": "Certo: calcular para a frente é fácil."
+      },
+      {
+        "text": "Que os dois arquivos eram cópias um do outro",
+        "why": "São arquivos diferentes, com conteúdos diferentes."
+      },
+      {
+        "text": "Que as chaves Ed25519 são simétricas, afinal",
+        "why": "Uma chave não faz o trabalho da outra."
+      }
+    ]
+  },
+  "ex-08tqwyjm": {
+    "prompt": "Uma chave pública chega por e-mail, dizendo ser da Vereda. O que o próprio arquivo da chave diz sobre o dono?",
+    "hint": "Veja o que o `openssl pkey -text` imprimiu.",
+    "choices": [
+      {
+        "text": "O nome do dono, no cabeçalho PEM",
+        "why": "O cabeçalho só diz PUBLIC KEY."
+      },
+      {
+        "text": "O domínio para o qual foi gerada, nos primeiros bytes",
+        "why": "Nenhum domínio é guardado numa chave."
+      },
+      {
+        "text": "Nada: amarrar uma chave a um nome é trabalho de um certificado",
+        "why": "Certo: aulas 8 e 9."
+      },
+      {
+        "text": "A data de criação",
+        "why": "Nem data."
+      }
+    ]
+  },
+  "ex-3qdd4nqm": {
+    "prompt": "Quais são formas corretas de tratar a chave privada de um servidor? Marque todas as que se aplicam.",
+    "hint": "Ela é o único segredo.",
+    "choices": [
+      {
+        "text": "Legível só pelo usuário do próprio serviço",
+        "why": "Sim: modo 600 e o usuário do serviço."
+      },
+      {
+        "text": "Guardada num módulo de hardware que assina sem exportá-la",
+        "why": "Sim: o arranjo mais forte."
+      },
+      {
+        "text": "Commitada no repositório privado, para o deploy encontrá-la",
+        "why": "Um repositório privado continua sendo uma cópia nas mãos de quem tem acesso."
+      },
+      {
+        "text": "Enviada ao colega que está depurando o TLS",
+        "why": "Uma chave que viaja é uma chave que pode vazar."
+      }
+    ]
+  },
+  "ex-jnepzb0d": {
+    "prompt": "No RSA, o que é o módulo público `n`?",
+    "hint": "3233 no brinquedo.",
+    "choices": [
+      {
+        "text": "A soma dos dois primos secretos",
+        "why": "É o produto deles."
+      },
+      {
+        "text": "O produto dos dois primos secretos",
+        "why": "Certo: p × q."
+      },
+      {
+        "text": "O expoente privado, escrito em hexadecimal",
+        "why": "Esse é o d, e é secreto."
+      },
+      {
+        "text": "Sempre 65537",
+        "why": "Esse é o expoente público usual, o e."
+      }
+    ]
+  },
+  "ex-a4pkes5n": {
+    "prompt": "Com a chave de brinquedo (n = 3233, e = 17, d = 2753), 65 foi cifrado como 2790. Para que número 2790 se decifra?",
+    "hint": "Leia a última linha da captura."
+  },
+  "ex-gkw6wp0q": {
+    "prompt": "Por que calcular o expoente privado `d` é difícil para quem só tem a chave pública?",
+    "hint": "Do que o cálculo de phi precisa?",
+    "choices": [
+      {
+        "text": "Ele precisa de p e q, e achá-los é fatorar n",
+        "why": "Certo: esse é o problema de mão única do RSA."
+      },
+      {
+        "text": "Porque d é gerado aleatoriamente e não fica guardado em lugar nenhum",
+        "why": "d é calculado a partir de e e phi, não sorteado."
+      },
+      {
+        "text": "Porque e fica em segredo junto com d",
+        "why": "e é público, 65537 em quase todo lugar."
+      },
+      {
+        "text": "Porque o módulo vem cifrado no arquivo",
+        "why": "O módulo é impresso às claras."
+      }
+    ]
+  },
+  "ex-3xay8pjy": {
+    "prompt": "Um desenvolvedor cifra o consentimento sim/não de cada paciente com a chave pública RSA da Vereda, crua, sem preenchimento. O que um estranho com a chave pública consegue saber?",
+    "hint": "O RSA cru é determinístico.",
+    "choices": [
+      {
+        "text": "Nada, sem a chave privada",
+        "why": "Cifrar um palpite só exige a chave pública."
+      },
+      {
+        "text": "A chave privada, depois de textos cifrados suficientes",
+        "why": "A igualdade vaza; a chave não."
+      },
+      {
+        "text": "Todas as respostas, cifrando \"sim\" e comparando",
+        "why": "Certo: a cifragem determinística permite testar um palpite; o OAEP impede isso."
+      },
+      {
+        "text": "Só o tamanho de cada resposta",
+        "why": "O texto cifrado tem sempre o tamanho do módulo."
+      }
+    ]
+  },
+  "ex-spqwvtz9": {
+    "prompt": "O esquema de preenchimento para cifrar com RSA é o OAEP, e para assinar com RSA é o ___.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "PSS"
+        ]
+      }
+    ]
+  },
+  "ex-e0schq74": {
+    "prompt": "Na chave P-256 do laboratório, o que é a chave privada?",
+    "hint": "32 bytes.",
+    "choices": [
+      {
+        "text": "Um ponto da curva, escrito com 04",
+        "why": "Essa é a chave pública."
+      },
+      {
+        "text": "Um número k",
+        "why": "Certo: a chave pública é o ponto k × G."
+      },
+      {
+        "text": "A equação da curva, escolhida na geração",
+        "why": "A curva é nomeada e fixada pelo padrão."
+      },
+      {
+        "text": "Dois primos, como no RSA",
+        "why": "As curvas não usam primos na própria chave."
+      }
+    ]
+  },
+  "ex-t314vwvd": {
+    "prompt": "A chave pública P-256 impressa pelo OpenSSL começa com `04`. Quantos bytes ela tem no total?",
+    "hint": "Um byte, depois x e y.",
+    "unit": "bytes"
+  },
+  "ex-2hqx0bk6": {
+    "prompt": "Associe cada curva nomeada ao seu trabalho habitual.",
+    "hint": "Um trabalho não pertence a nenhuma curva daqui.",
+    "pairs": [
+      {
+        "left": "X25519",
+        "right": "combinar uma chave no TLS 1.3"
+      },
+      {
+        "left": "Ed25519",
+        "right": "assinar chaves SSH e pacotes"
+      },
+      {
+        "left": "P-256",
+        "right": "certificados TLS e cartões inteligentes"
+      },
+      {
+        "left": "secp256k1",
+        "right": "transações de Bitcoin"
+      }
+    ],
+    "right_distractors": [
+      "cifrar um disco"
+    ]
+  },
+  "ex-tvvqr82y": {
+    "prompt": "Uma equipe precisa escolher um algoritmo de assinatura para atualizações de firmware assinadas num dispositivo pequeno com um gerador aleatório pouco confiável. Qual escolha elimina o risco específico desse gerador?",
+    "hint": "Qual algoritmo não precisa de número aleatório para assinar?",
+    "choices": [
+      {
+        "text": "ECDSA na P-256, com um número aleatório novo para cada assinatura",
+        "why": "Esse número é justamente o que um gerador fraco trai."
+      },
+      {
+        "text": "Ed25519",
+        "why": "Certo: o número de cada assinatura é derivado, não sorteado."
+      },
+      {
+        "text": "ECDSA numa curva maior, a P-384",
+        "why": "Uma curva maior não conserta um número repetido."
+      },
+      {
+        "text": "X25519",
+        "why": "A X25519 combina chaves; não assina."
+      }
+    ]
+  },
+  "ex-mxh0f1q6": {
+    "prompt": "Qual destas oferece o mesmo nível de segurança que o AES-128?",
+    "hint": "Veja a linha de 128 bits.",
+    "choices": [
+      {
+        "text": "RSA-2048",
+        "why": "O RSA-2048 está um nível abaixo, 112 bits."
+      },
+      {
+        "text": "RSA-128",
+        "why": "Não existe chave RSA assim, e ela seria trivialmente fraca."
+      },
+      {
+        "text": "Uma chave de curva elíptica P-256",
+        "why": "Certo: curva de 256 bits, segurança de 128 bits."
+      },
+      {
+        "text": "Uma chave de curva elíptica de 128 bits",
+        "why": "Uma curva precisa do dobro de bits do nível."
+      }
+    ]
+  },
+  "ex-fr11jjv0": {
+    "prompt": "Quantos bytes tem uma assinatura feita com a chave `rsa-3072` do laboratório?",
+    "hint": "Do tamanho do módulo.",
+    "unit": "bytes"
+  },
+  "ex-ssffh8gg": {
+    "prompt": "Uma configuração junta AES-128 para os dados com uma chave RSA-4096 para a troca de chaves. O que o RSA-4096 compra em relação ao RSA-3072?",
+    "hint": "O atacante vai na parte mais fraca.",
+    "choices": [
+      {
+        "text": "O dobro da segurança total, já que é mais longa",
+        "why": "O sistema é tão forte quanto sua parte mais fraca."
+      },
+      {
+        "text": "Praticamente nada, porque o AES-128 limita o sistema a 128 bits",
+        "why": "Certo: alinhe os níveis."
+      },
+      {
+        "text": "Proteção contra um computador quântico",
+        "why": "O algoritmo de Shor quebra o RSA em qualquer tamanho."
+      },
+      {
+        "text": "Assinaturas mais curtas",
+        "why": "As assinaturas RSA crescem com o módulo."
+      }
+    ]
+  },
+  "ex-frc636v2": {
+    "prompt": "Em 2008, chaves geradas em máquinas Debian tiveram de ser substituídas em todos os tamanhos. O que esse caso ensina sobre tamanho de chave?",
+    "hint": "Conte as chaves possíveis.",
+    "choices": [
+      {
+        "text": "Que o RSA-2048 era curto demais e o RSA-4096 sobreviveu",
+        "why": "Todos os tamanhos foram afetados igualmente."
+      },
+      {
+        "text": "Que curvas são mais seguras que RSA",
+        "why": "O defeito estava no gerador aleatório, não no algoritmo."
+      },
+      {
+        "text": "Que chaves precisam ser trocadas a cada dois anos",
+        "why": "A troca foi uma resposta, não a lição."
+      },
+      {
+        "text": "Sem boa aleatoriedade, o comprimento não vale nada",
+        "why": "Certo: a força está na aleatoriedade."
+      }
+    ]
+  },
+  "ex-bw5f1c0n": {
+    "prompt": "Associe cada chave do laboratório ao que o `openssl` imprimiu para ela.",
+    "hint": "Tamanhos e campos das capturas desta aula.",
+    "pairs": [
+      {
+        "left": "rsa-2048.key",
+        "right": "prime1 e prime2"
+      },
+      {
+        "left": "p256.key",
+        "right": "NIST CURVE: P-256"
+      },
+      {
+        "left": "ed25519-ana.pub",
+        "right": "44 bytes em DER"
+      },
+      {
+        "left": "rsa-3072.pub",
+        "right": "422 bytes em DER"
+      }
+    ],
+    "right_distractors": [
+      "um bloco de 16 bytes"
+    ]
+  },
+  "ex-vx025w6b": {
+    "prompt": "Ordene estas chaves do menor nível de segurança para o maior.",
+    "hint": "Use a tabela; o RSA-2048 é 112 bits.",
+    "items": [
+      "RSA-2048",
+      "P-256",
+      "P-384",
+      "AES-256"
+    ]
+  },
+  "ex-yr3kp0q4": {
+    "prompt": "A Vereda grava o tráfego cifrado de hoje e o guarda por vinte anos. Que ameaça faz da escolha de RSA ou curvas elípticas para esse tráfego um risco de longo prazo?",
+    "hint": "Algo que quebra as duas famílias em qualquer tamanho.",
+    "choices": [
+      {
+        "text": "Processadores mais rápidos fatorando RSA-3072",
+        "why": "Computadores clássicos mais rápidos não fecham uma distância desse tamanho."
+      },
+      {
+        "text": "Um futuro computador quântico",
+        "why": "Certo: gravado agora, decifrado depois; aula 7."
+      },
+      {
+        "text": "O AES ser quebrado por um ataque novo",
+        "why": "O AES protege os dados; a pergunta é sobre a troca de chaves."
+      },
+      {
+        "text": "Os certificados expirarem",
+        "why": "A expiração impede conexões novas, não gravações antigas."
+      }
+    ]
+  }
+}

@@ -68,6 +68,22 @@ def cmd_flip(a):
     print(f"{a.file}: byte {a.offset} XOR 0x{int(a.mask, 16):02x}")
 
 
+def cmd_toyrsa(a):
+    """RSA with numbers small enough to follow by hand. Textbook RSA, with no
+    padding, is NOT how RSA is used: lesson 2 says why."""
+    p, q, e = a.p, a.q, a.e
+    n, phi = p * q, (p - 1) * (q - 1)
+    d = pow(e, -1, phi)
+    print(f"p = {p}, q = {q}         two primes, kept secret")
+    print(f"n = p*q = {n}           public: the modulus")
+    print(f"phi = (p-1)(q-1) = {phi}   secret: needs p and q")
+    print(f"e = {e}                  public exponent")
+    print(f"d = e^-1 mod phi = {d}   private exponent")
+    c = pow(a.m, e, n)
+    print(f"encrypt m = {a.m}:  c = m^e mod n = {c}")
+    print(f"decrypt c = {c}:  m = c^d mod n = {pow(c, d, n)}")
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -91,6 +107,12 @@ def main():
     s.add_argument("offset", type=int)
     s.add_argument("--mask", default="01")
     s.set_defaults(fn=cmd_flip)
+    s = sub.add_parser("toyrsa", help="RSA with small numbers, to follow by hand")
+    s.add_argument("--p", type=int, default=61)
+    s.add_argument("--q", type=int, default=53)
+    s.add_argument("--e", type=int, default=17)
+    s.add_argument("m", type=int)
+    s.set_defaults(fn=cmd_toyrsa)
     a = p.parse_args()
     a.fn(a)
 

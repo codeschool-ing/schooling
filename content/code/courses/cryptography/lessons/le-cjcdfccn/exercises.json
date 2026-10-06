@@ -1,0 +1,553 @@
+[
+  {
+    "id": "ex-as5pne02",
+    "version": 1,
+    "section": "two-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Vereda's server publishes its public key. Who may hold a copy of it?",
+    "hint": "The name says it.",
+    "choices": [
+      {
+        "text": "Anybody",
+        "correct": true,
+        "why": "Right: that is what public means here."
+      },
+      {
+        "text": "Only clients that have signed in to the portal before",
+        "correct": false,
+        "why": "Signing in has nothing to do with it; it is meant to be handed out."
+      },
+      {
+        "text": "Only the certificate authority that issued it",
+        "correct": false,
+        "why": "A CA signs a certificate; the key is for everybody."
+      },
+      {
+        "text": "Only Vereda's own servers and staff",
+        "correct": false,
+        "why": "That would be the private key."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtdk3fgr",
+    "version": 1,
+    "section": "two-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`openssl pkey -in ed25519-ana.key -pubout` rebuilt the `.pub` file exactly. What does that show?",
+    "hint": "Which direction worked?",
+    "choices": [
+      {
+        "text": "That the public key can be turned back into the private key",
+        "correct": false,
+        "why": "The command went the other way."
+      },
+      {
+        "text": "The private key contains the public one",
+        "correct": true,
+        "why": "Right: computing it forward is easy."
+      },
+      {
+        "text": "That the two files were copies of each other",
+        "correct": false,
+        "why": "They are different files with different contents."
+      },
+      {
+        "text": "That Ed25519 keys are symmetric after all",
+        "correct": false,
+        "why": "One key cannot do the other's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-08tqwyjm",
+    "version": 1,
+    "section": "two-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A public key arrives by e-mail, claiming to be Vereda's. What does the key file itself tell you about its owner?",
+    "hint": "Look at what `openssl pkey -text` printed.",
+    "choices": [
+      {
+        "text": "The owner's name, in the PEM header",
+        "correct": false,
+        "why": "The header only says PUBLIC KEY."
+      },
+      {
+        "text": "The domain it was generated for, in its first bytes",
+        "correct": false,
+        "why": "No domain is stored in a key."
+      },
+      {
+        "text": "Nothing at all: binding a key to a name is a certificate's job",
+        "correct": true,
+        "why": "Right: lessons 8 and 9."
+      },
+      {
+        "text": "Its creation date",
+        "correct": false,
+        "why": "No date either."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qdd4nqm",
+    "version": 1,
+    "section": "two-keys",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are correct ways to handle a server's private key? Choose all that apply.",
+    "hint": "It is the one secret.",
+    "choices": [
+      {
+        "text": "Readable only by the service's own user",
+        "correct": true,
+        "why": "Yes: mode 600 and the service's user."
+      },
+      {
+        "text": "Kept in a hardware module that signs without exporting it",
+        "correct": true,
+        "why": "Yes: the strongest arrangement."
+      },
+      {
+        "text": "Committed to the private repository, so the deploy can find it",
+        "correct": false,
+        "why": "A private repository is still a copy anybody with access holds."
+      },
+      {
+        "text": "Sent to the colleague who is debugging TLS",
+        "correct": false,
+        "why": "A key that travels is a key that may leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnepzb0d",
+    "version": 1,
+    "section": "rsa",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In RSA, what is the public modulus `n`?",
+    "hint": "3233 in the toy.",
+    "choices": [
+      {
+        "text": "The sum of the two secret primes",
+        "correct": false,
+        "why": "It is their product."
+      },
+      {
+        "text": "The product of the two secret primes",
+        "correct": true,
+        "why": "Right: p × q."
+      },
+      {
+        "text": "The private exponent, written in hexadecimal",
+        "correct": false,
+        "why": "That is d, and it is secret."
+      },
+      {
+        "text": "Always 65537",
+        "correct": false,
+        "why": "That is the usual public exponent e."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4pkes5n",
+    "version": 1,
+    "section": "rsa",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the toy key (n = 3233, e = 17, d = 2753), 65 encrypted to 2790. What does 2790 decrypt to?",
+    "hint": "Read the last line of the capture.",
+    "value": 65,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gkw6wp0q",
+    "version": 1,
+    "section": "rsa",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is computing the private exponent `d` hard for somebody who holds only the public key?",
+    "hint": "What does computing phi need?",
+    "choices": [
+      {
+        "text": "It needs p and q, and finding them means factoring n",
+        "correct": true,
+        "why": "Right: that is RSA's one-way problem."
+      },
+      {
+        "text": "Because d is generated at random and stored nowhere",
+        "correct": false,
+        "why": "d is computed from e and phi, not drawn."
+      },
+      {
+        "text": "Because e is kept secret along with d",
+        "correct": false,
+        "why": "e is public, 65537 almost everywhere."
+      },
+      {
+        "text": "Because the modulus is encrypted in the file",
+        "correct": false,
+        "why": "The modulus is printed in the open."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xay8pjy",
+    "version": 1,
+    "section": "rsa",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer encrypts each patient's yes/no consent with Vereda's RSA public key, raw, with no padding. What can an outsider with the public key learn?",
+    "hint": "Raw RSA is deterministic.",
+    "choices": [
+      {
+        "text": "Nothing, without the private key",
+        "correct": false,
+        "why": "Encrypting a guess needs only the public key."
+      },
+      {
+        "text": "The private key, after enough ciphertexts",
+        "correct": false,
+        "why": "Equality leaks; the key does not."
+      },
+      {
+        "text": "Every answer, by encrypting \"yes\" and comparing",
+        "correct": true,
+        "why": "Right: deterministic encryption lets a guess be tested; OAEP prevents it."
+      },
+      {
+        "text": "Only the length of each answer",
+        "correct": false,
+        "why": "The ciphertext is always the modulus length."
+      }
+    ]
+  },
+  {
+    "id": "ex-spqwvtz9",
+    "version": 1,
+    "section": "rsa",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The padding scheme for RSA encryption is OAEP, and for RSA signatures it is ___.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "PSS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e0schq74",
+    "version": 1,
+    "section": "elliptic-curves",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab's P-256 key, what is the private key?",
+    "hint": "32 bytes.",
+    "choices": [
+      {
+        "text": "A point on the curve, written with 04",
+        "correct": false,
+        "why": "That is the public key."
+      },
+      {
+        "text": "A number k",
+        "correct": true,
+        "why": "Right: the public key is the point k × G."
+      },
+      {
+        "text": "The curve's equation, chosen at generation time",
+        "correct": false,
+        "why": "The curve is named and fixed by the standard."
+      },
+      {
+        "text": "Two primes, as in RSA",
+        "correct": false,
+        "why": "Curves use no primes in the key itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-t314vwvd",
+    "version": 1,
+    "section": "elliptic-curves",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The P-256 public key printed by OpenSSL starts with `04`. How many bytes is it in total?",
+    "hint": "One byte, then x and y.",
+    "value": 65,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-2hqx0bk6",
+    "version": 1,
+    "section": "elliptic-curves",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each named curve to its usual job.",
+    "hint": "One job belongs to no curve here.",
+    "pairs": [
+      {
+        "left": "X25519",
+        "right": "agreeing on a key in TLS 1.3"
+      },
+      {
+        "left": "Ed25519",
+        "right": "signing SSH keys and packages"
+      },
+      {
+        "left": "P-256",
+        "right": "TLS certificates and smart cards"
+      },
+      {
+        "left": "secp256k1",
+        "right": "Bitcoin transactions"
+      }
+    ],
+    "right_distractors": [
+      "encrypting a disk"
+    ]
+  },
+  {
+    "id": "ex-tvvqr82y",
+    "version": 1,
+    "section": "elliptic-curves",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team must pick a signature algorithm for firmware updates signed on a small device with an unreliable random generator. Which choice removes the specific risk of that generator?",
+    "hint": "Which algorithm needs no random number to sign?",
+    "choices": [
+      {
+        "text": "ECDSA on P-256, with a fresh random number for every signature",
+        "correct": false,
+        "why": "That number is exactly what a weak generator betrays."
+      },
+      {
+        "text": "Ed25519",
+        "correct": true,
+        "why": "Right: its per-signature number is derived, not drawn."
+      },
+      {
+        "text": "ECDSA on a larger curve, P-384",
+        "correct": false,
+        "why": "A larger curve does not fix a repeated number."
+      },
+      {
+        "text": "X25519",
+        "correct": false,
+        "why": "X25519 agrees on keys; it does not sign."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxh0f1q6",
+    "version": 1,
+    "section": "key-size",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these offers the same security level as AES-128?",
+    "hint": "Look at the 128-bit row.",
+    "choices": [
+      {
+        "text": "RSA-2048",
+        "correct": false,
+        "why": "RSA-2048 is one level lower, 112 bits."
+      },
+      {
+        "text": "RSA-128",
+        "correct": false,
+        "why": "No such RSA key exists, and it would be trivially weak."
+      },
+      {
+        "text": "A P-256 elliptic-curve key",
+        "correct": true,
+        "why": "Right: 256-bit curve, 128-bit security."
+      },
+      {
+        "text": "An elliptic-curve key of 128 bits",
+        "correct": false,
+        "why": "A curve needs twice the bits of the level."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr11jjv0",
+    "version": 1,
+    "section": "key-size",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes is a signature made with the lab's `rsa-3072` key?",
+    "hint": "As long as the modulus.",
+    "value": 384,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ssffh8gg",
+    "version": 1,
+    "section": "key-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A configuration pairs AES-128 for data with an RSA-4096 key for the key exchange. What does the RSA-4096 buy over RSA-3072?",
+    "hint": "The attacker goes for the weaker part.",
+    "choices": [
+      {
+        "text": "Twice the overall security, since it is longer",
+        "correct": false,
+        "why": "The system is as strong as its weakest part."
+      },
+      {
+        "text": "Practically nothing, because AES-128 caps the system at 128 bits",
+        "correct": true,
+        "why": "Right: match the levels."
+      },
+      {
+        "text": "Protection against a quantum computer",
+        "correct": false,
+        "why": "Shor's algorithm breaks RSA at every size."
+      },
+      {
+        "text": "Shorter signatures",
+        "correct": false,
+        "why": "RSA signatures grow with the modulus."
+      }
+    ]
+  },
+  {
+    "id": "ex-frc636v2",
+    "version": 1,
+    "section": "key-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In 2008, keys made on Debian machines had to be replaced at every length. What does that case teach about key size?",
+    "hint": "Count the possible keys.",
+    "choices": [
+      {
+        "text": "That RSA-2048 was too short and RSA-4096 survived",
+        "correct": false,
+        "why": "Every length was affected equally."
+      },
+      {
+        "text": "That curves are safer than RSA",
+        "correct": false,
+        "why": "The bug was in the random generator, not the algorithm."
+      },
+      {
+        "text": "That keys must be rotated every two years",
+        "correct": false,
+        "why": "Rotation was a response, not the lesson."
+      },
+      {
+        "text": "Without good randomness, length is worthless",
+        "correct": true,
+        "why": "Right: the strength is in the randomness."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw5f1c0n",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lab key to what `openssl` printed for it.",
+    "hint": "Sizes and fields from this lesson's captures.",
+    "pairs": [
+      {
+        "left": "rsa-2048.key",
+        "right": "prime1 and prime2"
+      },
+      {
+        "left": "p256.key",
+        "right": "NIST CURVE: P-256"
+      },
+      {
+        "left": "ed25519-ana.pub",
+        "right": "44 bytes in DER"
+      },
+      {
+        "left": "rsa-3072.pub",
+        "right": "422 bytes in DER"
+      }
+    ],
+    "right_distractors": [
+      "a 16-byte block"
+    ]
+  },
+  {
+    "id": "ex-vx025w6b",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these keys from the lowest security level to the highest.",
+    "hint": "Use the table; RSA-2048 is 112 bits.",
+    "items": [
+      "RSA-2048",
+      "P-256",
+      "P-384",
+      "AES-256"
+    ]
+  },
+  {
+    "id": "ex-yr3kp0q4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Vereda records today's encrypted traffic and keeps it for twenty years. Which threat makes the choice of RSA or elliptic curves for that traffic a long-term risk?",
+    "hint": "Something that breaks both families at every size.",
+    "choices": [
+      {
+        "text": "Faster processors factoring RSA-3072",
+        "correct": false,
+        "why": "Faster classical computers do not close a gap of that size."
+      },
+      {
+        "text": "A future quantum computer",
+        "correct": true,
+        "why": "Right: recorded now, decrypted later; lesson 7."
+      },
+      {
+        "text": "AES being broken by a new attack",
+        "correct": false,
+        "why": "AES protects the data; the question is about the key exchange."
+      },
+      {
+        "text": "The certificates expiring",
+        "correct": false,
+        "why": "Expiry stops new connections, not old recordings."
+      }
+    ]
+  }
+]
