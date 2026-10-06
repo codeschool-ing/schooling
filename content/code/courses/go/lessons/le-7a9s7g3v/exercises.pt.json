@@ -1,0 +1,374 @@
+{
+  "ex-h718aj92": {
+    "prompt": "Que faixa de valores um `int8` guarda?",
+    "hint": "Oito bits, e um deles vai para o sinal.",
+    "choices": [
+      {
+        "text": "De 0 a 255",
+        "why": "Esse é o `uint8`, que abre mão dos negativos."
+      },
+      {
+        "text": "De −127 a 127, a mesma distância para cada lado",
+        "why": "A faixa não é simétrica: o zero ocupa um dos 256 valores, e o que sobra vai para o lado negativo."
+      },
+      {
+        "text": "De −128 a 127",
+        "why": "Isso. O `go doc math.MaxInt` imprimiu `MinInt8` como −128 e `MaxInt8` como 127."
+      },
+      {
+        "text": "De −256 a 255",
+        "why": "Isso exigiria nove bits. Oito bits dão 256 valores ao todo, divididos entre os dois sinais."
+      }
+    ]
+  },
+  "ex-0n187keg": {
+    "prompt": "No amd64 do laboratório o programa imprimiu `int is 64 bits`. O que o mesmo código imprimiu compilado com `GOARCH=386`?",
+    "hint": "386 é x86 de 32 bits.",
+    "choices": [
+      {
+        "text": "`int is 64 bits`, porque um `int` tem 64 bits onde quer que Go rode",
+        "why": "Esse é o `int64`. O `int` simples segue a plataforma, e é por isso que o `MaxInt` diz \"depending on intSize\"."
+      },
+      {
+        "text": "`int is 32 bits`",
+        "why": "Isso, e o maior `int` que ele imprimiu foi 2147483647."
+      },
+      {
+        "text": "`int is 16 bits`",
+        "why": "A compilação de 32 bits imprimiu 32; nenhuma rodada do laboratório deu 16."
+      },
+      {
+        "text": "Nada: o build falha, porque `int` não tem tamanho no 386",
+        "why": "Compilou e rodou. `int` sempre tem tamanho; o tamanho depende da plataforma."
+      }
+    ]
+  },
+  "ex-vtxvwm5s": {
+    "prompt": "`var small int8 = 127`, depois `small++`, depois `fmt.Println(small)`. O que acontece?",
+    "hint": "A soma acontece com o programa rodando.",
+    "choices": [
+      {
+        "text": "Imprime `128`",
+        "why": "128 não cabe num `int8`, cujo maior valor é 127."
+      },
+      {
+        "text": "Imprime `-128`, depois de dar a volta pelo topo",
+        "why": "Isso. Overflow em tempo de execução dá a volta até o menor valor, em silêncio."
+      },
+      {
+        "text": "Dá panic com um erro de overflow",
+        "why": "Go dá panic na divisão de inteiro por zero, não no overflow. O overflow dá a volta sem mensagem."
+      },
+      {
+        "text": "O compilador recusa o `small++`",
+        "why": "O compilador recusa constantes que não cabem; o valor de uma variável ele não conhece."
+      }
+    ]
+  },
+  "ex-26xpdz79": {
+    "prompt": "Um programa guarda as tentativas restantes em `var left uint = 2` e, por engano, roda `left -= 3`. O que `left` guarda agora?",
+    "hint": "Um tipo sem sinal não tem −1 onde cair.",
+    "choices": [
+      {
+        "text": "−1",
+        "why": "Um `uint` não guarda número negativo; essa é toda a diferença para o `int`."
+      },
+      {
+        "text": "0, porque um valor sem sinal para no zero",
+        "why": "Nada em Go para na borda. A aritmética de inteiros dá a volta, nas duas direções."
+      },
+      {
+        "text": "18446744073709551615, o maior valor que um `uint` guarda",
+        "why": "Isso. 2 − 3 dá a volta até o topo, como o `0 − 1` da seção."
+      },
+      {
+        "text": "Nada: o programa dá panic na subtração",
+        "why": "Overflow é silencioso em Go; entre estas operações, só dividir inteiro por zero dá panic."
+      }
+    ]
+  },
+  "ex-s0svrn48": {
+    "prompt": "Quantos valores diferentes um `int16` consegue guardar, contando o zero?",
+    "hint": "Dezesseis bits, cada um 0 ou 1.",
+    "unit": "valores"
+  },
+  "ex-ec0mrrvd": {
+    "prompt": "O que `fmt.Println(-17 / 5, -17 % 5)` imprime?",
+    "hint": "Truncado em direção ao zero; o resto mantém o sinal de −17.",
+    "choices": [
+      {
+        "text": "`-4 3`",
+        "why": "Essa é uma linguagem que arredonda para baixo, como Python. Go trunca em direção ao zero."
+      },
+      {
+        "text": "`-3 2`",
+        "why": "O quociente está certo; o resto leva o sinal do número dividido, então é negativo."
+      },
+      {
+        "text": "`-3.4 0`",
+        "why": "Dois inteiros dividem em inteiro; só um operando float mantém a fração."
+      },
+      {
+        "text": "`-3 -2`",
+        "why": "Isso. −3,4 trunca para −3, e −3 × 5 + (−2) é −17."
+      }
+    ]
+  },
+  "ex-phaqtkk3": {
+    "prompt": "Quais destes o compilador recusa? Marque todos os que se aplicam.",
+    "hint": "O compilador só julga o que consegue calcular antes de o programa rodar.",
+    "choices": [
+      {
+        "text": "`var b int8 = 128`",
+        "why": "Sim: uma constante que não cabe é erro, \"(overflows)\"."
+      },
+      {
+        "text": "`fmt.Println(10 / 0)`",
+        "why": "Sim: \"invalid operation: division by zero\", porque os dois operandos são constantes."
+      },
+      {
+        "text": "`d := 0` e depois `fmt.Println(10 / d)`",
+        "why": "Compila; a divisão dá panic quando roda, com status de saída 2."
+      },
+      {
+        "text": "`var x int8 = 127` e depois `x++`",
+        "why": "Compila e dá a volta para −128 em tempo de execução, sem mensagem."
+      }
+    ]
+  },
+  "ex-m6gt56r3": {
+    "prompt": "Dividir um inteiro por uma variável que vale zero para o programa com um ___, e ele sai com status 2.",
+    "hint": "A primeira palavra que o programa imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "panic",
+          "pânico"
+        ]
+      }
+    ]
+  },
+  "ex-krr401ar": {
+    "prompt": "`a, b := 0.1, 0.2` e depois `fmt.Println(a+b == 0.3)`. O que imprime?",
+    "hint": "A soma acontece em tempo de execução, em `float64`.",
+    "choices": [
+      {
+        "text": "`true`",
+        "why": "Isso é o que a soma de constantes dá. Em variáveis a soma é 0.30000000000000004."
+      },
+      {
+        "text": "`false`",
+        "why": "Isso. Nem 0.1 nem 0.2 são guardados exatamente, e a soma deles erra o 0.3."
+      },
+      {
+        "text": "Nada: comparar floats com `==` é erro de compilação",
+        "why": "Compila. É isso que o torna perigoso: o compilador permite, e quase sempre é o teste errado."
+      },
+      {
+        "text": "Dá panic com um erro de precisão",
+        "why": "Floats nunca dão panic por precisão; o resultado só sai um pouco errado."
+      }
+    ]
+  },
+  "ex-t5yzytya": {
+    "prompt": "Por que `fmt.Println(0.1 + 0.2)` imprime `0.3`, se a mesma soma em duas variáveis imprime `0.30000000000000004`?",
+    "hint": "Quem faz a soma no primeiro caso?",
+    "choices": [
+      {
+        "text": "O compilador soma as duas constantes exatamente e converte só o resultado",
+        "why": "Isso. Constantes sem tipo são exatas (lição 5); o arredondamento acontece uma vez, no fim."
+      },
+      {
+        "text": "O `Println` arredonda todo float para uma casa decimal",
+        "why": "Ele imprimiu `0.30000000000000004` para as variáveis, então não arredonda para uma casa."
+      },
+      {
+        "text": "Go guarda literais em decimal e variáveis em binário",
+        "why": "Um literal que chega ao programa é um `float64` como outro qualquer; a diferença é quando a soma é feita."
+      },
+      {
+        "text": "Em `float64`, 0.1 + 0.2 é exatamente 0.3",
+        "why": "A versão com variáveis mostra que não é: o `==` com 0.3 deu `false`."
+      }
+    ]
+  },
+  "ex-a4h8r0c6": {
+    "prompt": "Como você testa se um `float64` chamado `v` é NaN?",
+    "hint": "NaN não é igual a nada.",
+    "choices": [
+      {
+        "text": "`v == math.NaN()`",
+        "why": "Isso é sempre `false`, mesmo quando `v` é NaN, porque NaN não é igual a si mesmo."
+      },
+      {
+        "text": "`math.IsInf(v, 0)`",
+        "why": "Isso pergunta pelos dois infinitos. NaN é outro valor, e o `IsInf` diz `false` para ele."
+      },
+      {
+        "text": "`math.IsNaN(v)`",
+        "why": "Isso. É o teste que a seção usou, e ele imprimiu `true` para `zero / zero`."
+      },
+      {
+        "text": "`v > math.MaxFloat64`",
+        "why": "NaN não é um número muito grande. Toda comparação de ordem com ele é `false`, esta também."
+      }
+    ]
+  },
+  "ex-ny9yq05y": {
+    "prompt": "`zero := 0.0` e depois `fmt.Println(1 / zero)`. O que acontece?",
+    "hint": "Floats e inteiros se separam aqui.",
+    "choices": [
+      {
+        "text": "Dá panic: integer divide by zero",
+        "why": "Esse panic é para inteiros. Uma divisão de float por zero tem resposta no IEEE 754."
+      },
+      {
+        "text": "Imprime `+Inf`",
+        "why": "Isso. Positivo dividido por zero é infinito positivo, e o programa segue."
+      },
+      {
+        "text": "Imprime `NaN`",
+        "why": "NaN veio de `zero / zero`, que não tem resposta que faça sentido; `1 / zero` tem."
+      },
+      {
+        "text": "O compilador recusa a divisão",
+        "why": "`zero` é uma variável, então o compilador não tem como saber que é zero; só constantes são conferidas."
+      }
+    ]
+  },
+  "ex-hgnvg35d": {
+    "prompt": "Uma loja soma os preços em `float64`. A tela mostra `30.00`, mas o teste `total == 30.0` falha, e o pedido nunca é marcado como pago. Qual é a correção?",
+    "hint": "O que o `%.2f` escondeu na seção 02?",
+    "choices": [
+      {
+        "text": "Usar `float32`, que guarda menos dígitos e assim arredonda o erro",
+        "why": "Menos bits deixam o erro maior, não menor; 0.1 não é exato em nenhum dos formatos."
+      },
+      {
+        "text": "Guardar todo valor como um número inteiro de centavos",
+        "why": "Isso. Centavos inteiros somam exatamente, e `==` neles quer dizer o que diz."
+      },
+      {
+        "text": "Somar 0.0000001 ao total antes de comparar",
+        "why": "O erro pode cair dos dois lados do 30, então um empurrão numa direção conserta alguns totais e quebra outros."
+      },
+      {
+        "text": "Nada em Go: os preços devem ter sido digitados errado",
+        "why": "Dez preços corretos de 0.10 já deram 0.9999999999999999. O erro é da aritmética, não da entrada."
+      }
+    ]
+  },
+  "ex-5csn30f3": {
+    "prompt": "Ponha os três campos de um `float64` na ordem em que os 64 bits os guardam, a partir do primeiro bit impresso pelo `%064b`.",
+    "hint": "A figura da seção 02.",
+    "items": [
+      "o sinal, 1 bit",
+      "o expoente, 11 bits",
+      "a fração, 52 bits"
+    ]
+  },
+  "ex-6ejx9mrt": {
+    "prompt": "Na figura, o campo do expoente de `0.1` guarda 1019. O expoente que ele representa é 1019 menos 1023. Que potência de 2 é essa?",
+    "hint": "Subtraia.",
+    "unit": "potência de 2"
+  },
+  "ex-b95azbez": {
+    "prompt": "O que `math.Sqrt(-1)` devolve?",
+    "hint": "O `math` trabalha com os números reais.",
+    "choices": [
+      {
+        "text": "`(0+1i)`",
+        "why": "Isso é o `cmplx.Sqrt(-1)`. O pacote que você chama decide entre quais números a resposta pode estar."
+      },
+      {
+        "text": "`NaN`",
+        "why": "Isso. Entre os reais −1 não tem raiz quadrada, então a resposta não é um número."
+      },
+      {
+        "text": "Dá panic, porque −1 não tem raiz quadrada",
+        "why": "Funções de float não dão panic por uma resposta impossível; devolvem NaN e seguem."
+      },
+      {
+        "text": "`-1`",
+        "why": "Nenhum número real ao quadrado dá −1, e a função não devolve o próprio argumento."
+      }
+    ]
+  },
+  "ex-zr5h3n6d": {
+    "prompt": "Depois de `z := complex(3, 4)`, `real(z)` é 3 e `___(z)` é 4.",
+    "hint": "A função embutida que dá a parte imaginária.",
+    "blanks": [
+      {
+        "accept": [
+          "imag"
+        ]
+      }
+    ]
+  },
+  "ex-jhfve5nb": {
+    "prompt": "Associe cada literal ao tipo que Go dá a ele quando nada mais diz.",
+    "hint": "A linha do `%T` na seção 01.",
+    "pairs": [
+      {
+        "left": "`42`",
+        "right": "`int`"
+      },
+      {
+        "left": "`4.2`",
+        "right": "`float64`"
+      },
+      {
+        "left": "`2i`",
+        "right": "`complex128`"
+      }
+    ],
+    "right_distractors": [
+      "`float32`",
+      "`int64`"
+    ]
+  },
+  "ex-dnfspxts": {
+    "prompt": "Um protocolo de rede põe um número de porta, de 0 a 65535, em dois bytes do cabeçalho. Que tipo deve ter o campo que o guarda?",
+    "hint": "O tamanho faz parte do significado, e a faixa também.",
+    "choices": [
+      {
+        "text": "`int16`, porque dois bytes são dezesseis bits",
+        "why": "Dezesseis bits está certo, mas um `int16` com sinal para em 32767, e metade das portas sairia negativa."
+      },
+      {
+        "text": "`uint16`",
+        "why": "Isso. Dezesseis bits, sem sinal, e a faixa dele é exatamente de 0 a 65535."
+      },
+      {
+        "text": "`int`, já que contar e indexar usam `int`",
+        "why": "`int` é o padrão para contadores, e um campo de cabeçalho é o caso em que o tamanho faz parte do significado."
+      },
+      {
+        "text": "`uint8`, o tipo de um byte",
+        "why": "Um byte guarda de 0 a 255; uma porta precisa de dois."
+      }
+    ]
+  },
+  "ex-z6awehzz": {
+    "prompt": "`var c uint8 = 200` e depois `c += 100`. O que `c` guarda?",
+    "hint": "Um `uint8` dá a volta depois de 255, e 256 valores fazem uma volta inteira.",
+    "choices": [
+      {
+        "text": "`300`",
+        "why": "300 não cabe em oito bits; o maior `uint8` é 255."
+      },
+      {
+        "text": "`255`, porque o valor para no topo",
+        "why": "Go não satura. Dá a volta, como o `127 + 1` num `int8`."
+      },
+      {
+        "text": "`44`",
+        "why": "Isso. 300 − 256 é 44: uma volta inteira de 256 valores, e o resto."
+      },
+      {
+        "text": "Nada: o compilador recusa o `c += 100`",
+        "why": "`c` é uma variável, então a soma não é uma constante que o compilador possa conferir."
+      }
+    ]
+  }
+}
