@@ -30,7 +30,7 @@ kind: Deployment
 metadata:
   name: big
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: big
@@ -68,8 +68,10 @@ spec:
     resources:
       requests:
         cpu: 100m
+        memory: 64Mi
       limits:
         cpu: 100m
+        memory: 64Mi
 ---
 apiVersion: v1
 kind: Pod

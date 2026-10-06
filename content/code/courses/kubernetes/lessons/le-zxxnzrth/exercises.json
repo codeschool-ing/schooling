@@ -1,0 +1,234 @@
+[
+  {
+    "id": "ex-3cg550nt",
+    "version": 1,
+    "section": "quota",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The quota allows four pods in `team-a`. Ana scales the Deployment to six. What does `kubectl get deployment` show?",
+    "hint": "The Deployment itself was accepted.",
+    "choices": [
+      {
+        "text": "`4/6`",
+        "correct": true,
+        "why": "Right: four pods admitted, two refused by the quota."
+      },
+      {
+        "text": "An error, and the old count of two",
+        "correct": false,
+        "why": "The scale itself was accepted; only pod creation was refused."
+      },
+      {
+        "text": "`6/6`, since quotas are only warnings",
+        "correct": false,
+        "why": "Quotas are enforced on every create."
+      },
+      {
+        "text": "`6/6`, with two pods `Pending`",
+        "correct": false,
+        "why": "No pod was ever created for the two extra copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnzr3djh",
+    "version": 1,
+    "section": "quota",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where did Ana find the reason the fifth and sixth pods never appeared?",
+    "hint": "Who tried to create those pods?",
+    "choices": [
+      {
+        "text": "In the Deployment's status",
+        "correct": false,
+        "why": "It said `4/6` and nothing more."
+      },
+      {
+        "text": "In the logs of the pods that did start",
+        "correct": false,
+        "why": "Those pods never knew about the refusal."
+      },
+      {
+        "text": "In a `FailedCreate` event, recorded when the ReplicaSet was refused",
+        "correct": true,
+        "why": "Right: `exceeded quota: team-a, requested: pods=1, used: pods=4, limited: pods=4`."
+      },
+      {
+        "text": "On two pods stuck in `Pending`",
+        "correct": false,
+        "why": "There were no such pods; the API server refused to create them."
+      }
+    ]
+  },
+  {
+    "id": "ex-j18sacxv",
+    "version": 1,
+    "section": "quota",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the refusal, the quota read `pods 4/4`, `requests.cpu 400m/1`, `requests.memory 256Mi/512Mi`. The team lowers each pod's memory request to 32Mi. Can it now run six pods?",
+    "hint": "Which ceiling stopped it?",
+    "choices": [
+      {
+        "text": "Yes, because memory was the problem",
+        "correct": false,
+        "why": "Memory still had room; the pod count was full."
+      },
+      {
+        "text": "Yes, because smaller pods use less of every limit",
+        "correct": false,
+        "why": "Smaller pods still count as one pod each."
+      },
+      {
+        "text": "No: the pod count is the ceiling it hit",
+        "correct": true,
+        "why": "Right. Whichever line is reached first stops the namespace."
+      },
+      {
+        "text": "No, because a quota cannot be changed once set",
+        "correct": false,
+        "why": "A quota is an object like any other and can be edited."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkrcq8p6",
+    "version": 1,
+    "section": "limitrange",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kubectl create deployment` wrote no resources, yet the pod had `requests: cpu 100m, memory 64Mi`. Where did they come from?",
+    "hint": "An object in the namespace fills in what is missing.",
+    "choices": [
+      {
+        "text": "From the ResourceQuota, divided by the pod limit",
+        "correct": false,
+        "why": "A quota caps totals; it never writes into a pod."
+      },
+      {
+        "text": "From the LimitRange's defaults",
+        "correct": true,
+        "why": "Right: `defaultRequest` and `default` are written into containers that left them out."
+      },
+      {
+        "text": "From the image's metadata",
+        "correct": false,
+        "why": "Images carry no resource requests."
+      },
+      {
+        "text": "From the scheduler, after placing the pod",
+        "correct": false,
+        "why": "They were set before the pod was admitted, let alone placed."
+      }
+    ]
+  },
+  {
+    "id": "ex-865r02x2",
+    "version": 1,
+    "section": "limitrange",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a namespace with a CPU or memory quota almost always need a LimitRange too?",
+    "hint": "What happens to a pod with no requests in such a namespace?",
+    "choices": [
+      {
+        "text": "The quota does nothing without one",
+        "correct": false,
+        "why": "The quota capped pods on its own."
+      },
+      {
+        "text": "To make pods start faster",
+        "correct": false,
+        "why": "Defaults change admission, not start-up time."
+      },
+      {
+        "text": "Because LimitRanges are required by the scheduler",
+        "correct": false,
+        "why": "The scheduler never reads them."
+      },
+      {
+        "text": "A pod without requests cannot be counted, so it is refused",
+        "correct": true,
+        "why": "Right. The defaults turn a forgotten field into a sensible value instead of a failed deploy."
+      }
+    ]
+  },
+  {
+    "id": "ex-3x1n67nb",
+    "version": 1,
+    "section": "limitrange",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`greedy` asked for a 512Mi memory limit while the namespace still had 512Mi of limits free. Why was it refused?",
+    "hint": "The message named a per-container ceiling.",
+    "choices": [
+      {
+        "text": "The quota had run out of memory",
+        "correct": false,
+        "why": "It had 512Mi left, exactly what was asked."
+      },
+      {
+        "text": "The LimitRange caps one container at 256Mi",
+        "correct": true,
+        "why": "Right: `maximum memory usage per Container is 256Mi`."
+      },
+      {
+        "text": "Pods may not be created directly in a namespace with a quota",
+        "correct": false,
+        "why": "They can; this one was refused for its size."
+      },
+      {
+        "text": "A limit without a request is invalid",
+        "correct": false,
+        "why": "A request defaults to the limit when only the limit is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxtqg58m",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question with the object that answers it.",
+    "hint": "The table at the end of the lesson.",
+    "pairs": [
+      {
+        "left": "How much may this team use altogether?",
+        "right": "ResourceQuota"
+      },
+      {
+        "left": "What does a container get if its author did not say?",
+        "right": "LimitRange defaults"
+      },
+      {
+        "left": "How large may one container be?",
+        "right": "LimitRange max"
+      }
+    ],
+    "right_distractors": [
+      "NetworkPolicy"
+    ]
+  },
+  {
+    "id": "ex-bse1vyps",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the LimitRange's default of 100m CPU per pod, how many millicores of the quota had the four running pods used?",
+    "hint": "Four times the default.",
+    "value": 400,
+    "tolerance": 0,
+    "unit": "millicores"
+  }
+]
