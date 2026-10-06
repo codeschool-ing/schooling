@@ -1,0 +1,466 @@
+[
+  {
+    "id": "ex-e0tk7wge",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Started by hand, `web` logged `connection refused` and exited. Why?",
+    "hint": "What was Postgres doing at that moment?",
+    "choices": [
+      {
+        "text": "The password in `DATABASE_URL` did not match the one Postgres had",
+        "correct": false,
+        "why": "A wrong password is refused by Postgres, not by the network."
+      },
+      {
+        "text": "Postgres was still initialising and not listening yet",
+        "correct": true,
+        "why": "Right: nothing made `web` wait for it."
+      },
+      {
+        "text": "The two containers had been put on two different networks",
+        "correct": false,
+        "why": "Both were on `shelfnet`, and `db` resolved to an address."
+      },
+      {
+        "text": "Port 5432 was not published",
+        "correct": false,
+        "why": "Containers on one network need no `-p` between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-z959c8y4",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did `shelf` reach Postgres with the host name `db`?",
+    "hint": "What did the first command create?",
+    "choices": [
+      {
+        "text": "Docker added `db` to the host's `/etc/hosts`",
+        "correct": false,
+        "why": "The host's files were not touched."
+      },
+      {
+        "text": "`db` is a reserved name for databases",
+        "correct": false,
+        "why": "Any container name would do."
+      },
+      {
+        "text": "A network Ana created resolves names",
+        "correct": true,
+        "why": "Right; lesson 23 shows how that works."
+      },
+      {
+        "text": "Postgres announces itself on the network",
+        "correct": false,
+        "why": "Postgres announces nothing; Docker answers the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnb76hcy",
+    "version": 1,
+    "section": "by-hand",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which problems of the by-hand setup does a Compose file solve? Choose all that apply.",
+    "hint": "The lesson listed four.",
+    "choices": [
+      {
+        "text": "The start order depended on luck",
+        "correct": true,
+        "why": "Yes: `depends_on` with a health condition fixes it."
+      },
+      {
+        "text": "The setup lived in one person's shell history",
+        "correct": true,
+        "why": "Yes: the file lives in the repository."
+      },
+      {
+        "text": "Taking it down needed several commands",
+        "correct": true,
+        "why": "Yes: `docker compose down`."
+      },
+      {
+        "text": "Postgres needed more memory than the machine had",
+        "correct": false,
+        "why": "Memory was never the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5rwgt5t",
+    "version": 1,
+    "section": "the-compose-file",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For `web` to wait until `db` passes its health check, its `depends_on` sets `condition: service____`.",
+    "hint": "The state `docker ps` shows in parentheses.",
+    "blanks": [
+      {
+        "accept": [
+          "healthy"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c23vs8wr",
+    "version": 1,
+    "section": "the-compose-file",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the health check run `pg_isready -h 127.0.0.1` rather than plain `pg_isready`?",
+    "hint": "What runs while the image initialises the database?",
+    "choices": [
+      {
+        "text": "`pg_isready` fails unless it is given a host to ask",
+        "correct": false,
+        "why": "It works without one; it asks the local socket."
+      },
+      {
+        "text": "Port 5432 is published only on 127.0.0.1",
+        "correct": false,
+        "why": "It is not published at all."
+      },
+      {
+        "text": "`-h` makes the check faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "The temporary setup server listens only on a socket",
+        "correct": true,
+        "why": "Right: through TCP, only the real server can answer ready."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0j1q31k",
+    "version": 1,
+    "section": "the-compose-file",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `docker compose up -d` did in the order its output showed.",
+    "hint": "Follow the lines.",
+    "items": [
+      "Create the network and the volume",
+      "Create both containers",
+      "Start `db`",
+      "Wait until `db` is healthy",
+      "Start `web`"
+    ]
+  },
+  {
+    "id": "ex-bv050pmx",
+    "version": 1,
+    "section": "the-compose-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the prefix `shelf` in `shelf_default` and `shelf-db-1` come from?",
+    "hint": "Ana ran the command in `~/shelf`.",
+    "choices": [
+      {
+        "text": "The directory the Compose file is in",
+        "correct": true,
+        "why": "Right: the project name, which keeps two projects apart."
+      },
+      {
+        "text": "The image name `shelf:1.5.0`",
+        "correct": false,
+        "why": "`db` runs `postgres:17` and still got the prefix."
+      },
+      {
+        "text": "A `name:` key at the top of `compose.yaml`",
+        "correct": false,
+        "why": "Ana's file has none; the default is the directory."
+      },
+      {
+        "text": "The first service in the file",
+        "correct": false,
+        "why": "The first service is `db`."
+      }
+    ]
+  },
+  {
+    "id": "ex-erx41qjy",
+    "version": 1,
+    "section": "the-compose-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker inspect` on `db` showed `POSTGRES_PASSWORD_FILE=/run/secrets/db_password` and no password. On `web` it showed the password. Why the difference?",
+    "hint": "What does each program read?",
+    "choices": [
+      {
+        "text": "Compose encrypts secrets for `db` only",
+        "correct": false,
+        "why": "Nothing is encrypted; the file is mounted as it is."
+      },
+      {
+        "text": "Postgres reads a file, `shelf` a variable",
+        "correct": true,
+        "why": "Right: a secret can only be a file for a program that reads one."
+      },
+      {
+        "text": "`web` was started before the secret existed",
+        "correct": false,
+        "why": "The secret existed before either container."
+      },
+      {
+        "text": "The secret is only for images from Docker Hub",
+        "correct": false,
+        "why": "Any image can mount it; the program has to read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wrbsds9",
+    "version": 1,
+    "section": "the-compose-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana add `*.env` and `db_password.txt` to `.dockerignore`?",
+    "hint": "What does `COPY . .` copy?",
+    "choices": [
+      {
+        "text": "Compose refuses to start without them listed",
+        "correct": false,
+        "why": "Compose does not read `.dockerignore`."
+      },
+      {
+        "text": "To hide them from `docker compose ps`",
+        "correct": false,
+        "why": "`ps` lists containers, not files."
+      },
+      {
+        "text": "So no build copies them",
+        "correct": true,
+        "why": "Right: the context is everything not ignored."
+      },
+      {
+        "text": "Because the Dockerfile reads them",
+        "correct": false,
+        "why": "It does not; they are for Compose."
+      }
+    ]
+  },
+  {
+    "id": "ex-0r5bchc3",
+    "version": 1,
+    "section": "everyday-compose",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `docker compose down` and `up -d --wait`, the catalogue still had four books. Why?",
+    "hint": "What did `docker volume ls` show after `down`?",
+    "choices": [
+      {
+        "text": "`down` only stops containers",
+        "correct": false,
+        "why": "It removed them, and the network."
+      },
+      {
+        "text": "Postgres keeps a copy in the image",
+        "correct": false,
+        "why": "The image never changes."
+      },
+      {
+        "text": "`shelf` re-inserted the fourth book",
+        "correct": false,
+        "why": "`shelf` only seeds the three built-in books into an empty table."
+      },
+      {
+        "text": "The named volume survived `down`",
+        "correct": true,
+        "why": "Right: only `down -v` removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r16vdf35",
+    "version": 1,
+    "section": "everyday-compose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `up -d --build` with a new version of `shelf`, what happened to `db`?",
+    "hint": "Read its line in the output.",
+    "choices": [
+      {
+        "text": "Nothing; its configuration had not changed",
+        "correct": true,
+        "why": "Right: `Running`, left alone."
+      },
+      {
+        "text": "It was rebuilt along with `web`",
+        "correct": false,
+        "why": "`db` has no `build:`; it is an image from a registry."
+      },
+      {
+        "text": "It was recreated, and its data lost",
+        "correct": false,
+        "why": "Recreating keeps volumes anyway, and it was not recreated."
+      },
+      {
+        "text": "It was restarted so that `web` could reconnect to it",
+        "correct": false,
+        "why": "No restart was needed or shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mgqwb2j",
+    "version": 1,
+    "section": "everyday-compose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `--wait` add to `docker compose up -d`?",
+    "hint": "When did the command return?",
+    "choices": [
+      {
+        "text": "It waits for a key press before starting",
+        "correct": false,
+        "why": "Nothing interactive happens."
+      },
+      {
+        "text": "It returns once every checked service is healthy",
+        "correct": true,
+        "why": "Right: what a script wants before its first request."
+      },
+      {
+        "text": "It waits a fixed 30 seconds",
+        "correct": false,
+        "why": "It waits for health, not for a clock."
+      },
+      {
+        "text": "It retries services that fail",
+        "correct": false,
+        "why": "Restarting is the restart policy's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6mehg6q",
+    "version": 1,
+    "section": "everyday-compose",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it does.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "`docker compose down`",
+        "right": "Removes containers and networks, keeps volumes"
+      },
+      {
+        "left": "`docker compose down -v`",
+        "right": "Removes the volumes too"
+      },
+      {
+        "left": "`docker compose exec db psql`",
+        "right": "Runs a command inside a running service"
+      },
+      {
+        "left": "`docker compose up -d --build`",
+        "right": "Rebuilds images and recreates what changed"
+      }
+    ],
+    "right_distractors": [
+      "Moves a service to another machine"
+    ]
+  },
+  {
+    "id": "ex-gb2a9s82",
+    "version": 1,
+    "section": "everyday-compose",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the `INSERT`, how many books did `/books` return?",
+    "hint": "Three built in, plus Ana's.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "books"
+  },
+  {
+    "id": "ex-n44k3fve",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's Compose file has `depends_on: [db]` with no condition, and `web` sometimes fails at start. What is the fix?",
+    "hint": "Started is not the same as ready.",
+    "choices": [
+      {
+        "text": "Add `sleep 10` before `shelf` starts",
+        "correct": false,
+        "why": "A guess that fails on the slow day; and distroless has no shell for it."
+      },
+      {
+        "text": "Publish `db`'s port",
+        "correct": false,
+        "why": "Publishing changes nothing between containers on one network."
+      },
+      {
+        "text": "Give `db` a health check and wait for `service_healthy`",
+        "correct": true,
+        "why": "Right: `web` starts only when Postgres accepts connections."
+      },
+      {
+        "text": "Remove `depends_on`",
+        "correct": false,
+        "why": "Then the order is not even attempted."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zys53k5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the end of a CI test run that used Compose, which command leaves nothing behind?",
+    "hint": "Containers, networks and volumes.",
+    "choices": [
+      {
+        "text": "`docker compose stop`",
+        "correct": false,
+        "why": "Stopped containers, the network and the volume all remain."
+      },
+      {
+        "text": "`docker compose down`",
+        "correct": false,
+        "why": "The volume remains, with the test data."
+      },
+      {
+        "text": "`docker compose down --rmi all`",
+        "correct": false,
+        "why": "The images go too, and the volume still stays."
+      },
+      {
+        "text": "`docker compose down -v`",
+        "correct": true,
+        "why": "Right: containers, network and volumes."
+      }
+    ]
+  }
+]
