@@ -83,7 +83,7 @@ RAGLIBS="numpy==2.4.6 onnxruntime==1.30.0 tokenizers==0.23.2 tiktoken==0.14.0
   psycopg[binary]==3.3.6 pgvector==0.3.6 openai==2.54.0 anthropic==1.11.0 rank-bm25==0.2.2
   langchain-core==1.6.6 langchain-text-splitters==1.1.3 langchain-openai==1.6.7
   langchain-postgres==0.0.18 llama-index-core==0.14.25 llama-index-embeddings-openai==0.7.0
-  llama-index-llms-openai==0.8.2 haystack-ai==3.3.0"
+  llama-index-llms-openai==0.8.2 llama-index-llms-openai-like==0.8.1 haystack-ai==3.3.0"
 
 # The environment every command of ana's runs in. The keys are the lab's and
 # open nothing anywhere else; both base URLs point at labgen.

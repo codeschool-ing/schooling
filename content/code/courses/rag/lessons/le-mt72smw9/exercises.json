@@ -1,0 +1,679 @@
+[
+  {
+    "id": "ex-e2fskpaj",
+    "version": 1,
+    "section": "langchain-pieces",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no settings, how many chunks did RecursiveCharacterTextSplitter make of the thirteen documents?",
+    "hint": "The first count printed.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "chunks"
+  },
+  {
+    "id": "ex-nybfkcb8",
+    "version": 1,
+    "section": "langchain-pieces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what unit does LangChain's splitter measure its default chunk_size of 4,000?",
+    "hint": "Look at length_function.",
+    "choices": [
+      {
+        "text": "Tokens of the embedding model",
+        "correct": false,
+        "why": "It would need the model's tokenizer; len counts characters."
+      },
+      {
+        "text": "Lines of the source file",
+        "correct": false,
+        "why": "Lines are one of its separators, not its unit."
+      },
+      {
+        "text": "Words separated by spaces",
+        "correct": false,
+        "why": "len on a string counts characters."
+      },
+      {
+        "text": "Characters",
+        "correct": true,
+        "why": "Right: length_function is len."
+      }
+    ]
+  },
+  {
+    "id": "ex-dw3czrwa",
+    "version": 1,
+    "section": "langchain-pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the default OpenAIEmbeddings call fail against the lab's provider?",
+    "hint": "Read the provider's message.",
+    "choices": [
+      {
+        "text": "The key belonged to another provider",
+        "correct": false,
+        "why": "The same key worked with the setting changed."
+      },
+      {
+        "text": "It sent token numbers, not text",
+        "correct": true,
+        "why": "Right: labembed accepts only strings."
+      },
+      {
+        "text": "The model name lab-minilm was unknown to LangChain",
+        "correct": false,
+        "why": "LangChain passed the name on; the provider refused the input."
+      },
+      {
+        "text": "The texts were longer than the model reads",
+        "correct": false,
+        "why": "The text was one short question."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0km6gtf",
+    "version": 1,
+    "section": "langchain-pieces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Against a provider that accepts token numbers, what does OpenAIEmbeddings' default do with a text longer than the model's limit?",
+    "hint": "The quiet half of the default.",
+    "choices": [
+      {
+        "text": "Sends it whole and lets the provider cut it",
+        "correct": false,
+        "why": "It splits before sending."
+      },
+      {
+        "text": "Keeps only the first sentence of the text",
+        "correct": false,
+        "why": "It keeps every piece and averages."
+      },
+      {
+        "text": "Splits it, embeds the pieces and averages them",
+        "correct": true,
+        "why": "Right: one vector for a chunk nobody chose."
+      },
+      {
+        "text": "Raises an error naming the limit",
+        "correct": false,
+        "why": "That would be the loud half; it is silent."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmst7spp",
+    "version": 1,
+    "section": "langchain-store-and-chain",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After loading twice without ids, how many rows did langchain_pg_embedding hold?",
+    "hint": "Twice 126.",
+    "value": 252,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-bq1mc46z",
+    "version": 1,
+    "section": "langchain-store-and-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What kept the row count at 126 when lc_load.py ran twice with --ids?",
+    "hint": "Lesson 5's kind of id.",
+    "choices": [
+      {
+        "text": "The DELETE before the loads",
+        "correct": false,
+        "why": "That emptied the table once; the second load would still double it without ids."
+      },
+      {
+        "text": "Ids from the document and a hash of the text",
+        "correct": true,
+        "why": "Right: the second load writes over the first."
+      },
+      {
+        "text": "The splitter makes fewer chunks the second time",
+        "correct": false,
+        "why": "Both runs printed 126."
+      },
+      {
+        "text": "PGVector skips a collection that exists",
+        "correct": false,
+        "why": "Without ids it doubled the same collection."
+      }
+    ]
+  },
+  {
+    "id": "ex-8n410qcc",
+    "version": 1,
+    "section": "langchain-store-and-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "similarity_search_with_score returned 0.253 for the best chunk and 0.377 for the third. What are these numbers?",
+    "hint": "Lower came first.",
+    "choices": [
+      {
+        "text": "Similarities, where a higher number is better",
+        "correct": false,
+        "why": "The best came with the lowest number."
+      },
+      {
+        "text": "Cosine distances, 1 minus the similarity",
+        "correct": true,
+        "why": "Right: 0.253 is a similarity of 0.747."
+      },
+      {
+        "text": "Probabilities that the chunk holds the answer",
+        "correct": false,
+        "why": "Nothing here computes a probability."
+      },
+      {
+        "text": "Ranks scaled into the range 0 to 1",
+        "correct": false,
+        "why": "They are distances from pgvector."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh8k2g47",
+    "version": 1,
+    "section": "langchain-store-and-chain",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A chunk has a cosine distance of 0.253 from the question. What is its cosine similarity? Give two decimals.",
+    "hint": "Distance is 1 minus similarity.",
+    "value": 0.75,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-txcmqtf5",
+    "version": 1,
+    "section": "langchain-store-and-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without the filter, where did the 14 days in the chain's reply come from?",
+    "hint": "Read the status beside [1].",
+    "choices": [
+      {
+        "text": "extract-1's memory",
+        "correct": false,
+        "why": "The reply cited source [1]."
+      },
+      {
+        "text": "The terms of sale, about e-books",
+        "correct": false,
+        "why": "The terms of sale say 30 days too."
+      },
+      {
+        "text": "The returns policy that is in force today",
+        "correct": false,
+        "why": "It says 30 days."
+      },
+      {
+        "text": "The superseded 2025 returns policy",
+        "correct": true,
+        "why": "Right: the store held it and nothing filtered it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f63mmmvm",
+    "version": 1,
+    "section": "langchain-store-and-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the cryptocurrency question, why was the model never called?",
+    "hint": "The last line of the program.",
+    "choices": [
+      {
+        "text": "LangChain refuses to run a chain that has no sources",
+        "correct": false,
+        "why": "A chain built only of | would have called it."
+      },
+      {
+        "text": "labgen was set to fail",
+        "correct": false,
+        "why": "No failure was injected here."
+      },
+      {
+        "text": "The program's if sent the refusal instead",
+        "correct": true,
+        "why": "Right: lesson 7's decision, written by hand."
+      },
+      {
+        "text": "The filter removed the question",
+        "correct": false,
+        "why": "Filters act on chunks, not questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7n3ztca",
+    "version": 1,
+    "section": "llamaindex",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which variable do LlamaIndex's OpenAI clients read for the provider's address?",
+    "hint": "The older name.",
+    "choices": [
+      {
+        "text": "OPENAI_API_BASE",
+        "correct": true,
+        "why": "Right: the name from before the SDK's version 1."
+      },
+      {
+        "text": "HTTPS_PROXY",
+        "correct": false,
+        "why": "That routes traffic; it does not choose the provider."
+      },
+      {
+        "text": "OPENAI_BASE_URL",
+        "correct": false,
+        "why": "That is the openai SDK's, which they ignore."
+      },
+      {
+        "text": "LLAMA_INDEX_BASE",
+        "correct": false,
+        "why": "No such variable is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmwfv49t",
+    "version": 1,
+    "section": "llamaindex",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Built with only a model name on a laptop with a real OpenAI key, where would LlamaIndex's embedding client send the corpus?",
+    "hint": "li_where.py printed it.",
+    "choices": [
+      {
+        "text": "To the provider the team configured",
+        "correct": false,
+        "why": "That address is in a variable it does not read."
+      },
+      {
+        "text": "Nowhere, since it embeds locally",
+        "correct": false,
+        "why": "It is an API client."
+      },
+      {
+        "text": "To labgen on 127.0.0.1:8600",
+        "correct": false,
+        "why": "Only if api_base is passed."
+      },
+      {
+        "text": "To api.openai.com",
+        "correct": true,
+        "why": "Right: the fallback when no address is set."
+      }
+    ]
+  },
+  {
+    "id": "ex-91txmk5d",
+    "version": 1,
+    "section": "llamaindex",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was OpenAI(model=\"extract-1\") refused by LlamaIndex?",
+    "hint": "What does it look up by name?",
+    "choices": [
+      {
+        "text": "The lab's key is not a key OpenAI issued",
+        "correct": false,
+        "why": "The refusal came before any request."
+      },
+      {
+        "text": "labgen rejected the model name",
+        "correct": false,
+        "why": "labgen serves extract-1."
+      },
+      {
+        "text": "It looks up each name's context window",
+        "correct": true,
+        "why": "Right: OpenAILike takes the window as a parameter."
+      },
+      {
+        "text": "Model names must start with gpt",
+        "correct": false,
+        "why": "The table lists several families."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn99fypx",
+    "version": 1,
+    "section": "llamaindex",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which rule of LlamaIndex's default prompt contradicts lesson 7?",
+    "hint": "Lesson 7 cites every sentence.",
+    "choices": [
+      {
+        "text": "Do not use prior knowledge",
+        "correct": false,
+        "why": "Lesson 7 says only the sources, which agrees."
+      },
+      {
+        "text": "Answer using the provided context",
+        "correct": false,
+        "why": "Lesson 7 asks for that too."
+      },
+      {
+        "text": "Never directly reference the given context",
+        "correct": true,
+        "why": "Right: no citation, nothing to check."
+      },
+      {
+        "text": "You are an expert Q&A system",
+        "correct": false,
+        "why": "A role, not a rule about sources."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5rnm4my",
+    "version": 1,
+    "section": "llamaindex",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "CitationQueryEngine retrieved three nodes. How many numbered sources did it send?",
+    "hint": "It cuts again at 512 tokens.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "sources"
+  },
+  {
+    "id": "ex-2d202pvf",
+    "version": 1,
+    "section": "llamaindex",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make CitationQueryEngine number smaller pieces, set its citation_chunk_____ parameter.",
+    "hint": "Default 512.",
+    "blanks": [
+      {
+        "accept": [
+          "size"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s0rh38gn",
+    "version": 1,
+    "section": "windows-and-merging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the sentence window, what is compared with the question?",
+    "hint": "Precise search, wide context.",
+    "choices": [
+      {
+        "text": "The whole document",
+        "correct": false,
+        "why": "Each sentence is a node of its own."
+      },
+      {
+        "text": "The window of seven sentences",
+        "correct": false,
+        "why": "The window is what is sent, not what is searched."
+      },
+      {
+        "text": "The heading above the sentence",
+        "correct": false,
+        "why": "Headings are not searched separately here."
+      },
+      {
+        "text": "The single sentence",
+        "correct": true,
+        "why": "Right: then the post-processor swaps in its window."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gtfk4v8",
+    "version": 1,
+    "section": "windows-and-merging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the express delivery sentence need its window?",
+    "hint": "Where was 9.90?",
+    "choices": [
+      {
+        "text": "The sentence came from the superseded policy",
+        "correct": false,
+        "why": "It came from shipping-and-delivery, which is current."
+      },
+      {
+        "text": "Its embedding failed",
+        "correct": false,
+        "why": "It was retrieved first."
+      },
+      {
+        "text": "It was cut in half by the splitter",
+        "correct": false,
+        "why": "Each node holds a whole sentence."
+      },
+      {
+        "text": "The price was in a table three sentences earlier",
+        "correct": true,
+        "why": "Right: the matching sentence held no price."
+      }
+    ]
+  },
+  {
+    "id": "ex-175y1h9q",
+    "version": 1,
+    "section": "windows-and-merging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a sentence window not respect that lesson 4's structured chunks do?",
+    "hint": "This window started in the front matter.",
+    "choices": [
+      {
+        "text": "The model's limit of 256 pieces",
+        "correct": false,
+        "why": "The window is not embedded; the sentence is."
+      },
+      {
+        "text": "The headings, where a subject changes",
+        "correct": true,
+        "why": "Right: it is counted in sentences."
+      },
+      {
+        "text": "The document's language",
+        "correct": false,
+        "why": "Every document is in one language."
+      },
+      {
+        "text": "The order of the sentences",
+        "correct": false,
+        "why": "The window keeps the order."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb7mq7xf",
+    "version": 1,
+    "section": "windows-and-merging",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put what the auto-merging retriever did for the e-books question in order.",
+    "hint": "From leaves to the document.",
+    "items": [
+      "Retrieve six leaves of 128 tokens",
+      "Count, for each parent, how many children came back",
+      "Replace children with their parent where more than half came",
+      "Repeat one level up until nothing changes"
+    ]
+  },
+  {
+    "id": "ex-y0jwxx38",
+    "version": 1,
+    "section": "measuring-the-defaults",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tokens per question did lesson 5's index send in the comparison?",
+    "hint": "The last row.",
+    "value": 168,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-tkx035v0",
+    "version": 1,
+    "section": "measuring-the-defaults",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did chunks of about 490 words find fewer answers than chunks of 60?",
+    "hint": "embeddings-vectors lesson 3.",
+    "choices": [
+      {
+        "text": "The model reads at most 256 pieces of each",
+        "correct": true,
+        "why": "Right: an answer further down is invisible."
+      },
+      {
+        "text": "Large chunks were filtered out as superseded",
+        "correct": false,
+        "why": "No filter ran in this measurement."
+      },
+      {
+        "text": "Only three chunks fit in the prompt",
+        "correct": false,
+        "why": "Three were taken from every pipeline."
+      },
+      {
+        "text": "The frameworks used a different embedding model",
+        "correct": false,
+        "why": "All seven used all-MiniLM-L6-v2."
+      }
+    ]
+  },
+  {
+    "id": "ex-fyy5krs9",
+    "version": 1,
+    "section": "measuring-the-defaults",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the lesson conclude from LangChain at 400 characters finding 24 of 26?",
+    "hint": "Whose number is it?",
+    "choices": [
+      {
+        "text": "LangChain retrieves better than LlamaIndex",
+        "correct": false,
+        "why": "Tuned, both get close; the setting decides."
+      },
+      {
+        "text": "Characters measure the size of a chunk better than words do",
+        "correct": false,
+        "why": "400 characters were chosen to match 60 words."
+      },
+      {
+        "text": "The test set is too small to say anything",
+        "correct": false,
+        "why": "It separates 22 from 26, if not 25 from 26."
+      },
+      {
+        "text": "A framework gets there with a measured setting",
+        "correct": true,
+        "why": "Right: the number belongs to the setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w4xw864",
+    "version": 1,
+    "section": "what-stays-yours",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each default to what the measured pipeline does instead.",
+    "hint": "The lesson's table.",
+    "pairs": [
+      {
+        "left": "a random id per load",
+        "right": "an id from the document and the text"
+      },
+      {
+        "left": "a distance, lower is better",
+        "right": "a similarity with a floor of 0.5"
+      },
+      {
+        "left": "never reference the context",
+        "right": "cite every sentence"
+      },
+      {
+        "left": "no filter on status",
+        "right": "current and public only"
+      }
+    ]
+  },
+  {
+    "id": "ex-pgge5a66",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does the lesson say to do when using a framework? Choose all that apply.",
+    "hint": "Four habits.",
+    "choices": [
+      {
+        "text": "Read the requests it sends",
+        "correct": true,
+        "why": "Yes: the prompt, the address, the body."
+      },
+      {
+        "text": "Set measured values explicitly",
+        "correct": true,
+        "why": "Yes, even when they equal the default."
+      },
+      {
+        "text": "Upgrade to the newest version every week",
+        "correct": false,
+        "why": "Pin versions and test after upgrades."
+      },
+      {
+        "text": "Keep the test outside the framework",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Trust the defaults the authors chose",
+        "correct": false,
+        "why": "They never saw your documents."
+      }
+    ]
+  }
+]

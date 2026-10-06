@@ -31,12 +31,14 @@ THE RULES OF extract-1, in the order it applies them.
      average meaning, in their original order, within the word limit the
      instruction gives ("in at most 40 words"), or 60 words if it gives none.
 
-  3. ANSWER FROM SOURCES. Sources are found in the request in three shapes:
-     a line `[n] ...` followed by its text, a `<source id="n">...</source>`
-     element, or an Anthropic `document` block. Earlier turns of the
-     conversation are read as sources too, with no number. Every sentence of
+  3. ANSWER FROM SOURCES. Sources are found in the request in four shapes:
+     a line `[n] ...` or `Source n:` followed by its text, a
+     `<source id="n">...</source>` element, or an Anthropic `document` block.
+     Earlier turns of the conversation are read as sources too, with no
+     number, and so is a last message that carries 40 words or more besides
+     its question, as a framework's default prompt does. Every sentence of
      every source is embedded with all-MiniLM-L6-v2, and so is the question
-     (the last user message, after `Question:` if it has one). The reply is
+     (the last user message, after `Question:` or `Query:` if it has one). The reply is
      the sentences whose cosine similarity to the question is at least 0.53
      and within 0.12 of the best one, at most three, best first, each copied
      word for word and followed by the number of its source. If no sentence
@@ -122,7 +124,7 @@ def count(system, messages):
 
 
 SOURCE_EL = re.compile(r'<source\b[^>]*\bid="([^"]+)"[^>]*>(.*?)</source>', re.S)
-SOURCE_LINE = re.compile(r"^\[(\d+)\][^\n]*\n", re.M)
+SOURCE_LINE = re.compile(r"^(?:\[(\d+)\]|Source (\d+):)[^\n]*\n", re.M)
 
 
 def split_sources(text):
@@ -137,10 +139,10 @@ def split_sources(text):
     for i, m in enumerate(heads):
         end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
         body = text[m.end():end]
-        q = re.search(r"^(Question|QUESTION):", body, re.M)
+        q = re.search(r"^(Question|QUESTION|Query):", body, re.M)
         if q:
             body, tail = body[:q.start()], body[q.start():]
-        found.append((m.group(1), body))
+        found.append((m.group(1) or m.group(2), body))
     return found, text[:heads[0].start()] + tail
 
 
@@ -171,8 +173,11 @@ def sentences(text):
     return out
 
 
+QUESTION = re.compile(r"(?:^|\n)(?:Question|QUESTION|Query):\s*(.+?)(?:\nAnswer:\s*)?$", re.S)
+
+
 def question_of(text):
-    m = re.search(r"(?:^|\n)(?:Question|QUESTION):\s*(.+)", text, re.S)
+    m = QUESTION.search(text)
     return (m.group(1) if m else text).strip()
 
 
@@ -227,6 +232,9 @@ def rule_sources(system, messages, documents):
         pool += [(s, label, None, -1, -1) for s in sentences(body)]
     for m in messages[:-1]:
         pool += [(s, None, None, -1, -1) for s in sentences(text_of(m["content"]))]
+    q = QUESTION.search(last)
+    if not pool and q and len(last[:q.start()].split()) >= 40:
+        pool += [(s, None, None, -1, -1) for s in sentences(last[:q.start()])]
     if not pool:
         return None
     q = question_of(rest if found else last)
