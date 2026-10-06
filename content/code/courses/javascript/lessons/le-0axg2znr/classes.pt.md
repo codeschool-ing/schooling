@@ -43,7 +43,7 @@ sintaxe antiga tornava desajeitados:
 
 **Nada na cadeia de protótipos mudou.** Uma classe é uma função, e os métodos dela ficam no objeto
 `prototype`, então tudo das três últimas seções vale para classes sem mudança. A saída do console
-dá o nome da classe, `Book { title: 'Dom Casmurro', year: 1899 }`, que é a diferença mais visível.
+põe o nome da classe, `Book`, na frente das chaves, que é a diferença mais visível.
 
 ## O que uma classe acrescenta
 

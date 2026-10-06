@@ -47,7 +47,7 @@ Dom Casmurro (1899) Iracema (?)
 
 - `const { title, year } = book` is short for two lines, `const title = book.title` and `const year
   = book.year`. **The names match the property names**;
-- `title: name` renames: it reads `book.title` into a variable called `name`. `pages = 0` is a
+- `: name` after `title` renames: it reads `book.title` into a variable called `name`. `pages = 0` is a
   **default**, used when the property is missing, which `pages` was. `isbn` had no default and
   came out `undefined`, as any missing property does;
 - patterns nest: `{ author: { name: authorName } }` reaches into `book.author`. If `author` were

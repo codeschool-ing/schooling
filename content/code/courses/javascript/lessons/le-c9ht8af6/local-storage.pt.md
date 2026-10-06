@@ -56,7 +56,7 @@ do navegador, e as duas abas viram o mesmo armazém.
 
 As outras linhas mostram a regra que pega todo mundo:
 
-- `setItem("lastBook", { title: "Iracema" })` guardou **`[object Object]`**. O valor foi convertido em
+- `setItem` com um objeto guardou **`[object Object]`**. O valor foi convertido em
   string, do jeito que a aula 2 mostrou um objeto virando texto, e o título se perdeu;
 - `typeof localStorage.getItem("visits")` é `string`. O código converteu com `Number` ao ler de volta,
   e é por isso que o contador funcionou;

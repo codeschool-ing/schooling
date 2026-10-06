@@ -64,7 +64,7 @@ undefined
 ```
 
 **After `=>`, a brace always opens a block, never an object.** In `wrong`, the braces are a
-function body, `title:` is a label (a part of the language almost nobody uses), and the function
+function body, `title` and its colon are a label (a part of the language almost nobody uses), and the function
 returns nothing. Wrapping the object in parentheses, as `right` does, makes it an expression again.
 Everybody writes `wrong` once.
 

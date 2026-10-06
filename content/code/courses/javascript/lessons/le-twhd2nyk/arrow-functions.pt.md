@@ -64,7 +64,7 @@ undefined
 ```
 
 **Depois de `=>`, uma chave sempre abre um bloco, nunca um objeto.** Em `wrong`, as chaves são o
-corpo da função, `title:` é um rótulo (uma parte da linguagem que quase ninguém usa), e a função
+corpo da função, `title` com os dois-pontos é um rótulo (uma parte da linguagem que quase ninguém usa), e a função
 não devolve nada. Envolver o objeto em parênteses, como faz `right`, o torna uma expressão de novo.
 Todo mundo escreve o `wrong` uma vez.
 

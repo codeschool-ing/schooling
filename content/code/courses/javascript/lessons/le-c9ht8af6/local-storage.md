@@ -56,7 +56,7 @@ the same store.
 
 The other lines show the rule that catches everybody:
 
-- `setItem("lastBook", { title: "Iracema" })` stored **`[object Object]`**. The value was converted to
+- `setItem` with an object stored **`[object Object]`**. The value was converted to
   a string, the way lesson 2 showed an object becoming text, and the title was lost;
 - `typeof localStorage.getItem("visits")` is `string`. The code converted with `Number` when reading
   it back, which is why the counter worked;

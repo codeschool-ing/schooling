@@ -42,7 +42,7 @@ a few guarantees the old way lacked. The same `Book`, with two features the old 
 
 **Nothing about the prototype chain changed.** A class is a function, and its methods sit on its
 `prototype` object, so everything in the last three sections applies to classes unchanged. Console
-output names the class, `Book { title: 'Dom Casmurro', year: 1899 }`, which is the most visible
+output puts the class's name, `Book`, in front of the braces, which is the most visible
 difference.
 
 ## What a class adds

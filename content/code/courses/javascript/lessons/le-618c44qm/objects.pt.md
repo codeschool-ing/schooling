@@ -77,7 +77,7 @@ ana@dev:~/js$ node shorthand.js
 ```
 
 Quando uma propriedade tem o mesmo nome da variável que guarda o valor dela, **`{ title, year }` é
-atalho para `{ title: title, year: year }`**, e você vai ver isso o tempo todo. `Object.keys`,
+atalho para escrever cada nome duas vezes, como em `year: year`**, e você vai ver isso o tempo todo. `Object.keys`,
 `Object.values` e `Object.entries` transformam um objeto em arrays dos seus nomes, dos seus valores
 ou de pares `[nome, valor]`, que é como você percorre um objeto com as ferramentas de array mais
 adiante nesta aula.

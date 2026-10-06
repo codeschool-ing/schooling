@@ -47,7 +47,7 @@ Dom Casmurro (1899) Iracema (?)
 
 - `const { title, year } = book` é atalho para duas linhas, `const title = book.title` e
   `const year = book.year`. **Os nomes batem com os nomes das propriedades**;
-- `title: name` renomeia: lê `book.title` para uma variável chamada `name`. `pages = 0` é um
+- `: name` depois de `title` renomeia: lê `book.title` para uma variável chamada `name`. `pages = 0` é um
   **padrão**, usado quando a propriedade falta, como faltava `pages`. `isbn` não tinha padrão e
   saiu `undefined`, como toda propriedade que falta;
 - padrões se aninham: `{ author: { name: authorName } }` alcança dentro de `book.author`. Se

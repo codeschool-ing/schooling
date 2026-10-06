@@ -77,6 +77,6 @@ ana@dev:~/js$ node shorthand.js
 ```
 
 When a property has the same name as the variable holding its value, **`{ title, year }` is short
-for `{ title: title, year: year }`**, and you will see it constantly. `Object.keys`, `Object.values`
+for writing each name twice, as in `year: year`**, and you will see it constantly. `Object.keys`, `Object.values`
 and `Object.entries` turn an object into arrays of its names, its values, or `[name, value]`
 pairs, which is how you loop over an object with the array tools later in this lesson.
