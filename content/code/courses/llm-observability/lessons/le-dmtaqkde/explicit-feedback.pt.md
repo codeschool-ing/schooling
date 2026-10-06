@@ -1,0 +1,84 @@
+---
+title: Polegar para cima e para baixo
+version: 1
+---
+
+O sinal de qualidade mais direto que existe: perguntar ao cliente. Um polegar embaixo de cada resposta,
+para cima ou para baixo, não custa nada para mostrar e um clique para dar. Nesta semana, **os clientes
+são simulados**, e o que cada um faz depois de uma resposta é decidido pelas regras que o `replay.py`
+declara no topo:
+
+```
+  - A reply is RIGHT if it contains one of its topic's facts, or, for a topic
+    the documents do not answer, if it is the refusal.
+  - 18% of customers rate a reply. A wrong reply gets a thumbs down 85% of the
+    time; a right one gets a thumbs up 92% of the time.
+  - After a wrong reply, 45% ask again in other words, 40 to 120 seconds
+    later, in the same session. If that is wrong too, 60% ask for a person.
+  - Summaries are for the support team, who do not rate them.
+```
+
+Os números são do curso, escolhidos para parecer o que equipes de atendimento relatam, e não medidos
+de ninguém. O que a aula mede é o que o assistente respondeu e como essas regras então se somam.
+
+## Ligando um polegar à sua resposta
+
+Cada clique é uma linha no `feedback.jsonl`, e ela traz **o id de trace da resposta a que se refere**,
+que a tela recebeu junto com a resposta:
+
+```
+ana@lab:~/obs$ head -3 feedback.jsonl
+{"trace": "65c96d256fe5e0df9f7b25467de00a60", "request": "r0012", "at": "2026-09-28T06:29:39", "kind": "thumbs", "value": "down"}
+{"trace": "731748f8ee9c32611a7403e01688fd78", "request": "r0025", "at": "2026-09-28T08:35:26", "kind": "rephrase", "value": "Who pays for the return postage?"}
+{"trace": "d7409c1f4b1d04d3e047ea703eca81fd", "request": "r0021", "at": "2026-09-28T08:02:28", "kind": "thumbs", "value": "down"}
+```
+
+A ligação é exata, por id, como a aula 1 disse que tinha de ser: um cliente que perguntou duas vezes
+num minuto gera dois traces e um polegar num deles. O `signals.py` liga cada linha à versão do seu trace
+e conta:
+
+```python
+"""signals.py: feedback joined to its trace by id, and counted per release."""
+import json
+from collections import Counter, defaultdict
+
+import costs
+
+release = {r["trace"]: r["release"] for r in costs.requests()}
+asked = Counter(r["release"] for r in costs.requests() if r["feature"] != "summary")
+seen = defaultdict(Counter)
+for f in map(json.loads, open("feedback.jsonl")):
+    seen[release[f["trace"]]][f["kind"] if f["kind"] != "thumbs" else "thumbs " + f["value"]] += 1
+print(f"{'release':10} {'requests':>8} {'rated':>6} {'down':>5} {'down %':>7} {'rephrased':>9} {'person':>7}  per 100 requests")
+for rel, c in sorted(seen.items()):
+    rated = c["thumbs up"] + c["thumbs down"]
+    print(f"{rel:10} {asked[rel]:8} {rated:6} {c['thumbs down']:5} {c['thumbs down'] / rated:7.0%} "
+          f"{c['rephrase'] / asked[rel] * 100:9.1f} {c['escalate'] / asked[rel] * 100:7.1f}")
+```
+
+```
+ana@lab:~/obs$ python signals.py
+release    requests  rated  down  down % rephrased  person  per 100 requests
+2026.09.4       789    123    44     36%      15.7     4.4
+2026.10.1       432     68    35     51%      21.8     9.0
+```
+
+Sob a versão antiga, **36% dos polegares foram para baixo**; sob a nova, **51%**. Essa seria a
+manchete, e vale ter cuidado com ela.
+
+## O que um polegar mede, e o que não mede
+
+**Pouca gente avalia.** 123 avaliações numa versão e 68 na outra, de 789 e 432 pedidos. Nesses tamanhos
+uma diferença de quinze pontos provavelmente é real, mas um painel mostrando a taxa de polegar para
+baixo de um dia sobre vinte avaliações vai pular só com o ruído. A aula 9 põe uma margem de erro numa
+taxa assim.
+
+**Quem avalia não é quem pergunta.** Aqui são 18% sorteados, porque a regra manda. Em produtos reais, as
+pessoas avaliam mais quando estão irritadas, ou mais quando estão encantadas, e a mistura muda com a
+tela: um polegar sempre visível atrai um público diferente de um que aparece depois de uma pausa. Uma
+taxa de polegar para baixo mede a experiência de quem avalia, e é segura para comparar duas versões da
+mesma tela, não dois produtos.
+
+**Um polegar diz que algo estava errado, não o quê.** Um polegar para baixo numa recusa, num fato errado
+e numa resposta lenta parecem iguais. O valor dele é apontar traces que valem ser lidos, e ser
+independente de qualquer coisa que o sistema pense de si mesmo.
