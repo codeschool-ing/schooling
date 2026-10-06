@@ -173,7 +173,22 @@ up() { # [CONFIG] [NAME]: a fresh cluster, the base images in it, kubectl pointe
   rm -f /var/tmp/lab-image.tar
   kubectl wait --for=condition=Ready nodes --all --timeout=180s >/dev/null
   serving_certs
+  no_upstream_dns
   kubectl -n kube-system rollout status deploy/coredns --timeout=180s >/dev/null
+}
+
+no_upstream_dns() { # CoreDNS answers the cluster's own names and nothing else
+  # A lab cluster has no business on the internet, and on the recording
+  # machine a pod that asked for `shop` was once answered for `shop.`, the
+  # real top-level domain, and sent its request out of the laptop. Taking
+  # CoreDNS's `forward` block out leaves every name outside cluster.local
+  # unanswered. A real cluster keeps it.
+  kubectl -n kube-system get configmap coredns -o jsonpath='{.data.Corefile}' |
+    sed '/^ *forward \. /,/^ *}/d' >/var/tmp/Corefile
+  kubectl -n kube-system create configmap coredns --from-file=Corefile=/var/tmp/Corefile \
+    --dry-run=client -o yaml | kubectl replace -f - >/dev/null
+  rm -f /var/tmp/Corefile
+  kubectl -n kube-system rollout restart deploy/coredns >/dev/null
 }
 
 serving_certs() { # approve each kubelet's request for a serving certificate
