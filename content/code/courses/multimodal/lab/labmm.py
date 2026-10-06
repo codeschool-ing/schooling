@@ -24,7 +24,8 @@ WHAT ANSWERS BEHIND EACH ONE IS NOT THE SAME, and the difference is the point:
     WRITTEN BY THE COURSE   lab-vision-1 and lab-flash-image have no model in
                             them. A reply about an image is chosen from rules
                             in lab/scripted/*.json, matched on the image's
-                            SHA-256 and phrases in the prompt, and every lesson
+                            SHA-256, the detail asked for and phrases in the
+                            prompt, and every lesson
                             that shows one says so.
     DRAWN BY THE LAB        lab-image-1 and lab-flash-image do not generate
                             pictures. They return a card that says so, at the
@@ -180,6 +181,8 @@ def scripted(texts, images, schema):
         if want is not None and [s[:12] for s in shas] != want:
             continue
         if bool(w.get("schema")) != bool(schema):
+            continue
+        if w.get("detail") and any(i.get("detail") != w["detail"] for i in images):
             continue
         return r["reply"], r["id"]
     return ("labmm has no reply written for this request. Its image replies are rules the course "
