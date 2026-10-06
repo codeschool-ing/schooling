@@ -31,7 +31,7 @@ Dois clientes em 400 no segundo passo encontraram o bug. Com o blue-green da aul
 
 A regra funcionou aqui, e tem uma falha que vale a pena ver. Com 98 respostas, **um** erro dá uma
 taxa de 1,02%, o que já está mais de 1,0 ponto acima de um blue sem nenhum. Então, entre 50 e 99
-respostas, a regra na verdade é "pare no primeiro erro". A seção 8 da aula 10 mostrou quanto vale um
+respostas, a regra na verdade é "pare no primeiro erro". A aula 10 seção 08 mostrou quanto vale um
 erro: muito pouco. Um canário com esta regra vai às vezes abortar um release bom por uma única
 requisição azarada.
 
@@ -45,4 +45,5 @@ Há duas correções honestas, e elas puxam para lados opostos:
   dedicadas à análise de canário.
 
 Qualquer uma é melhor que a terceira opção para onde as equipes escorregam: rodar de novo um canário
-abortado até ele passar. Uma regra que você ignora sempre que ela dispara não é uma regra.
+abortado até ele passar. Cada nova rodada é mais um sorteio, e um release com um bug raro acaba
+passando num deles.

@@ -24,7 +24,7 @@ ana@laptop:~/shipquote$ du -sh /tmp/uv-cold
 ```
 
 The first install downloaded and unpacked the three pinned packages and their dependencies, and
-took **0.785 seconds**; the second, reading the same files from the cache, took **0.157**. The cache
+took **1.099 seconds**; the second, reading the same files from the cache, took **0.167**. The cache
 holds 17 MB. On this lab the saving is small, because `uv` is fast and the project depends on almost
 nothing; on a project with hundreds of packages, or one that compiles them, the same comparison is
 minutes against seconds, on every run.

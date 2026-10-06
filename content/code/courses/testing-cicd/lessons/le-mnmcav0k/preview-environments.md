@@ -26,7 +26,7 @@ production
 staging
 ```
 
-One line of configuration, one deploy, and the smoke test passed: **0.173 seconds** to create an
+One line of configuration, one deploy, and the smoke test passed: **0.168 seconds** to create an
 environment and prove it answers. Then it is stopped and deleted, and `~/envs` holds the three
 permanent ones again. On a real platform the steps are the same, and slower: create the
 infrastructure, often from the same definition as staging; deploy; post the address on the pull

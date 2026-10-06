@@ -43,7 +43,7 @@ and prints the uncovered changed lines; hosted services such as Codecov and Cove
 thing as a comment on the pull request. A team that wants a coverage gate is usually better served
 by one on the change than on the total:
 
-- it asks something of **the person who made the change**, about **their change**, which they can
+- it asks something of **the person who made the change**, about their change, which they can
   answer;
 - it does not punish a change for old untested code it did not touch;
 - it cannot be met by adding a test elsewhere, as the total can.

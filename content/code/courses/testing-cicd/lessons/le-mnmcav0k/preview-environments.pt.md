@@ -26,7 +26,7 @@ production
 staging
 ```
 
-Uma linha de configuração, um deploy, e o smoke test passou: **0,173 segundo** para criar um ambiente
+Uma linha de configuração, um deploy, e o smoke test passou: **0,168 segundo** para criar um ambiente
 e provar que ele responde. Depois ele é parado e apagado, e `~/envs` volta a ter os três permanentes.
 Numa plataforma de verdade os passos são os mesmos, e mais lentos: criar a infraestrutura, muitas vezes
 a partir da mesma definição da homologação; implantar; postar o endereço no pull request para quem

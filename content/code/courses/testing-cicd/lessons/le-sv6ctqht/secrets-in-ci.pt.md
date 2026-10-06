@@ -34,7 +34,7 @@ vive no ambiente de produção, então um job que não o declara não tem como r
 o que disser. É a tabela da aula 8 seção 10, imposta.
 
 **O teste é o de contrato, e ele não pula.** A aula 2 avisou que um teste de contrato sem
-`CARRIER_URL` é pulado para sempre e relata sucesso; este job é onde a variável finalmente é
+`CARRIER_URL` é pulado para sempre e relata sucesso. Este job é onde a variável finalmente é
 definida, e o `-rs` torna visível no log um pulo, se ele voltar a acontecer.
 
 ## Os equivalentes no GitLab

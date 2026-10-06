@@ -45,6 +45,6 @@ batching changes, which is the opposite of integrating continuously.
 ## This repository's numbers
 
 The run of the repository's own workflow that this lesson's author looked at, on the commit that
-merged the previous course, started at 15:34:36 UTC and finished at 15:40:47, a little over six
+merged the previous course, started at 15:34:36 UTC and finished at 15:40:47. That is a little over six
 minutes for four jobs, among them a Go suite against a real PostgreSQL and a browser suite.
 Lesson 6 reads that run job by job, from the service's own record.

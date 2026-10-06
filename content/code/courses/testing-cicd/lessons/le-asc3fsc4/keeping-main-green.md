@@ -10,7 +10,7 @@ continuous integration, and each one answers a failure the lab has already shown
 
 The lab's hook ran **after** each push reached `main`, so run 2 and run 4 left a broken `main` for a
 while: anybody who pulled in between got a failing test. A hosted service checks a pull request
-**before** it merges, and a repository can make that check **required**: the merge button stays
+before it merges, and a repository can make that check **required**: the merge button stays
 disabled until the named checks pass. Lesson 6 shows where that is set. This repository requires
 its checks for exactly this reason, and its workflow is written so that a skipped job still
 reports, because a required check that never reports blocks every merge.

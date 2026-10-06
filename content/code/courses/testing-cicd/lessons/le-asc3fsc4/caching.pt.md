@@ -24,7 +24,7 @@ ana@laptop:~/shipquote$ du -sh /tmp/uv-cold
 ```
 
 A primeira instalação baixou e desempacotou os três pacotes fixados e as dependências deles, e levou
-**0,785 segundo**; a segunda, lendo os mesmos arquivos do cache, levou **0,157**. O cache ocupa 17 MB.
+**1,099 segundo**; a segunda, lendo os mesmos arquivos do cache, levou **0,167**. O cache ocupa 17 MB.
 Neste laboratório a economia é pequena, porque o `uv` é rápido e o projeto quase não tem
 dependências; num projeto com centenas de pacotes, ou que os compila, a mesma comparação vira minutos
 contra segundos, em cada execução.

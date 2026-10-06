@@ -10,7 +10,7 @@ servidor de CI em integração contínua, e cada um responde a uma falha que o l
 
 O hook do laboratório rodou **depois** de cada push chegar à `main`, então as execuções 2 e 4
 deixaram uma `main` quebrada por um tempo: quem puxou nesse meio-tempo recebeu um teste falhando. Um
-serviço hospedado confere um pull request **antes** do merge, e um repositório pode tornar essa
+serviço hospedado confere um pull request antes do merge, e um repositório pode tornar essa
 verificação **obrigatória**: o botão de merge fica desabilitado até as verificações nomeadas
 passarem. A aula 6 mostra onde isso se configura. Este repositório exige as verificações dele
 exatamente por isso, e o workflow é escrito para um job pulado ainda relatar, porque uma verificação

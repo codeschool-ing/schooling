@@ -44,7 +44,7 @@ hospedados como Codecov e Coveralls mostram a mesma coisa como comentário no pu
 que quer uma barreira de cobertura costuma ser mais bem servida por uma sobre a mudança do que sobre
 o total:
 
-- ela pede algo **à pessoa que fez a mudança**, sobre **a mudança dela**, que ela consegue
+- ela pede algo **à pessoa que fez a mudança**, sobre a mudança dela, que ela consegue
   responder;
 - não pune uma mudança por código antigo sem teste que ela não tocou;
 - não pode ser satisfeita com um teste em outro lugar, como o total pode.

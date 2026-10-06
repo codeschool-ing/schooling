@@ -50,5 +50,4 @@ de 0,05. Um bug que falha uma requisição em mil precisa de umas três mil.
   quando já há respostas bastantes para comparar.
 
 Bugs raros são os que o canário tem menos chance de pegar, e os que mais vezes chegam a todo mundo.
-Isso não é motivo para pular o canário; é o motivo de a aula 11 insistir num caminho de volta rápido
-para o que ele deixa passar.
+A aula 11 constrói um caminho de volta rápido justamente para eles.

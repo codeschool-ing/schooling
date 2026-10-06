@@ -50,5 +50,4 @@ under 0.05. A bug that fails one request in a thousand needs about three thousan
   are enough answers to compare.
 
 Rare bugs are the ones a canary is least likely to catch, and the ones that most often reach
-everybody. That is not a reason to skip canaries; it is the reason lesson 11 insists on a fast way
-back for what they miss.
+everybody. Lesson 11 builds a fast way back for exactly those.

@@ -46,6 +46,6 @@ e começam a juntar mudanças, que é o oposto de integrar continuamente.
 ## Os números deste repositório
 
 A execução do próprio workflow do repositório que o autor desta aula olhou, no commit que integrou o
-curso anterior, começou às 15:34:36 UTC e terminou às 15:40:47, pouco mais de seis minutos para
+curso anterior, começou às 15:34:36 UTC e terminou às 15:40:47. São pouco mais de seis minutos para
 quatro jobs, entre eles uma suíte Go contra um PostgreSQL real e uma suíte de navegador. A aula 6 lê
 essa execução job por job, a partir do registro do próprio serviço.

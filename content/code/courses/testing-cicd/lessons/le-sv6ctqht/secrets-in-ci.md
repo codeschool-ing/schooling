@@ -35,7 +35,7 @@ token lives only in the production environment, so a job that does not declare i
 whatever its YAML says. That is lesson 8 section 10's table, enforced.
 
 **The test is the contract test, and it does not skip.** Lesson 2 warned that a contract test with
-no `CARRIER_URL` is skipped for ever and reports success; this job is where the variable is finally
+no `CARRIER_URL` is skipped for ever and reports success. This job is where the variable is finally
 set, and `-rs` makes a skip visible in the log if it ever happens again.
 
 ## GitLab's equivalents

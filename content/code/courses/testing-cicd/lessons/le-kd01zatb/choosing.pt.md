@@ -16,7 +16,7 @@ Cinco jeitos de pôr um release diante dos clientes, e o que cada um compra:
 Elas se combinam. Um arranjo comum é blue-green ou rolling para o release, para os deploys serem
 rápidos e fáceis de desfazer, e flags para as funcionalidades dentro dele, para cada uma chegar aos
 clientes no seu próprio ritmo. Um canário entra por cima quando o tráfego é grande o bastante para
-julgar, no sentido da seção 8.
+julgar, no sentido da seção 08.
 
 ## Perguntas que decidem
 
