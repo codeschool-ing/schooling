@@ -4,7 +4,7 @@ version: 1
 ---
 
 Quem começa e lê `type Celsius float64` costuma entender um apelido: Celsius *é* um `float64`, com
-um nome mais legível. **É um tipo novo, com um `float64` por baixo**, e a regra da seção 01 vale
+um nome mais legível. **É um tipo novo, com um `float64` por baixo**, e a regra da seção 02 vale
 para ele por inteiro. Dois tipos de temperatura mostram isso:
 
 ```go
@@ -36,7 +36,7 @@ ana@vm:~/convert-temp$ go run .
 Somar um Celsius com um Fahrenheit é um erro de unidade, e o compilador o pegou só com duas linhas
 de declaração. A segunda recusa é a mesma regra vista do outro lado: um `float64` comum também não
 é um `Celsius`, mesmo sendo guardado exatamente igual. As constantes sem tipo `100` e `98.6` foram
-aceitas, pelo motivo que a seção 01 deu.
+aceitas, pelo motivo que a seção 02 deu.
 
 **Um tipo que você define é uma promessa sobre o que o número significa, e o compilador cobra essa
 promessa em cada linha do programa.** Custa pouco escrever e pega uma classe inteira de bugs antes

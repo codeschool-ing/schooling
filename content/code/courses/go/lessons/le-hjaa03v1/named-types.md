@@ -5,7 +5,7 @@ version: 1
 
 A newcomer reading `type Celsius float64` usually takes it as a nickname: Celsius *is* a
 `float64`, under a name that reads better. **It is a new type, with a `float64` underneath it**,
-and the rule of section 01 applies to it in full. Two temperature types make the point:
+and the rule of section 02 applies to it in full. Two temperature types make the point:
 
 ```go
 package main
@@ -36,7 +36,7 @@ ana@vm:~/convert-temp$ go run .
 Adding a Celsius to a Fahrenheit is a unit error, and the compiler caught it with nothing more than
 two lines of declarations. The second refusal is the same rule from the other side: a plain
 `float64` is not a `Celsius` either, even though one is stored exactly like the other. The
-untyped constants `100` and `98.6` were accepted, for the reason section 01 gave.
+untyped constants `100` and `98.6` were accepted, for the reason section 02 gave.
 
 **A type you define is a promise about what the number means, and the compiler holds every line of
 the program to it.** That is cheap to write and it catches a whole class of bug before the program

@@ -4,9 +4,9 @@ version: 1
 ---
 
 A function in Go receives a copy of every argument; lesson 22 makes that the rule for every type.
-What changes from type to type is what gets copied. Section 01 showed that for an array it is every
+What changes from type to type is what gets copied. Section 02 showed that for an array it is every
 element, so `zero(a)` changed a copy and `a` kept its 1. For a slice the copy is the three words of
-section 02, and the sizes say so:
+section 03, and the sizes say so:
 
 ```go
 package main

@@ -91,4 +91,4 @@ primeira letra porque estes nomes são ASCII puro; a lição 9 mostrou por que f
 fatiar bytes.
 
 Os dois laços dependem de o map ter sido criado. `counts := map[string]int{}` é um map;
-`var counts map[string]int` seria o map nil da seção 01, e o primeiro `++` entraria em pânico.
+`var counts map[string]int` seria o map nil da seção 02, e o primeiro `++` entraria em pânico.

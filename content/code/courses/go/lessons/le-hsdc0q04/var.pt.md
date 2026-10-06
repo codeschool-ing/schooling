@@ -72,15 +72,15 @@ inteiro.
 
 ## Onde o var é a forma certa
 
-A seção 02 apresenta uma forma mais curta, e a maioria das variáveis dentro de uma função a usa. O
+A seção 03 apresenta uma forma mais curta, e a maioria das variáveis dentro de uma função a usa. O
 `var` fica com três tarefas que a forma curta não faz:
 
 1. **No nível do pacote, é a única forma.** `greeting`, `host`, `port` e `verbose` moram fora de
-   `main`, e a seção 02 mostra o compilador recusando a forma curta ali.
+   `main`, e a seção 03 mostra o compilador recusando a forma curta ali.
 2. **Quando o valor zero é o valor inicial que você quer**, `var count int` diz isso com todas as
    letras. Um total acumulado que começa do nada se lê melhor assim do que como `count := 0`.
 3. **Quando o tipo de que você precisa não é o que o valor daria.** `var ratio float64 = 1` é um
-   `float64` guardando 1; sem o tipo, `1` faria dele um `int`, como mostra a execução da seção 02.
+   `float64` guardando 1; sem o tipo, `1` faria dele um `int`, como mostra a execução da seção 03.
 
 O grupo entre parênteses é questão de leitura, não de significado. Um bloco de configurações
 relacionadas no nível do pacote, como as três acima, se lê como uma coisa só; três linhas `var`

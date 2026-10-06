@@ -36,7 +36,7 @@ quer dizer que uma busca vai direto à chave em vez de passar por todas as entra
 
 O `fmt.Println` escreve um map como `map[chave:valor …]`, e nesta saída as chaves por acaso saem em
 ordem alfabética. Isso é o `fmt` ordenando as chaves antes de imprimir, não a ordem que o map
-guarda, e a seção 03 mostra a diferença.
+guarda, e a seção 04 mostra a diferença.
 
 Uma chave aparece uma vez só. Um literal que nomeia a mesma chave duas vezes é recusado na
 compilação, já que um dos dois valores seria jogado fora sem ninguém perceber:

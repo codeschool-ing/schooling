@@ -79,7 +79,7 @@ de build que o proxy informou, então o Go do laboratório e o que go.dev distri
 só.
 
 **Nada fora desse diretório pertence ao toolchain.** Apagar `/usr/local/go` desinstala o Go por
-completo; as únicas outras coisas em que ele mexeu são os caches que a seção 02 aponta, e esses
+completo; as únicas outras coisas em que ele mexeu são os caches que a seção 03 aponta, e esses
 são seus.
 
 ## Uma máquina virtual ou um contêiner

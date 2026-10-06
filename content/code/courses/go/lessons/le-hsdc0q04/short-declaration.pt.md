@@ -33,7 +33,7 @@ int int float64
 ```
 
 Os tipos vêm dos valores, como no `var` sem tipo: `1` dá um `int` e `1.0` um `float64`. É por isso
-que a seção 01 precisou de `var` com tipo para ter um `float64` guardando 1.
+que a seção 02 precisou de `var` com tipo para ter um `float64` guardando 1.
 
 A penúltima declaração é a que vale ler duas vezes. `y, z := 3, 4` tem `y` do lado esquerdo, e `y`
 já existe. **`:=` com vários nomes exige que pelo menos um deles seja novo, e os outros são
@@ -131,5 +131,5 @@ clássico de Go, em que um `err` definido dentro do corpo de um laço nunca cheg
 trata de blocos e escopo e mostra esse bug capturado. Por ora, o hábito que o evita é o de cima:
 quando um nome já existe e você quer mudá-lo, escreva `=`.
 
-Então, dentro de uma função, `:=` é o padrão e `var` fica para os três casos da seção 01. Fora de
+Então, dentro de uma função, `:=` é o padrão e `var` fica para os três casos da seção 02. Fora de
 uma função, `var` é tudo o que há.

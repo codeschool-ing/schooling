@@ -93,7 +93,7 @@ the ordinary case, and it is easy to forget the array exists until two slices sh
 
 ## Slices do not compare
 
-Arrays compared with `==` in section 01. Slices do not:
+Arrays compared with `==` in section 02. Slices do not:
 
 ```go
 package main

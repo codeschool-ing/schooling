@@ -33,7 +33,7 @@ int int float64
 ```
 
 The types come from the values, as with `var` and no type: `1` gives an `int` and `1.0` a
-`float64`. That is why section 01 needed `var` with a type to get a `float64` holding 1.
+`float64`. That is why section 02 needed `var` with a type to get a `float64` holding 1.
 
 The second-last declaration is the one to read twice. `y, z := 3, 4` has `y` on its left, and `y`
 already exists. **`:=` with several names needs at least one of them to be new, and the others are
@@ -130,5 +130,5 @@ where an `err` set inside a loop's body never reaches the `err` outside it. Less
 blocks and scope and shows that bug captured. For now, the habit that avoids it is the one above: when a name
 already exists and you mean to change it, write `=`.
 
-So inside a function, `:=` is the default and `var` is for the three cases of section 01. Outside
+So inside a function, `:=` is the default and `var` is for the three cases of section 02. Outside
 a function, `var` is all there is.

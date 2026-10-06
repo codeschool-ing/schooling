@@ -87,6 +87,6 @@ rodar.
 Um comprimento fixo é uma promessa forte, e a maioria dos dados não a cumpre: uma lista de
 usuários, as linhas de um arquivo e os resultados de uma busca têm um comprimento que ninguém
 conhece de antemão. Uma função escrita para `[3]int` nem pode ser chamada com um `[4]int`. É por
-isso que código Go comum é cheio de slices, a seção 02, e usa arrays onde o tamanho faz mesmo parte
+isso que código Go comum é cheio de slices, a seção 03, e usa arrays onde o tamanho faz mesmo parte
 do que o dado é. Um hash SHA-256 tem sempre 32 bytes, e a lição 13 mostra `sha256.Sum256`
 devolvendo um como um array exatamente desse comprimento.

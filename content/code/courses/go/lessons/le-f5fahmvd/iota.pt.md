@@ -85,7 +85,7 @@ para quem lê o código-fonte; o programa guarda só o número. O `time.Saturday
 imprimiu `Saturday` porque o tipo dele tem um método que transforma o número numa palavra, e
 métodos são a lição 25.
 
-**`day == Sunday` deu `true` para um `Weekday` que ninguém definiu.** É a regra da seção 01
+**`day == Sunday` deu `true` para um `Weekday` que ninguém definiu.** É a regra da seção 02
 encontrando esta: o valor zero de um `Weekday` é 0, e 0 é domingo. Um registro com o dia esquecido
 diria domingo sem avisar ninguém. O `Status` evita isso gastando a linha 0 com `Unknown`, então o
 campo esquecido diz o que aconteceu, e `a.status == Unknown` deu `true`.

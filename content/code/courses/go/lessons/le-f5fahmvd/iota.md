@@ -84,7 +84,7 @@ the reader of the source; the program holds only the number. The standard librar
 `time.Saturday` printed `Saturday` because its type has a method that turns the number into a
 word, and methods are lesson 25.
 
-**`day == Sunday` was `true` for a `Weekday` nobody set.** That is section 01's rule meeting this
+**`day == Sunday` was `true` for a `Weekday` nobody set.** That is section 02's rule meeting this
 one: the zero value of a `Weekday` is 0, and 0 is Sunday. A record with a forgotten day would
 quietly say Sunday. `Status` avoids that by spending line 0 on `Unknown`, so the forgotten field
 says what happened, and `a.status == Unknown` came out `true`.

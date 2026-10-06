@@ -85,6 +85,6 @@ length while compiling**, so a whole class of out-of-range bug never reaches a r
 A fixed length is a strong promise, and most data does not keep it: a list of users, the lines of a
 file and the results of a search all have a length nobody knows in advance. A function written for
 `[3]int` cannot even be called with a `[4]int`. That is why ordinary Go code is full of slices,
-section 02, and uses arrays where the size really is part of what the data is. A SHA-256 hash is
+section 03, and uses arrays where the size really is part of what the data is. A SHA-256 hash is
 always 32 bytes, and lesson 13 shows `sha256.Sum256` returning one as an array of exactly that
 length.

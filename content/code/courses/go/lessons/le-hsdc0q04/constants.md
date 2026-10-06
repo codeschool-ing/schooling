@@ -42,7 +42,7 @@ work out are what constants are for: a limit, a name, a ratio, a size.
 ## Untyped: a number that has not chosen a type yet
 
 `const answer = 42` has no type written, and that is not the same as the type being worked out from
-the value, which is what `var` did in section 01. **An untyped constant stays just a number until
+the value, which is what `var` did in section 02. **An untyped constant stays just a number until
 it is used, and then it takes the type of wherever it lands**, as long as it fits:
 
 ```go
@@ -79,7 +79,7 @@ The same `answer` became an `int8` in one variable and a `float64` in the next, 
 a `float64` without anybody saying what type `Pi` was. When an untyped constant lands where no type
 is asked for, as in `x := answer`, it takes its **default type**: `int` for a whole number,
 `float64` for one with a decimal point and `string` for text. Those are the types `%T` reported in
-sections 01 and 02.
+sections 02 and 03.
 
 Write the type, and the constant has it from then on:
 

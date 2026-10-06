@@ -45,7 +45,7 @@ mod
 sumdb
 ```
 
-`bin` é o `GOBIN` da seção 02. `pkg/mod` é o cache de módulos, e `pkg/sumdb` são as anotações do
+`bin` é o `GOBIN` da seção 03. `pkg/mod` é o cache de módulos, e `pkg/sumdb` são as anotações do
 próprio comando go sobre o banco de checksums. Não há `src`, e nada seu pertence a esse lugar.
 
 ## Dois módulos seus, antes de qualquer um ser publicado

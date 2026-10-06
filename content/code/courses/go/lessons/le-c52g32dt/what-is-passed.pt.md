@@ -4,9 +4,9 @@ version: 1
 ---
 
 Uma função em Go recebe uma cópia de cada argumento; a lição 22 faz disso a regra para todo tipo. O
-que muda de tipo para tipo é o que é copiado. A seção 01 mostrou que, para um array, são todos os
+que muda de tipo para tipo é o que é copiado. A seção 02 mostrou que, para um array, são todos os
 elementos, então `zero(a)` mudou uma cópia e `a` ficou com o seu 1. Para uma slice, a cópia são as
-três palavras da seção 02, e os tamanhos confirmam:
+três palavras da seção 03, e os tamanhos confirmam:
 
 ```go
 package main

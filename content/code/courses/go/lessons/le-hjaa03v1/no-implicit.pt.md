@@ -54,7 +54,7 @@ ana@vm:~/convert-fixed$ go run .
 7.5
 ```
 
-`int64(count)` é uma conversão: o valor de `count`, como `int64`. A seção 02 trata do que isso faz
+`int64(count)` é uma conversão: o valor de `count`, como `int64`. A seção 03 trata do que isso faz
 com um valor; o que importa aqui é que ela está escrita na linha, onde quem lê
 `total + int64(count)` vê que dois tipos se encontraram e qual deles ganhou.
 

@@ -36,7 +36,7 @@ of walking past every entry before it.
 
 `fmt.Println` writes a map as `map[key:value …]`, and in this output the keys happen to come out
 in alphabetical order. That is `fmt` sorting them before it prints, not the order the map keeps,
-and section 03 shows the difference.
+and section 04 shows the difference.
 
 A key appears once. A literal that names the same key twice is refused when it is compiled, since
 one of the two values would be thrown away without anybody noticing:

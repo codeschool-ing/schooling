@@ -77,7 +77,7 @@ which is what `go doc` read in lesson 4 with no network. The `VERSION` file carr
 time the proxy reported, so the lab's Go and the one go.dev serves are one release.
 
 **Nothing outside that directory belongs to the toolchain.** Deleting `/usr/local/go` uninstalls
-Go completely; the only other things it touched are the caches section 02 points at, which belong
+Go completely; the only other things it touched are the caches section 03 points at, which belong
 to you.
 
 ## A virtual machine or a container

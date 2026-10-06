@@ -53,7 +53,7 @@ ana@vm:~/convert-fixed$ go run .
 7.5
 ```
 
-`int64(count)` is a conversion: the value of `count`, as an `int64`. Section 02 is about what that
+`int64(count)` is a conversion: the value of `count`, as an `int64`. Section 03 is about what that
 does to a value; what matters here is that it is written in the line, where somebody reading
 `total + int64(count)` can see that two types met and which one won.
 

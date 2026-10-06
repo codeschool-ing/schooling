@@ -23,7 +23,7 @@ go version go1.27.1 linux/amd64
 
 **Exit status 127 is the shell's own number for "no such command"**, so the message is from
 `bash` and not from Go. The installation is fine; only `PATH` is wrong. Two causes cover nearly
-every case: the lines of section 02 were never added to `~/.profile`, or they were and this
+every case: the lines of section 03 were never added to `~/.profile`, or they were and this
 terminal was opened before they existed. The second command above is the repair for the second
 case: read the file again with `.`, or log out and back in.
 
@@ -45,10 +45,10 @@ go: go.mod requires go >= 1.28 (running go 1.27.1; GOTOOLCHAIN=local)
 
 Everything needed is in the parentheses. The module wants 1.28, the toolchain running is 1.27.1,
 and `GOTOOLCHAIN=local` says the go command was told not to fetch another. That last part is this
-lab's choice, made in its environment, as section 02 showed. With the default `auto`, the go
+lab's choice, made in its environment, as section 03 showed. With the default `auto`, the go
 command would download the release the module asks for and carry on, as lesson 2 shows.
 
-So there are two ways out. **Install the newer release** the way section 01 did, or let the go
+So there are two ways out. **Install the newer release** the way section 02 did, or let the go
 command fetch it by not forcing `local`. Editing the `go` line in `go.mod` down to your version
 hides the message without making the code any older. It may use something your release does not
 have, and then the failure reappears as a compile error that is harder to read.
@@ -73,7 +73,7 @@ name server, `8.8.8.8`, knows no host called `proxy.invalid`. `.invalid` is a na
 it never resolves, which made it a safe broken proxy for the demonstration.
 
 **When a download fails, look at `GOPROXY` before you look at the network.** It came from one of
-the three places in section 02. The usual culprit is a value somebody set months ago, in a shell,
+the three places in section 03. The usual culprit is a value somebody set months ago, in a shell,
 in `go env -w` or in a company's setup script. `go env -u GOPROXY` returns your own file to the
 release's default. If the network is the problem, the same line says so in other words: a timeout,
 a refused connection, a certificate it does not trust.

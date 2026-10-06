@@ -89,4 +89,4 @@ name, which is the first letter only because these names are plain ASCII; lesson
 slicing a string is slicing bytes.
 
 Both loops depend on the map having been made. `counts := map[string]int{}` is a map;
-`var counts map[string]int` would be the nil map of section 01, and the first `++` would panic.
+`var counts map[string]int` would be the nil map of section 02, and the first `++` would panic.

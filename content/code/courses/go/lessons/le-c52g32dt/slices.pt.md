@@ -94,7 +94,7 @@ caso comum, e é fácil esquecer que o array existe até duas slices o dividirem
 
 ## Slices não se comparam
 
-Arrays se compararam com `==` na seção 01. Slices não:
+Arrays se compararam com `==` na seção 02. Slices não:
 
 ```go
 package main

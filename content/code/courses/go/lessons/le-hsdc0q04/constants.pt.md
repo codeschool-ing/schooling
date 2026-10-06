@@ -44,7 +44,7 @@ nome, uma razão, um tamanho.
 ## Sem tipo: um número que ainda não escolheu um
 
 `const answer = 42` não tem tipo escrito, e isso não é o mesmo que o tipo ser deduzido do valor,
-que foi o que o `var` fez na seção 01. **Uma constante sem tipo continua sendo só um número até ser
+que foi o que o `var` fez na seção 02. **Uma constante sem tipo continua sendo só um número até ser
 usada, e então assume o tipo do lugar onde cai**, desde que caiba:
 
 ```go
@@ -81,7 +81,7 @@ A mesma `answer` virou um `int8` numa variável e um `float64` na seguinte, e `P
 `float64` sem que ninguém dissesse de que tipo `Pi` era. Quando uma constante sem tipo cai onde
 nenhum tipo é pedido, como em `x := answer`, ela assume o seu **tipo padrão**: `int` para um número
 inteiro, `float64` para um com ponto decimal e `string` para texto. São os tipos que o `%T`
-informou nas seções 01 e 02.
+informou nas seções 02 e 03.
 
 Escreva o tipo, e a constante passa a tê-lo:
 

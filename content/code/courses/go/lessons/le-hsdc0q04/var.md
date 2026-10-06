@@ -73,15 +73,15 @@ in full.
 
 ## Where var is the right form
 
-Section 02 introduces a shorter form, and most variables inside a function use it. `var` keeps
+Section 03 introduces a shorter form, and most variables inside a function use it. `var` keeps
 three jobs that the short form cannot do:
 
 1. **At package level it is the only form.** `greeting`, `host`, `port` and `verbose` live
-   outside `main`, and section 02 shows the compiler refusing the short form there.
+   outside `main`, and section 03 shows the compiler refusing the short form there.
 2. **When the zero value is the starting value you want**, `var count int` says so plainly. A
    running total that starts at nothing reads better as that than as `count := 0`.
 3. **When the type you need is not the one the value would give.** `var ratio float64 = 1` is a
-   `float64` holding 1; without the type, `1` would make it an `int`, as section 02's run shows.
+   `float64` holding 1; without the type, `1` would make it an `int`, as section 03's run shows.
 
 The parenthesised group is a matter of reading rather than of meaning. A block of related
 package-level settings, like the three above, reads as one thing; three separate `var` lines
