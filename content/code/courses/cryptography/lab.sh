@@ -5,7 +5,7 @@
 #
 #   bash lab.sh reset      rebuild ~/lab from nothing
 #
-# It needs the openssl command line, Python 3.9 or later, and two Python
+# It needs the openssl command line, xxd, Python 3.9 or later, and two Python
 # packages: `cryptography` 44 or later (Argon2id arrived in 44) and `bcrypt`.
 # No network, no account, no server outside the machine. Every lesson's
 # captures.sh starts by running it. Set LAB to build it somewhere other than
