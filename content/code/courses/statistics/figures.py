@@ -683,6 +683,153 @@ def l05_deviations(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 6
+
+def boxplot_h(f, p, xs, y, h=26, stroke='--phosphor', fill='--scan', dots=True):
+    """A horizontal boxplot at height y on plot p, whiskers to 1.5 IQR, points beyond."""
+    q1, md, q3 = S.quantile(xs, .25), S.median(xs), S.quantile(xs, .75)
+    iqr = q3 - q1
+    lo = min(x for x in xs if x >= q1 - 1.5 * iqr)
+    hi = max(x for x in xs if x <= q3 + 1.5 * iqr)
+    a, b = p.sx(q1), p.sx(q3)
+    f.line(p.sx(lo), y, a, y, stroke='--paper-dim', width=1.4)
+    f.line(b, y, p.sx(hi), y, stroke='--paper-dim', width=1.4)
+    f.line(p.sx(lo), y - h / 3, p.sx(lo), y + h / 3, stroke='--paper-dim', width=1.4)
+    f.line(p.sx(hi), y - h / 3, p.sx(hi), y + h / 3, stroke='--paper-dim', width=1.4)
+    f.path(f'M{a:.1f} {y - h / 2:.1f} L{b:.1f} {y - h / 2:.1f} L{b:.1f} {y + h / 2:.1f} '
+           f'L{a:.1f} {y + h / 2:.1f} Z', stroke=stroke, width=1.4, fill=fill)
+    f.line(p.sx(md), y - h / 2, p.sx(md), y + h / 2, stroke='--amber', width=2.2)
+    if dots:
+        for x in xs:
+            if x < lo or x > hi:
+                f.circle(p.sx(x), y, 4.5, fill=None, stroke='--amber', width=1.6)
+    return q1, md, q3, lo, hi
+
+
+def boxplot_v(f, p, xs, x, w=40):
+    q1, md, q3 = S.quantile(xs, .25), S.median(xs), S.quantile(xs, .75)
+    iqr = q3 - q1
+    lo = min(v for v in xs if v >= q1 - 1.5 * iqr)
+    hi = max(v for v in xs if v <= q3 + 1.5 * iqr)
+    a, b = p.sy(q1), p.sy(q3)
+    f.line(x, p.sy(lo), x, a, stroke='--paper-dim', width=1.4)
+    f.line(x, b, x, p.sy(hi), stroke='--paper-dim', width=1.4)
+    f.line(x - w / 4, p.sy(lo), x + w / 4, p.sy(lo), stroke='--paper-dim', width=1.4)
+    f.line(x - w / 4, p.sy(hi), x + w / 4, p.sy(hi), stroke='--paper-dim', width=1.4)
+    f.path(f'M{x - w / 2:.1f} {a:.1f} L{x + w / 2:.1f} {a:.1f} L{x + w / 2:.1f} {b:.1f} '
+           f'L{x - w / 2:.1f} {b:.1f} Z', stroke='--phosphor', width=1.4, fill='--scan')
+    f.line(x - w / 2, p.sy(md), x + w / 2, p.sy(md), stroke='--amber', width=2.2)
+    for v in xs:
+        if v < lo or v > hi:
+            f.circle(x, p.sy(v), 4.5, fill=None, stroke='--amber', width=1.6)
+
+
+@figure('l06-boxplot-anatomy', 6)
+def l06_boxplot_anatomy(lang):
+    xs = S.column('minutes')
+    t = {'en': dict(
+        label='A boxplot of the twelve delivery times over the dots themselves. The box runs from '
+              'the first quartile, 32.6, to the third, 41.8, with the median, 37.25, marked inside. '
+              'The left whisker reaches the fastest delivery, 27.5. The right whisker stops at '
+              '52.5; 61 lies beyond the upper fence at 55.4 and is drawn as a separate point.',
+        axis='delivery time, in minutes', q1='Q1', q3='Q3', med='median', wl='whisker',
+        wr='whisker', fence='upper fence', out='beyond the fence', box='the middle half',
+        cap='The box holds the middle half of the deliveries. Each whisker runs to the most '
+            'extreme value within 1.5 box-lengths of the box; anything further is drawn alone.'),
+        'pt': dict(
+        label='Um boxplot dos doze tempos de entrega sobre os próprios pontos. A caixa vai do '
+              'primeiro quartil, 32,6, ao terceiro, 41,8, com a mediana, 37,25, marcada dentro. O '
+              'bigode esquerdo chega à entrega mais rápida, 27,5. O bigode direito para em 52,5; '
+              '61 fica além da cerca superior, em 55,4, e é desenhado como um ponto separado.',
+        axis='tempo de entrega, em minutos', q1='Q1', q3='Q3', med='mediana', wl='bigode',
+        wr='bigode', fence='cerca superior', out='além da cerca', box='a metade do meio',
+        cap='A caixa contém a metade do meio das entregas. Cada bigode vai até o valor mais '
+            'extremo a até 1,5 comprimento de caixa da caixa; o que passar disso é desenhado '
+            'sozinho.')}[lang]
+    f = Fig('l06-boxplot-anatomy', 660, 250, t['label'])
+    p = Plot(f, 40, 30, 620, 195, 25, 65, 0, 1)
+    p.xaxis(range(25, 66, 5), label=t['axis'])
+    for x in xs:
+        f.circle(p.sx(x), 168, 3.5, fill='--phosphor-dim', stroke='--phosphor', width=0.8)
+    q1, md, q3, lo, hi = boxplot_h(f, p, xs, 110, h=34)
+    q3v = S.quantile(xs, .75)
+    fence = q3v + 1.5 * (q3v - S.quantile(xs, .25))
+    f.line(p.sx(fence), 70, p.sx(fence), 150, stroke='--paper-dim', width=1.2, dash='3 3')
+    f.text(p.sx(fence), 62, t['fence'], size=9.5, fill='--paper-dim')
+    f.text(p.sx(q1), 82, t['q1'], size=10, weight='600')
+    f.text(p.sx(q3), 82, t['q3'], size=10, weight='600')
+    f.text(p.sx(md), 140, t['med'], size=10, fill='--amber')
+    f.text((p.sx(q1) + p.sx(q3)) / 2, 50, t['box'], size=9.5, fill='--paper-dim')
+    f.text((p.sx(lo) + p.sx(q1)) / 2, 100, t['wl'], size=9.5, fill='--paper-dim')
+    f.text((p.sx(q3) + p.sx(hi)) / 2, 100, t['wr'], size=9.5, fill='--paper-dim')
+    f.text(p.sx(61), 92, t['out'], size=9.5, fill='--amber', anchor='end')
+    return f, t['cap']
+
+
+@figure('l06-baskets-box', 6)
+def l06_baskets_box(lang):
+    xs = S.BASKETS
+    edges = list(range(0, 441, 20))
+    counts = histogram(xs, edges)
+    t = {'en': dict(
+        label='The histogram of the 400 baskets with a boxplot drawn under it on the same scale. '
+              'The box runs from R$ 42.56 to R$ 106.38 with the median at R$ 66.73 closer to its '
+              'left end. The right whisker is far longer than the left, and 17 baskets beyond '
+              'R$ 202 are drawn as separate points.',
+        y='orders', x='basket, in reais',
+        cap='The same data twice. The box is off-centre and the right whisker is long: the '
+            'boxplot shows the tail the histogram shows, in a strip a fifth of the height.'),
+        'pt': dict(
+        label='O histograma das 400 cestas com um boxplot desenhado embaixo, na mesma escala. A '
+              'caixa vai de R$ 42,56 a R$ 106,38, com a mediana em R$ 66,73, mais perto da ponta '
+              'esquerda. O bigode direito é muito mais longo que o esquerdo, e 17 cestas além de '
+              'R$ 202 são desenhadas como pontos separados.',
+        y='pedidos', x='cesta, em reais',
+        cap='Os mesmos dados duas vezes. A caixa está fora do centro e o bigode direito é longo: o '
+            'boxplot mostra a cauda que o histograma mostra, numa faixa com um quinto da altura.')}[lang]
+    f = Fig('l06-baskets-box', 660, 320, t['label'])
+    top = (max(counts) // 10 + 1) * 10
+    p = Plot(f, 70, 40, 630, 200, 0, 440, 0, top)
+    p.yaxis(range(0, top + 1, 20), label=t['y'])
+    p.bars(edges, counts)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    boxplot_h(f, p, xs, 236, h=26)
+    q = Plot(f, 70, 40, 630, 262, 0, 440, 0, 1)
+    q.xaxis(range(0, 441, 40), label=t['x'])
+    return f, t['cap']
+
+
+@figure('l06-hoods', 6)
+def l06_hoods(lang):
+    t = {'en': dict(
+        label='Four vertical boxplots of delivery time, one per neighbourhood, thirty deliveries '
+              'each. Centro and Cambuí sit lowest, around 30 minutes, with Centro showing one point '
+              'above its whisker at 45.5. Taquaral is higher, around 39. Barão Geraldo is highest, '
+              'around 54, and its box is the tallest.',
+        y='minutes', names={'Centro': 'Centro', 'Cambuí': 'Cambuí', 'Taquaral': 'Taquaral',
+                            'Barão Geraldo': 'Barão Geraldo'},
+        cap='Four groups on one scale. The medians climb with the distance from the warehouse, '
+            'and Barão Geraldo, the farthest, also varies the most.'),
+        'pt': dict(
+        label='Quatro boxplots verticais do tempo de entrega, um por bairro, trinta entregas cada. '
+              'Centro e Cambuí ficam mais baixo, perto de 30 minutos, com o Centro mostrando um '
+              'ponto acima do bigode, em 45,5. Taquaral fica mais alto, perto de 39. Barão Geraldo '
+              'é o mais alto, perto de 54, e a caixa dele é a mais alta.',
+        y='minutos', names={'Centro': 'Centro', 'Cambuí': 'Cambuí', 'Taquaral': 'Taquaral',
+                            'Barão Geraldo': 'Barão Geraldo'},
+        cap='Quatro grupos numa escala só. As medianas sobem com a distância até o depósito, e '
+            'Barão Geraldo, o mais distante, também é o que mais varia.')}[lang]
+    f = Fig('l06-hoods', 600, 300, t['label'])
+    p = Plot(f, 70, 40, 570, 250, 0.5, 4.5, 20, 70)
+    p.yaxis(range(20, 71, 10), label=t['y'])
+    for i, (hood, _, _) in enumerate(S.HOODS):
+        xs = [r['minutes'] for r in S.DELIVERIES if r['hood'] == hood]
+        boxplot_v(f, p, xs, p.sx(i + 1), w=56)
+        f.text(p.sx(i + 1), p.y1 + 16, t['names'][hood], size=10)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

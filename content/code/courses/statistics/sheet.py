@@ -368,6 +368,33 @@ def _baskets():
 BASKETS = _baskets()
 
 
+# A hundred and twenty deliveries, thirty per neighbourhood, lessons 6 onwards. Each
+# has a distance, a number of items, whether it rained, and the minutes it took.
+HOODS = [('Centro', 1.0, 3.0), ('Cambuí', 2.0, 4.5), ('Taquaral', 4.0, 7.0),
+         ('Barão Geraldo', 9.0, 14.0)]
+
+
+def _deliveries():
+    d = Draw(120)
+    out = []
+    for hood, lo, hi in HOODS:
+        for _ in range(30):
+            km = round(d.uniform(lo, hi), 1)
+            items = 1 + d.index(15)
+            rain = 1 if d.r.random() < 0.15 else 0
+            minutes = 22 + 2.4 * km + 0.35 * items + 7 * rain + d.normal(0, 3.5)
+            out.append({'hood': hood, 'km': km, 'items': items, 'rain': rain,
+                        'minutes': round(minutes * 2) / 2})
+    return out
+
+
+DELIVERIES = _deliveries()
+
+
+def five(xs):
+    return (min(xs), quantile(xs, 0.25), median(xs), quantile(xs, 0.75), max(xs))
+
+
 def trimmed(xs, share):
     s = sorted(xs)
     k = int(len(s) * share)
@@ -512,6 +539,38 @@ def l5():
     pairs = [(a, b) for a in pop for b in pop]
     show('samples of two: mean of the n-1 variances', mean([var(list(q)) for q in pairs]))
     show('samples of two: mean of the n variances', mean([var(list(q), False) for q in pairs]))
+
+
+@lesson(6)
+def l6():
+    mins = column('minutes')
+    show('twelve minutes sorted', sorted(mins))
+    show('Q1, Q3 inclusive', f'{quantile(mins, .25)}  {quantile(mins, .75)}')
+    show('Q1, Q3 exclusive', f'{quantile_exc(mins, .25)}  {quantile_exc(mins, .75)}')
+    lo, hi = sorted(mins)[:6], sorted(mins)[6:]
+    show('Q1, Q3 median of halves', f'{median(lo)}  {median(hi)}')
+    q1, q3 = quantile(mins, .25), quantile(mins, .75)
+    iqr = q3 - q1
+    show('IQR inclusive', iqr)
+    show('fences', f'{q1 - 1.5 * iqr}  {q3 + 1.5 * iqr}')
+    show('90th percentile inclusive', quantile(mins, .9))
+    show('share at or below 44', sum(1 for x in mins if x <= 44) / 12)
+    b = BASKETS
+    show('400 baskets five', [round(v, 2) for v in five(b)])
+    bq1, bq3 = quantile(b, .25), quantile(b, .75)
+    show('400 baskets IQR', bq3 - bq1)
+    show('400 baskets upper fence', bq3 + 1.5 * (bq3 - bq1))
+    show('400 baskets beyond upper fence', sum(1 for x in b if x > bq3 + 1.5 * (bq3 - bq1)))
+    show('400 baskets largest within fence', max(x for x in b if x <= bq3 + 1.5 * (bq3 - bq1)))
+    show('400 baskets 90th, 95th percentile', f'{quantile(b, .9):.4f}  {quantile(b, .95):.4f}')
+    show('400 baskets sd', sd(b))
+    for hood, _, _ in HOODS:
+        xs = [r['minutes'] for r in DELIVERIES if r['hood'] == hood]
+        f = five(xs)
+        q1, q3 = f[1], f[3]
+        out = [x for x in xs if x > q3 + 1.5 * (q3 - q1) or x < q1 - 1.5 * (q3 - q1)]
+        show(f'{hood}: five, IQR, outliers', f'{[round(v, 3) for v in f]}  {q3 - q1:.3f}  {out}')
+        show(f'{hood}: mean, sd', f'{mean(xs):.3f} {sd(xs):.3f}')
 
 
 def main():
