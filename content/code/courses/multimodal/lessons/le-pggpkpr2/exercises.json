@@ -1,0 +1,694 @@
+[
+ {
+  "id": "ex-a5y61d34",
+  "version": 1,
+  "section": "three-streams",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many frames does the video stream of returns.mp4 hold?",
+  "value": 815,
+  "tolerance": 0,
+  "unit": "frames"
+ },
+ {
+  "id": "ex-62n8p1xe",
+  "version": 1,
+  "section": "three-streams",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does the MP4 container itself add for a model to read?",
+  "choices": [
+   {
+    "text": "The subtitles of the video",
+    "correct": false,
+    "why": "Subtitles would be a stream inside it, and this file has none."
+   },
+   {
+    "text": "A summary of the content",
+    "correct": false,
+    "why": "No container summarises anything."
+   },
+   {
+    "text": "Nothing a model reads",
+    "correct": true,
+    "why": "Right. It holds the streams together and in time; the model reads frames or sound, never the box they came in."
+   },
+   {
+    "text": "A description of every keyframe",
+    "correct": false,
+    "why": "Keyframes are pictures in the video stream, not descriptions."
+   }
+  ]
+ },
+ {
+  "id": "ex-qs5yge7j",
+  "version": 1,
+  "section": "three-streams",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is asking a decoder for frame 300 slower than it looks?",
+  "choices": [
+   {
+    "text": "Frame 300 has to be downloaded again",
+    "correct": false,
+    "why": "The file is local; the work is decoding."
+   },
+   {
+    "text": "Every frame is a full picture and they are large",
+    "correct": false,
+    "why": "Most frames are differences, which is why the file is small."
+   },
+   {
+    "text": "The audio has to be decoded first",
+    "correct": false,
+    "why": "The streams are decoded separately."
+   },
+   {
+    "text": "It rebuilds it from the last keyframe",
+    "correct": true,
+    "why": "Right, applying every difference after it: most frames are stored as changes from the one before."
+   }
+  ]
+ },
+ {
+  "id": "ex-hsbv6fp7",
+  "version": 1,
+  "section": "three-streams",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What joins what was shown to what was said?",
+  "choices": [
+   {
+    "text": "The clock that the two streams share",
+    "correct": true,
+    "why": "Right. Timestamps in seconds from the start."
+   },
+   {
+    "text": "The order of the frames in the file",
+    "correct": false,
+    "why": "Order alone does not say which words go with which frame."
+   },
+   {
+    "text": "The scene detector",
+    "correct": false,
+    "why": "It finds cuts; the clock is what lines them up with speech."
+   },
+   {
+    "text": "The H.264 codec",
+    "correct": false,
+    "why": "It compresses the pictures and knows nothing of speech."
+   }
+  ]
+ },
+ {
+  "id": "ex-603frh72",
+  "version": 1,
+  "section": "sampling-frames",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why did a frame every second miss the card?",
+  "choices": [
+   {
+    "text": "The card was too dark for OCR",
+    "correct": false,
+    "why": "Scene detection saw it and OCR read it."
+   },
+   {
+    "text": "ffmpeg handed over a later frame for the tick at 21",
+    "correct": true,
+    "why": "Right. Frames from 20.5 to 21.5 round to that tick and the filter keeps the last, from the next slide."
+   },
+   {
+    "text": "ffmpeg skips frames with no sound",
+    "correct": false,
+    "why": "The fps filter knows nothing about sound."
+   },
+   {
+    "text": "One frame a second is too many to read",
+    "correct": false,
+    "why": "All 33 were read; none was the card."
+   }
+  ]
+ },
+ {
+  "id": "ex-3bf0bhgb",
+  "version": 1,
+  "section": "sampling-frames",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "How many frames did the threshold of 0.03 pick out?",
+  "value": 6,
+  "tolerance": 0,
+  "unit": "frames"
+ },
+ {
+  "id": "ex-b3rhxb64",
+  "version": 1,
+  "section": "sampling-frames",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did a scene threshold of 0.3 find only two frames?",
+  "choices": [
+   {
+    "text": "The video has only two scenes",
+    "correct": false,
+    "why": "It has seven slides."
+   },
+   {
+    "text": "Slide changes scored far lower",
+    "correct": true,
+    "why": "Right, about 0.04 to 0.06. Only the cuts into and out of the dark card scored 1.0."
+   },
+   {
+    "text": "The detector stops after two frames",
+    "correct": false,
+    "why": "It runs over the whole video."
+   },
+   {
+    "text": "Keyframes were missing",
+    "correct": false,
+    "why": "Scene detection does not use keyframes."
+   }
+  ]
+ },
+ {
+  "id": "ex-617b45s9",
+  "version": 1,
+  "section": "sampling-frames",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The 0.03 scene detector saw six titles, not seven. Which one did it miss, and why?",
+  "choices": [
+   {
+    "text": "The card, because it is too short",
+    "correct": false,
+    "why": "It saw the card; that is its strength."
+   },
+   {
+    "text": "The refund slide, because it is the last",
+    "correct": false,
+    "why": "There is a cut into it at 26.44."
+   },
+   {
+    "text": "Slide 3, whose change was too small",
+    "correct": false,
+    "why": "That is what the keyframes missed, not 0.03."
+   },
+   {
+    "text": "The first slide, which no cut leads into",
+    "correct": true,
+    "why": "Right. The timeline adds the first frame by hand."
+   }
+  ]
+ },
+ {
+  "id": "ex-fqfhyqpy",
+  "version": 1,
+  "section": "sampling-frames",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each frame rule to where it is weak.",
+  "pairs": [
+   {
+    "left": "a fixed rate",
+    "right": "brief events between ticks"
+   },
+   {
+    "left": "scene detection",
+    "right": "a gradual change"
+   },
+   {
+    "left": "keyframes",
+    "right": "chosen for compression, not meaning"
+   }
+  ],
+  "right_distractors": [
+   "files larger than 1 GB"
+  ]
+ },
+ {
+  "id": "ex-4snv2n0q",
+  "version": 1,
+  "section": "the-soundtrack",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does each piece of the transcript have a start and an end?",
+  "choices": [
+   {
+    "text": "Whisper prints a start and an end for every word it hears",
+    "correct": false,
+    "why": "The times come from cutting at silences first."
+   },
+   {
+    "text": "Each silence-bounded stretch was transcribed alone",
+    "correct": true,
+    "why": "Right. Silero VAD found the stretches."
+   },
+   {
+    "text": "The MP4 container stores the times beside the audio",
+    "correct": false,
+    "why": "This file has no subtitle stream."
+   },
+   {
+    "text": "The slides mark when each sentence starts",
+    "correct": false,
+    "why": "Slides and speech are separate streams."
+   }
+  ]
+ },
+ {
+  "id": "ex-7x1cyth9",
+  "version": 1,
+  "section": "the-soundtrack",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is \"Fourth,\" missing from the transcript of step four?",
+  "choices": [
+   {
+    "text": "The narrator did not say it in the recording",
+    "correct": false,
+    "why": "The script and the truth file have it."
+   },
+   {
+    "text": "Whisper does not know the word Fourth",
+    "correct": false,
+    "why": "It wrote First, Second and Third."
+   },
+   {
+    "text": "The card covered it",
+    "correct": false,
+    "why": "The card has no sound and ends at 21.12."
+   },
+   {
+    "text": "The segment began after the word",
+    "correct": true,
+    "why": "Right. A word clipped at a segment boundary."
+   }
+  ]
+ },
+ {
+  "id": "ex-zkfe2rfb",
+  "version": 1,
+  "section": "the-soundtrack",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did Whisper base write for the returns video? Choose every one that applies.",
+  "choices": [
+   {
+    "text": "Marginelia",
+    "correct": true,
+    "why": "Right, for Marginalia."
+   },
+   {
+    "text": "prepared label",
+    "correct": true,
+    "why": "Right, for prepaid label."
+   },
+   {
+    "text": "sign and end",
+    "correct": true,
+    "why": "Right, for sign in."
+   },
+   {
+    "text": "RETURN30",
+    "correct": false,
+    "why": "The code was never said; only OCR saw it."
+   }
+  ]
+ },
+ {
+  "id": "ex-xc7pjnmj",
+  "version": 1,
+  "section": "one-timeline",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In timeline.py, which scene does a piece of speech belong to?",
+  "choices": [
+   {
+    "text": "The scene it starts in",
+    "correct": false,
+    "why": "The program uses the middle."
+   },
+   {
+    "text": "The scene its middle falls in",
+    "correct": true,
+    "why": "Right. A simple rule, and it says so."
+   },
+   {
+    "text": "The scene with the most similar title",
+    "correct": false,
+    "why": "No text comparison is made."
+   },
+   {
+    "text": "Every scene it overlaps",
+    "correct": false,
+    "why": "Each piece goes to exactly one scene."
+   }
+  ]
+ },
+ {
+  "id": "ex-j56hzdrs",
+  "version": 1,
+  "section": "one-timeline",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does the timeline do with the OCR's RETURN3O?",
+  "choices": [
+   {
+    "text": "Corrects it to RETURN30",
+    "correct": false,
+    "why": "A timeline does not correct its sources."
+   },
+   {
+    "text": "Drops it, because OCR was unsure",
+    "correct": false,
+    "why": "No confidence was checked; it is kept."
+   },
+   {
+    "text": "Keeps it where it was",
+    "correct": true,
+    "why": "Right, beside its time and the other stream. An error kept in place is checked at its second."
+   },
+   {
+    "text": "Moves it to the speech column",
+    "correct": false,
+    "why": "It was shown, not said."
+   }
+  ]
+ },
+ {
+  "id": "ex-0xqs6hee",
+  "version": 1,
+  "section": "one-timeline",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which piece of information is only in the speech, not on any slide?",
+  "choices": [
+   {
+    "text": "The label is valid for 7 days",
+    "correct": false,
+    "why": "That is shown on slide 7 and never said."
+   },
+   {
+    "text": "Code: RETURN30",
+    "correct": false,
+    "why": "Shown and never said."
+   },
+   {
+    "text": "Within 30 days of delivery",
+    "correct": false,
+    "why": "That is on the refund slide."
+   },
+   {
+    "text": "Where refunds go",
+    "correct": true,
+    "why": "Right: back to the card you paid with. A pipeline that only looks would lose it."
+   }
+  ]
+ },
+ {
+  "id": "ex-5596vdns",
+  "version": 1,
+  "section": "summarising",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many tokens is the timeline as text, by o200k_base?",
+  "value": 321,
+  "tolerance": 0,
+  "unit": "tokens"
+ },
+ {
+  "id": "ex-5dbwec5z",
+  "version": 1,
+  "section": "summarising",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "By the tile rule, how many tokens is one 1280 by 720 frame at high detail?",
+  "hint": "Six tiles of 512 pixels.",
+  "value": 1105,
+  "tolerance": 0,
+  "unit": "tokens"
+ },
+ {
+  "id": "ex-ns5fng0m",
+  "version": 1,
+  "section": "summarising",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "For a video of slides and speech, why is the timeline the right thing to send?",
+  "choices": [
+   {
+    "text": "Because models cannot read video frames",
+    "correct": false,
+    "why": "They can; it costs much more."
+   },
+   {
+    "text": "Because it is shorter than the soundtrack",
+    "correct": false,
+    "why": "Length of audio is not the comparison here."
+   },
+   {
+    "text": "Because OCR is more accurate than a vision model",
+    "correct": false,
+    "why": "OCR made a mistake here too; the point is cost for what matters."
+   },
+   {
+    "text": "It is far cheaper and keeps the slides' text",
+    "correct": true,
+    "why": "Right. 321 tokens against 7,735 for the scene frames."
+   }
+  ]
+ },
+ {
+  "id": "ex-ddt8gynr",
+  "version": 1,
+  "section": "summarising",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The course's illustrative summary says RETURN30 with a zero, though OCR read RETURN3O. What is the lesson's point about that?",
+  "choices": [
+   {
+    "text": "The summary is wrong and should say RETURN3O",
+    "correct": false,
+    "why": "The slide does say 30; the correction is right this time."
+   },
+   {
+    "text": "OCR should be replaced by a VLM",
+    "correct": false,
+    "why": "The point is about the summariser, not the reader."
+   },
+   {
+    "text": "Summaries should not include codes",
+    "correct": false,
+    "why": "The code is what the shop wanted callers to quote."
+   },
+   {
+    "text": "Silent corrections will one day be wrong",
+    "correct": true,
+    "why": "Right. The correction came from no source, and a summariser that makes it will one day make it wrongly."
+   }
+  ]
+ },
+ {
+  "id": "ex-yzfnknjv",
+  "version": 1,
+  "section": "summarising",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What frame sampling does Google's documentation describe for video given to Gemini?",
+  "choices": [
+   {
+    "text": "One frame per scene",
+    "correct": false,
+    "why": "That would have caught the card."
+   },
+   {
+    "text": "One frame per second by default",
+    "correct": true,
+    "why": "Right, with the fixed rate's blind spot."
+   },
+   {
+    "text": "Every frame",
+    "correct": false,
+    "why": "That would be the 900,575-token option."
+   },
+   {
+    "text": "Keyframes only",
+    "correct": false,
+    "why": "Not what the section reports."
+   }
+  ]
+ },
+ {
+  "id": "ex-q6axh0jy",
+  "version": 1,
+  "section": "what-sampling-misses",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which slide shows \"The label is valid for 7 days\" without anybody saying it?",
+  "choices": [
+   {
+    "text": "Slide 3",
+    "correct": false,
+    "why": "Slide 3 shows the three reasons."
+   },
+   {
+    "text": "Slide 7",
+    "correct": true,
+    "why": "Right. The refunds slide."
+   },
+   {
+    "text": "Slide 5",
+    "correct": false,
+    "why": "Slide 5 is the card with the code."
+   },
+   {
+    "text": "None; it is said aloud",
+    "correct": false,
+    "why": "The narration never says it."
+   }
+  ]
+ },
+ {
+  "id": "ex-k9pnp1zh",
+  "version": 1,
+  "section": "what-sampling-misses",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "For a video you know nothing about, what is the lesson's safe default for picking frames?",
+  "choices": [
+   {
+    "text": "Scene detection at 0.03",
+    "correct": false,
+    "why": "0.03 was tuned for this video and is wrong for most."
+   },
+   {
+    "text": "Keyframes, because they are free",
+    "correct": false,
+    "why": "Fine as a first pass; chosen for compression."
+   },
+   {
+    "text": "A fixed rate plus scene changes",
+    "correct": true,
+    "why": "Right: the rate for coverage, scene changes for cuts. Each covers the other's blind spot."
+   },
+   {
+    "text": "Every frame, to be safe",
+    "correct": false,
+    "why": "900,575 tokens for 32 seconds."
+   }
+  ]
+ },
+ {
+  "id": "ex-7ha27x4k",
+  "version": 1,
+  "section": "what-sampling-misses",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "At one frame a second and 1,105 tokens each, how many tokens is an hour of video?",
+  "value": 3978000,
+  "tolerance": 0,
+  "unit": "tokens"
+ },
+ {
+  "id": "ex-4c8cnbf4",
+  "version": 1,
+  "section": "what-sampling-misses",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps for long video in the order the lesson gives them.",
+  "items": [
+   "transcribe all of it",
+   "detect scenes",
+   "keep a frame per scene at low detail",
+   "summarise each piece",
+   "summarise the summaries"
+  ]
+ },
+ {
+  "id": "ex-g15mg3aj",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A shop's product videos are long single shots: a hand turning a book slowly to show its condition. Which frame rule fits?",
+  "choices": [
+   {
+    "text": "A fixed rate",
+    "correct": true,
+    "why": "Right. Continuous change with no cuts is what a fixed rate covers."
+   },
+   {
+    "text": "Scene detection, tuned low",
+    "correct": false,
+    "why": "There are no cuts, and a gradual change is scene detection's blind spot."
+   },
+   {
+    "text": "Keyframes only",
+    "correct": false,
+    "why": "The encoder places them for compression, and a slow turn may get few."
+   },
+   {
+    "text": "The soundtrack alone",
+    "correct": false,
+    "why": "The condition of the book is visual."
+   }
+  ]
+ },
+ {
+  "id": "ex-nnveprhw",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A summary of a training video says \"the form must be signed in blue ink\". The timeline has no entry that says so. What do you do?",
+  "choices": [
+   {
+    "text": "Keep it; models notice details people miss",
+    "correct": false,
+    "why": "Nothing the model read says it. It came from no source."
+   },
+   {
+    "text": "Treat it as unsupported",
+    "correct": true,
+    "why": "Right, until a moment in the video shows it. Every claim should point at an entry; this one points nowhere."
+   },
+   {
+    "text": "Re-run the summary until it disappears",
+    "correct": false,
+    "why": "That hides the problem; it does not check the claim."
+   },
+   {
+    "text": "Add more frames at high detail and trust the next summary",
+    "correct": false,
+    "why": "More input does not verify a claim; checking it against the video does."
+   }
+  ]
+ }
+]

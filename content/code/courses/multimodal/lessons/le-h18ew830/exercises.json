@@ -1,0 +1,666 @@
+[
+ {
+  "id": "ex-51rt5n04",
+  "version": 1,
+  "section": "sound-as-numbers",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many bytes is one second of the clean call's audio, at 16,000 samples a second and 2 bytes a sample?",
+  "value": 32000,
+  "tolerance": 0,
+  "unit": "bytes"
+ },
+ {
+  "id": "ex-r3e0f1cc",
+  "version": 1,
+  "section": "sound-as-numbers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the highest frequency a recording at 16,000 samples a second can hold?",
+  "choices": [
+   {
+    "text": "16,000 Hz",
+    "correct": false,
+    "why": "Half the sample rate is the limit, not the whole of it."
+   },
+   {
+    "text": "3,400 Hz",
+    "correct": false,
+    "why": "That is where the phone version was filtered, not a limit of 16 kHz."
+   },
+   {
+    "text": "8,000 Hz",
+    "correct": true,
+    "why": "Right. The Nyquist limit is half the sample rate."
+   },
+   {
+    "text": "Any frequency, given enough bits",
+    "correct": false,
+    "why": "Bit depth sets precision, not the frequency range."
+   }
+  ]
+ },
+ {
+  "id": "ex-t3v30w0v",
+  "version": 1,
+  "section": "sound-as-numbers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The phone call is resampled to 16 kHz before Whisper hears it. What does that give back?",
+  "choices": [
+   {
+    "text": "The frequencies above 3,400 Hz",
+    "correct": false,
+    "why": "They were never recorded; nothing can put them back."
+   },
+   {
+    "text": "The precision μ-law threw away",
+    "correct": false,
+    "why": "Resampling changes the rate, not lost precision."
+   },
+   {
+    "text": "Only the rate Whisper expects",
+    "correct": true,
+    "why": "Right. Resampling up does not restore what was not recorded."
+   },
+   {
+    "text": "The second channel",
+    "correct": false,
+    "why": "The file was mono to begin with."
+   }
+  ]
+ },
+ {
+  "id": "ex-q78f9whm",
+  "version": 1,
+  "section": "sound-as-numbers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A call centre records the agent on the left channel and the customer on the right. What does mixing it to mono lose?",
+  "choices": [
+   {
+    "text": "Half the frequencies",
+    "correct": false,
+    "why": "Channels and frequencies are different things."
+   },
+   {
+    "text": "Nothing a model would use",
+    "correct": false,
+    "why": "A diarizer would have to recover what the channels already said."
+   },
+   {
+    "text": "The timestamps",
+    "correct": false,
+    "why": "Time is shared by both channels and survives mixing."
+   },
+   {
+    "text": "Who-spoke-when, for free",
+    "correct": true,
+    "why": "Right. Two channels are the cheapest diarization there is."
+   }
+  ]
+ },
+ {
+  "id": "ex-sn4rm557",
+  "version": 1,
+  "section": "noise",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What signal-to-noise ratio did noise.py measure for the noisy call, in dB?",
+  "value": 4.9,
+  "tolerance": 0.05,
+  "unit": "dB"
+ },
+ {
+  "id": "ex-gqzc2djd",
+  "version": 1,
+  "section": "noise",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What was the loudest single frequency in the noise, and what is it?",
+  "choices": [
+   {
+    "text": "3,400 Hz, the edge of the phone band",
+    "correct": false,
+    "why": "That edge belongs to the phone version, not to the noise."
+   },
+   {
+    "text": "60 Hz, the hum of the mains",
+    "correct": true,
+    "why": "Right. Brazil's grid runs at 60 Hz."
+   },
+   {
+    "text": "1,000 Hz, the middle of speech",
+    "correct": false,
+    "why": "The noise's peak was far lower."
+   },
+   {
+    "text": "8,000 Hz, the Nyquist limit",
+    "correct": false,
+    "why": "The hiss is spread out; the peak is the hum."
+   }
+  ]
+ },
+ {
+  "id": "ex-p4ep24a1",
+  "version": 1,
+  "section": "noise",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why can the hum be cut with a filter while the hiss cannot?",
+  "choices": [
+   {
+    "text": "The hum is louder",
+    "correct": false,
+    "why": "Loudness is not what decides; position in the spectrum is."
+   },
+   {
+    "text": "Only the hiss shares the voices' band",
+    "correct": true,
+    "why": "Right. The hum sits below the voices; filtering the hiss would filter the voices."
+   },
+   {
+    "text": "Filters only work on single frequencies",
+    "correct": false,
+    "why": "A high-pass removes a whole band."
+   },
+   {
+    "text": "The hiss changes from second to second",
+    "correct": false,
+    "why": "Pink noise is steady; the problem is where it is."
+   }
+  ]
+ },
+ {
+  "id": "ex-zfaam8x6",
+  "version": 1,
+  "section": "noise",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In a real product there is no clean copy. Where do you measure the noise?",
+  "choices": [
+   {
+    "text": "In the loudest second of the file",
+    "correct": false,
+    "why": "That is most likely speech."
+   },
+   {
+    "text": "By asking Whisper how sure it was",
+    "correct": false,
+    "why": "Confidence is not a noise measurement."
+   },
+   {
+    "text": "It cannot be measured without the clean copy",
+    "correct": false,
+    "why": "The gaps between speech give it."
+   },
+   {
+    "text": "In the silences",
+    "correct": true,
+    "why": "Right, the stretches the speech detector calls silence. They hold only noise, and stand for the noise under the words."
+   }
+  ]
+ },
+ {
+  "id": "ex-4gdngah0",
+  "version": 1,
+  "section": "cleaning",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What word error rate did Whisper base score on the noisy call, as recorded, in percent?",
+  "value": 20.5,
+  "tolerance": 0.05,
+  "unit": "%"
+ },
+ {
+  "id": "ex-zwh4vfbg",
+  "version": 1,
+  "section": "cleaning",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "GTCRN's output sounds the cleanest and transcribed worse than the filters. What does the lesson take from that?",
+  "choices": [
+   {
+    "text": "GTCRN is broken",
+    "correct": false,
+    "why": "To a listener its output is the best of the four."
+   },
+   {
+    "text": "Neural denoisers never help",
+    "correct": false,
+    "why": "It restored the speech detector's stretches."
+   },
+   {
+    "text": "Pleasant is not transcribable",
+    "correct": true,
+    "why": "Right. Cleaner to the ear is not better for the transcriber: measure on your recordings, do not choose by listening."
+   },
+   {
+    "text": "Whisper cannot read 16 kHz audio",
+    "correct": false,
+    "why": "16 kHz is exactly what it expects."
+   }
+  ]
+ },
+ {
+  "id": "ex-nnk87r2h",
+  "version": 1,
+  "section": "cleaning",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the processing steps in the order the lesson gives.",
+  "items": [
+   "clean",
+   "resample",
+   "cut",
+   "transcribe"
+  ]
+ },
+ {
+  "id": "ex-r786htzh",
+  "version": 1,
+  "section": "cleaning",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each version of the call to the WER Whisper scored on it.",
+  "pairs": [
+   {
+    "left": "clean",
+    "right": "12.6%"
+   },
+   {
+    "left": "noisy, as recorded",
+    "right": "20.5%"
+   },
+   {
+    "left": "high-pass + afftdn",
+    "right": "13.2%"
+   },
+   {
+    "left": "GTCRN",
+    "right": "17.9%"
+   }
+  ],
+  "right_distractors": [
+   "9.8%"
+  ]
+ },
+ {
+  "id": "ex-qnqwpgkd",
+  "version": 1,
+  "section": "finding-speech",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "On the clean call, how many stretches did Silero find, for how many turns?",
+  "choices": [
+   {
+    "text": "11 stretches for 9 turns",
+    "correct": true,
+    "why": "Right. Two of Caio's turns had a pause long enough to split them."
+   },
+   {
+    "text": "9 stretches for 9 turns",
+    "correct": false,
+    "why": "Two turns came out as two stretches each."
+   },
+   {
+    "text": "5 stretches for 9 turns",
+    "correct": false,
+    "why": "That was the noisy call."
+   },
+   {
+    "text": "13 stretches for 9 turns",
+    "correct": false,
+    "why": "That was after GTCRN."
+   }
+  ]
+ },
+ {
+  "id": "ex-0tywez5z",
+  "version": 1,
+  "section": "finding-speech",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Raising the minimum silence from 0.25 to 1.0 seconds did what?",
+  "choices": [
+   {
+    "text": "Found more stretches",
+    "correct": false,
+    "why": "It found 4 instead of 11."
+   },
+   {
+    "text": "Removed the noise",
+    "correct": false,
+    "why": "It was run on the clean call."
+   },
+   {
+    "text": "Merged exchanges",
+    "correct": true,
+    "why": "Right. The first stretch held Caio, Bia and Caio again."
+   },
+   {
+    "text": "Changed the sample rate",
+    "correct": false,
+    "why": "It changes only what counts as a gap."
+   }
+  ]
+ },
+ {
+  "id": "ex-z3d10rt0",
+  "version": 1,
+  "section": "finding-speech",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did the noisy call give only 5 stretches?",
+  "choices": [
+   {
+    "text": "The hiss filled the gaps and looked like speech",
+    "correct": true,
+    "why": "Right. With the noise floor that high, silence stopped looking like silence."
+   },
+   {
+    "text": "The speakers talked over each other",
+    "correct": false,
+    "why": "The script has gaps between every turn."
+   },
+   {
+    "text": "Silero only accepts clean audio",
+    "correct": false,
+    "why": "It ran; the result was the problem."
+   },
+   {
+    "text": "The minimum silence was set to 1.0",
+    "correct": false,
+    "why": "It was run at 0.25."
+   }
+  ]
+ },
+ {
+  "id": "ex-50xftsqq",
+  "version": 1,
+  "section": "finding-speech",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "You are cutting audio for captions and for a meeting summary. How should the minimum silence differ?",
+  "choices": [
+   {
+    "text": "Short for captions, longer for the summary",
+    "correct": true,
+    "why": "Right. Captions follow sentences; a summary is happy with topics."
+   },
+   {
+    "text": "The same for both; it is a property of the recording",
+    "correct": false,
+    "why": "It is a choice about the pieces you need next."
+   },
+   {
+    "text": "Long for captions, short for the summary",
+    "correct": false,
+    "why": "The other way round."
+   },
+   {
+    "text": "Zero for both, to keep every pause",
+    "correct": false,
+    "why": "That would cut inside words at every breath."
+   }
+  ]
+ },
+ {
+  "id": "ex-afhjk3g5",
+  "version": 1,
+  "section": "who-spoke-when",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a diarizer's label speaker_0 tell you?",
+  "choices": [
+   {
+    "text": "One voice, followed through",
+    "correct": true,
+    "why": "Right. Deciding who speaker_0 is remains your job."
+   },
+   {
+    "text": "The name of the person",
+    "correct": false,
+    "why": "It knows voices apart, not names."
+   },
+   {
+    "text": "That this speaker spoke first",
+    "correct": false,
+    "why": "Numbers are arbitrary."
+   },
+   {
+    "text": "The loudest voice in the call",
+    "correct": false,
+    "why": "Loudness is not what the label means."
+   }
+  ]
+ },
+ {
+  "id": "ex-z8ep0rpb",
+  "version": 1,
+  "section": "who-spoke-when",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put the three models of diarization in order.",
+  "items": [
+   "segmentation finds where speech changes hands",
+   "embedding describes each piece's voice",
+   "clustering groups the pieces"
+  ]
+ },
+ {
+  "id": "ex-5smj275h",
+  "version": 1,
+  "section": "who-spoke-when",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The clean call has two people and the diarizer found three. What was the third?",
+  "choices": [
+   {
+    "text": "A fragment of Bia's first turn",
+    "correct": true,
+    "why": "Right. 11.98 to 14.34 seconds, cut off and given its own label."
+   },
+   {
+    "text": "Background noise",
+    "correct": false,
+    "why": "This was the clean call."
+   },
+   {
+    "text": "The silence between turns",
+    "correct": false,
+    "why": "Silence is not labelled as a speaker."
+   },
+   {
+    "text": "Caio's voice at the start",
+    "correct": false,
+    "why": "The first segment is speaker_0, Caio, like his other turns."
+   }
+  ]
+ },
+ {
+  "id": "ex-wq4ya8de",
+  "version": 1,
+  "section": "who-spoke-when",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "At which threshold did the diarizer find exactly two speakers on the clean call?",
+  "value": 0.9,
+  "tolerance": 0.001,
+  "unit": ""
+ },
+ {
+  "id": "ex-9832v55t",
+  "version": 1,
+  "section": "who-spoke-when",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does telling the diarizer speakers=2 help?",
+  "choices": [
+   {
+    "text": "It makes the embeddings more accurate",
+    "correct": false,
+    "why": "The embeddings are the same; the clustering changes."
+   },
+   {
+    "text": "It no longer guesses the count",
+    "correct": true,
+    "why": "Right. Clustering only decides which piece goes where, the easier half."
+   },
+   {
+    "text": "It removes the noise",
+    "correct": false,
+    "why": "No audio changes."
+   },
+   {
+    "text": "It turns diarization into speaker identification",
+    "correct": false,
+    "why": "It still does not know names."
+   }
+  ]
+ },
+ {
+  "id": "ex-hcg5kbye",
+  "version": 1,
+  "section": "segmenting-for-models",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Whisper was trained on windows of ___ seconds.",
+  "blanks": [
+   {
+    "accept": [
+     "30"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-nf3ex57c",
+  "version": 1,
+  "section": "segmenting-for-models",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Where should long audio be cut into pieces?",
+  "choices": [
+   {
+    "text": "Every 30 seconds exactly",
+    "correct": false,
+    "why": "That cuts words in half."
+   },
+   {
+    "text": "Where the diarizer changes label",
+    "correct": false,
+    "why": "A speaker change can come with no pause."
+   },
+   {
+    "text": "At the loudest point",
+    "correct": false,
+    "why": "That is most likely the middle of a word."
+   },
+   {
+    "text": "Only in silence",
+    "correct": true,
+    "why": "Right. The speech detector says where."
+   }
+  ]
+ },
+ {
+  "id": "ex-bhjc5tw0",
+  "version": 1,
+  "section": "segmenting-for-models",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "chunks.py cut the 55-second call into two pieces. How long was the first, in seconds?",
+  "value": 29.6,
+  "tolerance": 0.05,
+  "unit": "s"
+ },
+ {
+  "id": "ex-7m293xzm",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A shop records phone calls in stereo, agent left and customer right, with a strong 60 Hz hum. Which plan follows the lesson?",
+  "choices": [
+   {
+    "text": "Mix to mono, run GTCRN, then diarize",
+    "correct": false,
+    "why": "Mixing throws away the separation the channels give for free."
+   },
+   {
+    "text": "Diarize first, because the hum hides the speakers",
+    "correct": false,
+    "why": "The channels already say who spoke."
+   },
+   {
+    "text": "Low-pass at 120 Hz to keep the voices",
+    "correct": false,
+    "why": "A low-pass would keep the hum and remove the voices."
+   },
+   {
+    "text": "Keep the channels apart and filter each",
+    "correct": true,
+    "why": "Right: a high-pass on each, then transcribe and measure. No diarizer needed; the WER decides the rest."
+   }
+  ]
+ },
+ {
+  "id": "ex-5snyxebe",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "On your recordings, a denoiser lowers WER but the speech detector still merges turns. Which number do you watch when choosing a minimum silence?",
+  "choices": [
+   {
+    "text": "The WER alone, since it is the goal",
+    "correct": false,
+    "why": "The WER does not see where pieces start and end."
+   },
+   {
+    "text": "The file size after cleaning",
+    "correct": false,
+    "why": "Unchanged by the setting."
+   },
+   {
+    "text": "The diarizer's threshold",
+    "correct": false,
+    "why": "That is a different model's setting."
+   },
+   {
+    "text": "Stretches against known turns",
+    "correct": true,
+    "why": "Right. Count stretches against a sample whose turns are known."
+   }
+  ]
+ }
+]
