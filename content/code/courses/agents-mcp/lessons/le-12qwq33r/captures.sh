@@ -1,0 +1,332 @@
+#!/usr/bin/env bash
+# The terminal sessions quoted in lesson 10 of agents-mcp, as a script that
+# produces them.
+#
+# THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED.
+#
+#   sudo bash ../../lab.sh up        # once
+#   sudo bash captures.sh
+#
+# What is STAGED rather than typed, and not shown in the lesson: the lab
+# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
+# full; emptying labllm's log before the runs whose requests are read, done as
+# root because the log belongs to the labllm user; and the answers a person
+# typed at the approval prompts, fed on standard input.
+#
+# PYTHONWARNINGS=ignore::UserWarning is set for every command except the
+# first refund run: ADK announces each feature it marks experimental with a
+# Python warning on every run, and the lesson shows those warnings once,
+# there, and says so.
+#
+# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
+# as rules in lab/scripted/10-adk.json. Google's Agent Development Kit
+# (google-adk 2.11.0), what it sent on the wire in the Gemini API's format,
+# its events, its error handling, tool confirmation, callbacks, transfers,
+# agents as tools, workflow agents, session state and its deploy command's
+# help are real. Nothing was deployed: Agent Engine and Cloud Run need a
+# Google Cloud project, and this lab reaches no cloud.
+#
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
+set -uo pipefail
+export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+cd "$(dirname "$0")"
+LAB_SH=${LAB_SH:-../../lab.sh}
+lab() { bash "$LAB_SH" "$@"; }
+on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "export PYTHONWARNINGS=ignore::UserWarning; $*" 2>&1 || true; }
+loud() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
+put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
+block() { printf '##### %s\n' "$1"; }
+fresh_log() { : > /var/log/labllm/requests.jsonl; }
+exec 9>/var/tmp/agents-capture.lock; flock 9
+lab reset >/dev/null
+lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
+
+put adk_tools.py <<'PY'
+"""Marginalia's tools for the Google ADK: plain functions, read by their type hints and docstrings."""
+import shop
+
+
+def get_order(order_id: str) -> dict:
+    """Look up one Marginalia order by its id, M- and four digits. Returns status, dates, lines and amounts in cents."""
+    return shop.get_order(order_id)
+
+
+def search_help(query: str) -> list[dict]:
+    """Search Marginalia's help centre by meaning and return the three closest articles."""
+    return [{"title": a["title"], "body": a["body"]} for a in shop.search_help(query)]
+
+
+def refund(order_id: str, cents: int, reason: str) -> dict:
+    """Refund part or all of an order to the customer's original payment, in cents."""
+    return shop.refund(order_id, cents, reason, approved_by="ana")
+PY
+
+put adk_show.py <<'PY'
+"""Print ADK's events one line per part, shortened for reading."""
+import json
+
+
+def show(event):
+    for part in event.content.parts if event.content else []:
+        if part.function_call:
+            args = json.dumps(part.function_call.args, ensure_ascii=False)
+            print(f"{event.author:8} call    {part.function_call.name} {args[:80]}")
+        elif part.function_response:
+            body = json.dumps(part.function_response.response, ensure_ascii=False)
+            print(f"{event.author:8} result  {part.function_response.name} {body[:80]}")
+        elif part.text:
+            print(f"{event.author:8} text    {part.text}")
+    if getattr(event, "output", None) is not None:
+        print(f"{event.author:8} output  {event.output}")
+    if event.actions.state_delta:
+        print(f"{event.author:8} state   {event.actions.state_delta}")
+    if event.actions.transfer_to_agent:
+        print(f"{event.author:8} handoff to {event.actions.transfer_to_agent}")
+PY
+
+put adk_run.py <<'PY'
+"""A first agent with the Google ADK, pointed at the lab's stand-in through the Gemini API's wire format."""
+import asyncio
+import sys
+
+from google.adk.agents import Agent
+from google.adk.agents.run_config import RunConfig
+from google.adk.models.google_llm import Gemini
+from google.adk.runners import InMemoryRunner
+from google.genai.types import Content, Part
+
+from adk_show import show
+from adk_tools import get_order, search_help
+
+MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")  # labllm speaks the Gemini API too
+
+
+def say_what_failed(tool, args, tool_context, error):
+    return {"error": f"{type(error).__name__}: {error}"}
+
+
+def agent(how):
+    return Agent(name="support", model=MODEL,
+                 instruction="You answer Marginalia's customers in the Google ADK lesson. Use the tools; never guess.",
+                 tools=[get_order, search_help],
+                 on_tool_error_callback=say_what_failed if how == "caught" else None)
+
+
+async def main(how, task):
+    runner = InMemoryRunner(agent=agent(how), app_name="marginalia")
+    session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")
+    config = RunConfig(max_llm_calls=1 if how == "one-call" else 500)
+    try:
+        async for event in runner.run_async(user_id="bia", session_id=session.id, run_config=config,
+                                            new_message=Content(role="user", parts=[Part(text=task)])):
+            show(event)
+    except Exception as e:
+        print(f"raised   {type(e).__name__}: {e}")
+
+
+asyncio.run(main(sys.argv[1], sys.argv[2]))
+PY
+
+put wire.py <<'PY'
+"""What each request in labllm's log carried, in the Gemini API's format."""
+import json
+
+for n, line in enumerate(open("/var/log/labllm/requests.jsonl"), 1):
+    q = json.loads(line)["request"]
+    print(f"request {n}:")
+    print("  systemInstruction:", json.dumps(q["systemInstruction"]["parts"][0]["text"]))
+    for tool in q.get("tools", []):
+        for f in tool["functionDeclarations"]:
+            print(f"  tool {f['name']}:", json.dumps(f["parameters_json_schema"]))
+    for c in q["contents"]:
+        print(f"  {c['role']}:", json.dumps(c["parts"][0], ensure_ascii=False)[:150])
+PY
+
+put adk_refund.py <<'PY'
+"""A refund that needs a person's confirmation, and a callback that refuses large ones first."""
+import asyncio
+import sys
+
+from google.adk.agents import Agent
+from google.adk.models.google_llm import Gemini
+from google.adk.runners import InMemoryRunner
+from google.adk.tools import FunctionTool
+from google.genai.types import Content, FunctionResponse, Part
+
+from adk_show import show
+from adk_tools import get_order, refund
+
+MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+LIMIT = 5000  # cents; above this a refund is refused in code and no person is asked
+
+
+def limit_refunds(tool, args, tool_context):
+    if tool.name == "refund" and args["cents"] > LIMIT:
+        return {"error": f"Refunds above {LIMIT} cents need a manager."}  # returned instead of running the tool
+    return None                                                          # None: carry on
+
+
+agent = Agent(name="refunds", model=MODEL,
+              instruction="You handle refunds in the Google ADK lesson.",
+              tools=[get_order, FunctionTool(refund, require_confirmation=True)],
+              before_tool_callback=limit_refunds)
+
+
+async def run(runner, session, message):
+    """One run of the agent; returns the confirmation it stopped to wait for, if any."""
+    waiting = None
+    async for event in runner.run_async(user_id="bia", session_id=session.id, new_message=message):
+        show(event)
+        for part in event.content.parts if event.content else []:
+            if part.function_call and part.function_call.name == "adk_request_confirmation":
+                waiting = part.function_call
+    return waiting
+
+
+async def main(task):
+    runner = InMemoryRunner(agent=agent, app_name="marginalia")
+    session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")
+    waiting = await run(runner, session, Content(role="user", parts=[Part(text=task)]))
+    while waiting:
+        call = waiting.args["originalFunctionCall"]
+        print(f"approve? {call['name']} {call['args']} [y/n] ", end="", flush=True)
+        answer = sys.stdin.readline().strip()
+        print(answer)
+        reply = FunctionResponse(id=waiting.id, name="adk_request_confirmation", response={"confirmed": answer == "y"})
+        waiting = await run(runner, session, Content(role="user", parts=[Part(function_response=reply)]))
+
+
+asyncio.run(main(sys.argv[1]))
+PY
+
+put adk_team.py <<'PY'
+"""Two ways to involve a specialist: transfer control to it, or call it as a tool."""
+import asyncio
+import sys
+
+from google.adk.agents import Agent
+from google.adk.models.google_llm import Gemini
+from google.adk.runners import InMemoryRunner
+from google.adk.tools.agent_tool import AgentTool
+from google.genai.types import Content, Part
+
+from adk_show import show
+from adk_tools import get_order
+
+MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+
+
+def specialist():
+    return Agent(name="orders", model=MODEL, description="Answers questions about one Marginalia order.",
+                 instruction="You are the orders specialist of the Google ADK lesson.", tools=[get_order])
+
+
+def root(how):
+    if how == "transfer":
+        return Agent(name="triage", model=MODEL, instruction="You are the triage agent of the Google ADK lesson.",
+                     sub_agents=[specialist()])
+    return Agent(name="desk", model=MODEL, instruction="You are the front desk of the Google ADK lesson.",
+                 tools=[AgentTool(agent=specialist())])
+
+
+async def main(how):
+    runner = InMemoryRunner(agent=root(how), app_name="marginalia")
+    session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")
+    async for event in runner.run_async(user_id="bia", session_id=session.id,
+                                        new_message=Content(role="user", parts=[Part(text="Has M-1046 been packed?")])):
+        show(event)
+
+
+asyncio.run(main(sys.argv[1]))
+PY
+
+put adk_pipeline.py <<'PY'
+"""A fixed two-step workflow: plain code finds the facts, then an agent writes the reply from them."""
+import asyncio
+import json
+import re
+
+from google.adk.agents import Agent
+from google.adk.models.google_llm import Gemini
+from google.adk.runners import InMemoryRunner
+from google.adk.workflow import START, Workflow
+from google.genai.types import Content, Part
+
+import shop
+from adk_show import show
+
+MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+
+
+def find_facts(node_input: str) -> str:
+    """No model: the order id is a pattern, and the facts are a lookup."""
+    order = shop.get_order(re.search(r"M-[0-9]{4}", node_input).group(0))
+    return json.dumps({k: order[k] for k in ("id", "status", "delivered_on")})
+
+
+writer = Agent(name="writer", model=MODEL,
+               instruction="You write the customer's reply in the Google ADK lesson, from the facts you are given.")
+pipeline = Workflow(name="pipeline", edges=[(START, find_facts, writer)])
+
+
+async def main():
+    runner = InMemoryRunner(agent=pipeline, app_name="marginalia")
+    session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")
+    async for event in runner.run_async(user_id="bia", session_id=session.id,
+                                        new_message=Content(role="user", parts=[Part(text="When was M-1042 delivered?")])):
+        show(event)
+
+
+asyncio.run(main())
+PY
+
+SPECIALIST_SAW="python -c 'import json; r = [json.loads(l)[\"request\"] for l in open(\"/var/log/labllm/requests.jsonl\")]; q = [x for x in r if \"orders specialist\" in x[\"systemInstruction\"][\"parts\"][0][\"text\"]][0]; [print(c[\"role\"] + \":\", json.dumps(p, ensure_ascii=False)[:160]) for c in q[\"contents\"] for p in c[\"parts\"]]'"
+
+block deploy-help
+on 'adk deploy --help'
+
+block first-run
+fresh_log
+on 'python adk_run.py default "Where is my order M-1043?"'
+
+block first-wire
+on 'python wire.py'
+
+block missing
+on 'python adk_run.py default "Where is my order M-9999?" 2> stderr.txt; wc -l < stderr.txt; tail -1 stderr.txt'
+
+block caught
+on 'python adk_run.py caught "Where is my order M-9999?"'
+
+block one-call
+on 'python adk_run.py one-call "Where is my order M-1043?" 2> stderr.txt; wc -l < stderr.txt'
+
+block confirm-no
+fresh_log
+loud 'echo n | python adk_refund.py "One copy of M-1047 arrived damaged; please refund it."'
+on 'wc -l < /var/log/labllm/requests.jsonl'
+
+block confirm-yes
+on 'echo y | python adk_refund.py "One copy of M-1047 arrived damaged; please refund it."'
+on "python -c 'import sqlite3; print(sqlite3.connect(\"data/shop.db\").execute(\"SELECT order_id, cents, approved_by FROM refunds\").fetchall())'"
+
+block limit
+on 'echo y | python adk_refund.py "Please refund the whole order M-1047."'
+
+block transfer
+fresh_log
+on 'python adk_team.py transfer'
+on "$SPECIALIST_SAW"
+
+block as-tool
+fresh_log
+on 'python adk_team.py tool'
+on "$SPECIALIST_SAW"
+
+block sequential
+on "python -c 'from google.adk.agents import SequentialAgent; SequentialAgent(name=\"pipeline\", sub_agents=[])'"
+
+block pipeline
+fresh_log
+on 'python adk_pipeline.py 2> /dev/null'
+on "python -c 'import json; [print(json.dumps(c, ensure_ascii=False)) for l in open(\"/var/log/labllm/requests.jsonl\") for c in json.loads(l)[\"request\"][\"contents\"]]'"
