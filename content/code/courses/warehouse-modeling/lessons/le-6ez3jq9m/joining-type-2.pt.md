@@ -3,8 +3,8 @@ title: Fazendo uma pergunta a uma dimensão tipo 2
 version: 1
 ---
 
-O ponto do tipo 2 é que um fato pode ser descrito **como era** ou **como é agora**, e as duas são
-perguntas diferentes. Receita de 2025 por nível de fidelidade, dos dois jeitos:
+Com o tipo 2, um fato pode ser descrito **como era** ou **como é agora**, e as duas são perguntas
+diferentes. Receita de 2025 por nível de fidelidade, dos dois jeitos:
 
 ```sql
 -- Revenue of 2025 by loyalty tier: the tier the customer had when they

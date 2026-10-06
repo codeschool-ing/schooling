@@ -40,11 +40,11 @@ around would answer a different question.
 
 Type 0 is the right choice far more often than its number suggests:
 
-- **Dates of events about the thing**: when the customer joined, when a book was published, when a
+- Dates of events about the thing: when the customer joined, when a book was published, when a
   shop opened.
-- **Original classifications** kept on purpose for cohort analysis: the first tier, the acquisition
+- Original classifications kept on purpose for cohort analysis: the first tier, the acquisition
   channel, the campaign that brought somebody in.
-- **Values that cannot change by definition**: a date of birth, the ISBN of an edition.
+- Values that cannot change by definition: a date of birth, the ISBN of an edition.
 
 The danger is calling something type 0 that is merely *rarely* changed. A date of birth is type 0
 until somebody discovers it was typed wrongly, and then it needs correcting, which is the next

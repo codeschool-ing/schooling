@@ -39,5 +39,5 @@ people, and a warehouse that keyed on `customer_id` alone has no way to tell the
 own id. The warehouse is meant to be integrated (lesson 1), so it needs one identity that is neither of
 theirs.
 
-**The common thread: a natural key belongs to somebody else**, and that somebody can change it for
-reasons that have nothing to do with the warehouse. The warehouse needs keys that only it controls.
+**In all four, a natural key belongs to somebody else**, and that somebody can change it for reasons
+that have nothing to do with the warehouse. The warehouse needs keys that only it controls.

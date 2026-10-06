@@ -71,7 +71,7 @@ ana@lab:~/wh$ duckdb wh.duckdb < top-authors.sql
 Olga Fontes e Klara Bergman Lacerda têm o mesmo número nas duas colunas, porque nenhum livro desses dois autores tem
 coautor.
 
-**A regra para relatórios**: diga qual é. Uma tabela intitulada "receita por autor" com números sem
+**Um relatório tem de dizer qual dos dois é.** Uma tabela intitulada "receita por autor" com números sem
 peso vai ser totalizada por alguém, e o total vai sair dezesseis milhões de reais alto demais. O
 dicionário da lição 12 registra que colunas são rateios e quais são impactos, para a ferramenta de
 relatório se recusar a totalizar a segunda.

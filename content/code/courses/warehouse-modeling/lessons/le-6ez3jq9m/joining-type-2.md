@@ -3,8 +3,8 @@ title: Asking a type 2 dimension a question
 version: 1
 ---
 
-The point of type 2 is that a fact can be described **as it was** or **as it is now**, and the two
-are different questions. Revenue of 2025 by loyalty tier, both ways:
+With type 2, a fact can be described **as it was** or **as it is now**, and the two are different
+questions. Revenue of 2025 by loyalty tier, both ways:
 
 ```sql
 -- Revenue of 2025 by loyalty tier: the tier the customer had when they

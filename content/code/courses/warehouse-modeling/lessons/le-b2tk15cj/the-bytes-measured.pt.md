@@ -59,8 +59,8 @@ ana@lab:~/wh$ duckdb wh.duckdb < pq-sizes.sql
 **Por linha, a tabela larga custa quase três vezes a estrela.** Cada linha carrega o título, os autores,
 a editora, o nome e a cidade da loja, tudo escrito por extenso, 887.477 vezes.
 
-**Por coluna, custa cerca de um terço a mais.** Uma coluna de nomes de departamento é a mesma dúzia de
-palavras repetida em longas sequências, e um formato colunar guarda uma sequência de palavras repetidas
+**Por coluna, custa cerca de um terço a mais.** Uma coluna de nomes de departamento é feita das mesmas quatro
+palavras repetidas em longas sequências. Um formato colunar guarda uma sequência de palavras repetidas
 como a palavra e uma contagem, ou como um número pequeno apontando para uma lista das palavras. A lição 8
 mostra exatamente como. A repetição que triplicou o tamanho num banco por linhas quase não mexe num banco
 por colunas.

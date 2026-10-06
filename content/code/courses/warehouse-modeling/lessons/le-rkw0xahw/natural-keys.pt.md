@@ -41,5 +41,5 @@ vendas deles.
 um com o seu id. O warehouse deve ser integrado (lição 1), então precisa de uma identidade que não seja
 de nenhum dos dois.
 
-**O ponto em comum: uma chave natural pertence a outra pessoa**, e essa pessoa pode mudá-la por motivos
+**Nos quatro casos, uma chave natural pertence a outra pessoa**, e essa pessoa pode mudá-la por motivos
 que não têm nada a ver com o warehouse. O warehouse precisa de chaves que só ele controla.

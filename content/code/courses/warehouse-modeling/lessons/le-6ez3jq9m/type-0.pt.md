@@ -40,11 +40,11 @@ responderia outra pergunta.
 
 O tipo 0 é a escolha certa bem mais vezes do que o número sugere:
 
-- **Datas de eventos sobre a coisa**: quando o cliente entrou, quando um livro foi publicado, quando uma
+- Datas de eventos sobre a coisa: quando o cliente entrou, quando um livro foi publicado, quando uma
   loja abriu.
-- **Classificações originais** guardadas de propósito para análise de coortes: o primeiro nível, o
+- Classificações originais guardadas de propósito para análise de coortes: o primeiro nível, o
   canal de aquisição, a campanha que trouxe alguém.
-- **Valores que não podem mudar por definição**: uma data de nascimento, o ISBN de uma edição.
+- Valores que não podem mudar por definição: uma data de nascimento, o ISBN de uma edição.
 
 O perigo é chamar de tipo 0 algo que só muda *raramente*. Uma data de nascimento é tipo 0 até alguém
 descobrir que foi digitada errada, e aí ela precisa de correção, que é a próxima seção.

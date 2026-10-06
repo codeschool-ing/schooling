@@ -53,8 +53,8 @@ has to be updated too, which is a type 1 overwrite across their whole history.
 Type 2 grows by one row per change. For an attribute that changes often in a large dimension, such
 as a credit score updated monthly on millions of customers, that is too many rows. Type 4 moves the
 fast-changing attributes out into a small table of their own, a **mini-dimension**, with one row per
-combination of values that occurs (bands rather than exact numbers), and puts a second key in the fact
-table pointing at it. The customer dimension stays slow; the mini-dimension's key on each fact row
+combination of values that occurs (bands rather than exact numbers). A second key in the fact table
+points at it. The customer dimension stays slow; the mini-dimension's key on each fact row
 records what the fast attributes were at that moment.
 
 It is lesson 3's junk dimension again, used for a different reason. The shop does not need one: its

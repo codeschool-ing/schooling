@@ -70,7 +70,7 @@ ana@lab:~/wh$ duckdb wh.duckdb < top-authors.sql
 Olga Fontes and Klara Bergman Lacerda have the same number in both columns, because none of their
 books has a co-author.
 
-**The rule for reports**: say which one it is. A table headed "revenue by author" with unweighted
+**A report has to say which one it is.** A table headed "revenue by author" with unweighted
 numbers in it will be totalled by somebody, and the total will be sixteen million reais too high. Lesson
 12's dictionary records which columns are allocations and which are impacts, so the report tool can
 refuse to total the second.

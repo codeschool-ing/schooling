@@ -54,8 +54,8 @@ anteriores precisa ser atualizado também, o que é uma sobrescrita tipo 1 sobre
 O tipo 2 cresce uma linha por mudança. Para um atributo que muda com frequência numa dimensão grande,
 como um score de crédito atualizado todo mês para milhões de clientes, são linhas demais. O tipo 4 leva
 os atributos que mudam rápido para uma tabela pequena própria, uma **minidimensão**, com uma linha por
-combinação de valores que ocorre (faixas, e não números exatos), e põe uma segunda chave na tabela fato
-apontando para ela. A dimensão de clientes continua lenta; a chave da minidimensão em cada linha fato
+combinação de valores que ocorre (faixas, e não números exatos). Uma segunda chave na tabela fato
+aponta para ela. A dimensão de clientes continua lenta; a chave da minidimensão em cada linha fato
 registra como eram os atributos rápidos naquele momento.
 
 É a dimensão junk da lição 3 de novo, usada por outro motivo. A rede não precisa de uma: seus níveis

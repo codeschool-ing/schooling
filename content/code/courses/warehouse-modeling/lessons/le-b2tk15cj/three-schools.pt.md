@@ -3,8 +3,8 @@ title: Três escolas de projeto de warehouse
 version: 1
 ---
 
-Onde normalizar e onde não é mais que uma questão de tabelas. Divide a área em escolas, e você vai
-encontrar as três em descrições de vaga e em revisões de projeto.
+Onde normalizar e onde não normalizar também divide a área em escolas, e você vai encontrar as três
+em descrições de vaga e em revisões de projeto.
 
 **Inmon: normalize o warehouse, desnormalize os marts.** O warehouse de Bill Inmon, a *corporate
 information factory*, é um banco integrado e normalizado, perto da terceira forma normal, com o histórico

@@ -41,5 +41,5 @@ The defences are the same as for any derived table:
 - **Check it.** A load that finishes by comparing the aggregate's total with the fact table's, and fails
   if they differ, turns a silent disagreement into an error somebody sees.
 
-**The cost of an aggregate is not storage; it is the duty to keep it true.** Build one when a measured query
+**What an aggregate costs is the duty to keep it true.** Build one when a measured query
 is too slow for the people waiting on it, and not before.

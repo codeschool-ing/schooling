@@ -42,5 +42,5 @@ As defesas são as mesmas de qualquer tabela derivada:
 - **Confira.** Uma carga que termina comparando o total do agregado com o da tabela fato, e falha se
   diferirem, transforma uma discordância silenciosa num erro que alguém vê.
 
-**O custo de um agregado não é armazenamento; é o dever de mantê-lo verdadeiro.** Construa um quando uma
+**O que um agregado custa é o dever de mantê-lo verdadeiro.** Construa um quando uma
 consulta medida estiver lenta demais para quem espera por ela, e não antes.

@@ -47,7 +47,7 @@ ana@lab:~/wh$ duckdb wh.duckdb -cmd "SET VARIABLE extract_date = DATE '2025-12-0
 **The same question about 2024, asked in October 2025 and again in December 2025, gives two
 different answers.** Minas Gerais lost R$ 9,392.24 of 2024 sales between the two loads. Nothing about
 2024 changed in those two months. More customers moved out of Minas Gerais than into it in October and
-November, the overwrite took their whole history with them, and a report that was printed in October no longer
+November, and the overwrite took their whole history with them. A report printed in October no longer
 matches the warehouse.
 
 That is the defining property of type 1: **the past is rewritten to look like the present.** It is

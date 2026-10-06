@@ -3,8 +3,8 @@ title: Three schools of warehouse design
 version: 1
 ---
 
-Where to normalise and where not is not only a question about tables. It divides the field into
-schools, and you will meet all three in job descriptions and design reviews.
+Where to normalise and where not to also divides the field into schools, and you will meet all three
+in job descriptions and design reviews.
 
 **Inmon: normalise the warehouse, denormalise the marts.** Bill Inmon's warehouse, the *corporate
 information factory*, is one integrated, normalised database, close to third normal form, holding the

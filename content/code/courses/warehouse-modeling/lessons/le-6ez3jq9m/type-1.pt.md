@@ -47,7 +47,7 @@ ana@lab:~/wh$ duckdb wh.duckdb -cmd "SET VARIABLE extract_date = DATE '2025-12-0
 **A mesma pergunta sobre 2024, feita em outubro de 2025 e de novo em dezembro de 2025, dá duas
 respostas diferentes.** Minas Gerais perdeu R$ 9.392,24 de vendas de 2024 entre as duas cargas. Nada
 sobre 2024 mudou nesses dois meses. Saíram de Minas Gerais mais clientes do que entraram em outubro e
-novembro, a sobrescrita levou o histórico inteiro deles junto, e um relatório impresso em outubro não
+novembro, e a sobrescrita levou o histórico inteiro deles junto. Um relatório impresso em outubro não
 bate mais com o warehouse.
 
 Essa é a propriedade que define o tipo 1: **o passado é reescrito para parecer o presente.** É errado

@@ -60,7 +60,7 @@ ana@lab:~/wh$ duckdb wh.duckdb < pq-sizes.sql
 the publisher, the shop's name and city, all written out in full, 887,477 times.
 
 **By column, it costs about a third more.** A column of department names is the same four words repeated
-in long runs, and a columnar format stores a run of repeated words as the word and a count, or as a
+in long runs. A columnar format stores a run of repeated words as the word and a count, or as a
 small number pointing into a list of the words. Lesson 8 shows exactly how. The repetition that tripled
 the size of a row store barely moves a column store.
 
