@@ -53,5 +53,5 @@ SELECT row_number() OVER (ORDER BY v.customer_id, v.valid_from) AS customer_key,
 FROM versions v JOIN staging.customers c USING (customer_id)
 UNION ALL
 SELECT 0, NULL, 'Walk-in, not identified', 'none', 'Unknown', '--',
-       TIMESTAMPTZ '1900-01-01 00:00:00-03', TIMESTAMPTZ '9999-12-31 00:00:00-03', true
+       TIMESTAMPTZ '1970-01-01 00:00:00-03', TIMESTAMPTZ '9999-12-31 00:00:00-03', true
 ORDER BY customer_key;
