@@ -1,0 +1,581 @@
+[
+  {
+    "id": "ex-r5xsqkm7",
+    "version": 1,
+    "section": "sentinels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The read loop of section 02 got `0 \"\" EOF` on its fourth call. What was `io.EOF` telling it?",
+    "hint": "The program printed `done` afterwards.",
+    "choices": [
+      {
+        "text": "That the read failed and the last bytes were lost",
+        "correct": false,
+        "why": "The last byte, `o`, arrived on the third call; nothing was lost and nothing failed."
+      },
+      {
+        "text": "That the input was over, the normal way out of the loop",
+        "correct": true,
+        "why": "Right. It is a sentinel for the end of input, and the loop broke on it and printed `done`."
+      },
+      {
+        "text": "That `buf` was too small for the rest of the string",
+        "correct": false,
+        "why": "A small buffer only means more calls; the reader filled 4, 4 and then 1 byte."
+      },
+      {
+        "text": "That the string held a byte which was not valid text",
+        "correct": false,
+        "why": "`Read` does not judge the bytes at all, and `Hello, Go` is plain text."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzb35qn8",
+    "version": 1,
+    "section": "sentinels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 34 said to prefer `errors.Is`, yet the loop writes `err == io.EOF`. Why is that safe?",
+    "hint": "Read the parenthesis in `go doc io.EOF`.",
+    "choices": [
+      {
+        "text": "`io.EOF` is a constant, and constants compare with `==`",
+        "correct": false,
+        "why": "`go doc` printed `var EOF = errors.New(\"EOF\")`: a variable, like every sentinel."
+      },
+      {
+        "text": "A `Read` method must return `io.EOF` itself, never wrapped",
+        "correct": true,
+        "why": "Right. The documentation makes that a rule for readers precisely so that callers can use `==`."
+      },
+      {
+        "text": "`errors.Is` cannot find `io.EOF`, because it has no `Unwrap`",
+        "correct": false,
+        "why": "`errors.Is` checks the error itself first, so it finds `io.EOF` just as well."
+      },
+      {
+        "text": "`==` is faster, and a read loop runs often",
+        "correct": false,
+        "why": "Speed is not the argument the documentation makes; the guarantee that `io.EOF` arrives unwrapped is."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfbvsetx",
+    "version": 1,
+    "section": "sentinels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`io.ReadAll` reads a reader to its end with no trouble. What error does it return?",
+    "hint": "Reaching the end was what it was asked to do.",
+    "choices": [
+      {
+        "text": "`io.EOF`, since the reader returned it",
+        "correct": false,
+        "why": "The reader did return it to `ReadAll`, which does not pass it on: `A successful call returns err == nil`."
+      },
+      {
+        "text": "`io.ErrUnexpectedEOF`",
+        "correct": false,
+        "why": "That one is for input that stopped in the middle of something; an expected end is not that."
+      },
+      {
+        "text": "`nil`",
+        "correct": true,
+        "why": "Right. For a function asked to read everything, reaching the end is success."
+      },
+      {
+        "text": "The data, and a joined error holding every `io.EOF` it met",
+        "correct": false,
+        "why": "It returns one error, and for a successful read that error is `nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb8g6hks",
+    "version": 1,
+    "section": "sentinels",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By convention, the name of a sentinel such as `ErrUnexpectedEOF` starts with `___`; `io.EOF` is the exception.",
+    "hint": "Five of the six in `io` follow it.",
+    "blanks": [
+      {
+        "accept": [
+          "Err"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ks55dmk3",
+    "version": 1,
+    "section": "sentinels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A file format starts with a 16-byte header, and a parser's reader runs out after 9 of them. What should the parser return?",
+    "hint": "Was this end allowed to happen here?",
+    "choices": [
+      {
+        "text": "`io.EOF`, because the input ended",
+        "correct": false,
+        "why": "`io.EOF` says the input ended where it was allowed to; a header cut at 9 bytes did not."
+      },
+      {
+        "text": "`nil` and the 9 bytes, since some data arrived",
+        "correct": false,
+        "why": "A header with 7 bytes missing is not a result anybody can use; returning `nil` hides a broken file."
+      },
+      {
+        "text": "`io.ErrUnexpectedEOF`, or an error with more detail",
+        "correct": true,
+        "why": "Right. The input stopped in the middle of a structure, which is a failure, and `go doc io.EOF` names this error for it."
+      },
+      {
+        "text": "`io.ErrShortBuffer`, because the buffer could not be filled",
+        "correct": false,
+        "why": "That sentinel is about a buffer too small for what must go in it, not about input that ran out."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktjqbjjm",
+    "version": 1,
+    "section": "sentinels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A package declares its own `var EOF = errors.New(\"EOF\")` and its reader returns that at the end. Does a caller's `err == io.EOF` catch it?",
+    "hint": "Lesson 33 compared two errors made from the same words.",
+    "choices": [
+      {
+        "text": "Yes, both say `EOF`",
+        "correct": false,
+        "why": "Equal words do not make equal errors: two `errors.New` calls make two different values."
+      },
+      {
+        "text": "No: it is a different value with the same message",
+        "correct": true,
+        "why": "Right. A sentinel is matched by identity, so only `io.EOF` itself is `io.EOF`, and that reader breaks every caller's loop."
+      },
+      {
+        "text": "Yes, because both variables are named `EOF`",
+        "correct": false,
+        "why": "A name is how code refers to a value; the comparison is between the values, which differ."
+      },
+      {
+        "text": "Only with `errors.Is`, which compares messages",
+        "correct": false,
+        "why": "`errors.Is` compares values too, link by link, and no link here is `io.EOF`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz8hjnc4",
+    "version": 1,
+    "section": "declaring-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does section 03's `main` check `errors.Is(err, store.ErrNotFound)` instead of `err == store.ErrNotFound`?",
+    "hint": "What did `Count` do with the sentinel before returning it?",
+    "choices": [
+      {
+        "text": "`==` cannot compare values that come from another package",
+        "correct": false,
+        "why": "It can; the trouble is which value it gets, not where the value came from."
+      },
+      {
+        "text": "`Count` always returns it wrapped, with the item's name",
+        "correct": true,
+        "why": "Right. The value `main` receives is the wrapper, so only a check that walks the chain finds the sentinel."
+      },
+      {
+        "text": "`ErrNotFound` is unexported and `==` cannot see it",
+        "correct": false,
+        "why": "It starts with a capital letter, which is why `main` can name it at all."
+      },
+      {
+        "text": "`errors.Is` also matches any error whose message is `not found`",
+        "correct": false,
+        "why": "It never reads messages; that is the point of a sentinel being a value."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ewp6hf9",
+    "version": 1,
+    "section": "declaring-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`store.Count(\"pear\")` returned 0 and a `nil` error. Why is having no pears not an error?",
+    "hint": "Think of every caller that would then have to handle it.",
+    "choices": [
+      {
+        "text": "None in stock is a good answer; an error would make it a failure",
+        "correct": true,
+        "why": "Right. The store sells pears and has counted them; the count happens to be 0."
+      },
+      {
+        "text": "The map gives 0 for a missing key, so `Count` cannot tell pears from plums",
+        "correct": false,
+        "why": "The comma-ok form tells them apart, and `Count` uses it: `plum` got the sentinel."
+      },
+      {
+        "text": "A zero value counts as success in Go",
+        "correct": false,
+        "why": "Nothing in the language says so; `Count` chose `nil` because 0 is a real count here."
+      },
+      {
+        "text": "`Count`'s errors are reserved for items it does not sell",
+        "correct": false,
+        "why": "A function may return any error; this one happens to have just one failure today."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev5k6pzn",
+    "version": 1,
+    "section": "declaring-one",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are what make `store.ErrNotFound` usable by a caller in another package? Select all that apply.",
+    "hint": "One is about naming it, one about knowing when to look for it.",
+    "choices": [
+      {
+        "text": "Its name starts with a capital letter, so it is exported",
+        "correct": true,
+        "why": "Yes. Without that, `main` could not write `store.ErrNotFound` at all."
+      },
+      {
+        "text": "`Count`'s comment says its error wraps `ErrNotFound`",
+        "correct": true,
+        "why": "Yes. The signature says only `error`, so the comment is where a caller learns what to check."
+      },
+      {
+        "text": "Its message is lower case with no full stop",
+        "correct": false,
+        "why": "That makes the message read well inside a longer one; callers that check with `errors.Is` never read it."
+      },
+      {
+        "text": "It is created by `errors.New` inside `Count` on every call",
+        "correct": false,
+        "why": "That would make a new value each time, which nothing could match; a sentinel is made once, at package level."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhjqz567",
+    "version": 1,
+    "section": "declaring-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A second package, `catalog`, also declares `var ErrNotFound = errors.New(\"not found\")` and wraps it the same way. What does `errors.Is(err, store.ErrNotFound)` say about an error from `catalog`?",
+    "hint": "Same words, same name, different `errors.New` call.",
+    "choices": [
+      {
+        "text": "`true`, as the two messages are identical",
+        "correct": false,
+        "why": "`errors.Is` compares values, not text, and these are two values."
+      },
+      {
+        "text": "Nothing: the program does not compile with two `ErrNotFound`",
+        "correct": false,
+        "why": "Each lives in its own package, `store.ErrNotFound` and `catalog.ErrNotFound`, so the names never clash."
+      },
+      {
+        "text": "`false`, because only `store`'s own variable matches",
+        "correct": true,
+        "why": "Right. That is exactly what keeps a missing catalogue entry from being mistaken for an item the store does not sell."
+      },
+      {
+        "text": "`true`, because both variables share the name `ErrNotFound`",
+        "correct": false,
+        "why": "Names are for the code that writes them; at run time only the values are compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4qxr7y6",
+    "version": 1,
+    "section": "declaring-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In section 03's `switch`, the `case err != nil` line is moved above the `errors.Is` case. What does the program print for `plum`?",
+    "hint": "A `switch` with no tag runs the first case that is true (lesson 19).",
+    "choices": [
+      {
+        "text": "`plum: not sold here (count \"plum\": not found)`, as before",
+        "correct": false,
+        "why": "The sentinel case is never reached: the error is not `nil`, so the case above it already matched."
+      },
+      {
+        "text": "`plum: failed: count \"plum\": not found`",
+        "correct": true,
+        "why": "Right. Every non-nil error matches `err != nil`, so the specific check has to come before the general one."
+      },
+      {
+        "text": "`plum: 0 in stock`",
+        "correct": false,
+        "why": "The `default` case only runs when no case matched, and `err != nil` did."
+      },
+      {
+        "text": "Nothing: two cases match, so the compiler refuses the `switch`",
+        "correct": false,
+        "why": "Overlapping conditions are legal in a tagless `switch`; the first true one wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-fp7xc6ra",
+    "version": 1,
+    "section": "when-to-declare",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the shape of error it calls for.",
+    "hint": "Two questions: does a caller branch on it, and does it need data?",
+    "pairs": [
+      {
+        "left": "Callers stop reading when the input ends",
+        "right": "a sentinel"
+      },
+      {
+        "left": "Callers need the line number that was wrong",
+        "right": "an error type with a field"
+      },
+      {
+        "left": "Callers only add context and return it",
+        "right": "an opaque error"
+      },
+      {
+        "left": "Callers need the kind of failure and the input",
+        "right": "an error type that carries a sentinel"
+      }
+    ],
+    "right_distractors": [
+      "a panic"
+    ]
+  },
+  {
+    "id": "ex-dv4bzkmd",
+    "version": 1,
+    "section": "when-to-declare",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `sentinel-v2` run, `Count` stopped wrapping `ErrNotFound`. What changed for section 03's `main`?",
+    "hint": "Compare the `plum` lines of the two runs.",
+    "choices": [
+      {
+        "text": "It no longer compiled",
+        "correct": false,
+        "why": "It compiled, and `go vet` passed; the variable it names still exists."
+      },
+      {
+        "text": "The message for `plum` lost the item's name",
+        "correct": false,
+        "why": "The message was `count \"plum\": not found` in both runs, letter for letter."
+      },
+      {
+        "text": "Its `errors.Is` case no longer matched, so `plum` came out as `failed`",
+        "correct": true,
+        "why": "Right. Same text, no sentinel in the chain, and nothing reported the change."
+      },
+      {
+        "text": "`go vet` warned that `ErrNotFound` was never returned",
+        "correct": false,
+        "why": "`go vet` found nothing; whether a variable is ever returned is not something it checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-7489fk6k",
+    "version": 1,
+    "section": "when-to-declare",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which change to `store` breaks its callers loudly, with a compile error?",
+    "hint": "One of them made `go run` print `undefined`.",
+    "choices": [
+      {
+        "text": "Returning the error without `%w`",
+        "correct": false,
+        "why": "That is the quiet one: it compiled, and the caller's branch simply stopped matching."
+      },
+      {
+        "text": "Deleting the variable `ErrNotFound`",
+        "correct": true,
+        "why": "Right. `main` named it, so the build failed: `undefined: store.ErrNotFound`."
+      },
+      {
+        "text": "Rewording the message inside `errors.New(\"not found\")`",
+        "correct": false,
+        "why": "Callers that use `errors.Is` never read the message, so nothing of theirs changes at all."
+      },
+      {
+        "text": "Adding a second sentinel for another failure",
+        "correct": false,
+        "why": "A new variable breaks nobody; it is a new promise, which is its own cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy622km3",
+    "version": 1,
+    "section": "when-to-declare",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For `strconv.Atoi(\"99999999999999999999\")`, which of these is true?",
+    "hint": "The error is a type with a sentinel in its `Err` field.",
+    "choices": [
+      {
+        "text": "`errors.Is(err, strconv.ErrSyntax)` is true, since that is too long to be an int",
+        "correct": false,
+        "why": "Every character is a digit, so the syntax is fine; the value is what does not fit."
+      },
+      {
+        "text": "`errors.Is(err, strconv.ErrRange)` is true, and `errors.AsType` gives back the input",
+        "correct": true,
+        "why": "Right. The run printed `too big for an int` and `Num=\"99999999999999999999\"` for the same error."
+      },
+      {
+        "text": "`err == strconv.ErrRange` is true",
+        "correct": false,
+        "why": "The outer value is the `*strconv.NumError`; `ErrRange` is one link down, in its `Err` field."
+      },
+      {
+        "text": "`err` is `nil` and `n` is the largest `int`",
+        "correct": false,
+        "why": "`Atoi` returns an error for a number that does not fit; the run went to the range case."
+      }
+    ]
+  },
+  {
+    "id": "ex-mz6x8q4p",
+    "version": 1,
+    "section": "when-to-declare",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An error with a message but no variable or type a caller can check for is called ___, and it is the default.",
+    "hint": "It is free to change because nobody can depend on it.",
+    "blanks": [
+      {
+        "accept": [
+          "opaque"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9fakm0ew",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write `parseConfig`. It can fail on a dozen kinds of bad line, and its only caller prints the error and exits. What should it return?",
+    "hint": "Does any caller branch on the kind of failure?",
+    "choices": [
+      {
+        "text": "A sentinel for each kind of bad line, so callers can choose later",
+        "correct": false,
+        "why": "A dozen promises nobody asked for, each one impossible to take back without breaking somebody."
+      },
+      {
+        "text": "An opaque error from `fmt.Errorf`, with the line in its message",
+        "correct": true,
+        "why": "Right. Nobody branches and nobody needs a field, so the message for a person is the whole job."
+      },
+      {
+        "text": "One sentinel, `ErrBadConfig`, for all of them",
+        "correct": false,
+        "why": "Smaller, but still a promise with no caller to keep it for; the one caller only prints."
+      },
+      {
+        "text": "A panic, since a broken configuration cannot be recovered from",
+        "correct": false,
+        "why": "A bad file is an error a caller should see, not a bug in the program; lesson 36 is about panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w1anb1w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are sentinels? Select all that apply.",
+    "hint": "A sentinel is a variable holding one error value.",
+    "choices": [
+      {
+        "text": "`io.EOF`",
+        "correct": true,
+        "why": "Yes: `var EOF = errors.New(\"EOF\")`."
+      },
+      {
+        "text": "`strconv.ErrSyntax`",
+        "correct": true,
+        "why": "Yes. It sits in the `Err` field of a `*strconv.NumError`, and `errors.Is` finds it there."
+      },
+      {
+        "text": "`*strconv.NumError`",
+        "correct": false,
+        "why": "That is an error type with fields, found with `errors.As`; it carries a sentinel but is not one."
+      },
+      {
+        "text": "The `errors.New(\"age cannot be negative\")` inside lesson 32's `price`",
+        "correct": false,
+        "why": "It is made on each call and kept in no variable, so nothing can match it: an opaque error."
+      }
+    ]
+  },
+  {
+    "id": "ex-2y5dmfsy",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `sentinel-v2` run, how many of the three items were reported as `failed`?",
+    "hint": "`apple` and `pear` were never errors.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "items"
+  },
+  {
+    "id": "ex-a2kwpqqf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to `store.ErrNotFound` on the way to section 03's `plum` line.",
+    "hint": "It starts before `main` runs at all.",
+    "items": [
+      "`errors.New` makes it once, at package level",
+      "`Count` finds no `plum` in the map",
+      "`Count` wraps it with `%w` and the item's name",
+      "`errors.Is` walks the chain and finds it",
+      "`main` prints `not sold here`"
+    ]
+  }
+]

@@ -1,0 +1,576 @@
+[
+  {
+    "id": "ex-qba0k5gg",
+    "version": 1,
+    "section": "len-and-cap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`week` is a `[7]string` and `mid := week[2:4]`. What are `len(mid)` and `cap(mid)`?",
+    "hint": "The capacity is counted from where the slice starts.",
+    "choices": [
+      {
+        "text": "2 and 7, the length of the whole array",
+        "correct": false,
+        "why": "That counts from the start of the array. A slice's capacity is counted from its own start, `wed`, which leaves 5."
+      },
+      {
+        "text": "2 and 5",
+        "correct": true,
+        "why": "Right. `wed` and `thu` are its length; `wed` to `sun` is how far it reaches, five elements."
+      },
+      {
+        "text": "2 and 2, since a slice has no room past its length",
+        "correct": false,
+        "why": "`mid[:5]` printed `fri`, `sat` and `sun`: the room past the length was there all along."
+      },
+      {
+        "text": "3 and 5, because `[2:4]` includes index 4",
+        "correct": false,
+        "why": "The second number is where the slice stops, before it: `[2:4]` is indexes 2 and 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb0dast5",
+    "version": 1,
+    "section": "len-and-cap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mid` has length 2 and capacity 5. Which of these runs without a panic?",
+    "hint": "An index and a reslice are checked against different numbers.",
+    "choices": [
+      {
+        "text": "`mid[3]`, since index 3 is inside the capacity",
+        "correct": false,
+        "why": "An index is checked against the length only: the run stopped with `index out of range [3] with length 2`."
+      },
+      {
+        "text": "`mid[:5]`",
+        "correct": true,
+        "why": "Right. Reslicing upwards is legal up to the capacity, and 5 is the capacity."
+      },
+      {
+        "text": "`mid[:6]`, the six days from `wed` onwards",
+        "correct": false,
+        "why": "There are only five from `wed` onwards: `slice bounds out of range [:6] with capacity 5`."
+      },
+      {
+        "text": "`mid[2]`",
+        "correct": false,
+        "why": "Index 2 equals the length, and an index must be less than the length."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ad7468n",
+    "version": 1,
+    "section": "len-and-cap",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An index `s[i]` is checked against `len(s)`; a reslice `s[:j]` is checked against `___(s)`.",
+    "hint": "The second panic message named it.",
+    "blanks": [
+      {
+        "accept": [
+          "cap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4dv9bcj1",
+    "version": 1,
+    "section": "len-and-cap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program stops with `panic: runtime error: slice bounds out of range [:8] with capacity 6`. What does that tell you?",
+    "hint": "Which of the two numbers does this message name?",
+    "choices": [
+      {
+        "text": "The slice had length 6 and was indexed at 8",
+        "correct": false,
+        "why": "An index past the length gives `index out of range … with length`. This message is the reslice one."
+      },
+      {
+        "text": "The array behind the slice has exactly six elements in all",
+        "correct": false,
+        "why": "Capacity counts from the slice's start; the array has six from there and any number before it."
+      },
+      {
+        "text": "Something asked for length 8 from a slice whose array had 6 elements left",
+        "correct": true,
+        "why": "Right. `[:8]` asked for a length of 8, and from the slice's start its array had room for 6."
+      },
+      {
+        "text": "The compiler missed a constant 8 it should always catch",
+        "correct": false,
+        "why": "The compiler let `mid[3]` through too: a slice's length and capacity are known only at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjdk99z4",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `append` do when the slice it is given has no spare capacity?",
+    "hint": "Nothing in a slice resizes.",
+    "choices": [
+      {
+        "text": "Extends the same array in place, the way a dynamic array grows",
+        "correct": false,
+        "why": "An array never changes size. That is the picture section 03 replaces."
+      },
+      {
+        "text": "Panics with `slice bounds out of range`",
+        "correct": false,
+        "why": "That is reslicing past the capacity by hand. `append` makes room instead."
+      },
+      {
+        "text": "Allocates a bigger array, copies the elements, returns a slice over it",
+        "correct": true,
+        "why": "Right, and that new slice is why the result of `append` has to be stored."
+      },
+      {
+        "text": "Allocates an array exactly one element longer",
+        "correct": false,
+        "why": "Two thousand appends changed the capacity only twelve times; the new array is far bigger."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjegzjsf",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The capacity went from 512 to 848, where line 341 of `nextslicecap` computes 832. Why?",
+    "hint": "832 `int`s are 6,656 bytes.",
+    "choices": [
+      {
+        "text": "Above 512 the runtime multiplies by a fixed 1.66",
+        "correct": false,
+        "why": "848/512 is a coincidence of rounding: the next steps are 1.51 and 1.40, not a fixed factor."
+      },
+      {
+        "text": "The allocator rounds 6,656 bytes up to a 6,784-byte size class",
+        "correct": true,
+        "why": "Right. 6,784 bytes is 848 `int`s, and `append` uses the whole array it was given."
+      },
+      {
+        "text": "The compiler's 32-byte buffer added room for 16 more",
+        "correct": false,
+        "why": "That buffer only serves the first elements, and 32 bytes is four `int`s, not sixteen."
+      },
+      {
+        "text": "The loop asked for 848 by appending 336 elements in one call",
+        "correct": false,
+        "why": "The loop appends one at a time, so lines 329 and 330 never apply here."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0caxq5x",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's test asserts that after five appends to a nil `[]int`, `cap(s)` is 8. What is wrong with it?",
+    "hint": "Who chooses the capacity, and what does the documentation promise?",
+    "choices": [
+      {
+        "text": "Nothing: doubling below 256 makes 8 certain",
+        "correct": false,
+        "why": "The same loop started 1, 2, 3, 4 in one program and 4 in another; the compiler decides the first steps."
+      },
+      {
+        "text": "It tests a choice the compiler and runtime make, which the documentation never promises",
+        "correct": true,
+        "why": "Right. `append` promises a big enough array and nothing about its size."
+      },
+      {
+        "text": "The capacity after five appends is always exactly five",
+        "correct": false,
+        "why": "Both captured runs printed 8 at length 5; capacity runs ahead of length on purpose."
+      },
+      {
+        "text": "`cap` counts bytes, so 8 means one `int`",
+        "correct": false,
+        "why": "`cap` counts elements: 848 elements were 6,784 bytes in the size class table."
+      }
+    ]
+  },
+  {
+    "id": "ex-85n00gv8",
+    "version": 1,
+    "section": "growth",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `go doc builtin.append` promise? Choose all that apply.",
+    "hint": "Read the five sentences, not the runtime.",
+    "choices": [
+      {
+        "text": "With enough capacity, the destination is resliced in place",
+        "correct": true,
+        "why": "Yes: \"If it has sufficient capacity, the destination is resliced\"."
+      },
+      {
+        "text": "Without enough capacity, a new underlying array is allocated",
+        "correct": true,
+        "why": "Yes, in those words, which is why the result has to be stored."
+      },
+      {
+        "text": "The new capacity is twice the old one",
+        "correct": false,
+        "why": "That is `nextslicecap` below 256, an implementation detail; the documentation says nothing about size."
+      },
+      {
+        "text": "The old array is freed as soon as it is copied",
+        "correct": false,
+        "why": "Nothing says so, and section 05 shows other slices still reading an old array."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cmb0640",
+    "version": 1,
+    "section": "make",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `make([]string, 3)`?",
+    "hint": "The one number is the length.",
+    "choices": [
+      {
+        "text": "An empty slice with room for three strings",
+        "correct": false,
+        "why": "That is `make([]string, 0, 3)`. With one number, the slice already holds three elements."
+      },
+      {
+        "text": "Three empty strings: length 3, capacity 3",
+        "correct": true,
+        "why": "Right. That is why three appends afterwards left six elements."
+      },
+      {
+        "text": "A nil slice that will grow to three strings when you append",
+        "correct": false,
+        "why": "`make` always allocates; a nil slice is what `var s []string` gives."
+      },
+      {
+        "text": "An array of type `[3]string`",
+        "correct": false,
+        "why": "`make` returns the type it was given, a slice; the array is behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2p63q5r",
+    "version": 1,
+    "section": "make",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`upper := make([]string, 3)`, then three calls `upper = append(upper, name)`. What is `len(upper)`?",
+    "hint": "Where does `append` write?",
+    "choices": [
+      {
+        "text": "3",
+        "correct": false,
+        "why": "That would be true of `make([]string, 0, 3)`. Here the three names came after three empty strings."
+      },
+      {
+        "text": "6",
+        "correct": true,
+        "why": "Right: `6 [   ANA BIA CAIO]`, three empty strings and then the names."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "`make` with a length of 3 starts at 3, and every append adds one."
+      },
+      {
+        "text": "9",
+        "correct": false,
+        "why": "Each `append` added one element, not three."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aa9p2md",
+    "version": 1,
+    "section": "make",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these tell a nil slice from an empty, non-nil one? Choose all that apply.",
+    "hint": "Look at the five lines the program printed.",
+    "choices": [
+      {
+        "text": "`s == nil`",
+        "correct": true,
+        "why": "Yes: `true false` for the two."
+      },
+      {
+        "text": "`len(s)`",
+        "correct": false,
+        "why": "Both lengths printed 0."
+      },
+      {
+        "text": "`json.Marshal(s)`",
+        "correct": true,
+        "why": "Yes: `null` for the nil one, `[]` for the empty one."
+      },
+      {
+        "text": "`fmt.Println(s)`",
+        "correct": false,
+        "why": "Both printed `[]`."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1b74vxv",
+    "version": 1,
+    "section": "make",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To fill a slice with `n` elements by appending, and allocate exactly one array, write `s := make([]int, 0, ___)`.",
+    "hint": "Length first, capacity second.",
+    "blanks": [
+      {
+        "accept": [
+          "n"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tfkgzwhz",
+    "version": 1,
+    "section": "make",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler builds `var tags []string` from database rows and returns it as JSON. A user with no tags gets `\"tags\": null`, and the front end wants `[]`. What fixes it?",
+    "hint": "What did `json.Marshal` print for the two kinds of empty?",
+    "choices": [
+      {
+        "text": "Writing `tags = append(tags)` before marshalling",
+        "correct": false,
+        "why": "With nothing to add, `append` returns the slice as it was, still nil."
+      },
+      {
+        "text": "Nothing in Go: `encoding/json` writes every empty slice as `null`",
+        "correct": false,
+        "why": "It wrote `[]` for `[]string{}`; only the nil slice became `null`."
+      },
+      {
+        "text": "Checking `tags == nil` and returning an error",
+        "correct": false,
+        "why": "A user with no tags is not an error, and the front end still gets no list."
+      },
+      {
+        "text": "Starting from `tags := []string{}`",
+        "correct": true,
+        "why": "Right. An empty, non-nil slice marshals as `[]`, with or without rows appended to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxj9fmb6",
+    "version": 1,
+    "section": "aliasing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`nums := []int{1, 2, 3, 4, 5}` and `head := nums[:2]`. After `head = append(head, 99)`, what does `nums` print?",
+    "hint": "`head` has room up to capacity 5.",
+    "choices": [
+      {
+        "text": "`[1 2 3 4 5]`",
+        "correct": false,
+        "why": "That would need `append` to copy, and it copies only when there is no room."
+      },
+      {
+        "text": "`[1 2 99 4 5]`",
+        "correct": true,
+        "why": "Right. 99 went into index 2 of the array both slices use."
+      },
+      {
+        "text": "`[1 2 99 3 4 5]`",
+        "correct": false,
+        "why": "`append` writes into the next position; it never shifts elements along to insert."
+      },
+      {
+        "text": "`[1 2 3 4 5 99]`",
+        "correct": false,
+        "why": "It writes after `head`'s length, 2, not after `nums`'s."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssk8afar",
+    "version": 1,
+    "section": "aliasing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`s` has length 5 and capacity 5. What are the length and capacity of `s[1:3:4]`?",
+    "hint": "Both are counted from the first number.",
+    "choices": [
+      {
+        "text": "2 and 4, the third number itself",
+        "correct": false,
+        "why": "The capacity is `c - a`, counted from the slice's start like every capacity: 4 − 1."
+      },
+      {
+        "text": "2 and 3",
+        "correct": true,
+        "why": "Right: length 3 − 1, capacity 4 − 1."
+      },
+      {
+        "text": "3 and 4",
+        "correct": false,
+        "why": "That reads the numbers as lengths from index 0, but the slice starts at index 1."
+      },
+      {
+        "text": "2 and 4, since the capacity runs to the end of `s`",
+        "correct": false,
+        "why": "Without the third number it would; with it, the capacity stops at index 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-p86hfs9v",
+    "version": 1,
+    "section": "aliasing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func with(base []string, s string) []string { return append(base, s) }` is called twice with one `base` of length 3 and capacity 8. What happens to the first result?",
+    "hint": "This is the `path` bug inside a function.",
+    "choices": [
+      {
+        "text": "Nothing: each call gets a copy of `base`, and so of its array",
+        "correct": false,
+        "why": "The slice is copied, but a slice holds a pointer to the array, and the array is not copied."
+      },
+      {
+        "text": "The second call panics because index 3 is in use",
+        "correct": false,
+        "why": "Nothing tracks which slots are in use; `append` writes into the room and carries on."
+      },
+      {
+        "text": "Its last element becomes the second call's `s`",
+        "correct": true,
+        "why": "Right. Both appends wrote index 3 of the same array, like `docs` and `music`."
+      },
+      {
+        "text": "The second result holds both suffixes, one after the other",
+        "correct": false,
+        "why": "Each call appends after `base`'s length, 3, so both land on the same index."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4w4yypp",
+    "version": 1,
+    "section": "aliasing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`s` holds five elements and has capacity 5. Match each slice to what the next `append` to it does.",
+    "hint": "Look at how much room each one has, and whose room it is.",
+    "pairs": [
+      {
+        "left": "`s[:2]`",
+        "right": "Writes into the array `s` reads"
+      },
+      {
+        "left": "`s[:2:2]`",
+        "right": "Copies into a new array first"
+      },
+      {
+        "left": "`slices.Clone(s[:2])`",
+        "right": "Works on an array no other slice sees"
+      }
+    ],
+    "right_distractors": [
+      "Panics, because the capacity is used up"
+    ]
+  },
+  {
+    "id": "ex-7dv8hs9m",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `append(s, x)` does when `len(s) == cap(s)`.",
+    "hint": "Size first, then memory, then data.",
+    "items": [
+      "Work out a new capacity from the old one",
+      "Round it up to a size class and allocate that array",
+      "Copy the existing elements into the new array",
+      "Write `x` after them and return the new slice"
+    ]
+  },
+  {
+    "id": "ex-60w904gt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Using line 341 of `nextslicecap`, what capacity does the formula give when a full slice of capacity 1,024 needs room for one more, before any rounding?",
+    "hint": "A quarter of the old capacity, plus 192, added to it.",
+    "value": 1472,
+    "tolerance": 0,
+    "unit": "elements"
+  },
+  {
+    "id": "ex-zvy6jc6j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function receives `buf []byte` from its caller and wants a copy with a newline at the end, without any risk of changing the caller's data. Which is safe?",
+    "hint": "Which one leaves `append` no room in the caller's array?",
+    "choices": [
+      {
+        "text": "`append(buf, '\\n')`, because `buf` is already a copy",
+        "correct": false,
+        "why": "The header is a copy; the array is the caller's. With spare capacity, the newline lands in it."
+      },
+      {
+        "text": "`append(buf[:], '\\n')`, because `[:]` copies the slice",
+        "correct": false,
+        "why": "Slicing never copies: `buf[:]` is the same view with the same capacity."
+      },
+      {
+        "text": "`append(buf[:len(buf):len(buf)], '\\n')`",
+        "correct": true,
+        "why": "Right. With the capacity cut to the length, `append` has to copy first."
+      },
+      {
+        "text": "`append(buf[0:len(buf)], '\\n')`, as it names the length",
+        "correct": false,
+        "why": "Two numbers set the length only; the capacity still runs to the end of the array."
+      }
+    ]
+  }
+]

@@ -1,0 +1,384 @@
+{
+  "ex-w0v9wy08": {
+    "prompt": "Em `labels := Map(ages, strconv.Itoa)`, onde o compilador encontra o tipo de `U`?",
+    "hint": "`Map` é declarada `func Map[T, U any](xs []T, f func(T) U) []U`.",
+    "choices": [
+      {
+        "text": "Em `labels`, a variável onde o resultado vai parar",
+        "why": "A inferência nunca olha para fora da chamada; `labels` ganha o tipo do resultado, não o contrário."
+      },
+      {
+        "text": "No tipo de `strconv.Itoa`, `func(int) string`",
+        "why": "Isso. Ele casa com `func(T) U` com `T` igual a `int` e `U` igual a `string`."
+      },
+      {
+        "text": "Em lugar nenhum, então `U` vira `any`",
+        "why": "Um parâmetro de tipo que não se infere é erro, nunca um `any` silencioso; e o `%T` imprimiu `[]string`."
+      },
+      {
+        "text": "No import de `strconv`, que declara tipos de string",
+        "why": "Um import diz de que pacote vem um nome; o tipo vem da assinatura da função."
+      }
+    ]
+  },
+  "ex-x20gq4d5": {
+    "prompt": "O que o compilador faz com `var labels []string = Make(2)`, onde `func Make[T any](n int) []T`?",
+    "hint": "Onde `T` aparece nos parâmetros de `Make`?",
+    "choices": [
+      {
+        "text": "Compila, com `T` lido do tipo de `labels`",
+        "why": "Essa é a crença comum que a seção nomeia; a linha 19 de `~/generic2-infer` a desmente."
+      },
+      {
+        "text": "Compila, e `Make` devolve um `[]string` vazio",
+        "why": "Nem chega a rodar: `T` não tem valor, então não há `Make` para chamar."
+      },
+      {
+        "text": "Recusa: `cannot infer T`",
+        "why": "Isso. `T` só está no resultado, e a inferência lê os argumentos; escreva `Make[string](2)`."
+      },
+      {
+        "text": "Compila com `T` como `any`, e depois não consegue atribuir `[]any` a `labels`",
+        "why": "Não há padrão `any`; o primeiro e único erro é `cannot infer T`."
+      }
+    ]
+  },
+  "ex-hv5xt3nv": {
+    "prompt": "Preencher um parâmetro de tipo, como `Make[string](2)` faz ao citar `string` na chamada, se chama ___ explícita.",
+    "hint": "A seção põe a palavra em negrito.",
+    "blanks": [
+      {
+        "accept": [
+          "instanciação",
+          "instantiation"
+        ]
+      }
+    ]
+  },
+  "ex-89dcjj8a": {
+    "prompt": "Por que `Biggest(count, price)` foi recusada, com `count` um `int` e `price` um `float64`?",
+    "hint": "`Biggest(3, 2.5)` compilou duas linhas antes.",
+    "choices": [
+      {
+        "text": "`Biggest` não consegue comparar dois valores `float64`",
+        "why": "Ela comparou `3` e `2.5` como `float64` e imprimiu `3 float64`."
+      },
+      {
+        "text": "`count` fixou `T` como `int`, e `price` é de outro tipo",
+        "why": "Isso: `type float64 of price does not match inferred type int for T`. Um `T` por chamada, e Go não converte nada por você."
+      },
+      {
+        "text": "Variáveis com tipo não podem ser passadas a uma função genérica, só constantes",
+        "why": "`Biggest(float64(count), price)` passou dois valores com tipo e rodou."
+      },
+      {
+        "text": "O compilador escolheu `float64` para os dois e depois recusou `count`",
+        "why": "Essa escolha só é possível para constantes sem tipo; aqui o primeiro argumento já tinha tipo, `int`."
+      }
+    ]
+  },
+  "ex-yny72nzq": {
+    "prompt": "Com `Map` e `Make` declaradas como em `~/generic2`, quais destas linhas compilam? Marque todas as que compilam.",
+    "hint": "Há um argumento de onde ler cada parâmetro de tipo, ou ele está escrito?",
+    "choices": [
+      {
+        "text": "`toText := Map[int, string]`",
+        "why": "Sim: todos os tipos preenchidos, então é um valor de função comum."
+      },
+      {
+        "text": "`Map[int](ages, strconv.Itoa)`",
+        "why": "Sim: `T` está escrito e `U` ainda é lido em `strconv.Itoa`."
+      },
+      {
+        "text": "`names := Make(2)`",
+        "why": "Não: `cannot infer T`, já que `T` só aparece no resultado."
+      },
+      {
+        "text": "`toText := Map`",
+        "why": "Não: `cannot use generic function Map without instantiation`."
+      }
+    ]
+  },
+  "ex-z2vfcrwq": {
+    "prompt": "`func Map[T, U any](xs []T, f func(T) U) []U` é chamada como `Map[int](ages, strconv.Itoa)`. Quantos dos parâmetros de tipo o compilador inferiu?",
+    "hint": "Os colchetes na chamada os preenchem em ordem, e podem parar antes do fim.",
+    "unit": "parâmetros de tipo"
+  },
+  "ex-70v04mhk": {
+    "prompt": "O que é a restrição depois do nome de um parâmetro de tipo, como `comparable` ou `int | float64`?",
+    "hint": "A seção diz isso na primeira frase em negrito.",
+    "choices": [
+      {
+        "text": "Uma sintaxe de colchetes sem relação com interfaces",
+        "why": "É o que parece, e a seção começa corrigindo isso: `Number` foi declarada com `type … interface`."
+      },
+      {
+        "text": "Uma lista de tipos para os quais todo argumento é convertido",
+        "why": "Nada é convertido; um `Celsius` voltou como `main.Celsius`."
+      },
+      {
+        "text": "Uma interface, lida como o conjunto de tipos admitidos para `T`",
+        "why": "Isso. O corpo tem permissão para fazer o que todo tipo desse conjunto sabe fazer."
+      },
+      {
+        "text": "Uma conferência feita em cada valor enquanto o programa roda",
+        "why": "Restrições são conferidas pelo compilador; `Index[T any]` foi recusada antes de qualquer coisa rodar."
+      }
+    ]
+  },
+  "ex-sfp21x0r": {
+    "prompt": "`func Index[T any](xs []T, v T) int` usa `x == v` e é recusada. Onde o erro aparece, e por quê?",
+    "hint": "A mensagem estava na linha 7.",
+    "choices": [
+      {
+        "text": "Dentro de `Index`: algum tipo do conjunto que `any` descreve não tem `==`",
+        "why": "Isso. O corpo é conferido uma vez, contra o conjunto inteiro, antes de qualquer chamada."
+      },
+      {
+        "text": "Na chamada, porque strings não podem ser comparadas com `==`",
+        "why": "Strings se comparam sem problema; com `comparable` a mesma chamada imprimiu `1`."
+      },
+      {
+        "text": "Na chamada, porque a slice e o valor têm tipos diferentes",
+        "why": "`[]string` e `string` fazem `T` ser `string` de forma coerente; o erro foi no corpo, linha 7."
+      },
+      {
+        "text": "Dentro de `Index`, porque `==` nunca funciona com um parâmetro de tipo",
+        "why": "Funciona sempre que a restrição permite: `Index[T comparable]` compilou."
+      }
+    ]
+  },
+  "ex-pm784vqv": {
+    "prompt": "`Sum[T int | float64]` recusa um `[]Celsius`. Que mudança deixa `Sum` aceitá-lo e ainda devolver um `Celsius`?",
+    "hint": "A mensagem do compilador sugeriu.",
+    "choices": [
+      {
+        "text": "Converter cada leitura para `float64` antes de chamar `Sum`",
+        "why": "Isso compila, mas o resultado é um `float64`, e a unidade que a lição 10 deu se perde."
+      },
+      {
+        "text": "Trocar a união por `any`",
+        "why": "Aí `total += x` é recusado, porque `+` não é definido para todo tipo que `any` contém."
+      },
+      {
+        "text": "Escrever a restrição como `~int | ~float64`",
+        "why": "Isso. `~float64` contém todo tipo cujo tipo subjacente é `float64`, e o total imprimiu `62 main.Celsius`."
+      },
+      {
+        "text": "Dar a `Celsius` um método chamado `Add`",
+        "why": "Uma união lista tipos, não métodos; um método não muda nada quanto a `Celsius` estar nela."
+      }
+    ]
+  },
+  "ex-y5g8739v": {
+    "prompt": "Numa restrição, `___float64` é o conjunto de todo tipo cujo tipo subjacente é `float64`, `Celsius` incluído.",
+    "hint": "Um caractere, o que o compilador disse que talvez estivesse faltando.",
+    "blanks": [
+      {
+        "accept": [
+          "~"
+        ]
+      }
+    ]
+  },
+  "ex-msc0p08q": {
+    "prompt": "Qual destas interfaces pode ser o tipo de uma variável comum?",
+    "hint": "O que `var n Number = 3` disse?",
+    "choices": [
+      {
+        "text": "`interface{ ~int | ~float64 }`",
+        "why": "Uma união a torna só restrição: `cannot use type Number outside a type constraint`."
+      },
+      {
+        "text": "`interface{ int }`, uma união de um tipo só",
+        "why": "Um tipo só ainda é um elemento de tipo, e qualquer elemento de tipo torna a interface só restrição."
+      },
+      {
+        "text": "`interface{ String() string }`",
+        "why": "Isso. Uma interface só de métodos funciona dos dois jeitos, como `fmt.Stringer` fez em `ShowAll` e `ShowEach`."
+      },
+      {
+        "text": "`comparable`",
+        "why": "A documentação dele diz que só pode ser usado como restrição de parâmetro de tipo, não como tipo de variável."
+      }
+    ]
+  },
+  "ex-qpev9cjg": {
+    "prompt": "Associe cada restrição ao conjunto de tipos que ela admite.",
+    "hint": "A figura desenha três delas como caixas uma dentro da outra.",
+    "pairs": [
+      {
+        "left": "`any`",
+        "right": "todo tipo, então o corpo pode fazer muito pouco"
+      },
+      {
+        "left": "`comparable`",
+        "right": "os tipos em que `==` funciona"
+      },
+      {
+        "left": "`int | float64`",
+        "right": "exatamente `int` e `float64`"
+      },
+      {
+        "left": "`~int | ~float64`",
+        "right": "esses dois, e tipos como `Celsius` construídos sobre eles"
+      }
+    ],
+    "right_distractors": [
+      "só os tipos que têm um método `String`"
+    ]
+  },
+  "ex-77dne1p6": {
+    "prompt": "Por que `Pop` declara `var zero T` em vez de devolver um literal quando a pilha está vazia?",
+    "hint": "Que literal seria zero para uma `string`, um `int` e um ponteiro ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "Go exige que todo `return` cite uma variável",
+        "why": "`return top, true` devolve uma variável e uma constante; essa regra não existe."
+      },
+      {
+        "text": "Nenhum literal é zero para todo tipo, e `var` dá o zero do próprio `T`",
+        "why": "Isso. `0`, `\"\"` e `nil` servem cada um a alguns tipos; `var zero T` serve a todos, e deu `\"\"` para um `Stack[string]`."
+      },
+      {
+        "text": "`nil` funcionaria igualmente bem para estas pilhas; `var` é só a convenção que as pessoas seguem",
+        "why": "`nil` não é `string` nem `int`, então `return nil, false` seria recusado nessas pilhas."
+      },
+      {
+        "text": "Para reservar espaço na memória para o próximo `Push`",
+        "why": "`zero` é um valor local que é devolvido e esquecido; `Push` usa `append`."
+      }
+    ]
+  },
+  "ex-jy4b1d0g": {
+    "prompt": "Por que `var s Stack` é recusado, se `var words Stack[string]` está certo?",
+    "hint": "Leia o primeiro erro de `~/generic2-stackbad`.",
+    "choices": [
+      {
+        "text": "O valor zero de um tipo genérico não pode ser usado, então precisa de `&Stack{}`",
+        "why": "`var words Stack[string]` usou o valor zero e empilhou nele; `&Stack{}` é recusado pelo mesmo motivo que `var s Stack`."
+      },
+      {
+        "text": "`Stack` só é um tipo depois que o parâmetro de tipo é preenchido",
+        "why": "Isso: `cannot use generic type Stack[T any] without instantiation`. Não há de onde inferir `T`."
+      },
+      {
+        "text": "`Stack` não tem campos exportados",
+        "why": "Nomes exportados importam entre pacotes, lição 39; aqui é tudo um pacote só."
+      },
+      {
+        "text": "`T` assume `any` por padrão, e uma pilha de `any` tem de ser escrita `Stack[any]`",
+        "why": "Não há padrão; o argumento de tipo é sempre escrito para um tipo genérico."
+      }
+    ]
+  },
+  "ex-0v5028ps": {
+    "prompt": "`Stack[T any]` precisa de um `Contains` que use `==`. Qual conserto mantém um `Stack[[]int]` válido?",
+    "hint": "Quem paga pela restrição mais estrita em cada conserto?",
+    "choices": [
+      {
+        "text": "Declarar o tipo como `Stack[T comparable]`",
+        "why": "Isso torna o método válido e proíbe toda pilha de slices, `Stack[[]int]` inclusive."
+      },
+      {
+        "text": "Escrever o receptor como `(s *Stack[T comparable])`",
+        "why": "O receptor não repete a restrição, e escrever uma ali é erro de sintaxe."
+      },
+      {
+        "text": "Fazer dele uma função: `func Contains[T comparable](s *Stack[T], v T) bool`",
+        "why": "Isso. A pilha continua `any`, e só `Contains` pede mais; um `Stack[[]int]` existe e não pode ser passado a ela."
+      },
+      {
+        "text": "Comparar `any(x) == any(v)` dentro do método",
+        "why": "Isso compila e leva a falha para a execução: comparar dois `[]int` guardados em `any` entra em panic com `comparing uncomparable type []int`."
+      }
+    ]
+  },
+  "ex-tfb8w1cc": {
+    "prompt": "O que o compilador diz a `type Mapper interface { Map[U any](f func(int) U) *Stack[U] }`?",
+    "hint": "Um método pode ter parâmetros de tipo. E o método de uma interface?",
+    "choices": [
+      {
+        "text": "Nada: compila quando a linha `go` é 1.27 ou mais recente",
+        "why": "A linha `go` vale para métodos com parâmetros de tipo em tipos; numa interface eles são recusados, diga ela o que disser."
+      },
+      {
+        "text": "`interface method must have no type parameters`",
+        "why": "Isso, e `undefined: U` vem em seguida, porque os colchetes que o declarariam foram recusados."
+      },
+      {
+        "text": "Compila, mas só com `U` restrito por `any`",
+        "why": "A restrição na captura era `any`, e mesmo assim foi recusada."
+      },
+      {
+        "text": "Compila se a própria interface for declarada `Mapper[U any]`",
+        "why": "Isso seria um parâmetro de tipo da interface, outra coisa; o método em si continua não podendo declarar um."
+      }
+    ]
+  },
+  "ex-x5wj3xwx": {
+    "prompt": "Ordene estas restrições do menor conjunto de tipos para o maior.",
+    "hint": "A figura da seção 03 desenha três delas aninhadas; a quarta contém tudo.",
+    "items": [
+      "`int | float64`",
+      "`~int | ~float64`",
+      "`cmp.Ordered`",
+      "`any`"
+    ]
+  },
+  "ex-6z518z36": {
+    "prompt": "`type IDs []int`. Que tipo `slices.Clone(ids)` devolve para `ids` do tipo `IDs`?",
+    "hint": "`func Clone[S ~[]E, E any](s S) S`.",
+    "choices": [
+      {
+        "text": "`[]int`, porque `Clone` trabalha com slices simples",
+        "why": "Isso é o que `CloneFlat` fez com `[]E`; `Clone` devolve `S`, o tipo próprio de quem chama."
+      },
+      {
+        "text": "`IDs`",
+        "why": "Isso. `S` é `IDs`, cujo tipo subjacente é `[]int`, e o resultado é um `S`, como `Names` voltou como `main.Names`."
+      },
+      {
+        "text": "`[]any`, já que `E` é restrito por `any`",
+        "why": "`any` é a restrição de `E`, não o valor dele; `E` aqui é `int`."
+      },
+      {
+        "text": "Nada: `IDs` é recusado, já que `S` precisa ser exatamente `[]E`",
+        "why": "Exatamente `[]E` seria uma união sem `~`; o `~` está ali para admitir tipos como `IDs`."
+      }
+    ]
+  },
+  "ex-qds4rpe3": {
+    "prompt": "`*Stack[int]` tem `Map[U any](f func(int) U) *Stack[U]`. Ele satisfaz `interface { Map(f func(int) string) *Stack[string] }`?",
+    "hint": "Leia as linhas `have` e `want`.",
+    "choices": [
+      {
+        "text": "Sim, com `U` inferido como `string` a partir da interface",
+        "why": "A inferência lê os argumentos de uma chamada; uma interface não é chamada, e o compilador imprimiu `wrong type for method Map`."
+      },
+      {
+        "text": "Sim, desde que a linha `go` do módulo diga 1.27 ou mais recente",
+        "why": "A linha `go` permite que o método exista; não o faz satisfazer nada. A captura rodou sob 1.27.1."
+      },
+      {
+        "text": "Não: um método com parâmetros de tipo não satisfaz nenhum método de interface",
+        "why": "Isso. Uma interface pede uma assinatura que o valor tem agora; um método genérico é uma família que só existe por chamada."
+      },
+      {
+        "text": "Só depois de uma conversão explícita para o tipo da interface",
+        "why": "Uma conversão para interface precisa do mesmo conjunto de métodos; ela não acrescenta o que faltou na atribuição."
+      }
+    ]
+  },
+  "ex-3x9mh5md": {
+    "prompt": "Um método não pode estreitar a restrição de `Stack[T any]`, então uma busca com `==` vira função: `func Contains[T ___](s *Stack[T], v T) bool`.",
+    "hint": "A restrição pré-declarada para os tipos em que `==` funciona.",
+    "blanks": [
+      {
+        "accept": [
+          "comparable"
+        ]
+      }
+    ]
+  }
+}

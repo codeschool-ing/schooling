@@ -1,0 +1,582 @@
+[
+  {
+    "id": "ex-7xwapa6a",
+    "version": 1,
+    "section": "if-else",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A file contains `if (n > 0) {`, with parentheses. What happens to it?",
+    "hint": "Run it, then run `gofmt -d` on it.",
+    "choices": [
+      {
+        "text": "The compiler refuses it: Go has no parentheses in an `if`",
+        "correct": false,
+        "why": "It compiled and printed `7 is positive`. Go does not need them, which is not the same as refusing them."
+      },
+      {
+        "text": "It compiles and runs as written, and `gofmt` removes the parentheses",
+        "correct": true,
+        "why": "Right. The program ran, and `gofmt -d` showed `if (n > 0) {` becoming `if n > 0 {`."
+      },
+      {
+        "text": "It compiles, but `go vet` reports the parentheses as a likely mistake",
+        "correct": false,
+        "why": "Layout is `gofmt`'s business, not `go vet`'s; `vet` looks for code that is valid and wrong."
+      },
+      {
+        "text": "It compiles, and the parentheses make the condition a value of a different type",
+        "correct": false,
+        "why": "Parentheses group an expression and change nothing about its type; `(n > 0)` is still a `bool`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxy2cjmb",
+    "version": 1,
+    "section": "if-else",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an `else` that starts a line of its own, under the `if` block's closing brace, refused?",
+    "hint": "What does the scanner add at the end of a line that ends in `}`?",
+    "choices": [
+      {
+        "text": "The compiler enforces `gofmt`'s layout, and that layout keeps `else` beside the brace",
+        "correct": false,
+        "why": "The compiler accepts plenty `gofmt` would change, such as `if (n > 0)`. This one is grammar."
+      },
+      {
+        "text": "A semicolon is inserted after the `}`, so the `if` statement has ended before `else` arrives",
+        "correct": true,
+        "why": "Right. A line ending in `}` gets a semicolon, and no statement can begin with `else`."
+      },
+      {
+        "text": "Go has no `else` after a block of more than one line",
+        "correct": false,
+        "why": "The length of the block plays no part; `~/cond` has `} else {` after blocks of any size."
+      },
+      {
+        "text": "`else` must be followed by `if`",
+        "correct": false,
+        "why": "A plain `else {` ends the chain in `~/cond`; the trouble is where it starts, not what follows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2qsfcnf",
+    "version": 1,
+    "section": "if-else",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`if n > 0 fmt.Println(n, \"is positive\")`, on one line with no braces. What does `go build` say?",
+    "hint": "In Go, are the braces part of the `if`?",
+    "choices": [
+      {
+        "text": "Nothing: a single statement needs no braces",
+        "correct": false,
+        "why": "That is C's rule. Go has no form of `if` without braces."
+      },
+      {
+        "text": "It builds, with a warning that braces are recommended",
+        "correct": false,
+        "why": "Go has no warnings that let a build through."
+      },
+      {
+        "text": "`syntax error: unexpected name fmt, expected {`",
+        "correct": true,
+        "why": "Right. The parser wanted the opening brace where `fmt` starts."
+      },
+      {
+        "text": "`non-boolean condition in if statement`",
+        "correct": false,
+        "why": "That is lesson 8's message for a condition that is not a `bool`; `n > 0` is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-913s2md5",
+    "version": 1,
+    "section": "if-else",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the end of a line whose last token could end a statement, such as `}`, the scanner inserts a `___`.",
+    "hint": "A character, or its name.",
+    "blanks": [
+      {
+        "accept": [
+          ";",
+          "semicolon",
+          "semi-colon"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gbk97q1t",
+    "version": 1,
+    "section": "if-else",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/cond`, `n` is 0. Which conditions of `if n < 0 … else if n == 0 … else` are evaluated?",
+    "hint": "The first true condition ends the chain.",
+    "choices": [
+      {
+        "text": "Only `n == 0`, because it is the one that matches",
+        "correct": false,
+        "why": "Go cannot know which one matches without testing from the top, so `n < 0` is tested first."
+      },
+      {
+        "text": "`n < 0`, then `n == 0`, and nothing after that, since it was true",
+        "correct": true,
+        "why": "Right. `n == 0` was true, its block ran, and the chain ended."
+      },
+      {
+        "text": "All of them, and then the first true one is run",
+        "correct": false,
+        "why": "The chain stops at the first true condition; the final `else` never came into it."
+      },
+      {
+        "text": "`n < 0`, and then the `else`, since `else if` is only tested after an `else`",
+        "correct": false,
+        "why": "The chain is tested top to bottom, and `else if n == 0` comes straight after the first block."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwm26gx1",
+    "version": 1,
+    "section": "initialiser",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`if n, err := strconv.Atoi(s); err != nil { … } else { … }`. Where can `n` be used?",
+    "hint": "The `else` in `~/cond-init` printed `n`.",
+    "choices": [
+      {
+        "text": "Only in the first block, the one the initialiser is written on",
+        "correct": false,
+        "why": "That is half the picture: the `else if` tested `n > 10` and the `else` printed `n`."
+      },
+      {
+        "text": "Anywhere in the function after the `if`",
+        "correct": false,
+        "why": "A line after the chain got `undefined: n`."
+      },
+      {
+        "text": "In the condition and every block of the chain, and nowhere after",
+        "correct": true,
+        "why": "Right. The names of an initialiser belong to the whole `if` statement, `else` included."
+      },
+      {
+        "text": "In the `else` blocks only, because the first block runs when there was an error",
+        "correct": false,
+        "why": "Whether a value is useful there is a different question; the first block may use `n` too."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbxn00hj",
+    "version": 1,
+    "section": "initialiser",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the chain in `~/cond-init`, still inside the loop, a line says `fmt.Println(\"done with\", n)`. What happens?",
+    "hint": "Is that line inside the `if` statement?",
+    "choices": [
+      {
+        "text": "It prints the last `n`, or 0 for `\"forty-two\"`",
+        "correct": false,
+        "why": "That would need `n` to outlive the `if`, and it does not."
+      },
+      {
+        "text": "The build fails with `undefined: n`",
+        "correct": true,
+        "why": "Right. `n` ended with the chain's last closing brace."
+      },
+      {
+        "text": "It compiles, and `go vet` reports that `n` may be unset",
+        "correct": false,
+        "why": "It never compiles: outside the chain there is no `n` at all."
+      },
+      {
+        "text": "The build fails with `declared and not used: n`",
+        "correct": false,
+        "why": "`n` is used inside the chain; the failure is the use outside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h18564zy",
+    "version": 1,
+    "section": "initialiser",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of `if n, err := strconv.Atoi(s); err != nil`? Choose all that apply.",
+    "hint": "Two are about order and scope, two are beliefs.",
+    "choices": [
+      {
+        "text": "`strconv.Atoi(s)` runs before `err != nil` is tested",
+        "correct": true,
+        "why": "Yes: the short statement runs first, then the condition."
+      },
+      {
+        "text": "An initialiser may only hold a call that returns an `error`",
+        "correct": false,
+        "why": "Any short statement fits; `switch ext := strings.ToLower(…); ext` used one with no error in it."
+      },
+      {
+        "text": "If an `err` already exists outside, this `err` is a new variable that hides it",
+        "correct": true,
+        "why": "Yes. The `:=` declares new names in the `if`'s block, as lesson 6 showed for a loop body."
+      },
+      {
+        "text": "`n` keeps its value after the `if`, until the next initialiser replaces it",
+        "correct": false,
+        "why": "There is no `n` after the `if`: `undefined: n`."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0y7p9k9",
+    "version": 1,
+    "section": "initialiser",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function parses a number with `strconv.Atoi` and needs it in ten more lines after checking the error. Which shape fits?",
+    "hint": "Where must `n` be declared to outlive the check?",
+    "choices": [
+      {
+        "text": "`if n, err := …; err != nil { return … }`, then use `n` below",
+        "correct": false,
+        "why": "`n` would end with the `if`, and every use below would be `undefined: n`."
+      },
+      {
+        "text": "The initialiser form, with the ten lines moved into its `else`",
+        "correct": false,
+        "why": "It compiles, and it is the staircase the section argued against: the main path one level in."
+      },
+      {
+        "text": "`n, err := …` on its own line, then `if err != nil { return … }`, and then the rest",
+        "correct": true,
+        "why": "Right. That is `double` in `~/cond-after`: `n` is declared before the `if` and outlives it."
+      },
+      {
+        "text": "The initialiser form, then `n := n` after the `if` to keep it",
+        "correct": false,
+        "why": "After the `if` there is no `n` to copy; the right-hand `n` is just as undefined."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwh3jg8b",
+    "version": 1,
+    "section": "initialiser",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the checks of `priceFlat` in the order the function makes them.",
+    "hint": "The special cases first, the ordinary price last.",
+    "items": [
+      "`age < 0`: return -1",
+      "`age < 12`: return 0",
+      "`member`: return 15",
+      "Return 20"
+    ]
+  },
+  {
+    "id": "ex-7h1dmdqk",
+    "version": 1,
+    "section": "switch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `~/cond-switch`, `\"sat\"` printed `weekend` and nothing else, though the `\"fri\"` case comes right after. Why?",
+    "hint": "What ends a case in Go?",
+    "choices": [
+      {
+        "text": "The `\"sat\", \"sun\"` case ends with an invisible `break` that `gofmt` adds",
+        "correct": false,
+        "why": "`gofmt` adds nothing of the kind; the rule is in the language itself."
+      },
+      {
+        "text": "A case in Go ends by itself, so nothing below it ran",
+        "correct": true,
+        "why": "Right. Go runs the first matching case and leaves the `switch`; running on would take `fallthrough`."
+      },
+      {
+        "text": "`\"fri\"` was tested and did not match `\"sat\"`",
+        "correct": false,
+        "why": "Once a case matches no further case is tested; and in C even a non-matching case below would run."
+      },
+      {
+        "text": "`fmt.Println` ends the case, since it is the last call in it",
+        "correct": false,
+        "why": "The call has no say; a case of five statements ends the same way after the fifth."
+      }
+    ]
+  },
+  {
+    "id": "ex-ak6pyzr6",
+    "version": 1,
+    "section": "switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first `~/cond-grade`, `grade(95)` returned `pass`. Why?",
+    "hint": "Read the cases from the top.",
+    "choices": [
+      {
+        "text": "A tagless switch tests every case and returns the last one that holds",
+        "correct": false,
+        "why": "It is the other end: the first case that holds wins, and the rest are not tested."
+      },
+      {
+        "text": "`>=` compares the scores as text, and `\"95\"` sorts before `\"90\"`",
+        "correct": false,
+        "why": "`score` is an `int`; the comparison is numeric and `95 >= 90` is true."
+      },
+      {
+        "text": "The compiler rejected the overlapping case and dropped it",
+        "correct": false,
+        "why": "Nothing was rejected; the compiler does not compare conditions with each other."
+      },
+      {
+        "text": "`score >= 50` held and came first, so `score >= 90` was never tested",
+        "correct": true,
+        "why": "Right. Putting the narrowest condition first gave `95 distinction`."
+      }
+    ]
+  },
+  {
+    "id": "ex-racnwpn3",
+    "version": 1,
+    "section": "switch",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/cond-fall`, `n := 5` becomes `n := 200`. How many lines does the program print?",
+    "hint": "`fallthrough` moves one case down, once.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-f0jj9ypq",
+    "version": 1,
+    "section": "switch",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `switch` with nothing after the keyword compares each case with `___`.",
+    "hint": "A predeclared boolean.",
+    "blanks": [
+      {
+        "accept": [
+          "true"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-abpvm8t2",
+    "version": 1,
+    "section": "switch",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each file name to what `~/cond-ext` printed after it.",
+    "hint": "`filepath.Ext`, then `strings.ToLower`.",
+    "pairs": [
+      {
+        "left": "`main.go`",
+        "right": "`Go source`"
+      },
+      {
+        "left": "`logo.PNG`",
+        "right": "`image`"
+      },
+      {
+        "left": "`Makefile`",
+        "right": "`no extension`"
+      },
+      {
+        "left": "`README.md`",
+        "right": "`something else: .md`"
+      }
+    ],
+    "right_distractors": [
+      "`something else: .PNG`"
+    ]
+  },
+  {
+    "id": "ex-y4kcxexr",
+    "version": 1,
+    "section": "switch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A case ends with `fallthrough`, and the next case's condition is false. What happens?",
+    "hint": "`~/cond-fall` printed that 5 is more than 100.",
+    "choices": [
+      {
+        "text": "The next case is skipped, and the program tries the one after it",
+        "correct": false,
+        "why": "That would mean `fallthrough` tests conditions, and it does not test any."
+      },
+      {
+        "text": "The program goes to `default`",
+        "correct": false,
+        "why": "`default` did not run in `~/cond-fall`; the body under `n > 100` did."
+      },
+      {
+        "text": "The `switch` ends there, as if `fallthrough` were `break`",
+        "correct": false,
+        "why": "Then `5 is more than 100` would not have been printed."
+      },
+      {
+        "text": "The next case's body runs anyway",
+        "correct": true,
+        "why": "Right. `fallthrough` transfers control to the next body without evaluating its condition."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ee8dkqp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A C programmer writes `case \"sat\":` with nothing under it, then `case \"sun\": fmt.Println(d, \"weekend\")`. What does Go print for `\"sat\"`?",
+    "hint": "An empty case is still a whole case.",
+    "choices": [
+      {
+        "text": "`sat weekend`, because an empty case runs on into the next one",
+        "correct": false,
+        "why": "That is C. In Go the empty `\"sat\"` case matches, runs nothing, and ends."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right. The `\"sat\"` case matched and had no statements; `case \"sat\", \"sun\":` is the Go spelling."
+      },
+      {
+        "text": "A compile error, because a case may not be empty",
+        "correct": false,
+        "why": "An empty case is legal Go; it compiles and does nothing when it matches."
+      },
+      {
+        "text": "A compile error, `duplicate case`, because both cases print the same line",
+        "correct": false,
+        "why": "`duplicate case` is about the same value in two cases; `\"sat\"` and `\"sun\"` differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cfy059w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these compile? Choose all that apply.",
+    "hint": "Two are refusals you saw captured.",
+    "choices": [
+      {
+        "text": "A `switch` whose `default` is written first, above the cases",
+        "correct": true,
+        "why": "Yes. `default` runs only when no case matched, wherever it is written."
+      },
+      {
+        "text": "A `fallthrough` as the last statement of the last case",
+        "correct": false,
+        "why": "Refused: `cannot fallthrough final case in switch`."
+      },
+      {
+        "text": "A tagless `switch` whose cases overlap, such as `score >= 50` above `score >= 90`",
+        "correct": true,
+        "why": "Yes, and that is the trouble: it compiled and graded 95 as a pass."
+      },
+      {
+        "text": "Two cases of one `switch d` that both list `\"sat\"`",
+        "correct": false,
+        "why": "Refused: `duplicate case \"sat\" … in expression switch`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9qr8atp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`if x := f(); x > 3 { … } else if y := g(); y > x { … } else { … }`. Which names can the final `else` use?",
+    "hint": "Each initialiser's names last to the end of the chain, from where they are declared.",
+    "choices": [
+      {
+        "text": "Neither: each initialiser's names belong to its own block",
+        "correct": false,
+        "why": "The `else` in `~/cond-init` printed `n`, so an initialiser's names reach past its own block."
+      },
+      {
+        "text": "Only `x`, the first initialiser's",
+        "correct": false,
+        "why": "The `else if` has an initialiser of its own, and its `y` reaches the `else` below it too."
+      },
+      {
+        "text": "Both `x` and `y`",
+        "correct": true,
+        "why": "Right. `x` lasts from the first initialiser to the end of the chain, and `y` from the second."
+      },
+      {
+        "text": "Only `y`, the nearest initialiser's",
+        "correct": false,
+        "why": "`y > x` in the `else if` already used `x`, and it lasts to the end of the chain."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw4bhx1j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func main()` on one line and `{` alone on the next. What does the compiler say, and why?",
+    "hint": "The same mechanism refuses `else` on its own line.",
+    "choices": [
+      {
+        "text": "`unexpected semicolon or newline before {`: the line ending in `)` got a semicolon",
+        "correct": true,
+        "why": "Right. `)` can end a statement, so a semicolon was inserted after it, and the brace came too late."
+      },
+      {
+        "text": "Nothing: it compiles, and `gofmt` moves the brace up",
+        "correct": false,
+        "why": "It does not compile, and `gofmt` cannot read the file either: it stops with the same message."
+      },
+      {
+        "text": "`missing function body`: Go reads `func main()` alone as a declaration",
+        "correct": false,
+        "why": "The captured message was about the semicolon before `{`, not a missing body."
+      },
+      {
+        "text": "`syntax error: unexpected {`: Go has no blocks that stand alone",
+        "correct": false,
+        "why": "Go does have blocks that stand alone; the message named the inserted semicolon."
+      }
+    ]
+  }
+]

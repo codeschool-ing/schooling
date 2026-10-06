@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-r7abpwem",
+    "version": 1,
+    "section": "panic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go run .` on the program in `~/panic` printed `exit status 2`, and `echo $?` then printed `1`. Where does each number come from?",
+    "hint": "Run the built binary on its own and compare.",
+    "choices": [
+      {
+        "text": "Both come from the program, which exits twice: once for the panic and once for `main`",
+        "correct": false,
+        "why": "A process exits once. The built `./panic` printed a single status, 2, and nothing else."
+      },
+      {
+        "text": "The 2 is the program's, which `go run` reports; the 1 is `go run` failing itself",
+        "correct": true,
+        "why": "Right. Run on its own, the binary's status was 2, and `go run` turns any failure of the program into its own status 1."
+      },
+      {
+        "text": "The 2 counts the elements of `scores` and the 1 is the error",
+        "correct": false,
+        "why": "The slice did have two elements, but the status of every panicking program is 2, whatever its data."
+      },
+      {
+        "text": "`go vet` returned 2 warnings and the compiler returned 1",
+        "correct": false,
+        "why": "`go vet` found nothing and the build succeeded; both numbers appeared after the program had run."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tna649f",
+    "version": 1,
+    "section": "panic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these should a Go function report by returning an `error` rather than by panicking?",
+    "hint": "Ask who caused it: the program's code or the world it runs in.",
+    "choices": [
+      {
+        "text": "An index one past the end of a slice",
+        "correct": false,
+        "why": "No input makes that the right thing to read; it is a bug in the code, and the runtime panics."
+      },
+      {
+        "text": "A configuration file the user named does not exist",
+        "correct": true,
+        "why": "Right. A missing file is the world, not a mistake in the program, and the caller can do something about it."
+      },
+      {
+        "text": "A write to a map nobody created with `make`",
+        "correct": false,
+        "why": "That is the program's own mistake, the nil map of lesson 14, and Go panics on it."
+      },
+      {
+        "text": "A regular expression written in the source that does not compile",
+        "correct": false,
+        "why": "Only the programmer could have written it wrong, so `MustCompile` panics, before `main`, on the first run."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqqmdx0n",
+    "version": 1,
+    "section": "panic",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Go program panics and nothing recovers. What exit status does the program itself end with?",
+    "hint": "Not the number `go run` adds afterwards.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "exit status"
+  },
+  {
+    "id": "ex-zde12y4y",
+    "version": 1,
+    "section": "panic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program reads a regular expression from a file its user edits. Which call should compile it?",
+    "hint": "Who wrote this pattern?",
+    "choices": [
+      {
+        "text": "`regexp.MustCompile`, so that a bad pattern stops the program before it does any harm",
+        "correct": false,
+        "why": "That turns a typo in a file into a crash with a stack trace; `Must` is for patterns only a programmer could get wrong."
+      },
+      {
+        "text": "`regexp.Compile`, checking the error it returns",
+        "correct": true,
+        "why": "Right. The user can get it wrong on any run, so it is an `error` to report, as `~/panic-must` did with `go(`."
+      },
+      {
+        "text": "Either, since both return an error for a bad pattern",
+        "correct": false,
+        "why": "`MustCompile` returns only a `*Regexp`. Its source showed it turning `Compile`'s error into a panic."
+      },
+      {
+        "text": "`regexp.MustCompile` inside a deferred function",
+        "correct": false,
+        "why": "Deferring the call changes when it runs, not whether a bad pattern panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-p91rr82y",
+    "version": 1,
+    "section": "panic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`~/panic-mustbug` panicked before printing `word:`, and its trace named `main.init`, not `main.main`. Why did `main` never start?",
+    "hint": "Where is `word` declared?",
+    "choices": [
+      {
+        "text": "The compiler checks patterns, so the build ran the panic",
+        "correct": false,
+        "why": "`go build` succeeded and printed nothing; the panic came when `./must` ran."
+      },
+      {
+        "text": "`os.Args[1]` was missing, so the program stopped at the first line of `main`",
+        "correct": false,
+        "why": "The command passed both arguments, and the message was about the pattern, not about an index."
+      },
+      {
+        "text": "`word` is a package-level variable, set before `main` begins",
+        "correct": true,
+        "why": "Right. Package variables are initialised first, in the step the trace calls `main.init`, so `MustCompile` panicked there."
+      },
+      {
+        "text": "A panic always moves to the start of the program and is reported from there",
+        "correct": false,
+        "why": "A trace names where the panic really happened, as `main.main` at line 10 did in `~/panic`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxk6dr7b",
+    "version": 1,
+    "section": "defer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a call written with `defer` run?",
+    "hint": "Look at where `deferred in the loop:` appeared in the output.",
+    "choices": [
+      {
+        "text": "At the end of the block it is written in, like a `with` in Python",
+        "correct": false,
+        "why": "The calls deferred inside the `for` ran after `end of main`, long after their block had ended."
+      },
+      {
+        "text": "When the surrounding function returns, however it returns",
+        "correct": true,
+        "why": "Right. A normal return, an early return or a panic all run the deferred calls first."
+      },
+      {
+        "text": "Right away, in the background",
+        "correct": false,
+        "why": "Nothing deferred printed before `end of main`; the call waits."
+      },
+      {
+        "text": "Only if the function panics",
+        "correct": false,
+        "why": "`~/panic-defer` never panicked and all five calls ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7sdtdx8",
+    "version": 1,
+    "section": "defer",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines this `main` prints in order: `defer fmt.Println(\"a\")`, then `for i := range 2 { defer fmt.Println(\"loop\", i) }`, then `fmt.Println(\"b\")`.",
+    "hint": "Last in, first out, and nothing deferred runs before `main` returns.",
+    "items": [
+      "`b`",
+      "`loop 1`",
+      "`loop 0`",
+      "`a`"
+    ]
+  },
+  {
+    "id": "ex-bfg5hwxn",
+    "version": 1,
+    "section": "defer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n := 5`, then `defer fmt.Println(n)`, then `n = 9`. What does the deferred call print when the function returns?",
+    "hint": "When are a deferred call's arguments evaluated?",
+    "choices": [
+      {
+        "text": "5",
+        "correct": true,
+        "why": "Right. The argument was read at the `defer` line, as `x when deferred: 1` showed."
+      },
+      {
+        "text": "9, the value `n` has when the call runs",
+        "correct": false,
+        "why": "That is what a function literal reading `n` would print, like `x when run: 2`; `Println(n)` took its argument earlier."
+      },
+      {
+        "text": "Nothing, because `n` changed after the `defer`",
+        "correct": false,
+        "why": "Changing a variable does not cancel a deferred call; it runs and prints the value it was given."
+      },
+      {
+        "text": "The compiler refuses to change a variable that a `defer` has already used",
+        "correct": false,
+        "why": "`~/panic-defer` assigned `x = 2` after deferring a call with `x`, and compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnag8tm7",
+    "version": 1,
+    "section": "defer",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`os.Exit` and `log.Fatal` end the program at once, and no ___ call runs, not even one written in `main`.",
+    "hint": "`./exit now` printed nothing at all.",
+    "blanks": [
+      {
+        "accept": [
+          "deferred"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3j8tehwr",
+    "version": 1,
+    "section": "defer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `main` loops over a thousand file names and, inside the loop, opens each one and writes `defer f.Close()`. What happens to the files?",
+    "hint": "Deferred calls wait for the function, not for the block.",
+    "choices": [
+      {
+        "text": "Each file is closed at the end of its own turn of the loop",
+        "correct": false,
+        "why": "That is the block picture. `deferred in the loop:` ran only after `end of main`."
+      },
+      {
+        "text": "The compiler refuses `defer` inside a loop",
+        "correct": false,
+        "why": "`~/panic-defer` deferred three calls inside a `for` and compiled."
+      },
+      {
+        "text": "Only the last file is closed, because each `defer` replaces the one before it",
+        "correct": false,
+        "why": "Deferred calls pile up; all three in the loop ran, from 2 down to 0."
+      },
+      {
+        "text": "All of them stay open until `main` returns, then close in reverse order",
+        "correct": true,
+        "why": "Right. That is why `countLines` is a function of its own: its `defer` runs when each call returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfkavn41",
+    "version": 1,
+    "section": "recover",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where must `recover` be called for it to stop a panic?",
+    "hint": "`go doc builtin.recover` names the place.",
+    "choices": [
+      {
+        "text": "Anywhere in the function that panicked",
+        "correct": false,
+        "why": "Ordinary code after the panic never runs; the documentation says that outside a deferred function `recover` returns nil."
+      },
+      {
+        "text": "Directly inside a deferred function",
+        "correct": true,
+        "why": "Right. While a panic is on its way out, deferred calls are the only code that still runs."
+      },
+      {
+        "text": "In `main`, which catches the panics of the whole program",
+        "correct": false,
+        "why": "A recover in `main` did not see the panic in `~/panic-goroutine`."
+      },
+      {
+        "text": "Before the risky code, like opening a `try` block",
+        "correct": false,
+        "why": "Called before anything has panicked, `recover` returns nil and changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e7jjbk1",
+    "version": 1,
+    "section": "recover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/panic-sum`, the deferred function calls `panic(r)` again when `r` is not a `parseError`. What does that line protect against?",
+    "hint": "`~/panic-sumbug` is the case it was written for.",
+    "choices": [
+      {
+        "text": "Against a `parseError` escaping to the caller",
+        "correct": false,
+        "why": "A `parseError` is exactly what the function converts; it is the other panics that the line lets through."
+      },
+      {
+        "text": "Against recovering twice from one panic",
+        "correct": false,
+        "why": "There is one recover; the line decides what to do with what it returned."
+      },
+      {
+        "text": "Against a bug inside `Sum` being reported to its caller as bad input",
+        "correct": true,
+        "why": "Right. The index out of range in `~/panic-sumbug` kept crashing, with `[recovered, repanicked]`."
+      },
+      {
+        "text": "Against the compiler refusing a recover that ignores some panics",
+        "correct": false,
+        "why": "The compiler has no such rule; the check is a decision the package makes, as `encoding/gob` writes down."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjb40ncx",
+    "version": 1,
+    "section": "recover",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main` starts with `defer func() { fmt.Println(\"recovered:\", recover()) }()`. Which of these would that recover stop? Choose all that apply.",
+    "hint": "Same goroutine, and a panic rather than a fatal error.",
+    "choices": [
+      {
+        "text": "An index out of range on a line of `main`",
+        "correct": true,
+        "why": "Yes: a panic in `main` itself runs `main`'s deferred calls."
+      },
+      {
+        "text": "A panic in a function that `main` called",
+        "correct": true,
+        "why": "Yes: the panic climbs from the callee to `main`, as it climbed from `number` to `Sum`."
+      },
+      {
+        "text": "A panic in a goroutine that `main` started with `go`",
+        "correct": false,
+        "why": "No: `~/panic-goroutine` ended with status 2 and never printed `recovered:`."
+      },
+      {
+        "text": "A stack overflow from a function that calls itself forever",
+        "correct": false,
+        "why": "No: that is a fatal error, not a panic, and `~/panic-overflow` never printed `recovered:`."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3t1j65p",
+    "version": 1,
+    "section": "recover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The handler for `/boom` in `~/panic-http` wrote to a nil map. What happened next?",
+    "hint": "Look at both `curl` commands and the log.",
+    "choices": [
+      {
+        "text": "The server process stopped with exit status 2",
+        "correct": false,
+        "why": "The next request, to `/ok`, was answered, so the process was still running."
+      },
+      {
+        "text": "The client received `never sent` and an error status",
+        "correct": false,
+        "why": "The line after the panic never ran; `curl` got an empty reply."
+      },
+      {
+        "text": "That connection was closed, the panic was logged with its trace, and `/ok` still answered",
+        "correct": true,
+        "why": "Right. `net/http` recovers each request's panic, as the `Handler` documentation says."
+      },
+      {
+        "text": "Nothing visible: the server recovered and nobody was told",
+        "correct": false,
+        "why": "`server.log` named the panic, the client's address and `main.go:17`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cw8r4kk3",
+    "version": 1,
+    "section": "recover",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A command processes jobs from a queue in a loop, one at a time, and must not stop because one job hits a bug. Where does its recover belong?",
+    "hint": "A recover makes the function that deferred it return.",
+    "choices": [
+      {
+        "text": "Deferred once at the top of `main`, around the whole loop",
+        "correct": false,
+        "why": "Then the first panic would make `main` return, and the loop would end with it."
+      },
+      {
+        "text": "Deferred in a function that handles one job, logging what it caught",
+        "correct": true,
+        "why": "Right. That function returns after the panic and the loop takes the next job, which is what `net/http` does per request."
+      },
+      {
+        "text": "In each function the job calls, so a panic stops near where it began",
+        "correct": false,
+        "why": "That turns bugs everywhere into silent wrong results; the boundary is one place."
+      },
+      {
+        "text": "Nowhere: replace the panics with `log.Fatal`",
+        "correct": false,
+        "why": "`log.Fatal` calls `os.Exit`, which ends the whole command, the opposite of what is wanted."
+      }
+    ]
+  },
+  {
+    "id": "ex-81ekas1e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation with what happens in Go.",
+    "hint": "Who caused it, and is anybody recovering?",
+    "pairs": [
+      {
+        "left": "A file the user named is missing",
+        "right": "The function returns an `error`"
+      },
+      {
+        "left": "A slice is read one past its end",
+        "right": "The runtime panics and the program exits with 2"
+      },
+      {
+        "left": "A handler in an `http` server writes to a nil map",
+        "right": "The server recovers, logs it and closes the connection"
+      },
+      {
+        "left": "A goroutine calls itself until its stack runs out",
+        "right": "A fatal error that no recover can stop"
+      }
+    ],
+    "right_distractors": [
+      "The program exits with status 0 and prints nothing"
+    ]
+  },
+  {
+    "id": "ex-rj727dd9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deferred function calls `handle()`, and `handle` calls `recover()`. The function that deferred it panics. What happens?",
+    "hint": "Read the parenthesis in `go doc builtin.recover` again.",
+    "choices": [
+      {
+        "text": "The panic stops, because `recover` ran while the deferred calls were running",
+        "correct": false,
+        "why": "Timing is not enough; the documentation says inside a deferred function, \"but not any function called by it\"."
+      },
+      {
+        "text": "The compiler refuses a `recover` outside a deferred function",
+        "correct": false,
+        "why": "It compiles; `recover` is an ordinary built-in call that answers nil where it cannot act."
+      },
+      {
+        "text": "`recover` returns nil and the panic carries on",
+        "correct": true,
+        "why": "Right. Only a call made directly by the deferred function stops a panic."
+      },
+      {
+        "text": "`handle` stops the panic but cannot see its value",
+        "correct": false,
+        "why": "It is all or nothing: when `recover` stops a panic it also returns the value given to `panic`."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4havhmw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Sum(\"1++3\")` recovered from the panic `number` caused on the empty term. Did `Sum` go on to add the `3`?",
+    "hint": "What did `Sum` return?",
+    "choices": [
+      {
+        "text": "Yes: `recover` skips the bad term and the loop goes on",
+        "correct": false,
+        "why": "`Sum` returned `0 empty term`, not 4. A recover does not resume the loop."
+      },
+      {
+        "text": "No: `Sum` returned straight away, with the values its deferred function set",
+        "correct": true,
+        "why": "Right. The rest of the function after the panic never ran, and the named results said 0 and the error."
+      },
+      {
+        "text": "Yes, and then returned the total with the error beside it",
+        "correct": false,
+        "why": "The output was `0 empty term`; the deferred function set `total` to 0."
+      },
+      {
+        "text": "No: the program stopped with status 2",
+        "correct": false,
+        "why": "`main` printed the third result too; nothing crashed in `~/panic-sum`."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxr9245y",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deferred function can turn a panic into an `error` for the caller only by assigning to the function's ___ results.",
+    "hint": "`Sum` declared `(total int, err error)`.",
+    "blanks": [
+      {
+        "accept": [
+          "named"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0nwc3zes",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function creates a temporary file, writes `defer os.Remove(name)`, and calls `log.Fatal` when its input is bad. On bad input, what happens to the file?",
+    "hint": "What does `log.Fatal` call?",
+    "choices": [
+      {
+        "text": "It stays on disk",
+        "correct": true,
+        "why": "Right. `log.Fatal` calls `os.Exit(1)`, and `os.Exit` runs no deferred function."
+      },
+      {
+        "text": "It is removed, because deferred calls run however a function ends",
+        "correct": false,
+        "why": "However the function returns or panics, yes; `os.Exit` ends the program without returning, and `./exit now` printed nothing."
+      },
+      {
+        "text": "It is removed by the runtime, which deletes temporary files at exit",
+        "correct": false,
+        "why": "The runtime does not track files a program created; removing it was the job of the deferred call."
+      },
+      {
+        "text": "`log.Fatal` panics, so the removal runs and then the program stops",
+        "correct": false,
+        "why": "`log.Fatal` does not panic; its documentation says Print followed by `os.Exit(1)`."
+      }
+    ]
+  }
+]
