@@ -1,0 +1,587 @@
+[
+  {
+    "id": "ex-khsypp21",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Go, what decides whether a value lives on the stack or on the heap?",
+    "hint": "Section 02 asked something with `-gcflags=-m`.",
+    "choices": [
+      {
+        "text": "You do: `&` and `new` put a value on the heap, plain variables go on the stack",
+        "correct": false,
+        "why": "That is C's rule. In Go `p := point{1, 2}` was a plain variable and still went to the heap, because its address left the function."
+      },
+      {
+        "text": "The compiler, by escape analysis",
+        "correct": true,
+        "why": "Right. It keeps a value in the frame when it can prove nothing uses it after the return, and moves it to the heap otherwise."
+      },
+      {
+        "text": "The garbage collector",
+        "correct": false,
+        "why": "The collector only frees heap values. Where a value goes was settled at compile time, and `-m` printed it without running anything."
+      },
+      {
+        "text": "The operating system, which hands out the stack",
+        "correct": false,
+        "why": "The kernel gives the process memory, but which variable goes where is the Go compiler's choice, made per value."
+      }
+    ]
+  },
+  {
+    "id": "ex-my7832b4",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`newPoint` declares `p := point{1, 2}` and returns `&p`. What happens to `p`?",
+    "hint": "Read the first line `-m` printed.",
+    "choices": [
+      {
+        "text": "It dies with the frame, and the caller is left holding a dangling pointer",
+        "correct": false,
+        "why": "That is the C bug the section opened with. Go's compiler sees the address leave and does not let `p` die with the frame."
+      },
+      {
+        "text": "The compiler refuses to return the address of a local",
+        "correct": false,
+        "why": "It compiled and ran; `newPoint` allocated once per call in `AllocsPerRun`."
+      },
+      {
+        "text": "It is copied into the caller's frame when the function returns",
+        "correct": false,
+        "why": "The caller receives a pointer, so there is nothing to copy into; the value has to outlive the call somewhere else."
+      },
+      {
+        "text": "It is moved to the heap, and the pointer the caller holds stays good",
+        "correct": true,
+        "why": "Right: `moved to heap: p`. That is why lesson 23 could call returning it safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm8pz8zs",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`count` and `squares` both call `make`. Why does only the array in `squares` escape?",
+    "hint": "Look at what each function returns.",
+    "choices": [
+      {
+        "text": "`make` allocates on the heap by default, and the call in `count` was dropped as useless",
+        "correct": false,
+        "why": "The call was kept: `-m` printed `make([]int, 0, 8) does not escape` about it, so the array was made, in the frame."
+      },
+      {
+        "text": "`squares` returns the slice, so its array must outlive the call",
+        "correct": true,
+        "why": "Right. `count` returns only a length, so nothing leads back to its array after the return."
+      },
+      {
+        "text": "`squares` writes into its slice in a loop",
+        "correct": false,
+        "why": "Writing into a slice says nothing about who can reach it later; `count` writes into its own with `append`."
+      },
+      {
+        "text": "`append` in `count` moves the array to the stack",
+        "correct": false,
+        "why": "`append` moves nothing to the stack. The array was in the frame from the `make` on, because it never escaped."
+      }
+    ]
+  },
+  {
+    "id": "ex-yg9b84wy",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these went to the heap in `~/memory`? Choose all that apply.",
+    "hint": "`AllocsPerRun` counted one allocation for three of the five functions.",
+    "choices": [
+      {
+        "text": "`p` in `newPoint`",
+        "correct": true,
+        "why": "Yes: its address is returned."
+      },
+      {
+        "text": "`nums` in `sum`",
+        "correct": false,
+        "why": "No. The array is only read inside the function, and `-m` printed nothing about it."
+      },
+      {
+        "text": "`table` in `large`",
+        "correct": true,
+        "why": "Yes, though nothing escapes: 1.6 MB is over the 128 KiB a declared variable may take in a frame."
+      },
+      {
+        "text": "The array behind `buf` in `count`",
+        "correct": false,
+        "why": "No: `does not escape`, and `count` allocated 0 times per call."
+      }
+    ]
+  },
+  {
+    "id": "ex-t55t9qst",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go build -gcflags=___` makes the compiler print its decisions, including what escapes to the heap.",
+    "hint": "One letter after a dash.",
+    "blanks": [
+      {
+        "accept": [
+          "-m",
+          "-m -l",
+          "\"-m -l\"",
+          "\"-m\""
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j1t9zj8x",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function declares `var buf [1 << 20]byte`, a 1 MiB array, uses it and returns an `int`. Nothing takes its address. What does `-gcflags=-m` say about `buf`?",
+    "hint": "Escape analysis is not the only rule that sends a value to the heap.",
+    "choices": [
+      {
+        "text": "Nothing: a value that does not escape always stays in the frame, whatever its size may be",
+        "correct": false,
+        "why": "That holds below a size limit. `large` in `~/memory` escaped nothing and still got `moved to heap: table`."
+      },
+      {
+        "text": "A compile error: the array is too large for a stack",
+        "correct": false,
+        "why": "Go does not refuse it. A variable too big for the frame is put somewhere else, not rejected."
+      },
+      {
+        "text": "`moved to heap: buf`, as 1 MiB is over the 128 KiB limit for a declared variable",
+        "correct": true,
+        "why": "Right. `MaxStackVarSize` is 128 KiB, and the same thing happened to the 1.6 MB `table`."
+      },
+      {
+        "text": "Nothing at compile time; the program overflows its stack when it runs",
+        "correct": false,
+        "why": "The compiler acts first and moves it. A Go stack is not what a 1 MiB local array is put on."
+      }
+    ]
+  },
+  {
+    "id": "ex-04cyaxdv",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which heap values does Go's garbage collector free?",
+    "hint": "It starts from the roots.",
+    "choices": [
+      {
+        "text": "Those unused for a while",
+        "correct": false,
+        "why": "The collector never asks when a value was last used, nor how old it is; it is non-generational."
+      },
+      {
+        "text": "The ones no pointer from a root leads to",
+        "correct": true,
+        "why": "Right. Marking follows pointers from package variables and goroutine stacks; whatever it never reached is swept."
+      },
+      {
+        "text": "The ones created by functions that have already returned",
+        "correct": false,
+        "why": "`newPoint` returned and its `p` was kept, because the caller still pointed at it."
+      },
+      {
+        "text": "The largest ones, once the heap passes the GOGC goal",
+        "correct": false,
+        "why": "The goal decides when a collection starts, never which values go. A large reachable value is kept, as the 64 MB array was."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2d08nqg",
+    "version": 1,
+    "section": "the-collector",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of `gc 3 @0.009s 2%: … 15->15->8 MB, 16 MB goal, … 4 P` to what it means.",
+    "hint": "`go doc runtime` printed the key.",
+    "pairs": [
+      {
+        "left": "`gc 3`",
+        "right": "the third collection of the run"
+      },
+      {
+        "left": "`@0.009s`",
+        "right": "time since the program started"
+      },
+      {
+        "left": "`15->15->8 MB`",
+        "right": "heap at the start, at the end, and still reachable"
+      },
+      {
+        "left": "`16 MB goal`",
+        "right": "the size the collection aimed to finish under"
+      },
+      {
+        "left": "`4 P`",
+        "right": "processors the runtime used"
+      }
+    ],
+    "right_distractors": [
+      "how long the program was paused"
+    ]
+  },
+  {
+    "id": "ex-nmwfq0w5",
+    "version": 1,
+    "section": "the-collector",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A collection ends with 10 MB still reachable, and the program runs with `GOGC=200`. At what heap size, in MB, is the next collection's goal?",
+    "hint": "`GOGC=100` let 8 MB grow to a 16 MB goal.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-bjanpdp9",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gc 3` printed `0.027+0.29+0.058 ms clock`. For how long was the program stopped?",
+    "hint": "Two of the three phases stop the world.",
+    "choices": [
+      {
+        "text": "0.375 ms, all three phases added together",
+        "correct": false,
+        "why": "The middle phase, marking, runs while the program does; adding it counts time the program was running."
+      },
+      {
+        "text": "0.29 ms, the longest phase",
+        "correct": false,
+        "why": "That one is the concurrent mark, the part that does not stop anything."
+      },
+      {
+        "text": "0.085 ms, the first and the last phase",
+        "correct": true,
+        "why": "Right: sweep termination and mark termination stop the world; the 0.29 ms between them ran beside the program."
+      },
+      {
+        "text": "0.058 ms, only the last of the three phases",
+        "correct": false,
+        "why": "There are two stops per collection, at both ends of the mark, and the first one counts too."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqpsvgrz",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program prints the address of a heap value with `%p`, then again after a dozen collections, while still holding the pointer. What does the second line show?",
+    "hint": "One word in `mgc.go` answers it.",
+    "choices": [
+      {
+        "text": "A different address, since collections pack live values together",
+        "correct": false,
+        "why": "That would be a compacting collector, and `mgc.go` says Go's is non-compacting."
+      },
+      {
+        "text": "The same address",
+        "correct": true,
+        "why": "Right. The collector never moves a heap value; it reuses the gaps instead."
+      },
+      {
+        "text": "`<nil>`, because the collector reset the pointer",
+        "correct": false,
+        "why": "The collector never writes your variables. A value the program still points at is reachable and is kept, address and all."
+      },
+      {
+        "text": "Something unpredictable, as the sweep may have reused that memory",
+        "correct": false,
+        "why": "The sweep reuses only what marking did not reach, and this value was reached through the pointer."
+      }
+    ]
+  },
+  {
+    "id": "ex-hejjhd7a",
+    "version": 1,
+    "section": "the-collector",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the phases of one collection in order, as the runtime's documentation lists them.",
+    "hint": "It begins and ends its marking with a short stop.",
+    "items": [
+      "Stop the world: sweep termination",
+      "Mark and scan, alongside the program",
+      "Stop the world: mark termination",
+      "Sweep, alongside the program"
+    ]
+  },
+  {
+    "id": "ex-rbe7emht",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program keeps 8 MB alive and runs with `GOMEMLIMIT=4MiB`. What happens?",
+    "hint": "The limit is soft.",
+    "choices": [
+      {
+        "text": "The runtime stops it with an out-of-memory error at 4 MiB",
+        "correct": false,
+        "why": "Soft means no error at the limit: the program in section 04 finished."
+      },
+      {
+        "text": "Allocations past 4 MiB return nil",
+        "correct": false,
+        "why": "Go allocations do not return nil. The program kept allocating 496 MB in total."
+      },
+      {
+        "text": "It finishes, slowly, collecting thousands of times",
+        "correct": true,
+        "why": "Right: 2,927 collections and four times the run time, because no collection can free a reachable byte."
+      },
+      {
+        "text": "Nothing changes, since the heap is below 4 MiB anyway",
+        "correct": false,
+        "why": "8 MB alive is above 4 MiB; the collection count went from 61 to 2,927."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ccj9qvf",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `GOGC=off GOMEMLIMIT=64MiB` ask of the runtime?",
+    "hint": "The program of section 03 ran 10 collections under it.",
+    "choices": [
+      {
+        "text": "Never to collect, and to stop the program at 64 MiB",
+        "correct": false,
+        "why": "It collected 10 times, and nothing stopped. A memory limit is respected even with `GOGC=off`."
+      },
+      {
+        "text": "Not to collect until the memory it manages nears 64 MiB",
+        "correct": true,
+        "why": "Right: 10 collections instead of 61, and a heap that grew to 63 MB and stopped there."
+      },
+      {
+        "text": "To collect after every 64 MiB the program allocates",
+        "correct": false,
+        "why": "The limit is about memory held, not memory allocated: a collection starts when what the runtime manages nears 64 MiB."
+      },
+      {
+        "text": "Nothing: `GOGC=off` switches the memory limit off as well",
+        "correct": false,
+        "why": "The two are separate settings, and the run under both collected 10 times rather than 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-73jjq8w3",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `header = load()[:16]` and a full collection, `HeapAlloc` still counted 64 MB. Why?",
+    "hint": "What does `header` point into?",
+    "choices": [
+      {
+        "text": "The collector had not run yet",
+        "correct": false,
+        "why": "`heapMB` calls `runtime.GC` before measuring, so a whole collection had just finished."
+      },
+      {
+        "text": "Slicing copied the 64 MB array",
+        "correct": false,
+        "why": "Slicing copies nothing; that is why the slice could keep the original alive."
+      },
+      {
+        "text": "`header` points into the 64 MB array, and the collector keeps all of it",
+        "correct": true,
+        "why": "Right. Nothing in the collector looks at how much of an array a slice can see."
+      },
+      {
+        "text": "`HeapAlloc` counts memory already freed as well",
+        "correct": false,
+        "why": "After `strings.Clone` the same counter fell to 0 MB, so it does drop when memory is freed."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9rqx1be",
+    "version": 1,
+    "section": "limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To keep a short substring without keeping the large string it came from, copy it with `strings.___`.",
+    "hint": "`slices` has a function of the same name.",
+    "blanks": [
+      {
+        "accept": [
+          "Clone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s1jgvjmz",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service keeps about 300 MB alive and runs in a container limited to 512 MiB, with the default `GOGC`. What is the problem, and what fixes it?",
+    "hint": "Work out the next goal under `GOGC=100`.",
+    "choices": [
+      {
+        "text": "The goal is about 600 MB, past the container; set `GOMEMLIMIT` a margin below 512 MiB",
+        "correct": true,
+        "why": "Right. The proportion knows nothing of the container, and the limit makes the runtime collect before it gets there."
+      },
+      {
+        "text": "None: the runtime reads the container's limit and stays under it",
+        "correct": false,
+        "why": "The default memory limit is `math.MaxInt64`, which the documentation says effectively disables it."
+      },
+      {
+        "text": "Collections are too frequent; set `GOGC=off` and nothing else",
+        "correct": false,
+        "why": "With no limit beside it, `GOGC=off` collected nothing and grew to 499 MB for 8 MB alive."
+      },
+      {
+        "text": "The heap is too big; set `GOMEMLIMIT=256MiB` to halve it",
+        "correct": false,
+        "why": "That is under the 300 MB alive, the case where the lab program ran 2,927 collections and four times slower."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5728d28",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these keep memory alive longer than the program needs it? Choose all that apply.",
+    "hint": "Ask what a long-lived variable points into.",
+    "choices": [
+      {
+        "text": "A cache that stores `body[:20]` of each 1 MB request body for a day",
+        "correct": true,
+        "why": "Yes. Each entry keeps its whole megabyte reachable."
+      },
+      {
+        "text": "A map that stores `strings.Clone(line[:8])` for each line of a large file",
+        "correct": false,
+        "why": "No: each key has eight bytes of its own, and the lines become unreachable."
+      },
+      {
+        "text": "A package-level slice of pointers to finished jobs that nothing ever removes",
+        "correct": true,
+        "why": "Yes. A package variable is a root, so every job it points at stays reachable for good."
+      },
+      {
+        "text": "A 1 MB buffer inside a function that returns only its length",
+        "correct": false,
+        "why": "No. Nothing leads to it after the return, so the next collection frees it, if it was on the heap at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-11gxgxf3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want to know whether a particular function's result is allocated on the heap. Which command answers that?",
+    "hint": "The answer is decided before the program runs.",
+    "choices": [
+      {
+        "text": "`GODEBUG=gctrace=1 ./prog`",
+        "correct": false,
+        "why": "It reports collections and heap totals, not which value was put where."
+      },
+      {
+        "text": "`go build -gcflags=-m`",
+        "correct": true,
+        "why": "Right. The compiler prints its verdict per value, with the file and line."
+      },
+      {
+        "text": "`go vet`, which reports allocations as suspicious",
+        "correct": false,
+        "why": "Allocating is not a mistake, and `go vet` looks for mistakes."
+      },
+      {
+        "text": "Reading `HeapAlloc` from `runtime.ReadMemStats` in the program",
+        "correct": false,
+        "why": "That is one total for the whole heap; it cannot say which function's value is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-146jsdh6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function stores `&v`, the address of its local variable `v`, in a package-level map and returns. What does the compiler do with `v`?",
+    "hint": "A package variable outlives every call.",
+    "choices": [
+      {
+        "text": "Keeps it in the frame, as `v` is not returned",
+        "correct": false,
+        "why": "Returning is one way to escape, not the only one. Anything that can reach `v` after the call counts."
+      },
+      {
+        "text": "Refuses to compile the store",
+        "correct": false,
+        "why": "Storing the address of a local is legal Go; the compiler moves the value instead of refusing."
+      },
+      {
+        "text": "Copies `v` into the map's own storage, so that the pointer is never needed",
+        "correct": false,
+        "why": "The map holds a pointer, and a pointer has to point at the one `v`, not at a copy."
+      },
+      {
+        "text": "Moves it to the heap, since the map still points at it after the return",
+        "correct": true,
+        "why": "Right. `-m` would print `moved to heap: v`, as it did for `p` in `newPoint`."
+      }
+    ]
+  }
+]

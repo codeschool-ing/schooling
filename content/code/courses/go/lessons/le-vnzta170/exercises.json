@@ -1,0 +1,563 @@
+[
+  {
+    "id": "ex-mj9bv1r6",
+    "version": 1,
+    "section": "for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is how Go writes a loop that repeats while `n > 1`?",
+    "hint": "Go has one keyword for loops.",
+    "choices": [
+      {
+        "text": "`while n > 1 { … }`",
+        "correct": false,
+        "why": "`while` is not one of Go's keywords; section 02 shows the syntax error it causes."
+      },
+      {
+        "text": "`do { … } while n > 1`",
+        "correct": false,
+        "why": "Go has no `do … while` either; every loop is a `for`."
+      },
+      {
+        "text": "`for n > 1 { … }`",
+        "correct": true,
+        "why": "Right. A `for` with only a condition is Go's `while`."
+      },
+      {
+        "text": "`for range n > 1 { … }`, with `range` before the condition",
+        "correct": false,
+        "why": "`range` needs something to walk, and a condition is a `bool`: `cannot range over n > 1 (untyped bool value)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rm44a25k",
+    "version": 1,
+    "section": "for",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`for i := 0; i < 3; i++ { … }` runs its body three times. How many times is the condition `i < 3` tested?",
+    "hint": "Follow the figure: the test that ends the loop is a test too.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-4sfvhnw7",
+    "version": 1,
+    "section": "for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `fmt.Println(i)` placed right after `for i := 0; i < 3; i++ { … }` does what?",
+    "hint": "Where was `i` declared?",
+    "choices": [
+      {
+        "text": "Prints 3, the value that ended the loop",
+        "correct": false,
+        "why": "That would be true if `i` outlived the loop; declared in the first clause, it does not."
+      },
+      {
+        "text": "Prints 2, the last value the body saw",
+        "correct": false,
+        "why": "The line does not compile, so it prints nothing at all."
+      },
+      {
+        "text": "It does not compile: `undefined: i`, because `i` belongs only to the loop",
+        "correct": true,
+        "why": "Right. The variable of the first clause belongs to the `for` statement."
+      },
+      {
+        "text": "Prints 0, since `i` is reset when the loop ends",
+        "correct": false,
+        "why": "Nothing resets it; it is simply out of scope."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnz553vd",
+    "version": 1,
+    "section": "for",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A module's `go.mod` says `go 1.21`. Which of these loops compile in it? Choose all that apply.",
+    "hint": "Section 02 changed the `go` line and ran again.",
+    "choices": [
+      {
+        "text": "`for i := 0; i < 3; i++ { … }`",
+        "correct": true,
+        "why": "Yes. The three-clause loop has always been Go."
+      },
+      {
+        "text": "`for i := range 3 { … }`",
+        "correct": false,
+        "why": "No: `cannot range over 3 (untyped int constant): requires go1.22 or later`."
+      },
+      {
+        "text": "`for n > 1 { … }`",
+        "correct": true,
+        "why": "Yes. A condition alone is as old as the three clauses."
+      },
+      {
+        "text": "`for range 2 { … }`",
+        "correct": false,
+        "why": "No. Ranging over an integer, with or without a variable, arrived in Go 1.22."
+      }
+    ]
+  },
+  {
+    "id": "ex-efqcc8sp",
+    "version": 1,
+    "section": "for",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A file fails with `syntax error: unexpected name n at end of statement` on the line `while n > 1 {`, and with a second error on line 10 about a statement outside the function body. What should be fixed?",
+    "hint": "Which error caused the other?",
+    "choices": [
+      {
+        "text": "Line 10 first, because the last error in the list is the real one",
+        "correct": false,
+        "why": "It is the other way round: the parser lost track of the braces because of the first error."
+      },
+      {
+        "text": "`while` becomes `for`; the line 10 error then goes with it",
+        "correct": true,
+        "why": "Right. Fix the first error and run again; the second was the parser stumbling over the same mistake."
+      },
+      {
+        "text": "Rename `n`, since the message says it is unexpected",
+        "correct": false,
+        "why": "`n` is unexpected only because `while` before it is read as a name; any name there fails the same way."
+      },
+      {
+        "text": "Write `while (n > 1) {`, with parentheses, as in C",
+        "correct": false,
+        "why": "Parentheses do not make `while` a keyword; Go has none by that name."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzw5mksx",
+    "version": 1,
+    "section": "for",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`for i := ___ 5 { … }` runs its body five times, with `i` going from 0 to 4.",
+    "hint": "The word that also walks slices, maps and strings.",
+    "blanks": [
+      {
+        "accept": [
+          "range"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kv2qs6d1",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `for x := range []string{\"a\", \"b\"} { fmt.Println(x) }` print?",
+    "hint": "One variable, over a slice.",
+    "choices": [
+      {
+        "text": "`a` and then `b`",
+        "correct": false,
+        "why": "That is Python's `for x in xs`. In Go one variable gets the index."
+      },
+      {
+        "text": "`0` and then `1`",
+        "correct": true,
+        "why": "Right. With one variable, `range` over a slice gives the indices, whatever the variable is called."
+      },
+      {
+        "text": "`0 a` and then `1 b`",
+        "correct": false,
+        "why": "Both would need two variables, `for i, x := range …`."
+      },
+      {
+        "text": "Nothing, because one variable is refused and `_` is required",
+        "correct": false,
+        "why": "One variable is allowed; `_` is how you skip the index when you want the elements."
+      }
+    ]
+  },
+  {
+    "id": "ex-7whqdhps",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`team` holds `{Ana 10}` and `{Bia 7}`. After `for _, p := range team { p.Score += 5 }`, what does `fmt.Println(team)` print?",
+    "hint": "What is `p` on each pass?",
+    "choices": [
+      {
+        "text": "`[{Ana 15} {Bia 12}]`",
+        "correct": false,
+        "why": "That needs writing through the index, `team[i].Score`; `p` was a copy."
+      },
+      {
+        "text": "`[{Ana 10} {Bia 7}]`, the scores unchanged",
+        "correct": true,
+        "why": "Right. Each `p` was a copy of an element, changed and thrown away."
+      },
+      {
+        "text": "`[{Ana 10} {Bia 12}]`, since only the last copy is written back",
+        "correct": false,
+        "why": "No copy is ever written back, the last one included."
+      },
+      {
+        "text": "Nothing, because `go vet` refuses a loop that changes its copy",
+        "correct": false,
+        "why": "`go vet` exited 0 on exactly this loop, and `go run` does not run vet anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-6n9mjscr",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which loop really adds 5 to every player's `Score` in the slice `team`?",
+    "hint": "The loop has to write to the slice, not to a copy.",
+    "choices": [
+      {
+        "text": "`for _, p := range team { p.Score += 5 }`",
+        "correct": false,
+        "why": "`p` is a copy of each element, so the slice is untouched."
+      },
+      {
+        "text": "`for p := range team { p.Score += 5 }`",
+        "correct": false,
+        "why": "With one variable `p` is the index, an `int`: `p.Score undefined (type int has no field or method Score)`."
+      },
+      {
+        "text": "`for i := range team { team[i].Score += 5 }`",
+        "correct": true,
+        "why": "Right. `team[i]` is the element in the slice itself."
+      },
+      {
+        "text": "`for i, p := range team { p.Score = team[i].Score + 5 }`",
+        "correct": false,
+        "why": "It reads the right value and still writes it into the copy `p`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6eg7fb5",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`nums := []int{1}`, then `for _, n := range nums { nums = append(nums, n+1) }`. What does `fmt.Println(nums)` print?",
+    "hint": "When does `range` decide how many passes there will be?",
+    "choices": [
+      {
+        "text": "No output: the loop keeps finding the element it just appended, and runs forever",
+        "correct": false,
+        "why": "That is what a three-clause loop testing `len(nums)` would do; `range` read the length once."
+      },
+      {
+        "text": "`[1 2]`: one pass, since `nums` held one element when the loop began, and one append",
+        "correct": true,
+        "why": "Right. The slice had one element when the loop started, so there was one pass."
+      },
+      {
+        "text": "`[1]`, because an `append` inside `range` is discarded",
+        "correct": false,
+        "why": "The append is kept, since its result is assigned back to `nums`; it just adds no passes."
+      },
+      {
+        "text": "A panic, as changing a slice while ranging over it is forbidden",
+        "correct": false,
+        "why": "It is allowed; section 03 appended inside a `range` and printed `[1 2 3 10 20 30]`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zmp0gdv",
+    "version": 1,
+    "section": "range",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of `for i, v := range s`, where `s` is a slice? Choose all that apply.",
+    "hint": "Two are about copies and counts; two are about variables.",
+    "choices": [
+      {
+        "text": "`v` is a copy of `s[i]`",
+        "correct": true,
+        "why": "Yes. `range` assigns the element to `v`, and assignment copies."
+      },
+      {
+        "text": "Assigning to `v` changes `s[i]`",
+        "correct": false,
+        "why": "No. The team kept its old scores for exactly this reason."
+      },
+      {
+        "text": "The number of passes is fixed when the loop starts",
+        "correct": true,
+        "why": "Yes. `range` reads the slice once, before the first pass."
+      },
+      {
+        "text": "Since Go 1.22, `i` and `v` are one pair reused on every pass",
+        "correct": false,
+        "why": "It is the reverse: since 1.22 each pass gets its own `i` and `v`."
+      }
+    ]
+  },
+  {
+    "id": "ex-04x8751t",
+    "version": 1,
+    "section": "maps-and-strings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What values does `i` take in `for i := range \"café\"`?",
+    "hint": "The `é` takes two bytes.",
+    "choices": [
+      {
+        "text": "0, 1, 2, 3 and 4",
+        "correct": false,
+        "why": "Those are the byte indices a three-clause loop over `len(s)` walks; `range` stops once per rune."
+      },
+      {
+        "text": "1, 2, 3 and 4, one per character",
+        "correct": false,
+        "why": "Offsets start at 0, and they count bytes, not characters."
+      },
+      {
+        "text": "0, 1, 2 and 3: one offset per rune, where each begins",
+        "correct": true,
+        "why": "Right. Four runes, each at the byte offset where it starts; the `é` starts at 3."
+      },
+      {
+        "text": "0, 1, 2 and 5, the offset just past the `é`",
+        "correct": false,
+        "why": "The offset is where a rune starts, not where it ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-q64hqr5q",
+    "version": 1,
+    "section": "maps-and-strings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`range` meets the byte `\\xff`, which begins no UTF-8 character. What does it do?",
+    "hint": "Section 04 printed one line for it.",
+    "choices": [
+      {
+        "text": "It panics with an invalid UTF-8 error",
+        "correct": false,
+        "why": "Nothing failed: the loop carried on to the `!`."
+      },
+      {
+        "text": "It gives the rune U+FFFD and moves on by one byte",
+        "correct": true,
+        "why": "Right. The replacement character, `utf8.RuneError`, and the next pass starts at the next byte."
+      },
+      {
+        "text": "It skips the byte without a pass",
+        "correct": false,
+        "why": "There was a pass for it, at offset 5, printing `U+FFFD`."
+      },
+      {
+        "text": "It gives the byte itself, 255, as the rune",
+        "correct": false,
+        "why": "The rune was U+FFFD, not U+00FF; `range` decodes, and a byte that decodes to nothing gets the replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gx6qapg",
+    "version": 1,
+    "section": "maps-and-strings",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`len(\"señor\")` is 6, because `ñ` takes two bytes. How many passes does `for range \"señor\"` make?",
+    "hint": "One pass per rune.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "passes"
+  },
+  {
+    "id": "ex-asdwa2w6",
+    "version": 1,
+    "section": "maps-and-strings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A loop over a map deletes every entry whose value is 0, inside the same `range`. What happens?",
+    "hint": "Section 04 did exactly this with `stock`.",
+    "choices": [
+      {
+        "text": "It works: every such entry is gone, whatever order the walk took",
+        "correct": true,
+        "why": "Right. Deleting while walking a map is allowed, and `stock` kept only `apples` and `plums`."
+      },
+      {
+        "text": "A compile error: `delete` cannot appear inside a `range` over the same map",
+        "correct": false,
+        "why": "The compiler does not look for that, and the program in section 04 ran."
+      },
+      {
+        "text": "A fatal error about the map being changed during iteration",
+        "correct": false,
+        "why": "That kind of failure belongs to two goroutines sharing a map, the `go-concurrency` course's subject; one loop is fine."
+      },
+      {
+        "text": "Some entries survive, since the walk skips whatever follows a deletion",
+        "correct": false,
+        "why": "Every zero was removed; a deletion hides only the entry deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp2jjzqq",
+    "version": 1,
+    "section": "maps-and-strings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report must list a map's entries in the same order every time it runs. Which loop gives that?",
+    "hint": "Only one of them sorts anything.",
+    "choices": [
+      {
+        "text": "`for k, v := range m`",
+        "correct": false,
+        "why": "Lesson 14 ran the same walk twice and got two orders."
+      },
+      {
+        "text": "`for k := range maps.Keys(m)`",
+        "correct": false,
+        "why": "`maps.Keys` hands out keys in the map's own order, which is random."
+      },
+      {
+        "text": "`for k, v := range m`, run twice so the order settles",
+        "correct": false,
+        "why": "The order never settles; it is chosen again on every walk."
+      },
+      {
+        "text": "`for _, k := range slices.Sorted(maps.Keys(m))`",
+        "correct": true,
+        "why": "Right. The keys are sorted into a slice, and a slice is walked in index order."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5b0vffm",
+    "version": 1,
+    "section": "maps-and-strings",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`maps.Values(m)` returns an ___: a function that `range` calls to receive the values one at a time.",
+    "hint": "Its type is `iter.Seq[V]`.",
+    "blanks": [
+      {
+        "accept": [
+          "iterator"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bw659vtb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what is ranged over to what the first variable holds.",
+    "hint": "The table at the end of section 04.",
+    "pairs": [
+      {
+        "left": "An integer `n`",
+        "right": "0 up to `n`-1"
+      },
+      {
+        "left": "A slice",
+        "right": "The index"
+      },
+      {
+        "left": "A string",
+        "right": "The byte offset where a rune starts"
+      },
+      {
+        "left": "A map",
+        "right": "The key"
+      }
+    ],
+    "right_distractors": [
+      "The number of characters seen so far"
+    ]
+  },
+  {
+    "id": "ex-td0vjym8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `for i := 0; i < 2; i++ { body }` in the order they happen, from the start to the end of the loop.",
+    "hint": "The condition is tested before every pass, and once more at the end.",
+    "items": [
+      "`i := 0`",
+      "`i < 2` is true",
+      "The body runs with `i` at 0",
+      "`i++`",
+      "The body runs with `i` at 1",
+      "`i < 2` is false, and the loop ends"
+    ]
+  },
+  {
+    "id": "ex-he6avznq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`for i, r := range s` printed the offsets 0, 1, 3 and 4. What do you know about the rune at offset 1?",
+    "hint": "The gap between two offsets is the size of the rune between them.",
+    "choices": [
+      {
+        "text": "It is a broken byte, replaced by U+FFFD",
+        "correct": false,
+        "why": "After a broken byte `range` moves on by one byte, so the next offset would be 2."
+      },
+      {
+        "text": "No conclusion: offsets can jump for any rune",
+        "correct": false,
+        "why": "They jump by exactly the size of the rune, which is what makes the gap readable."
+      },
+      {
+        "text": "It took two bytes, so it is not ASCII",
+        "correct": true,
+        "why": "Right. The next rune starts at 3, two bytes on, and every ASCII character is one byte."
+      },
+      {
+        "text": "The loop skipped the rune at offset 2",
+        "correct": false,
+        "why": "No rune starts at 2; that byte is the second half of the rune at 1."
+      }
+    ]
+  }
+]

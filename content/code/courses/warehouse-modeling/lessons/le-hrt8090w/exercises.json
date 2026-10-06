@@ -1,0 +1,656 @@
+[
+  {
+    "id": "ex-0174z7qj",
+    "version": 1,
+    "section": "two-ways-to-grow",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each change to the kind of scaling it is.",
+    "hint": "Bigger machine, or more machines?",
+    "pairs": [
+      {
+        "left": "Moving from 4 cores to 64 in one server",
+        "right": "Scaling up"
+      },
+      {
+        "left": "Spreading a table across eight nodes",
+        "right": "Scaling out"
+      },
+      {
+        "left": "Starting compute for month-end, reading the same files",
+        "right": "Compute apart from storage"
+      }
+    ],
+    "right_distractors": [
+      "A bigger index"
+    ]
+  },
+  {
+    "id": "ex-3csqmpa7",
+    "version": 1,
+    "section": "two-ways-to-grow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the lesson's rule of thumb, when is one machine the simpler answer?",
+    "hint": "Think about memory.",
+    "choices": [
+      {
+        "text": "When its working data fits in memory",
+        "correct": true,
+        "why": "Right. Past that point, scaling out starts to pay."
+      },
+      {
+        "text": "When the warehouse has fewer than a million rows",
+        "correct": false,
+        "why": "Row counts alone say little; it is what a query reads that matters."
+      },
+      {
+        "text": "When there is a single analyst",
+        "correct": false,
+        "why": "Users affect concurrency, not whether one machine can hold the data."
+      },
+      {
+        "text": "When the data is in PostgreSQL",
+        "correct": false,
+        "why": "The engine is not the test."
+      }
+    ]
+  },
+  {
+    "id": "ex-bta527cp",
+    "version": 1,
+    "section": "scaling-up-measured",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With one thread the query took 0.358 s and with four 0.126 s. How many times as fast was it with four? Give one decimal.",
+    "hint": "Divide the first by the second.",
+    "value": 2.8,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-xk8jgg1d",
+    "version": 1,
+    "section": "scaling-up-measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did four threads not make the query four times as fast?",
+    "hint": "Not every part of a query splits.",
+    "choices": [
+      {
+        "text": "DuckDB only uses two threads",
+        "correct": false,
+        "why": "The `user` time with four threads shows more than two were busy."
+      },
+      {
+        "text": "The table was too small to split",
+        "correct": false,
+        "why": "17.7 million rows split well; the serial part is the limit."
+      },
+      {
+        "text": "Part of the work is serial",
+        "correct": true,
+        "why": "Right. Starting, building lookups and merging partial sums do not split."
+      },
+      {
+        "text": "Each thread read the whole table",
+        "correct": false,
+        "why": "Then more threads would have been slower, not faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-mby4atnc",
+    "version": 1,
+    "section": "amdahl",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job is 90% parallel. Using Amdahl's law, what is its speed-up on 4 processors? Give one decimal.",
+    "hint": "1 / (0.1 + 0.9 / 4)",
+    "value": 3.1,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-xhkzsddd",
+    "version": 1,
+    "section": "amdahl",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job is 95% parallel. What is the highest speed-up any number of processors can give it?",
+    "hint": "The ceiling is 1 / (1 - p).",
+    "value": 20,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-zb291w2e",
+    "version": 1,
+    "section": "amdahl",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A distributed query's nodes spend half their time exchanging rows over the network. What happens as more nodes are added?",
+    "hint": "The exchange is part of the serial share.",
+    "choices": [
+      {
+        "text": "It scales without limit, because each node has less data",
+        "correct": false,
+        "why": "Less data per node shrinks the parallel part only."
+      },
+      {
+        "text": "The gains flatten out quickly",
+        "correct": true,
+        "why": "Right. With half the time serial, the ceiling is about 2."
+      },
+      {
+        "text": "It gets slower at once",
+        "correct": false,
+        "why": "Not at once; it stops improving."
+      },
+      {
+        "text": "Nothing changes, because networks are free",
+        "correct": false,
+        "why": "Moving rows is the cost the lesson is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmk83ph2",
+    "version": 1,
+    "section": "the-ceiling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The grouping finished with the machine's memory, finished more slowly with 200 MB, and failed with 20 MB. What does that show?",
+    "hint": "Two lines: slower, then stopped.",
+    "choices": [
+      {
+        "text": "DuckDB has a bug at small memory limits",
+        "correct": false,
+        "why": "It behaved as designed and said what it needed."
+      },
+      {
+        "text": "Memory affects only the speed of a query, never whether it runs",
+        "correct": false,
+        "why": "The 20 MB run did not complete."
+      },
+      {
+        "text": "200 MB was faster than the full memory",
+        "correct": false,
+        "why": "It was slower: 0.466 s against 0.340 s."
+      },
+      {
+        "text": "Less memory slows it; far less stops it",
+        "correct": true,
+        "why": "Right. That is the shape of the ceiling on one machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks7gj4rt",
+    "version": 1,
+    "section": "the-ceiling",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are limits of a single machine named in the lesson? Choose all that apply.",
+    "hint": "Not only speed.",
+    "choices": [
+      {
+        "text": "The largest machine you can buy is a fixed size",
+        "correct": true,
+        "why": "Yes. Memory, disk and network all top out."
+      },
+      {
+        "text": "It is a single point of failure",
+        "correct": true,
+        "why": "Yes. When it is down, the warehouse is down."
+      },
+      {
+        "text": "It is sized for the busiest hour and idle the rest",
+        "correct": true,
+        "why": "Yes. Paid for all month."
+      },
+      {
+        "text": "It cannot run SQL joins",
+        "correct": false,
+        "why": "It runs them fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rfg2x9k",
+    "version": 1,
+    "section": "shared-nothing",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of a query on a shared-nothing system in order.",
+    "hint": "Plan, work, combine.",
+    "items": [
+      "The coordinator plans and sends each node its part",
+      "Each node scans and sums its own rows",
+      "The partial results are merged into one answer"
+    ],
+    "trap": "Merging before every node has finished is impossible: the query is as slow as its slowest node."
+  },
+  {
+    "id": "ex-f2dam4qh",
+    "version": 1,
+    "section": "shared-nothing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For \"total revenue by department\" on four nodes, what crosses the network?",
+    "hint": "Each node sums its own share.",
+    "choices": [
+      {
+        "text": "Every sales row, to the coordinator",
+        "correct": false,
+        "why": "That would be the opposite of the design."
+      },
+      {
+        "text": "Half of each node's rows",
+        "correct": false,
+        "why": "No row needs to move for this query."
+      },
+      {
+        "text": "Four partial sums per node",
+        "correct": true,
+        "why": "Right. The data stays; only the answers move."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The partial sums have to reach the coordinator."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr35b07g",
+    "version": 1,
+    "section": "shared-nothing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A system where each node has its own processors, memory and share of the data, and reads no other node's disk, is called ___ nothing.",
+    "hint": "What the nodes do not do with each other.",
+    "blanks": [
+      {
+        "accept": [
+          "shared"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h2sa5z5j",
+    "version": 1,
+    "section": "distributing-rows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did spreading sales by order number give four nearly equal nodes?",
+    "hint": "How many distinct values?",
+    "choices": [
+      {
+        "text": "There are hundreds of thousands of them",
+        "correct": true,
+        "why": "Right. Many values, spread evenly."
+      },
+      {
+        "text": "Order numbers are sequential",
+        "correct": false,
+        "why": "The hash scatters them; their order does not matter."
+      },
+      {
+        "text": "Every order has the same number of lines",
+        "correct": false,
+        "why": "Orders have one to six lines; it evens out over many orders."
+      },
+      {
+        "text": "DuckDB balances the nodes on purpose",
+        "correct": false,
+        "why": "The nodes here are a hash and a count."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekpfs9qw",
+    "version": 1,
+    "section": "distributing-rows",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Spread by shop, the fullest node got 643,004 of the 887,477 rows. What percentage is that? Give a whole number.",
+    "hint": "Divide and multiply by a hundred.",
+    "value": 72,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-h7jgtr0x",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster has one node per shop, seven nodes. Why is it still skewed?",
+    "hint": "Are the shops equal?",
+    "choices": [
+      {
+        "text": "Seven is an odd number of nodes, and hashing needs an even one",
+        "correct": false,
+        "why": "Hashing works with any number of nodes."
+      },
+      {
+        "text": "Moinhos opened in 2025",
+        "correct": false,
+        "why": "It is a small node; the problem is the large one."
+      },
+      {
+        "text": "Each shop has a different number of books",
+        "correct": false,
+        "why": "Rows are sale lines, not books on the shelf."
+      },
+      {
+        "text": "The website holds 42.6% of the rows",
+        "correct": true,
+        "why": "Right. Its node does 42.6% of the work and everybody waits for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z86y7yv1",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table is spread evenly by date, yet one node does most of the work. What is the likely cause?",
+    "hint": "Even rows, uneven work.",
+    "choices": [
+      {
+        "text": "The hash function is broken",
+        "correct": false,
+        "why": "The rows are even, so the hash is fine."
+      },
+      {
+        "text": "Every query asks about the last week",
+        "correct": true,
+        "why": "Right. Skewed queries: the nodes holding last week do all the work."
+      },
+      {
+        "text": "Dates have too many distinct values",
+        "correct": false,
+        "why": "Many values help balance; they do not cause skew."
+      },
+      {
+        "text": "The dimensions are broadcast",
+        "correct": false,
+        "why": "Broadcasting copies small tables to every node evenly."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjhhpk54",
+    "version": 1,
+    "section": "skew",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop layout's fullest node has 643,004 rows; the average is 221,869. What is the skew ratio? Give one decimal.",
+    "hint": "Fullest over average.",
+    "value": 2.9,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-1g2vjcnn",
+    "version": 1,
+    "section": "joins-across-machines",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each join strategy to what moves.",
+    "hint": "Nothing, the small side, or both sides.",
+    "pairs": [
+      {
+        "left": "Co-located",
+        "right": "Nothing: matching rows already share a node"
+      },
+      {
+        "left": "Broadcast",
+        "right": "The small table, copied to every node"
+      },
+      {
+        "left": "Shuffle",
+        "right": "Both sides, re-spread by the join key"
+      }
+    ],
+    "right_distractors": [
+      "Only the coordinator's plan"
+    ]
+  },
+  {
+    "id": "ex-38dcaxk4",
+    "version": 1,
+    "section": "joins-across-machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a star schema suit an MPP system well?",
+    "hint": "What is large and what is small?",
+    "choices": [
+      {
+        "text": "Big facts spread; small dimensions copy",
+        "correct": true,
+        "why": "Right. 9,000 book rows copied instead of 666,023 sales moved."
+      },
+      {
+        "text": "Stars have no joins",
+        "correct": false,
+        "why": "They have one per dimension."
+      },
+      {
+        "text": "Stars are always distributed by date",
+        "correct": false,
+        "why": "Date is a common partition, a poor distribution key."
+      },
+      {
+        "text": "MPP systems only accept stars",
+        "correct": false,
+        "why": "They accept any schema; stars just suit them."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0qd18vs",
+    "version": 1,
+    "section": "joins-across-machines",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows does broadcasting the 3,000-book table to the other three of four nodes move?",
+    "hint": "Three copies.",
+    "value": 9000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-418ddb90",
+    "version": 1,
+    "section": "joins-across-machines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Sales and payments are both large and joined on `order_id` every night. How should they be distributed?",
+    "hint": "Make the expensive join free.",
+    "choices": [
+      {
+        "text": "Both broadcast to every node",
+        "correct": false,
+        "why": "Broadcasting two large tables copies everything everywhere."
+      },
+      {
+        "text": "Sales by shop and payments by method",
+        "correct": false,
+        "why": "Few values, skewed nodes, and every join shuffles."
+      },
+      {
+        "text": "Both by `order_id`, so the join is co-located",
+        "correct": true,
+        "why": "Right. Spend the distribution key on the join between two large tables."
+      },
+      {
+        "text": "By date, so March sits together",
+        "correct": false,
+        "why": "That is a partitioning idea, and it leaves the join to shuffle."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy31v0x6",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between distribution and partitioning?",
+    "hint": "Machine or file?",
+    "choices": [
+      {
+        "text": "They are two names for one thing",
+        "correct": false,
+        "why": "They do different jobs and combine."
+      },
+      {
+        "text": "Machine against file",
+        "correct": true,
+        "why": "Right. One spreads work, the other lets queries skip."
+      },
+      {
+        "text": "Partitioning applies to dimensions only",
+        "correct": false,
+        "why": "Fact tables are the usual thing to partition."
+      },
+      {
+        "text": "Distribution only exists in the cloud",
+        "correct": false,
+        "why": "MPP systems distributed data long before the cloud."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0hvrmjd",
+    "version": 1,
+    "section": "partitioning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Asking for March 2025, how many of the 24 monthly files did DuckDB read?",
+    "hint": "`Scanning Files`.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ncxw9g3z",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why not partition the sales by day instead of by month?",
+    "hint": "Opening a file has a fixed cost.",
+    "choices": [
+      {
+        "text": "DuckDB cannot read 731 folders",
+        "correct": false,
+        "why": "It can; it would just pay to open each small file."
+      },
+      {
+        "text": "Nobody filters by day",
+        "correct": false,
+        "why": "People do; the cost is in the files."
+      },
+      {
+        "text": "Days are not a column of the sales",
+        "correct": false,
+        "why": "`date_key` is a day."
+      },
+      {
+        "text": "Tiny files cost more than they save",
+        "correct": true,
+        "why": "Right. Too fine is as bad as too coarse."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckp1rx6e",
+    "version": 1,
+    "section": "storage-and-compute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does separating storage from compute let a warehouse do that shared nothing makes hard?",
+    "hint": "Adding machines without moving data.",
+    "choices": [
+      {
+        "text": "Store data by column",
+        "correct": false,
+        "why": "Shared-nothing systems store by column too."
+      },
+      {
+        "text": "Run joins without any network",
+        "correct": false,
+        "why": "Compute still reads files over the network."
+      },
+      {
+        "text": "Resize compute, data untouched",
+        "correct": true,
+        "why": "Right. Elasticity, and isolation between teams."
+      },
+      {
+        "text": "Avoid paying for storage",
+        "correct": false,
+        "why": "Storage is still billed, by the gigabyte-month."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qrecy7f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer table of 8 million rows will be spread across 16 nodes. Which distribution key is best?",
+    "hint": "Many values, evenly spread.",
+    "choices": [
+      {
+        "text": "The customer id",
+        "correct": true,
+        "why": "Right. Eight million distinct values hash evenly."
+      },
+      {
+        "text": "The customer's state",
+        "correct": false,
+        "why": "Twenty-seven values, and São Paulo alone would swamp one node."
+      },
+      {
+        "text": "The loyalty tier",
+        "correct": false,
+        "why": "Three values for sixteen nodes: thirteen would be idle."
+      },
+      {
+        "text": "The date the customer joined",
+        "correct": false,
+        "why": "Recent dates hold most customers, and queries about new joiners hit few nodes."
+      }
+    ]
+  }
+]

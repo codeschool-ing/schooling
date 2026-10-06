@@ -1,0 +1,639 @@
+{
+  "ex-y5azrg82": {
+    "prompt": "Ponha as quatro decisões de projeto de Kimball na ordem em que ele as toma.",
+    "hint": "Os fatos vêm por último, porque um número só é fato numa granularidade.",
+    "items": [
+      "Escolher o processo de negócio",
+      "Declarar a granularidade",
+      "Identificar as dimensões",
+      "Identificar os fatos"
+    ],
+    "trap": "Começar pelos fatos é o erro comum: uma medida como o frete só existe na granularidade do pedido, não do item."
+  },
+  "ex-10m22twn": {
+    "prompt": "Qual destes é um processo de negócio no sentido de Kimball?",
+    "hint": "Algo que o negócio faz, e que deixa um registro a cada vez.",
+    "choices": [
+      {
+        "text": "Despachar um pedido online",
+        "why": "Isso. Acontece, de novo e de novo, e deixa um registro a cada vez."
+      },
+      {
+        "text": "O departamento de marketing",
+        "why": "Um departamento é uma organização, não algo que acontece."
+      },
+      {
+        "text": "O relatório mensal de receita",
+        "why": "Um relatório lê um processo; não é um."
+      },
+      {
+        "text": "A tabela `orders` do PostgreSQL",
+        "why": "Partir de uma tabela de origem é o que o método substitui."
+      }
+    ]
+  },
+  "ex-fx8kxy78": {
+    "prompt": "Por que a granularidade precisa ser declarada antes de escolher as dimensões?",
+    "hint": "Pense num livro com três autores.",
+    "choices": [
+      {
+        "text": "Porque o banco precisa da granularidade para criar a tabela",
+        "why": "Não. A granularidade é uma frase para pessoas; nenhum banco a lê."
+      },
+      {
+        "text": "Porque as dimensões são carregadas depois dos fatos",
+        "why": "Não. As dimensões são carregadas primeiro, para os fatos apontarem para elas."
+      },
+      {
+        "text": "Uma dimensão precisa de um valor por linha",
+        "why": "Isso. Um item de venda tem um livro mas não um autor, e é a granularidade que diz isso."
+      },
+      {
+        "text": "Não importa o que vem primeiro",
+        "why": "O ponto da lição é que a ordem é o método."
+      }
+    ]
+  },
+  "ex-6jt8ze6v": {
+    "prompt": "O DuckDB leu `isbn` como `BIGINT`. Por que o script de staging força `VARCHAR`?",
+    "hint": "Alguém somaria dois ISBNs?",
+    "choices": [
+      {
+        "text": "Texto ordena mais rápido que números",
+        "why": "Não. A razão não é velocidade, é significado."
+      },
+      {
+        "text": "É código, não quantidade",
+        "why": "Isso. Códigos que não são quantidades são texto."
+      },
+      {
+        "text": "O DuckDB não junta por inteiros",
+        "why": "Não. Toda chave do warehouse é um inteiro."
+      },
+      {
+        "text": "Um `BIGINT` é pequeno demais para treze dígitos",
+        "why": "Não. Um `BIGINT` guarda dezenove dígitos."
+      }
+    ]
+  },
+  "ex-ygjtt5cw": {
+    "prompt": "O que se ganha mantendo a extração num schema `staging` separado?",
+    "hint": "Quem lê o staging?",
+    "choices": [
+      {
+        "text": "Os relatórios rodam mais rápido no staging que na estrela, porque ele tem menos junções",
+        "why": "Não. O staging tem o formato operacional, o lento para relatórios."
+      },
+      {
+        "text": "Ela criptografa os dados durante a cópia",
+        "why": "Não. Um schema é um espaço de nomes, não criptografia."
+      },
+      {
+        "text": "Nada; é um hábito de nomes",
+        "why": "Não. É uma fronteira: nada fora da carga o lê."
+      },
+      {
+        "text": "Só a carga o lê, e os relatórios não dependem do formato dos arquivos",
+        "why": "Isso. Só a carga lê o staging; o resto lê o modelo construído a partir dele."
+      }
+    ]
+  },
+  "ex-d5wzhcev": {
+    "prompt": "A opção do DuckDB que faz `read_csv` ler o arquivo inteiro antes de escolher os tipos é `sample_size = ___`.",
+    "hint": "Um número negativo.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ]
+      }
+    ]
+  },
+  "ex-cjfq6xs3": {
+    "prompt": "Que coluna pertence à `dim_book` e não à `fact_sales`?",
+    "hint": "Você agruparia por ela ou a somaria?",
+    "choices": [
+      {
+        "text": "net_cents",
+        "why": "Uma medida de uma venda: é somada."
+      },
+      {
+        "text": "quantity",
+        "why": "Uma medida de um item: é somada."
+      },
+      {
+        "text": "department",
+        "why": "Isso. Descreve o livro e serve para agrupar."
+      },
+      {
+        "text": "discount_cents",
+        "why": "Uma medida: somada entre itens."
+      }
+    ]
+  },
+  "ex-ywrb4wdn": {
+    "prompt": "Por que a `dim_book` guarda `format` como `hardcover` e não como um código como `2`?",
+    "hint": "Quem lê uma dimensão?",
+    "choices": [
+      {
+        "text": "Todo relatório teria de lembrar uma junção de consulta",
+        "why": "Isso. Os atributos de uma dimensão são escritos para uma pessoa ler."
+      },
+      {
+        "text": "Texto comprime melhor que inteiros",
+        "why": "Não. A lição 8 mostra o contrário; aqui o ponto são os leitores."
+      },
+      {
+        "text": "O DuckDB não aceita inteiros pequenos",
+        "why": "Não. Ele tem `TINYINT`."
+      },
+      {
+        "text": "Porque o banco de origem guardava assim, e uma cópia não deve mudar valores",
+        "why": "Guardava, mas o motivo de manter é o leitor, não a origem."
+      }
+    ]
+  },
+  "ex-0ptj4hbq": {
+    "prompt": "Um livro em *Manga* fica num ramo de dois níveis da árvore de categorias. O que a `dim_book` põe na `subcategory` dele?",
+    "hint": "Toda linha recebe os três níveis.",
+    "choices": [
+      {
+        "text": "NULL",
+        "why": "Não. Um nível vazio faria todo relatório tratar os ramos rasos por conta própria."
+      },
+      {
+        "text": "Comics",
+        "why": "Esse é o departamento, o nível de cima."
+      },
+      {
+        "text": "A palavra Unknown",
+        "why": "Não. Nada é desconhecido aqui; o nível simplesmente não existe."
+      },
+      {
+        "text": "Manga, repetido da categoria",
+        "why": "Isso. O nível ausente repete o nome, e a hierarquia tem sempre três níveis."
+      }
+    ]
+  },
+  "ex-b3y6061b": {
+    "prompt": "Quais destas são propriedades de uma tabela dimensão? Marque todas as que se aplicam.",
+    "hint": "Pense na `dim_shop`.",
+    "choices": [
+      {
+        "text": "Uma chave própria, atribuída pelo warehouse",
+        "why": "Sim. `shop_key` fica ao lado do `shop_id` da rede."
+      },
+      {
+        "text": "Atributos descritivos escritos como texto",
+        "why": "Sim. Uma região é `South`, não um código."
+      },
+      {
+        "text": "Uma linha para cada venda",
+        "why": "Não. Essa é a tabela fato."
+      },
+      {
+        "text": "Poucas linhas, muitas colunas",
+        "why": "Sim. Sete lojas, oito colunas."
+      }
+    ]
+  },
+  "ex-5ggg9f08": {
+    "prompt": "Quais são os dois únicos tipos de coluna numa tabela fato?",
+    "hint": "Ponteiros e números.",
+    "choices": [
+      {
+        "text": "Nomes e descrições",
+        "why": "Esses pertencem às dimensões."
+      },
+      {
+        "text": "Chaves para dimensões, e medidas",
+        "why": "Isso. Cada coluna é um ponteiro para o contexto ou um número."
+      },
+      {
+        "text": "Chaves primárias e índices",
+        "why": "Um índice não é uma coluna."
+      },
+      {
+        "text": "Datas e valores",
+        "why": "Perto, mas a data é alcançada por uma chave, e há outras chaves."
+      }
+    ]
+  },
+  "ex-1xbzsf7s": {
+    "prompt": "`net_cents` somado sobre toda a `fact_sales` dá 9574389852. Quantos reais são? Dê até o centavo.",
+    "hint": "Divida por cem.",
+    "unit": "BRL"
+  },
+  "ex-d2wan1kh": {
+    "prompt": "Por que a `fact_sales` calcula `net_cents` na carga, em vez de deixar cada relatório calcular?",
+    "hint": "Quantas pessoas escreveriam a fórmula?",
+    "choices": [
+      {
+        "text": "Para que todos leiam uma definição de receita líquida",
+        "why": "Isso. Dois analistas que a escreveriam de dois jeitos leem a mesma coluna."
+      },
+      {
+        "text": "Porque o DuckDB não multiplica dentro de uma consulta",
+        "why": "Não. Ele multiplica ao carregar a tabela, no mesmo SQL."
+      },
+      {
+        "text": "Porque colunas guardadas ocupam menos espaço que as calculadas",
+        "why": "Não. Uma coluna guardada ocupa mais espaço, não menos."
+      },
+      {
+        "text": "Para esconder o desconto de quem lê os relatórios",
+        "why": "Não. O desconto é uma coluna própria."
+      }
+    ]
+  },
+  "ex-mscwwcya": {
+    "prompt": "Por que o dinheiro na `fact_sales` fica em centavos inteiros e não em reais num float?",
+    "hint": "Some 887.477 valores.",
+    "choices": [
+      {
+        "text": "Inteiros ocupam menos espaço que floats",
+        "why": "Não é o motivo: os dois ocupam oito bytes aqui."
+      },
+      {
+        "text": "Relatórios imprimem centavos de forma mais legível",
+        "why": "Não. Um relatório divide por cem para imprimir reais."
+      },
+      {
+        "text": "Floats arredondam, e as somas desviam",
+        "why": "Isso. Centavos inteiros somam exatamente, quantas linhas houver."
+      },
+      {
+        "text": "A origem usava centavos",
+        "why": "Usava, e ainda assim seria errado converter para float."
+      }
+    ]
+  },
+  "ex-3cpjx8s5": {
+    "prompt": "Todo banco consegue tirar o mês de uma data. O que a `dim_date` dá que uma função de data não dá?",
+    "hint": "O que alguém teve de anotar?",
+    "choices": [
+      {
+        "text": "Aritmética mais rápida com datas, porque o mês já vem calculado em cada linha",
+        "why": "Não. A velocidade não é o motivo da existência dela."
+      },
+      {
+        "text": "Feriados e outros fatos que nenhuma fórmula sabe",
+        "why": "Isso. A Sexta-feira Santa muda todo ano; alguém anota, uma vez."
+      },
+      {
+        "text": "Datas em outros fusos horários",
+        "why": "Não. A tabela tem uma linha por dia do calendário, num fuso."
+      },
+      {
+        "text": "Um jeito de guardar timestamps",
+        "why": "Não. Ela guarda dias, não instantes."
+      }
+    ]
+  },
+  "ex-e75nn3bd": {
+    "prompt": "Para que serve a linha de chave 0 da `dim_date`?",
+    "hint": "Pense num pacote ainda na estrada.",
+    "choices": [
+      {
+        "text": "Marca o primeiro dia dos dados",
+        "why": "Não. Esse é 20240101."
+      },
+      {
+        "text": "Guarda linhas que falharam na carga",
+        "why": "Não. Uma linha que falha não é carregada."
+      },
+      {
+        "text": "Um padrão para os fins de semana",
+        "why": "Não. Fins de semana são dias comuns com `is_weekend` verdadeiro."
+      },
+      {
+        "text": "Uma data ainda não alcançada",
+        "why": "Isso. Uma data de entrega `Not yet` mantém o pacote em toda contagem."
+      }
+    ]
+  },
+  "ex-5n26r7tk": {
+    "prompt": "Uma loja física faturou R$ 13.461,74 por feriado em dia útil e R$ 13.018,08 por dia útil comum. Em quantos reais o feriado superou o dia comum? Dê até o centavo.",
+    "hint": "Subtraia.",
+    "unit": "BRL"
+  },
+  "ex-0nhv6qkr": {
+    "prompt": "A única chave do warehouse que pode carregar significado, escrita como `20250418`, pertence à dimensão do calendário, `dim_` seguido de ___.",
+    "hint": "A tabela a que pertence, sem o prefixo.",
+    "blanks": [
+      {
+        "accept": [
+          "date"
+        ]
+      }
+    ]
+  },
+  "ex-gvewe6fc": {
+    "prompt": "Qual destas medidas é totalmente aditiva?",
+    "hint": "Soma em todas as dimensões e continua verdadeira.",
+    "choices": [
+      {
+        "text": "O percentual de desconto de um item",
+        "why": "Uma razão: não se soma."
+      },
+      {
+        "text": "Livros na prateleira no fim do mês",
+        "why": "Um saldo: não soma no tempo."
+      },
+      {
+        "text": "A quantidade vendida",
+        "why": "Isso. Some por qualquer coisa e você tem um total verdadeiro."
+      },
+      {
+        "text": "O preço médio de um livro num mês",
+        "why": "Uma média: precisa ser refeita a partir de somas."
+      }
+    ]
+  },
+  "ex-2xa2cwqq": {
+    "prompt": "A taxa de desconto da rede é 0,81%, e a média das taxas das sete lojas é 0,56%. Por que a diferença?",
+    "hint": "Quem vende mais, e quem dá mais desconto?",
+    "choices": [
+      {
+        "text": "Cada loja pesa igual, e o site domina",
+        "why": "Isso. Uma razão precisa ser refeita a partir das partes somadas, não tirada a média."
+      },
+      {
+        "text": "Arredondamento do DuckDB",
+        "why": "Não. Um quarto de ponto percentual não é arredondamento."
+      },
+      {
+        "text": "Pedidos cancelados contam numa e não na outra",
+        "why": "Não. As duas vêm da mesma tabela fato, sem os cancelados."
+      },
+      {
+        "text": "A Moinhos abriu em 2025",
+        "why": "Verdade, e mexe um pouco na média, mas não é a causa."
+      }
+    ]
+  },
+  "ex-4fthkg27": {
+    "prompt": "Uma colega acrescenta uma coluna `avg_price_cents` à `fact_sales`, um valor por item. Qual é o projeto mais seguro?",
+    "hint": "Guarde as partes, calcule a razão por último.",
+    "choices": [
+      {
+        "text": "Mantê-la, e deixar cada relatório tirar a média pelo que agrupar",
+        "why": "Tirar a média de uma média é exatamente a armadilha da questão anterior."
+      },
+      {
+        "text": "Guardá-la como float, para ter precisão",
+        "why": "O tipo não é o problema; a medida é."
+      },
+      {
+        "text": "Movê-la para a `dim_book`",
+        "why": "Uma média sobre vendas não é atributo do livro."
+      },
+      {
+        "text": "Tirá-la; dividir a soma do líquido pela soma da quantidade",
+        "why": "Isso. As duas partes são aditivas, então qualquer agrupamento dá uma média verdadeira."
+      }
+    ]
+  },
+  "ex-e6c9wmd5": {
+    "prompt": "Por que somar `on_hand` em doze fins de mês não significa nada?",
+    "hint": "É o mesmo exemplar?",
+    "choices": [
+      {
+        "text": "Porque alguns meses não têm contagem",
+        "why": "Não. Todo fim de mês tem contagem."
+      },
+      {
+        "text": "Porque os mesmos exemplares são contados de novo a cada mês em que ficam na prateleira",
+        "why": "Isso. Um nível, ao contrário de um fluxo, não soma no tempo."
+      },
+      {
+        "text": "Porque `on_hand` é guardado como texto",
+        "why": "Não. É um inteiro, e por isso a soma roda."
+      },
+      {
+        "text": "Porque o DuckDB estoura em somas grandes",
+        "why": "Não. 170.458 é um número pequeno; só é o número errado."
+      }
+    ]
+  },
+  "ex-fgkwqrfh": {
+    "prompt": "Ligue cada medida ao tipo dela.",
+    "hint": "Fluxos somam no tempo; níveis não; razões nunca somam.",
+    "pairs": [
+      {
+        "left": "Livros vendidos num mês",
+        "right": "Aditiva"
+      },
+      {
+        "left": "Livros na prateleira no fim do mês",
+        "right": "Semiaditiva"
+      },
+      {
+        "left": "A fração das vendas paga por Pix",
+        "right": "Não aditiva"
+      }
+    ]
+  },
+  "ex-nk9sgj7m": {
+    "prompt": "Quais destes são semiaditivos? Marque todos os que se aplicam.",
+    "hint": "Um nível num instante.",
+    "choices": [
+      {
+        "text": "O saldo de uma conta bancária",
+        "why": "Sim. Saldos somam entre contas, não entre dias."
+      },
+      {
+        "text": "Lugares restantes num voo",
+        "why": "Sim. Um nível num momento."
+      },
+      {
+        "text": "Pacotes despachados numa semana",
+        "why": "Não. Um fluxo: semanas somam."
+      },
+      {
+        "text": "Descontos dados numa promoção",
+        "why": "Não. Um fluxo de dinheiro: totalmente aditivo."
+      }
+    ]
+  },
+  "ex-zny8mzty": {
+    "prompt": "Ligue cada tabela da Ana ao tipo de tabela fato dela.",
+    "hint": "Uma linha por evento, por período ou por ciclo de vida.",
+    "pairs": [
+      {
+        "left": "fact_sales",
+        "right": "Transação"
+      },
+      {
+        "left": "fact_inventory",
+        "right": "Snapshot periódico"
+      },
+      {
+        "left": "fact_fulfilment",
+        "right": "Snapshot acumulado"
+      },
+      {
+        "left": "fact_event_attendance",
+        "right": "Sem fatos (factless)"
+      }
+    ]
+  },
+  "ex-3jk9nee5": {
+    "prompt": "Que tipo de tabela fato tem linhas que a carga atualiza depois de inserir?",
+    "hint": "Um marco preenchido depois.",
+    "choices": [
+      {
+        "text": "Snapshot acumulado",
+        "why": "Isso. Uma linha por pedido, preenchida a cada marco."
+      },
+      {
+        "text": "Transação",
+        "why": "Não. Uma venda é gravada uma vez, quando acontece."
+      },
+      {
+        "text": "Snapshot periódico",
+        "why": "Não. Cada período ganha linhas novas; as antigas ficam."
+      },
+      {
+        "text": "Sem fatos",
+        "why": "Não. Linhas de presença são gravadas uma vez."
+      }
+    ]
+  },
+  "ex-bj3zq245": {
+    "prompt": "Os movimentos de estoque (cada exemplar recebido ou vendido) são carregados como tabela de transação, sem tabela de fim de mês. Que pergunta fica difícil?",
+    "hint": "O que não tem linha quando nada se moveu?",
+    "choices": [
+      {
+        "text": "Quantos exemplares foram vendidos em março",
+        "why": "Essa é fácil: some os movimentos de março."
+      },
+      {
+        "text": "Que loja recebeu mais exemplares",
+        "why": "Fácil também: some os recebimentos por loja."
+      },
+      {
+        "text": "Que títulos estavam na prateleira no fim de março, inclusive os que não se moveram",
+        "why": "Isso. Um título sem movimento não tem linha, e o nível dele precisa ser refeito com todo o histórico."
+      },
+      {
+        "text": "O primeiro dia em que um título foi vendido",
+        "why": "Fácil: a menor data das vendas dele."
+      }
+    ]
+  },
+  "ex-cdj290vg": {
+    "prompt": "Quantos pedidos de dezembro de 2025 ainda não tinham sido entregues quando os dados terminam?",
+    "hint": "A última coluna da consulta de prazos."
+  },
+  "ex-m389kvkg": {
+    "prompt": "Uma tabela fato sem fatos não tem medidas. Como ela responde a perguntas?",
+    "hint": "A linha é o fato.",
+    "choices": [
+      {
+        "text": "Juntando-se a uma tabela de medidas",
+        "why": "Não. Não há outra tabela de medidas."
+      },
+      {
+        "text": "Contando as linhas",
+        "why": "Isso. Presenças, pessoas e eventos são todos contagens."
+      },
+      {
+        "text": "Não consegue; só documenta",
+        "why": "Não. Ela respondeu quem veio aonde."
+      },
+      {
+        "text": "Somando as chaves",
+        "why": "Não. Uma soma de chaves não significa nada."
+      }
+    ]
+  },
+  "ex-z0fdygr6": {
+    "prompt": "A rede faz uma promoção de 40 títulos escolhidos a dedo e quer saber quais não venderam nada. Por que a `fact_sales` sozinha não basta?",
+    "hint": "O que um título sem vendas deixa nela?",
+    "choices": [
+      {
+        "text": "Ela não tem `promotion_key`",
+        "why": "Tem; mas a chave só aparece em itens que existem."
+      },
+      {
+        "text": "É grande demais para pesquisar",
+        "why": "Não. É pesquisada em milissegundos."
+      },
+      {
+        "text": "As promoções ficam no banco operacional, e o warehouse não copia essa tabela",
+        "why": "Não. A `dim_promotion` existe."
+      },
+      {
+        "text": "Livros sem venda não deixam linhas, e os 40 não estão listados",
+        "why": "Isso. A lista de títulos elegíveis precisa de uma tabela de cobertura própria."
+      }
+    ]
+  },
+  "ex-cgtzxrww": {
+    "prompt": "`customer_changes` tem um timestamp em cada linha e cresce todo dia. Onde ela pertence no warehouse?",
+    "hint": "Pelo que as pessoas vão agrupar?",
+    "choices": [
+      {
+        "text": "Como uma tabela fato de transação de mudanças",
+        "why": "Responderia quantos clientes se mudaram, que ninguém pergunta."
+      },
+      {
+        "text": "Em lugar nenhum; histórico não é necessário",
+        "why": "A lição 1 mediu quanto custa perdê-lo."
+      },
+      {
+        "text": "Na dimensão de clientes, como versões de cada cliente",
+        "why": "Isso. É o histórico de uma dimensão, e a lição 5 o constrói."
+      },
+      {
+        "text": "Só no staging",
+        "why": "O staging alimenta o modelo; o histórico precisa chegar ao modelo."
+      }
+    ]
+  },
+  "ex-mn3v8n8c": {
+    "prompt": "O preço de tabela de um livro: fato ou atributo de dimensão?",
+    "hint": "Você o somaria entre livros?",
+    "choices": [
+      {
+        "text": "Um atributo do livro, usado para filtrar e agrupar",
+        "why": "Isso. O preço cobrado no item é o fato; o preço de tabela descreve o livro."
+      },
+      {
+        "text": "Um fato, porque é um número",
+        "why": "Ser número não é o teste; somá-lo entre livros não significa nada."
+      },
+      {
+        "text": "Nenhum; preços ficam no staging",
+        "why": "Não. É útil no modelo, como atributo."
+      },
+      {
+        "text": "Um fato numa tabela própria de preços",
+        "why": "Uma tabela de preços poderia ser, mas a pergunta é sobre o preço atual de um livro."
+      }
+    ]
+  },
+  "ex-0rqy17s2": {
+    "prompt": "Uma academia quer um warehouse das visitas dos alunos: cada visita tem um aluno, uma unidade, uma data e os minutos de permanência. Que projeto serve?",
+    "hint": "Processo, granularidade, dimensões, fatos.",
+    "choices": [
+      {
+        "text": "Uma dimensão de visitas com o aluno como fato",
+        "why": "Ao contrário: a visita acontece; o aluno a descreve."
+      },
+      {
+        "text": "Um snapshot periódico de alunos por mês",
+        "why": "Isso conta alunos, não visitas; perde os minutos por visita."
+      },
+      {
+        "text": "Um snapshot acumulado por aluno",
+        "why": "Um aluno não tem uma lista fixa de marcos."
+      },
+      {
+        "text": "Uma tabela de transação: uma linha cada, chaves para quem, onde e quando, e o tempo como medida",
+        "why": "Isso. Cada visita é um evento; minutos somam em tudo."
+      }
+    ]
+  }
+}

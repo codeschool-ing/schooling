@@ -1,0 +1,386 @@
+{
+  "ex-8y798g8d": {
+    "prompt": "O que o `go mod init example.com/accents` pergunta à rede?",
+    "hint": "A seção 02 diz o que é conferido no caminho.",
+    "choices": [
+      {
+        "text": "Pergunta a `example.com` se o nome está livre",
+        "why": "Nada visita o caminho; `example.com` é reservado para exemplos e não responde a comando go nenhum."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O caminho é um nome, conferido quanto ao formato; só vira endereço quando alguém baixa o módulo."
+      },
+      {
+        "text": "Reserva o caminho no proxy de módulos",
+        "why": "O proxy serve módulos publicados; o `init` não registra nada lá."
+      },
+      {
+        "text": "Registra o módulo novo no banco de checksums",
+        "why": "O banco guarda hashes de versões que alguém baixou; um módulo que ninguém baixou não está nele."
+      }
+    ]
+  },
+  "ex-6s3b740y": {
+    "prompt": "Um colega chama um módulo de `tools`, e outro módulo importa o pacote `tools/lint` dele. O que o `go build` no segundo módulo faz?",
+    "hint": "Onde o comando go procurou `hello/greet`?",
+    "choices": [
+      {
+        "text": "Baixa `tools` do proxy de módulos e compila",
+        "why": "Um primeiro elemento sem ponto nem chega a ir para o proxy."
+      },
+      {
+        "text": "Falha: `tools/lint` não está na biblioteca padrão",
+        "why": "Isso. Um caminho cujo primeiro elemento não tem ponto é procurado em `/usr/local/go/src`, como `hello/greet` foi."
+      },
+      {
+        "text": "Compila, porque qualquer caminho no formato certo pode ser importado",
+        "why": "O formato certo basta para o `init`, não para um import vindo de outro módulo."
+      },
+      {
+        "text": "Pede um `go mod tidy`, que então acrescenta uma linha `require`",
+        "why": "Não há módulo para exigir: o comando go trata o caminho como parte da biblioteca padrão."
+      }
+    ]
+  },
+  "ex-ny9e870r": {
+    "prompt": "A versão mais nova do Docker saiu como `v28.5.2+___`, porque o repositório dele passou da v1 e não tem `go.mod`.",
+    "hint": "Uma palavra que diz que a versão não traz nenhuma das promessas de um módulo.",
+    "blanks": [
+      {
+        "accept": [
+          "incompatible"
+        ]
+      }
+    ]
+  },
+  "ex-sdsaed3z": {
+    "prompt": "Você vai publicar uma biblioteca em `github.com/ana/textkit` no mês que vem, e o repositório ainda não existe. O que o `go mod init` deve receber hoje?",
+    "hint": "Quanto custa renomear um módulo depois?",
+    "choices": [
+      {
+        "text": "Um caminho `example.com`, renomeado no dia da publicação",
+        "why": "Renomear significa editar cada import dos pacotes do módulo; escolher o caminho real agora não custa nada."
+      },
+      {
+        "text": "Uma palavra curta sem ponto, mais rápida de digitar",
+        "why": "Um primeiro elemento sem ponto é lido como biblioteca padrão, então ninguém mais poderia importá-lo."
+      },
+      {
+        "text": "O endereço em que vai ser publicada",
+        "why": "Isso. O `init` confere só o formato, e o caminho é onde o comando go vai procurar depois de publicado."
+      },
+      {
+        "text": "A URL completa, com `https://` na frente",
+        "why": "Um caminho de módulo não tem esquema; o `init` recusa caracteres que um caminho não pode ter, como recusou o espaço."
+      }
+    ]
+  },
+  "ex-7cj9f6yz": {
+    "prompt": "A lição 1 imprimiu `github.com/prometheus/prometheus v0.315.0`. Quais destas são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Leia a versão como MAJOR.MINOR.PATCH.",
+    "choices": [
+      {
+        "text": "A versão major é 0",
+        "why": "Sim: `v0.315.0` é major 0, minor 315, patch 0."
+      },
+      {
+        "text": "Não promete compatibilidade de uma release para a seguinte",
+        "why": "Sim. O major 0 não faz promessa nenhuma de compatibilidade."
+      },
+      {
+        "text": "O caminho deveria terminar em `/v0`",
+        "why": "O sufixo começa no major 2; caminhos v0 e v1 não têm nenhum."
+      },
+      {
+        "text": "Está marcado como `+incompatible`",
+        "why": "Essa marca é de repositórios com tag v2 ou acima e sem `go.mod`; esta versão é major 0."
+      }
+    ]
+  },
+  "ex-0eb38ps3": {
+    "prompt": "Onde um módulo Go diz primeiro que depende de `golang.org/x/text`?",
+    "hint": "O que o `go mod tidy` leu antes de escrever qualquer coisa?",
+    "choices": [
+      {
+        "text": "No `go.sum`, que lista o hash de cada dependência",
+        "why": "O `go.sum` é escrito depois que a dependência é achada; registra bytes, não intenções."
+      },
+      {
+        "text": "Numa linha `import` de um arquivo `.go`",
+        "why": "Isso. O import é a declaração, e o `tidy` escreve o `go.mod` para combinar com ele."
+      },
+      {
+        "text": "Num manifesto que você edita antes de escrever o import",
+        "why": "Esse é o costume de outros gerenciadores de pacotes; o `go.mod` foi escrito pelo `tidy` a partir do import."
+      },
+      {
+        "text": "No `go.work`, ao lado do módulo",
+        "why": "Um workspace diz como módulos locais estão arrumados no disco; não exige nada da rede."
+      }
+    ]
+  },
+  "ex-715qbya9": {
+    "prompt": "O `go.sum` tem duas linhas para `golang.org/x/text v0.42.0`. O que a linha escrita `v0.42.0/go.mod h1:...` resume num hash?",
+    "hint": "A outra linha cobre os arquivos do módulo.",
+    "choices": [
+      {
+        "text": "O `go.mod` do seu próprio módulo",
+        "why": "O seu `go.mod` não é baixado, então não há com o que compará-lo."
+      },
+      {
+        "text": "O mesmo zip de novo, com um método mais forte",
+        "why": "As duas linhas dizem `h1:`, o mesmo método; elas cobrem arquivos diferentes."
+      },
+      {
+        "text": "Só o arquivo `go.mod` do próprio `golang.org/x/text`",
+        "why": "Isso. A primeira linha resume os arquivos do módulo, a segunda só o `go.mod` dele."
+      },
+      {
+        "text": "A lista de versões que o proxy ofereceu para o módulo",
+        "why": "Uma lista muda a cada release; o `go.sum` guarda hashes que nunca mudam para uma versão."
+      }
+    ]
+  },
+  "ex-dfkq25vw": {
+    "prompt": "Quando o comando go pergunta ao `sum.golang.org` sobre uma versão de módulo?",
+    "hint": "Quem decide é `modfetch/fetch.go`.",
+    "choices": [
+      {
+        "text": "Em todo build, antes de compilar qualquer dependência",
+        "why": "Depois da primeira vez, os builds comparam o cache com o `go.sum` e não perguntam a ninguém."
+      },
+      {
+        "text": "Quando encontra um hash que o `go.sum` ainda não tem",
+        "why": "Isso. Depois que o hash está no `go.sum`, a referência é o `go.sum`."
+      },
+      {
+        "text": "Só quando você roda `go mod verify`",
+        "why": "O `verify` confere o cache com o que foi baixado; o banco é consultado durante o download."
+      },
+      {
+        "text": "Nunca: ele existe para pessoas consultarem com `curl`",
+        "why": "O `go env GOSUMDB` o nomeou porque o comando go o usa; o `curl` só mostrou o que ele responde."
+      }
+    ]
+  },
+  "ex-5c3h22ea": {
+    "prompt": "Um colega apaga o `go.sum` do repositório para reduzir ruído. O que acontece quando a próxima pessoa clona e roda `go build`?",
+    "hint": "O build precisa de um hash para cada módulo que compila.",
+    "choices": [
+      {
+        "text": "Compila como antes, já que o `go.mod` ainda nomeia as versões",
+        "why": "Uma versão diz qual release, não quais bytes; o build recusa um módulo sem hash."
+      },
+      {
+        "text": "Para em `missing go.sum entry` até alguém rodar `go mod tidy`",
+        "why": "Isso, e esse `tidy` tira os hashes de novo do que for baixado naquele dia, conferidos só pelo banco."
+      },
+      {
+        "text": "Imprime `SECURITY ERROR`, como quando um hash foi alterado",
+        "why": "O `SECURITY ERROR` precisa de dois hashes que discordem; sem `go.sum` só existe um."
+      },
+      {
+        "text": "Baixa as versões mais novas, já que nada as fixa",
+        "why": "O `go.mod` fixa as versões; o `go.sum` só fixa os bytes delas."
+      }
+    ]
+  },
+  "ex-qs1tsryq": {
+    "prompt": "O seu módulo exige `example.com/a v1.2.0`. Outro módulo que você exige precisa de `example.com/a v1.4.0`, e a release mais nova de `a` é a v1.6.0. Que versão o build usa?",
+    "hint": "A maior das mínimas declaradas.",
+    "choices": [
+      {
+        "text": "v1.6.0, a mais nova",
+        "why": "A seleção de versão mínima nunca escolhe uma versão que ninguém pediu; o `x/tools` ficou na v0.49.0 com a v0.51.0 publicada."
+      },
+      {
+        "text": "v1.2.0, porque o seu próprio `go.mod` vence",
+        "why": "O outro módulo não funciona abaixo da v1.4.0, e a regra leva em conta a mínima de cada módulo."
+      },
+      {
+        "text": "v1.4.0",
+        "why": "Isso. Cada módulo declara a menor versão com que funciona, e o comando go pega a maior delas."
+      },
+      {
+        "text": "Nenhuma: o build para e pede que você escolha uma das duas",
+        "why": "Duas mínimas não são um conflito; a maior satisfaz os dois módulos."
+      }
+    ]
+  },
+  "ex-427s1q48": {
+    "prompt": "Ponha em ordem o que o primeiro `go mod tidy` fez pelo `golang.org/x/text`.",
+    "hint": "A figura da seção 03 desenha isso.",
+    "items": [
+      "Leu o `main.go` e achou um import que nenhum módulo fornece",
+      "Perguntou ao proxy que módulo fornece o pacote, e a versão mais nova dele",
+      "Calculou o hash dos arquivos baixados",
+      "Conferiu o hash no banco de checksums",
+      "Escreveu a linha `require` e o `go.sum`"
+    ]
+  },
+  "ex-09ce3tj3": {
+    "prompt": "`go mod tidy -___` imprime as mudanças que o `tidy` faria, não muda nada, e sai com 1 se houver alguma.",
+    "hint": "O nome da flag é o nome do formato que ela imprime.",
+    "blanks": [
+      {
+        "accept": [
+          "diff"
+        ]
+      }
+    ]
+  },
+  "ex-ehabr3rz": {
+    "prompt": "O que o `go mod vendor` copiou para `vendor/`?",
+    "hint": "Conte os arquivos que o `find` listou.",
+    "choices": [
+      {
+        "text": "O `golang.org/x/text` inteiro, cada pacote dele",
+        "why": "O módulo tem 487 arquivos; o `vendor` recebeu 14."
+      },
+      {
+        "text": "Os pacotes de que o build precisa, com os arquivos de licença",
+        "why": "Isso: `norm`, o `transform` que ele importa, `LICENSE` e `PATENTS`, e um índice, o `modules.txt`."
+      },
+      {
+        "text": "Um link para o cache de módulos",
+        "why": "A graça do `vendor` é compilar sem cache nenhum; ele guarda arquivos de verdade."
+      },
+      {
+        "text": "Os hashes do `go.sum`, para conferir o cache",
+        "why": "Os hashes ficam no `go.sum`; o `vendor` guarda código-fonte."
+      }
+    ]
+  },
+  "ex-z1c2zkgv": {
+    "prompt": "O `go mod vendor` copiou 14 arquivos de um módulo que tem 487. Mais ou menos que porcentagem dos arquivos do módulo é isso? Dê um número inteiro.",
+    "hint": "Divida 14 por 487 e multiplique por 100.",
+    "unit": "por cento"
+  },
+  "ex-tcxyebkz": {
+    "prompt": "Em `~/mods-vendor`, o `go list -m all` falhou com `can't compute 'all' using the vendor directory`. Por quê?",
+    "hint": "O que o `vendor` guarda, e sobre o que o `all` pergunta?",
+    "choices": [
+      {
+        "text": "O diretório vendor estava desatualizado em relação ao `go.mod`",
+        "why": "Essa falha é a `inconsistent vendoring`, e veio depois, após o `go mod edit`."
+      },
+      {
+        "text": "O `GOPROXY=off` ainda valia desde o build anterior",
+        "why": "Uma variável posta na frente de um comando vale só para aquele comando."
+      },
+      {
+        "text": "O `vendor` guarda os pacotes, não o grafo dos módulos",
+        "why": "Isso. O grafo da seção 03 não está nele, e `-mod=mod` lê o cache de módulos no lugar."
+      },
+      {
+        "text": "O `go list` não lê módulos depois que vão para o vendor",
+        "why": "O `go list -f \"{{.Dir}}\"` funcionou uma linha antes e apontou para dentro do `vendor`."
+      }
+    ]
+  },
+  "ex-tpjeh3qv": {
+    "prompt": "Uma máquina de build não tem rede e tem o cache de módulos vazio. Que módulo o `go build` compila ali sem nenhuma flag?",
+    "hint": "O que o `GOPROXY=off GOMODCACHE=/nowhere` provou?",
+    "choices": [
+      {
+        "text": "Um com `go.mod` e `go.sum` no repositório",
+        "why": "O `go.sum` confere bytes que ainda precisa buscar; sem rede e sem cache não há o que conferir."
+      },
+      {
+        "text": "Um com o `vendor` em dia e uma linha `go` de 1.14 ou mais nova",
+        "why": "Isso. O build lê o `vendor` sozinho, e o `~/mods-vendor` compilou com downloads proibidos."
+      },
+      {
+        "text": "Um cujas dependências estão registradas num arquivo `go.work`",
+        "why": "Um workspace aponta para diretórios de módulos locais; não traz junto uma dependência baixada."
+      },
+      {
+        "text": "Qualquer módulo, desde que `-mod=mod` esteja em `GOFLAGS`",
+        "why": "`-mod=mod` é justamente o ajuste que ignora o `vendor` e pede o cache de módulos, que aqui está vazio."
+      }
+    ]
+  },
+  "ex-8z7ak0dd": {
+    "prompt": "Associe cada comando ao que ele fez nesta lição.",
+    "hint": "Um comando por seção, e mais um da seção 03.",
+    "pairs": [
+      {
+        "left": "`go mod init`",
+        "right": "Escreveu um `go.mod` com uma linha `module` e uma `go`"
+      },
+      {
+        "left": "`go mod tidy`",
+        "right": "Fez o `go.mod` e o `go.sum` combinarem com os imports"
+      },
+      {
+        "left": "`go mod vendor`",
+        "right": "Copiou os pacotes necessários para dentro do módulo"
+      },
+      {
+        "left": "`go mod verify`",
+        "right": "Conferiu que o cache não mudou desde o download"
+      }
+    ],
+    "right_distractors": [
+      "Atualizou cada dependência para a release mais nova"
+    ]
+  },
+  "ex-zq2jhwm2": {
+    "prompt": "A Ana põe `~/mods-accents` num repositório. O que entra no commit? Escolha todos os que se aplicam.",
+    "hint": "De que arquivos o build da próxima pessoa precisaria?",
+    "choices": [
+      {
+        "text": "`go.mod`",
+        "why": "Sim: nomeia o módulo e as versões que ele exige."
+      },
+      {
+        "text": "`go.sum`",
+        "why": "Sim. Sem ele o próximo build para em `missing go.sum entry`, e os hashes têm de ser tirados de novo."
+      },
+      {
+        "text": "`~/go/pkg/mod/golang.org/x/text@v0.42.0`",
+        "why": "Esse é o cache de módulos, fora do módulo e compartilhado por todos os módulos da máquina."
+      },
+      {
+        "text": "O binário que o `go build` deixou ao lado do `main.go`",
+        "why": "Um binário é recompilado a partir do código; o repositório guarda aquilo de que ele é feito."
+      }
+    ]
+  },
+  "ex-f0whmfyd": {
+    "prompt": "O requisito de um módulo com vendor passou da v0.42.0 para a v0.41.0, e o `go build` agora acusa `inconsistent vendoring`. O que resolve?",
+    "hint": "A versão nova precisa primeiro de hashes, depois de uma cópia.",
+    "choices": [
+      {
+        "text": "Apagar o `vendor/modules.txt` para a verificação não ter o que comparar",
+        "why": "Sem o índice o comando go não sabe o que o `vendor` guarda, e a cópia continua sendo da v0.42.0."
+      },
+      {
+        "text": "Primeiro `go mod tidy`, depois `go mod vendor` de novo",
+        "why": "Isso: o `tidy` acrescenta as linhas da versão nova ao `go.sum`, e o `vendor` a copia."
+      },
+      {
+        "text": "Editar a versão no `modules.txt` à mão",
+        "why": "O índice passaria a descrever a v0.41.0 enquanto os arquivos ao lado continuam sendo da v0.42.0."
+      },
+      {
+        "text": "Compilar com `-mod=vendor` para forçar o uso da cópia",
+        "why": "O diretório vendor já estava em uso; é por isso que a diferença foi achada."
+      }
+    ]
+  },
+  "ex-1x7s92hr": {
+    "prompt": "A regra que escolhe a maior das versões que cada módulo pede, e nada mais novo, é a minimal version ___.",
+    "hint": "O nome em inglês tem três palavras.",
+    "blanks": [
+      {
+        "accept": [
+          "selection",
+          "seleção",
+          "selecao"
+        ]
+      }
+    ]
+  }
+}

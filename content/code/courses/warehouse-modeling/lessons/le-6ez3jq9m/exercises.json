@@ -1,0 +1,771 @@
+[
+  {
+    "id": "ex-vj1pwxbq",
+    "version": 1,
+    "section": "dimensions-change",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a dimension need a policy for change when a fact does not?",
+    "hint": "What happens to a sale after it happens?",
+    "choices": [
+      {
+        "text": "A fact is fixed; a dimension keeps living",
+        "correct": true,
+        "why": "Right. The sale stays true; the customer moves."
+      },
+      {
+        "text": "Facts are smaller",
+        "correct": false,
+        "why": "Size has nothing to do with it."
+      },
+      {
+        "text": "Facts are loaded every night and dimensions once",
+        "correct": false,
+        "why": "Both are loaded on a schedule; dimensions change between loads."
+      },
+      {
+        "text": "Dimensions have no surrogate keys",
+        "correct": false,
+        "why": "They do; that is what makes type 2 possible."
+      }
+    ]
+  },
+  {
+    "id": "ex-65wt26a3",
+    "version": 1,
+    "section": "dimensions-change",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each SCD type to what it does on a change.",
+    "hint": "Four types, four behaviours.",
+    "pairs": [
+      {
+        "left": "Type 0",
+        "right": "Keeps the original value"
+      },
+      {
+        "left": "Type 1",
+        "right": "Overwrites the value"
+      },
+      {
+        "left": "Type 2",
+        "right": "Adds a row for the new version"
+      },
+      {
+        "left": "Type 3",
+        "right": "Moves the old value to a previous column"
+      }
+    ],
+    "right_distractors": [
+      "Deletes the customer"
+    ]
+  },
+  {
+    "id": "ex-d0kdqy06",
+    "version": 1,
+    "section": "type-0",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which attribute is a natural type 0?",
+    "hint": "It describes a moment.",
+    "choices": [
+      {
+        "text": "The tier the customer has now",
+        "correct": false,
+        "why": "It changes, and the shop analyses its changes."
+      },
+      {
+        "text": "The city the customer lives in",
+        "correct": false,
+        "why": "It changes; lesson 1 measured what that does."
+      },
+      {
+        "text": "The day the customer joined",
+        "correct": true,
+        "why": "Right. True once, and true forever."
+      },
+      {
+        "text": "The customer's e-mail address, which people replace now and then",
+        "correct": false,
+        "why": "It changed 825 times in the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwsr85r0",
+    "version": 1,
+    "section": "type-0",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the 40,000 customers no longer live in the state they joined in?",
+    "hint": "The `live_elsewhere_now` column.",
+    "value": 622,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pj28t19j",
+    "version": 1,
+    "section": "type-1",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A type 1 report of 2024 sales by state was run in October 2025 and again in December 2025, and the numbers differ. Why?",
+    "hint": "Nothing about 2024 changed.",
+    "choices": [
+      {
+        "text": "Some 2024 sales arrived late",
+        "correct": false,
+        "why": "The fact table did not change between the two runs."
+      },
+      {
+        "text": "People who moved took their history to the new state",
+        "correct": true,
+        "why": "Right. The overwrite rewrites the past to look like the present."
+      },
+      {
+        "text": "Rounding in the second run",
+        "correct": false,
+        "why": "R$ 9,392.24 is not rounding."
+      },
+      {
+        "text": "December's extract had new customers",
+        "correct": false,
+        "why": "New customers joined after 2024; they bought nothing then."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghpdqjr2",
+    "version": 1,
+    "section": "type-1",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which change is type 1 the right choice?",
+    "hint": "Was the old value ever true?",
+    "choices": [
+      {
+        "text": "A customer moves from Curitiba to Recife",
+        "correct": false,
+        "why": "Both cities were true in turn; sales by region need both."
+      },
+      {
+        "text": "A reader is promoted to regular",
+        "correct": false,
+        "why": "The programme is analysed by tier over time: type 2."
+      },
+      {
+        "text": "A shop is moved to a different sales region",
+        "correct": false,
+        "why": "The old region was true; type 2 or 3."
+      },
+      {
+        "text": "A name mistyped at the till is corrected",
+        "correct": true,
+        "why": "Right. The old value was never true, so there is no history worth keeping."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e3zded4",
+    "version": 1,
+    "section": "type-1",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under type 1, 2024 sales in Minas Gerais were R$ 4,688,508.55 in October and R$ 4,679,116.31 in December. By how many reais did the past move?",
+    "hint": "Subtract.",
+    "value": 9392.24,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-kxfnpc8m",
+    "version": 1,
+    "section": "type-2",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Customer 1 has three rows in `dim_customer`. What distinguishes them?",
+    "hint": "Look at the dates and the tier.",
+    "choices": [
+      {
+        "text": "Three customers share the id by mistake",
+        "correct": false,
+        "why": "It is one customer, in three periods."
+      },
+      {
+        "text": "They are duplicates that the nightly load forgot to remove",
+        "correct": false,
+        "why": "They differ in tier and period on purpose."
+      },
+      {
+        "text": "Versions of one customer, each with its period",
+        "correct": true,
+        "why": "Right. Reader, regular, patron, one after the other."
+      },
+      {
+        "text": "One row per shop the customer used",
+        "correct": false,
+        "why": "Shops are another dimension."
+      }
+    ]
+  },
+  {
+    "id": "ex-20j1fnpd",
+    "version": 1,
+    "section": "type-2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the last version end on 9999-12-31 rather than on an empty value?",
+    "hint": "Write the lookup for time t.",
+    "choices": [
+      {
+        "text": "One condition then serves the current row too",
+        "correct": true,
+        "why": "Right. One condition, no special case."
+      },
+      {
+        "text": "DuckDB rejects an empty timestamp in a column it has to compare",
+        "correct": false,
+        "why": "It accepts them; the problem is the query."
+      },
+      {
+        "text": "The customer will leave in 9999",
+        "correct": false,
+        "why": "It is a far-away date standing for \"not ended\", not a prediction."
+      },
+      {
+        "text": "To mark the customer as deleted",
+        "correct": false,
+        "why": "The opposite: it marks the version that is still true."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g9vzjvk",
+    "version": 1,
+    "section": "type-2",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Type 2 took the customer dimension from 40,000 rows to 49,309. By what percentage did it grow? Give one decimal.",
+    "hint": "Growth over the starting size.",
+    "value": 23.3,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-kv71y058",
+    "version": 1,
+    "section": "joining-type-2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Readers bought R$ 35.7 million in 2025 as readers, and today's readers bought R$ 34.4 million. Which number answers \"how much does the lowest tier buy?\"",
+    "hint": "The tier when they bought.",
+    "choices": [
+      {
+        "text": "R$ 34.4 million, by today's tier",
+        "correct": false,
+        "why": "That counts promoted customers' reader-era purchases elsewhere."
+      },
+      {
+        "text": "Their average, about R$ 35.1 million",
+        "correct": false,
+        "why": "An average of two different questions answers neither."
+      },
+      {
+        "text": "Neither, without a type 3 column",
+        "correct": false,
+        "why": "Type 2 answers it directly."
+      },
+      {
+        "text": "R$ 35.7 million, by tier at the time of the sale",
+        "correct": true,
+        "why": "Right. Each sale is grouped by the version it points at."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfwbfw1p",
+    "version": 1,
+    "section": "joining-type-2",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where in Ana's warehouse is the \"which version was true when this sale happened?\" lookup done?",
+    "hint": "Look at how `fact_sales` gets its `customer_key`.",
+    "choices": [
+      {
+        "text": "In every report, with a date range join",
+        "correct": false,
+        "why": "Reports join on the key; the range was used once."
+      },
+      {
+        "text": "Once, when the load gives the fact its key",
+        "correct": true,
+        "why": "Right. The time travel is paid once, and every query gets \"as it was\" free."
+      },
+      {
+        "text": "In the report tool, which filters `is_current`",
+        "correct": false,
+        "why": "That would give \"as it is now\", the other question."
+      },
+      {
+        "text": "In PostgreSQL, before the extract",
+        "correct": false,
+        "why": "The operational database keeps only the current state."
+      }
+    ]
+  },
+  {
+    "id": "ex-217m7par",
+    "version": 1,
+    "section": "building-from-a-log",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `13_dim_customer.sql` in order.",
+    "hint": "First values, then the changes, then fill forward, then keys.",
+    "items": [
+      "Find what each field held when the customer joined",
+      "List each moment a tracked field changed",
+      "Carry each field's last value forward and end each version at the next one",
+      "Assign surrogate keys and add the unknown member"
+    ],
+    "trap": "Assigning keys before the versions exist is the slip: there would be nothing yet to give a key to."
+  },
+  {
+    "id": "ex-1b38f60b",
+    "version": 1,
+    "section": "building-from-a-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A move changes the city and the state. Why are they one moment, not two versions?",
+    "hint": "Think of a version with the new city and the old state.",
+    "choices": [
+      {
+        "text": "Split, they would describe a place that never existed",
+        "correct": true,
+        "why": "Right. \"Curitiba, SP\" would be a version that never existed."
+      },
+      {
+        "text": "DuckDB merges rows with the same customer automatically",
+        "correct": false,
+        "why": "Nothing is merged automatically; the query groups by moment."
+      },
+      {
+        "text": "Cities are type 1",
+        "correct": false,
+        "why": "The city is type 2 here."
+      },
+      {
+        "text": "States are not tracked",
+        "correct": false,
+        "why": "They are tracked, with the city."
+      }
+    ]
+  },
+  {
+    "id": "ex-0te9kmxe",
+    "version": 1,
+    "section": "loading-a-month",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does step 2 of `load_month.sql` do to a customer whose tier changed?",
+    "hint": "Close, then open.",
+    "choices": [
+      {
+        "text": "Deletes the old row",
+        "correct": false,
+        "why": "Facts point at it; nothing is deleted."
+      },
+      {
+        "text": "Overwrites the tier on the current row",
+        "correct": false,
+        "why": "That would be type 1."
+      },
+      {
+        "text": "Ends the current version on the extract's date",
+        "correct": true,
+        "why": "Right. Step 3 then opens a new current version."
+      },
+      {
+        "text": "Nothing; changes wait for the next month",
+        "correct": false,
+        "why": "They are applied in the month they appear."
+      }
+    ]
+  },
+  {
+    "id": "ex-jbsg7jkd",
+    "version": 1,
+    "section": "loading-a-month",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does step 2 compare with `IS DISTINCT FROM` rather than `<>`?",
+    "hint": "What is NULL <> NULL?",
+    "choices": [
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Two empty values count as equal, so no false change",
+        "correct": true,
+        "why": "Right. With `<>`, a NULL compared to anything is unknown, and the row is skipped."
+      },
+      {
+        "text": "`<>` does not work on text in DuckDB",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "It also compares the customer's name",
+        "correct": false,
+        "why": "The name is not in the comparison; it is type 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxrvqmmd",
+    "version": 1,
+    "section": "loading-a-month",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "November's load opened 1,214 versions and closed 263. How many of the opened versions were customers who joined during October?",
+    "hint": "Every closed version is reopened.",
+    "value": 951,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2qapaedp",
+    "version": 1,
+    "section": "loading-a-month",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A load that can run twice and leave the same result as running once is called ___.",
+    "hint": "From the Latin for \"the same\".",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6g6wswa2",
+    "version": 1,
+    "section": "type-3",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can type 3 not do that type 2 can?",
+    "hint": "A customer who moved twice.",
+    "choices": [
+      {
+        "text": "Show the previous value",
+        "correct": false,
+        "why": "That is exactly what type 3 shows."
+      },
+      {
+        "text": "Keep one row per customer, as type 1 does",
+        "correct": false,
+        "why": "Type 3 does keep one row per customer."
+      },
+      {
+        "text": "Run in DuckDB",
+        "correct": false,
+        "why": "It ran in the lesson."
+      },
+      {
+        "text": "Remember a second move",
+        "correct": true,
+        "why": "Right. A second move loses the first city, and no sale knows which column applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-m27yj909",
+    "version": 1,
+    "section": "type-3",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop redraws its sales regions and wants every report to show old and new side by side for a while. Which type fits best?",
+    "hint": "One transition, both sides.",
+    "choices": [
+      {
+        "text": "Type 0",
+        "correct": false,
+        "why": "It would keep only the original region."
+      },
+      {
+        "text": "Type 1",
+        "correct": false,
+        "why": "It would leave only the new arrangement."
+      },
+      {
+        "text": "Type 3: a region and a previous_region column",
+        "correct": true,
+        "why": "Right. Its classic use is one reorganisation."
+      },
+      {
+        "text": "A factless fact table",
+        "correct": false,
+        "why": "Regions describe shops; they are not events."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3ydtvfs",
+    "version": 1,
+    "section": "types-4-and-6",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a type 6 dimension add to type 2?",
+    "hint": "1 + 2 + 3.",
+    "choices": [
+      {
+        "text": "Today's value on every row",
+        "correct": true,
+        "why": "Right. Tier at the time and tier today, in one row."
+      },
+      {
+        "text": "A sixth fact table, for changes",
+        "correct": false,
+        "why": "The number is not a count of tables."
+      },
+      {
+        "text": "Six rows per customer",
+        "correct": false,
+        "why": "The number of rows follows the changes."
+      },
+      {
+        "text": "A mini-dimension for fast-changing attributes",
+        "correct": false,
+        "why": "That is type 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxbznkng",
+    "version": 1,
+    "section": "types-4-and-6",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many reais did customers who were readers at the time of purchase, and are patrons today, spend in 2025?",
+    "hint": "The last row of the type 6 query.",
+    "value": 39969.64,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-jh6mc281",
+    "version": 1,
+    "section": "types-4-and-6",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bank updates a credit score band for 5 million customers every month. Why not make the band a type 2 attribute of the customer dimension?",
+    "hint": "How many rows a year?",
+    "choices": [
+      {
+        "text": "Credit scores are personal data",
+        "correct": false,
+        "why": "They are, and the same is true of the customer dimension already."
+      },
+      {
+        "text": "Bands cannot be compared over time",
+        "correct": false,
+        "why": "They can; that is why the history is wanted."
+      },
+      {
+        "text": "Type 2 only works on text attributes, and a band is a number range",
+        "correct": false,
+        "why": "Type 2 works on any attribute."
+      },
+      {
+        "text": "Too many rows; a mini-dimension stays small",
+        "correct": true,
+        "why": "Right. Type 4: the fast attributes move to their own key on the fact."
+      }
+    ]
+  },
+  {
+    "id": "ex-bseykc3v",
+    "version": 1,
+    "section": "choosing-per-column",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each attribute of Ana's customer dimension to its treatment.",
+    "hint": "One decision per column.",
+    "pairs": [
+      {
+        "left": "tier",
+        "right": "Type 2"
+      },
+      {
+        "left": "name",
+        "right": "Type 1"
+      },
+      {
+        "left": "state when joined",
+        "right": "Type 0"
+      },
+      {
+        "left": "e-mail",
+        "right": "Not kept"
+      }
+    ],
+    "right_distractors": [
+      "Type 3"
+    ]
+  },
+  {
+    "id": "ex-fww1vbn5",
+    "version": 1,
+    "section": "choosing-per-column",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A utility company stores each customer's city only to know where to send the bill. Which type suits the city there?",
+    "hint": "Does anybody analyse facts by it over time?",
+    "choices": [
+      {
+        "text": "Type 2, as in the bookshop",
+        "correct": false,
+        "why": "The same attribute can get a different answer in a different business."
+      },
+      {
+        "text": "Type 1: only the current address matters",
+        "correct": true,
+        "why": "Right. The type follows the questions asked of it."
+      },
+      {
+        "text": "Type 0",
+        "correct": false,
+        "why": "The bill would go to an old address."
+      },
+      {
+        "text": "Type 3",
+        "correct": false,
+        "why": "Nobody needs the previous city beside the current one."
+      }
+    ]
+  },
+  {
+    "id": "ex-g52908ee",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these must hold for every customer in a correct type 2 dimension? Choose all that apply.",
+    "hint": "Three zeros in the check.",
+    "choices": [
+      {
+        "text": "Exactly one current row",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "No two versions overlapping in time",
+        "correct": true,
+        "why": "Yes. An overlap counts a sale twice."
+      },
+      {
+        "text": "No gap between one version's end and the next one's start",
+        "correct": true,
+        "why": "Yes. A gap drops a sale out of the join."
+      },
+      {
+        "text": "At least two versions",
+        "correct": false,
+        "why": "32,542 customers rightly have one."
+      }
+    ]
+  },
+  {
+    "id": "ex-10swpw00",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customer 1225 moved on 28 November and changed tier on 30 November. What does the extract-based load record?",
+    "hint": "It only sees midnight on the first of each month.",
+    "choices": [
+      {
+        "text": "One version, from 1 December",
+        "correct": true,
+        "why": "Right. The coarser the snapshot, the more history is lost."
+      },
+      {
+        "text": "Two versions, on 28 and 30 November",
+        "correct": false,
+        "why": "That is what the change log gives, not the snapshot."
+      },
+      {
+        "text": "Nothing, because two changes cancel out",
+        "correct": false,
+        "why": "They do not cancel; they arrive together."
+      },
+      {
+        "text": "An error, because two changes conflict",
+        "correct": false,
+        "why": "The load accepts them without complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-xs0g7vjd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sale from 20 October is loaded on 3 November, after the customer was promoted on 1 November. Which version should its `customer_key` point at, and what does the lesson's load do?",
+    "hint": "The load joins on the time of the order.",
+    "choices": [
+      {
+        "text": "The current version; the load uses `is_current`",
+        "correct": false,
+        "why": "A load using `is_current` would do that, and be wrong."
+      },
+      {
+        "text": "The unknown member, until the next month",
+        "correct": false,
+        "why": "The customer is known; the version is too."
+      },
+      {
+        "text": "The October one, found from the order's time",
+        "correct": true,
+        "why": "Right. A late fact still gets the version true when it happened."
+      },
+      {
+        "text": "Both versions, split in half",
+        "correct": false,
+        "why": "A sale has one customer version, not a share of two."
+      }
+    ]
+  }
+]

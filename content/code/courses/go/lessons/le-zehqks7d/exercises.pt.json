@@ -1,0 +1,373 @@
+{
+  "ex-sg4tax4c": {
+    "prompt": "`ages` já guarda a chave `\"ana\"`. O que `ages[\"ana\"] = 32` faz?",
+    "hint": "Não existe um insert separado.",
+    "choices": [
+      {
+        "text": "Acrescenta uma segunda entrada `\"ana\"`, e `len(ages)` cresce um",
+        "why": "Uma chave aparece uma vez só num map; na seção 02 o comprimento foi de 2 para 3 quando `caio` chegou e `ana` mudou, não para 4."
+      },
+      {
+        "text": "Não compila, porque a chave já existe",
+        "why": "O compilador só recusa uma chave repetida dentro de um mesmo literal. Atribuir a uma chave que já existe é comum."
+      },
+      {
+        "text": "Troca o valor e deixa o comprimento como está",
+        "why": "Isso. Atribuir a `m[chave]` acrescenta uma chave nova ou troca o valor de uma que já existe."
+      },
+      {
+        "text": "Entra em pânico em tempo de execução",
+        "why": "A única escrita que entrou em pânico nesta lição foi num map nil, e `ages` foi criado por um literal."
+      }
+    ]
+  },
+  "ex-qn05xd0n": {
+    "prompt": "`var prices map[string]int` é seguido de `prices[\"pear\"] = 3`. O que acontece?",
+    "hint": "Qual é o valor zero de um map, e o que se pode fazer com ele?",
+    "choices": [
+      {
+        "text": "O compilador recusa: um map precisa ser criado antes do uso",
+        "why": "Compilou. Se a variável guarda um map só se sabe quando o programa roda."
+      },
+      {
+        "text": "Funciona, já que um map nil se comporta como um vazio",
+        "why": "Para leitura e `len`, sim. Escrever é a única exceção."
+      },
+      {
+        "text": "O valor é descartado e o map continua vazio",
+        "why": "Nada é descartado em silêncio aqui; o programa para."
+      },
+      {
+        "text": "Pânico em tempo de execução: `assignment to entry in nil map`",
+        "why": "Isso. `var` dá o map nil, que pode ser lido e não escrito."
+      }
+    ]
+  },
+  "ex-7t6sazeq": {
+    "prompt": "Qual destes tipos de chave o compilador aceita?",
+    "hint": "Uma chave precisa funcionar com `==`.",
+    "choices": [
+      {
+        "text": "`[]byte`, os bytes de um arquivo",
+        "why": "Uma slice não é comparável: `invalid map key type []byte`."
+      },
+      {
+        "text": "`[32]byte`",
+        "why": "Isso. Um array de elementos comparáveis é comparável, e foi por isso que a lição 13 pôde usar um checksum como chave."
+      },
+      {
+        "text": "`map[string]int`, para que um map indexe outros",
+        "why": "Um map só pode ser comparado com `nil`, então nunca pode ser chave."
+      },
+      {
+        "text": "`func()`, para buscar um handler pela função",
+        "why": "Funções também não são comparáveis, a não ser com `nil`."
+      }
+    ]
+  },
+  "ex-cyg6wa5e": {
+    "prompt": "A função embutida que remove uma chave e o seu valor de um map é `___`.",
+    "hint": "Ela recebe o map e a chave.",
+    "blanks": [
+      {
+        "accept": [
+          "delete"
+        ]
+      }
+    ]
+  },
+  "ex-mky0tmza": {
+    "prompt": "`m := map[string]int{\"a\": 1, \"b\": 2, \"c\": 3}`, depois `m[\"d\"] = 4`, `m[\"a\"] = 5`, `delete(m, \"b\")` e `delete(m, \"x\")`. Quanto vale `len(m)`?",
+    "hint": "Uma linha acrescenta, uma troca, uma remove e uma não faz nada.",
+    "unit": "chaves"
+  },
+  "ex-5mbxb7xa": {
+    "prompt": "`map[string]bool` compila e `map[[]byte]bool` não, embora as duas chaves possam guardar os mesmos bytes. Que regra o compilador está aplicando?",
+    "hint": "A mesma regra recusou `a == b` entre dois maps.",
+    "choices": [
+      {
+        "text": "Uma chave precisa ter tamanho fixo, e uma slice pode crescer",
+        "why": "Uma string também não tem tamanho fixo e é uma boa chave. Tamanho não é o que se confere."
+      },
+      {
+        "text": "Uma chave nunca pode mudar, e os elementos de uma slice podem",
+        "why": "Um ponteiro é aceito como chave embora aquilo para que aponta possa mudar; o compilador confere uma propriedade só, e não é esta."
+      },
+      {
+        "text": "O tipo da chave precisa ser comparável com `==`, e o de uma slice não é",
+        "why": "Isso. Um map compara chaves com `==`, e slices só podem ser comparadas com `nil`."
+      },
+      {
+        "text": "Só tipos básicos podem ser chave",
+        "why": "Arrays não são tipos básicos e `[32]byte` foi chave na lição 13."
+      }
+    ]
+  },
+  "ex-g83epxcp": {
+    "prompt": "`stock` é um `map[string]int` sem a chave `\"kiwi\"`. O que `stock[\"kiwi\"]` dá?",
+    "hint": "Uma chave ausente não é erro em Go.",
+    "choices": [
+      {
+        "text": "Um pânico, como uma chave ausente em Python",
+        "why": "Python levanta um erro; Go não. A busca imprimiu `0` e o programa seguiu."
+      },
+      {
+        "text": "`0`",
+        "why": "Isso: o valor zero do tipo do valor, `int`, sem nada dizendo que a chave faltava."
+      },
+      {
+        "text": "`nil`, a marca de uma entrada ausente",
+        "why": "Um `int` não pode ser `nil`. Uma chave ausente dá o zero do tipo do valor, e o zero de `int` é 0."
+      },
+      {
+        "text": "`-1`, para diferir de qualquer contagem de verdade",
+        "why": "Não existe valor marcador especial; Go devolve o valor zero e deixa a pergunta para o `ok`."
+      }
+    ]
+  },
+  "ex-jt6qybsa": {
+    "prompt": "`stock` guarda `\"apple\": 0`. O que `n, ok := stock[\"apple\"]` define?",
+    "hint": "O `ok` fala da chave, não do valor.",
+    "choices": [
+      {
+        "text": "`n` é 0 e `ok` é false, já que o valor é o valor zero",
+        "why": "Essa foi a resposta para `kiwi`, que falta. `apple` está presente com 0 guardado, e o `ok` informa presença."
+      },
+      {
+        "text": "Nada: dois resultados exigem `stock.Get(\"apple\")`",
+        "why": "Maps não têm método `Get`. A própria expressão de índice devolve dois valores quando se pedem dois."
+      },
+      {
+        "text": "`n` é 0 e `ok` é true",
+        "why": "Isso. A chave está lá e o valor é 0; a execução imprimiu `0 true`."
+      },
+      {
+        "text": "`n` é 1, `ok` é true",
+        "why": "`n` é o valor guardado, que é 0. Nada conta a busca."
+      }
+    ]
+  },
+  "ex-8w7ej8dc": {
+    "prompt": "Em quais destes a busca de um valor só, `m[k]`, basta, sem `ok`? Escolha todos que se aplicam.",
+    "hint": "Pergunte se o valor zero poderia ser uma entrada de verdade.",
+    "choices": [
+      {
+        "text": "Um `map[string]bool` de usuários banidos em que só se guarda `true`",
+        "why": "Sim. Um usuário ausente dá `false`, que quer dizer \"não banido\", resposta que nenhuma entrada guardada daria."
+      },
+      {
+        "text": "Uma lista de estoque em que a quantidade 0 é uma entrada válida",
+        "why": "Aqui o 0 é ambíguo: sem estoque ou nunca listado. É justamente o caso para que o `ok` existe."
+      },
+      {
+        "text": "Contar palavras com `counts[w]++`",
+        "why": "Sim. Uma palavra nova é lida como 0 e vira 1, que é a contagem inicial certa."
+      },
+      {
+        "text": "Um map de temperaturas em que 0 °C é uma leitura que pode ocorrer",
+        "why": "Uma cidade a 0 °C e uma cidade sem leitura pareceriam iguais, então este precisa do `ok`."
+      }
+    ]
+  },
+  "ex-v9mzsy6r": {
+    "prompt": "Quando se pedem dois resultados, a busca num map devolve o valor e um `___` que é true só se a chave está presente.",
+    "hint": "O tipo dele, não o nome de costume.",
+    "blanks": [
+      {
+        "accept": [
+          "bool"
+        ]
+      }
+    ]
+  },
+  "ex-73kntq2d": {
+    "prompt": "`byInitial[first] = append(byInitial[first], name)` funciona na primeira vez que uma letra aparece, sem verificação. Por quê?",
+    "hint": "Como a chave ausente é lida, e o que o `append` faz com isso?",
+    "choices": [
+      {
+        "text": "O `append` percebe a chave ausente e a cria no map",
+        "why": "O `append` não sabe nada de maps; ele recebe uma slice. É a atribuição que cria a chave."
+      },
+      {
+        "text": "A chave ausente é lida como slice nil, e `append` numa slice nil aloca",
+        "why": "Isso. O valor zero de `[]string` é nil, e a lição 12 mostrou o `append` cuidando disso sozinho."
+      },
+      {
+        "text": "Um `map[string][]string` começa com uma slice vazia sob cada chave possível",
+        "why": "O map começa vazio, sem chave nenhuma; a busca de uma chave ausente só produz um valor zero."
+      },
+      {
+        "text": "Go repete a busca depois que o primeiro `append` falha",
+        "why": "Nada falha e nada é repetido: uma leitura, um `append`, uma escrita."
+      }
+    ]
+  },
+  "ex-s6q20zmd": {
+    "prompt": "`fmt.Println(ages)` imprimiu as chaves na mesma ordem nas duas execuções, e o laço `range` não. Por quê?",
+    "hint": "Qual dos dois fez algo a mais?",
+    "choices": [
+      {
+        "text": "O `fmt` ordena as chaves de um map antes de imprimir",
+        "why": "Isso. O `fmt` chama o `fmtsort`; o map em si não tem ordem a mostrar."
+      },
+      {
+        "text": "Imprimir lê o map na ordem em que as chaves foram inseridas",
+        "why": "A saída saiu em ordem alfabética, e o literal por acaso foi escrito nessa ordem; um map não guarda ordem de inserção para ler."
+      },
+      {
+        "text": "A ordem só é aleatória dentro de um laço",
+        "why": "`maps.Keys` é igualmente sem ordem fora de qualquer laço seu. Quem ordena é o `fmt`."
+      },
+      {
+        "text": "As duas execuções reusaram o cache de build, e com ele o mesmo map",
+        "why": "O cache guarda o programa compilado, não um map; a linha do `range` mudou entre as mesmas duas execuções."
+      }
+    ]
+  },
+  "ex-jvz1r9bk": {
+    "prompt": "De onde vem a ordem diferente de um `range` sobre o mesmo map, execução após execução?",
+    "hint": "A lição citou uma linha do runtime.",
+    "choices": [
+      {
+        "text": "Das chaves do map serem guardadas na ordem em que caíram no hash daquele dia",
+        "why": "O armazenamento conta, mas a variação é posta ali de propósito: o percurso do mesmíssimo map começa num lugar novo a cada vez."
+      },
+      {
+        "text": "Cada percurso começa num lugar que o runtime sorteia",
+        "why": "Isso: `it.entryOffset = rand()` em `internal/runtime/maps/table.go`."
+      },
+      {
+        "text": "Do coletor de lixo mudando entradas de lugar",
+        "why": "O coletor não reordena um map; o sorteio é feito quando o percurso começa."
+      },
+      {
+        "text": "De um bug que o go1.27.1 ainda tem",
+        "why": "É deliberado, e a documentação de `maps.Keys` diz que a ordem não é especificada."
+      }
+    ]
+  },
+  "ex-rcq7agfm": {
+    "prompt": "Ponha em ordem os passos para imprimir as entradas de um map ordenadas pela chave.",
+    "hint": "O map responde buscas; a slice responde a ordem.",
+    "items": [
+      "Tirar as chaves com `maps.Keys`",
+      "Recolhê-las e ordená-las com `slices.Sorted`",
+      "Percorrer a slice ordenada por índice",
+      "Buscar no map o valor de cada chave"
+    ]
+  },
+  "ex-ddg4rs9a": {
+    "prompt": "Um teste percorre um map de três chaves e espera a ordem em que o literal as escreveu. Ele passou nas cinco primeiras execuções. Qual é a conclusão certa?",
+    "hint": "Lembre o que quatro execuções em seis mostraram.",
+    "choices": [
+      {
+        "text": "Maps pequenos guardam a ordem de inserção, então o teste é correto",
+        "why": "Guardam girada a partir de um início sorteado: `./small` imprimiu `[deploy build test push]` uma vez."
+      },
+      {
+        "text": "Depende de uma ordem que Go não promete, e vai falhar em algumas execuções",
+        "why": "Isso. Com poucas chaves o início sorteado muitas vezes cai na primeira, então as falhas são raras, não ausentes."
+      },
+      {
+        "text": "Cinco aprovações provam que a ordem é fixa para aquele map",
+        "why": "Cinco execuções concordando é o que uma rotação de poucas chaves produz com frequência; não provam nada sobre a sexta."
+      },
+      {
+        "text": "Só quebra quando o map é impresso com `fmt`",
+        "why": "O `fmt` é o único lugar onde a ordem é sempre a mesma, porque ele ordena."
+      }
+    ]
+  },
+  "ex-cxnbnzsb": {
+    "prompt": "Ligue cada expressão à ordem em que ela produz as chaves de um map.",
+    "hint": "Só uma delas é aleatória.",
+    "pairs": [
+      {
+        "left": "`fmt.Println(m)`",
+        "right": "Ordenadas pela chave, sempre"
+      },
+      {
+        "left": "`for k := range m`",
+        "right": "A partir de um início sorteado, novo a cada percurso"
+      },
+      {
+        "left": "`slices.Sorted(maps.Keys(m))`",
+        "right": "Uma slice nova e ordenada que você percorre"
+      }
+    ],
+    "right_distractors": [
+      "A ordem em que as chaves foram inseridas"
+    ]
+  },
+  "ex-3eqjd0g2": {
+    "prompt": "Uma função declara `var index map[string][]int` e depois executa `index[w] = append(index[w], i)`. O que acontece na primeira palavra?",
+    "hint": "Separe a leitura, o `append` e a escrita.",
+    "choices": [
+      {
+        "text": "Funciona: o `append` aloca o que estiver nil",
+        "why": "O `append` aloca a slice. O map é outro nil, e é a escrita nele que falha."
+      },
+      {
+        "text": "O compilador recusa `append` numa entrada de map",
+        "why": "Ler uma entrada e fazer `append` na slice lida é comum; a seção 03 agrupou nomes assim."
+      },
+      {
+        "text": "Nada é guardado e `index` continua vazio",
+        "why": "Go não descarta escritas em silêncio; uma escrita num map nil para o programa."
+      },
+      {
+        "text": "Entra em pânico com `assignment to entry in nil map`",
+        "why": "Isso. A leitura e o `append` vão bem; a escrita no map nil entra em pânico. `index := map[string][]int{}` resolve."
+      }
+    ]
+  },
+  "ex-n8xthd8j": {
+    "prompt": "Quais destes compilam? Escolha todos que se aplicam.",
+    "hint": "A regra é sobre chaves e comparações, não sobre valores.",
+    "choices": [
+      {
+        "text": "`grid := map[[2]int]string{}`",
+        "why": "Sim. Um array de ints é comparável, então pode ser chave, uma posição de grade por exemplo."
+      },
+      {
+        "text": "`groups := map[string][]string{}`",
+        "why": "Sim. O valor pode ser de qualquer tipo, slices incluídas; só a chave precisa ser comparável."
+      },
+      {
+        "text": "`seen := map[[]int]bool{}`",
+        "why": "Não: `invalid map key type`, pelo mesmo motivo de `[]byte`."
+      },
+      {
+        "text": "`same := a == b` para dois maps `a` e `b`",
+        "why": "Não: `map can only be compared to nil`."
+      }
+    ]
+  },
+  "ex-77e6bkva": {
+    "prompt": "`var m map[string]int` nunca é criado. O que `delete(m, \"x\")` faz?",
+    "hint": "`go doc builtin.delete` responde numa frase.",
+    "choices": [
+      {
+        "text": "Entra em pânico, como toda escrita num map nil",
+        "why": "Guardar entra em pânico; remover de um map sem nada dentro não tem o que fazer. A documentação chama isso de no-op."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: \"If m is nil or there is no such element, delete is a no-op.\""
+      },
+      {
+        "text": "Não compila, já que `m` nunca foi criado",
+        "why": "O compilador não tem como saber se uma variável de map guarda um map; ele compilou também o programa do map nil."
+      },
+      {
+        "text": "Cria o map e depois não apaga nada",
+        "why": "Nada cria um map pelas suas costas; `m` continua nil depois."
+      }
+    ]
+  },
+  "ex-gy09ghgr": {
+    "prompt": "O laço de contagem de palavras da seção 03 roda sobre `strings.Fields(\"to be or not to be\")`. Quanto vale `len(counts)` depois?",
+    "hint": "`len` conta chaves, não palavras.",
+    "unit": "chaves"
+  }
+}

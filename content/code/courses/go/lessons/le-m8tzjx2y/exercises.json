@@ -1,0 +1,590 @@
+[
+  {
+    "id": "ex-bs3w82qy",
+    "version": 1,
+    "section": "any",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every type in Go satisfy `any`?",
+    "hint": "How many methods does `any` ask for?",
+    "choices": [
+      {
+        "text": "Each type quietly declares that it implements `any`",
+        "correct": false,
+        "why": "Go has no `implements` at all; lesson 27 showed satisfaction is decided by the methods a type has."
+      },
+      {
+        "text": "It lists no methods, and every type has all of zero",
+        "correct": true,
+        "why": "Right. A type satisfies an interface by having its methods, and `any` asks for none."
+      },
+      {
+        "text": "Type checking is switched off for variables declared `any`",
+        "correct": false,
+        "why": "The compiler checks every use of an `any`; it refused `a + b` in section 03."
+      },
+      {
+        "text": "Each type embeds `any`, the way a class extends a base class",
+        "correct": false,
+        "why": "Go has no base class to extend. Nothing is embedded; the empty method list is the whole reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3zse26g",
+    "version": 1,
+    "section": "any",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `var v any = 42` and then `v = \"Ana\"`, what does `fmt.Printf(\"%T\", v)` print?",
+    "hint": "`%T` reports the type of what is inside.",
+    "choices": [
+      {
+        "text": "`any`",
+        "correct": false,
+        "why": "`any` is the variable's own type, which never changes; `%T` prints the type of the value it holds."
+      },
+      {
+        "text": "`string`",
+        "correct": true,
+        "why": "Right. The dynamic type is whatever was stored last, and that was a string."
+      },
+      {
+        "text": "`int`, the type it was declared with",
+        "correct": false,
+        "why": "It was declared `any`; 42 was only its first value, and the second replaced it, type and all."
+      },
+      {
+        "text": "`interface {}`",
+        "correct": false,
+        "why": "That is how `%T` writes `any` itself, as with `*interface {}`; for `v` it names what `v` holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-fed9kxm1",
+    "version": 1,
+    "section": "any",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The type of the value stored inside an interface, the one `%T` prints, is called its ___ type.",
+    "hint": "It can change every time something new is stored.",
+    "blanks": [
+      {
+        "accept": [
+          "dynamic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5jxrq3jn",
+    "version": 1,
+    "section": "any",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the lab's machine, how many bytes does a variable of type `any` take, whatever it holds?",
+    "hint": "Two words of 8 bytes: what are they?",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-1z5q14z0",
+    "version": 1,
+    "section": "any",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`names` is a `[]string`. Why is `fmt.Println(names...)` refused?",
+    "hint": "What are the elements of the slice `Println` wants?",
+    "choices": [
+      {
+        "text": "A slice cannot be passed with `...` to a variadic function",
+        "correct": false,
+        "why": "It can when the types match: lesson 21 passed `scores...` to `sum(nums ...int)`."
+      },
+      {
+        "text": "`any` does not accept strings",
+        "correct": false,
+        "why": "It accepts every type; `fmt.Println(\"ana\", \"bia\")` passes two strings as two `any` values."
+      },
+      {
+        "text": "It needs a `[]any`, whose elements are interface values, and no conversion builds one in place",
+        "correct": true,
+        "why": "Right. Each string has to go into an interface in a new slice, and Go makes you write that loop."
+      },
+      {
+        "text": "Strings in a slice are not comparable",
+        "correct": false,
+        "why": "Strings compare fine, and printing compares nothing; the problem is the element type."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7k4nwty",
+    "version": 1,
+    "section": "any",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`{\"age\": 31}` is decoded into a `map[string]any`. What type does `doc[\"age\"]` hold?",
+    "hint": "JSON has a single kind of number.",
+    "choices": [
+      {
+        "text": "`int`, since 31 has no decimal point",
+        "correct": false,
+        "why": "`Unmarshal` does not look at the point; with no struct to ask, every number gets the same type."
+      },
+      {
+        "text": "`float64`",
+        "correct": true,
+        "why": "Right. The documentation lists it: float64, for JSON numbers."
+      },
+      {
+        "text": "`json.Number`, the number's text",
+        "correct": false,
+        "why": "Only a decoder told `UseNumber()` keeps numbers that way; `Unmarshal` does not."
+      },
+      {
+        "text": "`int64`, so that large ids fit",
+        "correct": false,
+        "why": "That would have kept the id whole, and section 02 showed it did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mw544r3",
+    "version": 1,
+    "section": "any",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service sends `{\"order\": 9007199254740995}`, your program decodes it into a `map[string]any` and sends the order id back. What does the service receive?",
+    "hint": "Where does 9007199254740995 sit against 2⁵³?",
+    "choices": [
+      {
+        "text": "The same id, because a `float64` has 64 bits",
+        "correct": false,
+        "why": "Only 52 of them are fraction, so above 2⁵³ not every whole number exists as a `float64`."
+      },
+      {
+        "text": "Nothing: `Unmarshal` returns an error for a number that does not fit",
+        "correct": false,
+        "why": "In section 02 the id changed and `err` was nil; no error is raised for rounding."
+      },
+      {
+        "text": "A neighbouring number, and nothing reports an error",
+        "correct": true,
+        "why": "Right. It is past 2⁵³ and odd, so it was rounded to a `float64` that is a different id."
+      },
+      {
+        "text": "The same id, as large numbers become `json.Number` by themselves",
+        "correct": false,
+        "why": "Nothing switches on its own: `json.Number` needs `UseNumber()` on a decoder."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykszsv3b",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`doc[\"age\"]` holds a `float64`. What happens with `years := doc[\"age\"].(int)`?",
+    "hint": "Can the compiler see what the map holds?",
+    "choices": [
+      {
+        "text": "The compiler refuses it, since the value is a `float64`",
+        "correct": false,
+        "why": "The compiler cannot know what a `map[string]any` will hold when the program runs, so it accepts the line."
+      },
+      {
+        "text": "`years` becomes 31, converted from 31.0",
+        "correct": false,
+        "why": "An assertion is not a conversion. It checks the type and hands the value over, or fails."
+      },
+      {
+        "text": "It compiles, and panics every time the line runs",
+        "correct": true,
+        "why": "Right: `interface conversion: interface {} is float64, not int`, on line 18."
+      },
+      {
+        "text": "`years` is 0 and the program carries on",
+        "correct": false,
+        "why": "This single-result form never answers quietly; the form that does is lesson 29's."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4fr6mp4",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`var a, b any = 2, 3` and then `fmt.Println(a + b)`. What happens?",
+    "hint": "Which types is `+` defined for, and could `any` be one?",
+    "choices": [
+      {
+        "text": "It prints 5",
+        "correct": false,
+        "why": "The values are ints, but the variables are `any`, and the compiler only sees the variables."
+      },
+      {
+        "text": "It prints 23, joining the two like strings",
+        "correct": false,
+        "why": "`any` is not turned into text; nothing is added or joined, because nothing compiles."
+      },
+      {
+        "text": "It compiles and panics at run time",
+        "correct": false,
+        "why": "That is the fate of a wrong assertion. Here no assertion was written and the compiler stops first."
+      },
+      {
+        "text": "The build fails: `+` is not defined on `any`",
+        "correct": true,
+        "why": "Right: `operator + not defined on a (variable of interface type any)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y59yqd1",
+    "version": 1,
+    "section": "the-cost",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`x` is a variable of type `any`. Which of these compile without a type assertion? Choose all that apply.",
+    "hint": "What does every Go value support?",
+    "choices": [
+      {
+        "text": "`fmt.Println(x)`",
+        "correct": true,
+        "why": "Yes. `Println` takes `...any`, and passing an `any` is something every value allows."
+      },
+      {
+        "text": "`len(x)`",
+        "correct": false,
+        "why": "Refused: `invalid argument: s (variable of interface type any) for built-in len`."
+      },
+      {
+        "text": "`x == y`, with `y` another `any`",
+        "correct": true,
+        "why": "Yes, it compiles; it can still panic at run time if both hold slices."
+      },
+      {
+        "text": "`var n int = x`",
+        "correct": false,
+        "why": "Refused, and the message names the fix: `need type assertion`."
+      },
+      {
+        "text": "`var y any = x`",
+        "correct": true,
+        "why": "Yes. Assigning one `any` to another needs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-she2884p",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sum(xs []any)` asserts each element to `float64`. Why does `sum([]any{1.5, 2})` panic?",
+    "hint": "What type does an untyped `2` take when nothing asks for one?",
+    "choices": [
+      {
+        "text": "The `2` went in as an `int`, its default type",
+        "correct": true,
+        "why": "Right. An `any` asks for no type, so the constant took its default, and the assertion wanted `float64`."
+      },
+      {
+        "text": "A `float64` cannot hold the number 2 exactly",
+        "correct": false,
+        "why": "It can: 2 is a small whole number, and `[]float64{1.5, 2}` worked fine in the typed version."
+      },
+      {
+        "text": "A `[]any` cannot mix a float and an int",
+        "correct": false,
+        "why": "It can mix anything; section 02 put five different types in one `[]any`."
+      },
+      {
+        "text": "`go vet` would have reported it, and nobody ran it",
+        "correct": false,
+        "why": "It was run, as `go vet && go run .`, and passed: nothing here breaks a rule it knows."
+      }
+    ]
+  },
+  {
+    "id": "ex-3v92p0h7",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`var c, d any = 1, 1.0` and then `fmt.Println(c == d)` prints `false`. Why?",
+    "hint": "Two interface values are equal when two things are equal.",
+    "choices": [
+      {
+        "text": "`1.0` is stored inexactly, as floats are",
+        "correct": false,
+        "why": "1.0 is exact in a `float64`; the comparison never gets as far as the numbers."
+      },
+      {
+        "text": "Two interface values are compared by address, as two separate boxes",
+        "correct": false,
+        "why": "`a == b` with 1 and 1 printed `true`, so it is not the address that is compared."
+      },
+      {
+        "text": "One holds an `int` and the other a `float64`",
+        "correct": true,
+        "why": "Right. The dynamic types differ, so the values are never compared."
+      },
+      {
+        "text": "`==` is refused between interfaces and answers false",
+        "correct": false,
+        "why": "A refusal would be a compile error; `==` on interfaces compiles and compares type and value."
+      }
+    ]
+  },
+  {
+    "id": "ex-w79fa91j",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cache is a `map[any]bool`. What happens when code runs `seen[key] = true` with `key` an `any` holding `[]int{1, 2}`?",
+    "hint": "A map has to compare keys; lesson 14 said which types can be keys.",
+    "choices": [
+      {
+        "text": "The compiler refuses a slice as a map key",
+        "correct": false,
+        "why": "It would for `map[[]int]bool`. Here the key type is `any`, which is comparable, so it compiles."
+      },
+      {
+        "text": "It compiles, and panics when that line runs",
+        "correct": true,
+        "why": "Right. Inside an `any` the compiler cannot see the slice; the lab's run printed `hash of unhashable type []int`."
+      },
+      {
+        "text": "It stores the slice's address as the key",
+        "correct": false,
+        "why": "Go never compares slices by address; a slice is not comparable at all."
+      },
+      {
+        "text": "It stores a copy of the slice, keyed by its contents",
+        "correct": false,
+        "why": "That is what an array key would give, `[2]int`; a slice cannot be hashed."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh63atqx",
+    "version": 1,
+    "section": "the-cost",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the tool section 03 suggests for it.",
+    "hint": "Behaviour, the same code for several types, and the unknown.",
+    "pairs": [
+      {
+        "left": "One `Sum` that works for `int` and for `float64`",
+        "right": "Generics, lesson 30"
+      },
+      {
+        "left": "Every type that can be written to, files and buffers alike",
+        "right": "An interface with methods, lesson 27"
+      },
+      {
+        "left": "A JSON document whose shape nobody knew in advance",
+        "right": "`map[string]any` read with assertions"
+      },
+      {
+        "left": "A JSON document whose fields are known",
+        "right": "A struct with typed fields"
+      }
+    ],
+    "right_distractors": [
+      "A `[]any` with a conversion for every element"
+    ]
+  },
+  {
+    "id": "ex-mm3tajpb",
+    "version": 1,
+    "section": "nil-inside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`var p *Player` and then `var v any = p`. What does `fmt.Println(p == nil, v == nil)` print?",
+    "hint": "What does `v` hold besides the pointer?",
+    "choices": [
+      {
+        "text": "`true true`",
+        "correct": false,
+        "why": "That is the common belief. `v` holds a type, `*main.Player`, so it is not an empty interface."
+      },
+      {
+        "text": "`true false`",
+        "correct": true,
+        "why": "Right. The pointer is nil; the interface has its type word filled, so it is not."
+      },
+      {
+        "text": "`false false`",
+        "correct": false,
+        "why": "`p` was declared and never given a value, so it is a nil pointer and `p == nil` is true."
+      },
+      {
+        "text": "No output: comparing an interface with `nil` is refused",
+        "correct": false,
+        "why": "It compiles; `== nil` is how you ask whether an interface holds no type at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xekrcht",
+    "version": 1,
+    "section": "nil-inside",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An interface value compares equal to `nil` only when it holds no value and no ___ either.",
+    "hint": "It is the word that `%T` prints.",
+    "blanks": [
+      {
+        "accept": [
+          "type"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k7ntzpm4",
+    "version": 1,
+    "section": "nil-inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first version of `lookup`, there is no `zoe` in the map. What does the loop print for her?",
+    "hint": "`lookup` returns `p` as an `any`, and the caller tests `r != nil`.",
+    "choices": [
+      {
+        "text": "`zoe not found`, from the `else` branch",
+        "correct": false,
+        "why": "That is what the fixed version printed. Here `r != nil` was true, since `r` held a type."
+      },
+      {
+        "text": "`zoe found: <nil>`",
+        "correct": true,
+        "why": "Right. The test passed, and `%v` printed the nil pointer inside as `<nil>`."
+      },
+      {
+        "text": "Nothing: `lookup` panics on the nil pointer",
+        "correct": false,
+        "why": "`lookup` only returns the pointer; nothing reads through it until `.Name` on the last line."
+      },
+      {
+        "text": "Nothing: returning a `*Player` as `any` does not compile",
+        "correct": false,
+        "why": "Every type satisfies `any`, so `return p` compiled, and `go vet` passed too."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2e6zd7a",
+    "version": 1,
+    "section": "nil-inside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func open(name string) io.Reader` returns `f`, a `*os.File` variable that stays nil when the file is missing. Callers test `if r := open(n); r != nil`. What is the sound fix?",
+    "hint": "The same two words as the figure, with `io.Reader` in place of `any`.",
+    "choices": [
+      {
+        "text": "Test `r != (io.Reader)(nil)` in the callers instead",
+        "correct": false,
+        "why": "That is the same question as `r != nil`, an empty interface, and it gets the same wrong answer."
+      },
+      {
+        "text": "Return `nil` itself when `f` is nil, or return `*os.File`",
+        "correct": true,
+        "why": "Right. Either the interface comes back with no type, or the caller compares a pointer with nil."
+      },
+      {
+        "text": "Run `go vet`, which reports a nil pointer stored in an interface",
+        "correct": false,
+        "why": "`go vet` passed the `lookup` program in silence; nothing about it breaks a rule."
+      },
+      {
+        "text": "Print `r` with `%v` before testing it",
+        "correct": false,
+        "why": "`%v` prints `<nil>` for both kinds of nil, which is why the bug hides in logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8j7b0xg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when the first `lookup(\"zoe\")` runs and its result is tested.",
+    "hint": "Start inside `find`.",
+    "items": [
+      "`find` returns a nil `*Player`, since the map has no `zoe`",
+      "`return p` stores that pointer in the `any`, filling its type word",
+      "The caller's `r != nil` is true",
+      "The program prints `zoe found: <nil>`"
+    ]
+  },
+  {
+    "id": "ex-2p60xw3g",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these statements about `any` are true? Choose all that apply.",
+    "hint": "Sections 02, 03 and 04 each give one.",
+    "choices": [
+      {
+        "text": "It is an alias for `interface{}`, and arrived in Go 1.18",
+        "correct": true,
+        "why": "Yes: `go doc builtin.any`, and a `go 1.17` module refused it."
+      },
+      {
+        "text": "Decoding JSON into it turns whole numbers into `int`",
+        "correct": false,
+        "why": "Every JSON number becomes a `float64`, `31` included."
+      },
+      {
+        "text": "A wrong assertion on it compiles and fails at run time",
+        "correct": true,
+        "why": "Yes: `.(int)` on a `float64` built and then panicked."
+      },
+      {
+        "text": "A `[]string` can be passed wherever a `[]any` is expected",
+        "correct": false,
+        "why": "The compiler refused `fmt.Println(names...)`; each string must go into a new `[]any`."
+      },
+      {
+        "text": "Holding a nil pointer, it does not compare equal to `nil`",
+        "correct": true,
+        "why": "Yes: the type word is filled, so `v == nil` printed `false`."
+      }
+    ]
+  }
+]

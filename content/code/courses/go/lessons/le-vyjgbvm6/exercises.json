@@ -1,0 +1,581 @@
+[
+  {
+    "id": "ex-jqher51k",
+    "version": 1,
+    "section": "the-difference",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func (c Counter) Reset() { c.n = 0 }` is called as `c.Reset()` on a `Counter` whose `n` is 5. What is `c.n` afterwards?",
+    "hint": "What does a value receiver hold?",
+    "choices": [
+      {
+        "text": "0, because `Reset` set the field",
+        "correct": false,
+        "why": "It set the field of its own copy. The caller's `c` was never handed to the method."
+      },
+      {
+        "text": "5",
+        "correct": true,
+        "why": "Right. The receiver is a copy made for the call, as `IncByValue` showed: it counted to 1 and `c.n` stayed 0."
+      },
+      {
+        "text": "Nothing: assigning to a field of a value receiver is a compile error",
+        "correct": false,
+        "why": "The compiler accepts it without a word, which is what makes the bug easy to write."
+      },
+      {
+        "text": "It panics, since the method writes to a copy that no longer exists",
+        "correct": false,
+        "why": "The copy exists for the whole call; it is dropped only when the method returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsss1g7q",
+    "version": 1,
+    "section": "the-difference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`c` is a variable of type `Counter`, and `Inc` has the receiver `*Counter`. Why does `c.Inc()` compile?",
+    "hint": "What can be taken from a variable?",
+    "choices": [
+      {
+        "text": "`Inc` runs on a copy of `c`, as a value method would",
+        "correct": false,
+        "why": "Then `c.n` would not have reached 2. The method received the address of `c` itself."
+      },
+      {
+        "text": "A pointer method accepts any value of its type, so no address is involved",
+        "correct": false,
+        "why": "A map element and a literal are values of the type too, and the same call on them was refused."
+      },
+      {
+        "text": "The compiler rewrites it as `(&c).Inc()`",
+        "correct": true,
+        "why": "Right. `c` is a variable, so it has an address, and the compiler takes it for you."
+      },
+      {
+        "text": "Go converts the `Counter` to a `*Counter` by copying it to a new place",
+        "correct": false,
+        "why": "A pointer to a copy would lose the change exactly as a value receiver does; `c.n` reached 2."
+      }
+    ]
+  },
+  {
+    "id": "ex-px3z1xvq",
+    "version": 1,
+    "section": "the-difference",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A receiver is the method's first ___, and like every other one it receives a copy of what it is given.",
+    "hint": "`%T` printed `func(main.Counter)` for `Counter.IncByValue`.",
+    "blanks": [
+      {
+        "accept": [
+          "parameter",
+          "argument"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0wk0nh37",
+    "version": 1,
+    "section": "the-difference",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Inc` has the receiver `*Counter`. Which of these calls compile? Choose all that apply.",
+    "hint": "Which of them has an address Go will give out?",
+    "choices": [
+      {
+        "text": "`c.Inc()`, where `c` is a local `Counter` variable",
+        "correct": true,
+        "why": "Yes. A variable has an address, and the compiler writes `(&c).Inc()`."
+      },
+      {
+        "text": "`list[0].Inc()`, where `list` is a `[]Counter`",
+        "correct": true,
+        "why": "Yes. A slice element lives in an array that stays put; line 20 compiled."
+      },
+      {
+        "text": "`byName[\"ana\"].Inc()`, where `byName` is a `map[string]Counter`",
+        "correct": false,
+        "why": "Refused: a map's entries move when it grows, so Go never hands out their address."
+      },
+      {
+        "text": "`Counter{}.Inc()`",
+        "correct": false,
+        "why": "Refused: a literal was never stored in a variable, so there is nothing whose address can be taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w3h3405",
+    "version": 1,
+    "section": "the-difference",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`IncByValue` has a value receiver. After `p := &c`, what does `p.IncByValue()` hand the method?",
+    "hint": "The program printed 3 inside and 2 after.",
+    "choices": [
+      {
+        "text": "A copy of the `Counter` that `p` points at",
+        "correct": true,
+        "why": "Right. The call is `(*p).IncByValue()`, and a value receiver copies what it is given."
+      },
+      {
+        "text": "The pointer `p`, so the count reaches `c` this time",
+        "correct": false,
+        "why": "`c.n` stayed at 2 after the call, so the method did not write through `p`."
+      },
+      {
+        "text": "A copy of the address in `p`",
+        "correct": false,
+        "why": "That is what a pointer receiver would get. The method is declared on `Counter`, so it gets a `Counter`."
+      },
+      {
+        "text": "Nothing: a value method cannot be called through a pointer",
+        "correct": false,
+        "why": "It can, and the program did: the compiler follows the pointer for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-f657sr6k",
+    "version": 1,
+    "section": "method-sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which methods are in the method set of `*Money`?",
+    "hint": "Read the second row of the table.",
+    "choices": [
+      {
+        "text": "Only those declared with the receiver `*Money`, the pointer type itself",
+        "correct": false,
+        "why": "From an address the compiler can reach the value, so the value methods are in it too."
+      },
+      {
+        "text": "Only those declared with the receiver `Money`",
+        "correct": false,
+        "why": "That is the method set of `Money`. The pointer's set has these and more."
+      },
+      {
+        "text": "All those declared with the receiver `Money` and with `*Money`",
+        "correct": true,
+        "why": "Right. The pointer has both kinds; the value has only its own."
+      },
+      {
+        "text": "Every method of every type in the package",
+        "correct": false,
+        "why": "A method set belongs to one type: methods declared on other types are never in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-de8hqeeb",
+    "version": 1,
+    "section": "method-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `func (m *Money) String() string`, why did `fmt.Println(price)` print `{1990}`?",
+    "hint": "What did `fmt` receive, and what does it ask of it?",
+    "choices": [
+      {
+        "text": "`Println` calls `String` only for the `%s` verb of `Printf`",
+        "correct": false,
+        "why": "`Println` printed `R$ 19,90` for `&price`, so it does call `String` when the value has one."
+      },
+      {
+        "text": "It got a `Money`, and `String` is not in the method set of `Money`",
+        "correct": true,
+        "why": "Right. The method belongs to `*Money`, so the value did not satisfy `fmt.Stringer`."
+      },
+      {
+        "text": "The `String` method returned an error, so `fmt` fell back to the fields",
+        "correct": false,
+        "why": "`String` returns a string and no error; `price.String()` printed `R$ 19,90`."
+      },
+      {
+        "text": "`fmt` can only call methods on types from the standard library",
+        "correct": false,
+        "why": "With a value receiver the same `Money` printed `R$ 19,90` three times."
+      }
+    ]
+  },
+  {
+    "id": "ex-7w0vcesh",
+    "version": 1,
+    "section": "method-sets",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Money` has `func (m *Money) String() string`, and `price` is a `Money` variable. Match each line to what it does.",
+    "hint": "Section 03 ran every one of them.",
+    "pairs": [
+      {
+        "left": "`fmt.Println(price)`",
+        "right": "prints the fields, `{1990}`"
+      },
+      {
+        "left": "`fmt.Println(&price)`",
+        "right": "prints `R$ 19,90`"
+      },
+      {
+        "left": "`price.String()`",
+        "right": "compiles, with `&price` taken for you"
+      },
+      {
+        "left": "`var s fmt.Stringer = price`",
+        "right": "refused: the method has a pointer receiver"
+      }
+    ],
+    "right_distractors": [
+      "panics at run time"
+    ]
+  },
+  {
+    "id": "ex-04cf1f8h",
+    "version": 1,
+    "section": "method-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Temp` has `func (t Temp) String() string` and `t` is a `Temp`. Does `var s fmt.Stringer = &t` compile?",
+    "hint": "This is the reverse of the `Money` case.",
+    "choices": [
+      {
+        "text": "No: a value method cannot be reached from a pointer",
+        "correct": false,
+        "why": "`p.IncByValue()` reached one in section 02; the compiler follows the pointer."
+      },
+      {
+        "text": "No: it needs `var s fmt.Stringer = *&t`",
+        "correct": false,
+        "why": "That would store a `Temp`, which works too, but the pointer was never the problem."
+      },
+      {
+        "text": "Yes: the method set of `*Temp` includes every method of `Temp`",
+        "correct": true,
+        "why": "Right. With a value receiver both `t` and `&t` satisfy it, as `&price` did once `String` took a value."
+      },
+      {
+        "text": "Only if `Temp` also declares a pointer method of the same name",
+        "correct": false,
+        "why": "A type may not have two methods of one name, and it does not need one here."
+      }
+    ]
+  },
+  {
+    "id": "ex-72syds5a",
+    "version": 1,
+    "section": "method-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Go leave pointer methods out of the method set of a value?",
+    "hint": "Think of the copy that `fmt` holds.",
+    "choices": [
+      {
+        "text": "Because calling through a pointer is slower than calling on a value",
+        "correct": false,
+        "why": "Speed has nothing to do with it; the rule is about what a change would reach."
+      },
+      {
+        "text": "What sits in an interface is a copy with no address to use, so changing it would reach nobody",
+        "correct": true,
+        "why": "Right. That would be section 02's bug, invisible; Go refuses it instead."
+      },
+      {
+        "text": "Because the garbage collector cannot follow a pointer stored in an interface",
+        "correct": false,
+        "why": "`&price` was stored in an interface and printed fine; the collector follows it like any other pointer."
+      },
+      {
+        "text": "It is a leftover from before Go 1, kept for compatibility",
+        "correct": false,
+        "why": "It follows from what a copy is, and it would be the right rule in a language designed today."
+      }
+    ]
+  },
+  {
+    "id": "ex-52mm2znd",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A struct has a `sync.Mutex` field. What receiver should its methods have?",
+    "hint": "What is a copy of a lock?",
+    "choices": [
+      {
+        "text": "A pointer, on every method",
+        "correct": true,
+        "why": "Right. A copy of a lock is a different lock, and `go vet` refused `Hits` for copying one."
+      },
+      {
+        "text": "A value on the methods that only read, a pointer on the others",
+        "correct": false,
+        "why": "`Hits` only read, and it was exactly the method `go vet` reported."
+      },
+      {
+        "text": "A value on every method, so that each call has a lock of its own",
+        "correct": false,
+        "why": "A lock of its own protects nothing: nobody else holds it."
+      },
+      {
+        "text": "Either: the program printed the right count with a value receiver",
+        "correct": false,
+        "why": "It printed 2 only because nothing else ran at the same time; `go vet` still refused it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2x625b68",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`time.Time` has 43 methods with a value receiver and four with a pointer. What do the four have in common?",
+    "hint": "Read their names: GobDecode, UnmarshalBinary, UnmarshalJSON, UnmarshalText.",
+    "choices": [
+      {
+        "text": "They are the slowest methods, so a pointer saves time",
+        "correct": false,
+        "why": "A `Time` is small; the receiver is chosen by what the method does to it."
+      },
+      {
+        "text": "They were added later and nobody changed them back",
+        "correct": false,
+        "why": "They are pointers on purpose, and a value receiver would make them useless."
+      },
+      {
+        "text": "They read a `Time` and turn it into bytes",
+        "correct": false,
+        "why": "That is the other direction, `MarshalJSON` and its siblings, which take a value."
+      },
+      {
+        "text": "Each decodes bytes into the receiver, so each must overwrite it",
+        "correct": true,
+        "why": "Right. That is question 1: a method that changes its receiver needs a pointer."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hepwj09",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these types should get pointer receivers? Choose all that apply.",
+    "hint": "Ask section 04's four questions of each.",
+    "choices": [
+      {
+        "text": "A `Cart` whose `Add` method appends to its `Items` field",
+        "correct": true,
+        "why": "Yes: `Add` changes the receiver, so every method of `Cart` takes a pointer."
+      },
+      {
+        "text": "A `Point{X, Y float64}` whose methods return new points",
+        "correct": false,
+        "why": "Small and used like a number, with nothing changed in place: values, like `time.Time`."
+      },
+      {
+        "text": "A `Cache` with a `sync.Mutex` and a map",
+        "correct": true,
+        "why": "Yes: a lock must not be copied, whatever each method does."
+      },
+      {
+        "text": "A `Frame` carrying a `[1 << 20]byte` array",
+        "correct": true,
+        "why": "Yes: every value-receiver call would copy a mebibyte, the size lesson 22 timed in the hundreds of microseconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-362hkavm",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`strings.Builder`'s `Len` and `String` only read the builder, yet they take `*Builder`. What would a value receiver on them break?",
+    "hint": "Its documentation says what must not happen to it.",
+    "choices": [
+      {
+        "text": "Nothing: they would just run a little slower",
+        "correct": false,
+        "why": "The cost is not speed. Each call would copy a value the type says must not be copied."
+      },
+      {
+        "text": "Every call would copy a non-zero `Builder`, which its documentation forbids",
+        "correct": true,
+        "why": "Right. \"Do not copy a non-zero Builder\" is question 2, so every method takes a pointer."
+      },
+      {
+        "text": "`Len` would always return 0, as `IncByValue` always left 0",
+        "correct": false,
+        "why": "A copy holds the same length as the original; reading a copy gives the right number."
+      },
+      {
+        "text": "The compiler would refuse a type that mixes the two kinds",
+        "correct": false,
+        "why": "Mixing compiles, as `time.Time` shows; it is advice, not a rule of the language."
+      }
+    ]
+  },
+  {
+    "id": "ex-15zcs9bs",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go vet` printed `Hits passes lock by value: example.com/stats.Stats contains sync.Mutex`. What is the fix?",
+    "hint": "Line 19 is the receiver.",
+    "choices": [
+      {
+        "text": "Nothing: the program printed the right count, 2",
+        "correct": false,
+        "why": "It was right only because nothing else ran at the same time; with locks, that is the case that matters."
+      },
+      {
+        "text": "Remove `Lock` and `Unlock` from `Hits`, since it only reads",
+        "correct": false,
+        "why": "Reading while another part of the program writes is what the lock is for."
+      },
+      {
+        "text": "Declare it `func (s *Stats) Hits() int`",
+        "correct": true,
+        "why": "Right. With a pointer receiver the method uses the caller's lock instead of a copy."
+      },
+      {
+        "text": "Make the field `mu *sync.Mutex`, so copies share it",
+        "correct": false,
+        "why": "It would silence `go vet`, but `Hits` would still read `hits` from a copy; the receiver is what is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtkqbc90",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With section 02's `Counter`, a program runs `var c Counter`, then `c.Inc()`, `c.IncByValue()`, `c.Inc()`, `p := &c` and `p.IncByValue()`. What is `c.n` at the end?",
+    "hint": "Count only the calls that receive an address.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "count"
+  },
+  {
+    "id": "ex-heewxsk8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`String` is declared on `*Money`. Put in order what happens during `fmt.Println(price)`.",
+    "hint": "It starts with the argument and ends with what is printed.",
+    "items": [
+      "`price` is copied into an argument of type `any`",
+      "`fmt` asks whether that value satisfies `fmt.Stringer`",
+      "it does not, because `String` is not in the method set of `Money`",
+      "`fmt` prints the fields, `{1990}`"
+    ]
+  },
+  {
+    "id": "ex-q3jf4s5c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func (m *Money) Add(c int64)` adds cents, and `prices` is a `map[string]Money`. `prices[\"tea\"].Add(50)` is refused. Which change makes the call compile and update the map?",
+    "hint": "What does the map have to hold for its element to be an address already?",
+    "choices": [
+      {
+        "text": "Give `Add` a value receiver",
+        "correct": false,
+        "why": "It would compile, and add the cents to a copy: the map would never change."
+      },
+      {
+        "text": "Write `(&prices[\"tea\"]).Add(50)`",
+        "correct": false,
+        "why": "That asks for the address of a map element, which lesson 23 saw refused."
+      },
+      {
+        "text": "Change the element type to a pointer, as `byName` did",
+        "correct": true,
+        "why": "Right. With `map[string]*Money` each element is an address, and `Add` writes through it."
+      },
+      {
+        "text": "Call it through a variable: `m := prices[\"tea\"]; m.Add(50)`",
+        "correct": false,
+        "why": "It compiles, but `m` is a copy of the element; without storing `m` back the map is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-70f7032t",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the compiler's message: `Money does not implement fmt.Stringer (method String has ___ receiver)`.",
+    "hint": "Section 03 printed it.",
+    "blanks": [
+      {
+        "accept": [
+          "pointer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gh7nfs5t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Account` has `func (a Account) Balance() int64` and `func (a *Account) Deposit(c int64)`, and `acct` is an `Account`. An interface lists only `Balance() int64`, another lists only `Deposit(int64)`. Which can hold `acct` itself?",
+    "hint": "Which method is in the method set of `Account`?",
+    "choices": [
+      {
+        "text": "Both, since `acct.Deposit(50)` compiles",
+        "correct": false,
+        "why": "That call compiles because `acct` is a variable; a value stored in an interface has no address."
+      },
+      {
+        "text": "Only the one listing `Balance`; the other needs `&acct`",
+        "correct": true,
+        "why": "Right. A mixed type satisfies an interface or not depending on which method it names."
+      },
+      {
+        "text": "Neither, because a type with mixed receivers satisfies no interface",
+        "correct": false,
+        "why": "Mixing compiles; `Balance` is in the method set of `Account` and that is enough for the first."
+      },
+      {
+        "text": "The one listing `Deposit`, because pointer methods belong to the value too",
+        "correct": false,
+        "why": "It is the other way round: the value's method set lacks the pointer methods."
+      }
+    ]
+  }
+]

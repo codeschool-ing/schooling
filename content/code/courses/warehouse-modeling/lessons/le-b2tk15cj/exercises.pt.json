@@ -1,0 +1,465 @@
+{
+  "ex-rpb493qv": {
+    "prompt": "Ligue cada anomalia ao que dá errado.",
+    "hint": "As três são sobre gravar.",
+    "pairs": [
+      {
+        "left": "Anomalia de atualização",
+        "right": "Uma renomeação interrompida deixa dois nomes"
+      },
+      {
+        "left": "Anomalia de inserção",
+        "right": "Um departamento não existe antes de ter um livro"
+      },
+      {
+        "left": "Anomalia de exclusão",
+        "right": "Apagar o último livro apaga o departamento"
+      }
+    ],
+    "right_distractors": [
+      "Uma consulta lê mais colunas do que precisa"
+    ]
+  },
+  "ex-3arrbffv": {
+    "prompt": "Por que as anomalias que a normalização evita quase não aparecem no warehouse da Ana?",
+    "hint": "Quem grava nele, e como?",
+    "choices": [
+      {
+        "text": "Uma carga grava, em lotes, numa transação",
+        "why": "Isso. Muitos escritores em momentos aleatórios é o que gera anomalias; o warehouse tem um."
+      },
+      {
+        "text": "O DuckDB não tem UPDATE",
+        "why": "Tem; a seção 04 o usou."
+      },
+      {
+        "text": "O warehouse não tem valor repetido nenhum",
+        "why": "Ele repete de propósito: o departamento em cada linha de livro."
+      },
+      {
+        "text": "Warehouses nunca guardam texto que alguém vá querer renomear depois",
+        "why": "Departamentos são renomeados; a carga leva o nome novo."
+      }
+    ]
+  },
+  "ex-fw5khvz1": {
+    "prompt": "Dos três custos que uma junção impõe ao leitor, qual um motor colunar torna pequeno?",
+    "hint": "Dois deles são sobre pessoas.",
+    "choices": [
+      {
+        "text": "Saber que tabelas ligar",
+        "why": "Isso é conhecimento na cabeça de alguém; nenhum motor o remove."
+      },
+      {
+        "text": "Acertar a condição da junção",
+        "why": "Uma condição errada roda rápido e devolve o total errado."
+      },
+      {
+        "text": "Tempo",
+        "why": "Isso. Dimensões pequenas são baratas de ligar; os outros dois custos ficam."
+      },
+      {
+        "text": "Nenhum; junções são sempre caras",
+        "why": "A seção 06 as mediu como quase de graça aqui."
+      }
+    ]
+  },
+  "ex-jmt9a2y9": {
+    "prompt": "\"Desnormalizar move o custo de cada consulta para a carga.\" O que exatamente a carga faz uma vez que cada consulta faria de outro jeito?",
+    "hint": "Pense no departamento de um livro.",
+    "choices": [
+      {
+        "text": "Guarda em cache o resultado de todo relatório",
+        "why": "Isso é um agregado, e só para os relatórios para os quais foi feito."
+      },
+      {
+        "text": "Descobre o departamento de cada livro, corretamente, e o escreve na linha",
+        "why": "Isso. Toda consulta depois disso lê uma coluna em vez de percorrer a árvore."
+      },
+      {
+        "text": "Remove a tabela de categorias",
+        "why": "O staging ainda a tem; a estrela só não obriga o leitor a usá-la."
+      },
+      {
+        "text": "Indexa todas as colunas",
+        "why": "Índices não são o assunto desta lição."
+      }
+    ]
+  },
+  "ex-g5rr0272": {
+    "prompt": "Quantas linhas da tabela larga a renomeação de *Non-fiction* grava?",
+    "hint": "A coluna `wide_rows`."
+  },
+  "ex-za96tp2f": {
+    "prompt": "A renomeação da tabela larga foi interrompida depois de 2025. O que todo relatório agrupado por departamento teria mostrado?",
+    "hint": "Olhe as duas linhas do resultado.",
+    "choices": [
+      {
+        "text": "Um erro, porque a tabela estava bloqueada",
+        "why": "Nada a bloqueia depois que o comando para."
+      },
+      {
+        "text": "Só o nome antigo, até a atualização terminar",
+        "why": "2025 já dizia `Nonfiction`."
+      },
+      {
+        "text": "Os totais certos, porque a soma é a mesma",
+        "why": "O total geral é o mesmo; a linha do departamento se divide em duas."
+      },
+      {
+        "text": "Duas linhas, divididas por ano",
+        "why": "Isso. A anomalia de atualização, dentro de um warehouse."
+      }
+    ]
+  },
+  "ex-ak6b69fr": {
+    "prompt": "Qual é o jeito seguro de mudar um nome na tabela larga?",
+    "hint": "Ela é uma cópia.",
+    "choices": [
+      {
+        "text": "Atualizá-la no lugar, um ano por vez, de noite quando ninguém lê",
+        "why": "Isso é a atualização interrompida, em câmera lenta."
+      },
+      {
+        "text": "Acrescentar uma segunda coluna com o nome novo e deixar a antiga",
+        "why": "Duas colunas para um fato é a anomalia de propósito."
+      },
+      {
+        "text": "Reconstruí-la a partir da estrela",
+        "why": "Isso. Uma cópia derivada é reconstruída, nunca editada."
+      },
+      {
+        "text": "Pedir à ferramenta de relatório que renomeie na tela",
+        "why": "Aí toda ferramenta precisa saber, e o dado continua com o nome antigo."
+      }
+    ]
+  },
+  "ex-8tms4vg8": {
+    "prompt": "No PostgreSQL a estrela ocupou 85 MB e a tabela larga 242 MB. Quantas vezes maior é a tabela larga? Dê uma casa decimal.",
+    "hint": "Divida."
+  },
+  "ex-ygjzp9hk": {
+    "prompt": "Por que a tabela larga custa 2,8 vezes a estrela por linha e só 1,3 vez em Parquet?",
+    "hint": "Como é uma coluna de nomes de departamento?",
+    "choices": [
+      {
+        "text": "Uma coluna de valores repetidos comprime quase a nada",
+        "why": "Isso. A lição 8 mostra as codificações; a repetição que triplica um banco por linhas quase não mexe num por colunas."
+      },
+      {
+        "text": "O Parquet descarta linhas duplicadas",
+        "why": "Nenhuma linha é descartada; as 887.477 estão lá."
+      },
+      {
+        "text": "O PostgreSQL guarda texto duas vezes",
+        "why": "Guarda uma vez por linha, por extenso."
+      },
+      {
+        "text": "A tabela larga tem menos colunas em Parquet",
+        "why": "As mesmas 31 colunas."
+      }
+    ]
+  },
+  "ex-t4d61jb6": {
+    "prompt": "A estrela respondeu em 0,021 s e a tabela larga em 0,017 s. Qual é a leitura justa?",
+    "hint": "Uma execução cada, numa máquina compartilhada.",
+    "choices": [
+      {
+        "text": "A tabela larga é cerca de 20% mais rápida e deveria substituir a estrela",
+        "why": "Uma execução cada não demonstra 20% de diferença, e velocidade não é o único custo."
+      },
+      {
+        "text": "A estrela é mais lenta porque tem mais linhas",
+        "why": "Tem as mesmas 887.477 linhas fato e dimensões pequenas."
+      },
+      {
+        "text": "O DuckDB guardou a segunda consulta em cache",
+        "why": "Eram consultas diferentes em execuções diferentes."
+      },
+      {
+        "text": "Quase igual: junções a dimensões pequenas são baratas aqui",
+        "why": "Isso. A diferença é do tamanho do ruído."
+      }
+    ]
+  },
+  "ex-b5jsfhwy": {
+    "prompt": "Quais destes são custos reais de uma tabela larga? Marque todos os que se aplicam.",
+    "hint": "A seção 06 listou três.",
+    "choices": [
+      {
+        "text": "Precisa ser reconstruída, não editada",
+        "why": "Sim. A seção 04 mostrou o que editá-la faz."
+      },
+      {
+        "text": "Guarda uma granularidade só",
+        "why": "Sim. Estoque e pagamentos não estão numa tabela de itens."
+      },
+      {
+        "text": "Um atributo novo é uma coluna nova na maior tabela",
+        "why": "Sim, reconstruída do zero."
+      },
+      {
+        "text": "Ferramentas que leem uma tabela por vez não conseguem usá-la",
+        "why": "São exatamente as ferramentas a que ela serve."
+      }
+    ]
+  },
+  "ex-vemt0kp7": {
+    "prompt": "No projeto de Inmon, o que as pessoas consultam?",
+    "hint": "Não o núcleo normalizado.",
+    "choices": [
+      {
+        "text": "O warehouse normalizado diretamente",
+        "why": "Inmon põe marts na frente dele."
+      },
+      {
+        "text": "Data marts dimensionais construídos do warehouse normalizado",
+        "why": "Isso. O núcleo é a fonte da verdade; os marts são para ler."
+      },
+      {
+        "text": "Os hubs e satélites",
+        "why": "Esses são do Data Vault."
+      },
+      {
+        "text": "O banco operacional",
+        "why": "A lição 1 argumentou contra isso."
+      }
+    ]
+  },
+  "ex-4ke5pr9e": {
+    "prompt": "Ligue cada escola ao seu núcleo integrado.",
+    "hint": "Onde fica a camada normalizada.",
+    "pairs": [
+      {
+        "left": "Inmon",
+        "right": "Um warehouse corporativo normalizado"
+      },
+      {
+        "left": "Kimball",
+        "right": "Estrelas com dimensões conformadas"
+      },
+      {
+        "left": "Data Vault",
+        "right": "Hubs, links e satélites"
+      }
+    ],
+    "right_distractors": [
+      "Uma tabela larga"
+    ]
+  },
+  "ex-2z1rt22n": {
+    "prompt": "Um banco tem quarenta sistemas de origem, muda-os todo trimestre, e seus auditores perguntam que carga gravou cada número. Que projeto a lição sugere como o melhor embaixo dos marts?",
+    "hint": "Só inserts, e toda linha carimbada.",
+    "choices": [
+      {
+        "text": "Um Data Vault",
+        "why": "Isso. Origens novas são satélites novos, e toda linha diz que carga a trouxe."
+      },
+      {
+        "text": "Uma tabela larga",
+        "why": "Ela não registra nada sobre cargas e é refeita por inteiro."
+      },
+      {
+        "text": "Só estrelas de Kimball",
+        "why": "Funciona, mas conformar quarenta origens mutáveis e auditar cargas é onde um vault ajuda."
+      },
+      {
+        "text": "Os próprios bancos operacionais",
+        "why": "Quarenta, em quarenta formatos, sem histórico."
+      }
+    ]
+  },
+  "ex-f5c0c2qh": {
+    "prompt": "O que um hub guarda?",
+    "hint": "Chaves e mais nada.",
+    "choices": [
+      {
+        "text": "Atributos descritivos com o histórico",
+        "why": "Esses são satélites."
+      },
+      {
+        "text": "Relações entre chaves",
+        "why": "Esses são links."
+      },
+      {
+        "text": "Chaves de negócio, e quando chegaram",
+        "why": "Isso. Uma linha por número de cliente, por ISBN."
+      },
+      {
+        "text": "Totais pré-somados",
+        "why": "Esses são agregados, fora do vault."
+      }
+    ]
+  },
+  "ex-7tabzfez": {
+    "prompt": "Por que ninguém tira relatório direto de um Data Vault?",
+    "hint": "Veja a consulta do nível atual.",
+    "choices": [
+      {
+        "text": "Vaults são pequenos demais para relatórios",
+        "why": "São maiores que estrelas, não menores."
+      },
+      {
+        "text": "Toda pergunta precisa de junções e uma janela para achar a linha mais recente",
+        "why": "Isso. É por isso que se constroem marts em cima dele."
+      },
+      {
+        "text": "Os dados dele são criptografados com md5",
+        "why": "O md5 gera uma chave, não um segredo."
+      },
+      {
+        "text": "Não guarda histórico",
+        "why": "Guarda todo."
+      }
+    ]
+  },
+  "ex-1nc4c3bs": {
+    "prompt": "Num Data Vault, os atributos descritivos e as mudanças deles moram em tabelas chamadas ___.",
+    "hint": "Orbitam um hub.",
+    "blanks": [
+      {
+        "accept": [
+          "satélites",
+          "satelites",
+          "satellites"
+        ]
+      }
+    ]
+  },
+  "ex-eag6g5cd": {
+    "prompt": "Quantas linhas a `agg_sales_month` tem?",
+    "hint": "Mês, loja e departamento."
+  },
+  "ex-zawm773e": {
+    "prompt": "Que regra impede um agregado de discordar da origem sobre os dados?",
+    "hint": "De onde ele é construído?",
+    "choices": [
+      {
+        "text": "É carregado direto do banco operacional",
+        "why": "Aí poderia discordar da tabela fato."
+      },
+      {
+        "text": "Fica guardado num banco separado",
+        "why": "Onde fica guardado não muda nada."
+      },
+      {
+        "text": "Não tem chaves de dimensão",
+        "why": "Mantém as conformadas, agregadas."
+      },
+      {
+        "text": "Vem da tabela fato atômica",
+        "why": "Isso. Derivado, nunca carregado da origem."
+      }
+    ]
+  },
+  "ex-bth3tmb6": {
+    "prompt": "Depois da correção, a tabela fato e o agregado diferem em 1.000 centavos. O que há de errado com o agregado?",
+    "hint": "Quando ele foi construído?",
+    "choices": [
+      {
+        "text": "Arredonda cada mês para os dez reais mais próximos",
+        "why": "Somou centavos exatos; batia até o centavo antes."
+      },
+      {
+        "text": "Conta pedidos cancelados",
+        "why": "Foi construído da mesma tabela fato."
+      },
+      {
+        "text": "Tem a idade da última reconstrução",
+        "why": "Isso. Uma cópia só é tão atual quanto o momento em que foi feita."
+      },
+      {
+        "text": "O DuckDB o corrompeu",
+        "why": "Nada está corrompido; está desatualizado."
+      }
+    ]
+  },
+  "ex-y68k2mkt": {
+    "prompt": "Ponha em ordem os passos de uma carga que mantém um agregado verdadeiro.",
+    "hint": "Detalhe primeiro, resumo depois, conferência por último.",
+    "items": [
+      "Carregar as linhas corrigidas na tabela fato",
+      "Reconstruir o agregado a partir da tabela fato",
+      "Comparar os dois totais, e falhar a carga se diferirem"
+    ],
+    "trap": "Conferir antes de reconstruir faria falhar toda carga que mudasse algo."
+  },
+  "ex-w4mbsbdf": {
+    "prompt": "Um time mantém uma tabela de preços de produtos que várias aplicações atualizam linha a linha o dia todo. Ela deve ser desnormalizada nas linhas dos produtos?",
+    "hint": "Quem grava nela?",
+    "choices": [
+      {
+        "text": "Não: muitos escritores, linha a linha",
+        "why": "Isso. Normalize o que muitos gravam; ali as anomalias são reais."
+      },
+      {
+        "text": "Sim, repetir é barato num banco colunar",
+        "why": "Armazenamento não é a questão quando muitos escritores podem deixá-la meio atualizada."
+      },
+      {
+        "text": "Sim, e acrescentar um agregado também",
+        "why": "Isso acrescenta uma segunda cópia a manter em sincronia."
+      },
+      {
+        "text": "Só se estiver em Parquet",
+        "why": "O formato não muda quem grava nela."
+      }
+    ]
+  },
+  "ex-x17kkp0a": {
+    "prompt": "Normalize o que muitos gravam, desnormalize o que muitos leem, e nunca edite uma ___.",
+    "hint": "Uma tabela larga ou um agregado é uma.",
+    "blanks": [
+      {
+        "accept": [
+          "cópia",
+          "copia"
+        ]
+      }
+    ]
+  },
+  "ex-syecrkgb": {
+    "prompt": "Uma ferramenta de painel só lê uma tabela. O que a Ana deve dar a ela?",
+    "hint": "A estrela continua sendo o modelo.",
+    "choices": [
+      {
+        "text": "Trocar a estrela por uma tabela larga",
+        "why": "Aí todo outro processo e granularidade perde o modelo."
+      },
+      {
+        "text": "As tabelas de staging",
+        "why": "Nada fora da carga lê o staging."
+      },
+      {
+        "text": "Uma tabela larga que os analistas corrigem à mão quando acham erros",
+        "why": "Editar uma cópia é como a anomalia volta."
+      },
+      {
+        "text": "Uma tabela larga refeita a partir da estrela após toda carga",
+        "why": "Isso. Uma saída do warehouse, não a fundação dele."
+      }
+    ]
+  },
+  "ex-zd194qdt": {
+    "prompt": "Que afirmação sobre armazenamento e normalização as medições desta lição sustentam?",
+    "hint": "Dois motores, duas razões.",
+    "choices": [
+      {
+        "text": "A repetição custa o mesmo em todo lugar",
+        "why": "Custou 2,8 vezes num e 1,3 no outro."
+      },
+      {
+        "text": "O argumento de espaço é forte por linha e fraco por coluna",
+        "why": "Isso. 2,8 vezes contra 1,3 vez."
+      },
+      {
+        "text": "O Parquet deixa a tabela larga menor que a estrela",
+        "why": "Menor que por linha, ainda maior que a estrela."
+      },
+      {
+        "text": "O PostgreSQL comprime repetição melhor",
+        "why": "Foi onde a tabela larga triplicou."
+      }
+    ]
+  }
+}

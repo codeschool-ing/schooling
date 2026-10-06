@@ -1,0 +1,593 @@
+[
+  {
+    "id": "ex-zyw393dr",
+    "version": 1,
+    "section": "no-implicit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the lab's amd64 machine `int` and `int64` are both 64 bits wide. Why is `total + count` still refused when one is `int64` and the other `int`?",
+    "hint": "Read the message: what does it say is mismatched?",
+    "choices": [
+      {
+        "text": "Because adding the two could overflow the 64 bits on this machine at run time",
+        "correct": false,
+        "why": "Overflow is not what the message names, and the same refusal happens with values far too small to overflow."
+      },
+      {
+        "text": "Because the compiler checks types, never widths",
+        "correct": true,
+        "why": "Right. The compiler checks types, not sizes, so the program builds the same way on a machine where `int` is 32 bits."
+      },
+      {
+        "text": "Because `int64` is only for values that do not fit in an `int`",
+        "correct": false,
+        "why": "Nothing stops `int64` holding 10. The refusal is about the two types meeting, not the values."
+      },
+      {
+        "text": "Because Go refuses arithmetic on `int64` variables",
+        "correct": false,
+        "why": "`total + int64(count)` printed 13, so arithmetic on `int64` is fine once both sides agree."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t54j630",
+    "version": 1,
+    "section": "no-implicit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`price` is a `float64`. `price * n` compiled with `const n = 3`, and `price * m` was refused with `const m int = 3`. What is the difference between `n` and `m`?",
+    "hint": "One of the two declarations names a type.",
+    "choices": [
+      {
+        "text": "`m` is a variable, and variables do not mix with floats",
+        "correct": false,
+        "why": "`m` is a constant too. Being constant is not enough; being untyped is what counts."
+      },
+      {
+        "text": "`n` is rounded to a float when declared, and `m` is kept exact",
+        "correct": false,
+        "why": "`n` has no type at all until it meets `price`; nothing is rounded."
+      },
+      {
+        "text": "`n` is untyped and takes the type it meets; `m` is already an `int`",
+        "correct": true,
+        "why": "Right. An untyped constant becomes `float64` to meet `price`; a typed one is an `int` like any variable."
+      },
+      {
+        "text": "The compiler checks the type of a constant declared on the line just before",
+        "correct": false,
+        "why": "Where a constant is declared changes nothing; whether it carries a type does."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6yxb837",
+    "version": 1,
+    "section": "no-implicit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`count` is an `int` holding 3. What happens to `fmt.Println(count * 2.5)`?",
+    "hint": "Can `2.5` become an `int` without losing anything?",
+    "choices": [
+      {
+        "text": "It prints `7.5`, because the constant turns the expression into a float",
+        "correct": false,
+        "why": "A constant takes the type of what it meets, here `int`; it never changes the other side's type."
+      },
+      {
+        "text": "It prints `6`, because `2.5` is cut to `2` first",
+        "correct": false,
+        "why": "That would be a silent loss, which is exactly what the compiler will not do with a constant."
+      },
+      {
+        "text": "It prints `7`, because the product is cut to an `int` at the end",
+        "correct": false,
+        "why": "Nothing is computed: the program does not build."
+      },
+      {
+        "text": "It does not compile: `2.5` would be truncated to fit an `int`",
+        "correct": true,
+        "why": "Right. The message is `2.5 (untyped float constant) truncated to int`; write `float64(count) * 2.5` for 7.5."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdfbxryk",
+    "version": 1,
+    "section": "no-implicit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`x` is an `int` and `y` is a `float64`. Which of these expressions compile? Choose all that apply.",
+    "hint": "An untyped constant converts when its value survives.",
+    "choices": [
+      {
+        "text": "`y * 2`",
+        "correct": true,
+        "why": "Yes. `2` becomes `float64` to meet `y`."
+      },
+      {
+        "text": "`x + 1.0`",
+        "correct": true,
+        "why": "Yes. `1.0` is a whole number, so it becomes an `int` with nothing lost; the lab printed 4."
+      },
+      {
+        "text": "`x * 0.5`",
+        "correct": false,
+        "why": "`0.5` cannot become an `int` without losing the half, so it is refused as truncated."
+      },
+      {
+        "text": "`y + x`",
+        "correct": false,
+        "why": "Two variables of different types: mismatched types `float64` and `int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e69phjf0",
+    "version": 1,
+    "section": "no-implicit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In C, `-1 < 1u` is false because the `-1` is converted to unsigned first. In Go, `b` is an `int` holding -1 and `a` is a `uint` holding 1. What does `b < a` do?",
+    "hint": "The rule is the same for comparisons as for arithmetic.",
+    "choices": [
+      {
+        "text": "It is false, as in C",
+        "correct": false,
+        "why": "That needs an implicit conversion to unsigned, which Go does not make."
+      },
+      {
+        "text": "It is true, because Go compares the mathematical values",
+        "correct": false,
+        "why": "Go does not compare across types at all; it never gets as far as the values."
+      },
+      {
+        "text": "The program does not compile: mismatched types `int` and `uint`",
+        "correct": true,
+        "why": "Right. The lab refused it with exactly that message; you choose the type with a conversion."
+      },
+      {
+        "text": "It compiles and panics at run time when the signs differ",
+        "correct": false,
+        "why": "A type mismatch is found while compiling; nothing waits for the program to run."
+      }
+    ]
+  },
+  {
+    "id": "ex-06awc3vv",
+    "version": 1,
+    "section": "conversions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`f` is a `float64` holding `-3.9`. What does `int(f)` give?",
+    "hint": "The cut goes toward zero.",
+    "choices": [
+      {
+        "text": "`-4`, the nearest whole number",
+        "correct": false,
+        "why": "That is rounding, which `math.Round` does; a conversion only drops the fraction."
+      },
+      {
+        "text": "`-3`",
+        "correct": true,
+        "why": "Right. The fraction is dropped, so the result moves toward zero: the lab printed `-3` for `int(-f)` with `f` at 3.9."
+      },
+      {
+        "text": "`-4`, because a negative number is cut downwards",
+        "correct": false,
+        "why": "Cutting downwards is what a floor function does. A conversion cuts toward zero for both signs."
+      },
+      {
+        "text": "A compile error, because a float cannot become an int",
+        "correct": false,
+        "why": "On a variable the conversion is allowed; only a constant like `3.9` written in the source is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpmk6xph",
+    "version": 1,
+    "section": "conversions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n` is an `int` holding 260. What does `uint8(n)` print?",
+    "hint": "A `uint8` keeps the low eight bits, worth up to 255.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-zr0fqsm4",
+    "version": 1,
+    "section": "conversions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`total` is 7 and `count` is 2, both `int`. What does `fmt.Println(float64(total / count))` print?",
+    "hint": "What runs first, the division or the conversion?",
+    "choices": [
+      {
+        "text": "`3.5`",
+        "correct": false,
+        "why": "That needs a float division, which only `float64(total) / float64(count)` gives."
+      },
+      {
+        "text": "`3`",
+        "correct": true,
+        "why": "Right. `7 / 2` is integer division, 3, and converting 3 to `float64` prints `3`."
+      },
+      {
+        "text": "`4`, because the conversion rounds the half up",
+        "correct": false,
+        "why": "The half was gone before the conversion ran; there was nothing left to round."
+      },
+      {
+        "text": "A compile error, because the conversion needs a float inside the parentheses",
+        "correct": false,
+        "why": "Converting an `int` to `float64` is always allowed; the problem is when it happens, not whether."
+      }
+    ]
+  },
+  {
+    "id": "ex-darmdktx",
+    "version": 1,
+    "section": "conversions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`n` is an `int` holding 65. What does `fmt.Println(string(n))` print?",
+    "hint": "Lesson 8 printed `'A'` as a number.",
+    "choices": [
+      {
+        "text": "`A`",
+        "correct": true,
+        "why": "Right. The number is read as a code point, and `go vet` flags the line because the digits were probably wanted."
+      },
+      {
+        "text": "`65`",
+        "correct": false,
+        "why": "Those are the digits, which `strconv.Itoa(n)` gives; a conversion to `string` does not."
+      },
+      {
+        "text": "Nothing: the compiler refuses a conversion from `int` to `string`",
+        "correct": false,
+        "why": "It compiles and runs; only `go vet` complains, and it exits with status 1."
+      },
+      {
+        "text": "Two bytes, the characters `6` and `5` as numbers",
+        "correct": false,
+        "why": "There is no step that splits the number into digits; the whole 65 is one code point."
+      }
+    ]
+  },
+  {
+    "id": "ex-k22n7mfr",
+    "version": 1,
+    "section": "conversions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`strconv.Atoi(\"99999999999999999999\")` is given a number too large for an `int`. What does it return?",
+    "hint": "The lab printed both values.",
+    "choices": [
+      {
+        "text": "0 and an `invalid syntax` error",
+        "correct": false,
+        "why": "That is what it returns for `\"4.5\"`. All digits is valid syntax; the value is the problem."
+      },
+      {
+        "text": "The low 64 bits of the number and no error, like a conversion",
+        "correct": false,
+        "why": "Parsing is not a conversion: it reports the problem instead of wrapping."
+      },
+      {
+        "text": "The largest `int` together with a `value out of range` error",
+        "correct": true,
+        "why": "Right: 9223372036854775807 and the error. A program that ignores `err` carries on with that number."
+      },
+      {
+        "text": "It panics, because the value cannot be represented",
+        "correct": false,
+        "why": "It returns an error as its second value; nothing panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-vaare9tw",
+    "version": 1,
+    "section": "conversions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To turn the `int` 1500 into the four characters `\"1500\"`, call `strconv.___(1500)`.",
+    "hint": "Its partner going the other way is `Atoi`.",
+    "blanks": [
+      {
+        "accept": [
+          "Itoa"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hf59meqx",
+    "version": 1,
+    "section": "conversions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`fmt.Println(int(3.9))` is refused, but `f := 3.9` followed by `fmt.Println(int(f))` compiles and prints `3`. Why does the compiler treat them differently?",
+    "hint": "What does the compiler know about each one while it compiles?",
+    "choices": [
+      {
+        "text": "Because `f` is a `float32`, which converts more loosely than a `float64`",
+        "correct": false,
+        "why": "`f := 3.9` makes a `float64`; the rule is the same for both float types."
+      },
+      {
+        "text": "Because `int(3.9)` would round to 4, and the compiler refuses rounding",
+        "correct": false,
+        "why": "A conversion never rounds. The constant is refused because its fraction would be lost."
+      },
+      {
+        "text": "Because conversions inside `fmt.Println` are checked and the variable hides it",
+        "correct": false,
+        "why": "Both conversions sit inside `fmt.Println`; where they sit is not the difference."
+      },
+      {
+        "text": "Only a constant's value is known while compiling, so the loss is caught there",
+        "correct": true,
+        "why": "Right. The compiler checks what it can see; `f` could hold anything when the line runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzdhmd76",
+    "version": 1,
+    "section": "conversions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression to what it gives. `f` is 3.9, `mid` is the `int` 200, `n` is the `int` 65.",
+    "hint": "Section 03 printed all four.",
+    "pairs": [
+      {
+        "left": "`int(-f)`",
+        "right": "`-3`"
+      },
+      {
+        "left": "`int8(mid)`",
+        "right": "`-56`"
+      },
+      {
+        "left": "`string(rune(n))`",
+        "right": "`\"A\"`"
+      },
+      {
+        "left": "`strconv.Itoa(n)`",
+        "right": "`\"65\"`"
+      }
+    ],
+    "right_distractors": [
+      "`-4`"
+    ]
+  },
+  {
+    "id": "ex-zphs9gh8",
+    "version": 1,
+    "section": "named-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `type Celsius float64` declare?",
+    "hint": "Could you add a `Celsius` to a plain `float64` variable?",
+    "choices": [
+      {
+        "text": "Another name for `float64`, accepted anywhere a `float64` is accepted",
+        "correct": false,
+        "why": "That is an alias, written with `=`. Without the `=`, assigning a `float64` variable was refused."
+      },
+      {
+        "text": "A new type, stored like a `float64`",
+        "correct": true,
+        "why": "Right. It does not mix with `float64` without a conversion, because to the compiler it is a different type."
+      },
+      {
+        "text": "A struct with one `float64` field",
+        "correct": false,
+        "why": "No struct is involved; a `Celsius` is the number itself, under a new type."
+      },
+      {
+        "text": "A type that converts to Fahrenheit on its own when the two meet",
+        "correct": false,
+        "why": "Nothing converts on its own; adding a `Celsius` to a `Fahrenheit` was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-tskxp375",
+    "version": 1,
+    "section": "named-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`boil` is a `Celsius` holding 100. Why does `fmt.Println(Fahrenheit(boil))` print `100` and not `212`?",
+    "hint": "What does a conversion change?",
+    "choices": [
+      {
+        "text": "Because the conversion is skipped when both types are `float64` underneath",
+        "correct": false,
+        "why": "It is not skipped: the value is a `Fahrenheit` now. It simply does no arithmetic."
+      },
+      {
+        "text": "Because `fmt.Println` prints the underlying `float64`, not the Fahrenheit value",
+        "correct": false,
+        "why": "There is no separate Fahrenheit value to print; the number inside is still 100."
+      },
+      {
+        "text": "A conversion changes the type and never the number",
+        "correct": true,
+        "why": "Right. Nothing in the language knows the formula; a function like `CToF` has to do the arithmetic."
+      },
+      {
+        "text": "Because the formula is applied when the program is built with optimisations",
+        "correct": false,
+        "why": "No build setting turns a conversion into a formula."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9ppr51a",
+    "version": 1,
+    "section": "named-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n` is an `int` holding 2. Which expression is two seconds?",
+    "hint": "A `Duration` counts nanoseconds.",
+    "choices": [
+      {
+        "text": "`time.Duration(n) * time.Nanosecond`",
+        "correct": false,
+        "why": "`time.Nanosecond` is 1, so this is still 2 nanoseconds; `time.Duration(n)` alone printed `2ns`."
+      },
+      {
+        "text": "`time.Duration(n)`",
+        "correct": false,
+        "why": "The lab printed `2ns`: the number inside a `Duration` counts nanoseconds."
+      },
+      {
+        "text": "`n * time.Second`",
+        "correct": false,
+        "why": "Refused: mismatched types `int` and `time.Duration`."
+      },
+      {
+        "text": "`time.Duration(n) * time.Second`",
+        "correct": true,
+        "why": "Right. The conversion makes it a `Duration`, and multiplying by `time.Second` gives it the unit; it printed `2s`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4qqfqkj",
+    "version": 1,
+    "section": "named-types",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `type Celsius float64`, `type Reading = float64` and `var x float64 = 21.5`, which lines compile? Choose all that apply.",
+    "hint": "One declaration has an `=` in it.",
+    "choices": [
+      {
+        "text": "`var r Reading = x`",
+        "correct": true,
+        "why": "Yes. `Reading` is an alias, so `r` is a `float64`."
+      },
+      {
+        "text": "`var c Celsius = x`",
+        "correct": false,
+        "why": "Refused: a `float64` variable is not a `Celsius`. `Celsius(x)` would compile."
+      },
+      {
+        "text": "`var c Celsius = 30`",
+        "correct": true,
+        "why": "Yes. `30` is an untyped constant and becomes a `Celsius`."
+      },
+      {
+        "text": "`c := Celsius(x)`",
+        "correct": true,
+        "why": "Yes. Both share the underlying type `float64`, so the conversion is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9jne3ba",
+    "version": 1,
+    "section": "named-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program declares `type UserID int64` and `type OrderID int64`, and `Cancel(id OrderID)` refuses to compile when it is handed a `UserID`. Which change would make that mistake compile again, silently?",
+    "hint": "Which kind of declaration catches nothing?",
+    "choices": [
+      {
+        "text": "Renaming `UserID` to `UserId`",
+        "correct": false,
+        "why": "A new spelling is still a defined type; the call is refused just the same."
+      },
+      {
+        "text": "Making the parameter `id int64`",
+        "correct": false,
+        "why": "A `UserID` variable is not an `int64` either, so this call would still be refused."
+      },
+      {
+        "text": "Giving `OrderID` an underlying type of `int` instead",
+        "correct": false,
+        "why": "Two defined types still do not mix, and now they do not even share an underlying type."
+      },
+      {
+        "text": "Adding `=` to both declarations",
+        "correct": true,
+        "why": "Right. Both would become aliases of `int64`, so the compiler would see one type and accept the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4e72gns",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A form sends the text `\"30\"` meaning seconds, and the program needs a `time.Duration`. Put the steps in order.",
+    "hint": "Text is parsed before it is a number of any type.",
+    "items": [
+      "Call `strconv.Atoi` on the text",
+      "Check that `err` is `nil` before using the number",
+      "Convert the `int` with `time.Duration(n)`",
+      "Multiply by `time.Second` to give it its unit"
+    ]
+  },
+  {
+    "id": "ex-2te6xvgt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ms` is an `int64` holding 1500, a number of milliseconds. Which expression prints `1.5s`?",
+    "hint": "Convert first, then give it its unit, and do not divide integers on the way.",
+    "choices": [
+      {
+        "text": "`time.Duration(ms)`",
+        "correct": false,
+        "why": "That reads 1500 as nanoseconds and printed `1.5µs`."
+      },
+      {
+        "text": "`time.Duration(ms) * time.Millisecond`",
+        "correct": true,
+        "why": "Right. The conversion makes it a `Duration` and the multiplication says the 1500 were milliseconds."
+      },
+      {
+        "text": "`time.Duration(ms) / 1000 * time.Second`",
+        "correct": false,
+        "why": "`1500 / 1000` is integer arithmetic and gives 1, so this printed `1s`: the half was lost before the unit arrived."
+      },
+      {
+        "text": "`ms * time.Millisecond`",
+        "correct": false,
+        "why": "Refused: an `int64` and a `time.Duration` are different types, even though one is defined as the other."
+      }
+    ]
+  }
+]

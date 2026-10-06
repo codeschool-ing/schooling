@@ -1,0 +1,563 @@
+[
+  {
+    "id": "ex-nemvxdzj",
+    "version": 1,
+    "section": "using",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Go 1.27, what does `go get github.com/mattn/go-runewidth@v0.0.16` do?",
+    "hint": "`go help get` says it in its first paragraph.",
+    "choices": [
+      {
+        "text": "Builds the package and installs the binary in `~/go/bin` for you",
+        "correct": false,
+        "why": "That is what `go get` did before modules; installing is `go install` now."
+      },
+      {
+        "text": "Requires that version in `go.mod` and downloads it",
+        "correct": true,
+        "why": "Right. It adjusts the requirements and fetches the source, and builds nothing."
+      },
+      {
+        "text": "Adds the import line to `main.go`",
+        "correct": false,
+        "why": "The go command does not edit your source; `main.go` already imported the package."
+      },
+      {
+        "text": "Copies the module's files into a `vendor` directory of your module",
+        "correct": false,
+        "why": "That is `go mod vendor`, lesson 38; `go get` writes to the module cache, outside your module."
+      }
+    ]
+  },
+  {
+    "id": "ex-z28j8mfe",
+    "version": 1,
+    "section": "using",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `go get github.com/mattn/go-runewidth@latest`, the flag of Brazil went from 1 column to 2, with `main.go` untouched. Why?",
+    "hint": "What did the upgrade replace?",
+    "choices": [
+      {
+        "text": "The `go` line in `go.mod` moved to a newer language version",
+        "correct": false,
+        "why": "It stayed `go 1.27.1`; the language did not change, a dependency did."
+      },
+      {
+        "text": "`go run` had kept an old binary in the cache",
+        "correct": false,
+        "why": "The cache is rebuilt when a dependency changes; the first run was right for v0.0.16."
+      },
+      {
+        "text": "A dependency changed: newer Unicode data",
+        "correct": true,
+        "why": "Right. An upgrade replaces code your program runs, which is why you run it again afterwards."
+      },
+      {
+        "text": "The terminal draws flags differently after a `go get`",
+        "correct": false,
+        "why": "The output is ASCII escapes and a number the program computed; the terminal decided nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekep6agc",
+    "version": 1,
+    "section": "using",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go list -m ___ all` prints each module with the newest published version beside it in square brackets.",
+    "hint": "A one-letter flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-u"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-car47f9g",
+    "version": 1,
+    "section": "using",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each version query to the version `go get` picks.",
+    "hint": "The table at the end of section 02.",
+    "pairs": [
+      {
+        "left": "`@latest`",
+        "right": "The newest tagged release that is not retracted"
+      },
+      {
+        "left": "`@patch`",
+        "right": "The newest with the same major and minor as yours"
+      },
+      {
+        "left": "`@v1.2`",
+        "right": "The newest `v1.2.x`"
+      },
+      {
+        "left": "`@none`",
+        "right": "No version: the requirement is removed"
+      }
+    ],
+    "right_distractors": [
+      "The newest commit on the default branch, tagged or not"
+    ]
+  },
+  {
+    "id": "ex-hzfk3mnn",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`uniseg` is imported by 546 packages and `uax29/v2/graphemes` by 10. Why does section 03 still call the second the better bet?",
+    "hint": "What does its source say about Unicode?",
+    "choices": [
+      {
+        "text": "`uniseg`'s licence forbids use in a program you sell",
+        "correct": false,
+        "why": "Both printed `MIT License`, which allows that."
+      },
+      {
+        "text": "Its tables follow Unicode 17.0.0, as this Go does, and `uniseg`'s stop at 15.0.0",
+        "correct": true,
+        "why": "Right. For text the edition matters, and its last release, February 2026, is recent."
+      },
+      {
+        "text": "`uniseg` pulls dozens of other modules into the build",
+        "correct": false,
+        "why": "Its `go.mod` has no `require` line at all; neither candidate brings anything."
+      },
+      {
+        "text": "Popular modules are the ones attackers target",
+        "correct": false,
+        "why": "The section measured maintenance, not fame; popularity was called a measure of the past."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckr510q1",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "govulncheck said GO-2021-0113 is fixed in `golang.org/x/text` v0.3.7; `-show verbose` added GO-2022-1059, fixed in v0.3.8, and GO-2026-5970, fixed in v0.39.0. Which command ends all three?",
+    "hint": "A fix version is a floor, not a target.",
+    "choices": [
+      {
+        "text": "`go get golang.org/x/text@v0.3.7`",
+        "correct": false,
+        "why": "That ends the one your code calls and keeps the two it does not call yet."
+      },
+      {
+        "text": "`go get golang.org/x/text@v0.3.8`",
+        "correct": false,
+        "why": "Still below v0.39.0, so GO-2026-5970 stays."
+      },
+      {
+        "text": "`go get golang.org/x/text@latest`",
+        "correct": true,
+        "why": "Right. It went to v0.42.0, past every fix, and the scan then found nothing."
+      },
+      {
+        "text": "`go get golang.org/x/text@none`",
+        "correct": false,
+        "why": "The program imports `language` and would no longer build; removing is not upgrading."
+      }
+    ]
+  },
+  {
+    "id": "ex-ae0ztm79",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the govulncheck runs in section 03? Choose all that apply.",
+    "hint": "Compare the first scan with the one after the upgrade.",
+    "choices": [
+      {
+        "text": "Exit status 3 meant that the code calls a vulnerable function",
+        "correct": true,
+        "why": "Yes: the trace showed `main.go:12:28` calling `language.Parse`."
+      },
+      {
+        "text": "It scanned the standard library of the Go that builds the module too",
+        "correct": true,
+        "why": "Yes: `-show verbose` named `the go1.27.1 standard library`."
+      },
+      {
+        "text": "`No vulnerabilities found` proves that the module has no flaws",
+        "correct": false,
+        "why": "It says nothing in the database matches what the code calls, on that day."
+      },
+      {
+        "text": "It read vuln.go.dev directly, as it does by default",
+        "correct": false,
+        "why": "The lab cannot reach it; every scan named a local copy with `-db`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjqb1586",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requirements did one `go get github.com/gin-gonic/gin@v1.12.0` add to an empty module's `go.mod`?",
+    "hint": "The command counted the `go: added` lines.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "requirements"
+  },
+  {
+    "id": "ex-e7kc3jjp",
+    "version": 1,
+    "section": "publishing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `v0.1.0` of `example.com/ana/greet` exist?",
+    "hint": "Look at what the author typed in `~/thirdparty-greet`.",
+    "choices": [
+      {
+        "text": "An upload to proxy.golang.org from an account",
+        "correct": false,
+        "why": "There is no account and no upload; the proxy reads the repository when asked."
+      },
+      {
+        "text": "A `version` line in the module's `go.mod`",
+        "correct": false,
+        "why": "`go.mod` has no such line; the module's versions live outside the file."
+      },
+      {
+        "text": "A git tag called `v0.1.0` in its repository",
+        "correct": true,
+        "why": "Right. The proxy's `.info` for a real module even names the tag: `refs/tags/v0.0.16`."
+      },
+      {
+        "text": "Its own page, created on pkg.go.dev",
+        "correct": false,
+        "why": "pkg.go.dev shows documentation of what is published; it does not publish anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvzn8ey8",
+    "version": 1,
+    "section": "publishing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first `go get` of `example.com/ana/greet` downloaded it and then failed with `404 Not Found` from sum.golang.org. Why?",
+    "hint": "Read the `server response` line.",
+    "choices": [
+      {
+        "text": "The zip that the lab's own program wrote into the proxy was damaged",
+        "correct": false,
+        "why": "The same zip was used a moment later, with `GONOSUMDB`, and it built."
+      },
+      {
+        "text": "The database fetches the module itself, and nothing answers there",
+        "correct": true,
+        "why": "Right: it tried `https://example.com/ana/greet?go-get=1` and got a 404."
+      },
+      {
+        "text": "A `file://` proxy is allowed for listing versions, never for downloads",
+        "correct": false,
+        "why": "`go help goproxy` says a `file://` URL can be a proxy, and the download line succeeded."
+      },
+      {
+        "text": "`go.sum` had no line for the module yet",
+        "correct": false,
+        "why": "That is the normal state before a first `go get`; the line is what the database was asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hhmznnz",
+    "version": 1,
+    "section": "publishing",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of releasing v1.1.0 in the lab in order, from the author's code to the importer's upgrade.",
+    "hint": "Section 04, from `git tag` on.",
+    "items": [
+      "The author commits `HelloAll`",
+      "The author runs `git tag v1.1.0`",
+      "The proxy holds `v1.1.0.info`, `.mod` and `.zip`",
+      "The importer's `go get example.com/ana/greet@latest` upgrades"
+    ]
+  },
+  {
+    "id": "ex-cmpb7ka6",
+    "version": 1,
+    "section": "publishing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's `go.sum` already lists `v0.1.0` when the author moves that tag to a new commit and the new contents are served. What does the colleague's next download of `v0.1.0` do?",
+    "hint": "Section 04 did exactly this.",
+    "choices": [
+      {
+        "text": "Takes the new code without a word, since the tag name is the version",
+        "correct": false,
+        "why": "The version name is the same, but go.sum holds the hash of the old contents."
+      },
+      {
+        "text": "Warns that `v0.1.0` was retracted, then uses it",
+        "correct": false,
+        "why": "Nothing was retracted; a retraction is a line the author publishes in a later version."
+      },
+      {
+        "text": "Refuses it: `checksum mismatch`, then `SECURITY ERROR`",
+        "correct": true,
+        "why": "Right. The go command cannot tell a careless author from an attacker, and refuses both."
+      },
+      {
+        "text": "Offers `v0.1.1` instead, as the next patch",
+        "correct": false,
+        "why": "No `v0.1.1` was ever tagged; the go command invents no versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0cghcbd",
+    "version": 1,
+    "section": "major-versions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `retract v1.1.0` in the `go.mod` of v1.1.1 do?",
+    "hint": "Was v1.1.0 still downloadable afterwards?",
+    "choices": [
+      {
+        "text": "Deletes v1.1.0 from the proxy and from every module cache",
+        "correct": false,
+        "why": "It deletes nothing: `go get ...@v1.1.0` still worked afterwards."
+      },
+      {
+        "text": "Hides it from `@latest`, with a warning",
+        "correct": true,
+        "why": "Right. It stays downloadable, marked `(retracted)`, with the author's reason in the warning."
+      },
+      {
+        "text": "Moves the tag v1.1.0 to the fixed commit instead",
+        "correct": false,
+        "why": "Moving a tag is what section 04 showed failing with `SECURITY ERROR`."
+      },
+      {
+        "text": "Stops every module that requires v1.1.0 from building",
+        "correct": false,
+        "why": "The importer on v1.1.0 still built and ran, and printed `Hello, AnaBia`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdevy1r0",
+    "version": 1,
+    "section": "major-versions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From v2 on, the major version is part of the module ___, so `example.com/ana/greet` at v2 is imported as `example.com/ana/greet/v2`.",
+    "hint": "The thing `go mod edit -module` changes.",
+    "blanks": [
+      {
+        "accept": [
+          "path"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4hbwaw1a",
+    "version": 1,
+    "section": "major-versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go list -m -u all` printed `example.com/ana/greet v1.1.1` with no brackets, although v2.0.0 exists. Why?",
+    "hint": "Look at the two `@v/list` files.",
+    "choices": [
+      {
+        "text": "v2.0.0 was retracted when the author dropped the retraction",
+        "correct": false,
+        "why": "`-dropretract` removed a line about v1.1.0; v2.0.0 was never retracted."
+      },
+      {
+        "text": "`GONOSUMDB` hides versions that are not in the checksum database",
+        "correct": false,
+        "why": "It skips verification and hides nothing; v1.1.1 is not in the database either."
+      },
+      {
+        "text": "v2.0.0 belongs to another module path, and `-u` stays in one",
+        "correct": true,
+        "why": "Right. Moving to v2 is a code change you make; no command makes it for you."
+      },
+      {
+        "text": "The proxy listed v2.0.0 only once somebody asked for it",
+        "correct": false,
+        "why": "The second `list` existed as soon as v2.0.0 was published, before any `go get`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pg049tzs",
+    "version": 1,
+    "section": "major-versions",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A module is at v1.4.0. Which of these changes call for v2.0.0 and a `/v2` path? Choose all that apply.",
+    "hint": "Ask whether some caller's code stops compiling.",
+    "choices": [
+      {
+        "text": "An exported function now returns `(string, error)` instead of `string`",
+        "correct": true,
+        "why": "Yes: `s := greet.Hello(name)` stops compiling, as section 05 said."
+      },
+      {
+        "text": "A new exported function is added beside the old ones",
+        "correct": false,
+        "why": "Nothing old changed; that is a minor release, v1.5.0."
+      },
+      {
+        "text": "An exported function that callers use is removed",
+        "correct": true,
+        "why": "Yes: every call to it stops compiling."
+      },
+      {
+        "text": "A bug inside a function is fixed and its signature stays",
+        "correct": false,
+        "why": "That is a patch, like v1.1.1's `\" and \"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-33hkjnjy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A module at v0.9.0 wants to rename an exported function. What does its version number require?",
+    "hint": "What does v0 promise?",
+    "choices": [
+      {
+        "text": "v1.0.0, since a breaking change needs a new major version",
+        "correct": false,
+        "why": "That rule starts at v1; below it no release promises anything."
+      },
+      {
+        "text": "A `/v1` suffix on the module path",
+        "correct": false,
+        "why": "`go mod init` refused `/v1`: suffixes exist only for v2 or later."
+      },
+      {
+        "text": "Just a new release, v0.10.0: v0 promises nothing",
+        "correct": true,
+        "why": "Right. Importers of a v0 module accept that any release may break them."
+      },
+      {
+        "text": "A `retract` of v0.9.0 in the next release",
+        "correct": false,
+        "why": "v0.9.0 is not wrong, only replaced; a retraction is for a version nobody should use."
+      }
+    ]
+  },
+  {
+    "id": "ex-a01dqahx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your service's `go list -m -u all` shows `example.com/lib v1.4.0 (retracted) [v1.4.2]`. What is the right next step?",
+    "hint": "The service still builds today.",
+    "choices": [
+      {
+        "text": "Nothing: a retracted version is refused at build time anyway",
+        "correct": false,
+        "why": "The app built and ran on retracted v1.1.0; a retraction refuses nothing."
+      },
+      {
+        "text": "Run `go mod tidy`, which removes retracted versions",
+        "correct": false,
+        "why": "`tidy` matches `go.mod` to the imports; it does not change a version you need."
+      },
+      {
+        "text": "Move to `example.com/lib/v2`, the only safe line",
+        "correct": false,
+        "why": "Nothing says a v2 exists; the fix offered is v1.4.2, on the same path."
+      },
+      {
+        "text": "Read the reason, then `go get` v1.4.2 and test",
+        "correct": true,
+        "why": "Right. The reason is in the warning, and an upgrade is a change to check."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntj1xe9k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go mod why -m github.com/clipperhouse/uax29/v2` printed a chain. Put it in the order it was printed, after the `#` line.",
+    "hint": "From your code to the module.",
+    "items": [
+      "`example.com/width`",
+      "`github.com/mattn/go-runewidth`",
+      "`github.com/clipperhouse/uax29/v2/graphemes`"
+    ]
+  },
+  {
+    "id": "ex-9t5yz6t8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your company's modules live under `git.corp.example`, and their names must reach neither the public proxy nor the checksum database. Which setting does that?",
+    "hint": "`go help private` describes one variable for both decisions.",
+    "choices": [
+      {
+        "text": "`GONOSUMDB=git.corp.example`",
+        "correct": false,
+        "why": "That covers the checksum database only; downloads still go through the public proxy."
+      },
+      {
+        "text": "`GOPRIVATE=git.corp.example`",
+        "correct": true,
+        "why": "Right. It keeps those modules away from both the proxy and the checksum database."
+      },
+      {
+        "text": "`GOSUMDB=off`",
+        "correct": false,
+        "why": "That stops verifying every module, public ones too, and still uses the public proxy."
+      },
+      {
+        "text": "`GOPROXY=off`",
+        "correct": false,
+        "why": "That stops all downloads, so every public dependency breaks as well."
+      }
+    ]
+  }
+]

@@ -1,0 +1,377 @@
+{
+  "ex-ewhcgkf1": {
+    "prompt": "`readConfig` devolve `fmt.Errorf(\"read config: %w\", err)`. O que é esse valor devolvido?",
+    "hint": "O laço da seção 02 o imprimiu, e depois imprimiu o que havia dentro dele.",
+    "choices": [
+      {
+        "text": "Uma string mais comprida com as duas mensagens juntas",
+        "why": "A mensagem é mais comprida, mas o valor é um erro, um `*fmt.wrapError`, e o laço encontrou `err` dentro dele."
+      },
+      {
+        "text": "Um erro novo que guarda `err` e acrescenta palavras",
+        "why": "Isso. `errors.Unwrap` aplicado a ele devolveu inteiro o `*fs.PathError` que `os.ReadFile` retornou."
+      },
+      {
+        "text": "O próprio `err`, com a mensagem trocada no lugar para começar com `read config`",
+        "why": "Nada mudou `err`: o laço imprimiu o `*fs.PathError` com a mensagem dele, `open settings.json: ...`, intacta."
+      },
+      {
+        "text": "Uma cópia de `err`, do mesmo tipo, com mensagem nova",
+        "why": "O tipo mudou: o laço imprimiu `*fmt.wrapError` para ele, e `*fs.PathError` uma linha abaixo."
+      }
+    ]
+  },
+  "ex-505cvs6n": {
+    "prompt": "Quando `errors.Unwrap(e)` devolve `nil`?",
+    "hint": "Ela chama um método, se puder.",
+    "choices": [
+      {
+        "text": "Quando `e` é o erro mais externo de uma cadeia",
+        "why": "O elo mais externo é o que tem mais coisa dentro; o laço o desembrulhou primeiro."
+      },
+      {
+        "text": "Quando `e` foi criado com `%w`",
+        "why": "É justamente o caso em que ela devolve algo: o `%w` dá ao erro um método `Unwrap`."
+      },
+      {
+        "text": "Se `e` não tem método `Unwrap() error`",
+        "why": "Isso. `syscall.Errno` não tem esse método, e é por isso que o laço parou depois dele."
+      },
+      {
+        "text": "Quando a mensagem de `e` está vazia",
+        "why": "`errors.Unwrap` nunca lê a mensagem; ela procura um método."
+      }
+    ]
+  },
+  "ex-rk6aekb1": {
+    "prompt": "Ponha os elos do erro que `start` devolveu na ordem em que o laço da seção 02 os imprimiu.",
+    "hint": "O laço começa pelo que `main` recebeu.",
+    "items": [
+      "`*fmt.wrapError` com `start server: ...`",
+      "`*fmt.wrapError` com `read config: ...`",
+      "`*fs.PathError` com `open settings.json: ...`",
+      "`syscall.Errno`, `no such file or directory`"
+    ]
+  },
+  "ex-6wh7k75h": {
+    "prompt": "`both := errors.Join(fs.ErrNotExist, fs.ErrPermission)`. O que `errors.Unwrap(both)` devolve?",
+    "hint": "Um erro juntado tem um método `Unwrap`, mas qual?",
+    "choices": [
+      {
+        "text": "`fs.ErrNotExist`, o primeiro erro passado ao `Join`",
+        "why": "Isso supõe que ela tira um elo de cada vez de uma lista; ela nem toca numa lista."
+      },
+      {
+        "text": "`nil`",
+        "why": "Isso. O método do erro juntado é `Unwrap() []error`, e `errors.Unwrap` só chama `Unwrap() error`."
+      },
+      {
+        "text": "Um slice com os dois erros",
+        "why": "O método do próprio erro juntado devolve esse slice, mas `errors.Unwrap` devolve um `error`, e deu `<nil>`."
+      },
+      {
+        "text": "`fs.ErrPermission`, o último erro passado ao `Join`",
+        "why": "A ordem não é o problema: `errors.Unwrap` não abre uma lista de erros por nenhuma das pontas."
+      }
+    ]
+  },
+  "ex-6akbqrhz": {
+    "prompt": "Um programa embrulha o erro de `os.ReadFile` de um arquivo que falta com `%w` três vezes, em três funções, em vez de duas. Quantas linhas o laço da seção 02 imprime, sem contar a linha do `fmt.Println(err)` antes dele?",
+    "hint": "Conte os embrulhos, e depois o que o próprio `os.ReadFile` devolveu.",
+    "unit": "linhas"
+  },
+  "ex-k6cq9tg4": {
+    "prompt": "Na seção 03, `err == fs.ErrNotExist` imprimiu `false` embora o arquivo faltasse. Por quê?",
+    "hint": "Qual é o valor que `start` devolveu?",
+    "choices": [
+      {
+        "text": "`==` compara as duas mensagens, e elas diferem",
+        "why": "`==` compara os valores, não o texto deles; e dois valores diferentes com o mesmo texto continuariam diferentes."
+      },
+      {
+        "text": "`err` é o embrulho mais externo, outro valor",
+        "why": "Isso. O `==` olha esse único valor, e ele é um `*fmt.wrapError`, seja o que for que ele guarde."
+      },
+      {
+        "text": "Erros não podem ser comparados com `==`; só funciona para `nil`",
+        "why": "A comparação compilou e rodou, e a seção 03 também comparou um `Errno` com `==` e obteve `true`."
+      },
+      {
+        "text": "`fs.ErrNotExist` pertence a `io/fs`, e `os` tem o seu",
+        "why": "`os.ErrNotExist` é `fs.ErrNotExist` com outro nome, como o `go doc` mostrou."
+      }
+    ]
+  },
+  "ex-b85mbs5q": {
+    "prompt": "`errors.___(err, fs.ErrNotExist)` percorre todos os elos da cadeia procurando o erro de arquivo que falta.",
+    "hint": "Responde verdadeiro ou falso.",
+    "blanks": [
+      {
+        "accept": [
+          "Is"
+        ]
+      }
+    ]
+  },
+  "ex-17a3yqkt": {
+    "prompt": "Para a cadeia de um `settings.json` que falta, o que `errors.Is(err, fs.ErrPermission)` devolve?",
+    "hint": "Um arquivo que falta é um problema de permissão?",
+    "choices": [
+      {
+        "text": "`true`, porque a cadeia guarda um erro",
+        "why": "`errors.Is` não pergunta se há um erro, e sim se este erro em particular está lá."
+      },
+      {
+        "text": "`true`, porque todo erro de sistema de arquivos casa com toda variável de `fs`",
+        "why": "O método `Is` de `syscall.ENOENT` diz sim só para `fs.ErrNotExist`; a resposta é por alvo."
+      },
+      {
+        "text": "`false`",
+        "why": "Isso. A seção 03 imprimiu `permission    false`: nenhum elo é, nem diz ser, um erro de permissão."
+      },
+      {
+        "text": "Entra em pânico, já que o alvo não está na cadeia",
+        "why": "Um alvo que não está lá é o caso comum de `false`; nada entra em pânico."
+      }
+    ]
+  },
+  "ex-t6xw7rn9": {
+    "prompt": "O último elo da cadeia é `syscall.ENOENT`, que não é igual a `fs.ErrNotExist`. Por que `errors.Is(err, fs.ErrNotExist)` ainda diz `true`?",
+    "hint": "A igualdade é um dos dois jeitos de um elo casar.",
+    "choices": [
+      {
+        "text": "`errors.Is` compara as mensagens, e as duas dizem que o arquivo falta",
+        "why": "As mensagens diferem, `file does not exist` contra `no such file or directory`, e o `Is` não as lê."
+      },
+      {
+        "text": "`syscall.Errno` tem um método `Is` que diz sim para ele",
+        "why": "Isso. Um elo casa se for igual ao alvo ou se o próprio método `Is` disser que sim; `ENOENT.Is(fs.ErrNotExist)` imprimiu `true`."
+      },
+      {
+        "text": "`fs.ErrNotExist` e `syscall.ENOENT` são uma variável só",
+        "why": "Isso vale para `os.ErrNotExist`; `inner == fs.ErrNotExist` imprimiu `false` para `ENOENT`."
+      },
+      {
+        "text": "`errors.Is` pula o último elo e só confere os embrulhos",
+        "why": "Ele confere todos os elos, inclusive o último; foi desse último que veio o casamento."
+      }
+    ]
+  },
+  "ex-csrzra77": {
+    "prompt": "Um colega troca `%w` por `%v` em `readConfig` para \"arrumar a mensagem\". O programa imprime exatamente o mesmo texto. O que quebra?",
+    "hint": "Quem olha um erro além de uma pessoa?",
+    "choices": [
+      {
+        "text": "Nada: a mensagem é idêntica, então o erro também é",
+        "why": "A seção 03 imprimiu a mesma primeira linha e uma cadeia de dois elos; texto igual não é cadeia igual."
+      },
+      {
+        "text": "A compilação: `%v` não formata um valor de erro",
+        "why": "`%v` formata qualquer valor, inclusive um erro; o programa compilou e rodou."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)` passa a dar falso, então o desvio das configurações padrão nunca roda",
+        "why": "Isso. O `*fs.PathError` e o `Errno` somem da cadeia, e o código que a inspecionava toma o outro desvio."
+      },
+      {
+        "text": "Só o tipo que o `%T` imprime, que nenhum código lê",
+        "why": "O tipo virou `*errors.errorString`, e toda função que percorre a cadeia lê justamente isso."
+      }
+    ]
+  },
+  "ex-cd50gh21": {
+    "prompt": "Por que a seção 04 escreve `errors.As(err, &pe)` em vez de `errors.As(err, pe)`?",
+    "hint": "O que `As` faz com o que encontra?",
+    "choices": [
+      {
+        "text": "`As` escreve na variável o elo que encontrar",
+        "why": "Isso. Sem o `&` ela não tinha onde escrever, e o programa entrou em pânico."
+      },
+      {
+        "text": "O `&` deixa a chamada mais rápida por não copiar `pe`",
+        "why": "`pe` é um ponteiro só; copiá-lo não custa nada. O `&` é sobre para onde vai o resultado."
+      },
+      {
+        "text": "O `&` diz a `As` para olhar além de um elo",
+        "why": "`As` sempre percorre a cadeia inteira; o `&` não muda nada na busca."
+      },
+      {
+        "text": "As duas funcionam; `&pe` é o estilo habitual",
+        "why": "Sem ele, o `go vet` apontou a chamada e o programa entrou em pânico: `target must be a non-nil pointer`."
+      }
+    ]
+  },
+  "ex-7c6v4fgd": {
+    "prompt": "`errors.AsType[fs.PathError](err)` não compila. A que a mensagem de erro atribui a culpa?",
+    "hint": "Qual tipo tem o método `Error`?",
+    "choices": [
+      {
+        "text": "`AsType` aceita só tipos interface entre os colchetes, nunca um tipo struct",
+        "why": "`*fs.PathError` é ponteiro para struct e funciona; a restrição é `error`, não \"uma interface\"."
+      },
+      {
+        "text": "`fs.PathError` não é exportado",
+        "why": "O P maiúsculo o exporta, e o `go doc` imprimiu os campos dele."
+      },
+      {
+        "text": "`Error` tem receptor ponteiro, então só o ponteiro é um `error`",
+        "why": "Isso. Só `*fs.PathError` satisfaz `error`, que é a regra de conjunto de métodos da lição 26."
+      },
+      {
+        "text": "Um tipo de outro pacote não pode ser argumento de tipo",
+        "why": "`*fs.PathError`, do mesmo pacote, funcionou na mesma posição um programa antes."
+      }
+    ]
+  },
+  "ex-3f2swvp3": {
+    "prompt": "Ligue cada função ao que ela devolve.",
+    "hint": "Duas delas respondem a mesma pergunta em formatos diferentes.",
+    "pairs": [
+      {
+        "left": "`errors.Unwrap(err)`",
+        "right": "o próximo elo, ou `nil`"
+      },
+      {
+        "left": "`errors.Is(err, target)`",
+        "right": "um `bool`: este valor está na cadeia"
+      },
+      {
+        "left": "`errors.As(err, &v)`",
+        "right": "um `bool`, e `v` preenchida com o primeiro elo do tipo dela"
+      },
+      {
+        "left": "`errors.AsType[T](err)`",
+        "right": "o primeiro elo do tipo `T`, e um `bool`"
+      }
+    ],
+    "right_distractors": [
+      "a mensagem sem o contexto"
+    ]
+  },
+  "ex-gfqvab7w": {
+    "prompt": "Um comando precisa dizer ao usuário qual arquivo não conseguiu abrir, e o erro que ele tem diz `start server: read config: open settings.json: no such file or directory`. Qual jeito de obter `settings.json` continua funcionando quando alguém acrescenta outra camada de contexto?",
+    "hint": "O caminho é um campo em algum lugar da cadeia.",
+    "choices": [
+      {
+        "text": "Quebrar a mensagem em `\": \"` e pegar o terceiro pedaço",
+        "why": "Uma camada nova acrescenta mais um pedaço na frente, e o terceiro vira `read config`."
+      },
+      {
+        "text": "`err.(*fs.PathError)`, e depois o `Path`",
+        "why": "A asserção só vê o valor de fora; a seção 04 imprimiu `assertion: false` antes de qualquer camada a mais."
+      },
+      {
+        "text": "`errors.AsType[*fs.PathError](err)`, e depois o `.Path` do resultado",
+        "why": "Isso. Ela percorre a cadeia até o `*fs.PathError`, por mais fundo que ele esteja, e lê um campo em vez de texto."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)`, e depois a palavra após `open`",
+        "why": "O `Is` só diz que o arquivo falta; o nome ainda sai da análise de uma mensagem que pode mudar."
+      }
+    ]
+  },
+  "ex-1thx49vc": {
+    "prompt": "`var pe *fs.PathError` e depois `errors.As(err, pe)`, sem `&`. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Três ferramentas olharam para isso na seção 04.",
+    "choices": [
+      {
+        "text": "Compila",
+        "why": "Sim. O parâmetro do alvo é `any`, então o compilador aceita qualquer valor ali."
+      },
+      {
+        "text": "O `go vet` sempre aponta a chamada",
+        "why": "Sim: `second argument to errors.As must be a non-nil pointer ...`, com status de saída 1."
+      },
+      {
+        "text": "Devolve `false` em silêncio e o programa segue",
+        "why": "Ela entra em pânico com `errors: target must be a non-nil pointer`, e o programa para com status 2."
+      },
+      {
+        "text": "O compilador o recusa com um erro de tipo",
+        "why": "É isso que o `AsType` lhe dá; `As` recebe `any`, e `any` aceita."
+      }
+    ]
+  },
+  "ex-38m0429r": {
+    "prompt": "Uma biblioteca que você chama passou a devolver `fmt.Errorf(\"load %s: %w\", name, err)` em volta de um erro de `os.Open`. Seu código antigo confere `os.IsNotExist(err)` e parou de perceber arquivos que faltam. Qual é a correção?",
+    "hint": "Leia o que `go doc os.IsNotExist` diz que código novo deve usar.",
+    "choices": [
+      {
+        "text": "Pedir à biblioteca que embrulhe com `%v` em vez disso",
+        "why": "Com `%v` não há cadeia nenhuma, e `os.IsNotExist` continua vendo um `*errors.errorString`."
+      },
+      {
+        "text": "Trocar por `errors.Is(err, fs.ErrNotExist)`",
+        "why": "Isso. `errors.Is` percorre a cadeia; `os.IsNotExist` é anterior ao embrulho e só olha o lado de fora."
+      },
+      {
+        "text": "Comparar `err == os.ErrNotExist`",
+        "why": "O `==` vê o embrulho mais externo, exatamente como `os.IsNotExist`, e dá falso pelo mesmo motivo."
+      },
+      {
+        "text": "Comparar `errors.Unwrap(err) == fs.ErrNotExist`",
+        "why": "Um desembrulho chega ao `*fs.PathError`, que não é `fs.ErrNotExist`; ele só casa via `Is`, mais abaixo."
+      }
+    ]
+  },
+  "ex-ks21s8hj": {
+    "prompt": "`err` veio de `os.ReadFile` com um arquivo que falta. Quais destas devolvem um erro em que `errors.Is(..., fs.ErrNotExist)` ainda o encontra? Marque todas as que se aplicam.",
+    "hint": "Quais guardam o próprio `err`, e quais guardam só o texto dele?",
+    "choices": [
+      {
+        "text": "`fmt.Errorf(\"load: %w\", err)`",
+        "why": "Sim. O `%w` mantém `err` como o próximo elo."
+      },
+      {
+        "text": "`errors.Join(err, cleanupErr)`",
+        "why": "Sim. Um erro juntado é uma árvore, e `errors.Is` percorre todos os ramos dela."
+      },
+      {
+        "text": "`fmt.Errorf(\"load: %v\", err)`",
+        "why": "O `%v` copia o texto para um `*errors.errorString` e descarta `err`, como a cadeia cortada da seção 03 mostrou."
+      },
+      {
+        "text": "`errors.New(\"load: \" + err.Error())`",
+        "why": "O mesmo que `%v`: um erro novo guardando uma string, sem nada para desembrulhar."
+      }
+    ]
+  },
+  "ex-pm6t4dgk": {
+    "prompt": "Qualquer tipo de erro vira um embrulho tendo um método `___() error` que devolve o erro que ele guarda.",
+    "hint": "O `*fmt.wrapError` e o `*fs.PathError` da seção 02 têm os dois.",
+    "blanks": [
+      {
+        "accept": [
+          "Unwrap"
+        ]
+      }
+    ]
+  },
+  "ex-xpadkj3j": {
+    "prompt": "Seu pacote tem `type QuotaError struct{ User string }` com `Error` em `*QuotaError`, e quem chama o embrulha duas vezes com `%w`. Como o topo do programa lê `User`?",
+    "hint": "É a mesma pergunta do caminho em `*fs.PathError`.",
+    "choices": [
+      {
+        "text": "`errors.Is(err, &QuotaError{})`, e depois ler o campo `User` do erro",
+        "why": "O `Is` compara valores, e um ponteiro recém-criado não é igual a nenhum elo; mesmo um `true` não lhe daria campo nenhum."
+      },
+      {
+        "text": "`errors.Unwrap(err).(*QuotaError)`",
+        "why": "Um desembrulho tira uma camada de duas, então a asserção encontra o segundo embrulho."
+      },
+      {
+        "text": "`errors.AsType[*QuotaError](err)` e o `User` do resultado",
+        "why": "Isso. Ela encontra o elo pelo tipo em qualquer profundidade, exatamente como com `*fs.PathError`."
+      },
+      {
+        "text": "`err.(*QuotaError)` direto",
+        "why": "O valor de fora é um `*fmt.wrapError`, e a asserção não olha mais nada."
+      }
+    ]
+  },
+  "ex-xtkd15mp": {
+    "prompt": "Com `%v` em `readConfig` e `%w` em `start`, quantos elos o laço da seção 03 imprimiu?",
+    "hint": "Conte as linhas com um tipo na frente.",
+    "unit": "elos"
+  }
+}

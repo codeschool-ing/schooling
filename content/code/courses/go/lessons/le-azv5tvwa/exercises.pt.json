@@ -1,0 +1,395 @@
+{
+  "ex-r5xsqkm7": {
+    "prompt": "O laço de leitura da seção 02 recebeu `0 \"\" EOF` na quarta chamada. O que `io.EOF` estava dizendo a ele?",
+    "hint": "O programa imprimiu `done` depois.",
+    "choices": [
+      {
+        "text": "Que a leitura falhou e os últimos bytes se perderam",
+        "why": "O último byte, `o`, chegou na terceira chamada; nada se perdeu e nada falhou."
+      },
+      {
+        "text": "Que a entrada tinha acabado, a saída normal do laço",
+        "why": "Isso. É um sentinela para o fim da entrada, e o laço saiu por ele e imprimiu `done`."
+      },
+      {
+        "text": "Que `buf` era pequeno demais para o resto da string",
+        "why": "Um buffer pequeno só significa mais chamadas; o leitor preencheu 4, 4 e depois 1 byte."
+      },
+      {
+        "text": "Que a string tinha um byte que não era texto válido",
+        "why": "`Read` não julga os bytes, e `Hello, Go` é texto simples."
+      }
+    ]
+  },
+  "ex-rzb35qn8": {
+    "prompt": "A lição 34 disse para preferir `errors.Is`, e ainda assim o laço escreve `err == io.EOF`. Por que isso é seguro?",
+    "hint": "Leia o parêntese em `go doc io.EOF`.",
+    "choices": [
+      {
+        "text": "`io.EOF` é uma constante, e constantes se comparam com `==`",
+        "why": "O `go doc` imprimiu `var EOF = errors.New(\"EOF\")`: uma variável, como todo sentinela."
+      },
+      {
+        "text": "Um método `Read` precisa devolver o próprio `io.EOF`, nunca embrulhado",
+        "why": "Isso. A documentação torna isso uma regra para leitores justamente para que quem chama possa usar `==`."
+      },
+      {
+        "text": "`errors.Is` não encontra `io.EOF`, porque ele não tem `Unwrap`",
+        "why": "`errors.Is` confere primeiro o próprio erro, então encontra `io.EOF` do mesmo jeito."
+      },
+      {
+        "text": "`==` é mais rápido, e um laço de leitura roda muitas vezes",
+        "why": "Velocidade não é o argumento da documentação; a garantia de que `io.EOF` chega sem embrulho é."
+      }
+    ]
+  },
+  "ex-xfbvsetx": {
+    "prompt": "`io.ReadAll` lê um leitor até o fim sem problema nenhum. Que erro ela devolve?",
+    "hint": "Chegar ao fim era o que pediram a ela.",
+    "choices": [
+      {
+        "text": "`io.EOF`, já que o leitor o devolveu",
+        "why": "O leitor o devolveu a `ReadAll`, que não o repassa: `A successful call returns err == nil`."
+      },
+      {
+        "text": "`io.ErrUnexpectedEOF`",
+        "why": "Esse é para uma entrada que parou no meio de alguma coisa; um fim esperado não é isso."
+      },
+      {
+        "text": "`nil`",
+        "why": "Isso. Para uma função a quem pediram que lesse tudo, chegar ao fim é sucesso."
+      },
+      {
+        "text": "Os dados, e um erro juntado com todo `io.EOF` que ela encontrou",
+        "why": "Ela devolve um erro só, e numa leitura bem-sucedida esse erro é `nil`."
+      }
+    ]
+  },
+  "ex-wb8g6hks": {
+    "prompt": "Por convenção, o nome de um sentinela como `ErrUnexpectedEOF` começa com `___`; `io.EOF` é a exceção.",
+    "hint": "Cinco dos seis de `io` a seguem.",
+    "blanks": [
+      {
+        "accept": [
+          "Err"
+        ]
+      }
+    ]
+  },
+  "ex-ks55dmk3": {
+    "prompt": "Um formato de arquivo começa com um cabeçalho de 16 bytes, e o leitor de um parser acaba depois de 9 deles. O que o parser deve devolver?",
+    "hint": "Esse fim podia acontecer aqui?",
+    "choices": [
+      {
+        "text": "`io.EOF`, porque a entrada acabou",
+        "why": "`io.EOF` diz que a entrada acabou onde podia acabar; um cabeçalho cortado em 9 bytes não acabou assim."
+      },
+      {
+        "text": "`nil` e os 9 bytes, já que chegaram alguns dados",
+        "why": "Um cabeçalho com 7 bytes faltando não é um resultado que alguém possa usar; devolver `nil` esconde um arquivo quebrado."
+      },
+      {
+        "text": "`io.ErrUnexpectedEOF`, ou um erro com mais detalhe",
+        "why": "Isso. A entrada parou no meio de uma estrutura, o que é uma falha, e `go doc io.EOF` indica esse erro para o caso."
+      },
+      {
+        "text": "`io.ErrShortBuffer`, porque o buffer não pôde ser preenchido",
+        "why": "Esse sentinela trata de um buffer pequeno demais para o que precisa caber nele, não de uma entrada que acabou."
+      }
+    ]
+  },
+  "ex-ktjqbjjm": {
+    "prompt": "Um pacote declara o seu próprio `var EOF = errors.New(\"EOF\")` e o leitor dele o devolve no fim. O `err == io.EOF` de quem chama o pega?",
+    "hint": "A lição 33 comparou dois erros criados com as mesmas palavras.",
+    "choices": [
+      {
+        "text": "Sim, os dois dizem `EOF`",
+        "why": "Palavras iguais não fazem erros iguais: duas chamadas a `errors.New` criam dois valores diferentes."
+      },
+      {
+        "text": "Não: é outro valor com a mesma mensagem",
+        "why": "Isso. Um sentinela casa pela identidade, então só o próprio `io.EOF` é `io.EOF`, e esse leitor quebra o laço de todo mundo que o chama."
+      },
+      {
+        "text": "Sim, porque as duas variáveis se chamam `EOF`",
+        "why": "Um nome é como o código se refere a um valor; a comparação é entre os valores, que diferem."
+      },
+      {
+        "text": "Só com `errors.Is`, que compara mensagens",
+        "why": "`errors.Is` também compara valores, elo a elo, e nenhum elo aqui é `io.EOF`."
+      }
+    ]
+  },
+  "ex-bz8hjnc4": {
+    "prompt": "Por que o `main` da seção 03 confere `errors.Is(err, store.ErrNotFound)` em vez de `err == store.ErrNotFound`?",
+    "hint": "O que `Count` fez com o sentinela antes de devolvê-lo?",
+    "choices": [
+      {
+        "text": "`==` não compara valores vindos de outro pacote",
+        "why": "Compara; o problema é qual valor ele recebe, não de onde o valor veio."
+      },
+      {
+        "text": "`Count` sempre o devolve embrulhado, com o nome do item",
+        "why": "Isso. O valor que `main` recebe é o embrulho, então só uma verificação que percorre a cadeia encontra o sentinela."
+      },
+      {
+        "text": "`ErrNotFound` não é exportado e o `==` não o enxerga",
+        "why": "Ele começa com maiúscula, e é por isso que `main` consegue nomeá-lo."
+      },
+      {
+        "text": "`errors.Is` também casa com qualquer erro cuja mensagem seja `not found`",
+        "why": "Ele nunca lê mensagens; é justamente por isso que um sentinela é um valor."
+      }
+    ]
+  },
+  "ex-5ewp6hf9": {
+    "prompt": "`store.Count(\"pear\")` devolveu 0 e um erro `nil`. Por que não ter peras não é um erro?",
+    "hint": "Pense em todo mundo que chama e que teria de tratá-lo.",
+    "choices": [
+      {
+        "text": "Não ter nenhuma em estoque é uma resposta boa; um erro a tornaria uma falha",
+        "why": "Isso. A loja vende peras e as contou; a contagem por acaso é 0."
+      },
+      {
+        "text": "O map dá 0 para uma chave que falta, então `Count` não distingue peras de ameixas",
+        "why": "A forma comma-ok as distingue, e `Count` a usa: `plum` recebeu o sentinela."
+      },
+      {
+        "text": "Em Go um valor zero conta como sucesso",
+        "why": "Nada na linguagem diz isso; `Count` escolheu `nil` porque 0 aqui é uma contagem de verdade."
+      },
+      {
+        "text": "Os erros de `Count` são reservados para itens que ela não vende",
+        "why": "Uma função pode devolver qualquer erro; esta por acaso só tem uma falha hoje."
+      }
+    ]
+  },
+  "ex-ev5k6pzn": {
+    "prompt": "Quais destas são o que torna `store.ErrNotFound` utilizável por quem chama de outro pacote? Marque todas as que se aplicam.",
+    "hint": "Uma é sobre nomeá-lo, outra sobre saber quando procurá-lo.",
+    "choices": [
+      {
+        "text": "O nome começa com maiúscula, então ele é exportado",
+        "why": "Sim. Sem isso, `main` nem conseguiria escrever `store.ErrNotFound`."
+      },
+      {
+        "text": "O comentário de `Count` diz que o erro dela embrulha `ErrNotFound`",
+        "why": "Sim. A assinatura só diz `error`, então o comentário é onde quem chama aprende o que conferir."
+      },
+      {
+        "text": "A mensagem está em minúsculas e sem ponto final",
+        "why": "Isso faz a mensagem ler bem dentro de uma mais longa; quem confere com `errors.Is` nunca a lê."
+      },
+      {
+        "text": "Ele é criado por `errors.New` dentro de `Count` a cada chamada",
+        "why": "Isso criaria um valor novo a cada vez, com o qual nada casaria; um sentinela é criado uma vez, no nível do pacote."
+      }
+    ]
+  },
+  "ex-jhjqz567": {
+    "prompt": "Um segundo pacote, `catalog`, também declara `var ErrNotFound = errors.New(\"not found\")` e o embrulha do mesmo jeito. O que `errors.Is(err, store.ErrNotFound)` diz de um erro vindo de `catalog`?",
+    "hint": "Mesmas palavras, mesmo nome, outra chamada a `errors.New`.",
+    "choices": [
+      {
+        "text": "`true`, já que as duas mensagens são idênticas",
+        "why": "`errors.Is` compara valores, não texto, e estes são dois valores."
+      },
+      {
+        "text": "Nada: o programa não compila com dois `ErrNotFound`",
+        "why": "Cada um mora no seu pacote, `store.ErrNotFound` e `catalog.ErrNotFound`, então os nomes nunca colidem."
+      },
+      {
+        "text": "`false`, porque só a própria variável de `store` casa",
+        "why": "Isso. É exatamente o que impede que um item que falta no catálogo seja confundido com um item que a loja não vende."
+      },
+      {
+        "text": "`true`, porque as duas variáveis têm o nome `ErrNotFound`",
+        "why": "Nomes são para o código que os escreve; em tempo de execução só os valores são comparados."
+      }
+    ]
+  },
+  "ex-y4qxr7y6": {
+    "prompt": "No `switch` da seção 03, a linha `case err != nil` passa para cima do `case` com `errors.Is`. O que o programa imprime para `plum`?",
+    "hint": "Um `switch` sem tag executa o primeiro `case` verdadeiro (lição 19).",
+    "choices": [
+      {
+        "text": "`plum: not sold here (count \"plum\": not found)`, como antes",
+        "why": "O `case` do sentinela nunca é alcançado: o erro não é `nil`, então o `case` de cima já casou."
+      },
+      {
+        "text": "`plum: failed: count \"plum\": not found`",
+        "why": "Isso. Todo erro não nulo casa com `err != nil`, então a verificação específica precisa vir antes da geral."
+      },
+      {
+        "text": "`plum: 0 in stock`",
+        "why": "O `default` só roda quando nenhum `case` casou, e `err != nil` casou."
+      },
+      {
+        "text": "Nada: dois `case` casam, então o compilador recusa o `switch`",
+        "why": "Condições que se sobrepõem são legais num `switch` sem tag; a primeira verdadeira vence."
+      }
+    ]
+  },
+  "ex-fp7xc6ra": {
+    "prompt": "Ligue cada situação à forma de erro que ela pede.",
+    "hint": "Duas perguntas: quem chama desvia por ele, e precisa de dados?",
+    "pairs": [
+      {
+        "left": "Quem chama para de ler quando a entrada acaba",
+        "right": "um sentinela"
+      },
+      {
+        "left": "Quem chama precisa do número da linha errada",
+        "right": "um tipo de erro com um campo"
+      },
+      {
+        "left": "Quem chama só acrescenta contexto e devolve",
+        "right": "um erro opaco"
+      },
+      {
+        "left": "Quem chama precisa do tipo de falha e da entrada",
+        "right": "um tipo de erro que carrega um sentinela"
+      }
+    ],
+    "right_distractors": [
+      "um pânico"
+    ]
+  },
+  "ex-dv4bzkmd": {
+    "prompt": "Na execução de `sentinel-v2`, `Count` parou de embrulhar `ErrNotFound`. O que mudou para o `main` da seção 03?",
+    "hint": "Compare as linhas de `plum` das duas execuções.",
+    "choices": [
+      {
+        "text": "Deixou de compilar",
+        "why": "Compilou, e o `go vet` passou; a variável que ele nomeia ainda existe."
+      },
+      {
+        "text": "A mensagem de `plum` perdeu o nome do item",
+        "why": "A mensagem foi `count \"plum\": not found` nas duas execuções, letra por letra."
+      },
+      {
+        "text": "O `case` com `errors.Is` deixou de casar, então `plum` saiu como `failed`",
+        "why": "Isso. Mesmo texto, nenhum sentinela na cadeia, e nada relatou a mudança."
+      },
+      {
+        "text": "O `go vet` avisou que `ErrNotFound` nunca era devolvido",
+        "why": "O `go vet` não encontrou nada; se uma variável é devolvida ou não é algo que ele não confere."
+      }
+    ]
+  },
+  "ex-7489fk6k": {
+    "prompt": "Qual mudança em `store` quebra quem chama em voz alta, com um erro de compilação?",
+    "hint": "Uma delas fez o `go run` imprimir `undefined`.",
+    "choices": [
+      {
+        "text": "Devolver o erro sem `%w`",
+        "why": "Essa é a silenciosa: compilou, e o desvio de quem chama simplesmente parou de casar."
+      },
+      {
+        "text": "Apagar a variável `ErrNotFound`",
+        "why": "Isso. O `main` a nomeava, então o build falhou: `undefined: store.ErrNotFound`."
+      },
+      {
+        "text": "Reescrever a mensagem dentro de `errors.New(\"not found\")`",
+        "why": "Quem usa `errors.Is` nunca lê a mensagem, então nada do lado dele muda."
+      },
+      {
+        "text": "Acrescentar um segundo sentinela para outra falha",
+        "why": "Uma variável nova não quebra ninguém; é uma promessa nova, que tem o seu próprio custo."
+      }
+    ]
+  },
+  "ex-gy622km3": {
+    "prompt": "Para `strconv.Atoi(\"99999999999999999999\")`, qual destas é verdadeira?",
+    "hint": "O erro é um tipo com um sentinela no campo `Err`.",
+    "choices": [
+      {
+        "text": "`errors.Is(err, strconv.ErrSyntax)` é verdadeiro: é longo demais para um int",
+        "why": "Todo caractere é um dígito, então a sintaxe está certa; o que não cabe é o valor."
+      },
+      {
+        "text": "`errors.Is(err, strconv.ErrRange)` é verdadeiro, e `errors.AsType` devolve a entrada",
+        "why": "Isso. A execução imprimiu `too big for an int` e `Num=\"99999999999999999999\"` para o mesmo erro."
+      },
+      {
+        "text": "`err == strconv.ErrRange` é verdadeiro",
+        "why": "O valor de fora é o `*strconv.NumError`; `ErrRange` está um elo abaixo, no campo `Err`."
+      },
+      {
+        "text": "`err` é `nil` e `n` é o maior `int`",
+        "why": "`Atoi` devolve um erro para um número que não cabe; a execução foi para o `case` de faixa."
+      }
+    ]
+  },
+  "ex-mz6x8q4p": {
+    "prompt": "Um erro com mensagem mas sem variável nem tipo que quem chama possa conferir é chamado de ___, e é o padrão.",
+    "hint": "Ele é livre para mudar porque ninguém pode depender dele.",
+    "blanks": [
+      {
+        "accept": [
+          "opaco"
+        ]
+      }
+    ]
+  },
+  "ex-9fakm0ew": {
+    "prompt": "Você escreve `parseConfig`. Ela pode falhar com uma dúzia de tipos de linha ruim, e quem a chama só imprime o erro e sai. O que ela deve devolver?",
+    "hint": "Alguém que chama desvia pelo tipo de falha?",
+    "choices": [
+      {
+        "text": "Um sentinela para cada tipo de linha ruim, para quem chama escolher depois",
+        "why": "Uma dúzia de promessas que ninguém pediu, cada uma impossível de retirar sem quebrar alguém."
+      },
+      {
+        "text": "Um erro opaco de `fmt.Errorf`, com a linha na mensagem",
+        "why": "Isso. Ninguém desvia e ninguém precisa de campo, então a mensagem para uma pessoa é todo o trabalho."
+      },
+      {
+        "text": "Um sentinela só, `ErrBadConfig`, para todos eles",
+        "why": "Menor, mas ainda uma promessa sem ninguém para quem mantê-la; o único que chama só imprime."
+      },
+      {
+        "text": "Um pânico, já que uma configuração quebrada não tem conserto",
+        "why": "Um arquivo ruim é um erro que quem chama deve ver, não um bug no programa; a lição 36 trata de pânicos."
+      }
+    ]
+  },
+  "ex-4w1anb1w": {
+    "prompt": "Quais destes são sentinelas? Marque todos os que se aplicam.",
+    "hint": "Um sentinela é uma variável que guarda um valor de erro.",
+    "choices": [
+      {
+        "text": "`io.EOF`",
+        "why": "Sim: `var EOF = errors.New(\"EOF\")`."
+      },
+      {
+        "text": "`strconv.ErrSyntax`",
+        "why": "Sim. Ele fica no campo `Err` de um `*strconv.NumError`, e `errors.Is` o encontra ali."
+      },
+      {
+        "text": "`*strconv.NumError`",
+        "why": "É um tipo de erro com campos, encontrado com `errors.As`; ele carrega um sentinela mas não é um."
+      },
+      {
+        "text": "O `errors.New(\"age cannot be negative\")` dentro do `price` da lição 32",
+        "why": "Ele é criado a cada chamada e não fica em variável nenhuma, então nada casa com ele: um erro opaco."
+      }
+    ]
+  },
+  "ex-2y5dmfsy": {
+    "prompt": "Na execução de `sentinel-v2`, quantos dos três itens foram relatados como `failed`?",
+    "hint": "`apple` e `pear` nunca foram erros.",
+    "unit": "itens"
+  },
+  "ex-a2kwpqqf": {
+    "prompt": "Ponha em ordem o que acontece com `store.ErrNotFound` no caminho até a linha de `plum` da seção 03.",
+    "hint": "Começa antes mesmo de `main` rodar.",
+    "items": [
+      "`errors.New` o cria uma vez, no nível do pacote",
+      "`Count` não encontra `plum` no map",
+      "`Count` o embrulha com `%w` e o nome do item",
+      "`errors.Is` percorre a cadeia e o encontra",
+      "`main` imprime `not sold here`"
+    ]
+  }
+}

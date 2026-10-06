@@ -1,0 +1,749 @@
+[
+  {
+    "id": "ex-kr4rmc38",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which workload does storing by column suit?",
+    "hint": "A few columns of every row.",
+    "choices": [
+      {
+        "text": "The report's",
+        "correct": true,
+        "why": "Right. The columns it uses are each one stretch of disk."
+      },
+      {
+        "text": "The till's, which writes and reads whole rows by key",
+        "correct": false,
+        "why": "A whole row is in eleven places in a column store."
+      },
+      {
+        "text": "Both equally, since the data is the same",
+        "correct": false,
+        "why": "The layout favours one or the other."
+      },
+      {
+        "text": "Neither; it is about saving disk only",
+        "correct": false,
+        "why": "Space is a consequence; reading less is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-ra90nxja",
+    "version": 1,
+    "section": "the-sizes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The fact table took 79 MB in PostgreSQL and 9,449,472 bytes in DuckDB. Roughly how many times smaller is the DuckDB file? Give a whole number.",
+    "hint": "79 MB is about 83 million bytes.",
+    "value": 8,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-cdbwvgaf",
+    "version": 1,
+    "section": "the-sizes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is PostgreSQL's table larger even than the CSV text of the same rows?",
+    "hint": "What does each row carry for the till?",
+    "choices": [
+      {
+        "text": "PostgreSQL keeps two copies of every table, one for reading and one for writing",
+        "correct": false,
+        "why": "It keeps one; the size is per row."
+      },
+      {
+        "text": "The CSV file was compressed",
+        "correct": false,
+        "why": "It was plain text."
+      },
+      {
+        "text": "Row headers, full-width numbers and free space",
+        "correct": true,
+        "why": "Right. The costs of a store built for transactions."
+      },
+      {
+        "text": "PostgreSQL stores numbers as text",
+        "correct": false,
+        "why": "It stores them as binary integers."
+      }
+    ]
+  },
+  {
+    "id": "ex-x60c5t9n",
+    "version": 1,
+    "section": "reading-one-column",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To sum `net_cents`, how much of the PostgreSQL table did it read?",
+    "hint": "Count the pages.",
+    "choices": [
+      {
+        "text": "One eleventh, one column of eleven",
+        "correct": false,
+        "why": "That is what a column store would read."
+      },
+      {
+        "text": "All of it",
+        "correct": true,
+        "why": "Right. 10,144 of 10,144 pages: the column is spread through every row."
+      },
+      {
+        "text": "Only the pages that were not in memory",
+        "correct": false,
+        "why": "It read those and the ones in memory: 8,064 plus 2,080."
+      },
+      {
+        "text": "Only the index on `net_cents`",
+        "correct": false,
+        "why": "There is no index on that column."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xhcxwzg",
+    "version": 1,
+    "section": "reading-one-column",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`net_cents` takes 1,119,464 of the Parquet file's 9,492,481 bytes. What percentage of the file does summing it read? Give a whole number.",
+    "hint": "Divide, multiply by a hundred.",
+    "value": 12,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-cskd3fxj",
+    "version": 1,
+    "section": "dictionary-and-runs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does dictionary encoding store a column of shop keys?",
+    "hint": "Seven distinct values.",
+    "choices": [
+      {
+        "text": "The value and how many times it repeats in a row",
+        "correct": false,
+        "why": "That is run-length encoding."
+      },
+      {
+        "text": "Each value as its distance from the minimum",
+        "correct": false,
+        "why": "That is frame of reference."
+      },
+      {
+        "text": "As text, alphabetically",
+        "correct": false,
+        "why": "Order and type are not the trick."
+      },
+      {
+        "text": "Each value once, plus a small code per row",
+        "correct": true,
+        "why": "Right. Seven shops need three bits per row."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1axbwjs",
+    "version": 1,
+    "section": "dictionary-and-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did DuckDB choose RLE for every segment of `date_key`?",
+    "hint": "How were the rows loaded?",
+    "choices": [
+      {
+        "text": "Dates are always stored that way",
+        "correct": false,
+        "why": "In the shuffled file the same column was a megabyte."
+      },
+      {
+        "text": "The column was declared with RLE",
+        "correct": false,
+        "why": "Nobody declared an encoding; DuckDB tried them."
+      },
+      {
+        "text": "Each day's sales sit together, in long runs",
+        "correct": true,
+        "why": "Right. Loaded by order number, which rises with time."
+      },
+      {
+        "text": "`date_key` has the most distinct values",
+        "correct": false,
+        "why": "It has 731, far fewer than order_id."
+      }
+    ]
+  },
+  {
+    "id": "ex-jywgtsmt",
+    "version": 1,
+    "section": "dictionary-and-runs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each encoding to what it exploits.",
+    "hint": "Few values, runs, or a narrow range.",
+    "pairs": [
+      {
+        "left": "Dictionary",
+        "right": "Few distinct values"
+      },
+      {
+        "left": "Run-length",
+        "right": "Equal values next to each other"
+      },
+      {
+        "left": "Bit-packing",
+        "right": "Values that fit in few bits"
+      },
+      {
+        "left": "FSST",
+        "right": "Fragments shared by many strings"
+      }
+    ],
+    "right_distractors": [
+      "Rows that are never read"
+    ]
+  },
+  {
+    "id": "ex-hmv5hdth",
+    "version": 1,
+    "section": "integers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`quantity` is always 1, 2 or 3. How many bits does each value need?",
+    "hint": "Three values.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-nwx6re66",
+    "version": 1,
+    "section": "integers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column is declared `BIGINT` but holds only small numbers. What does that cost in a column store?",
+    "hint": "Who decides the stored size?",
+    "choices": [
+      {
+        "text": "Almost nothing extra",
+        "correct": true,
+        "why": "Right. Bit-packing looks at the values, not the declared type."
+      },
+      {
+        "text": "Eight bytes per row, as declared",
+        "correct": false,
+        "why": "That is the row store's cost."
+      },
+      {
+        "text": "Twice as much as a 32-bit integer, always",
+        "correct": false,
+        "why": "The encoding ignores the declared width."
+      },
+      {
+        "text": "It is refused by the engine",
+        "correct": false,
+        "why": "Every engine accepts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7jt3kgt",
+    "version": 1,
+    "section": "integers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Storing a block's minimum once and each value as its distance from it is called frame of ___.",
+    "hint": "What the minimum serves as.",
+    "blanks": [
+      {
+        "accept": [
+          "reference"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jqyxdayh",
+    "version": 1,
+    "section": "strings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `title` get FSST and not a dictionary?",
+    "hint": "Are the titles repeated?",
+    "choices": [
+      {
+        "text": "Titles are too long for any dictionary",
+        "correct": false,
+        "why": "Length is not the problem; uniqueness is."
+      },
+      {
+        "text": "FSST is used for every text column",
+        "correct": false,
+        "why": "`department` and `format` got a dictionary."
+      },
+      {
+        "text": "Titles are in English",
+        "correct": false,
+        "why": "The language does not matter to the encoding."
+      },
+      {
+        "text": "Titles are almost all different, but share fragments",
+        "correct": true,
+        "why": "Right. A dictionary of whole titles would be as large as the column."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw2swfk7",
+    "version": 1,
+    "section": "sort-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sorted by shop and date, `shop_key` took 524 bytes. Why so little?",
+    "hint": "How many runs?",
+    "choices": [
+      {
+        "text": "Shop keys were dropped from the sorted file",
+        "correct": false,
+        "why": "All 887,477 values are there."
+      },
+      {
+        "text": "Seven runs, one per shop",
+        "correct": true,
+        "why": "Right. Run-length encoding at its best."
+      },
+      {
+        "text": "Sorting converts integers to text",
+        "correct": false,
+        "why": "Types do not change."
+      },
+      {
+        "text": "Parquet compresses small integers to zero bytes when they are sorted",
+        "correct": false,
+        "why": "Not zero: 524 bytes, the cost of seven runs and their counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzgggcbh",
+    "version": 1,
+    "section": "sort-order",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Shuffled, the file took 13,403,406 bytes; in order of order number, 9,331,332. By what percentage did the order shrink it? Give a whole number.",
+    "hint": "The saving over the shuffled size.",
+    "value": 30,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-429qe94m",
+    "version": 1,
+    "section": "sort-order",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three files by their total size, largest first.",
+    "hint": "Shuffling hurts most.",
+    "items": [
+      "shuffled.parquet",
+      "by_order.parquet",
+      "by_shop_date.parquet"
+    ],
+    "trap": "The two sorted files are close; the shuffled one is about 40% larger than either."
+  },
+  {
+    "id": "ex-2h19aqb1",
+    "version": 1,
+    "section": "zone-maps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a zone map?",
+    "hint": "A few bytes per block.",
+    "choices": [
+      {
+        "text": "Each block's minimum and maximum",
+        "correct": true,
+        "why": "Right. A reader discards blocks whose range misses the filter."
+      },
+      {
+        "text": "An index on every value of a column, kept in a separate B-tree",
+        "correct": false,
+        "why": "That is a conventional index, which a zone map is not."
+      },
+      {
+        "text": "A map of which node holds which rows",
+        "correct": false,
+        "why": "That is distribution, lesson 7."
+      },
+      {
+        "text": "A list of the folders a table is split into",
+        "correct": false,
+        "why": "That is partitioning."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz2tsq2n",
+    "version": 1,
+    "section": "zone-maps",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the file ordered by order number, how many of the 8 row groups could hold a sale from March 2025?",
+    "hint": "Groups 3 and 4.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qn3cqc5c",
+    "version": 1,
+    "section": "zone-maps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shuffled file has the same data, yet every row group must be read for March. Why?",
+    "hint": "Look at each group's range.",
+    "choices": [
+      {
+        "text": "Shuffled files have no statistics",
+        "correct": false,
+        "why": "They have them; the statistics are just useless."
+      },
+      {
+        "text": "DuckDB ignores zone maps on Parquet",
+        "correct": false,
+        "why": "It used them on the ordered file."
+      },
+      {
+        "text": "Every group spans both years, so none is ruled out",
+        "correct": true,
+        "why": "Right. Zone maps need the rows a query wants to sit together."
+      },
+      {
+        "text": "March has no sales in that file",
+        "correct": false,
+        "why": "It has the same sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-56revnkj",
+    "version": 1,
+    "section": "parquet",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a Parquet file to what it is.",
+    "hint": "From the outside in.",
+    "pairs": [
+      {
+        "left": "Footer",
+        "right": "Schema and per-block metadata, read first"
+      },
+      {
+        "left": "Row group",
+        "right": "A block of rows, 122,880 here"
+      },
+      {
+        "left": "Column chunk",
+        "right": "One column's values inside a row group"
+      },
+      {
+        "left": "Page",
+        "right": "The unit that is compressed"
+      }
+    ],
+    "right_distractors": [
+      "A row's header for transactions"
+    ]
+  },
+  {
+    "id": "ex-cedt2sqx",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a Parquet reader read the footer first?",
+    "hint": "What does it need before reading data?",
+    "choices": [
+      {
+        "text": "The footer holds the first rows",
+        "correct": false,
+        "why": "It holds metadata, not rows."
+      },
+      {
+        "text": "To know where everything is, and what to skip",
+        "correct": true,
+        "why": "Right. Positions, sizes, encodings and min/max per block."
+      },
+      {
+        "text": "To check a password",
+        "correct": false,
+        "why": "Parquet has no password in the footer."
+      },
+      {
+        "text": "Because files are written backwards",
+        "correct": false,
+        "why": "Data comes first; the metadata is written at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfcyg8qa",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table in Parquet must have 5,000 rows corrected. What does that involve?",
+    "hint": "Parquet has no notion of change.",
+    "choices": [
+      {
+        "text": "An UPDATE on the file, in place",
+        "correct": false,
+        "why": "Files are written once, whole, and never edited."
+      },
+      {
+        "text": "Changing the footer's statistics",
+        "correct": false,
+        "why": "The statistics describe data that would still be wrong."
+      },
+      {
+        "text": "Nothing; Parquet corrects itself",
+        "correct": false,
+        "why": "Nothing corrects data by itself."
+      },
+      {
+        "text": "Rewriting the files that hold them",
+        "correct": true,
+        "why": "Right. A changing table is many files and a record of which are current: lesson 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-eamjfq2n",
+    "version": 1,
+    "section": "vectorised",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make vectorised execution fast? Choose all that apply.",
+    "hint": "A batch of one column at a time.",
+    "choices": [
+      {
+        "text": "Overhead paid once per vector, not per row",
+        "correct": true,
+        "why": "Yes. 2,048 values per call in DuckDB."
+      },
+      {
+        "text": "Contiguous values that fill the cache with useful data",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Instructions that work on several values at once",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "An index on every column",
+        "correct": false,
+        "why": "Vectorised scans need no index."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvwspwwc",
+    "version": 1,
+    "section": "vectorised",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is late materialisation?",
+    "hint": "Filter first, fetch later.",
+    "choices": [
+      {
+        "text": "Loading the warehouse at night",
+        "correct": false,
+        "why": "That is a schedule."
+      },
+      {
+        "text": "Refreshing a materialised view late",
+        "correct": false,
+        "why": "Different word, different idea."
+      },
+      {
+        "text": "Fetching other columns only for rows that survive the filter",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Decompressing everything before filtering",
+        "correct": false,
+        "why": "The opposite: work on compressed data where possible."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk3gr0yq",
+    "version": 1,
+    "section": "what-columns-are-bad-at",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two thousand single-row inserts took 0.956 s in PostgreSQL and 1.981 s in DuckDB. Why is the column store slower here?",
+    "hint": "Eleven blocks per row.",
+    "choices": [
+      {
+        "text": "Each row is split across every column's block",
+        "correct": true,
+        "why": "Right. Two thousand times, each durably."
+      },
+      {
+        "text": "DuckDB checks every row against every other",
+        "correct": false,
+        "why": "There is no such check on a table without constraints."
+      },
+      {
+        "text": "DuckDB inserts are always slow, whatever their size",
+        "correct": false,
+        "why": "Batch loads are its strength; single rows are the problem."
+      },
+      {
+        "text": "PostgreSQL skips writing to disk",
+        "correct": false,
+        "why": "It writes; a row append is simply cheaper."
+      }
+    ]
+  },
+  {
+    "id": "ex-3c9mhkgb",
+    "version": 1,
+    "section": "what-columns-are-bad-at",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "DuckDB found order 112406 in 0.002 s with no index. Why would a lookup by `customer_key` be a different story?",
+    "hint": "What lets zone maps work?",
+    "choices": [
+      {
+        "text": "Customer keys are encrypted",
+        "correct": false,
+        "why": "Nothing is encrypted here."
+      },
+      {
+        "text": "There are fewer customers than orders",
+        "correct": false,
+        "why": "The count is not what matters; the order is."
+      },
+      {
+        "text": "Customer keys are not integers",
+        "correct": false,
+        "why": "They are integers."
+      },
+      {
+        "text": "The table is sorted by order, not by customer",
+        "correct": true,
+        "why": "Right. Every block would contain customers of every range, so none could be skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdw7c37f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table has 50 columns and a report reads 3 of them over every row. Which store reads less, and roughly how much less?",
+    "hint": "Bytes of the columns used, against bytes of whole rows.",
+    "choices": [
+      {
+        "text": "The row store, because it reads each row once from start to finish",
+        "correct": false,
+        "why": "Reading each row once means reading all 50 columns."
+      },
+      {
+        "text": "The column store, by an order of magnitude or more",
+        "correct": true,
+        "why": "Right. Three columns of fifty, before compression even starts."
+      },
+      {
+        "text": "Both read the same, since every row is needed",
+        "correct": false,
+        "why": "Every row, but not every column."
+      },
+      {
+        "text": "The row store, if it has an index on the three",
+        "correct": false,
+        "why": "An index helps find rows, not read every row's columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyzc6wxr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Most queries on a fact table filter by month and then by shop. Which order should its rows be written in?",
+    "hint": "Rows a query wants should sit together.",
+    "choices": [
+      {
+        "text": "By date, then shop",
+        "correct": true,
+        "why": "Right. Zone maps skip most months, and shops cluster inside each."
+      },
+      {
+        "text": "Shuffled, so that every node and block gets an even mix of the data",
+        "correct": false,
+        "why": "Even mixing is what makes zone maps useless."
+      },
+      {
+        "text": "By customer, which has the most distinct values of any key",
+        "correct": false,
+        "why": "Many values suit a distribution key; sort by what queries filter on."
+      },
+      {
+        "text": "By net amount, largest first",
+        "correct": false,
+        "why": "Nobody filters by it; it would scatter dates across every block."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq90xpw9",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Parquet row groups here hold 122,880 rows. How many row groups does a file of 887,477 rows need?",
+    "hint": "Round up.",
+    "value": 8,
+    "tolerance": 0
+  }
+]

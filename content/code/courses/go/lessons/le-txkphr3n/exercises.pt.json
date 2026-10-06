@@ -1,0 +1,401 @@
+{
+  "ex-khsypp21": {
+    "prompt": "Em Go, o que decide se um valor mora na pilha ou no heap?",
+    "hint": "A seção 02 perguntou a alguém com `-gcflags=-m`.",
+    "choices": [
+      {
+        "text": "Você: `&` e `new` põem um valor no heap, variáveis comuns vão para a pilha",
+        "why": "Essa é a regra de C. Em Go `p := point{1, 2}` era uma variável comum e mesmo assim foi para o heap, porque o endereço dela saiu da função."
+      },
+      {
+        "text": "O compilador, pela análise de escape",
+        "why": "Isso. Ele mantém um valor no quadro quando consegue provar que nada o usa depois do retorno, e o move para o heap caso contrário."
+      },
+      {
+        "text": "O coletor de lixo",
+        "why": "O coletor só libera valores do heap. Onde um valor vai foi decidido na compilação, e o `-m` imprimiu isso sem rodar nada."
+      },
+      {
+        "text": "O sistema operacional, que entrega a pilha",
+        "why": "O kernel dá memória ao processo, mas qual variável vai para onde é escolha do compilador de Go, feita valor a valor."
+      }
+    ]
+  },
+  "ex-my7832b4": {
+    "prompt": "`newPoint` declara `p := point{1, 2}` e devolve `&p`. O que acontece com `p`?",
+    "hint": "Leia a primeira linha que o `-m` imprimiu.",
+    "choices": [
+      {
+        "text": "Morre junto com o quadro, e quem chamou fica segurando um ponteiro solto",
+        "why": "Esse é o bug de C com que a seção abriu. O compilador de Go vê o endereço sair e não deixa `p` morrer com o quadro."
+      },
+      {
+        "text": "O compilador se recusa a devolver o endereço de uma local",
+        "why": "Compilou e rodou; `newPoint` alocou uma vez por chamada no `AllocsPerRun`."
+      },
+      {
+        "text": "É copiado para o quadro de quem chamou quando a função retorna",
+        "why": "Quem chama recebe um ponteiro, então não há para onde copiar; o valor precisa viver mais que a chamada em outro lugar."
+      },
+      {
+        "text": "Vai para o heap, e o ponteiro que quem chamou recebeu continua válido",
+        "why": "Isso: `moved to heap: p`. É por isso que a lição 23 pôde dizer que devolvê-lo é seguro."
+      }
+    ]
+  },
+  "ex-hm8pz8zs": {
+    "prompt": "`count` e `squares` chamam `make`. Por que só o array de `squares` escapa?",
+    "hint": "Veja o que cada função devolve.",
+    "choices": [
+      {
+        "text": "`make` aloca no heap por padrão, e a chamada em `count` foi removida por inútil",
+        "why": "A chamada ficou: o `-m` imprimiu `make([]int, 0, 8) does not escape` sobre ela, então o array foi criado, no quadro."
+      },
+      {
+        "text": "`squares` devolve a slice, então o array precisa viver mais que a chamada",
+        "why": "Isso. `count` devolve só um comprimento, então nada leva de volta ao array dele depois do retorno."
+      },
+      {
+        "text": "`squares` escreve na slice dentro de um laço",
+        "why": "Escrever numa slice não diz nada sobre quem a alcança depois; `count` escreve na sua com `append`."
+      },
+      {
+        "text": "O `append` em `count` move o array para a pilha",
+        "why": "O `append` não move nada para a pilha. O array estava no quadro desde o `make`, porque nunca escapou."
+      }
+    ]
+  },
+  "ex-yg9b84wy": {
+    "prompt": "Quais destes foram para o heap em `~/memory`? Escolha todos os que se aplicam.",
+    "hint": "O `AllocsPerRun` contou uma alocação para três das cinco funções.",
+    "choices": [
+      {
+        "text": "`p` em `newPoint`",
+        "why": "Sim: o endereço dele é devolvido."
+      },
+      {
+        "text": "`nums` em `sum`",
+        "why": "Não. O array só é lido dentro da função, e o `-m` não imprimiu nada sobre ele."
+      },
+      {
+        "text": "`table` em `large`",
+        "why": "Sim, embora nada escape: 1,6 MB passa dos 128 KiB que uma variável declarada pode ocupar num quadro."
+      },
+      {
+        "text": "O array por trás de `buf` em `count`",
+        "why": "Não: `does not escape`, e `count` alocou 0 vezes por chamada."
+      }
+    ]
+  },
+  "ex-t55t9qst": {
+    "prompt": "`go build -gcflags=___` faz o compilador imprimir as suas decisões, inclusive o que escapa para o heap.",
+    "hint": "Uma letra depois de um hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "-m",
+          "-m -l",
+          "\"-m -l\"",
+          "\"-m\""
+        ]
+      }
+    ]
+  },
+  "ex-j1t9zj8x": {
+    "prompt": "Uma função declara `var buf [1 << 20]byte`, um array de 1 MiB, usa e devolve um `int`. Nada pega o endereço dele. O que o `-gcflags=-m` diz sobre `buf`?",
+    "hint": "A análise de escape não é a única regra que manda um valor para o heap.",
+    "choices": [
+      {
+        "text": "Nada: um valor que não escapa fica sempre no quadro, seja qual for o tamanho que ele tenha",
+        "why": "Vale abaixo de um limite de tamanho. `large` em `~/memory` não escapou nada e mesmo assim recebeu `moved to heap: table`."
+      },
+      {
+        "text": "Um erro de compilação: o array é grande demais para uma pilha",
+        "why": "Go não recusa. Uma variável grande demais para o quadro vai para outro lugar, não é rejeitada."
+      },
+      {
+        "text": "`moved to heap: buf`, porque 1 MiB passa do limite de 128 KiB de uma variável declarada",
+        "why": "Isso. `MaxStackVarSize` é 128 KiB, e o mesmo aconteceu com a `table` de 1,6 MB."
+      },
+      {
+        "text": "Nada na compilação; o programa estoura a pilha quando roda",
+        "why": "O compilador age antes e o move. Uma pilha de Go não é onde um array local de 1 MiB é colocado."
+      }
+    ]
+  },
+  "ex-04cyaxdv": {
+    "prompt": "Quais valores do heap o coletor de lixo de Go libera?",
+    "hint": "Ele parte das raízes.",
+    "choices": [
+      {
+        "text": "Os que o programa não usa há algum tempo",
+        "why": "O coletor nunca pergunta quando um valor foi usado pela última vez, nem a idade dele; ele não é geracional."
+      },
+      {
+        "text": "Os que nenhuma raiz alcança por ponteiros",
+        "why": "Isso. A marcação segue ponteiros das variáveis de pacote e das pilhas das goroutines; o que ela nunca alcançou é varrido."
+      },
+      {
+        "text": "Os criados por funções que já retornaram ao chamador",
+        "why": "`newPoint` retornou e o `p` dela foi mantido, porque quem chamou ainda apontava para ele."
+      },
+      {
+        "text": "Os maiores, quando o heap passa da meta do GOGC",
+        "why": "A meta decide quando uma coleta começa, nunca quais valores saem. Um valor grande alcançável é mantido, como o array de 64 MB foi."
+      }
+    ]
+  },
+  "ex-h2d08nqg": {
+    "prompt": "Ligue cada campo de `gc 3 @0.009s 2%: … 15->15->8 MB, 16 MB goal, … 4 P` ao que ele significa.",
+    "hint": "O `go doc runtime` imprimiu a chave.",
+    "pairs": [
+      {
+        "left": "`gc 3`",
+        "right": "a terceira coleta da execução"
+      },
+      {
+        "left": "`@0.009s`",
+        "right": "tempo desde que o programa começou"
+      },
+      {
+        "left": "`15->15->8 MB`",
+        "right": "heap no começo, no fim, e ainda alcançável"
+      },
+      {
+        "left": "`16 MB goal`",
+        "right": "o tamanho abaixo do qual a coleta queria terminar"
+      },
+      {
+        "left": "`4 P`",
+        "right": "processadores que o runtime usou"
+      }
+    ],
+    "right_distractors": [
+      "quanto tempo o programa ficou parado"
+    ]
+  },
+  "ex-nmwfq0w5": {
+    "prompt": "Uma coleta termina com 10 MB ainda alcançáveis, e o programa roda com `GOGC=200`. Em que tamanho de heap, em MB, fica a meta da próxima coleta?",
+    "hint": "`GOGC=100` deixou 8 MB crescerem até uma meta de 16 MB.",
+    "unit": "MB"
+  },
+  "ex-bjanpdp9": {
+    "prompt": "O `gc 3` imprimiu `0.027+0.29+0.058 ms clock`. Por quanto tempo o programa ficou parado?",
+    "hint": "Duas das três fases param o mundo.",
+    "choices": [
+      {
+        "text": "0,375 ms, somando as três fases inteiras",
+        "why": "A fase do meio, a marcação, roda enquanto o programa roda; somá-la conta tempo em que o programa estava rodando."
+      },
+      {
+        "text": "0,29 ms, a fase mais longa",
+        "why": "Essa é a marcação concorrente, a parte que não para nada."
+      },
+      {
+        "text": "0,085 ms, a primeira e a última fase",
+        "why": "Isso: o término da varredura e o término da marcação param o mundo; os 0,29 ms entre eles correram ao lado do programa."
+      },
+      {
+        "text": "0,058 ms, que é apenas a última das fases",
+        "why": "Há duas paradas por coleta, nas duas pontas da marcação, e a primeira também conta."
+      }
+    ]
+  },
+  "ex-kqpsvgrz": {
+    "prompt": "Um programa imprime o endereço de um valor do heap com `%p`, e de novo depois de uma dúzia de coletas, ainda segurando o ponteiro. O que mostra a segunda linha?",
+    "hint": "Uma palavra em `mgc.go` responde.",
+    "choices": [
+      {
+        "text": "Outro endereço, já que as coletas juntam os valores vivos",
+        "why": "Isso seria um coletor compactador, e `mgc.go` diz que o de Go não é compactador."
+      },
+      {
+        "text": "O mesmo endereço",
+        "why": "Isso. O coletor nunca move um valor do heap; em vez disso ele reaproveita os buracos."
+      },
+      {
+        "text": "`<nil>`, porque o coletor zerou o ponteiro",
+        "why": "O coletor nunca escreve nas suas variáveis. Um valor para o qual o programa ainda aponta é alcançável e fica, com endereço e tudo."
+      },
+      {
+        "text": "Algo imprevisível, já que a varredura pode ter reaproveitado essa memória",
+        "why": "A varredura reaproveita só o que a marcação não alcançou, e este valor foi alcançado pelo ponteiro."
+      }
+    ]
+  },
+  "ex-hejjhd7a": {
+    "prompt": "Ponha as fases de uma coleta em ordem, como a documentação do runtime as lista.",
+    "hint": "A marcação começa e termina com uma parada curta.",
+    "items": [
+      "Mundo parado: término da varredura",
+      "Marcação, ao lado do programa",
+      "Mundo parado: término da marcação",
+      "Varredura, ao lado do programa"
+    ]
+  },
+  "ex-rbe7emht": {
+    "prompt": "Um programa mantém 8 MB vivos e roda com `GOMEMLIMIT=4MiB`. O que acontece?",
+    "hint": "O limite é flexível.",
+    "choices": [
+      {
+        "text": "O runtime o para com um erro de falta de memória em 4 MiB",
+        "why": "Flexível quer dizer sem erro no limite: o programa da seção 04 terminou."
+      },
+      {
+        "text": "As alocações depois de 4 MiB devolvem nil",
+        "why": "Alocações em Go não devolvem nil. O programa continuou alocando 496 MB no total."
+      },
+      {
+        "text": "Termina, devagar, coletando milhares de vezes",
+        "why": "Isso: 2.927 coletas e quatro vezes o tempo, porque nenhuma coleta libera um byte alcançável."
+      },
+      {
+        "text": "Nada muda, já que o heap fica abaixo de 4 MiB de qualquer jeito",
+        "why": "8 MB vivos passam de 4 MiB; a contagem de coletas foi de 61 para 2.927."
+      }
+    ]
+  },
+  "ex-0ccj9qvf": {
+    "prompt": "O que `GOGC=off GOMEMLIMIT=64MiB` pede ao runtime?",
+    "hint": "O programa da seção 03 rodou 10 coletas assim.",
+    "choices": [
+      {
+        "text": "Nunca coletar, e parar o programa em 64 MiB",
+        "why": "Coletou 10 vezes, e nada parou. Um limite de memória é respeitado mesmo com `GOGC=off`."
+      },
+      {
+        "text": "Não coletar até a memória que administra chegar perto de 64 MiB",
+        "why": "Isso: 10 coletas em vez de 61, e um heap que cresceu até 63 MB e parou ali."
+      },
+      {
+        "text": "Coletar a cada 64 MiB que o programa aloca",
+        "why": "O limite é sobre memória ocupada, não alocada: uma coleta começa quando o que o runtime administra chega perto de 64 MiB."
+      },
+      {
+        "text": "Nada: `GOGC=off` desliga também o limite de memória, junto com a coleta",
+        "why": "As duas configurações são separadas, e a execução com as duas coletou 10 vezes, não 0."
+      }
+    ]
+  },
+  "ex-73jjq8w3": {
+    "prompt": "Depois de `header = load()[:16]` e de uma coleta completa, `HeapAlloc` ainda contava 64 MB. Por quê?",
+    "hint": "Para dentro de onde `header` aponta?",
+    "choices": [
+      {
+        "text": "O coletor ainda não tinha rodado",
+        "why": "`heapMB` chama `runtime.GC` antes de medir, então uma coleta inteira tinha acabado de terminar."
+      },
+      {
+        "text": "O fatiamento copiou o array de 64 MB",
+        "why": "Fatiar não copia nada; é por isso que a slice pôde manter o original vivo."
+      },
+      {
+        "text": "`header` aponta para dentro do array de 64 MB, e o coletor o guarda inteiro",
+        "why": "Isso. Nada no coletor olha quanto de um array uma slice consegue ver."
+      },
+      {
+        "text": "`HeapAlloc` conta também a memória já liberada",
+        "why": "Depois do `strings.Clone` o mesmo contador caiu para 0 MB, então ele cai quando a memória é liberada."
+      }
+    ]
+  },
+  "ex-s9rqx1be": {
+    "prompt": "Para guardar uma substring curta sem guardar a string grande de onde ela veio, copie-a com `strings.___`.",
+    "hint": "`slices` tem uma função de mesmo nome.",
+    "blanks": [
+      {
+        "accept": [
+          "Clone"
+        ]
+      }
+    ]
+  },
+  "ex-s1jgvjmz": {
+    "prompt": "Um serviço mantém uns 300 MB vivos e roda num contêiner limitado a 512 MiB, com o `GOGC` padrão. Qual é o problema, e o que resolve?",
+    "hint": "Calcule a próxima meta com `GOGC=100`.",
+    "choices": [
+      {
+        "text": "A meta fica perto de 600 MB, além do contêiner; ponha o `GOMEMLIMIT` uma margem abaixo de 512 MiB",
+        "why": "Isso. A proporção não sabe nada do contêiner, e o limite faz o runtime coletar antes de chegar lá."
+      },
+      {
+        "text": "Nenhum: o runtime lê o limite do contêiner e fica abaixo dele",
+        "why": "O limite de memória padrão é `math.MaxInt64`, que a documentação diz que na prática o desliga."
+      },
+      {
+        "text": "As coletas são frequentes demais; ponha `GOGC=off` e mais nada",
+        "why": "Sem um limite ao lado, `GOGC=off` não coletou nada e cresceu até 499 MB para 8 MB vivos."
+      },
+      {
+        "text": "O heap é grande demais; ponha `GOMEMLIMIT=256MiB` para cortá-lo pela metade",
+        "why": "Isso fica abaixo dos 300 MB vivos, o caso em que o programa do laboratório rodou 2.927 coletas e quatro vezes mais devagar."
+      }
+    ]
+  },
+  "ex-s5728d28": {
+    "prompt": "Quais destes mantêm memória viva por mais tempo do que o programa precisa? Escolha todos os que se aplicam.",
+    "hint": "Pergunte para dentro de onde aponta uma variável de vida longa.",
+    "choices": [
+      {
+        "text": "Um cache que guarda `body[:20]` de cada corpo de requisição de 1 MB por um dia",
+        "why": "Sim. Cada entrada mantém o megabyte inteiro alcançável."
+      },
+      {
+        "text": "Um map que guarda `strings.Clone(line[:8])` de cada linha de um arquivo grande",
+        "why": "Não: cada chave tem oito bytes próprios, e as linhas ficam inalcançáveis."
+      },
+      {
+        "text": "Uma slice de pacote com ponteiros para tarefas terminadas que nada remove",
+        "why": "Sim. Uma variável de pacote é uma raiz, então toda tarefa para a qual ela aponta fica alcançável para sempre."
+      },
+      {
+        "text": "Um buffer de 1 MB dentro de uma função que devolve só o comprimento dele",
+        "why": "Não. Nada leva a ele depois do retorno, então a coleta seguinte o libera, se é que ele estava no heap."
+      }
+    ]
+  },
+  "ex-11gxgxf3": {
+    "prompt": "Você quer saber se o resultado de uma função específica é alocado no heap. Que comando responde isso?",
+    "hint": "A resposta é decidida antes de o programa rodar.",
+    "choices": [
+      {
+        "text": "`GODEBUG=gctrace=1 ./prog`",
+        "why": "Ele informa coletas e totais do heap, não qual valor foi parar onde."
+      },
+      {
+        "text": "`go build -gcflags=-m`",
+        "why": "Isso. O compilador imprime o veredito valor a valor, com arquivo e linha."
+      },
+      {
+        "text": "`go vet`, que aponta alocações como suspeitas",
+        "why": "Alocar não é engano, e o `go vet` procura enganos."
+      },
+      {
+        "text": "Ler `HeapAlloc` de `runtime.ReadMemStats` no programa",
+        "why": "Isso é um total do heap inteiro; não diz de qual função é cada valor."
+      }
+    ]
+  },
+  "ex-146jsdh6": {
+    "prompt": "Uma função guarda `&v`, o endereço da variável local `v`, num map de pacote e retorna. O que o compilador faz com `v`?",
+    "hint": "Uma variável de pacote vive mais que qualquer chamada.",
+    "choices": [
+      {
+        "text": "Mantém no quadro, já que `v` não é devolvida",
+        "why": "Devolver é um jeito de escapar, não o único. Qualquer coisa que alcance `v` depois da chamada conta."
+      },
+      {
+        "text": "Recusa compilar a gravação",
+        "why": "Guardar o endereço de uma local é Go válido; o compilador move o valor em vez de recusar."
+      },
+      {
+        "text": "Copia `v` para dentro do próprio map, e o ponteiro deixa de ser necessário",
+        "why": "O map guarda um ponteiro, e o ponteiro precisa apontar para a própria `v`, não para uma cópia."
+      },
+      {
+        "text": "Move para o heap, porque o map ainda aponta para ela depois do retorno",
+        "why": "Isso. O `-m` imprimiria `moved to heap: v`, como fez com o `p` de `newPoint`."
+      }
+    ]
+  }
+}

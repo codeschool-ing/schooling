@@ -1,0 +1,577 @@
+[
+  {
+    "id": "ex-jkrbnjk5",
+    "version": 1,
+    "section": "the-interface",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `error` in Go?",
+    "hint": "`go doc builtin.error` printed its whole declaration.",
+    "choices": [
+      {
+        "text": "A keyword that marks a function as able to throw",
+        "correct": false,
+        "why": "Go has no throw, and `error` is not a keyword: it is a type the language declares."
+      },
+      {
+        "text": "A string holding the message",
+        "correct": false,
+        "why": "The message comes from a method; the value itself can be any type, such as `*fs.PathError`."
+      },
+      {
+        "text": "An interface with one method, `Error() string`",
+        "correct": true,
+        "why": "Right. Any type with that method is an `error`, and nil means no error."
+      },
+      {
+        "text": "A struct from the `errors` package with a message field",
+        "correct": false,
+        "why": "It is predeclared, in the universe and not in a package, and it has no fields at all, only a method."
+      }
+    ]
+  },
+  {
+    "id": "ex-5djb8cwz",
+    "version": 1,
+    "section": "the-interface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/errors`, `err` was declared once, as `error`. Why did `%T` print `*fs.PathError` on one line and `*strconv.NumError` on another?",
+    "hint": "An interface value has two words.",
+    "choices": [
+      {
+        "text": "`:=` redeclared `err` with a new type at the second call",
+        "correct": false,
+        "why": "`:=` with an existing name only assigns it; `err` kept its type, `error`, throughout."
+      },
+      {
+        "text": "`%T` prints the type stored inside the interface, and each call stored a different one",
+        "correct": true,
+        "why": "Right. The variable's type is `error`; the type word inside it changes with what was stored."
+      },
+      {
+        "text": "Go converts the error to the type of the function that returned it, so each call gives `err` a new type",
+        "correct": false,
+        "why": "Nothing was converted. `os.Open` and `Atoi` each returned a pointer of their own type, wrapped in the `error` interface."
+      },
+      {
+        "text": "`%T` reads the package name from the error's message",
+        "correct": false,
+        "why": "The message of the first error never says `fs`; `%T` reads the type, not the text."
+      }
+    ]
+  },
+  {
+    "id": "ex-3awxcq1x",
+    "version": 1,
+    "section": "the-interface",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fmt.Println(err)` printed `open notes.txt: no such file or directory`. Where did that text come from?",
+    "hint": "`fmt` checks what kind of value it was handed.",
+    "choices": [
+      {
+        "text": "From the error's `Error` method, which `fmt` calls",
+        "correct": true,
+        "why": "Right. Calling `err.Error()` directly printed the same text for the `Atoi` error."
+      },
+      {
+        "text": "From the operating system, which prints it to the terminal",
+        "correct": false,
+        "why": "The system reports a code; the sentence is assembled by `*fs.PathError` and printed by the program."
+      },
+      {
+        "text": "From a field called `Message` that every error carries",
+        "correct": false,
+        "why": "`error` has no fields; `PathError` has `Op`, `Path` and `Err`, and none of them is the whole sentence."
+      },
+      {
+        "text": "From `fmt` itself, which knows the wording for each failure",
+        "correct": false,
+        "why": "`fmt` knows nothing about files; it asks the value for its text."
+      }
+    ]
+  },
+  {
+    "id": "ex-gfesxebe",
+    "version": 1,
+    "section": "the-interface",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function reports that nothing went wrong by returning an `error` equal to `___`.",
+    "hint": "The doc comment of the built-in type ends with it.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ahb6zrq3",
+    "version": 1,
+    "section": "the-interface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n, err := strconv.Atoi(\"12a\")` gave `n` the value 0. What should the caller conclude about that 0?",
+    "hint": "Look at `err` first.",
+    "choices": [
+      {
+        "text": "That the text held the number zero",
+        "correct": false,
+        "why": "That is the trap: `\"0\"` would give 0 with a nil error, and here the error is not nil."
+      },
+      {
+        "text": "That `Atoi` returns 0 for text it partly understood",
+        "correct": false,
+        "why": "It did not read `12` and stop; it refused the whole input, as its message says."
+      },
+      {
+        "text": "Nothing: beside a non-nil error the value is not an answer",
+        "correct": true,
+        "why": "Right. A function with two results returns two, and the first means nothing when the second is an error."
+      },
+      {
+        "text": "That the conversion overflowed and was set to the zero value",
+        "correct": false,
+        "why": "The error said `invalid syntax`, not a range problem; and in either case the 0 is no answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-7v9w92zv",
+    "version": 1,
+    "section": "the-idiom",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the block under `if err != nil` do in idiomatic Go?",
+    "hint": "Lesson 19 recommended a shape for special cases.",
+    "choices": [
+      {
+        "text": "It catches the error so that the lines after the call run anyway, as a catch block would",
+        "correct": false,
+        "why": "Nothing is caught: the error is already a value, and the lines after it are the success path."
+      },
+      {
+        "text": "It retries the call until `err` becomes nil",
+        "correct": false,
+        "why": "A retry is one possible way to handle an error, written by hand; it is not what the block means."
+      },
+      {
+        "text": "It handles the failure and leaves, by returning or ending the program",
+        "correct": true,
+        "why": "Right. The success path then runs down the left margin below it."
+      },
+      {
+        "text": "It logs the error, and the function carries on",
+        "correct": false,
+        "why": "Logging and carrying on is how `~/errors-ignore` sold a free ticket, only with a log line."
+      }
+    ]
+  },
+  {
+    "id": "ex-zr478j7f",
+    "version": 1,
+    "section": "the-idiom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 19's price function answered a bad age with `-1`. Why does the version in `~/errors-idiom` return an `error` instead?",
+    "hint": "What did `./price 8` print?",
+    "choices": [
+      {
+        "text": "Because Go refuses negative numbers as results",
+        "correct": false,
+        "why": "Any `int` can be returned, `-1` included; lesson 19's version compiled and ran."
+      },
+      {
+        "text": "Because a failure then cannot pass for a price",
+        "correct": true,
+        "why": "Right. A child's ticket is a real 0, and a stand-in number only works while every caller remembers it."
+      },
+      {
+        "text": "Because an `error` is faster to compare than an `int`",
+        "correct": false,
+        "why": "Speed was never the reason; an interface comparison is not cheaper than an integer one."
+      },
+      {
+        "text": "Because `os.Exit` needs an error to set the status",
+        "correct": false,
+        "why": "`os.Exit` takes an `int`; `main` chose 1 itself after seeing the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-j26n7dce",
+    "version": 1,
+    "section": "the-idiom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./price -4 2>/dev/null; echo $?` printed only `1`. What does that show?",
+    "hint": "`2>` names one of the program's outputs.",
+    "choices": [
+      {
+        "text": "That `price` accepted `-4` and printed nothing, so the run succeeded",
+        "correct": false,
+        "why": "An accepted age prints a price and exits with 0, as `./price 30` did."
+      },
+      {
+        "text": "That redirecting to `/dev/null` changed the exit status from 0 to 1",
+        "correct": false,
+        "why": "Redirecting an output never changes the status; the same run without it also gave 1."
+      },
+      {
+        "text": "That the message went to standard output",
+        "correct": false,
+        "why": "Then it would still be on the screen; only standard error was thrown away."
+      },
+      {
+        "text": "That it failed, and the message went to standard error",
+        "correct": true,
+        "why": "Right. The message is for a person; a script reads the status."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj6xkhvd",
+    "version": 1,
+    "section": "the-idiom",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `~/errors-ignore` both errors were discarded with `_`. What did `go run . thirty` print?",
+    "hint": "A failed `Atoi` returns a number anyway.",
+    "choices": [
+      {
+        "text": "`strconv.Atoi: parsing \"thirty\": invalid syntax`",
+        "correct": false,
+        "why": "That message only appears when something prints the error, and `_` threw it away."
+      },
+      {
+        "text": "`0`, a child's free ticket",
+        "correct": true,
+        "why": "Right. `Atoi` returned 0 beside its error, and 0 went into `price` as an age."
+      },
+      {
+        "text": "Nothing, because the program panicked",
+        "correct": false,
+        "why": "A discarded error does not stop anything; the program carried on and printed a price."
+      },
+      {
+        "text": "`20`, the adult price, because the age was never set",
+        "correct": false,
+        "why": "The age was set, to the 0 that `Atoi` returned, and 0 is under 12."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bt9ye75",
+    "version": 1,
+    "section": "the-idiom",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `main`, after `age, err := strconv.Atoi(...)`, the line `p, err ___ price(age, false)` compiles because `p` is new and `err` is only assigned.",
+    "hint": "Lesson 5's rule about several names on the left.",
+    "blanks": [
+      {
+        "accept": [
+          ":="
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-axxc1ep9",
+    "version": 1,
+    "section": "the-idiom",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the lines of one step of the idiom in the order they appear in `main`.",
+    "hint": "Call, test, leave, and only then use the value.",
+    "items": [
+      "`age, err := strconv.Atoi(os.Args[1])`",
+      "`if err != nil {`",
+      "`fmt.Fprintln(os.Stderr, err)`",
+      "`os.Exit(1)`",
+      "`p, err := price(age, false)`"
+    ]
+  },
+  {
+    "id": "ex-4m5bwnmg",
+    "version": 1,
+    "section": "custom-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `*LineError` usable as an `error`?",
+    "hint": "Count the methods `error` asks for.",
+    "choices": [
+      {
+        "text": "A line `implements error` beside the type",
+        "correct": false,
+        "why": "Go has no `implements`; nothing in `~/errors-custom` declares it."
+      },
+      {
+        "text": "Embedding the `error` type in the struct",
+        "correct": false,
+        "why": "The struct has only `Line` and `Msg`; nothing is embedded."
+      },
+      {
+        "text": "Being declared in the `errors` package",
+        "correct": false,
+        "why": "It is declared in `main`, and the error types of section 02 live in `io/fs` and `strconv`."
+      },
+      {
+        "text": "Its method `Error() string`",
+        "correct": true,
+        "why": "Right. Having the one method is the whole requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcjysmgp",
+    "version": 1,
+    "section": "custom-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a type of your own, like `LineError`, worth writing rather than a plain message?",
+    "hint": "Who reads the fields?",
+    "choices": [
+      {
+        "text": "Whenever a function can fail, so that every error it returns has a type of its own",
+        "correct": false,
+        "why": "Every error already has a type; `price` failed with a sentence and needed nothing more."
+      },
+      {
+        "text": "When the caller needs data about the failure, such as the line number",
+        "correct": true,
+        "why": "Right. The fields carry the data and the `Error` method builds the message from them."
+      },
+      {
+        "text": "When the message is longer than one line",
+        "correct": false,
+        "why": "Length has nothing to do with it; `line 2: no = in host localhost` is one short line."
+      },
+      {
+        "text": "Only when the error has to stop the program",
+        "correct": false,
+        "why": "Whether the program stops is the caller's decision, whatever the error's type."
+      }
+    ]
+  },
+  {
+    "id": "ex-9szv5nyz",
+    "version": 1,
+    "section": "custom-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/errors-nil`, `check` returned `nil` and `load` returned that as an `error`. Why was `err == nil` false?",
+    "hint": "An interface value has two words.",
+    "choices": [
+      {
+        "text": "Because `check` returned a pointer to an empty `LineError`",
+        "correct": false,
+        "why": "The pointer was nil; nothing was allocated, which is why calling `Error` dereferenced nil."
+      },
+      {
+        "text": "Because `go vet` changed the value before the run",
+        "correct": false,
+        "why": "`go vet` only reads code, and it found nothing to say."
+      },
+      {
+        "text": "Because the stored nil `*LineError` fills the type word",
+        "correct": true,
+        "why": "Right. The interface held `*main.LineError` and a nil pointer, and it is nil only when both are empty."
+      },
+      {
+        "text": "Because `nil` of one package is never equal to `nil` of another",
+        "correct": false,
+        "why": "There is no per-package nil; the type stored in the interface is what differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hhgfrs1",
+    "version": 1,
+    "section": "custom-errors",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's `func find(id int) *NotFound` returns `nil` on success, and callers write `err := find(id)` then `if err != nil`. Which changes stop a caller from seeing a failure that did not happen? Choose all that apply.",
+    "hint": "Where does the typed nil get into an interface?",
+    "choices": [
+      {
+        "text": "Declare the result of `find` as `error` and return a literal `nil`",
+        "correct": true,
+        "why": "Yes: that is the repair of `~/errors-nilfix`, a nil interface from the start."
+      },
+      {
+        "text": "Nothing, as long as callers use `err :=`, because then `err` is a `*NotFound`",
+        "correct": false,
+        "why": "That caller is safe today, but the first one that passes `err` on as an `error`, like `load`, sees a failure."
+      },
+      {
+        "text": "Run `go vet`, which reports the typed nil",
+        "correct": false,
+        "why": "`go vet && go run .` ran the program in `~/errors-nil`: vet reported nothing."
+      },
+      {
+        "text": "Give `Error` a value receiver instead of a pointer receiver",
+        "correct": false,
+        "why": "The receiver is not the problem: any nil `*NotFound` stored in an `error` still fills the type word."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxr1tjem",
+    "version": 1,
+    "section": "custom-errors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value stored in `var err error` to what `err == nil` gives.",
+    "hint": "Both words empty, or not.",
+    "pairs": [
+      {
+        "left": "Nothing assigned at all",
+        "right": "`true`"
+      },
+      {
+        "left": "A `*LineError` that is nil",
+        "right": "`false`, with a nil pointer inside"
+      },
+      {
+        "left": "`&LineError{Line: 2}`",
+        "right": "`false`, with a real error inside"
+      }
+    ],
+    "right_distractors": [
+      "`true`, because the pointer is nil"
+    ]
+  },
+  {
+    "id": "ex-4q0j7wrp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function opens a file, and when `os.Open` fails it does `log.Println(err)` and goes on to read from the `*os.File` it got. What is wrong with that?",
+    "hint": "What was `f` in `~/errors` when the file was missing?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the error is logged somewhere",
+        "correct": false,
+        "why": "Logging tells a person; the function still goes on with a value that is no answer."
+      },
+      {
+        "text": "Beside a non-nil error the `*os.File` is `nil`, so the function carries on with no file",
+        "correct": true,
+        "why": "Right. `~/errors` printed `<nil>` for the file; the block should leave, not log and continue."
+      },
+      {
+        "text": "`log.Println` cannot print an `error`",
+        "correct": false,
+        "why": "It prints it like `fmt.Println` does, by calling `Error`."
+      },
+      {
+        "text": "Go stops the function at the failed `os.Open`, so the read never runs",
+        "correct": false,
+        "why": "Nothing stops by itself; the failure is a value, and the lines after it run unless the code leaves."
+      }
+    ]
+  },
+  {
+    "id": "ex-4je1c4ce",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`parse(s string) (int, error)` reads a temperature, and every `int` is a possible temperature, negatives included. A teammate proposes returning `-9999` on bad input instead of an error. What is the strongest objection?",
+    "hint": "The child's free ticket in section 03.",
+    "choices": [
+      {
+        "text": "Negative numbers cannot be returned from a function that also returns an `error`",
+        "correct": false,
+        "why": "Any `int` can be returned beside an error; the problem is what the number means."
+      },
+      {
+        "text": "`-9999` is too slow to compare",
+        "correct": false,
+        "why": "Comparing integers costs nothing worth mentioning; speed was never the objection."
+      },
+      {
+        "text": "Go programs never use special values",
+        "correct": false,
+        "why": "Some do, like the `-1` of lesson 19; it is a habit that works only while a number is left over."
+      },
+      {
+        "text": "It is a legal temperature, so a caller cannot tell a failure from a reading, and nothing forces anybody to check",
+        "correct": true,
+        "why": "Right. When every value is an answer there is no number left to mean failed; an `error` beside it is unmistakable."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsbjdhd7",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Counted over `/usr/local/go/src` with tests left out, how many lines of Go 1.27.1's standard library contain `if err != nil`?",
+    "hint": "Section 03 opened with the count.",
+    "value": 8879,
+    "tolerance": 100,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-7kpy1dra",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of an `error` in Go? Choose all that apply.",
+    "hint": "Sections 02 and 04.",
+    "choices": [
+      {
+        "text": "It is an interface value: a type and a pointer",
+        "correct": true,
+        "why": "Yes. Lesson 22 measured 16 bytes, and `%T` reads the type half."
+      },
+      {
+        "text": "Returning one makes the caller's next lines skip until a handler",
+        "correct": false,
+        "why": "That is an exception; an error is a value, and the caller's next line runs."
+      },
+      {
+        "text": "`if err { }` does not compile",
+        "correct": true,
+        "why": "Yes: `non-boolean condition in if statement`, the refusal of lesson 8."
+      },
+      {
+        "text": "Its message is stored in a field that `fmt` reads",
+        "correct": false,
+        "why": "`fmt` calls the `Error` method; `LineError` builds the text from `Line` and `Msg` each time."
+      }
+    ]
+  }
+]
