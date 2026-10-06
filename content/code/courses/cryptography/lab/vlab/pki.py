@@ -9,6 +9,8 @@ that every certificate in ~/lab/pki is the same file on every machine.
     radius       radius.vereda.example   P-256      2026-03-01 .. 2026-09-17
     ldap         ldap.vereda.example     P-256      2026-04-01 .. 2030-12-31
     intranet     intranet.vereda.example P-256      self-signed
+    ana-mail     ana.lima@vereda.example RSA 2048   2026-02-01 .. 2028-02-01  S/MIME
+    bruno-mail   bruno.reis@vereda.example RSA 2048 2026-02-01 .. 2028-02-01  S/MIME
     impostor     "Vereda Root CA"        RSA 3072   same name as root, another key
 
 The lab's present is 2026-06-15 12:00 in São Paulo (NOW below); every check
@@ -116,6 +118,27 @@ def build(out):
         w(short + ".pem", pem(c))
         w(short + "-chain.pem", pem(c) + pem(iss))
         keys.write_private(k, os.path.join(out, short + ".key"))
+
+    # S/MIME certificates for lesson 13: RSA, so that signatures repeat, an
+    # e-mail address instead of a host name, and e-mail protection as usage.
+    for who, serial in (("ana", 0x5A01), ("bruno", 0x5A02)):
+        address = f"{who}.{'lima' if who == 'ana' else 'reis'}@vereda.example"
+        k = keys.rsa_key(f"pki/{who}-mail", 2048)
+        c = (x509.CertificateBuilder().subject_name(name(address, "Clinical staff"))
+             .issuer_name(iss.subject).public_key(k.public_key()).serial_number(serial)
+             .not_valid_before(day(2026, 2, 1)).not_valid_after(day(2028, 2, 1))
+             .add_extension(x509.BasicConstraints(ca=False, path_length=None), critical=True)
+             .add_extension(x509.KeyUsage(digital_signature=True, content_commitment=False,
+                                          key_encipherment=True, data_encipherment=False,
+                                          key_agreement=False, key_cert_sign=False, crl_sign=False,
+                                          encipher_only=False, decipher_only=False), critical=True)
+             .add_extension(x509.ExtendedKeyUsage([ExtendedKeyUsageOID.EMAIL_PROTECTION]), critical=False)
+             .add_extension(x509.SubjectAlternativeName([x509.RFC822Name(address)]), critical=False)
+             .add_extension(x509.AuthorityKeyIdentifier.from_issuer_public_key(iss_key.public_key()),
+                            critical=False)
+             .sign(iss_key, hashes.SHA256()))
+        w(f"{who}-mail.pem", pem(c))
+        keys.write_private(k, os.path.join(out, f"{who}-mail.key"))
 
     k = keys.ec_key("pki/intranet")
     self_signed = (x509.CertificateBuilder().subject_name(name("intranet.vereda.example"))

@@ -115,6 +115,29 @@ for name, (t, body, delivered) in events.items():
         delivered = None
     open(f"data/webhooks/{name}.json", "wb").write(delivered or body)
     open(f"data/webhooks/{name}.sig", "w").write(header + "\n")
+# Vereda's DNS zone and its two Ed25519 DNSSEC keys, in BIND's file format,
+# derived like every other key so that the signed zone repeats (lesson 13).
+import base64, struct
+os.makedirs("data/dns", exist_ok=True)
+open("data/dns/db.vereda.example", "w").write(
+    "$TTL 3600\n"
+    "@       IN SOA ns1.vereda.example. hostmaster.vereda.example. 2026061501 7200 900 1209600 300\n"
+    "@       IN NS  ns1.vereda.example.\n"
+    "ns1     IN A   192.0.2.53\n"
+    "portal  IN A   192.0.2.10\n")
+for label, flags in (("ksk", 257), ("zsk", 256)):
+    k = keys.ed25519_key("dns/" + label)
+    pub = k.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    priv = k.private_bytes(serialization.Encoding.Raw, serialization.PrivateFormat.Raw,
+                           serialization.NoEncryption())
+    rdata = struct.pack("!HBB", flags, 3, 15) + pub
+    acc = sum(b if i & 1 else b << 8 for i, b in enumerate(rdata))
+    tag = (acc + ((acc >> 16) & 0xFFFF)) & 0xFFFF  # RFC 4034, appendix B
+    base = f"data/dns/Kvereda.example.+015+{tag:05d}"
+    open(base + ".key", "w").write(f"vereda.example. IN DNSKEY {flags} 3 15 {base64.b64encode(pub).decode()}\n")
+    open(base + ".private", "w").write(
+        f"Private-key-format: v1.3\nAlgorithm: 15 (ED25519)\nPrivateKey: {base64.b64encode(priv).decode()}\n"
+        "Created: 20260101000000\nPublish: 20260101000000\nActivate: 20260101000000\n")
 os.makedirs("data/release", exist_ok=True)
 open("data/release/portal-2.4.1.tar", "wb").write(drbg.stream("release/portal-2.4.1", 20480))
 open("data/release/NOTES.txt", "w").write("Vereda portal 2.4.1: booking reminders by SMS.\n")
