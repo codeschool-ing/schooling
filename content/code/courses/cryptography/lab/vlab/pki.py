@@ -7,6 +7,7 @@ that every certificate in ~/lab/pki is the same file on every machine.
     agenda       agenda.vereda.example   P-256      2026-01-10 .. 2026-04-10  expired
     files        files.vereda.example    P-256      2026-02-01 .. 2026-08-20  revoked
     radius       radius.vereda.example   P-256      2026-03-01 .. 2026-09-17
+    ldap         ldap.vereda.example     P-256      2026-04-01 .. 2030-12-31
     intranet     intranet.vereda.example P-256      self-signed
     impostor     "Vereda Root CA"        RSA 3072   same name as root, another key
 
@@ -104,6 +105,10 @@ def build(out):
         "agenda": ("agenda.vereda.example", 0x3A02, day(2026, 1, 10), day(2026, 4, 10)),
         "files": ("files.vereda.example", 0x3A03, day(2026, 2, 1), day(2026, 8, 20)),
         "radius": ("radius.vereda.example", 0x3A04, day(2026, 3, 1), day(2026, 9, 17)),
+        # The directory's certificate is checked by libldap against the real
+        # clock, which no option moves, so it runs to 2030 to keep lesson 12's
+        # transcripts valid; every other check in the lab passes -attime.
+        "ldap": ("ldap.vereda.example", 0x3A05, day(2026, 4, 1), day(2030, 12, 31)),
     }
     for short, (host, serial, start, end) in leaves.items():
         k = keys.ec_key("pki/" + short)

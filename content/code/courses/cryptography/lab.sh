@@ -91,6 +91,12 @@ os.chmod("keys/ana_ssh", 0o600)
 pub = k.public_key().public_bytes(serialization.Encoding.OpenSSH, serialization.PublicFormat.OpenSSH).decode()
 open("keys/ana_ssh.pub", "w").write(pub + " ana@vereda.example\n")
 open("data/allowed_signers", "w").write("ana@vereda.example " + pub + "\n")
+# The SFTP server's host key for lesson 12, derived like every other key so
+# that its fingerprint repeats.
+k = keys.ed25519_key("keys/sftp-host")
+open("keys/sftp_host_ed25519", "wb").write(k.private_bytes(serialization.Encoding.PEM,
+    serialization.PrivateFormat.OpenSSH, serialization.NoEncryption()))
+os.chmod("keys/sftp_host_ed25519", 0o600)
 # Four deliveries from the payment gateway, as lesson 6 receives them. The
 # lab's present is 1781535600 (2026-06-15 12:00 in Sao Paulo).
 os.makedirs("data/webhooks", exist_ok=True)
