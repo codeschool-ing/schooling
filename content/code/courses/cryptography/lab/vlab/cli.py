@@ -84,6 +84,17 @@ def cmd_toyrsa(a):
     print(f"decrypt c = {c}:  m = c^d mod n = {pow(c, d, n)}")
 
 
+def cmd_avalanche(a):
+    """Hash two strings with SHA-256 and count the bits that differ."""
+    import hashlib
+    h1 = hashlib.sha256(a.first.encode()).digest()
+    h2 = hashlib.sha256(a.second.encode()).digest()
+    diff = sum(bin(x ^ y).count("1") for x, y in zip(h1, h2))
+    print(f"{a.first!r:>20}  {h1.hex()}")
+    print(f"{a.second!r:>20}  {h2.hex()}")
+    print(f"{diff} of 256 bits differ")
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -113,6 +124,10 @@ def main():
     s.add_argument("--e", type=int, default=17)
     s.add_argument("m", type=int)
     s.set_defaults(fn=cmd_toyrsa)
+    s = sub.add_parser("avalanche", help="SHA-256 of two strings, and how many bits differ")
+    s.add_argument("first")
+    s.add_argument("second")
+    s.set_defaults(fn=cmd_avalanche)
     a = p.parse_args()
     a.fn(a)
 

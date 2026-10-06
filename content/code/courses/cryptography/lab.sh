@@ -78,6 +78,13 @@ for who in ("ana", "bruno"):
     k = keys.x25519_key("keys/x25519-" + who)
     keys.write_private(k, f"keys/x25519-{who}.key"); keys.write_public(k, f"keys/x25519-{who}.pub")
 pki.build("pki")
+import hashlib, os
+os.makedirs("data/release", exist_ok=True)
+open("data/release/portal-2.4.1.tar", "wb").write(drbg.stream("release/portal-2.4.1", 20480))
+open("data/release/NOTES.txt", "w").write("Vereda portal 2.4.1: booking reminders by SMS.\n")
+with open("data/release/SHA256SUMS", "w") as f:
+    for n in ("NOTES.txt", "portal-2.4.1.tar"):
+        f.write(hashlib.sha256(open("data/release/" + n, "rb").read()).hexdigest() + "  " + n + "\n")
 PY
   data
 }
