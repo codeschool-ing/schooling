@@ -16,6 +16,10 @@
 #     data/traffic.jsonl    a week of requests, 28 September to 4 October
 #                           2026, drawn by lab/traffic.py (lessons 3 to 5, 9,
 #                           16), and data/topics.json, its topics and facts
+#     data/rubrics/*.md     the two versions of a rubric for relevance, and
+#     data/labels.jsonl     two people's labels of 60 replies against them:
+#                           ALL WRITTEN BY THE COURSE (lesson 10), from
+#                           lab/rubrics and lab/labels.jsonl
 #     prices.json           what a token costs, WRITTEN BY THE COURSE
 #     releases.json         which settings the assistant ran with, and from
 #                           when: a release on 2 October raised the floor
@@ -179,6 +183,9 @@ build_obs() {
   install -o ana -g ana -m 0644 "$HERE"/../rag/lab/data/docs/*.md $OBS/data/docs/
   install -o ana -g ana -m 0644 "$HERE"/../rag/lab/data/eval.jsonl $OBS/data/
   install -o ana -g ana -m 0644 "$HERE"/lab/prices.json "$HERE"/lab/releases.json $OBS/
+  install -d -o ana -g ana $OBS/data/rubrics
+  install -o ana -g ana -m 0644 "$HERE"/lab/rubrics/*.md $OBS/data/rubrics/
+  install -o ana -g ana -m 0644 "$HERE"/lab/labels.jsonl $OBS/data/
   runuser -u ana -- python3 "$HERE/lab/traffic.py" $OBS/data/traffic.jsonl
 }
 
