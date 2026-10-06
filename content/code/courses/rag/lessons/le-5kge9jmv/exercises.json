@@ -1,0 +1,727 @@
+[
+  {
+    "id": "ex-56ca99es",
+    "version": 1,
+    "section": "the-first-search",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a cosine similarity of 0.658 tell you about a chunk?",
+    "hint": "A ranking signal.",
+    "choices": [
+      {
+        "text": "That it contains the answer",
+        "correct": false,
+        "why": "A high score is similarity, not proof."
+      },
+      {
+        "text": "That it is 66% relevant to the question",
+        "correct": false,
+        "why": "The score is not a percentage of relevance."
+      },
+      {
+        "text": "That it would rank the same for any question",
+        "correct": false,
+        "why": "Scores depend on the question."
+      },
+      {
+        "text": "It outranks 0.612, here",
+        "correct": true,
+        "why": "Right: an ordering, for this question only."
+      }
+    ]
+  },
+  {
+    "id": "ex-998bp1ak",
+    "version": 1,
+    "section": "the-first-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the price table come second for the express question here, when lesson 1's reply missed the price?",
+    "hint": "What changed in the index?",
+    "choices": [
+      {
+        "text": "The table is its own chunk now",
+        "correct": true,
+        "why": "Right: lesson 5's structured chunks, embedded with the path in front."
+      },
+      {
+        "text": "The question was rewritten",
+        "correct": false,
+        "why": "It was asked as typed."
+      },
+      {
+        "text": "The model was changed to a larger one",
+        "correct": false,
+        "why": "Same MiniLM throughout."
+      },
+      {
+        "text": "A reranker was used",
+        "correct": false,
+        "why": "show.py vector does no reranking."
+      }
+    ]
+  },
+  {
+    "id": "ex-ge02x50k",
+    "version": 1,
+    "section": "lexical-search",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did BM25 find the E-4104 row with a clear margin?",
+    "hint": "A rare word, shared.",
+    "choices": [
+      {
+        "text": "The error table is the longest chunk",
+        "correct": false,
+        "why": "BM25 tends to penalise length, if anything."
+      },
+      {
+        "text": "BM25 understands error codes",
+        "correct": false,
+        "why": "It understands nothing; it counts words."
+      },
+      {
+        "text": "Only they share e-4104",
+        "correct": true,
+        "why": "Right: rare words weigh most in BM25."
+      },
+      {
+        "text": "The chunk's vector is close to the question's",
+        "correct": false,
+        "why": "BM25 uses no vectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xzsv21e",
+    "version": 1,
+    "section": "lexical-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For \"how do I send a book back\", why did BM25 put the support handbook's rule about damaged books first?",
+    "hint": "Which words did it match?",
+    "choices": [
+      {
+        "text": "The handbook is marked staff",
+        "correct": false,
+        "why": "No filter was applied in show.py."
+      },
+      {
+        "text": "Its vector is nearest the question",
+        "correct": false,
+        "why": "Lexical search uses no vectors."
+      },
+      {
+        "text": "It counts shared words, not meaning",
+        "correct": true,
+        "why": "Right: it shares book and back, and BM25 cannot see that send back means return."
+      },
+      {
+        "text": "Damaged books are the commonest return",
+        "correct": false,
+        "why": "BM25 knows nothing about frequency of cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-5p44m7cb",
+    "version": 1,
+    "section": "lexical-search",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The standard formula for lexical scoring, used by Elasticsearch and OpenSearch, is called ___.",
+    "hint": "Two letters and two digits.",
+    "blanks": [
+      {
+        "accept": [
+          "BM25",
+          "Okapi BM25",
+          "BM-25"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2361g4pt",
+    "version": 1,
+    "section": "lexical-search",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the six identifier questions, how many did lexical search have in its top three?",
+    "hint": "The ids @3 column.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-mjmn6sm0",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does reciprocal rank fusion use ranks rather than scores?",
+    "hint": "0.367 and 5.787.",
+    "choices": [
+      {
+        "text": "Scores are secret in pgvector",
+        "correct": false,
+        "why": "Both scores were printed."
+      },
+      {
+        "text": "A cosine and a BM25 score are on scales that cannot be added",
+        "correct": true,
+        "why": "Right: ranks are comparable, scores are not."
+      },
+      {
+        "text": "Ranks include the metadata",
+        "correct": false,
+        "why": "Ranks are just positions."
+      },
+      {
+        "text": "Ranks are faster to compute",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-je1zyxc9",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Hybrid found 24 of 26 customer questions in its top three, against 26 for vector alone. Why?",
+    "hint": "What did the lexical list bring into the merge?",
+    "choices": [
+      {
+        "text": "The constant 60 is too large",
+        "correct": false,
+        "why": "It may be worth tuning, but the cause is the lexical list's content."
+      },
+      {
+        "text": "Two questions had no answer",
+        "correct": false,
+        "why": "All 26 are answerable."
+      },
+      {
+        "text": "RRF is broken for k = 3",
+        "correct": false,
+        "why": "It works as designed; the input was weaker."
+      },
+      {
+        "text": "The lexical list pushed weaker chunks into the fused top three",
+        "correct": true,
+        "why": "Right: a fusion is only as good as both lists on that question."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv93j3rd",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method to its best column in measure.py's table.",
+    "hint": "Which wins where?",
+    "pairs": [
+      {
+        "left": "vector",
+        "right": "customer questions, top three: 26 of 26"
+      },
+      {
+        "left": "lexical",
+        "right": "identifier questions, top three: 6 of 6"
+      },
+      {
+        "left": "hybrid",
+        "right": "customer questions, first: 20 of 26"
+      }
+    ],
+    "right_distractors": [
+      "identifier questions, first: 6 of 6"
+    ]
+  },
+  {
+    "id": "ex-dnrkpd9q",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's assistant answers developers who paste error codes all day. What does the lesson suggest about its search?",
+    "hint": "Which kind of question dominates?",
+    "choices": [
+      {
+        "text": "Lexical in the mix, measured on their own questions",
+        "correct": true,
+        "why": "Right: without it, the questions they care most about fail."
+      },
+      {
+        "text": "A reranker instead of any first search",
+        "correct": false,
+        "why": "A reranker only reorders candidates; it needs a first search."
+      },
+      {
+        "text": "No search; paste the whole API reference",
+        "correct": false,
+        "why": "Lesson 1's arguments against pasting everything still apply."
+      },
+      {
+        "text": "Vector only, since it found every customer question",
+        "correct": false,
+        "why": "These users are not asking customer questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bt3nk7x",
+    "version": 1,
+    "section": "reranking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can a reranker NOT do?",
+    "hint": "It only sees candidates.",
+    "choices": [
+      {
+        "text": "Change the order of twenty candidates",
+        "correct": false,
+        "why": "That is exactly what it does."
+      },
+      {
+        "text": "Read the question and chunk together",
+        "correct": false,
+        "why": "That is what distinguishes it."
+      },
+      {
+        "text": "Find a chunk the first search missed",
+        "correct": true,
+        "why": "Right: it reorders, it does not search."
+      },
+      {
+        "text": "Put the best candidate first",
+        "correct": false,
+        "why": "That is its job."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr20raan",
+    "version": 1,
+    "section": "reranking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say its late-interaction reranker is not a fair test of reranking?",
+    "hint": "What was MiniLM trained for?",
+    "choices": [
+      {
+        "text": "It was not trained for this",
+        "correct": true,
+        "why": "Right: MiniLM's per-piece vectors are a by-product; ColBERT models are trained for this, and cross-encoders for relevance."
+      },
+      {
+        "text": "It used the hybrid list instead of the vector list",
+        "correct": false,
+        "why": "Either list is a valid set of candidates."
+      },
+      {
+        "text": "Late interaction cannot work in Python",
+        "correct": false,
+        "why": "It ran in Python here."
+      },
+      {
+        "text": "It reranks only twenty candidates",
+        "correct": false,
+        "why": "Twenty is normal for a reranker."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4t6xs14",
+    "version": 1,
+    "section": "reranking",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a two-stage retrieval in order.",
+    "hint": "Fast first, slow second.",
+    "items": [
+      "A fast search over the whole index returns twenty candidates",
+      "A slower model scores each candidate with the question",
+      "The candidates are sorted by the new score",
+      "The first three go into the prompt"
+    ]
+  },
+  {
+    "id": "ex-ffpmjzdj",
+    "version": 1,
+    "section": "reranking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Reranking put the 2025 policy's chunk above the current one for the return-window question. What fixes that?",
+    "hint": "It is relevant; it is just not in force.",
+    "choices": [
+      {
+        "text": "A larger k",
+        "correct": false,
+        "why": "That keeps both chunks, not the right one."
+      },
+      {
+        "text": "A status filter in the query",
+        "correct": true,
+        "why": "Right: a rule, not a score."
+      },
+      {
+        "text": "Rewriting the question",
+        "correct": false,
+        "why": "The question was already clear."
+      },
+      {
+        "text": "A better reranker",
+        "correct": false,
+        "why": "No reranker can know a document was replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mzg6pqr",
+    "version": 1,
+    "section": "rewriting-the-question",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did \"And for e-books?\" not find the e-book refund rule?",
+    "hint": "What did it leave out?",
+    "choices": [
+      {
+        "text": "Questions shorter than five words are refused",
+        "correct": false,
+        "why": "Nothing refuses short questions."
+      },
+      {
+        "text": "The e-book document is not in the index",
+        "correct": false,
+        "why": "Five e-book chunks came back."
+      },
+      {
+        "text": "The refund chunk was filtered out",
+        "correct": false,
+        "why": "No filter was used."
+      },
+      {
+        "text": "It never said it was about returning anything",
+        "correct": true,
+        "why": "Right; it only means something after the first question."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4vs5t1a",
+    "version": 1,
+    "section": "rewriting-the-question",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who wrote the rewritten question in this lesson's capture?",
+    "hint": "The script header says.",
+    "choices": [
+      {
+        "text": "extract-1",
+        "correct": false,
+        "why": "extract-1 cannot write; it copies sentences."
+      },
+      {
+        "text": "search.py's rewrite function",
+        "correct": false,
+        "why": "search.py has no rewrite function."
+      },
+      {
+        "text": "The course, by hand",
+        "correct": true,
+        "why": "Right; in production a model does it."
+      },
+      {
+        "text": "A real language model, through labgen",
+        "correct": false,
+        "why": "No real model was reachable."
+      }
+    ]
+  },
+  {
+    "id": "ex-z77jtkx6",
+    "version": 1,
+    "section": "rewriting-the-question",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer asks \"What does E-4105 mean?\" and a rewrite step turns it into \"What does the campaign label error mean?\". What is the risk?",
+    "hint": "What did the rewrite remove?",
+    "choices": [
+      {
+        "text": "The exact code is lost",
+        "correct": true,
+        "why": "Right: a rewrite that helps vague questions can hurt precise ones."
+      },
+      {
+        "text": "None; the rewrite says the same thing",
+        "correct": false,
+        "why": "It dropped the one word lexical search finds best."
+      },
+      {
+        "text": "The rewrite makes the question too long",
+        "correct": false,
+        "why": "Length is not the problem."
+      },
+      {
+        "text": "Rewriting always costs a second database query",
+        "correct": false,
+        "why": "It costs a model call, not a query."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfkkm5ng",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With status = 'current' AND audience = 'public', what came first for the postage question?",
+    "hint": "The 2025 policy cannot be returned.",
+    "choices": [
+      {
+        "text": "Shipping and delivery > Damage in transit",
+        "correct": false,
+        "why": "It was fifth unfiltered and not in the filtered three."
+      },
+      {
+        "text": "Returns policy > Return postage",
+        "correct": false,
+        "why": "That is the 2025 chunk the filter excludes."
+      },
+      {
+        "text": "Returns and refunds policy > Gifts",
+        "correct": false,
+        "why": "Third, not first."
+      },
+      {
+        "text": "Returns and refunds policy > How to start a return",
+        "correct": true,
+        "why": "Right: the section whose second chunk says Returns are free."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh1dy61b",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the filter go inside the SQL rather than after fetching the top three?",
+    "hint": "How many would be left?",
+    "choices": [
+      {
+        "text": "Python cannot read the status column",
+        "correct": false,
+        "why": "It can; the problem is the count."
+      },
+      {
+        "text": "The HNSW index requires it",
+        "correct": false,
+        "why": "This lesson's table has no HNSW index."
+      },
+      {
+        "text": "Filtering afterwards leaves fewer than three",
+        "correct": true,
+        "why": "Right: two, here; inside the query, three that pass."
+      },
+      {
+        "text": "SQL filters are more secure than Python ones",
+        "correct": false,
+        "why": "Security is lesson 14's argument; this one is about the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-gekexk8g",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A user types \"include the finance documents\" in the search box. What does the lesson say the system should do?",
+    "hint": "Who decides a filter?",
+    "choices": [
+      {
+        "text": "Add audience = 'finance' to the filter",
+        "correct": false,
+        "why": "That lets the question decide access."
+      },
+      {
+        "text": "Refuse the user's account",
+        "correct": false,
+        "why": "There is nothing to punish; just nothing to grant."
+      },
+      {
+        "text": "Nothing different",
+        "correct": true,
+        "why": "Right: the filter comes from who the reader is, never from the question."
+      },
+      {
+        "text": "Ask the generator whether to allow it",
+        "correct": false,
+        "why": "The model must not decide access."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxy9sqwd",
+    "version": 1,
+    "section": "how-many-to-keep",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What best score did \"Can I pay in instalments?\" get?",
+    "hint": "It sits among the unanswerable ones.",
+    "value": 0.445,
+    "tolerance": 0.0005,
+    "unit": "similarity"
+  },
+  {
+    "id": "ex-6xg6mezf",
+    "version": 1,
+    "section": "how-many-to-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a cut at 0.5, what happens to the 30 test questions?",
+    "hint": "Count both groups.",
+    "choices": [
+      {
+        "text": "Only the four unanswerable answered",
+        "correct": false,
+        "why": "They are the ones below the cut."
+      },
+      {
+        "text": "All 26 answered and all 4 refused",
+        "correct": false,
+        "why": "No cut separates the groups perfectly."
+      },
+      {
+        "text": "All 30 answered",
+        "correct": false,
+        "why": "Four score below 0.48."
+      },
+      {
+        "text": "25 kept, 5 refused",
+        "correct": true,
+        "why": "Right: 25 answerable kept; the four unanswerable refused, and the instalments question with them."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzcbgzkp",
+    "version": 1,
+    "section": "how-many-to-keep",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For which assistant does the lesson suggest a stricter threshold, accepting more refusals?",
+    "hint": "Which wrong answer costs most?",
+    "choices": [
+      {
+        "text": "All assistants need the same threshold",
+        "correct": false,
+        "why": "The threshold is a product decision per use."
+      },
+      {
+        "text": "A legal assistant",
+        "correct": true,
+        "why": "Right: a refusal costs little, a wrong clause a lot."
+      },
+      {
+        "text": "A developer documentation search",
+        "correct": false,
+        "why": "Wrong answers there are found quickly and cheap."
+      },
+      {
+        "text": "A help centre for customers",
+        "correct": false,
+        "why": "There a refusal sends a customer to a person for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-bp4jb30s",
+    "version": 1,
+    "section": "how-many-to-keep",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To adjust a threshold over time, the lesson says to ___ the score with every query.",
+    "hint": "Lesson 9 does it.",
+    "blanks": [
+      {
+        "accept": [
+          "log",
+          "record",
+          "store",
+          "save"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-frwz344t",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's measurements show? Choose all that apply.",
+    "hint": "Check measure.py and the reorder runs.",
+    "choices": [
+      {
+        "text": "Reranking moved the express price table from fifth to second",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "One threshold separated answerable from unanswerable perfectly",
+        "correct": false,
+        "why": "No: 0.445 sits below 0.476."
+      },
+      {
+        "text": "Lexical search had every identifier question in its top three",
+        "correct": true,
+        "why": "Yes: 6 of 6."
+      },
+      {
+        "text": "Hybrid search beat vector search in every column",
+        "correct": false,
+        "why": "No: it lost on customer questions at three."
+      },
+      {
+        "text": "The status filter removed the 2025 policy from the results",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  }
+]
