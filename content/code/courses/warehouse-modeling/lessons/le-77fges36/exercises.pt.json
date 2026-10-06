@@ -1,0 +1,532 @@
+{
+  "ex-r5v1xeyh": {
+    "prompt": "O que faz de um esquema uma estrela?",
+    "hint": "Conte as junções entre uma dimensão e a tabela fato.",
+    "choices": [
+      {
+        "text": "Toda dimensão está a exatamente uma junção da tabela fato",
+        "why": "Isso. Uma dimensão nunca se liga a outra dimensão."
+      },
+      {
+        "text": "Tem exatamente cinco tabelas, uma no meio e quatro em volta",
+        "why": "Não. Uma estrela tem tantas dimensões quanto o processo pede."
+      },
+      {
+        "text": "As tabelas estão em terceira forma normal",
+        "why": "Não. As dimensões de uma estrela não são normalizadas, de propósito."
+      },
+      {
+        "text": "Tem uma tabela fato para o negócio todo, com todas as medidas da empresa",
+        "why": "Não. Há uma tabela fato por processo de negócio, e o warehouse da Ana tem cinco."
+      }
+    ]
+  },
+  "ex-xjrdpnnw": {
+    "prompt": "Por que uma ferramenta de relatório consegue escrever as junções de uma estrela pelo usuário?",
+    "hint": "O que nunca muda de uma pergunta para a outra?",
+    "choices": [
+      {
+        "text": "Porque a ferramenta lê as chaves estrangeiras do banco operacional",
+        "why": "Não. A ferramenta trabalha no warehouse, não na origem."
+      },
+      {
+        "text": "Porque uma estrela não tem junção nenhuma, só uma tabela larga",
+        "why": "Não. Uma estrela liga a tabela fato a cada dimensão."
+      },
+      {
+        "text": "Os caminhos de junção são fixos",
+        "why": "Isso. Da fato a cada dimensão, por uma chave, sempre."
+      },
+      {
+        "text": "Porque o DuckDB as escreve",
+        "why": "Não. O banco executa junções; não as inventa."
+      }
+    ]
+  },
+  "ex-gt3mb7te": {
+    "prompt": "Ligue cada parte da pergunta do gerente ao lugar de onde a consulta a tira.",
+    "hint": "Filtros e agrupamentos vêm das dimensões; somas vêm dos fatos.",
+    "pairs": [
+      {
+        "left": "em 2025, nos fins de semana",
+        "right": "Um filtro na dim_date"
+      },
+      {
+        "left": "por região",
+        "right": "Um agrupamento na dim_shop"
+      },
+      {
+        "left": "por departamento",
+        "right": "Um agrupamento na dim_book"
+      },
+      {
+        "left": "receita",
+        "right": "Uma soma sobre a fact_sales"
+      }
+    ],
+    "right_distractors": [
+      "Uma junção entre duas dimensões"
+    ]
+  },
+  "ex-jbsvkv0s": {
+    "prompt": "Um relatório precisa de \"livros vendidos em feriados, por editora\". Que tabelas a consulta liga?",
+    "hint": "Onde moram o feriado e a editora?",
+    "choices": [
+      {
+        "text": "fact_sales, dim_date, dim_book e uma tabela de editoras",
+        "why": "Não na estrela: o nome da editora já está na `dim_book`."
+      },
+      {
+        "text": "fact_sales, dim_date e dim_book",
+        "why": "Isso. O feriado está na dimensão de datas; a editora é uma coluna do livro."
+      },
+      {
+        "text": "fact_sales e staging.books",
+        "why": "Não. Relatórios leem o modelo, nunca o staging."
+      },
+      {
+        "text": "dim_date e dim_book, ligadas diretamente uma à outra",
+        "why": "Não. Dimensões só se encontram pela tabela fato."
+      }
+    ]
+  },
+  "ex-ydkmrt5j": {
+    "prompt": "O que transforma uma estrela num floco de neve?",
+    "hint": "O que aconteceu com a `dim_book`?",
+    "choices": [
+      {
+        "text": "Acrescentar uma segunda tabela fato",
+        "why": "Não. Várias tabelas fato compartilhando dimensões é uma constelação de estrelas."
+      },
+      {
+        "text": "Guardar a tabela fato por coluna em vez de por linha",
+        "why": "Não. A organização física é a lição 8 e não muda o esquema."
+      },
+      {
+        "text": "Remover a dimensão de datas",
+        "why": "Não. Um floco de neve tem mais tabelas, não menos."
+      },
+      {
+        "text": "Dividir uma dimensão em tabelas ligadas",
+        "why": "Isso. A dimensão é normalizada, e a estrela ganha galhos."
+      }
+    ]
+  },
+  "ex-rrm1fat7": {
+    "prompt": "Em quantas tabelas o floco de neve dividiu a dimensão de livros, contando a própria `sf_book`?",
+    "hint": "Livro, três níveis de categoria, e a editora."
+  },
+  "ex-cyzr63k7": {
+    "prompt": "A estrela e o floco de neve deram as mesmas oito linhas. Do que a consulta do floco de neve precisou que a da estrela não precisou?",
+    "hint": "Conte-as nos planos.",
+    "choices": [
+      {
+        "text": "Um `GROUP BY` diferente",
+        "why": "Não. As duas agrupam por região e departamento."
+      },
+      {
+        "text": "Uma subconsulta",
+        "why": "Não. É uma cadeia plana de junções."
+      },
+      {
+        "text": "Três junções a mais, numa cadeia que alguém precisa conhecer",
+        "why": "Isso. Seis junções contra três, de livro a categoria a subcategoria a departamento."
+      },
+      {
+        "text": "Um índice em cada tabela",
+        "why": "Não. Nenhuma das consultas usou índice."
+      }
+    ]
+  },
+  "ex-zy1f5afe": {
+    "prompt": "Alguém liga `sf_book` direto a `sf_subcategory`, pulando `sf_category`. O que acontece?",
+    "hint": "Que chave a `sf_book` carrega?",
+    "choices": [
+      {
+        "text": "Um erro, ou uma resposta errada se uma coluna por acaso tiver o mesmo nome",
+        "why": "Isso. A `sf_book` tem `category_key`, não `subcategory_key`."
+      },
+      {
+        "text": "O DuckDB encontra sozinho o caminho por `sf_category`",
+        "why": "Não. Um banco liga o que mandam ligar."
+      },
+      {
+        "text": "O resultado é o mesmo, só mais lento",
+        "why": "Não. Não há chave entre as duas para ligar."
+      },
+      {
+        "text": "A consulta devolve mais departamentos",
+        "why": "Não sozinha; ela falha ou liga pela coisa errada."
+      }
+    ]
+  },
+  "ex-yrgnf5gy": {
+    "prompt": "A estrela repete 130.473 bytes de nomes, num arquivo de warehouse de 46.149.632 bytes. Que percentual do arquivo é isso? Dê duas casas decimais.",
+    "hint": "Divida, e multiplique por cem.",
+    "unit": "%"
+  },
+  "ex-s6x103ca": {
+    "prompt": "No banco operacional, normalizar impede que duas linhas discordem sobre o nome de um departamento. Por que o warehouse não precisa do floco de neve para isso?",
+    "hint": "Quem grava a `dim_book`?",
+    "choices": [
+      {
+        "text": "O DuckDB garante com uma restrição entre as linhas da tabela",
+        "why": "Não. Nada no DuckDB sabe que duas linhas deveriam concordar."
+      },
+      {
+        "text": "Departamentos nunca são renomeados",
+        "why": "Podem ser; a carga leva o nome novo a toda parte de uma vez."
+      },
+      {
+        "text": "Porque o warehouse não guarda nome nenhum",
+        "why": "Não. A `dim_book` guarda todos os nomes."
+      },
+      {
+        "text": "A carga a refaz a partir de uma cópia de cada nome",
+        "why": "Isso. A anomalia que o floco de neve evita já é evitada pela carga."
+      }
+    ]
+  },
+  "ex-vvxkgh12": {
+    "prompt": "Quais destes são custos de transformar a `dim_book` em floco de neve? Marque todos os que se aplicam.",
+    "hint": "Pense nos leitores, nas ferramentas e na carga.",
+    "choices": [
+      {
+        "text": "Mais junções por pergunta",
+        "why": "Sim. Três a mais para chegar ao departamento."
+      },
+      {
+        "text": "As ferramentas de relatório precisam aprender o caminho até cada campo",
+        "why": "Sim. Uma estrela precisa de uma junção por dimensão."
+      },
+      {
+        "text": "Mais tabelas, com chaves que a carga precisa manter consistentes",
+        "why": "Sim. Cinco tabelas onde havia uma."
+      },
+      {
+        "text": "A tabela fato dobra de tamanho",
+        "why": "Não. A tabela fato não muda nada."
+      }
+    ]
+  },
+  "ex-tp2bp44c": {
+    "prompt": "Qual destes é um bom motivo para separar um galho de uma dimensão numa tabela própria?",
+    "hint": "Diga quem fica melhor.",
+    "choices": [
+      {
+        "text": "O sistema de origem guarda isso numa tabela separada",
+        "why": "Esse é o hábito que os quatro passos substituem."
+      },
+      {
+        "text": "Colunas do censo repetidas em milhões de linhas",
+        "why": "Isso. Armazenamento e tempo de carga de verdade: um outrigger."
+      },
+      {
+        "text": "Normalizar é mais correto",
+        "why": "Esse é o padrão operacional aplicado a outro trabalho."
+      },
+      {
+        "text": "Deixa o diagrama mais arrumado",
+        "why": "Se o único beneficiado é o diagrama, fica na estrela."
+      }
+    ]
+  },
+  "ex-cvfnw7p2": {
+    "prompt": "Uma tabela separada de uma dimensão e apontada por ela, como um bloco de colunas do censo, se chama ___.",
+    "hint": "A palavra de Kimball, vinda dos barcos.",
+    "blanks": [
+      {
+        "accept": [
+          "outrigger"
+        ]
+      }
+    ]
+  },
+  "ex-527hqjqs": {
+    "prompt": "O que torna irregular a árvore de categorias da rede?",
+    "hint": "Compare *Comics* com *Fiction*.",
+    "choices": [
+      {
+        "text": "Alguns galhos param em dois níveis e outros vão até três",
+        "why": "Isso. Os galhos não têm todos a mesma profundidade."
+      },
+      {
+        "text": "Tem quatro departamentos",
+        "why": "O número no topo não a torna irregular."
+      },
+      {
+        "text": "Algumas categorias não têm livros",
+        "why": "Toda categoria dela tem livros; irregularidade é sobre profundidade."
+      },
+      {
+        "text": "Os nomes estão em inglês",
+        "why": "A língua não tem nada a ver com a forma."
+      }
+    ]
+  },
+  "ex-mree8qg7": {
+    "prompt": "Como a `dim_book` dá três níveis a todo livro quando *Manga* só tem dois acima?",
+    "hint": "Veja a subcategoria de um mangá.",
+    "choices": [
+      {
+        "text": "Deixa a subcategoria vazia e deixa os relatórios tratarem",
+        "why": "Aí todo relatório teria de saber que galhos são rasos."
+      },
+      {
+        "text": "Inventa um nível chamado *Other*",
+        "why": "Não. Nada é inventado; o nome existente é repetido."
+      },
+      {
+        "text": "Repete o nome: *Manga* é a própria subcategoria",
+        "why": "Isso. Um nível ausente repete o de baixo, decidido uma vez na carga."
+      },
+      {
+        "text": "Tira os mangás da dimensão",
+        "why": "Não. Todo livro está nela."
+      }
+    ]
+  },
+  "ex-w7xrmyxe": {
+    "prompt": "Um organograma pode ter qualquer número de níveis. Por que um conjunto fixo de colunas de nível não serve para ele?",
+    "hint": "Quantas colunas bastariam?",
+    "choices": [
+      {
+        "text": "Porque os nomes se repetem",
+        "why": "A repetição é o que o achatamento faz de propósito."
+      },
+      {
+        "text": "Não há profundidade máxima a prever",
+        "why": "Isso. Uma ponte de hierarquia responde \"tudo abaixo deste nó\" em qualquer profundidade."
+      },
+      {
+        "text": "Porque as pessoas mudam de gestor",
+        "why": "Esse é um problema de histórico (lição 5), não de profundidade."
+      },
+      {
+        "text": "Porque o DuckDB limita uma tabela a algumas dezenas de colunas",
+        "why": "Não. Ele permite muito mais colunas do que qualquer organograma tem níveis."
+      }
+    ]
+  },
+  "ex-sd74pm9f": {
+    "prompt": "O que significa a `dim_shop` ser conformada?",
+    "hint": "Duas tabelas fato, uma loja.",
+    "choices": [
+      {
+        "text": "Segue o padrão de nomes que o time combinou para todas as dimensões",
+        "why": "Nomes ajudam, mas conformar é ser a mesma tabela e os mesmos valores."
+      },
+      {
+        "text": "Foi conferida por uma pessoa",
+        "why": "Não. Conformar é uma propriedade do projeto, não uma revisão."
+      },
+      {
+        "text": "Está em terceira forma normal",
+        "why": "Não. É uma dimensão achatada de estrela."
+      },
+      {
+        "text": "A mesma tabela e os mesmos valores em toda tabela fato",
+        "why": "Isso. É o que permite comparar dois processos."
+      }
+    ]
+  },
+  "ex-n6q20yja": {
+    "prompt": "Por que a consulta de drill-across soma cada tabela fato antes de ligá-las, em vez de ligar `fact_sales` a `fact_inventory` linha a linha?",
+    "hint": "Quantas linhas de estoque cada venda de uma loja encontra?",
+    "choices": [
+      {
+        "text": "Somar primeiro é mais rápido, e o resultado é o mesmo de qualquer jeito",
+        "why": "O resultado não é o mesmo: a junção linha a linha infla os dois totais."
+      },
+      {
+        "text": "O DuckDB proíbe ligar duas tabelas fato",
+        "why": "Não. Ele executa a junção e produz um disparate."
+      },
+      {
+        "text": "Ligar primeiro multiplica cada venda por cada linha de estoque da mesma loja",
+        "why": "Isso. Some cada uma até a granularidade comum, e ligue uma linha a uma linha."
+      },
+      {
+        "text": "Porque as duas tabelas não têm coluna em comum",
+        "why": "Elas compartilham `shop_key`; é isso que torna a junção perigosa."
+      }
+    ]
+  },
+  "ex-w7y9f6ky": {
+    "prompt": "A Paulista vendeu 10.771 livros em dezembro de 2025 e tinha 18.337 na prateleira em 31 de dezembro. Quantos meses de estoque são? Dê uma casa decimal.",
+    "hint": "Estoque dividido pelas vendas de um mês."
+  },
+  "ex-br72g2a1": {
+    "prompt": "`fact_fulfilment` aponta quatro chaves de data para a `dim_date`. Como isso se chama?",
+    "hint": "Uma tabela, vários papéis no mesmo fato.",
+    "choices": [
+      {
+        "text": "Uma dimensão de papéis (role-playing)",
+        "why": "Isso. Uma tabela física, usada como data de pedido, pagamento, envio e entrega."
+      },
+      {
+        "text": "Uma dimensão junk",
+        "why": "Não. Uma dimensão junk junta pequenas flags sem relação."
+      },
+      {
+        "text": "Uma dimensão conformada compartilhada por quatro processos separados",
+        "why": "Ela também é conformada, mas quatro papéis numa tabela fato é o que a pergunta nomeia."
+      },
+      {
+        "text": "Uma dimensão de datas em floco de neve",
+        "why": "Não. Nada foi normalizado."
+      }
+    ]
+  },
+  "ex-gwdyd4rk": {
+    "prompt": "Por que criar as views `dim_order_date` e `dim_ship_date` em vez de ligar a `dim_date` duas vezes com apelidos?",
+    "hint": "O que uma ferramenta de relatório mostra ao usuário?",
+    "choices": [
+      {
+        "text": "Views são mais rápidas que tabelas",
+        "why": "Não. Uma view de uma tabela é a mesma tabela."
+      },
+      {
+        "text": "O DuckDB não liga uma tabela duas vezes",
+        "why": "Liga, com apelidos; as views são para os leitores."
+      },
+      {
+        "text": "Para guardar cada data duas vezes",
+        "why": "Não. Uma view não guarda nada."
+      },
+      {
+        "text": "Para cada papel ter um nome que a pessoa lê onde quer que a coluna apareça",
+        "why": "Isso. *Ship date › Month* diz qual das quatro datas é."
+      }
+    ]
+  },
+  "ex-wa2rtn6a": {
+    "prompt": "Pedidos feitos numa sexta foram despachados mais vezes em que dia, e por quê?",
+    "hint": "Veja a consulta de papéis.",
+    "choices": [
+      {
+        "text": "Sábado, porque o depósito trabalha no dia seguinte",
+        "why": "Não. Não há sábado no resultado."
+      },
+      {
+        "text": "Segunda, porque nada sai nos fins de semana",
+        "why": "Isso. 17.091 saíram na segunda, contra 11.170 na terça."
+      },
+      {
+        "text": "Sexta, no mesmo dia",
+        "why": "Não. Envio no mesmo dia não aparece."
+      },
+      {
+        "text": "Quarta, depois de dois dias de separação e embalagem",
+        "why": "A quarta ficou em terceiro, com 5.502."
+      }
+    ]
+  },
+  "ex-xh2t84zy": {
+    "prompt": "O que é uma dimensão junk?",
+    "hint": "Ela junta as sobras.",
+    "choices": [
+      {
+        "text": "Toda combinação de pequenas flags que ocorre",
+        "why": "Isso. Uma chave na tabela fato em vez de várias colunas de flag."
+      },
+      {
+        "text": "Uma dimensão que ninguém usa mais, mantida por histórico",
+        "why": "Não. O nome é sobre juntar, não sobre abandono."
+      },
+      {
+        "text": "Uma tabela de linhas que falharam na carga",
+        "why": "Não. Linhas rejeitadas são assunto da carga."
+      },
+      {
+        "text": "A dimensão dos clientes que não se identificaram",
+        "why": "Não. Esse é o membro desconhecido, na lição 4."
+      }
+    ]
+  },
+  "ex-hkvq3689": {
+    "prompt": "Quatro meios de pagamento e seis quantidades de parcelas poderiam dar 24 combinações. Quantas ocorrem de fato?",
+    "hint": "Só um meio é parcelado."
+  },
+  "ex-y7esxbg6": {
+    "prompt": "Qual destes campos pertence a uma dimensão junk?",
+    "hint": "Baixa cardinalidade, sem atributos próprios.",
+    "choices": [
+      {
+        "text": "O número do pedido",
+        "why": "Um valor diferente em quase toda linha: nem dimensão é."
+      },
+      {
+        "text": "A promoção, com nome, datas e percentual",
+        "why": "Tem atributos próprios: uma dimensão de verdade."
+      },
+      {
+        "text": "Se o pacote foi embrulhado para presente",
+        "why": "Isso. Uma flag de sim ou não que descreve o evento e não tem mais nada a dizer."
+      },
+      {
+        "text": "O valor líquido",
+        "why": "Uma medida: fica na tabela fato."
+      }
+    ]
+  },
+  "ex-4cgbtv7x": {
+    "prompt": "Ponha em ordem o caminho do floco de neve de uma venda até o departamento.",
+    "hint": "Cada tabela aponta para a de cima.",
+    "items": [
+      "fact_sales",
+      "sf_book",
+      "sf_category",
+      "sf_subcategory",
+      "sf_department"
+    ],
+    "trap": "Pular um nível é o erro clássico: a `sf_book` carrega um `category_key` e nada acima."
+  },
+  "ex-ffdkmfn7": {
+    "prompt": "Ligue cada necessidade de projeto à técnica que a lição dá para ela.",
+    "hint": "Cinco técnicas, quatro necessidades.",
+    "pairs": [
+      {
+        "left": "Comparar vendas com estoque por loja",
+        "right": "Drill-across numa dimensão conformada"
+      },
+      {
+        "left": "Relatar pela data do pedido e pela de envio",
+        "right": "Views de papéis sobre a data"
+      },
+      {
+        "left": "Tirar meio de pagamento e parcelas da tabela fato",
+        "right": "Uma dimensão junk"
+      },
+      {
+        "left": "Uma árvore de departamentos com galhos de profundidades diferentes",
+        "right": "Achatar, repetindo o nível ausente"
+      }
+    ],
+    "right_distractors": [
+      "Uma segunda tabela fato de pagamentos"
+    ]
+  },
+  "ex-4wvgk8sc": {
+    "prompt": "Uma analista nova propõe transformar toda dimensão em floco de neve \"porque o warehouse deve ser normalizado como a origem\". Qual é a melhor resposta?",
+    "hint": "O que a seção 06 mediu?",
+    "choices": [
+      {
+        "text": "Concordar, porque normalizar é sempre correto",
+        "why": "Correto para o trabalho operacional; este é outro trabalho."
+      },
+      {
+        "text": "Economiza menos de 1% e acrescenta junções para todo leitor; separe um galho só quando alguém ganha",
+        "why": "Isso. Diga que leitor ou carga fica melhor, galho por galho."
+      },
+      {
+        "text": "Recusar: flocos de neve são proibidos na modelagem dimensional",
+        "why": "Não são proibidos: a seção 07 diz quando um galho é o certo."
+      },
+      {
+        "text": "Concordar, mas só para a tabela fato",
+        "why": "O floco de neve é sobre dimensões; a tabela fato já é estreita."
+      }
+    ]
+  }
+}

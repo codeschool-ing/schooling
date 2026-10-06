@@ -1,0 +1,790 @@
+[
+  {
+    "id": "ex-r5v1xeyh",
+    "version": 1,
+    "section": "the-star",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a schema a star?",
+    "hint": "Count the joins between a dimension and the fact table.",
+    "choices": [
+      {
+        "text": "Every dimension is exactly one join from the fact table",
+        "correct": true,
+        "why": "Right. A dimension never joins to another dimension."
+      },
+      {
+        "text": "It has exactly five tables, one in the middle and four around it",
+        "correct": false,
+        "why": "No. A star has as many dimensions as the process needs."
+      },
+      {
+        "text": "Its tables are in third normal form",
+        "correct": false,
+        "why": "No. The dimensions of a star are deliberately not normalised."
+      },
+      {
+        "text": "It has one fact table for the whole business, holding every measure the company has",
+        "correct": false,
+        "why": "No. There is one fact table per business process, and Ana's warehouse has five."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjrdpnnw",
+    "version": 1,
+    "section": "the-star",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a report tool write the joins of a star for its user?",
+    "hint": "What never changes from one question to the next?",
+    "choices": [
+      {
+        "text": "Because the tool reads the foreign keys from the operational database",
+        "correct": false,
+        "why": "No. The tool works on the warehouse, not the source."
+      },
+      {
+        "text": "Because a star has no joins at all, only one wide table",
+        "correct": false,
+        "why": "No. A star joins the fact table to each dimension."
+      },
+      {
+        "text": "The join paths are fixed",
+        "correct": true,
+        "why": "Right. Fact to each dimension, by one key, every time."
+      },
+      {
+        "text": "Because DuckDB writes them",
+        "correct": false,
+        "why": "No. The database runs joins; it does not invent them."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt3mb7te",
+    "version": 1,
+    "section": "querying-a-star",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of the manager's question to where the query takes it from.",
+    "hint": "Filters and groupings come from dimensions; sums come from facts.",
+    "pairs": [
+      {
+        "left": "in 2025, at weekends",
+        "right": "A filter on dim_date"
+      },
+      {
+        "left": "by region",
+        "right": "A grouping on dim_shop"
+      },
+      {
+        "left": "by department",
+        "right": "A grouping on dim_book"
+      },
+      {
+        "left": "revenue",
+        "right": "A sum over fact_sales"
+      }
+    ],
+    "right_distractors": [
+      "A join between two dimensions"
+    ]
+  },
+  {
+    "id": "ex-jbsvkv0s",
+    "version": 1,
+    "section": "querying-a-star",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report needs \"books sold on holidays, by publisher\". Which tables does the query join?",
+    "hint": "Where do the holiday and the publisher live?",
+    "choices": [
+      {
+        "text": "fact_sales, dim_date, dim_book and a publisher table",
+        "correct": false,
+        "why": "Not in the star: the publisher's name is already in `dim_book`."
+      },
+      {
+        "text": "fact_sales, dim_date and dim_book",
+        "correct": true,
+        "why": "Right. The holiday is in the date dimension; the publisher is a column of the book."
+      },
+      {
+        "text": "fact_sales and staging.books",
+        "correct": false,
+        "why": "No. Reports read the model, never staging."
+      },
+      {
+        "text": "dim_date and dim_book, joined directly to each other",
+        "correct": false,
+        "why": "No. Dimensions only meet through the fact table."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydkmrt5j",
+    "version": 1,
+    "section": "the-snowflake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What turns a star into a snowflake?",
+    "hint": "What happened to `dim_book`?",
+    "choices": [
+      {
+        "text": "Adding a second fact table",
+        "correct": false,
+        "why": "No. Several fact tables sharing dimensions is a constellation of stars."
+      },
+      {
+        "text": "Storing the fact table by column instead of by row",
+        "correct": false,
+        "why": "No. Storage layout is lesson 8 and does not change the schema."
+      },
+      {
+        "text": "Removing the date dimension",
+        "correct": false,
+        "why": "No. A snowflake has more tables, not fewer."
+      },
+      {
+        "text": "Splitting a dimension into linked tables",
+        "correct": true,
+        "why": "Right. The dimension is normalised, and the star grows branches."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrm1fat7",
+    "version": 1,
+    "section": "the-snowflake",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Into how many tables did the snowflake split the book dimension, counting `sf_book` itself?",
+    "hint": "Book, three levels of category, and the publisher.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-cyzr63k7",
+    "version": 1,
+    "section": "same-question-both-ways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The star and the snowflake gave the same eight rows. What did the snowflake's query need that the star's did not?",
+    "hint": "Count them in the plans.",
+    "choices": [
+      {
+        "text": "A different `GROUP BY`",
+        "correct": false,
+        "why": "No. Both group by region and department."
+      },
+      {
+        "text": "A subquery",
+        "correct": false,
+        "why": "No. It is a flat chain of joins."
+      },
+      {
+        "text": "Three more joins, in a chain someone has to know",
+        "correct": true,
+        "why": "Right. Six joins against three, book to category to subcategory to department."
+      },
+      {
+        "text": "An index on every table",
+        "correct": false,
+        "why": "No. Neither query used an index."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy1f5afe",
+    "version": 1,
+    "section": "same-question-both-ways",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody joins `sf_book` straight to `sf_subcategory`, skipping `sf_category`. What happens?",
+    "hint": "Which key does `sf_book` carry?",
+    "choices": [
+      {
+        "text": "An error, or a wrong answer if a column happens to share a name",
+        "correct": true,
+        "why": "Right. `sf_book` has a `category_key`, not a `subcategory_key`."
+      },
+      {
+        "text": "DuckDB finds the path through `sf_category` by itself",
+        "correct": false,
+        "why": "No. A database joins what it is told to join."
+      },
+      {
+        "text": "The result is the same, only slower",
+        "correct": false,
+        "why": "No. There is no key between the two to join on."
+      },
+      {
+        "text": "The query returns more departments",
+        "correct": false,
+        "why": "Not by itself; it fails or joins on the wrong thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrgnf5gy",
+    "version": 1,
+    "section": "what-the-snowflake-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The star repeats 130,473 bytes of names, in a warehouse file of 46,149,632 bytes. What percentage of the file is that? Give two decimals.",
+    "hint": "Divide, then multiply by a hundred.",
+    "value": 0.28,
+    "tolerance": 0.01,
+    "unit": "%"
+  },
+  {
+    "id": "ex-s6x103ca",
+    "version": 1,
+    "section": "what-the-snowflake-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the operational database, normalising stops two rows from disagreeing about a department's name. Why does the warehouse not need the snowflake for that?",
+    "hint": "Who writes `dim_book`?",
+    "choices": [
+      {
+        "text": "DuckDB enforces it with a constraint across the rows of the table",
+        "correct": false,
+        "why": "No. Nothing in DuckDB knows two rows should agree."
+      },
+      {
+        "text": "Departments are never renamed",
+        "correct": false,
+        "why": "They can be; the load carries the new name everywhere at once."
+      },
+      {
+        "text": "Because the warehouse holds no names at all",
+        "correct": false,
+        "why": "No. `dim_book` holds every name."
+      },
+      {
+        "text": "The load rebuilds it from one copy of each name",
+        "correct": true,
+        "why": "Right. The anomaly the snowflake prevents is already prevented by the load."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvxkgh12",
+    "version": 1,
+    "section": "what-the-snowflake-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are costs of snowflaking `dim_book`? Choose all that apply.",
+    "hint": "Think about readers, tools and the load.",
+    "choices": [
+      {
+        "text": "More joins per question",
+        "correct": true,
+        "why": "Yes. Three more to reach the department."
+      },
+      {
+        "text": "Report tools have to learn the path to each field",
+        "correct": true,
+        "why": "Yes. A star needs one join per dimension."
+      },
+      {
+        "text": "More tables, with keys the load has to keep consistent",
+        "correct": true,
+        "why": "Yes. Five tables where there was one."
+      },
+      {
+        "text": "The fact table doubles in size",
+        "correct": false,
+        "why": "No. The fact table does not change at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tp2bp44c",
+    "version": 1,
+    "section": "when-to-snowflake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a good reason to split one branch of a dimension into a table of its own?",
+    "hint": "Name who is better off.",
+    "choices": [
+      {
+        "text": "The source system stores it in a separate table",
+        "correct": false,
+        "why": "That is the habit the four steps replace."
+      },
+      {
+        "text": "Census columns repeated on millions of rows",
+        "correct": true,
+        "why": "Right. Real storage and load time: an outrigger."
+      },
+      {
+        "text": "It is more correct to normalise",
+        "correct": false,
+        "why": "That is the operational standard applied to a different job."
+      },
+      {
+        "text": "It makes the diagram tidier",
+        "correct": false,
+        "why": "If the only beneficiary is the diagram, it stays in the star."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvfnw7p2",
+    "version": 1,
+    "section": "when-to-snowflake",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A table split off from one dimension and pointed at from it, such as a block of census columns, is called an ___.",
+    "hint": "Kimball's word, from boats.",
+    "blanks": [
+      {
+        "accept": [
+          "outrigger"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-527hqjqs",
+    "version": 1,
+    "section": "hierarchies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes the shop's category tree ragged?",
+    "hint": "Compare *Comics* with *Fiction*.",
+    "choices": [
+      {
+        "text": "Some branches stop at two levels and others go to three",
+        "correct": true,
+        "why": "Right. Its branches are not all the same depth."
+      },
+      {
+        "text": "It has four departments",
+        "correct": false,
+        "why": "The number at the top does not make it ragged."
+      },
+      {
+        "text": "Some categories have no books",
+        "correct": false,
+        "why": "Every category in it has books; raggedness is about depth."
+      },
+      {
+        "text": "Its names are in English",
+        "correct": false,
+        "why": "Language has nothing to do with shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-mree8qg7",
+    "version": 1,
+    "section": "hierarchies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does `dim_book` give every book three levels when *Manga* has only two above it?",
+    "hint": "Look at the subcategory of a manga.",
+    "choices": [
+      {
+        "text": "It leaves the subcategory empty and lets reports handle it",
+        "correct": false,
+        "why": "Then every report would have to know which branches are shallow."
+      },
+      {
+        "text": "It invents a level called *Other*",
+        "correct": false,
+        "why": "No. Nothing is invented; the existing name is repeated."
+      },
+      {
+        "text": "It repeats the name: *Manga* is its own subcategory",
+        "correct": true,
+        "why": "Right. A missing level repeats the one below it, decided once in the load."
+      },
+      {
+        "text": "It drops manga from the dimension",
+        "correct": false,
+        "why": "No. Every book is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7xrmyxe",
+    "version": 1,
+    "section": "hierarchies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An organisation chart can be any number of levels deep. Why does a fixed set of level columns not work for it?",
+    "hint": "How many columns would be enough?",
+    "choices": [
+      {
+        "text": "Because names repeat",
+        "correct": false,
+        "why": "Repetition is what flattening does on purpose."
+      },
+      {
+        "text": "There is no maximum depth to plan for",
+        "correct": true,
+        "why": "Right. A hierarchy bridge answers \"everything under this node\" at any depth."
+      },
+      {
+        "text": "Because people change managers",
+        "correct": false,
+        "why": "That is a history problem (lesson 5), not a depth problem."
+      },
+      {
+        "text": "Because DuckDB limits a table to a few dozen columns",
+        "correct": false,
+        "why": "No. It allows far more columns than any chart has levels."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd74pm9f",
+    "version": 1,
+    "section": "conformed-dimensions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does it mean for `dim_shop` to be conformed?",
+    "hint": "Two fact tables, one shop.",
+    "choices": [
+      {
+        "text": "It follows the naming standard the team agreed for all dimensions",
+        "correct": false,
+        "why": "Names help, but conforming is about being the same table and values."
+      },
+      {
+        "text": "It has been checked by a person",
+        "correct": false,
+        "why": "No. Conforming is a design property, not a review."
+      },
+      {
+        "text": "It is stored in third normal form",
+        "correct": false,
+        "why": "No. It is a flat star dimension."
+      },
+      {
+        "text": "The same table and values in every fact table",
+        "correct": true,
+        "why": "Right. That is what lets two processes be compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6q20yja",
+    "version": 1,
+    "section": "conformed-dimensions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the drill-across query sum each fact table before joining them, rather than joining `fact_sales` to `fact_inventory` row by row?",
+    "hint": "How many stock lines does each sale of a shop meet?",
+    "choices": [
+      {
+        "text": "Summing first is faster, and the result is the same either way",
+        "correct": false,
+        "why": "The result is not the same: the row-by-row join inflates both totals."
+      },
+      {
+        "text": "DuckDB forbids joining two fact tables",
+        "correct": false,
+        "why": "No. It will run the join and produce nonsense."
+      },
+      {
+        "text": "Joining first multiplies every sale by every stock line of the same shop",
+        "correct": true,
+        "why": "Right. Sum each to the shared grain, then join one row to one row."
+      },
+      {
+        "text": "Because the two tables have no column in common",
+        "correct": false,
+        "why": "They share `shop_key`; that is what makes the join dangerous."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7y9f6ky",
+    "version": 1,
+    "section": "conformed-dimensions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Paulista sold 10,771 books in December 2025 and had 18,337 on the shelf on 31 December. How many months of stock is that? Give one decimal.",
+    "hint": "Stock over a month's sales.",
+    "value": 1.7,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-br72g2a1",
+    "version": 1,
+    "section": "role-playing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fact_fulfilment` points four date keys at `dim_date`. What is that called?",
+    "hint": "One table, several parts in the same fact.",
+    "choices": [
+      {
+        "text": "A role-playing dimension",
+        "correct": true,
+        "why": "Right. One physical table, used as ordered, paid, shipped and delivered dates."
+      },
+      {
+        "text": "A junk dimension",
+        "correct": false,
+        "why": "No. A junk dimension collects small unrelated flags."
+      },
+      {
+        "text": "A conformed dimension shared across four separate processes",
+        "correct": false,
+        "why": "It is conformed too, but four roles in one fact table is what the question names."
+      },
+      {
+        "text": "A snowflaked date dimension",
+        "correct": false,
+        "why": "No. Nothing was normalised."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwdyd4rk",
+    "version": 1,
+    "section": "role-playing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why create the views `dim_order_date` and `dim_ship_date` instead of joining `dim_date` twice with aliases?",
+    "hint": "What does a report tool show the user?",
+    "choices": [
+      {
+        "text": "Views are faster than tables",
+        "correct": false,
+        "why": "No. A view of a table is the same table."
+      },
+      {
+        "text": "DuckDB cannot join one table twice",
+        "correct": false,
+        "why": "It can, with aliases; the views are for readers."
+      },
+      {
+        "text": "To store each date twice",
+        "correct": false,
+        "why": "No. A view stores nothing."
+      },
+      {
+        "text": "So each role has a name a person reads wherever the column appears",
+        "correct": true,
+        "why": "Right. *Ship date › Month* says which of four dates it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-wa2rtn6a",
+    "version": 1,
+    "section": "role-playing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Orders placed on a Friday were shipped most often on which day, and why?",
+    "hint": "Look at the roles query.",
+    "choices": [
+      {
+        "text": "Saturday, because the warehouse works the next day",
+        "correct": false,
+        "why": "No. There is no Saturday in the result."
+      },
+      {
+        "text": "Monday, because nothing ships at weekends",
+        "correct": true,
+        "why": "Right. 17,091 left on Monday, against 11,170 on Tuesday."
+      },
+      {
+        "text": "Friday, the same day",
+        "correct": false,
+        "why": "No. Same-day shipping does not appear."
+      },
+      {
+        "text": "Wednesday, after two days of picking and packing",
+        "correct": false,
+        "why": "Wednesday came third, with 5,502."
+      }
+    ]
+  },
+  {
+    "id": "ex-xh2t84zy",
+    "version": 1,
+    "section": "junk-dimensions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a junk dimension?",
+    "hint": "It collects the leftovers.",
+    "choices": [
+      {
+        "text": "Every occurring combination of small flags",
+        "correct": true,
+        "why": "Right. One key in the fact table instead of several flag columns."
+      },
+      {
+        "text": "A dimension nobody uses any more, kept for history",
+        "correct": false,
+        "why": "No. The name is about collecting, not about decay."
+      },
+      {
+        "text": "A table of rows that failed to load",
+        "correct": false,
+        "why": "No. Rejected rows are a load concern."
+      },
+      {
+        "text": "The dimension of customers who did not identify themselves",
+        "correct": false,
+        "why": "No. That is the unknown member, in lesson 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkvq3689",
+    "version": 1,
+    "section": "junk-dimensions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Four payment methods and six instalment counts could make 24 combinations. How many actually occur?",
+    "hint": "Only one method is split.",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-y7esxbg6",
+    "version": 1,
+    "section": "junk-dimensions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these fields belongs in a junk dimension?",
+    "hint": "Low cardinality, no attributes of its own.",
+    "choices": [
+      {
+        "text": "The order number",
+        "correct": false,
+        "why": "A different value on almost every row: not a dimension at all."
+      },
+      {
+        "text": "The promotion, with its name, dates and percentage",
+        "correct": false,
+        "why": "It has attributes of its own: a real dimension."
+      },
+      {
+        "text": "Whether a parcel was gift-wrapped",
+        "correct": true,
+        "why": "Right. A yes-or-no flag that describes the event and has nothing else to say."
+      },
+      {
+        "text": "The net amount",
+        "correct": false,
+        "why": "A measure: it stays in the fact table."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cgbtv7x",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the snowflake's path from a sale to its department in order.",
+    "hint": "Each table points at the one above.",
+    "items": [
+      "fact_sales",
+      "sf_book",
+      "sf_category",
+      "sf_subcategory",
+      "sf_department"
+    ],
+    "trap": "Skipping a level is the classic slip: `sf_book` carries a `category_key` and nothing higher."
+  },
+  {
+    "id": "ex-ffdkmfn7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each design need to the technique this lesson gives for it.",
+    "hint": "Five techniques, four needs.",
+    "pairs": [
+      {
+        "left": "Compare sales with stock by shop",
+        "right": "Drilling across a conformed dimension"
+      },
+      {
+        "left": "Report on both the order date and the ship date",
+        "right": "Role-playing views of the date"
+      },
+      {
+        "left": "Keep payment method and instalments out of the fact table",
+        "right": "A junk dimension"
+      },
+      {
+        "left": "A department tree with branches of different depths",
+        "right": "Flattening, repeating the missing level"
+      }
+    ],
+    "right_distractors": [
+      "A second fact table of payments"
+    ]
+  },
+  {
+    "id": "ex-4wvgk8sc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new analyst proposes snowflaking every dimension \"because the warehouse should be normalised like the source\". What is the best answer?",
+    "hint": "What did section 06 measure?",
+    "choices": [
+      {
+        "text": "Agree, because normalisation is always correct",
+        "correct": false,
+        "why": "Correct for the operational job; this is a different job."
+      },
+      {
+        "text": "It saves under 1% and adds joins for every reader; split a branch only when someone gains",
+        "correct": true,
+        "why": "Right. Name the reader or load that is better off, branch by branch."
+      },
+      {
+        "text": "Refuse: snowflakes are forbidden in dimensional modelling",
+        "correct": false,
+        "why": "Not forbidden: section 07 names when one branch is right."
+      },
+      {
+        "text": "Agree, but only for the fact table",
+        "correct": false,
+        "why": "Snowflaking is about dimensions; the fact table is already narrow."
+      }
+    ]
+  }
+]
