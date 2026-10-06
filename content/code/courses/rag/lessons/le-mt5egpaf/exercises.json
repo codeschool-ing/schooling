@@ -10,9 +10,9 @@
     "hint": "The name says it.",
     "choices": [
       {
-        "text": "In a search index the model consults before answering",
+        "text": "In the system prompt sent with every request",
         "correct": false,
-        "why": "There is no index inside a model. It consults nothing; it produces likely text."
+        "why": "The system prompt is text in the window: in-context knowledge, gone when the request ends."
       },
       {
         "text": "In its weights, fixed when training stopped",
@@ -20,14 +20,14 @@
         "why": "Right. That is why nothing a user does afterwards adds to it."
       },
       {
+        "text": "In a search index the model consults before answering",
+        "correct": false,
+        "why": "There is no index inside a model. It consults nothing; it produces likely text."
+      },
+      {
         "text": "In the conversation history the provider keeps for each user",
         "correct": false,
         "why": "Whatever a provider stores, the model reads only what each request sends; that is in-context, not parametric."
-      },
-      {
-        "text": "In the system prompt sent with every request",
-        "correct": false,
-        "why": "The system prompt is text in the window: in-context knowledge, gone when the request ends."
       }
     ]
   },
@@ -42,16 +42,6 @@
     "hint": "Think about what is behind the answer.",
     "choices": [
       {
-        "text": "The model refuses to answer whenever a fact it learnt has since changed",
-        "correct": false,
-        "why": "It does the opposite: it answers with the old fact, confidently."
-      },
-      {
-        "text": "It was right once, so it is stated as well as any true fact",
-        "correct": true,
-        "why": "Yes. The model learnt it well; nothing in the text marks it as out of date."
-      },
-      {
         "text": "Changed facts are rarer than private ones",
         "correct": false,
         "why": "How common it is does not make it harder to catch; how convincing the answer is does."
@@ -60,6 +50,16 @@
         "text": "Training removes facts once they change",
         "correct": false,
         "why": "Training never hears about the change. The old fact stays in the weights."
+      },
+      {
+        "text": "The model refuses to answer whenever a fact it learnt has since changed",
+        "correct": false,
+        "why": "It does the opposite: it answers with the old fact, confidently."
+      },
+      {
+        "text": "It was right once, so it is stated as well as any true fact",
+        "correct": true,
+        "why": "Yes. The model learnt it well; nothing in the text marks it as out of date."
       }
     ]
   },
@@ -74,24 +74,24 @@
     "hint": "It had no e-book sentence in its memory file.",
     "choices": [
       {
-        "text": "Answering with the nearest thing it has, in the form of an answer",
-        "correct": true,
-        "why": "Right: no knowledge of the e-book rule, and still a fluent, confident reply."
-      },
-      {
-        "text": "Refusing a question it was not trained on",
-        "correct": false,
-        "why": "It did not refuse. The closed-book rule always answers, which is the point."
-      },
-      {
         "text": "Reading the help centre article about e-books",
         "correct": false,
         "why": "Nothing was in the request but the question. There was nothing to read."
       },
       {
+        "text": "Answering with the nearest thing it has, in the form of an answer",
+        "correct": true,
+        "why": "Right: no knowledge of the e-book rule, and still a fluent, confident reply."
+      },
+      {
         "text": "Mixing up two documents that had both been sent in its prompt together",
         "correct": false,
         "why": "Its prompt held no documents at all; this was the closed-book rule."
+      },
+      {
+        "text": "Refusing a question it was not trained on",
+        "correct": false,
+        "why": "It did not refuse. The closed-book rule always answers, which is the point."
       }
     ]
   },
@@ -128,24 +128,24 @@
     "hint": "It writes no new words.",
     "choices": [
       {
-        "text": "Generates a new answer word by word, like a small language model",
-        "correct": false,
-        "why": "It generates nothing. It copies whole sentences out of the sources."
-      },
-      {
         "text": "Copies up to three sentences most similar to the question, with their numbers",
         "correct": true,
         "why": "Right: rule 3. The similarity is MiniLM's cosine, computed for real."
       },
       {
-        "text": "Sends the question to a real model through the proxy",
-        "correct": false,
-        "why": "No model API was reachable from the lab; that is why extract-1 exists."
-      },
-      {
         "text": "Returns the first source unchanged",
         "correct": false,
         "why": "It chooses sentences by similarity, from any source."
+      },
+      {
+        "text": "Generates a new answer word by word, like a small language model",
+        "correct": false,
+        "why": "It generates nothing. It copies whole sentences out of the sources."
+      },
+      {
+        "text": "Sends the question to a real model through the proxy",
+        "correct": false,
+        "why": "No model API was reachable from the lab; that is why extract-1 exists."
       }
     ]
   },
@@ -165,9 +165,9 @@
         "why": "Those are tiktoken's cl100k_base, computed on the machine."
       },
       {
-        "text": "The cosine similarities between chunks and questions",
+        "text": "The SDK objects the programs receive",
         "correct": false,
-        "why": "Real: all-MiniLM-L6-v2 runs on the machine."
+        "why": "The SDKs are the providers' own, unmodified; only the server behind them is the lab's."
       },
       {
         "text": "The text of every generated reply",
@@ -175,9 +175,9 @@
         "why": "Yes. The replies follow extract-1's rules; everything around them is real."
       },
       {
-        "text": "The SDK objects the programs receive",
+        "text": "The cosine similarities between chunks and questions",
         "correct": false,
-        "why": "The SDKs are the providers' own, unmodified; only the server behind them is the lab's."
+        "why": "Real: all-MiniLM-L6-v2 runs on the machine."
       }
     ]
   },
@@ -205,16 +205,6 @@
     "hint": "Compare the two requests, not the two models.",
     "choices": [
       {
-        "text": "Its weights were updated with the returns policy",
-        "correct": false,
-        "why": "Nothing updates weights during a request."
-      },
-      {
-        "text": "Nothing; the request carried the policy",
-        "correct": true,
-        "why": "Right. The knowledge lives in the request, for the length of the request."
-      },
-      {
         "text": "Its memory file now holds the thirty-day rule",
         "correct": false,
         "why": "The memory file is unchanged; without the policy it would say fourteen days again."
@@ -223,6 +213,16 @@
         "text": "It switched to a larger context window",
         "correct": false,
         "why": "The window is 8,192 in both; 1,144 tokens fit easily."
+      },
+      {
+        "text": "Nothing; the request carried the policy",
+        "correct": true,
+        "why": "Right. The knowledge lives in the request, for the length of the request."
+      },
+      {
+        "text": "Its weights were updated with the returns policy",
+        "correct": false,
+        "why": "Nothing updates weights during a request."
       }
     ]
   },
@@ -237,9 +237,9 @@
     "hint": "Its rule ranks sentences by one measure.",
     "choices": [
       {
-        "text": "It is similar to the question, which is not the same as needed",
-        "correct": true,
-        "why": "Right: it also says printed book and 30 days. Similarity is not relevance."
+        "text": "It came first in the document",
+        "correct": false,
+        "why": "It comes later than the return window section; order plays no part in rule 3."
       },
       {
         "text": "The system message asked for every rule about printed books",
@@ -252,9 +252,9 @@
         "why": "Both say 30 days; neither overrides the other, and that is not why it was picked."
       },
       {
-        "text": "It came first in the document",
-        "correct": false,
-        "why": "It comes later than the return window section; order plays no part in rule 3."
+        "text": "It is similar to the question, which is not the same as needed",
+        "correct": true,
+        "why": "Right: it also says printed book and 30 days. Similarity is not relevance."
       }
     ]
   },
@@ -327,16 +327,6 @@
     "hint": "A request has to fit two things.",
     "choices": [
       {
-        "text": "The tokens of the question",
-        "correct": false,
-        "why": "The question is inside the 9,072."
-      },
-      {
-        "text": "The numbers and names in front of each document",
-        "correct": false,
-        "why": "Those are inside the 9,072 too: it is more than the 8,914 the documents alone took."
-      },
-      {
         "text": "Room reserved for the reply",
         "correct": true,
         "why": "Right. labgen reserves 256 when the request does not say how long a reply it wants."
@@ -345,6 +335,16 @@
         "text": "A safety margin the SDK adds to every request",
         "correct": false,
         "why": "The SDK added nothing; the reservation is the server's."
+      },
+      {
+        "text": "The tokens of the question",
+        "correct": false,
+        "why": "The question is inside the 9,072."
+      },
+      {
+        "text": "The numbers and names in front of each document",
+        "correct": false,
+        "why": "Those are inside the 9,072 too: it is more than the 8,914 the documents alone took."
       }
     ]
   },
@@ -359,6 +359,16 @@
     "hint": "A bigger window moves the limit.",
     "choices": [
       {
+        "text": "None of the three; it only removes the refusal",
+        "correct": true,
+        "why": "Right. The request now fits, and every other cost remains and grows with the corpus."
+      },
+      {
+        "text": "The chance that unrelated text pulls the reply off course",
+        "correct": false,
+        "why": "More unrelated text means more chances to use the wrong part."
+      },
+      {
         "text": "The price of every question paying for every document",
         "correct": false,
         "why": "Every token is still billed, whatever the window."
@@ -367,16 +377,6 @@
         "text": "The time spent reading the whole prompt before replying",
         "correct": false,
         "why": "The model still reads it all first; a longer prompt is slower to read."
-      },
-      {
-        "text": "The chance that unrelated text pulls the reply off course",
-        "correct": false,
-        "why": "More unrelated text means more chances to use the wrong part."
-      },
-      {
-        "text": "None of the three; it only removes the refusal",
-        "correct": true,
-        "why": "Right. The request now fits, and every other cost remains and grows with the corpus."
       }
     ]
   },
@@ -404,16 +404,6 @@
     "hint": "The other half runs when documents change.",
     "choices": [
       {
-        "text": "Cutting every document into chunks and embedding each chunk once more",
-        "correct": false,
-        "why": "That is indexing, which runs before anybody asks."
-      },
-      {
-        "text": "Embedding the question, searching, and writing from what was found",
-        "correct": true,
-        "why": "Right: the query half."
-      },
-      {
         "text": "Rebuilding the index with the new question in it",
         "correct": false,
         "why": "Questions are not added to the index; it holds documents."
@@ -422,6 +412,16 @@
         "text": "Fine-tuning the generator on the retrieved chunks",
         "correct": false,
         "why": "No training happens at query time; the chunks only go into the prompt."
+      },
+      {
+        "text": "Cutting every document into chunks and embedding each chunk once more",
+        "correct": false,
+        "why": "That is indexing, which runs before anybody asks."
+      },
+      {
+        "text": "Embedding the question, searching, and writing from what was found",
+        "correct": true,
+        "why": "Right: the query half."
       }
     ]
   },
@@ -452,24 +452,24 @@
     "hint": "Was 9.90 in the prompt?",
     "choices": [
       {
-        "text": "Retrieval, because the section had the wrong score",
-        "correct": false,
-        "why": "It scored 0.698, first by a wide margin. Retrieval did its job."
-      },
-      {
         "text": "Indexing, because the table was not embedded",
         "correct": false,
         "why": "The whole section, table included, was embedded and found."
       },
       {
-        "text": "Generation: the answer was in front of it and it chose another sentence",
-        "correct": true,
-        "why": "Right. Each half can fail while the other succeeds."
+        "text": "Retrieval, because the section had the wrong score",
+        "correct": false,
+        "why": "It scored 0.698, first by a wide margin. Retrieval did its job."
       },
       {
         "text": "Both, since the reply was wrong",
         "correct": false,
         "why": "A wrong reply does not tell you which half failed; the scores do."
+      },
+      {
+        "text": "Generation: the answer was in front of it and it chose another sentence",
+        "correct": true,
+        "why": "Right. Each half can fail while the other succeeds."
       }
     ]
   },
@@ -497,9 +497,9 @@
     "hint": "Compare what each section is about.",
     "choices": [
       {
-        "text": "That section is all about postage; today's rule is one sentence of many",
-        "correct": true,
-        "why": "Right: 0.798 against 0.530. Similarity measures topic, not truth or date."
+        "text": "The current policy was missing from the index when tiny_rag.py searched it",
+        "correct": false,
+        "why": "It was there and came second, at 0.530."
       },
       {
         "text": "Newer documents are penalised by the embedding model",
@@ -507,9 +507,9 @@
         "why": "The model has no idea of dates; it embeds text."
       },
       {
-        "text": "The current policy was missing from the index when tiny_rag.py searched it",
-        "correct": false,
-        "why": "It was there and came second, at 0.530."
+        "text": "That section is all about postage; today's rule is one sentence of many",
+        "correct": true,
+        "why": "Right: 0.798 against 0.530. Similarity measures topic, not truth or date."
       },
       {
         "text": "tiny_rag.py sorts by file name",
@@ -560,6 +560,11 @@
     "hint": "A retrieval system reads a few passages.",
     "choices": [
       {
+        "text": "What does error E-4102 mean in the affiliate API?",
+        "correct": false,
+        "why": "The API reference's error table answers it."
+      },
+      {
         "text": "How long is a gift card valid?",
         "correct": false,
         "why": "One passage answers it: two years."
@@ -573,11 +578,6 @@
         "text": "Can I return a signed copy?",
         "correct": false,
         "why": "One section of the returns policy answers it."
-      },
-      {
-        "text": "What does error E-4102 mean in the affiliate API?",
-        "correct": false,
-        "why": "The API reference's error table answers it."
       }
     ]
   },
@@ -592,6 +592,11 @@
     "hint": "Is a phone line in any document?",
     "choices": [
       {
+        "text": "Nothing, because retrieval only helps with recent facts",
+        "correct": false,
+        "why": "It helps with private and changed facts too, and with saying what is not covered."
+      },
+      {
         "text": "The bot would find the phone number and correct the hours",
         "correct": false,
         "why": "There is no phone number to find; no document mentions one."
@@ -600,11 +605,6 @@
         "text": "With sources and a threshold, it would say the sources do not cover it",
         "correct": true,
         "why": "Right: that is what with_doc.py printed for the same question."
-      },
-      {
-        "text": "Nothing, because retrieval only helps with recent facts",
-        "correct": false,
-        "why": "It helps with private and changed facts too, and with saying what is not covered."
       },
       {
         "text": "The bot would quote the 2025 policy",
@@ -646,6 +646,21 @@
     "hint": "Retrieval cures one disease: the model not having the text.",
     "choices": [
       {
+        "text": "An index that still holds the replaced 2025 policy",
+        "correct": false,
+        "why": "No: retrieval found it and quoted it. Fixing that is a matter of what you store and filter."
+      },
+      {
+        "text": "A question about a total across every order",
+        "correct": false,
+        "why": "No: that needs a query over records, not a few passages."
+      },
+      {
+        "text": "A model that misreads tables",
+        "correct": false,
+        "why": "No: it misreads them in the prompt as anywhere else."
+      },
+      {
         "text": "A model that never saw the private support handbook",
         "correct": true,
         "why": "Yes: the handbook can be retrieved and put in the prompt."
@@ -654,21 +669,6 @@
         "text": "A model trained before this year's policy existed",
         "correct": true,
         "why": "Yes: the new policy is retrieved at query time."
-      },
-      {
-        "text": "An index that still holds the replaced 2025 policy",
-        "correct": false,
-        "why": "No: retrieval found it and quoted it. Fixing that is a matter of what you store and filter."
-      },
-      {
-        "text": "A model that misreads tables",
-        "correct": false,
-        "why": "No: it misreads them in the prompt as anywhere else."
-      },
-      {
-        "text": "A question about a total across every order",
-        "correct": false,
-        "why": "No: that needs a query over records, not a few passages."
       }
     ]
   }
