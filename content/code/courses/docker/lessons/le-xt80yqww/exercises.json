@@ -1,0 +1,293 @@
+[
+  {
+    "id": "ex-990hf1rs",
+    "version": 1,
+    "section": "under-docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the process list, which program created `shelf`'s container and then exited?",
+    "hint": "It is the OCI runtime.",
+    "choices": [
+      {
+        "text": "`dockerd`",
+        "correct": false,
+        "why": "It is still running, and it asks containerd to do the work."
+      },
+      {
+        "text": "`containerd`",
+        "correct": false,
+        "why": "It is process 428, still running."
+      },
+      {
+        "text": "`runc`",
+        "correct": true,
+        "why": "Right; the shim stays with the container afterwards."
+      },
+      {
+        "text": "`ctr`",
+        "correct": false,
+        "why": "`ctr` is a client Ana ran afterwards to look."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpsryw4c",
+    "version": 1,
+    "section": "under-docker",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Docker's containers and images live in containerd's namespace called `___`.",
+    "hint": "Docker's open-source project name.",
+    "blanks": [
+      {
+        "accept": [
+          "moby"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ze8kzs7p",
+    "version": 1,
+    "section": "under-docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Kubernetes stopped going through Docker in 2022. What happened to images built with Docker?",
+    "hint": "Lesson 3's specifications.",
+    "choices": [
+      {
+        "text": "They had to be rebuilt with a Kubernetes tool",
+        "correct": false,
+        "why": "Nothing needed rebuilding."
+      },
+      {
+        "text": "They run only on nodes with Docker installed",
+        "correct": false,
+        "why": "No Docker is needed on the node."
+      },
+      {
+        "text": "They must be converted to a containerd format first",
+        "correct": false,
+        "why": "There is one format, the OCI one."
+      },
+      {
+        "text": "They run unchanged, as OCI images",
+        "correct": true,
+        "why": "Right: containerd reads what Docker writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhvey7m8",
+    "version": 1,
+    "section": "under-docker",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the layers of one `docker run`, from the command down to the process.",
+    "hint": "The figure, left to right.",
+    "items": [
+      "`docker`",
+      "`dockerd`",
+      "`containerd`",
+      "`containerd-shim-runc-v2`",
+      "`runc`"
+    ]
+  },
+  {
+    "id": "ex-z6bzz311",
+    "version": 1,
+    "section": "podman",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under rootless Podman, `id` inside said `uid=0` and `ps` on the host said `ana`. What does `/proc/self/uid_map` show?",
+    "hint": "Read the first line: inside, outside, count.",
+    "choices": [
+      {
+        "text": "UID 0 inside is Ana's 30033 outside",
+        "correct": true,
+        "why": "Right: root in the container has only Ana's rights on the host."
+      },
+      {
+        "text": "UID 0 inside is UID 0 outside",
+        "correct": false,
+        "why": "That is Docker's default without remapping."
+      },
+      {
+        "text": "Every UID inside is 65534 outside",
+        "correct": false,
+        "why": "The map has two ranges, not one."
+      },
+      {
+        "text": "There is no mapping; Podman fakes `id`",
+        "correct": false,
+        "why": "Nothing is faked; the kernel maps the IDs."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hgpdjn0",
+    "version": 1,
+    "section": "podman",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Podman refuse `golang:1.25` until `unqualified-search-registries` was set?",
+    "hint": "What would \"whichever registry answers first\" allow?",
+    "choices": [
+      {
+        "text": "Podman cannot pull from Docker Hub",
+        "correct": false,
+        "why": "It pulled from Docker Hub's mirror once told to."
+      },
+      {
+        "text": "It will not guess the registry of a short name",
+        "correct": true,
+        "why": "Right: a guess could fetch somebody else's image."
+      },
+      {
+        "text": "Tags are not supported in Podman",
+        "correct": false,
+        "why": "Tags work; the registry was the question."
+      },
+      {
+        "text": "The image did not exist",
+        "correct": false,
+        "why": "It existed; the name was ambiguous."
+      }
+    ]
+  },
+  {
+    "id": "ex-mm210710",
+    "version": 1,
+    "section": "podman",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `podman build`, Ana has `localhost/shelf:1.0.0` in Podman and `shelf:1.0.0` in Docker. How are they related?",
+    "hint": "Where does each tool keep images?",
+    "choices": [
+      {
+        "text": "One image with two names",
+        "correct": false,
+        "why": "Each tool has its own store; nothing is shared here."
+      },
+      {
+        "text": "Podman reads Docker's images directly",
+        "correct": false,
+        "why": "It does not; it built its own."
+      },
+      {
+        "text": "Two copies in two separate stores",
+        "correct": true,
+        "why": "Right: same Dockerfile, separate storage."
+      },
+      {
+        "text": "Docker's copy was moved to Podman",
+        "correct": false,
+        "why": "Docker's is still listed by `docker images`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwxmrkk2",
+    "version": 1,
+    "section": "lxc-and-choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes an LXC system container different from the containers in this course?",
+    "hint": "One program, or a whole system?",
+    "choices": [
+      {
+        "text": "It runs its own kernel",
+        "correct": false,
+        "why": "It shares the host's kernel, like any container."
+      },
+      {
+        "text": "It cannot run on Linux",
+        "correct": false,
+        "why": "It is a Linux technology."
+      },
+      {
+        "text": "It uses OCI images",
+        "correct": false,
+        "why": "It uses system images of its own."
+      },
+      {
+        "text": "It runs a whole userland with init and services",
+        "correct": true,
+        "why": "Right: closer to a small VM than to one process."
+      }
+    ]
+  },
+  {
+    "id": "ex-853asspf",
+    "version": 1,
+    "section": "lxc-and-choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to its typical use.",
+    "hint": "The table.",
+    "pairs": [
+      {
+        "left": "Docker Engine",
+        "right": "Development and single hosts"
+      },
+      {
+        "left": "Podman",
+        "right": "Rootless hosts, the RHEL family"
+      },
+      {
+        "left": "containerd + nerdctl",
+        "right": "The runtime under Kubernetes"
+      },
+      {
+        "left": "LXC / Incus",
+        "right": "System containers and small VMs"
+      }
+    ],
+    "right_distractors": [
+      "Signing images"
+    ]
+  },
+  {
+    "id": "ex-tcc70366",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shared server where users must not get root through a container group should run `shelf`. Which fits best?",
+    "hint": "Lesson 6: the `docker` group is root.",
+    "choices": [
+      {
+        "text": "Podman, rootless, run by each user",
+        "correct": true,
+        "why": "Right: no daemon, and root inside maps to the user outside."
+      },
+      {
+        "text": "Docker, with every user in the `docker` group",
+        "correct": false,
+        "why": "That gives every user root on the machine."
+      },
+      {
+        "text": "LXC, with `shelf` inside a system container",
+        "correct": false,
+        "why": "Possible, but it gives up the OCI image the pipeline built."
+      },
+      {
+        "text": "`ctr` as root for everybody",
+        "correct": false,
+        "why": "That is root for everybody, and a debugging tool besides."
+      }
+    ]
+  }
+]

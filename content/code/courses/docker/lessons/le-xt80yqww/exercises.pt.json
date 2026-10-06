@@ -1,0 +1,203 @@
+{
+  "ex-990hf1rs": {
+    "prompt": "Na lista de processos, que programa criou o container do `shelf` e depois saiu?",
+    "hint": "É o runtime OCI.",
+    "choices": [
+      {
+        "text": "`dockerd`",
+        "why": "Ele continua rodando, e pede ao containerd que faça o trabalho."
+      },
+      {
+        "text": "`containerd`",
+        "why": "É o processo 428, ainda rodando."
+      },
+      {
+        "text": "`runc`",
+        "why": "Isso; o shim fica com o container depois."
+      },
+      {
+        "text": "`ctr`",
+        "why": "O `ctr` é um cliente que a Ana rodou depois para olhar."
+      }
+    ]
+  },
+  "ex-mpsryw4c": {
+    "prompt": "Os containers e imagens do Docker moram no namespace do containerd chamado `___`.",
+    "hint": "O nome do projeto de código aberto do Docker.",
+    "blanks": [
+      {
+        "accept": [
+          "moby"
+        ]
+      }
+    ]
+  },
+  "ex-ze8kzs7p": {
+    "prompt": "O Kubernetes deixou de passar pelo Docker em 2022. O que aconteceu com as imagens feitas com Docker?",
+    "hint": "As especificações da aula 3.",
+    "choices": [
+      {
+        "text": "Precisaram ser refeitas com uma ferramenta do Kubernetes",
+        "why": "Nada precisou ser refeito."
+      },
+      {
+        "text": "Só rodam em nós com Docker instalado",
+        "why": "Nenhum Docker é necessário no nó."
+      },
+      {
+        "text": "Precisam antes ser convertidas para um formato do containerd",
+        "why": "Há um formato só, o da OCI."
+      },
+      {
+        "text": "Rodam sem mudança, como imagens OCI",
+        "why": "Isso: o containerd lê o que o Docker escreve."
+      }
+    ]
+  },
+  "ex-yhvey7m8": {
+    "prompt": "Ordene as camadas de um `docker run`, do comando até o processo.",
+    "hint": "A figura, da esquerda para a direita.",
+    "items": [
+      "`docker`",
+      "`dockerd`",
+      "`containerd`",
+      "`containerd-shim-runc-v2`",
+      "`runc`"
+    ]
+  },
+  "ex-z6bzz311": {
+    "prompt": "No Podman sem root, o `id` lá dentro disse `uid=0` e o `ps` no host disse `ana`. O que o `/proc/self/uid_map` mostra?",
+    "hint": "Leia a primeira linha: dentro, fora, quantidade.",
+    "choices": [
+      {
+        "text": "O UID 0 de dentro é o 30033 da Ana lá fora",
+        "why": "Isso: o root do container só tem os direitos da Ana no host."
+      },
+      {
+        "text": "O UID 0 de dentro é o UID 0 de fora",
+        "why": "Esse é o padrão do Docker sem remapeamento."
+      },
+      {
+        "text": "Todo UID de dentro é 65534 lá fora",
+        "why": "O mapa tem duas faixas, e não uma."
+      },
+      {
+        "text": "Não há mapeamento; o Podman falsifica o `id`",
+        "why": "Nada é falsificado; o kernel mapeia os IDs."
+      }
+    ]
+  },
+  "ex-6hgpdjn0": {
+    "prompt": "Por que o Podman recusou `golang:1.25` até o `unqualified-search-registries` ser definido?",
+    "hint": "O que \"o primeiro registry que responder\" permitiria?",
+    "choices": [
+      {
+        "text": "O Podman não baixa do Docker Hub",
+        "why": "Ele baixou do espelho do Docker Hub assim que mandaram."
+      },
+      {
+        "text": "Ele não chuta o registry de um nome curto",
+        "why": "Isso: um chute poderia baixar a imagem de outra pessoa."
+      },
+      {
+        "text": "Tags não são suportadas no Podman",
+        "why": "Tags funcionam; a pergunta era o registry."
+      },
+      {
+        "text": "A imagem não existia",
+        "why": "Existia; o nome era ambíguo."
+      }
+    ]
+  },
+  "ex-mm210710": {
+    "prompt": "Depois do `podman build`, a Ana tem `localhost/shelf:1.0.0` no Podman e `shelf:1.0.0` no Docker. Qual a relação entre elas?",
+    "hint": "Onde cada ferramenta guarda imagens?",
+    "choices": [
+      {
+        "text": "Uma imagem com dois nomes",
+        "why": "Cada ferramenta tem o seu armazenamento; nada é compartilhado aqui."
+      },
+      {
+        "text": "O Podman lê as imagens do Docker diretamente",
+        "why": "Não lê; ele construiu a sua."
+      },
+      {
+        "text": "Duas cópias em dois armazenamentos separados",
+        "why": "Isso: o mesmo Dockerfile, armazenamento separado."
+      },
+      {
+        "text": "A cópia do Docker foi movida para o Podman",
+        "why": "A do Docker continua listada pelo `docker images`."
+      }
+    ]
+  },
+  "ex-wwxmrkk2": {
+    "prompt": "O que torna um container de sistema LXC diferente dos containers deste curso?",
+    "hint": "Um programa, ou um sistema inteiro?",
+    "choices": [
+      {
+        "text": "Ele roda um kernel próprio",
+        "why": "Ele divide o kernel do host, como qualquer container."
+      },
+      {
+        "text": "Ele não roda em Linux",
+        "why": "É uma tecnologia Linux."
+      },
+      {
+        "text": "Ele usa imagens OCI",
+        "why": "Ele usa imagens de sistema próprias."
+      },
+      {
+        "text": "Ele roda um userland inteiro com init e serviços",
+        "why": "Isso: mais perto de uma VM pequena que de um processo."
+      }
+    ]
+  },
+  "ex-853asspf": {
+    "prompt": "Ligue cada ferramenta ao uso típico dela.",
+    "hint": "A tabela.",
+    "pairs": [
+      {
+        "left": "Docker Engine",
+        "right": "Desenvolvimento e hosts únicos"
+      },
+      {
+        "left": "Podman",
+        "right": "Hosts sem root, a família RHEL"
+      },
+      {
+        "left": "containerd + nerdctl",
+        "right": "O runtime debaixo do Kubernetes"
+      },
+      {
+        "left": "LXC / Incus",
+        "right": "Containers de sistema e VMs pequenas"
+      }
+    ],
+    "right_distractors": [
+      "Assinar imagens"
+    ]
+  },
+  "ex-tcc70366": {
+    "prompt": "Num servidor compartilhado em que os usuários não podem ganhar root por um grupo de containers, o `shelf` precisa rodar. O que serve melhor?",
+    "hint": "Aula 6: o grupo `docker` é root.",
+    "choices": [
+      {
+        "text": "Podman, sem root, rodado por cada usuário",
+        "why": "Isso: sem daemon, e o root de dentro mapeia para o usuário de fora."
+      },
+      {
+        "text": "Docker, com todos os usuários no grupo `docker`",
+        "why": "Isso dá root na máquina a todos os usuários."
+      },
+      {
+        "text": "LXC, com o `shelf` num container de sistema",
+        "why": "Possível, mas abre mão da imagem OCI que o pipeline construiu."
+      },
+      {
+        "text": "O `ctr` como root para todo mundo",
+        "why": "Isso é root para todo mundo, e ainda uma ferramenta de depuração."
+      }
+    ]
+  }
+}
