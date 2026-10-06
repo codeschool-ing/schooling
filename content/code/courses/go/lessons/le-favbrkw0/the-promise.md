@@ -12,8 +12,8 @@ a program is compiled again by the new release, and the files a release produced
 to work with the next one.
 
 A promise like that leaves a question. Go has improved for fourteen years since, and some of the
-improvements change what existing code does. The answer is a line you have already seen in lesson
-4: the `go` line of `go.mod`.
+improvements change what existing code does. The answer is a line lesson 4 writes into the first
+module of the course: the `go` line of `go.mod`.
 
 ## One program, two answers
 

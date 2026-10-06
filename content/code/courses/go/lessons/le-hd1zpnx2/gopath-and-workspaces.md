@@ -30,7 +30,7 @@ main.go:6:2: cannot find package "example.com/greet" in any of:
 **In GOPATH mode, an import path was a directory under one of two roots**, the standard library's
 and yours, and those two lines are the whole search. A module changes the question: a directory
 with a `go.mod` at its root says what its code is called, wherever on the disk it sits, which is
-why lesson 4 could build `~/hello`.
+why lesson 4 can build `~/hello`.
 
 What `~/go` holds today is what the go command downloads and installs for you:
 

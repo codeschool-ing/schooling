@@ -46,6 +46,6 @@ de sempre**; o que vai além da aritmética, como o valor absoluto, que é 5 par
 pacote `math/cmplx`.
 
 A raiz quadrada mostra por que os dois pacotes são separados. O `math.Sqrt(-1)` trabalha com os
-números reais, onde −1 não tem raiz quadrada, então devolve `NaN`, como a seção 02 mostrou. O
+números reais, onde −1 não tem raiz quadrada, então devolve `NaN`, como a seção 03 mostrou. O
 `cmplx.Sqrt(-1)` trabalha com os números complexos, onde a resposta é `i`, impressa como `(0+1i)`.
 **O pacote que você chama decide entre quais números a resposta pode estar.**

@@ -80,7 +80,7 @@ ana@vm:~/history-auto$ GOTOOLCHAIN=go1.26.0 go version
 go version go1.26.0 linux/amd64
 ```
 
-The release ships `auto`; the lab sets `local`, as lesson 3 showed, so that every transcript in this
+The release ships `auto`; the lab sets `local`, as lesson 3 shows, so that every transcript in this
 course comes from go1.27.1 and never from a release fetched behind your back. Naming a release
 forces it: **`GOTOOLCHAIN=go1.26.0` made the go command download that whole toolchain from the
 module proxy and run it**, by itself, with nothing installed by hand. The second time there was no
@@ -119,7 +119,7 @@ what an older installation does, `go1.24.0+auto` tells the go command to begin a
 release installed and still switch when a module asks for more. The module asked for 1.25.0, so the
 go command downloaded go1.25.0 and ran it. **Under `auto`, a `go` line newer than your Go is not an
 error: the go command fetches the release the module needs and carries on.** Under `local` it is
-the refusal lesson 3 showed.
+the refusal lesson 3 shows.
 
 The `toolchain` line is the module saying which release it would rather be built with, which can be
 newer than the minimum its `go` line demands:

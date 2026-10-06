@@ -4,7 +4,7 @@ version: 1
 ---
 
 O `json.Unmarshal` faz o caminho inverso: recebe JSON e preenche um valor Go com ele. A expectativa
-errada aqui é o espelho da seção 02. Vindo de uma linguagem tipada, as pessoas esperam que o JSON
+errada aqui é o espelho da seção 03. Vindo de uma linguagem tipada, as pessoas esperam que o JSON
 seja conferido contra a struct, de modo que uma chave a mais ou a menos seja erro. **Por padrão o
 `encoding/json` confere quase nada: chaves desconhecidas são puladas, chaves ausentes deixam os
 campos no zero, e os nomes casam com maiúsculas ou minúsculas.** Os três numa execução só:

@@ -18,7 +18,7 @@ export PATH=$PATH:$HOME/go/bin
 
 As aspas simples mantêm `$PATH` e `$HOME` como foram escritos, então o arquivo guarda a receita e
 não o valor de hoje. A primeira linha serve para `go` e `gofmt`. A segunda serve para os programas
-que **você** gera com `go install`, que vão parar em `~/go/bin`; foi essa linha que fez o `hello`
+que **você** gera com `go install`, que vão parar em `~/go/bin`; é essa linha que faz o `hello`
 rodar pelo nome a partir de `~` na lição 4.
 
 O arquivo vale a partir do próximo login. Para ver o que um login novo recebe, sem sair da sessão,
@@ -59,7 +59,7 @@ e do diretório pessoal da Ana. Desenhadas, são três diretórios com três fun
 `GOROOT` é o toolchain da seção 02, e você nunca escreve nele. `GOPATH` é `~/go`, e dois outros
 valores ficam dentro dele: `GOBIN`, onde o `go install` põe programas, e `GOMODCACHE`, onde os
 módulos baixados ficam guardados, descompactados e só para leitura, da lição 38 em diante. `GOCACHE`
-é o cache de build que fez o segundo `go run` da lição 4 levar 44 milissegundos. **Tudo o que está
+é o cache de build que faz o segundo `go run` da lição 4 levar 44 milissegundos. **Tudo o que está
 em `GOPATH` e em `GOCACHE` pode ser apagado e volta quando for preciso**, ao preço de um download
 ou de uma recompilação: `go clean -cache` esvazia um e `go clean -modcache` o outro.
 
@@ -99,7 +99,7 @@ The commands are:
 	work        workspace maintenance
 ```
 
-Você já viu seis delas na lição 4: `run`, `build`, `install`, `doc`, `fmt` e `vet`. `work` é a
+A lição 4 usa seis delas: `run`, `build`, `install`, `doc`, `fmt` e `vet`. `work` é a
 seção 04 desta lição, `mod` é a lição 38 e `get` a lição 40; `test` é do curso `go-concurrency`.
 `go help` seguido de qualquer uma dessas palavras imprime o manual completo dela, e o resto da
 lista, que o `head` cortou, são tópicos como `go help gopath`.

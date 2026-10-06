@@ -35,8 +35,8 @@ long as the function value exists, even after the function that declared them ha
 ```
 
 Where those variables live, when a function has returned and its closure has not, is a question
-about memory. Lesson 24 answers it: the compiler sees that `n` outlives `counter` and keeps it on
-the heap.
+about memory. Lesson 24 answers it with the rule the compiler follows, escape analysis: a variable
+that may outlive its function, as `n` outlives `counter`, is kept on the heap.
 
 ## Two closures, one variable
 

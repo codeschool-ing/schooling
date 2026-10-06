@@ -18,7 +18,7 @@ export PATH=$PATH:$HOME/go/bin
 
 The single quotes keep `$PATH` and `$HOME` as written, so the file holds the recipe rather than
 today's value. The first line is for `go` and `gofmt`. The second is for the programs **you** build
-with `go install`, which land in `~/go/bin`; that line is how `hello` ran by name from `~` in
+with `go install`, which land in `~/go/bin`; that line is how `hello` runs by name from `~` in
 lesson 4.
 
 The file takes effect at the next login. To see what a fresh login gets, without logging out,
@@ -59,7 +59,7 @@ and from Ana's home directory. Drawn out, they are three directories with three 
 `GOROOT` is the toolchain from section 02, and you never write in it. `GOPATH` is `~/go`, and two
 other values are inside it: `GOBIN`, where `go install` puts programs, and `GOMODCACHE`, where
 downloaded modules are kept, unpacked and read-only, from lesson 38 on. `GOCACHE` is the build
-cache that made the second `go run` of lesson 4 take 44 milliseconds. **Everything under `GOPATH`
+cache that makes the second `go run` of lesson 4 take 44 milliseconds. **Everything under `GOPATH`
 and `GOCACHE` can be deleted and comes back on demand**, at the price of a download or a rebuild:
 `go clean -cache` empties the one and `go clean -modcache` the other.
 
@@ -98,7 +98,7 @@ The commands are:
 	work        workspace maintenance
 ```
 
-You have met six of them in lesson 4: `run`, `build`, `install`, `doc`, `fmt` and `vet`. `work`
+Lesson 4 uses six of them: `run`, `build`, `install`, `doc`, `fmt` and `vet`. `work`
 is section 04 of this lesson, `mod` is lesson 38 and `get` lesson 40; `test` belongs to the
 `go-concurrency` course. `go help` followed by any of these words prints its full manual, and the
 rest of the list, which `head` cut off, is topics such as `go help gopath`.

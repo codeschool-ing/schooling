@@ -30,7 +30,7 @@ main.go:6:2: cannot find package "example.com/greet" in any of:
 **No modo GOPATH, um caminho de importação era um diretório debaixo de uma de duas raízes**, a da
 biblioteca padrão e a sua, e essas duas linhas são a busca inteira. Um módulo muda a pergunta: um
 diretório com um `go.mod` na raiz diz como o seu código se chama, esteja onde estiver no disco, e é
-por isso que a lição 4 conseguiu compilar `~/hello`.
+por isso que a lição 4 consegue compilar `~/hello`.
 
 O que o `~/go` guarda hoje é o que o comando go baixa e instala para você:
 

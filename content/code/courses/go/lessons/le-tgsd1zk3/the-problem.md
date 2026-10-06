@@ -56,7 +56,7 @@ it. An include nobody needs any more is still pasted and still compiled, on ever
 nothing tells you it could go. Multiply that by two thousand files and you get the 8 gigabytes.
 
 Go made the dependency part of the language. An `import` names a package rather than a file to
-paste, and **an import the file does not use is a compile error**: lesson 4 showed the compiler
+paste, and **an import the file does not use is a compile error**: lesson 4 shows the compiler
 refusing `"os" imported and not used`. So the list of what a Go program depends on is exact by
 construction. The 2012 talk adds the other half. When the compiler meets `import "B"`, it opens one
 file, the compiled form of `B`, which already carries everything about `B`'s own dependencies that

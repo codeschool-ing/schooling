@@ -13,8 +13,8 @@ no código-fonte: um programa é compilado de novo pela versão nova, e os arqui
 não têm garantia de funcionar com a seguinte.
 
 Uma promessa assim deixa uma pergunta. Go melhorou durante os catorze anos seguintes, e algumas
-melhorias mudam o que o código existente faz. A resposta é uma linha que você já viu na lição 4: a
-linha `go` do `go.mod`.
+melhorias mudam o que o código existente faz. A resposta é uma linha que a lição 4 escreve no
+primeiro módulo do curso: a linha `go` do `go.mod`.
 
 ## Um programa, duas respostas
 

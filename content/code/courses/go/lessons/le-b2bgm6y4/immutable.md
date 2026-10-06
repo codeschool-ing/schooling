@@ -25,7 +25,7 @@ ana@vm:~/strings-mut$ go run .
 ```
 
 **A string's bytes are fixed when the string is made, and nothing can change them afterwards.**
-`s[0]` can be read, which section 03 does, and never written. A variable holding a string can be
+`s[0]` can be read, which section 04 does, and never written. A variable holding a string can be
 given a different string, and that is what "changing" a string means in Go: building a new one and
 assigning it.
 

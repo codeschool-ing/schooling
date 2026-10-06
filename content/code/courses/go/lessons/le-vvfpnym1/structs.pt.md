@@ -40,7 +40,7 @@ deles.
 ```
 
 `Tags` saiu como `[]`, e é uma slice nil: ninguém lhe deu valor. A lição 12 mostrou que o `fmt` não
-distingue uma slice nil de uma vazia, e a seção 02 mostra alguém que distingue.
+distingue uma slice nil de uma vazia, e a seção 03 mostra alguém que distingue.
 
 ## Dê nome aos campos
 

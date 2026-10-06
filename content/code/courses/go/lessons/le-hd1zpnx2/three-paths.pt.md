@@ -74,7 +74,7 @@ ana@vm:~/setup$ du -sh /usr/local/go
 ```
 
 Dois programas em `bin`, e 253 MB no total, a maior parte em `src`: o código-fonte da biblioteca
-padrão, que foi o que o `go doc` leu na lição 4 sem rede. O arquivo `VERSION` traz o mesmo horário
+padrão, que é o que o `go doc` lê na lição 4 sem rede. O arquivo `VERSION` traz o mesmo horário
 de build que o proxy informou, então o Go do laboratório e o que go.dev distribui são uma versão
 só.
 

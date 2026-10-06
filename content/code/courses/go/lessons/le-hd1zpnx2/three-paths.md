@@ -73,7 +73,7 @@ ana@vm:~/setup$ du -sh /usr/local/go
 ```
 
 Two programs in `bin`, and 253 MB in all, most of it `src`: the source of the standard library,
-which is what `go doc` read in lesson 4 with no network. The `VERSION` file carries the same build
+which is what `go doc` reads in lesson 4 with no network. The `VERSION` file carries the same build
 time the proxy reported, so the lab's Go and the one go.dev serves are one release.
 
 **Nothing outside that directory belongs to the toolchain.** Deleting `/usr/local/go` uninstalls

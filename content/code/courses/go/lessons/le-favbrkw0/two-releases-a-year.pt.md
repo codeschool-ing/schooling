@@ -81,7 +81,7 @@ ana@vm:~/history-auto$ GOTOOLCHAIN=go1.26.0 go version
 go version go1.26.0 linux/amd64
 ```
 
-A versão vem com `auto`; o laboratório define `local`, como a lição 3 mostrou, para que toda
+A versão vem com `auto`; o laboratório define `local`, como a lição 3 mostra, para que toda
 transcrição deste curso venha do go1.27.1 e nunca de uma versão buscada sem você saber. Nomear uma
 versão a força: **`GOTOOLCHAIN=go1.26.0` fez o comando go baixar o toolchain inteiro do proxy de
 módulos e executá-lo**, sozinho, sem nada instalado à mão. Na segunda vez não houve download, porque
@@ -120,7 +120,7 @@ o que uma instalação mais antiga faz, `go1.24.0+auto` diz ao comando go para c
 fosse a versão instalada e ainda assim trocar quando um módulo pede mais. O módulo pediu o 1.25.0,
 então o comando go baixou o go1.25.0 e o executou. **Com `auto`, uma linha `go` mais nova que o seu Go
 não é erro: o comando go busca a versão de que o módulo precisa e segue em frente.** Com `local` é a
-recusa que a lição 3 mostrou.
+recusa que a lição 3 mostra.
 
 A linha `toolchain` é o módulo dizendo com que versão prefere ser compilado, que pode ser mais nova
 que o mínimo exigido pela linha `go`:

@@ -57,7 +57,7 @@ arquivo. Um include de que ninguém precisa mais continua sendo colado e compila
 nada avisa que ele poderia sair. Multiplique isso por dois mil arquivos e você chega aos 8 gigabytes.
 
 Go fez da dependência uma parte da linguagem. Um `import` nomeia um pacote, e não um arquivo para
-colar, e **um import que o arquivo não usa é erro de compilação**: a lição 4 mostrou o compilador
+colar, e **um import que o arquivo não usa é erro de compilação**: a lição 4 mostra o compilador
 recusando `"os" imported and not used`. Assim a lista do que um programa Go usa é exata por
 construção. A palestra de 2012 acrescenta a outra metade. Quando o compilador encontra `import "B"`,
 ele abre um arquivo, a forma compilada de `B`, que já traz tudo o que um usuário de `B` precisa

@@ -55,7 +55,7 @@ Go instalado.
 
 **Go 1.11, 24 de agosto de 2018**, trouxe os módulos: um arquivo `go.mod` que dá nome ao código e às
 suas dependências. Antes dele, todo código Go morava numa única árvore de diretórios chamada
-`GOPATH`, que a lição 3 mostra. A lição 4 escreveu um `go.mod`, e a lição 38 trata de módulos de
+`GOPATH`, que a lição 3 mostra. A lição 4 escreve um `go.mod`, e a lição 38 trata de módulos de
 verdade.
 
 **Go 1.18, 15 de março de 2022**, trouxe generics, funções e tipos que servem para vários tipos ao

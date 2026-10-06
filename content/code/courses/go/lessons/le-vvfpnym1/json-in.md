@@ -4,7 +4,7 @@ version: 1
 ---
 
 `json.Unmarshal` goes the other way: it takes JSON and fills a Go value from it. The wrong
-expectation here is the mirror of section 02's. Coming from a typed language, people expect the
+expectation here is the mirror of section 03's. Coming from a typed language, people expect the
 JSON to be checked against the struct, so that an extra key or a missing one is an error. **By
 default `encoding/json` checks almost nothing: unknown keys are skipped, missing keys leave their
 fields at zero, and key names match in either case.** All three in one run:

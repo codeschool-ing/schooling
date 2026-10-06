@@ -35,8 +35,8 @@ existir, mesmo depois que a função que as declarou já retornou.
 ```
 
 Onde essas variáveis moram, quando uma função já retornou e a closure dela não, é uma questão de
-memória. A lição 24 responde: o compilador percebe que `n` sobrevive a `counter` e a guarda no
-heap.
+memória. A lição 24 responde com a regra que o compilador segue, a análise de escape: uma variável
+que pode sobreviver à sua função, como `n` sobrevive a `counter`, fica no heap.
 
 ## Duas closures, uma variável
 

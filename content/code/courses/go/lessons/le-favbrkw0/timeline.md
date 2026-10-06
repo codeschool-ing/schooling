@@ -54,7 +54,7 @@ That is why lesson 1 could build the go command from source with nothing but Go 
 
 **Go 1.11, 24 August 2018**, added modules: a `go.mod` file naming the code and its dependencies.
 Before it, all Go code lived in one directory tree called `GOPATH`, which lesson 3 shows. Lesson 4
-wrote a `go.mod`, and lesson 38 is about modules properly.
+writes a `go.mod`, and lesson 38 is about modules properly.
 
 **Go 1.18, 15 March 2022**, added generics, functions and types that work for several types at
 once. Lessons 30 and 31 teach them as the ordinary part of the language they now are; section 03

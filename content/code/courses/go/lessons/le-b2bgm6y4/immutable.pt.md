@@ -25,7 +25,7 @@ ana@vm:~/strings-mut$ go run .
 ```
 
 **Os bytes de uma string ficam fixos quando ela é criada, e nada consegue mudá-los depois.** `s[0]`
-pode ser lido, o que a seção 03 faz, e nunca escrito. Uma variável que guarda uma string pode
+pode ser lido, o que a seção 04 faz, e nunca escrito. Uma variável que guarda uma string pode
 receber outra string, e é isso que "mudar" uma string quer dizer em Go: montar uma nova e
 atribuí-la.
 

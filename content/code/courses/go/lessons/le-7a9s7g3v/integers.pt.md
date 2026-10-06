@@ -226,5 +226,5 @@ main.main()
 Isso é um **panic**: o programa para, imprime o que deu errado e onde (`main.go:7`, a divisão) e
 sai com status 2. O `never printed` não foi impresso. A lição 36 trata de panics e a lição 37 lê o
 resto dessa saída linha a linha. Divisão de ponto flutuante por zero não dá panic, como mostra a
-seção 02, e esse é um dos poucos lugares em que os dois tipos de número se comportam de modo
+seção 03, e esse é um dos poucos lugares em que os dois tipos de número se comportam de modo
 completamente diferente.

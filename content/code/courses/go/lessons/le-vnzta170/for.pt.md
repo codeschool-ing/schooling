@@ -100,7 +100,7 @@ novo**, porque os seguintes muitas vezes são o parser tropeçando no mesmo enga
 ## Contando com `range`
 
 Escrever `i := 0; i < n; i++` para fazer algo `n` vezes é comum o bastante para o Go 1.22 ter dado
-a isso uma forma mais curta. As lições 7 e 9 já a usaram como `for range 10`:
+a isso uma forma mais curta. As lições 7 e 9 já a usaram, como `for range 10` e `for range 100000`:
 
 ```go
 package main

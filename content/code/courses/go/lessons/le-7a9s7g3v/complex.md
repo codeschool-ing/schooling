@@ -46,6 +46,6 @@ operators**; anything beyond arithmetic, such as the absolute value, which is 5 
 the package `math/cmplx`.
 
 The square root shows why the two packages are separate. `math.Sqrt(-1)` works among the real
-numbers, where −1 has no square root, so it returns `NaN`, as section 02 showed. `cmplx.Sqrt(-1)`
+numbers, where −1 has no square root, so it returns `NaN`, as section 03 showed. `cmplx.Sqrt(-1)`
 works among the complex numbers, where the answer is `i`, printed as `(0+1i)`. **Which package you
 call decides which numbers the answer is allowed to be.**

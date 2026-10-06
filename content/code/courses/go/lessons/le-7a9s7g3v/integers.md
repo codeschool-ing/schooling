@@ -226,5 +226,5 @@ main.main()
 That is a **panic**: the program stops, prints what went wrong and where (`main.go:7`, the
 division), and exits with status 2. `never printed` was not. Lesson 36 is about panics and lesson
 37 reads the rest of that output line by line. Floating-point division by zero does not panic, as
-section 02 shows, which makes this one of the few places where the two kinds of number behave
+section 03 shows, which makes this one of the few places where the two kinds of number behave
 completely differently.

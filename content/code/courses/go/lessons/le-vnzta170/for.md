@@ -100,7 +100,7 @@ again**, because the ones after it are often the parser stumbling over the same 
 ## Counting with `range`
 
 Writing `i := 0; i < n; i++` to do something `n` times is common enough that Go 1.22 gave it a
-shorter form. Lessons 7 and 9 already used it as `for range 10`:
+shorter form. Lessons 7 and 9 already used it, as `for range 10` and `for range 100000`:
 
 ```go
 package main

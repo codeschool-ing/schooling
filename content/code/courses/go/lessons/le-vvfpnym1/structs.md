@@ -39,7 +39,7 @@ opposite: their names are fixed in the source, and the compiler checks every use
 ```
 
 `Tags` printed as `[]`, and it is a nil slice: nobody gave it a value. Lesson 12 showed that `fmt`
-cannot tell a nil slice from an empty one, and section 02 shows somebody who can.
+cannot tell a nil slice from an empty one, and section 03 shows somebody who can.
 
 ## Name the fields
 

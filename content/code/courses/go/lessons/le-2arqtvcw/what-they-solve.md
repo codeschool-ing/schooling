@@ -88,7 +88,7 @@ func Sort[S ~[]E, E cmp.Ordered](x S)
 
 That signature is the function `sort.Ints` now calls. Its brackets declare two type parameters, `S`
 for the slice and `E` for its elements, and `cmp.Ordered` is a constraint the `cmp` package defines
-for every type that `<` works on. Lesson 31 reads that line piece by piece. What matters here is the
+for every type that `<` works on. Lesson 31 reads its two pieces, `S ~[]E` and `cmp.Ordered`. What matters here is the
 consequence: **one `Sort` sorts `int`s, `string`s and every other ordered type**, where `sort` needed a
 copy for each.
 

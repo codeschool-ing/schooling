@@ -89,7 +89,7 @@ func Sort[S ~[]E, E cmp.Ordered](x S)
 
 Essa assinatura é a da função que `sort.Ints` chama hoje. Os colchetes declaram dois parâmetros de
 tipo, `S` para a slice e `E` para os elementos dela, e `cmp.Ordered` é uma restrição que o pacote
-`cmp` define para todo tipo em que `<` funciona. A lição 31 lê essa linha pedaço por pedaço. O que
+`cmp` define para todo tipo em que `<` funciona. A lição 31 lê as duas peças dela, `S ~[]E` e `cmp.Ordered`. O que
 importa aqui é a consequência: **um único `Sort` ordena `int`, `string` e qualquer outro tipo
 ordenável**, onde o `sort` precisava de uma cópia para cada.
 
