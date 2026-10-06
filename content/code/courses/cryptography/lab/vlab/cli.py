@@ -150,6 +150,44 @@ def cmd_webhook(a):
         print(f"{path.split('/')[-1]:<12} {'ACCEPT' if ok else 'REJECT'}  {why}")
 
 
+def cmd_toydh(a):
+    """Diffie-Hellman with numbers small enough to follow by hand."""
+    p, g = a.p, a.g
+    A, B = pow(g, a.a, p), pow(g, a.b, p)
+    print(f"public:  p = {p}, g = {g}")
+    print(f"Ana   picks a = {a.a} (secret), sends A = g^a mod p = {A}")
+    print(f"Bruno picks b = {a.b} (secret), sends B = g^b mod p = {B}")
+    print(f"Ana   computes B^a mod p = {pow(B, a.a, p)}")
+    print(f"Bruno computes A^b mod p = {pow(A, a.b, p)}")
+    print(f"on the wire: p, g, A = {A}, B = {B}; never a, b or the result")
+
+
+def cmd_ephemeral(a):
+    """Two X25519 key pairs made in memory for one exchange, used, and dropped."""
+    from cryptography.hazmat.primitives.asymmetric import x25519
+    ana, bruno = x25519.X25519PrivateKey.generate(), x25519.X25519PrivateKey.generate()
+    s1 = ana.exchange(bruno.public_key())
+    s2 = bruno.exchange(ana.public_key())
+    print(f"ephemeral pairs generated for this exchange: 2, written to disk: 0")
+    print(f"both sides derived the same {len(s1)}-byte secret: {'yes' if s1 == s2 else 'no'}")
+    del ana, bruno
+    print("private halves discarded; nothing left that could rebuild this secret")
+
+
+def cmd_kem(a):
+    """ML-KEM-768: a key pair from a fixed seed, one encapsulation, and the sizes."""
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import mlkem
+    from . import drbg
+    k = mlkem.MLKEM768PrivateKey.from_seed_bytes(drbg.stream("keys/mlkem768", 64))
+    pub = k.public_key()
+    secret, ciphertext = pub.encapsulate()
+    print(f"ML-KEM-768 public key      {len(pub.public_bytes_raw()):5} bytes")
+    print(f"encapsulation (ciphertext) {len(ciphertext):5} bytes")
+    print(f"shared secret              {len(secret):5} bytes")
+    print(f"decapsulated secret matches: {'yes' if k.decapsulate(ciphertext) == secret else 'no'}")
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -203,6 +241,16 @@ def main():
     s.add_argument("--now", type=int, required=True, help="the receiver's clock, as epoch seconds")
     s.add_argument("events", nargs="+")
     s.set_defaults(fn=cmd_webhook)
+    s = sub.add_parser("toydh", help="Diffie-Hellman with small numbers")
+    s.add_argument("--p", type=int, default=23)
+    s.add_argument("--g", type=int, default=5)
+    s.add_argument("--a", type=int, default=6)
+    s.add_argument("--b", type=int, default=15)
+    s.set_defaults(fn=cmd_toydh)
+    s = sub.add_parser("ephemeral", help="an X25519 exchange with keys that never touch the disk")
+    s.set_defaults(fn=cmd_ephemeral)
+    s = sub.add_parser("kem", help="ML-KEM-768 sizes and one encapsulation")
+    s.set_defaults(fn=cmd_kem)
     a = p.parse_args()
     a.fn(a)
 

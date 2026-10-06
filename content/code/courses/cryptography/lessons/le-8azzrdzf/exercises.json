@@ -1,0 +1,469 @@
+[
+  {
+    "id": "ex-fx152es9",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the toy exchange, which values crossed the network?",
+    "hint": "The last line of the output.",
+    "choices": [
+      {
+        "text": "a, b and the shared secret",
+        "correct": false,
+        "why": "Those never travel."
+      },
+      {
+        "text": "p, g, A and B",
+        "correct": true,
+        "why": "Right: 23, 5, 8 and 19."
+      },
+      {
+        "text": "Only the shared secret, encrypted",
+        "correct": false,
+        "why": "The secret is computed on each side, never sent."
+      },
+      {
+        "text": "The two private exponents, signed",
+        "correct": false,
+        "why": "Private values stay where they were chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn4kg5t5",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With p = 23, g = 5, Ana's secret a = 6 and Bruno's B = 19, what shared secret does Ana compute?",
+    "hint": "19^6 mod 23.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4cc3p0hs",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What problem must an eavesdropper solve to get the shared secret from what crossed the network?",
+    "hint": "Recover 6 from 8 = 5^a mod 23.",
+    "choices": [
+      {
+        "text": "Factoring the prime 23",
+        "correct": false,
+        "why": "A prime has no factors to find."
+      },
+      {
+        "text": "Finding a collision in the exchange",
+        "correct": false,
+        "why": "Collisions belong to hash functions."
+      },
+      {
+        "text": "The discrete logarithm",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Decrypting A and B with the wrong key",
+        "correct": false,
+        "why": "A and B are not encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-cp18r740",
+    "version": 1,
+    "section": "x25519",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana derived a secret from her private key and Bruno's public key; Bruno did the reverse. What did the two commands print?",
+    "hint": "Compare the two lines.",
+    "choices": [
+      {
+        "text": "The same 32 bytes, on both sides",
+        "correct": true,
+        "why": "Right: that is the agreement."
+      },
+      {
+        "text": "Two different secrets that combine later into one key",
+        "correct": false,
+        "why": "There is nothing to combine; they are equal."
+      },
+      {
+        "text": "Each other's private key",
+        "correct": false,
+        "why": "No private key is ever revealed."
+      },
+      {
+        "text": "A signature over the exchange",
+        "correct": false,
+        "why": "X25519 does not sign."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zrk9v89",
+    "version": 1,
+    "section": "x25519",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the X25519 shared secret passed through HKDF instead of being used as the AES key?",
+    "hint": "Two reasons in section 03.",
+    "choices": [
+      {
+        "text": "Because AES refuses keys of 32 bytes",
+        "correct": false,
+        "why": "AES-256 takes exactly 32 bytes."
+      },
+      {
+        "text": "To encrypt the secret before it is sent",
+        "correct": false,
+        "why": "The secret is never sent."
+      },
+      {
+        "text": "Because HKDF makes the exchange quantum-resistant",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Its bits are not uniform, and each purpose needs its own unrelated key",
+        "correct": true,
+        "why": "Right: the info label separates them."
+      }
+    ]
+  },
+  {
+    "id": "ex-r01swsxw",
+    "version": 1,
+    "section": "x25519",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "X25519 agrees on keys; the same curve used for signatures is called ___.",
+    "hint": "Lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "Ed25519"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ckf9cmh6",
+    "version": 1,
+    "section": "forward-secrecy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A year after a session, the server's RSA private key leaks. Under RSA key transport, what can whoever recorded the session do?",
+    "hint": "The second capture of section 04.",
+    "choices": [
+      {
+        "text": "Nothing: sessions expire",
+        "correct": false,
+        "why": "A recording does not expire."
+      },
+      {
+        "text": "Only see who talked to whom",
+        "correct": false,
+        "why": "They see the content."
+      },
+      {
+        "text": "Unwrap the session key and read it all",
+        "correct": true,
+        "why": "Right: that is what forward secrecy prevents."
+      },
+      {
+        "text": "Read it only if the session used CBC",
+        "correct": false,
+        "why": "The mode does not matter here."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2cqwjtz",
+    "version": 1,
+    "section": "forward-secrecy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With an ephemeral exchange, what does the server's long-term key still do?",
+    "hint": "It never encrypts the session key.",
+    "choices": [
+      {
+        "text": "It encrypts every record of the session",
+        "correct": false,
+        "why": "Session keys do that."
+      },
+      {
+        "text": "It signs, to prove who the server is",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is mixed into the shared secret so it can be recovered later",
+        "correct": false,
+        "why": "That would undo forward secrecy."
+      },
+      {
+        "text": "Nothing: it is no longer needed",
+        "correct": false,
+        "why": "It authenticates the exchange."
+      }
+    ]
+  },
+  {
+    "id": "ex-erwvch8p",
+    "version": 1,
+    "section": "forward-secrecy",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these give forward secrecy? Choose all that apply.",
+    "hint": "Fresh exchange, keys discarded.",
+    "choices": [
+      {
+        "text": "Any TLS 1.3 connection",
+        "correct": true,
+        "why": "Yes: only ephemeral exchanges exist in it."
+      },
+      {
+        "text": "A TLS 1.2 suite whose name starts TLS_ECDHE_",
+        "correct": true,
+        "why": "Yes: an ephemeral exchange."
+      },
+      {
+        "text": "A TLS 1.2 suite using RSA key transport",
+        "correct": false,
+        "why": "No: the server key unwraps every session."
+      },
+      {
+        "text": "An SSH connection",
+        "correct": true,
+        "why": "Yes: SSH runs an ephemeral exchange for each one."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hq4r191",
+    "version": 1,
+    "section": "authentication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An attacker in the middle runs one exchange with Ana and another with the server. Why doesn't the exchange itself notice?",
+    "hint": "What is attached to the number Ana receives?",
+    "choices": [
+      {
+        "text": "Because the attacker broke the discrete logarithm",
+        "correct": false,
+        "why": "Nothing was broken; both exchanges are honest."
+      },
+      {
+        "text": "Nothing in it says who sent the value",
+        "correct": true,
+        "why": "Right: a bare number has no owner."
+      },
+      {
+        "text": "Because X25519 keys are too short",
+        "correct": false,
+        "why": "Length is not the issue."
+      },
+      {
+        "text": "Because the attacker uses the same secret as Ana",
+        "correct": false,
+        "why": "The attacker agrees a different secret with each side."
+      }
+    ]
+  },
+  {
+    "id": "ex-326y8m90",
+    "version": 1,
+    "section": "authentication",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer sets `verify=False` in Python's requests to silence a certificate error on an internal API. What protection remains?",
+    "hint": "Encryption, with whom?",
+    "choices": [
+      {
+        "text": "Full protection, since the traffic is still encrypted",
+        "correct": false,
+        "why": "Encrypted to whoever answered."
+      },
+      {
+        "text": "None at all: the traffic goes in clear text",
+        "correct": false,
+        "why": "It is still encrypted."
+      },
+      {
+        "text": "Encryption, but with whoever answered",
+        "correct": true,
+        "why": "Right: the check of who is on the other end is gone."
+      },
+      {
+        "text": "Only forward secrecy",
+        "correct": false,
+        "why": "Forward secrecy with an impostor protects nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ehhw0hx",
+    "version": 1,
+    "section": "authentication",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each key in a TLS 1.3 connection to its job.",
+    "hint": "One job on the right belongs to no key here.",
+    "pairs": [
+      {
+        "left": "the server's ephemeral X25519 pair",
+        "right": "agreeing the secret"
+      },
+      {
+        "left": "the server's long-term certificate key",
+        "right": "signing the exchange"
+      },
+      {
+        "left": "the keys derived by HKDF",
+        "right": "encrypting the records"
+      }
+    ],
+    "right_distractors": [
+      "encrypting the session key to the server"
+    ]
+  },
+  {
+    "id": "ex-3g1y62x2",
+    "version": 1,
+    "section": "post-quantum",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is post-quantum key exchange being deployed before any large quantum computer exists?",
+    "hint": "Recorded traffic.",
+    "choices": [
+      {
+        "text": "Because quantum computers already break X25519",
+        "correct": false,
+        "why": "None that can exists yet."
+      },
+      {
+        "text": "Because ML-KEM is faster than X25519",
+        "correct": false,
+        "why": "It is not the reason, and its messages are larger."
+      },
+      {
+        "text": "Recorded traffic: harvest now, decrypt later",
+        "correct": true,
+        "why": "Right: traffic recorded today is exposed later."
+      },
+      {
+        "text": "Because NIST forbids X25519 from 2025",
+        "correct": false,
+        "why": "No such rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztx762xx",
+    "version": 1,
+    "section": "post-quantum",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes is an ML-KEM-768 public key, as `vcrypt kem` printed?",
+    "hint": "Compare with X25519's 32.",
+    "value": 1184,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-zykb9sfz",
+    "version": 1,
+    "section": "post-quantum",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do browsers deploy X25519MLKEM768 rather than ML-KEM-768 alone?",
+    "hint": "SIKE, 2022.",
+    "choices": [
+      {
+        "text": "Because ML-KEM cannot produce a 32-byte secret",
+        "correct": false,
+        "why": "It does produce one."
+      },
+      {
+        "text": "So an attacker must break both, one of which is new",
+        "correct": true,
+        "why": "Right: hybrid protects against a surprise in the new algorithm."
+      },
+      {
+        "text": "Because ML-KEM needs X25519 to sign its keys",
+        "correct": false,
+        "why": "Neither signs."
+      },
+      {
+        "text": "To halve the size of the messages",
+        "correct": false,
+        "why": "The messages get larger, not smaller."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2ayvaxx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an authenticated ephemeral key exchange in order.",
+    "hint": "Generate, exchange, sign, check, derive.",
+    "items": [
+      "each side generates a fresh X25519 pair",
+      "the public values are exchanged",
+      "the server signs the exchange with its certificate key",
+      "the client checks the certificate and the signature",
+      "both derive session keys with HKDF"
+    ]
+  },
+  {
+    "id": "ex-a63wytrp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each threat to the property that answers it.",
+    "hint": "Sections 04 to 06.",
+    "pairs": [
+      {
+        "left": "a server key stolen next year",
+        "right": "forward secrecy"
+      },
+      {
+        "left": "somebody answering in the server's place",
+        "right": "a signed exchange"
+      },
+      {
+        "left": "a future quantum computer",
+        "right": "a hybrid exchange with ML-KEM"
+      }
+    ],
+    "right_distractors": [
+      "a weak password"
+    ]
+  }
+]
