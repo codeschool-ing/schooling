@@ -109,11 +109,11 @@ language a module is written in. In anything newer, people write `any`; when you
 
 ## Where you have already met it
 
-Lesson 4 read the signature of `fmt.Println` in `go doc`, `func Println(a ...any) (n int, err
-error)`: any number of arguments, each of any type. Lesson 15 called `json.Unmarshal(data []byte,
-v any)`, which takes its destination as `any` because it has to accept a pointer to whatever struct
-you declared. **Both are the right use of `any`: the function really does accept every type, and
-works out at run time what it was given.**
+Lesson 4 read the signature of `fmt.Println` in `go doc`,
+`func Println(a ...any) (n int, err error)`: any number of arguments, each of any type. Lesson 15
+called `json.Unmarshal(data []byte, v any)`, which takes its destination as `any` because it has to
+accept a pointer to whatever struct you declared. **Both are the right use of `any`: the function
+really does accept every type, and works out at run time what it was given.**
 
 "Every type" does not stretch to slices of every type, though. A `[]string` is not a `[]any`, and
 passing one with `...`, the way lesson 21 passed a slice to a variadic function, is refused:

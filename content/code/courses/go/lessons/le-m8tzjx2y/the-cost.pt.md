@@ -50,8 +50,8 @@ exit status 2
 `doc["age"].(float64)` devolveu um `float64`, e `age+1` compilou porque `age` voltou a ter tipo.
 `doc["age"].(int)` também compilou, já que o compilador não tem como saber o que um map de `any` vai
 guardar quando o programa rodar. Na execução ele guardava um `float64`, e o programa entrou em
-**panic** na linha 18 com uma mensagem que nomeia os dois tipos, `interface {} is float64, not
-int`. Quem lê `31` no JSON e pensa num `int` escreve exatamente essa linha, e ela passa por toda
+**panic** na linha 18 com uma mensagem que nomeia os dois tipos, `interface {} is float64, not int`.
+Quem lê `31` no JSON e pensa num `int` escreve exatamente essa linha, e ela passa por toda
 verificação antes de rodar.
 
 Um panic encerra o programa com status de saída 2, que é o assunto da lição 36. A lição 29 mostra
@@ -90,9 +90,10 @@ ana@vm:~/any-ops$ go build
 
 `+` é definido para números e strings, e um `any` pode ser um, outro ou nenhum dos dois, então o
 compilador não o permite em nenhum caso. `len` funciona com strings, slices, maps e alguns outros
-tipos de valor, e o mesmo raciocínio o recusa. A terceira mensagem já aponta a saída: `need type
-assertion`. **Um `any` aceita o que todo valor Go aceita e nada mais**: ser atribuído, passado,
-impresso pelo `fmt` e comparado com `==`, e esta última tem uma pegadinha própria logo abaixo.
+tipos de valor, e o mesmo raciocínio o recusa. A terceira mensagem já aponta a saída:
+`need type assertion`. **Um `any` aceita o que todo valor Go aceita e nada mais**: ser atribuído,
+passado, impresso pelo `fmt` e comparado com `==`, e esta última tem uma pegadinha própria logo
+abaixo.
 
 ## O engano sai da compilação e vai para a execução
 

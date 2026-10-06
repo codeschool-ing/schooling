@@ -108,11 +108,11 @@ linguagem um módulo é escrito. Em qualquer coisa mais nova, escreve-se `any`; 
 
 ## Onde você já o encontrou
 
-A lição 4 leu no `go doc` a assinatura de `fmt.Println`, `func Println(a ...any) (n int, err
-error)`: qualquer quantidade de argumentos, cada um de qualquer tipo. A lição 15 chamou
-`json.Unmarshal(data []byte, v any)`, que recebe o destino como `any` porque precisa aceitar um
-ponteiro para qualquer struct que você tenha declarado. **Os dois são o uso certo de `any`: a
-função aceita de fato todo tipo, e descobre em tempo de execução o que recebeu.**
+A lição 4 leu no `go doc` a assinatura de `fmt.Println`,
+`func Println(a ...any) (n int, err error)`: qualquer quantidade de argumentos, cada um de qualquer
+tipo. A lição 15 chamou `json.Unmarshal(data []byte, v any)`, que recebe o destino como `any` porque
+precisa aceitar um ponteiro para qualquer struct que você tenha declarado. **Os dois são o uso certo
+de `any`: a função aceita de fato todo tipo, e descobre em tempo de execução o que recebeu.**
 
 "Todo tipo" não se estende a slices de todo tipo, porém. Um `[]string` não é um `[]any`, e
 passá-lo com `...`, do jeito que a lição 21 passou um slice para uma função variádica, é recusado:
