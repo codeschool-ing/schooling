@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-qg4pbxxj",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`scratch` was deleted and created again, and `/data/started` held a new time. Why?",
+    "hint": "Who owns an `emptyDir`?",
+    "choices": [
+      {
+        "text": "The new pod got a new, empty directory",
+        "correct": true,
+        "why": "Right. An `emptyDir` lives and dies with its pod."
+      },
+      {
+        "text": "The container restarted and rewrote the file",
+        "correct": false,
+        "why": "The pod was deleted; a restart would have kept the volume."
+      },
+      {
+        "text": "The node's clock was reset",
+        "correct": false,
+        "why": "The clock is fine; the file was new."
+      },
+      {
+        "text": "kubectl apply always empties volumes",
+        "correct": false,
+        "why": "A claim's volume kept its data across the same apply."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb69avf4",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a good use of an `emptyDir`?",
+    "hint": "It survives a container restart, not a pod deletion.",
+    "choices": [
+      {
+        "text": "A database's data files",
+        "correct": false,
+        "why": "They would vanish with the pod."
+      },
+      {
+        "text": "A local cache",
+        "correct": true,
+        "why": "Right. A cache can be rebuilt, so losing it costs time, not data."
+      },
+      {
+        "text": "Customers' uploads",
+        "correct": false,
+        "why": "Those must outlive every pod."
+      },
+      {
+        "text": "The order history",
+        "correct": false,
+        "why": "Same problem as uploads."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcgm6kgr",
+    "version": 1,
+    "section": "claims",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The claim `orders` stayed `Pending` until `writer` was created. Why?",
+    "hint": "`VOLUMEBINDINGMODE`.",
+    "choices": [
+      {
+        "text": "The provisioner was still starting",
+        "correct": false,
+        "why": "The event said it was waiting for a consumer."
+      },
+      {
+        "text": "1Gi was more than the node had",
+        "correct": false,
+        "why": "The same claim bound seconds later."
+      },
+      {
+        "text": "The class waits for a pod to choose the node",
+        "correct": true,
+        "why": "Right. `WaitForFirstConsumer` makes the volume where the pod will run."
+      },
+      {
+        "text": "Claims need an explicit class",
+        "correct": false,
+        "why": "It got `standard`, the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3afw0j2",
+    "version": 1,
+    "section": "claims",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The volume behind `orders` records `kubernetes.io/hostname In [shop-worker]`. What follows for the next pod that mounts `orders`?",
+    "hint": "Where does the data physically sit?",
+    "choices": [
+      {
+        "text": "It may run anywhere; data is copied",
+        "correct": false,
+        "why": "Nothing copies a local-path volume."
+      },
+      {
+        "text": "It can only run on `shop-worker`",
+        "correct": true,
+        "why": "Right. The data is a directory on that node."
+      },
+      {
+        "text": "It runs on the control plane",
+        "correct": false,
+        "why": "Nothing points there."
+      },
+      {
+        "text": "It gets a new, empty volume",
+        "correct": false,
+        "why": "The claim is still bound to the same volume."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw9zt7wb",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Deleting the claim `orders` made its PersistentVolume disappear. Which setting decided that?",
+    "hint": "`RECLAIMPOLICY`.",
+    "choices": [
+      {
+        "text": "`accessModes: ReadWriteOnce`",
+        "correct": false,
+        "why": "That is about mounting, not deletion."
+      },
+      {
+        "text": "`volumeBindingMode`",
+        "correct": false,
+        "why": "That decides when a volume is made."
+      },
+      {
+        "text": "`reclaimPolicy: Delete`",
+        "correct": true,
+        "why": "Right. The default class removes the storage with the claim."
+      },
+      {
+        "text": "The pod's `restartPolicy`",
+        "correct": false,
+        "why": "That is about containers."
+      }
+    ]
+  },
+  {
+    "id": "ex-mycn3gdn",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `reclaimPolicy: Retain`, the claim `ledger` was deleted. What state was its volume left in?",
+    "hint": "The last command of the lesson.",
+    "choices": [
+      {
+        "text": "`Available`, ready for any new claim",
+        "correct": false,
+        "why": "It still remembers the old claim, so nothing binds it on its own."
+      },
+      {
+        "text": "Deleted, like with `Delete`",
+        "correct": false,
+        "why": "It was listed after the claim was gone."
+      },
+      {
+        "text": "`Bound` to the pod",
+        "correct": false,
+        "why": "Volumes bind to claims, never to pods."
+      },
+      {
+        "text": "`Released`, with its data",
+        "correct": true,
+        "why": "Right. An operator decides what happens next."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wdhtjws",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each object with who usually writes it.",
+    "hint": "The table in the second section.",
+    "pairs": [
+      {
+        "left": "PersistentVolumeClaim",
+        "right": "The application's author"
+      },
+      {
+        "left": "PersistentVolume",
+        "right": "The provisioner"
+      },
+      {
+        "left": "StorageClass",
+        "right": "The cluster's operator"
+      }
+    ],
+    "right_distractors": [
+      "The kubelet"
+    ]
+  },
+  {
+    "id": "ex-8yas5073",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For a database's volume, set the class's `reclaimPolicy` to ___.",
+    "hint": "The one that kept `ledger`'s data.",
+    "blanks": [
+      {
+        "accept": [
+          "Retain"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
