@@ -1,0 +1,989 @@
+[
+  {
+    "id": "ex-fv1bvphr",
+    "version": 1,
+    "section": "the-seam",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a seam, in this lesson?",
+    "choices": [
+      {
+        "text": "A comment marking code that has no tests yet",
+        "correct": false,
+        "why": "A seam is in the code's shape, not in a comment."
+      },
+      {
+        "text": "A place where a collaborator is handed in",
+        "correct": true,
+        "why": "Right. An argument such as carrier or opener, where a test can pass a double."
+      },
+      {
+        "text": "The line where a unit test ends and an integration test starts",
+        "correct": false,
+        "why": "That is a boundary between layers, a different idea."
+      },
+      {
+        "text": "The join between two commits that a merge produces",
+        "correct": false,
+        "why": "Nothing to do with version control here."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqe7z5zs",
+    "version": 1,
+    "section": "the-seam",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "price builds its own CarrierClient inside the function body. What can a test no longer do?",
+    "choices": [
+      {
+        "text": "Call price at all",
+        "correct": false,
+        "why": "It can call it; every call just reaches the network."
+      },
+      {
+        "text": "Decide what the carrier answers",
+        "correct": true,
+        "why": "Right. With the client created inside, there is no place to hand in a stub."
+      },
+      {
+        "text": "Measure how long price takes",
+        "correct": false,
+        "why": "Timing is still possible, and slower."
+      },
+      {
+        "text": "Check the free-shipping rule on the subtotal",
+        "correct": false,
+        "why": "That check happens before the carrier is asked, so a test reaches it either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh3jg82k",
+    "version": 1,
+    "section": "the-seam",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Passing a collaborator in as a parameter instead of creating it inside has a grand name: dependency ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "injection"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wmtra4gs",
+    "version": 1,
+    "section": "dummy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the refusal test, why is the mailer None?",
+    "choices": [
+      {
+        "text": "The order is stopped before that argument is ever used",
+        "correct": true,
+        "why": "Right. None is a dummy: required by the signature, and it would blow up if used."
+      },
+      {
+        "text": "Because SmtpMailer cannot be imported in tests",
+        "correct": false,
+        "why": "It can; step 6 imports it to build an autospec mock."
+      },
+      {
+        "text": "To make the test send real e-mail through the default server",
+        "correct": false,
+        "why": "None has no send method; nothing is sent."
+      },
+      {
+        "text": "Because place ignores its mailer argument",
+        "correct": false,
+        "why": "place does use it, after the refusal check."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mmk7c8n",
+    "version": 1,
+    "section": "dummy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test of the refusal builds SmtpMailer(\"smtp.example\", 25) instead of passing None. What risk does that add?",
+    "choices": [
+      {
+        "text": "None, the two are equivalent",
+        "correct": false,
+        "why": "They are equivalent only while the refusal stays above the e-mail line."
+      },
+      {
+        "text": "The test fails to import pytest",
+        "correct": false,
+        "why": "Building an object has nothing to do with imports."
+      },
+      {
+        "text": "If the check moves below the e-mail, the test reaches a real server",
+        "correct": true,
+        "why": "Right. It then sends mail or hangs on a timeout, where None would have failed loudly."
+      },
+      {
+        "text": "The refusal is no longer raised",
+        "correct": false,
+        "why": "The refusal does not depend on which mailer is passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ytqp9j8",
+    "version": 1,
+    "section": "stub",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does StubCarrier do when it was built with an error?",
+    "choices": [
+      {
+        "text": "It records the error in a list for the test to read",
+        "correct": false,
+        "why": "That would be a spy; the stub keeps nothing."
+      },
+      {
+        "text": "Raises it when rate is called",
+        "correct": true,
+        "why": "Right. It raises the error it was given, which puts price into its fallback branch."
+      },
+      {
+        "text": "It calls the real carrier and passes on the error it gets",
+        "correct": false,
+        "why": "A stub has no network and no logic."
+      },
+      {
+        "text": "It retries twice and then returns the table price",
+        "correct": false,
+        "why": "Retries are not in the stub, and the table is price's fallback."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtsvhejt",
+    "version": 1,
+    "section": "stub",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the carrier stand-in three seconds late and the client's timeout at 2 s, how many seconds of real time did the session take, as printed by time?",
+    "value": 2.091,
+    "tolerance": 0.001,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-h5hn3g43",
+    "version": 1,
+    "section": "stub",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the stub's timeout test in the fast layer while the session against the slow stand-in is not?",
+    "choices": [
+      {
+        "text": "The stub raises the error at once; the real timeout waits two seconds",
+        "correct": true,
+        "why": "Right. Same branch of price, reached without waiting."
+      },
+      {
+        "text": "Because the stub test checks a different branch of price",
+        "correct": false,
+        "why": "Both reach the fallback branch."
+      },
+      {
+        "text": "Because pytest skips tests that sleep",
+        "correct": false,
+        "why": "pytest skips nothing for sleeping."
+      },
+      {
+        "text": "Because the stand-in is written in another language",
+        "correct": false,
+        "why": "It is Python too; the cost is the wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sb36td8",
+    "version": 1,
+    "section": "spy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The spy test compares lines == [the expected line]. What does that catch that \"timed out\" in lines[0] would not?",
+    "choices": [
+      {
+        "text": "A fallback that returns the wrong price",
+        "correct": false,
+        "why": "The spy test does not look at the price."
+      },
+      {
+        "text": "A carrier that answers too slowly for the timeout",
+        "correct": false,
+        "why": "The stub fails at once; speed is not in this test."
+      },
+      {
+        "text": "A second, unexpected line",
+        "correct": true,
+        "why": "Right. Comparing the whole list fails on any extra or missing line."
+      },
+      {
+        "text": "An empty log, when price logs nothing",
+        "correct": false,
+        "why": "lines[0] on an empty list raises IndexError, so that is caught either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nkgmnnm",
+    "version": 1,
+    "section": "spy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody deletes the log(...) call in price. Which of the four tests in test_carrier.py goes red?",
+    "choices": [
+      {
+        "text": "The carrier's price wins when it answers",
+        "correct": false,
+        "why": "The carrier answered, so nothing is logged anyway."
+      },
+      {
+        "text": "The table is used when the carrier is down",
+        "correct": false,
+        "why": "It passes a log that discards lines and checks the price only."
+      },
+      {
+        "text": "The fallback is logged with the reason",
+        "correct": true,
+        "why": "Right. It is the one test that reads what was logged."
+      },
+      {
+        "text": "A free order never asks the carrier",
+        "correct": false,
+        "why": "No fallback happens on a free order."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sa31ar0",
+    "version": 1,
+    "section": "spy",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A spy records calls; with a spy, the ___ reads the record and asserts on it.",
+    "blanks": [
+      {
+        "accept": [
+          "test"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xc3kvst4",
+    "version": 1,
+    "section": "mock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does test_a_free_order_never_asks_the_carrier need a double that records calls?",
+    "choices": [
+      {
+        "text": "Because the carrier is too slow to call in a test",
+        "correct": false,
+        "why": "Speed is not the reason; the point is a call that must not happen."
+      },
+      {
+        "text": "The return value is 0 either way",
+        "correct": true,
+        "why": "Right. Only the record of calls shows that the paid API was not asked."
+      },
+      {
+        "text": "Because pytest requires a mock when a function returns zero",
+        "correct": false,
+        "why": "pytest requires nothing of the kind."
+      },
+      {
+        "text": "To check that the CEP was normalised",
+        "correct": false,
+        "why": "The test asserts no call at all, so no CEP is checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-pr6ga3jp",
+    "version": 1,
+    "section": "mock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SmtpMailer.send became deliver. With a plain mock.Mock(), the order test passed. Why?",
+    "choices": [
+      {
+        "text": "A plain Mock accepts any method name",
+        "correct": true,
+        "why": "Right. It answered send as happily as it would have answered sned."
+      },
+      {
+        "text": "Because pytest caches the old SmtpMailer between runs",
+        "correct": false,
+        "why": "The test never touched SmtpMailer at all."
+      },
+      {
+        "text": "Because orders.place was renamed too",
+        "correct": false,
+        "why": "place still called send; that is the bug."
+      },
+      {
+        "text": "Because the rename did not reach the file on disk",
+        "correct": false,
+        "why": "git diff --stat showed the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0e01eqq",
+    "version": 1,
+    "section": "mock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With create_autospec(SmtpMailer, instance=True), what error did the order test raise after the rename?",
+    "choices": [
+      {
+        "text": "TypeError: missing argument body",
+        "correct": false,
+        "why": "The arguments were never reached; the attribute was missing."
+      },
+      {
+        "text": "AttributeError: Mock object has no attribute 'send'",
+        "correct": true,
+        "why": "Right. The same error production would raise, found in the fast layer."
+      },
+      {
+        "text": "AssertionError: expected send to be called once",
+        "correct": false,
+        "why": "The test stopped before the assertion, at the call itself."
+      },
+      {
+        "text": "ConnectionRefusedError from smtplib",
+        "correct": false,
+        "why": "An autospec mock opens no connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6z0ksnn",
+    "version": 1,
+    "section": "mock",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a plain unittest.mock.Mock()? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It records every call made to it",
+        "correct": true,
+        "why": "Right. call_args and call_count read that record."
+      },
+      {
+        "text": "It answers a method name it has never seen",
+        "correct": true,
+        "why": "Right. mailer.sned(...) succeeded in the capture."
+      },
+      {
+        "text": "It refuses calls that the real class does not have",
+        "correct": false,
+        "why": "That is create_autospec, not a plain Mock."
+      },
+      {
+        "text": "It sends the call on to the real object afterwards",
+        "correct": false,
+        "why": "A Mock replaces the object; nothing is passed on."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywd5zfy1",
+    "version": 1,
+    "section": "fake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes FakeOrders a fake rather than a stub?",
+    "choices": [
+      {
+        "text": "It is in a file called fakes.py",
+        "correct": false,
+        "why": "The file name is a convention; the behaviour decides."
+      },
+      {
+        "text": "It raises errors on demand",
+        "correct": false,
+        "why": "Raising on demand is what the stub does."
+      },
+      {
+        "text": "It keeps what it was given and hands out ids",
+        "correct": true,
+        "why": "Right. It has real behaviour, through a shortcut: a list instead of a table."
+      },
+      {
+        "text": "It checks the calls made to it with assertion methods",
+        "correct": false,
+        "why": "That is a mock."
+      }
+    ]
+  },
+  {
+    "id": "ex-89cmhmbj",
+    "version": 1,
+    "section": "fake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "FakeOrders.add starts ids at 0 while the real table starts at 1. Tests using the fake pass. What keeps fake and real in agreement?",
+    "choices": [
+      {
+        "text": "Code review, since both files are short",
+        "correct": false,
+        "why": "Memory is the thing that failed; the lesson asks for something else."
+      },
+      {
+        "text": "A mock of the fake",
+        "correct": false,
+        "why": "A double of a double checks nothing about the real table."
+      },
+      {
+        "text": "Coverage of fakes.py at 100%",
+        "correct": false,
+        "why": "Coverage says the lines ran, not that they agree with the table."
+      },
+      {
+        "text": "One set of tests run against both",
+        "correct": true,
+        "why": "Right. Parametrised over the fake and the real implementation, the first-id test fails for the fake."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1vwva61",
+    "version": 1,
+    "section": "fake",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each real collaborator with a well-known fake.",
+    "pairs": [
+      {
+        "left": "SMTP server",
+        "right": "Mailpit"
+      },
+      {
+        "left": "S3 object storage",
+        "right": "MinIO"
+      },
+      {
+        "left": "the clock",
+        "right": "A clock the test advances"
+      }
+    ],
+    "right_distractors": [
+      "Pact"
+    ]
+  },
+  {
+    "id": "ex-s7xb99gq",
+    "version": 1,
+    "section": "compared",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each double to its example in shipquote.",
+    "pairs": [
+      {
+        "left": "dummy",
+        "right": "mailer=None"
+      },
+      {
+        "left": "stub",
+        "right": "StubCarrier(cents=1999)"
+      },
+      {
+        "left": "spy",
+        "right": "log=lines.append"
+      },
+      {
+        "left": "fake",
+        "right": "FakeOrders()"
+      }
+    ],
+    "right_distractors": [
+      "CarrierClient(URL, token)"
+    ]
+  },
+  {
+    "id": "ex-2a8r2gdr",
+    "version": 1,
+    "section": "compared",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test is about the price returned for a CEP, and the carrier is in the way. Which double fits?",
+    "choices": [
+      {
+        "text": "A mock asserting rate was called with the CEP",
+        "correct": false,
+        "why": "That checks a call, and this test is about a result."
+      },
+      {
+        "text": "A stub",
+        "correct": true,
+        "why": "Right. It sets what the carrier says; the assertion is on the price."
+      },
+      {
+        "text": "A dummy carrier set to None",
+        "correct": false,
+        "why": "price calls rate on it, so None would fail."
+      },
+      {
+        "text": "The real carrier, through the lab's stand-in on every run",
+        "correct": false,
+        "why": "Slow, and a contract test's job, not this one's."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz6eq3y4",
+    "version": 1,
+    "section": "compared",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The names dummy, stub, spy, mock and fake come from Gerard Meszaros's book xUnit Test ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "Patterns"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0vt5pma2",
+    "version": 1,
+    "section": "patching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "mock.patch(\"urllib.request.urlopen\") did not reach CarrierClient. Why?",
+    "choices": [
+      {
+        "text": "Because patch only works inside pytest fixtures",
+        "correct": false,
+        "why": "patch works as a context manager anywhere."
+      },
+      {
+        "text": "Port 9 is reserved and the operating system blocked the patch",
+        "correct": false,
+        "why": "The port only explains the refusal; the patch failed earlier."
+      },
+      {
+        "text": "The default argument took the real urlopen at import time",
+        "correct": true,
+        "why": "Right. Defaults are evaluated once, when the function is defined."
+      },
+      {
+        "text": "Because urllib cannot be patched in Python 3.13",
+        "correct": false,
+        "why": "It can; this is about when the name was looked up."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqmx0qpb",
+    "version": 1,
+    "section": "patching",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A module does from urllib.request import urlopen and calls urlopen(...). The module is shipquote/fetch.py. Which target does the patch need?",
+    "choices": [
+      {
+        "text": "\"urllib.request.urlopen\"",
+        "correct": false,
+        "why": "The module holds its own copy of the reference."
+      },
+      {
+        "text": "\"shipquote.fetch.urlopen\"",
+        "correct": true,
+        "why": "Right. Patch the name where it is looked up."
+      },
+      {
+        "text": "\"urllib.urlopen\"",
+        "correct": false,
+        "why": "That name does not exist in Python 3."
+      },
+      {
+        "text": "\"shipquote.urllib.request.urlopen\"",
+        "correct": false,
+        "why": "shipquote has no urllib attribute."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbw7z5v6",
+    "version": 1,
+    "section": "patching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did the missed patch show itself in the run?",
+    "choices": [
+      {
+        "text": "As a warning that the patch target was not used",
+        "correct": false,
+        "why": "No such warning exists; that is the danger."
+      },
+      {
+        "text": "As a connection error, three exceptions deep",
+        "correct": true,
+        "why": "Right. A missed patch fails as something else, or passes against a real service."
+      },
+      {
+        "text": "As a skipped test",
+        "correct": false,
+        "why": "It ran and failed."
+      },
+      {
+        "text": "As a pass, since the server on port 9 answered",
+        "correct": false,
+        "why": "Nothing listens on port 9; it was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xa7xa2s",
+    "version": 1,
+    "section": "contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The carrier now answers price_cents. What did the four stub tests do?",
+    "choices": [
+      {
+        "text": "Passed",
+        "correct": true,
+        "why": "Right. They never talk to the carrier, so its change cannot reach them."
+      },
+      {
+        "text": "Failed with KeyError: 'cents'",
+        "correct": false,
+        "why": "That was the contract test."
+      },
+      {
+        "text": "Were skipped because CARRIER_URL was set",
+        "correct": false,
+        "why": "Only contract tests skip, and only when it is not set."
+      },
+      {
+        "text": "Timed out after two seconds each",
+        "correct": false,
+        "why": "Stubs answer at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntvtn1mj",
+    "version": 1,
+    "section": "contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a pipeline that never sets CARRIER_URL a problem, if every run is green?",
+    "choices": [
+      {
+        "text": "Because the stubs then call the real carrier instead",
+        "correct": false,
+        "why": "Stubs never call anything."
+      },
+      {
+        "text": "Because pytest fails a run that has skipped tests",
+        "correct": false,
+        "why": "A skip does not fail the run; that is the point."
+      },
+      {
+        "text": "The contract tests are skipped every time, so the contract is never checked",
+        "correct": true,
+        "why": "Right. A skipped test is not a passing test."
+      },
+      {
+        "text": "Because the token is printed in the log",
+        "correct": false,
+        "why": "Nothing is printed when nothing runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtm60vcd",
+    "version": 1,
+    "section": "contract",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pytest prints the reasons for skipped tests when given the option -r___ .",
+    "blanks": [
+      {
+        "accept": [
+          "s"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kgx8tybb",
+    "version": 1,
+    "section": "contract",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A provider's sandbox costs money per call and is down twice a week. Where do the contract tests run?",
+    "choices": [
+      {
+        "text": "On every push, so drift is caught at once",
+        "correct": false,
+        "why": "That pays per push and goes red whenever the sandbox is down."
+      },
+      {
+        "text": "Nowhere; the stubs are enough",
+        "correct": false,
+        "why": "Then nothing ever notices the stubs going stale."
+      },
+      {
+        "text": "On a schedule, with a failure read as stale stubs",
+        "correct": true,
+        "why": "Right. Nightly against the test environment, as section 10 suggests."
+      },
+      {
+        "text": "Against production, with a real customer's CEP",
+        "correct": false,
+        "why": "Production is not a test environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-c03vwn7t",
+    "version": 1,
+    "section": "over-mocking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test of place asserts every call in order and breaks when place is refactored with the same result. What is the symptom called in the lesson?",
+    "choices": [
+      {
+        "text": "The test mirrors the implementation",
+        "correct": true,
+        "why": "Right. It restates the code, so it fails on changes that kept the behaviour."
+      },
+      {
+        "text": "The double drifted from the real thing",
+        "correct": false,
+        "why": "Drift is a double going stale; here the code changed shape."
+      },
+      {
+        "text": "The test is flaky",
+        "correct": false,
+        "why": "It fails every time, for the same reason."
+      },
+      {
+        "text": "The suite is shaped like an ice-cream cone",
+        "correct": false,
+        "why": "That is about layers, not mocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwvefgtv",
+    "version": 1,
+    "section": "over-mocking",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checklist's questions in the lesson's order.",
+    "items": [
+      "Is the real thing slow, costly or unavailable?",
+      "Is this call the behaviour?",
+      "What keeps this double honest?"
+    ],
+    "trap": "Whether a double is needed at all comes first; how to keep it honest comes last."
+  },
+  {
+    "id": "ex-yygxfhr7",
+    "version": 1,
+    "section": "over-mocking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are brl and freight never mocked in shipquote's tests?",
+    "choices": [
+      {
+        "text": "Because they are private functions",
+        "correct": false,
+        "why": "They are public; that is not the reason."
+      },
+      {
+        "text": "Because unittest.mock cannot replace module functions",
+        "correct": false,
+        "why": "It can; it is a choice not to."
+      },
+      {
+        "text": "They are fast and deterministic, so the real ones cost nothing",
+        "correct": true,
+        "why": "Right. A double is for what is slow, costly or unpredictable."
+      },
+      {
+        "text": "Because they have no tests of their own",
+        "correct": false,
+        "why": "Both have unit tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps3f4x6h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new collaborator returns exchange rates from a central bank API that updates hourly. A test of a price in euros must be deterministic. Which double, and what keeps it honest?",
+    "choices": [
+      {
+        "text": "A plain Mock, kept honest by assert_called_once_with",
+        "correct": false,
+        "why": "A call assertion checks the call, not the shape of the real answer."
+      },
+      {
+        "text": "A stub with a fixed rate, plus a scheduled contract test",
+        "correct": true,
+        "why": "Right. The stub fixes the rate; the contract test checks the real API still answers in that shape."
+      },
+      {
+        "text": "The real API, kept honest by retrying when the rate moves",
+        "correct": false,
+        "why": "Retrying does not make a moving rate fixed."
+      },
+      {
+        "text": "A dummy, since the rate does not matter",
+        "correct": false,
+        "why": "The price depends on the rate, so it matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr89dkcv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to the habit that catches it.",
+    "pairs": [
+      {
+        "left": "A renamed method still called by a plain Mock",
+        "right": "create_autospec"
+      },
+      {
+        "left": "A changed answer from the carrier",
+        "right": "A contract test"
+      },
+      {
+        "left": "A patch that misses its target",
+        "right": "A seam"
+      }
+    ],
+    "right_distractors": [
+      "A longer timeout"
+    ]
+  },
+  {
+    "id": "ex-s9tgfdjb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these situations are good reasons to use a double? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The collaborator charges per call",
+        "correct": true,
+        "why": "Right. Cost per call is one of the checklist's reasons."
+      },
+      {
+        "text": "The collaborator's answer changes with the time of day",
+        "correct": true,
+        "why": "Right. Non-determinism makes a test pass or fail by the clock."
+      },
+      {
+        "text": "The collaborator is a pure function that returns in microseconds",
+        "correct": false,
+        "why": "Then the real one is cheaper than a double."
+      },
+      {
+        "text": "You need the collaborator to fail on demand",
+        "correct": true,
+        "why": "Right. A stub raising an error reaches a branch the real thing rarely takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvq2669s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the contract-drift capture, what would production have done with every quote?",
+    "choices": [
+      {
+        "text": "Answered 500 to every customer",
+        "correct": false,
+        "why": "price catches CarrierError and falls back."
+      },
+      {
+        "text": "Answered with price_cents in the body",
+        "correct": false,
+        "why": "The client never reads price_cents."
+      },
+      {
+        "text": "Quoted from the table, writing one log line each time",
+        "correct": true,
+        "why": "Right. The fallback hides the break from customers; the log line is the only trace."
+      },
+      {
+        "text": "Retried the carrier until it answered cents",
+        "correct": false,
+        "why": "There is no retry in price."
+      }
+    ]
+  }
+]
