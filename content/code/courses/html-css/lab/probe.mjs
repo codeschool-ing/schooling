@@ -6,10 +6,15 @@
  * questions the Elements panel of DevTools answers when you click on
  * something, and prints the answers as text so that a lesson can quote them.
  *
- *   probe [--width W] [--height H] [--dpr D] [--mobile] PAGE STEP...
+ *   probe [--width W] [--height H] [--dpr D] [--mobile] [--dark]
+ *         [--reduced-motion] [--hold-images] PAGE STEP...
  *
  * --hold-images keeps every image request waiting until a `release` step, so
  * that a page can be measured as it is before its pictures arrive.
+ *
+ * --dark and --reduced-motion make the page see the reader's settings for a
+ * dark colour scheme and for reduced motion; without them it sees a light
+ * scheme and no preference about motion.
  *
  * --mobile behaves like a phone's browser: it honours the viewport meta tag,
  * and without one it lays the page out 980 pixels wide and shrinks it to fit.
@@ -60,11 +65,13 @@ while (argv[0]?.startsWith('--')) {
   const k = argv.shift().slice(2);
   if (k === 'mobile') opt.mobile = true;
   else if (k === 'hold-images') opt.hold = true;
+  else if (k === 'dark') opt.dark = true;
+  else if (k === 'reduced-motion') opt.reduced = true;
   else opt[k] = Number(argv.shift());
 }
 const file = argv.shift();
 if (!file) {
-  console.error('usage: probe [--width W] [--height H] [--dpr D] [--mobile] PAGE STEP...');
+  console.error('usage: probe [--width W] [--height H] [--dpr D] [--mobile] [--dark] [--reduced-motion] [--hold-images] PAGE STEP...');
   process.exit(2);
 }
 
@@ -77,6 +84,8 @@ const context = await browser.newContext({
   deviceScaleFactor: opt.dpr,
   isMobile: opt.mobile,
   hasTouch: opt.mobile,
+  colorScheme: opt.dark ? 'dark' : 'light',
+  reducedMotion: opt.reduced ? 'reduce' : 'no-preference',
 });
 const page = await context.newPage();
 const fetched = [];
