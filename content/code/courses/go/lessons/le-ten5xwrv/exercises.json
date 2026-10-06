@@ -1,0 +1,575 @@
+[
+  {
+    "id": "ex-re1hj97t",
+    "version": 1,
+    "section": "hello",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a Go package build into a program you can run, rather than a library?",
+    "hint": "Look at the first line after the comment, and the function.",
+    "choices": [
+      {
+        "text": "Its file is called `main.go`",
+        "correct": false,
+        "why": "File names mean nothing to the compiler here: `hello.go` built a program."
+      },
+      {
+        "text": "It is `package main` and declares `func main`",
+        "correct": true,
+        "why": "Right. The package name `main` and a function `main` in it are the whole requirement."
+      },
+      {
+        "text": "It has a `go.mod` file at its root that names the module",
+        "correct": false,
+        "why": "A library has a `go.mod` too; the module says what the code is called, not whether it runs."
+      },
+      {
+        "text": "It imports the `fmt` package",
+        "correct": false,
+        "why": "A program need not print anything, and libraries import `fmt` all the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-q36r25ak",
+    "version": 1,
+    "section": "hello",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hello.go` calls `fmt.Println`. What does the capital P tell you?",
+    "hint": "It is about who may call it.",
+    "choices": [
+      {
+        "text": "That `Println` returns values",
+        "correct": false,
+        "why": "It does return two, but the capital has nothing to do with that."
+      },
+      {
+        "text": "That `Println` is built into the language",
+        "correct": false,
+        "why": "The built-ins, like `len`, are lower case; `Println` is an ordinary function in the `fmt` package."
+      },
+      {
+        "text": "That another package is allowed to call it",
+        "correct": true,
+        "why": "Right. A name that starts with a capital letter is exported; lesson 39 is about that rule."
+      },
+      {
+        "text": "Nothing: Go capitalises every function name by convention",
+        "correct": false,
+        "why": "`main` is a function and is lower case. The capital is a rule with an effect, not a style."
+      }
+    ]
+  },
+  {
+    "id": "ex-s2zmk2vg",
+    "version": 1,
+    "section": "hello",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A directory becomes a module when it has a file called `___` at its root.",
+    "hint": "`go mod init` writes it.",
+    "blanks": [
+      {
+        "accept": [
+          "go.mod"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v26rywae",
+    "version": 1,
+    "section": "hello",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go mod init example.com/hello` wrote `go 1.27.1` into `go.mod`. What does that line record?",
+    "hint": "Where did the number come from?",
+    "choices": [
+      {
+        "text": "The version of the hello program",
+        "correct": false,
+        "why": "A module's own versions are git tags, which lesson 40 covers; this line is about the language."
+      },
+      {
+        "text": "The Go release installed on every machine that will ever import this module",
+        "correct": false,
+        "why": "It cannot know that. It records what this module expects, not what others have."
+      },
+      {
+        "text": "The language version the module expects, from the toolchain that ran it",
+        "correct": true,
+        "why": "Right. The lab runs go1.27.1, so that is what `go mod init` wrote."
+      },
+      {
+        "text": "The release of the server at example.com",
+        "correct": false,
+        "why": "`example.com` is a domain reserved for examples; nothing answers there and nothing is asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vayaqvf",
+    "version": 1,
+    "section": "hello",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the first line of `hello.go`, `// Command hello prints a greeting.`? Choose all that apply.",
+    "hint": "Section 03 printed it.",
+    "choices": [
+      {
+        "text": "`go doc` prints it as the package's documentation",
+        "correct": true,
+        "why": "Yes: run with no argument in `~/hello`, `go doc` printed exactly this sentence."
+      },
+      {
+        "text": "The program prints it when it starts",
+        "correct": false,
+        "why": "A comment is not code; the program printed `Hello, Go` and nothing else."
+      },
+      {
+        "text": "It documents the package because it sits directly above `package main`",
+        "correct": true,
+        "why": "Yes. A comment directly above a declaration is that declaration's documentation."
+      },
+      {
+        "text": "The compiler refuses a program without it",
+        "correct": false,
+        "why": "Nothing requires it. It is a convention the tools read, not a rule the compiler enforces."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0szgbdf",
+    "version": 1,
+    "section": "run-build-install",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `go run .`, what is left in the current directory?",
+    "hint": "Where did the binary go?",
+    "choices": [
+      {
+        "text": "A binary named after the module",
+        "correct": false,
+        "why": "That is `go build`. `go run` keeps the binary out of your directory."
+      },
+      {
+        "text": "Nothing new: the binary is kept in the build cache",
+        "correct": true,
+        "why": "Right. It compiles, runs, and keeps the result where the go command manages it."
+      },
+      {
+        "text": "Nothing, because `go run` interprets the source without compiling it",
+        "correct": false,
+        "why": "Go has no interpreter. `go run` compiles, which is why the first run after emptying the cache took seconds."
+      },
+      {
+        "text": "An object file for each package it compiled",
+        "correct": false,
+        "why": "Compiled packages go to the build cache too, never into the source directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4be93d8",
+    "version": 1,
+    "section": "run-build-install",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `go clean -cache`, the first `go run .` took 4.493 s and the second 0.044 s. About how many times faster was the second? Give a whole number.",
+    "hint": "Divide the first by the second.",
+    "value": 102,
+    "tolerance": 5,
+    "unit": "times"
+  },
+  {
+    "id": "ex-62aan0y6",
+    "version": 1,
+    "section": "run-build-install",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each command to where the binary it compiles ends up.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "`go run .`",
+        "right": "The build cache"
+      },
+      {
+        "left": "`go build`",
+        "right": "The current directory"
+      },
+      {
+        "left": "`go install`",
+        "right": "`~/go/bin`, or `GOBIN` if it is set"
+      }
+    ],
+    "right_distractors": [
+      "`/usr/local/go/bin`"
+    ]
+  },
+  {
+    "id": "ex-8tjwmqqv",
+    "version": 1,
+    "section": "run-build-install",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You build a program like `hello` with `go build` on a Linux amd64 laptop and copy the binary to a fresh Linux amd64 server that has never had Go installed. What happens when you run it there?",
+    "hint": "What did `file` say about how it was linked?",
+    "choices": [
+      {
+        "text": "It fails until Go is installed, because the runtime lives in `/usr/local/go`",
+        "correct": false,
+        "why": "`/usr/local/go` is the compiler and its tools. The runtime was copied into the binary when it was built."
+      },
+      {
+        "text": "It must be recompiled on the server first",
+        "correct": false,
+        "why": "Same operating system, same architecture: there is nothing to recompile for."
+      },
+      {
+        "text": "It runs: the runtime is inside the binary, and it asks the machine for a kernel",
+        "correct": true,
+        "why": "Right. `statically linked` is the point of those 2.3 MB."
+      },
+      {
+        "text": "It runs only if the server has the same C library version as the laptop",
+        "correct": false,
+        "why": "That is the dependency a dynamically linked C program has. This binary was statically linked."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ajn98eb",
+    "version": 1,
+    "section": "run-build-install",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the second `go run .` take 44 milliseconds when the first took four and a half seconds?",
+    "hint": "What did `go clean -cache` empty?",
+    "choices": [
+      {
+        "text": "Nothing had changed, so the build cache already held the compiled program",
+        "correct": true,
+        "why": "Right. The first run compiled the standard library packages too; the second reused all of it."
+      },
+      {
+        "text": "The first run was downloading Go",
+        "correct": false,
+        "why": "Go was already installed; `GOTOOLCHAIN=local` stops the lab from downloading one."
+      },
+      {
+        "text": "The second run interpreted the source instead of compiling it",
+        "correct": false,
+        "why": "There is no interpreter to fall back to. The second run used the compiled result."
+      },
+      {
+        "text": "The operating system kept the first process in memory and resumed it",
+        "correct": false,
+        "why": "The first process had ended. A new one ran the same cached binary."
+      }
+    ]
+  },
+  {
+    "id": "ex-57rrcb1e",
+    "version": 1,
+    "section": "go-doc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `go doc` get the text it prints?",
+    "hint": "It worked with no network.",
+    "choices": [
+      {
+        "text": "From pkg.go.dev, downloaded each time",
+        "correct": false,
+        "why": "The lab answered with no network. The website is generated from the same comments, but `go doc` does not ask it."
+      },
+      {
+        "text": "From manual pages installed beside the compiler",
+        "correct": false,
+        "why": "There are no separate manual pages; the documentation is the source's own comments."
+      },
+      {
+        "text": "From comments in the source on your machine",
+        "correct": true,
+        "why": "Right. The toolchain carries the standard library's source, comments included."
+      },
+      {
+        "text": "From a documentation file that each package ships beside its code",
+        "correct": false,
+        "why": "There is no second file to keep in step: the comment is the documentation."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hjqf05t",
+    "version": 1,
+    "section": "go-doc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program splits the string `\" go is fun\"` (it starts with a space) into words. According to `go doc strings.Fields`, what does `strings.Fields` return?",
+    "hint": "Read the last sentence of its documentation.",
+    "choices": [
+      {
+        "text": "An empty first word, then `go`, `is` and `fun`",
+        "correct": false,
+        "why": "That is what splitting on single spaces does. `Fields` discards leading white space."
+      },
+      {
+        "text": "`go`, `is` and `fun`",
+        "correct": true,
+        "why": "Right: every element is non-empty, and leading runs of white space are discarded."
+      },
+      {
+        "text": "The whole string, because it splits only on newlines",
+        "correct": false,
+        "why": "It splits on any white space, as `unicode.IsSpace` defines it."
+      },
+      {
+        "text": "An error, because the string starts with a separator",
+        "correct": false,
+        "why": "Its signature returns `[]string` and nothing else, so it has no way to report an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-hey7msq4",
+    "version": 1,
+    "section": "go-doc",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go doc fmt.Println` printed the signature `func Println(a ...any) (n int, err ___)`.",
+    "hint": "The type that says whether writing failed.",
+    "blanks": [
+      {
+        "accept": [
+          "error"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-axwvyjx9",
+    "version": 1,
+    "section": "go-doc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your project is held on an older Go release while the newest one adds a function you read about on pkg.go.dev. Which source tells you whether the Go you are running has it?",
+    "hint": "Which one reads the standard library you installed?",
+    "choices": [
+      {
+        "text": "pkg.go.dev, because it is generated from the same comments",
+        "correct": false,
+        "why": "Same comments, different release: the site shows the standard library of the latest Go."
+      },
+      {
+        "text": "`go doc` in your terminal",
+        "correct": true,
+        "why": "Right. It reads the source of the toolchain you are running, so it answers for that release."
+      },
+      {
+        "text": "The newest release's notes, which list every addition",
+        "correct": false,
+        "why": "They say when it arrived, not whether your installed Go has it; you would still need to know which you run."
+      },
+      {
+        "text": "Any search engine, which returns the most popular page",
+        "correct": false,
+        "why": "Popularity says nothing about which release a page describes."
+      }
+    ]
+  },
+  {
+    "id": "ex-0181h2xp",
+    "version": 1,
+    "section": "format-and-vet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can you configure about the layout `gofmt` writes?",
+    "hint": "The section lists three things people expect to set.",
+    "choices": [
+      {
+        "text": "The width of an indent, counted in spaces",
+        "correct": false,
+        "why": "The indent is a tab, always."
+      },
+      {
+        "text": "Where the opening brace of a block goes",
+        "correct": false,
+        "why": "The brace goes on the same line, always; a brace on its own line does not even compile."
+      },
+      {
+        "text": "The longest a line may be before it is wrapped",
+        "correct": false,
+        "why": "There is no line length setting either."
+      },
+      {
+        "text": "Nothing: it has no layout settings",
+        "correct": true,
+        "why": "Right. That is the design, so a diff shows changes and never somebody's editor settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw9tfewm",
+    "version": 1,
+    "section": "format-and-vet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go run .` printed `Hello, %!d(string=Ana)`. What happened?",
+    "hint": "Who wrote `%!d`?",
+    "choices": [
+      {
+        "text": "The compiler rejected the format string and printed its error",
+        "correct": false,
+        "why": "The program compiled and ran; that line is its output."
+      },
+      {
+        "text": "`%d` was handed a string, and `fmt` wrote the mismatch into the output",
+        "correct": true,
+        "why": "Right: `%!d(string=Ana)` names the verb and what it received."
+      },
+      {
+        "text": "`Printf` converted the name to a number and overflowed",
+        "correct": false,
+        "why": "Go converts nothing on your behalf, and certainly not a name into a number."
+      },
+      {
+        "text": "The program panicked and this is the panic message",
+        "correct": false,
+        "why": "A panic stops the program with a stack trace; this program ended normally."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bx0gpkr",
+    "version": 1,
+    "section": "format-and-vet",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the three commands in the order the section suggests running them before you show a Go file to anyone.",
+    "hint": "Layout first.",
+    "items": [
+      "`go fmt`",
+      "`go vet`",
+      "`go build`"
+    ]
+  },
+  {
+    "id": "ex-s3h2pq2p",
+    "version": 1,
+    "section": "format-and-vet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The compiler said `./main.go:5:2: \"os\" imported and not used`. What is `5:2`?",
+    "hint": "The file has one import block.",
+    "choices": [
+      {
+        "text": "Error number 5, severity 2",
+        "correct": false,
+        "why": "Go's compiler messages carry no error numbers; this is a position."
+      },
+      {
+        "text": "The fifth import, in the second file",
+        "correct": false,
+        "why": "There is one file and two imports; the numbers point into `main.go`."
+      },
+      {
+        "text": "Line 5, column 2",
+        "correct": true,
+        "why": "Right: the second character of line 5, after the tab, where `\"os\"` starts."
+      },
+      {
+        "text": "Two errors were found on five lines",
+        "correct": false,
+        "why": "There is one error. `file:line:column` is the shape of every position the toolchain prints."
+      }
+    ]
+  },
+  {
+    "id": "ex-hz2gj11r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate's program compiles, and its log has a line reading `took %!s(int=42) ms`. Which tool would have reported the mistake without running the program?",
+    "hint": "It reads format strings.",
+    "choices": [
+      {
+        "text": "`gofmt`, which checks every line",
+        "correct": false,
+        "why": "`gofmt` changes layout and never reads what a format string asks for."
+      },
+      {
+        "text": "The compiler, which would refuse to build it",
+        "correct": false,
+        "why": "It did build: to the compiler the format is just a string."
+      },
+      {
+        "text": "`go vet`",
+        "correct": true,
+        "why": "Right. It checks the verbs of a format string against the arguments, as it did for `%d` and a string."
+      },
+      {
+        "text": "`go doc fmt.Printf`, which lists the verbs",
+        "correct": false,
+        "why": "Documentation tells you the rule; it does not read your code to see whether you broke it."
+      }
+    ]
+  },
+  {
+    "id": "ex-99pe3x6e",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these stop `go build` from producing a binary at all? Choose all that apply.",
+    "hint": "Separate the compiler's refusals from the other tools' reports.",
+    "choices": [
+      {
+        "text": "An imported package the file never uses",
+        "correct": true,
+        "why": "Yes: `\"os\" imported and not used` was a compile error, exit status 1."
+      },
+      {
+        "text": "A file that `gofmt -l` lists",
+        "correct": false,
+        "why": "The messy `main.go` compiled before `go fmt` touched it; layout is never a compile error."
+      },
+      {
+        "text": "A local variable declared and never used",
+        "correct": true,
+        "why": "Yes, the compiler refuses that the same way; lesson 5 shows it."
+      },
+      {
+        "text": "A `Printf` verb that does not match its argument",
+        "correct": false,
+        "why": "That built and ran, and printed `%!d(string=Ana)`; only `go vet` complained."
+      }
+    ]
+  }
+]

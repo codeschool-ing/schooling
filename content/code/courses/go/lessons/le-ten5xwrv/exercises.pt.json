@@ -1,0 +1,389 @@
+{
+  "ex-re1hj97t": {
+    "prompt": "O que faz um pacote Go virar um programa que você executa, e não uma biblioteca?",
+    "hint": "Olhe a primeira linha depois do comentário, e a função.",
+    "choices": [
+      {
+        "text": "O arquivo se chama `main.go`",
+        "why": "Nome de arquivo não significa nada para o compilador aqui: `hello.go` virou programa."
+      },
+      {
+        "text": "É `package main` e declara `func main`",
+        "why": "Isso. O nome de pacote `main` e uma função `main` dentro dele são o requisito inteiro."
+      },
+      {
+        "text": "Tem na raiz um arquivo `go.mod` que dá nome ao módulo",
+        "why": "Uma biblioteca também tem `go.mod`; o módulo diz como o código se chama, não se ele executa."
+      },
+      {
+        "text": "Importa o pacote `fmt`",
+        "why": "Um programa não precisa imprimir nada, e bibliotecas importam `fmt` o tempo todo."
+      }
+    ]
+  },
+  "ex-q36r25ak": {
+    "prompt": "`hello.go` chama `fmt.Println`. O que o P maiúsculo diz?",
+    "hint": "É sobre quem pode chamar.",
+    "choices": [
+      {
+        "text": "Que `Println` devolve valores",
+        "why": "Ela devolve dois, mas a maiúscula não tem nada a ver com isso."
+      },
+      {
+        "text": "Que `Println` é embutida na linguagem",
+        "why": "As embutidas, como `len`, são minúsculas; `Println` é uma função comum do pacote `fmt`."
+      },
+      {
+        "text": "Que outro pacote tem permissão para chamá-la",
+        "why": "Isso. Um nome que começa com maiúscula é exportado; a lição 39 trata dessa regra."
+      },
+      {
+        "text": "Nada: Go escreve todo nome de função com maiúscula por convenção",
+        "why": "`main` é uma função e é minúscula. A maiúscula é uma regra com efeito, não um estilo."
+      }
+    ]
+  },
+  "ex-s2zmk2vg": {
+    "prompt": "Um diretório vira um módulo quando tem um arquivo chamado `___` na raiz.",
+    "hint": "O `go mod init` o escreve.",
+    "blanks": [
+      {
+        "accept": [
+          "go.mod"
+        ]
+      }
+    ]
+  },
+  "ex-v26rywae": {
+    "prompt": "O `go mod init example.com/hello` escreveu `go 1.27.1` no `go.mod`. O que essa linha registra?",
+    "hint": "De onde veio o número?",
+    "choices": [
+      {
+        "text": "A versão do programa hello",
+        "why": "As versões do próprio módulo são tags de git, assunto da lição 40; esta linha é sobre a linguagem."
+      },
+      {
+        "text": "A versão de Go instalada em toda máquina que um dia importar este módulo",
+        "why": "Ele não tem como saber isso. Registra o que este módulo espera, não o que os outros têm."
+      },
+      {
+        "text": "A versão da linguagem que o módulo espera, vinda do toolchain que o rodou",
+        "why": "Isso. O laboratório roda go1.27.1, então foi isso que o `go mod init` escreveu."
+      },
+      {
+        "text": "A versão do servidor em example.com",
+        "why": "`example.com` é um domínio reservado para exemplos; nada responde ali e nada é perguntado."
+      }
+    ]
+  },
+  "ex-9vayaqvf": {
+    "prompt": "Quais destas valem para a primeira linha de `hello.go`, `// Command hello prints a greeting.`? Marque todas as que se aplicam.",
+    "hint": "A seção 03 a imprimiu.",
+    "choices": [
+      {
+        "text": "O `go doc` a imprime como documentação do pacote",
+        "why": "Sim: rodado sem argumento em `~/hello`, o `go doc` imprimiu exatamente essa frase."
+      },
+      {
+        "text": "O programa a imprime quando começa",
+        "why": "Comentário não é código; o programa imprimiu `Hello, Go` e mais nada."
+      },
+      {
+        "text": "Documenta o pacote porque fica logo acima de `package main`",
+        "why": "Sim. Um comentário logo acima de uma declaração é a documentação dela."
+      },
+      {
+        "text": "O compilador recusa um programa sem ela",
+        "why": "Nada exige isso. É uma convenção que as ferramentas leem, não uma regra que o compilador impõe."
+      }
+    ]
+  },
+  "ex-z0szgbdf": {
+    "prompt": "Depois de `go run .`, o que fica no diretório atual?",
+    "hint": "Para onde foi o binário?",
+    "choices": [
+      {
+        "text": "Um binário com o nome do módulo",
+        "why": "Isso é o `go build`. O `go run` mantém o binário fora do seu diretório."
+      },
+      {
+        "text": "Nada novo: o binário fica guardado no cache de build",
+        "why": "Isso. Ele compila, executa e guarda o resultado onde o comando go o administra."
+      },
+      {
+        "text": "Nada, porque o `go run` interpreta o código-fonte sem compilar",
+        "why": "Go não tem interpretador. O `go run` compila, e é por isso que a primeira execução depois de esvaziar o cache levou segundos."
+      },
+      {
+        "text": "Um arquivo-objeto para cada pacote que compilou",
+        "why": "Pacotes compilados também vão para o cache de build, nunca para o diretório do código-fonte."
+      }
+    ]
+  },
+  "ex-d4be93d8": {
+    "prompt": "Depois de `go clean -cache`, o primeiro `go run .` levou 4,493 s e o segundo 0,044 s. O segundo foi umas quantas vezes mais rápido? Dê um número inteiro.",
+    "hint": "Divida o primeiro pelo segundo.",
+    "unit": "vezes"
+  },
+  "ex-62aan0y6": {
+    "prompt": "Ligue cada comando ao lugar onde o binário que ele compila vai parar.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "`go run .`",
+        "right": "O cache de build"
+      },
+      {
+        "left": "`go build`",
+        "right": "O diretório atual"
+      },
+      {
+        "left": "`go install`",
+        "right": "`~/go/bin`, ou `GOBIN` se estiver definido"
+      }
+    ],
+    "right_distractors": [
+      "`/usr/local/go/bin`"
+    ]
+  },
+  "ex-8tjwmqqv": {
+    "prompt": "Você compila um programa como o `hello` com `go build` num notebook Linux amd64 e copia o binário para um servidor Linux amd64 novo, que nunca teve Go instalado. O que acontece quando você o executa lá?",
+    "hint": "O que o `file` disse sobre como ele foi ligado?",
+    "choices": [
+      {
+        "text": "Falha até instalarem Go, porque o runtime mora em `/usr/local/go`",
+        "why": "`/usr/local/go` é o compilador e as ferramentas. O runtime foi copiado para dentro do binário quando ele foi compilado."
+      },
+      {
+        "text": "Precisa ser recompilado no servidor antes",
+        "why": "Mesmo sistema operacional, mesma arquitetura: não há para que recompilar."
+      },
+      {
+        "text": "Roda: o runtime está dentro do binário, e ele pede à máquina um kernel",
+        "why": "Isso. `statically linked` é a razão daqueles 2,3 MB."
+      },
+      {
+        "text": "Roda só se o servidor tiver a mesma versão da biblioteca C do notebook",
+        "why": "Essa é a dependência de um programa C ligado dinamicamente. Este binário foi ligado estaticamente."
+      }
+    ]
+  },
+  "ex-6ajn98eb": {
+    "prompt": "Por que o segundo `go run .` levou 44 milissegundos quando o primeiro levou quatro segundos e meio?",
+    "hint": "O que o `go clean -cache` esvaziou?",
+    "choices": [
+      {
+        "text": "Nada tinha mudado, então o cache de build já tinha o programa compilado",
+        "why": "Isso. A primeira execução compilou também os pacotes da biblioteca padrão; a segunda reaproveitou tudo."
+      },
+      {
+        "text": "A primeira execução estava baixando o Go",
+        "why": "O Go já estava instalado; o `GOTOOLCHAIN=local` impede o laboratório de baixar outro."
+      },
+      {
+        "text": "A segunda execução interpretou o código em vez de compilar",
+        "why": "Não existe interpretador para onde voltar. A segunda execução usou o resultado compilado."
+      },
+      {
+        "text": "O sistema operacional manteve o primeiro processo na memória e o retomou",
+        "why": "O primeiro processo tinha terminado. Um novo executou o mesmo binário do cache."
+      }
+    ]
+  },
+  "ex-57rrcb1e": {
+    "prompt": "De onde o `go doc` tira o texto que imprime?",
+    "hint": "Funcionou sem rede.",
+    "choices": [
+      {
+        "text": "Do pkg.go.dev, baixado a cada vez",
+        "why": "O laboratório respondeu sem rede. O site é gerado dos mesmos comentários, mas o `go doc` não pergunta a ele."
+      },
+      {
+        "text": "De páginas de manual instaladas junto do compilador",
+        "why": "Não há páginas de manual separadas; a documentação são os próprios comentários do código."
+      },
+      {
+        "text": "De comentários no código-fonte da sua máquina",
+        "why": "Isso. O toolchain traz o código-fonte da biblioteca padrão, com comentários."
+      },
+      {
+        "text": "De um arquivo de documentação que cada pacote traz junto do código",
+        "why": "Não existe um segundo arquivo para manter em dia: o comentário é a documentação."
+      }
+    ]
+  },
+  "ex-3hjqf05t": {
+    "prompt": "Um programa quebra a string `\" go is fun\"` (que começa com espaço) em palavras. Segundo o `go doc strings.Fields`, o que `strings.Fields` devolve?",
+    "hint": "Leia a última frase da documentação dela.",
+    "choices": [
+      {
+        "text": "Uma primeira palavra vazia, depois `go`, `is` e `fun`",
+        "why": "Isso é o que quebrar em espaços simples faz. `Fields` descarta o espaço em branco do começo."
+      },
+      {
+        "text": "`go`, `is` e `fun`",
+        "why": "Isso: todo elemento é não vazio, e sequências de espaço no começo são descartadas."
+      },
+      {
+        "text": "A string inteira, porque só quebra em quebras de linha",
+        "why": "Quebra em qualquer espaço em branco, como `unicode.IsSpace` define."
+      },
+      {
+        "text": "Um erro, porque a string começa com um separador",
+        "why": "A assinatura devolve `[]string` e mais nada, então ela não tem como reportar erro."
+      }
+    ]
+  },
+  "ex-hey7msq4": {
+    "prompt": "O `go doc fmt.Println` imprimiu a assinatura `func Println(a ...any) (n int, err ___)`.",
+    "hint": "O tipo que diz se a escrita falhou.",
+    "blanks": [
+      {
+        "accept": [
+          "error"
+        ]
+      }
+    ]
+  },
+  "ex-axwvyjx9": {
+    "prompt": "Seu projeto está preso numa versão mais antiga de Go, e a mais nova acrescenta uma função que você leu no pkg.go.dev. Qual fonte diz se o Go que você está rodando a tem?",
+    "hint": "Qual delas lê a biblioteca padrão que você instalou?",
+    "choices": [
+      {
+        "text": "O pkg.go.dev, porque é gerado dos mesmos comentários",
+        "why": "Mesmos comentários, outra versão: o site mostra a biblioteca padrão do Go mais recente."
+      },
+      {
+        "text": "O `go doc` no seu terminal",
+        "why": "Isso. Ele lê o código-fonte do toolchain que você está rodando, então responde por essa versão."
+      },
+      {
+        "text": "As notas da versão mais nova, que listam cada adição",
+        "why": "Elas dizem quando a função chegou, não se o seu Go instalado a tem; você ainda precisaria saber qual roda."
+      },
+      {
+        "text": "Qualquer buscador, que devolve a página mais popular",
+        "why": "Popularidade não diz nada sobre qual versão uma página descreve."
+      }
+    ]
+  },
+  "ex-0181h2xp": {
+    "prompt": "O que você pode configurar no layout que o `gofmt` escreve?",
+    "hint": "A seção lista três coisas que as pessoas esperam configurar.",
+    "choices": [
+      {
+        "text": "A largura de uma indentação, contada em espaços",
+        "why": "A indentação é uma tabulação, sempre."
+      },
+      {
+        "text": "Onde fica a chave que abre um bloco",
+        "why": "A chave fica na mesma linha, sempre; chave sozinha na linha nem compila."
+      },
+      {
+        "text": "O tamanho máximo de uma linha antes de ser quebrada",
+        "why": "Também não há configuração de comprimento de linha."
+      },
+      {
+        "text": "Nada: ele não tem configurações de layout",
+        "why": "Isso. Esse é o projeto, para que um diff mostre mudanças e nunca as configurações do editor de alguém."
+      }
+    ]
+  },
+  "ex-hw9tfewm": {
+    "prompt": "O `go run .` imprimiu `Hello, %!d(string=Ana)`. O que aconteceu?",
+    "hint": "Quem escreveu `%!d`?",
+    "choices": [
+      {
+        "text": "O compilador rejeitou a string de formato e imprimiu o erro",
+        "why": "O programa compilou e rodou; essa linha é a saída dele."
+      },
+      {
+        "text": "`%d` recebeu uma string, e o `fmt` escreveu o descompasso na saída",
+        "why": "Isso: `%!d(string=Ana)` nomeia o verbo e o que ele recebeu."
+      },
+      {
+        "text": "O `Printf` converteu o nome para número e estourou",
+        "why": "Go não converte nada por você, muito menos um nome em número."
+      },
+      {
+        "text": "O programa entrou em pânico e esta é a mensagem do pânico",
+        "why": "Um pânico para o programa com um stack trace; este terminou normalmente."
+      }
+    ]
+  },
+  "ex-5bx0gpkr": {
+    "prompt": "Ponha os três comandos na ordem em que a seção sugere rodá-los antes de mostrar um arquivo Go a alguém.",
+    "hint": "Layout primeiro.",
+    "items": [
+      "`go fmt`",
+      "`go vet`",
+      "`go build`"
+    ]
+  },
+  "ex-s3h2pq2p": {
+    "prompt": "O compilador disse `./main.go:5:2: \"os\" imported and not used`. O que é `5:2`?",
+    "hint": "O arquivo tem um bloco de import.",
+    "choices": [
+      {
+        "text": "Erro número 5, gravidade 2",
+        "why": "As mensagens do compilador Go não têm número de erro; isto é uma posição."
+      },
+      {
+        "text": "O quinto import, no segundo arquivo",
+        "why": "Há um arquivo e dois imports; os números apontam para dentro de `main.go`."
+      },
+      {
+        "text": "Linha 5, coluna 2",
+        "why": "Isso: o segundo caractere da linha 5, depois da tabulação, onde `\"os\"` começa."
+      },
+      {
+        "text": "Dois erros foram achados em cinco linhas",
+        "why": "Há um erro. `arquivo:linha:coluna` é o formato de toda posição que o toolchain imprime."
+      }
+    ]
+  },
+  "ex-hz2gj11r": {
+    "prompt": "O programa de um colega compila, e o log tem uma linha `took %!s(int=42) ms`. Que ferramenta teria apontado o engano sem executar o programa?",
+    "hint": "Ela lê strings de formato.",
+    "choices": [
+      {
+        "text": "O `gofmt`, que confere cada linha",
+        "why": "O `gofmt` muda o layout e nunca lê o que uma string de formato pede."
+      },
+      {
+        "text": "O compilador, que se recusaria a compilar",
+        "why": "Compilou: para o compilador o formato é só uma string."
+      },
+      {
+        "text": "O `go vet`",
+        "why": "Isso. Ele confere os verbos da string de formato contra os argumentos, como fez com `%d` e uma string."
+      },
+      {
+        "text": "O `go doc fmt.Printf`, que lista os verbos",
+        "why": "A documentação diz a regra; ela não lê seu código para ver se você a quebrou."
+      }
+    ]
+  },
+  "ex-99pe3x6e": {
+    "prompt": "Quais destes impedem o `go build` de produzir um binário? Marque todos os que se aplicam.",
+    "hint": "Separe as recusas do compilador dos relatos das outras ferramentas.",
+    "choices": [
+      {
+        "text": "Um pacote importado que o arquivo nunca usa",
+        "why": "Sim: `\"os\" imported and not used` foi erro de compilação, código de saída 1."
+      },
+      {
+        "text": "Um arquivo que o `gofmt -l` lista",
+        "why": "O `main.go` bagunçado compilou antes de o `go fmt` mexer nele; layout nunca é erro de compilação."
+      },
+      {
+        "text": "Uma variável local declarada e nunca usada",
+        "why": "Sim, o compilador recusa isso do mesmo jeito; a lição 5 mostra."
+      },
+      {
+        "text": "Um verbo de `Printf` que não casa com o argumento",
+        "why": "Isso compilou e rodou, e imprimiu `%!d(string=Ana)`; só o `go vet` reclamou."
+      }
+    ]
+  }
+}
