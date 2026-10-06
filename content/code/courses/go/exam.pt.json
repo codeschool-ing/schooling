@@ -1549,5 +1549,234 @@
         "why": "Zero peras é uma contagem real; um token expirado quer dizer que a chamada não conseguiu fazer o que foi pedido."
       }
     ]
+  },
+  "ex-pfbbf0d9": {
+    "prompt": "Um programa confere cada linha da entrada com um padrão escrito no código-fonte, que nunca muda. Pela lição 36, como ele deve compilar esse padrão?",
+    "hint": "Lição 36.",
+    "choices": [
+      {
+        "text": "Com `regexp.Compile`, devolvendo o erro até o `main` como qualquer falha",
+        "why": "Isso é para um padrão digitado pelo usuário, que pode estar errado em qualquer execução. Um padrão no código só está errado por um bug."
+      },
+      {
+        "text": "`regexp.MustCompile`, numa variável de pacote",
+        "why": "Isso. Um erro nele entra em pânico na primeira execução, antes do `main`, na mesa de quem programou."
+      },
+      {
+        "text": "Com `regexp.Compile` e o erro descartado com `_`, já que não pode falhar",
+        "why": "Pode falhar, com um erro de digitação como `^[a-z+$`, e aí o programa rodaria com um `*Regexp` nil."
+      },
+      {
+        "text": "Dentro de um `recover` adiado, para um padrão ruim não derrubá-lo",
+        "why": "Isso esconderia um bug; o recover pertence aos pânicos internos de um pacote ou à fronteira de uma tarefa."
+      }
+    ]
+  },
+  "ex-bw680dba": {
+    "prompt": "A função adiada de `Sum` é trocada para recuperar qualquer pânico e devolvê-lo como erro, sem conferir `parseError`. Com o bug do `s[0]` de `~/panic-sumbug`, o que `Sum(\"1++3\")` entrega a quem chamou?",
+    "hint": "Lição 36.",
+    "choices": [
+      {
+        "text": "Um crash com `[recovered, repanicked]`, como antes",
+        "why": "Isso vinha da linha que entrava em pânico de novo; sem a verificação, nada entra em pânico de novo."
+      },
+      {
+        "text": "`4` e um erro nil, pulando o termo vazio",
+        "why": "Uma função recuperada não continua de onde parou; ela devolve o que os resultados nomeados guardam."
+      },
+      {
+        "text": "Um erro comum falando do índice fora do intervalo, como se a entrada estivesse errada",
+        "why": "Isso. O bug vira um erro de análise que quem chamou mostra ao usuário, e trace nenhum chega a quem o corrigiria."
+      },
+      {
+        "text": "Nada: o `recover` recusa erros de runtime e os deixa passar",
+        "why": "O `recover` para qualquer pânico em que seja chamado; só erros fatais, como estouro de pilha, escapam dele."
+      }
+    ]
+  },
+  "ex-8jmf28m7": {
+    "prompt": "O `main` começa com `defer fmt.Println(\"deferred: cleaning up\")` e depois chama `os.Exit(3)`. Com que status de saída o programa termina?",
+    "hint": "Lição 36.",
+    "unit": ""
+  },
+  "ex-beph3dfj": {
+    "prompt": "Um trace tirado com `debug.Stack()` dentro da função adiada de `price` tem um frame chamado `main.price.func1()`. Que frame é esse?",
+    "hint": "Lição 37.",
+    "choices": [
+      {
+        "text": "Uma closure sem nome, então o compilador inventou um",
+        "why": "Isso. Uma função literal não tem nome próprio, então o compilador dá um a partir da função que a envolve."
+      },
+      {
+        "text": "A primeira chamada que `price` fez, onde o pânico aconteceu",
+        "why": "O pânico aconteceu em `unitPrice`, mais abaixo no trace, na linha 22."
+      },
+      {
+        "text": "Uma cópia inline de `price`",
+        "why": "Frames inline aparecem com `(...)` e sem deslocamento; este é uma chamada própria."
+      },
+      {
+        "text": "Uma goroutine que `price` iniciou para recuperar o pânico",
+        "why": "O recover roda na mesma goroutine; um recover em outra goroutine nem conseguiria parar este pânico."
+      }
+    ]
+  },
+  "ex-56p77v88": {
+    "prompt": "`GOTRACEBACK=___` mantém a mensagem do pânico e o status de saída 2 e deixa de fora o stack trace de toda goroutine.",
+    "hint": "Lição 37.",
+    "blanks": [
+      {
+        "accept": [
+          "none",
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-bpn6csg4": {
+    "prompt": "O `go mod graph` mostrou `golang.org/x/text` exigindo `golang.org/x/tools`, mas o `go.sum` não tinha linha para `x/tools`. Por quê?",
+    "hint": "Lição 38.",
+    "choices": [
+      {
+        "text": "O `tidy` tira de `go.sum` as dependências indiretas",
+        "why": "O `tidy` mantém os hashes de que o build precisa; ele só tirou as linhas de `x/text` quando nada o importava."
+      },
+      {
+        "text": "Nenhum pacote que o programa importa vive nele, então ele nunca foi baixado",
+        "why": "Isso. O cache vazio do primeiro `tidy` recebeu `x/text` e mais nada."
+      },
+      {
+        "text": "O banco de checksums não tinha registro de `x/tools`",
+        "why": "O banco só é consultado sobre uma versão que está sendo baixada, e `x/tools` nunca foi."
+      },
+      {
+        "text": "A seleção de versão mínima o pulou, porque a v0.51.0 é mais nova",
+        "why": "A MVS escolheu a v0.49.0 para o grafo; ela escolhe versões, não se um módulo é baixado."
+      }
+    ]
+  },
+  "ex-w6w452b8": {
+    "prompt": "Ligue cada mensagem que o comando go imprimiu na lição 38 à sua causa.",
+    "hint": "Lição 38.",
+    "pairs": [
+      {
+        "left": "`malformed module path \"my accents\": invalid char ' '`",
+        "right": "um espaço no nome dado ao `go mod init`"
+      },
+      {
+        "left": "`package hello/greet is not in std`",
+        "right": "um caminho de módulo cujo primeiro elemento não tem ponto"
+      },
+      {
+        "left": "`checksum mismatch` e `SECURITY ERROR`",
+        "right": "um hash do `go.sum` com que os bytes não batem"
+      },
+      {
+        "left": "`inconsistent vendoring`",
+        "right": "`go.mod` e `vendor/modules.txt` com versões diferentes"
+      }
+    ],
+    "right_distractors": [
+      "um proxy de módulos que não pôde ser alcançado"
+    ]
+  },
+  "ex-pwrsc2vw": {
+    "prompt": "Um módulo tem diretório `vendor`, mas o `go.mod` ainda diz `go 1.13`. Pela lição 38, o que um `go build` simples faz com o `vendor`?",
+    "hint": "Lição 38.",
+    "choices": [
+      {
+        "text": "Usa, como sempre faz quando o diretório existe",
+        "why": "Existir é metade da condição; a outra metade é a linha `go`."
+      },
+      {
+        "text": "Recusa compilar até o `go mod vendor` rodar de novo",
+        "why": "Essa recusa é para quando `go.mod` e `modules.txt` discordam sobre versões."
+      },
+      {
+        "text": "Não o usa sozinho, já que isso exige uma linha `go` 1.14 ou posterior",
+        "why": "Isso. O `modload/init.go` passa para o `vendor` quando a linha go é pelo menos 1.14 e o diretório existe."
+      },
+      {
+        "text": "Apaga, porque módulos antigos não podem fazer vendor",
+        "why": "O comando go não apaga arquivos seus; o diretório só deixa de ser lido."
+      }
+    ]
+  },
+  "ex-cwze8p8p": {
+    "prompt": "Um arquivo importa `crypto/rand` e `math/rand/v2`, e o build para com `rand redeclared in this block`. O que resolve?",
+    "hint": "Lição 39.",
+    "choices": [
+      {
+        "text": "Um dot import de um deles, para os nomes dispensarem prefixo",
+        "why": "Os dois pacotes continuam colidindo, agora por nomes soltos, e quem lê perde a noção de onde vem o `N`."
+      },
+      {
+        "text": "Um import em branco, `_ \"crypto/rand\"`",
+        "why": "O `_` não associa nome nenhum, então o arquivo nem conseguiria mais chamar `crypto/rand`."
+      },
+      {
+        "text": "Um alias para um deles, como `crand \"crypto/rand\"`",
+        "why": "Isso. Os dois pacotes se chamam `rand`, e um alias antes do caminho dá a um deles outro nome neste arquivo."
+      },
+      {
+        "text": "Passar um dos imports para outro arquivo do mesmo pacote",
+        "why": "Só funciona se nenhum arquivo precisar dos dois; o arquivo que usa os dois continua com a colisão."
+      }
+    ]
+  },
+  "ex-9wsx8af2": {
+    "prompt": "Um arquivo tem `. \"strings\"` entre os imports e declara a própria `func Title(s string) string`. O que acontece?",
+    "hint": "Lição 39.",
+    "choices": [
+      {
+        "text": "O `Title` do arquivo vence, como um nome interno esconde um externo",
+        "why": "Um dot import põe os nomes de `strings` no próprio arquivo, no mesmo nível da sua declaração, então não há o que esconder."
+      },
+      {
+        "text": "É recusado: `Title already declared through dot-import of package strings`",
+        "why": "Isso. Todo nome exportado de `strings` vira um nome que este arquivo não pode declarar."
+      },
+      {
+        "text": "Compila, e as chamadas a `Title` vão para `strings.Title`",
+        "why": "O compilador não escolhe entre duas declarações de um mesmo nome; ele recusa."
+      },
+      {
+        "text": "Só compila se `Title` não for exportado, como `title`",
+        "why": "Isso evitaria a colisão, mas a pergunta é sobre o arquivo como está, e ele é recusado."
+      }
+    ]
+  },
+  "ex-z3ka5q98": {
+    "prompt": "O seu módulo exige `example.com/lib v1.2.3`. O módulo publicou a v1.2.7, a v1.3.0 e, no caminho `example.com/lib/v2`, a v2.0.0. Que versão `go get example.com/lib@patch` escolhe?",
+    "hint": "Lição 40.",
+    "choices": [
+      {
+        "text": "v1.2.7",
+        "why": "Isso. `patch` é a mais nova com os mesmos números major e minor da que você tem."
+      },
+      {
+        "text": "v1.3.0, a release mais nova de `example.com/lib`",
+        "why": "Isso é o que `latest` ou `upgrade` escolheriam; `patch` mantém o número minor."
+      },
+      {
+        "text": "v2.0.0, já que é a mais nova das três",
+        "why": "A v2 fica em outro caminho, e nenhuma consulta em `example.com/lib` atravessa uma versão major."
+      },
+      {
+        "text": "De novo a v1.2.3, porque `patch` só reinstala a versão que você tem",
+        "why": "O `go get` não instala nada, e `patch` vai para a release de correção mais nova quando ela existe."
+      }
+    ]
+  },
+  "ex-cqsxwqjp": {
+    "prompt": "Depois de apagar o código que usava um módulo, `go get github.com/mattn/go-runewidth@___` tira a dependência do `go.mod`.",
+    "hint": "Lição 40.",
+    "blanks": [
+      {
+        "accept": [
+          "none"
+        ]
+      }
+    ]
   }
 }

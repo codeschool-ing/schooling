@@ -2170,5 +2170,320 @@
         "why": "Zero pears is a real count; an expired token means the call could not do what was asked."
       }
     ]
+  },
+  {
+    "id": "ex-pfbbf0d9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program checks every line of its input against a pattern that is written in its source and never changes. How should it compile that pattern, going by lesson 36?",
+    "hint": "Lesson 36.",
+    "choices": [
+      {
+        "text": "With `regexp.Compile`, returning the error up to `main` like any failure",
+        "correct": false,
+        "why": "That is for a pattern a user typed, which can be wrong on any run. A pattern in the source is wrong only through a bug."
+      },
+      {
+        "text": "`regexp.MustCompile`, in a package-level variable",
+        "correct": true,
+        "why": "Right. A mistake in it panics on the first run, before `main`, at the programmer's desk."
+      },
+      {
+        "text": "With `regexp.Compile` and the error discarded with `_`, since it cannot fail",
+        "correct": false,
+        "why": "It can fail, through a typo like `^[a-z+$`, and then the program would run with a nil `*Regexp`."
+      },
+      {
+        "text": "Inside a deferred `recover`, so a bad pattern cannot crash it",
+        "correct": false,
+        "why": "That would hide a bug; recover belongs inside a package's own panics or at the boundary of one job."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw680dba",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Sum`'s deferred function is changed to recover every panic and return it as the error, with no check on `parseError`. With the `s[0]` bug of `~/panic-sumbug`, what does `Sum(\"1++3\")` give its caller?",
+    "hint": "Lesson 36.",
+    "choices": [
+      {
+        "text": "A crash with `[recovered, repanicked]`, as before",
+        "correct": false,
+        "why": "That came from the line that panicked again; without the check, nothing panics again."
+      },
+      {
+        "text": "`4` and a nil error, skipping the empty term",
+        "correct": false,
+        "why": "A recovered function does not resume where it stopped; it returns what its named results hold."
+      },
+      {
+        "text": "An ordinary error reporting the index out of range, as if the input were bad",
+        "correct": true,
+        "why": "Right. The bug becomes a parsing error the caller shows a user, and no trace ever reaches anybody who would fix it."
+      },
+      {
+        "text": "Nothing: `recover` refuses runtime errors and lets them through",
+        "correct": false,
+        "why": "`recover` stops any panic it is called in; only fatal errors, like a stack overflow, escape it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jmf28m7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`main` starts with `defer fmt.Println(\"deferred: cleaning up\")` and then calls `os.Exit(3)`. With what exit status does the program end?",
+    "hint": "Lesson 36.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-beph3dfj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A trace taken with `debug.Stack()` inside `price`'s deferred function has a frame named `main.price.func1()`. What is that frame?",
+    "hint": "Lesson 37.",
+    "choices": [
+      {
+        "text": "A closure with no name, so the compiler made one up",
+        "correct": true,
+        "why": "Right. A function literal has no name of its own, so the compiler gives it one built from the enclosing function."
+      },
+      {
+        "text": "The first call `price` made, where the panic happened",
+        "correct": false,
+        "why": "The panic happened in `unitPrice`, further down the trace, at line 22."
+      },
+      {
+        "text": "An inlined copy of `price`",
+        "correct": false,
+        "why": "Inlined frames are printed with `(...)` and no offset; this one is a call of its own."
+      },
+      {
+        "text": "A goroutine `price` started to recover the panic",
+        "correct": false,
+        "why": "The recover runs in the same goroutine; a recover in another goroutine could not stop this panic at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-56p77v88",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`GOTRACEBACK=___` keeps the panic's message and exit status 2 and leaves out every goroutine's stack trace.",
+    "hint": "Lesson 37.",
+    "blanks": [
+      {
+        "accept": [
+          "none",
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bpn6csg4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`go mod graph` showed `golang.org/x/text` requiring `golang.org/x/tools`, yet `go.sum` had no line for `x/tools`. Why?",
+    "hint": "Lesson 38.",
+    "choices": [
+      {
+        "text": "`tidy` removes indirect requirements from `go.sum`",
+        "correct": false,
+        "why": "`tidy` keeps the hashes the build needs; it removed `x/text`'s lines only when nothing imported it."
+      },
+      {
+        "text": "No package the program imports lives in it, so it was never downloaded",
+        "correct": true,
+        "why": "Right. The empty cache of the first `tidy` received `x/text` and nothing else."
+      },
+      {
+        "text": "The checksum database had no record of `x/tools`",
+        "correct": false,
+        "why": "The database is asked only about a version being downloaded, and `x/tools` never was."
+      },
+      {
+        "text": "Minimal version selection skipped it, because v0.51.0 is newer",
+        "correct": false,
+        "why": "MVS picked v0.49.0 for the graph; it chooses versions, not whether a module is fetched."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6w452b8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each message the go command printed in lesson 38 to its cause.",
+    "hint": "Lesson 38.",
+    "pairs": [
+      {
+        "left": "`malformed module path \"my accents\": invalid char ' '`",
+        "right": "a space in the name given to `go mod init`"
+      },
+      {
+        "left": "`package hello/greet is not in std`",
+        "right": "a module path whose first element has no dot"
+      },
+      {
+        "left": "`checksum mismatch` and `SECURITY ERROR`",
+        "right": "a hash in `go.sum` that the bytes do not match"
+      },
+      {
+        "left": "`inconsistent vendoring`",
+        "right": "`go.mod` and `vendor/modules.txt` naming different versions"
+      }
+    ],
+    "right_distractors": [
+      "a module proxy that could not be reached"
+    ]
+  },
+  {
+    "id": "ex-pwrsc2vw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A module has a `vendor` directory, but its `go.mod` still says `go 1.13`. Going by lesson 38, what does a plain `go build` do with `vendor`?",
+    "hint": "Lesson 38.",
+    "choices": [
+      {
+        "text": "Uses it, as it always does when the directory exists",
+        "correct": false,
+        "why": "Existing is half the condition; the other half is the `go` line."
+      },
+      {
+        "text": "Refuses to build until `go mod vendor` is run again",
+        "correct": false,
+        "why": "That refusal is for `go.mod` and `modules.txt` disagreeing about versions."
+      },
+      {
+        "text": "Does not use it by itself, since that needs a `go` line of 1.14 or later",
+        "correct": true,
+        "why": "Right. `modload/init.go` switches to `vendor` when the go line is at least 1.14 and the directory exists."
+      },
+      {
+        "text": "Deletes it, because old modules cannot vendor",
+        "correct": false,
+        "why": "The go command does not delete your files; the directory just goes unread."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwze8p8p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A file imports both `crypto/rand` and `math/rand/v2`, and the build stops with `rand redeclared in this block`. What fixes it?",
+    "hint": "Lesson 39.",
+    "choices": [
+      {
+        "text": "A dot import of one of them, so its names need no prefix",
+        "correct": false,
+        "why": "Both packages still clash, now through bare names, and every reader loses track of where `N` comes from."
+      },
+      {
+        "text": "A blank import, `_ \"crypto/rand\"`",
+        "correct": false,
+        "why": "`_` binds no name, so the file could no longer call `crypto/rand` at all."
+      },
+      {
+        "text": "An alias for one of them, like `crand \"crypto/rand\"`",
+        "correct": true,
+        "why": "Right. Both packages are called `rand`, and an alias written before the path gives one another name in this file."
+      },
+      {
+        "text": "Moving one import into a different file of the same package",
+        "correct": false,
+        "why": "That works only if no file needs both; the file that uses both still has the clash."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wsx8af2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A file has `. \"strings\"` among its imports and declares its own `func Title(s string) string`. What happens?",
+    "hint": "Lesson 39.",
+    "choices": [
+      {
+        "text": "The file's `Title` wins, as an inner name hides an outer one",
+        "correct": false,
+        "why": "A dot import puts `strings`' names into the file itself, the same level as your declaration, so there is nothing to hide behind."
+      },
+      {
+        "text": "It is refused: `Title already declared through dot-import of package strings`",
+        "correct": true,
+        "why": "Right. Every exported name of `strings` becomes one this file may not declare."
+      },
+      {
+        "text": "It compiles, and calls to `Title` go to `strings.Title`",
+        "correct": false,
+        "why": "The compiler will not pick between two declarations of one name; it refuses."
+      },
+      {
+        "text": "It compiles only if `Title` is unexported, as `title`",
+        "correct": false,
+        "why": "That would avoid the clash, but the question is the file as written, and it is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ka5q98",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your module requires `example.com/lib v1.2.3`. The module has published v1.2.7, v1.3.0 and, under the path `example.com/lib/v2`, v2.0.0. Which version does `go get example.com/lib@patch` choose?",
+    "hint": "Lesson 40.",
+    "choices": [
+      {
+        "text": "v1.2.7",
+        "correct": true,
+        "why": "Right. `patch` is the newest with the same major and minor numbers as the one you have."
+      },
+      {
+        "text": "v1.3.0, the newest release of `example.com/lib`",
+        "correct": false,
+        "why": "That is what `latest` or `upgrade` would pick; `patch` keeps the minor number."
+      },
+      {
+        "text": "v2.0.0, since it is the newest of all three",
+        "correct": false,
+        "why": "v2 lives at another path, and no query on `example.com/lib` ever crosses a major version."
+      },
+      {
+        "text": "v1.2.3 again, because `patch` only reinstalls the version you have",
+        "correct": false,
+        "why": "`go get` installs nothing, and `patch` moves to the newest patch release when there is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqsxwqjp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Once the code that used a module is deleted, `go get github.com/mattn/go-runewidth@___` removes the requirement from `go.mod`.",
+    "hint": "Lesson 40.",
+    "blanks": [
+      {
+        "accept": [
+          "none"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
   }
 ]
