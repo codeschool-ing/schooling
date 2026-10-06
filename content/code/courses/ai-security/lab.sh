@@ -23,7 +23,10 @@
 #                  ENDPOINT, below), enduser.py and ratelimit.py (end-user
 #                  ids and limits), kyc.py (deciding who gets API access),
 #                  shapes.py and retry.py (what goes into a call and what
-#                  comes out) and cli.py (every command)
+#                  comes out), toolgate.py (which tool calls an agent may
+#                  make), ground.py (whether an answer stands on its
+#                  sources), pipeline.py (the chain of output filters) and
+#                  cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -64,6 +67,21 @@
 #     one to be caught by a different rule; `guard retry` replays them in
 #     place of a model's attempts. The requests in data/inputs.jsonl were
 #     written by the course too.
+#   - The help centre in data/helpdesk/, the answers in data/answers.jsonl
+#     (in place of a model's replies), data/registry-snapshot.txt (a short
+#     stand-in for a package index) and data/suggested-deps.txt were written
+#     by the course.
+#   - data/owasp-llm-2025.json maps the ten categories of the OWASP Top 10
+#     for LLM Applications (2025) to this lab's commands; the names are
+#     OWASP's, the one-line meanings and the mapping are the course's.
+#   - data/surface.json, the inventory of the assistant's entry points, was
+#     written by the course for an invented company.
+#   - data/system-prompt.txt, with its harmless canary marker, and the
+#     replies in data/pipeline-outputs.jsonl were written by the course; no
+#     model produced the replies.
+#   - The tool calls in data/proposed-calls.jsonl were written by the
+#     course in place of what an agent would propose; no model proposed
+#     them.
 #   - guardlab/moderation.py is NOT A MODERATION MODEL either: a list of
 #     English words with weights the course chose, answering with a score
 #     per category the way a moderation endpoint does. The sixty messages in
@@ -86,7 +104,7 @@ esac
 rm -rf "$LAB"
 mkdir -p "$LAB/bin" "$LAB/data"
 cp -R "$here/lab/guardlab" "$LAB/guardlab"
-cp "$here"/lab/data/* "$LAB/data/"
+cp -R "$here"/lab/data/. "$LAB/data/"
 mv "$LAB/data/retention.json" "$LAB/data/holds.json" "$LAB/"
 cat > "$LAB/bin/guard" <<'GUARD'
 #!/usr/bin/env bash

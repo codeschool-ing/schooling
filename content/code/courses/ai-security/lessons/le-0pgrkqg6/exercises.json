@@ -1,0 +1,493 @@
+[
+  {
+    "id": "ex-909cwkg8",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a model is given tools, what does it actually produce?",
+    "hint": "Who runs the call?",
+    "choices": [
+      {
+        "text": "The result of the tool, computed inside the model",
+        "correct": false,
+        "why": "The model has no access to the tool's systems."
+      },
+      {
+        "text": "A proposal: a tool name and arguments",
+        "correct": true,
+        "why": "Right: the application decides whether it runs."
+      },
+      {
+        "text": "A signed request that the tool must accept",
+        "correct": false,
+        "why": "Nothing obliges the application to run it."
+      },
+      {
+        "text": "A new tool definition for the application",
+        "correct": false,
+        "why": "It proposes calls to tools it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j21jt4g",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the gate refuse `c2`, a lookup of `ac-0Z5Q`'s order?",
+    "hint": "Where does the gate get the session's account?",
+    "choices": [
+      {
+        "text": "Order 5120 does not exist in the lab",
+        "correct": false,
+        "why": "The gate never looks the order up; scope decides first."
+      },
+      {
+        "text": "Lookups are limited to one per conversation",
+        "correct": false,
+        "why": "c1 was a lookup too, and the budget is eight calls."
+      },
+      {
+        "text": "The session is ac-7Q2M's, set at sign-in",
+        "correct": true,
+        "why": "Right: the account in a proposal is something the model wrote."
+      },
+      {
+        "text": "Read tools need a person to confirm them",
+        "correct": false,
+        "why": "Only issue_refund carries a confirmation in the manifest."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9aq5w5n",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which proposed calls does the gate refuse outright? Choose all that apply.",
+    "hint": "DENY, not HOLD.",
+    "choices": [
+      {
+        "text": "c2, another client's order",
+        "correct": true,
+        "why": "Yes: outside the session's scope."
+      },
+      {
+        "text": "c4, a refund larger than what was paid",
+        "correct": true,
+        "why": "Yes: the limit refuses it before anyone is asked."
+      },
+      {
+        "text": "c6, a message to an outside address",
+        "correct": true,
+        "why": "Yes: the recipient is outside the tool's scope."
+      },
+      {
+        "text": "c3, a refund of what was paid",
+        "correct": false,
+        "why": "It is held for a person, not refused."
+      },
+      {
+        "text": "c5, a message to the session's client",
+        "correct": false,
+        "why": "It is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0n8ag3n",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`c7` proposes `update_contact`. Why is there nothing to check in its arguments?",
+    "hint": "Look at the manifest's list of tools.",
+    "choices": [
+      {
+        "text": "The tool is not granted to this agent at all",
+        "correct": true,
+        "why": "Right: an ungranted tool is refused whatever it says."
+      },
+      {
+        "text": "Its arguments are encrypted and the gate cannot read them",
+        "correct": false,
+        "why": "They are plain JSON, like every other proposal."
+      },
+      {
+        "text": "Contact updates are always allowed for the session's own client",
+        "correct": false,
+        "why": "The manifest grants no such tool."
+      },
+      {
+        "text": "The gate only checks the first six calls of a conversation",
+        "correct": false,
+        "why": "The budget in this run is eight."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qphsbd6",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each manifest question to Tarefa's answer.",
+    "hint": "One answer on the right belongs to no question.",
+    "pairs": [
+      {
+        "left": "read or write?",
+        "right": "lookup_order reads; the other two write"
+      },
+      {
+        "left": "whose data, at most?",
+        "right": "the session's client"
+      },
+      {
+        "left": "largest effect of one call?",
+        "right": "a refund of what was paid"
+      }
+    ],
+    "right_distractors": [
+      "whatever the payments system allows"
+    ]
+  },
+  {
+    "id": "ex-a877gqa4",
+    "version": 1,
+    "section": "confirmation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the gate refuse `--confirm c3` without `--by`?",
+    "hint": "What is a confirmation?",
+    "choices": [
+      {
+        "text": "It is an administrative act that names its author",
+        "correct": true,
+        "why": "Right: a questioned refund needs a name, not 'the system'."
+      },
+      {
+        "text": "The refund amount must be typed again alongside it",
+        "correct": false,
+        "why": "The amount is in the proposal already."
+      },
+      {
+        "text": "Only the session's own client may confirm a refund",
+        "correct": false,
+        "why": "The confirmer is staff; the point is that they are named."
+      },
+      {
+        "text": "Confirmations are switched off in the lab",
+        "correct": false,
+        "why": "With --by the refund is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqn6pv78",
+    "version": 1,
+    "section": "confirmation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which kinds of action does the lesson put on the list a person confirms? Choose all that apply.",
+    "hint": "Consequences, not tool names.",
+    "choices": [
+      {
+        "text": "Irreversible ones, such as money moved or a message sent",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Ones that reach outside the platform",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Ones with an effect far larger than a typical call",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Reading the client's own orders",
+        "correct": false,
+        "why": "A wrong lookup wastes a turn; it is almost never on the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkhprqd0",
+    "version": 1,
+    "section": "confirmation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which confirmation screen lets a person actually decide?",
+    "hint": "What can the person check?",
+    "choices": [
+      {
+        "text": "\"The assistant wants to issue a refund for this client. Allow it?\"",
+        "correct": false,
+        "why": "It asks for trust; nothing in it can be checked."
+      },
+      {
+        "text": "\"Refund R$ 1.200,00 to Marcos Teixeira for job 4471, the full amount\"",
+        "correct": true,
+        "why": "Right: the tool, the arguments and the effect, in words."
+      },
+      {
+        "text": "\"A refund is pending for the current conversation. Click to continue.\"",
+        "correct": false,
+        "why": "It says even less."
+      },
+      {
+        "text": "\"issue_refund: OK?\"",
+        "correct": false,
+        "why": "A tool name is not a decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-neh9zmte",
+    "version": 1,
+    "section": "confirmation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager proposes letting staff confirm `c4`, the R$ 9.000,00 refund, when a client insists. What does the lesson say?",
+    "hint": "What would the limit become?",
+    "choices": [
+      {
+        "text": "Fine, since a person is the last check before any money moves",
+        "correct": false,
+        "why": "The person is an added check; they do not remove the limit."
+      },
+      {
+        "text": "A limit that a click overrides is a suggestion, not a limit",
+        "correct": true,
+        "why": "Right: c4 is refused before anyone is asked."
+      },
+      {
+        "text": "Fine, as long as the manager is the one who confirms",
+        "correct": false,
+        "why": "Seniority does not change what the limit is for."
+      },
+      {
+        "text": "The limit should be removed, since staff can be trusted",
+        "correct": false,
+        "why": "Then nothing bounds one call's effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-y04rzt1d",
+    "version": 1,
+    "section": "confirmation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A person asked to confirm forty routine actions a day confirms the forty-first without reading it. This is confirmation ___.",
+    "hint": "Tiredness.",
+    "blanks": [
+      {
+        "accept": [
+          "fatigue"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fwmw422v",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the payments credential that `issue_refund` needs live?",
+    "hint": "Who must never see it?",
+    "choices": [
+      {
+        "text": "In the system prompt, so the model can pass it to the tool",
+        "correct": false,
+        "why": "Then any text in the model's context could carry it out."
+      },
+      {
+        "text": "In the tool result, returned after each refund",
+        "correct": false,
+        "why": "A result goes back into the model's context."
+      },
+      {
+        "text": "With the tool, on the server; the model never sees it at all",
+        "correct": true,
+        "why": "Right: a model that never held a key cannot leak it."
+      },
+      {
+        "text": "In the manifest, beside the tool's scope",
+        "correct": false,
+        "why": "The manifest is policy; secrets live in the secret store."
+      }
+    ]
+  },
+  {
+    "id": "ex-waasm1zk",
+    "version": 1,
+    "section": "isolation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `--budget 4`, how many of the seven proposed calls are refused because the budget is spent?",
+    "hint": "Count the budget lines.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-s1tr8m3b",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `lookup_order` run with a database user that can read orders and nothing else?",
+    "hint": "What if the gate has a bug?",
+    "choices": [
+      {
+        "text": "Database users that can write are more expensive",
+        "correct": false,
+        "why": "Cost is not the reason."
+      },
+      {
+        "text": "So a wrongly allowed call still reaches little",
+        "correct": true,
+        "why": "Right: isolation is the layer that holds when the gate fails."
+      },
+      {
+        "text": "The model chooses which database user to connect as",
+        "correct": false,
+        "why": "The model chooses nothing about credentials."
+      },
+      {
+        "text": "Read-only users are faster for every query",
+        "correct": false,
+        "why": "Speed is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-frfe42ky",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens when an agent's conversation spends its budget of calls?",
+    "hint": "The same fallback as lesson 19.",
+    "choices": [
+      {
+        "text": "The budget doubles once, so the task can finish",
+        "correct": false,
+        "why": "A budget that grows when reached is not a budget."
+      },
+      {
+        "text": "The model is asked to choose which calls matter most",
+        "correct": false,
+        "why": "The model does not decide what runs."
+      },
+      {
+        "text": "Later calls are queued until the next day",
+        "correct": false,
+        "why": "Nothing is queued; they are refused."
+      },
+      {
+        "text": "The conversation goes to a person",
+        "correct": true,
+        "why": "Right: like the retry loop running out."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bd067y6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the layers an action of the support agent passes through in order.",
+    "hint": "Policy first, a person next, the system last.",
+    "items": [
+      "The gate checks the tool against the manifest and the session",
+      "A person confirms it, if it is on the confirmation list",
+      "The tool runs with its own narrow credentials",
+      "The decision and its reason go to the log"
+    ]
+  },
+  {
+    "id": "ex-x3z9q2nq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each proposed call to the gate's decision.",
+    "hint": "One decision on the right is not one the gate prints.",
+    "pairs": [
+      {
+        "left": "c1, lookup of the session's order",
+        "right": "ALLOW"
+      },
+      {
+        "left": "c3, refund of what was paid",
+        "right": "HOLD"
+      },
+      {
+        "left": "c6, message to an outside address",
+        "right": "DENY"
+      }
+    ],
+    "right_distractors": [
+      "RETRY"
+    ]
+  },
+  {
+    "id": "ex-1mg1vptw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new tool, `export_orders`, would let the agent send a CSV of orders anywhere. Applying the lesson's three questions, what should happen to it?",
+    "hint": "Can its largest effect be bounded?",
+    "choices": [
+      {
+        "text": "Grant it with a confirmation step, since a person will then check",
+        "correct": false,
+        "why": "A confirmation adds a check; it does not bound what the tool can reach."
+      },
+      {
+        "text": "Grant it, since reading orders is already allowed",
+        "correct": false,
+        "why": "Exporting writes outside the platform; it is not a lookup."
+      },
+      {
+        "text": "Narrow it to the session and the platform, or leave it out",
+        "correct": true,
+        "why": "Right: a tool whose largest effect has no bound is split, narrowed or left out."
+      },
+      {
+        "text": "Grant it and rely on the logs to catch misuse",
+        "correct": false,
+        "why": "Logs explain afterwards; they do not prevent."
+      }
+    ]
+  }
+]

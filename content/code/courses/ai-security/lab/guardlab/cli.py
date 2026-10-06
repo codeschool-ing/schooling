@@ -35,6 +35,14 @@ course.
     guard check-out FILE            model replies against the output schema
     guard retry ID [ID ...]         the retry loop, with course-written replies
                                     standing in for the model's attempts
+    guard surface [--gaps]          the assistant's entry points and their controls
+    guard owasp [--uncovered]       the OWASP LLM Top 10 against this lab
+    guard filter FILE [--skip LAYER]
+                                    replies through the chain of output filters
+    guard ground FILE               answers against the help centre they cite
+    guard deps FILE                 suggested packages against a registry snapshot
+    guard gate FILE [--confirm ID --by NAME] [--budget N]
+                                    proposed tool calls against the manifest
 """
 import argparse
 import datetime as dt
@@ -505,6 +513,98 @@ def cmd_retry(a):
     return 0
 
 
+# ---- the surface ------------------------------------------------------------
+
+def cmd_surface(a):
+    rows = load("data/surface.json")
+    print("%-15s %-8s %-18s %s" % ("entry point", "goes to", "trusted?", "controls in the lab"))
+    gaps = 0
+    for r in rows:
+        trusted = "no" if r["trusted"] is False else r["trusted"]
+        ctl = ", ".join(r["controls"]) if r["controls"] else "NONE"
+        gaps += not r["controls"]
+        if a.gaps and r["controls"]:
+            continue
+        print("%-15s %-8s %-18s %s" % (r["id"], r["enters"], trusted, ctl))
+    print("%d entry points, %d with no control in this lab" % (len(rows), gaps))
+    return 0
+
+
+def cmd_owasp(a):
+    rows = load("data/owasp-llm-2025.json")
+    none = 0
+    for r in rows:
+        none += not r["controls"]
+        if a.uncovered and r["controls"]:
+            continue
+        print("%-5s %-34s %s" % (r["id"], r["name"],
+                                 ", ".join(r["controls"]) if r["controls"] else "NOT COVERED IN THIS LAB"))
+    print("%d categories, %d with no control in this lab" % (len(rows), none))
+    return 0
+
+
+# ---- the filter chain ------------------------------------------------------
+
+def cmd_filter(a):
+    from . import pipeline
+    with open(os.path.join(HOME, "data", "system-prompt.txt"), encoding="utf-8") as fh:
+        canary = pipeline.canary_of(fh.read())
+    chain = [l for l in pipeline.layers(canary, load("data/allowed-hosts.json"), 0.5)
+             if l[0] not in (a.skip or [])]
+    print("layers: " + " -> ".join(n for n, _ in chain))
+    for out in jsonl(a.file):
+        layer, why = pipeline.run(out["text"], chain)
+        print("%-3s %-5s %s" % (out["id"], "pass" if not layer else "BLOCK", why or ""))
+    return 0
+
+
+# ---- grounding ----------------------------------------------------------------
+
+def cmd_ground(a):
+    from . import ground
+    docs = ground.load_docs(os.path.join(HOME, "data", "helpdesk"))
+    bad = 0
+    for ans in jsonl(a.file):
+        notes, ok = ground.check(ans, docs)
+        bad += not ok
+        print("%-3s %-5s %s" % (ans["id"], "ok" if ok else "FLAG", notes[0]))
+        for n in notes[1:]:
+            print("%-3s %-5s %s" % ("", "", n))
+    print("%d of %d answers flagged" % (bad, len(jsonl(a.file))))
+    return 1 if bad else 0
+
+
+def cmd_deps(a):
+    from . import ground
+    with open(os.path.join(HOME, "data", "registry-snapshot.txt")) as fh:
+        registry = {line.strip().lower() for line in fh if line.strip()}
+    with open(a.file) as fh:
+        names = [line.strip() for line in fh if line.strip()]
+    missing = 0
+    for name, known in ground.deps(names, registry):
+        missing += not known
+        print("%-26s %s" % (name, "in the snapshot" if known else "NOT IN THE SNAPSHOT: do not install"))
+    return 1 if missing else 0
+
+
+# ---- tool calls -------------------------------------------------------------
+
+def cmd_gate(a):
+    from . import toolgate
+    manifest = load("data/tools.json")
+    session = manifest["session"]
+    if a.budget:
+        manifest["calls_per_conversation"] = a.budget
+    confirmed = {a.confirm: a.by} if a.confirm else {}
+    if a.confirm and not a.by:
+        print("a confirmation names the person who gave it: add --by NAME")
+        return 2
+    print("session %s, %d calls allowed" % (session["account"], manifest["calls_per_conversation"]))
+    for call, decision, why in toolgate.run(jsonl(a.file), session, manifest, confirmed):
+        print("%-3s %-14s %-5s  %s" % (call["id"], call["tool"], decision, why))
+    return 0
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -666,6 +766,34 @@ def main(argv=None):
     s = sub.add_parser("retry")
     s.add_argument("ids", nargs="+")
     s.set_defaults(fn=cmd_retry)
+
+    s = sub.add_parser("surface")
+    s.add_argument("--gaps", action="store_true")
+    s.set_defaults(fn=cmd_surface)
+
+    s = sub.add_parser("owasp")
+    s.add_argument("--uncovered", action="store_true")
+    s.set_defaults(fn=cmd_owasp)
+
+    s = sub.add_parser("filter")
+    s.add_argument("file")
+    s.add_argument("--skip", action="append")
+    s.set_defaults(fn=cmd_filter)
+
+    s = sub.add_parser("ground")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_ground)
+
+    s = sub.add_parser("deps")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_deps)
+
+    s = sub.add_parser("gate")
+    s.add_argument("file")
+    s.add_argument("--confirm")
+    s.add_argument("--by")
+    s.add_argument("--budget", type=int)
+    s.set_defaults(fn=cmd_gate)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)
