@@ -1,0 +1,257 @@
+[
+  {
+    "id": "ex-zgc40ax6",
+    "version": 1,
+    "section": "daemonset",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The DaemonSet `node-agent` has no `replicas`. How many pods did it run on the three-node cluster?",
+    "hint": "One node refused it.",
+    "choices": [
+      {
+        "text": "Three, one per node",
+        "correct": false,
+        "why": "The control-plane node's taint kept it off, and the DaemonSet does not tolerate it."
+      },
+      {
+        "text": "Two, one per worker",
+        "correct": true,
+        "why": "Right. Every node that may run it gets one, and the control plane may not."
+      },
+      {
+        "text": "One, as a default replica count",
+        "correct": false,
+        "why": "A DaemonSet has no count; it follows the nodes."
+      },
+      {
+        "text": "As many as the scheduler chooses",
+        "correct": false,
+        "why": "The question a DaemonSet asks is which nodes, not how many."
+      }
+    ]
+  },
+  {
+    "id": "ex-mp05n7yr",
+    "version": 1,
+    "section": "daemonset",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A fourth node joins the cluster. What happens to the DaemonSet `node-agent`?",
+    "hint": "It follows the nodes.",
+    "choices": [
+      {
+        "text": "Nothing until somebody raises a replica count",
+        "correct": false,
+        "why": "There is no count to raise; that is a Deployment's model."
+      },
+      {
+        "text": "One existing pod moves to the new node",
+        "correct": false,
+        "why": "Pods never move; the existing ones stay where they are."
+      },
+      {
+        "text": "The new node gets a pod of its own straight away",
+        "correct": true,
+        "why": "Right, as long as no taint keeps it off."
+      },
+      {
+        "text": "The new node is skipped until the DaemonSet is applied again",
+        "correct": false,
+        "why": "The controller watches nodes; nobody has to apply anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4hb9dkv",
+    "version": 1,
+    "section": "jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `completions: 3` and `parallelism: 2`, why did the third `report` pod start later than the other two?",
+    "hint": "How many may run at the same time?",
+    "choices": [
+      {
+        "text": "It waited for one of the first two to finish",
+        "correct": true,
+        "why": "Right: never more than two at once, three successes in all."
+      },
+      {
+        "text": "The first attempt at it failed",
+        "correct": false,
+        "why": "All three pods ended `Completed`; nothing failed."
+      },
+      {
+        "text": "The scheduler had no room on the workers",
+        "correct": false,
+        "why": "The workers were nearly idle; the limit was the Job's own."
+      },
+      {
+        "text": "Jobs always start their pods one at a time",
+        "correct": false,
+        "why": "Two started together, as `parallelism: 2` allows."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhgeadd6",
+    "version": 1,
+    "section": "jobs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Job `broken` has `backoffLimit: 2`. How many pods did it make before it gave up?",
+    "hint": "The first attempt, then the retries.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "pods"
+  },
+  {
+    "id": "ex-ema5phdg",
+    "version": 1,
+    "section": "jobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly migration Job fails. A pipeline must decide whether to alert. Which part of the Job should it read?",
+    "hint": "The reason the Job gave up.",
+    "choices": [
+      {
+        "text": "The number of pods with `Error` status",
+        "correct": false,
+        "why": "That counts attempts, and a Job can succeed after some of them fail."
+      },
+      {
+        "text": "The exit code printed in the logs of the first pod",
+        "correct": false,
+        "why": "The first pod may be a failure that a later retry fixed."
+      },
+      {
+        "text": "Its `Failed` condition and reason",
+        "correct": true,
+        "why": "Right: `BackoffLimitExceeded` says the Job as a whole has given up."
+      },
+      {
+        "text": "How long the Job has existed",
+        "correct": false,
+        "why": "Age says nothing about success."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kyr5ewh",
+    "version": 1,
+    "section": "cronjob",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CronJob without `timeZone` has the schedule `0 2 * * *`. On most clusters, when does it run?",
+    "hint": "Whose clock reads the schedule?",
+    "choices": [
+      {
+        "text": "At 02:00 in the time zone of the person who applied it",
+        "correct": false,
+        "why": "Nothing records where the person was; the cluster reads the schedule."
+      },
+      {
+        "text": "At 02:00 UTC",
+        "correct": true,
+        "why": "Right: the controller manager's time zone, usually UTC, which is 23:00 in São Paulo."
+      },
+      {
+        "text": "At 02:00 in the time zone of each node",
+        "correct": false,
+        "why": "One controller decides when to make the Job, not every node."
+      },
+      {
+        "text": "Every two hours",
+        "correct": false,
+        "why": "`0 2 * * *` is minute 0 of hour 2, once a day."
+      }
+    ]
+  },
+  {
+    "id": "ex-279067a4",
+    "version": 1,
+    "section": "cronjob",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The CronJob's second Job was named `nightly-29855110`. What is that number?",
+    "hint": "It is a time.",
+    "choices": [
+      {
+        "text": "A random suffix, like a pod's",
+        "correct": false,
+        "why": "It is one more than the previous run's, a minute later."
+      },
+      {
+        "text": "A count of how many times it has run",
+        "correct": false,
+        "why": "It had run twice."
+      },
+      {
+        "text": "A hash of the job template",
+        "correct": false,
+        "why": "A hash would not grow by one each minute."
+      },
+      {
+        "text": "The scheduled time, in minutes since 1970",
+        "correct": true,
+        "why": "Right: 17:10 UTC on 6 October 2026, which is what the run printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jarvy79j",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each workload with the controller that fits it.",
+    "hint": "Ask: every node, to completion, or on a schedule?",
+    "pairs": [
+      {
+        "left": "A log collector on every machine",
+        "right": "DaemonSet"
+      },
+      {
+        "left": "A database migration that runs once",
+        "right": "Job"
+      },
+      {
+        "left": "A backup every night at 02:00",
+        "right": "CronJob"
+      },
+      {
+        "left": "The shop's web servers",
+        "right": "Deployment"
+      }
+    ],
+    "right_distractors": [
+      "StatefulSet"
+    ]
+  },
+  {
+    "id": "ex-ag8kezyy",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Job retries a failing pod until it has failed `___` more times, and then marks itself `Failed`.",
+    "hint": "The field in `broken.yaml`.",
+    "blanks": [
+      {
+        "accept": [
+          "backoffLimit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

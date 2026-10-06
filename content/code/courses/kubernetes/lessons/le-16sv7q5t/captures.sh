@@ -15,7 +15,8 @@
 #     the kind project's stand-in for a cloud's load balancer: it watches for
 #     Services of type LoadBalancer and answers each with an Envoy container
 #     on Docker's network, whose address it writes into the Service. A cloud
-#     does the same with a machine of its own.
+#     does the same with a machine of its own. lab.sh says which one line of
+#     it is changed for the recording machine, which has no IPv6.
 # ClusterIPs, pod addresses, the load balancer's address and pod names differ
 # on every run.
 #

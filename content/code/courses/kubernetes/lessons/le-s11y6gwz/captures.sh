@@ -85,7 +85,7 @@ quiet 'sleep 5'
 run 'docker exec shop-control-plane grep encryption-provider /etc/kubernetes/manifests/kube-apiserver.yaml'
 run "$ETCD get /registry/secrets/default/db --print-value-only | strings | grep -c lab-only"
 run 'kubectl get secrets --all-namespaces -o json | kubectl replace -f - | tail -n 1'
-run "$ETCD get /registry/secrets/default/db --print-value-only | head -c 32; echo"
+run "$ETCD get /registry/secrets/default/db --print-value-only | head -c 26; echo"
 run "$ETCD get /registry/secrets/default/db --print-value-only | strings | grep -c lab-only"
 run 'kubectl get secret db -o jsonpath="{.data.password}" | base64 -d; echo'
 block access

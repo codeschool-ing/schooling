@@ -120,7 +120,16 @@ tools() {
   gobuild "helm.sh/helm/v4@$HELM" ./cmd/helm helm "-X helm.sh/helm/v4/internal/version.version=$HELM"
   gobuild "sigs.k8s.io/metrics-server@$METRICS_SERVER" ./cmd/metrics-server metrics-server \
     "-X sigs.k8s.io/metrics-server/pkg/version.gitVersion=$METRICS_SERVER"
-  gobuild "sigs.k8s.io/cloud-provider-kind@$CLOUD_PROVIDER_KIND" . cloud-provider-kind
+  # cloud-provider-kind's Envoy listens for its health check on "::", and
+  # the recording machine's kernel has no IPv6, so Envoy refuses the address
+  # and every LoadBalancer stays <pending>. One line is changed before the
+  # build, to 0.0.0.0; on a machine with IPv6 the released binary works.
+  if [ ! -x "$OPT/bin/cloud-provider-kind" ]; then
+    dir=$(GOTOOLCHAIN=auto GOFLAGS=-mod=mod go mod download -json "sigs.k8s.io/cloud-provider-kind@$CLOUD_PROVIDER_KIND" | jq -r .Dir)
+    rm -rf "$OPT/src/cloud-provider-kind" && cp -r "$dir" "$OPT/src/cloud-provider-kind" && chmod -R u+w "$OPT/src/cloud-provider-kind"
+    sed -i '/^admin:/,/port_value: 10000/ s/address: "::"/address: "0.0.0.0"/' "$OPT/src/cloud-provider-kind/pkg/loadbalancer/proxy.go"
+    (cd "$OPT/src/cloud-provider-kind" && GOTOOLCHAIN=auto GOFLAGS=-mod=mod CGO_ENABLED=0 go build -trimpath -o "$OPT/bin/cloud-provider-kind" .)
+  fi
   wrap metrics-server "$METRICS_SERVER" "$OPT/bin/metrics-server"
   [ -f "$OPT/manifests/calico.yaml" ] || curl -sSfo "$OPT/manifests/calico.yaml" \
     "https://raw.githubusercontent.com/projectcalico/calico/$CALICO/manifests/calico.yaml"

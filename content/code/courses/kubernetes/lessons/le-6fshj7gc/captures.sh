@@ -70,6 +70,7 @@ run 'kubectl apply -f shop-public.yaml'
 quiet 'kubectl scale deployment shop --replicas=1'
 quiet 'sleep 6'
 run 'kubectl get pods -l app=shop -o wide'
+run 'kubectl get nodes -o custom-columns=NAME:.metadata.name,ADDRESS:.status.addresses[0].address'
 NODES=$(kubectl get nodes -o jsonpath='{range .items[*]}{.status.addresses[0].address}{" "}{end}')
 run "for ip in $NODES; do echo -n \"\$ip: \"; curl -s -m 2 \$ip:30080 || echo no answer; done"
 run 'kubectl logs deployment/shop --tail=3'
