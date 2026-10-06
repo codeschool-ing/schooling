@@ -1172,6 +1172,101 @@ def l08_z_area(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-masking', 9)
+def l09_masking(lang):
+    twelve = S.column('basket')
+    two = [2126.00 if x == 212.60 else 1547.50 if x == 154.75 else x for x in twelve]
+    m, s_ = S.mean(two), S.sd(two)
+    md, mad = S.median(two), S.mad(two)
+    half = 3.5 * mad / 0.6745
+    t = {'en': dict(
+        label=f'The twelve baskets with two typing errors, R$ 1,547.50 and R$ 2,126.00, on a line '
+              f'from R$ 0 to R$ 2,500, drawn twice. Above, the band of the z-score rule, the mean '
+              f'plus or minus three standard deviations, reaches from below zero to about R$ 2,466 '
+              f'and contains both errors, so neither is flagged. Below, the band of the robust rule, '
+              f'built from the median and the MAD, reaches only to about R$ 247, and both errors lie '
+              f'far outside it.',
+        x='basket, in reais', zr='z-score rule: mean ± 3 sd', rr='robust rule: median ± 3.5 robust units',
+        none='nothing flagged', both='both flagged',
+        cap='The two errors inflate the standard deviation until the band they are judged by '
+            'contains them. The median and the MAD barely notice them.'),
+        'pt': dict(
+        label=f'As doze cestas com dois erros de digitação, R$ 1.547,50 e R$ 2.126,00, numa reta de '
+              f'R$ 0 a R$ 2.500, desenhadas duas vezes. Em cima, a faixa da regra do escore z, a média '
+              f'mais ou menos três desvios padrão, vai de abaixo de zero até cerca de R$ 2.466 e '
+              f'contém os dois erros, então nenhum é apontado. Embaixo, a faixa da regra robusta, '
+              f'construída com a mediana e o MAD, vai só até cerca de R$ 247, e os dois erros ficam '
+              f'bem fora dela.',
+        x='cesta, em reais', zr='regra do escore z: média ± 3 dp', rr='regra robusta: mediana ± 3,5 unidades robustas',
+        none='nada apontado', both='os dois apontados',
+        cap='Os dois erros inflam o desvio padrão até que a faixa pela qual são julgados os contenha. A '
+            'mediana e o MAD quase não os notam.')}[lang]
+    f = Fig('l09-masking', 660, 250, t['label'])
+    p = Plot(f, 30, 30, 640, 205, 0, 2500, 0, 1)
+    p.xaxis(range(0, 2501, 500), fmt=lambda v: num(lang, v, 0), label=t['x'])
+    for row, (lo, hi, lab, verdict, col) in enumerate((
+            (m - 3 * s_, m + 3 * s_, t['zr'], t['none'], '--paper-dim'),
+            (md - half, md + half, t['rr'], t['both'], '--amber'))):
+        y = 70 + row * 80
+        a, b = p.sx(max(lo, 0)), p.sx(min(hi, 2500))
+        f.path(f'M{a:.1f} {y - 14:.1f} L{b:.1f} {y - 14:.1f} L{b:.1f} {y + 14:.1f} L{a:.1f} {y + 14:.1f} Z',
+               stroke='--phosphor', width=1.2, fill='--scan')
+        f.text(30, y - 26, lab, size=10, anchor='start', weight='600')
+        f.text(640, y - 26, verdict, size=10, anchor='end', fill=col, weight='600')
+        for x in two:
+            out = x < lo or x > hi
+            f.circle(p.sx(x), y, 4.5, fill='--amber' if out else '--phosphor', stroke='--paper',
+                     width=0.8)
+    return f, t['cap']
+
+
+@figure('l09-decide', 9)
+def l09_decide(lang):
+    t = {'en': dict(
+        label='A decision chart. Start with a flagged value and go back to its source. If it is an '
+              'error and the true value can be found, correct it; if it cannot, remove it and say '
+              'so. If it belongs to a different population, analyse that group separately or '
+              'exclude it by a rule written down beforehand. If it is a genuine extreme, keep it, '
+              'and report the result with and without it when it changes the conclusion.',
+        start='a flagged value', src='check the source', err='an error', other='another population',
+        real='a genuine extreme', e1='correct it, or remove it', e2='and say so', o1='analyse it apart,',
+        o2='or exclude it by a rule', r1='keep it, and report with', r2='and without it',
+        cap='The rule that flags a value is only the start. What happens to it depends on where it '
+            'came from, and every choice is written down.'),
+        'pt': dict(
+        label='Um diagrama de decisão. Comece com um valor apontado e volte à origem dele. Se for um '
+              'erro e o valor verdadeiro puder ser achado, corrija-o; se não puder, remova-o e diga '
+              'isso. Se ele pertencer a outra população, analise esse grupo separadamente ou exclua-o '
+              'por uma regra escrita antes. Se for um extremo genuíno, mantenha-o, e informe o '
+              'resultado com e sem ele quando isso mudar a conclusão.',
+        start='um valor apontado', src='conferir a origem', err='um erro', other='outra população',
+        real='um extremo genuíno', e1='corrigir, ou remover', e2='e dizer isso', o1='analisar à parte,',
+        o2='ou excluir por uma regra', r1='manter, e informar com', r2='e sem ele',
+        cap='A regra que aponta um valor é só o começo. O que acontece com ele depende de onde veio, e '
+            'toda escolha fica registrada.')}[lang]
+    f = Fig('l09-decide', 660, 290, t['label'])
+    f.rect(250, 14, 160, 34, stroke='--amber')
+    f.text(330, 31, t['start'], size=10.5, weight='600', fill='--amber')
+    f.rect(250, 78, 160, 34, stroke='--phosphor')
+    f.text(330, 95, t['src'], size=10.5, weight='600')
+    f.line(330, 48, 330, 76, arrow=True)
+    xs = [110, 330, 550]
+    for x, lab, l1, l2 in zip(xs, (t['err'], t['other'], t['real']), (t['e1'], t['o1'], t['r1']),
+                              (t['e2'], t['o2'], t['r2'])):
+        f.rect(x - 90, 150, 180, 30, stroke='--wire')
+        f.text(x, 165, lab, size=10.5, weight='600')
+        f.rect(x - 95, 214, 190, 50, stroke='--wire', fill='--scan')
+        f.text(x, 232, l1, size=10)
+        f.text(x, 248, l2, size=10)
+        f.line(x, 180, x, 212, arrow=True)
+    f.path('M330 112 L330 130 L110 130 L110 148', stroke='--paper-dim', width=1.2, arrow=True)
+    f.path('M330 112 L330 148', stroke='--paper-dim', width=1.2, arrow=True)
+    f.path('M330 130 L550 130 L550 148', stroke='--paper-dim', width=1.2, arrow=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

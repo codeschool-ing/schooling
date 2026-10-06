@@ -694,6 +694,48 @@ def l8():
     show('z of a 52-minute delivery with mean 38.96 and sd 9.77', (52 - 38.96) / 9.77)
 
 
+def mad(xs):
+    m = median(xs)
+    return median([abs(x - m) for x in xs])
+
+
+def robust_z(x, xs):
+    return 0.6745 * (x - median(xs)) / mad(xs)
+
+
+@lesson(9)
+def l9():
+    twelve = column('basket')
+    typo = [2126.00 if x == 212.60 else x for x in twelve]
+    m, s_ = mean(typo), sd(typo)
+    show('typo: mean, sd', f'{m:.4f} {s_:.4f}')
+    show('typo: z of 2126.00', (2126 - m) / s_)
+    show('typo: largest other z', max((x - m) / s_ for x in typo if x != 2126))
+    show('max possible z with n = 12, (n-1)/sqrt(n)', 11 / math.sqrt(12))
+    show('max possible z with n = 10', 9 / math.sqrt(10))
+    two = [2126.00 if x == 212.60 else 1547.50 if x == 154.75 else x for x in twelve]
+    m2, s2 = mean(two), sd(two)
+    show('two typos: mean, sd', f'{m2:.4f} {s2:.4f}')
+    show('two typos: z of 2126.00, 1547.50', f'{(2126 - m2) / s2:.4f} {(1547.5 - m2) / s2:.4f}')
+    show('two typos: median, MAD', f'{median(two):.4f} {mad(two):.4f}')
+    show('two typos: robust z of 2126.00, 1547.50', f'{robust_z(2126, two):.4f} {robust_z(1547.5, two):.4f}')
+    show('two typos: robust z of 95.00 and 12.90', f'{robust_z(95.0, two):.4f} {robust_z(12.9, two):.4f}')
+    show('twelve correct: median, MAD', f'{median(twelve):.4f} {mad(twelve):.4f}')
+    show('twelve correct: robust z of 212.60', robust_z(212.6, twelve))
+    show('twelve correct: z of 212.60', (212.6 - mean(twelve)) / sd(twelve))
+    show('two typos: abs deviations sorted', sorted(round(abs(x - median(two)), 2) for x in two))
+    b = BASKETS
+    p95 = quantile(b, 0.95)
+    w = [min(x, p95) for x in b]
+    show('400: 95th percentile', p95)
+    show('400: winsorised at the 95th: mean', mean(w))
+    show('400: mean without the 17 beyond the fence', mean([x for x in b if x <= quantile(b, .75) + 1.5 * (quantile(b, .75) - quantile(b, .25))]))
+    show('400: count |z| > 3', sum(1 for x in b if abs(x - mean(b)) / sd(b) > 3))
+    show('400: robust z > 3.5 count', sum(1 for x in b if robust_z(x, b) > 3.5))
+    show('400: median, MAD', f'{median(b):.4f} {mad(b):.4f}')
+    show('400: three largest', sorted(b)[-3:])
+
+
 def main():
     picked = [int(a) for a in sys.argv[1:]] or sorted(SHEET)
     for n in picked:
