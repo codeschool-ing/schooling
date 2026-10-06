@@ -107,6 +107,40 @@ Now every `append` to `path` has to copy, so `docs` and `music` each get an arra
 
 The habit worth keeping is a question to ask whenever you append to a slice you did not make
 yourself: **who else can see this array?** If the answer is "possibly somebody", cut the capacity
-with `s[:len(s):len(s)]` before appending, or take a `slices.Clone` and append to that. Lesson 11's
-function that appended and lost its result is the same mechanism seen from the caller's side, and
-lesson 21 meets it again when a function takes `...` arguments.
+with `s[:len(s):len(s)]` before appending, or take a `slices.Clone` and append to that.
+
+## The caller's side
+
+Lesson 11's `addFour` appended to its copy of a slice, and the caller's length stayed at 3. It left
+open where the 4 went. When the caller's slice has spare capacity, the answer is: into the caller's
+array.
+
+```go
+package main
+
+import "fmt"
+
+func addFour(s []int) {
+	s = append(s, 4)
+}
+
+func main() {
+	nums := make([]int, 3, 10)
+	addFour(nums)
+	fmt.Println(nums, len(nums))
+	fmt.Println(nums[:4])
+}
+```
+
+```
+ana@vm:~/slices-caller$ go run .
+[0 0 0] 3
+[0 0 0 4]
+```
+
+`nums` still says length 3, as lesson 11 promised. But `nums[:4]`, stretching into the capacity as
+section 02 allowed, finds the 4 that `addFour` wrote. **The function changed memory the caller owns,
+past the caller's length, where nothing prints it**, and the next `append` the caller makes will
+write over it. With no spare capacity, `append` inside `addFour` would have copied to a new array
+instead, and the caller's array would be untouched. Lesson 21 meets the same mechanism again when a
+function takes `...` arguments.

@@ -145,7 +145,7 @@ Uma slice sem elementos vem em dois tipos, e quase todo o Go não consegue disti
     },
     {
       "code": "\tfmt.Println(none == nil, empty == nil)\n",
-      "note": "O `== nil` vê. É a única comparação que uma slice aceita; a lição 13 mostra o compilador recusando `==` entre duas slices."
+      "note": "O `== nil` vê. É a única comparação que uma slice aceita; a lição 11 mostrou o compilador recusando `==` entre duas slices."
     },
     {
       "code": "\n\ta, _ := json.Marshal(none)\n\tb, _ := json.Marshal(empty)\n\tfmt.Println(string(a), string(b))\n",

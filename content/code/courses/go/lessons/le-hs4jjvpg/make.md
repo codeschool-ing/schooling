@@ -145,7 +145,7 @@ A slice with no elements comes in two kinds, and most of Go cannot tell them apa
     },
     {
       "code": "\tfmt.Println(none == nil, empty == nil)\n",
-      "note": "`== nil` does. It is the one comparison a slice allows; lesson 13 shows the compiler refusing `==` between two slices."
+      "note": "`== nil` does. It is the one comparison a slice allows; lesson 11 showed the compiler refusing `==` between two slices."
     },
     {
       "code": "\n\ta, _ := json.Marshal(none)\n\tb, _ := json.Marshal(empty)\n\tfmt.Println(string(a), string(b))\n",

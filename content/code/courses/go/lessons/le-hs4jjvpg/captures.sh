@@ -304,3 +304,25 @@ EOF
 
 block path-fixed
 on slices-path 'go run .'
+
+lab fresh slices-caller
+put slices-caller/main.go <<'EOF'
+package main
+
+import "fmt"
+
+func addFour(s []int) {
+	s = append(s, 4)
+}
+
+func main() {
+	nums := make([]int, 3, 10)
+	addFour(nums)
+	fmt.Println(nums, len(nums))
+	fmt.Println(nums[:4])
+}
+EOF
+quiet slices-caller 'go mod init example.com/caller'
+
+block caller
+on slices-caller 'go run .'

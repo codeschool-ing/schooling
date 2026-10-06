@@ -109,5 +109,39 @@ array.
 O hábito que vale guardar é uma pergunta a fazer sempre que você der `append` numa slice que não foi
 você que criou: **quem mais enxerga este array?** Se a resposta for "talvez alguém", corte a
 capacidade com `s[:len(s):len(s)]` antes do `append`, ou tire um `slices.Clone` e acrescente nele.
-A função da lição 11 que fazia `append` e perdia o resultado é o mesmo mecanismo visto do lado de
-quem chama, e a lição 21 o reencontra quando uma função recebe argumentos `...`.
+
+## O lado de quem chama
+
+O `addFour` da lição 11 fazia `append` na sua cópia de uma slice, e o comprimento de quem chamou
+continuava 3. Ficou em aberto para onde foi o 4. Quando a slice de quem chama tem capacidade
+sobrando, a resposta é: para o array de quem chama.
+
+```go
+package main
+
+import "fmt"
+
+func addFour(s []int) {
+	s = append(s, 4)
+}
+
+func main() {
+	nums := make([]int, 3, 10)
+	addFour(nums)
+	fmt.Println(nums, len(nums))
+	fmt.Println(nums[:4])
+}
+```
+
+```
+ana@vm:~/slices-caller$ go run .
+[0 0 0] 3
+[0 0 0 4]
+```
+
+`nums` continua dizendo comprimento 3, como a lição 11 prometeu. Mas `nums[:4]`, esticando para
+dentro da capacidade como a seção 02 permitiu, encontra o 4 que o `addFour` escreveu. **A função
+mudou memória que pertence a quem chama, além do comprimento de quem chama, onde nada a imprime**, e
+o próximo `append` de quem chama vai escrever por cima. Sem capacidade sobrando, o `append` dentro
+de `addFour` teria copiado para um array novo, e o array de quem chama ficaria intacto. A lição 21
+reencontra o mesmo mecanismo quando uma função recebe argumentos `...`.
