@@ -12,7 +12,7 @@ Classes are where most of a stylesheet's selectors live, and a class name is rea
 ```
 
 - **The block** is the component: `.event-card`. One name, one component, one file.
-- **An element** is a part that only exists inside it, written with two underscores: `.event-card__title`. It is a class of its own, so the rule is `.event-card__title`, not `.event-card .title`: one class, specificity (0,1,0), and it cannot catch the title of anything else.
+- **An element** is a part that only exists inside it, written with two underscores: `.event-card__title`. It is a class of its own, so the rule is `.event-card__title`, not `.event-card .title`. That is one class, specificity (0,1,0), and it cannot catch the title of anything else.
 - **A modifier** is a variant, written with two hyphens: `.event-card--cancelled`. It goes on the block beside the block's own class, and here it does the least it can: it redefines `--color-accent`, section 03's pattern, and everything inside the card follows.
 
 ```

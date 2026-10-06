@@ -12,7 +12,7 @@ As classes são onde vive a maior parte dos seletores de uma folha de estilos, e
 ```
 
 - **O bloco** é o componente: `.event-card`. Um nome, um componente, um arquivo.
-- **Um elemento** é uma parte que só existe dentro dele, escrita com dois sublinhados: `.event-card__title`. É uma classe própria, então a regra é `.event-card__title`, não `.event-card .title`: uma classe, especificidade (0,1,0), e ela não tem como pegar o título de outra coisa.
+- **Um elemento** é uma parte que só existe dentro dele, escrita com dois sublinhados: `.event-card__title`. É uma classe própria, então a regra é `.event-card__title`, não `.event-card .title`. É uma classe só, especificidade (0,1,0), e ela não tem como pegar o título de outra coisa.
 - **Um modificador** é uma variante, escrita com dois hifens: `.event-card--cancelled`. Vai no bloco, ao lado da classe do próprio bloco, e aqui faz o mínimo possível: redefine `--color-accent`, o padrão da seção 03, e tudo dentro do cartão acompanha.
 
 ```

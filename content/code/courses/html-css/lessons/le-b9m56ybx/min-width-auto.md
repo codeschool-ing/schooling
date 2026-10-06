@@ -44,7 +44,7 @@ div.row.fixed  content 400 wide in a box 400 wide
 
 The title is a file name with no spaces and no hyphens, which the browser cannot break. In the first row, the title should have been 312 wide, 400 minus the 8-pixel gap and the 80-pixel price. **It refused to go below 330.91**, the width of that unbreakable string, and pushed the price to x 338.91, so that it ends at 418.91: **the row's content is 419 wide in a box 400 wide**. On a real page that is the price hanging off the edge of the card, or a page that scrolls sideways on a phone.
 
-The second row adds two declarations to the title: **`min-width: 0`**, which removes the floor and lets the item shrink to its share, and `overflow-wrap: anywhere` from lesson 6, which lets the string break so that it fits. The title is 312 wide and two lines tall, and the row is exactly 400.
+The second row gives the title two declarations: **`min-width: 0`**, which removes the floor and lets the item shrink to its share, and `overflow-wrap: anywhere` from lesson 6, which lets the string break so that it fits. The title is 312 wide and two lines tall, and the row is exactly 400.
 
 ## How to recognise it
 
