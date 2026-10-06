@@ -6,12 +6,13 @@ that every certificate in ~/lab/pki is the same file on every machine.
     portal       portal.vereda.example   P-256      2026-05-01 .. 2026-11-17
     agenda       agenda.vereda.example   P-256      2026-01-10 .. 2026-04-10  expired
     files        files.vereda.example    P-256      2026-02-01 .. 2026-08-20  revoked
-    radius       radius.vereda.example   P-256      2026-03-01 .. 2026-09-17
+    radius       radius.vereda.example   P-256      2026-03-01 .. 2030-12-31
     ldap         ldap.vereda.example     P-256      2026-04-01 .. 2030-12-31
     intranet     intranet.vereda.example P-256      self-signed
     ana-mail     ana.lima@vereda.example RSA 2048   2026-02-01 .. 2028-02-01  S/MIME
     bruno-mail   bruno.reis@vereda.example RSA 2048 2026-02-01 .. 2028-02-01  S/MIME
     impostor     "Vereda Root CA"        RSA 3072   same name as root, another key
+    portal-impostor, radius-impostor     the impostor's leaves for those names
 
 The lab's present is 2026-06-15 12:00 in São Paulo (NOW below); every check
 the lessons make passes it explicitly, so that a capture taken next year
@@ -106,10 +107,12 @@ def build(out):
         "portal": ("portal.vereda.example", 0x3A01, day(2026, 5, 1), day(2026, 11, 17)),
         "agenda": ("agenda.vereda.example", 0x3A02, day(2026, 1, 10), day(2026, 4, 10)),
         "files": ("files.vereda.example", 0x3A03, day(2026, 2, 1), day(2026, 8, 20)),
-        "radius": ("radius.vereda.example", 0x3A04, day(2026, 3, 1), day(2026, 9, 17)),
-        # The directory's certificate is checked by libldap against the real
-        # clock, which no option moves, so it runs to 2030 to keep lesson 12's
-        # transcripts valid; every other check in the lab passes -attime.
+        # The directory's and the RADIUS server's certificates are checked by
+        # libldap and by FreeRADIUS and eapol_test against the real clock,
+        # which no option moves, so they run to 2030 to keep the transcripts
+        # of lessons 12 and 16 valid; every other check in the lab passes
+        # -attime.
+        "radius": ("radius.vereda.example", 0x3A04, day(2026, 3, 1), day(2030, 12, 31)),
         "ldap": ("ldap.vereda.example", 0x3A05, day(2026, 4, 1), day(2030, 12, 31)),
     }
     for short, (host, serial, start, end) in leaves.items():
@@ -159,6 +162,11 @@ def build(out):
     fake = leaf_cert("portal.vereda.example", k, impostor, imp_key, 0x3A01,
                      day(2026, 5, 1), day(2026, 11, 17))
     w("portal-impostor.pem", pem(fake))
+    k = keys.ec_key("pki/radius-impostor")
+    fake = leaf_cert("radius.vereda.example", k, impostor, imp_key, 0x3A04,
+                     day(2026, 3, 1), day(2030, 12, 31))
+    w("radius-impostor.pem", pem(fake))
+    keys.write_private(k, os.path.join(out, "radius-impostor.key"))
 
     crl = (x509.CertificateRevocationListBuilder().issuer_name(iss.subject)
            .last_update(day(2026, 6, 1)).next_update(day(2026, 6, 30))

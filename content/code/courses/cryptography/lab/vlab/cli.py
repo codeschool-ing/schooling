@@ -193,6 +193,11 @@ def cmd_tlsflow(a):
     tlsflow.main()
 
 
+def cmd_eaplog(a):
+    from . import eaplog
+    eaplog.main()
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -258,6 +263,8 @@ def main():
     s.set_defaults(fn=cmd_kem)
     s = sub.add_parser("tls-flow", help="read `openssl s_client -trace` on stdin and list the handshake")
     s.set_defaults(fn=cmd_tlsflow)
+    s = sub.add_parser("eap-log", help="read `eapol_test` debug output on stdin and summarise it")
+    s.set_defaults(fn=cmd_eaplog)
     a = p.parse_args()
     a.fn(a)
 
