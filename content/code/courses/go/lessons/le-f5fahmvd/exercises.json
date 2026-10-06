@@ -1,0 +1,586 @@
+[
+  {
+    "id": "ex-k0b5gvrb",
+    "version": 1,
+    "section": "zero-values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function declares `var s string` and, without assigning it, prints it with `fmt.Printf(\"%#v\\n\", s)`. What appears?",
+    "hint": "Every type has a zero value.",
+    "choices": [
+      {
+        "text": "`\"\"`",
+        "correct": true,
+        "why": "Right. The zero value of a string is the empty string, and `%#v` writes it with its quotes."
+      },
+      {
+        "text": "`<nil>`",
+        "correct": false,
+        "why": "That is what an interface holding nothing prints. A string is not one of the kinds whose zero is `nil`."
+      },
+      {
+        "text": "Whatever bytes were in that memory before",
+        "correct": false,
+        "why": "That is C's rule for an unassigned local. Go sets every variable to its zero value when it is declared."
+      },
+      {
+        "text": "Nothing: the compiler refuses to read `s` before it is assigned",
+        "correct": false,
+        "why": "Some languages refuse that; Go does not need to, because `s` already holds a value from the moment it is declared."
+      }
+    ]
+  },
+  {
+    "id": "ex-km1vb0qm",
+    "version": 1,
+    "section": "zero-values",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these types have `nil` as their zero value? Choose all that apply.",
+    "hint": "Section 01 read the output in three groups.",
+    "choices": [
+      {
+        "text": "`*int`",
+        "correct": true,
+        "why": "Yes: a pointer that points at nothing is `(*int)(nil)`."
+      },
+      {
+        "text": "`[]int`",
+        "correct": true,
+        "why": "Yes: `[]int(nil)`, and its length is 0."
+      },
+      {
+        "text": "`[3]int`",
+        "correct": false,
+        "why": "An array is zero all the way down: `[3]int{0, 0, 0}`, never `nil`."
+      },
+      {
+        "text": "`map[string]int`",
+        "correct": true,
+        "why": "Yes: `map[string]int(nil)`, which can be read and not written."
+      },
+      {
+        "text": "a struct type such as `point`",
+        "correct": false,
+        "why": "A struct's zero is each field at its own zero: `main.point{X:0, Y:0, Label:\"\"}`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kypqyqs",
+    "version": 1,
+    "section": "zero-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var m map[string]int` and then `fmt.Println(len(m), m[\"a\"])`. What happens?",
+    "hint": "Reading and writing are not the same for a nil map.",
+    "choices": [
+      {
+        "text": "It panics, because `m` is nil",
+        "correct": false,
+        "why": "Only writing to a nil map panics. Reading a key and asking its length both work."
+      },
+      {
+        "text": "It prints `0 <nil>`",
+        "correct": false,
+        "why": "A missing key gives the map's value type's zero, and that type is `int`, so it is `0`."
+      },
+      {
+        "text": "It prints `0 0`",
+        "correct": true,
+        "why": "Right. A nil map has length 0, and reading any key gives the zero `int`."
+      },
+      {
+        "text": "It does not compile, because `m` was never made with `make`",
+        "correct": false,
+        "why": "The compiler cannot know and does not ask. `make` matters only once you write to the map."
+      }
+    ]
+  },
+  {
+    "id": "ex-2p9qwa32",
+    "version": 1,
+    "section": "zero-values",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write `type Counter struct { hits int; seen map[string]bool }`. Somebody declares `var c Counter` and your code runs `c.seen[\"/home\"] = true`. What happens?",
+    "hint": "What is the zero value of the field `seen`?",
+    "choices": [
+      {
+        "text": "It works: a field's zero map is an empty map ready for use",
+        "correct": false,
+        "why": "That is true of `strings.Builder`, not of a map. A map field starts `nil`, and a nil map cannot be written."
+      },
+      {
+        "text": "It panics, because `seen` is a nil map",
+        "correct": true,
+        "why": "Right. This type's zero value is not ready to use. Lesson 14 shows the panic and the `make` that prevents it."
+      },
+      {
+        "text": "It does not compile until `c` is initialised",
+        "correct": false,
+        "why": "`var c Counter` already initialised it, to its zero value. The compiler accepts the write."
+      },
+      {
+        "text": "The write is ignored and `seen` stays empty",
+        "correct": false,
+        "why": "Go does not drop a write in silence. The write to a nil map stops the program with a panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkytdxqk",
+    "version": 1,
+    "section": "zero-values",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go doc strings.Builder` says, in its own words: \"The zero value is ready to ___.\"",
+    "hint": "Three letters: what you can do with it straight away.",
+    "blanks": [
+      {
+        "accept": [
+          "use"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3g1r94p0",
+    "version": 1,
+    "section": "iota",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a `const` block, what is `iota`?",
+    "hint": "Look at `Saturday`, on the seventh line of its block.",
+    "choices": [
+      {
+        "text": "A counter that goes up by one every time it is read",
+        "correct": false,
+        "why": "It is fixed per line: two uses on the same line give the same number."
+      },
+      {
+        "text": "The position of the line in its block, counting from 0",
+        "correct": true,
+        "why": "Right. `Sunday` is on line 0 and `Saturday` on line 6, and a new block starts again at 0."
+      },
+      {
+        "text": "The number of constants the package has declared so far",
+        "correct": false,
+        "why": "It restarts in every block: the sizes block began at 0 again after the days."
+      },
+      {
+        "text": "A keyword that turns the block into an enum type",
+        "correct": false,
+        "why": "Go has no enum type and `iota` is not a keyword; `go doc builtin` lists it as a predeclared constant."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd1e3chb",
+    "version": 1,
+    "section": "iota",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the block `_ = iota`, `KiB = 1 << (10 * iota)`, `MiB`, `GiB`, `TiB`, how many bytes is `MiB`?",
+    "hint": "`MiB` is on line 2 and repeats the expression above it.",
+    "value": 1048576,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-bzzfzw08",
+    "version": 1,
+    "section": "iota",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the program give line 0 of the `Status` block to `Unknown` instead of to `Active`?",
+    "hint": "What does a field nobody set hold?",
+    "choices": [
+      {
+        "text": "Because `iota` cannot be used for a value of 0",
+        "correct": false,
+        "why": "It can and was: `Sunday` is 0. The choice is about what 0 should mean."
+      },
+      {
+        "text": "So a forgotten field says it was never set",
+        "correct": true,
+        "why": "Right. The forgotten field holds the zero `Status`, and naming 0 `Unknown` makes it say so."
+      },
+      {
+        "text": "Because Go requires the first constant of a block to be unused",
+        "correct": false,
+        "why": "There is no such rule; the days block uses its first line for `Sunday`."
+      },
+      {
+        "text": "Because 0 is reserved for errors in Go",
+        "correct": false,
+        "why": "Errors are values of type `error`, not numbers; nothing reserves 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehcrqb3x",
+    "version": 1,
+    "section": "iota",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fmt.Println(Monday)` with the lesson's own `Weekday` prints `1`, and `fmt.Println(time.Monday)` prints `Monday`. Why the difference?",
+    "hint": "Both are declared with `iota` in the same way.",
+    "choices": [
+      {
+        "text": "`time`'s constants are strings, and ours are numbers",
+        "correct": false,
+        "why": "`go doc time.Sunday` showed `Sunday Weekday = iota`, and `%d` printed `time.Saturday` as 6: they are numbers."
+      },
+      {
+        "text": "`fmt` has a list of the standard library's names",
+        "correct": false,
+        "why": "`fmt` knows nothing about `time`; it asks the value's type how to print itself."
+      },
+      {
+        "text": "`time.Weekday` has a method that turns the number into a word",
+        "correct": true,
+        "why": "Right. The constant is the number 1 in both; `time`'s type also has a `String` method, which lesson 25 covers."
+      },
+      {
+        "text": "Our constants lost their names because of `iota`",
+        "correct": false,
+        "why": "A constant's name never reaches the running program, with `iota` or without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh3zgf1g",
+    "version": 1,
+    "section": "iota",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program saved `Weekday` numbers to a database last week. Today you insert a line `Holiday` between `Monday` and `Tuesday` in the `iota` block. What happens to the saved rows?",
+    "hint": "Count the lines again after the insert.",
+    "choices": [
+      {
+        "text": "Every saved day from 2 upwards now reads as the wrong day",
+        "correct": true,
+        "why": "Right. A stored 2 meant Tuesday and now means `Holiday`: every constant after the insert moved up by one, and the stored numbers did not."
+      },
+      {
+        "text": "Nothing: each constant keeps the number of its first build",
+        "correct": false,
+        "why": "Constants are worked out on every build, from their position; nothing remembers the old numbering."
+      },
+      {
+        "text": "The build fails, because two constants now share the value 2",
+        "correct": false,
+        "why": "No two share one: `Holiday` is 2 and `Tuesday` became 3. The compiler sees nothing wrong."
+      },
+      {
+        "text": "Go renumbers the stored rows",
+        "correct": false,
+        "why": "Go knows nothing about your database. That is why numbers that leave the program are safer written by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-rh70f264",
+    "version": 1,
+    "section": "iota",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`const primes = []int{2, 3, 5}` is refused as \"not constant\". A slice like that belongs in a declaration made with the keyword `___`.",
+    "hint": "The other way to declare a name, which lesson 5 met first.",
+    "blanks": [
+      {
+        "accept": [
+          "var"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vpfhynj1",
+    "version": 1,
+    "section": "scope-and-shadowing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In one package, `main.go` imports `fmt` and `report.go` calls `fmt.Println` without importing it. What happens?",
+    "hint": "Which scope does an import belong to?",
+    "choices": [
+      {
+        "text": "It builds, because both files are in package `main`",
+        "correct": false,
+        "why": "That is true of `limit`, declared at package level. An import is not shared."
+      },
+      {
+        "text": "It fails: `undefined: fmt`",
+        "correct": true,
+        "why": "Right, the build fails in `report.go`. An import belongs to the one file that wrote it."
+      },
+      {
+        "text": "It builds with a warning, and runs",
+        "correct": false,
+        "why": "Go does not warn about scope; a name that is not in scope is an error."
+      },
+      {
+        "text": "It builds, and panics when `report` is called",
+        "correct": false,
+        "why": "An undefined name is found at compile time, before anything runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-dt1wnk68",
+    "version": 1,
+    "section": "scope-and-shadowing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does this print? `x := 1` then `if true { x := 2; x++ }` then `fmt.Println(x)`",
+    "hint": "How many variables called `x` are there?",
+    "choices": [
+      {
+        "text": "`3`",
+        "correct": false,
+        "why": "That would need the `if` to change the outer `x`. Its `:=` declared a second one instead."
+      },
+      {
+        "text": "`2`",
+        "correct": false,
+        "why": "That treats `:=` as `=` and forgets the `++`; neither touches the outer `x` anyway."
+      },
+      {
+        "text": "`1`",
+        "correct": true,
+        "why": "Right. The block's `x` is a new variable that hid the outer one until the closing brace."
+      },
+      {
+        "text": "Nothing: the build fails with \"no new variables on left side of :=\"",
+        "correct": false,
+        "why": "That error is for `:=` in the same block as the existing name. Inside the `if`, `x` is new."
+      }
+    ]
+  },
+  {
+    "id": "ex-brtr8m60",
+    "version": 1,
+    "section": "scope-and-shadowing",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each scope to something the lesson's programs declared there.",
+    "hint": "The table at the top of section 03.",
+    "pairs": [
+      {
+        "left": "universe",
+        "right": "`len` and `nil`"
+      },
+      {
+        "left": "package",
+        "right": "`var limit = 3`, outside any function"
+      },
+      {
+        "left": "file",
+        "right": "`import \"fmt\"`"
+      },
+      {
+        "left": "block",
+        "right": "the `x := x` inside the `if`"
+      }
+    ],
+    "right_distractors": [
+      "every program on the machine"
+    ]
+  },
+  {
+    "id": "ex-e4zdkt1y",
+    "version": 1,
+    "section": "scope-and-shadowing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`total` stopped at `\"x\"` and still returned `3 <nil>`. Why `<nil>`?",
+    "hint": "Count the variables called `err`.",
+    "choices": [
+      {
+        "text": "`strconv.Atoi` returns no error for a string it cannot read",
+        "correct": false,
+        "why": "It did return one: the fixed version printed `strconv.Atoi: parsing \"x\": invalid syntax`."
+      },
+      {
+        "text": "`break` resets every variable of the loop to its zero value",
+        "correct": false,
+        "why": "`break` only leaves the loop. The error was lost because it went into a different variable."
+      },
+      {
+        "text": "The loop's `:=` declared a second `err`, and the returned one was never assigned",
+        "correct": true,
+        "why": "Right. The inner `err` held the failure and ended with the iteration; the outer one stayed `nil`."
+      },
+      {
+        "text": "`return sum, err` returns whichever `err` was assigned last",
+        "correct": false,
+        "why": "A name means the variable in scope where it is written, and at the `return` that is the outer one."
+      }
+    ]
+  },
+  {
+    "id": "ex-74serzqn",
+    "version": 1,
+    "section": "scope-and-shadowing",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes make `total` return the error for `\"x\"`? Choose all that apply.",
+    "hint": "Ask, for each one, which `err` ends up holding the failure.",
+    "choices": [
+      {
+        "text": "Replace `break` with `return sum, err`",
+        "correct": true,
+        "why": "Yes: that `err` is the inner one, the one holding the failure. It is the section's fix."
+      },
+      {
+        "text": "Declare `var n int` before the loop and write `n, err = strconv.Atoi(a)`",
+        "correct": true,
+        "why": "Yes: with `=` nothing new is declared, so the failure lands in the outer `err` that is returned."
+      },
+      {
+        "text": "Rename the inner variable to `e` and keep the `break`",
+        "correct": false,
+        "why": "The failure would then sit in `e`, and the outer `err` would still never be assigned."
+      },
+      {
+        "text": "Run `go vet` before building",
+        "correct": false,
+        "why": "`go vet` exited 0 on this program. It did not report the shadowed `err`."
+      }
+    ]
+  },
+  {
+    "id": "ex-w866ybvq",
+    "version": 1,
+    "section": "scope-and-shadowing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function starts with `len := 3`, and twenty lines further down it calls `len(names)`. What happens?",
+    "hint": "Is `len` a keyword or a name?",
+    "choices": [
+      {
+        "text": "The first line is refused, because `len` is a keyword",
+        "correct": false,
+        "why": "`len` is a predeclared name in the universe scope, so declaring a variable with it is allowed."
+      },
+      {
+        "text": "It works: the parentheses make Go pick the built-in function",
+        "correct": false,
+        "why": "The parentheses do not choose; the innermost `len` in scope is the variable."
+      },
+      {
+        "text": "The call is refused: `len` is a variable of type `int` there",
+        "correct": true,
+        "why": "Right. The variable hides the built-in until the end of the block, and an `int` cannot be called."
+      },
+      {
+        "text": "It compiles and panics when the call runs",
+        "correct": false,
+        "why": "Calling a non-function is a type error, found at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpm8wn6h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the five scopes in order, from the outermost to the innermost.",
+    "hint": "The figure of section 03 draws them as nested boxes.",
+    "items": [
+      "universe",
+      "package",
+      "file",
+      "function",
+      "block"
+    ]
+  },
+  {
+    "id": "ex-4te0gwrc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`type Config struct { Retries int; Verbose bool; Name string }` and `var cfg Config`. What does `fmt.Printf(\"%#v\\n\", cfg)` print?",
+    "hint": "Each field at its own zero.",
+    "choices": [
+      {
+        "text": "`<nil>`",
+        "correct": false,
+        "why": "A struct is never `nil`; only pointers, slices, maps, functions and interfaces are."
+      },
+      {
+        "text": "`main.Config{Retries:0, Verbose:false, Name:nil}`",
+        "correct": false,
+        "why": "A string's zero is `\"\"`, not `nil`; `nil` is not a value a string can hold."
+      },
+      {
+        "text": "`main.Config{Retries:0, Verbose:false, Name:\"\"}`",
+        "correct": true,
+        "why": "Right. Every field took its own type's zero, as `point` did in section 01."
+      },
+      {
+        "text": "`main.Config{}`",
+        "correct": false,
+        "why": "`%#v` writes every field of a struct, set or not, as the `point` lines showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7c4y0tj7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these declarations compiles?",
+    "hint": "A constant is worked out before the program runs.",
+    "choices": [
+      {
+        "text": "`const now = time.Now()`",
+        "correct": false,
+        "why": "A function call runs when the program does; the compiler says `time.Now()` is not constant."
+      },
+      {
+        "text": "`const limit = 10 * 1024`",
+        "correct": true,
+        "why": "Right. Arithmetic on numbers the compiler already knows gives a constant."
+      },
+      {
+        "text": "`const names = []string{\"ana\", \"bia\"}`",
+        "correct": false,
+        "why": "A slice is built at run time; this is the `primes` error again, and it belongs in a `var`."
+      },
+      {
+        "text": "`n := iota`, inside `main`",
+        "correct": false,
+        "why": "`iota` only means something inside a `const` declaration, and the compiler says so."
+      }
+    ]
+  }
+]
