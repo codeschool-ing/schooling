@@ -309,6 +309,124 @@ def l01_minutes_dots(lang):
     return f, t[2]
 
 
+# ------------------------------------------------------------------ lesson 2
+
+@figure('l02-scales-ladder', 2)
+def l02_scales_ladder(lang):
+    t = {'en': dict(
+        label='Four boxes stacked like a ladder. Nominal at the bottom allows equal or different. '
+              'Ordinal adds greater or smaller. Interval adds differences. Ratio at the top adds '
+              'ratios, because only it has a true zero. Each rung keeps everything below it.',
+        rows=[('ratio', 'a true zero', '× ÷', 'weight, basket, minutes'),
+              ('interval', 'equal steps', '+ −', '°C, calendar year'),
+              ('ordinal', 'an order', '< >', 'rating 1 to 5, size S M L'),
+              ('nominal', 'names only', '= ≠', 'payment, neighbourhood')],
+        head=('scale', 'what it adds', 'allows', 'Horta’s example'),
+        cap='Each rung keeps every operation of the rungs below it and adds one. A rating can be '
+            'ordered but not subtracted; a temperature can be subtracted but not divided.'),
+        'pt': dict(
+        label='Quatro caixas empilhadas como uma escada. Nominal, embaixo, permite igual ou '
+              'diferente. Ordinal acrescenta maior ou menor. Intervalar acrescenta diferenças. '
+              'Razão, no topo, acrescenta razões, porque só ela tem um zero verdadeiro. Cada degrau '
+              'mantém tudo o que está abaixo.',
+        rows=[('razão', 'um zero verdadeiro', '× ÷', 'peso, cesta, minutos'),
+              ('intervalar', 'passos iguais', '+ −', '°C, ano do calendário'),
+              ('ordinal', 'uma ordem', '< >', 'nota de 1 a 5, tamanho P M G'),
+              ('nominal', 'só nomes', '= ≠', 'pagamento, bairro')],
+        head=('escala', 'o que acrescenta', 'permite', 'exemplo da Horta'),
+        cap='Cada degrau mantém todas as operações dos degraus de baixo e acrescenta uma. Uma nota '
+            'pode ser ordenada mas não subtraída; uma temperatura pode ser subtraída mas não '
+            'dividida.')}[lang]
+    f = Fig('l02-scales-ladder', 680, 260, t['label'])
+    xs = [20, 150, 310, 400]
+    for x, h in zip(xs, t['head']):
+        f.text(x + 6, 22, h, size=10, anchor='start', weight='600', fill='--paper-dim')
+    for i, (name, adds, ops, ex) in enumerate(t['rows']):
+        y = 38 + i * 53
+        indent = (3 - i) * 0
+        f.rect(16, y, 648, 44, stroke='--phosphor' if i == 0 else '--wire', fill='--panel')
+        f.text(xs[0] + 6, y + 22, name, size=12, anchor='start', weight='600')
+        f.text(xs[1] + 6, y + 22, adds, size=10.5, anchor='start', fill='--paper-dim')
+        f.text(xs[2] + 6, y + 22, ops, size=13, anchor='start', mono=True, fill='--phosphor')
+        f.text(xs[3] + 6, y + 22, ex, size=10.5, anchor='start')
+    return f, t['cap']
+
+
+@figure('l02-temperature-scales', 2)
+def l02_temperature_scales(lang):
+    t = {'en': dict(
+        label='Three number lines, one per temperature scale, each with its own zero. 13.5 and 27 '
+              'degrees Celsius sit at the same physical temperatures on all three. On Celsius the '
+              'second number is twice the first. On Fahrenheit, 56.3 and 80.6, it is 1.43 times. On '
+              'Kelvin, 286.65 and 300.15, it is 1.05 times.',
+        names=['Celsius', 'Fahrenheit', 'Kelvin'],
+        ratio='ratio',
+        cap='The same two afternoons on three scales. The difference keeps its meaning on each; '
+            'the ratio depends on where somebody put the zero, and only kelvin’s zero is real.'),
+        'pt': dict(
+        label='Três retas numéricas, uma por escala de temperatura, cada uma com o seu zero. 13,5 e '
+              '27 graus Celsius ficam nas mesmas temperaturas físicas nas três. Em Celsius o segundo '
+              'número é o dobro do primeiro. Em Fahrenheit, 56,3 e 80,6, é 1,43 vez. Em Kelvin, '
+              '286,65 e 300,15, é 1,05 vez.',
+        names=['Celsius', 'Fahrenheit', 'Kelvin'],
+        ratio='razão',
+        cap='As mesmas duas tardes em três escalas. A diferença mantém o significado em todas; a '
+            'razão depende de onde alguém pôs o zero, e só o zero do kelvin é real.')}[lang]
+    f = Fig('l02-temperature-scales', 680, 250, t['label'])
+    # all three drawn on one physical axis, in kelvin, from 0 K to 310 K
+    p = Plot(f, 120, 0, 600, 1, 0, 310, 0, 1)
+    rows = [(lambda k: k - 273.15, 'C'), (lambda k: (k - 273.15) * 9 / 5 + 32, 'F'),
+            (lambda k: k, 'K')]
+    a, b = 13.5 + 273.15, 27 + 273.15
+    for i, (conv, unit) in enumerate(rows):
+        y = 50 + i * 70
+        f.text(20, y, t['names'][i], size=11, anchor='start', weight='600')
+        f.line(p.sx(0), y, p.sx(310), y, stroke='--paper-dim')
+        zero = {0: 273.15, 1: 273.15 - 32 * 5 / 9, 2: 0}[i]
+        f.line(p.sx(zero), y - 7, p.sx(zero), y + 7, stroke='--paper', width=1.6)
+        f.text(p.sx(zero), y + 18, '0', size=9.5, fill='--paper-dim')
+        for k, col in ((a, '--phosphor'), (b, '--amber')):
+            f.circle(p.sx(k), y, 5, fill=col)
+        va, vb = conv(a), conv(b)
+        d = 2 if i == 2 else 1
+        f.text(p.sx(a) - 8, y - 14, num(lang, va, d), size=9.5, anchor='end', fill='--phosphor')
+        f.text(p.sx(b) + 8, y - 14, num(lang, vb, d), size=9.5, anchor='start', fill='--amber')
+        f.text(660, y, f'{t["ratio"]} {num(lang, vb / va, 2)}', size=10, anchor='end')
+    return f, t['cap']
+
+
+@figure('l02-ratings-bars', 2)
+def l02_ratings_bars(lang):
+    r = S.column('rating')
+    counts = [r.count(k) for k in range(1, 6)]
+    t = {'en': ('A bar chart of the twelve ratings, from 1 to 5 stars: one 1, one 2, two 3s, four 4s '
+                'and four 5s. The median, 4, is a rating somebody gave. The mean, 3.75, sits between '
+                'two bars.', 'orders', 'stars given',
+                'median 4', 'mean 3.75',
+                'The median is a value on the scale. The mean treats the step from 1 star to 2 as '
+                'the same size as the step from 4 to 5, which nobody measured.'),
+         'pt': ('Um gráfico de barras das doze notas, de 1 a 5 estrelas: um 1, um 2, dois 3, quatro '
+                '4 e quatro 5. A mediana, 4, é uma nota que alguém deu. A média, 3,75, fica entre '
+                'duas barras.', 'pedidos', 'estrelas dadas',
+                'mediana 4', 'média 3,75',
+                'A mediana é um valor da escala. A média trata o passo de 1 para 2 estrelas como do '
+                'mesmo tamanho que o passo de 4 para 5, e ninguém mediu isso.')}[lang]
+    f = Fig('l02-ratings-bars', 560, 260, t[0])
+    p = Plot(f, 80, 50, 520, 205, 0.5, 5.5, 0, 5)
+    p.yaxis(range(0, 6), label=t[1])
+    for k, c in zip(range(1, 6), counts):
+        x0, x1 = p.sx(k - 0.32), p.sx(k + 0.32)
+        f.path(f'M{x0:.1f} {p.y1:.1f} L{x0:.1f} {p.sy(c):.1f} L{x1:.1f} {p.sy(c):.1f} '
+               f'L{x1:.1f} {p.y1:.1f} Z', stroke='--phosphor', width=1,
+               fill='--phosphor-dim')
+        f.text((x0 + x1) / 2, p.y1 + 14, str(k), size=10)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 34, t[2], size=10, weight='600')
+    p.vline(4, t[3], stroke='--paper', dash=None, top=36, anchor='start', dy=0)
+    p.vline(S.mean(r), t[4], stroke='--amber', top=36, anchor='end')
+    return f, t[5]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
