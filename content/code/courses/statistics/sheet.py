@@ -1137,6 +1137,104 @@ def l16():
     show('baskets: median of the first 200, last 200', f'{median(BASKETS[:200]):.2f} {median(BASKETS[200:]):.2f}')
 
 
+# Anscombe's quartet (F. J. Anscombe, "Graphs in statistical analysis", 1973): four
+# sets of eleven points with the same means, spreads, correlation and line.
+ANSCOMBE_X = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
+ANSCOMBE = [
+    (ANSCOMBE_X, [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]),
+    (ANSCOMBE_X, [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74]),
+    (ANSCOMBE_X, [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73]),
+    ([8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8],
+     [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]),
+]
+
+
+def r_test(r, n):
+    """t statistic and two-sided p for a correlation of r on n pairs."""
+    t = r * math.sqrt(n - 2) / math.sqrt(1 - r * r)
+    return t, 2 * (1 - t_cdf(abs(t), n - 2))
+
+
+# Discount and orders, lesson 17: rising and flattening, a curve with no reversal.
+DISCOUNT = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+DISCOUNT_ORDERS = [round(400 + 260 * (1 - math.exp(-d / 4))) for d in DISCOUNT]
+
+# Gallery of correlations, lesson 17: sixty pairs at each target, from one seed each.
+GALLERY_R = (-0.9, -0.5, 0.0, 0.3, 0.7, 0.95)
+
+
+def gallery(rho, n=60, seed=1700):
+    """Sixty pairs whose sample correlation is exactly rho: the noise is made
+    uncorrelated with x before it is mixed in, so the picture shows the target."""
+    d = Draw(seed + int(round(rho * 100)))
+    xs = [d.normal(0, 1) for _ in range(n)]
+    es = [d.normal(0, 1) for _ in range(n)]
+    mx, me = mean(xs), mean(es)
+    xs = [x - mx for x in xs]
+    es = [e - me for e in es]
+    b = sum(x * e for x, e in zip(xs, es)) / sum(x * x for x in xs)
+    es = [e - b * x for x, e in zip(xs, es)]
+    sx, se = math.sqrt(sum(x * x for x in xs)), math.sqrt(sum(e * e for e in es))
+    xs = [x / sx * math.sqrt(n) for x in xs]
+    es = [e / se * math.sqrt(n) for e in es]
+    return xs, [rho * x + math.sqrt(1 - rho * rho) * e for x, e in zip(xs, es)]
+
+
+@lesson(17)
+def l17():
+    km = [r['km'] for r in DELIVERIES]
+    mins = [r['minutes'] for r in DELIVERIES]
+    items = [r['items'] for r in DELIVERIES]
+    rain = [r['rain'] for r in DELIVERIES]
+    show('120 deliveries: r km-minutes, rho', f'{pearson(km, mins):.4f} {spearman(km, mins):.4f}')
+    show('r items-minutes, rain-minutes, km-items', f'{pearson(items, mins):.4f} {pearson(rain, mins):.4f} {pearson(km, items):.4f}')
+    t, p = r_test(pearson(km, mins), 120)
+    show('test of r km-minutes: t, p', f'{t:.4f} {p:.3e}')
+    t, p = r_test(pearson(items, mins), 120)
+    show('test of r items-minutes: t, p', f'{t:.4f} {p:.4f}')
+    show('r squared km-minutes', f'{pearson(km, mins) ** 2:.4f}')
+    it, bk = column('items'), column('basket')
+    mi, mb = mean(it), mean(bk)
+    show('12 orders items, basket: means, sds', f'{mi:.4f} {mb:.4f} {sd(it):.4f} {sd(bk):.4f}')
+    sxy = sum((x - mi) * (y - mb) for x, y in zip(it, bk))
+    show('sum of products, covariance', f'{sxy:.4f} {sxy / 11:.4f}')
+    show('r items-basket, rho', f'{pearson(it, bk):.6f} {spearman(it, bk):.6f}')
+    show('items-basket products per order', [round((x - mi) * (y - mb), 2) for x, y in zip(it, bk)])
+    mn, rt = column('minutes'), column('rating')
+    show('12 orders minutes-rating r, rho', f'{pearson(mn, rt):.4f} {spearman(mn, rt):.4f}')
+    show('ranks of minutes', ranks(mn))
+    show('ranks of rating', ranks(rt))
+    for i, (xs, ys) in enumerate(ANSCOMBE, 1):
+        a, b = line(xs, ys)
+        show(f'Anscombe {i}: mean x, mean y, sd y, r, line, rho',
+             f'{mean(xs):.2f} {mean(ys):.3f} {sd(ys):.4f} {pearson(xs, ys):.4f} {a:.3f}+{b:.4f}x {spearman(xs, ys):.4f}')
+    show('discount orders', DISCOUNT_ORDERS)
+    show('discount r, rho', f'{pearson(DISCOUNT, DISCOUNT_ORDERS):.4f} {spearman(DISCOUNT, DISCOUNT_ORDERS):.4f}')
+    xs = list(range(-5, 6))
+    show('parabola x^2 on -5..5: r', f'{pearson(xs, [x * x for x in xs]):.4f}')
+    for rho in GALLERY_R:
+        gx, gy = gallery(rho)
+        show(f'gallery {rho}: r', f'{pearson(gx, gy):.4f}')
+    cen = [r for r in DELIVERIES if r['hood'] == 'Centro']
+    ck, cm = [r['km'] for r in cen], [r['minutes'] for r in cen]
+    show('Centro: r, rho', f'{pearson(ck, cm):.4f} {spearman(ck, cm):.4f}')
+    ck2, cm2 = ck + [1.6], cm + [95.0]
+    show('Centro plus a 95-minute breakdown at 1.6 km: r, rho', f'{pearson(ck2, cm2):.4f} {spearman(ck2, cm2):.4f}')
+    near = [r for r in DELIVERIES if r['hood'] in ('Centro', 'Cambuí')]
+    show('Centro and Cambuí only: r km-minutes, km range',
+         f'{pearson([r["km"] for r in near], [r["minutes"] for r in near]):.4f} {min(r["km"] for r in near)} {max(r["km"] for r in near)}')
+    show('all: km range', f'{min(km)} {max(km)}')
+    # a leverage point that MAKES a correlation: ten unrelated points and one far away
+    d = Draw(1717)
+    lx = [round(d.uniform(1, 3), 1) for _ in range(10)]
+    ly = [round(d.uniform(30, 36), 1) for _ in range(10)]
+    show('ten unrelated points: r', f'{pearson(lx, ly):.4f}')
+    show('plus one at (12, 60): r, rho', f'{pearson(lx + [12], ly + [60]):.4f} {spearman(lx + [12], ly + [60]):.4f}')
+    show('lever points', list(zip(lx, ly)))
+    show('12 orders plus a 1-item R$ 400 gift box: r, rho',
+         f'{pearson(it + [1], bk + [400.0]):.4f} {spearman(it + [1], bk + [400.0]):.4f}')
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:

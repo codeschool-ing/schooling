@@ -1986,6 +1986,266 @@ def l16_anova(lang):
     return f, t['cap']
 
 
+# ----------------------------------------------------------------- lesson 17
+
+def dots(f, p, xs, ys, r=2.8, fill='--phosphor-dim', stroke='--phosphor'):
+    for x, y in zip(xs, ys):
+        f.circle(p.sx(x), p.sy(y), r, fill=fill, stroke=stroke, width=0.7)
+
+
+@figure('l17-scatter', 17)
+def l17_scatter(lang):
+    km = [r['km'] for r in S.DELIVERIES]
+    mn = [r['minutes'] for r in S.DELIVERIES]
+    t = {'en': dict(
+        label='A scatter plot of the 120 deliveries, distance in kilometres across and minutes up. '
+              'The points form a band rising from about 25 minutes at 1 km to about 60 minutes at '
+              '13 km, with a few minutes of scatter around it at every distance.',
+        x='distance (km)', y='minutes',
+        cap='Each point is one delivery. The cloud rises from left to right, and it is narrow: '
+            'distance says a lot about how long a delivery takes.'),
+        'pt': dict(
+        label='Um gráfico de dispersão das 120 entregas, distância em quilômetros na horizontal e '
+              'minutos na vertical. Os pontos formam uma faixa que sobe de uns 25 minutos a 1 km até '
+              'uns 60 minutos a 13 km, com alguns minutos de espalhamento em cada distância.',
+        x='distância (km)', y='minutos',
+        cap='Cada ponto é uma entrega. A nuvem sobe da esquerda para a direita, e é estreita: a '
+            'distância diz muito sobre quanto uma entrega demora.')}[lang]
+    f = Fig('l17-scatter', 600, 320, t['label'])
+    p = Plot(f, 70, 36, 580, 260, 0, 14, 20, 75)
+    p.yaxis(range(20, 76, 10), label=t['y'])
+    p.xaxis(range(0, 15, 2), label=t['x'])
+    dots(f, p, km, mn)
+    return f, t['cap']
+
+
+@figure('l17-quadrants', 17)
+def l17_quadrants(lang):
+    it, bk = S.column('items'), S.column('basket')
+    mi, mb = S.mean(it), S.mean(bk)
+    t = {'en': dict(
+        label=f'The twelve orders, items across and basket up, with a dashed line at the mean of '
+              f'each: {num("en", mi, 2)} items and R$ {num("en", mb, 2)}. Every point sits in the '
+              f'top-right or bottom-left quarter, where the two deviations have the same sign.',
+        x='items', y='basket (R$)', tr='both above: product +', bl='both below: product +',
+        tl='product −', br='product −',
+        mi=f'mean {num("en", mi, 2)}', mb=f'mean {num("en", mb, 2)}',
+        cap='Correlation multiplies each point’s two deviations from the means. In the shaded '
+            'quarters the product is positive; in the other two it is negative. Here every order '
+            'lands in a positive quarter.'),
+        'pt': dict(
+        label=f'Os doze pedidos, itens na horizontal e cesta na vertical, com uma linha tracejada '
+              f'na média de cada um: {num("pt", mi, 2)} itens e R$ {num("pt", mb, 2)}. Todo ponto '
+              f'fica no quarto de cima à direita ou no de baixo à esquerda, onde os dois desvios '
+              f'têm o mesmo sinal.',
+        x='itens', y='cesta (R$)', tr='os dois acima: produto +', bl='os dois abaixo: produto +',
+        tl='produto −', br='produto −',
+        mi=f'média {num("pt", mi, 2)}', mb=f'média {num("pt", mb, 2)}',
+        cap='A correlação multiplica os dois desvios de cada ponto em relação às médias. Nos '
+            'quartos sombreados o produto é positivo; nos outros dois, negativo. Aqui todo pedido '
+            'cai num quarto positivo.')}[lang]
+    f = Fig('l17-quadrants', 600, 340, t['label'])
+    p = Plot(f, 80, 40, 570, 270, 0, 16, 0, 240)
+    xm, ym = p.sx(mi), p.sy(mb)
+    f.path(f'M{xm:.1f} {p.y0:.1f} L{p.x1:.1f} {p.y0:.1f} L{p.x1:.1f} {ym:.1f} L{xm:.1f} {ym:.1f} Z',
+           stroke=None, width=0, fill='--scan')
+    f.path(f'M{p.x0:.1f} {ym:.1f} L{xm:.1f} {ym:.1f} L{xm:.1f} {p.y1:.1f} L{p.x0:.1f} {p.y1:.1f} Z',
+           stroke=None, width=0, fill='--scan')
+    p.yaxis(range(0, 241, 40), label=t['y'], grid=False)
+    p.xaxis(range(0, 17, 2), label=t['x'])
+    f.line(xm, p.y0, xm, p.y1, stroke='--amber', width=1.4, dash='5 4')
+    f.line(p.x0, ym, p.x1, ym, stroke='--amber', width=1.4, dash='5 4')
+    f.text(xm + 6, p.y0 + 8, t['mi'], size=9.5, anchor='start', fill='--amber')
+    f.text(p.x1 - 4, ym - 9, t['mb'], size=9.5, anchor='end', fill='--amber')
+    f.text(xm + 8, p.y0 + 30, t['tr'], size=10, anchor='start')
+    f.text(p.x0 + 8, p.sy(68), t['bl'], size=10, anchor='start')
+    f.text(p.x0 + 8, p.y0 + 30, t['tl'], size=10, anchor='start', fill='--paper-dim')
+    f.text(p.x1 - 6, p.y1 - 12, t['br'], size=10, anchor='end', fill='--paper-dim')
+    dots(f, p, it, bk, r=4)
+    return f, t['cap']
+
+
+@figure('l17-gallery', 17)
+def l17_gallery(lang):
+    t = {'en': dict(
+        label='Six small scatter plots of sixty points each, with correlations of −0.90, −0.50, '
+              '0, 0.30, 0.70 and 0.95. The strong negative cloud is a narrow band falling to the '
+              'right, the zero cloud is a round blob, and the 0.95 cloud is a narrow band rising.',
+        cap='Six clouds and their correlation. The sign is the direction; the size is how tightly '
+            'the points hug a straight line. Note how little a correlation of 0.30 looks like '
+            'anything.'),
+        'pt': dict(
+        label='Seis gráficos de dispersão pequenos de sessenta pontos cada, com correlações de '
+              '−0,90, −0,50, 0, 0,30, 0,70 e 0,95. A nuvem negativa forte é uma faixa estreita '
+              'descendo para a direita, a nuvem zero é uma bolha redonda, e a de 0,95 é uma faixa '
+              'estreita subindo.',
+        cap='Seis nuvens e sua correlação. O sinal é a direção; o tamanho é quão justos os pontos '
+            'ficam em torno de uma reta. Repare como uma correlação de 0,30 quase não parece '
+            'nada.')}[lang]
+    f = Fig('l17-gallery', 600, 380, t['label'])
+    for i, rho in enumerate(S.GALLERY_R):
+        col, row = i % 3, i // 3
+        x0, y0 = 20 + col * 195, 14 + row * 182
+        f.rect(x0, y0, 180, 168, stroke='--wire', fill='--panel', rx=4)
+        p = Plot(f, x0 + 10, y0 + 30, x0 + 170, y0 + 160, -3.2, 3.2, -3.2, 3.2)
+        xs, ys = S.gallery(rho)
+        dots(f, p, xs, ys, r=2.2)
+        sign = '−' if rho < 0 else ''
+        f.text(x0 + 90, y0 + 16, f'r = {sign}{num(lang, abs(rho), 2)}', size=11, weight='600')
+    return f, t['cap']
+
+
+@figure('l17-anscombe', 17)
+def l17_anscombe(lang):
+    t = {'en': dict(
+        label='Anscombe’s four data sets, each drawn with the same fitted line. I is a loose '
+              'straight-line cloud. II is a smooth curve that rises and bends back down. III is a '
+              'perfect straight line with one point far above it. IV has ten points stacked at '
+              'x = 8 and one point far to the right at x = 19.',
+        cap='Four data sets with the same means, the same standard deviations, the same '
+            'correlation, 0.816, and the same line. Only one of them is described well by that '
+            'number.'),
+        'pt': dict(
+        label='Os quatro conjuntos de Anscombe, cada um desenhado com a mesma reta ajustada. I é '
+              'uma nuvem solta em linha reta. II é uma curva suave que sobe e volta a descer. III '
+              'é uma reta perfeita com um ponto muito acima dela. IV tem dez pontos empilhados em '
+              'x = 8 e um ponto muito à direita em x = 19.',
+        cap='Quatro conjuntos com as mesmas médias, os mesmos desvios padrão, a mesma correlação, '
+            '0,816, e a mesma reta. Só um deles é bem descrito por esse número.')}[lang]
+    f = Fig('l17-anscombe', 600, 420, t['label'])
+    for i, (xs, ys) in enumerate(S.ANSCOMBE):
+        col, row = i % 2, i // 2
+        x0, y0 = 50 + col * 290, 20 + row * 200
+        p = Plot(f, x0, y0 + 20, x0 + 240, y0 + 160, 2, 20, 2, 14)
+        p.yaxis(range(4, 15, 4), grid=False, size=9)
+        p.xaxis(range(4, 21, 4), size=9)
+        a, b = S.line(xs, ys)
+        f.line(p.sx(3), p.sy(a + b * 3), p.sx(19.5), p.sy(a + b * 19.5), stroke='--amber', width=1.6)
+        dots(f, p, xs, ys, r=3.4)
+        f.text(x0 + 4, y0 + 10, ['I', 'II', 'III', 'IV'][i], size=12, weight='600', anchor='start')
+    return f, t['cap']
+
+
+@figure('l17-monotone', 17)
+def l17_monotone(lang):
+    xs, ys = S.DISCOUNT, S.DISCOUNT_ORDERS
+    r, rho = S.pearson(xs, ys), S.spearman(xs, ys)
+    t = {'en': dict(
+        label=f'Orders in a week against the discount offered, from 0% to 20%. Orders climb '
+              f'quickly at first and then flatten near 660. Every step up in discount gives more '
+              f'orders, but less each time. Pearson’s r is {num("en", r, 2)}; Spearman’s is '
+              f'{num("en", rho, 2)}.',
+        x='discount (%)', y='orders in the week',
+        pr=f'Pearson {num("en", r, 2)}', sr=f'Spearman {num("en", rho, 2)}',
+        cap='Every increase in discount brings more orders, so the ranks agree perfectly and '
+            'Spearman’s coefficient is exactly 1. The points do not lie on a straight line, so '
+            'Pearson’s is lower.'),
+        'pt': dict(
+        label=f'Pedidos numa semana contra o desconto oferecido, de 0% a 20%. Os pedidos sobem '
+              f'rápido no começo e depois se achatam perto de 660. Cada degrau de desconto traz '
+              f'mais pedidos, mas menos a cada vez. O r de Pearson é {num("pt", r, 2)}; o de '
+              f'Spearman é {num("pt", rho, 2)}.',
+        x='desconto (%)', y='pedidos na semana',
+        pr=f'Pearson {num("pt", r, 2)}', sr=f'Spearman {num("pt", rho, 2)}',
+        cap='Todo aumento de desconto traz mais pedidos, então os postos concordam perfeitamente '
+            'e o coeficiente de Spearman é exatamente 1. Os pontos não ficam numa reta, então o '
+            'de Pearson é menor.')}[lang]
+    f = Fig('l17-monotone', 600, 320, t['label'])
+    p = Plot(f, 80, 36, 580, 260, 0, 20, 380, 680)
+    p.yaxis(range(400, 681, 50), label=t['y'])
+    p.xaxis(range(0, 21, 4), label=t['x'])
+    a, b = S.line(xs, ys)
+    f.line(p.sx(0), p.sy(a), p.sx(20), p.sy(a + 20 * b), stroke='--paper-dim', width=1.2, dash='5 4')
+    f.path('M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(y):.1f}' for x, y in zip(xs, ys)),
+           stroke='--phosphor', width=1.4)
+    dots(f, p, xs, ys, r=4)
+    f.text(p.x1 - 6, p.sy(470), t['pr'], size=11, anchor='end', weight='600')
+    f.text(p.x1 - 6, p.sy(440), t['sr'], size=11, anchor='end', weight='600', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l17-range', 17)
+def l17_range(lang):
+    near = [r for r in S.DELIVERIES if r['hood'] in ('Centro', 'Cambuí')]
+    far = [r for r in S.DELIVERIES if r['hood'] not in ('Centro', 'Cambuí')]
+    ra = S.pearson([r['km'] for r in S.DELIVERIES], [r['minutes'] for r in S.DELIVERIES])
+    rn = S.pearson([r['km'] for r in near], [r['minutes'] for r in near])
+    t = {'en': dict(
+        label=f'The 120 deliveries again, with the 60 to Centro and Cambuí, all under 4.5 km, '
+              f'drawn solid inside a shaded band and the rest drawn hollow. Across all 120 the '
+              f'correlation is {num("en", ra, 2)}; inside the band it is {num("en", rn, 2)}.',
+        x='distance (km)', y='minutes',
+        all=f'all 120: r = {num("en", ra, 2)}', near=f'Centro and Cambuí: r = {num("en", rn, 2)}',
+        cap='The same relationship, seen through a narrow window. Within a few kilometres, the '
+            'noise of traffic and order size is as large as the effect of distance, and the '
+            'correlation falls.'),
+        'pt': dict(
+        label=f'As 120 entregas de novo, com as 60 para Centro e Cambuí, todas abaixo de 4,5 km, '
+              f'desenhadas cheias dentro de uma faixa sombreada e o resto desenhado vazado. Nas '
+              f'120 a correlação é {num("pt", ra, 2)}; dentro da faixa é {num("pt", rn, 2)}.',
+        x='distância (km)', y='minutos',
+        all=f'todas as 120: r = {num("pt", ra, 2)}', near=f'Centro e Cambuí: r = {num("pt", rn, 2)}',
+        cap='A mesma relação, vista por uma janela estreita. Em poucos quilômetros, o ruído do '
+            'trânsito e do tamanho do pedido é tão grande quanto o efeito da distância, e a '
+            'correlação cai.')}[lang]
+    f = Fig('l17-range', 600, 320, t['label'])
+    p = Plot(f, 70, 36, 580, 260, 0, 14, 20, 75)
+    f.path(f'M{p.sx(0.8):.1f} {p.y0:.1f} L{p.sx(4.5):.1f} {p.y0:.1f} L{p.sx(4.5):.1f} {p.y1:.1f} '
+           f'L{p.sx(0.8):.1f} {p.y1:.1f} Z', stroke=None, width=0, fill='--scan')
+    p.yaxis(range(20, 76, 10), label=t['y'])
+    p.xaxis(range(0, 15, 2), label=t['x'])
+    for r in far:
+        f.circle(p.sx(r['km']), p.sy(r['minutes']), 2.8, fill=None, stroke='--paper-dim', width=1)
+    dots(f, p, [r['km'] for r in near], [r['minutes'] for r in near])
+    f.text(p.x1 - 6, p.y1 - 40, t['all'], size=11, anchor='end', weight='600')
+    f.text(p.x1 - 6, p.y1 - 20, t['near'], size=11, anchor='end', weight='600', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l17-lever', 17)
+def l17_lever(lang):
+    d = S.Draw(1717)
+    lx = [round(d.uniform(1, 3), 1) for _ in range(10)]
+    ly = [round(d.uniform(30, 36), 1) for _ in range(10)]
+    r0 = S.pearson(lx, ly)
+    r1 = S.pearson(lx + [12], ly + [60])
+
+    def signed(lang_, v):
+        return ('−' if v < 0 else '') + num(lang_, abs(v), 2)
+    t = {'en': dict(
+        label=f'Ten points clustered between 1 and 3 on the horizontal axis and 30 and 36 on the '
+              f'vertical, with no pattern among them, and one point far away at 12 and 60. A line '
+              f'drawn through all eleven runs from the cluster to the lone point. Without that '
+              f'point the correlation is {signed("en", r0)}; with it, {num("en", r1, 2)}.',
+        without=f'the ten alone: r = {signed("en", r0)}', with_=f'all eleven: r = {num("en", r1, 2)}',
+        lone='one point',
+        cap='One point far from the rest can manufacture a correlation out of nothing. Spearman’s '
+            'coefficient for the eleven is 0.14, because to ranks the lone point is just the top '
+            'rank on each axis.'),
+        'pt': dict(
+        label=f'Dez pontos agrupados entre 1 e 3 no eixo horizontal e 30 e 36 no vertical, sem '
+              f'padrão entre eles, e um ponto muito longe, em 12 e 60. Uma reta passando pelos onze '
+              f'vai do grupo até o ponto isolado. Sem esse ponto a correlação é {signed("pt", r0)}; '
+              f'com ele, {num("pt", r1, 2)}.',
+        without=f'só os dez: r = {signed("pt", r0)}', with_=f'os onze: r = {num("pt", r1, 2)}',
+        lone='um ponto',
+        cap='Um ponto longe dos outros pode fabricar uma correlação do nada. O coeficiente de '
+            'Spearman dos onze é 0,14, porque, em postos, o ponto isolado é só o posto mais alto '
+            'em cada eixo.')}[lang]
+    f = Fig('l17-lever', 600, 300, t['label'])
+    p = Plot(f, 60, 30, 580, 250, 0, 14, 25, 65)
+    p.yaxis(range(25, 66, 10))
+    p.xaxis(range(0, 15, 2))
+    a, b = S.line(lx + [12], ly + [60])
+    f.line(p.sx(0.5), p.sy(a + 0.5 * b), p.sx(13), p.sy(a + 13 * b), stroke='--amber', width=1.6)
+    dots(f, p, lx, ly, r=3.6)
+    f.circle(p.sx(12), p.sy(60), 4.5, fill='--amber', stroke='--amber')
+    f.text(p.sx(12) - 10, p.sy(60), t['lone'], size=10, anchor='end')
+    f.text(p.sx(5), p.sy(41), t['without'], size=11, anchor='start', weight='600')
+    f.text(p.sx(5), p.sy(37), t['with_'], size=11, anchor='start', weight='600', fill='--amber')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
