@@ -1,0 +1,225 @@
+[
+  {
+    "id": "ex-x7j6fx2e",
+    "version": 1,
+    "section": "taints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did no capture in this course ever place an ordinary pod on `shop-control-plane`?",
+    "hint": "`kubectl get nodes` with the taints column.",
+    "choices": [
+      {
+        "text": "It has too little memory",
+        "correct": false,
+        "why": "All three nodes report the same allocatable."
+      },
+      {
+        "text": "It carries a `NoSchedule` taint",
+        "correct": true,
+        "why": "Right: `node-role.kubernetes.io/control-plane`, set by kubeadm."
+      },
+      {
+        "text": "kind runs no kubelet there",
+        "correct": false,
+        "why": "It runs one; its own pods are there."
+      },
+      {
+        "text": "The scheduler skips the first node",
+        "correct": false,
+        "why": "There is no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d4rqm7v",
+    "version": 1,
+    "section": "taints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Deployment tolerates `dedicated=reports:NoSchedule` but has no `nodeSelector`. Where can its pods land?",
+    "hint": "A toleration permits; it does not direct.",
+    "choices": [
+      {
+        "text": "Only on the tainted node",
+        "correct": false,
+        "why": "That needs a selector or affinity as well."
+      },
+      {
+        "text": "Nowhere, until a selector is added",
+        "correct": false,
+        "why": "Untainted nodes accept it as they accept any pod."
+      },
+      {
+        "text": "On any worker",
+        "correct": true,
+        "why": "Right. The tainted one becomes allowed, not chosen."
+      },
+      {
+        "text": "Only on nodes with no taint",
+        "correct": false,
+        "why": "The toleration makes the tainted node allowed too."
+      }
+    ]
+  },
+  {
+    "id": "ex-zw1egevj",
+    "version": 1,
+    "section": "noexecute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-worker` got `maintenance=now:NoExecute`. What happened to the four shop pods running on it?",
+    "hint": "`NoExecute` reaches pods already there.",
+    "choices": [
+      {
+        "text": "They kept running until restarted",
+        "correct": false,
+        "why": "That would be `NoSchedule`."
+      },
+      {
+        "text": "They moved to `shop-worker2`",
+        "correct": false,
+        "why": "Pods never move, and that node was reserved."
+      },
+      {
+        "text": "They were paused",
+        "correct": false,
+        "why": "Kubernetes has no paused pods."
+      },
+      {
+        "text": "They were evicted, and replacements stayed `Pending`",
+        "correct": true,
+        "why": "Right. No node could take them."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrf3x14w",
+    "version": 1,
+    "section": "noexecute",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every pod tolerates `node.kubernetes.io/unreachable:NoExecute` for 300 seconds by default. What does that number decide?",
+    "hint": "Who sets that taint, and when?",
+    "choices": [
+      {
+        "text": "How long before a lost node's pods are replaced",
+        "correct": true,
+        "why": "Right. Kubernetes taints the node itself; after 300 s the pods are evicted."
+      },
+      {
+        "text": "How long a pod may run in total",
+        "correct": false,
+        "why": "Tolerations do not limit a healthy node."
+      },
+      {
+        "text": "The liveness probe's timeout",
+        "correct": false,
+        "why": "Probes are separate settings."
+      },
+      {
+        "text": "How often the kubelet reports",
+        "correct": false,
+        "why": "That is the kubelet's own setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf9hsh29",
+    "version": 1,
+    "section": "noexecute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How is the taint `dedicated=reports:NoSchedule` removed from `shop-worker2`?",
+    "hint": "The capture's `untaint` block.",
+    "choices": [
+      {
+        "text": "`kubectl untaint node shop-worker2 dedicated`",
+        "correct": false,
+        "why": "There is no `untaint` command."
+      },
+      {
+        "text": "The same `kubectl taint` with a trailing `-`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Deleting and re-creating the node",
+        "correct": false,
+        "why": "Far more than needed."
+      },
+      {
+        "text": "`kubectl label node shop-worker2 dedicated-`",
+        "correct": false,
+        "why": "Taints are not labels."
+      }
+    ]
+  },
+  {
+    "id": "ex-s412pk52",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each taint effect with what it does to pods already on the node.",
+    "hint": "The table at the end of the lesson.",
+    "pairs": [
+      {
+        "left": "`NoSchedule`",
+        "right": "Nothing; they stay"
+      },
+      {
+        "left": "`NoExecute`",
+        "right": "Evicts those that do not tolerate it"
+      },
+      {
+        "left": "`PreferNoSchedule`",
+        "right": "Nothing, and new pods only avoid it"
+      }
+    ],
+    "right_distractors": [
+      "Restarts their containers"
+    ]
+  },
+  {
+    "id": "ex-1cz9w8mg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps to give the reports team a node of its own.",
+    "hint": "Keep others out first, then bring the team in.",
+    "items": [
+      "Taint the node `dedicated=reports:NoSchedule`",
+      "Add the matching toleration to the reports pods",
+      "Add a `nodeSelector` for that node",
+      "Check where the reports pods landed"
+    ],
+    "trap": "Pods placed before the taint stay where they are, and a toleration without a selector may still land elsewhere."
+  },
+  {
+    "id": "ex-3kwbg5wx",
+    "version": 1,
+    "section": "taints",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The pod's answer to a taint is a ___.",
+    "hint": "It lets the pod in.",
+    "blanks": [
+      {
+        "accept": [
+          "toleration"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

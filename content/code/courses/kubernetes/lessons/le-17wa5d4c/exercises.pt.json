@@ -1,0 +1,157 @@
+{
+  "ex-x7j6fx2e": {
+    "prompt": "Por que nenhuma captura deste curso pôs um pod comum em `shop-control-plane`?",
+    "hint": "`kubectl get nodes` com a coluna de taints.",
+    "choices": [
+      {
+        "text": "Tem pouca memória",
+        "why": "Os três nós informam o mesmo allocatable."
+      },
+      {
+        "text": "Ele carrega um taint `NoSchedule`",
+        "why": "Isso: `node-role.kubernetes.io/control-plane`, posto pelo kubeadm."
+      },
+      {
+        "text": "O kind não roda kubelet ali",
+        "why": "Roda um; os pods do próprio nó estão ali."
+      },
+      {
+        "text": "O scheduler pula o primeiro nó",
+        "why": "Não existe essa regra."
+      }
+    ]
+  },
+  "ex-4d4rqm7v": {
+    "prompt": "Um Deployment tolera `dedicated=reports:NoSchedule` mas não tem `nodeSelector`. Onde os pods dele podem cair?",
+    "hint": "Uma toleration permite; não direciona.",
+    "choices": [
+      {
+        "text": "Só no nó com taint",
+        "why": "Isso precisa de um seletor ou afinidade também."
+      },
+      {
+        "text": "Em lugar nenhum, até ganhar um seletor",
+        "why": "Nós sem taint o aceitam como aceitam qualquer pod."
+      },
+      {
+        "text": "Em qualquer worker",
+        "why": "Isso. O com taint passa a ser permitido, não escolhido."
+      },
+      {
+        "text": "Só em nós sem taint",
+        "why": "A toleration torna o nó com taint permitido também."
+      }
+    ]
+  },
+  "ex-zw1egevj": {
+    "prompt": "`shop-worker` recebeu `maintenance=now:NoExecute`. O que aconteceu com os quatro pods da loja rodando nele?",
+    "hint": "`NoExecute` alcança pods que já estão lá.",
+    "choices": [
+      {
+        "text": "Continuaram rodando até reiniciar",
+        "why": "Isso seria `NoSchedule`."
+      },
+      {
+        "text": "Foram para `shop-worker2`",
+        "why": "Pods nunca se mudam, e aquele nó estava reservado."
+      },
+      {
+        "text": "Foram pausados",
+        "why": "O Kubernetes não tem pods pausados."
+      },
+      {
+        "text": "Foram despejados, e os substitutos ficaram `Pending`",
+        "why": "Isso. Nenhum nó podia recebê-los."
+      }
+    ]
+  },
+  "ex-yrf3x14w": {
+    "prompt": "Todo pod tolera `node.kubernetes.io/unreachable:NoExecute` por 300 segundos por padrão. O que esse número decide?",
+    "hint": "Quem põe esse taint, e quando?",
+    "choices": [
+      {
+        "text": "Quanto tempo até os pods de um nó perdido serem trocados",
+        "why": "Isso. O próprio Kubernetes põe o taint; depois de 300 s os pods são despejados."
+      },
+      {
+        "text": "Quanto tempo um pod pode rodar no total",
+        "why": "Tolerations não limitam um nó saudável."
+      },
+      {
+        "text": "O timeout da sonda de liveness",
+        "why": "Sondas são configurações à parte."
+      },
+      {
+        "text": "A frequência com que o kubelet dá notícias",
+        "why": "Isso é configuração do próprio kubelet."
+      }
+    ]
+  },
+  "ex-qf9hsh29": {
+    "prompt": "Como o taint `dedicated=reports:NoSchedule` é tirado de `shop-worker2`?",
+    "hint": "O bloco `untaint` da captura.",
+    "choices": [
+      {
+        "text": "`kubectl untaint node shop-worker2 dedicated`",
+        "why": "Não existe comando `untaint`."
+      },
+      {
+        "text": "O mesmo `kubectl taint` com um `-` no fim",
+        "why": "Isso."
+      },
+      {
+        "text": "Apagar e recriar o nó",
+        "why": "Muito mais que o necessário."
+      },
+      {
+        "text": "`kubectl label node shop-worker2 dedicated-`",
+        "why": "Taints não são rótulos."
+      }
+    ]
+  },
+  "ex-s412pk52": {
+    "prompt": "Ligue cada efeito de taint ao que ele faz com pods que já estão no nó.",
+    "hint": "A tabela no fim da lição.",
+    "pairs": [
+      {
+        "left": "`NoSchedule`",
+        "right": "Nada; eles ficam"
+      },
+      {
+        "left": "`NoExecute`",
+        "right": "Despeja os que não o toleram"
+      },
+      {
+        "left": "`PreferNoSchedule`",
+        "right": "Nada, e pods novos só o evitam"
+      }
+    ],
+    "right_distractors": [
+      "Reinicia os containers deles"
+    ]
+  },
+  "ex-1cz9w8mg": {
+    "prompt": "Ponha em ordem os passos para dar à equipe de relatórios um nó só dela.",
+    "hint": "Primeiro mantenha os outros fora, depois traga a equipe.",
+    "items": [
+      "Pôr o taint `dedicated=reports:NoSchedule` no nó",
+      "Acrescentar a toleration correspondente aos pods de relatórios",
+      "Acrescentar um `nodeSelector` para aquele nó",
+      "Conferir onde os pods de relatórios caíram"
+    ],
+    "trap": "Pods alocados antes do taint ficam onde estão, e uma toleration sem seletor ainda pode cair em outro lugar."
+  },
+  "ex-3kwbg5wx": {
+    "prompt": "A resposta do pod a um taint é uma ___.",
+    "hint": "Ela deixa o pod entrar.",
+    "blanks": [
+      {
+        "accept": [
+          "toleration",
+          "tolerância",
+          "tolerancia"
+        ]
+      }
+    ]
+  }
+}
