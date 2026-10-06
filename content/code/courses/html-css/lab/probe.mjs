@@ -31,7 +31,9 @@
  *   at MS                 freezes every animation at MS milliseconds
  *   width W               resizes the window to W pixels wide
  *   overflow              whether the page is wider than the window
- *   fill SEL TEXT · check SEL · click SEL · hover SEL · focus SEL · tab
+ *   tab                   presses Tab and prints what has the focus now
+ *   press KEY             presses a key, such as Enter or Space
+ *   fill SEL TEXT · check SEL · click SEL · hover SEL · focus SEL
  *   shot FILE             a screenshot, for the author to look at
  *
  * The page is opened from disk. Nothing is fetched from a network: a request
@@ -246,14 +248,17 @@ const steps = {
     await page.keyboard.press('Tab');
     const l = await page.evaluate(() => {
       const e = document.activeElement;
-      return e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + ' "' + (e.textContent || e.value || '').trim().slice(0, 40) + '"';
+      if (e === document.body) return 'body (nothing left to focus)';
+      const t = (e.textContent || e.value || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+      return e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (t ? ' "' + t + '"' : '');
     });
     console.log('focus: ' + l);
   },
+  async press(key) { await page.keyboard.press(key); await page.waitForTimeout(100); },
   async shot(f) { await page.screenshot({ path: f, fullPage: true }); },
 };
 
-const arity = { text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
+const arity = { press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
   at: 1, width: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
 try {
   while (argv.length) {
