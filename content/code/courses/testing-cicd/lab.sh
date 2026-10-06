@@ -1063,6 +1063,325 @@ commit_10() {
   GIT_COMMITTER_DATE=2026-09-29T15:30:00-03:00 git tag -a v1.5.0 -m 'shipquote 1.5.0'
 }
 
+# ---- step 11: Say how many days delivery takes; route and load for releases  [v1.6.0]
+step_11() {
+  python3 - <<'PY'
+from pathlib import Path
+p = Path("shipquote/quote.py")
+s = p.read_text()
+s = s.replace('''FREE_FROM = 19900         # an order of R$ 199,00 or more ships free
+''', '''FREE_FROM = 19900         # an order of R$ 199,00 or more ships free
+
+# Business days to deliver, by the first two digits of the CEP: the state.
+DAYS = {**{p: 1 for p in range(1, 20)},      # São Paulo
+        **{p: 2 for p in range(20, 40)},     # Rio, Espírito Santo, Minas
+        **{p: 4 for p in range(40, 57)},     # Bahia to Pernambuco
+        **{p: 5 for p in range(58, 66)},     # Paraíba to Maranhão
+        **{p: 6 for p in range(66, 70)},     # the North
+        **{p: 3 for p in range(70, 80)},     # the Centre-West
+        **{p: 2 for p in range(80, 100)}}    # the South
+''')
+s += '''
+
+def delivery_days(cep: str) -> int:
+    return DAYS[int(normalise_cep(cep)[:2])]
+'''
+p.write_text(s)
+p = Path("shipquote/app.py")
+s = p.read_text()
+s = s.replace('''        return {"cep": cep, "zone": quote.zone_of(cep),
+                "cents": cents, "price": money.brl(cents)}''',
+'''        return {"cep": cep, "zone": quote.zone_of(cep),
+                "cents": cents, "price": money.brl(cents),
+                "days": quote.delivery_days(cep)}''')
+p.write_text(s)
+p = Path("tests/test_app.py")
+s = p.read_text()
+s = s.replace('''    assert body == {"cep": "01310-100", "zone": "SP",
+                    "cents": 2190, "price": "R$ 21,90"}''',
+'''    assert body == {"cep": "01310-100", "zone": "SP",
+                    "cents": 2190, "price": "R$ 21,90", "days": 1}''')
+p.write_text(s)
+PY
+  cat >> tests/test_quote.py <<'EOF'
+
+
+@pytest.mark.parametrize("cep, days", [
+    ("01310-100", 1),
+    ("20040-002", 2),
+    ("69005-010", 6),
+    ("80010-000", 2),
+])
+def test_delivery_takes_the_days_of_the_state(cep, days):
+    assert delivery_days(cep) == days
+EOF
+  sed -i 's/^from shipquote.quote import FREE_FROM, freight, zone_of$/from shipquote.quote import FREE_FROM, delivery_days, freight, zone_of/' tests/test_quote.py
+  cat > ops/router.py <<'EOF'
+"""A small HTTP router for blue-green and canary releases.
+
+ROUTER_CONFIG names a JSON file with the backends and their share of traffic:
+  {"backends": {"blue": "http://127.0.0.1:8301", "green": "http://127.0.0.1:8302"},
+   "weights": {"blue": 100, "green": 0}}
+The file is read on every request, so moving traffic needs no restart. A
+request goes to the side its X-Request-Id hashes to, so the same id always
+lands on the same side, and the answer says which side in X-Served-By.
+"""
+import hashlib
+import json
+import os
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+CONFIG = os.environ["ROUTER_CONFIG"]
+PORT = int(os.environ.get("ROUTER_PORT", "8300"))
+
+
+def choose(request_id, weights):
+    bucket = int(hashlib.sha256(request_id.encode()).hexdigest(), 16) % 100
+    edge = 0
+    for name, weight in weights.items():
+        edge += weight
+        if bucket < edge:
+            return name
+    raise LookupError(f"weights add up to {edge}, not 100")
+
+
+class Route(BaseHTTPRequestHandler):
+    def do_GET(self):
+        with open(CONFIG) as f:
+            routes = json.load(f)
+        side = choose(self.headers.get("X-Request-Id", ""), routes["weights"])
+        try:
+            with urllib.request.urlopen(routes["backends"][side] + self.path,
+                                        timeout=5) as resp:
+                status, body = resp.status, resp.read()
+        except urllib.error.HTTPError as e:
+            status, body = e.code, e.read()
+        except OSError:
+            status, body = 502, b'{"error": "backend unavailable"}'
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("X-Served-By", side)
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, fmt, *args):
+        pass
+
+
+if __name__ == "__main__":
+    ThreadingHTTPServer(("127.0.0.1", PORT), Route).serve_forever()
+EOF
+  cat > ops/load.py <<'EOF'
+"""Send quote requests to a URL and count the answers, per backend.
+
+  python3 ops/load.py URL N [FIRST]
+
+Request number i carries X-Request-Id r<i> and the i-th order of a fixed mix
+of the shop's usual destinations, so two runs over the same numbers send the
+same requests. An error is a 5xx, or no answer at all.
+"""
+import sys
+import time
+import urllib.error
+import urllib.request
+from collections import Counter
+
+ORDERS = [
+    ("01310-100", 800), ("04538-133", 1200), ("05402-000", 300),
+    ("13015-904", 2500), ("20040-002", 600), ("22041-001", 1500),
+    ("30130-010", 900), ("40010-000", 400), ("50030-230", 1100),
+    ("57020-050", 700), ("60060-170", 2000), ("64000-020", 500),
+    ("66010-000", 1300), ("69005-010", 800), ("70040-010", 600),
+    ("74003-010", 1700), ("80010-000", 900), ("88010-001", 1400),
+    ("90010-150", 300), ("29010-000", 1000),
+]
+
+
+def main():
+    url, n = sys.argv[1], int(sys.argv[2])
+    first = int(sys.argv[3]) if len(sys.argv) > 3 else 1
+    sent, errors, slowest = Counter(), Counter(), Counter()
+    for i in range(first, first + n):
+        cep, weight = ORDERS[i % len(ORDERS)]
+        req = urllib.request.Request(
+            f"{url}/quote?cep={cep}&weight={weight}&subtotal=8990",
+            headers={"X-Request-Id": f"r{i}"})
+        started = time.monotonic()
+        try:
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                side, status = resp.headers.get("X-Served-By", "direct"), resp.status
+        except urllib.error.HTTPError as e:
+            side, status = e.headers.get("X-Served-By", "direct"), e.code
+        except OSError:
+            side, status = "unanswered", 0
+        ms = (time.monotonic() - started) * 1000
+        sent[side] += 1
+        slowest[side] = max(slowest[side], ms)
+        if status == 0 or status >= 500:
+            errors[side] += 1
+    print(f"{'backend':10} {'requests':>8} {'errors':>6} {'rate':>7}")
+    for side in sorted(sent):
+        rate = 100 * errors[side] / sent[side]
+        print(f"{side:10} {sent[side]:8} {errors[side]:6} {rate:6.1f}%")
+
+
+if __name__ == "__main__":
+    main()
+EOF
+  cat > ops/canary.py <<'EOF'
+"""Move traffic to a canary in steps, and stop by rule, not by mood.
+
+  python3 ops/canary.py ROUTES_JSON URL
+
+At each step the canary's share of traffic is raised and a batch of requests
+is sent. The canary is stopped, and all traffic sent back to the baseline,
+as soon as its error rate exceeds the baseline's by more than MAX_GAP points,
+once it has answered at least MIN_REQUESTS. Exit 0 means promoted, 1 aborted.
+"""
+import json
+import subprocess
+import sys
+
+STEPS = [5, 25, 50, 100]      # the canary's share of traffic, in percent
+BATCH = 400                   # requests sent at each step
+MIN_REQUESTS = 50             # do not judge a side on fewer answers than this
+MAX_GAP = 1.0                 # percentage points of errors above the baseline
+
+
+def set_weights(path, baseline, canary, share):
+    with open(path) as f:
+        routes = json.load(f)
+    routes["weights"] = {baseline: 100 - share, canary: share}
+    with open(path, "w") as f:
+        json.dump(routes, f)
+
+
+def measure(url, first):
+    out = subprocess.run([sys.executable, "ops/load.py", url, str(BATCH), str(first)],
+                         capture_output=True, text=True, check=True).stdout
+    rates = {}
+    for line in out.splitlines()[1:]:
+        side, sent, errors, _ = line.split()
+        rates[side] = (int(sent), int(errors))
+    return rates
+
+
+def main():
+    path, url = sys.argv[1], sys.argv[2]
+    baseline, canary = "blue", "green"
+    first = 1
+    for share in STEPS:
+        set_weights(path, baseline, canary, share)
+        rates = measure(url, first)
+        first += BATCH
+        sent, errors = rates.get(canary, (0, 0))
+        b_sent, b_errors = rates.get(baseline, (0, 0))
+        rate = 100 * errors / sent if sent else 0.0
+        b_rate = 100 * b_errors / b_sent if b_sent else 0.0
+        print(f"canary at {share:3}%: {canary} {errors}/{sent} = {rate:.1f}%, "
+              f"{baseline} {b_errors}/{b_sent} = {b_rate:.1f}%")
+        if sent >= MIN_REQUESTS and rate - b_rate > MAX_GAP:
+            set_weights(path, baseline, canary, 0)
+            print(f"abort: {canary} is {rate - b_rate:.1f} points worse than "
+                  f"{baseline}; all traffic back to {baseline}")
+            return 1
+        if sent < MIN_REQUESTS:
+            print(f"        {sent} answers is too few to judge; carrying on")
+    print(f"promote: {canary} takes all traffic")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+EOF
+}
+commit_11() {
+  at 2026-10-01T10:00:00-03:00 'Say how many days delivery takes; route and load for releases'
+  GIT_COMMITTER_DATE=2026-10-01T10:00:00-03:00 git tag -a v1.6.0 -m 'shipquote 1.6.0'
+}
+
+# ---- step 12: Give Alagoas its delivery days, and put the estimate behind a flag  [v1.6.1]
+step_12() {
+  sed -i 's/        \*\*{p: 4 for p in range(40, 57)},     # Bahia to Pernambuco/        **{p: 4 for p in range(40, 58)},     # Bahia to Alagoas/' shipquote/quote.py
+  cat >> tests/test_quote.py <<'EOF'
+
+
+def test_every_state_prefix_has_a_delivery_estimate():
+    missing = [p for p in range(1, 100) if p not in DAYS]
+    assert missing == []
+EOF
+  sed -i 's/^from shipquote.quote import FREE_FROM, delivery_days, freight, zone_of$/from shipquote.quote import DAYS, FREE_FROM, delivery_days, freight, zone_of/' tests/test_quote.py
+  cat > shipquote/flags.py <<'EOF'
+"""Feature flags: who sees a feature is decided outside the code.
+
+SHIPQUOTE_FLAGS names a JSON file of {"flag": percent}. A missing file, or a
+flag missing from it, means 0: the feature is off until somebody turns it on.
+"""
+import hashlib
+import json
+import os
+
+
+def load():
+    path = os.environ.get("SHIPQUOTE_FLAGS")
+    if not path or not os.path.exists(path):
+        return {}
+    with open(path) as f:
+        return json.load(f)
+
+
+def enabled(flags, name, customer):
+    """On for the flag's percentage of customers, the same ones every time."""
+    bucket = int(hashlib.sha256(f"{name}:{customer}".encode()).hexdigest(), 16) % 100
+    return bucket < flags.get(name, 0)
+EOF
+  python3 - <<'PY'
+from pathlib import Path
+p = Path("shipquote/app.py")
+s = p.read_text()
+s = s.replace("from . import carrier, money, quote\n", "from . import carrier, flags, money, quote\n")
+s = s.replace('''        try:
+            body = self.quote_body(cep, cents)''', '''        customer = args.get("customer", [""])[0]
+        try:
+            body = self.quote_body(cep, cents)
+            if flags.enabled(flags.load(), "delivery_estimate", customer):
+                body["days"] = quote.delivery_days(cep)''')
+s = s.replace('''                "cents": cents, "price": money.brl(cents),
+                "days": quote.delivery_days(cep)}''', '''                "cents": cents, "price": money.brl(cents)}''')
+p.write_text(s)
+p = Path("tests/test_app.py")
+s = p.read_text()
+s = s.replace('''                    "cents": 2190, "price": "R$ 21,90", "days": 1}''', '''                    "cents": 2190, "price": "R$ 21,90"}''')
+p.write_text(s)
+PY
+  cat > tests/test_flags.py <<'EOF'
+from shipquote.flags import enabled
+
+
+def test_a_flag_nobody_set_is_off():
+    assert not enabled({}, "delivery_estimate", "c1")
+
+
+def test_a_flag_at_100_is_on_for_everybody():
+    assert all(enabled({"delivery_estimate": 100}, "delivery_estimate", f"c{i}")
+               for i in range(1000))
+
+
+def test_the_same_customer_gets_the_same_answer_every_time():
+    flags = {"delivery_estimate": 30}
+    first = [enabled(flags, "delivery_estimate", f"c{i}") for i in range(1000)]
+    again = [enabled(flags, "delivery_estimate", f"c{i}") for i in range(1000)]
+    assert first == again
+EOF
+}
+commit_12() {
+  at 2026-10-02T09:30:00-03:00 'Give Alagoas its delivery days, and put the estimate behind a flag'
+  GIT_COMMITTER_DATE=2026-10-02T09:30:00-03:00 git tag -a v1.6.1 -m 'shipquote 1.6.1'
+}
+
 steps() {
   echo ' 1  2026-09-01  Money in cents, with its first tests'
   echo ' 2  2026-09-02  Price a parcel by zone and weight'
@@ -1074,8 +1393,10 @@ steps() {
   echo ' 8  2026-09-22  Run the checks on GitHub Actions and on GitLab CI'
   echo ' 9  2026-09-24  Build one artifact, deploy it, and check it answers  [v1.4.0]'
   echo '10  2026-09-29  Ask the carrier when the environment names one  [v1.5.0]'
+  echo '11  2026-10-01  Say how many days delivery takes; route and load for releases  [v1.6.0]'
+  echo '12  2026-10-02  Give Alagoas its delivery days, and put the estimate behind a flag  [v1.6.1]'
 }
-LAST=10
+LAST=12
 
 venv() {
   local dir=$1 py=${2:-3.13}
