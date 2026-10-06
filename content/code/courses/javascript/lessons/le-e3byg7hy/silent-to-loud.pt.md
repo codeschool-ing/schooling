@@ -3,7 +3,7 @@ title: Falhas silenciosas que viram erros
 version: 1
 ---
 
-Vários tipos de atribuição não podem acontecer de fato: a propriedade é somente leitura, o objeto está
+Vários tipos de atribuição não podem acontecer: a propriedade é somente leitura, o objeto está
 congelado, o valor é um primitivo. **O modo não estrito os ignora sem uma palavra; o modo estrito lança
 um `TypeError`.** Quatro deles, primeiro num arquivo não estrito:
 
@@ -76,4 +76,4 @@ A primeira linha vale saber por si só. **`Object.freeze(obj)` torna as propried
 somente leitura e impede que novas sejam acrescentadas.** Ele é raso, como o spread da aula 4: um
 objeto congelado que guarda um array ainda guarda um array que pode mudar. É útil para constantes e
 configuração que nada deve mudar, e em código estrito uma tentativa de mudar uma falha fazendo
-barulho, que é o ponto.
+barulho.

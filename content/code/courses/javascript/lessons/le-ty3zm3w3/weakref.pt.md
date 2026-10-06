@@ -42,7 +42,7 @@ que o laboratório escondeu chamando `gc()` à mão:
 - código que se comporta diferente conforme um objeto já foi ou não coletado se comporta diferente de
   uma execução para outra e de um motor para outro, que é o tipo de bug mais difícil de achar.
 
-Então a ordem de preferência é a ordem desta aula: **largue as referências na hora certa (limpe o
-temporizador, remova o listener, limite o cache)**; use um `WeakMap` ou `WeakSet` (aula 5) quando os
-dados devem seguir a vida de um objeto; e recorra a `WeakRef` e `FinalizationRegistry` só quando
-nenhum desses consegue expressar o que você precisa.
+Então a ordem de preferência é a ordem desta aula. Primeiro, **largue as referências na hora certa**:
+limpe o temporizador, remova o listener, limite o cache. Depois, use um `WeakMap` ou `WeakSet` (aula
+5) quando os dados devem seguir a vida de um objeto. Recorra a `WeakRef` e `FinalizationRegistry` só
+quando nenhum desses consegue expressar o que você precisa.

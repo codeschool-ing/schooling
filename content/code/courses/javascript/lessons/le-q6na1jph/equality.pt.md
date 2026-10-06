@@ -36,9 +36,9 @@ A primeira linha é o argumento contra ele. `0 == ""` é verdadeiro, `0 == "0"` 
 ```
 
 Uma relação em que A é igual a B e B é igual a C, mas A não é igual a C, é uma com a qual ninguém
-consegue raciocinar. O resto da saída acrescenta mais: `null == 0` é falso enquanto `null >= 0` é
-verdadeiro, porque `>=` converte `null` em número e `==` tem uma regra especial para ele;
-`1 == true` é verdadeiro e `2 == true` é falso, porque `true` vira `1`.
+consegue raciocinar. O resto da saída acrescenta mais. `null == 0` é falso enquanto `null >= 0` é
+verdadeiro, porque `>=` converte `null` em número e `==` tem uma regra especial para ele. E
+`1 == true` é verdadeiro enquanto `2 == true` é falso, porque `true` vira `1`.
 
 **Escreva `===` e `!==`, sempre.** Com três sinais a segunda linha saiu toda `false`, e os tipos
 decidem antes de qualquer outra coisa.

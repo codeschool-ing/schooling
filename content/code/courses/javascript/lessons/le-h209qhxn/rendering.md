@@ -85,5 +85,5 @@ The same two seconds of work, done in forty slices of 50 ms, each slice scheduli
 `setTimeout`. **The ping was answered while the job was running, after 6 slices**, not after all 40:
 between slices, the loop ran the click's task. The job took a little longer in total, because the
 loop did other things in between, and that is the trade. For work that is heavy on calculation, a
-**Web Worker** runs it on a separate thread with no access to the page, which is the other answer;
-lesson 15 has more on timers, and lesson 22 shows how to find which function is the slow one.
+**Web Worker** runs it on a separate thread with no access to the page, which is the other answer.
+Lesson 15 has more on timers, and lesson 22 shows how to find which function is the slow one.

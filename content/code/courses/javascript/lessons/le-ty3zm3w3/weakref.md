@@ -38,11 +38,11 @@ that represents it is gone. **The specification itself warns against relying on 
 the lab hid by calling `gc()` by hand:
 
 - **when collection happens is the engine's choice**, and it may be much later or, for a program that
-  ends first, never. A finalization callback is not guaranteed to run at all;
+  ends first, never. A finalisation callback is not guaranteed to run at all;
 - code that behaves differently depending on whether an object has been collected yet behaves
   differently from run to run and from engine to engine, which is the hardest kind of bug to find.
 
-So the order of preference is the order of this lesson: **let go of references at the right moment
-(clear the timer, remove the listener, bound the cache)**; use a `WeakMap` or `WeakSet` (lesson 5)
-when data should follow an object's lifetime; and reach for `WeakRef` and `FinalizationRegistry` only
-when neither of those can express what you need.
+So the order of preference is the order of this lesson. First, **let go of references at the right
+moment**: clear the timer, remove the listener, bound the cache. Next, use a `WeakMap` or `WeakSet`
+(lesson 5) when data should follow an object's lifetime. Reach for `WeakRef` and
+`FinalizationRegistry` only when neither of those can express what you need.

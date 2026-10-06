@@ -36,8 +36,8 @@ is false**:
 ```
 
 A relation where A equals B and B equals C, but A does not equal C, is one nobody can reason with.
-The rest of the output adds more: `null == 0` is false while `null >= 0` is true, because `>=`
-converts `null` to a number and `==` has a special rule for it; `1 == true` is true and
+The rest of the output adds more. `null == 0` is false while `null >= 0` is true, because `>=`
+converts `null` to a number and `==` has a special rule for it. And `1 == true` is true while
 `2 == true` is false, because `true` becomes `1`.
 
 **Write `===` and `!==`, always.** With three signs the second line came out all `false`, and the

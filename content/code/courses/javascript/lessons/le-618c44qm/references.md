@@ -32,7 +32,7 @@ object through it.** A primitive does not behave like this, because a primitive 
 at all (lesson 2): a function that receives a number and adds to it changes its own copy and
 nothing else.
 
-This is the single most useful fact in the lesson, because it explains a family of bugs that look
+This is the most useful fact in the lesson, because it explains a family of bugs that look
 unrelated. A list that changes "by itself" after being passed to a helper. A default settings object
 that slowly fills with one user's choices because every user shares it. A test that passes alone
 and fails after another test, because both changed the same fixture.

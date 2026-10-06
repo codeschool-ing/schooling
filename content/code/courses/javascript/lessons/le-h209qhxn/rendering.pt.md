@@ -86,5 +86,5 @@ Os mesmos dois segundos de trabalho, feitos em quarenta fatias de 50 ms, cada fa
 próxima com `setTimeout`. **O ping foi respondido enquanto o trabalho rodava, depois de 6 fatias**, e
 não depois das 40: entre as fatias, o laço rodou a tarefa do clique. O trabalho levou um pouco mais no
 total, porque o laço fez outras coisas no meio, e essa é a troca. Para trabalho pesado de cálculo, um
-**Web Worker** o roda numa thread separada, sem acesso à página, que é a outra resposta; a aula 15 traz
+**Web Worker** o roda numa thread separada, sem acesso à página, que é a outra resposta. A aula 15 traz
 mais sobre temporizadores, e a aula 22 mostra como achar qual função é a lenta.
