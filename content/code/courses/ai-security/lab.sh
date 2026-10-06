@@ -71,6 +71,9 @@
 #     (in place of a model's replies), data/registry-snapshot.txt (a short
 #     stand-in for a package index) and data/suggested-deps.txt were written
 #     by the course.
+#   - data/owasp-llm-2025.json maps the ten categories of the OWASP Top 10
+#     for LLM Applications (2025) to this lab's commands; the names are
+#     OWASP's, the one-line meanings and the mapping are the course's.
 #   - data/surface.json, the inventory of the assistant's entry points, was
 #     written by the course for an invented company.
 #   - data/system-prompt.txt, with its harmless canary marker, and the

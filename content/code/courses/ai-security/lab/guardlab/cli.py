@@ -36,6 +36,7 @@ course.
     guard retry ID [ID ...]         the retry loop, with course-written replies
                                     standing in for the model's attempts
     guard surface [--gaps]          the assistant's entry points and their controls
+    guard owasp [--uncovered]       the OWASP LLM Top 10 against this lab
     guard filter FILE [--skip LAYER]
                                     replies through the chain of output filters
     guard ground FILE               answers against the help centre they cite
@@ -529,6 +530,19 @@ def cmd_surface(a):
     return 0
 
 
+def cmd_owasp(a):
+    rows = load("data/owasp-llm-2025.json")
+    none = 0
+    for r in rows:
+        none += not r["controls"]
+        if a.uncovered and r["controls"]:
+            continue
+        print("%-5s %-34s %s" % (r["id"], r["name"],
+                                 ", ".join(r["controls"]) if r["controls"] else "NOT COVERED IN THIS LAB"))
+    print("%d categories, %d with no control in this lab" % (len(rows), none))
+    return 0
+
+
 # ---- the filter chain ------------------------------------------------------
 
 def cmd_filter(a):
@@ -756,6 +770,10 @@ def main(argv=None):
     s = sub.add_parser("surface")
     s.add_argument("--gaps", action="store_true")
     s.set_defaults(fn=cmd_surface)
+
+    s = sub.add_parser("owasp")
+    s.add_argument("--uncovered", action="store_true")
+    s.set_defaults(fn=cmd_owasp)
 
     s = sub.add_parser("filter")
     s.add_argument("file")
