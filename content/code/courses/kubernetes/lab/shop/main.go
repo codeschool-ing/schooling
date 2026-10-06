@@ -104,7 +104,7 @@ func main() {
 		for time.Now().Before(end) {
 			n++
 		}
-		fmt.Fprintf(w, "worked %dms on %s\n", ms, host)
+		fmt.Fprintf(w, "worked %dms, %d loops, on %s\n", ms, n, host)
 	})
 	mux.HandleFunc("/eat", func(w http.ResponseWriter, r *http.Request) {
 		mb, _ := strconv.Atoi(r.URL.Query().Get("mb"))

@@ -12,6 +12,8 @@
 #   sudo bash lab.sh tools          # once: the software and images, into /opt/k8s
 #   sudo bash lab.sh up [CONFIG]    # a fresh cluster "shop" (CONFIG: a kind config)
 #   sudo bash lab.sh load IMAGE...  # copy images from the laptop into every node
+#   sudo bash lab.sh metrics        # metrics-server, for lessons 21, 33 and 34
+#   sudo bash lab.sh calico         # Calico, on a cluster from lab/cluster-calico.yaml
 #   sudo bash lab.sh down           # delete every cluster this lab made
 #
 # WHAT IS STAGED, and why. The machine this was recorded on could reach
@@ -131,6 +133,12 @@ tools() {
     (cd "$OPT/src/cloud-provider-kind" && GOTOOLCHAIN=auto GOFLAGS=-mod=mod CGO_ENABLED=0 go build -trimpath -o "$OPT/bin/cloud-provider-kind" .)
   fi
   wrap metrics-server "$METRICS_SERVER" "$OPT/bin/metrics-server"
+  if [ ! -f "$OPT/manifests/metrics-server.yaml" ]; then
+    dir=$(GOTOOLCHAIN=auto GOFLAGS=-mod=mod go mod download -json "sigs.k8s.io/metrics-server@$METRICS_SERVER" | jq -r .Dir)
+    kubectl kustomize "$dir/manifests/base" |
+      sed "s#image: gcr.io/k8s-staging-metrics-server/metrics-server:master#image: lab.local/metrics-server:$METRICS_SERVER#" \
+      >"$OPT/manifests/metrics-server.yaml"
+  fi
   [ -f "$OPT/manifests/calico.yaml" ] || curl -sSfo "$OPT/manifests/calico.yaml" \
     "https://raw.githubusercontent.com/projectcalico/calico/$CALICO/manifests/calico.yaml"
   if [ ! -d "$OPT/manifests/gateway-api-$GATEWAY_API" ]; then
@@ -164,13 +172,16 @@ up() { # [CONFIG] [NAME]: a fresh cluster, the base images in it, kubectl pointe
   kind delete cluster --name "$name" >/dev/null 2>&1 || true
   mkdir -p /home/ana/.kube
   # No proxy reaches the nodes: they pull nothing (see the header).
-  env -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy \
+  env -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy -u NO_PROXY -u no_proxy \
     kind create cluster --name "$name" --config "$config" --image "$NODE" -q
   for i in $BASE_IMAGES; do
     docker save --platform linux/amd64 "$i" -o /var/tmp/lab-image.tar
     kind load image-archive /var/tmp/lab-image.tar --name "$name" >/dev/null 2>&1
   done
   rm -f /var/tmp/lab-image.tar
+  # A cluster without kind's network plugin has no Ready node until one is
+  # installed, so Calico goes in before anything waits for readiness.
+  if grep -q 'disableDefaultCNI: true' "$config"; then calico; fi
   kubectl wait --for=condition=Ready nodes --all --timeout=180s >/dev/null
   serving_certs
   no_upstream_dns
@@ -205,6 +216,20 @@ serving_certs() { # approve each kubelet's request for a serving certificate
     xargs -r kubectl certificate approve >/dev/null
 }
 
+calico() { # Calico as the network plugin, on a cluster made from cluster-calico.yaml
+  load "calico/cni:$CALICO" "calico/node:$CALICO" "calico/kube-controllers:$CALICO"
+  kubectl apply -f "$OPT/manifests/calico.yaml" >/dev/null
+  kubectl -n kube-system rollout status daemonset/calico-node --timeout=300s >/dev/null
+  kubectl -n kube-system rollout status deployment/calico-kube-controllers --timeout=300s >/dev/null
+  kubectl wait --for=condition=Ready nodes --all --timeout=180s >/dev/null
+}
+
+metrics() { # metrics-server, from its own manifests with the image built here
+  load "lab.local/metrics-server:$METRICS_SERVER"
+  kubectl apply -f "$OPT/manifests/metrics-server.yaml" >/dev/null
+  kubectl -n kube-system rollout status deployment/metrics-server --timeout=180s >/dev/null
+}
+
 down() {
   local c
   for c in $(kind get clusters 2>/dev/null); do kind delete cluster --name "$c" >/dev/null 2>&1; done
@@ -214,6 +239,8 @@ case ${1:-} in
   tools) tools ;;
   up) shift; up "$@" ;;
   load) shift; load "$@" ;;
+  metrics) metrics ;;
+  calico) calico ;;
   down) down ;;
   *) echo "usage: lab.sh tools | up [CONFIG] [NAME] | load IMAGE... | down" >&2; exit 2 ;;
 esac

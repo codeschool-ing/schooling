@@ -1,0 +1,166 @@
+{
+  "ex-adys9yg8": {
+    "prompt": "Qual destas é uma das três regras do modelo de rede do Kubernetes?",
+    "hint": "O contrário do que o Docker faz por padrão.",
+    "choices": [
+      {
+        "text": "Pods se alcançam pelo endereço do nó e uma porta publicada",
+        "why": "Esse é o padrão do Docker; o Kubernetes pede nenhuma tradução entre pods."
+      },
+      {
+        "text": "Todo pod alcança todo outro pod no endereço dele",
+        "why": "Isso: em qualquer nó, sem tradução de endereço no meio."
+      },
+      {
+        "text": "Pods em nós diferentes precisam de um Service para conversar",
+        "why": "O `left` pingou o `right` direto pelo endereço do pod."
+      },
+      {
+        "text": "Todo pod compartilha o endereço IP do nó",
+        "why": "Cada pod tinha o próprio endereço da fatia do nó."
+      }
+    ]
+  },
+  "ex-zr3dvc69": {
+    "prompt": "A resposta ao ping de `left` voltou com `ttl=62`. O que isso diz sobre o caminho?",
+    "hint": "Um pacote costuma começar em 64.",
+    "choices": [
+      {
+        "text": "O pacote foi embrulhado num túnel",
+        "why": "Um túnel esconderia os saltos; o TTL conta roteadores que o decrementaram."
+      },
+      {
+        "text": "Dois pacotes se perderam",
+        "why": "`0% packet loss`."
+      },
+      {
+        "text": "Foi roteado duas vezes, uma por cada nó",
+        "why": "Isso: 64 menos dois saltos de roteamento."
+      },
+      {
+        "text": "Passou por 62 máquinas",
+        "why": "O TTL conta para baixo a partir do valor inicial, aqui 64."
+      }
+    ]
+  },
+  "ex-tt7my6b1": {
+    "prompt": "Em `shop-worker`, um pod novo recebe um endereço. Qual destes poderia ser?",
+    "hint": "Cada nó distribui endereços da própria fatia.",
+    "choices": [
+      {
+        "text": "`10.244.1.7`",
+        "why": "Essa é a fatia de `shop-worker2`."
+      },
+      {
+        "text": "`10.244.2.7`",
+        "why": "Isso: o POD-CIDR de `shop-worker` é `10.244.2.0/24`."
+      },
+      {
+        "text": "`172.18.0.7`",
+        "why": "Essa é a rede dos próprios nós, não uma faixa de pods."
+      },
+      {
+        "text": "`10.96.0.7`",
+        "why": "Essa faixa é dos Services."
+      }
+    ]
+  },
+  "ex-b30nr0mn": {
+    "prompt": "O que o kindnet escreveu em `shop-worker` para `left` alcançar `right`?",
+    "hint": "Leia o `ip route` no nó.",
+    "choices": [
+      {
+        "text": "Um túnel VXLAN para cada outro nó",
+        "why": "Não há interface de túnel nas rotas."
+      },
+      {
+        "text": "Uma regra de iptables por pod",
+        "why": "O tráfego entre pods aqui só precisa de rotas."
+      },
+      {
+        "text": "Uma entrada de hosts para `right`",
+        "why": "Nomes não participam; o ping usou um endereço."
+      },
+      {
+        "text": "Uma rota para `10.244.1.0/24` via `shop-worker2`",
+        "why": "Isso: uma rota para a fatia de cada outro nó."
+      }
+    ]
+  },
+  "ex-tnnhqjbp": {
+    "prompt": "Ligue cada parte do `10-kindnet.conflist` ao trabalho dela.",
+    "hint": "Plugins ficam em cadeia, cada um fazendo uma parte.",
+    "pairs": [
+      {
+        "left": "`ptp`",
+        "right": "Faz o cabo do pod, um par de interfaces virtuais"
+      },
+      {
+        "left": "`host-local`",
+        "right": "Distribui endereços da fatia do nó"
+      },
+      {
+        "left": "`portmap`",
+        "right": "Implementa o `hostPort`"
+      }
+    ],
+    "right_distractors": [
+      "Aplica políticas de rede"
+    ]
+  },
+  "ex-z1zpt4sc": {
+    "prompt": "Os nós de uma equipe ficam em três sub-redes diferentes cujos roteadores descartam pacotes com origem desconhecida. Qual abordagem ainda deixa os pods se alcançarem?",
+    "hint": "Esconda os endereços dos pods dentro de pacotes dos nós.",
+    "choices": [
+      {
+        "text": "As rotas entre nós do kindnet",
+        "why": "Elas exigem todos os nós numa rede que carregue endereços de pod."
+      },
+      {
+        "text": "Uma rede sobreposta como VXLAN",
+        "why": "Isso. Os roteadores só veem endereços de nós."
+      },
+      {
+        "text": "Mais Services na frente dos pods",
+        "why": "Services ainda precisam de alcance entre pods por baixo."
+      },
+      {
+        "text": "Desligar o plugin CNI",
+        "why": "Sem um, os pods ficam sem rede nenhuma."
+      }
+    ]
+  },
+  "ex-ffmcj5ae": {
+    "prompt": "Que coluna da tabela de plugins faz a maioria das equipes escolher Calico ou Cilium em vez de kindnet ou Flannel?",
+    "hint": "Um deles ignora um objeto em silêncio.",
+    "choices": [
+      {
+        "text": "A velocidade com que os pods se alcançam",
+        "why": "Desempenho importa, e raramente é o que decide."
+      },
+      {
+        "text": "Em quais nuvens rodam",
+        "why": "Todos rodam nas máquinas virtuais de qualquer nuvem."
+      },
+      {
+        "text": "Se as políticas de rede são aplicadas",
+        "why": "Isso. Os outros aceitam as políticas e as ignoram; a lição 24 mostra."
+      },
+      {
+        "text": "Se os pods recebem endereços IPv4",
+        "why": "Todos dão endereços IPv4 aos pods."
+      }
+    ]
+  },
+  "ex-ketn3axq": {
+    "prompt": "Cada nó recebe uma fatia da faixa de pods do cluster, mostrada no `spec.___` dele.",
+    "hint": "A coluna POD-CIDR o leu.",
+    "blanks": [
+      {
+        "accept": [
+          "podCIDR"
+        ]
+      }
+    ]
+  }
+}

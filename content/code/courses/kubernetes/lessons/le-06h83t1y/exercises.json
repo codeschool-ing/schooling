@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-adys9yg8",
+    "version": 1,
+    "section": "pod-to-pod",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is one of the three rules of the Kubernetes network model?",
+    "hint": "The opposite of what Docker does by default.",
+    "choices": [
+      {
+        "text": "Pods reach each other through their node's address and a published port",
+        "correct": false,
+        "why": "That is Docker's default; Kubernetes asks for no translation between pods."
+      },
+      {
+        "text": "Every pod reaches every other pod at its own address",
+        "correct": true,
+        "why": "Right: on any node, with no address translation in between."
+      },
+      {
+        "text": "Pods on different nodes must use a Service to talk",
+        "correct": false,
+        "why": "`left` pinged `right` directly by its pod address."
+      },
+      {
+        "text": "Every pod shares its node's IP address",
+        "correct": false,
+        "why": "Each pod had its own address from its node's slice."
+      }
+    ]
+  },
+  {
+    "id": "ex-zr3dvc69",
+    "version": 1,
+    "section": "pod-to-pod",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The reply to `left`'s ping came back with `ttl=62`. What does that say about the path?",
+    "hint": "A packet usually starts at 64.",
+    "choices": [
+      {
+        "text": "The packet was wrapped in a tunnel",
+        "correct": false,
+        "why": "A tunnel would hide its hops; the TTL counts routers that decremented it."
+      },
+      {
+        "text": "Two packets were lost",
+        "correct": false,
+        "why": "`0% packet loss`."
+      },
+      {
+        "text": "It was routed twice, once by each node",
+        "correct": true,
+        "why": "Right: 64 minus two routing hops."
+      },
+      {
+        "text": "It crossed 62 machines",
+        "correct": false,
+        "why": "TTL counts down from its starting value, here 64."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt7my6b1",
+    "version": 1,
+    "section": "pod-to-pod",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On `shop-worker`, a new pod gets an address. Which one could it be?",
+    "hint": "Each node hands out addresses from its own slice.",
+    "choices": [
+      {
+        "text": "`10.244.1.7`",
+        "correct": false,
+        "why": "That is `shop-worker2`'s slice."
+      },
+      {
+        "text": "`10.244.2.7`",
+        "correct": true,
+        "why": "Right: `shop-worker`'s POD-CIDR is `10.244.2.0/24`."
+      },
+      {
+        "text": "`172.18.0.7`",
+        "correct": false,
+        "why": "That is the nodes' own network, not a pod range."
+      },
+      {
+        "text": "`10.96.0.7`",
+        "correct": false,
+        "why": "That range is for Services."
+      }
+    ]
+  },
+  {
+    "id": "ex-b30nr0mn",
+    "version": 1,
+    "section": "cni-plugins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did kindnet write on `shop-worker` so that `left` could reach `right`?",
+    "hint": "Read `ip route` on the node.",
+    "choices": [
+      {
+        "text": "A VXLAN tunnel to every other node",
+        "correct": false,
+        "why": "There is no tunnel interface in the routes."
+      },
+      {
+        "text": "An iptables rule per pod",
+        "correct": false,
+        "why": "Pod-to-pod traffic here needs only routes."
+      },
+      {
+        "text": "A host entry for `right`",
+        "correct": false,
+        "why": "Names are not involved; the ping used an address."
+      },
+      {
+        "text": "A route to `10.244.1.0/24` via `shop-worker2`",
+        "correct": true,
+        "why": "Right: one route per other node's slice."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnnhqjbp",
+    "version": 1,
+    "section": "cni-plugins",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of `10-kindnet.conflist` with its job.",
+    "hint": "Plugins are chained, each doing one part.",
+    "pairs": [
+      {
+        "left": "`ptp`",
+        "right": "Makes the pod's cable, a pair of virtual interfaces"
+      },
+      {
+        "left": "`host-local`",
+        "right": "Hands out addresses from the node's slice"
+      },
+      {
+        "left": "`portmap`",
+        "right": "Implements `hostPort`"
+      }
+    ],
+    "right_distractors": [
+      "Enforces network policies"
+    ]
+  },
+  {
+    "id": "ex-z1zpt4sc",
+    "version": 1,
+    "section": "cni-plugins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's nodes sit in three different subnets whose routers drop packets with unknown source addresses. Which approach lets pods still reach each other?",
+    "hint": "Hide the pod addresses inside node packets.",
+    "choices": [
+      {
+        "text": "kindnet's routes between nodes",
+        "correct": false,
+        "why": "Those need every node on one network that carries pod addresses."
+      },
+      {
+        "text": "An overlay such as VXLAN",
+        "correct": true,
+        "why": "Right. The routers only ever see node addresses."
+      },
+      {
+        "text": "More Services in front of the pods",
+        "correct": false,
+        "why": "Services still need pod-to-pod reachability underneath."
+      },
+      {
+        "text": "Turning off the CNI plugin",
+        "correct": false,
+        "why": "Without one, pods get no network at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffmcj5ae",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column of the plugin table makes most teams choose Calico or Cilium over kindnet or Flannel?",
+    "hint": "One of them silently ignores an object.",
+    "choices": [
+      {
+        "text": "How fast pods reach each other across nodes",
+        "correct": false,
+        "why": "Performance matters, and it is rarely what decides."
+      },
+      {
+        "text": "Which clouds they run on",
+        "correct": false,
+        "why": "All of them run on any cloud's virtual machines."
+      },
+      {
+        "text": "Whether network policies are enforced",
+        "correct": true,
+        "why": "Right. The others accept policies and ignore them; lesson 24 shows it."
+      },
+      {
+        "text": "Whether pods get IPv4 addresses",
+        "correct": false,
+        "why": "They all give pods IPv4 addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-ketn3axq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each node is given a slice of the cluster's pod range, shown in its `spec.___`.",
+    "hint": "The column POD-CIDR read it.",
+    "blanks": [
+      {
+        "accept": [
+          "podCIDR"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
