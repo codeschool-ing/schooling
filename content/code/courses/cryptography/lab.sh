@@ -148,6 +148,26 @@ fabio.nunes,Vereda@2026
 gabi.torres,m4r3-alta-em-ub@tub@
 hugo.matos,Primavera#2026
 TXT
+  # Two configuration files of the kind lesson 11 finds in real systems,
+  # each holding a password that is encoded or obfuscated and called
+  # protected. The password is the lab's own.
+  cat > "$LAB/data/portal-secret.yaml" <<'TXT'
+apiVersion: v1
+kind: Secret
+metadata:
+  name: portal-db
+type: Opaque
+data:
+  username: cG9ydGFs
+  password: Vi1kYi1zM2NyZXQtMjAyNg==
+TXT
+  cat > "$LAB/data/scheduler.ini" <<'TXT'
+[database]
+host = db.vereda.example
+user = scheduler
+; password is protected (ROT13 then Base64, see the vendor's manual)
+password = SS1xby1mM3BlcmctMjAyNg==
+TXT
   cat > "$LAB/data/referral.txt" <<'TXT'
 Referral 2026-0417. Patient: Marina Duarte, 41.
 Lower back pain after lifting, eight weeks. Eight sessions of physiotherapy.
