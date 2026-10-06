@@ -129,11 +129,17 @@ class Refusal(Exception):
 
 # ---------------------------------------------------------------- images in
 
+def b64(data):
+    """Standard or URL-safe base64, padded or not: google-genai sends the URL-safe kind."""
+    data = data.replace("-", "+").replace("_", "/")
+    return base64.b64decode(data + "=" * (-len(data) % 4))
+
+
 def load_image(url):
     """An image_url as the APIs take it: a data: URL, or http(s) to fetch."""
     if url.startswith("data:"):
         head, _, data = url.partition(",")
-        raw = base64.b64decode(data)
+        raw = b64(data)
     elif url.startswith(("http://127.0.0.1:8700/files/", "http://localhost:8700/files/")):
         raw = open(os.path.join(FILES, os.path.basename(url)), "rb").read()
     else:
@@ -527,7 +533,7 @@ class Handler(BaseHTTPRequestHandler):
         name = m.group(1)
         if name != "lab-flash-image":
             raise Refusal(404, "not_found", f"models/{name} is not found")
-        texts, images, n_in = [], [], 0
+        texts, images, blobs, n_in = [], [], [], 0
         for c in req.get("contents") or []:
             for p in c.get("parts", []):
                 if "text" in p:
@@ -535,6 +541,7 @@ class Handler(BaseHTTPRequestHandler):
                     n_in += text_tokens(p["text"])
                 blob = p.get("inlineData") or p.get("inline_data")
                 if blob:
+                    blobs.append(blob["data"])
                     img = load_image("data:%s;base64,%s" % (blob.get("mimeType") or blob.get("mime_type"), blob["data"]))
                     img["tokens"] = gemini_tokens(img["width"], img["height"])
                     images.append(img)
@@ -545,9 +552,7 @@ class Handler(BaseHTTPRequestHandler):
         parts = [{"text": reply}]
         out_images = 0
         if "IMAGE" in modalities:
-            base = Image.open(io.BytesIO(base64.b64decode(
-                ((req["contents"][-1]["parts"][0].get("inlineData") or req["contents"][-1]["parts"][0].get("inline_data") or {}).get("data") or "")))) \
-                if images else None
+            base = Image.open(io.BytesIO(b64(blobs[0]))) if blobs else None
             img = card((1024, 1024), textwrap.wrap(" ".join(texts), 60)[:8], base)
             parts.append({"inlineData": {"mimeType": "image/png",
                                          "data": base64.b64encode(encode(img, "png")).decode()}})
