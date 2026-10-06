@@ -427,6 +427,118 @@ def l02_ratings_bars(lang):
     return f, t[5]
 
 
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-balance', 3)
+def l03_balance(lang):
+    xs = S.column('minutes')
+    m = S.mean(xs)
+    left = sum(m - x for x in xs if x < m)
+    right = sum(x - m for x in xs if x > m)
+    t = {'en': dict(
+        label=f'The twelve delivery times as dots on a line, resting on a fulcrum at the mean, '
+              f'{num("en", m, 2)} minutes. The distances below the mean add up to '
+              f'{num("en", left, 2)} and the distances above it add up to the same.',
+        axis='delivery time, in minutes', mean=f'mean {num("en", m, 2)}',
+        below=f'distances below: {num("en", left, 2)}', above=f'distances above: {num("en", right, 2)}',
+        cap='The mean is the point where the line would balance. Two far values on the right are '
+            'balanced by many near ones on the left.'),
+        'pt': dict(
+        label=f'Os doze tempos de entrega como pontos numa reta, apoiada num fulcro na média, '
+              f'{num("pt", m, 2)} minutos. As distâncias abaixo da média somam '
+              f'{num("pt", left, 2)} e as distâncias acima somam o mesmo.',
+        axis='tempo de entrega, em minutos', mean=f'média {num("pt", m, 2)}',
+        below=f'distâncias abaixo: {num("pt", left, 2)}', above=f'distâncias acima: {num("pt", right, 2)}',
+        cap='A média é o ponto em que a reta se equilibraria. Dois valores distantes à direita são '
+            'equilibrados por muitos próximos à esquerda.')}[lang]
+    f = Fig('l03-balance', 640, 200, t['label'])
+    p = Plot(f, 40, 30, 600, 120, 25, 65, 0, 1)
+    p.xaxis(range(25, 66, 5), label=t['axis'])
+    placed = []
+    for x in sorted(xs):
+        level = sum(1 for q in placed if abs(p.sx(q) - p.sx(x)) < 13)
+        placed.append(x)
+        f.circle(p.sx(x), p.y1 - 22 - 14 * level, 6, fill='--phosphor' if x < m else '--amber',
+                 stroke='--paper', width=0.8)
+    mx = p.sx(m)
+    f.path(f'M{mx - 9:.1f} {p.y1:.1f} L{mx:.1f} {p.y1 - 13:.1f} L{mx + 9:.1f} {p.y1:.1f} Z',
+           stroke='--paper', width=1, fill='--scan')
+    f.text(mx, 22, t['mean'], size=10, weight='600')
+    f.text(p.sx(26), 52, t['below'], size=9.5, anchor='start', fill='--phosphor')
+    f.text(p.sx(64), 52, t['above'], size=9.5, anchor='end', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l03-median', 3)
+def l03_median(lang):
+    xs = sorted(S.column('basket'))
+    t = {'en': dict(
+        label='The twelve baskets sorted from R$ 12.90 to R$ 212.60, as twelve boxes in a row. The '
+              'sixth and seventh, R$ 62.30 and R$ 74.10, are highlighted; the median is halfway '
+              'between them, R$ 68.20.',
+        lo='six below', hi='six above', med='median = (62.30 + 74.10) ÷ 2 = 68.20',
+        cap='With an even count there is no single middle value, so the median is halfway between '
+            'the two in the middle.'),
+        'pt': dict(
+        label='As doze cestas ordenadas de R$ 12,90 a R$ 212,60, como doze caixas em fila. A sexta e '
+              'a sétima, R$ 62,30 e R$ 74,10, estão destacadas; a mediana fica no meio delas, '
+              'R$ 68,20.',
+        lo='seis abaixo', hi='seis acima', med='mediana = (62,30 + 74,10) ÷ 2 = 68,20',
+        cap='Com uma quantidade par não existe um único valor do meio, então a mediana fica no meio '
+            'dos dois centrais.')}[lang]
+    f = Fig('l03-median', 680, 150, t['label'])
+    w = 52
+    x0 = 340 - 6 * w
+    for i, v in enumerate(xs):
+        hot = i in (5, 6)
+        f.rect(x0 + i * w + 2, 40, w - 4, 34, stroke='--amber' if hot else '--wire', fill='--panel')
+        f.text(x0 + i * w + w / 2, 57, num(lang, v, 2), size=10, mono=True,
+               fill='--amber' if hot else '--paper')
+    f.line(340, 30, 340, 84, stroke='--amber', width=1.6, dash='4 3')
+    f.text(x0 + 3 * w, 22, t['lo'], size=10, fill='--paper-dim')
+    f.text(x0 + 9 * w, 22, t['hi'], size=10, fill='--paper-dim')
+    f.text(340, 104, t['med'], size=11, weight='600')
+    return f, t['cap']
+
+
+@figure('l03-items-frequency', 3)
+def l03_items_frequency(lang):
+    freq = {1: 14, 2: 22, 3: 31, 4: 18, 5: 9, 6: 6}
+    n = sum(freq.values())
+    wm = sum(k * v for k, v in freq.items()) / n
+    t = {'en': dict(
+        label=f'A bar chart of 100 orders by number of items: 14 with one, 22 with two, 31 with '
+              f'three, 18 with four, 9 with five and 6 with six. The weighted mean, '
+              f'{num("en", wm, 2)}, sits just right of three. The plain average of the labels 1 to '
+              f'6, 3.5, sits further right.',
+        y='orders', x='items in the order', wm=f'weighted mean {num("en", wm, 2)}',
+        naive='mean of the labels 3.5',
+        cap='Each bar weighs as much as the orders in it. Averaging the labels 1 to 6 gives every '
+            'bar the same weight, and lands at 3.5.'),
+        'pt': dict(
+        label=f'Um gráfico de barras de 100 pedidos por número de itens: 14 com um, 22 com dois, 31 '
+              f'com três, 18 com quatro, 9 com cinco e 6 com seis. A média ponderada, '
+              f'{num("pt", wm, 2)}, fica logo à direita do três. A média simples dos rótulos de 1 a '
+              f'6, 3,5, fica mais à direita.',
+        y='pedidos', x='itens no pedido', wm=f'média ponderada {num("pt", wm, 2)}',
+        naive='média dos rótulos 3,5',
+        cap='Cada barra pesa tanto quanto os pedidos que tem. Tirar a média dos rótulos de 1 a 6 dá o '
+            'mesmo peso a toda barra, e cai em 3,5.')}[lang]
+    f = Fig('l03-items-frequency', 600, 270, t['label'])
+    p = Plot(f, 80, 60, 560, 215, 0.5, 6.5, 0, 35)
+    p.yaxis(range(0, 36, 5), label=t['y'])
+    for k, c in freq.items():
+        x0, x1 = p.sx(k - 0.34), p.sx(k + 0.34)
+        f.path(f'M{x0:.1f} {p.y1:.1f} L{x0:.1f} {p.sy(c):.1f} L{x1:.1f} {p.sy(c):.1f} '
+               f'L{x1:.1f} {p.y1:.1f} Z', stroke='--phosphor', width=1, fill='--phosphor-dim')
+        f.text((x0 + x1) / 2, p.y1 + 14, str(k), size=10)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 34, t['x'], size=10, weight='600')
+    p.vline(wm, t['wm'], stroke='--amber', top=44, anchor='end')
+    p.vline(3.5, t['naive'], stroke='--paper-dim', top=44, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
