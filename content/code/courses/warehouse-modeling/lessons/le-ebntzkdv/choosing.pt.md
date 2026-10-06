@@ -10,7 +10,7 @@ segundos. O que decide costuma ser uma lista curta de perguntas, mais ou menos n
 1. **Onde os dados já estão?** Mover terabytes entre nuvens custa dinheiro a cada gigabyte que sai, e tempo.
    Uma empresa na AWS tende ao Redshift ou ao Snowflake na AWS; uma no Google Cloud, ao BigQuery.
 2. **Que forma tem a carga?** Muitas consultas pequenas e imprevisíveis de muita gente combinam com pagar por
-   consulta ou por segundo, com escala rápida; uma carga pesada e constante, o dia todo, combina com capacidade
+   consulta ou por segundo, com escala rápida. Uma carga pesada e constante, o dia todo, combina com capacidade
    reservada, paga por hora, que custa menos por unidade quando é usada.
 3. **Quanta operação o time quer?** O BigQuery pede quase nenhuma; o Snowflake pede warehouses dimensionados e
    suspensos; o Redshift provisionado pede nós, chaves e manutenção.

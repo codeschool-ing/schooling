@@ -3,7 +3,7 @@ title: The lab, and three ways to run it
 version: 1
 ---
 
-**A star schema is not understood by reading one.** You understand it when a query you expected to
+**Nobody understands a star schema by reading one.** You understand it when a query you expected to
 be slow comes back in twenty milliseconds, or when a total you trusted turns out to count every
 book twice. So every lesson here is run, and you should run it too.
 

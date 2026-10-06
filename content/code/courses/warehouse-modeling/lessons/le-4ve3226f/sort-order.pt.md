@@ -40,7 +40,7 @@ As mesmas 887.477 linhas, três arquivos:
 - **Em ordem de número de pedido**, como o warehouse as carregou, 9.331.332 bytes. `date_key` cai de
   1.136.811 bytes para 5.602, porque as datas sobem com os números de pedido e as vendas de um dia ficam
   juntas.
-- **Ordenadas por loja e data**, mais ou menos o mesmo total, e `shop_key` ocupa **524 bytes**: sete
+- **Ordenadas por loja e data**, mais ou menos o mesmo total, e `shop_key` ocupa 524 bytes: sete
   sequências, uma por loja, para a coluna inteira.
 
 **Ordenar mexeu no total em cerca de 30%, e numa única coluna por um fator de seiscentos.** Um warehouse

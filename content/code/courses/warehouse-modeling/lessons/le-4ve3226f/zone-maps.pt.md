@@ -3,7 +3,7 @@ title: Zone maps, pular sem índice
 version: 1
 ---
 
-Um arquivo colunar é dividido em blocos de linhas, **grupos de linhas** (row groups) no Parquet, e para
+Um arquivo colunar é dividido em blocos de linhas, **grupos de linhas** (row groups) no Parquet. Para
 cada grupo e cada coluna ele registra algumas estatísticas: o número de linhas, o número de valores vazios,
 e o **mínimo e o máximo**. Aqui estão para `date_key`, no arquivo gravado em ordem de número de pedido:
 
@@ -63,4 +63,4 @@ só a ordem difere.
 pasta; os zone maps pulam blocos dentro de um arquivo pelas estatísticas. As duas dependem da mesma coisa:
 **as linhas que uma consulta quer ficarem juntas**, e por isso a ordem de uma tabela fato é uma decisão de
 projeto, e não um detalhe. O DuckDB mantém zone maps também nas suas tabelas, e por isso a busca de um
-pedido na seção 12 foi rápida sem índice: a tabela está ordenada por número de pedido.
+pedido na seção 12 é rápida sem índice: a tabela está ordenada por número de pedido.

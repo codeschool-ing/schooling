@@ -53,11 +53,10 @@ Run Time (s): real 0.020 user 0.051812 sys 0.013116
 `2987810.7` onde o PostgreSQL imprimiu `2987810.70`, porque o resultado dele é um número de ponto
 flutuante e o do PostgreSQL era um decimal exato; o valor é o mesmo.
 
-A velocidade é o menos interessante. Olhe a consulta. Ela cita três tabelas, liga cada uma à do meio
-por uma única chave, e o departamento é uma coluna do livro. Ninguém precisou saber que a árvore de
+A consulta importa mais que a velocidade. Ela cita três tabelas, liga cada uma à do meio por uma
+única chave, e o departamento é uma coluna do livro. Ninguém precisou saber que a árvore de
 categorias é irregular, que pedidos cancelados ficam de fora ou que receita é quantidade vezes preço
-menos desconto. **Essas decisões foram tomadas uma vez, quando o warehouse foi carregado, e toda
-consulta depois disso as herda.**
+menos desconto. **A carga tomou essas decisões uma vez, e toda consulta depois disso as herda.**
 
 Estas são as tabelas que ele guarda:
 

@@ -74,6 +74,6 @@ números de pedido sobem com o tempo, e assim as vendas de cada dia ficam juntas
 em sequência; a outra metade, onde havia promoções, é empacotada em bits. Toda outra coluna é **empacotada
 em bits** (bit-packing), que é a próxima seção.
 
-A escolha é feita por segmento, testando as codificações e ficando com a menor. Ninguém declarou nada
+O DuckDB faz a escolha por segmento, testando as codificações e ficando com a menor. Ninguém declarou nada
 disso, e isso é típico dos motores colunares: as codificações são um detalhe de implementação que o leitor
 nunca precisa nomear, e se adaptam aos dados.

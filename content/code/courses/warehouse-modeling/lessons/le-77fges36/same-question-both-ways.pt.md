@@ -56,5 +56,5 @@ Três junções contra seis. As três a mais são baratas aqui, porque as tabela
 cadeia**, e quem liga `sf_book` direto a `sf_subcategory`, pulando a categoria, recebe um erro na melhor
 das hipóteses e uma resposta errada na pior.
 
-Essa é a troca, dita sem rodeios. O floco de neve guarda cada nome uma vez. A estrela pede a cada
+Essa é a troca. O floco de neve guarda cada nome uma vez. A estrela pede a cada
 leitor uma junção por dimensão. A próxima seção põe um número no que a primeira vale.

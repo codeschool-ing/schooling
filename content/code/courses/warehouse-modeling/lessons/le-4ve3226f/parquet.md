@@ -9,10 +9,10 @@ read and write it, so a file written by one is a table to all the others.
 
 Its structure, from the outside in:
 
-- **The file** holds a **schema**, the column names and types, and its metadata at the end, in a **footer**.
+- **The file** holds a schema, the column names and types, and its metadata at the end, in a **footer**.
   A reader reads the footer first, so it knows where everything is before it reads any data.
 - **Row groups** divide the rows into blocks, 122,880 rows each in the files DuckDB writes here.
-- **Column chunks**: inside each row group, each column's values are stored together, with their own
+- **Column chunks** sit inside each row group: each column's values stored together, with their own
   encoding and statistics.
 - **Pages** divide a column chunk further, and are the unit that is compressed.
 

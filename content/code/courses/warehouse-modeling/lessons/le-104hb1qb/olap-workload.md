@@ -36,6 +36,5 @@ The shape of an analytical workload, then:
 - **Joins to context.** A sale is a number; *who*, *what*, *where* and *when* make it a question.
 - **History.** This year against last, before the promotion against after.
 
-**Every item in that list is the opposite of the one in section 05**, and that is the whole
-argument of this lesson. A single design cannot be best at both, so the warehouse is a second
-design.
+**Every item in that list is the opposite of the one in section 05.** A single design cannot be
+best at both, so the warehouse is a second design.

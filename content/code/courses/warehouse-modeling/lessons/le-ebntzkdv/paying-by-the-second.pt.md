@@ -6,7 +6,7 @@ version: 1
 O Snowflake cobra o processamento em **créditos**, consumidos enquanto um virtual warehouse está ligado, faça
 ele o que fizer. A documentação dele, lida em 6 de outubro de 2026, dá as duas regras que moldam uma conta:
 
-- um **warehouse X-Small consome 1 crédito por hora** ligado, e cada tamanho acima **dobra**: Small 2, Medium
+- um **warehouse X-Small consome 1 crédito por hora** ligado, e cada tamanho acima dobra: Small 2, Medium
   4, Large 8, X-Large 16;
 - os créditos são cobrados **por segundo, com mínimo de 60 segundos** cada vez que um warehouse liga ou volta
   da suspensão.

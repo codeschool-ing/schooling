@@ -28,7 +28,7 @@ Mem:           16094        1359       11197         348        4182       14734
 ```
 
 Quatro núcleos e 16 GB de memória. O warehouse da Ana, inteiro, é um arquivo de cerca de 46 MB. **Para
-um negócio deste tamanho, escalar não é uma decisão que alguém precise tomar ainda**, e essa é a
+um negócio deste tamanho, escalar verticalmente não é uma decisão que alguém precise tomar ainda.** Essa é a
 situação mais comum que existe: um servidor moderno guarda centenas de gigabytes em memória e tem
 dezenas de núcleos, mais que o warehouse inteiro da maioria das empresas.
 

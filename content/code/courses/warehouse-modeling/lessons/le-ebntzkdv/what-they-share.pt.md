@@ -22,8 +22,8 @@ muito mais que as fundações, e as fundações são as que as duas lições ant
 
 **Nada das lições 2 a 6 muda porque o warehouse é alugado.** Fatos, dimensões, a granularidade, chaves
 substitutas e dimensões de mudança lenta são decisões sobre significado, e os três rodam todas elas. O que muda
-são duas coisas que quem operava um banco costumava decidir sozinho: **como se paga**, e **que botões físicos
-você recebe**. O resto da lição são essas duas, produto por produto.
+são duas coisas que quem operava um banco costumava decidir sozinho: como se paga, e que botões físicos
+você recebe. O resto da lição são essas duas, produto por produto.
 
 **Nenhum dos três roda neste laboratório.** Não há conta de nuvem neste curso. O SQL deles aparece nesta lição
 marcado como não executado; a aritmética é feita sobre os dados da própria Ana no DuckDB, e todo preço é citado

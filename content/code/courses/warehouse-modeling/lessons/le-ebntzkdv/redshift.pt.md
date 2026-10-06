@@ -14,8 +14,8 @@ em duas formas:
 - **Redshift Serverless**: nenhum cluster para escolher. A capacidade é medida em Redshift Processing Units,
   RPUs, aumentada e reduzida pelo serviço, e cobrada pelo tempo em que é usada.
 
-Por dentro, um cluster provisionado ainda se parece com o diagrama da lição 7: um **nó líder** que recebe o
-SQL, planeja e combina os resultados, e **nós de processamento** que guardam cada um uma parte de cada tabela,
+Por dentro, um cluster provisionado ainda se parece com o diagrama da lição 7. Um **nó líder** recebe o
+SQL, planeja e combina os resultados. **Nós de processamento** guardam cada um uma parte de cada tabela,
 divididos ainda em **fatias** (slices), uma por unidade de processamento, cada uma trabalhando nas suas linhas.
 
 Essa herança é o motivo de o Redshift, sozinho entre os três, fazer a quem modela as perguntas da lição 7:

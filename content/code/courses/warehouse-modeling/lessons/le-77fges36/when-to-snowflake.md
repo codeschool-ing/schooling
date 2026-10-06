@@ -15,8 +15,8 @@ the customer, is a snowflake on one branch, and Kimball calls a table used that 
 
 **A description shared by several dimensions.** If shops and customers both have an address in a
 city, and the city carries its own attributes (population, region, the sales territory it belongs
-to), one `dim_city` that both point at keeps the two from describing the same city differently. That
-is a second outrigger, and it is also what section 09 calls conforming.
+to), both can point at one `dim_city`. One table keeps the two from describing the same city
+differently. That is a second outrigger, and it is also what section 09 calls conforming.
 
 **A hierarchy that changes on its own schedule.** If the shop reorganised its departments every
 quarter and kept the history of each version, the category tree would be a dimension with a life of

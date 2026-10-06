@@ -4,9 +4,8 @@ version: 1
 ---
 
 The obvious objection is that the report worked. It took 1.6 seconds, it gave the right answer,
-and it did not need a second database. For a shop this size, on a quiet afternoon, that is true —
-and it is the strongest version of the case for not building a warehouse, so it deserves an
-answer rather than a dismissal.
+and it did not need a second database. For a shop this size, on a quiet afternoon, that is true,
+and it is the strongest version of the case for not building a warehouse.
 
 **The answer is in the conditions, not in the number.** The report ran alone. In production it
 would run beside the tills, and the two compete for the same three things:

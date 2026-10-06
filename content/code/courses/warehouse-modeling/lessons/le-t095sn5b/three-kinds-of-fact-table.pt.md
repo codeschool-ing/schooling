@@ -95,7 +95,7 @@ dezembro de 2025 ainda estavam a caminho quando os dados terminam. **Uma tabela 
 responderia aos dois primeiros números com algum esforço; só o snapshot responde ao terceiro
 diretamente**, porque os pedidos em aberto são linhas, e não a ausência de linhas.
 
-Três tabelas, três formas de tempo. Errar o tipo é fácil de ver depois: uma tabela de estoque feita
+Três tabelas, três formas de tempo. Errar o tipo é fácil de ver depois. Uma tabela de estoque feita
 como transação não tem linha para um livro que não se moveu, então não sabe o que havia na
-prateleira; uma tabela de entregas feita como transação tem uma linha por marco, e toda pergunta de
+prateleira. Uma tabela de entregas feita como transação tem uma linha por marco, e toda pergunta de
 prazo vira uma auto-junção.

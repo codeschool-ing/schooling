@@ -4,9 +4,8 @@ version: 1
 ---
 
 A objeção óbvia é que o relatório funcionou. Levou 1,6 segundo, deu a resposta certa e não precisou
-de um segundo banco. Para uma rede deste tamanho, numa tarde tranquila, isso é verdade — e é a
-versão mais forte do argumento contra construir um warehouse, então merece uma resposta e não um
-desdém.
+de um segundo banco. Para uma rede deste tamanho, numa tarde tranquila, isso é verdade, e é a
+versão mais forte do argumento contra construir um warehouse.
 
 **A resposta está nas condições, não no número.** O relatório rodou sozinho. Em produção ele rodaria
 ao lado dos caixas, e os dois disputam as mesmas três coisas:

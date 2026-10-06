@@ -53,11 +53,10 @@ Run Time (s): real 0.020 user 0.051812 sys 0.013116
 where PostgreSQL printed `2987810.70`, because its result is a floating-point number and
 PostgreSQL's was an exact decimal; the value is the same.
 
-The speed is the least interesting thing about it. Look at the query instead. It names three
-tables, joins each to the middle one by a single key, and the department is a column of the book.
-Nobody had to know that the category tree is ragged, that cancelled orders must be left out, or
-that revenue is quantity times price minus discount. **Those decisions were made once, when the
-warehouse was loaded, and every query after that inherits them.**
+The query matters more than the speed. It names three tables, joins each to the middle one by a
+single key, and the department is a column of the book. Nobody had to know that the category tree
+is ragged, that cancelled orders must be left out, or that revenue is quantity times price minus
+discount. **The load made those decisions once, and every query after that inherits them.**
 
 These are the tables it holds:
 

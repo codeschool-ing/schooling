@@ -56,8 +56,8 @@ ana@lab:~/wh$ duckdb wh.duckdb < drill-across.sql
 
 **Each fact table is summed on its own first, to the same grain, and the two results are joined on the
 conformed key.** That is called **drilling across**. Joining the two fact tables row to row instead
-would multiply every sale by every stock line of the same shop and produce a number with no meaning;
-summing first and then joining on `shop_key` gives one row per shop from each side.
+would multiply every sale by every stock line of the same shop and produce a number with no meaning.
+Summing first and then joining on `shop_key` gives one row per shop from each side.
 
 The answer is useful: the website holds about one month of stock and every physical shop between 1.6
 and 1.9, which is what a warehouse that ships the next day and shops that have to fill shelves would

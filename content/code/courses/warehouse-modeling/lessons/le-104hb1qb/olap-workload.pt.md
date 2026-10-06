@@ -36,6 +36,5 @@ A forma de uma carga analítica, então:
   numa pergunta.
 - **Histórico.** Este ano contra o passado, antes da promoção contra depois.
 
-**Cada item dessa lista é o oposto do item correspondente na seção 05**, e esse é o argumento
-inteiro desta lição. Um único projeto não consegue ser o melhor nas duas, então o warehouse é um
-segundo projeto.
+**Cada item dessa lista é o oposto do item correspondente na seção 05.** Um único projeto não
+consegue ser o melhor nas duas, então o warehouse é um segundo projeto.

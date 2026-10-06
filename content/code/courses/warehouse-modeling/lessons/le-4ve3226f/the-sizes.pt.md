@@ -35,10 +35,10 @@ total até o centavo.
 
 A tabela por linhas do PostgreSQL é maior até que o arquivo de texto, por motivos que são do trabalho
 dela, e não desperdício. Cada linha carrega um cabeçalho de umas duas dúzias de bytes que o caixa precisa
-para transações concorrentes; cada número ocupa os seus quatro ou oito bytes inteiros, seja 3 ou 677.468;
-e as páginas guardam algum espaço livre para uma atualização poder ficar no lugar.
+para transações concorrentes. Cada número ocupa os seus quatro ou oito bytes inteiros, seja 3 ou 677.468.
+E as páginas guardam algum espaço livre para uma atualização poder ficar no lugar.
 
-Os arquivos colunares são menores que o texto, e essa é a verdadeira surpresa. Eles não comprimem
+Os arquivos colunares são menores até que o texto. Eles não comprimem
 caracteres, como um arquivo zip. Usam o que sabem sobre cada coluna: que ela guarda um tipo, muitas vezes
 numa faixa estreita, muitas vezes em longas sequências do mesmo valor. As próximas seções pegam esses
 truques um a um, e os próprios metadados do Parquet mostram para onde foi cada byte.

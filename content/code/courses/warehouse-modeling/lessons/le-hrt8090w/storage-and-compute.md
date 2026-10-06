@@ -4,7 +4,7 @@ version: 1
 ---
 
 In the shared-nothing design of section 06, each node owns its share of the data on its own disks. That
-has a consequence that took the industry a decade to work around: **to add processing power you have to
+has a consequence that took the industry a decade to work around. **To add processing power you have to
 add storage, and move data onto it.** Doubling the nodes means rewriting every table's distribution across
 twice as many machines, which can take hours, and shrinking back at night means doing it again.
 

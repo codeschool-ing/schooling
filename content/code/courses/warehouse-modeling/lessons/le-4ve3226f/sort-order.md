@@ -38,7 +38,7 @@ The same 887,477 rows, three files:
 - **Shuffled**, 13,403,406 bytes. Every column is as scattered as it can be.
 - **In order of order number**, as the warehouse loaded them, 9,331,332 bytes. `date_key` drops from
   1,136,811 bytes to 5,602, because dates rise with order numbers and a day's sales sit together.
-- **Sorted by shop and date**, about the same total, and `shop_key` takes **524 bytes**: seven runs, one per
+- **Sorted by shop and date**, about the same total, and `shop_key` takes 524 bytes: seven runs, one per
   shop, for the whole column.
 
 **Sorting moved the total by about 30%, and a single column by a factor of six hundred.** A warehouse that

@@ -3,10 +3,10 @@ title: Partitioning, which is not distribution
 version: 1
 ---
 
-The two words are mixed up constantly, and they do different jobs.
+People mix the two words up constantly, and they do different jobs.
 
-- **Distribution** decides **which machine** a row lives on, to spread the work.
-- **Partitioning** decides **which file or segment** a row lives in, so that a query can skip the ones it
+- **Distribution** decides which machine a row lives on, to spread the work.
+- **Partitioning** decides which file or segment a row lives in, so that a query can skip the ones it
   does not need.
 
 They are independent: a table can be distributed across nodes by order number and, on each node,
@@ -54,8 +54,8 @@ EXPLAIN ANALYZE SELECT sum(net_cents) FROM read_parquet('sales_by_month/*/*/*.pa
 │    Total Files Read: 1    │
 ```
 
-**`Scanning Files: 1/24`.** The filter on `year` and `month` was applied to the folder names before
-anything was opened, and 23 of the 24 files were never touched. That is **partition pruning**, and it is the
+**`Scanning Files: 1/24`.** DuckDB applied the filter on `year` and `month` to the folder names before
+opening anything, and never touched 23 of the 24 files. That is **partition pruning**, and it is the
 cheapest speed-up in analytics: the work not done is free.
 
 Three rules make it pay:

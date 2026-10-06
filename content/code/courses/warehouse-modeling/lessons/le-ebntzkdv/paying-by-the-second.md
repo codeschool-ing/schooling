@@ -6,7 +6,7 @@ version: 1
 Snowflake bills compute in **credits**, consumed while a virtual warehouse runs, whatever it is doing. Its
 documentation, read on 6 October 2026, gives the two rules that shape a bill:
 
-- an **X-Small warehouse consumes 1 credit per hour** of running, and each size up **doubles** it: Small 2,
+- an **X-Small warehouse consumes 1 credit per hour** of running, and each size up doubles it: Small 2,
   Medium 4, Large 8, X-Large 16;
 - credits are billed **per second, with a minimum of 60 seconds** each time a warehouse starts or resumes.
 

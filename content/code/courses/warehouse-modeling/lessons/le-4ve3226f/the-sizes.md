@@ -35,10 +35,10 @@ total to the centavo.
 
 PostgreSQL's row store is larger even than the text file, for reasons that are about its job rather than
 waste. Every row carries a header of about two dozen bytes that the till needs for concurrent
-transactions; every number takes its full four or eight bytes whether it is 3 or 677,468; and pages keep
+transactions. Every number takes its full four or eight bytes whether it is 3 or 677,468. And pages keep
 some free space so that an update can stay in place.
 
-The columnar files are smaller than the text, and that is the real surprise. They are not compressing
+The columnar files are smaller even than the text. They are not compressing
 characters, the way a zip file does. They are using what they know about each column: that it holds one
 type, often a narrow range, often long runs of the same value. The next sections take those tricks one
 at a time, and Parquet's own metadata shows where every byte went.

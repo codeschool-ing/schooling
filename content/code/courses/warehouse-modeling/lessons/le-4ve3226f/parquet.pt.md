@@ -9,12 +9,12 @@ de lakehouse leem e gravam Parquet, então um arquivo gravado por um é uma tabe
 
 A estrutura dele, de fora para dentro:
 
-- **O arquivo** guarda um **esquema**, os nomes e tipos das colunas, e os seus metadados no fim, num
+- **O arquivo** guarda um esquema, os nomes e tipos das colunas, e os seus metadados no fim, num
   **rodapé** (footer). Um leitor lê o rodapé primeiro, e assim sabe onde está tudo antes de ler qualquer
   dado.
 - **Grupos de linhas** dividem as linhas em blocos, de 122.880 linhas cada nos arquivos que o DuckDB grava
   aqui.
-- **Pedaços de coluna** (column chunks): dentro de cada grupo, os valores de cada coluna ficam juntos, com
+- **Pedaços de coluna** (column chunks) ficam dentro de cada grupo: os valores de cada coluna juntos, com
   codificação e estatísticas próprias.
 - **Páginas** dividem um pedaço de coluna mais ainda, e são a unidade que é comprimida.
 

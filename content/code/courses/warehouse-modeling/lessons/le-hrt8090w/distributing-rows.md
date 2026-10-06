@@ -52,6 +52,6 @@ unevenly, as seven values usually land. A query on this layout runs as slow as t
 rows, which is 72% of the table, while one node sits idle.
 
 The lesson from the two results is the first rule of choosing a distribution key: **it needs many
-distinct values, spread evenly.** An order number, a customer number, a line id. Never a status, a
-country, a shop or a date with a handful of values. The next section shows the second rule, which is about
-the values being *spread evenly*, and why seven shops would be uneven even with seven nodes.
+distinct values.** An order number, a customer number, a line id. Never a status, a country, a shop or a
+date with a handful of values. The next section shows the second rule, that the values have to be *spread
+evenly*, and why seven shops would be uneven even with seven nodes.

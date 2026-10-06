@@ -28,7 +28,7 @@ Mem:           16094        1359       11197         348        4182       14734
 ```
 
 Four cores and 16 GB of memory. Ana's warehouse, all of it, is a file of about 46 MB. **For a business this
-size, scaling up is not a decision anybody needs to make yet**, and that is the most common situation
+size, scaling up is not a decision anybody needs to make yet.** That is the most common situation
 there is: a single modern server holds hundreds of gigabytes in memory and has dozens of cores, which
 is more than most companies' entire warehouse.
 

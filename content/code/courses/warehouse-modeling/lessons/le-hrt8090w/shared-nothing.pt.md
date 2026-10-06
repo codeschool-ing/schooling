@@ -4,7 +4,7 @@ version: 1
 ---
 
 O projeto comum para escalar um warehouse horizontalmente se chama **processamento massivamente
-paralelo**, MPP, e quase todo produto que faz isso segue o mesmo plano, **shared nothing** (nada
+paralelo**, MPP. Quase todo produto que faz isso segue o mesmo plano, **shared nothing** (nada
 compartilhado): cada máquina, ou **nó**, tem os seus processadores, a sua memória e a sua parte dos
 dados, e nenhum nó lê o disco de outro.
 

@@ -47,7 +47,7 @@ Cada parte da pergunta foi parar num lugar previsível:
 
 **Filtros e agrupamentos vêm das dimensões; somas vêm dos fatos.** Essa é a gramática inteira, e é por
 isso que se pode confiar a um usuário de negócio com uma ferramenta de relatório a montagem de
-perguntas sobre uma estrela: a ferramenta oferece as colunas das dimensões como coisas para arrastar
+perguntas sobre uma estrela. A ferramenta oferece as colunas das dimensões como coisas para arrastar
 para linhas e colunas, e as medidas como coisas para totalizar. Os caminhos de junção nunca mudam,
 então a ferramenta consegue escrevê-los.
 

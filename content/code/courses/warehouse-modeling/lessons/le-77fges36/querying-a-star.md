@@ -46,7 +46,7 @@ Every part of the question went somewhere predictable:
 | revenue | sums a measure of `fact_sales` |
 
 **Filters and groupings come from dimensions; sums come from facts.** That is the whole grammar, and
-it is why a business user with a report tool can be trusted to build questions on a star: the tool
+it is why a business user with a report tool can be trusted to build questions on a star. The tool
 offers the dimension columns as things to drag onto rows and columns, and the measures as things to
 total. The join paths never change, so the tool can write them.
 

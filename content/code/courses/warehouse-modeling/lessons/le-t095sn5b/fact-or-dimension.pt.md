@@ -37,8 +37,8 @@ ana@lab:~/wh$ duckdb wh.duckdb -c "SELECT field, count(*) AS changes FROM stagin
 
 `customer_changes` tem o formato de uma tabela de transação: um evento, uma data, uma linha a cada
 vez. **Mas não é um processo de negócio que alguém mede.** Ninguém pede "mudanças de nível por mês"
-num relatório. O que se pergunta é quanto um *patron* gasta, ou quanto se vendeu a clientes no Paraná
-— e para responder qualquer das duas corretamente sobre o ano passado é preciso saber em que nível e
+num relatório. O que se pergunta é quanto um *patron* gasta, ou quanto se vendeu a clientes no Paraná.
+Para responder qualquer das duas corretamente sobre o ano passado é preciso saber em que nível e
 em que estado cada cliente estava **na hora de cada venda**.
 
 Então essas 11.265 linhas são o histórico de uma dimensão, e não um fato. Elas vão para a dimensão de

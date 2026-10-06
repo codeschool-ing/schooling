@@ -25,14 +25,14 @@ Isso é **desequilíbrio** (skew): trabalho espalhado de forma desigual entre os
 acrescentar nós para de ajudar. Ele vem de dois lugares, e só o primeiro é visível com antecedência:
 
 - **Chaves desequilibradas.** Uma chave de distribuição com poucos valores, ou com valores de pesos muito
-  diferentes: lojas, países, uma coluna de cliente em que um atacadista tem um terço dos pedidos, ou uma
+  diferentes. Lojas, países, uma coluna de cliente em que um atacadista tem um terço dos pedidos, ou uma
   coluna em que a maioria das linhas está vazia e todo valor vazio vai para o mesmo nó.
 - **Consultas desequilibradas.** Uma chave que espalha as linhas por igual ainda pode espalhar o
   *trabalho* de forma desigual, se toda consulta filtra os mesmos poucos valores. Espalhados por data, os
   dados ficam equilibrados; mas se todos perguntam sobre a última semana, os nós com a última semana fazem
   todo o trabalho.
 
-Como se pega: produtos MPP informam linhas por nó de uma tabela e tempo por nó de uma consulta, e a view
+Como detectar: produtos MPP informam linhas por nó de uma tabela e tempo por nó de uma consulta, e a view
 `SVV_TABLE_INFO` do Redshift tem uma coluna `skew_rows` exatamente para isso. **A razão entre o nó mais
 cheio e a média é o número a observar.** Uma razão perto de 1 é saudável. O arranjo por número de pedido
 da seção anterior tem razão 1,002; o arranjo por loja, 643.004 contra uma média de 221.869, tem 2,9.

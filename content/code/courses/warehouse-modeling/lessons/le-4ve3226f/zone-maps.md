@@ -3,7 +3,7 @@ title: Zone maps, skipping without an index
 version: 1
 ---
 
-A columnar file is divided into blocks of rows, **row groups** in Parquet, and for every row group and
+A columnar file is divided into blocks of rows, **row groups** in Parquet. For every row group and
 every column it records a few statistics: the number of rows, the number of empty values, and the
 **minimum and maximum**. Here they are for `date_key`, in the file written in order of order number:
 
@@ -62,5 +62,5 @@ is identical; only the order differs.
 This is the same pruning as lesson 7's partitions, one level finer. Partitions skip files by their folder
 name; zone maps skip blocks inside a file by their statistics. Both depend on the same thing: **rows that a
 query wants sitting together**, which is why the sort order of a fact table is a design decision and not a
-detail. DuckDB keeps zone maps for its own tables too, which is why section 12's lookup of one order was fast
+detail. DuckDB keeps zone maps for its own tables too, which is why section 12's lookup of one order is fast
 without an index: the table is sorted by order number.

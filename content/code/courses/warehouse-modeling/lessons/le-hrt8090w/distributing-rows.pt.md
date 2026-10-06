@@ -52,7 +52,6 @@ desigual, como sete valores costumam cair. Uma consulta nesse arranjo é tão le
 linhas, que são 72% da tabela, enquanto um nó fica parado.
 
 A lição dos dois resultados é a primeira regra de escolha de uma chave de distribuição: **ela precisa de
-muitos valores distintos, espalhados por igual.** Um número de pedido, um número de cliente, um id de
-item. Nunca um status, um país, uma loja ou uma data com um punhado de valores. A próxima seção mostra a
-segunda regra, que é sobre os valores estarem *espalhados por igual*, e por que sete lojas seriam
-desiguais mesmo com sete nós.
+muitos valores distintos.** Um número de pedido, um número de cliente, um id de item. Nunca um status, um
+país, uma loja ou uma data com um punhado de valores. A próxima seção mostra a segunda regra, a de que os
+valores precisam estar *espalhados por igual*, e por que sete lojas seriam desiguais mesmo com sete nós.

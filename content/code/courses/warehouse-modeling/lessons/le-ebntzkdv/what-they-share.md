@@ -23,8 +23,8 @@ measured:
 
 **Nothing in lessons 2 to 6 changes because the warehouse is rented.** Facts, dimensions, the grain,
 surrogate keys and slowly changing dimensions are decisions about meaning, and every one of the three
-runs them. What changes is two things the operator of a database used to decide alone: **how you pay**, and
-**which physical knobs you are given**. The rest of the lesson is those two, product by product.
+runs them. What changes is two things the operator of a database used to decide alone: how you pay, and
+which physical knobs you are given. The rest of the lesson is those two, product by product.
 
 **None of the three runs in this lab.** There is no cloud account in this course. Their SQL appears in
 this lesson marked as not run; the arithmetic is done on Ana's own data in DuckDB, and every price is

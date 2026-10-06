@@ -10,7 +10,7 @@ decides it is usually a short list of questions, roughly in this order:
 1. **Where is the data already?** Moving terabytes between clouds costs money for every gigabyte that leaves,
    and time. A company on AWS tends towards Redshift or Snowflake on AWS; one on Google Cloud towards BigQuery.
 2. **What shape is the workload?** Many small, unpredictable queries from many people suit paying per query
-   or per second with fast scaling; a steady, heavy load that runs all day suits reserved capacity, paid by the
+   or per second with fast scaling. A steady, heavy load that runs all day suits reserved capacity, paid by the
    hour, which costs less per unit when it is used.
 3. **How much operation does the team want?** BigQuery asks for almost none; Snowflake asks for warehouses to
    be sized and suspended; provisioned Redshift asks for nodes, keys and maintenance.

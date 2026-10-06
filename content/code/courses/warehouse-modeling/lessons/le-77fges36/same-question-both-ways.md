@@ -56,5 +56,5 @@ and 28 rows. They are not free in the other sense: **every person who writes a r
 chain**, and somebody who joins `sf_book` to `sf_subcategory` directly, skipping the category, gets an
 error at best and a wrong answer at worst.
 
-That is the trade, stated plainly. The snowflake stores each name once. The star asks each reader to
+That is the trade. The snowflake stores each name once. The star asks each reader to
 make one join per dimension. The next section puts a number on what the first is worth.

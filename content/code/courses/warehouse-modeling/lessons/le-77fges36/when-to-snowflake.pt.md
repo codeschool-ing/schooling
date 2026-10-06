@@ -15,9 +15,9 @@ própria, apontada pelo cliente, é um floco de neve num galho, e Kimball chama 
 **outrigger**.
 
 **Uma descrição compartilhada por várias dimensões.** Se lojas e clientes têm endereço numa cidade, e
-a cidade tem atributos próprios (população, região, o território de vendas a que pertence), uma
-`dim_city` única para a qual os dois apontam evita que os dois descrevam a mesma cidade de jeitos
-diferentes. É um segundo outrigger, e também é o que a seção 09 chama de conformar.
+a cidade tem atributos próprios (população, região, o território de vendas a que pertence), os dois
+podem apontar para uma `dim_city` única. Uma tabela só evita que os dois descrevam a mesma cidade de
+jeitos diferentes. É um segundo outrigger, e também é o que a seção 09 chama de conformar.
 
 **Uma hierarquia que muda no seu próprio ritmo.** Se a rede reorganizasse seus departamentos a cada
 trimestre e guardasse o histórico de cada versão, a árvore de categorias seria uma dimensão com vida

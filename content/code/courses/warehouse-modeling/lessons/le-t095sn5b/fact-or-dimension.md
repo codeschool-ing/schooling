@@ -37,8 +37,8 @@ ana@lab:~/wh$ duckdb wh.duckdb -c "SELECT field, count(*) AS changes FROM stagin
 
 `customer_changes` has the shape of a transaction table: an event, a date, one row each time. **It
 is not a business process anybody measures**, though. Nobody asks for "tier changes per month" in a
-report. What people ask is how much a *patron* spends, or how much was sold to customers in Paraná
-— and to answer either correctly for last year they need to know what tier and which state each
+report. What people ask is how much a *patron* spends, or how much was sold to customers in Paraná.
+To answer either correctly for last year they need to know what tier and which state each
 customer was in **at the time of each sale**.
 
 So these 11,265 rows are the history of a dimension, not a fact. They go into the customer dimension,

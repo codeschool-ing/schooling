@@ -96,7 +96,7 @@ December 2025 were still on the way when the data ends. **A transaction table co
 two numbers with some effort; only the snapshot answers the third directly**, because the open
 orders are rows, rather than an absence of rows.
 
-Three tables, three shapes of time. Getting the kind wrong is easy to see afterwards: a stock table
-built as transactions has no row for a book that did not move, so it cannot say what was on the shelf;
-a fulfilment table built as transactions has one row per milestone, and every lead-time question
+Three tables, three shapes of time. Getting the kind wrong is easy to see afterwards. A stock table
+built as transactions has no row for a book that did not move, so it cannot say what was on the shelf.
+A fulfilment table built as transactions has one row per milestone, and every lead-time question
 becomes a self-join.

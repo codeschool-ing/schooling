@@ -57,7 +57,7 @@ ana@lab:~/wh$ duckdb wh.duckdb < drill-across.sql
 **Cada tabela fato é somada sozinha primeiro, até a mesma granularidade, e os dois resultados são
 ligados pela chave conformada.** Isso se chama **drill-across**. Ligar as duas tabelas fato linha a
 linha, em vez disso, multiplicaria cada venda por cada linha de estoque da mesma loja e produziria um
-número sem significado; somar primeiro e depois ligar por `shop_key` dá uma linha por loja de cada lado.
+número sem significado. Somar primeiro e depois ligar por `shop_key` dá uma linha por loja de cada lado.
 
 A resposta é útil: o site tem cerca de um mês de estoque e cada loja física entre 1,6 e 1,9, que é como
 seria de esperar de um depósito que despacha no dia seguinte e de lojas que precisam encher

@@ -3,10 +3,10 @@ title: Particionamento, que não é distribuição
 version: 1
 ---
 
-As duas palavras se confundem o tempo todo, e fazem trabalhos diferentes.
+As pessoas confundem as duas palavras o tempo todo, e elas fazem trabalhos diferentes.
 
-- **Distribuição** decide **em que máquina** uma linha mora, para espalhar o trabalho.
-- **Particionamento** decide **em que arquivo ou segmento** uma linha mora, para uma consulta poder pular
+- **Distribuição** decide em que máquina uma linha mora, para espalhar o trabalho.
+- **Particionamento** decide em que arquivo ou segmento uma linha mora, para uma consulta poder pular
   os que não precisa.
 
 São independentes: uma tabela pode ser distribuída entre nós por número de pedido e, em cada nó,
@@ -54,8 +54,8 @@ EXPLAIN ANALYZE SELECT sum(net_cents) FROM read_parquet('sales_by_month/*/*/*.pa
 │    Total Files Read: 1    │
 ```
 
-**`Scanning Files: 1/24`.** O filtro em `year` e `month` foi aplicado aos nomes das pastas antes de
-qualquer coisa ser aberta, e 23 dos 24 arquivos nunca foram tocados. Isso é **poda de partições**
+**`Scanning Files: 1/24`.** O DuckDB aplicou o filtro em `year` e `month` aos nomes das pastas antes
+de abrir qualquer coisa, e nunca tocou 23 dos 24 arquivos. Isso é **poda de partições**
 (partition pruning), e é o ganho de velocidade mais barato da análise de dados: o trabalho não feito sai
 de graça.
 

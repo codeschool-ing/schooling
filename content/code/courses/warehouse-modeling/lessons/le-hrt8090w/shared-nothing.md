@@ -3,8 +3,8 @@ title: Shared nothing, and the coordinator
 version: 1
 ---
 
-The common design for scaling a warehouse out is called **massively parallel processing**, MPP, and
-almost every product that does it follows the same plan, **shared nothing**: each machine, or **node**,
+The common design for scaling a warehouse out is called **massively parallel processing**, MPP.
+Almost every product that does it follows the same plan, **shared nothing**: each machine, or **node**,
 has its own processors, its own memory and its own share of the data, and no node reads another node's
 disk.
 

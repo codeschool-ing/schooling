@@ -73,6 +73,6 @@ rise with time, and so every day's sales sit together in one run. `discount_cent
 segments, because most lines have no discount and the zeros come in runs; the other half, where promotions
 were running, are bit-packed. Every other column is **bit-packed**, which is the next section.
 
-The choice is made per segment, by trying the encodings and keeping the smallest. Nobody declared any of
+DuckDB makes the choice per segment, by trying the encodings and keeping the smallest. Nobody declared any of
 it, and that is typical of columnar engines: the encodings are an implementation detail the reader never
 has to name, and they adapt to the data.

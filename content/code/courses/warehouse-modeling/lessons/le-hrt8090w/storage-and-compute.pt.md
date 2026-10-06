@@ -4,7 +4,7 @@ version: 1
 ---
 
 No projeto shared-nothing da seção 06, cada nó é dono da sua parte dos dados nos seus próprios discos.
-Isso tem uma consequência que a indústria levou uma década para contornar: **para acrescentar poder de
+Isso tem uma consequência que a indústria levou uma década para contornar. **Para acrescentar poder de
 processamento é preciso acrescentar armazenamento, e mover dados para ele.** Dobrar os nós significa
 reescrever a distribuição de toda tabela em duas vezes mais máquinas, o que pode levar horas, e encolher
 à noite significa fazer tudo de novo.
