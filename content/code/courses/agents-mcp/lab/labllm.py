@@ -594,7 +594,8 @@ class Handler(BaseHTTPRequestHandler):
         for t in req.get("tools") or []:
             for d in t.get("functionDeclarations") or t.get("function_declarations") or []:
                 tools.append({"name": d["name"], "description": d.get("description", ""),
-                              "input_schema": d.get("parametersJsonSchema") or d.get("parameters") or {}})
+                              "input_schema": d.get("parametersJsonSchema") or d.get("parameters_json_schema")
+                              or d.get("parameters") or {}})
         cfg = req.get("generationConfig") or req.get("generation_config") or {}
         inner = {"model": model, "max_tokens": cfg.get("maxOutputTokens", 1024), "messages": conv,
                  "system": system, "tools": tools or None}

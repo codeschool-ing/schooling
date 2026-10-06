@@ -1,0 +1,611 @@
+[
+  {
+    "id": "ex-ahjd9zx2",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does the model see when it decides whether to call get_order?",
+    "choices": [
+      {
+        "text": "The code of shop.get_order",
+        "correct": false,
+        "why": "The function is never sent. The model sees only the definition."
+      },
+      {
+        "text": "The tool's name, description and input schema",
+        "correct": true,
+        "why": "Right. Those three travel with every request, and they are all the model has to go on."
+      },
+      {
+        "text": "A sample of rows from shop.db, so it knows what an order looks like",
+        "correct": false,
+        "why": "No data is sent until a call is made and its result returned."
+      },
+      {
+        "text": "Nothing until it calls it",
+        "correct": false,
+        "why": "The definitions are part of every request, before any call."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrznr8ng",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does tools.py read the list of genres from books.jsonl instead of typing it into the schema?",
+    "choices": [
+      {
+        "text": "Because JSON Schema enums cannot be written by hand",
+        "correct": false,
+        "why": "They can; the point is keeping them true."
+      },
+      {
+        "text": "To make the schema smaller",
+        "correct": false,
+        "why": "The list is the same size either way."
+      },
+      {
+        "text": "So the enum cannot drift from the catalogue",
+        "correct": true,
+        "why": "Right. A genre added to the books is allowed at once, and a typed list would silently refuse it."
+      },
+      {
+        "text": "Because the model insists on reading data files before it calls a tool",
+        "correct": false,
+        "why": "The model reads only the definition; the file is read by the host when tools.py loads."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rkkw3tm",
+    "version": 1,
+    "section": "descriptions-are-prompts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The description of get_order states the id's format in words, and the schema enforces it with a pattern. Why both?",
+    "choices": [
+      {
+        "text": "Because providers reject a pattern unless the description repeats it",
+        "correct": false,
+        "why": "No provider requires that. The two do different jobs."
+      },
+      {
+        "text": "The description prevents the mistake; the schema catches it",
+        "correct": true,
+        "why": "Right. One helps the model get it right; the other is the host's check when it does not."
+      },
+      {
+        "text": "Because the description is shown to the customer and the schema is not",
+        "correct": false,
+        "why": "Neither is shown to the customer."
+      },
+      {
+        "text": "For redundancy in case one is lost in transit",
+        "correct": false,
+        "why": "Both travel in the same request; neither is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-cymz4fnn",
+    "version": 1,
+    "section": "descriptions-are-prompts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds 'Only call this after the customer confirms' to issue_refund's description. What is wrong with relying on it?",
+    "choices": [
+      {
+        "text": "Descriptions longer than one sentence are truncated by providers",
+        "correct": false,
+        "why": "Descriptions can be several sentences long. Length is not the problem."
+      },
+      {
+        "text": "The model will refuse to call the tool at all",
+        "correct": false,
+        "why": "It may call it or not; that uncertainty is the problem."
+      },
+      {
+        "text": "Customers can read tool descriptions",
+        "correct": false,
+        "why": "They cannot. The description goes to the provider and the trace, not to the customer."
+      },
+      {
+        "text": "It is a request the model may ignore; the host has to enforce it",
+        "correct": true,
+        "why": "Right. A rule that matters lives in code the model cannot skip, which is lesson 17's design."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6dtbanb",
+    "version": 1,
+    "section": "schemas-that-refuse",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each schema keyword to the call it refuses.",
+    "pairs": [
+      {
+        "left": "pattern",
+        "right": "order_id: \"1043\""
+      },
+      {
+        "left": "type",
+        "right": "max_results: \"five\""
+      },
+      {
+        "left": "additionalProperties: false",
+        "right": "verbose: true on get_order"
+      },
+      {
+        "left": "enum",
+        "right": "genre: \"poetry\""
+      }
+    ],
+    "right_distractors": [
+      "order_id: \"M-9999\""
+    ]
+  },
+  {
+    "id": "ex-k82qmcsd",
+    "version": 1,
+    "section": "schemas-that-refuse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "get_order(\"M-9999\") passed the schema and failed in the function. What does that show?",
+    "choices": [
+      {
+        "text": "A schema checks form, never facts",
+        "correct": true,
+        "why": "Right. M-9999 has the right shape; whether it exists is the function's to say."
+      },
+      {
+        "text": "That the pattern ^M-[0-9]{4}$ is wrong and should list the real ids",
+        "correct": false,
+        "why": "A pattern listing every id would be a copy of the database inside the schema."
+      },
+      {
+        "text": "That the validator was skipped for that call by mistake",
+        "correct": false,
+        "why": "The validator ran and passed it; the function then raised LookupError."
+      },
+      {
+        "text": "That shop.db is out of date",
+        "correct": false,
+        "why": "M-9999 was never an order in the lab's data."
+      }
+    ]
+  },
+  {
+    "id": "ex-njz4eafv",
+    "version": 1,
+    "section": "schemas-that-refuse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson say a provider's strict mode does not replace the host's validation?",
+    "choices": [
+      {
+        "text": "Because strict mode makes requests too slow to be usable in an agent loop",
+        "correct": false,
+        "why": "Speed is not the argument made."
+      },
+      {
+        "text": "Because strict mode is available only on the most expensive models",
+        "correct": false,
+        "why": "Availability varies; the argument holds wherever it is available."
+      },
+      {
+        "text": "Because strict mode ignores the required keyword",
+        "correct": false,
+        "why": "It honours required; its limits are elsewhere."
+      },
+      {
+        "text": "It is the provider's promise over a subset of JSON Schema; the host is the last place to refuse",
+        "correct": true,
+        "why": "Right. The host still owns the decision to run, and checks what is checkable before running."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxma2rw6",
+    "version": 1,
+    "section": "validate-before-running",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without the gate, what would `find_books(max_results=\"five\")` have done?",
+    "choices": [
+      {
+        "text": "Returned five books, since Python converts the word to a number",
+        "correct": false,
+        "why": "Python does not convert words to numbers."
+      },
+      {
+        "text": "Crashed the host with a TypeError at the slice",
+        "correct": true,
+        "why": "Right. stocked[:\"five\"] raises TypeError: a host failure instead of a correctable mistake."
+      },
+      {
+        "text": "Returned every book in the genre",
+        "correct": false,
+        "why": "A string in a slice does not mean 'all'; it raises."
+      },
+      {
+        "text": "Asked the model to repeat the call",
+        "correct": false,
+        "why": "Nothing asks the model anything without the gate; the exception propagates."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xvcyznq",
+    "version": 1,
+    "section": "validate-before-running",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests did agent.py send to answer 'Where is my order 1043?', the refused call included?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-vx54md2d",
+    "version": 1,
+    "section": "validate-before-running",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "find_books was asked for five mysteries and returned one. Why is that the right behaviour?",
+    "choices": [
+      {
+        "text": "Because the validator capped max_results at one",
+        "correct": false,
+        "why": "The validator allows 1 to 10. Five passed."
+      },
+      {
+        "text": "Because labllm trimmed the result to save tokens",
+        "correct": false,
+        "why": "labllm never touches tool results; it only answers requests."
+      },
+      {
+        "text": "Only one is in stock",
+        "correct": true,
+        "why": "Right. Two of the three mysteries with prices are sold out. An honest small answer is worth more than a padded one."
+      },
+      {
+        "text": "Because the catalogue has only one mystery",
+        "correct": false,
+        "why": "books.jsonl has more mysteries; Marginalia stocks few of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtanqps9",
+    "version": 1,
+    "section": "errors-as-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "run_tool catches LookupError and ValueError and lets other exceptions through. Why not catch everything?",
+    "choices": [
+      {
+        "text": "An outage turned into a polite result hides it behind a conversation that looks fine",
+        "correct": true,
+        "why": "Right. Expected failures become results; a broken database or a bug must stop the run loudly."
+      },
+      {
+        "text": "Because catching every exception is not allowed in Python",
+        "correct": false,
+        "why": "Python allows `except Exception`; the choice is deliberate."
+      },
+      {
+        "text": "Because other exceptions are too long to fit in a tool result",
+        "correct": false,
+        "why": "Length is not the reason; what the model could do about them is."
+      },
+      {
+        "text": "To save tokens on every error result sent back",
+        "correct": false,
+        "why": "An error message costs a handful of tokens either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3s6dsjc",
+    "version": 1,
+    "section": "errors-as-results",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belong in an error message returned to the model? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Which argument failed and the rule it broke",
+        "correct": true,
+        "why": "Yes. That is what the model needs to correct the call."
+      },
+      {
+        "text": "What would succeed, such as the list of tools that exist",
+        "correct": true,
+        "why": "Yes. It turns a dead end into a next step."
+      },
+      {
+        "text": "The stack trace, so the model can see where the error happened",
+        "correct": false,
+        "why": "No. A trace leaks paths and code, and the model can do nothing with line numbers."
+      },
+      {
+        "text": "The SQL that failed",
+        "correct": false,
+        "why": "No. Internal queries do not belong in a conversation that goes to a provider and into traces."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvq9q6vd",
+    "version": 1,
+    "section": "errors-as-results",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After get_order returned `LookupError: no order M-9999`, what did the model do?",
+    "choices": [
+      {
+        "text": "Retried with M-9998, the closest id",
+        "correct": false,
+        "why": "It guessed nothing; it asked the customer."
+      },
+      {
+        "text": "Asked the customer to check the number",
+        "correct": true,
+        "why": "Right. That reply was written by the course, and it is what a good one looks like."
+      },
+      {
+        "text": "Crashed the run with an exception that the host printed",
+        "correct": false,
+        "why": "run_tool turned the exception into an error result; nothing crashed."
+      },
+      {
+        "text": "Said the order had been delivered",
+        "correct": false,
+        "why": "That would be a fact nobody fetched."
+      }
+    ]
+  },
+  {
+    "id": "ex-ry04pdcs",
+    "version": 1,
+    "section": "three-wires",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A loop checks `finish_reason` to decide whether to run tools. Why does that loop never run Gemini's tools?",
+    "choices": [
+      {
+        "text": "Because Gemini does not support tool calls through its API",
+        "correct": false,
+        "why": "It does: wires.py got a function_call back."
+      },
+      {
+        "text": "Because Gemini returns tool calls in a separate request that the loop never makes",
+        "correct": false,
+        "why": "The call is in the same reply, among the parts."
+      },
+      {
+        "text": "A reply with a function call still ends with STOP",
+        "correct": true,
+        "why": "Right. The loop has to look for function_call parts instead of trusting the finish reason."
+      },
+      {
+        "text": "Because finish_reason is only an OpenAI field",
+        "correct": false,
+        "why": "Gemini has finishReason too; it just does not say a tool was called."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6ammhq1",
+    "version": 1,
+    "section": "three-wires",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In OpenAI's Chat Completions, what type are a tool call's arguments when they arrive?",
+    "choices": [
+      {
+        "text": "A JSON object that is ready to use as a Python dict",
+        "correct": false,
+        "why": "They arrive as a string, which the program has to parse."
+      },
+      {
+        "text": "A string containing JSON",
+        "correct": true,
+        "why": "Right. function.arguments is a string, and now and then a model produces one that does not parse."
+      },
+      {
+        "text": "A list of positional values in the order the parameters were declared",
+        "correct": false,
+        "why": "Arguments are named, never positional, on all three wires."
+      },
+      {
+        "text": "Protocol buffer bytes",
+        "correct": false,
+        "why": "The wire is JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-082j2mmq",
+    "version": 1,
+    "section": "three-wires",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each provider to how a tool result goes back to the model.",
+    "pairs": [
+      {
+        "left": "Anthropic Messages",
+        "right": "A tool_result block with tool_use_id"
+      },
+      {
+        "left": "OpenAI Chat Completions",
+        "right": "A message with role tool and tool_call_id"
+      },
+      {
+        "left": "Google Gemini",
+        "right": "A functionResponse part with name and id"
+      }
+    ],
+    "right_distractors": [
+      "A second system prompt"
+    ]
+  },
+  {
+    "id": "ex-z75qgf5n",
+    "version": 1,
+    "section": "parallel-calls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--drop-one`, the next request failed with a 400. What was wrong with it?",
+    "choices": [
+      {
+        "text": "The two calls should have been made in separate replies",
+        "correct": false,
+        "why": "Two calls in one reply are allowed; their results are the problem."
+      },
+      {
+        "text": "The first result was too large",
+        "correct": false,
+        "why": "Size was not the complaint. A result was missing."
+      },
+      {
+        "text": "The model's reply was not appended",
+        "correct": false,
+        "why": "It was; that is why the API could see a call with no result."
+      },
+      {
+        "text": "A tool_use id had no tool_result with that id in the next message",
+        "correct": true,
+        "why": "Right. Every call needs its result; a tool that cannot run still gets one, marked as an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-sagd1kdn",
+    "version": 1,
+    "section": "parallel-calls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model asks, in one reply, for get_order(M-1043) and issue_refund on the same order. What does the lesson suggest a host do?",
+    "choices": [
+      {
+        "text": "Run both at once, to save time",
+        "correct": false,
+        "why": "The refund would be decided before the lookup that justifies it has returned."
+      },
+      {
+        "text": "Run the read, and hold the write for a later step, one at a time",
+        "correct": true,
+        "why": "Right. Reads run together safely; writes run one at a time, after what justifies them."
+      },
+      {
+        "text": "Refuse the whole reply and end the run",
+        "correct": false,
+        "why": "The read is useful; ending the run throws it away."
+      },
+      {
+        "text": "Run the refund first, then the lookup",
+        "correct": false,
+        "why": "That is the most dangerous order."
+      }
+    ]
+  },
+  {
+    "id": "ex-rr0wjgzs",
+    "version": 1,
+    "section": "writes-and-retries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many cents were refunded in total across the three issue_refund calls in the transcript?",
+    "value": 3480,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-gvq69v6j",
+    "version": 1,
+    "section": "writes-and-retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a key the model invents on each call useless as an idempotency key?",
+    "choices": [
+      {
+        "text": "Because models write keys that are too short",
+        "correct": false,
+        "why": "A long invented key has the same problem."
+      },
+      {
+        "text": "Because keys must be numbers, and models tend to write words",
+        "correct": false,
+        "why": "issue_refund accepts any string of 8 or more characters."
+      },
+      {
+        "text": "A retry invents a new key, so it looks like a new intent",
+        "correct": true,
+        "why": "Right. The key must identify the intent, and come from something that exists before the run, such as the ticket."
+      },
+      {
+        "text": "Because the provider rejects keys it did not issue",
+        "correct": false,
+        "why": "The key is the host's business; the provider never sees it as a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn7hg8aa",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the gate's checks in the order run_tool applies them.",
+    "items": [
+      "Is the name a tool that exists?",
+      "Do the arguments pass the schema?",
+      "Does the function raise a known error?",
+      "Return the result"
+    ]
+  },
+  {
+    "id": "ex-tjhn9qxd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Anthropic's API, a tool_result that describes a failure carries `___: true`.",
+    "blanks": [
+      {
+        "accept": [
+          "is_error"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
