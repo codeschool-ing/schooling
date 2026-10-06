@@ -736,6 +736,48 @@ def l9():
     show('400: three largest', sorted(b)[-3:])
 
 
+@lesson(10)
+def l10():
+    b = BASKETS
+    show('400 baskets as a population: mean, sd (population)', f'{mean(b):.4f} {sd(b, False):.4f}')
+    d = Draw(1010)
+    three = [mean(d.sample(b, 40)) for _ in range(3)]
+    show('three random samples of 40: means', [round(x, 2) for x in three])
+    means = [mean(d.sample(b, 40)) for _ in range(1000)]
+    show('1000 samples of 40: mean of the means, sd of the means', f'{mean(means):.4f} {sd(means):.4f}')
+    show('1000 samples of 40: min, max of the means', f'{min(means):.2f} {max(means):.2f}')
+    # stratified against simple random, on the 120 deliveries
+    allm = [r['minutes'] for r in DELIVERIES]
+    show('120 deliveries: population mean', mean(allm))
+    groups = {h: [r['minutes'] for r in DELIVERIES if r['hood'] == h] for h, _, _ in HOODS}
+    d2 = Draw(1011)
+    srs = [mean(d2.sample(allm, 20)) for _ in range(1000)]
+    strat = []
+    for _ in range(1000):
+        pick = []
+        for h in groups:
+            pick += d2.sample(groups[h], 5)
+        strat.append(mean(pick))
+    show('SRS of 20: sd of the sample means', sd(srs))
+    show('stratified 5 per neighbourhood: sd of the sample means', sd(strat))
+    show('SRS of 20: share of means more than 3 minutes off', sum(1 for x in srs if abs(x - mean(allm)) > 3) / 1000)
+    show('stratified: share of means more than 3 minutes off', sum(1 for x in strat if abs(x - mean(allm)) > 3) / 1000)
+    # cluster: pick 1 neighbourhood at random and take 20 of its deliveries
+    clus = []
+    hoods = list(groups)
+    for _ in range(1000):
+        h = d2.pick(hoods)
+        clus.append(mean(d2.sample(groups[h], 20)))
+    show('cluster, one neighbourhood: sd of the sample means', sd(clus))
+    # convenience: the 20 deliveries nearest the warehouse (Centro and Cambuí only)
+    near = groups['Centro'] + groups['Cambuí']
+    show('convenience, Centro and Cambuí only: mean', mean(near))
+    conv = [mean(d2.sample(near, 20)) for _ in range(1000)]
+    show('convenience samples of 20: mean of the means', mean(conv))
+    # bigger convenience samples do not fix bias
+    show('all 60 near deliveries: mean (bias stays)', mean(near))
+
+
 def main():
     picked = [int(a) for a in sys.argv[1:]] or sorted(SHEET)
     for n in picked:

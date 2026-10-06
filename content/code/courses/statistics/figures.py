@@ -1267,6 +1267,111 @@ def l09_decide(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 10
+
+@figure('l10-methods', 10)
+def l10_methods(lang):
+    t = {'en': dict(
+        label='Three copies of the same population of 120 deliveries, drawn as four blocks of 30 '
+              'dots, one block per neighbourhood: Centro, Cambuí, Taquaral and Barão Geraldo. In '
+              'the first copy, a simple random sample of 20 is highlighted, scattered unevenly '
+              'across the blocks. In the second, a stratified sample takes 5 from each block. In '
+              'the third, a convenience sample takes 20 from the two blocks nearest the warehouse '
+              'and none from the others.',
+        titles=('simple random: any 20', 'stratified: 5 from each', 'convenience: the nearest 20'),
+        hoods=('Centro', 'Cambuí', 'Taquaral', 'Barão G.'),
+        cap='The same 20 deliveries chosen three ways. Only the convenience sample leaves whole '
+            'neighbourhoods out, and no amount of extra data from the near ones fixes that.'),
+        'pt': dict(
+        label='Três cópias da mesma população de 120 entregas, desenhadas como quatro blocos de 30 '
+              'pontos, um bloco por bairro: Centro, Cambuí, Taquaral e Barão Geraldo. Na primeira '
+              'cópia, uma amostra aleatória simples de 20 está destacada, espalhada de forma desigual '
+              'pelos blocos. Na segunda, uma amostra estratificada pega 5 de cada bloco. Na '
+              'terceira, uma amostra por conveniência pega 20 dos dois blocos mais perto do depósito '
+              'e nenhuma dos outros.',
+        titles=('aleatória simples: 20 quaisquer', 'estratificada: 5 de cada', 'conveniência: as 20 mais perto'),
+        hoods=('Centro', 'Cambuí', 'Taquaral', 'Barão G.'),
+        cap='As mesmas 20 entregas escolhidas de três jeitos. Só a amostra por conveniência deixa '
+            'bairros inteiros de fora, e nenhuma quantidade de dados a mais dos bairros perto conserta '
+            'isso.')}[lang]
+    f = Fig('l10-methods', 690, 270, t['label'])
+    d = S.Draw(7)
+    srs = set(d.sample(range(120), 20))
+    strat = set()
+    for g in range(4):
+        strat |= set(d.sample(range(g * 30, g * 30 + 30), 5))
+    conv = set(range(0, 10)) | set(range(30, 40))
+    for panel, (title, chosen) in enumerate(zip(t['titles'], (srs, strat, conv))):
+        x0 = 14 + panel * 228
+        f.text(x0 + 103, 20, title, size=10.5, weight='600')
+        for g in range(4):
+            gx = x0 + (g % 2) * 106
+            gy = 40 + (g // 2) * 112
+            f.rect(gx, gy, 100, 102, stroke='--wire', fill='--panel')
+            f.text(gx + 50, gy + 92, t['hoods'][g], size=9, fill='--paper-dim')
+            for i in range(30):
+                k = g * 30 + i
+                cx = gx + 14 + (i % 6) * 14.4
+                cy = gy + 14 + (i // 6) * 14
+                if k in chosen:
+                    f.circle(cx, cy, 4.6, fill='--amber')
+                else:
+                    f.circle(cx, cy, 3.2, fill='--phosphor-dim')
+    return f, t['cap']
+
+
+@figure('l10-strata', 10)
+def l10_strata(lang):
+    groups = {h: [r['minutes'] for r in S.DELIVERIES if r['hood'] == h] for h, _, _ in S.HOODS}
+    allm = [r['minutes'] for r in S.DELIVERIES]
+    d2 = S.Draw(1011)
+    srs = [S.mean(d2.sample(allm, 20)) for _ in range(1000)]
+    strat = []
+    for _ in range(1000):
+        pick = []
+        for h in groups:
+            pick += d2.sample(groups[h], 5)
+        strat.append(S.mean(pick))
+    near = groups['Centro'] + groups['Cambuí']
+    t = {'en': dict(
+        label='Two histograms of 1000 sample means each, on one scale from 28 to 48 minutes. The '
+              'means of simple random samples of 20 spread from about 31 to 46. The means of '
+              'stratified samples, 5 per neighbourhood, crowd between about 36 and 42. Both centre '
+              'on the population mean, 38.65. A third line marks 31.28, where samples taken only '
+              'from Centro and Cambuí centre, far from the truth.',
+        r1='simple random samples of 20', r2='stratified, 5 per neighbourhood', truth='true mean 38.65',
+        conv='near-only samples 31.28', x='mean of the sample, in minutes',
+        cap='Both honest methods centre on the truth, and stratifying halves the wobble. The '
+            'convenience samples are steady too, and steadily wrong.'),
+        'pt': dict(
+        label='Dois histogramas de 1000 médias amostrais cada, numa escala de 28 a 48 minutos. As '
+              'médias de amostras aleatórias simples de 20 se espalham de uns 31 a 46. As médias de '
+              'amostras estratificadas, 5 por bairro, se concentram entre uns 36 e 42. As duas se '
+              'centram na média da população, 38,65. Uma terceira linha marca 31,28, onde se centram '
+              'as amostras tiradas só do Centro e do Cambuí, longe da verdade.',
+        r1='amostras aleatórias simples de 20', r2='estratificadas, 5 por bairro', truth='média verdadeira 38,65',
+        conv='só bairros perto 31,28', x='média da amostra, em minutos',
+        cap='Os dois métodos honestos se centram na verdade, e estratificar corta a oscilação pela '
+            'metade. As amostras por conveniência também são estáveis, e estavelmente erradas.')}[lang]
+    f = Fig('l10-strata', 660, 330, t['label'])
+    edges = [28 + i * 0.5 for i in range(41)]
+    for row, (xs, lab) in enumerate(((srs, t['r1']), (strat, t['r2']))):
+        y0 = 50 + row * 120
+        counts = histogram(xs, edges)
+        p = Plot(f, 40, y0, 630, y0 + 90, 28, 48, 0, 220)
+        p.bars(edges, counts)
+        f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+        f.text(630, y0 + 6, lab, size=10, anchor='end', weight='600')
+    q = Plot(f, 40, 30, 630, 270, 28, 48, 0, 1)
+    q.xaxis(range(28, 49, 2), label=t['x'])
+    tm = S.mean(allm)
+    f.line(q.sx(tm), 34, q.sx(tm), 270, stroke='--paper', width=1.6)
+    f.text(q.sx(tm) + 6, 26, t['truth'], size=9.5, anchor='start')
+    f.line(q.sx(S.mean(near)), 34, q.sx(S.mean(near)), 270, stroke='--amber', width=1.6, dash='4 3')
+    f.text(q.sx(S.mean(near)) - 6, 26, t['conv'], size=9.5, anchor='end', fill='--amber')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
