@@ -59,7 +59,7 @@ ana@dev:~/js$ page create.html --dom '#books'
 
 A lista impressa mantém o espaço em branco que o template tinha, e as linhas vazias são onde ficaram
 os nós de texto em volta da linha removida. O navegador não desenha esse espaço; são de novo os
-`childNodes` da primeira seção.
+`childNodes` da seção 02.
 
 ## Montando listas a partir de dados
 

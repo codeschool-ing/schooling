@@ -45,7 +45,7 @@ three widths set in one task; the screen only ever saw the last
 
 ## Fixing the frozen page
 
-The page in the first section froze because one task took two seconds, and no frame and no click
+The page in section 02 froze because one task took two seconds, and no frame and no click
 could happen until it ended. **The fix is to cut long work into short tasks**, so the loop gets a
 turn between them:
 

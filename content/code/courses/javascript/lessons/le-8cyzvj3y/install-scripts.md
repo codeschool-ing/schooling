@@ -4,7 +4,7 @@ version: 1
 ---
 
 **A package can carry a script that the manager runs during installation, with your user's
-permissions.** The `scripts` field that held `start` in the first section also accepts
+permissions.** The `scripts` field that held `start` in section 02 also accepts
 `preinstall`, `install` and `postinstall`, and those run when somebody installs the package.
 
 They exist for good reasons. A package wrapping a library written in C compiles it for your

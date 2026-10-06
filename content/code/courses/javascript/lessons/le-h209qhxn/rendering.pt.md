@@ -46,7 +46,7 @@ three widths set in one task; the screen only ever saw the last
 
 ## Consertando a página congelada
 
-A página da primeira seção congelou porque uma tarefa levou dois segundos, e nenhum quadro e nenhum
+A página da seção 02 congelou porque uma tarefa levou dois segundos, e nenhum quadro e nenhum
 clique podiam acontecer até ela acabar. **O conserto é cortar o trabalho longo em tarefas curtas**,
 para o laço ter a vez entre elas:
 

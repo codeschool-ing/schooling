@@ -58,7 +58,7 @@ ana@dev:~/js$ page create.html --dom '#books'
 
 The printed list keeps the whitespace the template had, and the blank lines are where the removed
 row's surrounding text nodes stayed. The browser does not draw that whitespace; it is the
-`childNodes` of the first section again.
+`childNodes` of section 02 again.
 
 ## Building lists from data
 
