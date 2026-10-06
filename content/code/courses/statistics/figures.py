@@ -3139,6 +3139,153 @@ def l21_model_map(lang):
     return f, t['cap']
 
 
+# ----------------------------------------------------------------- lesson 22
+
+@figure('l22-overlap', 22)
+def l22_overlap(lang):
+    old, new = S._bags_year()
+    mo, mn_ = S.mean(old), S.mean(new)
+    so, sn = S.sd(old), S.sd(new)
+    t = {'en': dict(
+        label=f'Two bell curves for a year of delivery times, 100,000 in old insulated bags and '
+              f'100,000 in new ones. Their centres are {num("en", mo, 2)} and {num("en", mn_, 2)} '
+              f'minutes, and their spreads are both about 10.5 minutes, so the two curves lie almost '
+              f'exactly on top of each other.',
+        x='delivery minutes', o='old bags', n='new bags',
+        cap='The difference between the bags is real: p is about one in a hundred billion. It is '
+            'also a third of a minute, against a spread of ten minutes, and on this picture it is '
+            'nearly invisible.'),
+        'pt': dict(
+        label=f'Duas curvas em sino para um ano de tempos de entrega, 100.000 com as bolsas térmicas '
+              f'antigas e 100.000 com as novas. Os centros são {num("pt", mo, 2)} e '
+              f'{num("pt", mn_, 2)} minutos, e as dispersões são as duas de uns 10,5 minutos, então '
+              f'as duas curvas ficam quase exatamente uma sobre a outra.',
+        x='minutos de entrega', o='bolsas antigas', n='bolsas novas',
+        cap='A diferença entre as bolsas é real: o p é de cerca de um em cem bilhões. Ela também é '
+            'de um terço de minuto, contra uma dispersão de dez minutos, e nesta figura quase não '
+            'se vê.')}[lang]
+    f = Fig('l22-overlap', 600, 280, t['label'])
+    p = Plot(f, 40, 40, 580, 220, 0, 80, 0, 0.042)
+    p.xaxis(range(0, 81, 10), label=t['x'])
+    p.curve(lambda x: S.normal_pdf((x - mo) / so) / so, 0, 80, stroke='--phosphor', width=2.4)
+    p.curve(lambda x: S.normal_pdf((x - mn_) / sn) / sn, 0, 80, stroke='--amber', width=2, dash='6 4')
+    f.circle(380, 20, 5, fill='--phosphor', stroke='--phosphor')
+    f.text(391, 20, t['o'], size=10, anchor='start')
+    f.line(480, 20, 500, 20, stroke='--amber', width=2, dash='6 4')
+    f.text(506, 20, t['n'], size=10, anchor='start')
+    return f, t['cap']
+
+
+@figure('l22-p-vs-n', 22)
+def l22_p_vs_n(lang):
+    ns = (50, 500, 5000, 50000, 100000)
+    zs = [0.3 / (10.5 * math.sqrt(2 / n)) for n in ns]
+    t = {'en': dict(
+        label='The test statistic expected for a true difference of 0.3 minutes, with a spread of '
+              '10.5, as the number of deliveries in each group grows from 50 to 100,000. It climbs '
+              'from 0.14 to 6.4, crossing the 1.96 line, where p falls below 0.05, at around 9,400 '
+              'deliveries per group. The difference itself is 0.3 minutes throughout.',
+        x='deliveries in each group', y='expected test statistic', line='p = 0.05',
+        same='the effect stays at 0.3 minutes',
+        cap='Hold the effect fixed and grow the sample, and the p-value shrinks without limit. '
+            'With enough data, any difference that is not exactly zero becomes significant.'),
+        'pt': dict(
+        label='A estatística de teste esperada para uma diferença verdadeira de 0,3 minuto, com '
+              'dispersão de 10,5, conforme o número de entregas em cada grupo cresce de 50 a '
+              '100.000. Ela sobe de 0,14 a 6,4, cruzando a linha de 1,96, onde o p cai abaixo de '
+              '0,05, por volta de 9.400 entregas por grupo. A diferença em si é 0,3 minuto o tempo '
+              'todo.',
+        x='entregas em cada grupo', y='estatística de teste esperada', line='p = 0,05',
+        same='o efeito continua em 0,3 minuto',
+        cap='Fixe o efeito e aumente a amostra, e o p-valor encolhe sem limite. Com dados '
+            'suficientes, qualquer diferença que não seja exatamente zero fica significativa.')}[lang]
+    f = Fig('l22-p-vs-n', 600, 300, t['label'])
+    p = Plot(f, 70, 40, 560, 240, math.log10(30), math.log10(160000), 0, 7)
+    p.yaxis(range(0, 8), label=t['y'])
+    labels = {'en': ['50', '500', '5,000', '50,000', '100,000'],
+              'pt': ['50', '500', '5.000', '50.000', '100.000']}[lang]
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for n, lab in zip(ns, labels):
+        x = p.sx(math.log10(n))
+        f.line(x, p.y1, x, p.y1 + 4, stroke='--paper-dim', width=1)
+        f.text(x, p.y1 + 13, lab, size=9.5, fill='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 31, t['x'], size=10, weight='600')
+    f.line(p.x0, p.sy(1.96), p.x1, p.sy(1.96), stroke='--amber', width=1.4, dash='5 4')
+    f.text(p.x1, p.sy(1.96) - 9, t['line'], size=10, anchor='end', fill='--amber')
+    f.path('M' + ' L'.join(f'{p.sx(math.log10(n)):.1f} {p.sy(z):.1f}' for n, z in zip(ns, zs)),
+           stroke='--phosphor', width=2)
+    for n, z in zip(ns, zs):
+        f.circle(p.sx(math.log10(n)), p.sy(z), 4, fill='--phosphor', stroke='--phosphor')
+    f.text(p.sx(math.log10(60)), p.sy(5.5), t['same'], size=10.5, weight='600', anchor='start')
+    return f, t['cap']
+
+
+@figure('l22-intervals', 22)
+def l22_intervals(lang):
+    old, new = S._bags_year()
+    b = S.diff_ci(old, new)
+    ao, an = S._app_trial()
+    a = S.diff_ci(ao, an)
+    D = S.DELIVERIES
+    m = S.ols_full([(r['km'], r['items'], r['rain']) for r in D], [r['minutes'] for r in D])
+    q = S.t_inv(0.975, m['df'])
+    rain = (m['beta'][3], m['beta'][3] - q * m['se'][3], m['beta'][3] + q * m['se'][3])
+    lo_r, hi_r = S.t_interval(S.ROUTING)
+    route = (S.mean(S.ROUTING) - 40, lo_r - 40, hi_r - 40)
+    tdiff = [x - y for x, y in zip(S.TRAIN_AFTER, S.TRAIN_BEFORE)]
+    half = S.t_inv(0.975, 9) * S.sd(tdiff) / math.sqrt(10)
+    train = (S.mean(tdiff), S.mean(tdiff) - half, S.mean(tdiff) + half)
+    rows = [('rain', rain), ('bags', (b[0], b[2], b[3])), ('training', train), ('routing', route),
+            ('app', (a[0], a[2], a[3]))]
+    names = {'en': {'rain': 'rain', 'bags': 'new bags', 'training': 'training course',
+                    'routing': 'routing system', 'app': 'new app'},
+             'pt': {'rain': 'chuva', 'bags': 'bolsas novas', 'training': 'curso de treino',
+                    'routing': 'roteirização', 'app': 'app novo'}}[lang]
+    verdict = {'en': {'rain': 'significant and large', 'bags': 'significant, too small to matter',
+                      'training': 'significant, size unclear', 'routing': 'inconclusive',
+                      'app': 'rules out a change that matters'},
+               'pt': {'rain': 'significativa e grande', 'bags': 'significativa, pequena demais',
+                      'training': 'significativa, tamanho incerto', 'routing': 'inconclusiva',
+                      'app': 'descarta uma mudança que importe'}}[lang]
+    t = {'en': dict(
+        label='Five 95% confidence intervals for effects on delivery minutes, drawn against a '
+              'shaded band from −2 to +2 minutes, the smallest change Horta would act on. Rain: '
+              '4.7 to 8.0, entirely beyond the band. New bags: −0.41 to −0.23, away from zero but '
+              'deep inside the band. Training course: −2.4 to −0.03, away from zero and crossing '
+              'the band\'s edge. Routing system: −3.4 to +1.2, covering zero and the edge. New app: '
+              '−0.14 to +0.68, covering zero and inside the band.',
+        x='effect on delivery minutes', band='changes too small to act on',
+        cap='Where the interval sits against zero gives the test. Where it sits against the band '
+            'of changes too small to matter gives the answer that matters to Horta.'),
+        'pt': dict(
+        label='Cinco intervalos de confiança de 95% para efeitos nos minutos de entrega, desenhados '
+              'contra uma faixa sombreada de −2 a +2 minutos, a menor mudança pela qual a Horta '
+              'agiria. Chuva: 4,7 a 8,0, inteiro além da faixa. Bolsas novas: −0,41 a −0,23, longe '
+              'de zero mas bem dentro da faixa. Curso de treino: −2,4 a −0,03, longe de zero e '
+              'cruzando a borda da faixa. Roteirização: −3,4 a +1,2, cobrindo o zero e a borda. App '
+              'novo: −0,14 a +0,68, cobrindo o zero e dentro da faixa.',
+        x='efeito nos minutos de entrega', band='mudanças pequenas demais para agir',
+        cap='Onde o intervalo fica em relação ao zero dá o teste. Onde ele fica em relação à faixa '
+            'das mudanças pequenas demais para importar dá a resposta que importa para a Horta.')}[lang]
+    f = Fig('l22-intervals', 600, 340, t['label'])
+    p = Plot(f, 130, 40, 590, 270, -5, 9, 0, 1)
+    f.path(f'M{p.sx(-2):.1f} {p.y0:.1f} L{p.sx(2):.1f} {p.y0:.1f} L{p.sx(2):.1f} {p.y1:.1f} '
+           f'L{p.sx(-2):.1f} {p.y1:.1f} Z', stroke=None, width=0, fill='--scan')
+    f.text(p.sx(0), p.y0 - 10, t['band'], size=10, fill='--paper-dim')
+    p.xaxis(range(-4, 10, 2), fmt=lambda v: ('−' if v < 0 else '+' if v > 0 else '') + str(abs(v)), label=t['x'])
+    f.line(p.sx(0), p.y0, p.sx(0), p.y1, stroke='--paper', width=1.2)
+    for i, (k, (est, lo, hi)) in enumerate(rows):
+        y = p.y0 + 24 + i * 44
+        f.line(p.sx(lo), y, p.sx(hi), y, stroke='--amber', width=3, cap='round')
+        f.circle(p.sx(est), y, 4.5, fill='--panel', stroke='--amber', width=2)
+        f.text(p.x0 - 10, y, names[k], size=10.5, weight='600', anchor='end')
+        if hi > 4:
+            f.text(p.sx(est), y + 16, verdict[k], size=9.5, fill='--paper-dim')
+        else:
+            f.text(p.sx(max(hi, 2)) + 8, y, verdict[k], size=9.5, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

@@ -1632,6 +1632,94 @@ def l21():
     show('  log-likelihoods: null, m1, m2', f'{sum(y * math.log(sum(ys) / 400) + (1 - y) * math.log(1 - sum(ys) / 400) for y in ys):.3f} {m1["ll"]:.3f} {m2["ll"]:.3f}')
 
 
+# A year of deliveries in two kinds of insulated bag, lesson 22: so many that a
+# third of a minute is unmistakable, and still a third of a minute.
+def _bags_year(n=100000):
+    d = Draw(2200)
+    old = [d.normal(40.0, 10.5) for _ in range(n)]
+    new = [d.normal(39.7, 10.5) for _ in range(n)]
+    return old, new
+
+
+# A new version of the courier app tried on 5,000 deliveries each way, lesson 22: no
+# difference, measured well enough to say so.
+def _app_trial(n=5000):
+    d = Draw(2201)
+    old = [d.normal(40.0, 10.5) for _ in range(n)]
+    new = [d.normal(40.0, 10.5) for _ in range(n)]
+    return old, new
+
+
+def diff_ci(xs, ys, level=0.95):
+    """Difference of means ys − xs, its standard error and a Welch interval."""
+    vx, vy = var(xs) / len(xs), var(ys) / len(ys)
+    se = math.sqrt(vx + vy)
+    df = (vx + vy) ** 2 / (vx ** 2 / (len(xs) - 1) + vy ** 2 / (len(ys) - 1))
+    q = t_inv(1 - (1 - level) / 2, df)
+    dlt = mean(ys) - mean(xs)
+    return dlt, se, dlt - q * se, dlt + q * se
+
+
+def cohen_d(xs, ys):
+    nx, ny = len(xs), len(ys)
+    sp = math.sqrt(((nx - 1) * var(xs) + (ny - 1) * var(ys)) / (nx + ny - 2))
+    return (mean(ys) - mean(xs)) / sp
+
+
+@lesson(22)
+def l22():
+    old, new = _bags_year()
+    dlt, se, lo, hi = diff_ci(old, new)
+    t, df, p = welch(new, old)
+    show('bags: means, sds', f'{mean(old):.3f} {mean(new):.3f} {sd(old):.3f} {sd(new):.3f}')
+    show('bags: diff, se, 95% CI', f'{dlt:.3f} {se:.4f} {lo:.3f} {hi:.3f}')
+    show('bags: t, df, p', f'{t:.3f} {df:.0f} {p:.3e}')
+    z = abs(dlt) / se
+    show('bags: two-sided normal p (for tiny values)', f'{math.erfc(z / math.sqrt(2)):.3e}')
+    show('bags: Cohen d', f'{cohen_d(old, new):.4f}')
+    mo = median(old)
+    show('bags: share of new-bag deliveries faster than the old median', f'{sum(1 for x in new if x < mo) / len(new):.4f}')
+    # the same true difference with 50 deliveries each
+    d = Draw(2202)
+    o50 = [d.normal(40.0, 10.5) for _ in range(50)]
+    n50 = [d.normal(39.7, 10.5) for _ in range(50)]
+    t, df, p = welch(n50, o50)
+    dl, se5, lo5, hi5 = diff_ci(o50, n50)
+    show('same effect, 50 each: diff, CI, p', f'{dl:.3f} {lo5:.3f} {hi5:.3f} {p:.3f}')
+    # p for a fixed true difference as n grows
+    for n in (50, 500, 5000, 50000, 100000):
+        se_ = 10.5 * math.sqrt(2 / n)
+        z = 0.3 / se_
+        show(f'expected z and p for 0.3 min, n = {n} each', f'{z:.3f} {math.erfc(z / math.sqrt(2)):.3e}')
+    # training, routing, checkout effect sizes
+    tdiff = [a - b for a, b in zip(TRAIN_AFTER, TRAIN_BEFORE)]
+    show('training: mean diff, sd diff, dz', f'{mean(tdiff):.3f} {sd(tdiff):.3f} {mean(tdiff) / sd(tdiff):.3f}')
+    t, df, p, md, sdd = paired_t(TRAIN_BEFORE, TRAIN_AFTER)
+    show('training paired CI', f'{md - t_inv(0.975, 9) * sdd / math.sqrt(10):.3f} {md + t_inv(0.975, 9) * sdd / math.sqrt(10):.3f}')
+    show('routing: d against 40', f'{(mean(ROUTING) - 40) / sd(ROUTING):.3f}')
+    lo_r, hi_r = t_interval(ROUTING)
+    show('routing: CI for mean, for difference from 40', f'{lo_r:.3f} {hi_r:.3f} | {lo_r - 40:.3f} {hi_r - 40:.3f}')
+    show('checkout: rates, difference, relative lift', f'{220 / 2000:.4f} {262 / 2000:.4f} {262 / 2000 - 220 / 2000:.4f} {(262 - 220) / 220:.4f}')
+    p1, p2 = 220 / 2000, 262 / 2000
+    se_c = math.sqrt(p1 * (1 - p1) / 2000 + p2 * (1 - p2) / 2000)
+    show('checkout: difference CI', f'{p2 - p1 - 1.96 * se_c:.4f} {p2 - p1 + 1.96 * se_c:.4f}')
+    # rain effect from lesson 19's model
+    D = DELIVERIES
+    m = ols_full([(r['km'], r['items'], r['rain']) for r in D], [r['minutes'] for r in D])
+    q = t_inv(0.975, m['df'])
+    show('rain coefficient CI', f'{m["beta"][3]:.3f} {m["beta"][3] - q * m["se"][3]:.3f} {m["beta"][3] + q * m["se"][3]:.3f}')
+    ao, an = _app_trial()
+    dlt, se, lo, hi = diff_ci(ao, an)
+    t, df, p = welch(an, ao)
+    show('app: diff, CI, p', f'{dlt:.3f} {lo:.3f} {hi:.3f} {p:.3f}')
+    # TOST against ±1 minute for the app
+    t1 = (dlt + 1) / se
+    t2 = (1 - dlt) / se
+    show('app: TOST z lower, upper, p', f'{t1:.3f} {t2:.3f} {max(1 - normal_cdf(t1), 1 - normal_cdf(t2)):.2e}')
+    # orders per week: Horta's scale for the bag saving
+    show('minutes saved a year by the bag: 0.3 x 100000', f'{0.3 * 100000:.0f} min = {0.3 * 100000 / 60:.0f} h')
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:
