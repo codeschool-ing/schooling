@@ -1,0 +1,50 @@
+---
+title: Quão certa uma amostra pode ser
+version: 1
+---
+
+Uma taxa de aprovação tirada de uma amostra é uma estimativa, e toda estimativa precisa do seu erro ao
+lado. O `grade_sample.py` imprime um **intervalo de Wilson**: a faixa em que está a taxa verdadeira, com
+95% de confiança, dado quantas respostas passaram de quantas foram avaliadas. Ele se comporta melhor do
+que o `p ± 1.96 × √(p(1-p)/n)` dos livros com amostras pequenas e perto de 0% ou 100%, que é onde
+resultados de avaliação costumam estar; o código são dez linhas no `grade_sample.py`.
+
+A largura do intervalo depende de quantas respostas foram avaliadas, e não do tamanho do tráfego. O
+`sizes.py` imprime a meia-largura para uma taxa de 70% em cinco tamanhos de amostra:
+
+```python
+"""sizes.py: how close a sample of n replies gets to a true pass rate of 70%, at 95%."""
+import math
+
+for n in (50, 100, 400, 1000, 4000):
+    print(f"n = {n:5}   a pass rate of 70% is known to within {1.96 * math.sqrt(0.7 * 0.3 / n):5.1%}")
+```
+
+```
+ana@lab:~/obs$ python sizes.py
+n =    50   a pass rate of 70% is known to within 12.7%
+n =   100   a pass rate of 70% is known to within  9.0%
+n =   400   a pass rate of 70% is known to within  4.5%
+n =  1000   a pass rate of 70% is known to within  2.8%
+n =  4000   a pass rate of 70% is known to within  1.4%
+```
+
+**Reduzir o erro à metade exige quatro vezes a amostra.** Cem respostas dão ±9 pontos; quatrocentas dão
+±4,5; mil, ±2,8. Essa aritmética decide a maior parte das perguntas práticas:
+
+- **Para ver uma queda de 14 pontos**, como a desta semana, cem respostas por versão teriam bastado, por
+  pouco. O décimo uniforme teve 71 e 47, e é por isso que os seus intervalos se sobrepuseram.
+- **Para ver uma queda de 3 pontos**, são precisas quase duas mil por período, porque as duas taxas têm
+  erro e os dois se somam. No volume desta loja isso é mais de uma semana de tráfego, e avaliar tudo
+  pode sair mais barato do que esperar.
+- **O tamanho do tráfego não importa**, desde que a amostra seja uma parte pequena dele. Quatrocentas
+  respostas dizem tanto sobre um milhão quanto sobre dez mil.
+
+## Comparar duas taxas
+
+"A versão piorou?" é uma pergunta sobre duas taxas, e a resposta honesta vem de dois intervalos: se não
+se sobrepõem, sim; se se sobrepõem muito, a amostra não sabe dizer. Com a semana inteira, 73,5% a 79,4%
+contra 57,6% a 66,7%: nenhuma sobreposição, a versão piorou a relevância pela medida do judge-1. Com o
+décimo uniforme, 66,5% a 85,6% contra 51,7% a 77,8%: uma sobreposição grande, e o relato certo é
+"provavelmente pior, não demonstrado". A aula 14 faz isso como deve ser para uma mudança testada antes
+de ir ao ar, no conjunto de avaliação, com um teste feito para duas medições das mesmas perguntas.

@@ -1,0 +1,617 @@
+[
+  {
+    "id": "ex-zzrjnbyy",
+    "version": 1,
+    "section": "a-judge-in-code",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On live traffic, which criterion can a judge NOT grade?",
+    "choices": [
+      {
+        "text": "Relevance, which needs the customer's own rating",
+        "correct": false,
+        "why": "Relevance needs only the question and the reply, both in the trace."
+      },
+      {
+        "text": "Correctness, which needs an expected answer",
+        "correct": true,
+        "why": "Right. A customer's question comes with no answer key."
+      },
+      {
+        "text": "Faithfulness, which needs the original documents",
+        "correct": false,
+        "why": "The sources the model was given are recoverable from the trace."
+      },
+      {
+        "text": "Tone, which needs a second judge to agree with the first",
+        "correct": false,
+        "why": "Nothing in the lesson asks for a second judge."
+      }
+    ]
+  },
+  {
+    "id": "ex-t23dpwyx",
+    "version": 1,
+    "section": "a-judge-in-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does judge.py ask for one criterion per call rather than all of them at once?",
+    "choices": [
+      {
+        "text": "The judge-1 model refuses prompts with more than one rubric",
+        "correct": false,
+        "why": "Nothing in the lab says so."
+      },
+      {
+        "text": "One call per criterion is cheaper than one call for all",
+        "correct": false,
+        "why": "It repeats the reply and sources each time, so it costs more."
+      },
+      {
+        "text": "JSON output has room for one field only",
+        "correct": false,
+        "why": "The verdict already has three fields."
+      },
+      {
+        "text": "Each verdict is then separate, with its own span and price",
+        "correct": true,
+        "why": "Right. A criterion can be sampled, priced and compared on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptqxjjze",
+    "version": 1,
+    "section": "a-judge-in-code",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "judge-1 passed the express-delivery reply for relevance. What made it look relevant?",
+    "choices": [
+      {
+        "text": "It shared many of the question's words",
+        "correct": true,
+        "why": "Right. Similarity 0.64 against a threshold of 0.40; real judges share the blind spot, less crudely."
+      },
+      {
+        "text": "It cited two sources, which judge-1 counts as relevance",
+        "correct": false,
+        "why": "Citations play no part in relevance."
+      },
+      {
+        "text": "It was short, and judge-1 rewards short replies",
+        "correct": false,
+        "why": "Length is not one of judge-1's rules."
+      },
+      {
+        "text": "A customer gave it a thumbs up",
+        "correct": false,
+        "why": "The judge never sees the thumbs."
+      }
+    ]
+  },
+  {
+    "id": "ex-crg1trm7",
+    "version": 1,
+    "section": "a-judge-in-code",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What similarity did judge-1 report between the delivery question and its reply?",
+    "value": 0.64,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-qag5x6jc",
+    "version": 1,
+    "section": "why-sample",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Graded on every reply of the week, what share passed relevance under release 2026.10.1?",
+    "choices": [
+      {
+        "text": "76.6%",
+        "correct": false,
+        "why": "That is the old release."
+      },
+      {
+        "text": "66.0%",
+        "correct": false,
+        "why": "That is the uniform tenth's estimate."
+      },
+      {
+        "text": "62.3%",
+        "correct": true,
+        "why": "Right: 269 of 432."
+      },
+      {
+        "text": "about 70%",
+        "correct": false,
+        "why": "Neither release is near 70% over the whole week."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkx870qe",
+    "version": 1,
+    "section": "why-sample",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are reasons the lesson gives for grading a sample rather than everything? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Every judgement is a model call with its own price",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The judge reads what customers typed, so fewer copies go to fewer places",
+        "correct": true,
+        "why": "Right. Lesson 2's rules apply to the judge too."
+      },
+      {
+        "text": "A judge graded on everything gives a less accurate rate",
+        "correct": false,
+        "why": "Grading everything gives the narrowest interval there is."
+      },
+      {
+        "text": "Traces older than a day cannot be graded",
+        "correct": false,
+        "why": "The lesson grades a whole week."
+      }
+    ]
+  },
+  {
+    "id": "ex-e69xxk5f",
+    "version": 1,
+    "section": "why-sample",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which replies are chosen decides whether a rate is unbiased; how many decides how ___ it is.",
+    "blanks": [
+      {
+        "accept": [
+          "sure",
+          "certain"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-60kpj5az",
+    "version": 1,
+    "section": "three-ways-to-sample",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does sample.uniform choose by a hash of the trace id instead of a random number?",
+    "choices": [
+      {
+        "text": "Hashing is faster than any random generator",
+        "correct": false,
+        "why": "Speed is not the reason given."
+      },
+      {
+        "text": "So a rerun picks the same replies",
+        "correct": true,
+        "why": "Right. Two people grading the 10% sample grade the same thing."
+      },
+      {
+        "text": "A random number would pick the bad replies more often",
+        "correct": false,
+        "why": "A random choice is unbiased too; it is just not repeatable."
+      },
+      {
+        "text": "The trace id says which release answered",
+        "correct": false,
+        "why": "The release is an attribute; the id carries nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m5c1syk",
+    "version": 1,
+    "section": "three-ways-to-sample",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The stratified sample said 66.7% for release 2026.09.4, against a true 76.6%. Why?",
+    "choices": [
+      {
+        "text": "Order questions were half the sample and are a fifth of traffic",
+        "correct": true,
+        "why": "Right. They fail relevance more often, and nothing weighted them back."
+      },
+      {
+        "text": "Thirty replies are too few to say anything",
+        "correct": false,
+        "why": "Sixty per release is a usable sample; the error is in the design."
+      },
+      {
+        "text": "The random seed chose the worst replies",
+        "correct": false,
+        "why": "A seed does not favour bad replies."
+      },
+      {
+        "text": "judge-1 grades order questions more strictly than help questions",
+        "correct": false,
+        "why": "It applies the same rule to both."
+      }
+    ]
+  },
+  {
+    "id": "ex-4war7stg",
+    "version": 1,
+    "section": "three-ways-to-sample",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a targeted sample's pass rate good for?",
+    "choices": [
+      {
+        "text": "Comparing quality between two releases",
+        "correct": false,
+        "why": "It measures the sampling rule, not the week."
+      },
+      {
+        "text": "The quality number on the dashboard",
+        "correct": false,
+        "why": "That is exactly where it must never go."
+      },
+      {
+        "text": "Nothing as an estimate",
+        "correct": true,
+        "why": "Right. Its use is the replies it finds, to read and turn into test cases."
+      },
+      {
+        "text": "Setting the judge's threshold for the next week",
+        "correct": false,
+        "why": "Thresholds are not tuned on a biased sample."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8dgy3bm",
+    "version": 1,
+    "section": "three-ways-to-sample",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each sampling rule to what it is for.",
+    "pairs": [
+      {
+        "left": "uniform",
+        "right": "the number on the dashboard"
+      },
+      {
+        "left": "stratified, reweighted",
+        "right": "a small group that matters on its own"
+      },
+      {
+        "left": "targeted",
+        "right": "a reading list of likely failures"
+      }
+    ],
+    "right_distractors": [
+      "the judge's threshold"
+    ]
+  },
+  {
+    "id": "ex-hzmzb3m3",
+    "version": 1,
+    "section": "three-ways-to-sample",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many replies of the week did the targeted sample grade?",
+    "value": 393,
+    "tolerance": 0,
+    "unit": "replies"
+  },
+  {
+    "id": "ex-12btteke",
+    "version": 1,
+    "section": "how-sure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What halves the error of a sampled pass rate?",
+    "choices": [
+      {
+        "text": "Twice as many replies graded",
+        "correct": false,
+        "why": "Twice the sample cuts the error by about 30%."
+      },
+      {
+        "text": "Twice as much traffic to sample from",
+        "correct": false,
+        "why": "The size of the traffic does not enter."
+      },
+      {
+        "text": "A judge twice as expensive",
+        "correct": false,
+        "why": "Price has nothing to do with sampling error."
+      },
+      {
+        "text": "Four times as many replies graded",
+        "correct": true,
+        "why": "Right. The error falls with the square root of the sample."
+      }
+    ]
+  },
+  {
+    "id": "ex-cefx233f",
+    "version": 1,
+    "section": "how-sure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The uniform tenth's intervals were 66.5–85.6% and 51.7–77.8%. What is the honest report?",
+    "choices": [
+      {
+        "text": "The release made relevance worse by 11.5 points",
+        "correct": false,
+        "why": "The difference of the estimates is not shown by intervals that overlap this much."
+      },
+      {
+        "text": "No change, since the intervals overlap",
+        "correct": false,
+        "why": "Overlap means the sample cannot tell, not that nothing changed."
+      },
+      {
+        "text": "The release improved relevance at the upper end",
+        "correct": false,
+        "why": "An interval is not a range of outcomes that happened."
+      },
+      {
+        "text": "Probably worse, but not shown by this sample",
+        "correct": true,
+        "why": "Right. The whole week does show it; this sample cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmcpgn2b",
+    "version": 1,
+    "section": "how-sure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A product has a million replies a week, another ten thousand. Each grades 400. Which rate is surer?",
+    "choices": [
+      {
+        "text": "Neither: both are known to about ±4.5 points",
+        "correct": true,
+        "why": "Right. The number graded decides it."
+      },
+      {
+        "text": "The million, because its sample is drawn from more data",
+        "correct": false,
+        "why": "The traffic's size does not enter while the sample is a small part of it."
+      },
+      {
+        "text": "The ten thousand, because 400 is a larger share of it",
+        "correct": false,
+        "why": "4% is still a small share; the gain is negligible."
+      },
+      {
+        "text": "Neither, without grading everything",
+        "correct": false,
+        "why": "That is what an interval is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-796fzgcr",
+    "version": 1,
+    "section": "how-sure",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a pass rate of 70% on 100 replies, how many points either side is the 95% half-width, rounded to one decimal?",
+    "value": 9.0,
+    "tolerance": 0.05,
+    "unit": "points"
+  },
+  {
+    "id": "ex-n59h5ya0",
+    "version": 1,
+    "section": "the-cost-of-grading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the lesson get the price of grading from?",
+    "choices": [
+      {
+        "text": "An estimate from the length of each reply",
+        "correct": false,
+        "why": "The tokens are measured, not estimated."
+      },
+      {
+        "text": "The provider's monthly invoice for the lab",
+        "correct": false,
+        "why": "The lab has no invoice; the spans carry the tokens."
+      },
+      {
+        "text": "The judge's own spans, priced by costs.py",
+        "correct": true,
+        "why": "Right. Grading is priced like serving."
+      },
+      {
+        "text": "A table of fixed prices per criterion",
+        "correct": false,
+        "why": "Prices are per token, by model and date."
+      }
+    ]
+  },
+  {
+    "id": "ex-60j323wz",
+    "version": 1,
+    "section": "the-cost-of-grading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the cheapest saving the lesson names for relevance calls?",
+    "choices": [
+      {
+        "text": "Grading relevance only on weekdays",
+        "correct": false,
+        "why": "That biases the sample."
+      },
+      {
+        "text": "Sending only what the rubric reads",
+        "correct": true,
+        "why": "Right. The relevance rubric never asks about the sources, which travel anyway."
+      },
+      {
+        "text": "Asking for a shorter reason in the verdict",
+        "correct": false,
+        "why": "Output is a small part of the judge's tokens."
+      },
+      {
+        "text": "Grading with the assistant's own model",
+        "correct": false,
+        "why": "extract-1 costs several times what judge-1 does per token."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfv3b8kz",
+    "version": 1,
+    "section": "the-cost-of-grading",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One judgement cost 0.00016877 dollars and one reply 0.00061175. What percentage of a reply's cost does one judgement add, to the nearest whole number?",
+    "value": 28,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-nt5zfmsw",
+    "version": 1,
+    "section": "the-cost-of-grading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should a judge's spans carry a feature of their own, such as evaluation?",
+    "choices": [
+      {
+        "text": "So the judge is billed to a separate account",
+        "correct": false,
+        "why": "The point is visibility, not billing."
+      },
+      {
+        "text": "So that grading shows up as its own line of cost",
+        "correct": true,
+        "why": "Right. A cost nobody sees grows without a decision."
+      },
+      {
+        "text": "So the judge stops grading its own replies",
+        "correct": false,
+        "why": "The judge never grades itself here."
+      },
+      {
+        "text": "So the sampling rate is set from the dashboard",
+        "correct": false,
+        "why": "A feature label sets nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctv96wtn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these policies from most to least costly in judge calls for this week.",
+    "items": [
+      "every reply, three criteria",
+      "every reply, one criterion",
+      "targeted, one criterion",
+      "stratified, 30 per group, three criteria"
+    ]
+  },
+  {
+    "id": "ex-bq0pma7w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team wants to know whether a feature with 2% of traffic got worse. Which sample fits?",
+    "choices": [
+      {
+        "text": "A uniform tenth of all traffic",
+        "correct": false,
+        "why": "It would hold very few of that feature's replies."
+      },
+      {
+        "text": "Every reply of the week that got a thumbs down",
+        "correct": false,
+        "why": "That finds failures; it does not estimate a rate."
+      },
+      {
+        "text": "Stratified, with enough of that feature",
+        "correct": true,
+        "why": "Right. And reweighted if it is ever combined into a total."
+      },
+      {
+        "text": "The first hundred replies of Monday",
+        "correct": false,
+        "why": "A corner of the week, not the feature."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0p9cqmm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does grade_sample.py write the sampling rule beside every verdict in verdicts.jsonl?",
+    "choices": [
+      {
+        "text": "So nobody later averages two kinds of sample",
+        "correct": true,
+        "why": "Right. A targeted rate mixed with a uniform one estimates nothing."
+      },
+      {
+        "text": "So that the judge reads it and grades accordingly",
+        "correct": false,
+        "why": "The judge never sees verdicts.jsonl."
+      },
+      {
+        "text": "Because the Wilson interval needs it to run",
+        "correct": false,
+        "why": "Wilson needs only passed and graded."
+      },
+      {
+        "text": "To price each verdict at its own sampling rate",
+        "correct": false,
+        "why": "Price comes from tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqb3ypnh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many judge calls did the whole lesson make, from the cost capture?",
+    "value": 1854,
+    "tolerance": 0,
+    "unit": "calls"
+  }
+]

@@ -150,7 +150,7 @@ def judge(system, conv):
         ok = sims.max(axis=1) >= SUPPORTED
         score = round(float(ok.mean()), 2)
         worst = int(np.argmin(sims.max(axis=1)))
-        reason = (f"all {len(claims)} sentences are supported" if ok.all() else
+        reason = (f"{len(claims)} of {len(claims)} sentences supported" if ok.all() else
                   f"{int((~ok).sum())} of {len(claims)} sentences unsupported, e.g. \"{claims[worst][:80]}\"")
         return {"criterion": crit, "score": score, "verdict": "pass" if ok.all() else "fail", "reason": reason}
     if crit == "relevance":
