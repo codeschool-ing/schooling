@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-tkxhvm51",
+    "version": 1,
+    "section": "what-they-share",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these do BigQuery, Snowflake and Redshift have in common? Choose all that apply.",
+    "hint": "Lessons 7 and 8.",
+    "choices": [
+      {
+        "text": "Columnar, compressed storage",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Parallel processing on many machines",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Storage kept apart from compute",
+        "correct": true,
+        "why": "Yes, in all three today."
+      },
+      {
+        "text": "The same way of charging for compute",
+        "correct": false,
+        "why": "Bytes, seconds and node hours: three different bills."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz95jgrw",
+    "version": 1,
+    "section": "what-they-share",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What in lessons 2 to 6 changes when the warehouse moves to one of these products?",
+    "hint": "Meaning against machinery.",
+    "choices": [
+      {
+        "text": "Nothing in the model",
+        "correct": true,
+        "why": "Right. The bill and the physical knobs change; facts, dimensions and history do not."
+      },
+      {
+        "text": "Type 2 history is no longer needed, because the product keeps versions of every table",
+        "correct": false,
+        "why": "Table versions are about recovery, not about where a customer lived when they bought."
+      },
+      {
+        "text": "Star schemas must become snowflakes to run in the cloud",
+        "correct": false,
+        "why": "All three run a star as written."
+      },
+      {
+        "text": "Surrogate keys are replaced by the provider's own identifiers",
+        "correct": false,
+        "why": "No provider assigns your dimension keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-3myychrm",
+    "version": 1,
+    "section": "bigquery",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a slot in BigQuery?",
+    "hint": "A measure of compute.",
+    "choices": [
+      {
+        "text": "A partition of a table, one per day",
+        "correct": false,
+        "why": "Partitions are storage; slots are compute."
+      },
+      {
+        "text": "A saved query that runs on a schedule",
+        "correct": false,
+        "why": "That is a scheduled query."
+      },
+      {
+        "text": "A unit of processing capacity",
+        "correct": true,
+        "why": "Right. A query gets as many as it can use, up to the project's limit."
+      },
+      {
+        "text": "A column reserved for clustering",
+        "correct": false,
+        "why": "Clustering columns are ordinary columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-x535j58h",
+    "version": 1,
+    "section": "bigquery",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the BigQuery version of `fact_sales` use a `DATE` column instead of `date_key`?",
+    "hint": "What does it partition by?",
+    "choices": [
+      {
+        "text": "BigQuery has no integer type",
+        "correct": false,
+        "why": "It has `INT64`."
+      },
+      {
+        "text": "To partition the table by date",
+        "correct": true,
+        "why": "Right. `dim_date` stays, joined on the date."
+      },
+      {
+        "text": "Dates compress better than integers in Google's format, saving most of the storage bill",
+        "correct": false,
+        "why": "Storage is not why; the partition clause is."
+      },
+      {
+        "text": "Surrogate keys are forbidden",
+        "correct": false,
+        "why": "The other keys stay integers."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1mwtj01",
+    "version": 1,
+    "section": "paying-by-the-byte",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At BigQuery's on-demand price of US$ 6.25 per TiB, what would 4 TiB of queries cost in a month, before the free tebibyte is deducted?",
+    "hint": "Multiply.",
+    "value": 25,
+    "tolerance": 0.001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-1zkxdcjh",
+    "version": 1,
+    "section": "paying-by-the-byte",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query reads 3 INT64 columns of a table with 887,477 rows. How many bytes does BigQuery's on-demand model count for that table?",
+    "hint": "8 bytes per value.",
+    "value": 21299448,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0z184k24",
+    "version": 1,
+    "section": "paying-by-the-byte",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dim_date` is 11,712 bytes for the query. What is it billed?",
+    "hint": "There is a floor.",
+    "choices": [
+      {
+        "text": "11,712 bytes",
+        "correct": false,
+        "why": "Below the minimum."
+      },
+      {
+        "text": "Nothing, because dimensions are free",
+        "correct": false,
+        "why": "The price page makes no such exception."
+      },
+      {
+        "text": "1 TiB, the monthly free tier",
+        "correct": false,
+        "why": "The free tier is an allowance, not a charge per table."
+      },
+      {
+        "text": "10 MB, the minimum per table",
+        "correct": true,
+        "why": "Right. Every table referenced is billed at least 10 MB."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5t9dvb9",
+    "version": 1,
+    "section": "paying-by-the-byte",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An analyst adds `LIMIT 10` to a `SELECT *` over a large BigQuery table to keep it cheap. What does the bill do?",
+    "hint": "What does the price count?",
+    "choices": [
+      {
+        "text": "It drops to ten rows' worth",
+        "correct": false,
+        "why": "The price counts columns read, not rows shown."
+      },
+      {
+        "text": "It doubles, because the result is sorted",
+        "correct": false,
+        "why": "There is no sort here."
+      },
+      {
+        "text": "It stays the same: every column is billed whole",
+        "correct": true,
+        "why": "Right. Name fewer columns, or filter on the partition."
+      },
+      {
+        "text": "It becomes free, under the 10 MB minimum",
+        "correct": false,
+        "why": "A minimum is a floor, not a ceiling."
+      }
+    ]
+  },
+  {
+    "id": "ex-96d6tz1a",
+    "version": 1,
+    "section": "snowflake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a virtual warehouse in Snowflake?",
+    "hint": "You create it by name.",
+    "choices": [
+      {
+        "text": "A named cluster that runs queries",
+        "correct": true,
+        "why": "Right. Compute, sized and started apart from the data."
+      },
+      {
+        "text": "A schema that holds a copy of the data for one team",
+        "correct": false,
+        "why": "Warehouses hold no data; they read the shared tables."
+      },
+      {
+        "text": "A data mart",
+        "correct": false,
+        "why": "A mart is a set of tables; a virtual warehouse is compute."
+      },
+      {
+        "text": "A view",
+        "correct": false,
+        "why": "Views are SQL; warehouses are machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfqzb18c",
+    "version": 1,
+    "section": "snowflake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Snowflake tables have no partition clause. How are blocks skipped, then?",
+    "hint": "Lesson 8's zone maps, built in.",
+    "choices": [
+      {
+        "text": "They are never skipped; every query reads every block",
+        "correct": false,
+        "why": "The statistics exist so they can be."
+      },
+      {
+        "text": "By an index the user creates on each column",
+        "correct": false,
+        "why": "Snowflake does not ask for indexes on its tables."
+      },
+      {
+        "text": "By hashing the distribution key",
+        "correct": false,
+        "why": "That is Redshift's question."
+      },
+      {
+        "text": "Micro-partitions with min and max per column",
+        "correct": true,
+        "why": "Right. A clustering key makes them useful for the columns that matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8bba4ka",
+    "version": 1,
+    "section": "paying-by-the-second",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Medium Snowflake warehouse (4 credits an hour) runs a query for 90 seconds. How many credits does it consume?",
+    "hint": "4 × 90 / 3600.",
+    "value": 0.1,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-mhyr73yw",
+    "version": 1,
+    "section": "paying-by-the-second",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Large warehouse (8 credits an hour) is resumed for a 3-second query and suspended right after. How many credits is it billed?",
+    "hint": "There is a minimum each time it resumes. Give three decimals.",
+    "value": 0.133,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-m12z3r44",
+    "version": 1,
+    "section": "paying-by-the-second",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query parallelises perfectly. Moving it from Small to Medium does what to its cost?",
+    "hint": "Twice the rate, half the time.",
+    "choices": [
+      {
+        "text": "Doubles it",
+        "correct": false,
+        "why": "The time halves too."
+      },
+      {
+        "text": "Leaves it the same",
+        "correct": true,
+        "why": "Right. In practice Amdahl's law makes it somewhat more."
+      },
+      {
+        "text": "Halves it",
+        "correct": false,
+        "why": "The rate doubles."
+      },
+      {
+        "text": "Makes it free for the first minute of every hour",
+        "correct": false,
+        "why": "The first minute is a minimum, not a gift."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjpebqp6",
+    "version": 1,
+    "section": "paying-by-the-second",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habits reduce a Snowflake bill? Choose all that apply.",
+    "hint": "Time is the bill.",
+    "choices": [
+      {
+        "text": "Auto-suspend after a short idle period",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Sizing up only for heavy loads",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Queries that read less",
+        "correct": true,
+        "why": "Yes: they run for less time."
+      },
+      {
+        "text": "Keeping one warehouse running all day for every team",
+        "correct": false,
+        "why": "It is billed whether busy or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mh8gd8b",
+    "version": 1,
+    "section": "redshift",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a provisioned Redshift cluster, what does the leader node do?",
+    "hint": "Lesson 7's coordinator.",
+    "choices": [
+      {
+        "text": "Plans queries and combines results",
+        "correct": true,
+        "why": "Right. The compute nodes do the scanning."
+      },
+      {
+        "text": "Stores the largest table",
+        "correct": false,
+        "why": "Tables are spread over compute nodes."
+      },
+      {
+        "text": "Backs up the other nodes",
+        "correct": false,
+        "why": "Backups are a separate service."
+      },
+      {
+        "text": "Runs only the dashboards",
+        "correct": false,
+        "why": "Every query goes through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7zbpz5q",
+    "version": 1,
+    "section": "distribution-and-sort-keys",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Redshift distribution style to what it suits.",
+    "hint": "Four styles.",
+    "pairs": [
+      {
+        "left": "KEY",
+        "right": "Large tables joined on one column"
+      },
+      {
+        "left": "ALL",
+        "right": "Small dimensions copied to every node"
+      },
+      {
+        "left": "EVEN",
+        "right": "Tables with no good key and no joins"
+      },
+      {
+        "left": "AUTO",
+        "right": "Letting Redshift choose"
+      }
+    ]
+  },
+  {
+    "id": "ex-ryqf65as",
+    "version": 1,
+    "section": "distribution-and-sort-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why `DISTKEY (order_id)` and not `DISTKEY (shop_key)` for Ana's fact table?",
+    "hint": "Lesson 7 counted both.",
+    "choices": [
+      {
+        "text": "Shop keys are text, and a distribution key has to be an integer column",
+        "correct": false,
+        "why": "Both are integers, and text keys are allowed."
+      },
+      {
+        "text": "Order numbers sort the table by date",
+        "correct": false,
+        "why": "Sorting is the SORTKEY's job."
+      },
+      {
+        "text": "Seven shops put 72% of rows on one node",
+        "correct": true,
+        "why": "Right. Order numbers spread four nodes within half a per cent."
+      },
+      {
+        "text": "Redshift forbids distributing by a dimension key",
+        "correct": false,
+        "why": "It allows it; it would just be skewed here."
+      }
+    ]
+  },
+  {
+    "id": "ex-sm7zr76a",
+    "version": 1,
+    "section": "distribution-and-sort-keys",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Redshift clause that stores a table's rows in date order, so zone maps can skip blocks, is ___ (date_key).",
+    "hint": "Two words joined, in capitals.",
+    "blanks": [
+      {
+        "accept": [
+          "SORTKEY"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8v1qb6mj",
+    "version": 1,
+    "section": "the-same-star-three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which declaration in each product aims at keeping together the rows a query wants?",
+    "hint": "Skipping blocks.",
+    "choices": [
+      {
+        "text": "Slots; credits; RPUs",
+        "correct": false,
+        "why": "Those are units of compute and billing."
+      },
+      {
+        "text": "Partitions and clusters; clustering keys; sort keys",
+        "correct": true,
+        "why": "Right. BigQuery, Snowflake and Redshift, in that order."
+      },
+      {
+        "text": "Datasets; databases; schemas",
+        "correct": false,
+        "why": "Those are containers of tables."
+      },
+      {
+        "text": "`DISTKEY` in all three",
+        "correct": false,
+        "why": "Only Redshift has it, and it is about machines, not blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-tre617v9",
+    "version": 1,
+    "section": "the-same-star-three-ways",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team designs its tables around one product's knobs, putting billing tricks into the model. What risk does the lesson point to?",
+    "hint": "Moving products.",
+    "choices": [
+      {
+        "text": "The product refuses to run star schemas",
+        "correct": false,
+        "why": "All three run them."
+      },
+      {
+        "text": "Queries become slower than on PostgreSQL",
+        "correct": false,
+        "why": "Nothing suggests that."
+      },
+      {
+        "text": "History can no longer be kept",
+        "correct": false,
+        "why": "History is a modelling choice any product supports."
+      },
+      {
+        "text": "The model cannot move with only its DDL rewritten",
+        "correct": true,
+        "why": "Right. A dimensional model moves; one built on knobs does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a0e5brm",
+    "version": 1,
+    "section": "the-others",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which product in this list runs in a single process on one machine and is the engine of this course?",
+    "hint": "Every query in the course ran on it.",
+    "choices": [
+      {
+        "text": "ClickHouse",
+        "correct": false,
+        "why": "A columnar server, not this course's engine."
+      },
+      {
+        "text": "Databricks SQL",
+        "correct": false,
+        "why": "A managed service over Delta Lake."
+      },
+      {
+        "text": "DuckDB",
+        "correct": true,
+        "why": "Right. MotherDuck is a managed service built around it."
+      },
+      {
+        "text": "Microsoft Fabric",
+        "correct": false,
+        "why": "Microsoft's warehouse and lake product."
+      }
+    ]
+  },
+  {
+    "id": "ex-thdnj8fb",
+    "version": 1,
+    "section": "choosing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's questions for choosing a warehouse in the order it gives them.",
+    "hint": "Data first, people last.",
+    "items": [
+      "Where is the data already?",
+      "What shape is the workload?",
+      "How much operation does the team want?",
+      "What will a mistake cost?",
+      "What does the rest of the stack speak?"
+    ],
+    "trap": "Starting from benchmarks is the slip the section warns about: at most companies' size every product answers in seconds."
+  },
+  {
+    "id": "ex-b7s9pamg",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final's warehouse is a 46 MB file. What does the lesson say about renting a cloud warehouse for it now?",
+    "hint": "Lesson 7's rule of thumb.",
+    "choices": [
+      {
+        "text": "Not yet; one machine is the simpler answer",
+        "correct": true,
+        "why": "Right. The model will move when it is worth it."
+      },
+      {
+        "text": "It is required once there are two tables",
+        "correct": false,
+        "why": "Nothing requires it."
+      },
+      {
+        "text": "BigQuery, because its free tier covers it, and that settles the question for good",
+        "correct": false,
+        "why": "Cheap today is not the same as needed."
+      },
+      {
+        "text": "Redshift, because shops use AWS",
+        "correct": false,
+        "why": "Nothing says where Ponto Final's data lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdqz2qdz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Dashboards refresh every five minutes against a 2 TiB fact table, reading 4 of its 40 columns, filtered to the last week on a date-partitioned table. Under BigQuery on demand, which change cuts the bill most?",
+    "hint": "Bytes read per refresh, times refreshes.",
+    "choices": [
+      {
+        "text": "Adding `LIMIT 100` to each query",
+        "correct": false,
+        "why": "LIMIT does not reduce bytes read."
+      },
+      {
+        "text": "Moving to `SELECT *` so the cache is shared",
+        "correct": false,
+        "why": "That bills all 40 columns."
+      },
+      {
+        "text": "Removing the date partition",
+        "correct": false,
+        "why": "Then every refresh reads the whole history."
+      },
+      {
+        "text": "Refreshing from a small aggregate rebuilt after each load",
+        "correct": true,
+        "why": "Right. The dashboards read kilobytes instead of a week of four columns, every five minutes."
+      }
+    ]
+  }
+]
