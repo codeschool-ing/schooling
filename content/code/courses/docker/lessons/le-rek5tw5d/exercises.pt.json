@@ -1,0 +1,215 @@
+{
+  "ex-mj4y47dz": {
+    "prompt": "A Ana editou o `hello/server.js` no host e o container serviu o texto novo. O que tornou isso possível?",
+    "hint": "Onde o arquivo morava, e o que o vigiava?",
+    "choices": [
+      {
+        "text": "O Docker reconstruiu a imagem em segundo plano",
+        "why": "Nada foi construído; a imagem de fábrica foi usada o tempo todo."
+      },
+      {
+        "text": "O `docker cp` copiou o arquivo ao salvar",
+        "why": "Nenhuma cópia aconteceu; o container lia o diretório da Ana."
+      },
+      {
+        "text": "Um bind mount, e o `node --watch`",
+        "why": "Isso: o arquivo era da Ana, e o Node reiniciou com a mudança."
+      },
+      {
+        "text": "O Alpine recarrega JavaScript",
+        "why": "O sistema operacional não faz nada do tipo."
+      }
+    ]
+  },
+  "ex-7msmvyaf": {
+    "prompt": "Por que o `compose.dev.yaml` dá um volume nomeado ao cache de build do Go?",
+    "hint": "O que acontece com os arquivos de um container ao reiniciar e recriar?",
+    "choices": [
+      {
+        "text": "O Go se recusa a compilar sem um volume",
+        "why": "Ele compila; só começaria do zero toda vez."
+      },
+      {
+        "text": "O volume do cache guarda também os arquivos do banco",
+        "why": "Não há banco neste arquivo."
+      },
+      {
+        "text": "Para deixar só leitura o código montado para o Go",
+        "why": "O código é o bind mount; o cache é outra coisa."
+      },
+      {
+        "text": "Reinícios recompilam só o que mudou",
+        "why": "Isso: o cache sobrevive a qualquer container."
+      }
+    ]
+  },
+  "ex-10te7q6m": {
+    "prompt": "A `shelf:dev` tem `/src/shelf`, e mesmo assim `docker run -v \"$PWD/shelf\":/src shelf:dev` diz `./shelf: no such file`. Por quê?",
+    "hint": "O que uma montagem faz com o que estava lá?",
+    "choices": [
+      {
+        "text": "O diretório da Ana substitui o `/src` naquele container",
+        "why": "Isso: o binário da imagem fica escondido atrás dele."
+      },
+      {
+        "text": "O build falhou sem avisar",
+        "why": "Sem a montagem, o `ls` achou o binário."
+      },
+      {
+        "text": "Bind mounts são só leitura",
+        "why": "São graváveis por padrão, e o problema era ler de todo jeito."
+      },
+      {
+        "text": "O `CMD` precisa de caminho absoluto",
+        "why": "O `./shelf` resolve a partir do `WORKDIR`; o arquivo só não estava lá."
+      }
+    ]
+  },
+  "ex-y0jcpz36": {
+    "prompt": "Quais destes evitam o problema do binário escondido? Escolha todos os que se aplicam.",
+    "hint": "Mantenha o resultado do build longe da montagem.",
+    "choices": [
+      {
+        "text": "Construir o binário em `/usr/local/bin`",
+        "why": "Sim: a montagem em `/src` não o cobre."
+      },
+      {
+        "text": "Rodar `go run` dentro do container, como o `compose.dev.yaml` faz",
+        "why": "Sim: ele constrói depois que a montagem já está lá."
+      },
+      {
+        "text": "Pôr o resultado do build num volume próprio",
+        "why": "Sim."
+      },
+      {
+        "text": "Montar o diretório duas vezes",
+        "why": "Uma segunda montagem cobre a primeira; nada reaparece."
+      }
+    ]
+  },
+  "ex-xwyd05jp": {
+    "prompt": "Ligue cada ação do `develop.watch` ao que ela faz quando um arquivo muda.",
+    "hint": "Três ações.",
+    "pairs": [
+      {
+        "left": "`rebuild`",
+        "right": "Constrói a imagem e recria o serviço"
+      },
+      {
+        "left": "`sync`",
+        "right": "Copia o arquivo para o container rodando"
+      },
+      {
+        "left": "`sync+restart`",
+        "right": "Copia o arquivo e depois reinicia o container"
+      }
+    ],
+    "right_distractors": [
+      "Envia a imagem para um registry"
+    ]
+  },
+  "ex-7zsx7rsk": {
+    "prompt": "O que o `watch` com `rebuild` dá que a montagem com `go run` não dá?",
+    "hint": "Que imagem roda?",
+    "choices": [
+      {
+        "text": "Resposta mais rápida depois de cada gravação, sem build",
+        "why": "Ele é mais lento: um build completo a cada vez."
+      },
+      {
+        "text": "A imagem de produção, testada a cada mudança",
+        "why": "Isso: multiestágio, distroless e tudo."
+      },
+      {
+        "text": "Dispensar o Dockerfile",
+        "why": "Ele constrói a partir do Dockerfile."
+      },
+      {
+        "text": "Um depurador ligado sozinho ao container novo",
+        "why": "Nada liga um depurador."
+      }
+    ]
+  },
+  "ex-n2q37enx": {
+    "prompt": "Depois que o watch reconstruiu a imagem, qual era o `id` do livro que o `/books` devolveu no índice 3?",
+    "hint": "A entrada nova.",
+    "unit": "id"
+  },
+  "ex-g0js2a32": {
+    "prompt": "Por que o Node no container escuta com `--inspect=0.0.0.0:9229` em vez do padrão?",
+    "hint": "Aula 23: o loopback de quem?",
+    "choices": [
+      {
+        "text": "A porta padrão é reservada pelo Docker",
+        "why": "A porta é a mesma; o endereço é que muda."
+      },
+      {
+        "text": "Para o depurador aceitar conexões vindas da internet inteira",
+        "why": "O lado do host continua publicado só no loopback."
+      },
+      {
+        "text": "A porta publicada chega ao `eth0`, e não ao loopback",
+        "why": "Isso: o `127.0.0.1` padrão é o do próprio container."
+      },
+      {
+        "text": "O Node se recusa a depurar sem ser root",
+        "why": "Usuários não têm nada a ver com isso."
+      }
+    ]
+  },
+  "ex-ag3tzy3s": {
+    "prompt": "Por que uma porta de depuração nunca deve ser publicada num endereço de rede?",
+    "hint": "O que um depurador consegue fazer?",
+    "choices": [
+      {
+        "text": "Depuradores usam banda demais numa rede compartilhada",
+        "why": "Banda não é o risco."
+      },
+      {
+        "text": "Deixa o programa lento",
+        "why": "Velocidade também não é o risco."
+      },
+      {
+        "text": "Editores rejeitam depuradores remotos",
+        "why": "Eles aceitam; esse é o perigo."
+      },
+      {
+        "text": "Quem a alcança roda código no programa",
+        "why": "Isso: lê qualquer variável, roda qualquer coisa."
+      }
+    ]
+  },
+  "ex-4jyqt9d5": {
+    "prompt": "O Node lista os alvos de depuração, com o endereço WebSocket a que um editor se conecta, em `localhost:9229/json/___`.",
+    "hint": "Uma palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "list"
+        ]
+      }
+    ]
+  },
+  "ex-c0g766f4": {
+    "prompt": "Um colega acrescenta `--inspect=0.0.0.0:9229` e `ports: [\"9229:9229\"]` ao `compose.yaml` de produção \"para emergências\". O que a Ana deve sugerir?",
+    "hint": "Onde cada coisa pertence?",
+    "choices": [
+      {
+        "text": "Levar para um override de desenvolvimento, em `127.0.0.1`",
+        "why": "Isso: flags de desenvolvimento num arquivo de desenvolvimento, no loopback."
+      },
+      {
+        "text": "Manter, mas mudar o número da porta",
+        "why": "Outra porta é o mesmo depurador aberto."
+      },
+      {
+        "text": "Manter, porque o `--inspect` é inofensivo num ambiente de produção",
+        "why": "Ele entrega execução de código a quem alcançar a porta."
+      },
+      {
+        "text": "Tirar o healthcheck em vez disso",
+        "why": "Não tem relação, e o healthcheck é útil."
+      }
+    ]
+  }
+}
