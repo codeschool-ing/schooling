@@ -1,0 +1,145 @@
+{
+  "ex-s6kebepb": {
+    "prompt": "Com pesos 90 e 10, as 200 requisições se dividiram exatamente em 180 e 20. Por que exatamente?",
+    "hint": "Como o Traefik escolhe entre backends com peso?",
+    "choices": [
+      {
+        "text": "Sorte",
+        "why": "Um sorteio raramente cairia exato."
+      },
+      {
+        "text": "Um round robin ponderado, não um sorteio",
+        "why": "Isso."
+      },
+      {
+        "text": "O kube-proxy as dividiu",
+        "why": "O kube-proxy escolhe pods dentro de um Service; a divisão foi entre Services."
+      },
+      {
+        "text": "O canary tinha um décimo dos pods",
+        "why": "Ele tinha um de quatro."
+      }
+    ]
+  },
+  "ex-r0krckm8": {
+    "prompt": "Por que o canary precisa de um Service próprio em vez de dividir `app: shop` com os pods estáveis?",
+    "hint": "O que um Service compartilhado daria ao roteador?",
+    "choices": [
+      {
+        "text": "Services não podem compartilhar rótulos",
+        "why": "Os dois pods carregam `app: shop` sem problema."
+      },
+      {
+        "text": "O canary usa outra porta",
+        "why": "Os dois escutam na 8080."
+      },
+      {
+        "text": "Para a rota dar um peso a cada versão",
+        "why": "Isso. Um Service só dividiria por número de pods, um em quatro."
+      },
+      {
+        "text": "Para separar os logs dele",
+        "why": "Logs são por pod de qualquer jeito."
+      }
+    ]
+  },
+  "ex-96yej7qb": {
+    "prompt": "Uma pessoa de testes manda `X-Canary: always`. Qual backend responde?",
+    "hint": "A regra que casa com cabeçalho.",
+    "choices": [
+      {
+        "text": "O estável, nove vezes em dez",
+        "why": "A regra de cabeçalho pula os pesos."
+      },
+      {
+        "text": "Um aleatório",
+        "why": "O casamento é exato."
+      },
+      {
+        "text": "Nenhum; o cabeçalho é recusado",
+        "why": "Três requisições chegaram à 1.1."
+      },
+      {
+        "text": "O único pod 1.1",
+        "why": "Isso: o canary, toda vez."
+      }
+    ]
+  },
+  "ex-0001dy74": {
+    "prompt": "Depois de trocar o Service para o green, a versão 2.0 se comporta mal. Quanto tempo leva voltar?",
+    "hint": "O blue foi tocado?",
+    "choices": [
+      {
+        "text": "Um patch no seletor",
+        "why": "Isso. O blue continuou rodando, pronto."
+      },
+      {
+        "text": "Um rolling update completo",
+        "why": "Nada foi substituído."
+      },
+      {
+        "text": "O tempo de o blue subir",
+        "why": "O blue nunca parou."
+      },
+      {
+        "text": "Não dá para voltar",
+        "why": "A captura voltou."
+      }
+    ]
+  },
+  "ex-623p9tk6": {
+    "prompt": "O que o blue-green custa que um rolling update não custa?",
+    "hint": "A tabela no fim.",
+    "choices": [
+      {
+        "text": "Um roteador que divide por peso",
+        "why": "Isso é o que o canary precisa."
+      },
+      {
+        "text": "Uma segunda cópia inteira da aplicação",
+        "why": "Isso, enquanto a troca estiver pendente."
+      },
+      {
+        "text": "Um namespace novo",
+        "why": "Os dois vivem num namespace."
+      },
+      {
+        "text": "Indisponibilidade durante a troca",
+        "why": "As 200 requisições foram respondidas."
+      }
+    ]
+  },
+  "ex-sfrdrhgh": {
+    "prompt": "Ligue cada estratégia ao jeito de voltar.",
+    "hint": "A tabela no fim.",
+    "pairs": [
+      {
+        "left": "Rolling update",
+        "right": "Outro rollout"
+      },
+      {
+        "left": "Canary",
+        "right": "Peso a zero"
+      },
+      {
+        "left": "Blue-green",
+        "right": "Voltar o seletor"
+      }
+    ],
+    "right_distractors": [
+      "Apagar o namespace"
+    ]
+  },
+  "ex-j356f06k": {
+    "prompt": "Numa HTTPRoute, a fatia de tráfego de cada backend é definida pelo seu ___.",
+    "hint": "90 e 10.",
+    "blanks": [
+      {
+        "accept": [
+          "weight",
+          "peso"
+        ]
+      }
+    ]
+  }
+}
