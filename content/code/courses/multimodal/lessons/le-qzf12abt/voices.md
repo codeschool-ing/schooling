@@ -27,11 +27,11 @@ print(f"{out}: {seconds:.2f} s of audio at {audio.sample_rate} Hz, made in {took
 
 ```
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped. It should arrive on Thursday." lessac.wav
-lessac.wav: 2.76 s of audio at 22050 Hz, made in 0.35 s
+lessac.wav: 2.76 s of audio at 22050 Hz, made in 0.22 s
 ana@lab:~/mm$ python say.py en_GB-alan-medium "Your order has shipped. It should arrive on Thursday." alan.wav
-alan.wav: 3.47 s of audio at 22050 Hz, made in 0.41 s
+alan.wav: 3.47 s of audio at 22050 Hz, made in 0.34 s
 ana@lab:~/mm$ python say.py pt_BR-faber-medium "Seu pedido foi enviado. Deve chegar na quinta-feira." faber.wav
-faber.wav: 2.82 s of audio at 22050 Hz, made in 0.24 s
+faber.wav: 2.82 s of audio at 22050 Hz, made in 0.32 s
 ana@lab:~/mm$ grep -E "Language|Samplerate|URL|License" /opt/multimodal/share/vits-piper-en_US-lessac-medium/MODEL_CARD
 * Language: en_US (English, United States)
 * Samplerate: 22,050Hz

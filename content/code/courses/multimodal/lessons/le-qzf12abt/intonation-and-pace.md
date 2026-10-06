@@ -11,11 +11,11 @@ ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/a
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped?" /tmp/b.wav 1.0
 /tmp/b.wav: 1.15 s of audio at 22050 Hz, made in 0.11 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped!" /tmp/c.wav 1.0
-/tmp/c.wav: 1.14 s of audio at 22050 Hz, made in 0.11 s
+/tmp/c.wav: 1.14 s of audio at 22050 Hz, made in 0.12 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/d.wav 0.8
-/tmp/d.wav: 1.31 s of audio at 22050 Hz, made in 0.11 s
+/tmp/d.wav: 1.31 s of audio at 22050 Hz, made in 0.13 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/e.wav 1.25
-/tmp/e.wav: 1.00 s of audio at 22050 Hz, made in 0.11 s
+/tmp/e.wav: 1.00 s of audio at 22050 Hz, made in 0.09 s
 ```
 
 The lengths barely move, 1.14 against 1.15 seconds. The pitch does, measured by a small program that estimates the voice's fundamental frequency every 30 milliseconds:
@@ -86,7 +86,7 @@ for noise in (True, False):
 
 ```
 ana@lab:~/mm$ python twice.py
-noise on   daed63679ee3 1.13 s   47d643b490a6 1.25 s   different
+noise on   ae68a97ed74a 1.22 s   78f3a3307264 1.24 s   different
 noise off  8ca881e0ebb4 1.14 s   8ca881e0ebb4 1.14 s   the same
 ```
 

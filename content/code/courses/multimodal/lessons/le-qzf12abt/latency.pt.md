@@ -35,7 +35,7 @@ print(f"one sentence:    first sound after {time.time() - started:.2f} s, "
 
 ```
 ana@lab:~/mm$ python latency.py
-all at once:     first sound after 1.44 s, 18.4 s of speech, real-time factor 0.078
+all at once:     first sound after 1.40 s, 18.4 s of speech, real-time factor 0.076
 one sentence:    first sound after 0.30 s, 4.0 s of speech to play while the next 4 are made
 ```
 

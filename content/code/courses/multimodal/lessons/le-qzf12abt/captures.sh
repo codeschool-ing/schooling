@@ -206,10 +206,10 @@ Dom Casmurro, by Machado de Assis.
 TXT
 
 block espeak
-on 'espeak-ng -q --ipa -v en-us "Your order M-1042 arrived on 24/09/2026."'
-on 'espeak-ng -q --ipa -v en-us "Your refund of R\$ 34,80 is on its way."'
-on 'espeak-ng -q --ipa -v en-us "Dom Casmurro, by Machado de Assis."'
-on 'espeak-ng -q --ipa -v pt-br "Dom Casmurro, de Machado de Assis."'
+on 'espeak-ng -q -x -v en-us "Your order M-1042 arrived on 24/09/2026."'
+on 'espeak-ng -q -x -v en-us "Your refund of R\$ 34,80 is on its way."'
+on 'espeak-ng -q -x -v en-us "Dom Casmurro, by Machado de Assis."'
+on 'espeak-ng -q -x -v pt-br "Dom Casmurro, de Machado de Assis."'
 
 block voices
 on 'python say.py en_US-lessac-medium "Your order has shipped. It should arrive on Thursday." lessac.wav'
