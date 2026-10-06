@@ -40,6 +40,7 @@
  *   at MS                 freezes every animation at MS milliseconds
  *   width W               resizes the window to W pixels wide
  *   overflow              whether the page is wider than the window
+ *   spill SEL             whether an element's content is wider than its box
  *   tab                   presses Tab and prints what has the focus now
  *   press KEY             presses a key, such as Enter or Space
  *   fill SEL TEXT · check SEL · click SEL · hover SEL · focus SEL
@@ -342,6 +343,12 @@ const steps = {
     console.log(v.s > v.c ? `page is ${v.s} wide in a ${v.c} window: it scrolls sideways`
                           : `page fits: ${v.s} wide in a ${v.c} window`);
   },
+  async spill(sel) {
+    for (const el of await page.$$(sel)) {
+      const v = await el.evaluate((e) => [e.scrollWidth, e.clientWidth]);
+      console.log(`${await label(el)}  content ${v[0]} wide in a box ${v[1]} wide` + (v[0] > v[1] ? ': it spills' : ''));
+    }
+  },
   async fill(sel, text) { await page.fill(sel, text); },
   async check(sel) { await page.check(sel); },
   async click(sel) { await page.click(sel); await page.waitForTimeout(100); },
@@ -361,7 +368,7 @@ const steps = {
   async shot(f) { await page.screenshot({ path: f, fullPage: true }); },
 };
 
-const arity = { match: 1, rules: 2, describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
+const arity = { spill: 1, match: 1, rules: 2, describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
   at: 1, width: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
 try {
   while (argv.length) {
