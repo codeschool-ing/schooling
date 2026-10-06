@@ -102,6 +102,10 @@ reset() { # the daemon as it is on a machine where nothing has been done yet
   for img in $(docker image ls --format '{{.Repository}}:{{.Tag}}'); do
     case "$keep" in *" ${img#docker.io/library/} "*) ;; *) docker image rm -f "$img" >/dev/null 2>&1 || true ;; esac
   done
+  # an image pulled by digest is listed with the tag <none>, which no name
+  # removes, so what is left untagged goes by its id
+  docker image ls --format '{{.Tag}} {{.ID}}' | awk '$1=="<none>" {print $2}' | sort -u \
+    | xargs -r docker image rm -f >/dev/null 2>&1 || true
   docker image prune -f >/dev/null
   for img in ${LAB_IMAGES:-}; do docker pull -q "$img" >/dev/null; done
 }

@@ -1,0 +1,332 @@
+{
+  "ex-gtgsa7mq": {
+    "prompt": "O que a tag `latest` garante sobre uma imagem?",
+    "hint": "De onde veio a `shelf:latest`?",
+    "choices": [
+      {
+        "text": "Que ela é o build mais novo do registry",
+        "why": "Ela fica onde o último push que a nomeou a deixou."
+      },
+      {
+        "text": "Que ela passou nos testes de quem publica",
+        "why": "Nenhuma tag diz nada sobre testes."
+      },
+      {
+        "text": "Nada; é só a tag usada quando nenhuma é dada",
+        "why": "Isso. Pode ser o build mais antigo que existe."
+      },
+      {
+        "text": "Que ela é a versão estável mais recente",
+        "why": "Quem publica costuma apontá-la para lá, por escolha; nada obriga."
+      }
+    ]
+  },
+  "ex-g443aes7": {
+    "prompt": "Depois do push da 1.1.0, o `docker ps` mostrou o `web-a` com só um id na coluna `IMAGE`. Por quê?",
+    "hint": "De quem é o nome `localhost:5000/shelf` agora?",
+    "choices": [
+      {
+        "text": "O container caiu e perdeu a imagem",
+        "why": "O log dele mostrava que ele estava escutando; ele estava rodando."
+      },
+      {
+        "text": "O `docker ps` abrevia nomes longos",
+        "why": "Ele mostrou o nome inteiro para o `web-b`."
+      },
+      {
+        "text": "Containers iniciados de um registry mostram ids",
+        "why": "O `web-b` veio do mesmo registry e mostrou o nome."
+      },
+      {
+        "text": "O nome de onde ele partiu agora é de outra imagem",
+        "why": "Isso: a tag foi para a 1.1.0, então só o id ainda nomeia a imagem do `web-a`."
+      }
+    ]
+  },
+  "ex-6gx5g78k": {
+    "prompt": "Um servidor baixou `shelf:latest` em março. Em junho, depois de vários pushes, ele roda `docker run shelf:latest` de novo. O que roda?",
+    "hint": "Quando o `docker run` baixa?",
+    "choices": [
+      {
+        "text": "O build de março, o que ele já tem",
+        "why": "Isso, até alguém baixar de novo ou rodar com `--pull always`."
+      },
+      {
+        "text": "O build de junho, porque o `docker run` sempre pergunta ao registry",
+        "why": "Por padrão ele só baixa quando o nome não existe na máquina."
+      },
+      {
+        "text": "Nada; o Docker recusa uma tag velha",
+        "why": "O Docker não tem como saber que a tag está velha."
+      },
+      {
+        "text": "Um dos dois builds, escolhido ao acaso",
+        "why": "Não há sorteio: o nome local aponta para uma imagem."
+      }
+    ]
+  },
+  "ex-a56m7qeg": {
+    "prompt": "Quais destes são custos de fazer deploy com `latest`? Escolha todos os que se aplicam.",
+    "hint": "A aula listou três.",
+    "choices": [
+      {
+        "text": "Voltar atrás exige um nome que `latest` não dá",
+        "why": "Sim: ela só nomeia o que está lá agora."
+      },
+      {
+        "text": "Ninguém sabe dizer qual versão gerou um relato de bug",
+        "why": "Sim: a tag apontava para outro lugar naquele dia."
+      },
+      {
+        "text": "Um `FROM` com `latest` ganha compiladores novos sem pedir",
+        "why": "Sim, e o `DL3007` do hadolint recusa isso."
+      },
+      {
+        "text": "Imagens com tag `latest` são maiores",
+        "why": "Uma tag é um nome; ela não acrescenta nada à imagem."
+      }
+    ]
+  },
+  "ex-90xhph1v": {
+    "prompt": "Sai o `shelf` 1.2.4. No esquema da aula, que tags vão no build novo?",
+    "hint": "Que tags seguem o build mais novo, e quais nomeiam um só?",
+    "choices": [
+      {
+        "text": "Só `1.2.4`",
+        "why": "Aí `1.2` e `1` continuariam oferecendo o build sem a correção."
+      },
+      {
+        "text": "`1.2.4`, `1.2` e `1`",
+        "why": "Isso, mais a tag `sha-` do commit novo quando houver."
+      },
+      {
+        "text": "`1.2.4`, `1.2`, `1` e `1.2.3`",
+        "why": "A `1.2.3` nomeia uma versão, e precisa continuar nomeando."
+      },
+      {
+        "text": "Só `latest`, para todo mundo receber a correção",
+        "why": "Nada no esquema lê `latest`; quem pede `1.2` ficaria sem ela."
+      }
+    ]
+  },
+  "ex-cpy1z4tb": {
+    "prompt": "Por que o `LABEL` e as linhas `ARG` dele estão no estágio final do Dockerfile da Ana, e não no estágio de build?",
+    "hint": "O que sai do estágio de build?",
+    "choices": [
+      {
+        "text": "O BuildKit recusa o `LABEL` num estágio baseado na imagem `golang` oficial",
+        "why": "Qualquer estágio aceita `LABEL`; só ficaria naquele estágio."
+      },
+      {
+        "text": "Labels precisam vir depois do `USER`",
+        "why": "A ordem é livre; os da Ana vêm antes do `COPY`."
+      },
+      {
+        "text": "Só os labels e argumentos do estágio final chegam à imagem",
+        "why": "Isso: o estágio de build só entrega o `/out/shelf`, e um `ARG` só é visível no próprio estágio."
+      },
+      {
+        "text": "O BuildKit roda o estágio final primeiro",
+        "why": "Ele roda o que o estágio final precisa; a ordem não é o motivo."
+      }
+    ]
+  },
+  "ex-fcvtk710": {
+    "prompt": "Uma imagem é copiada para um segundo registry com outro nome. O que ainda diz de que commit ela veio?",
+    "hint": "Qual das duas mora dentro da imagem?",
+    "choices": [
+      {
+        "text": "A antiga tag `sha-12d9616`",
+        "why": "Tags pertencem a um registry, e a cópia não as levou."
+      },
+      {
+        "text": "Nada; essa informação se perde",
+        "why": "Ela está escrita dentro da imagem."
+      },
+      {
+        "text": "O log de envios do registry",
+        "why": "Esse fica no primeiro registry, se existir."
+      },
+      {
+        "text": "O label `org.opencontainers.image.revision`",
+        "why": "Isso: labels moram na imagem e viajam com ela."
+      }
+    ]
+  },
+  "ex-0wqh9rj3": {
+    "prompt": "A Ana enviou outro build como `1.2.3`, e o `registry:3` aceitou. O que teria recusado?",
+    "hint": "A aula citou um ajuste em dois registries hospedados.",
+    "choices": [
+      {
+        "text": "Tornar a tag imutável num registry que permita",
+        "why": "Isso, embora o digest continue sendo a única referência que os bytes garantem."
+      },
+      {
+        "text": "Nada: nenhum registry recusa push numa tag que já existe",
+        "why": "O ECR e o Artifact Registry recusam."
+      },
+      {
+        "text": "Fazer login antes",
+        "why": "O login só prova quem enviou."
+      },
+      {
+        "text": "Acrescentar um label `org.opencontainers.image.version`",
+        "why": "Um label descreve uma imagem; ele não protege uma tag."
+      }
+    ]
+  },
+  "ex-a3m4e31y": {
+    "prompt": "Os builds do `shelf` 1.0.0 da aula 15 e da aula 16, do mesmo código, tiveram ids diferentes. Quantos ids distintos são?",
+    "hint": "`f13bb63f689b` e `acc588659f39`.",
+    "unit": "ids"
+  },
+  "ex-7h8k4252": {
+    "prompt": "Ligue cada tag do `shelf` ao que ela nomeia.",
+    "hint": "Duas nomeiam um build; duas seguem o mais novo.",
+    "pairs": [
+      {
+        "left": "`1.2.3`",
+        "right": "Uma versão"
+      },
+      {
+        "left": "`1.2`",
+        "right": "A 1.2.x mais nova"
+      },
+      {
+        "left": "`1`",
+        "right": "A 1.x.y mais nova"
+      },
+      {
+        "left": "`sha-12d9616`",
+        "right": "O commit de onde ela veio"
+      }
+    ],
+    "right_distractors": [
+      "O build mais novo enviado sem tag"
+    ]
+  },
+  "ex-868r09xz": {
+    "prompt": "A Ana escreveu `golang:1.25@sha256:6993…`, mantendo a tag. O que o Docker usa para escolher a imagem?",
+    "hint": "O log do build disse o que carregou.",
+    "choices": [
+      {
+        "text": "A tag, e o digest é um comentário",
+        "why": "Quem decide é o digest; o build resolveu o próprio `@sha256:`."
+      },
+      {
+        "text": "O digest; a tag é para quem lê",
+        "why": "Isso: uma pessoa vê Go 1.25, e o Docker busca aqueles bytes."
+      },
+      {
+        "text": "O que tiver sido enviado mais recentemente dos dois",
+        "why": "Um digest não é novo nem velho; ele nomeia uma imagem."
+      },
+      {
+        "text": "Os dois, e o build falha se não concordarem",
+        "why": "O Docker resolve o digest e não pergunta ao registry onde a tag está."
+      }
+    ]
+  },
+  "ex-21t0d5wg": {
+    "prompt": "Fixar as bases pelo digest tem um custo. Qual?",
+    "hint": "O que mais deixa de chegar?",
+    "choices": [
+      {
+        "text": "Os builds ficam mais lentos, porque os digests são conferidos",
+        "why": "Resolver um digest não custa mais do que resolver uma tag."
+      },
+      {
+        "text": "A imagem cresce o tamanho do digest",
+        "why": "O digest fica no Dockerfile, e não é acrescentado à imagem."
+      },
+      {
+        "text": "Correções na base esperam alguém mudar a linha",
+        "why": "Isso, e é por isso que um bot propõe o digest novo como pull request."
+      },
+      {
+        "text": "O Dockerfile só constrói na máquina da Ana",
+        "why": "Qualquer máquina que alcance o registry busca os mesmos bytes."
+      }
+    ]
+  },
+  "ex-gvmvfg19": {
+    "prompt": "O bot embutido no GitHub que abre um pull request com o digest novo de uma imagem base se chama ___.",
+    "hint": "O Renovate é o outro citado.",
+    "blanks": [
+      {
+        "accept": [
+          "Dependabot"
+        ]
+      }
+    ]
+  },
+  "ex-10z39n2t": {
+    "prompt": "O `docker inspect web --format \"{{.Config.Image}}\"` imprimiu `localhost:5000/shelf@sha256:e836…`. O que isso diz?",
+    "hint": "A partir de quê o container foi iniciado?",
+    "choices": [
+      {
+        "text": "Que a tag `1.3.0` foi apagada",
+        "why": "A tag continua no registry; ela só não foi usada."
+      },
+      {
+        "text": "Que a imagem não tem labels",
+        "why": "Os labels ficam em `.Config.Labels`; este campo é a referência."
+      },
+      {
+        "text": "Que o registry reescreveu a referência",
+        "why": "A referência é o que a Ana digitou no `docker run`."
+      },
+      {
+        "text": "Que o `web` foi iniciado pelo digest",
+        "why": "Isso, então ele roda aqueles bytes, faça a tag o que fizer."
+      }
+    ]
+  },
+  "ex-yhap6egr": {
+    "prompt": "Ligue cada necessidade à referência que a atende.",
+    "hint": "Quem deve decidir quando muda?",
+    "pairs": [
+      {
+        "left": "Experimentar uma imagem à mão, hoje",
+        "right": "`alpine`"
+      },
+      {
+        "left": "Receber correções, sem funcionalidades novas",
+        "right": "`shelf:1.2`"
+      },
+      {
+        "left": "Rodar exatamente o que passou nos testes",
+        "right": "`shelf@sha256:e836…`"
+      },
+      {
+        "left": "Achar o commit por trás de um build",
+        "right": "`shelf:sha-12d9616`"
+      }
+    ],
+    "right_distractors": [
+      "`shelf:latest` em produção"
+    ]
+  },
+  "ex-r43rkvba": {
+    "prompt": "O arquivo de deploy de um colega diz `image: shelf:1.2.3`. Que mudança o faz rodar só o que foi testado, faça o registry o que fizer?",
+    "hint": "Uma tag pode ser sobrescrita, como a Ana mostrou.",
+    "choices": [
+      {
+        "text": "Acrescentar `@sha256:` e o digest que o push testado imprimiu",
+        "why": "Isso: a tag fica para quem lê, e o digest decide."
+      },
+      {
+        "text": "Mudar para `shelf:1.2`",
+        "why": "Essa muda de propósito, a cada correção."
+      },
+      {
+        "text": "Acrescentar `--pull always` ao comando de início",
+        "why": "Isso busca o que a tag apontar agora, sobrescrita inclusive."
+      },
+      {
+        "text": "Mudar para `shelf:latest` e fixar o endereço do registry no arquivo",
+        "why": "Não se fixa um registry; a `latest` muda a cada push."
+      }
+    ]
+  }
+}
