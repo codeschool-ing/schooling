@@ -216,8 +216,14 @@ def betainc(a, b, x):
 
 def gammainc(s, x):
     """The regularised lower incomplete gamma function P(s, x)."""
+    return 1 - gammaincc(s, x)
+
+
+def gammaincc(s, x):
+    """The regularised upper incomplete gamma function Q(s, x), computed directly so that a
+    tiny tail does not vanish into 1 - P."""
     if x <= 0:
-        return 0.0
+        return 1.0
     if x < s + 1:
         term = total = 1 / s
         k = s
@@ -227,7 +233,7 @@ def gammainc(s, x):
             total += term
             if abs(term) < abs(total) * 1e-16:
                 break
-        return total * math.exp(-x + s * math.log(x) - math.lgamma(s))
+        return 1 - total * math.exp(-x + s * math.log(x) - math.lgamma(s))
     # continued fraction for the upper half
     tiny = 1e-300
     b = x + 1 - s
@@ -245,7 +251,7 @@ def gammainc(s, x):
         h *= delta
         if abs(delta - 1) < 1e-16:
             break
-    return 1 - math.exp(-x + s * math.log(x) - math.lgamma(s)) * h
+    return math.exp(-x + s * math.log(x) - math.lgamma(s)) * h
 
 
 def t_cdf(t, df):
@@ -266,7 +272,7 @@ def t_inv(p, df):
 
 
 def chi2_sf(x, df):
-    return 1 - gammainc(df / 2, x / 2)
+    return gammaincc(df / 2, x / 2)
 
 
 def f_sf(f, d1, d2):
@@ -288,6 +294,85 @@ def welch(xs, ys):
     t = (mean(xs) - mean(ys)) / math.sqrt(vx + vy)
     df = (vx + vy) ** 2 / (vx ** 2 / (nx - 1) + vy ** 2 / (ny - 1))
     return t, df, 2 * t_cdf(-abs(t), df)
+
+
+def paired_t(before, after):
+    diffs = [a - b for b, a in zip(before, after)]
+    n = len(diffs)
+    t = mean(diffs) / (sd(diffs) / math.sqrt(n))
+    return t, n - 1, 2 * t_cdf(-abs(t), n - 1), mean(diffs), sd(diffs)
+
+
+def chi_square(table):
+    """Pearson's chi-square test of independence on a table of counts, no continuity correction."""
+    rows = [sum(r) for r in table]
+    cols = [sum(c) for c in zip(*table)]
+    total = sum(rows)
+    expected = [[r * c / total for c in cols] for r in rows]
+    stat = sum((o - e) ** 2 / e for ro, re in zip(table, expected) for o, e in zip(ro, re))
+    df = (len(rows) - 1) * (len(cols) - 1)
+    return stat, df, chi2_sf(stat, df), expected
+
+
+def anova(groups):
+    allv = [x for g in groups for x in g]
+    grand = mean(allv)
+    ssb = sum(len(g) * (mean(g) - grand) ** 2 for g in groups)
+    ssw = sum((x - mean(g)) ** 2 for g in groups for x in g)
+    dfb, dfw = len(groups) - 1, len(allv) - len(groups)
+    f = (ssb / dfb) / (ssw / dfw)
+    return f, dfb, dfw, f_sf(f, dfb, dfw), ssb, ssw
+
+
+def mann_whitney(xs, ys):
+    """U statistic for xs, and the two-sided p-value from the normal approximation with ties."""
+    allv = xs + ys
+    r = ranks(allv)
+    n1, n2 = len(xs), len(ys)
+    r1 = sum(r[:n1])
+    u = r1 - n1 * (n1 + 1) / 2
+    mu = n1 * n2 / 2
+    n = n1 + n2
+    ties = {}
+    for v in allv:
+        ties[v] = ties.get(v, 0) + 1
+    tie_term = sum(t ** 3 - t for t in ties.values())
+    sigma = math.sqrt(n1 * n2 / 12 * ((n + 1) - tie_term / (n * (n - 1))))
+    z = (u - mu) / sigma
+    return u, z, 2 * normal_cdf(-abs(z))
+
+
+def kruskal(groups):
+    allv = [x for g in groups for x in g]
+    r = ranks(allv)
+    n = len(allv)
+    h, i = 0.0, 0
+    for g in groups:
+        rs = r[i:i + len(g)]
+        i += len(g)
+        h += sum(rs) ** 2 / len(g)
+    h = 12 / (n * (n + 1)) * h - 3 * (n + 1)
+    ties = {}
+    for v in allv:
+        ties[v] = ties.get(v, 0) + 1
+    h /= 1 - sum(t ** 3 - t for t in ties.values()) / (n ** 3 - n)
+    df = len(groups) - 1
+    return h, df, chi2_sf(h, df)
+
+
+def wilcoxon(before, after):
+    """Signed-rank test, normal approximation; zero differences dropped."""
+    d = [a - b for b, a in zip(before, after) if a != b]
+    r = ranks([abs(x) for x in d])
+    wplus = sum(rk for rk, x in zip(r, d) if x > 0)
+    n = len(d)
+    mu = n * (n + 1) / 4
+    ties = {}
+    for x in d:
+        ties[abs(x)] = ties.get(abs(x), 0) + 1
+    sigma = math.sqrt(n * (n + 1) * (2 * n + 1) / 24 - sum(t ** 3 - t for t in ties.values()) / 48)
+    z = (wplus - mu) / sigma
+    return wplus, z, 2 * normal_cdf(-abs(z))
 
 
 # ------------------------------------------------------------ the generator
@@ -829,6 +914,21 @@ def _routing():
 ROUTING = _routing()
 
 
+# Ten couriers' mean delivery time in the month before and the month after a route
+# training, lesson 16: a paired comparison.
+def _training():
+    d = Draw(1600)
+    before = [round(d.normal(40, 4), 1) for _ in range(10)]
+    after = [round(b - 1.5 + d.normal(0, 1.4), 1) for b in before]
+    return before, after
+
+
+TRAIN_BEFORE, TRAIN_AFTER = _training()
+
+# The checkout test, lesson 16: visitors and purchases on each version of the page.
+CHECKOUT = [[220, 1780], [262, 1738]]
+
+
 def t_interval(xs, level=0.95):
     n, m, s_ = len(xs), mean(xs), sd(xs)
     t = t_inv(1 - (1 - level) / 2, n - 1)
@@ -993,6 +1093,48 @@ def l15():
     pw, _ = simulated_power(2, 25, seed=1512, alpha=0.01)
     show('n = 25, gain 2, alpha 0.01: simulated power', pw)
     show('normal approx power n=25 gain 2 alpha 0.01', normal_power(2, 25, alpha=0.01))
+
+
+@lesson(16)
+def l16():
+    g = {h: [r['minutes'] for r in DELIVERIES if r['hood'] == h] for h, _, _ in HOODS}
+    c, k = g['Centro'], g['Cambuí']
+    show('Centro, Cambuí: mean, sd', f'{mean(c):.4f} {sd(c):.4f} | {mean(k):.4f} {sd(k):.4f}')
+    t, df, p = welch(c, k)
+    show('Welch Centro vs Cambuí: t, df, p', f'{t:.4f} {df:.4f} {p:.4f}')
+    t, df, p = welch(k, g['Taquaral'])
+    show('Welch Cambuí vs Taquaral: t, df, p', f'{t:.4f} {df:.4f} {p:.6f}')
+    show('training before', TRAIN_BEFORE)
+    show('training after', TRAIN_AFTER)
+    t, df, p, md, sdd = paired_t(TRAIN_BEFORE, TRAIN_AFTER)
+    show('paired t: t, df, p, mean diff, sd diff', f'{t:.4f} {df} {p:.4f} {md:.4f} {sdd:.4f}')
+    t, df, p = welch(TRAIN_AFTER, TRAIN_BEFORE)
+    show('the same data as independent groups (wrong): t, df, p', f'{t:.4f} {df:.4f} {p:.4f}')
+    stat, df, p, e = chi_square(CHECKOUT)
+    show('checkout: rates', f'{220 / 2000:.4f} {262 / 2000:.4f}')
+    show('checkout chi-square: stat, df, p', f'{stat:.4f} {df} {p:.4f}')
+    show('checkout expected', [[round(v, 1) for v in row] for row in e])
+    # goodness of fit for complaints, grouping 5+ together
+    obs = [COMPLAINTS.count(k_) for k_ in range(5)] + [sum(1 for x in COMPLAINTS if x >= 5)]
+    exp_ = [60 * poisson_pmf(k_, 2.4) for k_ in range(5)]
+    exp_.append(60 - sum(exp_))
+    gof = sum((o - e_) ** 2 / e_ for o, e_ in zip(obs, exp_))
+    show('complaints: observed 0..4, 5+', obs)
+    show('complaints: expected', [round(v, 2) for v in exp_])
+    show('complaints goodness of fit: stat, df 5, p', f'{gof:.4f} {chi2_sf(gof, 5):.4f}')
+    f, dfb, dfw, p, ssb, ssw = anova(list(g.values()))
+    show('ANOVA four neighbourhoods: F, df, p', f'{f:.4f} {dfb} {dfw} {p:.3e}')
+    show('ANOVA: SS between, SS within, MS between, MS within', f'{ssb:.4f} {ssw:.4f} {ssb / dfb:.4f} {ssw / dfw:.4f}')
+    f, dfb, dfw, p, _, _ = anova([c, k])
+    show('ANOVA Centro and Cambuí only: F, p', f'{f:.4f} {p:.4f}')
+    u, z, p = mann_whitney(c, k)
+    show('Mann-Whitney Centro vs Cambuí: U, z, p', f'{u} {z:.4f} {p:.4f}')
+    h, df, p = kruskal(list(g.values()))
+    show('Kruskal-Wallis four neighbourhoods: H, df, p', f'{h:.4f} {df} {p:.3e}')
+    w, z, p = wilcoxon(TRAIN_BEFORE, TRAIN_AFTER)
+    show('Wilcoxon training: W+, z, p', f'{w} {z:.4f} {p:.4f}')
+    # baskets by payment: pix vs card, from the 400? use halves of the 400 as an illustration
+    show('baskets: median of the first 200, last 200', f'{median(BASKETS[:200]):.2f} {median(BASKETS[200:]):.2f}')
 
 
 def check():

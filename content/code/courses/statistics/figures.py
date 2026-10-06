@@ -1850,6 +1850,142 @@ def l15_power_curve(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 16
+
+@figure('l16-choose', 16)
+def l16_choose(lang):
+    t = {'en': dict(
+        label='A decision tree for choosing a test. First question: is the outcome numerical or '
+              'categorical? For a categorical outcome, use the chi-square test. For a numerical one, '
+              'ask how many groups. One group against a fixed value: the one-sample t test. Two '
+              'groups: if the same units are measured twice, the paired t test, with the Wilcoxon '
+              'signed-rank test as the rank-based alternative; if the groups are separate, Welch’s '
+              't test, with the Mann-Whitney test as the alternative. Three or more groups: ANOVA, '
+              'with the Kruskal-Wallis test as the alternative.',
+        q='what is the outcome?', num='numerical', cat='categorical: counts in a table',
+        chi='chi-square test', one='one group vs a value', two_p='two groups, same units twice',
+        two_i='two separate groups', many='three or more groups', t1='one-sample t',
+        tp='paired t', ti='Welch’s t', an='ANOVA', np_='if ranks are safer:',
+        wp='Wilcoxon signed-rank', mw='Mann-Whitney', kw='Kruskal-Wallis',
+        cap='Two questions pick most tests: what kind of outcome, and how many groups. A rank-based '
+            'alternative sits under each test of means, for small or awkward samples.'),
+        'pt': dict(
+        label='Uma árvore de decisão para escolher um teste. Primeira pergunta: o resultado é numérico '
+              'ou categórico? Para um resultado categórico, use o teste qui-quadrado. Para um numérico, '
+              'pergunte quantos grupos. Um grupo contra um valor fixo: o teste t de uma amostra. Dois '
+              'grupos: se as mesmas unidades são medidas duas vezes, o teste t pareado, com o teste de '
+              'postos sinalizados de Wilcoxon como alternativa baseada em postos; se os grupos são '
+              'separados, o teste t de Welch, com o teste de Mann-Whitney como alternativa. Três ou '
+              'mais grupos: ANOVA, com o teste de Kruskal-Wallis como alternativa.',
+        q='qual é o resultado?', num='numérico', cat='categórico: contagens numa tabela',
+        chi='teste qui-quadrado', one='um grupo vs um valor', two_p='dois grupos, mesmas unidades',
+        two_i='dois grupos separados', many='três ou mais grupos', t1='t de uma amostra',
+        tp='t pareado', ti='t de Welch', an='ANOVA', np_='se postos forem mais seguros:',
+        wp='postos sinalizados de Wilcoxon', mw='Mann-Whitney', kw='Kruskal-Wallis',
+        cap='Duas perguntas escolhem a maioria dos testes: que tipo de resultado, e quantos grupos. '
+            'Uma alternativa baseada em postos fica sob cada teste de médias, para amostras pequenas '
+            'ou difíceis.')}[lang]
+    f = Fig('l16-choose', 690, 330, t['label'])
+    f.rect(260, 10, 170, 32, stroke='--amber')
+    f.text(345, 26, t['q'], size=10.5, weight='600', fill='--amber')
+    f.rect(40, 70, 230, 32, stroke='--phosphor')
+    f.text(155, 86, t['num'], size=10.5, weight='600')
+    f.rect(440, 70, 230, 32, stroke='--phosphor')
+    f.text(555, 86, t['cat'], size=10, weight='600')
+    f.rect(470, 132, 170, 32, stroke='--wire', fill='--scan')
+    f.text(555, 148, t['chi'], size=10.5, weight='600')
+    f.path('M345 42 L345 56 L155 56 L155 68', arrow=True)
+    f.path('M345 56 L555 56 L555 68', arrow=True)
+    f.line(555, 102, 555, 130, arrow=True)
+    cols = [(85, t['one'], t['t1'], None), (250, t['two_p'], t['tp'], t['wp']),
+            (415, t['two_i'], t['ti'], t['mw']), (580, t['many'], t['an'], t['kw'])]
+    for x, lab, test, alt in cols:
+        f.rect(x - 80, 190, 160, 32, stroke='--wire')
+        f.text(x, 206, lab, size=9.5)
+        f.rect(x - 80, 238, 160, 30, stroke='--wire', fill='--scan')
+        f.text(x, 253, test, size=10.5, weight='600')
+        f.line(x, 222, x, 236, arrow=True)
+        if alt:
+            f.text(x, 292, t['np_'], size=8.5, fill='--paper-dim')
+            f.text(x, 308, alt, size=9.5, fill='--phosphor')
+    f.path('M155 102 L155 176 L85 176 L85 188', arrow=True)
+    f.path('M155 176 L250 176 L250 188', arrow=True)
+    f.path('M250 176 L415 176 L415 188', arrow=True)
+    f.path('M415 176 L580 176 L580 188', arrow=True)
+    return f, t['cap']
+
+
+@figure('l16-paired', 16)
+def l16_paired(lang):
+    b, a = S.TRAIN_BEFORE, S.TRAIN_AFTER
+    down = sum(1 for x, y in zip(b, a) if y < x)
+    t = {'en': dict(
+        label=f'Ten couriers, each drawn as a line from their mean delivery time in the month before '
+              f'the training, on the left, to the month after, on the right. The couriers differ '
+              f'from one another by several minutes, from about 33 to 42. {down} of the 10 lines slope '
+              f'down; the average change is a fall of 1.21 minutes.',
+        before='before', after='after', y='minutes',
+        cap='The couriers differ from each other far more than each one changes. Pairing compares '
+            'each courier with themselves, and removes that difference from the noise.'),
+        'pt': dict(
+        label=f'Dez entregadores, cada um desenhado como uma linha do tempo médio de entrega no mês '
+              f'antes do treinamento, à esquerda, até o mês depois, à direita. Os entregadores diferem '
+              f'entre si em vários minutos, de uns 33 a 42. {down} das 10 linhas descem; a mudança '
+              f'média é uma queda de 1,21 minuto.',
+        before='antes', after='depois', y='minutos',
+        cap='Os entregadores diferem entre si muito mais do que cada um muda. Parear compara cada '
+            'entregador consigo mesmo, e tira essa diferença do ruído.')}[lang]
+    f = Fig('l16-paired', 460, 300, t['label'])
+    p = Plot(f, 80, 40, 400, 260, 0, 1, 31, 44)
+    p.yaxis(range(32, 45, 2), label=t['y'])
+    for x, y in zip(b, a):
+        col = '--phosphor' if y < x else '--amber'
+        f.line(p.sx(0.1), p.sy(x), p.sx(0.9), p.sy(y), stroke=col, width=1.8)
+        f.circle(p.sx(0.1), p.sy(x), 4, fill=col)
+        f.circle(p.sx(0.9), p.sy(y), 4, fill=col)
+    f.text(p.sx(0.1), p.y1 + 18, t['before'], size=10.5, weight='600')
+    f.text(p.sx(0.9), p.y1 + 18, t['after'], size=10.5, weight='600')
+    return f, t['cap']
+
+
+@figure('l16-anova', 16)
+def l16_anova(lang):
+    g = [(h, [r['minutes'] for r in S.DELIVERIES if r['hood'] == h]) for h, _, _ in S.HOODS]
+    grand = S.mean([x for _, xs in g for x in xs])
+    t = {'en': dict(
+        label=f'The 120 deliveries as four columns of dots, one per neighbourhood, with a short bar '
+              f'at each neighbourhood’s mean and a dashed line across at the overall mean, '
+              f'{num("en", grand, 2)} minutes. The neighbourhood means sit far apart compared with '
+              f'how much the dots spread within each column.',
+        y='minutes', grand=f'overall mean {num("en", grand, 2)}',
+        cap='ANOVA compares two spreads: how far the group means sit from the overall mean, and how '
+            'far the values sit from their own group mean. Here the first dwarfs the second.'),
+        'pt': dict(
+        label=f'As 120 entregas como quatro colunas de pontos, uma por bairro, com uma barra curta na '
+              f'média de cada bairro e uma linha tracejada atravessando na média geral, '
+              f'{num("pt", grand, 2)} minutos. As médias dos bairros ficam muito separadas comparadas '
+              f'com quanto os pontos se espalham dentro de cada coluna.',
+        y='minutos', grand=f'média geral {num("pt", grand, 2)}',
+        cap='A ANOVA compara duas dispersões: quão longe as médias dos grupos ficam da média geral, e '
+            'quão longe os valores ficam da média do próprio grupo. Aqui a primeira é muito maior que '
+            'a segunda.')}[lang]
+    f = Fig('l16-anova', 600, 300, t['label'])
+    p = Plot(f, 70, 40, 580, 250, 0.4, 4.6, 20, 70)
+    p.yaxis(range(20, 71, 10), label=t['y'])
+    d = S.Draw(16)
+    for i, (h, xs) in enumerate(g):
+        cx = i + 1
+        for x in xs:
+            f.circle(p.sx(cx + d.uniform(-0.18, 0.18)), p.sy(x), 2.8, fill='--phosphor-dim', stroke='--phosphor', width=0.6)
+        m = S.mean(xs)
+        f.line(p.sx(cx - 0.3), p.sy(m), p.sx(cx + 0.3), p.sy(m), stroke='--amber', width=3)
+        f.text(p.sx(cx), p.y1 + 16, h, size=10)
+    f.line(p.x0, p.sy(grand), p.x1, p.sy(grand), stroke='--paper', width=1.2, dash='5 4')
+    f.text(p.x1, p.sy(grand) - 8, t['grand'], size=9.5, anchor='end')
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
