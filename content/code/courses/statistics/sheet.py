@@ -359,6 +359,21 @@ LIA = [33, 34, 35, 35, 35, 36, 36, 36]
 DAVI = [22, 26, 31, 35, 38, 40, 44, 44]
 
 
+# Four hundred baskets from one month, lessons 4 onwards: right-skewed, as money is.
+def _baskets():
+    d = Draw(400)
+    return [round(d.lognormal(4.22, 0.6), 2) for _ in range(400)]
+
+
+BASKETS = _baskets()
+
+
+def trimmed(xs, share):
+    s = sorted(xs)
+    k = int(len(s) * share)
+    return mean(s[k:len(s) - k])
+
+
 # ------------------------------------------------------------------ the sheet
 
 SHEET = {}
@@ -440,8 +455,25 @@ def l4():
     show('staff below the mean', sum(1 for s in SALARIES if s < mean(SALARIES)))
     show('payroll total', sum(SALARIES))
     show('mean x 9', mean(SALARIES) * 9)
-    trimmed = sorted(SALARIES)[1:-1]
-    show('trimmed mean, one off each end', mean(trimmed))
+    cut = sorted(SALARIES)[1:-1]
+    show('trimmed mean, one off each end', mean(cut))
+    show('median x 9', median(SALARIES) * 9)
+    b = BASKETS
+    show('400 baskets: mean', mean(b))
+    show('400 baskets: median', median(b))
+    show('400 baskets: min, max', f'{min(b)}  {max(b)}')
+    show('400 baskets: share below the mean', sum(1 for x in b if x < mean(b)) / len(b))
+    show('400 baskets: 10% trimmed mean', trimmed(b, 0.10))
+    show('400 baskets: 5% trimmed mean', trimmed(b, 0.05))
+    show('400 baskets: total', sum(b))
+    show('400 baskets: top 10% share of total', sum(sorted(b)[-40:]) / sum(b))
+    show('400 baskets: count above 200', sum(1 for x in b if x > 200))
+    # the typo: 212.60 typed as 2126.00 in the twelve
+    twelve = column('basket')
+    typo = [2126.00 if x == 212.60 else x for x in twelve]
+    show('twelve baskets with the typo: mean', mean(typo))
+    show('twelve baskets with the typo: median', median(typo))
+    show('twelve baskets: mean', mean(twelve))
 
 
 def main():

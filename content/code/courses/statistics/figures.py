@@ -539,6 +539,77 @@ def l03_items_frequency(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-salaries', 4)
+def l04_salaries(lang):
+    xs = S.SALARIES
+    m, md = S.mean(xs), S.median(xs)
+    t = {'en': dict(
+        label='Horta’s nine monthly salaries on a line from R$ 0 to R$ 30,000. Eight are '
+              'bunched between R$ 2,100 and R$ 3,400; the founder’s R$ 28,000 sits alone at the '
+              'right. The median, R$ 2,400, is among the eight. The mean, R$ 5,338.89, is in the '
+              'empty stretch where nobody is paid.',
+        axis='monthly pay, in thousands of reais', med='median 2,400', mean='mean 5,338.89',
+        founder='the founder', cap='Eight of the nine people earn less than the mean. The mean '
+        'sits where nobody is, pulled out by one value.'),
+        'pt': dict(
+        label='Os nove salários mensais da Horta numa reta de R$ 0 a R$ 30.000. Oito se amontoam '
+              'entre R$ 2.100 e R$ 3.400; os R$ 28.000 do fundador ficam sozinhos à direita. A '
+              'mediana, R$ 2.400, está entre os oito. A média, R$ 5.338,89, está no trecho vazio '
+              'onde ninguém recebe.',
+        axis='salário mensal, em milhares de reais', med='mediana 2.400', mean='média 5.338,89',
+        founder='o fundador', cap='Oito das nove pessoas ganham menos que a média. A média fica '
+        'onde não há ninguém, puxada por um valor.')}[lang]
+    f = Fig('l04-salaries', 660, 190, t['label'])
+    p = Plot(f, 40, 50, 620, 130, 0, 30000, 0, 1)
+    p.xaxis(range(0, 30001, 5000), fmt=lambda v: str(v // 1000), label=t['axis'])
+    placed = []
+    for x in sorted(xs):
+        level = sum(1 for q in placed if abs(p.sx(q) - p.sx(x)) < 11)
+        placed.append(x)
+        f.circle(p.sx(x), p.y1 - 10 - 12 * level, 5, fill='--phosphor', stroke='--paper', width=0.8)
+    p.vline(md, t['med'], stroke='--paper', dash=None, top=40, anchor='end', dy=-6)
+    p.vline(m, t['mean'], stroke='--amber', top=40, anchor='start', dy=-6)
+    f.text(p.sx(28000), p.y1 - 26, t['founder'], size=9.5, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l04-baskets-histogram', 4)
+def l04_baskets_histogram(lang):
+    xs = S.BASKETS
+    m, md = S.mean(xs), S.median(xs)
+    edges = list(range(0, 441, 20))
+    counts = histogram(xs, edges)
+    t = {'en': dict(
+        label=f'A histogram of 400 baskets in bins of R$ 20, from R$ 0 to R$ 440. The tallest '
+              f'bars are between R$ 40 and R$ 80, and a long thin tail runs right past R$ 400. '
+              f'The median, R$ {num("en", md, 2)}, sits in the bulk; the mean, '
+              f'R$ {num("en", m, 2)}, sits to its right.',
+        y='orders', x='basket, in reais', med=f'median {num("en", md, 2)}',
+        mean=f'mean {num("en", m, 2)}',
+        cap='A long tail to the right pulls the mean towards it. The median stays with the bulk '
+            'of the orders.'),
+        'pt': dict(
+        label=f'Um histograma de 400 cestas em faixas de R$ 20, de R$ 0 a R$ 440. As barras mais '
+              f'altas ficam entre R$ 40 e R$ 80, e uma cauda longa e fina corre para a direita '
+              f'além de R$ 400. A mediana, R$ {num("pt", md, 2)}, fica no grosso; a média, '
+              f'R$ {num("pt", m, 2)}, fica à direita dela.',
+        y='pedidos', x='cesta, em reais', med=f'mediana {num("pt", md, 2)}',
+        mean=f'média {num("pt", m, 2)}',
+        cap='Uma cauda longa à direita puxa a média para perto dela. A mediana fica com o grosso '
+            'dos pedidos.')}[lang]
+    f = Fig('l04-baskets-histogram', 660, 280, t['label'])
+    top = (max(counts) // 10 + 1) * 10
+    p = Plot(f, 70, 50, 630, 220, 0, 440, 0, top)
+    p.yaxis(range(0, top + 1, 20), label=t['y'])
+    p.bars(edges, counts)
+    p.xaxis(range(0, 441, 40), label=t['x'])
+    p.vline(md, t['med'], stroke='--paper', dash=None, top=40, anchor='end', dy=-4)
+    p.vline(m, t['mean'], stroke='--amber', top=40, anchor='start', dy=-4)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
