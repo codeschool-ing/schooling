@@ -19,6 +19,6 @@ Os atributos `name` desse formulário, `fullname` e `zip`, são o que o servidor
 
 ## Por que é mais que uma comodidade
 
-Para a maioria das pessoas o preenchimento automático economiza alguns segundos. Para quem tem uma deficiência motora, digitar é lento e cansativo, e para quem tem uma deficiência de memória ou de aprendizagem lembrar um endereço é a parte difícil; a WCAG tem um critério, *Identify Input Purpose*, que pede exatamente este atributo nos campos que coletam informações sobre o usuário. E para qualquer pessoa no celular ele é a diferença entre terminar um formulário e abandoná-lo.
+Para a maioria das pessoas o preenchimento automático economiza alguns segundos. Para quem tem uma deficiência motora, digitar é lento e cansativo, e para quem tem uma deficiência de memória ou de aprendizagem lembrar um endereço é a parte difícil. A WCAG tem um critério, *Identify Input Purpose*, que pede exatamente este atributo nos campos que coletam informações sobre o usuário. E para qualquer pessoa no celular ele é a diferença entre terminar um formulário e abandoná-lo.
 
 **`autocomplete="off"` é quase sempre ignorado em logins**, de propósito: os navegadores concluíram que bloquear gerenciadores de senha fazia as pessoas escolherem senhas piores. Para um campo em que um valor lembrado está de fato errado, um código de uso único ou uma caixa de busca, `off` continua sendo um pedido razoável.

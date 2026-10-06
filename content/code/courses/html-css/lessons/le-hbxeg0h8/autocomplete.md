@@ -19,6 +19,6 @@ The `name` attributes in that form, `fullname` and `zip`, are what the server re
 
 ## Why it is more than a convenience
 
-For most people autocomplete saves a few seconds. For somebody with a motor impairment typing is slow and tiring, and for somebody with a memory or learning disability recalling an address is the hard part; WCAG has a criterion, *Identify Input Purpose*, that asks for exactly this attribute on fields that collect information about the user. And for anyone on a phone it is the difference between finishing a form and leaving it.
+For most people autocomplete saves a few seconds. For somebody with a motor impairment typing is slow and tiring, and for somebody with a memory or learning disability recalling an address is the hard part. WCAG has a criterion, *Identify Input Purpose*, that asks for exactly this attribute on fields that collect information about the user. And for anyone on a phone it is the difference between finishing a form and leaving it.
 
 **`autocomplete="off"` is mostly ignored for logins**, on purpose: browsers decided that stopping password managers made people choose worse passwords. For a field where a remembered value is genuinely wrong, a one-time code or a search box, `off` is still a fair request.

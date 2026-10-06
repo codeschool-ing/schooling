@@ -48,4 +48,4 @@ p#status  color: rgb(0, 0, 0)
 const colours = { available: "text-green-700", soldOut: "text-red-700" };
 ```
 
-Esse é o bug de Tailwind mais comum de todos, e é invisível até alguém ver a cor errada. Quando uma classe está no elemento no painel Elements e não faz nada, confira se a folha tem regra para ela.
+É um bug comum de Tailwind, e é invisível até alguém ver a cor errada. Quando uma classe está no elemento no painel Elements e não faz nada, confira se a folha tem regra para ela.

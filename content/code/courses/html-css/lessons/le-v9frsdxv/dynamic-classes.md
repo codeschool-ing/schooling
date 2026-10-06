@@ -48,4 +48,4 @@ p#status  color: rgb(0, 0, 0)
 const colours = { available: "text-green-700", soldOut: "text-red-700" };
 ```
 
-That is the single most common Tailwind bug, and it is invisible until somebody sees the wrong colour. When a class is on the element in the Elements panel and does nothing, check whether the stylesheet has a rule for it.
+It is a common Tailwind bug, and it is invisible until somebody sees the wrong colour. When a class is on the element in the Elements panel and does nothing, check whether the stylesheet has a rule for it.
