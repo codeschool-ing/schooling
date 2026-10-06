@@ -3,9 +3,7 @@ title: Why an invented answer is a security problem
 version: 1
 ---
 
-A model generates the text that is likely to follow its input. Whether that text is true is not part
-of how it is produced, and so a model can state a policy that does not exist, cite a source nobody
-wrote or name a package nobody published, in exactly the tone it uses for facts. This is usually
+A model generates the text that is likely to follow its input. Whether that text is true is not part of how it is produced. So a model can state a policy that does not exist, cite a source nobody wrote or name a package nobody published, in exactly the tone it uses for facts. This is usually
 called **hallucination**. The common view is that it is a quality problem, an annoyance for users. Two
 cases show why that view is too small.
 

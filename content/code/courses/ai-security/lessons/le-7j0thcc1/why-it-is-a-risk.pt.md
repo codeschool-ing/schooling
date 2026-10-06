@@ -3,9 +3,7 @@ title: Por que uma resposta inventada é um problema de segurança
 version: 1
 ---
 
-Um modelo gera o texto que tende a seguir a entrada dele. Se esse texto é verdadeiro não faz parte de
-como ele é produzido, e por isso um modelo pode afirmar uma política que não existe, citar uma fonte que
-ninguém escreveu ou nomear um pacote que ninguém publicou, exatamente no tom que usa para fatos. Isso
+Um modelo gera o texto que tende a seguir a entrada dele. Se esse texto é verdadeiro não faz parte de como ele é produzido. Por isso um modelo pode afirmar uma política que não existe, citar uma fonte que ninguém escreveu ou nomear um pacote que ninguém publicou, exatamente no tom que usa para fatos. Isso
 costuma se chamar **alucinação**. A visão comum é que se trata de um problema de qualidade, um incômodo
 para os usuários. Dois casos mostram por que essa visão é pequena demais.
 
