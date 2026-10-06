@@ -1,0 +1,48 @@
+---
+title: "O que os 95% significam"
+version: 1
+---
+
+Esta é a leitura errada mais comum de toda a estatística. O intervalo da Horta vai de R$ 57,64 a R$ 107,13, e
+alguém diz: "há 95% de chance de a média verdadeira estar entre R$ 57,64 e R$ 107,13".
+
+Parece certo e, no quadro padrão que este curso usa, não é. A média verdadeira é um número fixo, R$ 82,78.
+Ela está nesse intervalo ou não está; neste intervalo, está. Nada nela é aleatório.
+
+O que é aleatório é o **intervalo**. Outra amostra dá outra média, outro erro padrão e outro intervalo.
+
+## Vinte amostras, vinte intervalos
+
+Tire 20 amostras aleatórias de 40 cestas e calcule um intervalo de 95% com cada uma:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 620 380\" role=\"img\" data-fig=\"l12-twenty\" aria-label=\"Vinte intervalos de confiança de 95% para a cesta média, um por amostra aleatória de 40, desenhados como barras horizontais, com uma linha vertical na média verdadeira, R$ 82,78. 19 das barras cruzam a linha; 1 erra, ficando inteira de um lado.\"><path d=\"M40.0 330.0 L590.0 330.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M40.0 330.0 L40.0 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"40.0\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">30</text><path d=\"M131.7 330.0 L131.7 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"131.7\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">50</text><path d=\"M223.3 330.0 L223.3 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"223.3\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">70</text><path d=\"M315.0 330.0 L315.0 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"315.0\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">90</text><path d=\"M406.7 330.0 L406.7 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"406.7\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">110</text><path d=\"M498.3 330.0 L498.3 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"498.3\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">130</text><path d=\"M590.0 330.0 L590.0 334.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"590.0\" y=\"343.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">150</text><text x=\"315.0\" y=\"361.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">cesta média, em reais</text><path d=\"M281.9 30.0 L281.9 330.0\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"281.9\" y=\"22.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">média verdadeira 82,78</text><path d=\"M218.4 50.0 L375.4 50.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"296.9\" cy=\"50.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M226.6 63.5 L381.3 63.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"303.9\" cy=\"63.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M135.7 77.0 L275.2 77.0\" stroke=\"var(--amber)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"205.4\" cy=\"77.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><text x=\"283.2\" y=\"77.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">erra</text><path d=\"M209.7 90.5 L394.4 90.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"302.0\" cy=\"90.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M194.8 104.0 L383.1 104.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"288.9\" cy=\"104.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M201.2 117.5 L315.7 117.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"258.4\" cy=\"117.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M178.8 131.0 L400.1 131.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"289.5\" cy=\"131.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M168.5 144.5 L320.3 144.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"244.4\" cy=\"144.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M214.0 158.0 L383.2 158.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"298.6\" cy=\"158.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M181.7 171.5 L332.8 171.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"257.3\" cy=\"171.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M187.7 185.0 L395.2 185.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"291.4\" cy=\"185.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M188.9 198.5 L304.6 198.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"246.8\" cy=\"198.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M152.4 212.0 L326.2 212.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"239.3\" cy=\"212.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M228.3 225.5 L393.9 225.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"311.1\" cy=\"225.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M166.3 239.0 L305.2 239.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"235.8\" cy=\"239.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M206.5 252.5 L352.4 252.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"279.4\" cy=\"252.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M214.6 266.0 L359.1 266.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"286.8\" cy=\"266.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M193.6 279.5 L363.9 279.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"278.8\" cy=\"279.5\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M227.7 293.0 L379.9 293.0\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"303.8\" cy=\"293.0\" r=\"2.6\" fill=\"var(--paper)\"></circle><path d=\"M210.3 306.5 L347.5 306.5\" stroke=\"var(--phosphor)\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"278.9\" cy=\"306.5\" r=\"2.6\" fill=\"var(--paper)\"></circle></svg>", "caption": "Cada amostra dá um intervalo diferente. O método pega a média verdadeira em cerca de 95% das vezes; um intervalo qualquer a contém ou não."}
+```
+
+Dezenove dos vinte intervalos contêm a média verdadeira, e um erra. Em 1.000 amostras, os intervalos
+contiveram a média verdadeira em **94,3%** das vezes: perto de 95%, e um pouco abaixo, porque para dados tão
+assimétricos quanto as cestas uma amostra de 40 não é grande o bastante para a aproximação normal ser
+exata.
+
+## A leitura correta
+
+Os 95% descrevem o **método**, não um intervalo específico:
+
+> Se você repetisse a amostragem muitas vezes e construísse um intervalo do mesmo jeito a cada vez, cerca de
+> 95% desses intervalos conteriam a média verdadeira.
+
+Para o intervalo que você tem, a formulação honesta é "temos 95% de confiança de que a média verdadeira está
+entre R$ 57,64 e R$ 107,13", em que "confiança" significa exatamente a frase acima. É uma afirmação sobre
+quantas vezes o procedimento funciona, aplicada a um resultado dele.
+
+## Por que a distinção não é preciosismo
+
+A leitura errada leva a conclusões erradas na prática. Dois intervalos que se sobrepõem às vezes são lidos
+como "as médias provavelmente são iguais", e dois que não se sobrepõem como "definitivamente diferentes".
+Nenhuma das duas coisas decorre. O intervalo é uma faixa de valores que os dados não conseguem descartar
+num certo nível de confiança, e mais nada; as aulas 13 e 14 tornam isso preciso com testes de hipótese e
+p-valores.
+
+Uma leitura prática que é segura: **o intervalo lista os valores da média verdadeira que são compatíveis
+com os dados**. Valores dentro são plausíveis; valores bem fora são difíceis de conciliar com o que se
+observou.

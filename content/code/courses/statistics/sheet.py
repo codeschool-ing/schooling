@@ -806,7 +806,89 @@ def l11():
     show('medians of samples of 30: mean, sd', f'{mean(meds):.4f} {sd(meds):.4f}')
 
 
+# The one sample lesson 12 works from: 40 baskets drawn at random from the 400.
+SAMPLE40 = Draw(1200).sample(BASKETS, 40)
+
+
+def t_interval(xs, level=0.95):
+    n, m, s_ = len(xs), mean(xs), sd(xs)
+    t = t_inv(1 - (1 - level) / 2, n - 1)
+    return m - t * s_ / math.sqrt(n), m + t * s_ / math.sqrt(n)
+
+
+@lesson(12)
+def l12():
+    x = SAMPLE40
+    n, m, s_ = len(x), mean(x), sd(x)
+    se = s_ / math.sqrt(n)
+    show('sample of 40: mean, sd, SE', f'{m:.4f} {s_:.4f} {se:.4f}')
+    show('z interval 95%', f'{m - 1.96 * se:.4f} {m + 1.96 * se:.4f}')
+    show('t(0.975, 39)', t_inv(0.975, 39))
+    lo, hi = t_interval(x)
+    show('t interval 95%', f'{lo:.4f} {hi:.4f}')
+    show('t interval 95% margin', (hi - lo) / 2)
+    show('true mean inside?', lo <= mean(BASKETS) <= hi)
+    lo90, hi90 = t_interval(x, 0.90)
+    lo99, hi99 = t_interval(x, 0.99)
+    show('90% interval', f'{lo90:.4f} {hi90:.4f}')
+    show('99% interval', f'{lo99:.4f} {hi99:.4f}')
+    show('z for 90, 95, 99', f'{normal_inv(0.95):.4f} {normal_inv(0.975):.4f} {normal_inv(0.995):.4f}')
+    # coverage: 20 samples for the figure, then 1000
+    d = Draw(1201)
+    twenty = [t_interval(d.sample(BASKETS, 40)) for _ in range(20)]
+    misses = [i for i, (a, b_) in enumerate(twenty) if not a <= mean(BASKETS) <= b_]
+    show('20 intervals: misses at', misses)
+    many = [t_interval(d.sample(BASKETS, 40)) for _ in range(1000)]
+    show('1000 intervals: share containing the true mean', sum(1 for a, b_ in many if a <= mean(BASKETS) <= b_) / 1000)
+    # small sample: Davi's eight deliveries
+    show('Davi: t(0.975, 7)', t_inv(0.975, 7))
+    lo, hi = t_interval(DAVI)
+    show('Davi: 95% t interval', f'{lo:.4f} {hi:.4f}')
+    show('Davi: margin', (hi - lo) / 2)
+    show('Davi: z-based margin (wrong for n = 8)', 1.96 * sd(DAVI) / math.sqrt(8))
+    for df in (2, 5, 10, 30, 100):
+        show(f't(0.975, {df})', t_inv(0.975, df))
+    # a proportion: 248 of 400 surveyed customers satisfied
+    k, nn = 248, 400
+    ph = k / nn
+    sep = math.sqrt(ph * (1 - ph) / nn)
+    show('survey: p-hat, SE', f'{ph:.4f} {sep:.4f}')
+    show('survey: 95% interval', f'{ph - 1.96 * sep:.4f} {ph + 1.96 * sep:.4f}')
+    show('survey: margin', 1.96 * sep)
+    # sample sizes
+    show('n for a margin of 3 points at p = 0.5', (1.96 ** 2) * 0.25 / 0.03 ** 2)
+    show('n for a margin of 5 points at p = 0.5', (1.96 ** 2) * 0.25 / 0.05 ** 2)
+    show('n for a margin of R$ 5 with s = 59', (1.96 * 59 / 5) ** 2)
+    show('n for a margin of R$ 10 with s = 59', (1.96 * 59 / 10) ** 2)
+
+
+def check():
+    """Compare the distributions written out above with SciPy's, where SciPy is installed."""
+    try:
+        from scipy import stats
+    except ImportError:
+        print('SciPy is not installed here, so the distributions were not compared')
+        return
+    worst = 0.0
+    for z in (-3, -1.96, -0.5, 0, 1.2, 2.58):
+        worst = max(worst, abs(normal_cdf(z) - stats.norm.cdf(z)))
+    for df in (1, 3, 7, 19, 39, 120):
+        for t in (-2.5, -1, 0.3, 2.0227, 4):
+            worst = max(worst, abs(t_cdf(t, df) - stats.t.cdf(t, df)))
+        worst = max(worst, abs(t_inv(0.975, df) - stats.t.ppf(0.975, df)))
+    for df in (1, 2, 4, 9):
+        for x in (0.5, 3.84, 9.49, 20):
+            worst = max(worst, abs(chi2_sf(x, df) - stats.chi2.sf(x, df)))
+    for d1, d2 in ((2, 27), (3, 116), (1, 10)):
+        for f in (0.5, 3.35, 12):
+            worst = max(worst, abs(f_sf(f, d1, d2) - stats.f.sf(f, d1, d2)))
+    print(f'largest difference from SciPy: {worst:.2e}')
+
+
 def main():
+    if sys.argv[1:] == ['check']:
+        check()
+        return
     picked = [int(a) for a in sys.argv[1:]] or sorted(SHEET)
     for n in picked:
         print(f'lesson {n}')

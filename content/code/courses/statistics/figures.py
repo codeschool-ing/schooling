@@ -1454,6 +1454,83 @@ def l11_shrink(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 12
+
+@figure('l12-twenty', 12)
+def l12_twenty(lang):
+    d = S.Draw(1201)
+    ivs = [S.t_interval(d.sample(S.BASKETS, 40)) for _ in range(20)]
+    mu = S.mean(S.BASKETS)
+    miss = sum(1 for a, b in ivs if not a <= mu <= b)
+    t = {'en': dict(
+        label=f'Twenty 95% confidence intervals for the mean basket, one per random sample of 40, '
+              f'drawn as horizontal bars, with a vertical line at the true mean, R$ 82.78. '
+              f'{20 - miss} of the bars cross the line; {miss} misses it, lying wholly to one side.',
+        x='mean basket, in reais', truth='true mean 82.78', miss='misses',
+        cap='Each sample gives a different interval. The method catches the true mean about 95% of '
+            'the time; any one interval either contains it or does not.'),
+        'pt': dict(
+        label=f'Vinte intervalos de confiança de 95% para a cesta média, um por amostra aleatória de '
+              f'40, desenhados como barras horizontais, com uma linha vertical na média verdadeira, '
+              f'R$ 82,78. {20 - miss} das barras cruzam a linha; {miss} erra, ficando inteira de um lado.',
+        x='cesta média, em reais', truth='média verdadeira 82,78', miss='erra',
+        cap='Cada amostra dá um intervalo diferente. O método pega a média verdadeira em cerca de 95% '
+            'das vezes; um intervalo qualquer a contém ou não.')}[lang]
+    f = Fig('l12-twenty', 620, 380, t['label'])
+    p = Plot(f, 40, 40, 590, 330, 30, 150, 0, 1)
+    p.xaxis(range(30, 151, 20), label=t['x'])
+    f.line(p.sx(mu), 30, p.sx(mu), p.y1, stroke='--paper', width=1.4)
+    f.text(p.sx(mu), 22, t['truth'], size=9.5)
+    for i, (a, b) in enumerate(ivs):
+        y = 50 + i * 13.5
+        hit = a <= mu <= b
+        col = '--phosphor' if hit else '--amber'
+        f.line(p.sx(a), y, p.sx(b), y, stroke=col, width=3, cap='round')
+        f.circle(p.sx((a + b) / 2), y, 2.6, fill='--paper')
+        if not hit:
+            f.text(p.sx(b) + 8, y, t['miss'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l12-t', 12)
+def l12_t(lang):
+    t = {'en': dict(
+        label='Three curves centred on zero. The normal curve is the tallest in the middle. The t '
+              'distribution with 7 degrees of freedom is a little lower in the middle with thicker '
+              'tails. With 2 degrees of freedom it is lower still, with much thicker tails. Marks '
+              'show where the middle 95% ends for each: 1.96 for the normal, 2.36 for 7 degrees of '
+              'freedom and 4.30 for 2.',
+        normal='normal: 1.96', t7='t, 7 degrees of freedom: 2.36', t2='t, 2 degrees of freedom: 4.30',
+        x='distance from the centre, in standard errors',
+        cap='With few observations, the standard deviation itself is uncertain, and the t '
+            'distribution widens the interval to pay for it. With many, it becomes the normal curve.'),
+        'pt': dict(
+        label='Três curvas centradas em zero. A curva normal é a mais alta no meio. A distribuição t '
+              'com 7 graus de liberdade é um pouco mais baixa no meio, com caudas mais grossas. Com 2 '
+              'graus de liberdade ela é ainda mais baixa, com caudas bem mais grossas. Marcas mostram '
+              'onde terminam os 95% centrais de cada uma: 1,96 para a normal, 2,36 para 7 graus de '
+              'liberdade e 4,30 para 2.',
+        normal='normal: 1,96', t7='t, 7 graus de liberdade: 2,36', t2='t, 2 graus de liberdade: 4,30',
+        x='distância do centro, em erros padrão',
+        cap='Com poucas observações, o próprio desvio padrão é incerto, e a distribuição t alarga o '
+            'intervalo para pagar por isso. Com muitas, ela vira a curva normal.')}[lang]
+    f = Fig('l12-t', 640, 290, t['label'])
+    p = Plot(f, 40, 40, 610, 230, -5, 5, 0, 0.42)
+    p.xaxis(range(-5, 6), fmt=lambda v: str(v).replace('-', '−'), label=t['x'])
+    p.curve(S.normal_pdf, -5, 5, stroke='--phosphor', width=2.2)
+    p.curve(lambda x: t_pdf(x, 7), -5, 5, stroke='--paper', width=1.8, dash='6 3')
+    p.curve(lambda x: t_pdf(x, 2), -5, 5, stroke='--amber', width=1.8, dash='2 3')
+    for v, col in ((1.96, '--phosphor'), (S.t_inv(0.975, 7), '--paper'), (S.t_inv(0.975, 2), '--amber')):
+        f.line(p.sx(v), p.y1, p.sx(v), p.y1 - 18, stroke=col, width=2)
+        f.line(p.sx(-v), p.y1, p.sx(-v), p.y1 - 18, stroke=col, width=2)
+    for i, (lab, col, dash) in enumerate(((t['normal'], '--phosphor', None), (t['t7'], '--paper', '6 3'),
+                                          (t['t2'], '--amber', '2 3'))):
+        y = 26 + i * 18
+        f.line(410, y, 432, y, stroke=col, width=2, dash=dash)
+        f.text(438, y, lab, size=9.5, anchor='start', fill=col if col != '--paper' else '--paper')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
