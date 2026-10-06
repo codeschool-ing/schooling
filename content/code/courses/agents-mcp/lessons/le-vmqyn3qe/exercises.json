@@ -1,0 +1,414 @@
+[
+  {
+    "id": "ex-xcn1d7e1",
+    "version": 1,
+    "section": "a-host-in-one-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does mcp_host.py name each tool server__tool?",
+    "choices": [
+      {
+        "text": "To keep same-named tools apart",
+        "correct": true,
+        "why": "Right. Two servers' tools with one name cannot collide: lesson 12's two get_order tools would get two names here."
+      },
+      {
+        "text": "Because the Messages API requires a double underscore in every tool name",
+        "correct": false,
+        "why": "Lesson 4's tools had none."
+      },
+      {
+        "text": "Because the servers send their tools named that way",
+        "correct": false,
+        "why": "The servers send get_order and refund; the host renames them."
+      },
+      {
+        "text": "To hide the server from the model",
+        "correct": false,
+        "why": "It does the opposite: the model sees which server."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft2sym9n",
+    "version": 1,
+    "section": "a-host-in-one-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does mcp_host.py skip asking a person before a call?",
+    "choices": [
+      {
+        "text": "When the model says the call is safe",
+        "correct": false,
+        "why": "The model's opinion is not consulted."
+      },
+      {
+        "text": "When the tool is read-only and its server's hints are trusted",
+        "correct": true,
+        "why": "Right. Only shop's tools qualify."
+      },
+      {
+        "text": "Always, for the first call of a run, and then for every call that follows the same tool",
+        "correct": false,
+        "why": "No such rule exists in the host."
+      },
+      {
+        "text": "When the server declares elicitation",
+        "correct": false,
+        "why": "Servers do not declare elicitation; clients do."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxd6jq03",
+    "version": 1,
+    "section": "one-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the model's tool list say about where each tool came from?",
+    "choices": [
+      {
+        "text": "Nothing; MCP tools look like any other",
+        "correct": false,
+        "why": "The names and descriptions said so."
+      },
+      {
+        "text": "Only the read-only hint",
+        "correct": false,
+        "why": "Hints were not sent to the model."
+      },
+      {
+        "text": "The server's address and process id, for each of the three server tools",
+        "correct": false,
+        "why": "Neither was sent."
+      },
+      {
+        "text": "The server's name",
+        "correct": true,
+        "why": "Right. In the tool name and in the description; read_help, the host's own, has no server label."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2bxs5nt",
+    "version": 1,
+    "section": "one-call",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tools did the host offer the model?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "tools"
+  },
+  {
+    "id": "ex-s3a7qqye",
+    "version": 1,
+    "section": "the-environment-is-a-list",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did search_help fail with the first, minimal ENV?",
+    "choices": [
+      {
+        "text": "Because labllm was down",
+        "correct": false,
+        "why": "No model call was involved in the failure."
+      },
+      {
+        "text": "Because PATH was missing",
+        "correct": false,
+        "why": "PATH was in the list."
+      },
+      {
+        "text": "MINILM_DIR was missing",
+        "correct": true,
+        "why": "Right. It finds the embedding model; without it, the module looked in a directory that does not exist here."
+      },
+      {
+        "text": "Because the help centre's forty articles were deleted when the lab was reset",
+        "correct": false,
+        "why": "help://h14 was read in the same run."
+      }
+    ]
+  },
+  {
+    "id": "ex-ftm39hv4",
+    "version": 1,
+    "section": "the-environment-is-a-list",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where was the reason for the search_help failure?",
+    "choices": [
+      {
+        "text": "In the tool result the model read",
+        "correct": false,
+        "why": "That said only 'Error executing tool search_help'."
+      },
+      {
+        "text": "In host.err, where the servers' standard error went",
+        "correct": true,
+        "why": "Right. A host that discards it discards the reason."
+      },
+      {
+        "text": "In host-audit.jsonl, which records the traceback of every failed call",
+        "correct": false,
+        "why": "The audit has is_error, not tracebacks."
+      },
+      {
+        "text": "In labllm's log",
+        "correct": false,
+        "why": "labllm saw only the model's requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgqsrkqn",
+    "version": 1,
+    "section": "the-host-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What stopped the model's request to read file:///home/ana/agents/data/shop.db?",
+    "choices": [
+      {
+        "text": "The shop server, which refused the URI",
+        "correct": false,
+        "why": "The request never reached a server."
+      },
+      {
+        "text": "The operating system's file permissions",
+        "correct": false,
+        "why": "ana can read that file."
+      },
+      {
+        "text": "The model, which changed its mind",
+        "correct": false,
+        "why": "The refusal came back as an error result."
+      },
+      {
+        "text": "The host's check that only help:// URIs are read",
+        "correct": true,
+        "why": "Right. Before any server was asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g9f1wa4",
+    "version": 1,
+    "section": "the-host-reads",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the scheme check belong in the host, although the shop server serves only help:// anyway?",
+    "choices": [
+      {
+        "text": "Because servers cannot refuse URIs",
+        "correct": false,
+        "why": "They can; this one would have."
+      },
+      {
+        "text": "Relying on the server means trusting every server with the same care",
+        "correct": true,
+        "why": "Right. The host is where the request becomes an action."
+      },
+      {
+        "text": "Because the check is faster in the host",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Because MCP forbids servers from reading files, so only hosts may touch the file system",
+        "correct": false,
+        "why": "MCP forbids nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrtw8r0g",
+    "version": 1,
+    "section": "two-owners-two-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the person asked twice about the approved refund?",
+    "choices": [
+      {
+        "text": "Because the first answer was lost",
+        "correct": false,
+        "why": "Both answers were read."
+      },
+      {
+        "text": "Because the model asked again",
+        "correct": false,
+        "why": "The model called refund once."
+      },
+      {
+        "text": "The host asked, then the server",
+        "correct": true,
+        "why": "Right. The host's policy first, then the server's own code: two rules with two owners."
+      },
+      {
+        "text": "Because MCP requires two confirmations for any tool whose annotations do not say read-only",
+        "correct": false,
+        "why": "No such requirement exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sa1dbn9",
+    "version": 1,
+    "section": "two-owners-two-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When the person answered n to the host, what did the refunds server see?",
+    "choices": [
+      {
+        "text": "Nothing; the call never reached it",
+        "correct": true,
+        "why": "Right. The model read the host's refusal."
+      },
+      {
+        "text": "A tools/call with approval set to false",
+        "correct": false,
+        "why": "approval is filled by the server's own question."
+      },
+      {
+        "text": "An input_required result",
+        "correct": false,
+        "why": "That is something a server sends, not receives."
+      },
+      {
+        "text": "A cancellation notice",
+        "correct": false,
+        "why": "Nothing was sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ekd15dw",
+    "version": 1,
+    "section": "the-audit-line",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines did host-audit.jsonl hold at the end of the lesson's runs?",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-f9bawqmt",
+    "version": 1,
+    "section": "the-audit-line",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the host's audit record that a server's own log could not? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "The declined refund",
+        "correct": true,
+        "why": "Right. It never reached the server."
+      },
+      {
+        "text": "The refused file:// URI",
+        "correct": true,
+        "why": "Right. No server was asked."
+      },
+      {
+        "text": "Calls to both servers, in one place",
+        "correct": true,
+        "why": "Right. Only the host sees every server."
+      },
+      {
+        "text": "The server's traceback",
+        "correct": false,
+        "why": "Tracebacks go to the server's standard error."
+      }
+    ]
+  },
+  {
+    "id": "ex-5f4y4ny3",
+    "version": 1,
+    "section": "what-the-library-did",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a server connected to mcp_host.py not ask the host's model to write text?",
+    "choices": [
+      {
+        "text": "Because labllm refuses requests from servers",
+        "correct": false,
+        "why": "Servers never reach labllm."
+      },
+      {
+        "text": "Because the server has no API key",
+        "correct": false,
+        "why": "Sampling does not use the server's key."
+      },
+      {
+        "text": "Because stdio cannot carry such requests",
+        "correct": false,
+        "why": "It is a matter of capabilities, not of transport."
+      },
+      {
+        "text": "The host gave its Client no sampling callback",
+        "correct": true,
+        "why": "Right. So the client does not declare sampling."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhyapjk1",
+    "version": 1,
+    "section": "what-the-library-did",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does input_required_max_rounds protect the host against?",
+    "choices": [
+      {
+        "text": "A server that keeps answering input_required, holding the call forever",
+        "correct": true,
+        "why": "Right. The loop stops after a fixed number of rounds."
+      },
+      {
+        "text": "A model that calls too many tools",
+        "correct": false,
+        "why": "That is MAX_STEPS, the host's own limit."
+      },
+      {
+        "text": "A person who answers too slowly",
+        "correct": false,
+        "why": "There is no timeout on the person in this host."
+      },
+      {
+        "text": "A tampered requestState",
+        "correct": false,
+        "why": "The server's seal handles that."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmxbn8g6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happened to the approved refund call in order.",
+    "items": [
+      "the model asks for refunds__refund",
+      "the host asks the person",
+      "the server answers input_required",
+      "server_asks puts its question to the person",
+      "the refund runs and the audit line is written"
+    ]
+  }
+]

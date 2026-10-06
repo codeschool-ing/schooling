@@ -1,0 +1,634 @@
+[
+  {
+    "id": "ex-1qfzamta",
+    "version": 1,
+    "section": "three-words",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What separates an agent from an assistant, in the sense this lesson uses?",
+    "hint": "Ask who decides what happens next.",
+    "choices": [
+      {
+        "text": "An agent runs on a larger and more capable model than an assistant does",
+        "correct": false,
+        "why": "Both can use the same model. The lab's assistant and agent call the same scripted-1."
+      },
+      {
+        "text": "The model chooses the next step, inside a loop",
+        "correct": true,
+        "why": "Right. The defining move is that the model decides what happens next, and keeps deciding until it answers."
+      },
+      {
+        "text": "Nobody has to read what it produces",
+        "correct": false,
+        "why": "That is not part of the definition, and an agent's mistakes cost more, because it acts on them."
+      },
+      {
+        "text": "It talks to customers directly",
+        "correct": false,
+        "why": "Who reads the output is a deployment choice. An assistant talking to a customer still chooses no steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyh7qr27",
+    "version": 1,
+    "section": "three-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly job reads yesterday's orders, and for every order delivered more than 30 days ago it closes the return window. It calls a model to word the email it sends. Which of the three is it?",
+    "choices": [
+      {
+        "text": "An agent, because a model takes part in what reaches the customer",
+        "correct": false,
+        "why": "A model in the pipeline does not make it an agent. The model never chooses which step comes next."
+      },
+      {
+        "text": "An assistant, because the model's part is to write text",
+        "correct": false,
+        "why": "An assistant's draft goes to a person who decides. Here nobody reads the email before it is sent."
+      },
+      {
+        "text": "Automation with a model call inside",
+        "correct": true,
+        "why": "Right. The programmer wrote the order of the steps; the model fills in one of them."
+      },
+      {
+        "text": "None of them: it starts by itself",
+        "correct": false,
+        "why": "How it starts does not matter. What matters is who decides the steps, and here the code does."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpp7p54y",
+    "version": 1,
+    "section": "three-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague asks whether a product is an agent. Which check settles it?",
+    "choices": [
+      {
+        "text": "Whether its documentation calls it one",
+        "correct": false,
+        "why": "Names are marketing. The lab's agent.py is forty lines and calls itself nothing."
+      },
+      {
+        "text": "Whether it has more than one tool",
+        "correct": false,
+        "why": "A loop with a single tool is an agent when the model decides when to call it and when to stop."
+      },
+      {
+        "text": "Whether the line that picks the next step reads the model's reply",
+        "correct": true,
+        "why": "Right. If the next step depends on what the model returned, the model is steering."
+      },
+      {
+        "text": "Whether it streams its answer",
+        "correct": false,
+        "why": "Streaming is how text arrives, and says nothing about who decides the steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-j93pf8yp",
+    "version": 1,
+    "section": "one-task-three-ways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`automation.py` was given `\"the book I bought last week\"` and stopped with `LookupError: no order the book I bought last week`. What does that show?",
+    "choices": [
+      {
+        "text": "The database is missing the order the customer placed last week",
+        "correct": false,
+        "why": "The database was never asked about last week. The program passed the whole sentence as an order id."
+      },
+      {
+        "text": "shop.py is broken and raises an error on valid input",
+        "correct": false,
+        "why": "The input is not a valid order id. get_order raised exactly what it says."
+      },
+      {
+        "text": "It handles only inputs its author foresaw",
+        "correct": true,
+        "why": "Right. The path expects an order id; a sentence is outside the path, and nothing in it chooses another one."
+      },
+      {
+        "text": "It should have retried",
+        "correct": false,
+        "why": "Retrying the same lookup with the same string gives the same error."
+      }
+    ]
+  },
+  {
+    "id": "ex-4q04n3gb",
+    "version": 1,
+    "section": "one-task-three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The assistant's draft ends with `[For the support team: I cannot see orders. Check the delivery date before sending this.]` Why is that line right?",
+    "choices": [
+      {
+        "text": "Because a model has to add a warning to everything it writes for a customer",
+        "correct": false,
+        "why": "A warning on everything is noise. This one names the single fact the draft could not check."
+      },
+      {
+        "text": "Because the 30 days in the draft were the model's guess and not the help centre's rule",
+        "correct": false,
+        "why": "The 30 days are in the help centre the assistant was given. The date is what it took on trust."
+      },
+      {
+        "text": "Because assistant.py sent the model no help-centre articles to work from",
+        "correct": false,
+        "why": "assistant.py puts all 40 articles in the system prompt. That is why its input was 2250 tokens."
+      },
+      {
+        "text": "The date came from Bia, unchecked",
+        "correct": true,
+        "why": "Right. The assistant had the help centre and the message, not the order. The person who acts is the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ztvpymz",
+    "version": 1,
+    "section": "one-task-three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked about M-1043, the agent searched for `tracking a parcel`. Asked about M-1042, it searched for `return a book`. What made the two searches different?",
+    "hint": "Look at what step 1 returned in each run.",
+    "choices": [
+      {
+        "text": "search_help picked the article to match the order's status",
+        "correct": false,
+        "why": "search_help only ranks articles against the query it is given. It never sees the order."
+      },
+      {
+        "text": "The model read get_order's result first",
+        "correct": true,
+        "why": "Right. `shipped` in one result and `delivered` in the other led to different next steps. That is the loop at work."
+      },
+      {
+        "text": "Two programs, one per question",
+        "correct": false,
+        "why": "Both runs were the same agent.py. Nothing in it mentions tracking or returns."
+      },
+      {
+        "text": "A missing help article",
+        "correct": false,
+        "why": "The agent never asked for one: it chose a different query before searching."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t75t4rv",
+    "version": 1,
+    "section": "who-holds-the-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the vocabulary this lesson borrows from Anthropic's article, what is a workflow?",
+    "choices": [
+      {
+        "text": "Any program that calls a model more than once to finish a task",
+        "correct": false,
+        "why": "Calling a model twice says nothing about who decides the order. An agent also calls it many times."
+      },
+      {
+        "text": "An agent that was handed a written plan of the steps to follow",
+        "correct": false,
+        "why": "A plan the model follows is still the model's choice of steps; a workflow's order is fixed in code."
+      },
+      {
+        "text": "The visual editor some vendors sell for building agents by dragging boxes",
+        "correct": false,
+        "why": "Some products use the word for that, but the distinction here is about who decides the path."
+      },
+      {
+        "text": "Steps joined by paths written in code",
+        "correct": true,
+        "why": "Right. The steps include model calls; the order of the steps is the programmer's."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bmavmkp",
+    "version": 1,
+    "section": "who-holds-the-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support tool asks the model to classify each message as `return`, `delivery` or `payment`, then runs a fixed procedure for each class. Where on the dial is it?",
+    "choices": [
+      {
+        "text": "A workflow with routing: one model choice among branches the programmer wrote",
+        "correct": true,
+        "why": "Right. The model chooses the branch once; the programmer wrote every branch and their order."
+      },
+      {
+        "text": "Fully an agent, since the model's output decides what runs",
+        "correct": false,
+        "why": "The model picks a branch once, and never sees a result or chooses again. That is far short of a loop."
+      },
+      {
+        "text": "Fully automation, since the procedures are code",
+        "correct": false,
+        "why": "The branch taken depends on the model's reading, so the model holds one decision."
+      },
+      {
+        "text": "An assistant, as a label is text",
+        "correct": false,
+        "why": "Nobody reads the label in this design. The procedure runs on it directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6n837zx",
+    "version": 1,
+    "section": "who-holds-the-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson describe autonomy as a dial rather than a yes-or-no?",
+    "choices": [
+      {
+        "text": "Because vendors grade their agent products on a scale from one to five",
+        "correct": false,
+        "why": "No such scale is used here. The dial is about how many decisions the model holds."
+      },
+      {
+        "text": "Because a model grows more or less sure of its answer from one reply to the next",
+        "correct": false,
+        "why": "Sureness is about the answer. The dial is about who chooses the steps."
+      },
+      {
+        "text": "Decisions are handed over one at a time",
+        "correct": true,
+        "why": "Right. Which branch, which tool, which arguments, when to stop: each one is the code's or the model's."
+      },
+      {
+        "text": "Agents learn to need less supervision",
+        "correct": false,
+        "why": "Nothing in agent.py learns between runs. Each run starts from the same code and an empty conversation."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnp7kqff",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who runs `shop.get_order` when the agent looks up M-1042?",
+    "choices": [
+      {
+        "text": "The model, on the provider's servers, with the order id it chose itself",
+        "correct": false,
+        "why": "The model sent back a block naming the tool and its arguments. It has no access to shop.db."
+      },
+      {
+        "text": "labllm, the stand-in provider, before it writes its reply",
+        "correct": false,
+        "why": "labllm returns text and tool_use blocks like any provider. It never touches the shop's data."
+      },
+      {
+        "text": "The Anthropic SDK, automatically, as soon as a tool_use block arrives",
+        "correct": false,
+        "why": "The SDK sends and receives. agent.py's RUN table is what calls the function."
+      },
+      {
+        "text": "agent.py, on ana's machine",
+        "correct": true,
+        "why": "Right. The host reads the request and calls the function. The model only asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpxj78f6",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The input tokens of the three requests for Bia's question were 180, 303 and 498. Why does each request carry more than the last?",
+    "choices": [
+      {
+        "text": "Each request resends the whole conversation, every earlier call and result included",
+        "correct": true,
+        "why": "Right. The conversation is the agent's state, and it travels in full every time."
+      },
+      {
+        "text": "The provider stores earlier steps and charges for the memory",
+        "correct": false,
+        "why": "The API keeps nothing between requests. Everything the model knows is in the request."
+      },
+      {
+        "text": "The tool definitions are added once more per step",
+        "correct": false,
+        "why": "They are sent each time, at the same size. They cannot explain the growth."
+      },
+      {
+        "text": "The system prompt grows",
+        "correct": false,
+        "why": "SYSTEM is a constant in agent.py. It is identical in all three requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyz4mqec",
+    "version": 1,
+    "section": "what-acting-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an agent's mistake more expensive than an assistant's, given the same model?",
+    "choices": [
+      {
+        "text": "Agents are billed at a higher rate per token by every provider",
+        "correct": false,
+        "why": "Providers price by model and token, not by how the program uses them."
+      },
+      {
+        "text": "It acts on the mistake before anyone reads it",
+        "correct": true,
+        "why": "Right. An assistant's wrong draft is read by somebody; an agent's wrong step becomes the input to the next one."
+      },
+      {
+        "text": "Its model makes more mistakes",
+        "correct": false,
+        "why": "Same model, same rate of mistakes. What differs is what happens after one."
+      },
+      {
+        "text": "None of its actions can be undone",
+        "correct": false,
+        "why": "Reading an order can be repeated freely. The point is that nobody checked before it acted."
+      }
+    ]
+  },
+  {
+    "id": "ex-kydm1xcq",
+    "version": 1,
+    "section": "what-acting-changes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these become your problem once a model chooses the steps? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The same question takes a different number of steps on different runs",
+        "correct": true,
+        "why": "Yes. The number of steps is decided at run time, by the model."
+      },
+      {
+        "text": "The cost of one answer is known only when it is finished",
+        "correct": true,
+        "why": "Yes. Each step resends the conversation, and the steps are not fixed in advance."
+      },
+      {
+        "text": "A tool is called with arguments nobody wrote",
+        "correct": true,
+        "why": "Yes. The arguments come from the model's reply."
+      },
+      {
+        "text": "The program needs a network connection to the database",
+        "correct": false,
+        "why": "No. shop.db is a local file, and the agent changes nothing about how it is reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-qshy3j98",
+    "version": 1,
+    "section": "what-acting-changes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague tests agent.py by running Bia's question once and checking the answer. Why is one run weak evidence?",
+    "choices": [
+      {
+        "text": "Because the answer should have been checked by a second model instead of a person",
+        "correct": false,
+        "why": "Lesson 18 measures over many runs, and one run is weak whoever reads it."
+      },
+      {
+        "text": "Because the help centre will have changed by the time the next run happens",
+        "correct": false,
+        "why": "The weakness is there even with the help centre frozen, as it is in the lab."
+      },
+      {
+        "text": "One run tests one path, and a real model picks again",
+        "correct": true,
+        "why": "Right. The path is chosen at run time, so a test covers many runs and many inputs, not one."
+      },
+      {
+        "text": "Real models never repeat an answer",
+        "correct": false,
+        "why": "Repeating is not the issue; a real model choosing a different path is."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h50hccj",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this course's lab, where do the model's replies come from?",
+    "choices": [
+      {
+        "text": "From Anthropic's API, reached through the key stored in /etc/agents.env",
+        "correct": false,
+        "why": "That key is the lab's own and opens nothing anywhere else. No provider is reached."
+      },
+      {
+        "text": "From a small language model that labllm runs on the same machine",
+        "correct": false,
+        "why": "labllm runs no language model at all. It reads rules."
+      },
+      {
+        "text": "From all-MiniLM-L6-v2, the embedding model the lab downloads",
+        "correct": false,
+        "why": "That model is real and runs here, but it turns text into vectors for search_help. It writes no replies."
+      },
+      {
+        "text": "From rules the course wrote",
+        "correct": true,
+        "why": "Right. labllm speaks the providers' wire formats and chooses each reply from the rules in lab/scripted."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvw90syn",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of what this course shows would change if labllm were replaced by a real provider?",
+    "choices": [
+      {
+        "text": "The words of the replies and which tools get called",
+        "correct": true,
+        "why": "Right. Those are the course's rules. The programs, tools and limits around them would stay as they are."
+      },
+      {
+        "text": "The SDK calls, written for labllm",
+        "correct": false,
+        "why": "They are the providers' own SDKs, unmodified. Only the base URL and the key point them at the lab."
+      },
+      {
+        "text": "The tool results, faked by the lab",
+        "correct": false,
+        "why": "The tool results are real: shop.py reads shop.db and runs the embedding model."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "labllm copies the wire, not the behaviour. A real model would choose its own steps and words."
+      }
+    ]
+  },
+  {
+    "id": "ex-kytg2x6q",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sudo bash lab.sh up` stops at once with `embeddings-vectors' lab is required beside this course`. What is wrong?",
+    "choices": [
+      {
+        "text": "The embeddings-vectors lab has to be built and running before this one starts",
+        "correct": false,
+        "why": "Nothing of that lab has to run. Two of its files and its model runner are read, nothing more."
+      },
+      {
+        "text": "Only one directory was copied over",
+        "correct": true,
+        "why": "Right. The lab takes minilm.py and the help centre from ../embeddings-vectors/lab."
+      },
+      {
+        "text": "The model failed its checksum",
+        "correct": false,
+        "why": "That fails later, in sha256sum, with a different message."
+      },
+      {
+        "text": "pip could not reach PyPI",
+        "correct": false,
+        "why": "pip runs after this check, and its failure prints pip's own error."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngndsjd3",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every program fails to connect to port 8600, and `/run/labllm.out` says the address is already in use. What do you check first?",
+    "choices": [
+      {
+        "text": "Whether the API key written in /etc/agents.env is still a valid one",
+        "correct": false,
+        "why": "A wrong key gets a 401 from labllm. Here labllm never started."
+      },
+      {
+        "text": "Whether a firewall rule is blocking traffic on the loopback interface",
+        "correct": false,
+        "why": "The error is from bind, on the server side. A firewall does not say the address is in use."
+      },
+      {
+        "text": "Which process holds 8600, with `ss -ltnp`",
+        "correct": true,
+        "why": "Right. Something else holds the port, for instance an earlier labllm that was never stopped."
+      },
+      {
+        "text": "Whether Python 3.11 is installed",
+        "correct": false,
+        "why": "labllm does not reach the point of binding a port without Python."
+      }
+    ]
+  },
+  {
+    "id": "ex-prcv4fhc",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each system to who decides its next step.",
+    "pairs": [
+      {
+        "left": "A cron job that archives old orders",
+        "right": "The programmer, beforehand"
+      },
+      {
+        "left": "A chat that drafts replies for the support team",
+        "right": "A person, after reading the answer"
+      },
+      {
+        "left": "A loop that looks up orders until it can answer",
+        "right": "The model, at every step"
+      }
+    ],
+    "right_distractors": [
+      "The customer, by choosing the words"
+    ]
+  },
+  {
+    "id": "ex-v8h5zpwt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests did agent.py send to the model to answer `Which ways can I pay?`",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-dvxpcjea",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one step of agent.py's loop in order.",
+    "items": [
+      "Send the conversation and the tool definitions to the model",
+      "Append the model's reply to the conversation",
+      "Run each tool the reply asks for",
+      "Append the tool results to the conversation"
+    ],
+    "trap": "Running a tool before appending the model's reply leaves a result answering a request the conversation does not contain, and the API refuses that order."
+  },
+  {
+    "id": "ex-wqrchzn9",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "agent.py stops when the reply's `stop_reason` is anything other than `___`, or after five steps.",
+    "blanks": [
+      {
+        "accept": [
+          "tool_use"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

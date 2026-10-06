@@ -1,0 +1,322 @@
+[
+ {
+  "id": "l06-orch-1",
+  "when": {
+   "system": "Marginalia's support orchestrator",
+   "task": [
+    "science fiction"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "ask_orders",
+    "input": {
+     "question": "Has order M-1043 shipped?"
+    }
+   },
+   {
+    "type": "tool_use",
+    "name": "ask_catalogue",
+    "input": {
+     "question": "Which science fiction books are in stock?"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-orch-2",
+  "when": {
+   "system": "Marginalia's support orchestrator",
+   "task": [
+    "science fiction"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Yes, order M-1043 has shipped; its tracking code is BR5512340003. For science fiction, we have The Time Machine (24.90) and The War of the Worlds (25.90), both by H. G. Wells, in stock."
+   }
+  ]
+ },
+ {
+  "id": "l06-orders-shipped-1",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "Has order M-1043 shipped?"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "get_order",
+    "input": {
+     "order_id": "M-1043"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-orders-shipped-2",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "Has order M-1043 shipped?"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Yes, M-1043 has shipped and is not delivered yet. Its tracking code is BR5512340003."
+   }
+  ]
+ },
+ {
+  "id": "l06-cat-1",
+  "when": {
+   "system": "Marginalia's catalogue specialist",
+   "task": [
+    "science fiction"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "find_books",
+    "input": {
+     "genre": "science fiction"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-cat-2",
+  "when": {
+   "system": "Marginalia's catalogue specialist",
+   "task": [
+    "science fiction"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "In stock: The Time Machine by H. G. Wells at 24.90 and The War of the Worlds by H. G. Wells at 25.90."
+   }
+  ]
+ },
+ {
+  "id": "l06-alone-1",
+  "when": {
+   "system": "working alone",
+   "task": [
+    "science fiction"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "get_order",
+    "input": {
+     "order_id": "M-1043"
+    }
+   },
+   {
+    "type": "tool_use",
+    "name": "find_books",
+    "input": {
+     "genre": "science fiction"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-alone-2",
+  "when": {
+   "system": "working alone",
+   "task": [
+    "science fiction"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Yes, order M-1043 has shipped; its tracking code is BR5512340003. For science fiction, we have The Time Machine (24.90) and The War of the Worlds (25.90), both by H. G. Wells, in stock."
+   }
+  ]
+ },
+ {
+  "id": "l06-triage",
+  "when": {
+   "system": "Marginalia's triage agent",
+   "task": [
+    "M-1046"
+   ]
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "transfer_to_orders",
+    "input": {}
+   }
+  ]
+ },
+ {
+  "id": "l06-handoff-1",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "M-1046"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "get_order",
+    "input": {
+     "order_id": "M-1046"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-handoff-2",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "M-1046"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "search_help",
+    "input": {
+     "query": "change an order before it is packed"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-handoff-3",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "M-1046"
+   ],
+   "step": 3
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "M-1046 still says Received, so it has not been packed yet. Until it says Packed you can still change the delivery address or remove an item from it."
+   }
+  ]
+ },
+ {
+  "id": "l06-tel-orch-1",
+  "when": {
+   "system": "Marginalia's support orchestrator",
+   "task": [
+    "both of my orders"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "ask_orders",
+    "input": {
+     "question": "Are orders M-1043 and M-1048 on their way?"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-tel-orch-2-evidence",
+  "when": {
+   "system": "Marginalia's support orchestrator",
+   "task": [
+    "both of my orders"
+   ],
+   "step": 2,
+   "last": [
+    "cancelled"
+   ]
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Only one of them. M-1043 has shipped (tracking BR5512340003), but M-1048 was cancelled, so nothing from it is on its way."
+   }
+  ]
+ },
+ {
+  "id": "l06-tel-orch-2",
+  "when": {
+   "system": "Marginalia's support orchestrator",
+   "task": [
+    "both of my orders"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Yes, both of your orders are on their way."
+   }
+  ]
+ },
+ {
+  "id": "l06-tel-orders-1",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "M-1043 and M-1048"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "get_order",
+    "input": {
+     "order_id": "M-1043"
+    }
+   },
+   {
+    "type": "tool_use",
+    "name": "get_order",
+    "input": {
+     "order_id": "M-1048"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l06-tel-orders-2",
+  "when": {
+   "system": "Marginalia's orders specialist",
+   "task": [
+    "M-1043 and M-1048"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Both orders are in the system and I found no problems with either."
+   }
+  ]
+ }
+]

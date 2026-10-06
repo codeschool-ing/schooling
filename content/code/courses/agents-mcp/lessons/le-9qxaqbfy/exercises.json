@@ -1,0 +1,598 @@
+[
+  {
+    "id": "ex-pvxpzrt2",
+    "version": 1,
+    "section": "claude-code-as-a-library",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the agent loop run when a program calls query() from the Claude Agent SDK?",
+    "choices": [
+      {
+        "text": "In a Claude Code subprocess the SDK starts",
+        "correct": true,
+        "why": "Right. The SDK ships the CLI and exchanges JSON lines with it."
+      },
+      {
+        "text": "On Anthropic's servers, as a hosted agent that the SDK calls over HTTPS",
+        "correct": false,
+        "why": "The CLI calls the model provider; the loop itself runs on this machine."
+      },
+      {
+        "text": "In a Python loop inside your own process, like lesson 8's Runner",
+        "correct": false,
+        "why": "That is the OpenAI SDK's design, not this one."
+      },
+      {
+        "text": "Inside labllm",
+        "correct": false,
+        "why": "labllm is the model provider; it decides nothing about the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wqv1k3j",
+    "version": 1,
+    "section": "claude-code-as-a-library",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first run's result said cost_usd=0.1370. What is that number?",
+    "choices": [
+      {
+        "text": "The amount labllm charged the lab's key",
+        "correct": false,
+        "why": "labllm charges nothing; the CLI computed the number."
+      },
+      {
+        "text": "The CLI's own estimate, not a bill",
+        "correct": true,
+        "why": "Right. It comes from the CLI's price table, guessed for a model it did not recognise; its size came from real token counts."
+      },
+      {
+        "text": "The price of the subprocess's CPU time",
+        "correct": false,
+        "why": "Compute time is not priced by the CLI."
+      },
+      {
+        "text": "A fixed fee for each query() call, whatever it sends",
+        "correct": false,
+        "why": "The later runs cost far less for the same answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-sce0tayj",
+    "version": 1,
+    "section": "tools-are-an-mcp-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What name did the model see for the get_order tool of the server called shop?",
+    "choices": [
+      {
+        "text": "shop.get_order",
+        "correct": false,
+        "why": "The separator is a double underscore, and there is a prefix."
+      },
+      {
+        "text": "get_order",
+        "correct": false,
+        "why": "The server's name is part of it."
+      },
+      {
+        "text": "mcp_shop_get_order_tool",
+        "correct": false,
+        "why": "The separators are doubled, and nothing follows the tool's name."
+      },
+      {
+        "text": "mcp__shop__get_order",
+        "correct": true,
+        "why": "Right. mcp, the server's name and the tool's name, joined by double underscores."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n9s0spc",
+    "version": 1,
+    "section": "tools-are-an-mcp-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the get_order handler in cs_tools.py use json.dumps itself?",
+    "choices": [
+      {
+        "text": "MCP content is text the tool writes itself",
+        "correct": true,
+        "why": "Right. A tool returns content blocks, so lesson 8's str() problem does not arise."
+      },
+      {
+        "text": "Because the CLI rejects dictionaries larger than one kilobyte",
+        "correct": false,
+        "why": "No such limit appears in the lesson."
+      },
+      {
+        "text": "To encrypt the order before it crosses the pipe",
+        "correct": false,
+        "why": "JSON is an encoding, not encryption."
+      },
+      {
+        "text": "Because the model only reads JSON",
+        "correct": false,
+        "why": "A model reads any text; JSON is chosen for clarity."
+      }
+    ]
+  },
+  {
+    "id": "ex-04138z67",
+    "version": 1,
+    "section": "what-it-sends",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tools did the first request of the default run offer?",
+    "value": 23,
+    "tolerance": 0,
+    "unit": "tools"
+  },
+  {
+    "id": "ex-j7p9kw29",
+    "version": 1,
+    "section": "what-it-sends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The run passed its own system_prompt and yet the request carried Bash, Edit and WebFetch. Why?",
+    "choices": [
+      {
+        "text": "Because the system prompt asked for them",
+        "correct": false,
+        "why": "SYSTEM names no such tools."
+      },
+      {
+        "text": "The tools option sets them, and it was left out",
+        "correct": true,
+        "why": "Right. tools=[] removed them; system_prompt only replaced the prompt."
+      },
+      {
+        "text": "Because allowed_tools listed them",
+        "correct": false,
+        "why": "allowed_tools listed two shop tools and decides approval, not existence."
+      },
+      {
+        "text": "Because labllm adds its own tools to every request",
+        "correct": false,
+        "why": "labllm logs what arrived; it adds nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-axcz9b38",
+    "version": 1,
+    "section": "what-it-sends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Besides cost, why does the lesson say to start the tool list from nothing?",
+    "choices": [
+      {
+        "text": "Because the CLI refuses to start with more than ten tools offered",
+        "correct": false,
+        "why": "It started with twenty-three."
+      },
+      {
+        "text": "Because built-in tools stop the shop's tools from working",
+        "correct": false,
+        "why": "The shop's tools worked in the default run."
+      },
+      {
+        "text": "A support agent was handed a shell it never needed",
+        "correct": true,
+        "why": "Right. Every offered tool is one the model is able to call; least privilege is lesson 17's subject."
+      },
+      {
+        "text": "Speed",
+        "correct": false,
+        "why": "Latency was nearly the same in both runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnrakse9",
+    "version": 1,
+    "section": "what-it-sends",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With tools=[], how many tokens did the first request carry in?",
+    "value": 399,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-7spj8k3k",
+    "version": 1,
+    "section": "claude-md-is-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With setting_sources not given, what happened to the CLAUDE.md in ~/agents?",
+    "choices": [
+      {
+        "text": "It was ignored, because the SDK reads no files unless asked",
+        "correct": false,
+        "why": "The grep found it in both requests."
+      },
+      {
+        "text": "It was sent in both requests",
+        "correct": true,
+        "why": "Right. Inside a reminder telling the model to follow it: leaving the option out loads every source."
+      },
+      {
+        "text": "It replaced the system prompt",
+        "correct": false,
+        "why": "SYSTEM was still there; the file went into the conversation."
+      },
+      {
+        "text": "The run failed with a settings error",
+        "correct": false,
+        "why": "The run answered normally."
+      }
+    ]
+  },
+  {
+    "id": "ex-edgwae4p",
+    "version": 1,
+    "section": "claude-md-is-read",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To keep a deployed agent from reading settings files and CLAUDE.md, pass ___=[] to ClaudeAgentOptions.",
+    "blanks": [
+      {
+        "accept": [
+          "setting_sources"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9a0rcega",
+    "version": 1,
+    "section": "allowed-is-not-available",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each option to what it decides.",
+    "pairs": [
+      {
+        "left": "tools",
+        "right": "which built-in tools exist in the session"
+      },
+      {
+        "left": "allowed_tools",
+        "right": "which calls run without asking anybody"
+      },
+      {
+        "left": "disallowed_tools",
+        "right": "which tools are removed and refused"
+      },
+      {
+        "left": "permission_mode",
+        "right": "who decides a call that is not allowed"
+      }
+    ],
+    "right_distractors": [
+      "which model answers"
+    ]
+  },
+  {
+    "id": "ex-f8ndedp8",
+    "version": 1,
+    "section": "allowed-is-not-available",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With no permission_mode, the refund run took over nine seconds. What was the CLI doing?",
+    "choices": [
+      {
+        "text": "Waiting for a person to type an answer",
+        "correct": false,
+        "why": "No callback was set in that run."
+      },
+      {
+        "text": "Running the refund and rolling it back",
+        "correct": false,
+        "why": "The refund never ran."
+      },
+      {
+        "text": "Retrying the agent's own request after a 404",
+        "correct": false,
+        "why": "The 404 was for the classifier's model, not the agent's request."
+      },
+      {
+        "text": "Asking a classifier, eleven times, whether the call was safe",
+        "correct": true,
+        "why": "Right. Auto mode sent the conversation to a classifier model; no verdict came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwyvrt9x",
+    "version": 1,
+    "section": "allowed-is-not-available",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The dontAsk refusal told the model it may reach the goal with other tools. Why did that not matter in cs_refund.py?",
+    "choices": [
+      {
+        "text": "Because the model was scripted to obey",
+        "correct": false,
+        "why": "The script is the lab's; the boundary has to hold for a real model."
+      },
+      {
+        "text": "tools=[] left no other tool to use",
+        "correct": true,
+        "why": "Right. The refusal holds because of what the session contains."
+      },
+      {
+        "text": "Because dontAsk also deletes the database's write permission",
+        "correct": false,
+        "why": "Permission modes do not touch files."
+      },
+      {
+        "text": "Because the message is not sent to the model",
+        "correct": false,
+        "why": "It was sent; the log shows it as the tool result."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4r5gn84",
+    "version": 1,
+    "section": "asking-a-person",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did can_use_tool never see the get_order calls?",
+    "choices": [
+      {
+        "text": "allowed_tools approved get_order first",
+        "correct": true,
+        "why": "Right. The SDK's warning says so: an allowed entry shadows the callback."
+      },
+      {
+        "text": "Because the model never called get_order in those runs",
+        "correct": false,
+        "why": "The warning is about every get_order call, whatever the model did."
+      },
+      {
+        "text": "Because callbacks only receive tools whose names start with refund",
+        "correct": false,
+        "why": "Callbacks receive any call that reaches them."
+      },
+      {
+        "text": "Because read-only tools skip the permission system",
+        "correct": false,
+        "why": "No tool is marked read-only in cs_tools.py."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7eb0asv",
+    "version": 1,
+    "section": "asking-a-person",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What can lesson 8's to_state() do that can_use_tool cannot?",
+    "choices": [
+      {
+        "text": "Show the person the call's arguments before anything runs",
+        "correct": false,
+        "why": "can_use_tool receives them too; ask_a_person printed them."
+      },
+      {
+        "text": "Deny with a message for the model",
+        "correct": false,
+        "why": "PermissionResultDeny carries a message."
+      },
+      {
+        "text": "Approve every future refund at once, from a single decision",
+        "correct": false,
+        "why": "Neither approves future calls; each is decided separately."
+      },
+      {
+        "text": "Wait for an answer given tomorrow, by another process",
+        "correct": true,
+        "why": "Right. can_use_tool answers while the run waits, in the same process."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdvb01eq",
+    "version": 1,
+    "section": "asking-a-person",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the approved run, how many cents did the refunds table hold for M-1047?",
+    "value": 3890,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-shrajsa6",
+    "version": 1,
+    "section": "hooks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the hooked run, why was nobody asked about the refund of 7780 cents?",
+    "choices": [
+      {
+        "text": "Because allowed_tools contained the refund tool",
+        "correct": false,
+        "why": "Only get_order was allowed."
+      },
+      {
+        "text": "The PreToolUse hook denied it before the permission rules ran",
+        "correct": true,
+        "why": "Right. The call never reached can_use_tool, so the n on standard input was never read."
+      },
+      {
+        "text": "Because the order had already been refunded in full",
+        "correct": false,
+        "why": "The hook refused on the amount, against LIMIT."
+      },
+      {
+        "text": "The model cancelled the call",
+        "correct": false,
+        "why": "The model asked; the hook answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmwzbyzs",
+    "version": 1,
+    "section": "hooks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the hook in cs_refund.py do? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Wrote an audit line for the refused refund",
+        "correct": true,
+        "why": "Right. It writes before it decides."
+      },
+      {
+        "text": "Wrote an audit line for the allowed get_order call",
+        "correct": true,
+        "why": "Right. A hook sees allowed calls too."
+      },
+      {
+        "text": "Asked a person before denying",
+        "correct": false,
+        "why": "It denied in code, with no person."
+      },
+      {
+        "text": "Changed the refund to 5000 cents and let it run",
+        "correct": false,
+        "why": "It denied the call; it did not rewrite it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4eve2pp2",
+    "version": 1,
+    "section": "limits-and-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the program see when the run hit max_turns=1?",
+    "choices": [
+      {
+        "text": "An error_max_turns result, then ResultError",
+        "correct": true,
+        "why": "Right. It reports in the stream and raises as well."
+      },
+      {
+        "text": "Only an exception, with no result message",
+        "correct": false,
+        "why": "The result came first."
+      },
+      {
+        "text": "A normal answer written from the tool result",
+        "correct": false,
+        "why": "No answer was written; the run stopped."
+      },
+      {
+        "text": "Nothing; the stream hung",
+        "correct": false,
+        "why": "The run ended in 378 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-59022737",
+    "version": 1,
+    "section": "limits-and-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With resume, why could the second message be answered?",
+    "choices": [
+      {
+        "text": "Because the CLI asked Bia which order she meant",
+        "correct": false,
+        "why": "That was the separate run's answer."
+      },
+      {
+        "text": "Because labllm remembered the earlier request",
+        "correct": false,
+        "why": "labllm keeps nothing between requests."
+      },
+      {
+        "text": "The first turn was sent again in the request",
+        "correct": true,
+        "why": "Right. The session's history travelled with it."
+      },
+      {
+        "text": "Because shop.py cached the order",
+        "correct": false,
+        "why": "A cache in shop.py would not tell the model which order was meant."
+      }
+    ]
+  },
+  {
+    "id": "ex-we3wadae",
+    "version": 1,
+    "section": "limits-and-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson treat ~/.claude/projects as a privacy question?",
+    "choices": [
+      {
+        "text": "Because the files are sent to Anthropic's servers at the end of every session",
+        "correct": false,
+        "why": "They stayed on this machine; the point is that they exist."
+      },
+      {
+        "text": "The CLI keeps every session there, customers' messages included",
+        "correct": true,
+        "why": "Right. Two of the three files held Bia's message."
+      },
+      {
+        "text": "Because they hold API keys",
+        "correct": false,
+        "why": "The lesson counts customer messages in them, not keys."
+      },
+      {
+        "text": "Because the files are world-readable by default",
+        "correct": false,
+        "why": "The lesson says nothing about their permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-awtrm5zm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the layers a refund call passed in this lesson in order, first to last.",
+    "hint": "The hook saw calls that nobody was asked about.",
+    "items": [
+      "the PreToolUse hook",
+      "the allowed_tools list",
+      "the permission mode",
+      "the can_use_tool callback"
+    ]
+  }
+]

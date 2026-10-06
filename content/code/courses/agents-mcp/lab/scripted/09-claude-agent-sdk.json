@@ -1,0 +1,215 @@
+[
+ {
+  "id": "l09-run-1",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1043"
+   ],
+   "not_last": [
+    "BR5512340003"
+   ]
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "mcp__shop__get_order",
+    "input": {
+     "order_id": "M-1043"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l09-run-2",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1043"
+   ],
+   "last": [
+    "BR5512340003"
+   ]
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it."
+   }
+  ]
+ },
+ {
+  "id": "l09-refund-1",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1047",
+    "arrived damaged"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "mcp__shop__refund",
+    "input": {
+     "order_id": "M-1047",
+     "cents": 3890,
+     "reason": "one copy arrived damaged"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l09-refund-all-1",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1047",
+    "whole order"
+   ],
+   "step": 1
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "mcp__shop__refund",
+    "input": {
+     "order_id": "M-1047",
+     "cents": 7780,
+     "reason": "customer asked for the whole order"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l09-refund-done",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1047"
+   ],
+   "step": 2,
+   "last": [
+    "\"refunded\": 3890"
+   ]
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Done: 38.90 has been refunded to your original payment for the damaged copy in order M-1047."
+   }
+  ]
+ },
+ {
+  "id": "l09-refund-not",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1047"
+   ],
+   "step": 2
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "I could not issue this refund myself; a colleague will review order M-1047 and reply to you by email."
+   }
+  ]
+ },
+ {
+  "id": "l09-mem-2a",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1042",
+    "return it"
+   ],
+   "not_last": [
+    "Returns are free"
+   ]
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "mcp__shop__search_help",
+    "input": {
+     "query": "return a book"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l09-mem-2b",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1042",
+    "return it"
+   ],
+   "last": [
+    "Returns are free"
+   ]
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Yes. M-1042 was delivered on 24 September, and books can be returned within 30 days of delivery, so until 24 October."
+   }
+  ]
+ },
+ {
+  "id": "l09-mem-1a",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1042"
+   ],
+   "not_last": [
+    "delivered_on"
+   ]
+  },
+  "reply": [
+   {
+    "type": "tool_use",
+    "name": "mcp__shop__get_order",
+    "input": {
+     "order_id": "M-1042"
+    }
+   }
+  ]
+ },
+ {
+  "id": "l09-mem-1b",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "M-1042"
+   ],
+   "last": [
+    "delivered_on"
+   ]
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Order M-1042 was delivered on 24 September 2026."
+   }
+  ]
+ },
+ {
+  "id": "l09-mem-none",
+  "when": {
+   "system": "in the Claude Agent SDK lesson",
+   "task": [
+    "return it"
+   ]
+  },
+  "reply": [
+   {
+    "type": "text",
+    "text": "Which order do you mean? Please send me its number, such as M-1042."
+   }
+  ]
+ }
+]

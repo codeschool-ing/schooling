@@ -1,0 +1,409 @@
+{
+  "ex-ahjd9zx2": {
+    "prompt": "Qual destes o modelo vê quando decide se chama o get_order?",
+    "choices": [
+      {
+        "text": "O código do shop.get_order",
+        "why": "A função nunca é enviada. O modelo vê só a definição."
+      },
+      {
+        "text": "O nome, a descrição e o esquema de entrada da ferramenta",
+        "why": "Certo. Esses três viajam em todo pedido, e são tudo o que o modelo tem."
+      },
+      {
+        "text": "Uma amostra de linhas do shop.db, para saber como é um pedido",
+        "why": "Nenhum dado é enviado até uma chamada ser feita e o resultado dela devolvido."
+      },
+      {
+        "text": "Nada até chamá-la",
+        "why": "As definições fazem parte de todo pedido, antes de qualquer chamada."
+      }
+    ]
+  },
+  "ex-rrznr8ng": {
+    "prompt": "Por que o tools.py lê a lista de gêneros do books.jsonl em vez de digitá-la no esquema?",
+    "choices": [
+      {
+        "text": "Porque enums de JSON Schema não podem ser escritos à mão",
+        "why": "Podem; o ponto é mantê-los verdadeiros."
+      },
+      {
+        "text": "Para deixar o esquema menor",
+        "why": "A lista tem o mesmo tamanho de qualquer jeito."
+      },
+      {
+        "text": "Para o enum não se desencontrar do catálogo",
+        "why": "Certo. Um gênero acrescentado aos livros passa a valer na hora, e uma lista digitada o recusaria em silêncio."
+      },
+      {
+        "text": "Porque o modelo insiste em ler arquivos de dados antes de chamar uma ferramenta",
+        "why": "O modelo lê só a definição; o arquivo é lido pelo hospedeiro quando o tools.py carrega."
+      }
+    ]
+  },
+  "ex-0rkkw3tm": {
+    "prompt": "A descrição do get_order diz o formato do id em palavras, e o esquema o impõe com um padrão. Por que os dois?",
+    "choices": [
+      {
+        "text": "Porque os fornecedores recusam um padrão a menos que a descrição o repita",
+        "why": "Nenhum fornecedor exige isso. Os dois fazem trabalhos diferentes."
+      },
+      {
+        "text": "A descrição previne o erro; o esquema o pega",
+        "why": "Certo. Uma ajuda o modelo a acertar; o outro é a verificação do hospedeiro quando ele erra."
+      },
+      {
+        "text": "Porque a descrição é mostrada ao cliente e o esquema não",
+        "why": "Nenhum dos dois é mostrado ao cliente."
+      },
+      {
+        "text": "Por redundância, caso um se perca no caminho",
+        "why": "Os dois viajam no mesmo pedido; nenhum se perde."
+      }
+    ]
+  },
+  "ex-cymz4fnn": {
+    "prompt": "Um colega acrescenta 'Só chame isto depois de o cliente confirmar' à descrição do issue_refund. O que há de errado em confiar nisso?",
+    "choices": [
+      {
+        "text": "Descrições com mais de uma frase são truncadas pelos fornecedores",
+        "why": "Descrições podem ter várias frases. O tamanho não é o problema."
+      },
+      {
+        "text": "O modelo vai se recusar a chamar a ferramenta",
+        "why": "Ele pode chamá-la ou não; essa incerteza é o problema."
+      },
+      {
+        "text": "Clientes conseguem ler descrições de ferramentas",
+        "why": "Não conseguem. A descrição vai para o fornecedor e para o rastro, não para o cliente."
+      },
+      {
+        "text": "É um pedido que o modelo é livre para ignorar; quem impõe é o código",
+        "why": "Certo. Uma regra que importa mora em código que o modelo não pode pular, que é o desenho da aula 17."
+      }
+    ]
+  },
+  "ex-a6dtbanb": {
+    "prompt": "Associe cada palavra-chave de esquema à chamada que ela recusa.",
+    "pairs": [
+      {
+        "left": "pattern",
+        "right": "order_id: \"1043\""
+      },
+      {
+        "left": "type",
+        "right": "max_results: \"five\""
+      },
+      {
+        "left": "additionalProperties: false",
+        "right": "verbose: true no get_order"
+      },
+      {
+        "left": "enum",
+        "right": "genre: \"poetry\""
+      }
+    ],
+    "right_distractors": [
+      "order_id: \"M-9999\""
+    ]
+  },
+  "ex-k82qmcsd": {
+    "prompt": "O get_order(\"M-9999\") passou no esquema e falhou na função. O que isso mostra?",
+    "choices": [
+      {
+        "text": "Um esquema confere forma, nunca fatos",
+        "why": "Certo. O M-9999 tem a forma certa; se ele existe é a função que diz."
+      },
+      {
+        "text": "Que o padrão ^M-[0-9]{4}$ está errado e deveria listar os ids reais",
+        "why": "Um padrão listando todo id seria uma cópia do banco dentro do esquema."
+      },
+      {
+        "text": "Que o validador foi pulado naquela chamada por engano",
+        "why": "O validador rodou e deixou passar; a função então levantou LookupError."
+      },
+      {
+        "text": "Que o shop.db está desatualizado",
+        "why": "O M-9999 nunca foi um pedido nos dados do laboratório."
+      }
+    ]
+  },
+  "ex-njz4eafv": {
+    "prompt": "Por que a aula diz que o modo estrito de um fornecedor não substitui a validação do hospedeiro?",
+    "choices": [
+      {
+        "text": "Porque o modo estrito deixa os pedidos lentos demais para um laço de agente",
+        "why": "Velocidade não é o argumento da aula."
+      },
+      {
+        "text": "Porque o modo estrito só existe nos modelos mais caros",
+        "why": "A disponibilidade varia; o argumento vale onde quer que exista."
+      },
+      {
+        "text": "Porque o modo estrito ignora a palavra-chave required",
+        "why": "Ele respeita required; os limites dele estão em outro lugar."
+      },
+      {
+        "text": "É uma promessa do fornecedor sobre parte do JSON Schema; a última recusa possível fica do nosso lado",
+        "why": "Certo. A decisão de rodar continua sendo do hospedeiro, que confere o que é verificável antes de rodar."
+      }
+    ]
+  },
+  "ex-cxma2rw6": {
+    "prompt": "Sem o portão, o que `find_books(max_results=\"five\")` teria feito?",
+    "choices": [
+      {
+        "text": "Devolvido cinco livros, já que o Python converte a palavra em número",
+        "why": "O Python não converte palavras em números."
+      },
+      {
+        "text": "Derrubado o hospedeiro com um TypeError no fatiamento",
+        "why": "Certo. stocked[:\"five\"] levanta TypeError: uma falha do hospedeiro em vez de um erro corrigível."
+      },
+      {
+        "text": "Devolvido todos os livros do gênero",
+        "why": "Uma string num fatiamento não quer dizer 'todos'; ela levanta erro."
+      },
+      {
+        "text": "Pedido ao modelo que repetisse a chamada",
+        "why": "Sem o portão nada pergunta ao modelo; a exceção se propaga."
+      }
+    ]
+  },
+  "ex-0xvcyznq": {
+    "prompt": "Quantos pedidos o agent.py mandou para responder 'Where is my order 1043?', contando a chamada recusada?",
+    "unit": "pedidos"
+  },
+  "ex-vx54md2d": {
+    "prompt": "O find_books recebeu um pedido de cinco mistérios e devolveu um. Por que esse é o comportamento certo?",
+    "choices": [
+      {
+        "text": "Porque o validador limitou o max_results a um",
+        "why": "O validador permite de 1 a 10. Cinco passou."
+      },
+      {
+        "text": "Porque o labllm cortou o resultado para economizar tokens",
+        "why": "O labllm nunca toca em resultados de ferramenta; ele só responde pedidos."
+      },
+      {
+        "text": "Só um está em estoque",
+        "why": "Certo. Dois dos três mistérios com preço estão esgotados. Uma resposta pequena e honesta vale mais que uma inflada."
+      },
+      {
+        "text": "Porque o catálogo só tem um mistério",
+        "why": "O books.jsonl tem mais mistérios; a Marginalia tem poucos em estoque."
+      }
+    ]
+  },
+  "ex-gtanqps9": {
+    "prompt": "O run_tool pega LookupError e ValueError e deixa as outras exceções passarem. Por que não pegar tudo?",
+    "choices": [
+      {
+        "text": "Uma pane transformada em resultado educado fica escondida atrás de uma conversa que parece normal",
+        "why": "Certo. Falhas esperadas viram resultados; um banco quebrado ou um bug têm de parar a execução com barulho."
+      },
+      {
+        "text": "Porque pegar toda exceção não é permitido em Python",
+        "why": "O Python permite `except Exception`; a escolha é deliberada."
+      },
+      {
+        "text": "Porque as outras exceções são longas demais para caber num resultado",
+        "why": "O tamanho não é o motivo; o que o modelo poderia fazer com elas é."
+      },
+      {
+        "text": "Para economizar tokens em cada resultado de erro devolvido",
+        "why": "Uma mensagem de erro custa um punhado de tokens de qualquer jeito."
+      }
+    ]
+  },
+  "ex-a3s6dsjc": {
+    "prompt": "Quais destes cabem numa mensagem de erro devolvida ao modelo? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Qual argumento falhou e a regra que ele quebrou",
+        "why": "Sim. É disso que o modelo precisa para corrigir a chamada."
+      },
+      {
+        "text": "O que daria certo, como a lista de ferramentas que existem",
+        "why": "Sim. Transforma um beco sem saída num próximo passo."
+      },
+      {
+        "text": "O stack trace, para o modelo ver onde o erro aconteceu",
+        "why": "Não. Um stack trace vaza caminhos e código, e o modelo não faz nada com números de linha."
+      },
+      {
+        "text": "O SQL que falhou",
+        "why": "Não. Consultas internas não cabem numa conversa que vai para um fornecedor e para rastros."
+      }
+    ]
+  },
+  "ex-tvq9q6vd": {
+    "prompt": "Depois de o get_order devolver `LookupError: no order M-9999`, o que o modelo fez?",
+    "choices": [
+      {
+        "text": "Tentou de novo com M-9998, o id mais próximo",
+        "why": "Ele não chutou nada; perguntou ao cliente."
+      },
+      {
+        "text": "Pediu ao cliente que conferisse o número",
+        "why": "Certo. Essa resposta foi escrita pelo curso, e é a cara de uma boa resposta."
+      },
+      {
+        "text": "Derrubou a execução com uma exceção que o hospedeiro imprimiu",
+        "why": "O run_tool transformou a exceção num resultado de erro; nada caiu."
+      },
+      {
+        "text": "Disse que o pedido tinha sido entregue",
+        "why": "Seria um fato que ninguém buscou."
+      }
+    ]
+  },
+  "ex-ry04pdcs": {
+    "prompt": "Um laço confere o `finish_reason` para decidir se roda ferramentas. Por que esse laço nunca roda as ferramentas do Gemini?",
+    "choices": [
+      {
+        "text": "Porque o Gemini não aceita chamadas de ferramenta pela API",
+        "why": "Aceita: o wires.py recebeu um function_call de volta."
+      },
+      {
+        "text": "Porque o Gemini devolve chamadas num pedido separado que o laço nunca faz",
+        "why": "A chamada vem na mesma resposta, entre as partes."
+      },
+      {
+        "text": "Uma resposta com chamada de função também termina com STOP",
+        "why": "Certo. O laço precisa procurar partes function_call em vez de confiar no motivo de término."
+      },
+      {
+        "text": "Porque finish_reason só existe na OpenAI",
+        "why": "O Gemini também tem finishReason; só não diz que uma ferramenta foi chamada."
+      }
+    ]
+  },
+  "ex-f6ammhq1": {
+    "prompt": "Na Chat Completions da OpenAI, de que tipo são os argumentos de uma chamada quando chegam?",
+    "choices": [
+      {
+        "text": "Um objeto JSON pronto para usar como dict em Python",
+        "why": "Eles chegam como string, que o programa precisa interpretar."
+      },
+      {
+        "text": "Uma string contendo JSON",
+        "why": "Certo. function.arguments é uma string, e de vez em quando um modelo produz uma que não se interpreta."
+      },
+      {
+        "text": "Uma lista de valores posicionais na ordem em que os parâmetros foram declarados",
+        "why": "Argumentos são nomeados, nunca posicionais, nos três protocolos."
+      },
+      {
+        "text": "Bytes de protocol buffer",
+        "why": "O protocolo é JSON."
+      }
+    ]
+  },
+  "ex-082j2mmq": {
+    "prompt": "Associe cada fornecedor ao jeito como um resultado de ferramenta volta ao modelo.",
+    "pairs": [
+      {
+        "left": "Anthropic Messages",
+        "right": "Um bloco tool_result com tool_use_id"
+      },
+      {
+        "left": "OpenAI Chat Completions",
+        "right": "Uma mensagem com role tool e tool_call_id"
+      },
+      {
+        "left": "Google Gemini",
+        "right": "Uma parte functionResponse com name e id"
+      }
+    ],
+    "right_distractors": [
+      "Um segundo prompt de sistema"
+    ]
+  },
+  "ex-z75qgf5n": {
+    "prompt": "Com `--drop-one`, o pedido seguinte falhou com 400. O que havia de errado nele?",
+    "choices": [
+      {
+        "text": "As duas chamadas deviam ter vindo em respostas separadas",
+        "why": "Duas chamadas numa resposta são permitidas; os resultados delas é que são o problema."
+      },
+      {
+        "text": "O primeiro resultado era grande demais",
+        "why": "O tamanho não foi a queixa. Faltava um resultado."
+      },
+      {
+        "text": "A resposta do modelo não foi anexada",
+        "why": "Foi; é por isso que a API conseguiu ver uma chamada sem resultado."
+      },
+      {
+        "text": "Um id de tool_use não tinha tool_result com aquele id na mensagem seguinte",
+        "why": "Certo. Toda chamada precisa do seu resultado; uma ferramenta que não pode rodar recebe um mesmo assim, marcado como erro."
+      }
+    ]
+  },
+  "ex-sagd1kdn": {
+    "prompt": "Um modelo pede, numa resposta, get_order(M-1043) e issue_refund no mesmo pedido. O que a aula sugere que o hospedeiro faça?",
+    "choices": [
+      {
+        "text": "Rodar os dois ao mesmo tempo, para ganhar tempo",
+        "why": "O reembolso seria decidido antes de voltar a consulta que o justifica."
+      },
+      {
+        "text": "Rodar a leitura, e segurar a escrita para um passo seguinte, uma de cada vez",
+        "why": "Certo. Leituras rodam juntas sem risco; escritas rodam uma de cada vez, depois do que as justifica."
+      },
+      {
+        "text": "Recusar a resposta inteira e encerrar a execução",
+        "why": "A leitura é útil; encerrar a execução a joga fora."
+      },
+      {
+        "text": "Rodar o reembolso primeiro, depois a consulta",
+        "why": "Essa é a ordem mais perigosa."
+      }
+    ]
+  },
+  "ex-rr0wjgzs": {
+    "prompt": "Quantos centavos foram reembolsados no total nas três chamadas de issue_refund da transcrição?",
+    "unit": "centavos"
+  },
+  "ex-gvq69v6j": {
+    "prompt": "Por que uma chave que o modelo inventa a cada chamada é inútil como chave de idempotência?",
+    "choices": [
+      {
+        "text": "Porque modelos escrevem chaves curtas demais",
+        "why": "Uma chave inventada longa tem o mesmo problema."
+      },
+      {
+        "text": "Porque chaves precisam ser números, e modelos tendem a escrever palavras",
+        "why": "O issue_refund aceita qualquer string de 8 caracteres ou mais."
+      },
+      {
+        "text": "Uma nova tentativa inventa uma chave nova, então parece outra intenção",
+        "why": "Certo. A chave tem de identificar a intenção e vir de algo que existe antes da execução, como o chamado."
+      },
+      {
+        "text": "Porque o fornecedor recusa chaves que não emitiu",
+        "why": "A chave é assunto do hospedeiro; o fornecedor nunca a vê como chave."
+      }
+    ]
+  },
+  "ex-yn7hg8aa": {
+    "prompt": "Ponha as verificações do portão na ordem em que o run_tool as aplica.",
+    "items": [
+      "O nome é de uma ferramenta que existe?",
+      "Os argumentos passam no esquema?",
+      "A função levanta um erro conhecido?",
+      "Devolver o resultado"
+    ]
+  },
+  "ex-tjhn9qxd": {
+    "prompt": "Na API da Anthropic, um tool_result que descreve uma falha carrega `___: true`.",
+    "blanks": [
+      {
+        "accept": [
+          "is_error"
+        ]
+      }
+    ]
+  }
+}

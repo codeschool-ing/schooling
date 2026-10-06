@@ -1,0 +1,407 @@
+[
+  {
+    "id": "ex-xn90sd1x",
+    "version": 1,
+    "section": "what-a-run-costs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many input tokens did the three requests of the uncached run carry in total?",
+    "value": 7440,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-18v15b38",
+    "version": 1,
+    "section": "what-a-run-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did each request carry about 2,350 tokens before any of the conversation?",
+    "choices": [
+      {
+        "text": "Because labllm pads every request",
+        "correct": false,
+        "why": "labllm counts what it receives."
+      },
+      {
+        "text": "The tools and the system prompt with the policies are sent every time",
+        "correct": true,
+        "why": "Right. The API keeps nothing between requests."
+      },
+      {
+        "text": "Because the model's answer is counted as input",
+        "correct": false,
+        "why": "The answer is output, 93 tokens in all."
+      },
+      {
+        "text": "Because of the cache",
+        "correct": false,
+        "why": "This run had no cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vr5f0ry",
+    "version": 1,
+    "section": "where-the-time-goes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did request 3 take about 3,200 ms when requests 1 and 2 took about 600?",
+    "choices": [
+      {
+        "text": "It carried the most input tokens",
+        "correct": false,
+        "why": "labllm spends no time on input; the difference was 41 tokens."
+      },
+      {
+        "text": "Because search_help ran during it",
+        "correct": false,
+        "why": "Tools run between requests, not during them."
+      },
+      {
+        "text": "Because the provider was overloaded and retried it once, without the program noticing",
+        "correct": false,
+        "why": "No retry happened in this run."
+      },
+      {
+        "text": "It wrote the 75-token answer",
+        "correct": true,
+        "why": "Right. 200 ms plus 75 × 40 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzp1ms83",
+    "version": 1,
+    "section": "where-the-time-goes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does streaming change for the person waiting?",
+    "choices": [
+      {
+        "text": "The total time, which falls by half",
+        "correct": false,
+        "why": "The work is the same; only when the first words appear changes."
+      },
+      {
+        "text": "When the first words appear",
+        "correct": true,
+        "why": "Right. After the time to first token, not after the whole answer."
+      },
+      {
+        "text": "The number of tokens",
+        "correct": false,
+        "why": "The same tokens are written."
+      },
+      {
+        "text": "The price per token, because streamed tokens are billed at a lower rate by most providers",
+        "correct": false,
+        "why": "Nothing in the lesson says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtt9j5yz",
+    "version": 1,
+    "section": "a-smaller-model",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many milliseconds did the whole run take with scripted-mini?",
+    "value": 1939,
+    "tolerance": 60,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-vsvcm4hh",
+    "version": 1,
+    "section": "a-smaller-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did switching to scripted-mini not change?",
+    "choices": [
+      {
+        "text": "The time to write the answer",
+        "correct": false,
+        "why": "It fell from 3,208 ms to 957."
+      },
+      {
+        "text": "The total time",
+        "correct": false,
+        "why": "It fell to 1,939 ms."
+      },
+      {
+        "text": "The tokens: 7,440 in and 93 out",
+        "correct": true,
+        "why": "Right. Speed changed; the shape of the bill did not."
+      },
+      {
+        "text": "The time per output token, which stays at 40 ms for every model of the lab",
+        "correct": false,
+        "why": "It is 10 ms for scripted-mini."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve0xd5gq",
+    "version": 1,
+    "section": "caching-the-prefix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the second cached run, what happened to the prefix on request 1?",
+    "choices": [
+      {
+        "text": "It was read from the cache, within its 300 seconds",
+        "correct": true,
+        "why": "Right. No write at all in that run."
+      },
+      {
+        "text": "It was written again",
+        "correct": false,
+        "why": "That was the first run."
+      },
+      {
+        "text": "It was left out of the request",
+        "correct": false,
+        "why": "The request still carries it; the provider bills it as a read."
+      },
+      {
+        "text": "It was ignored",
+        "correct": false,
+        "why": "It was read, 2,347 tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvzfch6w",
+    "version": 1,
+    "section": "caching-the-prefix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did --stamp make caching worse than no caching?",
+    "choices": [
+      {
+        "text": "Because timestamps are not allowed in system prompts",
+        "correct": false,
+        "why": "They are allowed; they change the prefix."
+      },
+      {
+        "text": "Because it made the prompt much longer, pushing it past the context window",
+        "correct": false,
+        "why": "It added a few tokens."
+      },
+      {
+        "text": "Because labllm forgets the cache when a run ends",
+        "correct": false,
+        "why": "The second cached run read it from the first."
+      },
+      {
+        "text": "The front of the prefix changed, so every request wrote it again",
+        "correct": true,
+        "why": "Right. 7,074 tokens written and none read; writes cost more than plain input."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3dnd4nf",
+    "version": 1,
+    "section": "caching-the-prefix",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a request in the order a provider's cache reads them, first to last.",
+    "hint": "A change near the front breaks everything after it.",
+    "items": [
+      "the tools",
+      "the system prompt",
+      "the messages"
+    ]
+  },
+  {
+    "id": "ex-1514y2d9",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the reply with max_tokens=8 come back as?",
+    "choices": [
+      {
+        "text": "An error, raised by the SDK",
+        "correct": false,
+        "why": "The request succeeded."
+      },
+      {
+        "text": "Half a sentence, with stop_reason max_tokens",
+        "correct": true,
+        "why": "Right. A program must check stop_reason."
+      },
+      {
+        "text": "The full answer, since the limit only applies to tool calls and not to text",
+        "correct": false,
+        "why": "It applies to every reply."
+      },
+      {
+        "text": "An empty reply",
+        "correct": false,
+        "why": "It held 8 tokens of text."
+      }
+    ]
+  },
+  {
+    "id": "ex-18f19s2b",
+    "version": 1,
+    "section": "limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A prompt longer than the model's window got HTTP status ___ before any work was done.",
+    "blanks": [
+      {
+        "accept": [
+          "400"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-14gvw2w6",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the call with two 529 failures succeed?",
+    "choices": [
+      {
+        "text": "Because labllm ignored the configuration",
+        "correct": false,
+        "why": "The log shows 529 529 200."
+      },
+      {
+        "text": "Because 529 is not an error",
+        "correct": false,
+        "why": "It is the status for an overloaded provider."
+      },
+      {
+        "text": "The SDK retried twice on its own",
+        "correct": true,
+        "why": "Right. With three failures it gave up and raised OverloadedError."
+      },
+      {
+        "text": "Because limits.py catches the error and calls again until the provider answers, without a limit",
+        "correct": false,
+        "why": "limits.py makes one call; the retries were the SDK's."
+      }
+    ]
+  },
+  {
+    "id": "ex-h962gzjy",
+    "version": 1,
+    "section": "a-budget-in-code",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong in an agent's own budget? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "A step limit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A token budget per run, summed from usage",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A time budget for the person waiting",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The provider's context window",
+        "correct": false,
+        "why": "That is the provider's limit, not the agent's."
+      }
+    ]
+  },
+  {
+    "id": "ex-50h60dtd",
+    "version": 1,
+    "section": "a-budget-in-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How should a run that hits its budget end?",
+    "choices": [
+      {
+        "text": "Silently, with whatever text the model had written so far",
+        "correct": false,
+        "why": "A limit that only truncates hides the problem it found."
+      },
+      {
+        "text": "By raising the budget and continuing until the model finishes the answer",
+        "correct": false,
+        "why": "Then it was not a budget."
+      },
+      {
+        "text": "With a reason, a message, and a handoff to a person",
+        "correct": true,
+        "why": "Right. Like lesson 7's stuck runs."
+      },
+      {
+        "text": "By retrying",
+        "correct": false,
+        "why": "A retry spends more of what ran out."
+      }
+    ]
+  },
+  {
+    "id": "ex-5r5akwjp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each limit to what came back to the program in this lesson.",
+    "pairs": [
+      {
+        "left": "max_tokens=8",
+        "right": "half a sentence, stop_reason max_tokens"
+      },
+      {
+        "left": "a prompt past the window",
+        "right": "HTTP 400 before any work"
+      },
+      {
+        "left": "three 529 answers in a row",
+        "right": "OverloadedError"
+      }
+    ],
+    "right_distractors": [
+      "an empty reply with status 200"
+    ]
+  },
+  {
+    "id": "ex-26yrytk8",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many tokens did the second cached run read from the cache, across its three requests?",
+    "value": 7041,
+    "tolerance": 0,
+    "unit": "tokens"
+  }
+]

@@ -1,0 +1,595 @@
+[
+  {
+    "id": "ex-5s71w372",
+    "version": 1,
+    "section": "agent-builder",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is the open-source library, as opposed to the hosted half?",
+    "choices": [
+      {
+        "text": "Agent Engine",
+        "correct": false,
+        "why": "That is the managed runtime on Google Cloud."
+      },
+      {
+        "text": "The Agent Development Kit",
+        "correct": true,
+        "why": "Right. google-adk on PyPI, which runs in this lab."
+      },
+      {
+        "text": "Vertex AI Agent Builder, the products for building and running agents on Google Cloud",
+        "correct": false,
+        "why": "That is the hosted side's name."
+      },
+      {
+        "text": "Cloud Run",
+        "correct": false,
+        "why": "Cloud Run is a service for running containers, one of the deploy targets."
+      }
+    ]
+  },
+  {
+    "id": "ex-1chjtr6q",
+    "version": 1,
+    "section": "agent-builder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `adk deploy --help` show about the relation between the two halves?",
+    "choices": [
+      {
+        "text": "That an ADK agent cannot run outside Google Cloud",
+        "correct": false,
+        "why": "One of the targets is a local Docker container."
+      },
+      {
+        "text": "That deploying rewrites the agent in another language",
+        "correct": false,
+        "why": "The same code is deployed."
+      },
+      {
+        "text": "The code written locally is what gets deployed, to Agent Engine, Cloud Run, GKE or Docker",
+        "correct": true,
+        "why": "Right. Where it runs is decided after it is written."
+      },
+      {
+        "text": "Nothing; it failed",
+        "correct": false,
+        "why": "It printed four deploy commands."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yhwpp3b",
+    "version": 1,
+    "section": "adk-in-one-screen",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How is a tool declared in the ADK?",
+    "choices": [
+      {
+        "text": "With a @function_tool decorator",
+        "correct": false,
+        "why": "That is lesson 8's SDK."
+      },
+      {
+        "text": "As an @tool inside an MCP server created in the process",
+        "correct": false,
+        "why": "That is lesson 9's SDK."
+      },
+      {
+        "text": "As a JSON file next to the agent",
+        "correct": false,
+        "why": "No file is involved; the function is read directly."
+      },
+      {
+        "text": "As a plain function in the agent's tools",
+        "correct": true,
+        "why": "Right. Its name, type hints and docstring become the declaration."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyn90jmz",
+    "version": 1,
+    "section": "adk-in-one-screen",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to the sessions of an InMemoryRunner when the process ends?",
+    "choices": [
+      {
+        "text": "They are written to sessions.db",
+        "correct": false,
+        "why": "Nothing is written to disk by the in-memory service."
+      },
+      {
+        "text": "They are gone",
+        "correct": true,
+        "why": "Right. They live in memory only."
+      },
+      {
+        "text": "They are uploaded to Agent Engine for safekeeping",
+        "correct": false,
+        "why": "Nothing is deployed or uploaded in this lab."
+      },
+      {
+        "text": "They are kept in ~/.claude/projects",
+        "correct": false,
+        "why": "That is where lesson 9's CLI kept its sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-chc3gm8k",
+    "version": 1,
+    "section": "what-it-sends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did the order reach the model as a tool result in the ADK run?",
+    "choices": [
+      {
+        "text": "As Python text made with str()",
+        "correct": false,
+        "why": "That was lesson 8's SDK."
+      },
+      {
+        "text": "As a JSON object in a functionResponse",
+        "correct": true,
+        "why": "Right. The Gemini API takes a structured value, and the dictionary went through."
+      },
+      {
+        "text": "As a CSV table written by the ADK so that the model reads fewer tokens",
+        "correct": false,
+        "why": "No table was written; the dictionary went as it was."
+      },
+      {
+        "text": "It did not; the ADK summarised it first",
+        "correct": false,
+        "why": "The whole order is in the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhtjqaft",
+    "version": 1,
+    "section": "what-it-sends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the ADK add to the agent's instruction?",
+    "choices": [
+      {
+        "text": "A list of every tool's full schema, repeated in prose",
+        "correct": false,
+        "why": "The schemas went in the tools field, not the instruction."
+      },
+      {
+        "text": "Today's date and the user's name",
+        "correct": false,
+        "why": "Neither was added."
+      },
+      {
+        "text": "A sentence giving the agent's internal name",
+        "correct": true,
+        "why": "Right. 'You are an agent. Your internal name is \"support\".'"
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The request shows a sentence after the instruction."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pdgs6kf",
+    "version": 1,
+    "section": "when-a-tool-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the ADK's defaults, what happened when get_order raised LookupError?",
+    "choices": [
+      {
+        "text": "The model was told 'try again' and asked once more",
+        "correct": false,
+        "why": "That is lesson 8's default; here nothing went back to the model."
+      },
+      {
+        "text": "The error came out of run_async and the run ended",
+        "correct": true,
+        "why": "Right. adk_run.py caught it; the ADK logged 174 lines on the way."
+      },
+      {
+        "text": "The ADK retried the tool three times before giving up and returning an empty result",
+        "correct": false,
+        "why": "No retry happened."
+      },
+      {
+        "text": "The tool returned None",
+        "correct": false,
+        "why": "It raised; nothing was returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6c7yrxf",
+    "version": 1,
+    "section": "when-a-tool-fails",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Agent argument whose return value becomes the result when a tool raises is `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "on_tool_error_callback"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k2tk55qx",
+    "version": 1,
+    "section": "when-a-tool-fails",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the ADK's default value of max_llm_calls in RunConfig?",
+    "value": 500,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-34h8vp19",
+    "version": 1,
+    "section": "a-person-confirms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When the model asked for refund with require_confirmation=True, what did the ADK do?",
+    "choices": [
+      {
+        "text": "Ran the refund and asked afterwards",
+        "correct": false,
+        "why": "Nothing ran until the answer came."
+      },
+      {
+        "text": "Kept the run open, blocked, until stdin had an answer",
+        "correct": false,
+        "why": "The run ended; the answer came in a new run."
+      },
+      {
+        "text": "Emitted adk_request_confirmation and ended the run",
+        "correct": true,
+        "why": "Right. The person's answer went back as a function response in a second run."
+      },
+      {
+        "text": "Asked the model whether the refund was safe",
+        "correct": false,
+        "why": "No model was asked during the wait: two requests in total."
+      }
+    ]
+  },
+  {
+    "id": "ex-d905q66b",
+    "version": 1,
+    "section": "a-person-confirms",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the declined refund run, how many requests did labllm log in total?",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-hptdqa69",
+    "version": 1,
+    "section": "a-person-confirms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why was nobody asked about the refund of 7780 cents?",
+    "choices": [
+      {
+        "text": "before_tool_callback returned a result, so the tool and its confirmation never ran",
+        "correct": true,
+        "why": "Right. A dictionary from the callback replaces the tool's result."
+      },
+      {
+        "text": "Because the customer withdrew the request",
+        "correct": false,
+        "why": "The model asked for it; the callback refused."
+      },
+      {
+        "text": "Because require_confirmation only applies below 5000 cents",
+        "correct": false,
+        "why": "The limit is in limit_refunds, not in the flag."
+      },
+      {
+        "text": "Because the y on standard input approved it automatically",
+        "correct": false,
+        "why": "The y was never read."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnffxqdc",
+    "version": 1,
+    "section": "a-person-confirms",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which features did ADK mark as experimental in the refund run? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Tool confirmation",
+        "correct": true,
+        "why": "Right. FeatureName.TOOL_CONFIRMATION."
+      },
+      {
+        "text": "JSON Schema for function declarations",
+        "correct": true,
+        "why": "Right. FeatureName.JSON_SCHEMA_FOR_FUNC_DECL."
+      },
+      {
+        "text": "InMemoryRunner",
+        "correct": false,
+        "why": "No warning named it."
+      },
+      {
+        "text": "before_tool_callback",
+        "correct": false,
+        "why": "No warning named it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynvjbttb",
+    "version": 1,
+    "section": "transfer-or-tool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the transfer, how did the specialist receive the triage agent's call?",
+    "choices": [
+      {
+        "text": "As its own earlier tool call",
+        "correct": false,
+        "why": "The ADK rewrote it so that it is not the specialist's own."
+      },
+      {
+        "text": "Not at all; transfers pass only the customer's message",
+        "correct": false,
+        "why": "The printed request holds more than that."
+      },
+      {
+        "text": "As a summary the triage agent wrote",
+        "correct": false,
+        "why": "No summary was written."
+      },
+      {
+        "text": "As quoted text in user messages beginning 'For context'",
+        "correct": true,
+        "why": "Right. The other agent's words arrive inside a user turn, between markers."
+      }
+    ]
+  },
+  {
+    "id": "ex-41fv369q",
+    "version": 1,
+    "section": "transfer-or-tool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Called through AgentTool, what did the specialist receive?",
+    "choices": [
+      {
+        "text": "The whole conversation so far, including the customer's original message",
+        "correct": false,
+        "why": "Only the request string crossed."
+      },
+      {
+        "text": "One message: the request the front desk wrote",
+        "correct": true,
+        "why": "Right. The boundary is what the caller writes."
+      },
+      {
+        "text": "The front desk's system instruction, with its tools",
+        "correct": false,
+        "why": "The specialist had its own instruction and its own tool."
+      },
+      {
+        "text": "The order, fetched in advance",
+        "correct": false,
+        "why": "The specialist fetched it with its own tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6zq2fxt",
+    "version": 1,
+    "section": "transfer-or-tool",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did the ADK's log line about context_cache_config warn of?",
+    "choices": [
+      {
+        "text": "That transfers lose the session",
+        "correct": false,
+        "why": "The session continued after the transfer."
+      },
+      {
+        "text": "That the cache stores customers' data unencrypted",
+        "correct": false,
+        "why": "The warning is about cost, not storage."
+      },
+      {
+        "text": "Each transfer changes the prompt's beginning, so a provider's cache cannot reuse it",
+        "correct": true,
+        "why": "Right. The instruction and tools swap at every transfer."
+      },
+      {
+        "text": "That transfer_to_agent is deprecated",
+        "correct": false,
+        "why": "Nothing in the line says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqxse3nv",
+    "version": 1,
+    "section": "workflows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did SequentialAgent print when it was created in ADK 2.11.0?",
+    "choices": [
+      {
+        "text": "That it is deprecated in favour of Workflow",
+        "correct": true,
+        "why": "Right. And that Workflow cannot yet be an LlmAgent's sub-agent."
+      },
+      {
+        "text": "That it needs at least two sub-agents to run",
+        "correct": false,
+        "why": "It was created with none and only warned about deprecation."
+      },
+      {
+        "text": "That it requires a Google Cloud project",
+        "correct": false,
+        "why": "Nothing in the warning mentions a project."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "A DeprecationWarning was printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-n57v648w",
+    "version": 1,
+    "section": "workflows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the Workflow run, what did the writer agent receive?",
+    "choices": [
+      {
+        "text": "The customer's question and the facts",
+        "correct": false,
+        "why": "The question was not passed on; only the function's output was."
+      },
+      {
+        "text": "The facts as JSON, and nothing else",
+        "correct": true,
+        "why": "Right. Each node receives only what the previous one produced."
+      },
+      {
+        "text": "A get_order tool, so that it could look the order up again before writing the reply",
+        "correct": false,
+        "why": "The writer had no tools."
+      },
+      {
+        "text": "The whole order record",
+        "correct": false,
+        "why": "find_facts kept three fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-26e6j1vf",
+    "version": 1,
+    "section": "three-libraries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each library to how a tool's result reached the model in this course.",
+    "pairs": [
+      {
+        "left": "OpenAI Agents SDK",
+        "right": "Python text made with str()"
+      },
+      {
+        "left": "Claude Agent SDK",
+        "right": "the text the tool wrote itself"
+      },
+      {
+        "left": "Google ADK",
+        "right": "a JSON object in a functionResponse"
+      }
+    ],
+    "right_distractors": [
+      "a CSV table"
+    ]
+  },
+  {
+    "id": "ex-jr0xgxq0",
+    "version": 1,
+    "section": "three-libraries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which library put a person's approval between two runs?",
+    "choices": [
+      {
+        "text": "The Claude Agent SDK, through can_use_tool",
+        "correct": false,
+        "why": "can_use_tool answers while the run waits."
+      },
+      {
+        "text": "None of the three",
+        "correct": false,
+        "why": "One of them did exactly that."
+      },
+      {
+        "text": "lesson 7's minagent, through its confirm callback",
+        "correct": false,
+        "why": "minagent's confirm is answered inside the loop."
+      },
+      {
+        "text": "The ADK",
+        "correct": true,
+        "why": "Right. require_confirmation ends the run; the answer comes in the next one."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dj4wp3n",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of the approved refund run in the order they appeared.",
+    "hint": "Nothing runs before the person answers.",
+    "items": [
+      "call refund",
+      "call adk_request_confirmation",
+      "the person answers y",
+      "result refund with refunded 3890",
+      "the model's reply"
+    ]
+  },
+  {
+    "id": "ex-a7y88e0c",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many lines did the ADK log to standard error when get_order raised with the default settings?",
+    "value": 174,
+    "tolerance": 0,
+    "unit": "lines"
+  }
+]

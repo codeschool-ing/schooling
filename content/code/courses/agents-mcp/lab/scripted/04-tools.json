@@ -1,0 +1,30 @@
+[
+ {"id": "l04-pattern-1", "when": {"system": "if a tool returns an error, read it", "task": ["order 1043"], "step": 1},
+  "reply": [{"type": "tool_use", "name": "get_order", "input": {"order_id": "1043"}}]},
+ {"id": "l04-pattern-2", "when": {"system": "if a tool returns an error, read it", "task": ["order 1043"], "step": 2, "last": ["does not match"]},
+  "reply": [{"type": "text", "text": "The id needs the M- prefix."}, {"type": "tool_use", "name": "get_order", "input": {"order_id": "M-1043"}}]},
+ {"id": "l04-pattern-3", "when": {"system": "if a tool returns an error, read it", "task": ["order 1043"], "step": 3},
+  "reply": [{"type": "text", "text": "Order M-1043 has shipped and is on its way, with tracking code BR5512340003. It has not been delivered yet."}]},
+
+ {"id": "l04-type-1", "when": {"system": "if a tool returns an error, read it", "task": ["mystery novels"], "step": 1},
+  "reply": [{"type": "tool_use", "name": "find_books", "input": {"genre": "mystery", "max_results": "five"}}]},
+ {"id": "l04-type-2", "when": {"system": "if a tool returns an error, read it", "task": ["mystery novels"], "step": 2, "last": ["not of type"]},
+  "reply": [{"type": "tool_use", "name": "find_books", "input": {"genre": "mystery", "max_results": 5}}]},
+ {"id": "l04-type-3", "when": {"system": "if a tool returns an error, read it", "task": ["mystery novels"], "step": 3},
+  "reply": [{"type": "text", "text": "Right now we have one mystery in stock: The Mysterious Affair at Styles by Agatha Christie, at 31.90."}]},
+
+ {"id": "l04-missing-1", "when": {"system": "if a tool returns an error, read it", "task": ["M-9999"], "step": 1},
+  "reply": [{"type": "tool_use", "name": "get_order", "input": {"order_id": "M-9999"}}]},
+ {"id": "l04-missing-2", "when": {"system": "if a tool returns an error, read it", "task": ["M-9999"], "step": 2},
+  "reply": [{"type": "text", "text": "I cannot find an order M-9999. Could you check the number in your confirmation email? It starts with M- and has four digits."}]},
+
+ {"id": "l04-parallel-1", "when": {"system": "if a tool returns an error, read it", "task": ["M-1043 and M-1048"], "step": 1},
+  "reply": [{"type": "text", "text": "I will look up both orders."},
+            {"type": "tool_use", "name": "get_order", "input": {"order_id": "M-1043"}},
+            {"type": "tool_use", "name": "get_order", "input": {"order_id": "M-1048"}}]},
+ {"id": "l04-parallel-2", "when": {"system": "if a tool returns an error, read it", "task": ["M-1043 and M-1048"], "step": 2},
+  "reply": [{"type": "text", "text": "M-1043 has shipped (tracking BR5512340003). M-1048 was cancelled, so nothing from it will arrive."}]},
+
+ {"id": "l04-wires", "when": {"task": ["Where is order M-1043?"], "step": 1},
+  "reply": [{"type": "tool_use", "name": "get_order", "input": {"order_id": "M-1043"}}]}
+]

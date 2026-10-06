@@ -1,0 +1,617 @@
+[
+  {
+    "id": "ex-v7qhyz72",
+    "version": 1,
+    "section": "the-skeleton",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this course write the loop by hand before using any SDK?",
+    "choices": [
+      {
+        "text": "Because SDKs are too unreliable to use in production systems",
+        "correct": false,
+        "why": "The lesson says they are worth using; the point is reading them."
+      },
+      {
+        "text": "So that every SDK's parts are recognisable",
+        "correct": true,
+        "why": "Right. Each SDK has a tool decorator, an adapter, a loop with limits, errors and a trace."
+      },
+      {
+        "text": "Because hand-written loops are always faster than the ones inside the SDKs",
+        "correct": false,
+        "why": "Speed is not the argument; understanding and changeability are."
+      },
+      {
+        "text": "Because the lab cannot install SDKs",
+        "correct": false,
+        "why": "The lab installs three agent SDKs, used in lessons 8 to 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6nw7y5b",
+    "version": 1,
+    "section": "tools-from-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `@tool` do with a function that has no docstring?",
+    "choices": [
+      {
+        "text": "Uses the function's name as the description",
+        "correct": false,
+        "why": "A name is not an explanation; minagent refuses rather than guess."
+      },
+      {
+        "text": "Asks the model to write a description the first time the tool is offered",
+        "correct": false,
+        "why": "Nothing asks a model anything at import time."
+      },
+      {
+        "text": "Raises ValueError",
+        "correct": true,
+        "why": "Right. The docstring is what the model reads, so a tool without one is refused when the code is written."
+      },
+      {
+        "text": "Leaves the description empty and carries on as if nothing was missing",
+        "correct": false,
+        "why": "An empty description makes the model guess what the tool is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx89eh0g",
+    "version": 1,
+    "section": "tools-from-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does marginalia.py give get_order's order_id a pattern?",
+    "choices": [
+      {
+        "text": "With Annotated[str, {\"pattern\": ...}] on its type",
+        "correct": true,
+        "why": "Right. schema_for merges the dict into the string's schema."
+      },
+      {
+        "text": "With a regular expression in the docstring that the decorator parses",
+        "correct": false,
+        "why": "The docstring becomes the description; nothing parses it."
+      },
+      {
+        "text": "With a Literal listing every order id in the database",
+        "correct": false,
+        "why": "That would copy the database into the schema, and go stale at the next order."
+      },
+      {
+        "text": "It does not; the function checks it",
+        "correct": false,
+        "why": "The pattern is in the schema, so the validator refuses M1047 before the function runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-btcrr1qz",
+    "version": 1,
+    "section": "tools-from-functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does schema_for refuse a `dict` parameter instead of mapping it to `{\"type\": \"object\"}`?",
+    "choices": [
+      {
+        "text": "Because JSON Schema has no object type",
+        "correct": false,
+        "why": "It has one; the problem is what an unconstrained object checks."
+      },
+      {
+        "text": "Because Python dictionaries cannot be sent as tool arguments over the wire",
+        "correct": false,
+        "why": "Tool arguments are JSON objects; a dict would travel fine."
+      },
+      {
+        "text": "Because the model would refuse to call a tool with a dict parameter",
+        "correct": false,
+        "why": "Models call such tools; that is part of the danger."
+      },
+      {
+        "text": "An object with no declared shape accepts anything",
+        "correct": true,
+        "why": "Right. Refusing at import time makes the author write a real schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccp4qszc",
+    "version": 1,
+    "section": "the-model-adapter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which class in minagent imports the anthropic SDK?",
+    "choices": [
+      {
+        "text": "Agent, since it sends the requests",
+        "correct": false,
+        "why": "Agent calls model.complete and never touches a provider's SDK."
+      },
+      {
+        "text": "Reply, since it parses the responses",
+        "correct": false,
+        "why": "Reply is a plain dataclass with no imports of its own."
+      },
+      {
+        "text": "Only AnthropicModel",
+        "correct": true,
+        "why": "Right. One class knows the wire, so swapping providers or faking the model touches nothing else."
+      },
+      {
+        "text": "Tool, since tool definitions are in Anthropic's shape",
+        "correct": false,
+        "why": "Tool builds a dict in that shape; it imports nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-8c5qmd2s",
+    "version": 1,
+    "section": "the-model-adapter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lesson admits the adapter seam is not perfectly clean. Why?",
+    "choices": [
+      {
+        "text": "The conversation inside Agent.run is kept in Anthropic's block format",
+        "correct": true,
+        "why": "Right. An OpenAI adapter would translate the conversation as well as the reply."
+      },
+      {
+        "text": "Because AnthropicModel catches exceptions that Agent should see",
+        "correct": false,
+        "why": "It catches nothing; exceptions propagate."
+      },
+      {
+        "text": "Because Reply has no field for the stop reason",
+        "correct": false,
+        "why": "Reply has stop."
+      },
+      {
+        "text": "Because tests have to use labllm",
+        "correct": false,
+        "why": "Tests use FakeModel and no labllm."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0awz3kq",
+    "version": 1,
+    "section": "the-loop",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of Agent.run to the lesson it comes from.",
+    "pairs": [
+      {
+        "left": "The conversation resent in full each step",
+        "right": "Lesson 1"
+      },
+      {
+        "left": "The repeat guard and the trace",
+        "right": "Lesson 3"
+      },
+      {
+        "left": "Validation and errors as results",
+        "right": "Lesson 4"
+      },
+      {
+        "left": "Budgets checked before the request",
+        "right": "Lesson 5"
+      }
+    ],
+    "right_distractors": [
+      "Lesson 9"
+    ]
+  },
+  {
+    "id": "ex-1ej5qgpq",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `failing` counter add that the step limit does not?",
+    "choices": [
+      {
+        "text": "It counts tokens spent on failed calls and adds them to the token budget",
+        "correct": false,
+        "why": "Tokens are counted by `used`; failing counts steps."
+      },
+      {
+        "text": "It retries failed calls automatically, up to three times each",
+        "correct": false,
+        "why": "Nothing in run retries a call; the model decides what to call next."
+      },
+      {
+        "text": "It ends a run stuck in errors long before the step limit",
+        "correct": true,
+        "why": "Right. Three steps in a row with only errors is a stuck model, whatever the limit allows."
+      },
+      {
+        "text": "It hides errors from the trace",
+        "correct": false,
+        "why": "Every error is recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayrgzpq5",
+    "version": 1,
+    "section": "every-failure-is-a-result",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the refund run, why did shop.refund never execute?",
+    "choices": [
+      {
+        "text": "Because the refund amount was larger than what was left to refund",
+        "correct": false,
+        "why": "3890 cents is less than the 7780 left on M-1047."
+      },
+      {
+        "text": "Because the schema refused the reason",
+        "correct": false,
+        "why": "The reason has no length rule in minagent's schema, and passed."
+      },
+      {
+        "text": "Because labllm blocked the call",
+        "correct": false,
+        "why": "labllm only returned the model's request; the host decided."
+      },
+      {
+        "text": "It is a write, and nobody confirmed it",
+        "correct": true,
+        "why": "Right. run.py passes no confirm callback, so call refuses every write."
+      }
+    ]
+  },
+  {
+    "id": "ex-5crmqv2b",
+    "version": 1,
+    "section": "every-failure-is-a-result",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does minagent refuse a repeated call with a message instead of stopping the run, as lesson 3 did?",
+    "choices": [
+      {
+        "text": "To give the model one chance to use the result it already has",
+        "correct": true,
+        "why": "Right. And if it keeps failing, the no-progress stop ends the run anyway."
+      },
+      {
+        "text": "Because stopping a run is not possible from inside call",
+        "correct": false,
+        "why": "call returns a value; run decides. Either design is possible."
+      },
+      {
+        "text": "Because repeated calls are always harmless and there is no reason to stop",
+        "correct": false,
+        "why": "A repeated write is anything but harmless; the guard catches it."
+      },
+      {
+        "text": "To save tokens",
+        "correct": false,
+        "why": "A refusal costs a request; the reason is recovery."
+      }
+    ]
+  },
+  {
+    "id": "ex-exgmf3p1",
+    "version": 1,
+    "section": "every-failure-is-a-result",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The stuck run's handoff said 'Nothing found yet.' Where does that sentence come from?",
+    "choices": [
+      {
+        "text": "From the model's last reply, which admitted it had found nothing",
+        "correct": false,
+        "why": "The model's last reply was a tool call; stop builds the handoff."
+      },
+      {
+        "text": "From the plan, which had no done steps",
+        "correct": false,
+        "why": "minagent keeps no plan."
+      },
+      {
+        "text": "From stop, because no call in the trace succeeded",
+        "correct": true,
+        "why": "Right. The handoff lists successful calls, and there were none."
+      },
+      {
+        "text": "From labllm's error message",
+        "correct": false,
+        "why": "labllm returned replies, not errors, in that run."
+      }
+    ]
+  },
+  {
+    "id": "ex-bthf2s02",
+    "version": 1,
+    "section": "retries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With labllm set to fail twice, how many requests answered 529 before the first 200 in the log?",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-9x807xna",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who retried the two failed requests?",
+    "choices": [
+      {
+        "text": "minagent's loop, which retries every failed step",
+        "correct": false,
+        "why": "Agent.run has no retry; the exception would have propagated."
+      },
+      {
+        "text": "The anthropic SDK, by default",
+        "correct": true,
+        "why": "Right. max_retries defaults to 2, with backoff, for 408, 409, 429 and 5xx."
+      },
+      {
+        "text": "labllm, which answers 200 after failing the configured number of times",
+        "correct": false,
+        "why": "labllm fails as told; something had to send the requests again."
+      },
+      {
+        "text": "ana, by hand",
+        "correct": false,
+        "why": "She ran the command once."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nqaxjye",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson advise against adding a retry loop in the agent on top of the SDK's retries?",
+    "choices": [
+      {
+        "text": "Because two layers multiply attempts, and a long outage is better served by a stopped outcome",
+        "correct": true,
+        "why": "Right. Three attempts in each of two layers is nine requests, and a customer waits through all of them."
+      },
+      {
+        "text": "Because the SDK refuses to be wrapped in another retry loop",
+        "correct": false,
+        "why": "Nothing in the SDK detects a wrapper."
+      },
+      {
+        "text": "Because a provider outage should be reported to the model as a tool result",
+        "correct": false,
+        "why": "An outage is not something the model can fix, so it is not a tool result."
+      },
+      {
+        "text": "Because retries are never useful",
+        "correct": false,
+        "why": "The SDK's retries are the recommended first layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-841x3q75",
+    "version": 1,
+    "section": "the-trace",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Dracula return run, how many input tokens did step 4's request carry?",
+    "value": 813,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-6qrn7eag",
+    "version": 1,
+    "section": "the-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Step 1's get_order took 0 ms. Why so fast?",
+    "choices": [
+      {
+        "text": "Because shop.db was cached in memory by an earlier run",
+        "correct": false,
+        "why": "The function never ran, cached or not."
+      },
+      {
+        "text": "Because labllm answered it instead of the host",
+        "correct": false,
+        "why": "Tools run in the host; labllm never runs a tool."
+      },
+      {
+        "text": "Because the trace rounds anything under a second down to zero",
+        "correct": false,
+        "why": "The trace records milliseconds; other steps show 1 ms and 1053 ms."
+      },
+      {
+        "text": "The schema refused M1047 first",
+        "correct": true,
+        "why": "Right. Validation is a microsecond's work, and no lookup happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-zq3g6hrb",
+    "version": 1,
+    "section": "the-trace",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fields does each line of trace.jsonl carry? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The model's time for the step",
+        "correct": true,
+        "why": "Yes: model_ms."
+      },
+      {
+        "text": "Each call's arguments and whether it failed",
+        "correct": true,
+        "why": "Yes: args and error, per call."
+      },
+      {
+        "text": "The start of each tool's result",
+        "correct": true,
+        "why": "Yes: the first 120 characters."
+      },
+      {
+        "text": "The full system prompt",
+        "correct": false,
+        "why": "No. The system prompt is the same in every step; the trace does not repeat it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc68yt5x",
+    "version": 1,
+    "section": "testing-without-a-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes it possible to test minagent's loop without any model?",
+    "choices": [
+      {
+        "text": "The loop only needs something with a complete method that returns a Reply",
+        "correct": true,
+        "why": "Right. FakeModel is eight lines that replay replies the test wrote."
+      },
+      {
+        "text": "labllm runs inside pytest during the tests",
+        "correct": false,
+        "why": "No labllm runs during the tests."
+      },
+      {
+        "text": "The anthropic SDK has a test mode that returns canned replies",
+        "correct": false,
+        "why": "The tests never construct the SDK."
+      },
+      {
+        "text": "The tests mock the network",
+        "correct": false,
+        "why": "Nothing is mocked; no network is involved at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsqxtaf9",
+    "version": 1,
+    "section": "testing-without-a-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What do fake-model tests prove, and what do they not?",
+    "choices": [
+      {
+        "text": "They prove the model answers correctly; they do not prove the tools work",
+        "correct": false,
+        "why": "It is the other way round: the tools and guards are what they test."
+      },
+      {
+        "text": "That the host is correct, not how well a real model uses it",
+        "correct": true,
+        "why": "Right. Evaluation runs over many real messages measure the second; lesson 18 builds them."
+      },
+      {
+        "text": "They prove everything an agent needs, so no other testing is required",
+        "correct": false,
+        "why": "They say nothing about a real model's choices."
+      },
+      {
+        "text": "They prove nothing, being fake",
+        "correct": false,
+        "why": "The host they test is real code, and the guarantees are real."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a20zhd8",
+    "version": 1,
+    "section": "what-the-frameworks-add",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does minagent lack that an agent SDK typically provides?",
+    "choices": [
+      {
+        "text": "A step limit",
+        "correct": false,
+        "why": "minagent has max_steps."
+      },
+      {
+        "text": "Schema validation of arguments",
+        "correct": false,
+        "why": "minagent validates every call."
+      },
+      {
+        "text": "A trace of each step",
+        "correct": false,
+        "why": "minagent writes trace.jsonl."
+      },
+      {
+        "text": "Sessions that keep a conversation between runs",
+        "correct": true,
+        "why": "Right. minagent's conversation lives for one run."
+      }
+    ]
+  },
+  {
+    "id": "ex-f968wfcz",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checks in Agent.call in order.",
+    "items": [
+      "Is the tool known?",
+      "Was this exact call already made?",
+      "Do the arguments pass the schema?",
+      "If it writes, did a person confirm?",
+      "Run it, catching only expected errors"
+    ]
+  },
+  {
+    "id": "ex-yj61ynr0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In minagent, a tool declared with `@tool(writes=___)` never runs without a confirmation.",
+    "blanks": [
+      {
+        "accept": [
+          "True"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

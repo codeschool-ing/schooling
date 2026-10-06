@@ -1,0 +1,36 @@
+[
+ {"id": "l05-gift-1", "when": {"system": "Keep a plan with update_plan", "task": ["nephew"], "step": 1},
+  "reply": [{"type": "tool_use", "name": "update_plan", "input": {"steps": [
+     {"step": "Look up order M-1045", "status": "todo"},
+     {"step": "Find adventure books in stock", "status": "todo"},
+     {"step": "Answer both questions", "status": "todo"}]}}]},
+ {"id": "l05-gift-2", "when": {"system": "Keep a plan with update_plan", "task": ["nephew"], "step": 2},
+  "reply": [{"type": "tool_use", "name": "get_order", "input": {"order_id": "M-1045"}}]},
+ {"id": "l05-gift-3", "when": {"system": "Keep a plan with update_plan", "task": ["nephew"], "step": 3},
+  "reply": [{"type": "tool_use", "name": "update_plan", "input": {"steps": [
+     {"step": "Look up order M-1045", "status": "done"},
+     {"step": "Find adventure books in stock", "status": "todo"},
+     {"step": "Answer both questions", "status": "todo"}]}},
+            {"type": "tool_use", "name": "find_books", "input": {"genre": "adventure"}}]},
+ {"id": "l05-gift-4", "when": {"system": "Keep a plan with update_plan", "task": ["nephew"], "step": 4},
+  "reply": [{"type": "tool_use", "name": "finish", "input": {
+     "answer": "Your order M-1045 is packed and will leave our warehouse soon; the tracking link comes by email when it ships. For a nephew who likes adventure, we have Moby-Dick by Herman Melville at 49.90 and The Count of Monte Cristo by Alexandre Dumas at 59.90 in stock.",
+     "sources": ["get_order M-1045", "find_books adventure"]}}]},
+
+ {"id": "l05-replan-1", "when": {"system": "Keep a plan with update_plan", "task": ["M-1049"], "step": 1},
+  "reply": [{"type": "tool_use", "name": "update_plan", "input": {"steps": [
+     {"step": "Look up order M-1049", "status": "todo"},
+     {"step": "Check the return window", "status": "todo"},
+     {"step": "Answer", "status": "todo"}]}}]},
+ {"id": "l05-replan-2", "when": {"system": "Keep a plan with update_plan", "task": ["M-1049"], "step": 2},
+  "reply": [{"type": "tool_use", "name": "get_order", "input": {"order_id": "M-1049"}}]},
+ {"id": "l05-replan-3", "when": {"system": "Keep a plan with update_plan", "task": ["M-1049"], "step": 3, "last": ["no order M-1049"]},
+  "reply": [{"type": "tool_use", "name": "update_plan", "input": {"steps": [
+     {"step": "Look up order M-1049", "status": "done"},
+     {"step": "Check the return window", "status": "dropped"},
+     {"step": "Ask the customer for the order number", "status": "todo"}]}}]},
+ {"id": "l05-replan-4", "when": {"system": "Keep a plan with update_plan", "task": ["M-1049"], "step": 4},
+  "reply": [{"type": "tool_use", "name": "finish", "input": {
+     "answer": "I cannot find an order M-1049, so I cannot check its return window yet. Could you send the order number from your confirmation email? It starts with M- and has four digits.",
+     "sources": ["get_order M-1049"]}}]}
+]
