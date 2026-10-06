@@ -1,0 +1,484 @@
+[
+  {
+    "id": "ex-x6d64byk",
+    "version": 1,
+    "section": "image-names",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `alpine:3.22` short for?",
+    "hint": "Two parts are filled in by default.",
+    "choices": [
+      {
+        "text": "`alpine.io/alpine:3.22`",
+        "correct": false,
+        "why": "There is no registry per image; the default registry is Docker Hub."
+      },
+      {
+        "text": "`docker.io/library/alpine:3.22`",
+        "correct": true,
+        "why": "Right: Docker Hub, the official images' namespace, the repository and the tag."
+      },
+      {
+        "text": "`localhost/alpine:3.22`, the local machine",
+        "correct": false,
+        "why": "A name with no registry means Docker Hub, not the local machine."
+      },
+      {
+        "text": "`docker.io/alpine/alpine:latest`",
+        "correct": false,
+        "why": "The namespace is `library`, and the tag given was `3.22`."
+      }
+    ]
+  },
+  {
+    "id": "ex-05mhckgp",
+    "version": 1,
+    "section": "image-names",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An image name with no tag, such as `alpine`, means the tag `___`.",
+    "hint": "Lesson 16 is about it.",
+    "blanks": [
+      {
+        "accept": [
+          "latest"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sdce590e",
+    "version": 1,
+    "section": "image-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's deployment names `alpine:3.22`. Who decides when the bytes it runs change?",
+    "hint": "Who can push to the repository?",
+    "choices": [
+      {
+        "text": "Nobody; a tag with a version number is fixed",
+        "correct": false,
+        "why": "A tag is a label, and it moves to every new 3.22 build."
+      },
+      {
+        "text": "Ana, because she wrote the version",
+        "correct": false,
+        "why": "She chose the line; Alpine chooses which build it points at."
+      },
+      {
+        "text": "The publisher, within 3.22",
+        "correct": true,
+        "why": "Right. Only a digest would leave the decision with Ana."
+      },
+      {
+        "text": "Docker, which updates images every night",
+        "correct": false,
+        "why": "Docker updates nothing on its own; a pull fetches whatever the tag points at then."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgcw0hr6",
+    "version": 1,
+    "section": "image-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker image inspect` gave the same `Id` for `alpine:3.22` and for its full name. What is that id?",
+    "hint": "Lesson 3 found the same hash.",
+    "choices": [
+      {
+        "text": "A number Docker assigns when it pulls",
+        "correct": false,
+        "why": "It is computed from the content, so every machine gets the same one."
+      },
+      {
+        "text": "A hash of the name `alpine:3.22`",
+        "correct": false,
+        "why": "Names do not enter the hash; two names gave the same id."
+      },
+      {
+        "text": "The id of the newest layer only",
+        "correct": false,
+        "why": "A layer has its own digest; this one names the whole image."
+      },
+      {
+        "text": "The digest of the image's index",
+        "correct": true,
+        "why": "Right, the same `sha256:5291…` as in `RepoDigests`."
+      }
+    ]
+  },
+  {
+    "id": "ex-znmv5ye0",
+    "version": 1,
+    "section": "image-names",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `docker.io/library/alpine:3.22` to what it is.",
+    "hint": "Left to right: server, account, image, version.",
+    "pairs": [
+      {
+        "left": "`docker.io`",
+        "right": "The registry"
+      },
+      {
+        "left": "`library`",
+        "right": "The namespace"
+      },
+      {
+        "left": "`alpine`",
+        "right": "The repository"
+      },
+      {
+        "left": "`3.22`",
+        "right": "The tag"
+      }
+    ],
+    "right_distractors": [
+      "The digest"
+    ]
+  },
+  {
+    "id": "ex-q8a7v7r2",
+    "version": 1,
+    "section": "a-registry-of-your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `docker tag shelf:1.0.0 localhost:5000/shelf:1.0.0` do?",
+    "hint": "Compare the ids afterwards.",
+    "choices": [
+      {
+        "text": "Gave the same image a second name",
+        "correct": true,
+        "why": "Right, a name that says which registry to push to."
+      },
+      {
+        "text": "Copied the image, doubling the disk it uses",
+        "correct": false,
+        "why": "Both names showed the same id; nothing was copied."
+      },
+      {
+        "text": "Sent the image to the registry",
+        "correct": false,
+        "why": "Sending is `docker push`, which came later."
+      },
+      {
+        "text": "Renamed the image, so `shelf:1.0.0` was gone",
+        "correct": false,
+        "why": "The listing still showed `shelf:1.0.0`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjnvnbd5",
+    "version": 1,
+    "section": "a-registry-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana pass the password with `--password-stdin` rather than `-p lab-only`?",
+    "hint": "Where else would a command-line argument be visible?",
+    "choices": [
+      {
+        "text": "`-p` is not accepted by `docker login`",
+        "correct": false,
+        "why": "It is accepted, with a warning about exactly this."
+      },
+      {
+        "text": "So it never lands in shell history or the process list",
+        "correct": true,
+        "why": "Right. An argument is visible to anyone listing processes."
+      },
+      {
+        "text": "Standard input is encrypted on the way to the registry",
+        "correct": false,
+        "why": "Encryption on the wire is TLS, whichever way the password was typed."
+      },
+      {
+        "text": "It makes the login last longer",
+        "correct": false,
+        "why": "How the password is given changes nothing about how long it holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-307hg7cp",
+    "version": 1,
+    "section": "a-registry-of-your-own",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `docker login`, `~/.docker/config.json` held `\"auth\": \"YW5hOmxhYi1vbmx5\"`. How protected is that?",
+    "hint": "What did one `base64 -d` give back?",
+    "choices": [
+      {
+        "text": "Hashed like the htpasswd file, so it cannot be reversed",
+        "correct": false,
+        "why": "The registry's file is hashed; the client's is merely encoded."
+      },
+      {
+        "text": "Encrypted with a key held by the daemon",
+        "correct": false,
+        "why": "No key was involved; one command decoded it."
+      },
+      {
+        "text": "Not at all: it decodes to `ana:lab-only`",
+        "correct": true,
+        "why": "Right, which is what a credential helper is for."
+      },
+      {
+        "text": "Safe, because only Docker reads the file",
+        "correct": false,
+        "why": "Any program running as Ana can read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xptymrbf",
+    "version": 1,
+    "section": "a-registry-of-your-own",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Ana's steps in order, from an image on her machine to a container started from the registry by digest.",
+    "hint": "A name first, then credentials.",
+    "items": [
+      "`docker tag` with the registry's address",
+      "`docker login` with the password on standard input",
+      "`docker push`, which prints the digest",
+      "`docker image rm` of the local names",
+      "`docker pull` and `docker run` by `@sha256:`"
+    ]
+  },
+  {
+    "id": "ex-cvstgbch",
+    "version": 1,
+    "section": "a-registry-of-your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first `docker push` ended in `no basic auth credentials`. How much of the image reached the registry?",
+    "hint": "What did each layer line say?",
+    "choices": [
+      {
+        "text": "All layers but the manifest",
+        "correct": false,
+        "why": "No layer was sent; each one stayed at `Waiting`."
+      },
+      {
+        "text": "The layers it shares with distroless",
+        "correct": false,
+        "why": "Shared layers would still have to be sent to this registry, which was empty."
+      },
+      {
+        "text": "Half of the layers, which `docker push` resumed later",
+        "correct": false,
+        "why": "Nothing was sent; the second push sent every layer."
+      },
+      {
+        "text": "None: every layer was still `Waiting`",
+        "correct": true,
+        "why": "Right; the registry refused before any layer was sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbsg3v6n",
+    "version": 1,
+    "section": "the-big-registries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Moving `shelf` from Ana's registry to GitHub's, what changes in the commands?",
+    "hint": "The protocol is the same everywhere.",
+    "choices": [
+      {
+        "text": "The address in the name, and how to log in",
+        "correct": true,
+        "why": "Right; the push and the pull stay as they are."
+      },
+      {
+        "text": "Everything: each registry has its own client",
+        "correct": false,
+        "why": "`docker push` and `docker pull` work against all of them."
+      },
+      {
+        "text": "Only the tag, which must start with `gh-`",
+        "correct": false,
+        "why": "There is no such rule; the address is what changes."
+      },
+      {
+        "text": "Nothing; Docker finds the registry by itself",
+        "correct": false,
+        "why": "The registry is whatever the name says, and the name has to say it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mbc9m3j",
+    "version": 1,
+    "section": "the-big-registries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cloud registry logins like ECR's hand `docker login` a password that lasts hours. What does that buy?",
+    "hint": "Think about the file the password ends up in.",
+    "choices": [
+      {
+        "text": "Faster pushes, since the token is shorter",
+        "correct": false,
+        "why": "Speed does not depend on the token."
+      },
+      {
+        "text": "A leaked one is worth little",
+        "correct": true,
+        "why": "Right: by the time somebody finds it, it has expired."
+      },
+      {
+        "text": "No need for `docker login` at all",
+        "correct": false,
+        "why": "The token is handed to `docker login`."
+      },
+      {
+        "text": "It lets anonymous users pull without a limit",
+        "correct": false,
+        "why": "It is about who may push and pull, not about anonymous limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7bnkdht",
+    "version": 1,
+    "section": "the-big-registries",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are the lesson's advice for choosing and running a registry? Choose all that apply.",
+    "hint": "Four points were listed.",
+    "choices": [
+      {
+        "text": "Keep it next to where the images run",
+        "correct": true,
+        "why": "Yes: faster, often free, and no stored password."
+      },
+      {
+        "text": "Give push access to the pipeline and few people",
+        "correct": true,
+        "why": "Yes: push decides what every server runs next."
+      },
+      {
+        "text": "Set retention rules on the first day",
+        "correct": true,
+        "why": "Yes: every image is kept and billed until told otherwise."
+      },
+      {
+        "text": "Prefer anonymous pulls from Docker Hub in CI",
+        "correct": false,
+        "why": "That is what hits the `429` limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxs12mxs",
+    "version": 1,
+    "section": "the-big-registries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each image address to its registry.",
+    "hint": "Read the host part.",
+    "pairs": [
+      {
+        "left": "`ghcr.io/owner/shelf`",
+        "right": "GitHub Container Registry"
+      },
+      {
+        "left": "`123456789012.dkr.ecr.sa-east-1.amazonaws.com/shelf`",
+        "right": "Amazon ECR"
+      },
+      {
+        "left": "`us-central1-docker.pkg.dev/project/repo/shelf`",
+        "right": "Google Artifact Registry"
+      },
+      {
+        "left": "`example.azurecr.io/shelf`",
+        "right": "Azure Container Registry"
+      }
+    ],
+    "right_distractors": [
+      "Docker Hub"
+    ]
+  },
+  {
+    "id": "ex-hp0ark7g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deployment must run exactly the image that passed the tests last Tuesday, whatever is pushed since. What should it name?",
+    "hint": "Which reference can nobody move?",
+    "choices": [
+      {
+        "text": "`localhost:5000/shelf:latest`",
+        "correct": false,
+        "why": "`latest` moves with every push that does not name a tag."
+      },
+      {
+        "text": "`localhost:5000/shelf:1.0.0`",
+        "correct": false,
+        "why": "A version tag can still be pushed over."
+      },
+      {
+        "text": "`localhost:5000/shelf@sha256:f13b…`",
+        "correct": true,
+        "why": "Right: the digest is the content, and nobody can move it."
+      },
+      {
+        "text": "`shelf:1.0.0`, without the registry",
+        "correct": false,
+        "why": "That name means Docker Hub, and still a movable tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddn47df9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CI runner shared by several projects pushes images. What should a job do about `docker login`?",
+    "hint": "What did `docker logout` remove?",
+    "choices": [
+      {
+        "text": "Log in once when the runner is set up, and never again",
+        "correct": false,
+        "why": "Then every job on the runner holds the credentials, forever."
+      },
+      {
+        "text": "Skip it, and make the registry accept anonymous pushes",
+        "correct": false,
+        "why": "Then anybody can change what servers run."
+      },
+      {
+        "text": "Pass the password with `-p` so it is not stored",
+        "correct": false,
+        "why": "`-p` still stores it in `config.json`, and shows it in the process list."
+      },
+      {
+        "text": "Log in with a short-lived token, and log out at the end",
+        "correct": true,
+        "why": "Right; lesson 26 does exactly that."
+      }
+    ]
+  }
+]
