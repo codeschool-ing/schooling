@@ -1,0 +1,378 @@
+{
+  "ex-s9hxeka1": {
+    "prompt": "`a` é um `[3]int` e `b` é um `[4]int`. Por que `a = b` é recusado?",
+    "hint": "O que `%T` imprime para um array?",
+    "choices": [
+      {
+        "text": "Porque `a` teria de crescer, o que pede um `append`",
+        "why": "Arrays nunca crescem, com `append` ou com qualquer coisa; a atribuição falha nos tipos."
+      },
+      {
+        "text": "O comprimento faz parte do tipo do array, então `[3]int` e `[4]int` são tipos diferentes",
+        "why": "Isso. `[3]int` e `[4]int` são tão diferentes quanto `int` e `string`."
+      },
+      {
+        "text": "Porque o quarto elemento de `b` se perderia",
+        "why": "O compilador não pesa o que se perderia; `[2]int` em `[3]int` é recusado do mesmo jeito."
+      },
+      {
+        "text": "Porque arrays não podem ser atribuídos de jeito nenhum, só copiados elemento a elemento",
+        "why": "`b := a` funcionou na seção 01 e copiou o array inteiro; o que difere aqui são os comprimentos."
+      }
+    ]
+  },
+  "ex-ayamxz9v": {
+    "prompt": "`a := [3]int{1, 2, 3}`, depois `b := a` e `b[0] = 99`. O que `fmt.Println(a)` imprime?",
+    "hint": "O que `b := a` criou?",
+    "choices": [
+      {
+        "text": "`[99 2 3]`, porque `a` e `b` são dois nomes para um array só",
+        "why": "É assim que duas slices de um array se comportam. Atribuir um array o copia."
+      },
+      {
+        "text": "`[1 2 3]`, porque `b` é uma cópia de todos os elementos",
+        "why": "Isso. `b` é uma cópia de todos os elementos, então mudá-lo não mexe em `a`."
+      },
+      {
+        "text": "`[99 99 99]`",
+        "why": "Uma atribuição a `b[0]` escreve um elemento, de `b`, e mais nada."
+      },
+      {
+        "text": "Um erro de compilação",
+        "why": "Um array pode ser copiado com `:=`, e foi exatamente o que aconteceu aqui."
+      }
+    ]
+  },
+  "ex-bs1ypnam": {
+    "prompt": "`func zero(a [3]int) { a[0] = 0 }` é chamada como `zero(a)` com `a` valendo `[1 2 3]`. O que `a` vale depois?",
+    "hint": "A função recebeu alguma coisa. O quê?",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, porque a função mudou a sua própria cópia",
+        "why": "Isso. Passar um array copia todos os elementos para o parâmetro."
+      },
+      {
+        "text": "`[0 2 3]`, porque uma função muda o que recebe",
+        "why": "Com uma slice mudaria. Um array chega como cópia."
+      },
+      {
+        "text": "`[0 0 0]`",
+        "why": "`a[0] = 0` muda um elemento, e ainda por cima da cópia."
+      },
+      {
+        "text": "A chamada é recusada, já que arrays não são aceitos como parâmetros",
+        "why": "`zero` compilou e rodou na seção 01; arrays são parâmetros comuns."
+      }
+    ]
+  },
+  "ex-whn5076b": {
+    "prompt": "`n := 4` seguido de `var c [n]int` é recusado com `invalid array length n`, porque o comprimento de um array tem de ser uma ___.",
+    "hint": "Algo que o compilador conhece antes de o programa rodar.",
+    "blanks": [
+      {
+        "accept": [
+          "constante",
+          "const"
+        ]
+      }
+    ]
+  },
+  "ex-tayqrp8t": {
+    "prompt": "Quais destas valem para arrays em Go? Marque todas as que se aplicam.",
+    "hint": "A seção 01 imprimiu cada uma.",
+    "choices": [
+      {
+        "text": "Dois arrays do mesmo tipo podem ser comparados com `==`",
+        "why": "Sim: elemento a elemento, e `a == [3]int{1, 2, 3}` imprimiu `true`."
+      },
+      {
+        "text": "`append` deixa um array um elemento mais longo",
+        "why": "O comprimento de um array está no tipo e nunca muda; `append` trabalha com slices."
+      },
+      {
+        "text": "Um índice constante além do fim é erro de compilação",
+        "why": "Sim: `a[3]` num `[3]int` foi recusado com `index 3 out of bounds [0:3]`."
+      },
+      {
+        "text": "Passá-lo para uma função deixa a função mudar os elementos de quem chamou",
+        "why": "A função recebe uma cópia; `zero(a)` deixou `a` como estava."
+      }
+    ]
+  },
+  "ex-29f7paev": {
+    "prompt": "`func sum(a [3]int) int` soma três números, e você tem `s := []int{1, 2, 3}`. O que `sum(s)` faz?",
+    "hint": "Compare os dois tipos como `%T` os imprimiria.",
+    "choices": [
+      {
+        "text": "Devolve 6, já que `s` tem exatamente três elementos",
+        "why": "O comprimento de `s` é um valor que ela carrega, não parte do tipo, então o compilador não pode contar com ele."
+      },
+      {
+        "text": "Compila e entra em pânico se `s` tiver menos de três elementos",
+        "why": "Nada fica para a execução aqui; a chamada nem compila."
+      },
+      {
+        "text": "O compilador a recusa: um `[]int` e um `[3]int` são tipos diferentes",
+        "why": "Isso. O laboratório disse `cannot use s (variable of type []int) as [3]int value in argument to sum`."
+      },
+      {
+        "text": "Compila, e a função recebe as três palavras da slice",
+        "why": "As três palavras da slice são o que um parâmetro `[]int` receberia; este parâmetro quer um array."
+      }
+    ]
+  },
+  "ex-h878rsxr": {
+    "prompt": "`a` é um `[5]int` e `s := a[1:3]`. Quanto valem `len(s)` e `cap(s)`?",
+    "hint": "A capacidade vai até o fim do array.",
+    "choices": [
+      {
+        "text": "3 e 5",
+        "why": "3 conta o índice 3 como incluído, e 5 é o comprimento do array, não a capacidade da slice."
+      },
+      {
+        "text": "2 e 2",
+        "why": "A capacidade não para no comprimento; o array continua depois do índice 2."
+      },
+      {
+        "text": "2 e 4",
+        "why": "Isso. Os índices 1 e 2 formam o comprimento; do índice 1 ao fim do array são 4."
+      },
+      {
+        "text": "2 e 5",
+        "why": "A capacidade conta de onde a slice começa, o índice 1, não do começo do array."
+      }
+    ]
+  },
+  "ex-4tzgbs2a": {
+    "prompt": "`a` é um `[8]int` e `s := a[2:5]`. Quanto vale `cap(s)`?",
+    "hint": "De onde `s` começa até o fim de `a`.",
+    "unit": "elementos"
+  },
+  "ex-saej68w0": {
+    "prompt": "`a := [5]int{10, 20, 30, 40, 50}` e `s := a[1:3]`. Depois de `s[0] = 99`, o que `fmt.Println(a)` imprime?",
+    "hint": "Alguma coisa foi copiada quando `s` foi criada?",
+    "choices": [
+      {
+        "text": "`[10 20 30 40 50]`, porque `s` é uma cópia de dois elementos",
+        "why": "Fatiar não copia elementos; `s` aponta para dentro de `a`."
+      },
+      {
+        "text": "`[99 20 30 40 50]`",
+        "why": "Isso toma `s[0]` pelo primeiro elemento do array, mas `s` começa no índice 1 de `a`."
+      },
+      {
+        "text": "`[10 99 30 40 50]`: `s[0]` é `a[1]`",
+        "why": "Isso. `s[0]` e `a[1]` são o mesmo elemento, e `&s[0] == &a[1]` imprimiu `true`."
+      },
+      {
+        "text": "Um erro de compilação, já que uma slice de um array é só de leitura",
+        "why": "Slices de arrays podem ser escritas tanto quanto o array; a atribuição compilou e rodou."
+      }
+    ]
+  },
+  "ex-d2eq4tkr": {
+    "prompt": "Com `s := a[1:3]` e `t := a[2:5]` sobre o mesmo array, qual par de expressões nomeia um elemento só?",
+    "hint": "Descubra qual índice de `a` cada uma é.",
+    "choices": [
+      {
+        "text": "`s[0]` e `t[0]`",
+        "why": "`s[0]` é `a[1]` e `t[0]` é `a[2]`: dois elementos diferentes."
+      },
+      {
+        "text": "`s[1]` e `t[0]`",
+        "why": "Isso. As duas são `a[2]`, e é por isso que escrever 77 por `t` mudou o que `s` imprimiu."
+      },
+      {
+        "text": "`s[1]` e `t[1]`",
+        "why": "`t[1]` é `a[3]`, um depois de `s[1]`."
+      },
+      {
+        "text": "Nenhum, porque cada slice ganha a sua própria cópia dos elementos que mostra",
+        "why": "Fatiar não copia nada; as duas slices olham para dentro de `a`."
+      }
+    ]
+  },
+  "ex-sb0r3jz4": {
+    "prompt": "O que um valor slice guarda, ele mesmo?",
+    "hint": "A figura a desenhou.",
+    "choices": [
+      {
+        "text": "Os elementos, num array que cresce quando enche",
+        "why": "Essa é a imagem do \"array dinâmico\". Os elementos moram num array para onde a slice aponta."
+      },
+      {
+        "text": "Uma cópia dos elementos entre os seus dois índices",
+        "why": "Nada é copiado quando uma slice é criada; `s[0] = 99` mudou o array."
+      },
+      {
+        "text": "Um ponteiro para dentro de um array, um comprimento e uma capacidade, e nenhum elemento",
+        "why": "Isso. Três palavras, e nenhum elemento próprio."
+      },
+      {
+        "text": "O nome do array e os dois índices com que foi fatiada",
+        "why": "O array de um literal de slice nem tem nome; a slice guarda um ponteiro, não um nome."
+      }
+    ]
+  },
+  "ex-ve9p955g": {
+    "prompt": "`a` é um `[5]int` e `s := a[1:3]`. Ligue cada expressão ao que o laboratório imprimiu para ela.",
+    "hint": "Uma delas vem da seção 03.",
+    "pairs": [
+      {
+        "left": "`len(s)`",
+        "right": "`2`"
+      },
+      {
+        "left": "`cap(s)`",
+        "right": "`4`"
+      },
+      {
+        "left": "o tipo de `s`, com `%T`",
+        "right": "`[]int`"
+      },
+      {
+        "left": "`&s[0] == &a[1]`",
+        "right": "`true`"
+      }
+    ],
+    "right_distractors": [
+      "`[2]int`"
+    ]
+  },
+  "ex-v2b83qny": {
+    "prompt": "Você precisa saber se dois `[]int` guardam os mesmos números na mesma ordem. O que você escreve?",
+    "hint": "`==` foi recusado para slices.",
+    "choices": [
+      {
+        "text": "`s == u`",
+        "why": "Recusado: `slice can only be compared to nil`."
+      },
+      {
+        "text": "`&s[0] == &u[0]`",
+        "why": "Isso pergunta se as duas começam no mesmo elemento de um array, o que duas slices iguais não precisam fazer."
+      },
+      {
+        "text": "`slices.Equal(s, u)`",
+        "why": "Isso. Compara os comprimentos, depois os elementos em ordem."
+      },
+      {
+        "text": "`len(s) == len(u) && cap(s) == cap(u)`",
+        "why": "Comprimentos e capacidades iguais não dizem nada sobre os números lá dentro."
+      }
+    ]
+  },
+  "ex-53t5sp5q": {
+    "prompt": "`addFour(s []int)` executa `s = append(s, 4)`. Depois de `addFour(nums)`, com `nums` tendo três elementos, quanto vale `len(nums)`?",
+    "hint": "O `s` de quem a atribuição mudou?",
+    "choices": [
+      {
+        "text": "4, porque o `append` acrescentou no array que `nums` usa",
+        "why": "Mesmo quando o array tem espaço, o comprimento de quem chamou está na slice de quem chamou, que nada mudou."
+      },
+      {
+        "text": "3, o comprimento que tinha antes da chamada",
+        "why": "Isso. A função atribuiu à sua própria cópia; a slice de quem chamou continua dizendo comprimento 3."
+      },
+      {
+        "text": "4, porque slices são passadas por referência",
+        "why": "Uma slice é passada como cópia de três palavras; a lição 22 desmonta essa imagem."
+      },
+      {
+        "text": "0, já que o `append` esvazia a slice que recebe",
+        "why": "O `append` nunca remove nada; lá dentro, `s` tinha quatro elementos."
+      }
+    ]
+  },
+  "ex-n6nx6t4j": {
+    "prompt": "`setFirst(s []int)` executa `s[0] = 100`. O que o `nums` de quem chamou, `[1 2 3]` antes da chamada, guarda depois?",
+    "hint": "Para onde leva o ponteiro da cópia?",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, porque a função recebeu uma cópia",
+        "why": "Recebeu, mas uma cópia de três palavras, e o ponteiro nela leva ao array de quem chamou."
+      },
+      {
+        "text": "`[100 2 3]`, porque a escrita chegou ao array dividido",
+        "why": "Isso. O ponteiro da cópia leva ao array de quem chamou, e o elemento foi escrito ali."
+      },
+      {
+        "text": "`[100 1 2 3]`",
+        "why": "Atribuir a `s[0]` substitui um elemento; não insere um."
+      },
+      {
+        "text": "Nada: o compilador recusa escrever nos elementos de um parâmetro",
+        "why": "Compilou, rodou e imprimiu `[100 2 3]`."
+      }
+    ]
+  },
+  "ex-0q8x8q0j": {
+    "prompt": "Para acrescentar 4 ao fim de `nums` e ficar com o resultado, escreva `nums = ___(nums, 4)`.",
+    "hint": "Uma função embutida; o compilador recusa uma chamada a ela que joga o resultado fora.",
+    "blanks": [
+      {
+        "accept": [
+          "append"
+        ]
+      }
+    ]
+  },
+  "ex-zpf4ptxv": {
+    "prompt": "Na máquina amd64 do laboratório, um `int` tem 8 bytes. Quantos bytes `unsafe.Sizeof` informa para um `[500]int`?",
+    "hint": "Um `[1000]int` dava 8000.",
+    "unit": "bytes"
+  },
+  "ex-6bqvvx9f": {
+    "prompt": "`func reset(s []int) { s = []int{} }` é chamada como `reset(nums)`, com `nums` valendo `[1 2 3]`. O que `nums` guarda depois?",
+    "hint": "A atribuição é ao próprio parâmetro, não a um elemento.",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, como antes da chamada",
+        "why": "Isso. Atribuir uma slice nova a `s` muda a cópia da função e nada do que quem chamou guarda."
+      },
+      {
+        "text": "`[]`, porque a slice de quem chamou agora aponta para um array vazio",
+        "why": "Só a cópia aponta para lá. As três palavras de quem chamou nunca foram escritas."
+      },
+      {
+        "text": "`[0 0 0]`",
+        "why": "Isso exigiria zerar os elementos, e nenhum foi escrito; `setFirst` mudou um indexando, e `reset` nunca indexa."
+      },
+      {
+        "text": "Um erro de compilação: `s` é atribuída e nunca usada",
+        "why": "Parâmetros não entram nessa regra; o laboratório compilou e `nums` imprimiu `[1 2 3]`."
+      }
+    ]
+  },
+  "ex-81f287sq": {
+    "prompt": "Ordene estes pelo número de bytes que uma chamada de função copia para passar um, do maior para o menor, na máquina amd64 do laboratório.",
+    "hint": "Um array é copiado inteiro; uma slice são três palavras, seja o que for que mostre.",
+    "items": [
+      "Um `[1000]int`",
+      "Um `[10]int`",
+      "Um `[]int` sobre um milhão de elementos",
+      "Um `int`"
+    ]
+  },
+  "ex-bjjrg5t1": {
+    "prompt": "`func withFour(s []int) []int { return append(s, 4) }`. Um colega escreve `withFour(nums)` numa linha sozinha, sem atribuição. O que acontece?",
+    "hint": "A recusa do compilador era para uma função em particular.",
+    "choices": [
+      {
+        "text": "É recusada como `is not used`, como uma chamada solta de `append`",
+        "why": "Essa verificação é para embutidas como `append`. O resultado de uma função sua pode ser jogado fora, e o laboratório compilou."
+      },
+      {
+        "text": "Compila, e `nums` mantém o comprimento antigo",
+        "why": "Isso. A slice mais longa foi devolvida para ninguém, que é o bug que devolver a slice devia evitar."
+      },
+      {
+        "text": "Compila, e `nums` ganha o 4 porque o `append` rodou sobre ela",
+        "why": "O `append` rodou sobre a cópia da função; o comprimento de quem chamou só muda se quem chamou guardar o resultado."
+      },
+      {
+        "text": "Entra em pânico em tempo de execução, porque a slice devolvida não foi guardada",
+        "why": "Nada confere isso em tempo de execução; o programa rodou e imprimiu `[1 2 3] 3`."
+      }
+    ]
+  }
+}
