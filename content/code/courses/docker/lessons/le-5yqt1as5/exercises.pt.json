@@ -1,0 +1,300 @@
+{
+  "ex-fkb5bkpf": {
+    "prompt": "O `shelf` escutava na 8080 dentro do `web`, e mesmo assim `curl localhost:8080` falhou. Por quê?",
+    "hint": "Em que rede o `shelf` escutava?",
+    "choices": [
+      {
+        "text": "O `shelf` ainda não tinha terminado de iniciar",
+        "why": "O log dizia que ele escutava; o tempo não era o problema."
+      },
+      {
+        "text": "O `curl` não alcança containers",
+        "why": "Ele alcançou o `shelf` assim que uma porta foi publicada."
+      },
+      {
+        "text": "A porta 8080 é reservada no Ubuntu",
+        "why": "O comando seguinte a usou."
+      },
+      {
+        "text": "Nenhuma porta foi publicada no host",
+        "why": "Isso: a rede do container é só dele até um `-p` ligá-la."
+      }
+    ]
+  },
+  "ex-83hvepwm": {
+    "prompt": "Depois de `-p 8080:8080`, o `ss` mostrou `0.0.0.0:8080`. Quem alcança o `shelf`?",
+    "hint": "Que endereços o `0.0.0.0` quer dizer?",
+    "choices": [
+      {
+        "text": "Quem alcançar a máquina pela rede",
+        "why": "Isso: todos os endereços da máquina, a placa de rede inclusive."
+      },
+      {
+        "text": "Só programas na máquina da Ana",
+        "why": "Isso seria `127.0.0.1`."
+      },
+      {
+        "text": "Só outros containers",
+        "why": "O próprio `curl` do host o alcançou."
+      },
+      {
+        "text": "Ninguém, até o `ufw` abrir",
+        "why": "As regras do Docker valem antes das do `ufw`."
+      }
+    ]
+  },
+  "ex-4knje0er": {
+    "prompt": "Para publicar a porta de um banco só para programas da mesma máquina, escreva `-p ___:5432:5432`.",
+    "hint": "O endereço de loopback.",
+    "blanks": [
+      {
+        "accept": [
+          "127.0.0.1"
+        ]
+      }
+    ]
+  },
+  "ex-vm30tc4d": {
+    "prompt": "O `web2` pediu `127.0.0.1:8080` enquanto o `web` a ocupava. O que aconteceu?",
+    "hint": "Leia o erro, e a linha antes dele.",
+    "choices": [
+      {
+        "text": "O Docker pôs o `web2` numa fila até o `web` parar",
+        "why": "Não há fila; o início falhou."
+      },
+      {
+        "text": "O `web2` foi criado, e recusado ao iniciar",
+        "why": "Isso: um id foi impresso, e depois `port is already allocated`."
+      },
+      {
+        "text": "Os dois dividiram a porta, revezando",
+        "why": "Uma porta do host, um container."
+      },
+      {
+        "text": "O Docker mudou o `web` para outra porta",
+        "why": "As portas de um container rodando não mudam."
+      }
+    ]
+  },
+  "ex-0szss5tv": {
+    "prompt": "Com `-e PORT=9090 -p 127.0.0.1:8080:9090`, que porta o `curl` da Ana usa?",
+    "hint": "O primeiro número é a porta na máquina.",
+    "choices": [
+      {
+        "text": "A 9090, onde o `shelf` escuta",
+        "why": "Essa fica dentro do container; a porta do host é a 8080."
+      },
+      {
+        "text": "Qualquer uma, o Docker abre as duas",
+        "why": "Só a porta do host no `-p` é aberta."
+      },
+      {
+        "text": "8080",
+        "why": "Isso: a 8080 do host, repassada à 9090 do container."
+      },
+      {
+        "text": "Nenhuma; `PORT` quebra a publicação",
+        "why": "O `curl` respondeu `1.0.0`."
+      }
+    ]
+  },
+  "ex-55k1h0qk": {
+    "prompt": "O `DATABASE_URL` leva uma senha. Quem consegue lê-la depois que o container é criado com `--env-file`?",
+    "hint": "O que o `docker inspect` imprimiu?",
+    "choices": [
+      {
+        "text": "Só a Ana, porque o arquivo é dela",
+        "why": "Os valores foram copiados para a configuração do container."
+      },
+      {
+        "text": "Ninguém: o Docker criptografa arquivos de ambiente",
+        "why": "O `docker inspect` a imprimiu em texto puro."
+      },
+      {
+        "text": "Só o root, pelo `/proc`",
+        "why": "Não precisa de `/proc`; o `docker inspect` basta."
+      },
+      {
+        "text": "Quem está no grupo `docker`, e o programa",
+        "why": "Isso, ou seja, todo mundo com root, mais o que roda lá dentro."
+      }
+    ]
+  },
+  "ex-e2129pt6": {
+    "prompt": "Ordene estes jeitos de dar ao `shelf` a senha do banco, do mais exposto ao menos exposto.",
+    "hint": "A aula listou as melhorias em ordem de esforço.",
+    "items": [
+      "`-e` digitado na linha de comando",
+      "Um arquivo de ambiente fora do projeto",
+      "Um arquivo montado no container",
+      "Buscada na inicialização num gerenciador de segredos"
+    ]
+  },
+  "ex-6kze9mk9": {
+    "prompt": "Com o `shelf.env`, o `shelf` registrou `hostname resolving error` e parou. Por quê?",
+    "hint": "Que host o `DATABASE_URL` nomeava?",
+    "choices": [
+      {
+        "text": "Não existia host chamado `db`",
+        "why": "Isso; o laboratório não tem banco aqui, e a aula usa isso de propósito."
+      },
+      {
+        "text": "O arquivo de ambiente tinha um erro de sintaxe",
+        "why": "As duas variáveis foram lidas; `PORT` e a URL estão no `docker inspect`."
+      },
+      {
+        "text": "Imagens distroless não usam DNS",
+        "why": "A consulta aconteceu e teve resposta: o host não existe."
+      },
+      {
+        "text": "A senha estava errada",
+        "why": "Ele nem chegou à senha."
+      }
+    ]
+  },
+  "ex-d8rzrjyk": {
+    "prompt": "O container `hog` terminou com código 137 e `OOMKilled: true`. O que aconteceu?",
+    "hint": "137 é 128 mais o número de um sinal.",
+    "choices": [
+      {
+        "text": "O `tail` saiu sozinho com um erro próprio dele",
+        "why": "Uma saída própria não marcaria `OOMKilled`."
+      },
+      {
+        "text": "O kernel o matou no limite de 64 MB",
+        "why": "Isso, com `SIGKILL`, o sinal 9: sem aviso e sem limpeza."
+      },
+      {
+        "text": "O Docker o parou depois de um tempo limite",
+        "why": "Nenhum tempo limite foi definido; o limite era de memória."
+      },
+      {
+        "text": "O Alpine não tem `/dev/zero`",
+        "why": "Ele leu de lá até faltar espaço."
+      }
+    ]
+  },
+  "ex-e2bbn3zk": {
+    "prompt": "O `docker stats` mostrou o container `spin`, limitado com `--cpus 0.5`, usando que porcentagem de uma CPU? Dê o número mostrado.",
+    "hint": "A segunda linha.",
+    "unit": "%"
+  },
+  "ex-tvrka0p3": {
+    "prompt": "O `shelf` recebe `--cpus 0.25` e chega um pico de tráfego. O que os usuários veem?",
+    "hint": "O que um limite de CPU faz quando é atingido?",
+    "choices": [
+      {
+        "text": "Erros, porque o container é morto e reiniciado",
+        "why": "Isso é o que um limite de memória faz, e não um de CPU."
+      },
+      {
+        "text": "Nada, porque os limites só valem no início",
+        "why": "O limite vale o tempo todo; o laço mostrou isso."
+      },
+      {
+        "text": "Respostas mais lentas",
+        "why": "Isso: o escalonador o segura; nada é morto."
+      },
+      {
+        "text": "Um `429 Too Many Requests` do Docker",
+        "why": "O Docker não responde HTTP por um container."
+      }
+    ]
+  },
+  "ex-tzqxeq1f": {
+    "prompt": "Ligue cada flag do `docker run` ao que ela limita ou decide.",
+    "hint": "Quatro ajustes de cgroup e do daemon.",
+    "pairs": [
+      {
+        "left": "`--memory 64m`",
+        "right": "Memória, imposta pelo matador de OOM do kernel"
+      },
+      {
+        "left": "`--cpus 0.5`",
+        "right": "Tempo de processador, pelo escalonador"
+      },
+      {
+        "left": "`--pids-limit 64`",
+        "right": "Quantos processos e threads"
+      },
+      {
+        "left": "`--restart on-failure:3`",
+        "right": "O que o daemon faz quando o processo termina"
+      }
+    ],
+    "right_distractors": [
+      "Quanto disco o container pode escrever"
+    ]
+  },
+  "ex-g9spqvtx": {
+    "prompt": "Com `--restart on-failure:3` e um banco que não existe, quantas vezes o `shelf` iniciou no total?",
+    "hint": "Conte as linhas `database:`.",
+    "unit": "inícios"
+  },
+  "ex-5pk08nsq": {
+    "prompt": "A Ana parou o `web`, que tinha `--restart unless-stopped`. O que ele faz quando o daemon reiniciar depois?",
+    "hint": "A última coluna da tabela.",
+    "choices": [
+      {
+        "text": "Inicia, como com `always`",
+        "why": "O `always` volta depois de o daemon reiniciar; o `unless-stopped`, não."
+      },
+      {
+        "text": "É apagado",
+        "why": "Nenhuma política apaga um container."
+      },
+      {
+        "text": "Inicia uma vez e para de novo",
+        "why": "Não existe esse comportamento; ele só continua parado."
+      },
+      {
+        "text": "Continua parado",
+        "why": "Isso: uma parada manual é lembrada entre reinícios do daemon."
+      }
+    ]
+  },
+  "ex-e3dwynkc": {
+    "prompt": "Que `docker run` é o certo para um banco que só o `shelf`, na mesma máquina, deve alcançar?",
+    "hint": "Endereço, limites e uma política de reinício.",
+    "choices": [
+      {
+        "text": "`docker run -d -p 127.0.0.1:5432:5432 --memory 512m --restart unless-stopped postgres:17`",
+        "why": "Isso: só loopback, um teto, e de volta depois de um reboot, a não ser que tenha sido parado."
+      },
+      {
+        "text": "`docker run -d -p 5432:5432 --restart always postgres:17`",
+        "why": "Publicado em todos os endereços, e sem limite."
+      },
+      {
+        "text": "`docker run -d -e PORT=5432 postgres:17`",
+        "why": "Nada é publicado, e `PORT` é variável do `shelf`, não do Postgres."
+      },
+      {
+        "text": "`docker run -d -p 127.0.0.1:5432:5432 --restart no postgres:17`",
+        "why": "Ele ficaria parado depois da primeira queda ou reboot, e não tem limite."
+      }
+    ]
+  },
+  "ex-7cpg8883": {
+    "prompt": "Um container some do `docker ps` o tempo todo. O `docker inspect` mostra `OOMKilled: true` e `RestartCount` em 3. Qual é a primeira coisa a olhar?",
+    "hint": "O que o matou, e o que lhe era permitido?",
+    "choices": [
+      {
+        "text": "O limite de CPU",
+        "why": "Um limite de CPU deixa o programa lento; ele não o mata."
+      },
+      {
+        "text": "O limite de memória contra o uso real",
+        "why": "Isso: ou o limite está baixo demais, ou o programa vaza memória."
+      },
+      {
+        "text": "As portas publicadas",
+        "why": "Portas não encerram processos."
+      },
+      {
+        "text": "A tag da imagem",
+        "why": "A tag não explica uma morte por falta de memória."
+      }
+    ]
+  }
+}
