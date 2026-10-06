@@ -1,0 +1,340 @@
+{
+  "ex-a8ya23h2": {
+    "prompt": "O notebook de um fisioterapeuta, com cifragem de disco inteiro, fica desbloqueado na mesa de um café, e alguém copia arquivos dele. O que a cifragem de disco fez?",
+    "hint": "Quando o disco é decifrado?",
+    "choices": [
+      {
+        "text": "Nada: um disco desbloqueado é lido como qualquer outro",
+        "why": "Certo: ela protege o aparelho desligado."
+      },
+      {
+        "text": "Cifrou as cópias, que o ladrão não consegue abrir",
+        "why": "Cópias de arquivos decifrados são arquivos comuns."
+      },
+      {
+        "text": "Travou o disco assim que arquivos foram copiados",
+        "why": "Nada vigia as cópias."
+      },
+      {
+        "text": "Registrou a cópia para a equipe de TI",
+        "why": "A cifragem de disco não registra nada desse tipo."
+      }
+    ]
+  },
+  "ex-bfybca02": {
+    "prompt": "Associe cada camada ao momento em que é decifrada.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "cifragem de disco inteiro",
+        "right": "quando a máquina é desbloqueada"
+      },
+      {
+        "left": "TDE",
+        "right": "quando o banco inicia"
+      },
+      {
+        "left": "cifragem de coluna na aplicação",
+        "right": "só na aplicação que tem a chave"
+      }
+    ],
+    "right_distractors": [
+      "nunca, nem com a chave"
+    ]
+  },
+  "ex-r1sfe33b": {
+    "prompt": "Por que trocar a frase-senha do LUKS leva um segundo em vez de cifrar o disco inteiro de novo?",
+    "hint": "O que uma frase-senha de fato cifra?",
+    "choices": [
+      {
+        "text": "Porque o LUKS cifra só os arquivos que mudaram",
+        "why": "O LUKS cifra todos os setores."
+      },
+      {
+        "text": "Ela só reembrulha a chave do volume num slot",
+        "why": "Certo: a chave dos dados nunca muda."
+      },
+      {
+        "text": "Porque a frase-senha é a própria chave AES",
+        "why": "Aí uma troca exigiria cifrar tudo de novo."
+      },
+      {
+        "text": "Porque o modo XTS permite trocar chaves no lugar",
+        "why": "O modo não é o motivo."
+      }
+    ]
+  },
+  "ex-6pxcrfqh": {
+    "prompt": "Quantos slots de chave o volume do laboratório tinha em uso depois do `luksAddKey`?",
+    "hint": "0 e ...",
+    "unit": "slots"
+  },
+  "ex-a86q4wam": {
+    "prompt": "Um ladrão tem o disco LUKS de um notebook roubado e todo o tempo que quiser. O que decide se ele consegue lê-lo?",
+    "hint": "O que o cabeçalho diz sobre os slots?",
+    "choices": [
+      {
+        "text": "O tamanho da chave do volume, 512 bits",
+        "why": "Ninguém ataca a chave de 512 bits; adivinham a frase-senha."
+      },
+      {
+        "text": "Se o XTS é usado em vez do CBC",
+        "why": "Os dois resistem a um ladrão sem chave."
+      },
+      {
+        "text": "Quão adivinháveis são as frases-senha, na velocidade do Argon2id",
+        "why": "Certo: e os dois slots contam, o de recuperação incluído."
+      },
+      {
+        "text": "Se o notebook tem TPM",
+        "why": "O TPM importa ao ligar o notebook, não para um disco retirado com slots de frase-senha."
+      }
+    ]
+  },
+  "ex-hb0n2vkn": {
+    "prompt": "Destruir o cabeçalho LUKS, e com ele toda cópia da chave do volume, deixa o disco ilegível de uma vez; isso se chama apagamento ___.",
+    "hint": "Apagar sem sobrescrever.",
+    "blanks": [
+      {
+        "accept": [
+          "criptográfico",
+          "criptografico"
+        ]
+      }
+    ]
+  },
+  "ex-m0dfjcns": {
+    "prompt": "O que o `strings` conseguiu ler do arquivo da tabela de pacientes sem entrar no PostgreSQL?",
+    "hint": "A captura da seção 04.",
+    "choices": [
+      {
+        "text": "Nada: o PostgreSQL cifra seus arquivos",
+        "why": "O PostgreSQL comunitário não tem TDE embutida."
+      },
+      {
+        "text": "Os nomes, mas não o CPF cifrado",
+        "why": "Certo."
+      },
+      {
+        "text": "Todas as colunas, inclusive o CPF",
+        "why": "A coluna do CPF estava cifrada."
+      },
+      {
+        "text": "Só o nome da tabela",
+        "why": "As próprias linhas estavam lá."
+      }
+    ]
+  },
+  "ex-19kmyftk": {
+    "prompt": "Uma equipe liga a TDE e conclui que injeção de SQL não consegue mais expor dados de clientes. O que está errado?",
+    "hint": "Para quem o banco decifra?",
+    "choices": [
+      {
+        "text": "A TDE só serve para os backups, não para os dados em uso",
+        "why": "Ela cobre os arquivos em uso também."
+      },
+      {
+        "text": "A injeção de SQL quebra o AES",
+        "why": "A injeção nunca toca na cifra."
+      },
+      {
+        "text": "O banco decifra para toda sessão, inclusive a injetada",
+        "why": "Certo: a TDE protege arquivos, não consultas."
+      },
+      {
+        "text": "A TDE desliga o registro de consultas",
+        "why": "Não desliga, e o registro não vem ao caso."
+      }
+    ]
+  },
+  "ex-5z59710v": {
+    "prompt": "O banco está cifrado em repouso; o `pg_dump` noturno vai para um bucket na nuvem como um arquivo .sql comum. Qual é a exposição real?",
+    "hint": "O que um dump contém?",
+    "choices": [
+      {
+        "text": "Nenhuma: o dump herda a cifragem do banco",
+        "why": "Um dump é produzido por uma consulta, decifrado."
+      },
+      {
+        "text": "Quem lê o bucket lê todas as tabelas",
+        "why": "Certo: cifre o dump como um arquivo à parte."
+      },
+      {
+        "text": "Só o esquema, já que os dados ficam de fora por padrão",
+        "why": "O pg_dump inclui os dados por padrão."
+      },
+      {
+        "text": "Só o texto cifrado das colunas cifradas",
+        "why": "Toda coluna não cifrada está nele como texto."
+      }
+    ]
+  },
+  "ex-5sbpa9p7": {
+    "prompt": "Os CPFs dos dois pacientes cifrados com `encrypt(…, 'aes')` deram hex idênticos. Que problema da aula 1 é esse?",
+    "hint": "Que vetor ele usou?",
+    "choices": [
+      {
+        "text": "Uma chave curta demais",
+        "why": "O tamanho da chave estava bom."
+      },
+      {
+        "text": "Falta de preenchimento",
+        "why": "O preenchimento foi aplicado."
+      },
+      {
+        "text": "Um IV fixo",
+        "why": "Certo: todo em zeros, então valores iguais dão bytes iguais."
+      },
+      {
+        "text": "Reuso de nonce no GCM",
+        "why": "Isso era CBC, não GCM."
+      }
+    ]
+  },
+  "ex-r5n0jr42": {
+    "prompt": "Por que cifrar uma coluna dentro do SQL, com a chave na consulta, é fraco contra os próprios administradores do banco?",
+    "hint": "Onde o texto das consultas vai parar?",
+    "choices": [
+      {
+        "text": "A chave fica em logs e estatísticas que eles leem",
+        "why": "Certo: cifre na aplicação."
+      },
+      {
+        "text": "Os algoritmos do pgcrypto estão ultrapassados",
+        "why": "O pgp_sym_encrypt com AES-256 é sólido."
+      },
+      {
+        "text": "Os administradores podem simplesmente desligar o pgcrypto",
+        "why": "Desligá-lo não revelaria chaves passadas."
+      },
+      {
+        "text": "Colunas cifradas ficam sem cifragem nos índices",
+        "why": "Os índices guardam o mesmo texto cifrado."
+      }
+    ]
+  },
+  "ex-wrwe3n0r": {
+    "prompt": "A Vereda precisa achar pacientes pelo CPF, que agora está cifrado com IVs aleatórios. Qual é a resposta de costume?",
+    "hint": "Só igualdade, com chave própria.",
+    "choices": [
+      {
+        "text": "Voltar a um IV fixo nessa coluna",
+        "why": "Isso vaza igualdade para todo mundo."
+      },
+      {
+        "text": "Decifrar todas as linhas a cada busca",
+        "why": "Correto, mas impossivelmente lento em escala."
+      },
+      {
+        "text": "Guardar ao lado um SHA-256 sem sal do CPF",
+        "why": "Há só um bilhão de CPFs; aula 4."
+      },
+      {
+        "text": "Um índice cego: um HMAC com chave do CPF",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-yhccqdww": {
+    "prompt": "Na cifragem em envelope, o que fica guardado ao lado dos dados?",
+    "hint": "A chave mestra fica no KMS.",
+    "choices": [
+      {
+        "text": "A chave mestra, num arquivo separado",
+        "why": "A chave mestra nunca sai do KMS."
+      },
+      {
+        "text": "A chave de dados, embrulhada",
+        "why": "Certo."
+      },
+      {
+        "text": "A chave de dados, em texto claro",
+        "why": "Aí quem tem os dados tem a chave."
+      },
+      {
+        "text": "Nada: o KMS guarda os dados",
+        "why": "O KMS guarda chaves, não dados."
+      }
+    ]
+  },
+  "ex-tphtxgdm": {
+    "prompt": "Ponha em ordem os passos de ler dados cifrados em envelope.",
+    "hint": "Desembrulhar antes de decifrar.",
+    "items": [
+      "ler a DEK embrulhada guardada com os dados",
+      "pedir ao KMS que a desembrulhe",
+      "o KMS confere a permissão e registra a chamada",
+      "decifrar os dados localmente com a DEK",
+      "esquecer a DEK"
+    ]
+  },
+  "ex-h95zcvb3": {
+    "prompt": "Por que os backups devem ser cifrados com chaves que os sistemas de produção não conseguem apagar?",
+    "hint": "Pense num ransomware que domina a produção.",
+    "choices": [
+      {
+        "text": "Porque apagar chaves é lento",
+        "why": "Velocidade não é a preocupação."
+      },
+      {
+        "text": "Para os backups poderem ser decifrados sem KMS",
+        "why": "Eles continuam precisando do KMS."
+      },
+      {
+        "text": "Para um invasor dos servidores não os destruir junto",
+        "why": "Certo."
+      },
+      {
+        "text": "Porque a conformidade proíbe apagar qualquer chave",
+        "why": "Chaves são apagadas de propósito, com prazo de espera."
+      }
+    ]
+  },
+  "ex-zfr02nt3": {
+    "prompt": "Quais riscos da Vereda a cifragem de disco inteiro nos notebooks da equipe cobre? Marque todas as que se aplicam.",
+    "hint": "O aparelho desligado.",
+    "choices": [
+      {
+        "text": "Um notebook esquecido num táxi, desligado",
+        "why": "Sim."
+      },
+      {
+        "text": "O disco de um notebook mandado para conserto",
+        "why": "Sim."
+      },
+      {
+        "text": "Um malware rodando com o usuário logado",
+        "why": "O disco está desbloqueado então."
+      },
+      {
+        "text": "O dump noturno do banco num bucket na nuvem",
+        "why": "Isso é outro sistema, e outra camada."
+      }
+    ]
+  },
+  "ex-phse9xh0": {
+    "prompt": "Associe cada ameaça à camada que a detém.",
+    "hint": "Seções 02 a 06.",
+    "pairs": [
+      {
+        "left": "um notebook roubado e desligado",
+        "right": "cifragem de disco inteiro"
+      },
+      {
+        "left": "arquivos de dados do banco copiados",
+        "right": "TDE"
+      },
+      {
+        "left": "um DBA lendo CPFs",
+        "right": "cifragem de coluna na aplicação"
+      },
+      {
+        "left": "um backup vazado sem acesso ao KMS",
+        "right": "cifragem em envelope com KMS"
+      }
+    ],
+    "right_distractors": [
+      "uma senha fraca de usuário no portal"
+    ]
+  }
+}
