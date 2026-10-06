@@ -2681,6 +2681,246 @@ def l19_overfit(lang):
     return f, t['cap']
 
 
+# ----------------------------------------------------------------- lesson 20
+
+def zero_line(f, p):
+    f.line(p.x0, p.sy(0), p.x1, p.sy(0), stroke='--amber', width=1.4, dash='5 4')
+
+
+def panel_title(f, x, y, s):
+    f.text(x, y, s, size=10.5, weight='600', anchor='start')
+
+
+@figure('l20-good', 20)
+def l20_good(lang):
+    D = S.DELIVERIES
+    fit = S.ols_full([(r['km'], r['items'], r['rain']) for r in D], [r['minutes'] for r in D])
+    res = [r['minutes'] - f_ for r, f_ in zip(D, fit['fitted'])]
+    t = {'en': dict(
+        label='Residuals of Horta\'s three-predictor model plotted against its predicted minutes, '
+              'from about 25 to 65. The points form an even horizontal band around zero, roughly '
+              'from −7 to +10, with no curve, no funnel and no stray point.',
+        x='predicted minutes', y='residual (minutes)',
+        cap='What a healthy residual plot looks like: a shapeless band of even width around zero. '
+            'Whatever pattern there was in the data, the model has taken it.'),
+        'pt': dict(
+        label='Resíduos do modelo de três preditores da Horta contra os minutos previstos, de uns '
+              '25 a 65. Os pontos formam uma faixa horizontal regular em torno de zero, mais ou '
+              'menos de −7 a +10, sem curva, sem funil e sem ponto desgarrado.',
+        x='minutos previstos', y='resíduo (minutos)',
+        cap='Assim é um gráfico de resíduos saudável: uma faixa sem forma, de largura regular, em '
+            'torno de zero. Qualquer padrão que havia nos dados, o modelo levou.')}[lang]
+    f = Fig('l20-good', 600, 300, t['label'])
+    p = Plot(f, 70, 36, 580, 240, 20, 70, -12, 12)
+    p.yaxis(range(-12, 13, 4), fmt=lambda v: str(v).replace('-', '−'), label=t['y'], grid=False)
+    p.xaxis(range(20, 71, 10), label=t['x'])
+    zero_line(f, p)
+    dots(f, p, fit['fitted'], res, r=2.8)
+    return f, t['cap']
+
+
+@figure('l20-curve', 20)
+def l20_curve(lang):
+    xs, ys = S.DISCOUNT, S.DISCOUNT_ORDERS
+    a, b = S.line(xs, ys)
+    r1 = [y - a - b * x for x, y in zip(xs, ys)]
+    lx = [math.log(1 + x) for x in xs]
+    a2, b2 = S.line(lx, ys)
+    r2 = [y - a2 - b2 * x for x, y in zip(lx, ys)]
+    t = {'en': dict(
+        label='Two residual plots for the discount data, residual up and discount across. Left, '
+              'for a straight line: the residuals run from −95 at no discount up to about +46 in '
+              'the middle and down to −47 at 20%, an arch. Right, for a line in the logarithm of '
+              'one plus the discount: the same arch, much flatter, between about −23 and +18.',
+        x='discount (%)', y='residual (orders)', a='straight line', b='line in ln(1 + discount)',
+        cap='A curve in the residuals means a curve the model missed. The logarithm takes most of '
+            'it out, but not all: what is left still arches.'),
+        'pt': dict(
+        label='Dois gráficos de resíduos para os dados de desconto, resíduo na vertical e desconto '
+              'na horizontal. À esquerda, para uma reta: os resíduos vão de −95 sem desconto até '
+              'uns +46 no meio e descem a −47 em 20%, um arco. À direita, para uma reta no '
+              'logaritmo de um mais o desconto: o mesmo arco, bem mais achatado, entre uns −23 e '
+              '+18.',
+        x='desconto (%)', y='resíduo (pedidos)', a='reta', b='reta em ln(1 + desconto)',
+        cap='Uma curva nos resíduos quer dizer uma curva que o modelo perdeu. O logaritmo tira a '
+            'maior parte dela, mas não toda: o que sobra ainda faz arco.')}[lang]
+    f = Fig('l20-curve', 600, 300, t['label'])
+    for k, (rs, title) in enumerate(((r1, t['a']), (r2, t['b']))):
+        x0 = 70 + k * 280
+        p = Plot(f, x0, 46, x0 + 230, 240, 0, 20, -100, 60)
+        p.yaxis(range(-100, 61, 40), fmt=lambda v: str(v).replace('-', '−'), label=t['y'] if k == 0 else None, grid=False, size=9)
+        p.xaxis(range(0, 21, 5), label=t['x'], size=9)
+        zero_line(f, p)
+        f.path('M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(e):.1f}' for x, e in zip(xs, rs)),
+               stroke='--phosphor', width=1.2)
+        dots(f, p, xs, rs, r=3.6)
+        panel_title(f, x0 + 10, 62, title)
+    return f, t['cap']
+
+
+@figure('l20-fan', 20)
+def l20_fan(lang):
+    it = [o[0] for o in S.BIG_ORDERS]
+    bk = [o[1] for o in S.BIG_ORDERS]
+    a, b = S.line(it, bk)
+    r1 = [y - a - b * x for x, y in zip(it, bk)]
+    la, lb = S.line([math.log(v) for v in it], [math.log(y) for y in bk])
+    r2 = [math.log(y) - la - lb * math.log(x) for x, y in zip(it, bk)]
+    t = {'en': dict(
+        label='Two residual plots for 200 orders against the number of items. Left, basket in '
+              'reais on items: the residuals spread from a few reais either way at one item to '
+              'well over a hundred at twenty, a funnel opening to the right. Right, the logarithm '
+              'of the basket on the logarithm of items: a band of even width.',
+        x='items', a='basket on items (R$)', b='ln basket on ln items',
+        cap='A funnel means the spread grows with the prediction. Here each customer shops at '
+            'their own price level, so the spread grows in proportion, and logarithms turn that '
+            'into an even band.'),
+        'pt': dict(
+        label='Dois gráficos de resíduos para 200 pedidos contra o número de itens. À esquerda, a '
+              'cesta em reais pelos itens: os resíduos se espalham de poucos reais para cada lado '
+              'com um item até bem mais de cem com vinte, um funil abrindo para a direita. À '
+              'direita, o logaritmo da cesta pelo logaritmo dos itens: uma faixa de largura '
+              'regular.',
+        x='itens', a='cesta por itens (R$)', b='ln cesta por ln itens',
+        cap='Um funil quer dizer que a dispersão cresce com a previsão. Aqui cada cliente compra '
+            'num nível de preço próprio, então a dispersão cresce em proporção, e os logaritmos '
+            'transformam isso numa faixa regular.')}[lang]
+    f = Fig('l20-fan', 600, 300, t['label'])
+    lim1 = max(abs(v) for v in r1) * 1.05
+    for k, (rs, title, lo, hi, ticks) in enumerate(((r1, t['a'], -150, 300, range(-150, 301, 75)),
+                                                    (r2, t['b'], -1.0, 1.0, [-1, -0.5, 0, 0.5, 1]))):
+        x0 = 70 + k * 280
+        p = Plot(f, x0, 46, x0 + 230, 240, 0, 21, lo, hi)
+        fmt = (lambda v: str(v).replace('-', '−')) if k == 0 else (lambda v: num(lang, v, 1).replace('-', '−'))
+        p.yaxis(ticks, fmt=fmt, grid=False, size=9)
+        p.xaxis(range(0, 21, 5), label=t['x'], size=9)
+        zero_line(f, p)
+        dots(f, p, it, rs, r=2.2)
+        panel_title(f, x0 + 10, 30, title)
+    assert lim1 < 300
+    return f, t['cap']
+
+
+def qq(f, p, xs):
+    n = len(xs)
+    zs = sorted((v - S.mean(xs)) / S.sd(xs) for v in xs)
+    th = [S.normal_inv((i + 0.5) / n) for i in range(n)]
+    f.line(p.sx(-3), p.sy(-3), p.sx(3), p.sy(3), stroke='--amber', width=1.4, dash='5 4')
+    dots(f, p, th, zs, r=2.2)
+
+
+@figure('l20-qq', 20)
+def l20_qq(lang):
+    D = S.DELIVERIES
+    fit = S.ols_full([(r['km'], r['items'], r['rain']) for r in D], [r['minutes'] for r in D])
+    res = [r['minutes'] - f_ for r, f_ in zip(D, fit['fitted'])]
+    t = {'en': dict(
+        label='Two normal quantile plots. Left, the 120 residuals of Horta\'s delivery model, '
+              'standardised: the points lie close to the dashed diagonal all the way along. '
+              'Right, the 400 baskets, standardised: the points bend away from the diagonal, '
+              'above it at both ends, the shape of a long right tail.',
+        x='normal quantile', y='data quantile', a='120 residuals', b='400 baskets',
+        cap='If the data were normal, the points would follow the diagonal. The residuals do; the '
+            'baskets curve upwards, the mark of a long right tail.'),
+        'pt': dict(
+        label='Dois gráficos de quantis normais. À esquerda, os 120 resíduos do modelo de entregas '
+              'da Horta, padronizados: os pontos ficam perto da diagonal tracejada o caminho todo. '
+              'À direita, as 400 cestas, padronizadas: os pontos se curvam para longe da diagonal, '
+              'acima dela nas duas pontas, a forma de uma cauda longa à direita.',
+        x='quantil normal', y='quantil dos dados', a='120 resíduos', b='400 cestas',
+        cap='Se os dados fossem normais, os pontos seguiriam a diagonal. Os resíduos seguem; as '
+            'cestas se curvam para cima, a marca de uma cauda longa à direita.')}[lang]
+    f = Fig('l20-qq', 600, 300, t['label'])
+    for k, (xs, title) in enumerate(((res, t['a']), (S.BASKETS, t['b']))):
+        x0 = 70 + k * 280
+        p = Plot(f, x0, 46, x0 + 230, 240, -3.2, 3.2, -3.2, 6)
+        fmt = lambda v: str(v).replace('-', '−')
+        p.yaxis([-2, 0, 2, 4, 6], fmt=fmt, label=t['y'] if k == 0 else None, grid=False, size=9)
+        p.xaxis([-3, -2, -1, 0, 1, 2, 3], fmt=fmt, label=t['x'], size=9)
+        qq(f, p, xs)
+        panel_title(f, x0 + 10, 62, title)
+    return f, t['cap']
+
+
+@figure('l20-time', 20)
+def l20_time(lang):
+    dk = [r['km'] for r in S.DAY]
+    dm = [r['minutes'] for r in S.DAY]
+    hr = [r['hour'] for r in S.DAY]
+    a, b = S.line(dk, dm)
+    res = [y - a - b * x for x, y in zip(dk, dm)]
+    t = {'en': dict(
+        label='Residuals of a distance-only model for one day\'s 60 deliveries, in the order they '
+              'left, from 10:00 to 20:00. Two shaded bands mark lunch and the evening rush. The '
+              'residuals rise above zero together inside each band and sit below zero together '
+              'between them, so neighbouring deliveries have similar residuals.',
+        x='time of departure', y='residual (minutes)', lunch='lunch', eve='evening',
+        cap='Residuals that come in runs are not independent. Something that changes through the '
+            'day, here the traffic, is in the residuals because it is not in the model.'),
+        'pt': dict(
+        label='Resíduos de um modelo só com a distância para as 60 entregas de um dia, na ordem em '
+              'que saíram, das 10:00 às 20:00. Duas faixas sombreadas marcam o almoço e o pico da '
+              'noite. Os resíduos sobem acima de zero juntos dentro de cada faixa e ficam abaixo '
+              'de zero juntos entre elas, então entregas vizinhas têm resíduos parecidos.',
+        x='hora de saída', y='resíduo (minutos)', lunch='almoço', eve='noite',
+        cap='Resíduos que vêm em sequências não são independentes. Algo que muda ao longo do dia, '
+            'aqui o trânsito, está nos resíduos porque não está no modelo.')}[lang]
+    f = Fig('l20-time', 600, 300, t['label'])
+    p = Plot(f, 70, 36, 580, 240, 10, 20, -8, 12)
+    for lo, hi, lab in ((11.5, 13.5, t['lunch']), (17.5, 19.5, t['eve'])):
+        f.path(f'M{p.sx(lo):.1f} {p.y0:.1f} L{p.sx(hi):.1f} {p.y0:.1f} L{p.sx(hi):.1f} {p.y1:.1f} '
+               f'L{p.sx(lo):.1f} {p.y1:.1f} Z', stroke=None, width=0, fill='--scan')
+        f.text(p.sx((lo + hi) / 2), p.y0 + 10, lab, size=10, weight='600')
+    p.yaxis(range(-8, 13, 4), fmt=lambda v: str(v).replace('-', '−'), label=t['y'], grid=False)
+    p.xaxis(range(10, 21, 2), fmt=lambda v: f'{v}:00', label=t['x'])
+    zero_line(f, p)
+    f.path('M' + ' L'.join(f'{p.sx(h):.1f} {p.sy(e):.1f}' for h, e in zip(hr, res)),
+           stroke='--phosphor', width=1)
+    dots(f, p, hr, res, r=2.8)
+    return f, t['cap']
+
+
+@figure('l20-influence', 20)
+def l20_influence(lang):
+    d = S.Draw(1717)
+    lx = [round(d.uniform(1, 3), 1) for _ in range(10)]
+    ly = [round(d.uniform(30, 36), 1) for _ in range(10)]
+    a1, b1 = S.line(lx + [12], ly + [60])
+    a0, b0 = S.line(lx, ly)
+
+    def sgn(v):
+        return ('−' if v < 0 else '+') + num(lang, abs(v), 2)
+    t = {'en': dict(
+        label=f'The ten patternless points and the lone point at 12 and 60 again. A solid line '
+              f'fitted to all eleven rises steeply, slope {sgn(b1)}, towards the lone point. A '
+              f'dashed line fitted to the ten alone is nearly flat, slope {sgn(b0)}. The lone point '
+              f'is far out on the horizontal axis, which gives it the leverage to pull the line.',
+        w=f'with it: slope {sgn(b1)}', wo=f'without it: slope {sgn(b0)}',
+        cap='A point far out along the horizontal axis has leverage: the line pivots towards it. '
+            'Here one point decides the sign of the slope, and Cook\'s distance flags it at 92, '
+            'against at most 0.2 for the others.'),
+        'pt': dict(
+        label=f'Os dez pontos sem padrão e o ponto isolado em 12 e 60 de novo. Uma reta cheia '
+              f'ajustada aos onze sobe forte, inclinação {sgn(b1)}, em direção ao ponto isolado. '
+              f'Uma reta tracejada ajustada só aos dez é quase plana, inclinação {sgn(b0)}. O ponto '
+              f'isolado fica longe no eixo horizontal, o que lhe dá a alavanca para puxar a reta.',
+        w=f'com ele: inclinação {sgn(b1)}', wo=f'sem ele: inclinação {sgn(b0)}',
+        cap='Um ponto longe no eixo horizontal tem alavanca: a reta gira em direção a ele. Aqui um '
+            'ponto decide o sinal da inclinação, e a distância de Cook o aponta com 92, contra no '
+            'máximo 0,2 para os outros.')}[lang]
+    f = Fig('l20-influence', 600, 300, t['label'])
+    p = Plot(f, 60, 30, 580, 250, 0, 14, 25, 65)
+    p.yaxis(range(25, 66, 10))
+    p.xaxis(range(0, 15, 2))
+    f.line(p.sx(0.5), p.sy(a1 + 0.5 * b1), p.sx(13), p.sy(a1 + 13 * b1), stroke='--amber', width=1.8)
+    f.line(p.sx(0.5), p.sy(a0 + 0.5 * b0), p.sx(13), p.sy(a0 + 13 * b0), stroke='--paper', width=1.6, dash='6 4')
+    dots(f, p, lx, ly, r=3.6)
+    f.circle(p.sx(12), p.sy(60), 4.5, fill='--amber', stroke='--amber')
+    f.text(p.sx(6), p.sy(50), t['w'], size=11, weight='600', fill='--amber', anchor='end')
+    f.text(p.sx(5.5), p.sy(33.5), t['wo'], size=11, weight='600', anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

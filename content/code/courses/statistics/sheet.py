@@ -1417,6 +1417,136 @@ def l19():
         show(f'train/test with {k} noise columns: train R2, train rmse, test rmse', f'{f_["r2"]:.4f} {tr_err:.3f} {err:.3f}')
 
 
+# Two hundred orders, lesson 20: each customer shops at a price level of their own,
+# so a basket's spread grows in proportion to the number of items in it.
+def _big_orders():
+    d = Draw(2000)
+    out = []
+    for _ in range(200):
+        items = 1 + d.index(20)
+        out.append((items, round(items * d.lognormal(2.35, 0.3), 2)))
+    return out
+
+
+BIG_ORDERS = _big_orders()
+
+
+# One day's 60 deliveries in the order they left, lesson 20: traffic builds to a peak
+# at lunch and another in the evening, and distance alone cannot see it.
+def _day():
+    d = Draw(2001)
+    out = []
+    for i in range(60):
+        hour = 10 + 10 * i / 59
+        km = round(d.uniform(1, 12), 1)
+        traffic = 6 * math.exp(-((hour - 12.5) / 1.2) ** 2) + 7 * math.exp(-((hour - 18.5) / 1.1) ** 2)
+        minutes = 22 + 2.4 * km + traffic + d.normal(0, 2.5)
+        out.append({'hour': round(hour, 2), 'km': km, 'minutes': round(minutes * 2) / 2,
+                    'rush': 1 if (11.5 <= hour <= 13.5 or 17.5 <= hour <= 19.5) else 0})
+    return out
+
+
+DAY = _day()
+
+
+def lag1(xs):
+    m = mean(xs)
+    return sum((a - m) * (b - m) for a, b in zip(xs, xs[1:])) / sum((a - m) ** 2 for a in xs)
+
+
+def cooks(rows, ys):
+    """Cook's distance and leverage for each point."""
+    fit = ols_full(rows, ys)
+    x = [[1.0] + list(r) for r in rows]
+    n, k = len(x), len(x[0])
+    xtx = [[sum(x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+    inv = inverse(xtx)
+    out = []
+    for i in range(n):
+        h = sum(x[i][a] * inv[a][b] * x[i][b] for a in range(k) for b in range(k))
+        e = ys[i] - fit['fitted'][i]
+        out.append((e * e / (k * fit['s'] ** 2) * h / (1 - h) ** 2, h))
+    return out
+
+
+@lesson(20)
+def l20():
+    D = DELIVERIES
+    mins = [r['minutes'] for r in D]
+    km = [r['km'] for r in D]
+    full = ols_full([(r['km'], r['items'], r['rain']) for r in D], mins)
+    res = [y - f for y, f in zip(mins, full['fitted'])]
+    show('full model residuals: sd, skew, kurt, min, max', f'{sd(res):.3f} {skewness(res):.3f} {kurtosis(res):.3f} {min(res):.2f} {max(res):.2f}')
+    simple = ols_full([(k,) for k in km], mins)
+    rs = [y - f for y, f in zip(mins, simple['fitted'])]
+    show('km-only residuals: skew, kurt', f'{skewness(rs):.3f} {kurtosis(rs):.3f}')
+    show('km-only residuals: mean for rain, dry', f'{mean([e for e, r in zip(rs, D) if r["rain"]]):.2f} {mean([e for e, r in zip(rs, D) if not r["rain"]]):.2f}')
+    show('first delivery residual, km-only', f'{rs[0]:.4f}')
+    # linearity: discount
+    a, b = line(DISCOUNT, DISCOUNT_ORDERS)
+    rl = [y - a - b * x for x, y in zip(DISCOUNT, DISCOUNT_ORDERS)]
+    show('discount line: a, b, R2', f'{a:.2f} {b:.3f} {pearson(DISCOUNT, DISCOUNT_ORDERS) ** 2:.4f}')
+    show('discount line residuals', [round(e, 1) for e in rl])
+    lx = [math.log(1 + x) for x in DISCOUNT]
+    a2, b2 = line(lx, DISCOUNT_ORDERS)
+    rl2 = [y - a2 - b2 * x for x, y in zip(lx, DISCOUNT_ORDERS)]
+    show('orders ~ ln(1 + discount): a, b, R2', f'{a2:.2f} {b2:.3f} {pearson(lx, DISCOUNT_ORDERS) ** 2:.4f}')
+    show('  residuals', [round(e, 1) for e in rl2])
+    q = ols_full([(x, x * x) for x in DISCOUNT], DISCOUNT_ORDERS)
+    show('orders ~ d + d^2: beta, R2', f'{[round(v, 3) for v in q["beta"]]} {q["r2"]:.4f}')
+    show('  residuals', [round(y - f, 1) for y, f in zip(DISCOUNT_ORDERS, q['fitted'])])
+    # heteroscedasticity
+    it = [o[0] for o in BIG_ORDERS]
+    bk = [o[1] for o in BIG_ORDERS]
+    h = ols_full([(v,) for v in it], bk)
+    rh = [y - f for y, f in zip(bk, h['fitted'])]
+    lo = [e for e, v in zip(rh, it) if v <= 5]
+    hi = [e for e, v in zip(rh, it) if v >= 16]
+    show('basket ~ items: a, b, R2', f'{h["beta"][0]:.3f} {h["beta"][1]:.3f} {h["r2"]:.4f}')
+    show('  residual sd for 1-5 items, 16-20 items, counts', f'{sd(lo):.2f} {sd(hi):.2f} {len(lo)} {len(hi)}')
+    ll = ols_full([(math.log(v),) for v in it], [math.log(y) for y in bk])
+    rll = [math.log(y) - f for y, f in zip(bk, ll['fitted'])]
+    lo2 = [e for e, v in zip(rll, it) if v <= 5]
+    hi2 = [e for e, v in zip(rll, it) if v >= 16]
+    show('ln basket ~ ln items: a, b, R2', f'{ll["beta"][0]:.4f} {ll["beta"][1]:.4f} {ll["r2"]:.4f}')
+    show('  residual sd for 1-5 items, 16-20 items', f'{sd(lo2):.4f} {sd(hi2):.4f}')
+    pi = [y / v for v, y in zip(it, bk)]
+    show('price per item: mean, sd', f'{mean(pi):.2f} {sd(pi):.2f}')
+    # independence
+    dk = [r['km'] for r in DAY]
+    dm = [r['minutes'] for r in DAY]
+    f1 = ols_full([(k,) for k in dk], dm)
+    r1 = [y - f for y, f in zip(dm, f1['fitted'])]
+    show('day: minutes ~ km: beta, R2, s, lag-1 autocorrelation', f'{[round(v, 3) for v in f1["beta"]]} {f1["r2"]:.4f} {f1["s"]:.3f} {lag1(r1):.3f}')
+    f2 = ols_full([(r['km'], r['rush']) for r in DAY], dm)
+    r2_ = [y - f for y, f in zip(dm, f2['fitted'])]
+    show('day: minutes ~ km + rush: beta, R2, s, lag-1', f'{[round(v, 3) for v in f2["beta"]]} {f2["r2"]:.4f} {f2["s"]:.3f} {lag1(r2_):.3f}')
+    show('day: se of km slope, simple vs with rush', f'{f1["se"][1]:.4f} {f2["se"][1]:.4f}')
+    show('rush count', sum(r['rush'] for r in DAY))
+    # influence
+    d = Draw(1717)
+    lx_ = [round(d.uniform(1, 3), 1) for _ in range(10)] + [12]
+    ly_ = [round(d.uniform(30, 36), 1) for _ in range(10)] + [60]
+    c = cooks([(v,) for v in lx_], ly_)
+    show('lever: Cook D and leverage of the lone point', f'{c[-1][0]:.3f} {c[-1][1]:.3f}')
+    show('lever: largest Cook D among the ten', f'{max(v[0] for v in c[:-1]):.3f}')
+    a3, b3 = line(lx_, ly_)
+    a4, b4 = line(lx_[:-1], ly_[:-1])
+    show('lever: slope with, without', f'{b3:.3f} {b4:.3f}')
+    c120 = cooks([(r['km'], r['items'], r['rain']) for r in D], mins)
+    big = max(range(120), key=lambda i: c120[i][0])
+    show('120: largest Cook D, index, its row, leverage', f'{c120[big][0]:.4f} {big} {D[big]} {c120[big][1]:.4f}')
+    show('120: count with D > 4/n', sum(1 for v in c120 if v[0] > 4 / 120))
+    show('120: mean leverage (k/n)', f'{mean([v[1] for v in c120]):.4f}')
+    # an outlier in y with low leverage: 240 typed for delivery 10's 24.0
+    m2 = mins[:]
+    m2[10] = 240.0
+    t = ols_full([(r['km'], r['items'], r['rain']) for r in D], m2)
+    ct = cooks([(r['km'], r['items'], r['rain']) for r in D], m2)
+    show('typo 240 for delivery 10: original minutes, beta, R2, Cook D, leverage',
+         f'{mins[10]} {[round(v, 3) for v in t["beta"]]} {t["r2"]:.4f} {ct[10][0]:.3f} {ct[10][1]:.4f}')
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:
