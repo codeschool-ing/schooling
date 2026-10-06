@@ -1,0 +1,272 @@
+{
+  "ex-rm41d18f": {
+    "prompt": "Uma imagem cujo Dockerfile não tem linha `USER`: com que usuário roda o processo do container dela?",
+    "hint": "O `docker top` mostrou um número.",
+    "choices": [
+      {
+        "text": "Root, UID 0",
+        "why": "Isso. E sem namespace de usuários, é o root do host."
+      },
+      {
+        "text": "O usuário que rodou o `docker run`",
+        "why": "O UID da própria Ana precisaria de `--user`; o padrão é o da imagem."
+      },
+      {
+        "text": "`nobody`, por segurança",
+        "why": "O Docker não escolhe nada mais seguro sozinho."
+      },
+      {
+        "text": "Um UID aleatório escolhido a cada início",
+        "why": "O Docker não sorteia usuários; isso é uma escolha de alguns orquestradores."
+      }
+    ]
+  },
+  "ex-rva5jdra": {
+    "prompt": "Uma falha no runtime deixa um processo passar pelas paredes de um container. Por que importa se esse processo era UID 0 ou UID 65532?",
+    "hint": "Como que usuário ele chega ao host?",
+    "choices": [
+      {
+        "text": "Não importa; um processo que passa pelas paredes vira root de qualquer jeito",
+        "why": "Ele chega como o usuário que era; o 65532 não tem direito nenhum no host."
+      },
+      {
+        "text": "Ele chega como esse usuário: como root, isso é a máquina inteira",
+        "why": "Isso. Como 65532, é muito pouco."
+      },
+      {
+        "text": "Processos com UID 65532 não conseguem usar a rede",
+        "why": "Conseguem; a diferença é sobre os arquivos e processos do host."
+      },
+      {
+        "text": "Processos root rodam mais rápido fora de um container",
+        "why": "Velocidade não é o ponto; poder sobre o host é."
+      }
+    ]
+  },
+  "ex-nvwvky27": {
+    "prompt": "Quais destes pioram quando o processo de um container roda como root? Escolha todos os que se aplicam.",
+    "hint": "A aula listou três.",
+    "choices": [
+      {
+        "text": "O que um diretório do host montado por bind pode sofrer",
+        "why": "Sim: o root pode reescrever qualquer coisa nele."
+      },
+      {
+        "text": "O que um processo que passou pelas paredes consegue fazer no host",
+        "why": "Sim: ele chega lá como root."
+      },
+      {
+        "text": "Até onde vai um bug do programa que escreve arquivos",
+        "why": "Sim: o root pode escrever em qualquer lugar do sistema de arquivos do container."
+      },
+      {
+        "text": "Quanto tempo a imagem leva para baixar",
+        "why": "O usuário não tem nada a ver com o tamanho do download."
+      }
+    ]
+  },
+  "ex-v31xypkt": {
+    "prompt": "Por que a aula escreve `USER 65532:65532` em vez de `USER nonroot`, se os dois funcionam?",
+    "hint": "Quem confere antes de iniciar o container?",
+    "choices": [
+      {
+        "text": "Nomes são mais lentos de digitar",
+        "why": "Digitação não é o argumento."
+      },
+      {
+        "text": "Nomes deixam de funcionar depois que a imagem vai para um registry",
+        "why": "Continuam funcionando; só não podem ser verificados sem o `/etc/passwd` da imagem."
+      },
+      {
+        "text": "Só um número deixa o orquestrador verificar",
+        "why": "Isso: orquestradores só conferem que não é root a partir de um número; o `runAsNonRoot` do Kubernetes recusa um nome que não consegue conferir."
+      },
+      {
+        "text": "O distroless não tem usuário `nonroot`",
+        "why": "Tem, como o `/etc/passwd` dele mostrou."
+      }
+    ]
+  },
+  "ex-wyk3nkz3": {
+    "prompt": "O `shelf` rodando como UID 65532 escutou na porta 80 sem problema. Por quê?",
+    "hint": "Leia o valor que a Ana imprimiu do `/proc`.",
+    "choices": [
+      {
+        "text": "A porta 80 não é privilegiada no Linux",
+        "why": "No host, abaixo de 1024 é reservado por padrão; dentro do container o ajuste é outro."
+      },
+      {
+        "text": "O distroless roda o `shelf` como root apesar do `USER`",
+        "why": "O `docker top` mostrou UID 65532."
+      },
+      {
+        "text": "A porta foi publicada com `-p`",
+        "why": "Nenhum `-p` foi dado; o programa usou a porta lá dentro."
+      },
+      {
+        "text": "O Docker define o `ip_unprivileged_port_start` como 0 em cada container",
+        "why": "Isso, então qualquer usuário pode usar qualquer porta naquele namespace."
+      }
+    ]
+  },
+  "ex-2fq94j4n": {
+    "prompt": "Na imagem Alpine, o usuário 10001 não conseguiu criar `/data/report.txt`. O que resolveu?",
+    "hint": "Quem era dono do `/data`?",
+    "choices": [
+      {
+        "text": "Um `chown app:app /data` antes do `USER`",
+        "why": "Isso: entregue exatamente o diretório em que ele escreve."
+      },
+      {
+        "text": "Rodar o container com `--privileged`",
+        "why": "Isso concederia muito mais do que um diretório precisa."
+      },
+      {
+        "text": "Trocar o `USER` por um nome em vez de número",
+        "why": "O nome e o número são o mesmo usuário."
+      },
+      {
+        "text": "Fazer do `/data` um link simbólico para o `/tmp`",
+        "why": "Isso foge da pergunta em vez de respondê-la."
+      }
+    ]
+  },
+  "ex-8s7dx8w3": {
+    "prompt": "O distroless não tem `cat`, e mesmo assim a Ana leu o `/etc/passwd` do container em execução com `docker ___ as-nonroot:/etc/passwd -`.",
+    "hint": "O comando que copia arquivos entre um container e o host.",
+    "blanks": [
+      {
+        "accept": [
+          "cp"
+        ]
+      }
+    ]
+  },
+  "ex-nzadpqgk": {
+    "prompt": "A `debian:trixie` tem 187MB e a `debian:trixie-slim` 119MB, as duas com 78 pacotes. O que a slim removeu?",
+    "hint": "Coisas que um container nunca lê.",
+    "choices": [
+      {
+        "text": "O shell e o gerenciador de pacotes",
+        "why": "Os dois continuam na slim; ela tem 259 programas em `/usr/bin`."
+      },
+      {
+        "text": "Documentação, páginas de manual e arquivos de idioma",
+        "why": "Isso. Os programas continuam todos lá, shell e `apt` incluídos."
+      },
+      {
+        "text": "Metade dos 78 pacotes, os que ninguém usa",
+        "why": "A contagem é idêntica: 78 nas duas."
+      },
+      {
+        "text": "A biblioteca C",
+        "why": "Sem ela quase nada no Debian rodaria."
+      }
+    ]
+  },
+  "ex-bts3adbz": {
+    "prompt": "A `layers:two` cria um arquivo de 50 MB num `RUN` e o apaga no seguinte. Por que o download dela é de 56.2MB?",
+    "hint": "O que a segunda camada contém?",
+    "choices": [
+      {
+        "text": "O `rm` falhou",
+        "why": "Ele rodou; o arquivo sumiu da visão do container."
+      },
+      {
+        "text": "O Docker comprime mal arquivos apagados",
+        "why": "Bytes aleatórios não se comprimem; mas o ponto é que eles estão lá."
+      },
+      {
+        "text": "A primeira camada ainda guarda o arquivo; a segunda só o esconde",
+        "why": "Isso: um whiteout por cima, os bytes embaixo, baixados em todo pull."
+      },
+      {
+        "text": "O BuildKit guarda o arquivo na imagem de propósito, como cache",
+        "why": "Isso é o modelo de camadas, não um cache."
+      }
+    ]
+  },
+  "ex-n3dfpyka": {
+    "prompt": "O `docker image ls layers` mostrou a `layers:one` com que `CONTENT SIZE`, em MB?",
+    "hint": "O mesmo do Alpine puro.",
+    "unit": "MB"
+  },
+  "ex-qzpap42p": {
+    "prompt": "Ponha as partes de uma instalação de pacotes bem feita na ordem em que aparecem num `RUN`.",
+    "hint": "Listas primeiro, limpeza por último, tudo numa camada.",
+    "items": [
+      "`apt-get update`",
+      "`apt-get install -y --no-install-recommends ca-certificates`",
+      "`rm -rf /var/lib/apt/lists/*`"
+    ]
+  },
+  "ex-645t9x9r": {
+    "prompt": "Pelo argumento da aula, por que um shell numa imagem de produção é um custo mesmo que o programa nunca o chame?",
+    "hint": "Quem mais poderia usá-lo?",
+    "choices": [
+      {
+        "text": "Ele deixa o programa mais lento no início",
+        "why": "Um shell sem uso não custa nada na execução."
+      },
+      {
+        "text": "Shells são proibidos em imagens de produção",
+        "why": "Nada os proíbe; a questão é quanto custam."
+      },
+      {
+        "text": "Ele torna a imagem incompatível com o Kubernetes",
+        "why": "O Kubernetes roda imagens com shell o tempo todo."
+      },
+      {
+        "text": "Uma ferramenta a mais para o invasor",
+        "why": "Isso, e mais um pacote para atualizar. Superfície é o que há dentro, não megabytes."
+      }
+    ]
+  },
+  "ex-ced6b9xw": {
+    "prompt": "Ligue cada prática ao problema que ela evita.",
+    "hint": "Quatro práticas, quatro problemas; um é isca.",
+    "pairs": [
+      {
+        "left": "Build multiestágio",
+        "right": "Entregar o compilador e o código-fonte"
+      },
+      {
+        "left": "`USER` numérico",
+        "right": "Rodar como root, sem como verificar"
+      },
+      {
+        "left": "Instalar e limpar num `RUN`",
+        "right": "Arquivos apagados guardados numa camada anterior"
+      },
+      {
+        "left": "`.dockerignore` com os segredos",
+        "right": "Uma senha copiada para a imagem"
+      }
+    ],
+    "right_distractors": [
+      "Um container que não alcança a rede"
+    ]
+  },
+  "ex-7jrmb27w": {
+    "prompt": "O Dockerfile de um colega termina com `FROM debian:trixie-slim`, `COPY app /app`, `RUN chmod +x /app`, `CMD [\"/app\"]`. O `app` é um binário estático. Que mudança única remove mais superfície?",
+    "hint": "Do que o programa precisa da base?",
+    "choices": [
+      {
+        "text": "Entregar sobre o distroless `static`",
+        "why": "Isso: sem shell, sem gerenciador de pacotes, e acrescente o `USER` também."
+      },
+      {
+        "text": "Trocar para `debian:trixie`",
+        "why": "Isso acrescenta 68MB de documentação e não muda mais nada."
+      },
+      {
+        "text": "Acrescentar `USER 65532:65532` e manter a base",
+        "why": "Vale a pena, mas o shell, o `apt` e os 259 programas continuam."
+      },
+      {
+        "text": "Apagar o `/usr/bin` num `RUN` seguinte",
+        "why": "A camada anterior guarda todos os arquivos; a imagem não diminui."
+      }
+    ]
+  }
+}
