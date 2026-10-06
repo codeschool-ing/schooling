@@ -9,7 +9,7 @@
 #   bash captures.sh           # needs uv, and the network the first time
 #
 # What is STAGED rather than typed, and not shown in the lesson: the project,
-# rebuilt by ../../lab.sh at its last step in /home/ana/shipquote, with its
+# rebuilt by ../../lab.sh at step 5 in /home/ana/shipquote, with its
 # virtual environment; and the two deliberate bugs in "first-test" and
 # "what-to-test", each written into a file with sed just before the run that
 # shows it and taken out again with `git checkout` right after.
@@ -21,7 +21,7 @@
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 HOME=/home/ana
 LAB=$(cd "$(dirname "$0")/../.." && pwd)/lab.sh
-bash "$LAB" stage last >/dev/null && bash "$LAB" venv "$HOME/shipquote" >/dev/null 2>&1
+bash "$LAB" stage 5 >/dev/null && bash "$LAB" venv "$HOME/shipquote" >/dev/null 2>&1
 cd "$HOME/shipquote" || exit 1
 export PATH="$HOME/shipquote/.venv/bin:$PATH"
 run() { printf 'ana@laptop:~/shipquote$ %s\n' "$*"; bash -c "$*" 2>&1; }

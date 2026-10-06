@@ -609,14 +609,95 @@ EOF
 }
 commit_5() { at 2026-09-10T16:25:00-03:00 'Say which day an order leaves the warehouse'; }
 
+# ---- step 6: Send e-mail over SMTP, and mock the mailer by its real shape
+step_6() {
+  cat > shipquote/mailer.py <<'EOF'
+"""E-mail through an SMTP server."""
+import smtplib
+from email.message import EmailMessage
+
+
+class SmtpMailer:
+    def __init__(self, host, port=25):
+        self.host = host
+        self.port = port
+
+    def send(self, to, subject, body):
+        msg = EmailMessage()
+        msg["From"] = "pedidos@livraria.example"
+        msg["To"] = to
+        msg["Subject"] = subject
+        msg.set_content(body)
+        with smtplib.SMTP(self.host, self.port, timeout=5) as smtp:
+            smtp.send_message(msg)
+EOF
+  cat > tests/test_orders.py <<'EOF'
+from unittest import mock
+
+import pytest
+
+from shipquote.mailer import SmtpMailer
+from shipquote.orders import place
+from tests.fakes import FakeOrders
+
+
+def test_placing_an_order_sends_exactly_one_confirmation():
+    mailer = mock.create_autospec(SmtpMailer, instance=True)
+    order_id = place(FakeOrders(), mailer, "bia@example.org", 8990)
+    mailer.send.assert_called_once_with(
+        to="bia@example.org", subject=f"Order {order_id} confirmed",
+        body="Total: R$ 89,90")
+
+
+def test_an_order_of_nothing_is_refused_before_anything_is_written():
+    orders = FakeOrders()
+    with pytest.raises(ValueError, match="must cost something"):
+        place(orders, mailer=None, email="bia@example.org", cents=0)
+    assert orders.rows == []
+EOF
+  cat > tests/test_carrier_contract.py <<'EOF'
+"""The questions the stubs answer, asked of a real carrier endpoint.
+
+Runs only when CARRIER_URL says where one is; CARRIER_TOKEN is its key.
+"""
+import os
+
+import pytest
+
+from shipquote.carrier import CarrierClient, CarrierError
+
+URL = os.environ.get("CARRIER_URL")
+pytestmark = [pytest.mark.contract,
+              pytest.mark.skipif(not URL, reason="CARRIER_URL is not set")]
+
+
+@pytest.fixture
+def client():
+    return CarrierClient(URL, os.environ.get("CARRIER_TOKEN", ""))
+
+
+def test_a_rate_is_a_whole_number_of_cents(client):
+    cents = client.rate("01310100", 1200)
+    assert isinstance(cents, int) and cents > 0
+
+
+def test_a_wrong_token_is_a_carrier_error_not_a_crash():
+    with pytest.raises(CarrierError, match="401"):
+        CarrierClient(URL, "not-the-token").rate("01310100", 1200)
+EOF
+  sed -i 's/^    "acceptance: a promise the shop makes, checked from outside",$/&\n    "contract: asks the real carrier the questions the stubs answer",/' pyproject.toml
+}
+commit_6() { at 2026-09-14T10:30:00-03:00 'Send e-mail over SMTP, and mock the mailer by its real shape'; }
+
 steps() {
   echo ' 1  2026-09-01  Money in cents, with its first tests'
   echo ' 2  2026-09-02  Price a parcel by zone and weight'
   echo ' 3  2026-09-03  Keep quotes in SQLite and answer over HTTP'
   echo ' 4  2026-09-08  Ask the carrier first, and confirm orders by e-mail'
   echo ' 5  2026-09-10  Say which day an order leaves the warehouse'
+  echo ' 6  2026-09-14  Send e-mail over SMTP, and mock the mailer by its real shape'
 }
-LAST=5
+LAST=6
 
 venv() {
   local dir=$1 py=${2:-3.13}
