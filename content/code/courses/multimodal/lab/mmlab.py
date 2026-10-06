@@ -22,11 +22,12 @@ def read_audio(path, rate=RATE):
     return np.frombuffer(raw, dtype=np.float32)
 
 
-def whisper(size="base", language="", task="transcribe"):
-    """OpenAI's Whisper, exported to ONNX by sherpa-onnx: `tiny` or `base`, int8."""
+def whisper(size="base", language="", task="transcribe", int8=True):
+    """OpenAI's Whisper, exported to ONNX by sherpa-onnx: `tiny` or `base`, int8 unless asked otherwise."""
     d = os.path.join(SHARE, f"sherpa-onnx-whisper-{size}")
+    q = ".int8" if int8 else ""
     return sherpa_onnx.OfflineRecognizer.from_whisper(
-        encoder=f"{d}/{size}-encoder.int8.onnx", decoder=f"{d}/{size}-decoder.int8.onnx",
+        encoder=f"{d}/{size}-encoder{q}.onnx", decoder=f"{d}/{size}-decoder{q}.onnx",
         tokens=f"{d}/{size}-tokens.txt", language=language, task=task, num_threads=2)
 
 
