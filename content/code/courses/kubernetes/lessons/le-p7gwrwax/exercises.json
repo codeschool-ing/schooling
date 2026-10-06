@@ -1,0 +1,198 @@
+[
+  {
+    "id": "ex-hat3qh9t",
+    "version": 1,
+    "section": "chart",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file holds the values a user may override without editing a template?",
+    "hint": "`--set` overrides it.",
+    "choices": [
+      {
+        "text": "`Chart.yaml`",
+        "correct": false,
+        "why": "That names the chart and its versions."
+      },
+      {
+        "text": "`values.yaml`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`templates/deployment.yaml`",
+        "correct": false,
+        "why": "That reads the values; it does not hold them."
+      },
+      {
+        "text": "The release's Secret",
+        "correct": false,
+        "why": "That records what was installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hp45xzy",
+    "version": 1,
+    "section": "chart",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`greeting` is empty in `values.yaml`. What does the template render for `env` when nobody sets it?",
+    "hint": "`with` renders its block only for a non-empty value.",
+    "choices": [
+      {
+        "text": "`GREETING` set to an empty string",
+        "correct": false,
+        "why": "The block is skipped entirely."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "Empty is a valid value."
+      },
+      {
+        "text": "`GREETING` set to `null`",
+        "correct": false,
+        "why": "Nothing is written."
+      },
+      {
+        "text": "No `env` block at all",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-arw52gt7",
+    "version": 1,
+    "section": "releases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl get deployment,service -l app.kubernetes.io/instance=shop` listed no Service. Why?",
+    "hint": "Look at the Service template's metadata.",
+    "choices": [
+      {
+        "text": "Helm does not create Services",
+        "correct": false,
+        "why": "The template made one."
+      },
+      {
+        "text": "The Service template sets no labels",
+        "correct": true,
+        "why": "Right. It exists; the selector cannot find it."
+      },
+      {
+        "text": "The Service failed to install",
+        "correct": false,
+        "why": "The install reported success."
+      },
+      {
+        "text": "Services live in another namespace",
+        "correct": false,
+        "why": "Both went to `default`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yepjhaq0",
+    "version": 1,
+    "section": "releases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `helm rollback shop 1`, what did `helm history` show?",
+    "hint": "A rollback does not rewind.",
+    "choices": [
+      {
+        "text": "Revision 2 deleted",
+        "correct": false,
+        "why": "All revisions stayed."
+      },
+      {
+        "text": "Revision 1 marked deployed again",
+        "correct": false,
+        "why": "Revision 1 stayed superseded."
+      },
+      {
+        "text": "A new revision 3, `Rollback to 1`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing; rollbacks are not recorded",
+        "correct": false,
+        "why": "It is the third line."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwwzw301",
+    "version": 1,
+    "section": "releases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does Helm 4 keep the history of a release?",
+    "hint": "`kubectl get secret -l owner=helm`.",
+    "choices": [
+      {
+        "text": "On a Helm server in the cluster",
+        "correct": false,
+        "why": "There is no Helm server."
+      },
+      {
+        "text": "In `~/.helm` on the laptop",
+        "correct": false,
+        "why": "Another laptop could not roll back then."
+      },
+      {
+        "text": "In a Secret per revision",
+        "correct": true,
+        "why": "Right, in the release's namespace."
+      },
+      {
+        "text": "In the chart's `Chart.yaml`",
+        "correct": false,
+        "why": "The chart does not change on install."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t9rxpdk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the safe way to change a release.",
+    "hint": "Read, change, check, and keep a way back.",
+    "items": [
+      "Render the change with `helm template`",
+      "Apply it with `helm upgrade`",
+      "Check the result with `helm history` and `kubectl`",
+      "If needed, `helm rollback` to the last good revision"
+    ],
+    "trap": "A rollback needs a revision to return to, and an upgrade is easier to judge when its rendering was read first."
+  },
+  {
+    "id": "ex-frmj5zpy",
+    "version": 1,
+    "section": "releases",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To install the same chart twice in one namespace, give each install a different release ___.",
+    "hint": "`shop` and `shop-staging`.",
+    "blanks": [
+      {
+        "accept": [
+          "name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
