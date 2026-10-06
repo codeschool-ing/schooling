@@ -1,0 +1,334 @@
+{
+  "ex-c9v9kycq": {
+    "prompt": "Ligue cada especificação da OCI ao que ela define.",
+    "hint": "Construir, guardar, rodar.",
+    "pairs": [
+      {
+        "left": "especificação de imagem",
+        "right": "Manifesto, configuração e camadas"
+      },
+      {
+        "left": "especificação de distribuição",
+        "right": "A API HTTP que um registry responde"
+      },
+      {
+        "left": "especificação de runtime",
+        "right": "Um sistema de arquivos raiz mais o `config.json`, e como iniciá-lo"
+      }
+    ],
+    "right_distractors": [
+      "As opções de linha de comando do `docker run`"
+    ]
+  },
+  "ex-f9cf3ppe": {
+    "prompt": "O Kubernetes 1.24 removeu o suporte embutido ao Docker Engine. Por que as imagens feitas com `docker build` continuaram rodando nele?",
+    "hint": "Que tipo de imagem o `docker build` produz?",
+    "choices": [
+      {
+        "text": "São imagens OCI, que o containerd e o CRI-O rodam",
+        "why": "Isso. O formato é padrão; o motor nunca foi o que o cluster precisava."
+      },
+      {
+        "text": "O Kubernetes converte, sem avisar, cada imagem Docker para um formato próprio no pull",
+        "why": "Nenhuma conversão acontece; a imagem já está no formato padrão."
+      },
+      {
+        "text": "Imagens Docker contêm uma cópia do Docker Engine",
+        "why": "Uma imagem guarda os arquivos do programa, não um motor."
+      },
+      {
+        "text": "Os clusters mantiveram o Docker instalado em cada nó por compatibilidade",
+        "why": "A 1.24 removeu justamente esse caminho; os clusters falam com o containerd ou o CRI-O."
+      }
+    ]
+  },
+  "ex-mhgr4fq3": {
+    "prompt": "De onde veio o runc?",
+    "hint": "2015.",
+    "choices": [
+      {
+        "text": "Foi escrito pelo projeto Kubernetes",
+        "why": "O Kubernetes usa runtimes; o runc veio de outro lugar."
+      },
+      {
+        "text": "Faz parte do kernel Linux",
+        "why": "É um programa comum que pede namespaces e cgroups ao kernel."
+      },
+      {
+        "text": "O Docker entregou à OCI o código que iniciava containers",
+        "why": "Isso, quando a OCI foi fundada sob a Linux Foundation."
+      },
+      {
+        "text": "Os autores do Podman o escreveram para substituir o motor do Docker",
+        "why": "O Podman veio depois e usa runc ou crun como runtime."
+      }
+    ]
+  },
+  "ex-ns5ewrr9": {
+    "prompt": "O `docker info --format \"{{.DefaultRuntime}}\"` imprimiu o nome do programa que por fim cria o processo do container: ___.",
+    "hint": "A implementação de referência da OCI.",
+    "blanks": [
+      {
+        "accept": [
+          "runc"
+        ]
+      }
+    ]
+  },
+  "ex-yfvr4869": {
+    "prompt": "Como o mesmo nome, `alpine:3.22`, entrega a um Raspberry Pi e a um servidor `amd64` os binários certos de cada um?",
+    "hint": "Abra o documento para o qual o índice aponta.",
+    "choices": [
+      {
+        "text": "O registry olha o endereço IP do cliente",
+        "why": "Registries não adivinham; quem escolhe é o cliente."
+      },
+      {
+        "text": "O índice da tag lista cada plataforma",
+        "why": "Isso. Aquela lista tinha oito plataformas."
+      },
+      {
+        "text": "Os binários do Alpine rodam em qualquer processador",
+        "why": "A aula 2 mostrou um binário arm64 recusado em amd64."
+      },
+      {
+        "text": "Há tags separadas, e o Docker reescreve o nome sem avisar",
+        "why": "Uma tag, um índice, muitos manifestos; nada é renomeado."
+      }
+    ]
+  },
+  "ex-x46x1wx4": {
+    "prompt": "O manifesto nomeia a camada como `sha256:53f8…`, e o `rootfs.diff_ids` da configuração diz `sha256:e477…`. Por que dois hashes para uma camada?",
+    "hint": "Um deles viaja.",
+    "choices": [
+      {
+        "text": "Um é o hash do arquivo comprimido, o outro dos arquivos descompactados",
+        "why": "Isso. O manifesto nomeia o que viaja; o `diff_ids` nomeia o que ele vira ao ser aberto."
+      },
+      {
+        "text": "A camada mudou depois que a imagem foi publicada, e a configuração nunca foi atualizada para acompanhar",
+        "why": "Qualquer mudança quebraria o digest do manifesto; os dois hashes estão certos para coisas diferentes."
+      },
+      {
+        "text": "Um usa SHA-256 e o outro SHA-512",
+        "why": "Os dois aparecem como `sha256:`."
+      },
+      {
+        "text": "O segundo é da variante arm64",
+        "why": "Os dois estão nos documentos da própria imagem amd64."
+      }
+    ]
+  },
+  "ex-fag1xm8h": {
+    "prompt": "Alguém acrescenta um byte a uma camada guardada num registry. O que acontece quando a Ana faz o pull da imagem?",
+    "hint": "O nome do blob é o hash dos bytes dele.",
+    "choices": [
+      {
+        "text": "Nada visível; um byte é pouco demais para importar",
+        "why": "Qualquer byte muda o hash por completo, como mostrou a cópia alterada."
+      },
+      {
+        "text": "O pull falha no digest",
+        "why": "Isso: os bytes já não batem com o digest que o manifesto nomeia. O endereçamento por conteúdo torna a mudança detectável."
+      },
+      {
+        "text": "O Docker conserta a camada usando a variante arm64",
+        "why": "Outras plataformas têm outros binários; nada conserta uma camada."
+      },
+      {
+        "text": "A tag `3.22` passa a apontar para a imagem alterada automaticamente",
+        "why": "O manifesto continua nomeando o digest original, que os bytes já não batem."
+      }
+    ]
+  },
+  "ex-7hbs5y88": {
+    "prompt": "Por que `docker run -it alpine:3.22`, sem comando, abre um shell?",
+    "hint": "Leia o documento de configuração.",
+    "choices": [
+      {
+        "text": "O Docker abre um shell para qualquer imagem",
+        "why": "O `postgres:17` iniciou o PostgreSQL na aula 1; o padrão vem de cada imagem."
+      },
+      {
+        "text": "O Alpine não tem outro programa",
+        "why": "A camada lista 519 entradas, muitas delas programas."
+      },
+      {
+        "text": "Porque `-it` quer dizer \"shell interativo\"",
+        "why": "O `-it` mantém a entrada aberta e aloca um terminal; ele não escolhe programa."
+      },
+      {
+        "text": "A configuração diz que o `Cmd` é `/bin/sh`",
+        "why": "Isso. A configuração da imagem traz o comando padrão."
+      }
+    ]
+  },
+  "ex-1pdx8ent": {
+    "prompt": "Ponha os documentos na ordem em que você os segue, da porta de entrada até os arquivos.",
+    "hint": "Cada um nomeia o seguinte por digest.",
+    "items": [
+      "`index.json`",
+      "O índice de imagem que lista as plataformas",
+      "O manifesto `amd64`",
+      "A camada, um blob `tar+gzip`"
+    ]
+  },
+  "ex-m7pycfym": {
+    "prompt": "O que um digest pode prometer que uma tag como `3.22` não pode?",
+    "hint": "Quem pode mover uma tag?",
+    "choices": [
+      {
+        "text": "Que a imagem está livre de vulnerabilidades",
+        "why": "Um digest identifica conteúdo; não diz nada sobre a qualidade dele. Aula 20."
+      },
+      {
+        "text": "Que ele nomeia uma imagem exata para sempre",
+        "why": "Isso. Mude um byte e o digest muda; uma tag pode ser movida para outra imagem."
+      },
+      {
+        "text": "Que a imagem é a versão mais nova",
+        "why": "Nada num digest diz novo ou velho."
+      },
+      {
+        "text": "Que a imagem roda em qualquer plataforma",
+        "why": "O digest do manifesto de uma plataforma nomeia a imagem de uma plataforma."
+      }
+    ]
+  },
+  "ex-ccagdm7g": {
+    "prompt": "Do que o runc precisa num bundle para iniciar um container? Escolha todos os que se aplicam.",
+    "hint": "O bundle da Ana tinha duas entradas.",
+    "choices": [
+      {
+        "text": "Um diretório de sistema de arquivos raiz",
+        "why": "Sim: o `rootfs`, desempacotado da imagem."
+      },
+      {
+        "text": "Um `config.json` que descreva o processo",
+        "why": "Sim: gravado pelo `runc spec` e editado pela Ana."
+      },
+      {
+        "text": "Um daemon do Docker rodando",
+        "why": "A Ana iniciou o bundle sem nenhum Docker envolvido."
+      },
+      {
+        "text": "Um registry de onde baixar",
+        "why": "O runc só lê um diretório; baixar é trabalho do Docker."
+      }
+    ]
+  },
+  "ex-egd43btd": {
+    "prompt": "A Ana iniciou o bundle como ela mesma, e mesmo assim o `ps` lá dentro informou o usuário como `root`. O que explica isso?",
+    "hint": "Conte os namespaces no `config.json`.",
+    "choices": [
+      {
+        "text": "O runc roda tudo como root no host, não importa quem o tenha iniciado",
+        "why": "A Ana não usou `sudo`; do lado de fora o processo é dela."
+      },
+      {
+        "text": "Um namespace de usuários mapeia a conta dela para root lá dentro",
+        "why": "Isso. Dentro é UID 0; fora, continua sendo a Ana."
+      },
+      {
+        "text": "O Alpine não tem outros usuários",
+        "why": "O `/etc/passwd` do Alpine lista vários; o mapeamento decide quem ela é."
+      },
+      {
+        "text": "O `ps` do Alpine sempre imprime `root`, seja qual for o usuário de verdade",
+        "why": "Imprimiu `root` porque, lá dentro, o processo é UID 0."
+      }
+    ]
+  },
+  "ex-qb8ktcnk": {
+    "prompt": "O `config.json` rootless da Ana lista namespaces de pid, ipc, uts, mount e user. Que consequência decorre disso?",
+    "hint": "Que tipo está faltando?",
+    "choices": [
+      {
+        "text": "O container não consegue ver os próprios arquivos",
+        "why": "O namespace de montagens e o `rootfs` lhe dão arquivos próprios."
+      },
+      {
+        "text": "Ele compartilharia a rede da Ana, já que não há namespace de rede",
+        "why": "Isso. Sem essa parede, ele enxerga as interfaces do host."
+      },
+      {
+        "text": "Ele não consegue definir o próprio nome de máquina",
+        "why": "O namespace `uts` está lá, e ele imprimiu `runc`."
+      },
+      {
+        "text": "Ele enxerga os processos do host, porque compartilha a tabela de processos do host",
+        "why": "O namespace `pid` está lá; o `ps` mostrou um processo."
+      }
+    ]
+  },
+  "ex-6fj6z98f": {
+    "prompt": "Quais destas o Docker faz e o runc sozinho não faz? Escolha todas as que se aplicam.",
+    "hint": "O runc inicia um processo a partir de um diretório.",
+    "choices": [
+      {
+        "text": "Baixar imagens de um registry",
+        "why": "Sim. O runc não sabe o que é um registry."
+      },
+      {
+        "text": "Pôr o processo em namespaces",
+        "why": "Isso é trabalho do runc; ele fez para a Ana sem Docker."
+      },
+      {
+        "text": "Guardar o registro dos containers e dos logs",
+        "why": "Sim. O runc esquece um container quando ele termina."
+      },
+      {
+        "text": "Publicar portas e criar redes",
+        "why": "Sim. O runc inicia um processo; a rede em volta é do Docker."
+      }
+    ]
+  },
+  "ex-v16n2a6t": {
+    "prompt": "Uma imagem é copiada byte a byte do Docker Hub para o registry de um provedor de nuvem. O que acontece com o digest dela?",
+    "hint": "O digest é calculado a partir do quê?",
+    "choices": [
+      {
+        "text": "Muda para o formato do novo registry",
+        "why": "O formato é o mesmo formato OCI nos dois."
+      },
+      {
+        "text": "Ganha o nome do provedor como prefixo",
+        "why": "O nome do repositório muda; o digest é um hash dos bytes."
+      },
+      {
+        "text": "Continua o mesmo",
+        "why": "Isso: os bytes são os mesmos, então o hash é o mesmo. É o que torna o registry intercambiável."
+      },
+      {
+        "text": "Fica inválido até a imagem ser reconstruída",
+        "why": "Nada precisa ser reconstruído; bytes idênticos dão hash idêntico."
+      }
+    ]
+  },
+  "ex-4k1mwqy2": {
+    "prompt": "No índice da imagem do alpine, metade das entradas diz `unknown/unknown`. O que elas são?",
+    "hint": "Não são plataformas.",
+    "choices": [
+      {
+        "text": "Plataformas que o Docker ainda não suporta",
+        "why": "Não são plataformas de jeito nenhum."
+      },
+      {
+        "text": "Manifestos quebrados que o registry deveria apagar",
+        "why": "São deliberados e acompanham as imagens."
+      },
+      {
+        "text": "Atestados sobre como cada imagem foi construída",
+        "why": "Isso. A aula 20 os lê."
+      },
+      {
+        "text": "Imagens para Windows, que o Linux informa como desconhecidas",
+        "why": "O Alpine não publica imagem Windows; isto são atestados."
+      }
+    ]
+  },
+  "ex-z9bhsf4v": {
+    "prompt": "Quantas camadas o manifesto `amd64` da `alpine:3.22` lista?",
+    "hint": "Conte as entradas em `layers`."
+  }
+}

@@ -1,0 +1,385 @@
+[
+  {
+    "id": "ex-9w6w1cxe",
+    "version": 1,
+    "section": "capabilities",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many capabilities did a root process in an Alpine container hold by default?",
+    "hint": "Count the names `capsh` printed.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "capabilities"
+  },
+  {
+    "id": "ex-vsfkdazx",
+    "version": 1,
+    "section": "capabilities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--cap-drop ALL`, `chown` failed although the process was still UID 0. Why?",
+    "hint": "What does the kernel check?",
+    "choices": [
+      {
+        "text": "The image's files belong to another user",
+        "correct": false,
+        "why": "The same command worked with the default capabilities."
+      },
+      {
+        "text": "Docker switched the user to `nobody` without saying",
+        "correct": false,
+        "why": "The process stayed UID 0; only the capabilities changed."
+      },
+      {
+        "text": "`/tmp` was mounted read-only",
+        "correct": false,
+        "why": "Nothing was read-only in that run."
+      },
+      {
+        "text": "The capability the operation needs was gone",
+        "correct": true,
+        "why": "Right: `CAP_CHOWN`, not the UID, decides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mta0ne5",
+    "version": 1,
+    "section": "capabilities",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `--security-opt no-new-privileges` add to `--cap-drop ALL`?",
+    "hint": "Think of `sudo`.",
+    "choices": [
+      {
+        "text": "Setuid programs stop granting privileges",
+        "correct": true,
+        "why": "Right: no process inside can gain privileges it did not start with."
+      },
+      {
+        "text": "It drops the capabilities a second time, in case the first drop failed",
+        "correct": false,
+        "why": "It does nothing with capabilities directly."
+      },
+      {
+        "text": "It forbids the container from opening network connections",
+        "correct": false,
+        "why": "Networking is untouched."
+      },
+      {
+        "text": "It makes the filesystem read-only",
+        "correct": false,
+        "why": "That is `--read-only`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx1ahkdc",
+    "version": 1,
+    "section": "capabilities",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A root process must bind port 80 and nothing else: `--cap-drop ALL --cap-add ___`.",
+    "hint": "The capability's name, in capitals, without `CAP_`.",
+    "blanks": [
+      {
+        "accept": [
+          "NET_BIND_SERVICE"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bc92gbdw",
+    "version": 1,
+    "section": "privileged-and-the-socket",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `--privileged` give the Alpine container? Choose all that apply.",
+    "hint": "Compare the two runs.",
+    "choices": [
+      {
+        "text": "Every capability the daemon holds, 40 here",
+        "correct": true,
+        "why": "Yes, against 14 by default."
+      },
+      {
+        "text": "The host's devices, 111 entries in `/dev`",
+        "correct": true,
+        "why": "Yes, against 14."
+      },
+      {
+        "text": "AppArmor and seccomp switched off",
+        "correct": true,
+        "why": "Yes, the lesson's other two defaults."
+      },
+      {
+        "text": "A copy of the host's filesystem as its root",
+        "correct": false,
+        "why": "Its root is still the image; the devices are the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnj98m57",
+    "version": 1,
+    "section": "privileged-and-the-socket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `docker:29.8.2-cli` container with the socket mounted listed itself in `docker ps`. What does that show?",
+    "hint": "Whose daemon did it ask?",
+    "choices": [
+      {
+        "text": "It ran its own Docker daemon inside",
+        "correct": false,
+        "why": "The CLI image has no daemon; it asked the host's."
+      },
+      {
+        "text": "It controls the host's daemon, which runs as root",
+        "correct": true,
+        "why": "Right: it could start any container, privileged included."
+      },
+      {
+        "text": "The socket is read-only, so it can only list",
+        "correct": false,
+        "why": "A socket is a connection; it does not have a read-only mode for API calls."
+      },
+      {
+        "text": "It sees only containers from its own image",
+        "correct": false,
+        "why": "It was the only one running; the daemon would list them all."
+      }
+    ]
+  },
+  {
+    "id": "ex-vm70ewhg",
+    "version": 1,
+    "section": "privileged-and-the-socket",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`audit.sh` printed `/risky privileged=true caps=[] DOCKER-SOCKET`. What should happen to `risky`?",
+    "hint": "Who needs either?",
+    "choices": [
+      {
+        "text": "Nothing, since `caps=[]` means no extra capabilities",
+        "correct": false,
+        "why": "`--privileged` grants them all; `CapAdd` is simply empty."
+      },
+      {
+        "text": "Restart it with `--restart unless-stopped`",
+        "correct": false,
+        "why": "A restart policy changes nothing about what it holds."
+      },
+      {
+        "text": "Find who needs it; remove both",
+        "correct": true,
+        "why": "Right: almost nothing needs either, and nothing exposed should have them."
+      },
+      {
+        "text": "Move it to another host",
+        "correct": false,
+        "why": "It would be root on that one instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex4cj817",
+    "version": 1,
+    "section": "privileged-and-the-socket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A tool's README says to run it with `--privileged`, but it only needs one USB device. What is the narrower grant?",
+    "hint": "The lesson named two flags.",
+    "choices": [
+      {
+        "text": "`--privileged`, but only for a minute",
+        "correct": false,
+        "why": "For that minute it holds everything."
+      },
+      {
+        "text": "Mounting the Docker socket instead",
+        "correct": false,
+        "why": "That is root on the host, not one device."
+      },
+      {
+        "text": "Running it as root without `--privileged`",
+        "correct": false,
+        "why": "The default set has no access to the host's devices."
+      },
+      {
+        "text": "`--device` for that device",
+        "correct": true,
+        "why": "Right, and `--cap-add` if one capability turns out to be missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1y91k09",
+    "version": 1,
+    "section": "read-only",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--read-only --tmpfs /tmp`, a file written to `/tmp` cannot be executed. Why?",
+    "hint": "Read the mount options in `/proc/mounts`.",
+    "choices": [
+      {
+        "text": "The tmpfs is mounted `noexec`",
+        "correct": true,
+        "why": "Right, with `nosuid` and `nodev` too."
+      },
+      {
+        "text": "tmpfs is in memory, and memory cannot hold programs",
+        "correct": false,
+        "why": "Programs run from memory all the time; the option decides."
+      },
+      {
+        "text": "`--read-only` applies to `/tmp` as well",
+        "correct": false,
+        "why": "The file was written; `/tmp` was writable."
+      },
+      {
+        "text": "Alpine has no shell to run it with",
+        "correct": false,
+        "why": "Alpine has `sh`; the mount refuses execution."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmaa0etm",
+    "version": 1,
+    "section": "read-only",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Postgres with `--read-only` failed on `/var/run/postgresql`. What made it work, with the image still read-only?",
+    "hint": "Data, scratch, nothing else.",
+    "choices": [
+      {
+        "text": "Removing `--read-only` for Postgres only",
+        "correct": false,
+        "why": "That gives up the protection instead of keeping it."
+      },
+      {
+        "text": "tmpfs on it and `/tmp`, data on its volume",
+        "correct": true,
+        "why": "Right: exactly the places its log named."
+      },
+      {
+        "text": "Running it with `--privileged`",
+        "correct": false,
+        "why": "Privileges do not make a read-only mount writable, and cost everything else."
+      },
+      {
+        "text": "A volume for that directory, named after the container",
+        "correct": false,
+        "why": "Close, but the socket and lock file are scratch; a tmpfs suits them."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm3v96gh",
+    "version": 1,
+    "section": "read-only",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `userns-remap` on, what is UID 0 inside a container on the host?",
+    "hint": "Remapped to what?",
+    "choices": [
+      {
+        "text": "Still root, but logged",
+        "correct": false,
+        "why": "Remapping changes the UID itself."
+      },
+      {
+        "text": "The UID of whoever ran `docker run`",
+        "correct": false,
+        "why": "That is closer to rootless Podman; remapping uses a range set for the daemon."
+      },
+      {
+        "text": "An unprivileged UID",
+        "correct": true,
+        "why": "Right: a process past the walls arrives with no rights."
+      },
+      {
+        "text": "UID 65532, like distroless's `nonroot`",
+        "correct": false,
+        "why": "Unrelated: that is a user inside the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnv53rjs",
+    "version": 1,
+    "section": "read-only",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each option to what it takes away.",
+    "hint": "One flag per wall.",
+    "pairs": [
+      {
+        "left": "`--cap-drop ALL`",
+        "right": "The pieces of root's power"
+      },
+      {
+        "left": "`--security-opt no-new-privileges`",
+        "right": "The way back through setuid programs"
+      },
+      {
+        "left": "`--read-only`",
+        "right": "Writing anywhere in the image"
+      },
+      {
+        "left": "`USER 65532:65532`",
+        "right": "Being UID 0 at all"
+      }
+    ],
+    "right_distractors": [
+      "Access to the network"
+    ]
+  },
+  {
+    "id": "ex-xwhtegax",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's Compose service for a log shipper has `privileged: true` and mounts `/var/run/docker.sock` \"to read container logs\". What should Ana ask for?",
+    "hint": "What does reading logs actually need?",
+    "choices": [
+      {
+        "text": "Nothing; log shippers always need both",
+        "correct": false,
+        "why": "Reading log files needs neither."
+      },
+      {
+        "text": "Keep the socket, drop `privileged`",
+        "correct": false,
+        "why": "The socket alone is still root on the host."
+      },
+      {
+        "text": "Add `read_only: true` to make it safe",
+        "correct": false,
+        "why": "Read-only does nothing about the socket's power."
+      },
+      {
+        "text": "Read-only mounts of the log files, and neither flag",
+        "correct": true,
+        "why": "Right: grant what the job needs, which is reading files."
+      }
+    ]
+  }
+]

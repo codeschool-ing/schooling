@@ -1,0 +1,219 @@
+{
+  "ex-jdf6ax08": {
+    "prompt": "O que é a interface `veth…` que apareceu no host quando o `box-a` iniciou?",
+    "hint": "Pense num cabo.",
+    "choices": [
+      {
+        "text": "Uma cópia da placa de rede do host, feita para o container",
+        "why": "Ela é virtual, e uma ponta de um par."
+      },
+      {
+        "text": "A ponta do host de um par com o `eth0` lá dentro",
+        "why": "Isso, plugada no `docker0`."
+      },
+      {
+        "text": "Uma regra de firewall que o Docker acrescenta para a bridge",
+        "why": "É uma interface; as regras ficam em outro lugar."
+      },
+      {
+        "text": "O servidor DNS",
+        "why": "O DNS é o `127.0.0.11`, dentro do container."
+      }
+    ]
+  },
+  "ex-b1yt4het": {
+    "prompt": "Dentro do `box-a`, a rota padrão passa por `___`, o endereço do `docker0`.",
+    "hint": "Leia o `ip route`.",
+    "blanks": [
+      {
+        "accept": [
+          "172.17.0.1"
+        ]
+      }
+    ]
+  },
+  "ex-j45h8wcw": {
+    "prompt": "Na bridge padrão, `ping box-a` a partir do `box-b` deu `bad address`, e o endereço funcionou. Por quê?",
+    "hint": "Quem responde nomes?",
+    "choices": [
+      {
+        "text": "O `box-a` não responde ping",
+        "why": "Ele respondeu ao ping pelo endereço."
+      },
+      {
+        "text": "Nomes exigem antes um `docker network connect` em cada container",
+        "why": "Conectar muda redes; a bridge padrão continua sem nomes."
+      },
+      {
+        "text": "Ali nada resolve nomes de containers",
+        "why": "Isso; uma rede definida pelo usuário resolve."
+      },
+      {
+        "text": "Os nomes tinham erro de digitação",
+        "why": "`box-a` era o nome exato."
+      }
+    ]
+  },
+  "ex-eeas7777": {
+    "prompt": "Na `shelfnet`, o que respondeu a consulta por `shelf-web`?",
+    "hint": "Leia o `/etc/resolv.conf` no `box-c`.",
+    "choices": [
+      {
+        "text": "O DNS do Google em `8.8.8.8`, passando pelo host",
+        "why": "É para lá que as outras perguntas são repassadas."
+      },
+      {
+        "text": "O `/etc/hosts` do host, copiado no início",
+        "why": "Os arquivos do host não entraram nisso."
+      },
+      {
+        "text": "O `shelf-web` se anunciando na rede",
+        "why": "Containers não anunciam nada; quem responde é o Docker."
+      },
+      {
+        "text": "O DNS embutido do Docker em `127.0.0.11`",
+        "why": "Isso: ele conhece pelo nome todo container da rede."
+      }
+    ]
+  },
+  "ex-rtm0j9eg": {
+    "prompt": "Da bridge padrão, o `box-a` não alcançava o `shelf-web` nem pelo endereço. O que mudou isso?",
+    "hint": "Um comando, sem reiniciar.",
+    "choices": [
+      {
+        "text": "`docker network connect shelfnet box-a`",
+        "why": "Isso: uma segunda interface, na `shelfnet`."
+      },
+      {
+        "text": "Publicar a porta 8080 com `-p`",
+        "why": "Publicar é para o lado do host, e não entre bridges."
+      },
+      {
+        "text": "Reiniciar o `box-a` para ele ganhar outro endereço",
+        "why": "Um endereço novo na mesma bridge não muda nada."
+      },
+      {
+        "text": "Desligar o firewall do host",
+        "why": "Nunca é a solução; o isolamento é desejado."
+      }
+    ]
+  },
+  "ex-mwnrtb5x": {
+    "prompt": "Por que pôr um banco numa rede `backend` em que o proxy exposto à web não está?",
+    "hint": "O que uma bridge separada faz?",
+    "choices": [
+      {
+        "text": "Redes separadas deixam as consultas mais rápidas",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Só containers da `backend` o alcançam",
+        "why": "Isso: o que for comprometido na `frontend` nem o enxerga."
+      },
+      {
+        "text": "O Postgres recusa a bridge padrão",
+        "why": "Ele roda bem lá."
+      },
+      {
+        "text": "O Compose precisa de uma rede separada para cada serviço",
+        "why": "Uma por projeto é o padrão."
+      }
+    ]
+  },
+  "ex-9h0zfp0p": {
+    "prompt": "O `shelf` escuta no `127.0.0.1:8080` do host. Por que `localhost:8080` a partir do `box-c` recebe `Connection refused`?",
+    "hint": "De quem é o loopback?",
+    "choices": [
+      {
+        "text": "O `box-c` não tem `wget` instalado na imagem",
+        "why": "O `wget` rodou e relatou a recusa."
+      },
+      {
+        "text": "A porta foi publicada no endereço errado",
+        "why": "O próprio `curl` da Ana a alcançou."
+      },
+      {
+        "text": "Lá, `localhost` é o `box-c`",
+        "why": "Isso: nada escuta na 8080 do próprio `box-c`."
+      },
+      {
+        "text": "O Alpine bloqueia a porta 8080 por padrão",
+        "why": "O Alpine não bloqueia nada do tipo."
+      }
+    ]
+  },
+  "ex-t4md0ey5": {
+    "prompt": "O `host.docker.internal:8080` foi recusado, embora o nome resolvesse para `172.17.0.1`. Por quê?",
+    "hint": "Onde o serviço escutava?",
+    "choices": [
+      {
+        "text": "O `host-gateway` só funciona no Docker Desktop, e não no Engine",
+        "why": "Ele resolveu e conectou na tentativa seguinte."
+      },
+      {
+        "text": "Containers nunca podem alcançar o host",
+        "why": "A terceira tentativa o alcançou."
+      },
+      {
+        "text": "A porta 8080 é reservada para o `docker0`",
+        "why": "Nada a reserva; é sobre o endereço de escuta."
+      },
+      {
+        "text": "Só em `127.0.0.1`, não no endereço da bridge",
+        "why": "Isso; o serviço em todos os endereços respondeu."
+      }
+    ]
+  },
+  "ex-7hz89bm6": {
+    "prompt": "Ligue cada modo de rede ao que o container recebe.",
+    "hint": "Das mais paredes para as menos.",
+    "pairs": [
+      {
+        "left": "`--network none`",
+        "right": "Só uma interface de loopback"
+      },
+      {
+        "left": "`bridge` padrão",
+        "right": "Namespace próprio, alcançável por endereço"
+      },
+      {
+        "left": "uma rede definida pelo usuário",
+        "right": "Namespace próprio, alcançável por nome"
+      },
+      {
+        "left": "`--network host`",
+        "right": "As interfaces e portas do próprio host"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia da rede de todos os outros containers"
+    ]
+  },
+  "ex-42r3f56q": {
+    "prompt": "Com `--network host -e PORT=9090`, em que porta do host o `ss` mostrou o `shelf` escutando?",
+    "hint": "Nenhum `-p` foi dado.",
+    "unit": "porta"
+  },
+  "ex-vn6ds7z7": {
+    "prompt": "O `shelf` e o Postgres rodam num servidor; só o `shelf` deve ser alcançável, e só por um proxy na mesma máquina. Que arranjo?",
+    "hint": "Nomes entre eles, uma porta de loopback para fora.",
+    "choices": [
+      {
+        "text": "Uma rede própria para os dois; `shelf` publicado só em `127.0.0.1`",
+        "why": "Isso: `db` pelo nome lá dentro, uma porta de loopback para fora."
+      },
+      {
+        "text": "Os dois em `--network host`",
+        "why": "O Postgres escutaria na própria máquina."
+      },
+      {
+        "text": "Os dois na bridge padrão, por endereço",
+        "why": "Endereços mudam ao reiniciar, e nada resolve nomes."
+      },
+      {
+        "text": "Publicar os dois em todos os endereços e contar com o `ufw`",
+        "why": "Aula 17: as regras do Docker vêm antes das do `ufw`."
+      }
+    ]
+  }
+}

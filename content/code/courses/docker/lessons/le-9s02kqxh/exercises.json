@@ -1,0 +1,404 @@
+[
+  {
+    "id": "ex-c9dv9seg",
+    "version": 1,
+    "section": "how-the-cache-decides",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these go into the cache key of a `COPY . .` step? Choose all that apply.",
+    "hint": "Three ingredients.",
+    "choices": [
+      {
+        "text": "The layer it is built on",
+        "correct": true,
+        "why": "Yes: change anything above, and this key changes too."
+      },
+      {
+        "text": "The instruction's text",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The content of the files it copies",
+        "correct": true,
+        "why": "Yes: one changed byte changes the key."
+      },
+      {
+        "text": "The time of day the build runs",
+        "correct": false,
+        "why": "Time is not part of any key; an unchanged build at night is fully cached."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1xb9nts",
+    "version": 1,
+    "section": "how-the-cache-decides",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana rebuilt with nothing changed and every step said `CACHED`. What did the builder do in those 0.313 seconds?",
+    "hint": "Did anything compile?",
+    "choices": [
+      {
+        "text": "Compiled again, very quickly",
+        "correct": false,
+        "why": "Nothing compiled; `go build` did not run at all."
+      },
+      {
+        "text": "Downloaded the layers from Docker Hub",
+        "correct": false,
+        "why": "They were local; `shelf:dev` was never pushed."
+      },
+      {
+        "text": "Checked the keys and reused every layer",
+        "correct": true,
+        "why": "Right. The image points at layers the builder already had."
+      },
+      {
+        "text": "Copied the previous image byte for byte",
+        "correct": false,
+        "why": "Nothing is copied; the same layers are reused in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4va4y0c",
+    "version": 1,
+    "section": "how-the-cache-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the `RUN go build` layer 146MB when `shelf` is one program?",
+    "hint": "What else did `go build` write while it ran?",
+    "choices": [
+      {
+        "text": "The layer holds a copy of the whole Go toolchain",
+        "correct": false,
+        "why": "The toolchain is in the base image's layers below."
+      },
+      {
+        "text": "Layers are padded to a minimum size",
+        "correct": false,
+        "why": "The `CMD` layer is 0B; there is no padding."
+      },
+      {
+        "text": "`docker history` counts the size twice",
+        "correct": false,
+        "why": "The sizes are per layer, counted once."
+      },
+      {
+        "text": "It also holds Go's build cache under `/root/.cache`",
+        "correct": true,
+        "why": "Right. Everything the step wrote, it keeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-vktp92f8",
+    "version": 1,
+    "section": "how-the-cache-decides",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Once a step's key changes, that step and every step ___ it are rebuilt.",
+    "hint": "Above or below?",
+    "blanks": [
+      {
+        "accept": [
+          "after",
+          "below"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a6x8ecyp",
+    "version": 1,
+    "section": "order-matters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `COPY . .` before `go build`, Ana added a README and the build took 19.8 seconds. Why did a file the program never reads cost a full compile?",
+    "hint": "What does `COPY . .` put into its key?",
+    "choices": [
+      {
+        "text": "Its checksum entered the `COPY` key, which invalidated the build below",
+        "correct": true,
+        "why": "Right. The `COPY` changed, so every later step ran."
+      },
+      {
+        "text": "The README is compiled into the binary",
+        "correct": false,
+        "why": "Go never reads it; it is not a source file."
+      },
+      {
+        "text": "Docker rebuilds everything whenever a new file appears in the project, by design",
+        "correct": false,
+        "why": "With `COPY *.go` the same README cost nothing."
+      },
+      {
+        "text": "README files are not allowed in images",
+        "correct": false,
+        "why": "They are allowed; this one simply changed a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bnknewa",
+    "version": 1,
+    "section": "order-matters",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the dependencies-first Dockerfile, how many seconds did the build after the `main.go` edit take? Use the `real` value.",
+    "hint": "The `ordered-edit` transcript.",
+    "value": 2.34,
+    "tolerance": 0.001,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-sj60mwew",
+    "version": 1,
+    "section": "order-matters",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of Ana's ordered Dockerfile in order, from top to bottom.",
+    "hint": "What changes least goes first.",
+    "items": [
+      "`FROM golang:1.25`",
+      "`COPY go.mod go.sum ./`",
+      "`COPY vendor/ vendor/`",
+      "`RUN go build net/http github.com/jackc/pgx/v5/pgxpool`",
+      "`COPY *.go ./`",
+      "`RUN go build -o /usr/local/bin/shelf .`"
+    ]
+  },
+  {
+    "id": "ex-f5kvntmr",
+    "version": 1,
+    "section": "order-matters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Python service's Dockerfile has `COPY . .` then `RUN pip install -r requirements.txt`. Which rewrite lets code edits skip the install?",
+    "hint": "The same shape as Ana's.",
+    "choices": [
+      {
+        "text": "Add `--no-cache` to the build",
+        "correct": false,
+        "why": "That rebuilds everything every time, the opposite."
+      },
+      {
+        "text": "Dependencies first, the code last",
+        "correct": true,
+        "why": "Right: copy `requirements.txt`, run `pip install`, then copy the code; the install's key depends only on the requirements file."
+      },
+      {
+        "text": "Move `pip install` to the very end of the file",
+        "correct": false,
+        "why": "Then it runs after every code change, the problem as before."
+      },
+      {
+        "text": "Install with `ADD` instead of `RUN`",
+        "correct": false,
+        "why": "`ADD` copies files; it cannot install packages."
+      }
+    ]
+  },
+  {
+    "id": "ex-76ymqdfm",
+    "version": 1,
+    "section": "order-matters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the ordered Dockerfile, why did the README change leave every step `CACHED`?",
+    "hint": "Which `COPY` would have seen it?",
+    "choices": [
+      {
+        "text": "The README was listed in `.dockerignore`",
+        "correct": false,
+        "why": "It was not; the ignore file lists `.git`, `.env`, `testdata/` and the Dockerfiles."
+      },
+      {
+        "text": "The builder skips files whose names are in capitals",
+        "correct": false,
+        "why": "Names do not matter; what is copied does."
+      },
+      {
+        "text": "`COPY *.go ./` only copies Go files",
+        "correct": true,
+        "why": "Right, so the README changes no key."
+      },
+      {
+        "text": "The cache always ignores Markdown files",
+        "correct": false,
+        "why": "`COPY . .` did copy it and paid for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrsjp5dy",
+    "version": 1,
+    "section": "cache-mounts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `RUN --mount=type=cache,target=/root/.cache/go-build go build …` keep between builds?",
+    "hint": "Where does the directory live?",
+    "choices": [
+      {
+        "text": "The compiled binary, inside the image",
+        "correct": false,
+        "why": "The binary is in the layer as always; the mount is separate."
+      },
+      {
+        "text": "The whole layer, so the step never runs again",
+        "correct": false,
+        "why": "The step did run again, in 0.9 seconds."
+      },
+      {
+        "text": "Nothing; mounts are discarded after each step",
+        "correct": false,
+        "why": "A cache mount is kept by the builder, unlike a tmpfs."
+      },
+      {
+        "text": "Go's build cache, kept outside any layer",
+        "correct": true,
+        "why": "Right. The step still runs, but finds the compiled packages."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xa0s058",
+    "version": 1,
+    "section": "cache-mounts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Dockerfile has `RUN apt-get update && apt-get install -y curl`, unchanged for a year. On the same machine, what does a normal `docker build` give you today?",
+    "hint": "What does that step's key contain?",
+    "choices": [
+      {
+        "text": "The year-old layer, reused, with its year-old packages",
+        "correct": true,
+        "why": "Right. Use `--no-cache` or `--pull` when the point is to get updates."
+      },
+      {
+        "text": "Today's package list, because `apt-get update` always runs",
+        "correct": false,
+        "why": "It only runs if its key changed, and nothing in the key did."
+      },
+      {
+        "text": "An error, because cached package lists expire",
+        "correct": false,
+        "why": "The cache has no expiry; it trusts its keys."
+      },
+      {
+        "text": "A fresh install, because `-y` disables the cache",
+        "correct": false,
+        "why": "`-y` answers apt's questions; it has nothing to do with Docker's cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-d67jnjmm",
+    "version": 1,
+    "section": "cache-mounts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each option or command to what it does.",
+    "hint": "Two are about the cache, one about the base image, one about disk.",
+    "pairs": [
+      {
+        "left": "`--no-cache`",
+        "right": "Ignores every cached layer for this build"
+      },
+      {
+        "left": "`--pull`",
+        "right": "Fetches the newest base image first"
+      },
+      {
+        "left": "`docker buildx du`",
+        "right": "Reports how much disk the build cache uses"
+      },
+      {
+        "left": "`docker builder prune`",
+        "right": "Empties the build cache"
+      }
+    ],
+    "right_distractors": [
+      "Deletes every image on the machine"
+    ]
+  },
+  {
+    "id": "ex-e17kd26v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's team changes a dependency version once a month and code all day. Which combination fits best?",
+    "hint": "One technique for each kind of change.",
+    "choices": [
+      {
+        "text": "`COPY . .` first, plus `--no-cache` on every build",
+        "correct": false,
+        "why": "That pays for everything every time."
+      },
+      {
+        "text": "Order plus a cache mount",
+        "correct": true,
+        "why": "Right: dependencies first, and a cache mount for the package manager; ordering saves code edits; the mount saves most of a dependency change."
+      },
+      {
+        "text": "Only `--pull`, so the base image is always fresh",
+        "correct": false,
+        "why": "That changes when the base updates, not how edits are cached."
+      },
+      {
+        "text": "A single `RUN` doing everything, so there is one layer",
+        "correct": false,
+        "why": "One layer means any change rebuilds all of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rg235s14",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the first build on a fresh CI runner slow even with a well-ordered Dockerfile?",
+    "hint": "What does the runner start with?",
+    "choices": [
+      {
+        "text": "CI runners have slower processors",
+        "correct": false,
+        "why": "Perhaps, but the cause here is what is missing."
+      },
+      {
+        "text": "Dockerfiles are ignored on CI",
+        "correct": false,
+        "why": "They are used exactly as on a laptop."
+      },
+      {
+        "text": "Its build cache is empty",
+        "correct": true,
+        "why": "Right. Lesson 26 stores the cache in a registry to fix that."
+      },
+      {
+        "text": "BuildKit is disabled on CI",
+        "correct": false,
+        "why": "It is the default builder there too."
+      }
+    ]
+  }
+]

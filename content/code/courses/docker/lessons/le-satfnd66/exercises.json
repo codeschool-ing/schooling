@@ -1,0 +1,492 @@
+[
+  {
+    "id": "ex-c9v9kycq",
+    "version": 1,
+    "section": "three-specifications",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each OCI specification to what it defines.",
+    "hint": "Build, store, run.",
+    "pairs": [
+      {
+        "left": "image specification",
+        "right": "Manifest, configuration and layers"
+      },
+      {
+        "left": "distribution specification",
+        "right": "The HTTP API a registry answers"
+      },
+      {
+        "left": "runtime specification",
+        "right": "A root filesystem plus `config.json`, and how to start it"
+      }
+    ],
+    "right_distractors": [
+      "The command-line flags of `docker run`"
+    ]
+  },
+  {
+    "id": "ex-f9cf3ppe",
+    "version": 1,
+    "section": "three-specifications",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Kubernetes 1.24 removed its built-in support for the Docker Engine. Why did images built with `docker build` keep running on it?",
+    "hint": "What kind of image does `docker build` produce?",
+    "choices": [
+      {
+        "text": "They are OCI images, which containerd and CRI-O run",
+        "correct": true,
+        "why": "Right. The format is standard; the engine was never what the cluster needed."
+      },
+      {
+        "text": "Kubernetes quietly converts each Docker image into its own format at pull time",
+        "correct": false,
+        "why": "No conversion happens; the image is already in the standard format."
+      },
+      {
+        "text": "Docker images contain a copy of the Docker Engine",
+        "correct": false,
+        "why": "An image holds the program's files, not an engine."
+      },
+      {
+        "text": "Clusters kept Docker installed on every node for compatibility",
+        "correct": false,
+        "why": "1.24 removed exactly that path; clusters talk to containerd or CRI-O."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhgr4fq3",
+    "version": 1,
+    "section": "three-specifications",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did runc come from?",
+    "hint": "2015.",
+    "choices": [
+      {
+        "text": "It was written by the Kubernetes project",
+        "correct": false,
+        "why": "Kubernetes uses runtimes; runc came from elsewhere."
+      },
+      {
+        "text": "It is part of the Linux kernel",
+        "correct": false,
+        "why": "It is an ordinary program that asks the kernel for namespaces and cgroups."
+      },
+      {
+        "text": "Docker gave its container-starting code to the OCI",
+        "correct": true,
+        "why": "Right, when the OCI was founded under the Linux Foundation."
+      },
+      {
+        "text": "Podman's authors wrote it to replace Docker's engine",
+        "correct": false,
+        "why": "Podman came later and uses runc or crun as its runtime."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns5ewrr9",
+    "version": 1,
+    "section": "three-specifications",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker info --format \"{{.DefaultRuntime}}\"` printed the name of the program that finally creates the container's process: ___.",
+    "hint": "The OCI's reference implementation.",
+    "blanks": [
+      {
+        "accept": [
+          "runc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yfvr4869",
+    "version": 1,
+    "section": "an-image-on-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the same name, `alpine:3.22`, give a Raspberry Pi and an `amd64` server each the right binaries?",
+    "hint": "Open the document the index points to.",
+    "choices": [
+      {
+        "text": "The registry looks at the client's IP address",
+        "correct": false,
+        "why": "Registries do not guess; the client chooses."
+      },
+      {
+        "text": "The tag's index lists each platform",
+        "correct": true,
+        "why": "Right. That list had eight platforms."
+      },
+      {
+        "text": "Alpine's binaries run on any processor",
+        "correct": false,
+        "why": "Lesson 2 showed an arm64 binary refused on amd64."
+      },
+      {
+        "text": "There are separate tags, and Docker silently rewrites the name",
+        "correct": false,
+        "why": "One tag, one index, many manifests; nothing is renamed."
+      }
+    ]
+  },
+  {
+    "id": "ex-x46x1wx4",
+    "version": 1,
+    "section": "an-image-on-disk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The manifest names the layer `sha256:53f8…`, and the configuration's `rootfs.diff_ids` says `sha256:e477…`. Why two hashes for one layer?",
+    "hint": "One of them travels.",
+    "choices": [
+      {
+        "text": "One is a hash of the compressed archive, the other of the files uncompressed",
+        "correct": true,
+        "why": "Right. The manifest names what travels; `diff_ids` names what it unpacks to."
+      },
+      {
+        "text": "The layer was changed after the image was published, and the configuration was never updated to match it",
+        "correct": false,
+        "why": "Any change would break the manifest's digest; both hashes are correct for different things."
+      },
+      {
+        "text": "One uses SHA-256 and the other SHA-512",
+        "correct": false,
+        "why": "Both are written `sha256:`."
+      },
+      {
+        "text": "The second belongs to the arm64 variant",
+        "correct": false,
+        "why": "Both are in the amd64 image's own documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-fag1xm8h",
+    "version": 1,
+    "section": "an-image-on-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody appends one byte to a layer stored in a registry. What happens when Ana pulls the image?",
+    "hint": "The blob's name is the hash of its bytes.",
+    "choices": [
+      {
+        "text": "Nothing visible; one byte is too small to matter",
+        "correct": false,
+        "why": "Any byte changes the hash completely, as the tampered copy showed."
+      },
+      {
+        "text": "The pull fails on the digest",
+        "correct": true,
+        "why": "Right: the bytes no longer match the digest the manifest names. Content addressing makes the change detectable."
+      },
+      {
+        "text": "Docker repairs the layer from the arm64 variant",
+        "correct": false,
+        "why": "Other platforms hold other binaries; nothing repairs a layer."
+      },
+      {
+        "text": "The tag `3.22` moves to the changed image automatically",
+        "correct": false,
+        "why": "The manifest still names the original digest, which the bytes no longer match."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hbs5y88",
+    "version": 1,
+    "section": "an-image-on-disk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `docker run -it alpine:3.22`, with no command, open a shell?",
+    "hint": "Read the configuration document.",
+    "choices": [
+      {
+        "text": "Docker opens a shell for any image",
+        "correct": false,
+        "why": "`postgres:17` started PostgreSQL in lesson 1; the default comes from each image."
+      },
+      {
+        "text": "Alpine has no other program",
+        "correct": false,
+        "why": "The layer lists 519 entries, many of them programs."
+      },
+      {
+        "text": "Because `-it` means \"interactive shell\"",
+        "correct": false,
+        "why": "`-it` keeps input open and allocates a terminal; it chooses no program."
+      },
+      {
+        "text": "Its config says `Cmd` is `/bin/sh`",
+        "correct": true,
+        "why": "Right. The image's configuration carries the default command."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pdx8ent",
+    "version": 1,
+    "section": "an-image-on-disk",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the documents in the order you follow them, from the way in down to the files.",
+    "hint": "Each one names the next by digest.",
+    "items": [
+      "`index.json`",
+      "The image index listing the platforms",
+      "The `amd64` manifest",
+      "The layer, a `tar+gzip` blob"
+    ]
+  },
+  {
+    "id": "ex-m7pycfym",
+    "version": 1,
+    "section": "an-image-on-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a digest promise that a tag like `3.22` cannot?",
+    "hint": "Who can move a tag?",
+    "choices": [
+      {
+        "text": "That the image is free of vulnerabilities",
+        "correct": false,
+        "why": "A digest identifies content; it says nothing about its quality. Lesson 20."
+      },
+      {
+        "text": "That it names one exact image forever",
+        "correct": true,
+        "why": "Right. Change a byte and the digest changes; a tag can be moved to another image."
+      },
+      {
+        "text": "That the image is the newest release",
+        "correct": false,
+        "why": "Nothing about a digest says new or old."
+      },
+      {
+        "text": "That the image runs on any platform",
+        "correct": false,
+        "why": "A platform manifest's digest names the image for one platform."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccagdm7g",
+    "version": 1,
+    "section": "runc-without-docker",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does runc need in a bundle to start a container? Choose all that apply.",
+    "hint": "Ana's bundle had two entries.",
+    "choices": [
+      {
+        "text": "A root filesystem directory",
+        "correct": true,
+        "why": "Yes: `rootfs`, unpacked from the image."
+      },
+      {
+        "text": "A `config.json` describing the process",
+        "correct": true,
+        "why": "Yes: written by `runc spec` and edited by Ana."
+      },
+      {
+        "text": "A running Docker daemon",
+        "correct": false,
+        "why": "Ana started the bundle with no Docker involved."
+      },
+      {
+        "text": "A registry to pull from",
+        "correct": false,
+        "why": "runc only reads a directory; pulling is Docker's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-egd43btd",
+    "version": 1,
+    "section": "runc-without-docker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana started the bundle as herself, yet `ps` inside reported the user as `root`. What explains it?",
+    "hint": "Count the namespaces in `config.json`.",
+    "choices": [
+      {
+        "text": "runc runs everything as root on the host, whoever starts it",
+        "correct": false,
+        "why": "Ana used no `sudo`; the process belongs to her outside."
+      },
+      {
+        "text": "A user namespace maps her account to root inside",
+        "correct": true,
+        "why": "Right. Inside it is UID 0; outside, still Ana."
+      },
+      {
+        "text": "Alpine has no other users",
+        "correct": false,
+        "why": "Alpine's `/etc/passwd` lists several; the mapping decides who she is."
+      },
+      {
+        "text": "`ps` in Alpine always prints `root`, whatever the user",
+        "correct": false,
+        "why": "It printed `root` because inside, the process is UID 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb8ktcnk",
+    "version": 1,
+    "section": "runc-without-docker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's rootless `config.json` lists pid, ipc, uts, mount and user namespaces. Which consequence follows?",
+    "hint": "Which kind is missing?",
+    "choices": [
+      {
+        "text": "The container cannot see its own files",
+        "correct": false,
+        "why": "The mount namespace and `rootfs` give it its own files."
+      },
+      {
+        "text": "It would share Ana's network, since there is no network namespace",
+        "correct": true,
+        "why": "Right. Without that wall, it sees the host's interfaces."
+      },
+      {
+        "text": "It cannot set its host name",
+        "correct": false,
+        "why": "The `uts` namespace is there, and it printed `runc`."
+      },
+      {
+        "text": "It sees the host's processes, because it shares the host's process table",
+        "correct": false,
+        "why": "The `pid` namespace is there; `ps` showed one process."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fj6z98f",
+    "version": 1,
+    "section": "runc-without-docker",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does Docker do that runc alone does not? Choose all that apply.",
+    "hint": "runc starts a process from a directory.",
+    "choices": [
+      {
+        "text": "Pull images from a registry",
+        "correct": true,
+        "why": "Yes. runc has no idea what a registry is."
+      },
+      {
+        "text": "Put the process in namespaces",
+        "correct": false,
+        "why": "That is runc's job; it did it for Ana with no Docker."
+      },
+      {
+        "text": "Keep a record of containers and their logs",
+        "correct": true,
+        "why": "Yes. runc forgets a container when it exits."
+      },
+      {
+        "text": "Publish ports and create networks",
+        "correct": true,
+        "why": "Yes. runc starts a process; the networking around it is Docker's."
+      }
+    ]
+  },
+  {
+    "id": "ex-v16n2a6t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An image is copied byte for byte from Docker Hub to a cloud provider's registry. What happens to its digest?",
+    "hint": "What is the digest computed from?",
+    "choices": [
+      {
+        "text": "It changes to the new registry's format",
+        "correct": false,
+        "why": "The format is the same OCI format on both."
+      },
+      {
+        "text": "It is prefixed with the provider's name",
+        "correct": false,
+        "why": "The name of the repository changes; the digest is a hash of the bytes."
+      },
+      {
+        "text": "It stays the same",
+        "correct": true,
+        "why": "Right: the bytes are the same, so the hash is the same. That is what makes the registry interchangeable."
+      },
+      {
+        "text": "It becomes invalid until the image is rebuilt",
+        "correct": false,
+        "why": "Nothing needs rebuilding; identical bytes give an identical hash."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k1mwqy2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In alpine's image index, half the entries say `unknown/unknown`. What are they?",
+    "hint": "They are not platforms.",
+    "choices": [
+      {
+        "text": "Platforms Docker does not support yet",
+        "correct": false,
+        "why": "They are not platforms at all."
+      },
+      {
+        "text": "Broken manifests the registry should delete",
+        "correct": false,
+        "why": "They are deliberate and belong with the images."
+      },
+      {
+        "text": "Attestations about how each image was built",
+        "correct": true,
+        "why": "Right. Lesson 20 reads them."
+      },
+      {
+        "text": "Images for Windows, which Linux reports as unknown",
+        "correct": false,
+        "why": "Alpine publishes no Windows image; these are attestations."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9bhsf4v",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many layers does the `amd64` manifest of `alpine:3.22` list?",
+    "hint": "Count the entries in `layers`.",
+    "value": 1,
+    "tolerance": 0
+  }
+]

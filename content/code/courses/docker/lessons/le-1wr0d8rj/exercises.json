@@ -1,0 +1,449 @@
+[
+  {
+    "id": "ex-dvw1thm3",
+    "version": 1,
+    "section": "one-off-tools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every tool command in this lesson start with `docker run --rm`?",
+    "hint": "What would a hundred runs leave behind?",
+    "choices": [
+      {
+        "text": "It removes the container when the command ends",
+        "correct": true,
+        "why": "Right; otherwise each run leaves a stopped container."
+      },
+      {
+        "text": "It runs the tool as root",
+        "correct": false,
+        "why": "`--rm` says nothing about the user; `--user` does."
+      },
+      {
+        "text": "It makes the container start faster by skipping the image's layers entirely",
+        "correct": false,
+        "why": "Layers are always used; `--rm` only affects what happens after the end."
+      },
+      {
+        "text": "It mounts the current directory",
+        "correct": false,
+        "why": "That is `-v \"$PWD\":/work`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhyhaaf6",
+    "version": 1,
+    "section": "one-off-tools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `docker run --rm -v \"$PWD\":/work -w /work mikefarah/yq:4 \".database.port\" config.yaml`, what does `-w /work` do?",
+    "hint": "Where is `config.yaml` looked for?",
+    "choices": [
+      {
+        "text": "Makes `/work` writable",
+        "correct": false,
+        "why": "The mount is writable by default; `-w` is about where the command starts."
+      },
+      {
+        "text": "Sets the working directory",
+        "correct": true,
+        "why": "Right: the command starts in `/work`, so `config.yaml` is found by its relative name."
+      },
+      {
+        "text": "Waits for `/work` to be ready",
+        "correct": false,
+        "why": "There is nothing to wait for; it sets a directory."
+      },
+      {
+        "text": "Watches `/work` for changes",
+        "correct": false,
+        "why": "No watching; the command runs once."
+      }
+    ]
+  },
+  {
+    "id": "ex-a60e68f0",
+    "version": 1,
+    "section": "one-off-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Hadolint read Ana's Dockerfile with nothing mounted. How?",
+    "hint": "Look at the end of the command.",
+    "choices": [
+      {
+        "text": "Docker copied the current directory into the container",
+        "correct": false,
+        "why": "Nothing is copied into a container unless mounted or built in."
+      },
+      {
+        "text": "Hadolint downloads the file from Ana's repository",
+        "correct": false,
+        "why": "It has no idea where the repository is."
+      },
+      {
+        "text": "Piped to stdin, kept open by `-i`",
+        "correct": true,
+        "why": "Right: `< Dockerfile` and `-`, read from stdin."
+      },
+      {
+        "text": "Hadolint is installed on the host after all",
+        "correct": false,
+        "why": "`which` found no hadolint."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw4tgxk3",
+    "version": 1,
+    "section": "one-off-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What could happen with `tar -czf $target/backup.tar.gz /srv/data` if `target` is `/mnt/my disk`?",
+    "hint": "What does the shell do with an unquoted variable?",
+    "choices": [
+      {
+        "text": "Nothing different; `tar` handles spaces in paths on its own",
+        "correct": false,
+        "why": "`tar` never sees one argument; the shell has already split it."
+      },
+      {
+        "text": "ShellCheck fixes the script when it runs",
+        "correct": false,
+        "why": "It reports; it changes no file."
+      },
+      {
+        "text": "The backup is encrypted",
+        "correct": false,
+        "why": "Quoting has nothing to do with encryption."
+      },
+      {
+        "text": "The shell splits it, and `tar` writes elsewhere",
+        "correct": true,
+        "why": "Right: SC2086. Quote it, as ShellCheck suggested."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5v3chh5",
+    "version": 1,
+    "section": "one-off-tools",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each hadolint finding to the problem behind it.",
+    "hint": "Read the codes' messages again.",
+    "pairs": [
+      {
+        "left": "DL3007",
+        "right": "`latest` changes under you"
+      },
+      {
+        "left": "DL3014",
+        "right": "`apt-get install` would stop to ask a question"
+      },
+      {
+        "left": "DL3009",
+        "right": "The package lists stay inside the image"
+      },
+      {
+        "left": "DL3025",
+        "right": "`CMD` in shell form, not JSON"
+      }
+    ],
+    "right_distractors": [
+      "The image is too large to push"
+    ]
+  },
+  {
+    "id": "ex-ea8sbr3j",
+    "version": 1,
+    "section": "versions-and-wrappers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`stats.py` printed a `Loan` under `python:3.13-slim` and an `AttributeError` under `python:3.12-slim`. Why?",
+    "hint": "When was `copy.replace` added?",
+    "choices": [
+      {
+        "text": "`copy.replace` does not exist before Python 3.13",
+        "correct": true,
+        "why": "Right. The tag decided which Python ran the file."
+      },
+      {
+        "text": "The 3.12 image is broken",
+        "correct": false,
+        "why": "It ran Python fine; the function is missing from that version."
+      },
+      {
+        "text": "Slim images remove the `copy` module",
+        "correct": false,
+        "why": "Both are slim, and `copy` imported in both."
+      },
+      {
+        "text": "The file was mounted read-only for 3.12",
+        "correct": false,
+        "why": "Both runs used the same mount, and reading worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c11bv92",
+    "version": 1,
+    "section": "versions-and-wrappers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "So that files a containerised tool writes into your directory belong to you, run it with `--___ \"$(id -u):$(id -g)\"`.",
+    "hint": "One word: whose identity the process takes.",
+    "blanks": [
+      {
+        "accept": [
+          "user"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-srpsv30c",
+    "version": 1,
+    "section": "versions-and-wrappers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the wrapper, why `\"$@\"` and not `$*`?",
+    "hint": "What happens to an argument that contains a space?",
+    "choices": [
+      {
+        "text": "`$*` is not valid inside a function body in bash",
+        "correct": false,
+        "why": "It is valid; it just joins and re-splits the arguments."
+      },
+      {
+        "text": "Each argument stays intact, spaces and all",
+        "correct": true,
+        "why": "Right. `$*` would re-split `\".x | length\"` into pieces."
+      },
+      {
+        "text": "`\"$@\"` is faster",
+        "correct": false,
+        "why": "Speed is not the difference."
+      },
+      {
+        "text": "`$*` would also pass the image name along to yq",
+        "correct": false,
+        "why": "Neither includes anything but the function's own arguments."
+      }
+    ]
+  },
+  {
+    "id": "ex-memyf748",
+    "version": 1,
+    "section": "versions-and-wrappers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's function uses `mikefarah/yq:4`. What does writing the tag do for her?",
+    "hint": "What would happen with no tag at all?",
+    "choices": [
+      {
+        "text": "Downloads version 4 on every call",
+        "correct": false,
+        "why": "Once pulled, the image is reused until she pulls again."
+      },
+      {
+        "text": "Makes yq run four times faster",
+        "correct": false,
+        "why": "The number is a version, not a speed."
+      },
+      {
+        "text": "Keeps yq on major version 4",
+        "correct": true,
+        "why": "Right. Without a tag she would get `latest`, whatever that is that day."
+      },
+      {
+        "text": "Limits the container to four processes",
+        "correct": false,
+        "why": "That would be `--pids-limit`, from lesson 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-3z1pt0s0",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`yq \".x\" ../other.yaml` says \"no such file or directory\", yet the file exists one directory up. Why?",
+    "hint": "What did the wrapper mount?",
+    "choices": [
+      {
+        "text": "yq cannot read files whose names end in `.yaml`",
+        "correct": false,
+        "why": "It read `config.yaml` a moment before."
+      },
+      {
+        "text": "The file is owned by root",
+        "correct": false,
+        "why": "Ana created it as herself; ownership is not the issue."
+      },
+      {
+        "text": "Docker hides files starting with `..`",
+        "correct": false,
+        "why": "Nothing is hidden; the parent directory simply is not there."
+      },
+      {
+        "text": "Only the current directory was mounted",
+        "correct": true,
+        "why": "Right: the path leaves the container's files; inside, `../other.yaml` is `/other.yaml`."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4a9y80d",
+    "version": 1,
+    "section": "the-limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds of wall-clock time did `time yq --version` report? Use the `real` value.",
+    "hint": "The first of the three lines.",
+    "value": 0.318,
+    "tolerance": 0.001,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-0earntg7",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Mounting `~/.aws` read-only into an image makes the AWS tool work. What does it also do?",
+    "hint": "Who can read what is mounted?",
+    "choices": [
+      {
+        "text": "Hands the credentials to whatever program is in that image",
+        "correct": true,
+        "why": "Right, so the image's origin matters; lesson 20."
+      },
+      {
+        "text": "Makes the credentials expire",
+        "correct": false,
+        "why": "Nothing about mounting changes the credentials."
+      },
+      {
+        "text": "Uploads them to Docker Hub",
+        "correct": false,
+        "why": "A mount stays on the machine."
+      },
+      {
+        "text": "Nothing more, because `:ro` keeps the credentials safe from the image",
+        "correct": false,
+        "why": "`:ro` stops writing, not reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0qgzcve",
+    "version": 1,
+    "section": "the-limits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a containerised command-line tool NOT see unless you arrange it? Choose all that apply.",
+    "hint": "Files, variables, network, display.",
+    "choices": [
+      {
+        "text": "Files outside the mounted directory",
+        "correct": true,
+        "why": "Yes: only what is mounted exists inside."
+      },
+      {
+        "text": "Services on the host's `localhost`",
+        "correct": true,
+        "why": "Yes: inside a container, `localhost` is the container. Lesson 23."
+      },
+      {
+        "text": "The arguments typed after the image name",
+        "correct": false,
+        "why": "Those are handed to the entrypoint every time."
+      },
+      {
+        "text": "A graphical display",
+        "correct": true,
+        "why": "Yes: a container has none without extra work."
+      }
+    ]
+  },
+  {
+    "id": "ex-52qgd0pz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do CI pipelines run linters and scanners as `docker run` of a pinned image?",
+    "hint": "What does the runner need installed?",
+    "choices": [
+      {
+        "text": "Docker images run linters faster than native installs",
+        "correct": false,
+        "why": "Speed is not the reason; a container adds start-up time."
+      },
+      {
+        "text": "Only Docker, and the same line gives the same answer on a laptop",
+        "correct": true,
+        "why": "Right. The tool's version travels in the tag."
+      },
+      {
+        "text": "Linters refuse to run outside containers",
+        "correct": false,
+        "why": "They run fine natively; the point is not having to install them."
+      },
+      {
+        "text": "It hides the source code from the linter",
+        "correct": false,
+        "why": "The code is mounted precisely so the linter can read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-94ntye15",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script calls the `yq` wrapper once for each of 2,000 YAML files. What is the main cost, and the fix?",
+    "hint": "What happens on every call?",
+    "choices": [
+      {
+        "text": "Disk space for 2,000 images; prune afterwards",
+        "correct": false,
+        "why": "One image is reused; no new images are made."
+      },
+      {
+        "text": "Network traffic to Docker Hub; use a mirror",
+        "correct": false,
+        "why": "The image is local after the first pull."
+      },
+      {
+        "text": "2,000 container start-ups; give yq all the files in one run, or install it",
+        "correct": true,
+        "why": "Right: about a third of a second each."
+      },
+      {
+        "text": "Memory; add `--memory`",
+        "correct": false,
+        "why": "Each container is short and small; the start-up time is what adds up."
+      }
+    ]
+  }
+]

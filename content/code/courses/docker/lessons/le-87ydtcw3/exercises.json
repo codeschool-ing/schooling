@@ -1,0 +1,520 @@
+[
+  {
+    "id": "ex-vef42bms",
+    "version": 1,
+    "section": "three-stacks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a container, what is the highest layer that every program on the machine shares?",
+    "hint": "Look at where the dashed line sits in the third stack.",
+    "choices": [
+      {
+        "text": "The kernel",
+        "correct": true,
+        "why": "Right. Above the kernel, each container has its own files and libraries."
+      },
+      {
+        "text": "The libraries installed on the host",
+        "correct": false,
+        "why": "Each container brings its own libraries in its image; sharing them is the bare-metal arrangement."
+      },
+      {
+        "text": "A hypervisor running under every container",
+        "correct": false,
+        "why": "There is no hypervisor in the container stack; that belongs to virtual machines."
+      },
+      {
+        "text": "Nothing at all, each container has its own copy of everything",
+        "correct": false,
+        "why": "Each container still makes its system calls to the host's one kernel."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk7fw7jg",
+    "version": 1,
+    "section": "three-stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno needs a Windows server and a Linux server on the same physical machine. Which arrangement allows it?",
+    "hint": "Which stack gives each guest its own kernel?",
+    "choices": [
+      {
+        "text": "Two containers, one from a Windows image and one from a Linux image, on a Linux host",
+        "correct": false,
+        "why": "A container uses the host's kernel, so on a Linux host every container is a Linux one."
+      },
+      {
+        "text": "Bare metal with both operating systems installed side by side and running at once",
+        "correct": false,
+        "why": "On bare metal one operating system owns the machine at a time."
+      },
+      {
+        "text": "Two virtual machines on a hypervisor",
+        "correct": true,
+        "why": "Right. Each VM boots its own kernel, so they can be different operating systems."
+      },
+      {
+        "text": "Two containers with `--platform windows`",
+        "correct": false,
+        "why": "`--platform` picks an image variant; it cannot supply a Windows kernel to a Linux host."
+      }
+    ]
+  },
+  {
+    "id": "ex-hptawxg3",
+    "version": 1,
+    "section": "three-stacks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece to where it runs.",
+    "hint": "Two hypervisors and one container engine.",
+    "pairs": [
+      {
+        "left": "Type 1 hypervisor, like KVM or ESXi",
+        "right": "Directly on the hardware, under the guests"
+      },
+      {
+        "left": "Type 2 hypervisor, like VirtualBox",
+        "right": "As a program on an ordinary operating system"
+      },
+      {
+        "left": "Container engine, like Docker Engine",
+        "right": "As programs on the host's own kernel, with no guest kernel"
+      }
+    ],
+    "right_distractors": [
+      "Inside each container, one per container"
+    ]
+  },
+  {
+    "id": "ex-symtw2y2",
+    "version": 1,
+    "section": "three-stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company runs its containers on cloud VMs. Which boundary separates it from another customer of the same provider?",
+    "hint": "Who rents what to whom?",
+    "choices": [
+      {
+        "text": "The container walls, since both customers use Docker",
+        "correct": false,
+        "why": "Containers separate programs inside one customer's machine; the provider does not rely on them between customers."
+      },
+      {
+        "text": "The hypervisor under the VMs",
+        "correct": true,
+        "why": "Right. The provider separates customers with VMs and their hypervisor's stronger boundary."
+      },
+      {
+        "text": "The kernel, which each customer shares with the other",
+        "correct": false,
+        "why": "Each VM has its own kernel; two customers on one host do not share one."
+      },
+      {
+        "text": "Nothing; the cloud gives every customer a separate physical building",
+        "correct": false,
+        "why": "Customers share physical machines; the hypervisor is what keeps them apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-2e2y7n6x",
+    "version": 1,
+    "section": "one-kernel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Ana's Ubuntu machine, `docker run --rm debian:trixie-slim uname -r` prints what?",
+    "hint": "Which kernel answers the system call?",
+    "choices": [
+      {
+        "text": "The host's kernel release, the same as `uname -r` on the host",
+        "correct": true,
+        "why": "Right: `6.18.44-fc-v70` three times. The image brings Debian's files, not a kernel."
+      },
+      {
+        "text": "Debian 13's kernel release",
+        "correct": false,
+        "why": "The image does not contain a running kernel; there is only the host's."
+      },
+      {
+        "text": "Nothing, because a container has no kernel to report",
+        "correct": false,
+        "why": "The call reaches the host's kernel, which answers."
+      },
+      {
+        "text": "An error, since Debian cannot run on Ubuntu",
+        "correct": false,
+        "why": "It ran: a Debian userland on the host's kernel is exactly what the image is."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bd12bej",
+    "version": 1,
+    "section": "one-kernel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an image named `alpine` give a container?",
+    "hint": "Compare `/etc/os-release` with `uname -r`.",
+    "choices": [
+      {
+        "text": "Alpine's files: shell, libraries, package manager and `/etc`",
+        "correct": true,
+        "why": "Right. The distribution is the files; the kernel is the host's."
+      },
+      {
+        "text": "Alpine's kernel, which is smaller than Ubuntu's and therefore boots faster",
+        "correct": false,
+        "why": "No kernel comes with the image, and nothing boots."
+      },
+      {
+        "text": "A virtual machine running Alpine",
+        "correct": false,
+        "why": "There is no VM; the container is a process on the host."
+      },
+      {
+        "text": "A copy of the host's Ubuntu, renamed",
+        "correct": false,
+        "why": "`/etc/os-release` inside says Alpine Linux v3.22, because the files are Alpine's."
+      }
+    ]
+  },
+  {
+    "id": "ex-mftwdfdq",
+    "version": 1,
+    "section": "one-kernel",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a Debian 13 `ls` run on a kernel that Debian 13 never shipped?",
+    "hint": "What does a program need from the kernel?",
+    "choices": [
+      {
+        "text": "Docker recompiles every program in the image for the host's kernel",
+        "correct": false,
+        "why": "Nothing is recompiled; the binaries in the image run as they are."
+      },
+      {
+        "text": "Because the Linux kernel keeps its interface to programs stable across versions",
+        "correct": true,
+        "why": "Right. A program built for one kernel's interface keeps working on later ones."
+      },
+      {
+        "text": "Debian and Ubuntu share one kernel source",
+        "correct": false,
+        "why": "Even an Alpine `ls`, from a different distribution family, runs on the same kernel."
+      },
+      {
+        "text": "`ls` makes no system calls",
+        "correct": false,
+        "why": "It reads directories, which is system calls; they just mean the same thing on every recent kernel."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhnfyzc8",
+    "version": 1,
+    "section": "one-kernel",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the transcript, how many seconds did `time docker run --rm alpine:3.22 true` take on the wall clock? Answer with the `real` value.",
+    "hint": "The first of the three lines.",
+    "value": 0.328,
+    "tolerance": 0.001,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-2j5fsbrg",
+    "version": 1,
+    "section": "one-kernel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker stats` shows the idle container at `668KiB / 15.72GiB`. What is the 15.72GiB?",
+    "hint": "Was a limit set?",
+    "choices": [
+      {
+        "text": "Memory Docker reserved for the container when it started",
+        "correct": false,
+        "why": "Nothing was reserved; containers do not set memory aside the way a VM does."
+      },
+      {
+        "text": "The host's memory, because no limit was set",
+        "correct": true,
+        "why": "Right. With no limit, the ceiling is everything the host has."
+      },
+      {
+        "text": "The size of the alpine image on disk",
+        "correct": false,
+        "why": "The image is 12.8MB on disk; this column is about memory."
+      },
+      {
+        "text": "Memory used by all containers together",
+        "correct": false,
+        "why": "The usage is the 668KiB on the left; the right side is the ceiling."
+      }
+    ]
+  },
+  {
+    "id": "ex-af40z2cw",
+    "version": 1,
+    "section": "the-price-of-sharing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a container started with `--memory 256m`, `free -m` reports about 16,000 MB. Why?",
+    "hint": "Which file does `free` read, and what does it describe?",
+    "choices": [
+      {
+        "text": "The limit only takes effect after the first allocation",
+        "correct": false,
+        "why": "The limit is in force from the start; `free` simply cannot see it."
+      },
+      {
+        "text": "`--memory` is ignored on cgroup v1",
+        "correct": false,
+        "why": "It is enforced; `docker stats` would show the limit."
+      },
+      {
+        "text": "Alpine's `free` is broken",
+        "correct": false,
+        "why": "Debian's or Ubuntu's would print the same number; the file is the host's."
+      },
+      {
+        "text": "`free` reads `/proc/meminfo`, which describes the host's memory; the limit lives in a cgroup",
+        "correct": true,
+        "why": "Right. The limit is real and invisible to anything that reads `/proc/meminfo`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3kcdbe0",
+    "version": 1,
+    "section": "the-price-of-sharing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program starts one worker thread per processor it counts with `nproc`. In a container with `--cpus 1` on Ana's 4-processor machine, how many workers does it start?",
+    "hint": "What did `nproc` print inside that container?",
+    "choices": [
+      {
+        "text": "1, because the container has exactly one processor available to it",
+        "correct": false,
+        "why": "`--cpus 1` limits time, not what `nproc` reports; it printed 4."
+      },
+      {
+        "text": "4, and they then share one processor's worth of time",
+        "correct": true,
+        "why": "Right. It sizes itself for the host and gets a quarter of what it planned for."
+      },
+      {
+        "text": "0, because `nproc` fails inside a container and the program falls back to none",
+        "correct": false,
+        "why": "`nproc` answered 4 in the transcript."
+      },
+      {
+        "text": "2, half of the host",
+        "correct": false,
+        "why": "Nothing halves it; the program sees the host's count."
+      }
+    ]
+  },
+  {
+    "id": "ex-84e12atm",
+    "version": 1,
+    "section": "the-price-of-sharing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker run --platform linux/arm64 alpine:3.22 uname -m` fails on Ana's `x86_64` machine with `exec format error`. What failed?",
+    "hint": "The image was found.",
+    "choices": [
+      {
+        "text": "The download of the image",
+        "correct": false,
+        "why": "The image was found and unpacked; the failure came after that."
+      },
+      {
+        "text": "Docker's permission check",
+        "correct": false,
+        "why": "Permissions produce `permission denied`, a different message."
+      },
+      {
+        "text": "The kernel could not execute an arm64 binary",
+        "correct": true,
+        "why": "Right. The file is a program for another processor."
+      },
+      {
+        "text": "Alpine has no arm64 variant, so Docker substituted an empty image",
+        "correct": false,
+        "why": "Alpine publishes arm64; the binary in it was simply for the wrong processor."
+      }
+    ]
+  },
+  {
+    "id": "ex-6e1vs16e",
+    "version": 1,
+    "section": "the-price-of-sharing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A tool needs a kernel module the host does not have. Why can its container not simply bring the module in its image?",
+    "hint": "Whose kernel would the module be loaded into?",
+    "choices": [
+      {
+        "text": "Images cannot hold files larger than a few megabytes",
+        "correct": false,
+        "why": "Images hold gigabytes; size is not the problem."
+      },
+      {
+        "text": "Loading one changes the host itself, for every container on it at once",
+        "correct": true,
+        "why": "Right. There is no kernel of the container's own to extend."
+      },
+      {
+        "text": "Modules only exist on Windows",
+        "correct": false,
+        "why": "Linux has loadable kernel modules; the issue is whose kernel."
+      },
+      {
+        "text": "Docker deletes `.ko` files when it builds",
+        "correct": false,
+        "why": "Nothing deletes them; a container simply has no kernel of its own to load them into."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6tyqfza",
+    "version": 1,
+    "section": "the-price-of-sharing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the arrangement the lesson recommends for it.",
+    "hint": "Ask what has to be separate: the kernel, or only the files.",
+    "pairs": [
+      {
+        "left": "Two parties who do not trust each other on one host",
+        "right": "Virtual machines"
+      },
+      {
+        "left": "A program packaged once for laptop, CI and server",
+        "right": "Containers"
+      },
+      {
+        "left": "One large database using the whole machine",
+        "right": "Bare metal, or one VM sized to the machine"
+      }
+    ],
+    "right_distractors": [
+      "A container running its own kernel"
+    ]
+  },
+  {
+    "id": "ex-xx2sj1nr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a kernel flaw threaten containers more than VMs on the same host?",
+    "hint": "Count the kernels each arrangement has.",
+    "choices": [
+      {
+        "text": "Containers have no walls at all, so anything running inside one reaches the host directly",
+        "correct": false,
+        "why": "They do: namespaces and cgroups. The point is what those walls are made of."
+      },
+      {
+        "text": "Every container's wall is the same shared kernel, so one flaw opens them all",
+        "correct": true,
+        "why": "Right. A VM's guest has its own kernel and sits behind the hypervisor."
+      },
+      {
+        "text": "VMs receive kernel patches automatically from the hypervisor, and containers do not",
+        "correct": false,
+        "why": "Neither patches itself; the difference is structural."
+      },
+      {
+        "text": "Containers run as root on the host",
+        "correct": false,
+        "why": "They can, and lesson 14 changes that, but the shared kernel is the reason here."
+      }
+    ]
+  },
+  {
+    "id": "ex-593q12p3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an Apple silicon Mac, an `amd64`-only image runs under Docker Desktop, but slowly. What is happening?",
+    "hint": "The Mac's processor is arm64.",
+    "choices": [
+      {
+        "text": "Docker Desktop downloads an arm64 version from a different registry",
+        "correct": false,
+        "why": "There is none for an amd64-only image; it runs the amd64 binary."
+      },
+      {
+        "text": "The image is recompiled for arm64 on first run",
+        "correct": false,
+        "why": "Nothing is recompiled; the instructions are translated as they run."
+      },
+      {
+        "text": "Emulation",
+        "correct": true,
+        "why": "Right. Each amd64 instruction is translated, which works and is slow."
+      },
+      {
+        "text": "The Mac's kernel is x86_64 underneath",
+        "correct": false,
+        "why": "It is arm64, which is exactly why the amd64 binary needs help."
+      }
+    ]
+  },
+  {
+    "id": "ex-shs9793n",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these from the most to the least that each program carries for itself.",
+    "hint": "Follow the line up the stacks.",
+    "items": [
+      "A virtual machine: its own kernel, libraries and files",
+      "A container: its own libraries and files, the host's kernel",
+      "A program on bare metal: only its own binary, sharing the rest"
+    ]
+  },
+  {
+    "id": "ex-reemw8pn",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Docker calls the lab machine's processor architecture `amd64`; `uname -m` calls the same thing ___.",
+    "hint": "It was printed by `docker info` in this lesson.",
+    "blanks": [
+      {
+        "accept": [
+          "x86_64",
+          "x86-64"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

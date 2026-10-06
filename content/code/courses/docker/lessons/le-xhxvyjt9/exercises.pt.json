@@ -1,0 +1,295 @@
+{
+  "ex-3m6c2qfb": {
+    "prompt": "Com o driver padrão `json-file` e nenhuma opção, até que tamanho pode crescer o log de um container?",
+    "hint": "O que o `du` disse depois de três segundos?",
+    "choices": [
+      {
+        "text": "Sem limite, até encher o disco",
+        "why": "Isso: a rotação precisa ser pedida."
+      },
+      {
+        "text": "Até 100 MB, e então rotaciona",
+        "why": "Não há tamanho padrão; ele chegou a 183 MB em três segundos."
+      },
+      {
+        "text": "Até o limite de memória do container",
+        "why": "O log é um arquivo no disco do host, e não memória."
+      },
+      {
+        "text": "Nada é guardado até o `docker logs` pedir",
+        "why": "O daemon escreve cada linha assim que ela chega."
+      }
+    ]
+  },
+  "ex-cr3myjbb": {
+    "prompt": "Com `--log-opt max-size=1m --log-opt max-file=3`, quantos arquivos de log o diretório do container tinha?",
+    "hint": "Conte as linhas `json.log`.",
+    "unit": "arquivos"
+  },
+  "ex-6bfj9qwr": {
+    "prompt": "A Ana acrescenta `log-driver` e `log-opts` ao `daemon.json` e reinicia o daemon. Que containers passam a rotacionar os logs?",
+    "hint": "Quando as opções de log de um container são decididas?",
+    "choices": [
+      {
+        "text": "Todos, a partir do reinício",
+        "why": "Os containers existentes mantêm as opções com que foram criados."
+      },
+      {
+        "text": "Só os criados depois da mudança",
+        "why": "Isso; os outros mantêm as suas até serem recriados."
+      },
+      {
+        "text": "Nenhum, até cada imagem ser reconstruída",
+        "why": "Log não faz parte de uma imagem."
+      },
+      {
+        "text": "Só os iniciados também com `--log-opt`",
+        "why": "A graça do padrão do daemon é não precisar da flag."
+      }
+    ]
+  },
+  "ex-gc7n1dfj": {
+    "prompt": "Por que um programa em container registra na saída padrão, e não em `/var/log/shelf.log`?",
+    "hint": "Quem decide para onde vão as linhas?",
+    "choices": [
+      {
+        "text": "Escrever arquivos é proibido em containers",
+        "why": "Containers escrevem arquivos o tempo todo; é uma escolha."
+      },
+      {
+        "text": "A saída padrão é mais rápida que um arquivo",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Para a plataforma decidir aonde as linhas vão",
+        "why": "Isso: o driver ou um agente as despacha, e a imagem não muda."
+      },
+      {
+        "text": "O distroless não tem `/var/log`",
+        "why": "Alguns têm, e de todo jeito não seria o motivo."
+      }
+    ]
+  },
+  "ex-mzx1t0nn": {
+    "prompt": "Por que o `shelf` ganhou um programa `/probe` próprio em vez de `HEALTHCHECK CMD curl -f …`?",
+    "hint": "O que há numa imagem distroless?",
+    "choices": [
+      {
+        "text": "O `curl` é mais lento que Go",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Health checks precisam ser escritos em Go",
+        "why": "Qualquer programa da imagem serve."
+      },
+      {
+        "text": "O `curl` não alcança `127.0.0.1` dentro de um container",
+        "why": "Alcançaria, se estivesse lá."
+      },
+      {
+        "text": "A imagem não tem `curl` nem shell para rodá-lo",
+        "why": "Isso, de propósito desde a aula 14; um binário estático minúsculo resolve."
+      }
+    ]
+  },
+  "ex-4vzkp8hd": {
+    "prompt": "O `web-9090` estava `Up` e `unhealthy`. O que havia de errado?",
+    "hint": "Em que porta o `shelf` escutava, e em qual a verificação perguntava?",
+    "choices": [
+      {
+        "text": "O `shelf` escutava na 9090; a verificação perguntava na 8080",
+        "why": "Isso: um erro de configuração que só o `Up` nunca mostraria."
+      },
+      {
+        "text": "O binário do probe estava faltando",
+        "why": "A mesma imagem estava saudável no `web`."
+      },
+      {
+        "text": "O período inicial era curto demais",
+        "why": "As quatro falhas seguidas vieram bem depois dele."
+      },
+      {
+        "text": "O `shelf` tinha caído",
+        "why": "Ele estava `Up`; o processo rodava."
+      }
+    ]
+  },
+  "ex-ef6z9kqt": {
+    "prompt": "Um container avulso fica `unhealthy`. O que o daemon do Docker faz a respeito?",
+    "hint": "A última caixa da figura.",
+    "choices": [
+      {
+        "text": "Reinicia, se ele tiver política de reinício",
+        "why": "Políticas de reinício reagem ao processo terminar, e não à saúde."
+      },
+      {
+        "text": "Nada; só registra o estado",
+        "why": "Isso: o Compose, o Swarm ou uma pessoa precisa agir."
+      },
+      {
+        "text": "Para o container depois das tentativas",
+        "why": "Ele continua rodando."
+      },
+      {
+        "text": "Troca por um container novo",
+        "why": "Isso é o que o Swarm faz, e não o daemon sozinho."
+      }
+    ]
+  },
+  "ex-mrygf92a": {
+    "prompt": "Ligue cada opção do `HEALTHCHECK` ao que ela define.",
+    "hint": "Os valores da Ana foram 5s, 2s, 5s e 3.",
+    "pairs": [
+      {
+        "left": "`--interval`",
+        "right": "De quanto em quanto tempo a verificação roda"
+      },
+      {
+        "left": "`--timeout`",
+        "right": "Quanto tempo uma verificação pode levar"
+      },
+      {
+        "left": "`--start-period`",
+        "right": "Por quanto tempo falhas não contam depois do início"
+      },
+      {
+        "left": "`--retries`",
+        "right": "Quantas falhas seguidas significam não saudável"
+      }
+    ],
+    "right_distractors": [
+      "Quantas vezes o container reinicia"
+    ]
+  },
+  "ex-rzam7pm8": {
+    "prompt": "O `shelf` vai para o Kubernetes. O que acontece com o `HEALTHCHECK` dele?",
+    "hint": "O Kubernetes tem mecanismo próprio.",
+    "choices": [
+      {
+        "text": "O Kubernetes o roda, como o Docker",
+        "why": "O Kubernetes ignora a instrução."
+      },
+      {
+        "text": "A imagem não consegue iniciar",
+        "why": "A instrução é metadado; nada a recusa."
+      },
+      {
+        "text": "É ignorado; as probes chamam o `/health`",
+        "why": "Isso, então o endpoint aproveita, mesmo que a instrução não."
+      },
+      {
+        "text": "Vira uma liveness probe sozinho",
+        "why": "Nada a converte; as probes são escritas no manifesto."
+      }
+    ]
+  },
+  "ex-8phpf9t4": {
+    "prompt": "O `.netrc` foi removido no mesmo `RUN` que o escreveu. Por que o `docker history` ainda mostrou o token?",
+    "hint": "Com o que a linha do histórico começava?",
+    "choices": [
+      {
+        "text": "A remoção falhou sem avisar",
+        "why": "O arquivo sumiu; o token está em outro lugar."
+      },
+      {
+        "text": "O Alpine guarda arquivos apagados num cache",
+        "why": "O Alpine não tem nada a ver com isso."
+      },
+      {
+        "text": "O `docker history` lê o contexto de build",
+        "why": "Ele lê a imagem."
+      },
+      {
+        "text": "O histórico registra os argumentos de build que um `RUN` usou",
+        "why": "Isso: `|1 REGISTRY_TOKEN=lab-only-token`."
+      }
+    ]
+  },
+  "ex-5xf59z5p": {
+    "prompt": "Para dar o token a um `RUN` sem registrá-lo em lugar nenhum, escreva `RUN --mount=type=___,id=registry_token …`.",
+    "hint": "A mesma palavra da flag que o `docker build` recebe.",
+    "blanks": [
+      {
+        "accept": [
+          "secret"
+        ]
+      }
+    ]
+  },
+  "ex-skg47wjb": {
+    "prompt": "Quais destes põem um token numa imagem que é enviada? Escolha todos os que se aplicam.",
+    "hint": "Três jeitos vazam; um não.",
+    "choices": [
+      {
+        "text": "`ARG` usado por um `RUN`",
+        "why": "Sim: o valor fica no histórico."
+      },
+      {
+        "text": "`ENV TOKEN=…`",
+        "why": "Sim: ele fica na configuração da imagem."
+      },
+      {
+        "text": "`COPY .netrc /root/`",
+        "why": "Sim: o arquivo fica numa camada, mesmo que uma seguinte o apague."
+      },
+      {
+        "text": "`RUN --mount=type=secret`",
+        "why": "Não: ele é montado para um `RUN` e não é escrito em lugar nenhum."
+      }
+    ]
+  },
+  "ex-3k6h4z9y": {
+    "prompt": "Onde fica disponível um segredo de build enquanto o `RUN` que o monta roda?",
+    "hint": "O `ls` na imagem pronta não achou nada lá.",
+    "choices": [
+      {
+        "text": "Em `/run/secrets/`, pelo id dele",
+        "why": "Isso, e só para aquele `RUN`."
+      },
+      {
+        "text": "Na variável de ambiente `SECRET`",
+        "why": "É um arquivo, a não ser que a montagem peça `env=`."
+      },
+      {
+        "text": "Em `/etc/secrets`",
+        "why": "O caminho é outro."
+      },
+      {
+        "text": "No contexto de build, como `token.txt`",
+        "why": "O arquivo é passado pelo `--secret`, e não copiado para o contexto."
+      }
+    ]
+  },
+  "ex-2d7pare3": {
+    "prompt": "Um container passou a registrar um erro em laço e o disco está quase cheio. Ponha os passos da Ana numa ordem que faça sentido.",
+    "hint": "Achar, conter o estrago, e então evitar o próximo.",
+    "items": [
+      "Achar o container com o maior arquivo de log",
+      "Ler as últimas linhas com `docker logs --tail`",
+      "Recriá-lo com `max-size` e `max-file`",
+      "Definir um padrão com rotação no `daemon.json`"
+    ]
+  },
+  "ex-vbczsrmw": {
+    "prompt": "O Dockerfile de um colega tem `ARG NPM_TOKEN` e um `RUN npm ci` que o lê. O que deve mudar?",
+    "hint": "Qual ferramenta desta aula deixa um valor fora do histórico?",
+    "choices": [
+      {
+        "text": "Renomear o argumento para parecer menos um segredo",
+        "why": "O valor continua no histórico, seja qual for o nome."
+      },
+      {
+        "text": "Passá-lo com `--secret` e montá-lo naquele `RUN`",
+        "why": "Isso: disponível para um passo, registrado em lugar nenhum."
+      },
+      {
+        "text": "Apagar o `.npmrc` no mesmo `RUN`",
+        "why": "Isso deixa um arquivo de fora, e não o argumento."
+      },
+      {
+        "text": "Passar o token para `ENV`",
+        "why": "Isso o guarda na configuração em vez disso."
+      }
+    ]
+  }
+}

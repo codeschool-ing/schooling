@@ -1,0 +1,321 @@
+[
+  {
+    "id": "ex-jdf6ax08",
+    "version": 1,
+    "section": "bridges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the `veth…` interface that appeared on the host when `box-a` started?",
+    "hint": "Think of a cable.",
+    "choices": [
+      {
+        "text": "A copy of the host's network card, made for the container",
+        "correct": false,
+        "why": "It is virtual, and one end of a pair."
+      },
+      {
+        "text": "The host's end of a pair with `eth0` inside",
+        "correct": true,
+        "why": "Right, plugged into `docker0`."
+      },
+      {
+        "text": "A firewall rule Docker adds for the bridge",
+        "correct": false,
+        "why": "It is an interface; rules are elsewhere."
+      },
+      {
+        "text": "The DNS server that answers the containers' names",
+        "correct": false,
+        "why": "DNS is `127.0.0.11`, inside the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1yt4het",
+    "version": 1,
+    "section": "bridges",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `box-a`, the default route goes via `___`, the address of `docker0`.",
+    "hint": "Read `ip route`.",
+    "blanks": [
+      {
+        "accept": [
+          "172.17.0.1"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j45h8wcw",
+    "version": 1,
+    "section": "bridges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the default bridge, `ping box-a` from `box-b` gave `bad address`, and the address worked. Why?",
+    "hint": "Who answers names?",
+    "choices": [
+      {
+        "text": "`box-a` does not answer pings",
+        "correct": false,
+        "why": "It answered the ping by address."
+      },
+      {
+        "text": "Names need a `docker network connect` first, on every container",
+        "correct": false,
+        "why": "Connecting changes networks; the default bridge still has no names."
+      },
+      {
+        "text": "Nothing there resolves container names",
+        "correct": true,
+        "why": "Right; a user-defined network does."
+      },
+      {
+        "text": "The names had a typo",
+        "correct": false,
+        "why": "`box-a` was the exact name."
+      }
+    ]
+  },
+  {
+    "id": "ex-eeas7777",
+    "version": 1,
+    "section": "user-networks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On `shelfnet`, what answered the lookup for `shelf-web`?",
+    "hint": "Read `/etc/resolv.conf` in `box-c`.",
+    "choices": [
+      {
+        "text": "Google's DNS at `8.8.8.8`, through the host",
+        "correct": false,
+        "why": "That is where other questions are passed on."
+      },
+      {
+        "text": "The host's `/etc/hosts`, copied in at start",
+        "correct": false,
+        "why": "The host's files were not involved."
+      },
+      {
+        "text": "`shelf-web` announcing itself on the network",
+        "correct": false,
+        "why": "Containers announce nothing; Docker answers."
+      },
+      {
+        "text": "Docker's embedded DNS at `127.0.0.11`",
+        "correct": true,
+        "why": "Right: it knows every container on the network by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtm0j9eg",
+    "version": 1,
+    "section": "user-networks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "From the default bridge, `box-a` could not reach `shelf-web` even by its address. What changed that?",
+    "hint": "One command, no restart.",
+    "choices": [
+      {
+        "text": "`docker network connect shelfnet box-a`",
+        "correct": true,
+        "why": "Right: a second interface, on `shelfnet`."
+      },
+      {
+        "text": "Publishing port 8080 with `-p`",
+        "correct": false,
+        "why": "Publishing is for the host's side, not between bridges."
+      },
+      {
+        "text": "Restarting `box-a` so it got a new address",
+        "correct": false,
+        "why": "A new address on the same bridge changes nothing."
+      },
+      {
+        "text": "Turning off the host's firewall",
+        "correct": false,
+        "why": "Never the fix; the isolation is wanted."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwnrtb5x",
+    "version": 1,
+    "section": "user-networks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why put a database on a `backend` network that the web-facing proxy is not on?",
+    "hint": "What does a separate bridge do?",
+    "choices": [
+      {
+        "text": "Separate networks make database queries faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Only containers on `backend` reach it",
+        "correct": true,
+        "why": "Right: whatever is compromised on `frontend` cannot even see it."
+      },
+      {
+        "text": "Postgres refuses the default bridge",
+        "correct": false,
+        "why": "It runs fine there."
+      },
+      {
+        "text": "Compose needs a separate network for every service",
+        "correct": false,
+        "why": "One per project is the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-9h0zfp0p",
+    "version": 1,
+    "section": "localhost-host-none",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`shelf` listens on the host's `127.0.0.1:8080`. Why does `localhost:8080` from `box-c` get `Connection refused`?",
+    "hint": "Whose loopback is it?",
+    "choices": [
+      {
+        "text": "`box-c` has no `wget` installed in its image",
+        "correct": false,
+        "why": "`wget` ran and reported the refusal."
+      },
+      {
+        "text": "The port was published to the wrong address",
+        "correct": false,
+        "why": "Ana's own `curl` reached it."
+      },
+      {
+        "text": "There, `localhost` is `box-c`",
+        "correct": true,
+        "why": "Right: nothing listens on `box-c`'s own 8080."
+      },
+      {
+        "text": "Alpine blocks port 8080 by default",
+        "correct": false,
+        "why": "Alpine blocks nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4md0ey5",
+    "version": 1,
+    "section": "localhost-host-none",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`host.docker.internal:8080` was refused, though the name resolved to `172.17.0.1`. Why?",
+    "hint": "Where was the service listening?",
+    "choices": [
+      {
+        "text": "`host-gateway` works only under Docker Desktop, not Engine",
+        "correct": false,
+        "why": "It resolved and connected on the next try."
+      },
+      {
+        "text": "Containers may never reach the host",
+        "correct": false,
+        "why": "The third attempt reached it."
+      },
+      {
+        "text": "Port 8080 is reserved for `docker0`",
+        "correct": false,
+        "why": "Nothing reserves it; it is about the listening address."
+      },
+      {
+        "text": "Only on `127.0.0.1`, not the bridge's address",
+        "correct": true,
+        "why": "Right; the service on every address answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hz89bm6",
+    "version": 1,
+    "section": "localhost-host-none",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each network mode to what the container gets.",
+    "hint": "From most walls to fewest.",
+    "pairs": [
+      {
+        "left": "`--network none`",
+        "right": "Only a loopback interface"
+      },
+      {
+        "left": "default `bridge`",
+        "right": "Its own namespace, reachable by address"
+      },
+      {
+        "left": "a user-defined network",
+        "right": "Its own namespace, reachable by name"
+      },
+      {
+        "left": "`--network host`",
+        "right": "The host's own interfaces and ports"
+      }
+    ],
+    "right_distractors": [
+      "A copy of every other container's network"
+    ]
+  },
+  {
+    "id": "ex-42r3f56q",
+    "version": 1,
+    "section": "localhost-host-none",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `--network host -e PORT=9090`, on which host port did `ss` show `shelf` listening?",
+    "hint": "No `-p` was given.",
+    "value": 9090,
+    "tolerance": 0,
+    "unit": "port"
+  },
+  {
+    "id": "ex-vn6ds7z7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`shelf` and Postgres run on one server; only `shelf` should be reachable, and only through a proxy on the same machine. Which layout?",
+    "hint": "Names between them, one loopback door outward.",
+    "choices": [
+      {
+        "text": "One user network for both; publish `shelf` on `127.0.0.1` only",
+        "correct": true,
+        "why": "Right: `db` by name inside, one loopback door outside."
+      },
+      {
+        "text": "Both on `--network host`",
+        "correct": false,
+        "why": "Postgres would listen on the machine itself."
+      },
+      {
+        "text": "Both on the default bridge, by address",
+        "correct": false,
+        "why": "Addresses change on restart, and nothing resolves names."
+      },
+      {
+        "text": "Publish both on every address and rely on `ufw`",
+        "correct": false,
+        "why": "Lesson 17: Docker's rules come before `ufw`'s."
+      }
+    ]
+  }
+]

@@ -1,0 +1,357 @@
+{
+  "ex-fzpzeagf": {
+    "prompt": "Ponha os programas na ordem em que um pedido de `docker run` passa por eles.",
+    "hint": "O cliente primeiro, o runtime por último.",
+    "items": [
+      "`docker`",
+      "`dockerd`",
+      "`containerd`",
+      "`containerd-shim-runc-v2`",
+      "`runc`"
+    ]
+  },
+  "ex-cgzvf87f": {
+    "prompt": "Com um container rodando, o `ps` mostra `dockerd`, `containerd`, um shim e `sleep`, mas nenhum `runc`. Por quê?",
+    "hint": "Qual é o trabalho do runc, e quando ele acaba?",
+    "choices": [
+      {
+        "text": "Ele termina assim que o container é criado",
+        "why": "Isso: ele monta namespaces e cgroups, inicia o processo e deixa o shim no comando."
+      },
+      {
+        "text": "O runc quebrou depois de iniciar o container",
+        "why": "Nada falhou; terminar é o que o runc faz."
+      },
+      {
+        "text": "O runc roda dentro do container, onde o host não consegue listá-lo",
+        "why": "O host lista todo processo, inclusive o `sleep` do container."
+      },
+      {
+        "text": "O Docker 29 trocou o runc pelo containerd",
+        "why": "O `docker version` continua listando o runc 1.5.1."
+      }
+    ]
+  },
+  "ex-30w2fsw0": {
+    "prompt": "O que manter um shim por container torna possível?",
+    "hint": "O que acontece com os containers quando o `dockerd` é atualizado?",
+    "choices": [
+      {
+        "text": "Rodar containers Windows num host Linux, sem nenhuma VM no meio",
+        "why": "Nenhum shim fornece outro kernel."
+      },
+      {
+        "text": "Atualizar os daemons sem matar os containers que estão rodando",
+        "why": "Isso: o `dockerd` e o `containerd` podem ser reiniciados ou atualizados enquanto o shim segura a entrada, a saída e o código de saída do container."
+      },
+      {
+        "text": "Iniciar containers sem imagem",
+        "why": "Todo container ainda precisa de um sistema de arquivos raiz."
+      },
+      {
+        "text": "Compartilhar uma camada de escrita entre muitos containers da mesma imagem",
+        "why": "Cada container continua tendo a sua; o shim não tem nada a ver com camadas."
+      }
+    ]
+  },
+  "ex-7t4ptg5q": {
+    "prompt": "O `curl --unix-socket /var/run/docker.sock http://localhost/containers/json` devolveu os containers em execução. O que isso mostra sobre o comando `docker`?",
+    "hint": "O que passa pelo socket?",
+    "choices": [
+      {
+        "text": "Ele lê os containers direto de `/var/lib/docker`",
+        "why": "Ele nunca lê esse diretório; ele pergunta ao daemon."
+      },
+      {
+        "text": "Ele precisa do `curl` instalado para funcionar",
+        "why": "Ele fala a API sozinho; o `curl` foi só um segundo cliente."
+      },
+      {
+        "text": "Ele é cliente de uma API HTTP aberta a qualquer programa",
+        "why": "Isso. O `docker ps` manda exatamente este pedido."
+      },
+      {
+        "text": "Ele fala com o Docker Hub para listar containers",
+        "why": "Containers são locais; o pedido foi ao daemon local."
+      }
+    ]
+  },
+  "ex-c0wrpd90": {
+    "prompt": "Ligue cada programa ao trabalho dele.",
+    "hint": "Quatro programas, quatro trabalhos.",
+    "pairs": [
+      {
+        "left": "`dockerd`",
+        "right": "Guarda imagens, redes, volumes e o registro dos containers"
+      },
+      {
+        "left": "`containerd`",
+        "right": "Desempacota imagens em snapshots e inicia e para containers"
+      },
+      {
+        "left": "o shim",
+        "right": "Fica ao lado de um container, segurando a saída e o código de saída dele"
+      },
+      {
+        "left": "`runc`",
+        "right": "Cria os namespaces e cgroups e inicia o processo"
+      }
+    ],
+    "right_distractors": [
+      "Baixa imagens em nome dos servidores do Docker Hub"
+    ]
+  },
+  "ex-f9175s7k": {
+    "prompt": "Por que a aula instala o Docker Engine pelo repositório do próprio Docker, e não pelo da distribuição?",
+    "hint": "Compare versões e plugins.",
+    "choices": [
+      {
+        "text": "Os pacotes da distribuição são ilegais de usar em empresas",
+        "why": "Não há nada de ilegal neles; são mais antigos e empacotados de outro jeito."
+      },
+      {
+        "text": "É o único jeito de ter uma conta no Docker Hub",
+        "why": "Contas não têm nada a ver com como o motor é instalado."
+      },
+      {
+        "text": "O Ubuntu proíbe repositórios de terceiros",
+        "why": "O `apt` os aceita; a chave em `signed-by` é como ele confia num."
+      },
+      {
+        "text": "Ele tem o motor atual e os plugins Compose e Buildx",
+        "why": "Isso, compilados para cada distribuição suportada."
+      }
+    ]
+  },
+  "ex-xca0qfjf": {
+    "prompt": "Na linha do repositório, o que o `signed-by=/etc/apt/keyrings/docker.asc` faz o `apt` fazer?",
+    "hint": "Para que serve uma chave?",
+    "choices": [
+      {
+        "text": "Aceitar só pacotes com a assinatura do Docker",
+        "why": "Isso. A chave é como o apt sabe que os pacotes vieram do Docker."
+      },
+      {
+        "text": "Criptografar os pacotes baixados no disco",
+        "why": "Assinar prova a origem; nada aqui criptografa."
+      },
+      {
+        "text": "Baixar mais rápido de um espelho",
+        "why": "A chave não diz nada sobre velocidade ou espelhos."
+      },
+      {
+        "text": "Entrar no Docker Hub com a conta da Ana",
+        "why": "A chave é do repositório de pacotes do Docker, não de uma conta."
+      }
+    ]
+  },
+  "ex-mgxyv8x3": {
+    "prompt": "O `sudo -u bruno docker ps` imprimiu \"permission denied while trying to connect to the docker API\". O que está faltando?",
+    "hint": "Quem é dono do socket?",
+    "choices": [
+      {
+        "text": "Um login no Docker Hub para o Bruno",
+        "why": "Listar containers locais não exige conta em registry."
+      },
+      {
+        "text": "O Bruno estar no grupo `docker`",
+        "why": "Isso. O socket é `rw` só para o root e o grupo `docker`."
+      },
+      {
+        "text": "Um segundo daemon para o usuário do Bruno",
+        "why": "Um daemon atende todos os usuários permitidos."
+      },
+      {
+        "text": "O pacote `docker-ce-cli` na pasta pessoal do Bruno",
+        "why": "O comando rodou; foi o socket que o recusou."
+      }
+    ]
+  },
+  "ex-2k1zphz0": {
+    "prompt": "A Ana não conseguiu listar `/srv/payroll`, mas leu o `salaries.csv` com `docker run -v /srv/payroll:/p`. Qual é a conclusão certa?",
+    "hint": "Quem leu o arquivo de verdade?",
+    "choices": [
+      {
+        "text": "O Docker tem um bug no jeito de conferir permissões em montagens",
+        "why": "Ele está se comportando como foi projetado; o daemon roda como root e faz o que pedem."
+      },
+      {
+        "text": "As permissões do arquivo foram definidas errado pelo laboratório",
+        "why": "Elas são `600`, só root, como planejado; a Ana de fato não consegue lê-lo como ela mesma."
+      },
+      {
+        "text": "Pertencer ao grupo `docker` equivale a ser root naquela máquina",
+        "why": "Isso. Conceda-o só a quem você daria o root."
+      },
+      {
+        "text": "Bind mounts são somente leitura, então nada foi exposto de verdade",
+        "why": "Ela imprimiu o conteúdo; montagens podem ser escritas a menos que se peça `:ro`."
+      }
+    ]
+  },
+  "ex-xd95ajx3": {
+    "prompt": "O que o modo rootless muda?",
+    "hint": "Quem é o daemon?",
+    "choices": [
+      {
+        "text": "Os containers não podem mais rodar como root lá dentro, então imagens que esperam root se recusam a iniciar",
+        "why": "Lá dentro um processo ainda pode ser root; do lado de fora, esse root é só o usuário."
+      },
+      {
+        "text": "Só o grupo `docker` é removido",
+        "why": "A mudança é nos privilégios do próprio daemon."
+      },
+      {
+        "text": "As imagens são baixadas sem registry",
+        "why": "O pull funciona igual; o que muda é o usuário do daemon."
+      },
+      {
+        "text": "O próprio daemon roda como usuário comum, então o root de um container é só esse usuário",
+        "why": "Isso, ao custo de alguns limites que o Docker documenta."
+      }
+    ]
+  },
+  "ex-jyj70y5m": {
+    "prompt": "O `daemon.json` do laboratório define `registry-mirrors` como `https://mirror.gcr.io`. A Ana baixa a `alpine:3.22`. O que muda em relação a um pull direto do Docker Hub?",
+    "hint": "Nomes, tags, digests, e o servidor.",
+    "choices": [
+      {
+        "text": "Só o servidor que manda os bytes",
+        "why": "Isso. O nome, a tag e o digest são os do Docker Hub."
+      },
+      {
+        "text": "A imagem recebe outro digest",
+        "why": "Os digests continuam sendo os do Docker Hub; os bytes são os mesmos."
+      },
+      {
+        "text": "A imagem passa a se chamar `mirror.gcr.io/alpine`",
+        "why": "Ela continua sendo `alpine:3.22`, como o `docker image ls` mostrou na aula 1."
+      },
+      {
+        "text": "A Ana precisa entrar no Google",
+        "why": "O espelho é público; não precisa de login."
+      }
+    ]
+  },
+  "ex-bz3a9h6b": {
+    "prompt": "O Bruno edita o `/etc/docker/daemon.json`, deixa uma vírgula sobrando e reinicia o Docker. O que acontece?",
+    "hint": "Quando o daemon lê o arquivo?",
+    "choices": [
+      {
+        "text": "O daemon ignora a linha ruim e inicia",
+        "why": "Ele lê o arquivo inteiro ao iniciar e recusa um malformado."
+      },
+      {
+        "text": "O daemon não inicia",
+        "why": "Isso. Conferir o arquivo com `jq .` antes de reiniciar evita isso."
+      },
+      {
+        "text": "O Docker reescreve o arquivo sem a vírgula",
+        "why": "Nada o reescreve; o arquivo é do administrador."
+      },
+      {
+        "text": "Só os containers novos são afetados",
+        "why": "Sem daemon, nenhum container pode ser gerenciado."
+      }
+    ]
+  },
+  "ex-gwjmc9wx": {
+    "prompt": "`Logging Driver: json-file`. De onde o `docker logs` lê a saída de um container?",
+    "hint": "O nome do driver diz.",
+    "choices": [
+      {
+        "text": "Do serviço de logs do Docker Hub",
+        "why": "Nada dos logs sai da máquina com este driver."
+      },
+      {
+        "text": "Da camada de escrita do container, em `/var/log`",
+        "why": "O motor captura a saída; ele não lê arquivos dentro do container."
+      },
+      {
+        "text": "De um arquivo de linhas JSON na mesma máquina",
+        "why": "Isso, e por padrão ele cresce sem limite; a aula 18 define um."
+      },
+      {
+        "text": "Do terminal que iniciou o container, que guarda uma cópia na memória",
+        "why": "Um terminal não guarda nada; quem guardou a saída foi o motor."
+      }
+    ]
+  },
+  "ex-h6r5abw3": {
+    "prompt": "O `docker info` informa onde o motor guarda imagens, containers e volumes no disco: o `Docker Root Dir`, que no laboratório é ___.",
+    "hint": "Um caminho absoluto dentro de `/var/lib`.",
+    "blanks": [
+      {
+        "accept": [
+          "/var/lib/docker",
+          "/var/lib/docker/"
+        ]
+      }
+    ]
+  },
+  "ex-f7ekm2n1": {
+    "prompt": "Ligue cada máquina ao que a aula manda instalar nela.",
+    "hint": "Onde está o kernel Linux?",
+    "pairs": [
+      {
+        "left": "Um servidor Linux que roda containers",
+        "right": "Docker Engine"
+      },
+      {
+        "left": "Um notebook macOS",
+        "right": "Docker Desktop, ou uma alternativa que rode uma VM Linux"
+      },
+      {
+        "left": "Um runner de CI Linux que constrói imagens",
+        "right": "Docker Engine, que traz o BuildKit"
+      }
+    ],
+    "right_distractors": [
+      "A VM Linux do Docker Desktop num servidor Linux"
+    ]
+  },
+  "ex-sgcyqaw6": {
+    "prompt": "O `/var/lib/docker` chegou a 40 GB num servidor de build. O que o Bruno deve evitar fazer?",
+    "hint": "Quem guarda o registro do que há lá dentro?",
+    "choices": [
+      {
+        "text": "Perguntar ao Docker o que está ocupando o espaço",
+        "why": "Esse é o primeiro passo seguro, e a aula 22 o mostra."
+      },
+      {
+        "text": "Remover pelo `docker` as imagens que ninguém usa",
+        "why": "Passar pelo daemon mantém os registros dele certos."
+      },
+      {
+        "text": "Conferir com `sudo du -sh /var/lib/docker`",
+        "why": "Ler o tamanho não muda nada."
+      },
+      {
+        "text": "Apagar arquivos lá dentro à mão",
+        "why": "Isso. Os registros do daemon e os arquivos passariam a discordar; a aula 22 recupera espaço com segurança."
+      }
+    ]
+  },
+  "ex-5vgfhse0": {
+    "prompt": "Num servidor Ubuntu comum, o daemon do Docker parou. Que comando o inicia de novo?",
+    "hint": "O pacote registrou um serviço.",
+    "choices": [
+      {
+        "text": "`sudo systemctl start docker`",
+        "why": "Isso. O laboratório não consegue rodá-lo, porque não inicia com systemd."
+      },
+      {
+        "text": "`docker start`",
+        "why": "Isso inicia um container parado, e precisa de um daemon rodando para pedir."
+      },
+      {
+        "text": "`docker run dockerd`",
+        "why": "Nenhum container inicia sem um daemon para iniciá-lo."
+      },
+      {
+        "text": "`sudo apt-get install docker-ce`",
+        "why": "Ele já está instalado; só precisa ser iniciado."
+      }
+    ]
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "ex-q6az231w": {
+    "prompt": "A Ana remove o `db` e inicia um container novo com o mesmo `-v pgdata:/var/lib/postgresql/data`. Por que a linha de `loans` continua lá?",
+    "hint": "Onde o PostgreSQL a escreveu?",
+    "choices": [
+      {
+        "text": "O Docker copiou a camada do container antigo para o novo",
+        "why": "Camadas nunca são copiadas entre containers."
+      },
+      {
+        "text": "O PostgreSQL guarda uma cópia na imagem",
+        "why": "A imagem é somente leitura e idêntica para todo container."
+      },
+      {
+        "text": "O volume sobreviveu ao container",
+        "why": "Isso: os dados moram no `pgdata`. O container é novo; o volume é o mesmo."
+      },
+      {
+        "text": "O nome `db` aponta para os mesmos dados",
+        "why": "Nomes são rótulos de containers; a aula 7 reusou um e perdeu os dados."
+      }
+    ]
+  },
+  "ex-e7q2c3qe": {
+    "prompt": "O `docker volume inspect pgdata` mostra um `Mountpoint` dentro de `/var/lib/docker/volumes/`. Como a Ana deve ler ou mudar os arquivos ali?",
+    "hint": "De quem é esse diretório?",
+    "choices": [
+      {
+        "text": "Editá-los ali com `sudo`, é só uma pasta",
+        "why": "O diretório é do Docker; editar pelas costas do daemon é como a aula 6 disse que as coisas quebram."
+      },
+      {
+        "text": "Copiar a pasta para outro lugar primeiro",
+        "why": "Ler direto o diretório do Docker é o problema, com cópia ou sem."
+      },
+      {
+        "text": "Pelo `docker commit`",
+        "why": "O commit captura a camada de escrita de um container, não um volume."
+      },
+      {
+        "text": "Por um container que monte o volume",
+        "why": "Isso, como fez o backup."
+      }
+    ]
+  },
+  "ex-1qqwyq7k": {
+    "prompt": "O volume da Ana guarda dados escritos pelo PostgreSQL 16. Ela inicia o `postgres:17` contra ele. O que ela deve esperar?",
+    "hint": "O que o volume guarda, e em que formato?",
+    "choices": [
+      {
+        "text": "Precisa do procedimento de atualização do PostgreSQL",
+        "why": "Isso: o formato dos arquivos mudou entre versões principais. Um volume guarda bytes; ele não converte um banco."
+      },
+      {
+        "text": "A versão nova usa os arquivos antigos do jeito que eles estão",
+        "why": "Dentro de uma mesma versão principal isso vale; entre 16 e 17 o formato muda."
+      },
+      {
+        "text": "O Docker converte o volume automaticamente quando a versão muda",
+        "why": "O Docker não sabe nada do que há dentro de um volume."
+      },
+      {
+        "text": "O volume é copiado para a imagem nova",
+        "why": "Volumes nunca entram em imagens."
+      }
+    ]
+  },
+  "ex-7ft5whkx": {
+    "prompt": "No comando de backup, o que o `:ro` em `-v pgdata:/data:ro` garante?",
+    "hint": "Duas letras, uma promessa.",
+    "choices": [
+      {
+        "text": "O arquivo gerado será somente leitura",
+        "why": "O arquivo foi gravado em `/backup`, outra montagem."
+      },
+      {
+        "text": "O container de backup não consegue mudar o volume",
+        "why": "Isso: o volume fica montado somente leitura para aquele container."
+      },
+      {
+        "text": "O banco fica pausado durante o backup",
+        "why": "Nada pausa o PostgreSQL; é por isso que um banco rodando pede `pg_dump`."
+      },
+      {
+        "text": "Só o root pode ler o volume depois",
+        "why": "O `:ro` afeta esta montagem, dentro deste container."
+      }
+    ]
+  },
+  "ex-v6558nwa": {
+    "prompt": "Com o `site` montado por bind em `/srv`, a Ana acrescenta uma linha ao `site/index.html` no host. Quando o container em execução a vê?",
+    "hint": "É uma cópia?",
+    "choices": [
+      {
+        "text": "Depois de `docker restart web`",
+        "why": "Não foi preciso reiniciar; o segundo `cat` a mostrou."
+      },
+      {
+        "text": "Nunca; o container recebeu uma cópia ao iniciar",
+        "why": "Um bind mount é o mesmo diretório, não uma cópia."
+      },
+      {
+        "text": "Na hora",
+        "why": "Isso. Os dois lados olham os mesmos arquivos."
+      },
+      {
+        "text": "Quando rodar o próximo `docker commit` do container",
+        "why": "O commit não participa; a montagem mostra os arquivos do host direto."
+      }
+    ]
+  },
+  "ex-j3rgxc1a": {
+    "prompt": "Um container escreveu `report.txt` no diretório montado por bind da Ana, e o `ls -l` mostra o dono como `root`. Que opção evita isso da próxima vez?",
+    "hint": "Rode o processo como outra pessoa.",
+    "choices": [
+      {
+        "text": "`:ro` no fim da montagem",
+        "why": "Somente leitura impediria a escrita de vez."
+      },
+      {
+        "text": "`--privileged`",
+        "why": "Isso dá mais poder ao container, não outro dono."
+      },
+      {
+        "text": "`--rm`",
+        "why": "O `--rm` remove o container; o arquivo continua do root."
+      },
+      {
+        "text": "`--user \"$(id -u):$(id -g)\"`",
+        "why": "Isso: o processo roda com os números da Ana, então os arquivos são dela."
+      }
+    ]
+  },
+  "ex-ycfb27sh": {
+    "prompt": "O Dockerfile do Bruno instala as dependências do programa em `/app/vendor`. Ele roda a imagem com o diretório de código montado por bind em `/app`, e o programa diz que as dependências sumiram. Por quê?",
+    "hint": "O que acontece com o diretório onde a montagem cai?",
+    "choices": [
+      {
+        "text": "A montagem é posta por cima de `/app`, escondendo o que a imagem tinha ali",
+        "why": "Isso. O que a imagem pôs em `/app` fica invisível enquanto a montagem existir."
+      },
+      {
+        "text": "O bind mount apagou o `/app/vendor` da imagem",
+        "why": "A imagem continua intacta; um container sem a montagem ainda o tem."
+      },
+      {
+        "text": "Dependências não podem ser instaladas num Dockerfile",
+        "why": "Podem; o problema é o que a montagem faz com elas na execução."
+      },
+      {
+        "text": "Bind mounts são somente leitura por padrão, então o programa não abre os arquivos",
+        "why": "Eles aceitam escrita a menos que se peça `:ro`."
+      }
+    ]
+  },
+  "ex-rjwsxj44": {
+    "prompt": "Um container que escreve numa montagem terminada em `:ro` falha com a mensagem \"Read-only file ___\". A mensagem vem em inglês.",
+    "hint": "A última palavra do erro.",
+    "blanks": [
+      {
+        "accept": [
+          "system"
+        ]
+      }
+    ]
+  },
+  "ex-xctamxxn": {
+    "prompt": "Por que a aula escreve `-v \"$PWD/site\":/srv` em vez de `-v site:/srv`?",
+    "hint": "O Docker entenderia `site` como o quê?",
+    "choices": [
+      {
+        "text": "Aspas são obrigatórias em volta de todo caminho",
+        "why": "Elas protegem espaços no `$PWD`; não são o ponto."
+      },
+      {
+        "text": "Um nome solto vira volume",
+        "why": "Isso: um bind mount precisa de caminho absoluto no host, e `site:/srv` criaria um volume nomeado chamado `site`."
+      },
+      {
+        "text": "`site` é palavra reservada no Docker",
+        "why": "Não é; viraria só um nome de volume."
+      },
+      {
+        "text": "Caminhos relativos são mais lentos",
+        "why": "Velocidade não tem nada a ver."
+      }
+    ]
+  },
+  "ex-b112gj9m": {
+    "prompt": "Ligue cada necessidade à montagem que a aula recomenda.",
+    "hint": "De quem são os arquivos?",
+    "pairs": [
+      {
+        "left": "Os arquivos de um banco de dados",
+        "right": "Um volume nomeado"
+      },
+      {
+        "left": "Código-fonte que a Ana edita com o container rodando",
+        "right": "Um bind mount"
+      },
+      {
+        "left": "Arquivos de rascunho de vida curta que não podem chegar ao disco",
+        "right": "tmpfs"
+      }
+    ],
+    "right_distractors": [
+      "A camada de escrita do container, com commit toda noite"
+    ]
+  },
+  "ex-qcyhkj0y": {
+    "prompt": "Um script monta `--mount type=bind,source=/data/inbox,target=/in`, e o `/data/inbox` foi digitado errado. O que o `--mount` faz que o `-v` não faria?",
+    "hint": "Compare as duas transcrições.",
+    "choices": [
+      {
+        "text": "Cria o diretório, pertencente ao root",
+        "why": "É isso que o `-v` faz, em silêncio."
+      },
+      {
+        "text": "Monta um tmpfs vazio no lugar",
+        "why": "Ele não monta nada e informa o erro."
+      },
+      {
+        "text": "Recusa iniciar o container",
+        "why": "Isso: \"bind source path does not exist\". Um erro de digitação interrompe a execução."
+      },
+      {
+        "text": "Recorre a um volume nomeado",
+        "why": "Não há plano B; o container não inicia."
+      }
+    ]
+  },
+  "ex-rfywgw49": {
+    "prompt": "Com `--tmpfs /scratch:size=16m`, quantos bytes o `dd` conseguiu escrever antes do \"No space left on device\"?",
+    "hint": "A última linha da saída do `dd`.",
+    "unit": "bytes"
+  },
+  "ex-q6maan13": {
+    "prompt": "Por que as configurações de produção se apoiam em volumes nomeados e as de desenvolvimento em bind mounts?",
+    "hint": "Qual deles depende da organização do host?",
+    "choices": [
+      {
+        "text": "Bind mounts são mais lentos em servidores",
+        "why": "Velocidade não é o argumento que a aula faz."
+      },
+      {
+        "text": "Volumes nomeados são criptografados pelo Docker antes da escrita",
+        "why": "Nada num volume local é criptografado por padrão."
+      },
+      {
+        "text": "Bind mounts estão obsoletos fora do desenvolvimento",
+        "why": "Têm suporte completo; só amarram um comando à organização de uma máquina."
+      },
+      {
+        "text": "Ele amarra o comando aos caminhos de uma máquina",
+        "why": "Isso: um volume nomeado funciona onde o Docker rodar, e no desenvolvimento esse caminho é justamente o ponto."
+      }
+    ]
+  },
+  "ex-sgy77b6h": {
+    "prompt": "A Ana atualiza o container da aplicação para uma imagem nova sem perder os dados. Ponha os passos em ordem.",
+    "hint": "O volume é a constante.",
+    "items": [
+      "Baixar a imagem nova",
+      "Remover o container antigo",
+      "Iniciar um container da imagem nova com o mesmo `-v pgdata:…`",
+      "Conferir que os dados estão lá"
+    ]
+  },
+  "ex-4yw4hhcr": {
+    "prompt": "O Bruno empacota o `pgdata` com `tar` toda noite com o PostgreSQL rodando. O que há de errado com esse backup?",
+    "hint": "O que o PostgreSQL está fazendo com esses arquivos enquanto isso?",
+    "choices": [
+      {
+        "text": "Há escritas acontecendo no meio da cópia",
+        "why": "Isso: a cópia não é necessariamente um banco consistente. Pare o container antes, ou use o `pg_dump`."
+      },
+      {
+        "text": "Nada, o `tar` copia arquivos de forma atômica",
+        "why": "Ele copia um arquivo depois do outro enquanto eles continuam mudando."
+      },
+      {
+        "text": "O arquivo gerado pertence ao root",
+        "why": "É verdade na aula, e tem conserto, mas não é o que torna o backup duvidoso."
+      },
+      {
+        "text": "Volumes não podem ser montados duas vezes",
+        "why": "Podem; o container de backup o montou ao lado do banco."
+      }
+    ]
+  }
+}

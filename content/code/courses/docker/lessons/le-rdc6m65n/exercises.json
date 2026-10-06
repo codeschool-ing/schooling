@@ -1,0 +1,528 @@
+[
+  {
+    "id": "ex-pacy4qth",
+    "version": 1,
+    "section": "works-on-my-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report query uses `JSON_TABLE`. It runs on Ana's laptop and fails with a syntax error on the staging server. Nobody edited the query. What is the most likely difference?",
+    "hint": "Which release added `JSON_TABLE`?",
+    "choices": [
+      {
+        "text": "Staging is on PostgreSQL 16, a release before that feature",
+        "correct": true,
+        "why": "Right. 17 added it, so the same text is valid SQL on one machine and a syntax error on the other."
+      },
+      {
+        "text": "The server's copy of the query was corrupted on its way from the repository",
+        "correct": false,
+        "why": "The text is identical on both machines; what differs is the database reading it."
+      },
+      {
+        "text": "Syntax errors depend on the operating system of the client that sends the query",
+        "correct": false,
+        "why": "The server parses the SQL, and its version decides which syntax exists."
+      },
+      {
+        "text": "Staging has less memory than the laptop",
+        "correct": false,
+        "why": "A lack of memory produces an out-of-memory error, never a syntax error."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag61hzcs",
+    "version": 1,
+    "section": "works-on-my-machine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a container image carry with the program?",
+    "hint": "Draw the line at the kernel.",
+    "choices": [
+      {
+        "text": "Everything above the kernel: interpreter or compiler, libraries, configuration files",
+        "correct": true,
+        "why": "Yes. The kernel is the one thing it does not bring; it uses the host's."
+      },
+      {
+        "text": "Its own kernel, so it can boot anywhere",
+        "correct": false,
+        "why": "That describes a virtual machine. A container uses the kernel of the machine it runs on."
+      },
+      {
+        "text": "Only the program's own binary",
+        "correct": false,
+        "why": "Then the libraries and the interpreter would still have to be installed on every machine, which is the problem containers solve."
+      },
+      {
+        "text": "A copy of the host it was built on",
+        "correct": false,
+        "why": "An image holds the files somebody chose for the program, not a snapshot of a machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-567c0t1b",
+    "version": 1,
+    "section": "works-on-my-machine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `docker run --rm golang:1.25 go version`. After the version is printed, what is left on her machine?",
+    "hint": "`--rm` is about the container.",
+    "choices": [
+      {
+        "text": "Nothing at all: the image goes with the container",
+        "correct": false,
+        "why": "`--rm` removes the container. The image stays, so the next run does not download it again."
+      },
+      {
+        "text": "A stopped container and the image",
+        "correct": false,
+        "why": "That is what the same command leaves without `--rm`."
+      },
+      {
+        "text": "The image `golang:1.25` stays; the container is gone",
+        "correct": true,
+        "why": "Right. The container was removed when `go version` ended; the image stays for next time."
+      },
+      {
+        "text": "Go installed in `/usr/local/go`",
+        "correct": false,
+        "why": "Nothing was installed on the host. The compiler lives in the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-4byn42vp",
+    "version": 1,
+    "section": "works-on-my-machine",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these still depend on the machine a container runs on? Choose all that apply.",
+    "hint": "Three things sit below the line the image draws, or outside it.",
+    "choices": [
+      {
+        "text": "The kernel",
+        "correct": true,
+        "why": "Yes. Every container on the machine shares it."
+      },
+      {
+        "text": "The processor architecture",
+        "correct": true,
+        "why": "Yes. An image built for one architecture needs help to run on another; lesson 2 shows the error."
+      },
+      {
+        "text": "The version of the libraries the program links against",
+        "correct": false,
+        "why": "Those travel inside the image, at the versions somebody chose."
+      },
+      {
+        "text": "Data written inside the container, once the container is removed",
+        "correct": true,
+        "why": "Yes, in the sense that it is gone: it lived in the container's own layer. Lesson 7."
+      },
+      {
+        "text": "The interpreter's version",
+        "correct": false,
+        "why": "The interpreter is inside the image, which is the point of `golang:1.25` and `postgres:17`."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8eks9k4",
+    "version": 1,
+    "section": "works-on-my-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A virtual machine per project also ends the fight between PostgreSQL 16 and 17. What does it cost that a container does not?",
+    "hint": "Count the operating systems.",
+    "choices": [
+      {
+        "text": "A licence for each copy of PostgreSQL running inside a VM",
+        "correct": false,
+        "why": "PostgreSQL has no per-copy licence, in a VM or anywhere else."
+      },
+      {
+        "text": "A whole operating system per project",
+        "correct": true,
+        "why": "Right. A container shares the host's kernel and needs none of that."
+      },
+      {
+        "text": "It cannot run two versions on one physical machine at once",
+        "correct": false,
+        "why": "Two VMs can run on one machine; that is how it settles the fight."
+      },
+      {
+        "text": "Network access between the two projects",
+        "correct": false,
+        "why": "A VM has networking. The cost is elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbrjt5gm",
+    "version": 1,
+    "section": "a-process-with-walls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With PostgreSQL running in a container, Ana runs `ps -C postgres` on the host. What does she see?",
+    "hint": "Look at the transcript again.",
+    "choices": [
+      {
+        "text": "Nothing at all, because a container's processes are invisible to the host's tools",
+        "correct": false,
+        "why": "The host saw six `postgres` processes, with ordinary numbers."
+      },
+      {
+        "text": "One `containerd` process standing in for the database",
+        "correct": false,
+        "why": "The database's own processes appear, under their own name."
+      },
+      {
+        "text": "The postgres processes, with ordinary host process numbers",
+        "correct": true,
+        "why": "Yes. A container is a process on the host, and the host lists it like any other."
+      },
+      {
+        "text": "An error: `ps` needs `docker` to read a container",
+        "correct": false,
+        "why": "`ps` reads the host's process table, where the container's processes already are."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxk22st5",
+    "version": 1,
+    "section": "a-process-with-walls",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the host, Ana's `postgres` is process 10912. Read `/proc/1/status` from inside the container again: what process number does the same `postgres` have in there?",
+    "hint": "The file's name already says it.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-v88v58rj",
+    "version": 1,
+    "section": "a-process-with-walls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker top db` shows the database running as UID 999, and `id postgres` inside the container says 999 is `postgres`. Why might the host show a different name for 999, or none?",
+    "hint": "Who turns a number into a name?",
+    "choices": [
+      {
+        "text": "Because the container's UID 999 is translated to a random host UID",
+        "correct": false,
+        "why": "In this lab the number is the same on both sides; 999 is 999. Only the name lookup differs."
+      },
+      {
+        "text": "Names come from each side's own `/etc/passwd`",
+        "correct": true,
+        "why": "Right. The process is UID 999 everywhere; the name is a local lookup."
+      },
+      {
+        "text": "Because PostgreSQL renames its user when it starts",
+        "correct": false,
+        "why": "The name comes from the image's `/etc/passwd`, not from PostgreSQL at run time."
+      },
+      {
+        "text": "Because `ps` cannot read processes owned by other users",
+        "correct": false,
+        "why": "`ps` listed them; it simply has no name of its own for 999."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0j4e9ca",
+    "version": 1,
+    "section": "a-process-with-walls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno starts a container whose command converts one file and exits. One second later `docker ps` no longer lists it. What happened?",
+    "hint": "How long does a container live?",
+    "choices": [
+      {
+        "text": "It crashed, because containers are meant to run forever",
+        "correct": false,
+        "why": "Nothing says a container has to stay up; many do one job and stop."
+      },
+      {
+        "text": "Docker removed it for using too much memory",
+        "correct": false,
+        "why": "Nothing here hit a limit. A finished command is enough to explain it."
+      },
+      {
+        "text": "It is still running, hidden from `docker ps`",
+        "correct": false,
+        "why": "`docker ps` lists every running container; a stopped one needs `-a`."
+      },
+      {
+        "text": "Its main process finished, so it stopped",
+        "correct": true,
+        "why": "Right. A container lives as long as its main process; one that did its job and exited is done, not broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-x013s04n",
+    "version": 1,
+    "section": "a-process-with-walls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mechanism to what it does for a container.",
+    "hint": "One limits sight, one limits use, one supplies files.",
+    "pairs": [
+      {
+        "left": "namespaces",
+        "right": "Limit what the process can see: processes, hostname, network"
+      },
+      {
+        "left": "cgroups",
+        "right": "Limit how much the process can use: memory, CPU, processes"
+      },
+      {
+        "left": "the image's layers",
+        "right": "Supply the filesystem the process sees"
+      }
+    ],
+    "right_distractors": [
+      "Boot a second kernel for the container"
+    ]
+  },
+  {
+    "id": "ex-vxht87ah",
+    "version": 1,
+    "section": "image-and-container",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana writes `/note` in container `one`. Container `two` came from the same image. Why can `two` not read the file?",
+    "hint": "Where did the write land?",
+    "choices": [
+      {
+        "text": "Because `two` started before the file was written",
+        "correct": false,
+        "why": "Order does not matter; `two` would not see it if it started afterwards either."
+      },
+      {
+        "text": "Its write landed in `one`'s own layer",
+        "correct": true,
+        "why": "Right. Containers never write into the image they share."
+      },
+      {
+        "text": "Because Alpine forbids creating files in the root directory",
+        "correct": false,
+        "why": "`one` wrote and read `/note` without trouble."
+      },
+      {
+        "text": "`two` runs as another user",
+        "correct": false,
+        "why": "Both run as root here; permissions are not what separates them."
+      }
+    ]
+  },
+  {
+    "id": "ex-qde28f6s",
+    "version": 1,
+    "section": "image-and-container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker image ls` shows `alpine:3.22` with `CONTENT SIZE` 3.88MB and `DISK USAGE` 12.8MB. What explains the difference?",
+    "hint": "One is how it travels, the other how it sits.",
+    "choices": [
+      {
+        "text": "Content size is compressed, as it travels from a registry; disk usage is unpacked on this disk",
+        "correct": true,
+        "why": "Right. Layers travel compressed and are unpacked when pulled."
+      },
+      {
+        "text": "Disk usage also counts the writable layers of every container ever started from this image on the machine",
+        "correct": false,
+        "why": "Containers have their own column elsewhere; this is the image."
+      },
+      {
+        "text": "Content size counts only the files Alpine changed since 3.21",
+        "correct": false,
+        "why": "It counts the whole image, compressed."
+      },
+      {
+        "text": "The two columns measure the same thing in different units",
+        "correct": false,
+        "why": "Both are in MB, and they differ by more than three times."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9n9weqz",
+    "version": 1,
+    "section": "image-and-container",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `docker rm -f one two db`. Which of these is still on her machine afterwards?",
+    "hint": "`rm` is not `image rm`.",
+    "choices": [
+      {
+        "text": "The tables the database created",
+        "correct": false,
+        "why": "They lived in `db`'s writable layer and went with it."
+      },
+      {
+        "text": "The file `/note`",
+        "correct": false,
+        "why": "It lived in `one`'s own layer, and `one` is gone."
+      },
+      {
+        "text": "The image `alpine:3.22`",
+        "correct": true,
+        "why": "Yes. Removing containers never removes the image they came from."
+      },
+      {
+        "text": "The container `db`, stopped",
+        "correct": false,
+        "why": "`-f` stops it and `rm` removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zhbbhgb",
+    "version": 1,
+    "section": "image-and-container",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Docker never changes an image when a container writes. Each container writes into its own ___ layer on top of it.",
+    "hint": "The opposite of read-only.",
+    "blanks": [
+      {
+        "accept": [
+          "writable",
+          "write",
+          "read-write"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bnezjvfq",
+    "version": 1,
+    "section": "image-and-container",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each word to what it names.",
+    "hint": "Four words, four things.",
+    "pairs": [
+      {
+        "left": "image",
+        "right": "A read-only filesystem plus metadata, started from"
+      },
+      {
+        "left": "container",
+        "right": "An image's files, a writable layer and a running process"
+      },
+      {
+        "left": "registry",
+        "right": "A server that stores images and hands them out"
+      },
+      {
+        "left": "volume",
+        "right": "Storage that outlives the containers using it"
+      }
+    ]
+  },
+  {
+    "id": "ex-bt71614f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate says \"the container has the new version now\" after a deploy. In Docker's terms, what almost certainly happened?",
+    "hint": "Can a running container's image change?",
+    "choices": [
+      {
+        "text": "The old container stopped and a new one started from the new image",
+        "correct": true,
+        "why": "Right. A container keeps the image it was started from; a new version means a new container."
+      },
+      {
+        "text": "The running container downloaded the new image into its writable layer",
+        "correct": false,
+        "why": "A container does not swap its image. Its layer only holds what its own process writes."
+      },
+      {
+        "text": "The image was edited in place while the container ran",
+        "correct": false,
+        "why": "Images are read-only. A new version is a new image."
+      },
+      {
+        "text": "The container rebooted its kernel with the new code",
+        "correct": false,
+        "why": "There is no kernel of its own to reboot."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd0e2pta",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of Ana's database container in order.",
+    "hint": "It starts from something that already exists.",
+    "items": [
+      "The image `postgres:17` is on the machine",
+      "`docker run -d` creates a container from it and starts `postgres`",
+      "PostgreSQL writes its tables into the container's own layer",
+      "`docker rm -f` stops the container and removes it with its layer",
+      "The image is still there for the next container"
+    ]
+  },
+  {
+    "id": "ex-3tchktq5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno argues that containers start in about the time their program takes to start. Which fact from this lesson supports him?",
+    "hint": "What has to happen before the first line of the program runs?",
+    "choices": [
+      {
+        "text": "Images are compressed when they travel",
+        "correct": false,
+        "why": "That makes a download faster, not a start."
+      },
+      {
+        "text": "Each container gets its own writable layer",
+        "correct": false,
+        "why": "True, but it is not what makes a start quick."
+      },
+      {
+        "text": "Docker keeps the image after `--rm`",
+        "correct": false,
+        "why": "That saves a download on the next run, not boot time."
+      },
+      {
+        "text": "A container is a process on the host's kernel, so there is no operating system to boot",
+        "correct": true,
+        "why": "Right. Starting a container is starting a process, with walls."
+      }
+    ]
+  }
+]

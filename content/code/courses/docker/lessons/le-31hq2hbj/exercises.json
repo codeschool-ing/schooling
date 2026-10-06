@@ -1,0 +1,400 @@
+[
+  {
+    "id": "ex-rm41d18f",
+    "version": 1,
+    "section": "running-as-root",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An image whose Dockerfile has no `USER` line: which user does its container's process run as?",
+    "hint": "`docker top` showed a number.",
+    "choices": [
+      {
+        "text": "Root, UID 0",
+        "correct": true,
+        "why": "Right. And with no user namespace, that is the host's root."
+      },
+      {
+        "text": "The user who ran `docker run`",
+        "correct": false,
+        "why": "Ana's own UID would need `--user`; the default is the image's."
+      },
+      {
+        "text": "`nobody`, for safety",
+        "correct": false,
+        "why": "Docker picks nothing safer by itself."
+      },
+      {
+        "text": "A random UID chosen at each start",
+        "correct": false,
+        "why": "Docker does not randomise users; that is a choice some orchestrators make."
+      }
+    ]
+  },
+  {
+    "id": "ex-rva5jdra",
+    "version": 1,
+    "section": "running-as-root",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A runtime flaw lets a process get past a container's walls. Why does it matter whether that process was UID 0 or UID 65532?",
+    "hint": "Which user does it arrive on the host as?",
+    "choices": [
+      {
+        "text": "It does not; a process past the walls is root anyway",
+        "correct": false,
+        "why": "It arrives as the user it was; 65532 has no rights on the host."
+      },
+      {
+        "text": "It arrives as that user: as root, that is the whole machine",
+        "correct": true,
+        "why": "Right. As 65532, it is very little."
+      },
+      {
+        "text": "UID 65532 processes cannot use the network",
+        "correct": false,
+        "why": "They can; the difference is about the host's files and processes."
+      },
+      {
+        "text": "Root processes run faster outside a container",
+        "correct": false,
+        "why": "Speed is not the issue; power over the host is."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvwvky27",
+    "version": 1,
+    "section": "running-as-root",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these get worse when a container's process runs as root? Choose all that apply.",
+    "hint": "The lesson listed three.",
+    "choices": [
+      {
+        "text": "What a bind-mounted host directory can be made to suffer",
+        "correct": true,
+        "why": "Yes: root can rewrite anything in it."
+      },
+      {
+        "text": "What a process past the walls can do on the host",
+        "correct": true,
+        "why": "Yes: it lands there as root."
+      },
+      {
+        "text": "How far a file-writing bug in the program reaches",
+        "correct": true,
+        "why": "Yes: root can write anywhere in the container's filesystem."
+      },
+      {
+        "text": "How long the image takes to pull",
+        "correct": false,
+        "why": "The user has nothing to do with download size."
+      }
+    ]
+  },
+  {
+    "id": "ex-v31xypkt",
+    "version": 1,
+    "section": "giving-it-a-user",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson write `USER 65532:65532` rather than `USER nonroot`, when both work?",
+    "hint": "Who checks before starting the container?",
+    "choices": [
+      {
+        "text": "Names are slower to type",
+        "correct": false,
+        "why": "Typing is not the argument."
+      },
+      {
+        "text": "Names stop working after an image is pushed to a registry",
+        "correct": false,
+        "why": "They keep working; they just cannot be verified without the image's `/etc/passwd`."
+      },
+      {
+        "text": "Only a number lets an orchestrator verify it",
+        "correct": true,
+        "why": "Right: orchestrators check non-root from a number; Kubernetes's `runAsNonRoot` refuses a name it cannot check."
+      },
+      {
+        "text": "Distroless has no `nonroot` user",
+        "correct": false,
+        "why": "It has one, as its `/etc/passwd` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wyk3nkz3",
+    "version": 1,
+    "section": "giving-it-a-user",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shelf` running as UID 65532 listened on port 80 without trouble. Why?",
+    "hint": "Read the value Ana printed from `/proc`.",
+    "choices": [
+      {
+        "text": "Port 80 is not a privileged port on Linux",
+        "correct": false,
+        "why": "On the host it is reserved below 1024 by default; inside the container the setting differs."
+      },
+      {
+        "text": "Distroless runs `shelf` as root despite `USER`",
+        "correct": false,
+        "why": "`docker top` showed UID 65532."
+      },
+      {
+        "text": "The port was published with `-p`",
+        "correct": false,
+        "why": "No `-p` was given; the program bound the port inside."
+      },
+      {
+        "text": "Docker sets `ip_unprivileged_port_start` to 0 in each container",
+        "correct": true,
+        "why": "Right, so any user may bind any port in that namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fq94j4n",
+    "version": 1,
+    "section": "giving-it-a-user",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Alpine image, user 10001 could not create `/data/report.txt`. What fixed it?",
+    "hint": "Who owned `/data`?",
+    "choices": [
+      {
+        "text": "`chown app:app /data` before `USER`",
+        "correct": true,
+        "why": "Right: hand over exactly the directory it writes to."
+      },
+      {
+        "text": "Running the container with `--privileged`",
+        "correct": false,
+        "why": "That would grant far more than one directory needs."
+      },
+      {
+        "text": "Changing `USER` to a name instead of a number",
+        "correct": false,
+        "why": "The name and number are the same user."
+      },
+      {
+        "text": "Making `/data` a symbolic link to `/tmp`",
+        "correct": false,
+        "why": "That avoids the question instead of answering it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s7dx8w3",
+    "version": 1,
+    "section": "giving-it-a-user",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Distroless has no `cat`, yet Ana read `/etc/passwd` out of the running container with `docker ___ as-nonroot:/etc/passwd -`.",
+    "hint": "The command that copies files between a container and the host.",
+    "blanks": [
+      {
+        "accept": [
+          "cp"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nzadpqgk",
+    "version": 1,
+    "section": "smaller-surface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`debian:trixie` is 187MB and `debian:trixie-slim` 119MB, both with 78 packages. What did slim remove?",
+    "hint": "Things a container never reads.",
+    "choices": [
+      {
+        "text": "The shell and the package manager",
+        "correct": false,
+        "why": "Both are still in slim; it has 259 programs in `/usr/bin`."
+      },
+      {
+        "text": "Documentation, manual pages and locale files",
+        "correct": true,
+        "why": "Right. The programs are all still there, shell and `apt` included."
+      },
+      {
+        "text": "Half of the 78 packages, the ones nobody uses",
+        "correct": false,
+        "why": "The count is identical: 78 in both."
+      },
+      {
+        "text": "The C library",
+        "correct": false,
+        "why": "Without it almost nothing in Debian would run."
+      }
+    ]
+  },
+  {
+    "id": "ex-bts3adbz",
+    "version": 1,
+    "section": "smaller-surface",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`layers:two` creates a 50 MB file in one `RUN` and deletes it in the next. Why is its download 56.2MB?",
+    "hint": "What does the second layer contain?",
+    "choices": [
+      {
+        "text": "The `rm` failed",
+        "correct": false,
+        "why": "It ran; the file is gone from the container's view."
+      },
+      {
+        "text": "Docker compresses deleted files badly",
+        "correct": false,
+        "why": "Random bytes do not compress; but the point is that they are there at all."
+      },
+      {
+        "text": "The first layer still holds the file; the second only hides it",
+        "correct": true,
+        "why": "Right: a whiteout on top, the bytes underneath, downloaded on every pull."
+      },
+      {
+        "text": "BuildKit caches the file in the image on purpose",
+        "correct": false,
+        "why": "This is the layer model, not a cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3dfpyka",
+    "version": 1,
+    "section": "smaller-surface",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker image ls layers` showed `layers:one` with what `CONTENT SIZE`, in MB?",
+    "hint": "The same as plain Alpine.",
+    "value": 3.8,
+    "tolerance": 0.001,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-qzpap42p",
+    "version": 1,
+    "section": "smaller-surface",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a well-formed package install in the order they appear in one `RUN`.",
+    "hint": "Lists first, clean-up last, all in one layer.",
+    "items": [
+      "`apt-get update`",
+      "`apt-get install -y --no-install-recommends ca-certificates`",
+      "`rm -rf /var/lib/apt/lists/*`"
+    ]
+  },
+  {
+    "id": "ex-645t9x9r",
+    "version": 1,
+    "section": "smaller-surface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By the lesson's argument, why is a shell in a production image a cost even if the program never calls it?",
+    "hint": "Who else might use it?",
+    "choices": [
+      {
+        "text": "It slows the program down at start-up",
+        "correct": false,
+        "why": "An unused shell costs nothing at run time."
+      },
+      {
+        "text": "Shells are illegal in production images",
+        "correct": false,
+        "why": "Nothing forbids them; the question is what they cost."
+      },
+      {
+        "text": "It makes the image incompatible with Kubernetes",
+        "correct": false,
+        "why": "Kubernetes runs images with shells all the time."
+      },
+      {
+        "text": "A tool for intruders, a package to patch",
+        "correct": true,
+        "why": "Right: one more of each. Surface is what is inside, not megabytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ced6b9xw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each practice to the problem it prevents.",
+    "hint": "Five practices, five problems; one is a decoy.",
+    "pairs": [
+      {
+        "left": "Multi-stage build",
+        "right": "Shipping the compiler and the sources"
+      },
+      {
+        "left": "Numeric `USER`",
+        "right": "Running as root, unverifiably"
+      },
+      {
+        "left": "Install and clean up in one `RUN`",
+        "right": "Deleted files kept in an earlier layer"
+      },
+      {
+        "left": "`.dockerignore` with secrets",
+        "right": "A password copied into the image"
+      }
+    ],
+    "right_distractors": [
+      "A container that cannot reach the network"
+    ]
+  },
+  {
+    "id": "ex-7jrmb27w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's Dockerfile ends `FROM debian:trixie-slim`, `COPY app /app`, `RUN chmod +x /app`, `CMD [\"/app\"]`. `app` is a static binary. Which single change removes the most surface?",
+    "hint": "What does the program need from the base?",
+    "choices": [
+      {
+        "text": "Ship on distroless `static` instead",
+        "correct": true,
+        "why": "Right: no shell, no package manager, and add the `USER` too."
+      },
+      {
+        "text": "Switch to `debian:trixie`",
+        "correct": false,
+        "why": "That adds 68MB of documentation and changes nothing else."
+      },
+      {
+        "text": "Add `USER 65532:65532` and keep the base",
+        "correct": false,
+        "why": "Worth doing, but the shell, `apt` and 259 programs stay."
+      },
+      {
+        "text": "Delete `/usr/bin` in a later `RUN`",
+        "correct": false,
+        "why": "The earlier layer keeps every file; the image does not shrink."
+      }
+    ]
+  }
+]

@@ -1,0 +1,338 @@
+{
+  "ex-x6d64byk": {
+    "prompt": "`alpine:3.22` é a forma curta de quê?",
+    "hint": "Duas partes são preenchidas por padrão.",
+    "choices": [
+      {
+        "text": "`alpine.io/alpine:3.22`",
+        "why": "Não existe um registry por imagem; o registry padrão é o Docker Hub."
+      },
+      {
+        "text": "`docker.io/library/alpine:3.22`",
+        "why": "Isso: Docker Hub, o namespace das imagens oficiais, o repositório e a tag."
+      },
+      {
+        "text": "`localhost/alpine:3.22`, a máquina local",
+        "why": "Um nome sem registry quer dizer Docker Hub, e não a máquina local."
+      },
+      {
+        "text": "`docker.io/alpine/alpine:latest`",
+        "why": "O namespace é `library`, e a tag dada foi `3.22`."
+      }
+    ]
+  },
+  "ex-05mhckgp": {
+    "prompt": "Um nome de imagem sem tag, como `alpine`, quer dizer a tag `___`.",
+    "hint": "A aula 16 é sobre ela.",
+    "blanks": [
+      {
+        "accept": [
+          "latest"
+        ]
+      }
+    ]
+  },
+  "ex-sdce590e": {
+    "prompt": "O deploy da Ana nomeia `alpine:3.22`. Quem decide quando mudam os bytes que ele roda?",
+    "hint": "Quem pode enviar para o repositório?",
+    "choices": [
+      {
+        "text": "Ninguém; uma tag com número de versão é fixa",
+        "why": "Uma tag é um rótulo, e ela vai para cada novo build 3.22."
+      },
+      {
+        "text": "A Ana, porque ela escreveu a versão",
+        "why": "Ela escolheu a linha; o Alpine escolhe para qual build ela aponta."
+      },
+      {
+        "text": "Quem publica, dentro da 3.22",
+        "why": "Isso. Só um digest deixaria a decisão com a Ana."
+      },
+      {
+        "text": "O Docker, que atualiza as imagens toda noite",
+        "why": "O Docker não atualiza nada sozinho; um pull busca o que a tag apontar naquele momento."
+      }
+    ]
+  },
+  "ex-dgcw0hr6": {
+    "prompt": "O `docker image inspect` deu o mesmo `Id` para `alpine:3.22` e para o nome completo. O que é esse id?",
+    "hint": "A aula 3 encontrou o mesmo hash.",
+    "choices": [
+      {
+        "text": "Um número que o Docker atribui quando baixa",
+        "why": "Ele é calculado a partir do conteúdo, então toda máquina chega ao mesmo."
+      },
+      {
+        "text": "Um hash do nome `alpine:3.22`",
+        "why": "Nomes não entram no hash; dois nomes deram o mesmo id."
+      },
+      {
+        "text": "O id apenas da camada mais nova",
+        "why": "Uma camada tem digest próprio; este nomeia a imagem inteira."
+      },
+      {
+        "text": "O digest do índice da imagem",
+        "why": "Isso, o mesmo `sha256:5291…` que está no `RepoDigests`."
+      }
+    ]
+  },
+  "ex-znmv5ye0": {
+    "prompt": "Ligue cada parte de `docker.io/library/alpine:3.22` ao que ela é.",
+    "hint": "Da esquerda para a direita: servidor, conta, imagem, versão.",
+    "pairs": [
+      {
+        "left": "`docker.io`",
+        "right": "O registry"
+      },
+      {
+        "left": "`library`",
+        "right": "O namespace"
+      },
+      {
+        "left": "`alpine`",
+        "right": "O repositório"
+      },
+      {
+        "left": "`3.22`",
+        "right": "A tag"
+      }
+    ],
+    "right_distractors": [
+      "O digest"
+    ]
+  },
+  "ex-q8a7v7r2": {
+    "prompt": "O que fez o `docker tag shelf:1.0.0 localhost:5000/shelf:1.0.0`?",
+    "hint": "Compare os ids depois.",
+    "choices": [
+      {
+        "text": "Deu à mesma imagem um segundo nome",
+        "why": "Isso, um nome que diz para qual registry enviar."
+      },
+      {
+        "text": "Copiou a imagem, dobrando o disco que ela usa",
+        "why": "Os dois nomes mostraram o mesmo id; nada foi copiado."
+      },
+      {
+        "text": "Enviou a imagem ao registry",
+        "why": "Enviar é o `docker push`, que veio depois."
+      },
+      {
+        "text": "Renomeou a imagem, e o `shelf:1.0.0` sumiu",
+        "why": "A listagem ainda mostrava o `shelf:1.0.0`."
+      }
+    ]
+  },
+  "ex-vjnvnbd5": {
+    "prompt": "Por que a Ana passou a senha com `--password-stdin` em vez de `-p lab-only`?",
+    "hint": "Onde mais um argumento de linha de comando fica visível?",
+    "choices": [
+      {
+        "text": "O `docker login` não aceita `-p`",
+        "why": "Aceita, com um aviso justamente sobre isto."
+      },
+      {
+        "text": "Para ela não parar no histórico nem na lista de processos",
+        "why": "Isso. Um argumento fica visível para quem listar os processos."
+      },
+      {
+        "text": "A entrada padrão vai criptografada até o registry",
+        "why": "A criptografia no caminho é o TLS, seja qual for o jeito de digitar a senha."
+      },
+      {
+        "text": "Faz o login durar mais",
+        "why": "O jeito de passar a senha não muda nada em quanto tempo ele vale."
+      }
+    ]
+  },
+  "ex-307hg7cp": {
+    "prompt": "Depois do `docker login`, o `~/.docker/config.json` tinha `\"auth\": \"YW5hOmxhYi1vbmx5\"`. Quão protegido está isso?",
+    "hint": "O que um `base64 -d` devolveu?",
+    "choices": [
+      {
+        "text": "Tem hash como o arquivo htpasswd, então não se desfaz",
+        "why": "O arquivo do registry tem hash; o do cliente está só codificado."
+      },
+      {
+        "text": "Criptografado com uma chave guardada pelo daemon",
+        "why": "Nenhuma chave entrou nisso; um comando decodificou."
+      },
+      {
+        "text": "Nada: decodifica para `ana:lab-only`",
+        "why": "Isso, e é para isso que serve um credential helper."
+      },
+      {
+        "text": "Seguro, porque só o Docker lê o arquivo",
+        "why": "Qualquer programa rodando como Ana consegue lê-lo."
+      }
+    ]
+  },
+  "ex-xptymrbf": {
+    "prompt": "Ponha os passos da Ana em ordem, de uma imagem na máquina dela a um container iniciado do registry pelo digest.",
+    "hint": "Primeiro um nome, depois as credenciais.",
+    "items": [
+      "`docker tag` com o endereço do registry",
+      "`docker login` com a senha pela entrada padrão",
+      "`docker push`, que imprime o digest",
+      "`docker image rm` dos nomes locais",
+      "`docker pull` e `docker run` por `@sha256:`"
+    ]
+  },
+  "ex-cvstgbch": {
+    "prompt": "O primeiro `docker push` terminou em `no basic auth credentials`. Quanto da imagem chegou ao registry?",
+    "hint": "O que dizia cada linha de camada?",
+    "choices": [
+      {
+        "text": "Todas as camadas menos o manifesto",
+        "why": "Nenhuma camada foi enviada; cada uma ficou em `Waiting`."
+      },
+      {
+        "text": "As camadas que ela divide com o distroless",
+        "why": "Camadas em comum ainda teriam de ser enviadas a este registry, que estava vazio."
+      },
+      {
+        "text": "Metade das camadas, que o `docker push` retomou depois",
+        "why": "Nada foi enviado; o segundo push mandou todas as camadas."
+      },
+      {
+        "text": "Nada: toda camada ainda estava em `Waiting`",
+        "why": "Isso; o registry recusou antes de qualquer camada ser enviada."
+      }
+    ]
+  },
+  "ex-kbsg3v6n": {
+    "prompt": "Levando o `shelf` do registry da Ana para o do GitHub, o que muda nos comandos?",
+    "hint": "O protocolo é o mesmo em todos.",
+    "choices": [
+      {
+        "text": "O endereço no nome, e o jeito de fazer login",
+        "why": "Isso; o push e o pull ficam como estão."
+      },
+      {
+        "text": "Tudo: cada registry tem o seu próprio cliente",
+        "why": "`docker push` e `docker pull` funcionam com todos eles."
+      },
+      {
+        "text": "Só a tag, que precisa começar com `gh-`",
+        "why": "Não existe essa regra; o que muda é o endereço."
+      },
+      {
+        "text": "Nada; o Docker acha o registry sozinho",
+        "why": "O registry é o que o nome diz, e o nome precisa dizer."
+      }
+    ]
+  },
+  "ex-1mbc9m3j": {
+    "prompt": "Logins de registries de nuvem como o do ECR entregam ao `docker login` uma senha que dura horas. O que isso compra?",
+    "hint": "Pense no arquivo onde a senha acaba ficando.",
+    "choices": [
+      {
+        "text": "Pushes mais rápidos, porque o token é mais curto",
+        "why": "A velocidade não depende do token."
+      },
+      {
+        "text": "Uma senha vazada vale pouco",
+        "why": "Isso: quando alguém a encontra, ela já expirou."
+      },
+      {
+        "text": "Dispensar o `docker login`",
+        "why": "O token é entregue ao `docker login`."
+      },
+      {
+        "text": "Deixa usuários anônimos baixarem sem limite",
+        "why": "É sobre quem pode enviar e baixar, não sobre limites anônimos."
+      }
+    ]
+  },
+  "ex-c7bnkdht": {
+    "prompt": "Quais destes são conselhos da aula para escolher e operar um registry? Escolha todos os que se aplicam.",
+    "hint": "Quatro pontos foram listados.",
+    "choices": [
+      {
+        "text": "Mantê-lo perto de onde as imagens rodam",
+        "why": "Sim: mais rápido, muitas vezes sem custo, e sem senha guardada."
+      },
+      {
+        "text": "Dar acesso de envio ao pipeline e a poucas pessoas",
+        "why": "Sim: enviar decide o que todo servidor roda em seguida."
+      },
+      {
+        "text": "Configurar retenção no primeiro dia",
+        "why": "Sim: toda imagem fica guardada e cobrada até alguém mandar apagar."
+      },
+      {
+        "text": "Preferir pulls anônimos do Docker Hub na CI",
+        "why": "É isso que bate no limite do `429`."
+      }
+    ]
+  },
+  "ex-kxs12mxs": {
+    "prompt": "Ligue cada endereço de imagem ao seu registry.",
+    "hint": "Leia a parte do host.",
+    "pairs": [
+      {
+        "left": "`ghcr.io/owner/shelf`",
+        "right": "GitHub Container Registry"
+      },
+      {
+        "left": "`123456789012.dkr.ecr.sa-east-1.amazonaws.com/shelf`",
+        "right": "Amazon ECR"
+      },
+      {
+        "left": "`us-central1-docker.pkg.dev/project/repo/shelf`",
+        "right": "Google Artifact Registry"
+      },
+      {
+        "left": "`example.azurecr.io/shelf`",
+        "right": "Azure Container Registry"
+      }
+    ],
+    "right_distractors": [
+      "Docker Hub"
+    ]
+  },
+  "ex-hp0ark7g": {
+    "prompt": "Um deploy precisa rodar exatamente a imagem que passou nos testes na terça passada, seja o que for enviado depois. O que ele deve nomear?",
+    "hint": "Que referência ninguém consegue mover?",
+    "choices": [
+      {
+        "text": "`localhost:5000/shelf:latest`",
+        "why": "A `latest` muda a cada push que não nomeia uma tag."
+      },
+      {
+        "text": "`localhost:5000/shelf:1.0.0`",
+        "why": "Uma tag de versão ainda pode ser sobrescrita por um push."
+      },
+      {
+        "text": "`localhost:5000/shelf@sha256:f13b…`",
+        "why": "Isso: o digest é o conteúdo, e ninguém consegue movê-lo."
+      },
+      {
+        "text": "`shelf:1.0.0`, sem o registry",
+        "why": "Esse nome quer dizer Docker Hub, e continua sendo uma tag móvel."
+      }
+    ]
+  },
+  "ex-ddn47df9": {
+    "prompt": "Um runner de CI compartilhado por vários projetos envia imagens. O que um job deve fazer quanto ao `docker login`?",
+    "hint": "O que o `docker logout` removeu?",
+    "choices": [
+      {
+        "text": "Fazer login uma vez ao preparar o runner, e nunca mais",
+        "why": "Aí todo job no runner guarda as credenciais, para sempre."
+      },
+      {
+        "text": "Pular, e fazer o registry aceitar pushes anônimos",
+        "why": "Aí qualquer um pode mudar o que os servidores rodam."
+      },
+      {
+        "text": "Passar a senha com `-p` para ela não ser guardada",
+        "why": "O `-p` também guarda no `config.json`, e ainda a mostra na lista de processos."
+      },
+      {
+        "text": "Login com um token de vida curta, e logout no fim",
+        "why": "Isso; a aula 26 faz exatamente isso."
+      }
+    ]
+  }
+}

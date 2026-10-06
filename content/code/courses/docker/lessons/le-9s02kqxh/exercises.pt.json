@@ -1,0 +1,276 @@
+{
+  "ex-c9dv9seg": {
+    "prompt": "Quais destes entram na chave de cache de um passo `COPY . .`? Escolha todos os que se aplicam.",
+    "hint": "Três ingredientes.",
+    "choices": [
+      {
+        "text": "A camada sobre a qual ele é construído",
+        "why": "Sim: mude qualquer coisa acima, e esta chave muda também."
+      },
+      {
+        "text": "O texto da instrução",
+        "why": "Sim."
+      },
+      {
+        "text": "O conteúdo dos arquivos que ele copia",
+        "why": "Sim: um byte mudado muda a chave."
+      },
+      {
+        "text": "A hora do dia em que o build roda",
+        "why": "Hora não faz parte de chave nenhuma; um build sem mudanças à noite fica todo em cache."
+      }
+    ]
+  },
+  "ex-k1xb9nts": {
+    "prompt": "A Ana reconstruiu sem mudar nada e todo passo disse `CACHED`. O que o builder fez nesses 0.313 segundo?",
+    "hint": "Alguma coisa compilou?",
+    "choices": [
+      {
+        "text": "Compilou de novo, bem rápido",
+        "why": "Nada compilou; o `go build` nem rodou."
+      },
+      {
+        "text": "Baixou as camadas do Docker Hub",
+        "why": "Elas eram locais; a `shelf:dev` nunca foi enviada."
+      },
+      {
+        "text": "Conferiu as chaves e reaproveitou todas as camadas",
+        "why": "Isso. A imagem aponta para camadas que o builder já tinha."
+      },
+      {
+        "text": "Copiou a imagem anterior byte a byte",
+        "why": "Nada é copiado; as mesmas camadas são reaproveitadas no lugar."
+      }
+    ]
+  },
+  "ex-c4va4y0c": {
+    "prompt": "Por que a camada do `RUN go build` tinha 146MB, se o `shelf` é um programa?",
+    "hint": "O que mais o `go build` escreveu enquanto rodava?",
+    "choices": [
+      {
+        "text": "A camada guarda uma cópia do conjunto de ferramentas inteiro do Go",
+        "why": "As ferramentas ficam nas camadas da imagem base, abaixo."
+      },
+      {
+        "text": "Camadas são completadas até um tamanho mínimo",
+        "why": "A camada do `CMD` tem 0B; não há preenchimento."
+      },
+      {
+        "text": "O `docker history` conta o tamanho duas vezes",
+        "why": "Os tamanhos são por camada, contados uma vez."
+      },
+      {
+        "text": "Ela também guarda o cache de build do Go em `/root/.cache`",
+        "why": "Isso. Tudo o que o passo escreveu, ela guarda."
+      }
+    ]
+  },
+  "ex-vktp92f8": {
+    "prompt": "Quando a chave de um passo muda, esse passo e todo passo ___ dele são reconstruídos.",
+    "hint": "Antes ou depois?",
+    "blanks": [
+      {
+        "accept": [
+          "depois",
+          "abaixo"
+        ]
+      }
+    ]
+  },
+  "ex-a6x8ecyp": {
+    "prompt": "Com `COPY . .` antes do `go build`, a Ana acrescentou um README e o build levou 19.8 segundos. Por que um arquivo que o programa nunca lê custou uma compilação inteira?",
+    "hint": "O que o `COPY . .` põe na chave dele?",
+    "choices": [
+      {
+        "text": "O checksum dele entrou na chave do `COPY`, o que invalidou o build abaixo",
+        "why": "Isso. O `COPY` mudou, então todo passo seguinte rodou."
+      },
+      {
+        "text": "O README é compilado para dentro do binário",
+        "why": "O Go nunca o lê; não é arquivo de código."
+      },
+      {
+        "text": "O Docker reconstrói tudo sempre que aparece um arquivo novo no projeto, por projeto",
+        "why": "Com `COPY *.go`, o mesmo README não custou nada."
+      },
+      {
+        "text": "Arquivos README não são permitidos em imagens",
+        "why": "São permitidos; este só mudou uma chave."
+      }
+    ]
+  },
+  "ex-1bnknewa": {
+    "prompt": "Com o Dockerfile de dependências primeiro, quantos segundos levou o build depois da edição no `main.go`? Use o valor de `real`.",
+    "hint": "A transcrição depois da edição.",
+    "unit": "segundos"
+  },
+  "ex-sj60mwew": {
+    "prompt": "Ponha as linhas do Dockerfile ordenado da Ana em ordem, de cima para baixo.",
+    "hint": "O que muda menos vem primeiro.",
+    "items": [
+      "`FROM golang:1.25`",
+      "`COPY go.mod go.sum ./`",
+      "`COPY vendor/ vendor/`",
+      "`RUN go build net/http github.com/jackc/pgx/v5/pgxpool`",
+      "`COPY *.go ./`",
+      "`RUN go build -o /usr/local/bin/shelf .`"
+    ]
+  },
+  "ex-f5kvntmr": {
+    "prompt": "O Dockerfile de um serviço Python tem `COPY . .` e depois `RUN pip install -r requirements.txt`. Que reescrita faz edições no código pularem a instalação?",
+    "hint": "O mesmo formato do da Ana.",
+    "choices": [
+      {
+        "text": "Acrescentar `--no-cache` ao build",
+        "why": "Isso reconstrói tudo toda vez, o oposto."
+      },
+      {
+        "text": "Dependências primeiro, o código por último",
+        "why": "Isso: copie o `requirements.txt`, rode o `pip install`, depois copie o código; a chave da instalação depende só do arquivo de requisitos."
+      },
+      {
+        "text": "Mover o `pip install` para o fim do arquivo",
+        "why": "Aí ele roda depois de toda mudança no código, o problema de antes."
+      },
+      {
+        "text": "Instalar com `ADD` em vez de `RUN`",
+        "why": "O `ADD` copia arquivos; não instala pacotes."
+      }
+    ]
+  },
+  "ex-76ymqdfm": {
+    "prompt": "No Dockerfile ordenado, por que a mudança no README deixou todos os passos `CACHED`?",
+    "hint": "Qual `COPY` o teria visto?",
+    "choices": [
+      {
+        "text": "O README estava no `.dockerignore`",
+        "why": "Não estava; o arquivo lista `.git`, `.env`, `testdata/` e os Dockerfiles."
+      },
+      {
+        "text": "O builder pula arquivos com nome em maiúsculas",
+        "why": "Nomes não importam; o que importa é o que é copiado."
+      },
+      {
+        "text": "O `COPY *.go ./` só copia arquivos Go",
+        "why": "Isso, então o README não muda chave nenhuma."
+      },
+      {
+        "text": "O cache sempre ignora arquivos Markdown",
+        "why": "O `COPY . .` o copiou e pagou por isso."
+      }
+    ]
+  },
+  "ex-vrsjp5dy": {
+    "prompt": "O que o `RUN --mount=type=cache,target=/root/.cache/go-build go build …` guarda entre builds?",
+    "hint": "Onde o diretório mora?",
+    "choices": [
+      {
+        "text": "O binário compilado, dentro da imagem",
+        "why": "O binário fica na camada como sempre; a montagem é separada."
+      },
+      {
+        "text": "A camada inteira, para o passo nunca mais rodar",
+        "why": "O passo rodou de novo, em 0.9 segundo."
+      },
+      {
+        "text": "Nada; montagens são descartadas depois de cada passo",
+        "why": "Uma montagem de cache é guardada pelo builder, diferente de um tmpfs."
+      },
+      {
+        "text": "O cache do Go, fora de qualquer camada",
+        "why": "Isso. O passo ainda roda, mas encontra os pacotes compilados."
+      }
+    ]
+  },
+  "ex-6xa0s058": {
+    "prompt": "Um Dockerfile tem `RUN apt-get update && apt-get install -y curl`, sem mudança há um ano. Na mesma máquina, o que um `docker build` normal lhe dá hoje?",
+    "hint": "O que a chave desse passo contém?",
+    "choices": [
+      {
+        "text": "A camada de um ano atrás, reaproveitada, com os pacotes de um ano atrás",
+        "why": "Isso. Use `--no-cache` ou `--pull` quando o objetivo é pegar atualizações."
+      },
+      {
+        "text": "A lista de pacotes de hoje, porque o `apt-get update` sempre roda",
+        "why": "Ele só roda se a chave mudou, e nada na chave mudou."
+      },
+      {
+        "text": "Um erro, porque listas de pacotes em cache expiram",
+        "why": "O cache não expira; ele confia nas chaves."
+      },
+      {
+        "text": "Uma instalação nova, porque o `-y` desliga o cache",
+        "why": "O `-y` responde às perguntas do apt; não tem nada a ver com o cache do Docker."
+      }
+    ]
+  },
+  "ex-d67jnjmm": {
+    "prompt": "Ligue cada opção ou comando ao que ele faz.",
+    "hint": "Dois são sobre o cache, um sobre a imagem base, um sobre o disco.",
+    "pairs": [
+      {
+        "left": "`--no-cache`",
+        "right": "Ignora toda camada em cache neste build"
+      },
+      {
+        "left": "`--pull`",
+        "right": "Busca antes a imagem base mais nova"
+      },
+      {
+        "left": "`docker buildx du`",
+        "right": "Informa quanto disco o cache de build usa"
+      },
+      {
+        "left": "`docker builder prune`",
+        "right": "Esvazia o cache de build"
+      }
+    ],
+    "right_distractors": [
+      "Apaga todas as imagens da máquina"
+    ]
+  },
+  "ex-e17kd26v": {
+    "prompt": "A equipe da Ana muda a versão de uma dependência uma vez por mês e o código o dia todo. Que combinação serve melhor?",
+    "hint": "Uma técnica para cada tipo de mudança.",
+    "choices": [
+      {
+        "text": "`COPY . .` primeiro, mais `--no-cache` em todo build",
+        "why": "Isso paga por tudo toda vez."
+      },
+      {
+        "text": "Ordem e montagem de cache",
+        "why": "Isso: dependências primeiro, e uma montagem de cache para o gerenciador de pacotes; a ordem poupa as edições no código; a montagem poupa a maior parte de uma mudança de dependência."
+      },
+      {
+        "text": "Só `--pull`, para a imagem base estar sempre nova",
+        "why": "Isso muda quando a base é atualizada, não como as edições ficam em cache."
+      },
+      {
+        "text": "Um único `RUN` fazendo tudo, para haver uma camada só",
+        "why": "Uma camada só quer dizer que qualquer mudança reconstrói tudo."
+      }
+    ]
+  },
+  "ex-rg235s14": {
+    "prompt": "Por que o primeiro build num runner de CI novo é lento mesmo com um Dockerfile bem ordenado?",
+    "hint": "Com o que o runner começa?",
+    "choices": [
+      {
+        "text": "Runners de CI têm processadores mais lentos",
+        "why": "Pode ser, mas a causa aqui é o que está faltando."
+      },
+      {
+        "text": "Dockerfiles são ignorados no CI",
+        "why": "São usados exatamente como num notebook."
+      },
+      {
+        "text": "O cache de build dele está vazio",
+        "why": "Isso. A aula 26 guarda o cache num registry para resolver."
+      },
+      {
+        "text": "O BuildKit fica desligado no CI",
+        "why": "Ele é o builder padrão lá também."
+      }
+    ]
+  }
+}
