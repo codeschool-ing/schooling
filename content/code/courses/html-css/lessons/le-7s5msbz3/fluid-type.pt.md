@@ -1,0 +1,29 @@
+---
+title: Tipografia fluida com clamp()
+version: 1
+---
+
+Um título que fica bem num notebook é grande demais num celular, e a correção de costume era uma media query que muda `font-size` num breakpoint: um tamanho, e de repente outro. O **`clamp()`**, da seção 07 da aula 10, faz o tamanho mudar **suavemente** com a janela, entre um mínimo e um máximo:
+
+```css
+h1 { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.5rem); }
+```
+
+Os três argumentos são o **mínimo**, o valor **preferido** e o **máximo**. O valor preferido cresce com a janela: `2.5vw` é 2,5% da largura dela. O navegador o usa sempre que ele fica entre os outros dois, e o limite mais próximo nos outros casos:
+
+```
+ana@laptop:~/site$ probe --width 320 fluid.html style h1 font-size width 768 style h1 font-size width 1280 style h1 font-size
+h1  font-size: 24px
+h1  font-size: 35.2px
+h1  font-size: 40px
+```
+
+Em **320**, o valor preferido é 16 + 8 = 24, que é exatamente o mínimo: **24px**. Em **768** é 16 + 19,2 = **35,2px**, entre os limites, então é usado como está. Em **1280** seria 48, acima do máximo, então o título para em **40px**.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 216\" role=\"img\" aria-label=\"O tamanho de fonte do h1 em função da largura da janela. Fica no mínimo, 24 pixels, até uma janela de 320, sobe em linha reta até o máximo, 40 pixels, em 960, e fica ali. Os três pontos medidos estão marcados: 24 em 320, 35,2 em 768 e 40 em 1280. Linhas tracejadas mostram para onde o valor preferido, 1rem mais 2,5vw, teria ido abaixo do mínimo e acima do máximo.\"><line x1=\"70\" y1=\"172\" x2=\"582\" y2=\"172\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></line><line x1=\"70\" y1=\"172\" x2=\"70\" y2=\"52\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></line><line x1=\"70\" y1=\"140\" x2=\"582\" y2=\"140\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 4\"></line><text x=\"62\" y=\"140\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">24px</text><line x1=\"70\" y1=\"76\" x2=\"582\" y2=\"76\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 4\"></line><text x=\"62\" y=\"76\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">40px</text><text x=\"134\" y=\"188\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">320</text><text x=\"313.2\" y=\"188\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">768</text><text x=\"390\" y=\"188\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">960</text><text x=\"518\" y=\"188\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">1280</text><path d=\"M 70 156 L 134 140\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"></path><path d=\"M 390 76 L 518 44\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"></path><path d=\"M 70 140 L 134 140 L 390 76 L 582 76\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"2.5\"></path><rect x=\"130\" y=\"136\" width=\"8\" height=\"8\" rx=\"4\" fill=\"var(--amber)\"></rect><text x=\"134\" y=\"128\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">24px</text><rect x=\"309.2\" y=\"91.2\" width=\"8\" height=\"8\" rx=\"4\" fill=\"var(--amber)\"></rect><text x=\"313.2\" y=\"83.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">35.2px</text><rect x=\"514\" y=\"72\" width=\"8\" height=\"8\" rx=\"4\" fill=\"var(--amber)\"></rect><text x=\"518\" y=\"64\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">40px</text><text x=\"582\" y=\"204\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">largura da janela</text><text x=\"230\" y=\"60\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">clamp(1.5rem, 1rem + 2.5vw, 2.5rem)</text><text x=\"582\" y=\"116\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">tracejado: 1rem + 2.5vw,</text><text x=\"582\" y=\"132\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">onde os limites o cortam</text></svg>", "caption": "Entre 320 e 960 o título cresce com a janela; fora disso um limite o segura."}
+```
+
+## Por que o rem está ali
+
+O valor preferido é `1rem + 2.5vw`, não `5vw`. Um tamanho só em `vw` depende só da janela, então é o mesmo qualquer que seja o tamanho de fonte que a pessoa escolheu no navegador; e quando ela dá zoom, um tamanho em `vw` continua do mesmo tamanho na tela, porque a janela fica mais estreita em pixels CSS exatamente na mesma velocidade em que o zoom aumenta cada pixel. O zoom não faz nada com ele. As WCAG pedem que o texto possa ser ampliado até 200% sem perda, critério de sucesso 1.4.4, e um tamanho só em `vw` atrapalha isso. A parte em `rem` mantém o tamanho preso à configuração de quem lê, e os limites em `rem` fazem o mesmo. **Use `clamp()` para títulos e textos grandes de destaque**, onde a diferença entre um celular e um desktop é grande; texto corrido em `1rem` em toda tela costuma estar certo.

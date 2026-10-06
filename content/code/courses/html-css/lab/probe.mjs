@@ -45,6 +45,7 @@
  *   at MS                 freezes every animation at MS milliseconds
  *   width W               resizes the window to W pixels wide
  *   overflow              whether the page is wider than the window
+ *   media QUERY           whether a media query matches the window as it is now
  *   spill SEL             whether an element's content is wider than its box
  *   tab                   presses Tab and prints what has the focus now
  *   press KEY             presses a key, such as Enter or Space
@@ -354,6 +355,10 @@ const steps = {
     console.log(v.s > v.c ? `page is ${v.s} wide in a ${v.c} window: it scrolls sideways`
                           : `page fits: ${v.s} wide in a ${v.c} window`);
   },
+  async media(q) {
+    const m = await page.evaluate((v) => window.matchMedia(v).matches, q);
+    console.log(`${q}  ${m ? 'matches' : 'does not match'}`);
+  },
   async spill(sel) {
     for (const el of await page.$$(sel)) {
       const v = await el.evaluate((e) => [e.scrollWidth, e.clientWidth]);
@@ -380,7 +385,7 @@ const steps = {
 };
 
 const arity = { spill: 1, match: 1, rules: 2, describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
-  at: 1, width: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
+  at: 1, width: 1, media: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
 try {
   while (argv.length) {
     const name = argv.shift();
