@@ -1,0 +1,149 @@
+{
+  "ex-bqw04663": {
+    "prompt": "`scribbler` escreveu 80 MiB em `/tmp` com limite de ephemeral-storage de 50Mi. O que aconteceu, e quem fez?",
+    "hint": "`.status.reason`.",
+    "choices": [
+      {
+        "text": "O kernel o matou com `OOMKilled`",
+        "why": "Isso é o limit de memória."
+      },
+      {
+        "text": "O kubelet o despejou",
+        "why": "Isso. Ele confere o uso de disco e removeu o pod."
+      },
+      {
+        "text": "A escrita falhou em 50 MiB",
+        "why": "O limite é conferido depois, não aplicado a cada escrita."
+      },
+      {
+        "text": "O scheduler o levou para um nó maior",
+        "why": "Pods nunca se mudam."
+      }
+    ]
+  },
+  "ex-40x6b1tm": {
+    "prompt": "Depois de um despejo por ephemeral storage, o kubelet reinicia o pod no lugar?",
+    "hint": "O que `Evicted` quer dizer para um pod?",
+    "choices": [
+      {
+        "text": "Sim, como um container que levou `OOMKilled`",
+        "why": "Esse reinício é por container; o despejo encerra o pod."
+      },
+      {
+        "text": "Sim, depois de cinco minutos",
+        "why": "Nada reinicia um pod despejado."
+      },
+      {
+        "text": "Não; só um controller cria um pod novo",
+        "why": "Isso. Um pod solto fica encerrado."
+      },
+      {
+        "text": "Não, e o nó é isolado",
+        "why": "O limite de um pod não isola o nó."
+      }
+    ]
+  },
+  "ex-t916b5a1": {
+    "prompt": "Durante o drain, por que o segundo despejo de um pod da loja foi recusado no começo?",
+    "hint": "`minAvailable: 3` com quatro réplicas.",
+    "choices": [
+      {
+        "text": "O nó ainda não estava isolado",
+        "why": "Ele foi isolado primeiro."
+      },
+      {
+        "text": "Pods com `emptyDir` nunca são despejados",
+        "why": "A flag permitiu, e ele foi despejado depois."
+      },
+      {
+        "text": "Só três teriam restado",
+        "why": "Isso. O substituto ainda não estava pronto, então o orçamento não permitia a segunda interrupção."
+      },
+      {
+        "text": "O CoreDNS precisava sair primeiro",
+        "why": "Despejos não esperam uns pelos outros por nome."
+      }
+    ]
+  },
+  "ex-0naa9z0n": {
+    "prompt": "Um PodDisruptionBudget define `minAvailable: 4` para um Deployment de quatro réplicas. O que acontece quando um nó com uma delas é drenado?",
+    "hint": "Quantas interrupções esse orçamento permite?",
+    "choices": [
+      {
+        "text": "O pod é despejado e substituído como sempre",
+        "why": "O orçamento permite zero interrupções."
+      },
+      {
+        "text": "O drain tenta de novo e nunca termina",
+        "why": "Isso. Zero interrupções permitidas bloqueia a manutenção até alguém mudar."
+      },
+      {
+        "text": "O orçamento é ignorado em drains",
+        "why": "Drains são exatamente o que orçamentos governam."
+      },
+      {
+        "text": "O Deployment escala para cinco antes",
+        "why": "Nada escala sozinho por causa de um drain."
+      }
+    ]
+  },
+  "ex-33j4nkjg": {
+    "prompt": "Depois de `shop-worker2` parar, os dois pods da loja nele ficaram `Terminating`. Por quê?",
+    "hint": "Quem confirma que um container parou?",
+    "choices": [
+      {
+        "text": "O kubelet deles não consegue confirmar que pararam",
+        "why": "Isso. A remoção espera um kubelet que não responde."
+      },
+      {
+        "text": "O prazo de desligamento é de cinco minutos",
+        "why": "Eles já foram substituídos; a espera é pela confirmação."
+      },
+      {
+        "text": "O orçamento bloqueia a remoção",
+        "why": "O orçamento foi removido, e não vale para nós perdidos."
+      },
+      {
+        "text": "Ainda estão atendendo tráfego",
+        "why": "O nó está desligado."
+      }
+    ]
+  },
+  "ex-gb5csyg5": {
+    "prompt": "Com a toleration padrão de 300 segundos e um prazo do nó de 50 segundos, cerca de quantos segundos passam entre um nó perder energia e os pods dele serem despejados?",
+    "hint": "Notar, depois decidir.",
+    "unit": "segundos"
+  },
+  "ex-sqp9m14a": {
+    "prompt": "Ligue cada evento ao que remove os pods.",
+    "hint": "A tabela no fim da lição.",
+    "pairs": [
+      {
+        "left": "Falta memória num nó",
+        "right": "O kubelet"
+      },
+      {
+        "left": "`kubectl drain`",
+        "right": "A Eviction API, um pod de cada vez"
+      },
+      {
+        "left": "Um nó fica sem energia",
+        "right": "O taint do node controller"
+      }
+    ],
+    "right_distractors": [
+      "O scheduler"
+    ]
+  },
+  "ex-433b9e9d": {
+    "prompt": "Depois da manutenção, `kubectl ___ shop-worker` deixa pods serem alocados no nó de novo.",
+    "hint": "O oposto de cordon.",
+    "blanks": [
+      {
+        "accept": [
+          "uncordon"
+        ]
+      }
+    ]
+  }
+}

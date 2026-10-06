@@ -1,0 +1,184 @@
+{
+  "ex-41qwnqps": {
+    "prompt": "Durante um rolling update, o que o `maxSurge` limita?",
+    "hint": "Surge: acima do número de sempre.",
+    "choices": [
+      {
+        "text": "Quantos pods podem estar não prontos",
+        "why": "Isso é o `maxUnavailable`."
+      },
+      {
+        "text": "Quantos rollouts podem rodar ao mesmo tempo",
+        "why": "Um Deployment roda um rollout."
+      },
+      {
+        "text": "A velocidade com que a imagem é baixada",
+        "why": "Baixar é assunto do kubelet."
+      },
+      {
+        "text": "Pods acima de `replicas`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-t9pwsep3": {
+    "prompt": "Um Deployment tem 8 réplicas, `maxSurge: 2` e `maxUnavailable: 0`. Qual é o máximo de pods que ele pode ter durante um rollout?",
+    "hint": "replicas + maxSurge.",
+    "unit": "pods"
+  },
+  "ex-jneb5xca": {
+    "prompt": "Por que `maxSurge: 0` com `maxUnavailable: 0` é recusado?",
+    "hint": "O que o controlador poderia fazer primeiro?",
+    "choices": [
+      {
+        "text": "Nenhum pod poderia entrar ou sair",
+        "why": "Isso, então o rollout nunca andaria."
+      },
+      {
+        "text": "Zero não é uma porcentagem válida",
+        "why": "`0` é aceito em qualquer um dos campos sozinho."
+      },
+      {
+        "text": "Precisaria do dobro de nós",
+        "why": "Não precisaria de espaço extra nenhum."
+      },
+      {
+        "text": "Só o `Recreate` usa zeros",
+        "why": "O `Recreate` não tem esses campos."
+      }
+    ]
+  },
+  "ex-a7yq15kv": {
+    "prompt": "Os nós estão cheios. Que configuração ainda deixa um rollout avançar?",
+    "hint": "Qual delas não precisa de pods a mais?",
+    "choices": [
+      {
+        "text": "`maxSurge: 1`, `maxUnavailable: 0`",
+        "why": "O pod a mais não tem para onde ir."
+      },
+      {
+        "text": "`maxSurge: 2`, `maxUnavailable: 0`",
+        "why": "Dois pods a mais sem espaço é pior."
+      },
+      {
+        "text": "`maxSurge: 0`, `maxUnavailable: 1`",
+        "why": "Isso, libera uma vaga antes de ocupar uma."
+      },
+      {
+        "text": "`maxSurge: 25%`, `maxUnavailable: 0`",
+        "why": "Ainda pods a mais primeiro."
+      }
+    ]
+  },
+  "ex-jht06bnc": {
+    "prompt": "Durante uma atualização, um cliente recebe `Connection refused` da loja. Qual a causa mais provável?",
+    "hint": "Duas coisas começam no mesmo instante.",
+    "choices": [
+      {
+        "text": "A imagem nova está quebrada",
+        "why": "Um pod quebrado nunca fica pronto, então não recebe tráfego."
+      },
+      {
+        "text": "Um pod parando ainda estava nas regras",
+        "why": "Isso, a brecha que uma espera no `preStop` cobre."
+      },
+      {
+        "text": "O `maxSurge` está baixo demais",
+        "why": "Isso define o ritmo, não a brecha."
+      },
+      {
+        "text": "O Service perdeu o seletor no meio do caminho",
+        "why": "Aí toda requisição falharia."
+      }
+    ]
+  },
+  "ex-86h5cdf8": {
+    "prompt": "Um pod tem `terminationGracePeriodSeconds: 30` e um `preStop` com espera de 25 segundos. Quanto tempo o processo tem depois do `SIGTERM`?",
+    "hint": "O período de graça inclui o hook.",
+    "choices": [
+      {
+        "text": "30 segundos",
+        "why": "O hook usou 25 deles."
+      },
+      {
+        "text": "55 segundos",
+        "why": "Eles não se somam."
+      },
+      {
+        "text": "5 segundos",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhum, ele é morto na hora",
+        "why": "Ainda sobram segundos."
+      }
+    ]
+  },
+  "ex-427zkf39": {
+    "prompt": "Uma versão nova quebra ao iniciar, com `maxSurge: 1` e `maxUnavailable: 0`. Quantos pods antigos se perdem?",
+    "hint": "Um pod antigo só sai depois que um novo fica pronto.",
+    "choices": [
+      {
+        "text": "Nenhum",
+        "why": "Isso, o rollout para num pod novo."
+      },
+      {
+        "text": "Um",
+        "why": "Isso precisaria de `maxUnavailable: 1`."
+      },
+      {
+        "text": "Todos",
+        "why": "Só o `Recreate` remove todos antes."
+      },
+      {
+        "text": "Um quarto deles",
+        "why": "Esse é o padrão, não esta configuração."
+      }
+    ]
+  },
+  "ex-xzmjgbjm": {
+    "prompt": "Depois do `kubectl rollout undo`, o que sobra que vai desfazer a correção?",
+    "hint": "Onde a mudança foi escrita?",
+    "choices": [
+      {
+        "text": "O ReplicaSet antigo",
+        "why": "Ele é para onde o undo voltou."
+      },
+      {
+        "text": "O histórico de revisões",
+        "why": "O histórico não aplica nada."
+      },
+      {
+        "text": "O manifesto no repositório",
+        "why": "Isso, o próximo apply o publica."
+      },
+      {
+        "text": "A coluna `CHANGE-CAUSE` do histórico",
+        "why": "Ela é um rótulo, não um modelo."
+      }
+    ]
+  },
+  "ex-8ekv8eta": {
+    "prompt": "Ponha em ordem o que acontece quando um Deployment troca um pod antigo com `maxSurge: 1` e `maxUnavailable: 0`.",
+    "hint": "Nada pode faltar.",
+    "items": [
+      "Um pod novo é criado",
+      "O pod novo passa na sonda de readiness",
+      "Um pod antigo recebe a ordem de parar",
+      "O hook `preStop` do pod antigo roda",
+      "O processo antigo recebe `SIGTERM`"
+    ],
+    "trap": "O hook vem antes do sinal, não depois."
+  },
+  "ex-n26hgm51": {
+    "prompt": "Para voltar a uma revisão específica: `kubectl rollout undo deployment/shop --___=2`.",
+    "hint": "A flag nomeia uma revisão.",
+    "blanks": [
+      {
+        "accept": [
+          "to-revision"
+        ]
+      }
+    ]
+  }
+}

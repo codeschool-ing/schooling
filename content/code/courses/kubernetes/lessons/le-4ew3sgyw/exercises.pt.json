@@ -1,0 +1,166 @@
+{
+  "ex-v68jawbb": {
+    "prompt": "Por que guardar a configuração num ConfigMap em vez de na imagem?",
+    "hint": "Pense no cluster de teste e na produção.",
+    "choices": [
+      {
+        "text": "Para uma imagem rodar em todo lugar",
+        "why": "Isso. A imagem é testada uma vez e cada cluster guarda o próprio ConfigMap."
+      },
+      {
+        "text": "Porque ConfigMaps são criptografados e imagens não",
+        "why": "Um ConfigMap é texto puro no etcd; segredos são a lição 14."
+      },
+      {
+        "text": "Porque uma imagem não consegue ler variáveis de ambiente",
+        "why": "Um programa numa imagem lê variáveis como em qualquer outro lugar."
+      },
+      {
+        "text": "Para a configuração poder ser maior que a imagem",
+        "why": "Um ConfigMap é limitado a um mebibyte."
+      }
+    ]
+  },
+  "ex-raf9f5hd": {
+    "prompt": "`kubectl get configmaps` listou `kube-root-ca.crt`, que a Ana nunca criou. O que é?",
+    "hint": "Todo namespace recebe um.",
+    "choices": [
+      {
+        "text": "Uma sobra da instalação do cluster, que pode ser apagada",
+        "why": "O cluster o põe ali de propósito, em todo namespace, e o recoloca."
+      },
+      {
+        "text": "O certificado que os pods usam para conferir que falam com o API server verdadeiro",
+        "why": "Isso. Ele guarda a CA do cluster, para um pod poder verificar o servidor que chama."
+      },
+      {
+        "text": "O certificado TLS da loja",
+        "why": "A loja serve HTTP simples aqui; este é do cluster."
+      },
+      {
+        "text": "Um ConfigMap que o kind faz para os próprios nós",
+        "why": "Todo cluster Kubernetes o faz, kind ou não."
+      }
+    ]
+  },
+  "ex-74hgapra": {
+    "prompt": "O volume monta o ConfigMap `shop-files` em `/etc/shop`. Que arquivo o container encontra ali?",
+    "hint": "Um arquivo por chave.",
+    "choices": [
+      {
+        "text": "`/etc/shop/greeting.txt`, o nome do arquivo original",
+        "why": "A chave foi chamada `greeting` em `--from-file=greeting=greeting.txt`, e chaves dão nome aos arquivos."
+      },
+      {
+        "text": "`/etc/shop/shop-files`, com o nome do ConfigMap",
+        "why": "O nome do ConfigMap identifica a fonte do volume, não um arquivo."
+      },
+      {
+        "text": "`/etc/shop/greeting`",
+        "why": "Isso: a chave `greeting` virou um arquivo com esse nome."
+      },
+      {
+        "text": "Nada até o pod reiniciar",
+        "why": "A loja leu o arquivo na primeira requisição."
+      }
+    ]
+  },
+  "ex-twmn5361": {
+    "prompt": "A Ana mudou os dois ConfigMaps. Cerca de 86 segundos depois, o que a loja em execução informou?",
+    "hint": "Um dos dois é copiado para o processo quando ele sobe.",
+    "choices": [
+      {
+        "text": "Os dois valores mudados",
+        "why": "A variável ainda dizia `Ana's shop`."
+      },
+      {
+        "text": "Nenhum dos dois mudou até o pod ser apagado",
+        "why": "O arquivo mudou sem reinício nenhum."
+      },
+      {
+        "text": "A variável mudou e o arquivo não",
+        "why": "É o contrário."
+      },
+      {
+        "text": "O arquivo novo, com a variável antiga",
+        "why": "Isso. O kubelet atualizou o arquivo montado; uma variável de ambiente nunca muda num processo em execução."
+      }
+    ]
+  },
+  "ex-rjdwaqde": {
+    "prompt": "O que fez a loja finalmente informar `GREETING=Ana's new shop`?",
+    "hint": "Um container novo leu a variável.",
+    "choices": [
+      {
+        "text": "Esperar mais um minuto pelo kubelet",
+        "why": "O kubelet atualiza arquivos, nunca o ambiente de um processo."
+      },
+      {
+        "text": "`kubectl rollout restart`, que trocou o pod",
+        "why": "Isso. O substituto subiu com o valor atual do ConfigMap."
+      },
+      {
+        "text": "Aplicar o ConfigMap uma segunda vez",
+        "why": "Ele já estava aplicado; o processo em execução era o problema."
+      },
+      {
+        "text": "Marcar o ConfigMap como imutável",
+        "why": "Isso impede mudanças; não as entrega."
+      }
+    ]
+  },
+  "ex-3411pd5g": {
+    "prompt": "Uma equipe guarda feature flags num ConfigMap, lidas como variáveis de ambiente. Ela vira uma flag numa emergência e nada muda por dez minutos. Qual é o diagnóstico mais preciso?",
+    "hint": "Quanto tempo teriam esperado com um arquivo?",
+    "choices": [
+      {
+        "text": "O kubelet está lento; ele deveria atualizar em um minuto",
+        "why": "Esse atraso é dos arquivos montados; variáveis nunca são atualizadas."
+      },
+      {
+        "text": "O ConfigMap era imutável",
+        "why": "Então a própria edição teria sido recusada."
+      },
+      {
+        "text": "Nada vai mudar até os pods serem trocados",
+        "why": "Isso. Uma variável é fixada na subida; um rollout, ou flags lidas de um arquivo que o programa relê, é o que funciona."
+      },
+      {
+        "text": "A flag chegou a metade dos pods e precisa de um Service para chegar ao resto",
+        "why": "Services roteiam requisições, não configuração; e nenhum pod em execução a recebeu."
+      }
+    ]
+  },
+  "ex-4pntsrdk": {
+    "prompt": "Um ConfigMap com `___: true` recusa toda edição dos dados; mudá-lo significa criar outro.",
+    "hint": "O erro do API server nomeou o campo.",
+    "blanks": [
+      {
+        "accept": [
+          "immutable"
+        ]
+      }
+    ]
+  },
+  "ex-6vn17k3y": {
+    "prompt": "Ligue cada configuração ao melhor jeito de entregá-la.",
+    "hint": "Valores curtos e arquivos inteiros.",
+    "pairs": [
+      {
+        "left": "A moeda em que a loja cobra",
+        "right": "Uma variável de ambiente"
+      },
+      {
+        "left": "Um arquivo de configuração do nginx",
+        "right": "Um arquivo num volume configMap"
+      },
+      {
+        "left": "Preços de um mês, nunca editados",
+        "right": "Um ConfigMap imutável"
+      }
+    ],
+    "right_distractors": [
+      "Uma imagem nova a cada mudança"
+    ]
+  }
+}

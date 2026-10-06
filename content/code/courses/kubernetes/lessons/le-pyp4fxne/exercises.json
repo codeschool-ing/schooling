@@ -1,0 +1,276 @@
+[
+  {
+    "id": "ex-qw1mewdw",
+    "version": 1,
+    "section": "security-context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no security context at all, which user did the busybox process run as?",
+    "hint": "`kubectl exec plain -- id`.",
+    "choices": [
+      {
+        "text": "nobody, the unprivileged user",
+        "correct": false,
+        "why": "`id` printed uid 0."
+      },
+      {
+        "text": "root",
+        "correct": true,
+        "why": "Right: uid 0, with fourteen capabilities."
+      },
+      {
+        "text": "A random user picked by the kubelet",
+        "correct": false,
+        "why": "The kubelet picks nothing unless told."
+      },
+      {
+        "text": "The user who ran kubectl",
+        "correct": false,
+        "why": "Your local user never reaches the node."
+      }
+    ]
+  },
+  {
+    "id": "ex-4xw45rmd",
+    "version": 1,
+    "section": "security-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hardened` set `readOnlyRootFilesystem: true`, yet `touch /tmp/scratch` worked. Why?",
+    "hint": "Look at `volumes`.",
+    "choices": [
+      {
+        "text": "`/tmp` is always writable in Linux",
+        "correct": false,
+        "why": "`/etc` was refused; `/tmp` would be too without a mount."
+      },
+      {
+        "text": "An `emptyDir` is mounted there",
+        "correct": true,
+        "why": "Right. A volume is not part of the image's filesystem."
+      },
+      {
+        "text": "User 10001 owns `/tmp`",
+        "correct": false,
+        "why": "Ownership cannot beat a read-only mount."
+      },
+      {
+        "text": "The setting only covers `/etc`",
+        "correct": false,
+        "why": "It covers the whole root filesystem."
+      }
+    ]
+  },
+  {
+    "id": "ex-xq4gc3kj",
+    "version": 1,
+    "section": "security-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`web` had `runAsNonRoot: true` and the image `nginx:1.29`. Why did it stop at `CreateContainerConfigError`?",
+    "hint": "Read the waiting message.",
+    "choices": [
+      {
+        "text": "The image could not be pulled",
+        "correct": false,
+        "why": "That would be `ErrImagePull`."
+      },
+      {
+        "text": "Pod Security Standards refused it",
+        "correct": false,
+        "why": "The pod was created; the kubelet refused to start the container."
+      },
+      {
+        "text": "The image runs as root",
+        "correct": true,
+        "why": "Right, and nothing in the pod named another user."
+      },
+      {
+        "text": "nginx needs port 80, which non-root cannot bind",
+        "correct": false,
+        "why": "It never got that far; it was refused before starting."
+      }
+    ]
+  },
+  {
+    "id": "ex-gv23ghrh",
+    "version": 1,
+    "section": "pod-security-standards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Pod Security Standards level refuses a container that runs as root?",
+    "hint": "The `plain` pod in `payments`.",
+    "choices": [
+      {
+        "text": "privileged",
+        "correct": false,
+        "why": "It refuses nothing."
+      },
+      {
+        "text": "baseline",
+        "correct": false,
+        "why": "Baseline blocks known escalations, not root itself."
+      },
+      {
+        "text": "restricted",
+        "correct": true,
+        "why": "Right. It demands `runAsNonRoot`."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "Restricted refused `plain` for exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-yegwpfnf",
+    "version": 1,
+    "section": "pod-security-standards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You label a busy namespace `enforce=restricted`. What happens to the pods already running in it?",
+    "hint": "The dry run printed warnings and labelled nothing.",
+    "choices": [
+      {
+        "text": "They keep running; new pods are checked",
+        "correct": true,
+        "why": "Right. The level applies to new pods, and the label prints warnings about existing ones."
+      },
+      {
+        "text": "Non-compliant ones are evicted at once",
+        "correct": false,
+        "why": "Nothing is evicted by a label."
+      },
+      {
+        "text": "The label is refused until they comply",
+        "correct": false,
+        "why": "The label is accepted, with a warning."
+      },
+      {
+        "text": "They are restarted with the new rules applied",
+        "correct": false,
+        "why": "A label restarts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fhc7jv7",
+    "version": 1,
+    "section": "admission-policy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `kubectl create deployment web --image=nginx` refused by `no-latest-tag`?",
+    "hint": "What tag does a bare name get?",
+    "choices": [
+      {
+        "text": "nginx is not allowed at all",
+        "correct": false,
+        "why": "`nginx:1.29` was accepted a moment later."
+      },
+      {
+        "text": "It has no colon, so no tag",
+        "correct": true,
+        "why": "Right. A bare name means `latest`, and the expression demands a colon."
+      },
+      {
+        "text": "Pod Security Standards refused it",
+        "correct": false,
+        "why": "The message named the ValidatingAdmissionPolicy."
+      },
+      {
+        "text": "The binding only allows the default namespace",
+        "correct": false,
+        "why": "The binding had no namespace restriction."
+      }
+    ]
+  },
+  {
+    "id": "ex-503xvftx",
+    "version": 1,
+    "section": "admission-policy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which image would `no-latest-tag`'s expression let through although it has no tag?",
+    "hint": "Where else can a colon appear in an image name?",
+    "choices": [
+      {
+        "text": "`nginx`",
+        "correct": false,
+        "why": "No colon, so it is refused."
+      },
+      {
+        "text": "`nginx:latest`",
+        "correct": false,
+        "why": "It ends in `:latest`, so it is refused."
+      },
+      {
+        "text": "`registry.local:5000/shop`",
+        "correct": true,
+        "why": "Right. The colon belongs to the port."
+      },
+      {
+        "text": "`shop:1.0`",
+        "correct": false,
+        "why": "That has a tag, and is meant to pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5snt288",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field with what it takes away.",
+    "hint": "The table in the first section.",
+    "pairs": [
+      {
+        "left": "`capabilities.drop: [\"ALL\"]`",
+        "right": "Every kernel capability"
+      },
+      {
+        "left": "`readOnlyRootFilesystem: true`",
+        "right": "Writing to the image's files"
+      },
+      {
+        "left": "`allowPrivilegeEscalation: false`",
+        "right": "Gaining privileges through set-uid binaries"
+      },
+      {
+        "left": "`runAsNonRoot: true`",
+        "right": "Starting as user 0"
+      }
+    ],
+    "right_distractors": [
+      "Network access"
+    ]
+  },
+  {
+    "id": "ex-zmx77xsr",
+    "version": 1,
+    "section": "pod-security-standards",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To be told about violations without refusing anything, label the namespace with the mode ___.",
+    "hint": "One of enforce, warn and audit.",
+    "blanks": [
+      {
+        "accept": [
+          "warn"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

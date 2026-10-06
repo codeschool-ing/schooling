@@ -1,0 +1,253 @@
+[
+  {
+    "id": "ex-7smwmxj1",
+    "version": 1,
+    "section": "metrics-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kubectl top pods` answers `error: Metrics API not available` on a fresh cluster. What is missing?",
+    "hint": "Who collects the kubelets' numbers?",
+    "choices": [
+      {
+        "text": "The kubelets do not measure anything yet",
+        "correct": false,
+        "why": "Every kubelet measures its containers all the time."
+      },
+      {
+        "text": "metrics-server",
+        "correct": true,
+        "why": "Right. Nothing collects the numbers into the API until it is installed."
+      },
+      {
+        "text": "A Prometheus server",
+        "correct": false,
+        "why": "`kubectl top` reads `metrics.k8s.io`, which metrics-server serves."
+      },
+      {
+        "text": "Requests on every pod",
+        "correct": false,
+        "why": "Usage is measured whether or not a request exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-wg0551pg",
+    "version": 1,
+    "section": "metrics-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a request for `/apis/metrics.k8s.io/v1beta1/nodes` reach metrics-server?",
+    "hint": "`kubectl get apiservice`.",
+    "choices": [
+      {
+        "text": "Through an Ingress in `kube-system`",
+        "correct": false,
+        "why": "No Ingress was installed in that lab."
+      },
+      {
+        "text": "kubectl calls metrics-server's pod address directly",
+        "correct": false,
+        "why": "kubectl only talks to the API server."
+      },
+      {
+        "text": "An APIService routes it via the API server",
+        "correct": true,
+        "why": "Right. The API server forwards the group; `v1beta1.metrics.k8s.io` points at the Service `kube-system/metrics-server`."
+      },
+      {
+        "text": "etcd stores the metrics and the API server reads them",
+        "correct": false,
+        "why": "Metrics never touch etcd; metrics-server keeps them in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-cye5qth4",
+    "version": 1,
+    "section": "metrics-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A guide says to add `--kubelet-insecure-tls` to metrics-server on kind. What did this lab do instead, and why?",
+    "hint": "`kubectl get csr`.",
+    "choices": [
+      {
+        "text": "Nothing; kind's kubelets already had trusted certificates",
+        "correct": false,
+        "why": "By default they sign their own, which is why the flag exists."
+      },
+      {
+        "text": "Gave each kubelet a certificate signed by the CA",
+        "correct": true,
+        "why": "Right. Verification stays on; the flag would accept any certificate, including an impostor's."
+      },
+      {
+        "text": "It used plain HTTP to the kubelets",
+        "correct": false,
+        "why": "The arguments show `--secure-port` and HTTPS throughout."
+      },
+      {
+        "text": "It turned off authentication on the API server",
+        "correct": false,
+        "why": "Nothing in the lab touches the API server's authentication."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xszcvxn",
+    "version": 1,
+    "section": "top",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each idle copy of the shop requested 500m and used about 1m. What did the other 499m cost?",
+    "hint": "What does the scheduler count?",
+    "choices": [
+      {
+        "text": "Nothing, because unused CPU is free",
+        "correct": false,
+        "why": "Reserved CPU cannot be promised to another pod."
+      },
+      {
+        "text": "The pod was throttled to 1m",
+        "correct": false,
+        "why": "It had no CPU limit; it used 1m because it was idle."
+      },
+      {
+        "text": "Capacity no other pod could get",
+        "correct": true,
+        "why": "Right. The scheduler counts requests, so the reserve is spent whether used or not."
+      },
+      {
+        "text": "Extra memory for the kubelet",
+        "correct": false,
+        "why": "A CPU request reserves CPU only."
+      }
+    ]
+  },
+  {
+    "id": "ex-ay8jnf2t",
+    "version": 1,
+    "section": "under-load",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under load the shop used up to 404m of CPU and at most 7 MiB of memory, against requests of 500m and 256 MiB. Which request was further off?",
+    "hint": "Compare the ratios.",
+    "choices": [
+      {
+        "text": "Memory",
+        "correct": true,
+        "why": "Right. About thirty times too much, against roughly right for CPU."
+      },
+      {
+        "text": "CPU",
+        "correct": false,
+        "why": "500m against 404m is a modest margin."
+      },
+      {
+        "text": "Both equally",
+        "correct": false,
+        "why": "One was near and one was thirty times over."
+      },
+      {
+        "text": "Neither; idle numbers are what count",
+        "correct": false,
+        "why": "A request has to cover the pod working."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncx4pjx4",
+    "version": 1,
+    "section": "under-load",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team sets requests from one `kubectl top` reading taken on a quiet afternoon. What is the risk?",
+    "hint": "How much history does metrics-server keep?",
+    "choices": [
+      {
+        "text": "None; `kubectl top` averages the last day",
+        "correct": false,
+        "why": "It shows one recent sample; there is no daily average."
+      },
+      {
+        "text": "The numbers are in the wrong units",
+        "correct": false,
+        "why": "Millicores and bytes are the units requests use."
+      },
+      {
+        "text": "The busy hours never get measured",
+        "correct": true,
+        "why": "Right. Requests need the peaks over days, which a monitoring system stores."
+      },
+      {
+        "text": "metrics-server rejects readings older than an hour",
+        "correct": false,
+        "why": "It keeps only the newest set, but rejects nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-x79j2sfr",
+    "version": 1,
+    "section": "top",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three copies each request 500m of CPU and use 20m. How many millicores do they reserve without using, in total?",
+    "hint": "(500 − 20) × 3.",
+    "value": 1440,
+    "tolerance": 0,
+    "unit": "millicores"
+  },
+  {
+    "id": "ex-7456t77x",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command with what it tells you.",
+    "hint": "One reads usage, one reads reservations, one reads the plumbing.",
+    "pairs": [
+      {
+        "left": "`kubectl top pods`",
+        "right": "What each pod uses now"
+      },
+      {
+        "left": "`kubectl describe node`",
+        "right": "What the pods on a node have requested"
+      },
+      {
+        "left": "`kubectl get apiservice`",
+        "right": "Whether the metrics API is reachable"
+      }
+    ],
+    "right_distractors": [
+      "The highest usage of the last week"
+    ]
+  },
+  {
+    "id": "ex-re1qyarq",
+    "version": 1,
+    "section": "metrics-server",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "metrics-server keeps no ___, only the newest set of numbers.",
+    "hint": "What a monitoring system adds.",
+    "blanks": [
+      {
+        "accept": [
+          "history"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

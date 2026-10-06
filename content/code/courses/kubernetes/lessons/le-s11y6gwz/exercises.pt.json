@@ -1,0 +1,166 @@
+{
+  "ex-hpgqwbp1": {
+    "prompt": "`kubectl get secret db -o jsonpath=\"{.data}\"` mostrou `bGFiLW9ubHktN0hxMg==`. O que protege esse valor de quem consegue rodar esse comando?",
+    "hint": "O `base64 -d` não precisou de chave.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Isso. Base64 é uma codificação; quem lê o objeto lê o valor."
+      },
+      {
+        "text": "A codificação base64, que precisa da chave do cluster",
+        "why": "Base64 não tem chave; um comando a reverteu."
+      },
+      {
+        "text": "A criptografia em repouso, que vem ligada por padrão",
+        "why": "Ela vem desligada, e protege cópias do etcd, não quem lê pela API."
+      },
+      {
+        "text": "O `tmpfs` em que o Secret é montado",
+        "why": "Isso protege o disco do nó, não a API."
+      }
+    ]
+  },
+  "ex-05h7e5qb": {
+    "prompt": "Por que o volume do Secret no pod é um `tmpfs`?",
+    "hint": "Onde um tmpfs guarda os arquivos?",
+    "choices": [
+      {
+        "text": "Para o pod poder escrever segredos novos nele",
+        "why": "Ele foi montado somente leitura."
+      },
+      {
+        "text": "Porque Secrets são maiores que ConfigMaps",
+        "why": "Os dois têm o mesmo limite de um mebibyte."
+      },
+      {
+        "text": "Para o valor ficar só na memória do nó",
+        "why": "Isso. Um disco trocado ou copiado não leva nada."
+      },
+      {
+        "text": "Porque o tmpfs criptografa o conteúdo",
+        "why": "Não criptografa; guarda na memória."
+      }
+    ]
+  },
+  "ex-cwfyymcz": {
+    "prompt": "Um serviço lê a senha do banco da variável `DB_PASSWORD`. Um relatório de falha que ele manda para uma ferramenta externa inclui o ambiente do processo. O que esta lição recomenda?",
+    "hint": "Qual entrega só é lida quando o programa decide?",
+    "choices": [
+      {
+        "text": "Codificar a variável em base64 duas vezes",
+        "why": "Qualquer codificação é revertida por quem lê o relatório."
+      },
+      {
+        "text": "Ler de um arquivo montado",
+        "why": "Isso. Um arquivo não é herdado, despejado nem listado em `/proc` com o ambiente."
+      },
+      {
+        "text": "Ligar a criptografia em repouso",
+        "why": "Isso protege a cópia do etcd; o vazamento aqui vem do processo em execução."
+      },
+      {
+        "text": "Marcar o Secret como imutável",
+        "why": "Imutabilidade impede edições; não esconde nada."
+      }
+    ]
+  },
+  "ex-re1g7t71": {
+    "prompt": "Antes da criptografia em repouso, o `strings` no valor guardado mostrou `lab-only-7Hq2`. Quem conseguiria ler aquilo?",
+    "hint": "Pense em cópias dos dados do etcd.",
+    "choices": [
+      {
+        "text": "Só o API server",
+        "why": "Qualquer coisa que leia os dados do etcd lê, inclusive um arquivo de backup."
+      },
+      {
+        "text": "Ninguém, porque o etcd criptografa tudo o que escreve no próprio disco",
+        "why": "O texto puro estava ali mesmo."
+      },
+      {
+        "text": "Qualquer um com uma cópia dos dados do etcd, como um backup vazado",
+        "why": "Isso. É para esse caso que existe a criptografia em repouso."
+      },
+      {
+        "text": "Todo pod do cluster",
+        "why": "Pods chegam ao API server, não ao etcd."
+      }
+    ]
+  },
+  "ex-1vsb8bd7": {
+    "prompt": "Depois de o API server receber a configuração de criptografia, `strings | grep -c lab-only` ainda imprimiu `1`. Por quê?",
+    "hint": "Quando um valor é criptografado?",
+    "choices": [
+      {
+        "text": "A flag precisa de um reinício do nó",
+        "why": "O API server reiniciou sozinho quando o manifesto mudou."
+      },
+      {
+        "text": "Só escritas novas são criptografadas, e ele era antigo",
+        "why": "Isso. Substituir cada Secret por ele mesmo os reescreveu, e a contagem foi a 0."
+      },
+      {
+        "text": "`identity` estava em primeiro, então nada é criptografado",
+        "why": "`secretbox` estava em primeiro; `identity` estava por último, para ler dados antigos."
+      },
+      {
+        "text": "O grep achou o texto no nome da chave",
+        "why": "A chave se chama `password`; a contagem era do valor."
+      }
+    ]
+  },
+  "ex-6gjc1x6q": {
+    "prompt": "Com a criptografia em repouso ligada, `kubectl get secret db` ainda devolveu a senha. A criptografia está quebrada?",
+    "hint": "Quem descriptografa, e para quem?",
+    "choices": [
+      {
+        "text": "Sim; o valor deveria voltar criptografado",
+        "why": "O API server descriptografa na saída para quem pode ler."
+      },
+      {
+        "text": "Sim; o secretbox só funciona em clusters novos",
+        "why": "Funcionou aqui; o etcd guardava `k8s:enc:secretbox:v1:key1:`."
+      },
+      {
+        "text": "Não; o kubectl lê o etcd diretamente e tem a chave",
+        "why": "O kubectl nunca fala com o etcd; só o API server fala."
+      },
+      {
+        "text": "Não; ela protege cópias dos dados, e quem lê pela API é com o RBAC",
+        "why": "Isso. As duas proteções respondem a preocupações diferentes."
+      }
+    ]
+  },
+  "ex-4nbjwgvw": {
+    "prompt": "Depois da criptografia em repouso, o valor guardado começava com `k8s:enc:___:v1:key1:`, nomeando o provedor que o criptografou.",
+    "hint": "O primeiro provedor da lista.",
+    "blanks": [
+      {
+        "accept": [
+          "secretbox"
+        ]
+      }
+    ]
+  },
+  "ex-53dcaxcr": {
+    "prompt": "Ligue cada preocupação ao que protege contra ela.",
+    "hint": "A tabela no fim da lição.",
+    "pairs": [
+      {
+        "left": "Alguém lê o Secret pela API",
+        "right": "Regras de RBAC sobre quem pode ler Secrets"
+      },
+      {
+        "left": "Uma cópia dos dados do etcd vaza",
+        "right": "Criptografia em repouso"
+      },
+      {
+        "left": "O valor vaza do processo em execução",
+        "right": "Um arquivo num tmpfs em vez de uma variável"
+      }
+    ],
+    "right_distractors": [
+      "Codificar o valor em base64"
+    ]
+  }
+}

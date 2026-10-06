@@ -1,0 +1,276 @@
+[
+  {
+    "id": "ex-rv6mte23",
+    "version": 1,
+    "section": "contexts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a context in `~/.kube/config` name?",
+    "hint": "Three things, one of them optional.",
+    "choices": [
+      {
+        "text": "One cluster and nothing else",
+        "correct": false,
+        "why": "A context also names the credentials, and can carry a namespace."
+      },
+      {
+        "text": "A cluster, a user, and optionally a namespace",
+        "correct": true,
+        "why": "Right. Switching context switches all three at once."
+      },
+      {
+        "text": "A namespace inside the cluster you are working on",
+        "correct": false,
+        "why": "A namespace can be part of a context, but the context also says which cluster and as whom."
+      },
+      {
+        "text": "A set of objects kubectl has applied before",
+        "correct": false,
+        "why": "The file keeps no record of objects; that lives in the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjv1vje4",
+    "version": 1,
+    "section": "contexts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deploy script runs against production every night. Why is `kubectl --context prod apply -f …` safer in it than `kubectl config use-context prod` followed by `kubectl apply -f …`?",
+    "hint": "Where does `use-context` write its change?",
+    "choices": [
+      {
+        "text": "`--context` encrypts the connection and `use-context` does not",
+        "correct": false,
+        "why": "Both reach the same API server over the same TLS connection."
+      },
+      {
+        "text": "`use-context` needs administrator rights on the cluster",
+        "correct": false,
+        "why": "It only edits a local file; the cluster never hears about it."
+      },
+      {
+        "text": "`use-context` stays in the file for every later command",
+        "correct": true,
+        "why": "Right. The next command anyone types on that machine goes to production too; `--context` affects one command."
+      },
+      {
+        "text": "`--context` refuses to run if the cluster is unreachable",
+        "correct": false,
+        "why": "Both fail the same way when the cluster cannot be reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwry5b49",
+    "version": 1,
+    "section": "contexts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `kubectl config set-context --current --namespace=dev`, a colleague says the `dev` namespace is now isolated from `default`. What does this lesson say?",
+    "hint": "What does a namespace change, by itself?",
+    "choices": [
+      {
+        "text": "Right: pods in `dev` can no longer reach `default`",
+        "correct": false,
+        "why": "Nothing about the network changed; only where names are looked up."
+      },
+      {
+        "text": "Only the lookup changed; isolation needs more",
+        "correct": true,
+        "why": "Right. A namespace changes where a name is looked up; lessons 20 and 24 add limits and network rules."
+      },
+      {
+        "text": "The command also limited how much CPU `dev` may use",
+        "correct": false,
+        "why": "Limits per namespace are quotas, a separate object (lesson 20)."
+      },
+      {
+        "text": "It moved the pods of `default` into `dev`",
+        "correct": false,
+        "why": "It edited the kubeconfig file; no object in the cluster moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqh27zsf",
+    "version": 1,
+    "section": "declarative",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana ran `kubectl apply -f deployment.yaml` twice without editing the file. What did the second run print?",
+    "hint": "apply compares before it acts.",
+    "choices": [
+      {
+        "text": "An error, because `web` already existed",
+        "correct": false,
+        "why": "That is what `kubectl create` does; `apply` compares and acts on the difference."
+      },
+      {
+        "text": "`created`, and a second deployment appeared",
+        "correct": false,
+        "why": "Names are unique in a namespace; the same file names the same object."
+      },
+      {
+        "text": "`deployment.apps/web unchanged`",
+        "correct": true,
+        "why": "Right. Nothing differed, so nothing was sent; that is what makes apply safe to repeat."
+      },
+      {
+        "text": "`configured`, because apply always rewrites the object",
+        "correct": false,
+        "why": "It printed `configured` only after the file changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-scyhfjqn",
+    "version": 1,
+    "section": "declarative",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `kubectl scale deployment web --replicas=5`, `kubectl diff -f deployment.yaml` printed `-  replicas: 5` and `+  replicas: 3`. What does that diff describe?",
+    "hint": "The minus side is the live object.",
+    "choices": [
+      {
+        "text": "What applying the file would change in the live object",
+        "correct": true,
+        "why": "Right. The cluster has drifted to 5, and the file would take it back to 3."
+      },
+      {
+        "text": "What changed in the file since its last commit to the repository",
+        "correct": false,
+        "why": "kubectl diff compares the file with the cluster, not with git."
+      },
+      {
+        "text": "A conflict apply cannot resolve",
+        "correct": false,
+        "why": "apply resolved it: the next listing showed 3/3."
+      },
+      {
+        "text": "Two replicas that failed to start",
+        "correct": false,
+        "why": "The numbers are the spec on each side; nothing about failures is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2fkwnqm",
+    "version": 1,
+    "section": "declarative",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To see what `kubectl apply -f deployment.yaml` would change, without changing anything, run `kubectl ___ -f deployment.yaml`.",
+    "hint": "Its output is a unified diff.",
+    "blanks": [
+      {
+        "accept": [
+          "diff"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yq1zb6ah",
+    "version": 1,
+    "section": "declarative",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does kubectl store the `last-applied-configuration` annotation on the object?",
+    "hint": "A field missing from the file can mean two different things.",
+    "choices": [
+      {
+        "text": "To let the cluster roll back to it after a failure",
+        "correct": false,
+        "why": "Rollbacks use ReplicaSets and history (lesson 35), not this annotation."
+      },
+      {
+        "text": "To tell a field you removed from one somebody else set",
+        "correct": true,
+        "why": "Right. Without the last file, apply could not know whether to delete a field that is absent."
+      },
+      {
+        "text": "Because the API server refuses objects without it",
+        "correct": false,
+        "why": "`kubectl create` makes objects without it; it is kubectl's bookkeeping."
+      },
+      {
+        "text": "To record who applied the file and when",
+        "correct": false,
+        "why": "It holds the file's content, not an author or a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9vkamn7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each command with what it does.",
+    "hint": "Two of them never change the cluster.",
+    "pairs": [
+      {
+        "left": "`kubectl apply -f`",
+        "right": "Makes the cluster match the file"
+      },
+      {
+        "left": "`kubectl diff -f`",
+        "right": "Shows what apply would change"
+      },
+      {
+        "left": "`kubectl create … --dry-run=client -o yaml`",
+        "right": "Prints an object without sending it"
+      },
+      {
+        "left": "`kubectl delete -f`",
+        "right": "Removes the objects the file names"
+      }
+    ],
+    "right_distractors": [
+      "Copies the cluster's objects into the file"
+    ]
+  },
+  {
+    "id": "ex-5e5vqvx3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During an incident Ana scaled to 5 by hand, and it helped. The next morning a pipeline ran `kubectl apply -f` from git. What happened, and what should she have done?",
+    "hint": "The file in git still said 3.",
+    "choices": [
+      {
+        "text": "Nothing; apply keeps changes made by hand",
+        "correct": false,
+        "why": "apply makes the cluster match the file, so it took it back to 3."
+      },
+      {
+        "text": "apply failed on the conflict; she had to delete the deployment",
+        "correct": false,
+        "why": "There was no failure; the drift was simply undone."
+      },
+      {
+        "text": "It went back to 3; the change should also have gone into the file",
+        "correct": true,
+        "why": "Right. A fix that should still be true tomorrow belongs in git, or the next apply undoes it."
+      },
+      {
+        "text": "It went to 8, adding the file's 3 to the 5 by hand",
+        "correct": false,
+        "why": "Fields are replaced, never added together."
+      }
+    ]
+  }
+]

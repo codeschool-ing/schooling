@@ -1,0 +1,160 @@
+{
+  "ex-3cg550nt": {
+    "prompt": "A cota permite quatro pods em `team-a`. A Ana escala o Deployment para seis. O que o `kubectl get deployment` mostra?",
+    "hint": "O próprio Deployment foi aceito.",
+    "choices": [
+      {
+        "text": "`4/6`",
+        "why": "Isso: quatro pods admitidos, dois recusados pela cota."
+      },
+      {
+        "text": "Um erro, e a contagem antiga de dois",
+        "why": "A escala em si foi aceita; só a criação de pods foi recusada."
+      },
+      {
+        "text": "`6/6`, já que cotas são só avisos",
+        "why": "Cotas são aplicadas em toda criação."
+      },
+      {
+        "text": "`6/6`, com dois pods `Pending`",
+        "why": "Nenhum pod chegou a ser criado para as duas cópias a mais."
+      }
+    ]
+  },
+  "ex-mnzr3djh": {
+    "prompt": "Onde a Ana encontrou o motivo de o quinto e o sexto pods nunca aparecerem?",
+    "hint": "Quem tentou criar esses pods?",
+    "choices": [
+      {
+        "text": "No status do Deployment",
+        "why": "Ele disse `4/6` e mais nada."
+      },
+      {
+        "text": "Nos logs dos pods que subiram",
+        "why": "Esses pods nunca souberam da recusa."
+      },
+      {
+        "text": "Num evento `FailedCreate`, registrado quando o ReplicaSet foi recusado",
+        "why": "Isso: `exceeded quota: team-a, requested: pods=1, used: pods=4, limited: pods=4`."
+      },
+      {
+        "text": "Em dois pods presos em `Pending`",
+        "why": "Não havia pods assim; o API server se recusou a criá-los."
+      }
+    ]
+  },
+  "ex-j18sacxv": {
+    "prompt": "Depois da recusa, a cota mostrava `pods 4/4`, `requests.cpu 400m/1`, `requests.memory 256Mi/512Mi`. A equipe baixa o pedido de memória de cada pod para 32Mi. Agora consegue rodar seis pods?",
+    "hint": "Qual teto a parou?",
+    "choices": [
+      {
+        "text": "Sim, porque o problema era a memória",
+        "why": "A memória ainda tinha folga; a contagem de pods estava cheia."
+      },
+      {
+        "text": "Sim, porque pods menores usam menos de cada limite",
+        "why": "Pods menores continuam contando um pod cada."
+      },
+      {
+        "text": "Não: a contagem de pods é o teto atingido",
+        "why": "Isso. A primeira linha alcançada para o namespace."
+      },
+      {
+        "text": "Não, porque uma cota não pode ser mudada depois de definida",
+        "why": "Uma cota é um objeto como outro qualquer e pode ser editada."
+      }
+    ]
+  },
+  "ex-nkrcq8p6": {
+    "prompt": "O `kubectl create deployment` não escreveu recurso nenhum, mas o pod tinha `requests: cpu 100m, memory 64Mi`. De onde vieram?",
+    "hint": "Um objeto no namespace completa o que falta.",
+    "choices": [
+      {
+        "text": "Da ResourceQuota, dividida pelo limite de pods",
+        "why": "Uma cota limita totais; nunca escreve num pod."
+      },
+      {
+        "text": "Dos padrões da LimitRange",
+        "why": "Isso: `defaultRequest` e `default` são escritos nos containers que os deixaram de fora."
+      },
+      {
+        "text": "Dos metadados da imagem",
+        "why": "Imagens não levam requests de recursos."
+      },
+      {
+        "text": "Do escalonador, depois de colocar o pod",
+        "why": "Eles foram definidos antes de o pod ser admitido, quanto mais colocado."
+      }
+    ]
+  },
+  "ex-865r02x2": {
+    "prompt": "Por que um namespace com cota de CPU ou memória quase sempre precisa também de uma LimitRange?",
+    "hint": "O que acontece com um pod sem requests num namespace assim?",
+    "choices": [
+      {
+        "text": "A cota não faz nada sem ela",
+        "why": "A cota limitou os pods sozinha."
+      },
+      {
+        "text": "Para os pods subirem mais rápido",
+        "why": "Padrões mudam a admissão, não o tempo de subida."
+      },
+      {
+        "text": "Porque LimitRanges são exigidas pelo escalonador",
+        "why": "O escalonador nunca as lê."
+      },
+      {
+        "text": "Um pod sem requests não pode ser contado, então é recusado",
+        "why": "Isso. Os padrões transformam um campo esquecido num valor razoável em vez de um deploy que falha."
+      }
+    ]
+  },
+  "ex-3x1n67nb": {
+    "prompt": "`greedy` pediu um limite de memória de 512Mi enquanto o namespace ainda tinha 512Mi de limites livres. Por que foi recusado?",
+    "hint": "A mensagem citou um teto por container.",
+    "choices": [
+      {
+        "text": "A cota tinha ficado sem memória",
+        "why": "Ela tinha 512Mi sobrando, exatamente o pedido."
+      },
+      {
+        "text": "A LimitRange limita um container a 256Mi",
+        "why": "Isso: `maximum memory usage per Container is 256Mi`."
+      },
+      {
+        "text": "Pods não podem ser criados direto num namespace com cota",
+        "why": "Podem; este foi recusado pelo tamanho."
+      },
+      {
+        "text": "Um limite sem request é inválido",
+        "why": "Um request assume o valor do limite quando só o limite é dado."
+      }
+    ]
+  },
+  "ex-kxtqg58m": {
+    "prompt": "Ligue cada pergunta ao objeto que a responde.",
+    "hint": "A tabela no fim da lição.",
+    "pairs": [
+      {
+        "left": "Quanto esta equipe pode usar no total?",
+        "right": "ResourceQuota"
+      },
+      {
+        "left": "O que um container recebe se o autor não disse?",
+        "right": "Padrões da LimitRange"
+      },
+      {
+        "left": "Quão grande pode ser um container?",
+        "right": "max da LimitRange"
+      }
+    ],
+    "right_distractors": [
+      "NetworkPolicy"
+    ]
+  },
+  "ex-bse1vyps": {
+    "prompt": "Com o padrão da LimitRange de 100m de CPU por pod, quantos milicores da cota os quatro pods em execução tinham usado?",
+    "hint": "Quatro vezes o padrão.",
+    "unit": "milicores"
+  }
+}

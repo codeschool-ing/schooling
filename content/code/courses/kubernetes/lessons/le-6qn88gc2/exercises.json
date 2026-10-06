@@ -1,0 +1,308 @@
+[
+  {
+    "id": "ex-1z4zqk9d",
+    "version": 1,
+    "section": "contexts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A command names no cluster. Where does kubectl send it?",
+    "hint": "One field in the kubeconfig.",
+    "choices": [
+      {
+        "text": "To the first cluster in the file",
+        "correct": false,
+        "why": "Order in the file decides nothing."
+      },
+      {
+        "text": "To every cluster in the file",
+        "correct": false,
+        "why": "kubectl talks to one API server per command."
+      },
+      {
+        "text": "To the `current-context`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To the cluster created last",
+        "correct": false,
+        "why": "Only because kind set the pointer then."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8ay8b2x",
+    "version": 1,
+    "section": "contexts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the safest way for a deploy pipeline to choose its cluster?",
+    "hint": "It should not depend on what ran before it.",
+    "choices": [
+      {
+        "text": "Run `kubectl config use-context` at the start",
+        "correct": false,
+        "why": "That moves a pointer others share."
+      },
+      {
+        "text": "Its own kubeconfig with one context",
+        "correct": true,
+        "why": "Right, or `--context` on every command."
+      },
+      {
+        "text": "Trust whatever the agent's context is",
+        "correct": false,
+        "why": "That is the incident in this lesson."
+      },
+      {
+        "text": "Name the cluster in the Deployment",
+        "correct": false,
+        "why": "A manifest has no cluster field."
+      }
+    ]
+  },
+  {
+    "id": "ex-2s1pjw77",
+    "version": 1,
+    "section": "contexts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which three things does a context name?",
+    "hint": "`kubectl config get-contexts` has a column for each.",
+    "choices": [
+      {
+        "text": "A node, a pod and a container",
+        "correct": false,
+        "why": "Those are inside a cluster."
+      },
+      {
+        "text": "A region, a zone and a provider",
+        "correct": false,
+        "why": "kubectl knows none of them."
+      },
+      {
+        "text": "An image, a tag and a registry",
+        "correct": false,
+        "why": "Those are about containers."
+      },
+      {
+        "text": "A cluster, a user and a namespace",
+        "correct": true,
+        "why": "Right, the namespace optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zmkqvcb",
+    "version": 1,
+    "section": "two-of-everything",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two clusters were made from the same configuration and both have a pod at `10.244.1.3`. What does that rule out?",
+    "hint": "Which `10.244.1.3` would a packet reach?",
+    "choices": [
+      {
+        "text": "Running the same image in both",
+        "correct": false,
+        "why": "Images do not care about addresses."
+      },
+      {
+        "text": "Routing pod to pod between them",
+        "correct": true,
+        "why": "Right, without renumbering one."
+      },
+      {
+        "text": "Using one kubeconfig for both",
+        "correct": false,
+        "why": "The file has done that all lesson."
+      },
+      {
+        "text": "Exposing both to the internet",
+        "correct": false,
+        "why": "Each can have its own load balancer."
+      }
+    ]
+  },
+  {
+    "id": "ex-kt11v3eg",
+    "version": 1,
+    "section": "two-of-everything",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are cluster-admin in staging. What does that give you in production?",
+    "hint": "Each cluster has its own RBAC.",
+    "choices": [
+      {
+        "text": "Read access",
+        "correct": false,
+        "why": "Nothing carries across."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The same role",
+        "correct": false,
+        "why": "Roles live in each cluster's etcd."
+      },
+      {
+        "text": "Access to `default` only",
+        "correct": false,
+        "why": "Not even that."
+      }
+    ]
+  },
+  {
+    "id": "ex-qh3f54sa",
+    "version": 1,
+    "section": "two-of-everything",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why might a team that runs customers' code get a cluster of its own rather than a namespace?",
+    "hint": "What do namespaces still share?",
+    "choices": [
+      {
+        "text": "Namespaces cannot hold Deployments",
+        "correct": false,
+        "why": "They hold them fine."
+      },
+      {
+        "text": "A cluster is cheaper than a namespace",
+        "correct": false,
+        "why": "It is the more expensive option."
+      },
+      {
+        "text": "Namespaces share one control plane",
+        "correct": true,
+        "why": "Right, and one etcd and one upgrade."
+      },
+      {
+        "text": "Quotas only work across clusters",
+        "correct": false,
+        "why": "Quotas are per namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-gex7wak4",
+    "version": 1,
+    "section": "strategy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which tool is the common way today to keep the same objects in many clusters?",
+    "hint": "Lesson 39.",
+    "choices": [
+      {
+        "text": "KubeFed",
+        "correct": false,
+        "why": "It was archived in 2023."
+      },
+      {
+        "text": "GitOps, one agent per cluster",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`kubectl apply` in a loop by hand",
+        "correct": false,
+        "why": "It works once and drifts after."
+      },
+      {
+        "text": "Copying etcd between clusters",
+        "correct": false,
+        "why": "That would copy identities too."
+      }
+    ]
+  },
+  {
+    "id": "ex-57dwk4ge",
+    "version": 1,
+    "section": "strategy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What decides whether two regions can both serve writes at once?",
+    "hint": "The stateless pods are the easy part.",
+    "choices": [
+      {
+        "text": "The number of nodes in each",
+        "correct": false,
+        "why": "Size does not settle agreement."
+      },
+      {
+        "text": "The Kubernetes version",
+        "correct": false,
+        "why": "Kubernetes does not hold the data."
+      },
+      {
+        "text": "The global load balancer",
+        "correct": false,
+        "why": "It sends traffic; it does not merge writes."
+      },
+      {
+        "text": "How the database is built",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jkkxhrbc",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each concern with what handles it today.",
+    "hint": "The table in the last section.",
+    "pairs": [
+      {
+        "left": "Same objects in every cluster",
+        "right": "GitOps"
+      },
+      {
+        "left": "Users to the nearest healthy cluster",
+        "right": "DNS or a global load balancer"
+      },
+      {
+        "left": "A Service reached from another cluster",
+        "right": "`ServiceExport` and `ServiceImport`"
+      },
+      {
+        "left": "Creating the clusters themselves",
+        "right": "Cluster API or Terraform"
+      }
+    ],
+    "right_distractors": [
+      "A shared etcd"
+    ]
+  },
+  {
+    "id": "ex-jyz2w05w",
+    "version": 1,
+    "section": "contexts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To run one command against another cluster without moving the pointer: `kubectl --___ kind-eu get nodes`.",
+    "hint": "The flag is named after what it picks.",
+    "blanks": [
+      {
+        "accept": [
+          "context"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

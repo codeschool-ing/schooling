@@ -1,0 +1,264 @@
+[
+  {
+    "id": "ex-x425pwnq",
+    "version": 1,
+    "section": "enforcement",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the first cluster, `deny-all` was created without error and `stranger` still reached the shop. Why?",
+    "hint": "Who enforces a NetworkPolicy?",
+    "choices": [
+      {
+        "text": "The policy had a syntax error",
+        "correct": false,
+        "why": "The API server checked it and accepted it."
+      },
+      {
+        "text": "Policies only apply to new pods",
+        "correct": false,
+        "why": "Calico applied the same file to running pods at once."
+      },
+      {
+        "text": "Nothing enforced it",
+        "correct": true,
+        "why": "Right. The network plugin enforces policies; kindnet's engine failed on this kernel, and the API server only stores them."
+      },
+      {
+        "text": "`stranger` was in the same namespace",
+        "correct": false,
+        "why": "It was in `other`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7beqavvw",
+    "version": 1,
+    "section": "enforcement",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `deny-all` on the Calico cluster, why did `front`, in the same namespace as the shop, time out too?",
+    "hint": "`podSelector: {}`.",
+    "choices": [
+      {
+        "text": "Its empty selector also picks `front`",
+        "correct": true,
+        "why": "Right. It selects every pod in `shop` and allows nothing in; a namespace gives its own pods no exception."
+      },
+      {
+        "text": "Calico blocks every connection by default",
+        "correct": false,
+        "why": "Before the policy, `stranger` got an answer."
+      },
+      {
+        "text": "`front` had no label for a rule to match",
+        "correct": false,
+        "why": "It had `app=front`, and no rule allowed it yet."
+      },
+      {
+        "text": "The DNS lookup of `shop` was blocked",
+        "correct": false,
+        "why": "DNS failures say `bad address`; this was a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-et7hv0en",
+    "version": 1,
+    "section": "allow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`allow-front` names port 8080, while the shop's Service listens on 80. Why 8080?",
+    "hint": "Which packet does the policy see?",
+    "choices": [
+      {
+        "text": "Port 80 needs root inside the container",
+        "correct": false,
+        "why": "That is about the container, not the policy."
+      },
+      {
+        "text": "The pod receives it on 8080",
+        "correct": true,
+        "why": "Right. The policy is checked at the pod, after the Service has translated 80 into 8080."
+      },
+      {
+        "text": "Policies cannot name port 80 at all",
+        "correct": false,
+        "why": "Any port can be named."
+      },
+      {
+        "text": "8080 covers both ports",
+        "correct": false,
+        "why": "A port rule names exactly one port."
+      }
+    ]
+  },
+  {
+    "id": "ex-05kqm4zn",
+    "version": 1,
+    "section": "allow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A namespace has `deny-all` and `allow-front`. Someone adds a third policy that allows the shop from everywhere. What happens to `deny-all`?",
+    "hint": "Can one policy take away what another grants?",
+    "choices": [
+      {
+        "text": "It wins, because it was applied first",
+        "correct": false,
+        "why": "Order plays no part."
+      },
+      {
+        "text": "The API server refuses the new policy as a conflict",
+        "correct": false,
+        "why": "There are no conflicts; permissions add up."
+      },
+      {
+        "text": "Both are ignored",
+        "correct": false,
+        "why": "Each still selects pods; the allows simply add up."
+      },
+      {
+        "text": "It still applies, and the shop opens up",
+        "correct": true,
+        "why": "Right. It still selects the pods, and a connection is allowed if any policy allows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-smsc30zx",
+    "version": 1,
+    "section": "allow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is selecting a namespace by `purpose: monitoring` riskier than by `kubernetes.io/metadata.name`?",
+    "hint": "Who can change each label?",
+    "choices": [
+      {
+        "text": "Custom labels are ignored by Calico",
+        "correct": false,
+        "why": "Calico honoured it the moment it was added."
+      },
+      {
+        "text": "Whoever labels it opens the path",
+        "correct": true,
+        "why": "Right. The name label is set by Kubernetes and cannot be changed."
+      },
+      {
+        "text": "It is slower to evaluate",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "It matches pods instead of namespaces",
+        "correct": false,
+        "why": "It is a `namespaceSelector`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ff82ngwy",
+    "version": 1,
+    "section": "egress",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `front-egress`, `wget shop` from `front` failed with `bad address 'shop'`. What was blocked?",
+    "hint": "What happens before the connection?",
+    "choices": [
+      {
+        "text": "The shop's port 8080 itself",
+        "correct": false,
+        "why": "That was allowed by `front-egress`."
+      },
+      {
+        "text": "The DNS query to CoreDNS",
+        "correct": true,
+        "why": "Right. Port 53 to `kube-system` was not allowed out."
+      },
+      {
+        "text": "The Service's ClusterIP",
+        "correct": false,
+        "why": "No address was ever looked up, so none was blocked."
+      },
+      {
+        "text": "Ingress into `front`",
+        "correct": false,
+        "why": "Nothing restricts traffic into `front`."
+      }
+    ]
+  },
+  {
+    "id": "ex-375dn096",
+    "version": 1,
+    "section": "egress",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `front-dns`, the `namespaceSelector` and the `podSelector` sit in one `to` entry. What would two separate entries, each with its own dash, allow?",
+    "hint": "Inside one entry they combine; across entries they add.",
+    "choices": [
+      {
+        "text": "The same thing",
+        "correct": false,
+        "why": "Separate entries are alternatives, not one combined rule."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Each entry would allow something on its own."
+      },
+      {
+        "text": "Any `kube-dns` pod anywhere, or any pod in `kube-system`",
+        "correct": true,
+        "why": "Right. Two entries are an OR, and far wider."
+      },
+      {
+        "text": "Only pods in `shop`",
+        "correct": false,
+        "why": "Neither entry mentions `shop`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7q4vgxn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps that locked `front` down to the shop and DNS while keeping it working.",
+    "hint": "The order of the captures.",
+    "items": [
+      "Install a plugin that enforces policies",
+      "Allow `front` into the shop on 8080",
+      "Restrict `front`'s egress to the shop",
+      "Allow `front` out to `kube-dns` on 53"
+    ],
+    "trap": "Without a plugin that enforces them, every later step changes nothing; and the DNS rule is only needed once egress is restricted."
+  },
+  {
+    "id": "ex-akgp5k4r",
+    "version": 1,
+    "section": "enforcement",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A policy with `podSelector: {}` selects ___ pod in its namespace.",
+    "hint": "An empty selector matches without conditions.",
+    "blanks": [
+      {
+        "accept": [
+          "every",
+          "each",
+          "all"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

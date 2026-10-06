@@ -1,0 +1,289 @@
+[
+  {
+    "id": "ex-0e088p97",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `curl` with the new account's token got a `Forbidden` answer naming `system:serviceaccount:shop:deployer`. Which step refused it?",
+    "hint": "Did the API server know who was asking?",
+    "choices": [
+      {
+        "text": "Authentication: the token was not valid",
+        "correct": false,
+        "why": "The message names the account, so the token was accepted."
+      },
+      {
+        "text": "Authorisation",
+        "correct": true,
+        "why": "Right. The identity was known; no rule granted it `list` on pods."
+      },
+      {
+        "text": "TLS: `curl` did not trust the server",
+        "correct": false,
+        "why": "A TLS failure would have stopped before any JSON came back."
+      },
+      {
+        "text": "Admission, because the namespace was new",
+        "correct": false,
+        "why": "Listing creates nothing, so admission never sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-trsazhjk",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is the user `kubernetes-admin` stored in the cluster?",
+    "hint": "`kubectl auth whoami` showed where the name came from.",
+    "choices": [
+      {
+        "text": "In a User object in `kube-system`",
+        "correct": false,
+        "why": "Kubernetes has no User objects."
+      },
+      {
+        "text": "As a ServiceAccount in `default`",
+        "correct": false,
+        "why": "A ServiceAccount would appear as `system:serviceaccount:…`."
+      },
+      {
+        "text": "Only in its client certificate",
+        "correct": true,
+        "why": "Right. People are names carried by certificates or tokens."
+      },
+      {
+        "text": "In etcd, with a hashed password",
+        "correct": false,
+        "why": "There is no password store for users."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0dqx2g7",
+    "version": 1,
+    "section": "role-binding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `deployer` account may `get` pods in `shop`. Why was `kubectl auth can-i create pods/exec` still `no`?",
+    "hint": "Look at how `pods/log` was granted.",
+    "choices": [
+      {
+        "text": "Exec is only allowed in `default`",
+        "correct": false,
+        "why": "No namespace has that rule."
+      },
+      {
+        "text": "`pods/exec` is a subresource the Role never named",
+        "correct": true,
+        "why": "Right. Each subresource is granted on its own, like `pods/log` was."
+      },
+      {
+        "text": "ServiceAccounts may never exec into a pod",
+        "correct": false,
+        "why": "A Role naming `pods/exec` with `create` would allow it."
+      },
+      {
+        "text": "The pod had no shell",
+        "correct": false,
+        "why": "`can-i` asks the authoriser; it never looks at a pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-fs3xn5wf",
+    "version": 1,
+    "section": "role-binding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A RoleBinding in namespace `shop` binds a Role to `deployer`. What may `deployer` do in `default`?",
+    "hint": "`can-i list pods -n default`.",
+    "choices": [
+      {
+        "text": "The same as in `shop`",
+        "correct": false,
+        "why": "The answer for `default` was `no`."
+      },
+      {
+        "text": "Read, but not write",
+        "correct": false,
+        "why": "Nothing grants reading there either."
+      },
+      {
+        "text": "Nothing this binding grants",
+        "correct": true,
+        "why": "Right. A RoleBinding grants inside its own namespace only."
+      },
+      {
+        "text": "Everything, since `default` has no rules",
+        "correct": false,
+        "why": "No rules means refusal, not freedom."
+      }
+    ]
+  },
+  {
+    "id": "ex-6964jt4m",
+    "version": 1,
+    "section": "in-a-pod",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod's token was issued for the pod `reader`. The pod is deleted, and a copy of the token is used a minute later. What happens?",
+    "hint": "The token names its pod.",
+    "choices": [
+      {
+        "text": "It works until `exp`, a year later",
+        "correct": false,
+        "why": "The API server also checks that the pod still exists."
+      },
+      {
+        "text": "It is refused, because the pod is gone",
+        "correct": true,
+        "why": "Right. A bound token dies with the object it names."
+      },
+      {
+        "text": "It works on the node it was issued for",
+        "correct": false,
+        "why": "Nodes do not check API tokens."
+      },
+      {
+        "text": "It is accepted with `view` rights",
+        "correct": false,
+        "why": "Nothing downgrades a token."
+      }
+    ]
+  },
+  {
+    "id": "ex-s98tpj85",
+    "version": 1,
+    "section": "in-a-pod",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team should manage everything in namespace `team-a` and nothing elsewhere. Which grant does that?",
+    "hint": "The reach comes from the binding.",
+    "choices": [
+      {
+        "text": "A ClusterRoleBinding to `admin`",
+        "correct": false,
+        "why": "That grants `admin` in every namespace."
+      },
+      {
+        "text": "A RoleBinding in `team-a` to the ClusterRole `admin`",
+        "correct": true,
+        "why": "Right. A RoleBinding limits a ClusterRole to its own namespace."
+      },
+      {
+        "text": "A ClusterRoleBinding to `cluster-admin`",
+        "correct": false,
+        "why": "That is everything, everywhere."
+      },
+      {
+        "text": "A RoleBinding to `view`",
+        "correct": false,
+        "why": "`view` reads; it does not manage."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kx1tbdn",
+    "version": 1,
+    "section": "in-a-pod",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod never talks to the API server. What should its spec say about the token?",
+    "hint": "A token nobody uses can still be stolen.",
+    "choices": [
+      {
+        "text": "`automountServiceAccountToken: false`",
+        "correct": true,
+        "why": "Right. Then there is no token in the container to steal."
+      },
+      {
+        "text": "Nothing; unused tokens expire within the hour",
+        "correct": false,
+        "why": "The mounted token was valid for a year."
+      },
+      {
+        "text": "`serviceAccountName: none`",
+        "correct": false,
+        "why": "That names an account called `none`, which does not exist."
+      },
+      {
+        "text": "A Role with no rules",
+        "correct": false,
+        "why": "It leaves the token mounted anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-arfgsze0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what the API server does with a request from the pipeline.",
+    "hint": "Who, then whether.",
+    "items": [
+      "Reads the token and decides who is asking",
+      "Looks for a binding that names that identity",
+      "Checks the bound role's rules for the verb and resource",
+      "Answers the request, or 403"
+    ],
+    "trap": "Nothing about permissions can be checked before the API server knows whose permissions to check."
+  },
+  {
+    "id": "ex-yd5py1s9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each object with what it holds.",
+    "hint": "The figure in the second section.",
+    "pairs": [
+      {
+        "left": "Role",
+        "right": "Rules: groups, resources and verbs"
+      },
+      {
+        "left": "RoleBinding",
+        "right": "A role and the subjects it is granted to"
+      },
+      {
+        "left": "ServiceAccount",
+        "right": "An identity for a program"
+      }
+    ],
+    "right_distractors": [
+      "A person's password"
+    ]
+  },
+  {
+    "id": "ex-ds4w4fp5",
+    "version": 1,
+    "section": "role-binding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To let the pipeline remove a Deployment, the verb ___ has to be added to the Role's first rule.",
+    "hint": "The one the capture refused.",
+    "blanks": [
+      {
+        "accept": [
+          "delete"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

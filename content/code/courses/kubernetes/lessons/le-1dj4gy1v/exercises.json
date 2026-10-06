@@ -1,0 +1,203 @@
+[
+  {
+    "id": "ex-3wkvbh6b",
+    "version": 1,
+    "section": "the-loop",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four replicas average 90% CPU utilisation against a target of 60%. How many replicas does the autoscaler ask for?",
+    "hint": "ceil(4 × 90 ÷ 60).",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "replicas"
+  },
+  {
+    "id": "ex-fvvsm5ea",
+    "version": 1,
+    "section": "the-loop",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod requests 200m of CPU and uses 300m. What utilisation, in percent, does the autoscaler see?",
+    "hint": "Usage divided by request.",
+    "value": 150,
+    "tolerance": 0,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-ex5detff",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The load pushed utilisation to 604% and the replicas stopped at 6. Why not more?",
+    "hint": "Read the HPA's spec.",
+    "choices": [
+      {
+        "text": "The nodes were full",
+        "correct": false,
+        "why": "All six ran; no pod was `Pending`."
+      },
+      {
+        "text": "`maxReplicas` is 6",
+        "correct": true,
+        "why": "Right. The formula asked for more and was capped."
+      },
+      {
+        "text": "The formula gave exactly 6",
+        "correct": false,
+        "why": "It gave far more than 6 at that reading."
+      },
+      {
+        "text": "Scaling up stops after a minute",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hyxnkgm",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after the HPA was created, its events said `no metrics returned`. What did it do with the replicas?",
+    "hint": "Without a measurement…",
+    "choices": [
+      {
+        "text": "It scaled to the maximum to be safe",
+        "correct": false,
+        "why": "That is not the safe direction it takes."
+      },
+      {
+        "text": "It scaled to zero",
+        "correct": false,
+        "why": "The minimum was 1, and nothing scaled."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. No measurement, no change."
+      },
+      {
+        "text": "It deleted the HPA",
+        "correct": false,
+        "why": "The HPA stays and retries."
+      }
+    ]
+  },
+  {
+    "id": "ex-max94sdr",
+    "version": 1,
+    "section": "scaling-down",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By default, why does the autoscaler wait before removing replicas after the load drops?",
+    "hint": "`stabilizationWindowSeconds`.",
+    "choices": [
+      {
+        "text": "Pods take five minutes to stop",
+        "correct": false,
+        "why": "Stopping is quick; the wait is a choice."
+      },
+      {
+        "text": "It uses the highest recommendation of the last five minutes",
+        "correct": true,
+        "why": "Right, so a brief dip does not remove pods needed again soon."
+      },
+      {
+        "text": "metrics-server reports late",
+        "correct": false,
+        "why": "It reports every fifteen seconds either way."
+      },
+      {
+        "text": "Scale-down needs approval",
+        "correct": false,
+        "why": "Nobody approves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpz1dn81",
+    "version": 1,
+    "section": "scaling-down",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is memory often a poor metric to scale a web service on?",
+    "hint": "What happens to memory when the load goes?",
+    "choices": [
+      {
+        "text": "metrics-server does not report memory",
+        "correct": false,
+        "why": "`kubectl top` showed memory."
+      },
+      {
+        "text": "The HPA refuses memory",
+        "correct": false,
+        "why": "`name: memory` is accepted."
+      },
+      {
+        "text": "Memory is measured in bytes",
+        "correct": false,
+        "why": "Utilisation is a percentage either way."
+      },
+      {
+        "text": "It seldom falls after the load ends",
+        "correct": true,
+        "why": "Right. The autoscaler then scales up and never back down."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnx6qmkf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each metric type with what serves it.",
+    "hint": "The table in the second section.",
+    "pairs": [
+      {
+        "left": "`Resource` (CPU, memory)",
+        "right": "metrics-server"
+      },
+      {
+        "left": "`Pods`, from the application",
+        "right": "A custom metrics adapter"
+      },
+      {
+        "left": "`External`, a queue's length",
+        "right": "An external metrics adapter such as KEDA"
+      }
+    ],
+    "right_distractors": [
+      "The kube-scheduler"
+    ]
+  },
+  {
+    "id": "ex-8qd0r70q",
+    "version": 1,
+    "section": "the-loop",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The autoscaler measures CPU as a percentage of each pod's ___.",
+    "hint": "What `cpu: 200m` was in the manifest.",
+    "blanks": [
+      {
+        "accept": [
+          "request",
+          "requests"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

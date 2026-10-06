@@ -1,0 +1,150 @@
+{
+  "ex-rbtacq64": {
+    "prompt": "Depois do `/drain`, o primeiro pod mostrou `0/1` pronto. O que aconteceu com ele?",
+    "hint": "Olhe RESTARTS e para onde as requisições foram.",
+    "choices": [
+      {
+        "text": "Foi reiniciado com estado limpo",
+        "why": "RESTARTS ficou em 0."
+      },
+      {
+        "text": "Saiu do Service, e continuou rodando",
+        "why": "Isso. Uma falha de readiness o tira dos endpoints e não faz mais nada."
+      },
+      {
+        "text": "Foi apagado e substituído pelo ReplicaSet",
+        "why": "O mesmo nome de pod apareceu, ainda Running."
+      },
+      {
+        "text": "Foi movido para outro nó",
+        "why": "Pods nunca se mudam; nada no nó dele mudou."
+      }
+    ]
+  },
+  "ex-hnthh892": {
+    "prompt": "Depois de a sonda de liveness reiniciar o pod quebrado, ele voltou a `1/1` pronto, embora tivesse sido drenado. Por quê?",
+    "hint": "De onde começa um container reiniciado?",
+    "choices": [
+      {
+        "text": "A liveness passa por cima da readiness",
+        "why": "Cada sonda decide a própria consequência; nenhuma passa por cima da outra."
+      },
+      {
+        "text": "O Service readiciona todo pod depois de um reinício",
+        "why": "O Service segue as respostas de readiness, não os reinícios."
+      },
+      {
+        "text": "O processo novo não viu a drenagem",
+        "why": "Isso. As duas estavam na memória do processo antigo, e o `/ready` voltou a responder 200."
+      },
+      {
+        "text": "O kubelet pula a readiness depois de um reinício",
+        "why": "A readiness continua sendo perguntada; ela simplesmente teve sucesso."
+      }
+    ]
+  },
+  "ex-v1rhpavr": {
+    "prompt": "Uma equipe faz o `/healthz` falhar sempre que o banco está inalcançável, e o usa como sonda de liveness. O banco cai por dois minutos. O que acontece?",
+    "hint": "A consequência de qual sonda é um reinício?",
+    "choices": [
+      {
+        "text": "Cada pod sai do Service até o banco voltar",
+        "why": "Isso é o que uma sonda de readiness faria; esta é de liveness."
+      },
+      {
+        "text": "Nada, já que os próprios pods estão saudáveis",
+        "why": "A sonda diz não saudável, e o kubelet age pela sonda."
+      },
+      {
+        "text": "Toda cópia reinicia em ciclo",
+        "why": "Isso. Reinícios não consertam um banco; o banco pertence à readiness."
+      },
+      {
+        "text": "O banco é reiniciado pela sonda da loja",
+        "why": "Uma sonda só reinicia o container a que pertence."
+      }
+    ]
+  },
+  "ex-rtvrregv": {
+    "prompt": "O pod `slow` precisava de trinta segundos para subir e só tinha uma sonda de liveness com `periodSeconds: 5` e `failureThreshold: 3`. Por que ele nunca atendeu?",
+    "hint": "Quinze segundos contra trinta.",
+    "choices": [
+      {
+        "text": "Foi morto depois de quinze segundos, toda vez",
+        "why": "Isso: três falhas com cinco segundos entre elas, muito antes de ele escutar."
+      },
+      {
+        "text": "A imagem estava faltando",
+        "why": "Ele rodou e reiniciou três vezes."
+      },
+      {
+        "text": "A sonda de readiness o manteve fora do Service",
+        "why": "Ele não tinha sonda de readiness nenhuma."
+      },
+      {
+        "text": "Sondas de startup vêm ligadas por padrão e falharam",
+        "why": "Não existe sonda de startup padrão."
+      }
+    ]
+  },
+  "ex-2vx1k2a9": {
+    "prompt": "Em vez de uma sonda de startup, um colega propõe `initialDelaySeconds: 60` na sonda de liveness. O que isso custa?",
+    "hint": "Quando um travamento de verdade seria percebido?",
+    "choices": [
+      {
+        "text": "Nada: é equivalente",
+        "why": "O atraso vale para toda subida, e uma subida rápida ainda espera um minuto para ser vigiada."
+      },
+      {
+        "text": "O pod nunca consegue ficar pronto",
+        "why": "A liveness não decide a prontidão."
+      },
+      {
+        "text": "Travamentos cedo passam um minuto sem ser vistos",
+        "why": "Isso. Uma sonda de startup passa a vez à liveness no primeiro sucesso em vez de depois de uma espera fixa."
+      },
+      {
+        "text": "O kubelet recusa atrasos acima de trinta segundos",
+        "why": "Não existe esse limite."
+      }
+    ]
+  },
+  "ex-drhvzwb7": {
+    "prompt": "Ligue cada sonda ao que uma falha faz.",
+    "hint": "A tabela no fim da lição.",
+    "pairs": [
+      {
+        "left": "Readiness",
+        "right": "Tira o pod do Service"
+      },
+      {
+        "left": "Liveness",
+        "right": "Reinicia o container"
+      },
+      {
+        "left": "Startup",
+        "right": "Segura as outras duas até ter sucesso"
+      }
+    ],
+    "right_distractors": [
+      "Leva o pod para outro nó"
+    ]
+  },
+  "ex-en8raewt": {
+    "prompt": "A sonda de startup de `slow-fixed` tem `periodSeconds: 5` e `failureThreshold: 12`. Quantos segundos a loja tem para subir antes de ser reiniciada?",
+    "hint": "Multiplique.",
+    "unit": "segundos"
+  },
+  "ex-48r62deq": {
+    "prompt": "Um pod que falha na sonda de ___ sai dos endpoints do Service e continua rodando.",
+    "hint": "A pergunta é: ele deve receber tráfego agora?",
+    "blanks": [
+      {
+        "accept": [
+          "readiness",
+          "prontidão"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "ex-cpx17exx": {
+    "prompt": "A Ana rodou um comando, `kubectl create deployment web --image=shop:1.0 --replicas=3`. Quantos objetos existiam para ele um segundo depois?",
+    "hint": "Conte todas as linhas da listagem que veio depois.",
+    "choices": [
+      {
+        "text": "Um, o Deployment que ela criou",
+        "why": "A listagem também mostrou um ReplicaSet e três Pods, criados por controladores."
+      },
+      {
+        "text": "Três, um para cada cópia",
+        "why": "Esses são os Pods; o Deployment e o ReplicaSet acima deles também são objetos."
+      },
+      {
+        "text": "Cinco: um Deployment, um ReplicaSet e três Pods",
+        "why": "Isso. Ela fez um, e dois controladores fizeram os outros quatro."
+      },
+      {
+        "text": "Quatro: o Deployment e os três containers que ele roda",
+        "why": "Um container não é um objeto da API; ele vive dentro de um Pod, e o ReplicaSet ficou de fora desta conta."
+      }
+    ]
+  },
+  "ex-xa6mxsrr": {
+    "prompt": "No YAML do pod, qual campo registra qual objeto criou o pod?",
+    "hint": "Fica dentro de `metadata` e nomeia um ReplicaSet.",
+    "choices": [
+      {
+        "text": "`generateName`",
+        "why": "Esse é o prefixo de que o nome foi feito, não um vínculo com um dono."
+      },
+      {
+        "text": "`ownerReferences`",
+        "why": "Isso. Ele nomeia `kind: ReplicaSet` e o nome dele, e o marca como o controlador."
+      },
+      {
+        "text": "`labels`",
+        "why": "Labels são como o ReplicaSet encontra o pod; o dono é registrado à parte."
+      },
+      {
+        "text": "`spec.containers`",
+        "why": "Isso é o que o pod roda, não quem o criou."
+      }
+    ]
+  },
+  "ex-b5ww3k4r": {
+    "prompt": "As colunas personalizadas mostraram `WANTED 3` e `READY 3` para o deployment. De que metade do objeto vem cada uma?",
+    "hint": "Uma foi digitada pela Ana; a outra foi contada.",
+    "choices": [
+      {
+        "text": "As duas do `spec`, já que as duas falam de réplicas",
+        "why": "`readyReplicas` não é algo que alguém peça; um controlador conta."
+      },
+      {
+        "text": "As duas do `status`, já que o cluster informa as duas",
+        "why": "`replicas: 3` estava no comando que a Ana digitou; é o spec."
+      },
+      {
+        "text": "WANTED do `spec`, READY do `status`",
+        "why": "Isso. O spec é o que ela pediu, e o status é o que um controlador encontrou ao contar."
+      },
+      {
+        "text": "WANTED do `metadata`, READY do `spec`",
+        "why": "O metadata diz qual objeto é; nenhum dos números fica ali."
+      }
+    ]
+  },
+  "ex-3hp989q7": {
+    "prompt": "Quantos tipos de objeto o `kubectl api-resources` contou no cluster recém-criado?",
+    "hint": "A linha contada pelo `wc -l`.",
+    "unit": "tipos"
+  },
+  "ex-2tggcqkx": {
+    "prompt": "Por que um pod substituto passa a receber tráfego de um Service sem ninguém editar o Service?",
+    "hint": "O Service nunca lista os pods pelo nome.",
+    "choices": [
+      {
+        "text": "O Service escolhe por label, e o pod novo carrega o label",
+        "why": "Isso. Um seletor é uma pergunta, e o pod novo a responde no momento em que existe."
+      },
+      {
+        "text": "O ReplicaSet edita a lista do Service toda vez que cria um pod novo",
+        "why": "Os dois nunca se tocam; ambos leem labels."
+      },
+      {
+        "text": "Os pods herdam o nome do antecessor",
+        "why": "Cada pod recebe cinco caracteres aleatórios novos; o nome muda."
+      },
+      {
+        "text": "Todo pod do namespace recebe o tráfego",
+        "why": "Um namespace é um escopo de nomes, não um seletor; o Service da loja escolheria só `app=web`."
+      }
+    ]
+  },
+  "ex-bhbtf0jf": {
+    "prompt": "A Ana diz: 'o namespace `kube-system` é a máquina do plano de controle'. Qual listagem desta lição a contradiz?",
+    "hint": "Procure um pod de `kube-system` que não esteja em `shop-control-plane`.",
+    "choices": [
+      {
+        "text": "`kubectl get namespaces`, que mostra cinco",
+        "why": "O número de namespaces não diz nada sobre onde os pods deles rodam."
+      },
+      {
+        "text": "Os três pods `kube-proxy`, um em cada nó",
+        "why": "Isso. Eles estão em `kube-system` e rodam também nos workers: um namespace é um escopo, não um lugar."
+      },
+      {
+        "text": "`kubectl get nodes`, que mostra o plano de controle",
+        "why": "Nós não ficam em namespace nenhum; essa listagem não decide nada."
+      },
+      {
+        "text": "`kubectl explain`, que diz que pods têm namespace",
+        "why": "Ter namespace diz respeito a nomes, e quem diz isso é o `api-resources`, não o `explain`."
+      }
+    ]
+  },
+  "ex-8s4vgn2z": {
+    "prompt": "Ligue cada palavra ao que ela é.",
+    "hint": "A tabela no começo da seção.",
+    "pairs": [
+      {
+        "left": "Nó",
+        "right": "Uma máquina do cluster, rodando um kubelet"
+      },
+      {
+        "left": "Pod",
+        "right": "Containers que rodam juntos e compartilham um endereço"
+      },
+      {
+        "left": "Seletor",
+        "right": "Uma pergunta sobre labels que escolhe objetos"
+      },
+      {
+        "left": "Namespace",
+        "right": "Um escopo de nomes usado para dividir um cluster"
+      }
+    ],
+    "right_distractors": [
+      "O programa que guarda todos os objetos"
+    ]
+  },
+  "ex-agcq4nkq": {
+    "prompt": "Todo objeto que faz alguma coisa tem duas metades: o ___, que diz o que deveria ser verdade, e o ___, que diz o que é.",
+    "hint": "Os nomes dos dois campos no YAML.",
+    "blanks": [
+      {
+        "accept": [
+          "spec",
+          ".spec"
+        ]
+      },
+      {
+        "accept": [
+          "status",
+          ".status"
+        ]
+      }
+    ]
+  },
+  "ex-tnfweqcd": {
+    "prompt": "Um deployment mostra `WANTED 3` e `READY 2` por vários minutos. Nos termos desta lição, o que está acontecendo?",
+    "hint": "Quando spec e status discordam, a diferença é trabalho de alguém.",
+    "choices": [
+      {
+        "text": "O spec foi editado para 2 e a tela está desatualizada",
+        "why": "WANTED lê o spec, e ele ainda diz 3."
+      },
+      {
+        "text": "Nada: o status é só informativo e ninguém age sobre ele",
+        "why": "O desenho inteiro é que controladores agem sobre a diferença entre os dois."
+      },
+      {
+        "text": "Um controlador tenta fechar a diferença e algo está segurando um pod",
+        "why": "Isso. A diferença persiste, então o controlador continua trabalhando nela; a lição 40 descobre por que um pod não sobe."
+      },
+      {
+        "text": "O cluster decidiu que duas cópias bastam",
+        "why": "Nada no cluster reescreve o número que você pediu no spec de um Deployment."
+      }
+    ]
+  }
+}

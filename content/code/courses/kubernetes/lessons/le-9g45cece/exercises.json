@@ -1,0 +1,200 @@
+[
+  {
+    "id": "ex-9g31q885",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does each pass of the Backup controller do?",
+    "hint": "Wanted against actual.",
+    "choices": [
+      {
+        "text": "Processes the events since the last pass",
+        "correct": false,
+        "why": "It reads no events; it lists the current state."
+      },
+      {
+        "text": "Makes each Backup's CronJob match it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Runs every backup immediately",
+        "correct": false,
+        "why": "The CronJob runs them on schedule."
+      },
+      {
+        "text": "Deletes CronJobs without an owner",
+        "correct": false,
+        "why": "Deletion is the garbage collector's work."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1v9rtbv",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The CronJob was deleted by hand and reappeared five seconds later. Why did the controller recreate it?",
+    "hint": "It has no code that watches deletions.",
+    "choices": [
+      {
+        "text": "It received a deletion event",
+        "correct": false,
+        "why": "It watches nothing; it lists."
+      },
+      {
+        "text": "The CronJob's owner restored it",
+        "correct": false,
+        "why": "Owners do not restore children."
+      },
+      {
+        "text": "Kubernetes undoes manual deletions",
+        "correct": false,
+        "why": "Nothing in Kubernetes does that by itself."
+      },
+      {
+        "text": "The next pass found it missing",
+        "correct": true,
+        "why": "Right. Reconciling state, not reacting to events."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb9fnzap",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Deleting the Backup also removed its CronJob, and the controller has no deletion code. What did it?",
+    "hint": "`.metadata.ownerReferences`.",
+    "choices": [
+      {
+        "text": "The garbage collector, through the owner reference",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The controller's next pass",
+        "correct": false,
+        "why": "It only creates and updates."
+      },
+      {
+        "text": "The CRD's schema",
+        "correct": false,
+        "why": "A schema validates; it deletes nothing."
+      },
+      {
+        "text": "The CronJob's own schedule",
+        "correct": false,
+        "why": "A schedule runs Jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-98qh6pq7",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do production controllers use informers instead of listing everything every five seconds?",
+    "hint": "Think of a thousand objects.",
+    "choices": [
+      {
+        "text": "Listing is not allowed by RBAC",
+        "correct": false,
+        "why": "This controller listed fine."
+      },
+      {
+        "text": "Informers reconcile differently",
+        "correct": false,
+        "why": "The reconcile function is the same."
+      },
+      {
+        "text": "One list and a watch spare the API server",
+        "correct": true,
+        "why": "Right, with a local cache for reads."
+      },
+      {
+        "text": "Polling loses objects",
+        "correct": false,
+        "why": "Each pass sees the whole state."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wd5r4vc",
+    "version": 1,
+    "section": "operators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes a controller an operator?",
+    "hint": "The table in the last section.",
+    "choices": [
+      {
+        "text": "Being written in Go",
+        "correct": false,
+        "why": "Controllers exist in many languages."
+      },
+      {
+        "text": "Running in its own namespace",
+        "correct": false,
+        "why": "Where it runs does not define it."
+      },
+      {
+        "text": "Watching more than one kind",
+        "correct": false,
+        "why": "Many plain controllers do."
+      },
+      {
+        "text": "Knowing how to run one application",
+        "correct": true,
+        "why": "Right: failover, backup, upgrades."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5xntr9r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened when `orders-nightly` was first created.",
+    "hint": "Stored, listed, compared, created.",
+    "items": [
+      "The API server stores the Backup",
+      "The controller's next pass lists it",
+      "The controller finds no CronJob for it",
+      "The controller creates the CronJob, owned by the Backup"
+    ],
+    "trap": "The controller can only list what is stored, and can only decide to create after finding nothing."
+  },
+  {
+    "id": "ex-p7wj76zs",
+    "version": 1,
+    "section": "the-loop",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Comparing what is wanted with what exists and changing what exists is called ___.",
+    "hint": "The name of the function.",
+    "blanks": [
+      {
+        "accept": [
+          "reconciling",
+          "reconcile",
+          "reconciliation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,193 @@
+{
+  "ex-b6wayaa5": {
+    "prompt": "Dois workers estavam quase parados, e a quinta cópia de `big` mesmo assim ficou `Pending`. Por quê?",
+    "hint": "O que o scheduler soma?",
+    "choices": [
+      {
+        "text": "Os nós estavam mais ocupados do que pareciam",
+        "why": "A loja usava quase nada de CPU; o uso não era o problema."
+      },
+      {
+        "text": "Só 800m continuavam sem reserva em cada um",
+        "why": "Isso. O scheduler compara requests com o allocatable, e 1500m não cabia."
+      },
+      {
+        "text": "Cinco cópias passam do limite do Deployment",
+        "why": "Um Deployment não tem esse limite."
+      },
+      {
+        "text": "A imagem ainda estava sendo baixada",
+        "why": "O evento dizia `Insufficient cpu`."
+      }
+    ]
+  },
+  "ex-8w8bwb4r": {
+    "prompt": "`kubectl describe node` mostrou `3200m (80%)` de CPU pedida em `shop-worker`, que rodava duas cópias de `big` com 1500m. De onde vieram os outros 200m?",
+    "hint": "Nem todo pod num nó é seu.",
+    "choices": [
+      {
+        "text": "A reserva do kubelet",
+        "why": "Isso já sai do allocatable, não entra nos requests."
+      },
+      {
+        "text": "Arredondar 1500m para a CPU seguinte",
+        "why": "Requests são somados exatamente, em milicores."
+      },
+      {
+        "text": "A quinta cópia pendente",
+        "why": "Um pod pendente não está em nó nenhum, então não reserva nada."
+      },
+      {
+        "text": "O pod do plugin de rede e uma cópia do CoreDNS",
+        "why": "Isso. Cada um pede 100m."
+      }
+    ]
+  },
+  "ex-8cbt60pb": {
+    "prompt": "Um container tem limit de CPU de 200m e faz um trabalho que leva 50 ms de CPU sem estrangulamento. Mais ou menos quanto tempo leva sob o limit?",
+    "hint": "200m é um quinto de uma CPU.",
+    "choices": [
+      {
+        "text": "50 ms",
+        "why": "Isso seria nenhum estrangulamento."
+      },
+      {
+        "text": "Cerca de 250 ms",
+        "why": "Isso. Ele roda 20 ms a cada período de 100 ms, então 50 ms de trabalho se espalham por cerca de 250."
+      },
+      {
+        "text": "É morto depois de 200 ms",
+        "why": "Limits de CPU estrangulam; nunca matam."
+      },
+      {
+        "text": "Cerca de 10 ms",
+        "why": "Um limit só consegue desacelerar um container."
+      }
+    ]
+  },
+  "ex-qv7gr5h8": {
+    "prompt": "Um pod reinicia a cada poucos minutos, e o último estado dele diz `OOMKilled`, código de saída 137. O que aconteceu?",
+    "hint": "`hungry`.",
+    "choices": [
+      {
+        "text": "Passou do limit de CPU",
+        "why": "Um limit de CPU estrangula; não mata."
+      },
+      {
+        "text": "A sonda de liveness falhou",
+        "why": "Isso termina com o kubelet o reiniciando, e o motivo não é `OOMKilled`."
+      },
+      {
+        "text": "Estourou o limit de memória",
+        "why": "Isso. O kernel o matou; 137 é 128 mais o 9 do SIGKILL."
+      },
+      {
+        "text": "O nó foi drenado",
+        "why": "Drenar apaga o pod; não reinicia um container no lugar."
+      }
+    ]
+  },
+  "ex-q58g025a": {
+    "prompt": "Por que o Kubernetes estrangula um container no limit de CPU, mas mata um no limit de memória?",
+    "hint": "Qual dos dois pode ser devolvido um momento depois?",
+    "choices": [
+      {
+        "text": "Memória custa mais caro que tempo de CPU",
+        "why": "Preço não entra em como um limit é aplicado."
+      },
+      {
+        "text": "Limits de CPU são só uma sugestão ao kernel",
+        "why": "`capped` rodou dez vezes mais devagar; o limit foi aplicado."
+      },
+      {
+        "text": "Só um processo morto devolve memória",
+        "why": "Isso. Tempo de CPU pode esperar; o kernel pode pausar um processo, mas não tomar de volta o que ele alocou."
+      },
+      {
+        "text": "O kubelet escolhe entre os dois ao acaso",
+        "why": "Os dois são aplicados do mesmo jeito toda vez."
+      }
+    ]
+  },
+  "ex-nnjxkhwc": {
+    "prompt": "`hungry` tinha request e limit de memória em 64Mi, e a classe dele era `Burstable`. O que o tornaria `Guaranteed`?",
+    "hint": "Guaranteed precisa dos dois recursos.",
+    "choices": [
+      {
+        "text": "Request e limit de CPU, iguais",
+        "why": "Isso. Aí todo container tem os dois recursos com requests iguais aos limits."
+      },
+      {
+        "text": "Um limit de memória mais alto",
+        "why": "Aí request e limit seriam diferentes, o que continua Burstable."
+      },
+      {
+        "text": "Tirar o request de memória",
+        "why": "O Kubernetes o preencheria a partir do limit; ainda faltaria CPU."
+      },
+      {
+        "text": "Um campo `qosClass: Guaranteed` na spec",
+        "why": "A classe fica no status e é derivada, nunca escrita."
+      }
+    ]
+  },
+  "ex-vttsrtnd": {
+    "prompt": "Um pod não tem requests nem limits. Qual é a classe dele?",
+    "hint": "`probe`.",
+    "choices": [
+      {
+        "text": "Burstable",
+        "why": "Burstable precisa de ao menos um request ou limit."
+      },
+      {
+        "text": "BestEffort",
+        "why": "Isso. Nada escrito, nada prometido."
+      },
+      {
+        "text": "Guaranteed",
+        "why": "Guaranteed precisa de limits nos dois recursos."
+      },
+      {
+        "text": "Nenhuma; ele é recusado",
+        "why": "`probe` rodou sem nenhum dos dois."
+      }
+    ]
+  },
+  "ex-xh82y31b": {
+    "prompt": "Um nó tem 4000m de allocatable e 300m já pedidos por pods do sistema. Cada cópia de uma aplicação pede 900m. Quantas cópias cabem no nó?",
+    "hint": "3700 dividido por 900, arredondado para baixo.",
+    "unit": "cópias"
+  },
+  "ex-12mv5ff6": {
+    "prompt": "Ligue cada configuração ao que a aplica.",
+    "hint": "Uma é conferida antes de o pod subir, duas enquanto ele roda.",
+    "pairs": [
+      {
+        "left": "Request de CPU",
+        "right": "O scheduler, quando aloca o pod"
+      },
+      {
+        "left": "Limit de CPU",
+        "right": "O kernel, fazendo o container esperar"
+      },
+      {
+        "left": "Limit de memória",
+        "right": "O kernel, matando o container"
+      }
+    ],
+    "right_distractors": [
+      "O API server, recusando o pod"
+    ]
+  },
+  "ex-76m2jgtq": {
+    "prompt": "Um container morto por passar do limit de memória mostra o motivo ___ no último estado.",
+    "hint": "Sem memória.",
+    "blanks": [
+      {
+        "accept": [
+          "OOMKilled"
+        ]
+      }
+    ]
+  }
+}

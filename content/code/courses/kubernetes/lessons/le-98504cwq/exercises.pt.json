@@ -1,0 +1,199 @@
+{
+  "ex-0e088p97": {
+    "prompt": "O `curl` com o token da conta nova recebeu uma resposta `Forbidden` citando `system:serviceaccount:shop:deployer`. Qual passo recusou?",
+    "hint": "O API server sabia quem estava perguntando?",
+    "choices": [
+      {
+        "text": "A autenticação: o token não era válido",
+        "why": "A mensagem cita a conta, então o token foi aceito."
+      },
+      {
+        "text": "A autorização",
+        "why": "Isso. A identidade era conhecida; nenhuma regra concedia `list` em pods."
+      },
+      {
+        "text": "O TLS: o `curl` não confiou no servidor",
+        "why": "Uma falha de TLS teria parado antes de qualquer JSON voltar."
+      },
+      {
+        "text": "A admissão, porque o namespace era novo",
+        "why": "Listar não cria nada, então a admissão nem vê."
+      }
+    ]
+  },
+  "ex-trsazhjk": {
+    "prompt": "Onde o usuário `kubernetes-admin` fica guardado no cluster?",
+    "hint": "`kubectl auth whoami` mostrou de onde o nome veio.",
+    "choices": [
+      {
+        "text": "Num objeto User em `kube-system`",
+        "why": "O Kubernetes não tem objetos User."
+      },
+      {
+        "text": "Como uma ServiceAccount em `default`",
+        "why": "Uma ServiceAccount apareceria como `system:serviceaccount:…`."
+      },
+      {
+        "text": "Só no certificado de cliente",
+        "why": "Isso. Pessoas são nomes carregados por certificados ou tokens."
+      },
+      {
+        "text": "No etcd, com uma senha em hash",
+        "why": "Não existe cadastro de senhas para usuários."
+      }
+    ]
+  },
+  "ex-p0dqx2g7": {
+    "prompt": "A conta `deployer` pode fazer `get` em pods em `shop`. Por que `kubectl auth can-i create pods/exec` continuou `no`?",
+    "hint": "Veja como `pods/log` foi concedido.",
+    "choices": [
+      {
+        "text": "Exec só é permitido em `default`",
+        "why": "Nenhum namespace tem essa regra."
+      },
+      {
+        "text": "`pods/exec` é um sub-recurso que a Role não nomeou",
+        "why": "Isso. Cada sub-recurso é concedido à parte, como foi `pods/log`."
+      },
+      {
+        "text": "ServiceAccounts nunca podem fazer exec num pod",
+        "why": "Uma Role nomeando `pods/exec` com `create` permitiria."
+      },
+      {
+        "text": "O pod não tinha shell",
+        "why": "`can-i` pergunta ao autorizador; ele nunca olha um pod."
+      }
+    ]
+  },
+  "ex-fs3xn5wf": {
+    "prompt": "Um RoleBinding no namespace `shop` liga uma Role a `deployer`. O que `deployer` pode fazer em `default`?",
+    "hint": "`can-i list pods -n default`.",
+    "choices": [
+      {
+        "text": "O mesmo que em `shop`",
+        "why": "A resposta para `default` foi `no`."
+      },
+      {
+        "text": "Ler, mas não escrever",
+        "why": "Nada concede leitura lá também."
+      },
+      {
+        "text": "Nada que este binding conceda",
+        "why": "Isso. Um RoleBinding concede só dentro do próprio namespace."
+      },
+      {
+        "text": "Tudo, já que `default` não tem regras",
+        "why": "Sem regras significa recusa, não liberdade."
+      }
+    ]
+  },
+  "ex-6964jt4m": {
+    "prompt": "O token de um pod foi emitido para o pod `reader`. O pod é apagado, e uma cópia do token é usada um minuto depois. O que acontece?",
+    "hint": "O token nomeia o seu pod.",
+    "choices": [
+      {
+        "text": "Funciona até o `exp`, um ano depois",
+        "why": "O API server também confere se o pod ainda existe."
+      },
+      {
+        "text": "É recusado, porque o pod sumiu",
+        "why": "Isso. Um token vinculado morre com o objeto que nomeia."
+      },
+      {
+        "text": "Funciona no nó para o qual foi emitido",
+        "why": "Nós não conferem tokens da API."
+      },
+      {
+        "text": "É aceito com direitos de `view`",
+        "why": "Nada rebaixa um token."
+      }
+    ]
+  },
+  "ex-s98tpj85": {
+    "prompt": "Uma equipe deve gerenciar tudo no namespace `team-a` e nada fora dele. Qual concessão faz isso?",
+    "hint": "O alcance vem do binding.",
+    "choices": [
+      {
+        "text": "Um ClusterRoleBinding para `admin`",
+        "why": "Isso concede `admin` em todos os namespaces."
+      },
+      {
+        "text": "Um RoleBinding em `team-a` para a ClusterRole `admin`",
+        "why": "Isso. Um RoleBinding limita uma ClusterRole ao próprio namespace."
+      },
+      {
+        "text": "Um ClusterRoleBinding para `cluster-admin`",
+        "why": "Isso é tudo, em todo lugar."
+      },
+      {
+        "text": "Um RoleBinding para `view`",
+        "why": "`view` lê; não gerencia."
+      }
+    ]
+  },
+  "ex-5kx1tbdn": {
+    "prompt": "Um pod nunca fala com o API server. O que a spec dele deveria dizer sobre o token?",
+    "hint": "Um token que ninguém usa ainda pode ser roubado.",
+    "choices": [
+      {
+        "text": "`automountServiceAccountToken: false`",
+        "why": "Isso. Aí não há token no container para roubar."
+      },
+      {
+        "text": "Nada; tokens sem uso expiram dentro da hora",
+        "why": "O token montado valia por um ano."
+      },
+      {
+        "text": "`serviceAccountName: none`",
+        "why": "Isso nomeia uma conta chamada `none`, que não existe."
+      },
+      {
+        "text": "Uma Role sem regras",
+        "why": "Ela deixa o token montado mesmo assim."
+      }
+    ]
+  },
+  "ex-arfgsze0": {
+    "prompt": "Ponha em ordem o que o API server faz com uma requisição do pipeline.",
+    "hint": "Quem, depois se pode.",
+    "items": [
+      "Lê o token e decide quem está perguntando",
+      "Procura um binding que nomeie essa identidade",
+      "Confere nas regras da role ligada o verbo e o recurso",
+      "Responde à requisição, ou 403"
+    ],
+    "trap": "Nada sobre permissões pode ser conferido antes de o API server saber de quem são as permissões."
+  },
+  "ex-yd5py1s9": {
+    "prompt": "Ligue cada objeto ao que ele guarda.",
+    "hint": "A figura da segunda seção.",
+    "pairs": [
+      {
+        "left": "Role",
+        "right": "Regras: grupos, recursos e verbos"
+      },
+      {
+        "left": "RoleBinding",
+        "right": "Uma role e os sujeitos a que é concedida"
+      },
+      {
+        "left": "ServiceAccount",
+        "right": "Uma identidade para um programa"
+      }
+    ],
+    "right_distractors": [
+      "A senha de uma pessoa"
+    ]
+  },
+  "ex-ds4w4fp5": {
+    "prompt": "Para deixar o pipeline remover um Deployment, o verbo ___ precisa entrar na primeira regra da Role.",
+    "hint": "O que a captura recusou.",
+    "blanks": [
+      {
+        "accept": [
+          "delete"
+        ]
+      }
+    ]
+  }
+}

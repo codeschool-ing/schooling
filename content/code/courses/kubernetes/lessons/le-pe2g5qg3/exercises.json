@@ -1,0 +1,266 @@
+[
+  {
+    "id": "ex-cpx17exx",
+    "version": 1,
+    "section": "objects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana ran one command, `kubectl create deployment web --image=shop:1.0 --replicas=3`. How many objects existed for it a second later?",
+    "hint": "Count every row of the listing that followed.",
+    "choices": [
+      {
+        "text": "One, the Deployment she created",
+        "correct": false,
+        "why": "The listing also showed a ReplicaSet and three Pods, made by controllers."
+      },
+      {
+        "text": "Three, one for each copy",
+        "correct": false,
+        "why": "Those are the Pods; the Deployment and the ReplicaSet above them are objects too."
+      },
+      {
+        "text": "Five: a Deployment, a ReplicaSet and three Pods",
+        "correct": true,
+        "why": "Right. She made one, and two controllers made the other four."
+      },
+      {
+        "text": "Four: the Deployment and the three containers it runs",
+        "correct": false,
+        "why": "A container is not an object of the API; it lives inside a Pod, and the ReplicaSet is missing from this count."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa6mxsrr",
+    "version": 1,
+    "section": "objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the pod's YAML, which field records which object made the pod?",
+    "hint": "It is inside `metadata` and names a ReplicaSet.",
+    "choices": [
+      {
+        "text": "`generateName`",
+        "correct": false,
+        "why": "That is the prefix the name was made from, not a link to an owner."
+      },
+      {
+        "text": "`ownerReferences`",
+        "correct": true,
+        "why": "Right. It names `kind: ReplicaSet` and its name, and marks it as the controller."
+      },
+      {
+        "text": "`labels`",
+        "correct": false,
+        "why": "Labels are how the ReplicaSet finds the pod; the owner is recorded separately."
+      },
+      {
+        "text": "`spec.containers`",
+        "correct": false,
+        "why": "That is what the pod runs, not who made it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5ww3k4r",
+    "version": 1,
+    "section": "objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The custom columns showed `WANTED 3` and `READY 3` for the deployment. Which half of the object does each come from?",
+    "hint": "One was typed by Ana; one was counted.",
+    "choices": [
+      {
+        "text": "Both from `spec`, since both describe replicas",
+        "correct": false,
+        "why": "`readyReplicas` is not something anybody asks for; a controller counts it."
+      },
+      {
+        "text": "Both from `status`, since the cluster reports both",
+        "correct": false,
+        "why": "`replicas: 3` was in the command Ana typed; it is the spec."
+      },
+      {
+        "text": "WANTED from `spec`, READY from `status`",
+        "correct": true,
+        "why": "Right. The spec is what she asked for, and the status is what a controller found when it counted."
+      },
+      {
+        "text": "WANTED from `metadata`, READY from `spec`",
+        "correct": false,
+        "why": "Metadata says which object it is; neither number lives there."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hp989q7",
+    "version": 1,
+    "section": "objects",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many types of object did `kubectl api-resources` count on the fresh cluster?",
+    "hint": "The line counted by `wc -l`.",
+    "value": 71,
+    "tolerance": 0,
+    "unit": "types"
+  },
+  {
+    "id": "ex-2tggcqkx",
+    "version": 1,
+    "section": "vocabulary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a replacement pod start receiving traffic from a Service without anyone editing the Service?",
+    "hint": "The Service never lists its pods by name.",
+    "choices": [
+      {
+        "text": "The Service selects by label, and the new pod carries the label",
+        "correct": true,
+        "why": "Right. A selector is a question, and the new pod answers it the moment it exists."
+      },
+      {
+        "text": "The ReplicaSet edits the Service's list each time it makes a new pod",
+        "correct": false,
+        "why": "The two never touch each other; both read labels."
+      },
+      {
+        "text": "Pods inherit their predecessor's name",
+        "correct": false,
+        "why": "Each pod gets five new random characters; the name changes."
+      },
+      {
+        "text": "Every pod in the namespace receives the traffic",
+        "correct": false,
+        "why": "A namespace is a scope for names, not a selector; the shop's Service would pick only `app=web`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhbtf0jf",
+    "version": 1,
+    "section": "vocabulary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana says: 'the `kube-system` namespace is the control-plane machine'. Which listing in this lesson contradicts her?",
+    "hint": "Look for a `kube-system` pod that is not on `shop-control-plane`.",
+    "choices": [
+      {
+        "text": "`kubectl get namespaces`, which shows five",
+        "correct": false,
+        "why": "The number of namespaces says nothing about where their pods run."
+      },
+      {
+        "text": "The three `kube-proxy` pods, one on each node",
+        "correct": true,
+        "why": "Right. They are in `kube-system` and run on the workers too: a namespace is a scope, not a place."
+      },
+      {
+        "text": "`kubectl get nodes`, which shows the control plane",
+        "correct": false,
+        "why": "Nodes are not in any namespace; that listing cannot settle it."
+      },
+      {
+        "text": "`kubectl explain`, which says pods are namespaced",
+        "correct": false,
+        "why": "Being namespaced is about names, and it is `api-resources` that says so, not `explain`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s4vgn2z",
+    "version": 1,
+    "section": "vocabulary",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each word with what it is.",
+    "hint": "The table at the top of the section.",
+    "pairs": [
+      {
+        "left": "Node",
+        "right": "One machine of the cluster, running a kubelet"
+      },
+      {
+        "left": "Pod",
+        "right": "Containers that run together and share an address"
+      },
+      {
+        "left": "Selector",
+        "right": "A question about labels that picks objects"
+      },
+      {
+        "left": "Namespace",
+        "right": "A name scope used to divide a cluster"
+      }
+    ],
+    "right_distractors": [
+      "The program that stores every object"
+    ]
+  },
+  {
+    "id": "ex-agcq4nkq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every object that does something has two halves: the ___, which says what should be true, and the ___, which says what is.",
+    "hint": "The names of the two fields in the YAML.",
+    "blanks": [
+      {
+        "accept": [
+          "spec",
+          ".spec"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "status",
+          ".status"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tnfweqcd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deployment shows `WANTED 3` and `READY 2` for several minutes. In this lesson's terms, what is going on?",
+    "hint": "When spec and status disagree, the difference is somebody's work.",
+    "choices": [
+      {
+        "text": "The spec was edited to 2 and the screen is out of date",
+        "correct": false,
+        "why": "WANTED reads the spec, and it still says 3."
+      },
+      {
+        "text": "Nothing: status is only informative and is not acted on",
+        "correct": false,
+        "why": "The whole design is that controllers act on the difference between the two."
+      },
+      {
+        "text": "A controller is trying to close the gap and something is stopping one pod",
+        "correct": true,
+        "why": "Right. The difference persists, so the controller keeps working on it; lesson 40 finds out why a pod will not start."
+      },
+      {
+        "text": "The cluster has decided two copies are enough",
+        "correct": false,
+        "why": "Nothing in the cluster rewrites the number you asked for in a Deployment's spec."
+      }
+    ]
+  }
+]

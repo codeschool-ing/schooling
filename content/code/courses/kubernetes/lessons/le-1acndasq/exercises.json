@@ -1,0 +1,244 @@
+[
+  {
+    "id": "ex-8cz5jdzb",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`search` had `nodeSelector: {disk: ssd}` and three replicas. Where did they run?",
+    "hint": "Only one node carried the label.",
+    "choices": [
+      {
+        "text": "All on `shop-worker2`",
+        "correct": true,
+        "why": "Right, even with `shop-worker` idle."
+      },
+      {
+        "text": "One on each node",
+        "correct": false,
+        "why": "The selector excludes every node without the label."
+      },
+      {
+        "text": "Two on `shop-worker2`, one elsewhere",
+        "correct": false,
+        "why": "A requirement never sends a pod elsewhere."
+      },
+      {
+        "text": "Nowhere, until a second node was labelled",
+        "correct": false,
+        "why": "One labelled node was enough for all three."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcarfdyh",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the selector was changed to `disk: nvme`, the three old `search` pods kept running. Why?",
+    "hint": "What does a rollout do before removing an old pod?",
+    "choices": [
+      {
+        "text": "Selectors only apply to new Deployments",
+        "correct": false,
+        "why": "The new pod did get the new selector."
+      },
+      {
+        "text": "The patch was rejected",
+        "correct": false,
+        "why": "kubectl answered `patched`."
+      },
+      {
+        "text": "The new pod never started, so the rollout stopped",
+        "correct": true,
+        "why": "Right. Old pods go only as new ones become ready."
+      },
+      {
+        "text": "The old pods moved to an nvme node",
+        "correct": false,
+        "why": "No node had `disk=nvme`, and pods never move."
+      }
+    ]
+  },
+  {
+    "id": "ex-37c59ezk",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cache` preferred `disk` in `[nvme, ssd]` with weight 100. What would have happened if `shop-worker2` had been full?",
+    "hint": "A preference, not a requirement.",
+    "choices": [
+      {
+        "text": "The pods would stay `Pending`",
+        "correct": false,
+        "why": "That is what a requirement does."
+      },
+      {
+        "text": "They would go to `shop-worker`",
+        "correct": true,
+        "why": "Right. Preferred rules add points; they forbid nothing."
+      },
+      {
+        "text": "The scheduler would evict other pods",
+        "correct": false,
+        "why": "Preferences never trigger eviction."
+      },
+      {
+        "text": "kubectl would refuse the Deployment",
+        "correct": false,
+        "why": "Placement is decided after the object is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6rmak7m",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A running pod was placed by `requiredDuringSchedulingIgnoredDuringExecution` on a node labelled `disk=ssd`. Someone removes the label. What happens to the pod?",
+    "hint": "Read the end of the field's name.",
+    "choices": [
+      {
+        "text": "It is evicted at once",
+        "correct": false,
+        "why": "The rule is ignored during execution."
+      },
+      {
+        "text": "It is restarted on another node",
+        "correct": false,
+        "why": "Pods never move."
+      },
+      {
+        "text": "It becomes `Pending`",
+        "correct": false,
+        "why": "A running pod cannot return to `Pending`."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The rule is checked only when the pod is placed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmwhjf8k",
+    "version": 1,
+    "section": "pods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With required anti-affinity on `kubernetes.io/hostname` and three replicas, why did one `shop` pod stay `Pending`?",
+    "hint": "How many nodes take ordinary pods?",
+    "choices": [
+      {
+        "text": "The image was missing on one node",
+        "correct": false,
+        "why": "The event named anti-affinity and a taint."
+      },
+      {
+        "text": "Anti-affinity limits a Deployment to two pods",
+        "correct": false,
+        "why": "It limits pods per domain, not per Deployment."
+      },
+      {
+        "text": "The nodes ran out of CPU",
+        "correct": false,
+        "why": "The event said nothing about resources."
+      },
+      {
+        "text": "Two usable nodes each held a copy",
+        "correct": true,
+        "why": "Right, and the control plane is tainted."
+      }
+    ]
+  },
+  {
+    "id": "ex-r654frmx",
+    "version": 1,
+    "section": "pods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `topologyKey` makes anti-affinity keep copies in different zones rather than different nodes?",
+    "hint": "The key names the domain.",
+    "choices": [
+      {
+        "text": "`kubernetes.io/hostname`",
+        "correct": false,
+        "why": "That domain is one node."
+      },
+      {
+        "text": "`topology.kubernetes.io/zone`",
+        "correct": true,
+        "why": "Right. Each zone becomes one domain."
+      },
+      {
+        "text": "`kubernetes.io/os`",
+        "correct": false,
+        "why": "That groups nodes by operating system."
+      },
+      {
+        "text": "`app`",
+        "correct": false,
+        "why": "That is a pod label, not a node domain."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhn2h56p",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each wish with the rule that expresses it.",
+    "hint": "Node rules look at nodes; pod rules look at neighbours.",
+    "pairs": [
+      {
+        "left": "Only on nodes labelled `gpu=yes`",
+        "right": "`nodeSelector`"
+      },
+      {
+        "left": "Never two copies on one node",
+        "right": "`podAntiAffinity`"
+      },
+      {
+        "left": "On the same node as the shop",
+        "right": "`podAffinity`"
+      },
+      {
+        "left": "Fast disks if possible",
+        "right": "Preferred node affinity"
+      }
+    ],
+    "right_distractors": [
+      "`restartPolicy`"
+    ]
+  },
+  {
+    "id": "ex-1xkcj72z",
+    "version": 1,
+    "section": "nodes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod whose required rules no node meets stays in the phase ___.",
+    "hint": "The third `shop` pod.",
+    "blanks": [
+      {
+        "accept": [
+          "Pending"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

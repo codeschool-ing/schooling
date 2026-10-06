@@ -1,0 +1,148 @@
+{
+  "ex-qq9jsf1t": {
+    "prompt": "Por que o `kubectl exec` na loja falhou com `\"sh\": executable file not found`?",
+    "hint": "O que tem na imagem da loja?",
+    "choices": [
+      {
+        "text": "O RBAC proíbe exec",
+        "why": "Um erro de permissão diria forbidden."
+      },
+      {
+        "text": "A imagem não tem shell",
+        "why": "Isso: feita a partir de scratch, só tem o programa."
+      },
+      {
+        "text": "O pod não estava rodando",
+        "why": "Ele respondeu requisições logo depois."
+      },
+      {
+        "text": "O exec só funciona no control plane",
+        "why": "Funciona em qualquer nó."
+      }
+    ]
+  },
+  "ex-tjbhd0m8": {
+    "prompt": "`kubectl port-forward deployment/shop 9090:8080` manda o tráfego para onde?",
+    "hint": "Ele usa o Service?",
+    "choices": [
+      {
+        "text": "Pelo Service para qualquer pod",
+        "why": "O túnel passa por fora do Service."
+      },
+      {
+        "text": "Para cada pod, um de cada vez",
+        "why": "Ele escolhe um pod."
+      },
+      {
+        "text": "Para um pod do Deployment, pelo API server",
+        "why": "Isso."
+      },
+      {
+        "text": "Para a porta 9090 do nó",
+        "why": "A 9090 está no laptop; a 8080 é do pod."
+      }
+    ]
+  },
+  "ex-c3fyywee": {
+    "prompt": "No container de depuração, `ps` mostrou `/shop` como PID 1. O que tornou o processo da loja visível?",
+    "hint": "Uma flag do `kubectl debug`.",
+    "choices": [
+      {
+        "text": "Rodar como root",
+        "why": "Root em outro namespace de PID não vê nada dele."
+      },
+      {
+        "text": "A imagem busybox",
+        "why": "A imagem deu as ferramentas, não a visão."
+      },
+      {
+        "text": "Compartilhar a rede",
+        "why": "Isso deu `localhost:8080`, não os processos."
+      },
+      {
+        "text": "`--target=shop`",
+        "why": "Isso. Ele entra no namespace de processos do alvo."
+      }
+    ]
+  },
+  "ex-3dk5jgyw": {
+    "prompt": "Terminada a investigação, como você remove o container efêmero `dbg`?",
+    "hint": "Containers efêmeros ficam na spec.",
+    "choices": [
+      {
+        "text": "`kubectl debug --remove dbg`",
+        "why": "Essa flag não existe."
+      },
+      {
+        "text": "Editar o pod e apagá-lo da spec",
+        "why": "A API recusa essa mudança."
+      },
+      {
+        "text": "Substituir o pod",
+        "why": "Isso. Ele sai junto com o pod, por exemplo no próximo rollout."
+      },
+      {
+        "text": "Ele se remove quando o `sleep` acaba",
+        "why": "Ele para, e continua listado."
+      }
+    ]
+  },
+  "ex-0e62m61e": {
+    "prompt": "`crashing` sai ao subir. Por que depurar uma cópia `--copy-to` em vez do próprio pod?",
+    "hint": "O que dá para mudar numa cópia?",
+    "choices": [
+      {
+        "text": "A cópia roda um comando que fica de pé",
+        "why": "Isso, e o original fica como estava."
+      },
+      {
+        "text": "Cópias ganham mais CPU",
+        "why": "Os recursos são copiados como estão."
+      },
+      {
+        "text": "O original é apagado pela cópia",
+        "why": "Ele ficou, ainda `Error`."
+      },
+      {
+        "text": "Cópias rodam no control plane",
+        "why": "Ela é alocada como qualquer pod."
+      }
+    ]
+  },
+  "ex-h71p0338": {
+    "prompt": "Ligue cada situação à ferramenta.",
+    "hint": "A tabela no fim da lição.",
+    "pairs": [
+      {
+        "left": "Chamar a página de administração de um pod do laptop",
+        "right": "`kubectl port-forward`"
+      },
+      {
+        "left": "Inspecionar um pod rodando cuja imagem não tem ferramentas",
+        "right": "`kubectl debug --target`"
+      },
+      {
+        "left": "Um pod que quebra antes de dar para acoplar",
+        "right": "`kubectl debug --copy-to`"
+      },
+      {
+        "left": "Ler o arquivo de configuração do kubelet",
+        "right": "`kubectl debug node/…`"
+      }
+    ],
+    "right_distractors": [
+      "`kubectl rollout undo`"
+    ]
+  },
+  "ex-shdexrey": {
+    "prompt": "Um pod de depuração de nó vê o sistema de arquivos do nó no caminho ___.",
+    "hint": "`/host/etc/kubernetes`.",
+    "blanks": [
+      {
+        "accept": [
+          "/host"
+        ]
+      }
+    ]
+  }
+}

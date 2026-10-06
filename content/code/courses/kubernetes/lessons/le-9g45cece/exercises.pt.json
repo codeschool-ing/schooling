@@ -1,0 +1,136 @@
+{
+  "ex-9g31q885": {
+    "prompt": "O que cada volta do controller de Backups faz?",
+    "hint": "Desejado contra real.",
+    "choices": [
+      {
+        "text": "Processa os eventos desde a última volta",
+        "why": "Ele não lê eventos; lista o estado atual."
+      },
+      {
+        "text": "Faz o CronJob de cada Backup bater com ele",
+        "why": "Isso."
+      },
+      {
+        "text": "Roda todo backup na hora",
+        "why": "O CronJob os roda no horário."
+      },
+      {
+        "text": "Apaga CronJobs sem dono",
+        "why": "Apagar é trabalho do coletor de lixo."
+      }
+    ]
+  },
+  "ex-n1v9rtbv": {
+    "prompt": "O CronJob foi apagado à mão e reapareceu cinco segundos depois. Por que o controller o recriou?",
+    "hint": "Ele não tem código que observe remoções.",
+    "choices": [
+      {
+        "text": "Recebeu um evento de remoção",
+        "why": "Ele não observa nada; lista."
+      },
+      {
+        "text": "O dono do CronJob o restaurou",
+        "why": "Donos não restauram filhos."
+      },
+      {
+        "text": "O Kubernetes desfaz remoções manuais",
+        "why": "Nada no Kubernetes faz isso sozinho."
+      },
+      {
+        "text": "A volta seguinte o achou faltando",
+        "why": "Isso. Reconciliar estado, não reagir a eventos."
+      }
+    ]
+  },
+  "ex-qb9fnzap": {
+    "prompt": "Apagar o Backup também removeu o CronJob, e o controller não tem código de remoção. O que fez isso?",
+    "hint": "`.metadata.ownerReferences`.",
+    "choices": [
+      {
+        "text": "O coletor de lixo, pela referência de dono",
+        "why": "Isso."
+      },
+      {
+        "text": "A volta seguinte do controller",
+        "why": "Ele só cria e atualiza."
+      },
+      {
+        "text": "O schema da CRD",
+        "why": "Um schema valida; não apaga nada."
+      },
+      {
+        "text": "O horário do próprio CronJob",
+        "why": "Um horário roda Jobs."
+      }
+    ]
+  },
+  "ex-98qh6pq7": {
+    "prompt": "Por que controllers de produção usam informers em vez de listar tudo a cada cinco segundos?",
+    "hint": "Pense em mil objetos.",
+    "choices": [
+      {
+        "text": "O RBAC não permite listar",
+        "why": "Este controller listou sem problema."
+      },
+      {
+        "text": "Informers reconciliam diferente",
+        "why": "A função de reconciliação é a mesma."
+      },
+      {
+        "text": "Uma listagem e um watch poupam o API server",
+        "why": "Isso, com um cache local para leituras."
+      },
+      {
+        "text": "Consultar perde objetos",
+        "why": "Cada volta vê o estado inteiro."
+      }
+    ]
+  },
+  "ex-1wd5r4vc": {
+    "prompt": "O que faz de um controller um operator?",
+    "hint": "A tabela da última seção.",
+    "choices": [
+      {
+        "text": "Ser escrito em Go",
+        "why": "Controllers existem em muitas linguagens."
+      },
+      {
+        "text": "Rodar no próprio namespace",
+        "why": "Onde roda não o define."
+      },
+      {
+        "text": "Observar mais de um tipo",
+        "why": "Muitos controllers comuns fazem isso."
+      },
+      {
+        "text": "Saber operar uma aplicação",
+        "why": "Isso: failover, backup, atualizações."
+      }
+    ]
+  },
+  "ex-p5xntr9r": {
+    "prompt": "Ponha em ordem o que aconteceu quando `orders-nightly` foi criado pela primeira vez.",
+    "hint": "Guardado, listado, comparado, criado.",
+    "items": [
+      "O API server guarda o Backup",
+      "A volta seguinte do controller o lista",
+      "O controller não acha CronJob para ele",
+      "O controller cria o CronJob, cujo dono é o Backup"
+    ],
+    "trap": "O controller só lista o que está guardado, e só decide criar depois de não achar nada."
+  },
+  "ex-p7wj76zs": {
+    "prompt": "Comparar o que se quer com o que existe e mudar o que existe se chama ___.",
+    "hint": "O nome da função.",
+    "blanks": [
+      {
+        "accept": [
+          "reconciliar",
+          "reconciliação",
+          "reconciliacao"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "ex-rv6mte23": {
+    "prompt": "O que um contexto no `~/.kube/config` nomeia?",
+    "hint": "Três coisas, uma delas opcional.",
+    "choices": [
+      {
+        "text": "Um cluster e mais nada",
+        "why": "Um contexto também nomeia as credenciais, e pode levar um namespace."
+      },
+      {
+        "text": "Um cluster, um usuário e, opcionalmente, um namespace",
+        "why": "Isso. Trocar de contexto troca os três de uma vez."
+      },
+      {
+        "text": "Um namespace dentro do cluster em que você está trabalhando",
+        "why": "Um namespace pode fazer parte de um contexto, mas o contexto também diz qual cluster e como quem."
+      },
+      {
+        "text": "Um conjunto de objetos que o kubectl já aplicou",
+        "why": "O arquivo não guarda registro de objetos; isso fica no cluster."
+      }
+    ]
+  },
+  "ex-mjv1vje4": {
+    "prompt": "Um script de deploy roda contra a produção toda noite. Por que `kubectl --context prod apply -f …` é mais seguro nele do que `kubectl config use-context prod` seguido de `kubectl apply -f …`?",
+    "hint": "Onde o `use-context` grava a mudança?",
+    "choices": [
+      {
+        "text": "`--context` criptografa a conexão e `use-context` não",
+        "why": "Os dois chegam ao mesmo API server pela mesma conexão TLS."
+      },
+      {
+        "text": "`use-context` exige direitos de administrador no cluster",
+        "why": "Ele só edita um arquivo local; o cluster nem fica sabendo."
+      },
+      {
+        "text": "`use-context` fica no arquivo para todo comando seguinte",
+        "why": "Isso. O próximo comando que qualquer pessoa digitar naquela máquina também vai para a produção; `--context` afeta um comando só."
+      },
+      {
+        "text": "`--context` se recusa a rodar se o cluster estiver fora do ar",
+        "why": "Os dois falham do mesmo jeito quando o cluster não responde."
+      }
+    ]
+  },
+  "ex-qwry5b49": {
+    "prompt": "Depois de `kubectl config set-context --current --namespace=dev`, um colega diz que o namespace `dev` agora está isolado do `default`. O que esta lição diz?",
+    "hint": "O que um namespace muda, sozinho?",
+    "choices": [
+      {
+        "text": "Certo: pods em `dev` não alcançam mais o `default`",
+        "why": "Nada mudou na rede; só onde os nomes são procurados."
+      },
+      {
+        "text": "Só a busca mudou; isolar exige mais",
+        "why": "Isso. Um namespace muda onde um nome é procurado; as lições 20 e 24 acrescentam limites e regras de rede."
+      },
+      {
+        "text": "O comando também limitou quanta CPU o `dev` pode usar",
+        "why": "Limites por namespace são cotas, um objeto à parte (lição 20)."
+      },
+      {
+        "text": "Ele moveu os pods do `default` para o `dev`",
+        "why": "Ele editou o arquivo kubeconfig; nenhum objeto do cluster se mexeu."
+      }
+    ]
+  },
+  "ex-bqh27zsf": {
+    "prompt": "A Ana rodou `kubectl apply -f deployment.yaml` duas vezes sem editar o arquivo. O que a segunda execução imprimiu?",
+    "hint": "O apply compara antes de agir.",
+    "choices": [
+      {
+        "text": "Um erro, porque `web` já existia",
+        "why": "Isso é o que o `kubectl create` faz; o `apply` compara e age sobre a diferença."
+      },
+      {
+        "text": "`created`, e um segundo deployment apareceu",
+        "why": "Nomes são únicos num namespace; o mesmo arquivo nomeia o mesmo objeto."
+      },
+      {
+        "text": "`deployment.apps/web unchanged`",
+        "why": "Isso. Nada era diferente, então nada foi enviado; é isso que torna o apply seguro para repetir."
+      },
+      {
+        "text": "`configured`, porque o apply sempre reescreve o objeto",
+        "why": "Ele só imprimiu `configured` depois que o arquivo mudou."
+      }
+    ]
+  },
+  "ex-scyhfjqn": {
+    "prompt": "Depois de `kubectl scale deployment web --replicas=5`, o `kubectl diff -f deployment.yaml` imprimiu `-  replicas: 5` e `+  replicas: 3`. O que esse diff descreve?",
+    "hint": "O lado do menos é o objeto vivo.",
+    "choices": [
+      {
+        "text": "O que aplicar o arquivo mudaria no objeto vivo",
+        "why": "Isso. O cluster se desviou para 5, e o arquivo o levaria de volta a 3."
+      },
+      {
+        "text": "O que mudou no arquivo desde o último commit no repositório",
+        "why": "O kubectl diff compara o arquivo com o cluster, não com o git."
+      },
+      {
+        "text": "Um conflito que o apply não consegue resolver",
+        "why": "O apply resolveu: a listagem seguinte mostrou 3/3."
+      },
+      {
+        "text": "Duas réplicas que não subiram",
+        "why": "Os números são o spec de cada lado; não há nada sobre falhas ali."
+      }
+    ]
+  },
+  "ex-z2fkwnqm": {
+    "prompt": "Para ver o que o `kubectl apply -f deployment.yaml` mudaria, sem mudar nada, rode `kubectl ___ -f deployment.yaml`.",
+    "hint": "A saída dele é um diff unificado.",
+    "blanks": [
+      {
+        "accept": [
+          "diff"
+        ]
+      }
+    ]
+  },
+  "ex-yq1zb6ah": {
+    "prompt": "Por que o kubectl guarda a anotação `last-applied-configuration` no objeto?",
+    "hint": "Um campo ausente do arquivo pode significar duas coisas diferentes.",
+    "choices": [
+      {
+        "text": "Para o cluster poder voltar a ele depois de uma falha",
+        "why": "Rollbacks usam ReplicaSets e histórico (lição 35), não essa anotação."
+      },
+      {
+        "text": "Para distinguir um campo que você tirou de um que outra pessoa definiu",
+        "why": "Isso. Sem o último arquivo, o apply não saberia se deve apagar um campo que está ausente."
+      },
+      {
+        "text": "Porque o API server recusa objetos sem ela",
+        "why": "O `kubectl create` cria objetos sem ela; é a contabilidade do kubectl."
+      },
+      {
+        "text": "Para registrar quem aplicou o arquivo e quando",
+        "why": "Ela guarda o conteúdo do arquivo, não um autor nem um horário."
+      }
+    ]
+  },
+  "ex-t9vkamn7": {
+    "prompt": "Ligue cada comando ao que ele faz.",
+    "hint": "Dois deles nunca mudam o cluster.",
+    "pairs": [
+      {
+        "left": "`kubectl apply -f`",
+        "right": "Faz o cluster bater com o arquivo"
+      },
+      {
+        "left": "`kubectl diff -f`",
+        "right": "Mostra o que o apply mudaria"
+      },
+      {
+        "left": "`kubectl create … --dry-run=client -o yaml`",
+        "right": "Imprime um objeto sem enviá-lo"
+      },
+      {
+        "left": "`kubectl delete -f`",
+        "right": "Remove os objetos que o arquivo nomeia"
+      }
+    ],
+    "right_distractors": [
+      "Copia os objetos do cluster para o arquivo"
+    ]
+  },
+  "ex-5e5vqvx3": {
+    "prompt": "Durante um incidente a Ana escalou para 5 à mão, e ajudou. Na manhã seguinte um pipeline rodou `kubectl apply -f` a partir do git. O que aconteceu, e o que ela deveria ter feito?",
+    "hint": "O arquivo no git ainda dizia 3.",
+    "choices": [
+      {
+        "text": "Nada; o apply mantém mudanças feitas à mão",
+        "why": "O apply faz o cluster bater com o arquivo, então o levou de volta a 3."
+      },
+      {
+        "text": "O apply falhou no conflito; ela teve de apagar o deployment",
+        "why": "Não houve falha; o desvio simplesmente foi desfeito."
+      },
+      {
+        "text": "Voltou para 3; a mudança devia ter ido também para o arquivo",
+        "why": "Isso. Um conserto que ainda deve valer amanhã pertence ao git, senão o próximo apply o desfaz."
+      },
+      {
+        "text": "Foi para 8, somando os 3 do arquivo aos 5 feitos à mão",
+        "why": "Campos são substituídos, nunca somados."
+      }
+    ]
+  }
+}

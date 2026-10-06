@@ -1,0 +1,166 @@
+{
+  "ex-qg4pbxxj": {
+    "prompt": "`scratch` foi apagado e criado de novo, e `/data/started` tinha uma hora nova. Por quê?",
+    "hint": "De quem é um `emptyDir`?",
+    "choices": [
+      {
+        "text": "O pod novo ganhou um diretório novo e vazio",
+        "why": "Isso. Um `emptyDir` vive e morre com o seu pod."
+      },
+      {
+        "text": "O container reiniciou e reescreveu o arquivo",
+        "why": "O pod foi apagado; um reinício teria mantido o volume."
+      },
+      {
+        "text": "O relógio do nó foi acertado",
+        "why": "O relógio está certo; o arquivo era novo."
+      },
+      {
+        "text": "O kubectl apply sempre esvazia volumes",
+        "why": "O volume de um claim manteve os dados no mesmo apply."
+      }
+    ]
+  },
+  "ex-nb69avf4": {
+    "prompt": "Qual destes é um bom uso de um `emptyDir`?",
+    "hint": "Sobrevive a um reinício de container, não a um pod apagado.",
+    "choices": [
+      {
+        "text": "Os arquivos de dados de um banco",
+        "why": "Sumiriam com o pod."
+      },
+      {
+        "text": "Um cache refazível",
+        "why": "Isso. Um cache pode ser refeito, então perdê-lo custa tempo, não dados."
+      },
+      {
+        "text": "Os uploads dos clientes",
+        "why": "Esses precisam sobreviver a todo pod."
+      },
+      {
+        "text": "O histórico de pedidos",
+        "why": "O mesmo problema dos uploads."
+      }
+    ]
+  },
+  "ex-zcgm6kgr": {
+    "prompt": "O claim `orders` ficou `Pending` até `writer` ser criado. Por quê?",
+    "hint": "`VOLUMEBINDINGMODE`.",
+    "choices": [
+      {
+        "text": "O provisioner ainda estava subindo",
+        "why": "O evento dizia que esperava um consumidor."
+      },
+      {
+        "text": "1Gi era mais do que o nó tinha",
+        "why": "O mesmo claim se ligou segundos depois."
+      },
+      {
+        "text": "A classe espera um pod para escolher o nó",
+        "why": "Isso. `WaitForFirstConsumer` cria o volume onde o pod vai rodar."
+      },
+      {
+        "text": "Claims precisam de uma classe explícita",
+        "why": "Ele recebeu `standard`, a padrão."
+      }
+    ]
+  },
+  "ex-d3afw0j2": {
+    "prompt": "O volume por trás de `orders` registra `kubernetes.io/hostname In [shop-worker]`. O que isso implica para o próximo pod que montar `orders`?",
+    "hint": "Onde os dados ficam fisicamente?",
+    "choices": [
+      {
+        "text": "Pode rodar em qualquer lugar; os dados são copiados",
+        "why": "Nada copia um volume local-path."
+      },
+      {
+        "text": "Só pode rodar em `shop-worker`",
+        "why": "Isso. Os dados são um diretório naquele nó."
+      },
+      {
+        "text": "Roda no control plane",
+        "why": "Nada aponta para lá."
+      },
+      {
+        "text": "Recebe um volume novo e vazio",
+        "why": "O claim continua ligado ao mesmo volume."
+      }
+    ]
+  },
+  "ex-jw9zt7wb": {
+    "prompt": "Apagar o claim `orders` fez o PersistentVolume dele sumir. Que configuração decidiu isso?",
+    "hint": "`RECLAIMPOLICY`.",
+    "choices": [
+      {
+        "text": "`accessModes: ReadWriteOnce`",
+        "why": "Isso é sobre montar, não apagar."
+      },
+      {
+        "text": "`volumeBindingMode`",
+        "why": "Isso decide quando um volume é criado."
+      },
+      {
+        "text": "`reclaimPolicy: Delete`",
+        "why": "Isso. A classe padrão remove o armazenamento com o claim."
+      },
+      {
+        "text": "A `restartPolicy` do pod",
+        "why": "Isso é sobre containers."
+      }
+    ]
+  },
+  "ex-mycn3gdn": {
+    "prompt": "Com `reclaimPolicy: Retain`, o claim `ledger` foi apagado. Em que estado o volume dele ficou?",
+    "hint": "O último comando da lição.",
+    "choices": [
+      {
+        "text": "`Available`, pronto para qualquer claim novo",
+        "why": "Ele ainda lembra do claim antigo, então nada o liga sozinho."
+      },
+      {
+        "text": "Apagado, como com `Delete`",
+        "why": "Ele apareceu na lista depois que o claim sumiu."
+      },
+      {
+        "text": "`Bound` ao pod",
+        "why": "Volumes se ligam a claims, nunca a pods."
+      },
+      {
+        "text": "`Released`, com os dados",
+        "why": "Isso. Um operador decide o que acontece depois."
+      }
+    ]
+  },
+  "ex-6wdhtjws": {
+    "prompt": "Ligue cada objeto a quem costuma escrevê-lo.",
+    "hint": "A tabela da segunda seção.",
+    "pairs": [
+      {
+        "left": "PersistentVolumeClaim",
+        "right": "Quem escreve a aplicação"
+      },
+      {
+        "left": "PersistentVolume",
+        "right": "O provisioner"
+      },
+      {
+        "left": "StorageClass",
+        "right": "O operador do cluster"
+      }
+    ],
+    "right_distractors": [
+      "O kubelet"
+    ]
+  },
+  "ex-8yas5073": {
+    "prompt": "Para o volume de um banco, coloque a `reclaimPolicy` da classe em ___.",
+    "hint": "A que guardou os dados de `ledger`.",
+    "blanks": [
+      {
+        "accept": [
+          "Retain"
+        ]
+      }
+    ]
+  }
+}

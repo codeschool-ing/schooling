@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-v68jawbb",
+    "version": 1,
+    "section": "inject",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why keep configuration in a ConfigMap rather than in the image?",
+    "hint": "Think of the test cluster and production.",
+    "choices": [
+      {
+        "text": "So one image runs everywhere",
+        "correct": true,
+        "why": "Right. The image is tested once and each cluster holds its own ConfigMap."
+      },
+      {
+        "text": "Because ConfigMaps are encrypted and images are not",
+        "correct": false,
+        "why": "A ConfigMap is plain text in etcd; secrets are lesson 14."
+      },
+      {
+        "text": "Because an image cannot read environment variables",
+        "correct": false,
+        "why": "A program in an image reads variables as anywhere else."
+      },
+      {
+        "text": "So the configuration can be larger than the image",
+        "correct": false,
+        "why": "A ConfigMap is limited to one mebibyte."
+      }
+    ]
+  },
+  {
+    "id": "ex-raf9f5hd",
+    "version": 1,
+    "section": "inject",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl get configmaps` listed `kube-root-ca.crt`, which Ana never created. What is it?",
+    "hint": "Every namespace gets one.",
+    "choices": [
+      {
+        "text": "A leftover from the cluster's installation that can be deleted",
+        "correct": false,
+        "why": "The cluster puts it there on purpose, in every namespace, and puts it back."
+      },
+      {
+        "text": "The certificate pods use to check they are talking to the real API server",
+        "correct": true,
+        "why": "Right. It holds the cluster's CA, so a pod can verify the server it calls."
+      },
+      {
+        "text": "The shop's TLS certificate",
+        "correct": false,
+        "why": "The shop serves plain HTTP here; this belongs to the cluster."
+      },
+      {
+        "text": "A ConfigMap kind makes for its own nodes",
+        "correct": false,
+        "why": "Every Kubernetes cluster makes it, kind or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-74hgapra",
+    "version": 1,
+    "section": "inject",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The volume mounts the ConfigMap `shop-files` at `/etc/shop`. Which file does the container find there?",
+    "hint": "One file per key.",
+    "choices": [
+      {
+        "text": "`/etc/shop/greeting.txt`, the name of the original file",
+        "correct": false,
+        "why": "The key was named `greeting` in `--from-file=greeting=greeting.txt`, and keys name the files."
+      },
+      {
+        "text": "`/etc/shop/shop-files`, named after the ConfigMap",
+        "correct": false,
+        "why": "The ConfigMap's name names the volume source, not a file."
+      },
+      {
+        "text": "`/etc/shop/greeting`",
+        "correct": true,
+        "why": "Right: the key `greeting` became a file of that name."
+      },
+      {
+        "text": "Nothing until the pod restarts",
+        "correct": false,
+        "why": "The shop read the file on its first request."
+      }
+    ]
+  },
+  {
+    "id": "ex-twmn5361",
+    "version": 1,
+    "section": "changes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana changed both ConfigMaps. About 86 seconds later, what did the running shop report?",
+    "hint": "One of the two is copied into the process when it starts.",
+    "choices": [
+      {
+        "text": "Both values changed",
+        "correct": false,
+        "why": "The variable still said `Ana's shop`."
+      },
+      {
+        "text": "Neither changed until the pod was deleted",
+        "correct": false,
+        "why": "The file changed with no restart at all."
+      },
+      {
+        "text": "The variable changed and the file did not",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "The new file, with the old variable",
+        "correct": true,
+        "why": "Right. The kubelet refreshed the mounted file; an environment variable never changes in a running process."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjdwaqde",
+    "version": 1,
+    "section": "changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made the shop finally report `GREETING=Ana's new shop`?",
+    "hint": "A new container read the variable.",
+    "choices": [
+      {
+        "text": "Waiting a second minute for the kubelet",
+        "correct": false,
+        "why": "The kubelet refreshes files, never a process's environment."
+      },
+      {
+        "text": "`kubectl rollout restart`, which replaced the pod",
+        "correct": true,
+        "why": "Right. The replacement started with the ConfigMap's current value."
+      },
+      {
+        "text": "Applying the ConfigMap a second time",
+        "correct": false,
+        "why": "It was already applied; the running process was the problem."
+      },
+      {
+        "text": "Marking the ConfigMap immutable",
+        "correct": false,
+        "why": "That stops changes; it does not deliver them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3411pd5g",
+    "version": 1,
+    "section": "changes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team stores feature flags in a ConfigMap, read as environment variables. They flip a flag in an emergency and nothing changes for ten minutes. What is the most accurate diagnosis?",
+    "hint": "How long would they have waited with a file?",
+    "choices": [
+      {
+        "text": "The kubelet is slow; it should refresh within a minute",
+        "correct": false,
+        "why": "That delay is about mounted files; variables are never refreshed."
+      },
+      {
+        "text": "The ConfigMap was immutable",
+        "correct": false,
+        "why": "Then the edit itself would have been refused."
+      },
+      {
+        "text": "Nothing will change until the pods are replaced",
+        "correct": true,
+        "why": "Right. A variable is fixed at start; a rollout, or flags read from a file the program rereads, is what works."
+      },
+      {
+        "text": "The flag reached half the pods and needs a Service to reach the rest",
+        "correct": false,
+        "why": "Services route requests, not configuration; and no running pod got it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pntsrdk",
+    "version": 1,
+    "section": "changes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A ConfigMap with `___: true` refuses every edit to its data; changing it means creating a new one.",
+    "hint": "The API server's error named the field.",
+    "blanks": [
+      {
+        "accept": [
+          "immutable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6vn17k3y",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of configuration with the better way to deliver it.",
+    "hint": "Short values and whole files.",
+    "pairs": [
+      {
+        "left": "The currency the shop prices in",
+        "right": "An environment variable"
+      },
+      {
+        "left": "An nginx configuration file",
+        "right": "A file on a configMap volume"
+      },
+      {
+        "left": "Prices for one month, never edited",
+        "right": "An immutable ConfigMap"
+      }
+    ],
+    "right_distractors": [
+      "A new image for every change"
+    ]
+  }
+]

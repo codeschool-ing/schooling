@@ -1,0 +1,256 @@
+[
+  {
+    "id": "ex-mkjf64gq",
+    "version": 1,
+    "section": "three-tools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a kind cluster, what is a node?",
+    "hint": "The tool's name is an abbreviation of the answer.",
+    "choices": [
+      {
+        "text": "A virtual machine with its own kernel",
+        "correct": false,
+        "why": "That is one of minikube's options; kind's nodes share the laptop's kernel."
+      },
+      {
+        "text": "A Docker container running a kubelet",
+        "correct": true,
+        "why": "Right: Kubernetes IN Docker. `docker ps` listed the three nodes."
+      },
+      {
+        "text": "A process of kind itself, one per node",
+        "correct": false,
+        "why": "kind builds the containers and exits; it runs nothing afterwards."
+      },
+      {
+        "text": "A pod in a cluster somewhere else",
+        "correct": false,
+        "why": "Nothing here runs in another cluster; the nodes are on the laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-59d4d51e",
+    "version": 1,
+    "section": "three-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student's work laptop does not allow installing anything, and they want to try one `kubectl` command today. Which path fits?",
+    "hint": "One path asks for no installation at all.",
+    "choices": [
+      {
+        "text": "kind on the laptop, since it is recommended",
+        "correct": false,
+        "why": "It needs Docker, kind and kubectl installed, which this laptop forbids."
+      },
+      {
+        "text": "A Linux virtual machine on the same laptop",
+        "correct": false,
+        "why": "A virtual machine is an installation too, and a larger one."
+      },
+      {
+        "text": "A browser playground",
+        "correct": true,
+        "why": "Right. Nothing is installed; nothing survives the session either, which is fine for one command."
+      },
+      {
+        "text": "minikube, because it needs no Docker",
+        "correct": false,
+        "why": "minikube still has to be installed, with a driver of some kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwtd2sd5",
+    "version": 1,
+    "section": "kind-cluster",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to `docker stats`, how many MiB did the control-plane node use, to one decimal place?",
+    "hint": "The first row of the table.",
+    "value": 537.5,
+    "tolerance": 0,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-3ywpkg3g",
+    "version": 1,
+    "section": "kind-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the three kind nodes report the laptop's own kernel version?",
+    "hint": "What does a container share with its host?",
+    "choices": [
+      {
+        "text": "kind copies the laptop's kernel into each node",
+        "correct": false,
+        "why": "Nothing is copied; there is only one kernel."
+      },
+      {
+        "text": "The nodes are virtual machines booted from the same disk image as the laptop",
+        "correct": false,
+        "why": "A virtual machine would have its own kernel; these are containers."
+      },
+      {
+        "text": "A container shares the kernel of the machine it runs on",
+        "correct": true,
+        "why": "Right. The nodes are three sets of processes on one Linux, which is why they start in seconds."
+      },
+      {
+        "text": "kubectl reports the client's kernel in that column",
+        "correct": false,
+        "why": "The column comes from each node's kubelet; it happens to be the same kernel."
+      }
+    ]
+  },
+  {
+    "id": "ex-knahjfks",
+    "version": 1,
+    "section": "kind-cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster runs Kubernetes 1.37. Which `kubectl` versions does the project support against it?",
+    "hint": "The rule is one minor version, in either direction.",
+    "choices": [
+      {
+        "text": "Only 1.37, the same version",
+        "correct": false,
+        "why": "One minor version either side is supported too."
+      },
+      {
+        "text": "1.36, 1.37 and 1.38",
+        "correct": true,
+        "why": "Right: within one minor version of the API server."
+      },
+      {
+        "text": "Any 1.x, because the API is stable",
+        "correct": false,
+        "why": "Fields and behaviour change between releases; the supported window is narrow on purpose."
+      },
+      {
+        "text": "1.35 to 1.37, never a newer one",
+        "correct": false,
+        "why": "A newer kubectl by one version is supported; a gap of two is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r7dcq94",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each message with what it means.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "`node(s) already exist for a cluster with the name`",
+        "right": "A cluster with that name exists"
+      },
+      {
+        "left": "`failed to connect to the docker API`",
+        "right": "Docker is not answering where the client looks"
+      },
+      {
+        "left": "`address already in use`",
+        "right": "A port the cluster publishes is held"
+      },
+      {
+        "left": "`The connection to the server localhost:8080 was refused`",
+        "right": "kubectl has no current context"
+      }
+    ],
+    "right_distractors": [
+      "The cluster's version is too new for kubectl"
+    ]
+  },
+  {
+    "id": "ex-p3901zzs",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `kind delete cluster --name study`, `kubectl get nodes` complained about `localhost:8080`. Why that address?",
+    "hint": "What did `kubectl config current-context` say afterwards?",
+    "choices": [
+      {
+        "text": "The deleted cluster's API server had moved to that address on the laptop",
+        "correct": false,
+        "why": "The cluster is gone, API server included."
+      },
+      {
+        "text": "kind left a web server on port 8080",
+        "correct": false,
+        "why": "kind leaves nothing running after a delete."
+      },
+      {
+        "text": "With no current context, kubectl falls back to an old default",
+        "correct": true,
+        "why": "Right. The context went with the cluster, and the fallback is an address nothing provides."
+      },
+      {
+        "text": "Port 8080 was still held by the earlier test",
+        "correct": false,
+        "why": "The refusal means nothing listened there, the opposite of a held port."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzfwmp4t",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Docker Desktop, a three-node cluster starts, and minutes later pods are killed and a node goes `NotReady`, with no error from kind. What should be checked first?",
+    "hint": "Docker Desktop runs everything inside a machine of fixed size.",
+    "choices": [
+      {
+        "text": "Whether the cluster's name is already taken",
+        "correct": false,
+        "why": "A taken name stops `kind create` at once, with a message."
+      },
+      {
+        "text": "Whether port 8080 is free",
+        "correct": false,
+        "why": "A held port fails the creation; this cluster was created."
+      },
+      {
+        "text": "Whether kubectl is a version behind the cluster",
+        "correct": false,
+        "why": "Version skew makes commands fail, not nodes disappear."
+      },
+      {
+        "text": "How much memory the virtual machine underneath was given",
+        "correct": true,
+        "why": "Right. Too little memory kills processes with no clean message; give it at least 4 GiB."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zkk6nhe",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building the study cluster in order.",
+    "hint": "kubectl needs a context, and a context needs a cluster.",
+    "items": [
+      "Make sure Docker answers",
+      "Write the cluster's file with its three nodes",
+      "Run `kind create cluster` with that file",
+      "Check that kubectl's current context is the new cluster",
+      "List the nodes and see them `Ready`"
+    ],
+    "trap": "kind needs Docker before anything, and kubectl can only list nodes once kind has written the context."
+  }
+]

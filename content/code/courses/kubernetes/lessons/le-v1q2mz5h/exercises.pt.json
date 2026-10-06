@@ -1,0 +1,175 @@
+{
+  "ex-zgc40ax6": {
+    "prompt": "O DaemonSet `node-agent` não tem `replicas`. Quantos pods ele rodou no cluster de três nós?",
+    "hint": "Um nó o recusou.",
+    "choices": [
+      {
+        "text": "Três, um por nó",
+        "why": "A taint do nó do plano de controle o manteve fora, e o DaemonSet não a tolera."
+      },
+      {
+        "text": "Dois, um por worker",
+        "why": "Isso. Todo nó que pode rodá-lo recebe um, e o plano de controle não pode."
+      },
+      {
+        "text": "Um, como contagem padrão de réplicas",
+        "why": "Um DaemonSet não tem contagem; ele segue os nós."
+      },
+      {
+        "text": "Quantos o escalonador escolher",
+        "why": "A pergunta de um DaemonSet é quais nós, não quantos."
+      }
+    ]
+  },
+  "ex-mp05n7yr": {
+    "prompt": "Um quarto nó entra no cluster. O que acontece com o DaemonSet `node-agent`?",
+    "hint": "Ele segue os nós.",
+    "choices": [
+      {
+        "text": "Nada até alguém aumentar uma contagem de réplicas",
+        "why": "Não há contagem para aumentar; esse é o modelo de um Deployment."
+      },
+      {
+        "text": "Um pod existente se muda para o nó novo",
+        "why": "Pods nunca se mudam; os existentes ficam onde estão."
+      },
+      {
+        "text": "O nó novo recebe um pod próprio na hora",
+        "why": "Isso, desde que nenhuma taint o mantenha fora."
+      },
+      {
+        "text": "O nó novo é ignorado até o DaemonSet ser aplicado de novo",
+        "why": "O controlador observa os nós; ninguém precisa aplicar nada."
+      }
+    ]
+  },
+  "ex-f4hb9dkv": {
+    "prompt": "Com `completions: 3` e `parallelism: 2`, por que o terceiro pod de `report` subiu depois dos outros dois?",
+    "hint": "Quantos podem rodar ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "Esperou um dos dois primeiros terminar",
+        "why": "Isso: nunca mais de dois ao mesmo tempo, três sucessos no total."
+      },
+      {
+        "text": "A primeira tentativa dele falhou",
+        "why": "Os três pods terminaram `Completed`; nada falhou."
+      },
+      {
+        "text": "O escalonador não tinha espaço nos workers",
+        "why": "Os workers estavam quase ociosos; o limite era do próprio Job."
+      },
+      {
+        "text": "Jobs sempre iniciam os pods um de cada vez",
+        "why": "Dois subiram juntos, como `parallelism: 2` permite."
+      }
+    ]
+  },
+  "ex-dhgeadd6": {
+    "prompt": "O Job `broken` tem `backoffLimit: 2`. Quantos pods ele criou antes de desistir?",
+    "hint": "A primeira tentativa, depois as novas tentativas.",
+    "unit": "pods"
+  },
+  "ex-ema5phdg": {
+    "prompt": "Um Job de migração noturno falha. Um pipeline precisa decidir se alerta. Que parte do Job ele deve ler?",
+    "hint": "O motivo de o Job ter desistido.",
+    "choices": [
+      {
+        "text": "O número de pods com status `Error`",
+        "why": "Isso conta tentativas, e um Job pode ter sucesso depois de algumas falharem."
+      },
+      {
+        "text": "O código de saída impresso nos logs do primeiro pod",
+        "why": "O primeiro pod pode ser uma falha que uma nova tentativa consertou."
+      },
+      {
+        "text": "A condição `Failed` e o motivo dela",
+        "why": "Isso: `BackoffLimitExceeded` diz que o Job como um todo desistiu."
+      },
+      {
+        "text": "Há quanto tempo o Job existe",
+        "why": "Idade não diz nada sobre sucesso."
+      }
+    ]
+  },
+  "ex-1kyr5ewh": {
+    "prompt": "Um CronJob sem `timeZone` tem o horário `0 2 * * *`. Na maioria dos clusters, quando ele roda?",
+    "hint": "O relógio de quem lê o horário?",
+    "choices": [
+      {
+        "text": "Às 02:00 no fuso de quem o aplicou",
+        "why": "Nada registra onde a pessoa estava; quem lê o horário é o cluster."
+      },
+      {
+        "text": "Às 02:00 UTC",
+        "why": "Isso: o fuso do controller manager, em geral UTC, que são 23:00 em São Paulo."
+      },
+      {
+        "text": "Às 02:00 no fuso de cada nó",
+        "why": "Um controlador decide quando criar o Job, não cada nó."
+      },
+      {
+        "text": "A cada duas horas",
+        "why": "`0 2 * * *` é o minuto 0 da hora 2, uma vez por dia."
+      }
+    ]
+  },
+  "ex-279067a4": {
+    "prompt": "O segundo Job do CronJob se chamava `nightly-29855110`. Que número é esse?",
+    "hint": "É um horário.",
+    "choices": [
+      {
+        "text": "Um sufixo aleatório, como o de um pod",
+        "why": "É um a mais que o da execução anterior, um minuto depois."
+      },
+      {
+        "text": "Uma contagem de quantas vezes ele rodou",
+        "why": "Ele tinha rodado duas vezes."
+      },
+      {
+        "text": "Um hash do modelo do job",
+        "why": "Um hash não cresceria de um em um a cada minuto."
+      },
+      {
+        "text": "O horário agendado, em minutos desde 1970",
+        "why": "Isso: 17:10 UTC de 6 de outubro de 2026, que é o que a execução imprimiu."
+      }
+    ]
+  },
+  "ex-jarvy79j": {
+    "prompt": "Ligue cada carga ao controlador que combina com ela.",
+    "hint": "Pergunte: em todo nó, até terminar, ou num horário?",
+    "pairs": [
+      {
+        "left": "Um coletor de logs em cada máquina",
+        "right": "DaemonSet"
+      },
+      {
+        "left": "Uma migração de banco que roda uma vez",
+        "right": "Job"
+      },
+      {
+        "left": "Um backup toda noite às 02:00",
+        "right": "CronJob"
+      },
+      {
+        "left": "Os servidores web da loja",
+        "right": "Deployment"
+      }
+    ],
+    "right_distractors": [
+      "StatefulSet"
+    ]
+  },
+  "ex-ag8kezyy": {
+    "prompt": "Um Job tenta de novo um pod que falha até ele falhar mais `___` vezes, e então se marca `Failed`.",
+    "hint": "O campo em `broken.yaml`.",
+    "blanks": [
+      {
+        "accept": [
+          "backoffLimit"
+        ]
+      }
+    ]
+  }
+}

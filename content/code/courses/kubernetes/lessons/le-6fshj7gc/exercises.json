@@ -1,0 +1,285 @@
+[
+  {
+    "id": "ex-97zzkp3f",
+    "version": 1,
+    "section": "inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Service has four pods. kube-proxy's iptables rules give the first rule a probability of 0.25. What probability does the second rule carry?",
+    "hint": "Each rule shares out what the rules before it left.",
+    "choices": [
+      {
+        "text": "0.25, the same as the first",
+        "correct": false,
+        "why": "Then the second pod would get a quarter of three quarters, less than its share."
+      },
+      {
+        "text": "One in three",
+        "correct": true,
+        "why": "Right. Three pods remain for what is left, and the third rule then carries 0.5."
+      },
+      {
+        "text": "0.5, as in the capture",
+        "correct": false,
+        "why": "0.5 was the second rule with three pods in all."
+      },
+      {
+        "text": "0.75, what the first left over",
+        "correct": false,
+        "why": "That is what reaches the second rule, not the share it takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-80djbwqa",
+    "version": 1,
+    "section": "inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A gRPC client keeps one connection open to a Service with three pods. One pod is busy and the other two are idle. Why?",
+    "hint": "When does kube-proxy draw?",
+    "choices": [
+      {
+        "text": "The busy pod has the lowest IP address",
+        "correct": false,
+        "why": "The order of the rules does not change anybody's share."
+      },
+      {
+        "text": "Session affinity is on by default",
+        "correct": false,
+        "why": "The default is `None`."
+      },
+      {
+        "text": "The pod was drawn once, at connect",
+        "correct": true,
+        "why": "Right. The draw is per connection, and every request since went down that one."
+      },
+      {
+        "text": "kube-proxy sends more to faster pods",
+        "correct": false,
+        "why": "It knows nothing about how busy a pod is."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqkbf1en",
+    "version": 1,
+    "section": "inside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three hundred requests split 96, 91 and 113 across three pods. What does that show?",
+    "hint": "An exact share would be 100 each.",
+    "choices": [
+      {
+        "text": "The third pod answers faster than the others",
+        "correct": false,
+        "why": "Speed plays no part in the draw."
+      },
+      {
+        "text": "Random is fair on average, not per hundred",
+        "correct": true,
+        "why": "Right. The shares converge over many connections."
+      },
+      {
+        "text": "One of the three rules is misconfigured",
+        "correct": false,
+        "why": "The probabilities were exactly one third, one half and the rest."
+      },
+      {
+        "text": "Affinity was on",
+        "correct": false,
+        "why": "With affinity on, all 300 went to one pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-hybrbyj3",
+    "version": 1,
+    "section": "inside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team turns on `sessionAffinity: ClientIP` so that logged-in users keep their session. Their users reach the cluster through one corporate gateway. What happens?",
+    "hint": "What address does each user arrive from?",
+    "choices": [
+      {
+        "text": "Each user keeps their own pod",
+        "correct": false,
+        "why": "They all share one address, so they share one pod."
+      },
+      {
+        "text": "Everybody lands on one pod",
+        "correct": true,
+        "why": "Right. Affinity keys on the address, and the gateway gives them all the same one."
+      },
+      {
+        "text": "The Service refuses ClientIP behind a gateway",
+        "correct": false,
+        "why": "Nothing checks where addresses come from."
+      },
+      {
+        "text": "Sessions now survive a pod's deletion",
+        "correct": false,
+        "why": "Affinity ends with the pod, and so does what it held in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jg0grp5",
+    "version": 1,
+    "section": "outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `externalTrafficPolicy: Cluster`, the shop's log showed `172.18.0.7` for a request the laptop sent. Why not the laptop's address?",
+    "hint": "The answer has to come back the same way.",
+    "choices": [
+      {
+        "text": "The node rewrote the source address",
+        "correct": true,
+        "why": "Right. The reply has to come back through the node that forwarded it, and the address is what that costs."
+      },
+      {
+        "text": "The laptop has that address",
+        "correct": false,
+        "why": "The laptop was 172.18.0.1; .7 was the control-plane node."
+      },
+      {
+        "text": "curl hides the source address it sends",
+        "correct": false,
+        "why": "Under `Local` the same curl showed the laptop's address."
+      },
+      {
+        "text": "The shop logs only the addresses of nodes",
+        "correct": false,
+        "why": "It logs whatever source arrived; under `Local` that was the laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d7mdkx5",
+    "version": 1,
+    "section": "outside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under `externalTrafficPolicy: Local`, a request reaches a node that runs none of the Service's pods. What happens?",
+    "hint": "The capture called each node.",
+    "choices": [
+      {
+        "text": "It is forwarded to a node with a pod",
+        "correct": false,
+        "why": "That is `Cluster`."
+      },
+      {
+        "text": "kube-proxy starts a pod on that node",
+        "correct": false,
+        "why": "kube-proxy only writes rules; it never starts pods."
+      },
+      {
+        "text": "No answer",
+        "correct": true,
+        "why": "Right. Two of the three nodes answered nothing."
+      },
+      {
+        "text": "It gets a 503 from the Service",
+        "correct": false,
+        "why": "A Service sends no HTTP answers of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t7hb0jp",
+    "version": 1,
+    "section": "outside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Service uses `externalTrafficPolicy: Local` behind a cloud load balancer. How does the load balancer avoid the nodes without a pod?",
+    "hint": "Kubernetes gives such a Service something extra.",
+    "choices": [
+      {
+        "text": "It sends to every node and retries on failure",
+        "correct": false,
+        "why": "Nothing in the lesson retries; the nodes are filtered before traffic is sent."
+      },
+      {
+        "text": "A health check that only pod nodes pass",
+        "correct": true,
+        "why": "Right. Each node answers the check with success only while it runs a pod, and traffic goes to the nodes that pass."
+      },
+      {
+        "text": "The cloud reads the pod list from etcd",
+        "correct": false,
+        "why": "No load balancer reads etcd."
+      },
+      {
+        "text": "It cannot; Local only works with NodePort",
+        "correct": false,
+        "why": "`Local` was designed for exactly this case."
+      }
+    ]
+  },
+  {
+    "id": "ex-rszqxsh6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting with what it decides.",
+    "hint": "Two were in the first section, one in the second.",
+    "pairs": [
+      {
+        "left": "`sessionAffinity: ClientIP`",
+        "right": "The same client goes to the same pod"
+      },
+      {
+        "left": "`externalTrafficPolicy: Local`",
+        "right": "Only pods on the receiving node serve"
+      },
+      {
+        "left": "`externalTrafficPolicy: Cluster`",
+        "right": "Any node may forward to any pod"
+      }
+    ],
+    "right_distractors": [
+      "Requests go to the least busy pod"
+    ]
+  },
+  {
+    "id": "ex-xw38x752",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `externalTrafficPolicy: Local`, a load balancer splits traffic evenly between two nodes. Node A runs one pod of the Service and node B runs three. What percentage of the traffic does the pod on node A receive?",
+    "hint": "Half goes to each node; the node splits its half among its own pods.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-8qtsq0xm",
+    "version": 1,
+    "section": "outside",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To let the application see the caller's real address, set the Service's `externalTrafficPolicy` to ___.",
+    "hint": "The one where two nodes gave no answer.",
+    "blanks": [
+      {
+        "accept": [
+          "Local"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

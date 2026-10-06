@@ -1,0 +1,290 @@
+[
+  {
+    "id": "ex-115chjvg",
+    "version": 1,
+    "section": "profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a pod choose the scheduler that places it?",
+    "hint": "One field in the pod's spec.",
+    "choices": [
+      {
+        "text": "With a label on the namespace",
+        "correct": false,
+        "why": "The namespace has no say."
+      },
+      {
+        "text": "With a node selector",
+        "correct": false,
+        "why": "That narrows the nodes, not the scheduler."
+      },
+      {
+        "text": "`spec.schedulerName`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The first scheduler to notice it wins",
+        "correct": false,
+        "why": "Each scheduler ignores pods that name another."
+      }
+    ]
+  },
+  {
+    "id": "ex-hc1371dm",
+    "version": 1,
+    "section": "profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which setting makes `NodeResourcesFit` prefer the fullest node?",
+    "hint": "The default is the opposite.",
+    "choices": [
+      {
+        "text": "`LeastAllocated`",
+        "correct": false,
+        "why": "That is the default, which prefers room."
+      },
+      {
+        "text": "`MostAllocated`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`RequestedToCapacityRatio` set to zero",
+        "correct": false,
+        "why": "That strategy takes a shape, not a zero."
+      },
+      {
+        "text": "`leaderElect: false`",
+        "correct": false,
+        "why": "That is about running one copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjedngzp",
+    "version": 1,
+    "section": "profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why might a team pack pods onto as few nodes as possible?",
+    "hint": "Think of the node autoscaler from lesson 34.",
+    "choices": [
+      {
+        "text": "Packed pods start faster",
+        "correct": false,
+        "why": "Start time does not depend on neighbours."
+      },
+      {
+        "text": "The emptied nodes get removed",
+        "correct": true,
+        "why": "Right, and fewer nodes cost less."
+      },
+      {
+        "text": "It survives the loss of a node better",
+        "correct": false,
+        "why": "It is the opposite: one node holds everything."
+      },
+      {
+        "text": "Packing is required for batch jobs",
+        "correct": false,
+        "why": "Nothing requires it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrm4x3yk",
+    "version": 1,
+    "section": "two",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pod has been Pending for ten minutes and `kubectl get events` shows nothing for it. What is the first thing to check?",
+    "hint": "Who would have written an event?",
+    "choices": [
+      {
+        "text": "Whether the nodes have room",
+        "correct": false,
+        "why": "A full cluster gives a `FailedScheduling` event."
+      },
+      {
+        "text": "Whether the image exists",
+        "correct": false,
+        "why": "Pulling only starts on a node."
+      },
+      {
+        "text": "Whether a quota blocks it",
+        "correct": false,
+        "why": "A quota refuses the pod before it exists."
+      },
+      {
+        "text": "Its `schedulerName`",
+        "correct": true,
+        "why": "Right: no scheduler, no events."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxp0dsyp",
+    "version": 1,
+    "section": "two",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A node has 4 CPUs free. With `MostAllocated`, how many pods requesting `500m` can the second scheduler put on it before it must use another node?",
+    "hint": "4000m ÷ 500m.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "pods"
+  },
+  {
+    "id": "ex-z2qyxjwg",
+    "version": 1,
+    "section": "doors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A validating webhook with `failurePolicy: Fail` is down. What happens to the writes it matches?",
+    "hint": "Fail is about the write, not the webhook.",
+    "choices": [
+      {
+        "text": "They are refused with an error",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They go through unchecked",
+        "correct": false,
+        "why": "That is `failurePolicy: Ignore`."
+      },
+      {
+        "text": "They wait until it is back",
+        "correct": false,
+        "why": "The API server does not queue writes."
+      },
+      {
+        "text": "The API server restarts it",
+        "correct": false,
+        "why": "It does not manage webhooks."
+      }
+    ]
+  },
+  {
+    "id": "ex-jednvfgn",
+    "version": 1,
+    "section": "doors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need to refuse images tagged `latest`. Which door needs nothing kept running?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "A validating admission webhook",
+        "correct": false,
+        "why": "It is a service to keep running."
+      },
+      {
+        "text": "A scheduler extender",
+        "correct": false,
+        "why": "It sees placement, not writes."
+      },
+      {
+        "text": "A ValidatingAdmissionPolicy",
+        "correct": true,
+        "why": "Right, an expression in the API server."
+      },
+      {
+        "text": "An aggregated API",
+        "correct": false,
+        "why": "It serves resources, not checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-gptkwf30",
+    "version": 1,
+    "section": "doors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which question is answered by an aggregated API rather than by etcd?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "`kubectl get deployments`",
+        "correct": false,
+        "why": "Stored by the API server in etcd."
+      },
+      {
+        "text": "`kubectl top pods`",
+        "correct": true,
+        "why": "Right, metrics-server answers it."
+      },
+      {
+        "text": "`kubectl get crd`",
+        "correct": false,
+        "why": "CRDs live in etcd."
+      },
+      {
+        "text": "`kubectl get events`",
+        "correct": false,
+        "why": "Events are stored in etcd."
+      }
+    ]
+  },
+  {
+    "id": "ex-t04pgnmk",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each extension with where its code runs.",
+    "hint": "The table in the last section.",
+    "pairs": [
+      {
+        "left": "Admission webhook",
+        "right": "An HTTPS service you run"
+      },
+      {
+        "left": "ValidatingAdmissionPolicy",
+        "right": "Inside the API server"
+      },
+      {
+        "left": "Aggregated API",
+        "right": "A whole API server behind a Service"
+      },
+      {
+        "left": "Second scheduler profile",
+        "right": "A `kube-scheduler` process"
+      }
+    ],
+    "right_distractors": [
+      "Inside etcd"
+    ]
+  },
+  {
+    "id": "ex-ts05253x",
+    "version": 1,
+    "section": "doors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To see the APIs served by somebody other than the API server: `kubectl get ___ | grep -v Local`.",
+    "hint": "The kind that registers an API group.",
+    "blanks": [
+      {
+        "accept": [
+          "apiservices",
+          "apiservice"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,276 @@
+[
+  {
+    "id": "ex-asa8srd8",
+    "version": 1,
+    "section": "inside-a-pod",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The sidecar fetched the shop's page from `localhost:8080`. Why does `localhost` reach the shop?",
+    "hint": "What do the containers of one pod share?",
+    "choices": [
+      {
+        "text": "kube-proxy forwards localhost to the pod's Service",
+        "correct": false,
+        "why": "There is no Service here at all; kube-proxy is not involved."
+      },
+      {
+        "text": "They share one network namespace",
+        "correct": true,
+        "why": "Right. One interface, one address, one localhost for every container of the pod."
+      },
+      {
+        "text": "The sidecar runs inside the shop's container",
+        "correct": false,
+        "why": "They are separate containers, from separate images; only the namespaces are shared."
+      },
+      {
+        "text": "The emptyDir volume carries the requests",
+        "correct": false,
+        "why": "The volume holds files; the request went over the network, to localhost."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8r31vcj",
+    "version": 1,
+    "section": "inside-a-pod",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl get pod web` showed `READY 2/2` for a pod with three containers. Why two?",
+    "hint": "One of them is not supposed to be running.",
+    "choices": [
+      {
+        "text": "One container failed to start",
+        "correct": false,
+        "why": "The pod was `Running` with no restarts; nothing had failed."
+      },
+      {
+        "text": "The sidecar is not counted because it has no port",
+        "correct": false,
+        "why": "Ports have nothing to do with the count; the sidecar is one of the two."
+      },
+      {
+        "text": "The init container had already finished, and only running ones are counted",
+        "correct": true,
+        "why": "Right. Its own status said `Completed`."
+      },
+      {
+        "text": "Pods count containers per node, and two fit on that node",
+        "correct": false,
+        "why": "All containers of a pod are on the same node; the count is of the pod's containers."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5tw97hp",
+    "version": 1,
+    "section": "inside-a-pod",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to put their web application and its PostgreSQL in one pod, 'so they are always together'. What is the best objection?",
+    "hint": "Ask whether they must live and die together.",
+    "choices": [
+      {
+        "text": "A pod cannot hold more than two containers",
+        "correct": false,
+        "why": "This lesson's pod held three."
+      },
+      {
+        "text": "PostgreSQL cannot listen on localhost",
+        "correct": false,
+        "why": "It can; a shared localhost is not the problem."
+      },
+      {
+        "text": "Two containers of a pod run on different nodes",
+        "correct": false,
+        "why": "A pod's containers always run on the same node."
+      },
+      {
+        "text": "They scale, fail and update differently",
+        "correct": true,
+        "why": "Right. Three copies of the application would mean three databases; they belong in two controllers."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k3250xh",
+    "version": 1,
+    "section": "restarts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the sidecar was stopped from the node, what did `kubectl get pod web` show?",
+    "hint": "Look at RESTARTS and AGE together.",
+    "choices": [
+      {
+        "text": "The same pod, with one restart",
+        "correct": true,
+        "why": "Right: `RESTARTS 1 (8s ago)`, and the age kept counting from the pod's creation."
+      },
+      {
+        "text": "A new pod with a new name and address",
+        "correct": false,
+        "why": "A container restart keeps the pod; only a deleted pod is replaced."
+      },
+      {
+        "text": "The pod `Pending` until the scheduler placed it again",
+        "correct": false,
+        "why": "The kubelet restarts the container where it is; the scheduler is not asked."
+      },
+      {
+        "text": "The pod `Completed`, since one container had exited",
+        "correct": false,
+        "why": "With `restartPolicy: Always` an exit is a restart, not an end."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfrsqz80",
+    "version": 1,
+    "section": "restarts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `restartPolicy` with what happens when a container exits.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "`Always`",
+        "right": "Restarted, whatever the exit code"
+      },
+      {
+        "left": "`OnFailure`",
+        "right": "Restarted only after an error"
+      },
+      {
+        "left": "`Never`",
+        "right": "Left stopped"
+      }
+    ],
+    "right_distractors": [
+      "Moved to another node"
+    ]
+  },
+  {
+    "id": "ex-vwjseckk",
+    "version": 1,
+    "section": "restarts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container keeps crashing a second after it starts. What does the kubelet do over time?",
+    "hint": "The pod's status gets a name for the waiting.",
+    "choices": [
+      {
+        "text": "Restarts it as fast as it can, forever",
+        "correct": false,
+        "why": "It waits longer each time, up to five minutes."
+      },
+      {
+        "text": "Gives up after three attempts and deletes the pod",
+        "correct": false,
+        "why": "The kubelet never deletes the pod; it keeps trying with longer waits."
+      },
+      {
+        "text": "Waits longer before each restart, showing `CrashLoopBackOff`",
+        "correct": true,
+        "why": "Right: ten seconds, twenty, forty, up to five minutes."
+      },
+      {
+        "text": "Moves the pod to a healthier node",
+        "correct": false,
+        "why": "The kubelet only acts on its own node; it cannot move anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wwr5j2c",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana deleted the bare pod `web`. What made it different from deleting a pod of a Deployment?",
+    "hint": "Who was counting?",
+    "choices": [
+      {
+        "text": "A bare pod cannot be deleted while running",
+        "correct": false,
+        "why": "It was deleted while running; the command succeeded."
+      },
+      {
+        "text": "Its containers kept running on the node without a pod",
+        "correct": false,
+        "why": "Deleting a pod stops its containers."
+      },
+      {
+        "text": "No controller noticed, so nothing replaced it",
+        "correct": true,
+        "why": "Right: `No resources found`. Nobody had promised that the pod would exist."
+      },
+      {
+        "text": "It was moved to the `kube-system` namespace",
+        "correct": false,
+        "why": "Deleted objects are not moved anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkw371xr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a container lose when the kubelet restarts it in the same pod? Choose all that apply.",
+    "hint": "What belongs to the container, and what to the pod?",
+    "choices": [
+      {
+        "text": "Files it wrote to its own filesystem",
+        "correct": true,
+        "why": "Right: a restarted container starts from its image again."
+      },
+      {
+        "text": "The pod's IP address",
+        "correct": false,
+        "why": "The address belongs to the pod and stays."
+      },
+      {
+        "text": "Files in the pod's emptyDir",
+        "correct": false,
+        "why": "The emptyDir belongs to the pod and survives the restart."
+      },
+      {
+        "text": "What it held in memory",
+        "correct": true,
+        "why": "Right: it is a new process."
+      },
+      {
+        "text": "The pod's name",
+        "correct": false,
+        "why": "The pod is the same object, so its name is too."
+      }
+    ]
+  },
+  {
+    "id": "ex-w54w0k1h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the life of this lesson's pod in order.",
+    "hint": "The init container comes before anything else runs.",
+    "items": [
+      "The pod is scheduled onto a node",
+      "The init container writes the greeting and exits",
+      "The shop and the sidecar start side by side",
+      "The sidecar is stopped and the kubelet restarts it",
+      "The pod is deleted and nothing replaces it"
+    ],
+    "trap": "Containers in `containers` only start once every init container has finished, and nothing comes after the deletion of a bare pod."
+  }
+]

@@ -1,0 +1,171 @@
+{
+  "ex-5jcgvnee": {
+    "prompt": "Um cluster novo recebe um Ingress e não tem controlador de Ingress instalado. O que roteia o tráfego dele?",
+    "hint": "O Kubernetes entrega o objeto, não a coisa que o obedece.",
+    "choices": [
+      {
+        "text": "O kube-proxy, que cuida de todo Service",
+        "why": "O kube-proxy roteia endereços de Service; nunca lê um Ingress."
+      },
+      {
+        "text": "O API server, que guarda as regras",
+        "why": "Guardar o objeto é tudo o que ele faz com ele."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Um Ingress é um pedido; sem controlador ele é aceito e ignorado."
+      },
+      {
+        "text": "O CoreDNS, apontando o host para um Service",
+        "why": "O CoreDNS responde nomes do cluster; o host do Ingress não é um deles."
+      }
+    ]
+  },
+  "ex-7we3hv7z": {
+    "prompt": "O Ingress manda `/admin` para `admin` e `/` para `shop`. Uma requisição para `shop.example.test/admin` bate com os dois. Para onde ela foi?",
+    "hint": "Qual caminho é mais específico?",
+    "choices": [
+      {
+        "text": "Para `shop`, porque `/` vem listado primeiro",
+        "why": "A ordem no arquivo não decide; o controlador prefere o casamento mais longo."
+      },
+      {
+        "text": "Para `admin`, o caminho mais longo que bate",
+        "why": "Isso: a resposta disse `admin 1.0`."
+      },
+      {
+        "text": "Para os dois, alternando",
+        "why": "Cada requisição chega a um backend, escolhido pela regra."
+      },
+      {
+        "text": "Para lugar nenhum: caminhos sobrepostos são recusados",
+        "why": "Sobreposição é normal; é como um site aninha seções."
+      }
+    ]
+  },
+  "ex-7m98n9kb": {
+    "prompt": "Um Ingress com `ingressClassName: nginx` foi aplicado num cluster só com Traefik. O que contou à Ana que ninguém o servia?",
+    "hint": "O API server não viu nada de errado.",
+    "choices": [
+      {
+        "text": "Um erro do `kubectl apply`",
+        "why": "Ele imprimiu `created`; o objeto é só dado."
+      },
+      {
+        "text": "Um evento de aviso no Ingress",
+        "why": "Nenhum componente observava aquela classe, então ninguém escreveu um."
+      },
+      {
+        "text": "A coluna `ADDRESS` vazia, diferente da que funcionava",
+        "why": "O Traefik não publica endereço aqui, então as duas linhas estavam vazias e iguais."
+      },
+      {
+        "text": "Só o `404` quando ela pediu o host dele",
+        "why": "Isso. Nada informa um Ingress que ninguém adota; as condições de status da Gateway API são a melhoria."
+      }
+    ]
+  },
+  "ex-cjkr56ck": {
+    "prompt": "Ligue cada objeto da Gateway API a quem costuma escrevê-lo.",
+    "hint": "A tabela no começo da seção.",
+    "pairs": [
+      {
+        "left": "GatewayClass",
+        "right": "Quem instala o controlador"
+      },
+      {
+        "left": "Gateway",
+        "right": "Quem opera o cluster"
+      },
+      {
+        "left": "HTTPRoute",
+        "right": "A equipe dona da aplicação"
+      }
+    ],
+    "right_distractors": [
+      "O API server, a partir do Ingress"
+    ]
+  },
+  "ex-0zbjf5dz": {
+    "prompt": "O HTTPRoute manda `/admin` para `admin` só com o cabeçalho `X-Staff: yes`. A que chegou uma requisição para `/admin` sem o cabeçalho?",
+    "hint": "A primeira regra precisa das duas condições.",
+    "choices": [
+      {
+        "text": "Um `404`, porque `/admin` exige o cabeçalho",
+        "why": "A rota tem uma regra padrão sem condições, que a pegou."
+      },
+      {
+        "text": "A loja, pela regra padrão",
+        "why": "Isso: `shop 1.0` respondeu; só com o cabeçalho o `admin` respondeu."
+      },
+      {
+        "text": "O `admin`, já que o caminho bateu",
+        "why": "As condições dentro de uma regra precisam valer todas."
+      },
+      {
+        "text": "O painel do Traefik",
+        "why": "Nenhuma rota aponta para lá."
+      }
+    ]
+  },
+  "ex-yke0ge21": {
+    "prompt": "Por que um cluster precisa ter os CRDs da Gateway API instalados antes de qualquer objeto dela ser aplicado?",
+    "hint": "Conte os recursos de API que um cluster novo conhece (lição 2).",
+    "choices": [
+      {
+        "text": "Os tipos não vêm embutidos no Kubernetes; os CRDs os acrescentam",
+        "why": "Isso. A lição 43 mostra como um CRD acrescenta um tipo à API."
+      },
+      {
+        "text": "Os CRDs contêm o programa do controlador",
+        "why": "Um CRD define um tipo; o controlador é um Deployment à parte."
+      },
+      {
+        "text": "O Ingress precisa ser desligado antes",
+        "why": "Os dois rodaram lado a lado nesta lição."
+      },
+      {
+        "text": "A Gateway API ainda está em `v1alpha1`",
+        "why": "Os tipos principais dela são `v1`."
+      }
+    ]
+  },
+  "ex-6jjgqk7h": {
+    "prompt": "O controlador que deve executar um Ingress é indicado pelo campo `___`.",
+    "hint": "Ele se refere a uma IngressClass.",
+    "blanks": [
+      {
+        "accept": [
+          "ingressClassName",
+          "spec.ingressClassName"
+        ]
+      }
+    ]
+  },
+  "ex-r7bdna06": {
+    "prompt": "Quais destes um HTTPRoute consegue expressar nos campos padrão, sem anotações de um controlador? Marque todos que se aplicam.",
+    "hint": "A seção cita três.",
+    "choices": [
+      {
+        "text": "Uma condição sobre um cabeçalho da requisição",
+        "why": "Isso: `X-Staff: yes`."
+      },
+      {
+        "text": "Dividir o tráfego entre Services por peso",
+        "why": "Isso: a lição 36 usa para um canary."
+      },
+      {
+        "text": "Em que nó o controlador roda",
+        "why": "Isso é o Deployment do próprio controlador, não uma rota."
+      },
+      {
+        "text": "Um prefixo de caminho",
+        "why": "Isso: `PathPrefix /admin`."
+      },
+      {
+        "text": "A imagem que os pods do Service rodam",
+        "why": "Rotas apontam para Services; os pods são outro assunto."
+      }
+    ]
+  }
+}
