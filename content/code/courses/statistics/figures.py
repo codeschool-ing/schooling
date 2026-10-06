@@ -1531,6 +1531,76 @@ def l12_t(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 13
+
+def null_curve(f, p, df, regions, observed, lang, obs_label, region_label):
+    """A t curve under the null with shaded rejection regions and the observed statistic."""
+    pdf = lambda x: t_pdf(x, df)
+    for lo, hi in regions:
+        p.curve(pdf, max(lo, p.xmin), min(hi, p.xmax), fill='--amber')
+    p.curve(pdf, p.xmin, p.xmax, stroke='--phosphor', width=2.2)
+    f.line(p.sx(observed), p.y1, p.sx(observed), p.y0 + 10, stroke='--paper', width=2)
+    f.text(p.sx(observed), p.y0, obs_label, size=10, weight='600')
+
+
+@figure('l13-one-sided', 13)
+def l13_one_sided(lang):
+    x = S.ROUTING
+    tt = (S.mean(x) - 40) / (S.sd(x) / math.sqrt(len(x)))
+    crit = S.t_inv(0.05, 24)
+    t = {'en': dict(
+        label=f'The t distribution with 24 degrees of freedom, the shape the test statistic would '
+              f'have if the new routing changed nothing. The left tail beyond −1.71 is shaded: the '
+              f'5% of results that would count as evidence of faster deliveries. The observed '
+              f'statistic, −1.00, is marked well inside the unshaded part.',
+        obs='observed t = −1.00', reg='reject: the lowest 5%', x='t statistic', crit='−1.71',
+        cap='The test asks where the observed statistic falls on the curve the null hypothesis '
+            'predicts. Here it is in the ordinary middle, so the null is not rejected.'),
+        'pt': dict(
+        label=f'A distribuição t com 24 graus de liberdade, a forma que a estatística de teste teria '
+              f'se o novo sistema de rotas não mudasse nada. A cauda esquerda além de −1,71 está '
+              f'sombreada: os 5% de resultados que contariam como evidência de entregas mais '
+              f'rápidas. A estatística observada, −1,00, está marcada bem dentro da parte sem sombra.',
+        obs='t observado = −1,00', reg='rejeitar: os 5% mais baixos', x='estatística t', crit='−1,71',
+        cap='O teste pergunta onde a estatística observada cai na curva que a hipótese nula prevê. '
+            'Aqui ela fica no meio comum, então a nula não é rejeitada.')}[lang]
+    f = Fig('l13-one-sided', 640, 280, t['label'])
+    p = Plot(f, 40, 50, 610, 220, -4, 4, 0, 0.42)
+    null_curve(f, p, 24, [(-4, crit)], tt, lang, t['obs'], t['reg'])
+    p.xaxis(range(-4, 5), fmt=lambda v: str(v).replace('-', '−'), label=t['x'])
+    f.text(p.sx(crit) - 6, p.sy(0.13), t['reg'], size=10, anchor='end', fill='--amber', weight='600')
+    f.text(p.sx(crit), p.y1 - 10, t['crit'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l13-two-sided', 13)
+def l13_two_sided(lang):
+    b15 = S.BAGS[:15]
+    tt = (S.mean(b15) - 1000) / (S.sd(b15) / math.sqrt(15))
+    crit = S.t_inv(0.975, 14)
+    t = {'en': dict(
+        label='The t distribution with 14 degrees of freedom, for a machine exactly on its 1000 g '
+              'target. Both tails beyond 2.14 standard errors are shaded, 2.5% each. The observed '
+              'statistic for 15 bags, 4.21, lies far out in the right tail.',
+        obs='observed t = 4.21', l='2.5%', r='2.5%', x='t statistic',
+        cap='A two-sided test splits the 5% between both tails, because a machine overfilling and '
+            'one underfilling are both off target.'),
+        'pt': dict(
+        label='A distribuição t com 14 graus de liberdade, para uma máquina exatamente no alvo de '
+              '1000 g. As duas caudas além de 2,14 erros padrão estão sombreadas, 2,5% cada. A '
+              'estatística observada para 15 sacos, 4,21, fica bem longe na cauda direita.',
+        obs='t observado = 4,21', l='2,5%', r='2,5%', x='estatística t',
+        cap='Um teste bilateral divide os 5% entre as duas caudas, porque uma máquina enchendo demais '
+            'e uma enchendo de menos estão as duas fora do alvo.')}[lang]
+    f = Fig('l13-two-sided', 640, 280, t['label'])
+    p = Plot(f, 40, 50, 610, 220, -5, 5, 0, 0.42)
+    null_curve(f, p, 14, [(-5, -crit), (crit, 5)], tt, lang, t['obs'], '')
+    p.xaxis(range(-5, 6), fmt=lambda v: str(v).replace('-', '−'), label=t['x'])
+    f.text(p.sx(-crit) - 8, p.sy(0.08), t['l'], size=10, anchor='end', fill='--amber', weight='600')
+    f.text(p.sx(crit) + 8, p.sy(0.08), t['r'], size=10, anchor='start', fill='--amber', weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

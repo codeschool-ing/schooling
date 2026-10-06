@@ -810,6 +810,16 @@ def l11():
 SAMPLE40 = Draw(1200).sample(BASKETS, 40)
 
 
+# Twenty-five deliveries after Horta switched on a new routing system, lessons 13 and 14.
+# Before the switch, deliveries averaged 40 minutes.
+def _routing():
+    d = Draw(1300)
+    return [round(d.normal(37.6, 6.0) * 2) / 2 for _ in range(25)]
+
+
+ROUTING = _routing()
+
+
 def t_interval(xs, level=0.95):
     n, m, s_ = len(xs), mean(xs), sd(xs)
     t = t_inv(1 - (1 - level) / 2, n - 1)
@@ -860,6 +870,30 @@ def l12():
     show('n for a margin of 5 points at p = 0.5', (1.96 ** 2) * 0.25 / 0.05 ** 2)
     show('n for a margin of R$ 5 with s = 59', (1.96 * 59 / 5) ** 2)
     show('n for a margin of R$ 10 with s = 59', (1.96 * 59 / 10) ** 2)
+
+
+@lesson(13)
+def l13():
+    x = ROUTING
+    n, m, s_ = len(x), mean(x), sd(x)
+    se = s_ / math.sqrt(n)
+    t = (m - 40) / se
+    show('routing: n, mean, sd, SE', f'{n} {m:.4f} {s_:.4f} {se:.4f}')
+    show('routing: values sorted', sorted(x))
+    show('routing: t against 40', t)
+    show('one-sided 5% critical value, df 24', t_inv(0.05, 24))
+    show('two-sided 5% critical values, df 24', t_inv(0.975, 24))
+    show('one-sided p', t_cdf(t, n - 1))
+    show('two-sided p', 2 * t_cdf(-abs(t), n - 1))
+    # bags: is the machine on target at 1000 g? first 15 bags
+    b15 = BAGS[:15]
+    m15, s15 = mean(b15), sd(b15)
+    t15 = (m15 - 1000) / (s15 / math.sqrt(15))
+    show('15 bags: mean, sd, t against 1000', f'{m15:.4f} {s15:.4f} {t15:.4f}')
+    show('15 bags: two-sided critical, df 14', t_inv(0.975, 14))
+    show('15 bags: two-sided p', 2 * t_cdf(-abs(t15), 14))
+    # alpha 1%: critical
+    show('one-sided 1% critical, df 24', t_inv(0.01, 24))
 
 
 def check():
