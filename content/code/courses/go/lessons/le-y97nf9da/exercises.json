@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-5vmyqc4s",
+    "version": 1,
+    "section": "implicit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `Rect` come to satisfy `Shape` in section 02's program?",
+    "hint": "Look at what the `Rect` declaration says, and what it does not.",
+    "choices": [
+      {
+        "text": "Its declaration ends in `implements Shape`",
+        "correct": false,
+        "why": "Go has no such word; it is not among the 25 keywords, and `Rect` names no interface."
+      },
+      {
+        "text": "It has a method `Area() float64`",
+        "correct": true,
+        "why": "Right. `Area() float64` is the one method `Shape` lists, and having it is the whole of it."
+      },
+      {
+        "text": "It is declared in the same package as `Shape`",
+        "correct": false,
+        "why": "`time.Duration` satisfied an interface written in another package, in section 03."
+      },
+      {
+        "text": "It embeds `Shape` as a field, as lesson 16 embedded structs",
+        "correct": false,
+        "why": "`Rect` has only `W` and `H`; nothing is embedded in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8y51cd8",
+    "version": 1,
+    "section": "implicit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`*os.File` writes `Write(b []byte) (n int, err error)` and `*strings.Builder` writes `Write(p []byte) (int, error)`. Which change to a type's `Write` would stop it satisfying `io.Writer`?",
+    "hint": "Which parts of a signature did the two differ in, and still both fit?",
+    "choices": [
+      {
+        "text": "Calling the parameter `data` instead of `p`",
+        "correct": false,
+        "why": "`*os.File` calls it `b` and fits; parameter names are documentation."
+      },
+      {
+        "text": "Leaving the results without names",
+        "correct": false,
+        "why": "`*strings.Builder` does exactly that and fits."
+      },
+      {
+        "text": "Returning `(int64, error)`",
+        "correct": true,
+        "why": "Right. The types of the results must match, and `int64` is not `int`."
+      },
+      {
+        "text": "Declaring it in a file that does not import `io`",
+        "correct": false,
+        "why": "The file declaring `strings.Builder` imports no `io` at all, and the builder fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-kx79sxb4",
+    "version": 1,
+    "section": "implicit",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `fmt.Printf(\"%T\", s)`, the verb `%T` prints the ___ of the value stored in the interface `s`.",
+    "hint": "It printed `main.Rect` and `main.Circle`.",
+    "blanks": [
+      {
+        "accept": [
+          "type",
+          "concrete type",
+          "dynamic type"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rjyf7cq4",
+    "version": 1,
+    "section": "implicit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`buf` is a `bytes.Buffer` and `sb` a `strings.Builder`. Which can be the first argument of `fmt.Fprintf`? Choose all that apply.",
+    "hint": "The parameter is an `io.Writer`, and the `Write` methods have pointer receivers except one.",
+    "choices": [
+      {
+        "text": "`os.Stdout`",
+        "correct": true,
+        "why": "Yes. It is an `*os.File`, and the first line went straight to the terminal."
+      },
+      {
+        "text": "`&buf`",
+        "correct": true,
+        "why": "Yes. `*bytes.Buffer` has `Write` in its method set."
+      },
+      {
+        "text": "`&sb`",
+        "correct": true,
+        "why": "Yes, and it is how section 02 passed the builder."
+      },
+      {
+        "text": "`sb`",
+        "correct": false,
+        "why": "Refused: `Write` has a pointer receiver, so a `strings.Builder` value does not have it, as section 04 printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-tktc5t4p",
+    "version": 1,
+    "section": "implicit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In section 02's program you delete the `Shape` type and `describe`, and the lines of `main` that used them. What happens to `Rect` and `Circle`?",
+    "hint": "Where in their declarations does `Shape` appear?",
+    "choices": [
+      {
+        "text": "They stop compiling until their `Area` methods are removed too",
+        "correct": false,
+        "why": "A method needs no interface to exist; `Area` is an ordinary method of each struct."
+      },
+      {
+        "text": "Nothing: they compile unchanged, because they never referred to it",
+        "correct": true,
+        "why": "Right. The relationship lived only where a value was used as a `Shape`."
+      },
+      {
+        "text": "They compile, but `Area` can no longer be called on them",
+        "correct": false,
+        "why": "`r.Area()` is a call on a `Rect`; it never went through `Shape`."
+      },
+      {
+        "text": "The compiler reports that they implement nothing",
+        "correct": false,
+        "why": "A type is never required to satisfy an interface, so there is nothing to report."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwjkk4m1",
+    "version": 1,
+    "section": "small-interfaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does an interface with one method fit more types than one with ten?",
+    "hint": "What must a type have before it fits?",
+    "choices": [
+      {
+        "text": "The compiler checks small interfaces less strictly",
+        "correct": false,
+        "why": "Every method is checked the same way; `Grid` failed `Shape`, which has one."
+      },
+      {
+        "text": "A type needs every listed method, and one is easy to have",
+        "correct": true,
+        "why": "Right. Each method added is one more thing a type must have before it fits."
+      },
+      {
+        "text": "One-method interfaces are satisfied by every type automatically",
+        "correct": false,
+        "why": "Only by types that have that method; a `Rect` is not an `io.Reader`."
+      },
+      {
+        "text": "Go limits the types that may satisfy a large interface",
+        "correct": false,
+        "why": "There is no such limit; a large interface is simply harder to have all of."
+      }
+    ]
+  },
+  {
+    "id": "ex-acsqfd8y",
+    "version": 1,
+    "section": "small-interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`countWords` is changed to take an `*os.File` instead of an `io.Reader`. Which of its three calls stops compiling?",
+    "hint": "What type is `os.Stdin`?",
+    "choices": [
+      {
+        "text": "The call with `os.Stdin`, because a pipe is not a file",
+        "correct": false,
+        "why": "`os.Stdin` is an `*os.File`, whatever is connected to it."
+      },
+      {
+        "text": "The call with `strings.NewReader(...)`",
+        "correct": true,
+        "why": "Right. It is a `*strings.Reader`, and the string would have to be written to a file first."
+      },
+      {
+        "text": "All three, because `bufio.NewScanner` only takes an `io.Reader`",
+        "correct": false,
+        "why": "An `*os.File` is an `io.Reader`, so passing `f` on to the scanner still compiles."
+      },
+      {
+        "text": "None: Go converts each argument to `*os.File`",
+        "correct": false,
+        "why": "Go converts nothing implicitly, lesson 10, and a `*strings.Reader` cannot become a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnjcck24",
+    "version": 1,
+    "section": "small-interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `os.Open` return an `*os.File` and not an `io.Reader`?",
+    "hint": "What did the program do with `f` after counting?",
+    "choices": [
+      {
+        "text": "The caller keeps `Close` and the rest, and `f` still fits `io.Reader`",
+        "correct": true,
+        "why": "Right. A concrete result costs nothing, and `f` went to `countWords` as an `io.Reader`."
+      },
+      {
+        "text": "An interface cannot be returned from a function, so a concrete type is the one option",
+        "correct": false,
+        "why": "It can; `io.MultiWriter` returns a `Writer`. Returning the concrete type is a choice."
+      },
+      {
+        "text": "An `*os.File` is faster to read from than any `io.Reader` would be",
+        "correct": false,
+        "why": "The same `Read` runs either way; what changes is which methods the caller can see."
+      },
+      {
+        "text": "`os` was written before `io` existed",
+        "correct": false,
+        "why": "`os.Open`'s file already has a `Read` that fits `io.Reader`; the order of history is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd9kps8g",
+    "version": 1,
+    "section": "small-interfaces",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each habit to where section 03 showed it.",
+    "hint": "Three habits, three programs.",
+    "pairs": [
+      {
+        "left": "accept the smallest interface you need",
+        "right": "`countWords(r io.Reader)`"
+      },
+      {
+        "left": "return the concrete type you have",
+        "right": "`func Open(name string) (*File, error)`"
+      },
+      {
+        "left": "declare the interface where it is used",
+        "right": "`labeler` next to `show`"
+      }
+    ],
+    "right_distractors": [
+      "`Rect implements Shape`"
+    ]
+  },
+  {
+    "id": "ex-hps653f5",
+    "version": 1,
+    "section": "small-interfaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write `save(dst ..., r Report) error`, and it only ever calls `dst.Write` and `dst.Close`. What type should `dst` have?",
+    "hint": "Ask for exactly what the function calls.",
+    "choices": [
+      {
+        "text": "`*os.File`, since a report usually ends up in a file",
+        "correct": false,
+        "why": "Then a caller with a buffer or a network connection could not use it; `countWords` showed the cost."
+      },
+      {
+        "text": "`io.ReadWriteCloser`, to be safe in case `save` ever needs to read back",
+        "correct": false,
+        "why": "It asks for `Read` too, which `save` never calls, and shuts out every writer that cannot read."
+      },
+      {
+        "text": "An interface with `Write` and `Close`, such as `io.WriteCloser`",
+        "correct": true,
+        "why": "Right. Two methods are called, so two are asked for, and nothing more."
+      },
+      {
+        "text": "`any`, so that anything at all can be passed",
+        "correct": false,
+        "why": "`any` has no methods, so `dst.Write` would not compile; lesson 28 is about what `any` costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw11jfh9",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The compiler says `Square does not implement Shape (missing method Area)`. What is wrong with `Square`?",
+    "hint": "Read the parenthesis.",
+    "choices": [
+      {
+        "text": "Its `Area` method returns the wrong type",
+        "correct": false,
+        "why": "That message is `wrong type for method Area`, with `have` and `want` lines."
+      },
+      {
+        "text": "Its `Area` method has a pointer receiver",
+        "correct": false,
+        "why": "That message ends in `(method Area has pointer receiver)`."
+      },
+      {
+        "text": "It does not say `implements Shape`",
+        "correct": false,
+        "why": "No type says that in Go; `Rect` fitted without it."
+      },
+      {
+        "text": "It has no method called `Area` at all",
+        "correct": true,
+        "why": "Right. Its method is called `Size`, and the name has to match."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6z28mfk",
+    "version": 1,
+    "section": "checks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Whether a value fits an interface is checked where the value is used, and at ___ time, so a mismatch never reaches a running program.",
+    "hint": "`go build` printed every one of section 04's errors.",
+    "blanks": [
+      {
+        "accept": [
+          "compile",
+          "compilation",
+          "build"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7bm9h25b",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Grid` failed with `have Area() int` and `want Area() float64`. Which change makes it a `Shape`?",
+    "hint": "Which line describes `Grid`, and which describes `Shape`?",
+    "choices": [
+      {
+        "text": "Write `Shape(g)` in the slice literal",
+        "correct": false,
+        "why": "A conversion asks the same question and gets the same answer; the method still returns `int`."
+      },
+      {
+        "text": "Make `Area` return a `float64`",
+        "correct": true,
+        "why": "Right. `have` must become `want`: the result converted with `float64(...)` inside the method."
+      },
+      {
+        "text": "Change `Shape` itself to `Area() int`",
+        "correct": false,
+        "why": "`Grid` would fit, and every type returning `float64`, `Rect` and `Circle` among them, would stop fitting."
+      },
+      {
+        "text": "Add a second method `Area() float64` beside the first",
+        "correct": false,
+        "why": "A type cannot have two methods of one name; the compiler refuses the second."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vxpfkny",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`encoding/json` writes `var _ Marshaler = (*RawMessage)(nil)` and not `var _ Marshaler = RawMessage{}`. What does the pointer form allow?",
+    "hint": "Which method set is larger?",
+    "choices": [
+      {
+        "text": "It makes the check run once at start-up instead of on every call",
+        "correct": false,
+        "why": "Neither form runs a check at all while the program runs; the compiler makes it."
+      },
+      {
+        "text": "It avoids allocating a `RawMessage`, which would fail the build",
+        "correct": false,
+        "why": "Allocating breaks no build. What matters is which method set gets compared."
+      },
+      {
+        "text": "The pointer's method set is compared, pointer methods included",
+        "correct": true,
+        "why": "Right. A pointer's method set has both kinds; a nil one is the cheapest pointer to write."
+      },
+      {
+        "text": "Nothing: the two lines check the same thing",
+        "correct": false,
+        "why": "They differ exactly when a method has a pointer receiver, which is lesson 26's table."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wyx1aj0",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's `Rect` is used as a `Shape` only in another package, `render`. Somebody renames `Area` to `Size` in `Rect`'s package. Without `var _ Shape = Rect{}`, where does the error appear?",
+    "hint": "Section 04 built the renamed `Rect` on its own first.",
+    "choices": [
+      {
+        "text": "In `Rect`'s package, at the renamed method",
+        "correct": false,
+        "why": "That package built and ran, printing 12; nothing in it used `Rect` as a `Shape`."
+      },
+      {
+        "text": "In `render`, where a `Rect` is used as a `Shape`",
+        "correct": true,
+        "why": "Right. The check happens at the use, so it fails for whoever owns the use; the blank line moves it home."
+      },
+      {
+        "text": "Nowhere at all, until the program runs and finally calls `Area`",
+        "correct": false,
+        "why": "Interface checks are made when building, never at run time."
+      },
+      {
+        "text": "In the file that declares `Shape`",
+        "correct": false,
+        "why": "`Shape` is unchanged and fine; an interface never lists the types that fit it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdfngf6c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens for `fmt.Fprintf(&sb, \"hi\")`, from compiling to running.",
+    "hint": "The first two happen in `go build`.",
+    "items": [
+      "`&sb`, a `*strings.Builder`, is passed where an `io.Writer` is asked for",
+      "the compiler finds `Write` in the method set of `*strings.Builder`",
+      "at run time, `Fprintf` formats `hi` into bytes",
+      "`Fprintf` calls `w.Write`, which runs the builder's own `Write`"
+    ]
+  },
+  {
+    "id": "ex-k09687gq",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With section 02's types, `shapes := []Shape{Rect{W: 1, H: 5}, Rect{W: 2, H: 3}}` and the loop that adds up `s.Area()`. What is the total?",
+    "hint": "Each `Area` is the `Rect`'s own.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "square units"
+  },
+  {
+    "id": "ex-36ert4sm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Package `report` declares `type source interface { Rows() [][]string }`. Package `db` has a type with that exact method and does not import `report`. Can a value of it be passed to `report`'s functions?",
+    "hint": "Did `time` import the program that declared `labeler`?",
+    "choices": [
+      {
+        "text": "No: `db` has to import `report` to see the interface",
+        "correct": false,
+        "why": "`time` never imported the program that declared `labeler`, and its types fitted."
+      },
+      {
+        "text": "No, because `source` starts with a lower-case letter",
+        "correct": false,
+        "why": "Lower case keeps other packages from naming `source`; it does not stop their values fitting it."
+      },
+      {
+        "text": "Only through a conversion, `source(v)`, written in `db`",
+        "correct": false,
+        "why": "`db` cannot even name `source`, and no conversion is needed where the value is passed."
+      },
+      {
+        "text": "Yes: the method set fits, and nothing else is asked",
+        "correct": true,
+        "why": "Right. The interface lives with its user, and the type never has to know it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc8ezppx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program declares `type labeler interface { String() string }`. Which of these can be passed as a `labeler`? Choose all that apply.",
+    "hint": "`go doc strings.Builder` listed `func (b *Builder) String() string`.",
+    "choices": [
+      {
+        "text": "`90 * time.Minute`",
+        "correct": true,
+        "why": "Yes: a `time.Duration` has `String`, and printed `1h30m0s`."
+      },
+      {
+        "text": "`&sb`, where `sb` is a `strings.Builder`",
+        "correct": true,
+        "why": "Yes: `*strings.Builder` has `String() string`, with a pointer receiver."
+      },
+      {
+        "text": "`sb` itself",
+        "correct": false,
+        "why": "No: `String` is a pointer method, so the value lacks it; lesson 26's `Money` failed the same way."
+      },
+      {
+        "text": "`Rect{W: 3, H: 4}` from section 02",
+        "correct": false,
+        "why": "No: `Rect` has `Area` and no `String`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ap0brq3n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library adds a method `Close() error` to one of its types in a new release. Which interfaces does the type satisfy from then on?",
+    "hint": "Nothing in the type lists interfaces.",
+    "choices": [
+      {
+        "text": "None new, until the library declares which ones it implements",
+        "correct": false,
+        "why": "There is nothing to declare in Go; having the method is the declaration."
+      },
+      {
+        "text": "Every interface whose methods it now all has, wherever it is declared",
+        "correct": true,
+        "why": "Right. Satisfaction is checked against the method set, wherever an interface is used."
+      },
+      {
+        "text": "Only `io.Closer`, the one interface named after that method",
+        "correct": false,
+        "why": "A program's own `type closer interface { Close() error }` fits as well; names of interfaces are not matched."
+      },
+      {
+        "text": "Only the interfaces declared inside that library",
+        "correct": false,
+        "why": "`time.Duration` fitted `labeler`, which `time` has never seen."
+      }
+    ]
+  }
+]
