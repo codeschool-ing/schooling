@@ -1,0 +1,193 @@
+{
+  "ex-97zzkp3f": {
+    "prompt": "Um Service tem quatro pods. As regras de iptables do kube-proxy dão à primeira regra probabilidade 0,25. Que probabilidade a segunda regra carrega?",
+    "hint": "Cada regra divide o que as regras anteriores deixaram.",
+    "choices": [
+      {
+        "text": "0,25, a mesma da primeira",
+        "why": "Aí o segundo pod receberia um quarto de três quartos, menos que a sua parte."
+      },
+      {
+        "text": "Uma em três",
+        "why": "Isso. Restam três pods para o que sobrou, e a terceira regra carrega 0,5."
+      },
+      {
+        "text": "0,5, como na captura",
+        "why": "0,5 era a segunda regra com três pods no total."
+      },
+      {
+        "text": "0,75, o que a primeira deixou",
+        "why": "Isso é o que chega à segunda regra, não a parte que ela fica."
+      }
+    ]
+  },
+  "ex-80djbwqa": {
+    "prompt": "Um cliente gRPC mantém uma conexão aberta com um Service de três pods. Um pod está ocupado e os outros dois, parados. Por quê?",
+    "hint": "Quando o kube-proxy sorteia?",
+    "choices": [
+      {
+        "text": "O pod ocupado tem o menor endereço IP",
+        "why": "A ordem das regras não muda a parte de ninguém."
+      },
+      {
+        "text": "A afinidade de sessão vem ligada por padrão",
+        "why": "O padrão é `None`."
+      },
+      {
+        "text": "O pod foi sorteado uma vez, ao conectar",
+        "why": "Isso. O sorteio é por conexão, e toda requisição desde então foi por ela."
+      },
+      {
+        "text": "O kube-proxy manda mais para pods mais rápidos",
+        "why": "Ele não sabe nada sobre o quanto um pod está ocupado."
+      }
+    ]
+  },
+  "ex-vqkbf1en": {
+    "prompt": "Trezentas requisições se dividiram em 96, 91 e 113 entre três pods. O que isso mostra?",
+    "hint": "Uma parte exata seria 100 para cada.",
+    "choices": [
+      {
+        "text": "O terceiro pod responde mais rápido que os outros",
+        "why": "Velocidade não entra no sorteio."
+      },
+      {
+        "text": "O sorteio é justo na média, não a cada centena",
+        "why": "Isso. As partes convergem ao longo de muitas conexões."
+      },
+      {
+        "text": "Uma das três regras está mal configurada",
+        "why": "As probabilidades eram exatamente um terço, metade e o resto."
+      },
+      {
+        "text": "A afinidade estava ligada",
+        "why": "Com afinidade ligada, as 300 foram para um pod."
+      }
+    ]
+  },
+  "ex-hybrbyj3": {
+    "prompt": "Uma equipe liga `sessionAffinity: ClientIP` para que usuários logados mantenham a sessão. Os usuários chegam ao cluster por um único gateway corporativo. O que acontece?",
+    "hint": "De que endereço cada usuário chega?",
+    "choices": [
+      {
+        "text": "Cada usuário mantém o seu pod",
+        "why": "Todos compartilham um endereço, então compartilham um pod."
+      },
+      {
+        "text": "Todo mundo cai num pod só",
+        "why": "Isso. A afinidade se guia pelo endereço, e o gateway dá o mesmo a todos."
+      },
+      {
+        "text": "O Service recusa ClientIP atrás de um gateway",
+        "why": "Nada confere de onde os endereços vêm."
+      },
+      {
+        "text": "As sessões agora sobrevivem à remoção de um pod",
+        "why": "A afinidade acaba com o pod, e o que ele guardava na memória também."
+      }
+    ]
+  },
+  "ex-6jg0grp5": {
+    "prompt": "Sob `externalTrafficPolicy: Cluster`, o log da loja mostrou `172.18.0.7` para uma requisição que o laptop mandou. Por que não o endereço do laptop?",
+    "hint": "A resposta precisa voltar pelo mesmo caminho.",
+    "choices": [
+      {
+        "text": "O nó reescreveu o endereço de origem",
+        "why": "Isso. A resposta precisa voltar pelo nó que repassou, e o endereço é o preço disso."
+      },
+      {
+        "text": "O laptop tem esse endereço",
+        "why": "O laptop era 172.18.0.1; o .7 era o nó control-plane."
+      },
+      {
+        "text": "O curl esconde o endereço de origem que manda",
+        "why": "Sob `Local` o mesmo curl mostrou o endereço do laptop."
+      },
+      {
+        "text": "A loja só registra os endereços dos nós",
+        "why": "Ela registra a origem que chegou; sob `Local` foi o laptop."
+      }
+    ]
+  },
+  "ex-4d7mdkx5": {
+    "prompt": "Sob `externalTrafficPolicy: Local`, uma requisição chega a um nó que não roda nenhum pod do Service. O que acontece?",
+    "hint": "A captura chamou cada nó.",
+    "choices": [
+      {
+        "text": "É repassada a um nó com pod",
+        "why": "Isso é `Cluster`."
+      },
+      {
+        "text": "O kube-proxy sobe um pod nesse nó",
+        "why": "O kube-proxy só escreve regras; nunca sobe pods."
+      },
+      {
+        "text": "Nenhuma resposta",
+        "why": "Isso. Dois dos três nós não responderam nada."
+      },
+      {
+        "text": "Recebe um 503 do Service",
+        "why": "Um Service não manda respostas HTTP próprias."
+      }
+    ]
+  },
+  "ex-8t7hb0jp": {
+    "prompt": "Um Service usa `externalTrafficPolicy: Local` atrás de um load balancer de nuvem. Como o load balancer evita os nós sem pod?",
+    "hint": "O Kubernetes dá algo a mais a um Service assim.",
+    "choices": [
+      {
+        "text": "Manda para todo nó e tenta de novo se falhar",
+        "why": "Nada na lição tenta de novo; os nós são filtrados antes de o tráfego ir."
+      },
+      {
+        "text": "Uma checagem de saúde só passa com pod",
+        "why": "Isso. Cada nó responde à checagem com sucesso só enquanto roda um pod, e o tráfego vai para os nós que passam."
+      },
+      {
+        "text": "A nuvem lê a lista de pods do etcd",
+        "why": "Nenhum load balancer lê o etcd."
+      },
+      {
+        "text": "Não consegue; Local só funciona com NodePort",
+        "why": "`Local` foi feito exatamente para este caso."
+      }
+    ]
+  },
+  "ex-rszqxsh6": {
+    "prompt": "Ligue cada configuração ao que ela decide.",
+    "hint": "Duas estavam na primeira seção, uma na segunda.",
+    "pairs": [
+      {
+        "left": "`sessionAffinity: ClientIP`",
+        "right": "O mesmo cliente vai ao mesmo pod"
+      },
+      {
+        "left": "`externalTrafficPolicy: Local`",
+        "right": "Só pods do nó que recebeu atendem"
+      },
+      {
+        "left": "`externalTrafficPolicy: Cluster`",
+        "right": "Qualquer nó pode repassar para qualquer pod"
+      }
+    ],
+    "right_distractors": [
+      "Requisições vão para o pod menos ocupado"
+    ]
+  },
+  "ex-xw38x752": {
+    "prompt": "Com `externalTrafficPolicy: Local`, um load balancer divide o tráfego por igual entre dois nós. O nó A roda um pod do Service e o nó B roda três. Que porcentagem do tráfego o pod do nó A recebe?",
+    "hint": "Metade vai para cada nó; o nó divide a sua metade entre os próprios pods.",
+    "unit": "por cento"
+  },
+  "ex-8qtsq0xm": {
+    "prompt": "Para a aplicação ver o endereço real de quem chamou, coloque a `externalTrafficPolicy` do Service em ___.",
+    "hint": "Aquela em que dois nós não responderam.",
+    "blanks": [
+      {
+        "accept": [
+          "Local"
+        ]
+      }
+    ]
+  }
+}

@@ -10,7 +10,8 @@
 #
 # What is STAGED rather than typed: the cluster (lab/cluster-ports.yaml) and a
 # busybox pod called `probe`; reading the node's rules with `docker exec`,
-# because a kind node is a container. The counts per pod come from 300 real
+# because a kind node is a container; and scaling the shop down to one copy
+# before the requests from outside, which the lesson says. The counts per pod come from 300 real
 # requests, so they differ on every run, and so do the names and addresses.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -41,7 +42,8 @@ quiet 'kubectl wait --for=condition=Ready pod/probe --timeout=60s'
 block mode
 run 'kubectl -n kube-system get configmap kube-proxy -o jsonpath="{.data.config\.conf}" | grep "^mode"'
 run 'kubectl get service shop -o custom-columns=NAME:.metadata.name,CLUSTER-IP:.spec.clusterIP'
-SVC=$(kubectl get svc shop -o jsonpath='{.spec.clusterIP}')
+# kube-proxy writes the rules a moment after the endpoints exist; wait for them.
+for _ in $(seq 30); do docker exec shop-worker iptables-save -t nat 2>/dev/null | grep -q 'default/shop ->' && break; sleep 1; done
 run "docker exec shop-worker iptables-save -t nat | grep -E 'KUBE-SVC.*default/shop' | grep -v KUBE-MARK"
 block spread
 run 'kubectl exec probe -- sh -c "for i in \$(seq 300); do wget -qO- shop; done" | sort | uniq -c'
