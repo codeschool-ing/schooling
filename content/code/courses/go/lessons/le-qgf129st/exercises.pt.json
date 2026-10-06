@@ -1,0 +1,418 @@
+{
+  "ex-fw9rfwr7": {
+    "prompt": "O `io` declara `type ReadWriter interface { Reader; Writer }`, cada um na sua linha. O que essa declaração quer dizer?",
+    "hint": "Do que uma interface é feita?",
+    "choices": [
+      {
+        "text": "Um `ReadWriter` guarda um valor `Reader` e um valor `Writer`, como dois campos de struct",
+        "why": "Uma interface guarda um valor, de um tipo dinâmico. A sua declaração lista métodos, não campos."
+      },
+      {
+        "text": "A sua lista de métodos é `Read` e `Write`, os métodos das duas",
+        "why": "Isso. Embutir acrescenta à lista os métodos da interface embutida, e é só isso que faz."
+      },
+      {
+        "text": "Um tipo precisa declarar que estende `Reader` e `Writer`",
+        "why": "Nada é declarado em lugar nenhum; um tipo satisfaz `ReadWriter` tendo os dois métodos, como disse a lição 27."
+      },
+      {
+        "text": "Basta um método `Read` ou um `Write`",
+        "why": "Um dos dois não basta: `*strings.Reader` tem `Read` e foi recusado por faltar `Write`."
+      }
+    ]
+  },
+  "ex-0qe7h8f2": {
+    "prompt": "Qual destes tipos satisfaz `io.ReadWriteCloser`?",
+    "hint": "Ela pede `Read`, `Write` e `Close`.",
+    "choices": [
+      {
+        "text": "`*bytes.Buffer`",
+        "why": "Ele lê e escreve, e o compilador o recusou por `missing method Close`."
+      },
+      {
+        "text": "`*strings.Reader`",
+        "why": "Ele só lê uma string; foi recusado até como `io.ReadWriter`."
+      },
+      {
+        "text": "`*os.File`",
+        "why": "Isso. `var rwc io.ReadWriteCloser = os.Stdout` compilou, e o `%T` imprimiu `*os.File`."
+      },
+      {
+        "text": "`*bufio.Writer`",
+        "why": "Ele escreve e descarrega, mas não tem método `Read` nem `Close`."
+      }
+    ]
+  },
+  "ex-e65hsfwm": {
+    "prompt": "`var r io.Reader = &buf` guarda um `*bytes.Buffer`, que tem `Write`. Por que `var rw io.ReadWriter = r` é recusado?",
+    "hint": "O que o compilador sabe sobre `r`?",
+    "choices": [
+      {
+        "text": "Uma interface não pode ser atribuída a outra em caso nenhum",
+        "why": "`var r io.Reader = rw` compilou na mesma seção: de maior para menor não tem problema."
+      },
+      {
+        "text": "O compilador julga `r` pelo seu tipo, e `io.Reader` só promete `Read`",
+        "why": "Isso. O que `r` guarda só se sabe na execução, que é onde uma asserção pergunta."
+      },
+      {
+        "text": "Precisa de uma conversão, `io.ReadWriter(r)`, para compilar",
+        "why": "Uma conversão é conferida contra as mesmas listas e também é recusada, com `missing method Write`."
+      },
+      {
+        "text": "Um `*bytes.Buffer` perde o seu método `Write` ao ser guardado como `io.Reader`",
+        "why": "Nada se perde: o `%T` ainda imprime `*bytes.Buffer`, e a seção 03 recupera o `Write` perguntando."
+      }
+    ]
+  },
+  "ex-0bwbs6h9": {
+    "prompt": "Uma interface listada dentro de outra interface acrescenta os seus ___ à lista, e é só isso que embutir faz.",
+    "hint": "`Read`, `Write` e `Close` são três deles.",
+    "blanks": [
+      {
+        "accept": [
+          "métodos",
+          "metodos",
+          "método",
+          "metodo"
+        ]
+      }
+    ]
+  },
+  "ex-k0s8k5kt": {
+    "prompt": "`io.ReadCloser` e `io.WriteCloser` incluem `Close() error`. O que acontece com `type RWC interface { io.ReadCloser; io.WriteCloser }`?",
+    "hint": "Um conjunto de métodos é um conjunto.",
+    "choices": [
+      {
+        "text": "O compilador recusa: `duplicate method Close`",
+        "why": "Essa mensagem existe para um módulo cuja linha `go` é anterior à 1.14; no go1.27.1 compilou."
+      },
+      {
+        "text": "Tem dois métodos `Close`, e uma chamada precisa dizer qual",
+        "why": "Um conjunto de métodos não tem como guardar dois métodos de um nome; os dois são o mesmo método."
+      },
+      {
+        "text": "Tem um `Close` só, já que um método idêntico conta uma vez",
+        "why": "Isso. `var f ReadWriteCloser = os.Stdout` compilou e rodou."
+      },
+      {
+        "text": "O `Close` de baixo esconde o de cima, como um campo de struct mais raso",
+        "why": "A profundidade decide entre campos de struct na lição 16; aqui não há o que decidir, os dois são `Close() error`."
+      }
+    ]
+  },
+  "ex-86vyfktz": {
+    "prompt": "`FlushWriter` embute `io.Writer` e acrescenta `Flush() error`. Quais destes podem ser passados onde se pede um `FlushWriter`? Marque todos os que se aplicam.",
+    "hint": "Precisa dos dois métodos, e nada declarado.",
+    "choices": [
+      {
+        "text": "Um `*bufio.Writer`",
+        "why": "Sim: `greet(out, \"Ana\")` compilou e imprimiu `Hello, Ana`."
+      },
+      {
+        "text": "`os.Stdout`",
+        "why": "Recusado: `*os.File does not implement FlushWriter (missing method Flush)`."
+      },
+      {
+        "text": "Um tipo seu com métodos `Write` e `Flush` das assinaturas certas",
+        "why": "Sim. Satisfazer uma interface exige só os métodos, seja quem for que escreveu o tipo."
+      },
+      {
+        "text": "Um `*bytes.Buffer`",
+        "why": "Ele escreve, mas `bytes.Buffer` não tem `Flush`; nada do que guarda está esperando para ser repassado."
+      }
+    ]
+  },
+  "ex-vw6b4y7b": {
+    "prompt": "`doc[\"name\"]` guarda a string `\"Ana\"`. O que `n, ok := doc[\"name\"].(float64)` dá?",
+    "hint": "Esta é a forma de dois resultados.",
+    "choices": [
+      {
+        "text": "Um panic: o valor é uma string, não um `float64`",
+        "why": "Essa é a forma de um resultado. Com `ok` ali para receber a resposta, nada entra em panic."
+      },
+      {
+        "text": "`n` vale 0 e `ok` é falso",
+        "why": "Isso. A execução imprimiu `name   0 false`: o valor zero de `float64` e um não."
+      },
+      {
+        "text": "`n` é a string convertida em número, 0 aqui, e `ok` é verdadeiro",
+        "why": "Uma asserção não converte nada. Ela confere o tipo dinâmico e responde se bateu."
+      },
+      {
+        "text": "Nada: o compilador recusa, já que o map guarda uma string ali",
+        "why": "O compilador não enxerga o que um `map[string]any` guarda; aceita toda asserção sobre um."
+      }
+    ]
+  },
+  "ex-k6ngde1h": {
+    "prompt": "O JSON não tinha a chave `email`. O que `email := doc[\"email\"].(string)` faz?",
+    "hint": "O que um map dá para uma chave que não tem, e de que tipo é isso?",
+    "choices": [
+      {
+        "text": "`email` vale `\"\"`, o valor zero de uma string",
+        "why": "Só a forma de dois resultados devolve um valor zero; esta não tem onde dizer não."
+      },
+      {
+        "text": "O compilador se recusa a fazer asserção sobre uma chave que falta",
+        "why": "Que chaves existem só se sabe quando o JSON chega; a linha compilou."
+      },
+      {
+        "text": "Entra em panic: o map deu uma interface vazia, e ela não guarda string",
+        "why": "Isso: `interface conversion: interface {} is nil, not string`."
+      },
+      {
+        "text": "`email` é nil, já que a chave falta",
+        "why": "`email` seria uma `string`, e uma string não pode ser nil; o programa para antes de ela existir."
+      }
+    ]
+  },
+  "ex-7m8t1ztv": {
+    "prompt": "Associe cada linha ao que ela faz quando o programa é compilado e executado.",
+    "hint": "Duas delas nunca chegam a rodar.",
+    "pairs": [
+      {
+        "left": "`s := x.(string)` com `x` um `any` guardando um `int`",
+        "right": "Compila, depois entra em panic"
+      },
+      {
+        "left": "`s, ok := x.(string)` com `x` um `any` guardando um `int`",
+        "right": "Dá `\"\"` e `false`"
+      },
+      {
+        "left": "`s := n.(string)` com `n` um `int`",
+        "right": "Recusado: `n` não é uma interface"
+      },
+      {
+        "left": "`b := r.(bytes.Buffer)` com `r` um `io.Reader`",
+        "right": "Recusado como asserção de tipo impossível"
+      }
+    ],
+    "right_distractors": [
+      "Converte o valor para string"
+    ]
+  },
+  "ex-rntg6pm3": {
+    "prompt": "`report(w io.Writer, ...)` contém `if f, ok := w.(FlushWriter); ok`. O que essa linha pergunta?",
+    "hint": "`FlushWriter` é uma interface, não um tipo concreto.",
+    "choices": [
+      {
+        "text": "Se `w` foi declarado como `FlushWriter`",
+        "why": "`w` foi declarado `io.Writer`, e isso nunca muda; a pergunta é sobre o valor lá dentro."
+      },
+      {
+        "text": "Se o valor dentro de `w` também tem `Flush() error`",
+        "why": "Isso. Fazer asserção para uma interface pergunta pelos seus métodos, seja qual for o tipo concreto."
+      },
+      {
+        "text": "Se `w` é um `*bufio.Writer`, o único tipo com `Flush`",
+        "why": "Qualquer tipo com os dois métodos passa, inclusive um que você escreva; a asserção nunca nomeia o `bufio`."
+      },
+      {
+        "text": "Se `w` é nil",
+        "why": "Isso é `w == nil`. Uma asserção pergunta pelo tipo lá dentro, e também responde falso para nil."
+      }
+    ]
+  },
+  "ex-a2we5avr": {
+    "prompt": "`io.Copy(os.Stdout, &buf)` copia de um `*bytes.Buffer`. Pelas linhas de `copyBuffer` impressas na seção 03, o que ele faz primeiro?",
+    "hint": "De que interface um `*bytes.Buffer` tem um método?",
+    "choices": [
+      {
+        "text": "Lê 32 KB por vez e escreve cada pedaço",
+        "why": "Esse é o laço para os readers que responderam não; o buffer responde sim antes dele."
+      },
+      {
+        "text": "Entrega o trabalho inteiro ao método `WriteTo` do buffer",
+        "why": "Isso. `src.(WriterTo)` é a primeira asserção, e `*bytes.Buffer` tem `WriteTo`."
+      },
+      {
+        "text": "Pergunta ao writer por `ReadFrom` antes de qualquer coisa",
+        "why": "O writer é perguntado em segundo; o `WriteTo` do reader é conferido primeiro."
+      },
+      {
+        "text": "Entra em panic a menos que o reader tenha um método `WriteTo`",
+        "why": "As duas asserções usam `ok`, então um reader sem `WriteTo` é só copiado do jeito lento."
+      }
+    ]
+  },
+  "ex-bx1vc0d3": {
+    "prompt": "Uma função recebe `r io.Reader` e deve fechá-lo quando o valor puder ser fechado, e deixá-lo em paz caso contrário. Que linha faz isso?",
+    "hint": "Alguns readers têm `Close`, outros não, e `io.Reader` só promete `Read`.",
+    "choices": [
+      {
+        "text": "`r.Close()`",
+        "why": "Recusado: `r.Close undefined (type io.Reader has no field or method Close)`."
+      },
+      {
+        "text": "`r.(io.Closer).Close()`",
+        "why": "Compila, e entra em panic para todo reader sem `Close`, como um `*strings.Reader`."
+      },
+      {
+        "text": "`if c, ok := r.(io.Closer); ok { c.Close() }`",
+        "why": "Isso. Pergunta pela capacidade e só a usa quando a resposta é sim."
+      },
+      {
+        "text": "`if r != nil { r.(*os.File).Close() }`",
+        "why": "Arquivos não são os únicos readers com `Close`, e qualquer outro reader não nil entra em panic aqui."
+      }
+    ]
+  },
+  "ex-am4cjs7r": {
+    "prompt": "`r` é um `io.Reader`. Por que `r.(bytes.Buffer)` é recusado quando `r.(*bytes.Buffer)` compila?",
+    "hint": "Lição 26: que conjunto de métodos tem `Read`?",
+    "choices": [
+      {
+        "text": "Asserções de tipo só aceitam tipos ponteiro",
+        "why": "`.(float64)` e `.(string)` são asserções para tipos não ponteiro e compilaram a lição inteira."
+      },
+      {
+        "text": "O método `Read` pertence só ao conjunto de métodos do ponteiro",
+        "why": "Isso, então um valor sem o `*` nunca satisfaz a interface, e uma asserção fadada a falhar é recusada como impossível."
+      },
+      {
+        "text": "O buffer foi guardado com `&`, então a asserção precisa repetir o `&`",
+        "why": "O que foi guardado só se sabe na execução; uma diferença ali daria panic, não recusa."
+      },
+      {
+        "text": "Structs como `bytes.Buffer` são recusadas em asserções",
+        "why": "O `r.(*Player)` da lição 28 fez asserção para ponteiro de struct, e um tipo struct funciona onde o conjunto de métodos cabe."
+      }
+    ]
+  },
+  "ex-j9esb210": {
+    "prompt": "Em `switch v := x.(type)`, com `x` um `any`, qual é o tipo de `v` dentro de `case string:`?",
+    "hint": "Este caso nomeia exatamente um tipo.",
+    "choices": [
+      {
+        "text": "`any`, o tipo de `x`",
+        "why": "Isso é um caso que lista vários tipos. Um caso que nomeia um tipo dá esse tipo a `v`."
+      },
+      {
+        "text": "`string`, o tipo que o caso nomeia",
+        "why": "Isso, e é por isso que `%q` e `len(v)` funcionam nesse caso sem nenhuma asserção escrita."
+      },
+      {
+        "text": "`*string`, um ponteiro para o valor lá dentro",
+        "why": "`v` é o próprio valor, do tipo do caso; nenhum ponteiro entra nisso."
+      },
+      {
+        "text": "O tipo que `x` guardava quando o programa foi compilado",
+        "why": "`x` não guarda nada em tempo de compilação; o caso é escolhido enquanto o programa roda."
+      }
+    ]
+  },
+  "ex-kr1w2dgv": {
+    "prompt": "Em `case int, float64:` do mesmo switch, o que é `v`?",
+    "hint": "O compilador disse em `mismatched types ... and untyped int`.",
+    "choices": [
+      {
+        "text": "Um `any`, o tipo de `x`, já que `v` não pode ser os dois",
+        "why": "Isso. `v` não pode ser dois tipos ao mesmo tempo, então mantém o tipo interface, e `v * 2` foi recusado."
+      },
+      {
+        "text": "Um `float64`, o mais largo dos dois",
+        "why": "Go não converte nada implicitamente, lição 10; um `int` continua `int`."
+      },
+      {
+        "text": "Um `int`, o primeiro tipo listado",
+        "why": "Aí `2.5` não poderia estar nele. A ordem da lista não escolhe um tipo."
+      },
+      {
+        "text": "O que tiver casado, então `v * 2` compila",
+        "why": "O `%T` imprime o que casou, mas o compilador recusou `v * 2` nesse caso."
+      }
+    ]
+  },
+  "ex-tt9t8mvx": {
+    "prompt": "`kind` tem `case nil`, `case int, float64`, `case string` e `default`. Em que caso chega um `*int` nil?",
+    "hint": "O que contém a interface que o guarda?",
+    "choices": [
+      {
+        "text": "`case nil`, já que o ponteiro é nil",
+        "why": "`case nil` casa com uma interface sem tipo, e esta guarda o tipo `*int`."
+      },
+      {
+        "text": "`case int, float64`, já que aponta para um `int`",
+        "why": "`*int` e `int` são tipos diferentes, e um caso casa com o tipo exato."
+      },
+      {
+        "text": "`default`",
+        "why": "Isso: a execução imprimiu `something else: *int`."
+      },
+      {
+        "text": "Nenhum: o switch entra em panic com um ponteiro nil",
+        "why": "Um type switch lê só a palavra do tipo, e nunca segue o ponteiro."
+      }
+    ]
+  },
+  "ex-mzfmpnkb": {
+    "prompt": "Num type switch o compilador recusa a instrução ___, porque o caso seguinte receberia um `v` de outro tipo.",
+    "hint": "A lição 19 a usou para rodar o corpo do caso seguinte.",
+    "blanks": [
+      {
+        "accept": [
+          "fallthrough"
+        ]
+      }
+    ]
+  },
+  "ex-21sa5a9s": {
+    "prompt": "O seu tipo de erro `*NotFound` tem um método `Error`, e você acrescenta um método `String` que devolve outra coisa. O que `fmt.Println(err)` imprime?",
+    "hint": "Que caso vem primeiro no switch do `fmt`?",
+    "choices": [
+      {
+        "text": "O que `String` devolve, por ser o método mais novo",
+        "why": "A ordem em que os métodos foram escritos não significa nada; quem decide é a ordem dos casos no `fmt`."
+      },
+      {
+        "text": "O que `Error` devolve, já que `case error` vem primeiro",
+        "why": "Isso. `Both` imprimiu `from Error`, pelo mesmo motivo."
+      },
+      {
+        "text": "As duas strings, uma depois da outra",
+        "why": "Um switch roda um caso e para; nunca roda dois."
+      },
+      {
+        "text": "Nada: dois métodos de descrição tornam a chamada ambígua e ela entra em panic",
+        "why": "Não há ambiguidade num switch: roda o primeiro caso que casar."
+      }
+    ]
+  },
+  "ex-7t7fvxrb": {
+    "prompt": "Ponha em ordem o que acontece com a linha `through a bufio.Writer` na segunda versão de `report`.",
+    "hint": "Ela termina no terminal.",
+    "items": [
+      "O `fmt.Fprintln` a escreve no buffer do `bufio.Writer`",
+      "`w.(FlushWriter)` pergunta se o writer também tem `Flush`",
+      "A asserção responde com `ok` verdadeiro",
+      "`f.Flush()` repassa a linha para `os.Stdout`"
+    ]
+  },
+  "ex-nfjfjwbj": {
+    "prompt": "Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Uma para cada seção, e duas armadilhas.",
+    "choices": [
+      {
+        "text": "Uma interface montada por embutimento é satisfeita implicitamente, como toda outra interface",
+        "why": "Sim. `*bufio.Writer` cabe em `FlushWriter` sem nomeá-la."
+      },
+      {
+        "text": "A forma `v, ok := x.(T)` não entra em panic, seja o que for que `x` guarde",
+        "why": "Sim, até para uma interface vazia, como `email` mostrou."
+      },
+      {
+        "text": "`x.(T)` compila com `x` uma variável `int`",
+        "why": "Recusado: `n (variable of type int) is not an interface`."
+      },
+      {
+        "text": "`case nil` casa com um ponteiro nil guardado numa interface",
+        "why": "Só uma interface sem tipo; o `*int` nil foi para o `default`."
+      },
+      {
+        "text": "Um type switch pode nomear interfaces nos seus casos, e a ordem delas importa",
+        "why": "Sim. O `fmt` confere `error` antes de `Stringer`, e essa ordem escolhe o método."
+      }
+    ]
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "ex-bs3w82qy": {
+    "prompt": "Por que todo tipo em Go satisfaz `any`?",
+    "hint": "Quantos métodos `any` exige?",
+    "choices": [
+      {
+        "text": "Cada tipo declara em silêncio que implementa `any`",
+        "why": "Go não tem `implements` em lugar nenhum; a lição 27 mostrou que quem decide é o conjunto de métodos do tipo."
+      },
+      {
+        "text": "Não lista métodos, e todo tipo tem todos os zero",
+        "why": "Isso. Um tipo satisfaz uma interface tendo os métodos dela, e `any` não pede nenhum."
+      },
+      {
+        "text": "A verificação de tipos é desligada para variáveis declaradas `any`",
+        "why": "O compilador confere cada uso de um `any`; ele recusou `a + b` na seção 03."
+      },
+      {
+        "text": "Todos os tipos embutem `any`, como uma classe estende uma classe base",
+        "why": "Go não tem classe base para estender. Nada é embutido; a lista vazia de métodos é o motivo inteiro."
+      }
+    ]
+  },
+  "ex-t3zse26g": {
+    "prompt": "Depois de `var v any = 42` e em seguida `v = \"Ana\"`, o que `fmt.Printf(\"%T\", v)` imprime?",
+    "hint": "O `%T` informa o tipo do que está dentro.",
+    "choices": [
+      {
+        "text": "`any`",
+        "why": "`any` é o tipo da própria variável, que nunca muda; o `%T` imprime o tipo do valor guardado."
+      },
+      {
+        "text": "`string`",
+        "why": "Isso. O tipo dinâmico é o do último valor guardado, e foi uma string."
+      },
+      {
+        "text": "`int`, o tipo com que foi declarada",
+        "why": "Ela foi declarada `any`; 42 foi só o primeiro valor, e o segundo o substituiu, com tipo e tudo."
+      },
+      {
+        "text": "`interface {}`",
+        "why": "É assim que o `%T` escreve o próprio `any`, como em `*interface {}`; para `v` ele nomeia o que `v` guarda."
+      }
+    ]
+  },
+  "ex-fed9kxm1": {
+    "prompt": "O tipo do valor guardado dentro de uma interface, o que o `%T` imprime, se chama tipo ___.",
+    "hint": "Ele pode mudar cada vez que algo novo é guardado.",
+    "blanks": [
+      {
+        "accept": [
+          "dinâmico",
+          "dinamico"
+        ]
+      }
+    ]
+  },
+  "ex-5jxrq3jn": {
+    "prompt": "Na máquina do laboratório, quantos bytes ocupa uma variável do tipo `any`, seja o que for que ela guarde?",
+    "hint": "Duas palavras de 8 bytes: quais são?",
+    "unit": "bytes"
+  },
+  "ex-1z5q14z0": {
+    "prompt": "`names` é um `[]string`. Por que `fmt.Println(names...)` é recusado?",
+    "hint": "Quais são os elementos do slice que o `Println` quer?",
+    "choices": [
+      {
+        "text": "Um slice não pode ser passado com `...` a uma função variádica",
+        "why": "Pode, quando os tipos batem: a lição 21 passou `scores...` para `sum(nums ...int)`."
+      },
+      {
+        "text": "`any` não aceita strings",
+        "why": "Ele aceita todo tipo; `fmt.Println(\"ana\", \"bia\")` passa duas strings como dois valores `any`."
+      },
+      {
+        "text": "Ele precisa de um `[]any`, cujos elementos são valores de interface, e nenhuma conversão monta um ali mesmo",
+        "why": "Isso. Cada string precisa entrar numa interface dentro de um slice novo, e Go faz você escrever esse laço."
+      },
+      {
+        "text": "Strings num slice não são comparáveis",
+        "why": "Strings se comparam sem problema, e imprimir não compara nada; o problema é o tipo do elemento."
+      }
+    ]
+  },
+  "ex-z7k4nwty": {
+    "prompt": "`{\"age\": 31}` é decodificado num `map[string]any`. Que tipo `doc[\"age\"]` guarda?",
+    "hint": "JSON tem um tipo só de número.",
+    "choices": [
+      {
+        "text": "`int`, já que 31 não tem ponto decimal",
+        "why": "O `Unmarshal` não olha o ponto; sem struct a quem perguntar, todo número recebe o mesmo tipo."
+      },
+      {
+        "text": "`float64`",
+        "why": "Isso. A documentação lista: float64, for JSON numbers."
+      },
+      {
+        "text": "`json.Number`, o texto do número",
+        "why": "Só um decoder que recebeu `UseNumber()` guarda números assim; o `Unmarshal` não."
+      },
+      {
+        "text": "`int64`, para que ids grandes caibam",
+        "why": "Isso teria mantido o id inteiro, e a seção 02 mostrou que não manteve."
+      }
+    ]
+  },
+  "ex-2mw544r3": {
+    "prompt": "Um serviço envia `{\"order\": 9007199254740995}`, o seu programa o decodifica num `map[string]any` e devolve o id do pedido. O que o serviço recebe?",
+    "hint": "Onde 9007199254740995 fica em relação a 2⁵³?",
+    "choices": [
+      {
+        "text": "O mesmo id, porque um `float64` tem 64 bits",
+        "why": "Só 52 deles são fração, então acima de 2⁵³ nem todo número inteiro existe como `float64`."
+      },
+      {
+        "text": "Nada: o `Unmarshal` devolve um erro para um número que não cabe",
+        "why": "Na seção 02 o id mudou e `err` veio nil; nenhum erro é levantado por arredondamento."
+      },
+      {
+        "text": "Um número vizinho, e nenhum erro foi levantado em momento algum",
+        "why": "Isso. Ele passa de 2⁵³ e é ímpar, então foi arredondado para um `float64` que é outro id."
+      },
+      {
+        "text": "O mesmo id, já que números grandes viram `json.Number` sozinhos",
+        "why": "Nada muda sozinho: `json.Number` exige `UseNumber()` num decoder."
+      }
+    ]
+  },
+  "ex-ykszsv3b": {
+    "prompt": "`doc[\"age\"]` guarda um `float64`. O que acontece com `years := doc[\"age\"].(int)`?",
+    "hint": "O compilador consegue ver o que o map guarda?",
+    "choices": [
+      {
+        "text": "O compilador recusa, já que o valor é um `float64`",
+        "why": "O compilador não tem como saber o que um `map[string]any` vai guardar na execução, então aceita a linha."
+      },
+      {
+        "text": "`years` vira 31, convertido de 31.0",
+        "why": "Uma asserção não é uma conversão. Ela confere o tipo e entrega o valor, ou falha."
+      },
+      {
+        "text": "Compila, e entra em panic quando a linha roda",
+        "why": "Isso: `interface conversion: interface {} is float64, not int`, na linha 18."
+      },
+      {
+        "text": "`years` vale 0 e o programa segue",
+        "why": "Esta forma de um resultado nunca responde em silêncio; a forma que faz isso é a da lição 29."
+      }
+    ]
+  },
+  "ex-y4fr6mp4": {
+    "prompt": "`var a, b any = 2, 3` e depois `fmt.Println(a + b)`. O que acontece?",
+    "hint": "Para quais tipos o `+` é definido, e um `any` poderia ser um deles?",
+    "choices": [
+      {
+        "text": "Imprime 5",
+        "why": "Os valores são ints, mas as variáveis são `any`, e o compilador só enxerga as variáveis."
+      },
+      {
+        "text": "Imprime 23, juntando os dois como strings",
+        "why": "`any` não vira texto; nada é somado nem juntado, porque nada compila."
+      },
+      {
+        "text": "Compila e entra em panic na execução",
+        "why": "Esse é o destino de uma asserção errada. Aqui nenhuma asserção foi escrita e o compilador para antes."
+      },
+      {
+        "text": "O build falha: `+` não é definido em `any`",
+        "why": "Isso: `operator + not defined on a (variable of interface type any)`."
+      }
+    ]
+  },
+  "ex-4y59yqd1": {
+    "prompt": "`x` é uma variável do tipo `any`. Quais destes compilam sem uma asserção de tipo? Marque todos os que se aplicam.",
+    "hint": "O que todo valor Go aceita?",
+    "choices": [
+      {
+        "text": "`fmt.Println(x)`",
+        "why": "Sim. O `Println` recebe `...any`, e ser passado é algo que todo valor permite."
+      },
+      {
+        "text": "`len(x)`",
+        "why": "Recusado: `invalid argument: s (variable of interface type any) for built-in len`."
+      },
+      {
+        "text": "`x == y`, com `y` outro `any`",
+        "why": "Sim, compila; ainda pode dar panic na execução se os dois guardarem slices."
+      },
+      {
+        "text": "`var n int = x`",
+        "why": "Recusado, e a mensagem nomeia a correção: `need type assertion`."
+      },
+      {
+        "text": "`var y any = x`",
+        "why": "Sim. Atribuir um `any` a outro não exige nada."
+      }
+    ]
+  },
+  "ex-she2884p": {
+    "prompt": "`sum(xs []any)` faz a asserção de cada elemento para `float64`. Por que `sum([]any{1.5, 2})` entra em panic?",
+    "hint": "Que tipo um `2` sem tipo assume quando nada pede um?",
+    "choices": [
+      {
+        "text": "O `2` entrou como `int`, o seu tipo padrão",
+        "why": "Isso. Um `any` não pede tipo, então a constante assumiu o padrão, e a asserção queria `float64`."
+      },
+      {
+        "text": "Um `float64` não guarda o número 2 exatamente",
+        "why": "Guarda: 2 é um inteiro pequeno, e `[]float64{1.5, 2}` funcionou bem na versão tipada."
+      },
+      {
+        "text": "Um `[]any` não pode misturar um float e um int",
+        "why": "Ele mistura qualquer coisa; a seção 02 pôs cinco tipos diferentes num só `[]any`."
+      },
+      {
+        "text": "O `go vet` teria apontado, e ninguém o rodou",
+        "why": "Ele rodou, como `go vet && go run .`, e passou: nada aqui quebra uma regra que ele conheça."
+      }
+    ]
+  },
+  "ex-3v92p0h7": {
+    "prompt": "`var c, d any = 1, 1.0` e depois `fmt.Println(c == d)` imprime `false`. Por quê?",
+    "hint": "Dois valores de interface são iguais quando duas coisas são iguais.",
+    "choices": [
+      {
+        "text": "`1.0` é guardado de forma inexata, como os floats",
+        "why": "1.0 é exato num `float64`; a comparação nem chega aos números."
+      },
+      {
+        "text": "Dois valores de interface são comparados pelo endereço, como duas caixas separadas",
+        "why": "`a == b` com 1 e 1 imprimiu `true`, então não é o endereço que se compara."
+      },
+      {
+        "text": "Um guarda um `int` e o outro um `float64`",
+        "why": "Isso. Os tipos dinâmicos diferem, então os valores nem são comparados."
+      },
+      {
+        "text": "`==` é recusado entre interfaces e responde falso",
+        "why": "Uma recusa seria erro de compilação; `==` entre interfaces compila e compara tipo e valor."
+      }
+    ]
+  },
+  "ex-w79fa91j": {
+    "prompt": "Um cache é um `map[any]bool`. O que acontece quando o código executa `seen[key] = true` com `key` um `any` que guarda `[]int{1, 2}`?",
+    "hint": "Um map precisa comparar chaves; a lição 14 disse que tipos podem ser chave.",
+    "choices": [
+      {
+        "text": "O compilador recusa um slice como chave de map",
+        "why": "Recusaria para `map[[]int]bool`. Aqui o tipo da chave é `any`, que é comparável, então compila."
+      },
+      {
+        "text": "Compila, e entra em panic quando essa linha roda",
+        "why": "Isso. Dentro de um `any` o compilador não enxerga o slice; a execução no laboratório imprimiu `hash of unhashable type []int`."
+      },
+      {
+        "text": "Guarda o endereço do slice como chave",
+        "why": "Go nunca compara slices pelo endereço; um slice não é comparável de jeito nenhum."
+      },
+      {
+        "text": "Guarda uma cópia do slice, indexada pelo conteúdo",
+        "why": "Isso é o que uma chave array daria, `[2]int`; um slice não pode ter hash."
+      }
+    ]
+  },
+  "ex-nh63atqx": {
+    "prompt": "Associe cada necessidade à ferramenta que a seção 03 sugere para ela.",
+    "hint": "Comportamento, o mesmo código para vários tipos, e o desconhecido.",
+    "pairs": [
+      {
+        "left": "Uma `Sum` que funciona para `int` e para `float64`",
+        "right": "Generics, lição 30"
+      },
+      {
+        "left": "Todo tipo em que se pode escrever, arquivos e buffers do mesmo jeito",
+        "right": "Uma interface com métodos, lição 27"
+      },
+      {
+        "left": "Um documento JSON cujo formato ninguém conhecia antes",
+        "right": "`map[string]any` lido com asserções"
+      },
+      {
+        "left": "Um documento JSON cujos campos são conhecidos",
+        "right": "Uma struct com campos tipados"
+      }
+    ],
+    "right_distractors": [
+      "Um `[]any` com uma conversão para cada elemento"
+    ]
+  },
+  "ex-mm3tajpb": {
+    "prompt": "`var p *Player` e depois `var v any = p`. O que `fmt.Println(p == nil, v == nil)` imprime?",
+    "hint": "O que `v` guarda além do ponteiro?",
+    "choices": [
+      {
+        "text": "`true true`",
+        "why": "Essa é a crença comum. `v` guarda um tipo, `*main.Player`, então não é uma interface vazia."
+      },
+      {
+        "text": "`true false`",
+        "why": "Isso. O ponteiro é nil; a interface tem a palavra do tipo preenchida, então não é."
+      },
+      {
+        "text": "`false false`",
+        "why": "`p` foi declarado e nunca recebeu valor, então é um ponteiro nil e `p == nil` é verdadeiro."
+      },
+      {
+        "text": "Nada: comparar uma interface com `nil` é recusado",
+        "why": "Compila; `== nil` é como se pergunta se uma interface não guarda tipo nenhum."
+      }
+    ]
+  },
+  "ex-8xekrcht": {
+    "prompt": "Um valor de interface só é igual a `nil` quando não guarda valor nem ___.",
+    "hint": "É a palavra que o `%T` imprime.",
+    "blanks": [
+      {
+        "accept": [
+          "tipo"
+        ]
+      }
+    ]
+  },
+  "ex-k7ntzpm4": {
+    "prompt": "Na primeira versão de `lookup`, não há `zoe` no map. O que o laço imprime para ela?",
+    "hint": "`lookup` devolve `p` como `any`, e quem chama testa `r != nil`.",
+    "choices": [
+      {
+        "text": "`zoe not found`, pelo ramo `else`",
+        "why": "É o que a versão corrigida imprimiu. Aqui `r != nil` foi verdadeiro, já que `r` guardava um tipo."
+      },
+      {
+        "text": "`zoe found: <nil>`",
+        "why": "Isso. O teste passou, e o `%v` imprimiu o ponteiro nil lá dentro como `<nil>`."
+      },
+      {
+        "text": "Nada: `lookup` entra em panic com o ponteiro nil",
+        "why": "`lookup` só devolve o ponteiro; nada o lê até o `.Name` da última linha."
+      },
+      {
+        "text": "Nada: devolver um `*Player` como `any` não compila",
+        "why": "Todo tipo satisfaz `any`, então `return p` compilou, e o `go vet` também passou."
+      }
+    ]
+  },
+  "ex-x2e6zd7a": {
+    "prompt": "`func open(name string) io.Reader` devolve `f`, uma variável `*os.File` que fica nil quando o arquivo não existe. Quem chama testa `if r := open(n); r != nil`. Qual é a correção certa?",
+    "hint": "As mesmas duas palavras da figura, com `io.Reader` no lugar de `any`.",
+    "choices": [
+      {
+        "text": "Testar `r != (io.Reader)(nil)` nos chamadores",
+        "why": "É a mesma pergunta que `r != nil`, uma interface vazia, e recebe a mesma resposta errada."
+      },
+      {
+        "text": "Devolver o próprio `nil` quando `f` é nil, ou devolver `*os.File`",
+        "why": "Isso. Ou a interface volta sem tipo, ou quem chama compara um ponteiro com nil."
+      },
+      {
+        "text": "Rodar o `go vet`, que aponta um ponteiro nil guardado numa interface",
+        "why": "O `go vet` deixou passar o programa `lookup` em silêncio; nada nele quebra uma regra."
+      },
+      {
+        "text": "Imprimir `r` com `%v` antes de testá-lo",
+        "why": "O `%v` imprime `<nil>` para os dois tipos de nil, e é por isso que o bug se esconde em logs."
+      }
+    ]
+  },
+  "ex-t8j7b0xg": {
+    "prompt": "Ponha em ordem o que acontece quando a primeira `lookup(\"zoe\")` roda e o resultado é testado.",
+    "hint": "Comece dentro de `find`.",
+    "items": [
+      "`find` devolve um `*Player` nil, já que o map não tem `zoe`",
+      "`return p` guarda esse ponteiro no `any`, preenchendo a palavra do tipo",
+      "O `r != nil` de quem chama é verdadeiro",
+      "O programa imprime `zoe found: <nil>`"
+    ]
+  },
+  "ex-2p60xw3g": {
+    "prompt": "Quais destas afirmações sobre `any` são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "As seções 02, 03 e 04 dão uma cada.",
+    "choices": [
+      {
+        "text": "É um alias de `interface{}`, e chegou no Go 1.18",
+        "why": "Sim: `go doc builtin.any`, e um módulo `go 1.17` o recusou."
+      },
+      {
+        "text": "Decodificar JSON nele transforma números inteiros em `int`",
+        "why": "Todo número JSON vira `float64`, inclusive o `31`."
+      },
+      {
+        "text": "Uma asserção errada sobre ele compila e falha na execução",
+        "why": "Sim: `.(int)` sobre um `float64` compilou e depois entrou em panic."
+      },
+      {
+        "text": "Um `[]string` pode ser passado onde quer que se espere um `[]any`",
+        "why": "O compilador recusou `fmt.Println(names...)`; cada string precisa entrar num `[]any` novo."
+      },
+      {
+        "text": "Guardando um ponteiro nil, ele não é igual a `nil`",
+        "why": "Sim: a palavra do tipo está preenchida, então `v == nil` imprimiu `false`."
+      }
+    ]
+  }
+}

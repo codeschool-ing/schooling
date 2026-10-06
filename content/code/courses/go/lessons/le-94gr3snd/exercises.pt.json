@@ -1,0 +1,420 @@
+{
+  "ex-ef59shye": {
+    "prompt": "`x` é um `int`. Qual é o tipo de `p` depois de `p := &x`?",
+    "hint": "O `%T` imprimiu isso na seção 02.",
+    "choices": [
+      {
+        "text": "`&int`",
+        "why": "O `&` cria um endereço numa expressão; num tipo, \"ponteiro para\" se escreve com `*`."
+      },
+      {
+        "text": "`*int`",
+        "why": "Isso. `*int` é \"ponteiro para um `int`\", e o `%T` imprimiu exatamente isso."
+      },
+      {
+        "text": "`int`, uma segunda variável valendo 21",
+        "why": "É o que `p := x` criaria. `&x` é o endereço, não uma cópia do número."
+      },
+      {
+        "text": "`pointer`, um tipo próprio compartilhado por todo endereço",
+        "why": "Um ponteiro Go carrega o tipo para o qual aponta; `*int` e `*string` são tipos diferentes."
+      }
+    ]
+  },
+  "ex-x0zxpz56": {
+    "prompt": "Depois de `x := 21` e `p := &x`, o comando `___ = 30` faz `x` valer 30 sem citar `x`.",
+    "hint": "Siga o ponteiro, do lado esquerdo do `=`.",
+    "blanks": [
+      {
+        "accept": [
+          "*p"
+        ]
+      }
+    ]
+  },
+  "ex-de9yccye": {
+    "prompt": "`var p *int` seguido de `fmt.Println(*p)`. O que acontece?",
+    "hint": "Qual é o valor zero de um ponteiro, e o que há nesse endereço?",
+    "choices": [
+      {
+        "text": "Imprime 0, o valor zero de um `int`",
+        "why": "Não há `int` para ler: `p` é nil e não aponta para variável nenhuma."
+      },
+      {
+        "text": "Imprime `<nil>`",
+        "why": "É o que imprimir o próprio `p` dá. `*p` tenta segui-lo."
+      },
+      {
+        "text": "Entra em panic: invalid memory address or nil pointer dereference",
+        "why": "Isso. Seguir um ponteiro nil para o programa, em tempo de execução, com status de saída 2."
+      },
+      {
+        "text": "O compilador recusa `*p`, porque vê um ponteiro que ainda não recebeu valor algum",
+        "why": "Compilou; se `p` é nil só se sabe enquanto o programa roda."
+      }
+    ]
+  },
+  "ex-m2yjhq54": {
+    "prompt": "`p := &nums[0]` aponta para dentro de um array de três `int`. Por que o compilador recusa `p++`?",
+    "hint": "Leia o erro: `non-numeric type *int`.",
+    "choices": [
+      {
+        "text": "Porque `p++` poderia passar do fim, e o compilador verifica limites",
+        "why": "A recusa não tem nada a ver com para onde `p` aponta; `p++` é recusado em qualquer ponteiro."
+      },
+      {
+        "text": "Porque um ponteiro não é um número, e Go não tem aritmética de ponteiros",
+        "why": "Isso. Para chegar ao próximo elemento você indexa o array, `nums[1]`."
+      },
+      {
+        "text": "Porque `++` é reservado para variáveis declaradas com `var`",
+        "why": "`*a++` funcionou na seção 02 com um ponteiro vindo de uma função; o `++` olha o tipo, não a declaração."
+      },
+      {
+        "text": "Porque arrays são valores, então os seus elementos não têm endereço",
+        "why": "`&nums[0]` compilou na linha anterior; elementos de array têm endereço, sim."
+      }
+    ]
+  },
+  "ex-ss43e8d5": {
+    "prompt": "`func newPlayer(name string) *Player { p := Player{Name: name}; return &p }`. Um revisor acostumado com C diz que o ponteiro devolvido fica solto quando a função retorna. O que é verdade?",
+    "hint": "O que `newCounter` imprimiu na seção 02?",
+    "choices": [
+      {
+        "text": "Fica solto; a função tem de usar `new(Player)` em vez disso",
+        "why": "`new(Player)` e `&p` dão a mesma garantia: a variável vive enquanto for alcançável."
+      },
+      {
+        "text": "É seguro para structs, e ficaria solto para um `int`",
+        "why": "`newCounter` devolveu o endereço de um `int` local, e os dois contadores continuaram funcionando."
+      },
+      {
+        "text": "É seguro: `p` vive enquanto o ponteiro devolvido o alcançar",
+        "why": "Isso. Uma variável Go vive enquanto algo a alcança; a lição 24 mostra onde o compilador a coloca."
+      },
+      {
+        "text": "O compilador se recusa a devolver o endereço de uma variável local",
+        "why": "`newCounter` fez exatamente isso e compilou."
+      }
+    ]
+  },
+  "ex-pwas49bb": {
+    "prompt": "`p` é um `*Player`. O que `p.Score++` faz?",
+    "hint": "Go não tem `->`.",
+    "choices": [
+      {
+        "text": "Muda uma cópia do jogador, como o `win` da lição 22 fazia",
+        "why": "O `win` da lição 22 recebia um `Player`. Através de um ponteiro a mudança chega ao jogador apontado."
+      },
+      {
+        "text": "Nada: é recusado, e o campo precisa de `(*p).Score++`",
+        "why": "A forma longa também compila, e ninguém a escreve, porque o ponto segue o ponteiro."
+      },
+      {
+        "text": "Move `p` para o próximo campo da struct",
+        "why": "Não há aritmética de ponteiros; o `++` vale para o campo."
+      },
+      {
+        "text": "Incrementa o `Score` do jogador para o qual `p` aponta",
+        "why": "Isso. `p.Score` num ponteiro quer dizer `(*p).Score`."
+      }
+    ]
+  },
+  "ex-9vx16agm": {
+    "prompt": "`bia := &Player{Name: \"Bia\", Score: 1}` e `twin := &Player{Name: \"Bia\", Score: 1}`. O que `bia == twin` e `*bia == *twin` imprimem?",
+    "hint": "Uma compara endereços, a outra compara structs.",
+    "choices": [
+      {
+        "text": "`true true`, já que os dois jogadores são iguais",
+        "why": "Os jogadores são iguais, e são duas variáveis, então os endereços diferem."
+      },
+      {
+        "text": "`false true`",
+        "why": "Isso. Dois `&Player{...}` criam duas variáveis; seguir os dois compara os campos."
+      },
+      {
+        "text": "`false false`, porque ponteiros para structs nunca são iguais",
+        "why": "`p == &x` deu `true` na seção 02: ponteiros são iguais quando levam a uma mesma variável."
+      },
+      {
+        "text": "Um erro de compilação: structs não podem ser comparadas",
+        "why": "Uma struct cujos campos são comparáveis se compara com `==`, campo a campo."
+      }
+    ]
+  },
+  "ex-3g9m9wpd": {
+    "prompt": "`ana` é uma variável do tipo `Player`. Quais destas expressões têm o tipo `*Player`? Marque todas as que se aplicam.",
+    "hint": "A seção 03 citou três jeitos de obter um.",
+    "choices": [
+      {
+        "text": "`&ana`",
+        "why": "Sim: o endereço de uma variável que já existe."
+      },
+      {
+        "text": "`&Player{Name: \"Bia\"}`",
+        "why": "Sim: uma struct criada na hora, e o endereço dela."
+      },
+      {
+        "text": "`new(Player)`",
+        "why": "Sim: um `Player` zerado e o endereço dele."
+      },
+      {
+        "text": "`Player{}`",
+        "why": "Não: isso é um valor `Player`, sem endereço tomado."
+      },
+      {
+        "text": "`*ana`",
+        "why": "Não: `*` segue um ponteiro, e `ana` não é um, então isso não compila."
+      }
+    ]
+  },
+  "ex-3fcnfzjp": {
+    "prompt": "`Options{Limit: &10}` é recusado com `cannot take address of 10`. Por quê?",
+    "hint": "Do que o `&` precisa à sua direita?",
+    "choices": [
+      {
+        "text": "`Limit` é um `*int`, e 10 é uma constante sem tipo que ainda não tem tipo",
+        "why": "A mensagem é sobre o endereço, não o tipo; `new(10)` transforma a mesma constante num `int` sem problema."
+      },
+      {
+        "text": "O `&` precisa de uma variável, e uma constante não é uma",
+        "why": "Isso. Antes do Go 1.26 a correção era `n := 10` e `&n`; agora `new(10)` cria a variável."
+      },
+      {
+        "text": "O `&` não é permitido dentro de um literal de struct",
+        "why": "`Limit: &n` dentro do literal é a forma antiga, que funciona."
+      },
+      {
+        "text": "Campos ponteiro só são definidos depois que a struct é criada",
+        "why": "Um literal os define como qualquer outro campo: `Options{Limit: new(10)}` rodou."
+      }
+    ]
+  },
+  "ex-y5wze0ka": {
+    "prompt": "`new(10)` compila num módulo cuja linha `go` diz 1.___ ou mais.",
+    "hint": "O compilador disse isso quando a linha foi ajustada para 1.25.",
+    "blanks": [
+      {
+        "accept": [
+          "26"
+        ]
+      }
+    ]
+  },
+  "ex-04jg5b63": {
+    "prompt": "Por que o compilador recusa `&ages[\"ana\"]` num `map[string]int`?",
+    "hint": "O que o `grow` faz com a tabela antiga?",
+    "choices": [
+      {
+        "text": "Porque valores de map são constantes depois de guardados",
+        "why": "`ages[\"ana\"] = 31` muda um; a recusa é sobre o endereço."
+      },
+      {
+        "text": "Porque um map muda as suas entradas para uma tabela nova quando cresce",
+        "why": "Isso. Um ponteiro para um elemento levaria a uma tabela que o map descartou."
+      },
+      {
+        "text": "Porque um map já é um ponteiro, então o `&` seria redundante",
+        "why": "O valor do map é um ponteiro para a tabela; um elemento dentro da tabela é outra coisa."
+      },
+      {
+        "text": "Porque só elementos struct de um map têm endereço",
+        "why": "`players[\"ana\"].Score = 11` também foi recusado: nenhum elemento de map é uma variável."
+      }
+    ]
+  },
+  "ex-kmje29my": {
+    "prompt": "`players` é um `map[string]Player`, e `players[\"ana\"].Score = 11` é recusado. Qual destas compila e muda a pontuação de Ana?",
+    "hint": "Trate a struct guardada como valor: leia, mude, guarde de volta.",
+    "choices": [
+      {
+        "text": "`(&players[\"ana\"]).Score = 11`",
+        "why": "Um elemento de map não tem endereço, então `&players[\"ana\"]` também é recusado."
+      },
+      {
+        "text": "`players[\"ana\"]->Score = 11`",
+        "why": "Go não tem `->`; essa é a grafia de C."
+      },
+      {
+        "text": "`p := players[\"ana\"]; p.Score = 11; players[\"ana\"] = p`",
+        "why": "Isso. A cópia é uma variável, então o seu campo é atribuível, e guardá-la de volta substitui a entrada."
+      },
+      {
+        "text": "`*players[\"ana\"].Score = 11`",
+        "why": "`Score` é um `int`, não um ponteiro, então não há nada para o `*` seguir."
+      }
+    ]
+  },
+  "ex-p183ngky": {
+    "prompt": "`nums := make([]int, 3, 10)`, `first := &nums[0]`, `nums = append(nums, 4)`, `*first = 100`. Quanto vale `nums[0]`?",
+    "hint": "Compare a capacidade aqui com a da seção 04.",
+    "choices": [
+      {
+        "text": "100, porque o `append` tinha espaço e não mudou a slice de lugar",
+        "why": "Isso. Com capacidade 10, o 4 foi para o mesmo array, e `first` continua apontando para dentro dele."
+      },
+      {
+        "text": "0, porque o `append` sempre leva a slice para um array novo",
+        "why": "Ele muda de lugar só quando a capacidade acaba; a lição 12 mostrou os dois casos."
+      },
+      {
+        "text": "Um panic, porque `first` aponta para um elemento velho",
+        "why": "Nem um ponteiro velho causa panic; e aqui ele nem está velho."
+      },
+      {
+        "text": "0, já que `first` foi obtido antes do append e aponta para o array antigo",
+        "why": "Quando ele foi obtido só importa se o append mudou a slice de lugar, e com espaço sobrando não mudou."
+      }
+    ]
+  },
+  "ex-azm2czaf": {
+    "prompt": "Ponha em ordem o que acontece em `~/pointers-stale`, do ponteiro sendo obtido até a escrita que `nums` nunca vê.",
+    "hint": "A slice começa cheia: comprimento 3, capacidade 3.",
+    "items": [
+      "`first := &nums[0]` aponta para dentro do array da slice",
+      "o `append` não encontra espaço depois do comprimento",
+      "o `append` copia os três elementos para um array novo e acrescenta 4",
+      "`nums` recebe a slice sobre o array novo",
+      "`*first = 100` escreve no array antigo"
+    ]
+  },
+  "ex-dmf0xkf6": {
+    "prompt": "`addTo(s *[]int, v int)` faz append através de um ponteiro. Que formato a biblioteca padrão usa em funções que fazem uma slice crescer?",
+    "hint": "Olhe o próprio `append`, e o `slices.Insert`.",
+    "choices": [
+      {
+        "text": "Receber `*[]T`, para quem chama não precisar atribuir nada",
+        "why": "Esse é o formato de `addTo`; `append` e `slices.Insert` recebem uma slice e devolvem uma."
+      },
+      {
+        "text": "Devolver a slice nova, que quem chama guarda",
+        "why": "Isso. `s = append(s, v)` mostra na chamada que `s` muda."
+      },
+      {
+        "text": "Devolver um ponteiro para o array novo",
+        "why": "Uma slice já carrega esse ponteiro, com comprimento e capacidade."
+      },
+      {
+        "text": "Nenhum: slices são passadas por referência, então quem chama vê o crescimento",
+        "why": "A lição 22 desmontou essa imagem; o comprimento de quem chama está no próprio valor slice de quem chama."
+      }
+    ]
+  },
+  "ex-2xr1x4mm": {
+    "prompt": "Ligue cada trecho de sintaxe ao que ele quer dizer.",
+    "hint": "O asterisco quer dizer uma coisa num tipo e outra numa expressão.",
+    "pairs": [
+      {
+        "left": "`&x`",
+        "right": "o endereço da variável x"
+      },
+      {
+        "left": "`*p` numa expressão",
+        "right": "a variável para a qual p aponta"
+      },
+      {
+        "left": "`*int` num tipo",
+        "right": "ponteiro para um int"
+      },
+      {
+        "left": "`nil` como ponteiro",
+        "right": "um ponteiro que não leva a variável nenhuma"
+      }
+    ],
+    "right_distractors": [
+      "o int guardado logo depois de x na memória"
+    ]
+  },
+  "ex-3r90q89t": {
+    "prompt": "`func reset(p *Player) { p = &Player{} }` é chamada como `reset(&ana)`, com a pontuação de Ana em 10. Quanto vale `ana.Score` depois?",
+    "hint": "A função escreveu através de `p`, ou em `p`?",
+    "choices": [
+      {
+        "text": "0, porque a função recebeu o endereço de Ana e trocou o que havia lá",
+        "why": "Ela recebeu o endereço e depois trocou a sua cópia dele, sem escrever através dele."
+      },
+      {
+        "text": "10, porque a função só mudou a sua própria cópia do ponteiro",
+        "why": "Isso. É o `replace` da lição 22 de novo: atribuir a um parâmetro nunca chega a quem chamou; `*p = Player{}` chegaria."
+      },
+      {
+        "text": "Um panic, porque o jogador novo é liberado no retorno",
+        "why": "Nada entra em panic; o jogador novo só fica inalcançável quando `reset` retorna."
+      },
+      {
+        "text": "Um erro de compilação: um parâmetro ponteiro é só leitura",
+        "why": "Um parâmetro é uma variável comum, ponteiro ou não, e atribuir a ele compila."
+      }
+    ]
+  },
+  "ex-dbqq80c6": {
+    "prompt": "`byName := map[string]*Player{\"ana\": &ana}`, depois `byName[\"ana\"].Score = 50`. Quanto vale `ana.Score`?",
+    "hint": "O que o map guardou: um jogador, ou um endereço?",
+    "choices": [
+      {
+        "text": "Inalterada, porque um map guarda uma cópia do que você põe nele",
+        "why": "Ele guardou uma cópia do ponteiro, e a cópia leva à própria `ana`."
+      },
+      {
+        "text": "Nada: atribuir a um campo através de um map é recusado",
+        "why": "Essa recusa é para `map[string]Player`. Aqui o elemento é um ponteiro, e o campo pertence a uma variável."
+      },
+      {
+        "text": "50",
+        "why": "Isso. O map guarda `&ana`, então o ponto o segue até `ana` e escreve lá."
+      },
+      {
+        "text": "Inalterada até o map ser guardado de volta com `byName[\"ana\"] = p`",
+        "why": "Guardar de volta é a correção para um map de structs; com ponteiros a escrita já chegou."
+      }
+    ]
+  },
+  "ex-x9dx02t8": {
+    "prompt": "Num módulo cuja linha `go` é 1.27.1, quais destas compilam? `nums` é um `[]int`, `ages` um `map[string]int`, `ana` um `Player` e `p := &ana`. Marque todas as que se aplicam.",
+    "hint": "Endereços de elementos de slice, sim; de elementos de map, não; aritmética, nunca.",
+    "choices": [
+      {
+        "text": "`q := &nums[1]`",
+        "why": "Sim: um elemento de slice é uma variável com endereço."
+      },
+      {
+        "text": "`a := &ages[\"ana\"]`",
+        "why": "Não: um elemento de map não tem endereço, porque o map o muda de lugar."
+      },
+      {
+        "text": "`p.Score = 3`",
+        "why": "Sim: o ponto segue `p` até `ana`."
+      },
+      {
+        "text": "`p = p + 1`",
+        "why": "Não: Go não tem aritmética de ponteiros."
+      },
+      {
+        "text": "`n := new(42)`",
+        "why": "Sim: o `new` aceita uma expressão do Go 1.26 em diante."
+      }
+    ]
+  },
+  "ex-wq0cstdz": {
+    "prompt": "Quando uma função deve receber um `*Player` em vez de um `Player`?",
+    "hint": "A seção 03 deu duas razões, as duas da lição 22.",
+    "choices": [
+      {
+        "text": "Sempre, porque copiar uma struct é lento",
+        "why": "A lição 22 mediu uma struct pequena sendo copiada dentro do custo da chamada."
+      },
+      {
+        "text": "Quando lê mais de um campo do jogador que recebeu como argumento da função",
+        "why": "Ler campos funciona igual numa cópia; o número de campos lidos não é a questão."
+      },
+      {
+        "text": "Quando precisa mudar o jogador de quem chamou, ou a struct é grande",
+        "why": "Isso. Fora isso, a cópia mantém o jogador de quem chamou fora do alcance da função."
+      },
+      {
+        "text": "Nunca: ponteiros para structs são inseguros em Go",
+        "why": "Ponteiros Go não têm aritmética e mantêm vivo o alvo; `win(&ana)` é Go comum."
+      }
+    ]
+  }
+}

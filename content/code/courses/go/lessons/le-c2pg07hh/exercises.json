@@ -1,0 +1,567 @@
+[
+  {
+    "id": "ex-ky3fygbc",
+    "version": 1,
+    "section": "break-continue",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `~/flow`, the last line of the list is `\"40\"`, and the sum came out as 19. Why was `40` never added?",
+    "hint": "Look at the line just before it.",
+    "choices": [
+      {
+        "text": "`continue` had skipped a line earlier, and it skips every line after that one too",
+        "correct": false,
+        "why": "`continue` ends one turn only; `\"7\"` came after the skipped empty line and was added."
+      },
+      {
+        "text": "The loop had ended at `\"end\"`",
+        "correct": true,
+        "why": "Right. `break` left the loop at `\"end\"`, so the turn that would have read `\"40\"` never happened."
+      },
+      {
+        "text": "`strconv.Atoi` refused `\"40\"` as a number",
+        "correct": false,
+        "why": "It accepts `\"40\"`; a refusal would have printed `skipping \"40\"`, and nothing like that was printed."
+      },
+      {
+        "text": "`break` left the `if`, and the loop then skipped to its last turn",
+        "correct": false,
+        "why": "`break` never leaves an `if`; it leaves the nearest loop around it, and there was no last turn."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc5eyy3k",
+    "version": 1,
+    "section": "break-continue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `break` is inside an `if`, which is inside a `for`. When it runs, which statement runs next?",
+    "hint": "Which of the two is something a `break` can leave?",
+    "choices": [
+      {
+        "text": "The first statement after the `if`'s closing brace, still inside the loop",
+        "correct": false,
+        "why": "That is the picture of `break` leaving the `if`. An `if` is not something `break` leaves."
+      },
+      {
+        "text": "The loop's condition, for the next turn",
+        "correct": false,
+        "why": "That is `continue`, which ends one turn and lets the loop go on."
+      },
+      {
+        "text": "The first statement after the loop",
+        "correct": true,
+        "why": "Right. `break` ends the nearest `for` around it, and the program carries on after that loop."
+      },
+      {
+        "text": "Whatever called the function, as with `return`",
+        "correct": false,
+        "why": "`break` stays in the function. Only `return` leaves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cay8g9c9",
+    "version": 1,
+    "section": "break-continue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`i := 0; for i < len(lines) { if lines[i] == \"\" { continue }; ...; i++ }` meets an empty line. What happens?",
+    "hint": "Is `i++` part of the loop, or part of the body?",
+    "choices": [
+      {
+        "text": "It skips the empty line and goes on with the next one",
+        "correct": false,
+        "why": "That is what the three-clause form does, because there the `i++` runs after every turn."
+      },
+      {
+        "text": "It goes round on the same empty line for ever, because `i++` is never reached",
+        "correct": true,
+        "why": "Right. `continue` skipped the `i++` as an ordinary line of the body; `timeout` had to kill the program."
+      },
+      {
+        "text": "The compiler refuses it: `continue is not in a loop`",
+        "correct": false,
+        "why": "The `continue` is in a loop, so it compiles; that message is for a `continue` with no loop around it."
+      },
+      {
+        "text": "It builds, but `go vet` reports that the loop never ends",
+        "correct": false,
+        "why": "`go vet` exited 0 on exactly this loop. Nothing in the toolchain knows the loop was meant to end."
+      }
+    ]
+  },
+  {
+    "id": "ex-kknfrmfg",
+    "version": 1,
+    "section": "break-continue",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`timeout 2 ./skip; echo $?` printed `___`, the status `timeout` exits with when it had to kill the command.",
+    "hint": "A three-digit number.",
+    "blanks": [
+      {
+        "accept": [
+          "124"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vp7m0vfp",
+    "version": 1,
+    "section": "break-continue",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`check(n int)` contains `if n < 0 { break }`, and `main` calls `check` inside a `for`. What does the compiler do?",
+    "hint": "Where is the nearest loop, counting only this function?",
+    "choices": [
+      {
+        "text": "Compiles it, and the `break` ends the loop in `main`",
+        "correct": false,
+        "why": "`break` acts on a loop in its own function; the call from inside a loop does not lend it one."
+      },
+      {
+        "text": "Compiles it, and the `break` returns from `check` early",
+        "correct": false,
+        "why": "That would be `return`. A `break` with no loop, `switch` or `select` around it does not compile."
+      },
+      {
+        "text": "Compiles it with a warning, and ignores the `break` when it runs",
+        "correct": false,
+        "why": "Go has no warnings that let a build through; what it objects to, it refuses."
+      },
+      {
+        "text": "Refuses it: `break is not in a loop, switch, or select`",
+        "correct": true,
+        "why": "Right. The loop in `main` is in another function, so inside `check` there is nothing to leave."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3fqqkxz",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `break` with no label sits inside a `for` that is inside another `for`. What does it leave?",
+    "hint": "The grid program printed two answers.",
+    "choices": [
+      {
+        "text": "Both loops",
+        "correct": false,
+        "why": "That is the bug's assumption. The grid program found 49 after 25 because the outer loop carried on."
+      },
+      {
+        "text": "The inner loop only",
+        "correct": true,
+        "why": "Right. A `break` leaves the innermost `for`, `switch` or `select` around it."
+      },
+      {
+        "text": "The outer loop, because it was declared first",
+        "correct": false,
+        "why": "Order of declaration plays no part; the nearest enclosing loop is the one left."
+      },
+      {
+        "text": "Neither: it is a compile error without a label",
+        "correct": false,
+        "why": "A plain `break` in nested loops compiles and runs; the grid program did both."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph14q5t4",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The compiler says `label search defined and not used`. What has the programmer done?",
+    "hint": "Count the places the word `search` appears.",
+    "choices": [
+      {
+        "text": "Labelled a loop and left the `break` without the label's name",
+        "correct": true,
+        "why": "Right. A label that no `break`, `continue` or `goto` names is refused; `break search` fixed it."
+      },
+      {
+        "text": "Declared a variable called `search` and never read it",
+        "correct": false,
+        "why": "That message would say `declared and not used`; labels have a message of their own."
+      },
+      {
+        "text": "Put the label on an `if`, where labels are not allowed",
+        "correct": false,
+        "why": "The label was on the outer `for`, a fine place for it; the message is about it being unused."
+      },
+      {
+        "text": "Indented the label at the level of the `for` instead of one to its left",
+        "correct": false,
+        "why": "Layout is never a compile error; `gofmt` moves a label without the compiler minding."
+      }
+    ]
+  },
+  {
+    "id": "ex-pagantt1",
+    "version": 1,
+    "section": "labels",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `~/flow-rows`, `continue rows` is replaced by a plain `continue`. What sum does the program now print for row 1, `{16, -25, 36}`?",
+    "hint": "A plain `continue` skips one value, not the row.",
+    "value": 52,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-afz4z24b",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/flow-switch`, why did `delete` still run after the program printed `stopping`?",
+    "hint": "What is the innermost statement a `break` can leave there?",
+    "choices": [
+      {
+        "text": "The `stop` case fell through into `default`, which ran the next command",
+        "correct": false,
+        "why": "Go cases do not fall through: `default` did not print `running stop`. The next turn of the loop ran `delete`."
+      },
+      {
+        "text": "`break` is not allowed in a `case`, so it was ignored",
+        "correct": false,
+        "why": "It is allowed and it did something: it left the `switch`."
+      },
+      {
+        "text": "The `break` left the `switch`, not the `for` around it",
+        "correct": true,
+        "why": "Right. A `switch` is one of the statements `break` belongs to, so the loop went on to the next command."
+      },
+      {
+        "text": "`range` copies the slice first, so the loop cannot be stopped early",
+        "correct": false,
+        "why": "A `range` loop stops early with `break loop`, as the fixed version showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-eevb57p1",
+    "version": 1,
+    "section": "labels",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `break` inside a `case` should end the `for` around the `switch`. Which changes make it do so? Choose all that apply.",
+    "hint": "One of the wrong ones moves the trouble one turn along.",
+    "choices": [
+      {
+        "text": "Label the `for` and write `break` with that label",
+        "correct": true,
+        "why": "Yes: `break loop` stopped at `stopping` and went straight to `done`."
+      },
+      {
+        "text": "Replace `break` with `continue`",
+        "correct": false,
+        "why": "`continue` goes to the next turn of the loop, so `delete` would still run."
+      },
+      {
+        "text": "Write `return` in the `case`, if nothing follows the loop in that function",
+        "correct": true,
+        "why": "Yes. `return` leaves the function and every loop in it; with code after the loop, it would skip that too."
+      },
+      {
+        "text": "Add `fallthrough` before the `break`",
+        "correct": false,
+        "why": "`fallthrough` passes control to the next case's body, lesson 19's subject; it does not touch the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7wz2rfm",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`inner:` labels the inner loop, and `break inner` is written in the outer loop's body after the inner loop has ended. Why is it refused?",
+    "hint": "A label names a statement. Is the `break` inside that statement?",
+    "choices": [
+      {
+        "text": "Labels may only go on the outermost loop of a function",
+        "correct": false,
+        "why": "Any `for`, `switch` or `select` may be labelled; `inner:` itself was accepted."
+      },
+      {
+        "text": "A label's name must differ from every variable in the function",
+        "correct": false,
+        "why": "No variable called `inner` existed, and the message was `invalid break label inner`, not a clash."
+      },
+      {
+        "text": "The `break` is not inside the loop the label names",
+        "correct": true,
+        "why": "Right. `break L` can only leave a statement that encloses it, and the inner loop had already ended."
+      },
+      {
+        "text": "Labelled loops cannot be left with `break`, only with `goto`",
+        "correct": false,
+        "why": "`break search` left a labelled loop in the grid program."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9ygz9he",
+    "version": 1,
+    "section": "labels",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside an inner loop, under an outer loop labelled `outer`: match each statement to where the program goes next.",
+    "hint": "The figure in this section has the four arrows.",
+    "pairs": [
+      {
+        "left": "`continue`",
+        "right": "The next turn of the inner loop"
+      },
+      {
+        "left": "`break`",
+        "right": "The rest of the outer loop's body"
+      },
+      {
+        "left": "`continue outer`",
+        "right": "The next turn of the outer loop"
+      },
+      {
+        "left": "`break outer`",
+        "right": "The first statement after both loops"
+      }
+    ],
+    "right_distractors": [
+      "The caller of the function"
+    ]
+  },
+  {
+    "id": "ex-2xzx6aes",
+    "version": 1,
+    "section": "goto",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`goto done jumps over declaration of msg at ./main.go:10:6`. What rule did the program break?",
+    "hint": "At the label, would `msg` exist?",
+    "choices": [
+      {
+        "text": "A `goto` may only jump backwards",
+        "correct": false,
+        "why": "Forward jumps are allowed; this one was refused because of what it skipped."
+      },
+      {
+        "text": "It skipped a declaration whose variable would be in scope at the label",
+        "correct": true,
+        "why": "Right. At `done:` the name `msg` would exist without its declaration ever having run."
+      },
+      {
+        "text": "Its label is used before the line that defines it",
+        "correct": false,
+        "why": "A label can be named above or below its line; the whole function is its scope."
+      },
+      {
+        "text": "It jumped out of the `if` block it was written in",
+        "correct": false,
+        "why": "Jumping out of a block is allowed; jumping into one is the other refusal."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7891v0t",
+    "version": 1,
+    "section": "goto",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these `goto` statements does the compiler refuse?",
+    "hint": "Two rules, and only one of them is about blocks.",
+    "choices": [
+      {
+        "text": "A `goto again` inside an `if`, jumping to a label written above the `if`",
+        "correct": false,
+        "why": "That is the loop in `~/flow-goto`, which ran three turns. Leaving a block is allowed."
+      },
+      {
+        "text": "A `goto inside` written before an `if`, to a label inside that `if`'s braces",
+        "correct": true,
+        "why": "Right: `goto inside jumps into block`. Entering the block that way would skip the condition guarding it."
+      },
+      {
+        "text": "A forward `goto` over `msg = \"short\"`, where `var msg string` was declared above the `goto`",
+        "correct": false,
+        "why": "Skipping an assignment is fine: `msg` was already in scope, so nothing new appears at the label."
+      },
+      {
+        "text": "A `goto` in `main` to a label in `main`, three lines down, with no declarations between",
+        "correct": false,
+        "why": "A forward jump in the same function, over no declaration and into no block, breaks neither rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcfhq1bq",
+    "version": 1,
+    "section": "goto",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `~/flow-goto` program loops three times with `goto again` and works. Why does the section still say nobody should write it?",
+    "hint": "Think about the next person reading it.",
+    "choices": [
+      {
+        "text": "A loop made of `goto` runs slower than a `for`",
+        "correct": false,
+        "why": "Nothing in the lesson measured speed; the objection is to reading, not to running."
+      },
+      {
+        "text": "`go vet` reports every `goto`, so the code would not pass review",
+        "correct": false,
+        "why": "`go vet` reports no such thing; `goto` is legal Go and the program built cleanly."
+      },
+      {
+        "text": "A `for` states its start, condition and step in one place, and the `goto` version makes the reader rebuild them",
+        "correct": true,
+        "why": "Right. The reader has to find the label, every `goto` that names it, and the conditions around them."
+      },
+      {
+        "text": "`goto` is deprecated and will stop compiling in a future release",
+        "correct": false,
+        "why": "It is one of the 25 keywords, and Go's compatibility promise from lesson 2 keeps it working."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s49acky",
+    "version": 1,
+    "section": "goto",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every failure in the child process jumps to one label, because the child never comes back from that function and so cannot `___ err`.",
+    "hint": "The usual way out of a Go function.",
+    "blanks": [
+      {
+        "accept": [
+          "return"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bnpcpzc0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a three-clause `for i := 0; i < n; i++`, a `continue` runs. Put what happens next in order.",
+    "hint": "The post statement belongs to the loop.",
+    "items": [
+      "The rest of the body is skipped",
+      "`i++` runs",
+      "`i < n` is checked",
+      "The body starts again from its first line"
+    ]
+  },
+  {
+    "id": "ex-w15kzad0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `for` over commands holds a `switch`, and one `case` says `continue`. Where does the `continue` send the program?",
+    "hint": "Compare the two messages from section 02: which statements does each one belong to?",
+    "choices": [
+      {
+        "text": "To the next turn of the `for`, skipping the rest of the body",
+        "correct": true,
+        "why": "Right. `continue` belongs to loops alone, so a `switch` around it is not what it acts on."
+      },
+      {
+        "text": "To the end of the `switch`, the way a `break` there would",
+        "correct": false,
+        "why": "That is `break`'s rule: it is the one that belongs to a `switch` as well as to loops."
+      },
+      {
+        "text": "To the next `case` of the `switch`",
+        "correct": false,
+        "why": "That is `fallthrough`, lesson 19's subject, not `continue`."
+      },
+      {
+        "text": "Nowhere: it is a compile error, `continue is not in a loop`",
+        "correct": false,
+        "why": "That error needs no loop at all around the `continue`; here the `for` encloses it, so it compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wt7x9wd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these compile? Choose all that apply.",
+    "hint": "Two of the four are refusals you have seen; the other two are allowed by the same rules.",
+    "choices": [
+      {
+        "text": "A `break` inside a `switch` that is in no loop at all",
+        "correct": true,
+        "why": "Yes. `break` belongs to a `switch` too, so it leaves the `switch`."
+      },
+      {
+        "text": "A `continue` inside a `switch` that is in no loop at all",
+        "correct": false,
+        "why": "Refused: `continue is not in a loop`. A `switch` gives `continue` nothing to act on."
+      },
+      {
+        "text": "A `goto` back up to a label above a `:=` declaration it has already passed",
+        "correct": true,
+        "why": "Yes. Jumping back brings no new name into scope at the label, which is all the rule forbids."
+      },
+      {
+        "text": "A label on a loop that nothing ever names",
+        "correct": false,
+        "why": "Refused: `label search defined and not used`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny8rzkrk",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `break` with no label leaves the innermost `for`, `switch` or `___` around it.",
+    "hint": "The third one waits on channels, in the `go-concurrency` course.",
+    "blanks": [
+      {
+        "accept": [
+          "select"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

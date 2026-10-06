@@ -1,0 +1,605 @@
+[
+  {
+    "id": "ex-fw9rfwr7",
+    "version": 1,
+    "section": "embedded-interfaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`io` declares `type ReadWriter interface { Reader; Writer }`, each on its own line. What does that declaration mean?",
+    "hint": "What does an interface consist of?",
+    "choices": [
+      {
+        "text": "A `ReadWriter` holds a `Reader` value and a `Writer` value, like two struct fields",
+        "correct": false,
+        "why": "An interface holds one value, of one dynamic type. Its declaration lists methods, not fields."
+      },
+      {
+        "text": "Its method list is `Read` and `Write`, the methods of both",
+        "correct": true,
+        "why": "Right. Embedding adds the embedded interface's methods to the list, and that is all it does."
+      },
+      {
+        "text": "A type must declare that it extends `Reader` and `Writer`",
+        "correct": false,
+        "why": "Nothing is declared anywhere; a type satisfies `ReadWriter` by having both methods, as lesson 27 said."
+      },
+      {
+        "text": "Either a `Read` or a `Write` method is enough",
+        "correct": false,
+        "why": "Either one is not enough: `*strings.Reader` has `Read` and was refused for missing `Write`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qe7h8f2",
+    "version": 1,
+    "section": "embedded-interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these types satisfies `io.ReadWriteCloser`?",
+    "hint": "It asks for `Read`, `Write` and `Close`.",
+    "choices": [
+      {
+        "text": "`*bytes.Buffer`",
+        "correct": false,
+        "why": "It reads and writes, and the compiler refused it for `missing method Close`."
+      },
+      {
+        "text": "`*strings.Reader`",
+        "correct": false,
+        "why": "It only reads a string; it was refused even as an `io.ReadWriter`."
+      },
+      {
+        "text": "`*os.File`",
+        "correct": true,
+        "why": "Right. `var rwc io.ReadWriteCloser = os.Stdout` compiled, and `%T` printed `*os.File`."
+      },
+      {
+        "text": "`*bufio.Writer`",
+        "correct": false,
+        "why": "It writes and flushes, but it has no `Read` and no `Close` method."
+      }
+    ]
+  },
+  {
+    "id": "ex-e65hsfwm",
+    "version": 1,
+    "section": "embedded-interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var r io.Reader = &buf` holds a `*bytes.Buffer`, which has `Write`. Why is `var rw io.ReadWriter = r` refused?",
+    "hint": "What does the compiler know about `r`?",
+    "choices": [
+      {
+        "text": "One interface can never be assigned to another",
+        "correct": false,
+        "why": "`var r io.Reader = rw` compiled in the same section: bigger to smaller is fine."
+      },
+      {
+        "text": "The compiler judges `r` by its type, and `io.Reader` promises only `Read`",
+        "correct": true,
+        "why": "Right. What `r` holds is only known at run time, which is where an assertion asks."
+      },
+      {
+        "text": "It needs a conversion, `io.ReadWriter(r)`, to compile",
+        "correct": false,
+        "why": "A conversion is checked against the same lists and is refused too, with `missing method Write`."
+      },
+      {
+        "text": "A `*bytes.Buffer` loses its `Write` method once stored as an `io.Reader`",
+        "correct": false,
+        "why": "Nothing is lost: `%T` still prints `*bytes.Buffer`, and section 03 gets `Write` back by asking."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bwbs6h9",
+    "version": 1,
+    "section": "embedded-interfaces",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An interface listed inside another interface adds its ___ to the list, and that is all embedding does.",
+    "hint": "`Read`, `Write` and `Close` are three of them.",
+    "blanks": [
+      {
+        "accept": [
+          "methods",
+          "method"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k0s8k5kt",
+    "version": 1,
+    "section": "embedded-interfaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`io.ReadCloser` and `io.WriteCloser` both include `Close() error`. What happens with `type RWC interface { io.ReadCloser; io.WriteCloser }`?",
+    "hint": "A method set is a set.",
+    "choices": [
+      {
+        "text": "The compiler refuses it: `duplicate method Close`",
+        "correct": false,
+        "why": "That message exists for a module whose `go` line is older than 1.14; on go1.27.1 it compiled."
+      },
+      {
+        "text": "It has two `Close` methods, and a call must say which one",
+        "correct": false,
+        "why": "A method set has no way to hold two methods of one name; the two are the same method."
+      },
+      {
+        "text": "It has one `Close`, since an identical method counts once",
+        "correct": true,
+        "why": "Right. `var f ReadWriteCloser = os.Stdout` compiled and ran."
+      },
+      {
+        "text": "The later `Close` hides the earlier one, like a shallower struct field",
+        "correct": false,
+        "why": "Depth decides between struct fields in lesson 16; here there is nothing to decide, both are `Close() error`."
+      }
+    ]
+  },
+  {
+    "id": "ex-86vyfktz",
+    "version": 1,
+    "section": "embedded-interfaces",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`FlushWriter` embeds `io.Writer` and adds `Flush() error`. Which of these can be passed where a `FlushWriter` is asked for? Choose all that apply.",
+    "hint": "It needs both methods, and nothing declared.",
+    "choices": [
+      {
+        "text": "A `*bufio.Writer`",
+        "correct": true,
+        "why": "Yes: `greet(out, \"Ana\")` compiled and printed `Hello, Ana`."
+      },
+      {
+        "text": "`os.Stdout`",
+        "correct": false,
+        "why": "Refused: `*os.File does not implement FlushWriter (missing method Flush)`."
+      },
+      {
+        "text": "A type of your own with `Write` and `Flush` methods of the right signatures",
+        "correct": true,
+        "why": "Yes. Satisfying an interface takes only the methods, whoever wrote the type."
+      },
+      {
+        "text": "A `*bytes.Buffer`",
+        "correct": false,
+        "why": "It writes, but `bytes.Buffer` has no `Flush`; nothing it holds is waiting to be passed on."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw6b4y7b",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`doc[\"name\"]` holds the string `\"Ana\"`. What does `n, ok := doc[\"name\"].(float64)` give?",
+    "hint": "This is the two-result form.",
+    "choices": [
+      {
+        "text": "A panic: the value is a string, not a `float64`",
+        "correct": false,
+        "why": "That is the single-result form. With `ok` there to take the answer, nothing panics."
+      },
+      {
+        "text": "`n` is 0 and `ok` is false",
+        "correct": true,
+        "why": "Right. The run printed `name   0 false`: the zero value of `float64` and a no."
+      },
+      {
+        "text": "`n` is the string converted to a number, 0 here, and `ok` is true",
+        "correct": false,
+        "why": "An assertion converts nothing. It checks the dynamic type and answers whether it matched."
+      },
+      {
+        "text": "Nothing: the compiler refuses it, as the map holds a string there",
+        "correct": false,
+        "why": "The compiler cannot see what a `map[string]any` holds; it accepts every assertion on one."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6ngde1h",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The JSON had no `email` key. What does `email := doc[\"email\"].(string)` do?",
+    "hint": "What does a map give for a key it does not have, and what type is that?",
+    "choices": [
+      {
+        "text": "`email` is `\"\"`, the zero value of a string",
+        "correct": false,
+        "why": "Only the two-result form hands back a zero value; this one has nowhere to say no."
+      },
+      {
+        "text": "The compiler refuses to assert on a missing key",
+        "correct": false,
+        "why": "Which keys exist is only known when the JSON arrives; the line compiled."
+      },
+      {
+        "text": "It panics: the map gave an empty interface, and it holds no string",
+        "correct": true,
+        "why": "Right: `interface conversion: interface {} is nil, not string`."
+      },
+      {
+        "text": "`email` is nil, since the key is missing",
+        "correct": false,
+        "why": "`email` would be a `string`, and a string cannot be nil; the program stops before it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-7m8t1ztv",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line to what it does when the program is built and run.",
+    "hint": "Two of them never get to run.",
+    "pairs": [
+      {
+        "left": "`s := x.(string)` with `x` an `any` holding an `int`",
+        "right": "Compiles, then panics"
+      },
+      {
+        "left": "`s, ok := x.(string)` with `x` an `any` holding an `int`",
+        "right": "Gives `\"\"` and `false`"
+      },
+      {
+        "left": "`s := n.(string)` with `n` an `int`",
+        "right": "Refused: `n` is not an interface"
+      },
+      {
+        "left": "`b := r.(bytes.Buffer)` with `r` an `io.Reader`",
+        "right": "Refused as an impossible type assertion"
+      }
+    ],
+    "right_distractors": [
+      "Converts the value to a string"
+    ]
+  },
+  {
+    "id": "ex-rntg6pm3",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`report(w io.Writer, ...)` contains `if f, ok := w.(FlushWriter); ok`. What does that line ask?",
+    "hint": "`FlushWriter` is an interface, not a concrete type.",
+    "choices": [
+      {
+        "text": "Whether `w` was declared as a `FlushWriter`",
+        "correct": false,
+        "why": "`w` was declared `io.Writer`, and that never changes; the question is about the value inside."
+      },
+      {
+        "text": "Whether the value inside `w` also has `Flush() error`",
+        "correct": true,
+        "why": "Right. Asserting to an interface asks for its methods, whatever the concrete type turns out to be."
+      },
+      {
+        "text": "Whether `w` is a `*bufio.Writer`, the one type with `Flush`",
+        "correct": false,
+        "why": "Any type with both methods passes, including one you write; the assertion never names `bufio`."
+      },
+      {
+        "text": "Whether `w` is nil",
+        "correct": false,
+        "why": "That is `w == nil`. An assertion asks about the type inside, and answers false for nil too."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2we5avr",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`io.Copy(os.Stdout, &buf)` copies from a `*bytes.Buffer`. Going by the lines of `copyBuffer` printed in section 03, what does it do first?",
+    "hint": "Which interface does a `*bytes.Buffer` have a method of?",
+    "choices": [
+      {
+        "text": "It reads 32 KB at a time and writes each piece",
+        "correct": false,
+        "why": "That is the loop for readers that answered no; the buffer answers yes before it."
+      },
+      {
+        "text": "It hands the whole job to the buffer's `WriteTo` method",
+        "correct": true,
+        "why": "Right. `src.(WriterTo)` is the first assertion, and `*bytes.Buffer` has `WriteTo`."
+      },
+      {
+        "text": "It asks the writer for `ReadFrom` before anything else",
+        "correct": false,
+        "why": "The writer is asked second; the reader's `WriteTo` is checked first."
+      },
+      {
+        "text": "It panics unless the reader has a `WriteTo` method",
+        "correct": false,
+        "why": "Both assertions use `ok`, so a reader without `WriteTo` is simply copied the slow way."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx1vc0d3",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function receives `r io.Reader` and should close it when the value can be closed, and leave it alone otherwise. Which line does that?",
+    "hint": "Some readers have `Close`, some do not, and `io.Reader` promises only `Read`.",
+    "choices": [
+      {
+        "text": "`r.Close()`",
+        "correct": false,
+        "why": "Refused: `r.Close undefined (type io.Reader has no field or method Close)`."
+      },
+      {
+        "text": "`r.(io.Closer).Close()`",
+        "correct": false,
+        "why": "It compiles, and panics for every reader that has no `Close`, such as a `*strings.Reader`."
+      },
+      {
+        "text": "`if c, ok := r.(io.Closer); ok { c.Close() }`",
+        "correct": true,
+        "why": "Right. It asks for the capability and only uses it when the answer is yes."
+      },
+      {
+        "text": "`if r != nil { r.(*os.File).Close() }`",
+        "correct": false,
+        "why": "Files are not the only readers with `Close`, and any other non-nil reader panics here."
+      }
+    ]
+  },
+  {
+    "id": "ex-am4cjs7r",
+    "version": 1,
+    "section": "type-assertion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`r` is an `io.Reader`. Why is `r.(bytes.Buffer)` refused when `r.(*bytes.Buffer)` compiles?",
+    "hint": "Lesson 26: which method set has `Read`?",
+    "choices": [
+      {
+        "text": "Type assertions only accept pointer types",
+        "correct": false,
+        "why": "`.(float64)` and `.(string)` are assertions to non-pointer types and compiled throughout this lesson."
+      },
+      {
+        "text": "The method `Read` belongs to the pointer's method set alone",
+        "correct": true,
+        "why": "Right, so a value without the `*` never satisfies the interface, and an assertion bound to fail is refused as impossible."
+      },
+      {
+        "text": "The buffer was stored with `&`, so the assertion has to repeat the `&`",
+        "correct": false,
+        "why": "What was stored is only known at run time; a mismatch there would panic, not be refused."
+      },
+      {
+        "text": "Structs like `bytes.Buffer` are refused in assertions",
+        "correct": false,
+        "why": "Lesson 28's `r.(*Player)` asserted to a pointer to a struct, and a struct type works where the method set fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9esb210",
+    "version": 1,
+    "section": "type-switch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `switch v := x.(type)`, with `x` an `any`, what is the type of `v` inside `case string:`?",
+    "hint": "This case names exactly one type.",
+    "choices": [
+      {
+        "text": "`any`, the type of `x`",
+        "correct": false,
+        "why": "That is a case listing several types. A case naming one type gives `v` that type."
+      },
+      {
+        "text": "`string`, the type that case names",
+        "correct": true,
+        "why": "Right, which is why `%q` and `len(v)` work in that case with no assertion written."
+      },
+      {
+        "text": "`*string`, a pointer to the value inside",
+        "correct": false,
+        "why": "`v` is the value itself, of the case's type; no pointer is involved."
+      },
+      {
+        "text": "Whatever type `x` held when the program was compiled",
+        "correct": false,
+        "why": "`x` holds nothing at compile time; the case is chosen while the program runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr1w2dgv",
+    "version": 1,
+    "section": "type-switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `case int, float64:` of the same switch, what is `v`?",
+    "hint": "The compiler said it in `mismatched types ... and untyped int`.",
+    "choices": [
+      {
+        "text": "An `any`, the type of `x`, since `v` cannot be both",
+        "correct": true,
+        "why": "Right. `v` cannot be two types at once, so it keeps the interface type, and `v * 2` was refused."
+      },
+      {
+        "text": "A `float64`, the wider of the two",
+        "correct": false,
+        "why": "Go converts nothing implicitly, lesson 10; an `int` stays an `int`."
+      },
+      {
+        "text": "An `int`, the first type listed",
+        "correct": false,
+        "why": "Then `2.5` could not be in it. The order of the list does not choose a type."
+      },
+      {
+        "text": "Whichever matched, so `v * 2` compiles",
+        "correct": false,
+        "why": "`%T` prints whichever matched, but the compiler refused `v * 2` in that case."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt9t8mvx",
+    "version": 1,
+    "section": "type-switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kind` has `case nil`, `case int, float64`, `case string` and `default`. Which case does a nil `*int` reach?",
+    "hint": "What does the interface holding it contain?",
+    "choices": [
+      {
+        "text": "`case nil`, since the pointer is nil",
+        "correct": false,
+        "why": "`case nil` matches an interface with no type, and this one holds the type `*int`."
+      },
+      {
+        "text": "`case int, float64`, since it points at an `int`",
+        "correct": false,
+        "why": "`*int` and `int` are different types, and a case matches the type exactly."
+      },
+      {
+        "text": "`default`",
+        "correct": true,
+        "why": "Right: the run printed `something else: *int`."
+      },
+      {
+        "text": "None: the switch panics on a nil pointer",
+        "correct": false,
+        "why": "A type switch reads the type word only, and never follows the pointer."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzfmpnkb",
+    "version": 1,
+    "section": "type-switch",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a type switch the compiler refuses the statement ___, because the next case would receive a `v` of a different type.",
+    "hint": "Lesson 19 used it to run the body of the next case.",
+    "blanks": [
+      {
+        "accept": [
+          "fallthrough"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-21sa5a9s",
+    "version": 1,
+    "section": "type-switch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your error type `*NotFound` has an `Error` method, and you add a `String` method that returns something else. What does `fmt.Println(err)` print?",
+    "hint": "Which case comes first in `fmt`'s switch?",
+    "choices": [
+      {
+        "text": "What `String` returns, as the newest method",
+        "correct": false,
+        "why": "The order methods were written in means nothing; the order of the cases in `fmt` decides."
+      },
+      {
+        "text": "What `Error` returns, since `case error` comes first",
+        "correct": true,
+        "why": "Right. `Both` printed `from Error`, for the same reason."
+      },
+      {
+        "text": "Both strings, one after the other",
+        "correct": false,
+        "why": "A switch runs one case and stops; it never runs two."
+      },
+      {
+        "text": "Nothing: two describing methods make the call ambiguous and it panics",
+        "correct": false,
+        "why": "There is no ambiguity in a switch: the first case that matches runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t7fvxrb",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to the line `through a bufio.Writer` in the second version of `report`.",
+    "hint": "It ends on the terminal.",
+    "items": [
+      "`fmt.Fprintln` writes it into the `bufio.Writer`'s buffer",
+      "`w.(FlushWriter)` asks whether the writer also has `Flush`",
+      "The assertion answers with `ok` true",
+      "`f.Flush()` passes the line on to `os.Stdout`"
+    ]
+  },
+  {
+    "id": "ex-nfjfjwbj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true? Choose all that apply.",
+    "hint": "One for each section, and two traps.",
+    "choices": [
+      {
+        "text": "An interface built by embedding is satisfied implicitly, like every other interface",
+        "correct": true,
+        "why": "Yes. `*bufio.Writer` fits `FlushWriter` without naming it."
+      },
+      {
+        "text": "The form `v, ok := x.(T)` does not panic, whatever `x` holds",
+        "correct": true,
+        "why": "Yes, even for an empty interface, as `email` showed."
+      },
+      {
+        "text": "`x.(T)` compiles with `x` an `int` variable",
+        "correct": false,
+        "why": "Refused: `n (variable of type int) is not an interface`."
+      },
+      {
+        "text": "`case nil` matches a nil pointer stored in an interface",
+        "correct": false,
+        "why": "Only an interface with no type; the nil `*int` went to `default`."
+      },
+      {
+        "text": "A type switch can name interfaces in its cases, and their order matters",
+        "correct": true,
+        "why": "Yes. `fmt` checks `error` before `Stringer`, and that order picks the method."
+      }
+    ]
+  }
+]

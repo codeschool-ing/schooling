@@ -1,0 +1,396 @@
+{
+  "ex-7xwapa6a": {
+    "prompt": "Um arquivo contém `if (n > 0) {`, com parênteses. O que acontece com ele?",
+    "hint": "Rode-o, depois rode `gofmt -d` nele.",
+    "choices": [
+      {
+        "text": "O compilador recusa: Go não tem parênteses num `if`",
+        "why": "Compilou e imprimiu `7 is positive`. Go não precisa deles, o que não é o mesmo que recusá-los."
+      },
+      {
+        "text": "Compila e roda como está, e o `gofmt` remove os parênteses",
+        "why": "Isso. O programa rodou, e o `gofmt -d` mostrou `if (n > 0) {` virando `if n > 0 {`."
+      },
+      {
+        "text": "Compila, mas o `go vet` aponta os parênteses como provável engano",
+        "why": "Layout é assunto do `gofmt`, não do `go vet`; o `vet` procura código válido e errado."
+      },
+      {
+        "text": "Compila, e os parênteses fazem da condição um valor de outro tipo",
+        "why": "Parênteses agrupam uma expressão e não mudam nada no seu tipo; `(n > 0)` continua sendo um `bool`."
+      }
+    ]
+  },
+  "ex-jxy2cjmb": {
+    "prompt": "Por que um `else` que começa uma linha própria, abaixo da chave que fecha o bloco do `if`, é recusado?",
+    "hint": "O que o scanner acrescenta no fim de uma linha que termina em `}`?",
+    "choices": [
+      {
+        "text": "O compilador impõe o layout do `gofmt`, e esse layout mantém o `else` junto da chave",
+        "why": "O compilador aceita muita coisa que o `gofmt` mudaria, como `if (n > 0)`. Esta é gramática."
+      },
+      {
+        "text": "Um ponto e vírgula é inserido depois da `}`, então o comando `if` já terminou quando o `else` chega",
+        "why": "Isso. Uma linha que termina em `}` ganha um ponto e vírgula, e nenhum comando pode começar com `else`."
+      },
+      {
+        "text": "Go não tem `else` depois de um bloco de mais de uma linha",
+        "why": "O tamanho do bloco não conta; `~/cond` tem `} else {` depois de blocos de qualquer tamanho."
+      },
+      {
+        "text": "O `else` tem de ser seguido de `if`",
+        "why": "Um `else {` simples encerra a cadeia em `~/cond`; o problema é onde ele começa, não o que vem depois."
+      }
+    ]
+  },
+  "ex-k2qsfcnf": {
+    "prompt": "`if n > 0 fmt.Println(n, \"is positive\")`, numa linha só, sem chaves. O que o `go build` diz?",
+    "hint": "Em Go, as chaves fazem parte do `if`?",
+    "choices": [
+      {
+        "text": "Nada: um comando só não precisa de chaves",
+        "why": "Essa é a regra de C. Go não tem forma de `if` sem chaves."
+      },
+      {
+        "text": "Compila, com um aviso de que chaves são recomendadas",
+        "why": "Go não tem avisos que deixam o build passar."
+      },
+      {
+        "text": "`syntax error: unexpected name fmt, expected {`",
+        "why": "Isso. O parser queria a chave de abertura onde `fmt` começa."
+      },
+      {
+        "text": "`non-boolean condition in if statement`",
+        "why": "Essa é a mensagem da lição 8 para uma condição que não é `bool`; `n > 0` é."
+      }
+    ]
+  },
+  "ex-913s2md5": {
+    "prompt": "No fim de uma linha cujo último token poderia terminar um comando, como `}`, o scanner insere um `___`.",
+    "hint": "Um caractere, ou o nome dele.",
+    "blanks": [
+      {
+        "accept": [
+          ";",
+          "ponto e vírgula",
+          "ponto-e-vírgula"
+        ]
+      }
+    ]
+  },
+  "ex-gbk97q1t": {
+    "prompt": "Em `~/cond`, `n` vale 0. Quais condições de `if n < 0 … else if n == 0 … else` são avaliadas?",
+    "hint": "A primeira condição verdadeira encerra a cadeia.",
+    "choices": [
+      {
+        "text": "Só `n == 0`, porque é a que casa",
+        "why": "Go não tem como saber qual casa sem testar de cima, então `n < 0` é testada primeiro."
+      },
+      {
+        "text": "`n < 0`, depois `n == 0`, e nada depois disso, já que ela era verdadeira",
+        "why": "Isso. `n == 0` era verdadeira, o bloco dela rodou e a cadeia terminou."
+      },
+      {
+        "text": "Todas, e depois a primeira verdadeira é executada",
+        "why": "A cadeia para na primeira condição verdadeira; o `else` final nem entrou na história."
+      },
+      {
+        "text": "`n < 0`, e depois o `else`, já que o `else if` só é testado depois de um `else`",
+        "why": "A cadeia é testada de cima para baixo, e `else if n == 0` vem logo depois do primeiro bloco."
+      }
+    ]
+  },
+  "ex-vwm26gx1": {
+    "prompt": "`if n, err := strconv.Atoi(s); err != nil { … } else { … }`. Onde `n` pode ser usado?",
+    "hint": "O `else` de `~/cond-init` imprimiu `n`.",
+    "choices": [
+      {
+        "text": "Só no primeiro bloco, aquele em que a inicialização está escrita",
+        "why": "Essa é metade da imagem: o `else if` testou `n > 10` e o `else` imprimiu `n`."
+      },
+      {
+        "text": "Em qualquer lugar da função depois do `if`",
+        "why": "Uma linha depois da cadeia recebeu `undefined: n`."
+      },
+      {
+        "text": "Na condição e em todos os blocos da cadeia, e em nenhum lugar depois",
+        "why": "Isso. Os nomes de uma inicialização pertencem ao comando `if` inteiro, inclusive o `else`."
+      },
+      {
+        "text": "Só nos blocos `else`, porque o primeiro bloco roda quando houve erro",
+        "why": "Se o valor é útil ali é outra questão; o primeiro bloco também pode usar `n`."
+      }
+    ]
+  },
+  "ex-wbxn00hj": {
+    "prompt": "Depois da cadeia em `~/cond-init`, ainda dentro do laço, uma linha diz `fmt.Println(\"done with\", n)`. O que acontece?",
+    "hint": "Essa linha está dentro do comando `if`?",
+    "choices": [
+      {
+        "text": "Imprime o último `n`, ou 0 para `\"forty-two\"`",
+        "why": "Isso exigiria que `n` sobrevivesse ao `if`, e ele não sobrevive."
+      },
+      {
+        "text": "O build falha com `undefined: n`",
+        "why": "Isso. `n` terminou com a última chave de fechamento da cadeia."
+      },
+      {
+        "text": "Compila, e o `go vet` aponta que `n` pode não ter valor",
+        "why": "Nunca compila: fora da cadeia não existe `n` nenhum."
+      },
+      {
+        "text": "O build falha com `declared and not used: n`",
+        "why": "`n` é usado dentro da cadeia; a falha é o uso fora dela."
+      }
+    ]
+  },
+  "ex-h18564zy": {
+    "prompt": "Quais destas valem para `if n, err := strconv.Atoi(s); err != nil`? Escolha todas as que se aplicam.",
+    "hint": "Duas são sobre ordem e escopo, duas são crenças.",
+    "choices": [
+      {
+        "text": "`strconv.Atoi(s)` roda antes de `err != nil` ser testado",
+        "why": "Sim: o comando curto roda primeiro, depois a condição."
+      },
+      {
+        "text": "Uma inicialização só pode conter uma chamada que devolve um `error`",
+        "why": "Qualquer comando curto serve; `switch ext := strings.ToLower(…); ext` usou um sem erro nenhum."
+      },
+      {
+        "text": "Se um `err` já existe do lado de fora, este `err` é uma variável nova que o esconde",
+        "why": "Sim. O `:=` declara nomes novos no bloco do `if`, como a lição 6 mostrou para o corpo de um laço."
+      },
+      {
+        "text": "`n` mantém o valor depois do `if`, até a próxima inicialização substituí-lo",
+        "why": "Não existe `n` depois do `if`: `undefined: n`."
+      }
+    ]
+  },
+  "ex-s0y7p9k9": {
+    "prompt": "Uma função converte um número com `strconv.Atoi` e precisa dele em mais dez linhas depois de verificar o erro. Que forma serve?",
+    "hint": "Onde `n` precisa ser declarado para sobreviver à verificação?",
+    "choices": [
+      {
+        "text": "`if n, err := …; err != nil { return … }`, e usar `n` abaixo",
+        "why": "`n` terminaria com o `if`, e todo uso abaixo seria `undefined: n`."
+      },
+      {
+        "text": "A forma com inicialização, com as dez linhas levadas para o `else` dela",
+        "why": "Compila, e é a escada contra a qual a seção argumentou: o caminho principal um nível para dentro."
+      },
+      {
+        "text": "`n, err := …` sozinho, em seguida `if err != nil { return … }`, e então o resto",
+        "why": "Isso. É o `double` de `~/cond-after`: `n` é declarado antes do `if` e sobrevive a ele."
+      },
+      {
+        "text": "A forma com inicialização, depois `n := n` após o `if` para guardá-lo",
+        "why": "Depois do `if` não há `n` para copiar; o `n` da direita é igualmente indefinido."
+      }
+    ]
+  },
+  "ex-wwh3jg8b": {
+    "prompt": "Ponha as verificações de `priceFlat` na ordem em que a função as faz.",
+    "hint": "Os casos especiais primeiro, o preço comum por último.",
+    "items": [
+      "`age < 0`: devolve -1",
+      "`age < 12`: devolve 0",
+      "`member`: devolve 15",
+      "Devolve 20"
+    ]
+  },
+  "ex-7h1dmdqk": {
+    "prompt": "Em `~/cond-switch`, `\"sat\"` imprimiu `weekend` e mais nada, embora o caso `\"fri\"` venha logo depois. Por quê?",
+    "hint": "O que encerra um caso em Go?",
+    "choices": [
+      {
+        "text": "O caso `\"sat\", \"sun\"` termina com um `break` invisível que o `gofmt` acrescenta",
+        "why": "O `gofmt` não acrescenta nada assim; a regra está na própria linguagem."
+      },
+      {
+        "text": "Um caso em Go termina sozinho, então nada abaixo dele rodou",
+        "why": "Isso. Go roda o primeiro caso que casa e sai do `switch`; seguir adiante exigiria `fallthrough`."
+      },
+      {
+        "text": "`\"fri\"` foi testado e não casou com `\"sat\"`",
+        "why": "Quando um caso casa, nenhum outro é testado; e em C até um caso abaixo que não casa rodaria."
+      },
+      {
+        "text": "O `fmt.Println` encerra o caso, por ser a última chamada nele",
+        "why": "A chamada não decide nada; um caso de cinco comandos termina do mesmo jeito depois do quinto."
+      }
+    ]
+  },
+  "ex-ak6pyzr6": {
+    "prompt": "No primeiro `~/cond-grade`, `grade(95)` devolveu `pass`. Por quê?",
+    "hint": "Leia os casos de cima para baixo.",
+    "choices": [
+      {
+        "text": "Um switch sem valor testa todos os casos e devolve o último que vale",
+        "why": "É o contrário: o primeiro caso que vale vence, e os outros não são testados."
+      },
+      {
+        "text": "O `>=` compara as notas como texto, e `\"95\"` vem antes de `\"90\"`",
+        "why": "`score` é um `int`; a comparação é numérica e `95 >= 90` é verdadeira."
+      },
+      {
+        "text": "O compilador rejeitou o caso que se sobrepunha ao outro e o descartou",
+        "why": "Nada foi rejeitado; o compilador não compara condições entre si."
+      },
+      {
+        "text": "`score >= 50` valia e veio primeiro, então `score >= 90` nunca foi testado",
+        "why": "Isso. Pôr a condição mais estreita primeiro deu `95 distinction`."
+      }
+    ]
+  },
+  "ex-racnwpn3": {
+    "prompt": "Em `~/cond-fall`, `n := 5` vira `n := 200`. Quantas linhas o programa imprime?",
+    "hint": "O `fallthrough` desce um caso, uma vez.",
+    "unit": "linhas"
+  },
+  "ex-f0jj9ypq": {
+    "prompt": "Um `switch` sem nada depois da palavra-chave compara cada caso com `___`.",
+    "hint": "Um booleano predeclarado.",
+    "blanks": [
+      {
+        "accept": [
+          "true"
+        ]
+      }
+    ]
+  },
+  "ex-abpvm8t2": {
+    "prompt": "Ligue cada nome de arquivo ao que `~/cond-ext` imprimiu depois dele.",
+    "hint": "`filepath.Ext`, depois `strings.ToLower`.",
+    "pairs": [
+      {
+        "left": "`main.go`",
+        "right": "`Go source`"
+      },
+      {
+        "left": "`logo.PNG`",
+        "right": "`image`"
+      },
+      {
+        "left": "`Makefile`",
+        "right": "`no extension`"
+      },
+      {
+        "left": "`README.md`",
+        "right": "`something else: .md`"
+      }
+    ],
+    "right_distractors": [
+      "`something else: .PNG`"
+    ]
+  },
+  "ex-y4kcxexr": {
+    "prompt": "Um caso termina com `fallthrough`, e a condição do caso seguinte é falsa. O que acontece?",
+    "hint": "`~/cond-fall` imprimiu que 5 é maior que 100.",
+    "choices": [
+      {
+        "text": "O caso seguinte é pulado, e o programa tenta o depois dele",
+        "why": "Isso significaria que o `fallthrough` testa condições, e ele não testa nenhuma."
+      },
+      {
+        "text": "O programa vai para o `default`",
+        "why": "O `default` não rodou em `~/cond-fall`; o corpo sob `n > 100` rodou."
+      },
+      {
+        "text": "O `switch` termina ali, como se o `fallthrough` fosse `break`",
+        "why": "Nesse caso `5 is more than 100` não teria sido impresso."
+      },
+      {
+        "text": "O corpo do caso seguinte roda mesmo assim",
+        "why": "Isso. O `fallthrough` transfere o controle para o próximo corpo sem avaliar a condição dele."
+      }
+    ]
+  },
+  "ex-6ee8dkqp": {
+    "prompt": "Quem vem de C escreve `case \"sat\":` sem nada embaixo, depois `case \"sun\": fmt.Println(d, \"weekend\")`. O que Go imprime para `\"sat\"`?",
+    "hint": "Um caso vazio continua sendo um caso inteiro.",
+    "choices": [
+      {
+        "text": "`sat weekend`, porque um caso vazio segue para o próximo",
+        "why": "Isso é C. Em Go o caso vazio `\"sat\"` casa, não roda nada e termina."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O caso `\"sat\"` casou e não tinha comandos; `case \"sat\", \"sun\":` é a grafia de Go."
+      },
+      {
+        "text": "Um erro de compilação, porque um caso não pode ser vazio",
+        "why": "Um caso vazio é Go válido; compila e não faz nada quando casa."
+      },
+      {
+        "text": "Um erro de compilação, `duplicate case`, porque os dois casos imprimem a mesma linha",
+        "why": "`duplicate case` trata do mesmo valor em dois casos; `\"sat\"` e `\"sun\"` são diferentes."
+      }
+    ]
+  },
+  "ex-9cfy059w": {
+    "prompt": "Quais destes compilam? Escolha todos os que se aplicam.",
+    "hint": "Dois são recusas que você viu capturadas.",
+    "choices": [
+      {
+        "text": "Um `switch` cujo `default` está escrito primeiro, acima dos casos",
+        "why": "Sim. O `default` só roda quando nenhum caso casou, onde quer que esteja escrito."
+      },
+      {
+        "text": "Um `fallthrough` como último comando do último caso",
+        "why": "Recusado: `cannot fallthrough final case in switch`."
+      },
+      {
+        "text": "Um `switch` sem valor cujos casos se sobrepõem, como `score >= 50` acima de `score >= 90`",
+        "why": "Sim, e esse é o problema: compilou e deu aprovação para 95."
+      },
+      {
+        "text": "Dois casos de um `switch d` que listam `\"sat\"`",
+        "why": "Recusado: `duplicate case \"sat\" … in expression switch`."
+      }
+    ]
+  },
+  "ex-t9qr8atp": {
+    "prompt": "`if x := f(); x > 3 { … } else if y := g(); y > x { … } else { … }`. Quais nomes o `else` final pode usar?",
+    "hint": "Os nomes de cada inicialização duram até o fim da cadeia, a partir de onde são declarados.",
+    "choices": [
+      {
+        "text": "Nenhum: os nomes de cada inicialização pertencem ao próprio bloco",
+        "why": "O `else` de `~/cond-init` imprimiu `n`, então os nomes de uma inicialização vão além do próprio bloco."
+      },
+      {
+        "text": "Só `x`, o da primeira inicialização",
+        "why": "O `else if` tem uma inicialização própria, e o `y` dela também chega ao `else` abaixo."
+      },
+      {
+        "text": "Tanto `x` quanto `y`",
+        "why": "Isso. `x` dura da primeira inicialização até o fim da cadeia, e `y` da segunda."
+      },
+      {
+        "text": "Só `y`, o da inicialização mais próxima",
+        "why": "`y > x` no `else if` já usou `x`, e ele dura até o fim da cadeia."
+      }
+    ]
+  },
+  "ex-vw4bhx1j": {
+    "prompt": "`func main()` numa linha e `{` sozinha na seguinte. O que o compilador diz, e por quê?",
+    "hint": "O mesmo mecanismo recusa o `else` numa linha própria.",
+    "choices": [
+      {
+        "text": "`unexpected semicolon or newline before {`: a linha terminada em `)` ganhou um ponto e vírgula",
+        "why": "Isso. `)` pode terminar um comando, então um ponto e vírgula foi inserido depois dela, e a chave chegou tarde."
+      },
+      {
+        "text": "Nada: compila, e o `gofmt` sobe a chave",
+        "why": "Não compila, e o `gofmt` também não consegue ler o arquivo: ele para com a mesma mensagem."
+      },
+      {
+        "text": "`missing function body`: Go lê `func main()` sozinho como uma declaração",
+        "why": "A mensagem capturada falava do ponto e vírgula antes do `{`, não de um corpo ausente."
+      },
+      {
+        "text": "`syntax error: unexpected {`: Go não tem blocos soltos",
+        "why": "Go tem blocos soltos; a mensagem apontou o ponto e vírgula inserido."
+      }
+    ]
+  }
+}

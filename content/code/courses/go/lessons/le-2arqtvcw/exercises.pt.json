@@ -1,0 +1,395 @@
+{
+  "ex-ancj44dk": {
+    "prompt": "O `diff` comparou `SumInts` com `SumFloats` linha a linha. O que ele achou de diferente?",
+    "hint": "Ele imprimiu duas linhas de cada lado.",
+    "choices": [
+      {
+        "text": "O laço, porque um float precisa de outra forma de `range`",
+        "why": "`range` funciona igual sobre qualquer slice; as linhas do laço eram idênticas e o `diff` não as imprimiu."
+      },
+      {
+        "text": "Só os tipos, na assinatura e em `var total`",
+        "why": "Isso. Duas linhas diferem, e nas duas a única mudança é `int` contra `float64`."
+      },
+      {
+        "text": "O `return`, que converte o resultado para o tipo certo",
+        "why": "`return total` é o mesmo texto nas duas; `total` já tem o tipo do resultado."
+      },
+      {
+        "text": "Nada",
+        "why": "O `diff` imprimiu `1,2c1,2` e os dois pares de linhas; texto idêntico não imprimiria nada."
+      }
+    ]
+  },
+  "ex-7wvx5h7h": {
+    "prompt": "`SumAny([]any{3, stock})`, com `stock` um `int64`, está errado. Quem achou o erro?",
+    "hint": "O comando foi `go vet && go run .`.",
+    "choices": [
+      {
+        "text": "O compilador, que se recusou a compilar `[]any{3, stock}`",
+        "why": "Esse literal é um `[]any` válido; qualquer valor entra num, então o programa foi gerado."
+      },
+      {
+        "text": "O `go vet`, que apontou o `int64`",
+        "why": "O `go vet` não imprimiu nada e saiu com 0, e por isso o `go run` seguiu em frente."
+      },
+      {
+        "text": "O próprio programa, pelo panic do caso `default`",
+        "why": "Isso: `panic: SumAny: cannot add int64`, em tempo de execução, na chamada que por acaso passou o tipo errado."
+      },
+      {
+        "text": "Ninguém: o `int64` foi convertido para `float64` e somado",
+        "why": "Nada o converte; o type switch só tinha casos para `int` e `float64`, e o `default` entrou em panic."
+      }
+    ]
+  },
+  "ex-kz0v5hjk": {
+    "prompt": "`ages` é um `[]int`. Por que o compilador recusa `SumAny(ages)`, se `SumAny` recebe `[]any`?",
+    "hint": "A mesma recusa aconteceu com `fmt.Println` na lição 21.",
+    "choices": [
+      {
+        "text": "Um `[]int` não é um `[]any`, e Go nunca converte um tipo de slice em outro",
+        "why": "Isso. Cada `int` poderia virar um `any`, mas a slice como um todo é outro tipo, então quem chama copia."
+      },
+      {
+        "text": "`SumAny` só aceita valores `float64`",
+        "why": "O type switch dela tem um caso `int`, e `SumAny(boxed)` somou três `int` e chegou a 71."
+      },
+      {
+        "text": "A chamada precisa de `ages...` para espalhar a slice",
+        "why": "`...` é para parâmetros variádicos; `SumAny` tem um parâmetro de slice comum, e os tipos continuariam diferentes."
+      },
+      {
+        "text": "O type switch não tem caso para `[]int`",
+        "why": "O switch roda em tempo de execução, sobre cada elemento; a recusa veio do compilador, antes de algo rodar."
+      }
+    ]
+  },
+  "ex-kcbmg0q6": {
+    "prompt": "Comparada a escrever `SumInts` e `SumFloats`, o que a versão `SumAny` custa? Marque todas as que valem.",
+    "hint": "Pense no panic, na linha com `%T` e no laço `boxed`.",
+    "choices": [
+      {
+        "text": "Um tipo errado só aparece quando o programa roda",
+        "why": "Sim: o `int64` chegou ao caso `default` e entrou em panic."
+      },
+      {
+        "text": "O resultado é `float64` seja qual for a entrada",
+        "why": "Sim: três `int` deram `71 float64`."
+      },
+      {
+        "text": "Quem tem um `[]int` precisa copiá-lo para um `[]any` antes",
+        "why": "Sim: é o laço `boxed`, depois que o compilador recusou `SumAny(ages)`."
+      },
+      {
+        "text": "Precisa ser escrita de novo para cada tipo novo",
+        "why": "Esse é o custo das cópias. `SumAny` é escrita uma vez; um tipo novo pede um `case` novo, não uma função nova."
+      }
+    ]
+  },
+  "ex-dv8anjgc": {
+    "prompt": "Associe cada função da biblioteca padrão ao jeito como ela lida com vários tipos.",
+    "hint": "O `go doc` mostrou todas essas assinaturas.",
+    "pairs": [
+      {
+        "left": "`sort.Ints`",
+        "right": "uma cópia escrita para cada tipo de elemento"
+      },
+      {
+        "left": "`sort.Slice`",
+        "right": "recebe `any` e descobre em tempo de execução"
+      },
+      {
+        "left": "`sort.Sort`",
+        "right": "pede ao tipo `Len`, `Less` e `Swap`"
+      },
+      {
+        "left": "`slices.Sort`",
+        "right": "uma função com parâmetros de tipo"
+      }
+    ],
+    "right_distractors": [
+      "converte toda slice para `[]float64` antes"
+    ]
+  },
+  "ex-xgq952z1": {
+    "prompt": "Por que nenhuma interface comum consegue dizer \"um tipo que se pode somar com `+`\"?",
+    "hint": "O que uma interface comum lista?",
+    "choices": [
+      {
+        "text": "Interfaces não guardam números, só structs",
+        "why": "Um `any` guardou `3` e `1.5` em `SumAny`; uma interface guarda valor de qualquer tipo."
+      },
+      {
+        "text": "Consegue: `int` e `float64` já têm um método `Add`",
+        "why": "Eles não têm método nenhum, e a lição 25 mostrou que não se acrescenta método a um tipo de fora do seu pacote."
+      },
+      {
+        "text": "Ela lista métodos, e `+` é um operador",
+        "why": "Isso. É a lacuna que `sort.Sort` contorna com `Less`, e que a lista de tipos de um parâmetro de tipo preenche."
+      },
+      {
+        "text": "Go proíbe parâmetros de interface em funções que fazem conta",
+        "why": "Essa regra não existe; `SumAny` recebeu valores `any` e fez conta depois de um type switch."
+      }
+    ]
+  },
+  "ex-y390n6d5": {
+    "prompt": "O que é um parâmetro de tipo, como o `T` em `func Sum[T int | float64](xs []T) T`?",
+    "hint": "A seção começa nomeando o palpite errado.",
+    "choices": [
+      {
+        "text": "Outro jeito de escrever `any`: recebe valor de todo tipo",
+        "why": "É o primeiro palpite comum e o contrário da verdade: `Sum` recusou `int64` e `string` em tempo de compilação."
+      },
+      {
+        "text": "Um tipo decidido em tempo de execução a partir do valor passado",
+        "why": "Nada é decidido em tempo de execução; o compilador descobre `T` pelo argumento quando compila a chamada."
+      },
+      {
+        "text": "Um nome para um tipo que quem chama escolhe, conferido a cada chamada",
+        "why": "Isso. A lista depois dele diz que tipos ele pode ser, e cada chamada é conferida contra essa lista."
+      },
+      {
+        "text": "Uma conversão, escrita entre colchetes",
+        "why": "Conversões são `T(x)`, lição 10; os colchetes declaram um parâmetro, e nenhum valor é convertido."
+      }
+    ]
+  },
+  "ex-pc56kpy7": {
+    "prompt": "`ints := Sum([]int{3, 4, 5})`. O que o `%T` imprimiu para `ints`?",
+    "hint": "O resultado é declarado como `T`.",
+    "choices": [
+      {
+        "text": "`float64`",
+        "why": "Essa era a `SumAny`, que precisava escolher um único tipo de resultado para qualquer entrada."
+      },
+      {
+        "text": "`int`",
+        "why": "Isso: `12 int`. `T` era `int` nessa chamada, e o resultado é um `T`."
+      },
+      {
+        "text": "`T`",
+        "why": "`T` só existe no código; na chamada ele representa um tipo de verdade, e é esse que o `%T` imprime."
+      },
+      {
+        "text": "`interface {}`",
+        "why": "Nenhuma interface entra; o valor nunca foi guardado num `any`."
+      }
+    ]
+  },
+  "ex-bsgg4760": {
+    "prompt": "Em `func Sum[T int | float64](xs []T) T`, a lista `int | float64` é a ___ do parâmetro de tipo.",
+    "hint": "A lição 31 é sobre escrevê-las.",
+    "blanks": [
+      {
+        "accept": [
+          "restrição",
+          "constraint"
+        ]
+      }
+    ]
+  },
+  "ex-dah30fsc": {
+    "prompt": "O que acontece com `Sum([]int64{3, stock})`, com `Sum` declarada como `[T int | float64]`?",
+    "hint": "O mesmo `int64` fez `SumAny` entrar em panic.",
+    "choices": [
+      {
+        "text": "Roda e devolve um `float64`",
+        "why": "O resultado é um `T`, e nenhum `T` serviu: a chamada nem compilou."
+      },
+      {
+        "text": "Recusada: `int64 does not satisfy int | float64`",
+        "why": "Isso. O compilador confere cada chamada contra a lista, então o erro nunca chega a um programa rodando."
+      },
+      {
+        "text": "Entra em panic em tempo de execução, como a `SumAny`",
+        "why": "Essa é a falha que os parâmetros de tipo eliminam; esta aparece antes de o programa existir."
+      },
+      {
+        "text": "Converte cada `int64` para `int` e soma",
+        "why": "Go não converte nada sozinho, lição 10; um `int64` simplesmente não está na lista."
+      }
+    ]
+  },
+  "ex-asc4ww70": {
+    "prompt": "Um colega amplia a lista para `[T int | float64 | string]`. O que `Sum([]string{\"a\", \"b\"})` faz agora?",
+    "hint": "O que `+` faz com duas strings?",
+    "choices": [
+      {
+        "text": "Recusada: `+` não é definido para strings",
+        "why": "`+` junta strings, então todo tipo da nova lista tem um e o corpo continua compilando."
+      },
+      {
+        "text": "Compila, e devolve `\"ab\"`",
+        "why": "Isso. `total` começa como `\"\"` e o `+=` junta; se isso é uma soma é exatamente o que a lista decide."
+      },
+      {
+        "text": "Compila, e depois entra em panic quando chega nas strings",
+        "why": "Nada é conferido em tempo de execução no `Sum`; uma chamada que compila já foi conferida."
+      },
+      {
+        "text": "Devolve `0`, porque `var total T` começa em zero",
+        "why": "O valor zero de uma `string` é `\"\"`, não `0`, e o laço depois soma a ele."
+      }
+    ]
+  },
+  "ex-ej02gthm": {
+    "prompt": "Quantos parâmetros de tipo `func Sort[S ~[]E, E cmp.Ordered](x S)` declara?",
+    "hint": "Conte os nomes nos colchetes, não os parâmetros nos parênteses.",
+    "unit": "parâmetros de tipo"
+  },
+  "ex-de6gz4b6": {
+    "prompt": "Por que `ShowAll(room, wait)` foi recusada, se `ShowEach(room, wait)` compilou?",
+    "hint": "Leia a mensagem: `does not match inferred type Celsius for T`.",
+    "choices": [
+      {
+        "text": "`time.Duration` não tem método `String`",
+        "why": "Tem: `ShowEach` imprimiu `1m30s` com ele."
+      },
+      {
+        "text": "`T` é um único tipo por chamada, e o primeiro argumento fez dele `Celsius`",
+        "why": "Isso. `wait` é um `time.Duration`, outro tipo, então não pode ser também o `T` daquela chamada."
+      },
+      {
+        "text": "Um parâmetro variádico não pode ter um parâmetro de tipo como tipo de elemento, então toda chamada assim é recusada",
+        "why": "`ShowAll(room, room+1)` compilou e rodou com essa mesma assinatura."
+      },
+      {
+        "text": "`fmt.Stringer` não pode ser usado como restrição",
+        "why": "Pode; qualquer interface pode ser restrição, e `ShowAll` compilou quando a chamada teve um só tipo."
+      }
+    ]
+  },
+  "ex-tasvzq1a": {
+    "prompt": "Que ordem de trabalho a seção recomenda?",
+    "hint": "Qual foi a evidência na seção 02?",
+    "choices": [
+      {
+        "text": "Tornar toda função genérica desde o início, já que um parâmetro de tipo não custa nada e pode ajudar um dia",
+        "why": "Custa legibilidade em cada linha, e um parâmetro que só representa um tipo não devolve nada em troca."
+      },
+      {
+        "text": "Usar `any` primeiro, e trocar por generics quando der panic",
+        "why": "Isso espera uma falha em tempo de execução para tomar uma decisão que o compilador poderia ter tomado."
+      },
+      {
+        "text": "Escrever para um tipo; passar a genérico quando uma segunda cópia só difere nos tipos",
+        "why": "Isso. A duplicação é a evidência, como foi o `diff` de `SumInts` e `SumFloats`."
+      },
+      {
+        "text": "Deixar generics para a biblioteca padrão e nunca escrever um",
+        "why": "A seção diz quando escrever um: contêineres e algoritmos que de outro modo seriam copiados por tipo."
+      }
+    ]
+  },
+  "ex-sevfb1m4": {
+    "prompt": "Quais destes são bons candidatos a parâmetro de tipo? Marque todos os que valem.",
+    "hint": "O código se importa com qual é o tipo, ou só com o que ele sabe fazer?",
+    "choices": [
+      {
+        "text": "Uma função que devolve o último elemento de qualquer slice",
+        "why": "Sim: um algoritmo cuja lógica é a mesma para todo tipo de elemento, com `T` ligando a slice ao resultado."
+      },
+      {
+        "text": "Uma fila que guarda valores de um tipo que quem chama escolhe",
+        "why": "Sim: um contêiner, o outro caso que a seção nomeia."
+      },
+      {
+        "text": "Uma função que só chama `Write` no que receber",
+        "why": "Isso é comportamento: um parâmetro `io.Writer` comum diz isso e aceita mais chamadores."
+      },
+      {
+        "text": "Uma função auxiliar que só é chamada com um `map[string]int`",
+        "why": "Todo chamador usa um tipo só, que é o segundo sinal de um parâmetro de tipo que não rende nada."
+      }
+    ]
+  },
+  "ex-fghvkfyp": {
+    "prompt": "O que a seção diz sobre `func Log[T fmt.Stringer](v T)`?",
+    "hint": "Quantas vezes `T` aparece na assinatura?",
+    "choices": [
+      {
+        "text": "O compilador recusa: uma restrição não pode conter método",
+        "why": "`ShowAll[T fmt.Stringer]` compilou; uma interface com métodos é uma restrição comum."
+      },
+      {
+        "text": "Aceita mais tipos que `func Log(v fmt.Stringer)`",
+        "why": "Aceita os mesmos, um tipo por chamada, o que é menos quando há vários valores."
+      },
+      {
+        "text": "Confere o tipo em tempo de execução, como a `SumAny`",
+        "why": "Restrições são conferidas em tempo de compilação; a conferência em execução só volta com um type switch no corpo."
+      },
+      {
+        "text": "`T` aparece uma vez, então faz o trabalho de `func Log(v fmt.Stringer)`",
+        "why": "Isso. Um parâmetro de tipo usado uma vez não liga nada a nada, e a interface comum se lê com mais facilidade."
+      }
+    ]
+  },
+  "ex-ch0p8dek": {
+    "prompt": "Ponha os passos das seções 02 e 03 na ordem em que a lição os seguiu.",
+    "hint": "A evidência vem antes da função genérica.",
+    "items": [
+      "Escrever `SumInts` para o único tipo que você tem",
+      "Aparece uma segunda cópia, `SumFloats`",
+      "O `diff` mostra que só os tipos diferem",
+      "Escrever `Sum[T int | float64]` uma vez e apagar as duas cópias"
+    ]
+  },
+  "ex-j6yqss89": {
+    "prompt": "`names` é um `[]string`. O que acontece com `sort.Slice(&names, less)`?",
+    "hint": "Qual é o tipo do primeiro parâmetro de `sort.Slice`?",
+    "choices": [
+      {
+        "text": "O compilador recusa, porque um `*[]string` é um ponteiro para slice e não uma slice",
+        "why": "O parâmetro é `any`, e um ponteiro é um `any` tão bom quanto 42 era; o compilador não tem o que recusar."
+      },
+      {
+        "text": "Ordena `names` através do ponteiro",
+        "why": "`sort.Slice` quer a própria slice; a documentação diz que entra em panic se `x` não for slice."
+      },
+      {
+        "text": "Compila, passa no `go vet` e entra em panic quando roda",
+        "why": "Isso. É o 42 da seção 02 numa forma que alguém escreveria de verdade, e só executando se descobre."
+      },
+      {
+        "text": "O `go vet` aponta o ponteiro antes de rodar",
+        "why": "O `go vet` deixou passar `sort.Slice(42, ...)` na seção 02, e deixa passar um ponteiro do mesmo jeito."
+      }
+    ]
+  },
+  "ex-9yk1cn7a": {
+    "prompt": "`slices.Sort` ordena uma slice de qualquer tipo de elemento que satisfaça `cmp.___`, a restrição dos tipos em que `<` funciona.",
+    "hint": "É a última palavra dentro dos colchetes da assinatura.",
+    "blanks": [
+      {
+        "accept": [
+          "Ordered"
+        ]
+      }
+    ]
+  },
+  "ex-n7hf9vk2": {
+    "prompt": "Por que `sort.Ints` e `sort.Float64s` ainda estão na biblioteca padrão?",
+    "hint": "Leia a nota em `go doc sort.Ints`, e lembre da lição 2.",
+    "choices": [
+      {
+        "text": "Código que as chama tem de continuar compilando",
+        "why": "Isso. A promessa do Go 1 as mantém, e o corpo delas hoje só chama `slices.Sort`."
+      },
+      {
+        "text": "Rodam mais rápido que `slices.Sort` nos seus próprios tipos",
+        "why": "Não têm como: a nota diz que cada uma só chama `slices.Sort`."
+      },
+      {
+        "text": "`slices.Sort` não ordena uma slice de tipo básico como `int`",
+        "why": "`~/generics-std` ordenou `[]int{41, 7, 23}` com ela."
+      },
+      {
+        "text": "Só elas põem os valores NaN primeiro ao ordenar floats",
+        "why": "O `go doc slices.Sort` diz o mesmo sobre NaNs, e `Float64s` a chama."
+      }
+    ]
+  }
+}

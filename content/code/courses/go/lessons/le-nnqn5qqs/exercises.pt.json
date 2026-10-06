@@ -1,0 +1,395 @@
+{
+  "ex-w71m9dym": {
+    "prompt": "No stack trace de um panic, qual quadro vem primeiro, logo abaixo da linha `goroutine`?",
+    "hint": "Em `~/stacks` foi `main.unitPrice`.",
+    "choices": [
+      {
+        "text": "`main.main`, porque o programa começa ali",
+        "why": "`main.main` veio por último. O trace é impresso a partir da outra ponta."
+      },
+      {
+        "text": "A função que estava rodando quando o panic aconteceu",
+        "why": "Isso. Os quadros são impressos do mais fundo para cima, então o de cima é onde o programa quebrou."
+      },
+      {
+        "text": "A função que o programa chamou primeiro, depois de o runtime iniciá-lo e lhe passar o controle",
+        "why": "Essa é a ordem em que as chamadas foram feitas, que a figura desenhou à esquerda; o trace imprime a ordem da direita."
+      },
+      {
+        "text": "A própria função de panic do runtime",
+        "why": "O trace padrão deixa de fora os quadros do runtime; `~/stacks` mostrou só funções de `main`."
+      }
+    ]
+  },
+  "ex-m29bhkzd": {
+    "prompt": "O trace de `~/stacks` tem `main.lineTotal(...)` acima de `/home/ana/stacks/main.go:21`. O que está na linha 21?",
+    "hint": "Todo quadro menos o de cima aponta para uma chamada.",
+    "choices": [
+      {
+        "text": "O índice que saiu do intervalo",
+        "why": "Essa é a linha 17, a linha do quadro de cima, `discount[qty]`."
+      },
+      {
+        "text": "A declaração `func lineTotal(l line) int`",
+        "why": "A linha de um quadro é onde a função estava quando o trace foi tirado, não onde a função começa."
+      },
+      {
+        "text": "A chamada de `lineTotal` para `unitPrice`",
+        "why": "Isso. Abaixo do quadro de cima, a linha de cada quadro é onde aquela função fez a chamada de cima."
+      },
+      {
+        "text": "A chamada de `orderTotal` para `lineTotal`",
+        "why": "Essa chamada é a linha 27, no quadro de `orderTotal`, mais abaixo."
+      }
+    ]
+  },
+  "ex-x6sdft2q": {
+    "prompt": "`main.main` chama `run`, `run` chama `load`, e `load` chama `parseLine`, que entra em panic. Ponha os quadros na ordem em que o trace os imprime.",
+    "hint": "Do mais fundo para cima.",
+    "items": [
+      "`main.parseLine`",
+      "`main.load`",
+      "`main.run`",
+      "`main.main`"
+    ]
+  },
+  "ex-6e2t8zdv": {
+    "prompt": "Três quadros do trace de `~/stacks` terminam em `(...)` e não têm `+0x` depois da linha. Por quê?",
+    "hint": "O `go build -gcflags=-m` respondeu.",
+    "choices": [
+      {
+        "text": "Essas funções não recebiam argumentos",
+        "why": "`unitPrice` recebe dois, e com o inline desligado o runtime os imprimiu."
+      },
+      {
+        "text": "O runtime escondeu os argumentos porque guardavam dados privados",
+        "why": "O runtime não julga os dados; com `-l` ele imprimiu `{0x49b0c7?, 0x41b4f9?}, 0x4` para a mesma chamada."
+      },
+      {
+        "text": "O compilador os expandiu inline, copiando o corpo para dentro de quem chama",
+        "why": "Isso. Não houve chamada separada na execução, então não há argumentos nem deslocamento para imprimir."
+      },
+      {
+        "text": "O trace foi cortado porque era longo demais",
+        "why": "Nada foi cortado: o arquivo e a linha de cada quadro estão lá, até `main.main`."
+      }
+    ]
+  },
+  "ex-8c0qfe57": {
+    "prompt": "Uma queda termina em `main.go:34 +0x15b`. Um colega edita outra função, recompila, tem a mesma queda e vê `main.go:34 +0x163`. É outro bug?",
+    "hint": "A partir de onde o deslocamento é medido, e em qual binário?",
+    "choices": [
+      {
+        "text": "Sim: um deslocamento diferente quer dizer que outra instrução falhou",
+        "why": "Outra instrução num outro binário; o deslocamento só é comparável dentro de um build."
+      },
+      {
+        "text": "Sim, porque a edição moveu o bug para outro lugar de `main`",
+        "why": "A linha continua sendo 34, e a linha é o que mantém o significado entre builds."
+      },
+      {
+        "text": "Não dá para saber sem um depurador",
+        "why": "O trace já responde: mesma função, mesmo arquivo, mesma linha."
+      },
+      {
+        "text": "Quase certamente não: mesma linha; o deslocamento muda sempre que o código de máquina é refeito",
+        "why": "Isso. O `+0x` é a distância a partir do começo da função neste binário, então leia a linha."
+      }
+    ]
+  },
+  "ex-9asgmfjr": {
+    "prompt": "O que o `GOTRACEBACK=none ./stacks` imprimiu?",
+    "hint": "É a configuração que tira alguma coisa.",
+    "choices": [
+      {
+        "text": "Nada, e o código de saída foi 0",
+        "why": "A mensagem ficou e o código continuou 2; a configuração muda o que é impresso, não como o programa termina."
+      },
+      {
+        "text": "A linha `panic:` e nenhum quadro",
+        "why": "Isso. A mensagem e o código de saída sobrevivem e todos os quadros somem."
+      },
+      {
+        "text": "Os traces das goroutines do runtime além das do programa",
+        "why": "Isso é `system`, a outra ponta da escala."
+      },
+      {
+        "text": "O trace padrão, porque `none` não é um valor válido",
+        "why": "`none` está na documentação e funcionou: os quadros não apareceram."
+      }
+    ]
+  },
+  "ex-bcg4mc9x": {
+    "prompt": "Um servidor entra em panic numa goroutine que esperava outra goroutine que ele iniciou. Qual `GOTRACEBACK` mostra as duas?",
+    "hint": "A palavra da documentação para goroutines que o programa criou.",
+    "choices": [
+      {
+        "text": "`single`, o padrão",
+        "why": "O padrão imprime só a goroutine atual."
+      },
+      {
+        "text": "`all`",
+        "why": "Isso. Ele acrescenta os traces de toda goroutine criada pelo usuário."
+      },
+      {
+        "text": "`none`, e uma chamada a `debug.Stack` em cada goroutine no lugar",
+        "why": "`debug.Stack` mostra só a goroutine que o chama, e `none` remove os quadros que você queria."
+      },
+      {
+        "text": "`crash`, que acrescenta as outras goroutines ao trace",
+        "why": "`all` e `system` já enxergam; `crash` acrescenta um core dump em cima de `system`."
+      }
+    ]
+  },
+  "ex-t03dqwfk": {
+    "prompt": "`debug.Stack()` foi chamado dentro da função adiada de `price`, depois do panic. Por que o trace dele ainda mostrou `main.unitPrice` e a linha 22?",
+    "hint": "Onde roda uma função adiada enquanto um panic está em andamento?",
+    "choices": [
+      {
+        "text": "`debug.Stack` devolve o trace do último panic, guardado pelo runtime",
+        "why": "A documentação dele diz que formata o trace da goroutine que o chama, como ela está agora."
+      },
+      {
+        "text": "O `slog.Error` acrescentou os quadros quando registrou o valor que o `recover` devolveu à função adiada, junto com a mensagem",
+        "why": "A linha do `slog` foi uma linha de pares chave=valor; os quadros vieram de `debug.Stack`."
+      },
+      {
+        "text": "A função adiada roda em cima dos quadros que entraram em panic, antes de eles serem removidos",
+        "why": "Isso. É por isso que um trace tirado ali ainda chega à linha do bug."
+      },
+      {
+        "text": "O `recover` põe de volta na pilha os quadros que entraram em panic",
+        "why": "Nada é posto de volta: os quadros nunca saíram, e `debug.Stack` rodou antes de `price` retornar."
+      }
+    ]
+  },
+  "ex-j1ggt6ex": {
+    "prompt": "`slog.Error(\"order failed\", \"order\", id, ...)` imprimiu `order=2`: depois da mensagem, o `slog` recebe os argumentos em pares e escreve cada par como ___=valor.",
+    "hint": "O primeiro de cada par é aquilo pelo que um sistema de log busca.",
+    "blanks": [
+      {
+        "accept": [
+          "chave",
+          "key"
+        ]
+      }
+    ]
+  },
+  "ex-q9jgevhc": {
+    "prompt": "Um serviço faz o recover do panic de cada requisição e registra só `panic=\"runtime error: index out of range [4] with length 4\"`. O que falta a quem está de plantão, e como se resolve?",
+    "hint": "Que parte da saída fala de onde?",
+    "choices": [
+      {
+        "text": "Nada: a mensagem cita o índice e o tamanho, o que basta para achar a linha",
+        "why": "Qualquer slice indexada em qualquer lugar poderia ter impresso isso; a mensagem não tem arquivo nem linha."
+      },
+      {
+        "text": "Os quadros: registrar `debug.Stack()` junto com a linha, a partir da função adiada",
+        "why": "Isso. O runtime não imprime trace para um panic recuperado, então o programa precisa escrevê-lo."
+      },
+      {
+        "text": "Os quadros: definir `GOTRACEBACK=all` para o runtime imprimi-los",
+        "why": "O `GOTRACEBACK` só molda o trace de um panic que mata o programa; este foi recuperado."
+      },
+      {
+        "text": "O código de saída, que diz qual handler entrou em panic",
+        "why": "Um panic recuperado não encerra o processo, e um código não cita handler nenhum."
+      }
+    ]
+  },
+  "ex-2bwjfbev": {
+    "prompt": "Que comando mostra o commit a partir do qual um binário Go foi compilado, sem executá-lo?",
+    "hint": "Ele leu `vcs.revision` de dentro de `stacks`.",
+    "choices": [
+      {
+        "text": "`git log --oneline`",
+        "why": "Isso lista os commits do repositório; não consegue dizer de qual deles um binário veio."
+      },
+      {
+        "text": "`go version -m`",
+        "why": "Isso. Ele imprime o módulo, a versão do Go e as configurações do build, incluindo `vcs.revision`."
+      },
+      {
+        "text": "`go doc runtime/debug.ReadBuildInfo`",
+        "why": "Isso imprime a documentação da função que um programa chama para ler o próprio registro."
+      },
+      {
+        "text": "`file`, que imprime o BuildID",
+        "why": "O BuildID identifica o conteúdo do build, não o commit; `vcs.revision` é o commit."
+      }
+    ]
+  },
+  "ex-cqc773sz": {
+    "prompt": "O registro de um binário diz `vcs.modified=true`. O que isso diz a você durante um incidente?",
+    "hint": "Releia a documentação de `BuildSetting`.",
+    "choices": [
+      {
+        "text": "O arquivo do binário foi alterado no disco em algum momento depois de o comando go compilá-lo, por alguém ou por algo",
+        "why": "A configuração descreve a árvore de código-fonte na hora do build, não o arquivo depois."
+      },
+      {
+        "text": "O módulo tem uma versão mais nova disponível",
+        "why": "Nada no registro olha para outras versões; ele descreve este build."
+      },
+      {
+        "text": "O Go foi atualizado desde o commit",
+        "why": "A versão do Go tem a sua própria linha, `go1.27.1`; `vcs.modified` é sobre a árvore."
+      },
+      {
+        "text": "A árvore tinha mudanças não commitadas, então o commit sozinho não descreve o código",
+        "why": "Isso. Com `false` a revisão é o código exato; com `true` parte do código só existe na máquina que compilou."
+      }
+    ]
+  },
+  "ex-5fey27sn": {
+    "prompt": "O `go build -ldflags=-s` gerou `small`. Quais destes o binário perdeu? Escolha todos os que se aplicam.",
+    "hint": "Compare o trace de `./small` e o `go version -m small` com o build completo.",
+    "choices": [
+      {
+        "text": "A tabela de símbolos",
+        "why": "Sim: a ajuda do linker diz que `-s` a omite."
+      },
+      {
+        "text": "As informações de depuração DWARF",
+        "why": "Sim: `-s` implica `-w`, que omite a tabela de símbolos DWARF."
+      },
+      {
+        "text": "O arquivo e a linha nos traces",
+        "why": "Não: `./small` ainda imprimiu `main.go:20`."
+      },
+      {
+        "text": "A versão do módulo e o commit que o `go version -m` lê",
+        "why": "Não: `go version -m small` ainda mostrou `v0.0.0-20261006130000-d569db795b44`."
+      }
+    ]
+  },
+  "ex-wxdr5vdj": {
+    "prompt": "Compilado com `-trimpath`, o que o último quadro do trace disse no lugar de `/home/ana/stacks-release/main.go:53`?",
+    "hint": "Os nomes de arquivo registrados começam com algo que o módulo declara.",
+    "choices": [
+      {
+        "text": "`main.go:53`, sem diretório nenhum",
+        "why": "Alguma coisa substitui o diretório; o trace mostrou o quê."
+      },
+      {
+        "text": "`./main.go:53`, relativo ao lugar onde o build rodou",
+        "why": "Isso ainda dependeria do diretório de quem compilou, que é o que o `-trimpath` remove."
+      },
+      {
+        "text": "`example.com/stacks/main.go:53`",
+        "why": "Isso. O caminho do módulo tomou o lugar do diretório pessoal, e a linha continuou 53."
+      },
+      {
+        "text": "Nada: o `-trimpath` remove os nomes de arquivo dos traces",
+        "why": "Ele remove caminhos do sistema de arquivos, não nomes de arquivo; o quadro ainda citou `main.go`."
+      }
+    ]
+  },
+  "ex-vcqme880": {
+    "prompt": "`stacks` tinha 2430545 bytes e o `small` sem símbolos, 1568928. Em quantos por cento, arredondados para um número inteiro, tirar os símbolos encolheu o binário?",
+    "hint": "Divida a diferença pelo tamanho maior.",
+    "unit": "por cento"
+  },
+  "ex-nseq3hkp": {
+    "prompt": "Associe cada pedaço de um trace ao que ele quer dizer.",
+    "hint": "A seção 02 leu cada um.",
+    "pairs": [
+      {
+        "left": "`goroutine 1 [running]:`",
+        "right": "De que goroutine são os quadros abaixo, e o estado dela"
+      },
+      {
+        "left": "`main.lineTotal(...)`",
+        "right": "Uma função que o compilador expandiu inline em quem a chama"
+      },
+      {
+        "left": "`+0x15b`",
+        "right": "Onde a instrução fica no código de máquina da função"
+      },
+      {
+        "left": "`0x41b4f9?`",
+        "right": "Um valor de argumento que o runtime não garante"
+      }
+    ],
+    "right_distractors": [
+      "O número de vezes que a função foi chamada"
+    ]
+  },
+  "ex-3mg6mcdy": {
+    "prompt": "O quadro de cima de um trace é `regexp.MustCompile` em `/usr/local/go/src/regexp/regexp.go:312`, e o seguinte é `main.init()` em `main.go:11`. Onde você começa a procurar o bug?",
+    "hint": "A lição 36 imprimiu este trace.",
+    "choices": [
+      {
+        "text": "Em `regexp.go:312`, já que o quadro de cima é onde o programa quebrou",
+        "why": "Quebrou ali de propósito: o `MustCompile` entra em panic quando recebe um padrão ruim. O engano é o padrão que ele recebeu."
+      },
+      {
+        "text": "Em `main.go:11`, o primeiro quadro do seu próprio código",
+        "why": "Isso. Desça além dos quadros da biblioteca até a primeira chamada que o seu código fez; ali o padrão ruim foi passado."
+      },
+      {
+        "text": "Em `main.main`, onde o trace termina",
+        "why": "Este não tem quadro `main.main`: o panic veio antes de `main` rodar."
+      },
+      {
+        "text": "Na versão do Go, já que uma função da biblioteca padrão entrou em panic",
+        "why": "O `MustCompile` fez o que a documentação dele diz que faz com um padrão que não compila."
+      }
+    ]
+  },
+  "ex-tym8r49s": {
+    "prompt": "`main.unitPrice({0x49b0c7?, 0x41b4f9?}, 0x4)`. Em qual valor impresso dá para confiar?",
+    "hint": "Procure o que não tem marca.",
+    "choices": [
+      {
+        "text": "`0x41b4f9`, o comprimento da string",
+        "why": "Ele tem um `?`, e nenhuma string `\"cake\"` tem quatro milhões de bytes."
+      },
+      {
+        "text": "Os três, já que o runtime os leu da pilha",
+        "why": "O `?` marca os que ele não pôde garantir: a posição já não estava em uso."
+      },
+      {
+        "text": "Nenhum: argumentos num trace estão sempre desatualizados",
+        "why": "O que não tem marca bateu exatamente com a mensagem, o índice 4."
+      },
+      {
+        "text": "`0x4`, a quantidade",
+        "why": "Isso. Ele não tem `?`, e é o 4 que a mensagem do panic citou."
+      }
+    ]
+  },
+  "ex-frc3jdfb": {
+    "prompt": "Uma queda em produção aponta para `main.go:20`, e a linha 20 de `main.go` na sua máquina hoje é uma linha em branco. O que você faz primeiro?",
+    "hint": "O binário sabe algo que a sua cópia local não sabe.",
+    "choices": [
+      {
+        "text": "Concluir que o trace está errado porque o binário teve os símbolos tirados",
+        "why": "Um binário sem símbolos imprimiu o arquivo e a linha certos na seção 04."
+      },
+      {
+        "text": "Recompilar a partir da sua cópia e esperar a queda acontecer de novo",
+        "why": "A sua cópia não é o código que quebrou; as linhas do binário novo podem não bater também."
+      },
+      {
+        "text": "Ler `vcs.revision` do binário e olhar a linha 20 de `main.go` naquele commit",
+        "why": "Isso. O `go version -m` ou a versão registrada no log dão o commit, e o `git show <rev>:main.go` dá a linha."
+      },
+      {
+        "text": "Buscar a mensagem do panic no código em vez de usar a linha",
+        "why": "Uma mensagem do runtime como `index out of range` não está no seu código; a linha é a parte precisa."
+      }
+    ]
+  },
+  "ex-ss8vb95m": {
+    "prompt": "Dentro de uma função adiada, `debug.___()` devolve o trace da goroutine que o chama, como bytes que um logger pode escrever.",
+    "hint": "Uma função de `runtime/debug`.",
+    "blanks": [
+      {
+        "accept": [
+          "Stack"
+        ]
+      }
+    ]
+  }
+}

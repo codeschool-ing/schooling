@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-w71m9dym",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the stack trace of a panic, which frame comes first, right under the `goroutine` line?",
+    "hint": "In `~/stacks` it was `main.unitPrice`.",
+    "choices": [
+      {
+        "text": "`main.main`, because the program starts there",
+        "correct": false,
+        "why": "`main.main` came last. The trace is printed from the other end."
+      },
+      {
+        "text": "The function that was running when the panic happened",
+        "correct": true,
+        "why": "Right. Frames are printed deepest first, so the top one is where the program broke."
+      },
+      {
+        "text": "The function that was called first by the program, after the runtime had started it and handed it control",
+        "correct": false,
+        "why": "That is the order the calls were made in, which the figure drew on the left; the trace prints the right-hand order."
+      },
+      {
+        "text": "The runtime's own panic function",
+        "correct": false,
+        "why": "The default trace leaves the runtime's frames out; `~/stacks` showed only `main` functions."
+      }
+    ]
+  },
+  {
+    "id": "ex-m29bhkzd",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The trace of `~/stacks` has `main.lineTotal(...)` above `/home/ana/stacks/main.go:21`. What is on line 21?",
+    "hint": "Every frame but the top one points at a call.",
+    "choices": [
+      {
+        "text": "The index that went out of range",
+        "correct": false,
+        "why": "That is line 17, the top frame's line, `discount[qty]`."
+      },
+      {
+        "text": "The declaration `func lineTotal(l line) int`",
+        "correct": false,
+        "why": "A frame's line is where the function was when the trace was taken, not where the function begins."
+      },
+      {
+        "text": "The call from `lineTotal` to `unitPrice`",
+        "correct": true,
+        "why": "Right. Below the top frame, each frame's line is where that function made the call above it."
+      },
+      {
+        "text": "The call from `orderTotal` to `lineTotal`",
+        "correct": false,
+        "why": "That call is line 27, in the `orderTotal` frame below."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6sdft2q",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main.main` calls `run`, `run` calls `load`, and `load` calls `parseLine`, which panics. Put the frames in the order the trace prints them.",
+    "hint": "Deepest first.",
+    "items": [
+      "`main.parseLine`",
+      "`main.load`",
+      "`main.run`",
+      "`main.main`"
+    ]
+  },
+  {
+    "id": "ex-6e2t8zdv",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three frames of the `~/stacks` trace end in `(...)` and have no `+0x` after their line. Why?",
+    "hint": "`go build -gcflags=-m` answered it.",
+    "choices": [
+      {
+        "text": "Those functions took no arguments",
+        "correct": false,
+        "why": "`unitPrice` takes two, and with inlining off the runtime printed them."
+      },
+      {
+        "text": "The runtime hid the arguments because they held private data",
+        "correct": false,
+        "why": "The runtime does not judge the data; with `-l` it printed `{0x49b0c7?, 0x41b4f9?}, 0x4` for the same call."
+      },
+      {
+        "text": "The compiler inlined them, copying their bodies into the caller",
+        "correct": true,
+        "why": "Right. There was no separate call at run time, so there are no arguments and no offset to print."
+      },
+      {
+        "text": "The trace was cut short because it was too long",
+        "correct": false,
+        "why": "Nothing was cut: the file and line of each frame are all there, down to `main.main`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8c0qfe57",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A crash ends at `main.go:34 +0x15b`. A colleague edits a different function, rebuilds, gets the same crash, and sees `main.go:34 +0x163`. Is it a different bug?",
+    "hint": "What is the offset measured from, and in which binary?",
+    "choices": [
+      {
+        "text": "Yes: a different offset means a different instruction failed",
+        "correct": false,
+        "why": "Different instruction in a different binary; the offset is only comparable within one build."
+      },
+      {
+        "text": "Yes, because the edit moved the bug to another place in `main`",
+        "correct": false,
+        "why": "The line is still 34, and the line is what keeps its meaning across builds."
+      },
+      {
+        "text": "It cannot be known without a debugger",
+        "correct": false,
+        "why": "The trace already answers it: same function, same file, same line."
+      },
+      {
+        "text": "Almost certainly not: same line; the offset moves whenever the machine code is rebuilt",
+        "correct": true,
+        "why": "Right. `+0x` is the distance from the function's start in this binary, so read the line instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-9asgmfjr",
+    "version": 1,
+    "section": "more-context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `GOTRACEBACK=none ./stacks` print?",
+    "hint": "It is the setting that takes something away.",
+    "choices": [
+      {
+        "text": "Nothing, and the exit status was 0",
+        "correct": false,
+        "why": "The message stayed and the status was still 2; the setting changes what is printed, not how the program ends."
+      },
+      {
+        "text": "The `panic:` line and no frames",
+        "correct": true,
+        "why": "Right. The message and the exit status survive and every frame is gone."
+      },
+      {
+        "text": "The traces of the runtime's goroutines as well as the program's",
+        "correct": false,
+        "why": "That is `system`, the opposite end of the scale."
+      },
+      {
+        "text": "The default trace, because `none` is not a valid value",
+        "correct": false,
+        "why": "`none` is in the documentation and it worked: the frames were missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcg4mc9x",
+    "version": 1,
+    "section": "more-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server panics in a goroutine that was waiting on another goroutine it had started. Which `GOTRACEBACK` shows both?",
+    "hint": "The documentation's word for goroutines the program created.",
+    "choices": [
+      {
+        "text": "`single`, the default",
+        "correct": false,
+        "why": "The default prints the current goroutine only."
+      },
+      {
+        "text": "`all`",
+        "correct": true,
+        "why": "Right. It adds the traces of every user-created goroutine."
+      },
+      {
+        "text": "`none`, and a `debug.Stack` call in each goroutine instead",
+        "correct": false,
+        "why": "`debug.Stack` shows only the goroutine that calls it, and `none` removes the frames you wanted."
+      },
+      {
+        "text": "`crash`, which adds the other goroutines to the trace",
+        "correct": false,
+        "why": "`all` and `system` already do; `crash` adds a core dump on top of `system`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t03dqwfk",
+    "version": 1,
+    "section": "more-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`debug.Stack()` was called inside `price`'s deferred function, after the panic. Why did its trace still show `main.unitPrice` and line 22?",
+    "hint": "Where does a deferred function run while a panic is under way?",
+    "choices": [
+      {
+        "text": "`debug.Stack` returns the trace of the last panic, saved by the runtime",
+        "correct": false,
+        "why": "Its documentation says it formats the trace of the goroutine that calls it, as it is now."
+      },
+      {
+        "text": "`slog.Error` added the frames when it logged the value that `recover` had returned to the deferred function",
+        "correct": false,
+        "why": "The `slog` line was one line of key=value pairs; the frames came from `debug.Stack`."
+      },
+      {
+        "text": "The deferred function runs on top of the frames that panicked, before they are removed",
+        "correct": true,
+        "why": "Right. That is why a trace taken there still reaches the line of the bug."
+      },
+      {
+        "text": "`recover` puts the panicking frames back on the stack",
+        "correct": false,
+        "why": "Nothing is put back: the frames were never gone, and `debug.Stack` ran before `price` returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1ggt6ex",
+    "version": 1,
+    "section": "more-context",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`slog.Error(\"order failed\", \"order\", id, ...)` printed `order=2`: after the message, `slog` takes its arguments in pairs and writes each pair as ___=value.",
+    "hint": "The first of each pair is what a log system searches by.",
+    "blanks": [
+      {
+        "accept": [
+          "key"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q9jgevhc",
+    "version": 1,
+    "section": "more-context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service recovers each request's panic and logs only `panic=\"runtime error: index out of range [4] with length 4\"`. What does the person on call lack, and how is it fixed?",
+    "hint": "Which part of the output is about where?",
+    "choices": [
+      {
+        "text": "Nothing: the message names the index and the length, which is enough to find the line",
+        "correct": false,
+        "why": "Any slice indexed anywhere could have printed it; the message has no file and no line."
+      },
+      {
+        "text": "The frames: log `debug.Stack()` with the line, from the deferred function",
+        "correct": true,
+        "why": "Right. The runtime prints no trace for a recovered panic, so the program has to write it."
+      },
+      {
+        "text": "The frames: set `GOTRACEBACK=all` so the runtime prints them",
+        "correct": false,
+        "why": "`GOTRACEBACK` only shapes the trace of a panic that kills the program; this one was recovered."
+      },
+      {
+        "text": "The exit status, which says which handler panicked",
+        "correct": false,
+        "why": "A recovered panic does not end the process, and a status names no handler anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bwjfbev",
+    "version": 1,
+    "section": "in-production",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command shows the commit a Go binary was built from, without running the binary?",
+    "hint": "It read `vcs.revision` out of `stacks`.",
+    "choices": [
+      {
+        "text": "`git log --oneline`",
+        "correct": false,
+        "why": "That lists the repository's commits; it cannot say which one a given binary came from."
+      },
+      {
+        "text": "`go version -m`",
+        "correct": true,
+        "why": "Right. It prints the module, the Go release and the build settings, `vcs.revision` included."
+      },
+      {
+        "text": "`go doc runtime/debug.ReadBuildInfo`",
+        "correct": false,
+        "why": "That prints the documentation of the function a program calls to read its own record."
+      },
+      {
+        "text": "`file`, which prints the BuildID",
+        "correct": false,
+        "why": "The BuildID identifies the build's content, not the commit; `vcs.revision` is the commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqc773sz",
+    "version": 1,
+    "section": "in-production",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A binary's record says `vcs.modified=true`. What does that tell you during an incident?",
+    "hint": "Read the `BuildSetting` documentation again.",
+    "choices": [
+      {
+        "text": "The binary file was changed on disk at some point after the go command had built it",
+        "correct": false,
+        "why": "The setting describes the source tree at build time, not the file afterwards."
+      },
+      {
+        "text": "The module has a newer version available",
+        "correct": false,
+        "why": "Nothing in the record looks at other versions; it describes this build."
+      },
+      {
+        "text": "Go was upgraded since the commit",
+        "correct": false,
+        "why": "The Go release has its own line, `go1.27.1`; `vcs.modified` is about the tree."
+      },
+      {
+        "text": "The tree had uncommitted changes, so the commit alone does not describe the code",
+        "correct": true,
+        "why": "Right. With `false` the revision is the exact source; with `true` some of the code exists only on the machine that built it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fey27sn",
+    "version": 1,
+    "section": "in-production",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go build -ldflags=-s` produced `small`. Which of these did the binary lose? Choose all that apply.",
+    "hint": "Compare `./small`'s trace and `go version -m small` with the full build.",
+    "choices": [
+      {
+        "text": "The symbol table",
+        "correct": true,
+        "why": "Yes: the linker's help says `-s` omits it."
+      },
+      {
+        "text": "The DWARF debug information",
+        "correct": true,
+        "why": "Yes: `-s` implies `-w`, which omits the DWARF symbol table."
+      },
+      {
+        "text": "The file and line in its traces",
+        "correct": false,
+        "why": "No: `./small` still printed `main.go:20`."
+      },
+      {
+        "text": "The module version and commit `go version -m` reads",
+        "correct": false,
+        "why": "No: `go version -m small` still showed `v0.0.0-20261006130000-d569db795b44`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxdr5vdj",
+    "version": 1,
+    "section": "in-production",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Built with `-trimpath`, what did the last frame of the trace say instead of `/home/ana/stacks-release/main.go:53`?",
+    "hint": "The recorded file names begin with something the module declares.",
+    "choices": [
+      {
+        "text": "`main.go:53`, with no directory at all",
+        "correct": false,
+        "why": "Something replaces the directory; the trace showed what."
+      },
+      {
+        "text": "`./main.go:53`, relative to where the build ran",
+        "correct": false,
+        "why": "That would still depend on the builder's directory, which is what `-trimpath` removes."
+      },
+      {
+        "text": "`example.com/stacks/main.go:53`",
+        "correct": true,
+        "why": "Right. The module path took the place of the home directory, and the line stayed 53."
+      },
+      {
+        "text": "Nothing: `-trimpath` removes the file names from traces",
+        "correct": false,
+        "why": "It removes file system paths, not file names; the frame still named `main.go`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcqme880",
+    "version": 1,
+    "section": "in-production",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`stacks` was 2430545 bytes and the stripped `small` 1568928. By how many percent, rounded to a whole number, did stripping shrink the binary?",
+    "hint": "Divide the difference by the larger size.",
+    "value": 35,
+    "tolerance": 1,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-nseq3hkp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a trace with what it means.",
+    "hint": "Section 02 read each one.",
+    "pairs": [
+      {
+        "left": "`goroutine 1 [running]:`",
+        "right": "Which goroutine the frames below belong to, and its state"
+      },
+      {
+        "left": "`main.lineTotal(...)`",
+        "right": "A function the compiler inlined into its caller"
+      },
+      {
+        "left": "`+0x15b`",
+        "right": "Where the instruction sits in the function's machine code"
+      },
+      {
+        "left": "`0x41b4f9?`",
+        "right": "An argument value the runtime cannot vouch for"
+      }
+    ],
+    "right_distractors": [
+      "The number of times the function was called"
+    ]
+  },
+  {
+    "id": "ex-3mg6mcdy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A trace's top frame is `regexp.MustCompile` in `/usr/local/go/src/regexp/regexp.go:312`, and the next is `main.init()` at `main.go:11`. Where do you start looking for the bug?",
+    "hint": "Lesson 36 printed this trace.",
+    "choices": [
+      {
+        "text": "At `regexp.go:312`, since the top frame is where the program broke",
+        "correct": false,
+        "why": "It broke there on purpose: `MustCompile` panics when it is given a bad pattern. The mistake is the pattern it was given."
+      },
+      {
+        "text": "At `main.go:11`, the first frame in your own code",
+        "correct": true,
+        "why": "Right. Read down past the library's frames to the first call your code made; there the bad pattern was passed in."
+      },
+      {
+        "text": "In `main.main`, where the trace ends",
+        "correct": false,
+        "why": "This one has no `main.main` frame: the panic came before `main` ran."
+      },
+      {
+        "text": "In the Go release, since a standard library function panicked",
+        "correct": false,
+        "why": "`MustCompile` did what its documentation says it does with a pattern that does not parse."
+      }
+    ]
+  },
+  {
+    "id": "ex-tym8r49s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main.unitPrice({0x49b0c7?, 0x41b4f9?}, 0x4)`. Which printed value can you trust?",
+    "hint": "Look for the one without a mark.",
+    "choices": [
+      {
+        "text": "`0x41b4f9`, the length of the string",
+        "correct": false,
+        "why": "It carries a `?`, and no string `\"cake\"` is four million bytes long."
+      },
+      {
+        "text": "All three, since the runtime read them from the stack",
+        "correct": false,
+        "why": "The `?` marks the ones it could not vouch for: the slot was no longer in use."
+      },
+      {
+        "text": "None: arguments in a trace are always stale",
+        "correct": false,
+        "why": "The unmarked one matched the message exactly, index 4."
+      },
+      {
+        "text": "`0x4`, the quantity",
+        "correct": true,
+        "why": "Right. It has no `?`, and it is the 4 the panic message named."
+      }
+    ]
+  },
+  {
+    "id": "ex-frc3jdfb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A crash in production points at `main.go:20`, and line 20 of `main.go` on your machine today is a blank line. What do you do first?",
+    "hint": "The binary knows something your checkout does not.",
+    "choices": [
+      {
+        "text": "Conclude the trace is wrong because the binary was stripped",
+        "correct": false,
+        "why": "A stripped binary printed the right file and line in section 04."
+      },
+      {
+        "text": "Rebuild from your checkout and wait for the crash to happen again",
+        "correct": false,
+        "why": "Your checkout is not the code that crashed; the new binary's lines may not match either."
+      },
+      {
+        "text": "Read `vcs.revision` from the binary and look at line 20 of `main.go` in that commit",
+        "correct": true,
+        "why": "Right. `go version -m` or the logged version gives the commit, and `git show <rev>:main.go` gives the line."
+      },
+      {
+        "text": "Search the code for the panic message instead of using the line",
+        "correct": false,
+        "why": "A runtime message such as `index out of range` is not in your code; the line is the precise part."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss8vb95m",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a deferred function, `debug.___()` returns the trace of the goroutine that calls it, as bytes a logger can write.",
+    "hint": "A function of `runtime/debug`.",
+    "blanks": [
+      {
+        "accept": [
+          "Stack"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

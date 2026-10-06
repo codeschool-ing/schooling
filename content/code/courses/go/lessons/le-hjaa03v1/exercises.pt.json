@@ -1,0 +1,405 @@
+{
+  "ex-zyw393dr": {
+    "prompt": "Na máquina amd64 do laboratório, `int` e `int64` têm os dois 64 bits. Por que `total + count` ainda é recusado quando um é `int64` e o outro `int`?",
+    "hint": "Leia a mensagem: o que ela diz que não combina?",
+    "choices": [
+      {
+        "text": "Porque somar os dois poderia estourar os 64 bits desta máquina em tempo de execução",
+        "why": "Estouro não é o que a mensagem aponta, e a mesma recusa acontece com valores pequenos demais para estourar."
+      },
+      {
+        "text": "Porque o compilador confere tipos, nunca larguras",
+        "why": "Isso. O compilador confere tipos, não tamanhos, e assim o programa compila igual numa máquina em que `int` tem 32 bits."
+      },
+      {
+        "text": "Porque `int64` é só para valores que não cabem num `int`",
+        "why": "Nada impede um `int64` de guardar 10. A recusa é sobre os dois tipos se encontrarem, não sobre os valores."
+      },
+      {
+        "text": "Porque Go recusa aritmética com variáveis `int64`",
+        "why": "`total + int64(count)` imprimiu 13, então conta com `int64` funciona quando os dois lados concordam."
+      }
+    ]
+  },
+  "ex-6t54j630": {
+    "prompt": "`price` é um `float64`. `price * n` compilou com `const n = 3`, e `price * m` foi recusado com `const m int = 3`. Qual a diferença entre `n` e `m`?",
+    "hint": "Uma das duas declarações nomeia um tipo.",
+    "choices": [
+      {
+        "text": "`m` é uma variável, e variáveis não se misturam com floats",
+        "why": "`m` também é constante. Ser constante não basta; o que conta é ser sem tipo."
+      },
+      {
+        "text": "`n` vira float ao ser declarada, e `m` fica exata",
+        "why": "`n` não tem tipo nenhum até encontrar `price`; nada é arredondado."
+      },
+      {
+        "text": "`n` é sem tipo e assume o tipo que encontrar; `m` já é um `int`",
+        "why": "Isso. Uma constante sem tipo vira `float64` para encontrar `price`; uma com tipo é um `int` como qualquer variável."
+      },
+      {
+        "text": "O compilador confere o tipo de uma constante declarada na linha logo antes",
+        "why": "Onde a constante é declarada não muda nada; se ela tem tipo, muda."
+      }
+    ]
+  },
+  "ex-e6yxb837": {
+    "prompt": "`count` é um `int` com 3. O que acontece com `fmt.Println(count * 2.5)`?",
+    "hint": "`2.5` consegue virar `int` sem perder nada?",
+    "choices": [
+      {
+        "text": "Imprime `7.5`, porque a constante transforma a expressão em float",
+        "why": "Uma constante assume o tipo do que encontra, aqui `int`; ela nunca muda o tipo do outro lado."
+      },
+      {
+        "text": "Imprime `6`, porque `2.5` é cortado para `2` antes",
+        "why": "Isso seria uma perda silenciosa, que é justamente o que o compilador não faz com uma constante."
+      },
+      {
+        "text": "Imprime `7`, porque o produto é cortado para `int` no fim",
+        "why": "Nada é calculado: o programa não compila."
+      },
+      {
+        "text": "Não compila: `2.5` seria truncado para caber num `int`",
+        "why": "Isso. A mensagem é `2.5 (untyped float constant) truncated to int`; escreva `float64(count) * 2.5` para ter 7.5."
+      }
+    ]
+  },
+  "ex-cdfbxryk": {
+    "prompt": "`x` é um `int` e `y` é um `float64`. Quais destas expressões compilam? Marque todas as que se aplicam.",
+    "hint": "Uma constante sem tipo se converte quando o valor sobrevive.",
+    "choices": [
+      {
+        "text": "`y * 2`",
+        "why": "Sim. `2` vira `float64` para encontrar `y`."
+      },
+      {
+        "text": "`x + 1.0`",
+        "why": "Sim. `1.0` é um número inteiro, então vira `int` sem perder nada; o laboratório imprimiu 4."
+      },
+      {
+        "text": "`x * 0.5`",
+        "why": "`0.5` não vira `int` sem perder a metade, então é recusado como truncado."
+      },
+      {
+        "text": "`y + x`",
+        "why": "Duas variáveis de tipos diferentes: mismatched types `float64` e `int`."
+      }
+    ]
+  },
+  "ex-e69phjf0": {
+    "prompt": "Em C, `-1 < 1u` é falso porque o `-1` é convertido para sem sinal antes. Em Go, `b` é um `int` com -1 e `a` é um `uint` com 1. O que `b < a` faz?",
+    "hint": "A regra vale para comparações como vale para contas.",
+    "choices": [
+      {
+        "text": "Dá falso, como em C",
+        "why": "Isso exige uma conversão implícita para sem sinal, que Go não faz."
+      },
+      {
+        "text": "Dá verdadeiro, porque Go compara os valores matemáticos",
+        "why": "Go não compara entre tipos de jeito nenhum; nem chega aos valores."
+      },
+      {
+        "text": "O programa não compila: mismatched types `int` e `uint`",
+        "why": "Isso. O laboratório recusou com exatamente essa mensagem; você escolhe o tipo com uma conversão."
+      },
+      {
+        "text": "Compila e entra em pânico em tempo de execução quando os sinais diferem",
+        "why": "Um tipo que não combina é achado na compilação; nada espera o programa rodar."
+      }
+    ]
+  },
+  "ex-06awc3vv": {
+    "prompt": "`f` é um `float64` com `-3.9`. O que `int(f)` dá?",
+    "hint": "O corte vai em direção ao zero.",
+    "choices": [
+      {
+        "text": "`-4`, o inteiro mais próximo",
+        "why": "Isso é arredondar, o que `math.Round` faz; a conversão só descarta a fração."
+      },
+      {
+        "text": "`-3`",
+        "why": "Isso. A fração é descartada, então o resultado vai em direção ao zero: o laboratório imprimiu `-3` para `int(-f)` com `f` valendo 3.9."
+      },
+      {
+        "text": "`-4`, porque um número negativo é cortado para baixo",
+        "why": "Cortar para baixo é o que uma função de piso faz. A conversão corta em direção ao zero nos dois sinais."
+      },
+      {
+        "text": "Um erro de compilação, porque um float não pode virar int",
+        "why": "Sobre uma variável a conversão é permitida; só uma constante como `3.9` escrita no código é recusada."
+      }
+    ]
+  },
+  "ex-xpmk6xph": {
+    "prompt": "`n` é um `int` com 260. O que `uint8(n)` imprime?",
+    "hint": "Um `uint8` guarda os oito bits de baixo, que valem até 255.",
+    "unit": ""
+  },
+  "ex-zr0fqsm4": {
+    "prompt": "`total` vale 7 e `count` vale 2, os dois `int`. O que `fmt.Println(float64(total / count))` imprime?",
+    "hint": "O que roda primeiro, a divisão ou a conversão?",
+    "choices": [
+      {
+        "text": "`3.5`",
+        "why": "Isso exige uma divisão de float, que só `float64(total) / float64(count)` dá."
+      },
+      {
+        "text": "`3`",
+        "why": "Isso. `7 / 2` é divisão inteira, 3, e converter 3 para `float64` imprime `3`."
+      },
+      {
+        "text": "`4`, porque a conversão arredonda a metade para cima",
+        "why": "A metade sumiu antes de a conversão rodar; não sobrou nada para arredondar."
+      },
+      {
+        "text": "Um erro de compilação, porque a conversão precisa de um float dentro dos parênteses",
+        "why": "Converter um `int` para `float64` é sempre permitido; o problema é quando acontece, não se acontece."
+      }
+    ]
+  },
+  "ex-darmdktx": {
+    "prompt": "`n` é um `int` com 65. O que `fmt.Println(string(n))` imprime?",
+    "hint": "A lição 8 imprimiu `'A'` como número.",
+    "choices": [
+      {
+        "text": "`A`",
+        "why": "Isso. O número é lido como code point, e o `go vet` aponta a linha porque os dígitos eram provavelmente o desejado."
+      },
+      {
+        "text": "`65`",
+        "why": "Esses são os dígitos, que `strconv.Itoa(n)` dá; uma conversão para `string` não dá."
+      },
+      {
+        "text": "Nada: o compilador recusa conversão de `int` para `string`",
+        "why": "Compila e roda; só o `go vet` reclama, e sai com status 1."
+      },
+      {
+        "text": "Dois bytes, os caracteres `6` e `5` como números",
+        "why": "Não há passo que separe o número em dígitos; o 65 inteiro é um code point só."
+      }
+    ]
+  },
+  "ex-k22n7mfr": {
+    "prompt": "`strconv.Atoi(\"99999999999999999999\")` recebe um número grande demais para um `int`. O que ela devolve?",
+    "hint": "O laboratório imprimiu os dois valores.",
+    "choices": [
+      {
+        "text": "0 e um erro `invalid syntax`",
+        "why": "É o que ela devolve para `\"4.5\"`. Só dígitos é sintaxe válida; o problema é o valor."
+      },
+      {
+        "text": "Os 64 bits de baixo do número e nenhum erro, como uma conversão",
+        "why": "Interpretar não é converter: a função reporta o problema em vez de dar a volta."
+      },
+      {
+        "text": "O maior `int` junto com um erro `value out of range`",
+        "why": "Isso: 9223372036854775807 e o erro. Um programa que ignora `err` segue com esse número."
+      },
+      {
+        "text": "Entra em pânico, porque o valor não pode ser representado",
+        "why": "Ela devolve um erro como segundo valor; nada entra em pânico."
+      }
+    ]
+  },
+  "ex-vaare9tw": {
+    "prompt": "Para transformar o `int` 1500 nos quatro caracteres `\"1500\"`, chame `strconv.___(1500)`.",
+    "hint": "A parceira dela no sentido contrário é `Atoi`.",
+    "blanks": [
+      {
+        "accept": [
+          "Itoa"
+        ]
+      }
+    ]
+  },
+  "ex-hf59meqx": {
+    "prompt": "`fmt.Println(int(3.9))` é recusado, mas `f := 3.9` seguido de `fmt.Println(int(f))` compila e imprime `3`. Por que o compilador trata os dois de jeitos diferentes?",
+    "hint": "O que o compilador sabe sobre cada um enquanto compila?",
+    "choices": [
+      {
+        "text": "Porque `f` é um `float32`, que se converte com menos rigor que um `float64`",
+        "why": "`f := 3.9` cria um `float64`; a regra é a mesma para os dois tipos de float."
+      },
+      {
+        "text": "Porque `int(3.9)` arredondaria para 4, e o compilador recusa arredondamentos",
+        "why": "Uma conversão nunca arredonda. A constante é recusada porque a fração se perderia."
+      },
+      {
+        "text": "Porque conversões dentro de `fmt.Println` são conferidas e a variável esconde isso",
+        "why": "As duas conversões estão dentro de `fmt.Println`; o lugar não é a diferença."
+      },
+      {
+        "text": "Só o valor de uma constante é conhecido na compilação, então a perda é pega ali",
+        "why": "Isso. O compilador confere o que consegue ver; `f` pode ter qualquer coisa quando a linha rodar."
+      }
+    ]
+  },
+  "ex-mzdhmd76": {
+    "prompt": "Ligue cada expressão ao que ela dá. `f` vale 3.9, `mid` é o `int` 200, `n` é o `int` 65.",
+    "hint": "A seção 03 imprimiu as quatro.",
+    "pairs": [
+      {
+        "left": "`int(-f)`",
+        "right": "`-3`"
+      },
+      {
+        "left": "`int8(mid)`",
+        "right": "`-56`"
+      },
+      {
+        "left": "`string(rune(n))`",
+        "right": "`\"A\"`"
+      },
+      {
+        "left": "`strconv.Itoa(n)`",
+        "right": "`\"65\"`"
+      }
+    ],
+    "right_distractors": [
+      "`-4`"
+    ]
+  },
+  "ex-zphs9gh8": {
+    "prompt": "O que `type Celsius float64` declara?",
+    "hint": "Daria para somar um `Celsius` com uma variável `float64` comum?",
+    "choices": [
+      {
+        "text": "Outro nome para `float64`, aceito em qualquer lugar onde um `float64` é aceito",
+        "why": "Isso é um alias, escrito com `=`. Sem o `=`, atribuir uma variável `float64` foi recusado."
+      },
+      {
+        "text": "Um tipo novo, guardado como um `float64`",
+        "why": "Isso. Não se mistura com `float64` sem conversão, porque para o compilador é outro tipo."
+      },
+      {
+        "text": "Uma struct com um campo `float64`",
+        "why": "Não há struct nenhuma; um `Celsius` é o próprio número, sob um tipo novo."
+      },
+      {
+        "text": "Um tipo que se converte sozinho para Fahrenheit quando os dois se encontram",
+        "why": "Nada se converte sozinho; somar um `Celsius` com um `Fahrenheit` foi recusado."
+      }
+    ]
+  },
+  "ex-tskxp375": {
+    "prompt": "`boil` é um `Celsius` com 100. Por que `fmt.Println(Fahrenheit(boil))` imprime `100` e não `212`?",
+    "hint": "O que uma conversão muda?",
+    "choices": [
+      {
+        "text": "Porque a conversão é pulada quando os dois tipos são `float64` por baixo",
+        "why": "Ela não é pulada: o valor agora é um `Fahrenheit`. Ela simplesmente não faz conta."
+      },
+      {
+        "text": "Porque `fmt.Println` imprime o `float64` de baixo, não o valor em Fahrenheit",
+        "why": "Não existe um valor Fahrenheit separado para imprimir; o número lá dentro continua 100."
+      },
+      {
+        "text": "Uma conversão muda o tipo e nunca o número",
+        "why": "Isso. Nada na linguagem conhece a fórmula; uma função como `CToF` precisa fazer a conta."
+      },
+      {
+        "text": "Porque a fórmula é aplicada quando o programa é compilado com otimizações",
+        "why": "Nenhuma opção de build transforma uma conversão numa fórmula."
+      }
+    ]
+  },
+  "ex-y9ppr51a": {
+    "prompt": "`n` é um `int` com 2. Qual expressão vale dois segundos?",
+    "hint": "Um `Duration` conta nanossegundos.",
+    "choices": [
+      {
+        "text": "`time.Duration(n) * time.Nanosecond`",
+        "why": "`time.Nanosecond` vale 1, então isso continua sendo 2 nanossegundos; `time.Duration(n)` sozinho imprimiu `2ns`."
+      },
+      {
+        "text": "`time.Duration(n)`",
+        "why": "O laboratório imprimiu `2ns`: o número dentro de um `Duration` conta nanossegundos."
+      },
+      {
+        "text": "`n * time.Second`",
+        "why": "Recusado: mismatched types `int` e `time.Duration`."
+      },
+      {
+        "text": "`time.Duration(n) * time.Second`",
+        "why": "Isso. A conversão faz dele um `Duration`, e multiplicar por `time.Second` dá a unidade; imprimiu `2s`."
+      }
+    ]
+  },
+  "ex-a4qqfqkj": {
+    "prompt": "Com `type Celsius float64`, `type Reading = float64` e `var x float64 = 21.5`, quais linhas compilam? Marque todas as que se aplicam.",
+    "hint": "Uma das declarações tem um `=`.",
+    "choices": [
+      {
+        "text": "`var r Reading = x`",
+        "why": "Sim. `Reading` é um alias, então `r` é um `float64`."
+      },
+      {
+        "text": "`var c Celsius = x`",
+        "why": "Recusado: uma variável `float64` não é um `Celsius`. `Celsius(x)` compilaria."
+      },
+      {
+        "text": "`var c Celsius = 30`",
+        "why": "Sim. `30` é uma constante sem tipo e vira um `Celsius`."
+      },
+      {
+        "text": "`c := Celsius(x)`",
+        "why": "Sim. Os dois têm o tipo subjacente `float64`, então a conversão é permitida."
+      }
+    ]
+  },
+  "ex-e9jne3ba": {
+    "prompt": "Um programa declara `type UserID int64` e `type OrderID int64`, e `Cancel(id OrderID)` não compila quando recebe um `UserID`. Que mudança faria esse engano voltar a compilar, em silêncio?",
+    "hint": "Que tipo de declaração não pega nada?",
+    "choices": [
+      {
+        "text": "Renomear `UserID` para `UserId`",
+        "why": "Uma grafia nova continua sendo um tipo definido; a chamada é recusada do mesmo jeito."
+      },
+      {
+        "text": "Fazer o parâmetro ser `id int64`",
+        "why": "Uma variável `UserID` também não é um `int64`, então essa chamada continuaria recusada."
+      },
+      {
+        "text": "Dar a `OrderID` o tipo subjacente `int`",
+        "why": "Dois tipos definidos continuam sem se misturar, e agora nem têm o mesmo tipo subjacente."
+      },
+      {
+        "text": "Pôr `=` nas duas declarações",
+        "why": "Isso. Os dois virariam aliases de `int64`, então o compilador veria um tipo só e aceitaria a chamada."
+      }
+    ]
+  },
+  "ex-q4e72gns": {
+    "prompt": "Um formulário envia o texto `\"30\"`, que quer dizer segundos, e o programa precisa de um `time.Duration`. Ponha os passos em ordem.",
+    "hint": "Texto é interpretado antes de ser número de qualquer tipo.",
+    "items": [
+      "Chamar `strconv.Atoi` com o texto",
+      "Conferir que `err` é `nil` antes de usar o número",
+      "Converter o `int` com `time.Duration(n)`",
+      "Multiplicar por `time.Second` para dar a unidade"
+    ]
+  },
+  "ex-2te6xvgt": {
+    "prompt": "`ms` é um `int64` com 1500, uma quantidade de milissegundos. Qual expressão imprime `1.5s`?",
+    "hint": "Converta primeiro, depois dê a unidade, e não divida inteiros no caminho.",
+    "choices": [
+      {
+        "text": "`time.Duration(ms)`",
+        "why": "Isso lê 1500 como nanossegundos e imprimiu `1.5µs`."
+      },
+      {
+        "text": "`time.Duration(ms) * time.Millisecond`",
+        "why": "Isso. A conversão faz dele um `Duration` e a multiplicação diz que os 1500 eram milissegundos."
+      },
+      {
+        "text": "`time.Duration(ms) / 1000 * time.Second`",
+        "why": "`1500 / 1000` é conta inteira e dá 1, então isso imprimiu `1s`: a metade se perdeu antes de a unidade chegar."
+      },
+      {
+        "text": "`ms * time.Millisecond`",
+        "why": "Recusado: um `int64` e um `time.Duration` são tipos diferentes, mesmo um sendo definido como o outro."
+      }
+    ]
+  }
+}

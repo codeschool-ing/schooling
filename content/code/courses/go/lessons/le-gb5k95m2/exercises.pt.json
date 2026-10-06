@@ -1,0 +1,396 @@
+{
+  "ex-r7abpwem": {
+    "prompt": "O `go run .` no programa de `~/panic` imprimiu `exit status 2`, e o `echo $?` depois imprimiu `1`. De onde vem cada número?",
+    "hint": "Rode o binário sozinho e compare.",
+    "choices": [
+      {
+        "text": "Os dois vêm do programa, que sai duas vezes: uma pelo panic e outra por `main`",
+        "why": "Um processo sai uma vez só. O `./panic` compilado imprimiu um único código, 2, e mais nada."
+      },
+      {
+        "text": "O 2 é do programa, que o `go run` informa; o 1 é o próprio `go run` falhando",
+        "why": "Isso. Rodado sozinho, o binário saiu com 2, e o `go run` transforma qualquer falha do programa no seu próprio código 1."
+      },
+      {
+        "text": "O 2 conta os elementos de `scores` e o 1 é o erro",
+        "why": "A slice tinha mesmo dois elementos, mas o código de todo programa que entra em panic é 2, sejam quais forem os dados."
+      },
+      {
+        "text": "O `go vet` devolveu 2 avisos e o compilador devolveu 1",
+        "why": "O `go vet` não achou nada e o build deu certo; os dois números apareceram depois de o programa rodar."
+      }
+    ]
+  },
+  "ex-9tna649f": {
+    "prompt": "Qual destes uma função Go deve informar devolvendo um `error`, e não entrando em panic?",
+    "hint": "Pergunte quem causou: o código do programa ou o mundo em que ele roda.",
+    "choices": [
+      {
+        "text": "Um índice um depois do fim de uma slice",
+        "why": "Nenhuma entrada torna essa leitura a coisa certa; é um bug no código, e o runtime entra em panic."
+      },
+      {
+        "text": "Um arquivo de configuração que o usuário indicou não existe",
+        "why": "Isso. Um arquivo ausente é o mundo, não um engano do programa, e quem chama pode fazer algo a respeito."
+      },
+      {
+        "text": "Uma escrita num map que ninguém criou com `make`",
+        "why": "É engano do próprio programa, o map nil da lição 14, e Go entra em panic com isso."
+      },
+      {
+        "text": "Uma expressão regular escrita no código-fonte que não compila",
+        "why": "Só quem programou pode tê-la escrito errado, então o `MustCompile` entra em panic, antes de `main`, na primeira execução."
+      }
+    ]
+  },
+  "ex-tqqmdx0n": {
+    "prompt": "Um programa Go entra em panic e nada o recupera. Com que código de saída o próprio programa termina?",
+    "hint": "Não o número que o `go run` acrescenta depois.",
+    "unit": "código de saída"
+  },
+  "ex-zde12y4y": {
+    "prompt": "Um programa lê uma expressão regular de um arquivo que o usuário edita. Que chamada deve compilá-la?",
+    "hint": "Quem escreveu este padrão?",
+    "choices": [
+      {
+        "text": "`regexp.MustCompile`, para que um padrão ruim pare o programa antes de causar estrago",
+        "why": "Isso transforma um erro de digitação num arquivo numa queda com stack trace; `Must` é para padrões que só quem programou erraria."
+      },
+      {
+        "text": "`regexp.Compile`, conferindo o erro que ela devolve",
+        "why": "Isso. O usuário pode errar em qualquer execução, então é um `error` para informar, como `~/panic-must` fez com `go(`."
+      },
+      {
+        "text": "Qualquer uma, já que as duas devolvem erro para um padrão ruim",
+        "why": "O `MustCompile` devolve só um `*Regexp`. O código-fonte dele mostrou o erro de `Compile` virando panic."
+      },
+      {
+        "text": "`regexp.MustCompile` dentro de uma função adiada",
+        "why": "Adiar a chamada muda quando ela roda, não se um padrão ruim entra em panic."
+      }
+    ]
+  },
+  "ex-p91rr82y": {
+    "prompt": "`~/panic-mustbug` entrou em panic antes de imprimir `word:`, e o trace citou `main.init`, não `main.main`. Por que `main` nem começou?",
+    "hint": "Onde `word` é declarada?",
+    "choices": [
+      {
+        "text": "O compilador confere padrões, então o build executou o panic",
+        "why": "O `go build` deu certo e não imprimiu nada; o panic veio quando `./must` rodou."
+      },
+      {
+        "text": "Faltava `os.Args[1]`, então o programa parou na primeira linha de `main`",
+        "why": "O comando passou os dois argumentos, e a mensagem era sobre o padrão, não sobre um índice."
+      },
+      {
+        "text": "`word` é uma variável de pacote, definida antes de `main` começar",
+        "why": "Isso. Variáveis de pacote são inicializadas primeiro, no passo que o trace chama de `main.init`, então o `MustCompile` entrou em panic ali."
+      },
+      {
+        "text": "Um panic sempre vai para o começo do programa e é informado de lá",
+        "why": "Um trace diz onde o panic aconteceu de fato, como `main.main` na linha 10 fez em `~/panic`."
+      }
+    ]
+  },
+  "ex-hxk6dr7b": {
+    "prompt": "Quando roda uma chamada escrita com `defer`?",
+    "hint": "Veja onde `deferred in the loop:` apareceu na saída.",
+    "choices": [
+      {
+        "text": "No fim do bloco em que está escrita, como um `with` de Python",
+        "why": "As chamadas adiadas dentro do `for` rodaram depois de `end of main`, muito depois de o bloco terminar."
+      },
+      {
+        "text": "Quando a função em volta retorna, seja como for",
+        "why": "Isso. Um retorno normal, um retorno antecipado ou um panic executam antes as chamadas adiadas."
+      },
+      {
+        "text": "Na mesma hora, em segundo plano",
+        "why": "Nada adiado imprimiu antes de `end of main`; a chamada espera."
+      },
+      {
+        "text": "Só se a função entrar em panic",
+        "why": "`~/panic-defer` nunca entrou em panic e as cinco chamadas rodaram."
+      }
+    ]
+  },
+  "ex-q7sdtdx8": {
+    "prompt": "Ponha em ordem as linhas que este `main` imprime: `defer fmt.Println(\"a\")`, depois `for i := range 2 { defer fmt.Println(\"loop\", i) }`, depois `fmt.Println(\"b\")`.",
+    "hint": "A última a entrar é a primeira a sair, e nada adiado roda antes de `main` retornar.",
+    "items": [
+      "`b`",
+      "`loop 1`",
+      "`loop 0`",
+      "`a`"
+    ]
+  },
+  "ex-bfg5hwxn": {
+    "prompt": "`n := 5`, depois `defer fmt.Println(n)`, depois `n = 9`. O que a chamada adiada imprime quando a função retorna?",
+    "hint": "Quando são avaliados os argumentos de uma chamada adiada?",
+    "choices": [
+      {
+        "text": "5",
+        "why": "Isso. O argumento foi lido na linha do `defer`, como `x when deferred: 1` mostrou."
+      },
+      {
+        "text": "9, o valor que `n` tem quando a chamada roda",
+        "why": "É o que uma função literal lendo `n` imprimiria, como `x when run: 2`; o `Println(n)` pegou o argumento antes."
+      },
+      {
+        "text": "Nada, porque `n` mudou depois do `defer`",
+        "why": "Mudar uma variável não cancela uma chamada adiada; ela roda e imprime o valor que recebeu."
+      },
+      {
+        "text": "O compilador se recusa a mudar uma variável que um `defer` já usou",
+        "why": "`~/panic-defer` atribuiu `x = 2` depois de adiar uma chamada com `x`, e compilou."
+      }
+    ]
+  },
+  "ex-fnag8tm7": {
+    "prompt": "`os.Exit` e `log.Fatal` encerram o programa na hora, e nenhuma chamada ___ roda, nem uma escrita em `main`.",
+    "hint": "`./exit now` não imprimiu nada.",
+    "blanks": [
+      {
+        "accept": [
+          "adiada",
+          "deferred"
+        ]
+      }
+    ]
+  },
+  "ex-3j8tehwr": {
+    "prompt": "Um `main` percorre mil nomes de arquivo e, dentro do laço, abre cada um e escreve `defer f.Close()`. O que acontece com os arquivos?",
+    "hint": "Chamadas adiadas esperam a função, não o bloco.",
+    "choices": [
+      {
+        "text": "Cada arquivo é fechado no fim da sua própria volta do laço",
+        "why": "Essa é a imagem do bloco. `deferred in the loop:` só rodou depois de `end of main`."
+      },
+      {
+        "text": "O compilador recusa `defer` dentro de um laço",
+        "why": "`~/panic-defer` adiou três chamadas dentro de um `for` e compilou."
+      },
+      {
+        "text": "Só o último arquivo é fechado, porque cada `defer` substitui o anterior",
+        "why": "Chamadas adiadas se acumulam; as três do laço rodaram, de 2 até 0."
+      },
+      {
+        "text": "Todos ficam abertos até `main` retornar, e então fecham na ordem inversa",
+        "why": "Isso. É por isso que `countLines` é uma função à parte: o `defer` dela roda quando cada chamada retorna."
+      }
+    ]
+  },
+  "ex-rfkavn41": {
+    "prompt": "Onde `recover` precisa ser chamado para parar um panic?",
+    "hint": "O `go doc builtin.recover` diz qual é o lugar.",
+    "choices": [
+      {
+        "text": "Em qualquer lugar da função que entrou em panic",
+        "why": "O código comum depois do panic nunca roda; a documentação diz que fora de uma função adiada `recover` devolve nil."
+      },
+      {
+        "text": "Diretamente dentro de uma função adiada",
+        "why": "Isso. Enquanto um panic está de saída, as chamadas adiadas são o único código que ainda roda."
+      },
+      {
+        "text": "Em `main`, que pega os panics do programa inteiro",
+        "why": "Um recover em `main` não viu o panic de `~/panic-goroutine`."
+      },
+      {
+        "text": "Antes do código arriscado, como quem abre um bloco `try`",
+        "why": "Chamado antes de qualquer panic, `recover` devolve nil e não muda nada."
+      }
+    ]
+  },
+  "ex-0e7jjbk1": {
+    "prompt": "Em `~/panic-sum`, a função adiada chama `panic(r)` de novo quando `r` não é um `parseError`. Contra o que essa linha protege?",
+    "hint": "`~/panic-sumbug` é o caso para o qual ela foi escrita.",
+    "choices": [
+      {
+        "text": "Contra um `parseError` escapar para quem chama",
+        "why": "Um `parseError` é justamente o que a função converte; são os outros panics que a linha deixa passar."
+      },
+      {
+        "text": "Contra fazer o recover duas vezes do mesmo panic",
+        "why": "Há um único recover; a linha decide o que fazer com o que ele devolveu."
+      },
+      {
+        "text": "Contra um bug dentro de `Sum` ser informado a quem chama como entrada ruim",
+        "why": "Isso. O índice fora do intervalo em `~/panic-sumbug` continuou derrubando o programa, com `[recovered, repanicked]`."
+      },
+      {
+        "text": "Contra o compilador recusar um recover que ignora alguns panics",
+        "why": "O compilador não tem essa regra; a verificação é uma decisão do pacote, como o `encoding/gob` registra."
+      }
+    ]
+  },
+  "ex-hjb40ncx": {
+    "prompt": "`main` começa com `defer func() { fmt.Println(\"recovered:\", recover()) }()`. Quais destes esse recover pararia? Escolha todos os que se aplicam.",
+    "hint": "Mesma goroutine, e um panic em vez de um erro fatal.",
+    "choices": [
+      {
+        "text": "Um índice fora do intervalo numa linha de `main`",
+        "why": "Sim: um panic no próprio `main` executa as chamadas adiadas de `main`."
+      },
+      {
+        "text": "Um panic numa função que `main` chamou",
+        "why": "Sim: o panic sobe da função chamada até `main`, como subiu de `number` até `Sum`."
+      },
+      {
+        "text": "Um panic numa goroutine que `main` iniciou com `go`",
+        "why": "Não: `~/panic-goroutine` terminou com código 2 e nunca imprimiu `recovered:`."
+      },
+      {
+        "text": "Um estouro de pilha de uma função que chama a si mesma para sempre",
+        "why": "Não: isso é um erro fatal, não um panic, e `~/panic-overflow` nunca imprimiu `recovered:`."
+      }
+    ]
+  },
+  "ex-q3t1j65p": {
+    "prompt": "O handler de `/boom` em `~/panic-http` escreveu num map nil. O que aconteceu em seguida?",
+    "hint": "Veja os dois comandos `curl` e o log.",
+    "choices": [
+      {
+        "text": "O processo do servidor parou com código de saída 2",
+        "why": "A requisição seguinte, para `/ok`, foi respondida, então o processo continuava rodando."
+      },
+      {
+        "text": "O cliente recebeu `never sent` e um status de erro",
+        "why": "A linha depois do panic nunca rodou; o `curl` recebeu uma resposta vazia."
+      },
+      {
+        "text": "Aquela conexão foi fechada, o panic foi registrado no log com o trace, e `/ok` continuou respondendo",
+        "why": "Isso. O `net/http` faz o recover do panic de cada requisição, como diz a documentação de `Handler`."
+      },
+      {
+        "text": "Nada visível: o servidor fez o recover e ninguém ficou sabendo",
+        "why": "O `server.log` registrou o panic, o endereço do cliente e `main.go:17`."
+      }
+    ]
+  },
+  "ex-cw8r4kk3": {
+    "prompt": "Um comando processa trabalhos de uma fila num laço, um de cada vez, e não pode parar porque um trabalho encontrou um bug. Onde fica o recover dele?",
+    "hint": "Um recover faz retornar a função que o adiou.",
+    "choices": [
+      {
+        "text": "Adiado uma vez no topo de `main`, em volta do laço inteiro",
+        "why": "Aí o primeiro panic faria `main` retornar, e o laço acabaria junto."
+      },
+      {
+        "text": "Adiado numa função que trata um trabalho, registrando no log o que pegou",
+        "why": "Isso. Essa função retorna depois do panic e o laço pega o próximo trabalho, que é o que o `net/http` faz por requisição."
+      },
+      {
+        "text": "Em cada função que o trabalho chama, para um panic parar perto de onde começou",
+        "why": "Isso transforma bugs por toda parte em resultados errados silenciosos; a fronteira é um lugar só."
+      },
+      {
+        "text": "Em lugar nenhum: troque os panics por `log.Fatal`",
+        "why": "O `log.Fatal` chama `os.Exit`, que encerra o comando inteiro, o oposto do que se quer."
+      }
+    ]
+  },
+  "ex-81ekas1e": {
+    "prompt": "Associe cada situação ao que acontece em Go.",
+    "hint": "Quem causou, e alguém está fazendo recover?",
+    "pairs": [
+      {
+        "left": "Um arquivo que o usuário indicou não existe",
+        "right": "A função devolve um `error`"
+      },
+      {
+        "left": "Uma slice é lida um depois do fim",
+        "right": "O runtime entra em panic e o programa sai com 2"
+      },
+      {
+        "left": "Um handler num servidor `http` escreve num map nil",
+        "right": "O servidor faz o recover, registra no log e fecha a conexão"
+      },
+      {
+        "left": "Uma goroutine chama a si mesma até a pilha acabar",
+        "right": "Um erro fatal que nenhum recover consegue parar"
+      }
+    ],
+    "right_distractors": [
+      "O programa sai com código 0 e não imprime nada"
+    ]
+  },
+  "ex-rj727dd9": {
+    "prompt": "Uma função adiada chama `handle()`, e `handle` chama `recover()`. A função que a adiou entra em panic. O que acontece?",
+    "hint": "Releia o parêntese em `go doc builtin.recover`.",
+    "choices": [
+      {
+        "text": "O panic para, porque o `recover` rodou enquanto as chamadas adiadas rodavam",
+        "why": "O momento não basta; a documentação diz dentro de uma função adiada, \"but not any function called by it\"."
+      },
+      {
+        "text": "O compilador recusa um `recover` fora de uma função adiada",
+        "why": "Compila; `recover` é uma chamada embutida comum que devolve nil onde não pode agir."
+      },
+      {
+        "text": "O `recover` devolve nil e o panic segue em frente",
+        "why": "Isso. Só uma chamada feita diretamente pela função adiada para um panic."
+      },
+      {
+        "text": "`handle` para o panic mas não consegue ver o valor dele",
+        "why": "É tudo ou nada: quando `recover` para um panic, ele também devolve o valor passado a `panic`."
+      }
+    ]
+  },
+  "ex-v4havhmw": {
+    "prompt": "`Sum(\"1++3\")` fez o recover do panic que `number` causou no termo vazio. `Sum` seguiu em frente e somou o `3`?",
+    "hint": "O que `Sum` devolveu?",
+    "choices": [
+      {
+        "text": "Sim: o `recover` pula o termo ruim e o laço continua",
+        "why": "`Sum` devolveu `0 empty term`, não 4. Um recover não retoma o laço."
+      },
+      {
+        "text": "Não: `Sum` retornou na hora, com os valores que a função adiada definiu",
+        "why": "Isso. O resto da função depois do panic nunca rodou, e os resultados nomeados disseram 0 e o erro."
+      },
+      {
+        "text": "Sim, e depois devolveu o total com o erro ao lado",
+        "why": "A saída foi `0 empty term`; a função adiada definiu `total` como 0."
+      },
+      {
+        "text": "Não: o programa parou com código 2",
+        "why": "`main` imprimiu o terceiro resultado também; nada quebrou em `~/panic-sum`."
+      }
+    ]
+  },
+  "ex-kxr9245y": {
+    "prompt": "Uma função adiada só consegue transformar um panic num `error` para quem chama atribuindo aos resultados ___ da função.",
+    "hint": "`Sum` declarou `(total int, err error)`.",
+    "blanks": [
+      {
+        "accept": [
+          "nomeados",
+          "named"
+        ]
+      }
+    ]
+  },
+  "ex-0nwc3zes": {
+    "prompt": "Uma função cria um arquivo temporário, escreve `defer os.Remove(name)` e chama `log.Fatal` quando a entrada é ruim. Com entrada ruim, o que acontece com o arquivo?",
+    "hint": "O que o `log.Fatal` chama?",
+    "choices": [
+      {
+        "text": "Ele fica no disco",
+        "why": "Isso. O `log.Fatal` chama `os.Exit(1)`, e o `os.Exit` não executa nenhuma função adiada."
+      },
+      {
+        "text": "Ele é removido, porque chamadas adiadas rodam seja como for que a função termine",
+        "why": "Seja como for que a função retorne ou entre em panic, sim; o `os.Exit` encerra o programa sem retornar, e `./exit now` não imprimiu nada."
+      },
+      {
+        "text": "Ele é removido pelo runtime, que apaga arquivos temporários na saída",
+        "why": "O runtime não acompanha os arquivos que um programa criou; removê-lo era trabalho da chamada adiada."
+      },
+      {
+        "text": "O `log.Fatal` entra em panic, então a remoção roda e depois o programa para",
+        "why": "O `log.Fatal` não entra em panic; a documentação dele diz Print seguido de `os.Exit(1)`."
+      }
+    ]
+  }
+}
