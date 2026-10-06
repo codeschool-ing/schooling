@@ -282,7 +282,7 @@ PY
   printf 'name,monthly\nana,7800\nbruno,8200\n' > "$s/hr/salaries.csv"
   chown -R root:root "$s/portal"; chmod 644 "$s/portal/"*; chmod 640 "$s/portal/users"; chgrp shop "$s/portal/users"
   chown bruno:hr "$s/hr" "$s/hr/salaries.csv"; chmod 750 "$s/hr"; chmod 640 "$s/hr/salaries.csv"
-  touch -d '2026-09-30 17:00:00 -0300' "$s/hr/salaries.csv" "$s/hr"
+  touch -d '2026-09-30 17:00:00 -0300' "$s/hr/salaries.csv" "$s/hr" "$s/portal/"*
   touch "$LAB/www/var/log/lab/portal.log"; chown shop "$LAB/www/var/log/lab/portal.log"
   # sudo on www: ana may restart the portal and read its log, and nothing else.
   cat > "$LAB/www/etc/sudoers.d/ana" <<'S'
