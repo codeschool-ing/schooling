@@ -67,6 +67,32 @@ CREATE TABLE staging.books AS FROM read_csv('extract/books.csv', sample_size = -
 ana@lab:~/wh$ duckdb fresh.duckdb < staging.sql
 ```
 
+Depois a camada gerada é construída num banco vazio e comparada com a escrita à mão, coluna por coluna:
+
+```sql
+-- Every staging column, by hand against generated, both ways round.
+ATTACH 'wh.duckdb' AS hand (READ_ONLY);
+ATTACH 'fresh.duckdb' AS generated (READ_ONLY);
+WITH h AS (SELECT table_name, column_name, data_type FROM duckdb_columns()
+           WHERE database_name = 'hand' AND schema_name = 'staging'),
+     g AS (SELECT table_name, column_name, data_type FROM duckdb_columns()
+           WHERE database_name = 'generated' AND schema_name = 'staging')
+SELECT (SELECT count(*) FROM h) AS hand_columns,
+       (SELECT count(*) FROM g) AS generated_columns,
+       (SELECT count(*) FROM (FROM h EXCEPT FROM g)) AS only_by_hand,
+       (SELECT count(*) FROM (FROM g EXCEPT FROM h)) AS only_generated;
+```
+
+```
+ana@lab:~/wh$ duckdb < compare.sql
+┌──────────────┬───────────────────┬──────────────┬────────────────┐
+│ hand_columns │ generated_columns │ only_by_hand │ only_generated │
+│    int64     │       int64       │    int64     │     int64      │
+├──────────────┼───────────────────┼──────────────┼────────────────┤
+│           77 │                77 │            0 │              0 │
+└──────────────┴───────────────────┴──────────────┴────────────────┘
+```
+
 Dezessete linhas de SQL, e a única exceção, `books`, leva seu tipo forçado. Construída num banco vazio e comparada com
 a camada de staging escrita à mão na lição 2, **cada uma das 77 colunas bate, em nome e em tipo, nos dois sentidos**.
 A camada gerada é a escrita à mão, e daqui em diante acrescentar uma origem é uma linha de JSON.

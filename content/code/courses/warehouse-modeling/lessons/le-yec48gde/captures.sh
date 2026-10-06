@@ -144,4 +144,5 @@ SELECT (SELECT count(*) FROM h) AS hand_columns,
        (SELECT count(*) FROM (FROM g EXCEPT FROM h)) AS only_generated;
 SQL
 code compare-sql compare.sql
+block compare
 on 'duckdb < compare.sql'

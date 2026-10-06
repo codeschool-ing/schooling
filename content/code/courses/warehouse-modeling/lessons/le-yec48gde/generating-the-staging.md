@@ -67,6 +67,32 @@ CREATE TABLE staging.books AS FROM read_csv('extract/books.csv', sample_size = -
 ana@lab:~/wh$ duckdb fresh.duckdb < staging.sql
 ```
 
+Then the generated layer is built into an empty database and compared with the hand-written one, column by column:
+
+```sql
+-- Every staging column, by hand against generated, both ways round.
+ATTACH 'wh.duckdb' AS hand (READ_ONLY);
+ATTACH 'fresh.duckdb' AS generated (READ_ONLY);
+WITH h AS (SELECT table_name, column_name, data_type FROM duckdb_columns()
+           WHERE database_name = 'hand' AND schema_name = 'staging'),
+     g AS (SELECT table_name, column_name, data_type FROM duckdb_columns()
+           WHERE database_name = 'generated' AND schema_name = 'staging')
+SELECT (SELECT count(*) FROM h) AS hand_columns,
+       (SELECT count(*) FROM g) AS generated_columns,
+       (SELECT count(*) FROM (FROM h EXCEPT FROM g)) AS only_by_hand,
+       (SELECT count(*) FROM (FROM g EXCEPT FROM h)) AS only_generated;
+```
+
+```
+ana@lab:~/wh$ duckdb < compare.sql
+┌──────────────┬───────────────────┬──────────────┬────────────────┐
+│ hand_columns │ generated_columns │ only_by_hand │ only_generated │
+│    int64     │       int64       │    int64     │     int64      │
+├──────────────┼───────────────────┼──────────────┼────────────────┤
+│           77 │                77 │            0 │              0 │
+└──────────────┴───────────────────┴──────────────┴────────────────┘
+```
+
 Seventeen lines of SQL, and the one exception, `books`, carries its forced type. Built into an empty database and
 compared with the staging layer written by hand in lesson 2, **every one of the 77 columns matches, by name and by
 type, in both directions**. The generated layer is the hand-written one, and from now on adding a source is one line
