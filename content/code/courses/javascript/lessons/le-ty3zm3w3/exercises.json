@@ -1,0 +1,555 @@
+[
+  {
+    "id": "ex-jsm3zghs",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `lifecycle.js`, what released the million books' memory?",
+    "hint": "Nothing called `free`.",
+    "choices": [
+      {
+        "text": "Letting go, then a collection",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A call to `delete books`",
+        "correct": false,
+        "why": "`delete` removes properties, and was not used."
+      },
+      {
+        "text": "The end of the program",
+        "correct": false,
+        "why": "The figure dropped while it was still running."
+      },
+      {
+        "text": "`Array.from` releasing its result",
+        "correct": false,
+        "why": "It returned the array and kept nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwh4yvzq",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `process.memoryUsage()` figure does the section say to watch for leaks in your own code?",
+    "hint": "Live JavaScript objects.",
+    "choices": [
+      {
+        "text": "`rss`",
+        "correct": false,
+        "why": "That includes Node itself and its code."
+      },
+      {
+        "text": "`heapTotal`",
+        "correct": false,
+        "why": "That is what V8 reserved, not what is used."
+      },
+      {
+        "text": "`heapUsed`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`external`",
+        "correct": false,
+        "why": "That is memory outside the heap."
+      }
+    ]
+  },
+  {
+    "id": "ex-10z3fvxm",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a million books allocated, how many megabytes did the heap use, as `lifecycle.js` printed it?",
+    "hint": "The second line.",
+    "value": 80,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-9yenp4bt",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the garbage collector keep?",
+    "hint": "Starting from the roots.",
+    "choices": [
+      {
+        "text": "Every object created in the last minute",
+        "correct": false,
+        "why": "Age does not decide."
+      },
+      {
+        "text": "Objects with at least one reference to them",
+        "correct": false,
+        "why": "A cycle has references and was still collected."
+      },
+      {
+        "text": "Objects the program named with `const`",
+        "correct": false,
+        "why": "A `const` that is out of scope keeps nothing."
+      },
+      {
+        "text": "Everything reachable from a root",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv7sdrs4",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The author and the book pointed at each other. Why were they collected?",
+    "hint": "It traces; it does not count.",
+    "choices": [
+      {
+        "text": "`WeakRef` released them",
+        "correct": false,
+        "why": "A `WeakRef` only asks; it does not release."
+      },
+      {
+        "text": "Nothing reached the pair",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Cycles are broken by `null` automatically",
+        "correct": false,
+        "why": "The cycle stayed intact; it was unreachable."
+      },
+      {
+        "text": "The collector frees cycles first",
+        "correct": false,
+        "why": "There is no such priority."
+      }
+    ]
+  },
+  {
+    "id": "ex-353bc4n0",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "According to the section, what is every leak, underneath?",
+    "hint": "A path.",
+    "choices": [
+      {
+        "text": "Memory the collector failed to notice",
+        "correct": false,
+        "why": "The collector does not miss reachable memory or keep unreachable memory."
+      },
+      {
+        "text": "A bug in V8",
+        "correct": false,
+        "why": "The collector was right every time here."
+      },
+      {
+        "text": "An unintended path from a root",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Too many variables in one function",
+        "correct": false,
+        "why": "Count of variables is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-j35rcssc",
+    "version": 1,
+    "section": "cache-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the cache in `cache-leak.js` grow every hour?",
+    "hint": "What removed entries?",
+    "choices": [
+      {
+        "text": "No entry was removed",
+        "correct": true,
+        "why": "Right: a cache with no limit."
+      },
+      {
+        "text": "The collector was too slow",
+        "correct": false,
+        "why": "It ran before every measurement."
+      },
+      {
+        "text": "Strings in a `Map` cannot be collected",
+        "correct": false,
+        "why": "They can, once unreachable; these were reachable."
+      },
+      {
+        "text": "`repeat` leaks memory",
+        "correct": false,
+        "why": "It built a string the `Map` then held."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyjesrp4",
+    "version": 1,
+    "section": "cache-leaks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many entries did the bounded cache hold after four hours?",
+    "hint": "Its limit.",
+    "value": 1000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4438g884",
+    "version": 1,
+    "section": "cache-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the LRU cache, which entry is removed when it goes over the limit?",
+    "hint": "Least recently used.",
+    "choices": [
+      {
+        "text": "The newest",
+        "correct": false,
+        "why": "That is the one just added."
+      },
+      {
+        "text": "The first key",
+        "correct": true,
+        "why": "Right: the least recently used."
+      },
+      {
+        "text": "A random one",
+        "correct": false,
+        "why": "The rule is deterministic."
+      },
+      {
+        "text": "The largest",
+        "correct": false,
+        "why": "Size is not considered."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cs01kte",
+    "version": 1,
+    "section": "cache-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a hit delete the key and set it again?",
+    "hint": "Insertion order.",
+    "choices": [
+      {
+        "text": "To refresh the cached value",
+        "correct": false,
+        "why": "The value is the same."
+      },
+      {
+        "text": "Because `Map` keys expire",
+        "correct": false,
+        "why": "They do not expire."
+      },
+      {
+        "text": "To trigger a garbage collection",
+        "correct": false,
+        "why": "Nothing here triggers one."
+      },
+      {
+        "text": "To move it to the end",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rq6rd0h",
+    "version": 1,
+    "section": "listener-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did Node print when the twelfth listener was added?",
+    "hint": "Past ten.",
+    "choices": [
+      {
+        "text": "`MaxListenersExceededWarning`",
+        "correct": true,
+        "why": "Right. It printed when the eleventh arrived."
+      },
+      {
+        "text": "A `RangeError`",
+        "correct": false,
+        "why": "Nothing threw."
+      },
+      {
+        "text": "Nothing; listeners are free",
+        "correct": false,
+        "why": "A warning printed."
+      },
+      {
+        "text": "`ERR_TOO_MANY_LISTENERS`",
+        "correct": false,
+        "why": "The name was different."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwzng4c7",
+    "version": 1,
+    "section": "listener-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section say about raising the limit with `setMaxListeners`?",
+    "hint": "The warning is usually right.",
+    "choices": [
+      {
+        "text": "It is the right fix for the warning",
+        "correct": false,
+        "why": "It hides the leak."
+      },
+      {
+        "text": "It is needed once per program",
+        "correct": false,
+        "why": "The fix is removing listeners."
+      },
+      {
+        "text": "Do not silence the warning that way",
+        "correct": true,
+        "why": "Right: remove the listeners instead."
+      },
+      {
+        "text": "It frees the old listeners",
+        "correct": false,
+        "why": "It frees nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bzzp0t8",
+    "version": 1,
+    "section": "listener-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did each forgotten listener keep 10,000 rows in memory?",
+    "hint": "Its closure.",
+    "choices": [
+      {
+        "text": "`EventEmitter` copies the data it is given",
+        "correct": false,
+        "why": "It stores the listener, not data."
+      },
+      {
+        "text": "Arrays are never collected",
+        "correct": false,
+        "why": "Unreachable arrays are."
+      },
+      {
+        "text": "The rows were global",
+        "correct": false,
+        "why": "They were local to `handleRequest`."
+      },
+      {
+        "text": "Its closure held `page`, rows and all",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pt7e9086",
+    "version": 1,
+    "section": "listener-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which widget's data was still alive after collection?",
+    "hint": "Which interval was cleared?",
+    "choices": [
+      {
+        "text": "Both, since both called `startWidget`",
+        "correct": false,
+        "why": "The stopped one let go."
+      },
+      {
+        "text": "The one whose interval was never cleared",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Neither, since `WeakRef` was used",
+        "correct": false,
+        "why": "The `WeakRef` held neither alive."
+      },
+      {
+        "text": "The one created second",
+        "correct": false,
+        "why": "Order does not decide; clearing does."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmj887pq",
+    "version": 1,
+    "section": "weakref",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the `FinalizationRegistry` callback receive?",
+    "hint": "The object is gone.",
+    "choices": [
+      {
+        "text": "The collected object",
+        "correct": false,
+        "why": "It no longer exists."
+      },
+      {
+        "text": "A `WeakRef` to the object",
+        "correct": false,
+        "why": "It received the label."
+      },
+      {
+        "text": "Its label",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "It printed the label."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cd3p4fh",
+    "version": 1,
+    "section": "weakref",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the specification warn against relying on `FinalizationRegistry`?",
+    "hint": "When does collection happen?",
+    "choices": [
+      {
+        "text": "Its callback runs late, or never",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It only works with `--expose-gc`",
+        "correct": false,
+        "why": "It works without it, on the engine's schedule."
+      },
+      {
+        "text": "It deletes objects that are still reachable",
+        "correct": false,
+        "why": "The collector never does that."
+      },
+      {
+        "text": "It is only available in browsers",
+        "correct": false,
+        "why": "Node ran it here."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4qkqgb6",
+    "version": 1,
+    "section": "weakref",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the section's tools in its order of preference, first choice first.",
+    "hint": "The last paragraph.",
+    "items": [
+      "Let go of references at the right moment",
+      "Use a `WeakMap` or `WeakSet`",
+      "Use `WeakRef` and `FinalizationRegistry`"
+    ],
+    "trap": "`WeakRef` comes last because its behaviour depends on when the engine collects."
+  },
+  {
+    "id": "ex-qzrkqyxp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Node server's `heapUsed` rises by a similar amount every hour and never comes down. Which of these does the lesson point to first?",
+    "hint": "Something only grows.",
+    "choices": [
+      {
+        "text": "The collector is turned off",
+        "correct": false,
+        "why": "It cannot be turned off."
+      },
+      {
+        "text": "Something that only grows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Too many `const` declarations",
+        "correct": false,
+        "why": "Declarations do not accumulate."
+      },
+      {
+        "text": "Strings that are too long",
+        "correct": false,
+        "why": "Length alone is not a leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n4jqedk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page component starts `setInterval` to refresh a clock. What must happen when the component is removed?",
+    "hint": "Lesson 15's rule.",
+    "choices": [
+      {
+        "text": "Nothing: removing the element stops its timers",
+        "correct": false,
+        "why": "Timers belong to the window, not the element."
+      },
+      {
+        "text": "Set the element to `null`",
+        "correct": false,
+        "why": "The interval still holds its callback."
+      },
+      {
+        "text": "Call `gc()`",
+        "correct": false,
+        "why": "That exists only with an experimental flag, and frees nothing reachable."
+      },
+      {
+        "text": "`clearInterval` with its id",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]
