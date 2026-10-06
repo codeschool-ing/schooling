@@ -1,0 +1,424 @@
+[
+  {
+    "id": "ex-mth3w7q0",
+    "version": 1,
+    "section": "official-images",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `postgres:17` have no slash in its name, while most images on Docker Hub look like `someone/something`?",
+    "hint": "The pull printed the full name.",
+    "choices": [
+      {
+        "text": "Slashes are not allowed in database image names",
+        "correct": false,
+        "why": "Any image may have a namespace; this one's is hidden by default."
+      },
+      {
+        "text": "It is stored on Ana's machine, not on Docker Hub",
+        "correct": false,
+        "why": "It was pulled from Docker Hub, through the mirror."
+      },
+      {
+        "text": "PostgreSQL owns the domain `docker.io`",
+        "correct": false,
+        "why": "The registry is Docker's; `library` is its namespace for official images."
+      },
+      {
+        "text": "An official image, in the `library` namespace",
+        "correct": true,
+        "why": "Right: `docker` fills the namespace in, `docker.io/library/postgres:17`."
+      }
+    ]
+  },
+  {
+    "id": "ex-49nzs56q",
+    "version": 1,
+    "section": "official-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`postgres:17` has `Entrypoint` `docker-entrypoint.sh` and `Cmd` `postgres`. What runs when Ana starts it with no command?",
+    "hint": "How are the two combined?",
+    "choices": [
+      {
+        "text": "The script, with `postgres` passed as its argument",
+        "correct": true,
+        "why": "Right. The script prepares things and then starts the server."
+      },
+      {
+        "text": "`postgres` alone; the entrypoint only runs on first start",
+        "correct": false,
+        "why": "The entrypoint always runs, and decides what to do on first start."
+      },
+      {
+        "text": "A shell, because no command was given",
+        "correct": false,
+        "why": "That is alpine's default `Cmd`; this image has its own."
+      },
+      {
+        "text": "Both programs at once, in two processes",
+        "correct": false,
+        "why": "The command is an argument to the entrypoint, not a second process."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k0s0a7f",
+    "version": 1,
+    "section": "official-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The image declares `ExposedPorts` `5432/tcp`. Without any `-p`, can a program on Ana's host connect to the database on `localhost:5432`?",
+    "hint": "Documentation or door?",
+    "choices": [
+      {
+        "text": "Yes, Docker publishes declared ports",
+        "correct": false,
+        "why": "Declaring a port documents it; nothing is published until `-p` asks."
+      },
+      {
+        "text": "No",
+        "correct": true,
+        "why": "Right. `ExposedPorts` is documentation; lesson 17 publishes ports."
+      },
+      {
+        "text": "Only programs running as root",
+        "correct": false,
+        "why": "It is not about privileges; nothing is listening on the host at all."
+      },
+      {
+        "text": "Yes, but only for a minute after the container starts",
+        "correct": false,
+        "why": "There is no window; without `-p` there is no published port."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7756jtg",
+    "version": 1,
+    "section": "official-images",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `postgres` tag to what it names.",
+    "hint": "Some move more often than others.",
+    "pairs": [
+      {
+        "left": "`17`",
+        "right": "The newest 17.x release, moving with every patch"
+      },
+      {
+        "left": "`17.11`",
+        "right": "Exactly that minor release"
+      },
+      {
+        "left": "`17-alpine`",
+        "right": "The same PostgreSQL built on Alpine"
+      }
+    ],
+    "right_distractors": [
+      "A build that never changes, guaranteed by Docker"
+    ]
+  },
+  {
+    "id": "ex-tzsdn89j",
+    "version": 1,
+    "section": "a-database-in-seconds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`docker exec db pg_isready` said ready, then `psql -h 127.0.0.1` from the host failed with \"server closed the connection unexpectedly\". What was `pg_isready` actually talking to?",
+    "hint": "Where did it look, and which server was running then?",
+    "choices": [
+      {
+        "text": "The real server, which then crashed",
+        "correct": false,
+        "why": "Nothing crashed; the log shows an orderly handover."
+      },
+      {
+        "text": "The PostgreSQL on Ana's host",
+        "correct": false,
+        "why": "It ran inside the container, through `docker exec`."
+      },
+      {
+        "text": "The temporary setup server, on the Unix socket",
+        "correct": true,
+        "why": "Right. It listens only on the socket, so the check passed and TCP clients could not connect."
+      },
+      {
+        "text": "Nothing; `pg_isready` always says ready",
+        "correct": false,
+        "why": "It said not ready until the temporary server came up."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f6s3rvt",
+    "version": 1,
+    "section": "a-database-in-seconds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which check waited until the database really accepted outside connections?",
+    "hint": "Ask the way the clients will connect.",
+    "choices": [
+      {
+        "text": "`docker ps` showing the container as `Up`",
+        "correct": false,
+        "why": "`Up` means the main process runs, which it did all along."
+      },
+      {
+        "text": "`pg_isready` with no host inside the container",
+        "correct": false,
+        "why": "That is the one that answered for the temporary server."
+      },
+      {
+        "text": "Waiting until `docker logs` prints anything at all",
+        "correct": false,
+        "why": "The temporary server prints plenty before the real one starts."
+      },
+      {
+        "text": "`pg_isready -h 127.0.0.1` inside the container",
+        "correct": true,
+        "why": "Right: over TCP, which the temporary server does not listen on."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty1kpmk2",
+    "version": 1,
+    "section": "a-database-in-seconds",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the image's first start in order.",
+    "hint": "Read the log again.",
+    "items": [
+      "The entrypoint creates the data files",
+      "A temporary server starts, on the Unix socket only",
+      "`01-schema.sql` runs",
+      "The temporary server stops",
+      "The real server starts and listens on TCP 5432"
+    ]
+  },
+  {
+    "id": "ex-23n7z6j1",
+    "version": 1,
+    "section": "a-database-in-seconds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana restarted the database against the same volume with `POSTGRES_PASSWORD=other`, and that password was refused. What would make `other` work?",
+    "hint": "When does the image read that variable?",
+    "choices": [
+      {
+        "text": "An `ALTER USER` run inside the database",
+        "correct": true,
+        "why": "Right: change it in SQL. The variable only applies when the data directory is empty."
+      },
+      {
+        "text": "Restarting the container once more so the variable is picked up",
+        "correct": false,
+        "why": "Every start with existing data skips initialisation, however many times."
+      },
+      {
+        "text": "Using `-e` twice",
+        "correct": false,
+        "why": "The variable was received; the entrypoint simply skipped the step that uses it."
+      },
+      {
+        "text": "Pulling `postgres:17` again",
+        "correct": false,
+        "why": "The image is fine; the data in the volume holds the old password."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2j4cq2x",
+    "version": 1,
+    "section": "a-database-in-seconds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The postgres image runs the `.sql` and `.sh` files it finds in `/docker-entrypoint-___.d` on first start.",
+    "hint": "The same word as the PostgreSQL tool that creates a cluster.",
+    "blanks": [
+      {
+        "accept": [
+          "initdb"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-atkcvvkc",
+    "version": 1,
+    "section": "more-than-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `-p 127.0.0.1:5416:5432`, which number must be different for each PostgreSQL container on Ana's machine?",
+    "hint": "Which side belongs to the host?",
+    "choices": [
+      {
+        "text": "5432, the container's port",
+        "correct": false,
+        "why": "Every container has its own network, so 5432 inside can repeat."
+      },
+      {
+        "text": "5416, the host's port",
+        "correct": true,
+        "why": "Right. Each container may listen on 5432 inside; the host's ports must not collide."
+      },
+      {
+        "text": "Both, or the second container will not start",
+        "correct": false,
+        "why": "Only the host side has to be unique."
+      },
+      {
+        "text": "Neither; Docker picks free ports itself",
+        "correct": false,
+        "why": "Only with `-P` or a bare container port; here Ana chose."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kjyaxm3",
+    "version": 1,
+    "section": "more-than-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana talked to Redis with `docker exec cache redis-cli PING` without installing anything. Where did `redis-cli` come from?",
+    "hint": "What else is in the image besides the server?",
+    "choices": [
+      {
+        "text": "From Ana's host, mounted into the container by Docker",
+        "correct": false,
+        "why": "Nothing was mounted; the host has no `redis-cli`."
+      },
+      {
+        "text": "Docker Hub ran it remotely",
+        "correct": false,
+        "why": "`exec` runs a program inside the local container."
+      },
+      {
+        "text": "It is inside the `redis:8` image",
+        "correct": true,
+        "why": "Right. The image ships the client next to the server."
+      },
+      {
+        "text": "Docker includes it in every container",
+        "correct": false,
+        "why": "It came with this image; an alpine container has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-g17n8xxm",
+    "version": 1,
+    "section": "more-than-one",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each image to a variable its entrypoint reads.",
+    "hint": "Each project names its own.",
+    "pairs": [
+      {
+        "left": "`postgres`",
+        "right": "`POSTGRES_PASSWORD`"
+      },
+      {
+        "left": "`mariadb`",
+        "right": "`MARIADB_ROOT_PASSWORD`"
+      },
+      {
+        "left": "`mongo`",
+        "right": "`MONGO_INITDB_ROOT_USERNAME`"
+      }
+    ],
+    "right_distractors": [
+      "`DOCKER_DATABASE_PASSWORD`"
+    ]
+  },
+  {
+    "id": "ex-0g2kq92x",
+    "version": 1,
+    "section": "more-than-one",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which questions does a database started with one `docker run` leave open for production? Choose all that apply.",
+    "hint": "Four were listed, each with its lesson.",
+    "choices": [
+      {
+        "text": "Where the volume's data is backed up",
+        "correct": true,
+        "why": "Yes, lesson 8."
+      },
+      {
+        "text": "How much memory the container may use",
+        "correct": true,
+        "why": "Yes, lesson 17."
+      },
+      {
+        "text": "Whether PostgreSQL can store tables",
+        "correct": false,
+        "why": "That works out of the box."
+      },
+      {
+        "text": "Who applies security updates to the image",
+        "correct": true,
+        "why": "Yes, lesson 20."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpe3tzvr",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the side-by-side transcript, what major version answered on port 5416?",
+    "hint": "`SHOW server_version`.",
+    "value": 16,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-nw4zsnv9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana edits `01-schema.sql` to add a third book and wants a database built from the new script. What must she do?",
+    "hint": "When does the script run?",
+    "choices": [
+      {
+        "text": "Restart the container",
+        "correct": false,
+        "why": "A restart finds the data directory full and skips the scripts."
+      },
+      {
+        "text": "Nothing; the entrypoint watches the directory",
+        "correct": false,
+        "why": "It reads the directory once, on the first start only."
+      },
+      {
+        "text": "Pull a newer `postgres:17`",
+        "correct": false,
+        "why": "The image is not what holds the old data."
+      },
+      {
+        "text": "Remove the volume first",
+        "correct": true,
+        "why": "Right: the next start then initialises again. An empty data directory is what triggers the scripts."
+      }
+    ]
+  }
+]
