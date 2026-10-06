@@ -7,7 +7,7 @@ Tarefa is about to open its assistant to other companies through an API: a baker
 answer customers, a translation agency, a law firm. Each one gets a key, and the key reaches
 Tarefa's model provider through Tarefa's own account. **Whatever a customer does with that key, the
 provider sees Tarefa doing**, and Tarefa's agreement with its provider, like most of them, makes
-Tarefa answerable for how its own customers use the access. Lesson 17 was about telling Tarefa's
+Tarefa answerable for how its own customers use the access. Lesson 7 was about telling Tarefa's
 users apart; this lesson is about deciding which companies become users at all.
 
 The usual first instinct is that a signup form and a credit card are enough, since anybody who pays
@@ -73,5 +73,5 @@ with**, not whether it is trustworthy forever. That is why Nuvem Tradutora, whos
 webmail address rather than at its own domain, gets `VERIFY` and a sandbox rather than a refusal:
 confirming the address at the domain fixes it.
 
-The data collected here is personal data too, the contact's name and address at least, and lesson 22
+The data collected here is personal data too, the contact's name and address at least, and lesson 12
 applies to it like anything else: collect what the decision needs, and say why.

@@ -5,7 +5,7 @@ version: 1
 
 O primeiro identificador que vem à cabeça é o que a aplicação já tem para todo mundo: o e-mail.
 Enviá-lo poria um dado pessoal em cada requisição, para uma finalidade de que o fornecedor não precisa,
-que é exatamente o que o princípio da necessidade da aula 22 proíbe. A segunda ideia é fazer o hash do
+que é exatamente o que o princípio da necessidade da aula 12 proíbe. A segunda ideia é fazer o hash do
 endereço antes, e **o hash de um e-mail pode ser revertido por qualquer um capaz de adivinhar
 e-mails**:
 
@@ -72,7 +72,7 @@ usuários, e qualquer histórico de abuso que ele tenha atribuído aos identific
 solto. Às vezes é o que você quer, depois de a chave vazar, e em geral não é. Troque quando a chave
 puder estar comprometida, e não por calendário.
 
-**O identificador ainda é dado pessoal na Tarefa**, pelo raciocínio da aula 22: a Tarefa tem a chave,
-então para ela o dado é pseudonimizado. Ele vai nos logs da aula 21 no lugar do e-mail. E, depois que
+**O identificador ainda é dado pessoal na Tarefa**, pelo raciocínio da aula 12: a Tarefa tem a chave,
+então para ela o dado é pseudonimizado. Ele vai nos logs da aula 11 no lugar do e-mail. E, depois que
 uma conta é eliminada, os identificadores que o fornecedor guarda apontam para uma conta que não existe
 mais, então não identificam ninguém, nem para a Tarefa nem para outra pessoa.

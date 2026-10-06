@@ -18,8 +18,7 @@ LLM08 Vector and Embedding Weaknesses    NOT COVERED IN THIS LAB
 *Data and model poisoning* (LLM04) e *vector and embedding weaknesses* (LLM08) tratam dos dados de que
 um modelo aprende ou que ele busca: um conjunto de treino ou uma base vetorial que alguém adulterou, ou
 que vaza o que guarda. O assistente da Tarefa, como está neste laboratório, não busca nada além de três
-páginas da central de ajuda escritas pela Tarefa, então a exposição hoje é pequena. **Uma exposição
-pequena ainda é uma linha**, e a aula 6 deste curso trata exatamente dessas duas.
+páginas da central de ajuda escritas pela Tarefa, então a exposição hoje é pequena. **Uma exposição pequena ainda é uma linha.**
 
 ## Uma revisão, linha a linha
 

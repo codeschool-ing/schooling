@@ -4,8 +4,7 @@ version: 1
 ---
 
 A system prompt holds instructions that clients are not meant to read: how the assistant should handle
-refunds, which topics to send to a person, sometimes internal names. Lesson 5 is about how a prompt
-gets out. This section is about noticing when it has, with a **canary**: a marker that means nothing,
+refunds, which topics to send to a person, sometimes internal names. Prompts do get out. This section is about noticing when one has, with a **canary**: a marker that means nothing,
 is written into the system prompt and nowhere else, and therefore should never appear in a reply.
 
 ```
@@ -41,6 +40,6 @@ Three practical notes:
 
 - **One marker per prompt version**, so that an alert says which version leaked and since when.
 - **Never put a secret in a system prompt** and rely on the canary to protect it. The canary reports a
-  leak; it does not prevent one. Keys and credentials stay with the tools, as lesson 20 said.
+  leak; it does not prevent one. Keys and credentials stay with the tools, as lesson 10 said.
 - **Write the system prompt as if it will be read.** It probably will be, by somebody. A prompt that
   would embarrass the company if published is a prompt to rewrite, whatever filters stand behind it.

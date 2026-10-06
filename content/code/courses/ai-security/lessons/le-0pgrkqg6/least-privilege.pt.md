@@ -94,5 +94,4 @@ perguntas por ferramenta resolvem quase tudo:
 | qual o maior efeito que uma chamada pode ter? | um reembolso do valor pago, e não mais |
 
 Uma ferramenta que não consegue responder à terceira pergunta com um limite é uma ferramenta que deve
-ser dividida, estreitada ou deixada de fora. A aula 7 olha o que dá errado quando as permissões de um
-agente são mais largas que a tarefa; esta aula é o formato do conserto.
+ser dividida, estreitada ou deixada de fora. Um agente com permissões mais largas que a tarefa pode ser levado a usar a diferença; esta aula é o formato do conserto.

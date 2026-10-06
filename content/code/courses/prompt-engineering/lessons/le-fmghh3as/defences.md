@@ -114,5 +114,4 @@ rate at which injections work. It cannot bring it to zero, and nothing tells you
 The pattern of this lesson is the one lesson 6 ended on. **Write the prompt so the model behaves
 well; put the limits in the program, so that it does not matter when it does not.**
 
-The `ai-security` course goes much further into how injection is detected, tested for and
-contained.
+The `ai-security` course goes further into how injection is detected and contained.

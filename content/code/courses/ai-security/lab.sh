@@ -52,7 +52,7 @@
 #     documentation uses as an example.
 #   - guardlab/standin.py is NOT A MODEL. It is a scoring rule the course
 #     wrote, with a bonus for Southeastern postcodes put there on purpose so
-#     that lesson 9 has a proxy to find. The shortlist decisions in
+#     that lesson 3 has a proxy to find. The shortlist decisions in
 #     data/shortlist-v1.csv and -v2.csv are written from the counts in
 #     guardlab/fairness.py, and the profiles in data/profiles.jsonl are
 #     invented.

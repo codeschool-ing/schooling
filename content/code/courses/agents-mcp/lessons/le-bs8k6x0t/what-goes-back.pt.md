@@ -25,4 +25,4 @@ Cortar também tem custo: um campo deixado de fora é um campo que o modelo não
 
 ## Observações não são instruções
 
-Tudo o que uma ferramenta devolve é texto que o modelo lê, e parte dele foi escrita por pessoas que não são o usuário: um artigo de ajuda, uma resenha de produto, uma mensagem anterior de um cliente. **Um modelo pode confundir texto dentro de uma observação com uma instrução**, e é assim que funciona a injeção de prompt indireta (aula 3 do `ai-security`). A aula 17 constrói a defesa no hospedeiro, que é onde ela fica; por ora, o hábito a formar é tratar uma observação como dado que chegou de fora, diga o que disser.
+Tudo o que uma ferramenta devolve é texto que o modelo lê, e parte dele foi escrita por pessoas que não são o usuário: um artigo de ajuda, uma resenha de produto, uma mensagem anterior de um cliente. **Um modelo pode confundir texto dentro de uma observação com uma instrução**, e é assim que funciona a injeção de prompt indireta (aula 7 do `prompt-engineering`). A aula 17 constrói a defesa no hospedeiro, que é onde ela fica; por ora, o hábito a formar é tratar uma observação como dado que chegou de fora, diga o que disser.

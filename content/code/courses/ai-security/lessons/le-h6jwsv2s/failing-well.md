@@ -53,16 +53,16 @@ run away:
 | attempts per request | how often one request can be retried | the loop above |
 | `max_tokens` on each call | the length, and so the cost, of one reply | the provider's API |
 | length of each input field | the cost of the prompt, and how much the model has to read | the input rules |
-| tokens per user per day | what one person can spend | lesson 17 |
-| tool calls or turns per task | how far an agent can go before it stops | lesson 7 |
+| tokens per user per day | what one person can spend | lesson 7 |
+| tool calls or turns per task | how far an agent can go before it stops | lesson 10 |
 
 `max_tokens` deserves a note because it is easy to set too high on the grounds that a reply should
 never be cut off. A reply that the schema caps at 400 characters of summary never needs thousands of tokens. A limit near what the schema allows turns a reply that rambles into one that fails quickly and cheaply, and the retry loop handles it from there.
 
 ## Count the rejections
 
-Every rejection is logged under the request id, as lesson 21 recommends, with the path and the rule
+Every rejection is logged under the request id, as lesson 11 recommends, with the path and the rule
 that failed. Counted per day, rejections are one of the most useful numbers this feature produces.
 A rate that rises after a prompt change or a model update is the earliest sign that something
-changed, and it arrives before any client complains. The metrics tier from lesson 21 is the place for
+changed, and it arrives before any client complains. The metrics tier from lesson 11 is the place for
 it: a count per day, with no text in it, kept for as long as the other counts.

@@ -39,7 +39,7 @@ each mistake costs:
 For spam on a marketplace, many teams lean towards recall and accept some blocked messages, provided
 the writer is told and can appeal. For a category where a missed message can hurt somebody, such as
 threats, the lean is further towards recall still. The lean is a decision, and like the fairness
-metric in lesson 9 it goes in writing with the numbers that justified it.
+metric in lesson 3 it goes in writing with the numbers that justified it.
 
 ## A score that does not spread out
 

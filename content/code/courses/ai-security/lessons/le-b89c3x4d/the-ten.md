@@ -36,19 +36,19 @@ Read the map in three groups.
 
 **The ones about what goes in.** *Prompt injection* (LLM01) is the root that lesson 1 described: a
 model reads instructions and material as one stream. No single control removes it, which is why its
-row names three: narrowing the input (lesson 19), filtering the output (lesson 15) and gating the tools
-(lesson 20). *Supply chain* (LLM03) is about anything that came from somewhere else; the lab covers only
-the package names of lesson 8, and a model's own provenance is outside it.
+row names three: narrowing the input (lesson 9), filtering the output (lesson 5) and gating the tools
+(lesson 10). *Supply chain* (LLM03) is about anything that came from somewhere else; the lab covers only
+the package names of lesson 2, and a model's own provenance is outside it.
 
-**The ones about what comes out.** *Sensitive information disclosure* (LLM02) is lessons 21 and 22.
-*Improper output handling* (LLM05) is lesson 19's schema and lesson 15's chain. *System prompt leakage*
+**The ones about what comes out.** *Sensitive information disclosure* (LLM02) is lessons 11 and 12.
+*Improper output handling* (LLM05) is lesson 9's schema and lesson 5's chain. *System prompt leakage*
 (LLM07) has only the canary, which detects a verbatim leak and nothing else; the stronger defence is
-lesson 15's advice not to put anything in a system prompt that would matter if it were read.
-*Misinformation* (LLM09) is lesson 8.
+lesson 5's advice not to put anything in a system prompt that would matter if it were read.
+*Misinformation* (LLM09) is lesson 2.
 
-**The ones about what the model may do.** *Excessive agency* (LLM06) is lesson 20's manifest, gate and
-confirmation. *Unbounded consumption* (LLM10) is every limit in the course: per-user rates in lesson 17,
-the retry cap in lesson 19, the call budget in lesson 20.
+**The ones about what the model may do.** *Excessive agency* (LLM06) is lesson 10's manifest, gate and
+confirmation. *Unbounded consumption* (LLM10) is every limit in the course: per-user rates in lesson 7,
+the retry cap in lesson 9, the call budget in lesson 10.
 
 Each row is a pointer, not a proof. A row with a command in it says the lab has *a* control; whether
 that control is enough for a given feature is the question the next section asks.

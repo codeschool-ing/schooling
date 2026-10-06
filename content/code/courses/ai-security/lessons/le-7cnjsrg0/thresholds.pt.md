@@ -37,7 +37,7 @@ aquela cujos erros a Tarefa prefere aguentar**, e isso depende do custo de cada 
 Para spam num marketplace, muitas equipes pendem para o recall e aceitam alguns bloqueios, desde que
 quem escreveu seja avisado e possa recorrer. Para uma categoria em que uma mensagem perdida pode ferir
 alguém, como ameaças, a inclinação para o recall é ainda maior. A inclinação é uma decisão, e, como a
-métrica de justiça da aula 9, vai por escrito com os números que a justificaram.
+métrica de justiça da aula 3, vai por escrito com os números que a justificaram.
 
 ## Um score que não se espalha
 

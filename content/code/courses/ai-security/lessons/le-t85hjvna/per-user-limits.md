@@ -74,5 +74,5 @@ Tarefa's own database, makes it one indexed lookup. That table is personal data 
 sits in, and it is erased with it.
 
 **One limit is never the whole defence.** A determined user opens a second account. Per-user limits
-make abuse cost an account per budget, which is why lesson 18 is about who gets an account, and how
+make abuse cost an account per budget, which is why lesson 8 is about who gets an account, and how
 much it can do, before it has earned more.

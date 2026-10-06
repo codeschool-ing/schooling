@@ -402,8 +402,7 @@ All of it reads as blocked on the sandbox and none of it is. It is authored cont
 `content/`, and nobody has been named to make any of it.
 
 **Teaching exploitation at scale.** `pentest` lessons 1, 2 and 22 are rules of engagement, *"the
-document that separates a profession from a crime"*, and the tester's liability in Brazil;
-`ai-security` lesson 11 is the same boundary. **Teaching this to anonymous paying students at scale
+document that separates a profession from a crime"*, and the tester's liability in Brazil. **Teaching this to anonymous paying students at scale
 is not the exposure a university course with an enrolled cohort has.** It is not a design question
 and no sheet can answer it. **Decide before the course is sold**, not after.
 

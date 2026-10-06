@@ -94,5 +94,4 @@ tool settle most of it:
 | what is the largest effect one call can have? | a refund of what was paid, and no more |
 
 A tool that cannot answer the third question with a bound is a tool that should be split, narrowed or
-left out. Lesson 7 looks at what goes wrong when an agent's permissions are wider than its task; this
-lesson is the shape of the fix.
+left out. An agent whose permissions are wider than its task can be talked into using the difference; this lesson is the shape of the fix.

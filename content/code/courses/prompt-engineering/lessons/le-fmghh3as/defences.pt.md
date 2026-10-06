@@ -115,4 +115,4 @@ injeções funcionam. Não consegue levá-la a zero, e nada avisa quando falhou.
 O padrão desta lição é aquele com que a lição 6 terminou. **Escreva o prompt para o modelo se
 comportar bem; ponha os limites no programa, para que não importe quando ele não se comporta.**
 
-O curso `ai-security` vai muito mais longe em como a injeção é detectada, testada e contida.
+O curso `ai-security` vai mais longe em como a injeção é detectada e contida.

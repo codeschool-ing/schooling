@@ -43,7 +43,7 @@ users, which is a much smaller decision to take than a suspension.
 
 Doce Lar Confeitaria was accepted on the first day: a real CNPJ, its own domain, and customer support
 as its use case. Its usage is logged by week with the topic of each request. **The topics were written
-by the course** as a classifier would label them; a real one is a classifier like those in lesson 16,
+by the course** as a classifier would label them; a real one is a classifier like those in lesson 6,
 with errors of its own.
 
 ```
@@ -75,12 +75,12 @@ What happens next is a ladder rather than a switch:
 3. **Suspend.** If the answer confirms a prohibited use, or does not come.
 
 Every step is recorded with who took it and why, and the numbers that justified it go with the
-record. The same discipline as lesson 9 and lesson 16 applies here: **the threshold, 30% in this lab,
+record. The same discipline as lesson 3 and lesson 6 applies here: **the threshold, 30% in this lab,
 is a choice**, written down with its reason and revisited when it fires on customers who turned out to
 be fine.
 
 ## Where this leaves the defences
 
-Lesson 17 made every request carry a person's identifier; this lesson makes every key carry a known
-company and a declared purpose; lesson 19 restricts what any single request may put in and get out.
+Lesson 7 made every request carry a person's identifier; this lesson makes every key carry a known
+company and a declared purpose; lesson 9 restricts what any single request may put in and get out.
 None of the three is enough alone, and an attacker has to get past all of them at once.

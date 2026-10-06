@@ -74,5 +74,5 @@ lado de cada conta, no banco da própria Tarefa, faz disso uma consulta indexada
 pessoal como a conta em que está, e é eliminada com ela.
 
 **Um limite nunca é a defesa inteira.** Um usuário determinado abre uma segunda conta. Limites por
-usuário fazem o abuso custar uma conta por orçamento, e é por isso que a aula 18 trata de quem recebe
+usuário fazem o abuso custar uma conta por orçamento, e é por isso que a aula 8 trata de quem recebe
 uma conta, e de quanto ela pode fazer, antes de merecer mais.

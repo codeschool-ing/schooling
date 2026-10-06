@@ -29,7 +29,7 @@ trabalha num fluxo só**, e nada nesse fluxo marca quais palavras são ordens e 
 modelo é treinado para seguir instruções, e não distingue de forma confiável as instruções que deveria
 seguir de um texto com cara de instrução que chegou dentro de um ticket ou de um arquivo.
 
-Essa é a raiz da injeção de prompt, que as aulas 2 e 3 tratam. Aqui ela dá a pergunta que organiza todo
+Essa é a raiz da injeção de prompt, que a aula 7 de `prompt-engineering` trata. Aqui ela dá a pergunta que organiza todo
 o resto: **para cada texto que chega ao modelo, quem o escreveu, e o que o modelo pode fazer depois de
 lê-lo?** Um prompt de sistema escrito pela Tarefa e uma página da central de ajuda revisada pela Tarefa
 são confiáveis. Uma mensagem de cliente, um ticket, um arquivo que um cliente anexou e uma página buscada
@@ -41,8 +41,8 @@ Seguir a pergunta até o fim dá o princípio defensivo deste curso. Se texto n�
 modelo, então tudo o que o modelo pode fazer, texto não confiável pode tentar fazê-lo fazer. Então o
 estrago é limitado pelo alcance do modelo, e não pelo julgamento dele:
 
-- um modelo que só responde pode, no pior caso, responder mal, e as verificações da aula 19 e os
-  filtros da aula 15 ficam entre essa resposta e o cliente;
+- um modelo que só responde pode, no pior caso, responder mal, e as verificações da aula 9 e os
+  filtros da aula 5 ficam entre essa resposta e o cliente;
 - um modelo que chama ferramentas pode, no pior caso, chamá-las mal, e o portão e a confirmação da aula
   20 ficam entre a proposta e o efeito.
 

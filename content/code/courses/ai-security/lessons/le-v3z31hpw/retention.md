@@ -110,4 +110,4 @@ Deleting a file deletes one copy. Three others are common, and each needs its ow
 - **The model provider.** The provider receives every prompt and keeps its own records of your
   calls, for abuse monitoring, for a period set by its terms. Your sweep does not touch them. What
   the provider keeps, where, and whether an arrangement with no retention is available to you is a
-  question for the contract, and lesson 22 is about that contract.
+  question for the contract, and lesson 12 is about that contract.

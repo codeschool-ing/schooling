@@ -6,8 +6,7 @@ version: 1
 Uma imagem comum do tratamento de entrada para um modelo é que não há nada a tratar: o modelo lê
 texto, então o que o usuário digitou segue adiante, e a verificação acontece na resposta. **Todo campo
 que chega a um prompt é algo sobre o que o modelo vai tentar agir**, e quanto menos houver, e quanto
-mais tiver formato conhecido, menos há para dar errado. A aula 2 mostra o que texto livre num prompt
-pode fazer nas mãos de alguém que tenta; esta aula trata da metade mais barata, que é decidir o que
+mais tiver formato conhecido, menos há para dar errado. Texto livre num prompt é o que alguém que tenta vai usar; esta aula trata da metade mais barata da defesa, que é decidir o que
 pode entrar.
 
 A entrada de trabalhos da Tarefa recebe o pedido de um cliente e pede a um modelo que o classifique e
@@ -70,7 +69,7 @@ exit 1
 **Uma lista de campos aceitos.** O `in-3` traz um campo `priority` que o formulário nunca ofereceu. Um
 montador de requisição que copia para o prompt todo campo que recebe transforma qualquer campo extra
 numa instrução que o desenvolvedor nunca escreveu; aceitar só os campos nomeados fecha esse caminho
-sem custo. É o mesmo movimento da lista de finalidade da aula 22, aplicado na outra direção.
+sem custo. É o mesmo movimento da lista de finalidade da aula 12, aplicado na outra direção.
 
 **Listas fechadas onde a resposta é fechada.** `category` aceita um de cinco valores. *Photography*
 pode ser uma ótima categoria para a Tarefa acrescentar um dia. Até lá é um valor que o resto do

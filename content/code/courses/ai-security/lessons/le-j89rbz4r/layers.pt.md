@@ -3,8 +3,8 @@ title: Uma cadeia de filtros, cada um nomeado no veredito
 version: 1
 ---
 
-Cada aula anterior construiu uma verificação: dados pessoais na aula 21, moderação na aula 16, schemas e
-lista de hosts na aula 19. A tentação é escolher a melhor e confiar nela. **Cada uma tem um ponto cego
+Cada aula anterior construiu uma verificação: dados pessoais na aula 11, moderação na aula 6, schemas e
+lista de hosts na aula 9. A tentação é escolher a melhor e confiar nela. **Cada uma tem um ponto cego
 que outra cobre**, e a defesa prática é pô-las em fila, para que uma resposta só chegue ao cliente depois
 de todas a aprovarem. Isso costuma se chamar defesa em profundidade, e a única coisa nova de que precisa é
 uma ordem e o registro de qual camada decidiu.
@@ -52,9 +52,9 @@ o que as camadas seguintes chegam a ver. Três regras resolvem isso na Tarefa:
 
 | camada | pega | deixa passar |
 |---|---|---|
-| dados pessoais | formatos com aritmética: CPF, cartão, telefone, e-mail, chaves | nomes, endereços, tudo o que é escrito em palavras (aula 21) |
+| dados pessoais | formatos com aritmética: CPF, cartão, telefone, e-mail, chaves | nomes, endereços, tudo o que é escrito em palavras (aula 11) |
 | canário | o prompt de sistema repetido palavra por palavra | as mesmas instruções parafraseadas (esta aula) |
-| moderação | as palavras que o classificador aprendeu | ironia, truques de grafia, outros idiomas (aula 16) |
+| moderação | as palavras que o classificador aprendeu | ironia, truques de grafia, outros idiomas (aula 6) |
 | lista de hosts | links para hosts que ninguém aprovou | uma página nociva num host aprovado |
 
 Ler a tabela descendo a última coluna é o ponto: nenhuma das perdas é coberta pela mesma camada, e

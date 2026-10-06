@@ -25,4 +25,4 @@ Trimming has a cost of its own: a field left out is a field the model cannot use
 
 ## Observations are not instructions
 
-Everything a tool returns is text the model reads, and some of it was written by people who are not the user: a help article, a product review, a customer's earlier message. **A model can mistake text inside an observation for an instruction**, and that is how indirect prompt injection works (`ai-security` lesson 3). Lesson 17 builds the defence in the host, where it belongs; for now the habit to form is to treat an observation as data that arrived from outside, whatever it says.
+Everything a tool returns is text the model reads, and some of it was written by people who are not the user: a help article, a product review, a customer's earlier message. **A model can mistake text inside an observation for an instruction**, and that is how indirect prompt injection works (`prompt-engineering` lesson 7). Lesson 17 builds the defence in the host, where it belongs; for now the habit to form is to treat an observation as data that arrived from outside, whatever it says.

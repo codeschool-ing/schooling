@@ -19,8 +19,7 @@ LLM08 Vector and Embedding Weaknesses    NOT COVERED IN THIS LAB
 *Data and model poisoning* (LLM04) and *vector and embedding weaknesses* (LLM08) both concern the data a
 model learns from or retrieves from: a training set or a vector store that somebody tampered with, or
 that leaks what it holds. Tarefa's assistant as built in this lab retrieves nothing beyond three help
-centre pages written by Tarefa, so the exposure is small today. **A small exposure is still a row**,
-and lesson 6 of this course is about exactly these two.
+centre pages written by Tarefa, so the exposure is small today. **A small exposure is still a row.**
 
 ## A review, row by row
 

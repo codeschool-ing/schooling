@@ -58,7 +58,7 @@ cliente, a chave Pix, o id do trabalho e a data de abertura do ticket. `renamed`
 por marcadores. `in text` é o texto livre: o cliente escreveu o primeiro nome da Juliana numa
 mensagem e o próprio telefone em outra, e os dois também viraram marcadores.
 
-**Os nomes nas mensagens puderam ser achados porque o ticket diz quais são.** A aula 21 mostrou que
+**Os nomes nas mensagens puderam ser achados porque o ticket diz quais são.** A aula 11 mostrou que
 nenhum padrão acha um nome em texto livre. Aqui os campos estruturados trazem `Marcos Teixeira` e
 `Juliana Prado`, então a ferramenta sabe quais palavras procurar, primeiros nomes inclusive. Uma
 terceira pessoa citada só numa mensagem, um advogado ou um parente, passaria, e esse limite pertence

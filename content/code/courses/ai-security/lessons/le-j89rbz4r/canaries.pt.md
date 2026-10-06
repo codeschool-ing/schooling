@@ -4,8 +4,7 @@ version: 1
 ---
 
 Um prompt de sistema guarda instruções que os clientes não devem ler: como o assistente trata
-reembolsos, quais assuntos mandar a uma pessoa, às vezes nomes internos. A aula 5 trata de como um prompt
-escapa. Esta seção trata de perceber quando ele escapou, com um **canário**: um marcador que não
+reembolsos, quais assuntos mandar a uma pessoa, às vezes nomes internos. Prompts escapam. Esta seção trata de perceber quando um escapou, com um **canário**: um marcador que não
 significa nada, escrito no prompt de sistema e em nenhum outro lugar, e que portanto nunca deveria
 aparecer numa resposta.
 
@@ -42,6 +41,6 @@ Três notas práticas:
 
 - **Um marcador por versão do prompt**, para que um alerta diga qual versão vazou e desde quando.
 - **Nunca ponha um segredo num prompt de sistema** confiando no canário para protegê-lo. O canário relata
-  um vazamento; não impede nenhum. Chaves e credenciais ficam com as ferramentas, como disse a aula 20.
+  um vazamento; não impede nenhum. Chaves e credenciais ficam com as ferramentas, como disse a aula 10.
 - **Escreva o prompt de sistema como se ele fosse ser lido.** Provavelmente vai ser, por alguém. Um prompt
   que envergonharia a empresa se publicado é um prompt a reescrever, sejam quais forem os filtros atrás.
