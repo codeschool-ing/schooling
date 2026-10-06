@@ -115,5 +115,5 @@ CODE
 run 'kubectl apply -f nightly.yaml'
 quiet 'sleep 140'
 run 'kubectl get cronjob nightly'
-run 'kubectl get jobs -l batch.kubernetes.io/cronjob-name=nightly 2>/dev/null || kubectl get jobs'
+run 'kubectl get jobs'
 run 'kubectl logs job/$(kubectl get jobs -o name | grep nightly | tail -n 1 | cut -d/ -f2)'
