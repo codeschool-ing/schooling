@@ -58,6 +58,14 @@ tools() {
   # iproute2 for `ip` and `ss`, which the networking lessons read
   command -v ip >/dev/null || { apt-get update -qq && apt-get install -y -qq iproute2 >/dev/null; }
   id ana >/dev/null 2>&1 || useradd --create-home --shell /bin/bash ana
+  # bruno is a second account on the same machine, deliberately NOT in the
+  # docker group: lesson 6 shows what he gets when he tries.
+  id bruno >/dev/null 2>&1 || useradd --create-home --shell /bin/bash bruno
+  # A directory only root may read, with made-up figures, so that lesson 6 can
+  # show what membership of the docker group amounts to.
+  install -d -m 700 -o root -g root /srv/payroll
+  printf 'name,monthly_brl\nana,9800\nbruno,10400\n' > /srv/payroll/salaries.csv
+  chmod 600 /srv/payroll/salaries.csv
   getent group docker >/dev/null || groupadd docker
   usermod -aG docker ana
   echo 'ana ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/ana
