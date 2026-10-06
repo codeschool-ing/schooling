@@ -52,6 +52,8 @@
 #
 #   sudo bash lab.sh up              build it (idempotent)
 #   sudo bash lab.sh reset           rebuild ~/agents and restart labllm
+#   sudo bash lab.sh remote          deploy ~/agents/remote_mcp.py to "remote"
+#                                    and start it there (lesson 16)
 #   sudo bash lab.sh down
 #   sudo bash lab.sh exec 'COMMAND'  run COMMAND as ana, in ~/agents
 #
@@ -70,6 +72,8 @@ VENV=/opt/agents
 SHARE=$VENV/share
 WORK=/home/ana/agents
 LOGDIR=/var/log/labllm
+REMOTE=/srv/mcp                 # the second machine's files, owned by mcpd
+REMOTE_TLS=/etc/agents-remote   # the lab's certificate authority and the server's key
 PYLIBS="anthropic==1.11.0 openai==3.24.0 google-genai==2.28.0 mcp==2.3.0
   openai-agents==0.23.1 claude-agent-sdk==0.2.163 google-adk==2.11.0
   jsonschema==4.26.0 tiktoken==0.14.0 numpy==2.4.6 onnxruntime==1.30.0
@@ -109,6 +113,7 @@ need() {
 build_user() {
   id ana >/dev/null 2>&1 || useradd -m -s /bin/bash ana
   id labllm >/dev/null 2>&1 || useradd -r -s /usr/sbin/nologin labllm
+  id mcpd >/dev/null 2>&1 || useradd -r -s /usr/sbin/nologin -d $REMOTE mcpd
   mkdir -p $LOGDIR && chown labllm:labllm $LOGDIR && chmod 0755 $LOGDIR
 }
 
@@ -200,6 +205,100 @@ stop_llm() {
   fi
 }
 
+# "remote": a network namespace standing in for a second machine, reached at
+# 203.0.113.10 (a documentation address, RFC 5737) under two names, with a
+# certificate authority of the lab's own. ana's machine trusts that CA through
+# one file, $SHARE/marginalia-ca.crt, which the lesson passes to its client:
+# nothing here turns TLS verification off.
+build_remote() {
+  ip netns list | grep -qw remote || ip netns add remote
+  ip link show mcp0 >/dev/null 2>&1 || { ip link add mcp0 type veth peer name mcp1; ip link set mcp1 netns remote; }
+  ip addr show mcp0 | grep -q 203.0.113.1/24 || ip addr add 203.0.113.1/24 dev mcp0
+  ip link set mcp0 up
+  ip netns exec remote sh -c 'ip addr show mcp1 | grep -q 203.0.113.10/24 || ip addr add 203.0.113.10/24 dev mcp1
+    ip link set mcp1 up; ip link set lo up'
+  grep -q "mcp.marginalia.test" /etc/hosts || echo "203.0.113.10 mcp.marginalia.test auth.marginalia.test" >> /etc/hosts
+  mkdir -p $REMOTE_TLS && chmod 0700 $REMOTE_TLS
+  if [ ! -f $REMOTE_TLS/server.crt ]; then
+    openssl req -x509 -newkey rsa:2048 -nodes -days 3650 -subj "/CN=Marginalia lab CA" \
+      -keyout $REMOTE_TLS/ca.key -out $REMOTE_TLS/ca.crt 2>/dev/null
+    openssl req -newkey rsa:2048 -nodes -subj "/CN=mcp.marginalia.test" \
+      -keyout $REMOTE_TLS/server.key -out $REMOTE_TLS/server.csr 2>/dev/null
+    printf 'subjectAltName=DNS:mcp.marginalia.test,DNS:auth.marginalia.test\n' > $REMOTE_TLS/san.ext
+    openssl x509 -req -in $REMOTE_TLS/server.csr -CA $REMOTE_TLS/ca.crt -CAkey $REMOTE_TLS/ca.key \
+      -CAcreateserial -days 825 -extfile $REMOTE_TLS/san.ext -out $REMOTE_TLS/server.crt 2>/dev/null
+  fi
+  install -m 0644 $REMOTE_TLS/ca.crt $SHARE/marginalia-ca.crt
+}
+
+# The tokens the authorization server would have issued, written by the lab:
+# each value goes to ana's ~/agents/tokens/NAME (readable by her only), and its
+# SHA-256 with what it grants goes to the remote server's table. The values are
+# new on every deploy, and no lesson prints one.
+write_tokens() {
+  local name client scopes resource expires value table=$REMOTE/tokens.json
+  install -d -o ana -g ana -m 0700 $WORK/tokens
+  printf '{' > $table
+  while read -r name client scopes resource expires; do
+    value=lab-$(openssl rand -hex 24)
+    printf '%s' "$value" > $WORK/tokens/$name; chown ana:ana $WORK/tokens/$name; chmod 0600 $WORK/tokens/$name
+    printf '%s"%s": {"client_id": "%s", "scopes": %s, "resource": "%s", "expires_at": %s}' \
+      "$([ "$(wc -c < $table)" -gt 1 ] && echo ,)" "$(printf '%s' "$value" | sha256sum | cut -d' ' -f1)" \
+      "$client" "$scopes" "$resource" "$(date -d "$expires" +%s)" >> $table
+  done <<'TOKENS'
+support support-agent ["orders:read"] https://mcp.marginalia.test:8443/mcp 2026-12-31
+refunds refunds-desk ["orders:read","orders:refund"] https://mcp.marginalia.test:8443/mcp 2026-12-31
+billing billing-agent ["orders:read"] https://billing.marginalia.test/mcp 2026-12-31
+expired old-agent ["orders:read"] https://mcp.marginalia.test:8443/mcp 2026-10-01
+TOKENS
+  printf '}\n' >> $table
+  chown mcpd:mcpd $table; chmod 0600 $table
+}
+
+# Deploy what ana wrote to the second machine and start it there, as mcpd, with
+# its own copy of the shop: the remote server reads nothing in /home/ana.
+start_remote() {
+  [ -f $WORK/remote_mcp.py ] || { echo "write ~/agents/remote_mcp.py first" >&2; return 1; }
+  stop_remote
+  rm -rf $REMOTE
+  install -d -o mcpd -g mcpd -m 0700 $REMOTE
+  install -d -o mcpd -g mcpd $REMOTE/data $REMOTE/tls
+  install -o mcpd -g mcpd -m 0644 $WORK/remote_mcp.py "$HERE/lab/work/shop.py" "$HERE/lab/remote/auth_metadata.py" $REMOTE/
+  install -o mcpd -g mcpd -m 0644 "$EMBLAB/data/help.jsonl" $REMOTE/data/
+  install -o mcpd -g mcpd -m 0600 $REMOTE_TLS/server.crt $REMOTE_TLS/server.key $REMOTE/tls/
+  runuser -u mcpd -- $VENV/bin/python -c "
+import sqlite3, sys
+db = sqlite3.connect('$REMOTE/data/shop.db')
+db.executescript(open(sys.argv[1]).read())
+db.commit()" "$HERE/lab/data/shop.sql"
+  write_tokens
+  local p
+  for p in auth_metadata remote_mcp; do
+    ip netns exec remote setsid runuser -u mcpd -- env -i PATH=$VENV/bin:/usr/bin:/bin HOME=$REMOTE \
+      TZ=America/Sao_Paulo LAB_TODAY=2026-10-06 MINILM_DIR=$SHARE/all-MiniLM-L6-v2 \
+      bash -c "cd $REMOTE && exec python $p.py" > /run/remote-$p.out 2>&1 < /dev/null &
+    echo $! > /run/remote-$p.pid
+  done
+  for _ in $(seq 50); do
+    curl -s -m 2 --noproxy "*" -o /dev/null --cacert $SHARE/marginalia-ca.crt https://mcp.marginalia.test:8443/mcp 2>/dev/null && return 0
+    sleep 0.2
+  done
+  echo "the remote server did not start; see /run/remote-remote_mcp.out" >&2; return 1
+}
+
+stop_remote() {
+  local p
+  for p in auth_metadata remote_mcp; do
+    if [ -f /run/remote-$p.pid ]; then
+      pkill -P "$(cat /run/remote-$p.pid)" 2>/dev/null || true
+      kill "$(cat /run/remote-$p.pid)" 2>/dev/null || true
+      rm -f /run/remote-$p.pid
+    fi
+  done
+  ip netns pids remote 2>/dev/null | xargs -r kill 2>/dev/null || true
+  sleep 0.3
+}
+
 exec_as() {  # exec_as COMMAND: as ana, in ~/agents, with the lab's environment and nothing else
   # shellcheck disable=SC2046
   runuser -u ana -- env -i HOME=/home/ana USER=ana $(grep -v '^#' $ENVFILE | xargs) \
@@ -209,13 +308,15 @@ exec_as() {  # exec_as COMMAND: as ana, in ~/agents, with the lab's environment 
 case ${1:-} in
   up)
     need; build_user; write_env; build_venv; build_tokenizer; build_model
-    build_work; start_llm ;;
+    build_remote; build_work; start_llm ;;
   reset)
-    write_env; install_lab; build_work; start_llm ;;
+    write_env; install_lab; stop_remote; build_work; start_llm ;;
+  remote)
+    build_user; build_remote; start_remote ;;
   down)
-    stop_llm ;;
+    stop_remote; stop_llm ;;
   exec)
     shift; exec_as "$@" ;;
   *)
-    echo "usage: sudo bash lab.sh up|reset|down|exec 'COMMAND'" >&2; exit 2 ;;
+    echo "usage: sudo bash lab.sh up|reset|remote|down|exec 'COMMAND'" >&2; exit 2 ;;
 esac

@@ -1,0 +1,449 @@
+[
+  {
+    "id": "ex-m64pjf5w",
+    "version": 1,
+    "section": "local-and-remote",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is true of a remote MCP server, and not of a local stdio one?",
+    "choices": [
+      {
+        "text": "It runs as the person who started the host",
+        "correct": false,
+        "why": "That is a local server."
+      },
+      {
+        "text": "It speaks different messages",
+        "correct": false,
+        "why": "The messages are the same; the transport changes."
+      },
+      {
+        "text": "It must be told who is asking, on every request",
+        "correct": true,
+        "why": "Right. A token proves it; a local server's caller is whoever started it."
+      },
+      {
+        "text": "It inherits the host's environment",
+        "correct": false,
+        "why": "It inherits nothing from the host."
+      }
+    ]
+  },
+  {
+    "id": "ex-sndar7rg",
+    "version": 1,
+    "section": "the-second-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could ana not list /srv/mcp?",
+    "choices": [
+      {
+        "text": "Because the network namespace hides other machines' files",
+        "correct": false,
+        "why": "A namespace separates networks; file access is decided by the owner and mode."
+      },
+      {
+        "text": "The directory belongs to mcpd and is closed to others",
+        "correct": true,
+        "why": "Right. The server's files, its shop and its token table are mcpd's."
+      },
+      {
+        "text": "Because the server deleted it after starting, so that nothing on disk could be read",
+        "correct": false,
+        "why": "It was there; ana was refused."
+      },
+      {
+        "text": "Because ana's token lacks a scope",
+        "correct": false,
+        "why": "Tokens are for the HTTP server, not for files."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ahc4q9e",
+    "version": 1,
+    "section": "the-second-machine",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit code did curl give when it could not verify the server's certificate?",
+    "value": 60,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vpzw5ct4",
+    "version": 1,
+    "section": "the-second-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made the certificate verify on ana's side?",
+    "choices": [
+      {
+        "text": "Turning off verification for this host",
+        "correct": false,
+        "why": "Nothing in the lesson turns verification off."
+      },
+      {
+        "text": "Installing the server's private key",
+        "correct": false,
+        "why": "The private key never leaves the server."
+      },
+      {
+        "text": "A different port",
+        "correct": false,
+        "why": "The port is the same."
+      },
+      {
+        "text": "Pointing the client at the lab's CA certificate",
+        "correct": true,
+        "why": "Right. One file, marginalia-ca.crt."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2kxnmd8",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the WWW-Authenticate header's resource_metadata give a client?",
+    "choices": [
+      {
+        "text": "The URL of a document naming the server's authorization servers",
+        "correct": true,
+        "why": "Right. The first link of the discovery chain."
+      },
+      {
+        "text": "A token to retry with",
+        "correct": false,
+        "why": "No token is handed out by a 401."
+      },
+      {
+        "text": "The list of tools",
+        "correct": false,
+        "why": "Tools are listed only after authorisation."
+      },
+      {
+        "text": "The server's certificate",
+        "correct": false,
+        "why": "Certificates are checked during TLS, not through this header."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk2dea3x",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the discovery chain in order, from the server's address to a token.",
+    "items": [
+      "a request without a token gets 401",
+      "WWW-Authenticate names the resource metadata",
+      "the resource metadata names the authorization server",
+      "the authorization server's metadata names its endpoints",
+      "the client asks for a token"
+    ]
+  },
+  {
+    "id": "ex-2pxq6zwy",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did the lab's token endpoint answer, and why?",
+    "choices": [
+      {
+        "text": "A token, because the lab runs a full authorization server",
+        "correct": false,
+        "why": "It runs metadata only."
+      },
+      {
+        "text": "401, because the request had no token",
+        "correct": false,
+        "why": "The answer was 501."
+      },
+      {
+        "text": "501: this lab publishes metadata and issues tokens by file",
+        "correct": true,
+        "why": "Right. The chain is real; issuance is described, not run."
+      },
+      {
+        "text": "Nothing; the port was closed",
+        "correct": false,
+        "why": "It answered with JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sk00bpa",
+    "version": 1,
+    "section": "the-remote-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does TokenTable key its table by the token's SHA-256?",
+    "choices": [
+      {
+        "text": "Because SHA-256 makes lookups faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Because HTTP headers cannot carry a token in clear",
+        "correct": false,
+        "why": "The header carries the token itself."
+      },
+      {
+        "text": "To make the token shorter on the wire",
+        "correct": false,
+        "why": "The client still sends the whole token."
+      },
+      {
+        "text": "So it holds no tokens",
+        "correct": true,
+        "why": "Right. The table itself holds no token, so a copy of it is not a set of working tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-xq47fkr3",
+    "version": 1,
+    "section": "the-remote-server",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The AuthSettings flag that makes the server refuse tokens issued for another resource is `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "validate_token_resource"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y01dmtgk",
+    "version": 1,
+    "section": "tokens-and-scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the billing token refused, although it was valid and unexpired?",
+    "choices": [
+      {
+        "text": "It was issued for a different server",
+        "correct": true,
+        "why": "Right. The audience rule: accept only tokens issued for you."
+      },
+      {
+        "text": "Because its scope was orders:read",
+        "correct": false,
+        "why": "The support token had the same scope and was accepted."
+      },
+      {
+        "text": "Because billing-agent is on a blocklist the server keeps beside the token table",
+        "correct": false,
+        "why": "There is no blocklist; the resource did not match."
+      },
+      {
+        "text": "Because it was sent without TLS",
+        "correct": false,
+        "why": "Every request used TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-40aan60v",
+    "version": 1,
+    "section": "tokens-and-scopes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do the billing and expired tokens get exactly the same 401 body?",
+    "choices": [
+      {
+        "text": "Because the server could not tell them apart",
+        "correct": false,
+        "why": "It could; it chose not to say."
+      },
+      {
+        "text": "So that nobody learns which tokens exist or why one fails",
+        "correct": true,
+        "why": "Right. One answer for every rejected token."
+      },
+      {
+        "text": "Because uvicorn writes all error bodies",
+        "correct": false,
+        "why": "The SDK's auth middleware writes it."
+      },
+      {
+        "text": "Because both were issued to the same client, old-agent, which the server no longer recognises",
+        "correct": false,
+        "why": "They were issued to different clients."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9z2tcwn",
+    "version": 1,
+    "section": "tokens-and-scopes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does the specification recommend answering a valid token whose scope is too narrow?",
+    "choices": [
+      {
+        "text": "With a tool error inside a 200, as this server does",
+        "correct": false,
+        "why": "That is what this server does, not what the specification recommends."
+      },
+      {
+        "text": "By granting the scope for one call",
+        "correct": false,
+        "why": "Servers never widen a token."
+      },
+      {
+        "text": "403, with WWW-Authenticate naming the scope needed",
+        "correct": true,
+        "why": "Right. A client then knows which scope to ask for."
+      },
+      {
+        "text": "401, as for an invalid token",
+        "correct": false,
+        "why": "401 is for invalid or expired tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-3feh7n8q",
+    "version": 1,
+    "section": "a-client-for-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did moving a server from local to remote remove from lesson 15's host?",
+    "choices": [
+      {
+        "text": "The need to check tool results",
+        "correct": false,
+        "why": "Results still need checking."
+      },
+      {
+        "text": "The audit file",
+        "correct": false,
+        "why": "The host still writes it."
+      },
+      {
+        "text": "Asking a person before a refund, since the token's scope now decides everything",
+        "correct": false,
+        "why": "The host's own rules still apply."
+      },
+      {
+        "text": "The ENV list, since the host starts nothing",
+        "correct": true,
+        "why": "Right. It adds a secret to keep instead: the token."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q8sb82n",
+    "version": 1,
+    "section": "what-the-lab-leaves-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does PKCE protect against?",
+    "choices": [
+      {
+        "text": "A stolen code being used",
+        "correct": true,
+        "why": "Right. A stolen authorization code is useless without the client's secret."
+      },
+      {
+        "text": "A server accepting tokens for another resource",
+        "correct": false,
+        "why": "That is the audience check."
+      },
+      {
+        "text": "Expired tokens",
+        "correct": false,
+        "why": "Expiry is checked by the server."
+      },
+      {
+        "text": "A server whose certificate was signed by an authority the client does not know",
+        "correct": false,
+        "why": "That is TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-46g93qzx",
+    "version": 1,
+    "section": "what-the-lab-leaves-out",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the specification forbid? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "A server passing a client's token on to another service",
+        "correct": true,
+        "why": "Right. Token passthrough."
+      },
+      {
+        "text": "A client sending a server a token issued for another server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A server accepting a token not issued for it",
+        "correct": true,
+        "why": "Right. The audience rule."
+      },
+      {
+        "text": "A client sending its token in the Authorization header",
+        "correct": false,
+        "why": "That is how tokens are sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-92jazvjd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each token to what happened to its call.",
+    "pairs": [
+      {
+        "left": "support, reading",
+        "right": "the order came back"
+      },
+      {
+        "left": "support, refunding",
+        "right": "a tool error: no orders:refund"
+      },
+      {
+        "left": "billing",
+        "right": "401: issued for another resource"
+      },
+      {
+        "left": "refunds",
+        "right": "refunded 3890"
+      }
+    ],
+    "right_distractors": [
+      "403 with a new token"
+    ]
+  }
+]
