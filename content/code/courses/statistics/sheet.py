@@ -1547,6 +1547,91 @@ def l20():
          f'{mins[10]} {[round(v, 3) for v in t["beta"]]} {t["r2"]:.4f} {ct[10][0]:.3f} {ct[10][1]:.4f}')
 
 
+# Four hundred orders, lesson 21: whether the customer complained, against how long
+# the delivery took and whether it was their first order.
+def _complaint_orders():
+    d = Draw(2100)
+    out = []
+    for _ in range(400):
+        minutes = round(d.uniform(20, 70) * 2) / 2
+        first = 1 if d.r.random() < 0.3 else 0
+        z = -8.0 + 0.14 * minutes + 0.9 * first
+        p = 1 / (1 + math.exp(-z))
+        out.append({'minutes': minutes, 'first': first, 'complained': 1 if d.r.random() < p else 0})
+    return out
+
+
+COMPLAINT_ORDERS = _complaint_orders()
+
+
+def logistic(rows, ys, iters=50):
+    """Logistic regression by Newton-Raphson: coefficients, standard errors, log-likelihood."""
+    x = [[1.0] + list(r) for r in rows]
+    n, k = len(x), len(x[0])
+    beta = [0.0] * k
+    for _ in range(iters):
+        p = [1 / (1 + math.exp(-sum(b * v for b, v in zip(beta, xi)))) for xi in x]
+        grad = [sum((ys[i] - p[i]) * x[i][a] for i in range(n)) for a in range(k)]
+        hess = [[sum(p[i] * (1 - p[i]) * x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+        step = solve(hess, grad)
+        beta = [b + s for b, s in zip(beta, step)]
+        if max(abs(s) for s in step) < 1e-12:
+            break
+    p = [1 / (1 + math.exp(-sum(b * v for b, v in zip(beta, xi)))) for xi in x]
+    hess = [[sum(p[i] * (1 - p[i]) * x[i][a] * x[i][b] for i in range(n)) for b in range(k)] for a in range(k)]
+    inv = inverse(hess)
+    se = [math.sqrt(inv[j][j]) for j in range(k)]
+    ll = sum(y * math.log(q) + (1 - y) * math.log(1 - q) for y, q in zip(ys, p))
+    return dict(beta=beta, se=se, p=p, ll=ll)
+
+
+def confusion(ys, ps, cut):
+    tp = sum(1 for y, q in zip(ys, ps) if y and q >= cut)
+    fn = sum(1 for y, q in zip(ys, ps) if y and q < cut)
+    fp = sum(1 for y, q in zip(ys, ps) if not y and q >= cut)
+    tn = sum(1 for y, q in zip(ys, ps) if not y and q < cut)
+    return tp, fn, fp, tn
+
+
+@lesson(21)
+def l21():
+    O = COMPLAINT_ORDERS
+    ys = [o['complained'] for o in O]
+    mins = [o['minutes'] for o in O]
+    first = [o['first'] for o in O]
+    show('400 orders: complaints, first orders', f'{sum(ys)} {sum(first)}')
+    for lo, hi in ((20, 30), (30, 40), (40, 50), (50, 60), (60, 70.01)):
+        sel = [y for y, m in zip(ys, mins) if lo <= m < hi]
+        show(f'  complaint rate {lo}-{int(hi)} min', f'{sum(sel)}/{len(sel)} = {sum(sel) / len(sel):.3f}')
+    a, b = line(mins, ys)
+    show('straight line on 0/1: a, b; predictions at 20, 45, 70, 80', f'{a:.4f} {b:.5f} {[round(a + b * m, 3) for m in (20, 45, 70, 80)]}')
+    m1 = logistic([(m,) for m in mins], ys)
+    show('logit ~ minutes: beta, se', f'{[round(v, 4) for v in m1["beta"]]} {[round(v, 4) for v in m1["se"]]}')
+    b0, b1 = m1['beta']
+    show('  odds ratio per minute, per 10 minutes', f'{math.exp(b1):.4f} {math.exp(10 * b1):.4f}')
+    for m in (30, 40, 45, 50, 60):
+        z = b0 + b1 * m
+        show(f'  at {m} min: log-odds, odds, p', f'{z:.4f} {math.exp(z):.4f} {1 / (1 + math.exp(-z)):.4f}')
+    show('  minutes where p = 0.5', f'{-b0 / b1:.2f}')
+    m2 = logistic(list(zip(mins, first)), ys)
+    show('logit ~ minutes + first: beta, se', f'{[round(v, 4) for v in m2["beta"]]} {[round(v, 4) for v in m2["se"]]}')
+    c0, c1, c2 = m2['beta']
+    show('  OR minute, OR 10 min, OR first', f'{math.exp(c1):.4f} {math.exp(10 * c1):.4f} {math.exp(c2):.4f}')
+    show('  95% CI for OR first', f'{math.exp(c2 - 1.96 * m2["se"][2]):.3f} {math.exp(c2 + 1.96 * m2["se"][2]):.3f}')
+    show('  z and p for first', f'{c2 / m2["se"][2]:.3f} {2 * (1 - normal_cdf(abs(c2 / m2["se"][2]))):.2e}')
+    for m in (45,):
+        for f_ in (0, 1):
+            z = c0 + c1 * m + c2 * f_
+            show(f'  p at {m} min, first={f_}', f'{1 / (1 + math.exp(-z)):.4f} odds {math.exp(z):.4f}')
+    for cut in (0.5, 0.2):
+        tp, fn, fp, tn = confusion(ys, m2['p'], cut)
+        show(f'  cut {cut}: tp fn fp tn', f'{tp} {fn} {fp} {tn}')
+        show(f'    accuracy, sensitivity, specificity, precision',
+             f'{(tp + tn) / 400:.4f} {tp / (tp + fn):.4f} {tn / (tn + fp):.4f} {tp / (tp + fp):.4f}')
+    show('  always "no complaint" accuracy', f'{1 - sum(ys) / 400:.4f}')
+    show('  log-likelihoods: null, m1, m2', f'{sum(y * math.log(sum(ys) / 400) + (1 - y) * math.log(1 - sum(ys) / 400) for y in ys):.3f} {m1["ll"]:.3f} {m2["ll"]:.3f}')
+
+
 def check():
     """Compare the distributions written out above with SciPy's, where SciPy is installed."""
     try:

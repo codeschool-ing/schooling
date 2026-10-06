@@ -2921,6 +2921,224 @@ def l20_influence(lang):
     return f, t['cap']
 
 
+# ----------------------------------------------------------------- lesson 21
+
+def _logit_fit(with_first=True):
+    O = S.COMPLAINT_ORDERS
+    ys = [o['complained'] for o in O]
+    rows = [(o['minutes'], o['first']) if with_first else (o['minutes'],) for o in O]
+    return O, ys, S.logistic(rows, ys)
+
+
+@figure('l21-line-vs-curve', 21)
+def l21_line_vs_curve(lang):
+    O, ys, m = _logit_fit(False)
+    mins = [o['minutes'] for o in O]
+    a, b = S.line(mins, ys)
+    b0, b1 = m['beta']
+    t = {'en': dict(
+        label=f'The 400 orders as two rows of ticks, complaints at 1 and no complaint at 0, against '
+              f'delivery minutes from 20 to 70. A straight line fitted to the zeros and ones runs from '
+              f'{num("en", a + 20 * b, 2)} at 20 minutes, below zero, to {num("en", a + 70 * b, 2)} at '
+              f'70. An S-shaped logistic curve stays between 0 and 1, flat near zero for quick '
+              f'deliveries and climbing steeply after 45 minutes.',
+        x='delivery minutes', y='probability of a complaint', line='straight line', curve='logistic curve',
+        below='below zero',
+        cap='A straight line through zeros and ones predicts impossible probabilities at the ends. '
+            'The logistic curve bends to stay between 0 and 1.'),
+        'pt': dict(
+        label=f'Os 400 pedidos como duas fileiras de marcas, reclamações em 1 e sem reclamação em 0, '
+              f'contra os minutos de entrega de 20 a 70. Uma reta ajustada aos zeros e uns vai de '
+              f'{num("pt", a + 20 * b, 2)} em 20 minutos, abaixo de zero, até {num("pt", a + 70 * b, 2)} '
+              f'em 70. Uma curva logística em S fica entre 0 e 1, plana perto de zero para entregas '
+              f'rápidas e subindo forte depois de 45 minutos.',
+        x='minutos de entrega', y='probabilidade de reclamação', line='reta', curve='curva logística',
+        below='abaixo de zero',
+        cap='Uma reta pelos zeros e uns prevê probabilidades impossíveis nas pontas. A curva '
+            'logística se dobra para ficar entre 0 e 1.')}[lang]
+    f = Fig('l21-line-vs-curve', 600, 320, t['label'])
+    p = Plot(f, 80, 36, 580, 260, 18, 72, -0.3, 1.1)
+    p.yaxis([0, 0.25, 0.5, 0.75, 1], fmt=lambda v: num(lang, v, 2), label=t['y'])
+    p.xaxis(range(20, 71, 10), label=t['x'])
+    f.line(p.x0, p.sy(0), p.x1, p.sy(0), stroke='--paper-dim', width=1, dash='2 3')
+    d = S.Draw(2101)
+    for o in O:
+        y = o['complained']
+        jy = (d.uniform(-0.03, 0.03))
+        f.line(p.sx(o['minutes']), p.sy(y + jy) - 3, p.sx(o['minutes']), p.sy(y + jy) + 3, stroke='--paper-dim', width=0.8)
+    f.line(p.sx(20), p.sy(a + 20 * b), p.sx(70), p.sy(a + 70 * b), stroke='--paper', width=1.8, dash='6 4')
+    p.curve(lambda x: 1 / (1 + math.exp(-(b0 + b1 * x))), 20, 70, stroke='--amber', width=2.4)
+    f.text(p.sx(25), p.sy(-0.19), t['below'], size=10, anchor='start')
+    f.text(p.sx(44), p.sy(0.5), t['line'], size=10.5, weight='600', anchor='end')
+    f.text(p.sx(62), p.sy(0.8), t['curve'], size=10.5, weight='600', anchor='end', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l21-two-curves', 21)
+def l21_two_curves(lang):
+    O, ys, m = _logit_fit(True)
+    c0, c1, c2 = m['beta']
+    t = {'en': dict(
+        label=f'The fitted probability of a complaint against delivery minutes, as two S-shaped '
+              f'curves: one for returning customers and one, to its left, for first orders. At 45 '
+              f'minutes the curves give {num("en", 100 / (1 + math.exp(-(c0 + c1 * 45))), 0)}% and '
+              f'{num("en", 100 / (1 + math.exp(-(c0 + c1 * 45 + c2))), 0)}%.',
+        x='delivery minutes', y='probability of a complaint', a='first order', b='returning customer',
+        cap='On the log-odds scale a first order adds the same amount at every delivery time. On the '
+            'probability scale that becomes a sideways shift: the gap is widest in the middle.'),
+        'pt': dict(
+        label=f'A probabilidade ajustada de reclamação contra os minutos de entrega, como duas '
+              f'curvas em S: uma para clientes que voltam e outra, à esquerda dela, para primeiros '
+              f'pedidos. Em 45 minutos as curvas dão {num("pt", 100 / (1 + math.exp(-(c0 + c1 * 45))), 0)}% '
+              f'e {num("pt", 100 / (1 + math.exp(-(c0 + c1 * 45 + c2))), 0)}%.',
+        x='minutos de entrega', y='probabilidade de reclamação', a='primeiro pedido', b='cliente que volta',
+        cap='Na escala de log-chances um primeiro pedido soma o mesmo em qualquer tempo de entrega. '
+            'Na escala de probabilidade isso vira um deslocamento para o lado: a diferença é maior no '
+            'meio.')}[lang]
+    f = Fig('l21-two-curves', 600, 320, t['label'])
+    p = Plot(f, 80, 36, 580, 260, 20, 80, 0, 1)
+    p.yaxis([0, 0.25, 0.5, 0.75, 1], fmt=lambda v: num(lang, v, 2), label=t['y'])
+    p.xaxis(range(20, 81, 10), label=t['x'])
+    p.curve(lambda x: 1 / (1 + math.exp(-(c0 + c1 * x))), 20, 80, stroke='--phosphor', width=2.2)
+    p.curve(lambda x: 1 / (1 + math.exp(-(c0 + c1 * x + c2))), 20, 80, stroke='--amber', width=2.2)
+    p.vline(45, stroke='--paper-dim', dash='3 3', top=p.y0 + 10)
+    f.text(p.sx(52), p.sy(0.62), t['a'], size=10.5, weight='600', anchor='end', fill='--amber')
+    f.text(p.sx(64), p.sy(0.42), t['b'], size=10.5, weight='600', anchor='start', fill='--phosphor')
+    return f, t['cap']
+
+
+@figure('l21-threshold', 21)
+def l21_threshold(lang):
+    O, ys, m = _logit_fit(True)
+    ps = m['p']
+    edges = [i / 20 for i in range(21)]
+    yes = histogram([q for q, y in zip(ps, ys) if y], edges)
+    no = histogram([q for q, y in zip(ps, ys) if not y], edges)
+    t = {'en': dict(
+        label='Two histograms of the model\'s predicted probability of a complaint, from 0 to 1. '
+              'Orders with no complaint pile up near zero; orders that did bring a complaint spread '
+              'across the whole range, most of them above 0.5. Each histogram has its own vertical '
+              'scale. Two vertical lines mark cut-offs at 0.2 and 0.5.',
+        x='predicted probability of a complaint', y='orders', no='no complaint', yes='complained',
+        cap='Wherever the cut-off goes, some orders land on the wrong side. Moving it left catches '
+            'more complaints and raises more false alarms.'),
+        'pt': dict(
+        label='Dois histogramas da probabilidade prevista de reclamação, de 0 a 1. Pedidos sem '
+              'reclamação se acumulam perto de zero; pedidos que trouxeram reclamação se espalham '
+              'pela faixa toda, a maioria acima de 0,5. Cada histograma tem a própria escala '
+              'vertical. Duas linhas verticais marcam cortes em 0,2 e 0,5.',
+        x='probabilidade prevista de reclamação', y='pedidos', no='sem reclamação', yes='reclamou',
+        cap='Onde quer que o corte fique, alguns pedidos caem do lado errado. Movê-lo para a '
+            'esquerda pega mais reclamações e dá mais alarmes falsos.')}[lang]
+    f = Fig('l21-threshold', 600, 340, t['label'])
+    top1 = 20 * math.ceil(max(no) / 20)
+    top2 = 5 * math.ceil(max(yes) / 5)
+    p1 = Plot(f, 70, 40, 580, 150, 0, 1, 0, top1)
+    p2 = Plot(f, 70, 175, 580, 280, 0, 1, 0, top2)
+    p1.bars(edges, no, fill='--scan', stroke='--paper-dim')
+    p2.bars(edges, yes, fill='--amber', stroke='--amber')
+    p1.yaxis([0, top1 // 2, top1], grid=False, size=9)
+    p2.yaxis([0, top2 // 2, top2], grid=False, size=9)
+    for p_ in (p1, p2):
+        f.line(p_.x0, p_.y1, p_.x1, p_.y1, stroke='--paper-dim')
+    p2.xaxis([0, 0.2, 0.5, 0.8, 1], fmt=lambda v: num(lang, v, 1), label=t['x'])
+    for cut in (0.2, 0.5):
+        x = p1.sx(cut)
+        f.line(x, p1.y0 - 6, x, p2.y1, stroke='--paper', width=1.4, dash='4 3')
+    f.text(p1.x1 - 4, p1.y0 + 4, t['no'], size=10.5, weight='600', anchor='end')
+    f.text(p2.x1 - 4, p2.y0 + 4, t['yes'], size=10.5, weight='600', anchor='end', fill='--amber')
+    f.text(p1.x0, p1.y0 - 18, t['y'], size=10, weight='600', anchor='start')
+    return f, t['cap']
+
+
+@figure('l21-confusion', 21)
+def l21_confusion(lang):
+    O, ys, m = _logit_fit(True)
+    t = {'en': dict(
+        cut='cut-off', pred='predicted', act='actual', c='complaint', n='none',
+        label=None,
+        cap='Each cut-off sorts the 400 orders into four boxes. The lower cut-off finds more of the '
+            'real complaints and wrongly flags more of the quiet orders.'),
+        'pt': dict(
+        cut='corte', pred='previsto', act='real', c='reclamação', n='nenhuma',
+        label=None,
+        cap='Cada corte separa os 400 pedidos em quatro caixas. O corte mais baixo acha mais das '
+            'reclamações reais e marca errado mais pedidos tranquilos.')}[lang]
+    cells = {}
+    for cut in (0.5, 0.2):
+        cells[cut] = S.confusion(ys, m['p'], cut)
+    if lang == 'en':
+        lab = ('Two confusion tables for 400 orders. With a cut-off of 0.5: {0} complaints predicted '
+               'and real, {1} real complaints missed, {2} false alarms, {3} quiet orders correctly '
+               'left alone. With a cut-off of 0.2: {4} caught, {5} missed, {6} false alarms, {7} '
+               'correctly left alone.')
+    else:
+        lab = ('Duas tabelas de confusão para 400 pedidos. Com corte de 0,5: {0} reclamações previstas '
+               'e reais, {1} reclamações reais perdidas, {2} alarmes falsos, {3} pedidos tranquilos '
+               'corretamente deixados de lado. Com corte de 0,2: {4} pegas, {5} perdidas, {6} alarmes '
+               'falsos, {7} corretamente deixados de lado.')
+    f = Fig('l21-confusion', 600, 250, lab.format(*cells[0.5], *cells[0.2]))
+    for k, cut in enumerate((0.5, 0.2)):
+        tp, fn, fp, tn = cells[cut]
+        x0 = 30 + k * 290
+        f.text(x0 + 135, 18, f'{t["cut"]} {num(lang, cut, 1)}', size=11.5, weight='600')
+        f.text(x0 + 165, 44, t['pred'], size=10, fill='--paper-dim')
+        f.text(x0 + 120, 64, t['c'], size=10)
+        f.text(x0 + 210, 64, t['n'], size=10)
+        f.text(x0 + 30, 150, t['act'], size=10, fill='--paper-dim')
+        f.text(x0 + 70, 110, t['c'], size=10, anchor='end')
+        f.text(x0 + 70, 180, t['n'], size=10, anchor='end')
+        for (r, c_, v, hl) in ((0, 0, tp, True), (0, 1, fn, False), (1, 0, fp, False), (1, 1, tn, True)):
+            x, y = x0 + 78 + c_ * 90, 78 + r * 70
+            f.rect(x, y, 84, 64, stroke='--phosphor' if hl else '--amber', fill='--panel', rx=4)
+            f.text(x + 42, y + 32, str(v), size=16, weight='600', fill='--paper' if hl else '--amber')
+    return f, t['cap']
+
+
+@figure('l21-model-map', 21)
+def l21_model_map(lang):
+    t = {'en': dict(
+        label='A map from the kind of outcome to the model that fits it. A number with roughly normal '
+              'noise: linear regression. Yes or no: logistic regression. A count: Poisson regression. '
+              'One of several categories: multinomial logistic regression. Time until an event: '
+              'survival analysis. Below them all, a box for many predictors and complex patterns: '
+              'machine learning, such as trees and their ensembles.',
+        q='what is the outcome?',
+        rows=[('a number', 'linear regression'), ('yes or no', 'logistic regression'),
+              ('a count', 'Poisson regression'), ('one of several categories', 'multinomial logistic'),
+              ('time until an event', 'survival analysis')],
+        ml='many predictors, complex patterns, prediction first: machine learning',
+        cap='The outcome decides the family. Every one of these shares the ideas of the last three '
+            'lessons: coefficients with the others held fixed, residuals to check, and data held '
+            'back to test on.'),
+        'pt': dict(
+        label='Um mapa do tipo de resultado para o modelo que serve. Um número com ruído mais ou '
+              'menos normal: regressão linear. Sim ou não: regressão logística. Uma contagem: '
+              'regressão de Poisson. Uma de várias categorias: regressão logística multinomial. '
+              'Tempo até um evento: análise de sobrevivência. Embaixo de todos, uma caixa para muitos '
+              'preditores e padrões complexos: aprendizado de máquina, como árvores e seus conjuntos.',
+        q='qual é o resultado?',
+        rows=[('um número', 'regressão linear'), ('sim ou não', 'regressão logística'),
+              ('uma contagem', 'regressão de Poisson'), ('uma de várias categorias', 'logística multinomial'),
+              ('tempo até um evento', 'análise de sobrevivência')],
+        ml='muitos preditores, padrões complexos, previsão em primeiro: aprendizado de máquina',
+        cap='O resultado decide a família. Todas compartilham as ideias das últimas três aulas: '
+            'coeficientes com os outros fixos, resíduos para checar e dados separados para testar.')}[lang]
+    f = Fig('l21-model-map', 600, 340, t['label'])
+    node(f, 90, 150, 150, t['q'], h=40, stroke='--amber')
+    for i, (a, b) in enumerate(t['rows']):
+        y = 30 + i * 50
+        f.rect(200, y - 17, 170, 34, stroke='--wire', fill='--panel', rx=6)
+        f.text(285, y, a, size=10.5)
+        f.rect(400, y - 17, 180, 34, stroke='--phosphor', fill='--panel', rx=6)
+        f.text(490, y, b, size=10.5, weight='600')
+        f.line(165, 150, 198, y, stroke='--paper-dim', width=1.2)
+        f.line(370, y, 398, y, stroke='--paper', width=1.4, arrow=True)
+    f.rect(20, 285, 560, 40, stroke='--amber', fill='--panel', rx=6, dash='5 4')
+    f.text(300, 305, t['ml'], size=10.5, weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
