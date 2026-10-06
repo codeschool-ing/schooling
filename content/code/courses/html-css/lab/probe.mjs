@@ -27,6 +27,7 @@
  *   window                the window's inner size and its device pixel ratio
  *   text SEL              the text of every element SEL matches
  *   box SEL               position and size of every element SEL matches
+ *   layout SEL            where layout put each element, before any transform
  *   match SEL             which elements a selector matches
  *   style SEL PROP,...    computed values of the named properties; SEL may end
  *                         in ::before, ::after or ::marker
@@ -43,6 +44,8 @@
  *   release               lets the images held by --hold-images arrive
  *   scroll Y              scrolls the page to Y
  *   at MS                 freezes every animation at MS milliseconds
+ *   frames MS             lets the page run for MS milliseconds and counts the
+ *                         layouts and style recalculations it did meanwhile
  *   width W               resizes the window to W pixels wide
  *   overflow              whether the page is wider than the window
  *   media QUERY           whether a media query matches the window as it is now
@@ -162,6 +165,12 @@ const steps = {
   },
   async dom() {
     console.log(await page.evaluate(() => document.documentElement.outerHTML));
+  },
+  async layout(sel) {
+    for (const el of await page.$$(sel)) {
+      const v = await el.evaluate((e) => [e.offsetLeft, e.offsetTop, e.offsetWidth, e.offsetHeight]);
+      console.log(`${await label(el)}  laid out at x ${v[0]}, y ${v[1]}, width ${v[2]}, height ${v[3]}`);
+    }
   },
   async box(sel) {
     const els = await page.$$(sel);
@@ -345,6 +354,15 @@ const steps = {
       for (const a of document.getAnimations()) { a.pause(); a.currentTime = t; }
     }, Number(ms));
   },
+  async frames(ms) {
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Performance.enable');
+    const read = async () => Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.map((m) => [m.name, m.value]));
+    const a = await read();
+    await page.waitForTimeout(Number(ms));
+    const b = await read();
+    console.log(`in ${ms} ms: ${b.LayoutCount - a.LayoutCount} layouts, ${b.RecalcStyleCount - a.RecalcStyleCount} style recalculations`);
+  },
   async width(w) {
     await page.setViewportSize({ width: Number(w), height: opt.height });
     await page.waitForTimeout(100);
@@ -385,7 +403,7 @@ const steps = {
 };
 
 const arity = { spill: 1, match: 1, rules: 2, describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
-  at: 1, width: 1, media: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
+  at: 1, width: 1, media: 1, layout: 1, frames: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
 try {
   while (argv.length) {
     const name = argv.shift();
