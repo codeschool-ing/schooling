@@ -22,7 +22,7 @@
 #
 # wpa_passphrase separates its lines with tabs, and the transcripts keep them.
 #
-# Recorded with wpa_supplicant 2.10 and Python 3.12, TZ=America/Sao_Paulo.
+# Recorded with wpa_supplicant 2.10 and Python 3.13, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)

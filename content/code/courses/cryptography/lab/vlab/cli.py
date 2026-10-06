@@ -60,6 +60,23 @@ def cmd_open(a):
     sys.stdout.buffer.write(plain)
 
 
+def cmd_nonceaudit(a):
+    # Reads only the first 12 bytes of each file: the nonce seal wrote there.
+    # It needs no key and decrypts nothing; it reports repeats, which under
+    # one key are the mistake, and leaves the response to whoever owns the key.
+    seen = {}
+    for path in a.files:
+        seen.setdefault(read(path)[:12].hex(), []).append(path)
+    print(f"{len(a.files)} sealed files, {len(seen)} different nonces")
+    repeated = {n: p for n, p in seen.items() if len(p) > 1}
+    for nonce, paths in sorted(repeated.items()):
+        print(f"nonce {nonce} used {len(paths)} times: {' '.join(paths)}")
+    if repeated:
+        print(f"{len(repeated)} nonces repeated: if these files share a key, rotate it and re-seal them")
+        sys.exit(1)
+    print("no nonce repeated")
+
+
 def cmd_flip(a):
     data = bytearray(read(a.file))
     data[a.offset] ^= int(a.mask, 16)
@@ -216,6 +233,9 @@ def main():
         else:
             s.add_argument("infile")
         s.set_defaults(fn=fn)
+    s = sub.add_parser("nonce-audit", help="list sealed files that share a nonce, reading nothing but the nonces")
+    s.add_argument("files", nargs="+")
+    s.set_defaults(fn=cmd_nonceaudit)
     s = sub.add_parser("flip", help="change one byte of a sealed file, to see the tag refuse it")
     s.add_argument("file")
     s.add_argument("offset", type=int)
