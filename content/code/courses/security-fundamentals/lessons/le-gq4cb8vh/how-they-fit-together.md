@@ -17,10 +17,10 @@ answers a different question, and organisations combine them.
 
 ### A typical combination
 
-A company of a few hundred people might use them like this: the **CSF** to talk to its board, because
-six functions and a current and target profile fit on one slide; **ISO 27001** as the management system,
-certified because customers ask for it; **27002** and the **CIS Controls** to decide and implement the
-controls; and **SP 800-53** as a reference when a control needs a precise specification. A US federal
+A company of a few hundred people might use them like this. The **CSF** talks to its board, because
+six functions and a current and target profile fit on one slide. ISO 27001 is the management system,
+certified because customers ask for it. 27002 and the CIS Controls decide and implement the controls,
+and SP 800-53 is the reference when a control needs a precise specification. A US federal
 contractor would add the **RMF** for each system it operates on the government's behalf.
 
 ### The bridges between them

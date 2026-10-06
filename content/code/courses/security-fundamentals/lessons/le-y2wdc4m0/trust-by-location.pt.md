@@ -24,8 +24,7 @@ infectado por um anexo de e-mail está lá dentro. Também estão o celular de u
 errado, a máquina de um terceirizado ligada numa tomada sobrando e um servidor comprometido semana
 passada que anda quieto desde então. Cada um deles herda toda a confiança que o lugar carrega.
 
-A outra direção também falha. Alguém da equipe trabalhando de casa, com a própria senha correta, está
-fora, e uma política baseada em localização o trata como um estranho, o que empurra as pessoas para
+A outra direção também falha. Alguém da equipe trabalhando de casa, com a própria senha correta, está fora, e uma política baseada em localização o trata como um estranho. Isso empurra as pessoas para
 gambiarras: uma VPN ligada o dia inteiro, ou arquivos mandados para um e-mail pessoal para abrir em
 casa.
 

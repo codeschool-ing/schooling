@@ -39,5 +39,5 @@ the part of the shop that customer cares about, and no larger.
 
 Three things to check when a supplier sends one: that the **scope** covers the service you are buying;
 that the certificate is **current** (the issue and expiry dates, and that it is against the 2022
-edition); and that the certification body is **accredited**, which can be checked with the accreditation
+edition); and that the certification body is **accredited**. That last one is checked with the accreditation
 body that names it. A certificate from an unaccredited body is a document, not an assurance.

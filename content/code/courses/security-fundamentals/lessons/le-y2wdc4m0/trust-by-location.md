@@ -25,7 +25,7 @@ Wi-Fi, a contractor's machine plugged into a spare socket, and a server that was
 week and has been quiet since. Each of them inherits all the trust the location carries.
 
 The other direction fails too. A member of staff working from home with their own correct password
-is outside, and a policy based on location treats them like a stranger, which pushes people towards
+is outside, and a policy based on location treats them like a stranger. That pushes people towards
 workarounds: a VPN left connected all day, or files emailed to a personal address so they can be
 opened at home.
 

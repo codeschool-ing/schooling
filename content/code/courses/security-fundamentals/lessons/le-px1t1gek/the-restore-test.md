@@ -53,8 +53,8 @@ invoices` means a whole folder exists in the live data and is absent from the re
 `diff` saying the two are not the same.
 
 The cause is in the job's first line: *written in March*. The invoices folder came later, and the job
-was never told about it. It has backed up `data` every night since, successfully, and that success is
-what hid the problem: **no error, no alert, and no invoices.** Had the server died, the shop would have
+was never told about it. It has backed up `data` every night since, successfully.
+That success is what hid the problem: **no error, no alert, and no invoices.** Had the server died, the shop would have
 restored its orders and lost every invoice, which in Brazil are documents a business is required to
 keep.
 

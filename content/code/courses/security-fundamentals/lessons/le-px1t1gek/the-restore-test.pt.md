@@ -53,8 +53,8 @@ invoices` ("só em /srv/shop: invoices") quer dizer que uma pasta inteira existe
 na restauração. `exit 1` é o `diff` dizendo que as duas não são iguais.
 
 A causa está na primeira linha do script: *written in March*, "escrito em março". A pasta das notas veio
-depois, e ninguém avisou o backup. Ele faz backup de `data` toda noite desde então, com sucesso, e esse
-sucesso foi o que escondeu o problema: **nenhum erro, nenhum alerta e nenhuma nota.** Se o servidor
+depois, e ninguém avisou o backup. Ele faz backup de `data` toda noite desde então, com sucesso.
+Esse sucesso foi o que escondeu o problema: **nenhum erro, nenhum alerta e nenhuma nota.** Se o servidor
 tivesse morrido, a loja teria restaurado os pedidos e perdido todas as notas fiscais, que no Brasil são
 documentos que uma empresa é obrigada a guardar.
 

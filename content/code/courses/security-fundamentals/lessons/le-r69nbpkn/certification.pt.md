@@ -39,6 +39,6 @@ o escopo deveria ser a parte da loja com que aquele cliente se importa, e não m
 
 Três coisas a conferir quando um fornecedor manda um: que o **escopo** cobre o serviço que você está
 comprando; que o certificado está **em vigor** (as datas de emissão e validade, e que é contra a edição
-de 2022); e que o organismo de certificação é **acreditado**, o que dá para conferir junto ao organismo de
+de 2022); e que o organismo de certificação é **acreditado**. Essa última se confere junto ao organismo de
 acreditação que o nomeia. Um certificado de um organismo não acreditado é um documento, e não uma
 garantia.

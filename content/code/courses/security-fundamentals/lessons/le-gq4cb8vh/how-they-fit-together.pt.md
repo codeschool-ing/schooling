@@ -17,10 +17,10 @@ uma pergunta diferente, e as organizações os combinam.
 
 ### Uma combinação típica
 
-Uma empresa de algumas centenas de pessoas poderia usá-los assim: o **CSF** para falar com o conselho,
-porque seis funções e um perfil atual e um alvo cabem num slide; a **ISO 27001** como sistema de gestão,
-certificada porque os clientes pedem; a **27002** e os **CIS Controls** para decidir e implementar os
-controles; e o **SP 800-53** como referência quando um controle precisa de especificação precisa. Uma
+Uma empresa de algumas centenas de pessoas poderia usá-los assim. O **CSF** fala com o conselho,
+porque seis funções e um perfil atual e um alvo cabem num slide. A ISO 27001 é o sistema de gestão,
+certificada porque os clientes pedem. A 27002 e os CIS Controls decidem e implementam os controles, e o
+SP 800-53 é a referência quando um controle precisa de especificação precisa. Uma
 contratada do governo federal americano acrescentaria o **RMF** para cada sistema que opera em nome do
 governo.
 
