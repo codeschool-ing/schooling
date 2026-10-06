@@ -1,0 +1,489 @@
+{
+  "ex-d8cvcmrw": {
+    "prompt": "No rag.py, de onde vem o vetor da pergunta?",
+    "hint": "Não de uma cópia local do modelo.",
+    "choices": [
+      {
+        "text": "A resposta do modelo de chat",
+        "why": "O modelo de chat roda depois da busca."
+      },
+      {
+        "text": "O pgvector o calcula a partir do texto da pergunta",
+        "why": "O pgvector guarda e compara vetores; não gera embedding."
+      },
+      {
+        "text": "Um MiniLM local carregado pelo programa",
+        "why": "Esse era o search.py; o rag.py pergunta ao provedor."
+      },
+      {
+        "text": "O endpoint de embeddings do provedor",
+        "why": "Certo: o mesmo SDK serve os dois modelos."
+      }
+    ]
+  },
+  "ex-gz4jyxch": {
+    "prompt": "Por que o rag.py não tem reordenador?",
+    "hint": "O que a aula 6 mediu?",
+    "choices": [
+      {
+        "text": "Reordenadores não funcionam sobre resultados do pgvector",
+        "why": "Um reordenador roda depois de qualquer busca."
+      },
+      {
+        "text": "O SDK não consegue chamar dois modelos",
+        "why": "Ele já chama dois."
+      },
+      {
+        "text": "O reordenador do laboratório deu empate",
+        "why": "Certo: um passo entra quando uma medição o pede."
+      },
+      {
+        "text": "A reordenação quebraria as citações",
+        "why": "As citações numeram a ordem que for mandada."
+      }
+    ]
+  },
+  "ex-t6kr46ka": {
+    "prompt": "Uma equipe aponta o rag.py para um provedor real e troca o modelo de embeddings pelo do provedor, deixando o índice como está. O que acontece?",
+    "hint": "Qual modelo construiu o índice?",
+    "choices": [
+      {
+        "text": "Perguntas encontram vetores de outro modelo",
+        "why": "Certo: o índice precisa ser refeito com o modelo novo antes."
+      },
+      {
+        "text": "O pgvector recusa a consulta",
+        "why": "Só se as dimensões diferirem; os significados diferem de qualquer jeito."
+      },
+      {
+        "text": "O piso se ajusta sozinho",
+        "why": "Nada ajusta o piso."
+      },
+      {
+        "text": "Funciona, já que só o modelo de chat importa",
+        "why": "O vetor da pergunta tem de vir do modelo do índice."
+      }
+    ]
+  },
+  "ex-wj1dpc2q": {
+    "prompt": "O que a citação de um bloco de texto leva na resposta da Anthropic?",
+    "hint": "Leia a linha impressa.",
+    "choices": [
+      {
+        "text": "O documento, o título e um intervalo de caracteres",
+        "why": "Certo: char_location."
+      },
+      {
+        "text": "Uma nota de confiança",
+        "why": "Nenhuma nota é devolvida."
+      },
+      {
+        "text": "Um número que o leitor tem de procurar no prompt numerado",
+        "why": "Essa é a abordagem do Chat Completions."
+      },
+      {
+        "text": "O embedding da frase citada",
+        "why": "Citações não levam vetores."
+      }
+    ]
+  },
+  "ex-rzrmdn54": {
+    "prompt": "Por que a requisição da Anthropic usou 187 tokens de entrada contra 314 pelo rag.py?",
+    "hint": "Quem pede as citações?",
+    "choices": [
+      {
+        "text": "A Anthropic conta tokens com outra codificação",
+        "why": "O labgen conta os dois do mesmo jeito."
+      },
+      {
+        "text": "Usou-se streaming",
+        "why": "Nenhuma das duas usou streaming."
+      },
+      {
+        "text": "A API já pede as citações por conta própria",
+        "why": "Certo: a instrução de citar por número some."
+      },
+      {
+        "text": "Menos fontes foram recuperadas",
+        "why": "O mesmo retrieve() rodou."
+      }
+    ]
+  },
+  "ex-mttm8zz9": {
+    "prompt": "Com citações do provedor dando intervalos exatos de caracteres, o que a aula diz que um pipeline jurídico ainda deve fazer?",
+    "hint": "Um intervalo também é uma afirmação.",
+    "choices": [
+      {
+        "text": "Confirmar que o texto está na fonte naqueles caracteres",
+        "why": "Certo: uma comparação de strings com o intervalo na mão."
+      },
+      {
+        "text": "Voltar para o Chat Completions",
+        "why": "O formato não é o problema."
+      },
+      {
+        "text": "Nada mais; o provedor garante o intervalo",
+        "why": "O intervalo é de onde o provedor diz que o texto veio."
+      },
+      {
+        "text": "Gerar de novo o embedding da frase citada",
+        "why": "Similaridade não é a verificação necessária aqui."
+      }
+    ]
+  },
+  "ex-hms9r7sw": {
+    "prompt": "Em quantos pedaços a resposta transmitida chegou?",
+    "hint": "A última linha do stream.py.",
+    "unit": "pedaços"
+  },
+  "ex-fsv1s16q": {
+    "prompt": "O que o streaming NÃO encurta?",
+    "hint": "Nada é transmitido antes de o prompt existir.",
+    "choices": [
+      {
+        "text": "A espera pela resposta inteira ser escrita",
+        "why": "Ele esconde essa espera mostrando as palavras à medida que chegam."
+      },
+      {
+        "text": "O tempo de recuperação",
+        "why": "Certo: a busca ainda termina antes de qualquer coisa ser transmitida."
+      },
+      {
+        "text": "O tempo até a primeira palavra na tela",
+        "why": "É exatamente isso que ele encurta."
+      },
+      {
+        "text": "O tempo que o cliente olha uma caixa em branco",
+        "why": "É o que ele melhora."
+      }
+    ]
+  },
+  "ex-tt0v5a30": {
+    "prompt": "Por que uma resposta transmitida complica a verificação de citação da aula 7?",
+    "hint": "Quando a resposta está inteira?",
+    "choices": [
+      {
+        "text": "O SDK proíbe ler uma resposta transmitida duas vezes",
+        "why": "O programa pode guardar o texto que imprimiu."
+      },
+      {
+        "text": "Precisa da resposta inteira, que chega no fim",
+        "why": "Certo: mostrar à medida que chega e depois anotar, ou segurar."
+      },
+      {
+        "text": "Respostas transmitidas não têm citações",
+        "why": "Têm; os marcadores vêm junto com o texto."
+      },
+      {
+        "text": "O streaming muda as fontes",
+        "why": "As fontes são fixadas antes do streaming começar."
+      }
+    ]
+  },
+  "ex-ct5mf32z": {
+    "prompt": "Para receber as contagens de tokens numa resposta transmitida do Chat Completions, a requisição define stream_options com include____.",
+    "hint": "Como se chamam as contagens.",
+    "blanks": [
+      {
+        "accept": [
+          "_usage",
+          "usage"
+        ]
+      }
+    ]
+  },
+  "ex-z1wwknw8": {
+    "prompt": "Com duas recusas injetadas, por que o rag.py ainda respondeu?",
+    "hint": "max_retries=3.",
+    "choices": [
+      {
+        "text": "A busca rodou sem vetor",
+        "why": "Sem vetor, sem busca."
+      },
+      {
+        "text": "O rag.py capturou o erro e usou um vetor em cache",
+        "why": "Não há cache no rag.py."
+      },
+      {
+        "text": "O SDK tentou de novo dentro do orçamento",
+        "why": "Certo: recusada duas vezes, deu certo na terceira tentativa."
+      },
+      {
+        "text": "O labgen ignorou as falhas injetadas no chat",
+        "why": "As falhas caíram na chamada de embedding."
+      }
+    ]
+  },
+  "ex-dhtkkq1h": {
+    "prompt": "Com cinco recusas e max_retries=2, por que o endpoint de chat nunca foi chamado?",
+    "hint": "O que falhou primeiro?",
+    "choices": [
+      {
+        "text": "O fragile.py só gera embedding",
+        "why": "Ele chama rag.ask, que faz as duas coisas."
+      },
+      {
+        "text": "O labgen recusa chats durante um limite de taxa",
+        "why": "Nem chegou lá."
+      },
+      {
+        "text": "O piso recusou a pergunta",
+        "why": "Não havia nota para comparar."
+      },
+      {
+        "text": "A chamada de embedding desistiu antes",
+        "why": "Certo: sem vetor, nada com que buscar."
+      }
+    ]
+  },
+  "ex-argsqcp9": {
+    "prompt": "A chamada de chat falha depois de uma busca bem-sucedida. O que a aula sugere mostrar ao cliente?",
+    "hint": "Metade funcionou.",
+    "choices": [
+      {
+        "text": "A frase de recusa",
+        "why": "Ela diz que os documentos não cobrem, o que é falso."
+      },
+      {
+        "text": "Um laço de tentativas que roda até uma dar certo",
+        "why": "Tentativas sem limite deixam o cliente esperando."
+      },
+      {
+        "text": "Um stack trace, para o cliente relatar",
+        "why": "Isso é um acidente, não uma decisão."
+      },
+      {
+        "text": "Os artigos recuperados, sem resposta",
+        "why": "Certo: as fontes são conhecidas e úteis."
+      }
+    ]
+  },
+  "ex-3jd2z8j8": {
+    "prompt": "Ligue cada falha a se o SDK tenta de novo.",
+    "hint": "Tente de novo o que pode dar certo.",
+    "pairs": [
+      {
+        "left": "429, requisições demais",
+        "right": "tentada de novo"
+      },
+      {
+        "left": "401, uma chave recusada",
+        "right": "não tentada de novo"
+      },
+      {
+        "left": "uma conexão que caiu",
+        "right": "tentada de novo, como erro de conexão"
+      },
+      {
+        "left": "400, uma requisição malformada",
+        "right": "não tentada de novo, já que repetir não ajuda"
+      }
+    ]
+  },
+  "ex-sq42nqm4": {
+    "prompt": "Com um orçamento de 250, quantos tokens o prompt usou?",
+    "hint": "Uma fonte mantida.",
+    "unit": "tokens"
+  },
+  "ex-b9554pxm": {
+    "prompt": "Por que o budget.py descarta fontes inteiras em vez de cortar a última para caber?",
+    "hint": "Qual metade iria embora?",
+    "choices": [
+      {
+        "text": "Descartar é mais rápido que cortar",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Meia fonte perde a segunda metade, a da exceção",
+        "why": "Certo: toda fonte fica intacta."
+      },
+      {
+        "text": "Cortar texto quebra o tokenizador",
+        "why": "Qualquer texto pode ser tokenizado."
+      },
+      {
+        "text": "Provedores recusam fontes parciais",
+        "why": "Um provedor não tem como saber."
+      }
+    ]
+  },
+  "ex-v947hjp5": {
+    "prompt": "O budget.py contou 358 tokens com as três fontes, e o provedor informa 314 tokens de prompt para a mesma pergunta pelo rag.py. O que a aula conclui?",
+    "hint": "Perto o bastante para quê?",
+    "choices": [
+      {
+        "text": "O provedor cobra a mais",
+        "why": "A contagem do provedor foi menor."
+      },
+      {
+        "text": "A contagem local está errada e não deve ser usada",
+        "why": "Ela é próxima o bastante para orçar."
+      },
+      {
+        "text": "Tokens não podem ser contados antes de mandar",
+        "why": "O budget.py fez exatamente isso."
+      },
+      {
+        "text": "Orçar com margem, nunca até o último token",
+        "why": "Certo: os acréscimos diferem entre a contagem local e a do provedor."
+      }
+    ]
+  },
+  "ex-kv4avjd5": {
+    "prompt": "Por que a aula quer um orçamento bem abaixo da janela do modelo?",
+    "hint": "Os três motivos da aula 1.",
+    "choices": [
+      {
+        "text": "Modelos recusam prompts acima de metade da janela",
+        "why": "Aceitam o que couber."
+      },
+      {
+        "text": "Preço, tempo e distração pesam em todo tamanho",
+        "why": "Certo: a janela é um máximo, não uma meta."
+      },
+      {
+        "text": "Prompts maiores entram menos em cache",
+        "why": "Cache é assunto da aula 17 e não é o motivo."
+      },
+      {
+        "text": "O pgvector não consegue devolver mais pedaços",
+        "why": "Ele devolve o que o LIMIT pedir."
+      }
+    ]
+  },
+  "ex-esmescem": {
+    "prompt": "Qual campo do registro de consultas permite ajustar o piso a partir de perguntas reais?",
+    "hint": "O piso é uma nota.",
+    "choices": [
+      {
+        "text": "completion_tokens",
+        "why": "Isso é custo."
+      },
+      {
+        "text": "cited",
+        "why": "Isso mostra quais pedaços são usados."
+      },
+      {
+        "text": "reply",
+        "why": "A resposta ajuda a revisão, não o piso."
+      },
+      {
+        "text": "sources, com as notas",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-62c88gn1": {
+    "prompt": "Por que a aula trata o registro de consultas como dado pessoal?",
+    "hint": "O que os clientes digitam em chats de atendimento?",
+    "choices": [
+      {
+        "text": "Contém embeddings",
+        "why": "Contém ids de pedaços e notas, não vetores."
+      },
+      {
+        "text": "O provedor exige",
+        "why": "É a lei e o aviso de privacidade, não o provedor."
+      },
+      {
+        "text": "Todo registro é dado pessoal",
+        "why": "Este é por causa do que os clientes digitam."
+      },
+      {
+        "text": "Perguntas têm nomes, números de pedido e endereços",
+        "why": "Certo: precisa de retenção, exclusão e acesso restrito."
+      }
+    ]
+  },
+  "ex-eh9ffvp5": {
+    "prompt": "Um pedaço não foi citado nenhuma vez num mês de consultas registradas. O que a aula diz que isso indica?",
+    "hint": "Duas possibilidades.",
+    "choices": [
+      {
+        "text": "O piso está baixo demais",
+        "why": "Um piso baixo deixa entrar mais pedaços, não menos."
+      },
+      {
+        "text": "Ninguém pergunta, ou a busca nunca o acha",
+        "why": "Certo: as duas coisas valem saber."
+      },
+      {
+        "text": "Deveria ser apagado do índice na mesma hora",
+        "why": "Pode tratar de algo raro e ainda estar certo."
+      },
+      {
+        "text": "O embedding guardado dele se corrompeu em algum ponto",
+        "why": "Possível, mas não é o que a aula tira disso."
+      }
+    ]
+  },
+  "ex-pb7hrh1r": {
+    "prompt": "O rag.py acrescenta uma linha JSON por consulta ao arquivo queries.___.",
+    "hint": "JSON Lines.",
+    "blanks": [
+      {
+        "accept": [
+          "jsonl"
+        ]
+      }
+    ]
+  },
+  "ex-amzcqsej": {
+    "prompt": "Ponha em ordem o que o ask() do rag.py faz.",
+    "hint": "A linha de registro é a última.",
+    "items": [
+      "Recuperar as fontes acima do piso",
+      "Gerar uma resposta, ou recusar se não houver nenhuma",
+      "Juntar os números das fontes citadas",
+      "Acrescentar o registro ao queries.jsonl"
+    ]
+  },
+  "ex-6ez2nwez": {
+    "prompt": "Que mudança no rag.py a aula 9 chamaria de prematura?",
+    "hint": "Passos entram quando uma medição pede.",
+    "choices": [
+      {
+        "text": "Um cache semântico antes de medir as repetições",
+        "why": "Certo: a aula 17 mede isso antes."
+      },
+      {
+        "text": "Definir um tempo limite explícito no cliente que ele cria",
+        "why": "O tempo limite padrão não é escolha de ninguém; definir um não é prematuro."
+      },
+      {
+        "text": "Recusar perguntas cuja melhor fonte fica abaixo do piso",
+        "why": "Isso foi medido nas aulas 6 a 8."
+      },
+      {
+        "text": "Registrar cada consulta com as fontes e as notas",
+        "why": "O registro é o que as medições depois precisam."
+      }
+    ]
+  },
+  "ex-5dde3xks": {
+    "prompt": "Quais destes as execuções desta aula mostraram? Escolha todos os que se aplicam.",
+    "hint": "Confira cada um contra uma captura.",
+    "choices": [
+      {
+        "text": "Citações da Anthropic com intervalos de caracteres",
+        "why": "Sim: caracteres 0-62."
+      },
+      {
+        "text": "Um orçamento de 250 mantendo uma fonte de três",
+        "why": "Sim."
+      },
+      {
+        "text": "O primeiro token de uma resposta transmitida chegando em menos de 100 ms",
+        "why": "Nenhum tempo foi citado."
+      },
+      {
+        "text": "Duas requisições de embedding recusadas absorvidas pelo SDK",
+        "why": "Sim."
+      },
+      {
+        "text": "Um modelo Claude real escrevendo as próprias frases",
+        "why": "Não: as respostas são do extract-1."
+      }
+    ]
+  }
+}
