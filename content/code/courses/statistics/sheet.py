@@ -281,6 +281,15 @@ def poisson_pmf(k, lam):
     return math.exp(-lam) * lam ** k / math.factorial(k)
 
 
+def welch(xs, ys):
+    """Welch's two-sample t test: t, degrees of freedom, two-sided p."""
+    nx, ny = len(xs), len(ys)
+    vx, vy = var(xs) / nx, var(ys) / ny
+    t = (mean(xs) - mean(ys)) / math.sqrt(vx + vy)
+    df = (vx + vy) ** 2 / (vx ** 2 / (nx - 1) + vy ** 2 / (ny - 1))
+    return t, df, 2 * t_cdf(-abs(t), df)
+
+
 # ------------------------------------------------------------ the generator
 
 
@@ -894,6 +903,55 @@ def l13():
     show('15 bags: two-sided p', 2 * t_cdf(-abs(t15), 14))
     # alpha 1%: critical
     show('one-sided 1% critical, df 24', t_inv(0.01, 24))
+
+
+def null_batches():
+    """1000 batches of 20 tests of tweaks that do nothing; false alarms per batch."""
+    d = Draw(1401)
+    out = []
+    for _ in range(1000):
+        k = 0
+        for _ in range(20):
+            a_ = [BASKETS[d.index(400)] for _ in range(50)]
+            b_ = [BASKETS[d.index(400)] for _ in range(50)]
+            k += welch(a_, b_)[2] < 0.05
+        out.append(k)
+    return out
+
+
+@lesson(14)
+def l14():
+    x = ROUTING
+    n, m, s_ = len(x), mean(x), sd(x)
+    se = s_ / math.sqrt(n)
+    t = (m - 40) / se
+    show('routing: t, one-sided p, two-sided p', f'{t:.4f} {t_cdf(t, n - 1):.4f} {2 * t_cdf(-abs(t), n - 1):.4f}')
+    c = t_inv(0.975, n - 1)
+    show('routing: 95% interval', f'{m - c * se:.4f} {m + c * se:.4f}')
+    b15 = BAGS[:15]
+    t15 = (mean(b15) - 1000) / (sd(b15) / math.sqrt(15))
+    show('bags: two-sided p', 2 * t_cdf(-abs(t15), 14))
+    # p-values just either side of 0.05: t values with 24 df
+    for p_ in (0.049, 0.051):
+        show(f't giving one-sided p = {p_}', t_inv(p_, 24))
+    # twenty tweaks that do nothing: two groups of 50 baskets each, drawn from the same 400
+    d = Draw(1400)
+    ps = []
+    for _ in range(20):
+        a_ = [BASKETS[d.index(400)] for _ in range(50)]
+        b_ = [BASKETS[d.index(400)] for _ in range(50)]
+        ps.append(welch(a_, b_)[2])
+    show('20 null tweaks: p-values', [round(v, 3) for v in ps])
+    show('20 null tweaks: count below 0.05', sum(1 for v in ps if v < 0.05))
+    show('20 null tweaks: smallest p', min(ps))
+    show('P(at least one of 20 below 0.05)', 1 - 0.95 ** 20)
+    show('Bonferroni level for 20 tests', 0.05 / 20)
+    counts = null_batches()
+    show('1000 batches of 20 null tweaks: share with at least one p < 0.05', sum(1 for c in counts if c) / 1000)
+    show('1000 batches: how many batches had 0, 1, 2, 3, 4+ false alarms',
+         [counts.count(k) for k in range(4)] + [sum(1 for c in counts if c >= 4)])
+    show('1000 batches: total false alarms out of 20000 tests', sum(counts))
+    show('binomial(20, 0.05) for 0..3', [round(binom_pmf(k, 20, 0.05), 4) for k in range(4)])
 
 
 def check():

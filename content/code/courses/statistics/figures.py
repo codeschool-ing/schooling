@@ -30,6 +30,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+sys.dont_write_bytecode = True
 import sheet as S  # noqa: E402
 
 SANS = "'IBM Plex Sans', sans-serif"
@@ -1598,6 +1599,125 @@ def l13_two_sided(lang):
     p.xaxis(range(-5, 6), fmt=lambda v: str(v).replace('-', '−'), label=t['x'])
     f.text(p.sx(-crit) - 8, p.sy(0.08), t['l'], size=10, anchor='end', fill='--amber', weight='600')
     f.text(p.sx(crit) + 8, p.sy(0.08), t['r'], size=10, anchor='start', fill='--amber', weight='600')
+    return f, t['cap']
+
+
+# ------------------------------------------------------------------ lesson 14
+
+@figure('l14-pvalue', 14)
+def l14_pvalue(lang):
+    x = S.ROUTING
+    tt = (S.mean(x) - 40) / (S.sd(x) / math.sqrt(len(x)))
+    p1 = S.t_cdf(tt, 24)
+    t = {'en': dict(
+        label=f'The t distribution with 24 degrees of freedom, as the null hypothesis predicts it. '
+              f'The area to the left of the observed statistic, −1.00, is shaded. It is '
+              f'{num("en", p1, 3)}: if the routing changed nothing, about one sample in six would '
+              f'look at least this favourable to the supplier.',
+        obs='observed t = −1.00', area=f'p = {num("en", p1, 3)}', x='t statistic',
+        cap='The p-value is the area beyond what was observed, in the direction the alternative '
+            'points. Here it is large: results like this are common when nothing has changed.'),
+        'pt': dict(
+        label=f'A distribuição t com 24 graus de liberdade, como a hipótese nula a prevê. A área à '
+              f'esquerda da estatística observada, −1,00, está sombreada. Ela vale '
+              f'{num("pt", p1, 3)}: se o sistema de rotas não mudasse nada, cerca de uma amostra em '
+              f'seis pareceria pelo menos tão favorável ao fornecedor.',
+        obs='t observado = −1,00', area=f'p = {num("pt", p1, 3)}', x='estatística t',
+        cap='O p-valor é a área além do que se observou, na direção para onde a alternativa aponta. '
+            'Aqui ele é grande: resultados assim são comuns quando nada mudou.')}[lang]
+    f = Fig('l14-pvalue', 640, 280, t['label'])
+    p = Plot(f, 40, 50, 610, 220, -4, 4, 0, 0.42)
+    null_curve(f, p, 24, [(-4, tt)], tt, lang, t['obs'], '')
+    p.xaxis(range(-4, 5), fmt=lambda v: str(v).replace('-', '−'), label=t['x'])
+    f.text(p.sx(-2.1), p.sy(0.16), t['area'], size=11, anchor='end', fill='--amber', weight='600')
+    return f, t['cap']
+
+
+@figure('l14-batches', 14)
+def l14_batches(lang):
+    counts = S.null_batches()
+    obs = [counts.count(k) for k in range(4)] + [sum(1 for c in counts if c >= 4)]
+    exp_ = [1000 * S.binom_pmf(k, 20, 0.05) for k in range(4)]
+    exp_.append(1000 - sum(exp_))
+    t = {'en': dict(
+        label='A bar chart of 1,000 batches of 20 tests, every test comparing two groups that '
+              'differ by nothing but chance. 372 batches had no significant result, 394 had one, '
+              '174 had two, 47 had three and 13 had four or more. Dots show what the binomial '
+              'distribution predicts, and they sit close to the bars.',
+        y='batches', x='tests in the batch with p below 0.05', four='4+', o='simulated batches',
+        e='binomial, 20 tests at 5%',
+        cap='Run twenty tests on nothing, and most of the time at least one comes out '
+            '"significant". In 628 of the 1,000 batches, somebody would have had a finding.'),
+        'pt': dict(
+        label='Um gráfico de barras de 1.000 lotes de 20 testes, cada teste comparando dois grupos que '
+              'só diferem por acaso. 372 lotes não tiveram nenhum resultado significativo, 394 tiveram '
+              'um, 174 tiveram dois, 47 tiveram três e 13 tiveram quatro ou mais. Pontos mostram o que '
+              'a distribuição binomial prevê, e ficam perto das barras.',
+        y='lotes', x='testes do lote com p abaixo de 0,05', four='4+', o='lotes simulados',
+        e='binomial, 20 testes a 5%',
+        cap='Rode vinte testes sobre nada, e na maior parte das vezes pelo menos um sai '
+            '"significativo". Em 628 dos 1.000 lotes, alguém teria tido uma descoberta.')}[lang]
+    f = Fig('l14-batches', 600, 270, t['label'])
+    p = Plot(f, 70, 50, 570, 210, -0.6, 4.6, 0, 450)
+    p.yaxis(range(0, 451, 100), label=t['y'])
+    for k, c in enumerate(obs):
+        x0, x1 = p.sx(k - 0.3), p.sx(k + 0.3)
+        f.path(f'M{x0:.1f} {p.y1:.1f} L{x0:.1f} {p.sy(c):.1f} L{x1:.1f} {p.sy(c):.1f} '
+               f'L{x1:.1f} {p.y1:.1f} Z', stroke='--phosphor', width=1, fill='--phosphor-dim')
+        f.text((x0 + x1) / 2, p.y1 + 13, t['four'] if k == 4 else str(k), size=10)
+        f.circle(p.sx(k), p.sy(exp_[k]), 4.5, fill='--amber', stroke='--paper', width=0.8)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 33, t['x'], size=10, weight='600')
+    f.path('M380 30 L394 30 L394 42 L380 42 Z', stroke='--phosphor', width=1, fill='--phosphor-dim')
+    f.text(400, 36, t['o'], size=9.5, anchor='start')
+    f.circle(387, 56, 4.5, fill='--amber', stroke='--paper', width=0.8)
+    f.text(400, 56, t['e'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l14-duality', 14)
+def l14_duality(lang):
+    x = S.ROUTING
+    m, se = S.mean(x), S.sd(x) / math.sqrt(len(x))
+    c = S.t_inv(0.975, 24)
+    b = S.BAGS[:15]
+    mb, seb = S.mean(b), S.sd(b) / math.sqrt(15)
+    cb = S.t_inv(0.975, 14)
+    t = {'en': dict(
+        label='Two rows, each a 95% confidence interval with the null value marked. Above, the '
+              'routing deliveries: an interval from 36.62 to 41.18 minutes contains the null value '
+              '40, and the two-sided p-value is 0.33. Below, the bags: an interval from 1002.26 to '
+              '1006.94 g lies wholly above the null value 1000, and the two-sided p-value is '
+              '0.0009.',
+        r1='routing: p = 0.33', r2='bags: p = 0.0009', n1='null 40', n2='null 1000',
+        u1='minutes', u2='grams',
+        cap='An interval that contains the null value goes with p above 0.05; one that excludes '
+            'it goes with p below. They are two views of the same calculation.'),
+        'pt': dict(
+        label='Duas linhas, cada uma um intervalo de confiança de 95% com o valor da nula marcado. Em '
+              'cima, as entregas do sistema de rotas: um intervalo de 36,62 a 41,18 minutos contém o '
+              'valor da nula, 40, e o p-valor bilateral é 0,33. Embaixo, os sacos: um intervalo de '
+              '1002,26 a 1006,94 g fica inteiro acima do valor da nula, 1000, e o p-valor bilateral é '
+              '0,0009.',
+        r1='rotas: p = 0,33', r2='sacos: p = 0,0009', n1='nula 40', n2='nula 1000',
+        u1='minutos', u2='gramas',
+        cap='Um intervalo que contém o valor da nula anda junto com p acima de 0,05; um que o exclui, '
+            'com p abaixo. São duas vistas da mesma conta.')}[lang]
+    f = Fig('l14-duality', 640, 250, t['label'])
+    rows = ((m - c * se, m + c * se, m, 40, 34, 46, t['r1'], t['n1'], t['u1'], 70),
+            (mb - cb * seb, mb + cb * seb, mb, 1000, 998, 1010, t['r2'], t['n2'], t['u2'], 175))
+    for lo, hi, mid, null, a, b_, lab, nlab, unit, y in rows:
+        p = Plot(f, 160, y - 20, 610, y + 20, a, b_, 0, 1)
+        f.line(p.x0, y + 22, p.x1, y + 22, stroke='--paper-dim')
+        for v in range(int(a), int(b_) + 1, 2):
+            f.line(p.sx(v), y + 22, p.sx(v), y + 26, stroke='--paper-dim', width=1)
+            f.text(p.sx(v), y + 36, num(lang, v, 0) if v < 1000 else str(v), size=9, fill='--paper-dim')
+        f.line(p.sx(lo), y, p.sx(hi), y, stroke='--phosphor', width=4, cap='round')
+        f.circle(p.sx(mid), y, 3.5, fill='--paper')
+        f.line(p.sx(null), y - 18, p.sx(null), y + 22, stroke='--amber', width=1.6, dash='4 3')
+        f.text(p.sx(null), y - 26, nlab, size=9.5, fill='--amber')
+        f.text(20, y, lab, size=10.5, anchor='start', weight='600')
+        f.text(p.x1, y + 50, unit, size=9.5, anchor='end', fill='--paper-dim')
     return f, t['cap']
 
 
