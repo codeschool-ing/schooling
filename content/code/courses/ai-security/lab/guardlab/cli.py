@@ -35,6 +35,7 @@ course.
     guard check-out FILE            model replies against the output schema
     guard retry ID [ID ...]         the retry loop, with course-written replies
                                     standing in for the model's attempts
+    guard surface [--gaps]          the assistant's entry points and their controls
     guard filter FILE [--skip LAYER]
                                     replies through the chain of output filters
     guard ground FILE               answers against the help centre they cite
@@ -511,6 +512,23 @@ def cmd_retry(a):
     return 0
 
 
+# ---- the surface ------------------------------------------------------------
+
+def cmd_surface(a):
+    rows = load("data/surface.json")
+    print("%-15s %-8s %-18s %s" % ("entry point", "goes to", "trusted?", "controls in the lab"))
+    gaps = 0
+    for r in rows:
+        trusted = "no" if r["trusted"] is False else r["trusted"]
+        ctl = ", ".join(r["controls"]) if r["controls"] else "NONE"
+        gaps += not r["controls"]
+        if a.gaps and r["controls"]:
+            continue
+        print("%-15s %-8s %-18s %s" % (r["id"], r["enters"], trusted, ctl))
+    print("%d entry points, %d with no control in this lab" % (len(rows), gaps))
+    return 0
+
+
 # ---- the filter chain ------------------------------------------------------
 
 def cmd_filter(a):
@@ -734,6 +752,10 @@ def main(argv=None):
     s = sub.add_parser("retry")
     s.add_argument("ids", nargs="+")
     s.set_defaults(fn=cmd_retry)
+
+    s = sub.add_parser("surface")
+    s.add_argument("--gaps", action="store_true")
+    s.set_defaults(fn=cmd_surface)
 
     s = sub.add_parser("filter")
     s.add_argument("file")

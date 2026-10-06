@@ -71,6 +71,8 @@
 #     (in place of a model's replies), data/registry-snapshot.txt (a short
 #     stand-in for a package index) and data/suggested-deps.txt were written
 #     by the course.
+#   - data/surface.json, the inventory of the assistant's entry points, was
+#     written by the course for an invented company.
 #   - data/system-prompt.txt, with its harmless canary marker, and the
 #     replies in data/pipeline-outputs.jsonl were written by the course; no
 #     model produced the replies.
