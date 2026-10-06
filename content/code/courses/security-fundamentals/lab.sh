@@ -325,6 +325,76 @@ socketserver.ThreadingTCPServer(('192.168.20.30', 5432), H).serve_forever()
 PY
 }
 
+# ---------------------------------------------------------------- lesson 11
+# A week of sign-in attempts at the shop's systems, generated rather than
+# recorded, with the truth known for every line: lesson 11 measures a
+# detector against it. Everything is fixed: the counts below are the design,
+# and a seeded generator only spreads them over the week. What is in it:
+#   - the nine staff signing in from the office, with typing mistakes:
+#     80 ten-minute windows with failures (60 with one, 15 with two, 4 with
+#     three, 1 with four), each followed by a success;
+#   - svc-backup, a service account whose password expired, failing six
+#     times at 02:00 every night of the seven;
+#   - the purple exercise of the week, agreed with the owners: 203.0.113.50
+#     guessing fast (three windows of eight failures, Tuesday afternoon) and
+#     203.0.113.77 guessing slowly (six windows of three and two of two,
+#     Thursday). Those two addresses are listed in red-team-sources.txt,
+#     which is the exercise's own schedule and the only truth the lesson uses.
+build_logins() {
+  local d="$LAB/laptop/home/ana"
+  python3 - "$d" <<'PY'
+import random, sys, datetime as dt
+out = sys.argv[1]
+r = random.Random(2026)
+staff = ['ana', 'bruno', 'carla', 'davi', 'elisa', 'fabio', 'gil', 'helena', 'igor']
+start = dt.datetime(2026, 9, 28)
+rows = []
+def at(day, hour, minute, second):
+    return start + dt.timedelta(days=day, hours=hour, minutes=minute, seconds=second)
+used = set()
+def window(day, hour, m10):
+    k = (day, hour, m10)
+    if k in used:
+        return False
+    used.add(k); return True
+def human(nfail):
+    while True:
+        day, hour, m10 = r.randrange(7), r.randrange(8, 19), r.randrange(6)
+        if window(day, hour, m10):
+            break
+    who = r.choice(staff)
+    src = '192.168.10.%d' % (20 + staff.index(who))
+    sec = 0
+    for i in range(nfail):
+        sec += r.randrange(5, 40)
+        rows.append((at(day, hour, m10 * 10, sec), src, who, 'fail'))
+    sec += r.randrange(5, 40)
+    rows.append((at(day, hour, m10 * 10, sec), src, who, 'ok'))
+for n, k in ((1, 60), (2, 15), (3, 4), (4, 1)):
+    for _ in range(k):
+        human(n)
+for day in range(7):
+    for i in range(6):
+        rows.append((at(day, 2, 0, 5 + i * 20), '192.168.20.40', 'svc-backup', 'fail'))
+for m10 in (0, 1, 2):
+    for i in range(8):
+        rows.append((at(1, 14, m10 * 10, 3 + i * 7), '203.0.113.50', r.choice(staff), 'fail'))
+for i, n in enumerate([3, 3, 3, 3, 3, 3, 2, 2]):
+    hour = 9 + i
+    for j in range(n):
+        rows.append((at(3, hour, 20, 10 + j * 150), '203.0.113.77', staff[(i + j) % 9], 'fail'))
+rows.sort()
+with open(out + '/logins.csv', 'w') as f:
+    f.write('time,source,user,result\n')
+    for t, src, who, res in rows:
+        f.write('%s,%s,%s,%s\n' % (t.strftime('%Y-%m-%dT%H:%M:%S'), src, who, res))
+with open(out + '/red-team-sources.txt', 'w') as f:
+    f.write('203.0.113.50\n203.0.113.77\n')
+PY
+  chown ana:ana "$d/logins.csv" "$d/red-team-sources.txt"
+  touch -d '2026-10-05 09:00:00 -0300' "$d/logins.csv" "$d/red-team-sources.txt"
+}
+
 # ---------------------------------------------------------------- tools
 # probe HOST:PORT...  tries a TCP connection to each and says what happened,
 # one line each: open (it answered), refused (a machine said nothing listens
@@ -380,7 +450,7 @@ down() {
 up() {
   need; people
   if ip netns list | grep -qw wire; then return 0; fi
-  build_net; hostfiles; build_www; build_db; build_tools; start_services
+  build_net; hostfiles; build_www; build_db; build_logins; build_tools; start_services
 }
 
 case ${1:-} in
