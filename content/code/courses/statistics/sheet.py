@@ -425,6 +425,30 @@ def _hours():
 ORDER_HOURS = _hours()
 
 
+# Complaints received per day over 60 days, lesson 8: drawn from a Poisson with mean 2.4.
+def _complaints():
+    d = Draw(60)
+    out = []
+    for _ in range(60):
+        limit, k, prod = math.exp(-2.4), 0, d.r.random()
+        while prod > limit:
+            k += 1
+            prod *= d.r.random()
+        out.append(k)
+    return out
+
+
+COMPLAINTS = _complaints()
+
+
+def binom_cdf(k, n, p):
+    return sum(binom_pmf(i, n, p) for i in range(k + 1))
+
+
+def poisson_cdf(k, lam):
+    return sum(poisson_pmf(i, lam) for i in range(k + 1))
+
+
 def five(xs):
     return (min(xs), quantile(xs, 0.25), median(xs), quantile(xs, 0.75), max(xs))
 
@@ -630,6 +654,44 @@ def l7():
     show('order hours: counts per hour 7..23', [sum(1 for x in h if k <= x < k + 1) for k in range(7, 24)])
     show('order hours: between 15 and 16', sum(1 for x in h if 15 <= x < 16))
     show('order hours: skew, kurt', f'{skewness(h):.4f} {kurtosis(h):.4f}')
+
+
+@lesson(8)
+def l8():
+    # uniform: a courier arrives at a random moment between 18:00 and 18:30
+    show('uniform 0..30: P(wait > 20)', 10 / 30)
+    show('uniform 0..30: mean, sd', f'{15} {30 / math.sqrt(12):.4f}')
+    # binomial: 10 deliveries, each late with probability 0.15
+    n, p = 10, 0.15
+    for k in range(0, 6):
+        show(f'binomial(10, 0.15): P(X = {k})', binom_pmf(k, n, p))
+    show('binomial: P(X >= 3)', 1 - binom_cdf(2, n, p))
+    show('binomial: P(X <= 2)', binom_cdf(2, n, p))
+    show('binomial: mean, sd', f'{n * p:.4f} {math.sqrt(n * p * (1 - p)):.4f}')
+    show('C(10, 2)', math.comb(10, 2))
+    # poisson: complaints per day, mean 2.4
+    lam = 2.4
+    for k in range(0, 9):
+        show(f'poisson(2.4): P(X = {k})', poisson_pmf(k, lam))
+    show('poisson: P(X >= 5)', 1 - poisson_cdf(4, lam))
+    show('poisson: P(X = 0) over a week of 7 days (rate 16.8)', poisson_pmf(0, 16.8))
+    c = COMPLAINTS
+    show('60 days: counts 0..8', [c.count(k) for k in range(9)])
+    show('60 days: expected counts 0..8', [round(60 * poisson_pmf(k, lam), 2) for k in range(9)])
+    show('60 days: mean, variance', f'{mean(c):.4f} {var(c):.4f}')
+    show('60 days: max', max(c))
+    # normal: bags with mean 1003 and sd 6
+    mu, sg = 1003, 6
+    show('normal: within 1, 2, 3 sd', f'{normal_cdf(1) - normal_cdf(-1):.4f} {normal_cdf(2) - normal_cdf(-2):.4f} '
+         f'{normal_cdf(3) - normal_cdf(-3):.4f}')
+    show('bags: z of 995', (995 - mu) / sg)
+    show('bags: P(bag < 995)', normal_cdf((995 - mu) / sg))
+    show('bags: P(bag > 1015)', 1 - normal_cdf((1015 - mu) / sg))
+    show('bags: weight that 99% exceed', mu + sg * normal_inv(0.01))
+    show('bags: z for 1%', normal_inv(0.01))
+    show('bags: observed share < 995 in the 200', sum(1 for x in BAGS if x < 995) / 200)
+    show('bags: observed within 1 sd of the sample mean', sum(1 for x in BAGS if abs(x - mean(BAGS)) <= sd(BAGS)) / 200)
+    show('z of a 52-minute delivery with mean 38.96 and sd 9.77', (52 - 38.96) / 9.77)
 
 
 def main():

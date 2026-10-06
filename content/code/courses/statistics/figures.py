@@ -997,6 +997,181 @@ def l07_bimodal(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 8
+
+def pmf_bars(f, p, probs, highlight=None, width=0.6, labels=True, lang='en', d=3):
+    for k, pr in probs:
+        x0, x1 = p.sx(k - width / 2), p.sx(k + width / 2)
+        hot = highlight and highlight(k)
+        f.path(f'M{x0:.1f} {p.y1:.1f} L{x0:.1f} {p.sy(pr):.1f} L{x1:.1f} {p.sy(pr):.1f} '
+               f'L{x1:.1f} {p.y1:.1f} Z', stroke='--amber' if hot else '--phosphor', width=1,
+               fill='--amber' if hot else '--phosphor-dim')
+        if labels and pr > 0.004:
+            f.text((x0 + x1) / 2, p.sy(pr) - 9, num(lang, pr, d), size=9,
+                   fill='--amber' if hot else '--paper-dim')
+        f.text((x0 + x1) / 2, p.y1 + 13, str(k), size=10)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+
+
+@figure('l08-uniform', 8)
+def l08_uniform(lang):
+    t = {'en': dict(
+        label='A flat line at height one thirtieth from 0 to 30 minutes: the courier is equally '
+              'likely to arrive at any moment in the half hour. The stretch from 20 to 30 minutes '
+              'is shaded; it is a third of the rectangle, so the chance of waiting more than 20 '
+              'minutes is one in three.',
+        x='minutes after 18:00', shade='wait longer than 20 minutes: 1/3',
+        cap='Every moment equally likely, so the probability of any stretch is its share of the '
+            'width.'),
+        'pt': dict(
+        label='Uma linha reta na altura de um trinta avos, de 0 a 30 minutos: o entregador tem a '
+              'mesma chance de chegar em qualquer momento da meia hora. O trecho de 20 a 30 minutos '
+              'está sombreado; é um terço do retângulo, então a chance de esperar mais de 20 minutos '
+              'é de uma em três.',
+        x='minutos depois das 18:00', shade='esperar mais de 20 minutos: 1/3',
+        cap='Todo momento com a mesma chance, então a probabilidade de qualquer trecho é a fração '
+            'que ele ocupa da largura.')}[lang]
+    f = Fig('l08-uniform', 560, 200, t['label'])
+    p = Plot(f, 50, 40, 520, 150, -2, 32, 0, 1.4)
+    p.xaxis(range(0, 31, 5), label=t['x'])
+    f.path(f'M{p.sx(20):.1f} {p.sy(0):.1f} L{p.sx(20):.1f} {p.sy(1):.1f} L{p.sx(30):.1f} '
+           f'{p.sy(1):.1f} L{p.sx(30):.1f} {p.sy(0):.1f} Z', stroke=None, width=0, fill='--amber',
+           opacity=0.45)
+    f.path(f'M{p.sx(0):.1f} {p.sy(0):.1f} L{p.sx(0):.1f} {p.sy(1):.1f} L{p.sx(30):.1f} '
+           f'{p.sy(1):.1f} L{p.sx(30):.1f} {p.sy(0):.1f}', stroke='--phosphor', width=2.2)
+    f.text(p.sx(25), p.sy(1) - 14, t['shade'], size=10, fill='--amber')
+    return f, t['cap']
+
+
+@figure('l08-binomial', 8)
+def l08_binomial(lang):
+    probs = [(k, S.binom_pmf(k, 10, 0.15)) for k in range(0, 11)]
+    t = {'en': dict(
+        label='A bar chart of the binomial distribution with 10 deliveries, each late with '
+              'probability 0.15. The bars for 0 to 5 late deliveries are 0.197, 0.347, 0.276, '
+              '0.130, 0.040 and 0.008; from 6 upwards they are too small to see. The bars for 3 or '
+              'more are highlighted and add up to 0.180.',
+        y='probability', x='late deliveries out of 10', hot='3 or more: 0.180',
+        cap='One count, eleven possible values, and a probability for each. The highlighted bars '
+            'are the evenings with three or more late deliveries.'),
+        'pt': dict(
+        label='Um gráfico de barras da distribuição binomial com 10 entregas, cada uma atrasando com '
+              'probabilidade 0,15. As barras de 0 a 5 atrasos são 0,197, 0,347, 0,276, 0,130, 0,040 e '
+              '0,008; de 6 para cima são pequenas demais para ver. As barras de 3 ou mais estão '
+              'destacadas e somam 0,180.',
+        y='probabilidade', x='entregas atrasadas em 10', hot='3 ou mais: 0,180',
+        cap='Uma contagem, onze valores possíveis, e uma probabilidade para cada. As barras '
+            'destacadas são as noites com três ou mais atrasos.')}[lang]
+    f = Fig('l08-binomial', 600, 250, t['label'])
+    p = Plot(f, 70, 40, 570, 200, -0.6, 10.6, 0, 0.4)
+    p.yaxis([0, 0.1, 0.2, 0.3, 0.4], fmt=lambda v: num(lang, v, 1), label=t['y'])
+    pmf_bars(f, p, probs, highlight=lambda k: k >= 3, lang=lang)
+    f.text((p.x0 + p.x1) / 2, p.y1 + 33, t['x'], size=10, weight='600')
+    f.text(p.sx(6.5), p.sy(0.2), t['hot'], size=10.5, fill='--amber', weight='600')
+    return f, t['cap']
+
+
+@figure('l08-poisson', 8)
+def l08_poisson(lang):
+    c = S.COMPLAINTS
+    obs = [c.count(k) for k in range(9)]
+    exp_ = [60 * S.poisson_pmf(k, 2.4) for k in range(9)]
+    t = {'en': dict(
+        label='Bars show how many of 60 days had 0, 1, 2 and up to 8 complaints: 5, 17, 16, 8, 12, '
+              '2, and none with 6 or more. Dots show what a Poisson distribution with mean 2.4 '
+              'expects in 60 days: about 5.4, 13.1, 15.7, 12.5, 7.5, 3.6, 1.4, 0.5 and 0.2. The two '
+              'follow the same shape, with the ups and downs sixty days produce.',
+        y='days', x='complaints in a day', o='observed days', e='Poisson, mean 2.4',
+        cap='Sixty real days against the model. No sample matches a model bar for bar; the '
+            'question is whether the shape and the spread agree.'),
+        'pt': dict(
+        label='As barras mostram quantos de 60 dias tiveram 0, 1, 2 e até 8 reclamações: 5, 17, 16, 8, '
+              '12, 2, e nenhum com 6 ou mais. Os pontos mostram o que uma distribuição de Poisson com '
+              'média 2,4 espera em 60 dias: cerca de 5,4, 13,1, 15,7, 12,5, 7,5, 3,6, 1,4, 0,5 e 0,2. '
+              'Os dois seguem a mesma forma, com os altos e baixos que sessenta dias produzem.',
+        y='dias', x='reclamações num dia', o='dias observados', e='Poisson, média 2,4',
+        cap='Sessenta dias reais contra o modelo. Nenhuma amostra bate com um modelo barra a barra; '
+            'a pergunta é se a forma e a dispersão concordam.')}[lang]
+    f = Fig('l08-poisson', 600, 260, t['label'])
+    p = Plot(f, 70, 50, 570, 205, -0.6, 8.6, 0, 20)
+    p.yaxis(range(0, 21, 5), label=t['y'])
+    pmf_bars(f, p, list(enumerate(obs)), labels=False, lang=lang)
+    for k, e in enumerate(exp_):
+        f.circle(p.sx(k), p.sy(e), 4.5, fill='--amber', stroke='--paper', width=0.8)
+    f.text((p.x0 + p.x1) / 2, p.y1 + 33, t['x'], size=10, weight='600')
+    f.path(f'M390 30 L404 30 L404 42 L390 42 Z', stroke='--phosphor', width=1, fill='--phosphor-dim')
+    f.text(410, 36, t['o'], size=9.5, anchor='start')
+    f.circle(397, 56, 4.5, fill='--amber', stroke='--paper', width=0.8)
+    f.text(410, 56, t['e'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l08-normal-rule', 8)
+def l08_normal_rule(lang):
+    t = {'en': dict(
+        label='A normal curve for bag weights with mean 1003 g and standard deviation 6 g. Bands '
+              'mark one, two and three standard deviations either side: 997 to 1009 g holds 68.3% '
+              'of bags, 991 to 1015 g holds 95.4%, and 985 to 1021 g holds 99.7%.',
+        x='weight of a bag, in grams',
+        cap='The same proportions for every normal curve, whatever its mean and standard '
+            'deviation: about 68%, 95% and 99.7%.'),
+        'pt': dict(
+        label='Uma curva normal para o peso dos sacos, com média 1003 g e desvio padrão 6 g. Faixas '
+              'marcam um, dois e três desvios padrão para cada lado: de 997 a 1009 g ficam 68,3% dos '
+              'sacos, de 991 a 1015 g ficam 95,4%, e de 985 a 1021 g ficam 99,7%.',
+        x='peso de um saco, em gramas',
+        cap='As mesmas proporções para toda curva normal, sejam quais forem a média e o desvio '
+            'padrão: cerca de 68%, 95% e 99,7%.')}[lang]
+    mu, sg = 1003, 6
+    pdf = lambda x: S.normal_pdf((x - mu) / sg) / sg
+    f = Fig('l08-normal-rule', 640, 300, t['label'])
+    p = Plot(f, 40, 90, 610, 240, mu - 4 * sg, mu + 4 * sg, 0, pdf(mu) * 1.05)
+    p.curve(pdf, mu - sg, mu + sg, fill='--phosphor-dim')
+    p.curve(pdf, mu - 4 * sg, mu + 4 * sg, stroke='--phosphor', width=2.2)
+    p.xaxis(range(mu - 3 * sg, mu + 3 * sg + 1, sg), label=t['x'])
+    for k, share, y in ((1, '68,3%' if lang == 'pt' else '68.3%', 74),
+                        (2, '95,4%' if lang == 'pt' else '95.4%', 50),
+                        (3, '99,7%' if lang == 'pt' else '99.7%', 26)):
+        a, b = p.sx(mu - k * sg), p.sx(mu + k * sg)
+        f.line(a, y, b, y, stroke='--paper-dim', width=1.2)
+        f.line(a, y - 5, a, y + 5, stroke='--paper-dim', width=1.2)
+        f.line(b, y - 5, b, y + 5, stroke='--paper-dim', width=1.2)
+        f.text((a + b) / 2, y - 9, share, size=10, weight='600')
+        f.line(a, y + 5, a, p.y1, stroke='--wire', width=1, dash='2 3')
+        f.line(b, y + 5, b, p.y1, stroke='--wire', width=1, dash='2 3')
+    return f, t['cap']
+
+
+@figure('l08-z-area', 8)
+def l08_z_area(lang):
+    mu, sg = 1003, 6
+    pdf = lambda x: S.normal_pdf((x - mu) / sg) / sg
+    pr = S.normal_cdf((995 - mu) / sg)
+    t = {'en': dict(
+        label=f'The normal curve of bag weights, mean 1003 g and standard deviation 6 g, with the '
+              f'area left of 995 g shaded. 995 g is 1.33 standard deviations below the mean, and '
+              f'the shaded area is {num("en", pr, 4)}, about 9% of the bags.',
+        x='weight of a bag, in grams', z='z = −1.33', area=f'area {num("en", pr, 4)}',
+        cap='A probability under a continuous curve is an area. Turn the weight into a z-score, '
+            'and one table, or one formula, gives the area for any normal curve.'),
+        'pt': dict(
+        label=f'A curva normal do peso dos sacos, média 1003 g e desvio padrão 6 g, com a área à '
+              f'esquerda de 995 g sombreada. 995 g fica 1,33 desvio padrão abaixo da média, e a área '
+              f'sombreada é {num("pt", pr, 4)}, cerca de 9% dos sacos.',
+        x='peso de um saco, em gramas', z='z = −1,33', area=f'área {num("pt", pr, 4)}',
+        cap='Uma probabilidade sob uma curva contínua é uma área. Transforme o peso num escore z, e '
+            'uma tabela, ou uma fórmula, dá a área para qualquer curva normal.')}[lang]
+    f = Fig('l08-z-area', 620, 250, t['label'])
+    p = Plot(f, 40, 40, 590, 190, mu - 4 * sg, mu + 4 * sg, 0, pdf(mu) * 1.05)
+    p.curve(pdf, mu - 4 * sg, 995, fill='--amber')
+    p.curve(pdf, mu - 4 * sg, mu + 4 * sg, stroke='--phosphor', width=2.2)
+    p.xaxis(range(mu - 3 * sg, mu + 3 * sg + 1, sg), label=t['x'])
+    p.vline(995, t['z'], stroke='--amber', top=60, anchor='end')
+    f.text(p.sx(986), p.sy(pdf(995) * 0.9), t['area'], size=10.5, fill='--amber', weight='600',
+           anchor='end')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
