@@ -1,0 +1,201 @@
+{
+  "ex-yeze1r7v": {
+    "prompt": "A Ana matou o processo da loja com `kill -9`, e três segundos depois ela já atendia de novo. O que a trouxe de volta?",
+    "hint": "Olhe a última linha do `compose.yaml`.",
+    "choices": [
+      {
+        "text": "O Compose, que vigia os containers que iniciou",
+        "why": "O Compose leu o arquivo uma vez, no `up`, e não estava rodando quando o processo morreu."
+      },
+      {
+        "text": "O daemon do Docker, aplicando `restart: always`",
+        "why": "Isso. A política fica com o daemon daquela máquina, que viu a saída e iniciou o container de novo."
+      },
+      {
+        "text": "Nada: o `SIGKILL` não consegue parar o processo de um container",
+        "why": "Ele parou, sim; o contador de reinícios foi de 0 para 1 porque o processo saiu."
+      },
+      {
+        "text": "A própria loja, que capturou o sinal e reiniciou",
+        "why": "Nenhum programa consegue capturar o `SIGKILL`; é por isso que ele foi usado aqui."
+      }
+    ]
+  },
+  "ex-3cdvshbj": {
+    "prompt": "`docker compose up -d --scale web=3` parou com `Bind for 0.0.0.0:8080 failed: port is already allocated`. Qual é o limite por trás disso?",
+    "hint": "Três containers, uma máquina, uma porta publicada.",
+    "choices": [
+      {
+        "text": "O Compose só consegue rodar uma réplica de um serviço",
+        "why": "Ele criou `shop-web-2` e `shop-web-3`; o que falhou foi publicar a porta delas."
+      },
+      {
+        "text": "A imagem foi construída para escutar numa porta só",
+        "why": "Cada container tem seu namespace de rede, então cada um pode escutar na 8080 lá dentro; o conflito é no laptop."
+      },
+      {
+        "text": "O laptop ficou sem memória para uma terceira cópia",
+        "why": "O erro fala de uma porta, não de memória."
+      },
+      {
+        "text": "Uma porta de uma máquina pertence a um processo só",
+        "why": "Isso. A primeira cópia é dona da 8080 no host; as outras precisam de um proxy na frente ou de portas próprias."
+      }
+    ]
+  },
+  "ex-drp8t7q0": {
+    "prompt": "A Ana acrescenta um segundo laptop e roda o mesmo `compose.yaml` nos dois, cada um com `restart: always`. O primeiro laptop perde a energia. O que acontece com a cópia que rodava nele?",
+    "hint": "Quem guarda a política de reinício, e onde ela vive?",
+    "choices": [
+      {
+        "text": "O daemon do segundo laptop a inicia lá",
+        "why": "Cada daemon só conhece os próprios containers; nada avisa o segundo de que falta uma cópia."
+      },
+      {
+        "text": "Ela some até o primeiro laptop voltar",
+        "why": "Isso. A política vivia no daemon do primeiro laptop e caiu com ele; o segundo mantém a própria cópia e nada além."
+      },
+      {
+        "text": "O Compose a move, já que os dois laptops compartilham um arquivo",
+        "why": "O arquivo é o mesmo, mas nada o lê continuamente em nenhuma das máquinas."
+      },
+      {
+        "text": "As duas cópias param, porque os dois daemons estão ligados",
+        "why": "Dois daemons comuns do Docker não estão ligados de jeito nenhum; a segunda cópia continua rodando."
+      }
+    ]
+  },
+  "ex-7f81fph7": {
+    "prompt": "Durante a atualização de `shop:1.0` para `shop:1.1`, quantas das 300 requisições da sonda ficaram sem resposta?",
+    "hint": "O `uniq -c` contou as linhas `000`.",
+    "unit": "requisições"
+  },
+  "ex-9fbbwzvf": {
+    "prompt": "Depois da atualização, a loja respondeu `shop 1.1 on cdb0f6d432ff`, onde antes dizia `7f1b64994482`. O que o hostname novo diz?",
+    "hint": "O hostname é o começo do id do container.",
+    "choices": [
+      {
+        "text": "O mesmo container foi renomeado depois que a imagem mudou",
+        "why": "O id de um container é fixo pela vida inteira; um id novo é um container novo."
+      },
+      {
+        "text": "O Compose moveu o container para outra rede",
+        "why": "A rede `shop_default` ficou; o que mudou foi o container."
+      },
+      {
+        "text": "O container antigo foi removido e um novo foi criado",
+        "why": "Isso. Um container é substituído, nunca atualizado no lugar, e o intervalo é o tempo entre os dois."
+      },
+      {
+        "text": "A sonda chegou a uma segunda réplica iniciada para a atualização",
+        "why": "Só houve uma réplica o tempo todo; é por isso que requisições foram recusadas."
+      }
+    ]
+  },
+  "ex-n296g3s2": {
+    "prompt": "Quais destes uma atualização sem intervalo precisa, que a montagem de uma máquina não tinha? Marque todos que se aplicam.",
+    "hint": "Pense na ordem: subir, esperar, mudar, parar.",
+    "choices": [
+      {
+        "text": "Duas cópias rodando no mesmo momento",
+        "why": "Isso: a nova precisa estar de pé antes de a antiga sair."
+      },
+      {
+        "text": "Algo na frente que decida qual cópia recebe uma requisição",
+        "why": "Isso: mudar o tráfego exige um lugar onde o tráfego é roteado."
+      },
+      {
+        "text": "Um disco mais rápido, para o container novo subir antes",
+        "why": "Subir mais rápido encurta o intervalo sem fechá-lo; a ordem continua parar e depois subir."
+      },
+      {
+        "text": "Um sinal de que a cópia nova está pronta, não só iniciada",
+        "why": "Isso: senão o tráfego vai para um processo que ainda carrega."
+      },
+      {
+        "text": "Uma tag de imagem nova para cada versão",
+        "why": "A atualização já usou `shop:1.1`; tags nomeiam versões, não ordenam a troca."
+      }
+    ]
+  },
+  "ex-5ye4gqyc": {
+    "prompt": "O que um orquestrador faz que o `docker compose up` não faz?",
+    "hint": "Os dois leem uma descrição do que deveria rodar. A diferença é quando.",
+    "choices": [
+      {
+        "text": "Ele lê um arquivo que descreve os containers",
+        "why": "O Compose também; o `compose.yaml` é um arquivo assim."
+      },
+      {
+        "text": "Ele inicia containers a partir de imagens",
+        "why": "O Compose também faz isso, pelo daemon do Docker."
+      },
+      {
+        "text": "Ele continua comparando essa descrição com o que está rodando, e age sobre a diferença",
+        "why": "Isso. O Compose lê o arquivo quando alguém digita `up` e para de olhar; o laço nunca para."
+      },
+      {
+        "text": "Ele reinicia um processo que cai",
+        "why": "O daemon do Docker já fez isso na primeira seção, com `restart: always`."
+      }
+    ]
+  },
+  "ex-qvkqmnz0": {
+    "prompt": "Ligue cada necessidade ao que cuida dela num cluster.",
+    "hint": "A tabela desta seção indica uma lição para cada uma.",
+    "pairs": [
+      {
+        "left": "Várias cópias num endereço",
+        "right": "Um Service na frente delas"
+      },
+      {
+        "left": "Uma atualização sem intervalo",
+        "right": "Subir, esperar ficar pronta, depois parar"
+      },
+      {
+        "left": "Mais cópias sob carga",
+        "right": "Um controlador que muda a contagem"
+      },
+      {
+        "left": "Uma máquina que morre",
+        "right": "As cópias dela iniciadas nas máquinas restantes"
+      }
+    ],
+    "right_distractors": [
+      "Uma política de reinício no daemon de cada máquina"
+    ]
+  },
+  "ex-5w1ek3w6": {
+    "prompt": "Uma equipe roda uma ferramenta interna numa máquina virtual, atualiza uma vez por mês fora do expediente, e ninguém a usa à noite. Qual leitura desta lição combina melhor com ela?",
+    "hint": "Pese as doze requisições contra o preço pago antes da primeira.",
+    "choices": [
+      {
+        "text": "Kubernetes, já que um intervalo durante atualizações nunca é aceitável",
+        "why": "Ninguém a usa durante o intervalo; as doze requisições não atingiriam ninguém."
+      },
+      {
+        "text": "O Compose basta; os intervalos caem onde ninguém está pedindo",
+        "why": "Isso. O preço do orquestrador é pago adiantado, e aqui compraria quase nada."
+      },
+      {
+        "text": "Nenhum: uma ferramenta numa máquina só não deveria rodar em container",
+        "why": "Nada na lição argumenta contra containers numa máquina; o Compose aparece funcionando bem ali."
+      },
+      {
+        "text": "Kubernetes, porque a política de reinício dele é a mais forte",
+        "why": "Numa máquina só o daemon do Docker já reinicia um processo que caiu; não é para isso que serve um cluster."
+      }
+    ]
+  },
+  "ex-a7k9049r": {
+    "prompt": "Ponha em ordem os passos de uma atualização sem intervalo.",
+    "hint": "A cópia antiga é a última coisa a sair.",
+    "items": [
+      "Subir uma cópia da versão nova",
+      "Esperar a cópia nova responder como pronta",
+      "Mandar o tráfego para a cópia nova",
+      "Parar a cópia antiga"
+    ],
+    "trap": "Parar a cópia antiga antes disso é a ordem do Compose, e o intervalo que ele mediu."
+  }
+}
