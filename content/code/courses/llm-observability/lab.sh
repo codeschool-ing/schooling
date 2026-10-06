@@ -35,6 +35,8 @@
 #   127.0.0.1:6006          Arize Phoenix, started by `phoenix` (lesson 7)
 #   127.0.0.1:3000          Langfuse, self-hosted, started by `langfuse`
 #                           (lesson 6): six containers, lab/langfuse/
+#   127.0.0.1:8585          Helicone's gateway, self-hosted from its all-in-one
+#                           image, started by `helicone` (lesson 7)
 #   127.0.0.1:8700          a recorder that answers like LangSmith's ingest
 #                           endpoint and keeps what it receives (lesson 6)
 #
@@ -59,7 +61,8 @@
 #
 # NOT REACHABLE, AND THEREFORE NOT RUN: any provider's real API; LangSmith's
 # service, which is not offered to install (its SDK is run, against the
-# recorder); Helicone's and Arize's hosted services. The lessons that show
+# recorder); Helicone's and Arize's hosted services. Helicone's own gateway
+# runs here, and refuses to forward to labobs, as lesson 7 shows. The lessons that show
 # their code or settings say they were not run.
 #
 #   sudo bash lab.sh up               build it (idempotent)
@@ -67,6 +70,7 @@
 #   sudo bash lab.sh phoenix|phoenix-down
 #   sudo bash lab.sh langfuse|langfuse-down
 #   sudo bash lab.sh recorder|recorder-down
+#   sudo bash lab.sh helicone|helicone-down
 #   sudo bash lab.sh down
 #   sudo bash lab.sh exec 'COMMAND'   run COMMAND as ana, in ~/obs
 #
@@ -249,6 +253,24 @@ stop_recorder() {
   fi
 }
 
+# Helicone, self-hosted from its all-in-one image (lesson 7): its gateway on
+# 127.0.0.1:8585 and its screens on 127.0.0.1:3100. The image is 14 GB on disk;
+# `helicone-down` removes the container and leaves the image.
+HELICONE_IMAGE=helicone/helicone-all-in-one@sha256:4da15718dd4936da63be8fbd5f8aedd2d396e25bffccbbfcd786d0b568d6b901
+start_helicone() {
+  docker rm -f llmobs-helicone >/dev/null 2>&1 || true
+  docker run -d --name llmobs-helicone -p 127.0.0.1:8585:8585 -p 127.0.0.1:3100:3000 $HELICONE_IMAGE >/dev/null
+  for _ in $(seq 120); do
+    curl -s http://127.0.0.1:8585/healthcheck 2>/dev/null | grep -q healthy && return 0
+    sleep 2
+  done
+  echo "helicone did not start: docker logs llmobs-helicone" >&2; return 1
+}
+
+stop_helicone() {
+  docker rm -f llmobs-helicone >/dev/null 2>&1 || true
+}
+
 exec_as() {  # exec_as COMMAND: as ana, in ~/obs, with the lab's environment and nothing else
   # shellcheck disable=SC2046
   runuser -u ana -- env -i HOME=/home/ana USER=ana $(grep -v '^#' $ENVFILE | xargs) \
@@ -267,9 +289,11 @@ case ${1:-} in
   langfuse) start_langfuse ;;
   langfuse-down) stop_langfuse ;;
   recorder) start_recorder ;;
+  helicone) start_helicone ;;
+  helicone-down) stop_helicone ;;
   recorder-down) stop_recorder ;;
   down)
-    stop_recorder; stop_phoenix; stop_langfuse; stop_labobs; bash "$RAG_LAB" down ;;
+    stop_recorder; stop_phoenix; stop_langfuse; stop_helicone; stop_labobs; bash "$RAG_LAB" down ;;
   exec)
     shift; exec_as "$@" ;;
   *)
