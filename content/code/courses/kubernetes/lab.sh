@@ -11,9 +11,10 @@
 #
 #   sudo bash lab.sh tools          # once: the software and images, into /opt/k8s
 #   sudo bash lab.sh up [CONFIG]    # a fresh cluster "shop" (CONFIG: a kind config)
-#   sudo bash lab.sh load IMAGE...  # copy images from the laptop into every node
+#   sudo bash lab.sh load IMAGE...  # copy images from the laptop into the cluster's nodes
 #   sudo bash lab.sh metrics        # metrics-server, for lessons 21, 33 and 34
 #   sudo bash lab.sh calico         # Calico, on a cluster from lab/cluster-calico.yaml
+#   sudo bash lab.sh csi            # the CSI host-path driver, for lesson 27
 #   sudo bash lab.sh down           # delete every cluster this lab made
 #
 # WHAT IS STAGED, and why. The machine this was recorded on could reach
@@ -31,6 +32,8 @@
 #     `kind load`), and the manifests ask for it by tag. On your own computer the
 #     nodes pull for themselves and none of this is needed.
 #   - the shop application is lab/shop, built here, three versions of it.
+#   - Calico's manifest names its images on quay.io; Calico publishes the same
+#     images on Docker Hub, and the lab's copy of the manifest names those.
 #
 # Two settings differ from kind's defaults, both because of the sandbox and not
 # because of anything a lesson teaches. The machine has cgroup v1, which the
@@ -62,6 +65,12 @@ METRICS_SERVER=v0.9.0
 CLOUD_PROVIDER_KIND=v0.12.0
 CALICO=v3.32.1
 GATEWAY_API=v1.4.0   # the version Traefik v3.6 is built against
+# The CSI host-path driver lesson 27 runs, and its two sidecars at the
+# versions the driver's v1.18.0 manifests name.
+CSI_HOSTPATH=v1.18.0
+CSI_PROVISIONER=v6.3.0
+CSI_REGISTRAR=v2.17.0
+CSI_REGISTRAR_COMMIT=c5794c45f34ce9c62e47dfd5a2b073c3824f2c79
 # Images every cluster gets on creation. A lesson that needs more loads them.
 BASE_IMAGES="shop:1.0 shop:1.1 shop:2.0 busybox:1.37 nginx:1.29"
 export PATH=$OPT/bin:$PATH
@@ -90,11 +99,11 @@ gobuild() { # MODULE@VERSION PACKAGE NAME [LDFLAGS]: built inside its own module
   (cd "$OPT/src/$name" && GOTOOLCHAIN=auto GOFLAGS=-mod=mod CGO_ENABLED=0 go build -trimpath -ldflags "$ld" -o "$OPT/bin/$name" "$pkg")
 }
 
-wrap() { # NAME VERSION BINARY [ARGS-AS-JSON]: one static binary as an image of its own
-  local name=$1 version=$2 bin=$3 dir
+wrap() { # NAME VERSION BINARY [USER]: one static binary as an image of its own
+  local name=$1 version=$2 bin=$3 user=${4:-65532:65532} dir
   docker image inspect "lab.local/$name:$version" >/dev/null 2>&1 && return 0
   dir=$(mktemp -d) && cp "$bin" "$dir/$name"
-  printf 'FROM scratch\nCOPY %s /%s\nUSER 65532:65532\nENTRYPOINT ["/%s"]\n' "$name" "$name" "$name" >"$dir/Dockerfile"
+  printf 'FROM scratch\nCOPY %s /%s\nUSER %s\nENTRYPOINT ["/%s"]\n' "$name" "$name" "$user" "$name" >"$dir/Dockerfile"
   docker build -q -t "lab.local/$name:$version" "$dir" >/dev/null && rm -rf "$dir"
 }
 
@@ -139,8 +148,10 @@ tools() {
       sed "s#image: gcr.io/k8s-staging-metrics-server/metrics-server:master#image: lab.local/metrics-server:$METRICS_SERVER#" \
       >"$OPT/manifests/metrics-server.yaml"
   fi
-  [ -f "$OPT/manifests/calico.yaml" ] || curl -sSfo "$OPT/manifests/calico.yaml" \
-    "https://raw.githubusercontent.com/projectcalico/calico/$CALICO/manifests/calico.yaml"
+  if [ ! -f "$OPT/manifests/calico.yaml" ]; then
+    curl -sSf "https://raw.githubusercontent.com/projectcalico/calico/$CALICO/manifests/calico.yaml" |
+      sed 's#image: quay.io/calico/#image: docker.io/calico/#' >"$OPT/manifests/calico.yaml"
+  fi
   if [ ! -d "$OPT/manifests/gateway-api-$GATEWAY_API" ]; then
     dir=$(GOTOOLCHAIN=auto go mod download -json "sigs.k8s.io/gateway-api@$GATEWAY_API" | jq -r .Dir)
     mkdir -p "$OPT/manifests/gateway-api-$GATEWAY_API"
@@ -152,18 +163,17 @@ tools() {
   shop_images
 }
 
-load() { # IMAGE...: into every node of every cluster this lab made
+load() { # IMAGE...: into every node of the cluster kubectl points at
   local c
-  for c in $(kind get clusters 2>/dev/null); do
-    for i in "$@"; do
-      # Docker's containerd store keeps every platform's index, and `kind load
-      # docker-image` then asks for layers it never pulled; saving one platform
-      # first is what works.
-      docker save --platform linux/amd64 "$i" -o /var/tmp/lab-image.tar
-      kind load image-archive /var/tmp/lab-image.tar --name "$c" >/dev/null 2>&1
-    done
+  c=$(kubectl config current-context) && c=${c#kind-}
+  for i in "$@"; do
+    # Docker's containerd store keeps every platform's index, and `kind load
+    # docker-image` then asks for layers it never pulled; saving one platform
+    # first is what works.
+    docker save --platform linux/amd64 "$i" -o /var/tmp/lab-image.$$.tar
+    kind load image-archive /var/tmp/lab-image.$$.tar --name "$c" >/dev/null 2>&1
   done
-  rm -f /var/tmp/lab-image.tar
+  rm -f /var/tmp/lab-image.$$.tar
 }
 
 up() { # [CONFIG] [NAME]: a fresh cluster, the base images in it, kubectl pointed at it
@@ -175,10 +185,10 @@ up() { # [CONFIG] [NAME]: a fresh cluster, the base images in it, kubectl pointe
   env -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy -u NO_PROXY -u no_proxy \
     kind create cluster --name "$name" --config "$config" --image "$NODE" -q
   for i in $BASE_IMAGES; do
-    docker save --platform linux/amd64 "$i" -o /var/tmp/lab-image.tar
-    kind load image-archive /var/tmp/lab-image.tar --name "$name" >/dev/null 2>&1
+    docker save --platform linux/amd64 "$i" -o /var/tmp/lab-image.$$.tar
+    kind load image-archive /var/tmp/lab-image.$$.tar --name "$name" >/dev/null 2>&1
   done
-  rm -f /var/tmp/lab-image.tar
+  rm -f /var/tmp/lab-image.$$.tar
   # A cluster without kind's network plugin has no Ready node until one is
   # installed, so Calico goes in before anything waits for readiness.
   if grep -q 'disableDefaultCNI: true' "$config"; then calico; fi
@@ -216,6 +226,42 @@ serving_certs() { # approve each kubelet's request for a serving certificate
     xargs -r kubectl certificate approve >/dev/null
 }
 
+csi_tools() { # the CSI driver and sidecars, built from source and wrapped as images
+  gobuild "github.com/kubernetes-csi/csi-driver-host-path@$CSI_HOSTPATH" ./cmd/hostpathplugin hostpathplugin \
+    "-X main.version=$CSI_HOSTPATH"
+  gobuild "github.com/kubernetes-csi/external-provisioner/v6@$CSI_PROVISIONER" ./cmd/csi-provisioner csi-provisioner \
+    "-X main.version=$CSI_PROVISIONER"
+  # The registrar tags v2 releases with a v1 module path, so Go cannot
+  # fetch it by tag: this is the commit the tag v2.17.0 points at.
+  gobuild "github.com/kubernetes-csi/node-driver-registrar@$CSI_REGISTRAR_COMMIT" ./cmd/csi-node-driver-registrar \
+    csi-node-driver-registrar "-X main.version=$CSI_REGISTRAR"
+  # The sidecars talk to the driver over a socket the driver creates as
+  # root, so they run as root too, as the project's own images do.
+  wrap csi-provisioner "$CSI_PROVISIONER" "$OPT/bin/csi-provisioner" 0:0
+  wrap csi-node-driver-registrar "$CSI_REGISTRAR" "$OPT/bin/csi-node-driver-registrar" 0:0
+  # The driver mounts and formats things, so it needs `mount` and friends
+  # beside it: Ubuntu's base image has them, where the project's own image
+  # adds them to Alpine with a package manager this machine cannot reach.
+  if ! docker image inspect "lab.local/hostpathplugin:$CSI_HOSTPATH" >/dev/null 2>&1; then
+    pull ubuntu:24.04
+    local dir; dir=$(mktemp -d) && cp "$OPT/bin/hostpathplugin" "$dir/"
+    printf 'FROM ubuntu:24.04\nCOPY hostpathplugin /hostpathplugin\nENTRYPOINT ["/hostpathplugin"]\n' >"$dir/Dockerfile"
+    docker build -q -t "lab.local/hostpathplugin:$CSI_HOSTPATH" "$dir" >/dev/null && rm -rf "$dir"
+  fi
+  [ -f "$OPT/manifests/csi-hostpath.yaml" ] || python3 "$LAB/lab/csi-manifest.py" \
+    "$(GOTOOLCHAIN=auto GOFLAGS=-mod=mod go mod download -json "github.com/kubernetes-csi/csi-driver-host-path@$CSI_HOSTPATH" | jq -r .Dir)" \
+    "$(GOTOOLCHAIN=auto GOFLAGS=-mod=mod go mod download -json "github.com/kubernetes-csi/external-provisioner/v6@$CSI_PROVISIONER" | jq -r .Dir)" \
+    "$CSI_HOSTPATH $CSI_PROVISIONER $CSI_REGISTRAR" >"$OPT/manifests/csi-hostpath.yaml"
+}
+
+csi() { # the host-path CSI driver, for lesson 27
+  csi_tools
+  load "lab.local/hostpathplugin:$CSI_HOSTPATH" "lab.local/csi-provisioner:$CSI_PROVISIONER" \
+    "lab.local/csi-node-driver-registrar:$CSI_REGISTRAR"
+  kubectl apply -f "$OPT/manifests/csi-hostpath.yaml" >/dev/null
+  kubectl rollout status daemonset/csi-hostpathplugin --timeout=180s >/dev/null
+}
+
 calico() { # Calico as the network plugin, on a cluster made from cluster-calico.yaml
   load "calico/cni:$CALICO" "calico/node:$CALICO" "calico/kube-controllers:$CALICO"
   kubectl apply -f "$OPT/manifests/calico.yaml" >/dev/null
@@ -241,6 +287,8 @@ case ${1:-} in
   load) shift; load "$@" ;;
   metrics) metrics ;;
   calico) calico ;;
+  csi) csi ;;
+  csi-tools) csi_tools ;;
   down) down ;;
   *) echo "usage: lab.sh tools | up [CONFIG] [NAME] | load IMAGE... | down" >&2; exit 2 ;;
 esac
