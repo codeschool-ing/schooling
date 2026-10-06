@@ -830,6 +830,173 @@ def l06_hoods(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-bin-widths', 7)
+def l07_bin_widths(lang):
+    xs = S.BASKETS
+    t = {'en': dict(
+        label='The same 400 baskets drawn three times. With bins of R$ 5 the bars are a jagged '
+              'comb. With bins of R$ 20 a single peak and a long right tail appear. With bins of '
+              'R$ 80 almost everything falls in the first two bars and the shape is lost.',
+        w='bins of R$ {}', x='basket, in reais',
+        cap='Too narrow and the picture is noise; too wide and the shape disappears. The middle '
+            'width shows the peak and the tail.'),
+        'pt': dict(
+        label='As mesmas 400 cestas desenhadas três vezes. Com faixas de R$ 5 as barras são um pente '
+              'irregular. Com faixas de R$ 20 aparecem um pico só e uma cauda longa à direita. Com '
+              'faixas de R$ 80 quase tudo cai nas duas primeiras barras e a forma se perde.',
+        w='faixas de R$ {}', x='cesta, em reais',
+        cap='Estreita demais e o desenho é ruído; larga demais e a forma some. A largura do meio '
+            'mostra o pico e a cauda.')}[lang]
+    f = Fig('l07-bin-widths', 660, 432, t['label'])
+    for i, w in enumerate((5, 20, 80)):
+        y0 = 30 + i * 118
+        edges = list(range(0, 481, w))
+        counts = histogram(xs, edges)
+        top = max(counts)
+        p = Plot(f, 60, y0 + 14, 630, y0 + 94, 0, 480, 0, top)
+        p.bars(edges, counts)
+        f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+        f.text(60, y0, t['w'].format(w), size=10, anchor='start', weight='600')
+        f.text(56, p.y0, str(top), size=9, anchor='end', fill='--paper-dim')
+        f.text(56, p.y1, '0', size=9, anchor='end', fill='--paper-dim')
+    q = Plot(f, 60, 0, 630, 386, 0, 480, 0, 1)
+    q.xaxis(range(0, 481, 40), label=t['x'])
+    return f, t['cap']
+
+
+def small_hist(f, x0, y0, w, h, xs, edges, label, lang, unit=''):
+    counts = histogram(xs, edges)
+    p = Plot(f, x0, y0, x0 + w, y0 + h, edges[0], edges[-1], 0, max(counts) * 1.1)
+    p.bars(edges, counts)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    m, md = S.mean(xs), S.median(xs)
+    f.line(p.sx(md), p.y1, p.sx(md), y0 - 4, stroke='--paper', width=1.6)
+    f.line(p.sx(m), p.y1, p.sx(m), y0 - 4, stroke='--amber', width=1.6, dash='4 3')
+    f.text(x0 + w / 2, y0 - 20, label, size=10.5, weight='600')
+    f.text(x0, p.y1 + 13, num(lang, edges[0], 0) + unit, size=9, anchor='start', fill='--paper-dim')
+    f.text(x0 + w, p.y1 + 13, num(lang, edges[-1], 0) + unit, size=9, anchor='end', fill='--paper-dim')
+    return p
+
+
+@figure('l07-three-shapes', 7)
+def l07_three_shapes(lang):
+    t = {'en': dict(
+        label='Three histograms side by side. On the left, 100 scores on an easy test, piled up '
+              'near the top with a tail running left; the mean, 86.4, is left of the median, 89. In '
+              'the middle, 200 bags of rice, symmetric, with mean and median together near 1003 g. '
+              'On the right, 400 baskets with a tail running right; the mean, 82.78, is right of '
+              'the median, 66.74.',
+        titles=('left-skewed: test scores', 'symmetric: bags, in g', 'right-skewed: baskets'),
+        key_m='mean', key_md='median',
+        cap='The tail pulls the mean towards it. On the left it sits below the median, on the right '
+            'above it; in the symmetric middle the two coincide.'),
+        'pt': dict(
+        label='Três histogramas lado a lado. À esquerda, 100 notas de uma prova fácil, amontoadas '
+              'perto do topo com uma cauda para a esquerda; a média, 86,4, fica à esquerda da '
+              'mediana, 89. No meio, 200 sacos de arroz, simétricos, com média e mediana juntas '
+              'perto de 1003 g. À direita, 400 cestas com uma cauda para a direita; a média, 82,78, '
+              'fica à direita da mediana, 66,74.',
+        titles=('assimetria à esquerda: notas', 'simétrica: sacos, em g', 'assimetria à direita: cestas'),
+        key_m='média', key_md='mediana',
+        cap='A cauda puxa a média para perto dela. À esquerda ela fica abaixo da mediana, à direita '
+            'acima; no meio simétrico as duas coincidem.')}[lang]
+    f = Fig('l07-three-shapes', 690, 240, t['label'])
+    small_hist(f, 20, 50, 200, 130, S.SCORES, list(range(50, 101, 5)), t['titles'][0], lang)
+    small_hist(f, 245, 50, 200, 130, S.BAGS, list(range(984, 1024, 3)), t['titles'][1], lang)
+    small_hist(f, 470, 50, 200, 130, S.BASKETS, list(range(0, 441, 20)), t['titles'][2], lang)
+    f.line(250, 222, 270, 222, stroke='--paper', width=1.6)
+    f.text(276, 222, t['key_md'], size=9.5, anchor='start')
+    f.line(370, 222, 390, 222, stroke='--amber', width=1.6, dash='4 3')
+    f.text(396, 222, t['key_m'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+def t_pdf(x, df):
+    c = math.exp(math.lgamma((df + 1) / 2) - math.lgamma(df / 2)) / math.sqrt(df * math.pi)
+    return c * (1 + x * x / df) ** (-(df + 1) / 2)
+
+
+@figure('l07-tails', 7)
+def l07_tails(lang):
+    # a t with 5 degrees of freedom, scaled to standard deviation 1, against the normal
+    k = math.sqrt(5 / 3)
+    heavy = lambda x: k * t_pdf(x * k, 5)
+    t = {'en': dict(
+        label='Two curves with the same mean, 0, and the same standard deviation, 1. The normal '
+              'curve is drawn in blue. The heavy-tailed curve, in red, is taller and narrower in '
+              'the middle. A second panel enlarges the right tail from 2 to 4.5 standard '
+              'deviations: beyond about 2.5 the red curve stays above the blue one.',
+        y='density', x='standard deviations from the mean', normal='normal: excess kurtosis 0',
+        heavy='heavy tails: excess kurtosis 6', zoom='the right tail, enlarged',
+        cap='Same centre, same standard deviation, different tails. Kurtosis measures how much of '
+            'the spread comes from rare values far out.'),
+        'pt': dict(
+        label='Duas curvas com a mesma média, 0, e o mesmo desvio padrão, 1. A curva normal está '
+              'em azul. A curva de caudas pesadas, em vermelho, é mais alta e estreita no meio. Um '
+              'segundo painel amplia a cauda direita, de 2 a 4,5 desvios padrão: além de uns 2,5, a '
+              'curva vermelha fica acima da azul.',
+        y='densidade', x='desvios padrão a partir da média', normal='normal: curtose em excesso 0',
+        heavy='caudas pesadas: curtose em excesso 6', zoom='a cauda direita, ampliada',
+        cap='Mesmo centro, mesmo desvio padrão, caudas diferentes. A curtose mede quanto da '
+            'dispersão vem de valores raros e distantes.')}[lang]
+    f = Fig('l07-tails', 680, 320, t['label'])
+    p = Plot(f, 60, 70, 400, 255, -4.5, 4.5, 0, 0.55)
+    p.yaxis([0, 0.1, 0.2, 0.3, 0.4, 0.5], fmt=lambda v: num(lang, v, 1), label=t['y'])
+    p.xaxis(range(-4, 5, 2), fmt=lambda v: str(v).replace('-', '−'), label=t['x'])
+    p.curve(S.normal_pdf, -4.5, 4.5, stroke='--phosphor', width=2.2)
+    p.curve(heavy, -4.5, 4.5, stroke='--amber', width=2.2, dash='6 3')
+    z = Plot(f, 470, 70, 660, 255, 2, 4.5, 0, 0.06)
+    z.yaxis([0, 0.02, 0.04, 0.06], fmt=lambda v: num(lang, v, 2), grid=True)
+    z.xaxis([2, 3, 4], fmt=str)
+    z.curve(S.normal_pdf, 2, 4.5, stroke='--phosphor', width=2.2)
+    z.curve(heavy, 2, 4.5, stroke='--amber', width=2.2, dash='6 3')
+    f.text(565, 46, t['zoom'], size=9.5, fill='--paper-dim')
+    f.line(60, 18, 82, 18, stroke='--phosphor', width=2.2)
+    f.text(88, 18, t['normal'], size=9.5, anchor='start', fill='--phosphor')
+    f.line(330, 18, 352, 18, stroke='--amber', width=2.2, dash='6 3')
+    f.text(358, 18, t['heavy'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l07-bimodal', 7)
+def l07_bimodal(lang):
+    xs = S.ORDER_HOURS
+    edges = [h / 2 for h in range(14, 49)]
+    counts = histogram(xs, edges)
+    m = S.mean(xs)
+    t = {'en': dict(
+        label='A histogram of the time of day of 500 orders, in half-hour bins from 7:00 to 24:00, '
+              'with a boxplot under it. There are two peaks, one around lunch at 12:00 and a larger '
+              'one around dinner at 19:30, and almost nothing between 15:00 and 17:00. The mean, '
+              'about 16:06, falls in that empty afternoon. The boxplot shows a box from about '
+              '12:11 to 19:44 with the median near 17:57, and gives no hint of the two peaks.',
+        y='orders', x='time of day', mean='mean 16:06',
+        cap='Two peaks and an empty afternoon. The mean lands where almost nobody orders, and the '
+            'boxplot underneath looks like any other.'),
+        'pt': dict(
+        label='Um histograma do horário de 500 pedidos, em faixas de meia hora das 7:00 às 24:00, com '
+              'um boxplot embaixo. Há dois picos, um perto do almoço, às 12:00, e outro maior perto '
+              'do jantar, às 19:30, e quase nada entre 15:00 e 17:00. A média, por volta das 16:06, '
+              'cai nessa tarde vazia. O boxplot mostra uma caixa de cerca de 12:11 a 19:44, com a '
+              'mediana perto das 17:57, e não dá nenhum sinal dos dois picos.',
+        y='pedidos', x='horário do dia', mean='média 16:06',
+        cap='Dois picos e uma tarde vazia. A média cai onde quase ninguém pede, e o boxplot embaixo '
+            'parece igual a qualquer outro.')}[lang]
+    f = Fig('l07-bimodal', 660, 320, t['label'])
+    top = (max(counts) // 10 + 1) * 10
+    p = Plot(f, 70, 40, 630, 200, 7, 24, 0, top)
+    p.yaxis(range(0, top + 1, 10), label=t['y'])
+    p.bars(edges, counts)
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+    p.vline(m, t['mean'], stroke='--amber', top=40, anchor='middle', dy=-2)
+    boxplot_h(f, p, xs, 234, h=24)
+    q = Plot(f, 70, 0, 630, 262, 7, 24, 0, 1)
+    q.xaxis(range(8, 25, 2), fmt=lambda v: f'{v}:00', label=t['x'])
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

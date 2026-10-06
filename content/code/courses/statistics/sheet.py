@@ -391,6 +391,40 @@ def _deliveries():
 DELIVERIES = _deliveries()
 
 
+# Two hundred 1 kg bags of rice from a filling machine, lesson 7: symmetric.
+def _bags():
+    d = Draw(200)
+    return [round(d.normal(1003, 6), 1) for _ in range(200)]
+
+
+BAGS = _bags()
+
+
+# A hundred scores on an easy internal test, out of 100, lesson 7: a tail on the left.
+def _scores():
+    d = Draw(100)
+    return [max(0, round(100 - d.lognormal(math.log(12), 0.6))) for _ in range(100)]
+
+
+SCORES = _scores()
+
+
+# The time of day of 500 orders, in hours after midnight, lesson 7: lunch and dinner.
+def _hours():
+    d = Draw(500)
+    out = []
+    for i in range(500):
+        if d.r.random() < 0.45:
+            h = d.normal(12.0, 1.1)
+        else:
+            h = d.normal(19.6, 1.2)
+        out.append(round(min(23.99, max(7.0, h)), 2))
+    return out
+
+
+ORDER_HOURS = _hours()
+
+
 def five(xs):
     return (min(xs), quantile(xs, 0.25), median(xs), quantile(xs, 0.75), max(xs))
 
@@ -571,6 +605,31 @@ def l6():
         out = [x for x in xs if x > q3 + 1.5 * (q3 - q1) or x < q1 - 1.5 * (q3 - q1)]
         show(f'{hood}: five, IQR, outliers', f'{[round(v, 3) for v in f]}  {q3 - q1:.3f}  {out}')
         show(f'{hood}: mean, sd', f'{mean(xs):.3f} {sd(xs):.3f}')
+
+
+@lesson(7)
+def l7():
+    for name, xs in (('bags', BAGS), ('baskets', BASKETS), ('scores', SCORES)):
+        m, md, s_ = mean(xs), median(xs), sd(xs)
+        show(f'{name}: n, min, max', f'{len(xs)}  {min(xs)}  {max(xs)}')
+        show(f'{name}: mean, median, sd', f'{m:.4f}  {md:.4f}  {s_:.4f}')
+        show(f'{name}: skewness (SKEW)', skewness(xs))
+        show(f'{name}: excess kurtosis (KURT)', kurtosis(xs))
+        show(f'{name}: Pearson median skewness 3(mean-median)/sd', 3 * (m - md) / s_)
+    allm = [r['minutes'] for r in DELIVERIES]
+    show('120 deliveries: five', five(allm))
+    show('120 deliveries: mean, sd', f'{mean(allm):.4f} {sd(allm):.4f}')
+    show('120 deliveries: skew, kurt', f'{skewness(allm):.4f} {kurtosis(allm):.4f}')
+    edges = list(range(20, 72, 4))
+    counts = [sum(1 for x in allm if edges[i] <= x < edges[i + 1]) for i in range(len(edges) - 1)]
+    show('120 deliveries: counts in 4-minute bins from 20', counts)
+    h = ORDER_HOURS
+    show('order hours: min, max', f'{min(h)} {max(h)}')
+    show('order hours: mean, median', f'{mean(h):.4f} {median(h):.4f}')
+    show('order hours: five', [round(v, 2) for v in five(h)])
+    show('order hours: counts per hour 7..23', [sum(1 for x in h if k <= x < k + 1) for k in range(7, 24)])
+    show('order hours: between 15 and 16', sum(1 for x in h if 15 <= x < 16))
+    show('order hours: skew, kurt', f'{skewness(h):.4f} {kurtosis(h):.4f}')
 
 
 def main():
