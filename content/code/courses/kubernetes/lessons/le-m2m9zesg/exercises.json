@@ -1,0 +1,285 @@
+[
+  {
+    "id": "ex-b6wayaa5",
+    "version": 1,
+    "section": "requests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two workers sat almost idle, and the fifth copy of `big` still stayed `Pending`. Why?",
+    "hint": "What does the scheduler add up?",
+    "choices": [
+      {
+        "text": "The nodes were busier than they looked",
+        "correct": false,
+        "why": "The shop used almost no CPU; usage was not the problem."
+      },
+      {
+        "text": "Only 800m was left unreserved on each",
+        "correct": true,
+        "why": "Right. The scheduler compares requests with allocatable, and 1500m did not fit."
+      },
+      {
+        "text": "Five copies exceed the Deployment's limit",
+        "correct": false,
+        "why": "A Deployment has no such limit."
+      },
+      {
+        "text": "The image was still being pulled",
+        "correct": false,
+        "why": "The event said `Insufficient cpu`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w8bwb4r",
+    "version": 1,
+    "section": "requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl describe node` showed `3200m (80%)` of CPU requested on `shop-worker`, which ran two copies of `big` at 1500m. Where did the other 200m come from?",
+    "hint": "Not every pod on a node is yours.",
+    "choices": [
+      {
+        "text": "The kubelet's reserve",
+        "correct": false,
+        "why": "That is already subtracted from allocatable, not added to requests."
+      },
+      {
+        "text": "Rounding up 1500m to the next CPU",
+        "correct": false,
+        "why": "Requests are added exactly, in millicores."
+      },
+      {
+        "text": "The pending fifth copy",
+        "correct": false,
+        "why": "A pending pod is on no node, so it reserves nothing."
+      },
+      {
+        "text": "The network plugin's pod and a CoreDNS copy",
+        "correct": true,
+        "why": "Right. Each requests 100m."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cbt60pb",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container has a CPU limit of 200m and does work that takes 50 ms of CPU when unthrottled. Roughly how long does it take under the limit?",
+    "hint": "200m is a fifth of a CPU.",
+    "choices": [
+      {
+        "text": "50 ms",
+        "correct": false,
+        "why": "That would be no throttling at all."
+      },
+      {
+        "text": "About 250 ms",
+        "correct": true,
+        "why": "Right. It runs 20 ms in each 100 ms period, so 50 ms of work spans about 250."
+      },
+      {
+        "text": "It is killed after 200 ms",
+        "correct": false,
+        "why": "CPU limits throttle; they never kill."
+      },
+      {
+        "text": "About 10 ms",
+        "correct": false,
+        "why": "A limit can only slow a container down."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv7gr5h8",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod restarts every few minutes, and its last state reads `OOMKilled`, exit code 137. What happened?",
+    "hint": "`hungry`.",
+    "choices": [
+      {
+        "text": "It ran over its CPU limit",
+        "correct": false,
+        "why": "A CPU limit throttles; it does not kill."
+      },
+      {
+        "text": "The liveness probe failed",
+        "correct": false,
+        "why": "That ends with the kubelet restarting it, and the reason is not `OOMKilled`."
+      },
+      {
+        "text": "Over its memory limit",
+        "correct": true,
+        "why": "Right. The kernel killed it; 137 is 128 plus SIGKILL's 9."
+      },
+      {
+        "text": "The node was drained",
+        "correct": false,
+        "why": "Draining deletes the pod; it does not restart a container in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-q58g025a",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Kubernetes throttle a container at its CPU limit but kill one at its memory limit?",
+    "hint": "Which of the two can be handed back a moment later?",
+    "choices": [
+      {
+        "text": "Memory is more expensive than CPU time",
+        "correct": false,
+        "why": "Price plays no part in how a limit is enforced."
+      },
+      {
+        "text": "CPU limits are only a suggestion to the kernel",
+        "correct": false,
+        "why": "`capped` ran ten times slower; the limit was enforced."
+      },
+      {
+        "text": "Only a dead process gives memory back",
+        "correct": true,
+        "why": "Right. CPU time can wait; the kernel can pause a process, but not take back what it allocated."
+      },
+      {
+        "text": "The kubelet chooses between the two at random",
+        "correct": false,
+        "why": "Both are enforced the same way every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnjxkhwc",
+    "version": 1,
+    "section": "qos",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hungry` had memory request and limit both at 64Mi, and its class was `Burstable`. What would make it `Guaranteed`?",
+    "hint": "Guaranteed needs both resources.",
+    "choices": [
+      {
+        "text": "A CPU request and limit, equal",
+        "correct": true,
+        "why": "Right. Then every container has both resources with requests equal to limits."
+      },
+      {
+        "text": "A higher memory limit",
+        "correct": false,
+        "why": "Then request and limit would differ, which is still Burstable."
+      },
+      {
+        "text": "Removing the memory request",
+        "correct": false,
+        "why": "Kubernetes would fill it in from the limit; CPU would still be missing."
+      },
+      {
+        "text": "A `qosClass: Guaranteed` field in the spec",
+        "correct": false,
+        "why": "The class lives in the status and is derived, never written."
+      }
+    ]
+  },
+  {
+    "id": "ex-vttsrtnd",
+    "version": 1,
+    "section": "qos",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod has no requests and no limits. What is its class?",
+    "hint": "`probe`.",
+    "choices": [
+      {
+        "text": "Burstable",
+        "correct": false,
+        "why": "Burstable needs at least one request or limit."
+      },
+      {
+        "text": "BestEffort",
+        "correct": true,
+        "why": "Right. Nothing written, nothing promised."
+      },
+      {
+        "text": "Guaranteed",
+        "correct": false,
+        "why": "Guaranteed needs limits on both resources."
+      },
+      {
+        "text": "None; it is refused",
+        "correct": false,
+        "why": "`probe` ran without either."
+      }
+    ]
+  },
+  {
+    "id": "ex-xh82y31b",
+    "version": 1,
+    "section": "requests",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A node has 4000m allocatable and 300m already requested by system pods. Each copy of an app requests 900m. How many copies fit on the node?",
+    "hint": "3700 divided by 900, rounded down.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-12mv5ff6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting with what enforces it.",
+    "hint": "One is checked before the pod starts, two while it runs.",
+    "pairs": [
+      {
+        "left": "CPU request",
+        "right": "The scheduler, when it places the pod"
+      },
+      {
+        "left": "CPU limit",
+        "right": "The kernel, by making the container wait"
+      },
+      {
+        "left": "Memory limit",
+        "right": "The kernel, by killing the container"
+      }
+    ],
+    "right_distractors": [
+      "The API server, by refusing the pod"
+    ]
+  },
+  {
+    "id": "ex-76m2jgtq",
+    "version": 1,
+    "section": "limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A container killed for going over its memory limit shows the reason ___ in its last state.",
+    "hint": "Out of memory.",
+    "blanks": [
+      {
+        "accept": [
+          "OOMKilled"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

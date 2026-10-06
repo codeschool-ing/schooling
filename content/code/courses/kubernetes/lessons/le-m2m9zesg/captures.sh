@@ -9,8 +9,9 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed: the cluster, a busybox pod called `probe`
-# that sends the shop requests from inside the cluster, and the pauses that
-# let a pod be scheduled or killed before the next listing. The loop counts
+# that sends the shop requests from inside the cluster, looking up each pod's
+# address for it, and the pauses that let a pod be scheduled or killed before
+# the next listing. The loop counts
 # depend on the laptop's CPU and on what else it was doing, and differ on
 # every run; so do names and ages.
 #
