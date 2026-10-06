@@ -1,0 +1,433 @@
+[
+  {
+    "id": "ex-3m6c2qfb",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default `json-file` driver and no options, how large may a container's log grow?",
+    "hint": "What did `du` say after three seconds?",
+    "choices": [
+      {
+        "text": "Without limit, until the disk is full",
+        "correct": true,
+        "why": "Right: rotation has to be asked for."
+      },
+      {
+        "text": "Up to 100 MB, then it rotates",
+        "correct": false,
+        "why": "There is no default size; it grew to 183 MB in three seconds."
+      },
+      {
+        "text": "Up to whatever memory limit the container was given",
+        "correct": false,
+        "why": "The log is a file on the host's disk, not memory."
+      },
+      {
+        "text": "Nothing is kept until `docker logs` asks",
+        "correct": false,
+        "why": "The daemon writes every line as it arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-cr3myjbb",
+    "version": 1,
+    "section": "logs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `--log-opt max-size=1m --log-opt max-file=3`, how many log files did the container's directory hold?",
+    "hint": "Count the `json.log` lines.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "files"
+  },
+  {
+    "id": "ex-6bfj9qwr",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana adds `log-driver` and `log-opts` to `daemon.json` and restarts the daemon. Which containers rotate their logs?",
+    "hint": "When are a container's log options decided?",
+    "choices": [
+      {
+        "text": "All of them, from the restart on",
+        "correct": false,
+        "why": "Existing containers keep the options they were created with."
+      },
+      {
+        "text": "Only those created afterwards",
+        "correct": true,
+        "why": "Right; the others keep theirs until they are recreated."
+      },
+      {
+        "text": "None, until each image is rebuilt",
+        "correct": false,
+        "why": "Logging is not part of an image."
+      },
+      {
+        "text": "Only those started with `--log-opt` too",
+        "correct": false,
+        "why": "The point of the daemon default is not to need the flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc7n1dfj",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a containerised program log to standard output rather than to `/var/log/shelf.log`?",
+    "hint": "Who decides where the lines go?",
+    "choices": [
+      {
+        "text": "Writing files is forbidden in containers",
+        "correct": false,
+        "why": "Containers write files all the time; it is a choice."
+      },
+      {
+        "text": "Standard output is faster than a file",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "So the platform decides where lines go",
+        "correct": true,
+        "why": "Right: the driver or an agent ships them, and the image does not change."
+      },
+      {
+        "text": "Distroless has no `/var/log`",
+        "correct": false,
+        "why": "Some do, and it would not be the reason anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzx1t0nn",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `shelf` get its own `/probe` program instead of `HEALTHCHECK CMD curl -f …`?",
+    "hint": "What is in a distroless image?",
+    "choices": [
+      {
+        "text": "`curl` is slower than Go",
+        "correct": false,
+        "why": "Speed is not why."
+      },
+      {
+        "text": "Health checks must be written in Go",
+        "correct": false,
+        "why": "Any program in the image will do."
+      },
+      {
+        "text": "`curl` cannot reach `127.0.0.1` inside a container",
+        "correct": false,
+        "why": "It could, if it were there."
+      },
+      {
+        "text": "The image has no `curl` and no shell to run it",
+        "correct": true,
+        "why": "Right, on purpose since lesson 14; a tiny static binary fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vzkp8hd",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`web-9090` was `Up` and `unhealthy`. What was wrong?",
+    "hint": "Which port did `shelf` listen on, and which did the check ask?",
+    "choices": [
+      {
+        "text": "`shelf` listened on 9090; the check asked 8080",
+        "correct": true,
+        "why": "Right: a misconfiguration that `Up` alone would never show."
+      },
+      {
+        "text": "The probe binary was missing",
+        "correct": false,
+        "why": "The same image was healthy in `web`."
+      },
+      {
+        "text": "The start period was too short",
+        "correct": false,
+        "why": "Four failures in a row came long after it."
+      },
+      {
+        "text": "`shelf` had crashed",
+        "correct": false,
+        "why": "It was `Up`; the process was running."
+      }
+    ]
+  },
+  {
+    "id": "ex-ef6z9kqt",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A standalone container turns `unhealthy`. What does the Docker daemon do about it?",
+    "hint": "The figure's last box.",
+    "choices": [
+      {
+        "text": "Restarts it, if it has a restart policy",
+        "correct": false,
+        "why": "Restart policies react to the process exiting, not to health."
+      },
+      {
+        "text": "Nothing; it only records the state",
+        "correct": true,
+        "why": "Right: Compose, Swarm or a person has to act on it."
+      },
+      {
+        "text": "Stops it after the retries",
+        "correct": false,
+        "why": "It keeps running."
+      },
+      {
+        "text": "Replaces it with a new container from the same image",
+        "correct": false,
+        "why": "That is what Swarm does, not the daemon on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-mrygf92a",
+    "version": 1,
+    "section": "health-checks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `HEALTHCHECK` option to what it sets.",
+    "hint": "Ana's values were 5s, 2s, 5s and 3.",
+    "pairs": [
+      {
+        "left": "`--interval`",
+        "right": "How often the check runs"
+      },
+      {
+        "left": "`--timeout`",
+        "right": "How long one check may take"
+      },
+      {
+        "left": "`--start-period`",
+        "right": "How long failures do not count after start"
+      },
+      {
+        "left": "`--retries`",
+        "right": "How many failures in a row mean unhealthy"
+      }
+    ],
+    "right_distractors": [
+      "How many times the container restarts"
+    ]
+  },
+  {
+    "id": "ex-rzam7pm8",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shelf` moves to Kubernetes. What happens to its `HEALTHCHECK`?",
+    "hint": "Kubernetes has its own mechanism.",
+    "choices": [
+      {
+        "text": "Kubernetes runs it, like Docker",
+        "correct": false,
+        "why": "Kubernetes ignores the instruction."
+      },
+      {
+        "text": "The image fails to start",
+        "correct": false,
+        "why": "The instruction is metadata; nothing refuses it."
+      },
+      {
+        "text": "It is ignored; probes call `/health` instead",
+        "correct": true,
+        "why": "Right, so the endpoint carries over even though the instruction does not."
+      },
+      {
+        "text": "It becomes a liveness probe automatically",
+        "correct": false,
+        "why": "Nothing converts it; probes are written in the manifest."
+      }
+    ]
+  },
+  {
+    "id": "ex-8phpf9t4",
+    "version": 1,
+    "section": "build-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `.netrc` was removed in the same `RUN` that wrote it. Why could `docker history` still show the token?",
+    "hint": "What did the history line begin with?",
+    "choices": [
+      {
+        "text": "The removal failed silently",
+        "correct": false,
+        "why": "The file is gone; the token is elsewhere."
+      },
+      {
+        "text": "Alpine keeps deleted files in a cache",
+        "correct": false,
+        "why": "Nothing about Alpine is involved."
+      },
+      {
+        "text": "`docker history` reads the build context",
+        "correct": false,
+        "why": "It reads the image."
+      },
+      {
+        "text": "The history records the build arguments a `RUN` used",
+        "correct": true,
+        "why": "Right: `|1 REGISTRY_TOKEN=lab-only-token`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xf59z5p",
+    "version": 1,
+    "section": "build-secrets",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To give one `RUN` the token without recording it anywhere, write `RUN --mount=type=___,id=registry_token …`.",
+    "hint": "The same word as the flag `docker build` takes.",
+    "blanks": [
+      {
+        "accept": [
+          "secret"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-skg47wjb",
+    "version": 1,
+    "section": "build-secrets",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these put a token into an image that is pushed? Choose all that apply.",
+    "hint": "Three ways leak; one does not.",
+    "choices": [
+      {
+        "text": "`ARG` used by a `RUN`",
+        "correct": true,
+        "why": "Yes: the value is in the history."
+      },
+      {
+        "text": "`ENV TOKEN=…`",
+        "correct": true,
+        "why": "Yes: it is in the image's configuration."
+      },
+      {
+        "text": "`COPY .netrc /root/`",
+        "correct": true,
+        "why": "Yes: the file is in a layer, even if a later one deletes it."
+      },
+      {
+        "text": "`RUN --mount=type=secret`",
+        "correct": false,
+        "why": "No: it is mounted for one `RUN` and written nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k6h4z9y",
+    "version": 1,
+    "section": "build-secrets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is a build secret available while the `RUN` that mounts it runs?",
+    "hint": "`ls` in the finished image found nothing there.",
+    "choices": [
+      {
+        "text": "Under `/run/secrets/`, by its id",
+        "correct": true,
+        "why": "Right, and only for that one `RUN`."
+      },
+      {
+        "text": "In the environment variable `SECRET`",
+        "correct": false,
+        "why": "It is a file, unless `env=` is asked for in the mount."
+      },
+      {
+        "text": "In `/etc/secrets`",
+        "correct": false,
+        "why": "The path is different."
+      },
+      {
+        "text": "In the build context, as `token.txt`",
+        "correct": false,
+        "why": "The file is passed by `--secret`, not copied into the context."
+      }
+    ]
+  },
+  {
+    "id": "ex-2d7pare3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container has been logging an error in a loop and the disk is nearly full. Put Ana's steps in a sensible order.",
+    "hint": "Find it, stop the damage, then prevent the next one.",
+    "items": [
+      "Find the container whose log file is largest",
+      "Read its last lines with `docker logs --tail`",
+      "Recreate it with `max-size` and `max-file`",
+      "Set a rotating default in `daemon.json`"
+    ]
+  },
+  {
+    "id": "ex-vbczsrmw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's Dockerfile has `ARG NPM_TOKEN` and `RUN npm ci` that reads it. What should change?",
+    "hint": "Which of this lesson's tools keeps a value out of history?",
+    "choices": [
+      {
+        "text": "Rename the argument so it looks less like a secret",
+        "correct": false,
+        "why": "The value is still in the history, whatever the name."
+      },
+      {
+        "text": "Pass it with `--secret` and mount it in that `RUN`",
+        "correct": true,
+        "why": "Right: available for the one step, recorded nowhere."
+      },
+      {
+        "text": "Delete `.npmrc` in the same `RUN`",
+        "correct": false,
+        "why": "That keeps a file out, not the argument."
+      },
+      {
+        "text": "Move the token to `ENV`",
+        "correct": false,
+        "why": "That stores it in the configuration instead."
+      }
+    ]
+  }
+]
