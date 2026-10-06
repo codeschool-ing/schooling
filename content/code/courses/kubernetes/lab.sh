@@ -40,9 +40,10 @@
 #
 # One setting differs on purpose: `serverTLSBootstrap: true` makes each kubelet
 # ask the cluster's CA for its serving certificate, so metrics-server can verify
-# it (lesson 21 approves them). kind's default leaves the kubelets with
+# it (lesson 21 shows the requests). kind's default leaves the kubelets with
 # self-signed certificates, and the usual workaround is a flag that turns the
-# verification off.
+# verification off. `lab.sh up` approves those requests as soon as they arrive,
+# which a cluster's operator does by hand or with an approver they trust.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -155,7 +156,22 @@ up() { # [CONFIG] [NAME]: a fresh cluster, the base images in it, kubectl pointe
   done
   rm -f /var/tmp/lab-image.tar
   kubectl wait --for=condition=Ready nodes --all --timeout=180s >/dev/null
+  serving_certs
   kubectl -n kube-system rollout status deploy/coredns --timeout=180s >/dev/null
+}
+
+serving_certs() { # approve each kubelet's request for a serving certificate
+  # (see serverTLSBootstrap in the header). Without one, `kubectl logs` and
+  # `kubectl exec` fail: the API server cannot verify the kubelet it dials.
+  local want have
+  want=$(kubectl get nodes --no-headers | wc -l)
+  for _ in $(seq 60); do
+    have=$(kubectl get csr --no-headers 2>/dev/null | grep -c 'kubelet-serving' || true)
+    [ "$have" -ge "$want" ] && break
+    sleep 2
+  done
+  kubectl get csr --no-headers | awk '/kubelet-serving/ && /Pending/ {print $1}' |
+    xargs -r kubectl certificate approve >/dev/null
 }
 
 down() {

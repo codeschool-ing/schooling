@@ -24,6 +24,9 @@ set -uo pipefail
 COURSE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 export HOME=/home/ana KUBECONFIG=/home/ana/.kube/config TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 export PATH=/opt/k8s/bin:$PATH
+# Nothing a lesson types needs the internet (lab.sh says why), so the
+# recording machine's proxy is not passed on to it.
+unset HTTPS_PROXY https_proxy HTTP_PROXY http_proxy NO_PROXY no_proxy
 mkdir -p /home/ana/shop && cd /home/ana/shop || exit 1
 HOST=${HOST:-laptop}
 
