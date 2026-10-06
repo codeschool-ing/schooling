@@ -1,0 +1,566 @@
+[
+  {
+    "id": "ex-g1egxx2b",
+    "version": 1,
+    "section": "errors-new",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`a := errors.New(\"not found\")` and `b := errors.New(\"not found\")`. What does `a == b` give?",
+    "hint": "Each call allocates.",
+    "choices": [
+      {
+        "text": "`true`, because the messages are equal",
+        "correct": false,
+        "why": "`a.Error() == b.Error()` was `true`; `a == b` compares the values, and they differ."
+      },
+      {
+        "text": "`false`",
+        "correct": true,
+        "why": "Right. Each call returns a pointer to a new `errorString`, and the two pointers differ."
+      },
+      {
+        "text": "It does not compile: errors cannot be compared with `==`",
+        "correct": false,
+        "why": "Interfaces compare with `==`; `a == c` compiled and gave `true`."
+      },
+      {
+        "text": "`true` the first time and `false` after the program has run a while",
+        "correct": false,
+        "why": "Nothing about it depends on time; two calls give two distinct values from the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjpf05d9",
+    "version": 1,
+    "section": "errors-new",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `c := a`, `a == c` is `true`. Why?",
+    "hint": "What did the assignment copy?",
+    "choices": [
+      {
+        "text": "Because `c` is a reference to the variable `a`",
+        "correct": false,
+        "why": "Assignment copies a value; `c` is a variable of its own holding a copy of the interface."
+      },
+      {
+        "text": "Because `==` on errors compares their messages",
+        "correct": false,
+        "why": "Then `a == b` would be `true` as well, and it was `false`."
+      },
+      {
+        "text": "Copying the interface copied its pointer too",
+        "correct": true,
+        "why": "Right. Same type, same pointer, so both point at one `errorString`: the same error."
+      },
+      {
+        "text": "Because `errors.New` caches the last error it made",
+        "correct": false,
+        "why": "`New` is one line, `return &errorString{text}`; it keeps nothing between calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-v763zd7k",
+    "version": 1,
+    "section": "errors-new",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `if err.Error() == \"not found\"` a poor way to recognise a failure?",
+    "hint": "Who owns the wording?",
+    "choices": [
+      {
+        "text": "It does not compile, because `Error` returns a pointer",
+        "correct": false,
+        "why": "`Error` returns a `string`, and comparing strings compiles; that is what makes the test dangerous."
+      },
+      {
+        "text": "Rewording the message breaks it silently",
+        "correct": true,
+        "why": "Right. And unrelated errors may share the text. The sentence is for a person; the identity is the value."
+      },
+      {
+        "text": "Calling `Error` changes the error",
+        "correct": false,
+        "why": "`Error` only returns `e.s`; it changes nothing."
+      },
+      {
+        "text": "It is always false, because `Error` adds the type's name to the text",
+        "correct": false,
+        "why": "`Error` returns the text as given: `fmt.Println(a)` printed `not found` and nothing more."
+      }
+    ]
+  },
+  {
+    "id": "ex-f61qf0rk",
+    "version": 1,
+    "section": "errors-new",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fmt.Printf(\"%T\\n\", errors.New(\"x\"))` prints `*errors.___`.",
+    "hint": "The unexported struct in `errors.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "errorString"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5esp6h7w",
+    "version": 1,
+    "section": "errors-new",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which message needs `fmt.Errorf` rather than `errors.New`?",
+    "hint": "`errors.New` takes no verbs.",
+    "choices": [
+      {
+        "text": "`name is empty`",
+        "correct": false,
+        "why": "A fixed sentence with nothing to format is exactly what `errors.New` is for."
+      },
+      {
+        "text": "`age cannot be negative`",
+        "correct": false,
+        "why": "Lesson 32's `price` built this one with `errors.New`; it never changes."
+      },
+      {
+        "text": "`age -4 is negative`",
+        "correct": true,
+        "why": "Right. The -4 is the age that was given, and formatting it in takes `%d` and so `fmt.Errorf`."
+      },
+      {
+        "text": "`operation not allowed`",
+        "correct": false,
+        "why": "Fixed text again; every occurrence says the same thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pjrrhdja",
+    "version": 1,
+    "section": "errorf",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fmt.Errorf(\"read config: %v\", err)` and `fmt.Errorf(\"read config: %w\", err)` print the same text. What differs?",
+    "hint": "Look at the two `%T` lines.",
+    "choices": [
+      {
+        "text": "Only the `%w` one keeps the original error inside it",
+        "correct": true,
+        "why": "Right. `%w` gave a `*fmt.wrapError` with the error in its `err` field; `%v` gave text only."
+      },
+      {
+        "text": "Only the `%w` one can be printed with `fmt.Println`",
+        "correct": false,
+        "why": "Both printed: they are the first two lines of the output."
+      },
+      {
+        "text": "The `%v` one is not an `error`, only a string",
+        "correct": false,
+        "why": "It is an `error`, a `*errors.errorString`; `fmt.Errorf` always returns an error."
+      },
+      {
+        "text": "The `%w` one hides the original message from the output",
+        "correct": false,
+        "why": "The original message is printed in both; the difference is in what is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pqr5wk2",
+    "version": 1,
+    "section": "errorf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`readConfig` returns `fmt.Errorf(\"read config: %w\", err)` without repeating the file name. Why is leaving it out right?",
+    "hint": "What does the error from `os.ReadFile` already say?",
+    "choices": [
+      {
+        "text": "File names are not allowed in error messages",
+        "correct": false,
+        "why": "Nothing forbids them; the `*fs.PathError` prints one itself."
+      },
+      {
+        "text": "`%w` cannot be combined with a second verb in one format",
+        "correct": false,
+        "why": "`fmt.Errorf(\"read %s: %w\", path, err)` is allowed; the reason is that it would say the path twice."
+      },
+      {
+        "text": "The caller adds the name later",
+        "correct": false,
+        "why": "`start` added `start server`, its own step, not the file name."
+      },
+      {
+        "text": "The `*fs.PathError` underneath already names it",
+        "correct": true,
+        "why": "Right. Each layer adds what the error does not know yet, and the path is already there."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgytdj1j",
+    "version": 1,
+    "section": "errorf",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/wrap-context`, put the parts of the final message in the order the program WROTE them.",
+    "hint": "The cause is written first.",
+    "items": [
+      "`open settings.json: no such file or directory`",
+      "`read config: `",
+      "`start server: `"
+    ]
+  },
+  {
+    "id": "ex-ppsw77c3",
+    "version": 1,
+    "section": "errorf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`~/wrap-style` printed `Failed to start server: Error: could not read config: open settings.json: no such file or directory..`. Which convention would have prevented the two full stops?",
+    "hint": "Each layer closed a sentence.",
+    "choices": [
+      {
+        "text": "Using `%v` instead of `%w`",
+        "correct": false,
+        "why": "Both verbs print the same text; the full stops were written in the format strings."
+      },
+      {
+        "text": "Starting each message with a capital letter",
+        "correct": false,
+        "why": "That is the other half of the problem, `Error:` mid-line; it adds to it rather than preventing it."
+      },
+      {
+        "text": "Ending every message without punctuation",
+        "correct": true,
+        "why": "Right. A message is a fragment that another layer may put in front of, never a closed sentence."
+      },
+      {
+        "text": "Printing the error with `fmt.Printf` instead of `fmt.Println`",
+        "correct": false,
+        "why": "The full stops are in the error's own text; any way of printing it shows them."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6faeg3q",
+    "version": 1,
+    "section": "errorf",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the 2,095 calls to `errors.New(\"…\")` counted in Go 1.27.1's standard library, how many messages end with a full stop?",
+    "hint": "The third count in section 03.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-bp58r901",
+    "version": 1,
+    "section": "errorf",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fmt.Errorf(\"save notes: %w\", reason)` with `reason` a `string`: what happens?",
+    "hint": "Compiler, run, `go vet`: who notices?",
+    "choices": [
+      {
+        "text": "The compiler refuses it",
+        "correct": false,
+        "why": "To the compiler the format is just a string; `go run .` built and ran it."
+      },
+      {
+        "text": "It panics when `fmt.Errorf` runs",
+        "correct": false,
+        "why": "Nothing panicked; the message printed with the complaint inside it."
+      },
+      {
+        "text": "It runs and prints `%!w(string=disk full)`; `go vet` reports it",
+        "correct": true,
+        "why": "Right. `%w` needs an `error`, and vet checks the arguments against the format."
+      },
+      {
+        "text": "`%w` turns the string into an error and wraps it",
+        "correct": false,
+        "why": "No conversion happens; the documentation calls a non-error operand invalid."
+      }
+    ]
+  },
+  {
+    "id": "ex-77nfqpxt",
+    "version": 1,
+    "section": "errorf",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fmt.Errorf(\"start server: %___\", err)` keeps `err` whole inside the error it returns.",
+    "hint": "The verb that exists only in `fmt.Errorf`.",
+    "blanks": [
+      {
+        "accept": [
+          "w"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-knwr1087",
+    "version": 1,
+    "section": "several-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`validate(\"Ana\", 30)` collected no problems and returned `errors.Join(errs...)` with an empty `errs`. What did it return?",
+    "hint": "The first line of the output.",
+    "choices": [
+      {
+        "text": "An empty `*errors.joinError`, which is not nil",
+        "correct": false,
+        "why": "That would be lesson 32's trap; `Join` avoids it and returns a real nil."
+      },
+      {
+        "text": "`nil`",
+        "correct": true,
+        "why": "Right. `Join` returns nil when every value, or no value, is nil, so `validate` needed no special case."
+      },
+      {
+        "text": "An error whose message is the empty string",
+        "correct": false,
+        "why": "It printed `<nil>`, not an empty line."
+      },
+      {
+        "text": "It panicked, because `Join` needs at least one error",
+        "correct": false,
+        "why": "It ran fine; the parameter is variadic and accepts zero values."
+      }
+    ]
+  },
+  {
+    "id": "ex-5srn1s76",
+    "version": 1,
+    "section": "several-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does `fmt.Errorf` with two `%w` suit better than `errors.Join`?",
+    "hint": "One line or several, your words or none.",
+    "choices": [
+      {
+        "text": "When there are more than two errors",
+        "correct": false,
+        "why": "`Join` takes any number; the count is not what decides."
+      },
+      {
+        "text": "When one of the errors may be nil",
+        "correct": false,
+        "why": "That is a strength of `Join`, which discards nils; `fmt.Errorf` would print `%!w(<nil>)`."
+      },
+      {
+        "text": "When the failures belong to one operation and should read as one sentence in your words",
+        "correct": true,
+        "why": "Right. `save notes.txt: disk full (and closing it: …)` is one line; `Join` adds no words and puts each on its own line."
+      },
+      {
+        "text": "When the errors must stay findable afterwards by callers, which `errors.Join` cannot offer",
+        "correct": false,
+        "why": "Both keep every error whole; the documentation of `Join` says its errors may be inspected with `Is` and `As`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jzfnq7y",
+    "version": 1,
+    "section": "several-errors",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each call to the type `%T` printed for its result.",
+    "hint": "Sections 02 to 04.",
+    "pairs": [
+      {
+        "left": "`errors.New(\"not found\")`",
+        "right": "`*errors.errorString`"
+      },
+      {
+        "left": "`fmt.Errorf(\"read config: %w\", err)`",
+        "right": "`*fmt.wrapError`"
+      },
+      {
+        "left": "`fmt.Errorf` with two `%w`",
+        "right": "`*fmt.wrapErrors`"
+      },
+      {
+        "left": "`errors.Join` of two errors",
+        "right": "`*errors.joinError`"
+      }
+    ],
+    "right_distractors": [
+      "`*fs.PathError`"
+    ]
+  },
+  {
+    "id": "ex-gj7cxf2q",
+    "version": 1,
+    "section": "several-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A package's `Load` wraps `os.ReadFile`'s error with `%w`, and its users check for a missing file. Next release, `Load` reads from an embedded copy and never touches the disk. What happens to those users?",
+    "hint": "What did they depend on?",
+    "choices": [
+      {
+        "text": "Their code stops compiling until they remove the check",
+        "correct": false,
+        "why": "Nothing in a signature changed, so everything compiles; that is why it is dangerous."
+      },
+      {
+        "text": "Their check now matches every error `Load` returns",
+        "correct": false,
+        "why": "The check looks for a file error, and no error from the new `Load` holds one."
+      },
+      {
+        "text": "Their check compiles and runs, and its branch is dead from then on",
+        "correct": true,
+        "why": "Right. Wrapping made the file error part of `Load`'s behaviour, and removing it broke users without a sign."
+      },
+      {
+        "text": "Nothing, because wrapped errors are only text",
+        "correct": false,
+        "why": "With `%w` the inner error is kept whole; that is exactly what they were relying on."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7ayc6y8",
+    "version": 1,
+    "section": "several-errors",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To add words to an error without letting callers reach the error underneath, `fmt.Errorf` uses the verb `%___`.",
+    "hint": "The verb `Printf` uses for any value.",
+    "blanks": [
+      {
+        "accept": [
+          "v"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kymzw9av",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good messages to put in front of a wrapped error? Choose all that apply.",
+    "hint": "Lower case, no punctuation, what was being done.",
+    "choices": [
+      {
+        "text": "`\"load user %d: %w\"`",
+        "correct": true,
+        "why": "Yes: a step, a value that identifies it, and the cause after the colon."
+      },
+      {
+        "text": "`\"Failed to load user: %w.\"`",
+        "correct": false,
+        "why": "A capital, `Failed`, and a full stop: `~/wrap-style` showed what that does in the middle of a line."
+      },
+      {
+        "text": "`\"parse settings: %w\"`",
+        "correct": true,
+        "why": "Yes: it says what was being done and lets the cause finish the sentence."
+      },
+      {
+        "text": "`\"error: %w\"`",
+        "correct": false,
+        "why": "It says nothing the reader did not know: everything printed there is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-nx1qkctw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function calls `os.Open` and then `json.Unmarshal`, and both can fail. A teammate wraps both with `%v` \"to keep things simple\". What does the caller lose compared with `%w`?",
+    "hint": "The text is the same either way.",
+    "choices": [
+      {
+        "text": "The messages of the two errors",
+        "correct": false,
+        "why": "`%v` prints the same text as `%w`; the messages are all there."
+      },
+      {
+        "text": "Any way to tell from code which of the two failed, or why",
+        "correct": true,
+        "why": "Right. `%v` keeps only text, so code can match nothing but strings, which section 02 advised against."
+      },
+      {
+        "text": "The exit status of the program",
+        "correct": false,
+        "why": "The status is whatever `main` passes to `os.Exit`; the verb has nothing to do with it."
+      },
+      {
+        "text": "Nothing at all; the two verbs are synonyms in `fmt.Errorf`",
+        "correct": false,
+        "why": "They print alike and build different values: `*errors.errorString` against `*fmt.wrapError`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a75sdgsh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A batch job processes 500 records and should report every record that fails, not just the first. Which shape fits?",
+    "hint": "Section 04's form did the same with two fields.",
+    "choices": [
+      {
+        "text": "Return at the first failure, wrapped with `%w`",
+        "correct": false,
+        "why": "That reports one record; the person fixes it and meets the next on the following run."
+      },
+      {
+        "text": "One `fmt.Errorf` with a `%w` per record",
+        "correct": false,
+        "why": "The format would need one verb per failure, and the number is not known when the code is written."
+      },
+      {
+        "text": "Concatenate the messages into one string and pass the result to `errors.New`",
+        "correct": false,
+        "why": "The text would be there, but every error underneath would be dropped, as with `%v`."
+      },
+      {
+        "text": "Collect each record's error in a slice and return `errors.Join(errs...)`",
+        "correct": true,
+        "why": "Right. Like `validate`, and it returns nil by itself when no record failed."
+      }
+    ]
+  }
+]
