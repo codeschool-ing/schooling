@@ -6,11 +6,11 @@ version: 1
 O Delta Lake é um de três formatos de tabela abertos, e os outros dois são construídos sobre a mesma ideia: dados em
 arquivos Parquet, mais metadados que dizem quais arquivos formam cada versão.
 
-O **Apache Iceberg**, criado na Netflix, guarda seus metadados numa árvore em vez de um log plano: um arquivo de
-metadados para cada versão da tabela aponta para uma **manifest list**, que aponta para **manifests**, cada um listando
+O **Apache Iceberg**, criado na Netflix, guarda seus metadados numa árvore em vez de um log plano. Um arquivo de
+metadados para cada versão da tabela aponta para uma manifest list, que aponta para manifests, cada um listando
 um conjunto de arquivos de dados com suas estatísticas. A árvore permite planejar tabelas muito grandes rapidamente. O
 Iceberg também identifica colunas por id e não por nome, então renomear uma coluna ou mudar o esquema de partição não
-regrava dados, e ele tem **particionamento oculto** (hidden partitioning): uma tabela particionada pelo mês de um
+regrava dados. E ele tem **particionamento oculto** (hidden partitioning): uma tabela particionada pelo mês de um
 timestamp é consultada com um filtro comum no timestamp, e o Iceberg descobre quais partições servem.
 
 O **Apache Hudi**, criado na Uber, foi feito primeiro para tabelas que recebem um fluxo constante de updates e deletes,

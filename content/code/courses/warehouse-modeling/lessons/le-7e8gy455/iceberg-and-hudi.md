@@ -6,10 +6,10 @@ version: 1
 Delta Lake is one of three open table formats, and the other two are built on the same idea: data in Parquet files,
 plus metadata that says which files make up each version.
 
-**Apache Iceberg**, created at Netflix, keeps its metadata in a tree rather than a flat log: a metadata file for each
-version of the table points at a **manifest list**, which points at **manifests**, each listing a set of data files
+**Apache Iceberg**, created at Netflix, keeps its metadata in a tree rather than a flat log. A metadata file for each
+version of the table points at a manifest list, which points at manifests, each listing a set of data files
 with their statistics. The tree lets very large tables be planned quickly. Iceberg also tracks columns by id rather
-than by name, so renaming a column or changing a partition scheme does not rewrite data, and it has **hidden
+than by name, so renaming a column or changing a partition scheme does not rewrite data. And it has **hidden
 partitioning**: a table partitioned by the month of a timestamp is queried with an ordinary filter on the timestamp,
 and Iceberg works out which partitions match.
 

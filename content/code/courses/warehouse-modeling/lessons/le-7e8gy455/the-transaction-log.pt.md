@@ -28,7 +28,7 @@ O commit 0 tem quatro ações:
 - **`add`**: um arquivo de dados entrando na tabela.
 
 O último comando olha dentro da ação `add` do commit 1. Além do caminho do arquivo, omitido aqui porque é um nome
-aleatório, ela traz o valor da partição, o tamanho do arquivo em bytes e **estatísticas**: o número de registros,
+aleatório, ela traz o valor da partição e o tamanho do arquivo em bytes. Traz também **estatísticas**: o número de registros,
 e o mínimo, o máximo e a contagem de valores vazios de cada coluna. 483.410 registros, o ano de 2025.
 
 **Para ler a tabela, um leitor reproduz o log**: começa do nada, aplica cada commit em ordem, acrescentando e

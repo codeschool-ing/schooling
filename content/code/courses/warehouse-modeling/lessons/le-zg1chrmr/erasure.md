@@ -63,13 +63,13 @@ the six lines still point at keys 27, 28 and 29, so every total in the warehouse
 centavos, and the lines now belong to a customer nobody can name.
 What gives an identifier its meaning is erased; the identifier stays.
 
-Three things this does not do, and each one matters:
+Three things this does not do:
 
 - **It does not touch the copies.** The extract files, the staging schema, the lake's Delta files and their old versions,
   the backups: each still holds the person until it is rebuilt, vacuumed or expired. Lesson 10 met this as the reason a
   Delta table's history is a liability as well as a feature. The classification has to cover them too.
 - **It keeps the version dates.** `valid_from` still records three moments when this customer's tier changed. Whether three
-  timestamps can lead back to a person is exactly the question article 12 asks of anonymised data, whether it can be
-  reversed with reasonable effort, and it is a judgement for whoever answers for the data, not for a script.
+  timestamps can lead back to a person is the question article 12 asks of anonymised data: can it be reversed with
+  reasonable effort? That is a judgement for whoever answers for the data, not for a script.
 - **It does not stop the next load.** Unless the source system has erased the customer too, tomorrow's load brings them
   back. Erasure has to start at the source, or be recorded somewhere the load reads.

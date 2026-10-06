@@ -38,7 +38,7 @@ print(f"problems: {len(problems)}")
 sys.exit(1 if problems else 0)
 ```
 
-It reads the model's tables from DuckDB's own catalogue, so it cannot miss a table nobody listed, and it checks in both
+It reads the model's tables from DuckDB's own catalogue, so it cannot miss a table nobody listed. It checks in both
 directions: a column with no description or no classification is a problem, and so is a classification for a column
 that no longer exists, which is how a renamed column shows up. It prints the first five problems, the count, and exits
 1 if there is any.

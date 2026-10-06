@@ -34,4 +34,4 @@ leu ali mesmo, deduziu os tipos pelo conteúdo e respondeu. Essa é toda a ofert
   então a mesma pasta serve ao DuckDB, ao Spark, a um notebook Python e a um warehouse na nuvem ao mesmo tempo.
   É a separação entre armazenamento e processamento da lição 7, com o armazenamento aberto a todos.
 
-O preço dessa liberdade é pago por quem lê, e as duas próximas seções mostram a conta.
+Quem lê paga por essa liberdade, e as duas próximas seções mostram a conta.

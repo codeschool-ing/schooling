@@ -27,8 +27,8 @@ Commit 0 has four actions:
 - **`metaData`**: the table's schema, its partition columns and its settings.
 - **`add`**: one data file joining the table.
 
-The last command looks inside commit 1's `add` action. Beside the file's path, which is omitted here because it is a
-random name, it carries the partition value, the size of the file in bytes and **statistics**: the number of
+The last command looks inside commit 1's `add` action. Beside the file's path, left out here because it is a random
+name, it carries the partition value and the size of the file in bytes. It also carries **statistics**: the number of
 records, and the minimum, maximum and count of empty values of each column. 483,410 records, the year 2025.
 
 **To read the table, a reader replays the log**: start with nothing, apply each commit in order, adding and removing

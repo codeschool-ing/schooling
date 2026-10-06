@@ -33,4 +33,4 @@ place, worked out the types from its contents, and answered. That is the lake's 
   folder serves DuckDB, Spark, a Python notebook and a cloud warehouse at once. That is lesson 7's separation
   of storage and compute, with the storage open to everybody.
 
-The price for that freedom is paid by the reader, and the next two sections show the bill.
+The reader pays for that freedom, and the next two sections show the bill.

@@ -86,8 +86,8 @@ renames `discount_cents` to `discount`, the kind of tidying that seems harmless 
 table, and the check fails with **a message naming the column and an exit status of 1**.
 
 That exit status is the point. A check that prints a warning is read when somebody remembers; a check that exits 1
-stops a deployment. **The contract belongs in the producer's pipeline**, run before a change is published, so the
-rename is refused on the producer's side, where it was made and can be undone, rather than discovered by every
+stops a deployment. **The contract belongs in the producer's pipeline**, run before a change is published. The
+rename is then refused on the producer's side, where it was made and can be undone, rather than discovered by every
 dashboard that read `discount_cents`, the way section 3 of lesson 10 found a renamed column too late.
 
 A contract written by hand in JSON is a teaching version. In practice the same idea comes as dbt's model contracts,

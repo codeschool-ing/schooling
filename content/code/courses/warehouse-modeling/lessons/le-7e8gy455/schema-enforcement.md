@@ -39,8 +39,7 @@ appended, and the table now has 13 columns
 - **With `schema_mode="merge"` the same append succeeds** and the table gains the column. Every earlier row reads it
   as empty.
 
-That is the difference between a lake and a table, in one decision. **Evolving the schema is a deliberate act that
-somebody writes down**, rather than something that happens to the table because one file was different. The website
+**Evolving the schema is a deliberate act that somebody writes down**, rather than something that happens to the table because one file was different. The website
 team's renamed column of section 3 would have been stopped at the door with an error naming it, and the people who
 could fix it would have been the ones to see it.
 

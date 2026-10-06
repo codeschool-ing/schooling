@@ -15,7 +15,7 @@ exit status 1
 ```
 
 The column is added and the test fails, naming it. In a pipeline that runs the test on every change, the change that
-adds `gift_wrap` does not reach the warehouse until it carries a description and a classification, which means **the
+adds `gift_wrap` does not reach the warehouse until it carries a description and a classification. So **the
 person adding the column writes the description, in the same change**, while they still know what it means.
 
 That is the whole discipline, and it has three parts that only work together:

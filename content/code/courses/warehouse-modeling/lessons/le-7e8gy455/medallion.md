@@ -24,8 +24,8 @@ Set beside this course, the mapping is direct. Bronze is Ana's `extract/` folder
 the load does between staging and the model; gold is the star. **The dimensional model did not go away when the
 warehouse moved to the lake; it became the gold layer.**
 
-What the medallion layers add is a rule about where each kind of work happens, which keeps them from being done
-twice or skipped: cleaning happens on the way into silver and nowhere else; business definitions, such as what revenue
+What the medallion layers add is a rule about where each kind of work happens, so that none of it is done twice
+or skipped. Cleaning happens on the way into silver and nowhere else; business definitions, such as what revenue
 means, happen on the way into gold and nowhere else. A lakehouse without that rule tends to grow three slightly
 different versions of the same clean-up, in three teams' notebooks.
 

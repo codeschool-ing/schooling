@@ -7,8 +7,8 @@ Ana's staging layer has fifteen tables, and lesson 2 wrote fifteen nearly identi
 warehouse with four hundred source tables would have four hundred, and the four hundred and first would be copied
 from one of the others, with whatever mistake that one carried.
 
-A **metadata-driven** pipeline turns that round. The tables are described as data, a list with one entry per
-source saying what it is called, where it comes from and anything unusual about it, and **one generic program** turns
+A **metadata-driven** pipeline turns that round. The tables are described as data: a list with one entry per
+source, saying what it is called, where it comes from and anything unusual about it. Then **one generic program** turns
 the list into loads, either by generating the code or by running the loads itself. Adding a source is a line in the
 list, not a new program.
 

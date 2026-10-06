@@ -38,8 +38,7 @@ appended, and the table now has 13 columns
   alguma coisa.
 - **Com `schema_mode="merge"` o mesmo append funciona** e a tabela ganha a coluna. Toda linha anterior a lê como vazia.
 
-Essa é a diferença entre um lake e uma tabela, numa decisão só. **Evoluir o esquema é um ato deliberado que alguém
-escreve**, e não algo que acontece com a tabela porque um arquivo veio diferente. A coluna renomeada pelo time do site
+**Evoluir o esquema é um ato deliberado que alguém escreve**, e não algo que acontece com a tabela porque um arquivo veio diferente. A coluna renomeada pelo time do site
 na seção 3 teria sido barrada na porta com um erro que a nomeia, e as pessoas capazes de corrigi-la seriam as que o
 veriam.
 

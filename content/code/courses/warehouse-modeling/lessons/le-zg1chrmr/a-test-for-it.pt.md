@@ -40,7 +40,7 @@ sys.exit(1 if problems else 0)
 ```
 
 Ele lê as tabelas do modelo no próprio catálogo do DuckDB, então não consegue deixar passar uma tabela que ninguém
-listou, e confere nos dois sentidos: uma coluna sem descrição ou sem classificação é um problema, e também uma
+listou. E confere nos dois sentidos: uma coluna sem descrição ou sem classificação é um problema, e também uma
 classificação de uma coluna que não existe mais, que é como uma coluna renomeada aparece. Ele imprime os cinco
 primeiros problemas, a contagem, e sai com 1 se houver algum.
 

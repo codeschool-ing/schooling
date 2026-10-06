@@ -7,8 +7,8 @@ A camada de staging de Ana tem quinze tabelas, e a lição 2 escreveu quinze com
 Um warehouse com quatrocentas tabelas de origem teria quatrocentos, e o quadringentésimo primeiro seria copiado de um
 dos outros, com o erro que aquele carregasse.
 
-Um pipeline **orientado a metadados** (metadata-driven) inverte isso. As tabelas são descritas como dados, uma lista
-com uma entrada por origem dizendo como se chama, de onde vem e o que tem de incomum, e **um programa genérico**
+Um pipeline **orientado a metadados** (metadata-driven) inverte isso. As tabelas são descritas como dados: uma lista
+com uma entrada por origem, dizendo como se chama, de onde vem e o que tem de incomum. Então **um programa genérico**
 transforma a lista em cargas, gerando o código ou executando ele mesmo as cargas. Acrescentar uma origem é uma linha na
 lista, não um programa novo.
 

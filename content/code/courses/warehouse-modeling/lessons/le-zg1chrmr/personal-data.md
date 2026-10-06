@@ -3,7 +3,7 @@ title: Which columns are personal data
 version: 1
 ---
 
-Brazil's **Lei Geral de Proteção de Dados**, the LGPD, Law 13,709 of 2018, defines **personal data** in article 5 as
+Brazil's Lei Geral de Proteção de Dados, the LGPD, Law 13,709 of 2018, defines **personal data** in article 5 as
 information relating to an identified or identifiable natural person. *Identifiable* is the word that matters: a
 customer number is personal data, because the company can turn it back into a person, even though it is only a
 number.

@@ -88,7 +88,7 @@ dentro do time dono da tabela, e a conferência falha com **uma mensagem que nom
 
 Esse status de saída é o ponto. Uma conferência que imprime um aviso é lida quando alguém lembra; uma conferência que
 sai com 1 barra um deploy. **O contrato pertence ao pipeline de quem produz**, executado antes de uma mudança ser
-publicada, para que a renomeação seja recusada do lado de quem a fez e pode desfazê-la, em vez de descoberta por cada
+publicada. A renomeação é então recusada do lado de quem a fez e pode desfazê-la, em vez de descoberta por cada
 painel que lia `discount_cents`, do jeito que a seção 3 da lição 10 achou tarde demais uma coluna renomeada.
 
 Um contrato escrito à mão em JSON é uma versão didática. Na prática, a mesma ideia aparece como os model contracts do

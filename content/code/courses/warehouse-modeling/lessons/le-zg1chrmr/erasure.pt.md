@@ -63,15 +63,15 @@ tocadas**: as seis linhas ainda apontam para as chaves 27, 28 e 29, então todo 
 9.574.389.852 centavos, e as linhas agora pertencem a um cliente que ninguém consegue nomear. O que dava significado ao
 identificador foi apagado; o identificador fica.
 
-Três coisas que isso não faz, e cada uma importa:
+Três coisas que isso não faz:
 
 - **Não mexe nas cópias.** Os arquivos de extração, o esquema de staging, os arquivos Delta do lake e suas versões
   antigas, os backups: cada um ainda guarda a pessoa até ser reconstruído, passar por um vacuum ou expirar. A lição 10
   encontrou isso como o motivo de o histórico de uma tabela Delta ser um passivo além de um recurso. A classificação
   precisa cobri-los também.
 - **Mantém as datas das versões.** `valid_from` ainda registra três momentos em que o nível desse cliente mudou. Se três
-  carimbos de tempo conseguem levar de volta a uma pessoa é exatamente a pergunta que o artigo 12 faz sobre dados
-  anonimizados, se a anonimização pode ser revertida com esforços razoáveis, e isso é um julgamento para quem responde
+  carimbos de tempo conseguem levar de volta a uma pessoa é a pergunta que o artigo 12 faz sobre dados
+  anonimizados: a anonimização pode ser revertida com esforços razoáveis? Isso é um julgamento para quem responde
   pelos dados, não para um script.
 - **Não impede a próxima carga.** A menos que o sistema de origem também tenha apagado o cliente, a carga de amanhã o
   traz de volta. A eliminação precisa começar na origem, ou ficar registrada em algum lugar que a carga leia.

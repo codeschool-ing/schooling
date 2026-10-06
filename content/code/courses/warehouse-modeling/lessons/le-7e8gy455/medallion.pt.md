@@ -24,8 +24,8 @@ Postas ao lado deste curso, as camadas se encaixam direto. Bronze é a pasta `ex
 prata é o que a carga faz entre o staging e o modelo; ouro é a estrela. **O modelo dimensional não sumiu quando o
 warehouse foi para o lake; virou a camada ouro.**
 
-O que as camadas medalhão acrescentam é uma regra sobre onde cada tipo de trabalho acontece, o que impede que ele seja
-feito duas vezes ou pulado: a limpeza acontece na entrada da prata e em nenhum outro lugar; as definições de negócio,
+O que as camadas medalhão acrescentam é uma regra sobre onde cada tipo de trabalho acontece, para que nenhum seja feito duas
+vezes ou pulado. A limpeza acontece na entrada da prata e em nenhum outro lugar; as definições de negócio,
 como o que significa receita, acontecem na entrada do ouro e em nenhum outro lugar. Um lakehouse sem essa regra tende
 a criar três versões ligeiramente diferentes da mesma limpeza, nos notebooks de três times.
 

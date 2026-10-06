@@ -3,7 +3,7 @@ title: Quais colunas são dados pessoais
 version: 1
 ---
 
-A **Lei Geral de Proteção de Dados**, a LGPD, Lei 13.709 de 2018, define **dado pessoal** no artigo 5º como informação
+A Lei Geral de Proteção de Dados, a LGPD, Lei 13.709 de 2018, define **dado pessoal** no artigo 5º como informação
 relacionada a pessoa natural identificada ou identificável. *Identificável* é a palavra que importa: um número de
 cliente é dado pessoal, porque a empresa consegue transformá-lo de volta numa pessoa, ainda que seja só um número.
 

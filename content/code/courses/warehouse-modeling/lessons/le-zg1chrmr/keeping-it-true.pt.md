@@ -15,8 +15,8 @@ exit status 1
 ```
 
 A coluna é acrescentada e o teste falha, nomeando-a. Num pipeline que roda o teste a cada mudança, a mudança que
-acrescenta `gift_wrap` não chega ao warehouse enquanto não trouxer uma descrição e uma classificação, o que significa
-que **quem acrescenta a coluna escreve a descrição, na mesma mudança**, enquanto ainda sabe o que ela significa.
+acrescenta `gift_wrap` não chega ao warehouse enquanto não trouxer uma descrição e uma classificação. Assim,
+**quem acrescenta a coluna escreve a descrição, na mesma mudança**, enquanto ainda sabe o que ela significa.
 
 Essa é toda a disciplina, e ela tem três partes que só funcionam juntas:
 
