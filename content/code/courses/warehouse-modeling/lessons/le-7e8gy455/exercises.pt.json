@@ -1,0 +1,538 @@
+{
+  "ex-beasat3w": {
+    "prompt": "O que Ana fez antes de o DuckDB conseguir responder sobre o arquivo de pedidos no lake?",
+    "hint": "Veja o primeiro comando.",
+    "choices": [
+      {
+        "text": "Copiou o arquivo, como estava, para uma pasta do lake",
+        "why": "Isso. O DuckDB o leu ali mesmo e deduziu os tipos pelo conteúdo."
+      },
+      {
+        "text": "Criou uma tabela e carregou o arquivo",
+        "why": "Nenhuma tabela foi criada; esse é o jeito do warehouse."
+      },
+      {
+        "text": "Converteu-o para Parquet para qualquer motor conseguir ler",
+        "why": "Ele continuou CSV."
+      },
+      {
+        "text": "Registrou-o num catálogo",
+        "why": "Nada foi registrado; isso é parte de como um pântano começa."
+      }
+    ]
+  },
+  "ex-xxag4sf3": {
+    "prompt": "Quais destes a seção conta como oferta do lake? Marque todos os que se aplicam.",
+    "hint": "Três itens.",
+    "choices": [
+      {
+        "text": "Uma fonte nova é uma pasta, não um projeto",
+        "why": "Sim."
+      },
+      {
+        "text": "Armazenamento barato para qualquer arquivo",
+        "why": "Sim."
+      },
+      {
+        "text": "Muitos motores lendo os mesmos arquivos",
+        "why": "Sim."
+      },
+      {
+        "text": "Todo arquivo conferido contra um modelo na chegada",
+        "why": "Isso é esquema na escrita, o jeito do warehouse."
+      }
+    ]
+  },
+  "ex-0rdedsvg": {
+    "prompt": "Um warehouse confere os dados na carga: esquema na escrita. Um lake deixa isso para cada leitor: esquema na ___.",
+    "hint": "O oposto de escrita.",
+    "blanks": [
+      {
+        "accept": [
+          "leitura",
+          "read"
+        ]
+      }
+    ]
+  },
+  "ex-8gw86p6g": {
+    "prompt": "Com `union_by_name = true`, a consulta sobre os dois arquivos devolveu 586.584 pedidos e nenhum erro. O que havia de errado?",
+    "hint": "Conte os clientes.",
+    "choices": [
+      {
+        "text": "Contou o arquivo antigo duas vezes, uma com cada nome de coluna",
+        "why": "A contagem é os 577.468 antigos mais a semana nova."
+      },
+      {
+        "text": "A coluna de frete foi somada como texto e deu zero",
+        "why": "Essa consulta não somou o frete."
+      },
+      {
+        "text": "Todos os pedidos da semana nova perderam o cliente, que estava em client_id",
+        "why": "Isso. O cliente estava em `client_id`, uma coluna que a consulta nunca citou."
+      },
+      {
+        "text": "O DuckDB descartou em silêncio as linhas de tipo diferente",
+        "why": "Nenhuma linha sumiu; uma coluna ficou vazia."
+      }
+    ]
+  },
+  "ex-cbzab0fv": {
+    "prompt": "De 586.584 pedidos, 430.221 tinham cliente. Quantos não tinham?",
+    "hint": "Subtraia."
+  },
+  "ex-qhgf25w3": {
+    "prompt": "Um job que grava vinte arquivos Parquet numa pasta comum morre depois do décimo primeiro. O que os leitores veem?",
+    "hint": "Uma pasta não tem transações.",
+    "choices": [
+      {
+        "text": "Nada até o job rodar de novo, porque a pasta fica travada",
+        "why": "Uma pasta não tem trava."
+      },
+      {
+        "text": "Onze arquivos, como se completo",
+        "why": "Isso. Uma carga parcial parece inteira."
+      },
+      {
+        "text": "Um erro na leitura",
+        "why": "Nada sabe quais arquivos deveriam estar lá."
+      },
+      {
+        "text": "A versão anterior dos dados, restaurada pelo serviço de armazenamento",
+        "why": "O armazenamento de objetos não sabe quais arquivos formam uma versão."
+      }
+    ]
+  },
+  "ex-kyqkdk5q": {
+    "prompt": "Ligue cada falha do pântano ao que ela parece.",
+    "hint": "Cinco das seis da seção.",
+    "pairs": [
+      {
+        "left": "Sem transações",
+        "right": "Uma carga pela metade lida como completa"
+      },
+      {
+        "left": "Sem updates",
+        "right": "Uma correção de uma linha regravando um arquivo"
+      },
+      {
+        "left": "Sem histórico",
+        "right": "A pasta de ontem não pode ser lida"
+      },
+      {
+        "left": "Arquivos pequenos",
+        "right": "Meio milhão de arquivos por ano"
+      },
+      {
+        "left": "Sem catálogo",
+        "right": "Uma pasta chamada orders_v2_final"
+      }
+    ]
+  },
+  "ex-bb05q1zx": {
+    "prompt": "O que um formato de tabela aberto acrescenta a uma pasta de arquivos Parquet?",
+    "hint": "Uma coisa ao lado dos dados.",
+    "choices": [
+      {
+        "text": "Um servidor ao qual todo leitor e escritor se conecta",
+        "why": "O Delta não precisa de servidor; o laboratório não rodou nenhum."
+      },
+      {
+        "text": "Um novo formato de arquivo que substitui o Parquet",
+        "why": "Os dados continuam Parquet comum."
+      },
+      {
+        "text": "Um índice da posição de cada linha em cada arquivo",
+        "why": "Lista arquivos e suas estatísticas, não linhas."
+      },
+      {
+        "text": "Um log de commits",
+        "why": "Isso. Cada commit diz quais arquivos acrescentou e removeu."
+      }
+    ]
+  },
+  "ex-184s6cjn": {
+    "prompt": "Por que um job que morre no meio de uma escrita Delta não deixa tabela parcial?",
+    "hint": "O que um leitor lê primeiro?",
+    "choices": [
+      {
+        "text": "A biblioteca apaga os arquivos que gravou quando o processo termina",
+        "why": "Um processo que morre não limpa nada."
+      },
+      {
+        "text": "O armazenamento de objetos volta a pasta ao estado anterior ao job",
+        "why": "O armazenamento de objetos não sabe nada do job."
+      },
+      {
+        "text": "Seus arquivos novos nunca entraram num commit, e leitores só seguem o log",
+        "why": "Isso. Leitores seguem o log, então arquivos sem commit são invisíveis."
+      },
+      {
+        "text": "Cada arquivo é gravado dentro da sua própria transação de banco",
+        "why": "Não há banco; há um log."
+      }
+    ]
+  },
+  "ex-taqjn7p0": {
+    "prompt": "Ligue cada formato à sua origem.",
+    "hint": "Três empresas.",
+    "pairs": [
+      {
+        "left": "Delta Lake",
+        "right": "Databricks"
+      },
+      {
+        "left": "Apache Iceberg",
+        "right": "Netflix"
+      },
+      {
+        "left": "Apache Hudi",
+        "right": "Uber"
+      }
+    ]
+  },
+  "ex-jpr6nm80": {
+    "prompt": "Ana gravou 404.067 linhas de 2024 e 483.410 de 2025. Quantas linhas a tabela tem depois do commit 1?",
+    "hint": "Some."
+  },
+  "ex-scv0bhgr": {
+    "prompt": "Qual parte da pasta é a tabela, e não os dados?",
+    "hint": "Dois tipos de arquivo.",
+    "choices": [
+      {
+        "text": "Os arquivos JSON em _delta_log, um por commit",
+        "why": "Isso. Sem eles a pasta é uma pilha de Parquet."
+      },
+      {
+        "text": "As pastas chamadas year=2024 e year=2025",
+        "why": "São partições, e o log também as registra."
+      },
+      {
+        "text": "Os arquivos Parquet, porque seus rodapés listam o esquema",
+        "why": "Um arquivo Parquet só conhece a si mesmo."
+      },
+      {
+        "text": "Os arquivos Parquet mais novos",
+        "why": "Mais novo não é atual: depois de um update o antigo fica ao lado do novo."
+      }
+    ]
+  },
+  "ex-1cj94fr8": {
+    "prompt": "Ponha as ações do commit 0 de Ana na ordem em que aparecem no arquivo.",
+    "hint": "Quem gravou vem primeiro; o arquivo de dados por último.",
+    "items": [
+      "commitInfo",
+      "protocol",
+      "metaData",
+      "add"
+    ],
+    "trap": "`add` por último: o arquivo entra numa tabela cujo esquema as linhas anteriores já declararam."
+  },
+  "ex-1g766f0h": {
+    "prompt": "Dois escritores tentam criar o commit 2 no mesmo instante. O que acontece?",
+    "hint": "Um commit é um arquivo aparecendo.",
+    "choices": [
+      {
+        "text": "Os dois conseguem",
+        "why": "Só um arquivo pode ser o commit 2."
+      },
+      {
+        "text": "A tabela trava até um administrador escolher um deles",
+        "why": "Ninguém precisa escolher; o armazenamento escolhe."
+      },
+      {
+        "text": "O mais tardio sobrescreve o arquivo de commit do primeiro",
+        "why": "Criar o arquivo é atômico, então o segundo o encontra ocupado."
+      },
+      {
+        "text": "Um vence; o outro relê e tenta de novo",
+        "why": "Isso. Nenhum servidor é necessário entre eles."
+      }
+    ]
+  },
+  "ex-z9k4ejb6": {
+    "prompt": "Uma tabela com milhares de commits grava de tempos em tempos um ___, um arquivo Parquet com o estado naquele commit, para os leitores não reproduzirem do zero.",
+    "hint": "De onde o leitor começa.",
+    "blanks": [
+      {
+        "accept": [
+          "checkpoint"
+        ]
+      }
+    ]
+  },
+  "ex-eyxehpw2": {
+    "prompt": "O update de Ana mudou 1 linha e copiou 404.066. Quantas linhas o novo arquivo de 2024 tinha?",
+    "hint": "Mudadas mais copiadas."
+  },
+  "ex-hrz4bd4m": {
+    "prompt": "Por que uma correção de uma linha copiou 404.066 linhas?",
+    "hint": "Arquivos Parquet são gravados uma vez.",
+    "choices": [
+      {
+        "text": "O Delta regrava todos os arquivos da tabela a cada commit, para as estatísticas ficarem exatas",
+        "why": "O arquivo de 2025 não foi tocado."
+      },
+      {
+        "text": "Copy on write regrava o arquivo",
+        "why": "Isso. O arquivo com a linha foi lido e gravado de novo inteiro."
+      },
+      {
+        "text": "O predicado pegou o ano inteiro porque ids de pedido se repetem a cada ano",
+        "why": "Uma linha foi atualizada."
+      },
+      {
+        "text": "A biblioteca fez uma cópia de segurança antes de mudar algo",
+        "why": "O arquivo antigo é a cópia; ficou onde estava."
+      }
+    ]
+  },
+  "ex-bhcerxzm": {
+    "prompt": "O que vetores de deleção mudam numa deleção?",
+    "hint": "Merge on read.",
+    "choices": [
+      {
+        "text": "Registram posições de linha a ignorar, e deixam a regravação para uma compactação",
+        "why": "Isso. A regravação espera uma compactação."
+      },
+      {
+        "text": "Removem as linhas do arquivo no lugar, sem regravá-lo",
+        "why": "Um arquivo Parquet não é editado no lugar."
+      },
+      {
+        "text": "Apagam o arquivo antigo do disco na hora, sem precisar de vacuum",
+        "why": "Nenhum commit apaga nada do disco."
+      },
+      {
+        "text": "Fazem cada leitor regravar o arquivo na primeira leitura",
+        "why": "Leitores pulam as posições; não regravam."
+      }
+    ]
+  },
+  "ex-9fgwe0k4": {
+    "prompt": "Qual é a última versão da tabela de Ana que ainda tem o erro de caixa?",
+    "hint": "O update foi o commit 2.",
+    "choices": [
+      {
+        "text": "A versão 2, a atual, porque o arquivo antigo ainda está no disco",
+        "why": "A versão 2 lê o arquivo corrigido."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Versões antigas mantêm seus arquivos."
+      },
+      {
+        "text": "A versão 1, a de antes do update",
+        "why": "Isso. 9.574.389.852, antes da correção."
+      },
+      {
+        "text": "A versão 0",
+        "why": "Ela tem o erro, mas a versão 1 é posterior e também tem."
+      }
+    ]
+  },
+  "ex-qc0fpnp8": {
+    "prompt": "Depois de um vacuum de verdade com retenção zero, quais versões da tabela de Ana ainda podem ser lidas?",
+    "hint": "Qual arquivo sai?",
+    "choices": [
+      {
+        "text": "As três",
+        "why": "O log lista um arquivo que não existe mais."
+      },
+      {
+        "text": "Só a versão 2",
+        "why": "Isso. As versões 0 e 1 precisam do arquivo 2024 original."
+      },
+      {
+        "text": "As versões 1 e 2, porque a versão 0 não tinha arquivo de 2025",
+        "why": "A versão 1 também precisa do arquivo 2024 original."
+      },
+      {
+        "text": "Nenhuma, até a tabela ser regravada a partir do warehouse",
+        "why": "Os arquivos da versão atual ficam."
+      }
+    ]
+  },
+  "ex-tsvv9sdg": {
+    "prompt": "Um cliente pede para ser esquecido e é apagado de uma tabela Delta hoje. Quando ele some do disco?",
+    "hint": "Arquivos antigos ficam.",
+    "choices": [
+      {
+        "text": "Hoje, quando o delete entra num commit",
+        "why": "O commit só para de listar os arquivos antigos."
+      },
+      {
+        "text": "Nunca, porque o Delta guarda toda versão para sempre por projeto",
+        "why": "O vacuum existe para removê-las."
+      },
+      {
+        "text": "Quando o próximo checkpoint for gravado, já que ele substitui o log",
+        "why": "Um checkpoint resume o log; não apaga arquivo de dados."
+      },
+      {
+        "text": "Depois de um vacuum",
+        "why": "Isso. Até lá versões antigas ainda têm as linhas."
+      }
+    ]
+  },
+  "ex-wvv3q4y4": {
+    "prompt": "Ana acrescentou uma linha com 13 colunas a uma tabela Delta de 12, sem `schema_mode`. O que o histórico mostrou depois?",
+    "hint": "Onde a recusa aconteceu?",
+    "choices": [
+      {
+        "text": "Um commit 3 marcado como falho, com a mensagem de erro",
+        "why": "Escritas recusadas não deixam commit nenhum."
+      },
+      {
+        "text": "Um commit 3 que descartou a coluna extra e acrescentou o resto",
+        "why": "Nada foi acrescentado."
+      },
+      {
+        "text": "Ainda terminando no commit 2: a escrita foi recusada antes de qualquer commit",
+        "why": "Isso. A escrita foi recusada antes do commit."
+      },
+      {
+        "text": "Um commit 3 acrescentando a coluna, sem linhas",
+        "why": "Isso pede `schema_mode=\"merge\"`."
+      }
+    ]
+  },
+  "ex-ddvg3k8w": {
+    "prompt": "Quais destes a conferência de esquema de uma tabela Delta barraria? Marque todos os que se aplicam.",
+    "hint": "Ela confere forma, não significado.",
+    "choices": [
+      {
+        "text": "Um lote com uma coluna a mais",
+        "why": "Sim, como a captura mostrou."
+      },
+      {
+        "text": "Um lote com texto onde se declarou número",
+        "why": "Sim, tipo diferente."
+      },
+      {
+        "text": "Preços em reais gravados numa coluna feita para centavos",
+        "why": "Mesmo tipo, significado errado: passa."
+      },
+      {
+        "text": "Uma coluna renomeada na origem já mapeada para o nome da tabela",
+        "why": "A tabela vê o próprio nome: passa."
+      }
+    ]
+  },
+  "ex-2rdvzgqa": {
+    "prompt": "Ligue cada ideia ao formato a que a seção a associa.",
+    "hint": "Mais ou menos duas cada.",
+    "pairs": [
+      {
+        "left": "Particionamento oculto",
+        "right": "Iceberg"
+      },
+      {
+        "left": "Fluxos de updates vindos de captura de mudanças",
+        "right": "Hudi"
+      },
+      {
+        "left": "Um log JSON plano, um arquivo por commit",
+        "right": "Delta Lake"
+      }
+    ]
+  },
+  "ex-d67bnc0v": {
+    "prompt": "O que escolher Iceberg em vez de Delta muda na estrela das lições 2 a 6?",
+    "hint": "Formato contra modelo.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Isso. Os formatos diferem nos metadados; fatos e dimensões são os mesmos."
+      },
+      {
+        "text": "Dimensões precisam ser guardadas como manifests em vez de tabelas",
+        "why": "Manifests listam arquivos; não são escolha de modelagem."
+      },
+      {
+        "text": "O histórico tipo 2 passa para a viagem no tempo do formato",
+        "why": "Viagem no tempo é sobre versões da tabela, não sobre quando o cliente mudou."
+      },
+      {
+        "text": "Chaves substitutas são trocadas pelos ids de coluna do Iceberg",
+        "why": "Ids de coluna nomeiam colunas, não linhas."
+      }
+    ]
+  },
+  "ex-97p5ke0t": {
+    "prompt": "Ponha as camadas medalhão na ordem em que os dados passam por elas.",
+    "hint": "Metais, do mais barato.",
+    "items": [
+      "bronze: como chegou",
+      "prata: limpo e conformado",
+      "ouro: modelado para perguntas"
+    ],
+    "trap": "Limpeza antes da modelagem: o ouro sai da prata, nunca direto do bronze."
+  },
+  "ex-6f56acy6": {
+    "prompt": "Em qual camada o `client_id` do site vira `customer_id`?",
+    "hint": "Uma vez, e em nenhum outro lugar.",
+    "choices": [
+      {
+        "text": "Bronze, para o arquivo cru ser corrigido assim que chega",
+        "why": "O bronze guarda o arquivo como recebido."
+      },
+      {
+        "text": "Ouro",
+        "why": "Aí a correção se repetiria por tabela."
+      },
+      {
+        "text": "Na consulta de cada painel",
+        "why": "Esse é o jeito do pântano: cada leitor por conta própria."
+      },
+      {
+        "text": "Prata",
+        "why": "Isso. Todo leitor depois dela vê um nome só."
+      }
+    ]
+  },
+  "ex-k8mtmdfv": {
+    "prompt": "Um job noturno sobrescreve a partição 2025 de uma tabela Delta. Na terça um relatório lê números errados; a carga de quarta já rodou. O que responde \"o que o relatório de segunda leu?\"",
+    "hint": "Versões, e quanto duram.",
+    "choices": [
+      {
+        "text": "Ler os arquivos crus da pasta 2025 na ordem dos horários",
+        "why": "A pasta tem arquivos de várias versões; só o log diz quais andavam juntos."
+      },
+      {
+        "text": "Ler a versão que estava vigente na segunda",
+        "why": "Isso, desde que nenhum vacuum tenha removido seus arquivos."
+      },
+      {
+        "text": "Rodar de novo a carga de segunda",
+        "why": "A origem mudou desde segunda."
+      },
+      {
+        "text": "Nada, porque um overwrite apaga os arquivos anteriores na hora",
+        "why": "Um overwrite é um commit; arquivos antigos ficam até um vacuum."
+      }
+    ]
+  },
+  "ex-fks671as": {
+    "prompt": "Um time guarda CSVs crus num bucket e cada analista os limpa num notebook. Qual mudança desta lição resolve mais?",
+    "hint": "Onde a limpeza acontece.",
+    "choices": [
+      {
+        "text": "Uma camada prata, limpa uma vez em tabelas com esquema, que todo analista lê",
+        "why": "Isso. Uma limpeza, numa tabela com esquema."
+      },
+      {
+        "text": "Converter os CSVs para Parquet no lugar, mantendo os notebooks",
+        "why": "Leituras mais rápidas; ainda uma limpeza por analista."
+      },
+      {
+        "text": "Ligar o versionamento do bucket para cada arquivo guardar seu histórico",
+        "why": "Histórico de arquivos não é tabela, e a limpeza segue repetida."
+      },
+      {
+        "text": "Levar os notebooks a um cluster maior para as limpezas rodarem mais rápido",
+        "why": "Duplicação mais rápida ainda é duplicação."
+      }
+    ]
+  }
+}

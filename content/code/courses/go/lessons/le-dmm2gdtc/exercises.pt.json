@@ -1,0 +1,376 @@
+{
+  "ex-r8zbwa57": {
+    "prompt": "`count` é um `int` que vale 3. O que Go faz com `if count {`?",
+    "hint": "Olhe a primeira linha que o compilador imprimiu em `~/runes-truthy`.",
+    "choices": [
+      {
+        "text": "Executa o bloco, porque qualquer número diferente de zero conta como verdadeiro",
+        "why": "Essa é a regra de Python e de C. Go não tem valores \"verdadeiros\", então o número nem chega a ser testado."
+      },
+      {
+        "text": "Recusa compilar: condição não booleana",
+        "why": "Isso. Um `if` aceita um `bool` e mais nada, e o programa não compila."
+      },
+      {
+        "text": "Compila, e o `go vet` avisa sobre a condição",
+        "why": "Não é aviso: o compilador para com código de saída 1 antes de o vet ter o que ler."
+      },
+      {
+        "text": "Converte com `bool(count)` por baixo dos panos",
+        "why": "O próprio `bool(count)` é recusado: não existe conversão de número para `bool`, nem escondida nem escrita."
+      }
+    ]
+  },
+  "ex-dphnxm9f": {
+    "prompt": "Complete a condição para ela ser verdadeira quando `name` tem algum texto: `if name ___ \"\" {`",
+    "hint": "Uma comparação produz um `bool`.",
+    "blanks": [
+      {
+        "accept": [
+          "!="
+        ]
+      }
+    ]
+  },
+  "ex-avzvh690": {
+    "prompt": "`people` vale 0. O que acontece quando Go chega a `if people > 0 && total/people > 50 {`?",
+    "hint": "Qual lado do `&&` é avaliado primeiro, e quando ele para?",
+    "choices": [
+      {
+        "text": "Entra em pânico com divisão inteira por zero",
+        "why": "Foi o que a condição invertida fez. Aqui o lado esquerdo é falso, então a divisão nunca executa."
+      },
+      {
+        "text": "A condição é falsa e a divisão nunca é avaliada",
+        "why": "Isso. O `&&` para num lado esquerdo falso; é a guarda depois da qual `~/runes-short` imprimiu `the guard held`."
+      },
+      {
+        "text": "O compilador recusa, porque consegue ver que `people` pode ser zero",
+        "why": "`people` é uma variável, e o compilador não acompanha o valor dela; o programa compilou e executou."
+      },
+      {
+        "text": "Os dois lados executam, a divisão dá 0 e a condição é falsa",
+        "why": "Divisão inteira por zero não dá 0 em Go; entra em pânico, como a lição 7 mostrou. Aqui ela é pulada."
+      }
+    ]
+  },
+  "ex-v7f4azy0": {
+    "prompt": "`a` e `b` são `bool`. Que expressão é verdadeira quando exatamente um deles é verdadeiro?",
+    "hint": "Go não tem um quarto operador lógico.",
+    "choices": [
+      {
+        "text": "`a ^ b`",
+        "why": "`^` é ou exclusivo em inteiros, e num `bool` o compilador recusou: operator ^ not defined."
+      },
+      {
+        "text": "`a || b`",
+        "why": "O `||` também é verdadeiro quando os dois são, que é o caso que a pergunta exclui."
+      },
+      {
+        "text": "`a != b`",
+        "why": "Isso. Dois booleanos diferem exatamente quando um é verdadeiro e o outro falso."
+      },
+      {
+        "text": "`!(a && b)`",
+        "why": "Isso também é verdadeiro quando os dois são falsos, então não é \"exatamente um\"."
+      }
+    ]
+  },
+  "ex-q2ystp57": {
+    "prompt": "Um handler executa `if cacheHit || slowLookup(key) {` uma vez por requisição, e `slowLookup` registra uma linha no log a cada chamada. Em 10 requisições, 7 delas com `cacheHit` verdadeiro, quantas linhas ele registra?",
+    "hint": "Quando o lado direito do `||` é pulado?",
+    "unit": "linhas"
+  },
+  "ex-kqxy1pve": {
+    "prompt": "O que é `byte` em Go?",
+    "hint": "O `go doc builtin.byte` responde numa linha.",
+    "choices": [
+      {
+        "text": "Um tipo de caractere, como o `char` de C",
+        "why": "Go não tem `char`. Uma letra é uma rune, e um byte é um número de 0 a 255."
+      },
+      {
+        "text": "Outro nome para `uint8`",
+        "why": "Isso: um apelido, equivalente a `uint8` em tudo, mantido para dizer que o número é dado bruto."
+      },
+      {
+        "text": "Outro nome para `int8`",
+        "why": "Um byte vai de 0 a 255, então não tem sinal: `uint8`, não `int8`."
+      },
+      {
+        "text": "Um tipo próprio, que o compilador mantém separado de todo tipo inteiro",
+        "why": "O `=` em `type byte = uint8` o torna o mesmo tipo, não um novo; o `%T` imprimiu `uint8`."
+      }
+    ]
+  },
+  "ex-6df0vhr1": {
+    "prompt": "`r := 'A'`. Ligue cada verbo ao que o `fmt.Printf` imprime para `r`.",
+    "hint": "Uma rune é um número, e cada verbo a mostra de um jeito.",
+    "pairs": [
+      {
+        "left": "`%d`",
+        "right": "`65`"
+      },
+      {
+        "left": "`%c`",
+        "right": "`A`"
+      },
+      {
+        "left": "`%U`",
+        "right": "`U+0041`"
+      },
+      {
+        "left": "`%q`",
+        "right": "`'A'`"
+      }
+    ],
+    "right_distractors": [
+      "`\"A\"`"
+    ]
+  },
+  "ex-n9kt7jhh": {
+    "prompt": "O que `len(\"é\")` devolve?",
+    "hint": "O que o `len` conta numa string?",
+    "choices": [
+      {
+        "text": "1, porque é uma letra",
+        "why": "O `len` conta bytes, e o UTF-8 gasta dois com `é`; só letras ASCII ocupam um."
+      },
+      {
+        "text": "2",
+        "why": "Isso: a string guarda UTF-8, `c3 a9`, e o `len` conta esses dois bytes."
+      },
+      {
+        "text": "4, porque toda rune é um `int32`",
+        "why": "Uma variável `rune` tem quatro bytes, mas a string guarda UTF-8, que gasta só os bytes de que o code point precisa."
+      },
+      {
+        "text": "233, o code point da letra",
+        "why": "233 é o valor da rune `'é'`. O `len` dá uma contagem, não o valor de coisa alguma."
+      }
+    ]
+  },
+  "ex-834pmm94": {
+    "prompt": "O que acontece com `var b byte = 'é'`?",
+    "hint": "Qual é o code point de `é`, e qual o tamanho de um byte?",
+    "choices": [
+      {
+        "text": "Recusado: `'é'` estoura um byte",
+        "why": "Esse foi o símbolo do euro, 8364. O `é` é 233, que cabe."
+      },
+      {
+        "text": "Compila, e `b` guarda `0xc3`, o primeiro byte de `é`",
+        "why": "Um literal de rune é um code point; os bytes de UTF-8 só existem quando a letra está dentro de uma string."
+      },
+      {
+        "text": "Compila, e `b` guarda 233, não os dois bytes que uma string guarda",
+        "why": "Isso. O code point cabe num byte, e ainda assim não é como `é` fica numa string: `c3 a9`."
+      },
+      {
+        "text": "Recusado: um byte não pode guardar uma letra",
+        "why": "`var b byte = 'A'` compilou no primeiro programa da seção; qualquer constante rune até 255 cabe."
+      }
+    ]
+  },
+  "ex-kqb0bg7n": {
+    "prompt": "O que `fmt.Println('a' - 'A')` imprime?",
+    "hint": "Os dois são números.",
+    "unit": "code points"
+  },
+  "ex-0antqr26": {
+    "prompt": "Os dígitos `'0'` a `'9'` são dez code points consecutivos. O que `fmt.Println('7' - '0')` imprime?",
+    "hint": "Subtraia dois números que estão a sete de distância.",
+    "choices": [
+      {
+        "text": "`7`",
+        "why": "Isso. Sete code points os separam, e o `Println` imprime a diferença como número."
+      },
+      {
+        "text": "`55`, o code point de `'7'`",
+        "why": "Esse é `'7'` sozinho. Subtrair `'0'`, que é 48, leva o code point ao valor do dígito."
+      },
+      {
+        "text": "Nada: subtrair um literal de rune de outro não compila",
+        "why": "Literais de rune são números, e `'a' - 'A'` compilou e imprimiu 32."
+      },
+      {
+        "text": "O caractere de code point 7, um caractere de controle invisível",
+        "why": "O `Println` imprime uma rune como número; só o `%c` a desenharia como caractere."
+      }
+    ]
+  },
+  "ex-dgg2wmd6": {
+    "prompt": "`\"caf\\u00e9\" == \"cafe\\u0301\"` é `false`, embora os dois se leiam café. Por quê?",
+    "hint": "O que o `==` compara?",
+    "choices": [
+      {
+        "text": "A segunda não é UTF-8 válido",
+        "why": "U+0301 é um code point comum, codificado como `cc 81`; as duas strings são válidas."
+      },
+      {
+        "text": "O `==` compara os bytes, e as duas grafias são bytes diferentes",
+        "why": "Isso. Go não sabe que as duas são canonicamente equivalentes; ele vê 5 bytes contra 6."
+      },
+      {
+        "text": "O `==` entre strings compara onde elas estão guardadas, não o que contêm",
+        "why": "Esse é o `==` de Java entre objetos. O `==` de Go entre strings compara o conteúdo, e aqui o conteúdo difere."
+      },
+      {
+        "text": "Go normaliza a primeira string e não a segunda",
+        "why": "Go não normaliza nenhuma; isso exige `golang.org/x/text/unicode/norm`, fora da biblioteca padrão."
+      }
+    ]
+  },
+  "ex-8p2c7wz4": {
+    "prompt": "`brazil := \"\\U0001F1E7\\U0001F1F7\"` aparece como uma bandeira. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Conte runes, depois bytes.",
+    "choices": [
+      {
+        "text": "São duas runes",
+        "why": "Sim: dois símbolos indicadores regionais, B e R."
+      },
+      {
+        "text": "`len(brazil)` é 8",
+        "why": "Sim: cada indicador ocupa quatro bytes de UTF-8."
+      },
+      {
+        "text": "A bandeira do Brasil tem code point próprio, e estes escapes o escrevem",
+        "why": "Nenhuma bandeira tem; uma fonte que conhece o par de letras desenha a bandeira."
+      },
+      {
+        "text": "`len(brazil)` é 1, o único caractere que o leitor vê",
+        "why": "O `len` conta bytes, nunca caracteres como o leitor os vê."
+      }
+    ]
+  },
+  "ex-4sqv72f5": {
+    "prompt": "Como o Unicode chama o que um leitor vê como um caractere, por exemplo um `e` com acento combinante?",
+    "hint": "Pode conter vários code points.",
+    "choices": [
+      {
+        "text": "Uma rune",
+        "why": "Uma rune é um code point, e este caractere tem dois."
+      },
+      {
+        "text": "Um code point",
+        "why": "Um code point é o número de uma rune; o `e` e o acento são dois."
+      },
+      {
+        "text": "Um grapheme cluster",
+        "why": "Isso: um ou mais code points desenhados e editados como uma unidade."
+      },
+      {
+        "text": "Uma sequência UTF-8",
+        "why": "Sequências UTF-8 são os bytes de um code point cada; o termo é sobre armazenamento, não sobre o que o leitor vê."
+      }
+    ]
+  },
+  "ex-dzrd3yd0": {
+    "prompt": "Um formulário de cadastro precisa recusar nomes de exibição com mais de 20 caracteres como a pessoa os vê, bandeiras incluídas. O que isso exige em Go?",
+    "hint": "Qual dos três comprimentos é esse, e que pacote o tem?",
+    "choices": [
+      {
+        "text": "`len(name) <= 20`",
+        "why": "Isso conta bytes: um nome de 20 letras acentuadas tem uns 40 bytes e seria recusado sem motivo."
+      },
+      {
+        "text": "Contar runes com `utf8.RuneCountInString`",
+        "why": "Mais perto, mas uma bandeira são duas runes e um `é` decomposto são duas, então ainda conta mais do que a pessoa vê."
+      },
+      {
+        "text": "Contar as runes para as quais `unicode.IsLetter` é verdadeiro",
+        "why": "Um indicador regional também não é letra, então um nome feito de bandeiras contaria como nada."
+      },
+      {
+        "text": "Segmentação em grapheme clusters, de um módulo fora da biblioteca padrão",
+        "why": "Isso. A biblioteca padrão para nas runes; a lição 40 trata de como escolher um módulo assim."
+      }
+    ]
+  },
+  "ex-vmqc2f8w": {
+    "prompt": "Ponha estes literais de string na ordem do que o `len` devolve para eles, do menor para o maior.",
+    "hint": "ASCII ocupa um byte; conte a partir daí.",
+    "items": [
+      "`\"A\"`",
+      "`\"é\"`",
+      "`\"€\"`",
+      "`\"\\U0001F642\"`"
+    ]
+  },
+  "ex-mqy8eg7a": {
+    "prompt": "Ligue cada comprimento de um texto ao jeito de obtê-lo em Go.",
+    "hint": "A tabela no fim da seção 04.",
+    "pairs": [
+      {
+        "left": "bytes",
+        "right": "`len(s)`"
+      },
+      {
+        "left": "runes",
+        "right": "`utf8.RuneCountInString(s)`"
+      },
+      {
+        "left": "caracteres como o leitor os vê",
+        "right": "um módulo fora da biblioteca padrão"
+      }
+    ],
+    "right_distractors": [
+      "`unicode.IsMark(r)`"
+    ]
+  },
+  "ex-yexan3vb": {
+    "prompt": "`count` é um `int`. Qual destas linhas compila?",
+    "hint": "Uma condição já precisa ser um `bool`.",
+    "choices": [
+      {
+        "text": "`if !count {`",
+        "why": "O `!` só está definido para `bool`: operator ! not defined on count."
+      },
+      {
+        "text": "`if bool(count) {`",
+        "why": "Não existe conversão de número para `bool`: cannot convert count to type bool."
+      },
+      {
+        "text": "`if count {`",
+        "why": "non-boolean condition in if statement: Go não tem valores \"verdadeiros\"."
+      },
+      {
+        "text": "`if count != 0 {`",
+        "why": "Isso. A comparação produz um `bool`, que é tudo o que um `if` aceita."
+      }
+    ]
+  },
+  "ex-d8w2g8zg": {
+    "prompt": "`fmt.Printf(\"%___\\n\", 67)` desenha o caractere cujo code point é 67. Que letra de verbo vai na lacuna?",
+    "hint": "O verbo que desenhou `C` na seção 03.",
+    "blanks": [
+      {
+        "accept": [
+          "c"
+        ]
+      }
+    ]
+  },
+  "ex-eq4be933": {
+    "prompt": "Um programa testa `if name == \"José\"`, e dá falso para um usuário que digitou José no celular. Qual é a causa mais provável?",
+    "hint": "As duas strings parecem iguais. Compare o que elas podem guardar.",
+    "choices": [
+      {
+        "text": "Strings em Go precisam ser comparadas com uma função do pacote `strings`",
+        "why": "O `==` compara o conteúdo de strings em Go; deu `false` para café só porque o conteúdo diferia."
+      },
+      {
+        "text": "O celular mandou `e` mais um acento combinante, e o `==` compara bytes",
+        "why": "Isso. As duas grafias de `é` são bytes diferentes, e nada as normaliza antes da comparação."
+      },
+      {
+        "text": "`é` passa de 127, então não cabe numa string Go",
+        "why": "Uma string Go guarda UTF-8, e o `é` coube como `c3 a9`."
+      },
+      {
+        "text": "O `==` diferencia maiúsculas e o celular pôs uma letra em maiúscula",
+        "why": "Diferencia, mas o nome foi digitado com as mesmas maiúsculas; a diferença está no `é`."
+      }
+    ]
+  }
+}

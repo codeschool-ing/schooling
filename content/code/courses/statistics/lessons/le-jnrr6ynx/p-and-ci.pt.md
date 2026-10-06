@@ -1,0 +1,43 @@
+---
+title: P-valores e intervalos de confiança
+version: 1
+---
+
+Um intervalo de confiança e um teste bilateral são duas vistas de uma mesma conta. Para um intervalo de 95% e
+um teste com α = 0,05:
+
+> O valor da nula fica **fora** do intervalo de 95% exatamente quando o p-valor bilateral está **abaixo de
+> 0,05**.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 640 250\" role=\"img\" data-fig=\"l14-duality\" aria-label=\"Duas linhas, cada uma um intervalo de confiança de 95% com o valor da nula marcado. Em cima, as entregas do sistema de rotas: um intervalo de 36,62 a 41,18 minutos contém o valor da nula, 40, e o p-valor bilateral é 0,33. Embaixo, os sacos: um intervalo de 1002,26 a 1006,94 g fica inteiro acima do valor da nula, 1000, e o p-valor bilateral é 0,0009.\"><path d=\"M160.0 92.0 L610.0 92.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M160.0 92.0 L160.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"160.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">34</text><path d=\"M235.0 92.0 L235.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"235.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">36</text><path d=\"M310.0 92.0 L310.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"310.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">38</text><path d=\"M385.0 92.0 L385.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"385.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">40</text><path d=\"M460.0 92.0 L460.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"460.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">42</text><path d=\"M535.0 92.0 L535.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"535.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">44</text><path d=\"M610.0 92.0 L610.0 96.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"610.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">46</text><path d=\"M258.2 70.0 L429.3 70.0\" stroke=\"var(--phosphor)\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"343.7\" cy=\"70.0\" r=\"3.5\" fill=\"var(--paper)\"></circle><path d=\"M385.0 52.0 L385.0 92.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"4 3\"></path><text x=\"385.0\" y=\"44.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">nula 40</text><text x=\"20.0\" y=\"70.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">rotas: p = 0,33</text><text x=\"610.0\" y=\"120.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">minutos</text><path d=\"M160.0 197.0 L610.0 197.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M160.0 197.0 L160.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"160.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">998</text><path d=\"M235.0 197.0 L235.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"235.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1000</text><path d=\"M310.0 197.0 L310.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"310.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1002</text><path d=\"M385.0 197.0 L385.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"385.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1004</text><path d=\"M460.0 197.0 L460.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"460.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1006</text><path d=\"M535.0 197.0 L535.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"535.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1008</text><path d=\"M610.0 197.0 L610.0 201.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"610.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1010</text><path d=\"M319.7 175.0 L495.3 175.0\" stroke=\"var(--phosphor)\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"></path><circle cx=\"407.5\" cy=\"175.0\" r=\"3.5\" fill=\"var(--paper)\"></circle><path d=\"M235.0 157.0 L235.0 197.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"4 3\"></path><text x=\"235.0\" y=\"149.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">nula 1000</text><text x=\"20.0\" y=\"175.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">sacos: p = 0,0009</text><text x=\"610.0\" y=\"225.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">gramas</text></svg>", "caption": "Um intervalo que contém o valor da nula anda junto com p acima de 0,05; um que o exclui, com p abaixo. São duas vistas da mesma conta."}
+```
+
+## Os dois exemplos da Horta
+
+**O sistema de rotas.** As 25 entregas dão um intervalo de 95% para a média de **36,62 a 41,18 minutos**. O
+valor da nula, 40, está dentro dele, e o p-valor bilateral é 0,33. Os dois dizem a mesma coisa: os dados são
+compatíveis com nenhuma mudança.
+
+**A envasadora.** Os 15 sacos dão um intervalo de 95% de **1002,26 a 1006,94 g**. O valor da nula, 1000,
+está fora dele, e o p-valor bilateral é 0,0009. Os dois dizem que a máquina está fora do alvo.
+
+## Por que o intervalo costuma ser mais útil
+
+O p-valor responde uma pergunta: os dados são compatíveis com um valor específico? O intervalo responde essa
+pergunta para **todos** os valores de uma vez.
+
+O intervalo do sistema de rotas diz mais que "não significativo". Diz que a média verdadeira pode estar em
+qualquer lugar de 36,62 a 41,18 minutos. Isso inclui nenhuma mudança, e inclui uma melhora de mais de três
+minutos. Um gerente que lesse só "p = 0,33" poderia concluir que o sistema é inútil; um gerente que lê o
+intervalo vê que o experimento simplesmente não conseguiu dizer, e que um teste maior poderia valer a pena.
+
+O intervalo da envasadora diz mais que "significativo". Diz que o excesso fica entre 2,3 e 6,9 g por saco, o
+que é aquilo de que a Horta precisa para estimar quanto arroz está sendo dado de graça.
+
+## O intervalo responde "quanto"
+
+Esse é o principal motivo de os relatórios estatísticos terem migrado para intervalos. Um teste diz **se**
+um efeito se distingue de zero. Um intervalo diz **quão grande** ele pode ser, que é quase sempre a pergunta
+da qual uma decisão depende. A aula 22 se apoia exatamente nisso: um resultado significativo pode ser
+pequeno demais para importar, e só o intervalo mostra isso.

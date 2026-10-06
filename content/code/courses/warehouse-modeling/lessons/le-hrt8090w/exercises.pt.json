@@ -1,0 +1,424 @@
+{
+  "ex-0174z7qj": {
+    "prompt": "Ligue cada mudança ao tipo de escala que ela é.",
+    "hint": "Máquina maior, ou mais máquinas?",
+    "pairs": [
+      {
+        "left": "Passar de 4 para 64 núcleos num servidor",
+        "right": "Escala vertical"
+      },
+      {
+        "left": "Espalhar uma tabela por oito nós",
+        "right": "Escala horizontal"
+      },
+      {
+        "left": "Ligar processamento no fechamento, lendo os mesmos arquivos",
+        "right": "Processamento separado do armazenamento"
+      }
+    ],
+    "right_distractors": [
+      "Um índice maior"
+    ]
+  },
+  "ex-3csqmpa7": {
+    "prompt": "Pela regra prática da lição, quando uma máquina é a resposta mais simples?",
+    "hint": "Pense em memória.",
+    "choices": [
+      {
+        "text": "Quando os dados em uso cabem na memória",
+        "why": "Isso. Passado esse ponto, a escala horizontal começa a compensar."
+      },
+      {
+        "text": "Quando o warehouse tem menos de um milhão de linhas",
+        "why": "Contagens de linhas sozinhas dizem pouco; importa o que uma consulta lê."
+      },
+      {
+        "text": "Quando há um analista só",
+        "why": "Usuários afetam a concorrência, não se uma máquina comporta os dados."
+      },
+      {
+        "text": "Quando os dados estão no PostgreSQL",
+        "why": "O motor não é o teste."
+      }
+    ]
+  },
+  "ex-bta527cp": {
+    "prompt": "Com uma thread a consulta levou 0,358 s e com quatro 0,126 s. Quantas vezes mais rápida ela foi com quatro? Dê uma casa decimal.",
+    "hint": "Divida o primeiro pelo segundo."
+  },
+  "ex-xk8jgg1d": {
+    "prompt": "Por que quatro threads não deixaram a consulta quatro vezes mais rápida?",
+    "hint": "Nem toda parte de uma consulta se divide.",
+    "choices": [
+      {
+        "text": "O DuckDB só usa duas threads",
+        "why": "O tempo `user` com quatro threads mostra mais de duas ocupadas."
+      },
+      {
+        "text": "A tabela era pequena demais para dividir",
+        "why": "17,7 milhões de linhas se dividem bem; o limite é a parte serial."
+      },
+      {
+        "text": "Parte do trabalho é serial",
+        "why": "Isso. Começar, montar buscas e juntar somas parciais não se dividem."
+      },
+      {
+        "text": "Cada thread leu a tabela inteira",
+        "why": "Aí mais threads seriam mais lentas, não mais rápidas."
+      }
+    ]
+  },
+  "ex-mby4atnc": {
+    "prompt": "Um trabalho é 90% paralelo. Pela lei de Amdahl, qual é o ganho em 4 processadores? Dê uma casa decimal.",
+    "hint": "1 / (0,1 + 0,9 / 4)"
+  },
+  "ex-xhkzsddd": {
+    "prompt": "Um trabalho é 95% paralelo. Qual o maior ganho que qualquer número de processadores pode dar a ele?",
+    "hint": "O teto é 1 / (1 - p)."
+  },
+  "ex-zb291w2e": {
+    "prompt": "Os nós de uma consulta distribuída passam metade do tempo trocando linhas pela rede. O que acontece conforme se acrescentam nós?",
+    "hint": "A troca faz parte da fração serial.",
+    "choices": [
+      {
+        "text": "Escala sem limite, porque cada nó tem menos dados",
+        "why": "Menos dados por nó encolhe só a parte paralela."
+      },
+      {
+        "text": "Os ganhos se achatam rápido",
+        "why": "Isso. Com metade do tempo serial, o teto fica perto de 2."
+      },
+      {
+        "text": "Fica mais lenta de imediato",
+        "why": "Não de imediato; para de melhorar."
+      },
+      {
+        "text": "Nada muda, porque redes são de graça",
+        "why": "Mover linhas é o custo de que a lição trata."
+      }
+    ]
+  },
+  "ex-xmk83ph2": {
+    "prompt": "O agrupamento terminou com a memória da máquina, terminou mais devagar com 200 MB, e falhou com 20 MB. O que isso mostra?",
+    "hint": "Duas linhas: mais lento, depois parado.",
+    "choices": [
+      {
+        "text": "O DuckDB tem um defeito com limites pequenos de memória",
+        "why": "Ele se comportou como projetado e disse o que precisava."
+      },
+      {
+        "text": "A memória só afeta a velocidade de uma consulta, nunca se ela roda",
+        "why": "A execução com 20 MB não terminou."
+      },
+      {
+        "text": "200 MB foi mais rápido que a memória toda",
+        "why": "Foi mais lento: 0,466 s contra 0,340 s."
+      },
+      {
+        "text": "Menos memória atrasa; muito menos para",
+        "why": "Isso. Essa é a forma do teto de uma máquina."
+      }
+    ]
+  },
+  "ex-ks7gj4rt": {
+    "prompt": "Quais destes são limites de uma máquina só citados na lição? Marque todos os que se aplicam.",
+    "hint": "Não só velocidade.",
+    "choices": [
+      {
+        "text": "A maior máquina que se pode comprar tem um tamanho fixo",
+        "why": "Sim. Memória, disco e rede têm todos um máximo."
+      },
+      {
+        "text": "É um ponto único de falha",
+        "why": "Sim. Quando está fora, o warehouse está fora."
+      },
+      {
+        "text": "É dimensionada para a hora mais cheia e fica ociosa no resto",
+        "why": "Sim. Paga o mês inteiro."
+      },
+      {
+        "text": "Não consegue fazer junções em SQL",
+        "why": "Faz muito bem."
+      }
+    ]
+  },
+  "ex-8rfg2x9k": {
+    "prompt": "Ponha em ordem os passos de uma consulta num sistema shared-nothing.",
+    "hint": "Planejar, trabalhar, combinar.",
+    "items": [
+      "O coordenador planeja e manda a cada nó a sua parte",
+      "Cada nó varre e soma as próprias linhas",
+      "Os resultados parciais são juntados numa resposta"
+    ],
+    "trap": "Juntar antes de todos os nós terminarem é impossível: a consulta é tão lenta quanto o nó mais lento."
+  },
+  "ex-f2dam4qh": {
+    "prompt": "Para \"receita total por departamento\" em quatro nós, o que atravessa a rede?",
+    "hint": "Cada nó soma a sua parte.",
+    "choices": [
+      {
+        "text": "Toda linha de venda, para o coordenador",
+        "why": "Isso seria o contrário do projeto."
+      },
+      {
+        "text": "Metade das linhas de cada nó",
+        "why": "Nenhuma linha precisa se mover nesta consulta."
+      },
+      {
+        "text": "Quatro somas parciais por nó",
+        "why": "Isso. Os dados ficam; só as respostas se movem."
+      },
+      {
+        "text": "Nada",
+        "why": "As somas parciais precisam chegar ao coordenador."
+      }
+    ]
+  },
+  "ex-yr35b07g": {
+    "prompt": "Um sistema em que cada nó tem seus processadores, sua memória e sua parte dos dados, e não lê o disco de outro nó, se chama ___ nothing.",
+    "hint": "O que os nós não fazem entre si.",
+    "blanks": [
+      {
+        "accept": [
+          "shared"
+        ]
+      }
+    ]
+  },
+  "ex-h2sa5z5j": {
+    "prompt": "Por que espalhar as vendas por número de pedido deu quatro nós quase iguais?",
+    "hint": "Quantos valores distintos?",
+    "choices": [
+      {
+        "text": "Há centenas de milhares deles",
+        "why": "Isso. Muitos valores, espalhados por igual."
+      },
+      {
+        "text": "Os números de pedido são sequenciais",
+        "why": "O hash os espalha; a ordem não importa."
+      },
+      {
+        "text": "Todo pedido tem o mesmo número de itens",
+        "why": "Pedidos têm de um a seis itens; isso se equilibra em muitos pedidos."
+      },
+      {
+        "text": "O DuckDB equilibra os nós de propósito",
+        "why": "Os nós aqui são um hash e uma contagem."
+      }
+    ]
+  },
+  "ex-ekpfs9qw": {
+    "prompt": "Espalhado por loja, o nó mais cheio recebeu 643.004 das 887.477 linhas. Que percentual é isso? Dê um número inteiro.",
+    "hint": "Divida e multiplique por cem.",
+    "unit": "%"
+  },
+  "ex-h7jgtr0x": {
+    "prompt": "Um cluster tem um nó por loja, sete nós. Por que ainda está desequilibrado?",
+    "hint": "As lojas são iguais?",
+    "choices": [
+      {
+        "text": "Sete é um número ímpar de nós, e o hash precisa de um par",
+        "why": "O hash funciona com qualquer número de nós."
+      },
+      {
+        "text": "A Moinhos abriu em 2025",
+        "why": "É um nó pequeno; o problema é o grande."
+      },
+      {
+        "text": "Cada loja tem um número diferente de livros",
+        "why": "As linhas são itens de venda, não livros na prateleira."
+      },
+      {
+        "text": "O site tem 42,6% das linhas",
+        "why": "Isso. O nó dele faz 42,6% do trabalho e todos esperam por ele."
+      }
+    ]
+  },
+  "ex-z86y7yv1": {
+    "prompt": "Uma tabela está espalhada por igual por data, e mesmo assim um nó faz a maior parte do trabalho. Qual é a causa provável?",
+    "hint": "Linhas iguais, trabalho desigual.",
+    "choices": [
+      {
+        "text": "A função de hash está quebrada",
+        "why": "As linhas estão iguais, então o hash está bem."
+      },
+      {
+        "text": "Toda consulta pergunta da última semana",
+        "why": "Isso. Consultas desequilibradas: os nós com a última semana fazem tudo."
+      },
+      {
+        "text": "Datas têm valores distintos demais",
+        "why": "Muitos valores ajudam o equilíbrio; não causam desequilíbrio."
+      },
+      {
+        "text": "As dimensões vão por broadcast",
+        "why": "O broadcast copia tabelas pequenas a todos os nós por igual."
+      }
+    ]
+  },
+  "ex-xjhhpk54": {
+    "prompt": "O nó mais cheio do arranjo por loja tem 643.004 linhas; a média é 221.869. Qual é a razão de desequilíbrio? Dê uma casa decimal.",
+    "hint": "O mais cheio sobre a média."
+  },
+  "ex-1g2vjcnn": {
+    "prompt": "Ligue cada estratégia de junção ao que se move.",
+    "hint": "Nada, o lado pequeno, ou os dois lados.",
+    "pairs": [
+      {
+        "left": "Co-localizado",
+        "right": "Nada: as linhas correspondentes já estão no mesmo nó"
+      },
+      {
+        "left": "Broadcast",
+        "right": "A tabela pequena, copiada para cada nó"
+      },
+      {
+        "left": "Shuffle",
+        "right": "Os dois lados, reespalhados pela chave da junção"
+      }
+    ],
+    "right_distractors": [
+      "Só o plano do coordenador"
+    ]
+  },
+  "ex-38dcaxk4": {
+    "prompt": "Por que um esquema estrela combina bem com um sistema MPP?",
+    "hint": "O que é grande e o que é pequeno?",
+    "choices": [
+      {
+        "text": "Fatos grandes se espalham; dimensões pequenas se copiam",
+        "why": "Isso. 9.000 linhas de livros copiadas em vez de 666.023 vendas movidas."
+      },
+      {
+        "text": "Estrelas não têm junções",
+        "why": "Têm uma por dimensão."
+      },
+      {
+        "text": "Estrelas são sempre distribuídas por data",
+        "why": "Data é uma partição comum, uma chave de distribuição ruim."
+      },
+      {
+        "text": "Sistemas MPP só aceitam estrelas",
+        "why": "Aceitam qualquer esquema; estrelas só combinam bem."
+      }
+    ]
+  },
+  "ex-v0qd18vs": {
+    "prompt": "Quantas linhas o broadcast da tabela de 3.000 livros para os outros três de quatro nós move?",
+    "hint": "Três cópias."
+  },
+  "ex-418ddb90": {
+    "prompt": "Vendas e pagamentos são grandes e ligados por `order_id` toda noite. Como devem ser distribuídos?",
+    "hint": "Torne de graça a junção cara.",
+    "choices": [
+      {
+        "text": "As duas por broadcast para cada nó",
+        "why": "Fazer broadcast de duas tabelas grandes copia tudo para todo lado."
+      },
+      {
+        "text": "Vendas por loja e pagamentos por meio",
+        "why": "Poucos valores, nós desequilibrados, e toda junção faz shuffle."
+      },
+      {
+        "text": "As duas por `order_id`, para a junção ficar co-localizada",
+        "why": "Isso. Gaste a chave de distribuição na junção entre duas tabelas grandes."
+      },
+      {
+        "text": "Por data, para março ficar junto",
+        "why": "Essa é uma ideia de partição, e deixa a junção fazer shuffle."
+      }
+    ]
+  },
+  "ex-hy31v0x6": {
+    "prompt": "Qual é a diferença entre distribuição e particionamento?",
+    "hint": "Máquina ou arquivo?",
+    "choices": [
+      {
+        "text": "São dois nomes para a mesma coisa",
+        "why": "Fazem trabalhos diferentes e se combinam."
+      },
+      {
+        "text": "Máquina contra arquivo",
+        "why": "Isso. Uma espalha o trabalho, o outro deixa as consultas pularem."
+      },
+      {
+        "text": "Particionamento vale só para dimensões",
+        "why": "Tabelas fato são o mais comum de particionar."
+      },
+      {
+        "text": "Distribuição só existe na nuvem",
+        "why": "Sistemas MPP distribuíam dados muito antes da nuvem."
+      }
+    ]
+  },
+  "ex-w0hvrmjd": {
+    "prompt": "Pedindo março de 2025, quantos dos 24 arquivos mensais o DuckDB leu?",
+    "hint": "`Scanning Files`."
+  },
+  "ex-ncxw9g3z": {
+    "prompt": "Por que não particionar as vendas por dia em vez de por mês?",
+    "hint": "Abrir um arquivo tem um custo fixo.",
+    "choices": [
+      {
+        "text": "O DuckDB não lê 731 pastas",
+        "why": "Lê; só pagaria para abrir cada arquivo pequeno."
+      },
+      {
+        "text": "Ninguém filtra por dia",
+        "why": "Filtram; o custo está nos arquivos."
+      },
+      {
+        "text": "Dias não são coluna das vendas",
+        "why": "`date_key` é um dia."
+      },
+      {
+        "text": "Arquivos minúsculos custam mais do que poupam",
+        "why": "Isso. Fino demais é tão ruim quanto grosso demais."
+      }
+    ]
+  },
+  "ex-ckp1rx6e": {
+    "prompt": "O que separar armazenamento de processamento permite a um warehouse que o shared nothing dificulta?",
+    "hint": "Acrescentar máquinas sem mover dados.",
+    "choices": [
+      {
+        "text": "Guardar dados por coluna",
+        "why": "Sistemas shared-nothing também guardam por coluna."
+      },
+      {
+        "text": "Fazer junções sem rede nenhuma",
+        "why": "O processamento ainda lê arquivos pela rede."
+      },
+      {
+        "text": "Redimensionar o processamento sem tocar nos dados",
+        "why": "Isso. Elasticidade, e isolamento entre times."
+      },
+      {
+        "text": "Não pagar armazenamento",
+        "why": "O armazenamento ainda é cobrado, por gigabyte-mês."
+      }
+    ]
+  },
+  "ex-7qrecy7f": {
+    "prompt": "Uma tabela de clientes de 8 milhões de linhas será espalhada por 16 nós. Que chave de distribuição é a melhor?",
+    "hint": "Muitos valores, espalhados por igual.",
+    "choices": [
+      {
+        "text": "O id do cliente",
+        "why": "Isso. Oito milhões de valores distintos se espalham por igual."
+      },
+      {
+        "text": "O estado do cliente",
+        "why": "Vinte e sete valores, e só São Paulo afogaria um nó."
+      },
+      {
+        "text": "O nível de fidelidade",
+        "why": "Três valores para dezesseis nós: treze ficariam parados."
+      },
+      {
+        "text": "A data em que o cliente entrou",
+        "why": "Datas recentes têm a maioria dos clientes, e consultas sobre novatos atingem poucos nós."
+      }
+    ]
+  }
+}

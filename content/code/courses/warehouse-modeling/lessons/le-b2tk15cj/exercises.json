@@ -1,0 +1,691 @@
+[
+  {
+    "id": "ex-rpb493qv",
+    "version": 1,
+    "section": "what-normalisation-buys",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each anomaly to what goes wrong.",
+    "hint": "All three are about writing.",
+    "pairs": [
+      {
+        "left": "Update anomaly",
+        "right": "A rename that stops halfway leaves two names"
+      },
+      {
+        "left": "Insertion anomaly",
+        "right": "A department cannot exist until it has a book"
+      },
+      {
+        "left": "Deletion anomaly",
+        "right": "Deleting the last book erases the department"
+      }
+    ],
+    "right_distractors": [
+      "A query reads more columns than it needs"
+    ]
+  },
+  {
+    "id": "ex-3arrbffv",
+    "version": 1,
+    "section": "what-normalisation-buys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the anomalies normalisation prevents mostly absent from Ana's warehouse?",
+    "hint": "Who writes it, and how?",
+    "choices": [
+      {
+        "text": "One load writes it, in batches, in a transaction",
+        "correct": true,
+        "why": "Right. Many writers at random moments is what makes anomalies; the warehouse has one."
+      },
+      {
+        "text": "DuckDB has no UPDATE statement",
+        "correct": false,
+        "why": "It has one; section 04 used it."
+      },
+      {
+        "text": "The warehouse has no repeated values at all",
+        "correct": false,
+        "why": "It repeats on purpose: the department on every book row."
+      },
+      {
+        "text": "Warehouses never store text that people might want to rename later",
+        "correct": false,
+        "why": "Departments get renamed; the load carries the new name."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw5khvz1",
+    "version": 1,
+    "section": "why-the-warehouse-may-repeat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the three costs a join puts on a reader, which one does a columnar engine make small?",
+    "hint": "Two of them are about people.",
+    "choices": [
+      {
+        "text": "Knowing which tables to join",
+        "correct": false,
+        "why": "That is knowledge in somebody's head; no engine removes it."
+      },
+      {
+        "text": "Getting the join condition right",
+        "correct": false,
+        "why": "A wrong condition runs fast and returns the wrong total."
+      },
+      {
+        "text": "Time",
+        "correct": true,
+        "why": "Right. Small dimensions are cheap to join; the other two costs remain."
+      },
+      {
+        "text": "None of them; joins are always expensive",
+        "correct": false,
+        "why": "Section 06 measured them as nearly free here."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmt9a2y9",
+    "version": 1,
+    "section": "why-the-warehouse-may-repeat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\"Denormalising moves the cost from every query to the load.\" What exactly does the load do once that each query would otherwise do?",
+    "hint": "Think of the department of a book.",
+    "choices": [
+      {
+        "text": "It caches the results of every report",
+        "correct": false,
+        "why": "That is an aggregate, and only for the reports someone built it for."
+      },
+      {
+        "text": "It works out each book's department, correctly, and writes it on the row",
+        "correct": true,
+        "why": "Right. Every query after that reads a column instead of walking the tree."
+      },
+      {
+        "text": "It removes the category table",
+        "correct": false,
+        "why": "Staging still holds it; the star just does not make readers use it."
+      },
+      {
+        "text": "It indexes every column",
+        "correct": false,
+        "why": "Indexes are not what this lesson is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5rr0272",
+    "version": 1,
+    "section": "an-update-measured",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows of the wide table does renaming *Non-fiction* write?",
+    "hint": "The `wide_rows` column.",
+    "value": 375294,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-za96tp2f",
+    "version": 1,
+    "section": "an-update-measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rename of the wide table was interrupted after 2025. What would every report grouped by department have shown?",
+    "hint": "Look at the two rows of the result.",
+    "choices": [
+      {
+        "text": "An error, because the table was locked",
+        "correct": false,
+        "why": "Nothing locks it once the statement stops."
+      },
+      {
+        "text": "The old name only, until the update finished",
+        "correct": false,
+        "why": "2025 already said `Nonfiction`."
+      },
+      {
+        "text": "The right totals, because the sum is the same",
+        "correct": false,
+        "why": "The grand total is the same; the department's row is split in two."
+      },
+      {
+        "text": "Two rows for one department, split by year",
+        "correct": true,
+        "why": "Right. The update anomaly, inside a warehouse."
+      }
+    ]
+  },
+  {
+    "id": "ex-ak6b69fr",
+    "version": 1,
+    "section": "an-update-measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the safe way to change a name in the wide table?",
+    "hint": "It is a copy.",
+    "choices": [
+      {
+        "text": "Update it in place, one year at a time, during the night when nobody is reading",
+        "correct": false,
+        "why": "That is the interrupted update, slowed down."
+      },
+      {
+        "text": "Add a second column with the new name and leave the old one",
+        "correct": false,
+        "why": "Two columns for one fact is the anomaly by design."
+      },
+      {
+        "text": "Rebuild it from the star",
+        "correct": true,
+        "why": "Right. A derived copy is rebuilt, never edited."
+      },
+      {
+        "text": "Ask the report tool to rename it on display",
+        "correct": false,
+        "why": "Then every tool has to know, and the data still says the old name."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tms4vg8",
+    "version": 1,
+    "section": "the-bytes-measured",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In PostgreSQL the star took 85 MB and the wide table 242 MB. How many times larger is the wide table? Give one decimal.",
+    "hint": "Divide.",
+    "value": 2.8,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-ygjzp9hk",
+    "version": 1,
+    "section": "the-bytes-measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the wide table cost 2.8 times the star by row and only 1.3 times in Parquet?",
+    "hint": "What does a column of department names look like?",
+    "choices": [
+      {
+        "text": "A column of repeated values compresses to almost nothing",
+        "correct": true,
+        "why": "Right. Lesson 8 shows the encodings; the repetition that triples a row store barely moves a column store."
+      },
+      {
+        "text": "Parquet drops duplicate rows",
+        "correct": false,
+        "why": "No row is dropped; the 887,477 are all there."
+      },
+      {
+        "text": "PostgreSQL stores text twice",
+        "correct": false,
+        "why": "It stores it once per row, in full."
+      },
+      {
+        "text": "The wide table has fewer columns in Parquet",
+        "correct": false,
+        "why": "Same 31 columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4d61jb6",
+    "version": 1,
+    "section": "one-big-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The star answered in 0.021 s and the wide table in 0.017 s. What is the fair reading?",
+    "hint": "One run each, on a shared machine.",
+    "choices": [
+      {
+        "text": "The wide table is about 20% faster and should replace the star",
+        "correct": false,
+        "why": "One run each cannot show a 20% difference, and speed is not the only cost."
+      },
+      {
+        "text": "The star is slower because it has more rows",
+        "correct": false,
+        "why": "It has the same 887,477 fact rows and small dimensions."
+      },
+      {
+        "text": "DuckDB cached the second query",
+        "correct": false,
+        "why": "They were different queries in different runs."
+      },
+      {
+        "text": "About the same: joins to small dimensions are cheap here",
+        "correct": true,
+        "why": "Right. The difference is the size of the noise."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5jsfhwy",
+    "version": 1,
+    "section": "one-big-table",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are real costs of a one big table? Choose all that apply.",
+    "hint": "Section 06 listed three.",
+    "choices": [
+      {
+        "text": "It must be rebuilt rather than edited",
+        "correct": true,
+        "why": "Yes. Section 04 showed what editing it does."
+      },
+      {
+        "text": "It holds one grain only",
+        "correct": true,
+        "why": "Yes. Stock and payments are not in a table of sale lines."
+      },
+      {
+        "text": "A new attribute means a new column on the biggest table",
+        "correct": true,
+        "why": "Yes, rebuilt from scratch."
+      },
+      {
+        "text": "Tools that read one table at a time cannot use it",
+        "correct": false,
+        "why": "Those are exactly the tools it suits."
+      }
+    ]
+  },
+  {
+    "id": "ex-vemt0kp7",
+    "version": 1,
+    "section": "three-schools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Inmon's design, what do people query?",
+    "hint": "Not the normalised core.",
+    "choices": [
+      {
+        "text": "The normalised warehouse directly",
+        "correct": false,
+        "why": "Inmon puts marts in front of it."
+      },
+      {
+        "text": "Dimensional data marts built from the normalised warehouse",
+        "correct": true,
+        "why": "Right. The core is the source of truth; marts are for reading."
+      },
+      {
+        "text": "The hubs and satellites",
+        "correct": false,
+        "why": "Those are Data Vault."
+      },
+      {
+        "text": "The operational database",
+        "correct": false,
+        "why": "Lesson 1 argued against that."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ke5pr9e",
+    "version": 1,
+    "section": "three-schools",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each school to its integrated core.",
+    "hint": "Where the normalised layer sits.",
+    "pairs": [
+      {
+        "left": "Inmon",
+        "right": "A normalised enterprise warehouse"
+      },
+      {
+        "left": "Kimball",
+        "right": "Stars sharing conformed dimensions"
+      },
+      {
+        "left": "Data Vault",
+        "right": "Hubs, links and satellites"
+      }
+    ],
+    "right_distractors": [
+      "One big table"
+    ]
+  },
+  {
+    "id": "ex-2z1rt22n",
+    "version": 1,
+    "section": "three-schools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bank has forty source systems, changes them every quarter, and its auditors ask which load wrote each number. Which design does the lesson suggest fits it best underneath its marts?",
+    "hint": "Inserts only, and every row stamped.",
+    "choices": [
+      {
+        "text": "A Data Vault",
+        "correct": true,
+        "why": "Right. New sources are new satellites, and every row says which load brought it."
+      },
+      {
+        "text": "One big table",
+        "correct": false,
+        "why": "It records nothing about loads and is rebuilt wholesale."
+      },
+      {
+        "text": "Kimball stars alone",
+        "correct": false,
+        "why": "Workable, but conforming forty changing sources and auditing loads is where a vault helps."
+      },
+      {
+        "text": "The operational databases themselves",
+        "correct": false,
+        "why": "Forty of them, in forty shapes, with no history."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5c0c2qh",
+    "version": 1,
+    "section": "data-vault",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a hub hold?",
+    "hint": "Keys and nothing else.",
+    "choices": [
+      {
+        "text": "Descriptive attributes with their history",
+        "correct": false,
+        "why": "Those are satellites."
+      },
+      {
+        "text": "Relationships between keys",
+        "correct": false,
+        "why": "Those are links."
+      },
+      {
+        "text": "Business keys, with when and where they were first loaded",
+        "correct": true,
+        "why": "Right. One row per customer number, per ISBN."
+      },
+      {
+        "text": "Pre-summed totals",
+        "correct": false,
+        "why": "Those are aggregates, outside the vault."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tabzfez",
+    "version": 1,
+    "section": "data-vault",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does nobody report from a Data Vault directly?",
+    "hint": "Look at the query for the current tier.",
+    "choices": [
+      {
+        "text": "Vaults are too small to report from",
+        "correct": false,
+        "why": "They are larger than stars, not smaller."
+      },
+      {
+        "text": "Every question needs joins and a window to find each latest row",
+        "correct": true,
+        "why": "Right. That is why marts are built on top of it."
+      },
+      {
+        "text": "Its data is encrypted with md5",
+        "correct": false,
+        "why": "md5 makes a key, not a secret."
+      },
+      {
+        "text": "It holds no history",
+        "correct": false,
+        "why": "It holds all of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nc4c3bs",
+    "version": 1,
+    "section": "data-vault",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Data Vault, descriptive attributes and their changes live in tables called ___.",
+    "hint": "They orbit a hub.",
+    "blanks": [
+      {
+        "accept": [
+          "satellites",
+          "satellite"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eag6g5cd",
+    "version": 1,
+    "section": "aggregates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows does `agg_sales_month` hold?",
+    "hint": "Month, shop and department.",
+    "value": 616,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zawm773e",
+    "version": 1,
+    "section": "aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which rule keeps an aggregate from disagreeing with the source about the data?",
+    "hint": "Where is it built from?",
+    "choices": [
+      {
+        "text": "It is loaded straight from the operational database",
+        "correct": false,
+        "why": "Then it could disagree with the fact table."
+      },
+      {
+        "text": "It is stored in a separate database",
+        "correct": false,
+        "why": "Where it is stored changes nothing."
+      },
+      {
+        "text": "It has no dimension keys",
+        "correct": false,
+        "why": "It keeps the conformed ones, rolled up."
+      },
+      {
+        "text": "It is built from the atomic fact table",
+        "correct": true,
+        "why": "Right. Derived, never loaded from the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-bth3tmb6",
+    "version": 1,
+    "section": "the-cost-of-a-summary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the correction, the fact table and the aggregate differ by 1,000 centavos. What is wrong with the aggregate?",
+    "hint": "When was it built?",
+    "choices": [
+      {
+        "text": "It rounds every month to the nearest ten reais",
+        "correct": false,
+        "why": "It summed exact centavos; it matched to the centavo before."
+      },
+      {
+        "text": "It counts cancelled orders",
+        "correct": false,
+        "why": "It was built from the same fact table."
+      },
+      {
+        "text": "It is as old as its last rebuild",
+        "correct": true,
+        "why": "Right. A copy is only as fresh as the moment it was made."
+      },
+      {
+        "text": "DuckDB corrupted it",
+        "correct": false,
+        "why": "Nothing is corrupt; it is stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-y68k2mkt",
+    "version": 1,
+    "section": "the-cost-of-a-summary",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a load that keeps an aggregate true in order.",
+    "hint": "Detail first, summary second, check last.",
+    "items": [
+      "Load the corrected rows into the fact table",
+      "Rebuild the aggregate from the fact table",
+      "Compare the two totals, and fail the load if they differ"
+    ],
+    "trap": "Checking before rebuilding would fail every load that changed anything."
+  },
+  {
+    "id": "ex-w4mbsbdf",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps a table of product prices that several applications update a row at a time all day. Should it be denormalised into the products' rows?",
+    "hint": "Who writes it?",
+    "choices": [
+      {
+        "text": "No: many writers, row at a time",
+        "correct": true,
+        "why": "Right. Normalise what many write; the anomalies are real there."
+      },
+      {
+        "text": "Yes, repetition is cheap in a column store",
+        "correct": false,
+        "why": "Storage is not the issue when many writers can leave it half updated."
+      },
+      {
+        "text": "Yes, and add an aggregate as well",
+        "correct": false,
+        "why": "That adds a second copy to keep in step."
+      },
+      {
+        "text": "Only if it is in Parquet",
+        "correct": false,
+        "why": "The format does not change who writes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x17kkp0a",
+    "version": 1,
+    "section": "deciding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Normalise what is written by many, denormalise what is read by many, and never edit a ___.",
+    "hint": "A wide table or an aggregate is one.",
+    "blanks": [
+      {
+        "accept": [
+          "copy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-syecrkgb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard tool can only read one table. What should Ana give it?",
+    "hint": "The star stays the model.",
+    "choices": [
+      {
+        "text": "Replace the star with a wide table",
+        "correct": false,
+        "why": "Then every other process and grain loses its model."
+      },
+      {
+        "text": "The staging tables",
+        "correct": false,
+        "why": "Nothing outside the load reads staging."
+      },
+      {
+        "text": "A wide table that analysts correct by hand when they spot errors",
+        "correct": false,
+        "why": "Editing a copy is how the anomaly comes back."
+      },
+      {
+        "text": "A wide table rebuilt from the star after every load",
+        "correct": true,
+        "why": "Right. An output of the warehouse, not its foundation."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd194qdt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about storage and normalisation is supported by this lesson's measurements?",
+    "hint": "Two engines, two ratios.",
+    "choices": [
+      {
+        "text": "Repetition costs the same everywhere",
+        "correct": false,
+        "why": "It cost 2.8 times in one and 1.3 in the other."
+      },
+      {
+        "text": "The space argument for normalising is strong by row and weak by column",
+        "correct": true,
+        "why": "Right. 2.8 times against 1.3 times."
+      },
+      {
+        "text": "Parquet makes the wide table smaller than the star",
+        "correct": false,
+        "why": "Smaller than by row, still larger than the star."
+      },
+      {
+        "text": "PostgreSQL compresses repetition better",
+        "correct": false,
+        "why": "It was the one where the wide table tripled."
+      }
+    ]
+  }
+]

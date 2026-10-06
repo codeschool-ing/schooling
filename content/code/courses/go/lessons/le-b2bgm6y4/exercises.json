@@ -1,0 +1,582 @@
+[
+  {
+    "id": "ex-y2tf9sf6",
+    "version": 1,
+    "section": "literals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these literals holds a real tab character between `a` and `b`?",
+    "hint": "Where does a backslash start an escape?",
+    "choices": [
+      {
+        "text": "`` `a\\tb` ``",
+        "correct": false,
+        "why": "Between backquotes nothing is an escape, so this is four characters: `a`, a backslash, `t`, `b`."
+      },
+      {
+        "text": "`\"a\\tb\"`",
+        "correct": true,
+        "why": "Right. In double quotes `\\t` is one character, the tab."
+      },
+      {
+        "text": "`\"a\\\\tb\"`, since the doubled backslash makes the escape stronger",
+        "correct": false,
+        "why": "`\\\\` is an escaped backslash, so the string holds a backslash followed by `t`."
+      },
+      {
+        "text": "`'a\\tb'`, because single quotes keep escapes too",
+        "correct": false,
+        "why": "Single quotes make a rune literal, and three characters in one is refused, as lesson 8 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhxqcm91",
+    "version": 1,
+    "section": "literals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens with `path := \"C:\\new\\table\"`?",
+    "hint": "Are `\\n` and `\\t` escapes Go knows?",
+    "choices": [
+      {
+        "text": "The compiler refuses it with unknown escape",
+        "correct": false,
+        "why": "That was `\\d`, which is not an escape. `\\n` and `\\t` are, so this compiles."
+      },
+      {
+        "text": "It compiles, and the string holds a newline and a tab",
+        "correct": true,
+        "why": "Right. Nothing complains, `go vet` exited 0, and `fmt.Println` printed `C:` on a line of its own."
+      },
+      {
+        "text": "It compiles, but `go vet` reports the suspicious escapes",
+        "correct": false,
+        "why": "`go vet` printed nothing and exited 0; the escapes are valid, so there is nothing for it to see."
+      },
+      {
+        "text": "It compiles, and the path is stored exactly as typed",
+        "correct": false,
+        "why": "That is what the raw literal `` `C:\\new\\table` `` does. Double quotes turned two of the backslashes into escapes."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5awncgy",
+    "version": 1,
+    "section": "literals",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `len(`` `\\d+\\.\\d+` ``)`?",
+    "hint": "In a raw literal each backslash is one byte.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-sje40hvp",
+    "version": 1,
+    "section": "literals",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A string literal written between ___ has no escapes and can span several lines.",
+    "hint": "The character on the key to the left of 1 on many keyboards.",
+    "blanks": [
+      {
+        "accept": [
+          "backquotes",
+          "backquote",
+          "backticks",
+          "backtick"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1ds9r12x",
+    "version": 1,
+    "section": "literals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these lines does the compiler refuse?",
+    "hint": "One backslash is followed by a letter that is not an escape.",
+    "choices": [
+      {
+        "text": "`p := `` `\\d+` ``",
+        "correct": false,
+        "why": "In a raw literal a backslash is just a backslash, so this compiles."
+      },
+      {
+        "text": "`p := \"\\\\d+\"`",
+        "correct": false,
+        "why": "`\\\\` is a valid escape for one backslash, so the string is `\\d+` and it compiles."
+      },
+      {
+        "text": "`p := \"\\d+\"`",
+        "correct": true,
+        "why": "Right: unknown escape. `\\d` means something to a regular expression and nothing to Go."
+      },
+      {
+        "text": "`p := \"\\x41\"`, since a hexadecimal escape has to name a whole code point",
+        "correct": false,
+        "why": "`\\x41` is one byte, 65, and printed `A` in `~/strings-lit`."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1qps70e",
+    "version": 1,
+    "section": "literals",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each escape, inside double quotes, to what it puts in the string.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "`\\n`",
+        "right": "a newline"
+      },
+      {
+        "left": "`\\\\`",
+        "right": "one backslash"
+      },
+      {
+        "left": "`\\x41`",
+        "right": "the byte 65, given in hexadecimal"
+      },
+      {
+        "left": "`\\u20ac`",
+        "right": "the euro sign, stored as its UTF-8 bytes"
+      }
+    ],
+    "right_distractors": [
+      "a backquote"
+    ]
+  },
+  {
+    "id": "ex-64cyt8av",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`s := \"hello\"`. What does Go do with `s[0] = 'H'`?",
+    "hint": "Can a string's bytes change?",
+    "choices": [
+      {
+        "text": "Changes the first byte of `s` in place",
+        "correct": false,
+        "why": "That is a C array. A Go string's bytes are fixed when it is made."
+      },
+      {
+        "text": "Compiles, then panics when the line runs",
+        "correct": false,
+        "why": "The refusal comes earlier: it is a compile error, and nothing runs."
+      },
+      {
+        "text": "Refuses to compile it: cannot assign to `s[0]`",
+        "correct": true,
+        "why": "Right. `s[0]` can be read and never assigned."
+      },
+      {
+        "text": "Changes a copy of the string, and `s` keeps saying hello",
+        "correct": false,
+        "why": "No copy is made either: the assignment is refused before the program exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-yz49v8as",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`t := s`, then `s = \"H\" + s[1:]`, with `s` starting as `\"hello, world\"`. What does `fmt.Println(t)` print?",
+    "hint": "Did anything write into the bytes `t` refers to?",
+    "choices": [
+      {
+        "text": "`Hello, world`, because `t` and `s` share their bytes",
+        "correct": false,
+        "why": "They did share bytes, but `s` was given new bytes by `+`; the old ones never changed."
+      },
+      {
+        "text": "`hello, world`",
+        "correct": true,
+        "why": "Right. `s` now holds a new string, and `t` still holds the old one."
+      },
+      {
+        "text": "Nothing: the assignment to `s` is a compile error",
+        "correct": false,
+        "why": "Assigning a new string to a variable is allowed; only writing into a string's bytes is refused."
+      },
+      {
+        "text": "An empty line, since the old string was freed when `s` moved on",
+        "correct": false,
+        "why": "Memory that something still points to is never freed; `t` keeps the old bytes alive."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkr29mz6",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the lab's amd64 machine, what does `unsafe.Sizeof(book)` give for a string holding a whole book?",
+    "hint": "What did it give for `\"a\"`?",
+    "choices": [
+      {
+        "text": "The number of bytes in the book",
+        "correct": false,
+        "why": "That is `len(book)`. The string value only points at those bytes."
+      },
+      {
+        "text": "24, a pointer, a length and a capacity",
+        "correct": false,
+        "why": "A string has no capacity, since nothing can be appended to it in place; it is two words, not three."
+      },
+      {
+        "text": "16: a pointer and a length, 8 bytes each",
+        "correct": true,
+        "why": "Right, whatever the text; it gave 16 for `\"a\"` as well."
+      },
+      {
+        "text": "8, the size of the pointer to the text alone",
+        "correct": false,
+        "why": "The length travels with the pointer, which is why `len` costs nothing; together they are 16."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd4tm72n",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program reads a 1 GB log into a string `log` and keeps only `first := log[:80]` in a map that lives as long as the program. How much of the log stays in memory?",
+    "hint": "What does a substring point into?",
+    "choices": [
+      {
+        "text": "80 bytes, because slicing copies the part it takes",
+        "correct": false,
+        "why": "Slicing copies nothing: `w` started seven bytes after `t`, inside the same bytes."
+      },
+      {
+        "text": "The whole gigabyte, since `first` points into it; `strings.Clone(first)` would keep 80 bytes",
+        "correct": true,
+        "why": "Right. That is the case `go doc strings.Clone` names: retaining a small substring of a much larger string."
+      },
+      {
+        "text": "None of it: `first` stops being valid once `log` is no longer used",
+        "correct": false,
+        "why": "That is a dangling pointer in C. Go keeps the bytes alive for as long as anything points into them."
+      },
+      {
+        "text": "80 bytes, because the garbage collector trims what no substring covers",
+        "correct": false,
+        "why": "The collector frees whole allocations, never part of one; the gigabyte is one allocation."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hv96j5t",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did 100,000 rounds of `s += \"ab\"` take seconds when a `strings.Builder` took milliseconds?",
+    "hint": "What does `+` do with the string built so far?",
+    "choices": [
+      {
+        "text": "Each `+=` copied the whole string built so far into new memory",
+        "correct": true,
+        "why": "Right: 2 bytes, then 4, up to 200,000, about 10 billion bytes moved in all."
+      },
+      {
+        "text": "Each `+=` checked that the result was valid UTF-8",
+        "correct": false,
+        "why": "`+` checks nothing; a string can hold any bytes. The cost is the copying."
+      },
+      {
+        "text": "The `for range` loop is slow, and the Builder version avoided it",
+        "correct": false,
+        "why": "Both programs ran the same loop 100,000 times; only what happened inside differed."
+      },
+      {
+        "text": "Strings are compared on every `+=`, and comparing grows with length",
+        "correct": false,
+        "why": "Nothing is compared. `+=` builds a new string and copies both sides into it."
+      }
+    ]
+  },
+  {
+    "id": "ex-29awbjyv",
+    "version": 1,
+    "section": "utf8",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`s := \"café\"`. What is `s[3]`?",
+    "hint": "Indexing a string counts in bytes.",
+    "choices": [
+      {
+        "text": "The rune `'é'`",
+        "correct": false,
+        "why": "`é` starts at byte 3 but takes two bytes; indexing gives only the first of them."
+      },
+      {
+        "text": "The byte 195, the first half of `é`",
+        "correct": true,
+        "why": "Right: a `uint8`, which `%c` drew as the wrong character, `Ã`."
+      },
+      {
+        "text": "The string `\"é\"`",
+        "correct": false,
+        "why": "An index gives one byte, never a string; a string would come from slicing, `s[3:5]`."
+      },
+      {
+        "text": "The byte 102, the `f`",
+        "correct": false,
+        "why": "That is `s[2]`. Indexes start at 0, so `s[3]` is the fourth byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mz6mqyw",
+    "version": 1,
+    "section": "utf8",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`s := \"café\"`. Which of these are true? Choose all that apply.",
+    "hint": "`é` is two bytes.",
+    "choices": [
+      {
+        "text": "`len(s)` is 5",
+        "correct": true,
+        "why": "Yes: three ASCII bytes and two for `é`."
+      },
+      {
+        "text": "`utf8.RuneCountInString(s)` is 4",
+        "correct": true,
+        "why": "Yes: four runes, the precomposed `é` being one."
+      },
+      {
+        "text": "`s[:4]` is valid UTF-8",
+        "correct": false,
+        "why": "It ends in the lone byte `\\xc3`, and `utf8.ValidString` said `false`."
+      },
+      {
+        "text": "`s[4]` is the letter `é`",
+        "correct": false,
+        "why": "`s[4]` is 169, the second half of `é`, and a byte at that."
+      }
+    ]
+  },
+  {
+    "id": "ex-yh7xhwdg",
+    "version": 1,
+    "section": "utf8",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `strings.Index(\"café au lait\", \"au\")` return?",
+    "hint": "Count bytes, not characters.",
+    "choices": [
+      {
+        "text": "5, the number of characters before `au`",
+        "correct": false,
+        "why": "Five characters, but `é` is two bytes, and `strings` answers in bytes."
+      },
+      {
+        "text": "6, the offset in bytes",
+        "correct": true,
+        "why": "Right: c, a, f, two bytes of `é` and a space come first."
+      },
+      {
+        "text": "7, counting from 1",
+        "correct": false,
+        "why": "Offsets start at 0, as indexes do."
+      },
+      {
+        "text": "4, the number of runes in `café`",
+        "correct": false,
+        "why": "That counts `café` only and in runes; the answer is a byte offset into the whole string."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3sr7p48",
+    "version": 1,
+    "section": "utf8",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server receives a name over the network and `utf8.RuneCountInString(name)` returns 10. What does that tell you?",
+    "hint": "What did it answer for `\"\\xff\\xfe\"`?",
+    "choices": [
+      {
+        "text": "The name is valid UTF-8 with 10 characters",
+        "correct": false,
+        "why": "Neither follows: invalid bytes count as one rune each, and runes are not characters."
+      },
+      {
+        "text": "The name is 10 bytes long",
+        "correct": false,
+        "why": "`len` would tell you that; runes and bytes match only for ASCII."
+      },
+      {
+        "text": "The name holds no invalid bytes, or the count would be an error",
+        "correct": false,
+        "why": "It returns one number and no error; `\"\\xff\\xfe\"` gave 2."
+      },
+      {
+        "text": "Little until `utf8.ValidString(name)` is true; then it has 10 runes",
+        "correct": true,
+        "why": "Right. Check validity first, and remember that runes are still not characters as a reader sees them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndp3f6as",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put these literals in order of what `len` returns for them, smallest first.",
+    "hint": "Escapes work only in double quotes; the euro sign is three bytes.",
+    "items": [
+      "`\"\\n\"`",
+      "`` `\\n` ``",
+      "`\"\\u20ac\"`",
+      "`` `\\u20ac` ``"
+    ]
+  },
+  {
+    "id": "ex-pe812gbv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each task to the tool for it.",
+    "hint": "Three from section 04, one from section 03.",
+    "pairs": [
+      {
+        "left": "the size of a string in bytes",
+        "right": "`len(s)`"
+      },
+      {
+        "left": "the number of runes",
+        "right": "`utf8.RuneCountInString(s)`"
+      },
+      {
+        "left": "whether bytes from outside are UTF-8",
+        "right": "`utf8.ValidString(s)`"
+      },
+      {
+        "left": "a long string built in a loop",
+        "right": "`strings.Builder`"
+      }
+    ],
+    "right_distractors": [
+      "`strings.Clone(s)`"
+    ]
+  },
+  {
+    "id": "ex-4gvv2b01",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`s` is a string variable. Which of these lines compiles?",
+    "hint": "Assigning to the variable is not the same as writing into the string.",
+    "choices": [
+      {
+        "text": "`s[0]++`",
+        "correct": false,
+        "why": "Incrementing a byte of a string is writing into it: cannot assign to `s[0]`."
+      },
+      {
+        "text": "`s[0] = 'H'`",
+        "correct": false,
+        "why": "The bytes of a string cannot be assigned; the compiler refused exactly this line."
+      },
+      {
+        "text": "`s = \"H\" + s[1:]`",
+        "correct": true,
+        "why": "Right. It builds a new string and gives it to the variable; no byte of the old one changes."
+      },
+      {
+        "text": "`s[0] = \"H\"`, because the right-hand side is a string as well",
+        "correct": false,
+        "why": "A string on the right changes nothing: assigning to `s[0]` is refused whatever the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmh5kfxp",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`utf8.___(\"\\xff\\xfe\")` returns `false`, because those two bytes begin no character.",
+    "hint": "The function section 04 says to call on text from outside.",
+    "blanks": [
+      {
+        "accept": [
+          "ValidString"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mn7ngk73",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen shows the first 9 bytes of a name with `name[:9]`. What goes wrong for `\"Conceição Silva\"`?",
+    "hint": "Count the bytes of `ç` and `ã`.",
+    "choices": [
+      {
+        "text": "It panics, because `name` contains letters outside ASCII",
+        "correct": false,
+        "why": "Slicing within the length never panics, whatever the bytes are; the result is just wrong."
+      },
+      {
+        "text": "It returns the first 9 characters, `Conceição`",
+        "correct": false,
+        "why": "That would need 11 bytes, since `ç` and `ã` take two each."
+      },
+      {
+        "text": "It cuts `ã` in half and the result is not valid UTF-8",
+        "correct": true,
+        "why": "Right: `Conceiç` and the lone first byte of `ã`, the same cut as `s[:4]` on `café`."
+      },
+      {
+        "text": "It does not compile, since slicing a string needs the `utf8` package",
+        "correct": false,
+        "why": "Slicing is part of the language; `s[:3]` and `s[:4]` compiled with no import."
+      }
+    ]
+  }
+]

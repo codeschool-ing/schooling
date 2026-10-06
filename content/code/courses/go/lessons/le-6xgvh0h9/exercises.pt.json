@@ -1,0 +1,390 @@
+{
+  "ex-eh6f4n0f": {
+    "prompt": "Onde se declara um método de `Rect` em Go?",
+    "hint": "Veja onde `Area` ficou em `~/methods`.",
+    "choices": [
+      {
+        "text": "Dentro das chaves de `type Rect struct { … }`, depois dos campos",
+        "why": "É onde Java e Python põem métodos. A declaração de uma struct em Go lista campos e mais nada."
+      },
+      {
+        "text": "No nível do pacote, como função com `(r Rect)` antes do nome",
+        "why": "Isso. O receptor é o parâmetro extra na frente do nome, e o método pode ficar em qualquer arquivo do pacote."
+      },
+      {
+        "text": "Num bloco `class Rect` que envolve a struct",
+        "why": "Go não tem a palavra-chave `class`; a lição 1 contou as palavras-chave."
+      },
+      {
+        "text": "Em qualquer pacote que importe `Rect`",
+        "why": "Um método precisa ser declarado no pacote que define o tipo; outro pacote recebe `cannot define new methods on non-local type`."
+      }
+    ]
+  },
+  "ex-02w4w1mg": {
+    "prompt": "`type Number = int` é seguido de `func (n Number) Triple() int`. O que o compilador diz?",
+    "hint": "O que o `=` faz de `Number`?",
+    "choices": [
+      {
+        "text": "Nada: `Number` é um tipo deste pacote, então pode ter métodos",
+        "why": "Isso vale para `type Number int`. Com o `=`, `Number` é outro nome para `int`, que nenhum pacote seu define."
+      },
+      {
+        "text": "`cannot define new methods on non-local type Number`",
+        "why": "Isso. Um alias não é um tipo novo, então um método nele é um método em `int`, e isso é recusado."
+      },
+      {
+        "text": "Que o receptor de um método precisa ser uma struct",
+        "why": "`Celsius` é um `float64` e tem método; qualquer tipo que o pacote define pode ter."
+      },
+      {
+        "text": "Que `Triple` já está declarado em `int`",
+        "why": "`int` não tem método nenhum. A recusa é sobre de onde o tipo vem, não sobre o nome."
+      }
+    ]
+  },
+  "ex-aeyxqk1w": {
+    "prompt": "Em `func (c Celsius) ToFahrenheit() Fahrenheit`, o `(c Celsius)` escrito antes do nome do método é o seu ___.",
+    "hint": "É o valor sobre o qual o método é chamado.",
+    "blanks": [
+      {
+        "accept": [
+          "receptor",
+          "receiver"
+        ]
+      }
+    ]
+  },
+  "ex-2bsfrqxv": {
+    "prompt": "`type Span time.Duration` compila, e depois `s.Hours()` num `Span` é recusado. Por quê?",
+    "hint": "O que um tipo definido herda do tipo sobre o qual é construído?",
+    "choices": [
+      {
+        "text": "`Hours` não é exportado e não pode ser alcançado do `main`",
+        "why": "Começa com maiúscula, e `time.Duration(s).Hours()` funcionou a partir do `main`."
+      },
+      {
+        "text": "Métodos de tipos do `time` só funcionam em valores criados pelo pacote `time`",
+        "why": "Quem criou o valor não importa. `time.Duration(s)` foi criado no `main` e tinha `Hours`."
+      },
+      {
+        "text": "Um tipo definido ganha os valores e operadores de `time.Duration`, e nenhum dos métodos",
+        "why": "Isso: `type Span has no field or method Hours`. Converter de volta para `time.Duration` os traz."
+      },
+      {
+        "text": "`Span` foi declarado sem métodos próprios, então não pode chamar nenhum",
+        "why": "`Span` tem `Days`, e a chamada a `Hours` continua recusada, porque `Hours` pertence a `time.Duration`."
+      }
+    ]
+  },
+  "ex-qvwgjnsd": {
+    "prompt": "`Weekday` tem um método `String` que devolve o nome do dia. O que `fmt.Printf(\"%d\", Saturday)` imprime?",
+    "hint": "Que verbos o método mudou?",
+    "choices": [
+      {
+        "text": "`Saturday`, já que o `fmt` chama `String` em todo verbo",
+        "why": "Chama no `Println`, no `%v` e no `%s`. O `%d` pede o número."
+      },
+      {
+        "text": "`%!d(main.Weekday=Saturday)`, a reclamação de verbo errado",
+        "why": "`%d` serve para um `Weekday`, cujo tipo de base é `int`, então não há do que reclamar."
+      },
+      {
+        "text": "`6`",
+        "why": "Isso. A constante continua sendo o número 6; o método só muda como `%v` e `%s` a mostram."
+      },
+      {
+        "text": "Nada: o programa entra em pânico",
+        "why": "A linha de saída foi `Saturday Saturday 6`, sem pânico."
+      }
+    ]
+  },
+  "ex-gvw0kva2": {
+    "prompt": "No `package main`, quais destes podem ganhar um método? Escolha todos os que se aplicam.",
+    "hint": "O tipo precisa ser definido no mesmo pacote, e um alias não define nada.",
+    "choices": [
+      {
+        "text": "`type Celsius float64`",
+        "why": "Sim: um tipo definido deste pacote, construído sobre um número."
+      },
+      {
+        "text": "`type Names []string`",
+        "why": "Sim. Um tipo de slice definido é um tipo deste pacote como outro qualquer."
+      },
+      {
+        "text": "`time.Duration`",
+        "why": "Não: pertence ao pacote `time`."
+      },
+      {
+        "text": "`type Count = int`",
+        "why": "Não. O alias é `int`, que é predeclarado."
+      }
+    ]
+  },
+  "ex-1e6fe0b5": {
+    "prompt": "Por que `strings.ToUpper(s)` é uma função e não um método que você chama como `s.ToUpper()`?",
+    "hint": "Quem define o tipo `string`?",
+    "choices": [
+      {
+        "text": "Funções rodam mais rápido que métodos",
+        "why": "Uma chamada de método é uma chamada de função com o receptor como primeiro parâmetro; velocidade não é o motivo."
+      },
+      {
+        "text": "`string` é predeclarado, então um método nele é recusado em todo pacote",
+        "why": "Isso. Pela regra da seção 02, `strings` não tem como declarar `s.ToUpper()`."
+      },
+      {
+        "text": "Métodos só são permitidos em tipos struct",
+        "why": "`Celsius`, um número, tinha `ToFahrenheit`, e `time.Weekday`, um `int`, tem `String`."
+      },
+      {
+        "text": "O estilo de Go proíbe métodos na biblioteca padrão",
+        "why": "O mesmo pacote tem `Builder`, `Reader` e `Replacer`, cada um com métodos."
+      }
+    ]
+  },
+  "ex-jfd31v40": {
+    "prompt": "Duas funções chamadas `Area`, uma recebendo `Rect` e outra `Circle`, são recusadas. Dois métodos chamados `Area`, um em cada tipo, compilam. Por que a diferença?",
+    "hint": "Onde mora o nome de um método?",
+    "choices": [
+      {
+        "text": "Métodos têm sobrecarga pelo tipo do receptor, e funções por nada",
+        "why": "Go não tem sobrecarga de nenhum dos dois. Cada `Area` é um método diferente porque pertence a um tipo diferente."
+      },
+      {
+        "text": "Os dois métodos estavam em arquivos diferentes",
+        "why": "Estavam no mesmo arquivo, `main.go`; e arquivos de um pacote compartilham o escopo de qualquer jeito."
+      },
+      {
+        "text": "O nome de um método pertence ao tipo, e o de uma função ao pacote",
+        "why": "Isso: `Area redeclared in this block` para as funções, nada para os métodos."
+      },
+      {
+        "text": "O compilador renomeia os métodos para `RectArea` e `CircleArea` sozinho",
+        "why": "Nenhuma renomeação acontece; o `%T` de `Rect.Area` imprimiu `func(main.Rect) float64`, um método de `Rect`."
+      }
+    ]
+  },
+  "ex-5spyhyc7": {
+    "prompt": "Em vez de um método `String`, `Weekday` ganha `func WeekdayName(d Weekday) string` no mesmo pacote. O que `fmt.Println(Saturday)` imprime?",
+    "hint": "O que o `fmt` procura?",
+    "choices": [
+      {
+        "text": "`Saturday`: o `fmt` acha uma função que recebe um `Weekday`",
+        "why": "O `fmt` não enxerga as funções do seu pacote. Ele procura um método chamado `String` no tipo do valor."
+      },
+      {
+        "text": "`6`",
+        "why": "Isso. Uma função que ninguém chama não muda nada, e a lição 6 imprimiu o mesmo `0 1 6` sem ela."
+      },
+      {
+        "text": "Um erro de compilação, já que `Weekday` não tem `String`",
+        "why": "Nada exige um método `String`; sem ele o `fmt` imprime o número."
+      },
+      {
+        "text": "`main.Weekday(6)`, o tipo e o número",
+        "why": "O `Println` não acrescenta nome de tipo a um número; ele imprimiu `0 1 6` na lição 6."
+      }
+    ]
+  },
+  "ex-hv7dy8n0": {
+    "prompt": "Um pacote define `type Money int64`, em centavos. Ele precisa que o `fmt` imprima um `Money` como `R$ 19,90`, e precisa do total de um `[]Money`. Que desenho combina com a seção 03?",
+    "hint": "Um dos dois precisa ser achado pelo `fmt`; o outro é sobre muitos valores.",
+    "choices": [
+      {
+        "text": "As duas funções, `Format(m Money)` e `Total(items []Money)`, como faz o `strings`",
+        "why": "O `fmt` nunca chama `Format`; `fmt.Println(price)` imprimiria o número de centavos."
+      },
+      {
+        "text": "Um método `String` em `Money`, e `Total` como função que recebe `[]Money`",
+        "why": "Isso. O `fmt` precisa achar `String` no tipo; um total é sobre muitos valores, sem nenhum no comando."
+      },
+      {
+        "text": "Os dois como métodos de `Money`, com `Total` chamado no primeiro item como `items[0].Total(items)`",
+        "why": "Compila, e o receptor não tem papel nenhum, que é o sinal de que se queria uma função."
+      },
+      {
+        "text": "Um método `String` em `int64`, para que todo valor saia como dinheiro",
+        "why": "`int64` não é tipo seu: `cannot define new methods on non-local type int64`."
+      }
+    ]
+  },
+  "ex-pa24ryjr": {
+    "prompt": "Em quais destes uma função comum é a escolha natural? Escolha todos os que se aplicam.",
+    "hint": "Um método precisa de um valor de um tipo seu no comando.",
+    "choices": [
+      {
+        "text": "Contar as vogais de uma `string`",
+        "why": "Sim: `string` não pode ter métodos seus, como o `strings` mostra."
+      },
+      {
+        "text": "Decidir se dois valores `Rect` se sobrepõem",
+        "why": "Sim. Os dois retângulos têm o mesmo papel, e `Overlap(a, b)` diz isso."
+      },
+      {
+        "text": "Fazer o `fmt.Println` mostrar um `Celsius` como `21.5C`",
+        "why": "Não: o `fmt` acha um método `String` e mais nada."
+      },
+      {
+        "text": "Calcular a área de um `Rect` a partir dos seus dois campos",
+        "why": "Não. São os dados do próprio valor, o primeiro motivo para um método."
+      }
+    ]
+  },
+  "ex-byw8hy81": {
+    "prompt": "`r` é um `Rect`. Qual é o tipo de `r.Area`, escrito sem parênteses?",
+    "hint": "O receptor já está dentro dele.",
+    "choices": [
+      {
+        "text": "`float64`, a área",
+        "why": "Sem os parênteses nada é chamado. O valor é o próprio método, com `r` preenchido."
+      },
+      {
+        "text": "`func(main.Rect) float64`",
+        "why": "Esse é o `Rect.Area`, a method expression, que ainda precisa de um `Rect` como parâmetro."
+      },
+      {
+        "text": "`func() float64`",
+        "why": "Isso: um method value, uma função com o receptor amarrado, como o `%T` imprimiu."
+      },
+      {
+        "text": "Um erro de compilação: um método precisa ser chamado",
+        "why": "`area := r.Area` compilou e rodou, e `area()` imprimiu 12."
+      }
+    ]
+  },
+  "ex-1wtx1cre": {
+    "prompt": "`r := Rect{W: 3, H: 4}`, depois `area := r.Area`, depois `r.H = 5`. O que `area()` devolve?",
+    "hint": "Quando o receptor foi copiado?",
+    "unit": "unidades quadradas"
+  },
+  "ex-faevxevy": {
+    "prompt": "Com o `Shift` da seção 04, o que `strings.Map(Shift(1).Rotate, \"abc z\")` devolve?",
+    "hint": "`Rotate` volta de `z` para `a` e deixa o que não é letra como está.",
+    "choices": [
+      {
+        "text": "`abc z`, já que um method value não leva o seu 1",
+        "why": "Leva: `Shift(13).Rotate` levou o seu 13 e transformou `hello` em `uryyb`."
+      },
+      {
+        "text": "`bcd!a`",
+        "why": "O espaço não é letra minúscula, então `Rotate` o devolve sem mudança."
+      },
+      {
+        "text": "`bcd {`",
+        "why": "`{` vem depois de `z` no ASCII, e o `% 26` está ali justamente para voltar ao `a`."
+      },
+      {
+        "text": "`bcd a`",
+        "why": "Isso. Cada letra anda uma posição, `z` volta para `a`, e o espaço fica."
+      }
+    ]
+  },
+  "ex-t1mdpsa8": {
+    "prompt": "`Employee` declara o próprio `Greet`, e mesmo assim `e.Introduce()` imprimiu `Hello, I am Ana.` sem `from Acme`. Por quê?",
+    "hint": "Qual é o receptor do `Introduce` promovido?",
+    "choices": [
+      {
+        "text": "Go sempre prefere o método do tipo embutido, mais fundo",
+        "why": "Vence o mais raso: `e.Greet()` achou o de `Employee`. A questão é o que `Introduce` chama lá dentro."
+      },
+      {
+        "text": "`Introduce` roda sobre `e.Person`, então o `p.Greet()` dele é o de `Person`",
+        "why": "Isso. Um método promovido recebe o valor embutido e não tem como saber que há um `Employee` em volta."
+      },
+      {
+        "text": "`Employee.Greet` tem assinatura diferente, então não sobrescreve",
+        "why": "Os dois são `Greet() string`. Nada em Go sobrescreve, seja qual for a assinatura."
+      },
+      {
+        "text": "Os métodos de `Person` foram compilados antes de `Employee` existir",
+        "why": "A ordem de declaração não importa num pacote; o que importa é que `p` é um `Person`."
+      }
+    ]
+  },
+  "ex-jnat1nyc": {
+    "prompt": "`r` é um `Rect` com um método `Area() float64`. Ligue cada grafia ao que ela é.",
+    "hint": "Duas delas chamam, duas não.",
+    "pairs": [
+      {
+        "left": "`r.Area()`",
+        "right": "uma chamada, que dá um `float64`"
+      },
+      {
+        "left": "`r.Area`",
+        "right": "um method value do tipo `func() float64`"
+      },
+      {
+        "left": "`Rect.Area`",
+        "right": "uma method expression do tipo `func(main.Rect) float64`"
+      },
+      {
+        "left": "`Rect.Area(r)`",
+        "right": "a mesma chamada que `r.Area()`, com o receptor como primeiro argumento"
+      }
+    ],
+    "right_distractors": [
+      "um método promovido de um `Rect` embutido"
+    ]
+  },
+  "ex-zxrak5s6": {
+    "prompt": "Ponha as partes do método `Area` de `Rect` na ordem em que são escritas.",
+    "hint": "O receptor vem antes do nome.",
+    "items": [
+      "`func`",
+      "`(r Rect)`",
+      "`Area()`",
+      "`float64`",
+      "`{ return r.W * r.H }`"
+    ]
+  },
+  "ex-7ws2b33p": {
+    "prompt": "`Contractor` embute `Person`. Você acrescenta `func (c Contractor) Greet() string`, que devolve `\"Hi from \" + c.Agency`. O que `c.Introduce()` imprime agora para o Caio?",
+    "hint": "Quem é o receptor de `Introduce`?",
+    "choices": [
+      {
+        "text": "`Hi from Temps.`",
+        "why": "Isso exigiria que `Introduce` chamasse o `Greet` de `Contractor`, e o receptor dele é o `Person` embutido."
+      },
+      {
+        "text": "`Hello, I am Caio.`",
+        "why": "Isso. Acrescentar um `Greet` ao tipo de fora muda `c.Greet()` e deixa o `Introduce` promovido exatamente como estava."
+      },
+      {
+        "text": "Um erro de compilação: `Greet` é ambíguo",
+        "why": "Ambiguidade exige dois de mesmo nome na mesma profundidade; aqui um está na profundidade 0 e vence."
+      },
+      {
+        "text": "`Hi from Temps`, seguido de `Hello, I am Caio.`",
+        "why": "Nada chama os dois. `Introduce` faz uma chamada, a `p.Greet()`, sobre um `Person`."
+      }
+    ]
+  },
+  "ex-hf32kwr3": {
+    "prompt": "Um pacote `geo` define `Point`. No `package main` você quer um tipo com um método `Distance` que continue tendo os métodos de `Point`. Que declaração dá isso?",
+    "hint": "Junte a regra da seção 02 com a lição 16.",
+    "choices": [
+      {
+        "text": "`func (p geo.Point) Distance(q geo.Point) float64`",
+        "why": "`geo.Point` não é definido no `main`: `cannot define new methods on non-local type`."
+      },
+      {
+        "text": "`type Place = geo.Point` e um método em `Place`",
+        "why": "Um alias é o próprio `geo.Point`, recusado pelo mesmo motivo que `Number = int`."
+      },
+      {
+        "text": "`type Place struct{ geo.Point }` e um método em `Place`",
+        "why": "Isso. `Place` é definido no `main`, então pode ter métodos, e os de `Point` são promovidos para ele."
+      },
+      {
+        "text": "`type Place geo.Point`, que mantém todo método de `Point` e acrescenta `Distance`",
+        "why": "Compila, mas não mantém nenhum método de `Point`, como `Span` perdeu `Hours`, então não é o que se pediu."
+      }
+    ]
+  },
+  "ex-z3ekc8ng": {
+    "prompt": "Em `~/methods-embed`, quantos métodos diferentes podem ser chamados como `e.X()` num `Employee`, contando os promovidos mas não `e.Person.X()`?",
+    "hint": "O `Greet` de `Person` fica escondido atrás do de `Employee`.",
+    "unit": "métodos"
+  }
+}

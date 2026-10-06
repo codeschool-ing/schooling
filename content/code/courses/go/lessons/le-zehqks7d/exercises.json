@@ -1,0 +1,557 @@
+[
+  {
+    "id": "ex-sg4tax4c",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ages` already holds the key `\"ana\"`. What does `ages[\"ana\"] = 32` do?",
+    "hint": "There is no separate insert.",
+    "choices": [
+      {
+        "text": "Adds a second `\"ana\"` entry, so `len(ages)` grows by one",
+        "correct": false,
+        "why": "A key appears once in a map; in section 02 the length went from 2 to 3 when `caio` arrived and `ana` changed, not to 4."
+      },
+      {
+        "text": "Fails to compile, because the key exists",
+        "correct": false,
+        "why": "The compiler only refuses a key repeated inside one literal. An assignment to an existing key is ordinary."
+      },
+      {
+        "text": "Replaces the value and leaves the length alone",
+        "correct": true,
+        "why": "Right. Assigning to `m[key]` adds a new key or replaces the value of an existing one."
+      },
+      {
+        "text": "Panics at run time",
+        "correct": false,
+        "why": "The only write that panicked in this lesson was one into a nil map, and `ages` was made by a literal."
+      }
+    ]
+  },
+  {
+    "id": "ex-qn05xd0n",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`var prices map[string]int` is followed by `prices[\"pear\"] = 3`. What happens?",
+    "hint": "What is the zero value of a map, and what can be done with it?",
+    "choices": [
+      {
+        "text": "The compiler refuses it: a map must be made before use",
+        "correct": false,
+        "why": "It compiled. Whether the variable holds a map is only known when the program runs."
+      },
+      {
+        "text": "It works, since a nil map behaves as an empty one",
+        "correct": false,
+        "why": "It does for reading and `len`. Writing is the one exception."
+      },
+      {
+        "text": "The value is dropped and the map stays empty",
+        "correct": false,
+        "why": "Nothing is dropped quietly here; the program stops."
+      },
+      {
+        "text": "A run-time panic: `assignment to entry in nil map`",
+        "correct": true,
+        "why": "Right. `var` gives the nil map, which can be read and not written."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t6sazeq",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these key types does the compiler accept?",
+    "hint": "A key has to work with `==`.",
+    "choices": [
+      {
+        "text": "`[]byte`, the bytes of a file",
+        "correct": false,
+        "why": "A slice is not comparable: `invalid map key type []byte`."
+      },
+      {
+        "text": "`[32]byte`",
+        "correct": true,
+        "why": "Right. An array of comparable elements is comparable, which is why lesson 13 could key a map by a checksum."
+      },
+      {
+        "text": "`map[string]int`, so that one map can index others",
+        "correct": false,
+        "why": "A map can only be compared to `nil`, so it can never be a key."
+      },
+      {
+        "text": "`func()`, to look up a handler by function",
+        "correct": false,
+        "why": "Functions are not comparable either, except with `nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyg6wa5e",
+    "version": 1,
+    "section": "maps",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The built-in function that removes a key and its value from a map is `___`.",
+    "hint": "It takes the map and the key.",
+    "blanks": [
+      {
+        "accept": [
+          "delete"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mky0tmza",
+    "version": 1,
+    "section": "maps",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`m := map[string]int{\"a\": 1, \"b\": 2, \"c\": 3}`, then `m[\"d\"] = 4`, `m[\"a\"] = 5`, `delete(m, \"b\")` and `delete(m, \"x\")`. What is `len(m)`?",
+    "hint": "One line adds, one replaces, one removes and one does nothing.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "keys"
+  },
+  {
+    "id": "ex-5mbxb7xa",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`map[string]bool` compiles and `map[[]byte]bool` does not, though both keys could hold the same bytes. What rule is the compiler applying?",
+    "hint": "The same rule refused `a == b` between two maps.",
+    "choices": [
+      {
+        "text": "A key must have a fixed size, and a slice can grow",
+        "correct": false,
+        "why": "A string has no fixed size either and is a fine key. Size is not what is checked."
+      },
+      {
+        "text": "A key must never change, and a slice's elements can",
+        "correct": false,
+        "why": "A pointer is accepted as a key though what it points at can change; the compiler checks one property, and it is not this."
+      },
+      {
+        "text": "A key's type must be comparable with `==`, and a slice's is not",
+        "correct": true,
+        "why": "Right. A map compares keys with `==`, and slices can only be compared to `nil`."
+      },
+      {
+        "text": "Only basic types may be keys",
+        "correct": false,
+        "why": "Arrays are not basic types and `[32]byte` was a key in lesson 13."
+      }
+    ]
+  },
+  {
+    "id": "ex-g83epxcp",
+    "version": 1,
+    "section": "comma-ok",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`stock` is a `map[string]int` with no key `\"kiwi\"`. What does `stock[\"kiwi\"]` give?",
+    "hint": "A missing key is not an error in Go.",
+    "choices": [
+      {
+        "text": "A panic, like a missing key in Python",
+        "correct": false,
+        "why": "Python raises an error; Go does not. The lookup printed `0` and the program carried on."
+      },
+      {
+        "text": "`0`",
+        "correct": true,
+        "why": "Right: the zero value of the value type, `int`, with nothing saying the key was missing."
+      },
+      {
+        "text": "`nil`, the marker of a missing entry",
+        "correct": false,
+        "why": "An `int` cannot be `nil`. A missing key gives the value type's zero, and the zero of `int` is 0."
+      },
+      {
+        "text": "`-1`, so that it differs from any real count",
+        "correct": false,
+        "why": "There is no special marker value; Go hands back the zero value and leaves the question to `ok`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt6qybsa",
+    "version": 1,
+    "section": "comma-ok",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`stock` holds `\"apple\": 0`. What does `n, ok := stock[\"apple\"]` set?",
+    "hint": "`ok` is about the key, not the value.",
+    "choices": [
+      {
+        "text": "`n` is 0 and `ok` is false, since the value is the zero value",
+        "correct": false,
+        "why": "That was the answer for `kiwi`, which is missing. `apple` is present with 0 stored, and `ok` reports presence."
+      },
+      {
+        "text": "Nothing: two results need `stock.Get(\"apple\")`",
+        "correct": false,
+        "why": "Maps have no `Get` method. The index expression itself returns two values when two are asked for."
+      },
+      {
+        "text": "`n` is 0 and `ok` is true",
+        "correct": true,
+        "why": "Right. The key is there and its value is 0; the run printed `0 true`."
+      },
+      {
+        "text": "`n` is 1, `ok` is true",
+        "correct": false,
+        "why": "`n` is the value stored, which is 0. Nothing counts the lookup."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w7ej8dc",
+    "version": 1,
+    "section": "comma-ok",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In which of these is the single-value lookup `m[k]` enough, with no `ok`? Choose all that apply.",
+    "hint": "Ask whether the zero value could be a real entry.",
+    "choices": [
+      {
+        "text": "A `map[string]bool` of banned users where only `true` is ever stored",
+        "correct": true,
+        "why": "Yes. A missing user gives `false`, which means \"not banned\", the same answer a stored entry could never give."
+      },
+      {
+        "text": "A stock list where a quantity of 0 is a valid entry",
+        "correct": false,
+        "why": "Here 0 is ambiguous: out of stock or never listed. That is exactly the case `ok` exists for."
+      },
+      {
+        "text": "Counting words with `counts[w]++`",
+        "correct": true,
+        "why": "Yes. A new word reads as 0 and becomes 1, which is the right starting count."
+      },
+      {
+        "text": "A map of temperatures in which 0 °C is a reading that can occur",
+        "correct": false,
+        "why": "A city at 0 °C and a city with no reading would look the same, so this one needs `ok`."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9mzsy6r",
+    "version": 1,
+    "section": "comma-ok",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked for two results, a map lookup returns the value and a `___` that is true only if the key is present.",
+    "hint": "Its type, not its usual name.",
+    "blanks": [
+      {
+        "accept": [
+          "bool"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-73kntq2d",
+    "version": 1,
+    "section": "comma-ok",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`byInitial[first] = append(byInitial[first], name)` works the first time a letter appears, with no check. Why?",
+    "hint": "What does the missing key read as, and what does `append` do with it?",
+    "choices": [
+      {
+        "text": "`append` notices the missing key and creates it in the map",
+        "correct": false,
+        "why": "`append` knows nothing about maps; it receives a slice. The assignment is what creates the key."
+      },
+      {
+        "text": "The missing key reads as a nil slice, and `append` to a nil slice allocates",
+        "correct": true,
+        "why": "Right. The zero value of `[]string` is nil, and lesson 12 showed `append` handling that by itself."
+      },
+      {
+        "text": "A `map[string][]string` starts with an empty slice under every possible key",
+        "correct": false,
+        "why": "The map starts empty, with no keys at all; the lookup of a missing key just produces a zero value."
+      },
+      {
+        "text": "Go retries the lookup after the first `append` fails",
+        "correct": false,
+        "why": "Nothing fails and nothing is retried: one read, one `append`, one store."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6q20zmd",
+    "version": 1,
+    "section": "unordered",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fmt.Println(ages)` printed the keys in the same order on both runs, while the `range` loop did not. Why?",
+    "hint": "Which of the two did something extra?",
+    "choices": [
+      {
+        "text": "`fmt` sorts a map's keys before printing",
+        "correct": true,
+        "why": "Right. `fmt` calls `fmtsort`; the map itself has no order to show."
+      },
+      {
+        "text": "Printing reads the map in the order the keys were inserted",
+        "correct": false,
+        "why": "The output was alphabetical, and the literal happened to be written in that order; a map keeps no insertion order to read."
+      },
+      {
+        "text": "The order is only random inside a loop",
+        "correct": false,
+        "why": "`maps.Keys` is just as unordered outside any loop of yours. `fmt` is the one that sorts."
+      },
+      {
+        "text": "Both runs reused the build cache, and with it the same map",
+        "correct": false,
+        "why": "The cache keeps the compiled program, not a map; the `range` line changed between the same two runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvz1r9bk",
+    "version": 1,
+    "section": "unordered",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the different order of a `range` over the same map, run after run, come from?",
+    "hint": "The lesson quoted one line of the runtime.",
+    "choices": [
+      {
+        "text": "From the map's keys being stored in the order they hashed to that day",
+        "correct": false,
+        "why": "Storage plays a part, but the variation is put there on purpose: a walk of the very same map starts somewhere new each time."
+      },
+      {
+        "text": "Each walk starts at a place the runtime picks at random",
+        "correct": true,
+        "why": "Right: `it.entryOffset = rand()` in `internal/runtime/maps/table.go`."
+      },
+      {
+        "text": "From the garbage collector moving entries around",
+        "correct": false,
+        "why": "The collector does not reorder a map; the randomness is chosen when the walk begins."
+      },
+      {
+        "text": "From a bug that go1.27.1 still has",
+        "correct": false,
+        "why": "It is deliberate, and the documentation of `maps.Keys` says the order is not specified."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcq7agfm",
+    "version": 1,
+    "section": "unordered",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order the steps for printing a map's entries sorted by key.",
+    "hint": "The map answers lookups; the slice answers order.",
+    "items": [
+      "Take the keys out with `maps.Keys`",
+      "Collect and sort them with `slices.Sorted`",
+      "Walk the sorted slice by index",
+      "Look each key's value up in the map"
+    ]
+  },
+  {
+    "id": "ex-ddg4rs9a",
+    "version": 1,
+    "section": "unordered",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test walks a map of three keys and expects them in the order the literal wrote them. It passed its first five runs. What is the right conclusion?",
+    "hint": "Remember what four runs in six showed.",
+    "choices": [
+      {
+        "text": "Small maps keep their insertion order, so the test is sound",
+        "correct": false,
+        "why": "They keep it rotated from a random start: `./small` printed `[deploy build test push]` once."
+      },
+      {
+        "text": "It depends on an order Go does not promise, and it will fail on some runs",
+        "correct": true,
+        "why": "Right. With few keys the random start often lands on the first one, so the failures are rare, not absent."
+      },
+      {
+        "text": "Five passes prove the order is fixed for that map",
+        "correct": false,
+        "why": "Five agreeing runs are what a rotation over a few keys produces often enough; they prove nothing about the sixth."
+      },
+      {
+        "text": "It only breaks when the map is printed with `fmt`",
+        "correct": false,
+        "why": "`fmt` is the one place the order is always the same, because it sorts."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxnbnzsb",
+    "version": 1,
+    "section": "unordered",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression to the order in which it produces a map's keys.",
+    "hint": "Only one of them is random.",
+    "pairs": [
+      {
+        "left": "`fmt.Println(m)`",
+        "right": "Sorted by key, every time"
+      },
+      {
+        "left": "`for k := range m`",
+        "right": "From a random start, new on each walk"
+      },
+      {
+        "left": "`slices.Sorted(maps.Keys(m))`",
+        "right": "A new sorted slice you walk yourself"
+      }
+    ],
+    "right_distractors": [
+      "The order the keys were inserted in"
+    ]
+  },
+  {
+    "id": "ex-3eqjd0g2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function declares `var index map[string][]int` and then runs `index[w] = append(index[w], i)`. What happens on the first word?",
+    "hint": "Separate the read, the `append` and the store.",
+    "choices": [
+      {
+        "text": "It works: `append` allocates whatever is nil",
+        "correct": false,
+        "why": "`append` allocates the slice. The map is a different nil, and the store into it is what fails."
+      },
+      {
+        "text": "The compiler refuses `append` on a map entry",
+        "correct": false,
+        "why": "Reading an entry and appending to the slice read is ordinary; section 03 grouped names that way."
+      },
+      {
+        "text": "Nothing is stored and `index` stays empty",
+        "correct": false,
+        "why": "Go does not drop writes in silence; a write to a nil map stops the program."
+      },
+      {
+        "text": "It panics with `assignment to entry in nil map`",
+        "correct": true,
+        "why": "Right. The read and the `append` are fine; the store into the nil map panics. `index := map[string][]int{}` fixes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8xthd8j",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these compile? Choose all that apply.",
+    "hint": "The rule is about keys and comparisons, not values.",
+    "choices": [
+      {
+        "text": "`grid := map[[2]int]string{}`",
+        "correct": true,
+        "why": "Yes. An array of ints is comparable, so it can be a key, a grid position for example."
+      },
+      {
+        "text": "`groups := map[string][]string{}`",
+        "correct": true,
+        "why": "Yes. The value may be any type, slices included; only the key must be comparable."
+      },
+      {
+        "text": "`seen := map[[]int]bool{}`",
+        "correct": false,
+        "why": "No: `invalid map key type`, for the same reason as `[]byte`."
+      },
+      {
+        "text": "`same := a == b` for two maps `a` and `b`",
+        "correct": false,
+        "why": "No: `map can only be compared to nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-77e6bkva",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var m map[string]int` is never made. What does `delete(m, \"x\")` do?",
+    "hint": "`go doc builtin.delete` answers it in one sentence.",
+    "choices": [
+      {
+        "text": "Panics, like any write to a nil map",
+        "correct": false,
+        "why": "Storing panics; removing from a map with nothing in it has nothing to do. The documentation calls it a no-op."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: \"If m is nil or there is no such element, delete is a no-op.\""
+      },
+      {
+        "text": "It does not compile, since `m` was never made",
+        "correct": false,
+        "why": "The compiler cannot know whether a map variable holds a map; it compiled the nil-map program too."
+      },
+      {
+        "text": "It makes the map, then deletes nothing",
+        "correct": false,
+        "why": "Nothing makes a map behind your back; `m` is still nil afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy09ghgr",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The word-counting loop of section 03 runs over `strings.Fields(\"to be or not to be\")`. What is `len(counts)` afterwards?",
+    "hint": "`len` counts keys, not words.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "keys"
+  }
+]

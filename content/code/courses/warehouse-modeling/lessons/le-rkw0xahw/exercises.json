@@ -1,0 +1,772 @@
+[
+  {
+    "id": "ex-b34c3k6p",
+    "version": 1,
+    "section": "declaring-the-grain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a grain sentence say?",
+    "hint": "Not the columns.",
+    "choices": [
+      {
+        "text": "What one row of the table stands for",
+        "correct": true,
+        "why": "Right. An event or state of the business, in its words."
+      },
+      {
+        "text": "Which columns the fact table has",
+        "correct": false,
+        "why": "Columns follow from the grain; the grain is not a list of them."
+      },
+      {
+        "text": "How often the table is loaded, and from which source",
+        "correct": false,
+        "why": "That is a schedule, a matter for `pipelines-etl`."
+      },
+      {
+        "text": "Which index the table is sorted by",
+        "correct": false,
+        "why": "Physical order is lesson 8; it does not define a row."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkcxewat",
+    "version": 1,
+    "section": "declaring-the-grain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Kimball recommend the atomic grain, the finest the source records?",
+    "hint": "Can a query bring back detail that was summed away?",
+    "choices": [
+      {
+        "text": "Atomic tables are the smallest",
+        "correct": false,
+        "why": "They are the largest; that is the price."
+      },
+      {
+        "text": "Report tools only read atomic tables",
+        "correct": false,
+        "why": "They read any table; aggregated ones too."
+      },
+      {
+        "text": "Summed-away detail cannot come back",
+        "correct": true,
+        "why": "Right. A table of whole orders could never say which book was sold."
+      },
+      {
+        "text": "It makes surrogate keys unnecessary",
+        "correct": false,
+        "why": "Grain and keys are separate decisions."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h7bvgcy",
+    "version": 1,
+    "section": "declaring-the-grain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column fails the grain test for `fact_sales`, one row per order line?",
+    "hint": "Exactly one value per row at that grain.",
+    "choices": [
+      {
+        "text": "The book's department",
+        "correct": false,
+        "why": "One per line, through the book."
+      },
+      {
+        "text": "The order's shipping fee",
+        "correct": true,
+        "why": "Right. One per order, so it repeats on every line."
+      },
+      {
+        "text": "The promotion applied to the line",
+        "correct": false,
+        "why": "One per line: each line has at most one promotion."
+      },
+      {
+        "text": "The shop where the order was placed",
+        "correct": false,
+        "why": "One per line, since each order is at one shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfbs1qbg",
+    "version": 1,
+    "section": "mixed-grains",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Summed over the lines, shipping comes to 236,410,850 centavos; the shop charged 225,246,280. By how many reais does the line-level sum overstate it?",
+    "hint": "Subtract, then divide by a hundred.",
+    "value": 111645.7,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-hdr1bzzb",
+    "version": 1,
+    "section": "mixed-grains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did copying the shipping fee onto every line raise no error?",
+    "hint": "Each row, read alone, is true.",
+    "choices": [
+      {
+        "text": "DuckDB hides warnings by default",
+        "correct": false,
+        "why": "There was no warning to hide."
+      },
+      {
+        "text": "The join skipped orders without shipping",
+        "correct": false,
+        "why": "Those carry zero; they change nothing."
+      },
+      {
+        "text": "Shipping is stored in reais, not centavos",
+        "correct": false,
+        "why": "It is in centavos, like every amount here."
+      },
+      {
+        "text": "Every row is true; only the sum is wrong",
+        "correct": true,
+        "why": "Right. The fee of the order really is R$ 14.90; summing it per line is the mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tz167jk",
+    "version": 1,
+    "section": "allocating",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After allocation, what do the shipping shares of order 112406's three lines add up to?",
+    "hint": "372, 338 and 780.",
+    "choices": [
+      {
+        "text": "1,489 centavos, one lost to rounding",
+        "correct": false,
+        "why": "The leftover centavos are handed out, so none is lost."
+      },
+      {
+        "text": "4,470 centavos, the fee three times",
+        "correct": false,
+        "why": "That is the mistake of the previous section."
+      },
+      {
+        "text": "1,490 centavos, the fee exactly",
+        "correct": true,
+        "why": "Right. The parts add back up to what was charged."
+      },
+      {
+        "text": "1,491 centavos, one added by rounding",
+        "correct": false,
+        "why": "Rounding down first makes that impossible."
+      }
+    ]
+  },
+  {
+    "id": "ex-8aqn37n7",
+    "version": 1,
+    "section": "allocating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the allocation round every share down and then give out the leftover centavos, instead of rounding each share to the nearest centavo?",
+    "hint": "Three shares of 496.67 each.",
+    "choices": [
+      {
+        "text": "Three shares rounded alone come to 1,491",
+        "correct": true,
+        "why": "Right. Three shares of 496.67 round to 497 each, 1,491 in all."
+      },
+      {
+        "text": "Rounding down is faster",
+        "correct": false,
+        "why": "Speed is not the concern; the total is."
+      },
+      {
+        "text": "The law requires shares to be rounded down",
+        "correct": false,
+        "why": "No law is involved; arithmetic is."
+      },
+      {
+        "text": "Floats cannot be rounded in SQL",
+        "correct": false,
+        "why": "They can; the problem is the sum."
+      }
+    ]
+  },
+  {
+    "id": "ex-16yw0zbf",
+    "version": 1,
+    "section": "allocating",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are legitimate bases for allocating an order's shipping to its lines? Choose all that apply.",
+    "hint": "Each gives a different answer to \"freight by department\".",
+    "choices": [
+      {
+        "text": "In proportion to each line's value",
+        "correct": true,
+        "why": "Yes. The rule used here."
+      },
+      {
+        "text": "In proportion to each book's weight",
+        "correct": true,
+        "why": "Yes. Closer to what the courier charges for."
+      },
+      {
+        "text": "An equal share per line",
+        "correct": true,
+        "why": "Yes. Simple, and it still adds up."
+      },
+      {
+        "text": "The whole fee on the first line",
+        "correct": false,
+        "why": "It adds up, but it tells nothing about the other lines; nobody could read freight by department from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-htf0h7br",
+    "version": 1,
+    "section": "two-grains-two-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fact_sales` and `fact_payments` are joined on `order_id`, and payments more than double. What is that called?",
+    "hint": "Rows of one side repeated for each match on the other.",
+    "choices": [
+      {
+        "text": "A cartesian product of the two whole tables",
+        "correct": false,
+        "why": "That would join every row to every row, not only within an order."
+      },
+      {
+        "text": "Double entry bookkeeping",
+        "correct": false,
+        "why": "An accounting method; nothing to do with joins."
+      },
+      {
+        "text": "A slowly changing dimension",
+        "correct": false,
+        "why": "That is lesson 5's subject."
+      },
+      {
+        "text": "Fan-out",
+        "correct": true,
+        "why": "Right. Two grains joined on a key unique in neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxnkpc7y",
+    "version": 1,
+    "section": "two-grains-two-tables",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop received 9,799,636,132 centavos and sold 9,574,389,852 centavos of books. How many reais is the difference?",
+    "hint": "It is the shipping.",
+    "value": 2252462.8,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-ta8y0g3j",
+    "version": 1,
+    "section": "two-grains-two-tables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana needs \"books sold against money received, per month\". Which plan is right?",
+    "hint": "Sum first, then join.",
+    "choices": [
+      {
+        "text": "Join the lines to the payments, then sum both by month",
+        "correct": false,
+        "why": "That is the fan-out the section measured."
+      },
+      {
+        "text": "Sum each by month, then join the two results",
+        "correct": true,
+        "why": "Right. One row per month on each side, joined one to one."
+      },
+      {
+        "text": "Add a `payment_cents` column to every sales line",
+        "correct": false,
+        "why": "A payment has no single value per line: the shipping mistake again."
+      },
+      {
+        "text": "Use `DISTINCT` on the joined rows",
+        "correct": false,
+        "why": "Two identical payments would collapse into one; it hides the fan-out unreliably."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyg2na4z",
+    "version": 1,
+    "section": "degenerate-dimensions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `order_id` stay in `fact_sales` with no dimension table behind it?",
+    "hint": "What would `dim_order` hold?",
+    "choices": [
+      {
+        "text": "A dimension of orders would hold nothing but the number",
+        "correct": true,
+        "why": "Right. Everything else about an order is already on its lines."
+      },
+      {
+        "text": "Order numbers are too large to be dimension keys",
+        "correct": false,
+        "why": "Size has nothing to do with it."
+      },
+      {
+        "text": "Kimball forbids tables with one column",
+        "correct": false,
+        "why": "Nothing forbids it; it would just be useless."
+      },
+      {
+        "text": "It was left there by mistake",
+        "correct": false,
+        "why": "It is there on purpose: it groups lines and leads back to receipts."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxp6gtjk",
+    "version": 1,
+    "section": "degenerate-dimensions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A dimension key kept on the fact row with no dimension table behind it, such as an order number, is called a ___ dimension.",
+    "hint": "Kimball's adjective.",
+    "blanks": [
+      {
+        "accept": [
+          "degenerate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a2mdhmwk",
+    "version": 1,
+    "section": "natural-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a natural key?",
+    "hint": "It comes from the business or a source system.",
+    "choices": [
+      {
+        "text": "`customer_key` in `dim_customer`",
+        "correct": false,
+        "why": "That one the warehouse assigned: a surrogate."
+      },
+      {
+        "text": "`book_key` in `fact_sales`",
+        "correct": false,
+        "why": "A surrogate, pointing at `dim_book`."
+      },
+      {
+        "text": "A book's ISBN",
+        "correct": true,
+        "why": "Right. It belongs to the publishing world, not to the warehouse."
+      },
+      {
+        "text": "A row number inside a query",
+        "correct": false,
+        "why": "That identifies nothing outside the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-paz6aeev",
+    "version": 1,
+    "section": "natural-keys",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these happen to natural keys over a warehouse's life? Choose all that apply.",
+    "hint": "Four were named.",
+    "choices": [
+      {
+        "text": "A customer changes e-mail address",
+        "correct": true,
+        "why": "Yes. 825 times in the shop's history."
+      },
+      {
+        "text": "A new till system numbers customers from one again",
+        "correct": true,
+        "why": "Yes. Old 2123 and new 2123 become different people."
+      },
+      {
+        "text": "A code is reused for a different product",
+        "correct": true,
+        "why": "Yes. Facts from before and after point at one key."
+      },
+      {
+        "text": "The warehouse renumbers its own keys every night",
+        "correct": false,
+        "why": "No. Old rows keep their keys; that is the point of owning them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygdh6vcp",
+    "version": 1,
+    "section": "surrogate-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Customer 2123 has two surrogate keys. Why can the natural key not do that?",
+    "hint": "How many values per customer?",
+    "choices": [
+      {
+        "text": "Natural keys are too long",
+        "correct": false,
+        "why": "Length matters for size, not for versions."
+      },
+      {
+        "text": "One value per customer cannot hold two versions",
+        "correct": true,
+        "why": "Right. Each sale points at the version true when it happened."
+      },
+      {
+        "text": "Two different customers share the number 2123 in the source",
+        "correct": false,
+        "why": "No. 2123 is one customer who moved."
+      },
+      {
+        "text": "The source deleted it",
+        "correct": false,
+        "why": "No. It is still there, with the new city."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrefvj42",
+    "version": 1,
+    "section": "surrogate-keys",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The e-mail column in Parquet took 4,129,699 bytes and the integer key 2,480,761. How many times larger is the e-mail column? Give two decimals.",
+    "hint": "Divide.",
+    "value": 1.66,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-mrvms3c0",
+    "version": 1,
+    "section": "surrogate-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes shop keys whose first digit is the region: 1 for the Southeast, 2 for the South. What goes wrong?",
+    "hint": "What if a shop is reassigned?",
+    "choices": [
+      {
+        "text": "Nothing goes wrong; a key that says the region is easier to read",
+        "correct": false,
+        "why": "Readable until the meaning changes, and then it lies."
+      },
+      {
+        "text": "Keys starting with 1 sort first",
+        "correct": false,
+        "why": "Sort order is harmless."
+      },
+      {
+        "text": "Integers cannot start with 2",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "A region change makes every fact's key wrong",
+        "correct": true,
+        "why": "Right. A key that encodes something becomes false when that thing changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dcg3mdn",
+    "version": 1,
+    "section": "the-unknown-member",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Walk-in sales have no customer. What does `fact_sales` put in their `customer_key`?",
+    "hint": "A row that says so.",
+    "choices": [
+      {
+        "text": "NULL",
+        "correct": false,
+        "why": "An empty key drops out of every inner join."
+      },
+      {
+        "text": "The key of the last customer who bought",
+        "correct": false,
+        "why": "That would hand the sale to the wrong person."
+      },
+      {
+        "text": "0, the key of the row *Walk-in, not identified*",
+        "correct": true,
+        "why": "Right. The unknown member keeps the rows in every join."
+      },
+      {
+        "text": "A new key for each walk-in sale",
+        "correct": false,
+        "why": "That invents a customer per sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww422hbh",
+    "version": 1,
+    "section": "the-unknown-member",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With empty keys, how many sales lines drop out of a join to `dim_customer`?",
+    "hint": "887,477 against 658,707.",
+    "value": 228770,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-w812hfab",
+    "version": 1,
+    "section": "the-unknown-member",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an empty key drop out of an inner join, even against another empty key?",
+    "hint": "What is NULL = NULL?",
+    "choices": [
+      {
+        "text": "NULL is not equal to anything, itself included",
+        "correct": true,
+        "why": "Right. The comparison is unknown, and the join keeps only true matches."
+      },
+      {
+        "text": "DuckDB deletes rows with NULL keys on load",
+        "correct": false,
+        "why": "They are there; the join is what drops them."
+      },
+      {
+        "text": "Because the dimension has no NULL row",
+        "correct": false,
+        "why": "Even with one, NULL would not match it."
+      },
+      {
+        "text": "Inner joins skip the first million rows",
+        "correct": false,
+        "why": "No such rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-7aphzx8v",
+    "version": 1,
+    "section": "many-to-many",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the authors not be a column of `fact_sales`?",
+    "hint": "The grain test.",
+    "choices": [
+      {
+        "text": "Author names are personal data, which a fact table should not carry",
+        "correct": false,
+        "why": "That is lesson 12's concern, and not the reason here."
+      },
+      {
+        "text": "Authors change too often",
+        "correct": false,
+        "why": "A book's authors rarely change."
+      },
+      {
+        "text": "The fact table already has too many columns",
+        "correct": false,
+        "why": "It has eleven; that is not the problem."
+      },
+      {
+        "text": "A line can have several authors, not one value",
+        "correct": true,
+        "why": "Right. One book, possibly three authors."
+      }
+    ]
+  },
+  {
+    "id": "ex-n129z509",
+    "version": 1,
+    "section": "many-to-many",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Through the bridge without weights, sales come to R$ 111,745,133.05; the shop sold R$ 95,743,898.52. How many reais are counted twice or more?",
+    "hint": "Subtract.",
+    "value": 16001234.53,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-yv6wen6s",
+    "version": 1,
+    "section": "bridge-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The weights of every book in `bridge_book_author` add up to 1. What does that guarantee?",
+    "hint": "Multiply each sale by the weight and add.",
+    "choices": [
+      {
+        "text": "Each author gets the same revenue overall",
+        "correct": false,
+        "why": "No. Authors of best-sellers still get more."
+      },
+      {
+        "text": "Authors' weighted shares add back to the sales",
+        "correct": true,
+        "why": "Right. The weighted total matched R$ 95,743,898.52."
+      },
+      {
+        "text": "No book can have more than one author",
+        "correct": false,
+        "why": "468 books have more than one."
+      },
+      {
+        "text": "The bridge has one row per book",
+        "correct": false,
+        "why": "It has one row per book and author pair."
+      }
+    ]
+  },
+  {
+    "id": "ex-d93w6snp",
+    "version": 1,
+    "section": "bridge-tables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The events team wants to know which authors' books sell most, to choose whom to invite. Which column should they read?",
+    "hint": "Allocation or impact?",
+    "choices": [
+      {
+        "text": "The unweighted one, which measures impact",
+        "correct": true,
+        "why": "Right. Impact, which is not to be totalled."
+      },
+      {
+        "text": "The weighted one, because it adds up",
+        "correct": false,
+        "why": "Adding up matters for royalties, not for choosing a guest."
+      },
+      {
+        "text": "Neither; authors cannot be ranked",
+        "correct": false,
+        "why": "Both columns rank them; they answer different questions."
+      },
+      {
+        "text": "The total of the unweighted column",
+        "correct": false,
+        "why": "That total is sixteen million reais too high and means nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-zq6xg91a",
+    "version": 1,
+    "section": "bridge-tables",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem from this lesson to its repair.",
+    "hint": "Four problems, four repairs, one extra.",
+    "pairs": [
+      {
+        "left": "Shipping counted once per line",
+        "right": "Allocate it, or keep it at the order's grain"
+      },
+      {
+        "left": "Walk-in sales vanish from joins",
+        "right": "An unknown member, key 0"
+      },
+      {
+        "left": "A customer's e-mail changes",
+        "right": "A surrogate key the warehouse owns"
+      },
+      {
+        "left": "Revenue by author adds up to too much",
+        "right": "A bridge with weights"
+      }
+    ],
+    "right_distractors": [
+      "A snowflaked author dimension"
+    ]
+  },
+  {
+    "id": "ex-t6tx17je",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the allocation in the order the SQL performs them.",
+    "hint": "Exact, then floor, then hand out.",
+    "items": [
+      "Compute each line's exact share of the fee",
+      "Round every share down to whole centavos",
+      "Count the centavos left over in each order",
+      "Give them, one each, to the largest remainders"
+    ],
+    "trap": "Handing out the centavos before rounding down is the slip: there is nothing left over until the shares are floored."
+  },
+  {
+    "id": "ex-ew3a9xbp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hospital warehouse has one row per admission, and a patient can have several diagnoses per admission. The board wants admissions per diagnosis, adding up to the number of admissions. What should the model use?",
+    "hint": "A fact meeting a set, with shares that add up.",
+    "choices": [
+      {
+        "text": "A diagnosis column on the admission row",
+        "correct": false,
+        "why": "An admission has several; the column fails the grain test."
+      },
+      {
+        "text": "One fact row per diagnosis, counting each in full",
+        "correct": false,
+        "why": "Counts in full add up to more than the admissions."
+      },
+      {
+        "text": "A bridge of admission and diagnosis pairs with weights",
+        "correct": true,
+        "why": "Right. Weighted counts add up to the admissions; unweighted ones give impact."
+      },
+      {
+        "text": "The first diagnosis only, and ignore the rest",
+        "correct": false,
+        "why": "It adds up, by throwing away what the board asked about."
+      }
+    ]
+  }
+]

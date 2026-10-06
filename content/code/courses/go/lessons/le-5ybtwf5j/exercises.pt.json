@@ -1,0 +1,382 @@
+{
+  "ex-g1egxx2b": {
+    "prompt": "`a := errors.New(\"not found\")` e `b := errors.New(\"not found\")`. Quanto dá `a == b`?",
+    "hint": "Cada chamada aloca.",
+    "choices": [
+      {
+        "text": "`true`, porque as mensagens são iguais",
+        "why": "`a.Error() == b.Error()` deu `true`; `a == b` compara os valores, e eles diferem."
+      },
+      {
+        "text": "`false`",
+        "why": "Isso. Cada chamada devolve um ponteiro para um `errorString` novo, e os dois ponteiros diferem."
+      },
+      {
+        "text": "Não compila: erros não podem ser comparados com `==`",
+        "why": "Interfaces se comparam com `==`; `a == c` compilou e deu `true`."
+      },
+      {
+        "text": "`true` na primeira vez e `false` depois que o programa roda um tempo",
+        "why": "Nada disso depende do tempo; duas chamadas dão dois valores distintos desde o começo."
+      }
+    ]
+  },
+  "ex-zjpf05d9": {
+    "prompt": "Depois de `c := a`, `a == c` dá `true`. Por quê?",
+    "hint": "O que a atribuição copiou?",
+    "choices": [
+      {
+        "text": "Porque `c` é uma referência à variável `a`",
+        "why": "A atribuição copia um valor; `c` é uma variável própria com uma cópia da interface."
+      },
+      {
+        "text": "Porque `==` em erros compara as mensagens",
+        "why": "Então `a == b` também daria `true`, e deu `false`."
+      },
+      {
+        "text": "Copiar a interface copiou também o ponteiro",
+        "why": "Isso. Mesmo tipo, mesmo ponteiro, então as duas apontam para um mesmo `errorString`: o mesmo erro."
+      },
+      {
+        "text": "Porque o `errors.New` guarda o último erro que criou",
+        "why": "O `New` é uma linha, `return &errorString{text}`; não guarda nada entre chamadas."
+      }
+    ]
+  },
+  "ex-v763zd7k": {
+    "prompt": "Por que `if err.Error() == \"not found\"` é um jeito ruim de reconhecer uma falha?",
+    "hint": "De quem é o texto?",
+    "choices": [
+      {
+        "text": "Não compila, porque `Error` devolve um ponteiro",
+        "why": "`Error` devolve uma `string`, e comparar strings compila; é isso que torna o teste perigoso."
+      },
+      {
+        "text": "Reescrever a mensagem o quebra em silêncio",
+        "why": "Isso. E erros sem relação podem ter o mesmo texto. A frase é para uma pessoa; a identidade é o valor."
+      },
+      {
+        "text": "Chamar `Error` altera o erro",
+        "why": "O `Error` só devolve `e.s`; não altera nada."
+      },
+      {
+        "text": "Dá sempre false, porque o `Error` acrescenta o nome do tipo ao texto",
+        "why": "O `Error` devolve o texto como foi dado: `fmt.Println(a)` imprimiu `not found` e nada mais."
+      }
+    ]
+  },
+  "ex-f61qf0rk": {
+    "prompt": "`fmt.Printf(\"%T\\n\", errors.New(\"x\"))` imprime `*errors.___`.",
+    "hint": "A struct não exportada de `errors.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "errorString"
+        ]
+      }
+    ]
+  },
+  "ex-5esp6h7w": {
+    "prompt": "Qual mensagem precisa de `fmt.Errorf` em vez de `errors.New`?",
+    "hint": "O `errors.New` não aceita verbos.",
+    "choices": [
+      {
+        "text": "`name is empty`",
+        "why": "Uma frase fixa sem nada a formatar é exatamente para o que serve o `errors.New`."
+      },
+      {
+        "text": "`age cannot be negative`",
+        "why": "O `price` da lição 32 montou esta com `errors.New`; ela nunca muda."
+      },
+      {
+        "text": "`age -4 is negative`",
+        "why": "Isso. O -4 é a idade recebida, e formatá-la dentro exige `%d` e portanto o `fmt.Errorf`."
+      },
+      {
+        "text": "`operation not allowed`",
+        "why": "Texto fixo de novo; toda ocorrência diz a mesma coisa."
+      }
+    ]
+  },
+  "ex-pjrrhdja": {
+    "prompt": "`fmt.Errorf(\"read config: %v\", err)` e `fmt.Errorf(\"read config: %w\", err)` imprimem o mesmo texto. O que difere?",
+    "hint": "Veja as duas linhas de `%T`.",
+    "choices": [
+      {
+        "text": "Só o de `%w` guarda o erro original dentro",
+        "why": "Isso. O `%w` deu um `*fmt.wrapError` com o erro no campo `err`; o `%v` deu só texto."
+      },
+      {
+        "text": "Só o de `%w` pode ser impresso com `fmt.Println`",
+        "why": "Os dois foram impressos: são as duas primeiras linhas da saída."
+      },
+      {
+        "text": "O de `%v` não é um `error`, só uma string",
+        "why": "É um `error`, um `*errors.errorString`; o `fmt.Errorf` sempre devolve um erro."
+      },
+      {
+        "text": "O de `%w` esconde da saída a mensagem original",
+        "why": "A mensagem original é impressa nos dois; a diferença está no que é guardado."
+      }
+    ]
+  },
+  "ex-1pqr5wk2": {
+    "prompt": "`readConfig` devolve `fmt.Errorf(\"read config: %w\", err)` sem repetir o nome do arquivo. Por que deixá-lo de fora está certo?",
+    "hint": "O que o erro do `os.ReadFile` já diz?",
+    "choices": [
+      {
+        "text": "Nomes de arquivo não são permitidos em mensagens de erro",
+        "why": "Nada os proíbe; o próprio `*fs.PathError` imprime um."
+      },
+      {
+        "text": "O `%w` não pode ser combinado com um segundo verbo num formato",
+        "why": "`fmt.Errorf(\"read %s: %w\", path, err)` é permitido; o motivo é que diria o caminho duas vezes."
+      },
+      {
+        "text": "Quem chama acrescenta o nome depois",
+        "why": "`start` acrescentou `start server`, o próprio passo, não o nome do arquivo."
+      },
+      {
+        "text": "O `*fs.PathError` por baixo já o cita",
+        "why": "Isso. Cada camada acrescenta o que o erro ainda não sabe, e o caminho já está lá."
+      }
+    ]
+  },
+  "ex-cgytdj1j": {
+    "prompt": "Em `~/wrap-context`, coloque as partes da mensagem final na ordem em que o programa as ESCREVEU.",
+    "hint": "A causa é escrita primeiro.",
+    "items": [
+      "`open settings.json: no such file or directory`",
+      "`read config: `",
+      "`start server: `"
+    ]
+  },
+  "ex-ppsw77c3": {
+    "prompt": "`~/wrap-style` imprimiu `Failed to start server: Error: could not read config: open settings.json: no such file or directory..`. Que convenção teria evitado os dois pontos finais?",
+    "hint": "Cada camada fechou uma frase.",
+    "choices": [
+      {
+        "text": "Usar `%v` em vez de `%w`",
+        "why": "Os dois verbos imprimem o mesmo texto; os pontos estavam escritos nas strings de formato."
+      },
+      {
+        "text": "Começar cada mensagem com letra maiúscula",
+        "why": "Essa é a outra metade do problema, `Error:` no meio da linha; ela piora em vez de evitar."
+      },
+      {
+        "text": "Terminar toda mensagem sem pontuação",
+        "why": "Isso. Uma mensagem é um fragmento na frente do qual outra camada pode escrever, nunca uma frase fechada."
+      },
+      {
+        "text": "Imprimir o erro com `fmt.Printf` em vez de `fmt.Println`",
+        "why": "Os pontos estão no próprio texto do erro; qualquer forma de imprimi-lo os mostra."
+      }
+    ]
+  },
+  "ex-g6faeg3q": {
+    "prompt": "Das 2.095 chamadas a `errors.New(\"…\")` contadas na biblioteca padrão do Go 1.27.1, quantas mensagens terminam com ponto final?",
+    "hint": "A terceira contagem da seção 03.",
+    "unit": "mensagens"
+  },
+  "ex-bp58r901": {
+    "prompt": "`fmt.Errorf(\"save notes: %w\", reason)` com `reason` sendo uma `string`: o que acontece?",
+    "hint": "Compilador, execução, `go vet`: quem percebe?",
+    "choices": [
+      {
+        "text": "O compilador recusa",
+        "why": "Para o compilador o formato é só uma string; o `go run .` compilou e rodou."
+      },
+      {
+        "text": "Entra em pânico quando o `fmt.Errorf` roda",
+        "why": "Nada entrou em pânico; a mensagem foi impressa com a reclamação dentro."
+      },
+      {
+        "text": "Roda e imprime `%!w(string=disk full)`; o `go vet` aponta",
+        "why": "Isso. O `%w` precisa de um `error`, e o vet confere os argumentos contra o formato."
+      },
+      {
+        "text": "O `%w` transforma a string num erro e a embrulha",
+        "why": "Nenhuma conversão acontece; a documentação chama de inválido um operando que não é erro."
+      }
+    ]
+  },
+  "ex-77nfqpxt": {
+    "prompt": "`fmt.Errorf(\"start server: %___\", err)` guarda `err` inteiro dentro do erro que devolve.",
+    "hint": "O verbo que só existe no `fmt.Errorf`.",
+    "blanks": [
+      {
+        "accept": [
+          "w"
+        ]
+      }
+    ]
+  },
+  "ex-knwr1087": {
+    "prompt": "`validate(\"Ana\", 30)` não juntou problema nenhum e devolveu `errors.Join(errs...)` com `errs` vazio. O que devolveu?",
+    "hint": "A primeira linha da saída.",
+    "choices": [
+      {
+        "text": "Um `*errors.joinError` vazio, que não é nil",
+        "why": "Essa seria a armadilha da lição 32; o `Join` a evita e devolve um nil de verdade."
+      },
+      {
+        "text": "`nil`",
+        "why": "Isso. O `Join` devolve nil quando todo valor, ou nenhum, é nil, então `validate` não precisou de caso especial."
+      },
+      {
+        "text": "Um erro cuja mensagem é a string vazia",
+        "why": "Ele imprimiu `<nil>`, não uma linha vazia."
+      },
+      {
+        "text": "Entrou em pânico, porque o `Join` precisa de pelo menos um erro",
+        "why": "Rodou sem problema; o parâmetro é variádico e aceita zero valores."
+      }
+    ]
+  },
+  "ex-5srn1s76": {
+    "prompt": "Quando o `fmt.Errorf` com dois `%w` serve melhor que o `errors.Join`?",
+    "hint": "Uma linha ou várias, palavras suas ou nenhuma.",
+    "choices": [
+      {
+        "text": "Quando há mais de dois erros",
+        "why": "O `Join` aceita qualquer quantidade; não é a contagem que decide."
+      },
+      {
+        "text": "Quando um dos erros pode ser nil",
+        "why": "Isso é um ponto forte do `Join`, que descarta os nil; o `fmt.Errorf` imprimiria `%!w(<nil>)`."
+      },
+      {
+        "text": "Quando as falhas pertencem a uma operação e devem ser lidas como uma frase, com as suas palavras",
+        "why": "Isso. `save notes.txt: disk full (and closing it: …)` é uma linha; o `Join` não acrescenta palavras e põe cada um numa linha."
+      },
+      {
+        "text": "Quando os erros precisam continuar encontráveis depois por quem chama, o que o `errors.Join` não oferece",
+        "why": "Os dois guardam cada erro inteiro; a documentação do `Join` diz que os erros dele podem ser inspecionados com `Is` e `As`."
+      }
+    ]
+  },
+  "ex-0jzfnq7y": {
+    "prompt": "Ligue cada chamada ao tipo que o `%T` imprimiu para o resultado.",
+    "hint": "Seções 02 a 04.",
+    "pairs": [
+      {
+        "left": "`errors.New(\"not found\")`",
+        "right": "`*errors.errorString`"
+      },
+      {
+        "left": "`fmt.Errorf(\"read config: %w\", err)`",
+        "right": "`*fmt.wrapError`"
+      },
+      {
+        "left": "`fmt.Errorf` com dois `%w`",
+        "right": "`*fmt.wrapErrors`"
+      },
+      {
+        "left": "`errors.Join` de dois erros",
+        "right": "`*errors.joinError`"
+      }
+    ],
+    "right_distractors": [
+      "`*fs.PathError`"
+    ]
+  },
+  "ex-gj7cxf2q": {
+    "prompt": "O `Load` de um pacote embrulha com `%w` o erro do `os.ReadFile`, e os usuários verificam se falta um arquivo. Na versão seguinte, o `Load` lê de uma cópia embutida e nunca toca o disco. O que acontece com esses usuários?",
+    "hint": "Do que eles dependiam?",
+    "choices": [
+      {
+        "text": "O código deles para de compilar até que tirem a verificação",
+        "why": "Nada numa assinatura mudou, então tudo compila; é por isso que é perigoso."
+      },
+      {
+        "text": "A verificação passa a casar com todo erro que o `Load` devolve",
+        "why": "A verificação procura um erro de arquivo, e nenhum erro do novo `Load` guarda um."
+      },
+      {
+        "text": "A verificação compila e roda, e o ramo dela fica morto dali em diante",
+        "why": "Isso. Embrulhar fez o erro de arquivo parte do comportamento do `Load`, e tirá-lo quebrou os usuários sem sinal nenhum."
+      },
+      {
+        "text": "Nada, porque erros embrulhados são só texto",
+        "why": "Com `%w` o erro interno é guardado inteiro; é justamente nisso que eles se apoiavam."
+      }
+    ]
+  },
+  "ex-p7ayc6y8": {
+    "prompt": "Para acrescentar palavras a um erro sem deixar quem chama alcançar o erro de baixo, o `fmt.Errorf` usa o verbo `%___`.",
+    "hint": "O verbo que o `Printf` usa para qualquer valor.",
+    "blanks": [
+      {
+        "accept": [
+          "v"
+        ]
+      }
+    ]
+  },
+  "ex-kymzw9av": {
+    "prompt": "Quais destas são boas mensagens para pôr na frente de um erro embrulhado? Escolha todas as que se aplicam.",
+    "hint": "Minúscula, sem pontuação, o que estava sendo feito.",
+    "choices": [
+      {
+        "text": "`\"load user %d: %w\"`",
+        "why": "Sim: um passo, um valor que o identifica e a causa depois dos dois-pontos."
+      },
+      {
+        "text": "`\"Failed to load user: %w.\"`",
+        "why": "Uma maiúscula, `Failed`, e um ponto final: o `~/wrap-style` mostrou o que isso faz no meio de uma linha."
+      },
+      {
+        "text": "`\"parse settings: %w\"`",
+        "why": "Sim: diz o que estava sendo feito e deixa a causa terminar a frase."
+      },
+      {
+        "text": "`\"error: %w\"`",
+        "why": "Não diz nada que o leitor não soubesse: tudo o que é impresso ali é um erro."
+      }
+    ]
+  },
+  "ex-nx1qkctw": {
+    "prompt": "Uma função chama `os.Open` e depois `json.Unmarshal`, e as duas podem falhar. Um colega embrulha as duas com `%v` \"para simplificar\". O que quem chama perde em comparação com `%w`?",
+    "hint": "O texto é o mesmo nos dois casos.",
+    "choices": [
+      {
+        "text": "As mensagens dos dois erros",
+        "why": "O `%v` imprime o mesmo texto que o `%w`; as mensagens estão todas lá."
+      },
+      {
+        "text": "Qualquer jeito de saber pelo código qual das duas falhou, ou por quê",
+        "why": "Isso. O `%v` guarda só texto, então o código só pode comparar strings, o que a seção 02 desaconselhou."
+      },
+      {
+        "text": "O status de saída do programa",
+        "why": "O status é o que o `main` passa ao `os.Exit`; o verbo não tem nada a ver com isso."
+      },
+      {
+        "text": "Nada: no `fmt.Errorf` os dois verbos são sinônimos e montam o mesmo valor",
+        "why": "Eles imprimem igual e montam valores diferentes: `*errors.errorString` contra `*fmt.wrapError`."
+      }
+    ]
+  },
+  "ex-a75sdgsh": {
+    "prompt": "Um job em lote processa 500 registros e deve relatar todo registro que falhar, não só o primeiro. Que formato serve?",
+    "hint": "O formulário da seção 04 fez o mesmo com dois campos.",
+    "choices": [
+      {
+        "text": "Devolver na primeira falha, embrulhada com `%w`",
+        "why": "Isso relata um registro; a pessoa o corrige e encontra o próximo na execução seguinte."
+      },
+      {
+        "text": "Um `fmt.Errorf` com um `%w` por registro",
+        "why": "O formato precisaria de um verbo por falha, e o número não é conhecido quando o código é escrito."
+      },
+      {
+        "text": "Concatenar as mensagens numa string só e passar o resultado ao `errors.New`",
+        "why": "O texto estaria lá, mas todos os erros de baixo seriam descartados, como com `%v`."
+      },
+      {
+        "text": "Juntar o erro de cada registro numa slice e devolver `errors.Join(errs...)`",
+        "why": "Isso. Como `validate`, e devolve nil sozinho quando nenhum registro falhou."
+      }
+    ]
+  }
+}
