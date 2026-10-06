@@ -109,4 +109,4 @@ A type can also have functions attached to it, called methods, and lesson 25 is 
 Embedding promotes them exactly as it promotes fields: a method declared on `Person` can be called
 on an `Employee`, and lesson 25 comes back to this lesson to show it. For now it is enough to know
 that **whatever `e.Something` finds in the embedded struct, a field or a method, it finds by the
-same search**, and section 03 says exactly how far down that search goes.
+same search**, and section 04 says exactly how far down that search goes.

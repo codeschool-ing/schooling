@@ -3,7 +3,7 @@ title: Dois campos com um nome só
 version: 1
 ---
 
-A seção 01 descreveu a promoção como uma busca: `e.Name` é procurado no próprio `Employee` e depois
+A seção 02 descreveu a promoção como uma busca: `e.Name` é procurado no próprio `Employee` e depois
 dentro das structs embutidas nele. A busca vai nível por nível, e isso dá duas regras. **O campo
 mais raso com um nome vence, e dois campos com o mesmo nome na mesma profundidade se anulam**, de
 modo que usar esse nome é erro de compilação. As duas aparecem assim que um `Employee` embute uma

@@ -3,7 +3,7 @@ title: Two fields with one name
 version: 1
 ---
 
-Section 01 described promotion as a search: `e.Name` is looked for in `Employee` itself, and then
+Section 02 described promotion as a search: `e.Name` is looked for in `Employee` itself, and then
 inside the structs embedded in it. The search goes level by level, and that gives two rules. **The
 shallowest field of a name wins, and two fields of the same name at the same depth cancel each
 other out**, so using that name is a compile error. Both show up as soon as an `Employee` embeds

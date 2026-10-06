@@ -110,4 +110,4 @@ Um tipo pode ter funções presas a ele, chamadas métodos, e é na lição 25 q
 promove métodos exatamente como promove campos: um método declarado em `Person` pode ser chamado
 num `Employee`, e a lição 25 volta a esta lição para mostrar isso. Por ora basta saber que **tudo o que
 `e.Algo` encontra na struct embutida, campo ou método, é encontrado pela mesma busca**, e
-a seção 03 diz exatamente até que profundidade essa busca vai.
+a seção 04 diz exatamente até que profundidade essa busca vai.
