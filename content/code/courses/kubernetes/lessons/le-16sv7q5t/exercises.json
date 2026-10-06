@@ -1,0 +1,229 @@
+[
+  {
+    "id": "ex-jgnj5hdp",
+    "version": 1,
+    "section": "clusterip-dns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the cluster keep the list of pods behind the Service `shop`?",
+    "hint": "A separate object, kept by a controller.",
+    "choices": [
+      {
+        "text": "In the Service's own `spec`",
+        "correct": false,
+        "why": "The Service holds a selector; the list of addresses is another object."
+      },
+      {
+        "text": "In an EndpointSlice",
+        "correct": true,
+        "why": "Right: three addresses on port 8080, matching the three pods."
+      },
+      {
+        "text": "In CoreDNS, as one record per pod",
+        "correct": false,
+        "why": "The Service's name resolves to its one ClusterIP, not to the pods."
+      },
+      {
+        "text": "In the kube-proxy pod on the control plane",
+        "correct": false,
+        "why": "kube-proxy reads the list on every node; it does not keep it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzr13k89",
+    "version": 1,
+    "section": "clusterip-dns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a pod in the `default` namespace, why does the bare name `shop` reach the Service?",
+    "hint": "Read the pod's `/etc/resolv.conf`.",
+    "choices": [
+      {
+        "text": "Every Service is published under its bare name on the internet",
+        "correct": false,
+        "why": "Cluster names never leave the cluster; the lab's DNS answers nothing outside `cluster.local`."
+      },
+      {
+        "text": "kube-proxy rewrites the name into an address",
+        "correct": false,
+        "why": "kube-proxy works on addresses, never on names."
+      },
+      {
+        "text": "The resolver's search list adds `default.svc.cluster.local`",
+        "correct": true,
+        "why": "Right: `shop` becomes `shop.default.svc.cluster.local`, which CoreDNS knows."
+      },
+      {
+        "text": "The pod's `/etc/hosts` lists every Service",
+        "correct": false,
+        "why": "Services are resolved by CoreDNS at `10.96.0.10`, not by a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7b0c2bq",
+    "version": 1,
+    "section": "clusterip-dns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Service's name resolves, but every call to it is refused at once. `kubectl get endpointslices` shows `<unset>`. What is the likeliest cause?",
+    "hint": "An empty list behind a working address.",
+    "choices": [
+      {
+        "text": "CoreDNS is down",
+        "correct": false,
+        "why": "The name resolved, so CoreDNS answered."
+      },
+      {
+        "text": "kube-proxy is not running on that node",
+        "correct": false,
+        "why": "The slice is empty before kube-proxy even reads it."
+      },
+      {
+        "text": "Its selector matches no ready pod",
+        "correct": true,
+        "why": "Right: no pods, or a label typo, leaves the slice empty and the address refusing."
+      },
+      {
+        "text": "The Service's ClusterIP changed after it was created",
+        "correct": false,
+        "why": "A Service's address never changes while it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7kbbqre",
+    "version": 1,
+    "section": "clusterip-dns",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The full name of the Service `shop` in the namespace `default` is `shop.default.___.cluster.local`.",
+    "hint": "The nslookup answer.",
+    "blanks": [
+      {
+        "accept": [
+          "svc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qp90kg4h",
+    "version": 1,
+    "section": "outside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A NodePort Service has `nodePort: 30080`. Which nodes answer on port 30080?",
+    "hint": "The first curl asked a worker by its address.",
+    "choices": [
+      {
+        "text": "Only the nodes running a pod of it",
+        "correct": false,
+        "why": "Every node answers by default; lesson 17 shows the setting that narrows it."
+      },
+      {
+        "text": "Every node",
+        "correct": true,
+        "why": "Right, whether a pod runs there or not."
+      },
+      {
+        "text": "Only the control-plane node",
+        "correct": false,
+        "why": "`shop-worker` answered directly."
+      },
+      {
+        "text": "Whichever node the scheduler picks for the Service",
+        "correct": false,
+        "why": "A Service is never scheduled; it is not a pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh3gf87x",
+    "version": 1,
+    "section": "outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The LoadBalancer Service `shop-lb` showed `80:31269/TCP` besides its external address. What is `31269`?",
+    "hint": "A LoadBalancer is built on another type.",
+    "choices": [
+      {
+        "text": "The port the shop listens on inside the pod",
+        "correct": false,
+        "why": "The shop listens on 8080."
+      },
+      {
+        "text": "A port on the laptop",
+        "correct": false,
+        "why": "It is a port on every node of the cluster."
+      },
+      {
+        "text": "The NodePort that the balancer sends its traffic to",
+        "correct": true,
+        "why": "Right. A LoadBalancer is a NodePort with a balancer in front."
+      },
+      {
+        "text": "The balancer's administration port",
+        "correct": false,
+        "why": "That is internal to the balancer and not in the Service."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4tkym7t",
+    "version": 1,
+    "section": "outside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team on a cloud has forty web applications and wants each reachable from the internet. Why do most clusters use one LoadBalancer Service and an ingress controller instead of forty LoadBalancer Services?",
+    "hint": "What does each LoadBalancer Service ask the cloud for?",
+    "choices": [
+      {
+        "text": "Kubernetes allows only one LoadBalancer per cluster",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "Each one is a balancer billed by the hour",
+        "correct": true,
+        "why": "Right: one balancer in front of one controller routes all forty by host and path."
+      },
+      {
+        "text": "LoadBalancer Services cannot use port 80",
+        "correct": false,
+        "why": "`shop-lb` answered on port 80."
+      },
+      {
+        "text": "Ingress is faster than a LoadBalancer",
+        "correct": false,
+        "why": "Speed is not the reason; the Ingress controller sits behind a LoadBalancer anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-81qhz8wh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the Service types from the one with the fewest ways in to the one with the most.",
+    "hint": "Each is built on the one before.",
+    "items": [
+      "ClusterIP",
+      "NodePort",
+      "LoadBalancer"
+    ],
+    "trap": "A NodePort includes a ClusterIP, and a LoadBalancer includes a NodePort."
+  }
+]
