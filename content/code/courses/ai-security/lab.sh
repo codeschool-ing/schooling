@@ -23,7 +23,8 @@
 #                  ENDPOINT, below), enduser.py and ratelimit.py (end-user
 #                  ids and limits), kyc.py (deciding who gets API access),
 #                  shapes.py and retry.py (what goes into a call and what
-#                  comes out) and cli.py (every command)
+#                  comes out), toolgate.py (which tool calls an agent may
+#                  make) and cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -64,6 +65,9 @@
 #     one to be caught by a different rule; `guard retry` replays them in
 #     place of a model's attempts. The requests in data/inputs.jsonl were
 #     written by the course too.
+#   - The tool calls in data/proposed-calls.jsonl were written by the
+#     course in place of what an agent would propose; no model proposed
+#     them.
 #   - guardlab/moderation.py is NOT A MODERATION MODEL either: a list of
 #     English words with weights the course chose, answering with a score
 #     per category the way a moderation endpoint does. The sixty messages in

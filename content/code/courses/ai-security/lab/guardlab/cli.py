@@ -35,6 +35,8 @@ course.
     guard check-out FILE            model replies against the output schema
     guard retry ID [ID ...]         the retry loop, with course-written replies
                                     standing in for the model's attempts
+    guard gate FILE [--confirm ID --by NAME] [--budget N]
+                                    proposed tool calls against the manifest
 """
 import argparse
 import datetime as dt
@@ -505,6 +507,24 @@ def cmd_retry(a):
     return 0
 
 
+# ---- tool calls -------------------------------------------------------------
+
+def cmd_gate(a):
+    from . import toolgate
+    manifest = load("data/tools.json")
+    session = manifest["session"]
+    if a.budget:
+        manifest["calls_per_conversation"] = a.budget
+    confirmed = {a.confirm: a.by} if a.confirm else {}
+    if a.confirm and not a.by:
+        print("a confirmation names the person who gave it: add --by NAME")
+        return 2
+    print("session %s, %d calls allowed" % (session["account"], manifest["calls_per_conversation"]))
+    for call, decision, why in toolgate.run(jsonl(a.file), session, manifest, confirmed):
+        print("%-3s %-14s %-5s  %s" % (call["id"], call["tool"], decision, why))
+    return 0
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -666,6 +686,13 @@ def main(argv=None):
     s = sub.add_parser("retry")
     s.add_argument("ids", nargs="+")
     s.set_defaults(fn=cmd_retry)
+
+    s = sub.add_parser("gate")
+    s.add_argument("file")
+    s.add_argument("--confirm")
+    s.add_argument("--by")
+    s.add_argument("--budget", type=int)
+    s.set_defaults(fn=cmd_gate)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)
