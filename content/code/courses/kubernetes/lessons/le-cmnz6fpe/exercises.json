@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-trbpv0me",
+    "version": 1,
+    "section": "recommendations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The recommender suggested 250Mi of memory for a shop that uses about 6Mi. Why?",
+    "hint": "Is 250Mi a measurement?",
+    "choices": [
+      {
+        "text": "The shop leaks memory",
+        "correct": false,
+        "why": "`kubectl top` showed 5 and 6 MiB."
+      },
+      {
+        "text": "It is the recommender's floor",
+        "correct": true,
+        "why": "Right: it never suggests less unless told to."
+      },
+      {
+        "text": "It copies the current request",
+        "correct": false,
+        "why": "The request was 256Mi; the target is 250Mi."
+      },
+      {
+        "text": "Memory is always rounded to a quarter GiB",
+        "correct": false,
+        "why": "No such rounding exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-fk388sxv",
+    "version": 1,
+    "section": "recommendations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `updateMode: \"Off\"`, what happened to the shop's pods?",
+    "hint": "Off.",
+    "choices": [
+      {
+        "text": "They were evicted with new requests",
+        "correct": false,
+        "why": "That is `Recreate`."
+      },
+      {
+        "text": "They were resized in place",
+        "correct": false,
+        "why": "That is `InPlaceOrRecreate`."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The recommendation is only written in the VPA's status."
+      },
+      {
+        "text": "New pods got the target",
+        "correct": false,
+        "why": "That is `Initial`."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9mt6qe8",
+    "version": 1,
+    "section": "recommendations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should a VPA and an HPA not both act on CPU for the same Deployment?",
+    "hint": "What does a bigger request do to utilisation?",
+    "choices": [
+      {
+        "text": "Each undoes what the other does",
+        "correct": true,
+        "why": "Right. Larger requests lower the utilisation the HPA reads, so it removes pods."
+      },
+      {
+        "text": "The API server refuses the second",
+        "correct": false,
+        "why": "Both are accepted."
+      },
+      {
+        "text": "They need different metrics servers",
+        "correct": false,
+        "why": "Both read the same API."
+      },
+      {
+        "text": "The VPA only works on StatefulSets",
+        "correct": false,
+        "why": "It targets Deployments too."
+      }
+    ]
+  },
+  {
+    "id": "ex-e61vtqdw",
+    "version": 1,
+    "section": "resize",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `kubectl patch pod … --subresource resize`, `restarts` was still 0. What changed?",
+    "hint": "Spec and status both showed the new numbers.",
+    "choices": [
+      {
+        "text": "Nothing until the next restart",
+        "correct": false,
+        "why": "The status showed them applied."
+      },
+      {
+        "text": "A new pod replaced the old one",
+        "correct": false,
+        "why": "Same name, no restart."
+      },
+      {
+        "text": "Its cgroup limits, while live",
+        "correct": true,
+        "why": "Right: the container's cgroup settings, while it ran."
+      },
+      {
+        "text": "The Deployment's template",
+        "correct": false,
+        "why": "It still says 50m and 256Mi."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vy2cps0",
+    "version": 1,
+    "section": "resize",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A JVM sizes its heap once, at start. Which `resizePolicy` suits its memory?",
+    "hint": "Would a larger limit help a running JVM?",
+    "choices": [
+      {
+        "text": "`NotRequired`",
+        "correct": false,
+        "why": "It would keep its old heap."
+      },
+      {
+        "text": "`RestartContainer`",
+        "correct": true,
+        "why": "Right. A restart lets it size the heap again."
+      },
+      {
+        "text": "`Never`",
+        "correct": false,
+        "why": "No such policy."
+      },
+      {
+        "text": "`Recreate`",
+        "correct": false,
+        "why": "That is a VPA mode, not a resize policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-076akmbj",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes the cluster autoscaler add a node?",
+    "hint": "Requests, not usage.",
+    "choices": [
+      {
+        "text": "Nodes above 80% CPU usage",
+        "correct": false,
+        "why": "Usage does not trigger it."
+      },
+      {
+        "text": "The HPA asking for it",
+        "correct": false,
+        "why": "The two never talk."
+      },
+      {
+        "text": "A schedule set by the operator",
+        "correct": false,
+        "why": "It reacts; it has no schedule."
+      },
+      {
+        "text": "Pods with nowhere to go",
+        "correct": true,
+        "why": "Right: `Pending` for lack of room."
+      }
+    ]
+  },
+  {
+    "id": "ex-edf0gcx8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each autoscaler with what it changes.",
+    "hint": "Lessons 33 and 34.",
+    "pairs": [
+      {
+        "left": "HorizontalPodAutoscaler",
+        "right": "How many pods"
+      },
+      {
+        "left": "VerticalPodAutoscaler",
+        "right": "Each pod's requests"
+      },
+      {
+        "left": "Cluster autoscaler",
+        "right": "How many nodes"
+      }
+    ],
+    "right_distractors": [
+      "Which version the pods run"
+    ]
+  },
+  {
+    "id": "ex-kqasqve6",
+    "version": 1,
+    "section": "resize",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A running pod's CPU is changed in place through the pod's `___` subresource.",
+    "hint": "`--subresource …`",
+    "blanks": [
+      {
+        "accept": [
+          "resize"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

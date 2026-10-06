@@ -15,13 +15,15 @@
 #   sudo bash lab.sh metrics        # metrics-server, for lessons 21, 33 and 34
 #   sudo bash lab.sh calico         # Calico, on a cluster from lab/cluster-calico.yaml
 #   sudo bash lab.sh csi            # the CSI host-path driver, for lesson 27
+#   sudo bash lab.sh vpa            # the VPA recommender, for lesson 34
 #   sudo bash lab.sh down           # delete every cluster this lab made
 #
 # WHAT IS STAGED, and why. The machine this was recorded on could reach
 # dl.k8s.io, the Go module proxy, raw.githubusercontent.com and Docker Hub
 # (through Google's mirror, mirror.gcr.io), and NOT registry.k8s.io, quay.io or
 # GitHub's release downloads. So:
-#   - kubectl comes from dl.k8s.io, checked against its published SHA256.
+#   - kubectl and kube-scheduler come from dl.k8s.io, checked against their
+#     published SHA256.
 #   - kind, helm, metrics-server, cloud-provider-kind and the other Kubernetes
 #     programs below are built from their released source with the Go
 #     toolchain, at the tags pinned here. The ones that run INSIDE the cluster
@@ -71,6 +73,7 @@ CSI_HOSTPATH=v1.18.0
 CSI_PROVISIONER=v6.3.0
 CSI_REGISTRAR=v2.17.0
 CSI_REGISTRAR_COMMIT=c5794c45f34ce9c62e47dfd5a2b073c3824f2c79
+VPA=v1.8.0          # the Vertical Pod Autoscaler's recommender, for lesson 34
 # Images every cluster gets on creation. A lesson that needs more loads them.
 BASE_IMAGES="shop:1.0 shop:1.1 shop:2.0 busybox:1.37 nginx:1.29"
 export PATH=$OPT/bin:$PATH
@@ -122,11 +125,15 @@ shop_images() { # the course's own application, three versions
 tools() {
   docker_up
   mkdir -p "$OPT/bin" "$OPT/manifests"
-  if [ ! -x "$OPT/bin/kubectl" ]; then
-    curl -sSfLo "$OPT/bin/kubectl" "https://dl.k8s.io/release/$KUBECTL/bin/linux/amd64/kubectl"
-    echo "$(curl -sSfL "https://dl.k8s.io/release/$KUBECTL/bin/linux/amd64/kubectl.sha256")  $OPT/bin/kubectl" | sha256sum -c --quiet
-    chmod +x "$OPT/bin/kubectl"
-  fi
+  # kube-scheduler too, for lesson 45's second scheduler, which runs on the
+  # laptop beside kubectl.
+  local bin
+  for bin in kubectl kube-scheduler; do
+    [ -x "$OPT/bin/$bin" ] && continue
+    curl -sSfLo "$OPT/bin/$bin" "https://dl.k8s.io/release/$KUBECTL/bin/linux/amd64/$bin"
+    echo "$(curl -sSfL "https://dl.k8s.io/release/$KUBECTL/bin/linux/amd64/$bin.sha256")  $OPT/bin/$bin" | sha256sum -c --quiet
+    chmod +x "$OPT/bin/$bin"
+  done
   gobuild "sigs.k8s.io/kind@$KIND" . kind
   gobuild "helm.sh/helm/v4@$HELM" ./cmd/helm helm "-X helm.sh/helm/v4/internal/version.version=$HELM"
   gobuild "sigs.k8s.io/metrics-server@$METRICS_SERVER" ./cmd/metrics-server metrics-server \
@@ -254,6 +261,19 @@ csi_tools() { # the CSI driver and sidecars, built from source and wrapped as im
     "$CSI_HOSTPATH $CSI_PROVISIONER $CSI_REGISTRAR" >"$OPT/manifests/csi-hostpath.yaml"
 }
 
+vpa() { # the Vertical Pod Autoscaler's CRDs, RBAC and recommender only, for lesson 34
+  local dir
+  dir=$(GOTOOLCHAIN=auto GOFLAGS=-mod=mod go mod download -json "k8s.io/autoscaler/vertical-pod-autoscaler@$VPA" | jq -r .Dir)
+  gobuild "k8s.io/autoscaler/vertical-pod-autoscaler@$VPA" ./pkg/recommender vpa-recommender
+  wrap vpa-recommender "$VPA" "$OPT/bin/vpa-recommender"
+  load "lab.local/vpa-recommender:$VPA"
+  kubectl apply -f "$dir/deploy/vpa-v1-crd-gen.yaml" -f "$dir/deploy/vpa-rbac.yaml" >/dev/null
+  # The project's image tag has no leading v; the lab's is the module version.
+  sed "s#image: registry.k8s.io/autoscaling/vpa-recommender:.*#image: lab.local/vpa-recommender:$VPA#" \
+    "$dir/deploy/recommender-deployment.yaml" | kubectl apply -f - >/dev/null
+  kubectl -n kube-system rollout status deployment/vpa-recommender --timeout=180s >/dev/null
+}
+
 csi() { # the host-path CSI driver, for lesson 27
   csi_tools
   load "lab.local/hostpathplugin:$CSI_HOSTPATH" "lab.local/csi-provisioner:$CSI_PROVISIONER" \
@@ -289,6 +309,7 @@ case ${1:-} in
   calico) calico ;;
   csi) csi ;;
   csi-tools) csi_tools ;;
+  vpa) vpa ;;
   down) down ;;
   *) echo "usage: lab.sh tools | up [CONFIG] [NAME] | load IMAGE... | down" >&2; exit 2 ;;
 esac
