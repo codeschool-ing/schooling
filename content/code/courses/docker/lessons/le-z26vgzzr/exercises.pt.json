@@ -1,0 +1,292 @@
+{
+  "ex-7a6g8hjr": {
+    "prompt": "Num Dockerfile com duas linhas `FROM`, qual estágio vira a imagem que o `docker build` produz?",
+    "hint": "Com que `FROM` a `shelf:slim` terminou?",
+    "choices": [
+      {
+        "text": "O primeiro, porque faz o trabalho e guarda o programa compilado",
+        "why": "Os arquivos do primeiro estágio só chegam à imagem pelo `COPY --from`."
+      },
+      {
+        "text": "Os dois, mesclados num sistema de arquivos só",
+        "why": "Nada é mesclado; a imagem é um estágio."
+      },
+      {
+        "text": "O que for menor",
+        "why": "Tamanho não é como ele escolhe; o último estágio é a imagem."
+      },
+      {
+        "text": "O estágio do último `FROM`",
+        "why": "Isso, a menos que o `--target` peça outro."
+      }
+    ]
+  },
+  "ex-r9an1022": {
+    "prompt": "O que o `COPY --from=build /out/shelf /shelf` traz para o estágio final?",
+    "hint": "Um caminho.",
+    "choices": [
+      {
+        "text": "Só o arquivo `/out/shelf`",
+        "why": "Isso. O compilador, o código e o cache ficam para trás."
+      },
+      {
+        "text": "O sistema de arquivos inteiro do estágio de build",
+        "why": "Só o caminho indicado é copiado."
+      },
+      {
+        "text": "As camadas do estágio de build, como nova base",
+        "why": "O estágio final mantém a própria base, o distroless."
+      },
+      {
+        "text": "O cache de build, para o próximo build ser mais rápido",
+        "why": "O cache fica no estágio de build; nunca chega à imagem."
+      }
+    ]
+  },
+  "ex-7f9ycard": {
+    "prompt": "Ligue cada imagem ao `DISK USAGE` dela nesta aula.",
+    "hint": "Leia o `docker image ls` de novo.",
+    "pairs": [
+      {
+        "left": "`shelf:single`",
+        "right": "1.44GB"
+      },
+      {
+        "left": "`shelf:slim`",
+        "right": "28MB"
+      },
+      {
+        "left": "`shelf:scratch`",
+        "right": "21.9MB"
+      }
+    ],
+    "right_distractors": [
+      "343MB"
+    ]
+  },
+  "ex-tmypg320": {
+    "prompt": "O `docker exec slim sh` falhou com \"executable file not found\". O que isso diz à Ana?",
+    "hint": "O que há no distroless?",
+    "choices": [
+      {
+        "text": "O container parou",
+        "why": "Ele estava rodando; o `curl` tinha acabado de alcançá-lo."
+      },
+      {
+        "text": "Não há shell na imagem, de propósito",
+        "why": "Isso. Só o `shelf` pode rodar lá dentro."
+      },
+      {
+        "text": "O `exec` precisa de `-it` para funcionar",
+        "why": "O `-it` liga um terminal; não fornece um programa que falta."
+      },
+      {
+        "text": "A imagem foi construída para outro processador",
+        "why": "Isso dá `exec format error`; este programa simplesmente não existe."
+      }
+    ]
+  },
+  "ex-pc8ryyem": {
+    "prompt": "No `scratch`, `exec /shelf: no such file or directory`, embora o `/shelf` tenha sido copiado. O que faltava de verdade?",
+    "hint": "Leia o que o `ldd` listou.",
+    "choices": [
+      {
+        "text": "O arquivo `/shelf`, que o `COPY --from` pulou sem avisar",
+        "why": "Ele estava lá; o kernel precisava de outra coisa para rodá-lo."
+      },
+      {
+        "text": "Permissão de execução no `/shelf`",
+        "why": "Um problema de permissão diz `permission denied`."
+      },
+      {
+        "text": "A biblioteca C e o carregador dinâmico dela",
+        "why": "Isso. O binário foi ligado a eles, e o `scratch` não tem nenhum dos dois."
+      },
+      {
+        "text": "Um shell para iniciar o programa",
+        "why": "A forma exec não precisa de shell; o binário estático rodou depois no `scratch`."
+      }
+    ]
+  },
+  "ex-cxx220rk": {
+    "prompt": "Para o Go pôr tudo dentro do binário, sem depender da biblioteca C, a Ana define `CGO_ENABLED=___` no build.",
+    "hint": "Um único dígito.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-m01qfddd": {
+    "prompt": "Um programa estático no `scratch` não consegue verificar nenhum certificado HTTPS que encontra. Que base resolve isso acrescentando o mínimo?",
+    "hint": "O que falta no `scratch` de que um cliente TLS precisa?",
+    "choices": [
+      {
+        "text": "`debian:trixie-slim`, já que uma distribuição completa tem tudo",
+        "why": "Funciona, e leva shell, `apt` e muito mais do que o necessário."
+      },
+      {
+        "text": "`alpine:3.22`, porque é a menor distribuição que existe",
+        "why": "Também funciona, com shell e gerenciador de pacotes de que o programa não precisa."
+      },
+      {
+        "text": "Nenhuma; programas estáticos não conseguem usar TLS",
+        "why": "Conseguem; só precisam dos certificados para conferir."
+      },
+      {
+        "text": "`gcr.io/distroless/static-debian12`, feita justamente para isso",
+        "why": "Isso: ela acrescenta certificados CA, fusos horários e usuários, e nenhum shell."
+      }
+    ]
+  },
+  "ex-mqggjmr9": {
+    "prompt": "O Bruno copia um binário compilado no Debian, ligado à `glibc`, para uma imagem `alpine:3.22`. Ele não inicia. Por quê?",
+    "hint": "Que biblioteca C o Alpine usa?",
+    "choices": [
+      {
+        "text": "A biblioteca C dele é a `musl`",
+        "why": "Isso: não a `glibc` de que o binário precisa; a mesma falha do `shelf` no `scratch`."
+      },
+      {
+        "text": "O Alpine proíbe binários de outras distribuições",
+        "why": "Nada os proíbe; um binário estático roda em qualquer lugar."
+      },
+      {
+        "text": "O kernel do Alpine é mais antigo",
+        "why": "Não existe kernel do Alpine; é o do host."
+      },
+      {
+        "text": "O binário precisa de uma linha `USER`",
+        "why": "Usuários não impedem um binário de carregar."
+      }
+    ]
+  },
+  "ex-d6jpvwtm": {
+    "prompt": "Que ferramenta listou as bibliotecas compartilhadas de que o `shelf` precisava para rodar?",
+    "hint": "Rodada no estágio de build.",
+    "choices": [
+      {
+        "text": "`docker history`",
+        "why": "Isso lista camadas, não as bibliotecas de um binário."
+      },
+      {
+        "text": "`ldd`",
+        "why": "Isso, rodado dentro do estágio de build com `--target build`."
+      },
+      {
+        "text": "`docker image inspect`",
+        "why": "Isso lê a configuração da imagem."
+      },
+      {
+        "text": "`go version`",
+        "why": "Isso imprime a versão do compilador."
+      }
+    ]
+  },
+  "ex-vsckxcpt": {
+    "prompt": "Por que a Ana conseguiu rodar o `go test` numa imagem construída do mesmo Dockerfile da versão de entrega?",
+    "hint": "Que estágio ela construiu?",
+    "choices": [
+      {
+        "text": "O distroless inclui o conjunto de ferramentas do Go",
+        "why": "Ele não tem ferramentas nem shell."
+      },
+      {
+        "text": "O `go test` roda no host e só lê a imagem",
+        "why": "Ele rodou dentro do container, a partir do estágio de build."
+      },
+      {
+        "text": "O `--target build` parou no estágio com o compilador e o código",
+        "why": "Isso: um Dockerfile, duas imagens."
+      },
+      {
+        "text": "Os testes são compilados para dentro do binário de entrega",
+        "why": "Arquivos de teste não fazem parte do binário."
+      }
+    ]
+  },
+  "ex-ms7cp5ey": {
+    "prompt": "O que o `FROM --platform=$BUILDPLATFORM golang:1.25 AS build` consegue num build multiplataforma?",
+    "hint": "Onde o compilador roda?",
+    "choices": [
+      {
+        "text": "Ele força a imagem final a ter a arquitetura da máquina de build",
+        "why": "O estágio final segue cada plataforma pedida; esta linha só diz respeito ao estágio de build."
+      },
+      {
+        "text": "Ele baixa um compilador separado para cada plataforma",
+        "why": "Um compilador nativo produz todos os alvos."
+      },
+      {
+        "text": "Ele faz o build rodar sob QEMU",
+        "why": "Ele evita justamente isso."
+      },
+      {
+        "text": "O estágio de build roda nativo, e o Go faz compilação cruzada para cada alvo",
+        "why": "Isso: sem emulador, e é por isso que o laboratório conseguiu construir `arm64`."
+      }
+    ]
+  },
+  "ex-v2wsa5bv": {
+    "prompt": "O `docker image ls --tree shelf:multi` listou quantas plataformas sob a tag?",
+    "hint": "Conte os ramos.",
+    "unit": "plataformas"
+  },
+  "ex-bhfh6qmm": {
+    "prompt": "O `docker run --platform linux/arm64 shelf:multi` imprimiu `exec format error` no laboratório. A imagem arm64 está quebrada?",
+    "hint": "Que processador o laboratório tem?",
+    "choices": [
+      {
+        "text": "Não; este processador não roda código arm64",
+        "why": "Isso: uma máquina arm64 roda essa variante nativamente."
+      },
+      {
+        "text": "Sim, o Go não compila para arm64 sem QEMU",
+        "why": "O Go fez a compilação cruzada sem emulador nenhum."
+      },
+      {
+        "text": "Sim, a base distroless só existe em amd64",
+        "why": "O distroless é publicado para as duas, e o build buscou a variante arm64."
+      },
+      {
+        "text": "Não, mas ela precisa de `--privileged`",
+        "why": "Privilégios não mudam o processador."
+      }
+    ]
+  },
+  "ex-smkprwx4": {
+    "prompt": "Ponha as linhas do Dockerfile multiestágio em ordem.",
+    "hint": "Construir primeiro, entregar por último.",
+    "items": [
+      "`FROM golang:1.25 AS build`",
+      "`RUN CGO_ENABLED=0 go build -o /out/shelf .`",
+      "`FROM gcr.io/distroless/static-debian12`",
+      "`COPY --from=build /out/shelf /shelf`",
+      "`CMD [\"/shelf\"]`"
+    ]
+  },
+  "ex-6ek8jzkb": {
+    "prompt": "O que entregar o `shelf` sobre distroless custa à equipe?",
+    "hint": "O que eles não conseguem fazer dentro do container?",
+    "choices": [
+      {
+        "text": "Velocidade: programas no distroless rodam mais devagar",
+        "why": "O mesmo binário roda na mesma velocidade."
+      },
+      {
+        "text": "Abrir um shell lá dentro para olhar em volta",
+        "why": "Isso. A aula 22 mostra como inspecioná-lo pelo lado de fora."
+      },
+      {
+        "text": "TLS: o distroless não tem certificados",
+        "why": "O `static` traz certificados CA."
+      },
+      {
+        "text": "Logs: o distroless descarta a saída padrão",
+        "why": "O `docker logs` mostrou a saída dele normalmente."
+      }
+    ]
+  }
+}

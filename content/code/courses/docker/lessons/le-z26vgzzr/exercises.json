@@ -1,0 +1,430 @@
+[
+  {
+    "id": "ex-7a6g8hjr",
+    "version": 1,
+    "section": "two-stages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Dockerfile with two `FROM` lines, which stage becomes the image `docker build` produces?",
+    "hint": "Which `FROM` did `shelf:slim` end up with?",
+    "choices": [
+      {
+        "text": "The first, because it does the work and holds the compiled program",
+        "correct": false,
+        "why": "The first stage's files only reach the image through `COPY --from`."
+      },
+      {
+        "text": "Both, merged into one filesystem",
+        "correct": false,
+        "why": "Nothing is merged; the image is one stage."
+      },
+      {
+        "text": "Whichever is smaller",
+        "correct": false,
+        "why": "Size is not how it chooses; the last stage is the image."
+      },
+      {
+        "text": "The stage after the last `FROM`",
+        "correct": true,
+        "why": "Right, unless `--target` asks for another."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9an1022",
+    "version": 1,
+    "section": "two-stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `COPY --from=build /out/shelf /shelf` bring into the final stage?",
+    "hint": "One path.",
+    "choices": [
+      {
+        "text": "The file `/out/shelf` alone",
+        "correct": true,
+        "why": "Right. The compiler, sources and cache stay behind."
+      },
+      {
+        "text": "The whole build stage's filesystem",
+        "correct": false,
+        "why": "Only the named path is copied."
+      },
+      {
+        "text": "The build stage's layers, as a new base",
+        "correct": false,
+        "why": "The final stage keeps its own base, distroless."
+      },
+      {
+        "text": "The build cache, so the next build is faster",
+        "correct": false,
+        "why": "The cache stays in the build stage; it never reaches the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-7f9ycard",
+    "version": 1,
+    "section": "two-stages",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each image to its `DISK USAGE` in this lesson.",
+    "hint": "Read `docker image ls` again.",
+    "pairs": [
+      {
+        "left": "`shelf:single`",
+        "right": "1.44GB"
+      },
+      {
+        "left": "`shelf:slim`",
+        "right": "28MB"
+      },
+      {
+        "left": "`shelf:scratch`",
+        "right": "21.9MB"
+      }
+    ],
+    "right_distractors": [
+      "343MB"
+    ]
+  },
+  {
+    "id": "ex-tmypg320",
+    "version": 1,
+    "section": "two-stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker exec slim sh` failed with \"executable file not found\". What does that tell Ana?",
+    "hint": "What is in distroless?",
+    "choices": [
+      {
+        "text": "The container has stopped",
+        "correct": false,
+        "why": "It was running; `curl` had just reached it."
+      },
+      {
+        "text": "There is no shell in the image, by design",
+        "correct": true,
+        "why": "Right. Only `shelf` can run inside it."
+      },
+      {
+        "text": "`exec` needs `-it` to work",
+        "correct": false,
+        "why": "`-it` attaches a terminal; it cannot supply a missing program."
+      },
+      {
+        "text": "The image was built for another processor",
+        "correct": false,
+        "why": "That gives `exec format error`; this program simply does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc8ryyem",
+    "version": 1,
+    "section": "choosing-a-base",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On `scratch`, `exec /shelf: no such file or directory`, though `/shelf` was copied in. What was really missing?",
+    "hint": "Read what `ldd` listed.",
+    "choices": [
+      {
+        "text": "The `/shelf` file, which `COPY --from` silently skipped",
+        "correct": false,
+        "why": "It was there; the kernel needed something else to run it."
+      },
+      {
+        "text": "Execute permission on `/shelf`",
+        "correct": false,
+        "why": "A permission problem says `permission denied`."
+      },
+      {
+        "text": "The C library and its dynamic loader",
+        "correct": true,
+        "why": "Right. The binary was linked against them, and `scratch` has neither."
+      },
+      {
+        "text": "A shell to start the program with",
+        "correct": false,
+        "why": "Exec form needs no shell; the static binary later ran on `scratch`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxx220rk",
+    "version": 1,
+    "section": "choosing-a-base",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make Go put everything into the binary, with no dependency on the C library, Ana sets `CGO_ENABLED=___` in the build.",
+    "hint": "A single digit.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m01qfddd",
+    "version": 1,
+    "section": "choosing-a-base",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A static program on `scratch` fails to verify every HTTPS certificate it meets. Which base fixes that with the least added?",
+    "hint": "What does `scratch` lack that a TLS client needs?",
+    "choices": [
+      {
+        "text": "`debian:trixie-slim`, since a full distribution has everything",
+        "correct": false,
+        "why": "It works, and carries a shell, `apt` and much more than needed."
+      },
+      {
+        "text": "`alpine:3.22`, because it is the smallest distribution there is",
+        "correct": false,
+        "why": "It works too, with a shell and package manager the program does not need."
+      },
+      {
+        "text": "None; static programs cannot use TLS",
+        "correct": false,
+        "why": "They can; they only need the certificates to check against."
+      },
+      {
+        "text": "`gcr.io/distroless/static-debian12`, made for this",
+        "correct": true,
+        "why": "Right: it adds CA certificates, time zones and users, and no shell."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqggjmr9",
+    "version": 1,
+    "section": "choosing-a-base",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno copies a binary compiled on Debian, linked against `glibc`, into an `alpine:3.22` image. It fails to start. Why?",
+    "hint": "Which C library does Alpine use?",
+    "choices": [
+      {
+        "text": "Its C library is `musl`",
+        "correct": true,
+        "why": "Right: not the `glibc` the binary needs; the same failure as `shelf` on `scratch`."
+      },
+      {
+        "text": "Alpine forbids binaries from other distributions",
+        "correct": false,
+        "why": "Nothing forbids them; a static binary runs anywhere."
+      },
+      {
+        "text": "Alpine's kernel is older",
+        "correct": false,
+        "why": "There is no Alpine kernel; it is the host's."
+      },
+      {
+        "text": "The binary needs a `USER` line",
+        "correct": false,
+        "why": "Users do not stop a binary from loading."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6jpvwtm",
+    "version": 1,
+    "section": "choosing-a-base",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tool listed the shared libraries `shelf` needed at run time?",
+    "hint": "Run in the build stage.",
+    "choices": [
+      {
+        "text": "`docker history`",
+        "correct": false,
+        "why": "That lists layers, not a binary's libraries."
+      },
+      {
+        "text": "`ldd`",
+        "correct": true,
+        "why": "Right, run inside the build stage with `--target build`."
+      },
+      {
+        "text": "`docker image inspect`",
+        "correct": false,
+        "why": "That reads the image's configuration."
+      },
+      {
+        "text": "`go version`",
+        "correct": false,
+        "why": "That prints the compiler's version."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsckxcpt",
+    "version": 1,
+    "section": "targets-and-platforms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could Ana run `go test` in an image built from the same Dockerfile as the release?",
+    "hint": "Which stage did she build?",
+    "choices": [
+      {
+        "text": "Distroless includes the Go toolchain",
+        "correct": false,
+        "why": "It has no toolchain and no shell."
+      },
+      {
+        "text": "`go test` runs on the host and only reads the image",
+        "correct": false,
+        "why": "It ran inside the container, from the build stage."
+      },
+      {
+        "text": "`--target build` stopped at the stage with the compiler and sources",
+        "correct": true,
+        "why": "Right: one Dockerfile, two images."
+      },
+      {
+        "text": "Tests are compiled into the release binary",
+        "correct": false,
+        "why": "Test files are not part of the binary."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms7cp5ey",
+    "version": 1,
+    "section": "targets-and-platforms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `FROM --platform=$BUILDPLATFORM golang:1.25 AS build` achieve in a multi-platform build?",
+    "hint": "Where does the compiler run?",
+    "choices": [
+      {
+        "text": "It forces the final image to be the build machine's architecture",
+        "correct": false,
+        "why": "The final stage follows each requested platform; this line only concerns the build stage."
+      },
+      {
+        "text": "It downloads a separate compiler for each platform",
+        "correct": false,
+        "why": "One native compiler produces every target."
+      },
+      {
+        "text": "It makes the build run under QEMU",
+        "correct": false,
+        "why": "It avoids exactly that."
+      },
+      {
+        "text": "The build stage runs natively, and Go cross-compiles for each target",
+        "correct": true,
+        "why": "Right: no emulator needed, which is why the lab could build `arm64`."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2wsa5bv",
+    "version": 1,
+    "section": "targets-and-platforms",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker image ls --tree shelf:multi` listed how many platforms under the tag?",
+    "hint": "Count the branches.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "platforms"
+  },
+  {
+    "id": "ex-bhfh6qmm",
+    "version": 1,
+    "section": "targets-and-platforms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker run --platform linux/arm64 shelf:multi` printed `exec format error` on the lab. Is the arm64 image broken?",
+    "hint": "Which processor does the lab have?",
+    "choices": [
+      {
+        "text": "No; this processor cannot run arm64 code",
+        "correct": true,
+        "why": "Right: an arm64 machine runs that variant natively."
+      },
+      {
+        "text": "Yes, Go cannot compile for arm64 without QEMU",
+        "correct": false,
+        "why": "Go cross-compiled it without any emulator."
+      },
+      {
+        "text": "Yes, the distroless base is amd64 only",
+        "correct": false,
+        "why": "Distroless is published for both, and the build fetched its arm64 variant."
+      },
+      {
+        "text": "No, but it needs `--privileged`",
+        "correct": false,
+        "why": "Privileges do not change the processor."
+      }
+    ]
+  },
+  {
+    "id": "ex-smkprwx4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the multi-stage Dockerfile's lines in order.",
+    "hint": "Build first, ship last.",
+    "items": [
+      "`FROM golang:1.25 AS build`",
+      "`RUN CGO_ENABLED=0 go build -o /out/shelf .`",
+      "`FROM gcr.io/distroless/static-debian12`",
+      "`COPY --from=build /out/shelf /shelf`",
+      "`CMD [\"/shelf\"]`"
+    ]
+  },
+  {
+    "id": "ex-6ek8jzkb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does shipping `shelf` on distroless cost the team?",
+    "hint": "What can they not do inside the container?",
+    "choices": [
+      {
+        "text": "Speed: distroless programs run slower",
+        "correct": false,
+        "why": "The same binary runs at the same speed."
+      },
+      {
+        "text": "Opening a shell inside to look around",
+        "correct": true,
+        "why": "Right. Lesson 22 shows how to inspect it from the outside."
+      },
+      {
+        "text": "TLS: distroless has no certificates",
+        "correct": false,
+        "why": "`static` ships CA certificates."
+      },
+      {
+        "text": "Logs: distroless discards standard output",
+        "correct": false,
+        "why": "`docker logs` showed its output as usual."
+      }
+    ]
+  }
+]
