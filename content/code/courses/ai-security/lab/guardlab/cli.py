@@ -35,6 +35,8 @@ course.
     guard check-out FILE            model replies against the output schema
     guard retry ID [ID ...]         the retry loop, with course-written replies
                                     standing in for the model's attempts
+    guard ground FILE               answers against the help centre they cite
+    guard deps FILE                 suggested packages against a registry snapshot
     guard gate FILE [--confirm ID --by NAME] [--budget N]
                                     proposed tool calls against the manifest
 """
@@ -507,6 +509,35 @@ def cmd_retry(a):
     return 0
 
 
+# ---- grounding ----------------------------------------------------------------
+
+def cmd_ground(a):
+    from . import ground
+    docs = ground.load_docs(os.path.join(HOME, "data", "helpdesk"))
+    bad = 0
+    for ans in jsonl(a.file):
+        notes, ok = ground.check(ans, docs)
+        bad += not ok
+        print("%-3s %-5s %s" % (ans["id"], "ok" if ok else "FLAG", notes[0]))
+        for n in notes[1:]:
+            print("%-3s %-5s %s" % ("", "", n))
+    print("%d of %d answers flagged" % (bad, len(jsonl(a.file))))
+    return 1 if bad else 0
+
+
+def cmd_deps(a):
+    from . import ground
+    with open(os.path.join(HOME, "data", "registry-snapshot.txt")) as fh:
+        registry = {line.strip().lower() for line in fh if line.strip()}
+    with open(a.file) as fh:
+        names = [line.strip() for line in fh if line.strip()]
+    missing = 0
+    for name, known in ground.deps(names, registry):
+        missing += not known
+        print("%-26s %s" % (name, "in the snapshot" if known else "NOT IN THE SNAPSHOT: do not install"))
+    return 1 if missing else 0
+
+
 # ---- tool calls -------------------------------------------------------------
 
 def cmd_gate(a):
@@ -686,6 +717,14 @@ def main(argv=None):
     s = sub.add_parser("retry")
     s.add_argument("ids", nargs="+")
     s.set_defaults(fn=cmd_retry)
+
+    s = sub.add_parser("ground")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_ground)
+
+    s = sub.add_parser("deps")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_deps)
 
     s = sub.add_parser("gate")
     s.add_argument("file")

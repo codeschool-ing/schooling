@@ -24,7 +24,8 @@
 #                  ids and limits), kyc.py (deciding who gets API access),
 #                  shapes.py and retry.py (what goes into a call and what
 #                  comes out), toolgate.py (which tool calls an agent may
-#                  make) and cli.py (every command)
+#                  make), ground.py (whether an answer stands on its
+#                  sources) and cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -65,6 +66,10 @@
 #     one to be caught by a different rule; `guard retry` replays them in
 #     place of a model's attempts. The requests in data/inputs.jsonl were
 #     written by the course too.
+#   - The help centre in data/helpdesk/, the answers in data/answers.jsonl
+#     (in place of a model's replies), data/registry-snapshot.txt (a short
+#     stand-in for a package index) and data/suggested-deps.txt were written
+#     by the course.
 #   - The tool calls in data/proposed-calls.jsonl were written by the
 #     course in place of what an agent would propose; no model proposed
 #     them.
@@ -90,7 +95,7 @@ esac
 rm -rf "$LAB"
 mkdir -p "$LAB/bin" "$LAB/data"
 cp -R "$here/lab/guardlab" "$LAB/guardlab"
-cp "$here"/lab/data/* "$LAB/data/"
+cp -R "$here"/lab/data/. "$LAB/data/"
 mv "$LAB/data/retention.json" "$LAB/data/holds.json" "$LAB/"
 cat > "$LAB/bin/guard" <<'GUARD'
 #!/usr/bin/env bash
