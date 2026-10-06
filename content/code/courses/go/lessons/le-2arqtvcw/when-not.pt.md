@@ -107,8 +107,8 @@ métodos, a interface comum diz a mesma coisa com menos colchetes e aceita mais 
 
 Três sinais de que um parâmetro de tipo não está se pagando:
 
-- ele aparece uma vez na assinatura, como tipo de um parâmetro. `func F[T fmt.Stringer](v T)` faz o
-  trabalho de `func F(v fmt.Stringer)`;
+- ele aparece uma vez na assinatura, como tipo de um parâmetro. uma função `F[T fmt.Stringer]` cujo
+  único parâmetro é `v T` faz o trabalho de `func F(v fmt.Stringer)`;
 - todo chamador do programa usa o mesmo tipo para ele;
 - o corpo pergunta qual é o tipo, com um type switch sobre o valor. É o `SumAny` da seção 02 de novo,
   e devolve a conferência em tempo de execução que os parâmetros de tipo existem para eliminar.

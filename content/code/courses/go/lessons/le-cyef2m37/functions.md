@@ -83,8 +83,8 @@ is the same gap from another side. `Map` on its own is not a function you can ho
 for one; storing it needs every type filled in, as `toText := Map[int, string]` did.
 
 When `cannot infer` appears, the repair is the one `main` above used: write the types in brackets.
-They go in the order the function declared them, and you may stop early. `Map[int](ages, f)` would
-fix `T` and still leave `U` to be read off `f`.
+They go in the order the function declared them, and you may stop early. Calling `Map[int]` with `ages` and
+`f` would fix `T` and still leave `U` to be read off `f`.
 
 ## Every use of `T` has to agree
 

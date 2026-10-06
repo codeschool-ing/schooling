@@ -85,7 +85,7 @@ para uma; guardá-lo exige todos os tipos preenchidos, como `toText := Map[int, 
 
 Quando aparece `cannot infer`, o conserto é o que o `main` acima usou: escrever os tipos entre
 colchetes. Eles vão na ordem em que a função os declarou, e você pode parar antes do fim.
-`Map[int](ages, f)` fixaria `T` e ainda deixaria `U` para ser lido em `f`.
+Chamar `Map[int]` com `ages` e `f` fixaria `T` e ainda deixaria `U` para ser lido em `f`.
 
 ## Todo uso de `T` tem de concordar
 

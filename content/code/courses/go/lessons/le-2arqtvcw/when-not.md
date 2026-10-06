@@ -105,8 +105,8 @@ the plain interface says the same thing with fewer brackets and accepts more cal
 
 Three signs that a type parameter is not earning its place:
 
-- it appears once in the signature, as the type of one parameter. `func F[T fmt.Stringer](v T)` does
-  the job of `func F(v fmt.Stringer)`;
+- it appears once in the signature, as the type of one parameter. a function `F[T fmt.Stringer]` whose
+  one parameter is `v T` does the job of `func F(v fmt.Stringer)`;
 - every caller in the program uses the same type for it;
 - the body asks what the type is, with a type switch on the value. That is the `SumAny` of section 02
   again, and it gives back the run-time checking that type parameters exist to remove.
