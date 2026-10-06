@@ -43,7 +43,7 @@ muito menor do que uma suspensão.
 A Doce Lar Confeitaria foi aceita no primeiro dia: um CNPJ real, o próprio domínio e atendimento a
 clientes como caso de uso. O uso dela é registrado por semana, com o tema de cada requisição. **Os
 temas foram escritos pelo curso** como um classificador os rotularia; um de verdade é um classificador
-como os da aula 16, com erros próprios.
+como os da aula 6, com erros próprios.
 
 ```
 ana@lab:~/guard$ guard drift p-docelar
@@ -74,12 +74,12 @@ O que acontece depois é uma escada, não um interruptor:
 3. **Suspender.** Se a resposta confirmar um uso proibido, ou não vier.
 
 Cada degrau é registrado com quem o tomou e por quê, e os números que o justificaram vão junto. A mesma
-disciplina da aula 9 e da aula 16 vale aqui: **o limiar, 30% neste laboratório, é uma escolha**,
+disciplina da aula 3 e da aula 6 vale aqui: **o limiar, 30% neste laboratório, é uma escolha**,
 registrada com o motivo e revista quando dispara sobre clientes que se mostraram corretos.
 
 ## Onde isto deixa as defesas
 
-A aula 17 fez cada requisição levar o identificador de uma pessoa; esta aula faz cada chave levar uma
-empresa conhecida e uma finalidade declarada; a aula 19 restringe o que uma requisição pode pôr para
+A aula 7 fez cada requisição levar o identificador de uma pessoa; esta aula faz cada chave levar uma
+empresa conhecida e uma finalidade declarada; a aula 9 restringe o que uma requisição pode pôr para
 dentro e tirar para fora. Nenhuma das três basta sozinha, e um atacante precisa passar por todas ao
 mesmo tempo.

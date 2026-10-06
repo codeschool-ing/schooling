@@ -82,13 +82,12 @@ keeping the testing yours.
 ::: track ai prompt
 The next course in your track, `prompt-reliability`, starts from that testing: test sets,
 evaluation metrics, and versioned prompts whose every change is measured.
-`ai-security`, further along the track, returns to lesson 7 and treats prompt injection as the
-security problem it is.
+`ai-security`, further along the track, takes lesson 7 as known and builds the defences around it.
 :::
 
 ::: track *
 Two courses build directly on this one. `prompt-reliability` turns the testing in this lesson into
 a practice: test sets, evaluation metrics, and versioned prompts.
-`ai-security` returns to lesson 7 and treats prompt injection as the security problem it is,
+`ai-security` takes lesson 7 as known and builds the defences around it,
 and it is in every track that holds this course.
 :::

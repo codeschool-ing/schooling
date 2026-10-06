@@ -54,8 +54,7 @@ the same test needs three changes to be worth anything against one:
 - **Many samples of each.** With sampling switched on, one prompt gives different answers on
   different runs, so a single flip proves nothing. Each member of the pair is run many times and the
   two distributions are compared, with a test that says whether the difference is larger than the
-  noise between runs. Lesson 13 automates adversarial tests in exactly this shape, and the course
-  `prompt-reliability` measures run-to-run variation.
+  noise between runs. The course `prompt-reliability` measures that run-to-run variation.
 - **A decision to count.** "Shortlisted or not", a score, a category: something the pair can
   disagree about. Free text has to be reduced to one of those first, or the comparison is a matter of
   opinion.

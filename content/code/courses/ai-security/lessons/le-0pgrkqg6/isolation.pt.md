@@ -34,12 +34,12 @@ c7  update_contact DENY   budget of 4 calls per conversation is spent
 
 Com orçamento de quatro, a quinta proposta é recusada seja ela qual for. O manifesto do laboratório
 permite oito, o bastante para uma conversa de suporte e pouco para uma descontrolada. Quando o orçamento
-acaba, a conversa vai para uma pessoa, o mesmo destino do laço de novas tentativas da aula 19.
+acaba, a conversa vai para uma pessoa, o mesmo destino do laço de novas tentativas da aula 9.
 
 ## Tudo deixa registro
 
 Cada proposta, cada decisão e o motivo dela, cada confirmação e quem a deu vão para o log, com o id da
-requisição e o identificador de usuário final da aula 17. Os logs da aula 21 valem aqui: os argumentos
+requisição e o identificador de usuário final da aula 7. Os logs da aula 11 valem aqui: os argumentos
 de uma chamada são dado pessoal quando nomeiam uma pessoa, e passam por redação e vencem como o resto.
 
 Três camadas, então, e uma ação precisa passar por todas: o manifesto e o escopo dele, a pessoa que

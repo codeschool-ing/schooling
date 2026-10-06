@@ -7,7 +7,7 @@ A Tarefa está prestes a abrir o assistente a outras empresas por uma API: uma c
 ele responda clientes, uma agência de tradução, um escritório de advocacia. Cada uma recebe uma chave,
 e a chave chega ao fornecedor do modelo pela conta da própria Tarefa. **O que um cliente fizer com essa
 chave, o fornecedor vê a Tarefa fazendo**, e o acordo da Tarefa com o fornecedor, como a maioria
-deles, torna a Tarefa responsável por como os próprios clientes usam o acesso. A aula 17 tratou de
+deles, torna a Tarefa responsável por como os próprios clientes usam o acesso. A aula 7 tratou de
 distinguir os usuários da Tarefa; esta aula trata de decidir quais empresas viram usuárias.
 
 O primeiro instinto costuma ser que um formulário e um cartão de crédito bastam, já que quem paga é
@@ -73,5 +73,5 @@ empresa começa**, não se ela é confiável para sempre. É por isso que a Nuve
 está num webmail e não no próprio domínio, recebe `VERIFY` e um sandbox em vez de uma recusa: confirmar
 o e-mail no domínio resolve.
 
-Os dados coletados aqui também são dados pessoais, ao menos o nome e o e-mail do contato, e a aula 22
+Os dados coletados aqui também são dados pessoais, ao menos o nome e o e-mail do contato, e a aula 12
 vale para eles como para qualquer outra coisa: colete o que a decisão exige, e diga por quê.

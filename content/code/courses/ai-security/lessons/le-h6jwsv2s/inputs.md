@@ -6,8 +6,7 @@ version: 1
 A common picture of input handling for a model is that there is nothing to handle: the model reads
 text, so whatever the user typed is passed along, and the checking happens on the reply. **Every
 field that reaches a prompt is something the model will try to act on**, and the less of it there is,
-and the more of it has a known shape, the less there is to go wrong. Lesson 2 shows what free text in
-a prompt can do in the hands of somebody trying; this lesson is about the cheaper half, which is
+and the more of it has a known shape, the less there is to go wrong. Free text in a prompt is what somebody trying will use; this lesson is about the cheaper half of the defence, which is
 deciding what is allowed in at all.
 
 Tarefa's job intake takes a client's request and asks a model to categorise it and suggest a price.
@@ -70,7 +69,7 @@ exit 1
 **An allowlist of fields.** `in-3` carries a `priority` field the form never offered. A request
 builder that copies every field it receives into the prompt turns any extra field into an
 instruction the developer never wrote; accepting only the fields that are named closes that path at
-no cost. This is the same move as lesson 22's purpose list, applied to the other direction.
+no cost. This is the same move as lesson 12's purpose list, applied to the other direction.
 
 **Closed lists where the answer is closed.** `category` takes one of five values. *Photography* may be a perfectly good category for Tarefa to add one day. Until then it is a value the rest of the system has no handling for, so it is refused at the door, with a message that says which values exist.
 

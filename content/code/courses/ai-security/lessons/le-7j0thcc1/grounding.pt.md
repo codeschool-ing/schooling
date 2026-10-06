@@ -50,7 +50,7 @@ exit 1
 - A `a5` diz que não sabe e passa a pergunta a uma pessoa. **Abster-se é uma resposta correta**, e um
   sistema que pune isso ensina o modelo, pelo prompt e pela avaliação, a chutar.
 
-O que acontece com uma resposta marcada segue a aula 19: ela não é mostrada, e a pergunta volta ao modelo
+O que acontece com uma resposta marcada segue a aula 9: ela não é mostrada, e a pergunta volta ao modelo
 uma vez com o problema, ou vai para uma pessoa.
 
 ## O que esta verificação não vê

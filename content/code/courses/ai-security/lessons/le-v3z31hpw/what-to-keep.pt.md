@@ -93,7 +93,7 @@ A camada bruta ainda tem a própria chave, por trinta dias. A redação protege 
 mais; ela não desfaz a colagem, e é por isso que a resposta pede que a chave seja revogada em vez de
 prometer esquecê-la.
 
-**Toda camada é dado pessoal enquanto puder ser ligada a uma pessoa.** Pela LGPD, que a aula 22
+**Toda camada é dado pessoal enquanto puder ser ligada a uma pessoa.** Pela LGPD, que a aula 12
 aplica às chamadas de modelo, a camada com redação ainda nomeia uma conta, e uma conta é uma pessoa.
 Um cliente que pede a exclusão dos dados dele está perguntando sobre os logs também. As camadas
 tornam esse pedido mais barato de atender; não tiram os logs do alcance dele.

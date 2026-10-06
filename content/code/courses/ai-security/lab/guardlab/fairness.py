@@ -5,7 +5,7 @@ freelancers who apply to a job and shortlists the best; a reviewer later
 judged whether each applicant could have done the job (`good`). No model
 made these decisions: COUNTS below says how many of each kind there are, and
 build() writes one row per applicant from it, in a fixed order. The two
-versions are the shortlist before and after the change lesson 9 discusses.
+versions are the shortlist before and after the change lesson 3 discusses.
 
 Every metric is a rate over a group. A group with fewer than MINIMUM rows is
 reported as too small, the same rule the platform's own item analysis uses:

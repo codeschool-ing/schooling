@@ -53,8 +53,7 @@ não é, e o mesmo teste precisa de três mudanças para valer alguma coisa cont
 - **Muitas amostras de cada.** Com amostragem ligada, um prompt dá respostas diferentes em execuções
   diferentes, então uma mudança isolada não prova nada. Cada lado do par roda muitas vezes e as duas
   distribuições são comparadas, com um teste que diz se a diferença é maior que o ruído entre
-  execuções. A aula 13 automatiza testes adversariais exatamente nesse formato, e o curso
-  `prompt-reliability` mede a variação entre execuções.
+  execuções. O curso `prompt-reliability` mede essa variação entre execuções.
 - **Uma decisão para contar.** "Pré-selecionado ou não", um score, uma categoria: algo em que o par
   possa discordar. Texto livre precisa ser reduzido a uma dessas coisas antes, ou a comparação vira
   questão de opinião.

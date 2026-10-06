@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The terminal sessions quoted in lesson 22 of ai-security, as a script that
+# The terminal sessions quoted in lesson 12 of ai-security, as a script that
 # produces them.
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in

@@ -52,7 +52,7 @@ A lista de revisão é onde as aulas anteriores deste curso voltam:
 
 | caso de uso | por que uma pessoa olha antes |
 |---|---|
-| `hiring-screening` | uma decisão sobre o trabalho das pessoas, com o viés da aula 9 e o direito de revisão do art. 20 da LGPD |
+| `hiring-screening` | uma decisão sobre o trabalho das pessoas, com o viés da aula 3 e o direito de revisão do art. 20 da LGPD |
 | `health-information` | dado sensível pelo art. 11, e um paciente que age sobre uma resposta errada |
 | `legal-drafting` | um contrato que ninguém qualificado lê antes de ser assinado |
 | `marketing-copy` | em geral tranquilo, e o passo mais curto até avaliações falsas |
@@ -96,6 +96,6 @@ contestar. Quatro perguntas resolvem a maioria das revisões:
 4. **O que vai ser medido**, e a Tarefa vai ver a medição?
 
 Para a Contrata Já RH, um resultado razoável é uma aprovação com condições: nenhuma rejeição
-automática, todo ranking revisado por um recrutador, e as taxas por grupo da aula 9 relatadas à Tarefa
+automática, todo ranking revisado por um recrutador, e as taxas por grupo da aula 3 relatadas à Tarefa
 a cada trimestre. Uma alternativa razoável é a recusa. O que não é razoável é aprovar a frase como
 está porque a categoria estava numa lista.

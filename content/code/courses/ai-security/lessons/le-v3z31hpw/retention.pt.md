@@ -111,4 +111,4 @@ Apagar um arquivo apaga uma cópia. Três outras são comuns, e cada uma precisa
 - **O fornecedor do modelo.** O fornecedor recebe cada prompt e mantém registros próprios das suas
   chamadas, para monitorar abuso, por um prazo definido nos termos dele. A sua varredura não os
   toca. O que o fornecedor guarda, onde, e se há para você um arranjo sem retenção é uma questão de
-  contrato, e a aula 22 trata desse contrato.
+  contrato, e a aula 12 trata desse contrato.

@@ -22,8 +22,7 @@ honestas:
   anexo e nunca o conteúdo;
 - **aceitar o risco por escrito**, com quem aceitou, por quê, e a data de olhar de novo.
 
-O que não é saída é deixar a linha vazia e torcer. A aula 3 trata do que texto dentro de arquivos e
-páginas pode fazer com um modelo, e pertence exatamente a esta linha.
+O que não é saída é deixar a linha vazia e torcer. Texto que chega ao modelo dentro de arquivos e páginas pertence exatamente a esta linha.
 
 ## Ordenando o trabalho
 
@@ -35,7 +34,7 @@ Nem toda lacuna é igualmente urgente, e o inventário tem o necessário para or
    cliente verificado escreve, que vem antes de texto que só a equipe escreve.
 
 Os arquivos anexados pontuam alto nas duas: qualquer um que abre uma conta pode anexar um, e o assistente
-que o lê pode propor chamadas de ferramenta. Mesmo com o portão da aula 20 na frente das ferramentas,
+que o lê pode propor chamadas de ferramenta. Mesmo com o portão da aula 10 na frente das ferramentas,
 essa combinação põe a linha no topo da lista.
 
 ## O mapa envelhece

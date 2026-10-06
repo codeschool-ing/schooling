@@ -22,8 +22,7 @@ it. **A gap on the map is a decision waiting to be made**, and there are only th
   title and size and never its contents;
 - **accept the risk in writing**, with who accepted it, why, and the date to look again.
 
-What is not an outcome is leaving the row empty and hoping. Lesson 3 is about what text inside files
-and pages can do to a model, and it belongs to exactly this row.
+What is not an outcome is leaving the row empty and hoping. Text that reaches the model inside files and pages belongs to exactly this row.
 
 ## Ranking the work
 
@@ -35,7 +34,7 @@ Not every gap is equally urgent, and the inventory has what is needed to rank th
    can, which outranks text only staff can.
 
 The attached files score high on both: anybody who opens an account can attach one, and the assistant
-that reads it can propose tool calls. Even with lesson 20's gate in front of the tools, that combination
+that reads it can propose tool calls. Even with lesson 10's gate in front of the tools, that combination
 puts the row at the top of the list.
 
 ## The map ages

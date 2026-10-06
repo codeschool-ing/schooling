@@ -19,5 +19,5 @@ Between two agents there is a line, and **everything an agent knows about the ot
 
 - **Make the question carry its own context.** Ids, the customer's exact constraint, what has already been tried.
 - **Decide what an answer must contain.** A free-text sentence is the weakest form. A structured answer (status, facts, sources) or the evidence the host attaches (section 08) lets the receiving agent check instead of trust.
-- **Pass the least data that does the job.** A specialist that only needs an order id should not receive the customer's address because it happened to be in the conversation. `ai-security` lesson 22 makes the same argument for data sent to a model at all; between agents it applies again at every boundary.
+- **Pass the least data that does the job.** A specialist that only needs an order id should not receive the customer's address because it happened to be in the conversation. `ai-security` lesson 12 makes the same argument for data sent to a model at all; between agents it applies again at every boundary.
 - **Record what crossed.** The trace should show each question and each answer at the boundary, because that is where a wrong answer is most often born.
