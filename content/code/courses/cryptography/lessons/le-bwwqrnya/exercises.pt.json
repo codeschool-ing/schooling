@@ -1,0 +1,349 @@
+{
+  "ex-y22w7517": {
+    "prompt": "Na captura do TLS 1.3, o que o cliente manda na primeira mensagem que um cliente TLS 1.2 não manda?",
+    "hint": "É o que economiza uma ida e volta.",
+    "choices": [
+      {
+        "text": "Um key share",
+        "why": "Certo: a chave pública X25519, mandada antes de ser pedida."
+      },
+      {
+        "text": "O certificado que o cliente espera que o servidor apresente",
+        "why": "Clientes não mandam o certificado do servidor."
+      },
+      {
+        "text": "A chave de sessão, cifrada com a chave pública do servidor",
+        "why": "Isso é transporte de chave RSA, que o TLS 1.3 removeu."
+      },
+      {
+        "text": "A primeira página dos dados da aplicação, em texto claro",
+        "why": "Dados nunca vão em claro."
+      }
+    ]
+  },
+  "ex-bcjejeyn": {
+    "prompt": "Que parte de um handshake TLS 1.3 um observador na rede ainda consegue ler?",
+    "hint": "Antes do ServerHello, nada é cifrado.",
+    "choices": [
+      {
+        "text": "A cadeia de certificados do servidor",
+        "why": "No TLS 1.3 ela é cifrada; no TLS 1.2 não era."
+      },
+      {
+        "text": "As mensagens Finished",
+        "why": "Elas são cifradas."
+      },
+      {
+        "text": "Os dados da aplicação, se forem HTTP/1.1",
+        "why": "Os dados da aplicação são sempre cifrados."
+      },
+      {
+        "text": "Os dois hellos, incluindo o nome do SNI",
+        "why": "Certo: portal.vereda.example fica visível, até o ECH escondê-lo."
+      }
+    ]
+  },
+  "ex-3143f15e": {
+    "prompt": "Quantas suítes de cifras o cliente do laboratório ofereceu no ClientHello do TLS 1.3?",
+    "hint": "A segunda linha da captura."
+  },
+  "ex-vgb3gfj9": {
+    "prompt": "Por que o servidor assina a transcrição no CertificateVerify, se já mandou uma cadeia de certificados válida?",
+    "hint": "Um certificado é público.",
+    "choices": [
+      {
+        "text": "Para renovar o certificado durante o handshake",
+        "why": "Nada é renovado ali."
+      },
+      {
+        "text": "Para provar que tem a chave privada do certificado",
+        "why": "Certo: e amarrar a identidade dele a esta troca."
+      },
+      {
+        "text": "Para cifrar a chave de sessão para o cliente",
+        "why": "A chave vem da troca X25519."
+      },
+      {
+        "text": "Porque a cadeia não inclui a raiz",
+        "why": "A raiz nunca é mandada; não é esse o motivo."
+      }
+    ]
+  },
+  "ex-p3zrtma5": {
+    "prompt": "Alguém no meio tira as suítes de cifras mais fortes do ClientHello. Qual mensagem faz o handshake falhar?",
+    "hint": "Um MAC sobre tudo o que foi dito.",
+    "choices": [
+      {
+        "text": "EncryptedExtensions",
+        "why": "Leva respostas a extensões, não uma verificação."
+      },
+      {
+        "text": "O ServerHello, que recusaria a lista cortada",
+        "why": "O servidor não consegue perceber que a lista foi cortada."
+      },
+      {
+        "text": "Finished",
+        "why": "Certo: as transcrições diferem, então os MACs discordam."
+      },
+      {
+        "text": "Certificate",
+        "why": "O certificado não é afetado."
+      }
+    ]
+  },
+  "ex-97xvvsnm": {
+    "prompt": "Ponha as mensagens do handshake TLS 1.3 na ordem em que foram mandadas.",
+    "hint": "Siga a figura.",
+    "items": [
+      "ClientHello",
+      "ServerHello",
+      "Certificate",
+      "CertificateVerify",
+      "o Finished do servidor",
+      "o Finished do cliente"
+    ]
+  },
+  "ex-yhejye8q": {
+    "prompt": "Por que o servidor não manda o certificado raiz da Vereda na cadeia?",
+    "hint": "De onde precisa vir a confiança?",
+    "choices": [
+      {
+        "text": "Porque a raiz é grande demais para um registro",
+        "why": "O tamanho não é o motivo."
+      },
+      {
+        "text": "Porque mandá-la revelaria a chave privada da raiz",
+        "why": "Um certificado não contém chave privada."
+      },
+      {
+        "text": "Não provaria nada: o cliente já precisa confiar nela",
+        "why": "Certo: qualquer um consegue mandar uma raiz."
+      },
+      {
+        "text": "Porque o TLS 1.3 proíbe cadeias com mais de dois",
+        "why": "Não existe esse limite."
+      }
+    ]
+  },
+  "ex-g0fqtqm6": {
+    "prompt": "Por que o `SSLKEYLOGFILE` nunca pode estar definido num servidor de produção?",
+    "hint": "O que uma gravação mais o registro dão?",
+    "choices": [
+      {
+        "text": "Deixa cada handshake visivelmente mais lento",
+        "why": "Velocidade não é a preocupação."
+      },
+      {
+        "text": "Grava em disco os segredos de toda sessão",
+        "why": "Certo: o sigilo futuro é desfeito."
+      },
+      {
+        "text": "Desliga a verificação de certificados",
+        "why": "Não afeta a verificação."
+      },
+      {
+        "text": "Força o TLS 1.2",
+        "why": "Funciona com as duas versões."
+      }
+    ]
+  },
+  "ex-bw26s8k7": {
+    "prompt": "Quantos bytes tem o CLIENT_TRAFFIC_SECRET_0 na conexão do laboratório, que usou TLS_AES_256_GCM_SHA384?",
+    "hint": "O tamanho do hash da suíte.",
+    "unit": "bytes"
+  },
+  "ex-s7y81m8y": {
+    "prompt": "Por que o TLS 1.3 deriva segredos de tráfego separados para os sentidos cliente-servidor e servidor-cliente?",
+    "hint": "Pense num registro devolvido pelo caminho de onde veio.",
+    "choices": [
+      {
+        "text": "Porque o servidor e o cliente usam cifras diferentes",
+        "why": "Os dois usam a mesma suíte."
+      },
+      {
+        "text": "Para dobrar a quantidade de dados que a conexão consegue levar",
+        "why": "O limite é tratado pelas atualizações de chave."
+      },
+      {
+        "text": "Para o cliente poder ler dados que o servidor ainda não mandou",
+        "why": "Isso não faz sentido."
+      },
+      {
+        "text": "Nenhum registro volta refletido",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-62e563wa": {
+    "prompt": "Associe cada servidor do laboratório ao erro que o cliente deu.",
+    "hint": "Seção 05.",
+    "pairs": [
+      {
+        "left": "8444, portal sem a AC emissora",
+        "right": "unable to get local issuer certificate"
+      },
+      {
+        "left": "8445, agenda",
+        "right": "certificate has expired"
+      },
+      {
+        "left": "8446, intranet",
+        "right": "self-signed certificate"
+      },
+      {
+        "left": "8443, pedido como www.vereda.example",
+        "right": "hostname mismatch"
+      }
+    ],
+    "right_distractors": [
+      "certificate revoked"
+    ]
+  },
+  "ex-5t0rm0q2": {
+    "prompt": "Quando o certificado da agenda falhou, o que o cliente mandou antes de fechar?",
+    "hint": "O fim do trace.",
+    "choices": [
+      {
+        "text": "O próprio Finished, para o servidor registrar",
+        "why": "Ele nunca chegou lá."
+      },
+      {
+        "text": "Um alerta fatal: certificate expired",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada: a conexão expirou por tempo",
+        "why": "Ela fechou de propósito, com motivo."
+      },
+      {
+        "text": "Um pedido de certificado mais novo",
+        "why": "O TLS não tem essa mensagem."
+      }
+    ]
+  },
+  "ex-zd2zjzvw": {
+    "prompt": "O script de um desenvolvedor falha com `self-signed certificate` contra um serviço interno novo. Qual correção mantém a proteção para a qual o erro existe?",
+    "hint": "Quem deveria responder pela chave do serviço?",
+    "choices": [
+      {
+        "text": "Passar -k ao curl só para aquele host",
+        "why": "Aí qualquer servidor respondendo naquele host é aceito."
+      },
+      {
+        "text": "Pôr o certificado do serviço numa lista de exceções",
+        "why": "Uma exceção por host é confiança sem verificação."
+      },
+      {
+        "text": "Emitir o certificado dele pela AC interna em que os clientes confiam",
+        "why": "Certo."
+      },
+      {
+        "text": "Passar o serviço para TLS 1.2",
+        "why": "A versão não tem nada a ver."
+      }
+    ]
+  },
+  "ex-dbmhef04": {
+    "prompt": "Quais versões do TLS um servidor deve aceitar hoje?",
+    "hint": "RFC 8996.",
+    "choices": [
+      {
+        "text": "TLS 1.0 para cima, pelos clientes antigos",
+        "why": "1.0 e 1.1 estão descontinuados."
+      },
+      {
+        "text": "TLS 1.2 e 1.3",
+        "why": "Certo."
+      },
+      {
+        "text": "TLS 1.3 junto com o SSL 3.0, como reserva",
+        "why": "O SSL 3.0 é proibido."
+      },
+      {
+        "text": "O que o sistema operacional habilitar por padrão, sem mudar",
+        "why": "Os padrões variam; a decisão é sua."
+      }
+    ]
+  },
+  "ex-w4t9bpqw": {
+    "prompt": "Associe cada parte de `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384` ao que ela nomeia.",
+    "hint": "Da esquerda para a direita: troca, certificado, cifra, hash.",
+    "pairs": [
+      {
+        "left": "ECDHE",
+        "right": "uma troca de chaves efêmera"
+      },
+      {
+        "left": "ECDSA",
+        "right": "o tipo de chave do certificado"
+      },
+      {
+        "left": "AES_256_GCM",
+        "right": "a cifra autenticada"
+      },
+      {
+        "left": "SHA384",
+        "right": "o hash da derivação e da transcrição"
+      }
+    ],
+    "right_distractors": [
+      "o nome do servidor"
+    ]
+  },
+  "ex-6fr8bgpj": {
+    "prompt": "Por que o cliente forçando `AES256-GCM-SHA384` sobre TLS 1.2 recebeu um handshake failure do portal?",
+    "hint": "Que chave essa suíte precisa que o certificado tenha?",
+    "choices": [
+      {
+        "text": "Porque o AES-256-GCM está desativado no OpenSSL 3",
+        "why": "É a suíte que o handshake TLS 1.3 usou."
+      },
+      {
+        "text": "Porque o servidor só fala TLS 1.3",
+        "why": "A captura anterior negociou TLS 1.2."
+      },
+      {
+        "text": "A chave do certificado do portal é ECDSA",
+        "why": "Certo: a suíte exige transporte de chave RSA, então nenhuma serve aos dois lados."
+      },
+      {
+        "text": "Porque o certificado tinha expirado",
+        "why": "O certificado do portal é válido."
+      }
+    ]
+  },
+  "ex-jqph7dpd": {
+    "prompt": "Quais destas coisas um cliente TLS 1.3 confere antes de mandar o Finished? Marque todas as que se aplicam.",
+    "hint": "Tudo sobre a identidade do servidor.",
+    "choices": [
+      {
+        "text": "Que a cadeia leva a uma raiz confiável",
+        "why": "Sim."
+      },
+      {
+        "text": "Que o nome pedido está no SAN",
+        "why": "Sim."
+      },
+      {
+        "text": "Que o CertificateVerify verifica sobre a transcrição",
+        "why": "Sim."
+      },
+      {
+        "text": "Que a chave privada do servidor tem pelo menos 4096 bits",
+        "why": "P-256 está bem, e não existe essa regra."
+      }
+    ]
+  },
+  "ex-tjv4vcnh": {
+    "prompt": "A extensão em que o cliente nomeia o host que quer, mandada em texto claro no ClientHello, se chama ___.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "SNI",
+          "server_name"
+        ]
+      }
+    ]
+  }
+}

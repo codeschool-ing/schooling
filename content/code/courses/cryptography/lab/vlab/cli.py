@@ -188,6 +188,11 @@ def cmd_kem(a):
     print(f"decapsulated secret matches: {'yes' if k.decapsulate(ciphertext) == secret else 'no'}")
 
 
+def cmd_tlsflow(a):
+    from . import tlsflow
+    tlsflow.main()
+
+
 def main():
     p = argparse.ArgumentParser(prog="vcrypt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -251,6 +256,8 @@ def main():
     s.set_defaults(fn=cmd_ephemeral)
     s = sub.add_parser("kem", help="ML-KEM-768 sizes and one encapsulation")
     s.set_defaults(fn=cmd_kem)
+    s = sub.add_parser("tls-flow", help="read `openssl s_client -trace` on stdin and list the handshake")
+    s.set_defaults(fn=cmd_tlsflow)
     a = p.parse_args()
     a.fn(a)
 
