@@ -37,7 +37,7 @@ smaller chunks gain most because they lose most when cut.
 
 From here on, the index holds **structured chunks of up to 60 words, embedded with their heading
 path**. Lesson 4's table gave structured 60 the cheapest context of the strategies that found more
-than 21 answers, 170 tokens a question, and the path takes it to 26 of 26. It is the best result in
+than 15 answers, 170 tokens a question, and the path takes it to 26 of 26. It is the best result in
 either lesson, on both counts.
 
 Three details of how it is done matter more than they look.

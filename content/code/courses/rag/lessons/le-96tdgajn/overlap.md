@@ -48,10 +48,10 @@ three chunks retrieved. Two lines of it belong here:
 
 | strategy | chunks | found |
 | --- | --- | --- |
-| fixed, 60 words | 116 | 21 of 26 |
-| fixed, 60 words, 15 overlapping | 150 | 24 of 26 |
+| fixed, 60 words | 116 | 19 of 26 |
+| fixed, 60 words, 15 overlapping | 150 | 23 of 26 |
 
-**Overlap found three more answers out of 26**, for 34 more chunks across the corpus. It is the
+**Overlap found four more answers out of 26**, for 34 more chunks across the corpus. It is the
 cheapest improvement fixed-size chunking can get, and the usual advice is an overlap of 10 to 20 per
 cent of the chunk size. It is still a patch on a cut made without looking. The next section stops
 making cuts like that.

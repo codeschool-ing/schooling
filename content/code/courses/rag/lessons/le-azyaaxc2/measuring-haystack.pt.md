@@ -25,7 +25,7 @@ dos seus. Ainda assim são mais de quatro vezes os 168 tokens da aula 5, por uma
 **Sessenta palavras acharam menos que o padrão.** 22 de 26, enquanto os 400 caracteres do LangChain
 acharam 24 e o índice da aula 5, 26. Uma contagem de palavras corta onde cair a sexagésima palavra, no
 meio da frase e por cima dos títulos, e sem sobreposição um fato dividido por um corte não fica em
-nenhuma das metades; a própria linha "fixed, 60 words" da aula 4 achou 21 pelo mesmo motivo. O que a
+nenhuma das metades; a própria linha "fixed, 60 words" da aula 4 achou 19 pelo mesmo motivo. O que a
 aula 5 somou às 60 palavras foi a estrutura do documento e o caminho de títulos no texto do
 embedding, e foi isso que a levou a 26.
 

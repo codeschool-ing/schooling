@@ -36,7 +36,7 @@ menos. Os pedaços menores ganham mais porque perdem mais ao serem cortados.
 
 Daqui em diante, o índice guarda **pedaços estruturados de até 60 palavras, com o caminho de títulos no
 embedding**. A tabela da aula 4 deu ao estruturado 60 o contexto mais barato entre as estratégias que
-acharam mais de 21 respostas, 170 tokens por pergunta, e o caminho o leva a 26 de 26. É o melhor
+acharam mais de 15 respostas, 170 tokens por pergunta, e o caminho o leva a 26 de 26. É o melhor
 resultado das duas aulas, nos dois critérios.
 
 Três detalhes de como isso é feito importam mais do que parece.

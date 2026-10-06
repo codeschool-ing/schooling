@@ -48,10 +48,10 @@ pedaços recuperados. Duas linhas dela pertencem aqui:
 
 | estratégia | pedaços | achadas |
 | --- | --- | --- |
-| fixo, 60 palavras | 116 | 21 de 26 |
-| fixo, 60 palavras, 15 sobrepostas | 150 | 24 de 26 |
+| fixo, 60 palavras | 116 | 19 de 26 |
+| fixo, 60 palavras, 15 sobrepostas | 150 | 23 de 26 |
 
-**A sobreposição achou três respostas a mais de 26**, por 34 pedaços a mais no corpus. É a melhoria mais
+**A sobreposição achou quatro respostas a mais de 26**, por 34 pedaços a mais no corpus. É a melhoria mais
 barata que o corte de tamanho fixo pode ter, e o conselho comum é uma sobreposição de 10 a 20 por cento
 do tamanho do pedaço. Continua sendo um remendo num corte feito sem olhar. A próxima seção para de fazer
 cortes assim.

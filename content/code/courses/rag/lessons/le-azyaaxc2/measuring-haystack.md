@@ -25,7 +25,7 @@ than four times lesson 5's 168 tokens for one answer fewer.
 **Sixty words found fewer than the default.** 22 of 26, where LangChain's 400 characters found
 24 and lesson 5's index 26. A word count cuts wherever the sixtieth word falls, mid-sentence and
 across headings, and without overlap a fact split by a cut is in neither half; lesson 4's own
-"fixed, 60 words" row found 21 for the same reason. What lesson 5 added on top of 60 words was the
+"fixed, 60 words" row found 19 for the same reason. What lesson 5 added on top of 60 words was the
 document's structure and the heading path in the embedded text, and those are what took it to 26.
 
 **Paragraphs alone were the cheapest and found the fewest**, 21 for 124 tokens: many paragraphs here

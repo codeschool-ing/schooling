@@ -66,7 +66,7 @@ de volta um corte de tamanho fixo dentro das passagens longas.
 indexou o corpus frase por frase e contou 319 delas; para um corpus grande, gerar o embedding de cada
 frase primeiro mais ou menos dobra a conta de indexação.
 
-A medição no fim da aula é o veredito neste corpus: o corte semântico achou a resposta de 21 das 26
-perguntas, o mesmo que pedaços fixos de 60 palavras e quatro a menos que cortar nos títulos. **Em
+A medição no fim da aula é o veredito neste corpus: o corte semântico achou a resposta de 20 das 26
+perguntas, uma a mais que pedaços fixos de 60 palavras e cinco a menos que cortar nos títulos. **Em
 documentos com bons títulos, as marcas do próprio autor vencem uma estimativa delas.** Em texto sem
 marcas é uma escolha razoável, e ali a escolha é entre ele e cortes de tamanho fixo com sobreposição.

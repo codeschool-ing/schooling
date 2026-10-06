@@ -67,7 +67,7 @@ indexed the corpus sentence by sentence and counted 319 of them; for a large cor
 sentence first roughly doubles the indexing bill.
 
 The measurement at the end of the lesson is the verdict on this corpus: semantic chunking found the
-answer for 21 of 26 questions, the same as fixed 60-word chunks and four fewer than cutting at the
+answer for 20 of 26 questions, one more than fixed 60-word chunks and five fewer than cutting at the
 headings. **On documents with good headings, the author's own marks beat an estimate of them.** On
 text with no marks it is a reasonable choice, and the choice there is between it and fixed-size cuts
 with overlap.
