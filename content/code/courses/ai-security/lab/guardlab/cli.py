@@ -35,6 +35,8 @@ course.
     guard check-out FILE            model replies against the output schema
     guard retry ID [ID ...]         the retry loop, with course-written replies
                                     standing in for the model's attempts
+    guard filter FILE [--skip LAYER]
+                                    replies through the chain of output filters
     guard ground FILE               answers against the help centre they cite
     guard deps FILE                 suggested packages against a registry snapshot
     guard gate FILE [--confirm ID --by NAME] [--budget N]
@@ -509,6 +511,21 @@ def cmd_retry(a):
     return 0
 
 
+# ---- the filter chain ------------------------------------------------------
+
+def cmd_filter(a):
+    from . import pipeline
+    with open(os.path.join(HOME, "data", "system-prompt.txt"), encoding="utf-8") as fh:
+        canary = pipeline.canary_of(fh.read())
+    chain = [l for l in pipeline.layers(canary, load("data/allowed-hosts.json"), 0.5)
+             if l[0] not in (a.skip or [])]
+    print("layers: " + " -> ".join(n for n, _ in chain))
+    for out in jsonl(a.file):
+        layer, why = pipeline.run(out["text"], chain)
+        print("%-3s %-5s %s" % (out["id"], "pass" if not layer else "BLOCK", why or ""))
+    return 0
+
+
 # ---- grounding ----------------------------------------------------------------
 
 def cmd_ground(a):
@@ -717,6 +734,11 @@ def main(argv=None):
     s = sub.add_parser("retry")
     s.add_argument("ids", nargs="+")
     s.set_defaults(fn=cmd_retry)
+
+    s = sub.add_parser("filter")
+    s.add_argument("file")
+    s.add_argument("--skip", action="append")
+    s.set_defaults(fn=cmd_filter)
 
     s = sub.add_parser("ground")
     s.add_argument("file")

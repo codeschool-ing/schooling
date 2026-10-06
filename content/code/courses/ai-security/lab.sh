@@ -25,7 +25,8 @@
 #                  shapes.py and retry.py (what goes into a call and what
 #                  comes out), toolgate.py (which tool calls an agent may
 #                  make), ground.py (whether an answer stands on its
-#                  sources) and cli.py (every command)
+#                  sources), pipeline.py (the chain of output filters) and
+#                  cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -70,6 +71,9 @@
 #     (in place of a model's replies), data/registry-snapshot.txt (a short
 #     stand-in for a package index) and data/suggested-deps.txt were written
 #     by the course.
+#   - data/system-prompt.txt, with its harmless canary marker, and the
+#     replies in data/pipeline-outputs.jsonl were written by the course; no
+#     model produced the replies.
 #   - The tool calls in data/proposed-calls.jsonl were written by the
 #     course in place of what an agent would propose; no model proposed
 #     them.
