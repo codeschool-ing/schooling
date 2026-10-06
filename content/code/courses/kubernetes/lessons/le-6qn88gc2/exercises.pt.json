@@ -1,0 +1,214 @@
+{
+  "ex-1z4zqk9d": {
+    "prompt": "Um comando não nomeia cluster. Para onde o kubectl o manda?",
+    "hint": "Um campo do kubeconfig.",
+    "choices": [
+      {
+        "text": "Ao primeiro cluster do arquivo",
+        "why": "A ordem no arquivo não decide nada."
+      },
+      {
+        "text": "A todos os clusters do arquivo",
+        "why": "O kubectl fala com um API server por comando."
+      },
+      {
+        "text": "Ao `current-context`",
+        "why": "Isso."
+      },
+      {
+        "text": "Ao cluster criado por último",
+        "why": "Só porque o kind definiu o ponteiro na hora."
+      }
+    ]
+  },
+  "ex-r8ay8b2x": {
+    "prompt": "Qual o jeito mais seguro de um pipeline de deploy escolher o cluster?",
+    "hint": "Ele não deve depender do que rodou antes.",
+    "choices": [
+      {
+        "text": "Rodar `kubectl config use-context` no começo",
+        "why": "Isso move um ponteiro que outros compartilham."
+      },
+      {
+        "text": "Um kubeconfig próprio com um contexto",
+        "why": "Isso, ou `--context` em todo comando."
+      },
+      {
+        "text": "Confiar no contexto que o agente tiver",
+        "why": "Esse é o incidente desta lição."
+      },
+      {
+        "text": "Nomear o cluster no Deployment",
+        "why": "Um manifesto não tem campo de cluster."
+      }
+    ]
+  },
+  "ex-2s1pjw77": {
+    "prompt": "Que três coisas um contexto nomeia?",
+    "hint": "O `kubectl config get-contexts` tem uma coluna para cada.",
+    "choices": [
+      {
+        "text": "Um nó, um pod e um container",
+        "why": "Isso fica dentro de um cluster."
+      },
+      {
+        "text": "Uma região, uma zona e um provedor",
+        "why": "O kubectl não conhece nenhum deles."
+      },
+      {
+        "text": "Uma imagem, uma tag e um registry",
+        "why": "Isso é sobre containers."
+      },
+      {
+        "text": "Um cluster, um usuário e um namespace",
+        "why": "Isso, o namespace opcional."
+      }
+    ]
+  },
+  "ex-1zmkqvcb": {
+    "prompt": "Dois clusters foram criados com a mesma configuração e os dois têm um pod em `10.244.1.3`. O que isso descarta?",
+    "hint": "Que `10.244.1.3` um pacote alcançaria?",
+    "choices": [
+      {
+        "text": "Rodar a mesma imagem nos dois",
+        "why": "Imagens não ligam para endereços."
+      },
+      {
+        "text": "Rotear de pod para pod entre eles",
+        "why": "Isso, sem renumerar um deles."
+      },
+      {
+        "text": "Usar um kubeconfig para os dois",
+        "why": "O arquivo fez isso a lição toda."
+      },
+      {
+        "text": "Expor os dois à internet",
+        "why": "Cada um pode ter o próprio balanceador."
+      }
+    ]
+  },
+  "ex-kt11v3eg": {
+    "prompt": "Você é cluster-admin no staging. O que isso te dá na produção?",
+    "hint": "Cada cluster tem o próprio RBAC.",
+    "choices": [
+      {
+        "text": "Acesso de leitura",
+        "why": "Nada passa de um para o outro."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso."
+      },
+      {
+        "text": "O mesmo papel",
+        "why": "Papéis vivem no etcd de cada cluster."
+      },
+      {
+        "text": "Acesso só ao `default`",
+        "why": "Nem isso."
+      }
+    ]
+  },
+  "ex-qh3f54sa": {
+    "prompt": "Por que um time que roda código de clientes ganharia um cluster próprio em vez de um namespace?",
+    "hint": "O que os namespaces ainda compartilham?",
+    "choices": [
+      {
+        "text": "Namespaces não guardam Deployments",
+        "why": "Eles guardam sem problema."
+      },
+      {
+        "text": "Um cluster é mais barato que um namespace",
+        "why": "É a opção mais cara."
+      },
+      {
+        "text": "Namespaces dividem um control plane",
+        "why": "Isso, e um etcd e uma atualização."
+      },
+      {
+        "text": "Quotas só funcionam entre clusters",
+        "why": "Quotas são por namespace."
+      }
+    ]
+  },
+  "ex-gex7wak4": {
+    "prompt": "Qual ferramenta é o jeito comum hoje de manter os mesmos objetos em muitos clusters?",
+    "hint": "Lição 39.",
+    "choices": [
+      {
+        "text": "KubeFed",
+        "why": "Ele foi arquivado em 2023."
+      },
+      {
+        "text": "GitOps, um agente por cluster",
+        "why": "Isso."
+      },
+      {
+        "text": "`kubectl apply` num laço à mão",
+        "why": "Funciona uma vez e se desvia depois."
+      },
+      {
+        "text": "Copiar o etcd entre clusters",
+        "why": "Isso copiaria identidades também."
+      }
+    ]
+  },
+  "ex-57dwk4ge": {
+    "prompt": "O que decide se duas regiões podem ambas servir escritas ao mesmo tempo?",
+    "hint": "Os pods sem estado são a parte fácil.",
+    "choices": [
+      {
+        "text": "O número de nós em cada uma",
+        "why": "Tamanho não resolve concordância."
+      },
+      {
+        "text": "A versão do Kubernetes",
+        "why": "O Kubernetes não guarda os dados."
+      },
+      {
+        "text": "O balanceador global",
+        "why": "Ele manda tráfego; não junta escritas."
+      },
+      {
+        "text": "Como o banco de dados é feito",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-jkkxhrbc": {
+    "prompt": "Ligue cada preocupação ao que cuida dela hoje.",
+    "hint": "A tabela da última seção.",
+    "pairs": [
+      {
+        "left": "Os mesmos objetos em todo cluster",
+        "right": "GitOps"
+      },
+      {
+        "left": "Usuários ao cluster saudável mais próximo",
+        "right": "DNS ou um balanceador global"
+      },
+      {
+        "left": "Um Service alcançado de outro cluster",
+        "right": "`ServiceExport` e `ServiceImport`"
+      },
+      {
+        "left": "Criar os próprios clusters",
+        "right": "Cluster API ou Terraform"
+      }
+    ],
+    "right_distractors": [
+      "Um etcd compartilhado"
+    ]
+  },
+  "ex-jyz2w05w": {
+    "prompt": "Para rodar um comando em outro cluster sem mover o ponteiro: `kubectl --___ kind-eu get nodes`.",
+    "hint": "A flag tem o nome do que ela escolhe.",
+    "blanks": [
+      {
+        "accept": [
+          "context"
+        ]
+      }
+    ]
+  }
+}
