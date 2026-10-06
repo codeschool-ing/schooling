@@ -1,0 +1,291 @@
+{
+  "ex-f6ne0ne7": {
+    "prompt": "O que um scanner de vulnerabilidades como o Trivy faz de fato com uma imagem?",
+    "hint": "Dois passos.",
+    "choices": [
+      {
+        "text": "Roda o programa e tenta ataques conhecidos contra ele",
+        "why": "Ele nunca roda nem ataca nada."
+      },
+      {
+        "text": "Compara com a imagem mais nova sob a mesma tag",
+        "why": "Ele compara com um banco de avisos, e não com outras imagens."
+      },
+      {
+        "text": "Lista o conteúdo e procura cada item nos avisos",
+        "why": "Isso: um inventário, depois uma consulta."
+      },
+      {
+        "text": "Confere a assinatura dela",
+        "why": "Assinaturas são outra ferramenta, o Cosign."
+      }
+    ]
+  },
+  "ex-sspgcndb": {
+    "prompt": "A mesma imagem, sem mudança, é varrida um mês depois e mostra mais achados. Por quê?",
+    "hint": "O que tem data?",
+    "choices": [
+      {
+        "text": "A imagem se degrada à medida que é baixada",
+        "why": "Os bytes de uma imagem nunca mudam; o digest prova isso."
+      },
+      {
+        "text": "O Trivy acha mais a cada execução na mesma imagem",
+        "why": "O resultado depende do banco, e não de repetição."
+      },
+      {
+        "text": "O Docker atualizou pacotes dentro dela",
+        "why": "Nada atualiza o conteúdo de uma imagem."
+      },
+      {
+        "text": "O banco de avisos cresceu",
+        "why": "Isso: avisos novos citam pacotes que a imagem sempre teve."
+      }
+    ]
+  },
+  "ex-5aykqcdj": {
+    "prompt": "Quantas vulnerabilidades conhecidas o Trivy relatou na `debian:trixie-slim`? Some as severidades.",
+    "hint": "43 + 60 + 58 + 2.",
+    "unit": "achados"
+  },
+  "ex-4fkcx2qw": {
+    "prompt": "O `shelf` nunca importa o `golang.org/x/text`, e mesmo assim o Trivy o achou no binário `shelf`. Como?",
+    "hint": "O que todo binário Go carrega?",
+    "choices": [
+      {
+        "text": "O binário traz os módulos com que foi construído",
+        "why": "Isso, e o `x/text` veio com o `pgx`."
+      },
+      {
+        "text": "Deduziu pelo tamanho do binário",
+        "why": "O Trivy lê versões exatas; ele não deduz."
+      },
+      {
+        "text": "Leu o `go.mod` de dentro da imagem",
+        "why": "A imagem final não tem `go.mod`; só os binários."
+      },
+      {
+        "text": "O distroless lista módulos Go nos registros de pacotes",
+        "why": "Esses registros são dos pacotes Debian, e não de módulos Go."
+      }
+    ]
+  },
+  "ex-s5f9fjex": {
+    "prompt": "Ligue cada alvo do relatório do `shelf` ao que o Trivy leu para ele.",
+    "hint": "Um sistema operacional, dois binários.",
+    "pairs": [
+      {
+        "left": "`debian 12.15`",
+        "right": "Os registros de pacotes da base distroless"
+      },
+      {
+        "left": "`shelf (gobinary)`",
+        "right": "Os módulos embutidos no servidor"
+      },
+      {
+        "left": "`probe (gobinary)`",
+        "right": "Os módulos embutidos no health check"
+      }
+    ],
+    "right_distractors": [
+      "A linha `FROM` do Dockerfile"
+    ]
+  },
+  "ex-2nrzamwr": {
+    "prompt": "O `--ignore-unfixed` reduziu os 163 achados do Debian a nenhum. O que isso diz à Ana?",
+    "hint": "O que um rebuild hoje mudaria?",
+    "choices": [
+      {
+        "text": "A imagem é segura",
+        "why": "As vulnerabilidades continuam lá; só não têm correção ainda."
+      },
+      {
+        "text": "Um rebuild hoje não removeria nenhuma",
+        "why": "Isso: elas vão embora quando o Debian lançar correções."
+      },
+      {
+        "text": "O banco do Trivy é velho demais para saber das correções",
+        "why": "Ele tem um dia; as correções ainda não existem."
+      },
+      {
+        "text": "O Debian nunca vai corrigi-las",
+        "why": "`affected` quer dizer ainda não corrigido, e não nunca."
+      }
+    ]
+  },
+  "ex-rwk6bwha": {
+    "prompt": "Para o Trivy fazer um passo do pipeline falhar quando achar algo, acrescente `--___ 1`.",
+    "hint": "O status com que o comando termina.",
+    "blanks": [
+      {
+        "accept": [
+          "exit-code"
+        ]
+      }
+    ]
+  },
+  "ex-m40hrmwc": {
+    "prompt": "Ponha a correção da Ana para o achado do `x/text` em ordem.",
+    "hint": "Mudar a dependência, depois provar.",
+    "items": [
+      "`go get golang.org/x/text@v0.39.0`",
+      "`go mod tidy` e `go mod vendor`",
+      "Reconstruir a imagem como 1.6.1",
+      "Varrer a imagem nova de novo"
+    ]
+  },
+  "ex-7drv7p47": {
+    "prompt": "Depois da atualização, o `shelf` ainda tinha um achado: o `tzdata` na base, corrigido no Debian. O que se livra dele?",
+    "hint": "Quem constrói a base?",
+    "choices": [
+      {
+        "text": "Um `go get` de um `tzdata` mais novo",
+        "why": "O `tzdata` é um pacote Debian da base, e não um módulo Go."
+      },
+      {
+        "text": "O `--ignore-unfixed`",
+        "why": "Ele está corrigido lá em cima; a flag não o esconderia, e esconder não é corrigir."
+      },
+      {
+        "text": "Um distroless refeito, e depois um rebuild do `shelf`",
+        "why": "Isso; com a base fixada, um pull request traz o digest novo."
+      },
+      {
+        "text": "Apagar o `/usr/share/zoneinfo` numa camada seguinte",
+        "why": "Aula 14: uma camada seguinte esconde arquivos e os guarda."
+      }
+    ]
+  },
+  "ex-epehafbh": {
+    "prompt": "Por que `--severity HIGH,CRITICAL --ignore-unfixed` é a barreira de costume, em vez de falhar em todo achado?",
+    "hint": "O que bloquearia todo build?",
+    "choices": [
+      {
+        "text": "Achados baixos são sempre falsos positivos",
+        "why": "São avisos reais, só menos graves."
+      },
+      {
+        "text": "O Trivy não consegue relatar achados baixos na CI",
+        "why": "Ele relata todas as severidades, a não ser que mandem não relatar."
+      },
+      {
+        "text": "Achados sem correção nunca são exploráveis",
+        "why": "Podem ser; só não há para o que atualizar ainda."
+      },
+      {
+        "text": "Bloqueia o que dá para corrigir, e não o que não dá",
+        "why": "Isso: uma barreira que ninguém passa acaba desligada."
+      }
+    ]
+  },
+  "ex-nvbxx3th": {
+    "prompt": "O índice do `shelf:1.6.0` listou um manifesto com plataforma `unknown/unknown`. O que é?",
+    "hint": "Leia as anotações dele.",
+    "choices": [
+      {
+        "text": "As atestações sobre a imagem `linux/amd64`",
+        "why": "Isso: SBOM e proveniência, apontando para a imagem pelo digest."
+      },
+      {
+        "text": "Um build quebrado para uma CPU desconhecida",
+        "why": "Nada falhou; nem é uma imagem."
+      },
+      {
+        "text": "Uma imagem para qualquer plataforma",
+        "why": "Nenhuma plataforma o roda."
+      },
+      {
+        "text": "Uma cópia guardada para voltar atrás",
+        "why": "Voltar atrás usa digests antigos, e não isto."
+      }
+    ]
+  },
+  "ex-mcx26hc4": {
+    "prompt": "Aparece um aviso no mês que vem sobre um pacote. Como um SBOM guardado de cada versão ajuda?",
+    "hint": "Que pergunta ele responde sem baixar nada?",
+    "choices": [
+      {
+        "text": "Corrige o pacote sozinho",
+        "why": "Um SBOM é uma lista; ele não muda nada."
+      },
+      {
+        "text": "Diz quais imagens têm o pacote",
+        "why": "Isso, sem baixar e varrer cada imagem de novo."
+      },
+      {
+        "text": "Impede a imagem vulnerável de rodar",
+        "why": "Impedir é trabalho de uma política, e não de uma lista."
+      },
+      {
+        "text": "Prova que o pacote nunca foi usado",
+        "why": "Ele lista o que está presente, e não o que é usado."
+      }
+    ]
+  },
+  "ex-x5x0554h": {
+    "prompt": "O que a proveniência do `shelf:1.6.0` registrou? Escolha todos os que se aplicam.",
+    "hint": "Leia `dependencies` e `revision`.",
+    "choices": [
+      {
+        "text": "A imagem `golang:1.25` usada, pelo digest",
+        "why": "Sim, embora o Dockerfile só tenha escrito uma tag."
+      },
+      {
+        "text": "A base distroless, pelo digest",
+        "why": "Sim."
+      },
+      {
+        "text": "O commit Git que foi construído",
+        "why": "Sim: `12d9616…`."
+      },
+      {
+        "text": "A senha do registry da Ana",
+        "why": "Não: não havia senha, e a proveniência não registra uma."
+      }
+    ]
+  },
+  "ex-eabmesnd": {
+    "prompt": "As atestações dizem o que uma imagem é. O que uma assinatura do Cosign acrescenta?",
+    "hint": "Quem responde por ela?",
+    "choices": [
+      {
+        "text": "Uma lista dos pacotes da imagem",
+        "why": "Isso é o SBOM."
+      },
+      {
+        "text": "Um resultado de varredura",
+        "why": "Varrer é a parte do Trivy."
+      },
+      {
+        "text": "Quem responde pelo digest",
+        "why": "Isso: confira que é a identidade esperada antes de rodar."
+      },
+      {
+        "text": "A prova de que a imagem não tem vulnerabilidades",
+        "why": "Uma assinatura não diz nada sobre vulnerabilidades."
+      }
+    ]
+  },
+  "ex-bxmxefas": {
+    "prompt": "A Ana escreve a regra da equipe para imagens. Qual segue esta aula?",
+    "hint": "Barrar o que dá para corrigir, guardar os registros, conferir quem construiu.",
+    "choices": [
+      {
+        "text": "Falhar em qualquer achado, de qualquer severidade",
+        "why": "Os 161 sem correção do Debian bloqueariam todo build."
+      },
+      {
+        "text": "Varrer uma vez na versão, e nunca mais",
+        "why": "O banco cresce; uma varredura antiga não diz nada sobre hoje."
+      },
+      {
+        "text": "Confiar em qualquer imagem de um registry conhecido",
+        "why": "Onde ela está guardada não diz nada sobre o que há nela."
+      },
+      {
+        "text": "Barrar altas corrigíveis, guardar SBOMs, verificar assinaturas",
+        "why": "Isso: cada parte responde a uma pergunta da aula."
+      }
+    ]
+  }
+}

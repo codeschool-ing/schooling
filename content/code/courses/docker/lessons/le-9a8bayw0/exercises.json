@@ -1,0 +1,429 @@
+[
+  {
+    "id": "ex-f6ne0ne7",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a vulnerability scanner like Trivy actually do with an image?",
+    "hint": "Two steps.",
+    "choices": [
+      {
+        "text": "Runs the program and tries known attacks against it",
+        "correct": false,
+        "why": "It never runs or attacks anything."
+      },
+      {
+        "text": "Compares it with the newest image under the same tag",
+        "correct": false,
+        "why": "It compares with a database of advisories, not with other images."
+      },
+      {
+        "text": "Lists its contents and looks each up in advisories",
+        "correct": true,
+        "why": "Right: an inventory, then a lookup."
+      },
+      {
+        "text": "Checks its signature",
+        "correct": false,
+        "why": "Signatures are a different tool, Cosign."
+      }
+    ]
+  },
+  {
+    "id": "ex-sspgcndb",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same image, unchanged, is scanned a month later and shows more findings. Why?",
+    "hint": "What has a date?",
+    "choices": [
+      {
+        "text": "The image decays as it is pulled",
+        "correct": false,
+        "why": "An image's bytes never change; its digest proves it."
+      },
+      {
+        "text": "Trivy finds more with each run on the same image",
+        "correct": false,
+        "why": "Its results depend on the database, not on repetition."
+      },
+      {
+        "text": "Docker updated packages inside it",
+        "correct": false,
+        "why": "Nothing updates an image's contents."
+      },
+      {
+        "text": "The advisory database grew",
+        "correct": true,
+        "why": "Right: new advisories name packages the image always had."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aykqcdj",
+    "version": 1,
+    "section": "scanning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many known vulnerabilities did Trivy report in `debian:trixie-slim`? Add up the severities.",
+    "hint": "43 + 60 + 58 + 2.",
+    "value": 163,
+    "tolerance": 0,
+    "unit": "findings"
+  },
+  {
+    "id": "ex-4fkcx2qw",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`shelf` never imports `golang.org/x/text`, yet Trivy found it in the `shelf` binary. How?",
+    "hint": "What does every Go binary carry?",
+    "choices": [
+      {
+        "text": "The binary embeds the modules it was built from",
+        "correct": true,
+        "why": "Right, and `x/text` came in with `pgx`."
+      },
+      {
+        "text": "It guessed from the binary's size",
+        "correct": false,
+        "why": "Trivy reads exact versions; it does not guess."
+      },
+      {
+        "text": "It read `go.mod` from the image",
+        "correct": false,
+        "why": "The final image has no `go.mod`; only the binaries."
+      },
+      {
+        "text": "Distroless lists Go modules in its package records",
+        "correct": false,
+        "why": "Those records are Debian's packages, not Go modules."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5f9fjex",
+    "version": 1,
+    "section": "scanning",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each target in the `shelf` report to what Trivy read for it.",
+    "hint": "One OS, two binaries.",
+    "pairs": [
+      {
+        "left": "`debian 12.15`",
+        "right": "The distroless base's package records"
+      },
+      {
+        "left": "`shelf (gobinary)`",
+        "right": "The modules built into the server"
+      },
+      {
+        "left": "`probe (gobinary)`",
+        "right": "The modules built into the health check"
+      }
+    ],
+    "right_distractors": [
+      "The Dockerfile's `FROM` line"
+    ]
+  },
+  {
+    "id": "ex-2nrzamwr",
+    "version": 1,
+    "section": "triage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`--ignore-unfixed` reduced Debian's 163 findings to none. What does that tell Ana?",
+    "hint": "What would a rebuild today change?",
+    "choices": [
+      {
+        "text": "The image is safe",
+        "correct": false,
+        "why": "The vulnerabilities are still there; they just have no fix yet."
+      },
+      {
+        "text": "A rebuild today would remove none of them",
+        "correct": true,
+        "why": "Right: they go when Debian ships fixes."
+      },
+      {
+        "text": "Trivy's database is too old to know of the fixes",
+        "correct": false,
+        "why": "It is a day old; the fixes do not exist yet."
+      },
+      {
+        "text": "Debian will never fix them",
+        "correct": false,
+        "why": "`affected` means not fixed yet, not never."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwk6bwha",
+    "version": 1,
+    "section": "triage",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make Trivy fail a pipeline step when it finds something, add `--___ 1`.",
+    "hint": "The status the command ends with.",
+    "blanks": [
+      {
+        "accept": [
+          "exit-code"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m40hrmwc",
+    "version": 1,
+    "section": "triage",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Ana's fix for the `x/text` finding in order.",
+    "hint": "Change the dependency, then prove it.",
+    "items": [
+      "`go get golang.org/x/text@v0.39.0`",
+      "`go mod tidy` and `go mod vendor`",
+      "Rebuild the image as 1.6.1",
+      "Scan the new image again"
+    ]
+  },
+  {
+    "id": "ex-7drv7p47",
+    "version": 1,
+    "section": "triage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the update, `shelf` still had one finding: `tzdata` in the base, fixed in Debian. What gets rid of it?",
+    "hint": "Who builds the base?",
+    "choices": [
+      {
+        "text": "`go get` a newer `tzdata`",
+        "correct": false,
+        "why": "`tzdata` is a Debian package in the base, not a Go module."
+      },
+      {
+        "text": "`--ignore-unfixed`",
+        "correct": false,
+        "why": "It is fixed upstream; the flag would not hide it, and hiding is not fixing."
+      },
+      {
+        "text": "A rebuilt distroless, then a rebuild of `shelf`",
+        "correct": true,
+        "why": "Right; with the base pinned, a pull request brings the new digest."
+      },
+      {
+        "text": "Deleting `/usr/share/zoneinfo` in a later layer",
+        "correct": false,
+        "why": "Lesson 14: a later layer hides files and keeps them."
+      }
+    ]
+  },
+  {
+    "id": "ex-epehafbh",
+    "version": 1,
+    "section": "triage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `--severity HIGH,CRITICAL --ignore-unfixed` the usual gate, rather than failing on every finding?",
+    "hint": "What would block every build?",
+    "choices": [
+      {
+        "text": "Low findings are always false positives",
+        "correct": false,
+        "why": "They are real advisories, just less severe."
+      },
+      {
+        "text": "Trivy cannot report low findings in CI",
+        "correct": false,
+        "why": "It reports every severity unless told not to."
+      },
+      {
+        "text": "Unfixed findings are never exploitable",
+        "correct": false,
+        "why": "They can be; there is just nothing to upgrade to yet."
+      },
+      {
+        "text": "It blocks what has a fix, not what has none",
+        "correct": true,
+        "why": "Right: a gate nobody can pass gets switched off."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvbxx3th",
+    "version": 1,
+    "section": "provenance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The index for `shelf:1.6.0` listed a manifest with platform `unknown/unknown`. What is it?",
+    "hint": "Read its annotations.",
+    "choices": [
+      {
+        "text": "The attestations about the `linux/amd64` image",
+        "correct": true,
+        "why": "Right: SBOM and provenance, pointing at the image by digest."
+      },
+      {
+        "text": "A broken build for an unrecognised CPU",
+        "correct": false,
+        "why": "Nothing failed; it is not an image at all."
+      },
+      {
+        "text": "An image for any platform",
+        "correct": false,
+        "why": "No platform runs it."
+      },
+      {
+        "text": "A copy kept for rollback",
+        "correct": false,
+        "why": "Rollback uses older digests, not this."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcx26hc4",
+    "version": 1,
+    "section": "provenance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An advisory appears next month for a package. How does an SBOM kept for each release help?",
+    "hint": "Which question does it answer without pulling anything?",
+    "choices": [
+      {
+        "text": "It patches the package automatically",
+        "correct": false,
+        "why": "An SBOM is a list; it changes nothing."
+      },
+      {
+        "text": "It answers which images contain it",
+        "correct": true,
+        "why": "Right, without pulling and scanning every image again."
+      },
+      {
+        "text": "It blocks the vulnerable image from running",
+        "correct": false,
+        "why": "Blocking is a policy's job, not a list's."
+      },
+      {
+        "text": "It proves the package was never used",
+        "correct": false,
+        "why": "It lists what is present, not what is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5x0554h",
+    "version": 1,
+    "section": "provenance",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the provenance of `shelf:1.6.0` record? Choose all that apply.",
+    "hint": "Read the `dependencies` and `revision`.",
+    "choices": [
+      {
+        "text": "The `golang:1.25` image used, by digest",
+        "correct": true,
+        "why": "Yes, though the Dockerfile wrote only a tag."
+      },
+      {
+        "text": "The distroless base, by digest",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The Git commit that was built",
+        "correct": true,
+        "why": "Yes: `12d9616…`."
+      },
+      {
+        "text": "Ana's registry password",
+        "correct": false,
+        "why": "No: there was no password, and provenance does not record one."
+      }
+    ]
+  },
+  {
+    "id": "ex-eabmesnd",
+    "version": 1,
+    "section": "provenance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Attestations say what an image is. What does a Cosign signature add?",
+    "hint": "Who vouches?",
+    "choices": [
+      {
+        "text": "A list of the image's packages",
+        "correct": false,
+        "why": "That is the SBOM."
+      },
+      {
+        "text": "A scan result",
+        "correct": false,
+        "why": "Scanning is Trivy's part."
+      },
+      {
+        "text": "Who vouches for the digest",
+        "correct": true,
+        "why": "Right: verify it is the identity you expect before running."
+      },
+      {
+        "text": "Proof the image has no vulnerabilities",
+        "correct": false,
+        "why": "A signature says nothing about vulnerabilities."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxmxefas",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana writes the team's rule for images. Which one follows this lesson?",
+    "hint": "Gate what can be fixed, keep the records, check who built it.",
+    "choices": [
+      {
+        "text": "Fail on any finding at all, of any severity",
+        "correct": false,
+        "why": "Debian's 161 unfixable ones would block every build."
+      },
+      {
+        "text": "Scan once at release, and never again",
+        "correct": false,
+        "why": "The database grows; an old scan says nothing about today."
+      },
+      {
+        "text": "Trust any image from a well-known registry",
+        "correct": false,
+        "why": "Where it is stored says nothing about what is in it."
+      },
+      {
+        "text": "Gate on fixable high findings, keep SBOMs, verify signatures",
+        "correct": true,
+        "why": "Right: each part answers one of the lesson's questions."
+      }
+    ]
+  }
+]
