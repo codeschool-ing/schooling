@@ -1,0 +1,432 @@
+[
+  {
+    "id": "ex-b8nq14f1",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which three primitives does Marginalia's server offer?",
+    "choices": [
+      {
+        "text": "Tools, resources and a prompt",
+        "correct": true,
+        "why": "Right. get_order and search_help, help://{article_id}, and reply_to_customer."
+      },
+      {
+        "text": "Tools, sampling and roots, as the 2026-07-28 revision recommends for new servers",
+        "correct": false,
+        "why": "Sampling and roots are client features, and both are deprecated."
+      },
+      {
+        "text": "Three tools, each a decorated function",
+        "correct": false,
+        "why": "It has two tools; the other primitives are different kinds of thing."
+      },
+      {
+        "text": "A model, a loop and tools",
+        "correct": false,
+        "why": "Those belong to a host; the server has no model."
+      }
+    ]
+  },
+  {
+    "id": "ex-myvr9ckk",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does try_server.py reach the server without starting a subprocess?",
+    "choices": [
+      {
+        "text": "It imports shop.py and calls get_order directly",
+        "correct": false,
+        "why": "It goes through a real MCP client and the server's handlers."
+      },
+      {
+        "text": "Client(server) connects in-process",
+        "correct": true,
+        "why": "Right. Given the server object, the client reaches the same handlers a host's requests do."
+      },
+      {
+        "text": "Through HTTP on port 8700, which the server opens automatically when it is imported",
+        "correct": false,
+        "why": "Nothing listens on a port here."
+      },
+      {
+        "text": "Through labllm",
+        "correct": false,
+        "why": "No model takes part in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-683qzbkq",
+    "version": 1,
+    "section": "a-schema-that-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does OrderId put the pattern in the type annotation?",
+    "choices": [
+      {
+        "text": "Because pydantic refuses strings without a pattern",
+        "correct": false,
+        "why": "A plain str is accepted; the pattern is a choice."
+      },
+      {
+        "text": "To make the tool list shorter",
+        "correct": false,
+        "why": "It makes the schema longer, on purpose."
+      },
+      {
+        "text": "So that shop.py does not need to check the id",
+        "correct": false,
+        "why": "shop.py still raises for an order that does not exist."
+      },
+      {
+        "text": "One annotation becomes both the schema and the check",
+        "correct": true,
+        "why": "Right. The model is told the rule, and the two cannot drift apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7j91k8f",
+    "version": 1,
+    "section": "a-schema-that-checks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What may a host do with readOnlyHint from a server it does not trust?",
+    "choices": [
+      {
+        "text": "Skip confirmation for the tool, since the server says it changes nothing",
+        "correct": false,
+        "why": "The specification says hints from untrusted servers are untrusted."
+      },
+      {
+        "text": "Nothing; hints are removed by the protocol",
+        "correct": false,
+        "why": "They are in the tool list."
+      },
+      {
+        "text": "Treat it as the server's description of itself, not as a guarantee",
+        "correct": true,
+        "why": "Right. The decision about a person stays with the host."
+      },
+      {
+        "text": "Forward it to the model as an instruction",
+        "correct": false,
+        "why": "A hint is metadata for the host, not an instruction."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4kwtfd4",
+    "version": 1,
+    "section": "structured-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did customer_id not reach the client, although the database row has it?",
+    "choices": [
+      {
+        "text": "Order declares the fields that leave the server, and it is not one",
+        "correct": true,
+        "why": "Right. The output type is an allow list."
+      },
+      {
+        "text": "Because the SDK removes personal data automatically",
+        "correct": false,
+        "why": "The SDK knows nothing about personal data."
+      },
+      {
+        "text": "Because the client asked for fewer fields in its tools/call request",
+        "correct": false,
+        "why": "The request carried only order_id."
+      },
+      {
+        "text": "Because shop.get_order hides it",
+        "correct": false,
+        "why": "shop.get_order returns it; the server dropped it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k5m50jr",
+    "version": 1,
+    "section": "structured-results",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A tool result's JSON object matching the output schema is in the field `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "structuredContent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kpw2wbyy",
+    "version": 1,
+    "section": "failures-that-say-why",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the M-9999 call explain itself here, when lesson 13's server said only 'Error executing tool get_order'?",
+    "choices": [
+      {
+        "text": "Because this server uses a newer SDK version than lesson 13's did",
+        "correct": false,
+        "why": "Both use mcp 2.3.0."
+      },
+      {
+        "text": "Because the client asked for details",
+        "correct": false,
+        "why": "The request is the same."
+      },
+      {
+        "text": "Because the database returned a friendlier error",
+        "correct": false,
+        "why": "shop.py raised the same LookupError."
+      },
+      {
+        "text": "It raised ToolError, whose text is passed on",
+        "correct": true,
+        "why": "Right. ToolError is the one exception whose text reaches the client; any other is a crash, with details kept on the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk4jbfet",
+    "version": 1,
+    "section": "failures-that-say-why",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happened to the call with order_id '1043'?",
+    "choices": [
+      {
+        "text": "It was refused by validation before the function ran",
+        "correct": true,
+        "why": "Right. The message named the pattern; the database was not touched."
+      },
+      {
+        "text": "It returned order M-1043",
+        "correct": false,
+        "why": "Nothing adds the prefix."
+      },
+      {
+        "text": "It crashed the server",
+        "correct": false,
+        "why": "The server answered the next request."
+      },
+      {
+        "text": "It returned an empty Order, with every field set to null",
+        "correct": false,
+        "why": "No Order was built."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvrqcbh2",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between a tool and a resource?",
+    "choices": [
+      {
+        "text": "A tool returns text and a resource returns JSON",
+        "correct": false,
+        "why": "Either can return either."
+      },
+      {
+        "text": "Resources are faster",
+        "correct": false,
+        "why": "Speed is not the distinction."
+      },
+      {
+        "text": "A model asks for a tool; a host reads a resource",
+        "correct": true,
+        "why": "Right. Who decides is what differs."
+      },
+      {
+        "text": "Resources only work over HTTP, because they are addressed by URIs",
+        "correct": false,
+        "why": "help://h14 was read in-process."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyh53nw0",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is help_article safe against a URI such as help://../data/shop.db?",
+    "choices": [
+      {
+        "text": "Because help:// URIs cannot contain dots",
+        "correct": false,
+        "why": "Dots are allowed; the handler never uses them as a path."
+      },
+      {
+        "text": "It looks ids up in a dictionary and never builds a path",
+        "correct": true,
+        "why": "Right. And the SDK's ResourceSecurity refuses traversal in template parameters by default."
+      },
+      {
+        "text": "Because the server runs as root",
+        "correct": false,
+        "why": "It runs as ana, which is why a path check would matter."
+      },
+      {
+        "text": "Because the client checks URIs before sending them",
+        "correct": false,
+        "why": "The server cannot rely on that."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7y3n4hz",
+    "version": 1,
+    "section": "resources",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many help articles does the resource template stand for?",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "articles"
+  },
+  {
+    "id": "ex-k7m0wvk7",
+    "version": 1,
+    "section": "a-prompt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who chooses a prompt, in MCP's division of the primitives?",
+    "choices": [
+      {
+        "text": "The model, when it needs instructions",
+        "correct": false,
+        "why": "The model asks for tools; a person picks prompts."
+      },
+      {
+        "text": "The server, at start-up, sending each prompt as the client connects",
+        "correct": false,
+        "why": "The server only offers prompts; it does not push them."
+      },
+      {
+        "text": "labllm",
+        "correct": false,
+        "why": "No model is involved in choosing."
+      },
+      {
+        "text": "A person",
+        "correct": true,
+        "why": "Right. A host shows prompts as something like slash commands."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzyf2ms1",
+    "version": 1,
+    "section": "a-prompt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The prompt says 'look the order up with get_order'. Does that let the model call get_order?",
+    "choices": [
+      {
+        "text": "Yes; a prompt from a server grants its tools",
+        "correct": false,
+        "why": "Prompts grant nothing."
+      },
+      {
+        "text": "No: that is the host's call",
+        "correct": true,
+        "why": "Right. A prompt is text, not a permission."
+      },
+      {
+        "text": "Only if the person typed the order id",
+        "correct": false,
+        "why": "The argument fills the text; it decides nothing about calls."
+      },
+      {
+        "text": "Yes, but only once per conversation, after which the host asks the person",
+        "correct": false,
+        "why": "No such rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-m65ky0r8",
+    "version": 1,
+    "section": "testing-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests passed in test_marginalia_mcp.py?",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "tests"
+  },
+  {
+    "id": "ex-7qbwn2aa",
+    "version": 1,
+    "section": "testing-it",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which properties do the tests hold the server to? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "The customer's id never leaves the server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A missing order says why",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The model writes polite replies",
+        "correct": false,
+        "why": "No model takes part; that is not the server's to test."
+      },
+      {
+        "text": "An unknown article is an error",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4maawx12",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to get_order('1043') in order.",
+    "hint": "The function's body never runs.",
+    "items": [
+      "the client sends tools/call",
+      "the SDK validates the arguments against OrderId",
+      "the pattern does not match",
+      "an isError result names the pattern"
+    ]
+  }
+]
