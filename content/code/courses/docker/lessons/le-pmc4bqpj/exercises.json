@@ -1,0 +1,429 @@
+[
+  {
+    "id": "ex-q6az231w",
+    "version": 1,
+    "section": "named-volumes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana removes `db` and starts a new container with the same `-v pgdata:/var/lib/postgresql/data`. Why is the `loans` row still there?",
+    "hint": "Where did PostgreSQL write it?",
+    "choices": [
+      {
+        "text": "Docker copied the old container's layer into the new one",
+        "correct": false,
+        "why": "Layers are never copied between containers."
+      },
+      {
+        "text": "PostgreSQL keeps a copy in the image",
+        "correct": false,
+        "why": "The image is read-only and identical for every container."
+      },
+      {
+        "text": "The volume outlived the container",
+        "correct": true,
+        "why": "Right: the data lives in `pgdata`. The container is new; the volume is the same one."
+      },
+      {
+        "text": "The name `db` points to the same data",
+        "correct": false,
+        "why": "Names are labels on containers; lesson 7 reused one and lost the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7q2c3qe",
+    "version": 1,
+    "section": "named-volumes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker volume inspect pgdata` shows a `Mountpoint` under `/var/lib/docker/volumes/`. How should Ana read or change the files in it?",
+    "hint": "Whose directory is that?",
+    "choices": [
+      {
+        "text": "Edit them there with `sudo`, it is just a folder",
+        "correct": false,
+        "why": "It is Docker's directory; editing behind the daemon's back is how lesson 6 said things break."
+      },
+      {
+        "text": "Copy the folder somewhere else first",
+        "correct": false,
+        "why": "Reading Docker's directory directly is the problem, copied or not."
+      },
+      {
+        "text": "Through `docker commit`",
+        "correct": false,
+        "why": "Commit captures a container's writable layer, not a volume."
+      },
+      {
+        "text": "Through a container that mounts the volume",
+        "correct": true,
+        "why": "Right, as the backup did."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qqwyq7k",
+    "version": 1,
+    "section": "named-volumes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's volume holds data written by PostgreSQL 16. She starts `postgres:17` against it. What should she expect?",
+    "hint": "What does the volume hold, and in which format?",
+    "choices": [
+      {
+        "text": "It needs PostgreSQL's own upgrade procedure",
+        "correct": true,
+        "why": "Right: the files' format changed between major versions. A volume keeps bytes; it cannot convert a database."
+      },
+      {
+        "text": "The new version uses the old files as they are",
+        "correct": false,
+        "why": "Within one major version that is true; across 16 and 17 the format changes."
+      },
+      {
+        "text": "Docker converts the volume automatically when the version changes",
+        "correct": false,
+        "why": "Docker knows nothing about what is inside a volume."
+      },
+      {
+        "text": "The volume is copied into the new image",
+        "correct": false,
+        "why": "Volumes never enter images."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ft5whkx",
+    "version": 1,
+    "section": "named-volumes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the backup command, what does `:ro` in `-v pgdata:/data:ro` guarantee?",
+    "hint": "Two letters, one promise.",
+    "choices": [
+      {
+        "text": "The archive will be read-only",
+        "correct": false,
+        "why": "The archive was written to `/backup`, a different mount."
+      },
+      {
+        "text": "The backup container cannot change the volume",
+        "correct": true,
+        "why": "Right: the volume is mounted read-only for that container."
+      },
+      {
+        "text": "The database is paused during the backup",
+        "correct": false,
+        "why": "Nothing pauses PostgreSQL; that is why a running database needs `pg_dump`."
+      },
+      {
+        "text": "Only root may read the volume afterwards",
+        "correct": false,
+        "why": "`:ro` affects this mount, inside this container."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6558nwa",
+    "version": 1,
+    "section": "bind-mounts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `site` bind-mounted on `/srv`, Ana appends a line to `site/index.html` on the host. When does the running container see it?",
+    "hint": "Is it a copy?",
+    "choices": [
+      {
+        "text": "After `docker restart web`",
+        "correct": false,
+        "why": "No restart was needed; the second `cat` showed it."
+      },
+      {
+        "text": "Never; the container got a copy when it started",
+        "correct": false,
+        "why": "A bind mount is the same directory, not a copy."
+      },
+      {
+        "text": "Immediately",
+        "correct": true,
+        "why": "Right. Both sides are looking at the same files."
+      },
+      {
+        "text": "Once the container's next `docker commit` runs",
+        "correct": false,
+        "why": "Commit is not involved; the mount shows host files directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3rgxc1a",
+    "version": 1,
+    "section": "bind-mounts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container wrote `report.txt` into Ana's bind-mounted directory, and `ls -l` shows it owned by `root`. Which option prevents that next time?",
+    "hint": "Run the process as somebody else.",
+    "choices": [
+      {
+        "text": "`:ro` at the end of the mount",
+        "correct": false,
+        "why": "Read-only would stop the write altogether."
+      },
+      {
+        "text": "`--privileged`",
+        "correct": false,
+        "why": "That gives the container more power, not a different owner."
+      },
+      {
+        "text": "`--rm`",
+        "correct": false,
+        "why": "`--rm` removes the container; the file stays root's."
+      },
+      {
+        "text": "`--user \"$(id -u):$(id -g)\"`",
+        "correct": true,
+        "why": "Right: the process runs with Ana's numbers, so its files are hers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycfb27sh",
+    "version": 1,
+    "section": "bind-mounts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno's Dockerfile installs the program's dependencies into `/app/vendor`. He runs the image with his source directory bind-mounted on `/app`, and the program says its dependencies are missing. Why?",
+    "hint": "What happens to a directory the mount lands on?",
+    "choices": [
+      {
+        "text": "The mount is laid over `/app`, hiding what the image had there",
+        "correct": true,
+        "why": "Right. Whatever the image put in `/app` is invisible while the mount is in place."
+      },
+      {
+        "text": "The bind mount deleted `/app/vendor` from the image",
+        "correct": false,
+        "why": "The image is untouched; a container without the mount still has it."
+      },
+      {
+        "text": "Dependencies cannot be installed in a Dockerfile",
+        "correct": false,
+        "why": "They can; the problem is what the mount does to them at run time."
+      },
+      {
+        "text": "Bind mounts are read-only by default, so the program cannot open its files",
+        "correct": false,
+        "why": "They are writable unless `:ro` is asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjwsxj44",
+    "version": 1,
+    "section": "bind-mounts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A container writing into a mount that ends in `:ro` fails with the message \"Read-only file ___\".",
+    "hint": "The last word of the error.",
+    "blanks": [
+      {
+        "accept": [
+          "system"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xctamxxn",
+    "version": 1,
+    "section": "bind-mounts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson write `-v \"$PWD/site\":/srv` instead of `-v site:/srv`?",
+    "hint": "What would Docker take `site` to be?",
+    "choices": [
+      {
+        "text": "Quotes are compulsory around every path",
+        "correct": false,
+        "why": "They protect spaces in `$PWD`; they are not the point."
+      },
+      {
+        "text": "A bare name means a volume",
+        "correct": true,
+        "why": "Right: a bind mount needs an absolute host path, and `site:/srv` would create a named volume called `site`."
+      },
+      {
+        "text": "`site` is a reserved word in Docker",
+        "correct": false,
+        "why": "It is not; it would simply become a volume name."
+      },
+      {
+        "text": "Relative paths are slower",
+        "correct": false,
+        "why": "Speed is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-b112gj9m",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the mount the lesson recommends.",
+    "hint": "Who owns the files?",
+    "pairs": [
+      {
+        "left": "A database's files",
+        "right": "A named volume"
+      },
+      {
+        "left": "Source code Ana edits while the container runs",
+        "right": "A bind mount"
+      },
+      {
+        "left": "Short-lived scratch files that must not reach the disk",
+        "right": "tmpfs"
+      }
+    ],
+    "right_distractors": [
+      "The container's writable layer, committed every night"
+    ]
+  },
+  {
+    "id": "ex-qcyhkj0y",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script mounts `--mount type=bind,source=/data/inbox,target=/in`, and `/data/inbox` was mistyped. What does `--mount` do that `-v` would not?",
+    "hint": "Compare the two transcripts.",
+    "choices": [
+      {
+        "text": "It creates the directory, owned by root",
+        "correct": false,
+        "why": "That is what `-v` does, silently."
+      },
+      {
+        "text": "It mounts an empty tmpfs instead",
+        "correct": false,
+        "why": "It mounts nothing and reports the error."
+      },
+      {
+        "text": "It refuses to start the container",
+        "correct": true,
+        "why": "Right: \"bind source path does not exist\". A typo stops the run."
+      },
+      {
+        "text": "It falls back to a named volume",
+        "correct": false,
+        "why": "No fallback; the container does not start."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfywgw49",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `--tmpfs /scratch:size=16m`, how many bytes did `dd` manage to write before \"No space left on device\"?",
+    "hint": "The last line of `dd`'s output.",
+    "value": 16777216,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-q6maan13",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do production setups lean on named volumes and development setups on bind mounts?",
+    "hint": "Which one depends on the host's layout?",
+    "choices": [
+      {
+        "text": "Bind mounts are slower on servers",
+        "correct": false,
+        "why": "Speed is not the argument the lesson makes."
+      },
+      {
+        "text": "Named volumes are encrypted by Docker before writing",
+        "correct": false,
+        "why": "Nothing about a local volume is encrypted by default."
+      },
+      {
+        "text": "Bind mounts are deprecated outside development",
+        "correct": false,
+        "why": "They are fully supported; they just tie a command to one machine's layout."
+      },
+      {
+        "text": "It ties a command to one machine's paths",
+        "correct": true,
+        "why": "Right: a named volume works wherever Docker runs, and in development that path is exactly the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgy77b6h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana upgrades her application container to a new image without losing its data. Put the steps in order.",
+    "hint": "The volume is the constant.",
+    "items": [
+      "Pull the new image",
+      "Remove the old container",
+      "Start a container from the new image with the same `-v pgdata:…`",
+      "Check the data is there"
+    ]
+  },
+  {
+    "id": "ex-4yw4hhcr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno archives `pgdata` with `tar` every night while PostgreSQL runs. What is wrong with that backup?",
+    "hint": "What is PostgreSQL doing to those files meanwhile?",
+    "choices": [
+      {
+        "text": "Writes happen during the copy",
+        "correct": true,
+        "why": "Right: the copy need not be a consistent database. Stop the container first, or use `pg_dump`."
+      },
+      {
+        "text": "Nothing, `tar` copies files atomically",
+        "correct": false,
+        "why": "It copies one file after another while they keep changing."
+      },
+      {
+        "text": "The archive is owned by root",
+        "correct": false,
+        "why": "True in the lesson, and fixable, but not what makes the backup unreliable."
+      },
+      {
+        "text": "Volumes cannot be mounted twice",
+        "correct": false,
+        "why": "They can; the backup container mounted it alongside the database."
+      }
+    ]
+  }
+]
