@@ -118,8 +118,7 @@ normalised 16/30 right
 ```
 
 **Sixteen of thirty**, either way. Under this release, ten of the fourteen wrong replies are the refusal
-to a question the documents answer, which lesson 5 would have predicted, and two are the express
-delivery sentence from lesson 1, now answering the question about the price of express delivery too.
+to a question the documents answer, which lesson 5 would have predicted. Two are the express delivery sentence from lesson 1, now answering the question about the price of express delivery too.
 
 The two comparisons agree here because extract-1 copies sentences, so a right reply contains the fact
 as the document wrote it. The difference shows on replies that are worded differently. `normalise.py`

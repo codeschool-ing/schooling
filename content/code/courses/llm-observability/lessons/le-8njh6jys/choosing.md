@@ -21,9 +21,7 @@ model calls; and tracing inside each application, for the questions a gateway ca
 about why. The two meet where lesson 1 said everything meets: if the application passes its trace id
 to the gateway in a header, a request in the gateway's logs leads to the trace that made it.
 
-For a single assistant like Marginalia's, built by one team, the tracing is the half that cannot be
-skipped, because the failures this course has found so far were in the search, the floor and the
-customer's message, and a gateway sees none of those. The gateway is the half to add when there are
+For a single assistant like Marginalia's, built by one team, the tracing is the half that cannot be skipped. The failures this course has found so far were in the search, the floor and the customer's message, and a gateway sees none of those. The gateway is the half to add when there are
 several applications and one bill.
 
 Whichever is chosen, the order of questions from lesson 6 still decides it: where the data may go,

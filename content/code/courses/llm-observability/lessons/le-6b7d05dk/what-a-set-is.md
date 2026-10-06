@@ -10,8 +10,7 @@ facts; the right answer to those is the refusal.
 
 That file is an **evaluation set**, and it is a different thing from anything lesson 9 sampled. A sample
 of traffic says how the assistant did last week, on whatever customers happened to ask. An evaluation
-set asks **the same questions of every version**, so that two versions can be compared on equal terms,
-which is lesson 14's job, and so that a build can be failed when one gets worse, which is lesson 15's.
+set asks **the same questions of every version**, so that two versions can be compared on equal terms; that is lesson 14's job. It also lets a build fail when one gets worse, which is lesson 15's.
 
 Four properties make a set fit for that, and this lesson is about keeping them:
 

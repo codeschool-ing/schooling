@@ -8,8 +8,7 @@ threshold of 0.40 that the lab chose. Lesson 10 found that at 0.40 it never flag
 irrelevant. The threshold is a setting, though, and every judge that returns a score has one, so the
 question is fair: **at which threshold would it be a useful detector?**
 
-`sweep.py` scores the 36 replies the judge reads (the refusals are passed by rule, as lesson 10
-decided) and counts, at six thresholds, how many it would flag and how many of those people failed:
+`sweep.py` scores the 36 replies the judge reads; the refusals are passed by rule, as lesson 10 decided. It counts, at six thresholds, how many it would flag and how many of those people failed:
 
 ```python
 """sweep.py: judge-1's relevance score used to flag irrelevant replies, at six thresholds,
@@ -68,8 +67,7 @@ Reading down the table is moving the threshold up, and both columns move:
 
 0.70 looks best on this table, and it would be a mistake to adopt it from this table. **Seven bad
 replies are too few to choose a threshold with.** The scores of the bad ones (0.54 to 0.68) overlap the
-scores of good ones (0.55 to 0.90) because judge-1 measures shared words, and a threshold tuned on
-sixty replies to catch exactly these seven is fitted to them. A team does this with a few hundred
+scores of good ones (0.55 to 0.90) because judge-1 measures shared words. A threshold tuned on sixty replies to catch exactly these seven is fitted to them. A team does this with a few hundred
 labelled replies, and checks the chosen threshold on labels it did not tune on, which is lesson 13's
 split between a development set and a held-out one.
 

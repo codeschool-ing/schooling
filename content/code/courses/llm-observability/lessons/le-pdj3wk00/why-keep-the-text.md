@@ -10,7 +10,7 @@ the case where that rule is hardest to follow, because **the body is the thing b
 Look at what lesson 1 could and could not explain. The delivery answer was wrong, and the trace
 said why: one chunk kept, about the wrong kind of delivery. That worked because the question was on
 the root span. Take the question away, and the trace says that a request in the `help` feature kept
-one chunk and got a 13-token reply, and nobody can tell whether that is a good answer to a good
+one chunk and got a 13-token reply. Nobody can tell whether that is a good answer to a good
 question or a good answer to the wrong one.
 
 The text is needed for three jobs, and each needs a different amount of it:

@@ -74,11 +74,9 @@ ana@lab:~/obs$ grep -c "Joana Prado" spans.jsonl
 ```
 
 The address appears nowhere. The name appears once, in the question, and that is not a bug in the
-patterns: there is no pattern for a name, which is the subject of a later section.
+patterns: there is no pattern for a name, which is the subject of the section after next.
 
-Make the check permanent. A test that sends a request carrying a known address, which exists only
-for the test, and then fails if that address appears anywhere in the exported spans, runs in a
-second and catches the day somebody adds a new attribute and forgets the function. **A canary is a
+Make the check permanent. A test can send a request carrying a known address, which exists only for the test, and fail if that address appears anywhere in the exported spans. It runs in a second and catches the day somebody adds a new attribute and forgets the function. **A canary is a
 value that should never come out the other side**, and its absence is the only evidence that
 redaction is on.
 

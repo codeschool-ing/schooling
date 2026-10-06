@@ -69,5 +69,4 @@ extract-1 gives the same reply to the same question every time, so a broken case
 on every run. A real model, sampling its tokens, may not: a case can fail once and pass on the next run
 with nothing changed. Asking for temperature 0 makes this rarer and does not remove it. The gate stays
 the same, and the response to a failure is the same too: read the case. A case that fails on one run
-of the candidate and passes on the next is evidence that the reply is unstable, which is a property of
-the release worth knowing, not a reason to rerun until the gate is green.
+of the candidate and passes on the next is evidence that the reply is unstable. That is a property of the release worth knowing, not a reason to rerun until the gate is green.

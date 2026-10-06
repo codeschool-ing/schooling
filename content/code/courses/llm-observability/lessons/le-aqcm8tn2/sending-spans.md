@@ -73,7 +73,7 @@ read from `gen_ai.usage.*`. That is the convention of lesson 1 paying off: nobod
 those attributes mean.
 
 **`ask` became a `GENERATION` too, with no usage.** The root span carries `gen_ai.request.model`
-because lesson 1 put the model of the release on it, and a span with a model on it looks like a model
+because lesson 1 put the model of the release on it. A span with a model on it looks like a model
 call to a tool that reads the convention literally. A dashboard that counted generations would now
 count every request twice.
 

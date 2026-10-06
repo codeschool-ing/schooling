@@ -102,7 +102,7 @@ draft.jsonl: 43 cases, NOT the version the manifest pins
 ```
 
 Presidio finds the name. The order number and the telephone were already replaced by the harvest's
-redaction, so the patterns have nothing left to find; the name would have gone into the repository, into
+redaction, so the patterns have nothing left to find. The name would have gone into the repository, into
 every run's output, and into every pull request that shows a failing case. The first line of the report
 says something too: the draft is not the version the manifest pins, which is true of any edited set
 until it is built and released as a new version.

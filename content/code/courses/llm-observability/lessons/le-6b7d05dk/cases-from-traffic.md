@@ -83,9 +83,7 @@ ana@lab:~/obs$ grep e39 data/eval-additions.jsonl
 {"id": "e39", "question": "Order MG-00000002 - I want to return it. Who pays for the return postage? Ana Teste, +55 11 5550-0101", "gold": [["returns-policy", "How to start a return"]], "facts": ["Returns are free"], "source": "traffic 2026-09-28 to 10-04, doubted", "added": "2026-10-06", "synthetic": ["MG-00000002", "Ana Teste", "+55 11 5550-0101"]}
 ```
 
-**The wording is the customer's, and the data is not.** e39 keeps the shape that made the order messages
-fail, an order number, a name and a telephone number around the question, because that shape is the
-point of the case. Every value in it is invented for the test, and the case says so in `synthetic`, so
+**The wording is the customer's, and the data is not.** e39 keeps the shape that made the order messages fail: an order number, a name and a telephone number around the question. That shape is the point of the case. Every value in it is invented for the test, and the case says so in `synthetic`, so
 that the check in the section after next can tell a declared test value from a customer's.
 
 **The facts and the gold come from the documents**, exactly as for the first thirty, and **each case

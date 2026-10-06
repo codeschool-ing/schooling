@@ -65,8 +65,8 @@ def grade(criterion, question, reply, sources=(), expected=None):
 
 **The model behind the prompt is judge-1, the lab's stand-in.** It does not read: it measures the
 similarity of embeddings, by rules written at the top of `lab/labobs.py`, and answers in the shape the
-prompt asks for. The prompt is the one a team would send a real model, and every number this lesson
-draws from it, how many replies were graded, what that cost, how sure a sample can be, is a property of
+prompt asks for. The prompt is the one a team would send a real model. Every number this lesson draws
+from it (how many replies were graded, what that cost, how sure a sample can be) is a property of
 sampling and of the bill, not of how clever the judge is.
 
 The week's replies come from the spans: `traffic.py` rebuilds each one as a record with its question,

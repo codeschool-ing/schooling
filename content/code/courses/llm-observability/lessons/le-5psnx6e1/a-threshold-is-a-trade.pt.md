@@ -69,7 +69,7 @@ Descer na tabela é subir o limiar, e as duas colunas se mexem:
 
 0,70 parece o melhor nesta tabela, e seria um erro adotá-lo por esta tabela. **Sete respostas ruins são
 poucas demais para escolher um limiar.** As notas das ruins (0,54 a 0,68) se sobrepõem às das boas
-(0,55 a 0,90) porque o judge-1 mede palavras em comum, e um limiar ajustado em sessenta respostas para
+(0,55 a 0,90) porque o judge-1 mede palavras em comum. Um limiar ajustado em sessenta respostas para
 pegar exatamente estas sete está encaixado nelas. Uma equipe faz isso com algumas centenas de respostas
 rotuladas, e confere o limiar escolhido em rótulos que não usou para ajustá-lo, que é a separação entre
 um conjunto de desenvolvimento e um reservado, assunto da aula 13.

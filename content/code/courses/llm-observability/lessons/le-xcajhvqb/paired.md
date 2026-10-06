@@ -13,7 +13,7 @@ cases that changed verdict, and the question is whether they changed in one dire
 would explain.
 
 **McNemar's test** answers that. If the change made no difference, each changed case would be equally
-likely to have gone either way, like a coin; the exact test asks how often a fair coin, tossed once per
+likely to have gone either way, like a coin. The exact test asks how often a fair coin, tossed once per
 changed case, would come out at least as lopsided. `regress.py` computes it in five lines.
 
 For the floor release: five changed cases, all five broken. A fair coin gives five heads in a row one

@@ -79,7 +79,5 @@ labels:
 3. **The disagreements that remain were settled and recorded** as a set of their own, so that the
    individual labels stay what each person said.
 
-Two raters on sixty replies is the smallest version of this that still measures something. A team that
-labels regularly gives a new person a few dozen replies already agreed, checks their kappa against the
-reference before trusting their labels, and repeats a small overlap between raters every round, because
+Two raters on sixty replies is the smallest version of this that still measures something. A team that labels regularly gives a new person a few dozen replies already agreed, and checks their kappa against the reference before trusting their labels. It also repeats a small overlap between raters every round, because
 people drift as the rubric gets familiar.

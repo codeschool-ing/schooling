@@ -3,8 +3,7 @@ title: The release that shipped
 version: 1
 ---
 
-`regress.py` compares two runs of the same set. It refuses runs that did not ask exactly the set's
-questions, grades every reply by lesson 8's facts and checks, and reports the cases that moved, the
+`regress.py` compares two runs of the same set. It refuses runs that did not ask exactly the set's questions and grades every reply by lesson 8's facts and checks. Then it reports the cases that moved, the
 checks that newly fail, and what the change did to tokens, money and time:
 
 ```python

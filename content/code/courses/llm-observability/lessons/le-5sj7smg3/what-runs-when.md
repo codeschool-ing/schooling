@@ -17,8 +17,7 @@ Not everything should run on every commit, because the checks cost very differen
 | the regression | production and candidate answer the set; broken cases, new check failures, budgets | yes, twice per case | every change that can alter a reply |
 | the slow ones | held-out split, judge-graded metrics, a look at the changed replies | yes, more | before a release, or nightly |
 
-**The first tier costs nothing and should never be skipped.** It is lesson 13's `check_set.py` as tests,
-and it fails in seconds when somebody commits a set that does not match its manifest, or a case that
+**The first tier costs nothing and should never be skipped.** It is lesson 13's `check_set.py` as tests. It fails in seconds when somebody commits a set that does not match its manifest, or a case that
 holds a customer's name.
 
 **The second tier costs money on every run.** In lesson 14 the whole set cost under five cents to

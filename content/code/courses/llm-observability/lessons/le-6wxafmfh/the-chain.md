@@ -94,6 +94,6 @@ inside the SDK: lesson 4 shows what an SDK retry looks like in a trace, which is
 The same facts could be written as five log lines with timestamps. What the trace adds is the
 **parent**: every span knows which span it ran inside. That is what lets a tool draw the tree,
 subtract a child's time from its parent's, and find all the spans of one request among the spans of
-a thousand others running at the same time, which a timestamp cannot do once two requests overlap.
+a thousand others running at the same time. A timestamp cannot do that once two requests overlap.
 `observability` lesson 11 reads traces of a web shop the same way; the difference here is only what
 the slowest span usually is.
