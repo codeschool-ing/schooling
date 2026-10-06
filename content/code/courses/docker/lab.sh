@@ -35,6 +35,8 @@
 
 set -euo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Go is used once, by `tools`, to vendor shelf's dependency; sudo drops it from PATH.
+export PATH=$PATH:/usr/local/go/bin
 
 LAB=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 OPT=/opt/docker-lab
