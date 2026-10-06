@@ -25,6 +25,7 @@ quiet 'kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep
 
 block csr
 run 'kubectl get csr -o custom-columns=NAME:.metadata.name,SIGNER:.spec.signerName,REQUESTOR:.spec.username,CONDITION:.status.conditions[0].type'
+quiet 'kubectl wait --for=condition=Available apiservice/v1beta1.metrics.k8s.io --timeout=180s'
 block apiservice
 run 'kubectl get apiservice v1beta1.metrics.k8s.io'
 run 'kubectl -n kube-system get deployment metrics-server -o jsonpath="{.spec.template.spec.containers[0].args}"; echo'

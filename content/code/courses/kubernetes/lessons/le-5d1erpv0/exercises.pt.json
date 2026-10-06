@@ -1,0 +1,172 @@
+{
+  "ex-7smwmxj1": {
+    "prompt": "`kubectl top pods` responde `error: Metrics API not available` num cluster novo. O que está faltando?",
+    "hint": "Quem reúne os números dos kubelets?",
+    "choices": [
+      {
+        "text": "Os kubelets ainda não medem nada",
+        "why": "Todo kubelet mede os seus containers o tempo todo."
+      },
+      {
+        "text": "O metrics-server",
+        "why": "Isso. Nada reúne os números na API até ele ser instalado."
+      },
+      {
+        "text": "Um servidor Prometheus",
+        "why": "O `kubectl top` lê `metrics.k8s.io`, que o metrics-server serve."
+      },
+      {
+        "text": "Requests em todo pod",
+        "why": "O uso é medido existindo request ou não."
+      }
+    ]
+  },
+  "ex-wg0551pg": {
+    "prompt": "Como uma requisição para `/apis/metrics.k8s.io/v1beta1/nodes` chega ao metrics-server?",
+    "hint": "`kubectl get apiservice`.",
+    "choices": [
+      {
+        "text": "Por um Ingress em `kube-system`",
+        "why": "Nenhum Ingress foi instalado naquele laboratório."
+      },
+      {
+        "text": "O kubectl chama direto o endereço do pod do metrics-server",
+        "why": "O kubectl só fala com o API server."
+      },
+      {
+        "text": "Um APIService a roteia pelo API server",
+        "why": "Isso. O API server repassa o grupo; `v1beta1.metrics.k8s.io` aponta para o Service `kube-system/metrics-server`."
+      },
+      {
+        "text": "O etcd guarda as métricas e o API server as lê",
+        "why": "Métricas nunca tocam o etcd; o metrics-server as guarda na memória."
+      }
+    ]
+  },
+  "ex-cye5qth4": {
+    "prompt": "Um guia manda acrescentar `--kubelet-insecure-tls` ao metrics-server no kind. O que este laboratório fez em vez disso, e por quê?",
+    "hint": "`kubectl get csr`.",
+    "choices": [
+      {
+        "text": "Nada; os kubelets do kind já tinham certificados confiáveis",
+        "why": "Por padrão eles assinam o próprio, e é por isso que a flag existe."
+      },
+      {
+        "text": "Deu a cada kubelet um certificado da CA",
+        "why": "Isso. A verificação continua ligada; a flag aceitaria qualquer certificado, inclusive o de um impostor."
+      },
+      {
+        "text": "Usou HTTP puro com os kubelets",
+        "why": "Os argumentos mostram `--secure-port` e HTTPS do começo ao fim."
+      },
+      {
+        "text": "Desligou a autenticação no API server",
+        "why": "Nada no laboratório mexe na autenticação do API server."
+      }
+    ]
+  },
+  "ex-5xszcvxn": {
+    "prompt": "Cada cópia parada da loja pedia 500m e usava cerca de 1m. Quanto custaram os outros 499m?",
+    "hint": "O que o scheduler conta?",
+    "choices": [
+      {
+        "text": "Nada, porque CPU sem uso é de graça",
+        "why": "CPU reservada não pode ser prometida a outro pod."
+      },
+      {
+        "text": "O pod foi estrangulado em 1m",
+        "why": "Ele não tinha limit de CPU; usava 1m porque estava parado."
+      },
+      {
+        "text": "Capacidade negada a outros pods",
+        "why": "Isso. O scheduler conta requests, então a reserva é gasta sendo usada ou não."
+      },
+      {
+        "text": "Memória extra para o kubelet",
+        "why": "Um request de CPU reserva só CPU."
+      }
+    ]
+  },
+  "ex-ay8jnf2t": {
+    "prompt": "Sob carga a loja usou até 404m de CPU e no máximo 7 MiB de memória, contra requests de 500m e 256 MiB. Qual request estava mais longe?",
+    "hint": "Compare as proporções.",
+    "choices": [
+      {
+        "text": "Memória",
+        "why": "Isso. Cerca de trinta vezes demais, contra mais ou menos certo para CPU."
+      },
+      {
+        "text": "CPU",
+        "why": "500m contra 404m é uma margem modesta."
+      },
+      {
+        "text": "Os dois igualmente",
+        "why": "Um estava perto e o outro, trinta vezes acima."
+      },
+      {
+        "text": "Nenhum; os números parados é que contam",
+        "why": "Um request precisa cobrir o pod trabalhando."
+      }
+    ]
+  },
+  "ex-ncx4pjx4": {
+    "prompt": "Uma equipe define requests a partir de uma leitura do `kubectl top` feita numa tarde calma. Qual é o risco?",
+    "hint": "Quanto histórico o metrics-server guarda?",
+    "choices": [
+      {
+        "text": "Nenhum; o `kubectl top` faz a média do último dia",
+        "why": "Ele mostra uma amostra recente; não existe média diária."
+      },
+      {
+        "text": "Os números estão na unidade errada",
+        "why": "Milicores e bytes são as unidades dos requests."
+      },
+      {
+        "text": "Os picos nunca são medidos",
+        "why": "Isso. Requests precisam dos picos ao longo de dias, que um sistema de monitoramento guarda."
+      },
+      {
+        "text": "O metrics-server rejeita leituras com mais de uma hora",
+        "why": "Ele guarda só o conjunto mais novo, mas não rejeita nada."
+      }
+    ]
+  },
+  "ex-x79j2sfr": {
+    "prompt": "Três cópias pedem 500m de CPU cada e usam 20m. Quantos milicores elas reservam sem usar, no total?",
+    "hint": "(500 − 20) × 3.",
+    "unit": "milicores"
+  },
+  "ex-7456t77x": {
+    "prompt": "Ligue cada comando ao que ele mostra.",
+    "hint": "Um lê uso, um lê reservas, um lê o encanamento.",
+    "pairs": [
+      {
+        "left": "`kubectl top pods`",
+        "right": "O que cada pod usa agora"
+      },
+      {
+        "left": "`kubectl describe node`",
+        "right": "O que os pods de um nó pediram"
+      },
+      {
+        "left": "`kubectl get apiservice`",
+        "right": "Se a API de métricas está alcançável"
+      }
+    ],
+    "right_distractors": [
+      "O maior uso da última semana"
+    ]
+  },
+  "ex-re1qyarq": {
+    "prompt": "O metrics-server não guarda ___, só o conjunto mais novo de números.",
+    "hint": "O que um sistema de monitoramento acrescenta.",
+    "blanks": [
+      {
+        "accept": [
+          "histórico",
+          "historico"
+        ]
+      }
+    ]
+  }
+}
