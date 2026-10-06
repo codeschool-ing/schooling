@@ -98,7 +98,11 @@ OBSLIBS="numpy==2.4.6 onnxruntime==1.30.0 tokenizers==0.23.2 tiktoken==0.14.0
   opentelemetry-exporter-otlp-proto-http==1.45.0 openinference-instrumentation-openai==0.1.63
   arize-phoenix==20.18.0 langfuse==4.17.0 langsmith==0.14.4 deepeval==4.2.8 ragas==0.3.1
   langchain-openai==1.6.7 pytest==9.1.1 prometheus-client==0.26.0
-  presidio-analyzer==2.2.364 presidio-anonymizer==2.2.364"
+  presidio-analyzer==2.2.364 presidio-anonymizer==2.2.364
+  langchain-community==0.3.31 pillow==12.3.0 rapidfuzz==3.14.6"
+# The last line is RAGAS's. ragas 0.3.1 imports a chat model that
+# langchain-community removed in 0.4, and needs pillow and rapidfuzz without
+# declaring them; ragas 0.4 would pull openai back to 1.x. Lesson 12 says so.
 # The language model Presidio finds names with (lesson 2), from spaCy's own releases.
 SPACY_MODEL=https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl
 
