@@ -1,0 +1,276 @@
+[
+  {
+    "id": "ex-41qwnqps",
+    "version": 1,
+    "section": "strategy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During a rolling update, what does `maxSurge` limit?",
+    "hint": "Surge: above the usual number.",
+    "choices": [
+      {
+        "text": "How many pods may be not ready",
+        "correct": false,
+        "why": "That is `maxUnavailable`."
+      },
+      {
+        "text": "How many rollouts may run at once",
+        "correct": false,
+        "why": "A Deployment runs one rollout."
+      },
+      {
+        "text": "How fast the image is pulled",
+        "correct": false,
+        "why": "Pulling is the kubelet's business."
+      },
+      {
+        "text": "Pods above `replicas`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9pwsep3",
+    "version": 1,
+    "section": "strategy",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Deployment has 8 replicas, `maxSurge: 2` and `maxUnavailable: 0`. What is the most pods it can have during a rollout?",
+    "hint": "replicas + maxSurge.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "pods"
+  },
+  {
+    "id": "ex-jneb5xca",
+    "version": 1,
+    "section": "strategy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `maxSurge: 0` with `maxUnavailable: 0` refused?",
+    "hint": "What could the controller do first?",
+    "choices": [
+      {
+        "text": "No pod could be added or removed",
+        "correct": true,
+        "why": "Right, so the rollout could never move."
+      },
+      {
+        "text": "Zero is not a valid percentage",
+        "correct": false,
+        "why": "`0` is accepted for either field on its own."
+      },
+      {
+        "text": "It would need twice the nodes",
+        "correct": false,
+        "why": "It would need no extra room at all."
+      },
+      {
+        "text": "Only `Recreate` uses zeros",
+        "correct": false,
+        "why": "`Recreate` has no such fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7yq15kv",
+    "version": 1,
+    "section": "strategy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nodes are full. Which setting still lets a rollout proceed?",
+    "hint": "Which one needs no extra pods?",
+    "choices": [
+      {
+        "text": "`maxSurge: 1`, `maxUnavailable: 0`",
+        "correct": false,
+        "why": "The extra pod has nowhere to go."
+      },
+      {
+        "text": "`maxSurge: 2`, `maxUnavailable: 0`",
+        "correct": false,
+        "why": "Two extra pods with no room is worse."
+      },
+      {
+        "text": "`maxSurge: 0`, `maxUnavailable: 1`",
+        "correct": true,
+        "why": "Right, it frees a slot before it fills one."
+      },
+      {
+        "text": "`maxSurge: 25%`, `maxUnavailable: 0`",
+        "correct": false,
+        "why": "Still extra pods first."
+      }
+    ]
+  },
+  {
+    "id": "ex-jht06bnc",
+    "version": 1,
+    "section": "stopping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During an update, a client gets `Connection refused` from the shop. What is the likeliest cause?",
+    "hint": "Two things start at the same moment.",
+    "choices": [
+      {
+        "text": "The new image is broken",
+        "correct": false,
+        "why": "A broken pod never gets ready, so it gets no traffic."
+      },
+      {
+        "text": "A stopping pod was still in the rules",
+        "correct": true,
+        "why": "Right, the gap a `preStop` sleep covers."
+      },
+      {
+        "text": "`maxSurge` is too low",
+        "correct": false,
+        "why": "That sets the pace, not the gap."
+      },
+      {
+        "text": "The Service lost its selector halfway through",
+        "correct": false,
+        "why": "Every request would fail then."
+      }
+    ]
+  },
+  {
+    "id": "ex-86h5cdf8",
+    "version": 1,
+    "section": "stopping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod has `terminationGracePeriodSeconds: 30` and a `preStop` sleep of 25 seconds. How long does the process get after `SIGTERM`?",
+    "hint": "The grace period includes the hook.",
+    "choices": [
+      {
+        "text": "30 seconds",
+        "correct": false,
+        "why": "The hook used 25 of them."
+      },
+      {
+        "text": "55 seconds",
+        "correct": false,
+        "why": "They are not added."
+      },
+      {
+        "text": "5 seconds",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None, it is killed at once",
+        "correct": false,
+        "why": "There are seconds left."
+      }
+    ]
+  },
+  {
+    "id": "ex-427zkf39",
+    "version": 1,
+    "section": "undo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new version crashes at start, with `maxSurge: 1` and `maxUnavailable: 0`. How many old pods are lost?",
+    "hint": "An old pod leaves only after a new one is ready.",
+    "choices": [
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right, the rollout stops at one new pod."
+      },
+      {
+        "text": "One",
+        "correct": false,
+        "why": "That would need `maxUnavailable: 1`."
+      },
+      {
+        "text": "All of them",
+        "correct": false,
+        "why": "Only `Recreate` removes them all first."
+      },
+      {
+        "text": "A quarter of them",
+        "correct": false,
+        "why": "That is the default, not this setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzmjgbjm",
+    "version": 1,
+    "section": "undo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `kubectl rollout undo`, what is left that will undo the fix?",
+    "hint": "Where was the change written?",
+    "choices": [
+      {
+        "text": "The old ReplicaSet",
+        "correct": false,
+        "why": "It is what undo went back to."
+      },
+      {
+        "text": "The revision history",
+        "correct": false,
+        "why": "History does not apply anything."
+      },
+      {
+        "text": "The manifest in the repository",
+        "correct": true,
+        "why": "Right, the next apply ships it."
+      },
+      {
+        "text": "The `CHANGE-CAUSE` column of the history",
+        "correct": false,
+        "why": "It is a label, not a template."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ekv8eta",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when a Deployment replaces one old pod under `maxSurge: 1` and `maxUnavailable: 0`.",
+    "hint": "Nothing may go missing.",
+    "items": [
+      "A new pod is created",
+      "The new pod passes its readiness probe",
+      "An old pod is told to stop",
+      "The old pod's `preStop` hook runs",
+      "The old process gets `SIGTERM`"
+    ],
+    "trap": "The hook comes before the signal, not after."
+  },
+  {
+    "id": "ex-n26hgm51",
+    "version": 1,
+    "section": "undo",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To go back to one specific revision: `kubectl rollout undo deployment/shop --___=2`.",
+    "hint": "The flag names a revision.",
+    "blanks": [
+      {
+        "accept": [
+          "to-revision"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
