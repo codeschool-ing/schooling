@@ -1387,7 +1387,7 @@ def l11_clt(lang):
               'and with samples of 100 a narrow bell centred on R$ 82.78. From 5 upwards a normal '
               'curve is drawn over each histogram.',
         row='means of samples of {}', x='mean basket of the sample, in reais',
-        cap='The population never changes shape. The means of samples drawn from it do: wider '
+        cap='The population never changes shape. The means of samples drawn from it do: larger '
             'samples give means that are more symmetric and more tightly gathered around R$ 82.78.'),
         'pt': dict(
         label='Quatro histogramas na mesma escala, de R$ 0 a R$ 440, cada um com 2.000 médias '
