@@ -23,9 +23,9 @@ error on a server with 16. Nobody changed the query. The only thing that differe
 checks it, and it goes stale the first time somebody upgrades one thing for one project.
 
 **Installing everything system-wide** works until two projects disagree. Debian and Ubuntu can
-keep PostgreSQL 16 and 17 side by side, on two ports with two data directories, but every tool on
-the machine, from `psql` to a backup script, then has to be told which one it means, and the
-arrangement is different on every distribution and on every laptop.
+keep PostgreSQL 16 and 17 side by side, on two ports with two data directories. But every tool on the
+machine, from `psql` to a backup script, then has to be told which one it means, and the arrangement
+is different on every distribution and on every laptop.
 
 **A virtual machine per project** settles the fight, at the price of a whole operating system per
 project: its own kernel, its own boot, gigabytes of disk and a fixed slice of memory reserved

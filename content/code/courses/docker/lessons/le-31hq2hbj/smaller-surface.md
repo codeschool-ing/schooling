@@ -97,7 +97,7 @@ RUN apt-get update \
 is the standard shape, and hadolint asked for each of its parts in lesson 10. `--no-install-recommends`
 skips packages that are suggested and not needed, and the `rm` deletes the package lists in the same
 layer that downloaded them. The same reasoning applies to secrets: a file deleted in a later layer is
-still in the earlier one, which is why lesson 11 kept `.env` out of the context altogether, and why
+still in the earlier one. That is why lesson 11 kept `.env` out of the context altogether, and why
 lesson 18 shows the right way to use a secret during a build.
 
 ## A checklist for the final stage

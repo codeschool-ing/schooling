@@ -103,10 +103,9 @@ ana@vm:~/ops$ docker run --rm -i hadolint/hadolint hadolint --no-color - < Docke
 -:4 DL3025 warning: Use arguments JSON notation for CMD and ENTRYPOINT arguments
 ```
 
-Seis apontamentos em quatro linhas, e cada um é um problema real: uma tag `latest` que muda sem
-aviso, um `apt-get install` que pararia para fazer uma pergunta no meio de um build, uma lista de
-pacotes deixada dentro da imagem e um `CMD` numa forma que a aula 11 mostra quebrando o
-`docker stop`. As aulas 11 a 16 explicam cada um. O hadolint leu o arquivo pela entrada padrão, então
+Seis apontamentos em quatro linhas, e cada um é um problema real. Uma tag `latest` muda sem aviso; um
+`apt-get install` pararia para fazer uma pergunta no meio de um build; uma lista de pacotes fica dentro
+da imagem; e o `CMD` está numa forma que a aula 11 mostra quebrando o `docker stop`. As aulas 11 a 16 explicam cada um. O hadolint leu o arquivo pela entrada padrão, então
 desta vez nada foi montado.
 
 **É assim que pipelines de CI rodam a maior parte das verificações**: um linter, um formatador ou um

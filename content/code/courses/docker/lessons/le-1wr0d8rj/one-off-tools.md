@@ -102,9 +102,9 @@ ana@vm:~/ops$ docker run --rm -i hadolint/hadolint hadolint --no-color - < Docke
 -:4 DL3025 warning: Use arguments JSON notation for CMD and ENTRYPOINT arguments
 ```
 
-Six findings in four lines, every one a real problem: a `latest` tag that changes under you, an
-`apt-get install` that would stop and ask a question in the middle of a build, a package list left
-inside the image, and a `CMD` in a form that lesson 11 shows breaking `docker stop`. Lessons 11 to 16
+Six findings in four lines, and every one is a real problem. A `latest` tag changes under you; an
+`apt-get install` would stop and ask a question in the middle of a build; a package list is left
+inside the image; and the `CMD` is in a form that lesson 11 shows breaking `docker stop`. Lessons 11 to 16
 explain each one. Hadolint read the file from standard input, so this time nothing was mounted.
 
 **This is how CI pipelines run most of their checks**: a linter, a formatter or a security scanner

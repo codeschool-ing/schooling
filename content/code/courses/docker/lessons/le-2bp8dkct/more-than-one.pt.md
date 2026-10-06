@@ -61,7 +61,8 @@ Algumas que vale reconhecer:
 
 Um banco iniciado assim é perfeito para desenvolvimento, testes e experimentos. **Para produção,
 quatro perguntas continuam abertas, e a imagem não as responde por você**: onde é feito o backup dos
-dados do volume (aula 8), quanta memória o container pode usar (aula 17), como a senha chega a ele sem
-ficar numa linha de comando (aula 18) e quem aplica as atualizações de segurança da imagem (aula 20).
+dados do volume (aula 8), e quanta memória o container pode usar (aula 17). Depois, como a senha chega
+a ele sem ficar numa linha de comando (aulas 17 e 19), e quem aplica as atualizações de segurança da
+imagem (aula 20).
 Muitas equipes respondem à primeira e à última não rodando o banco em container nenhum, e comprando-o
 como serviço gerenciado de um provedor de nuvem; é uma boa resposta, e é uma decisão, não um padrão.

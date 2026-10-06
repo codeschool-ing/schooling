@@ -35,7 +35,7 @@ image, built once by the pipeline of lesson 26, and named by its digest.
 
 Lesson 1 started from a program that worked on one machine and not on another. Since then, `shelf` has
 become an image built in stages, small and without root or shell, scanned, with its bill of materials
-and its provenance, published by a pipeline with every check in front of it, and run under limits,
+and its provenance. A pipeline publishes it with every check in front, and it runs under limits,
 health checks and restart policies, alone or in a swarm. The next course in most tracks is
 `kubernetes`, and its first lesson starts from the last section of lesson 27: what one machine cannot
 do.

@@ -35,9 +35,9 @@ ana@vm:~$ docker run --rm --cpus 1 alpine:3.22 nproc
 
 O `--cpus 1` limita o container ao tempo de um processador, e o `nproc` continua respondendo 4.
 
-**Isso pega programas de verdade.** Um runtime que se dimensiona pelo que enxerga, um pool com uma
-thread por processador ou um heap que ocupa um quarto da memória, pode se dimensionar para o host
-inteiro dentro de um container limitado a uma fração dele, e então bater no limite. Os runtimes
+**Isso pega programas de verdade.** Um runtime que se dimensiona pelo que enxerga pode se dimensionar para o host inteiro dentro de um
+container limitado a uma fração dele, e então bater no limite: um pool com uma thread por processador,
+um heap que ocupa um quarto da memória. Os runtimes
 modernos leem os limites do cgroup por esse motivo, e a JVM faz isso por padrão desde o Java 10. Um
 programa que lê o `/proc/meminfo` por conta própria continua recebendo o número do host. A aula 4
 mostra onde mora o limite de verdade, e a aula 17, como definir um.

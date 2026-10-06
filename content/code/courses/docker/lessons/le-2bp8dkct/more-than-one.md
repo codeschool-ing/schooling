@@ -60,8 +60,8 @@ lists them. A few that are worth recognising:
 
 A database started this way is perfect for development, tests and trying things. **For production,
 four questions remain open, and the image does not answer them for you**: where the volume's data is
-backed up (lesson 8), how much memory the container may use (lesson 17), how the password reaches it
-without sitting in a command line (lesson 18), and who applies the security updates to the image
-(lesson 20). Many teams answer the first and the last by not running the database in a container at
+backed up (lesson 8), and how much memory the container may use (lesson 17). Then how the password
+reaches it without sitting in a command line (lessons 17 and 19), and who applies the security updates
+to the image (lesson 20). Many teams answer the first and the last by not running the database in a container at
 all, and buying it as a managed service from a cloud provider; that is a fine answer, and it is a
 decision, not a default.

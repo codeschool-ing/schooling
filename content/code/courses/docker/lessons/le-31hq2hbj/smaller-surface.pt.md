@@ -98,8 +98,8 @@ RUN apt-get update \
 pacotes do Debian; ele é o formato padrão, e o hadolint pediu cada uma das partes dele na aula 10. O
 `--no-install-recommends` pula pacotes sugeridos e desnecessários, e o `rm` apaga as listas de pacotes
 na mesma camada que as baixou. O mesmo raciocínio vale para segredos: um arquivo apagado numa camada
-seguinte continua na anterior, e é por isso que a aula 11 deixou o `.env` fora do contexto de vez, e
-que a aula 18 mostra o jeito certo de usar um segredo durante um build.
+seguinte continua na anterior. É por isso que a aula 11 deixou o `.env` fora do contexto de vez, e que
+a aula 18 mostra o jeito certo de usar um segredo durante um build.
 
 ## Uma lista para o estágio final
 

@@ -35,7 +35,7 @@ uma imagem, construída uma vez pelo pipeline da aula 26, e nomeada pelo digest.
 
 A aula 1 começou de um programa que funcionava numa máquina e não em outra. Desde então, o `shelf` virou
 uma imagem construída em estágios, pequena e sem root nem shell, varrida, com lista de materiais e
-proveniência, publicada por um pipeline com todas as verificações à frente, e rodada com limites, health
+proveniência. Um pipeline a publica com todas as verificações à frente, e ela roda com limites, health
 checks e políticas de reinício, sozinha ou num swarm. O próximo curso na maioria das trilhas é o
 `kubernetes`, e a primeira aula dele parte da última etapa da aula 27: o que uma máquina só não consegue
 fazer.
