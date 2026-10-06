@@ -13,7 +13,7 @@ In `automation.py` the sequence is the source code, read top to bottom. In `assi
 
 ## Workflows and agents
 
-Anthropic's engineering article *Building effective agents* (December 2024) drew the line this course uses, and most of the field has adopted it: a **workflow** is a system where models and tools are joined by paths written in code, and an **agent** is a system where the model directs its own process and its own use of tools. A workflow can call a model at several steps; what makes it a workflow is that the programmer chose the order.
+Anthropic's engineering article *Building effective agents* (December 2024) drew the line this course uses, and most of the field has adopted it. A **workflow** is a system where models and tools are joined by paths written in code, and an **agent** is a system where the model directs its own process and its own use of tools. A workflow can call a model at several steps; what makes it a workflow is that the programmer chose the order.
 
 That article's advice is also lesson 2's: start with the simplest arrangement that works, and give the model control of the path only when the path cannot be written down in advance.
 

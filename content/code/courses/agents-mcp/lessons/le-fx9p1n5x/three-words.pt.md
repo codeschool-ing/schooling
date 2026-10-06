@@ -9,7 +9,7 @@ As três palavras são usadas como se fossem degraus de uma escada de inteligên
 - **Assistente.** Um modelo produz uma resposta, e uma pessoa a lê e decide o que acontece. O modelo pode ser muito capaz; mesmo assim, nunca age. A decisão fica com quem lê o rascunho.
 - **Agente.** O modelo escolhe o próximo passo, um programa o executa, o resultado volta para o modelo, e o modelo escolhe de novo, até decidir responder. **A decisão fica dentro de um laço, e quem a tem é o modelo.**
 
-A definição não diz nada sobre quão bom é o modelo, quantas ferramentas ele tem ou se um cliente fala com ele diretamente. São perguntas reais, e aulas seguintes as fazem, mas nenhuma muda qual dos três um sistema é. Um laço com uma ferramenta, em que o modelo decide quando chamá-la e quando parar, é um agente. Um pipeline que chama o melhor modelo do mercado cinco vezes numa ordem fixa é automação com chamadas de modelo dentro.
+A definição não diz nada sobre quão bom é o modelo, quantas ferramentas ele tem ou se um cliente fala com ele diretamente. São perguntas reais, e as aulas 2 a 6 voltam a elas, mas nenhuma muda qual dos três um sistema é. Um laço com uma ferramenta, em que o modelo decide quando chamá-la e quando parar, é um agente. Um pipeline que chama o melhor modelo do mercado cinco vezes numa ordem fixa é automação com chamadas de modelo dentro.
 
 ## Um teste que se aplica ao código
 

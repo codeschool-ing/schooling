@@ -27,4 +27,4 @@ labllm refuses the conversation the way Anthropic's API does: `messages.2` (the 
 
 ## When not to run calls together
 
-Independent reads can run together safely. Calls that depend on each other, or that write, should not, even if a model asks for them in one reply: a refund and the lookup that justifies it belong in that order, and two refunds for the same order in one reply are more likely a mistake than a plan. A host can run reads concurrently and writes one at a time, or refuse a reply that asks for more than one write.
+Independent reads can run together safely. Calls that depend on each other, or that write, should not, even if a model asks for them in one reply. A refund and the lookup that justifies it belong in that order, and two refunds for the same order in one reply are more likely a mistake than a plan. A host can run reads concurrently and writes one at a time, or refuse a reply that asks for more than one write.

@@ -13,7 +13,7 @@ No `automation.py`, a sequência é o código-fonte, lido de cima para baixo. No
 
 ## Workflows e agentes
 
-O artigo de engenharia da Anthropic *Building effective agents* (dezembro de 2024) traçou a linha que este curso usa, e a maior parte da área a adotou: um **workflow** é um sistema em que modelos e ferramentas são ligados por caminhos escritos em código, e um **agente** é um sistema em que o modelo dirige o próprio processo e o próprio uso das ferramentas. Um workflow pode chamar um modelo em vários passos; o que faz dele um workflow é que o programador escolheu a ordem.
+O artigo de engenharia da Anthropic *Building effective agents* (dezembro de 2024) traçou a linha que este curso usa, e a maior parte da área a adotou. Um **workflow** é um sistema em que modelos e ferramentas são ligados por caminhos escritos em código, e um **agente** é um sistema em que o modelo dirige o próprio processo e o próprio uso das ferramentas. Um workflow pode chamar um modelo em vários passos; o que faz dele um workflow é que o programador escolheu a ordem.
 
 O conselho desse artigo também é o da aula 2: começar pelo arranjo mais simples que funciona, e dar ao modelo o controle do caminho só quando o caminho não pode ser escrito de antemão.
 

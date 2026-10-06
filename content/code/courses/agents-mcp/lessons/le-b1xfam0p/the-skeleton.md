@@ -22,6 +22,6 @@ Two smaller files use it. `marginalia.py` declares the shop's four tools with th
 
 ## Why write it rather than install one
 
-Lessons 8 to 10 use three vendors' SDKs, and they are worth using. Writing the loop first is not about avoiding them. It is about being able to read them: every SDK has a tool decorator, a model adapter, a run loop with limits, a way to report errors to the model and a trace, and once you have written each of those you know what to look for in their documentation, and what question to ask when one of them does something surprising.
+Lessons 8 to 10 use three vendors' SDKs, and they are worth using. Writing the loop first is not about avoiding them. It is about being able to read them. Every SDK has a tool decorator, a model adapter, a run loop with limits, a way to report errors to the model and a trace. Once you have written each of those you know what to look for in their documentation, and what question to ask when one of them does something surprising.
 
 There is also a plain engineering case for the small version. **A loop you wrote is a loop you can change in an afternoon**: a new guard, a different trace format, a refusal rule. In a framework the same change may mean a plugin interface, a subclass or waiting for a release. The design sheet for this course says the same thing more bluntly: this lesson is the one that does not age, because it depends on no vendor.

@@ -27,4 +27,4 @@ O labllm recusa a conversa como a API da Anthropic recusa: `messages.2` (a terce
 
 ## Quando não rodar chamadas juntas
 
-Leituras independentes podem rodar juntas sem risco. Chamadas que dependem umas das outras, ou que escrevem, não deveriam, mesmo que um modelo as peça numa resposta: um reembolso e a consulta que o justifica vêm nessa ordem, e dois reembolsos do mesmo pedido numa resposta são mais provavelmente um erro que um plano. Um hospedeiro pode rodar leituras ao mesmo tempo e escritas uma de cada vez, ou recusar uma resposta que peça mais de uma escrita.
+Leituras independentes podem rodar juntas sem risco. Chamadas que dependem umas das outras, ou que escrevem, não deveriam, mesmo que um modelo as peça numa resposta. Um reembolso e a consulta que o justifica vêm nessa ordem, e dois reembolsos do mesmo pedido numa resposta são mais provavelmente um erro que um plano. Um hospedeiro pode rodar leituras ao mesmo tempo e escritas uma de cada vez, ou recusar uma resposta que peça mais de uma escrita.

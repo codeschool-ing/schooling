@@ -15,7 +15,7 @@ The specification describes MCP as a **client-host-server** architecture. `ai-de
 
 Among the design principles the specification lists, one is written as a negative: **servers should not be able to read the whole conversation, nor "see into" other servers.** The full history stays with the host, each server receives only what it needs, and anything that crosses from one server to another goes through the host, because nothing else connects them.
 
-The rest of this lesson tests that principle, and the parts of it that depend on the host, with a server written to report on itself, the order server of lesson 11 under the name `orders`, and a second server from another team, `archive`, which the course wrote for the purpose. `hosts.py` is lesson 11's three hosts, now told which servers to start on the command line:
+The rest of this lesson tests that principle, and the parts of it that depend on the host. It uses three servers: one written to report on itself, the order server of lesson 11 under the name `orders`, and `archive`, a second server from another team, which the course wrote for the purpose. `hosts.py` is lesson 11's three hosts, now told which servers to start on the command line:
 
 ```python
 """Three hosts, each given a set of MCP servers to start: python hosts.py HOST TASK SERVER..."""

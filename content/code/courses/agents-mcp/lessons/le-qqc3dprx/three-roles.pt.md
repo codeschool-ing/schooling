@@ -15,7 +15,7 @@ A especificação descreve o MCP como uma arquitetura **cliente-hospedeiro-servi
 
 Entre os princípios de desenho que a especificação lista, um está escrito como negação: **servidores não devem conseguir ler a conversa inteira, nem "enxergar dentro" de outros servidores.** O histórico completo fica com o hospedeiro, cada servidor recebe só o que precisa, e tudo o que passa de um servidor para outro passa pelo hospedeiro, porque nada mais os liga.
 
-O resto desta aula testa esse princípio, e as partes dele que dependem do hospedeiro, com um servidor escrito para se descrever, o servidor de pedidos da aula 11 com o nome `orders`, e um segundo servidor de outra equipe, `archive`, que o curso escreveu para isso. O `hosts.py` são os três hospedeiros da aula 11, agora informados na linha de comando de quais servidores iniciar:
+O resto desta aula testa esse princípio, e as partes dele que dependem do hospedeiro. Ela usa três servidores: um escrito para se descrever, o servidor de pedidos da aula 11 com o nome `orders`, e `archive`, um segundo servidor de outra equipe, que o curso escreveu para isso. O `hosts.py` são os três hospedeiros da aula 11, agora informados na linha de comando de quais servidores iniciar:
 
 ```python
 """Three hosts, each given a set of MCP servers to start: python hosts.py HOST TASK SERVER..."""

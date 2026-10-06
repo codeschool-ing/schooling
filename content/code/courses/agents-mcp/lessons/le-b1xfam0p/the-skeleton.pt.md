@@ -22,6 +22,6 @@ Dois arquivos menores o usam. O `marginalia.py` declara as quatro ferramentas da
 
 ## Por que escrevê-lo em vez de instalar um
 
-As aulas 8 a 10 usam os SDKs de três fornecedores, e vale a pena usá-los. Escrever o laço antes não é para evitá-los. É para conseguir lê-los: todo SDK tem um decorador de ferramentas, um adaptador de modelo, um laço de execução com limites, um jeito de informar erros ao modelo e um rastro, e depois de escrever cada um desses você sabe o que procurar na documentação deles, e que pergunta fazer quando um deles fizer algo surpreendente.
+As aulas 8 a 10 usam os SDKs de três fornecedores, e vale a pena usá-los. Escrever o laço antes não é para evitá-los. É para conseguir lê-los. Todo SDK tem um decorador de ferramentas, um adaptador de modelo, um laço de execução com limites, um jeito de informar erros ao modelo e um rastro. Depois de escrever cada um desses você sabe o que procurar na documentação deles, e que pergunta fazer quando um deles fizer algo surpreendente.
 
 Há também um argumento de engenharia simples a favor da versão pequena. **Um laço que você escreveu é um laço que você muda numa tarde**: uma guarda nova, outro formato de rastro, uma regra de recusa. Num framework a mesma mudança pode exigir uma interface de plugin, uma subclasse ou esperar uma versão nova. A ficha de desenho deste curso diz a mesma coisa de forma mais direta: esta aula é a que não envelhece, porque não depende de nenhum fornecedor.

@@ -9,7 +9,7 @@ The three words are used as if they were rungs on a ladder of intelligence, with
 - **Assistant.** A model produces one answer, and a person reads it and decides what happens. The model may be very capable; it still never acts. The decision sits with whoever reads the draft.
 - **Agent.** The model chooses the next step, a program carries it out, the result goes back to the model, and the model chooses again, until it decides to answer. **The decision sits inside a loop, and the model holds it.**
 
-The definition says nothing about how good the model is, how many tools it has or whether a customer talks to it directly. Those are real questions, and later lessons ask them, but none of them changes which of the three a system is. A loop with one tool, where the model decides when to call it and when to stop, is an agent. A pipeline that calls the best model on the market five times in a fixed order is automation with model calls inside it.
+The definition says nothing about how good the model is, how many tools it has or whether a customer talks to it directly. Those are real questions, and lessons 2 to 6 come back to them, but none of them changes which of the three a system is. A loop with one tool, where the model decides when to call it and when to stop, is an agent. A pipeline that calls the best model on the market five times in a fixed order is automation with model calls inside it.
 
 ## A test you can apply to code
 
