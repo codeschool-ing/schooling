@@ -33,10 +33,10 @@ pedaços cujo texto mudou e de nada mais.
 ## Com fine-tuning: treinar de novo
 
 Um modelo ajustado conhece o regulamento antigo até que um modelo novo seja treinado sem ele. Isso quer
-dizer montar um conjunto que ensine os fatos novos, com exemplos suficientes para sobrescrever os
-antigos, que o modelo aprendeu com a mesma força; rodar o treinamento, que leva de minutos a horas no
-serviço de um provedor; avaliar o modelo novo contra o antigo para ver se nada mais quebrou; e trocar a
-produção para o nome do modelo novo.
+dizer quatro passos. Montar um conjunto que ensine os fatos novos, com exemplos suficientes para
+sobrescrever os antigos, que o modelo aprendeu com a mesma força. Rodar o treinamento, que leva de
+minutos a horas no serviço de um provedor. Avaliar o modelo novo contra o antigo para ver se nada mais
+quebrou. E trocar a produção para o nome do modelo novo.
 
 Nenhum desses passos é difícil, e todos eles são uma versão nova. Uma equipe que reindexaria um
 documento na tarde em que ele mudou vai juntar os fine-tunings por semana ou por mês, e no meio-tempo o

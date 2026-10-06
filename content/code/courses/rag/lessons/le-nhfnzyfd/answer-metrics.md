@@ -89,7 +89,7 @@ as somebody reads the wrong lines before acting on the total.
 That diagnosis is the whole value of measuring the three properties apart. A team looking only at *15
 of 20 correct* would have tuned the search, which was not broken. Two more things are visible only in
 the listing: e25 shows this evaluation runs without the audience filter, so a staff question reached
-the finance document, the leak lesson 2 described and lesson 14 closes; and e05 says the fact for that
+the finance document, the leak lesson 2 described and lesson 14 closes. And e05 says the fact for that
 question should have been written better, which is a fix to the test set, not to the code.
 
 ## Correctness for a real model

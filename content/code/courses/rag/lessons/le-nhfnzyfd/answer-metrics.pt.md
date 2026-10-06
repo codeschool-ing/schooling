@@ -89,7 +89,7 @@ as linhas erradas antes de agir sobre o total.
 Esse diagnóstico é todo o valor de medir as três propriedades separadas. Uma equipe olhando só para *15
 de 20 corretas* teria mexido na busca, que não estava quebrada. Mais duas coisas só aparecem na
 listagem: a e25 mostra que esta avaliação roda sem o filtro de público, então uma pergunta de atendente
-chegou ao documento do financeiro, o vazamento que a aula 2 descreveu e a aula 14 fecha; e a e05 diz que
+chegou ao documento do financeiro, o vazamento que a aula 2 descreveu e a aula 14 fecha. E a e05 diz que
 o fato daquela pergunta deveria ter sido escrito melhor, o que é um conserto no conjunto de teste, não
 no código.
 

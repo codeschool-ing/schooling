@@ -111,6 +111,6 @@ Reordenar os vinte primeiros da híbrida recuperou as duas perguntas de cliente 
 empurrado para fora dos três primeiros, perdeu um primeiro lugar e perdeu uma pergunta de
 identificador. **Neste corpus, com um reordenador não treinado para o trabalho, dá mais ou menos
 empate.** Espera-se que um cross-encoder treinado se saia melhor, e comparações publicadas mostram que
-ele se sai na maioria dos corpora, e por isso pipelines em produção usam um; mas o hábito que esta aula
+ele se sai na maioria dos corpora, e por isso pipelines em produção usam um. Mas o hábito que esta aula
 ensina é o que o pegaria se não se saísse no seu: medir a lista reordenada contra a anterior, nas suas
 próprias perguntas, antes de pagar por ela.

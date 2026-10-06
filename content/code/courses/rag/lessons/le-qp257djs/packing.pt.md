@@ -62,7 +62,7 @@ fontes que a aula 7 mandou e cortou o texto delas de 167 tokens para 116.
 ## Medido, em todas as perguntas
 
 O `compare.py` roda os dois pipelines nas 30 perguntas do `eval.jsonl`, pelo extract-1, e pontua as
-respostas com as regras da aula 8: uma resposta está correta quando contém um fato da resposta, ou
+respostas com as regras da aula 8. Uma resposta está correta quando contém um fato da resposta, ou
 recusa uma pergunta que os documentos não respondem, e é fiel quando toda frase está citada literalmente
 ou perto da fonte citada.
 

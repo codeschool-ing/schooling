@@ -88,7 +88,7 @@ trata de mantê-los assim.
 
 Os arquivos `.jsonl` são o resto das peças do curso: `eval.jsonl` são trinta perguntas com os trechos
 que as respondem, para a aula 8, e `identifiers.jsonl` mais seis cuja resposta depende de um código ou
-número exato, para a aula 6; as duas conversas são para as aulas de memória e de isolamento; os
+número exato, para a aula 6. As duas conversas são para as aulas de memória e de isolamento; os
 anúncios e o registro de perguntas são para as aulas 16 e 17. `help.jsonl` é a central de ajuda do
 `embeddings-vectors`, copiada como estava.
 

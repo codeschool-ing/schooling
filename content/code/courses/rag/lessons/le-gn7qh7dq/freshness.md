@@ -31,11 +31,11 @@ chunks whose text is different and nothing else.
 
 ## With fine-tuning: retrain
 
-A fine-tuned model knows the old policy until a new model is trained without it. That means building a
-dataset that teaches the new facts, including enough examples to overwrite the old ones, which the
-model learnt with the same strength; running the training, which takes from minutes to hours on a
-provider's service; evaluating the new model against the old one so that nothing else broke; and
-switching production to the new model's name.
+A fine-tuned model knows the old policy until a new model is trained without it. That means four steps.
+Build a dataset that teaches the new facts, with enough examples to overwrite the old ones, which the
+model learnt with the same strength. Run the training, which takes from minutes to hours on a
+provider's service. Evaluate the new model against the old one so that nothing else broke. And
+switch production to the new model's name.
 
 None of those steps is hard, and all of them are a release. A team that would re-index a document the
 afternoon it changed will batch fine-tuning runs weekly or monthly, and in between the model answers

@@ -7,8 +7,8 @@ The three libraries so far are code a team imports. **RAGFlow is an application 
 is an open-source retrieval engine under the Apache 2.0 licence, maintained by InfiniFlow, and it
 comes as a set of servers: a web interface where people upload documents and chat with them, an
 API for programs, and the storage behind both. This course does not run it, and the reason is part
-of the lesson: its README in October 2026 recommends starting with 4 CPU cores, 16 GB of memory
-and 50 GB of disk, with Docker, and the stack it starts includes a search engine (Elasticsearch, or
+of the lesson. Its README in October 2026 recommends starting with 4 CPU cores, 16 GB of memory
+and 50 GB of disk, with Docker. The stack it starts includes a search engine (Elasticsearch, or
 InfiniFlow's own Infinity), MySQL, MinIO for files, and a message queue and a cache beside them.
 That is more machine than this lab, and more machinery than a team adds without deciding to.
 

@@ -33,8 +33,8 @@ algo por trás que já esteve certo, e isso é muito mais difícil de pegar.
 ## Perguntando sem fonte
 
 O laboratório deste curso tem um gerador chamado **extract-1**, e a próxima seção diz exatamente o que
-ele é. Ele responde pela mesma API que um modelo real, e para esta seção basta saber como ele se
-comporta quando a pergunta chega sozinha, sem nenhum documento junto: responde a partir de um pequeno
+ele é. Ele responde pela mesma API que um modelo real. Para esta seção basta saber como ele se
+comporta quando a pergunta chega sozinha, sem nenhum documento junto. Responde a partir de um pequeno
 arquivo de frases que o curso escreveu como o que ele "aprendeu no treinamento", e responde sempre.
 
 O `ask.py` manda uma pergunta e imprime a resposta:

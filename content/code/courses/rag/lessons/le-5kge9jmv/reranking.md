@@ -112,5 +112,5 @@ Reranking the hybrid's top twenty recovered the two customer questions the hybri
 the top three, lost one first place, and lost one identifier question. **On this corpus, with a
 reranker not trained for the job, it is roughly a wash.** A trained cross-encoder is expected to do
 better, and published comparisons show it does on most corpora, which is why production pipelines
-use one; but the habit this lesson teaches is the one that would catch it if it did not on yours:
+use one. The habit this lesson teaches is the one that would catch it if it did not on yours:
 measure the reranked list against the one before it, on your own questions, before paying for it.

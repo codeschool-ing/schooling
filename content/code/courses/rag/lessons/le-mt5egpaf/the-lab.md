@@ -88,7 +88,7 @@ about keeping them that way.
 
 The `.jsonl` files are the rest of the course's fixtures: `eval.jsonl` is thirty questions with the
 passages that answer them, for lesson 8, and `identifiers.jsonl` six more whose answers turn on an
-exact code or number, for lesson 6; the two chats are for the lessons on memory and isolation;
+exact code or number, for lesson 6. The two chats are for the lessons on memory and isolation;
 the listings and the query log are for lessons 16 and 17. `help.jsonl` is the help centre from
 `embeddings-vectors`, copied as it was.
 

@@ -31,8 +31,8 @@ something behind it that used to be right, which is much harder to catch.
 ## Asking without a source
 
 This course's lab has a generator called **extract-1**, and the next section says exactly what it
-is. It answers through the same API a real model does, and for this section the one thing to know is
-how it behaves when the question arrives alone, with no document beside it: it answers from a small
+is. It answers through the same API a real model does. For this section the one thing to know is
+how it behaves when the question arrives alone, with no document beside it. It answers from a small
 file of sentences the course wrote as what it "learnt in training", and it always answers.
 
 `ask.py` sends one question and prints the reply:

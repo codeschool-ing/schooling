@@ -7,8 +7,8 @@ As três bibliotecas até aqui são código que uma equipe importa. **O RAGFlow 
 equipe roda.** É um motor de recuperação de código aberto sob a licença Apache 2.0, mantido pela
 InfiniFlow, e vem como um conjunto de servidores: uma interface web onde as pessoas sobem documentos
 e conversam com eles, uma API para programas, e o armazenamento por trás dos dois. Este curso não o
-roda, e o motivo faz parte da aula: o README dele em outubro de 2026 recomenda começar com 4 núcleos
-de CPU, 16 GB de memória e 50 GB de disco, com Docker, e a pilha que ele sobe inclui um motor de
+roda, e o motivo faz parte da aula. O README dele em outubro de 2026 recomenda começar com 4 núcleos
+de CPU, 16 GB de memória e 50 GB de disco, com Docker. A pilha que ele sobe inclui um motor de
 busca (Elasticsearch, ou o Infinity, da própria InfiniFlow), MySQL, MinIO para os arquivos, e uma fila
 de mensagens e um cache ao lado. É mais máquina do que este laboratório, e mais maquinário do que uma
 equipe acrescenta sem decidir.

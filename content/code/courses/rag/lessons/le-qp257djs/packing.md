@@ -62,7 +62,7 @@ sources lesson 7 sent and cut their text from 167 tokens to 116.
 ## Measured, over every question
 
 `compare.py` runs both pipelines over the 30 questions of `eval.jsonl`, through extract-1, and scores
-the replies with lesson 8's rules: a reply is correct when it contains a fact of the answer, or
+the replies with lesson 8's rules. A reply is correct when it contains a fact of the answer, or
 refuses a question the documents do not answer, and faithful when every sentence is quoted or close
 to its cited source.
 
