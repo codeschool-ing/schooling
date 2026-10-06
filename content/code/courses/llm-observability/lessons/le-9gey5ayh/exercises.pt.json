@@ -1,0 +1,430 @@
+{
+  "ex-02jp6mn7": {
+    "prompt": "Associe cada relógio de uma chamada em streaming ao que ele decide.",
+    "pairs": [
+      {
+        "left": "tempo até o primeiro token",
+        "right": "quanto tempo a tela fica vazia"
+      },
+      {
+        "left": "tempo por token de saída",
+        "right": "quanto leva uma resposta longa depois de começar"
+      },
+      {
+        "left": "a chamada inteira",
+        "right": "por quanto tempo um worker e uma conexão ficam presos"
+      }
+    ],
+    "right_distractors": [
+      "quantos tokens o prompt tinha"
+    ]
+  },
+  "ex-k84xa62t": {
+    "prompt": "Na execução do stream.py, quantos milissegundos passaram antes de o primeiro pedaço chegar?",
+    "unit": "ms"
+  },
+  "ex-5knaymwp": {
+    "prompt": "Por que registrar o tempo até o primeiro token exige uma chamada em streaming?",
+    "choices": [
+      {
+        "text": "Chamadas sem streaming não trazem uso",
+        "why": "Elas trazem uso; é o tempo que perdem."
+      },
+      {
+        "text": "O OpenTelemetry guarda eventos em spans de streaming e descarta nos outros, então não haveria evento de primeiro token",
+        "why": "Qualquer span pode ter eventos."
+      },
+      {
+        "text": "Sem streaming, o primeiro e o último token chegam juntos",
+        "why": "Certo. O cliente não consegue ver quando o fornecedor produziu o primeiro."
+      },
+      {
+        "text": "Fornecedores cobram menos por streaming",
+        "why": "O preço não depende de streaming."
+      }
+    ]
+  },
+  "ex-s2ff0ky6": {
+    "prompt": "Uma equipe corta o prompt pela metade e as respostas ficam do mesmo tamanho. Qual relógio mais se move?",
+    "choices": [
+      {
+        "text": "O tempo até o primeiro token",
+        "why": "Certo. O primeiro token espera o prompt ser lido; o resto não."
+      },
+      {
+        "text": "O tempo por token de saída",
+        "why": "É propriedade do modelo e da carga do fornecedor, não do prompt."
+      },
+      {
+        "text": "Os relógios ficam como estavam, porque o prompt é lido em paralelo com a resposta sendo escrita",
+        "why": "O prompt é lido antes do primeiro token, e é isso que o primeiro relógio mede."
+      },
+      {
+        "text": "O número de tokens de saída",
+        "why": "As respostas ficaram do mesmo tamanho, como a pergunta diz."
+      }
+    ]
+  },
+  "ex-r28ddn9k": {
+    "prompt": "A média do primeiro token na semana foi 353 ms, a mediana 290, o p99 4.257. Por que a média resume mal?",
+    "choices": [
+      {
+        "text": "Foi calculada com poucas chamadas",
+        "why": "1.108 chamadas bastam; o problema é a forma."
+      },
+      {
+        "text": "Médias não podem ser calculadas em milissegundos",
+        "why": "Podem; é só o resumo errado para uma cauda."
+      },
+      {
+        "text": "Inclui as chamadas que falharam",
+        "why": "O latency.py exclui as chamadas que falharam."
+      },
+      {
+        "text": "Não descreve ninguém",
+        "why": "Certo: alta demais para a chamada típica, baixa demais para a lenta. Um corpo apertado e uma cauda longa são duas populações que a média mistura."
+      }
+    ]
+  },
+  "ex-8t4gfwg5": {
+    "prompt": "Por que uma chamada de p99 não é problema de um cliente raro?",
+    "choices": [
+      {
+        "text": "Porque o p99 é definido sobre clientes, não chamadas",
+        "why": "O latency.py o calcula sobre chamadas."
+      },
+      {
+        "text": "Porque uma sessão tem muitas chamadas, e muitas sessões topam com uma",
+        "why": "Certo. Dez chamadas dão cerca de uma chance em dez de pelo menos um p99."
+      },
+      {
+        "text": "Porque as chamadas lentas são todas de um usuário",
+        "why": "As partidas a frio caem ao acaso, em qualquer um."
+      },
+      {
+        "text": "Porque sob carga o p99 é igual à mediana",
+        "why": "Aqui ele foi quase quinze vezes a mediana."
+      }
+    ]
+  },
+  "ex-vme1r1s0": {
+    "prompt": "Qual foi o tempo mediano por token de saída depois do primeiro, nas chamadas a modelo da semana?",
+    "unit": "ms"
+  },
+  "ex-0x7xtkcf": {
+    "prompt": "Ao longo da semana, o que o tamanho de uma chamada inteira a modelo mais acompanhou?",
+    "choices": [
+      {
+        "text": "O número de tokens de saída",
+        "why": "Certo. De menos de 20 a mais de 80 tokens, a mediana foi de 555 a 2.498 ms."
+      },
+      {
+        "text": "O número de tokens de entrada",
+        "why": "A entrada moveu o primeiro token em cerca de um décimo de segundo entre todos os grupos."
+      },
+      {
+        "text": "A hora do dia",
+        "why": "Os tempos do labobs não dependem da hora."
+      },
+      {
+        "text": "A funcionalidade que fez o pedido",
+        "why": "Só pelo tamanho das respostas de cada funcionalidade."
+      }
+    ]
+  },
+  "ex-v4hpwvpe": {
+    "prompt": "Dezesseis chamadas esperaram mais de 3 s pelo primeiro token, em todos os grupos de tamanho de entrada. O que isso sugere?",
+    "choices": [
+      {
+        "text": "Prompts longos causam partidas a frio",
+        "why": "Elas apareceram em todo tamanho de prompt, os curtos inclusive."
+      },
+      {
+        "text": "A saída foi muito longa nessas chamadas",
+        "why": "O primeiro token vem antes de qualquer saída existir."
+      },
+      {
+        "text": "Um defeito no drivers.py que os agrupou errado",
+        "why": "O agrupamento é pela contagem do próprio span; os 16 são contados à parte de qualquer forma."
+      },
+      {
+        "text": "Uma causa fora do pedido",
+        "why": "Certo. Lentidão que ignora o tamanho aponta para o fornecedor, a rede ou uma fila."
+      }
+    ]
+  },
+  "ex-xxgczn22": {
+    "prompt": "Associe cada objetivo à alavanca que esta aula põe ao lado dele.",
+    "pairs": [
+      {
+        "left": "mais barato",
+        "right": "menos fontes no prompt"
+      },
+      {
+        "left": "terminar antes",
+        "right": "respostas mais curtas"
+      },
+      {
+        "left": "doer menos na cauda",
+        "right": "um timeout e uma nova tentativa"
+      }
+    ],
+    "right_distractors": [
+      "uma temperatura mais alta"
+    ]
+  },
+  "ex-mje2qd3t": {
+    "prompt": "Com 30% das tentativas recusadas, duas de dez tentativas falharam e nenhum dos dez pedidos. Por quê?",
+    "choices": [
+      {
+        "text": "As falhas foram no embedding, que não conta",
+        "why": "Elas foram em spans de chat."
+      },
+      {
+        "text": "Cada falha foi repetida, e a repetição funcionou",
+        "why": "Certo. A taxa por tentativa é a saúde do fornecedor; a por pedido, a do cliente."
+      },
+      {
+        "text": "O errors.py ignora falhas",
+        "why": "Ele contou duas."
+      },
+      {
+        "text": "Recusas não são erros",
+        "why": "Um 503 é um erro no span."
+      }
+    ]
+  },
+  "ex-97h0c2hr": {
+    "prompt": "A taxa de erro por tentativa sobe e a por pedido fica estável. Qual é a leitura da aula?",
+    "choices": [
+      {
+        "text": "Um incidente: acionar alguém agora",
+        "why": "Isso é para quando as duas sobem juntas."
+      },
+      {
+        "text": "Nada a ver, já que nenhum cliente foi afetado",
+        "why": "As novas tentativas estão sendo gastas, e elas acabam."
+      },
+      {
+        "text": "Um aviso: as novas tentativas estão absorvendo um problema do fornecedor",
+        "why": "Certo. É a hora de olhar, antes que acabem."
+      },
+      {
+        "text": "Um defeito no laço de novas tentativas",
+        "why": "O laço está funcionando exatamente como planejado quando isso acontece."
+      }
+    ]
+  },
+  "ex-nc7m0bp6": {
+    "prompt": "Com as novas tentativas do próprio SDK, o trace mostrou um span de 1.835 ms e nenhum erro. O que o log do labobs mostrou?",
+    "choices": [
+      {
+        "text": "Um pedido que levou 1.835 ms",
+        "why": "Foram três pedidos."
+      },
+      {
+        "text": "Três sucessos",
+        "why": "Os pedidos 2362 e 2363 foram recusados."
+      },
+      {
+        "text": "Duas recusas com 503 e depois um sucesso",
+        "why": "Certo. O SDK escondeu as duas falhas dentro de um span bem-sucedido."
+      },
+      {
+        "text": "Nada, porque o SDK repete localmente",
+        "why": "Toda nova tentativa é um pedido novo ao fornecedor."
+      }
+    ]
+  },
+  "ex-sq7jxr7g": {
+    "prompt": "Além de repetir no próprio código, como uma equipe pode manter as novas tentativas do SDK e ainda ver cada tentativa?",
+    "choices": [
+      {
+        "text": "Instrumentar por baixo, no nível do HTTP",
+        "why": "Certo. Cada pedido que o SDK manda vira um span próprio."
+      },
+      {
+        "text": "Aumentar o max_retries para as falhas ficarem mais raras do que eram",
+        "why": "Mais repetições escondem mais falhas."
+      },
+      {
+        "text": "Baixar o timeout até as repetições pararem",
+        "why": "Um timeout não revela uma recusa; acrescenta outro tipo de falha."
+      },
+      {
+        "text": "Ler nos cabeçalhos da resposta uma contagem de repetições",
+        "why": "A resposta final não diz quantas tentativas vieram antes."
+      }
+    ]
+  },
+  "ex-t22wpwp0": {
+    "prompt": "Como o assistente distingue um stream cortado de um que terminou?",
+    "choices": [
+      {
+        "text": "A resposta é mais curta que o normal",
+        "why": "Respostas curtas são normais; tamanho não prova nada."
+      },
+      {
+        "text": "O status HTTP é 500",
+        "why": "O stream começou com 200; o status foi enviado antes de qualquer texto."
+      },
+      {
+        "text": "Faltam as citações",
+        "why": "Uma resposta terminada pode não ter citações também."
+      },
+      {
+        "text": "Nenhum motivo de parada chegou",
+        "why": "Certo. Um stream terminado acaba com um; um que caiu, não."
+      }
+    ]
+  },
+  "ex-5742e56f": {
+    "prompt": "Uma resposta em streaming é mostrada na tela à medida que chega, é cortada, e é repetida. O que o cliente vê se a tela não foi feita para isso?",
+    "choices": [
+      {
+        "text": "Nada diferente de uma resposta lenta",
+        "why": "Isso só é verdade quando a resposta aparece completa."
+      },
+      {
+        "text": "O começo, e depois o texto recomeçando ou duplicado",
+        "why": "Certo. Repetir uma resposta em streaming é um tropeço visível."
+      },
+      {
+        "text": "Uma página de erro com o id de trace",
+        "why": "A repetição deu certo; nenhum erro chegou à tela."
+      },
+      {
+        "text": "Só a segunda tentativa",
+        "why": "Os seis primeiros pedaços já estavam na tela."
+      }
+    ]
+  },
+  "ex-shgat6f7": {
+    "prompt": "O assistente registra até onde chegou um stream cortado no atributo app.partial____.",
+    "blanks": [
+      {
+        "accept": [
+          "pieces"
+        ]
+      }
+    ]
+  },
+  "ex-xx428kyx": {
+    "prompt": "Por que um timeout de 1 s na chamada inteira é uma má escolha para este assistente?",
+    "choices": [
+      {
+        "text": "É mais longo que o padrão do SDK",
+        "why": "O padrão é dez minutos."
+      },
+      {
+        "text": "Nunca dispara",
+        "why": "Dispararia o tempo todo."
+      },
+      {
+        "text": "Corta as respostas longas também",
+        "why": "Certo. Mais da metade da semana passou de um segundo porque tinha mais a dizer."
+      },
+      {
+        "text": "Não dá para definir timeout em streams",
+        "why": "Dá, como limite de cada leitura."
+      }
+    ]
+  },
+  "ex-6rymdzcg": {
+    "prompt": "O timeout de dois segundos do timeout.py disparou numa chamada que ia levar quatro. O que o timeout do SDK de fato limita?",
+    "choices": [
+      {
+        "text": "A chamada inteira, do começo ao fim",
+        "why": "Um stream longo sem intervalo longo não o dispararia."
+      },
+      {
+        "text": "O número de novas tentativas",
+        "why": "Isso é o max_retries, outra configuração."
+      },
+      {
+        "text": "O tempo de processamento do próprio fornecedor, informado de volta",
+        "why": "O cliente não vê o tempo de processamento do fornecedor; vê só bytes chegando ou não."
+      },
+      {
+        "text": "A conexão e cada leitura: num stream, o primeiro pedaço e os intervalos",
+        "why": "Certo. É o timeout do cliente HTTP, não um limite na chamada inteira."
+      }
+    ]
+  },
+  "ex-2kyw65qg": {
+    "prompt": "Qual é o timeout padrão do SDK da OpenAI, em minutos?",
+    "unit": "minutos"
+  },
+  "ex-f3ek6rka": {
+    "prompt": "Coloque os eventos do trace do stream cortado na ordem em que aconteceram.",
+    "items": [
+      "a primeira tentativa entrega seis pedaços",
+      "o stream termina sem motivo de parada",
+      "o assistente espera meio segundo",
+      "a segunda tentativa entrega a resposta inteira"
+    ]
+  },
+  "ex-djzmedxm": {
+    "prompt": "Quais destes pertencem a um span de chamada a modelo para trabalhar latência? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "O tempo até o primeiro token",
+        "why": "Certo."
+      },
+      {
+        "text": "A contagem de tokens de saída",
+        "why": "Certo: o tempo a acompanha."
+      },
+      {
+        "text": "A contagem de tokens de entrada",
+        "why": "Certo: o primeiro token a acompanha."
+      },
+      {
+        "text": "A latência média da semana",
+        "why": "Um span é uma chamada; o resumo da semana se calcula a partir de muitos spans."
+      }
+    ]
+  },
+  "ex-nvyx2xcg": {
+    "prompt": "A aula 3 descobriu que a entrada era a maior parte do custo. Do que a aula 4 descobre que a saída é a maior parte?",
+    "choices": [
+      {
+        "text": "Do tempo",
+        "why": "Certo. Cada token de saída soma os seus 25 ms ou por aí."
+      },
+      {
+        "text": "Do custo também, quando o preço da saída é contado direito",
+        "why": "A entrada continuou sendo a maior parte do custo mesmo quatro vezes mais barata por token."
+      },
+      {
+        "text": "Das falhas, já que saídas longas são cortadas mais vezes",
+        "why": "Nenhum padrão assim foi medido aqui."
+      },
+      {
+        "text": "Dos tokens mandados ao modelo de embedding",
+        "why": "O embedding lê a pergunta, não a saída."
+      }
+    ]
+  },
+  "ex-2ct0tg4w": {
+    "prompt": "Qual taxa de erro descreve o que os clientes viveram?",
+    "choices": [
+      {
+        "text": "A taxa de erro por tentativa",
+        "why": "Essa é a saúde do fornecedor; novas tentativas podem escondê-la dos clientes."
+      },
+      {
+        "text": "A taxa de erro por pedido",
+        "why": "Certo."
+      },
+      {
+        "text": "A taxa de partidas a frio na semana, como as regras do labobs a definem",
+        "why": "Partidas a frio são lentas, não falhas."
+      },
+      {
+        "text": "A parcela de recusas pelo piso",
+        "why": "Uma recusa é uma resposta, não um erro."
+      }
+    ]
+  }
+}
