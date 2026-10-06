@@ -82,10 +82,10 @@ def degrade_call(out):
     clean = os.path.join(out, "call-1042.wav")
     subprocess.run(FFMPEG + [
         "-i", clean,
-        "-f", "lavfi", "-i", "anoisesrc=color=pink:seed=1042:amplitude=0.06:sample_rate=16000",
+        "-f", "lavfi", "-i", "anoisesrc=color=pink:seed=1042:amplitude=0.35:sample_rate=16000",
         "-f", "lavfi", "-i", "sine=frequency=60:sample_rate=16000",
         "-filter_complex",
-        "[2]volume=0.05[hum];[0][1][hum]amix=inputs=3:duration=first:normalize=0[m]",
+        "[2]volume=0.12[hum];[0][1][hum]amix=inputs=3:duration=first:normalize=0[m]",
         "-map", "[m]", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
         "-map_metadata", "-1", "-fflags", "+bitexact", os.path.join(out, "call-1042-noisy.wav")], check=True)
     subprocess.run(FFMPEG + [
