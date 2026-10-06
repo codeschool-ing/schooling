@@ -1,0 +1,407 @@
+{
+  "ex-yjmck5k4": {
+    "prompt": "Que abordagem esta aula constrói, e por que essa?",
+    "choices": [
+      {
+        "text": "Decidir cada passo pelo último resultado, porque ele se adapta melhor a surpresas",
+        "why": "Ele se adapta, mas perde a segunda metade de um pedido em tarefas longas."
+      },
+      {
+        "text": "Escrever o plano inteiro primeiro e executá-lo sem mudanças, pela previsibilidade",
+        "why": "Previsível até um resultado invalidar o resto do plano."
+      },
+      {
+        "text": "Planejar, agir, revisar",
+        "why": "Certo. Um plano escrito mantém tarefas longas no rumo, e revisá-lo trata os resultados que mudam o caminho."
+      },
+      {
+        "text": "Nenhum plano",
+        "why": "O agente da aula escreve um no primeiro passo."
+      }
+    ]
+  },
+  "ex-9g7zkqy3": {
+    "prompt": "O que escrever o plano por uma chamada de ferramenta dá que planejar no texto da resposta não dá?",
+    "choices": [
+      {
+        "text": "Uma estrutura que o hospedeiro conta, guarda e passa adiante",
+        "why": "Certo. Uma lista de passos com status de um conjunto fechado é algo que o código lê; prosa não é."
+      },
+      {
+        "text": "Raciocínio melhor, porque ferramentas fazem o modelo pensar mais em cada um dos passos",
+        "why": "A aula não afirma nada sobre a qualidade do raciocínio; o ganho é o plano ser um objeto."
+      },
+      {
+        "text": "Menos tokens por execução, porque uma chamada é mais curta que qualquer frase",
+        "why": "O update_plan acrescenta passos e tokens; a aula conta isso como custo."
+      },
+      {
+        "text": "A garantia de que o plano é seguido",
+        "why": "Nada obriga o modelo a seguir o plano; o hospedeiro só pode lê-lo e compará-lo."
+      }
+    ]
+  },
+  "ex-bddez5ys": {
+    "prompt": "Quantos pedidos a pergunta do presente levou sem limites apertados?",
+    "unit": "pedidos"
+  },
+  "ex-jm1gkzg3": {
+    "prompt": "Por que o `agent.py` trata uma resposta sem chamada de ferramenta como `stopped`, e não como resposta?",
+    "choices": [
+      {
+        "text": "Porque a API devolve erro quando a resposta não traz chamada de ferramenta",
+        "why": "Uma resposta só de texto é válida para a API. O hospedeiro escolhe como tratá-la."
+      },
+      {
+        "text": "Porque respostas de texto custam mais tokens que uma chamada de finish",
+        "why": "Custo não é o motivo dado."
+      },
+      {
+        "text": "Ele foi instruído a responder por finish, então texto puro é ambíguo",
+        "why": "Certo. Sem a chamada de finish, a resposta é uma resposta, uma pergunta de volta ou um modelo que desistiu, e o hospedeiro não distingue."
+      },
+      {
+        "text": "Porque o labllm não devolve texto",
+        "why": "O labllm devolve texto em muitas aulas."
+      }
+    ]
+  },
+  "ex-kk21k27k": {
+    "prompt": "Para que serve o `sources` na chamada de finish?",
+    "choices": [
+      {
+        "text": "Para citar os livros que o cliente deveria ler",
+        "why": "As fontes são chamadas de ferramenta, não recomendações de leitura."
+      },
+      {
+        "text": "Para um revisor ou um teste conferir a resposta contra as chamadas",
+        "why": "Certo. Ele nomeia em que a resposta se apoia, para conferir a afirmação sem ler a conversa inteira."
+      },
+      {
+        "text": "Para dizer ao labllm qual regra aplicar em seguida",
+        "why": "O labllm escolhe regras pela conversa, não pelos argumentos do finish."
+      },
+      {
+        "text": "Para deixar a resposta mais longa e mais convincente para o cliente ler",
+        "why": "O cliente vê a resposta; as fontes são para conferir."
+      }
+    ]
+  },
+  "ex-89zyfaan": {
+    "prompt": "Associe cada orçamento à falha contra a qual ele protege.",
+    "pairs": [
+      {
+        "left": "Passos",
+        "right": "Um modelo que entra em laço ou nunca chama finish"
+      },
+      {
+        "left": "Tokens",
+        "right": "Uma conversa que cresce sem limite"
+      },
+      {
+        "left": "Segundos",
+        "right": "Um cliente esperando ferramentas lentas"
+      }
+    ],
+    "right_distractors": [
+      "Uma resposta errada"
+    ]
+  },
+  "ex-pv10rg3w": {
+    "prompt": "A execução com orçamento de tokens informou `1895 of 1500 used`. Por que o orçamento estourou?",
+    "choices": [
+      {
+        "text": "Porque o contador de tokens do agent.py está errado e conta alguns tokens duas vezes",
+        "why": "O contador soma entrada e saída por pedido; os totais são consistentes."
+      },
+      {
+        "text": "A conferência roda antes de cada pedido, e o tamanho de um pedido só se sabe quando ele volta",
+        "why": "Certo. Abaixo de 1500 antes do passo 3, 1895 depois; a conferência antes do passo 4 parou a execução."
+      },
+      {
+        "text": "Porque o labllm ignora o orçamento que o hospedeiro definiu",
+        "why": "O labllm nunca vê o orçamento; ele mora no hospedeiro."
+      },
+      {
+        "text": "Porque o modelo pediu mais tokens",
+        "why": "O modelo não tem voz no orçamento."
+      }
+    ]
+  },
+  "ex-znzyhmxs": {
+    "prompt": "Como um hospedeiro consegue parar uma execução antes que um pedido cruze o orçamento de tokens, e não depois?",
+    "choices": [
+      {
+        "text": "Pedindo ao modelo que mantenha as respostas curtas",
+        "why": "Isso é um pedido, não uma verificação, e a entrada é a maior parte de qualquer jeito."
+      },
+      {
+        "text": "Baixando o max_tokens para zero no último pedido permitido",
+        "why": "Um pedido sem espaço para responder não produz nada útil."
+      },
+      {
+        "text": "Contando primeiro os tokens do próximo pedido e recusando-o se ele for cruzar",
+        "why": "Certo. A API da Anthropic tem um endpoint de contagem de tokens para isso, e o labllm o implementa."
+      },
+      {
+        "text": "Conferindo depois de cada pedido",
+        "why": "Foi isso que produziu 1895 de 1500."
+      }
+    ]
+  },
+  "ex-df4pk41d": {
+    "prompt": "Das maneiras como uma execução pode terminar no agent.py, qual é a única que dá `answered`?",
+    "choices": [
+      {
+        "text": "O modelo responder com texto e sem chamada de ferramenta",
+        "why": "Isso é stopped: replied without calling finish."
+      },
+      {
+        "text": "Chegar ao limite de passos com um plano cujos passos estão todos feitos",
+        "why": "Um limite de passos é uma parada, diga o plano o que disser."
+      },
+      {
+        "text": "Ficar sem tempo depois de a última ferramenta voltar",
+        "why": "Isso é o orçamento de tempo, uma parada."
+      },
+      {
+        "text": "O modelo chamar finish",
+        "why": "Certo. A execução só acaba quando o modelo diz isso explicitamente, por uma chamada validada."
+      }
+    ]
+  },
+  "ex-177dgx11": {
+    "prompt": "Uma equipe quer que o agente sinalize respostas de que não tem certeza para uma pessoa revisar. Onde a aula sugere pôr isso?",
+    "choices": [
+      {
+        "text": "No prompt de sistema, pedindo ao modelo que acrescente 'não tenho certeza' a essas respostas",
+        "why": "Prosa precisa ser interpretada, e uma frase pode faltar ou variar."
+      },
+      {
+        "text": "Como um campo no esquema do finish, como needs_human",
+        "why": "Certo. Um campo estruturado é validado e lido pelo código, sem prosa para interpretar."
+      },
+      {
+        "text": "Numa chamada de modelo separada que avalia toda resposta depois de a execução terminar",
+        "why": "Isso é uma verificação extra possível, mas não o que a aula descreve."
+      },
+      {
+        "text": "No limite de passos",
+        "why": "Um limite decide quando parar, não quão segura é uma resposta."
+      }
+    ]
+  },
+  "ex-7gfd7mw9": {
+    "prompt": "O resultado com limite de passos lista 'Find adventure books in stock' como não feito, embora o find_books tenha devolvido dois livros. Por quê?",
+    "choices": [
+      {
+        "text": "Porque o find_books falhou em silêncio",
+        "why": "Ele devolveu dois livros; a transcrição os mostra."
+      },
+      {
+        "text": "O plano foi escrito antes de a busca rodar",
+        "why": "Certo. Um plano é o relato do modelo sobre o trabalho e fica pelo menos um passo atrás dele."
+      },
+      {
+        "text": "Porque o hospedeiro apaga a última atualização do plano sempre que um limite dispara",
+        "why": "O hospedeiro guarda o último plano como foi escrito."
+      },
+      {
+        "text": "Porque execuções paradas marcam todo passo como não feito",
+        "why": "A consulta aparece como feita."
+      }
+    ]
+  },
+  "ex-k3ah4zm9": {
+    "prompt": "O que a aula diz que uma passagem melhor inclui, além do plano?",
+    "choices": [
+      {
+        "text": "Um palpite de resposta, para o cliente não ficar esperando",
+        "why": "Uma resposta chutada é justamente o que uma execução parada não pode mandar."
+      },
+      {
+        "text": "O prompt de sistema completo e toda definição de ferramenta que o agente recebeu",
+        "why": "Quem assume o caso precisa do trabalho feito, não da configuração do agente."
+      },
+      {
+        "text": "Um pedido de desculpas",
+        "why": "Cortesia é bem-vinda; ela não diz à pessoa o que foi encontrado."
+      },
+      {
+        "text": "Os resultados das ferramentas que a execução coletou",
+        "why": "Certo. Os resultados são o trabalho; o plano sozinho manda a pessoa refazer o que já foi feito."
+      }
+    ]
+  },
+  "ex-pk7ytp3s": {
+    "prompt": "Depois de `no order M-1049`, o plano marcou 'Check the return window' como dropped. Por que isso é melhor que marcá-lo como done?",
+    "choices": [
+      {
+        "text": "Porque done é reservado a passos que usam ferramentas",
+        "why": "Os status não têm essa regra; o ponto é a verdade."
+      },
+      {
+        "text": "Porque passos dropped custam menos tokens",
+        "why": "A palavra do status não faz diferença no custo."
+      },
+      {
+        "text": "Registra uma decisão em vez de uma afirmação falsa",
+        "why": "Certo. A janela nunca foi conferida; dropped diz que foi considerada e abandonada depois deste resultado."
+      },
+      {
+        "text": "Porque o esquema não permite done ali",
+        "why": "O esquema permite done em qualquer passo."
+      }
+    ]
+  },
+  "ex-2ehv1jkf": {
+    "prompt": "Por que é certo que o modelo não tentou o M-1048, o id existente mais próximo do M-1049?",
+    "choices": [
+      {
+        "text": "Porque chutar um id é agir sobre o pedido de outra pessoa",
+        "why": "Certo. Um id 'corrigido' é o pedido de outro cliente, que a aula 17 trata como problema de permissão."
+      },
+      {
+        "text": "Porque o M-1048 foi cancelado e não poderia ser devolvido de jeito nenhum",
+        "why": "O status dele não vem ao caso; não é o pedido do cliente para consultar."
+      },
+      {
+        "text": "Porque o limite de passos teria sido atingido",
+        "why": "Havia espaço para mais passos."
+      },
+      {
+        "text": "Porque o get_order recusa ids terminados em 8",
+        "why": "O get_order aceita qualquer id que case com o padrão."
+      }
+    ]
+  },
+  "ex-k8ek48aq": {
+    "prompt": "Um cliente escreve 'leve o tempo que precisar'. O que isso deve fazer com o limite de passos do agente?",
+    "choices": [
+      {
+        "text": "Dobrá-lo, dentro do razoável",
+        "why": "Uma mensagem é dado. Um orçamento é configuração que a conversa não alcança."
+      },
+      {
+        "text": "Removê-lo só naquela execução, já que o cliente aceitou esperar",
+        "why": "O limite protege a loja também, não só a paciência do cliente."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. O limite é uma variável no hospedeiro, e nenhum texto numa conversa o muda."
+      },
+      {
+        "text": "Deixar o modelo decidir",
+        "why": "Um limite que o modelo pode mudar não é limite."
+      }
+    ]
+  },
+  "ex-q99eqnsb": {
+    "prompt": "Qual a diferença entre informar o modelo sobre um limite e delegar o limite a ele?",
+    "choices": [
+      {
+        "text": "Informar põe o limite no prompt de sistema; delegar o põe na mensagem do usuário",
+        "why": "Os dois são informar. Delegar quer dizer que a saída do modelo pode mudá-lo."
+      },
+      {
+        "text": "Informar muda como ele planeja; delegar deixa que ele decida quando parar",
+        "why": "Certo. Dizer ao modelo que ele tem umas cinco chamadas é uma dica; o contador do hospedeiro continua decidindo."
+      },
+      {
+        "text": "Não há: de um jeito ou de outro o modelo obedece ao número que recebe",
+        "why": "Um modelo pode contar ou não; essa incerteza é o motivo de o hospedeiro contar."
+      },
+      {
+        "text": "Delegar custa menos tokens",
+        "why": "Custo não é a distinção."
+      }
+    ]
+  },
+  "ex-03fmhn9d": {
+    "prompt": "Onde a aula sugere pôr um limite de passos?",
+    "choices": [
+      {
+        "text": "Na média de passos que as execuções bem-sucedidas levam",
+        "why": "Metade das execuções bem-sucedidas fica acima da média; o limite as pararia."
+      },
+      {
+        "text": "Acima das execuções bem-sucedidas mais lentas, como o percentil 99, mais uma margem",
+        "why": "Certo. Ele deve disparar em execuções que deram errado e quase nunca nas que só são longas."
+      },
+      {
+        "text": "Tão alto quanto o fornecedor permitir",
+        "why": "Isso desliga o limite na prática."
+      },
+      {
+        "text": "No que o modelo sugerir",
+        "why": "O modelo não tem voz nos próprios limites."
+      }
+    ]
+  },
+  "ex-09qt9gxq": {
+    "prompt": "Um limite dispara em uma de cada cinco execuções. O que a aula diz que isso indica?",
+    "choices": [
+      {
+        "text": "Que o limite está fazendo bem o seu trabalho",
+        "why": "Um em cem é um limite fazendo o seu trabalho. Um em cinco é um sinal."
+      },
+      {
+        "text": "Que o fornecedor está lento",
+        "why": "Possível no orçamento de tempo, mas a resposta da aula é ler os resultados parados."
+      },
+      {
+        "text": "Que o limite deve ser removido",
+        "why": "Removê-lo perde a proteção; primeiro descubra por que ele dispara."
+      },
+      {
+        "text": "O limite ou o agente está errado; os resultados dizem qual",
+        "why": "Certo. Os planos e rastros das execuções paradas mostram se elas eram longas ou quebradas."
+      }
+    ]
+  },
+  "ex-exd0j583": {
+    "prompt": "Quais destes são motivos para dar limites diferentes a tipos diferentes de tarefa? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma tarefa de pesquisa legitimamente leva muitos mais passos que uma pergunta sobre pedido",
+        "why": "Sim. Um limite global não serve a nenhuma das duas."
+      },
+      {
+        "text": "Um limite pensado para pesquisa deixa uma pergunta de pedido em laço rodar muito tempo",
+        "why": "Sim. O limite frouxo atrasa a captura."
+      },
+      {
+        "text": "Tipos diferentes de tarefa usam modelos diferentes com preços diferentes",
+        "why": "Talvez, mas isso é sobre custo por token, não sobre quantos passos uma tarefa precisa."
+      },
+      {
+        "text": "O roteador já sabe de que tipo é uma tarefa",
+        "why": "Sim. É o lugar natural para escolher o limite."
+      }
+    ]
+  },
+  "ex-21mc6ch1": {
+    "prompt": "Ponha em ordem um passo do laço do agent.py.",
+    "items": [
+      "Conferir os orçamentos de passos, tokens e tempo",
+      "Mandar o pedido ao modelo",
+      "Somar os tokens do pedido ao total",
+      "Tratar cada chamada: finish, update_plan ou uma ferramenta da loja"
+    ]
+  },
+  "ex-r1fdnkp3": {
+    "prompt": "No esquema do update_plan, um passo que o modelo decidiu não fazer tem o status `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "dropped"
+        ]
+      }
+    ]
+  },
+  "ex-qw1as2te": {
+    "prompt": "Na execução com orçamento de tempo, o primeiro pedido escreveu 52 tokens de saída. Pela regra do labllm, 200 ms mais 40 ms por token de saída, quantos milissegundos ele deveria ter levado, no mínimo?",
+    "hint": "Multiplique primeiro, depois some.",
+    "unit": "ms"
+  }
+}

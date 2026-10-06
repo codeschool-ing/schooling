@@ -1,0 +1,613 @@
+[
+  {
+    "id": "ex-yjmck5k4",
+    "version": 1,
+    "section": "plan-or-improvise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which approach does this lesson build, and why that one?",
+    "choices": [
+      {
+        "text": "Deciding each step from the last result, because it adapts best to surprises",
+        "correct": false,
+        "why": "It adapts, but it loses track of a request's second half on long tasks."
+      },
+      {
+        "text": "Writing the full plan first and executing it without changes, for predictability",
+        "correct": false,
+        "why": "Predictable until a result invalidates the rest of the plan."
+      },
+      {
+        "text": "Plan, act, revise",
+        "correct": true,
+        "why": "Right. A written plan keeps long tasks on track, and revising it handles the results that change the path."
+      },
+      {
+        "text": "No plan at all",
+        "correct": false,
+        "why": "The lesson's agent writes one at its first step."
+      }
+    ]
+  },
+  {
+    "id": "ex-9g7zkqy3",
+    "version": 1,
+    "section": "plan-or-improvise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does writing the plan through a tool call give that planning in reply text does not?",
+    "choices": [
+      {
+        "text": "A structure the host counts, stores and hands over",
+        "correct": true,
+        "why": "Right. A list of steps with statuses from a closed set is something code can read; prose is not."
+      },
+      {
+        "text": "Better reasoning, because tools make the model think harder about each of the steps",
+        "correct": false,
+        "why": "The lesson claims nothing about reasoning quality; the benefit is that the plan is an object."
+      },
+      {
+        "text": "Fewer tokens per run, because a tool call is shorter than any sentence",
+        "correct": false,
+        "why": "update_plan adds steps and tokens; the lesson counts that as a cost."
+      },
+      {
+        "text": "A guarantee that the plan is followed",
+        "correct": false,
+        "why": "Nothing makes the model follow its plan; the host can only read and compare it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bddez5ys",
+    "version": 1,
+    "section": "a-written-plan",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests did the gift question take with no tight limits?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-jm1gkzg3",
+    "version": 1,
+    "section": "a-written-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `agent.py` treat a reply with no tool call as `stopped` rather than as an answer?",
+    "choices": [
+      {
+        "text": "Because the API returns an error when the reply carries no tool call",
+        "correct": false,
+        "why": "A text-only reply is valid for the API. The host chooses how to treat it."
+      },
+      {
+        "text": "Because text replies cost more tokens than a finish call does",
+        "correct": false,
+        "why": "Cost is not the reason given."
+      },
+      {
+        "text": "It was told to answer through finish, so plain text is ambiguous",
+        "correct": true,
+        "why": "Right. Without a finish call the reply is an answer, a question back, or a model that gave up, and the host cannot tell which."
+      },
+      {
+        "text": "Because labllm cannot return text",
+        "correct": false,
+        "why": "labllm returns text in many lessons."
+      }
+    ]
+  },
+  {
+    "id": "ex-kk21k27k",
+    "version": 1,
+    "section": "a-written-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `sources` in the finish call for?",
+    "choices": [
+      {
+        "text": "To cite the books the customer should read",
+        "correct": false,
+        "why": "The sources are tool calls, not reading recommendations."
+      },
+      {
+        "text": "So a reviewer or a test checks the answer against the calls",
+        "correct": true,
+        "why": "Right. It names what the answer rests on, so checking the claim needs no full read of the conversation."
+      },
+      {
+        "text": "To tell labllm which rule to apply next",
+        "correct": false,
+        "why": "labllm chooses rules from the conversation, not from finish's arguments."
+      },
+      {
+        "text": "To make the answer longer and more convincing for the customer to read",
+        "correct": false,
+        "why": "The customer sees the answer; sources are for checking."
+      }
+    ]
+  },
+  {
+    "id": "ex-89zyfaan",
+    "version": 1,
+    "section": "four-budgets",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each budget to the failure it protects against.",
+    "pairs": [
+      {
+        "left": "Steps",
+        "right": "A model that loops or never calls finish"
+      },
+      {
+        "left": "Tokens",
+        "right": "A conversation that grows without bound"
+      },
+      {
+        "left": "Seconds",
+        "right": "A customer waiting on slow tools"
+      }
+    ],
+    "right_distractors": [
+      "A wrong answer"
+    ]
+  },
+  {
+    "id": "ex-pv10rg3w",
+    "version": 1,
+    "section": "four-budgets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The token run reported `1895 of 1500 used`. Why was the budget overrun?",
+    "choices": [
+      {
+        "text": "Because the token counter in agent.py is wrong and counts some tokens twice",
+        "correct": false,
+        "why": "The counter adds input and output per request; the totals are consistent."
+      },
+      {
+        "text": "The check runs before each request, and a request's size is unknown until it returns",
+        "correct": true,
+        "why": "Right. Under 1500 before step 3, 1895 after it; the check before step 4 stopped the run."
+      },
+      {
+        "text": "Because labllm ignores the budget the host set",
+        "correct": false,
+        "why": "labllm never sees the budget; it lives in the host."
+      },
+      {
+        "text": "Because the model asked for more tokens",
+        "correct": false,
+        "why": "The model has no say in the budget."
+      }
+    ]
+  },
+  {
+    "id": "ex-znzyhmxs",
+    "version": 1,
+    "section": "four-budgets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can a host stop a run before a request crosses the token budget, rather than after?",
+    "choices": [
+      {
+        "text": "By asking the model to keep its replies short",
+        "correct": false,
+        "why": "That is a request, not a check, and the input side is the larger part anyway."
+      },
+      {
+        "text": "By lowering max_tokens to zero on the last allowed request",
+        "correct": false,
+        "why": "A request with no room to reply produces nothing useful."
+      },
+      {
+        "text": "By counting the next request's tokens first and refusing it if it would cross",
+        "correct": true,
+        "why": "Right. Anthropic's API has a token-counting endpoint for this, and labllm implements it."
+      },
+      {
+        "text": "By checking after each request",
+        "correct": false,
+        "why": "That is what produced 1895 of 1500."
+      }
+    ]
+  },
+  {
+    "id": "ex-df4pk41d",
+    "version": 1,
+    "section": "stop-criteria",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the ways a run can end in agent.py, which is the only one that yields `answered`?",
+    "choices": [
+      {
+        "text": "The model replying with text and no tool call",
+        "correct": false,
+        "why": "That is stopped: replied without calling finish."
+      },
+      {
+        "text": "Reaching the step limit with a plan whose steps are all done",
+        "correct": false,
+        "why": "A step limit is a stop, whatever the plan says."
+      },
+      {
+        "text": "Running out of time after the last tool has returned",
+        "correct": false,
+        "why": "That is the time budget, a stop."
+      },
+      {
+        "text": "The model calling finish",
+        "correct": true,
+        "why": "Right. The run is over only when the model says so explicitly, through a validated call."
+      }
+    ]
+  },
+  {
+    "id": "ex-177dgx11",
+    "version": 1,
+    "section": "stop-criteria",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants the agent to flag answers it is unsure of for a person to review. Where does the lesson suggest putting that?",
+    "choices": [
+      {
+        "text": "In the system prompt, asking the model to add 'I am not sure' to such answers",
+        "correct": false,
+        "why": "Prose has to be parsed, and a phrase can be missed or varied."
+      },
+      {
+        "text": "As a field in finish's schema, such as needs_human",
+        "correct": true,
+        "why": "Right. A structured field is validated and read by code, with no prose to parse."
+      },
+      {
+        "text": "In a separate model call that rates every answer after the run has finished",
+        "correct": false,
+        "why": "That is a possible extra check, but not what the lesson describes."
+      },
+      {
+        "text": "In the step limit",
+        "correct": false,
+        "why": "A limit decides when to stop, not how sure an answer is."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gfd7mw9",
+    "version": 1,
+    "section": "what-a-stopped-run-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The step-limit outcome lists 'Find adventure books in stock' as not done, though find_books had returned two books. Why?",
+    "choices": [
+      {
+        "text": "Because find_books failed silently",
+        "correct": false,
+        "why": "It returned two books; the transcript shows them."
+      },
+      {
+        "text": "The plan was written before the search ran",
+        "correct": true,
+        "why": "Right. A plan is the model's account of the work and lags at least one step behind it."
+      },
+      {
+        "text": "Because the host deletes the plan's last update whenever a limit fires",
+        "correct": false,
+        "why": "The host keeps the last plan as written."
+      },
+      {
+        "text": "Because stopped runs mark every step not done",
+        "correct": false,
+        "why": "The lookup is listed as done."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3ah4zm9",
+    "version": 1,
+    "section": "what-a-stopped-run-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson say a better handoff includes, beyond the plan?",
+    "choices": [
+      {
+        "text": "A guess at the answer, so the customer is not left waiting",
+        "correct": false,
+        "why": "A guessed answer is exactly what a stopped run must not send."
+      },
+      {
+        "text": "The full system prompt and every tool definition the agent was given",
+        "correct": false,
+        "why": "A person taking the case over needs the work done, not the agent's configuration."
+      },
+      {
+        "text": "An apology",
+        "correct": false,
+        "why": "Courtesy is fine; it does not tell the person what was found."
+      },
+      {
+        "text": "The tool results the run collected",
+        "correct": true,
+        "why": "Right. The results are the work; the plan alone tells a person to redo what is already done."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk7ytp3s",
+    "version": 1,
+    "section": "replanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `no order M-1049`, the plan marked 'Check the return window' as dropped. Why is that better than marking it done?",
+    "choices": [
+      {
+        "text": "Because done is reserved for steps that use tools",
+        "correct": false,
+        "why": "The statuses have no such rule; the point is truth."
+      },
+      {
+        "text": "Because dropped steps cost fewer tokens",
+        "correct": false,
+        "why": "The status word makes no difference to cost."
+      },
+      {
+        "text": "It records a decision instead of a false claim",
+        "correct": true,
+        "why": "Right. The window was never checked; dropped says it was considered and abandoned after this result."
+      },
+      {
+        "text": "Because the schema does not allow done there",
+        "correct": false,
+        "why": "The schema allows done on any step."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ehv1jkf",
+    "version": 1,
+    "section": "replanning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is it right that the model did not try M-1048, the closest existing id to M-1049?",
+    "choices": [
+      {
+        "text": "Because guessing an id means acting on somebody else's order",
+        "correct": true,
+        "why": "Right. A 'corrected' id is a different customer's order, which lesson 17 treats as a permission problem."
+      },
+      {
+        "text": "Because M-1048 was cancelled and could not be returned in any case",
+        "correct": false,
+        "why": "Its status is beside the point; it is not the customer's order to look at."
+      },
+      {
+        "text": "Because the step limit would have been reached",
+        "correct": false,
+        "why": "There was room for more steps."
+      },
+      {
+        "text": "Because get_order refuses ids ending in 8",
+        "correct": false,
+        "why": "get_order accepts any id matching the pattern."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8ek48aq",
+    "version": 1,
+    "section": "limits-belong-to-the-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer writes 'take as long as you need'. What should that do to the agent's step limit?",
+    "choices": [
+      {
+        "text": "Double it, within reason",
+        "correct": false,
+        "why": "A message is data. A budget is configuration the conversation cannot reach."
+      },
+      {
+        "text": "Remove it for that run only, since the customer accepted waiting",
+        "correct": false,
+        "why": "The limit protects the shop too, not only the customer's patience."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The limit is a variable in the host, and no text in a conversation changes it."
+      },
+      {
+        "text": "Let the model decide",
+        "correct": false,
+        "why": "A limit the model can change is no limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-q99eqnsb",
+    "version": 1,
+    "section": "limits-belong-to-the-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between informing the model about a limit and delegating the limit to it?",
+    "choices": [
+      {
+        "text": "Informing puts the limit in the system prompt; delegating puts it in the user message",
+        "correct": false,
+        "why": "Both of those are informing. Delegating means the model's output can change it."
+      },
+      {
+        "text": "Informing changes how it plans; delegating lets it decide when it stops",
+        "correct": true,
+        "why": "Right. Telling the model it has about five calls is a hint; the host's counter still decides."
+      },
+      {
+        "text": "There is none: either way the model obeys the number it is given",
+        "correct": false,
+        "why": "A model may or may not count; that uncertainty is why the host counts."
+      },
+      {
+        "text": "Delegating costs fewer tokens",
+        "correct": false,
+        "why": "Cost is not the distinction."
+      }
+    ]
+  },
+  {
+    "id": "ex-03fmhn9d",
+    "version": 1,
+    "section": "choosing-the-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the lesson suggest setting a step limit?",
+    "choices": [
+      {
+        "text": "At the average number of steps successful runs take",
+        "correct": false,
+        "why": "Half the successful runs are above the average; the limit would stop them."
+      },
+      {
+        "text": "Above the slowest successful runs, such as the 99th percentile, plus a margin",
+        "correct": true,
+        "why": "Right. It should fire on runs gone wrong and almost never on runs that are merely long."
+      },
+      {
+        "text": "As high as the provider allows",
+        "correct": false,
+        "why": "That turns the limit off in practice."
+      },
+      {
+        "text": "At whatever the model suggests",
+        "correct": false,
+        "why": "The model has no say in its limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-09qt9gxq",
+    "version": 1,
+    "section": "choosing-the-numbers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One limit in five runs fires. What does the lesson say that tells you?",
+    "choices": [
+      {
+        "text": "That the limit is doing its job well",
+        "correct": false,
+        "why": "One in a hundred is a limit doing its job. One in five is a signal."
+      },
+      {
+        "text": "That the provider is slow",
+        "correct": false,
+        "why": "Possible for the time budget, but the lesson's answer is to read the stopped outcomes."
+      },
+      {
+        "text": "That the limit should be removed",
+        "correct": false,
+        "why": "Removing it loses the protection; first find out why it fires."
+      },
+      {
+        "text": "Either the limit or the agent is wrong; the outcomes say which",
+        "correct": true,
+        "why": "Right. The plans and traces of the stopped runs show whether they were long or broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-exd0j583",
+    "version": 1,
+    "section": "choosing-the-numbers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons to give different task types different limits? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A research task legitimately takes many more steps than an order question",
+        "correct": true,
+        "why": "Yes. One global limit fits neither."
+      },
+      {
+        "text": "A limit set for research lets a looping order question run a long time",
+        "correct": true,
+        "why": "Yes. The loose limit delays the catch."
+      },
+      {
+        "text": "Different task types use different models with different prices",
+        "correct": false,
+        "why": "Possibly, but that is about cost per token, not about how many steps a task needs."
+      },
+      {
+        "text": "The router already knows which type a task is",
+        "correct": true,
+        "why": "Yes. It is the natural place to choose the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-21mc6ch1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one step of agent.py's loop in order.",
+    "items": [
+      "Check the step, token and time budgets",
+      "Send the request to the model",
+      "Add the request's tokens to the total",
+      "Handle each tool call: finish, update_plan or a shop tool"
+    ]
+  },
+  {
+    "id": "ex-r1fdnkp3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In update_plan's schema, a step the model decided not to do has the status `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "dropped"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qw1as2te",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the time-budget run, the first request wrote 52 output tokens. Under labllm's rule of 200 ms plus 40 ms per output token, how many milliseconds should it have taken, at the least?",
+    "hint": "Multiply first, then add.",
+    "value": 2280,
+    "tolerance": 0,
+    "unit": "ms"
+  }
+]
