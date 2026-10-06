@@ -167,12 +167,15 @@ def scripted(system, messages, tools):
       task      every phrase appears in what the user wrote (not in tool results)
       system    the phrase appears in the system prompt
       step      this is the Nth model call of the conversation (1 = no reply yet)
-      last      every phrase appears in the last message, tool results included
+      last      every phrase appears in the last message that is not a system
+                message, tool results included
       not_last  none of these phrases appears in the last message
       tools     every one of these tools is offered
       no_tools  no tool is offered
     """
-    last = messages[-1] if messages else {}
+    # The Claude Code CLI appends a system-role message after a tool result,
+    # so "last" is the last message that is not one.
+    last = next((m for m in reversed(messages) if m.get("role") != "system"), {})
     last_text = text_of(last.get("content")).lower()
     names = {t.get("name") for t in tools or []}
     sys_text = (text_of(system) if system else "").lower()
