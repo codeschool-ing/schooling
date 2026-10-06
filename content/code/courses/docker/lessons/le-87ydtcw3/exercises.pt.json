@@ -1,0 +1,356 @@
+{
+  "ex-vef42bms": {
+    "prompt": "Num container, qual é a camada mais alta que todos os programas da máquina compartilham?",
+    "hint": "Veja onde fica a linha tracejada na terceira pilha.",
+    "choices": [
+      {
+        "text": "O kernel",
+        "why": "Isso. Acima do kernel, cada container tem os próprios arquivos e bibliotecas."
+      },
+      {
+        "text": "As bibliotecas instaladas no host",
+        "why": "Cada container traz as próprias bibliotecas na imagem; compartilhá-las é o arranjo do bare metal."
+      },
+      {
+        "text": "Um hipervisor rodando por baixo de cada container",
+        "why": "Não há hipervisor na pilha dos containers; ele pertence às máquinas virtuais."
+      },
+      {
+        "text": "Nada, cada container tem cópia própria de tudo",
+        "why": "Cada container ainda faz as chamadas de sistema ao único kernel do host."
+      }
+    ]
+  },
+  "ex-sk7fw7jg": {
+    "prompt": "O Bruno precisa de um servidor Windows e de um Linux na mesma máquina física. Que arranjo permite isso?",
+    "hint": "Qual pilha dá a cada convidado o próprio kernel?",
+    "choices": [
+      {
+        "text": "Dois containers, um de imagem Windows e um de imagem Linux, num host Linux",
+        "why": "Um container usa o kernel do host, então num host Linux todo container é Linux."
+      },
+      {
+        "text": "Bare metal com os dois sistemas instalados lado a lado e rodando ao mesmo tempo",
+        "why": "No bare metal, um sistema operacional é dono da máquina de cada vez."
+      },
+      {
+        "text": "Duas máquinas virtuais num hipervisor",
+        "why": "Isso. Cada VM dá boot no próprio kernel, então podem ser sistemas operacionais diferentes."
+      },
+      {
+        "text": "Dois containers com `--platform windows`",
+        "why": "O `--platform` escolhe uma variante de imagem; ele não fornece um kernel Windows a um host Linux."
+      }
+    ]
+  },
+  "ex-hptawxg3": {
+    "prompt": "Ligue cada peça a onde ela roda.",
+    "hint": "Dois hipervisores e um motor de containers.",
+    "pairs": [
+      {
+        "left": "Hipervisor tipo 1, como KVM ou ESXi",
+        "right": "Direto no hardware, por baixo dos convidados"
+      },
+      {
+        "left": "Hipervisor tipo 2, como VirtualBox",
+        "right": "Como um programa num sistema operacional comum"
+      },
+      {
+        "left": "Motor de containers, como o Docker Engine",
+        "right": "Como programas no próprio kernel do host, sem kernel convidado"
+      }
+    ],
+    "right_distractors": [
+      "Dentro de cada container, um por container"
+    ]
+  },
+  "ex-symtw2y2": {
+    "prompt": "Uma empresa roda os containers dela em VMs na nuvem. Que fronteira a separa de outro cliente do mesmo provedor?",
+    "hint": "Quem aluga o quê para quem?",
+    "choices": [
+      {
+        "text": "As paredes dos containers, já que os dois clientes usam Docker",
+        "why": "Containers separam programas dentro da máquina de um cliente; o provedor não depende deles entre clientes."
+      },
+      {
+        "text": "O hipervisor por baixo das VMs",
+        "why": "Isso. O provedor separa clientes com VMs e a fronteira mais forte do hipervisor."
+      },
+      {
+        "text": "O kernel, que cada cliente compartilha com o outro",
+        "why": "Cada VM tem kernel próprio; dois clientes num mesmo host não compartilham um."
+      },
+      {
+        "text": "Nada; a nuvem dá a cada cliente um prédio físico separado",
+        "why": "Clientes dividem máquinas físicas; o hipervisor é o que os mantém separados."
+      }
+    ]
+  },
+  "ex-2e2y7n6x": {
+    "prompt": "Na máquina Ubuntu da Ana, o que `docker run --rm debian:trixie-slim uname -r` imprime?",
+    "hint": "Qual kernel responde à chamada de sistema?",
+    "choices": [
+      {
+        "text": "A versão do kernel do host, igual ao `uname -r` no host",
+        "why": "Isso: `6.18.44-fc-v70` três vezes. A imagem traz os arquivos do Debian, não um kernel."
+      },
+      {
+        "text": "A versão do kernel do Debian 13",
+        "why": "A imagem não contém um kernel em execução; só existe o do host."
+      },
+      {
+        "text": "Nada, porque um container não tem kernel para informar",
+        "why": "A chamada chega ao kernel do host, que responde."
+      },
+      {
+        "text": "Um erro, já que Debian não roda em Ubuntu",
+        "why": "Rodou: um espaço de usuário Debian no kernel do host é exatamente o que a imagem é."
+      }
+    ]
+  },
+  "ex-0bd12bej": {
+    "prompt": "O que uma imagem chamada `alpine` dá a um container?",
+    "hint": "Compare o `/etc/os-release` com o `uname -r`.",
+    "choices": [
+      {
+        "text": "Os arquivos do Alpine: shell, bibliotecas, gerenciador de pacotes e `/etc`",
+        "why": "Isso. A distribuição são os arquivos; o kernel é o do host."
+      },
+      {
+        "text": "O kernel do Alpine, que é menor que o do Ubuntu e por isso dá boot mais rápido",
+        "why": "Nenhum kernel vem com a imagem, e nada dá boot."
+      },
+      {
+        "text": "Uma máquina virtual rodando Alpine",
+        "why": "Não há VM; o container é um processo no host."
+      },
+      {
+        "text": "Uma cópia do Ubuntu do host, renomeada",
+        "why": "O `/etc/os-release` lá dentro diz Alpine Linux v3.22, porque os arquivos são do Alpine."
+      }
+    ]
+  },
+  "ex-mftwdfdq": {
+    "prompt": "Por que um `ls` do Debian 13 consegue rodar num kernel que o Debian 13 nunca distribuiu?",
+    "hint": "Do que um programa precisa do kernel?",
+    "choices": [
+      {
+        "text": "O Docker recompila cada programa da imagem para o kernel do host",
+        "why": "Nada é recompilado; os binários da imagem rodam como estão."
+      },
+      {
+        "text": "Porque o kernel Linux mantém estável a interface com os programas entre versões",
+        "why": "Isso. Um programa feito para a interface de um kernel continua funcionando nos seguintes."
+      },
+      {
+        "text": "Debian e Ubuntu compartilham um código-fonte de kernel",
+        "why": "Até o `ls` do Alpine, de outra família de distribuições, roda no mesmo kernel."
+      },
+      {
+        "text": "O `ls` não faz chamadas de sistema",
+        "why": "Ele lê diretórios, o que é chamada de sistema; elas só querem dizer a mesma coisa em todo kernel recente."
+      }
+    ]
+  },
+  "ex-xhnfyzc8": {
+    "prompt": "Na transcrição, quantos segundos de relógio levou `time docker run --rm alpine:3.22 true`? Responda com o valor de `real`.",
+    "hint": "A primeira das três linhas.",
+    "unit": "segundos"
+  },
+  "ex-2j5fsbrg": {
+    "prompt": "O `docker stats` mostra o container parado com `668KiB / 15.72GiB`. O que são os 15.72GiB?",
+    "hint": "Algum limite foi definido?",
+    "choices": [
+      {
+        "text": "Memória que o Docker reservou para o container ao iniciá-lo",
+        "why": "Nada foi reservado; containers não separam memória como uma VM separa."
+      },
+      {
+        "text": "A memória do host, porque nenhum limite foi definido",
+        "why": "Isso. Sem limite, o teto é tudo o que o host tem."
+      },
+      {
+        "text": "O tamanho da imagem alpine em disco",
+        "why": "A imagem tem 12.8MB em disco; esta coluna é sobre memória."
+      },
+      {
+        "text": "A memória usada por todos os containers juntos",
+        "why": "O uso são os 668KiB à esquerda; o lado direito é o teto."
+      }
+    ]
+  },
+  "ex-af40z2cw": {
+    "prompt": "Dentro de um container iniciado com `--memory 256m`, o `free -m` informa cerca de 16.000 MB. Por quê?",
+    "hint": "Que arquivo o `free` lê, e o que ele descreve?",
+    "choices": [
+      {
+        "text": "O limite só vale depois da primeira alocação",
+        "why": "O limite vale desde o início; o `free` só não consegue vê-lo."
+      },
+      {
+        "text": "O `--memory` é ignorado no cgroup v1",
+        "why": "Ele é aplicado; o `docker stats` mostraria o limite."
+      },
+      {
+        "text": "O `free` do Alpine está quebrado",
+        "why": "O do Debian ou o do Ubuntu imprimiriam o mesmo número; o arquivo é o do host."
+      },
+      {
+        "text": "O `free` lê o `/proc/meminfo`, que descreve a memória do host; o limite mora num cgroup",
+        "why": "Isso. O limite é real e invisível para quem lê o `/proc/meminfo`."
+      }
+    ]
+  },
+  "ex-t3kcdbe0": {
+    "prompt": "Um programa inicia uma thread de trabalho por processador que conta com o `nproc`. Num container com `--cpus 1`, na máquina de 4 processadores da Ana, quantas threads ele inicia?",
+    "hint": "O que o `nproc` imprimiu dentro daquele container?",
+    "choices": [
+      {
+        "text": "1, porque o container tem exatamente um processador disponível",
+        "why": "O `--cpus 1` limita tempo, não o que o `nproc` informa; ele imprimiu 4."
+      },
+      {
+        "text": "4, que depois dividem o tempo de um processador",
+        "why": "Isso. Ele se dimensiona para o host e recebe um quarto do que planejou."
+      },
+      {
+        "text": "0, porque o `nproc` falha dentro de um container e o programa fica sem nenhuma",
+        "why": "O `nproc` respondeu 4 na transcrição."
+      },
+      {
+        "text": "2, metade do host",
+        "why": "Nada divide pela metade; o programa enxerga a contagem do host."
+      }
+    ]
+  },
+  "ex-84e12atm": {
+    "prompt": "O `docker run --platform linux/arm64 alpine:3.22 uname -m` falha na máquina `x86_64` da Ana com `exec format error`. O que falhou?",
+    "hint": "A imagem foi encontrada.",
+    "choices": [
+      {
+        "text": "O download da imagem",
+        "why": "A imagem foi encontrada e desempacotada; a falha veio depois."
+      },
+      {
+        "text": "A checagem de permissão do Docker",
+        "why": "Permissão produz `permission denied`, outra mensagem."
+      },
+      {
+        "text": "O kernel não conseguiu executar um binário arm64",
+        "why": "Isso. O arquivo é um programa para outro processador."
+      },
+      {
+        "text": "O Alpine não tem variante arm64, então o Docker pôs uma imagem vazia no lugar",
+        "why": "O Alpine publica arm64; o binário só era do processador errado."
+      }
+    ]
+  },
+  "ex-6e1vs16e": {
+    "prompt": "Uma ferramenta precisa de um módulo de kernel que o host não tem. Por que o container dela não pode simplesmente trazer o módulo na imagem?",
+    "hint": "Em qual kernel o módulo seria carregado?",
+    "choices": [
+      {
+        "text": "Imagens não comportam arquivos maiores que alguns megabytes",
+        "why": "Imagens guardam gigabytes; tamanho não é o problema."
+      },
+      {
+        "text": "Módulos são carregados no único kernel compartilhado, então a decisão é do host, para todos os containers de uma vez",
+        "why": "Isso. Não existe kernel do próprio container para estender."
+      },
+      {
+        "text": "Módulos só existem no Windows",
+        "why": "O Linux tem módulos de kernel carregáveis; a questão é de quem é o kernel."
+      },
+      {
+        "text": "O Docker apaga arquivos `.ko` no build",
+        "why": "Nada os apaga; um container simplesmente não tem kernel próprio onde carregá-los."
+      }
+    ]
+  },
+  "ex-s6tyqfza": {
+    "prompt": "Ligue cada necessidade ao arranjo que a aula recomenda para ela.",
+    "hint": "Pergunte o que precisa ficar separado: o kernel, ou só os arquivos.",
+    "pairs": [
+      {
+        "left": "Duas partes que não confiam uma na outra num mesmo host",
+        "right": "Máquinas virtuais"
+      },
+      {
+        "left": "Um programa empacotado uma vez para notebook, CI e servidor",
+        "right": "Containers"
+      },
+      {
+        "left": "Um banco de dados grande usando a máquina toda",
+        "right": "Bare metal, ou uma VM do tamanho da máquina"
+      }
+    ],
+    "right_distractors": [
+      "Um container rodando o próprio kernel"
+    ]
+  },
+  "ex-xx2sj1nr": {
+    "prompt": "Por que uma falha no kernel ameaça mais os containers do que as VMs num mesmo host?",
+    "hint": "Conte os kernels de cada arranjo.",
+    "choices": [
+      {
+        "text": "Containers não têm parede nenhuma, então qualquer coisa rodando dentro de um chega direto ao host",
+        "why": "Têm: namespaces e cgroups. A questão é do que essas paredes são feitas."
+      },
+      {
+        "text": "A parede de todo container é o mesmo kernel compartilhado, então uma falha abre todas",
+        "why": "Isso. O convidado de uma VM tem kernel próprio e fica atrás do hipervisor."
+      },
+      {
+        "text": "As VMs recebem correções de kernel automaticamente do hipervisor, e os containers não",
+        "why": "Nenhum se corrige sozinho; a diferença é estrutural."
+      },
+      {
+        "text": "Containers rodam como root no host",
+        "why": "Podem rodar, e a aula 14 muda isso, mas o motivo aqui é o kernel compartilhado."
+      }
+    ]
+  },
+  "ex-593q12p3": {
+    "prompt": "Num Mac com Apple silicon, uma imagem só `amd64` roda no Docker Desktop, mas devagar. O que está acontecendo?",
+    "hint": "O processador do Mac é arm64.",
+    "choices": [
+      {
+        "text": "O Docker Desktop baixa uma versão arm64 de outro registry",
+        "why": "Não há uma para imagem só amd64; ele roda o binário amd64."
+      },
+      {
+        "text": "A imagem é recompilada para arm64 na primeira execução",
+        "why": "Nada é recompilado; as instruções são traduzidas enquanto rodam."
+      },
+      {
+        "text": "Emulação",
+        "why": "Isso. Cada instrução amd64 é traduzida, o que funciona e é lento."
+      },
+      {
+        "text": "O kernel do Mac é x86_64 por baixo",
+        "why": "Ele é arm64, que é justamente por que o binário amd64 precisa de ajuda."
+      }
+    ]
+  },
+  "ex-shs9793n": {
+    "prompt": "Ordene do que mais ao que menos leva consigo para cada programa.",
+    "hint": "Siga a linha subindo pelas pilhas.",
+    "items": [
+      "Uma máquina virtual: kernel, bibliotecas e arquivos próprios",
+      "Um container: bibliotecas e arquivos próprios, o kernel do host",
+      "Um programa no bare metal: só o próprio binário, compartilhando o resto"
+    ]
+  },
+  "ex-reemw8pn": {
+    "prompt": "O Docker chama a arquitetura do processador da máquina do laboratório de `amd64`; o `uname -m` chama a mesma coisa de ___.",
+    "hint": "Ela foi impressa pelo `docker info` nesta aula.",
+    "blanks": [
+      {
+        "accept": [
+          "x86_64",
+          "x86-64"
+        ]
+      }
+    ]
+  }
+}
