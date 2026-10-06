@@ -1,0 +1,170 @@
+{
+  "ex-8cz5jdzb": {
+    "prompt": "`search` tinha `nodeSelector: {disk: ssd}` e três réplicas. Onde elas rodaram?",
+    "hint": "Só um nó tinha o rótulo.",
+    "choices": [
+      {
+        "text": "Todas em `shop-worker2`",
+        "why": "Isso, mesmo com `shop-worker` parado."
+      },
+      {
+        "text": "Uma em cada nó",
+        "why": "O seletor exclui todo nó sem o rótulo."
+      },
+      {
+        "text": "Duas em `shop-worker2`, uma em outro lugar",
+        "why": "Uma exigência nunca manda um pod para outro lugar."
+      },
+      {
+        "text": "Em lugar nenhum, até um segundo nó ser rotulado",
+        "why": "Um nó rotulado bastou para as três."
+      }
+    ]
+  },
+  "ex-fcarfdyh": {
+    "prompt": "Depois de o seletor virar `disk: nvme`, os três pods antigos de `search` continuaram rodando. Por quê?",
+    "hint": "O que um rollout faz antes de remover um pod antigo?",
+    "choices": [
+      {
+        "text": "Seletores só valem para Deployments novos",
+        "why": "O pod novo recebeu, sim, o seletor novo."
+      },
+      {
+        "text": "O patch foi rejeitado",
+        "why": "O kubectl respondeu `patched`."
+      },
+      {
+        "text": "O pod novo nunca subiu, então o rollout parou",
+        "why": "Isso. Pods antigos só saem conforme os novos ficam prontos."
+      },
+      {
+        "text": "Os pods antigos foram para um nó nvme",
+        "why": "Nenhum nó tinha `disk=nvme`, e pods nunca se mudam."
+      }
+    ]
+  },
+  "ex-37c59ezk": {
+    "prompt": "`cache` preferia `disk` em `[nvme, ssd]` com peso 100. O que teria acontecido se `shop-worker2` estivesse cheio?",
+    "hint": "Uma preferência, não uma exigência.",
+    "choices": [
+      {
+        "text": "Os pods ficariam `Pending`",
+        "why": "Isso é o que uma exigência faz."
+      },
+      {
+        "text": "Iriam para `shop-worker`",
+        "why": "Isso. Regras preferidas somam pontos; não proíbem nada."
+      },
+      {
+        "text": "O scheduler despejaria outros pods",
+        "why": "Preferências nunca disparam despejo."
+      },
+      {
+        "text": "O kubectl recusaria o Deployment",
+        "why": "A alocação é decidida depois de o objeto ser aceito."
+      }
+    ]
+  },
+  "ex-w6rmak7m": {
+    "prompt": "Um pod rodando foi alocado por `requiredDuringSchedulingIgnoredDuringExecution` num nó rotulado `disk=ssd`. Alguém tira o rótulo. O que acontece com o pod?",
+    "hint": "Leia o fim do nome do campo.",
+    "choices": [
+      {
+        "text": "É despejado na hora",
+        "why": "A regra é ignorada durante a execução."
+      },
+      {
+        "text": "É reiniciado em outro nó",
+        "why": "Pods nunca se mudam."
+      },
+      {
+        "text": "Fica `Pending`",
+        "why": "Um pod rodando não volta a `Pending`."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. A regra só é conferida quando o pod é alocado."
+      }
+    ]
+  },
+  "ex-qmwhjf8k": {
+    "prompt": "Com anti-afinidade obrigatória em `kubernetes.io/hostname` e três réplicas, por que um pod `shop` ficou `Pending`?",
+    "hint": "Quantos nós aceitam pods comuns?",
+    "choices": [
+      {
+        "text": "A imagem faltava num nó",
+        "why": "O evento citou anti-afinidade e um taint."
+      },
+      {
+        "text": "A anti-afinidade limita um Deployment a dois pods",
+        "why": "Ela limita pods por domínio, não por Deployment."
+      },
+      {
+        "text": "Os nós ficaram sem CPU",
+        "why": "O evento não falou de recursos."
+      },
+      {
+        "text": "Dois nós usáveis já tinham uma cópia cada",
+        "why": "Isso, e o control plane tem taint."
+      }
+    ]
+  },
+  "ex-r654frmx": {
+    "prompt": "Qual `topologyKey` faz a anti-afinidade manter as cópias em zonas diferentes em vez de nós diferentes?",
+    "hint": "A chave nomeia o domínio.",
+    "choices": [
+      {
+        "text": "`kubernetes.io/hostname`",
+        "why": "Esse domínio é um nó."
+      },
+      {
+        "text": "`topology.kubernetes.io/zone`",
+        "why": "Isso. Cada zona vira um domínio."
+      },
+      {
+        "text": "`kubernetes.io/os`",
+        "why": "Isso agrupa nós por sistema operacional."
+      },
+      {
+        "text": "`app`",
+        "why": "Isso é um rótulo de pod, não um domínio de nós."
+      }
+    ]
+  },
+  "ex-jhn2h56p": {
+    "prompt": "Ligue cada desejo à regra que o expressa.",
+    "hint": "Regras de nó olham nós; regras de pod olham vizinhos.",
+    "pairs": [
+      {
+        "left": "Só em nós rotulados `gpu=yes`",
+        "right": "`nodeSelector`"
+      },
+      {
+        "left": "Nunca duas cópias num nó",
+        "right": "`podAntiAffinity`"
+      },
+      {
+        "left": "No mesmo nó que a loja",
+        "right": "`podAffinity`"
+      },
+      {
+        "left": "Discos rápidos se possível",
+        "right": "Afinidade de nó preferida"
+      }
+    ],
+    "right_distractors": [
+      "`restartPolicy`"
+    ]
+  },
+  "ex-1xkcj72z": {
+    "prompt": "Um pod cujas regras obrigatórias nenhum nó atende fica na fase ___.",
+    "hint": "O terceiro pod `shop`.",
+    "blanks": [
+      {
+        "accept": [
+          "Pending"
+        ]
+      }
+    ]
+  }
+}
