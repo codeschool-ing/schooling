@@ -1,0 +1,393 @@
+{
+  "ex-j5p6fmg2": {
+    "prompt": "`b := Book{Title: \"Dom Casmurro\"}`. O que há em `b.Pages`, que o literal não nomeia?",
+    "hint": "A lição 6 imprimiu uma struct que ninguém preencheu.",
+    "choices": [
+      {
+        "text": "Nada: lê-lo entra em pânico até que seja definido",
+        "why": "Todo campo de uma struct sempre guarda um valor; não existe estado indefinido para causar pânico."
+      },
+      {
+        "text": "`0`, o valor zero de `int`",
+        "why": "Isso. Campos que o literal deixa de fora recebem o valor zero do tipo; o `%+v` imprimiu `Pages:0`."
+      },
+      {
+        "text": "O código não compila: um literal precisa nomear todo campo",
+        "why": "Um literal com nome dos campos pode nomear qualquer subconjunto deles; só um literal sem nomes precisa dar todos os valores."
+      },
+      {
+        "text": "O valor que um construtor de `Book` definir",
+        "why": "Go não roda construtor nenhum quando uma struct é criada. Zero é tudo o que há, a menos que o seu código defina mais."
+      }
+    ]
+  },
+  "ex-9nwbcmzf": {
+    "prompt": "`type Book struct { Title string; Tags []string }`. O que `a == b` faz para dois valores `Book`?",
+    "hint": "Uma struct só é comparável se todo campo for.",
+    "choices": [
+      {
+        "text": "Compara `Title` e pula a slice",
+        "why": "Go nunca compara parte de uma struct; ou todo campo é comparado, ou o operador é recusado."
+      },
+      {
+        "text": "Compara os dois campos, a slice elemento por elemento",
+        "why": "Slices não têm `==` nenhum, então uma struct que guarda uma também não pode usar o `==` da struct."
+      },
+      {
+        "text": "Não compila, por causa do campo slice",
+        "why": "Isso: `struct containing []string cannot be compared`. Um campo slice basta para perder o `==`."
+      },
+      {
+        "text": "Compila e entra em pânico quando o programa roda",
+        "why": "O tipo é conhecido na compilação, então a recusa vem do compilador, não da execução."
+      }
+    ]
+  },
+  "ex-d176cd1t": {
+    "prompt": "Para imprimir o nome de cada campo na frente do valor, o `fmt.Printf` recebe o verbo `___`.",
+    "hint": "`%v` com um caractere a mais.",
+    "blanks": [
+      {
+        "accept": [
+          "%+v"
+        ]
+      }
+    ]
+  },
+  "ex-zez9kdhs": {
+    "prompt": "O `go vet` apontou `net.TCPAddr{ip, 8080, \"\"}` e não apontaria `Point{3, 4}` para o seu próprio `Point`. Por que a diferença?",
+    "hint": "Quem pode mudar cada tipo, e quem teria de consertar o literal?",
+    "choices": [
+      {
+        "text": "Um campo acrescentado ao tipo de outro pacote quebra seu literal; o seu tipo muda junto com o seu código",
+        "why": "Isso. A verificação cobre tipos struct importados de outro pacote, cujos autores decidem quando campos são acrescentados."
+      },
+      {
+        "text": "Literais sem nomes estão sempre errados, e o vet só tem tempo para a biblioteca padrão",
+        "why": "Qualquer pacote importado conta, não só a biblioteca padrão, e os seus tipos pequenos são um lugar razoável para eles."
+      },
+      {
+        "text": "Um literal sem nomes de `TCPAddr` compila para outro valor",
+        "why": "Ele produziu `127.0.0.1:8080` como pretendido; o aviso é sobre o futuro, não sobre o valor de hoje."
+      },
+      {
+        "text": "`Point` tem só dois campos",
+        "why": "O número de campos não é o que o vet conta; ele pergunta onde o tipo foi declarado."
+      }
+    ]
+  },
+  "ex-3xgavt02": {
+    "prompt": "Quais destes tipos podem ser chave de um map? Escolha todos que se aplicam.",
+    "hint": "A regra da lição 14, aplicada campo a campo.",
+    "choices": [
+      {
+        "text": "`struct{ X, Y int }`",
+        "why": "Sim. Os dois campos são comparáveis, então a struct é; `map[Point]int` contou visitas."
+      },
+      {
+        "text": "`struct{ Title string; Tags []string }`",
+        "why": "Não. O campo slice torna a struct inteira incomparável."
+      },
+      {
+        "text": "`[2]struct{ X, Y int }`",
+        "why": "Sim. Um array de elementos comparáveis é comparável, e estes elementos são."
+      },
+      {
+        "text": "`struct{ Name string; Seen map[string]bool }`",
+        "why": "Não. Um campo map só pode ser comparado com `nil`, então a struct não pode ser comparada."
+      }
+    ]
+  },
+  "ex-479gzvkp": {
+    "prompt": "Um `User` tem um campo `age int`, minúsculo. O que o `json.Marshal` faz com ele?",
+    "hint": "A saída não tinha `age`. O que o `err` disse?",
+    "choices": [
+      {
+        "text": "Escreve-o sob a chave `age`",
+        "why": "A saída não tinha chave `age` nenhuma."
+      },
+      {
+        "text": "Devolve um erro que nomeia o campo",
+        "why": "O `err` imprimiu `<nil>`. Nada informa o campo que faltou."
+      },
+      {
+        "text": "Deixa-o de fora, e não informa nada",
+        "why": "Isso. Outro pacote não enxerga um nome minúsculo, então o campo é pulado em silêncio."
+      },
+      {
+        "text": "Escreve-o como `null`, já que o valor não pode ser lido",
+        "why": "`null` foi o que a slice nil `Tags` deu. `age` não apareceu de forma nenhuma."
+      }
+    ]
+  },
+  "ex-chk1y184": {
+    "prompt": "O que a tag `json:\"-\"` num campo `Password` faz?",
+    "hint": "Compare o `User` sem tags com o que tem tags.",
+    "choices": [
+      {
+        "text": "Escreve o campo sob a chave `-`",
+        "why": "Uma tag exatamente `-` quer dizer o contrário: o campo não é escrito. A documentação dá outra grafia para uma chave chamada `-`."
+      },
+      {
+        "text": "Deixa o campo de fora só quando ele está vazio",
+        "why": "Isso é o `omitempty`. Com `-`, `hunter2` também não foi escrito."
+      },
+      {
+        "text": "Escreve o campo com o valor mascarado",
+        "why": "O `encoding/json` não mascara nada; a chave simplesmente não aparece."
+      },
+      {
+        "text": "Mantém-no fora do JSON sempre",
+        "why": "Isso. A senha `hunter2` não apareceu em nenhuma das saídas."
+      }
+    ]
+  },
+  "ex-h0e2rvr3": {
+    "prompt": "Ligue cada tag ao que o `json.Marshal` faz com o campo.",
+    "hint": "A primeira palavra é um nome; o que vem depois da vírgula é uma opção.",
+    "pairs": [
+      {
+        "left": "`json:\"name\"`",
+        "right": "Escrito sob a chave `name`"
+      },
+      {
+        "left": "`json:\"email,omitempty\"`",
+        "right": "Escrito como `email`, ou omitido quando vazio"
+      },
+      {
+        "left": "`json:\"-\"`",
+        "right": "Nunca escrito"
+      },
+      {
+        "left": "`json:\"ended,omitzero\"`",
+        "right": "Escrito como `ended`, ou omitido quando guarda o valor zero do tipo"
+      }
+    ],
+    "right_distractors": [
+      "Escrito em maiúsculas"
+    ]
+  },
+  "ex-zkpdwb1j": {
+    "prompt": "Um campo é declarado `Name string` com a tag `json: \"name\"`, com um espaço depois dos dois-pontos. O que acontece?",
+    "hint": "Que ferramenta leu as tags na seção?",
+    "choices": [
+      {
+        "text": "O compilador recusa a tag",
+        "why": "Para o compilador uma tag é uma string como outra qualquer; o `go run` compilou e rodou."
+      },
+      {
+        "text": "Chave `Name`, e o `go vet` aponta a tag",
+        "why": "Isso. A tag fica ilegível, então vale o nome padrão, e o vet diz `bad syntax for struct tag value`."
+      },
+      {
+        "text": "A chave sai como `name`; o espaço é ignorado",
+        "why": "A saída foi `{\"Name\":\"Ana\",…}`: o espaço tornou a tag inteira ilegível."
+      },
+      {
+        "text": "O `json.Marshal` devolve um erro sobre a tag",
+        "why": "Ele devolveu o JSON sem reclamar; só o `go vet` reclamou."
+      }
+    ]
+  },
+  "ex-gzx4kpbh": {
+    "prompt": "Um campo `Deadline time.Time` com a tag `json:\"deadline,omitempty\"` fica no valor zero. O que o `json.Marshal` escreve?",
+    "hint": "Uma struct chega a ser \"vazia\" no sentido do `omitempty`?",
+    "choices": [
+      {
+        "text": "Nada, porque a hora zero é vazia",
+        "why": "O `omitempty` conhece false, 0, nil e comprimento zero. Uma struct não é nada disso, então é escrita."
+      },
+      {
+        "text": "`\"deadline\": null`",
+        "why": "Um `time.Time` é um valor struct, nunca nil, então não tem como sair como `null`."
+      },
+      {
+        "text": "`\"deadline\":\"0001-01-01T00:00:00Z\"`",
+        "why": "Isso. Foi o que aconteceu com `started`; `ended`, com `omitzero` no lugar, ficou de fora."
+      },
+      {
+        "text": "Uma string vazia, `\"deadline\":\"\"`",
+        "why": "A hora zero é escrita como um instante de verdade, o primeiro do ano 1, não como string vazia."
+      }
+    ]
+  },
+  "ex-dz5jqfy9": {
+    "prompt": "Uma struct tem `ID int` com a tag `json:\"id\"` = 0, `Note string` com a tag `json:\"note,omitempty\"` = \"\", `token string` = \"abc\", `Tags []string` com a tag `json:\"tags,omitempty\"` = `[]string{\"x\"}` e `Score int` com a tag `json:\"score\"` = 0. Quantas chaves o `json.Marshal` escreve?",
+    "hint": "Sem `omitempty`, um zero continua sendo escrito.",
+    "unit": "chaves"
+  },
+  "ex-9qecwh6s": {
+    "prompt": "Ponha as três partes de um campo de struct com tag na ordem em que são escritas.",
+    "hint": "A mesma ordem de uma declaração `var`, mais uma.",
+    "items": [
+      "O nome do campo, `Email`",
+      "O tipo dele, `string`",
+      "A tag, `json:\"email,omitempty\"` entre acentos graves"
+    ]
+  },
+  "ex-rk317svp": {
+    "prompt": "O `json.Unmarshal` lê `{\"name\": \"Bia\", \"nickname\": \"b\"}` num `User` sem campo `nickname`. O que acontece com `\"nickname\"`?",
+    "hint": "O que o `err` imprimiu?",
+    "choices": [
+      {
+        "text": "O `Unmarshal` devolve `json: unknown field \"nickname\"`",
+        "why": "Essa mensagem só veio de um `Decoder` instruído com `DisallowUnknownFields`. O `Unmarshal` puro devolveu nil."
+      },
+      {
+        "text": "É pulada, e o erro é nil",
+        "why": "Isso. Chaves desconhecidas são ignoradas por padrão."
+      },
+      {
+        "text": "É guardada no campo mais parecido, `Name`",
+        "why": "`Name` recebeu `Bia`. O casamento ignora maiúsculas, e mais nada."
+      },
+      {
+        "text": "O programa entra em pânico",
+        "why": "Nada entrou em pânico; a execução imprimiu a struct e `<nil>`."
+      }
+    ]
+  },
+  "ex-fqpsksy6": {
+    "prompt": "Um campo tem a tag `json:\"name\"` e o JSON diz `\"NAME\": \"Bia\"`. O que o `encoding/json` põe no campo?",
+    "hint": "Ele prefere o casamento exato. E se não houver?",
+    "choices": [
+      {
+        "text": "Nada: a chave precisa casar exatamente com a tag",
+        "why": "Essa é a regra da versão 2. O `encoding/json` preencheu `Name` com `Bia`."
+      },
+      {
+        "text": "`BIA`, em maiúsculas para casar com a chave",
+        "why": "Só a chave é comparada sem maiúsculas; o valor é copiado como está."
+      },
+      {
+        "text": "`Bia`",
+        "why": "Isso. Sem casamento exato, uma chave que difere só em maiúsculas é aceita."
+      },
+      {
+        "text": "Um erro sobre as maiúsculas da chave",
+        "why": "O `err` foi nil. Maiúsculas não são algo de que o `encoding/json` reclame."
+      }
+    ]
+  },
+  "ex-mwaznaxz": {
+    "prompt": "Depois de `dec := json.NewDecoder(r)`, chamar `dec.___()` faz o `Decode` recusar chaves que não casam com campo nenhum.",
+    "hint": "O nome diz o que ele proíbe.",
+    "blanks": [
+      {
+        "accept": [
+          "DisallowUnknownFields"
+        ]
+      }
+    ]
+  },
+  "ex-pc2r9bb5": {
+    "prompt": "Alguém escreve `json.Unmarshal(data, u)`, esquecendo o `&`. O que acontece?",
+    "hint": "Separe o compilador, a execução e o `go vet`.",
+    "choices": [
+      {
+        "text": "O compilador recusa um argumento que não é ponteiro",
+        "why": "O `Unmarshal` aceita um valor de qualquer tipo, então o compilador não tem do que reclamar."
+      },
+      {
+        "text": "Preenche uma cópia de `u`, e `u` fica vazio com erro nil",
+        "why": "O erro não foi nil: disse `json: Unmarshal(non-pointer main.User)`."
+      },
+      {
+        "text": "Um erro na execução, que o `go vet` antecipa",
+        "why": "Isso: `call of Unmarshal passes non-pointer as second argument`."
+      },
+      {
+        "text": "Entra em pânico com uma desreferência nil",
+        "why": "Não há ponteiro nil envolvido; o `Unmarshal` confere o argumento e devolve um erro."
+      }
+    ]
+  },
+  "ex-jej6k59g": {
+    "prompt": "`User` tem um campo, `Name string` com a tag `json:\"name\"`. Quais entradas fazem o `json.Unmarshal` devolver erro? Escolha todas que se aplicam.",
+    "hint": "Chaves desconhecidas e ausentes não são erro.",
+    "choices": [
+      {
+        "text": "`{\"name\": 42}`",
+        "why": "Sim: `cannot unmarshal number into Go struct field User.name of type string`."
+      },
+      {
+        "text": "`{\"name\": \"Bia\", \"age\": 30}`",
+        "why": "Não. `age` não casa com campo nenhum e é pulada."
+      },
+      {
+        "text": "`{}`",
+        "why": "Não. Uma chave ausente deixa o campo no zero, o que não é erro."
+      },
+      {
+        "text": "`{\"name\": \"Bia\",}`",
+        "why": "Sim. Uma vírgula antes do `}` não é JSON: `invalid character '}'`."
+      }
+    ]
+  },
+  "ex-t9e71j8p": {
+    "prompt": "Um serviço lê a configuração com `json.Unmarshal` numa struct com `Timeout int` e a tag `json:\"timeout\"`. Um operador digita `\"timeuot\": 30`. O que acontece, e o que teria pegado isso?",
+    "hint": "A chave não casa com campo nenhum. O que o padrão faz com uma chave assim?",
+    "choices": [
+      {
+        "text": "O `Unmarshal` devolve um erro que nomeia `timeuot`, e o serviço se recusa a subir até alguém corrigir o arquivo",
+        "why": "O `Unmarshal` puro pula chaves desconhecidas e devolve nil; só um `Decoder` estrito as nomeia."
+      },
+      {
+        "text": "`Timeout` recebe 30, já que o casamento de chaves é tolerante",
+        "why": "Ele perdoa maiúsculas, não grafia: `timeuot` e `timeout` são palavras diferentes."
+      },
+      {
+        "text": "`Timeout` fica 0, sem erro; o `DisallowUnknownFields` a recusaria",
+        "why": "Isso. Um arquivo que uma pessoa digitou é o caso que a seção deu para recusar chaves desconhecidas."
+      },
+      {
+        "text": "O `go vet` aponta a chave com erro de grafia",
+        "why": "O vet lê o código Go, tags incluídas; ele nunca vê um arquivo JSON lido em tempo de execução."
+      }
+    ]
+  },
+  "ex-ps2w07cb": {
+    "prompt": "O mesmo `{\"NAME\": \"Bia\"}` passa pelo `jsonv2.Unmarshal` do `encoding/json/v2`, num campo com a tag `json:\"name\"`. O que volta?",
+    "hint": "A versão 2 mudou uma regra sobre nomes.",
+    "choices": [
+      {
+        "text": "`Name` é `Bia`, como com o `encoding/json`",
+        "why": "A execução imprimiu `{Name: Tags:[]}` para a versão 2: ela casa os nomes exatamente."
+      },
+      {
+        "text": "`Name` fica vazio, e o erro é nil",
+        "why": "Isso. `NAME` não é `name` para a versão 2, e uma chave desconhecida continua não sendo erro por padrão."
+      },
+      {
+        "text": "Um erro sobre um membro desconhecido",
+        "why": "A versão 2 também ignora chaves desconhecidas a menos que se diga o contrário; os dois erros imprimiram `<nil>`."
+      },
+      {
+        "text": "Não compila: os dois pacotes se chamam `json` na cláusula package",
+        "why": "Importar o segundo como `jsonv2` lhe dá outro nome, e o programa rodou."
+      }
+    ]
+  },
+  "ex-29pdg4cc": {
+    "prompt": "`Tags []string` com a tag `json:\"tags\"` é nil, e o `encoding/json` escreve `\"tags\":null`. Quem lê espera uma lista. O que faz ele escrever `[]`?",
+    "hint": "A lição 12 serializou os dois tipos de slice vazia.",
+    "choices": [
+      {
+        "text": "Acrescentar `omitempty` à tag",
+        "why": "O `omitempty` tira a chave de vez, e quem espera uma lista não lida com isso melhor do que com `null`."
+      },
+      {
+        "text": "Defini-lo como `[]string{}` antes de serializar",
+        "why": "Isso. Uma slice vazia que não é nil é escrita como `[]`; só a nil vira `null`."
+      },
+      {
+        "text": "Nada: o `encoding/json` escreve toda slice vazia como `null`",
+        "why": "A lição 12 imprimiu `null []`: a slice nil e a vazia saem diferentes."
+      },
+      {
+        "text": "Pôr a tag `json:\"tags,omitzero\"` no lugar de `json:\"tags\"`",
+        "why": "Uma slice nil é o valor zero do tipo, então o `omitzero` tira a chave em vez de escrever `[]`."
+      }
+    ]
+  }
+}
