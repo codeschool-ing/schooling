@@ -22,6 +22,7 @@
  *   style SEL PROP,...    computed values of the named properties
  *   tree [SEL]            the accessibility tree, as Playwright writes it
  *   axe                   the axe-core rules the page fails
+ *   describe SEL          role, name, description and states, as a screen reader gets them
  *   validity SEL          a form field's validity and its message
  *   send SEL              presses SEL and prints the request the form made
  *   top X Y               the element painted on top at a point
@@ -175,6 +176,23 @@ const steps = {
       console.log(`${v.id} (${v.impact}, ${v.nodes.length} element${v.nodes.length > 1 ? 's' : ''}): ${v.help}`);
     }
   },
+  /* What assistive technology is told about one element: its role, its name,
+     its description and the states that matter for a form field. Read from
+     Chromium's own accessibility tree through the DevTools protocol. */
+  async describe(sel) {
+    const cdp = await page.context().newCDPSession(page);
+    const { root } = await cdp.send('DOM.getDocument', { depth: -1 });
+    const { nodeIds } = await cdp.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector: sel });
+    for (const nodeId of nodeIds) {
+      const { nodes } = await cdp.send('Accessibility.getPartialAXTree', { nodeId, fetchRelatives: false });
+      const n = nodes[0];
+      const props = Object.fromEntries((n.properties || []).map((p) => [p.name, p.value.value]));
+      const out = [`role ${n.role?.value}`, `name ${JSON.stringify(n.name?.value ?? '')}`];
+      if (n.description?.value) out.push(`description ${JSON.stringify(n.description.value)}`);
+      for (const k of ['required', 'invalid']) if (props[k] && props[k] !== 'false') out.push(k === 'invalid' ? 'invalid' : k);
+      console.log(out.join(', '));
+    }
+  },
   async validity(sel) {
     for (const el of await page.$$(sel)) {
       const v = await el.evaluate((e) => {
@@ -258,7 +276,7 @@ const steps = {
   async shot(f) { await page.screenshot({ path: f, fullPage: true }); },
 };
 
-const arity = { press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
+const arity = { describe: 1, press: 1, text: 1, json: 1, box: 1, style: 2, tree: -1, validity: 1, send: 1, top: 2, img: 1, scroll: 1,
   at: 1, width: 1, fill: 2, check: 1, click: 1, hover: 1, focus: 1, shot: 1 };
 try {
   while (argv.length) {
