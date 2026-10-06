@@ -1,0 +1,446 @@
+[
+  {
+    "id": "ex-1avgakyk",
+    "version": 1,
+    "section": "fields",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which field does a revocation list use to name a certificate?",
+    "hint": "3A03 for the files server.",
+    "choices": [
+      {
+        "text": "The subject's common name",
+        "correct": false,
+        "why": "Names can repeat across certificates."
+      },
+      {
+        "text": "The serial number",
+        "correct": true,
+        "why": "Right: unique per issuer."
+      },
+      {
+        "text": "The public key's fingerprint",
+        "correct": false,
+        "why": "The CRL lists serials, not keys."
+      },
+      {
+        "text": "The Not After date of the certificate being revoked",
+        "correct": false,
+        "why": "Many certificates share a date."
+      }
+    ]
+  },
+  {
+    "id": "ex-1c2bz35m",
+    "version": 1,
+    "section": "fields",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each extension of the portal's certificate to what it says.",
+    "hint": "One statement belongs to no extension.",
+    "pairs": [
+      {
+        "left": "Basic Constraints CA:FALSE",
+        "right": "may not sign other certificates"
+      },
+      {
+        "left": "Extended Key Usage",
+        "right": "for a TLS server"
+      },
+      {
+        "left": "Subject Alternative Name",
+        "right": "the host names it covers"
+      },
+      {
+        "left": "CRL Distribution Points",
+        "right": "where the revocation list is published"
+      }
+    ],
+    "right_distractors": [
+      "the server's private key"
+    ]
+  },
+  {
+    "id": "ex-0kjjsh6x",
+    "version": 1,
+    "section": "fields",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The portal's certificate signature is how many bytes long, given its issuer's 2048-bit RSA key?",
+    "hint": "An RSA signature is as long as the modulus.",
+    "value": 256,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-198g5093",
+    "version": 1,
+    "section": "fields",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two CAs have the same name. Which extension lets a client find the right issuer for a certificate?",
+    "hint": "A fingerprint of the issuer's key.",
+    "choices": [
+      {
+        "text": "Key Usage",
+        "correct": false,
+        "why": "It lists what the key may do."
+      },
+      {
+        "text": "Subject Alternative Name",
+        "correct": false,
+        "why": "It names the subject's hosts."
+      },
+      {
+        "text": "Authority Key Identifier",
+        "correct": true,
+        "why": "Right: it identifies the issuer's key, not its name."
+      },
+      {
+        "text": "CRL Distribution Points",
+        "correct": false,
+        "why": "It says where the CRL is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8thht6w",
+    "version": 1,
+    "section": "validity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `agenda.pem` fail at the lab's present but pass as of 1 March?",
+    "hint": "Its Not After was 10 April.",
+    "choices": [
+      {
+        "text": "It was revoked in between",
+        "correct": false,
+        "why": "It is not on the CRL."
+      },
+      {
+        "text": "It expired on 10 April",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The issuing CA expired",
+        "correct": false,
+        "why": "It runs until 2031."
+      },
+      {
+        "text": "The certificate was altered",
+        "correct": false,
+        "why": "Nothing changed in the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm5yk63g",
+    "version": 1,
+    "section": "validity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many days were left on the portal's certificate at the lab's present?",
+    "hint": "The last capture of section 03.",
+    "value": 154,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-mce5kqm6",
+    "version": 1,
+    "section": "validity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A restored virtual machine starts rejecting every valid certificate with `certificate is not yet valid`. Most likely cause?",
+    "hint": "What reads the dates?",
+    "choices": [
+      {
+        "text": "Its trust store was deleted",
+        "correct": false,
+        "why": "That error would say unable to get issuer."
+      },
+      {
+        "text": "The CA revoked every certificate",
+        "correct": false,
+        "why": "The error would say revoked."
+      },
+      {
+        "text": "The certificates are too short-lived",
+        "correct": false,
+        "why": "Lifetime does not cause this message."
+      },
+      {
+        "text": "Its clock is set in the past",
+        "correct": true,
+        "why": "Right: before every Not Before."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3zvt2nn",
+    "version": 1,
+    "section": "validity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team proposes ten-year certificates for internal services to avoid outages. What is the strongest argument against?",
+    "hint": "Which limit does every client enforce?",
+    "choices": [
+      {
+        "text": "Internal CAs cannot sign certificates longer than 398 days",
+        "correct": false,
+        "why": "Public rules do not bind an internal CA."
+      },
+      {
+        "text": "A leaked key stays usable for years",
+        "correct": true,
+        "why": "Right: expiry is the one bound everybody enforces."
+      },
+      {
+        "text": "Long certificates are larger and slow the handshake",
+        "correct": false,
+        "why": "The dates do not change the size meaningfully."
+      },
+      {
+        "text": "Browsers refuse internal certificates longer than a year",
+        "correct": false,
+        "why": "Internal clients are not browsers bound by that."
+      }
+    ]
+  },
+  {
+    "id": "ex-ct9s85vz",
+    "version": 1,
+    "section": "names",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Against which part of the certificate does a modern client check the host name?",
+    "hint": "Not the Subject line.",
+    "choices": [
+      {
+        "text": "The subject's common name",
+        "correct": false,
+        "why": "Browsers stopped reading it in 2017."
+      },
+      {
+        "text": "The Subject Alternative Name list",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The issuer's name",
+        "correct": false,
+        "why": "That names the CA."
+      },
+      {
+        "text": "The CRL distribution point",
+        "correct": false,
+        "why": "That is a URL for revocation."
+      }
+    ]
+  },
+  {
+    "id": "ex-29ny0v0e",
+    "version": 1,
+    "section": "names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which host names does a SAN entry of `*.vereda.example` cover?",
+    "hint": "Exactly one label.",
+    "choices": [
+      {
+        "text": "vereda.example and every name below it",
+        "correct": false,
+        "why": "The bare domain is not matched."
+      },
+      {
+        "text": "Any name ending in vereda.example, at any depth",
+        "correct": false,
+        "why": "Only one label is matched."
+      },
+      {
+        "text": "agenda.vereda.example, but not a.b.vereda.example",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only www.vereda.example",
+        "correct": false,
+        "why": "Any single label matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpy2achf",
+    "version": 1,
+    "section": "names",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An internal client builds its own TLS context, checks the chain against Vereda's root, and sets the host name check off. What can impersonate the portal to it?",
+    "hint": "Every certificate from Vereda's CA chains.",
+    "choices": [
+      {
+        "text": "Nothing, because the chain is checked",
+        "correct": false,
+        "why": "The chain proves the CA, not the name."
+      },
+      {
+        "text": "Any server Vereda's CA certified",
+        "correct": true,
+        "why": "Right: without the name, any valid chain passes."
+      },
+      {
+        "text": "Only servers with an expired certificate",
+        "correct": false,
+        "why": "Expiry is still checked."
+      },
+      {
+        "text": "Only a server holding the root's private key",
+        "correct": false,
+        "why": "Much less is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8stez11",
+    "version": 1,
+    "section": "revocation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `files.pem` pass the first check of section 05 although it had been revoked?",
+    "hint": "What was the check not told to do?",
+    "choices": [
+      {
+        "text": "Its revocation had not taken effect yet",
+        "correct": false,
+        "why": "It was revoked on 20 May."
+      },
+      {
+        "text": "The CRL was expired",
+        "correct": false,
+        "why": "The CRL was current on 15 June."
+      },
+      {
+        "text": "The CRL was not consulted",
+        "correct": true,
+        "why": "Right: a client that does not look does not know."
+      },
+      {
+        "text": "Its serial is not in the CRL",
+        "correct": false,
+        "why": "3A03 is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-49rsnesn",
+    "version": 1,
+    "section": "revocation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why has OCSP soft-fail never protected users against a determined attacker?",
+    "hint": "What happens when the responder does not answer?",
+    "choices": [
+      {
+        "text": "The browser carries on when blocked",
+        "correct": true,
+        "why": "Right: blocking the check defeats it."
+      },
+      {
+        "text": "OCSP responses are not signed",
+        "correct": false,
+        "why": "They are signed by the CA."
+      },
+      {
+        "text": "OCSP only works for EV certificates",
+        "correct": false,
+        "why": "It works for any certificate."
+      },
+      {
+        "text": "Revoked certificates still appear in CT logs",
+        "correct": false,
+        "why": "CT has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjx5jtgy",
+    "version": 1,
+    "section": "revocation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a CRL's ___ Update date has passed, a client that requires it refuses even certificates that were never revoked.",
+    "hint": "Last or Next?",
+    "blanks": [
+      {
+        "accept": [
+          "Next"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bj8kt24j",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the lab's events by date.",
+    "hint": "Use the timeline of section 03.",
+    "items": [
+      "agenda.pem expires",
+      "files.pem is revoked",
+      "the CRL is issued",
+      "the lab's present",
+      "the CRL's Next Update"
+    ]
+  },
+  {
+    "id": "ex-xbwwp12m",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each OpenSSL error to its cause in the lab.",
+    "hint": "Lessons 8 and 9.",
+    "pairs": [
+      {
+        "left": "certificate has expired",
+        "right": "agenda.pem after 10 April"
+      },
+      {
+        "left": "certificate revoked",
+        "right": "files.pem checked against the CRL"
+      },
+      {
+        "left": "hostname mismatch",
+        "right": "portal.pem checked as www.vereda.example"
+      },
+      {
+        "left": "CRL has expired",
+        "right": "a check on 15 July with the June CRL"
+      }
+    ],
+    "right_distractors": [
+      "a weak cipher suite"
+    ]
+  }
+]
