@@ -1025,6 +1025,44 @@ commit_9() {
   GIT_COMMITTER_DATE=2026-09-24T11:00:00-03:00 git tag -a v1.4.0 -m 'shipquote 1.4.0'
 }
 
+# ---- step 10: Ask the carrier when the environment names one  [v1.5.0]
+step_10() {
+  python3 - <<'PY'
+from pathlib import Path
+p = Path("shipquote/app.py")
+s = p.read_text()
+s = s.replace("from . import money, quote\n", "from . import carrier, money, quote\n")
+s = s.replace('''            env = os.environ.get("SHIPQUOTE_ENV", "dev")
+            return self.reply(200, {"version": VERSION, "env": env})''',
+'''            env = os.environ.get("SHIPQUOTE_ENV", "dev")
+            source = os.environ.get("SHIPQUOTE_CARRIER_URL") or "table"
+            return self.reply(200, {"version": VERSION, "env": env,
+                                    "carrier": source})''')
+s = s.replace('''        except ValueError as e:
+            return self.reply(400, {"error": str(e)})
+''', '''        except ValueError as e:
+            return self.reply(400, {"error": str(e)})
+        carrier_url = os.environ.get("SHIPQUOTE_CARRIER_URL")
+        if carrier_url and cents:
+            client = carrier.CarrierClient(
+                carrier_url, os.environ.get("SHIPQUOTE_CARRIER_TOKEN", ""))
+            cents = carrier.price(client, cep, weight_g, subtotal,
+                                  log=lambda line: print(line, file=sys.stderr))
+''')
+p.write_text(s)
+PY
+  cat >> tests/test_app.py <<'EOF'
+
+
+def test_version_says_the_table_is_used_when_no_carrier_is_named(base_url):
+    assert get(base_url + "/version")[1]["carrier"] == "table"
+EOF
+}
+commit_10() {
+  at 2026-09-29T15:30:00-03:00 'Ask the carrier when the environment names one'
+  GIT_COMMITTER_DATE=2026-09-29T15:30:00-03:00 git tag -a v1.5.0 -m 'shipquote 1.5.0'
+}
+
 steps() {
   echo ' 1  2026-09-01  Money in cents, with its first tests'
   echo ' 2  2026-09-02  Price a parcel by zone and weight'
@@ -1035,8 +1073,9 @@ steps() {
   echo ' 7  2026-09-17  Build test data with a factory, a table and a property'
   echo ' 8  2026-09-22  Run the checks on GitHub Actions and on GitLab CI'
   echo ' 9  2026-09-24  Build one artifact, deploy it, and check it answers  [v1.4.0]'
+  echo '10  2026-09-29  Ask the carrier when the environment names one  [v1.5.0]'
 }
-LAST=9
+LAST=10
 
 venv() {
   local dir=$1 py=${2:-3.13}
