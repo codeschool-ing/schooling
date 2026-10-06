@@ -41,7 +41,7 @@ parser de Go, em `go/token`, então um programa pode perguntar a ele:
 }
 ```
 
-Vinte e cinco. A palestra de 2012 da seção 01 deu a comparação: C99 tinha 37 e C++11 tinha 84. Leia
+Vinte e cinco. A palestra de 2012 da seção 02 deu a comparação: C99 tinha 37 e C++11 tinha 84. Leia
 a lista procurando o que falta, porque **nenhum `class`, `extends`, `try`, `catch`, `throw` ou
 `while` aparece nela.** Essas palavras não são reservadas em Go; você poderia chamar uma variável de
 `class`. E sem `while`, o único laço é o `for`, nas três formas que a lição 17 mostra.
@@ -59,7 +59,7 @@ embutido nele.
 
 Uma função Go que pode falhar devolve um erro como valor comum, ao lado do resultado, e quem chamou
 olha para ele na linha seguinte. Não há `try` em volta de um bloco nem caminho escondido pelo qual
-uma falha salta do meio de uma função. O `net.LookupHost` da seção 02 devolveu `[127.0.0.1]` e
+uma falha salta do meio de uma função. O `net.LookupHost` da seção 03 devolveu `[127.0.0.1]` e
 `<nil>`, e esse `<nil>` era o erro, impresso como valor porque nada deu errado. As lições 32 a 35
 tratam de erros; a lição 36 trata de `panic`, que é para bugs e não para falhas.
 
@@ -118,12 +118,12 @@ quatro programas que você talvez já use são Go.
 ::: track devops devsecops
 Nesta trilha você vai operar esses programas antes de escrever algo parecido com eles. Quando um deles
 se comportar mal, o código-fonte que você acabará lendo está escrito na linguagem que este curso
-ensina, e o binário que você acabará copiando entre máquinas é o arquivo único da seção 02.
+ensina, e o binário que você acabará copiando entre máquinas é o arquivo único da seção 03.
 :::
 
 ::: track backend
 Nesta trilha Go é a linguagem dos serviços que você vai escrever: programas que passam o dia
-respondendo a requisições pela rede, que é o terceiro problema da seção 01. O arquivo único da seção
+respondendo a requisições pela rede, que é o terceiro problema da seção 02. O arquivo único da seção
 02 é o que você vai entregar a quem faz o deploy deles.
 :::
 

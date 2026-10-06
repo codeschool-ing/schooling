@@ -72,7 +72,7 @@ normal.
 
 Go pôs a concorrência na linguagem, e não numa biblioteca. **A palavra-chave `go` põe uma função
 para rodar ao lado do resto do programa**, e `chan` declara um canal pelo qual duas delas conversam.
-As duas estão entre as 25 palavras-chave que a seção 03 conta. Usá-las bem é o assunto do curso
+As duas estão entre as 25 palavras-chave que a seção 04 conta. Usá-las bem é o assunto do curso
 `go-concurrency`; este curso ensina a linguagem sobre a qual elas são construídas.
 
 ## Quem, e quando

@@ -41,7 +41,7 @@ as names because the grammar owns them. The standard library includes Go's own p
 }
 ```
 
-Twenty-five. The 2012 talk of section 01 gave the comparison: C99 had 37 and C++11 had 84. Read the
+Twenty-five. The 2012 talk of section 02 gave the comparison: C99 had 37 and C++11 had 84. Read the
 list for what is missing, because **no `class`, `extends`, `try`, `catch`, `throw` or `while`
 appears in it.** Those words are not reserved in Go; you could name a variable `class`. And with no `while`, the
 one loop is `for`, in the three forms lesson 17 shows.
@@ -59,7 +59,7 @@ embedded in it.
 
 A Go function that can fail returns an error as an ordinary value, next to its result, and the
 caller looks at it on the next line. There is no `try` around a block and no hidden path by which a
-failure jumps out of the middle of a function. `net.LookupHost` in section 02 returned `[127.0.0.1]`
+failure jumps out of the middle of a function. `net.LookupHost` in section 03 returned `[127.0.0.1]`
 and `<nil>`, and that `<nil>` was the error, printed as a value because nothing went wrong. Lessons
 32 to 35 are about errors; lesson 36 covers `panic`, which is for bugs and not for failures.
 
@@ -118,12 +118,12 @@ are Go.
 ::: track devops devsecops
 On this track you will operate those programs before you write anything like them. When one of
 them misbehaves, the source you end up reading is written in the language this course teaches, and
-the binary you end up copying between machines is the single file of section 02.
+the binary you end up copying between machines is the single file of section 03.
 :::
 
 ::: track backend
 On this track Go is the language of the services you will write: programs that answer requests over
-the network all day, which is the third problem of section 01. The single file of section 02 is what
+the network all day, which is the third problem of section 02. The single file of section 03 is what
 you will hand to whoever deploys them.
 :::
 

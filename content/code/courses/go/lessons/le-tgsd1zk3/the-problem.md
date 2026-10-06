@@ -70,7 +70,7 @@ designed before multicore machines, networking and web applications were normal.
 
 Go put concurrency into the language rather than into a library. **The keyword `go` starts a
 function running alongside the rest of the program**, and `chan` declares a channel that two of
-them talk through. Both are among the 25 keywords section 03 counts. Using them well is the subject
+them talk through. Both are among the 25 keywords section 04 counts. Using them well is the subject
 of the `go-concurrency` course; this course teaches the language they are built on.
 
 ## Who, and when
