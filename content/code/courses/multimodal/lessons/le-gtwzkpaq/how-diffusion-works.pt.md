@@ -5,7 +5,7 @@ version: 1
 
 **Um modelo de difusão não pinta. Ele tira ruído.** Essa é a ideia sobre a qual todo gerador de imagens dos últimos anos é construído, e ela explica quase tudo do comportamento deles: por que um prompt é uma sugestão, por que duas execuções diferem e por que algumas coisas saem erradas toda vez.
 
-O treino começa com imagens reais e as destrói. Pegue uma imagem, acrescente um pouco de ruído aleatório, depois mais um pouco, mil vezes, até não sobrar nada da imagem. A quantidade acrescentada a cada passo segue um **cronograma** fixo. Aqui está esse processo rodado sobre a capa de *Dom Casmurro* do laboratório, com o cronograma linear dos artigos originais de difusão, e o Tesseract tentando ler o título a cada etapa:
+O treino começa com imagens reais e as destrói. Pegue uma imagem, acrescente um pouco de ruído aleatório, depois mais um pouco, mil vezes, até não sobrar nada da imagem. A quantidade acrescentada a cada passo segue um **cronograma** fixo. Aqui está esse processo rodado sobre a capa de *Dom Casmurro* do curso, com o cronograma linear dos artigos originais de difusão, e o Tesseract tentando ler o título a cada etapa:
 
 ```python
 """What a diffusion model learns to undo: the cover, drowned in noise step by step."""
@@ -57,4 +57,4 @@ O modelo é treinado no caminho inverso: diante de uma imagem ruidosa, e sabendo
 
 **A imagem tem tamanho fixo.** Um modelo gera nas resoluções em que foi treinado. Pedir outro tamanho significa partir de um ruído com outro formato, o que pode mudar a composição, e por isso uma API oferece uma lista curta de tamanhos (aula 9).
 
-*O ruído do `noise.py` é aritmética real, e a geração não roda em lugar nenhum deste laboratório: nenhum modelo de imagem podia ser alcançado da máquina em que o curso foi gravado. Gerar percorre a curva da direita para a esquerda, do ruído puro de volta a uma imagem.*
+*O ruído do `noise.py` é aritmética real, e a geração não roda em lugar nenhum deste curso: os modelos de imagem do Ollama só rodam no macOS por enquanto, e a máquina do curso é Linux. Gerar percorre a curva da direita para a esquerda, do ruído puro de volta a uma imagem.*

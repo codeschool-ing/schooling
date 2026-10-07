@@ -17,7 +17,7 @@ from PIL import Image, PngImagePlugin
 
 card = Image.open("grid/00-0.png")
 info = PngImagePlugin.PngInfo()
-info.add_text("Source", "labmm stand-in, lab-image-1, 2026-10-06")
+info.add_text("Source", "images_server stand-in, gpt-image-1, 2026-10-07")
 card.save("stamped.png", pnginfo=info)
 print("saved:  ", Image.open("stamped.png").text)
 
@@ -28,7 +28,7 @@ print("edited: ", Image.open("edited.png").text)
 
 ```
 ana@lab:~/mm$ python stamp.py
-saved:   {'Source': 'labmm stand-in, lab-image-1, 2026-10-06'}
+saved:   {'Source': 'images_server stand-in, gpt-image-1, 2026-10-07'}
 edited:  {}
 ```
 

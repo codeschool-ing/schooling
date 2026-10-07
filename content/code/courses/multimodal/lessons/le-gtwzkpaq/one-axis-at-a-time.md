@@ -57,7 +57,189 @@ light   a single desk lamp at night          219 characters
 
 Five prompts: the base, two other media, two other lights. Nothing else moves between them, and the program says how long each one is, which matters for the models that stop reading at 77 tokens.
 
-Then every prompt is sent, **twice**, because one picture of a prompt is not a measurement of it. The Images API has no seed (section 02), so asking for `n=2` per prompt is how you tell "this prompt gives cold light" from "this one picture happened to come out cold":
+Then every prompt is sent, **twice**, because one picture of a prompt is not a measurement of it. The Images API has no seed (section 02), so asking for `n=2` per prompt is how you tell "this prompt gives cold light" from "this one picture happened to come out cold".
+
+**No image generator runs on your computer in this course.** Ollama's image models run only on macOS so far, and the course's machine is Linux. So the requests go to a stand-in the course provides, which answers exactly the way OpenAI's Images API does and draws a grey card instead of a picture. Everything around the picture is real: the request, the checks on it, the shape of the answer and the file on your disk. With a key of your own, the same program reaches OpenAI by changing one line.
+
+`images_server.py`, the stand-in:
+
+```python
+"""images_server: the course's stand-in for an image API, on localhost:8800. NO MODEL DRAWS HERE.
+
+It answers three routes the way the real services do, closely enough that the
+openai and google-genai SDKs talk to it unchanged:
+
+    POST /v1/images/generations              OpenAI: a picture from a prompt
+    POST /v1/images/edits                    OpenAI: a picture changed inside a mask
+    POST /v1beta/models/MODEL:generateContent    Gemini: words in, words and a picture out
+
+Every picture it returns is a grey card with the request written on it. What is
+real is everything around the picture: the request the SDK built, the checks
+on it, the shape of the answer, and the file on your disk. Each request is also
+written to images_server.log, one JSON line, so a lesson can see what arrived.
+"""
+import base64
+import json
+import math
+import re
+import textwrap
+from email.parser import BytesParser
+from email.policy import HTTP
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from io import BytesIO
+
+import tiktoken
+from PIL import Image, ImageDraw, ImageFont
+
+SIZES = ["auto", "1024x1024", "1024x1536", "1536x1024"]   # the sizes OpenAI lists for its GPT image models
+FONT = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
+BOLD = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 28)
+TOKENS = tiktoken.get_encoding("o200k_base")
+
+
+class Refused(Exception):
+    def __init__(self, message, param=None):
+        super().__init__(message)
+        self.message, self.param = message, param
+
+
+def card(size, lines, base=None):
+    """The picture this stand-in returns: what was asked, on a card that says what it is."""
+    img = base.convert("RGB").resize(size) if base else Image.new("RGB", size, (58, 63, 71))
+    d = ImageDraw.Draw(img)
+    d.rectangle([24, 24, size[0] - 24, 88 + 34 * len(lines)], fill=(30, 33, 38))
+    d.text((48, 44), "images_server stand-in: no model drew this", font=BOLD, fill=(255, 214, 102))
+    for i, line in enumerate(lines):
+        d.text((48, 96 + i * 34), line, font=FONT, fill=(235, 235, 235))
+    return img
+
+
+def png(img):
+    buf = BytesIO()
+    img.save(buf, "PNG")
+    return buf.getvalue()
+
+
+def generate(req):
+    size = req.get("size") or "auto"
+    if size not in SIZES:
+        raise Refused(f"Invalid value: '{size}'. Supported values are: " + ", ".join(f"'{s}'" for s in SIZES), "size")
+    w, h = (1024, 1024) if size == "auto" else map(int, size.split("x"))
+    n = int(req.get("n") or 1)
+    lines = textwrap.wrap(req.get("prompt", ""), 60)[:8] + [f"{req.get('model')}, {w}x{h}"]
+    data = [png(card((w, h), lines + [f"picture {k + 1} of {n}"])) for k in range(n)]
+    return {"data": [{"b64_json": base64.b64encode(d).decode()} for d in data], "size": f"{w}x{h}"}, \
+        {"size": f"{w}x{h}", "n": n, "bytes": [len(d) for d in data]}
+
+
+def edit(fields, files):
+    base = Image.open(BytesIO(files["image"]))
+    mask = Image.open(BytesIO(files["mask"])) if "mask" in files else None
+    if mask is not None:
+        if mask.size != base.size:
+            raise Refused(f"The mask must be the same size as the image: the image is {base.size[0]}x{base.size[1]} "
+                          f"and the mask {mask.size[0]}x{mask.size[1]}.", "mask")
+        if mask.mode != "RGBA":
+            raise Refused("The mask must have an alpha channel.", "mask")
+        hole = mask.getchannel("A").point(lambda a: 255 if a == 0 else 0)   # transparent = may be repainted
+        base = Image.composite(Image.new("RGB", base.size, (128, 128, 128)), base.convert("RGB"), hole)
+    lines = textwrap.wrap(fields.get("prompt", ""), 50)[:6] + ["the grey area is what an edit would repaint"]
+    out = png(card(base.size, lines, base))
+    return {"data": [{"b64_json": base64.b64encode(out).decode()}]}, {"size": "%dx%d" % base.size}
+
+
+def gemini_tokens(w, h):
+    """Google's published rule for an image sent to Gemini 2.x: 258 tokens per 768-pixel tile."""
+    return 258 if w <= 384 and h <= 384 else 258 * math.ceil(w / 768) * math.ceil(h / 768)
+
+
+def gemini(model, req):
+    texts, pictures, tokens_in = [], [], 0
+    for content in req.get("contents", []):
+        for part in content.get("parts", []):
+            if "text" in part:
+                texts.append(part["text"])
+                tokens_in += len(TOKENS.encode(part["text"]))
+            blob = part.get("inlineData") or part.get("inline_data")
+            if blob:
+                raw = base64.urlsafe_b64decode(blob["data"] + "=" * (-len(blob["data"]) % 4))
+                pictures.append(Image.open(BytesIO(raw)))
+                tokens_in += gemini_tokens(*pictures[-1].size)
+    config = req.get("generationConfig") or req.get("generation_config") or {}
+    wants = [m.upper() for m in config.get("responseModalities") or config.get("response_modalities") or ["TEXT"]]
+    reply = "images_server is a stand-in: no model read this request or drew a picture for it."
+    parts = [{"text": reply}]
+    if "IMAGE" in wants:
+        img = card((1024, 1024), textwrap.wrap(" ".join(texts), 60)[:8], pictures[0] if pictures else None)
+        parts.append({"inlineData": {"mimeType": "image/png", "data": base64.b64encode(png(img)).decode()}})
+    tokens_out = len(TOKENS.encode(reply)) + (1290 if "IMAGE" in wants else 0)   # Google prices a picture as 1,290
+    return {"candidates": [{"content": {"role": "model", "parts": parts}, "finishReason": "STOP", "index": 0}],
+            "usageMetadata": {"promptTokenCount": tokens_in, "candidatesTokenCount": tokens_out,
+                              "totalTokenCount": tokens_in + tokens_out}, "modelVersion": model}, \
+        {"tokens_in": tokens_in, "tokens_out": tokens_out}
+
+
+class Handler(BaseHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+    def answer(self, status, obj):
+        body = json.dumps(obj).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        self.answer(200, {"server": "images_server.py, a stand-in: no model draws here"})
+
+    def do_POST(self):
+        body = self.rfile.read(int(self.headers.get("Content-Length") or 0))
+        record = {"path": self.path}
+        try:
+            if self.path == "/v1/images/generations":
+                req = json.loads(body)
+                record["model"] = req.get("model")
+                out, more = generate(req)
+            elif self.path == "/v1/images/edits":
+                head = f"Content-Type: {self.headers['Content-Type']}\r\n\r\n".encode()
+                fields, files = {}, {}
+                for part in BytesParser(policy=HTTP).parsebytes(head + body).iter_parts():
+                    name = part.get_param("name", header="content-disposition").removesuffix("[]")
+                    if part.get_filename():
+                        files[name] = part.get_payload(decode=True)
+                    else:
+                        fields[name] = part.get_content()
+                record["model"] = fields.get("model")
+                out, more = edit(fields, files)
+            elif m := re.fullmatch(r"/v1beta/models/([^:]+):generateContent", self.path.split("?")[0]):
+                record["model"] = m[1]
+                out, more = gemini(m[1], json.loads(body))
+            else:
+                raise Refused(f"no route for POST {self.path}")
+            record.update(more, status=200)
+            self.answer(200, out)
+        except Refused as e:
+            record.update(status=400, error=e.message)
+            self.answer(400, {"error": {"message": e.message, "type": "invalid_request_error",
+                                        "param": e.param, "code": None}})
+        with open("images_server.log", "a") as log:
+            log.write(json.dumps(record) + "\n")
+
+
+if __name__ == "__main__":
+    print("images_server: a stand-in on http://localhost:8800, no model behind it", flush=True)
+    ThreadingHTTPServer(("127.0.0.1", 8800), Handler).serve_forever()
+```
+
+It answers three routes, and this lesson uses the first; lesson 9 uses the other two. Start it in a second terminal, in `~/mm`, and leave it running:
+
+```sh
+python images_server.py
+```
+
+`grid.py`, which sends the prompts:
 
 ```python
 """Send every prompt in grid.json, twice, and keep each picture with what asked for it."""
@@ -68,13 +250,13 @@ import os
 
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8800/v1")   # the stand-in; OpenAI is https://api.openai.com/v1
 os.makedirs("grid", exist_ok=True)
 with open("grid/log.csv", "w", newline="") as f:
     log = csv.writer(f)
     log.writerow(["file", "axis", "value", "prompt"])
     for i, row in enumerate(json.load(open("grid.json"))):
-        result = client.images.generate(model="lab-image-1", prompt=row["prompt"], size="1536x1024", n=2)
+        result = client.images.generate(model="gpt-image-1", prompt=row["prompt"], size="1536x1024", n=2)
         for k, image in enumerate(result.data):
             name = f"grid/{i:02}-{k}.png"
             open(name, "wb").write(base64.b64decode(image.b64_json))
@@ -85,12 +267,12 @@ print(open("grid/log.csv").read().count("\n") - 1, "pictures,", len(os.listdir("
 ```
 ana@lab:~/mm$ python grid.py
 10 pictures, 10 files
-ana@lab:~/mm$ tail -n 2 /var/log/labmm/requests.jsonl | python -c "import json, sys; [print({k: r[k] for k in (\"n\", \"path\", \"size\", \"images\", \"bytes\")}) for r in map(json.loads, sys.stdin)]"
-{'n': 5, 'path': '/v1/images/generations', 'size': '1536x1024', 'images': 2, 'bytes': [41599, 41532]}
-{'n': 6, 'path': '/v1/images/generations', 'size': '1536x1024', 'images': 2, 'bytes': [41650, 41586]}
+ana@lab:~/mm$ tail -n 2 images_server.log
+{"path": "/v1/images/generations", "model": "gpt-image-1", "size": "1536x1024", "n": 2, "bytes": [41497, 41437], "status": 200}
+{"path": "/v1/images/generations", "model": "gpt-image-1", "size": "1536x1024", "n": 2, "bytes": [41550, 41490], "status": 200}
 ```
 
-**The pictures that came back are not pictures of books.** labmm is the course's stand-in, and `lab-image-1` returns a grey card at the size asked for, with the prompt written on it and the line *no model drew this*. The request, the log and the files on disk are real; the drawing is not. What this lab can teach about image generation is the method around the model, and the method is what survives when the model changes.
+**The pictures that came back are not pictures of books.** Each is a grey card at the size asked for, with the prompt written on it and the line *no model drew this*. The request, the server's log and the ten files on disk are real; the drawing is not. Each picture is about 41 kilobytes, and the two of one request differ by a few dozen bytes, because each card carries its own number. What this course can teach about image generation is the method around the model, and the method is what survives when the model changes.
 
 ## What to keep for each run
 
