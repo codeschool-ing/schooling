@@ -200,3 +200,29 @@ def c1_worth():
     f.text(555, 120, T('saved ÷ cost = 20', 'economia ÷ custo = 20'), size=11, weight='600', fill='--phosphor')
     return f, T('A control’s value is the expected loss it removes; its ratio is that value over what it costs, every year.',
                 'O valor de um controle é a perda esperada que ele remove; a razão é esse valor sobre o que ele custa, por ano.')
+
+
+@figure('l11-wins', 11)
+def wins():
+    f = Fig('l11-wins', 720, 220, T(
+        'Two reasons that move an item up the plan, named so they can be weighed. A quick win: C8, '
+        'one message template changed in an afternoon, which costs nothing in the plan’s order and '
+        'shows the model producing results. A visible win: a notice of new sign-ins, R18, which '
+        'patients and owners can see and which builds trust for the invisible controls.',
+        'Dois motivos que sobem um item no plano, nomeados para poderem ser pesados. Uma vitória '
+        'rápida: o C8, um modelo de mensagem mudado numa tarde, que não custa nada na ordem do plano '
+        'e mostra o modelo produzindo resultado. Uma vitória visível: um aviso de logins novos, o '
+        'R18, que pacientes e donos conseguem ver e que constrói confiança para os controles '
+        'invisíveis.'))
+    cards = [(T('a quick win', 'uma vitória rápida'), 'C8', T('one template, one afternoon', 'um modelo, uma tarde'), T('shows the model works', 'mostra que o modelo funciona')),
+             (T('a visible win', 'uma vitória visível'), 'R18', T('a notice of new sign-ins', 'um aviso de logins novos'), T('trust for what nobody sees', 'confiança para o que ninguém vê'))]
+    for i, (head, ref, what, why) in enumerate(cards):
+        x = 40 + i * 340
+        f.rect(x, 30, 300, 130, stroke='--phosphor', fill='--panel', width=1.4)
+        f.text(x + 150, 54, head, size=11, weight='600')
+        f.text(x + 150, 84, ref, size=13, mono=True, weight='600', fill='--phosphor')
+        f.text(x + 150, 112, what, size=10)
+        f.text(x + 150, 136, why, size=9.5, fill='--paper-dim')
+    f.text(360, 195, T('legitimate reasons, as long as the plan says that is why', 'motivos legítimos, desde que o plano diga que é por isso'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('A reason that is named can be argued with. A reason that is not ends up as “it felt more urgent”.',
+                'Um motivo nomeado pode ser discutido. Um motivo não nomeado acaba virando “pareceu mais urgente”.')

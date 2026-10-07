@@ -203,3 +203,30 @@ def webhook_letters():
     f.text(366, 210, T('R at both ends: is the original webhook kept?', 'R nas duas pontas: o webhook original fica guardado?'), size=9.5, italic=True, fill='--paper-dim')
     return f, T('S and E describe the same flaw from two ends: the portal does not ask who sent the request, and then lets it do what only the gateway should.',
                 'S e E descrevem a mesma falha das duas pontas: o portal não pergunta quem mandou o pedido, e depois o deixa fazer o que só o gateway deveria.')
+
+
+@figure('l03-sequence', 3)
+def sequence():
+    f = Fig('l03-sequence', 720, 190, T(
+        'A real attack is several letters in sequence. Phishing a receptionist is S, spoofing a '
+        'staff member. Using the receptionist’s access to open records the role should not reach is '
+        'E, elevation of privilege. Reading every record is I, information disclosure. The threat is '
+        'filed under the letter that made you think of it.',
+        'Um ataque real são várias letras em sequência. Fazer phishing de uma recepcionista é S, '
+        'falsificar alguém da equipe. Usar o acesso dela para abrir prontuários que o papel não '
+        'deveria alcançar é E, elevação de privilégio. Ler todos os prontuários é I, vazamento de '
+        'informação. A ameaça é arquivada na letra que fez você pensar nela.'))
+    steps = [('S', T('phish a receptionist', 'phishing na recepcionista')),
+             ('E', T('reach records beyond the role', 'alcançar prontuários além do papel')),
+             ('I', T('read every record', 'ler todos os prontuários'))]
+    for i, (letter, what) in enumerate(steps):
+        x = 30 + i * 230
+        f.rect(x, 50, 200, 70, stroke='--amber' if i == 0 else '--paper-dim', fill='--panel', width=1.4)
+        f.text(x + 100, 72, letter, size=14, mono=True, weight='600', fill='--amber' if i == 0 else '--paper')
+        f.text(x + 100, 100, what, size=10)
+        if i < 2:
+            f.line(x + 200, 85, x + 230, 85, arrow=True)
+    f.text(130, 140, T('filed here: the letter that found it', 'arquivada aqui: a letra que a achou'), size=9.5, italic=True, fill='--amber')
+    f.text(360, 175, T('the letters are a prompt for finding threats, not a filing system', 'as letras são um estímulo para achar ameaças, não um sistema de arquivo'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('Arguing over whether T03 is S or E finds nothing new. Asking the next letter’s question might.',
+                'Discutir se a T03 é S ou E não acha nada novo. Fazer a pergunta da próxima letra pode achar.')

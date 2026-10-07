@@ -176,3 +176,33 @@ def t03_impact():
     f.text(360, 185, T('the largest line is the patients who leave, and it is the one daniel and carla argued over', 'a maior linha são os pacientes que saem, e é a que o daniel e a carla discutiram'), size=9.5, italic=True, fill='--paper-dim')
     return f, T('An impact is a sum of things somebody can argue about one by one, which is easier than arguing about one big number.',
                 'Um impacto é uma soma de coisas que dá para discutir uma a uma, o que é mais fácil que discutir um número grande.')
+
+
+@figure('l09-bet', 9)
+def bet():
+    f = Fig('l09-bet', 720, 220, T(
+        'The calibration bet. You can win R$ 1,000 either if the true value falls inside your 90% '
+        'range, or with a 90% chance by spinning a wheel. If you prefer the wheel, your range is too '
+        'narrow. If you prefer your range, it may be too wide. A calibrated estimator does not mind '
+        'which.',
+        'A aposta de calibração. Você pode ganhar R$ 1.000 se o valor verdadeiro cair dentro da sua '
+        'faixa de 90%, ou com 90% de chance girando uma roleta. Se preferir a roleta, a sua faixa é '
+        'estreita demais. Se preferir a faixa, ela pode ser larga demais. Com boa calibração, tanto '
+        'faz qual.'))
+    f.rect(20, 30, 200, 70, stroke='--paper-dim', fill='--panel', width=1.2)
+    f.lines(120, 65, [T('win R$ 1,000 if the truth', 'ganhar R$ 1.000 se a verdade'), T('is inside your range', 'está na sua faixa')], size=10)
+    f.circle(120, 160, 36, fill='--panel', stroke='--paper-dim', width=1.2)
+    f.path('M120 160 L120 124 A36 36 0 1 1 98.8 130.9 Z', stroke=None, fill='--phosphor-dim')
+    f.text(120, 210, T('or a wheel that pays 90% of the time', 'ou uma roleta que paga 90% das vezes'), size=9.5, fill='--paper-dim')
+    outs = [(T('you prefer the wheel', 'você prefere a roleta'), T('your range is too narrow', 'a sua faixa é estreita demais'), '--amber'),
+            (T('you prefer your range', 'você prefere a faixa'), T('it may be too wide', 'ela pode ser larga demais'), '--amber'),
+            (T('you do not mind which', 'tanto faz para você'), T('you are calibrated', 'a sua calibração está boa'), '--phosphor')]
+    for i, (a, b, c) in enumerate(outs):
+        y = 25 + i * 62
+        f.rect(330, y, 370, 50, stroke=c, fill='--panel', width=1.3)
+        f.text(345, y + 17, a, size=10, anchor='start', weight='600')
+        f.text(345, y + 35, b, size=10, anchor='start', fill='--paper-dim')
+    f.line(220, 65, 330, 105, arrow=True)
+    f.line(160, 160, 330, 105, arrow=True)
+    return f, T('The bet turns “how sure am I?” into a choice, and people are better at choices than at percentages.',
+                'A aposta transforma “quão certo estou?” numa escolha, e as pessoas são melhores em escolhas do que em porcentagens.')
