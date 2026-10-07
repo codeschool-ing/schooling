@@ -48,8 +48,9 @@ começar ali.
 
 ## A tabela em si
 
-O `conntrack -L` imprime o que o `fw` lembra. O `laptop` mantinha uma conexão aberta com `app` e
-tinha acabado de fechar outra:
+O `conntrack -L` imprime o que o `fw` lembra. O `laptop` manteve uma conexão aberta com `app` por
+três segundos, com `setsid bash -c "exec 3<>/dev/tcp/192.168.20.10/8080; sleep 3" </dev/null >/dev/null 2>&1 &`,
+e tinha acabado de fechar outra, o `curl` acima:
 
 ```
 root@fw:~# conntrack -L 2>/dev/null

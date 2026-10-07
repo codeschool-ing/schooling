@@ -8,7 +8,9 @@ it**. They talk to `www`, in the DMZ, which receives each request and makes a re
 `app` on their behalf. That is a **reverse proxy**: a server that answers for other servers, the
 mirror image of the forward proxy a company puts between its staff and the web.
 
-From `remote`, a stranger on the internet, the shop answers and the application does not:
+In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy loaded on
+`fw` by `nft -f baseline.nft`; lesson 4 explains every line of it. From `remote`, a stranger on the
+internet, the shop answers and the application does not:
 
 ```
 ana@remote:~$ curl -s https://www.example.com/

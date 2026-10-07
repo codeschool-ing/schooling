@@ -20,7 +20,8 @@ one rule can speak for all of them. The lab's segments are its zones:
 | management | the machine administrators work from | enough to administer the others | no |
 
 **Segmentation** is putting a firewall between zones, so that every conversation from one to another
-has to be allowed by a rule. Before any rule is loaded, `fw` routes everything, and a stranger on the
+has to be allowed by a rule. In your lab this lesson starts from `sudo bash nslab.sh reset`. Before
+any rule is loaded, `fw` routes everything, and a stranger on the
 internet reaches whatever answers:
 
 ```
@@ -33,8 +34,8 @@ www:443                open
 ```
 
 The database, the application, SSH on the application server: all `open`. `laptop:22` says
-`refused`, which is still an answer: a machine replied that nothing listens there. `probe`, a small
-command the lab installs, prints one of three words, and the difference between them matters all
+`refused`, which is still an answer: a machine replied that nothing listens there. `probe`, the
+small command `nslab.sh` installs in lesson 1, prints one of three words, and the difference between them matters all
 lesson:
 
 | probe says | what happened |

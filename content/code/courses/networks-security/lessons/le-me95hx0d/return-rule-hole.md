@@ -9,7 +9,9 @@ carrying that number.
 
 A source port is chosen by the sender. The web server on `app` uses 8080 because it listens there,
 and any program on any server may choose 8080 as well. `laptop` happens to run a service on port
-9999, and the rules were never meant to let a server reach it. From `db`, first with a port the
+9999, and the rules were never meant to let a server reach it. In the lab a listener stands in for
+it; start it on `laptop`, as root, with
+`setsid socat TCP-LISTEN:9999,bind=192.168.10.20,fork,reuseaddr SYSTEM:"echo laptop answered" </dev/null >/dev/null 2>&1 &`. From `db`, first with a port the
 system picks and then with 8080:
 
 ```

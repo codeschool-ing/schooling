@@ -20,7 +20,10 @@ subject=CN = app.corp.example.com
 inside it. In a real deployment this runs on `app`, and only the CSR travels to the CA.
 
 **The CA decides what to sign.** It does not copy whatever the request asks for; it applies its own
-profile. The extensions for this certificate, written down before signing:
+profile. The extensions for this certificate, written down before signing: the `[server]` section of
+`ca.cnf` and one more line with the name, made with
+`{ sed -n "/^\[server\]/,/^\[/p" ca.cnf | sed "\$d"; echo "subjectAltName = DNS:app.corp.example.com"; } > app.ext`
+inside `ca`:
 
 ```
 root@admin:~# cd ca; cat app.ext

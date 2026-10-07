@@ -19,6 +19,19 @@ root@fw:~# nft list ruleset > known-good.nft; wc -l known-good.nft
 Depois agende o caminho de volta **antes** de fazer a mudança, e faça a mudança. O arquivo novo é uma
 chain de entrada mais rígida que, por engano, não permite mais SSH a partir do segmento de gestão:
 
+```conf
+flush ruleset
+table ip filter {
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+    iifname "lo" accept
+  }
+}
+```
+
+Salve-o no `fw` como `tighter.nft`, e então a única linha:
+
 ```
 root@fw:~# (sleep 5; nft -f known-good.nft; echo "rolled back at $(date +%T)" > rollback.log) > /dev/null 2>&1 & nft -f tighter.nft; date +%T; nft list ruleset | grep -c accept
 15:34:47

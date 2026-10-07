@@ -18,8 +18,21 @@ Só `192.168.30.20` pode enviar algo para dentro do roteador por essa interface.
 torna visível o deny implícito, um hábito que vale a pena ter, porque uma ACL cuja última linha é
 invisível é uma ACL que alguém vai ler errado.
 
-A filial tem dois computadores: `branchpc` e `guest`, ligados no mesmo segmento. Antes de qualquer ACL,
-os dois chegam à internet:
+A filial tem dois computadores: `branchpc` e `guest`, ligados no mesmo segmento. No seu
+laboratório esta aula começa com `sudo bash nslab.sh reset` sem política nenhuma no `fw`, para que todo
+filtro aqui seja o do roteador da filial. O `guest` é ligado à mão, a partir do seu próprio
+computador. O `remote` ganha uma rota de volta para a filial, porque o roteador da filial do
+laboratório não faz tradução de endereços, e um processo escutando na porta 80 faz as vezes de um
+servidor web qualquer:
+
+```sh
+sudo bash nslab.sh plug guest branch 192.168.30.99/24 52:54:00:1e:63:99; sudo ip -n guest route add default via 192.168.30.1
+# on remote, as root
+ip route add 192.168.30.0/24 via 203.0.113.70
+setsid socat TCP-LISTEN:80,bind=203.0.113.50,fork,reuseaddr SYSTEM:"echo remote web" </dev/null >/dev/null 2>&1 &
+```
+
+Antes de qualquer ACL, os dois chegam à internet:
 
 ```
 ana@branchpc:~$ probe remote:80 remote:443 remote:22

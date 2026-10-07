@@ -26,7 +26,9 @@ status: ok
 ```
 
 `status: ok`. Em seguida a configuração do proxy muda para alcançar a aplicação por TLS, verificando o
-certificado da aplicação e também apresentando o seu:
+certificado da aplicação e também apresentando o seu. Em `/etc/nginx/sites-enabled/shop` no `www`,
+todo `proxy_pass http://192.168.20.10:8080;` vira as sete linhas impressas abaixo, de `proxy_pass` a
+`proxy_ssl_certificate_key`, e `nginx -s reload` as põe em vigor:
 
 ```
 root@www:~# grep -m1 -A8 "location / {" /etc/nginx/sites-enabled/shop | sed "s/^ *//"

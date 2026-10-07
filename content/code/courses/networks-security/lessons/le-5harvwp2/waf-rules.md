@@ -10,7 +10,17 @@ WAF describes what is forbidden, which makes it the same kind of tool as a signa
 
 The lab runs **ModSecurity**, the open-source WAF engine, as an nginx module, with the **OWASP Core
 Rule Set** (CRS), the rule set most deployments start from. It is switched on for the site with two
-lines, and its engine starts in **detection-only** mode:
+lines, and its engine starts in **detection-only** mode. On `www`, write `waf.conf` as it is printed
+below, and then make three edits. The audit log moves to nginx's own log directory, the two
+`modsecurity` lines go in below `client_max_body_size`, and the rate limit's burst rises to 50. The
+last one is so that the tests in this section are judged by the WAF and not refused for their speed:
+
+```sh
+# on www, as root
+sed -i "s#^SecAuditLog .*#SecAuditLog /var/log/nginx/modsec_audit.log#" /etc/nginx/modsecurity.conf
+sed -i "0,/client_max_body_size 16k;/s||client_max_body_size 16k;\n    modsecurity on;\n    modsecurity_rules_file /etc/nginx/waf.conf;|" /etc/nginx/sites-enabled/shop
+sed -i "s/limit_req zone=perip burst=10 nodelay;/limit_req zone=perip burst=50 nodelay;/" /etc/nginx/sites-enabled/shop
+```
 
 ```
 root@www:~# cat /etc/nginx/waf.conf; grep -E "^SecRuleEngine" /etc/nginx/modsecurity.conf; grep -n modsecurity /etc/nginx/sites-enabled/shop
@@ -49,7 +59,9 @@ matched, each adding to an **anomaly score**, and rule 949110 compared the total
 threshold and would have blocked. In detection-only mode it writes that down and does nothing.
 
 **That is how a WAF should be introduced**: in detection-only mode, for long enough to see what it
-would block among real traffic. Switched to blocking:
+would block among real traffic. Switched to blocking, after emptying the audit log with
+`: > /var/log/nginx/modsec_audit.log` and changing `DetectionOnly` to `On` in
+`/etc/nginx/modsecurity.conf`:
 
 ```
 root@www:~# grep -E "^SecRuleEngine" /etc/nginx/modsecurity.conf; nginx -s reload

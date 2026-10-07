@@ -10,7 +10,8 @@ matrix and a cell can be tried.
 
 The baseline of lesson 4 already applies it between zones: the staff reach the application and not the
 database, the proxy reaches the application and nothing else. What the zone matrix cannot express is
-finer than a zone. Who reaches the database today:
+finer than a zone. In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's
+policy loaded on `fw` by `nft -f baseline.nft`. Who reaches the database today:
 
 ```
 ana@app:~$ probe db:5432 db:22

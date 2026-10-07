@@ -3,8 +3,9 @@ title: Symmetric encryption, and why it must be authenticated
 version: 1
 ---
 
-A file, a key made of 32 random bytes written as hexadecimal, and AES-256 in CBC mode through
-`openssl enc`:
+In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy loaded on
+`fw` by `nft -f baseline.nft`. A file, a key made of 32 random bytes written as hexadecimal, and
+AES-256 in CBC mode through `openssl enc`:
 
 ```
 ana@laptop:~$ printf "Payroll for September: 42 people, BRL 318,450.00\n" > payroll.txt; wc -c payroll.txt

@@ -17,8 +17,20 @@ Only `192.168.30.20` may send anything into the router through that interface. T
 makes the implicit deny visible, which is a habit worth having, because an ACL whose last line is
 invisible is an ACL somebody will misread.
 
-The branch has two computers: `branchpc` and `guest`, plugged in on the same segment. Before any ACL,
-both reach the internet:
+The branch has two computers: `branchpc` and `guest`, plugged in on the same segment. In your lab this
+lesson starts from `sudo bash nslab.sh reset` with no policy on `fw`, so that every filter here is the
+branch router's. `guest` is plugged in by hand, from your own computer. `remote` gets a route back to
+the branch, because the lab's branch router does no address translation, and a listener on port 80
+stands in for any web server there:
+
+```sh
+sudo bash nslab.sh plug guest branch 192.168.30.99/24 52:54:00:1e:63:99; sudo ip -n guest route add default via 192.168.30.1
+# on remote, as root
+ip route add 192.168.30.0/24 via 203.0.113.70
+setsid socat TCP-LISTEN:80,bind=203.0.113.50,fork,reuseaddr SYSTEM:"echo remote web" </dev/null >/dev/null 2>&1 &
+```
+
+Before any ACL, both reach the internet:
 
 ```
 ana@branchpc:~$ probe remote:80 remote:443 remote:22

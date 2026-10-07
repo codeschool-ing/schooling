@@ -4,7 +4,8 @@ version: 1
 ---
 
 Blocking is only as good as the rule, and the rule was written in a hurry. The shop publishes a help
-page called `admin-guide.html`, for customers:
+page called `admin-guide.html`, for customers. In the lab it is one line on `app`, written there as root
+with `printf "how to use the admin console\n" > /srv/app/admin-guide.html`:
 
 ```
 ana@remote:~$ curl -s -m3 http://www.example.com/admin-guide.html; echo "exit $?"

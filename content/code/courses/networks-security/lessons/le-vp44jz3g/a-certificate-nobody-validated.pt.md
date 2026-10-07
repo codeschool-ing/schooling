@@ -10,7 +10,12 @@ continua acontecendo, perfeitamente, com quem quer que tenha respondido.
 Em `remote`, uma máquina que não é a loja roda um servidor TLS com um certificado que fez para si
 mesma, alegando ser `www.example.com`. O `laptop` se conecta a ela como se fosse a loja, do jeito que
 o tráfego chega à máquina errada por uma resposta de DNS falsa (aula 8) ou por uma mentira no ARP
-(aula 7):
+(aula 7). O impostor são dois comandos no `remote`, como root:
+
+```sh
+cd /root; openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 30 -subj "/CN=www.example.com" -keyout fake.key -out fake.crt 2>/dev/null
+setsid openssl s_server -accept 8443 -cert fake.crt -key fake.key -www -quiet </dev/null >/dev/null 2>&1 &
+```
 
 ```
 ana@laptop:~$ curl -sS -o /dev/null --connect-to www.example.com:443:203.0.113.50:8443 https://www.example.com/; echo "exit $?"

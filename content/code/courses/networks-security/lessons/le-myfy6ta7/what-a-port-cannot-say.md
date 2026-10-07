@@ -5,7 +5,8 @@ version: 1
 
 Lesson 1's firewall judges **headers**: addresses, protocol, ports. The rule every office writes
 first is some version of "staff may browse the web", and in header terms that means TCP to ports 80
-and 443:
+and 443. In your lab this lesson starts from `sudo bash nslab.sh reset`, and the rule set below is
+`edge.nft` on `fw`:
 
 ```
 root@fw:~# cat edge.nft

@@ -11,8 +11,10 @@ estreitou até endereços únicos.
 Essa premissa falha de três jeitos que o curso já encontrou. Uma máquina de dentro é comprometida
 (aula 9), e tudo o que a zona dela alcança passa a ser do atacante. Um endereço é emprestado ou
 forjado (aula 8). E a rede deixa de ter um dentro: laptops em casa, serviços no data center de outra
-pessoa, uma filial ligada por um túnel. No laboratório, a LAN da equipe alcança a página de
-administração da aplicação porque a configuração de base diz que a LAN pode:
+pessoa, uma filial ligada por um túnel. No seu laboratório esta aula começa com
+`sudo bash nslab.sh reset`, com a política da empresa carregada no `fw` por `nft -f baseline.nft`. A
+LAN da equipe alcança a página de administração da aplicação porque a configuração de base diz que a
+LAN pode:
 
 ```
 ana@laptop:~$ probe app:8080 app:8443

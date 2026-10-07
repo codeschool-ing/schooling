@@ -9,7 +9,13 @@ perfectly, with whoever answered.
 
 On `remote`, a machine that is not the shop runs a TLS server with a certificate it made for itself,
 claiming to be `www.example.com`. `laptop` connects to it as the shop, the way traffic arrives at the
-wrong machine through a bad DNS answer (lesson 8) or a lie in ARP (lesson 7):
+wrong machine through a bad DNS answer (lesson 8) or a lie in ARP (lesson 7). The impostor is two
+commands on `remote`, as root:
+
+```sh
+cd /root; openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 30 -subj "/CN=www.example.com" -keyout fake.key -out fake.crt 2>/dev/null
+setsid openssl s_server -accept 8443 -cert fake.crt -key fake.key -www -quiet </dev/null >/dev/null 2>&1 &
+```
 
 ```
 ana@laptop:~$ curl -sS -o /dev/null --connect-to www.example.com:443:203.0.113.50:8443 https://www.example.com/; echo "exit $?"
