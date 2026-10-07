@@ -18,13 +18,14 @@
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
 # centre, as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; www's address, 192.0.2.80, put on lb1 by
-# hand (lesson 16 is where two balancers share it); each backend section
-# written into lb1's haproxy.cfg as root (the lesson shows each one with
-# grep), and HAProxy restarted as root after every change; and web3's nginx
-# stopped as root before the last two requests of the cookie block, and started
-# again after them.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it. The part of haproxy.cfg no section changes is EXTRACTED from
+# where-it-sits's example, and each backend after it is the block the section
+# prints with sed. HAProxy is restarted after each change as where-it-sits
+# says: netlab.sh kill typed on the computer itself, then the sh fence of that
+# section, EXTRACTED with `lab.sh fence`. www's address put on lb1, the extra
+# slow download before `show stat`, and web3's nginx stopped are the commands
+# the prose gives inline, word for word.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -53,35 +54,19 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
+HERE=$(cd "$(dirname "$0")" && pwd)
 backend() {  # backend (the backend section on stdin): write it, restart HAProxy
   local body; body=$(cat)
-  lab exec lb1 root 'cat > /etc/haproxy/haproxy.cfg' <<C
-global
-    log stdout format raw local0
-    stats socket /run/haproxy.sock mode 600 level admin
-
-defaults
-    mode http
-    log global
-    option httplog
-    timeout connect 2s
-    timeout client 30s
-    timeout server 30s
-
-frontend www
-    bind 192.0.2.80:80
-    default_backend web
-
-$body
-C
-  lab kill lb1 'haproxy -db' TERM; sleep 0.5
-  quiet lb1 'setsid haproxy -db -f /etc/haproxy/haproxy.cfg </dev/null >>/run/haproxy.log 2>&1 &'
+  { bash "$LAB_SH" example "$HERE/where-it-sits.md" haproxy.cfg; echo; printf '%s\n' "$body"; } |
+    lab exec lb1 root 'cat > /etc/haproxy/haproxy.cfg'
+  ( cd ~ && sudo bash netlab.sh kill lb1 haproxy ) >/dev/null 2>&1; sleep 0.5
+  lab exec lb1 ana "$(bash "$LAB_SH" fence "$HERE/where-it-sits.md" 1)" >/dev/null 2>&1
   sleep 1.5
 }
 show() { on lb1 'sed -n "/^backend/,\$p" /etc/haproxy/haproxy.cfg'; }
 
 lab reset
-quiet lb1 'ip addr add 192.0.2.80/24 dev eth0'
+lab exec lb1 ana 'sudo ip addr add 192.0.2.80/24 dev eth0' >/dev/null 2>&1
 
 block roundrobin
 backend <<'B'
@@ -118,7 +103,7 @@ backend web
 B
 show
 on laptop 'curl -s -o /dev/null http://www.example.com/slow.txt & sleep 0.3; for i in 1 2 3 4; do curl -s http://www.example.com/; done; wait'
-( lab exec laptop ana 'curl -s -o /dev/null http://www.example.com/slow.txt' >/dev/null 2>&1 & )
+( lab exec laptop ana 'curl -s -o /dev/null http://www.example.com/slow.txt &' >/dev/null 2>&1 & )
 sleep 0.5
 on lb1 'echo "show stat" | sudo socat stdio /run/haproxy.sock | cut -d, -f1,2,5 | grep -E "^web,web"'
 sleep 4
@@ -151,7 +136,7 @@ show
 on laptop 'curl -s -D - -o /dev/null http://www.example.com/ | grep -i set-cookie'
 on laptop 'for i in $(seq 4); do curl -s -b "SERVERID=w3" http://www.example.com/; done'
 on laptop 'for i in $(seq 3); do curl -s http://www.example.com/; done'
-lab kill web3 nginx TERM
+( cd ~ && sudo bash netlab.sh kill web3 nginx ) >/dev/null 2>&1
 on laptop 'curl -s -b "SERVERID=w3" http://www.example.com/'
 backend <<'B'
 backend web
