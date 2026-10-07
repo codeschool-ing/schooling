@@ -9,8 +9,9 @@ MAC está atrás de cada porta, como a aula 18 de `networks-addressing` mostrou,
 unicast só por aquela porta. Um laptop na porta vizinha vê o próprio tráfego, os broadcasts e quase
 mais nada.
 
-O laboratório mostra isso. `files` buscou uma página em `web1` enquanto `laptop`, no mesmo switch,
-capturava tudo de ou para `files` durante cinco segundos:
+A rede da aula 1 mostra isso. Comece a captura em `laptop`, que fica no mesmo switch, e enquanto ela
+corre os seus cinco segundos, busque uma página em `web1` a partir de `files` com
+`curl -s http://192.0.2.21/`:
 
 ```
 ana@laptop:~$ sudo timeout 5 tcpdump -n -i eth0 host 192.168.10.10 and not host 192.168.10.20
@@ -30,9 +31,10 @@ passaram entre a porta de `files` e a porta de `hq`, e o switch nunca as copiou 
 ## Três lugares que veem o tráfego
 
 **Uma porta espelho**, que a Cisco chama de SPAN, é uma configuração do switch que copia todo quadro
-de uma porta, ou de uma VLAN inteira, para outra porta onde um analisador escuta. O switch do
-laboratório foi configurado para espelhar a porta de `files` para `mon`, uma máquina com uma interface
-e nenhum endereço IP, e a mesma requisição foi feita de novo:
+de uma porta, ou de uma VLAN inteira, para outra porta onde um analisador escuta. O `netlab.sh` tem um
+verbo para isso. Na máquina virtual, `sudo bash netlab.sh span hq files` configura o switch da matriz
+para espelhar a porta de `files` para `mon`, uma máquina com uma interface e nenhum endereço IP. Comece a
+captura em `mon` e faça a mesma requisição em `files` de novo:
 
 ```
 ana@mon:~$ tshark -n -i eth0 -c 6 -f "tcp port 80"
@@ -53,7 +55,7 @@ o `200 OK`. **`mon` não precisa de endereço para isso**, porque nunca particip
 **Um tap** é um pequeno aparelho posto no próprio cabo. Ele deixa o tráfego passar e copia os dois
 sentidos para uma porta de monitoração, seja qual for a configuração do switch. Custa dinheiro e um
 instante de parada para instalar, e é a resposta quando não dá para confiar que a porta espelho esteja
-completa. O laboratório não tem tap, então este é descrito e não mostrado.
+completa. A rede deste curso não tem tap, então este é descrito e não mostrado.
 
 **No próprio host** é o terceiro lugar, e muitas vezes o mais simples: capturar no servidor que está
 com problema, onde todo pacote que ele manda ou recebe passa pela própria interface. Isso é a aula 12,
