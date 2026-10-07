@@ -48,9 +48,9 @@ She runs it for the day the lab has just played:
 ana@vm:~/etl$ time python batch.py 2026-03-01
 2026-03-01: 7 shops, 183 orders
 
-real	0m0.221s
-user	0m0.172s
-sys	0m0.032s
+real	0m0.202s
+user	0m0.158s
+sys	0m0.025s
 ana@vm:~/etl$ psql -d wh -c "SELECT * FROM daily_sales ORDER BY shop_id"
     day     | shop_id | orders | revenue_cents 
 ------------+---------+--------+---------------

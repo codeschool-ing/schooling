@@ -31,11 +31,11 @@ ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SE
 ana@vm:~/etl$ ls -l landing/events inbox
 inbox:
 total 52
--rw-r--r-- 1 ana ana 51310 Oct  7 05:20 stock_2026-03-01.csv
+-rw-r--r-- 1 ana ana 51310 Oct  7 05:24 stock_2026-03-01.csv
 
 landing/events:
 total 316
--rw-r--r-- 1 ana ana 321982 Oct  7 05:20 2026-03-01.jsonl
+-rw-r--r-- 1 ana ana 321982 Oct  7 05:24 2026-03-01.jsonl
 ```
 
 Dezenove clientes novos e 183 pedidos novos. Dois arquivos também apareceram: os eventos de clique

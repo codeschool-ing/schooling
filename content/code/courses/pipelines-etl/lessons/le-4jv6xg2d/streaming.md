@@ -94,15 +94,15 @@ She starts it for seven seconds, stops it, waits three, and starts it again:
 ```
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 7
 starting at byte 0
-05:20:34  74 events, 5 purchases, at most 1.5 s behind
-05:20:36  116 events, 5 purchases, at most 1.1 s behind
-05:20:38  153 events, 6 purchases, at most 1.0 s behind
-stopped at byte 19764
+05:24:42  74 events, 5 purchases, at most 1.3 s behind
+05:24:44  117 events, 5 purchases, at most 1.1 s behind
+05:24:46  152 events, 6 purchases, at most 1.0 s behind
+stopped at byte 19649
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 5
-starting at byte 19764
-05:20:44  96 events, 4 purchases, at most 3.5 s behind
-05:20:46  131 events, 6 purchases, at most 0.9 s behind
-stopped at byte 36613
+starting at byte 19649
+05:24:52  97 events, 4 purchases, at most 3.4 s behind
+05:24:54  130 events, 6 purchases, at most 1.0 s behind
+stopped at byte 36377
 ```
 
 The clock times are the recording's own, and a run of yours will show yours. Two things in it are
@@ -111,8 +111,8 @@ the point:
 - **The lag is about a second.** A purchase is known to the pipeline a second after it happens, not
   the next morning. The one-second floor is the replay's doing: it writes `occurred_at` to the
   whole second, so an event can look up to a second older than it is.
-- **The restart did not start again.** The second run began at byte 19764, where the first had
-  stopped, and its first window was 3.5 seconds behind: the three seconds of events that arrived
+- **The restart did not start again.** The second run began at byte 19649, where the first had
+  stopped, and its first window was 3.4 seconds behind: the three seconds of events that arrived
   while nothing was reading, caught up in one go.
 
 ## What streaming costs

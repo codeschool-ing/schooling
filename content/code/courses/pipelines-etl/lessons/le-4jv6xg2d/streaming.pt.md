@@ -95,15 +95,15 @@ Ela o inicia por sete segundos, para, espera três, e inicia de novo:
 ```
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 7
 starting at byte 0
-05:20:34  74 events, 5 purchases, at most 1.5 s behind
-05:20:36  116 events, 5 purchases, at most 1.1 s behind
-05:20:38  153 events, 6 purchases, at most 1.0 s behind
-stopped at byte 19764
+05:24:42  74 events, 5 purchases, at most 1.3 s behind
+05:24:44  117 events, 5 purchases, at most 1.1 s behind
+05:24:46  152 events, 6 purchases, at most 1.0 s behind
+stopped at byte 19649
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 5
-starting at byte 19764
-05:20:44  96 events, 4 purchases, at most 3.5 s behind
-05:20:46  131 events, 6 purchases, at most 0.9 s behind
-stopped at byte 36613
+starting at byte 19649
+05:24:52  97 events, 4 purchases, at most 3.4 s behind
+05:24:54  130 events, 6 purchases, at most 1.0 s behind
+stopped at byte 36377
 ```
 
 Os horários são os da gravação, e uma execução sua vai mostrar os seus. Duas coisas nela importam:
@@ -112,8 +112,8 @@ Os horários são os da gravação, e uma execução sua vai mostrar os seus. Du
   acontecer, não na manhã seguinte. O piso de um segundo é obra da reprodução: ela escreve
   `occurred_at` em segundos inteiros, então um evento pode parecer até um segundo mais velho do que
   é.
-- **O reinício não começou de novo.** A segunda execução começou no byte 19764, onde a primeira
-  tinha parado, e a sua primeira janela estava 3,5 segundos atrasada: os três segundos de eventos que
+- **O reinício não começou de novo.** A segunda execução começou no byte 19649, onde a primeira
+  tinha parado, e a sua primeira janela estava 3,4 segundos atrasada: os três segundos de eventos que
   chegaram enquanto nada lia, alcançados de uma vez.
 
 ## O que o streaming custa
