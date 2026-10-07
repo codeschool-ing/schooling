@@ -868,6 +868,51 @@ def l08_dag(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-two-schedules', 9)
+def l09_two_schedules(lang):
+    t = {'en': dict(
+            label='Three days on a time line, 1 to 3 March. Above, the trigger schedule: a run at '
+                  'each midnight, for that midnight, covering an instant. Below, the interval '
+                  'schedule: a run at the end of each day, for that day, covering it from midnight '
+                  'to midnight; its first run happens at midnight on 2 March and is for 1 March.',
+            trig='cron string: a trigger', intv='CronDataIntervalTimetable: an interval',
+            runs_at='runs at', is_for='is for', d=['1 March', '2 March', '3 March', '4 March'],
+            cap='The same three days. One schedule runs at each midnight for that instant; the '
+                'other runs when each day is over, for the whole day.'),
+         'pt': dict(
+            label='Três dias numa linha do tempo, de 1º a 3 de março. Em cima, o agendamento por '
+                  'gatilho: uma execução a cada meia-noite, para aquela meia-noite, cobrindo um '
+                  'instante. Embaixo, o agendamento por intervalo: uma execução no fim de cada dia, '
+                  'para aquele dia, cobrindo-o de meia-noite a meia-noite; a primeira execução '
+                  'acontece à meia-noite de 2 de março e é para 1º de março.',
+            trig='string cron: um gatilho', intv='CronDataIntervalTimetable: um intervalo',
+            runs_at='roda em', is_for='é para', d=['1º de março', '2 de março', '3 de março',
+                                                   '4 de março'],
+            cap='Os mesmos três dias. Um agendamento roda a cada meia-noite para aquele instante; o '
+                'outro roda quando cada dia acaba, para o dia inteiro.')}[lang]
+    f = Fig('l09-two-schedules', 720, 270, t['label'])
+    xs = [80 + i * 190 for i in range(4)]
+    y = 240
+    f.line(40, y, 700, y, stroke='--paper-dim', arrow=True)
+    for x, dname in zip(xs, t['d']):
+        f.line(x, y - 5, x, y + 5, stroke='--paper-dim')
+        f.text(x, y + 18, dname, size=10, fill='--paper-dim')
+    f.text(40, 30, t['trig'], size=11, weight='600', anchor='start')
+    for x in xs[:3]:
+        f.circle(x, 60, 6, fill='--phosphor')
+        f.line(x, 68, x, 100, stroke='--phosphor-dim', dash='2 3')
+    f.text(40, 120, t['intv'], size=11, weight='600', anchor='start')
+    for i in range(3):
+        a, b = xs[i], xs[i + 1]
+        f.rect(a + 2, 140, b - a - 4, 22, stroke='--amber', fill='--scan', rx=4)
+        f.text((a + b) / 2, 151, t['is_for'] + ' ' + t['d'][i], size=10)
+        f.circle(b, 186, 5, fill='--amber')
+        f.text(b, 204, t['runs_at'] + ' ' + t['d'][i + 1], size=9.5, fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

@@ -120,7 +120,11 @@ EOF
 
 as_ana() {
   # shellcheck disable=SC2046
-  runuser -u ana -- env -i HOME=/home/ana USER=ana $(cat "$ENVFILE") bash -c "$1"
+  if [ "$(id -un)" = ana ]; then   # `day` and `until` may be run by ana herself
+    env -i HOME=/home/ana USER=ana $(cat "$ENVFILE") bash -c "$1"
+  else
+    runuser -u ana -- env -i HOME=/home/ana USER=ana $(cat "$ENVFILE") bash -c "$1"
+  fi
 }
 
 need() {
@@ -256,7 +260,8 @@ reset() {
   load_shop
     as_ana "psql -q -d postgres -c 'SET client_min_messages = warning' -c 'DROP ROLE IF EXISTS etl_reader'"
   as_ana "dropdb --force --if-exists wh 2>/dev/null; createdb wh; dropdb --force --if-exists airflow 2>/dev/null; createdb airflow"
-  echo 2026-02-28 > $RUN/clock
+  mkdir -p $RUN && chown ana $RUN
+  echo 2026-02-28 > $RUN/clock && chown ana $RUN/clock
 }
 
 day() {
@@ -267,11 +272,11 @@ day() {
     echo "the shop has lived up to $last: the next day to play is $next" >&2; exit 1
   fi
   [ -f $DATA/days/$d.sql ] || { echo "the lab's data ends on 2026-03-31" >&2; exit 1; }
-  as_ana "psql -q -v ON_ERROR_STOP=1 -f $DATA/days/$d.sql >/dev/null"
-  mkdir -p $ETL/landing/events
-  install -o ana -g ana -m 644 $DATA/events/$d.jsonl $ETL/landing/events/$d.jsonl
-  install -o ana -g ana -m 644 $DATA/stock/$d.csv $ETL/inbox/stock_$d.csv
-  echo "$d" > $RUN/clock
+  as_ana "psql -q -v ON_ERROR_STOP=1 -f $DATA/days/$d.sql >/dev/null
+          mkdir -p $ETL/landing/events
+          install -m 644 $DATA/events/$d.jsonl $ETL/landing/events/$d.jsonl
+          install -m 644 $DATA/stock/$d.csv $ETL/inbox/stock_$d.csv
+          echo $d > $RUN/clock"
 }
 
 case "${1:-}" in
