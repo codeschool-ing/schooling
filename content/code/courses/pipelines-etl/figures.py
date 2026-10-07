@@ -1207,6 +1207,56 @@ def l12_lineage(lang):
     f.text(360, 84, t['down'], size=11)
     return f, t['cap']
 
+@figure('l13-compare', 13)
+def l13_compare(lang):
+    t = {'en': dict(
+            label='A table comparing Airflow, Luigi, Prefect and Dagster on four questions. The '
+                  'unit is a task in the first three and an asset in Dagster. The order is written '
+                  'with >> in Airflow, with requires in Luigi, by the order of calls in Prefect and '
+                  'with deps in Dagster. Done means a run succeeded in Airflow and Prefect, that the '
+                  'output exists in Luigi, and that the asset was materialized, and when, in Dagster. '
+                  'The schedule is run by the scheduler, by luigid with cron, by a server with a '
+                  'worker, and by dagster-daemon.',
+            rows=['unit', 'order', 'done means', 'on a schedule'],
+            cells=[['task', 'task', 'task', 'asset'],
+                   [('>>', 1), ('requires()', 1), ('the order of calls', 0), ('deps=', 1)],
+                   ['a run succeeded', 'the output exists', 'a run succeeded', 'materialized, and when'],
+                   ['scheduler', 'luigid + cron', 'server + worker', 'dagster-daemon']],
+            cap='Four tools, four questions. The third row is the one that decides what a rerun does.'),
+         'pt': dict(
+            label='Uma tabela que compara Airflow, Luigi, Prefect e Dagster em quatro perguntas. A '
+                  'unidade é uma tarefa nos três primeiros e um asset no Dagster. A ordem é escrita '
+                  'com >> no Airflow, com requires no Luigi, pela ordem das chamadas no Prefect e '
+                  'com deps no Dagster. Feito quer dizer que uma execução deu certo no Airflow e no '
+                  'Prefect, que a saída existe no Luigi, e que o asset foi materializado, e quando, '
+                  'no Dagster. O agendamento é rodado pelo agendador, pelo luigid com cron, por um '
+                  'servidor com um worker e pelo dagster-daemon.',
+            rows=['unidade', 'ordem', 'feito quer dizer', 'num horário'],
+            cells=[['tarefa', 'tarefa', 'tarefa', 'asset'],
+                   [('>>', 1), ('requires()', 1), ('a ordem das chamadas', 0), ('deps=', 1)],
+                   ['uma execução deu certo', 'a saída existe', 'uma execução deu certo',
+                    'materializado, e quando'],
+                   ['agendador', 'luigid + cron', 'servidor + worker', 'dagster-daemon']],
+            cap='Quatro ferramentas, quatro perguntas. A terceira linha é a que decide o que uma '
+                'nova execução faz.')}[lang]
+    f = Fig('l13-compare', 720, 230, t['label'])
+    x0, cw = 130, 147
+    tools = ['Airflow', 'Luigi', 'Prefect', 'Dagster']
+    for i, name in enumerate(tools):
+        f.text(x0 + cw * i + cw / 2, 24, name, size=11.5, weight='600')
+    f.line(14, 40, 706, 40, stroke='--wire')
+    for r, (row, cells) in enumerate(zip(t['rows'], t['cells'])):
+        y = 66 + r * 44
+        if r == 2:
+            f.rect(14, y - 18, 692, 36, stroke='--amber', fill='--scan', rx=4)
+        f.text(20, y, row, size=10.5, anchor='start', fill='--paper-dim', weight='600')
+        for i, c in enumerate(cells):
+            mono = False
+            if isinstance(c, tuple):
+                c, mono = c[0], bool(c[1])
+            f.text(x0 + cw * i + cw / 2, y, c, size=10 if not mono else 10.5, mono=mono)
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:
