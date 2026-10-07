@@ -8,6 +8,11 @@
 #   sudo useradd -m -s /bin/bash -G sudo ana   # once, on a throwaway machine
 #   sudo -u ana -i bash /path/to/captures.sh    # hostname `server`
 #
+# THE BLOCKS THE STUDENT TYPES TO SET A SECTION UP ARE READ OUT OF THE LESSON.
+# stage() takes the sh fence of a section whose first line is the one given and
+# runs it as written, so what the lesson shows and what made these transcripts
+# cannot drift apart; a fence that is not there stops the script.
+#
 # ONLY LINUX IS CAPTURED HERE, and PowerShell 7 running on that same Linux.
 # What only Windows or macOS can print is shown in the lesson as commands with
 # no output, and the prose says so where it happens: a transcript nobody ran
@@ -17,7 +22,8 @@
 # the Ubuntu 24.04 server from lesson 3, with one user, ana, in the sudo group;
 # /usr/local/bin/office-report, a two-line script that writes df's output to
 # /srv/reports, and office-report.service to run it, both written with sudo
-# tee before the first block, with /srv/reports absent; all three removed
+# tee before the first block by the lesson's own fence, run by stage(), with
+# /srv/reports absent; all three removed
 # again at the end; the journal also holds earlier runs of this script, so
 # its lines are read with -n; the server started fresh just before the
 # recording, so -b holds only this run; and sudo set to ask ana for no password, which
@@ -44,6 +50,17 @@ psh() {
   pwsh -NoProfile -NoLogo -Command "\$ErrorView='ConciseView'; $* | Out-String -Width 100 -Stream | ForEach-Object { \$_.TrimEnd() }" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+here=$(cd "$(dirname "$0")" && pwd)
+stage() {
+  local fence
+  fence=$(first="$2" awk '
+    /^```sh$/ { inside = 1; n = 0; next }
+    /^```$/ && inside { if (keep) exit; inside = 0; next }
+    inside { n++; if (n == 1 && $0 == ENVIRON["first"]) keep = 1; if (keep) print }
+  ' "$here/$1")
+  [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
+  eval "$fence"
+}
 # Lines from stdin, typed one at a time into an interactive bash in a real
 # terminal, so job numbers and "Terminated" appear exactly as a person sees them.
 session() {
@@ -58,10 +75,7 @@ cd ~
 sudo systemctl reset-failed office-report.service >/dev/null 2>&1
 sudo rm -f /etc/systemd/system/office-report.service /usr/local/bin/office-report
 sudo rm -rf /srv/reports
-printf '#!/bin/sh\ndf -h / > /srv/reports/disk-$(date +%%F).txt\necho "report written"\n' | sudo tee /usr/local/bin/office-report >/dev/null
-sudo chmod 755 /usr/local/bin/office-report
-printf '[Unit]\nDescription=Write the daily disk report\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/office-report\n' | sudo tee /etc/systemd/system/office-report.service >/dev/null
-sudo systemctl daemon-reload
+stage a-quiet-failure.md "sudo tee /usr/local/bin/office-report > /dev/null <<'EOF'"
 
 block journal
 show 'sudo journalctl --disk-usage'

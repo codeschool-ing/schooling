@@ -1,7 +1,29 @@
 ---
 title: Uma falha que disse ter dado certo
-version: 1
+version: 2
 ---
+
+O servidor do escritório escreve um relatório de disco todo dia, com um script e um serviço escritos do
+jeito que a aula 14 escreveu os do backup. Para acompanhar esta seção, ponha os mesmos dois no seu
+servidor; o script tem um defeito, e a seção é sobre achá-lo:
+
+```sh
+sudo tee /usr/local/bin/office-report > /dev/null <<'EOF'
+#!/bin/sh
+df -h / > /srv/reports/disk-$(date +%F).txt
+echo "report written"
+EOF
+sudo chmod 755 /usr/local/bin/office-report
+sudo tee /etc/systemd/system/office-report.service > /dev/null <<'EOF'
+[Unit]
+Description=Write the daily disk report
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/office-report
+EOF
+sudo systemctl daemon-reload
+```
 
 O relatório de disco não apareceu. O serviço que o escreve foi iniciado à mão, para observar:
 

@@ -1,9 +1,20 @@
 ---
 title: Quão cheio está o disco, e com o quê?
-version: 1
+version: 2
 ---
 
-Duas perguntas diferentes, e cada uma tem o seu comando.
+Duas perguntas diferentes, e cada uma tem o seu comando. A segunda precisa de uma pasta para medir. A
+aula 12 deixou uma pasta `work` na sua pasta pessoal; isto a troca por quatro arquivos pequenos e um de
+3 MB, só zeros, no lugar de um documento escaneado, com as mesmas datas daqui:
+
+```sh
+rm -rf ~/work && mkdir -p ~/work/invoices ~/work/reports
+printf 'id,name,city\n1,Acme Ltd,Sao Paulo\n2,Bravo & Filhos,Campinas\n' > ~/work/clients.csv
+printf 'Invoice 104 for Acme Ltd\n' > ~/work/invoices/104.txt
+printf 'Q3 summary, Bravo & Filhos\n' > ~/work/reports/q3.txt
+head -c 3000000 /dev/zero > ~/work/reports/scan.pdf
+find ~/work -exec touch -h -d '2026-09-01 09:00' {} +
+```
 
 ```
 ana@server:~$ df -h /

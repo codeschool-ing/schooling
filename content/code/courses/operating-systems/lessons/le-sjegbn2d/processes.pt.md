@@ -3,7 +3,11 @@ title: Achando um processo e parando
 version: 2
 ---
 
-Um `sleep` foi deixado rodando em segundo plano para esta seção, para ter o que achar.
+Esta seção precisa de algo para achar. Deixe um `sleep` rodando em segundo plano, como na aula 1:
+
+```sh
+sleep 600 &
+```
 
 ```
 ana@server:~$ ps -eo pid,user,comm --sort=pid | head -6

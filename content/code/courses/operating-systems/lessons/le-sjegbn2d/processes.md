@@ -3,7 +3,11 @@ title: Finding a process and stopping it
 version: 2
 ---
 
-A `sleep` was left running in the background for this section, to have something to find.
+This section needs something to find. Leave a `sleep` running in the background, as in lesson 1:
+
+```sh
+sleep 600 &
+```
 
 ```
 ana@server:~$ ps -eo pid,user,comm --sort=pid | head -6
