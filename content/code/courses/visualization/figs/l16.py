@@ -292,7 +292,7 @@ def l16_three_d(lang):
         label=f'A receita por categoria como uma pizza inclinada com profundidade, ao lado de um '
               f'gráfico de barras com os mesmos números. Na pizza, Bebidas fica na frente e a '
               f'parede lateral aparece, então ocupa {num("pt", ink["Drinks"], 1)}% da tinta sendo '
-              f'{num("pt", real["Drinks"], 1)}% da receita, a segunda menor fatia. Hortaliças, a '
+              f'{num("pt", real["Drinks"], 1)}% da receita, a segunda menor fatia. Verduras, a '
               f'maior com {num("pt", real["Vegetables"], 1)}%, fica atrás e ocupa '
               f'{num("pt", ink["Vegetables"], 1)}%. As barras mostram a ordem real.',
         ink='da tinta', rev='da receita',

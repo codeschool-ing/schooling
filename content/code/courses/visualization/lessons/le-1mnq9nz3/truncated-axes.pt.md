@@ -27,6 +27,15 @@ gráfico fiel tem fator 1. Este programa calcula o fator para três bases:
 {"language": "python", "file": "liefactor.py", "parts": [{"code": "import csv\nimport matplotlib.pyplot as plt\n"}, {"code": "totals = {}\nwith open(\"monthly.csv\") as f:\n    for row in csv.DictReader(f):\n        if row[\"region\"] == \"Southeast\":\n            year = row[\"month\"][:4]\n            totals[year] = totals.get(year, 0) + int(row[\"orders\"])\n", "note": "Soma os pedidos do Sudeste de cada ano: os quatro primeiros caracteres do mês são o ano."}, {"code": "a, b = totals[\"2024\"], totals[\"2025\"]\nchange = (b - a) / a\nprint(f\"Southeast 2024: {a:,}   2025: {b:,}\")\nprint(f\"change in the data: {change:+.1%}\")\n", "note": "A variação que o dado mostra, como fração de 2024."}, {"code": "for start in (0, 50_000, 65_000):\n    drawn = (b - start) / (a - start) - 1\n    print(f\"axis from {start:>6,}: bars differ by {drawn:+7.1%}, lie factor {drawn / change:4.1f}\")\n", "note": "Para cada ponto onde o eixo poderia começar, as barras mostram só a parte acima dele. A diferença relativa entre elas, dividida pela do dado, é o fator de mentira."}, {"code": "fig, axes = plt.subplots(1, 2, figsize=(7, 3))\nfor ax, start in zip(axes, (0, 65_000)):\n    ax.bar([\"2024\", \"2025\"], [a, b], color=\"#2b52c9\")\n    ax.set_ylim(start, 80_000)\n    ax.set_title(f\"axis from {start:,}\", loc=\"left\")\nfig.savefig(\"liefactor.png\", dpi=150, bbox_inches=\"tight\")\n", "note": "Desenha o gráfico honesto e o cortado lado a lado, para a diferença ser vista além de calculada."}], "output": "Southeast 2024: 67,663   2025: 77,567\nchange in the data: +14.6%\naxis from      0: bars differ by  +14.6%, lie factor  1.0\naxis from 50,000: bars differ by  +56.1%, lie factor  3.8\naxis from 65,000: bars differ by +371.9%, lie factor 25.4"}
 ```
 
+```
+ana@vm:~/viz$ .venv/bin/python liefactor.py
+Southeast 2024: 67,663   2025: 77,567
+change in the data: +14.6%
+axis from      0: bars differ by  +14.6%, lie factor  1.0
+axis from 50,000: bars differ by  +56.1%, lie factor  3.8
+axis from 65,000: bars differ by +371.9%, lie factor 25.4
+```
+
 O dado variou 14,6%. Começar o eixo em 50.000 faz as barras diferirem 56,1%, quase quatro vezes a
 verdade; começar em 65.000 faz elas diferirem 371,9%, um fator de mentira de 25,4. A regra prática do
 próprio Tufte era que qualquer coisa fora de 0,95 a 1,05 é uma distorção que vale corrigir.
