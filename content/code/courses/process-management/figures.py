@@ -1187,6 +1187,96 @@ def l08_change(lang):
 # ---- end of lesson 8
 
 
+# ------------------------------------------------------------------ lesson 9
+
+def _beta_pdf(x, o, m, p):
+    """A PERT-style beta: shape parameters from the mode, as PERT assumes."""
+    a = 1 + 4 * (m - o) / (p - o)
+    b = 1 + 4 * (p - m) / (p - o)
+    u = (x - o) / (p - o)
+    if u <= 0 or u >= 1:
+        return 0.0
+    return u ** (a - 1) * (1 - u) ** (b - 1)
+
+
+@figure('l09-three-point', 9)
+def l09_three_point(lang):
+    o, m, p = S.TASKS['payment integration']
+    mu, sd = S.pert(o, m, p)
+    t = {
+        'en': dict(x='working days', o='optimistic 3', m='most likely 6', p='pessimistic 20',
+                   mean=f'PERT mean {num(lang, mu, 2)}',
+                   label='A skewed curve over working days from 3 to 20 for the payment integration task. It peaks '
+                         'at the most likely value, 6 days, and has a long tail to the right towards the '
+                         'pessimistic 20. The PERT mean, 7.83 days, sits to the right of the peak.',
+                   cap='One task, three figures. The most likely value is where the curve peaks, and the mean is to '
+                       'its right, because a task can run much longer than expected and only a little shorter.'),
+        'pt': dict(x='dias úteis', o='otimista 3', m='mais provável 6', p='pessimista 20',
+                   mean=f'média PERT {num(lang, mu, 2)}',
+                   label='Uma curva assimétrica sobre dias úteis de 3 a 20 para a tarefa de integração de pagamento. '
+                         'Ela tem pico no valor mais provável, 6 dias, e uma cauda longa à direita em direção ao '
+                         'pessimista 20. A média PERT, 7,83 dias, fica à direita do pico.',
+                   cap='Uma tarefa, três números. O valor mais provável é onde a curva tem o pico, e a média fica à '
+                       'direita dele, porque uma tarefa pode se alongar muito além do esperado e encurtar só um '
+                       'pouco.'),
+    }[lang]
+    f = Fig('l09-three-point', 620, 260, t['label'])
+    peak = _beta_pdf(m, o, m, p)
+    pl = Plot(f, 40, 50, 590, 200, 0, 22, 0, peak * 1.15)
+    pl.xaxis([0, 3, 6, 10, 15, 20], label=t['x'])
+    pl.curve(lambda x: _beta_pdf(x, o, m, p), o, p, fill='--phosphor-dim')
+    pl.curve(lambda x: _beta_pdf(x, o, m, p), o, p, stroke='--phosphor', width=2)
+    for v, lab, anc in ((o, t['o'], 'end'), (p, t['p'], 'end')):
+        f.line(pl.sx(v), pl.y1, pl.sx(v), pl.y1 - 30, stroke='--paper-dim', width=1.2, dash='3 3')
+    f.text(pl.sx(o) - 4, pl.y1 - 38, t['o'], size=9.5, anchor='end', fill='--paper-dim')
+    f.text(pl.sx(p), pl.y1 - 38, t['p'], size=9.5, anchor='middle', fill='--paper-dim')
+    f.line(pl.sx(m), pl.y1, pl.sx(m), pl.sy(peak), stroke='--paper', width=1.2, dash='3 3')
+    f.text(pl.sx(m), pl.sy(peak) - 10, t['m'], size=9.5, anchor='end', fill='--paper', weight='600')
+    f.line(pl.sx(mu), pl.y1, pl.sx(mu), pl.y0 - 4, stroke='--amber', width=1.6, dash='5 3')
+    f.text(pl.sx(mu) + 6, pl.y0 + 4, t['mean'], size=10, anchor='start', fill='--amber', weight='600')
+    return f, t['cap']
+
+
+@figure('l09-totals', 9)
+def l09_totals(lang):
+    tm = sum(S.pert(*v)[0] for v in S.TASKS.values())
+    sd = math.sqrt(sum(S.pert(*v)[1] ** 2 for v in S.TASKS.values()))
+    mm = sum(v[1] for v in S.TASKS.values())
+    pp = sum(v[2] for v in S.TASKS.values())
+    rows_en = [('sum of the most likely values', mm), ('sum of the PERT means', tm),
+               ('about the 85th percentile', tm + 1.04 * sd), ('sum of the pessimistic values', pp)]
+    rows_pt = [('soma dos mais prováveis', mm), ('soma das médias PERT', tm),
+               ('perto do percentil 85', tm + 1.04 * sd), ('soma dos pessimistas', pp)]
+    t = {
+        'en': dict(rows=rows_en, x='working days for the four tasks together',
+                   label='Four horizontal bars for the online booking feature. The sum of the most likely values is '
+                         '17 days; the sum of the PERT means is 20.5; about the 85th percentile is 24.1; the sum of '
+                         'the pessimistic values is 46.',
+                   cap='Four ways to add up the same four tasks. The sum of the most likely values is the number '
+                       'people quote, and it is the most optimistic of the four; the sum of the pessimistic values '
+                       'is a world in which everything goes wrong at once.'),
+        'pt': dict(rows=rows_pt, x='dias úteis das quatro tarefas juntas',
+                   label='Quatro barras horizontais para a funcionalidade de agendamento online. A soma dos valores '
+                         'mais prováveis é 17 dias; a soma das médias PERT é 20,5; perto do percentil 85 é 24,1; a '
+                         'soma dos pessimistas é 46.',
+                   cap='Quatro jeitos de somar as mesmas quatro tarefas. A soma dos mais prováveis é o número que as '
+                       'pessoas citam, e é o mais otimista dos quatro; a soma dos pessimistas é um mundo em que tudo '
+                       'dá errado ao mesmo tempo.'),
+    }[lang]
+    f = Fig('l09-totals', 640, 250, t['label'])
+    pl = Plot(f, 220, 20, 600, 200, 0, 50, 0, 4)
+    pl.xaxis([0, 10, 20, 30, 40, 50], label=t['x'])
+    for i, (name, v) in enumerate(t['rows']):
+        y = 32 + i * 42
+        c = '--amber' if i == 2 else '--phosphor'
+        f.rect(pl.sx(0), y, pl.sx(v) - pl.sx(0), 26, stroke=c, fill='--phosphor-dim' if i != 2 else '--scan', rx=2)
+        f.text(pl.x0 - 10, y + 13, name, size=10, anchor='end')
+        f.text(pl.sx(v) + 8, y + 13, num(lang, v, 1), size=10, anchor='start', weight='600', fill=c)
+    return f, t['cap']
+
+# ---- end of lesson 9
+
+
 # ------------------------------------------------------------------ the figures
 
 

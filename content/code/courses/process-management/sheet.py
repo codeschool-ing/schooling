@@ -282,13 +282,14 @@ def lesson9():
               f'triangular={triangular(o, m, p):.3f}')
         tm += mu; tv += sd * sd; tri += triangular(o, m, p); mm += m; pp += p; oo += o
     sd = math.sqrt(tv)
-    print(f'  total PERT mean {tm:.3f}, variance {tv:.4f}, sd {sd:.4f}')
+    print(f'  total PERT mean {tm:.3f}, variance {tv:.4f}, sd {sd:.4f}; '
+          f'the sds added directly {sum(pert(*v)[1] for v in TASKS.values()):.3f}')
     print(f'  sum of most-likely {mm}, sum of optimistic {oo}, sum of pessimistic {pp}, triangular sum {tri:.3f}')
     print(f'  mean + 1 sd {tm + sd:.2f}; mean + 1.04 sd (about P85) {tm + 1.04 * sd:.2f}; '
           f'mean + 2 sd {tm + 2 * sd:.2f}')
-    print('  analogy', ANALOGY['past'] * ANALOGY['factor'])
+    print('  analogy', round(ANALOGY['past'] * ANALOGY['factor'], 2))
     r = PARAMETRIC['days_spent'] / PARAMETRIC['screens_done']
-    print('  parametric rate', r, 'days a screen; new feature', r * PARAMETRIC['screens_new'])
+    print('  parametric rate', r, 'days a screen; new feature', round(r * PARAMETRIC['screens_new'], 2))
 
 
 def lesson10():
