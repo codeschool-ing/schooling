@@ -1,18 +1,39 @@
 ---
 title: The first minutes
-version: 1
+version: 2
 ---
 
-The lab stages an incident with the alerts of lesson 16 in place. A deploy robot marks a release of
-payments in Grafana, as lesson 7's did:
+This lesson stages an incident with the alerts of lesson 16 in place. To stage the same one, start
+the lab again from nothing and save lesson 16's three files again, `prometheus/rules/burn.yml`,
+`alertmanager/routes.yml` and `compose.override.yaml`, as that lesson's sections *Writing the rule*
+and *Routing* give them. Then load them, give a deploy robot a token in Grafana as lesson 7 did, and
+set the customers going for forty minutes; three minutes later the shop is ready to break:
+
+```sh
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+curl -s -u admin:$(cat .grafana-password) -H 'Content-Type: application/json' -d '{"name": "deploy-bot", "role": "Editor"}' localhost:3000/api/serviceaccounts
+SA=$(curl -s -u admin:$(cat .grafana-password) localhost:3000/api/serviceaccounts/search?query=deploy-bot | jq -r '.serviceAccounts[0].id')
+curl -s -u admin:$(cat .grafana-password) -H 'Content-Type: application/json' -d '{"name": "incidents"}' localhost:3000/api/serviceaccounts/$SA/tokens | jq -r .key > .grafana-token
+docker compose run -d --rm loadgen python -m loadgen.load 5 2400
+sleep 180
+```
+
+The robot marks a release of payments in Grafana:
 
 ```
 ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Content-Type: application/json' -d '{"tags": ["deploy"], "text": "payments 1.4.2"}' localhost:3000/api/annotations | jq -c .
 {"id":1,"message":"Annotation added"}
 ```
 
-The release is the fault file telling payments to fail one charge in eight. Nothing else happens until
-the burn-rate alert decides it is worth a page:
+The release is the fault file telling payments to fail one charge in eight:
+
+```sh
+echo '{"fail_every": 8}' > faults/payments.json
+```
+
+Nothing else happens until the burn-rate alert decides it is worth a page, and the pager's log stays
+empty until then:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix pager | grep '"PAGE"' | jq -c '{time, status, alertname, summary}'
