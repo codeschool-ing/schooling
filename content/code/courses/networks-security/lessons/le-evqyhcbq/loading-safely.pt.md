@@ -9,7 +9,8 @@ propósito.
 
 **Conferir antes de carregar.** O `nft -c` analisa o arquivo e o confere contra o kernel em execução
 sem mudar nada. Uma cópia da base com uma palavra escrita errado, `acept` onde deveria estar
-`accept`:
+`accept`, feita no `fw` com
+`sed "s/ct state new accept comment \"staff browse\"/ct state new acept comment \"staff browse\"/" baseline.nft > typo.nft`:
 
 ```
 root@fw:~# nft -c -f typo.nft; echo "exit $?"

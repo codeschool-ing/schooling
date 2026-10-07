@@ -24,7 +24,15 @@ MCowBQYDK2VuAyEAXqvs8rPoiR1c5rUiQoemyebaBEzVltV928cFbPRcvCg=
 -----END PUBLIC KEY-----
 ```
 
-As chaves públicas, copiadas de um para o outro, são tudo o que passou entre eles. Cada lado então
+As chaves públicas são copiadas de um para o outro. No laboratório, a cópia é feita do seu próprio
+computador, onde a pasta pessoal de cada máquina é um diretório em `/lab`:
+
+```sh
+sudo cp /lab/app/home/$USER/app.pub /lab/laptop/home/$USER/
+sudo cp /lab/laptop/home/$USER/ana.pub /lab/app/home/$USER/
+```
+
+Elas são tudo o que passou entre as duas máquinas. Cada lado então
 deriva o segredo compartilhado a partir da sua própria chave privada e da chave pública do outro, e
 mostra um hash dele em vez do segredo em si:
 

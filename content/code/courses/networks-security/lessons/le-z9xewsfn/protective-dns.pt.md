@@ -10,7 +10,11 @@ resolvedor que registra quem os pediu diz ao defensor quem clicou.
 
 Isso é **DNS protetivo** (*protective DNS*). O servidor de nomes da empresa recebe uma lista de nomes
 que não vai resolver: aqui, dois imitadores do próprio domínio da empresa que foram denunciados em
-mensagens de phishing. Nomes sob `.test` são reservados e nunca podem pertencer a ninguém real:
+mensagens de phishing. Nomes sob `.test` são reservados e nunca podem pertencer a ninguém real. No seu laboratório esta
+aula começa com `sudo bash nslab.sh reset`, com a política da empresa carregada no `fw` por
+`nft -f baseline.nft`. Acrescente as quatro linhas impressas abaixo ao fim de
+`/etc/dnsmasq.d/lab.conf` no `dns`, e reinicie lá o servidor de nomes com
+`kill $(cat /var/log/lab/dnsmasq.pid); sleep 0.5; dnsmasq --conf-dir=/etc/dnsmasq.d --pid-file=/var/log/lab/dnsmasq.pid --user=root`:
 
 ```
 root@dns:~# grep -A3 "^# names the company" /etc/dnsmasq.d/lab.conf

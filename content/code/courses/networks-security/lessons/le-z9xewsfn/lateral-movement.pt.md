@@ -5,8 +5,10 @@ version: 1
 
 Assim que um software roda num laptop, ele procura a próxima máquina. Numa LAN plana da equipe, ele
 encontra todos os outros computadores respondendo nas portas que o Windows usa para compartilhar
-arquivos, a **445**, e para oferecer área de trabalho remota, a **3389**. Em `desk`, as duas
-respondem a qualquer um do segmento:
+arquivos, a **445**, e para oferecer área de trabalho remota, a **3389**. No laboratório, dois
+processos escutando fazem as vezes desses serviços; suba-os no `desk`, como root, com
+`for p in 445 3389; do setsid socat TCP-LISTEN:$p,bind=192.168.10.21,fork,reuseaddr SYSTEM:"echo desk $p" </dev/null >/dev/null 2>&1 & done`.
+Em `desk`, as duas respondem a qualquer um do segmento:
 
 ```
 ana@laptop:~$ probe desk:445 desk:3389

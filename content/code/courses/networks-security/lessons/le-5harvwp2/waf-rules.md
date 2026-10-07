@@ -11,9 +11,9 @@ WAF describes what is forbidden, which makes it the same kind of tool as a signa
 The lab runs **ModSecurity**, the open-source WAF engine, as an nginx module, with the **OWASP Core
 Rule Set** (CRS), the rule set most deployments start from. It is switched on for the site with two
 lines, and its engine starts in **detection-only** mode. On `www`, write `waf.conf` as it is printed
-below, and then make three edits: the audit log moves to nginx's own log directory, the two
-`modsecurity` lines go in below `client_max_body_size`, and the rate limit's burst rises to 50, so
-that the tests in this section are judged by the WAF and not refused for their speed:
+below, and then make three edits. The audit log moves to nginx's own log directory, the two
+`modsecurity` lines go in below `client_max_body_size`, and the rate limit's burst rises to 50. The
+last one is so that the tests in this section are judged by the WAF and not refused for their speed:
 
 ```sh
 # on www, as root

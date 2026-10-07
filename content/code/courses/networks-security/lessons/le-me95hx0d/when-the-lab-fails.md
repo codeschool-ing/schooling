@@ -84,5 +84,5 @@ something still behaves strangely, `reset`: it costs four seconds and puts every
 way `nslab.sh` builds it.
 
 **And when nothing else works**, delete the virtual machine and build it again. With Multipass that
-is `multipass delete --purge nslab` followed by the commands of the first section. It feels like giving up. It is what professionals do with a machine whose state nobody can
-explain any more, and it is why this course builds everything from a script you can read.
+is `multipass delete --purge nslab` followed by the commands of the first section. It feels like
+giving up. It is what professionals do with a machine whose state nobody can explain any more, and it is why this course builds everything from a script you can read.

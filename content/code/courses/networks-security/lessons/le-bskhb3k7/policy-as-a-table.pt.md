@@ -3,7 +3,10 @@ title: A política como tabela, as regras como sua saída
 version: 1
 ---
 
-A política fica em `admin`, em um arquivo de texto que qualquer um pode revisar em um pull request:
+A política fica em `admin`, em um arquivo de texto que qualquer um pode revisar em um pull request. No
+seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa carregada
+no `fw` por `nft -f baseline.nft`; escreva o `policy.txt` e o `segment.py` em `/root` no `admin`,
+como aparecem impressos abaixo.
 
 ```
 root@admin:~# cat policy.txt
@@ -55,7 +58,13 @@ root@admin:~# python3 segment.py app | grep accept
 ```
 
 A aplicação aceita HTTP do papel de proxy e SSH do papel de administração. Cada arquivo é copiado para o
-seu servidor e carregado, quatro linhas de aceite em cada um:
+seu servidor e carregado, quatro linhas de aceite em cada um. No laboratório a cópia é uma linha no seu
+próprio computador, o trabalho que uma ferramenta de gerência de configuração faz numa empresa de
+verdade:
+
+```sh
+for h in app db; do sudo bash nslab.sh exec admin root "python3 segment.py $h" | sudo tee /lab/$h/root/segment.nft >/dev/null; done
+```
 
 ```
 root@db:~# nft -f segment.nft && nft list chain inet host input | grep -c accept

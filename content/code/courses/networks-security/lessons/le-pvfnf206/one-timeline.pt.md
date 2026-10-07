@@ -3,8 +3,10 @@ title: Uma linha do tempo
 version: 1
 ---
 
-O sensor também viu `remote`. O `eve.json` dele foi copiado para a coleção, e as três fontes agora
-descrevem o mesmo estranho por três lados: as recusas do firewall, os fluxos do firewall e o alerta do
+O sensor também viu `remote`. O `eve.json` dele foi copiado para a coleção, o que no laboratório é
+um comando no seu próprio computador, já que o sensor não tem endereço de onde enviar nada:
+`sudo mkdir -p /lab/admin/var/log/lab/remote/sensor; sudo cp /lab/sensor/var/log/suricata/eve.json /lab/admin/var/log/lab/remote/sensor/`.
+As três fontes agora descrevem o mesmo estranho por três lados: as recusas do firewall, os fluxos do firewall e o alerta do
 sensor. Lida separadamente, cada uma é uma lista. **Postas em uma única ordem pelo tempo, elas contam o
 que aconteceu.**
 

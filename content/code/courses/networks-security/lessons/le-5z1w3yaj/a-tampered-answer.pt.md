@@ -14,7 +14,8 @@ root@dns:~# sed -i "s/^\(www\.example\.com\.[[:space:]]*300[[:space:]]*IN A[[:sp
 59:www.example.com.	300	IN A	203.0.113.66
 ```
 
-O servidor é reiniciado para servir o arquivo editado, a resposta que o resolvedor guardou em cache
+O servidor é reiniciado para servir o arquivo editado, com
+`kill $(cat /var/cache/bind/named.pid); sleep 1; named -u bind -c /etc/bind/named.conf` no `dns`; a resposta que o resolvedor guardou em cache
 para o nome é descartada, e o `laptop` pergunta de novo:
 
 ```

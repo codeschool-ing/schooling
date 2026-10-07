@@ -28,7 +28,12 @@ table ip filter {
 `add @web_clients { ip saddr ct count over 4 }` acrescenta a origem ao conjunto, ou a encontra lá, e
 casa quando essa origem já tem **mais de quatro** conexões rastreadas. Um pacote que casa é respondido
 com um reset TCP, então o cliente fica sabendo na hora em vez de ficar esperando. A regra tem de vir
-antes da regra que aceita a internet na loja, senão o accept decidiria primeiro:
+antes da regra que aceita a internet na loja, senão o accept decidiria primeiro. O `nft -f` a põe no
+fim, então no `fw` ela é carregada, apagada pelo seu handle e inserida de novo no topo:
+
+```sh
+nft -f perclient.nft; h=$(nft -a list chain ip filter forward | grep "at most 4" | grep -o "handle [0-9]*" | cut -d" " -f2); nft delete rule ip filter forward handle $h; nft insert rule ip filter forward index 1 iifname "eth0" ip daddr 192.0.2.80 tcp dport 443 ct state new add @web_clients { ip saddr ct count over 4 } counter reject with tcp reset comment \"at most 4 open connections per client\"
+```
 
 ```
 root@fw:~# nft list chain ip filter forward | sed -n "3,5p"

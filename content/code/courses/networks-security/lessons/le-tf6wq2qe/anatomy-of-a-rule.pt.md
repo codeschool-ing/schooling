@@ -3,7 +3,9 @@ title: A anatomia de uma regra
 version: 1
 ---
 
-A regra que esta aula carrega no `sensor` conta tentativas de login que chegam de fora:
+No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. A regra que esta aula carrega no `sensor`, escrita no seu
+arquivo de regras vazio, conta tentativas de login que chegam de fora:
 
 ```
 root@sensor:~# cat /etc/suricata/rules/local.rules
@@ -18,7 +20,11 @@ Os motores leem uma regra como uma linha só, e uma barra invertida no fim de um
 
 Antes de qualquer coisa rodar, a configuração é testada, arquivos de regras incluídos. Esta também carrega
 o `http-events.rules`, regras que vêm com o Suricata e disparam com HTTP malformado, que a seção sobre
-anomalias usa:
+anomalias usa. Uma linha no `suricata.yaml` o acrescenta à lista:
+
+```sh
+sed -i "/^rule-files:/,/^[a-z]/{s#^  - local.rules#  - local.rules\n  - http-events.rules#}" /etc/suricata/suricata.yaml
+```
 
 ```
 root@sensor:~# grep -A2 "^rule-files" /etc/suricata/suricata.yaml; ls /etc/suricata/rules/http-events.rules

@@ -5,8 +5,9 @@ version: 1
 
 O TLS teve quatro versões, e o SSL duas antes dele. **SSL 2 e 3, TLS 1.0 e TLS 1.1 estão todos
 obsoletos**, os dois últimos formalmente desde 2021. Cada um tem fraquezas conhecidas, e um servidor
-que ainda os aceita deixa um cliente, ou alguém fingindo ser um, escolhê-los. O proxy da loja
-permite dois:
+que ainda os aceita deixa um cliente, ou alguém fingindo ser um, escolhê-los. No seu laboratório
+esta aula começa com `sudo bash nslab.sh reset` sem política nenhuma carregada no `fw`, para que toda
+pergunta aqui seja sobre TLS e nenhuma sobre o firewall. O proxy da loja permite dois:
 
 ```
 root@www:~# grep -n ssl_protocols /etc/nginx/sites-enabled/shop

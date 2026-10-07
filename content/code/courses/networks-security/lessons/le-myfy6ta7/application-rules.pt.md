@@ -26,8 +26,9 @@ Leia a primeira parte por parte:
 | `sid:1000001; rev:1` | o número da regra e a revisão; regras locais usam números de um milhão para cima |
 
 A segunda regra procura TLS indo para qualquer porta **que não seja** a 443. O `suricata -T` confere
-que as duas carregam antes de qualquer coisa rodar. Depois, a tentativa de SSH e uma busca normal de
-página de novo:
+que as duas carregam antes de qualquer coisa rodar. Esvazie os logs da primeira execução com
+`rm -f /var/log/suricata/*.json /var/log/suricata/*.log`, suba o Suricata com o mesmo comando de
+antes e dê a ele alguns segundos. Depois, a tentativa de SSH e uma busca normal de página de novo:
 
 ```
 ana@laptop:~$ ssh -p 443 -o BatchMode=yes 203.0.113.50 true; echo "exit $?"
