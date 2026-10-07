@@ -79,6 +79,8 @@ reset() {
   commit '2026-09-10 10:15' 'Draw the console as it is: reachable from the internet'
   cat "$here/lab/threats-from-abuse-cases.csv" >> threats.csv && git add threats.csv
   commit '2026-09-14 16:00' 'Add the threats the abuse cases found'
+  add requirements.csv trace.py
+  commit '2026-09-17 14:30' 'Write a requirement for each threat'
 }
 
 case ${1:-} in
