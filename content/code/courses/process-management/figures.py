@@ -829,6 +829,175 @@ def l05_feature_teams(lang):
 # ---- end of lesson 5
 
 
+# ------------------------------------------------------------------ lesson 6
+
+@figure('l06-process-groups', 6)
+def l06_process_groups(lang):
+    t = {
+        'en': dict(g=['Initiating', 'Planning', 'Executing', 'Closing'], mc='Monitoring and Controlling',
+                   mcn='runs alongside everything, from the first day to the last',
+                   loop='planning is revisited as execution teaches something',
+                   label='Four process groups in a row: initiating, planning, executing and closing, with an '
+                         'arrow from executing back to planning. A fifth group, monitoring and controlling, is a '
+                         'wide band underneath all four, because it runs throughout.',
+                   cap='The five process groups of the sixth edition. They are not phases: a project with three '
+                       'phases goes through all five groups in each, and monitoring runs underneath the rest.'),
+        'pt': dict(g=['Iniciação', 'Planejamento', 'Execução', 'Encerramento'], mc='Monitoramento e Controle',
+                   mcn='corre junto de tudo, do primeiro ao último dia',
+                   loop='o planejamento é revisto quando a execução ensina algo',
+                   label='Quatro grupos de processos em linha: iniciação, planejamento, execução e encerramento, '
+                         'com uma seta da execução de volta ao planejamento. Um quinto grupo, monitoramento e '
+                         'controle, é uma faixa larga embaixo dos quatro, porque corre o tempo todo.',
+                   cap='Os cinco grupos de processos da sexta edição. Eles não são fases: um projeto com três fases '
+                       'passa pelos cinco grupos em cada uma, e o monitoramento corre por baixo de todo o resto.'),
+    }[lang]
+    f = Fig('l06-process-groups', 660, 230, t['label'])
+    xs = [20, 180, 340, 500]
+    for i, (x, g) in enumerate(zip(xs, t['g'])):
+        box(f, x, 50, 140, 46, [g], stroke='--phosphor' if i in (1, 2) else '--wire', weights=['600'])
+        if i < 3:
+            arrow(f, x + 142, 73, x + 158, 73)
+    f.path('M410 50 C410 22 250 22 250 48', stroke='--amber', width=1.4, dash='4 3', arrow=True)
+    f.text(330, 14, t['loop'], size=9.5, fill='--amber')
+    box(f, 20, 130, 620, 56, [t['mc'], t['mcn']], stroke='--paper-dim', fill='--scan',
+        fills=['--paper', '--paper-dim'], weights=['600', None])
+    for x in xs:
+        f.line(x + 70, 98, x + 70, 128, stroke='--wire', width=1.2, dash='2 3')
+    return f, t['cap']
+
+
+@figure('l06-wbs', 6)
+def l06_wbs(lang):
+    t = {
+        'en': dict(root='Online booking', l1=['1 Booking rules', '2 Slots API', '3 Booking screens', '4 Pilot'],
+                   l2=[['1.1 Interview clinics', '1.2 Write the rules'], ['2.1 Data model', '2.2 Endpoints'],
+                       ['3.1 Design', '3.2 Build'], ['4.1 Train staff', '4.2 Run one clinic']],
+                   wp='work packages: small enough to estimate and assign',
+                   label='A work breakdown structure. The root, online booking, splits into four deliverables: '
+                         'booking rules, slots API, booking screens and pilot. Each splits into two work packages, '
+                         'such as interview clinics and write the rules under booking rules.',
+                   cap='A work breakdown structure for the Agenda team’s online booking. Each level adds up to '
+                       'exactly the level above it — the 100% rule — so nothing outside the tree is in the '
+                       'project, and nothing in the project is outside the tree.'),
+        'pt': dict(root='Agendamento online', l1=['1 Regras', '2 API de horários', '3 Telas', '4 Piloto'],
+                   l2=[['1.1 Ouvir clínicas', '1.2 Escrever regras'], ['2.1 Modelo de dados', '2.2 Endpoints'],
+                       ['3.1 Desenho', '3.2 Construção'], ['4.1 Treinar equipe', '4.2 Rodar uma clínica']],
+                   wp='pacotes de trabalho: pequenos o bastante para estimar e atribuir',
+                   label='Uma estrutura analítica do projeto. A raiz, agendamento online, se divide em quatro '
+                         'entregas: regras, API de horários, telas e piloto. Cada uma se divide em dois pacotes de '
+                         'trabalho, como ouvir clínicas e escrever regras sob regras.',
+                   cap='Uma estrutura analítica do projeto (EAP) para o agendamento online do time Agenda. Cada '
+                       'nível soma exatamente o nível de cima — a regra dos 100% —, então nada fora da árvore está '
+                       'no projeto, e nada do projeto está fora da árvore.'),
+    }[lang]
+    f = Fig('l06-wbs', 680, 270, t['label'])
+    box(f, 260, 14, 160, 36, [t['root']], stroke='--phosphor', weights=['600'])
+    for i, name in enumerate(t['l1']):
+        x = 14 + i * 166
+        f.path(f'M340 50 L340 66 L{x + 76} 66 L{x + 76} 80', stroke='--paper-dim', width=1.2)
+        box(f, x, 80, 152, 34, [name], size=10, weights=['600'])
+        for k, wp in enumerate(t['l2'][i]):
+            y = 136 + k * 44
+            f.path(f'M{x + 12} 114 L{x + 12} {y + 17} L{x + 22} {y + 17}', stroke='--paper-dim', width=1.1)
+            box(f, x + 22, y, 130, 34, [wp], size=9.5, fill='--scan')
+    f.text(340, 252, t['wp'], size=9.5, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l06-network', 6)
+def l06_network(lang):
+    es, ef, ls, lf, slack, end = S.cpm()
+    t = {
+        'en': dict(names={'A': 'agree rules', 'B': 'slots API', 'C': 'design screens', 'D': 'build screens',
+                          'E': 'integrate', 'F': 'pilot'},
+                   d='days', crit='critical path: 14 days', fl='slack 1',
+                   label='An activity network. A, agree the rules, 3 days, leads to B, the slots API, 5 days, and '
+                         'to C, design the screens, 2 days. C leads to D, build the screens, 4 days. B and D both '
+                         'lead to E, integrate, 3 days, which leads to F, the pilot, 2 days. The path A, C, D, E, F '
+                         'is critical at 14 days; B has 1 day of slack.',
+                   cap='Each box shows the earliest start and finish above the duration, and the latest start and '
+                       'finish below it. Where earliest and latest are equal the slack is zero, and those boxes form '
+                       'the critical path.'),
+        'pt': dict(names={'A': 'combinar regras', 'B': 'API de horários', 'C': 'desenhar telas',
+                          'D': 'construir telas', 'E': 'integrar', 'F': 'piloto'},
+                   d='dias', crit='caminho crítico: 14 dias', fl='folga 1',
+                   label='Uma rede de atividades. A, combinar as regras, 3 dias, leva a B, a API de horários, 5 dias, '
+                         'e a C, desenhar as telas, 2 dias. C leva a D, construir as telas, 4 dias. B e D levam a E, '
+                         'integrar, 3 dias, que leva a F, o piloto, 2 dias. O caminho A, C, D, E, F é crítico, com 14 '
+                         'dias; B tem 1 dia de folga.',
+                   cap='Cada caixa mostra o início e o fim mais cedo acima da duração, e o início e o fim mais tarde '
+                       'abaixo dela. Onde mais cedo e mais tarde coincidem, a folga é zero, e essas caixas formam o '
+                       'caminho crítico.'),
+    }[lang]
+    f = Fig('l06-network', 680, 270, t['label'])
+    pos = {'A': (14, 104), 'B': (200, 30), 'C': (148, 170), 'D': (290, 170), 'E': (420, 104), 'F': (556, 104)}
+    w, h = 110, 70
+    edges = [('A', 'B'), ('A', 'C'), ('C', 'D'), ('B', 'E'), ('D', 'E'), ('E', 'F')]
+    for a, b in edges:
+        (x1, y1), (x2, y2) = pos[a], pos[b]
+        crit = slack[a] == 0 and slack[b] == 0
+        sx_, sy_ = x1 + w, y1 + h / 2
+        ex, ey = x2, y2 + h / 2
+        if a == 'A' and b == 'C':
+            sx_, sy_, ex, ey = x1 + w / 2 + 20, y1 + h, x2 + 10, y2 + h / 2
+        f.line(sx_, sy_, ex - 2, ey, stroke='--amber' if crit else '--paper-dim', width=2 if crit else 1.2,
+               arrow=True)
+    for k, (x, y) in pos.items():
+        crit = slack[k] == 0
+        f.rect(x, y, w, h, stroke='--amber' if crit else '--wire', fill='--panel', rx=4, width=1.8 if crit else 1.2)
+        f.text(x + 8, y + 12, str(es[k]), size=9.5, anchor='start', mono=True, fill='--paper-dim')
+        f.text(x + w - 8, y + 12, str(ef[k]), size=9.5, anchor='end', mono=True, fill='--paper-dim')
+        f.text(x + w / 2, y + 28, f'{k} · {t["names"][k]}', size=9.5, weight='600')
+        f.text(x + w / 2, y + 44, f'{S.ACTIVITIES[k][0]} {t["d"]}', size=9.5, fill='--paper-dim')
+        f.text(x + 8, y + 60, str(ls[k]), size=9.5, anchor='start', mono=True, fill='--paper-dim')
+        f.text(x + w - 8, y + 60, str(lf[k]), size=9.5, anchor='end', mono=True, fill='--paper-dim')
+    f.text(255, 116, t['fl'], size=9.5, fill='--phosphor', weight='600')
+    f.text(670, 258, t['crit'], size=10, anchor='end', fill='--amber', weight='600')
+    return f, t['cap']
+
+
+@figure('l06-evm', 6)
+def l06_evm(lang):
+    e = S.EVM
+    t = {
+        'en': dict(y='thousands of R$', x='week', pv='planned value (PV)', ev='earned value (EV)',
+                   ac='actual cost (AC)', bac='budget at completion: 200', now='today, week 6',
+                   label='Three lines over ten weeks against a budget of 200 thousand. Planned value rises to 120 '
+                         'thousand at week 6 and 200 at week 10. At week 6, earned value has reached only 100 '
+                         'thousand and actual cost has reached 125 thousand.',
+                   cap='At week 6 the project has spent 125 thousand to earn 100 thousand of work it had planned to '
+                       'have finished at 120 thousand. Over budget and behind schedule, and the two gaps are read '
+                       'separately.'),
+        'pt': dict(y='milhares de R$', x='semana', pv='valor planejado (VP)', ev='valor agregado (VA)',
+                   ac='custo real (CR)', bac='orçamento no término: 200', now='hoje, semana 6',
+                   label='Três linhas ao longo de dez semanas contra um orçamento de 200 mil. O valor planejado sobe '
+                         'a 120 mil na semana 6 e a 200 na semana 10. Na semana 6, o valor agregado chegou só a 100 '
+                         'mil e o custo real a 125 mil.',
+                   cap='Na semana 6 o projeto gastou 125 mil para agregar 100 mil de um trabalho que planejava ter '
+                       'terminado a 120 mil. Acima do orçamento e atrasado, e as duas lacunas são lidas '
+                       'separadamente.'),
+    }[lang]
+    f = Fig('l06-evm', 640, 300, t['label'])
+    p = Plot(f, 70, 40, 520, 240, 0, 10, 0, 220)
+    p.yaxis([0, 50, 100, 150, 200], label=t['y'])
+    p.xaxis(range(0, 11, 2), label=t['x'])
+    f.line(p.x0, p.sy(200), p.x1, p.sy(200), stroke='--paper-dim', width=1.2, dash='5 4')
+    f.text(p.x0 + 6, p.sy(200) - 10, t['bac'], size=9.5, anchor='start', fill='--paper-dim')
+    f.line(p.sx(0), p.sy(0), p.sx(6), p.sy(e['PV'] / 1000), stroke='--paper', width=1.8)
+    f.line(p.sx(0), p.sy(0), p.sx(6), p.sy(e['EV'] / 1000), stroke='--phosphor', width=2.2)
+    f.line(p.sx(0), p.sy(0), p.sx(6), p.sy(e['AC'] / 1000), stroke='--amber', width=2.2)
+    f.line(p.sx(6), p.y0, p.sx(6), p.y1, stroke='--wire', width=1.2, dash='3 3')
+    f.text(p.sx(6), p.y0 - 8, t['now'], size=9.5, fill='--paper-dim')
+    for v, key, c in ((e['AC'], 'ac', '--amber'), (e['PV'], 'pv', '--paper'), (e['EV'], 'ev', '--phosphor')):
+        f.circle(p.sx(6), p.sy(v / 1000), 3.5, fill=c)
+    f.text(p.sx(6) + 10, p.sy(125) - 6, t['ac'] + ' 125', size=9.5, anchor='start', fill='--amber', weight='600')
+    f.text(p.sx(6) + 10, p.sy(120) + 8, t['pv'] + ' 120', size=9.5, anchor='start', fill='--paper', weight='600')
+    f.text(p.sx(6) + 10, p.sy(100) + 6, t['ev'] + ' 100', size=9.5, anchor='start', fill='--phosphor', weight='600')
+    return f, t['cap']
+
+# ---- end of lesson 6
+
+
 # ------------------------------------------------------------------ the figures
 
 
