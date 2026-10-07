@@ -25,4 +25,4 @@ Para o agendamento online do time Agenda, um pré-mortem produziu os cinco risco
 
 ## Olhe a arquitetura
 
-Riscos técnicos se escondem no projeto, e um arquiteto deveria procurá-los de propósito: as partes novas para o time, as integrações com sistemas fora do controle dele, os lugares em que um requisito de qualidade — tempo de resposta, disponibilidade — está perto do limite do que o projeto consegue entregar. A oitava seção desta aula volta a eles, porque são os riscos que um arquiteto está mais bem posicionado para encontrar e reduzir.
+Riscos técnicos se escondem no projeto, e um arquiteto deveria procurá-los de propósito. Eles ficam nas partes novas para o time, nas integrações com sistemas fora do controle dele, nos lugares em que um requisito de qualidade — tempo de resposta, disponibilidade — está perto do limite do que o projeto consegue entregar. A oitava seção desta aula volta a eles, porque são os riscos que um arquiteto está mais bem posicionado para encontrar e reduzir.

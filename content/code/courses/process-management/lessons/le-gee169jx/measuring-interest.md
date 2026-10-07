@@ -3,7 +3,7 @@ title: Putting a number on the interest
 version: 1
 ---
 
-The single most useful thing a team can do for its technical debt is **measure the interest**, because the interest is what makes a debt worth paying and what lets it compete with features. It does not need to be precise; it needs to be honest and in the same unit as everything else, which is usually hours.
+The most useful thing a team can do for its technical debt is **measure the interest**, because the interest is what makes a debt worth paying and what lets it compete with features. It does not need to be precise; it needs to be honest and in the same unit as everything else, which is usually hours.
 
 ## Two debts, priced
 
@@ -27,7 +27,7 @@ Fixing it is estimated at **60 hours**. The fix pays for itself in 60 / 25 = **2
 3 hours × 2 deployments = 6 hours a Sprint
 ```
 
-Automating it is estimated at **40 hours**, which pays back in 40 / 6 = **6.7 Sprints**. Still worth doing, and much less urgent than the test suite. Over ten Sprints the two debts cost **250** and **60** hours respectively, which is the comparison to put in front of a Product Owner.
+Automating it is estimated at 40 hours, which pays back in 40 / 6 = **6.7 Sprints**. Still worth doing, and much less urgent than the test suite. Over ten Sprints the two debts cost **250** and **60** hours respectively, which is the comparison to put in front of a Product Owner.
 
 ## The interest that is not hours
 

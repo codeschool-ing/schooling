@@ -11,7 +11,7 @@ average work in progress = average throughput × average cycle time
 
 ## The numbers
 
-Over the four weeks from 2 to 29 March — **28 days** — the team finished **20 items**, a throughput of 20 / 28, or about **0.714 items a day**. The mean cycle time of those items was **7.75 days**. Little's law says the average number of items in progress over that period should have been about:
+Over the four weeks from 2 to 29 March — 28 days — the team finished **20 items**, a throughput of 20 / 28, or about **0.714 items a day**. The mean cycle time of those items was **7.75 days**. Little's law says the average number of items in progress over that period should have been about:
 
 ```localised
 0.714 items a day × 7.75 days = 5.54 items

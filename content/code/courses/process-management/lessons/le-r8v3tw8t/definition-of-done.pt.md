@@ -24,6 +24,6 @@ Duas listas costumam ser confundidas. **Critérios de aceite pertencem a um item
 
 ## Por que isso importa a um arquiteto
 
-A Definição de Pronto é onde requisitos não funcionais ganham dentes. Uma organização que precisa que toda mudança mantenha o tempo de resposta p95 abaixo de um limite, registre logs num formato estruturado ou passe por uma varredura de segurança pode escrever isso na Definição de Pronto, e a partir daí isso faz parte do que *pronto* significa em vez de ser uma tarefa à parte que alguém agenda quando sobra tempo. Se a organização tem uma Definição de Pronto padrão, todo Time Scrum tem de segui-la como mínimo, e os times podem acrescentar a ela.
+A Definição de Pronto é onde requisitos não funcionais ganham dentes. Uma organização que precisa que toda mudança mantenha o tempo de resposta p95 abaixo de um limite, registre logs num formato estruturado ou passe por uma varredura de segurança pode escrever isso na Definição de Pronto. A partir daí isso faz parte do que *pronto* significa em vez de ser uma tarefa à parte que alguém agenda quando sobra tempo. Se a organização tem uma Definição de Pronto padrão, todo Time Scrum tem de segui-la como mínimo, e os times podem acrescentar a ela.
 
 O custo também aparece aqui. Uma Definição de Pronto que exige um teste de regressão manual do aplicativo inteiro torna cada item mais lento de terminar, e a resposta honesta é automatizar o teste ou aceitar o ritmo mais lento — não apagar a linha em silêncio nos últimos dias de uma Sprint.

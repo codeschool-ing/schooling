@@ -17,7 +17,7 @@ During a Sprint, no change is made that would endanger the Sprint Goal, quality 
 
 ## Sprint Planning — at most eight hours
 
-Planning answers three questions: **why** this Sprint is valuable, which produces the Sprint Goal; **what** can be done this Sprint, which the Developers select from the Product Backlog; and **how** the chosen work will get done, which the Developers plan, often by breaking items into tasks of a day or less.
+Planning answers three questions. *Why* is this Sprint valuable? The answer is the Sprint Goal. *What* can be done this Sprint? The Developers select it from the Product Backlog. *How* will the chosen work get done? The Developers plan that, often by breaking items into tasks of a day or less.
 
 ## Daily Scrum — fifteen minutes
 

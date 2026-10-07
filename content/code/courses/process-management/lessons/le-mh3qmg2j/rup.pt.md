@@ -5,7 +5,7 @@ version: 1
 
 O **Rational Unified Process** veio da Rational Software no fim dos anos 1990, do mesmo círculo de pessoas que criou a UML: Grady Booch, Ivar Jacobson e James Rumbaugh, com Philippe Kruchten liderando o trabalho no processo em si. A IBM comprou a Rational em 2003 e o RUP virou um produto IBM, vendido com ferramentas e uma grande teia de orientações. Foi o processo de software mais influente dos anos imediatamente anteriores ao ágil, e boa parte do vocabulário dele continua por aí.
 
-O RUP se descrevia em três expressões: **guiado por casos de uso**, **centrado na arquitetura**, e **iterativo e incremental**. As três importam, e a segunda é a que torna o RUP interessante para um arquiteto.
+O RUP se descrevia em três expressões: *guiado por casos de uso*, **centrado na arquitetura**, e *iterativo e incremental*. As três importam, e a segunda é a que torna o RUP interessante para um arquiteto.
 
 ## Quatro fases, cada uma terminando numa decisão
 

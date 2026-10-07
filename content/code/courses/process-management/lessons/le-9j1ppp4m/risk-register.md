@@ -30,7 +30,7 @@ Three fields deserve particular attention.
 
 ## Keeping it alive
 
-The register works when reviewing it is part of a regular event the team already holds — Sprint planning, a stage boundary in PRINCE2's terms, a PI planning in SAFe's — and when each review asks three questions: which risks have become more or less likely, which have happened and become issues, and what has appeared that is not on the list. Risks that can no longer happen are **closed**, with a note; a register that only grows becomes too long to read.
+The register works when reviewing it is part of a regular event the team already holds — Sprint planning, a stage boundary in PRINCE2's terms, a PI planning in SAFe's. Each review then asks three questions: which risks have become more or less likely, which have happened and become issues, and what has appeared that is not on the list. Risks that can no longer happen are **closed**, with a note; a register that only grows becomes too long to read.
 
 ## Keep it small
 

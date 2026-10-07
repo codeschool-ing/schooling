@@ -30,7 +30,7 @@ Três campos merecem atenção especial.
 
 ## Mantendo-o vivo
 
-O registro funciona quando revisá-lo faz parte de um evento regular que o time já faz — o planejamento da Sprint, um limite de estágio nos termos do PRINCE2, um PI Planning no SAFe — e quando cada revisão faz três perguntas: quais riscos ficaram mais ou menos prováveis, quais aconteceram e viraram questões, e o que apareceu que não está na lista. Riscos que não podem mais acontecer são **fechados**, com uma nota; um registro que só cresce fica comprido demais para ser lido.
+O registro funciona quando revisá-lo faz parte de um evento regular que o time já faz — o planejamento da Sprint, um limite de estágio nos termos do PRINCE2, um PI Planning no SAFe. Cada revisão faz então três perguntas: quais riscos ficaram mais ou menos prováveis, quais aconteceram e viraram questões, e o que apareceu que não está na lista. Riscos que não podem mais acontecer são **fechados**, com uma nota; um registro que só cresce fica comprido demais para ser lido.
 
 ## Mantenha-o pequeno
 

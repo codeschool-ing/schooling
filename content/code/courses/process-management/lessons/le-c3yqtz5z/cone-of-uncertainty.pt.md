@@ -3,7 +3,7 @@ title: Quanto se pode saber, e quando
 version: 1
 ---
 
-A discussão entre a aposta sequencial e a ágil é, no fundo, uma discussão sobre informação: **quanto do que o projeto precisa saber é conhecível no primeiro dia**. Duas figuras põem números nisso, e as duas valem a pena porque vão citá-las para você.
+A discussão entre a aposta sequencial e a ágil é uma discussão sobre informação: **quanto do que o projeto precisa saber é conhecível no primeiro dia**. Duas figuras põem números nisso, e as duas valem a pena porque vão citá-las para você.
 
 ## O cone da incerteza
 

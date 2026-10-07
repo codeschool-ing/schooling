@@ -11,7 +11,7 @@ Every team answers them, including the team that says it has no process. Two dev
 
 The methods in this course differ on the surface: phases, sprints, boards, stages, change boards. Underneath, each one is **a bet about how much of the work can be known before it starts**. A method built for requirements that hold still spends its effort planning up front, because a plan made early saves rework later. A method built for requirements that move spends its effort on short loops, because a plan made early would be wrong by the time it was followed.
 
-Neither bet is foolish. The mistake is to apply one of them to a world that behaves like the other, and most of the failures this course describes have that shape: a fixed plan forced onto a product nobody understood yet, or a team improvising week to week on work that was perfectly knowable and needed a schedule.
+Neither bet is foolish. The mistake is to apply one of them to a world that behaves like the other, and most of the failures this course describes have that shape. One is a fixed plan forced onto a product nobody understood yet; the other is a team improvising week to week on work that was perfectly knowable and needed a schedule.
 
 ## Why somebody technical has to understand it
 
@@ -31,6 +31,6 @@ The course assumes no management background. It assumes you have worked, or are 
 
 ## How the course is built
 
-The first eight lessons are the methods, each read for what it assumes: the classic sequence in this lesson, Scrum, Kanban and Extreme Programming in lessons 2 to 4, agile across several teams in lesson 5, and the heavier frameworks — PMI, PRINCE2, RUP and ITIL — in lessons 6 to 8. Lessons 9 to 14 are the work that every method needs whatever it is called: estimating, risk, prioritising, measuring delivery and handling technical debt. Lesson 15 is about the certificates the market asks for.
+The first eight lessons are the methods, each read for what it assumes. The classic sequence is in this lesson; Scrum, Kanban and Extreme Programming in lessons 2 to 4, agile across several teams in lesson 5, and the heavier frameworks — PMI, PRINCE2, RUP and ITIL — in lessons 6 to 8. Lessons 9 to 14 are the work that every method needs whatever it is called: estimating, risk, prioritising, measuring delivery and handling technical debt. Lesson 15 is about the certificates the market asks for.
 
 The practice is a pencil, a board and a spreadsheet. Lesson 3 sets up the spreadsheet, and from then on every number a lesson quotes is one you can recompute in it.

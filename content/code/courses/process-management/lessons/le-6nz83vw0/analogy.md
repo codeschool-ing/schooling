@@ -9,7 +9,7 @@ The simplest technique is also one of the most accurate: find a piece of work li
 
 The Agenda team has to estimate **online booking** for the clinic network. Last year it built **clinic onboarding** — the screens and the API that let a new clinic register, configure its rooms and invite its staff. The two features are similar in shape: a few screens, an API, a third-party integration and a pilot in one clinic. Onboarding took **18 working days**.
 
-Online booking is judged to be somewhat larger: its payment integration is more complex than onboarding's email integration, and it has more rules. The team estimates it at about **1.2 times** onboarding, which gives **21.6 working days**.
+Online booking is judged to be somewhat larger: its payment integration is more complex than onboarding's email integration, and it has more rules. The team estimates it at about 1.2 times onboarding, which gives **21.6 working days**.
 
 The arithmetic is trivial. The work is in the two judgements: that the features are comparable, and how much larger the new one is. Those judgements are made better by people who worked on the old feature, and worse by people who only read its ticket.
 

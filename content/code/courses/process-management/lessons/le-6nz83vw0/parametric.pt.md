@@ -7,7 +7,7 @@ A estimativa paramétrica leva a analogia um passo adiante. Em vez de comparar t
 
 ## Um exemplo resolvido
 
-No último ano o time Agenda construiu **40 telas** em várias funcionalidades, e o tempo gasto em trabalho de tela foi de **128 dias úteis**. Isso dá **3,2 dias por tela**, uma taxa que já contém o desenho, a revisão, os testes e o retrabalho que o time de fato fez.
+No último ano o time Agenda construiu 40 telas em várias funcionalidades, e o tempo gasto em trabalho de tela foi de **128 dias úteis**. Isso dá **3,2 dias por tela**, uma taxa que já contém o desenho, a revisão, os testes e o retrabalho que o time de fato fez.
 
 A funcionalidade de agendamento online precisa de **7 telas**. A 3,2 dias cada, o trabalho de telas chega a **22,4 dias úteis**.
 

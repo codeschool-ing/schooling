@@ -7,7 +7,7 @@ Em 2021 o PMI publicou uma sétima edição do guia que quase não se parece com
 
 ## Doze princípios
 
-Os princípios são enunciados como imperativos curtos. Parafraseados, pedem que um projeto seja um **administrador** diligente e respeitoso; construa um **time** colaborativo; engaje as **partes interessadas**; foque em **valor**; reconheça como as partes do projeto interagem, como um **sistema**; demonstre **liderança**; **adapte** a abordagem ao contexto; incorpore **qualidade** aos processos e às entregas; navegue a **complexidade**; otimize as respostas ao **risco**; abrace a **adaptabilidade e a resiliência**; e possibilite a **mudança** para chegar ao futuro para o qual foi criado.
+Os princípios são enunciados como imperativos curtos. Parafraseados, os seis primeiros pedem que um projeto seja um *administrador* diligente e respeitoso, construa um *time* colaborativo, engaje as *partes interessadas*, foque em *valor*, veja suas partes interagindo como um *sistema* e demonstre *liderança*. Os outros seis pedem que ele *adapte* a abordagem ao contexto, incorpore *qualidade*, lide com a *complexidade*, otimize as respostas ao *risco*, abrace a *adaptabilidade e a resiliência* e possibilite a *mudança* para chegar ao futuro para o qual foi criado.
 
 Vários deles caberiam sem esforço no manifesto ágil. Isso é deliberado: a sétima edição foi escrita para uma profissão em que boa parte dos projetos é conduzida com abordagens ágeis ou híbridas.
 

@@ -7,7 +7,7 @@ Parametric estimating takes analogy one step further. Instead of comparing whole
 
 ## A worked example
 
-Over the last year, the Agenda team built **40 screens** across several features, and the time spent on screen work was **128 working days**. That is **3.2 days a screen**, a rate that already contains the design, the review, the tests and the rework the team actually did.
+Over the last year, the Agenda team built 40 screens across several features, and the time spent on screen work was **128 working days**. That is **3.2 days a screen**, a rate that already contains the design, the review, the tests and the rework the team actually did.
 
 The online-booking feature needs **7 screens**. At 3.2 days each, the screen work comes to **22.4 working days**.
 

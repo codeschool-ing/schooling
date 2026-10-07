@@ -25,4 +25,4 @@ For the Agenda team's online booking, a pre-mortem produced the five risks of th
 
 ## Look at the architecture
 
-Technical risks hide in the design, and an architect should look for them deliberately: the parts that are new to the team, the integrations with systems outside its control, the places where a quality requirement — response time, availability — is close to the limit of what the design can deliver. This lesson's eighth section comes back to those, because they are the risks an architect is best placed to find and to reduce.
+Technical risks hide in the design, and an architect should look for them deliberately. They sit in the parts that are new to the team, the integrations with systems outside its control, the places where a quality requirement — response time, availability — is close to the limit of what the design can deliver. This lesson's eighth section comes back to those, because they are the risks an architect is best placed to find and to reduce.

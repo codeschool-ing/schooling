@@ -7,7 +7,7 @@ XP's planning practices are older than most of what Scrum teams use today, and s
 
 ## The story
 
-A story is a small piece of behaviour a user would value, written on a card in a sentence or two: *a receptionist can move an appointment to another day without cancelling it*. The card is not a specification. Ron Jeffries described a story as three things, the **three Cs**: the **card**, which is a reminder; the **conversation** between the people who will build it and the people who want it, which is where the detail is decided; and the **confirmation**, the tests that say when it is done.
+A story is a small piece of behaviour a user would value, written on a card in a sentence or two: *a receptionist can move an appointment to another day without cancelling it*. The card is not a specification. Ron Jeffries described a story as three things, the **three Cs**: the *card*, which is a reminder; the *conversation* between the people who will build it and the people who want it, which is where the detail is decided; and the *confirmation*, the tests that say when it is done.
 
 The popular template — *as a receptionist, I want to move an appointment, so that the patient keeps their place in the queue* — came later, from teams at Connextra around 2001. It is useful because it forces somebody to name who benefits and why. It is harmful when the sentence becomes the whole requirement and the conversation never happens.
 

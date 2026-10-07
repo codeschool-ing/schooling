@@ -24,6 +24,6 @@ Two lists are often confused. **Acceptance criteria belong to one item** and say
 
 ## Why it matters to an architect
 
-The Definition of Done is where non-functional requirements get teeth. An organisation that needs every change to keep the p95 response time under a limit, to log in a structured format or to pass a security scan can write that into the Definition of Done, and from then on it is part of what *done* means rather than a separate task somebody schedules when there is time. If the organisation has a standard Definition of Done, every Scrum Team must follow it as a minimum, and teams may add to it.
+The Definition of Done is where non-functional requirements get teeth. An organisation that needs every change to keep the p95 response time under a limit, to log in a structured format or to pass a security scan can write that into the Definition of Done. From then on it is part of what *done* means rather than a separate task somebody schedules when there is time. If the organisation has a standard Definition of Done, every Scrum Team must follow it as a minimum, and teams may add to it.
 
 The cost is also visible here. A Definition of Done that requires a manual regression test of the whole app makes every item slower to finish, and the honest response is to automate the test or to accept the slower pace — not to drop the line quietly in the last days of a Sprint.

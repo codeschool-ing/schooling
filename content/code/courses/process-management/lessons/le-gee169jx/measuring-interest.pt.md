@@ -27,7 +27,7 @@ Consertá-la é estimado em **60 horas**. A correção se paga em 60 / 25 = **2,
 3 horas × 2 deploys = 6 horas por Sprint
 ```
 
-Automatizá-lo é estimado em **40 horas**, que se pagam em 40 / 6 = **6,7 Sprints**. Ainda vale fazer, e é bem menos urgente que a suíte de testes. Em dez Sprints as duas dívidas custam **250** e **60** horas, respectivamente, que é a comparação a pôr diante de um Product Owner.
+Automatizá-lo é estimado em 40 horas, que se pagam em 40 / 6 = **6,7 Sprints**. Ainda vale fazer, e é bem menos urgente que a suíte de testes. Em dez Sprints as duas dívidas custam **250** e **60** horas, respectivamente, que é a comparação a pôr diante de um Product Owner.
 
 ## Os juros que não são horas
 

@@ -21,7 +21,7 @@ Some debt is large enough to be a project of its own: replacing the flaky test i
 
 ## Replacing a system piece by piece
 
-The largest debts sometimes mean replacing a whole system. The approach that works in most cases is the **strangler fig**, named by Martin Fowler in 2004 after a plant that grows around a tree until it replaces it: build the new system alongside the old, route one piece of functionality at a time to the new one, and retire the old one when nothing uses it. The system keeps working throughout, and each step can be stopped if priorities change. The `tech-strategy` course gives it a lesson of its own, its seventh, together with the rewrite that is almost never worth it.
+The largest debts sometimes mean replacing a whole system. The approach that works in most cases is the **strangler fig**, named by Martin Fowler in 2004 after a plant that grows around a tree until it replaces it. You build the new system alongside the old, route one piece of functionality at a time to the new one, and retire the old one when nothing uses it. The system keeps working throughout, and each step can be stopped if priorities change. The `tech-strategy` course gives it a lesson of its own, its seventh, together with the rewrite that is almost never worth it.
 
 ## What does not work
 

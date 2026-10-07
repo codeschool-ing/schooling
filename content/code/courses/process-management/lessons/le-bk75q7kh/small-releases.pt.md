@@ -7,7 +7,7 @@ As práticas de planejamento do XP são mais antigas que quase tudo o que os tim
 
 ## A história
 
-Uma história é um pedaço pequeno de comportamento que um usuário valorizaria, escrito num cartão em uma ou duas frases: *uma recepcionista consegue mudar uma consulta para outro dia sem cancelá-la*. O cartão não é uma especificação. Ron Jeffries descreveu uma história como três coisas, os **três Cs**: o **cartão** (card), que é um lembrete; a **conversa** entre quem vai construir e quem quer, que é onde o detalhe é decidido; e a **confirmação**, os testes que dizem quando está pronta.
+Uma história é um pedaço pequeno de comportamento que um usuário valorizaria, escrito num cartão em uma ou duas frases: *uma recepcionista consegue mudar uma consulta para outro dia sem cancelá-la*. O cartão não é uma especificação. Ron Jeffries descreveu uma história como três coisas, os **três Cs**: o *cartão* (card), que é um lembrete; a *conversa* entre quem vai construir e quem quer, que é onde o detalhe é decidido; e a *confirmação*, os testes que dizem quando está pronta.
 
 O modelo popular — *como recepcionista, quero mudar uma consulta, para que o paciente mantenha seu lugar na fila* — veio depois, de times da Connextra por volta de 2001. Ele é útil porque obriga alguém a dizer quem se beneficia e por quê. É prejudicial quando a frase vira o requisito inteiro e a conversa nunca acontece.
 

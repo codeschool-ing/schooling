@@ -21,7 +21,7 @@ Alguma dívida é grande o bastante para ser um projeto próprio: substituir a i
 
 ## Substituindo um sistema pedaço por pedaço
 
-As maiores dívidas às vezes significam substituir um sistema inteiro. A abordagem que funciona na maioria dos casos é a da **figueira estranguladora** (strangler fig), nomeada por Martin Fowler em 2004 a partir de uma planta que cresce em volta de uma árvore até substituí-la: construir o sistema novo ao lado do antigo, encaminhar uma funcionalidade de cada vez para o novo, e aposentar o antigo quando nada mais o usar. O sistema continua funcionando o tempo todo, e cada passo pode ser interrompido se as prioridades mudarem. O curso `tech-strategy` dedica a ela uma aula própria, a sétima, junto com a reescrita que quase nunca vale a pena.
+As maiores dívidas às vezes significam substituir um sistema inteiro. A abordagem que funciona na maioria dos casos é a da **figueira estranguladora** (strangler fig), nomeada por Martin Fowler em 2004 a partir de uma planta que cresce em volta de uma árvore até substituí-la. Você constrói o sistema novo ao lado do antigo, encaminha uma funcionalidade de cada vez para o novo e aposenta o antigo quando nada mais o usar. O sistema continua funcionando o tempo todo, e cada passo pode ser interrompido se as prioridades mudarem. O curso `tech-strategy` dedica a ela uma aula própria, a sétima, junto com a reescrita que quase nunca vale a pena.
 
 ## O que não funciona
 

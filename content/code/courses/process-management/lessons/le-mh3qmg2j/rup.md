@@ -5,7 +5,7 @@ version: 1
 
 The **Rational Unified Process** came from Rational Software in the late 1990s, from the same circle of people who created UML: Grady Booch, Ivar Jacobson and James Rumbaugh, with Philippe Kruchten leading the work on the process itself. IBM bought Rational in 2003 and RUP became an IBM product, sold with tools and a large web of guidance. It was the most influential software process of the years just before agile, and much of its vocabulary is still around.
 
-RUP described itself in three phrases: **use-case driven**, **architecture-centric**, and **iterative and incremental**. All three matter, and the second is the one that makes RUP interesting to an architect.
+RUP described itself in three phrases: *use-case driven*, **architecture-centric**, and *iterative and incremental*. All three matter, and the second is the one that makes RUP interesting to an architect.
 
 ## Four phases, each ending in a decision
 

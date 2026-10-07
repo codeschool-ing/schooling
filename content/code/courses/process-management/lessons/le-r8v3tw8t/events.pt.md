@@ -17,7 +17,7 @@ Durante a Sprint, nenhuma mudança que ponha em risco a Meta da Sprint é feita,
 
 ## Planejamento da Sprint — no máximo oito horas
 
-O planejamento responde a três perguntas: **por que** esta Sprint tem valor, o que produz a Meta da Sprint; **o que** pode ser feito nesta Sprint, que os Desenvolvedores selecionam do Product Backlog; e **como** o trabalho escolhido vai ser feito, que os Desenvolvedores planejam, muitas vezes quebrando itens em tarefas de um dia ou menos.
+O planejamento responde a três perguntas. *Por que* esta Sprint tem valor? A resposta é a Meta da Sprint. *O que* pode ser feito nesta Sprint? Os Desenvolvedores selecionam do Product Backlog. *Como* o trabalho escolhido vai ser feito? Os Desenvolvedores planejam, muitas vezes quebrando itens em tarefas de um dia ou menos.
 
 ## Daily Scrum — quinze minutos
 

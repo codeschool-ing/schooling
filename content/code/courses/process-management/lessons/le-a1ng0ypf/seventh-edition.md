@@ -7,7 +7,7 @@ In 2021 PMI published a seventh edition of the guide that looks almost nothing l
 
 ## Twelve principles
 
-The principles are stated as short imperatives. Paraphrased, they ask a project to be a diligent and respectful **steward**; to build a collaborative **team**; to engage **stakeholders**; to focus on **value**; to recognise how the parts of the project interact, as a **system**; to show **leadership**; to **tailor** the approach to the context; to build **quality** into processes and deliverables; to navigate **complexity**; to optimise its responses to **risk**; to embrace **adaptability and resiliency**; and to enable **change** in order to reach the future it was set up for.
+The principles are stated as short imperatives. Paraphrased, the first six ask a project to be a diligent and respectful *steward*, to build a collaborative *team*, to engage *stakeholders*, to focus on *value*, to see its parts interacting as a *system* and to show *leadership*. The other six ask it to *tailor* the approach to the context, build in *quality*, deal with *complexity*, optimise its responses to *risk*, embrace *adaptability and resiliency*, and enable *change* to reach the future it was set up for.
 
 Several of them would sit comfortably in the agile manifesto. That is deliberate: the seventh edition was written for a profession in which a large share of projects are run with agile or hybrid approaches.
 

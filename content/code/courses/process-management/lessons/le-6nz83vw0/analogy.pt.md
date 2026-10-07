@@ -9,7 +9,7 @@ A técnica mais simples também é uma das mais precisas: ache um trabalho parec
 
 O time Agenda precisa estimar o **agendamento online** da rede de clínicas. No ano passado ele construiu o **cadastro de clínicas** — as telas e a API que deixam uma clínica nova se registrar, configurar suas salas e convidar sua equipe. As duas funcionalidades têm formato parecido: algumas telas, uma API, uma integração com terceiros e um piloto numa clínica. O cadastro levou **18 dias úteis**.
 
-O agendamento online é julgado um pouco maior: a integração de pagamento é mais complexa que a integração de e-mail do cadastro, e ele tem mais regras. O time o estima em cerca de **1,2 vez** o cadastro, o que dá **21,6 dias úteis**.
+O agendamento online é julgado um pouco maior: a integração de pagamento é mais complexa que a integração de e-mail do cadastro, e ele tem mais regras. O time o estima em cerca de 1,2 vez o cadastro, o que dá **21,6 dias úteis**.
 
 A conta é trivial. O trabalho está nos dois julgamentos: que as funcionalidades são comparáveis, e quanto maior é a nova. Esses julgamentos ficam melhores nas mãos de quem trabalhou na funcionalidade antiga, e piores nas de quem só leu o ticket dela.
 

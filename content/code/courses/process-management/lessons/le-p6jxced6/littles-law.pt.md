@@ -11,7 +11,7 @@ trabalho em progresso médio = vazão média × tempo de ciclo médio
 
 ## Os números
 
-Nas quatro semanas de 2 a 29 de março — **28 dias** —, o time terminou **20 itens**, uma vazão de 20 / 28, ou cerca de **0,714 item por dia**. O tempo de ciclo médio desses itens foi **7,75 dias**. A lei de Little diz que o número médio de itens em andamento nesse período deveria ter sido cerca de:
+Nas quatro semanas de 2 a 29 de março — 28 dias —, o time terminou **20 itens**, uma vazão de 20 / 28, ou cerca de **0,714 item por dia**. O tempo de ciclo médio desses itens foi **7,75 dias**. A lei de Little diz que o número médio de itens em andamento nesse período deveria ter sido cerca de:
 
 ```localised
 0,714 item por dia × 7,75 dias = 5,54 itens
