@@ -135,7 +135,7 @@ reset() {
   cp -r $DATA/raw $DATA/ref $WORK/
   chown -R ana:ana $WORK
   chmod -R a-w $WORK/raw
-  as_ana "dropdb --if-exists quitanda 2>/dev/null; createdb quitanda"
+  as_ana "dropdb --maintenance-db=postgres --if-exists quitanda && createdb quitanda"
   as_ana "cd $WORK && psql -q -v ON_ERROR_STOP=1 -f '$HERE/lab/raw.sql'"
 }
 
