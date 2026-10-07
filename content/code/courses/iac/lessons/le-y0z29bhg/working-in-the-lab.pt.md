@@ -55,7 +55,8 @@ comandos que o criam de novo.
   ele diz algo que vale ler, e não toda vez.
 - **As aulas que mostram `git diff` guardam a configuração no Git**, e fazem commit onde o texto diz
   que a Ana fez. Diga ao Git o seu nome uma vez, com `git config --global user.name "Seu Nome"` e o
-  mesmo com `user.email`, ou o primeiro commit é recusado.
+  mesmo com `user.email`, ou o primeiro commit é recusado; e `git config --global init.defaultBranch main`,
+  o nome de ramo que as transcrições mostram, onde o Git do Ubuntu diria `master`.
 - **Os ids são diferentes a cada execução.** A AWS inventa ids `vpc-…` e `sg-…`, e o moto também,
   então os seus nunca vão bater com a página; todo o resto deve bater.
 

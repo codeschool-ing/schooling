@@ -55,7 +55,8 @@ gives the commands that make it again.
   says something worth reading, and not every time.
 - **Lessons that show `git diff` keep the configuration in Git**, and commit where the prose says Ana
   did. Tell Git your name once, with `git config --global user.name "Your Name"` and the same with
-  `user.email`, or the first commit refuses.
+  `user.email`, or the first commit refuses; and `git config --global init.defaultBranch main`, the
+  branch name the transcripts show, where Ubuntu's Git would say `master`.
 - **Ids are different on every run.** AWS invents `vpc-…` and `sg-…` ids, and so does moto, so yours
   will never match the page; everything else should.
 
