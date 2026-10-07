@@ -1,9 +1,10 @@
 ---
 title: O processador que o QEMU imita
-version: 1
+version: 2
 ---
 
-Dentro do convidado, as mesmas duas perguntas:
+Dentro do convidado, as mesmas duas perguntas. A vm1 é um convidado novo, feito com `bash newvm.sh vm1`
+da aula 1:
 
 ```
 ana@vm1:~$ lscpu | grep -E "^(Vendor ID|Model name|Virtualization|Hypervisor)"

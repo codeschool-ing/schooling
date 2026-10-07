@@ -1,6 +1,6 @@
 ---
 title: Quanto o laboratório custa, e como mantê-lo
-version: 1
+version: 2
 ---
 
 Três convidados ligados ao mesmo tempo, e quanto o host paga por eles:
@@ -45,7 +45,7 @@ vier.
 Dois hábitos mantêm um laboratório útil por muito tempo:
 
 - **Guarde a receita, não só as máquinas.** Tudo nesta aula são alguns comandos e, anotados num script,
-  eles refazem o laboratório em minutos em qualquer computador. O próprio laboratório deste curso é
-  exatamente isso, o `lab.sh`.
+  eles refazem o laboratório em minutos em qualquer computador. O `newvm.sh` da aula 1 já é quase
+  um: junte o arquivo da rede e três linhas que o chamam, e este laboratório volta.
 - **Um laboratório por finalidade.** Um laboratório que também é o servidor de teste de alguém acumula
   mudanças de que ninguém lembra, e no dia em que for revertido, o trabalho de alguém vai junto.

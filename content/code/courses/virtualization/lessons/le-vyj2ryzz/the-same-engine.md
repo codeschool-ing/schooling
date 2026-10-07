@@ -1,10 +1,10 @@
 ---
 title: The same engine
-version: 1
+version: 2
 ---
 
 Whatever manages it, a QEMU guest ends up as one long command line: libvirt writes one for `virsh`,
-and Proxmox writes one for `qm`. Here is the lab's, for vm1, with the options that describe the
+and Proxmox writes one for `qm`. Here is the lab's, for a vm1 fresh from `newvm.sh`, lesson 1, with the options that describe the
 hardware picked out, one per line:
 
 ```

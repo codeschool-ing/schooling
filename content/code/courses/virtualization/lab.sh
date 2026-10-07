@@ -7,10 +7,11 @@
 # hostname, the user ana, and ana's key from host, so `ssh NAME` works.
 #
 # The base disk is Ubuntu's minimal cloud image, checked against Ubuntu's
-# SHA256SUMS, with five packages added before its first boot and nothing
-# else changed: qemu-guest-agent, nginx-light (switched off until a lesson
-# starts it), curl, netcat-openbsd and tcpdump. The guests have no internet,
-# so they could not have been installed later.
+# SHA256SUMS, with five packages added by virt-customize before its first
+# boot and its machine-id emptied again: qemu-guest-agent, nginx-light
+# (switched off until a lesson starts it), curl, netcat-openbsd and tcpdump.
+# Guests on an isolated network have no internet, so they could not be
+# installed later.
 #
 # THE BASE DISK IS READ-ONLY (chmod 444), and that is not tidiness. Every guest
 # reads from it, so one write into it changes every guest at once, and there
@@ -23,27 +24,40 @@
 # by how much. On a computer with VT-x or AMD-V the same commands run with
 # --virt-type kvm.
 #
+# THE BASE DISK IS MADE BY LESSON 1'S captures.sh, exactly as section 04 of that
+# lesson shows a student, and this script refuses to run without it.
+#
+# `vm` and `office` RUN THE STUDENT'S OWN PROGRAMS, taken out of the lessons that
+# show them: newvm.sh from lesson 1's one-command.md, and office.sh from lesson
+# 11's an-office-and-two-networks.md. A capture made through this script ran the
+# program the reader was given, never a copy of it that could drift.
+#
 #   sudo bash lab.sh up                 libvirt's default network, and a key for ana
-#   sudo bash lab.sh vm NAME [NETWORK] [MEMORY_MB] [VCPUS]
+#   sudo bash lab.sh vm NAME [NETWORK] [MEMORY_MB] [VCPUS]    newvm.sh, as ana
 #   sudo bash lab.sh seed NAME          the cloud-init disk, for a guest made by hand
 #   sudo bash lab.sh wait NAME          until the guest answers ssh, then name it in /etc/hosts
 #   sudo bash lab.sh rm NAME
-#   sudo bash lab.sh office             a stand-in for the office network, for lesson 11 on
+#   sudo bash lab.sh office             office.sh, the office network, for lesson 11 on
 #   sudo bash lab.sh down               every guest, every network but default, and the office
 set -euo pipefail
 
 IMAGES=/var/lib/libvirt/images
+HERE=$(cd "$(dirname "$0")" && pwd)
+LESSONS=${LESSONS:-$HERE/lessons}
+# a program a lesson shows in a schooling-example block, as the copy button gives it
+shown() {
+  awk '/^```schooling-example$/{f=1; next} /^```$/{f=0} f' "$1" | jq -r '[.parts[].code] | join("\n")'
+}
 BASE=$IMAGES/lab-base.qcow2
 virsh() { command virsh -q -c qemu:///system "$@"; }
 
 need() {
   local missing=()
-  for p in qemu-system-x86 qemu-utils libvirt-daemon-system libvirt-clients virtinst \
-           dnsmasq-base cloud-image-utils dosfstools; do
+  for p in qemu-system-x86 qemu-utils libvirt-daemon-system virtinst cloud-image-utils jq; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
-  [ -f "$BASE" ] || { echo "no base disk at $BASE" >&2; exit 1; }
+  [ -f "$BASE" ] || { echo "no base disk at $BASE: run lesson 1's captures.sh first" >&2; exit 1; }
   chmod 444 "$BASE"
 }
 
@@ -73,43 +87,14 @@ address() {  # address NAME: the guest's IPv4 address, from libvirt's DHCP or fr
   echo "$a"
 }
 
-office() {  # the office network: a bridge on host, and one other device on it
-  # On your own computer, your real network is this, and a bridged guest joins
-  # it through your network card. The computer the lab was recorded on has no
-  # network card of its own to lend, so this stands in: a bridge called lan0 on
-  # which host is 10.0.0.1, and a device called printer at 10.0.0.50, which
-  # answers HTTP, logs who asked, and hands out the office's addresses by DHCP.
-  ip link show lan0 >/dev/null 2>&1 && return
-  ip link add lan0 type bridge
-  ip addr add 10.0.0.1/24 dev lan0
-  ip link set lan0 up
-  ip netns add printer
-  ip link add prn0 type veth peer name prn0-lan
-  ip link set prn0-lan master lan0 up
-  ip link set prn0 netns printer
-  ip -n printer addr add 10.0.0.50/24 dev prn0
-  ip -n printer link set prn0 up
-  ip -n printer link set lo up
-  mkdir -p /var/tmp/office-www
-  echo "office printer: ready" > /var/tmp/office-www/index.html
-  ip netns exec printer dnsmasq --interface=prn0 --bind-interfaces --port=0 \
-    --dhcp-range=10.0.0.100,10.0.0.150,12h --dhcp-option=option:router,10.0.0.1 \
-    --dhcp-leasefile=/run/office-dhcp.leases --pid-file=/run/office-dhcp.pid
-  ip netns exec printer setsid python3 -m http.server 80 --directory /var/tmp/office-www \
-    >/var/log/office-http.log 2>&1 < /dev/null &
-  local i
-  for i in $(seq 40); do
-    ip netns exec printer bash -c ': > /dev/tcp/127.0.0.1/80' 2>/dev/null && break
-    sleep 0.25
-  done
+office() {  # the office network: office.sh, as lesson 11 shows it
+  shown "$LESSONS/le-v5g6z9yr/an-office-and-two-networks.md" > /var/tmp/office.sh
+  bash /var/tmp/office.sh >/dev/null
 }
 
 office_down() {
-  [ -f /run/office-dhcp.pid ] && kill "$(cat /run/office-dhcp.pid)" 2>/dev/null || true
-  ip netns pids printer 2>/dev/null | xargs -r kill 2>/dev/null || true
-  ip netns del printer 2>/dev/null || true
-  ip link del lan0 2>/dev/null || true
-  rm -f /run/office-dhcp.pid /run/office-dhcp.leases
+  [ -f /var/tmp/office.sh ] && bash /var/tmp/office.sh down
+  rm -f /run/office-dhcp.pid /run/office-dhcp.leases /var/tmp/office.sh
 }
 
 seed() {  # seed NAME: the cloud-init disk that names a guest and lets ana in
@@ -124,33 +109,13 @@ users:
     shell: /bin/bash
     ssh_authorized_keys: [ "$(cat /home/ana/.ssh/id_ed25519.pub)" ]
 UD
-  cloud-localds --filesystem=vfat "$IMAGES/$1-seed.img" "$ud"; rm -f "$ud"
+  cloud-localds "$IMAGES/$1-seed.img" "$ud"; rm -f "$ud"
 }
 
-wait_vm() {  # wait_vm NAME: until ana can ssh in and cloud-init has finished
-  local n=$1 ip='' i
-  for i in $(seq 120); do
-    ip=$(address "$n")
-    [ -n "$ip" ] && runuser -u ana -- ssh -o BatchMode=yes -o ConnectTimeout=3 "ana@$ip" true 2>/dev/null && break
-    ip=''; sleep 5
-  done
-  [ -n "$ip" ] || { echo "$n did not answer" >&2; exit 1; }
-  runuser -u ana -- ssh "ana@$ip" 'cloud-init status --wait' >/dev/null
-  sed -i "/ $n\$/d" /etc/hosts; echo "$ip $n" >> /etc/hosts
-}
-
-vm() {  # vm NAME [NETWORK] [MEMORY_MB] [VCPUS]
-  local n=$1 net=${2:-default} mem=${3:-1024} cpus=${4:-2}
-  local d=$IMAGES/$n.qcow2 seed=$IMAGES/$n-seed.img
-  seed "$n"
-  qemu-img create -q -f qcow2 -b "$BASE" -F qcow2 "$d" 8G
-  virt-install --name "$n" --virt-type qemu --memory "$mem" --vcpus "$cpus" --import \
-    --disk "$d",bus=virtio --disk "$seed",bus=virtio,format=raw --os-variant ubuntu24.04 \
-    --network network="$net" --graphics none --noautoconsole >/dev/null 2>&1
-  wait_vm "$n"
-  # cloud-init has done its job; the seed disk goes, so the guest is only its own disk
-  virsh detach-disk "$n" vdb --persistent >/dev/null 2>&1 || true
-  rm -f "$seed"
+wait_vm() {  # vm NAME [NETWORK] [MEMORY_MB] [VCPUS]: newvm.sh, as lesson 1 shows it
+  shown "$LESSONS/le-g0pv11ha/one-command.md" > /home/ana/newvm.sh
+  chown ana:ana /home/ana/newvm.sh
+  runuser -u ana -- bash -c 'cd && bash newvm.sh "$@"' newvm "$@" >/dev/null
 }
 
 rm_vm() {

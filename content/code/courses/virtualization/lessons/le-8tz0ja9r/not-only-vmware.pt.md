@@ -1,10 +1,11 @@
 ---
 title: Não só do VMware
-version: 1
+version: 2
 ---
 
 Um VMDK é só um disco, e qualquer hypervisor que leia o formato consegue dar boot nele. Aqui o QEMU liga
-um convidado cujo disco é um VMDK, com o mesmo `virt-install` da aula 1 e `format=vmdk`:
+um convidado cujo disco é um VMDK, com o mesmo `virt-install` da aula 1 e `format=vmdk`. O disco seed dele, `vmw1-seed.img`, é feito à mão
+como na aula 1, seção 05, com `hostname: vmw1`:
 
 ```
 ana@host:~$ cd /var/lib/libvirt/images && sudo qemu-img convert -O vmdk lab-base.qcow2 vmw1.vmdk
