@@ -12,7 +12,22 @@ conhecida e a marca como `related`.
 
 Este conjunto de regras separa os dois estados em regras distintas, para que cada um tenha o seu
 contador, e deixa a LAN perguntar duas coisas na porta UDP 53: ao servidor de nomes de verdade na
-DMZ, e a `app`, que não roda DNS nenhum:
+DMZ, e a `app`, que não roda DNS nenhum. É o `related.nft` no `fw`:
+
+```conf
+flush ruleset
+table ip filter {
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    ct state established counter accept
+    ct state related counter accept
+    ct state invalid counter drop
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 tcp dport 8080 ct state new counter accept
+    iifname "eth2" oifname "eth1" ip daddr 192.0.2.53 udp dport 53 ct state new counter accept
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 udp dport 53 ct state new counter accept
+  }
+}
+```
 
 ```
 root@fw:~# nft -f related.nft
@@ -49,8 +64,23 @@ aqui.
 
 ## Os contadores dizem o que as regras fizeram de fato
 
-Uma regra com `counter` conta os pacotes e bytes com que casou. Depois de três pedidos do `laptop` e
-uma tentativa de `remote` no banco de dados:
+Uma regra com `counter` conta os pacotes e bytes com que casou. O `stateful.nft` ganha um em cada
+regra, e uma última regra com nada além de um contador e um comentário:
+
+```conf
+flush ruleset
+table ip filter {
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    ct state established,related counter accept
+    ct state invalid counter drop
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 tcp dport 8080 ct state new counter accept
+    counter comment "everything else, about to be dropped"
+  }
+}
+```
+
+Depois de três pedidos do `laptop` e uma tentativa de `remote` no banco de dados:
 
 ```
 root@fw:~# nft -f stateful.nft

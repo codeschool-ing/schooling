@@ -6,7 +6,8 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash ana               # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/nslab.sh          # the lab, beside course.json
+#   echo 'ana ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/ana   # this lesson runs sudo as ana
+#   sudo ln -sf "$(realpath ../../lab.sh)" /var/tmp/nslab.sh   # the lab, beside course.json
 #   sudo bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh; lesson 1
@@ -78,10 +79,15 @@ root fw 'nft list chain ip filter forward | tail -4 | head -2 | sed "s/^\t*//"'
 
 block regression
 quiet fw 'nft -f baseline.nft; nft add rule ip filter forward ip saddr 192.168.99.0/16 oifname \"eth3\" tcp dport 22 ct state new accept comment \"admins reach the servers over SSH\"'
-# The regression test runs on the lab's own host, the one machine that can
-# start a connection from every zone: its prompt is a bare $.
-mkdir -p /var/tmp/matrix && cd /var/tmp/matrix
-cat > matrix.expected <<'T'
+# The regression test runs on the lab's own host, as ana, the one machine that
+# can start a connection from every zone: its prompt is a bare $. The script is
+# extracted from the lesson, byte for byte as the copy button gives it, and it
+# calls ~/nslab/nslab.sh with sudo, so ana needs the extracted lab there and a
+# sudoers entry (see the header).
+m=/home/ana/matrix
+install -d -o ana -g ana /home/ana/nslab "$m"
+install -o ana -g ana -m 644 /var/tmp/nslab/nslab.sh /home/ana/nslab/nslab.sh
+cat > "$m/matrix.expected" <<'T'
 remote  www:443      open
 remote  app:8080     blocked
 remote  db:5432      blocked
@@ -93,22 +99,16 @@ admin   app:8080     blocked
 www     app:8080     open
 www     db:5432      blocked
 T
-cat > matrix-test.sh <<'SH'
-#!/bin/bash
-# Try every cell of matrix.expected from the machine it starts on,
-# and print each cell whose result differs from what was expected.
-fail=0
-while read -r from target want; do
-  got=$(bash /var/tmp/nslab.sh exec "$from" ana "probe $target" | awk '{print $2}')
-  if [ "$got" != "$want" ]; then
-    printf '%-7s %-12s expected %-8s got %s\n' "$from" "$target" "$want" "$got"
-    fail=1
-  fi
-done < matrix.expected
-exit $fail
-SH
-printf '$ cat matrix.expected\n'; cat matrix.expected
-printf '$ bash matrix-test.sh; echo "exit $?"\n'; bash matrix-test.sh; echo "exit $?"
+python3 - "$(dirname "$(readlink -f "$0")")/a-regression-test.md" > "$m/matrix-test.sh" <<'PY'
+import json, re, sys
+for b in re.findall(r"^```schooling-example\n(.*?)\n```$", open(sys.argv[1]).read(), re.S | re.M):
+    ex = json.loads(b)
+    if ex.get("file") == "matrix-test.sh":
+        print("\n".join(p["code"] for p in ex["parts"]))
+PY
+chown ana:ana "$m"/*
+host() { printf '$ %s\n' "$*"; runuser -u ana -- bash -c "cd ~/matrix && $*" 2>&1; }
+host 'cat matrix.expected'
+host 'bash matrix-test.sh; echo "exit $?"'
 quiet fw 'nft -f baseline.nft'
-printf '$ bash matrix-test.sh; echo "exit $?"\n'; bash matrix-test.sh; echo "exit $?"
-cd - >/dev/null
+host 'bash matrix-test.sh; echo "exit $?"'

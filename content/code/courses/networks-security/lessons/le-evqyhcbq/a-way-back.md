@@ -18,6 +18,19 @@ root@fw:~# nft list ruleset > known-good.nft; wc -l known-good.nft
 Then schedule the way back **before** making the change, and make it. The new file is a stricter input
 chain that, by mistake, no longer allows SSH from the management segment:
 
+```conf
+flush ruleset
+table ip filter {
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+    iifname "lo" accept
+  }
+}
+```
+
+Save it on `fw` as `tighter.nft`, and then the one line:
+
 ```
 root@fw:~# (sleep 5; nft -f known-good.nft; echo "rolled back at $(date +%T)" > rollback.log) > /dev/null 2>&1 & nft -f tighter.nft; date +%T; nft list ruleset | grep -c accept
 15:34:47

@@ -23,7 +23,15 @@ MCowBQYDK2VuAyEAXqvs8rPoiR1c5rUiQoemyebaBEzVltV928cFbPRcvCg=
 -----END PUBLIC KEY-----
 ```
 
-The public keys, copied to each other, are all that crossed between them. Each side then derives the
+The public keys are copied to each other. In the lab the copy is
+made from your own computer, where each machine's home directory is a folder under `/lab`:
+
+```sh
+sudo cp /lab/app/home/$USER/app.pub /lab/laptop/home/$USER/
+sudo cp /lab/laptop/home/$USER/ana.pub /lab/app/home/$USER/
+```
+
+They are all that crossed between the two machines. Each side then derives the
 shared secret from its own private key and the other's public key, and shows a hash of it rather than
 the secret itself:
 

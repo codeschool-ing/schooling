@@ -8,7 +8,10 @@ arquivos viu a configuração; uma verificação de **em que o host está escuta
 É uma das verificações de host mais baratas que existem, e a lógica é a mesma do AIDE: registrar uma
 linha de base (*baseline*), comparar.
 
-Os sockets em escuta do `www`, salvos como linha de base:
+Os sockets em escuta do `www` são salvos como linha de base, e então o programa por trás de `/debug/`
+sobe, um processo escutando que faz as vezes dele:
+`setsid socat TCP-LISTEN:8081,bind=0.0.0.0,fork,reuseaddr SYSTEM:"echo debug" </dev/null >/dev/null 2>&1 &`.
+Primeiro a linha de base:
 
 ```
 root@www:~# ss -Hltn | awk "{print \$4}" | sort > listening.baseline; cat listening.baseline

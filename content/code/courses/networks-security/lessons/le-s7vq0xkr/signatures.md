@@ -19,15 +19,24 @@ MCowBQYDK2VwAyEATZYYS8vjlrhJ22IsXQ/grXnj1Llczs89wImxSNp4Bjk=
 
 The public key is what gets published, once, somewhere the users already trust: the company's
 documentation, its internal wiki, the configuration that installs the agent. Then the release is
-signed:
+signed, on `admin`, after a copy of the agent is put in your home there with
+`sudo cp /lab/www/var/www/downloads/agent-2.4.1.tar.gz /lab/admin/home/$USER/` and
+`sudo chown $USER: /lab/admin/home/$USER/agent-2.4.1.tar.gz` on your own computer:
 
 ```
 ana@admin:~$ openssl pkeyutl -sign -rawin -inkey release.key -in agent-2.4.1.tar.gz -out agent-2.4.1.tar.gz.sig; wc -c agent-2.4.1.tar.gz.sig
 64 agent-2.4.1.tar.gz.sig
 ```
 
-The signature is 64 bytes, whatever the size of the file. On `laptop`, which has the public key, the
-downloaded file is checked against it:
+The signature is 64 bytes, whatever the size of the file. `laptop` gets the public key, the signature
+and an intact copy of the file, the one it downloaded having been altered in the previous section:
+
+```sh
+sudo cp /lab/admin/home/$USER/release.pub /lab/admin/home/$USER/agent-2.4.1.tar.gz.sig /lab/admin/home/$USER/agent-2.4.1.tar.gz /lab/laptop/home/$USER/
+sudo chown $USER: /lab/laptop/home/$USER/*
+```
+
+and checks the file against them:
 
 ```
 ana@laptop:~$ openssl pkeyutl -verify -rawin -pubin -inkey release.pub -in agent-2.4.1.tar.gz -sigfile agent-2.4.1.tar.gz.sig

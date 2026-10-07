@@ -8,7 +8,9 @@ decide**. Nenhuma regra abaixo dela é consultada para aquele pacote. Esse únic
 parte dos bugs em conjuntos de regras: uma regra pode estar perfeitamente escrita e não fazer nada,
 porque algo acima dela já decidiu.
 
-O `laptop` precisa ser isolado enquanto alguém o investiga. O administrador acrescenta uma regra à
+No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, e toda seção começa carregando de
+novo a política da empresa no `fw`, com `nft -f baseline.nft`, para que cada erro seja cometido numa
+cópia limpa. O `laptop` precisa ser isolado enquanto alguém o investiga. O administrador acrescenta uma regra à
 configuração de base:
 
 ```
