@@ -1,11 +1,11 @@
 ---
 title: Lendo a lista pública de preços
-version: 1
+version: 2
 ---
 
 Todo preço desta aula, e deste curso, é uma linha de um só documento: **a lista pública de preços que
-a AWS publica em JSON**, que qualquer pessoa lê sem conta. O curso a lê com `prices.py`, o programa ao
-lado do `course.json`, e esta é a tabela inteira que ele imprime:
+a AWS publica em JSON**, que qualquer pessoa lê sem conta. O curso a lê com `prices.py`, o programa que a
+aula 1 imprime inteiro, e esta é a tabela inteira que ele imprime:
 
 ```
 ana@laptop:~/cloud$ python3 prices.py

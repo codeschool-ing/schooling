@@ -4,7 +4,7 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson, all of them in the section "the-seam", was copied from running it.
 #
-#   bash captures.sh            # from anywhere; it finds prices.py beside course.json
+#   bash captures.sh            # from anywhere; prices.py is read out of lesson 1
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE. prices.py reads the AWS public price
 # list, which AWS publishes as JSON with no account and no key, at the offer
@@ -27,7 +27,8 @@ export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 COURSE=$(cd "$(dirname "$0")/../.." && pwd) || exit 1
 W=$(mktemp -d)
 trap 'rm -rf "$W"' EXIT
-cp "$COURSE/prices.py" "$W/"
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+prices_py "$W" || exit 1
 cat > "$W/egress.py" <<'PY'
 import sys
 

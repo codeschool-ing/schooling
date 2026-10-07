@@ -1,6 +1,6 @@
 ---
 title: Uma função ou uma máquina
-version: 1
+version: 2
 ---
 
 A conta da seção anterior é pequena porque a carga é pequena. **O custo de uma função é proporcional
@@ -23,7 +23,7 @@ serviço que uma função.** Ela não tem segunda cópia quando falha nem nada n
 carga; a aula 4 defendeu pelo menos duas atrás de um balanceador. Duas t3.medium e um Application
 Load Balancer a 0,0225 USD por hora: (2 × 0,04160 + 0,0225) × 730 = 77,16 USD.
 
-O cruzamento é cada custo mensal dividido pelo custo da função por milhão:
+O cruzamento é cada custo mensal dividido pelo custo da função por milhão. Salvo como `crossover.py`:
 
 ```python
 # us-east-1, from `python3 prices.py`: on demand, USD per hour.
