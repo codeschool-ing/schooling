@@ -1,0 +1,593 @@
+[
+  {
+    "id": "ex-73gkc09s",
+    "version": 1,
+    "section": "linux-text-logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the rsyslog rule `auth,authpriv.*  /var/log/auth.log`, what does `.*` mean?",
+    "hint": "A selector is facility.severity.",
+    "choices": [
+      {
+        "text": "Every severity",
+        "correct": true,
+        "why": "Right. The part after the dot is the severity, and * takes all of them."
+      },
+      {
+        "text": "Every user's messages",
+        "correct": false,
+        "why": "rsyslog does not select by user."
+      },
+      {
+        "text": "Every file under /var/log",
+        "correct": false,
+        "why": "The destination is the right-hand side of the rule."
+      },
+      {
+        "text": "Every program on the machine",
+        "correct": false,
+        "why": "Programs are not in the selector; the facility before the dot groups them."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2j3xp61",
+    "version": 1,
+    "section": "linux-text-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the effect of the `-` in `-/var/log/syslog`?",
+    "hint": "Speed against durability.",
+    "choices": [
+      {
+        "text": "Messages matching the rule are discarded instead of written to that file",
+        "correct": false,
+        "why": "Discarding is written with `stop` or `~`; this writes them."
+      },
+      {
+        "text": "The file is excluded from rotation, so it keeps growing until somebody empties it by hand",
+        "correct": false,
+        "why": "Rotation is logrotate's business, in lesson 3."
+      },
+      {
+        "text": "The file is written in binary, like the journal, and only journalctl reads it",
+        "correct": false,
+        "why": "It is a text file; the journal is the binary one."
+      },
+      {
+        "text": "rsyslog does not force each line to disk, so a crash loses the last few",
+        "correct": true,
+        "why": "Right. Faster writes, and the most recent lines are the ones at risk."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfv261t1",
+    "version": 1,
+    "section": "linux-text-logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "ana runs `tail /var/log/auth.log` and gets `Permission denied`. What would let her read it, on Ubuntu, without becoming root?",
+    "hint": "Look at the owner and group of the file.",
+    "choices": [
+      {
+        "text": "Reading /var/log/syslog instead",
+        "correct": false,
+        "why": "It has the same owner, group and mode."
+      },
+      {
+        "text": "Running `logger` first",
+        "correct": false,
+        "why": "Writing a line does not grant reading the file."
+      },
+      {
+        "text": "Membership of the adm group",
+        "correct": true,
+        "why": "Right. The files are syslog:adm with mode rw-r-----."
+      },
+      {
+        "text": "Membership of the syslog group",
+        "correct": false,
+        "why": "syslog is the owner user; the group with read access is adm."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8bedbxd",
+    "version": 1,
+    "section": "linux-text-logs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to the file rsyslog's default Ubuntu rules write it to.",
+    "hint": "auth goes to one place, kern to another, the rest to a third.",
+    "pairs": [
+      {
+        "left": "su opening a session (authpriv)",
+        "right": "/var/log/auth.log"
+      },
+      {
+        "left": "logger -t backup 'done' (user)",
+        "right": "/var/log/syslog"
+      },
+      {
+        "left": "a disk driver's warning (kern)",
+        "right": "/var/log/kern.log"
+      },
+      {
+        "left": "a package installed with apt",
+        "right": "/var/log/apt/history.log"
+      }
+    ]
+  },
+  {
+    "id": "ex-58k1eqh6",
+    "version": 1,
+    "section": "linux-text-logs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In RFC 5424, which number is the severity `err`?",
+    "hint": "emerg is 0 and debug is 7.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1gdf2qwr",
+    "version": 1,
+    "section": "the-journal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Ubuntu 24.04, which program receives a message from sshd first?",
+    "hint": "One of them writes text files from a copy.",
+    "choices": [
+      {
+        "text": "rsyslog",
+        "correct": false,
+        "why": "It writes auth.log, but from what journald hands it."
+      },
+      {
+        "text": "logrotate",
+        "correct": false,
+        "why": "It rotates files on a schedule; it never receives messages."
+      },
+      {
+        "text": "journald",
+        "correct": true,
+        "why": "Right. rsyslog gets a copy from journald and writes the text files."
+      },
+      {
+        "text": "auditd",
+        "correct": false,
+        "why": "It records kernel audit events, a separate trail, and only when installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pqn94nq",
+    "version": 1,
+    "section": "the-journal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A minimal server has no /var/log/journal directory. It reboots after a crash. What happened to the journal from before the reboot?",
+    "hint": "Where does journald keep it when that directory is missing?",
+    "choices": [
+      {
+        "text": "It is compressed into /var/log/journal.gz on shutdown",
+        "correct": false,
+        "why": "There is no such file."
+      },
+      {
+        "text": "It is intact under /var/log/journal, which journald creates as it starts",
+        "correct": false,
+        "why": "journald uses that directory if it exists; it does not create it on its own."
+      },
+      {
+        "text": "It was copied to /var/log/syslog before the reboot",
+        "correct": false,
+        "why": "Only if rsyslog was running and received copies; the journal itself is still lost."
+      },
+      {
+        "text": "It is gone: without that directory journald kept it in /run/log/journal, in memory",
+        "correct": true,
+        "why": "Right. Volatile storage lasts until the next boot."
+      }
+    ]
+  },
+  {
+    "id": "ex-884t08m0",
+    "version": 1,
+    "section": "the-journal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which journalctl option filters by the systemd unit a message came from?",
+    "hint": "ssh.service is a unit.",
+    "choices": [
+      {
+        "text": "-p",
+        "correct": false,
+        "why": "-p filters by severity."
+      },
+      {
+        "text": "-o",
+        "correct": false,
+        "why": "-o chooses the output format."
+      },
+      {
+        "text": "-u",
+        "correct": true,
+        "why": "Right. `journalctl -u ssh.service`."
+      },
+      {
+        "text": "-b",
+        "correct": false,
+        "why": "-b limits to a boot."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hcfb91h",
+    "version": 1,
+    "section": "windows-event-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analyst looks for event 4688 on a fresh Windows installation and finds none, though programs clearly ran. Why?",
+    "hint": "The Security channel writes only what something asks for.",
+    "choices": [
+      {
+        "text": "Event Viewer hides process events unless Sysmon is installed",
+        "correct": false,
+        "why": "Sysmon adds its own channel; it does not unhide Security events."
+      },
+      {
+        "text": "4688 is written to the System channel rather than Security, so she was looking in the wrong place",
+        "correct": false,
+        "why": "It is a Security event."
+      },
+      {
+        "text": "Process creation is not enabled in the audit policy by default",
+        "correct": true,
+        "why": "Right. auditpol has to turn it on; until then nothing is written."
+      },
+      {
+        "text": "The events were overwritten because the channel was full",
+        "correct": false,
+        "why": "Possible on a busy machine, but a fresh one with none at all points at the policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-1d3qzqw0",
+    "version": 1,
+    "section": "windows-event-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two analysts, in São Paulo and in Lisbon, open the same 4625 event in Event Viewer and see different times. What is true?",
+    "hint": "Stored one way, shown another.",
+    "choices": [
+      {
+        "text": "One of the two computers has a clock that is wrong",
+        "correct": false,
+        "why": "Clock drift changes what is written, not how a stored time is displayed."
+      },
+      {
+        "text": "The event holds one UTC time, shown in each viewer's local zone",
+        "correct": true,
+        "why": "Right. Same instant, two displays."
+      },
+      {
+        "text": "Event Viewer rounds times to the nearest hour for remote logs",
+        "correct": false,
+        "why": "It does not round."
+      },
+      {
+        "text": "Each copy of the event was written by a different domain controller",
+        "correct": false,
+        "why": "It is the same event, read twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb7hzp38",
+    "version": 1,
+    "section": "the-ids-that-matter",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Windows event id to what it records.",
+    "hint": "46xx is logons, 47xx accounts, 1102 the log itself.",
+    "pairs": [
+      {
+        "left": "4624",
+        "right": "an account logged on"
+      },
+      {
+        "left": "4625",
+        "right": "a logon failed"
+      },
+      {
+        "left": "4720",
+        "right": "a user account was created"
+      },
+      {
+        "left": "1102",
+        "right": "the audit log was cleared"
+      },
+      {
+        "left": "7045",
+        "right": "a service was installed"
+      }
+    ]
+  },
+  {
+    "id": "ex-z111z8v5",
+    "version": 1,
+    "section": "the-ids-that-matter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A domain controller records 300 events 4625 in ten minutes, from one address, each for a different user name and each with status 0xC0000064. What is the most likely reading?",
+    "hint": "What does 0xC0000064 say about the account?",
+    "choices": [
+      {
+        "text": "Three hundred accounts were locked out",
+        "correct": false,
+        "why": "Lockouts are 4740, and accounts that do not exist cannot be locked."
+      },
+      {
+        "text": "The domain controller's audit log was cleared",
+        "correct": false,
+        "why": "That is 1102."
+      },
+      {
+        "text": "Somebody is trying names that do not exist on the domain",
+        "correct": true,
+        "why": "Right. 0xC0000064 is an account that does not exist; many names from one source is guessing names."
+      },
+      {
+        "text": "One user keeps typing a wrong password",
+        "correct": false,
+        "why": "That would be one name and 0xC000006A, the wrong password for an account that exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8z2hhcg",
+    "version": 1,
+    "section": "the-ids-that-matter",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an event 4624, which logon type means the session came through Remote Desktop?",
+    "hint": "2 is the keyboard, 3 the network.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-f3qjj3mk",
+    "version": 1,
+    "section": "the-ids-that-matter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is event 1102 useful even though it records the destruction of evidence?",
+    "hint": "When is it written?",
+    "choices": [
+      {
+        "text": "It prevents the log from being cleared again for a day",
+        "correct": false,
+        "why": "Nothing in it blocks anything."
+      },
+      {
+        "text": "It contains a backup of the events that were cleared",
+        "correct": false,
+        "why": "It holds who cleared it, not the events."
+      },
+      {
+        "text": "It is written after the clear, so the fact of the clearing survives it",
+        "correct": true,
+        "why": "Right. The evidence is gone, and a record that it was removed remains, with who and when."
+      },
+      {
+        "text": "Windows writes it to every other channel at the same time",
+        "correct": false,
+        "why": "It is a Security event."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnfp7kzx",
+    "version": 1,
+    "section": "the-ids-that-matter",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Windows event to its closest Linux counterpart.",
+    "hint": "Most of them live in auth.log.",
+    "pairs": [
+      {
+        "left": "4625 a logon failed",
+        "right": "sshd: Failed password for"
+      },
+      {
+        "left": "4688 a process was created",
+        "right": "an execve record in audit.log"
+      },
+      {
+        "left": "7045 a service was installed",
+        "right": "a new unit file in /etc/systemd/system"
+      },
+      {
+        "left": "4634 a logoff",
+        "right": "pam_unix: session closed for user"
+      }
+    ]
+  },
+  {
+    "id": "ex-hnx9e5fq",
+    "version": 1,
+    "section": "time-and-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`date -d 'Sep 17 02:33:07'` printed `Thu Sep 17 02:33:07 -03 2026`. Where did the year and the zone come from?",
+    "hint": "The line itself had neither.",
+    "choices": [
+      {
+        "text": "From the machine where date ran",
+        "correct": true,
+        "why": "Right. A record without them is read in the reader's year and zone."
+      },
+      {
+        "text": "From the firewall that wrote the line",
+        "correct": false,
+        "why": "The line carries no year and no zone to take them from."
+      },
+      {
+        "text": "From the syslog standard, which fixes UTC-3",
+        "correct": false,
+        "why": "No standard fixes a zone."
+      },
+      {
+        "text": "From an NTP server",
+        "correct": false,
+        "why": "NTP sets the clock; it does not annotate old lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-h60jt41j",
+    "version": 1,
+    "section": "time-and-clocks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An event is stamped 2026-09-17T23:10:00-03:00. What hour is it in UTC, on the 24-hour clock? Give the hour only.",
+    "hint": "Add three hours, and mind the day.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-bwfjtmcn",
+    "version": 1,
+    "section": "time-and-clocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "gw's clock is 40 seconds fast and files' clock is right. gw logs a login at 02:33:47; files logs the copy it caused at 02:33:20. What does a timeline built from the raw stamps say?",
+    "hint": "Correct one of them by 40 seconds and compare.",
+    "choices": [
+      {
+        "text": "The correct order, since 40 seconds is within normal tolerance",
+        "correct": false,
+        "why": "The order flips, so the tolerance is not the issue."
+      },
+      {
+        "text": "That the login and the copy happened in the same second",
+        "correct": false,
+        "why": "They are 27 seconds apart as stamped."
+      },
+      {
+        "text": "Nothing, because the two machines cannot be compared",
+        "correct": false,
+        "why": "They can, once the drift is known; that is what NTP prevents having to do."
+      },
+      {
+        "text": "That the copy happened before the login that caused it",
+        "correct": true,
+        "why": "Right. Corrected, the login was at 02:33:07, before the copy; uncorrected, the order is reversed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cywhdda",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of an sshd message on Ubuntu 24.04, from the program to the file an analyst greps.",
+    "hint": "Two programs in the middle.",
+    "items": [
+      "sshd writes the message",
+      "journald stores it with its fields",
+      "rsyslog receives a copy and matches auth,authpriv.*",
+      "the line is appended to /var/log/auth.log"
+    ]
+  },
+  {
+    "id": "ex-v6n47pk7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need to know when a package was installed on an Ubuntu server two months ago. Where do you look first?",
+    "hint": "apt keeps its own history.",
+    "choices": [
+      {
+        "text": "/var/log/wtmp",
+        "correct": false,
+        "why": "wtmp records logins."
+      },
+      {
+        "text": "/var/log/auth.log",
+        "correct": false,
+        "why": "It holds logins and sudo; the sudo line is there, but not what apt did."
+      },
+      {
+        "text": "/var/log/apt/history.log and its rotated copies",
+        "correct": true,
+        "why": "Right. apt writes every install and removal there, with dates."
+      },
+      {
+        "text": "/var/log/kern.log, where the kernel notes the modules and software it loads",
+        "correct": false,
+        "why": "The kernel does not record package installs."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0zfsrzx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody asks whether PowerShell code ran on a workstation last night, and what it said. Which channel answers, if it was enabled?",
+    "hint": "Event 4104.",
+    "choices": [
+      {
+        "text": "Security",
+        "correct": false,
+        "why": "4688 there would show the process, not the script's text."
+      },
+      {
+        "text": "Application",
+        "correct": false,
+        "why": "Programs write there; PowerShell's script blocks go to their own channel."
+      },
+      {
+        "text": "System",
+        "correct": false,
+        "why": "System holds services and drivers."
+      },
+      {
+        "text": "Microsoft-Windows-PowerShell/Operational",
+        "correct": true,
+        "why": "Right. Script block logging writes 4104 there, with the code."
+      }
+    ]
+  }
+]
