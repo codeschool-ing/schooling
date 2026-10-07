@@ -1,12 +1,13 @@
 ---
 title: Blocks, arguments and labels
-version: 1
+version: 2
 ---
 
 A Terraform file looks like a programming language and is closer to a form. **HCL has two kinds
 of thing in it, blocks and arguments**, and an expression on the right of every argument. There
-are no statements to run in order, no loops that execute and no functions you define. Ana's
-`main.tf`, now with a variable read from a second file, shows nearly all of it:
+are no statements to run in order, no loops that execute and no functions you define. Ana starts
+this lesson in a new, empty `~/shop`, and her `main.tf`, with a variable read from a second file,
+shows nearly all of it:
 
 ```hcl
 # The shop's network, as Terraform describes it.
@@ -63,7 +64,7 @@ does not matter and neither does the order of the blocks inside them: `main.tf` 
 where to look, and Terraform attaches no meaning to them. A subdirectory is not read at all;
 lesson 10 makes one into a module.
 
-The second file is in JSON. **Every block can be written as `.tf.json`**, with the block type and
+The second file, `owner.tf.json`, is in JSON. **Every block can be written as `.tf.json`**, with the block type and
 its labels becoming nested keys:
 
 ```json
@@ -92,7 +93,7 @@ Success! The configuration is valid.
 
 `terraform validate` reads the whole directory and checks it against the providers' schemas,
 without asking AWS anything. It is the fastest way to find out that a file does not say what you
-meant. Here is a subnet whose range Ana forgot to quote:
+meant. Here is a subnet, in a new file `subnet.tf`, whose range Ana forgot to quote:
 
 ```hcl
 resource "aws_subnet" "a" {
@@ -116,4 +117,6 @@ ana@laptop:~/shop$ terraform validate
 The parser saw `10.20` and tried to read a number, which is what an unquoted value starting with
 a digit is. **The error names the file, the line and the block, and quotes the line.** Every
 error in this lesson has that shape, and reading it from the quoted line outwards is the habit
-worth having. Lesson 13 runs `validate` as the first step of a test suite.
+worth having. Lesson 13 runs `validate` as the first step of a test suite. Ana deletes
+`subnet.tf` once the error has been read, and the subnets come back, written properly, in the
+locals section.

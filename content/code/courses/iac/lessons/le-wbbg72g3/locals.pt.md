@@ -1,12 +1,13 @@
 ---
 title: Locals, e dizer uma coisa uma vez só
-version: 1
+version: 2
 ---
 
 Todo recurso da loja deveria levar as mesmas três tags, `Project`, `Owner` e `Environment`, e um
 nome montado a partir do ambiente. Escritas à mão em cada recurso, as três cópias concordam no dia
 em que são digitadas e se separam na primeira edição que alguém fizer em só duas delas. **Um valor
-local dá nome a uma expressão uma vez**, e todo o resto se refere ao nome:
+local dá nome a uma expressão uma vez**, e todo o resto se refere ao nome. A Ana põe os da loja no
+`locals.tf`:
 
 ```hcl
 locals {
@@ -25,8 +26,8 @@ singular. Essa diferença é um erro de digitação que todo mundo comete uma ve
 qualquer expressão, inclusive outros locals, variáveis e atributos de recursos, e o Terraform
 descobre a ordem pelas referências, como faz com os recursos.
 
-As sub-redes agora leem tudo de outro lugar: a faixa do `cidrsubnet`, a zona da variável, as tags
-do local, combinadas com um `Name` próprio:
+As sub-redes, no `network.tf`, agora leem tudo de outro lugar: a faixa do `cidrsubnet`, a zona da
+variável, as tags do local, combinadas com um `Name` próprio:
 
 ```hcl
 resource "aws_subnet" "a" {
@@ -46,8 +47,33 @@ resource "aws_subnet" "c" {
 }
 ```
 
-A VPC do `main.tf` recebe o mesmo tratamento, e as tags agora vêm de um lugar só em todos os
-arquivos:
+A VPC do `main.tf` recebe o mesmo tratamento, e o `tags` dela vira uma linha:
+
+```hcl
+# The shop's network, as Terraform describes it.
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "sa-east-1"
+}
+
+/* One VPC for the whole shop.
+   Its subnets are in network.tf. */
+resource "aws_vpc" "shop" {
+  cidr_block           = "10.20.0.0/16"
+  enable_dns_hostnames = true // the machines get DNS names
+  tags                 = merge(local.common_tags, { Name = local.name })
+}
+```
+
+E as tags agora vêm de um lugar só em todos os arquivos:
 
 ```
 ana@laptop:~/shop$ grep -n "tags" *.tf

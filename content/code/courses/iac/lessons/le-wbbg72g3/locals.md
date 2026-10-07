@@ -1,13 +1,13 @@
 ---
 title: Locals, and saying a thing once
-version: 1
+version: 2
 ---
 
 Every resource of the shop should carry the same three tags, `Project`, `Owner` and
 `Environment`, and a name built from the environment. Written out by hand in each resource, the
 three copies agree on the day they are typed and drift apart on the first edit somebody makes to
 only two of them. **A local value names an expression once**, and everything else refers to the
-name:
+name. Ana puts the shop's in `locals.tf`:
 
 ```hcl
 locals {
@@ -26,8 +26,9 @@ singular. That mismatch is a typo everybody makes once. A local may use any expr
 other locals, variables and resource attributes, and Terraform works out the order from the
 references, as it does for resources.
 
-The subnets now read everything from somewhere else: the range from `cidrsubnet`, the zone from
-the variable, the tags from the local, merged with a `Name` of their own:
+The subnets, in `network.tf`, now read everything from somewhere else: the range from
+`cidrsubnet`, the zone from the variable, the tags from the local, merged with a `Name` of their
+own:
 
 ```hcl
 resource "aws_subnet" "a" {
@@ -47,7 +48,33 @@ resource "aws_subnet" "c" {
 }
 ```
 
-The VPC in `main.tf` gets the same treatment, and the tags now come from one place in every file:
+The VPC in `main.tf` gets the same treatment, its `tags` now one line:
+
+```hcl
+# The shop's network, as Terraform describes it.
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "sa-east-1"
+}
+
+/* One VPC for the whole shop.
+   Its subnets are in network.tf. */
+resource "aws_vpc" "shop" {
+  cidr_block           = "10.20.0.0/16"
+  enable_dns_hostnames = true // the machines get DNS names
+  tags                 = merge(local.common_tags, { Name = local.name })
+}
+```
+
+And the tags now come from one place in every file:
 
 ```
 ana@laptop:~/shop$ grep -n "tags" *.tf
