@@ -64,4 +64,6 @@ for m in TOKEN.finditer(data):
 out = [line.rstrip() for line in lines]
 while out and not out[-1]:
     out.pop()
-print("\n".join(out))
+# a screen with nothing left on it prints nothing: the next prompt lands where the cursor is
+if out:
+    print("\n".join(out))

@@ -50,7 +50,8 @@ give() {
 # starts it in a second terminal, with a fresh wire.jsonl, and stopped after.
 relay_up() {
   lab exec ana "rm -f wire.jsonl; setsid python relay.py $* > relay.out 2>&1 < /dev/null & echo \$! > relay.pid" < /dev/null
-  for _ in $(seq 25); do curl -s -o /dev/null http://127.0.0.1:8500/ && return 0; sleep 0.2; done
+  # a bare TCP connect, so the readiness check is not a request the relay logs or answers with a --fail
+  for _ in $(seq 25); do (exec 3<>/dev/tcp/127.0.0.1/8500) 2>/dev/null && return 0; sleep 0.2; done
 }
 relay_down() { lab exec ana 'kill $(cat relay.pid) 2>/dev/null; rm -f relay.pid' < /dev/null; sleep 0.3; }
 
