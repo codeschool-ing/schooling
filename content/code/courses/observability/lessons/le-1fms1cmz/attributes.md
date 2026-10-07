@@ -1,6 +1,6 @@
 ---
 title: Attributes: what a span knows
-version: 1
+version: 2
 ---
 
 A span with only a name and a duration says that something took time. **Attributes say what it was
@@ -32,7 +32,15 @@ group by. This is the start of the storefront's checkout, the span lesson 1's tr
 }
 ```
 
-And this is what that span carried for one checkout of a kettle, as Jaeger stored it:
+And this is what that span carried for one checkout of a kettle, as Jaeger stored it. To see yours,
+send a checkout and ask the storefront's log for the trace id of its last one; that id goes in place
+of the one in the address below:
+
+```sh
+curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @checkout.json
+docker compose logs --no-log-prefix storefront | grep 'checkout finished' | tail -1 | jq -r .trace_id
+```
+
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/7649c3dfb988a9ca71e4bec16bfca43f | jq -c '.data[0].spans[] | select(.operationName == "POST /checkout") | .tags[] | {key, value}'

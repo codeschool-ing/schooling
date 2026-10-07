@@ -1,6 +1,6 @@
 ---
 title: A span's name is a category, not a record
-version: 1
+version: 2
 ---
 
 The storefront's span is called `POST /checkout`, not `POST /checkout for kettle`. That looks like a
@@ -9,6 +9,19 @@ for fifty orders, once naming each with its order id and once with the route's t
 as an attribute:
 
 ```python
+import sys
+
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+style = sys.argv[1]
+provider = TracerProvider(resource=Resource.create({"service.name": f"names-{style}"}))
+provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+tracer = provider.get_tracer("names")
+
+for order_id in range(1001, 1051):
     if style == "bad":
         name = f"GET /orders/{order_id}"
         attributes = {}
@@ -17,6 +30,15 @@ as an attribute:
         attributes = {"shop.order_id": order_id}
     with tracer.start_as_current_span(name, attributes=attributes):
         pass
+provider.shutdown()
+```
+
+Save it as `~/shop/scratch/names.py` and run it both ways. It prints nothing; the spans go to
+the Collector, and from there to Jaeger:
+
+```sh
+docker compose run --rm sandbox python names.py bad
+docker compose run --rm sandbox python names.py good
 ```
 
 Jaeger keeps a list of each service's **operations**, the distinct span names it has seen, and

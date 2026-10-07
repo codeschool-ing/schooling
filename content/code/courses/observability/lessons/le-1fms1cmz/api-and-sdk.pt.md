@@ -1,6 +1,6 @@
 ---
 title: A API, o SDK, e por que nada acontece sem o segundo
-version: 1
+version: 2
 ---
 
 A imagem óbvia de instrumentar é uma biblioteca só: importar, criar spans, e eles aparecem em algum
@@ -16,9 +16,10 @@ with tracer.start_as_current_span("hello") as span:
     print("trace id:", format(span.get_span_context().trace_id, "032x"))
 ```
 
-O laboratório o roda no `sandbox`, um contêiner da própria imagem da loja que executa os scripts
-de `~/shop/scratch`. O Docker imprime três linhas suas antes da saída do script, dizendo que criou
-o contêiner:
+Salve-o como `~/shop/scratch/no_sdk.py`. **Todo script que este curso roda fica em
+`~/shop/scratch`**, e roda no `sandbox`, um contêiner da própria imagem da loja cujo diretório de
+trabalho é esse, então o script tem os mesmos pacotes que os serviços. O Docker imprime três linhas
+suas antes da saída do script, dizendo que criou o contêiner:
 
 ```
 ana@obs:~/shop$ docker compose run --rm sandbox python no_sdk.py

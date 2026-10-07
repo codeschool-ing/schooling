@@ -450,6 +450,33 @@ service:
 LABFILE
 }
 
+put_shown() {
+  # A file a capture writes into ~/shop is one the student was shown: its
+  # whole text is in a lesson, as a fence, as the output of a `cat`, or as the
+  # parts of an annotated example put together. Anything else is refused, so a
+  # capture cannot run a program the lessons never gave.
+  local here; here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  local tmp; tmp=$(mktemp)
+  cat > "$tmp"
+  python3 - "$here/lessons" "$1" "$tmp" <<'PY' || { rm -f "$tmp"; exit 1; }
+import glob, json, re, sys
+lessons, path, tmp = sys.argv[1:]
+body = open(tmp).read().rstrip("\n")
+texts = []
+for md in glob.glob(f"{lessons}/*/*.md"):
+    if md.endswith(".pt.md"):
+        continue
+    t = open(md).read()
+    texts.append(t)
+    for ex in re.findall(r"^```schooling-example\n(.*?)^```$", t, re.M | re.S):
+        texts.append("".join(p["code"] for p in json.loads(ex)["parts"]))
+if not any(body in t for t in texts):
+    sys.exit(f"lab: {path} is not shown whole in any lesson")
+PY
+  as_ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" < "$tmp"
+  rm -f "$tmp"
+}
+
 base_image() {
   # THE ONE THING THIS MACHINE NEEDS THAT A STUDENT'S DOES NOT. The computer the
   # course is recorded on reaches the internet only through a proxy that
@@ -550,6 +577,7 @@ case "${1:-}" in
   reset) shift; down; rm -rf "$SHOP"; up "$@" ;;
   down) down ;;
   as) shift; as_ana "$*" ;;
+  put) shift; put_shown "$1" ;;
   kind-up) kind_up ;;
   kind-load) shift; for i in "$@"; do kind_load "$i"; done ;;
   kind-down) kind delete cluster --name lab >/dev/null 2>&1 || true ;;

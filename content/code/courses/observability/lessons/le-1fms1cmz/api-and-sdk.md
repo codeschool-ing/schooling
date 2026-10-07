@@ -1,6 +1,6 @@
 ---
 title: The API, the SDK, and why nothing happens without the second
-version: 1
+version: 2
 ---
 
 The obvious picture of instrumenting is one library: import it, create spans, and they appear
@@ -16,9 +16,10 @@ with tracer.start_as_current_span("hello") as span:
     print("trace id:", format(span.get_span_context().trace_id, "032x"))
 ```
 
-The lab runs it in `sandbox`, a container from the shop's own image that runs the scripts in
-`~/shop/scratch`. Docker prints three lines of its own before the script's output, saying it
-created the container:
+Save it as `~/shop/scratch/no_sdk.py`. **Every script this course runs lives in `~/shop/scratch`**,
+and runs in `sandbox`, a container from the shop's own image whose working directory is that one,
+so the script has the same packages the services have. Docker prints three lines of its own before
+the script's output, saying it created the container:
 
 ```
 ana@obs:~/shop$ docker compose run --rm sandbox python no_sdk.py

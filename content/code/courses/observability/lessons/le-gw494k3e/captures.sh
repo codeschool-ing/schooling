@@ -22,7 +22,7 @@ LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 on() { printf 'ana@obs:~/shop$ %s\n' "$*"; lab as "$*" 2>&1 || true; }
 quiet() { lab as "$*" >/dev/null 2>&1 || true; }
-put() { lab as "cat > '$1'"; }
+put() { lab put "$1"; }
 block() { printf '##### %s\n' "$1"; }
 checkout() { quiet "curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @checkout.json"; }
 last_trace() { lab as "docker compose logs --no-log-prefix ${1:-storefront} | grep '${2:-checkout finished}' | tail -1 | jq -r .trace_id"; }
