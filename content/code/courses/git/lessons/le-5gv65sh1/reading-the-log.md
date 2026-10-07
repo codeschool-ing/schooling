@@ -1,6 +1,6 @@
 ---
 title: Reading the log
-version: 1
+version: 2
 ---
 
 Lesson 1 showed the log once. This is how you actually use it: the default format, the short one,
@@ -80,9 +80,10 @@ ana@vm:~/site$ git log --oneline -- index.html
 6555c9b Link the menu from the home page
 8577a83 Open at half past five
 6abda31 Add the home page
-ana@vm:~/site$ git log --oneline --since=2026-09-17
+ana@vm:~/site$ git log --oneline --since="2026-09-17 00:00"
 6555c9b Link the menu from the home page
 eadf998 Take rye bread off until the flour arrives
+31a6298 Add cheese rolls
 ana@vm:~/site$ git log --oneline --grep=price
 1b2d576 Put the prices up for September
 ```
@@ -91,8 +92,10 @@ ana@vm:~/site$ git log --oneline --grep=price
   enough.
 - `-- index.html` keeps the commits that changed that file. The `--` separates file names from
   everything else, and it is a good habit even when Git could guess.
-- `--since=2026-09-17` keeps what happened on or after a date. `--until` is the other end, and both
-  accept `"2 weeks ago"` as well as a date.
+- `--since="2026-09-17 00:00"` keeps what happened from that moment on. Give it the time as well:
+  a date on its own means that day **at the current time of day**, so the same command run in the
+  afternoon drops the morning's commits. `--until` is the other end, and both accept
+  `"2 weeks ago"` as well as a date.
 - `--grep=price` searches the messages. It found *prices* too, because it matches a pattern and not
   a whole word.
 

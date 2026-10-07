@@ -1,6 +1,6 @@
 ---
 title: Reading a diff
-version: 1
+version: 2
 ---
 
 A diff is how Git answers *what changed*. Lesson 1 said a commit stores a snapshot and not a list of
@@ -13,7 +13,13 @@ is which two.
 
 ## One change, line by line
 
-Here the price of the cheese roll has been edited and not yet staged, so plain `git diff` shows it:
+Here the price of the cheese roll has been edited and not yet staged, so plain `git diff` shows it.
+Make the same edit in nano, 2.50 to 2.80, or with the command that does it in one line:
+
+```bash
+sed -i 's/2.50/2.80/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git diff
@@ -43,6 +49,15 @@ three characters:
 **Diffs have no idea of "changed".** A changed line is shown as the old one removed and the new one
 added, `-…2.50` and `+…2.80`. A long file changed in three places gives three hunks, each with a
 few lines of context around it.
+
+Now put the price back, so that the rest of this lesson reads the same files you have:
+
+```bash
+sed -i 's/2.80/2.50/' menu.html
+```
+
+The working tree matches the last commit again and `git diff` prints nothing. Lesson 4 has the
+command made for exactly this, `git restore`.
 
 ## Between two commits
 

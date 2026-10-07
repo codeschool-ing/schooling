@@ -1,6 +1,6 @@
 ---
 title: Lendo um diff
-version: 1
+version: 2
 ---
 
 Um diff é como o Git responde *o que mudou*. A aula 1 disse que um commit guarda uma fotografia e não
@@ -14,7 +14,12 @@ uma lista de mudanças; **um diff é calculado quando você pede, comparando dua
 ## Uma mudança, linha por linha
 
 Aqui o preço do pão de queijo foi editado e ainda não foi preparado, então o `git diff` puro o
-mostra:
+mostra. Faça a mesma edição no nano, de 2.50 para 2.80, ou com o comando que a faz numa linha:
+
+```bash
+sed -i 's/2.50/2.80/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git diff
@@ -44,6 +49,15 @@ um de três caracteres:
 **Diffs não têm ideia de "mudou".** Uma linha mudada aparece como a antiga removida e a nova
 acrescentada, `-…2.50` e `+…2.80`. Um arquivo comprido mudado em três lugares dá três hunks, cada um
 com algumas linhas de contexto em volta.
+
+Agora volte o preço, para que o resto desta aula leia os mesmos arquivos que você tem:
+
+```bash
+sed -i 's/2.80/2.50/' menu.html
+```
+
+A árvore de trabalho volta a bater com o último commit e o `git diff` não imprime nada. A aula 4 tem
+o comando feito exatamente para isso, o `git restore`.
 
 ## Entre dois commits
 

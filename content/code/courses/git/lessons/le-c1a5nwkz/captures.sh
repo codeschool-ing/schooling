@@ -35,34 +35,48 @@ block() { printf '##### %s\n' "$1"; }
 at() { export GIT_AUTHOR_DATE="$1" GIT_COMMITTER_DATE="$1"; }
 as() { export GIT_AUTHOR_NAME="$1" GIT_AUTHOR_EMAIL="$2" GIT_COMMITTER_NAME="$1" GIT_COMMITTER_EMAIL="$2"; }
 me() { as 'Ana Souza' 'ana@example.com'; }
+
+# Where the lessons are, so that a block can be read out of the page that prints
+# it: what the capture runs and what the student is shown cannot then drift.
+lessons=$(cd "$(dirname "$0")/.." && pwd)
+self=$(basename "$(cd "$(dirname "$0")" && pwd)")
+# fence FILE N: the Nth ```bash block of FILE, exactly as the lesson prints it.
+fence() {
+  local body
+  body=$(awk -v n="$2" '/^```bash$/ { if (++c == n) { f = 1; next } } f && /^```$/ { exit } f' "$1")
+  [ -n "$body" ] || { echo "no bash block $2 in $1" >&2; exit 1; }
+  printf '%s\n' "$body"
+}
+# given SECTION N [DATE...]: run the Nth ```bash block of this lesson's SECTION
+# one line at a time, as somebody pasting it would. Each line that makes a
+# commit is dated with the next DATE, the one thing a capture adds. Names come
+# from the settings and from the block's own `-c user.name=…`, so the exported
+# identity is set aside while it runs and put back afterwards.
+given() {
+  local md="$lessons/$self/$1.md" n=$2 line name=${GIT_AUTHOR_NAME-} email=${GIT_AUTHOR_EMAIL-}
+  shift 2
+  unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+  while IFS= read -r line; do
+    case $line in ''|'#'*) continue ;; esac
+    if [ $# -gt 0 ] && [[ $line =~ git(\ -c\ [^\ ]+)*\ (commit|merge|revert|rebase|cherry-pick|pull|tag\ -a) ]]; then
+      at "$1"; shift
+    fi
+    eval "$line"
+  done < <(fence "$md" "$n")
+  [ -z "$name" ] || as "$name" "$email"
+}
 git config --global user.name 'Ana Souza'
 git config --global user.email 'ana@example.com'
 git config --global init.defaultBranch main
 git config --global core.editor nano
 
 # The week of lesson 3, rebuilt: nine commits by Ana and Bruno.
-cd ~ && rm -rf ~/site
-mkdir ~/site && cd ~/site && git init -q
 bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
-me; at '2026-09-14T09:05:00-03:00'
-printf '<h1>Padaria Sol</h1>\n<p>Bread from six in the morning.</p>\n' > index.html; c 'Add the home page'
-at '2026-09-14T10:20:00-03:00'
-printf 'h1 { color: darkorange; }\n' > style.css; c 'Give the heading its colour'
-at '2026-09-14T14:10:00-03:00'
-printf '<h1>Menu</h1>\n<p>French bread, 0.80</p>\n' > menu.html; c 'Add the menu'
-bruno; at '2026-09-15T11:02:00-03:00'
-printf '<p>Rye bread, 1.20</p>\n' >> menu.html; c 'Add rye bread to the menu'
-me; at '2026-09-16T09:40:00-03:00'
-sed -i 's/six in the morning/half past five/' index.html; c 'Open at half past five'
-bruno; at '2026-09-16T16:25:00-03:00'
-sed -i 's/0.80/0.90/; s/1.20/1.35/' menu.html; c 'Put the prices up for September'
-me; at '2026-09-17T10:15:00-03:00'
-printf '<p>Cheese roll, 2.50</p>\n' >> menu.html; c 'Add cheese rolls'
-bruno; at '2026-09-18T08:50:00-03:00'
-sed -i '/Rye bread/d' menu.html; c 'Take rye bread off until the flour arrives'
+# Lesson 3's week, made by the program lesson 3 prints, read out of its page.
+fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
-printf '<p><a href="menu.html">See the menu</a></p>\n' >> index.html; c 'Link the menu from the home page'
 
 cd ~ && rm -rf ~/before
 git config --global color.ui never
