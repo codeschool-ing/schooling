@@ -109,7 +109,7 @@ class Shell:
                     self.cwd = m.group(2).decode()
                 return buf.decode(errors="replace") + "\n[replay: TIMEOUT]", -1, self.cwd
             tail = buf[-60:].decode(errors="replace")
-            if self._answers and tail.endswith("? "):
+            if self._answers and (tail.endswith("? ") or tail.endswith(": ")):
                 ans = self._answers.pop(0)
                 os.write(self.fd, (ans + "\n").encode())
                 buf += (ans + "\n").encode()  # what the terminal would have echoed
@@ -291,7 +291,7 @@ def main():
                     if screen(cmd) or any(l.startswith("^C") or l.startswith("^Z") for l in expect):
                         manual = True
                         break
-                    answers = [m.group(1) for m in (re.search(r"\? (y|n|yes|no)$", l) for l in expect) if m]
+                    answers = [m.group(1) for m in (re.search(r"[?:] (y|n|yes|no)$", l) for l in expect) if m]
                     out, st = mach.step(user, cwd, cmd, answers, expect)
                     if st == -1 and "[replay: TIMEOUT]" in out:
                         manual = True

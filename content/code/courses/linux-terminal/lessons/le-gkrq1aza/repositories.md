@@ -1,6 +1,6 @@
 ---
 title: Repositories, and why `update` is not `upgrade`
-version: 1
+version: 2
 ---
 
 A repository is a web server with packages on it and an **index** describing them. Your machine
@@ -17,6 +17,10 @@ That is the whole model, and it explains the command people get wrong first:
 yesterday's catalogue and reports nothing to do, which is where "but I did update it" comes from.
 
 ## Where the list lives
+
+On the machine you installed in lesson 1 the directory below has one file, `ubuntu.sources`. The
+machine these transcripts were captured on has more — Docker's repository and two PPAs — which is
+what makes it a better example of a machine somebody has been using:
 
 ```
 root@vm:~# ls /etc/apt/sources.list.d/
@@ -100,7 +104,8 @@ Three words carry the whole listing:
 **And this run has two real failures in it**, which is luckier than it sounds, because this error is
 one of the two you will actually meet.
 
-What happened here is specific: this machine reaches the network through a proxy that returns `403
+What happened here is specific: the machine these transcripts were captured on reaches the network
+through a proxy that returns `403
 Forbidden` for those two PPAs. apt could not fetch `InRelease` — the signed file — at all, and
 `no longer signed` is what apt says when the signed index is missing, whatever the reason. **The
 message names the consequence, not the cause.**
