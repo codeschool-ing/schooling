@@ -807,8 +807,10 @@ def l05_feature_teams(lang):
     for i, name in enumerate(t['cteam']):
         y = 40 + i * 58
         box(f, 20, y, 250, 46, [name], size=10)
-    arrow(f, 205, 34, 205, 220, stroke='--amber', width=2)
-    f.text(215, 232, t['feature'], size=9.5, anchor='start', fill='--amber')
+        f.rect(222, y + 14, 30, 18, stroke='--amber', fill='--scan', rx=3, width=1.6)
+        if i < 2:
+            arrow(f, 237, y + 33, 237, y + 70, stroke='--amber', width=1.6)
+    f.text(237, 220, t['feature'], size=9.5, anchor='middle', fill='--amber')
     f.text(145, 260, t['note1'], size=9.5, fill='--paper-dim')
     f.text(493, 22, t['feat'], size=11, weight='600')
     for j, name in enumerate(t['fteam']):
