@@ -1,18 +1,18 @@
 ---
-title: Installing NetBox
+title: Instalando o NetBox
 version: 1
 ---
 
-NetBox is a Django application, and it is not in Ubuntu's archive. It is installed the way its own
-documentation installs it: the code from its repository at a release tag, and its Python
-libraries in a virtual environment of its own, beside it. It needs PostgreSQL and Redis, which
-lesson 1's `apt-get` already brought. Two more packages, to build the PostgreSQL driver:
+O NetBox é uma aplicação Django, e não está no repositório do Ubuntu. Ele é instalado do jeito que
+a documentação dele instala: o código do repositório numa tag de release, e as bibliotecas Python
+num ambiente virtual próprio, ao lado. Ele precisa de PostgreSQL e Redis, que o `apt-get` da aula 1
+já trouxe. Mais dois pacotes, para compilar o driver do PostgreSQL:
 
 ```sh
 sudo apt-get install -y libpq-dev python3.12-dev
 ```
 
-Then NetBox v4.6.10, into `/opt/netbox`:
+Depois o NetBox v4.6.10, em `/opt/netbox`:
 
 ```sh
 sudo git clone --depth 1 --branch v4.6.10 https://github.com/netbox-community/netbox.git /opt/netbox
@@ -20,17 +20,17 @@ sudo python3 -m venv /opt/netbox/venv
 sudo /opt/netbox/venv/bin/pip install -r /opt/netbox/requirements.txt
 ```
 
-`requirements.txt` pins every library NetBox uses to the version that release was tested with,
-and the install takes a few minutes. `netlab.sh` does the rest, in `build_netbox`: it writes
-NetBox's `configuration.py`, starts PostgreSQL and Redis inside the `netbox` machine, creates
-the database and runs NetBox's migrations on the first build, and starts the web server on
+O `requirements.txt` fixa cada biblioteca que o NetBox usa na versão com que aquela release foi
+testada, e a instalação leva alguns minutos. O `netlab.sh` faz o resto, no `build_netbox`: grava o
+`configuration.py` do NetBox, liga o PostgreSQL e o Redis dentro da máquina `netbox`, cria o banco e
+roda as migrações do NetBox na primeira construção, e liga o servidor web em
 `https://netbox.example.net`.
 
-**An empty NetBox would teach nothing**, so the first build also fills it with what the lab is:
-three sites, the three routers and `nc1` with their interfaces and addresses, the prefixes they
-come from and the two cables between the routers. That is a script run once through NetBox's own
-shell, and it creates an account for `ana` with an API token, which `netlab.sh` writes to
-`~/.netbox-token` in her home. Save it as `~/netlab/netbox_seed.py`:
+**Um NetBox vazio não ensinaria nada**, então a primeira construção também o preenche com o que o
+laboratório é: três sites, os três roteadores e o `nc1` com suas interfaces e endereços, os
+prefixos de onde eles vêm e os dois cabos entre os roteadores. Isso é um script rodado uma vez pelo
+shell do próprio NetBox, e ele cria uma conta para a `ana` com um token de API, que o `netlab.sh`
+grava em `~/.netbox-token` na home dela. Salve-o como `~/netlab/netbox_seed.py`:
 
 ```python
 # What NetBox holds when the lab is built: the three routers and nc1, where
@@ -118,15 +118,15 @@ print("seeded", Device.objects.count(), "devices,", Interface.objects.count(), "
       IPAddress.objects.count(), "addresses")
 ```
 
-Rebuild the lab:
+Reconstrua o laboratório:
 
 ```sh
 sudo ~/netlab/netlab.sh reset
 ```
 
-**The first build after installing NetBox takes minutes, not seconds**, because an empty database is
-built by running every one of NetBox's migrations. `netlab.sh` keeps a copy of the migrated and seeded
-database in `/var/cache/netlab` and unpacks it on every build after that. The objects and their
-ids come out the same as in the transcripts; their creation times are your first build's. The
-web interface is on `https://netbox.example.net` from inside the lab, and this lesson does not
-need it: everything below goes through the API.
+**A primeira construção depois de instalar o NetBox leva minutos, não segundos**, porque um banco vazio
+é construído rodando cada uma das migrações do NetBox. O `netlab.sh` guarda uma cópia do banco migrado e
+populado em `/var/cache/netlab` e a desempacota em toda construção depois dessa. Os objetos e seus
+ids saem iguais aos das transcrições; as datas de criação são as da sua primeira construção. A
+interface web fica em `https://netbox.example.net` de dentro do laboratório, e esta aula não precisa
+dela: tudo abaixo passa pela API.

@@ -1,7 +1,14 @@
 ---
 title: NetBox a partir do Python
-version: 1
+version: 2
 ---
+
+Os scripts desta aula ficam em `~/sot` no `ctl`. Dois arquivos vêm sem mudança do `~/tpl` da aula
+10, o template e o `push.py`, e são copiados logo no começo:
+
+```
+ana@ctl:~$ mkdir -p sot/inventory && cp -r tpl/templates tpl/push.py sot/
+```
 
 O `pynetbox` embrulha a API em objetos Python: um endpoint é um atributo, um filtro é um método, um
 resultado é um objeto cujos campos são atributos. Todo script desta aula se conecta por um módulo
