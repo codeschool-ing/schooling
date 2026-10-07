@@ -1,16 +1,17 @@
 ---
-title: The service desk
+title: A central de chamados
 version: 1
 ---
 
-The ticketing systems people use at work, ServiceNow, Jira Service Management or the open-source
-desks such as Zammad and GLPI, are either licensed or a small data centre to install, and this
-lesson needs only the part they share: tickets with a number, a status and comments, behind a JSON
-API that takes a token. The lab's service desk is that part, a program called `deskd` written for
-this course, and it runs on the machine called `tickets`.
+Os sistemas de chamados que as pessoas usam no trabalho, o ServiceNow, o Jira Service Management ou
+as centrais open source como o Zammad e o GLPI, ou são licenciados ou são um pequeno data center para
+instalar, e esta aula precisa só da parte que todos têm em comum: chamados com número, status e
+comentários, por trás de uma API JSON que recebe um token. A central de chamados do laboratório é
+essa parte, um programa chamado `deskd` escrito para este curso, e roda na máquina chamada
+`tickets`.
 
-It is short enough to read in full, and reading it tells you exactly what the last section of
-this lesson can and cannot ask of it. Save it as `~/netlab/deskd.py`:
+Ele é curto o bastante para ler inteiro, e lê-lo diz exatamente o que a última seção desta aula pode
+e não pode pedir a ele. Salve-o como `~/netlab/deskd.py`:
 
 ```python
 #!/opt/netauto/bin/python
@@ -150,8 +151,8 @@ if __name__ == "__main__":
     main()
 ```
 
-Rebuild the lab, and `netlab.sh` starts it, writes its token to `~/.desk-token` in `ana`'s home,
-and says so:
+Reconstrua o laboratório, e o `netlab.sh` o liga, grava o token dele em `~/.desk-token` na home da
+`ana` e avisa:
 
 ```sh
 sudo ~/netlab/netlab.sh reset
