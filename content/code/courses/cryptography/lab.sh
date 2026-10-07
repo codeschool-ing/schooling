@@ -70,6 +70,8 @@ le-0pfv6eh8 third-party
 le-rjhw1035 encoding
 le-rjhw1035 obfuscation
 le-esc4bcph dnssec
+le-7bsxn5w6 keys-in-code
+le-7bsxn5w6 nonce-reuse
 "
 
 STOCK=/usr/local/lib/cryptography-stock
@@ -126,7 +128,7 @@ elif mode == "steps":
         sys.exit(f"{lesson}/{slug} has no sh fence that starts in ~/lab")
     for b in blocks:
         for l in b.split("\n"):
-            if not l or l.startswith("sudo apt-get "):
+            if l.startswith("sudo apt-get "):  # a blank line stays: it may be in a heredoc
                 continue
             # this runs as root already, and sudo would reset PATH to one
             # whose python3 is not the stock 3.12
@@ -137,10 +139,12 @@ PY
 }
 
 steps() {
-  # As the student types them: in a login shell's PATH, from their home.
+  # As the student types them: in a login shell's PATH, from their home, and
+  # with no git configuration, as on a fresh machine.
   local script
   script=$(fences steps "$1" "$2")
-  (cd "$HOME" && PATH=$STOCK:$HOME/lab/bin:$PATH bash -euo pipefail -c "$script")
+  (cd "$HOME" && PATH=$STOCK:$HOME/lab/bin:$PATH GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+     bash -euo pipefail -c "$script")
 }
 
 reset() {
