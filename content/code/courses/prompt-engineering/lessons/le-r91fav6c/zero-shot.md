@@ -1,6 +1,6 @@
 ---
 title: An instruction, the input, and no examples
-version: 1
+version: 2
 ---
 
 **A zero-shot prompt asks for a task without showing a single solved example of it.** It gives the
@@ -16,12 +16,14 @@ of them.
 ## A weak version
 
 Café Aurora gets messages through its website and wants each one labelled, so that complaints reach
-the manager first. The course wrote this first attempt as an illustration:
+the manager first. Here is a first attempt, as a template: `{message}` is where each message goes.
+Save it as `~/pe/prompts/weak.txt`:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/weak.txt
 Is this review positive or negative?
 
-Do you open on public holidays?
+{message}
 ```
 
 Every part of it leaves a decision to the model:
@@ -33,15 +35,16 @@ Every part of it leaves a decision to the model:
 - the output is not described, so the model may reply with a word, a sentence, or an answer;
 - the edge cases are not mentioned, and this input is one: it is a question, not a review.
 
-A model given that prompt has every reason to answer the question, because answering questions is
-what it was trained to do (lesson 1), and the message is a question. Nothing in the prompt said
-otherwise.
+Given a message that is a question, a model has every reason to answer it, because answering
+questions is what it was trained to do (lesson 1), or to invent a label nobody listed. Nothing in
+the prompt says otherwise, and the next reading section shows which it did.
 
 ## A strong version
 
-The same task, with each gap closed. The course wrote it as an illustration too:
+The same task, with each gap closed. Save it as `~/pe/prompts/strong.txt`:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/strong.txt
 Label a message sent to Café Aurora through its website.
 
 Labels:
@@ -59,7 +62,7 @@ Edge cases:
 Reply with the label only, in lower case, nothing else.
 
 <message>
-Do you open on public holidays?
+{message}
 </message>
 ```
 
