@@ -1,6 +1,6 @@
 ---
 title: Perder o estado, e a segunda rede
-version: 1
+version: 2
 ---
 
 A crença comum é que o estado é um cache: algo que o Terraform guarda para ir mais rápido, e que
@@ -9,6 +9,7 @@ o Terraform não faz ideia de que alguma coisa existe, e faz o que qualquer ferr
 faz com uma descrição e um mundo vazio: cria a descrição.
 
 A Ana guarda a configuração no git, e faz o que a maioria dos guias manda: deixa o estado de fora.
+Este é o `.gitignore` dela, escrito antes do `git init` e do primeiro commit:
 
 ```
 .terraform/
