@@ -1,13 +1,23 @@
 ---
 title: Arrumando os commits antes que alguém os veja
-version: 1
+version: 2
 ---
 
 O trabalho não chega em commits arrumados. Você faz o commit de uma funcionalidade, depois de uma
 mudança na folha de estilo, e aí percebe que falta um ponto de exclamação no texto da funcionalidade.
 O histórico honesto são três commits, um dos quais corrige o primeiro. **Antes de o branch ser
 compartilhado, você pode transformá-lo no histórico que teria escrito se tivesse acertado de
-primeira.** O `--amend` da aula 4 faz isso para o último commit. Para um mais antigo:
+primeira.** O `--amend` da aula 4 faz isso para o último commit. Para um mais antigo, aqui estão a
+funcionalidade, a folha de estilo e a exclamação que faltava, ainda sem commit:
+
+```bash
+printf '<p>Seasonal cakes: ask at the counter.</p>\n' >> menu.html
+git commit -qam 'feat(menu): mention seasonal cakes'
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git commit -qam 'style: give paragraphs more room'
+sed -i 's/ask at the counter/ask at the counter!/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git commit -qa --fixup HEAD~1
@@ -25,13 +35,14 @@ O `git commit --fixup HEAD~1` criou um commit cuja mensagem é `fixup! ` seguido
 que ele corrige. Nada mais nele é especial; é um bilhete para o seu eu futuro dizendo *isto vai junto
 com aquilo*.
 
-O `git rebase -i --autosquash` então faz a arrumação. O `-i` é um **rebase interativo**, que reaplica
-commits do jeito que a aula 6 descreveu mas deixa você reordenar, juntar ou reescrever as mensagens no
-caminho, a partir de um plano que o Git escreve no seu editor. O `--autosquash` preenche o plano por
-você: leva todo commit `fixup!` para logo depois do commit que ele nomeia e o incorpora. Aqui o plano foi
-aceito sem mudança, e o resultado são dois commits: os bolos da estação com o ponto de exclamação
-incluído, e a mudança na folha de estilo. **A correção deixou de existir como commit separado**, porque
-nunca deveria ter precisado.
+O `git rebase -i --autosquash` então faz a arrumação. O `-i` é um **rebase interativo**, que
+reaplica commits do jeito que a aula 6 descreveu mas deixa você reordenar, juntar ou reescrever as
+mensagens no caminho, a partir de um plano que o Git escreve no seu editor. O `--autosquash`
+preenche o plano por você: leva todo commit `fixup!` para logo depois do commit que ele nomeia e o
+incorpora. Aqui o plano foi aceito sem mudança, o que no seu editor quer dizer salvá-lo como está e
+fechar, e o resultado são dois commits: os bolos da estação com o ponto de exclamação incluído, e a
+mudança na folha de estilo. **A correção deixou de existir como commit separado**, porque nunca
+deveria ter precisado.
 
 ## A regra, mais uma vez
 

@@ -46,26 +46,31 @@ fence() {
   [ -n "$body" ] || { echo "no bash block $2 in $1" >&2; exit 1; }
   printf '%s\n' "$body"
 }
-# given SECTION N [DATE...]: run the Nth ```bash block of this lesson's SECTION
-# one line at a time, as somebody pasting it would. Each line that makes a
-# commit is dated with the next DATE, the one thing a capture adds. Names come
+# given SECTION N [DATE...]: run the Nth ```bash block of this lesson's SECTION,
+# as somebody pasting it would. Each git command in it that makes a commit or a
+# tag is dated with the next DATE, the one thing a capture adds, and a DATE left
+# over is an error: the block and the dates have stopped agreeing. Names come
 # from the settings and from the block's own `-c user.name=…`, so the exported
 # identity is set aside while it runs and put back afterwards.
 given() {
-  local md="$lessons/$self/$1.md" n=$2 line name=${GIT_AUTHOR_NAME-} email=${GIT_AUTHOR_EMAIL-}
+  local section=$1 md="$lessons/$self/$1.md" n=$2 name=${GIT_AUTHOR_NAME-} email=${GIT_AUTHOR_EMAIL-}
   shift 2
+  dates=("$@")
   unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
-  # With no dates there is nothing to place between lines, and the block runs
-  # whole, which is what lets one hold a here-document.
-  if [ $# -eq 0 ]; then
-    eval "$(fence "$md" "$n")"
-  else while IFS= read -r line; do
-    case $line in ''|'#'*) continue ;; esac
-    if [ $# -gt 0 ] && [[ $line =~ (^|[\;\&\ ])git\ (.*\ )?(commit|merge|revert|rebase|cherry-pick|pull|tag\ -a)(\ |$) ]]; then
-      at "$1"; shift
-    fi
-    eval "$line"
-  done < <(fence "$md" "$n"); fi
+  git() {
+    local a skip= sub=
+    for a in "$@"; do
+      if [ -n "$skip" ]; then skip=; continue; fi
+      case $a in -c|-C) skip=1 ;; -*) ;; *) sub=$a; break ;; esac
+    done
+    case $sub in commit|merge|revert|rebase|cherry-pick|pull|tag)
+      if [ ${#dates[@]} -gt 0 ]; then at "${dates[0]}"; dates=("${dates[@]:1}"); fi ;;
+    esac
+    command git "$@"
+  }
+  eval "$(fence "$md" "$n")"
+  unset -f git
+  [ ${#dates[@]} -eq 0 ] || { echo "given $section $n: ${#dates[@]} date(s) left over" >&2; exit 1; }
   [ -z "$name" ] || as "$name" "$email"
 }
 git config --global user.name 'Ana Souza'
