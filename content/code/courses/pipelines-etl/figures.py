@@ -744,6 +744,48 @@ def l06_zones(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-scd2', 7)
+def l07_scd2(lang):
+    t = {'en': dict(
+            label='Customer 3145 on a time line. Version 3133, São Paulo, is valid from 1 May 2025 '
+                  'to 08:16:38 on 15 March 2026. Version 5393, Rio de Janeiro, is valid from that '
+                  'moment with no end. A sale on 11 March points to version 3133, because the '
+                  'sale happened while that version was true.',
+            v1='key 3133 · São Paulo', v2='key 5393 · Rio de Janeiro', open_='still true',
+            sale='sale, 11 March', moved='moved 15 March 08:16:38',
+            start='1 May 2025',
+            cap='The end of one version is the start of the next. A fact is joined to the version '
+                'whose interval holds the moment of the sale.'),
+         'pt': dict(
+            label='O cliente 3145 numa linha do tempo. A versão 3133, São Paulo, vale de 1º de maio '
+                  'de 2025 até 08:16:38 de 15 de março de 2026. A versão 5393, Rio de Janeiro, vale '
+                  'a partir desse momento, sem fim. Uma venda em 11 de março aponta para a versão '
+                  '3133, porque aconteceu enquanto essa versão era verdade.',
+            v1='chave 3133 · São Paulo', v2='chave 5393 · Rio de Janeiro', open_='ainda vale',
+            sale='venda, 11 de março', moved='mudou em 15 de março, 08:16:38',
+            start='1º de maio de 2025',
+            cap='O fim de uma versão é o começo da próxima. Um fato é ligado à versão cujo intervalo '
+                'contém o momento da venda.')}[lang]
+    f = Fig('l07-scd2', 720, 220, t['label'])
+    x0, xm, x1, y = 40, 470, 690, 110
+    f.line(x0, y + 50, x1, y + 50, stroke='--paper-dim', arrow=True)
+    f.rect(x0, y, xm - x0, 30, stroke='--wire', fill='--panel', rx=4)
+    f.text((x0 + xm) / 2, y + 15, t['v1'], size=10.5, weight='600')
+    f.rect(xm, y, x1 - xm - 10, 30, stroke='--phosphor', fill='--scan', rx=4, dash='5 3')
+    f.text((xm + x1 - 10) / 2, y + 15, t['v2'], size=10.5, weight='600')
+    f.text(x1 - 12, y - 10, t['open_'], size=10, fill='--paper-dim', anchor='end')
+    f.line(xm, y - 30, xm, y + 56, stroke='--amber', dash='4 3')
+    f.text(xm, y - 38, t['moved'], size=10, fill='--amber')
+    sx = xm - 70
+    f.circle(sx, y + 50, 6, fill='--phosphor')
+    f.text(sx, y + 72, t['sale'], size=10)
+    f.line(sx, y + 44, sx, y + 32, stroke='--phosphor', width=1.4, arrow=True)
+    f.text(x0, y + 72, t['start'], size=10, fill='--paper-dim', anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
