@@ -1,6 +1,6 @@
 ---
 title: Losing one cable of the bundle
-version: 1
+version: 2
 ---
 
 In lesson 20 a pulled cable cost a ping half a minute, because spanning tree had to walk a blocked
@@ -11,7 +11,7 @@ that went dead.
 ## Pulling e1 while a ping runs
 
 On `pc1`, a ping to `pc3` was started, two packets a second for ten seconds. Two seconds in, cable
-`e1` was pulled, by setting `sw2`'s end of it down. The ping printed its summary when it finished,
+`e1` was pulled, by setting `sw2`'s end of it down: `ip link set e1 down` at a root prompt on sw2. The ping printed its summary when it finished,
 and then `sw1` was asked about its members:
 
 ```
