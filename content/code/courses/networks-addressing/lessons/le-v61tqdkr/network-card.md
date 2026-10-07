@@ -1,6 +1,6 @@
 ---
 title: "The network card: where the cable meets the computer"
-version: 1
+version: 2
 ---
 
 Every device in lesson 1 has network cards, and so does every computer that talks to them. **A
@@ -11,7 +11,8 @@ own machine.
 
 The common picture is a board plugged into a slot. That still exists, but most cards today are a
 chip on the main board, a radio inside a laptop, or, as in this lab, no hardware at all. To the
-operating system they look the same: an interface with a name, an address and counters. Here is
+operating system they look the same: an interface with a name, an address and counters. This
+lesson runs on lesson 1's office, built again with `sudo bash ~/netlab/netlab.sh up office`. Here is
 pc1's:
 
 ```

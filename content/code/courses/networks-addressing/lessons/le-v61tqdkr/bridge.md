@@ -1,6 +1,6 @@
 ---
 title: "The bridge: what a switch is underneath"
-version: 1
+version: 2
 ---
 
 Before switches, an Ethernet that had grown too busy was cut in two and the halves were joined by a
@@ -23,8 +23,8 @@ root@sw1:~# bridge link show
 root@sw1:~# bridge fdb show br br0 dynamic
 ```
 
-Five ports, `master br0`, and an empty table of learnt addresses. The lab emptied it just before
-this block, so you can watch it learn. pc1 pings the server, then pc2 does:
+Five ports, `master br0`, and an empty table of learnt addresses. It was emptied just before this
+block with `bridge fdb flush dev br0 dynamic`, so you can watch it learn. pc1 pings the server, then pc2 does:
 
 ```
 ana@pc1:~$ ping -c 1 -q 10.20.10.10

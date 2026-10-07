@@ -1,6 +1,6 @@
 ---
 title: "A placa de rede: onde o cabo encontra o computador"
-version: 1
+version: 2
 ---
 
 Todo equipamento da aula 1 tem placas de rede, e todo computador que conversa com eles também.
@@ -11,7 +11,8 @@ camadas 1 e 2 ao mesmo tempo: ela produz o sinal, e decide quais quadros são da
 A imagem comum é uma placa encaixada num slot. Isso ainda existe, mas hoje a maioria das placas é
 um chip na placa-mãe, um rádio dentro de um laptop, ou, como neste laboratório, hardware nenhum.
 Para o sistema operacional todas parecem iguais: uma interface com nome, endereço e contadores. Esta
-é a do pc1:
+aula roda no escritório da aula 1, montado de novo com `sudo bash ~/netlab/netlab.sh up office`.
+Esta é a do pc1:
 
 ```
 ana@pc1:~$ ip link show eth0
