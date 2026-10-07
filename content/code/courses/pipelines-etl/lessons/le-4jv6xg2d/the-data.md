@@ -1,3 +1,80 @@
+---
+title: The shop's database and its data
+version: 1
+---
+
+**Every number in this course comes from the next two files, so they have to be exact.** Copy them
+rather than retyping them. You do not need to read the generator to follow the lessons, but each
+oddity a later lesson finds in the data, a duplicated event or one that arrives late, was put there
+by a line of it, on purpose.
+
+## shop.sql
+
+The operational database: the shops, the books, the customers, and the orders with their lines and
+payments. Save it as `~/pontofinal/shop.sql`:
+
+```sql
+-- The operational database of Ponto Final, the source every pipeline in the
+-- course reads. The tills and the website write it; nothing in this course
+-- does, except `shop day` playing back a day of trade.
+CREATE TABLE shops (
+  shop_id   integer PRIMARY KEY,
+  name      text NOT NULL,
+  city      text,
+  state     text,
+  channel   text NOT NULL CHECK (channel IN ('store', 'online'))
+);
+CREATE TABLE books (
+  book_id          integer PRIMARY KEY,
+  isbn             text NOT NULL UNIQUE,
+  title            text NOT NULL,
+  category         text NOT NULL,
+  publisher        text NOT NULL,
+  list_price_cents integer NOT NULL CHECK (list_price_cents > 0),
+  updated_at       timestamptz NOT NULL
+);
+CREATE TABLE customers (
+  customer_id integer PRIMARY KEY,
+  name        text NOT NULL,
+  email       text NOT NULL UNIQUE,
+  city        text NOT NULL,
+  state       text NOT NULL,
+  created_at  timestamptz NOT NULL,
+  updated_at  timestamptz NOT NULL
+);
+CREATE TABLE orders (
+  order_id    integer PRIMARY KEY,
+  shop_id     integer NOT NULL REFERENCES shops,
+  customer_id integer REFERENCES customers,
+  ordered_at  timestamptz NOT NULL,
+  status      text NOT NULL CHECK (status IN ('completed', 'cancelled', 'refunded')),
+  updated_at  timestamptz NOT NULL
+);
+CREATE INDEX orders_updated_at ON orders (updated_at);
+CREATE TABLE order_lines (
+  order_id         integer NOT NULL REFERENCES orders,
+  line_no          integer NOT NULL,
+  book_id          integer NOT NULL REFERENCES books,
+  quantity         integer NOT NULL CHECK (quantity > 0),
+  unit_price_cents integer NOT NULL CHECK (unit_price_cents > 0),
+  PRIMARY KEY (order_id, line_no)
+);
+CREATE TABLE payments (
+  payment_id   integer PRIMARY KEY,
+  order_id     integer NOT NULL REFERENCES orders,
+  method       text NOT NULL,
+  amount_cents integer NOT NULL,
+  paid_at      timestamptz NOT NULL
+);
+```
+
+## generate.py
+
+Three months of trade at Ponto Final, drawn a day at a time. It writes the shop as it stood on the
+night of 28 February and every day of March as the SQL the tills ran, plus the website's events,
+the distributor's stock files and the publishers' prices. Save it as `~/pontofinal/generate.py`:
+
+```python
 """Three months of trade at Ponto Final, a chain of bookshops that does not exist.
 
 The same shops as warehouse-modeling, and a smaller, newer slice of their life:
@@ -18,7 +95,7 @@ writes into OUT:
   events/<date>.jsonl   the website's click events for that day, as its
                         collector wrote them: a few duplicated, a few late
   stock/<date>.csv      the distributor's stock file for that day
-  prices.json           the publishers' list prices the lab's API serves
+  prices.json           the publishers' list prices prices_api.py serves
 
 Everything is drawn from random.Random with fixed seeds, so the same files
 come out on every run and on every machine. Nothing here is real: the people
@@ -391,3 +468,7 @@ with open(os.path.join(OUT, "prices.json"), "w", encoding="utf-8") as f:
     json.dump(prices, f, indent=0)
 print(f"customers {len(s_customers)}, orders {len(s_orders)}, lines {len(s_lines)} at {CUT}; "
       f"{len(day_sql)} days of changes")
+```
+
+**It uses fixed seeds, so it draws the same three months on every machine.** That is what lets a
+transcript in lesson 12 show the number your own terminal will show.

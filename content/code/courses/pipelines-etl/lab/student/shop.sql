@@ -1,6 +1,6 @@
 -- The operational database of Ponto Final, the source every pipeline in the
 -- course reads. The tills and the website write it; nothing in this course
--- does, except lab.sh playing back a day of trade.
+-- does, except `shop day` playing back a day of trade.
 CREATE TABLE shops (
   shop_id   integer PRIMARY KEY,
   name      text NOT NULL,

@@ -8,10 +8,13 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo bash captures.sh
 #
-# STAGED, and not typed in the lesson: `lab.sh reset` before the first block,
-# which puts the shop back to the night of 28 February; and the replay of the
-# website in the streaming block, started in the background by this script
-# as `python ~/lab/lab/replay.py`, which the lesson names.
+# STAGED, and not typed in the lesson: the packages and the user the lesson
+# installs by hand, which the recording machine already had; the files the lesson tells ana to write
+# into ~/pontofinal are copied there from lab/student/ by `lab.sh up`, which
+# then runs setup.sh exactly as the lesson does; `shop reset` before the
+# versions block, which puts the shop back to the night of 28 February; and
+# the replay of the website in the streaming block, started in the background
+# by this script as `python ~/pontofinal/replay.py`, which the lesson shows.
 #
 # Timings and clock times are one run each, on a machine shared with other
 # work, and move from run to run; the lesson says so where it quotes one.
@@ -19,6 +22,17 @@
 # Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, Airflow 3.3.2,
 # dbt-core 1.12.5, 4 cores, TZ=America/Sao_Paulo, on 2026-10-07.
 . "$(dirname "$0")/../../capture.sh"
+
+# A first build: what an earlier run left of the database, the data and the
+# clock is removed, so setup.sh draws and loads them as it does on a new machine.
+[ -x /usr/local/bin/shop ] && lab down >/dev/null 2>&1
+rm -rf /var/lib/etl-pg /var/lib/etl-run /var/lib/etl-data /var/lib/etl-api
+block setup
+printf 'ana@vm:~$ sudo bash ~/pontofinal/setup.sh\n'
+lab up 2>&1
+for f in setup.sh shop.sh shop.sql generate.py replay.py; do
+  code "file-${f/./-}" "/home/ana/pontofinal/$f"
+done
 lab reset >/dev/null
 
 block versions
@@ -119,7 +133,7 @@ print(f"stopped at byte {pos}")
 PY
 code consume-py consume.py
 lab exec 'rm -f landing/stream.jsonl stream.offset; touch landing/stream.jsonl'
-lab exec 'setsid python ~/lab/lab/replay.py landing/events/2026-03-01.jsonl landing/stream.jsonl 600 </dev/null >/dev/null 2>&1 & echo $! > /home/ana/etl/replay.pid'
+lab exec 'setsid python ~/pontofinal/replay.py landing/events/2026-03-01.jsonl landing/stream.jsonl 600 </dev/null >/dev/null 2>&1 & echo $! > /home/ana/etl/replay.pid'
 sleep 1
 block stream
 on 'python consume.py landing/stream.jsonl stream.offset 7'

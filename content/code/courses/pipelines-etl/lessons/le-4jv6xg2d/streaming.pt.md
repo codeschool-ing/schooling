@@ -8,10 +8,48 @@ origem é algo que nunca fecha — um site gravando um clique a cada vez que alg
 gravando uma venda, um sensor gravando uma leitura — e o consumidor acompanha, um evento ou um
 punhado de cada vez.
 
-O site do laboratório escreve os seus eventos num arquivo, um objeto JSON por linha. Durante o dia
-o arquivo cresce; o laboratório reproduz isso com `~/lab/lab/replay.py`, que acrescenta cada evento
-do dia a `landing/stream.jsonl` quando chega a hora dele, seiscentas vezes mais rápido que o dia de
-onde veio. O consumidor da Ana lê o arquivo enquanto ele cresce:
+O site do laboratório escreve os seus eventos num arquivo, um objeto JSON por linha, e durante o
+dia o arquivo cresce. O `shop day` entrega o arquivo do dia inteiro, como um batch o receberia, então
+para ver um arquivo crescer é preciso algo que o escreva uma linha por vez. Salve isto como
+`~/pontofinal/replay.py`:
+
+```python
+"""Replay a day of the website's events as if it were happening now.
+
+    python3 replay.py EVENTS.jsonl OUT.jsonl [SPEED]
+
+appends each event of EVENTS.jsonl to OUT.jsonl when its moment comes, with
+`occurred_at` moved to today, SPEED times faster than the day it came from (60
+by default: a minute of the shop's day each second). It is the lab's stand-in
+for a website that is open: what a streaming consumer reads is a file that
+keeps growing. Written for the course; standard library only.
+"""
+import datetime as dt
+import json
+import sys
+import time
+
+src, out = sys.argv[1], sys.argv[2]
+speed = float(sys.argv[3]) if len(sys.argv) > 3 else 60.0
+events = [json.loads(line) for line in open(src, encoding="utf-8")]
+first = dt.datetime.fromisoformat(events[0]["occurred_at"])
+start = time.time()
+now0 = dt.datetime.now().astimezone()
+with open(out, "a", encoding="utf-8") as f:
+    for ev in events:
+        due = (dt.datetime.fromisoformat(ev["occurred_at"]) - first).total_seconds() / speed
+        wait = start + due - time.time()
+        if wait > 0:
+            time.sleep(wait)
+        ev["occurred_at"] = (now0 + dt.timedelta(seconds=due)).isoformat(timespec="seconds")
+        f.write(json.dumps(ev, separators=(",", ":")) + "\n")
+        f.flush()
+```
+
+A Ana o inicia em segundo plano, `python ~/pontofinal/replay.py landing/events/2026-03-01.jsonl
+landing/stream.jsonl 600 &`, e ele acrescenta cada evento do dia a `landing/stream.jsonl` quando
+chega a hora dele, seiscentas vezes mais rápido que o dia de onde veio. O consumidor dela lê o
+arquivo enquanto ele cresce:
 
 ```schooling-example
 {
@@ -57,15 +95,15 @@ Ela o inicia por sete segundos, para, espera três, e inicia de novo:
 ```
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 7
 starting at byte 0
-23:52:38  74 events, 5 purchases, at most 1.6 s behind
-23:52:40  117 events, 5 purchases, at most 1.1 s behind
-23:52:42  155 events, 6 purchases, at most 1.0 s behind
-stopped at byte 19649
+05:20:34  74 events, 5 purchases, at most 1.5 s behind
+05:20:36  116 events, 5 purchases, at most 1.1 s behind
+05:20:38  153 events, 6 purchases, at most 1.0 s behind
+stopped at byte 19764
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 5
-starting at byte 19649
-23:52:48  97 events, 4 purchases, at most 3.7 s behind
-23:52:50  130 events, 6 purchases, at most 1.0 s behind
-stopped at byte 36377
+starting at byte 19764
+05:20:44  96 events, 4 purchases, at most 3.5 s behind
+05:20:46  131 events, 6 purchases, at most 0.9 s behind
+stopped at byte 36613
 ```
 
 Os horários são os da gravação, e uma execução sua vai mostrar os seus. Duas coisas nela importam:
@@ -74,8 +112,8 @@ Os horários são os da gravação, e uma execução sua vai mostrar os seus. Du
   acontecer, não na manhã seguinte. O piso de um segundo é obra da reprodução: ela escreve
   `occurred_at` em segundos inteiros, então um evento pode parecer até um segundo mais velho do que
   é.
-- **O reinício não começou de novo.** A segunda execução começou no byte 19649, onde a primeira
-  tinha parado, e a sua primeira janela estava 3,7 segundos atrasada: os três segundos de eventos que
+- **O reinício não começou de novo.** A segunda execução começou no byte 19764, onde a primeira
+  tinha parado, e a sua primeira janela estava 3,5 segundos atrasada: os três segundos de eventos que
   chegaram enquanto nada lia, alcançados de uma vez.
 
 ## O que o streaming custa

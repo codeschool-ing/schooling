@@ -1,4 +1,4 @@
-"""The publishers' price API, as the lab serves it on 127.0.0.1:8081.
+"""The publishers' price API, as `shop api` serves it on 127.0.0.1:8081.
 
 Written for the course. It behaves the way the APIs a pipeline meets behave,
 on purpose and nothing more:
@@ -13,7 +13,7 @@ requests inside one second get 429 with a Retry-After. While the file
 /var/lib/etl-api/outage exists it answers 503 to everything, which is how
 lesson 10 has a source go down at three in the morning.
 
-        python3 api.py PRICES.json PORT CLOCK
+        python3 prices_api.py PRICES.json PORT CLOCK
 
 Standard library only.
 """
@@ -29,7 +29,7 @@ from urllib.parse import parse_qs, urlparse
 
 PRICES = json.load(open(sys.argv[1], encoding="utf-8"))
 PORT = int(sys.argv[2])
-CLOCK = sys.argv[3]  # the file lab.sh keeps the last day played in
+CLOCK = sys.argv[3]  # the file `shop day` keeps the last day played in
 KEY = "ponto-final-lab"
 OUTAGE = "/var/lib/etl-api/outage"
 LIMIT = 5

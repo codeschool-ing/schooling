@@ -8,10 +8,47 @@ is something that never closes — a website writing a click every time somebody
 writing a sale, a sensor writing a reading — and the consumer keeps up with it, one event or a
 handful at a time.
 
-The lab's website writes its events to a file, one JSON object per line. During the day the file
-grows; the lab plays that back with `~/lab/lab/replay.py`, which appends each of the day's events to
-`landing/stream.jsonl` when its moment comes, six hundred times faster than the day it came from.
-Ana's consumer reads the file as it grows:
+The lab's website writes its events to a file, one JSON object per line, and during the day the
+file grows. `shop day` delivers the day's file whole, the way a batch would receive it, so to watch
+one grow you need something that writes it a line at a time. Save this as `~/pontofinal/replay.py`:
+
+```python
+"""Replay a day of the website's events as if it were happening now.
+
+    python3 replay.py EVENTS.jsonl OUT.jsonl [SPEED]
+
+appends each event of EVENTS.jsonl to OUT.jsonl when its moment comes, with
+`occurred_at` moved to today, SPEED times faster than the day it came from (60
+by default: a minute of the shop's day each second). It is the lab's stand-in
+for a website that is open: what a streaming consumer reads is a file that
+keeps growing. Written for the course; standard library only.
+"""
+import datetime as dt
+import json
+import sys
+import time
+
+src, out = sys.argv[1], sys.argv[2]
+speed = float(sys.argv[3]) if len(sys.argv) > 3 else 60.0
+events = [json.loads(line) for line in open(src, encoding="utf-8")]
+first = dt.datetime.fromisoformat(events[0]["occurred_at"])
+start = time.time()
+now0 = dt.datetime.now().astimezone()
+with open(out, "a", encoding="utf-8") as f:
+    for ev in events:
+        due = (dt.datetime.fromisoformat(ev["occurred_at"]) - first).total_seconds() / speed
+        wait = start + due - time.time()
+        if wait > 0:
+            time.sleep(wait)
+        ev["occurred_at"] = (now0 + dt.timedelta(seconds=due)).isoformat(timespec="seconds")
+        f.write(json.dumps(ev, separators=(",", ":")) + "\n")
+        f.flush()
+```
+
+Ana starts it in the background, `python ~/pontofinal/replay.py landing/events/2026-03-01.jsonl
+landing/stream.jsonl 600 &`, so it appends each of the day's events to `landing/stream.jsonl` when
+its moment comes, six hundred times faster than the day it came from. Her consumer reads the file
+as it grows:
 
 ```schooling-example
 {
@@ -57,15 +94,15 @@ She starts it for seven seconds, stops it, waits three, and starts it again:
 ```
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 7
 starting at byte 0
-23:52:38  74 events, 5 purchases, at most 1.6 s behind
-23:52:40  117 events, 5 purchases, at most 1.1 s behind
-23:52:42  155 events, 6 purchases, at most 1.0 s behind
-stopped at byte 19649
+05:20:34  74 events, 5 purchases, at most 1.5 s behind
+05:20:36  116 events, 5 purchases, at most 1.1 s behind
+05:20:38  153 events, 6 purchases, at most 1.0 s behind
+stopped at byte 19764
 ana@vm:~/etl$ python consume.py landing/stream.jsonl stream.offset 5
-starting at byte 19649
-23:52:48  97 events, 4 purchases, at most 3.7 s behind
-23:52:50  130 events, 6 purchases, at most 1.0 s behind
-stopped at byte 36377
+starting at byte 19764
+05:20:44  96 events, 4 purchases, at most 3.5 s behind
+05:20:46  131 events, 6 purchases, at most 0.9 s behind
+stopped at byte 36613
 ```
 
 The clock times are the recording's own, and a run of yours will show yours. Two things in it are
@@ -74,8 +111,8 @@ the point:
 - **The lag is about a second.** A purchase is known to the pipeline a second after it happens, not
   the next morning. The one-second floor is the replay's doing: it writes `occurred_at` to the
   whole second, so an event can look up to a second older than it is.
-- **The restart did not start again.** The second run began at byte 19649, where the first had
-  stopped, and its first window was 3.7 seconds behind: the three seconds of events that arrived
+- **The restart did not start again.** The second run began at byte 19764, where the first had
+  stopped, and its first window was 3.5 seconds behind: the three seconds of events that arrived
   while nothing was reading, caught up in one go.
 
 ## What streaming costs

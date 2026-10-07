@@ -18,10 +18,10 @@ ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SE
 (1 row)
 ```
 
-Março ainda não aconteceu. O `lab.sh day` toca um dia dele:
+Março ainda não aconteceu. O `shop day` toca um dia dele:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-01
+ana@vm:~/etl$ sudo shop day 2026-03-01
 ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SELECT count(*) FROM orders) AS orders, (SELECT max(ordered_at) FROM orders) AS last_order"
  customers | orders |       last_order       
 -----------+--------+------------------------
@@ -31,11 +31,11 @@ ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SE
 ana@vm:~/etl$ ls -l landing/events inbox
 inbox:
 total 52
--rw-r--r-- 1 ana ana 51310 Oct  6 23:52 stock_2026-03-01.csv
+-rw-r--r-- 1 ana ana 51310 Oct  7 05:20 stock_2026-03-01.csv
 
 landing/events:
 total 316
--rw-r--r-- 1 ana ana 321982 Oct  6 23:52 2026-03-01.jsonl
+-rw-r--r-- 1 ana ana 321982 Oct  7 05:20 2026-03-01.jsonl
 ```
 
 Dezenove clientes novos e 183 pedidos novos. Dois arquivos também apareceram: os eventos de clique
@@ -69,13 +69,13 @@ mudanças assim sem ler o banco inteiro de novo.
 ## O relógio só anda para a frente
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-01
+ana@vm:~/etl$ sudo shop day 2026-03-01
 the shop has lived up to 2026-03-01: the next day to play is 2026-03-02
 ```
 
 Um dia pode ser tocado uma vez, em ordem, como no mundo. **Para voltar, você reinicia** — o
-`lab.sh reset` devolve a loja ao dia 28 e esvazia tudo o que os pipelines escreveram. O `lab.sh
-until 2026-03-07` toca uma semana de uma vez, quando uma lição precisa de histórico para trabalhar.
+`sudo shop reset` devolve a loja ao dia 28 e esvazia tudo o que os pipelines escreveram. O `sudo
+shop until 2026-03-07` toca uma semana de uma vez, quando uma lição precisa de histórico para trabalhar.
 
 Essa é a resposta do laboratório a um problema que nenhum outro curso daqui tem: **um job agendado
 precisa que o tempo passe**, e ninguém espera um mês para ver um relatório mensal rodar. O tempo da

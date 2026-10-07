@@ -18,10 +18,10 @@ ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SE
 (1 row)
 ```
 
-March has not happened yet. `lab.sh day` plays one day of it:
+March has not happened yet. `shop day` plays one day of it:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-01
+ana@vm:~/etl$ sudo shop day 2026-03-01
 ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SELECT count(*) FROM orders) AS orders, (SELECT max(ordered_at) FROM orders) AS last_order"
  customers | orders |       last_order       
 -----------+--------+------------------------
@@ -31,11 +31,11 @@ ana@vm:~/etl$ psql -c "SELECT (SELECT count(*) FROM customers) AS customers, (SE
 ana@vm:~/etl$ ls -l landing/events inbox
 inbox:
 total 52
--rw-r--r-- 1 ana ana 51310 Oct  6 23:52 stock_2026-03-01.csv
+-rw-r--r-- 1 ana ana 51310 Oct  7 05:20 stock_2026-03-01.csv
 
 landing/events:
 total 316
--rw-r--r-- 1 ana ana 321982 Oct  6 23:52 2026-03-01.jsonl
+-rw-r--r-- 1 ana ana 321982 Oct  7 05:20 2026-03-01.jsonl
 ```
 
 Nineteen new customers and 183 new orders. Two files have also appeared: the website's click
@@ -68,12 +68,12 @@ whole database again.
 ## The clock only goes forward
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-01
+ana@vm:~/etl$ sudo shop day 2026-03-01
 the shop has lived up to 2026-03-01: the next day to play is 2026-03-02
 ```
 
-A day can be played once, in order, as in the world. **To go back, you reset** — `lab.sh reset`
-returns the shop to the 28th and empties everything the pipelines wrote. `lab.sh until
+A day can be played once, in order, as in the world. **To go back, you reset** — `sudo shop reset`
+returns the shop to the 28th and empties everything the pipelines wrote. `sudo shop until
 2026-03-07` plays a week in one go when a lesson needs history to work on.
 
 This is the lab's answer to a problem no other course here has: **a scheduled job needs time to

@@ -48,9 +48,9 @@ Ela o roda para o dia que o laboratório acabou de tocar:
 ana@vm:~/etl$ time python batch.py 2026-03-01
 2026-03-01: 7 shops, 183 orders
 
-real	0m0.190s
-user	0m0.159s
-sys	0m0.016s
+real	0m0.221s
+user	0m0.172s
+sys	0m0.032s
 ana@vm:~/etl$ psql -d wh -c "SELECT * FROM daily_sales ORDER BY shop_id"
     day     | shop_id | orders | revenue_cents 
 ------------+---------+--------+---------------

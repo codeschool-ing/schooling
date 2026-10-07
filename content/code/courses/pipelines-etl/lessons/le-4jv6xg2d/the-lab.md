@@ -12,66 +12,56 @@ The lab is one Linux machine with these on it:
 - **PostgreSQL 16**, with three databases: `shop`, the operational database the tills and the
   website write to; `wh`, the warehouse your pipelines will fill; and `airflow`, where Airflow keeps
   its own records from lesson 8 on.
-- **Python 3**, with one virtual environment per tool. Airflow, dbt, Prefect and Dagster each pin
+- **Python 3.13**, with one virtual environment per tool. Airflow, dbt, Prefect and Dagster each pin
   their own versions of the same libraries, and in one environment they would fight.
 - **The shop's data**, three months of trade drawn by a generator with fixed seeds, so your numbers
   are the ones printed here.
-- **A small price API**, written for the course, that pages its answers, limits how fast you may
-  ask, and can be made to fail on purpose.
+- **A small price API**, written in lesson 3, that pages its answers, limits how fast you may ask,
+  and can be made to fail on purpose.
 
-All of it is built by one script, `lab.sh`, which comes with the course material. Copy the `lab`
-directory to your home directory and run it once:
-
-```
-ana@vm:~$ sudo bash ~/lab/lab.sh up
-```
-
-It creates a user called `ana`, installs everything under `/opt/etl`, generates the data and
-loads the shop. With the packages already downloaded once it took about a minute and a half on
-the machine the course was recorded on; the first time, most of the wait is the download. Then
-check what you have:
-
-```
-ana@vm:~/etl$ psql --version
-psql (PostgreSQL) 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
-ana@vm:~/etl$ python --version
-Python 3.13.16
-ana@vm:~/etl$ airflow version
-3.3.2
-ana@vm:~/etl$ dbt --version | head -2
-Core:
-  - installed: 1.12.5
-```
-
-And what it cost:
-
-```
-ana@vm:~/etl$ du -sh /var/lib/etl-data /var/lib/etl-pg /opt/etl
-19M	/var/lib/etl-data
-79M	/var/lib/etl-pg
-1.3G	/opt/etl
-```
-
-**The data is small and the tools are not.** Nineteen megabytes of trade and 1.3 GB of software
-to move it. That ratio is normal for a laptop and the opposite of production, and lesson 19 is
-where the data gets large enough to matter.
+**All of it comes from four files this lesson shows you whole**, which you save in a directory
+called `~/pontofinal`: two scripts in the next section, and the shop's database and its data in the
+section after. One of the scripts builds everything; the section after those says how to run it.
 
 ## Three ways to run it
 
 **In a virtual machine — recommended.** An Ubuntu 24.04 virtual machine with 4 GB of memory and
 10 GB of free disk. From lesson 8 Airflow runs four processes at once, and on the recording machine
-they held about 1.4 GB of memory between them before any DAG had run. The script adds a user, a
+they held about 1.4 GB of memory between them before any DAG had run. The setup adds a user, a
 database server and six Python environments, which is exactly the kind of change you do not want
-on the computer you work on. `virtualization` lesson 4
-builds one in VirtualBox if you have not.
+on the computer you work on. `virtualization` lesson 4 builds one in VirtualBox if you have not.
 
-**Installed on your own Linux computer.** Read `lab.sh` and do what it does by hand: install
-PostgreSQL 16, create the three databases, make the virtual environments with the versions it
-pins. It is under three hundred lines and every step is commented. This is the path that teaches the
-most and breaks the most.
+**Installed on your own Linux computer.** The same steps, on the computer itself. Everything goes
+under `/opt/etl`, `/var/lib/etl-*` and a user called `ana`, so it stays apart from your own files,
+but it does change the machine, and taking it out again is yours to do by hand. This is the path
+that teaches the most and breaks the most.
 
 **In containers, for the tools alone.** Airflow publishes an official container image and a
 Compose file, and dbt runs in any Python image. That gets you the software but not this lab — the
-shop, its data and the day-by-day clock are in `lab.sh` — and the course was not recorded that
-way. It is named here for the student who already works in containers and wants to bring the
+shop, its data and the day-by-day clock are in the four files — and the course was not recorded
+that way. It is named here for the student who already works in containers and wants to bring the
 lessons into that setup.
+
+## Before the files
+
+On Ubuntu 24.04, the packages come first. Ubuntu 24.04's own Python is 3.12 and the course was
+recorded on 3.13, which the deadsnakes PPA provides:
+
+```sh
+sudo add-apt-repository -y ppa:deadsnakes/ppa
+sudo apt-get install -y python3.13-venv postgresql-16 make git curl
+```
+
+Then the user. **Every transcript in this course is `ana`'s, on a machine called `vm`**, so making
+the same user makes every path in them yours as well. She needs `sudo`, because `shop`, the
+command the next section installs, runs as root:
+
+```sh
+sudo adduser ana
+sudo usermod -aG sudo ana
+sudo -iu ana
+mkdir ~/pontofinal
+```
+
+Those were not captured: the recording machine already had the packages and the user. From here on
+every command is `ana`'s, and every transcript is a capture.
