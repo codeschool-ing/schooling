@@ -1,13 +1,14 @@
 ---
 title: When a run goes wrong, and who notices
-version: 1
+version: 2
 ---
 
 A trace that ends in `done` looks like success, and the loop has no other word for it. **The loop
 can check the shape of every turn and the limits on every call; it cannot check that the reasoning
-is right.** Five runs, each broken in a different place, show which failures land on which side of
-that line. All the turns were written by the course; the tool replies and the loop's verdicts are
-what `agent` printed.
+is right.** Six runs, each broken in a different place, show which failures land on which side of
+that line. One is live; the turns of the other five were written by the course and played back, so
+that each failure shows on its own. The tool replies and the loop's verdicts are what `agent`
+printed.
 
 ## An observation the model ignores
 
@@ -51,6 +52,41 @@ step 1
   model> Action: calculator(4 * 27.90)
 stopped: the reply has neither an Action nor an Answer
 ```
+
+The model in this course did the same thing for real, with the first version of the ReAct prompt,
+which described the tools by placeholders instead of examples:
+
+```
+ana@lab:~/pe$ diff prompts/react-v1.txt prompts/react.txt
+2,4c2,4
+<   search[words]        the best matching line of the café's staff handbook
+<   calculator[sum]      arithmetic with numbers and + - * /
+< Use this format, and write one Action at a time:
+---
+>   search[refund approval]   the best matching line of the café's staff handbook
+>   calculator[3 * 2.50]      arithmetic with numbers and + - * /
+> Use this format. Write one Thought and one Action, then stop and wait:
+6,8c6,9
+< Action: one tool call
+< Observation: (the tool's reply is written here for you)
+< ... repeat as needed, then:
+---
+> Action: search[...] or calculator[...]
+> The program then writes an Observation line with the tool's reply. When you
+> have every fact you need, write:
+> Thought: why you have the answer
+ana@lab:~/pe$ agent --live "Four soups of the day, R\$ 27.90 each, paid by card, all served cold. How much goes back, how, and does anybody have to approve it?" --prompt prompts/react-v1.txt --max-steps 6
+tools allowed: calculator, reviews, search, today
+step 1
+  model> Thought: I need to calculate the total cost of the soups and then find out how much I need to return, considering that it was paid by card.
+  model> 
+  model> Action: calculator[sum] with the cost of each soup (R$ 27.90) and the number of soups (4)
+stopped: the reply has neither an Action nor an Answer
+```
+
+It copied the placeholder, `calculator[sum]`, and then explained in words what it wanted summed.
+The loop could not read it and stopped. The second version of the prompt, the one in the section
+before, shows a real call for each tool instead, and the model's Actions became readable.
 
 **Stopping is the right response**: guessing what a malformed line meant is how a loop ends up
 running a call nobody wrote. A real system would send the model a short message saying what the

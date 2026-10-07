@@ -1,13 +1,14 @@
 ---
 title: Quando uma execução dá errado, e quem percebe
-version: 1
+version: 2
 ---
 
 Um registro que termina em `done` parece sucesso, e o laço não tem outra palavra para isso. **O laço
 consegue conferir a forma de cada turno e os limites de cada chamada; não consegue conferir se o
-raciocínio está certo.** Cinco execuções, cada uma quebrada num lugar diferente, mostram que falhas
-caem de cada lado dessa linha. Todos os turnos foram escritos pelo curso; as respostas das
-ferramentas e os veredictos do laço são o que o `agent` imprimiu.
+raciocínio está certo.** Seis execuções, cada uma quebrada num lugar diferente, mostram que falhas
+caem de cada lado dessa linha. Uma é ao vivo; os turnos das outras cinco foram escritos pelo curso e
+reproduzidos, para que cada falha apareça sozinha. As respostas das ferramentas e os veredictos do
+laço são o que o `agent` imprimiu.
 
 ## Uma observação que o modelo ignora
 
@@ -52,6 +53,41 @@ step 1
   model> Action: calculator(4 * 27.90)
 stopped: the reply has neither an Action nor an Answer
 ```
+
+O modelo deste curso fez a mesma coisa de verdade, com a primeira versão do prompt de ReAct, que
+descrevia as ferramentas por marcadores em vez de exemplos:
+
+```
+ana@lab:~/pe$ diff prompts/react-v1.txt prompts/react.txt
+2,4c2,4
+<   search[words]        the best matching line of the café's staff handbook
+<   calculator[sum]      arithmetic with numbers and + - * /
+< Use this format, and write one Action at a time:
+---
+>   search[refund approval]   the best matching line of the café's staff handbook
+>   calculator[3 * 2.50]      arithmetic with numbers and + - * /
+> Use this format. Write one Thought and one Action, then stop and wait:
+6,8c6,9
+< Action: one tool call
+< Observation: (the tool's reply is written here for you)
+< ... repeat as needed, then:
+---
+> Action: search[...] or calculator[...]
+> The program then writes an Observation line with the tool's reply. When you
+> have every fact you need, write:
+> Thought: why you have the answer
+ana@lab:~/pe$ agent --live "Four soups of the day, R\$ 27.90 each, paid by card, all served cold. How much goes back, how, and does anybody have to approve it?" --prompt prompts/react-v1.txt --max-steps 6
+tools allowed: calculator, reviews, search, today
+step 1
+  model> Thought: I need to calculate the total cost of the soups and then find out how much I need to return, considering that it was paid by card.
+  model> 
+  model> Action: calculator[sum] with the cost of each soup (R$ 27.90) and the number of soups (4)
+stopped: the reply has neither an Action nor an Answer
+```
+
+Ele copiou o marcador, `calculator[sum]`, e depois explicou em palavras o que queria somar. O laço não
+conseguiu ler e parou. A segunda versão do prompt, a da seção anterior, mostra uma chamada de verdade
+para cada ferramenta, e as Actions do modelo passaram a ser legíveis.
 
 **Parar é a resposta certa**: adivinhar o que uma linha malformada quis dizer é como um laço acaba
 executando uma chamada que ninguém escreveu. Um sistema de verdade mandaria ao modelo uma mensagem
