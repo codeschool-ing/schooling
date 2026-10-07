@@ -37,8 +37,10 @@ Com `--sensitive remove`, a frase é substituída e o resto da mensagem sobreviv
 
 O marcador é de propósito. Apagar a frase sem rastro deixaria o modelo lendo uma freelancer atrasada
 que não dá motivo nenhum, e o resumo seria injusto com ela. O marcador diz ao modelo que houve um
-motivo, e o resumo que o `llama3.2:3b` escreveu na seção anterior diz que ela *"initially mentioned a
-health issue that may have caused a delay"*, que é tudo de que o atendente precisa, e nada sobre qual.
+motivo. **Se o modelo o usa é outra história**: o resumo que o `llama3.2:3b` escreveu na seção anterior
+diz só que ela *"failed to deliver the work on time"*, que é exatamente o resumo injusto que o marcador
+estava ali para evitar. O marcador torna possível um resumo justo, e uma pessoa ainda lê o que o modelo
+fez dele.
 
 ## A lista de palavras vê palavras
 

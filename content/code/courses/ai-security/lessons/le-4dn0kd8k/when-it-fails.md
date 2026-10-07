@@ -3,7 +3,7 @@ title: When the setup fails
 version: 1
 ---
 
-Four failures account for most of it, and each one names itself in the first line it prints. All
+Four failures account for most of it, and **each one names itself in the first line it prints**. All
 four were produced on the machine these lessons were recorded on, the first by accident and the
 others by doing the thing wrong on purpose. A fifth, running out of memory, comes at the end.
 
@@ -31,7 +31,7 @@ ana@lab:~/guard$ guard ask "Say hello in five words."
 ask: cannot reach http://localhost:11434/v1 ([Errno 111] Connection refused). Is Ollama running?
 ana@lab:~$ ollama list
 NAME           ID              SIZE      MODIFIED       
-llama3.2:3b    a80c4f17acd5    2.0 GB    19 minutes ago    
+llama3.2:3b    a80c4f17acd5    2.0 GB    56 minutes ago    
 ```
 
 Both say the same thing in two ways: the program that serves the model is not running, so nothing is
@@ -74,12 +74,12 @@ guard: no tool named 'sufrace' in ~/guard/tools
 
 Three different messages, from three different mistakes:
 
-- **`command not found`** is a terminal opened before the two lines went into `~/.bashrc`, so its
+- `command not found` is a terminal opened before the two lines went into `~/.bashrc`, so its
   `PATH` does not include `~/guard/bin`. Open a new terminal, or type `source ~/.bashrc` in the one
   you have. If that does not fix it, `tail -2 ~/.bashrc` shows whether the lines are there.
-- **`Permission denied`** is `bin/guard` saved without `chmod +x`: the file is there and the shell
+- `Permission denied` is `bin/guard` saved without `chmod +x`: the file is there and the shell
   will not run it.
-- **`no tool named`** comes from `guard` itself, which ran and found no program under that name in
+- `no tool named` comes from `guard` itself, which ran and found no program under that name in
   `~/guard/tools`. Either the name is misspelt, as here, or the lesson that prints the program has
   not been done yet. `ls ~/guard/tools` lists what you have.
 
@@ -90,5 +90,5 @@ at the memory `ollama ps` reports against what the computer has free with everyt
 Closing a browser often frees more than the model needs. If it still does not fit, take `llama3.2:1b`
 as described above.
 
-If something fails that is not here, read the first error it printed before anything else. The lines
-after it are usually its consequences.
+If something fails that is not here, **read the first error it printed before anything else.** The
+lines after it are usually its consequences.

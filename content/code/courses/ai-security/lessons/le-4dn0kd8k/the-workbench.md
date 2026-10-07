@@ -117,13 +117,13 @@ if __name__ == "__main__":
 
 ```
 ana@lab:~/guard$ guard ask "Say hello in five words."
-Hello, how are you today?
+Hello from the digital world.
 ana@lab:~/guard$ guard ask "Say hello in five words."
-Hello, how are you today?
+Hello from the digital world.
 ana@lab:~/guard$ guard ask "Say hello in five words." --temperature 0.8 --seed 3
 Hello there, it's nice to meet you.
 ana@lab:~/guard$ guard ask "Say hello in five words." --temperature 0.8 --seed 4
-Hello, it's nice to meet you!
+Hello from the digital realm.
 ```
 
 The first two runs gave the same words, and that is what `--temperature 0`, the default here, is
@@ -147,5 +147,6 @@ the machine, and yours prints your own names.
 - **What the model replied was captured from `llama3.2:3b`, served by Ollama 0.40.0, on
   7 October 2026**, on a computer with no graphics card. Run the same command and you may get the same
   words, or different ones: a different processor does the arithmetic in a different order, and a
-  newer version of the model writes something else. That is not a sign something is wrong. Judge a
+  newer version of the model writes something else. Even on the recording machine, at temperature 0,
+  a few commands gave a different reply on a different run, and the lessons where that happened say so. That is not a sign something is wrong. Judge a
   reply by what the lesson checks in it, never by whether it matches this page.

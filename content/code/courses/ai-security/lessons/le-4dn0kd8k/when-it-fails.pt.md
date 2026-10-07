@@ -3,7 +3,7 @@ title: Quando a instalação falha
 version: 1
 ---
 
-Quatro falhas respondem pela maior parte, e cada uma se apresenta na primeira linha que imprime. As
+Quatro falhas respondem pela maior parte, e **cada uma se apresenta na primeira linha que imprime**. As
 quatro foram produzidas na máquina em que estas aulas foram gravadas, a primeira por acidente e as
 outras fazendo a coisa errada de propósito. Uma quinta, a memória acabar, vem no fim.
 
@@ -31,7 +31,7 @@ ana@lab:~/guard$ guard ask "Say hello in five words."
 ask: cannot reach http://localhost:11434/v1 ([Errno 111] Connection refused). Is Ollama running?
 ana@lab:~$ ollama list
 NAME           ID              SIZE      MODIFIED       
-llama3.2:3b    a80c4f17acd5    2.0 GB    19 minutes ago    
+llama3.2:3b    a80c4f17acd5    2.0 GB    56 minutes ago    
 ```
 
 As duas dizem a mesma coisa de dois jeitos: o programa que serve o modelo não está rodando, então nada
@@ -74,11 +74,11 @@ guard: no tool named 'sufrace' in ~/guard/tools
 
 Três mensagens diferentes, de três erros diferentes:
 
-- **`command not found`** é um terminal aberto antes de as duas linhas entrarem no `~/.bashrc`, então o
+- `command not found` é um terminal aberto antes de as duas linhas entrarem no `~/.bashrc`, então o
   `PATH` dele não inclui `~/guard/bin`. Abra um terminal novo, ou digite `source ~/.bashrc` no que você
   tem. Se isso não resolver, `tail -2 ~/.bashrc` mostra se as linhas estão lá.
-- **`Permission denied`** é o `bin/guard` salvo sem `chmod +x`: o arquivo está lá e o shell não o roda.
-- **`no tool named`** vem do próprio `guard`, que rodou e não achou programa com esse nome em
+- `Permission denied` é o `bin/guard` salvo sem `chmod +x`: o arquivo está lá e o shell não o roda.
+- `no tool named` vem do próprio `guard`, que rodou e não achou programa com esse nome em
   `~/guard/tools`. Ou o nome está errado, como aqui, ou a aula que imprime o programa ainda não foi
   feita. `ls ~/guard/tools` lista o que você tem.
 
@@ -89,5 +89,5 @@ compare a memória que o `ollama ps` informa com o que o computador tem livre co
 Fechar um navegador costuma liberar mais do que o modelo precisa. Se mesmo assim não couber, use o
 `llama3.2:1b` como descrito acima.
 
-Se falhar algo que não está aqui, leia o primeiro erro que ele imprimiu antes de qualquer outra coisa.
+Se falhar algo que não está aqui, **leia o primeiro erro que ele imprimiu antes de qualquer outra coisa.**
 As linhas depois dele costumam ser consequências.

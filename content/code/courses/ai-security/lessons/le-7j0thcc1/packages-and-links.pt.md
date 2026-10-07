@@ -102,23 +102,28 @@ pergunta, e guarde a resposta como veio:
 ```
 ana@lab:~/guard$ guard ask "Which Python packages would I install to generate a Pix QR code for a Brazilian payment, and to validate a CPF? Reply with package names only, one per line, nothing else." > data/model-deps.txt
 ana@lab:~/guard$ cat data/model-deps.txt
-pip install qrcode python-cpf
+pip install qrcode
+pip install pyzbar
+pip install python-cpf
 ana@lab:~/guard$ guard deps data/model-deps.txt; echo "exit $?"
 qrcode                     in the snapshot
+pyzbar                     NOT IN THE SNAPSHOT: do not install
 python-cpf                 NOT IN THE SNAPSHOT: do not install
 exit 1
 ana@lab:~/guard$ guard ask "Which Python packages would I install to generate a Pix QR code for a Brazilian payment, and to validate a CPF? Reply with package names only, one per line, nothing else." --temperature 0.8 --seed 2
 pip install python-qrcode
-pip install pybricks
+pip install py-cpf
 ```
 
-Pediu-se a ele um nome por linha, e ele respondeu com um comando de instalação; é por isso que o `deps.py`
+Pediu-se a ele só os nomes, e ele respondeu com comandos de instalação; é por isso que o `deps.py`
 ignora um `pip install` no começo: uma verificação que lê a saída de um modelo tem de lê-la como ela
-vem, não como foi pedida. O `qrcode` é um pacote real, e a Tarefa o revisou. O `python-cpf` não está na
-lista revisada, e a verificação o barra ali. Se existe hoje um pacote com esse nome no índice público, e
-quem o publicou, é exatamente o que a pessoa que o revisar vai descobrir.
+vem, não como foi pedida. O `qrcode` é um pacote real, e a Tarefa o revisou. O `pyzbar` e o
+`python-cpf` não estão na lista revisada, e a verificação os barra ali. Se existe hoje um pacote com
+cada nome no índice público, e quem o publicou, é exatamente o que a pessoa que o revisar vai
+descobrir. (O `pyzbar` lê QR codes em vez de gerá-los, o que é uma segunda pergunta para a mesma
+pessoa.)
 
-O modelo deu os dois nomes com a mesma confiança, e esse é o problema inteiro: nada na resposta marca
+O modelo deu os três nomes com a mesma confiança, e esse é o problema inteiro: nada na resposta marca
 qual nome é qual. A última execução, com temperatura 0.8, nomeou outros dois pacotes, nenhum deles na
 lista revisada. Uma lista do que uma execução sugeriu não substitui conferir toda execução.
 

@@ -251,7 +251,7 @@ ana@lab:~/guard$ guard propose "Job 4471 was never delivered. I paid R$ 1.200,00
 ana@lab:~/guard$ cat data/real-calls.jsonl
 {"id": "p1", "tool": "lookup_order", "args": {"account": "ac-7Q2M", "order": "4471"}}
 {"id": "p2", "tool": "issue_refund", "args": {"account": "ac-7Q2M", "job": "4471", "cents": "120000"}}
-{"id": "p3", "tool": "send_message", "args": {"to": "ac-7Q2M", "text": "Refund of R$ 1.200,00 has been initiated."}}
+{"id": "p3", "tool": "send_message", "args": {"to": "ac-7Q2M", "text": "Refund of R$ 1.200,00 has been processed."}}
 ana@lab:~/guard$ guard gate data/real-calls.jsonl
 session ac-7Q2M, 8 calls allowed
 p1  lookup_order   ALLOW  read, within scope
@@ -269,7 +269,7 @@ Três coisas aconteceram, e nenhuma estava nas sete propostas escritas.
   `"120000"`, não como número. O portão a recusa, e essa verificação existe por causa desta execução: a
   primeira versão do portão comparava o texto com um número, e o Python parou com um erro no meio da
   lista. Um portão que quebra numa proposta que não esperava não decidiu nada.
-- **A `p3` diz ao cliente que o reembolso foi iniciado.** Está dentro do escopo, uma mensagem para a
+- **A `p3` diz ao cliente que o reembolso foi processado.** Está dentro do escopo, uma mensagem para a
   própria conta da sessão, então o portão a permite, enquanto o reembolso que ela anuncia foi recusado.
   **O portão confere o que uma chamada pode alcançar, não se o que ela diz é verdade.** Uma mensagem que
   relata uma ação vem depois da ação, escrita pelo código a partir do resultado, e não proposta pelo

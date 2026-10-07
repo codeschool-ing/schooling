@@ -78,9 +78,9 @@ Python 3.12.3
 ollama version is 0.40.0
 ana@lab:~$ ollama list
 NAME           ID              SIZE      MODIFIED       
-llama3.2:3b    a80c4f17acd5    2.0 GB    18 minutes ago    
+llama3.2:3b    a80c4f17acd5    2.0 GB    56 minutes ago    
 ana@lab:~$ ollama run llama3.2:3b "Say hello in five words."
-Hello, it's nice to chat.
+Hello there, I'm here now.
 
 ana@lab:~$ ollama ps
 NAME           ID              SIZE      PROCESSOR          CONTEXT    RUNNER      UNTIL              

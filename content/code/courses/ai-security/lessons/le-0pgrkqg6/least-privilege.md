@@ -250,7 +250,7 @@ ana@lab:~/guard$ guard propose "Job 4471 was never delivered. I paid R$ 1.200,00
 ana@lab:~/guard$ cat data/real-calls.jsonl
 {"id": "p1", "tool": "lookup_order", "args": {"account": "ac-7Q2M", "order": "4471"}}
 {"id": "p2", "tool": "issue_refund", "args": {"account": "ac-7Q2M", "job": "4471", "cents": "120000"}}
-{"id": "p3", "tool": "send_message", "args": {"to": "ac-7Q2M", "text": "Refund of R$ 1.200,00 has been initiated."}}
+{"id": "p3", "tool": "send_message", "args": {"to": "ac-7Q2M", "text": "Refund of R$ 1.200,00 has been processed."}}
 ana@lab:~/guard$ guard gate data/real-calls.jsonl
 session ac-7Q2M, 8 calls allowed
 p1  lookup_order   ALLOW  read, within scope
@@ -268,7 +268,7 @@ Three things happened, and none of them was in the seven written proposals.
   `"120000"`, not the number. The gate refuses it, and that check exists because of this run: the first
   version of the gate compared the text with a number, and Python stopped with an error halfway
   through the list. A gate that crashes on a proposal it did not expect has decided nothing.
-- **`p3` tells the client the refund has been initiated.** It is in scope, a message to the session's
+- **`p3` tells the client the refund has been processed.** It is in scope, a message to the session's
   own account, so the gate allows it, while the refund it announces was refused. **The gate checks what
   a call may reach, not whether what it says is true.** A message that reports an action belongs after
   the action, written by the code from its result, and not proposed by the model beside it.

@@ -117,13 +117,13 @@ O `guard` o encontra pelo nome, então o programa agora é um comando:
 
 ```
 ana@lab:~/guard$ guard ask "Say hello in five words."
-Hello, how are you today?
+Hello from the digital world.
 ana@lab:~/guard$ guard ask "Say hello in five words."
-Hello, how are you today?
+Hello from the digital world.
 ana@lab:~/guard$ guard ask "Say hello in five words." --temperature 0.8 --seed 3
 Hello there, it's nice to meet you.
 ana@lab:~/guard$ guard ask "Say hello in five words." --temperature 0.8 --seed 4
-Hello, it's nice to meet you!
+Hello from the digital realm.
 ```
 
 As duas primeiras execuções deram as mesmas palavras, e é para isso que serve o `--temperature 0`, o
@@ -147,5 +147,6 @@ máquina, e a sua imprime os seus próprios nomes.
 - **O que o modelo respondeu foi capturado do `llama3.2:3b`, servido pelo Ollama 0.40.0, em 7 de
   outubro de 2026**, num computador sem placa de vídeo. Rode o mesmo comando e você pode receber as
   mesmas palavras, ou outras: outro processador faz as contas em outra ordem, e uma versão mais nova do
-  modelo escreve outra coisa. Isso não é sinal de que algo está errado. Julgue uma resposta pelo que a
+  modelo escreve outra coisa. Mesmo na máquina de gravação, com temperatura 0, alguns comandos deram outra
+  resposta em outra execução, e as aulas em que isso aconteceu dizem. Isso não é sinal de que algo está errado. Julgue uma resposta pelo que a
   aula confere nela, nunca por bater ou não com esta página.

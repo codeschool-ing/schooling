@@ -103,23 +103,27 @@ its reply as it came:
 ```
 ana@lab:~/guard$ guard ask "Which Python packages would I install to generate a Pix QR code for a Brazilian payment, and to validate a CPF? Reply with package names only, one per line, nothing else." > data/model-deps.txt
 ana@lab:~/guard$ cat data/model-deps.txt
-pip install qrcode python-cpf
+pip install qrcode
+pip install pyzbar
+pip install python-cpf
 ana@lab:~/guard$ guard deps data/model-deps.txt; echo "exit $?"
 qrcode                     in the snapshot
+pyzbar                     NOT IN THE SNAPSHOT: do not install
 python-cpf                 NOT IN THE SNAPSHOT: do not install
 exit 1
 ana@lab:~/guard$ guard ask "Which Python packages would I install to generate a Pix QR code for a Brazilian payment, and to validate a CPF? Reply with package names only, one per line, nothing else." --temperature 0.8 --seed 2
 pip install python-qrcode
-pip install pybricks
+pip install py-cpf
 ```
 
-It was asked for one name per line and answered with an install command, which is why `deps.py`
-ignores a leading `pip install`: a check that reads a model's output has to read it as it comes, not as
-it was asked for. `qrcode` is a real package, and Tarefa has reviewed it. `python-cpf` is not on the
-reviewed list, and the check stops it there. Whether a package by that name exists on the public index
-today, and who published it, is exactly what the person reviewing it finds out.
+It was asked for names only and answered with install commands, which is why `deps.py` ignores a
+leading `pip install`: a check that reads a model's output has to read it as it comes, not as it was
+asked for. `qrcode` is a real package, and Tarefa has reviewed it. `pyzbar` and `python-cpf` are not on
+the reviewed list, and the check stops them there. Whether a package by each name exists on the public
+index today, and who published it, is exactly what the person reviewing it finds out. (`pyzbar` reads
+QR codes rather than making them, which is a second question for the same person.)
 
-The model gave both names with the same confidence, which is the whole problem: nothing in the reply
+The model gave all three names with the same confidence, which is the whole problem: nothing in the reply
 marks which name is which. The last run, at temperature 0.8, named two other packages, neither of them
 on the reviewed list. A list of what one run suggested is no substitute for checking every run.
 

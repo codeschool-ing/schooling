@@ -382,30 +382,30 @@ if unknown:
 ana@lab:~/guard$ guard summarise outbox/TK-4471.json --purpose summarise-dispute > reply-4471.txt
 ana@lab:~/guard$ cat reply-4471.txt
 Summary:
-The client, <NAME_1>, has expressed dissatisfaction with the logo design for their bakery, which was due on September 10, 2026. The client claims to have paid R$ 1,200.00 for the service, but has not received the logo. The freelancer, <NAME_2>, initially mentioned a health issue that may have caused a delay, but now claims to be able to deliver by Friday. The client is requesting a refund and has asked to be contacted on <PHONE_1>.
+The client, <NAME_1>, has disputed the payment for the logo design job (TK-4471) due on September 10, 2026. The client claims that the freelancer, <NAME_2>, failed to deliver the work on time and has requested a refund of R$ 1,200.00. The client also expressed frustration and asked to speak with the freelancer on <PHONE_1>.
 
 Draft reply to the client:
 "Dear <NAME_1>, 
 
-Thank you for reaching out to us about the issue with your logo design. We apologize for the delay and any inconvenience this has caused. We understand that you paid R$ 1,200.00 for the service, and we are willing to work with you to find a solution.
+Thank you for reaching out to us regarding the status of your logo design job (TK-4471). We apologize for any inconvenience caused by the delay in delivery. We will look into this matter and try to resolve the issue as soon as possible.
 
-Regarding the freelancer's statement, we will look into the matter and provide an update as soon as possible. In the meantime, we would like to offer you a refund for the service, as per your request. Please let us know if this is acceptable to you, and we will proceed with the refund process.
+Regarding the payment, we will review the situation and get back to you with an update. Please be assured that we are committed to providing you with the best possible service.
 
-If you would like to discuss this further or have any questions, please don't hesitate to contact us. We are here to help.
+We will also contact the freelancer, <NAME_2>, to discuss the situation and find a resolution. We appreciate your patience and understanding in this matter.
 
 Best regards, [Your Name]"
 ana@lab:~/guard$ guard restore vault/TK-4471.json reply-4471.txt; echo "exit $?"
 Summary:
-The client, Marcos Teixeira, has expressed dissatisfaction with the logo design for their bakery, which was due on September 10, 2026. The client claims to have paid R$ 1,200.00 for the service, but has not received the logo. The freelancer, Juliana Prado, initially mentioned a health issue that may have caused a delay, but now claims to be able to deliver by Friday. The client is requesting a refund and has asked to be contacted on +55 11 98765-4321.
+The client, Marcos Teixeira, has disputed the payment for the logo design job (TK-4471) due on September 10, 2026. The client claims that the freelancer, Juliana Prado, failed to deliver the work on time and has requested a refund of R$ 1,200.00. The client also expressed frustration and asked to speak with the freelancer on +55 11 98765-4321.
 
 Draft reply to the client:
 "Dear Marcos Teixeira, 
 
-Thank you for reaching out to us about the issue with your logo design. We apologize for the delay and any inconvenience this has caused. We understand that you paid R$ 1,200.00 for the service, and we are willing to work with you to find a solution.
+Thank you for reaching out to us regarding the status of your logo design job (TK-4471). We apologize for any inconvenience caused by the delay in delivery. We will look into this matter and try to resolve the issue as soon as possible.
 
-Regarding the freelancer's statement, we will look into the matter and provide an update as soon as possible. In the meantime, we would like to offer you a refund for the service, as per your request. Please let us know if this is acceptable to you, and we will proceed with the refund process.
+Regarding the payment, we will review the situation and get back to you with an update. Please be assured that we are committed to providing you with the best possible service.
 
-If you would like to discuss this further or have any questions, please don't hesitate to contact us. We are here to help.
+We will also contact the freelancer, Juliana Prado, to discuss the situation and find a resolution. We appreciate your patience and understanding in this matter.
 
 Best regards, [Your Name]"
 exit 0
@@ -416,12 +416,18 @@ both back in place. `guard restore` also reports a placeholder the vault does no
 `<NAME_3>` a model invented, and exits with status 4 instead of passing it through. `[Your Name]` at the
 end is not one of its placeholders, and goes through as it came.
 
-Read the draft reply again, though. **It offers the client a refund and says Tarefa will proceed with
-it.** Nobody at Tarefa decided that. The purpose asked for a draft, and the model wrote a promise, the
-same kind of promise lesson 2 showed a tribunal holding an airline to. That is why the purpose says
-*draft*, and why a person sends it rather than the model. Minimisation protects what the provider
-sees; it does nothing about what the model writes. Your reply may be worded differently and go wrong
-in a different way, or not at all.
+Read the restored summary again, though. **It says the client asked to speak with the freelancer on
++55 11 98765-4321, and that is the client's own number**: the message said *"Call me on <PHONE_1>"*.
+The model attached the placeholder to the wrong person, and restoring it put a real phone number into
+a false sentence, which now reads with all the authority of the real data around it. Minimisation
+protects what the provider sees; it does nothing about what the model gets wrong, and the agent
+reading the summary still checks it against the ticket.
+
+Your reply will probably differ, and not only in wording. On the machine these lessons were recorded
+on, the same command at temperature 0 gave two different replies on different runs: the other kept the
+phone number with the client and instead offered the client a refund nobody at Tarefa had decided.
+Each run is a new chance for a different mistake, which is why a person sends the draft and not the
+model.
 
 ## Pseudonymous is not anonymous
 

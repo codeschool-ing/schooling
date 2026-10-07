@@ -9,9 +9,9 @@ se ela é aceitável. **O que ele devolve é um score por categoria**, às vezes
 decisão que o seu código toma a partir desses scores, com uma linha que você escolheu, e a linha é
 onde está quase todo o trabalho desta aula.
 
-Todo fornecedor dessa classe de produto responde mais ou menos nesse formato. O deste curso é um
-substituto, o `moderation.py`, que a aula 5 lhe deu junto com o `guard moderate`, e **não é um modelo de
-moderação**: é uma lista de palavras e expressões em inglês por categoria, cada uma com um peso que o
+Todo fornecedor dessa classe de produto responde mais ou menos nesse formato. O deste curso é o
+`moderation.py`, que a aula 5 lhe deu junto com o `guard moderate`. **Ele é um substituto, não um modelo
+de moderação**: uma lista de palavras e expressões em inglês por categoria, cada uma com um peso que o
 curso escolheu, combinadas num score que se comporta como um. O comentário no topo dele lista os erros
 que ele comete de propósito. Ele responde assim:
 

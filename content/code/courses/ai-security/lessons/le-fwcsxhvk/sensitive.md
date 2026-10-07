@@ -37,9 +37,10 @@ With `--sensitive remove`, the sentence is replaced and the rest of the message 
 
 The marker is deliberate. Deleting the sentence without a trace would leave the model reading a
 freelancer who is late and offers no reason, and the summary would be unfair to her. The marker
-tells the model that a reason was given, and the summary `llama3.2:3b` wrote in the previous section
-says she *"initially mentioned a health issue that may have caused a delay"*, which is all the agent
-needs, and nothing about which one.
+tells the model that a reason was given. **Whether the model uses it is another matter**: the summary
+`llama3.2:3b` wrote in the previous section says only that she *"failed to deliver the work on
+time"*, which is exactly the unfair summary the marker was there to prevent. The marker makes a fair
+summary possible, and a person still reads what the model made of it.
 
 ## The word list sees words
 
