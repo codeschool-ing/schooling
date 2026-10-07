@@ -8,8 +8,11 @@
 #
 #   sudo useradd -m -s /bin/bash ana     # once, on a throwaway machine,
 #                                        # with passwordless sudo for ana
-#   sudo cp ../../lab.sh /var/tmp/lab.sh  # the lab, beside course.json
 #   sudo -u ana -i bash /path/to/captures.sh
+#
+# lab.sh, beside course.json, extracts netlab.sh and tunnel.py from lesson 1's
+# pages and installs them where that lesson tells the student to; the captures
+# run the student's own copy.
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
@@ -27,7 +30,7 @@
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.

@@ -3,7 +3,7 @@ title: Why the offices cannot talk
 version: 1
 ---
 
-The lab has two offices. At head office, `laptop` sits on `192.168.10.0/24` behind the router `hq`. At
+The network has two offices. At head office, `laptop` sits on `192.168.10.0/24` behind the router `hq`. At
 the branch, a till, `till`, sits on `192.168.20.0/24` behind the router `branch`. Each router has one
 public address, and between them is an ISP.
 
@@ -14,7 +14,8 @@ public address, and between them is an ISP.
 Each office reaches the internet through NAT, which lesson 11 of `networks-addressing` covered: `hq`
 rewrites the source of everything leaving to its own public address. That works for a conversation that
 starts inside. It does nothing for a conversation from one private network to another, and a ping from
-the laptop to the till shows it:
+the laptop to the till shows it. Open a shell on `laptop` and another on `isp` with
+`sudo bash netlab.sh shell`, on a freshly built network:
 
 ```
 ana@laptop:~$ ping -c 2 -W 1 192.168.20.30

@@ -3,7 +3,7 @@ title: Por que os escritórios não se falam
 version: 1
 ---
 
-O laboratório tem dois escritórios. Na matriz, `laptop` fica em `192.168.10.0/24`, atrás do roteador
+A rede tem dois escritórios. Na matriz, `laptop` fica em `192.168.10.0/24`, atrás do roteador
 `hq`. Na filial, um caixa, `till`, fica em `192.168.20.0/24`, atrás do roteador `branch`. Cada roteador
 tem um endereço público, e entre eles há um provedor.
 
@@ -14,7 +14,8 @@ tem um endereço público, e entre eles há um provedor.
 Cada escritório chega à internet por NAT, assunto da aula 11 de `networks-addressing`: `hq` reescreve a
 origem de tudo que sai com o próprio endereço público. Isso funciona para uma conversa que começa do lado
 de dentro. Não resolve nada numa conversa de uma rede privada para outra, e um ping do laptop para o caixa
-mostra isso:
+mostra isso. Abra um shell em `laptop` e outro em `isp` com `sudo bash netlab.sh shell`, numa rede recém
+montada:
 
 ```
 ana@laptop:~$ ping -c 2 -W 1 192.168.20.30
