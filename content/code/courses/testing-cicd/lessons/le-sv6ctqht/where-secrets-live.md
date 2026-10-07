@@ -1,6 +1,6 @@
 ---
 title: Where a secret sits on the machine
-version: 1
+version: 2
 ---
 
 Out of the repository, a secret still has to be somewhere on the machine that runs the program, and
@@ -28,7 +28,14 @@ platform, never baked into the image.
 ## The process
 
 How a secret reaches the process matters too. Compare a token passed as a command-line argument with
-one passed in the environment, as `shipquote` does:
+one passed in the environment, as `shipquote` does. The first is a Python process that sleeps for
+thirty seconds and does nothing else, started in the background with a token among its arguments:
+
+```sh
+python3 -c 'import time; time.sleep(30)' --carrier-token=lab-live-token &
+```
+
+Then, within those thirty seconds, what anybody on the machine can list:
 
 ```
 ana@laptop:~/shipquote$ ps -o args= -C python3 | grep "[c]arrier-token"
