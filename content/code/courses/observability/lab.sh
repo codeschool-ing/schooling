@@ -70,33 +70,42 @@ export TZ=America/Sao_Paulo
 
 as_ana() { su - "$USER_LAB" -c "cd $SHOP && $*"; }
 
-# Every file of ~/shop is a fence in a lesson, under a paragraph that opens with
+# Every file of ~/shop is a fence in a lesson, under a line that is nothing but
 # its path, `~/shop/<path>`; the student copies it from there, and this reads it
-# from there. There is no second copy to drift.
+# from there. There is no second copy to drift. Lesson 1's two pages give every
+# file they caption; a later lesson gives only the one named after its colon,
+# because it also captions files the lesson writes for a while and takes away.
 FILES_FROM=(
   le-7fgac3dc/the-shop.md
   le-7fgac3dc/what-watches-it.md
-  le-aamwg2qb/shipping.md
-  le-68t063mj/tail-sampling.md
-  le-af8knzar/fan-out.md
-  le-m2spgnw3/envoy.md
+  le-aamwg2qb/shipping.md:otel/collector-logs.yaml
+  le-68t063mj/tail-sampling.md:otel/collector-sampling.yaml
+  le-af8knzar/fan-out.md:otel/collector-fanout.yaml
+  le-m2spgnw3/envoy.md:envoy/envoy.yaml
 )
 
 extract() {
   python3 - "$SHOP" "$@" <<'PY'
 import os, re, sys
 shop, sources = sys.argv[1], sys.argv[2:]
-fence = re.compile(r"^`~/shop/([^`]+)`[^\n]*\n(?:[^\n]+\n)*\n```[a-z]*\n(.*?)^```$", re.M | re.S)
+fence = re.compile(r"^`~/shop/([^`]+)`\n\n```[a-z]*\n(.*?)^```$", re.M | re.S)
 seen = {}
-for src in sources:
+for spec in sources:
+    src, _, only = spec.partition(":")
+    found = 0
     for m in fence.finditer(open(src).read()):
         path, body = m.group(1), m.group(2)
+        if only and path != only:
+            continue
         if path in seen:
             sys.exit(f"lab: ~/shop/{path} is written in {seen[path]} and again in {src}")
         seen[path] = src
+        found += 1
         out = os.path.join(shop, path)
         os.makedirs(os.path.dirname(out), exist_ok=True)
         open(out, "w").write(body)
+    if only and found != 1:
+        sys.exit(f"lab: {src} should show ~/shop/{only} once, and shows it {found} times")
 print(len(seen))
 PY
 }
