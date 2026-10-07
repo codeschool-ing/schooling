@@ -22,8 +22,9 @@ próximas seções cuidam para que só a captura rode com esse privilégio.
 
 ## Lendo uma linha
 
-O laptop buscou a página inicial enquanto o `tcpdump` imprimia os primeiros quatro pacotes que viu na
-porta 80, uma vez do jeito padrão e outra com `-n`:
+O laptop buscou a página inicial, `curl -s http://192.0.2.21/` em `laptop`, enquanto o `tcpdump` em
+`web1` imprimia os primeiros quatro pacotes que viu na porta 80, uma vez do jeito padrão e outra com
+`-n`; comece a captura antes, depois busque a página, duas vezes:
 
 ```
 ana@web1:~$ sudo tcpdump -i eth0 -c 4 tcp port 80

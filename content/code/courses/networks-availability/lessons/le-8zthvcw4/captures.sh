@@ -18,10 +18,12 @@
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
 # centre, as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; and the traffic each capture catches,
-# generated on laptop by the commands beside each bg line below (a few
-# requests to web1, and one download of its 20 MB file).
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it: the traffic each capture catches, typed on laptop. The home page
+# fetched while the first captures run is given in on-the-server's prose; the
+# four requests are the sh fence of writing-the-file, EXTRACTED with
+# `lab.sh fence`; the 20 MB download is in snaplen-and-rotation's prose, and
+# the ring capture is then stopped with Ctrl+C, which is the INT sent below.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -50,7 +52,8 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-requests() { lab exec laptop ana 'for i in 1 2 3; do curl -s http://192.0.2.21/ >/dev/null; done; curl -s http://192.0.2.21/missing >/dev/null' >/dev/null 2>&1; }
+HERE=$(cd "$(dirname "$0")" && pwd)
+requests() { lab exec laptop ana "$(bash "$LAB_SH" fence "$HERE/writing-the-file.md" 1)" >/dev/null 2>&1; }
 
 lab reset
 

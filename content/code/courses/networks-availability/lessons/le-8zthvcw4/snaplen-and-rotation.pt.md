@@ -10,7 +10,8 @@ de cada pacote, a outra guarda só os últimos megabytes.
 
 **O snap length é quantos bytes de cada pacote são guardados.** Por padrão o `tcpdump` guarda 262144,
 o pacote inteiro de qualquer coisa que esta rede leva. Para uma pergunta sobre conexões e flags os
-cabeçalhos bastam, e `-s 96` guarda os primeiros 96 bytes:
+cabeçalhos bastam, e `-s 96` guarda os primeiros 96 bytes. O laptop fez as mesmas quatro requisições,
+com a mesma linha da seção anterior:
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -s 96 -c 40 -Z ana -w short.pcap tcp port 80
@@ -48,7 +49,9 @@ existe.
 
 Uma falha que acontece uma vez por noite pede uma captura que rode a noite inteira sem encher o disco.
 **`-C` começa um arquivo novo a cada tantos milhões de bytes, e `-W` guarda só essa quantidade de
-arquivos**, sobrescrevendo o mais antigo. O laptop baixou um arquivo de 20 MB com isso rodando:
+arquivos**, sobrescrevendo o mais antigo. O laptop baixou um arquivo de 20 MB com isso rodando,
+`curl -s -o /dev/null http://192.0.2.21/big.bin`, e quando o download terminou a captura foi parada com
+`Ctrl+C`:
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -C 1 -W 3 -Z ana -w ring.pcap tcp port 80

@@ -10,7 +10,8 @@ packet, the other keeps only the last few megabytes.
 
 **The snap length is how many bytes of each packet are kept.** By default `tcpdump` keeps 262144, the
 whole of any packet this network carries. For a question about connections and flags the headers
-are enough, and `-s 96` keeps the first 96 bytes:
+are enough, and `-s 96` keeps the first 96 bytes. The laptop made the same four requests, with the same
+line as in the previous section:
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -s 96 -c 40 -Z ana -w short.pcap tcp port 80
@@ -48,7 +49,9 @@ headers only is also the simplest privacy measure there is.
 
 A fault that happens once a night needs a capture that runs all night without filling the disk.
 **`-C` starts a new file every so many million bytes, and `-W` keeps only that many files**,
-overwriting the oldest. The laptop downloaded a 20 MB file with this running:
+overwriting the oldest. The laptop downloaded a 20 MB file with this running,
+`curl -s -o /dev/null http://192.0.2.21/big.bin`, and when the download had finished the capture was
+stopped with `Ctrl+C`:
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -C 1 -W 3 -Z ana -w ring.pcap tcp port 80
