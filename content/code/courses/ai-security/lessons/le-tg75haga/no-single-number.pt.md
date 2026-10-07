@@ -55,7 +55,7 @@ aceita menos que caia de forma desigual**. Nomeie os dois erros pelo lado de que
 Para um recurso que decide quem consegue trabalho, muitas equipes decidem que o erro do freelancer é
 o mais grave e mantêm a diferença de TPR perto de zero, aceitando uma diferença de precisão e avisando
 os clientes. Outra equipe pode decidir diferente. O que torna qualquer das duas defensável é a escolha
-estar **registrada com os números dela**, no mesmo documento que a aula 22 chamou de RIPD: a métrica
+estar **registrada com os números dela**, no mesmo documento que a aula 12 chamou de RIPD: a métrica
 escolhida, o motivo, as diferenças medidas, a data, e quando serão medidas de novo. É isso também que
 um pedido de revisão pelo art. 20 da LGPD vai querer ver.
 

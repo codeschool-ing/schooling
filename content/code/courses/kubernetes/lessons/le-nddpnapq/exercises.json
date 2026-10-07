@@ -1,0 +1,208 @@
+[
+  {
+    "id": "ex-ftkp2jnr",
+    "version": 1,
+    "section": "exposed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a Kubernetes component publish its measurements?",
+    "hint": "`kubectl get --raw …`",
+    "choices": [
+      {
+        "text": "In etcd, under `/metrics`",
+        "correct": false,
+        "why": "They are served by each component, not stored."
+      },
+      {
+        "text": "At its own `/metrics` address",
+        "correct": true,
+        "why": "Right, in the Prometheus text format."
+      },
+      {
+        "text": "In its log files only",
+        "correct": false,
+        "why": "Logs and metrics are separate."
+      },
+      {
+        "text": "In a ConfigMap per component",
+        "correct": false,
+        "why": "Nothing writes them there."
+      }
+    ]
+  },
+  {
+    "id": "ex-s04m6eye",
+    "version": 1,
+    "section": "exposed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a label holding a user id a classic way to make monitoring expensive?",
+    "hint": "Each combination of labels is one series.",
+    "choices": [
+      {
+        "text": "User ids are personal data",
+        "correct": false,
+        "why": "True, but not why it costs."
+      },
+      {
+        "text": "Labels are limited to ten characters",
+        "correct": false,
+        "why": "No such limit."
+      },
+      {
+        "text": "Every user becomes a new series",
+        "correct": true,
+        "why": "Right, and series are what is stored and paid for."
+      },
+      {
+        "text": "Counters cannot have labels",
+        "correct": false,
+        "why": "`apiserver_request_total` has many."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz0wp331",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `kubectl logs` actually read?",
+    "hint": "`/var/log/pods`.",
+    "choices": [
+      {
+        "text": "A stream from the process",
+        "correct": false,
+        "why": "It reads what the runtime already wrote."
+      },
+      {
+        "text": "A file the runtime wrote on the node",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Records in etcd",
+        "correct": false,
+        "why": "Logs never go to etcd."
+      },
+      {
+        "text": "The central log store",
+        "correct": false,
+        "why": "Only if one exists, and kubectl does not use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtwmkzgp",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program writes its logs to `/app/log.txt` inside the container. What does the cluster's log collector see?",
+    "hint": "What does the runtime capture?",
+    "choices": [
+      {
+        "text": "The same lines",
+        "correct": false,
+        "why": "Only stdout and stderr reach the node's files."
+      },
+      {
+        "text": "A copy, delayed",
+        "correct": false,
+        "why": "Nothing copies the file."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Write logs to standard output."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "It simply sees nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy24s82c",
+    "version": 1,
+    "section": "backends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which signal shows where one request spent its time across several services?",
+    "hint": "The table in the last section.",
+    "choices": [
+      {
+        "text": "Metrics",
+        "correct": false,
+        "why": "They aggregate many requests."
+      },
+      {
+        "text": "Logs",
+        "correct": false,
+        "why": "Each service logs alone, with no link."
+      },
+      {
+        "text": "Traces",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Events",
+        "correct": false,
+        "why": "Events are about Kubernetes objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sche193",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each signal with where it is commonly stored.",
+    "hint": "The table in the last section.",
+    "pairs": [
+      {
+        "left": "Metrics",
+        "right": "Prometheus"
+      },
+      {
+        "left": "Logs",
+        "right": "Loki"
+      },
+      {
+        "left": "Traces",
+        "right": "Jaeger"
+      }
+    ],
+    "right_distractors": [
+      "etcd"
+    ]
+  },
+  {
+    "id": "ex-sff73mp7",
+    "version": 1,
+    "section": "logs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the node, container logs are files under `/var/log/___`.",
+    "hint": "One directory per pod.",
+    "blanks": [
+      {
+        "accept": [
+          "pods"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

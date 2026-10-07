@@ -1,0 +1,363 @@
+{
+  "ex-pacy4qth": {
+    "prompt": "Uma consulta de relatório usa `JSON_TABLE`. Ela roda no notebook da Ana e falha com erro de sintaxe no servidor de homologação. Ninguém editou a consulta. Qual é a diferença mais provável?",
+    "hint": "Qual versão trouxe o `JSON_TABLE`?",
+    "choices": [
+      {
+        "text": "A homologação está no PostgreSQL 16, anterior a esse recurso",
+        "why": "Isso. O 17 o trouxe, então o mesmo texto é SQL válido numa máquina e erro de sintaxe na outra."
+      },
+      {
+        "text": "A cópia da consulta no servidor se corrompeu no caminho desde o repositório",
+        "why": "O texto é idêntico nas duas máquinas; o que muda é o banco que o lê."
+      },
+      {
+        "text": "Erros de sintaxe dependem do sistema operacional do cliente que envia a consulta",
+        "why": "Quem analisa o SQL é o servidor, e a versão dele decide que sintaxe existe."
+      },
+      {
+        "text": "A homologação tem menos memória que o notebook",
+        "why": "Falta de memória produz erro de memória, nunca erro de sintaxe."
+      }
+    ]
+  },
+  "ex-ag61hzcs": {
+    "prompt": "O que uma imagem de container leva junto com o programa?",
+    "hint": "Trace a linha no kernel.",
+    "choices": [
+      {
+        "text": "Tudo acima do kernel: interpretador ou compilador, bibliotecas, arquivos de configuração",
+        "why": "Isso. O kernel é a única coisa que ela não traz; ela usa o do host."
+      },
+      {
+        "text": "Um kernel próprio, para dar boot em qualquer lugar",
+        "why": "Isso descreve uma máquina virtual. Um container usa o kernel da máquina onde roda."
+      },
+      {
+        "text": "Só o binário do próprio programa",
+        "why": "Aí as bibliotecas e o interpretador ainda teriam de ser instalados em cada máquina, que é o problema que os containers resolvem."
+      },
+      {
+        "text": "Uma cópia do host onde foi construída",
+        "why": "Uma imagem guarda os arquivos que alguém escolheu para o programa, não uma foto de uma máquina."
+      }
+    ]
+  },
+  "ex-567c0t1b": {
+    "prompt": "A Ana roda `docker run --rm golang:1.25 go version`. Depois que a versão aparece, o que fica na máquina dela?",
+    "hint": "O `--rm` é sobre o container.",
+    "choices": [
+      {
+        "text": "Nada: a imagem vai embora com o container",
+        "why": "O `--rm` remove o container. A imagem fica, então a próxima execução não a baixa de novo."
+      },
+      {
+        "text": "Um container parado e a imagem",
+        "why": "É isso que o mesmo comando deixa sem o `--rm`."
+      },
+      {
+        "text": "A imagem `golang:1.25` fica; o container já se foi",
+        "why": "Isso. O container foi removido quando o `go version` terminou; a imagem fica para a próxima vez."
+      },
+      {
+        "text": "O Go instalado em `/usr/local/go`",
+        "why": "Nada foi instalado no host. O compilador mora na imagem."
+      }
+    ]
+  },
+  "ex-4byn42vp": {
+    "prompt": "Quais destes ainda dependem da máquina onde o container roda? Escolha todos os que se aplicam.",
+    "hint": "Três coisas ficam abaixo da linha que a imagem traça, ou fora dela.",
+    "choices": [
+      {
+        "text": "O kernel",
+        "why": "Sim. Todos os containers da máquina o compartilham."
+      },
+      {
+        "text": "A arquitetura do processador",
+        "why": "Sim. Uma imagem construída para uma arquitetura precisa de ajuda para rodar em outra; a aula 2 mostra o erro."
+      },
+      {
+        "text": "A versão das bibliotecas que o programa usa",
+        "why": "Essas viajam dentro da imagem, nas versões que alguém escolheu."
+      },
+      {
+        "text": "Dados escritos dentro do container, depois que o container é removido",
+        "why": "Sim, no sentido de que somem: moravam na camada do próprio container. Aula 7."
+      },
+      {
+        "text": "A versão do interpretador",
+        "why": "O interpretador está dentro da imagem, que é a razão de ser de `golang:1.25` e `postgres:17`."
+      }
+    ]
+  },
+  "ex-b8eks9k4": {
+    "prompt": "Uma máquina virtual por projeto também acaba com a briga entre o PostgreSQL 16 e o 17. O que ela custa que um container não custa?",
+    "hint": "Conte os sistemas operacionais.",
+    "choices": [
+      {
+        "text": "Uma licença para cada cópia do PostgreSQL rodando dentro de uma VM",
+        "why": "O PostgreSQL não tem licença por cópia, nem numa VM nem em lugar nenhum."
+      },
+      {
+        "text": "Um sistema operacional inteiro por projeto",
+        "why": "Isso. Um container compartilha o kernel do host e não precisa de nada disso."
+      },
+      {
+        "text": "Ela não consegue rodar duas versões numa máquina física ao mesmo tempo",
+        "why": "Duas VMs rodam numa máquina; é assim que ela resolve a briga."
+      },
+      {
+        "text": "Acesso à rede entre os dois projetos",
+        "why": "Uma VM tem rede. O custo está em outro lugar."
+      }
+    ]
+  },
+  "ex-bbrjt5gm": {
+    "prompt": "Com o PostgreSQL rodando num container, a Ana roda `ps -C postgres` no host. O que ela vê?",
+    "hint": "Olhe a transcrição de novo.",
+    "choices": [
+      {
+        "text": "Nada, porque os processos de um container são invisíveis para as ferramentas do host",
+        "why": "O host viu seis processos `postgres`, com números comuns."
+      },
+      {
+        "text": "Um processo `containerd` no lugar do banco",
+        "why": "Os processos do próprio banco aparecem, com o próprio nome."
+      },
+      {
+        "text": "Os processos do postgres, com números de processo comuns do host",
+        "why": "Sim. Um container é um processo no host, e o host o lista como qualquer outro."
+      },
+      {
+        "text": "Um erro: o `ps` precisa do `docker` para ler um container",
+        "why": "O `ps` lê a tabela de processos do host, onde os processos do container já estão."
+      }
+    ]
+  },
+  "ex-vxk22st5": {
+    "prompt": "No host, o `postgres` da Ana é o processo 10912. Leia de novo o `/proc/1/status` de dentro do container: que número de processo o mesmo `postgres` tem lá dentro?",
+    "hint": "O nome do arquivo já diz."
+  },
+  "ex-v88v58rj": {
+    "prompt": "O `docker top db` mostra o banco rodando com UID 999, e o `id postgres` dentro do container diz que 999 é `postgres`. Por que o host pode mostrar outro nome para o 999, ou nenhum?",
+    "hint": "Quem transforma um número em nome?",
+    "choices": [
+      {
+        "text": "Porque o UID 999 do container é traduzido para um UID aleatório no host",
+        "why": "Neste laboratório o número é o mesmo dos dois lados; 999 é 999. Só a busca do nome muda."
+      },
+      {
+        "text": "Os nomes vêm do `/etc/passwd` de cada lado",
+        "why": "Isso. O processo é UID 999 em todo lugar; o nome é uma consulta local."
+      },
+      {
+        "text": "Porque o PostgreSQL renomeia o usuário dele ao iniciar",
+        "why": "O nome vem do `/etc/passwd` da imagem, não do PostgreSQL em execução."
+      },
+      {
+        "text": "Porque o `ps` não consegue ler processos de outros usuários",
+        "why": "O `ps` os listou; ele só não tem um nome próprio para o 999."
+      }
+    ]
+  },
+  "ex-v0j4e9ca": {
+    "prompt": "O Bruno inicia um container cujo comando converte um arquivo e termina. Um segundo depois, o `docker ps` não o lista mais. O que aconteceu?",
+    "hint": "Quanto tempo um container vive?",
+    "choices": [
+      {
+        "text": "Ele quebrou, porque containers são feitos para rodar para sempre",
+        "why": "Nada diz que um container precisa ficar de pé; muitos fazem um trabalho e param."
+      },
+      {
+        "text": "O Docker o removeu por usar memória demais",
+        "why": "Nada aqui bateu num limite. Um comando que terminou basta para explicar."
+      },
+      {
+        "text": "Ele continua rodando, escondido do `docker ps`",
+        "why": "O `docker ps` lista todo container em execução; um parado precisa de `-a`."
+      },
+      {
+        "text": "O processo principal terminou e ele parou",
+        "why": "Isso. Um container vive enquanto o processo principal vive; um que fez o trabalho e saiu terminou, não quebrou."
+      }
+    ]
+  },
+  "ex-x013s04n": {
+    "prompt": "Ligue cada mecanismo ao que ele faz por um container.",
+    "hint": "Um limita a visão, um limita o uso, um fornece arquivos.",
+    "pairs": [
+      {
+        "left": "namespaces",
+        "right": "Limitam o que o processo enxerga: processos, nome de máquina, rede"
+      },
+      {
+        "left": "cgroups",
+        "right": "Limitam quanto o processo pode usar: memória, CPU, processos"
+      },
+      {
+        "left": "as camadas da imagem",
+        "right": "Fornecem o sistema de arquivos que o processo enxerga"
+      }
+    ],
+    "right_distractors": [
+      "Dão boot num segundo kernel para o container"
+    ]
+  },
+  "ex-vxht87ah": {
+    "prompt": "A Ana escreve `/note` no container `one`. O container `two` veio da mesma imagem. Por que o `two` não consegue ler o arquivo?",
+    "hint": "Onde a escrita caiu?",
+    "choices": [
+      {
+        "text": "Porque o `two` iniciou antes de o arquivo ser escrito",
+        "why": "A ordem não importa; o `two` também não o veria se iniciasse depois."
+      },
+      {
+        "text": "A escrita caiu na camada do próprio `one`",
+        "why": "Isso. Containers nunca escrevem na imagem que compartilham."
+      },
+      {
+        "text": "Porque o Alpine proíbe criar arquivos no diretório raiz",
+        "why": "O `one` escreveu e leu `/note` sem problema."
+      },
+      {
+        "text": "O `two` roda com outro usuário",
+        "why": "Os dois rodam como root aqui; não são as permissões que os separam."
+      }
+    ]
+  },
+  "ex-qde28f6s": {
+    "prompt": "O `docker image ls` mostra `alpine:3.22` com `CONTENT SIZE` de 3.88MB e `DISK USAGE` de 12.8MB. O que explica a diferença?",
+    "hint": "Um é como ela viaja, o outro como ela fica.",
+    "choices": [
+      {
+        "text": "O content size é comprimido, como viaja de um registry; o disk usage é descompactado neste disco",
+        "why": "Isso. As camadas viajam comprimidas e são descompactadas no pull."
+      },
+      {
+        "text": "O disk usage também conta as camadas de escrita de todos os containers já iniciados a partir desta imagem na máquina",
+        "why": "Containers têm o seu próprio espaço contado em outro lugar; aqui é a imagem."
+      },
+      {
+        "text": "O content size conta só os arquivos que o Alpine mudou desde a 3.21",
+        "why": "Ele conta a imagem inteira, comprimida."
+      },
+      {
+        "text": "As duas colunas medem a mesma coisa em unidades diferentes",
+        "why": "As duas estão em MB, e diferem por mais de três vezes."
+      }
+    ]
+  },
+  "ex-j9n9weqz": {
+    "prompt": "A Ana roda `docker rm -f one two db`. Qual destes ainda está na máquina dela depois?",
+    "hint": "`rm` não é `image rm`.",
+    "choices": [
+      {
+        "text": "As tabelas que o banco criou",
+        "why": "Elas moravam na camada de escrita do `db` e foram com ele."
+      },
+      {
+        "text": "O arquivo `/note`",
+        "why": "Ele morava na camada do próprio `one`, e o `one` se foi."
+      },
+      {
+        "text": "A imagem `alpine:3.22`",
+        "why": "Sim. Remover containers nunca remove a imagem de onde vieram."
+      },
+      {
+        "text": "O container `db`, parado",
+        "why": "O `-f` o para e o `rm` o remove."
+      }
+    ]
+  },
+  "ex-5zhbbhgb": {
+    "prompt": "O Docker nunca altera uma imagem quando um container escreve. Cada container escreve na própria camada de ___ por cima dela.",
+    "hint": "O oposto de somente leitura.",
+    "blanks": [
+      {
+        "accept": [
+          "escrita",
+          "gravação",
+          "leitura e escrita"
+        ]
+      }
+    ]
+  },
+  "ex-bnezjvfq": {
+    "prompt": "Ligue cada palavra ao que ela nomeia.",
+    "hint": "Quatro palavras, quatro coisas.",
+    "pairs": [
+      {
+        "left": "imagem",
+        "right": "Um sistema de arquivos somente leitura mais metadados, de onde se parte"
+      },
+      {
+        "left": "container",
+        "right": "Os arquivos de uma imagem, uma camada de escrita e um processo rodando"
+      },
+      {
+        "left": "registry",
+        "right": "Um servidor que guarda imagens e as distribui"
+      },
+      {
+        "left": "volume",
+        "right": "Armazenamento que sobrevive aos containers que o usam"
+      }
+    ]
+  },
+  "ex-bt71614f": {
+    "prompt": "Depois de um deploy, um colega diz \"o container já está com a versão nova\". Nos termos do Docker, o que quase certamente aconteceu?",
+    "hint": "A imagem de um container em execução pode mudar?",
+    "choices": [
+      {
+        "text": "O container antigo parou e um novo iniciou a partir da imagem nova",
+        "why": "Isso. Um container mantém a imagem de onde partiu; versão nova quer dizer container novo."
+      },
+      {
+        "text": "O container em execução baixou a imagem nova para a camada de escrita dele",
+        "why": "Um container não troca de imagem. A camada dele só guarda o que o próprio processo escreve."
+      },
+      {
+        "text": "A imagem foi editada no lugar enquanto o container rodava",
+        "why": "Imagens são somente leitura. Versão nova é imagem nova."
+      },
+      {
+        "text": "O container reiniciou o próprio kernel com o código novo",
+        "why": "Não há kernel próprio para reiniciar."
+      }
+    ]
+  },
+  "ex-dd0e2pta": {
+    "prompt": "Ponha em ordem a vida do container de banco da Ana.",
+    "hint": "Ele parte de algo que já existe.",
+    "items": [
+      "A imagem `postgres:17` está na máquina",
+      "O `docker run -d` cria um container a partir dela e inicia o `postgres`",
+      "O PostgreSQL escreve as tabelas na camada do próprio container",
+      "O `docker rm -f` para o container e o remove junto com a camada",
+      "A imagem continua lá para o próximo container"
+    ]
+  },
+  "ex-3tchktq5": {
+    "prompt": "O Bruno defende que um container inicia mais ou menos no tempo que o programa dele leva para iniciar. Que fato desta aula o apoia?",
+    "hint": "O que precisa acontecer antes de a primeira linha do programa rodar?",
+    "choices": [
+      {
+        "text": "As imagens viajam comprimidas",
+        "why": "Isso acelera um download, não um início."
+      },
+      {
+        "text": "Cada container ganha a própria camada de escrita",
+        "why": "É verdade, mas não é o que torna o início rápido."
+      },
+      {
+        "text": "O Docker mantém a imagem depois do `--rm`",
+        "why": "Isso poupa um download na próxima vez, não um boot."
+      },
+      {
+        "text": "Um container é um processo no kernel do host, então não há sistema operacional para dar boot",
+        "why": "Isso. Iniciar um container é iniciar um processo, com paredes."
+      }
+    ]
+  }
+}

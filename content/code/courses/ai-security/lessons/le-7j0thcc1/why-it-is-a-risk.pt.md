@@ -33,7 +33,7 @@ Três propriedades põem o assunto neste curso, e não só numa revisão de qual
   *"respondemos em dois dias"* é visivelmente um palpite. Uma resposta errada na voz confiante do
   assistente é lida como política.
 - **Não pode ser consertada dentro do modelo.** Modelos melhores inventam menos; nenhum inventa nada. A
-  defesa é a mesma da aula 19: verificações em volta do modelo, escritas em código, que não dependem de o
+  defesa é a mesma da aula 9: verificações em volta do modelo, escritas em código, que não dependem de o
   modelo estar certo.
 
 A aula 5 de `prompt-engineering`, que este curso pressupõe, explicou por que modelos inventam e como um

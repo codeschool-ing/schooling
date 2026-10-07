@@ -1,0 +1,961 @@
+[
+  {
+    "id": "ex-mhy5zhje",
+    "version": 1,
+    "section": "stop-criteria",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are stop criteria written before the release starts?",
+    "choices": [
+      {
+        "text": "Because the pipeline cannot read files during a release",
+        "correct": false,
+        "why": "It reads them whenever it runs."
+      },
+      {
+        "text": "So the decision is made calmly, once",
+        "correct": true,
+        "why": "Right. Nobody argues with the numbers mid-incident."
+      },
+      {
+        "text": "So the release goes faster",
+        "correct": false,
+        "why": "Speed is not what they buy."
+      },
+      {
+        "text": "Because a canary cannot be stopped once started",
+        "correct": false,
+        "why": "The script stops it at any step."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rnv1057",
+    "version": 1,
+    "section": "stop-criteria",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each constant in canary.py to the question it answers.",
+    "pairs": [
+      {
+        "left": "MAX_GAP",
+        "right": "How much worse is too much?"
+      },
+      {
+        "left": "MIN_REQUESTS",
+        "right": "How much evidence before judging?"
+      },
+      {
+        "left": "STEPS",
+        "right": "How does the exposure grow?"
+      }
+    ],
+    "right_distractors": [
+      "Which version is deployed?"
+    ]
+  },
+  {
+    "id": "ex-zrb8ac3h",
+    "version": 1,
+    "section": "stop-criteria",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests does canary.py send at each step?",
+    "value": 400,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-tcawpw5x",
+    "version": 1,
+    "section": "stop-criteria",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The criteria live in a file in the repository. What does that make visible?",
+    "choices": [
+      {
+        "text": "Which customers met the canary",
+        "correct": false,
+        "why": "The file holds rules, not traffic."
+      },
+      {
+        "text": "How long each release took",
+        "correct": false,
+        "why": "That lives in the pipeline's history."
+      },
+      {
+        "text": "Loosening them to get one release out",
+        "correct": true,
+        "why": "Right. It goes through a pull request like any change."
+      },
+      {
+        "text": "The error rate of the last canary",
+        "correct": false,
+        "why": "The script prints that; the file does not keep it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1fenrw7",
+    "version": 1,
+    "section": "automated-abort",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 5%, green answered 21 requests. What did canary.py do?",
+    "choices": [
+      {
+        "text": "Aborted, because the sample was too small to be safe",
+        "correct": false,
+        "why": "A small sample is a reason to wait, not to stop."
+      },
+      {
+        "text": "Said it was too few to judge, and went on",
+        "correct": true,
+        "why": "Right. 21 is under MIN_REQUESTS."
+      },
+      {
+        "text": "Promoted green, since it had no errors",
+        "correct": false,
+        "why": "Promotion comes only after the last step."
+      },
+      {
+        "text": "Sent another 400 requests at 5%",
+        "correct": false,
+        "why": "It moves to the next step."
+      }
+    ]
+  },
+  {
+    "id": "ex-pg4mm80f",
+    "version": 1,
+    "section": "automated-abort",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At which share, in percent, did canary.py abort 1.6.0?",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-e2vaa7fs",
+    "version": 1,
+    "section": "automated-abort",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does canary.py's exit code 1 do in a pipeline?",
+    "choices": [
+      {
+        "text": "It restarts the canary from 5%",
+        "correct": false,
+        "why": "Nothing reruns it."
+      },
+      {
+        "text": "It rolls blue back to the previous release",
+        "correct": false,
+        "why": "Blue was never changed."
+      },
+      {
+        "text": "It deletes green's release directory",
+        "correct": false,
+        "why": "Green stays, to be examined."
+      },
+      {
+        "text": "It fails the job; nothing after it runs",
+        "correct": true,
+        "why": "Right. The pipeline reads the code and stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e8qzjbm",
+    "version": 1,
+    "section": "automated-abort",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With MAX_GAP at 1.0, what does the rule really do between 50 and 99 answers?",
+    "hint": "Work out the rate of one error in 98 answers.",
+    "choices": [
+      {
+        "text": "It stops on the first error",
+        "correct": true,
+        "why": "Right. One in 98 is 1.02%, over the gap."
+      },
+      {
+        "text": "It ignores errors until 100 answers",
+        "correct": false,
+        "why": "It judges from 50."
+      },
+      {
+        "text": "It needs at least two errors to stop",
+        "correct": false,
+        "why": "One is enough below 100 answers."
+      },
+      {
+        "text": "It compares latency instead of errors",
+        "correct": false,
+        "why": "It only counts errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-xshtmkdf",
+    "version": 1,
+    "section": "automated-abort",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are honest fixes for that flaw, by the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Raise MIN_REQUESTS until one error cannot cross the gap",
+        "correct": true,
+        "why": "Right. Bugs are then caught later."
+      },
+      {
+        "text": "Use a statistical test instead of a fixed gap",
+        "correct": true,
+        "why": "Right. It asks whether the difference beats chance."
+      },
+      {
+        "text": "Rerun an aborted canary until it passes",
+        "correct": false,
+        "why": "A rule overridden whenever it fires is not a rule."
+      },
+      {
+        "text": "Remove MIN_REQUESTS",
+        "correct": false,
+        "why": "Then a single request could decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1qrgmhp",
+    "version": 1,
+    "section": "promote",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Across its four steps, how many requests did green answer when 1.6.1 was promoted?",
+    "hint": "Add green's count at each step.",
+    "value": 728,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zx7nvsb1",
+    "version": 1,
+    "section": "promote",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a clean canary show about the new release?",
+    "choices": [
+      {
+        "text": "That it is correct",
+        "correct": false,
+        "why": "It measured errors, not correctness."
+      },
+      {
+        "text": "That it is not worse, at what was measured",
+        "correct": true,
+        "why": "Right. What was not measured was not checked."
+      },
+      {
+        "text": "That its prices match the carrier's",
+        "correct": false,
+        "why": "Nothing compared prices."
+      },
+      {
+        "text": "That blue can be deleted",
+        "correct": false,
+        "why": "Blue stays until slow problems have had time to show."
+      }
+    ]
+  },
+  {
+    "id": "ex-djncc80y",
+    "version": 1,
+    "section": "promote",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "1.6.1's canary counted only errors. Which bug would it have promoted?",
+    "choices": [
+      {
+        "text": "A KeyError on one CEP prefix",
+        "correct": false,
+        "why": "That is a 500, and it was counted."
+      },
+      {
+        "text": "A process that crashes at start",
+        "correct": false,
+        "why": "The smoke test catches that first."
+      },
+      {
+        "text": "Every quote a 200 with a wrong price",
+        "correct": true,
+        "why": "Right. Only a business metric would notice."
+      },
+      {
+        "text": "A port number typed wrong in config.env",
+        "correct": false,
+        "why": "The deploy's smoke test fails on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtf3pgcw",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does ops/rollback.sh change on disk?",
+    "choices": [
+      {
+        "text": "It swaps two links",
+        "correct": true,
+        "why": "Right. current and previous trade places, then it restarts and smokes."
+      },
+      {
+        "text": "It unpacks the previous artifact again",
+        "correct": false,
+        "why": "It is still unpacked in releases/."
+      },
+      {
+        "text": "It reverts the last commit",
+        "correct": false,
+        "why": "It never touches git."
+      },
+      {
+        "text": "It rewrites config.env",
+        "correct": false,
+        "why": "Configuration belongs to the environment and stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-79bse4kx",
+    "version": 1,
+    "section": "rollback",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did the rollback take, to the nearest tenth?",
+    "value": 1.9,
+    "tolerance": 0.05,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-02nkbyb6",
+    "version": 1,
+    "section": "rollback",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made the rollback fast? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The old release was still on disk",
+        "correct": true,
+        "why": "Right. Nothing had to be fetched."
+      },
+      {
+        "text": "Nothing was built",
+        "correct": true,
+        "why": "Right. The same artifact that ran before ran again."
+      },
+      {
+        "text": "The configuration stayed where it was",
+        "correct": true,
+        "why": "Right. Only the code moved."
+      },
+      {
+        "text": "The restart skipped the smoke test",
+        "correct": false,
+        "why": "It ran the smoke test."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2r7qrkp",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is rebuilding 1.5.0 from its tag not the same as rolling back to it?",
+    "choices": [
+      {
+        "text": "Git tags cannot be checked out",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "The rebuild is a new artifact that never ran",
+        "correct": true,
+        "why": "Right. Lesson 7: build once, deploy those bytes."
+      },
+      {
+        "text": "The tag points at 1.6.0 after the release",
+        "correct": false,
+        "why": "A tag does not move."
+      },
+      {
+        "text": "1.5.0 cannot read 1.6.0's configuration",
+        "correct": false,
+        "why": "The configuration did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w2nfgxw",
+    "version": 1,
+    "section": "rehearsal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Production runs 1.5.0 after one rollback. Somebody runs rollback.sh again. What runs now?",
+    "choices": [
+      {
+        "text": "1.5.0 still; the script refuses to roll back twice",
+        "correct": false,
+        "why": "It swaps the links every time."
+      },
+      {
+        "text": "The release before 1.5.0",
+        "correct": false,
+        "why": "It remembers one step only."
+      },
+      {
+        "text": "1.6.0, the release with the bug",
+        "correct": true,
+        "why": "Right. A second rollback undoes the first."
+      },
+      {
+        "text": "Nothing; the process is stopped",
+        "correct": false,
+        "why": "It restarts and passes the smoke test."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns7dc9dh",
+    "version": 1,
+    "section": "rehearsal",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After its first deploy, rollback.sh says the environment has no ___ release.",
+    "blanks": [
+      {
+        "accept": [
+          "previous"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h5za809s",
+    "version": 1,
+    "section": "rehearsal",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do teams that trust their rollback do? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Run it in staging regularly",
+        "correct": true,
+        "why": "Right. A rollback that ran last week works."
+      },
+      {
+        "text": "Check what it will go back to first",
+        "correct": true,
+        "why": "Right. readlink answers it in the lab."
+      },
+      {
+        "text": "Name one person to call it",
+        "correct": true,
+        "why": "Right. Two people at once is the double rollback."
+      },
+      {
+        "text": "Keep it secret, so nobody runs it by mistake",
+        "correct": false,
+        "why": "A path nobody knows is a path nobody can use."
+      }
+    ]
+  },
+  {
+    "id": "ex-2156pj32",
+    "version": 1,
+    "section": "roll-forward",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Was 1.6.1 a rollback or a roll forward from 1.6.0?",
+    "choices": [
+      {
+        "text": "A rollback, because it removed code",
+        "correct": false,
+        "why": "It added a test and a flag."
+      },
+      {
+        "text": "A roll forward: a fix in a new release",
+        "correct": true,
+        "why": "Right. One character, released as 1.6.1."
+      },
+      {
+        "text": "Neither, it was a hotfix",
+        "correct": false,
+        "why": "A hotfix shipped as a release is a roll forward."
+      },
+      {
+        "text": "A rollback, because its number is close to 1.6.0",
+        "correct": false,
+        "why": "Numbers say nothing about direction."
+      }
+    ]
+  },
+  {
+    "id": "ex-sm926str",
+    "version": 1,
+    "section": "roll-forward",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is rolling forward the better choice, by the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The release before is broken too",
+        "correct": true,
+        "why": "Right. Going back one step fixes nothing."
+      },
+      {
+        "text": "Going back would undo a migration the old release cannot read",
+        "correct": true,
+        "why": "Right. The next section covers those."
+      },
+      {
+        "text": "The fix is small and the pipeline is as fast as a rollback",
+        "correct": true,
+        "why": "Right. Then both reach production as quickly."
+      },
+      {
+        "text": "The author of the change prefers it",
+        "correct": false,
+        "why": "That is the argument a default removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx38zgmx",
+    "version": 1,
+    "section": "roll-forward",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"roll back first\" a good default during an incident?",
+    "choices": [
+      {
+        "text": "Rollbacks never fail",
+        "correct": false,
+        "why": "Section 06 showed two ways they surprise."
+      },
+      {
+        "text": "It stops the damage before the cause is known",
+        "correct": true,
+        "why": "Right. The fix can then be written the usual way."
+      },
+      {
+        "text": "It avoids writing a postmortem",
+        "correct": false,
+        "why": "The postmortem is written either way."
+      },
+      {
+        "text": "Customers prefer older versions",
+        "correct": false,
+        "why": "Customers did not ask."
+      }
+    ]
+  },
+  {
+    "id": "ex-n30p1frc",
+    "version": 1,
+    "section": "data-does-not-roll-back",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a rollback leave behind? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A migration that changed the schema",
+        "correct": true,
+        "why": "Right. The old code meets the new schema."
+      },
+      {
+        "text": "E-mails already sent",
+        "correct": true,
+        "why": "Right. Rolling back stops only the next ones."
+      },
+      {
+        "text": "Messages in a shared queue",
+        "correct": true,
+        "why": "Right. The old consumers meet them."
+      },
+      {
+        "text": "The new release's code",
+        "correct": false,
+        "why": "That is the one thing it does undo."
+      }
+    ]
+  },
+  {
+    "id": "ex-fybdpvs6",
+    "version": 1,
+    "section": "data-does-not-roll-back",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the releases of an expand-and-contract column change.",
+    "items": [
+      "Add the new column",
+      "Write both columns",
+      "Copy the old rows across",
+      "Read the new column",
+      "Stop writing the old column and drop it"
+    ],
+    "trap": "Dropping the old column is last: until then a rollback still needs it."
+  },
+  {
+    "id": "ex-1vmq1gsa",
+    "version": 1,
+    "section": "data-does-not-roll-back",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which question does the lesson ask at review time for a release that touches state?",
+    "choices": [
+      {
+        "text": "How many tests cover the migration?",
+        "correct": false,
+        "why": "Coverage says nothing about what stays behind."
+      },
+      {
+        "text": "If rolled back an hour later, what is left behind?",
+        "correct": true,
+        "why": "Right. Anything left needs a plan or a flag."
+      },
+      {
+        "text": "Can it be deployed at night?",
+        "correct": false,
+        "why": "The hour changes nothing about state."
+      },
+      {
+        "text": "Who wrote the migration?",
+        "correct": false,
+        "why": "The author changes nothing about state."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0nezqqp",
+    "version": 1,
+    "section": "the-regression-test",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run against 1.6.0's quote.py, the regression test failed with: assert [ ___ ] == [].",
+    "blanks": [
+      {
+        "accept": [
+          "57"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-917xwz76",
+    "version": 1,
+    "section": "the-regression-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the test run on the code with the bug as well as on the fix?",
+    "choices": [
+      {
+        "text": "To measure how long the suite takes",
+        "correct": false,
+        "why": "Timing was not the point."
+      },
+      {
+        "text": "A test never seen failing proves nothing yet",
+        "correct": true,
+        "why": "Right. Red on the bug, green on the fix."
+      },
+      {
+        "text": "Because pytest needs two runs to cache results",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "To prove the old tests were wrong",
+        "correct": false,
+        "why": "They were right, and incomplete."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc7qje5w",
+    "version": 1,
+    "section": "the-regression-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The four-example test passed on 1.6.0. What does the regression test check instead?",
+    "choices": [
+      {
+        "text": "A fifth example, in Alagoas",
+        "correct": false,
+        "why": "That catches 57 and nothing else."
+      },
+      {
+        "text": "The response time of a quote to the Northeast",
+        "correct": false,
+        "why": "It does not time anything."
+      },
+      {
+        "text": "A property: every prefix has an estimate",
+        "correct": true,
+        "why": "Right. It catches any gap a future edit leaves."
+      },
+      {
+        "text": "That the app answers 500 for Alagoas",
+        "correct": false,
+        "why": "That would test the bug, not the fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4cvqs4a",
+    "version": 1,
+    "section": "postmortem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a blameless postmortem name?",
+    "choices": [
+      {
+        "text": "The person who wrote the line with the bug",
+        "correct": false,
+        "why": "That is a cause nobody can act on."
+      },
+      {
+        "text": "What happened, and what changes",
+        "correct": true,
+        "why": "Right. A test, a flag and a rule."
+      },
+      {
+        "text": "The reviewer who missed it",
+        "correct": false,
+        "why": "Same: not a change anybody can make."
+      },
+      {
+        "text": "The customers it affected",
+        "correct": false,
+        "why": "They are counted, not named."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjk83t10",
+    "version": 1,
+    "section": "postmortem",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are changes, in the postmortem's sense? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A regression test for every prefix",
+        "correct": true,
+        "why": "Right. Done in 1.6.1."
+      },
+      {
+        "text": "The estimate behind a flag",
+        "correct": true,
+        "why": "Right. It can be turned off without a deploy."
+      },
+      {
+        "text": "Releases go out as canaries",
+        "correct": true,
+        "why": "Right. With this lesson's criteria."
+      },
+      {
+        "text": "Ana promises to be more careful",
+        "correct": false,
+        "why": "\"Be more careful\" is not a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jbpa2d4",
+    "version": 1,
+    "section": "error-budget",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 99.9% over 30 days, how many minutes of downtime does the budget allow?",
+    "hint": "30 days is 43,200 minutes.",
+    "value": 43.2,
+    "tolerance": 0.1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-hwhgbzt3",
+    "version": 1,
+    "section": "error-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The error budget for the month is spent. What does the rule say?",
+    "choices": [
+      {
+        "text": "Pause features; fix reliability",
+        "correct": true,
+        "why": "Right. They resume when the budget recovers."
+      },
+      {
+        "text": "Lower the objective to 99%",
+        "correct": false,
+        "why": "Moving the target to fit is the opposite of the rule."
+      },
+      {
+        "text": "Release faster to fix things sooner",
+        "correct": false,
+        "why": "Releases are what spends the budget."
+      },
+      {
+        "text": "Nothing, the budget is only a report",
+        "correct": false,
+        "why": "It is a rule about releasing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds4em8jh",
+    "version": 1,
+    "section": "error-budget",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team has not spent any of its error budget in a year. What does the lesson read into that?",
+    "choices": [
+      {
+        "text": "The objective should be raised to 100%",
+        "correct": false,
+        "why": "No service reaches 100%, and trying costs without end."
+      },
+      {
+        "text": "It releases too slowly, or aims too high",
+        "correct": true,
+        "why": "Right. The budget is there to be spent."
+      },
+      {
+        "text": "The canary criteria are too loose",
+        "correct": false,
+        "why": "Loose criteria would spend the budget, not save it."
+      },
+      {
+        "text": "Its tests can be removed",
+        "correct": false,
+        "why": "The tests are part of why it is unspent."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gk63hzt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what a team does when a release misbehaves, as this lesson teaches.",
+    "items": [
+      "Stop it: abort the canary or roll back",
+      "Find the cause in the logs",
+      "Write a test that fails on the bug",
+      "Ship the fix as a new release",
+      "Write the postmortem"
+    ],
+    "trap": "Stopping comes before diagnosing: the damage grows while the cause is studied."
+  },
+  {
+    "id": "ex-3f36czfe",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool of the lesson to what it decides.",
+    "pairs": [
+      {
+        "left": "stop criteria",
+        "right": "when one release is abandoned"
+      },
+      {
+        "left": "error budget",
+        "right": "when releasing pauses altogether"
+      },
+      {
+        "left": "rollback",
+        "right": "how the code goes back"
+      },
+      {
+        "left": "feature flag",
+        "right": "whether customers see a feature"
+      }
+    ]
+  },
+  {
+    "id": "ex-as0gynwc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which part of the incident would a rollback alone not have fixed?",
+    "choices": [
+      {
+        "text": "The failing quotes to Alagoas",
+        "correct": false,
+        "why": "Rolling back to 1.5.0 stopped them."
+      },
+      {
+        "text": "The 500s in green's log",
+        "correct": false,
+        "why": "Green out of traffic logs no more."
+      },
+      {
+        "text": "The gap in the tests",
+        "correct": true,
+        "why": "Right. The gap that let it through; only the regression test closes it."
+      },
+      {
+        "text": "The time customers waited for a quote",
+        "correct": false,
+        "why": "Blue answered at its usual speed."
+      }
+    ]
+  }
+]

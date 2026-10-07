@@ -1,0 +1,176 @@
+{
+  "ex-mkjf64gq": {
+    "prompt": "Num cluster do kind, o que é um nó?",
+    "hint": "O nome da ferramenta abrevia a resposta.",
+    "choices": [
+      {
+        "text": "Uma máquina virtual com kernel próprio",
+        "why": "Essa é uma das opções do minikube; os nós do kind compartilham o kernel do laptop."
+      },
+      {
+        "text": "Um container Docker com kubelet",
+        "why": "Isso: Kubernetes IN Docker. O `docker ps` listou os três nós."
+      },
+      {
+        "text": "Um processo do próprio kind, um por nó",
+        "why": "O kind monta os containers e sai; não roda nada depois."
+      },
+      {
+        "text": "Um pod num cluster em outro lugar",
+        "why": "Nada aqui roda em outro cluster; os nós estão no laptop."
+      }
+    ]
+  },
+  "ex-59d4d51e": {
+    "prompt": "O laptop de trabalho de uma pessoa não permite instalar nada, e ela quer testar um comando `kubectl` hoje. Qual caminho combina?",
+    "hint": "Um caminho não pede instalação nenhuma.",
+    "choices": [
+      {
+        "text": "O kind no laptop, já que é o recomendado",
+        "why": "Ele precisa de Docker, kind e kubectl instalados, o que esse laptop proíbe."
+      },
+      {
+        "text": "Uma máquina virtual Linux no mesmo laptop",
+        "why": "Uma máquina virtual também é uma instalação, e maior."
+      },
+      {
+        "text": "Um playground no navegador, que não instala nada",
+        "why": "Isso. Nada é instalado; nada sobrevive à sessão também, o que está bem para um comando."
+      },
+      {
+        "text": "O minikube, porque não precisa de Docker",
+        "why": "O minikube também precisa ser instalado, com algum driver."
+      }
+    ]
+  },
+  "ex-pwtd2sd5": {
+    "prompt": "Segundo o `docker stats`, quantos MiB o nó do plano de controle usava, com uma casa decimal?",
+    "hint": "A primeira linha da tabela.",
+    "unit": "MiB"
+  },
+  "ex-3ywpkg3g": {
+    "prompt": "Por que os três nós do kind informam a versão do kernel do próprio laptop?",
+    "hint": "O que um container compartilha com o host?",
+    "choices": [
+      {
+        "text": "O kind copia o kernel do laptop para cada nó",
+        "why": "Nada é copiado; só existe um kernel."
+      },
+      {
+        "text": "Os nós são máquinas virtuais iniciadas da mesma imagem de disco do laptop",
+        "why": "Uma máquina virtual teria kernel próprio; estes são containers."
+      },
+      {
+        "text": "Um container compartilha o kernel da máquina em que roda",
+        "why": "Isso. Os nós são três conjuntos de processos num Linux só, e por isso sobem em segundos."
+      },
+      {
+        "text": "O kubectl informa naquela coluna o kernel do cliente",
+        "why": "A coluna vem do kubelet de cada nó; é o mesmo kernel por acaso de arquitetura."
+      }
+    ]
+  },
+  "ex-knahjfks": {
+    "prompt": "Um cluster roda Kubernetes 1.37. Quais versões do `kubectl` o projeto suporta contra ele?",
+    "hint": "A regra é uma versão menor, em qualquer direção.",
+    "choices": [
+      {
+        "text": "Só a 1.37, a mesma versão",
+        "why": "Uma versão menor para cada lado também tem suporte."
+      },
+      {
+        "text": "1.36, 1.37 e 1.38",
+        "why": "Isso: a até uma versão menor do API server."
+      },
+      {
+        "text": "Qualquer 1.x, porque a API é estável",
+        "why": "Campos e comportamentos mudam entre versões; a janela suportada é estreita de propósito."
+      },
+      {
+        "text": "Da 1.35 à 1.37, nunca uma mais nova",
+        "why": "Um kubectl uma versão mais novo tem suporte; uma diferença de duas não."
+      }
+    ]
+  },
+  "ex-9r7dcq94": {
+    "prompt": "Ligue cada mensagem ao que ela significa.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "`node(s) already exist for a cluster with the name`",
+        "right": "Já existe um cluster com esse nome"
+      },
+      {
+        "left": "`failed to connect to the docker API`",
+        "right": "O Docker não responde onde o cliente procura"
+      },
+      {
+        "left": "`address already in use`",
+        "right": "Uma porta que o cluster publica está ocupada"
+      },
+      {
+        "left": "`The connection to the server localhost:8080 was refused`",
+        "right": "O kubectl não tem contexto atual"
+      }
+    ],
+    "right_distractors": [
+      "A versão do cluster é nova demais para o kubectl"
+    ]
+  },
+  "ex-p3901zzs": {
+    "prompt": "Depois de `kind delete cluster --name study`, o `kubectl get nodes` reclamou de `localhost:8080`. Por que esse endereço?",
+    "hint": "O que o `kubectl config current-context` disse depois?",
+    "choices": [
+      {
+        "text": "O API server do cluster apagado tinha ido para esse endereço no laptop",
+        "why": "O cluster sumiu, com API server e tudo."
+      },
+      {
+        "text": "O kind deixou um servidor web na porta 8080",
+        "why": "O kind não deixa nada rodando depois de apagar."
+      },
+      {
+        "text": "Sem contexto atual, o kubectl cai num padrão antigo",
+        "why": "Isso. O contexto foi junto com o cluster, e o padrão é um endereço que nada oferece."
+      },
+      {
+        "text": "A porta 8080 ainda estava com o teste anterior",
+        "why": "A recusa significa que nada escutava ali, o contrário de uma porta ocupada."
+      }
+    ]
+  },
+  "ex-nzfwmp4t": {
+    "prompt": "No Docker Desktop, um cluster de três nós sobe, e minutos depois pods são mortos e um nó fica `NotReady`, sem erro nenhum do kind. O que conferir primeiro?",
+    "hint": "O Docker Desktop roda tudo dentro de uma máquina de tamanho fixo.",
+    "choices": [
+      {
+        "text": "Se o nome do cluster já existe",
+        "why": "Um nome já usado para o `kind create` na hora, com mensagem."
+      },
+      {
+        "text": "Se a porta 8080 está livre",
+        "why": "Uma porta ocupada faz a criação falhar; este cluster foi criado."
+      },
+      {
+        "text": "Se o kubectl está uma versão atrás do cluster",
+        "why": "Diferença de versão faz comandos falharem, não nós sumirem."
+      },
+      {
+        "text": "Quanta memória recebeu a máquina virtual por baixo de tudo",
+        "why": "Isso. Pouca memória mata processos sem mensagem clara; dê pelo menos 4 GiB."
+      }
+    ]
+  },
+  "ex-6zkk6nhe": {
+    "prompt": "Ponha em ordem os passos de montar o cluster de estudo.",
+    "hint": "O kubectl precisa de um contexto, e um contexto precisa de um cluster.",
+    "items": [
+      "Garantir que o Docker responde",
+      "Escrever o arquivo do cluster com os três nós",
+      "Rodar `kind create cluster` com esse arquivo",
+      "Conferir que o contexto atual do kubectl é o cluster novo",
+      "Listar os nós e vê-los `Ready`"
+    ],
+    "trap": "O kind precisa do Docker antes de tudo, e o kubectl só lista nós depois que o kind escreveu o contexto."
+  }
+}

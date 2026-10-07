@@ -1,0 +1,450 @@
+[
+  {
+    "id": "ex-vsdhm2cg",
+    "version": 1,
+    "section": "the-writable-layer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana writes `/notes.txt` in a container, runs `docker stop`, then `docker start`. Is the file there?",
+    "hint": "Stopping ends the process. What about the layer?",
+    "choices": [
+      {
+        "text": "No, stopping a container wipes its writable layer, like a reboot does to RAM",
+        "correct": false,
+        "why": "The layer is kept; `cat` printed `first note` after the start."
+      },
+      {
+        "text": "Yes",
+        "correct": true,
+        "why": "Right. A stopped container keeps its writable layer; only removal deletes it."
+      },
+      {
+        "text": "Only if she committed it to an image first",
+        "correct": false,
+        "why": "No commit is needed for a stop and start."
+      },
+      {
+        "text": "Only if the container was started with `--rm`",
+        "correct": false,
+        "why": "`--rm` does the opposite: it removes the container when it stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-hg52zv32",
+    "version": 1,
+    "section": "the-writable-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `docker rm -f notes`, Ana runs `docker run -d --name notes alpine:3.22 sleep 3600` again and the file is missing. Why does reusing the name not bring it back?",
+    "hint": "What did `docker rm` delete?",
+    "choices": [
+      {
+        "text": "Names are reserved for an hour after removal",
+        "correct": false,
+        "why": "The name was reused at once; it is just a label on a new container."
+      },
+      {
+        "text": "The image was updated on Docker Hub in between the two runs",
+        "correct": false,
+        "why": "The same image was used both times."
+      },
+      {
+        "text": "The old layer went with the old container",
+        "correct": true,
+        "why": "Right: the new one is a different container. The name is a label, not the container."
+      },
+      {
+        "text": "Alpine clears `/` each time it starts",
+        "correct": false,
+        "why": "The file survived a stop and start of the same container."
+      }
+    ]
+  },
+  {
+    "id": "ex-38b7dp3y",
+    "version": 1,
+    "section": "the-writable-layer",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each letter in `docker diff` output to its meaning.",
+    "hint": "Three letters, three kinds of change.",
+    "pairs": [
+      {
+        "left": "`A`",
+        "right": "The path was added"
+      },
+      {
+        "left": "`C`",
+        "right": "The path was changed"
+      },
+      {
+        "left": "`D`",
+        "right": "The path was deleted"
+      }
+    ],
+    "right_distractors": [
+      "The path was copied from the image"
+    ]
+  },
+  {
+    "id": "ex-vsdxk73w",
+    "version": 1,
+    "section": "the-writable-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker ps` shows nothing, yet the disk keeps filling. Which command would reveal containers that still hold writable layers?",
+    "hint": "`docker ps` lists only one kind.",
+    "choices": [
+      {
+        "text": "`docker image ls`, which lists every layer on the machine",
+        "correct": false,
+        "why": "It lists images, not containers' writable layers."
+      },
+      {
+        "text": "`docker diff` with no argument",
+        "correct": false,
+        "why": "`diff` needs a container, which is what we are looking for."
+      },
+      {
+        "text": "`docker volume ls`",
+        "correct": false,
+        "why": "Volumes are separate from writable layers."
+      },
+      {
+        "text": "`docker ps -a`",
+        "correct": true,
+        "why": "Right. It also lists stopped containers, each with its layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-36cw9zfr",
+    "version": 1,
+    "section": "the-vanished-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where was the `loans` table of the first `db` container actually stored?",
+    "hint": "Read the image's `Config.Volumes`.",
+    "choices": [
+      {
+        "text": "In an anonymous volume Docker created for it",
+        "correct": true,
+        "why": "Right, which is why it could be rescued later."
+      },
+      {
+        "text": "In the container's writable layer",
+        "correct": false,
+        "why": "The image declares `/var/lib/postgresql/data` a volume, so the data went there instead."
+      },
+      {
+        "text": "In the `postgres:17` image",
+        "correct": false,
+        "why": "Images are read-only; containers never write into them."
+      },
+      {
+        "text": "On Docker Hub, which backs up database containers",
+        "correct": false,
+        "why": "Nothing about a container's data leaves the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-20rjkwkb",
+    "version": 1,
+    "section": "the-vanished-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `db` container, started with the same command, had an empty database. Why?",
+    "hint": "What did Docker mount for it?",
+    "choices": [
+      {
+        "text": "PostgreSQL deletes its data when it receives `SIGKILL`",
+        "correct": false,
+        "why": "The data was still on disk and was read back later."
+      },
+      {
+        "text": "It was given a new anonymous volume, which was empty",
+        "correct": true,
+        "why": "Right. Nothing told Docker to reuse the first one."
+      },
+      {
+        "text": "The first container's volume was deleted by `docker rm -f`",
+        "correct": false,
+        "why": "It survived; Ana mounted it into `rescued`."
+      },
+      {
+        "text": "`POSTGRES_PASSWORD` resets the database each time",
+        "correct": false,
+        "why": "The password only matters when the data directory is empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xkzf31t",
+    "version": 1,
+    "section": "the-vanished-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A week later Bruno runs `docker volume prune` to free disk space, with no container using the first anonymous volume. What happens to the rescued loans data if Ana had not mounted it again?",
+    "hint": "What does prune remove by default?",
+    "choices": [
+      {
+        "text": "It is kept, because volumes are never pruned",
+        "correct": false,
+        "why": "Prune exists to remove unused volumes."
+      },
+      {
+        "text": "It is moved into the image",
+        "correct": false,
+        "why": "Nothing moves data into images."
+      },
+      {
+        "text": "It is deleted",
+        "correct": true,
+        "why": "Right: prune removes anonymous volumes no container uses, which is what an orphaned database is."
+      },
+      {
+        "text": "It is archived to `/var/lib/docker/trash`",
+        "correct": false,
+        "why": "There is no such archive; removal is final."
+      }
+    ]
+  },
+  {
+    "id": "ex-040fa3ex",
+    "version": 1,
+    "section": "the-vanished-table",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make every new database container reuse the same data, give the volume a name: `docker run -v ___:/var/lib/postgresql/data postgres:17`, where the blank is a name such as `pgdata`. What kind of volume is that called?",
+    "hint": "The opposite of anonymous.",
+    "blanks": [
+      {
+        "accept": [
+          "named",
+          "a named volume",
+          "named volume"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8a3d33vm",
+    "version": 1,
+    "section": "the-vanished-table",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Ana's rescue of the vanished table in order.",
+    "hint": "Find it, free it, mount it, read it.",
+    "items": [
+      "List the volumes and see two anonymous ones",
+      "Inspect the running `db` to learn which volume it uses",
+      "Remove `db`, so nothing else is using PostgreSQL's data",
+      "Start a new container with the other volume mounted on `/var/lib/postgresql/data`",
+      "Query `loans` and see the row"
+    ]
+  },
+  {
+    "id": "ex-94yvm9kh",
+    "version": 1,
+    "section": "where-state-belongs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of state to where the lesson says it belongs.",
+    "hint": "Only one of them may live in the writable layer.",
+    "pairs": [
+      {
+        "left": "The database's files",
+        "right": "A named volume"
+      },
+      {
+        "left": "A password",
+        "right": "A secret file, never the image"
+      },
+      {
+        "left": "The application's logs",
+        "right": "Standard output, collected by the engine"
+      },
+      {
+        "left": "A cache it can rebuild",
+        "right": "The writable layer, or tmpfs"
+      }
+    ],
+    "right_distractors": [
+      "A `docker commit` after each change"
+    ]
+  },
+  {
+    "id": "ex-3h7hv6ej",
+    "version": 1,
+    "section": "where-state-belongs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker history notes:snapshot` describes the committed layer as `sleep 3600`. What problem does that reveal?",
+    "hint": "How did `/notes.txt` get there?",
+    "choices": [
+      {
+        "text": "The commit failed and the file is missing",
+        "correct": false,
+        "why": "The file is in the image; the history just does not say how."
+      },
+      {
+        "text": "`sleep` cannot run in an image",
+        "correct": false,
+        "why": "It is only the command the container happened to run."
+      },
+      {
+        "text": "Commits are limited to 8.19kB",
+        "correct": false,
+        "why": "That was simply the size of this layer."
+      },
+      {
+        "text": "The image records nothing about how the file was made, so it cannot be rebuilt or reviewed",
+        "correct": true,
+        "why": "Right. A Dockerfile writes the steps down; a commit does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-n938vt7v",
+    "version": 1,
+    "section": "where-state-belongs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is `docker commit` the right tool?",
+    "hint": "Evidence, not product.",
+    "choices": [
+      {
+        "text": "To keep a broken container's state as evidence",
+        "correct": true,
+        "why": "Right: as evidence of what went wrong, not as something to run."
+      },
+      {
+        "text": "To ship a new version of the application to production",
+        "correct": false,
+        "why": "A release needs a recipe someone can rebuild; that is a Dockerfile."
+      },
+      {
+        "text": "To back up a database container every night at the same hour",
+        "correct": false,
+        "why": "The data belongs in a volume, and volumes have their own backups (lesson 8)."
+      },
+      {
+        "text": "To change a running container's configuration",
+        "correct": false,
+        "why": "Configuration is set when a container is created; commit captures files."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv6mcb38",
+    "version": 1,
+    "section": "where-state-belongs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before removing a long-running container, which checks tell Ana whether anything will be lost? Choose all that apply.",
+    "hint": "The lesson's three questions.",
+    "choices": [
+      {
+        "text": "Whether `docker diff` lists anything that matters",
+        "correct": true,
+        "why": "Yes: that is the writable layer, which goes with the container."
+      },
+      {
+        "text": "Whether its mounts include an anonymous volume",
+        "correct": true,
+        "why": "Yes: it will be orphaned, and later pruned."
+      },
+      {
+        "text": "Whether the image is the newest tag",
+        "correct": false,
+        "why": "The image is not what is lost; it stays."
+      },
+      {
+        "text": "Whether a new container with the same image and options would give the same result",
+        "correct": true,
+        "why": "Yes: if not, something lives only in this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dp6epyp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `docker stop notes`, the status says `Exited (137)`. What does the 137 mean here?",
+    "hint": "Lesson 4 decoded the number.",
+    "choices": [
+      {
+        "text": "The container ran out of memory while it was sleeping",
+        "correct": false,
+        "why": "Nothing used memory; `sleep` was waiting."
+      },
+      {
+        "text": "`sleep` ignored the polite signal, then was killed",
+        "correct": true,
+        "why": "Right: SIGKILL, signal 9, after ten seconds. Lesson 11 explains why."
+      },
+      {
+        "text": "Docker's internal error code for any stopped container",
+        "correct": false,
+        "why": "It is the process's exit status, 128 plus the signal."
+      },
+      {
+        "text": "The file `/notes.txt` was 137 bytes",
+        "correct": false,
+        "why": "Exit codes are not sizes."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgqycqkf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana runs a throwaway PostgreSQL with `docker run --rm -e POSTGRES_PASSWORD=x postgres:17` and stops it. What happens to the anonymous volume it used?",
+    "hint": "What does `--rm` clean up besides the container?",
+    "choices": [
+      {
+        "text": "It stays, orphaned, like the ones in this lesson",
+        "correct": false,
+        "why": "That happens with `docker rm`; `--rm` also removes anonymous volumes."
+      },
+      {
+        "text": "It is renamed after the container",
+        "correct": false,
+        "why": "Anonymous volumes keep their hash until they are removed."
+      },
+      {
+        "text": "It is removed along with the container",
+        "correct": true,
+        "why": "Right. `--rm` cleans up the container's anonymous volumes too."
+      },
+      {
+        "text": "It is committed into the image",
+        "correct": false,
+        "why": "Nothing writes into an image."
+      }
+    ]
+  }
+]

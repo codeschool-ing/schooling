@@ -1,0 +1,383 @@
+{
+  "ex-ky3fygbc": {
+    "prompt": "Em `~/flow`, a última linha da lista é `\"40\"`, e a soma deu 19. Por que o `40` nunca foi somado?",
+    "hint": "Olhe a linha logo antes dele.",
+    "choices": [
+      {
+        "text": "O `continue` tinha pulado uma linha antes, e ele pula também todas as linhas seguintes",
+        "why": "O `continue` encerra uma volta só; `\"7\"` veio depois da linha vazia pulada e foi somado."
+      },
+      {
+        "text": "O laço tinha terminado em `\"end\"`",
+        "why": "Isso. O `break` saiu do laço em `\"end\"`, então a volta que leria `\"40\"` nunca aconteceu."
+      },
+      {
+        "text": "O `strconv.Atoi` recusou `\"40\"` como número",
+        "why": "Ele aceita `\"40\"`; uma recusa teria impresso `skipping \"40\"`, e nada assim foi impresso."
+      },
+      {
+        "text": "O `break` saiu do `if`, e o laço então pulou para a última volta",
+        "why": "O `break` nunca sai de um `if`; ele sai do laço mais próximo em volta, e não houve última volta."
+      }
+    ]
+  },
+  "ex-jc5eyy3k": {
+    "prompt": "Um `break` está dentro de um `if`, que está dentro de um `for`. Quando ele roda, qual comando roda em seguida?",
+    "hint": "Qual dos dois é algo de que um `break` pode sair?",
+    "choices": [
+      {
+        "text": "O primeiro comando depois da chave que fecha o `if`, ainda dentro do laço",
+        "why": "Essa é a imagem do `break` saindo do `if`. Um `if` não é algo de que o `break` sai."
+      },
+      {
+        "text": "A condição do laço, para a próxima volta",
+        "why": "Isso é o `continue`, que encerra uma volta e deixa o laço seguir."
+      },
+      {
+        "text": "O primeiro comando depois do laço",
+        "why": "Isso. O `break` encerra o `for` mais próximo em volta dele, e o programa segue depois desse laço."
+      },
+      {
+        "text": "Quem chamou a função, como com `return`",
+        "why": "O `break` fica na função. Só o `return` sai dela."
+      }
+    ]
+  },
+  "ex-cay8g9c9": {
+    "prompt": "`i := 0; for i < len(lines) { if lines[i] == \"\" { continue }; ...; i++ }` encontra uma linha vazia. O que acontece?",
+    "hint": "O `i++` faz parte do laço ou do corpo?",
+    "choices": [
+      {
+        "text": "Pula a linha vazia e segue com a próxima",
+        "why": "É o que a forma de três cláusulas faz, porque nela o `i++` roda depois de toda volta."
+      },
+      {
+        "text": "Gira na mesma linha vazia para sempre, porque o `i++` nunca é alcançado",
+        "why": "Isso. O `continue` pulou o `i++` como uma linha comum do corpo; o `timeout` teve de matar o programa."
+      },
+      {
+        "text": "O compilador recusa: `continue is not in a loop`",
+        "why": "O `continue` está num laço, então compila; essa mensagem é para um `continue` sem laço em volta."
+      },
+      {
+        "text": "Compila, mas o `go vet` aponta que o laço nunca termina",
+        "why": "O `go vet` saiu com 0 exatamente neste laço. Nada no toolchain sabe que o laço deveria terminar."
+      }
+    ]
+  },
+  "ex-kknfrmfg": {
+    "prompt": "`timeout 2 ./skip; echo $?` imprimiu `___`, o status com que o `timeout` sai quando teve de matar o comando.",
+    "hint": "Um número de três dígitos.",
+    "blanks": [
+      {
+        "accept": [
+          "124"
+        ]
+      }
+    ]
+  },
+  "ex-vp7m0vfp": {
+    "prompt": "`check(n int)` contém `if n < 0 { break }`, e `main` chama `check` dentro de um `for`. O que o compilador faz?",
+    "hint": "Onde está o laço mais próximo, contando só esta função?",
+    "choices": [
+      {
+        "text": "Compila, e o `break` encerra o laço de `main`",
+        "why": "O `break` age sobre um laço da própria função; a chamada de dentro de um laço não lhe empresta um."
+      },
+      {
+        "text": "Compila, e o `break` faz `check` retornar mais cedo",
+        "why": "Isso seria o `return`. Um `break` sem laço, `switch` ou `select` em volta não compila."
+      },
+      {
+        "text": "Compila com um aviso, e ignora o `break` quando ele roda",
+        "why": "Go não tem avisos que deixam o build passar; o que ele objeta, ele recusa."
+      },
+      {
+        "text": "Recusa: `break is not in a loop, switch, or select`",
+        "why": "Isso. O laço de `main` está em outra função, então dentro de `check` não há nada de que sair."
+      }
+    ]
+  },
+  "ex-m3fqqkxz": {
+    "prompt": "Um `break` sem rótulo está dentro de um `for` que está dentro de outro `for`. Do que ele sai?",
+    "hint": "O programa da grade imprimiu duas respostas.",
+    "choices": [
+      {
+        "text": "Os dois laços",
+        "why": "Essa é a suposição do bug. O programa da grade achou 49 depois de 25 porque o laço externo seguiu."
+      },
+      {
+        "text": "Só o laço interno",
+        "why": "Isso. Um `break` sai do `for`, do `switch` ou do `select` mais interno em volta dele."
+      },
+      {
+        "text": "O laço externo, porque foi declarado primeiro",
+        "why": "A ordem de declaração não conta; o laço mais próximo em volta é o que é deixado."
+      },
+      {
+        "text": "Nenhum: sem rótulo é erro de compilação",
+        "why": "Um `break` simples em laços aninhados compila e roda; o programa da grade fez as duas coisas."
+      }
+    ]
+  },
+  "ex-ph14q5t4": {
+    "prompt": "O compilador diz `label search defined and not used`. O que a pessoa programadora fez?",
+    "hint": "Conte os lugares onde a palavra `search` aparece.",
+    "choices": [
+      {
+        "text": "Rotulou um laço e deixou o `break` sem o nome do rótulo",
+        "why": "Isso. Um rótulo que nenhum `break`, `continue` ou `goto` nomeia é recusado; `break search` corrigiu."
+      },
+      {
+        "text": "Declarou uma variável chamada `search` e nunca a leu",
+        "why": "Essa mensagem diria `declared and not used`; rótulos têm uma mensagem própria."
+      },
+      {
+        "text": "Pôs o rótulo num `if`, onde rótulos não são permitidos",
+        "why": "O rótulo estava no `for` externo, um bom lugar para ele; a mensagem é sobre não ser usado."
+      },
+      {
+        "text": "Indentou o rótulo no nível do `for` em vez de um à esquerda",
+        "why": "Layout nunca é erro de compilação; o `gofmt` move um rótulo sem que o compilador se importe."
+      }
+    ]
+  },
+  "ex-pagantt1": {
+    "prompt": "Em `~/flow-rows`, `continue rows` é trocado por um `continue` simples. Que soma o programa imprime agora para a linha 1, `{16, -25, 36}`?",
+    "hint": "Um `continue` simples pula um valor, não a linha.",
+    "unit": ""
+  },
+  "ex-afz4z24b": {
+    "prompt": "Em `~/flow-switch`, por que o `delete` ainda rodou depois de o programa imprimir `stopping`?",
+    "hint": "Qual é o comando mais interno de que um `break` pode sair ali?",
+    "choices": [
+      {
+        "text": "O caso `stop` caiu no `default`, que rodou o próximo comando",
+        "why": "Casos em Go não caem no seguinte: o `default` não imprimiu `running stop`. Quem rodou `delete` foi a próxima volta do laço."
+      },
+      {
+        "text": "O `break` não é permitido num `case`, então foi ignorado",
+        "why": "Ele é permitido e fez algo: saiu do `switch`."
+      },
+      {
+        "text": "O `break` saiu do `switch`, não do `for` em volta",
+        "why": "Isso. O `switch` é um dos comandos a que o `break` pertence, então o laço seguiu para o próximo comando."
+      },
+      {
+        "text": "O `range` copia a slice antes, então o laço não pode ser parado cedo",
+        "why": "Um laço com `range` para cedo com `break loop`, como a versão corrigida mostrou."
+      }
+    ]
+  },
+  "ex-eevb57p1": {
+    "prompt": "Um `break` dentro de um `case` deveria encerrar o `for` em volta do `switch`. Que mudanças fazem isso? Escolha todas as que se aplicam.",
+    "hint": "Uma das erradas só empurra o problema uma volta adiante.",
+    "choices": [
+      {
+        "text": "Rotular o `for` e escrever o `break` com esse rótulo",
+        "why": "Sim: `break loop` parou em `stopping` e foi direto para `done`."
+      },
+      {
+        "text": "Trocar o `break` por `continue`",
+        "why": "O `continue` vai para a próxima volta do laço, então o `delete` ainda rodaria."
+      },
+      {
+        "text": "Escrever `return` no `case`, se nada vem depois do laço naquela função",
+        "why": "Sim. O `return` sai da função e de todo laço nela; com código depois do laço, ele pularia isso também."
+      },
+      {
+        "text": "Acrescentar `fallthrough` antes do `break`",
+        "why": "O `fallthrough` passa o controle para o corpo do próximo caso, assunto da lição 19; ele não mexe no laço."
+      }
+    ]
+  },
+  "ex-m7wz2rfm": {
+    "prompt": "`inner:` rotula o laço interno, e `break inner` está escrito no corpo do laço externo depois de o interno terminar. Por que é recusado?",
+    "hint": "Um rótulo nomeia um comando. O `break` está dentro desse comando?",
+    "choices": [
+      {
+        "text": "Rótulos só podem ir no laço mais externo de uma função",
+        "why": "Qualquer `for`, `switch` ou `select` pode ser rotulado; o próprio `inner:` foi aceito."
+      },
+      {
+        "text": "O nome de um rótulo tem de ser diferente de toda variável da função",
+        "why": "Não havia variável chamada `inner`, e a mensagem foi `invalid break label inner`, não um conflito."
+      },
+      {
+        "text": "O `break` não está dentro do laço que o rótulo nomeia",
+        "why": "Isso. `break L` só pode sair de um comando que o envolve, e o laço interno já tinha terminado."
+      },
+      {
+        "text": "Laços rotulados não podem ser deixados com `break`, só com `goto`",
+        "why": "`break search` saiu de um laço rotulado no programa da grade."
+      }
+    ]
+  },
+  "ex-d9ygz9he": {
+    "prompt": "Dentro de um laço interno, sob um laço externo rotulado `outer`: ligue cada comando ao lugar para onde o programa vai em seguida.",
+    "hint": "A figura desta seção tem as quatro setas.",
+    "pairs": [
+      {
+        "left": "`continue`",
+        "right": "A próxima volta do laço interno"
+      },
+      {
+        "left": "`break`",
+        "right": "O resto do corpo do laço externo"
+      },
+      {
+        "left": "`continue outer`",
+        "right": "A próxima volta do laço externo"
+      },
+      {
+        "left": "`break outer`",
+        "right": "O primeiro comando depois dos dois laços"
+      }
+    ],
+    "right_distractors": [
+      "Quem chamou a função"
+    ]
+  },
+  "ex-2xzx6aes": {
+    "prompt": "`goto done jumps over declaration of msg at ./main.go:10:6`. Que regra o programa quebrou?",
+    "hint": "No rótulo, `msg` existiria?",
+    "choices": [
+      {
+        "text": "Um `goto` só pode saltar para trás",
+        "why": "Saltos para a frente são permitidos; este foi recusado pelo que pulou."
+      },
+      {
+        "text": "Pulou uma declaração cuja variável estaria no escopo no rótulo",
+        "why": "Isso. Em `done:` o nome `msg` existiria sem que a declaração tivesse rodado."
+      },
+      {
+        "text": "O rótulo é usado antes da linha que o define",
+        "why": "Um rótulo pode ser nomeado acima ou abaixo da linha dele; a função inteira é o seu escopo."
+      },
+      {
+        "text": "Saltou para fora do bloco `if` em que estava escrito",
+        "why": "Saltar para fora de um bloco é permitido; saltar para dentro de um é a outra recusa."
+      }
+    ]
+  },
+  "ex-a7891v0t": {
+    "prompt": "Qual destes `goto` o compilador recusa?",
+    "hint": "Duas regras, e só uma delas é sobre blocos.",
+    "choices": [
+      {
+        "text": "Um `goto again` dentro de um `if`, saltando para um rótulo escrito acima do `if`",
+        "why": "É o laço de `~/flow-goto`, que rodou três voltas. Sair de um bloco é permitido."
+      },
+      {
+        "text": "Um `goto inside` escrito antes de um `if`, para um rótulo dentro das chaves desse `if`",
+        "why": "Isso: `goto inside jumps into block`. Entrar no bloco assim pularia a condição que o protege."
+      },
+      {
+        "text": "Um `goto` para a frente por cima de `msg = \"short\"`, com `var msg string` declarado acima do `goto`",
+        "why": "Pular uma atribuição é permitido: `msg` já estava no escopo, então nada novo aparece no rótulo."
+      },
+      {
+        "text": "Um `goto` em `main` para um rótulo em `main`, três linhas abaixo, sem declarações no meio",
+        "why": "Um salto para a frente na mesma função, sem pular declaração e sem entrar em bloco, não quebra nenhuma regra."
+      }
+    ]
+  },
+  "ex-zcfhq1bq": {
+    "prompt": "O programa de `~/flow-goto` dá três voltas com `goto again` e funciona. Por que a seção ainda diz que ninguém deveria escrevê-lo?",
+    "hint": "Pense na próxima pessoa que vai lê-lo.",
+    "choices": [
+      {
+        "text": "Um laço feito de `goto` roda mais devagar que um `for`",
+        "why": "Nada na lição mediu velocidade; a objeção é à leitura, não à execução."
+      },
+      {
+        "text": "O `go vet` aponta todo `goto`, então o código não passaria na revisão",
+        "why": "O `go vet` não aponta nada disso; `goto` é Go válido e o programa compilou sem problemas."
+      },
+      {
+        "text": "Um `for` declara início, condição e passo num só lugar, e a versão com `goto` obriga quem lê a reconstruí-los",
+        "why": "Isso. Quem lê precisa achar o rótulo, cada `goto` que o nomeia e as condições em volta deles."
+      },
+      {
+        "text": "O `goto` está obsoleto e vai deixar de compilar numa versão futura",
+        "why": "Ele é uma das 25 palavras-chave, e a promessa de compatibilidade da lição 2 o mantém funcionando."
+      }
+    ]
+  },
+  "ex-6s49acky": {
+    "prompt": "Toda falha no processo filho salta para um rótulo só, porque o filho nunca sai daquela função de volta e por isso não pode fazer `___ err`.",
+    "hint": "O jeito comum de sair de uma função Go.",
+    "blanks": [
+      {
+        "accept": [
+          "return"
+        ]
+      }
+    ]
+  },
+  "ex-bnpcpzc0": {
+    "prompt": "Num `for i := 0; i < n; i++` de três cláusulas, um `continue` roda. Ponha em ordem o que acontece em seguida.",
+    "hint": "O comando de pós-iteração pertence ao laço.",
+    "items": [
+      "O resto do corpo é pulado",
+      "O `i++` roda",
+      "O `i < n` é avaliado",
+      "O corpo começa de novo da primeira linha"
+    ]
+  },
+  "ex-w15kzad0": {
+    "prompt": "Um `for` sobre comandos contém um `switch`, e um `case` diz `continue`. Para onde o `continue` manda o programa?",
+    "hint": "Compare as duas mensagens da seção 02: a que comandos cada uma pertence?",
+    "choices": [
+      {
+        "text": "Para a próxima volta do `for`, pulando o resto do corpo",
+        "why": "Isso. O `continue` pertence só aos laços, então um `switch` em volta dele não é sobre o que ele age."
+      },
+      {
+        "text": "Para o fim do `switch`, como um `break` ali faria",
+        "why": "Essa é a regra do `break`: é ele que pertence a um `switch` além dos laços."
+      },
+      {
+        "text": "Para o próximo `case` do `switch`",
+        "why": "Isso é o `fallthrough`, assunto da lição 19, não o `continue`."
+      },
+      {
+        "text": "Para lugar nenhum: é erro de compilação, `continue is not in a loop`",
+        "why": "Esse erro exige que não haja laço nenhum em volta do `continue`; aqui o `for` o envolve, então compila."
+      }
+    ]
+  },
+  "ex-3wt7x9wd": {
+    "prompt": "Quais destes compilam? Escolha todos os que se aplicam.",
+    "hint": "Dois dos quatro são recusas que você já viu; os outros dois são permitidos pelas mesmas regras.",
+    "choices": [
+      {
+        "text": "Um `break` dentro de um `switch` que não está em laço nenhum",
+        "why": "Sim. O `break` também pertence a um `switch`, então sai do `switch`."
+      },
+      {
+        "text": "Um `continue` dentro de um `switch` que não está em laço nenhum",
+        "why": "Recusado: `continue is not in a loop`. Um `switch` não dá ao `continue` nada sobre o que agir."
+      },
+      {
+        "text": "Um `goto` de volta a um rótulo acima de uma declaração `:=` pela qual já passou",
+        "why": "Sim. Saltar para trás não traz nome novo para o escopo no rótulo, que é tudo o que a regra proíbe."
+      },
+      {
+        "text": "Um rótulo num laço que nada nunca nomeia",
+        "why": "Recusado: `label search defined and not used`."
+      }
+    ]
+  },
+  "ex-ny8rzkrk": {
+    "prompt": "Um `break` sem rótulo sai do `for`, do `switch` ou do `___` mais interno em volta dele.",
+    "hint": "O terceiro espera em channels, no curso `go-concurrency`.",
+    "blanks": [
+      {
+        "accept": [
+          "select"
+        ]
+      }
+    ]
+  }
+}

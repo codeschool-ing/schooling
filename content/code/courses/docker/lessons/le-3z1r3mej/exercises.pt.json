@@ -1,0 +1,318 @@
+{
+  "ex-e0tk7wge": {
+    "prompt": "Iniciado à mão, o `web` registrou `connection refused` e saiu. Por quê?",
+    "hint": "O que o Postgres fazia naquele momento?",
+    "choices": [
+      {
+        "text": "A senha no `DATABASE_URL` não batia com a que o Postgres tinha",
+        "why": "Uma senha errada é recusada pelo Postgres, e não pela rede."
+      },
+      {
+        "text": "O Postgres ainda inicializava e não escutava",
+        "why": "Isso: nada fez o `web` esperar por ele."
+      },
+      {
+        "text": "Os dois containers estavam em redes diferentes",
+        "why": "Os dois estavam na `shelfnet`, e o `db` resolveu para um endereço."
+      },
+      {
+        "text": "A porta 5432 não foi publicada",
+        "why": "Containers numa mesma rede não precisam de `-p` entre si."
+      }
+    ]
+  },
+  "ex-z959c8y4": {
+    "prompt": "Como o `shelf` alcançou o Postgres com o nome de host `db`?",
+    "hint": "O que o primeiro comando criou?",
+    "choices": [
+      {
+        "text": "O Docker pôs `db` no `/etc/hosts` do host",
+        "why": "Os arquivos do host não foram tocados."
+      },
+      {
+        "text": "`db` é um nome reservado para bancos de dados",
+        "why": "Qualquer nome de container serviria."
+      },
+      {
+        "text": "Uma rede criada pela Ana resolve nomes",
+        "why": "Isso; a aula 23 mostra como isso funciona."
+      },
+      {
+        "text": "O Postgres se anuncia na rede",
+        "why": "O Postgres não anuncia nada; quem responde o nome é o Docker."
+      }
+    ]
+  },
+  "ex-mnb76hcy": {
+    "prompt": "Que problemas da montagem à mão um arquivo do Compose resolve? Escolha todos os que se aplicam.",
+    "hint": "A aula listou quatro.",
+    "choices": [
+      {
+        "text": "A ordem de início dependia de sorte",
+        "why": "Sim: o `depends_on` com condição de saúde resolve."
+      },
+      {
+        "text": "A montagem morava no histórico de alguém",
+        "why": "Sim: o arquivo mora no repositório."
+      },
+      {
+        "text": "Derrubar tudo pedia vários comandos",
+        "why": "Sim: `docker compose down`."
+      },
+      {
+        "text": "O Postgres precisava de mais memória do que a máquina tinha",
+        "why": "Memória nunca foi o problema."
+      }
+    ]
+  },
+  "ex-w5rwgt5t": {
+    "prompt": "Para o `web` esperar o `db` passar no health check, o `depends_on` dele define `condition: service____`.",
+    "hint": "O estado que o `docker ps` mostra entre parênteses.",
+    "blanks": [
+      {
+        "accept": [
+          "healthy"
+        ]
+      }
+    ]
+  },
+  "ex-c23vs8wr": {
+    "prompt": "Por que o health check roda `pg_isready -h 127.0.0.1`, e não só `pg_isready`?",
+    "hint": "O que roda enquanto a imagem inicializa o banco?",
+    "choices": [
+      {
+        "text": "O `pg_isready` falha se não receber um host a quem perguntar",
+        "why": "Ele funciona sem; pergunta ao socket local."
+      },
+      {
+        "text": "A porta 5432 só é publicada em 127.0.0.1",
+        "why": "Ela não é publicada de jeito nenhum."
+      },
+      {
+        "text": "O `-h` deixa a verificação mais rápida",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O servidor temporário da inicialização só escuta num socket",
+        "why": "Isso: por TCP, só o servidor de verdade consegue responder que está pronto."
+      }
+    ]
+  },
+  "ex-v0j1q31k": {
+    "prompt": "Ponha o que o `docker compose up -d` fez na ordem que a saída mostrou.",
+    "hint": "Siga as linhas.",
+    "items": [
+      "Criar a rede e o volume",
+      "Criar os dois containers",
+      "Iniciar o `db`",
+      "Esperar o `db` ficar saudável",
+      "Iniciar o `web`"
+    ]
+  },
+  "ex-bv050pmx": {
+    "prompt": "De onde veio o prefixo `shelf` em `shelf_default` e `shelf-db-1`?",
+    "hint": "A Ana rodou o comando em `~/shelf`.",
+    "choices": [
+      {
+        "text": "Do diretório onde está o arquivo do Compose",
+        "why": "Isso: o nome do projeto, que mantém dois projetos separados."
+      },
+      {
+        "text": "Do nome da imagem `shelf:1.5.0`",
+        "why": "O `db` roda `postgres:17` e ganhou o prefixo mesmo assim."
+      },
+      {
+        "text": "De uma chave `name:` no topo do `compose.yaml`",
+        "why": "O arquivo da Ana não tem; o padrão é o diretório."
+      },
+      {
+        "text": "Do primeiro serviço do arquivo",
+        "why": "O primeiro serviço é o `db`."
+      }
+    ]
+  },
+  "ex-erx41qjy": {
+    "prompt": "O `docker inspect` no `db` mostrou `POSTGRES_PASSWORD_FILE=/run/secrets/db_password` e nenhuma senha. No `web`, mostrou a senha. Por que a diferença?",
+    "hint": "O que cada programa lê?",
+    "choices": [
+      {
+        "text": "O Compose criptografa segredos só para o `db`",
+        "why": "Nada é criptografado; o arquivo é montado como está."
+      },
+      {
+        "text": "Postgres lê arquivo; `shelf` lê variável",
+        "why": "Isso: um segredo só pode ser arquivo para um programa que lê um."
+      },
+      {
+        "text": "O `web` iniciou antes de o segredo existir",
+        "why": "O segredo existia antes dos dois containers."
+      },
+      {
+        "text": "O segredo só serve para imagens do Docker Hub",
+        "why": "Qualquer imagem pode montá-lo; o programa precisa lê-lo."
+      }
+    ]
+  },
+  "ex-0wrbsds9": {
+    "prompt": "Por que a Ana acrescentou `*.env` e `db_password.txt` ao `.dockerignore`?",
+    "hint": "O que um `COPY . .` copia?",
+    "choices": [
+      {
+        "text": "O Compose não inicia sem que eles estejam listados",
+        "why": "O Compose não lê o `.dockerignore`."
+      },
+      {
+        "text": "Para escondê-los do `docker compose ps`",
+        "why": "O `ps` lista containers, e não arquivos."
+      },
+      {
+        "text": "Para nenhum build copiá-los",
+        "why": "Isso: o contexto é tudo o que não é ignorado."
+      },
+      {
+        "text": "Porque o Dockerfile os lê",
+        "why": "Não lê; eles são para o Compose."
+      }
+    ]
+  },
+  "ex-0r5bchc3": {
+    "prompt": "Depois de `docker compose down` e `up -d --wait`, o catálogo ainda tinha quatro livros. Por quê?",
+    "hint": "O que o `docker volume ls` mostrou depois do `down`?",
+    "choices": [
+      {
+        "text": "O `down` só para os containers",
+        "why": "Ele os removeu, e a rede também."
+      },
+      {
+        "text": "O Postgres guarda uma cópia na imagem",
+        "why": "A imagem nunca muda."
+      },
+      {
+        "text": "O `shelf` reinseriu o quarto livro",
+        "why": "O `shelf` só põe os três livros embutidos numa tabela vazia."
+      },
+      {
+        "text": "O volume nomeado sobreviveu",
+        "why": "Isso: só o `down -v` o remove."
+      }
+    ]
+  },
+  "ex-r16vdf35": {
+    "prompt": "Depois de `up -d --build` com uma versão nova do `shelf`, o que aconteceu com o `db`?",
+    "hint": "Leia a linha dele na saída.",
+    "choices": [
+      {
+        "text": "Nada; a configuração dele não tinha mudado",
+        "why": "Isso: `Running`, deixado em paz."
+      },
+      {
+        "text": "Foi reconstruído junto com o `web`",
+        "why": "O `db` não tem `build:`; é uma imagem de um registry."
+      },
+      {
+        "text": "Foi recriado, e os dados se perderam",
+        "why": "Recriar mantém os volumes de todo jeito, e ele não foi recriado."
+      },
+      {
+        "text": "Foi reiniciado para que o `web` pudesse reconectar a ele",
+        "why": "Nenhum reinício foi preciso nem mostrado."
+      }
+    ]
+  },
+  "ex-0mgqwb2j": {
+    "prompt": "O que o `--wait` acrescenta ao `docker compose up -d`?",
+    "hint": "Quando o comando voltou?",
+    "choices": [
+      {
+        "text": "Espera uma tecla antes de iniciar",
+        "why": "Nada interativo acontece."
+      },
+      {
+        "text": "Só volta quando todo serviço verificado está saudável",
+        "why": "Isso: o que um script quer antes da primeira requisição."
+      },
+      {
+        "text": "Espera 30 segundos fixos",
+        "why": "Ele espera a saúde, e não um relógio."
+      },
+      {
+        "text": "Tenta de novo os serviços que falham",
+        "why": "Reiniciar é trabalho da política de reinício."
+      }
+    ]
+  },
+  "ex-y6mehg6q": {
+    "prompt": "Ligue cada comando ao que ele faz.",
+    "hint": "A tabela no fim da etapa.",
+    "pairs": [
+      {
+        "left": "`docker compose down`",
+        "right": "Remove containers e redes, guarda os volumes"
+      },
+      {
+        "left": "`docker compose down -v`",
+        "right": "Remove os volumes também"
+      },
+      {
+        "left": "`docker compose exec db psql`",
+        "right": "Roda um comando dentro de um serviço rodando"
+      },
+      {
+        "left": "`docker compose up -d --build`",
+        "right": "Reconstrói as imagens e recria o que mudou"
+      }
+    ],
+    "right_distractors": [
+      "Move um serviço para outra máquina"
+    ]
+  },
+  "ex-gb2a9s82": {
+    "prompt": "Depois do `INSERT`, quantos livros o `/books` devolveu?",
+    "hint": "Três embutidos, mais o da Ana.",
+    "unit": "livros"
+  },
+  "ex-n44k3fve": {
+    "prompt": "O arquivo do Compose de um colega tem `depends_on: [db]` sem condição, e o `web` às vezes falha ao iniciar. Qual é a correção?",
+    "hint": "Iniciado não é o mesmo que pronto.",
+    "choices": [
+      {
+        "text": "Pôr um `sleep 10` antes de o `shelf` iniciar",
+        "why": "Um chute que falha no dia lento; e o distroless nem tem shell para isso."
+      },
+      {
+        "text": "Publicar a porta do `db`",
+        "why": "Publicar não muda nada entre containers numa mesma rede."
+      },
+      {
+        "text": "Dar um health check ao `db` e esperar `service_healthy`",
+        "why": "Isso: o `web` só inicia quando o Postgres aceita conexões."
+      },
+      {
+        "text": "Tirar o `depends_on`",
+        "why": "Aí a ordem nem é tentada."
+      }
+    ]
+  },
+  "ex-0zys53k5": {
+    "prompt": "No fim de um teste na CI que usou o Compose, que comando não deixa nada para trás?",
+    "hint": "Containers, redes e volumes.",
+    "choices": [
+      {
+        "text": "`docker compose stop`",
+        "why": "Os containers parados, a rede e o volume continuam."
+      },
+      {
+        "text": "`docker compose down`",
+        "why": "O volume continua, com os dados do teste."
+      },
+      {
+        "text": "`docker compose down --rmi all`",
+        "why": "As imagens vão também, e o volume continua."
+      },
+      {
+        "text": "`docker compose down -v`",
+        "why": "Isso: containers, rede e volumes."
+      }
+    ]
+  }
+}

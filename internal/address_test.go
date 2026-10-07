@@ -50,9 +50,23 @@ func TestTheCallersAddressIsReadInOnePlace(t *testing.T) {
 	   is named instead. */
 	const statesTheRule = "internal/address_test.go"
 
+	/* AND THE CATALOGUE, BECAUSE NOTHING IN IT IS THE PLATFORM. A program under
+	   `content/` is teaching material: a module of its own, never linked into
+	   any binary this repository deploys, run on a student's laptop against a
+	   cluster of their own. The promise above is about what the platform does
+	   with a visitor's address, and that program has no visitors. The first one
+	   to reach this test was the `kubernetes` course's `shop`, which logs the
+	   address each request came from — and two lessons are ABOUT that address:
+	   whose it is after a port-forward, after a NodePort, after
+	   `externalTrafficPolicy: Local`. Their transcripts, and a third lesson's
+	   log lines, were captured from it, so removing the read would make them
+	   describe a program that no longer exists. */
+	const catalogue = "content/"
+
 	eachGoFile(t,
 		func(rel string) bool {
-			return strings.HasPrefix(rel, allowed) || rel == statesTheRule
+			return strings.HasPrefix(rel, allowed) || rel == statesTheRule ||
+				strings.HasPrefix(rel, catalogue)
 		},
 		func(rel string, file *ast.File) {
 			ast.Inspect(file, func(n ast.Node) bool {

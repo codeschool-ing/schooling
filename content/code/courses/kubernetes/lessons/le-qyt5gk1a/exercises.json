@@ -1,0 +1,212 @@
+[
+  {
+    "id": "ex-xysxkerw",
+    "version": 1,
+    "section": "defining",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What had to be installed or restarted for `kubectl get backups` to work?",
+    "hint": "One `kubectl apply`.",
+    "choices": [
+      {
+        "text": "A new API server binary",
+        "correct": false,
+        "why": "The API server was not touched."
+      },
+      {
+        "text": "A kubectl plugin",
+        "correct": false,
+        "why": "kubectl learns kinds from the API."
+      },
+      {
+        "text": "Only the CustomResourceDefinition object",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A controller for Backups",
+        "correct": false,
+        "why": "Storing and listing needs none."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrjp50p8",
+    "version": 1,
+    "section": "using",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nightly.yaml` never set `keep`, and `kubectl get backups` showed 7. Where did 7 come from?",
+    "hint": "Read the schema.",
+    "choices": [
+      {
+        "text": "kubectl filled it in",
+        "correct": false,
+        "why": "The stored spec itself contains it."
+      },
+      {
+        "text": "The schema's `default`",
+        "correct": true,
+        "why": "Right. It is written into the object when stored."
+      },
+      {
+        "text": "A controller set it",
+        "correct": false,
+        "why": "No controller was running."
+      },
+      {
+        "text": "The printer column computes it",
+        "correct": false,
+        "why": "Columns only read paths."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m43cwzp",
+    "version": 1,
+    "section": "using",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `bad.yaml` refused for `compress` before anything was said about `keep: 365`?",
+    "hint": "kubectl asks for strict validation.",
+    "choices": [
+      {
+        "text": "`keep: 365` was valid",
+        "correct": false,
+        "why": "The second attempt refused it."
+      },
+      {
+        "text": "Decoding fails first on an unknown field",
+        "correct": true,
+        "why": "Right. The schema check comes after decoding."
+      },
+      {
+        "text": "Fields are checked in alphabetical order",
+        "correct": false,
+        "why": "Order of fields plays no part."
+      },
+      {
+        "text": "kubectl stops at the first line",
+        "correct": false,
+        "why": "The server did the checking."
+      }
+    ]
+  },
+  {
+    "id": "ex-vj64e8pp",
+    "version": 1,
+    "section": "using",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A patch to `status` through the main route answered `(no change)`. Why is that separation useful?",
+    "hint": "Who writes spec, and who writes status?",
+    "choices": [
+      {
+        "text": "It makes status writes faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "It hides status from kubectl",
+        "correct": false,
+        "why": "`kubectl get` showed it."
+      },
+      {
+        "text": "It stores status outside etcd",
+        "correct": false,
+        "why": "Both are in the same object."
+      },
+      {
+        "text": "RBAC grants each route apart",
+        "correct": true,
+        "why": "Right. A controller reports status; people change spec."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd493mnr",
+    "version": 1,
+    "section": "using",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `orders-nightly` was created, what ran at three in the morning?",
+    "hint": "`kubectl get jobs,cronjobs`.",
+    "choices": [
+      {
+        "text": "A Job made by the CRD",
+        "correct": false,
+        "why": "A CRD only stores objects."
+      },
+      {
+        "text": "pg_dump inside the API server",
+        "correct": false,
+        "why": "The API server runs no workloads."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. No controller reads Backups yet."
+      },
+      {
+        "text": "A CronJob created on first apply",
+        "correct": false,
+        "why": "None existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-gef35dbj",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the CRD with what it gives.",
+    "hint": "The annotated definition.",
+    "pairs": [
+      {
+        "left": "`openAPIV3Schema`",
+        "right": "Validation and defaults"
+      },
+      {
+        "left": "`subresources.status`",
+        "right": "A separate route for status"
+      },
+      {
+        "left": "`additionalPrinterColumns`",
+        "right": "Columns in `kubectl get`"
+      },
+      {
+        "left": "`shortNames`",
+        "right": "`kubectl get bk`"
+      }
+    ],
+    "right_distractors": [
+      "A controller that acts on the objects"
+    ]
+  },
+  {
+    "id": "ex-veyfz7r2",
+    "version": 1,
+    "section": "defining",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The CRD's name joins the plural and the group: `backups.___`.",
+    "hint": "The group.",
+    "blanks": [
+      {
+        "accept": [
+          "shop.example.test"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

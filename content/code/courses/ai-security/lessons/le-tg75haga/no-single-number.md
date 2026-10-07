@@ -54,7 +54,7 @@ willing to have fall unevenly**. Name the two errors in the terms of the people 
 For a feature that decides who gets work, many teams decide that the freelancer's error is the
 graver one and hold the TPR gap close to zero, accepting a precision gap and telling clients so.
 Another team may decide otherwise. What makes either defensible is that the choice is **written down
-with its numbers**, in the same document lesson 22 called the RIPD: the metric chosen, the reason,
+with its numbers**, in the same document lesson 12 called the RIPD: the metric chosen, the reason,
 the gaps measured, the date, and when they will be measured again. That is also what a review
 request under art. 20 of the LGPD will ask to see.
 

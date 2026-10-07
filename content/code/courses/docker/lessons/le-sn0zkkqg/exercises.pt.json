@@ -1,0 +1,341 @@
+{
+  "ex-9fcp4yyq": {
+    "prompt": "O `readlink /proc/<pid>/ns/net` dá `net:[4026532266]` para o container e `net:[4026531833]` para o shell da Ana. O que isso diz a ela?",
+    "hint": "Quando dois processos mostram o mesmo número?",
+    "choices": [
+      {
+        "text": "Eles estão em namespaces de rede diferentes",
+        "why": "Isso. O mesmo namespace mostra o mesmo número; estes diferem."
+      },
+      {
+        "text": "A rede do container é mais rápida",
+        "why": "Os números identificam namespaces; não medem nada."
+      },
+      {
+        "text": "O container tem 4026532266 interfaces de rede",
+        "why": "Ele tinha duas, `lo` e `eth0`; o número nomeia o namespace."
+      },
+      {
+        "text": "Os dois processos compartilham a rede, mas têm firewalls diferentes",
+        "why": "Compartilhar um namespace mostraria o mesmo número."
+      }
+    ]
+  },
+  "ex-jsddd7c6": {
+    "prompt": "O `lsns` mostrou o namespace `user` do container compartilhado com 89 processos do host. O que decorre disso para um processo rodando como root lá dentro?",
+    "hint": "Qual parede está faltando?",
+    "choices": [
+      {
+        "text": "Ele é um usuário sem privilégio no host, porque o Docker remapeia o root por padrão",
+        "why": "Esse remapeamento é um namespace de usuários, e este container não tem um próprio."
+      },
+      {
+        "text": "Ele não consegue rodar, já que o kernel proíbe root em containers",
+        "why": "Ele rodou: `sleep 600` como root."
+      },
+      {
+        "text": "Ele é o root do host, contido só pelas outras paredes",
+        "why": "Isso. A aula 21 trata das outras paredes e de acrescentar esta."
+      },
+      {
+        "text": "Ele pertence ao usuário `kthreadd`",
+        "why": "`kthreadd` é só o primeiro processo listado naquele namespace compartilhado."
+      }
+    ]
+  },
+  "ex-01vyj1bj": {
+    "prompt": "No host, o `ls /sys/class/net` lista uma interface `veth…` que apareceu junto com o container. O que ela é?",
+    "hint": "Um cabo tem duas pontas.",
+    "choices": [
+      {
+        "text": "Uma segunda placa de rede que o Docker acrescentou à máquina",
+        "why": "Nenhum hardware foi acrescentado; ela é virtual."
+      },
+      {
+        "text": "Uma ponta de um cabo virtual",
+        "why": "Isso: a ponta do host, e o `eth0` do container é a outra. A aula 23 a segue até a bridge `docker0`."
+      },
+      {
+        "text": "O loopback do container, visto de fora",
+        "why": "O `lo` do container fica dentro do namespace dele."
+      },
+      {
+        "text": "Uma VPN que o Docker abre para o Docker Hub",
+        "why": "Nada nela sai da máquina."
+      }
+    ]
+  },
+  "ex-va8wef84": {
+    "prompt": "A Ana roda `sudo nsenter --target $PID --uts --net sh -c \"hostname; ip -brief addr\"`. De quem são os arquivos de onde vem o programa `ip`?",
+    "hint": "Em quais namespaces ela entrou, e em quais não?",
+    "choices": [
+      {
+        "text": "Do host: o namespace de montagens não foi atravessado",
+        "why": "Isso. Só UTS e rede foram atravessados, então arquivos e programas continuaram sendo do host."
+      },
+      {
+        "text": "Do container, porque o `nsenter` copia o programa para dentro",
+        "why": "Nada é copiado; o programa é procurado no sistema de arquivos do namespace de montagens onde o processo está."
+      },
+      {
+        "text": "Do busybox do Alpine, e por isso a saída veio no formato `-brief`",
+        "why": "O `ip` do Alpine recusou o `-brief` nesta mesma aula; este é o iproute2 do host."
+      },
+      {
+        "text": "De nenhum; o `nsenter` tem um `ip` embutido",
+        "why": "O `nsenter` só entra nos namespaces e roda o programa que recebe."
+      }
+    ]
+  },
+  "ex-mfe901yz": {
+    "prompt": "Ligue cada namespace àquilo de que ele dá ao container uma cópia própria.",
+    "hint": "Quatro tipos do `lsns`.",
+    "pairs": [
+      {
+        "left": "pid",
+        "right": "Números de processo, recomeçando no 1"
+      },
+      {
+        "left": "net",
+        "right": "Interfaces de rede, endereços e rotas"
+      },
+      {
+        "left": "uts",
+        "right": "O nome de máquina"
+      },
+      {
+        "left": "mnt",
+        "right": "A lista de sistemas de arquivos montados"
+      }
+    ],
+    "right_distractors": [
+      "Quanta memória ele pode usar"
+    ]
+  },
+  "ex-fkh05nrz": {
+    "prompt": "O `cpu.cfs_quota_us` é 50000 e o `cpu.cfs_period_us` é 100000. O que o container recebe?",
+    "hint": "Divida um pelo outro, e pense em tempo.",
+    "choices": [
+      {
+        "text": "O processador número 0 dos quatro",
+        "why": "O limite é tempo, não um processador específico."
+      },
+      {
+        "text": "Metade dos quatro processadores da máquina",
+        "why": "Isso seria `--cpus 2`. 50000 de 100000 é metade do tempo de um processador."
+      },
+      {
+        "text": "50 ms de CPU a cada período de 100 ms",
+        "why": "Isso: metade do tempo de um processador, que é o `--cpus 0.5`."
+      },
+      {
+        "text": "50% de chance de ser escalonado",
+        "why": "O escalonamento aqui não é sorteio; a cota é um orçamento fixo por período."
+      }
+    ]
+  },
+  "ex-3x078a15": {
+    "prompt": "A Ana iniciou um container com `--memory 64m`. Que número o `memory.limit_in_bytes` guarda?",
+    "hint": "m quer dizer mebibytes: 1024 × 1024 bytes.",
+    "unit": "bytes"
+  },
+  "ex-jfjwfpf4": {
+    "prompt": "Um container sai com código 137 e o `docker inspect` mostra `OOMKilled=false`. Qual é a melhor leitura?",
+    "hint": "137 é 128 mais o número de um sinal.",
+    "choices": [
+      {
+        "text": "Ele ficou sem memória, e o Docker registrou isso do jeito errado",
+        "why": "Isso mostraria `OOMKilled=true`."
+      },
+      {
+        "text": "Um `SIGKILL` vindo de outra coisa que não o limite de memória",
+        "why": "Isso. O 137 diz sinal 9; o `false` diz que não foi o limite de memória."
+      },
+      {
+        "text": "Ele terminou normalmente depois de rodar por 137 segundos",
+        "why": "Código de saída não é duração."
+      },
+      {
+        "text": "Ele bateu no limite de número de processos que pode iniciar",
+        "why": "Um limite de processos recusa um fork; ele não mata o container."
+      }
+    ]
+  },
+  "ex-s5b9tz7j": {
+    "prompt": "Ligue cada limite ao que acontece quando um container chega nele.",
+    "hint": "Um recusa, um mata, um faz esperar.",
+    "pairs": [
+      {
+        "left": "pids.max",
+        "right": "Um processo novo não pode ser criado"
+      },
+      {
+        "left": "o limite de memória",
+        "right": "O kernel mata um processo com `SIGKILL`"
+      },
+      {
+        "left": "a cota de CPU",
+        "right": "Os processos esperam o próximo período"
+      }
+    ],
+    "right_distractors": [
+      "O Docker reinicia o container com um limite maior"
+    ]
+  },
+  "ex-89e6c9wz": {
+    "prompt": "Numa máquina com cgroup v2, onde a Ana procuraria o limite de memória de um container?",
+    "hint": "O v2 mantém uma árvore só.",
+    "choices": [
+      {
+        "text": "Num arquivo chamado `memory.max`",
+        "why": "Isso: no diretório único do cgroup do container. Mesmo limite, outro nome de arquivo, um diretório para todos os controladores."
+      },
+      {
+        "text": "No `memory.limit_in_bytes` em `/sys/fs/cgroup/memory/docker/`",
+        "why": "Esse é o layout v1 que a máquina do laboratório mostra."
+      },
+      {
+        "text": "No `/proc/meminfo` dentro do container",
+        "why": "A aula 2 mostrou que esse arquivo informa a memória do host."
+      },
+      {
+        "text": "Em lugar nenhum; o v2 não tem limite de memória",
+        "why": "Tem, com outro nome de arquivo."
+      }
+    ]
+  },
+  "ex-1b2kpvyw": {
+    "prompt": "Depois de `rm /etc/motd` dentro do container, o que a camada superior guarda em `etc/motd`?",
+    "hint": "Olhe o primeiro caractere da linha do `ls -l`.",
+    "choices": [
+      {
+        "text": "Nada; o arquivo foi removido da camada do Alpine",
+        "why": "Camadas inferiores nunca são escritas; o original continua no snapshot 110."
+      },
+      {
+        "text": "Uma cópia do `motd` cujo conteúdo foi trocado por uma nota avisando que o arquivo foi apagado",
+        "why": "Nem é um arquivo comum."
+      },
+      {
+        "text": "Um whiteout: um dispositivo de caractere numerado `0, 0` que esconde o arquivo de baixo",
+        "why": "Isso. O overlayfs esconde o arquivo inferior quando encontra o whiteout primeiro."
+      },
+      {
+        "text": "Um link simbólico para `/dev/null`",
+        "why": "A linha do `ls -l` começa com `c`, dispositivo de caractere, e não com `l`."
+      }
+    ]
+  },
+  "ex-xydpj9vs": {
+    "prompt": "Uma imagem traz um arquivo de 2 GB, e um container acrescenta uma linha a ele. O que a camada superior ganha?",
+    "hint": "O que precisa acontecer antes de um arquivo inferior poder mudar?",
+    "choices": [
+      {
+        "text": "Uma linha",
+        "why": "Camadas inferiores não podem mudar, então o arquivo precisa ser copiado para cima antes de ser escrito."
+      },
+      {
+        "text": "Uma cópia inteira de 2 GB, com a linha acrescentada",
+        "why": "Isso. A primeira escrita copia o arquivo para cima, e é a cópia que muda."
+      },
+      {
+        "text": "Nada, porque a escrita é recusada",
+        "why": "A escrita funciona; ela cai numa cópia."
+      },
+      {
+        "text": "Um link para o original na camada da imagem",
+        "why": "Um link não guardaria a mudança; o overlayfs copia o arquivo."
+      }
+    ]
+  },
+  "ex-e8aa7n5m": {
+    "prompt": "Quais arquivos o Docker gravou na camada pequena entre a do Alpine e a do próprio container? Escolha todos os que se aplicam.",
+    "hint": "Coisas que mudam por container mas não são escritas do programa.",
+    "choices": [
+      {
+        "text": "`etc/hostname`",
+        "why": "Sim: o nome que o container recebeu."
+      },
+      {
+        "text": "`etc/hosts`",
+        "why": "Sim, junto com a configuração de DNS em `etc/resolv.conf`."
+      },
+      {
+        "text": "`.dockerenv`",
+        "why": "Sim: um arquivo marcador vazio."
+      },
+      {
+        "text": "`tmp/new.txt`",
+        "why": "Essa foi a escrita da Ana; está na camada superior."
+      },
+      {
+        "text": "`bin/busybox`",
+        "why": "Esse vem da própria camada do Alpine."
+      }
+    ]
+  },
+  "ex-ekjkn5vp": {
+    "prompt": "Ordene as camadas do `web` do topo da pilha, que o overlayfs lê primeiro, até a base.",
+    "hint": "As escritas caem no topo.",
+    "items": [
+      "A camada superior, snapshot 212",
+      "A camada por container do Docker, snapshot 211",
+      "A camada da imagem do Alpine, snapshot 110"
+    ]
+  },
+  "ex-az67qpmn": {
+    "prompt": "A aplicação de um container inicia 500 threads e depois falha com \"Resource temporarily unavailable\". A máquina tem memória de sobra. Que mecanismo a parou?",
+    "hint": "Threads contam como processos.",
+    "choices": [
+      {
+        "text": "O namespace de PID",
+        "why": "Um namespace muda o que o processo enxerga, não quantos ele pode ter."
+      },
+      {
+        "text": "O cgroup de memória",
+        "why": "Esse mata; este recusou."
+      },
+      {
+        "text": "O limite do cgroup de pids",
+        "why": "Isso. Cada thread conta contra o `pids.max`, e a recusa é esse erro."
+      },
+      {
+        "text": "O overlayfs, que permite um número limitado de arquivos abertos",
+        "why": "Isso seria outro erro, e o sistema de arquivos não tem limite de threads."
+      }
+    ]
+  },
+  "ex-4sskjxan": {
+    "prompt": "Ligue cada pergunta sobre um container ao recurso do kernel que a responde.",
+    "hint": "Visão, uso, arquivos.",
+    "pairs": [
+      {
+        "left": "O que ele enxerga?",
+        "right": "Namespaces"
+      },
+      {
+        "left": "Quanto ele pode usar?",
+        "right": "Cgroups"
+      },
+      {
+        "left": "De onde vêm os arquivos dele?",
+        "right": "Camadas do overlayfs"
+      }
+    ],
+    "right_distractors": [
+      "Um hipervisor"
+    ]
+  },
+  "ex-8qz1nw0f": {
+    "prompt": "Um jeito comum de um programa saber que está rodando num container Docker é procurar um arquivo vazio na raiz do sistema de arquivos chamado ___.",
+    "hint": "O Docker o grava na camada por container.",
+    "blanks": [
+      {
+        "accept": [
+          ".dockerenv",
+          "/.dockerenv"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "ex-2cjb1g5e": {
+    "prompt": "No `shop.yaml`, o que faz um pod contar como uma das três cópias do Deployment?",
+    "hint": "O pod nunca é listado pelo nome em lugar nenhum.",
+    "choices": [
+      {
+        "text": "Os labels batem com o seletor",
+        "why": "Isso. O modelo carimba `app: shop` e o seletor conta todo pod que o carrega."
+      },
+      {
+        "text": "O nome dele começa com o nome do Deployment",
+        "why": "Nomes são gerados e nunca consultados para saber o dono; labels e referências de dono sim."
+      },
+      {
+        "text": "Ele roda a imagem indicada no modelo",
+        "why": "Muitos pods sem relação podem rodar a mesma imagem; o seletor só olha labels."
+      },
+      {
+        "text": "Ele escuta na porta indicada em `containerPort`",
+        "why": "Esse campo documenta uma porta e não participa da posse."
+      }
+    ]
+  },
+  "ex-7x8fbhkb": {
+    "prompt": "O que `containerPort: 8080` faz no Deployment?",
+    "hint": "A loja escutaria na 8080 sem ele.",
+    "choices": [
+      {
+        "text": "Abre a porta 8080 no nó",
+        "why": "Nada num Deployment abre a porta de um nó; um Service NodePort abre."
+      },
+      {
+        "text": "Diz à loja em que porta escutar",
+        "why": "O programa escolhe a porta; a loja lê a própria configuração `PORT`."
+      },
+      {
+        "text": "Documenta a porta em que o container escuta, e não abre nada",
+        "why": "Isso. Ele informa pessoas e ferramentas; o `targetPort` do Service é que manda o tráfego para lá."
+      },
+      {
+        "text": "Publica a loja na internet",
+        "why": "Os pods ficaram inalcançáveis do laptop até um port-forward ou um NodePort ser acrescentado."
+      }
+    ]
+  },
+  "ex-2qny3shj": {
+    "prompt": "A Ana muda o label do modelo para `app: store` e aplica, deixando o seletor em `app: shop`. O que acontece?",
+    "hint": "O seletor precisa bater com o modelo.",
+    "choices": [
+      {
+        "text": "O Service passa a seguir o label novo",
+        "why": "O Service também seleciona `app: shop`, e nada o reescreve."
+      },
+      {
+        "text": "O API server recusa o Deployment",
+        "why": "Isso. Um seletor que não bate com o próprio modelo é rejeitado antes de qualquer coisa rodar."
+      },
+      {
+        "text": "Três pods novos sobem, e os três antigos continuam rodando",
+        "why": "Isso exigiria que o objeto fosse aceito antes, e ele não é."
+      },
+      {
+        "text": "Os pods são renomeados para combinar",
+        "why": "Labels e nomes são coisas separadas; nada renomeia um pod."
+      }
+    ]
+  },
+  "ex-bs330pr2": {
+    "prompt": "No Service, `port: 80` é o que os clientes usam, e `___: 8080` diz para qual porta do pod o tráfego vai.",
+    "hint": "O nome do campo diz para onde o tráfego é mirado.",
+    "blanks": [
+      {
+        "accept": [
+          "targetPort"
+        ]
+      }
+    ]
+  },
+  "ex-1hedcc20": {
+    "prompt": "Qual comando abriu um túnel da porta 8081 do laptop até a loja?",
+    "hint": "Ele para quando o comando para.",
+    "choices": [
+      {
+        "text": "`kubectl apply -f shop-nodeport.yaml`",
+        "why": "Isso abriu a 30080 em todos os nós, que não é um túnel e não para com um comando."
+      },
+      {
+        "text": "`kubectl rollout status deployment/shop`",
+        "why": "Esse só espera os pods ficarem disponíveis."
+      },
+      {
+        "text": "`kubectl port-forward service/shop 8081:80`",
+        "why": "Isso: uma ferramenta para uma pessoa, levada pelo API server e pelo kubelet."
+      },
+      {
+        "text": "`kubectl get service shop`",
+        "why": "Isso lista o Service; não muda nada."
+      }
+    ]
+  },
+  "ex-bem7bhdw": {
+    "prompt": "`kubectl get service shop-public` mostrou `80:30080/TCP`. O que isso significa?",
+    "hint": "Dois lugares em que o Service responde.",
+    "choices": [
+      {
+        "text": "Porta 80 dentro do pod, 30080 no laptop",
+        "why": "O pod escuta na 8080, e a porta do laptop era a 8080 pelo mapeamento do cluster."
+      },
+      {
+        "text": "Porta 80 no endereço do Service, e 30080 em todos os nós",
+        "why": "Isso. Um Service NodePort também é ClusterIP, com uma porta aberta em cada nó."
+      },
+      {
+        "text": "Requisições na 80 são redirecionadas para a 30080 com um status HTTP",
+        "why": "Nada responde com redirecionamento; os pacotes são reescritos no kernel."
+      },
+      {
+        "text": "Só o nó que roda um pod escuta na 30080",
+        "why": "Todos escutam; as requisições chegaram ao nó do plano de controle, que não roda nenhum pod da loja."
+      }
+    ]
+  },
+  "ex-kv0bvh23": {
+    "prompt": "Seis requisições foram para `localhost:8080`. Quantos pods diferentes as responderam?",
+    "hint": "Conte os nomes distintos depois de `on`.",
+    "unit": "pods"
+  },
+  "ex-52xx1pjj": {
+    "prompt": "O log da loja mostrou as requisições do NodePort chegando `from 172.18.0.2`. Por que não do endereço do próprio laptop?",
+    "hint": "A que nó as requisições chegaram primeiro, e o pod roda lá?",
+    "choices": [
+      {
+        "text": "O laptop e o nó do plano de controle têm o mesmo endereço",
+        "why": "O nó é um container com endereço próprio na rede do Docker."
+      },
+      {
+        "text": "A loja registra o nó em que roda, não o cliente",
+        "why": "Os pods rodam nos workers, e a linha do port-forward mostra outra origem."
+      },
+      {
+        "text": "O primeiro nó reescreveu a origem e depois a repassou",
+        "why": "Isso. Assim a resposta volta pelo mesmo nó; a lição 17 mostra a configuração que preserva a original."
+      },
+      {
+        "text": "Toda requisição dentro de um cluster passa por um proxy no etcd",
+        "why": "O etcd guarda objetos; não carrega tráfego nenhum."
+      }
+    ]
+  },
+  "ex-zwx2a85e": {
+    "prompt": "Ponha em ordem o que aconteceu entre o `kubectl apply -f shop.yaml` e a primeira resposta pelo NodePort.",
+    "hint": "Primeiro objetos, depois pods, depois um caminho de entrada.",
+    "items": [
+      "O API server guarda o Deployment e o Service",
+      "Três pods são escalonados nos workers",
+      "Os pods ficam disponíveis e o rollout termina",
+      "Um Service NodePort abre a 30080 em todos os nós",
+      "Uma requisição à 8080 do laptop chega a um dos pods"
+    ],
+    "trap": "Nenhuma requisição é respondida antes de um pod estar disponível, e nenhuma chega de fora antes de o NodePort existir."
+  }
+}

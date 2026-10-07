@@ -1,0 +1,1782 @@
+{
+  "ex-sqfwskbg": {
+    "prompt": "Compilar `cmd/go` levou 21,332 segundos com o cache vazio e 0,837 segundo logo em seguida. O que deixou o segundo build rápido?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "A saída foi para `/dev/null`, então nada precisou ser linkado",
+        "why": "Os dois builds escreveram em `/dev/null`; isso só joga o resultado fora, e o primeiro foi lento do mesmo jeito."
+      },
+      {
+        "text": "Todos os 334 pacotes já estavam compilados, à espera no cache de build",
+        "why": "Isso. O `go clean -cache` tinha esvaziado o cache antes do primeiro build; o segundo encontrou os 334 pacotes já compilados."
+      },
+      {
+        "text": "O segundo build usou os quatro processadores e o primeiro usou um",
+        "why": "O primeiro build é justamente o que mostra, no `user` de 57 segundos, vários processadores trabalhando ao mesmo tempo."
+      },
+      {
+        "text": "Go só compila os arquivos-fonte editados desde o build anterior",
+        "why": "A unidade que o cache guarda é um pacote compilado, não um arquivo editado, e nada foi editado entre as duas execuções."
+      }
+    ]
+  },
+  "ex-r4c8qeh2": {
+    "prompt": "Na máquina x86-64 do laboratório você roda `GOOS=linux GOARCH=arm64 go build` no programa `why` e copia o resultado para um servidor Linux ARM de 64 bits. O que ele imprime lá?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "`compiled for linux/amd64`, já que foi essa a máquina que compilou",
+        "why": "`runtime.GOOS` e `runtime.GOARCH` dizem o alvo do build, e o alvo foi arm64."
+      },
+      {
+        "text": "Nada: `Exec format error`, como no laboratório",
+        "why": "O laboratório recusou porque é x86-64. Um servidor ARM é exatamente a máquina para a qual o binário foi feito."
+      },
+      {
+        "text": "`compiled for linux/arm64`",
+        "why": "Isso. Os dois valores são fixados na compilação e dizem para qual sistema o binário foi feito, onde quer que rode."
+      },
+      {
+        "text": "Um erro dizendo que falta a instalação de Go no servidor",
+        "why": "Um binário Go leva o runtime dentro dele; nada de Go precisa estar instalado onde ele roda."
+      }
+    ]
+  },
+  "ex-d7gzak3s": {
+    "prompt": "Um colega roda `file` num binário Go e lê `dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2`. Pela lição 1, quais destes podem explicar isso? Marque todas as que se aplicam.",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "O programa usa `net`, que mantém um caminho pela biblioteca C",
+        "why": "Sim. O `lookup` importava `net` e saiu precisando de `libc.so.6`."
+      },
+      {
+        "text": "Foi um build nativo numa máquina com um compilador C no `PATH`",
+        "why": "Sim. É quando o `go doc cmd/cgo` diz que o cgo fica ligado, e o laboratório tinha `gcc`."
+      },
+      {
+        "text": "Foi compilado com `CGO_ENABLED=0`",
+        "why": "Isso é a correção, não a causa: o mesmo `lookup` compilado assim saiu `statically linked`."
+      },
+      {
+        "text": "Todo binário Go linka o runtime de Go como biblioteca compartilhada",
+        "why": "O runtime fica dentro do arquivo; o `why` o carregava e o `ldd` não encontrou biblioteca compartilhada nenhuma."
+      }
+    ]
+  },
+  "ex-2cdqsk9z": {
+    "prompt": "Suponha que a go1.28.0 saia em fevereiro de 2027, no calendário que a lição 2 descreve. Que versões passam a receber releases de correção?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "1.26, 1.27 e 1.28, as três últimas",
+        "why": "Três significaria suporte até existirem três releases mais novas; a regra diz duas."
+      },
+      {
+        "text": "Só a 1.27 e a 1.28",
+        "why": "Isso. Com a 1.28, a 1.26 passa a ter duas releases mais novas e para, como a 1.25 parou quando a 1.27 chegou."
+      },
+      {
+        "text": "Só a 1.28, a mais nova",
+        "why": "Em 18 de agosto de 2026 saíram correções da 1.25 e da 1.26 junto com a 1.27.0, então não só a mais nova é cuidada."
+      },
+      {
+        "text": "Todas as versões desde Go 1, por causa da promessa de compatibilidade",
+        "why": "A promessa é sobre código-fonte compilar em releases novas, não sobre corrigir as antigas para sempre."
+      }
+    ]
+  },
+  "ex-ezyer6kf": {
+    "prompt": "Go lança uma versão nova a cada seis meses e dá suporte a cada uma até existirem duas mais novas. Por cerca de quantos meses uma release tem suporte?",
+    "hint": "Lição 2.",
+    "unit": "meses"
+  },
+  "ex-4qx7xcns": {
+    "prompt": "Além da linha `go`, um `go.mod` pode ter uma linha ___ que indica a release com que o módulo prefere ser compilado, que pode ser mais nova que o mínimo.",
+    "hint": "Lição 2.",
+    "blanks": [
+      {
+        "accept": [
+          "toolchain"
+        ]
+      }
+    ]
+  },
+  "ex-qrm5yahk": {
+    "prompt": "Uma configuração pode vir de três lugares, e o comando go os lê numa ordem fixa, em que o último vence. Ponha-os nessa ordem, do primeiro lido ao último.",
+    "hint": "Lição 3.",
+    "items": [
+      "o arquivo `go.env` dentro do `GOROOT`",
+      "o seu próprio arquivo, escrito pelo `go env -w`",
+      "o ambiente do shell"
+    ]
+  },
+  "ex-1tfdrps7": {
+    "prompt": "Um post de blog manda você mover seu projeto, que tem o próprio `go.mod`, de `~/projects/api` para `~/go/src`, senão ele não compila. O que é verdade?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "É necessário para o comando go encontrar os imports do projeto",
+        "why": "Isso era o modo GOPATH, o comportamento legado que o `go help gopath` descreve; não é o que um módulo usa."
+      },
+      {
+        "text": "O conselho está desatualizado: um módulo compila onde quer que esteja",
+        "why": "Isso. Um diretório com `go.mod` na raiz diz como o código se chama, e é por isso que `~/hello` compilou na lição 4."
+      },
+      {
+        "text": "Só é necessário para o `go install`, que escreve dentro do `GOPATH`",
+        "why": "O `go install` põe o binário em `~/go/bin`; onde o código-fonte fica não importa para ele, como a lição 4 mostrou a partir de `~/hello`."
+      },
+      {
+        "text": "É verdade, porque o `GOMODCACHE` aponta para `~/go/src`",
+        "why": "O `GOMODCACHE` é `~/go/pkg/mod`, com downloads só de leitura; e hoje `~/go` nem tem `src`."
+      }
+    ]
+  },
+  "ex-w9fr1m80": {
+    "prompt": "`go env ___` lista toda configuração diferente do padrão, venha de onde vier; no laboratório imprimiu só `GOTOOLCHAIN='local'`.",
+    "hint": "Lição 3.",
+    "blanks": [
+      {
+        "accept": [
+          "-changed",
+          "changed"
+        ]
+      }
+    ]
+  },
+  "ex-wzt471nt": {
+    "prompt": "No diretório `~/work`, um `go.mod` diz `module example.com/tools/report`. Que arquivo o `go build` deixa ali?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "`work`, por causa do diretório",
+        "why": "O nome do diretório não conta; é o caminho do módulo que dá nome ao binário."
+      },
+      {
+        "text": "`main`, por causa do pacote que vira programa",
+        "why": "O pacote de todo programa é `main`, então esse nome não distinguiria programa nenhum."
+      },
+      {
+        "text": "`report`, pelo último elemento desse caminho",
+        "why": "Isso. O `go build` dá ao binário o nome do último elemento do caminho do módulo, como aconteceu com `hello`."
+      },
+      {
+        "text": "Nada: o binário fica no cache de build",
+        "why": "Isso é o `go run`. O `go build` deixa o binário ao lado do código-fonte."
+      }
+    ]
+  },
+  "ex-2mzdbfk8": {
+    "prompt": "Uma função declara `total := 0` e nunca usa `total`. Entre o compilador, o `gofmt` e o `go vet`, o que acontece?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "O compilador nunca gera o programa: `declared and not used: total`",
+        "why": "Isso. Uma variável local declarada e nunca usada é recusada como um import não usado."
+      },
+      {
+        "text": "Compila, e o `go vet` aponta a variável",
+        "why": "O `go vet` é para o que é Go válido e quase sempre um bug; isto não é Go válido, então nem chega lá."
+      },
+      {
+        "text": "O `gofmt` apaga a linha quando formata o arquivo",
+        "why": "O `gofmt` só mexe no layout: espaços, tabulações, linhas em branco. Ele não remove instruções."
+      },
+      {
+        "text": "Nada: uma variável não usada é legal e não custa nada",
+        "why": "Go faz disso um erro de propósito, porque uma variável não usada costuma ser um erro de digitação de outra que é usada."
+      }
+    ]
+  },
+  "ex-z88c79v3": {
+    "prompt": "Quais destas são verdade sobre o `go run .`? Marque todas as que se aplicam.",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Compila o programa num binário antes de rodá-lo",
+        "why": "Sim. Go não tem interpretador; o `go run` compila e depois roda o binário."
+      },
+      {
+        "text": "Guarda o binário no cache de build",
+        "why": "Sim, e é por isso que a segunda execução levou 44 milissegundos."
+      },
+      {
+        "text": "Lê o código-fonte e o executa linha por linha, como um interpretador",
+        "why": "Parece isso e não é: a primeira execução passou quatro segundos compilando."
+      },
+      {
+        "text": "Deixa o binário no diretório atual, ao lado do `go.mod`",
+        "why": "Isso é o `go build`. Depois do `go run` não sobra arquivo que você encontre."
+      }
+    ]
+  },
+  "ex-q1cehqw8": {
+    "prompt": "Um pacote declara `const answer int = 42`, e o `main` diz `var exact float64 = answer`. O que acontece?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Compila, porque 42 cabe num `float64`",
+        "why": "Caber é o teste de uma constante sem tipo. Esta recebeu o tipo `int`, e é o tipo que se verifica."
+      },
+      {
+        "text": "O compilador se recusa a usar uma constante `int` como valor `float64`",
+        "why": "Isso. Como no caso do `int8`: uma constante com tipo mantém o tipo, e Go não converte um tipo numérico em outro sozinho."
+      },
+      {
+        "text": "Compila, e `exact` guarda 42.0 convertido em tempo de execução",
+        "why": "Go não converte nada por você, nem na compilação nem na execução."
+      },
+      {
+        "text": "Só compila se `exact` for declarada com `:=`",
+        "why": "`exact := answer` compilaria, mas daria a `exact` o tipo `int`, então ela nem seria um `float64`."
+      }
+    ]
+  },
+  "ex-4rfgkqp3": {
+    "prompt": "Dentro de uma função: `x, err := first()` e, duas linhas abaixo no mesmo bloco, `x, err := second()`. O que o compilador diz?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Nada: `:=` com dois nomes atribui os que já existem",
+        "why": "Isso vale quando pelo menos um nome à esquerda é novo. Aqui os dois já existem."
+      },
+      {
+        "text": "`declared and not used: x`, porque o primeiro `x` foi substituído antes de ser lido",
+        "why": "Se `x` é lido é outra questão; a segunda linha é recusada antes disso importar."
+      },
+      {
+        "text": "`no new variables on left side of :=`",
+        "why": "Isso. `:=` com vários nomes exige pelo menos um novo; a correção é `x, err = second()`."
+      },
+      {
+        "text": "Nada: a segunda linha declara um `x` e um `err` novos que sombreiam os primeiros",
+        "why": "Sombrear exige um bloco interno. No mesmo bloco um nome não pode ser declarado duas vezes."
+      }
+    ]
+  },
+  "ex-zs4n2x5x": {
+    "prompt": "Uma variável de pacote que ninguém lê compila. Dentro de uma função, um `count` nunca lido é recusado com: `declared and not ___: count`.",
+    "hint": "Lição 5.",
+    "blanks": [
+      {
+        "accept": [
+          "used"
+        ]
+      }
+    ]
+  },
+  "ex-yjxm297g": {
+    "prompt": "`const ( A = iota * 10; B; C; D )`, um nome por linha. Qual é o valor de `C`?",
+    "hint": "Lição 6.",
+    "unit": ""
+  },
+  "ex-a9p8vrj1": {
+    "prompt": "`var cfg *Config` é declarada no início do `main`. Dentro de `if debug { cfg, err := load(); if err != nil { return }; fmt.Println(\"loaded\", cfg.Name) }`, e depois do `if`, `run(cfg)`. Com `debug` verdadeiro e `load` dando certo, o que `run` recebe?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "O `*Config` que `load` devolveu",
+        "why": "Esse foi para um segundo `cfg`, declarado pelo `:=` dentro do bloco do `if` e perdido na chave que o fecha."
+      },
+      {
+        "text": "`nil`, o valor zero do `cfg` de fora",
+        "why": "Isso. Os dois nomes eram novos no bloco do `if`, então o `:=` declarou os dois, a mesma forma do `err` sombreado de `total`."
+      },
+      {
+        "text": "Nada: o compilador recusa o `cfg` de dentro como declarado e não usado",
+        "why": "Recusaria, se nada o lesse. O bloco imprime `cfg.Name`, então o `cfg` de dentro é usado, e nada reclama, como o `go vet` saiu com 0 em `total`."
+      },
+      {
+        "text": "Nada: `:=` não pode redeclarar um nome que existe fora do bloco",
+        "why": "Pode, e é esse o problema: um bloco interno pode reaproveitar um nome de fora e escondê-lo."
+      }
+    ]
+  },
+  "ex-8f5awvrf": {
+    "prompt": "Ligue cada declaração ao que `fmt.Printf(\"%#v\", v)` imprime para ela antes de qualquer atribuição.",
+    "hint": "Lição 6.",
+    "pairs": [
+      {
+        "left": "`var v string`",
+        "right": "`\"\"`"
+      },
+      {
+        "left": "`var v []int`",
+        "right": "`[]int(nil)`"
+      },
+      {
+        "left": "`var v [2]int`",
+        "right": "`[2]int{0, 0}`"
+      },
+      {
+        "left": "`var v bool`",
+        "right": "`false`"
+      }
+    ],
+    "right_distractors": [
+      "`undefined`"
+    ]
+  },
+  "ex-cpqgeatg": {
+    "prompt": "`var x int16 = 32767`, depois `x++`, depois `fmt.Println(x)`. O que imprime?",
+    "hint": "Lição 7.",
+    "unit": ""
+  },
+  "ex-45b3mwvc": {
+    "prompt": "Qual destes compila e depois dá a volta quando roda?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "`const limit int8 = 127` e depois `next := limit + 1`",
+        "why": "`limit` é uma constante com tipo, então a soma também é constante, e o compilador recusa: `overflows int8`."
+      },
+      {
+        "text": "`var v int8 = 127` e depois `v = v + 1`",
+        "why": "Isso. `v` é uma variável, então nada se sabe antes da execução, e 127 + 1 num `int8` vira −128 em silêncio."
+      },
+      {
+        "text": "`var small int8 = 128`",
+        "why": "128 é uma constante que o compilador consegue verificar, e ele a recusou com `(overflows)`."
+      },
+      {
+        "text": "`fmt.Println(1 << 100)`, que dá a volta e vira 0",
+        "why": "Uma constante sem tipo que precisa virar `int` e não cabe é erro de compilação, nunca um valor que deu a volta."
+      }
+    ]
+  },
+  "ex-z3msrahe": {
+    "prompt": "Ponha estes tipos em ordem do maior valor que cada um consegue guardar, do menor para o maior.",
+    "hint": "Lição 7.",
+    "items": [
+      "`int8`",
+      "`uint8`",
+      "`int16`",
+      "`uint16`"
+    ]
+  },
+  "ex-68mvankg": {
+    "prompt": "`s` é uma string que pode estar vazia. O que `if len(s) > 0 && s[0] == '#' {` faz quando `s` é `\"\"`?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Entra em pânico, porque `s[0]` não existe numa string vazia",
+        "why": "Entraria se fosse avaliado. O `&&` achou o lado esquerdo falso e nem olhou o direito."
+      },
+      {
+        "text": "Não compila, porque `s[0]` é um byte e `'#'` é um rune",
+        "why": "`'#'` é uma constante rune sem tipo, 35, e cabe num byte, então a comparação compila."
+      },
+      {
+        "text": "A condição é simplesmente falsa, e `s[0]` nunca chega a ser avaliado",
+        "why": "Isso. Avaliação em curto-circuito: o teste de tamanho protege o índice, como `people > 0` protegeu a divisão."
+      },
+      {
+        "text": "Os dois lados são avaliados antes, então a resposta depende do que `s[0]` guarda",
+        "why": "O `&&` para assim que a resposta é conhecida; em Go a ordem dos dois testes faz parte do significado."
+      }
+    ]
+  },
+  "ex-7d87q925": {
+    "prompt": "ASCII puro ocupa um byte, `é` dois e `€` três. Quanto retorna `len(\"a€é\")`?",
+    "hint": "Lição 8.",
+    "unit": "bytes"
+  },
+  "ex-k1v0ygd9": {
+    "prompt": "`count` é um `int`, e `tests` e `lint` são `bool`. Quais destas linhas o compilador recusa? Marque todas as que se aplicam.",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "`if count {`",
+        "why": "Recusada: `non-boolean condition in if statement`. Nenhum tipo além de `bool` vale como condição."
+      },
+      {
+        "text": "`pair := 'ab'`",
+        "why": "Recusada: `more than one character in rune literal`. Aspas simples guardam um rune só."
+      },
+      {
+        "text": "`odd := tests != lint`",
+        "why": "Compila. `!=` entre dois booleanos é o ou exclusivo de Go."
+      },
+      {
+        "text": "`var b byte = 'é'`",
+        "why": "Compila, porque 233 cabe num byte. Essa é a armadilha: o byte guarda o code point, não o `c3 a9` de uma string."
+      },
+      {
+        "text": "`ready := bool(count)`",
+        "why": "Recusada: `cannot convert count (variable of type int) to type bool`. Não existe conversão de número para valor de verdade."
+      }
+    ]
+  },
+  "ex-1hebw7gt": {
+    "prompt": "Quanto retorna `strings.Index(\"São Paulo\", \"Paulo\")`? (`ã` é guardado como o `é`.)",
+    "hint": "Lição 9.",
+    "unit": ""
+  },
+  "ex-vjbg1923": {
+    "prompt": "A lição 9 diz quando recorrer a um `strings.Builder`. Qual destes é esse caso?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "Juntar um nome e um sobrenome uma vez, para uma saudação",
+        "why": "Uma vez, o `+` não custa nada que valha economizar: junte poucas strings com `+`."
+      },
+      {
+        "text": "Montar um relatório de 50.000 linhas, uma a cada volta de um loop",
+        "why": "Isso. O `+=` num loop copia tudo o que já foi montado a cada volta, e foi assim que 100.000 voltas levaram 3,7 segundos."
+      },
+      {
+        "text": "Trocar a primeira letra de uma string por maiúscula no lugar",
+        "why": "Nada muda uma string no lugar; um Builder também cria uma string nova, e `\"H\" + s[1:]` é o jeito simples."
+      },
+      {
+        "text": "Guardar só os primeiros 80 bytes de uma string grande",
+        "why": "Esse é o caso do `strings.Clone`, que copia uma substring pequena para a grande poder ir embora."
+      }
+    ]
+  },
+  "ex-kcz5mf26": {
+    "prompt": "Um literal bruto não consegue guardar uma crase, porque a crase o encerra. Uma string que precisa de uma é escrita entre aspas ___.",
+    "hint": "Lição 9.",
+    "blanks": [
+      {
+        "accept": [
+          "duplas"
+        ]
+      }
+    ]
+  },
+  "ex-jf2aaegf": {
+    "prompt": "Um pacote tem `type Feet float64`, `type Meters float64` e `func ToMeters(f Feet) Meters { return Meters(f) }`. O que `ToMeters(10)` devolve?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "Não compila, porque `Feet` não pode virar `Meters`",
+        "why": "Dois tipos com o mesmo tipo subjacente se convertem um no outro; só misturá-los sem conversão é recusado."
+      },
+      {
+        "text": "3.048, convertido pelo sistema de tipos",
+        "why": "Nada na linguagem sabe como pés se relacionam com metros, assim como nada sabia de Celsius e Fahrenheit."
+      },
+      {
+        "text": "10 metros: a conversão trocou o rótulo do número e não fez conta nenhuma",
+        "why": "Isso. A conversão muda o tipo e nunca o número, como `Fahrenheit(boil)` imprimindo 100. A conta precisa ser escrita."
+      },
+      {
+        "text": "10, depois de um aviso do vet sobre precisão perdida",
+        "why": "Nada se perde e nada avisa; o programa é válido e simplesmente diz a coisa errada."
+      }
+    ]
+  },
+  "ex-mf1wmfpw": {
+    "prompt": "`n` é um `int` que guarda 130. O que `fmt.Println(int8(n))` imprime?",
+    "hint": "Lição 10.",
+    "unit": ""
+  },
+  "ex-n2fq00bg": {
+    "prompt": "`strconv.Atoi(\" 42\")` recusou o espaço no início e devolveu 0 com o erro `strconv.Atoi: parsing \" 42\": invalid ___`.",
+    "hint": "Lição 10.",
+    "blanks": [
+      {
+        "accept": [
+          "syntax"
+        ]
+      }
+    ]
+  },
+  "ex-q2495skm": {
+    "prompt": "`p := [2]int{1, 2}` e `q := []int{1, 2}`. Quais destas compilam? Marque todas as que se aplicam.",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "`fmt.Println(p == [2]int{1, 2})`",
+        "why": "Compila: dois arrays do mesmo tipo se comparam elemento por elemento."
+      },
+      {
+        "text": "`fmt.Println(q == nil)`",
+        "why": "Compila: `nil` é a única coisa com que um slice pode ser comparado."
+      },
+      {
+        "text": "`fmt.Println(q == []int{1, 2})`",
+        "why": "Recusada: `slice can only be compared to nil`. O `slices.Equal` compara os elementos."
+      },
+      {
+        "text": "`var r [3]int = p`",
+        "why": "Recusada: o tamanho faz parte do tipo, e um `[2]int` não é um `[3]int`."
+      }
+    ]
+  },
+  "ex-ewrr3at1": {
+    "prompt": "`s := []int{1, 2, 3}`, depois `t := s` e `t[0] = 9`. O que `fmt.Println(s)` imprime?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, porque a atribuição copia os elementos",
+        "why": "Isso é o que a atribuição de um array faz. Um slice copia as suas três palavras, e o ponteiro leva ao mesmo array."
+      },
+      {
+        "text": "`[9 2 3]`",
+        "why": "Isso. `t` é um segundo slice sobre o mesmo array, como era o parâmetro de `setFirst`."
+      },
+      {
+        "text": "Nada: `t := s` é recusado, porque slices não podem ser copiados",
+        "why": "Slices podem ser atribuídos à vontade; o que se recusa é `==` entre dois deles."
+      },
+      {
+        "text": "`[9 2 3]` só se `s` tiver sido fatiado de um array com nome",
+        "why": "Um literal de slice também cria um array; ele só não tem nome. O compartilhamento funciona igual."
+      }
+    ]
+  },
+  "ex-f8s251v2": {
+    "prompt": "`s == u` entre dois `[]int` é recusado com `invalid operation: s == u (slice can only be compared to ___)`.",
+    "hint": "Lição 11.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ]
+      }
+    ]
+  },
+  "ex-cj6jcynj": {
+    "prompt": "`base := []int{1, 2, 3}` tem tamanho 3 e capacidade 3. Depois `a := append(base, 4)` e `b := append(base, 5)`. O que `fmt.Println(a, b)` imprime?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "`[1 2 3 5] [1 2 3 5]`, porque os dois appends escreveram no mesmo array",
+        "why": "Isso foi o `path`, que tinha capacidade sobrando. `base` não tem nenhuma, então nenhum append consegue escrever no array dele."
+      },
+      {
+        "text": "`[1 2 3 4] [1 2 3 5]`",
+        "why": "Isso. Com tamanho igual à capacidade, cada `append` aloca um array novo e copia antes, então `a` e `b` não compartilham nada."
+      },
+      {
+        "text": "`[1 2 3 4] [1 2 3 4 5]`, já que `b` é anexado depois de `a`",
+        "why": "Os dois appends partem de `base`, que continua com tamanho 3; `a` nunca é a entrada deles."
+      },
+      {
+        "text": "Entra em pânico no segundo append, além da capacidade",
+        "why": "O `append` não entra em pânico por falta de espaço; ele aloca um array maior. Só um índice ou um reslice são verificados."
+      }
+    ]
+  },
+  "ex-es0tt699": {
+    "prompt": "`s := make([]int, 2, 5)`. Ligue cada linha ao que acontece.",
+    "hint": "Lição 12.",
+    "pairs": [
+      {
+        "left": "`fmt.Println(s[3])`",
+        "right": "`panic: runtime error: index out of range [3] with length 2`"
+      },
+      {
+        "left": "`fmt.Println(s[:6])`",
+        "right": "`panic: runtime error: slice bounds out of range [:6] with capacity 5`"
+      },
+      {
+        "left": "`fmt.Println(s[:4])`",
+        "right": "imprime `[0 0 0 0]`"
+      },
+      {
+        "left": "`fmt.Println(make([]int, 5, 2))`",
+        "right": "`invalid argument: length and capacity swapped`"
+      }
+    ],
+    "right_distractors": [
+      "imprime `[0 0]` e para no tamanho"
+    ]
+  },
+  "ex-0y016cz2": {
+    "prompt": "Qual linha cria um slice vazio com espaço para 100 `int`s, pronto para receber `append` sem alocar de novo?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "`s := make([]int, 100)`",
+        "why": "Isso já são 100 zeros, não espaço: um `append` cairia na posição 100."
+      },
+      {
+        "text": "`s := make([]int, 100, 0)`",
+        "why": "Primeiro o tamanho, depois a capacidade: com constantes o compilador recusa isto como `length and capacity swapped`."
+      },
+      {
+        "text": "`s := make([]int, 0, 100)`",
+        "why": "Isso. Tamanho 0, capacidade 100: um array só, e o `append` não sai dele nos primeiros 100 elementos."
+      },
+      {
+        "text": "`var s [100]int`, com o `append` escrevendo nele",
+        "why": "Isso é um array, de tamanho fixo, e o `append` recebe um slice."
+      }
+    ]
+  },
+  "ex-sh69t4yg": {
+    "prompt": "`raw := []byte{192, 168, 0, 10, 0, 80}` guarda seis bytes. O que `[4]byte(raw)` faz?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "Entra em pânico, porque o slice é maior que o array",
+        "why": "Só o menor entra em pânico. Maior não tem problema: a conversão pega o que precisa."
+      },
+      {
+        "text": "Copia os quatro primeiros bytes num array novo; nenhum dos outros dois é lido",
+        "why": "Isso. Foi assim que `netip.AddrFrom4([4]byte(raw))` imprimiu `192.168.0.10`."
+      },
+      {
+        "text": "É recusado, porque o compilador não consegue ver que `raw` tem quatro bytes",
+        "why": "O compilador aceita e deixa a verificação de tamanho para a execução, onde um slice curto entra em pânico."
+      },
+      {
+        "text": "Dá um array que compartilha os quatro primeiros bytes do slice",
+        "why": "Compartilhar é o que `(*[4]byte)(raw)`, a conversão para ponteiro, faz; a conversão para array copia."
+      }
+    ]
+  },
+  "ex-beeddrcs": {
+    "prompt": "Com a linha `go` recuada, a go1.27.1 disse de que release cada conversão precisa. Converter um slice em ponteiro para array, `(*[4]int)(s)`, exige Go 1.N ou posterior. Quanto é N?",
+    "hint": "Lição 13.",
+    "unit": ""
+  },
+  "ex-6apnrgpc": {
+    "prompt": "`var m map[string]int` é declarada e nunca criada. Ligue cada linha ao que ela dá.",
+    "hint": "Lição 14.",
+    "pairs": [
+      {
+        "left": "`v, ok := m[\"x\"]`",
+        "right": "`0` e `false`"
+      },
+      {
+        "left": "`fmt.Println(m == nil)`",
+        "right": "`true`"
+      },
+      {
+        "left": "`m[\"x\"] = 1`",
+        "right": "`panic: assignment to entry in nil map`"
+      },
+      {
+        "left": "`fmt.Println(len(m))`",
+        "right": "`0`"
+      }
+    ],
+    "right_distractors": [
+      "um erro de compilação, já que `m` nunca foi criada"
+    ]
+  },
+  "ex-dhw1vmkb": {
+    "prompt": "Um literal de map traz `\"ana\": 31` e, três linhas abaixo, `\"ana\": 32`. O que acontece?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "O map guarda 32, o último valor escrito",
+        "why": "É o que duas atribuições `ages[\"ana\"] = …` fazem. Num literal, um dos valores seria jogado fora sem ninguém ver, então é recusado."
+      },
+      {
+        "text": "O map guarda 31, e o segundo par é ignorado",
+        "why": "Ignorar em silêncio é justamente o que o compilador se recusa a fazer."
+      },
+      {
+        "text": "Entra em pânico quando o literal é montado na execução",
+        "why": "As duas chaves são constantes escritas no código, então o compilador vê o conflito antes de qualquer execução."
+      },
+      {
+        "text": "O compilador recusa: `duplicate key \"ana\" in map literal`",
+        "why": "Isso. Uma chave aparece uma vez só, e um literal que a repete não compila."
+      }
+    ]
+  },
+  "ex-2j3a5n4s": {
+    "prompt": "Uma ferramenta escreve um arquivo de configurações percorrendo um `map[string]string` com `range`. Cada execução produz um arquivo diferente a partir das mesmas configurações, e quem revisa vê diffs que ninguém fez. O que resolve?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "Criar o map com `make(map[string]string, n)` e o tamanho certo",
+        "why": "O tamanho só reserva espaço; toda volta ainda começa num lugar aleatório."
+      },
+      {
+        "text": "Inserir as chaves em ordem alfabética",
+        "why": "Um map não guarda ordem de inserção; num map pequeno a ordem sai rotacionada, e num grande, embaralhada."
+      },
+      {
+        "text": "Pegar `slices.Sorted(maps.Keys(m))` e percorrer esse slice",
+        "why": "Isso. O map responde qual é cada valor; o slice ordenado de chaves responde em que ordem."
+      },
+      {
+        "text": "Manter as configurações abaixo de oito chaves para caberem num grupo",
+        "why": "Mesmo assim o começo é aleatório: quatro chaves deram três inícios diferentes em seis execuções, e o grupo não é uma promessa da linguagem."
+      }
+    ]
+  },
+  "ex-tfysnqcx": {
+    "prompt": "Uma struct `Session` tem um campo `Token string` que outros pacotes precisam ler, e ele nunca pode aparecer no JSON que o serviço registra. Qual declaração faz isso?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "``Token string `json:\"-\"` ``",
+        "why": "Isso. A tag `-` deixa o campo de fora sempre, e o T maiúsculo o mantém visível para outros pacotes."
+      },
+      {
+        "text": "`token string`, em minúsculas, sem tag",
+        "why": "Ficaria fora do JSON, e também fora de todo outro pacote, que é justamente onde o campo precisa estar."
+      },
+      {
+        "text": "``Token string `json:\"token,omitempty\"` ``",
+        "why": "O `omitempty` só tira o campo enquanto ele está vazio; um token de verdade sairia."
+      },
+      {
+        "text": "``Token string `json:\"token,omitzero\"` ``, que esconde qualquer valor",
+        "why": "O `omitzero` tira o campo quando ele tem o valor zero, e um token preenchido não é zero."
+      }
+    ]
+  },
+  "ex-r5km3sry": {
+    "prompt": "Quais destas tags de struct o `go vet` aponta? Marque todas as que se aplicam.",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "``json: \"name\"``",
+        "why": "Apontada: o espaço depois dos dois-pontos deixa a tag inteira ilegível, `bad syntax for struct tag value`."
+      },
+      {
+        "text": "``json:\"email, omitempty\"``",
+        "why": "Apontada: `suspicious space in struct tag value`. A opção seria ` omitempty`, que não é opção nenhuma."
+      },
+      {
+        "text": "``json:\"email,omitempty\"``",
+        "why": "Correta como está: uma chave, uma vírgula e a opção, sem espaço."
+      },
+      {
+        "text": "``json:\"-\"``",
+        "why": "Uma tag válida: deixa o campo fora do JSON sempre."
+      }
+    ]
+  },
+  "ex-b8jvyr4c": {
+    "prompt": "`Person` tem um campo `Name`; `User` embute `Person`; `Admin` embute `User`. Nada mais declara `Name`. Para `a` do tipo `Admin`, o que `a.Name` faz?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "É recusado: a promoção só alcança um nível abaixo",
+        "why": "A busca desce nível por nível até onde precisar; não há limite de um."
+      },
+      {
+        "text": "Lê `a.User.Person.Name`, dois níveis abaixo",
+        "why": "Isso. `Admin` não tem `Name`, nem `User` no seu próprio nível, então a busca desce mais um nível e encontra o único."
+      },
+      {
+        "text": "É ambíguo, porque `User` e `Person` levam os dois a `Name`",
+        "why": "Ambiguidade exige dois campos de um mesmo nome na mesma profundidade. Aqui há um só `Name`, alcançado por uma cadeia."
+      },
+      {
+        "text": "Lê uma cópia do nome que `Admin` guarda no próprio nível",
+        "why": "A promoção não copia nada; o `%+v` mostraria `Name` dentro de `Person` dentro de `User`."
+      }
+    ]
+  },
+  "ex-xse72fmm": {
+    "prompt": "Num módulo `go 1.27.1`, `e := Employee{Person: Person{Name: \"Ana\"}, Email: \"ana@example.com\"}`, em que `Email` é campo de `Person`. O que acontece?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Compila, e o `Email` é juntado ao `Person` informado",
+        "why": "Não há junção: as duas formas escreveriam o mesmo campo duas vezes, então não se misturam para uma struct embutida."
+      },
+      {
+        "text": "Compila, e vence o `Email` escrito por último",
+        "why": "Nenhum vence; o literal é recusado antes de qualquer valor ser montado."
+      },
+      {
+        "text": "É recusado, porque campos promovidos não podem ser definidos num literal",
+        "why": "Desde Go 1.27 podem, como mostrou `Employee{Name: \"Ana\", Email: …, Company: …}`; o problema é misturar as duas formas."
+      },
+      {
+        "text": "Recusado: `cannot specify promoted field Email and enclosing embedded field Person`",
+        "why": "Isso. Ou o `Person` inteiro ou os campos promovidos dele, não os dois."
+      }
+    ]
+  },
+  "ex-fgxsyb30": {
+    "prompt": "`n := 81`, depois `for n > 1 { n /= 3 }`. Quantas vezes o corpo executa?",
+    "hint": "Lição 17.",
+    "unit": "vezes"
+  },
+  "ex-atsvja8z": {
+    "prompt": "`€` ocupa três bytes em UTF-8. Que valores `i` assume em `for i := range \"€uro\"`?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "0, 1, 2 e 3, um por caractere",
+        "why": "Isso seria uma contagem de caracteres. O `range` numa string dá o deslocamento em bytes onde cada rune começa."
+      },
+      {
+        "text": "De 0 a 5, um por byte",
+        "why": "Esse é o loop de três cláusulas sobre `len(s)`. O `range` decodifica o UTF-8 e visita cada rune uma vez."
+      },
+      {
+        "text": "0, 3, 4 e 5",
+        "why": "Isso. O `€` começa em 0 e ocupa três bytes, então o `u` começa em 3, como o `!` depois do `é` começava em 5 em `café`."
+      },
+      {
+        "text": "0, 1, 2 e 3, mais U+FFFD para os bytes que não cabem",
+        "why": "U+FFFD só aparece para bytes que não são UTF-8, como `\\xff`; um `€` válido é decodificado como um rune só."
+      }
+    ]
+  },
+  "ex-mhv487e8": {
+    "prompt": "Um `range` sobre um map acrescenta uma chave nova para cada chave que visita. O que Go diz sobre as chaves acrescentadas durante o loop?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "Cada uma pode ser visitada ou pulada; a especificação deixa em aberto",
+        "why": "Isso. Por isso as entradas novas vão num segundo map, copiado depois que o loop termina."
+      },
+      {
+        "text": "Nenhuma é visitada, porque o `range` lê o map uma vez, como lê um slice uma vez",
+        "why": "Ler uma vez é a regra do slice. Num map, uma entrada criada durante a volta pode aparecer."
+      },
+      {
+        "text": "Todas são visitadas, então o loop pode nunca terminar",
+        "why": "Nada promete que sejam visitadas, e nada promete que não sejam."
+      },
+      {
+        "text": "Entra em pânico, como sempre acontece ao mudar um map durante a volta",
+        "why": "Apagar durante a volta é explicitamente permitido, e acrescentar também não entra em pânico; só é imprevisível."
+      }
+    ]
+  },
+  "ex-z6k6a2p7": {
+    "prompt": "A busca na grade da lição 18 mantém o `break` simples (sem label) e roda sobre `{{30, 1}, {2, 3}, {40, 50}}`, imprimindo uma linha `found` sempre que um valor passa de 20. Quantas linhas `found` ela imprime?",
+    "hint": "Lição 18.",
+    "unit": "linhas"
+  },
+  "ex-jdzxee2k": {
+    "prompt": "Ligue cada mensagem do compilador ao erro que a causou.",
+    "hint": "Lição 18.",
+    "pairs": [
+      {
+        "left": "`break is not in a loop, switch, or select`",
+        "right": "uma função auxiliar tenta encerrar o loop de quem a chamou"
+      },
+      {
+        "left": "`label search defined and not used`",
+        "right": "um label que nenhum `break` ou `continue` cita"
+      },
+      {
+        "left": "`invalid break label inner`",
+        "right": "um `break` que cita um loop que não o envolve"
+      },
+      {
+        "left": "`goto done jumps over declaration of msg`",
+        "right": "um salto por cima de uma variável ainda no escopo no label"
+      }
+    ],
+    "right_distractors": [
+      "um `continue` dentro de um `switch` dentro de um `for`"
+    ]
+  },
+  "ex-x2sgn8k7": {
+    "prompt": "Um `switch ext := strings.ToLower(filepath.Ext(name)); ext { … }` termina, e a linha seguinte é `fmt.Println(ext)`. O que acontece?",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "Imprime a extensão do último nome testado",
+        "why": "Isso exigiria que `ext` sobrevivesse ao `switch`; os nomes de um inicializador acabam na chave que o fecha."
+      },
+      {
+        "text": "O build falha com `undefined: ext`, porque o nome acabou na chave que fecha o `switch`",
+        "why": "Isso. Como no `if`, um nome declarado antes do valor pertence ao comando, do jeito que `n` pertencia depois da cadeia de `if`."
+      },
+      {
+        "text": "Imprime uma string vazia, o valor zero de `ext`",
+        "why": "Ali não existe `ext` para ter valor zero; o nome não existe depois do `switch`."
+      },
+      {
+        "text": "Só compila se o caso `default` também tiver usado `ext`",
+        "why": "Usá-lo dentro de um caso é permitido e não muda nada sobre onde o nome acaba."
+      }
+    ]
+  },
+  "ex-27pv7p5t": {
+    "prompt": "`n := 50`, depois `switch { case n > 10: fmt.Println(\"A\"); fallthrough; case n > 20: fmt.Println(\"B\"); case n > 30: fmt.Println(\"C\"); default: fmt.Println(\"D\") }`, um comando por linha. Quantas linhas ele imprime?",
+    "hint": "Lição 19.",
+    "unit": "linhas"
+  },
+  "ex-caaybsws": {
+    "prompt": "Um `switch` sem valor transforma uma nota num conceito: 90 ou mais é distinção, 50 ou mais é aprovação, o resto é reprovação. Ponha os três casos na ordem que dá distinção ao 95.",
+    "hint": "Lição 19.",
+    "items": [
+      "`case score >= 90: return \"distinction\"`",
+      "`case score >= 50: return \"pass\"`",
+      "`default: return \"fail\"`"
+    ]
+  },
+  "ex-z8jv0e6d": {
+    "prompt": "Alguém vindo de Python escreve `func greet(name string, greeting string = \"Hello\")`. O que o compilador diz?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "Nada: `greeting` é opcional, e `greet(\"Ana\")` usa `Hello`",
+        "why": "Go não tem valores padrão para parâmetros; todo argumento precisa ser passado."
+      },
+      {
+        "text": "`greet redeclared in this block`",
+        "why": "Essa é a mensagem para duas funções com o mesmo nome, a recusa de Go à sobrecarga."
+      },
+      {
+        "text": "`syntax error: unexpected = in parameter list; possibly missing comma or )`",
+        "why": "Isso. Valor padrão nem faz parte da gramática de Go."
+      },
+      {
+        "text": "O `go vet` avisa que o valor padrão esconde um argumento",
+        "why": "Nem chega ao `go vet`: o arquivo nem é analisado."
+      }
+    ]
+  },
+  "ex-vgb9hkqe": {
+    "prompt": "`parse(s string) (int, error)` é chamada como `if n := parse(s); n > 0 { … }`. O que acontece?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "`n` recebe o `int`, e o erro é descartado",
+        "why": "Go nunca descarta um resultado sozinho; descartar se escreve com `_`."
+      },
+      {
+        "text": "`assignment mismatch: 1 variable but parse returns 2 values`",
+        "why": "Isso. Um nome à esquerda e dois valores à direita, que é o que impede um erro esquecido de compilar."
+      },
+      {
+        "text": "`n` guarda os dois valores, como uma tupla do tipo `(int, error)`",
+        "why": "Go não tem tuplas; `(int, error)` é uma lista de resultados, não um tipo que uma variável possa ter."
+      },
+      {
+        "text": "Compila, porque o inicializador de um `if` pode pegar só o primeiro resultado",
+        "why": "Um inicializador é uma declaração curta comum e segue a mesma regra que `q := divmod(17, 5)`."
+      }
+    ]
+  },
+  "ex-2ca3exv8": {
+    "prompt": "Com o `counter` da lição 21: `next := counter()`, depois `next()` duas vezes, depois `other := counter()` e `other()` uma vez. O que `fmt.Println(next() + other())` imprime?",
+    "hint": "Lição 21.",
+    "unit": ""
+  },
+  "ex-c8mxqe9d": {
+    "prompt": "Um módulo cujo `go.mod` diz `go 1.24` tem `name := name` como primeira linha do corpo de um `for _, name := range names`, antes de uma closure que usa `name`. O que muda ao apagar essa linha?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "Toda closure passa a imprimir o último nome, como com `go 1.21`",
+        "why": "Esse era o comportamento de um módulo em 1.21. A partir da 1.22 cada volta já declara o seu próprio `name`."
+      },
+      {
+        "text": "O build falha, porque a closure perde a variável que capturou",
+        "why": "A closure passa a capturar o `name` do loop, que existe em toda volta."
+      },
+      {
+        "text": "Nada: desde a 1.22 cada volta já tem o seu próprio `name`",
+        "why": "Isso. Num módulo em 1.22 ou posterior a cópia é inofensiva e pode sair."
+      },
+      {
+        "text": "As closures passam a tirar uma foto de `name` em vez da variável",
+        "why": "Uma closure nunca tira foto; ela sempre guarda uma variável. O que mudou na 1.22 foi quantas variáveis o loop cria."
+      }
+    ]
+  },
+  "ex-py5t5her": {
+    "prompt": "`type Config struct { Port int; Labels map[string]string }` e `func tweak(c Config) { c.Port = 9; c.Labels[\"env\"] = \"prod\" }`. Depois de `tweak(cfg)`, o que o `cfg` de quem chamou mostra?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Nenhuma das mudanças, porque a struct inteira foi copiada",
+        "why": "A struct foi copiada, e com ela o ponteiro de 8 bytes do map, que continua levando à tabela de quem chamou."
+      },
+      {
+        "text": "As duas mudanças, porque structs com maps são passadas por referência",
+        "why": "Nada em Go é passado por referência; `Port` vive na cópia e só lá vale 9."
+      },
+      {
+        "text": "O label novo, e a porta antiga",
+        "why": "Isso. A cópia de uma struct é tão funda quanto os próprios campos: `Port` foi copiado, e `Labels` copiou um ponteiro para uma tabela compartilhada."
+      },
+      {
+        "text": "A porta nova, e não o label",
+        "why": "É o contrário: escrever no map passa pelo ponteiro compartilhado, e o `int` é uma cópia particular."
+      }
+    ]
+  },
+  "ex-8rxrcys3": {
+    "prompt": "Na máquina do laboratório, uma variável `v` do tipo `any` guarda um `Record` de 1.024 bytes. Quantos bytes `unsafe.Sizeof(v)` informa?",
+    "hint": "Lição 22.",
+    "unit": "bytes"
+  },
+  "ex-mft2y8nq": {
+    "prompt": "`x, y := 1, 2` e depois `swap(&x, &y)`. Qual `swap` deixa `x` com 2 e `y` com 1?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "`func swap(a, b *int) { a, b = b, a }`",
+        "why": "Isto troca as duas cópias dos endereços que a função recebeu; nada é escrito na outra ponta de nenhum deles."
+      },
+      {
+        "text": "`func swap(a, b *int) { t := *a; a = b; b = &t }`",
+        "why": "Lê `*a` e depois só reatribui os ponteiros locais; nem `x` nem `y` chegam a ser escritos."
+      },
+      {
+        "text": "`func swap(a, b *int) { *a, *b = *b, *a }`",
+        "why": "Isso. `*a` e `*b` são as variáveis de quem chamou, e atribuir a elas é como uma função alcança quem chamou."
+      },
+      {
+        "text": "`func swap(a, b int) { a, b = b, a }`",
+        "why": "Esta nem compila com `&x`, e com `x` trocaria duas cópias particulares."
+      }
+    ]
+  },
+  "ex-9vz9qer2": {
+    "prompt": "Com o `newCounter() *int` da lição 23: `a := newCounter()`, `b := a`, depois `*a++` e `*b++`. O que `fmt.Println(*a)` imprime?",
+    "hint": "Lição 23.",
+    "unit": ""
+  },
+  "ex-msqqx437": {
+    "prompt": "O compilador do Go 1.27.1 move uma variável declarada para o heap, seja o que for que a análise de escape tenha concluído, quando ela passa de `MaxStackVarSize`. Quantos KiB são?",
+    "hint": "Lição 24.",
+    "unit": "KiB"
+  },
+  "ex-mw1am913": {
+    "prompt": "O `mgc.go` do runtime chama o coletor de \"a concurrent mark and sweep\". O que concurrent significa ali?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Valores novos são coletados separados dos antigos",
+        "why": "Isso seria geracional, e o mesmo arquivo diz que o coletor é non-generational."
+      },
+      {
+        "text": "A marcação acontece enquanto o programa continua rodando",
+        "why": "Isso. O programa para duas vezes por coleta, rapidamente; no `gc 3` os 0,29 ms da marcação correram ao lado dele."
+      },
+      {
+        "text": "Valores vivos são movidos juntos para fechar os buracos",
+        "why": "Isso seria compactação, e o coletor de Go nunca move um valor no heap."
+      },
+      {
+        "text": "O programa inteiro é pausado enquanto cada ponteiro é seguido",
+        "why": "Essa é a imagem do programa congelado que o trace desmente: as paradas levaram 0,027 e 0,058 ms."
+      }
+    ]
+  },
+  "ex-4j60mjqt": {
+    "prompt": "O seu módulo tem um pacote `temp` que declara `type Celsius float64`. No `package main` do mesmo módulo você escreve `func (c temp.Celsius) Kelvin() float64`. O que acontece?",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "Compila, porque os dois pacotes pertencem ao seu módulo",
+        "why": "A regra é sobre o pacote, não o módulo: um método fica no pacote que define o tipo."
+      },
+      {
+        "text": "É recusado: `cannot define new methods on non-local type temp.Celsius`",
+        "why": "Isso. Como com `time.Duration`, só o pacote que define um tipo pode dar métodos a ele; o `main` pode definir um tipo próprio por cima."
+      },
+      {
+        "text": "Compila, porque `Celsius` é um tipo definido e não um alias",
+        "why": "Ser definido só importa dentro do pacote que o define; fora dele é non-local do mesmo jeito."
+      },
+      {
+        "text": "Compila, e `Kelvin` passa a existir em `temp` para todo mundo que importa",
+        "why": "Importar um pacote nunca acrescenta método aos tipos dele; esse é o sentido da regra."
+      }
+    ]
+  },
+  "ex-0g9enjnv": {
+    "prompt": "`r.Area` sem parênteses é um method value do tipo `func() float64`. `Rect.Area`, nomeado pelo tipo, é uma method ___ do tipo `func(main.Rect) float64`.",
+    "hint": "Lição 25.",
+    "blanks": [
+      {
+        "accept": [
+          "expression"
+        ]
+      }
+    ]
+  },
+  "ex-5mz5hq5m": {
+    "prompt": "`Inc` tem o receptor `*Counter`, e `list` é um `[]Counter` com dois contadores zerados. Depois de `for _, c := range list { c.Inc() }`, o que `fmt.Println(list)` imprime?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "`[{0} {0}]`",
+        "why": "Isso. `c` é uma cópia de cada elemento; `c.Inc()` pega `&c` e conta essa cópia. `list[i].Inc()` alcançaria os elementos."
+      },
+      {
+        "text": "`[{1} {1}]`, porque um método com ponteiro muda aquilo em que é chamado",
+        "why": "Muda a variável em que é chamado, e essa variável é a cópia do loop, não o elemento."
+      },
+      {
+        "text": "Nada: `cannot call pointer method Inc on Counter`",
+        "why": "Essa recusa é para elemento de map ou literal. `c` é uma variável comum, então o `&` automático vale."
+      },
+      {
+        "text": "`[{2} {2}]`, já que `c` é a mesma variável nas duas voltas",
+        "why": "Mesmo compartilhada, seria uma cópia contada duas vezes, e o slice continuaria com zeros."
+      }
+    ]
+  },
+  "ex-9k9fxnag": {
+    "prompt": "O tipo `T` tem `func (t T) A()` e `func (t *T) B()`, e `t` é uma variável do tipo `T`. Quais afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "O method set de `*T` tem `A` e `B`",
+        "why": "Sim. A partir de um endereço o compilador sempre alcança o valor e o copia para o `A`."
+      },
+      {
+        "text": "`t.B()` compila",
+        "why": "Sim. `t` é uma variável, então Go reescreve a chamada como `(&t).B()`."
+      },
+      {
+        "text": "O method set de `T` tem `A` e `B`",
+        "why": "Só o `A`. O método com ponteiro precisa de um endereço que um valor numa interface não tem."
+      },
+      {
+        "text": "`var x interface{ B() } = t` compila",
+        "why": "Recusado: `T does not implement … (method B has pointer receiver)`. `&t` compilaria."
+      }
+    ]
+  },
+  "ex-cr78ceb4": {
+    "prompt": "Um tipo `Grid` guarda um `[1000][1000]float64`, e todos os métodos dele só leem. Pelas quatro perguntas da lição 26, que receptor eles devem ter?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "Um receptor de valor, já que nada altera a grade",
+        "why": "Só a pergunta 1 permitiria; a pergunta 3 vence, porque cada chamada copiaria oito milhões de bytes."
+      },
+      {
+        "text": "Ponteiro em todos eles, já que cada chamada copiaria oito milhões de bytes",
+        "why": "Isso. Um tipo que carrega um array grande recebe ponteiro, e um só tipo de receptor por tipo mantém os method sets inteiros."
+      },
+      {
+        "text": "Receptores de valor nos métodos pequenos e ponteiros nos lentos",
+        "why": "A cópia é do receptor, não do trabalho do método, e misturar os tipos deixa incompleto o method set do valor."
+      },
+      {
+        "text": "Tanto faz: o compilador passa receptores grandes por ponteiro de qualquer jeito",
+        "why": "Nada faz isso; a lição 22 mediu 350.746 ns para passar por valor um array de 8.000.000 bytes."
+      }
+    ]
+  },
+  "ex-w25f7zkn": {
+    "prompt": "O build para com `Disk does not implement Store (wrong type for method Get)`, depois `have Get(string) []byte` e `want Get(string) ([]byte, error)`. O que há de errado com `Disk`?",
+    "hint": "Lição 27.",
+    "choices": [
+      {
+        "text": "Não tem nenhum método chamado `Get`",
+        "why": "Isso apareceria como `missing method Get`. `wrong type` quer dizer que o nome existe."
+      },
+      {
+        "text": "Nunca declarou que implementa `Store`",
+        "why": "Nada em Go declara isso; um tipo se encaixa por ter os métodos, e a mensagem é sobre um deles."
+      },
+      {
+        "text": "O `Get` dele tem receptor de ponteiro e foi passado um valor",
+        "why": "Esse caso termina em `(method Get has pointer receiver)`, não num `have` e num `want`."
+      },
+      {
+        "text": "O `Get` dele devolve só `[]byte`, e `Store` pede `[]byte` e um `error`",
+        "why": "Isso. `have` é o que o tipo declara e `want` o que a interface pede; os resultados precisam bater em tipo e ordem."
+      }
+    ]
+  },
+  "ex-b2n45yec": {
+    "prompt": "`NewCache()` é declarada para devolver uma interface `Cache` com `Get` e `Set`. O tipo concreto que ela monta também tem um método `Stats()`. O que quem chama `NewCache` perde?",
+    "hint": "Lição 27.",
+    "choices": [
+      {
+        "text": "Nada: a interface guarda o valor concreto, então `c.Stats()` compila",
+        "why": "Por meio de um `Cache`, o compilador só permite o que `Cache` lista; `Stats` não está lá."
+      },
+      {
+        "text": "O `Stats`, que não dá mais para chamar sem uma asserção de tipo",
+        "why": "Isso. É o mesmo motivo de `os.Open` devolver um `*os.File`: devolva o tipo concreto, e quem chama fica com todos os métodos."
+      },
+      {
+        "text": "A possibilidade de passar o cache onde se pede um `Cache`",
+        "why": "Isso é justamente o que ele mantém. Um resultado concreto também poderia ir ali, e por isso devolvê-lo não custa nada."
+      },
+      {
+        "text": "Velocidade, já que toda chamada por interface é verificada na execução",
+        "why": "Se um valor se encaixa é verificado na compilação, no ponto de uso; o custo que a lição 27 aponta são os métodos perdidos."
+      }
+    ]
+  },
+  "ex-r27mc0t1": {
+    "prompt": "`{\"ids\": [1, 2]}` é decodificado com `json.Unmarshal` num `map[string]any`. O que `fmt.Printf(\"%T\", doc[\"ids\"])` imprime?",
+    "hint": "Lição 28.",
+    "choices": [
+      {
+        "text": "`[]int`, já que os dois números são inteiros",
+        "why": "O `Unmarshal` não tem como saber que você queria inteiros; sem struct para dizer, todo número JSON vira `float64`."
+      },
+      {
+        "text": "`[]float64`, um float por número",
+        "why": "Cada elemento é um `float64`, mas nada promete que o próximo também seja, então o slice é de interfaces."
+      },
+      {
+        "text": "`[]interface {}`",
+        "why": "Isso. Um array JSON vira `[]any`, e o `%T` escreve `any` pelo nome longo, como saiu em `tags`."
+      },
+      {
+        "text": "`[]any`, o nome que a documentação usa",
+        "why": "O tipo é esse, mas o `%T` imprime `any` como `interface {}`, o nome longo dele."
+      }
+    ]
+  },
+  "ex-z50e944s": {
+    "prompt": "`var buf *bytes.Buffer` nunca recebe valor, e depois `var w io.Writer = buf`. O que `fmt.Println(w != nil)` imprime?",
+    "hint": "Lição 28.",
+    "choices": [
+      {
+        "text": "`false`, porque `buf` é nil e `w` guarda `buf`",
+        "why": "Essa é a imagem errada: `w` também guarda um tipo, `*bytes.Buffer`, então não é o nil da interface."
+      },
+      {
+        "text": "`true`",
+        "why": "Isso. `== nil` numa interface pergunta se as duas palavras estão vazias, e a do tipo está preenchida; o `%v` ainda imprimiria `<nil>`."
+      },
+      {
+        "text": "Nada: um ponteiro nil não pode ser atribuído a uma interface",
+        "why": "Pode, e o compilador e o `go vet` aceitam; é por isso que o erro é difícil de ver."
+      },
+      {
+        "text": "Entra em pânico, porque a comparação lê através do ponteiro nil",
+        "why": "Comparar uma interface com nil não lê campo nenhum; o pânico só vem quando algo segue o ponteiro."
+      }
+    ]
+  },
+  "ex-q2tzwpax": {
+    "prompt": "`var a any = 2` e depois `var n int = a` é recusado com uma mensagem que termina apontando a saída: `need type ___`.",
+    "hint": "Lição 28.",
+    "blanks": [
+      {
+        "accept": [
+          "assertion"
+        ]
+      }
+    ]
+  },
+  "ex-mj7hv42p": {
+    "prompt": "`var r io.Reader = strings.NewReader(\"text\")`, depois `w, ok := r.(io.Writer)`. O que acontece?",
+    "hint": "Lição 29.",
+    "choices": [
+      {
+        "text": "Entra em pânico, porque um `*strings.Reader` não aceita escrita",
+        "why": "A forma de um resultado só entraria em pânico. Com `ok` à esquerda, um palpite errado é uma resposta, não uma parada."
+      },
+      {
+        "text": "É recusado como asserção de tipo impossível",
+        "why": "`io.Writer` é uma interface, e algum valor dentro de um `io.Reader` poderia ter `Write`, então o compilador não pode descartar."
+      },
+      {
+        "text": "`ok` é false, `w` é nil, e nada entra em pânico",
+        "why": "Isso. O valor ali dentro não tem `Write`, então a pergunta de capacidade responde não, como respondeu para `os.Stdout` e `Flush`."
+      },
+      {
+        "text": "`ok` é true, já que todo leitor do `io` também escreve",
+        "why": "`io.Reader` promete `Read` e mais nada; um `*strings.Reader` lê uma string e não aceita escrita."
+      }
+    ]
+  },
+  "ex-g8w7mjjz": {
+    "prompt": "O `kind` da lição 29 tem `case nil`, `case int, float64`, `case string` e `default`. Ele é chamado com cada um de `nil`, `7`, `int64(7)`, `\"7\"`, `7.0` e um `*int` nil. Quantas das seis chamadas chegam ao `default`?",
+    "hint": "Lição 29.",
+    "unit": "chamadas"
+  },
+  "ex-t1kp3ps8": {
+    "prompt": "A lição 30 comparou quatro jeitos de escrever uma tarefa para vários tipos. Ligue cada um ao que quem chama paga.",
+    "hint": "Lição 30.",
+    "pairs": [
+      {
+        "left": "uma cópia por tipo, como `sort.Ints`",
+        "right": "nada, se houver uma cópia para o tipo dele"
+      },
+      {
+        "left": "`any` e um type switch, como `SumAny`",
+        "right": "uma cópia para `[]any`, e um resultado de um tipo fixo"
+      },
+      {
+        "left": "uma interface, como `sort.Sort`",
+        "right": "três métodos no tipo dele"
+      },
+      {
+        "left": "um parâmetro de tipo, como `Sum[T]`",
+        "right": "nada, e o resultado volta no tipo dele mesmo"
+      }
+    ],
+    "right_distractors": [
+      "um pânico em toda chamada, mesmo com o tipo certo"
+    ]
+  },
+  "ex-0n16f64q": {
+    "prompt": "Um programa precisa de um `Cache` que guarde valores do tipo que cada chamador escolher, e de um `Save` que escreva a saída onde mandarem, arquivo ou buffer. Pela lição 30, qual recebe um parâmetro de tipo?",
+    "hint": "Lição 30.",
+    "choices": [
+      {
+        "text": "Os dois, já que cada um trabalha com vários tipos",
+        "why": "O `Save` faz algo diferente por destino; isso é comportamento, e uma interface como `io.Writer` expressa isso."
+      },
+      {
+        "text": "O `Save`, e o cache guarda `any`",
+        "why": "É o contrário: `any` no cache traz de volta as asserções em tempo de execução do `SumAny`."
+      },
+      {
+        "text": "Nenhum: uma interface serve tão bem para um contêiner",
+        "why": "Uma interface lista métodos; um cache precisa devolver exatamente o tipo que entrou, e é isso que o `T` amarra."
+      },
+      {
+        "text": "O `Cache`; o `Save` recebe um `io.Writer`",
+        "why": "Isso. Um contêiner faz a mesma coisa seja qual for o tipo, então é genérico; escrever é comportamento, então recebe uma interface."
+      }
+    ]
+  },
+  "ex-kp2sczax": {
+    "prompt": "`func Biggest[T int | float64](a, b T) T` é chamada como `top := Biggest(3, 2.5)`. Qual é o `T` nessa chamada?",
+    "hint": "Lição 31.",
+    "choices": [
+      {
+        "text": "`int`, tirado do primeiro argumento",
+        "why": "Isso aconteceu com a variável tipada `count`. `3` é uma constante sem tipo e ainda não escolheu tipo nenhum."
+      },
+      {
+        "text": "`float64`, o único tipo da lista em que as duas constantes cabem",
+        "why": "Isso. Constantes sem tipo deixam o compilador livre para escolher um tipo só para as duas; o `%T` imprimiu `float64`, e `top` imprimiu `3`."
+      },
+      {
+        "text": "Nenhum: a chamada é recusada porque os dois argumentos diferem",
+        "why": "Essa recusa foi para `Biggest(count, price)`, duas variáveis tipadas. Constantes ainda podem entrar em acordo."
+      },
+      {
+        "text": "`any`, porque os argumentos são de tipos misturados",
+        "why": "Aqui `T` só pode ser `int` ou `float64`, e é um tipo por chamada."
+      }
+    ]
+  },
+  "ex-mjc3ehbr": {
+    "prompt": "`type Email string` e `func Join[T string](xs []T) string`. O que acontece com `Join([]Email{\"a@x\", \"b@x\"})`?",
+    "hint": "Lição 31.",
+    "choices": [
+      {
+        "text": "Compila, já que um `Email` é guardado exatamente como uma `string`",
+        "why": "Guardado igual não é o mesmo tipo: a restrição contém só `string`, como `int | float64` continha `float64` e recusou `Celsius`."
+      },
+      {
+        "text": "Compila, e `T` é inferido como `string`",
+        "why": "A inferência lê `T` do argumento, um `[]Email`, então `T` seria `Email`, que depois é conferido com a restrição."
+      },
+      {
+        "text": "Entra em pânico na execução, quando o primeiro `Email` é convertido",
+        "why": "Uma chamada genérica é verificada na compilação; nada fica para converter ou falhar na execução."
+      },
+      {
+        "text": "É recusado; escrever a restrição como `~string` faria aceitar",
+        "why": "Isso. `~string` é todo tipo cujo tipo subjacente é `string`, `Email` incluído."
+      }
+    ]
+  },
+  "ex-9e8j068r": {
+    "prompt": "Um módulo cujo `go.mod` diz `go 1.26` declara `func (s *Stack[T]) Map[U any](f func(T) U) *Stack[U]`, e é compilado com a go1.27.1. O que acontece?",
+    "hint": "Lição 31.",
+    "choices": [
+      {
+        "text": "É recusado: `generic method requires go1.27 or later`",
+        "why": "Isso. Um método com parâmetros de tipo próprios exige um módulo em `go 1.27` ou posterior, seja qual for o compilador."
+      },
+      {
+        "text": "Compila, porque o compilador é a go1.27.1",
+        "why": "A linha `go` decide em que versão da linguagem o módulo está escrito, como decidiu para `new(10)` e para generics sob 1.17."
+      },
+      {
+        "text": "Compila, mas `Map` não consegue satisfazer interface nenhuma",
+        "why": "Isso vale para métodos genéricos num módulo `go 1.27`; aqui o método nem compila."
+      },
+      {
+        "text": "É recusado, porque um método nunca pode declarar parâmetros de tipo",
+        "why": "Desde Go 1.27 pode; o mesmo arquivo rodou e imprimiu `*main.Stack[string]` com a linha `go` em 1.27.1."
+      }
+    ]
+  },
+  "ex-ks0jhhg0": {
+    "prompt": "`func check(text string) error` declara `var le *LineError` no início, só a preenche quando uma linha está errada, e termina com `return le`. Com um texto correto, o que o `err == nil` de quem chamou diz?",
+    "hint": "Lição 32.",
+    "choices": [
+      {
+        "text": "`true`, porque o tipo do resultado é `error`, o que consertou o `~/errors-nil`",
+        "why": "A correção foi `return nil` com resultado `error`. Devolver uma variável `*LineError` nil ainda preenche a palavra do tipo."
+      },
+      {
+        "text": "`false`: uma interface com um `*LineError` dentro nunca é nil",
+        "why": "Isso. Uma interface só é nil quando as duas palavras estão vazias, e `return le` guarda o tipo `*LineError` com um ponteiro nil."
+      },
+      {
+        "text": "Nada: o compilador recusa um `*LineError` devolvido como `error`",
+        "why": "`*LineError` tem `Error() string`, então é um `error`; o compilador e o `go vet` aceitam."
+      },
+      {
+        "text": "Entra em pânico no `return le`, porque `le` é nil",
+        "why": "Devolver um ponteiro nil não lê nada através dele; o pânico da lição 32 veio depois, da chamada a `Error`."
+      }
+    ]
+  },
+  "ex-bfmhr646": {
+    "prompt": "Para um `strconv.Atoi` que falhou, `fmt.Println(err)` imprimiu exatamente o texto que `err.___()` devolve.",
+    "hint": "Lição 32.",
+    "blanks": [
+      {
+        "accept": [
+          "Error"
+        ]
+      }
+    ]
+  },
+  "ex-nj0s167b": {
+    "prompt": "O que `fmt.Println(errors.New(\"age %d is negative\"))` imprime?",
+    "hint": "Lição 33.",
+    "choices": [
+      {
+        "text": "`age %!d(MISSING) is negative`",
+        "why": "É assim que o `fmt` aponta um verbo sem argumento. O `errors.New` não é o `fmt`, e não lê verbo nenhum."
+      },
+      {
+        "text": "`age %d is negative`, com verbo e tudo",
+        "why": "Isso. O `errors.New` não aceita verbos; uma mensagem com um valor dentro é trabalho do `fmt.Errorf`."
+      },
+      {
+        "text": "Nada: o compilador recusa um verbo no `errors.New`",
+        "why": "O texto é só uma string para o compilador, e para o `errors.New`."
+      },
+      {
+        "text": "`age 0 is negative`, com o valor zero preenchido",
+        "why": "Nada preenche o `%d`; não há argumento nem etapa de formatação."
+      }
+    ]
+  },
+  "ex-bbpmh1rf": {
+    "prompt": "O que `fmt.Println(errors.Join(errors.New(\"disk full\"), nil))` imprime?",
+    "hint": "Lição 33.",
+    "choices": [
+      {
+        "text": "`<nil>`, porque um dos erros informados é nil",
+        "why": "O `Join` só devolve nil se todos os valores forem nil; aqui um não é."
+      },
+      {
+        "text": "`disk full` e depois `<nil>` numa segunda linha",
+        "why": "Valores nil são descartados antes de qualquer junção, então não há segunda linha."
+      },
+      {
+        "text": "`disk full`",
+        "why": "Isso. Valores de erro nil são descartados, e uma mensagem só não tem quebra de linha para acrescentar."
+      },
+      {
+        "text": "Entra em pânico, porque o `Join` não consegue embrulhar um erro nil",
+        "why": "A documentação diz o que acontece com valores nil: são descartados, em silêncio."
+      }
+    ]
+  },
+  "ex-2zy4mkd0": {
+    "prompt": "`j := errors.Join(fmt.Errorf(\"save: %w\", fs.ErrPermission), errors.New(\"disk full\"))`. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Lição 34.",
+    "choices": [
+      {
+        "text": "`errors.Is(j, fs.ErrPermission)` é `true`",
+        "why": "Sim. O `errors.Is` percorre a árvore inteira, cada ramo por vez e cada ramo pela sua cadeia."
+      },
+      {
+        "text": "`errors.Unwrap(j)` devolve `nil`",
+        "why": "Sim. Um erro juntado tem `Unwrap() []error`, e o `errors.Unwrap` só chama a forma de um erro só."
+      },
+      {
+        "text": "`j == fs.ErrPermission` é `true`",
+        "why": "O `==` compara o valor de fora, um `*errors.joinError`, que não é `fs.ErrPermission`."
+      },
+      {
+        "text": "`errors.Is(j, fs.ErrNotExist)` é `true`, já que há um erro de arquivo lá dentro",
+        "why": "Ele pergunta por aquele erro específico, e um problema de permissão não é arquivo inexistente."
+      }
+    ]
+  },
+  "ex-rfmfyf0b": {
+    "prompt": "Uma biblioteca ainda precisa compilar com Go 1.25 e precisa tirar o `*fs.PathError` de um erro embrulhado. Que chamada ela usa?",
+    "hint": "Lição 34.",
+    "choices": [
+      {
+        "text": "`errors.AsType[*fs.PathError](err)`, a forma que a documentação prefere",
+        "why": "Com a go1.25.0 o `go doc` respondeu `no symbol AsType in package errors`; ela chegou na 1.26."
+      },
+      {
+        "text": "`var pe *fs.PathError` e `errors.As(err, &pe)`",
+        "why": "Isso. O `errors.As` é a forma de todo módulo que precisava compilar com um Go mais antigo."
+      },
+      {
+        "text": "`err.(*fs.PathError)`, uma asserção de tipo",
+        "why": "Uma asserção só pergunta pelo valor de fora, e o de fora é um `*fmt.wrapError`."
+      },
+      {
+        "text": "`errors.Is(err, &fs.PathError{})`",
+        "why": "O `errors.Is` procura um valor, e um `&fs.PathError{}` novo é um ponteiro que nenhuma cadeia contém; achar um tipo é trabalho do `As`."
+      }
+    ]
+  },
+  "ex-4ngf89nn": {
+    "prompt": "Um loop lê de um `io.Reader` com `n, err := r.Read(buf)`. Ponha o que ele faz com os resultados de cada chamada na ordem em que o loop da lição 35 faz.",
+    "hint": "Lição 35.",
+    "items": [
+      "usar os `n` bytes de `buf[:n]`",
+      "sair do loop se `err == io.EOF`",
+      "relatar qualquer outro `err` não nil como falha e retornar"
+    ]
+  },
+  "ex-bqavy548": {
+    "prompt": "Um pacote `auth` pode falhar porque um token expirou. Quem chama precisa desviar nesse caso e dizer ao usuário quando o token expirou. Pela tabela da lição 35, o que `auth` deve devolver?",
+    "hint": "Lição 35.",
+    "choices": [
+      {
+        "text": "Um sentinela, `var ErrExpired = errors.New(\"token expired\")`",
+        "why": "Um sentinela responde sim ou não; não carrega horário nenhum, e tirá-lo da mensagem é o que a lição 34 desaconselhou."
+      },
+      {
+        "text": "Um erro opaco do `fmt.Errorf` com o horário na mensagem",
+        "why": "Opaco é para falhas em que ninguém desvia, e aqui quem chama precisa desviar e ler um dado."
+      },
+      {
+        "text": "Um tipo de erro com o horário da expiração num campo, encontrado com `errors.As`",
+        "why": "Isso. Quem chama desvia e precisa de dado, que é a linha do tipo de erro, como no `*fs.PathError`."
+      },
+      {
+        "text": "Nada: um token expirado é uma resposta, como zero peras no estoque",
+        "why": "Zero peras é uma contagem real; um token expirado quer dizer que a chamada não conseguiu fazer o que foi pedido."
+      }
+    ]
+  },
+  "ex-pfbbf0d9": {
+    "prompt": "Um programa confere cada linha da entrada com um padrão escrito no código-fonte, que nunca muda. Pela lição 36, como ele deve compilar esse padrão?",
+    "hint": "Lição 36.",
+    "choices": [
+      {
+        "text": "Com `regexp.Compile`, devolvendo o erro até o `main` como qualquer falha",
+        "why": "Isso é para um padrão digitado pelo usuário, que pode estar errado em qualquer execução. Um padrão no código só está errado por um bug."
+      },
+      {
+        "text": "`regexp.MustCompile`, numa variável de pacote",
+        "why": "Isso. Um erro nele entra em pânico na primeira execução, antes do `main`, na mesa de quem programou."
+      },
+      {
+        "text": "Com `regexp.Compile` e o erro descartado com `_`, já que não pode falhar",
+        "why": "Pode falhar, com um erro de digitação como `^[a-z+$`, e aí o programa rodaria com um `*Regexp` nil."
+      },
+      {
+        "text": "Dentro de um `recover` adiado, para um padrão ruim não derrubá-lo",
+        "why": "Isso esconderia um bug; o recover pertence aos pânicos internos de um pacote ou à fronteira de uma tarefa."
+      }
+    ]
+  },
+  "ex-bw680dba": {
+    "prompt": "A função adiada de `Sum` é trocada para recuperar qualquer pânico e devolvê-lo como erro, sem conferir `parseError`. Com o bug do `s[0]` de `~/panic-sumbug`, o que `Sum(\"1++3\")` entrega a quem chamou?",
+    "hint": "Lição 36.",
+    "choices": [
+      {
+        "text": "Um crash com `[recovered, repanicked]`, como antes",
+        "why": "Isso vinha da linha que entrava em pânico de novo; sem a verificação, nada entra em pânico de novo."
+      },
+      {
+        "text": "`4` e um erro nil, pulando o termo vazio",
+        "why": "Uma função recuperada não continua de onde parou; ela devolve o que os resultados nomeados guardam."
+      },
+      {
+        "text": "Um erro comum falando do índice fora do intervalo, como se a entrada estivesse errada",
+        "why": "Isso. O bug vira um erro de análise que quem chamou mostra ao usuário, e trace nenhum chega a quem o corrigiria."
+      },
+      {
+        "text": "Nada: o `recover` recusa erros de runtime e os deixa passar",
+        "why": "O `recover` para qualquer pânico em que seja chamado; só erros fatais, como estouro de pilha, escapam dele."
+      }
+    ]
+  },
+  "ex-8jmf28m7": {
+    "prompt": "O `main` começa com `defer fmt.Println(\"deferred: cleaning up\")` e depois chama `os.Exit(3)`. Com que status de saída o programa termina?",
+    "hint": "Lição 36.",
+    "unit": ""
+  },
+  "ex-beph3dfj": {
+    "prompt": "Um trace tirado com `debug.Stack()` dentro da função adiada de `price` tem um frame chamado `main.price.func1()`. Que frame é esse?",
+    "hint": "Lição 37.",
+    "choices": [
+      {
+        "text": "Uma closure sem nome, então o compilador inventou um",
+        "why": "Isso. Uma função literal não tem nome próprio, então o compilador dá um a partir da função que a envolve."
+      },
+      {
+        "text": "A primeira chamada que `price` fez, onde o pânico aconteceu",
+        "why": "O pânico aconteceu em `unitPrice`, mais abaixo no trace, na linha 22."
+      },
+      {
+        "text": "Uma cópia inline de `price`",
+        "why": "Frames inline aparecem com `(...)` e sem deslocamento; este é uma chamada própria."
+      },
+      {
+        "text": "Uma goroutine que `price` iniciou para recuperar o pânico",
+        "why": "O recover roda na mesma goroutine; um recover em outra goroutine nem conseguiria parar este pânico."
+      }
+    ]
+  },
+  "ex-56p77v88": {
+    "prompt": "`GOTRACEBACK=___` mantém a mensagem do pânico e o status de saída 2 e deixa de fora o stack trace de toda goroutine.",
+    "hint": "Lição 37.",
+    "blanks": [
+      {
+        "accept": [
+          "none",
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-bpn6csg4": {
+    "prompt": "O `go mod graph` mostrou `golang.org/x/text` exigindo `golang.org/x/tools`, mas o `go.sum` não tinha linha para `x/tools`. Por quê?",
+    "hint": "Lição 38.",
+    "choices": [
+      {
+        "text": "O `tidy` tira de `go.sum` as dependências indiretas",
+        "why": "O `tidy` mantém os hashes de que o build precisa; ele só tirou as linhas de `x/text` quando nada o importava."
+      },
+      {
+        "text": "Nenhum pacote que o programa importa vive nele, então ele nunca foi baixado",
+        "why": "Isso. O cache vazio do primeiro `tidy` recebeu `x/text` e mais nada."
+      },
+      {
+        "text": "O banco de checksums não tinha registro de `x/tools`",
+        "why": "O banco só é consultado sobre uma versão que está sendo baixada, e `x/tools` nunca foi."
+      },
+      {
+        "text": "A seleção de versão mínima o pulou, porque a v0.51.0 é mais nova",
+        "why": "A MVS escolheu a v0.49.0 para o grafo; ela escolhe versões, não se um módulo é baixado."
+      }
+    ]
+  },
+  "ex-w6w452b8": {
+    "prompt": "Ligue cada mensagem que o comando go imprimiu na lição 38 à sua causa.",
+    "hint": "Lição 38.",
+    "pairs": [
+      {
+        "left": "`malformed module path \"my accents\": invalid char ' '`",
+        "right": "um espaço no nome dado ao `go mod init`"
+      },
+      {
+        "left": "`package hello/greet is not in std`",
+        "right": "um caminho de módulo cujo primeiro elemento não tem ponto"
+      },
+      {
+        "left": "`checksum mismatch` e `SECURITY ERROR`",
+        "right": "um hash do `go.sum` com que os bytes não batem"
+      },
+      {
+        "left": "`inconsistent vendoring`",
+        "right": "`go.mod` e `vendor/modules.txt` com versões diferentes"
+      }
+    ],
+    "right_distractors": [
+      "um proxy de módulos que não pôde ser alcançado"
+    ]
+  },
+  "ex-pwrsc2vw": {
+    "prompt": "Um módulo tem diretório `vendor`, mas o `go.mod` ainda diz `go 1.13`. Pela lição 38, o que um `go build` simples faz com o `vendor`?",
+    "hint": "Lição 38.",
+    "choices": [
+      {
+        "text": "Usa, como sempre faz quando o diretório existe",
+        "why": "Existir é metade da condição; a outra metade é a linha `go`."
+      },
+      {
+        "text": "Recusa compilar até o `go mod vendor` rodar de novo",
+        "why": "Essa recusa é para quando `go.mod` e `modules.txt` discordam sobre versões."
+      },
+      {
+        "text": "Não o usa sozinho, já que isso exige uma linha `go` 1.14 ou posterior",
+        "why": "Isso. O `modload/init.go` passa para o `vendor` quando a linha go é pelo menos 1.14 e o diretório existe."
+      },
+      {
+        "text": "Apaga, porque módulos antigos não podem fazer vendor",
+        "why": "O comando go não apaga arquivos seus; o diretório só deixa de ser lido."
+      }
+    ]
+  },
+  "ex-cwze8p8p": {
+    "prompt": "Um arquivo importa `crypto/rand` e `math/rand/v2`, e o build para com `rand redeclared in this block`. O que resolve?",
+    "hint": "Lição 39.",
+    "choices": [
+      {
+        "text": "Um dot import de um deles, para os nomes dispensarem prefixo",
+        "why": "Os dois pacotes continuam colidindo, agora por nomes soltos, e quem lê perde a noção de onde vem o `N`."
+      },
+      {
+        "text": "Um import em branco, `_ \"crypto/rand\"`",
+        "why": "O `_` não associa nome nenhum, então o arquivo nem conseguiria mais chamar `crypto/rand`."
+      },
+      {
+        "text": "Um alias para um deles, como `crand \"crypto/rand\"`",
+        "why": "Isso. Os dois pacotes se chamam `rand`, e um alias antes do caminho dá a um deles outro nome neste arquivo."
+      },
+      {
+        "text": "Passar um dos imports para outro arquivo do mesmo pacote",
+        "why": "Só funciona se nenhum arquivo precisar dos dois; o arquivo que usa os dois continua com a colisão."
+      }
+    ]
+  },
+  "ex-9wsx8af2": {
+    "prompt": "Um arquivo tem `. \"strings\"` entre os imports e declara a própria `func Title(s string) string`. O que acontece?",
+    "hint": "Lição 39.",
+    "choices": [
+      {
+        "text": "O `Title` do arquivo vence, como um nome interno esconde um externo",
+        "why": "Um dot import põe os nomes de `strings` no próprio arquivo, no mesmo nível da sua declaração, então não há o que esconder."
+      },
+      {
+        "text": "É recusado: `Title already declared through dot-import of package strings`",
+        "why": "Isso. Todo nome exportado de `strings` vira um nome que este arquivo não pode declarar."
+      },
+      {
+        "text": "Compila, e as chamadas a `Title` vão para `strings.Title`",
+        "why": "O compilador não escolhe entre duas declarações de um mesmo nome; ele recusa."
+      },
+      {
+        "text": "Só compila se `Title` não for exportado, como `title`",
+        "why": "Isso evitaria a colisão, mas a pergunta é sobre o arquivo como está, e ele é recusado."
+      }
+    ]
+  },
+  "ex-z3ka5q98": {
+    "prompt": "O seu módulo exige `example.com/lib v1.2.3`. O módulo publicou a v1.2.7, a v1.3.0 e, no caminho `example.com/lib/v2`, a v2.0.0. Que versão `go get example.com/lib@patch` escolhe?",
+    "hint": "Lição 40.",
+    "choices": [
+      {
+        "text": "v1.2.7",
+        "why": "Isso. `patch` é a mais nova com os mesmos números major e minor da que você tem."
+      },
+      {
+        "text": "v1.3.0, a release mais nova de `example.com/lib`",
+        "why": "Isso é o que `latest` ou `upgrade` escolheriam; `patch` mantém o número minor."
+      },
+      {
+        "text": "v2.0.0, já que é a mais nova das três",
+        "why": "A v2 fica em outro caminho, e nenhuma consulta em `example.com/lib` atravessa uma versão major."
+      },
+      {
+        "text": "De novo a v1.2.3, porque `patch` só reinstala a versão que você tem",
+        "why": "O `go get` não instala nada, e `patch` vai para a release de correção mais nova quando ela existe."
+      }
+    ]
+  },
+  "ex-cqsxwqjp": {
+    "prompt": "Depois de apagar o código que usava um módulo, `go get github.com/mattn/go-runewidth@___` tira a dependência do `go.mod`.",
+    "hint": "Lição 40.",
+    "blanks": [
+      {
+        "accept": [
+          "none"
+        ]
+      }
+    ]
+  }
+}

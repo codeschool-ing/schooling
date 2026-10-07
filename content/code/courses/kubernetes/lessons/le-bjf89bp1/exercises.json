@@ -1,0 +1,226 @@
+[
+  {
+    "id": "ex-8a8mfpt3",
+    "version": 1,
+    "section": "the-driver",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the three containers in each `csi-hostpathplugin` pod, which one is the storage driver itself?",
+    "hint": "The other two are published by the Kubernetes project for every driver.",
+    "choices": [
+      {
+        "text": "`hostpath`",
+        "correct": true,
+        "why": "Right. It answers the CSI calls on the socket."
+      },
+      {
+        "text": "`csi-provisioner`",
+        "correct": false,
+        "why": "A sidecar: it turns claims into `CreateVolume` calls."
+      },
+      {
+        "text": "`node-driver-registrar`",
+        "correct": false,
+        "why": "A sidecar: it tells the kubelet where the socket is."
+      },
+      {
+        "text": "The kubelet",
+        "correct": false,
+        "why": "The kubelet is not a container in that pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-xm4wqx52",
+    "version": 1,
+    "section": "the-driver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl get csinodes` showed `DRIVERS 1` on both workers. What put that 1 there?",
+    "hint": "Which sidecar talks to the kubelet?",
+    "choices": [
+      {
+        "text": "The StorageClass",
+        "correct": false,
+        "why": "A class names a provisioner; it registers nothing on nodes."
+      },
+      {
+        "text": "The first claim",
+        "correct": false,
+        "why": "No claim existed yet."
+      },
+      {
+        "text": "The CSIDriver object",
+        "correct": false,
+        "why": "It describes the driver for the whole cluster, not per node."
+      },
+      {
+        "text": "`node-driver-registrar` on each node",
+        "correct": true,
+        "why": "Right. It registers the socket with that node's kubelet."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3yn0cqj",
+    "version": 1,
+    "section": "a-volume",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which component asked the driver for `CreateVolume`?",
+    "hint": "The table at the end of the lesson.",
+    "choices": [
+      {
+        "text": "The kubelet on `shop-worker2`",
+        "correct": false,
+        "why": "The kubelet makes the node calls."
+      },
+      {
+        "text": "`csi-provisioner`",
+        "correct": true,
+        "why": "Right. It watches claims and makes the controller calls."
+      },
+      {
+        "text": "The API server",
+        "correct": false,
+        "why": "The API server only stores the claim."
+      },
+      {
+        "text": "The scheduler",
+        "correct": false,
+        "why": "It chose the node; it calls no driver."
+      }
+    ]
+  },
+  {
+    "id": "ex-q28rc52n",
+    "version": 1,
+    "section": "a-volume",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is a PersistentVolume's `volumeHandle` to Kubernetes?",
+    "hint": "It matched the directory name on the node.",
+    "choices": [
+      {
+        "text": "A path Kubernetes mounts by itself",
+        "correct": false,
+        "why": "Kubernetes never touches the storage; the driver mounts it."
+      },
+      {
+        "text": "The driver's id, kept and handed back",
+        "correct": true,
+        "why": "Right. Kubernetes stores it and passes it on later calls without understanding it."
+      },
+      {
+        "text": "The claim's uid",
+        "correct": false,
+        "why": "The claim has its own uid; the handle came from the driver."
+      },
+      {
+        "text": "A hash of the class's parameters",
+        "correct": false,
+        "why": "It identifies one volume, not a class."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6m47xv5",
+    "version": 1,
+    "section": "a-volume",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the driver's calls in the order they happened for `writer`'s volume.",
+    "hint": "Made, prepared on the node, placed in the pod.",
+    "items": [
+      "`CreateVolume`",
+      "`NodeStageVolume`",
+      "`NodePublishVolume`",
+      "`NodeUnpublishVolume`",
+      "`DeleteVolume`"
+    ],
+    "trap": "A volume has to exist before a node can stage it, and has to leave the pod before it can be deleted."
+  },
+  {
+    "id": "ex-ghtpyjch",
+    "version": 1,
+    "section": "on-the-node",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `writer`, `mount` showed `/data` on `/dev/vda`. Why that device?",
+    "hint": "Where does a host-path volume live?",
+    "choices": [
+      {
+        "text": "The driver created a 1 GiB disk",
+        "correct": false,
+        "why": "It made a directory, not a disk."
+      },
+      {
+        "text": "Every pod mounts `/dev/vda`",
+        "correct": false,
+        "why": "Only volumes on the node's disk show it."
+      },
+      {
+        "text": "It is a directory on the node's disk",
+        "correct": true,
+        "why": "Right, bind-mounted into the pod."
+      },
+      {
+        "text": "The cloud attached a disk",
+        "correct": false,
+        "why": "This lab has no cloud; `ATTACHREQUIRED` was false."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rbs4k25",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each CSI call with who made it in the lab.",
+    "hint": "Controller calls from the sidecar, node calls from the kubelet.",
+    "pairs": [
+      {
+        "left": "`CreateVolume`",
+        "right": "`csi-provisioner`"
+      },
+      {
+        "left": "`NodePublishVolume`",
+        "right": "The kubelet"
+      },
+      {
+        "left": "`GetPluginInfo`",
+        "right": "Anything that connects to the socket first"
+      }
+    ],
+    "right_distractors": [
+      "The scheduler"
+    ]
+  },
+  {
+    "id": "ex-jyfvywv0",
+    "version": 1,
+    "section": "the-driver",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A CSI driver answers gRPC calls over a Unix ___.",
+    "hint": "`csi.sock`.",
+    "blanks": [
+      {
+        "accept": [
+          "socket"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

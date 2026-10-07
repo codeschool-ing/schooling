@@ -1,0 +1,29 @@
+---
+title: They inherit, so they have a scope
+version: 1
+---
+
+Custom properties are **inherited**, like `color` and `font-family` in lesson 5 section 10. A value declared on `:root` is visible to every element because every element descends from the root. And a value declared on any other element is visible to that element and everything inside it, and to nothing else. That is the line that made the second heading red:
+
+```css
+.cancelled { --accent: var(--red); }
+```
+
+```
+ana@laptop:~/site$ probe events.html style .cancelled --accent style .event border-left-color
+article.event.cancelled  --accent: #8a1c1c
+article.event  border-left-color: rgb(47, 111, 78)
+article.event.cancelled  border-left-color: rgb(138, 28, 28)
+```
+
+The cancelled event declares `--accent` again, as the red. Inside it, every `var(--accent)` finds that value first, because the nearest ancestor that declares a custom property is the one that counts. Its border and its heading are red; the other event's are green; and the rules that draw them are the same two rules.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"A custom property in the tree. :root sets --accent to the green #2f6f4e. The first article inherits it. The cancelled article sets --accent to the red #8a1c1c. Both h2 elements use the same rule, a color that reads --accent, and the first comes out green, rgb(47, 111, 78), the second red, rgb(138, 28, 28).\"><line x1=\"360\" y1=\"66\" x2=\"200\" y2=\"120\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></line><line x1=\"360\" y1=\"66\" x2=\"520\" y2=\"120\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></line><line x1=\"200\" y1=\"176\" x2=\"200\" y2=\"206\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></line><line x1=\"520\" y1=\"176\" x2=\"520\" y2=\"206\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></line><rect x=\"240\" y=\"12\" width=\"240\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"360\" y=\"28\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">:root</text><text x=\"360\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">--accent: #2f6f4e</text><rect x=\"90\" y=\"120\" width=\"220\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"136\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">article.event</text><text x=\"200\" y=\"152\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">--accent: inherited</text><rect x=\"400\" y=\"120\" width=\"240\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"520\" y=\"136\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">article.event.cancelled</text><text x=\"520\" y=\"152\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">--accent: #8a1c1c</text><rect x=\"90\" y=\"206\" width=\"220\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">h2</text><text x=\"200\" y=\"238\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">color reads --accent</text><text x=\"200\" y=\"254\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">rgb(47, 111, 78)</text><rect x=\"400\" y=\"206\" width=\"240\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"520\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">h2</text><text x=\"520\" y=\"238\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">color reads --accent</text><text x=\"520\" y=\"254\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">rgb(138, 28, 28)</text><text x=\"20\" y=\"290\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">One rule gives two colours: each h2 reads --accent from its own ancestors.</text></svg>", "caption": "Custom properties inherit, so a component changes a value for everything inside it by setting it once."}
+```
+
+## What scoping is good for
+
+This is the pattern for **variants**: a component reads its colours and sizes from custom properties, and a variant only changes the properties. A cancelled event, a featured event, a sold-out book: each is one line that sets `--accent`, instead of a rule for every part of the card that has to change colour. Adding a new part to the card later, an icon or a button, means writing `var(--accent)` once, and every variant follows.
+
+It is also how a component can be configured from outside without anybody reaching into its insides: a page that wants smaller cards sets `--space: 0.75rem` on the container, and the cards inside use it. That keeps selectors short and specificity flat, which lesson 5 section 08 asked for.

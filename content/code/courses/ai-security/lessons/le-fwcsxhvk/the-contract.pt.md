@@ -12,7 +12,7 @@ enviado:
 | pergunta | por que importa pela LGPD |
 |---|---|
 | Os prompts e respostas são usados para treinar ou melhorar os modelos do fornecedor? | se sim, o fornecedor decide uma finalidade própria e deixa de ser só operador (art. 39) |
-| Por quanto tempo o fornecedor os guarda, e há um arranjo sem retenção? | a política de retenção da Tarefa não os alcança, e a varredura da aula 21 para nos discos da própria Tarefa |
+| Por quanto tempo o fornecedor os guarda, e há um arranjo sem retenção? | a política de retenção da Tarefa não os alcança, e a varredura da aula 11 para nos discos da própria Tarefa |
 | Onde são processados, e sob qual mecanismo do art. 33? | uma transferência internacional precisa de um, em geral as cláusulas-padrão da ANPD |
 | A quais outras empresas o fornecedor os repassa? | os titulares têm direito de saber quem recebe os dados deles |
 | Com que rapidez o fornecedor comunica um incidente de segurança à Tarefa? | a Tarefa tem o próprio prazo diante da ANPD, e ele começa quando a Tarefa fica sabendo |
@@ -30,7 +30,7 @@ direto neste recurso:
   Tarefa tem sobre ela e com quem compartilhou. *"Um fornecedor de modelo, sob contrato, para resumir
   tickets de suporte"* faz parte da resposta verdadeira, e o aviso de privacidade já deveria dizê-lo.
 - **Eliminação de dados desnecessários** (art. 18, IV). Um pedido que chega à Tarefa chega a todo
-  depósito que a Tarefa controla: o ticket, os logs da aula 21 e o cofre. A cópia da caixa de saída no
+  depósito que a Tarefa controla: o ticket, os logs da aula 11 e o cofre. A cópia da caixa de saída no
   fornecedor fica sob os termos de retenção do contrato, que é um motivo para preferir termos curtos.
 - **Correção** (art. 18, III). Um resumo que errou o motivo da Juliana, salvo no ticket, é dado sobre
   ela como qualquer outro.

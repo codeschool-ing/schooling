@@ -58,7 +58,7 @@ the job's id and the date the ticket was opened. `renamed` replaced the two name
 `in text` is the free text: the client wrote Juliana's first name in a message and their own phone
 number in another, and both became placeholders as well.
 
-**The names in the messages could be found because the ticket says what they are.** Lesson 21 showed
+**The names in the messages could be found because the ticket says what they are.** Lesson 11 showed
 that no pattern finds a name in free text. Here the structured fields hold `Marcos Teixeira` and
 `Juliana Prado`, so the tool knows which words to look for, first names included. A third person
 mentioned only in a message, a lawyer or a relative, would get through, and that limit belongs in

@@ -1,0 +1,274 @@
+[
+  {
+    "id": "ex-w2yw01kr",
+    "version": 1,
+    "section": "a-pinned-toolchain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why run `go test` in `golang:1.25` rather than with whatever Go a machine has installed?",
+    "hint": "Lesson 1's problem.",
+    "choices": [
+      {
+        "text": "Tests are faster in a container",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Go refuses to run tests outside a container",
+        "correct": false,
+        "why": "It runs them anywhere; the version differs."
+      },
+      {
+        "text": "The image includes the tests",
+        "correct": false,
+        "why": "The source is mounted; the image only brings the toolchain."
+      },
+      {
+        "text": "Every machine then tests with the same Go",
+        "correct": true,
+        "why": "Right: 1.25.14, here and in the pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-45kwbykt",
+    "version": 1,
+    "section": "a-pinned-toolchain",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To stop Go from reusing a cached test result, add `-count=___`.",
+    "hint": "A single run.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ph5vk3a0",
+    "version": 1,
+    "section": "a-test-stage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plain `docker build -t shelf:1.7.0 .` showed no `[test …]` step. Why?",
+    "hint": "What does the final stage copy from?",
+    "choices": [
+      {
+        "text": "The final stage needs nothing from `test`",
+        "correct": true,
+        "why": "Right: only stages the target needs are run."
+      },
+      {
+        "text": "BuildKit skips stages named `test`",
+        "correct": false,
+        "why": "The name means nothing; the graph decides."
+      },
+      {
+        "text": "The tests were cached from the run just before",
+        "correct": false,
+        "why": "A cached step is still listed, as `CACHED`."
+      },
+      {
+        "text": "Tests run only when the build is given `--no-cache`",
+        "correct": false,
+        "why": "They ran with `--target test`, cache and all."
+      }
+    ]
+  },
+  {
+    "id": "ex-83bena82",
+    "version": 1,
+    "section": "a-test-stage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `/health` answering `OK`, `docker build --target test .` exited with status 1. What does a pipeline do with that?",
+    "hint": "What did the build not produce?",
+    "choices": [
+      {
+        "text": "It retries until the test passes",
+        "correct": false,
+        "why": "A deterministic failure fails again."
+      },
+      {
+        "text": "It stops: no image is built from the failing code",
+        "correct": true,
+        "why": "Right, which is the point of the stage."
+      },
+      {
+        "text": "It pushes the image with a warning",
+        "correct": false,
+        "why": "There is no image to push."
+      },
+      {
+        "text": "It ignores it, as tests are optional in builds",
+        "correct": false,
+        "why": "Status 1 is a failure to any pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-8d0d9gfr",
+    "version": 1,
+    "section": "a-test-stage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a test that talks to a database a poor fit for a `RUN` step in the Dockerfile?",
+    "hint": "When does a cached step run again?",
+    "choices": [
+      {
+        "text": "Dockerfiles cannot run `go test` inside a `RUN` step at all",
+        "correct": false,
+        "why": "The test stage ran it."
+      },
+      {
+        "text": "Databases are not allowed in builds",
+        "correct": false,
+        "why": "The issue is caching, not permission."
+      },
+      {
+        "text": "Its result depends on more than the files the cache sees",
+        "correct": true,
+        "why": "Right: an unchanged step prints `CACHED`, database or not."
+      },
+      {
+        "text": "The test stage has no Go",
+        "correct": false,
+        "why": "It starts from `build`, which has Go."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7ct1dz1",
+    "version": 1,
+    "section": "a-test-stage",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happens for `docker build --target test .`.",
+    "hint": "Follow the graph from the bottom.",
+    "items": [
+      "Pull the `golang:1.25` base",
+      "Copy the modules and the source",
+      "Compile `shelf` and `probe`",
+      "Run `go vet` and `go test`"
+    ]
+  },
+  {
+    "id": "ex-d6pftgj8",
+    "version": 1,
+    "section": "integration-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the test database keep its data on a `tmpfs`?",
+    "hint": "What should the next run start from?",
+    "choices": [
+      {
+        "text": "Postgres requires it in containers",
+        "correct": false,
+        "why": "Lesson 19 used a named volume."
+      },
+      {
+        "text": "To keep the test password secret",
+        "correct": false,
+        "why": "The password is in the file anyway."
+      },
+      {
+        "text": "So that `down -v` is never needed afterwards",
+        "correct": false,
+        "why": "That is a side effect, not the reason."
+      },
+      {
+        "text": "Each run starts from empty",
+        "correct": true,
+        "why": "Right, and memory is faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-70r7511e",
+    "version": 1,
+    "section": "integration-tests",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a wrong password in `DATABASE_URL`, what exit status did `docker compose run --rm tests` give?",
+    "hint": "The `echo` after it.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "status"
+  },
+  {
+    "id": "ex-f41wdrvj",
+    "version": 1,
+    "section": "integration-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a plain `go test ./...` not run `TestPostgresServesTheSeededCatalogue`?",
+    "hint": "Read the first line of `postgres_test.go`.",
+    "choices": [
+      {
+        "text": "It is behind the `integration` build tag",
+        "correct": true,
+        "why": "Right: `-tags integration` includes it."
+      },
+      {
+        "text": "Go skips tests that need the network",
+        "correct": false,
+        "why": "Go knows nothing about what a test needs."
+      },
+      {
+        "text": "It fails silently without `DATABASE_URL`",
+        "correct": false,
+        "why": "It fails loudly, by design."
+      },
+      {
+        "text": "Only Compose can run it",
+        "correct": false,
+        "why": "Anything that sets the tag and the variable can."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x3dg56c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which order of steps fits a pipeline for `shelf`, from this lesson?",
+    "hint": "Fast failures first, the image last.",
+    "choices": [
+      {
+        "text": "Push the image, then run the tests against it",
+        "correct": false,
+        "why": "An image that fails its tests should never be pushed."
+      },
+      {
+        "text": "Test stage, integration run, then build and push",
+        "correct": true,
+        "why": "Right: each step only runs if the one before passed."
+      },
+      {
+        "text": "Integration tests only, since they cover everything",
+        "correct": false,
+        "why": "Unit tests are faster and fail first."
+      },
+      {
+        "text": "Build the image, then decide whether tests are needed",
+        "correct": false,
+        "why": "Tests are what decide whether the image is built."
+      }
+    ]
+  }
+]

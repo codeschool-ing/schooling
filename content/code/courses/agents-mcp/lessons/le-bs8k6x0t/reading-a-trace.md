@@ -47,4 +47,4 @@ The fields are a choice, and these are the ones that answer the questions people
 - **what came back**, truncated: the first 80 characters here, enough to recognise the result without copying a customer's whole order into a log;
 - **the size of the request**, so cost per step can be read off.
 
-A trace is also data about people. This one holds an order id and the start of an order, and a real one would hold customers' messages. `ai-security` lesson 21 is about what to keep, redact and delete, and the rule that applies already here is to log what you need to explain a run and no more. Lesson 7 builds a fuller trace with timings, and lesson 18 turns traces into the numbers a team watches.
+A trace is also data about people. This one holds an order id and the start of an order, and a real one would hold customers' messages. `ai-security` lesson 11 is about what to keep, redact and delete, and the rule that applies already here is to log what you need to explain a run and no more. Lesson 7 builds a fuller trace with timings, and lesson 18 turns traces into the numbers a team watches.

@@ -18,7 +18,7 @@ those lands on every user Tarefa has. With nothing else to go on, the provider c
 user from a bad customer.
 
 **At Tarefa.** When the provider's warning arrives, or when Tarefa's own monitoring sees something
-odd, the first question is *who*. Lesson 21's logs answer it if every call recorded the account. The
+odd, the first question is *who*. Lesson 11's logs answer it if every call recorded the account. The
 same identifier also lets Tarefa limit, bill and investigate per user, which the next two sections
 are about.
 
@@ -47,7 +47,7 @@ body an application would send; this lesson sends nothing anywhere:
 ```
 
 `eu-fe47aa8e7cd5e1b6f8bc` is the identifier the lab produces for the account `ac-7Q2M`, the client
-whose e-mail address you met in lesson 21. The next section is how it is made.
+whose e-mail address you met in lesson 11. The next section is how it is made.
 
 ## What the provider does with it
 
@@ -55,5 +55,5 @@ An identifier lets the provider tell Tarefa *which* user tripped its abuse detec
 can deal with one account instead of having the key restricted. What each provider actually does
 with the field, how long it keeps it and whether it acts on it automatically is set out in its terms
 and documentation, and differs between providers. Read them for the provider you use, the same way
-lesson 22 read the contract. The field costs a few bytes per request, and the day it matters is the
+lesson 12 read the contract. The field costs a few bytes per request, and the day it matters is the
 day an abuse report names your key.

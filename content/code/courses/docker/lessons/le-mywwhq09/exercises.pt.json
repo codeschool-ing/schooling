@@ -1,0 +1,266 @@
+{
+  "ex-pv7qtqqq": {
+    "prompt": "Antes de apagar o `shelf:1.0.0`, a Ana quer todo container iniciado a partir dele. Que filtro?",
+    "hint": "A imagem de que um container descende.",
+    "choices": [
+      {
+        "text": "`--filter ancestor=shelf:1.0.0`",
+        "why": "Isso: ele achou o `web-old`."
+      },
+      {
+        "text": "`--filter status=exited`",
+        "why": "Isso lista containers parados, de qualquer imagem."
+      },
+      {
+        "text": "`--filter name=shelf`",
+        "why": "Nomes de container não são nomes de imagem."
+      },
+      {
+        "text": "`--filter label=org.opencontainers.image.version=1.0.0`",
+        "why": "Labels são outra coisa; a imagem é o ancestral."
+      }
+    ]
+  },
+  "ex-52ac9zhv": {
+    "prompt": "Para imprimir só ids de containers, um por linha, para outro comando consumir: `docker ps -___`.",
+    "hint": "Uma letra, de quiet.",
+    "blanks": [
+      {
+        "accept": [
+          "q"
+        ]
+      }
+    ]
+  },
+  "ex-caaxr5e2": {
+    "prompt": "O `docker logs --since 1h web | wc -l` imprimiu 0, com as linhas do log aparecendo acima. Por quê?",
+    "hint": "Em que saída o `log` do Go escreve?",
+    "choices": [
+      {
+        "text": "O `--since 1h` excluiu toda linha com mais de uma hora",
+        "why": "As linhas foram impressas; só não passaram pelo pipe."
+      },
+      {
+        "text": "Iam para a saída de erro, que o pipe não leva",
+        "why": "Isso: com `2>&1` antes do pipe, a contagem deu 2."
+      },
+      {
+        "text": "O `wc` não conta linhas que começam com horário",
+        "why": "O `wc -l` conta quebras de linha, seja o que for a linha."
+      },
+      {
+        "text": "O driver de log não era o `json-file`",
+        "why": "Era o padrão, e o `docker logs` o leu."
+      }
+    ]
+  },
+  "ex-mw1afwvj": {
+    "prompt": "Que comando imprime só o usuário com que um container roda?",
+    "hint": "Um template com um caminho.",
+    "choices": [
+      {
+        "text": "`docker ps --format \"{{.User}}\"`",
+        "why": "O `ps` não tem coluna de usuário."
+      },
+      {
+        "text": "`docker top web`",
+        "why": "Isso lista processos, com mais coisas além do usuário."
+      },
+      {
+        "text": "`docker inspect web --format \"{{.Config.User}}\"`",
+        "why": "Isso: um campo, `65532:65532`."
+      },
+      {
+        "text": "`docker logs web | grep user`",
+        "why": "O log diz o que o programa escreveu, e não a configuração."
+      }
+    ]
+  },
+  "ex-tgy0p5q6": {
+    "prompt": "O `docker exec web sh` falhou com `executable file not found`. O que isso quer dizer?",
+    "hint": "O que há numa imagem distroless?",
+    "choices": [
+      {
+        "text": "O container tinha parado",
+        "why": "Ele estava rodando; o `exec` chegou a ele."
+      },
+      {
+        "text": "A Ana não tem permissão para exec",
+        "why": "O erro é sobre o arquivo, e não permissão."
+      },
+      {
+        "text": "O `exec` precisa de `-it` para iniciar um shell",
+        "why": "Sem `-it` um shell iniciaria e sairia; este nem foi achado."
+      },
+      {
+        "text": "Não há `sh` na imagem",
+        "why": "Isso, de propósito desde a aula 14."
+      }
+    ]
+  },
+  "ex-enqc45dh": {
+    "prompt": "Como um container Alpine alcançou o `shelf` em `localhost:8080` sem porta nenhuma publicada para ele?",
+    "hint": "De quem era aquele `localhost`?",
+    "choices": [
+      {
+        "text": "Ele entrou no namespace de rede do `web`",
+        "why": "Isso: o mesmo `localhost`, então o `wget` alcançou o `shelf` direto."
+      },
+      {
+        "text": "Pela porta 8080 publicada no host",
+        "why": "Ele perguntou ao `localhost` de dentro, e não à porta do host."
+      },
+      {
+        "text": "O Docker repassa o `localhost` entre todos os containers",
+        "why": "Cada container tem o próprio `localhost`."
+      },
+      {
+        "text": "O Alpine inclui o `shelf`",
+        "why": "O Alpine inclui o `wget`; o `shelf` estava no outro container."
+      }
+    ]
+  },
+  "ex-qzex10pg": {
+    "prompt": "Ligue cada pergunta ao comando que a responde sem shell.",
+    "hint": "Um comando para cada.",
+    "pairs": [
+      {
+        "left": "Que processos rodam nele?",
+        "right": "`docker top web`"
+      },
+      {
+        "left": "O que ele mudou no disco?",
+        "right": "`docker diff web`"
+      },
+      {
+        "left": "Me dê o binário que ele roda",
+        "right": "`docker cp web:/shelf .`"
+      },
+      {
+        "left": "Ele responde no próprio `localhost`?",
+        "right": "`docker run --network container:web alpine wget …`"
+      }
+    ],
+    "right_distractors": [
+      "`docker exec web sh`"
+    ]
+  },
+  "ex-xry0ag4c": {
+    "prompt": "O `docker diff web` não imprimiu nada. O que isso diz sobre o `shelf`?",
+    "hint": "O que o `diff` compara?",
+    "choices": [
+      {
+        "text": "O comando falhou sem avisar, sem mensagem de erro",
+        "why": "Uma lista vazia é a resposta, e não uma falha."
+      },
+      {
+        "text": "A camada gravável dele não mudou",
+        "why": "Isso, o que uma execução só leitura também garantiria."
+      },
+      {
+        "text": "Ele não tem camada gravável, por ser distroless",
+        "why": "Todo container tem uma; esta só não mudou."
+      },
+      {
+        "text": "O distroless esconde mudanças do `diff`",
+        "why": "Nada está escondido; não havia o que mostrar."
+      }
+    ]
+  },
+  "ex-w6fma3mg": {
+    "prompt": "O `docker volume prune -f` não removeu nada; o `docker volume prune -af` removeu o `pgdata`. Por que a diferença?",
+    "hint": "Que volumes cada um considera?",
+    "choices": [
+      {
+        "text": "A primeira execução precisava de `--force` duas vezes",
+        "why": "O `-f` só pula a confirmação."
+      },
+      {
+        "text": "O `pgdata` ainda estava montado da primeira vez",
+        "why": "O container dele tinha sido removido antes das duas."
+      },
+      {
+        "text": "O `-a` inclui volumes nomeados sem uso",
+        "why": "Isso: o `prune` sozinho só pega os anônimos, desde o Engine 23."
+      },
+      {
+        "text": "Volumes só podem ser removidos depois de um tempo",
+        "why": "Não há espera; a regra é sobre nomes."
+      }
+    ]
+  },
+  "ex-9e5sw19f": {
+    "prompt": "O que o `docker image prune`, sem `-a`, remove?",
+    "hint": "Ele recuperou 0B aqui.",
+    "choices": [
+      {
+        "text": "Toda imagem que nenhum container está usando",
+        "why": "Isso é o `-a`."
+      },
+      {
+        "text": "Imagens com mais de trinta dias, por padrão",
+        "why": "Idade pede um `--filter until=`; não é o padrão."
+      },
+      {
+        "text": "Imagens base como a `golang:1.25`",
+        "why": "Só o `-a` removeria, e só se nada as usasse."
+      },
+      {
+        "text": "Imagens órfãs, as sobras sem nome",
+        "why": "Isso: não havia nenhuma, então 0B."
+      }
+    ]
+  },
+  "ex-bracmmm2": {
+    "prompt": "Quantos GB o `docker builder prune -af` liberou?",
+    "hint": "A linha `Total:`.",
+    "unit": "GB"
+  },
+  "ex-g7jgzgp6": {
+    "prompt": "Ligue cada comando ao que ele lhe custa.",
+    "hint": "A última coluna da tabela.",
+    "pairs": [
+      {
+        "left": "`docker volume prune -a`",
+        "right": "Dados"
+      },
+      {
+        "left": "`docker builder prune -a`",
+        "right": "Tempo de build no próximo build"
+      },
+      {
+        "left": "`docker image prune -a`",
+        "right": "Tempo de download no próximo pull"
+      },
+      {
+        "left": "`docker image prune`",
+        "right": "Nada"
+      }
+    ],
+    "right_distractors": [
+      "Os containers rodando"
+    ]
+  },
+  "ex-1622w8hx": {
+    "prompt": "O disco de um runner de CI compartilhado enche toda semana. Que limpeza noturna é segura para ele?",
+    "hint": "O que vale guardar num runner?",
+    "choices": [
+      {
+        "text": "`docker system prune -af`, sem `--volumes`",
+        "why": "Isso: containers, redes, imagens e cache, que os jobs refazem de todo jeito."
+      },
+      {
+        "text": "Só `docker volume prune -af`",
+        "why": "Volumes raramente são o espaço num runner, e os dados de um job podem estar num."
+      },
+      {
+        "text": "Apagar o `/var/lib/docker` à mão",
+        "why": "Pelas costas do daemon, isso corrompe o estado dele."
+      },
+      {
+        "text": "Reiniciar o runner toda noite",
+        "why": "Reiniciar não libera disco."
+      }
+    ]
+  }
+}

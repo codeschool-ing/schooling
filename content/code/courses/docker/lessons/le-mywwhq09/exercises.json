@@ -1,0 +1,384 @@
+[
+  {
+    "id": "ex-pv7qtqqq",
+    "version": 1,
+    "section": "finding-things",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before deleting `shelf:1.0.0`, Ana wants every container started from it. Which filter?",
+    "hint": "The image a container descends from.",
+    "choices": [
+      {
+        "text": "`--filter ancestor=shelf:1.0.0`",
+        "correct": true,
+        "why": "Right: it found `web-old`."
+      },
+      {
+        "text": "`--filter status=exited`",
+        "correct": false,
+        "why": "That lists stopped containers, from any image."
+      },
+      {
+        "text": "`--filter name=shelf`",
+        "correct": false,
+        "why": "Container names are not image names."
+      },
+      {
+        "text": "`--filter label=org.opencontainers.image.version=1.0.0`",
+        "correct": false,
+        "why": "Labels are something else; the image is the ancestor."
+      }
+    ]
+  },
+  {
+    "id": "ex-52ac9zhv",
+    "version": 1,
+    "section": "finding-things",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To print only container ids, one a line, for another command to consume: `docker ps -___`.",
+    "hint": "One letter, for quiet.",
+    "blanks": [
+      {
+        "accept": [
+          "q"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-caaxr5e2",
+    "version": 1,
+    "section": "finding-things",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`docker logs --since 1h web | wc -l` printed 0, with the log lines shown above it. Why?",
+    "hint": "Which stream does Go's `log` write to?",
+    "choices": [
+      {
+        "text": "`--since 1h` excluded every line older than an hour",
+        "correct": false,
+        "why": "The lines were printed; they only missed the pipe."
+      },
+      {
+        "text": "Standard error never reached the pipe",
+        "correct": true,
+        "why": "Right: `2>&1` before the pipe counted 2."
+      },
+      {
+        "text": "`wc` cannot count lines with timestamps",
+        "correct": false,
+        "why": "`wc -l` counts newlines, whatever the line holds."
+      },
+      {
+        "text": "The log driver was not `json-file`",
+        "correct": false,
+        "why": "It was the default, and `docker logs` read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mw1afwvj",
+    "version": 1,
+    "section": "finding-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which command prints only the user a container runs as?",
+    "hint": "A template with one path.",
+    "choices": [
+      {
+        "text": "`docker ps --format \"{{.User}}\"`",
+        "correct": false,
+        "why": "`ps` has no user column."
+      },
+      {
+        "text": "`docker top web`",
+        "correct": false,
+        "why": "That lists processes, with more than the user."
+      },
+      {
+        "text": "`docker inspect web --format \"{{.Config.User}}\"`",
+        "correct": true,
+        "why": "Right: one field, `65532:65532`."
+      },
+      {
+        "text": "`docker logs web | grep user`",
+        "correct": false,
+        "why": "The log says what the program wrote, not the configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgy0p5q6",
+    "version": 1,
+    "section": "looking-inside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker exec web sh` failed with `executable file not found`. What does that mean?",
+    "hint": "What is in a distroless image?",
+    "choices": [
+      {
+        "text": "The container had stopped",
+        "correct": false,
+        "why": "It was running; `exec` reached it."
+      },
+      {
+        "text": "Ana lacks permission to exec",
+        "correct": false,
+        "why": "The error is about the file, not permission."
+      },
+      {
+        "text": "`exec` needs `-it` to start a shell",
+        "correct": false,
+        "why": "Without `-it` a shell would start and exit; this one was never found."
+      },
+      {
+        "text": "There is no `sh` in the image",
+        "correct": true,
+        "why": "Right, on purpose since lesson 14."
+      }
+    ]
+  },
+  {
+    "id": "ex-enqc45dh",
+    "version": 1,
+    "section": "looking-inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did an Alpine container reach `shelf` on `localhost:8080` without any port published to it?",
+    "hint": "Whose `localhost` was it?",
+    "choices": [
+      {
+        "text": "It joined `web`'s network namespace",
+        "correct": true,
+        "why": "Right: same `localhost`, so `wget` reached `shelf` directly."
+      },
+      {
+        "text": "Through port 8080 published on the host",
+        "correct": false,
+        "why": "It asked `localhost` inside, not the host's port."
+      },
+      {
+        "text": "Docker forwards `localhost` between all containers",
+        "correct": false,
+        "why": "Containers each have their own `localhost`."
+      },
+      {
+        "text": "Alpine includes `shelf`",
+        "correct": false,
+        "why": "Alpine includes `wget`; `shelf` was in the other container."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzex10pg",
+    "version": 1,
+    "section": "looking-inside",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the command that answers it without a shell.",
+    "hint": "One command each.",
+    "pairs": [
+      {
+        "left": "Which processes run in it?",
+        "right": "`docker top web`"
+      },
+      {
+        "left": "What did it change on disk?",
+        "right": "`docker diff web`"
+      },
+      {
+        "left": "Give me the binary it runs",
+        "right": "`docker cp web:/shelf .`"
+      },
+      {
+        "left": "Does it answer on its own `localhost`?",
+        "right": "`docker run --network container:web alpine wget …`"
+      }
+    ],
+    "right_distractors": [
+      "`docker exec web sh`"
+    ]
+  },
+  {
+    "id": "ex-xry0ag4c",
+    "version": 1,
+    "section": "looking-inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker diff web` printed nothing. What does that say about `shelf`?",
+    "hint": "What does `diff` compare?",
+    "choices": [
+      {
+        "text": "The command failed silently, without an error message",
+        "correct": false,
+        "why": "An empty list is the answer, not a failure."
+      },
+      {
+        "text": "Its writable layer is unchanged",
+        "correct": true,
+        "why": "Right, which a read-only run would also guarantee."
+      },
+      {
+        "text": "It has no writable layer, being distroless",
+        "correct": false,
+        "why": "Every container has one; this one is simply unchanged."
+      },
+      {
+        "text": "Distroless hides changes from `diff`",
+        "correct": false,
+        "why": "Nothing is hidden; there was nothing to show."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6fma3mg",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`docker volume prune -f` removed nothing; `docker volume prune -af` removed `pgdata`. Why the difference?",
+    "hint": "Which volumes does each consider?",
+    "choices": [
+      {
+        "text": "The first run needed `--force` twice",
+        "correct": false,
+        "why": "`-f` only skips the confirmation."
+      },
+      {
+        "text": "`pgdata` was still mounted the first time",
+        "correct": false,
+        "why": "Its container had been removed before either."
+      },
+      {
+        "text": "`-a` adds named volumes no container uses",
+        "correct": true,
+        "why": "Right: plain `prune` takes only anonymous ones, since Engine 23."
+      },
+      {
+        "text": "Volumes become prunable only after a delay",
+        "correct": false,
+        "why": "There is no delay; the rule is about names."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e5sw19f",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `docker image prune`, without `-a`, remove?",
+    "hint": "It reclaimed 0B here.",
+    "choices": [
+      {
+        "text": "Every image that no container is using",
+        "correct": false,
+        "why": "That is `-a`."
+      },
+      {
+        "text": "Images older than thirty days, by default",
+        "correct": false,
+        "why": "Age needs a `--filter until=`; it is not the default."
+      },
+      {
+        "text": "Base images such as `golang:1.25`",
+        "correct": false,
+        "why": "Only `-a` would, and only if nothing used them."
+      },
+      {
+        "text": "Dangling images, the unnamed leftovers",
+        "correct": true,
+        "why": "Right: there were none, so 0B."
+      }
+    ]
+  },
+  {
+    "id": "ex-bracmmm2",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many GB did `docker builder prune -af` free?",
+    "hint": "The `Total:` line.",
+    "value": 1.545,
+    "tolerance": 0.001,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-g7jgzgp6",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it costs you.",
+    "hint": "The last column of the table.",
+    "pairs": [
+      {
+        "left": "`docker volume prune -a`",
+        "right": "Data"
+      },
+      {
+        "left": "`docker builder prune -a`",
+        "right": "Build time on the next build"
+      },
+      {
+        "left": "`docker image prune -a`",
+        "right": "Download time on the next pull"
+      },
+      {
+        "left": "`docker image prune`",
+        "right": "Nothing"
+      }
+    ],
+    "right_distractors": [
+      "The running containers"
+    ]
+  },
+  {
+    "id": "ex-1622w8hx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shared CI runner's disk fills every week. Which nightly cleanup is safe for it?",
+    "hint": "What on a runner is worth keeping?",
+    "choices": [
+      {
+        "text": "`docker system prune -af`, without `--volumes`",
+        "correct": true,
+        "why": "Right: containers, networks, images and cache, which jobs rebuild anyway."
+      },
+      {
+        "text": "`docker volume prune -af` alone",
+        "correct": false,
+        "why": "Volumes are rarely the space on a runner, and a job's data could be in one."
+      },
+      {
+        "text": "Delete `/var/lib/docker` by hand",
+        "correct": false,
+        "why": "Behind the daemon's back, that corrupts its state."
+      },
+      {
+        "text": "Restart the runner every night",
+        "correct": false,
+        "why": "A restart frees no disk."
+      }
+    ]
+  }
+]

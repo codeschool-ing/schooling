@@ -1,0 +1,317 @@
+[
+  {
+    "id": "ex-mj4y47dz",
+    "version": 1,
+    "section": "bind-mounted-source",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana edited `hello/server.js` on the host and the container served the new text. What made that possible?",
+    "hint": "Where did the file live, and what watched it?",
+    "choices": [
+      {
+        "text": "Docker rebuilt the image in the background",
+        "correct": false,
+        "why": "Nothing was built; the stock image was used throughout."
+      },
+      {
+        "text": "`docker cp` copied the file in on save",
+        "correct": false,
+        "why": "No copy happened; the container read Ana's directory."
+      },
+      {
+        "text": "A bind mount, and `node --watch`",
+        "correct": true,
+        "why": "Right: the file was Ana's, and Node restarted on the change."
+      },
+      {
+        "text": "Alpine reloads JavaScript",
+        "correct": false,
+        "why": "The operating system does nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-7msmvyaf",
+    "version": 1,
+    "section": "bind-mounted-source",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `compose.dev.yaml` give Go's build cache a named volume?",
+    "hint": "What happens to a container's own files on restart and recreate?",
+    "choices": [
+      {
+        "text": "Go refuses to compile without a volume",
+        "correct": false,
+        "why": "It compiles fine; it would just start from nothing each time."
+      },
+      {
+        "text": "The cache volume also holds the database files",
+        "correct": false,
+        "why": "There is no database in this file."
+      },
+      {
+        "text": "To make the mounted source read-only for Go",
+        "correct": false,
+        "why": "The source is the bind mount; the cache is separate."
+      },
+      {
+        "text": "Restarts recompile only changes",
+        "correct": true,
+        "why": "Right: the cache outlives any one container."
+      }
+    ]
+  },
+  {
+    "id": "ex-10te7q6m",
+    "version": 1,
+    "section": "bind-mounted-source",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`shelf:dev` has `/src/shelf`, yet `docker run -v \"$PWD/shelf\":/src shelf:dev` says `./shelf: no such file`. Why?",
+    "hint": "What does a mount do to what was there?",
+    "choices": [
+      {
+        "text": "Ana's directory replaces `/src` for that container",
+        "correct": true,
+        "why": "Right: the image's binary is hidden behind it."
+      },
+      {
+        "text": "The build failed silently",
+        "correct": false,
+        "why": "Without the mount, `ls` found the binary."
+      },
+      {
+        "text": "Bind mounts are read-only",
+        "correct": false,
+        "why": "They are writable by default, and reading was the problem anyway."
+      },
+      {
+        "text": "`CMD` needs an absolute path",
+        "correct": false,
+        "why": "`./shelf` resolves against `WORKDIR`; the file was simply not there."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0jcpz36",
+    "version": 1,
+    "section": "bind-mounted-source",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these avoid the hidden-binary problem? Choose all that apply.",
+    "hint": "Keep build output away from the mount.",
+    "choices": [
+      {
+        "text": "Build the binary into `/usr/local/bin`",
+        "correct": true,
+        "why": "Yes: the mount on `/src` does not cover it."
+      },
+      {
+        "text": "Run `go run` inside the container, as `compose.dev.yaml` does",
+        "correct": true,
+        "why": "Yes: it builds after the mount is in place."
+      },
+      {
+        "text": "Put the build output in a volume of its own",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Mount the directory twice",
+        "correct": false,
+        "why": "A second mount covers the first; nothing reappears."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwyd05jp",
+    "version": 1,
+    "section": "compose-watch",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `develop.watch` action to what it does when a file changes.",
+    "hint": "Three actions.",
+    "pairs": [
+      {
+        "left": "`rebuild`",
+        "right": "Builds the image and recreates the service"
+      },
+      {
+        "left": "`sync`",
+        "right": "Copies the file into the running container"
+      },
+      {
+        "left": "`sync+restart`",
+        "right": "Copies the file, then restarts the container"
+      }
+    ],
+    "right_distractors": [
+      "Pushes the image to a registry"
+    ]
+  },
+  {
+    "id": "ex-7zsx7rsk",
+    "version": 1,
+    "section": "compose-watch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `watch` with `rebuild` give that the bind-mounted `go run` setup does not?",
+    "hint": "Which image runs?",
+    "choices": [
+      {
+        "text": "Faster feedback after each save, without a build",
+        "correct": false,
+        "why": "It is slower: a full build each time."
+      },
+      {
+        "text": "The image that ships, tested on every change",
+        "correct": true,
+        "why": "Right: multi-stage, distroless and all."
+      },
+      {
+        "text": "No need for a Dockerfile",
+        "correct": false,
+        "why": "It builds from the Dockerfile."
+      },
+      {
+        "text": "A debugger attached automatically to the new container",
+        "correct": false,
+        "why": "Nothing attaches a debugger."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2q37enx",
+    "version": 1,
+    "section": "compose-watch",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the watch rebuilt the image, what was the `id` of the book `/books` returned at index 3?",
+    "hint": "The new entry.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "id"
+  },
+  {
+    "id": "ex-g0js2a32",
+    "version": 1,
+    "section": "debugger",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Node in the container listen with `--inspect=0.0.0.0:9229` rather than the default?",
+    "hint": "Lesson 23: whose loopback?",
+    "choices": [
+      {
+        "text": "The default port is reserved by Docker",
+        "correct": false,
+        "why": "The port is the same; the address differs."
+      },
+      {
+        "text": "So the debugger accepts connections from the internet",
+        "correct": false,
+        "why": "The host side is still published on loopback only."
+      },
+      {
+        "text": "A published port reaches `eth0`, not its loopback",
+        "correct": true,
+        "why": "Right: the default `127.0.0.1` is the container's own."
+      },
+      {
+        "text": "Node refuses to debug as a non-root user",
+        "correct": false,
+        "why": "Users have nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag3tzy3s",
+    "version": 1,
+    "section": "debugger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a debugging port never be published on a network address?",
+    "hint": "What can a debugger do?",
+    "choices": [
+      {
+        "text": "Debuggers use too much bandwidth on a shared network",
+        "correct": false,
+        "why": "Bandwidth is not the risk."
+      },
+      {
+        "text": "It slows the program",
+        "correct": false,
+        "why": "Speed is not the risk either."
+      },
+      {
+        "text": "Editors reject remote debuggers",
+        "correct": false,
+        "why": "They accept them; that is the danger."
+      },
+      {
+        "text": "Whoever reaches it runs code in the program",
+        "correct": true,
+        "why": "Right: read any variable, run anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jyqt9d5",
+    "version": 1,
+    "section": "debugger",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Node lists its debugging targets, with the WebSocket address an editor connects to, at `localhost:9229/json/___`.",
+    "hint": "One word.",
+    "blanks": [
+      {
+        "accept": [
+          "list"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c0g766f4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds `--inspect=0.0.0.0:9229` and `ports: [\"9229:9229\"]` to the production `compose.yaml` \"for emergencies\". What should Ana suggest?",
+    "hint": "Where does each belong?",
+    "choices": [
+      {
+        "text": "Move it to a development override, on `127.0.0.1`",
+        "correct": true,
+        "why": "Right: development flags in a development file, on loopback."
+      },
+      {
+        "text": "Keep it, but change the port number",
+        "correct": false,
+        "why": "A different port is the same open debugger."
+      },
+      {
+        "text": "Keep it, since `--inspect` is harmless in production",
+        "correct": false,
+        "why": "It hands code execution to whoever reaches the port."
+      },
+      {
+        "text": "Remove the healthcheck instead",
+        "correct": false,
+        "why": "Unrelated, and the healthcheck is useful."
+      }
+    ]
+  }
+]

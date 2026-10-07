@@ -1,0 +1,182 @@
+{
+  "ex-w2yw01kr": {
+    "prompt": "Por que rodar o `go test` na `golang:1.25`, e não com o Go que cada máquina tiver instalado?",
+    "hint": "O problema da aula 1.",
+    "choices": [
+      {
+        "text": "Testes são mais rápidos num container",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "O Go se recusa a rodar testes fora de um container",
+        "why": "Ele roda em qualquer lugar; a versão é que muda."
+      },
+      {
+        "text": "A imagem inclui os testes",
+        "why": "O código é montado; a imagem só traz o toolchain."
+      },
+      {
+        "text": "Toda máquina testa com o mesmo Go",
+        "why": "Isso: 1.25.14, aqui e no pipeline."
+      }
+    ]
+  },
+  "ex-45kwbykt": {
+    "prompt": "Para impedir o Go de reaproveitar um resultado de teste em cache, acrescente `-count=___`.",
+    "hint": "Uma única execução.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ]
+      }
+    ]
+  },
+  "ex-ph5vk3a0": {
+    "prompt": "Um `docker build -t shelf:1.7.0 .` simples não mostrou passo `[test …]`. Por quê?",
+    "hint": "De onde o estágio final copia?",
+    "choices": [
+      {
+        "text": "O estágio final não precisa de nada do `test`",
+        "why": "Isso: só os estágios de que o alvo precisa rodam."
+      },
+      {
+        "text": "O BuildKit pula estágios chamados `test`",
+        "why": "O nome não significa nada; quem decide é o grafo."
+      },
+      {
+        "text": "Os testes estavam em cache desde a execução anterior",
+        "why": "Um passo em cache continua listado, como `CACHED`."
+      },
+      {
+        "text": "Testes só rodam quando o build recebe `--no-cache`",
+        "why": "Eles rodaram com `--target test`, com cache e tudo."
+      }
+    ]
+  },
+  "ex-83bena82": {
+    "prompt": "Com o `/health` respondendo `OK`, o `docker build --target test .` saiu com status 1. O que um pipeline faz com isso?",
+    "hint": "O que o build não produziu?",
+    "choices": [
+      {
+        "text": "Tenta de novo até o teste passar",
+        "why": "Uma falha determinística falha de novo."
+      },
+      {
+        "text": "Para: nenhuma imagem sai do código que falha",
+        "why": "Isso, e é para isso que serve o estágio."
+      },
+      {
+        "text": "Envia a imagem com um aviso",
+        "why": "Não há imagem para enviar."
+      },
+      {
+        "text": "Ignora, porque testes são opcionais em builds",
+        "why": "Status 1 é falha para qualquer pipeline."
+      }
+    ]
+  },
+  "ex-8d0d9gfr": {
+    "prompt": "Por que um teste que conversa com um banco combina mal com um passo `RUN` no Dockerfile?",
+    "hint": "Quando um passo em cache roda de novo?",
+    "choices": [
+      {
+        "text": "Dockerfiles não conseguem rodar `go test` num passo `RUN`, de jeito nenhum",
+        "why": "O estágio de testes rodou."
+      },
+      {
+        "text": "Bancos não são permitidos em builds",
+        "why": "O problema é o cache, e não permissão."
+      },
+      {
+        "text": "O resultado depende de mais que os arquivos que o cache vê",
+        "why": "Isso: um passo sem mudança imprime `CACHED`, com banco ou sem."
+      },
+      {
+        "text": "O estágio de testes não tem Go",
+        "why": "Ele parte do `build`, que tem Go."
+      }
+    ]
+  },
+  "ex-m7ct1dz1": {
+    "prompt": "Ordene o que acontece num `docker build --target test .`.",
+    "hint": "Siga o grafo de baixo para cima.",
+    "items": [
+      "Baixar a base `golang:1.25`",
+      "Copiar os módulos e o código",
+      "Compilar o `shelf` e o `probe`",
+      "Rodar o `go vet` e o `go test`"
+    ]
+  },
+  "ex-d6pftgj8": {
+    "prompt": "Por que o banco de teste guarda os dados num `tmpfs`?",
+    "hint": "De onde a próxima execução deve partir?",
+    "choices": [
+      {
+        "text": "O Postgres exige isso em containers",
+        "why": "A aula 19 usou um volume nomeado."
+      },
+      {
+        "text": "Para manter a senha de teste em segredo",
+        "why": "A senha está no arquivo de todo jeito."
+      },
+      {
+        "text": "Para não precisar de `down -v` depois",
+        "why": "Isso é um efeito colateral, e não o motivo."
+      },
+      {
+        "text": "Cada execução começa vazia",
+        "why": "Isso, e memória é mais rápida."
+      }
+    ]
+  },
+  "ex-70r7511e": {
+    "prompt": "Com uma senha errada no `DATABASE_URL`, que status de saída o `docker compose run --rm tests` deu?",
+    "hint": "O `echo` depois dele.",
+    "unit": "status"
+  },
+  "ex-f41wdrvj": {
+    "prompt": "Por que um `go test ./...` simples não roda o `TestPostgresServesTheSeededCatalogue`?",
+    "hint": "Leia a primeira linha do `postgres_test.go`.",
+    "choices": [
+      {
+        "text": "Ele está atrás da build tag `integration`",
+        "why": "Isso: o `-tags integration` o inclui."
+      },
+      {
+        "text": "O Go pula testes que precisam de rede",
+        "why": "O Go não sabe de que um teste precisa."
+      },
+      {
+        "text": "Falha calado sem `DATABASE_URL`",
+        "why": "Ele falha alto, de propósito."
+      },
+      {
+        "text": "Só o Compose consegue rodá-lo",
+        "why": "Qualquer coisa que defina a tag e a variável consegue."
+      }
+    ]
+  },
+  "ex-7x3dg56c": {
+    "prompt": "Que ordem de passos serve a um pipeline do `shelf`, a partir desta aula?",
+    "hint": "Falhas rápidas primeiro, a imagem por último.",
+    "choices": [
+      {
+        "text": "Enviar a imagem, depois rodar os testes nela",
+        "why": "Uma imagem que falha nos testes nunca deve ser enviada."
+      },
+      {
+        "text": "Estágio de testes, integração, depois build e push",
+        "why": "Isso: cada passo só roda se o anterior passou."
+      },
+      {
+        "text": "Só testes de integração, porque cobrem tudo",
+        "why": "Testes de unidade são mais rápidos e falham primeiro."
+      },
+      {
+        "text": "Construir a imagem e depois ver se precisa testar",
+        "why": "São os testes que decidem se a imagem é construída."
+      }
+    ]
+  }
+}

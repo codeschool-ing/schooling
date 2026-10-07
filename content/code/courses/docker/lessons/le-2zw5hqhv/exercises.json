@@ -1,0 +1,339 @@
+[
+  {
+    "id": "ex-hmgp9btm",
+    "version": 1,
+    "section": "one-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the pipeline live in `ci/pipeline.sh` rather than as steps in the workflow file?",
+    "hint": "Who else can run it?",
+    "choices": [
+      {
+        "text": "Anyone with Docker reproduces a CI failure with one command",
+        "correct": true,
+        "why": "Right: the laptop and the runner run the same thing."
+      },
+      {
+        "text": "GitHub Actions cannot run `docker`",
+        "correct": false,
+        "why": "It can; the workflow calls it."
+      },
+      {
+        "text": "Shell scripts run faster than workflow steps",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Workflow files hold at most four steps of shell commands each",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nd1jjwy",
+    "version": 1,
+    "section": "one-script",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does an `amd64` runner build the `arm64` image of `shelf` without emulating ARM?",
+    "hint": "Where does the build stage run?",
+    "choices": [
+      {
+        "text": "QEMU is built into BuildKit",
+        "correct": false,
+        "why": "No emulation was used; nothing installed it."
+      },
+      {
+        "text": "Go compiles for `TARGETARCH` on `BUILDPLATFORM`",
+        "correct": true,
+        "why": "Right; the final stage runs no commands, so needs no emulation."
+      },
+      {
+        "text": "The `arm64` image is copied from `amd64`",
+        "correct": false,
+        "why": "The binaries differ; they are compiled for each target."
+      },
+      {
+        "text": "The registry converts it on push",
+        "correct": false,
+        "why": "Registries store bytes; they convert nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmne7xsq",
+    "version": 1,
+    "section": "one-script",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The line that makes the script stop at the first command that fails is `set -___`.",
+    "hint": "The script's first setting.",
+    "blanks": [
+      {
+        "accept": [
+          "e",
+          "eu"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r9545pss",
+    "version": 1,
+    "section": "one-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Ana's first run, what did the failed scan prevent?",
+    "hint": "Which step comes after it?",
+    "choices": [
+      {
+        "text": "It let the image through, with a warning",
+        "correct": false,
+        "why": "The pipeline exited with status 1 before the push."
+      },
+      {
+        "text": "The integration tests",
+        "correct": false,
+        "why": "They ran before the scan, and passed."
+      },
+      {
+        "text": "The build and push of a release image",
+        "correct": true,
+        "why": "Right: nothing with the finding reached the registry."
+      },
+      {
+        "text": "The unit tests",
+        "correct": false,
+        "why": "They were first, and passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nx80jwk",
+    "version": 1,
+    "section": "one-script",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the pipeline's steps in the order the script runs them.",
+    "hint": "Cheapest first.",
+    "items": [
+      "Unit tests",
+      "Integration tests",
+      "Scan",
+      "Build and push"
+    ]
+  },
+  {
+    "id": "ex-vjza46zf",
+    "version": 1,
+    "section": "the-workflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the workflow log in with `GITHUB_TOKEN` rather than a personal access token saved as a secret?",
+    "hint": "How long does each one live?",
+    "choices": [
+      {
+        "text": "Personal tokens cannot push packages",
+        "correct": false,
+        "why": "They can, which is part of the risk."
+      },
+      {
+        "text": "`GITHUB_TOKEN` needs no login step",
+        "correct": false,
+        "why": "It is passed to `docker login` like any other."
+      },
+      {
+        "text": "GHCR rejects every other credential",
+        "correct": false,
+        "why": "It accepts personal tokens too."
+      },
+      {
+        "text": "It is revoked when the job ends",
+        "correct": true,
+        "why": "Right: a leaked copy is useless almost at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc1cwd9z",
+    "version": 1,
+    "section": "the-workflow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `actions/checkout` written with a commit hash and the version as a comment?",
+    "hint": "Lesson 16, applied to the pipeline's tools.",
+    "choices": [
+      {
+        "text": "Tags move; a commit hash never does",
+        "correct": true,
+        "why": "Right: the code that runs with the token is fixed."
+      },
+      {
+        "text": "GitHub requires hashes for official actions",
+        "correct": false,
+        "why": "It accepts tags; the choice is the workflow's."
+      },
+      {
+        "text": "Hashes download faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "The comment is what GitHub actually reads",
+        "correct": false,
+        "why": "GitHub reads the hash; the comment is for people."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkhdfw9b",
+    "version": 1,
+    "section": "the-workflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `if: always()` on the logout step guarantee?",
+    "hint": "What if the pipeline fails?",
+    "choices": [
+      {
+        "text": "The workflow always ends in success, whatever happens",
+        "correct": false,
+        "why": "It changes nothing about the job's result."
+      },
+      {
+        "text": "The logout runs even if the pipeline fails",
+        "correct": true,
+        "why": "Right: no credential is left behind on a failure."
+      },
+      {
+        "text": "The logout runs before the pipeline step does",
+        "correct": false,
+        "why": "Order is unchanged; only the condition differs."
+      },
+      {
+        "text": "The token is renewed",
+        "correct": false,
+        "why": "Nothing renews it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s8hsx5q",
+    "version": 1,
+    "section": "releases-and-platforms",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For `REF_NAME=v1.8.0`, which tags did the pipeline push? Choose all that apply.",
+    "hint": "Read the tag list after the release.",
+    "choices": [
+      {
+        "text": "`1.8.0`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`1.8`",
+        "correct": true,
+        "why": "Yes, the minor line."
+      },
+      {
+        "text": "`1`",
+        "correct": true,
+        "why": "Yes, the major line."
+      },
+      {
+        "text": "`latest`",
+        "correct": false,
+        "why": "No: nothing in the script writes `latest`, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw1j9b7b",
+    "version": 1,
+    "section": "releases-and-platforms",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the local build cache emptied, how many steps of the release build came back `CACHED`?",
+    "hint": "The `grep -c` after the run.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "steps"
+  },
+  {
+    "id": "ex-fwm2ey2c",
+    "version": 1,
+    "section": "releases-and-platforms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `main` build and the `v1.8.0` build came from the same commit, yet pushed different digests. Why?",
+    "hint": "What did each pass as `VERSION`?",
+    "choices": [
+      {
+        "text": "Registries add their own timestamp to each push they receive",
+        "correct": false,
+        "why": "Registries store exactly the bytes they are sent."
+      },
+      {
+        "text": "Tags are part of what the digest is computed from",
+        "correct": false,
+        "why": "A tag points at a digest; it is not inside it."
+      },
+      {
+        "text": "The version is compiled into the binary",
+        "correct": true,
+        "why": "Right: `dev` and `1.8.0` are different bytes."
+      },
+      {
+        "text": "The cache was emptied",
+        "correct": false,
+        "why": "A cache changes speed, not what is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg1r8qdm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes a workflow that builds and pushes `:latest` on every push, and runs the tests afterwards against the pushed image. What is wrong with it?",
+    "hint": "Order, and names.",
+    "choices": [
+      {
+        "text": "Nothing; testing the pushed image is more realistic",
+        "correct": false,
+        "why": "Every failing build is already in the registry by then."
+      },
+      {
+        "text": "Just the tag: `latest` should have been named `main` instead",
+        "correct": false,
+        "why": "The order is the larger problem."
+      },
+      {
+        "text": "Workflows cannot push on every commit",
+        "correct": false,
+        "why": "They can; the trigger is fine."
+      },
+      {
+        "text": "Untested images reach the registry under a moving tag",
+        "correct": true,
+        "why": "Right: test first, push by commit and version, deploy by digest."
+      }
+    ]
+  }
+]

@@ -1,0 +1,208 @@
+[
+  {
+    "id": "ex-s6kebepb",
+    "version": 1,
+    "section": "canary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With weights 90 and 10, the 200 requests split exactly 180 and 20. Why exactly?",
+    "hint": "How does Traefik pick between weighted backends?",
+    "choices": [
+      {
+        "text": "Luck",
+        "correct": false,
+        "why": "A random draw would rarely land exactly."
+      },
+      {
+        "text": "A weighted round robin, not a draw",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "kube-proxy split them",
+        "correct": false,
+        "why": "kube-proxy picks pods inside one Service; the split was between Services."
+      },
+      {
+        "text": "The canary had a tenth of the pods",
+        "correct": false,
+        "why": "It had one of four."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0krckm8",
+    "version": 1,
+    "section": "canary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the canary need a Service of its own instead of sharing `app: shop` with the stable pods?",
+    "hint": "What would one shared Service give the router?",
+    "choices": [
+      {
+        "text": "Services cannot share labels",
+        "correct": false,
+        "why": "Both pods carry `app: shop` without trouble."
+      },
+      {
+        "text": "The canary uses another port",
+        "correct": false,
+        "why": "Both listen on 8080."
+      },
+      {
+        "text": "So the route weights each version apart",
+        "correct": true,
+        "why": "Right. One Service would split by pod count, one in four."
+      },
+      {
+        "text": "To keep its logs apart",
+        "correct": false,
+        "why": "Logs are per pod either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-96yej7qb",
+    "version": 1,
+    "section": "canary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A tester sends `X-Canary: always`. Which backend answers?",
+    "hint": "The rule with a header match.",
+    "choices": [
+      {
+        "text": "Stable, nine times in ten",
+        "correct": false,
+        "why": "The header rule skips the weights."
+      },
+      {
+        "text": "A random one",
+        "correct": false,
+        "why": "The match is exact."
+      },
+      {
+        "text": "Neither; the header is refused",
+        "correct": false,
+        "why": "Three requests reached 1.1."
+      },
+      {
+        "text": "The single 1.1 pod",
+        "correct": true,
+        "why": "Right: the canary, every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-0001dy74",
+    "version": 1,
+    "section": "blue-green",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After switching the Service to green, version 2.0 misbehaves. How long does going back take?",
+    "hint": "Was blue touched?",
+    "choices": [
+      {
+        "text": "One selector patch",
+        "correct": true,
+        "why": "Right. Blue kept running, ready."
+      },
+      {
+        "text": "A full rolling update",
+        "correct": false,
+        "why": "Nothing was replaced."
+      },
+      {
+        "text": "As long as blue takes to start",
+        "correct": false,
+        "why": "Blue never stopped."
+      },
+      {
+        "text": "It cannot go back",
+        "correct": false,
+        "why": "The capture went back."
+      }
+    ]
+  },
+  {
+    "id": "ex-623p9tk6",
+    "version": 1,
+    "section": "blue-green",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does blue-green cost that a rolling update does not?",
+    "hint": "The table at the end.",
+    "choices": [
+      {
+        "text": "A router that splits by weight",
+        "correct": false,
+        "why": "That is the canary's need."
+      },
+      {
+        "text": "A whole second copy of the application",
+        "correct": true,
+        "why": "Right, for as long as the switch is pending."
+      },
+      {
+        "text": "A new namespace",
+        "correct": false,
+        "why": "Both live in one namespace."
+      },
+      {
+        "text": "Downtime during the switch",
+        "correct": false,
+        "why": "All 200 requests were answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfrdrhgh",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each strategy with how you go back.",
+    "hint": "The table at the end.",
+    "pairs": [
+      {
+        "left": "Rolling update",
+        "right": "Another rollout"
+      },
+      {
+        "left": "Canary",
+        "right": "Weight to zero"
+      },
+      {
+        "left": "Blue-green",
+        "right": "Patch the selector back"
+      }
+    ],
+    "right_distractors": [
+      "Delete the namespace"
+    ]
+  },
+  {
+    "id": "ex-j356f06k",
+    "version": 1,
+    "section": "canary",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an HTTPRoute, each backend's share of traffic is set by its ___.",
+    "hint": "90 and 10.",
+    "blanks": [
+      {
+        "accept": [
+          "weight"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

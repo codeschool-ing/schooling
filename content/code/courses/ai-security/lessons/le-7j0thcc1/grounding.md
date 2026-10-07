@@ -50,7 +50,7 @@ exit 1
 - `a5` says it does not know and passes the question to a person. **Abstaining is a correct answer**,
   and a system that punishes it teaches the model, through the prompt and the evaluation, to guess.
 
-What happens to a flagged answer follows lesson 19: it is not shown, and the question goes back to the
+What happens to a flagged answer follows lesson 9: it is not shown, and the question goes back to the
 model once with the problem, or to a person.
 
 ## What this check cannot see

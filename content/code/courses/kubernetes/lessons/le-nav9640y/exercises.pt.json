@@ -1,0 +1,192 @@
+{
+  "ex-gryqx126": {
+    "prompt": "A Ana apagou o pod `web-768c88b7c7-5dbxj`. Dois segundos depois o ReplicaSet ainda tinha três pods. O que aconteceu?",
+    "hint": "Compare os nomes antes e depois.",
+    "choices": [
+      {
+        "text": "A remoção foi recusada porque o pod tinha dono",
+        "why": "O `5dbxj` sumiu da segunda listagem; a remoção aconteceu."
+      },
+      {
+        "text": "Um pod novo foi criado a partir do modelo",
+        "why": "Isso: o `5xvw2`, com nome novo, porque a contagem tinha caído para dois."
+      },
+      {
+        "text": "O kubelet reiniciou o mesmo pod com o nome antigo",
+        "why": "Um pod apagado se vai de vez; o substituto tem outro nome."
+      },
+      {
+        "text": "O Deployment restaurou o pod a partir do histórico do etcd",
+        "why": "Nada é restaurado; um objeto novo é criado do modelo, com endereço novo também."
+      }
+    ]
+  },
+  "ex-jm6qdqes": {
+    "prompt": "Depois de a Ana trocar o label de um pod para `app=debug`, havia quatro pods e o ReplicaSet informava três. O que é o quarto?",
+    "hint": "A que seletor ele ainda responde?",
+    "choices": [
+      {
+        "text": "Um substituto que vai ser removido em um minuto",
+        "why": "O pod novo `l7mxz` é o que conta; nada vai removê-lo."
+      },
+      {
+        "text": "Um pod que o ReplicaSet vai apagar para voltar a três",
+        "why": "Ele não bate mais com o seletor, então o ReplicaSet nem o vê."
+      },
+      {
+        "text": "Um órfão que ninguém conta, substitui ou apaga",
+        "why": "Isso. Ele continua rodando fora de todos os seletores, o que é útil num incidente e perigoso por acidente."
+      },
+      {
+        "text": "Um pod de um segundo ReplicaSet",
+        "why": "Só existia um ReplicaSet naquele momento, e o pod não pertence a nenhum."
+      }
+    ]
+  },
+  "ex-jha4gd3t": {
+    "prompt": "Um Service seleciona `app: web`. A Ana troca o label de um pod problemático para `app=debug` durante um incidente. O que isso dá a ela?",
+    "hint": "Dois seletores deixam de ver o pod ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Nada, já que o pod continua rodando",
+        "why": "Continuar rodando é o objetivo: fora da rotação, mas ainda ali para ser examinado."
+      },
+      {
+        "text": "Um reinício do pod com memória limpa",
+        "why": "Nada o reinicia; o estado dele é exatamente o que ela quer guardar."
+      },
+      {
+        "text": "A remoção dele, assim que o ReplicaSet perceber",
+        "why": "O ReplicaSet deixa de vê-lo e por isso nunca o apaga."
+      },
+      {
+        "text": "Nenhum tráfego chega a ele, um substituto toma o lugar, e o estado continua para exame",
+        "why": "Isso. O Service e o ReplicaSet escolhem por label, então os dois o soltam ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-68z15h5p": {
+    "prompt": "`kubectl set image deployment/web shop=shop:1.1` deixou dois ReplicaSets. Qual deles quer os pods?",
+    "hint": "Olhe a coluna DESIRED.",
+    "choices": [
+      {
+        "text": "Os dois, dois cada",
+        "why": "O antigo foi para 0; o Deployment passou a contagem para o outro."
+      },
+      {
+        "text": "O antigo, até alguém apagar o novo",
+        "why": "É o contrário: o novo quer 2 e o antigo 0."
+      },
+      {
+        "text": "O novo, `web-798bdd9498`, com 2",
+        "why": "Isso. O antigo fica vazio, guardado para um rollback."
+      },
+      {
+        "text": "Nenhum: o Deployment segura os pods diretamente",
+        "why": "Um Deployment nunca é dono de pods; é dono de ReplicaSets."
+      }
+    ]
+  },
+  "ex-chgffmgw": {
+    "prompt": "Por que um Deployment cria um segundo ReplicaSet para uma imagem nova em vez de editar o primeiro?",
+    "hint": "O que um ReplicaSet editado faria com os pods que já tem?",
+    "choices": [
+      {
+        "text": "O modelo de um ReplicaSet não pode ser editado de jeito nenhum",
+        "why": "Pode; editá-lo só não faz nada com os pods existentes."
+      },
+      {
+        "text": "Os pods antigos ainda batem, então ele os deixaria todos como estão",
+        "why": "Isso. Um ReplicaSet só conta; um segundo, com hash novo, é como os pods realmente mudam."
+      },
+      {
+        "text": "Dois ReplicaSets deixam a atualização mais rápida",
+        "why": "Velocidade não é o motivo; o ritmo é dado pela estratégia (lição 35)."
+      },
+      {
+        "text": "O API server proíbe duas imagens num ReplicaSet",
+        "why": "Um modelo de pod pode ter vários containers com imagens diferentes."
+      }
+    ]
+  },
+  "ex-taqxf847": {
+    "prompt": "A Ana apagou todos os ReplicaSets de `web`. O que a listagem seguinte mostrou, seis segundos depois?",
+    "hint": "O Deployment continuava lá.",
+    "choices": [
+      {
+        "text": "Nenhum ReplicaSet e nenhum pod",
+        "why": "O Deployment notou a falta do ReplicaSet e o criou de novo."
+      },
+      {
+        "text": "O `web-798bdd9498` de novo, querendo 2 pods",
+        "why": "Isso: o mesmo nome, porque o modelo, e portanto o hash, não tinha mudado."
+      },
+      {
+        "text": "Os dois ReplicaSets de volta, com o histórico",
+        "why": "Só o necessário foi criado; o antigo, vazio, não."
+      },
+      {
+        "text": "Um ReplicaSet com um nome aleatório novo",
+        "why": "O nome vem do hash do modelo, não do acaso."
+      }
+    ]
+  },
+  "ex-ng8aw1aw": {
+    "prompt": "Um Deployment acrescenta o label `pod-template-___` ao seletor de cada ReplicaSet, para ele contar só os pods feitos daquele modelo.",
+    "hint": "É um resumo curto do modelo.",
+    "blanks": [
+      {
+        "accept": [
+          "hash"
+        ]
+      }
+    ]
+  },
+  "ex-e40c3rn0": {
+    "prompt": "Ligue cada objeto ao que ele faz.",
+    "hint": "Cada nível é dono do seguinte.",
+    "pairs": [
+      {
+        "left": "Deployment",
+        "right": "Cria um ReplicaSet por modelo e passa a contagem entre eles"
+      },
+      {
+        "left": "ReplicaSet",
+        "right": "Cria ou apaga pods até a contagem dos que batem estar certa"
+      },
+      {
+        "left": "Pod",
+        "right": "Roda os containers, num nó"
+      }
+    ],
+    "right_distractors": [
+      "Escolhe o nó em que cada pod roda"
+    ]
+  },
+  "ex-chdx5m7q": {
+    "prompt": "Quais destes deixariam pods rodando que nenhum controlador conta? Marque todos que se aplicam.",
+    "hint": "Pense no seletor, nunca no nome.",
+    "choices": [
+      {
+        "text": "Trocar à mão o label `app` de um pod que está rodando",
+        "why": "Isso: ele sai do seletor e vira órfão."
+      },
+      {
+        "text": "Apagar um pod",
+        "why": "Esse pod some, e o substituto é contado."
+      },
+      {
+        "text": "Escalar o Deployment para zero",
+        "why": "Isso apaga os pods em vez de deixá-los soltos."
+      },
+      {
+        "text": "Criar um pod solto sem labels",
+        "why": "Isso: nenhum seletor bateu com ele, então nada o conta ou substitui (lição 9)."
+      },
+      {
+        "text": "Mudar a imagem do Deployment",
+        "why": "Os pods antigos são trocados pelos do ReplicaSet novo."
+      }
+    ]
+  }
+}

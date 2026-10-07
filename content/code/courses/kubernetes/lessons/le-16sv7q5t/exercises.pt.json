@@ -1,0 +1,155 @@
+{
+  "ex-jgnj5hdp": {
+    "prompt": "Onde o cluster guardava a lista de pods por trás do Service `shop`?",
+    "hint": "Um objeto à parte, mantido por um controlador.",
+    "choices": [
+      {
+        "text": "No próprio `spec` do Service",
+        "why": "O Service guarda um seletor; a lista de endereços é outro objeto."
+      },
+      {
+        "text": "Num EndpointSlice",
+        "why": "Isso: três endereços na porta 8080, os dos três pods."
+      },
+      {
+        "text": "No CoreDNS, como um registro por pod",
+        "why": "O nome do Service resolve para o ClusterIP dele, não para os pods."
+      },
+      {
+        "text": "No pod do kube-proxy do plano de controle",
+        "why": "O kube-proxy lê a lista em cada nó; não a guarda."
+      }
+    ]
+  },
+  "ex-rzr13k89": {
+    "prompt": "Dentro de um pod no namespace `default`, por que o nome `shop` sozinho chega ao Service?",
+    "hint": "Leia o `/etc/resolv.conf` do pod.",
+    "choices": [
+      {
+        "text": "Todo Service é publicado com o nome curto na internet",
+        "why": "Nomes do cluster nunca saem do cluster; o DNS do laboratório não responde nada fora de `cluster.local`."
+      },
+      {
+        "text": "O kube-proxy reescreve o nome num endereço",
+        "why": "O kube-proxy trabalha com endereços, nunca com nomes."
+      },
+      {
+        "text": "A lista de busca do resolvedor acrescenta `default.svc.cluster.local`",
+        "why": "Isso: `shop` vira `shop.default.svc.cluster.local`, que o CoreDNS conhece."
+      },
+      {
+        "text": "O `/etc/hosts` do pod lista todos os Services",
+        "why": "Services são resolvidos pelo CoreDNS em `10.96.0.10`, não por um arquivo."
+      }
+    ]
+  },
+  "ex-a7b0c2bq": {
+    "prompt": "O nome de um Service resolve, mas toda chamada a ele é recusada na hora. `kubectl get endpointslices` mostra `<unset>`. Qual é a causa mais provável?",
+    "hint": "Uma lista vazia por trás de um endereço que funciona.",
+    "choices": [
+      {
+        "text": "O CoreDNS está fora do ar",
+        "why": "O nome resolveu, então o CoreDNS respondeu."
+      },
+      {
+        "text": "O kube-proxy não está rodando naquele nó",
+        "why": "A lista está vazia antes mesmo de o kube-proxy lê-la."
+      },
+      {
+        "text": "O seletor dele não bate com nenhum pod pronto",
+        "why": "Isso: nenhum pod, ou um erro de label, deixa a lista vazia e o endereço recusando."
+      },
+      {
+        "text": "O ClusterIP do Service mudou depois de criado",
+        "why": "O endereço de um Service nunca muda enquanto ele existe."
+      }
+    ]
+  },
+  "ex-f7kbbqre": {
+    "prompt": "O nome completo do Service `shop` no namespace `default` é `shop.default.___.cluster.local`.",
+    "hint": "A resposta do nslookup.",
+    "blanks": [
+      {
+        "accept": [
+          "svc"
+        ]
+      }
+    ]
+  },
+  "ex-qp90kg4h": {
+    "prompt": "Um Service NodePort tem `nodePort: 30080`. Quais nós respondem na porta 30080?",
+    "hint": "O primeiro curl chamou um worker pelo endereço.",
+    "choices": [
+      {
+        "text": "Só os nós que rodam um pod dele",
+        "why": "Todo nó responde por padrão; a lição 17 mostra a configuração que restringe isso."
+      },
+      {
+        "text": "Todos os nós",
+        "why": "Isso, rode um pod ali ou não."
+      },
+      {
+        "text": "Só o nó do plano de controle",
+        "why": "O `shop-worker` respondeu diretamente."
+      },
+      {
+        "text": "O nó que o escalonador escolher para o Service",
+        "why": "Um Service nunca é escalonado; não é um pod."
+      }
+    ]
+  },
+  "ex-hh3gf87x": {
+    "prompt": "O Service LoadBalancer `shop-lb` mostrou `80:31269/TCP` além do endereço externo. O que é `31269`?",
+    "hint": "Um LoadBalancer é construído sobre outro tipo.",
+    "choices": [
+      {
+        "text": "A porta em que a loja escuta dentro do pod",
+        "why": "A loja escuta na 8080."
+      },
+      {
+        "text": "Uma porta do laptop",
+        "why": "É uma porta em cada nó do cluster."
+      },
+      {
+        "text": "O NodePort para onde o balanceador manda o tráfego",
+        "why": "Isso. Um LoadBalancer é um NodePort com um balanceador na frente."
+      },
+      {
+        "text": "A porta de administração do balanceador",
+        "why": "Isso é interno ao balanceador e não fica no Service."
+      }
+    ]
+  },
+  "ex-r4tkym7t": {
+    "prompt": "Uma equipe numa nuvem tem quarenta aplicações web e quer cada uma acessível pela internet. Por que a maioria dos clusters usa um Service LoadBalancer e um controlador de Ingress em vez de quarenta Services LoadBalancer?",
+    "hint": "O que cada Service LoadBalancer pede à nuvem?",
+    "choices": [
+      {
+        "text": "O Kubernetes permite só um LoadBalancer por cluster",
+        "why": "Não há limite assim."
+      },
+      {
+        "text": "Cada um é um balanceador cobrado por hora",
+        "why": "Isso: um balanceador na frente de um controlador roteia as quarenta por host e caminho."
+      },
+      {
+        "text": "Services LoadBalancer não podem usar a porta 80",
+        "why": "O `shop-lb` respondeu na porta 80."
+      },
+      {
+        "text": "O Ingress é mais rápido que um LoadBalancer",
+        "why": "Velocidade não é o motivo; o controlador de Ingress fica atrás de um LoadBalancer, de qualquer forma."
+      }
+    ]
+  },
+  "ex-81qhz8wh": {
+    "prompt": "Ordene os tipos de Service do que tem menos caminhos de entrada para o que tem mais.",
+    "hint": "Cada um é construído sobre o anterior.",
+    "items": [
+      "ClusterIP",
+      "NodePort",
+      "LoadBalancer"
+    ],
+    "trap": "Um NodePort inclui um ClusterIP, e um LoadBalancer inclui um NodePort."
+  }
+}

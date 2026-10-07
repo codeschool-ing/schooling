@@ -3,8 +3,8 @@ title: A chain of filters, each one named in its verdict
 version: 1
 ---
 
-Earlier lessons each built one check: personal data in lesson 21, moderation in lesson 16, schemas and
-host allowlists in lesson 19. The temptation is to pick the best one and rely on it. **Every one of
+Earlier lessons each built one check: personal data in lesson 11, moderation in lesson 6, schemas and
+host allowlists in lesson 9. The temptation is to pick the best one and rely on it. **Every one of
 them has a blind spot that another covers**, and the practical defence is to put them in a row so that a
 reply reaches the client only after all of them have passed it. This is usually called defence in
 depth, and the only new thing it needs is an order and a record of which layer decided.
@@ -51,9 +51,9 @@ what the later layers ever see. Three rules settle it at Tarefa:
 
 | layer | catches | misses |
 |---|---|---|
-| personal data | shapes with arithmetic: CPF, card, phone, e-mail, keys | names, addresses, anything in words (lesson 21) |
+| personal data | shapes with arithmetic: CPF, card, phone, e-mail, keys | names, addresses, anything in words (lesson 11) |
 | canary | the system prompt repeated word for word | the same instructions paraphrased (this lesson) |
-| moderation | the words its classifier learned | sarcasm, spelling tricks, other languages (lesson 16) |
+| moderation | the words its classifier learned | sarcasm, spelling tricks, other languages (lesson 6) |
 | host allowlist | links to hosts nobody approved | a harmful page on an approved host |
 
 Reading the table down the last column is the point: none of the misses is covered by the same layer,

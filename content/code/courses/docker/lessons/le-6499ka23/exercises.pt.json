@@ -1,0 +1,300 @@
+{
+  "ex-kf8dtr19": {
+    "prompt": "No Dockerfile da Ana, `RUN go build …` e `CMD [\"shelf\"]` rodam programas. Quando cada um roda?",
+    "hint": "Um faz a imagem; o outro é o que a imagem faz.",
+    "choices": [
+      {
+        "text": "Os dois rodam toda vez que um container inicia, em ordem",
+        "why": "Aí cada início recompilaria; o resultado do build já está numa camada."
+      },
+      {
+        "text": "O `RUN` no build; o `CMD` a cada início",
+        "why": "Isso. O resultado do `RUN` fica numa camada; o `CMD` é o comando padrão do container."
+      },
+      {
+        "text": "Os dois rodam só durante o `docker build`",
+        "why": "O `CMD` é registrado no build e rodado depois, por cada container."
+      },
+      {
+        "text": "O `CMD` no build; o `RUN` no início",
+        "why": "É o contrário."
+      }
+    ]
+  },
+  "ex-sh3pj2f3": {
+    "prompt": "O Dockerfile da Ana diz `EXPOSE 8080`. O que fez o `curl localhost:8080` funcionar na máquina dela?",
+    "hint": "Que opção o `docker run` recebeu?",
+    "choices": [
+      {
+        "text": "O `EXPOSE 8080` no Dockerfile",
+        "why": "O `EXPOSE` documenta a porta; não publica nada."
+      },
+      {
+        "text": "O `WORKDIR /src`",
+        "why": "Isso define um diretório; não tem nada a ver com portas."
+      },
+      {
+        "text": "A opção `-p 127.0.0.1:8080:8080` do `docker run`",
+        "why": "Isso. A publicação acontece na execução."
+      },
+      {
+        "text": "O Go abre portas do host por padrão para todo programa que compila",
+        "why": "O programa escuta dentro do namespace de rede do container."
+      }
+    ]
+  },
+  "ex-c9scn2wn": {
+    "prompt": "No primeiro build, o passo `#8`, `go build`, levou 14.2 segundos. Por que tanto para um serviço pequeno?",
+    "hint": "O que mais ele compila?",
+    "choices": [
+      {
+        "text": "Ele baixa o pgx da internet",
+        "why": "O pgx está vendorizado; nada foi baixado."
+      },
+      {
+        "text": "O Docker deixa o `RUN` mais lento de propósito",
+        "why": "O `RUN` roda na velocidade normal dentro do build."
+      },
+      {
+        "text": "O `go build` roda os testes antes",
+        "why": "Compilar não roda testes; isso é o `go test`."
+      },
+      {
+        "text": "Ele também compila a biblioteca padrão e o pgx",
+        "why": "Isso, do zero, já que nada estava em cache ainda."
+      }
+    ]
+  },
+  "ex-syjc1ppx": {
+    "prompt": "O `docker image ls shelf` mostrou o `DISK USAGE` da primeira imagem. Quantos GB?",
+    "hint": "A coluna depois do id.",
+    "unit": "GB"
+  },
+  "ex-ygdw1pwj": {
+    "prompt": "Com `CMD shelf`, o `docker stop` levou dez segundos e o `shelf` nunca registrou \"shutting down\". Por quê?",
+    "hint": "Quem era o processo 1?",
+    "choices": [
+      {
+        "text": "O `/bin/sh -c shelf` era o processo 1 e não repassou o `SIGTERM`",
+        "why": "Isso. O Docker esperou e depois mandou `SIGKILL` para os dois."
+      },
+      {
+        "text": "O `shelf` ignora o `SIGTERM` quando é iniciado sem uma lista JSON",
+        "why": "O mesmo binário tratou o `SIGTERM` na forma exec; aqui ele nunca o recebeu."
+      },
+      {
+        "text": "O Docker sempre espera dez segundos antes de parar um container, rode o que rodar",
+        "why": "Na forma exec ele parou em um quinto de segundo."
+      },
+      {
+        "text": "A imagem não tinha `EXPOSE`",
+        "why": "Tinha, e portas não têm nada a ver com sinais."
+      }
+    ]
+  },
+  "ex-1m7aqjm7": {
+    "prompt": "Se um container precisa mesmo de um script de shell para iniciar, o script deve iniciar o programa com `___ shelf`, para o programa substituir o shell como processo 1.",
+    "hint": "Um comando interno do shell, de quatro letras.",
+    "blanks": [
+      {
+        "accept": [
+          "exec"
+        ]
+      }
+    ]
+  },
+  "ex-3kpsensc": {
+    "prompt": "Depois de `docker build --build-arg VERSION=1.0.0`, que variável o `docker image inspect` acha no `Env` da imagem?",
+    "hint": "Uma vive durante o build; a outra em todo container.",
+    "choices": [
+      {
+        "text": "Tanto `VERSION` quanto `PORT`",
+        "why": "O `VERSION` era um `ARG`; ele só existiu enquanto o build rodava."
+      },
+      {
+        "text": "O `PORT`",
+        "why": "Isso. O `ENV` fica guardado na imagem; a versão chegou ao binário pelo linker."
+      },
+      {
+        "text": "Só o `VERSION`, já que veio pela linha de comando",
+        "why": "Argumentos de build da linha de comando não são guardados como ambiente."
+      },
+      {
+        "text": "Nenhuma; variáveis nunca são guardadas",
+        "why": "As de `ENV` são: o `PORT=8080` está na lista."
+      }
+    ]
+  },
+  "ex-z248t74w": {
+    "prompt": "A imagem diz `ENV PORT=8080`, e a Ana a roda com `-e PORT=9090`. Em que porta o `shelf` escuta?",
+    "hint": "Leia a linha de log dele.",
+    "choices": [
+      {
+        "text": "8080, porque a imagem vence",
+        "why": "O log diz `:9090`; valores da execução sobrescrevem os da imagem."
+      },
+      {
+        "text": "Nas duas",
+        "why": "O programa lê um valor de `PORT`."
+      },
+      {
+        "text": "9090",
+        "why": "Isso: o `docker run -e` sobrescreve o `ENV`."
+      },
+      {
+        "text": "Em nenhuma, porque as duas conflitam",
+        "why": "Não há conflito; uma simplesmente sobrescreve a outra."
+      }
+    ]
+  },
+  "ex-mwjc3xny": {
+    "prompt": "Ligue cada instrução ao que ela faz.",
+    "hint": "Na hora do build ou na execução?",
+    "pairs": [
+      {
+        "left": "`ADD`",
+        "right": "Copia, e também desempacota arquivos locais e busca URLs"
+      },
+      {
+        "left": "`ENTRYPOINT`",
+        "right": "O programa que sempre roda; o `CMD` fornece os argumentos padrão dele"
+      },
+      {
+        "left": "`WORKDIR`",
+        "right": "O diretório onde as instruções seguintes e o container começam"
+      },
+      {
+        "left": "`ARG`",
+        "right": "Uma variável que só existe durante o build"
+      }
+    ],
+    "right_distractors": [
+      "Publica uma porta no host"
+    ]
+  },
+  "ex-kxmj292d": {
+    "prompt": "De onde o `COPY . .` pode pegar arquivos?",
+    "hint": "O builder não lê o seu disco.",
+    "choices": [
+      {
+        "text": "De qualquer lugar do disco da Ana",
+        "why": "O builder só enxerga o que o cliente mandou."
+      },
+      {
+        "text": "Só dos arquivos rastreados pelo git",
+        "why": "O git não é consultado; arquivos fora dele, como o `.env`, também foram copiados."
+      },
+      {
+        "text": "Só de arquivos com menos de 100 MB",
+        "why": "Um dump de 300 MB entrou."
+      },
+      {
+        "text": "Só do contexto de build mandado pelo cliente",
+        "why": "Isso, depois de o `.dockerignore` filtrá-lo."
+      }
+    ]
+  },
+  "ex-3njd03n3": {
+    "prompt": "O `.env` da Ana foi parar na `shelf:dev`. Ela acrescenta `RUN rm /src/.env` depois do `COPY`. A senha sumiu da imagem?",
+    "hint": "O que cada instrução deixa para trás?",
+    "choices": [
+      {
+        "text": "Não; a camada anterior, do `COPY`, ainda o tem",
+        "why": "Isso. A correção é deixá-lo fora do contexto com o `.dockerignore`; a aula 14 mostra a camada."
+      },
+      {
+        "text": "Sim, o arquivo não existe mais",
+        "why": "Ele não aparece mais no sistema de arquivos final, mas a camada do `COPY` ainda o guarda."
+      },
+      {
+        "text": "Sim, se ela também rodar `docker image prune`",
+        "why": "O prune remove imagens sem uso, não camadas desta."
+      },
+      {
+        "text": "Não, porque `rm` não é permitido num Dockerfile",
+        "why": "O `rm` roda normalmente; só não consegue alcançar uma camada anterior."
+      }
+    ]
+  },
+  "ex-qkc5wf12": {
+    "prompt": "Depois do `.dockerignore`, o build informou `transferring context: 22.75kB`, menos que o `vendor/` sozinho. Por quê?",
+    "hint": "O que o builder já tinha?",
+    "choices": [
+      {
+        "text": "O `.dockerignore` excluiu o `vendor/` também",
+        "why": "O `ls -a /src` mostra `vendor` na imagem."
+      },
+      {
+        "text": "O BuildKit só mandou o que mudou desde builds anteriores",
+        "why": "Isso. O número conta a transferência, não o tamanho do contexto."
+      },
+      {
+        "text": "O BuildKit comprime o contexto a 0,3% do tamanho",
+        "why": "Compressão não explica; o código mal se comprime."
+      },
+      {
+        "text": "O build falhou e não mandou nada",
+        "why": "Ele deu nome à `shelf:dev` e a imagem tem os arquivos."
+      }
+    ]
+  },
+  "ex-56zbc0p6": {
+    "prompt": "Quais entradas pertencem ao `.dockerignore` do `shelf`, pelo conselho da aula? Escolha todas as que se aplicam.",
+    "hint": "Grande, secreto, ou inútil para a imagem.",
+    "choices": [
+      {
+        "text": ".git",
+        "why": "Sim: o histórico é grande e a imagem não precisa dele."
+      },
+      {
+        "text": ".env",
+        "why": "Sim: ele guarda uma senha."
+      },
+      {
+        "text": "vendor/",
+        "why": "O build precisa da dependência vendorizada; excluí-la quebra o `go build`."
+      },
+      {
+        "text": "testdata/",
+        "why": "Sim: uma exportação de 300 MB que a imagem não usa."
+      },
+      {
+        "text": "main.go",
+        "why": "Esse é o próprio programa."
+      }
+    ]
+  },
+  "ex-6q9df5dy": {
+    "prompt": "Ponha os passos de `docker build -t shelf:dev .` na ordem em que a saída do build os mostra.",
+    "hint": "Siga os números.",
+    "items": [
+      "Carregar o Dockerfile e o `.dockerignore`",
+      "Resolver a imagem do `FROM`",
+      "Mandar o contexto de build",
+      "Rodar `WORKDIR`, `COPY` e `RUN`",
+      "Exportar a imagem e dar o nome"
+    ]
+  },
+  "ex-aghdy6rb": {
+    "prompt": "Uma imagem tem `ENTRYPOINT [\"yq\"]` e `CMD [\"--help\"]`. O que roda com `docker run imagem \".a\" f.yaml`?",
+    "hint": "O que substitui o quê?",
+    "choices": [
+      {
+        "text": "`yq --help`",
+        "why": "Argumentos depois do nome da imagem substituem o `CMD`."
+      },
+      {
+        "text": "`.a f.yaml`, rodado como comando",
+        "why": "Isso aconteceria sem entrypoint."
+      },
+      {
+        "text": "`yq \".a\" f.yaml`",
+        "why": "Isso: o entrypoint fica, os argumentos digitados substituem os padrão."
+      },
+      {
+        "text": "`yq --help \".a\" f.yaml`",
+        "why": "Argumentos digitados substituem o `CMD`; não são acrescentados a ele."
+      }
+    ]
+  }
+}

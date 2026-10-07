@@ -1,0 +1,496 @@
+{
+  "ex-kr4rmc38": {
+    "prompt": "A que carga guardar por coluna serve?",
+    "hint": "Algumas colunas de todas as linhas.",
+    "choices": [
+      {
+        "text": "A do relatório",
+        "why": "Isso. As colunas que ele usa são cada uma um trecho do disco."
+      },
+      {
+        "text": "A do caixa, que grava e lê linhas inteiras pela chave",
+        "why": "Uma linha inteira está em onze lugares num banco por colunas."
+      },
+      {
+        "text": "As duas igualmente, já que os dados são os mesmos",
+        "why": "A organização favorece uma ou outra."
+      },
+      {
+        "text": "Nenhuma; é só para economizar disco",
+        "why": "O espaço é consequência; ler menos é o ponto."
+      }
+    ]
+  },
+  "ex-ra90nxja": {
+    "prompt": "A tabela fato ocupou 79 MB no PostgreSQL e 9.449.472 bytes no DuckDB. Cerca de quantas vezes menor é o arquivo DuckDB? Dê um número inteiro.",
+    "hint": "79 MB são cerca de 83 milhões de bytes."
+  },
+  "ex-cdbwvgaf": {
+    "prompt": "Por que a tabela do PostgreSQL é maior até que o texto CSV das mesmas linhas?",
+    "hint": "O que cada linha carrega para o caixa?",
+    "choices": [
+      {
+        "text": "O PostgreSQL guarda duas cópias de cada tabela, uma para ler e outra para gravar",
+        "why": "Guarda uma; o tamanho é por linha."
+      },
+      {
+        "text": "O arquivo CSV estava comprimido",
+        "why": "Era texto puro."
+      },
+      {
+        "text": "Cabeçalhos de linha, números de largura cheia e espaço livre",
+        "why": "Isso. Os custos de um banco feito para transações."
+      },
+      {
+        "text": "O PostgreSQL guarda números como texto",
+        "why": "Guarda como inteiros binários."
+      }
+    ]
+  },
+  "ex-x60c5t9n": {
+    "prompt": "Para somar `net_cents`, quanto da tabela do PostgreSQL ele leu?",
+    "hint": "Conte as páginas.",
+    "choices": [
+      {
+        "text": "Um onze avos, uma coluna de onze",
+        "why": "Isso é o que um banco por colunas leria."
+      },
+      {
+        "text": "Tudo",
+        "why": "Isso. 10.144 de 10.144 páginas: a coluna está espalhada em todas as linhas."
+      },
+      {
+        "text": "Só as páginas que não estavam na memória",
+        "why": "Leu essas e as da memória: 8.064 mais 2.080."
+      },
+      {
+        "text": "Só o índice em `net_cents`",
+        "why": "Não há índice nessa coluna."
+      }
+    ]
+  },
+  "ex-0xhcxwzg": {
+    "prompt": "`net_cents` ocupa 1.119.464 dos 9.492.481 bytes do arquivo Parquet. Que percentual do arquivo somá-la lê? Dê um número inteiro.",
+    "hint": "Divida, multiplique por cem.",
+    "unit": "%"
+  },
+  "ex-cskd3fxj": {
+    "prompt": "Como a codificação por dicionário guarda uma coluna de chaves de loja?",
+    "hint": "Sete valores distintos.",
+    "choices": [
+      {
+        "text": "O valor e quantas vezes se repete em sequência",
+        "why": "Essa é a codificação por sequência."
+      },
+      {
+        "text": "Cada valor como a distância até o mínimo",
+        "why": "Esse é o quadro de referência."
+      },
+      {
+        "text": "Como texto, em ordem alfabética",
+        "why": "Ordem e tipo não são o truque."
+      },
+      {
+        "text": "Cada valor uma vez, mais um código pequeno por linha",
+        "why": "Isso. Sete lojas precisam de três bits por linha."
+      }
+    ]
+  },
+  "ex-g1axbwjs": {
+    "prompt": "Por que o DuckDB escolheu RLE para todo segmento de `date_key`?",
+    "hint": "Como as linhas foram carregadas?",
+    "choices": [
+      {
+        "text": "Datas são sempre guardadas assim",
+        "why": "No arquivo embaralhado a mesma coluna ocupou um megabyte."
+      },
+      {
+        "text": "A coluna foi declarada com RLE",
+        "why": "Ninguém declarou codificação; o DuckDB testou."
+      },
+      {
+        "text": "As vendas de cada dia ficam juntas, em longas sequências",
+        "why": "Isso. Carregadas por número de pedido, que sobe com o tempo."
+      },
+      {
+        "text": "`date_key` tem mais valores distintos",
+        "why": "Tem 731, bem menos que order_id."
+      }
+    ]
+  },
+  "ex-jywgtsmt": {
+    "prompt": "Ligue cada codificação ao que ela aproveita.",
+    "hint": "Poucos valores, sequências, ou faixa estreita.",
+    "pairs": [
+      {
+        "left": "Dicionário",
+        "right": "Poucos valores distintos"
+      },
+      {
+        "left": "Por sequência (RLE)",
+        "right": "Valores iguais lado a lado"
+      },
+      {
+        "left": "Empacotamento em bits",
+        "right": "Valores que cabem em poucos bits"
+      },
+      {
+        "left": "FSST",
+        "right": "Fragmentos comuns a muitas strings"
+      }
+    ],
+    "right_distractors": [
+      "Linhas que nunca são lidas"
+    ]
+  },
+  "ex-hmv5hdth": {
+    "prompt": "`quantity` é sempre 1, 2 ou 3. Quantos bits cada valor precisa?",
+    "hint": "Três valores."
+  },
+  "ex-nwx6re66": {
+    "prompt": "Uma coluna é declarada `BIGINT` mas só tem números pequenos. Quanto isso custa num banco por colunas?",
+    "hint": "Quem decide o tamanho guardado?",
+    "choices": [
+      {
+        "text": "Quase nada a mais",
+        "why": "Isso. O empacotamento olha os valores, não o tipo declarado."
+      },
+      {
+        "text": "Oito bytes por linha, como declarado",
+        "why": "Esse é o custo do banco por linhas."
+      },
+      {
+        "text": "O dobro de um inteiro de 32 bits, sempre",
+        "why": "A codificação ignora a largura declarada."
+      },
+      {
+        "text": "O motor recusa",
+        "why": "Todo motor aceita."
+      }
+    ]
+  },
+  "ex-d7jt3kgt": {
+    "prompt": "Guardar o mínimo do bloco uma vez e cada valor como a distância até ele se chama quadro de ___.",
+    "hint": "O que o mínimo serve de.",
+    "blanks": [
+      {
+        "accept": [
+          "referência",
+          "referencia"
+        ]
+      }
+    ]
+  },
+  "ex-jqyxdayh": {
+    "prompt": "Por que `title` ganhou FSST e não um dicionário?",
+    "hint": "Os títulos se repetem?",
+    "choices": [
+      {
+        "text": "Títulos são longos demais para qualquer dicionário",
+        "why": "O comprimento não é o problema; a unicidade é."
+      },
+      {
+        "text": "O FSST é usado em toda coluna de texto",
+        "why": "`department` e `format` ganharam dicionário."
+      },
+      {
+        "text": "Os títulos estão em inglês",
+        "why": "A língua não importa para a codificação."
+      },
+      {
+        "text": "Os títulos são quase todos diferentes, mas têm fragmentos comuns",
+        "why": "Isso. Um dicionário de títulos inteiros seria tão grande quanto a coluna."
+      }
+    ]
+  },
+  "ex-hw2swfk7": {
+    "prompt": "Ordenada por loja e data, `shop_key` ocupou 524 bytes. Por que tão pouco?",
+    "hint": "Quantas sequências?",
+    "choices": [
+      {
+        "text": "As chaves de loja foram tiradas do arquivo ordenado",
+        "why": "Os 887.477 valores estão lá."
+      },
+      {
+        "text": "Sete sequências, uma por loja",
+        "why": "Isso. A codificação por sequência no seu melhor."
+      },
+      {
+        "text": "Ordenar converte inteiros em texto",
+        "why": "Os tipos não mudam."
+      },
+      {
+        "text": "O Parquet comprime inteiros pequenos para zero byte quando ordenados",
+        "why": "Não zero: 524 bytes, o custo de sete sequências e suas contagens."
+      }
+    ]
+  },
+  "ex-kzgggcbh": {
+    "prompt": "Embaralhado, o arquivo ocupou 13.403.406 bytes; em ordem de número de pedido, 9.331.332. Em que percentual a ordem o encolheu? Dê um número inteiro.",
+    "hint": "A economia sobre o tamanho embaralhado.",
+    "unit": "%"
+  },
+  "ex-429qe94m": {
+    "prompt": "Ordene os três arquivos pelo tamanho total, do maior para o menor.",
+    "hint": "Embaralhar é o que mais atrapalha.",
+    "items": [
+      "shuffled.parquet",
+      "by_order.parquet",
+      "by_shop_date.parquet"
+    ],
+    "trap": "Os dois ordenados ficam próximos; o embaralhado é uns 40% maior que qualquer um."
+  },
+  "ex-2h19aqb1": {
+    "prompt": "O que é um zone map?",
+    "hint": "Alguns bytes por bloco.",
+    "choices": [
+      {
+        "text": "O mínimo e o máximo de cada bloco",
+        "why": "Isso. Um leitor descarta blocos cujo intervalo não inclui o filtro."
+      },
+      {
+        "text": "Um índice sobre cada valor de uma coluna, numa árvore B separada",
+        "why": "Isso é um índice convencional, que um zone map não é."
+      },
+      {
+        "text": "Um mapa de que nó tem que linhas",
+        "why": "Isso é distribuição, lição 7."
+      },
+      {
+        "text": "Uma lista das pastas em que a tabela está dividida",
+        "why": "Isso é particionamento."
+      }
+    ]
+  },
+  "ex-bz2tsq2n": {
+    "prompt": "No arquivo ordenado por número de pedido, quantos dos 8 grupos de linhas poderiam ter uma venda de março de 2025?",
+    "hint": "Grupos 3 e 4."
+  },
+  "ex-qn3cqc5c": {
+    "prompt": "O arquivo embaralhado tem os mesmos dados, e mesmo assim todo grupo precisa ser lido para março. Por quê?",
+    "hint": "Olhe o intervalo de cada grupo.",
+    "choices": [
+      {
+        "text": "Arquivos embaralhados não têm estatísticas",
+        "why": "Têm; as estatísticas só são inúteis."
+      },
+      {
+        "text": "O DuckDB ignora zone maps em Parquet",
+        "why": "Usou no arquivo ordenado."
+      },
+      {
+        "text": "Todo grupo cobre os dois anos, então nenhum é descartado",
+        "why": "Isso. Zone maps precisam que as linhas que uma consulta quer fiquem juntas."
+      },
+      {
+        "text": "Março não tem vendas nesse arquivo",
+        "why": "Tem as mesmas vendas."
+      }
+    ]
+  },
+  "ex-56revnkj": {
+    "prompt": "Ligue cada parte de um arquivo Parquet ao que ela é.",
+    "hint": "De fora para dentro.",
+    "pairs": [
+      {
+        "left": "Rodapé",
+        "right": "Esquema e metadados por bloco, lidos primeiro"
+      },
+      {
+        "left": "Grupo de linhas",
+        "right": "Um bloco de linhas, 122.880 aqui"
+      },
+      {
+        "left": "Pedaço de coluna",
+        "right": "Os valores de uma coluna dentro de um grupo"
+      },
+      {
+        "left": "Página",
+        "right": "A unidade que é comprimida"
+      }
+    ],
+    "right_distractors": [
+      "O cabeçalho de uma linha para transações"
+    ]
+  },
+  "ex-cedt2sqx": {
+    "prompt": "Por que um leitor de Parquet lê o rodapé primeiro?",
+    "hint": "Do que ele precisa antes de ler dados?",
+    "choices": [
+      {
+        "text": "O rodapé guarda as primeiras linhas",
+        "why": "Guarda metadados, não linhas."
+      },
+      {
+        "text": "Para saber onde está tudo, e o que pular",
+        "why": "Isso. Posições, tamanhos, codificações e mín/máx por bloco."
+      },
+      {
+        "text": "Para conferir uma senha",
+        "why": "O Parquet não tem senha no rodapé."
+      },
+      {
+        "text": "Porque os arquivos são gravados de trás para a frente",
+        "why": "Os dados vêm primeiro; os metadados são gravados no fim."
+      }
+    ]
+  },
+  "ex-dfcyg8qa": {
+    "prompt": "Uma tabela em Parquet precisa ter 5.000 linhas corrigidas. O que isso envolve?",
+    "hint": "O Parquet não tem noção de mudança.",
+    "choices": [
+      {
+        "text": "Um UPDATE no arquivo, no lugar",
+        "why": "Arquivos são gravados uma vez, inteiros, e nunca editados."
+      },
+      {
+        "text": "Mudar as estatísticas do rodapé",
+        "why": "As estatísticas descrevem dados que continuariam errados."
+      },
+      {
+        "text": "Nada; o Parquet se corrige sozinho",
+        "why": "Nada corrige dados sozinho."
+      },
+      {
+        "text": "Regravar os arquivos que as contêm",
+        "why": "Isso. Uma tabela que muda são muitos arquivos e um registro de quais valem: lição 10."
+      }
+    ]
+  },
+  "ex-eamjfq2n": {
+    "prompt": "Quais destes tornam rápida a execução vetorizada? Marque todos os que se aplicam.",
+    "hint": "Um lote de uma coluna por vez.",
+    "choices": [
+      {
+        "text": "Custo fixo pago uma vez por vetor, não por linha",
+        "why": "Sim. 2.048 valores por chamada no DuckDB."
+      },
+      {
+        "text": "Valores contíguos que enchem o cache de dado útil",
+        "why": "Sim."
+      },
+      {
+        "text": "Instruções que trabalham em vários valores de uma vez",
+        "why": "Sim."
+      },
+      {
+        "text": "Um índice em cada coluna",
+        "why": "Varreduras vetorizadas não precisam de índice."
+      }
+    ]
+  },
+  "ex-yvwspwwc": {
+    "prompt": "O que é materialização tardia?",
+    "hint": "Filtrar primeiro, buscar depois.",
+    "choices": [
+      {
+        "text": "Carregar o warehouse à noite",
+        "why": "Isso é uma agenda."
+      },
+      {
+        "text": "Atualizar uma materialized view com atraso",
+        "why": "Palavra diferente, ideia diferente."
+      },
+      {
+        "text": "Buscar as outras colunas só para as linhas que passam no filtro",
+        "why": "Isso."
+      },
+      {
+        "text": "Descomprimir tudo antes de filtrar",
+        "why": "O contrário: trabalhar nos dados comprimidos quando possível."
+      }
+    ]
+  },
+  "ex-tk3gr0yq": {
+    "prompt": "Duas mil inserções de uma linha levaram 0,956 s no PostgreSQL e 1,981 s no DuckDB. Por que o banco por colunas é mais lento aqui?",
+    "hint": "Onze blocos por linha.",
+    "choices": [
+      {
+        "text": "Cada linha é dividida entre os blocos de todas as colunas",
+        "why": "Isso. Duas mil vezes, cada uma de forma durável."
+      },
+      {
+        "text": "O DuckDB confere cada linha contra todas as outras",
+        "why": "Não há essa conferência numa tabela sem restrições."
+      },
+      {
+        "text": "Inserções no DuckDB são sempre lentas, de qualquer tamanho",
+        "why": "Cargas em lote são o forte dele; linhas soltas são o problema."
+      },
+      {
+        "text": "O PostgreSQL não grava em disco",
+        "why": "Grava; acrescentar uma linha é só mais barato."
+      }
+    ]
+  },
+  "ex-3c9mhkgb": {
+    "prompt": "O DuckDB achou o pedido 112406 em 0,002 s sem índice. Por que uma busca por `customer_key` seria outra história?",
+    "hint": "O que faz os zone maps funcionarem?",
+    "choices": [
+      {
+        "text": "Chaves de cliente são criptografadas",
+        "why": "Nada é criptografado aqui."
+      },
+      {
+        "text": "Há menos clientes que pedidos",
+        "why": "A contagem não importa; a ordem importa."
+      },
+      {
+        "text": "Chaves de cliente não são inteiros",
+        "why": "São inteiros."
+      },
+      {
+        "text": "A tabela está ordenada por pedido, não por cliente",
+        "why": "Isso. Todo bloco teria clientes de toda faixa, e nenhum poderia ser pulado."
+      }
+    ]
+  },
+  "ex-jdw7c37f": {
+    "prompt": "Uma tabela tem 50 colunas e um relatório lê 3 delas em todas as linhas. Que banco lê menos, e cerca de quanto menos?",
+    "hint": "Bytes das colunas usadas, contra bytes das linhas inteiras.",
+    "choices": [
+      {
+        "text": "O banco por linhas, porque lê cada linha uma vez do começo ao fim",
+        "why": "Ler cada linha uma vez é ler as 50 colunas."
+      },
+      {
+        "text": "O banco por colunas, em uma ordem de grandeza ou mais",
+        "why": "Isso. Três colunas de cinquenta, antes mesmo da compressão."
+      },
+      {
+        "text": "Os dois leem o mesmo, já que toda linha é necessária",
+        "why": "Toda linha, mas não toda coluna."
+      },
+      {
+        "text": "O banco por linhas, se tiver índice nas três",
+        "why": "Um índice ajuda a achar linhas, não a ler colunas de todas."
+      }
+    ]
+  },
+  "ex-kyzc6wxr": {
+    "prompt": "A maioria das consultas a uma tabela fato filtra por mês e depois por loja. Em que ordem as linhas devem ser gravadas?",
+    "hint": "As linhas que uma consulta quer devem ficar juntas.",
+    "choices": [
+      {
+        "text": "Por data, depois loja",
+        "why": "Isso. Os zone maps pulam quase todos os meses, e as lojas se agrupam dentro de cada um."
+      },
+      {
+        "text": "Embaralhada, para todo nó e bloco ter uma mistura igual dos dados",
+        "why": "Mistura igual é o que inutiliza os zone maps."
+      },
+      {
+        "text": "Por cliente, que tem mais valores distintos que qualquer chave",
+        "why": "Muitos valores servem a uma chave de distribuição; ordene pelo que as consultas filtram."
+      },
+      {
+        "text": "Por valor líquido, do maior",
+        "why": "Ninguém filtra por ele; espalharia as datas por todo bloco."
+      }
+    ]
+  },
+  "ex-tq90xpw9": {
+    "prompt": "Os grupos de linhas do Parquet aqui têm 122.880 linhas. De quantos grupos um arquivo de 887.477 linhas precisa?",
+    "hint": "Arredonde para cima."
+  }
+}

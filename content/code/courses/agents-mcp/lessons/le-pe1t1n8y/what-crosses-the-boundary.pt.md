@@ -19,5 +19,5 @@ Entre dois agentes há uma linha, e **tudo o que um agente sabe sobre os outros 
 
 - **Faça a pergunta carregar o próprio contexto.** Ids, a restrição exata do cliente, o que já foi tentado.
 - **Decida o que uma resposta precisa conter.** Uma frase em texto livre é a forma mais fraca. Uma resposta estruturada (status, fatos, fontes) ou a evidência que o hospedeiro anexa (seção 08) deixam o agente que recebe conferir em vez de confiar.
-- **Passe o mínimo de dados que resolve.** Um especialista que só precisa de um id de pedido não deveria receber o endereço do cliente porque ele por acaso estava na conversa. A aula 22 do `ai-security` faz o mesmo argumento para dados mandados a um modelo; entre agentes ele vale de novo a cada fronteira.
+- **Passe o mínimo de dados que resolve.** Um especialista que só precisa de um id de pedido não deveria receber o endereço do cliente porque ele por acaso estava na conversa. A aula 12 do `ai-security` faz o mesmo argumento para dados mandados a um modelo; entre agentes ele vale de novo a cada fronteira.
 - **Registre o que atravessou.** O rastro deve mostrar cada pergunta e cada resposta na fronteira, porque é ali que uma resposta errada mais costuma nascer.

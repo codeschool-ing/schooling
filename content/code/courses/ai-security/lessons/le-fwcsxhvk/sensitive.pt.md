@@ -59,7 +59,7 @@ criança, que é dado sensível de um terceiro, e a lista nunca ouviu falar de a
 fornecedor sem mudança.
 
 Uma lista maior move a linha sem removê-la. Um classificador a move mais, seja um modelo ou um
-endpoint de moderação como os da aula 16, e a taxa de erro dele é uma que você teria de medir nos seus
+endpoint de moderação como os da aula 6, e a taxa de erro dele é uma que você teria de medir nos seus
 próprios tickets. Então a lista é uma rede com buracos, e **as decisões de projeto ficam onde a
 segurança está**:
 

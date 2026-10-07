@@ -1,0 +1,212 @@
+[
+  {
+    "id": "ex-qq9jsf1t",
+    "version": 1,
+    "section": "reaching-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `kubectl exec` into the shop fail with `\"sh\": executable file not found`?",
+    "hint": "What is in the shop's image?",
+    "choices": [
+      {
+        "text": "RBAC forbids exec",
+        "correct": false,
+        "why": "A permission error would say forbidden."
+      },
+      {
+        "text": "The image has no shell",
+        "correct": true,
+        "why": "Right: built from scratch, it holds only the program."
+      },
+      {
+        "text": "The pod was not running",
+        "correct": false,
+        "why": "It answered requests a moment later."
+      },
+      {
+        "text": "exec only works on the control plane",
+        "correct": false,
+        "why": "It works on any node."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjbhd0m8",
+    "version": 1,
+    "section": "reaching-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl port-forward deployment/shop 9090:8080` sends traffic where?",
+    "hint": "Does it use the Service?",
+    "choices": [
+      {
+        "text": "Through the Service to any pod",
+        "correct": false,
+        "why": "The tunnel bypasses the Service."
+      },
+      {
+        "text": "To every pod in turn",
+        "correct": false,
+        "why": "It picks one pod."
+      },
+      {
+        "text": "To one pod of the Deployment, via the API server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To the node's port 9090",
+        "correct": false,
+        "why": "9090 is on the laptop; 8080 is the pod's."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3fyywee",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the debug container, `ps` showed `/shop` as PID 1. What made the shop's process visible?",
+    "hint": "One flag of `kubectl debug`.",
+    "choices": [
+      {
+        "text": "Running as root",
+        "correct": false,
+        "why": "Root in another PID namespace sees nothing of it."
+      },
+      {
+        "text": "The busybox image",
+        "correct": false,
+        "why": "The image gave the tools, not the view."
+      },
+      {
+        "text": "Sharing the network",
+        "correct": false,
+        "why": "That gave `localhost:8080`, not the processes."
+      },
+      {
+        "text": "`--target=shop`",
+        "correct": true,
+        "why": "Right. It joins the target's process namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dk5jgyw",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Once the investigation is over, how do you remove the ephemeral container `dbg`?",
+    "hint": "Ephemeral containers stay in the spec.",
+    "choices": [
+      {
+        "text": "`kubectl debug --remove dbg`",
+        "correct": false,
+        "why": "No such flag exists."
+      },
+      {
+        "text": "Edit the pod and delete it from the spec",
+        "correct": false,
+        "why": "The API refuses that change."
+      },
+      {
+        "text": "Replace the pod",
+        "correct": true,
+        "why": "Right. It leaves with the pod, for example on the next rollout."
+      },
+      {
+        "text": "It removes itself when `sleep` ends",
+        "correct": false,
+        "why": "It stops, and stays listed."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e62m61e",
+    "version": 1,
+    "section": "copies-and-nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`crashing` exits on start. Why debug a `--copy-to` copy instead of the pod itself?",
+    "hint": "What can you change in a copy?",
+    "choices": [
+      {
+        "text": "The copy runs a command that stays up",
+        "correct": true,
+        "why": "Right, and the original stays as it was."
+      },
+      {
+        "text": "Copies get more CPU",
+        "correct": false,
+        "why": "Resources are copied as they are."
+      },
+      {
+        "text": "The original is deleted by the copy",
+        "correct": false,
+        "why": "It stayed, still `Error`."
+      },
+      {
+        "text": "Copies run on the control plane",
+        "correct": false,
+        "why": "It is scheduled like any pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-h71p0338",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation with the tool.",
+    "hint": "The table at the end of the lesson.",
+    "pairs": [
+      {
+        "left": "Call one pod's admin page from your laptop",
+        "right": "`kubectl port-forward`"
+      },
+      {
+        "left": "Inspect a running pod whose image has no tools",
+        "right": "`kubectl debug --target`"
+      },
+      {
+        "left": "A pod that crashes before you can attach",
+        "right": "`kubectl debug --copy-to`"
+      },
+      {
+        "left": "Read the kubelet's configuration file",
+        "right": "`kubectl debug node/…`"
+      }
+    ],
+    "right_distractors": [
+      "`kubectl rollout undo`"
+    ]
+  },
+  {
+    "id": "ex-shdexrey",
+    "version": 1,
+    "section": "copies-and-nodes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A node debugging pod sees the node's filesystem under the path ___.",
+    "hint": "`/host/etc/kubernetes`.",
+    "blanks": [
+      {
+        "accept": [
+          "/host"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

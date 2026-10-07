@@ -1,0 +1,321 @@
+[
+  {
+    "id": "ex-twbqdz5j",
+    "version": 1,
+    "section": "swarm",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an orchestrator do that Compose on one machine does not?",
+    "hint": "Desired against actual.",
+    "choices": [
+      {
+        "text": "Builds images faster",
+        "correct": false,
+        "why": "Building is not its job."
+      },
+      {
+        "text": "Keeps the declared state true, across machines",
+        "correct": true,
+        "why": "Right: replicas, replacements and rollouts."
+      },
+      {
+        "text": "Removes the need for a registry between machines entirely",
+        "correct": false,
+        "why": "Several machines need a registry even more."
+      },
+      {
+        "text": "Runs containers without images",
+        "correct": false,
+        "why": "It runs images like everything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-94qqtqdg",
+    "version": 1,
+    "section": "swarm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana killed the container of `shelf.2`. What did Swarm do, and why?",
+    "hint": "The service said three.",
+    "choices": [
+      {
+        "text": "Nothing, until Ana ran `docker service update`",
+        "correct": false,
+        "why": "Nobody ran a command; Swarm acted alone."
+      },
+      {
+        "text": "Restarted the same container, as a restart policy would",
+        "correct": false,
+        "why": "A new task replaced it; the old one stays listed as failed."
+      },
+      {
+        "text": "Started a new task, since two is not three",
+        "correct": true,
+        "why": "Right: actual state differed from desired state."
+      },
+      {
+        "text": "Scaled the service down to two",
+        "correct": false,
+        "why": "The declared count does not change by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-sagp1r4k",
+    "version": 1,
+    "section": "swarm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`docker service create` warned that `shelf:1.0.0` could not be resolved to a digest in a registry. What is the risk it names?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "The service will not start until the image is pushed",
+        "correct": false,
+        "why": "It started; the warning is about consistency."
+      },
+      {
+        "text": "The image will be deleted",
+        "correct": false,
+        "why": "Nothing is deleted."
+      },
+      {
+        "text": "The service runs without the image's health check",
+        "correct": false,
+        "why": "The image has one; the warning is about the name."
+      },
+      {
+        "text": "Nodes resolving the tag to different builds",
+        "correct": true,
+        "why": "Right: each resolves the tag on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-62ze8cbh",
+    "version": 1,
+    "section": "swarm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did Ana's services use `--endpoint-mode dnsrr` and no published port?",
+    "hint": "What did `ls /proc/net/ip_vs` say?",
+    "choices": [
+      {
+        "text": "The lab's kernel lacks IPVS, which VIPs and the mesh use",
+        "correct": true,
+        "why": "Right; on a normal host the defaults work."
+      },
+      {
+        "text": "dnsrr is faster than a virtual IP",
+        "correct": false,
+        "why": "Speed was not the reason."
+      },
+      {
+        "text": "Published ports are forbidden in a one-node swarm",
+        "correct": false,
+        "why": "They work on a normal kernel, with one node or many."
+      },
+      {
+        "text": "Overlay networks need dnsrr",
+        "correct": false,
+        "why": "Overlays use a virtual IP by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhtrjk86",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To replace one task at a time during an update, use `--update-___ 1`.",
+    "hint": "How many at once.",
+    "blanks": [
+      {
+        "accept": [
+          "parallelism"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1p4nkaye",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the image's health check make a rolling update safer?",
+    "hint": "When does Swarm move to the next task?",
+    "choices": [
+      {
+        "text": "It makes updates faster",
+        "correct": false,
+        "why": "It makes them more careful, not faster."
+      },
+      {
+        "text": "A broken version stops after one task, not all",
+        "correct": true,
+        "why": "Right: Swarm waits for each new task to be healthy."
+      },
+      {
+        "text": "It skips the update delay",
+        "correct": false,
+        "why": "The delay still applies."
+      },
+      {
+        "text": "It rolls back every update automatically, even good ones",
+        "correct": false,
+        "why": "Only a failure-action of `rollback` reverts, and only on failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-4p477t8h",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `docker service rollback`, which image did the service run?",
+    "hint": "The description before the last update.",
+    "choices": [
+      {
+        "text": "`shelf:1.0.1`",
+        "correct": false,
+        "why": "That was the update being undone."
+      },
+      {
+        "text": "`shelf:latest`",
+        "correct": false,
+        "why": "No `latest` was ever used."
+      },
+      {
+        "text": "`shelf:1.0.0`",
+        "correct": true,
+        "why": "Right, rolled out the same careful way."
+      },
+      {
+        "text": "None; the service was removed",
+        "correct": false,
+        "why": "Rollback keeps the service."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9rmwygv",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many replicas did `stack.yaml` ask for `web`?",
+    "hint": "Under `deploy`.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "replicas"
+  },
+  {
+    "id": "ex-6pzpy7wf",
+    "version": 1,
+    "section": "the-landscape",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each platform to what it is good at.",
+    "hint": "The table.",
+    "pairs": [
+      {
+        "left": "Docker Swarm",
+        "right": "Small clusters, Compose files as they are"
+      },
+      {
+        "left": "HashiCorp Nomad",
+        "right": "Containers and non-container jobs together"
+      },
+      {
+        "left": "Kubernetes",
+        "right": "Almost everything, with the largest ecosystem"
+      },
+      {
+        "left": "A container PaaS",
+        "right": "A web service with no servers to look after"
+      }
+    ],
+    "right_distractors": [
+      "Building images from source"
+    ]
+  },
+  {
+    "id": "ex-2v1wd2m5",
+    "version": 1,
+    "section": "the-landscape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's team moves `shelf` from Swarm to Cloud Run. What has to change in the image?",
+    "hint": "What do all these platforms run?",
+    "choices": [
+      {
+        "text": "It must be rebuilt for Google's runtime",
+        "correct": false,
+        "why": "Cloud Run runs OCI images as they are."
+      },
+      {
+        "text": "The health check must be removed",
+        "correct": false,
+        "why": "Removing it is not required, and `/health` stays useful."
+      },
+      {
+        "text": "It must include a web server",
+        "correct": false,
+        "why": "`shelf` already is one."
+      },
+      {
+        "text": "Nothing; every option runs the same OCI image",
+        "correct": true,
+        "why": "Right: where it runs is a separate decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0njrsbf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A two-person team runs one web service with spiky traffic and no wish to manage servers. Which fits first?",
+    "hint": "The first bullet of \"How to choose\".",
+    "choices": [
+      {
+        "text": "A container PaaS such as Cloud Run",
+        "correct": true,
+        "why": "Right: no servers, and it scales with the traffic."
+      },
+      {
+        "text": "A Kubernetes cluster that the two of them run",
+        "correct": false,
+        "why": "A lot of concepts and operations for one service."
+      },
+      {
+        "text": "Compose on a single server they rent",
+        "correct": false,
+        "why": "It works, but they must manage the server, and spikes hit one machine."
+      },
+      {
+        "text": "Swarm across three machines of their own",
+        "correct": false,
+        "why": "Still machines to run, for a team that wanted none."
+      }
+    ]
+  }
+]

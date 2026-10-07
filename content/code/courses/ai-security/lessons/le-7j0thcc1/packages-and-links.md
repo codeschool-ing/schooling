@@ -10,7 +10,7 @@ a model keeps suggesting the same invented name, whoever registers it first deci
 developer who trusts the suggestion installs. Researchers have measured models inventing package
 names at a noticeable rate, and the trick of registering them has its own nickname, *slopsquatting*.
 
-The defence is the same as for links in lesson 19: **a name a model produced is checked against a
+The defence is the same as for links in lesson 9: **a name a model produced is checked against a
 list you trust before anything acts on it.** In the lab, a model's suggestions for a Pix QR code
 feature are in `data/suggested-deps.txt`, written by the course, and `data/registry-snapshot.txt` is a
 short stand-in for the packages Tarefa has already reviewed:
@@ -47,7 +47,7 @@ Three habits make this hold in a team:
 
 ## Links are names too
 
-Lesson 19's `out-6` linked to `pay-tarefa.example`, a host that looked like Tarefa's. A model that
+Lesson 9's `out-6` linked to `pay-tarefa.example`, a host that looked like Tarefa's. A model that
 invents a plausible link produces the same risk as one that invents a package: a name that somebody
-else can own. The host allowlist of lesson 19 is the same defence as the registry snapshot here, one
+else can own. The host allowlist of lesson 9 is the same defence as the registry snapshot here, one
 for the client's browser and one for the developer's machine.

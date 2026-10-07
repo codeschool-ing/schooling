@@ -366,7 +366,7 @@ lives in `content/`:
 
 | the fixture | courses it serves |
 |---|---|
-| a **web application with known flaws** | `attacks-threats`, `secure-code`, `ai-security`, `manual-testing`, `web-automation`, `non-functional-testing`, `api-mobile-automation` |
+| a **web application with known flaws** | `attacks-threats`, `secure-code`, `manual-testing`, `web-automation`, `non-functional-testing`, `api-mobile-automation` |
 | a **vulnerable network** | `pentest`, `defense-hardening`, `soc-response` |
 | **logs and captures containing a real attack** | `soc-response` |
 | a **corpus where retrieval can fail** | `rag` |

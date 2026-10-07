@@ -29,7 +29,7 @@ working on as one stream**, and nothing in that stream marks which words are ord
 material. A model is trained to follow instructions, and it cannot reliably tell the instructions it
 was meant to follow from instruction-like text that arrived inside a ticket or a file.
 
-That is the root of prompt injection, which lessons 2 and 3 cover. Here it gives the one question that
+That is the root of prompt injection, which lesson 7 of `prompt-engineering` covers. Here it gives the one question that
 organises everything else: **for every piece of text that reaches the model, who wrote it, and what can
 the model do once it has read it?** A system prompt written by Tarefa and a help centre page reviewed
 by Tarefa are trusted. A client's message, a ticket, a file a client attached and a page fetched from
@@ -41,9 +41,9 @@ Following the question to its end gives the defensive principle of this course. 
 reach the model, then whatever the model can do, untrusted text can try to make it do. So the damage is
 bounded by the model's reach rather than by the model's judgement:
 
-- a model that can only answer can, at worst, answer badly, and lesson 19's checks and lesson 15's
+- a model that can only answer can, at worst, answer badly, and lesson 9's checks and lesson 5's
   filters stand between that answer and the client;
-- a model that can call tools can, at worst, call them badly, and lesson 20's gate and confirmation
+- a model that can call tools can, at worst, call them badly, and lesson 10's gate and confirmation
   stand between the proposal and the effect.
 
 The rest of this lesson turns that question into a list, and the list into a plan.

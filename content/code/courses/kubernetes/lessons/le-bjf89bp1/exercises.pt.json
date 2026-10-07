@@ -1,0 +1,156 @@
+{
+  "ex-8a8mfpt3": {
+    "prompt": "Dos três containers de cada pod `csi-hostpathplugin`, qual é o driver de armazenamento em si?",
+    "hint": "Os outros dois são publicados pelo projeto Kubernetes para todo driver.",
+    "choices": [
+      {
+        "text": "`hostpath`",
+        "why": "Isso. Ele responde às chamadas CSI no socket."
+      },
+      {
+        "text": "`csi-provisioner`",
+        "why": "Um sidecar: transforma claims em chamadas `CreateVolume`."
+      },
+      {
+        "text": "`node-driver-registrar`",
+        "why": "Um sidecar: diz ao kubelet onde está o socket."
+      },
+      {
+        "text": "O kubelet",
+        "why": "O kubelet não é um container daquele pod."
+      }
+    ]
+  },
+  "ex-xm4wqx52": {
+    "prompt": "`kubectl get csinodes` mostrou `DRIVERS 1` nos dois workers. O que pôs esse 1 ali?",
+    "hint": "Qual sidecar fala com o kubelet?",
+    "choices": [
+      {
+        "text": "A StorageClass",
+        "why": "Uma classe nomeia um provisioner; não registra nada nos nós."
+      },
+      {
+        "text": "O primeiro claim",
+        "why": "Nenhum claim existia ainda."
+      },
+      {
+        "text": "O objeto CSIDriver",
+        "why": "Ele descreve o driver para o cluster todo, não por nó."
+      },
+      {
+        "text": "O `node-driver-registrar` de cada nó",
+        "why": "Isso. Ele registra o socket no kubelet daquele nó."
+      }
+    ]
+  },
+  "ex-f3yn0cqj": {
+    "prompt": "Que componente pediu `CreateVolume` ao driver?",
+    "hint": "A tabela no fim da lição.",
+    "choices": [
+      {
+        "text": "O kubelet em `shop-worker2`",
+        "why": "O kubelet faz as chamadas de nó."
+      },
+      {
+        "text": "O `csi-provisioner`",
+        "why": "Isso. Ele observa claims e faz as chamadas de controller."
+      },
+      {
+        "text": "O API server",
+        "why": "O API server só guarda o claim."
+      },
+      {
+        "text": "O scheduler",
+        "why": "Ele escolheu o nó; não chama driver nenhum."
+      }
+    ]
+  },
+  "ex-q28rc52n": {
+    "prompt": "O que o `volumeHandle` de um PersistentVolume é para o Kubernetes?",
+    "hint": "Ele bateu com o nome do diretório no nó.",
+    "choices": [
+      {
+        "text": "Um caminho que o Kubernetes monta sozinho",
+        "why": "O Kubernetes nunca toca o armazenamento; o driver monta."
+      },
+      {
+        "text": "O id do driver, guardado e devolvido",
+        "why": "Isso. O Kubernetes o guarda e o repassa nas chamadas seguintes sem entendê-lo."
+      },
+      {
+        "text": "O uid do claim",
+        "why": "O claim tem o próprio uid; o handle veio do driver."
+      },
+      {
+        "text": "Um hash dos parâmetros da classe",
+        "why": "Ele identifica um volume, não uma classe."
+      }
+    ]
+  },
+  "ex-s6m47xv5": {
+    "prompt": "Ponha as chamadas ao driver na ordem em que aconteceram para o volume de `writer`.",
+    "hint": "Criado, preparado no nó, posto no pod.",
+    "items": [
+      "`CreateVolume`",
+      "`NodeStageVolume`",
+      "`NodePublishVolume`",
+      "`NodeUnpublishVolume`",
+      "`DeleteVolume`"
+    ],
+    "trap": "Um volume precisa existir antes de um nó prepará-lo, e precisa sair do pod antes de ser apagado."
+  },
+  "ex-ghtpyjch": {
+    "prompt": "Dentro de `writer`, o `mount` mostrou `/data` em `/dev/vda`. Por que esse dispositivo?",
+    "hint": "Onde vive um volume host-path?",
+    "choices": [
+      {
+        "text": "O driver criou um disco de 1 GiB",
+        "why": "Ele criou um diretório, não um disco."
+      },
+      {
+        "text": "Todo pod monta `/dev/vda`",
+        "why": "Só volumes no disco do nó o mostram."
+      },
+      {
+        "text": "É um diretório no disco do nó",
+        "why": "Isso, montado com bind no pod."
+      },
+      {
+        "text": "A nuvem anexou um disco",
+        "why": "Este laboratório não tem nuvem; `ATTACHREQUIRED` era false."
+      }
+    ]
+  },
+  "ex-9rbs4k25": {
+    "prompt": "Ligue cada chamada CSI a quem a fez no laboratório.",
+    "hint": "Chamadas de controller do sidecar, de nó do kubelet.",
+    "pairs": [
+      {
+        "left": "`CreateVolume`",
+        "right": "`csi-provisioner`"
+      },
+      {
+        "left": "`NodePublishVolume`",
+        "right": "O kubelet"
+      },
+      {
+        "left": "`GetPluginInfo`",
+        "right": "Qualquer coisa que se conecta primeiro ao socket"
+      }
+    ],
+    "right_distractors": [
+      "O scheduler"
+    ]
+  },
+  "ex-jyfvywv0": {
+    "prompt": "Um driver CSI responde a chamadas gRPC por um ___ Unix.",
+    "hint": "`csi.sock`.",
+    "blanks": [
+      {
+        "accept": [
+          "socket"
+        ]
+      }
+    ]
+  }
+}

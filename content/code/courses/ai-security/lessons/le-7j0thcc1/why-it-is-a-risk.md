@@ -32,7 +32,7 @@ Three properties put it in this course rather than only in a quality review:
 - **It carries authority it has not earned.** A wrong answer from a form that says *"we will reply in
   two days"* is visibly a guess. A wrong answer in the assistant's confident voice is read as policy.
 - **It cannot be fixed inside the model.** Better models invent less; none invents nothing. The
-  defence is the same as in lesson 19: checks around the model, written in code, that do not depend on
+  defence is the same as in lesson 9: checks around the model, written in code, that do not depend on
   the model being right.
 
 Lesson 5 of `prompt-engineering`, which this course assumes, explained why models invent and how a

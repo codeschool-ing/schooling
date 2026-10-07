@@ -1,0 +1,277 @@
+[
+  {
+    "id": "ex-gryqx126",
+    "version": 1,
+    "section": "replicaset",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana deleted pod `web-768c88b7c7-5dbxj`. Two seconds later the ReplicaSet still had three pods. What happened?",
+    "hint": "Compare the names before and after.",
+    "choices": [
+      {
+        "text": "The deletion was refused because the pod had an owner",
+        "correct": false,
+        "why": "`5dbxj` is gone from the second listing; the deletion went through."
+      },
+      {
+        "text": "A new pod was made from the template",
+        "correct": true,
+        "why": "Right: `5xvw2`, with a new name, because the count had dropped to two."
+      },
+      {
+        "text": "The kubelet restarted the same pod under its old name",
+        "correct": false,
+        "why": "A deleted pod is gone for good; the replacement has a different name."
+      },
+      {
+        "text": "The Deployment restored the pod from etcd's history",
+        "correct": false,
+        "why": "Nothing is restored; a new object is created from the template, with a new address too."
+      }
+    ]
+  },
+  {
+    "id": "ex-jm6qdqes",
+    "version": 1,
+    "section": "replicaset",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After Ana relabelled one pod `app=debug`, there were four pods and the ReplicaSet reported three. What is the fourth?",
+    "hint": "Which selector does it still answer?",
+    "choices": [
+      {
+        "text": "A replacement that will be removed in a minute",
+        "correct": false,
+        "why": "The new pod `l7mxz` is the one that counts; nothing will remove it."
+      },
+      {
+        "text": "A pod the ReplicaSet will delete to get back to three",
+        "correct": false,
+        "why": "It no longer matches the selector, so the ReplicaSet does not see it at all."
+      },
+      {
+        "text": "An orphan nobody counts, replaces or deletes",
+        "correct": true,
+        "why": "Right. It keeps running outside every selector, which is useful in an incident and a hazard by accident."
+      },
+      {
+        "text": "A second ReplicaSet's pod",
+        "correct": false,
+        "why": "Only one ReplicaSet existed then, and the pod belongs to none."
+      }
+    ]
+  },
+  {
+    "id": "ex-jha4gd3t",
+    "version": 1,
+    "section": "replicaset",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Service selects `app: web`. Ana relabels a misbehaving pod `app=debug` during an incident. What does that buy her?",
+    "hint": "Two selectors stop seeing the pod at once.",
+    "choices": [
+      {
+        "text": "Nothing, since the pod keeps running",
+        "correct": false,
+        "why": "Running is the point: it is out of rotation but still there to inspect."
+      },
+      {
+        "text": "A restart of the pod with fresh memory",
+        "correct": false,
+        "why": "Nothing restarts it; its state is exactly what she wants to keep."
+      },
+      {
+        "text": "Its deletion, once the ReplicaSet notices",
+        "correct": false,
+        "why": "The ReplicaSet stops seeing it and so never deletes it."
+      },
+      {
+        "text": "No traffic reaches it, a replacement takes its place, and its state stays inspectable",
+        "correct": true,
+        "why": "Right. The Service and the ReplicaSet both select by label, so both let go of it at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-68z15h5p",
+    "version": 1,
+    "section": "deployment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kubectl set image deployment/web shop=shop:1.1` left two ReplicaSets. Which one wants the pods?",
+    "hint": "Look at the DESIRED column.",
+    "choices": [
+      {
+        "text": "Both, two each",
+        "correct": false,
+        "why": "The old one went to 0; the Deployment moved the count across."
+      },
+      {
+        "text": "The old one, until somebody deletes the new one",
+        "correct": false,
+        "why": "It is the reverse: the new one wants 2 and the old one 0."
+      },
+      {
+        "text": "The new one, `web-798bdd9498`, with 2",
+        "correct": true,
+        "why": "Right. The old one is kept empty for a rollback."
+      },
+      {
+        "text": "Neither: the Deployment holds the pods directly",
+        "correct": false,
+        "why": "A Deployment never owns pods; it owns ReplicaSets."
+      }
+    ]
+  },
+  {
+    "id": "ex-chgffmgw",
+    "version": 1,
+    "section": "deployment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a Deployment make a second ReplicaSet for a new image instead of editing the first one?",
+    "hint": "What would an edited ReplicaSet do with the pods it already has?",
+    "choices": [
+      {
+        "text": "A ReplicaSet's template cannot be edited at all",
+        "correct": false,
+        "why": "It can be; editing it just does nothing to existing pods."
+      },
+      {
+        "text": "The old pods still match, so it would leave them all as they are",
+        "correct": true,
+        "why": "Right. A ReplicaSet only counts; a second one with a new hash is how the pods actually change."
+      },
+      {
+        "text": "Two ReplicaSets make the update faster",
+        "correct": false,
+        "why": "Speed is not the reason; the pace is set by the strategy (lesson 35)."
+      },
+      {
+        "text": "The API server forbids two images in one ReplicaSet",
+        "correct": false,
+        "why": "A pod template can hold several containers with different images."
+      }
+    ]
+  },
+  {
+    "id": "ex-taqxf847",
+    "version": 1,
+    "section": "deployment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana deleted every ReplicaSet of `web`. What did the next listing show, six seconds later?",
+    "hint": "The Deployment was still there.",
+    "choices": [
+      {
+        "text": "No ReplicaSets and no pods",
+        "correct": false,
+        "why": "The Deployment noticed the missing ReplicaSet and made it again."
+      },
+      {
+        "text": "`web-798bdd9498` again, wanting 2 pods",
+        "correct": true,
+        "why": "Right: the same name, because the template and so its hash had not changed."
+      },
+      {
+        "text": "Both ReplicaSets back, with their history",
+        "correct": false,
+        "why": "Only the one it needs was made; the old empty one was not."
+      },
+      {
+        "text": "A ReplicaSet with a new random name",
+        "correct": false,
+        "why": "The name comes from the template's hash, not from chance."
+      }
+    ]
+  },
+  {
+    "id": "ex-ng8aw1aw",
+    "version": 1,
+    "section": "deployment",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Deployment adds the label `pod-template-___` to each ReplicaSet's selector, so it counts only pods made from that template.",
+    "hint": "It is a short digest of the template.",
+    "blanks": [
+      {
+        "accept": [
+          "hash"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e40c3rn0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each object with what it does.",
+    "hint": "One level owns the next.",
+    "pairs": [
+      {
+        "left": "Deployment",
+        "right": "Makes one ReplicaSet per template and moves the count between them"
+      },
+      {
+        "left": "ReplicaSet",
+        "right": "Makes or deletes pods until the count of matching ones is right"
+      },
+      {
+        "left": "Pod",
+        "right": "Runs the containers, on one node"
+      }
+    ],
+    "right_distractors": [
+      "Chooses the node each pod runs on"
+    ]
+  },
+  {
+    "id": "ex-chdx5m7q",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would leave pods running that no controller counts? Choose all that apply.",
+    "hint": "Think about the selector, never the name.",
+    "choices": [
+      {
+        "text": "Changing a running pod's `app` label by hand",
+        "correct": true,
+        "why": "Right: it drops out of the selector and becomes an orphan."
+      },
+      {
+        "text": "Deleting a pod",
+        "correct": false,
+        "why": "That pod is gone, and its replacement is counted."
+      },
+      {
+        "text": "Scaling the Deployment to zero",
+        "correct": false,
+        "why": "That deletes the pods rather than stranding them."
+      },
+      {
+        "text": "Creating a bare pod with no labels",
+        "correct": true,
+        "why": "Right: no selector ever matched it, so nothing counts or replaces it (lesson 9)."
+      },
+      {
+        "text": "Changing the Deployment's image",
+        "correct": false,
+        "why": "The old pods are replaced by the new ReplicaSet's."
+      }
+    ]
+  }
+]

@@ -1,0 +1,180 @@
+[
+  {
+    "id": "ex-matej94a",
+    "version": 1,
+    "section": "base-overlays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file makes the shop that customers use run three copies instead of one?",
+    "hint": "The base runs one.",
+    "choices": [
+      {
+        "text": "`base/deployment.yaml`",
+        "correct": false,
+        "why": "The base says 1."
+      },
+      {
+        "text": "`base/kustomization.yaml`",
+        "correct": false,
+        "why": "It lists resources and the generator."
+      },
+      {
+        "text": "`overlays/production/replicas.yaml`",
+        "correct": true,
+        "why": "Right, a patch merged over the base."
+      },
+      {
+        "text": "`overlays/staging/kustomization.yaml`",
+        "correct": false,
+        "why": "That is staging."
+      }
+    ]
+  },
+  {
+    "id": "ex-5406yfst",
+    "version": 1,
+    "section": "base-overlays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes Kustomize different from Helm in the files it reads?",
+    "hint": "Could `kubectl apply -f` take the base's files?",
+    "choices": [
+      {
+        "text": "They are plain manifests, not templates",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They must be JSON",
+        "correct": false,
+        "why": "They were YAML."
+      },
+      {
+        "text": "They live in the cluster",
+        "correct": false,
+        "why": "They live in a directory."
+      },
+      {
+        "text": "They are downloaded from a repository",
+        "correct": false,
+        "why": "Nothing was downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jkpx702",
+    "version": 1,
+    "section": "changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the generated ConfigMap's name end in a hash such as `-k59c4b8286`?",
+    "hint": "What happened to the Deployment when the greeting changed?",
+    "choices": [
+      {
+        "text": "To avoid name clashes between namespaces",
+        "correct": false,
+        "why": "Namespaces already separate names."
+      },
+      {
+        "text": "Kubernetes requires unique ConfigMap names",
+        "correct": false,
+        "why": "Only within a namespace, like everything."
+      },
+      {
+        "text": "It encrypts the contents",
+        "correct": false,
+        "why": "A hash of the contents encrypts nothing."
+      },
+      {
+        "text": "New contents change the pod template, so pods roll",
+        "correct": true,
+        "why": "Right. The reference changes and the Deployment rolls out."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qp1d0r2",
+    "version": 1,
+    "section": "changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the change, `shop-settings-f655md8fbd` was still in `production`. Why?",
+    "hint": "What does `kubectl apply` do with objects an overlay stops producing?",
+    "choices": [
+      {
+        "text": "A pod still used it",
+        "correct": false,
+        "why": "The rollout replaced every pod."
+      },
+      {
+        "text": "`apply` deletes nothing by itself",
+        "correct": true,
+        "why": "Right. Pruning is a separate choice."
+      },
+      {
+        "text": "Kustomize keeps one old copy for rollback",
+        "correct": false,
+        "why": "It keeps nothing; it builds."
+      },
+      {
+        "text": "ConfigMaps cannot be deleted",
+        "correct": false,
+        "why": "They can, like any object."
+      }
+    ]
+  },
+  {
+    "id": "ex-pharevp7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kustomization field with what it did.",
+    "hint": "The two overlays.",
+    "pairs": [
+      {
+        "left": "`namespace: staging`",
+        "right": "Put every object in that namespace"
+      },
+      {
+        "left": "`nameSuffix: -staging`",
+        "right": "Renamed objects and their references"
+      },
+      {
+        "left": "`images`",
+        "right": "Changed the image tag"
+      },
+      {
+        "left": "`patches`",
+        "right": "Merged a fragment over the base"
+      }
+    ],
+    "right_distractors": [
+      "Rolled back a release"
+    ]
+  },
+  {
+    "id": "ex-e8axdnrk",
+    "version": 1,
+    "section": "changes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kubectl apply ___ deploy/overlays/production` builds the overlay and applies it.",
+    "hint": "A one-letter flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-k"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,167 @@
+{
+  "ex-jap4kypn": {
+    "prompt": "Um StatefulSet chamado `db` pede três réplicas. Como os pods se chamam?",
+    "hint": "Os nomes não são aleatórios.",
+    "choices": [
+      {
+        "text": "`db` seguido de um hash do modelo e um sufixo aleatório",
+        "why": "Essa é a nomenclatura de um Deployment; os nomes de um StatefulSet são fixos."
+      },
+      {
+        "text": "`db-0`, `db-1`, `db-2`",
+        "why": "Isso, e um substituto do `db-1` se chama `db-1` de novo."
+      },
+      {
+        "text": "Os nomes que o modelo lista para eles",
+        "why": "Um modelo descreve um pod; os números ordinais são acrescentados pelo controlador."
+      },
+      {
+        "text": "Os nomes dos nós em que rodam",
+        "why": "Dois deles rodaram no mesmo nó; os nomes vêm do StatefulSet."
+      }
+    ]
+  },
+  "ex-txfxhny7": {
+    "prompt": "O `db-0` subiu às 16:49:56, o `db-1` quatro segundos depois, o `db-2` cinco segundos depois disso. Por que não todos de uma vez?",
+    "hint": "O que um cluster de banco precisa do primeiro membro?",
+    "choices": [
+      {
+        "text": "O escalonador coloca um pod por segundo",
+        "why": "O escalonador colocou três pods de Deployment num segundo na lição 8."
+      },
+      {
+        "text": "Cada pod esperou o disco ser formatado",
+        "why": "Os discos foram providenciados, mas a ordem vem do próprio StatefulSet."
+      },
+      {
+        "text": "O StatefulSet espera cada pod ficar pronto antes de iniciar o seguinte",
+        "why": "Isso. Subir em ordem é o padrão, porque os membros seguintes costumam se juntar ao primeiro."
+      },
+      {
+        "text": "Imagens busybox demoram para subir",
+        "why": "Elas sobem em bem menos de um segundo; a espera é proposital."
+      }
+    ]
+  },
+  "ex-95fn37p6": {
+    "prompt": "O que o `nslookup db-1.db.default.svc.cluster.local` devolveu?",
+    "hint": "O primeiro rótulo do nome é um pod.",
+    "choices": [
+      {
+        "text": "Os endereços dos três pods",
+        "why": "Isso foi o que o nome do próprio Service devolveu."
+      },
+      {
+        "text": "O endereço do `db-1` sozinho",
+        "why": "Isso: um Service headless dá a cada pod um nome próprio."
+      },
+      {
+        "text": "O ClusterIP do Service",
+        "why": "Um Service headless não tem; `clusterIP: None`."
+      },
+      {
+        "text": "Um erro, porque pods não têm nome DNS",
+        "why": "Pods atrás de um Service headless têm; ele respondeu com um endereço."
+      }
+    ]
+  },
+  "ex-nqddtrbj": {
+    "prompt": "Depois de o `db-1` ser apagado e voltar, o que `cat /data/born /data/last-order` imprimiu, e por quê?",
+    "hint": "Em que objeto os dados viviam?",
+    "choices": [
+      {
+        "text": "Nada: um pod novo começa com o disco vazio",
+        "why": "O pod novo recebeu a claim do antigo, `data-db-1`."
+      },
+      {
+        "text": "Só `db-1`; o pedido estava na memória do pod apagado",
+        "why": "`order-1042` foi escrito num arquivo no disco, e foi impresso."
+      },
+      {
+        "text": "`db-0` e `order-1042`, do disco do primeiro pod",
+        "why": "Cada pod tem a própria claim; o `db-1` nunca vê a do `db-0`."
+      },
+      {
+        "text": "`db-1` e `order-1042`: o disco está preso ao nome",
+        "why": "Isso. A claim `data-db-1` sobreviveu ao pod e foi para o substituto."
+      }
+    ]
+  },
+  "ex-5mq8evt0": {
+    "prompt": "A Ana reduziu `db` de três réplicas para uma. Quais claims sobraram depois?",
+    "hint": "Um disco é a única coisa que não pode ser recriada a partir de um arquivo.",
+    "choices": [
+      {
+        "text": "Só a `data-db-0`",
+        "why": "As três foram listadas depois, ainda `Bound`."
+      },
+      {
+        "text": "As três",
+        "why": "Isso. Reduzir a escala mantém os discos, então aumentar de novo os encontra."
+      },
+      {
+        "text": "`data-db-0` e `data-db-1`, porque o `db-2` foi apagado primeiro",
+        "why": "O `db-2` saiu primeiro, mas a claim dele ficou com as outras duas."
+      },
+      {
+        "text": "Nenhuma: os volumes são apagados junto com os pods do StatefulSet",
+        "why": "Apagá-los fica para alguém, de propósito."
+      }
+    ]
+  },
+  "ex-wggnsdt3": {
+    "prompt": "Por que o substituto do `db-1` voltou em `shop-worker2`, o nó em que estava antes?",
+    "hint": "Onde vive um disco local-path?",
+    "choices": [
+      {
+        "text": "StatefulSets sempre mantêm um pod no primeiro nó dele",
+        "why": "Com armazenamento em rede o pod poderia mudar; aqui o disco decidiu."
+      },
+      {
+        "text": "O escalonador o escolheu por acaso",
+        "why": "Ele não tinha escolha: só um nó guarda aquele diretório."
+      },
+      {
+        "text": "O disco dele é um diretório naquele nó",
+        "why": "Isso. O pod precisa ir para onde está o disco; a lição 26 mostra como o volume diz isso."
+      },
+      {
+        "text": "O Service headless só resolve nomes naquele nó",
+        "why": "O DNS responde de qualquer pod do cluster, como a probe mostrou."
+      }
+    ]
+  },
+  "ex-kv19fe0k": {
+    "prompt": "Um Service com `clusterIP: None` não tem endereço próprio. Ele se chama ___, e o nome dele responde com os endereços dos pods.",
+    "hint": "Ele não tem um endereço único no topo.",
+    "blanks": [
+      {
+        "accept": [
+          "headless",
+          "sem cabeça"
+        ]
+      }
+    ]
+  },
+  "ex-dg5sggy5": {
+    "prompt": "Ligue cada necessidade ao controlador que a atende.",
+    "hint": "Pergunte se as cópias são intercambiáveis.",
+    "pairs": [
+      {
+        "left": "Dez servidores web idênticos",
+        "right": "Deployment"
+      },
+      {
+        "left": "Três membros de banco que guardam cada um os próprios dados",
+        "right": "StatefulSet"
+      },
+      {
+        "left": "Um broker de mensagens cujos membros se encontram pelo nome",
+        "right": "StatefulSet com um Service headless"
+      }
+    ],
+    "right_distractors": [
+      "Um pod solto por membro"
+    ]
+  }
+}

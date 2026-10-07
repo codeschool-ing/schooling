@@ -1,0 +1,21 @@
+# The usual cluster with kind's own network plugin left out, so that Calico
+# can be installed instead (lab.sh calico). Calico's manifest assumes pods
+# get addresses from 192.168.0.0/16, so the cluster is told the same.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  disableDefaultCNI: true
+  podSubnet: 192.168.0.0/16
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri"]
+    restrict_oom_score_adj = true
+kubeadmConfigPatches:
+- |
+  kind: KubeletConfiguration
+  failCgroupV1: false
+  serverTLSBootstrap: true
+nodes:
+- role: control-plane
+- role: worker
+- role: worker

@@ -12,7 +12,7 @@ first ticket is sent:
 | question | why it matters under the LGPD |
 |---|---|
 | Are the prompts and replies used to train or improve the provider's models? | if yes, the provider is deciding a purpose of its own and is no longer only an operator (art. 39) |
-| How long does the provider keep them, and is an arrangement with no retention available? | Tarefa's retention policy does not reach them, and lesson 21's sweep stops at Tarefa's own disks |
+| How long does the provider keep them, and is an arrangement with no retention available? | Tarefa's retention policy does not reach them, and lesson 11's sweep stops at Tarefa's own disks |
 | Where are they processed, and under which mechanism of art. 33? | an international transfer needs one, usually the ANPD's standard contractual clauses |
 | Which other companies does the provider pass them to? | the data subjects have a right to know who receives their data |
 | How fast does the provider report a security incident to Tarefa? | Tarefa has its own deadline towards the ANPD, and it starts when Tarefa learns of the incident |
@@ -30,7 +30,7 @@ directly on this feature:
   about her and with whom it shared it. *"A model provider, under contract, for summarising support
   tickets"* is part of the true answer, and the privacy notice should already say so.
 - **Deletion of unnecessary data** (art. 18, IV). A request that reaches Tarefa reaches every
-  store Tarefa controls: the ticket, the logs of lesson 21, and the vault. The outbox copy at the
+  store Tarefa controls: the ticket, the logs of lesson 11, and the vault. The outbox copy at the
   provider is covered by the contract's retention terms, which is one reason to prefer short ones.
 - **Correction** (art. 18, III). A summary that got Juliana's reason wrong, saved in the ticket, is
   data about her like any other.

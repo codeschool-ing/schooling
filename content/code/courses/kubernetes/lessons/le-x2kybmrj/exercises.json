@@ -1,0 +1,221 @@
+[
+  {
+    "id": "ex-bqw04663",
+    "version": 1,
+    "section": "pressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`scribbler` wrote 80 MiB into `/tmp` with an ephemeral-storage limit of 50Mi. What happened, and who did it?",
+    "hint": "`.status.reason`.",
+    "choices": [
+      {
+        "text": "The kernel killed it with `OOMKilled`",
+        "correct": false,
+        "why": "That is the memory limit."
+      },
+      {
+        "text": "The kubelet evicted it",
+        "correct": true,
+        "why": "Right. It checks disk use and removed the pod."
+      },
+      {
+        "text": "The write failed at 50 MiB",
+        "correct": false,
+        "why": "The limit is checked afterwards, not enforced on each write."
+      },
+      {
+        "text": "The scheduler moved it to a bigger node",
+        "correct": false,
+        "why": "Pods never move."
+      }
+    ]
+  },
+  {
+    "id": "ex-40x6b1tm",
+    "version": 1,
+    "section": "pressure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After an eviction for ephemeral storage, does the kubelet restart the pod in place?",
+    "hint": "What does `Evicted` mean for a pod?",
+    "choices": [
+      {
+        "text": "Yes, like a container that was `OOMKilled`",
+        "correct": false,
+        "why": "That restart is per container; eviction ends the pod."
+      },
+      {
+        "text": "Yes, after five minutes",
+        "correct": false,
+        "why": "Nothing restarts an evicted pod."
+      },
+      {
+        "text": "No; only a controller makes a new pod",
+        "correct": true,
+        "why": "Right. A bare pod stays finished."
+      },
+      {
+        "text": "No, and the node is cordoned",
+        "correct": false,
+        "why": "One pod's limit does not cordon the node."
+      }
+    ]
+  },
+  {
+    "id": "ex-t916b5a1",
+    "version": 1,
+    "section": "drain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During the drain, why was the second eviction of a shop pod refused at first?",
+    "hint": "`minAvailable: 3` with four replicas.",
+    "choices": [
+      {
+        "text": "The node was not yet cordoned",
+        "correct": false,
+        "why": "It was cordoned first."
+      },
+      {
+        "text": "Pods with `emptyDir` are never evicted",
+        "correct": false,
+        "why": "The flag allowed it, and it was evicted later."
+      },
+      {
+        "text": "Only three would have remained",
+        "correct": true,
+        "why": "Right. The replacement was not ready yet, so the budget allowed no second disruption."
+      },
+      {
+        "text": "CoreDNS had to go first",
+        "correct": false,
+        "why": "Evictions do not wait for each other by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-0naa9z0n",
+    "version": 1,
+    "section": "drain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A PodDisruptionBudget sets `minAvailable: 4` for a Deployment with four replicas. What happens when a node holding one of them is drained?",
+    "hint": "How many disruptions does that budget allow?",
+    "choices": [
+      {
+        "text": "The pod is evicted and replaced as usual",
+        "correct": false,
+        "why": "The budget allows zero disruptions."
+      },
+      {
+        "text": "The drain retries and never finishes",
+        "correct": true,
+        "why": "Right. Zero allowed disruptions blocks maintenance until someone changes it."
+      },
+      {
+        "text": "The budget is ignored for drains",
+        "correct": false,
+        "why": "Drains are exactly what budgets govern."
+      },
+      {
+        "text": "The Deployment scales to five first",
+        "correct": false,
+        "why": "Nothing scales automatically for a drain."
+      }
+    ]
+  },
+  {
+    "id": "ex-33j4nkjg",
+    "version": 1,
+    "section": "node-lost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `shop-worker2` was stopped, its two shop pods stayed `Terminating`. Why?",
+    "hint": "Who confirms that a container stopped?",
+    "choices": [
+      {
+        "text": "Their kubelet cannot confirm they stopped",
+        "correct": true,
+        "why": "Right. The deletion waits for a kubelet that is not answering."
+      },
+      {
+        "text": "The grace period is five minutes",
+        "correct": false,
+        "why": "They were replaced already; the wait is for confirmation."
+      },
+      {
+        "text": "The budget blocks their deletion",
+        "correct": false,
+        "why": "The budget was removed, and does not apply to lost nodes."
+      },
+      {
+        "text": "They are still serving traffic",
+        "correct": false,
+        "why": "The node is off."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb5csyg5",
+    "version": 1,
+    "section": "node-lost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the default toleration of 300 seconds and a node grace period of 50 seconds, about how many seconds pass between a node losing power and its pods being evicted?",
+    "hint": "Notice, then decide.",
+    "value": 350,
+    "tolerance": 10,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-sqp9m14a",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each event with what removes the pods.",
+    "hint": "The table at the end of the lesson.",
+    "pairs": [
+      {
+        "left": "A node runs short of memory",
+        "right": "The kubelet"
+      },
+      {
+        "left": "`kubectl drain`",
+        "right": "The Eviction API, one pod at a time"
+      },
+      {
+        "left": "A node loses power",
+        "right": "The node controller's taint"
+      }
+    ],
+    "right_distractors": [
+      "The scheduler"
+    ]
+  },
+  {
+    "id": "ex-433b9e9d",
+    "version": 1,
+    "section": "drain",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After maintenance, `kubectl ___ shop-worker` lets pods be scheduled on the node again.",
+    "hint": "The opposite of cordon.",
+    "blanks": [
+      {
+        "accept": [
+          "uncordon"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

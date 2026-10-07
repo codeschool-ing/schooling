@@ -1,0 +1,166 @@
+{
+  "ex-trbpv0me": {
+    "prompt": "O recomendador sugeriu 250Mi de memória para uma loja que usa uns 6Mi. Por quê?",
+    "hint": "250Mi é uma medição?",
+    "choices": [
+      {
+        "text": "A loja vaza memória",
+        "why": "O `kubectl top` mostrou 5 e 6 MiB."
+      },
+      {
+        "text": "É o piso do recomendador",
+        "why": "Isso: ele nunca sugere menos se não for mandado."
+      },
+      {
+        "text": "Copia o request atual",
+        "why": "O request era 256Mi; o alvo é 250Mi."
+      },
+      {
+        "text": "Memória é sempre arredondada para um quarto de GiB",
+        "why": "Esse arredondamento não existe."
+      }
+    ]
+  },
+  "ex-fk388sxv": {
+    "prompt": "Com `updateMode: \"Off\"`, o que aconteceu com os pods da loja?",
+    "hint": "Off.",
+    "choices": [
+      {
+        "text": "Foram despejados com requests novos",
+        "why": "Isso é `Recreate`."
+      },
+      {
+        "text": "Foram redimensionados no lugar",
+        "why": "Isso é `InPlaceOrRecreate`."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. A recomendação só é escrita no status do VPA."
+      },
+      {
+        "text": "Pods novos ganharam o alvo",
+        "why": "Isso é `Initial`."
+      }
+    ]
+  },
+  "ex-c9mt6qe8": {
+    "prompt": "Por que um VPA e um HPA não deveriam agir os dois sobre CPU no mesmo Deployment?",
+    "hint": "O que um request maior faz com a utilização?",
+    "choices": [
+      {
+        "text": "Um desfaz o que o outro faz",
+        "why": "Isso. Requests maiores baixam a utilização que o HPA lê, então ele remove pods."
+      },
+      {
+        "text": "O API server recusa o segundo",
+        "why": "Os dois são aceitos."
+      },
+      {
+        "text": "Precisam de metrics servers diferentes",
+        "why": "Os dois leem a mesma API."
+      },
+      {
+        "text": "O VPA só funciona com StatefulSets",
+        "why": "Ele mira Deployments também."
+      }
+    ]
+  },
+  "ex-e61vtqdw": {
+    "prompt": "Depois de `kubectl patch pod … --subresource resize`, `restarts` continuava 0. O que mudou?",
+    "hint": "A spec e o status mostraram os números novos.",
+    "choices": [
+      {
+        "text": "Nada até o próximo reinício",
+        "why": "O status mostrou que foram aplicados."
+      },
+      {
+        "text": "Um pod novo substituiu o antigo",
+        "why": "Mesmo nome, sem reinício."
+      },
+      {
+        "text": "Os limites de cgroup, ao vivo",
+        "why": "Isso: as configurações de cgroup do container, enquanto rodava."
+      },
+      {
+        "text": "O template do Deployment",
+        "why": "Ele continua dizendo 50m e 256Mi."
+      }
+    ]
+  },
+  "ex-5vy2cps0": {
+    "prompt": "Uma JVM dimensiona o heap uma vez, ao subir. Qual `resizePolicy` serve para a memória dela?",
+    "hint": "Um limite maior ajudaria uma JVM rodando?",
+    "choices": [
+      {
+        "text": "`NotRequired`",
+        "why": "Ela manteria o heap antigo."
+      },
+      {
+        "text": "`RestartContainer`",
+        "why": "Isso. Um reinício a deixa dimensionar o heap de novo."
+      },
+      {
+        "text": "`Never`",
+        "why": "Essa política não existe."
+      },
+      {
+        "text": "`Recreate`",
+        "why": "Isso é um modo do VPA, não uma política de redimensionamento."
+      }
+    ]
+  },
+  "ex-076akmbj": {
+    "prompt": "O que faz o cluster autoscaler acrescentar um nó?",
+    "hint": "Requests, não uso.",
+    "choices": [
+      {
+        "text": "Nós acima de 80% de uso de CPU",
+        "why": "Uso não o dispara."
+      },
+      {
+        "text": "O HPA pedir",
+        "why": "Os dois nunca conversam."
+      },
+      {
+        "text": "Um horário definido pelo operador",
+        "why": "Ele reage; não tem horário."
+      },
+      {
+        "text": "Pods sem lugar para ir",
+        "why": "Isso: `Pending` por falta de espaço."
+      }
+    ]
+  },
+  "ex-edf0gcx8": {
+    "prompt": "Ligue cada autoscaler ao que ele muda.",
+    "hint": "Lições 33 e 34.",
+    "pairs": [
+      {
+        "left": "HorizontalPodAutoscaler",
+        "right": "Quantos pods"
+      },
+      {
+        "left": "VerticalPodAutoscaler",
+        "right": "Os requests de cada pod"
+      },
+      {
+        "left": "Cluster autoscaler",
+        "right": "Quantos nós"
+      }
+    ],
+    "right_distractors": [
+      "Qual versão os pods rodam"
+    ]
+  },
+  "ex-kqasqve6": {
+    "prompt": "A CPU de um pod rodando é mudada no lugar pelo sub-recurso `___` do pod.",
+    "hint": "`--subresource …`",
+    "blanks": [
+      {
+        "accept": [
+          "resize"
+        ]
+      }
+    ]
+  }
+}

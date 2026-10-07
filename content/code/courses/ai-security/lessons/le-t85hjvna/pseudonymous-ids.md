@@ -5,7 +5,7 @@ version: 1
 
 The first identifier that comes to mind is the one the application already has for everybody: the
 e-mail address. Sending it would put a piece of personal data in every request, for a purpose the
-provider does not need it for, which is exactly what lesson 22's necessity principle forbids. The
+provider does not need it for, which is exactly what lesson 12's necessity principle forbids. The
 second idea is to hash the address first, and **a hash of an e-mail address can be reversed by
 anybody who can guess e-mail addresses**:
 
@@ -76,7 +76,7 @@ users, and any abuse history it attributed to the old identifiers is detached. T
 what you want, after a key leaked, and usually not. Rotate when the key may be compromised, and
 not on a calendar.
 
-**The identifier is still personal data at Tarefa**, by the reasoning of lesson 22: Tarefa holds the
-key, so for Tarefa it is pseudonymised. It belongs in the logs of lesson 21 instead of the e-mail. And
+**The identifier is still personal data at Tarefa**, by the reasoning of lesson 12: Tarefa holds the
+key, so for Tarefa it is pseudonymised. It belongs in the logs of lesson 11 instead of the e-mail. And
 once an account is erased, the identifiers the provider holds point at an account that no longer
 exists, so they identify nobody, to Tarefa or to anyone else.

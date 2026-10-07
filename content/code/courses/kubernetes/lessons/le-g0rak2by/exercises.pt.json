@@ -1,0 +1,188 @@
+{
+  "ex-wxjax3vr": {
+    "prompt": "Como o kubelet num control plane do kubeadm inicia o API server?",
+    "hint": "Ele não pode pedir ao API server que inicie a si mesmo.",
+    "choices": [
+      {
+        "text": "A partir de um Deployment no `kube-system`",
+        "why": "Um Deployment precisa de um API server rodando."
+      },
+      {
+        "text": "A partir de um arquivo em `/etc/kubernetes/manifests`",
+        "why": "Isso, um pod estático."
+      },
+      {
+        "text": "Como um serviço do systemd que o kubeadm escreveu na instalação",
+        "why": "Só o próprio kubelet é um serviço."
+      },
+      {
+        "text": "A partir de um DaemonSet nos nós de control plane",
+        "why": "Também precisa do API server antes."
+      }
+    ]
+  },
+  "ex-941a3atz": {
+    "prompt": "Um cluster do kubeadm nunca foi atualizado. O que quebra no primeiro aniversário dele?",
+    "hint": "`kubeadm certs check-expiration`.",
+    "choices": [
+      {
+        "text": "Os tokens de bootstrap",
+        "why": "Eles duram 24 horas, não um ano."
+      },
+      {
+        "text": "Os dados do etcd",
+        "why": "Os dados do etcd não expiram."
+      },
+      {
+        "text": "As imagens dos nós",
+        "why": "Imagens não expiram."
+      },
+      {
+        "text": "Certificados",
+        "why": "Isso, `kubeadm certs renew all`."
+      }
+    ]
+  },
+  "ex-d2n8acp4": {
+    "prompt": "Ponha em ordem os passos para remover um nó de trabalho de vez.",
+    "hint": "Mova o trabalho enquanto o nó ainda está no cluster.",
+    "items": [
+      "`kubectl drain` no nó",
+      "`kubeadm reset` no nó",
+      "`kubectl delete node`"
+    ],
+    "trap": "Apagar o Node antes deixa os pods dele sem para onde reportar."
+  },
+  "ex-9r1ngser": {
+    "prompt": "Do que o `--discovery-token-ca-cert-hash` protege um nó que está entrando?",
+    "hint": "Ele fixa algo.",
+    "choices": [
+      {
+        "text": "Entrar num control plane que não é o seu",
+        "why": "Isso."
+      },
+      {
+        "text": "Um token expirado",
+        "why": "O token é verificado pelo control plane."
+      },
+      {
+        "text": "Uma versão errada do Kubernetes",
+        "why": "Versões não estão no hash."
+      },
+      {
+        "text": "Ficar sem endereços de pod no nó novo",
+        "why": "Endereçamento é do plugin de rede."
+      }
+    ]
+  },
+  "ex-cpp2a7k8": {
+    "prompt": "Por que tratar um token de join como uma senha?",
+    "hint": "O que um nó pode ler?",
+    "choices": [
+      {
+        "text": "Ele contém a senha do administrador em texto puro",
+        "why": "Ele não contém senha."
+      },
+      {
+        "text": "Ele nunca expira",
+        "why": "Ele dura 24 horas por padrão."
+      },
+      {
+        "text": "Ele deixa uma máquina entrar como nó",
+        "why": "Isso, e um nó lê os Secrets dos pods dele."
+      },
+      {
+        "text": "Ele destrava o etcd",
+        "why": "O etcd usa certificados próprios."
+      }
+    ]
+  },
+  "ex-thfnayvh": {
+    "prompt": "Um cluster roda três membros de etcd. Por que ele ainda precisa de backups?",
+    "hint": "O que acontece com um delete por engano?",
+    "choices": [
+      {
+        "text": "Três membros não elegem um líder",
+        "why": "Três é o tamanho comum."
+      },
+      {
+        "text": "Um delete chega aos três",
+        "why": "Isso, a replicação copia os erros também."
+      },
+      {
+        "text": "Os membros não compartilham dados",
+        "why": "Eles replicam toda escrita."
+      },
+      {
+        "text": "Snapshots são necessários para iniciar o etcd",
+        "why": "O etcd inicia a partir do diretório de dados."
+      }
+    ]
+  },
+  "ex-d65txaad": {
+    "prompt": "Por que o snapshot é copiado para fora do nó de control plane?",
+    "hint": "E se o nó morrer?",
+    "choices": [
+      {
+        "text": "O etcd apaga snapshots depois de uma hora",
+        "why": "Ele não mexe no arquivo."
+      },
+      {
+        "text": "A restauração só roda no laptop",
+        "why": "Ela rodou no nó aqui."
+      },
+      {
+        "text": "Ele se perderia com o nó",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele é grande demais para o disco do nó",
+        "why": "Ele tinha 2,1 MB."
+      }
+    ]
+  },
+  "ex-tm96an2m": {
+    "prompt": "Ponha em ordem os passos da restauração do etcd desta lição.",
+    "hint": "Parar, restaurar, apontar, iniciar.",
+    "items": [
+      "Tirar os manifestos de `/etc/kubernetes/manifests`",
+      "`etcdutl snapshot restore` num diretório novo",
+      "Mudar o caminho de dados no manifesto do etcd",
+      "Devolver os manifestos"
+    ],
+    "trap": "Restaurar por baixo de um etcd rodando corrompe os dois."
+  },
+  "ex-ky37ggs6": {
+    "prompt": "Backups rodam toda noite às 02:00. O cluster se perde às 17:00 e é restaurado. O que falta?",
+    "hint": "O snapshot é um instante.",
+    "choices": [
+      {
+        "text": "Nada, o etcd repete o log",
+        "why": "O log se perdeu com o cluster."
+      },
+      {
+        "text": "Só os Secrets",
+        "why": "Tudo volta ao mesmo instante."
+      },
+      {
+        "text": "Toda mudança desde as 02:00",
+        "why": "Isso, quinze horas delas."
+      },
+      {
+        "text": "Os nós",
+        "why": "Os objetos Node voltam com o snapshot."
+      }
+    ]
+  },
+  "ex-vsbyd1hb": {
+    "prompt": "Para imprimir um comando novo para um nó novo usar: `kubeadm token create --print-___-command`.",
+    "hint": "O comando que ele imprime.",
+    "blanks": [
+      {
+        "accept": [
+          "join"
+        ]
+      }
+    ]
+  }
+}

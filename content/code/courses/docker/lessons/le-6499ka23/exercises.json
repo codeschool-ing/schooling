@@ -1,0 +1,439 @@
+[
+  {
+    "id": "ex-kf8dtr19",
+    "version": 1,
+    "section": "first-dockerfile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Ana's Dockerfile, `RUN go build …` and `CMD [\"shelf\"]` both run programs. When does each run?",
+    "hint": "One makes the image; the other is what the image does.",
+    "choices": [
+      {
+        "text": "Both run every time a container starts, in order",
+        "correct": false,
+        "why": "Then every start would recompile; the build result is already in a layer."
+      },
+      {
+        "text": "`RUN` while building; `CMD` at each start",
+        "correct": true,
+        "why": "Right. `RUN`'s result is stored as a layer; `CMD` is the container's default command."
+      },
+      {
+        "text": "Both run only during `docker build`",
+        "correct": false,
+        "why": "`CMD` is recorded during the build and run later, by each container."
+      },
+      {
+        "text": "`CMD` at build time; `RUN` at start",
+        "correct": false,
+        "why": "The other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh3pj2f3",
+    "version": 1,
+    "section": "first-dockerfile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's Dockerfile says `EXPOSE 8080`. What made `curl localhost:8080` work on her machine?",
+    "hint": "Which option did `docker run` get?",
+    "choices": [
+      {
+        "text": "`EXPOSE 8080` in the Dockerfile",
+        "correct": false,
+        "why": "`EXPOSE` documents the port; it publishes nothing."
+      },
+      {
+        "text": "`WORKDIR /src`",
+        "correct": false,
+        "why": "That sets a directory; it has nothing to do with ports."
+      },
+      {
+        "text": "The `-p 127.0.0.1:8080:8080` option of `docker run`",
+        "correct": true,
+        "why": "Right. Publishing happens at run time."
+      },
+      {
+        "text": "Go opens host ports by default for any program it compiles",
+        "correct": false,
+        "why": "The program listens inside the container's network namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9scn2wn",
+    "version": 1,
+    "section": "first-dockerfile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first build, step `#8`, `go build`, took 14.2 seconds. Why so long for a small service?",
+    "hint": "What else does it compile?",
+    "choices": [
+      {
+        "text": "It downloads pgx from the internet",
+        "correct": false,
+        "why": "pgx is vendored; nothing was downloaded."
+      },
+      {
+        "text": "Docker slows `RUN` down on purpose",
+        "correct": false,
+        "why": "`RUN` runs at normal speed inside the build."
+      },
+      {
+        "text": "`go build` runs the tests first",
+        "correct": false,
+        "why": "Building does not run tests; that is `go test`."
+      },
+      {
+        "text": "It also compiles the standard library and pgx",
+        "correct": true,
+        "why": "Right, from scratch, since nothing was cached yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-syjc1ppx",
+    "version": 1,
+    "section": "first-dockerfile",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker image ls shelf` showed the first image's `DISK USAGE`. How many GB?",
+    "hint": "The column after the id.",
+    "value": 1.45,
+    "tolerance": 0.001,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-ygdw1pwj",
+    "version": 1,
+    "section": "instructions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `CMD shelf`, `docker stop` took ten seconds and `shelf` never logged \"shutting down\". Why?",
+    "hint": "Who was process 1?",
+    "choices": [
+      {
+        "text": "`/bin/sh -c shelf` was process 1 and did not pass `SIGTERM` on",
+        "correct": true,
+        "why": "Right. Docker waited, then sent `SIGKILL` to both."
+      },
+      {
+        "text": "`shelf` ignores `SIGTERM` when it is started without a JSON list",
+        "correct": false,
+        "why": "The same binary handled `SIGTERM` in exec form; it never received it here."
+      },
+      {
+        "text": "Docker always waits ten seconds before stopping a container, whatever it runs",
+        "correct": false,
+        "why": "In exec form it stopped in a fifth of a second."
+      },
+      {
+        "text": "The image had no `EXPOSE`",
+        "correct": false,
+        "why": "It had one, and ports have nothing to do with signals."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m7aqjm7",
+    "version": 1,
+    "section": "instructions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If a container really needs a shell script to start, the script should start the program with `___ shelf`, so that the program replaces the shell as process 1.",
+    "hint": "A shell builtin of four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "exec"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3kpsensc",
+    "version": 1,
+    "section": "instructions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `docker build --build-arg VERSION=1.0.0`, which variable does `docker image inspect` find in the image's `Env`?",
+    "hint": "One lives during the build; the other in every container.",
+    "choices": [
+      {
+        "text": "Both `VERSION` and `PORT`",
+        "correct": false,
+        "why": "`VERSION` was an `ARG`; it existed only while the build ran."
+      },
+      {
+        "text": "`PORT`",
+        "correct": true,
+        "why": "Right. `ENV` is stored in the image; the version reached the binary through the linker instead."
+      },
+      {
+        "text": "Only `VERSION`, since it was given on the command line",
+        "correct": false,
+        "why": "Command-line build arguments are not stored as environment."
+      },
+      {
+        "text": "Neither; variables are never stored",
+        "correct": false,
+        "why": "`ENV` variables are: `PORT=8080` is in the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-z248t74w",
+    "version": 1,
+    "section": "instructions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The image says `ENV PORT=8080`, and Ana runs it with `-e PORT=9090`. Which port does `shelf` listen on?",
+    "hint": "Read its log line.",
+    "choices": [
+      {
+        "text": "8080, because the image wins",
+        "correct": false,
+        "why": "The log says `:9090`; run-time values override the image's."
+      },
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "The program reads one value of `PORT`."
+      },
+      {
+        "text": "9090",
+        "correct": true,
+        "why": "Right: `docker run -e` overrides `ENV`."
+      },
+      {
+        "text": "None, because the two conflict",
+        "correct": false,
+        "why": "There is no conflict; one simply overrides the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwjc3xny",
+    "version": 1,
+    "section": "instructions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each instruction to what it does.",
+    "hint": "Build time or run time?",
+    "pairs": [
+      {
+        "left": "`ADD`",
+        "right": "Copies, and also unpacks local archives and fetches URLs"
+      },
+      {
+        "left": "`ENTRYPOINT`",
+        "right": "The program that always runs; `CMD` supplies its default arguments"
+      },
+      {
+        "left": "`WORKDIR`",
+        "right": "The directory later instructions and the container start in"
+      },
+      {
+        "left": "`ARG`",
+        "right": "A variable that exists only during the build"
+      }
+    ],
+    "right_distractors": [
+      "Publishes a port on the host"
+    ]
+  },
+  {
+    "id": "ex-kxmj292d",
+    "version": 1,
+    "section": "build-context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where can `COPY . .` take files from?",
+    "hint": "The builder does not read your disk.",
+    "choices": [
+      {
+        "text": "Anywhere on Ana's disk",
+        "correct": false,
+        "why": "The builder only sees what the client sent."
+      },
+      {
+        "text": "Only the files tracked by git",
+        "correct": false,
+        "why": "Git is not consulted; untracked files like `.env` were copied too."
+      },
+      {
+        "text": "Only files under 100 MB",
+        "correct": false,
+        "why": "A 300 MB dump went in."
+      },
+      {
+        "text": "Only the build context sent by the client",
+        "correct": true,
+        "why": "Right, after `.dockerignore` has filtered it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3njd03n3",
+    "version": 1,
+    "section": "build-context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's `.env` ended up in `shelf:dev`. She adds `RUN rm /src/.env` after the `COPY`. Is the password gone from the image?",
+    "hint": "What does each instruction leave behind?",
+    "choices": [
+      {
+        "text": "No; the earlier `COPY` layer still has it",
+        "correct": true,
+        "why": "Right. The fix is keeping it out of the context with `.dockerignore`; lesson 14 shows the layer."
+      },
+      {
+        "text": "Yes, the file no longer exists",
+        "correct": false,
+        "why": "It no longer appears in the final filesystem, but the layer from `COPY` still holds it."
+      },
+      {
+        "text": "Yes, if she also runs `docker image prune`",
+        "correct": false,
+        "why": "Pruning removes unused images, not layers of this one."
+      },
+      {
+        "text": "No, because `rm` is not allowed in a Dockerfile",
+        "correct": false,
+        "why": "`rm` runs fine; it just cannot reach back into an earlier layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkc5wf12",
+    "version": 1,
+    "section": "build-context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After adding `.dockerignore`, the build reported `transferring context: 22.75kB`, less than `vendor/` alone. Why?",
+    "hint": "What did the builder already have?",
+    "choices": [
+      {
+        "text": "`.dockerignore` excluded `vendor/` too",
+        "correct": false,
+        "why": "`ls -a /src` shows `vendor` in the image."
+      },
+      {
+        "text": "BuildKit sent only what changed since earlier builds",
+        "correct": true,
+        "why": "Right. The number counts the transfer, not the size of the context."
+      },
+      {
+        "text": "BuildKit compresses the context to 0.3% of its size",
+        "correct": false,
+        "why": "Compression does not explain it; the source is barely compressible."
+      },
+      {
+        "text": "The build failed and sent nothing",
+        "correct": false,
+        "why": "It named `shelf:dev` and the image has its files."
+      }
+    ]
+  },
+  {
+    "id": "ex-56zbc0p6",
+    "version": 1,
+    "section": "build-context",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which entries belong in `shelf`'s `.dockerignore`, by the lesson's advice? Choose all that apply.",
+    "hint": "Large, secret, or unneeded by the image.",
+    "choices": [
+      {
+        "text": ".git",
+        "correct": true,
+        "why": "Yes: the history is large and the image does not need it."
+      },
+      {
+        "text": ".env",
+        "correct": true,
+        "why": "Yes: it holds a password."
+      },
+      {
+        "text": "vendor/",
+        "correct": false,
+        "why": "The build needs the vendored dependency; excluding it breaks `go build`."
+      },
+      {
+        "text": "testdata/",
+        "correct": true,
+        "why": "Yes: a 300 MB export the image does not use."
+      },
+      {
+        "text": "main.go",
+        "correct": false,
+        "why": "That is the program itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-6q9df5dy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `docker build -t shelf:dev .` in the order the build output shows them.",
+    "hint": "Follow the numbers.",
+    "items": [
+      "Load the Dockerfile and `.dockerignore`",
+      "Resolve the `FROM` image",
+      "Send the build context",
+      "Run `WORKDIR`, `COPY` and `RUN`",
+      "Export the image and name it"
+    ]
+  },
+  {
+    "id": "ex-aghdy6rb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An image has `ENTRYPOINT [\"yq\"]` and `CMD [\"--help\"]`. What runs for `docker run image \".a\" f.yaml`?",
+    "hint": "What replaces what?",
+    "choices": [
+      {
+        "text": "`yq --help`",
+        "correct": false,
+        "why": "Arguments after the image name replace `CMD`."
+      },
+      {
+        "text": "`.a f.yaml`, run as a command",
+        "correct": false,
+        "why": "That would happen with no entrypoint."
+      },
+      {
+        "text": "`yq \".a\" f.yaml`",
+        "correct": true,
+        "why": "Right: the entrypoint stays, the typed arguments replace the default ones."
+      },
+      {
+        "text": "`yq --help \".a\" f.yaml`",
+        "correct": false,
+        "why": "Typed arguments replace `CMD`; they are not appended to it."
+      }
+    ]
+  }
+]

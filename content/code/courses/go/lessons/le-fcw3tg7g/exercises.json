@@ -1,0 +1,563 @@
+[
+  {
+    "id": "ex-pyvy3yhf",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which line declares a function taking two `int` parameters called `width` and `height`?",
+    "hint": "In Go the name comes before its type.",
+    "choices": [
+      {
+        "text": "`func area(int width, int height) int`",
+        "correct": false,
+        "why": "That is the C order. Go reads it as two parameters called `int`, of a type called `width` and one called `height`."
+      },
+      {
+        "text": "`func area(width, height int) int`",
+        "correct": true,
+        "why": "Right. The name comes first, and neighbouring parameters of one type share it."
+      },
+      {
+        "text": "`func area(width: int, height: int) int`",
+        "correct": false,
+        "why": "That is how Python's type hints and TypeScript write it. Go puts no colon between a name and its type."
+      },
+      {
+        "text": "`func area(int, int width, height) int`",
+        "correct": false,
+        "why": "Grouping shares one type among the names before it; it does not list the types first and the names after."
+      }
+    ]
+  },
+  {
+    "id": "ex-fc4sj2pc",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func area(int width, int height) int` fails with `int redeclared in this block`. Why does the compiler talk about `int` at all?",
+    "hint": "Read each pair as Go reads it: name, then type.",
+    "choices": [
+      {
+        "text": "Because `int` is a keyword and cannot appear in a parameter list twice",
+        "correct": false,
+        "why": "`int` is a predeclared name, not a keyword, which is exactly why it can be used as a parameter's name."
+      },
+      {
+        "text": "Because Go has only one integer type per function",
+        "correct": false,
+        "why": "A function may take any mix of types; `label` took a `string`, two `int` and a `string`."
+      },
+      {
+        "text": "Each pair declares a parameter named `int`, so the second one is a redeclaration",
+        "correct": true,
+        "why": "Right. `int width` is a parameter called `int` of a type called `width`; two of them clash, and `width` is undefined."
+      },
+      {
+        "text": "Because the result type `int` repeats a parameter's type",
+        "correct": false,
+        "why": "Results and parameters may share a type freely: `area(width, height int) int` compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-mat1x2b1",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Go has no default parameter values. How does the `strings` package offer a split with a limit on the number of pieces?",
+    "hint": "Look at the names `go doc strings` listed.",
+    "choices": [
+      {
+        "text": "`Split` takes an optional third argument",
+        "correct": false,
+        "why": "Optional arguments do not exist; `Split` takes exactly `(s, sep string)`."
+      },
+      {
+        "text": "A second `Split` with three parameters overloads the first",
+        "correct": false,
+        "why": "Two functions with one name in a package are refused: `redeclared in this block`."
+      },
+      {
+        "text": "A separate function with its own name, `SplitN`, that has an `n int` parameter",
+        "correct": true,
+        "why": "Right. Each variant is its own function, so a call names exactly the code that runs."
+      },
+      {
+        "text": "You pass `-1` to `Split` to mean no limit",
+        "correct": false,
+        "why": "That confuses the two: `SplitN` takes the count, and `Split` has no parameter to pass it in."
+      }
+    ]
+  },
+  {
+    "id": "ex-xv35vdk7",
+    "version": 1,
+    "section": "parameters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two functions named `area` in one package, even with different parameters, stop the build with `area ___ in this block`.",
+    "hint": "The same word appears when a name is declared twice anywhere.",
+    "blanks": [
+      {
+        "accept": [
+          "redeclared"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yc9e9e1h",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func area(width, height int, unit string) int` never reads `unit`. What happens when you build it?",
+    "hint": "Lesson 5's rule was about local variables.",
+    "choices": [
+      {
+        "text": "The build stops with `declared and not used: unit`",
+        "correct": false,
+        "why": "That rule covers variables declared in a function body; a parameter is part of the signature and is exempt."
+      },
+      {
+        "text": "It builds, and `go vet` says nothing either",
+        "correct": true,
+        "why": "Right. The parameter list is a contract with the caller, and a signature sometimes has to accept a value it ignores."
+      },
+      {
+        "text": "It builds, but `go vet` reports the unused parameter",
+        "correct": false,
+        "why": "`go vet && go run .` printed 12 and nothing else: vet had no complaint."
+      },
+      {
+        "text": "It builds only if the parameter is renamed `_`",
+        "correct": false,
+        "why": "Naming it `_` is allowed and says you ignore it on purpose, but it is not required."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds57x7w1",
+    "version": 1,
+    "section": "parameters",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each compiler message to the line of code that produces it.",
+    "hint": "`area` takes `(width, height int)`.",
+    "pairs": [
+      {
+        "left": "`not enough arguments in call to area`",
+        "right": "`area(3)`"
+      },
+      {
+        "left": "`too many arguments in call to area`",
+        "right": "`area(3, 4, 5)`"
+      },
+      {
+        "left": "`cannot use \"4\" (untyped string constant) as int value`",
+        "right": "`area(3, \"4\")`"
+      },
+      {
+        "left": "`unexpected = in parameter list`",
+        "right": "`func greet(name string, greeting string = \"Hello\")`"
+      }
+    ],
+    "right_distractors": [
+      "`area(3, 4)`"
+    ]
+  },
+  {
+    "id": "ex-x9z1vrpe",
+    "version": 1,
+    "section": "multiple-returns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`divmod` returns `(int, int)`. What does `q := divmod(17, 5)` do?",
+    "hint": "Count the names on the left and the values on the right.",
+    "choices": [
+      {
+        "text": "`q` gets the first result, 3, and the remainder is dropped",
+        "correct": false,
+        "why": "Some languages do that; Go refuses, so a result is never lost without you saying so."
+      },
+      {
+        "text": "It does not compile: one variable but two values",
+        "correct": true,
+        "why": "Right: `assignment mismatch: 1 variable but divmod returns 2 values`."
+      },
+      {
+        "text": "`q` holds a pair, `(3, 2)`, that can be indexed later",
+        "correct": false,
+        "why": "Go has no tuples. `(int, int)` is a list of results, not a type a variable can have."
+      },
+      {
+        "text": "`q` gets the last result, 2",
+        "correct": false,
+        "why": "No result is picked for you, first or last; the assignment is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-qddwr6zz",
+    "version": 1,
+    "section": "multiple-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fmt.Println(divmod(17, 5))` prints `3 2`, but `fmt.Println(\"result:\", divmod(17, 5))` does not compile. Why?",
+    "hint": "When can a multi-result call fill another call's arguments?",
+    "choices": [
+      {
+        "text": "`Println` cannot print a string and a number in one call",
+        "correct": false,
+        "why": "It can: `Println` accepts values of any type, mixed freely."
+      },
+      {
+        "text": "The string must come after the call",
+        "correct": false,
+        "why": "Order is not the issue. Mixed with any other argument, before or after, the call is refused."
+      },
+      {
+        "text": "A multi-result call spreads over arguments only when it is the whole argument list",
+        "correct": true,
+        "why": "Right. With anything beside it, the compiler wants one value there: `multiple-value … in single-value context`."
+      },
+      {
+        "text": "Two results are joined into a string first, which fails",
+        "correct": false,
+        "why": "Nothing is joined. The results are separate values, and the error says a single value was expected."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsd2vf9z",
+    "version": 1,
+    "section": "multiple-returns",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does this print?\n\n```go\nn, _ := strconv.Atoi(\"12a\")\nfmt.Println(n + 5)\n```",
+    "hint": "What does a failed `Atoi` hand back as its number?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "printed value"
+  },
+  {
+    "id": "ex-5hw89fj0",
+    "version": 1,
+    "section": "multiple-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is writing `_` for a returned `error` a defensible choice?",
+    "hint": "Lesson 12 did it once, and this lesson said why that was safe.",
+    "choices": [
+      {
+        "text": "Whenever the program has been tested and works",
+        "correct": false,
+        "why": "Tests pass on the input you tried; `\"42x\"` became 0 without a word, and a test with good input would never see it."
+      },
+      {
+        "text": "Never: the compiler refuses `_` in place of an `error`",
+        "correct": false,
+        "why": "It accepts it, which is why it needs care: `n, _ := strconv.Atoi(\"42x\")` compiled and printed 1."
+      },
+      {
+        "text": "When the value is printed straight away, so a wrong one shows",
+        "correct": false,
+        "why": "A failed `Atoi` printed 0, which looks like a perfectly good number; nothing showed."
+      },
+      {
+        "text": "When you know why the failure cannot happen or does not matter",
+        "correct": true,
+        "why": "Right. `json.Marshal` on a slice of strings is such a case: none of its listed failures applies."
+      }
+    ]
+  },
+  {
+    "id": "ex-kapdppm9",
+    "version": 1,
+    "section": "multiple-returns",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`divmod` returns `(int, int)`. Which of these lines compile? Choose every one that does.",
+    "hint": "A blank holds a place; it does not remove one.",
+    "choices": [
+      {
+        "text": "`_, r := divmod(17, 5)`",
+        "correct": true,
+        "why": "Compiles: `_` takes the quotient and `r` the remainder."
+      },
+      {
+        "text": "`fmt.Println(divmod(17, 5))`",
+        "correct": true,
+        "why": "Compiles: the call is the whole argument list, so both results become arguments."
+      },
+      {
+        "text": "`r := divmod(17, 5)[1]`",
+        "correct": false,
+        "why": "There is no tuple to index: the results are two values, not one value with two parts."
+      },
+      {
+        "text": "`q, r := divmod(17, 5)` followed only by `fmt.Println(q)`",
+        "correct": false,
+        "why": "`r` is declared and never used, which stops the build: `declared and not used: r`."
+      }
+    ]
+  },
+  {
+    "id": "ex-06b2ye2c",
+    "version": 1,
+    "section": "multiple-returns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function `func sign(n int) string` returns `\"negative\"` inside `if n < 0 { … }` and `\"other\"` inside `if n >= 0 { … }`, and has nothing after the two `if`. Every integer is covered. What does the compiler say?",
+    "hint": "Does the check look at values, or at the shape of the code?",
+    "choices": [
+      {
+        "text": "Nothing: the two conditions cover every `n`, so every path returns",
+        "correct": false,
+        "why": "True of the values, but the check does not reason about them; it sees an `if` that might not run before the closing brace."
+      },
+      {
+        "text": "`missing return`, at the closing brace",
+        "correct": true,
+        "why": "Right. The compiler checks the shape of the paths, and after an `if` with no `else` there is a path that falls through."
+      },
+      {
+        "text": "Nothing, and it returns `\"\"` if neither branch runs",
+        "correct": false,
+        "why": "Go does not supply a zero value for a missing `return`; it refuses to compile."
+      },
+      {
+        "text": "A warning from `go vet`, but the program builds",
+        "correct": false,
+        "why": "This is the compiler's rule, not vet's, and it is an error: the build stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-xm5g3kc6",
+    "version": 1,
+    "section": "named-returns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func nothing() (n int, s string, err error)` contains only `return`. What does it return?",
+    "hint": "A named result is a variable.",
+    "choices": [
+      {
+        "text": "Nothing: a bare `return` in a function with results is an error",
+        "correct": false,
+        "why": "With named results a bare `return` is legal; it returns what the names hold."
+      },
+      {
+        "text": "`0`, `\"\"` and `nil`, the zero value of each",
+        "correct": true,
+        "why": "Right. Named results are declared when the function starts and set to their zero values, and it printed `0 \"\" <nil>`."
+      },
+      {
+        "text": "Undefined values, since nothing assigned them",
+        "correct": false,
+        "why": "Go has no undefined values; every variable starts at its type's zero, as lesson 6 showed."
+      },
+      {
+        "text": "Only `err`, as `nil`",
+        "correct": false,
+        "why": "A function returns all its results every time; the caller received three values."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb34gdab",
+    "version": 1,
+    "section": "named-returns",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `return` with nothing after it, in a function whose results have names, is called a ___ return.",
+    "hint": "It has two common names in English; either is accepted.",
+    "blanks": [
+      {
+        "accept": [
+          "bare",
+          "naked"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cteaj9wg",
+    "version": 1,
+    "section": "named-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`port(\"8080\")` declares `n, err := strconv.Atoi(s)` inside an `if`, returns `n, err` explicitly there on failure, and ends with a bare `return`. `go vet` is silent. What does `fmt.Println(port(\"8080\"))` print after `parsed 8080`?",
+    "hint": "Which `n` does the last `return` see?",
+    "choices": [
+      {
+        "text": "`8080 <nil>`",
+        "correct": false,
+        "why": "That is what was meant, and it is why the bug survives review: the 8080 is in the inner `n`, which the last `return` cannot see."
+      },
+      {
+        "text": "`0 <nil>`",
+        "correct": true,
+        "why": "Right. The bare `return` hands back the outer results, which nobody assigned."
+      },
+      {
+        "text": "Nothing: the compiler refuses the bare `return` at the end",
+        "correct": false,
+        "why": "It refuses a bare `return` only where a result is hidden, inside the `if`; at the end nothing hides them."
+      },
+      {
+        "text": "`8080` followed by an error saying `err` was shadowed",
+        "correct": false,
+        "why": "Shadowing produces no run-time error; the program ran and printed zero values."
+      }
+    ]
+  },
+  {
+    "id": "ex-gq2at5me",
+    "version": 1,
+    "section": "named-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `strings.Cut` name its results `(before, after string, found bool)` rather than writing `(string, string, bool)`?",
+    "hint": "Where do you meet that signature first?",
+    "choices": [
+      {
+        "text": "So the signature in `go doc` says which string is which",
+        "correct": true,
+        "why": "Right. The names document the order that two results of one type would otherwise hide."
+      },
+      {
+        "text": "Because a function returning three values must name them",
+        "correct": false,
+        "why": "Names are never required; `divmod` returned two unnamed results and the compiler had no objection."
+      },
+      {
+        "text": "So callers can pick results by name, as in `Cut(s, \"=\").after`",
+        "correct": false,
+        "why": "The names belong to the function; a caller receives plain values and names them itself."
+      },
+      {
+        "text": "Named results run faster",
+        "correct": false,
+        "why": "Nothing in the lesson measured speed; the reason given is the documentation."
+      }
+    ]
+  },
+  {
+    "id": "ex-zm7ac6eq",
+    "version": 1,
+    "section": "named-returns",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `f()` return?\n\n```go\nfunc f() (n int) {\n\tdefer func() { n *= 2 }()\n\treturn 5\n}\n```",
+    "hint": "`return 5` sets `n` first. What runs after that?",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "returned value"
+  },
+  {
+    "id": "ex-5aktdpem",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when `answer()` runs, `func answer() (n int)` with a deferred `n++` and `return 41`.",
+    "hint": "The deferred function runs between the `return` statement and the caller.",
+    "items": [
+      "`n` is declared and set to 0",
+      "the `defer` schedules the function literal",
+      "`return 41` sets `n` to 41",
+      "the deferred function adds one to `n`",
+      "the caller receives 42"
+    ]
+  },
+  {
+    "id": "ex-p359t3z8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `g()` return?\n\n```go\nfunc g() int {\n\tn := 5\n\tdefer func() { n *= 2 }()\n\treturn n\n}\n```",
+    "hint": "Is `n` the result here, or a local variable whose value `return` copies?",
+    "choices": [
+      {
+        "text": "10, because the deferred function runs before the value leaves",
+        "correct": false,
+        "why": "It does run, but it doubles a local variable after `return n` already copied 5 into the unnamed result."
+      },
+      {
+        "text": "5: the deferred call changes a local `n`, not the result",
+        "correct": true,
+        "why": "Right. Only a named result is a variable a deferred function can reach after `return`; this one has no name."
+      },
+      {
+        "text": "Nothing: `defer` needs a named result to compile",
+        "correct": false,
+        "why": "`defer` works in any function; only changing the result needs a name."
+      },
+      {
+        "text": "0, because `defer` resets the result",
+        "correct": false,
+        "why": "Nothing is reset; `n *= 2` doubles a variable, and the result never sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ffadsdm",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's 40-line function has named results and four bare `return` statements, two inside nested `if` blocks that use `:=`. Which concerns from this lesson apply? Choose every one that does.",
+    "hint": "Think about the reader, and about shadowing.",
+    "choices": [
+      {
+        "text": "A reader at a `return` has to scroll up and search the body to know what it returns",
+        "correct": true,
+        "why": "Yes. The bare form reads well only when the results are visible on the same screen."
+      },
+      {
+        "text": "A `:=` in a block may declare new variables that hide the results",
+        "correct": true,
+        "why": "Yes. That is the `port` bug: the work landed in inner variables and the caller got zeros."
+      },
+      {
+        "text": "Named results make the function slower than unnamed ones",
+        "correct": false,
+        "why": "The lesson made no claim about speed, and none of its captures measured one."
+      },
+      {
+        "text": "Go allows at most one bare `return` per function",
+        "correct": false,
+        "why": "There is no such limit; the rule is about hidden results, not about how many returns there are."
+      }
+    ]
+  }
+]

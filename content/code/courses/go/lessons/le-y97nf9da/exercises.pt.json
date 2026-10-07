@@ -1,0 +1,395 @@
+{
+  "ex-5vmyqc4s": {
+    "prompt": "Como `Rect` passa a satisfazer `Shape` no programa da seção 02?",
+    "hint": "Veja o que a declaração de `Rect` diz, e o que não diz.",
+    "choices": [
+      {
+        "text": "A declaração dele termina em `implements Shape`",
+        "why": "Go não tem essa palavra; ela não está entre as 25 palavras-chave, e `Rect` não nomeia interface nenhuma."
+      },
+      {
+        "text": "Tem um método `Area() float64`",
+        "why": "Isso. `Area() float64` é o único método que `Shape` lista, e tê-lo é tudo."
+      },
+      {
+        "text": "É declarado no mesmo pacote que `Shape`",
+        "why": "`time.Duration` satisfez uma interface escrita em outro pacote, na seção 03."
+      },
+      {
+        "text": "Embute `Shape` como campo, como a lição 16 embutia structs",
+        "why": "`Rect` tem só `W` e `H`; nada está embutido nele."
+      }
+    ]
+  },
+  "ex-r8y51cd8": {
+    "prompt": "`*os.File` escreve `Write(b []byte) (n int, err error)` e `*strings.Builder` escreve `Write(p []byte) (int, error)`. Que mudança no `Write` de um tipo o faria deixar de satisfazer `io.Writer`?",
+    "hint": "Em que partes da assinatura os dois diferem, e ainda assim os dois se encaixam?",
+    "choices": [
+      {
+        "text": "Chamar o parâmetro de `data` em vez de `p`",
+        "why": "`*os.File` o chama de `b` e se encaixa; nomes de parâmetro são documentação."
+      },
+      {
+        "text": "Deixar os resultados sem nome",
+        "why": "`*strings.Builder` faz exatamente isso e se encaixa."
+      },
+      {
+        "text": "Devolver `(int64, error)`",
+        "why": "Isso. Os tipos dos resultados precisam casar, e `int64` não é `int`."
+      },
+      {
+        "text": "Declará-lo num arquivo que não importa `io`",
+        "why": "O arquivo que declara `strings.Builder` não importa `io`, e o builder se encaixa."
+      }
+    ]
+  },
+  "ex-kx79sxb4": {
+    "prompt": "Em `fmt.Printf(\"%T\", s)`, o verbo `%T` imprime o ___ do valor guardado na interface `s`.",
+    "hint": "Ele imprimiu `main.Rect` e `main.Circle`.",
+    "blanks": [
+      {
+        "accept": [
+          "tipo",
+          "tipo concreto",
+          "tipo dinâmico",
+          "tipo dinamico"
+        ]
+      }
+    ]
+  },
+  "ex-rjyf7cq4": {
+    "prompt": "`buf` é um `bytes.Buffer` e `sb` um `strings.Builder`. Quais podem ser o primeiro argumento de `fmt.Fprintf`? Escolha todos os que se aplicam.",
+    "hint": "O parâmetro é um `io.Writer`, e os métodos `Write` têm receptor ponteiro, exceto um.",
+    "choices": [
+      {
+        "text": "`os.Stdout`",
+        "why": "Sim. É um `*os.File`, e a primeira linha foi direto para o terminal."
+      },
+      {
+        "text": "`&buf`",
+        "why": "Sim. `*bytes.Buffer` tem `Write` no seu conjunto de métodos."
+      },
+      {
+        "text": "`&sb`",
+        "why": "Sim, e é assim que a seção 02 passou o builder."
+      },
+      {
+        "text": "`sb`",
+        "why": "Recusado: `Write` tem receptor ponteiro, então um valor `strings.Builder` não o tem, como a seção 04 imprimiu."
+      }
+    ]
+  },
+  "ex-tktc5t4p": {
+    "prompt": "No programa da seção 02 você apaga o tipo `Shape` e `describe`, e as linhas de `main` que os usavam. O que acontece com `Rect` e `Circle`?",
+    "hint": "Em que ponto das declarações deles `Shape` aparece?",
+    "choices": [
+      {
+        "text": "Deixam de compilar até que os métodos `Area` também sejam removidos",
+        "why": "Um método não precisa de interface para existir; `Area` é um método comum de cada struct."
+      },
+      {
+        "text": "Nada: compilam sem mudança, porque nunca se referiram a ele",
+        "why": "Isso. A relação só existia onde um valor era usado como `Shape`."
+      },
+      {
+        "text": "Compilam, mas `Area` não pode mais ser chamado neles",
+        "why": "`r.Area()` é uma chamada sobre um `Rect`; nunca passou por `Shape`."
+      },
+      {
+        "text": "O compilador avisa que eles não implementam nada",
+        "why": "Um tipo nunca é obrigado a satisfazer uma interface, então não há nada a avisar."
+      }
+    ]
+  },
+  "ex-vwjkk4m1": {
+    "prompt": "Por que uma interface com um método serve para mais tipos do que uma com dez?",
+    "hint": "O que um tipo precisa ter antes de se encaixar?",
+    "choices": [
+      {
+        "text": "O compilador verifica interfaces pequenas com menos rigor",
+        "why": "Todo método é verificado do mesmo jeito; `Grid` falhou em `Shape`, que tem um."
+      },
+      {
+        "text": "Um tipo precisa de todo método listado, e um é fácil de ter",
+        "why": "Isso. Cada método acrescentado é mais uma coisa que um tipo precisa ter para se encaixar."
+      },
+      {
+        "text": "Interfaces de um método são satisfeitas automaticamente por todo tipo",
+        "why": "Só pelos tipos que têm esse método; um `Rect` não é um `io.Reader`."
+      },
+      {
+        "text": "Go limita os tipos que podem satisfazer uma interface grande",
+        "why": "Não há limite assim; uma interface grande só é mais difícil de ter inteira."
+      }
+    ]
+  },
+  "ex-acsqfd8y": {
+    "prompt": "`countWords` passa a receber um `*os.File` em vez de um `io.Reader`. Qual das três chamadas deixa de compilar?",
+    "hint": "De que tipo é `os.Stdin`?",
+    "choices": [
+      {
+        "text": "A chamada com `os.Stdin`, porque um pipe não é um arquivo",
+        "why": "`os.Stdin` é um `*os.File`, seja o que for que esteja ligado nele."
+      },
+      {
+        "text": "A chamada com `strings.NewReader(...)`",
+        "why": "Isso. É um `*strings.Reader`, e a string teria de ser gravada num arquivo antes."
+      },
+      {
+        "text": "As três, porque `bufio.NewScanner` só recebe um `io.Reader`",
+        "why": "Um `*os.File` é um `io.Reader`, então passar `f` adiante ao scanner continua compilando."
+      },
+      {
+        "text": "Nenhuma: Go converte cada argumento para `*os.File`",
+        "why": "Go não converte nada implicitamente, lição 10, e um `*strings.Reader` não vira arquivo."
+      }
+    ]
+  },
+  "ex-fnjcck24": {
+    "prompt": "Por que `os.Open` devolve um `*os.File` e não um `io.Reader`?",
+    "hint": "O que o programa fez com `f` depois de contar?",
+    "choices": [
+      {
+        "text": "Quem chama fica com `Close` e o resto, e `f` ainda cabe em `io.Reader`",
+        "why": "Isso. Um resultado concreto não custa nada, e `f` foi para `countWords` como `io.Reader`."
+      },
+      {
+        "text": "Uma interface não pode ser devolvida por uma função, então um tipo concreto é a única opção",
+        "why": "Pode; `io.MultiWriter` devolve um `Writer`. Devolver o tipo concreto é uma escolha."
+      },
+      {
+        "text": "Um `*os.File` é mais rápido de ler do que qualquer `io.Reader` seria",
+        "why": "O mesmo `Read` roda nos dois casos; o que muda é quais métodos quem chama enxerga."
+      },
+      {
+        "text": "`os` foi escrito antes de `io` existir",
+        "why": "O arquivo de `os.Open` já tem um `Read` que cabe em `io.Reader`; a ordem histórica não é o motivo."
+      }
+    ]
+  },
+  "ex-xd9kps8g": {
+    "prompt": "Ligue cada hábito ao lugar onde a seção 03 o mostrou.",
+    "hint": "Três hábitos, três programas.",
+    "pairs": [
+      {
+        "left": "aceitar a menor interface de que precisa",
+        "right": "`countWords(r io.Reader)`"
+      },
+      {
+        "left": "devolver o tipo concreto que tem",
+        "right": "`func Open(name string) (*File, error)`"
+      },
+      {
+        "left": "declarar a interface onde é usada",
+        "right": "`labeler` ao lado de `show`"
+      }
+    ],
+    "right_distractors": [
+      "`Rect implements Shape`"
+    ]
+  },
+  "ex-hps653f5": {
+    "prompt": "Você escreve `save(dst ..., r Report) error`, e ela só chama `dst.Write` e `dst.Close`. Que tipo `dst` deve ter?",
+    "hint": "Peça exatamente o que a função chama.",
+    "choices": [
+      {
+        "text": "`*os.File`, já que um relatório costuma acabar num arquivo",
+        "why": "Então quem tem um buffer ou uma conexão de rede não poderia usá-la; `countWords` mostrou o custo."
+      },
+      {
+        "text": "`io.ReadWriteCloser`, por segurança, caso `save` um dia precise ler de volta",
+        "why": "Pede `Read` também, que `save` nunca chama, e exclui todo escritor que não sabe ler."
+      },
+      {
+        "text": "Uma interface com `Write` e `Close`, como `io.WriteCloser`",
+        "why": "Isso. Dois métodos são chamados, então dois são pedidos, e nada mais."
+      },
+      {
+        "text": "`any`, para que qualquer coisa possa ser passada",
+        "why": "`any` não tem métodos, então `dst.Write` não compilaria; a lição 28 trata do custo de `any`."
+      }
+    ]
+  },
+  "ex-nw11jfh9": {
+    "prompt": "O compilador diz `Square does not implement Shape (missing method Area)`. O que há de errado com `Square`?",
+    "hint": "Leia o parêntese.",
+    "choices": [
+      {
+        "text": "O método `Area` dele devolve o tipo errado",
+        "why": "Essa mensagem é `wrong type for method Area`, com as linhas `have` e `want`."
+      },
+      {
+        "text": "O método `Area` dele tem receptor ponteiro",
+        "why": "Essa mensagem termina em `(method Area has pointer receiver)`."
+      },
+      {
+        "text": "Ele não diz `implements Shape`",
+        "why": "Nenhum tipo diz isso em Go; `Rect` se encaixou sem isso."
+      },
+      {
+        "text": "Não tem método nenhum chamado `Area`",
+        "why": "Isso. O método dele se chama `Size`, e o nome precisa casar."
+      }
+    ]
+  },
+  "ex-d6z28mfk": {
+    "prompt": "Se um valor se encaixa numa interface é verificado onde o valor é usado, e em tempo de ___, então uma incompatibilidade nunca chega a um programa rodando.",
+    "hint": "O `go build` imprimiu cada um dos erros da seção 04.",
+    "blanks": [
+      {
+        "accept": [
+          "compilação",
+          "compilacao",
+          "build"
+        ]
+      }
+    ]
+  },
+  "ex-7bm9h25b": {
+    "prompt": "`Grid` falhou com `have Area() int` e `want Area() float64`. Que mudança faz dele um `Shape`?",
+    "hint": "Qual linha descreve `Grid`, e qual descreve `Shape`?",
+    "choices": [
+      {
+        "text": "Escrever `Shape(g)` no literal do slice",
+        "why": "Uma conversão faz a mesma pergunta e recebe a mesma resposta; o método ainda devolve `int`."
+      },
+      {
+        "text": "Fazer `Area` devolver `float64`",
+        "why": "Isso. `have` precisa virar `want`: o resultado convertido com `float64(...)` dentro do método."
+      },
+      {
+        "text": "Mudar a própria `Shape` para `Area() int`",
+        "why": "`Grid` se encaixaria, e todo tipo que devolve `float64`, `Rect` e `Circle` entre eles, deixaria de se encaixar."
+      },
+      {
+        "text": "Acrescentar um segundo método `Area() float64` ao lado do primeiro",
+        "why": "Um tipo não pode ter dois métodos com o mesmo nome; o compilador recusa o segundo."
+      }
+    ]
+  },
+  "ex-4vxpfkny": {
+    "prompt": "`encoding/json` escreve `var _ Marshaler = (*RawMessage)(nil)` e não `var _ Marshaler = RawMessage{}`. O que a forma com ponteiro permite?",
+    "hint": "Qual conjunto de métodos é maior?",
+    "choices": [
+      {
+        "text": "Faz a verificação rodar uma vez na inicialização em vez de a cada chamada",
+        "why": "Nenhuma das formas roda verificação enquanto o programa executa; quem a faz é o compilador."
+      },
+      {
+        "text": "Evita alocar um `RawMessage`, o que quebraria o build",
+        "why": "Alocar não quebra build nenhum. O que importa é qual conjunto de métodos é comparado."
+      },
+      {
+        "text": "O conjunto de métodos do ponteiro é comparado, com os de ponteiro",
+        "why": "Isso. O conjunto de métodos de um ponteiro tem os dois tipos; um nil é o ponteiro mais barato de escrever."
+      },
+      {
+        "text": "Nada: as duas linhas verificam a mesma coisa",
+        "why": "Elas diferem exatamente quando um método tem receptor ponteiro, que é a tabela da lição 26."
+      }
+    ]
+  },
+  "ex-1wyx1aj0": {
+    "prompt": "O `Rect` de uma equipe só é usado como `Shape` em outro pacote, `render`. Alguém renomeia `Area` para `Size` no pacote de `Rect`. Sem `var _ Shape = Rect{}`, onde o erro aparece?",
+    "hint": "A seção 04 compilou o `Rect` renomeado sozinho primeiro.",
+    "choices": [
+      {
+        "text": "No pacote de `Rect`, no método renomeado",
+        "why": "Esse pacote compilou e rodou, imprimindo 12; nada nele usava `Rect` como `Shape`."
+      },
+      {
+        "text": "Em `render`, onde um `Rect` é usado como `Shape`",
+        "why": "Isso. A verificação acontece no uso, então falha para quem é dono do uso; a linha com `_` a traz para casa."
+      },
+      {
+        "text": "Em lugar nenhum, até o programa rodar e finalmente chamar `Area`",
+        "why": "Verificações de interface são feitas no build, nunca em tempo de execução."
+      },
+      {
+        "text": "No arquivo que declara `Shape`",
+        "why": "`Shape` não mudou e está certa; uma interface nunca lista os tipos que se encaixam nela."
+      }
+    ]
+  },
+  "ex-mdfngf6c": {
+    "prompt": "Ponha em ordem o que acontece em `fmt.Fprintf(&sb, \"hi\")`, da compilação à execução.",
+    "hint": "Os dois primeiros acontecem no `go build`.",
+    "items": [
+      "`&sb`, um `*strings.Builder`, é passado onde se pede um `io.Writer`",
+      "o compilador encontra `Write` no conjunto de métodos de `*strings.Builder`",
+      "em tempo de execução, `Fprintf` formata `hi` em bytes",
+      "`Fprintf` chama `w.Write`, que executa o próprio `Write` do builder"
+    ]
+  },
+  "ex-k09687gq": {
+    "prompt": "Com os tipos da seção 02, `shapes := []Shape{Rect{W: 1, H: 5}, Rect{W: 2, H: 3}}` e o laço que soma `s.Area()`. Quanto dá o total?",
+    "hint": "Cada `Area` é o do próprio `Rect`.",
+    "unit": "unidades de área"
+  },
+  "ex-36ert4sm": {
+    "prompt": "O pacote `report` declara `type source interface { Rows() [][]string }`. O pacote `db` tem um tipo com exatamente esse método e não importa `report`. Um valor dele pode ser passado às funções de `report`?",
+    "hint": "O `time` importou o programa que declarou `labeler`?",
+    "choices": [
+      {
+        "text": "Não: `db` precisa importar `report` para ver a interface",
+        "why": "`time` nunca importou o programa que declarou `labeler`, e os tipos dele se encaixaram."
+      },
+      {
+        "text": "Não, porque `source` começa com letra minúscula",
+        "why": "A minúscula impede outros pacotes de nomear `source`; não impede os valores deles de se encaixarem."
+      },
+      {
+        "text": "Só por uma conversão, `source(v)`, escrita em `db`",
+        "why": "`db` nem consegue nomear `source`, e nenhuma conversão é necessária onde o valor é passado."
+      },
+      {
+        "text": "Sim: o conjunto de métodos se encaixa, e nada mais é pedido",
+        "why": "Isso. A interface mora com quem a usa, e o tipo nunca precisa saber que ela existe."
+      }
+    ]
+  },
+  "ex-kc8ezppx": {
+    "prompt": "Um programa declara `type labeler interface { String() string }`. Quais destes podem ser passados como `labeler`? Escolha todos os que se aplicam.",
+    "hint": "O `go doc strings.Builder` listou `func (b *Builder) String() string`.",
+    "choices": [
+      {
+        "text": "`90 * time.Minute`",
+        "why": "Sim: um `time.Duration` tem `String`, e imprimiu `1h30m0s`."
+      },
+      {
+        "text": "`&sb`, em que `sb` é um `strings.Builder`",
+        "why": "Sim: `*strings.Builder` tem `String() string`, com receptor ponteiro."
+      },
+      {
+        "text": "o próprio `sb`",
+        "why": "Não: `String` é método de ponteiro, então o valor não o tem; o `Money` da lição 26 falhou do mesmo jeito."
+      },
+      {
+        "text": "`Rect{W: 3, H: 4}` da seção 02",
+        "why": "Não: `Rect` tem `Area` e nenhum `String`."
+      }
+    ]
+  },
+  "ex-ap0brq3n": {
+    "prompt": "Uma biblioteca acrescenta um método `Close() error` a um dos seus tipos numa versão nova. Que interfaces o tipo satisfaz daí em diante?",
+    "hint": "Nada no tipo lista interfaces.",
+    "choices": [
+      {
+        "text": "Nenhuma nova, até a biblioteca declarar quais ela implementa",
+        "why": "Não há nada a declarar em Go; ter o método é a declaração."
+      },
+      {
+        "text": "Toda interface cujos métodos ele agora tem, onde quer que ela esteja declarada",
+        "why": "Isso. A satisfação é verificada contra o conjunto de métodos, onde quer que uma interface seja usada."
+      },
+      {
+        "text": "Só `io.Closer`, a única interface com o nome desse método",
+        "why": "O próprio `type closer interface { Close() error }` de um programa também serve; nomes de interface não são comparados."
+      },
+      {
+        "text": "Só as interfaces declaradas dentro dessa biblioteca",
+        "why": "`time.Duration` se encaixou em `labeler`, que o `time` nunca viu."
+      }
+    ]
+  }
+}

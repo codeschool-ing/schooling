@@ -50,8 +50,8 @@ ao modelo sair do controle:
 | tentativas por requisição | quantas vezes uma requisição é repetida | o laço acima |
 | `max_tokens` em cada chamada | o tamanho, e portanto o custo, de uma resposta | a API do fornecedor |
 | tamanho de cada campo de entrada | o custo do prompt, e quanto o modelo precisa ler | as regras de entrada |
-| tokens por usuário por dia | quanto uma pessoa pode gastar | aula 17 |
-| chamadas de ferramenta ou turnos por tarefa | até onde um agente vai antes de parar | aula 7 |
+| tokens por usuário por dia | quanto uma pessoa pode gastar | aula 7 |
+| chamadas de ferramenta ou turnos por tarefa | até onde um agente vai antes de parar | aula 10 |
 
 O `max_tokens` merece uma nota porque é fácil defini-lo alto demais, com o argumento de que uma resposta
 nunca deve ser cortada. Uma resposta cujo resumo o schema limita a 400 caracteres nunca precisa de
@@ -60,8 +60,8 @@ falha rápido e barato, e o laço de novas tentativas cuida dela a partir dali.
 
 ## Conte as recusas
 
-Toda recusa vai para o log com o id da requisição, como a aula 21 recomenda, com o caminho e a regra que
+Toda recusa vai para o log com o id da requisição, como a aula 11 recomenda, com o caminho e a regra que
 falhou. Contadas por dia, as recusas são um dos números mais úteis que este recurso produz. Uma taxa que
 sobe depois de uma mudança de prompt ou de uma atualização do modelo é o primeiro sinal de que algo
-mudou, e chega antes de qualquer cliente reclamar. A camada de métricas da aula 21 é o lugar dela: uma
+mudou, e chega antes de qualquer cliente reclamar. A camada de métricas da aula 11 é o lugar dela: uma
 contagem por dia, sem texto nenhum, guardada tanto quanto as outras contagens.

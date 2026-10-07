@@ -1,0 +1,207 @@
+{
+  "ex-975avk2v": {
+    "prompt": "Qual componente do plano de controle é o único que lê e escreve no etcd?",
+    "hint": "Todos os outros componentes chegam aos dados por ele.",
+    "choices": [
+      {
+        "text": "O escalonador",
+        "why": "O escalonador escreve o nó de um pod pelo API server, como todo mundo."
+      },
+      {
+        "text": "O controller manager",
+        "why": "Os controladores dele criam objetos pelo API server; nunca abrem o etcd."
+      },
+      {
+        "text": "O API server",
+        "why": "Isso. A flag `--etcd-servers` dele aponta para o etcd, e toda conferência que ele faz depende de não haver outra porta."
+      },
+      {
+        "text": "O kubelet do nó do plano de controle",
+        "why": "Esse kubelet roda o etcd como pod estático; não lê os dados dele."
+      }
+    ]
+  },
+  "ex-n1kqbtnf": {
+    "prompt": "Os componentes do plano de controle são pods, mas pods são criados pelo API server. Como o API server sobe num nó novo?",
+    "hint": "Olhe o que o `ls /etc/kubernetes/manifests` imprimiu.",
+    "choices": [
+      {
+        "text": "O kubeadm o inicia diretamente e o mantém rodando",
+        "why": "O kubeadm escreve os arquivos e sai; não supervisiona nada."
+      },
+      {
+        "text": "O kubelet o roda a partir de um arquivo no disco",
+        "why": "Isso. O kubelet observa esse diretório e não precisa de API server para rodar o que está nele."
+      },
+      {
+        "text": "O etcd o inicia quando o banco sobe",
+        "why": "O etcd guarda dados e não inicia nada; ele também é um pod estático."
+      },
+      {
+        "text": "O escalonador o coloca no nó do plano de controle",
+        "why": "O escalonador trabalha pelo API server, então não pode ser quem o inicia."
+      }
+    ]
+  },
+  "ex-wrsrvprr": {
+    "prompt": "Todo objeto é guardado no etcd sob uma chave que começa com `/___/`, seguida do tipo, do namespace e do nome.",
+    "hint": "As chaves que o etcdctl listou.",
+    "blanks": [
+      {
+        "accept": [
+          "registry"
+        ]
+      }
+    ]
+  },
+  "ex-vvph2hza": {
+    "prompt": "Por que o kubelet é um serviço do systemd no nó em vez de um pod?",
+    "hint": "Pergunte o que teria de iniciá-lo.",
+    "choices": [
+      {
+        "text": "Pods não rodam em nós de trabalho",
+        "why": "Os pods da Ana rodaram nos dois workers."
+      },
+      {
+        "text": "Ele precisa de mais memória do que qualquer pod pode ter",
+        "why": "Memória não tem nada a ver; a questão é quem o inicia."
+      },
+      {
+        "text": "O kube-proxy se recusa a rotear para ele de outro jeito",
+        "why": "O kube-proxy roteia o tráfego de Services para pods, não para o kubelet."
+      },
+      {
+        "text": "Ele é o que roda pods, então nada poderia rodá-lo",
+        "why": "Isso. O kubelet pede ao runtime que inicie pods; algo abaixo dele, aqui o systemd, precisa iniciar o kubelet."
+      }
+    ]
+  },
+  "ex-9dveqzbb": {
+    "prompt": "Ligue cada componente do nó à pergunta que ele responde.",
+    "hint": "Quatro coisas rodam em todo nó.",
+    "pairs": [
+      {
+        "left": "kubelet",
+        "right": "Quais pods deveriam rodar aqui, e eles estão rodando?"
+      },
+      {
+        "left": "containerd",
+        "right": "Como um container é de fato iniciado?"
+      },
+      {
+        "left": "kube-proxy",
+        "right": "Para qual pod leva o endereço de um Service?"
+      },
+      {
+        "left": "plugin CNI",
+        "right": "Que endereço e rotas um pod novo recebe?"
+      }
+    ],
+    "right_distractors": [
+      "Para qual nó deve ir um pod ainda sem nó?"
+    ]
+  },
+  "ex-vb9t2mnd": {
+    "prompt": "Um colega lê o nome kube-proxy e conclui que toda requisição a um Service passa por aquele processo. O que mostraria que não?",
+    "hint": "Onde o kube-proxy deixa o trabalho dele?",
+    "choices": [
+      {
+        "text": "O `crictl ps`, que mostra o kube-proxy como container",
+        "why": "Ser um container não diz nada sobre o tráfego passar por ele."
+      },
+      {
+        "text": "As regras do kernel do nó, que reescrevem os próprios pacotes",
+        "why": "Isso. O kube-proxy escreve regras de iptables ou nftables e sai do caminho; a lição 17 as lê."
+      },
+      {
+        "text": "O `systemctl is-active`, que mostra que ele não é um serviço",
+        "why": "Se o systemd o roda ou não, não tem relação com o caminho de um pacote."
+      },
+      {
+        "text": "O diretório do CNI, que guarda as rotas dele",
+        "why": "Esse diretório configura o plugin de rede, não o kube-proxy."
+      }
+    ]
+  },
+  "ex-e9ambt1m": {
+    "prompt": "Ponha em ordem os componentes que agiram sobre o deployment novo da Ana, como os eventos registraram.",
+    "hint": "Os eventos foram ordenados pelo momento em que foram escritos.",
+    "items": [
+      "O controlador de deployments cria um ReplicaSet",
+      "O controlador de ReplicaSets cria um pod sem nó",
+      "O escalonador escreve um nó no pod",
+      "O kubelet daquele nó inicia o container"
+    ],
+    "trap": "Cada passo precisa do objeto que o anterior escreveu: nenhum pod antes do ReplicaSet, nenhum container antes de um nó ser escolhido."
+  },
+  "ex-vfhm6vda": {
+    "prompt": "Com o escalonador parado, a Ana escalou a loja de uma cópia para três. O que o `kubectl get pods` mostrou?",
+    "hint": "Quais passos da corrente ainda tinham alguém para fazê-los?",
+    "choices": [
+      {
+        "text": "Só o pod original, já que a escala foi recusada",
+        "why": "Foi impresso `deployment.apps/shop scaled`; o API server aceitou a mudança."
+      },
+      {
+        "text": "O pod original rodando e dois novos em `Pending`",
+        "why": "Isso. Os controladores criaram os pods; ninguém escolheu um nó para eles."
+      },
+      {
+        "text": "Três pods `Running`, todos no nó do plano de controle",
+        "why": "Sem escalonador nenhum pod recebe nó, no plano de controle ou em qualquer lugar."
+      },
+      {
+        "text": "Nenhum pod: o que rodava também parou",
+        "why": "O pod que rodava continuou; o escalonador só é preciso para colocar pods novos."
+      }
+    ]
+  },
+  "ex-bzk929ve": {
+    "prompt": "O API server de um cluster cai por dez minutos. Durante esse tempo, o que acontece com os pods da loja que já estavam rodando?",
+    "hint": "Quem mantém rodando um pod que já roda?",
+    "choices": [
+      {
+        "text": "Param, porque o kubelet perde as instruções",
+        "why": "O kubelet mantém os pods que já tem; só não fica sabendo de novos."
+      },
+      {
+        "text": "São movidos para os nós que ainda alcançam o etcd",
+        "why": "Os nós nunca alcançam o etcd, e nada move um pod com o API server fora."
+      },
+      {
+        "text": "Continuam atendendo, e nada neles muda",
+        "why": "Isso. Um plano de controle que para é um cluster que não muda, não um que para de atender."
+      },
+      {
+        "text": "Reiniciam em loop até o API server voltar",
+        "why": "Nada os reinicia; os containers mantêm os processos que têm."
+      }
+    ]
+  },
+  "ex-sec1yaq6": {
+    "prompt": "Quais destes rodam como pods no cluster do laptop? Marque todos que se aplicam.",
+    "hint": "Um deles não pode, e um é um banco de dados dentro de um pod.",
+    "choices": [
+      {
+        "text": "kube-apiserver",
+        "why": "Isso: um pod estático no nó do plano de controle."
+      },
+      {
+        "text": "etcd",
+        "why": "Isso: também um pod estático."
+      },
+      {
+        "text": "kubelet",
+        "why": "É um serviço do systemd; é o que roda pods."
+      },
+      {
+        "text": "kube-proxy",
+        "why": "Isso: um por nó, a partir de um DaemonSet."
+      },
+      {
+        "text": "containerd",
+        "why": "O runtime é um serviço com que o kubelet fala."
+      }
+    ]
+  }
+}

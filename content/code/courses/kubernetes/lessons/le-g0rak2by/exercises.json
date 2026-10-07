@@ -1,0 +1,278 @@
+[
+  {
+    "id": "ex-wxjax3vr",
+    "version": 1,
+    "section": "what-kubeadm-made",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the kubelet on a kubeadm control plane start the API server?",
+    "hint": "It cannot ask the API server to start itself.",
+    "choices": [
+      {
+        "text": "From a Deployment in `kube-system`",
+        "correct": false,
+        "why": "A Deployment needs a running API server."
+      },
+      {
+        "text": "From a file in `/etc/kubernetes/manifests`",
+        "correct": true,
+        "why": "Right, a static pod."
+      },
+      {
+        "text": "As a systemd service kubeadm wrote",
+        "correct": false,
+        "why": "Only the kubelet itself is a service."
+      },
+      {
+        "text": "From a DaemonSet on control-plane nodes",
+        "correct": false,
+        "why": "Also needs the API server first."
+      }
+    ]
+  },
+  {
+    "id": "ex-941a3atz",
+    "version": 1,
+    "section": "what-kubeadm-made",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A kubeadm cluster was never upgraded. What breaks on its first birthday?",
+    "hint": "`kubeadm certs check-expiration`.",
+    "choices": [
+      {
+        "text": "The bootstrap tokens",
+        "correct": false,
+        "why": "They last 24 hours, not a year."
+      },
+      {
+        "text": "The etcd data",
+        "correct": false,
+        "why": "etcd data does not expire."
+      },
+      {
+        "text": "The node images",
+        "correct": false,
+        "why": "Images do not expire."
+      },
+      {
+        "text": "Certificates",
+        "correct": true,
+        "why": "Right, `kubeadm certs renew all`."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2n8acp4",
+    "version": 1,
+    "section": "nodes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps to remove a worker node for good.",
+    "hint": "Move the work while the node is still in the cluster.",
+    "items": [
+      "`kubectl drain` the node",
+      "`kubeadm reset` on the node",
+      "`kubectl delete node`"
+    ],
+    "trap": "Deleting the Node first leaves its pods with nowhere to report."
+  },
+  {
+    "id": "ex-9r1ngser",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `--discovery-token-ca-cert-hash` protect a joining node from?",
+    "hint": "It pins something.",
+    "choices": [
+      {
+        "text": "Joining a control plane that is not yours",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An expired token",
+        "correct": false,
+        "why": "The token is checked by the control plane."
+      },
+      {
+        "text": "A wrong Kubernetes version",
+        "correct": false,
+        "why": "Versions are not in the hash."
+      },
+      {
+        "text": "Running out of pod addresses on the new node",
+        "correct": false,
+        "why": "Addressing is the network plugin's."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpp2a7k8",
+    "version": 1,
+    "section": "nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why treat a join token like a password?",
+    "hint": "What can a node read?",
+    "choices": [
+      {
+        "text": "It contains the admin's password in plain text",
+        "correct": false,
+        "why": "It contains no password."
+      },
+      {
+        "text": "It never expires",
+        "correct": false,
+        "why": "It lasts 24 hours by default."
+      },
+      {
+        "text": "It lets a machine join as a node",
+        "correct": true,
+        "why": "Right, and a node reads its pods' Secrets."
+      },
+      {
+        "text": "It unlocks etcd",
+        "correct": false,
+        "why": "etcd uses its own certificates."
+      }
+    ]
+  },
+  {
+    "id": "ex-thfnayvh",
+    "version": 1,
+    "section": "etcd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster runs three etcd members. Why does it still need backups?",
+    "hint": "What happens to a mistaken delete?",
+    "choices": [
+      {
+        "text": "Three members cannot elect a leader",
+        "correct": false,
+        "why": "Three is the usual size."
+      },
+      {
+        "text": "A delete reaches all three",
+        "correct": true,
+        "why": "Right, replication copies mistakes too."
+      },
+      {
+        "text": "Members do not share data",
+        "correct": false,
+        "why": "They replicate every write."
+      },
+      {
+        "text": "Snapshots are needed to start etcd",
+        "correct": false,
+        "why": "etcd starts from its data directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-d65txaad",
+    "version": 1,
+    "section": "etcd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the snapshot copied off the control-plane node?",
+    "hint": "What if the node dies?",
+    "choices": [
+      {
+        "text": "etcd deletes snapshots after an hour",
+        "correct": false,
+        "why": "It does not touch the file."
+      },
+      {
+        "text": "The restore runs only on the laptop",
+        "correct": false,
+        "why": "It ran on the node here."
+      },
+      {
+        "text": "It would be lost with the node",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is too large for the node's disk",
+        "correct": false,
+        "why": "It was 2.1 MB."
+      }
+    ]
+  },
+  {
+    "id": "ex-tm96an2m",
+    "version": 1,
+    "section": "etcd",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put in order the steps of the etcd restore in this lesson.",
+    "hint": "Stop, restore, point, start.",
+    "items": [
+      "Move the manifests out of `/etc/kubernetes/manifests`",
+      "`etcdutl snapshot restore` into a new directory",
+      "Change the etcd manifest's data path",
+      "Move the manifests back"
+    ],
+    "trap": "Restoring under a running etcd corrupts both."
+  },
+  {
+    "id": "ex-ky37ggs6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Backups run every night at 02:00. The cluster is lost at 17:00 and restored. What is missing?",
+    "hint": "The snapshot is a moment.",
+    "choices": [
+      {
+        "text": "Nothing, etcd replays its log",
+        "correct": false,
+        "why": "The log was lost with the cluster."
+      },
+      {
+        "text": "Only the Secrets",
+        "correct": false,
+        "why": "Everything is restored to the same moment."
+      },
+      {
+        "text": "Every change since 02:00",
+        "correct": true,
+        "why": "Right, fifteen hours of them."
+      },
+      {
+        "text": "The nodes",
+        "correct": false,
+        "why": "Node objects come back with the snapshot."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsbyd1hb",
+    "version": 1,
+    "section": "nodes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To print a fresh command for a new node to use: `kubeadm token create --print-___-command`.",
+    "hint": "The command it prints.",
+    "blanks": [
+      {
+        "accept": [
+          "join"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

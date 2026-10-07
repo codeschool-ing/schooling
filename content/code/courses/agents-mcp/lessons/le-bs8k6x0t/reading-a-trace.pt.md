@@ -47,4 +47,4 @@ Os campos são uma escolha, e estes são os que respondem às perguntas que as p
 - **o que voltou**, truncado: os primeiros 80 caracteres aqui, o bastante para reconhecer o resultado sem copiar o pedido inteiro de um cliente para um log;
 - **o tamanho do pedido**, para ler o custo por passo.
 
-Um rastro também é dado sobre pessoas. Este guarda um id de pedido e o começo de um pedido, e um real guardaria mensagens de clientes. A aula 21 do `ai-security` é sobre o que guardar, redigir e apagar, e a regra que já vale aqui é registrar o necessário para explicar uma execução e nada mais. A aula 7 monta um rastro mais completo, com tempos, e a aula 18 transforma rastros nos números que uma equipe acompanha.
+Um rastro também é dado sobre pessoas. Este guarda um id de pedido e o começo de um pedido, e um real guardaria mensagens de clientes. A aula 11 do `ai-security` é sobre o que guardar, redigir e apagar, e a regra que já vale aqui é registrar o necessário para explicar uma execução e nada mais. A aula 7 monta um rastro mais completo, com tempos, e a aula 18 transforma rastros nos números que uma equipe acompanha.

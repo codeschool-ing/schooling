@@ -1,0 +1,947 @@
+[
+  {
+    "id": "ex-y5azrg82",
+    "version": 1,
+    "section": "four-steps",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put Kimball's four design decisions in the order he takes them.",
+    "hint": "The facts come last, because a number is a fact only at a grain.",
+    "items": [
+      "Choose the business process",
+      "Declare the grain",
+      "Identify the dimensions",
+      "Identify the facts"
+    ],
+    "trap": "Starting from the facts is the common slip: a measure such as the shipping fee only exists at the grain of an order, not of a line."
+  },
+  {
+    "id": "ex-10m22twn",
+    "version": 1,
+    "section": "four-steps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a business process in Kimball's sense?",
+    "hint": "Something the business does, that leaves a record each time.",
+    "choices": [
+      {
+        "text": "Shipping an online order",
+        "correct": true,
+        "why": "Right. It happens, again and again, and leaves a record each time."
+      },
+      {
+        "text": "The marketing department",
+        "correct": false,
+        "why": "A department is an organisation, not something that happens."
+      },
+      {
+        "text": "The monthly revenue report",
+        "correct": false,
+        "why": "A report reads a process; it is not one."
+      },
+      {
+        "text": "The `orders` table in PostgreSQL",
+        "correct": false,
+        "why": "Starting from a source table is what the method replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-fx8kxy78",
+    "version": 1,
+    "section": "four-steps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the grain have to be declared before the dimensions are chosen?",
+    "hint": "Think of a book with three authors.",
+    "choices": [
+      {
+        "text": "Because the database needs the grain to create the table",
+        "correct": false,
+        "why": "No. The grain is a sentence for people; no database reads it."
+      },
+      {
+        "text": "Because dimensions are loaded after facts",
+        "correct": false,
+        "why": "No. Dimensions are loaded first, so the facts can point at them."
+      },
+      {
+        "text": "One value per row is what a dimension needs",
+        "correct": true,
+        "why": "Right. A sale line has one book but not one author, and the grain is what says so."
+      },
+      {
+        "text": "It does not matter which comes first",
+        "correct": false,
+        "why": "The lesson's point is that the order is the method."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jt8ze6v",
+    "version": 1,
+    "section": "extract-and-stage",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "DuckDB read `isbn` as `BIGINT`. Why does the staging script force it to `VARCHAR`?",
+    "hint": "Would anybody add two ISBNs?",
+    "choices": [
+      {
+        "text": "Text sorts faster than numbers",
+        "correct": false,
+        "why": "No. Speed is not the reason; meaning is."
+      },
+      {
+        "text": "It is a code, not a quantity",
+        "correct": true,
+        "why": "Right. Codes that are not quantities are text."
+      },
+      {
+        "text": "DuckDB cannot join on integers",
+        "correct": false,
+        "why": "No. Every key in the warehouse is an integer."
+      },
+      {
+        "text": "A `BIGINT` is too small for thirteen digits",
+        "correct": false,
+        "why": "No. A `BIGINT` holds nineteen digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygjtt5cw",
+    "version": 1,
+    "section": "extract-and-stage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does keeping the extract in a separate `staging` schema buy?",
+    "hint": "Who reads staging?",
+    "choices": [
+      {
+        "text": "Reports run faster against staging than against the star, because it has fewer joins",
+        "correct": false,
+        "why": "No. Staging has the operational shape, the slow one for reports."
+      },
+      {
+        "text": "It encrypts the data while it is copied",
+        "correct": false,
+        "why": "No. A schema is a namespace, not encryption."
+      },
+      {
+        "text": "Nothing; it is a naming habit",
+        "correct": false,
+        "why": "No. It is a boundary: nothing outside the load reads it."
+      },
+      {
+        "text": "Only the load reads it, so reports never depend on file layout",
+        "correct": true,
+        "why": "Right. Only the load reads staging; everything else reads the model built from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5wzhcev",
+    "version": 1,
+    "section": "extract-and-stage",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The DuckDB option that makes `read_csv` read the whole file before choosing column types is `sample_size = ___`.",
+    "hint": "A negative number.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cjfq6xs3",
+    "version": 1,
+    "section": "dimensions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which column belongs in `dim_book` rather than in `fact_sales`?",
+    "hint": "Would you group by it or sum it?",
+    "choices": [
+      {
+        "text": "net_cents",
+        "correct": false,
+        "why": "A measure of a sale: it is summed."
+      },
+      {
+        "text": "quantity",
+        "correct": false,
+        "why": "A measure of a line: it is summed."
+      },
+      {
+        "text": "department",
+        "correct": true,
+        "why": "Right. It describes the book and is grouped by."
+      },
+      {
+        "text": "discount_cents",
+        "correct": false,
+        "why": "A measure: summed across lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywrb4wdn",
+    "version": 1,
+    "section": "dimensions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `dim_book` store `format` as `hardcover` rather than as a code such as `2`?",
+    "hint": "Who reads a dimension?",
+    "choices": [
+      {
+        "text": "Every report would have to remember a lookup join",
+        "correct": true,
+        "why": "Right. A dimension's attributes are written for a person to read."
+      },
+      {
+        "text": "Text compresses better than integers",
+        "correct": false,
+        "why": "No. Lesson 8 shows the reverse is usual; this is about readers."
+      },
+      {
+        "text": "DuckDB does not support small integers",
+        "correct": false,
+        "why": "No. It has `TINYINT`."
+      },
+      {
+        "text": "Because the source database stored it that way, and copies should not change values",
+        "correct": false,
+        "why": "It did, but the reason to keep it is the reader, not the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ptj4hbq",
+    "version": 1,
+    "section": "dimensions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A book under *Manga* sits in a two-level branch of the category tree. What does `dim_book` put in its `subcategory`?",
+    "hint": "Every row gets all three levels.",
+    "choices": [
+      {
+        "text": "NULL",
+        "correct": false,
+        "why": "No. An empty level would make every report handle the shallow branches itself."
+      },
+      {
+        "text": "Comics",
+        "correct": false,
+        "why": "That is its department, the level above."
+      },
+      {
+        "text": "The word Unknown",
+        "correct": false,
+        "why": "No. Nothing is unknown here; the level simply does not exist."
+      },
+      {
+        "text": "Manga, repeated from the category",
+        "correct": true,
+        "why": "Right. The missing level repeats the name, so the hierarchy is always three deep."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3y6061b",
+    "version": 1,
+    "section": "dimensions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are properties of a dimension table? Choose all that apply.",
+    "hint": "Think of `dim_shop`.",
+    "choices": [
+      {
+        "text": "A key of its own, assigned by the warehouse",
+        "correct": true,
+        "why": "Yes. `shop_key` sits beside the shop's own `shop_id`."
+      },
+      {
+        "text": "Descriptive attributes written as text",
+        "correct": true,
+        "why": "Yes. A region is `South`, not a code."
+      },
+      {
+        "text": "A row for every sale",
+        "correct": false,
+        "why": "No. That is the fact table."
+      },
+      {
+        "text": "Few rows, many columns",
+        "correct": true,
+        "why": "Yes. Seven shops, eight columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ggg9f08",
+    "version": 1,
+    "section": "facts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are the only two kinds of column in a fact table?",
+    "hint": "Pointers and numbers.",
+    "choices": [
+      {
+        "text": "Names and descriptions",
+        "correct": false,
+        "why": "Those belong to dimensions."
+      },
+      {
+        "text": "Keys to dimensions, and measures",
+        "correct": true,
+        "why": "Right. Every column is a pointer to context or a number."
+      },
+      {
+        "text": "Primary keys and indexes",
+        "correct": false,
+        "why": "An index is not a column."
+      },
+      {
+        "text": "Dates and amounts",
+        "correct": false,
+        "why": "Close, but a date is reached through a key, and there are other keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xbzsf7s",
+    "version": 1,
+    "section": "facts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`net_cents` summed over the whole `fact_sales` is 9574389852. How many reais is that? Give it to the centavo.",
+    "hint": "Divide by a hundred.",
+    "value": 95743898.52,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-d2wan1kh",
+    "version": 1,
+    "section": "facts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `fact_sales` compute `net_cents` when it is loaded, rather than leaving each report to compute it?",
+    "hint": "How many people would write the formula?",
+    "choices": [
+      {
+        "text": "So that everybody reads one definition of net revenue",
+        "correct": true,
+        "why": "Right. Two analysts who would have written it two ways read the same column."
+      },
+      {
+        "text": "Because DuckDB cannot multiply inside a query",
+        "correct": false,
+        "why": "No. It multiplies when it loads the table, in the same SQL."
+      },
+      {
+        "text": "Because stored columns take less space than computed ones",
+        "correct": false,
+        "why": "No. A stored column takes more space, not less."
+      },
+      {
+        "text": "To hide the discount from the people who read the reports",
+        "correct": false,
+        "why": "No. The discount is a column of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-mscwwcya",
+    "version": 1,
+    "section": "facts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is money in `fact_sales` stored in integer cents rather than as a decimal number of reais in a float?",
+    "hint": "Add up 887,477 amounts.",
+    "choices": [
+      {
+        "text": "Integers take less space than floats",
+        "correct": false,
+        "why": "Not the reason: both take eight bytes here."
+      },
+      {
+        "text": "Reports print cents more readably",
+        "correct": false,
+        "why": "No. A report divides by a hundred to print reais."
+      },
+      {
+        "text": "Floats round, and sums drift",
+        "correct": true,
+        "why": "Right. Integer cents add up exactly, however many rows there are."
+      },
+      {
+        "text": "The source used cents",
+        "correct": false,
+        "why": "It did, and it would still be wrong to convert to a float."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cpjx8s5",
+    "version": 1,
+    "section": "the-date-dimension",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every database can extract the month from a date. What does `dim_date` give that a date function cannot?",
+    "hint": "What did somebody have to write down?",
+    "choices": [
+      {
+        "text": "Faster arithmetic on dates, because the month is precomputed for every row",
+        "correct": false,
+        "why": "No. Speed is not why it exists."
+      },
+      {
+        "text": "Holidays and other facts no formula knows",
+        "correct": true,
+        "why": "Right. Good Friday moves every year; somebody writes it down, once."
+      },
+      {
+        "text": "Dates in other time zones",
+        "correct": false,
+        "why": "No. The table has one row per calendar day, in one zone."
+      },
+      {
+        "text": "A way to store timestamps",
+        "correct": false,
+        "why": "No. It holds days, not moments."
+      }
+    ]
+  },
+  {
+    "id": "ex-e75nn3bd",
+    "version": 1,
+    "section": "the-date-dimension",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `dim_date`'s row with key 0 for?",
+    "hint": "Think of a parcel still on the road.",
+    "choices": [
+      {
+        "text": "It marks the first day of the data",
+        "correct": false,
+        "why": "No. That is 20240101."
+      },
+      {
+        "text": "It holds rows that failed to load",
+        "correct": false,
+        "why": "No. A failed row is not loaded at all."
+      },
+      {
+        "text": "A default value for weekends",
+        "correct": false,
+        "why": "No. Weekends are ordinary days with `is_weekend` true."
+      },
+      {
+        "text": "A date not reached yet",
+        "correct": true,
+        "why": "Right. A delivery date of `Not yet` keeps the parcel in every count."
+      }
+    ]
+  },
+  {
+    "id": "ex-5n26r7tk",
+    "version": 1,
+    "section": "the-date-dimension",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A physical shop took R$ 13,461.74 per weekday holiday and R$ 13,018.08 per ordinary weekday. By how many reais did a holiday beat an ordinary day? Give it to the centavo.",
+    "hint": "Subtract.",
+    "value": 443.66,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-0nhv6qkr",
+    "version": 1,
+    "section": "the-date-dimension",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The one key in the warehouse allowed to carry meaning, written like `20250418`, belongs to the calendar dimension, `dim_` followed by ___.",
+    "hint": "The table it belongs to, without the prefix.",
+    "blanks": [
+      {
+        "accept": [
+          "date"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gvewe6fc",
+    "version": 1,
+    "section": "additivity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these measures is fully additive?",
+    "hint": "It adds across every dimension and stays true.",
+    "choices": [
+      {
+        "text": "The discount percentage of a line",
+        "correct": false,
+        "why": "A ratio: it cannot be added."
+      },
+      {
+        "text": "Books on the shelf at month-end",
+        "correct": false,
+        "why": "A balance: it does not add across time."
+      },
+      {
+        "text": "The quantity sold",
+        "correct": true,
+        "why": "Right. Sum it by anything and you get a true total."
+      },
+      {
+        "text": "The average price of a book in a month",
+        "correct": false,
+        "why": "An average: it has to be rebuilt from sums."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xa2cwqq",
+    "version": 1,
+    "section": "additivity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The chain's discount rate is 0.81%, and the average of the seven shops' rates is 0.56%. Why the gap?",
+    "hint": "Who sells the most, and who discounts the most?",
+    "choices": [
+      {
+        "text": "Each shop weighs the same, and the website dominates",
+        "correct": true,
+        "why": "Right. A ratio has to be rebuilt from the summed parts, not averaged."
+      },
+      {
+        "text": "Rounding in DuckDB",
+        "correct": false,
+        "why": "No. A quarter of a percentage point is not rounding."
+      },
+      {
+        "text": "Cancelled orders are counted in one and not the other",
+        "correct": false,
+        "why": "No. Both come from the same fact table, without cancelled orders."
+      },
+      {
+        "text": "Moinhos opened in 2025",
+        "correct": false,
+        "why": "True, and it moves the average a little, but it is not the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fthkg27",
+    "version": 1,
+    "section": "additivity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds a column `avg_price_cents` to `fact_sales`, one value per line. What is the safer design?",
+    "hint": "Store the parts, compute the ratio last.",
+    "choices": [
+      {
+        "text": "Keep it, and let each report average it over whatever it groups by",
+        "correct": false,
+        "why": "Averaging an average is exactly the trap of the previous question."
+      },
+      {
+        "text": "Store it as a float for precision",
+        "correct": false,
+        "why": "The type is not the problem; the measure is."
+      },
+      {
+        "text": "Move it to `dim_book`",
+        "correct": false,
+        "why": "An average over sales is not an attribute of the book."
+      },
+      {
+        "text": "Drop it; divide summed net by summed quantity",
+        "correct": true,
+        "why": "Right. Both parts are additive, so any grouping gives a true average."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6c9wmd5",
+    "version": 1,
+    "section": "semi-additive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is summing `on_hand` over twelve month-ends meaningless?",
+    "hint": "Is it the same copy?",
+    "choices": [
+      {
+        "text": "Because some months have no count",
+        "correct": false,
+        "why": "No. Every month-end has a count."
+      },
+      {
+        "text": "Because the same copies are counted again every month they stay on the shelf",
+        "correct": true,
+        "why": "Right. A level, unlike a flow, does not add over time."
+      },
+      {
+        "text": "Because `on_hand` is stored as text",
+        "correct": false,
+        "why": "No. It is an integer, which is why the sum runs at all."
+      },
+      {
+        "text": "Because DuckDB overflows on large sums",
+        "correct": false,
+        "why": "No. 170,458 is a small number; it is just the wrong one."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgkwqrfh",
+    "version": 1,
+    "section": "semi-additive",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each measure to the kind it is.",
+    "hint": "Flows add over time; levels do not; ratios never add.",
+    "pairs": [
+      {
+        "left": "Books sold in a month",
+        "right": "Additive"
+      },
+      {
+        "left": "Books on the shelf at month-end",
+        "right": "Semi-additive"
+      },
+      {
+        "left": "The share of sales paid by Pix",
+        "right": "Non-additive"
+      }
+    ]
+  },
+  {
+    "id": "ex-nk9sgj7m",
+    "version": 1,
+    "section": "semi-additive",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are semi-additive? Choose all that apply.",
+    "hint": "A level at an instant.",
+    "choices": [
+      {
+        "text": "The balance of a bank account",
+        "correct": true,
+        "why": "Yes. Balances add across accounts, not across days."
+      },
+      {
+        "text": "Seats left on a flight",
+        "correct": true,
+        "why": "Yes. A level at a moment."
+      },
+      {
+        "text": "Parcels shipped in a week",
+        "correct": false,
+        "why": "No. A flow: weeks add up."
+      },
+      {
+        "text": "Discounts given in a promotion",
+        "correct": false,
+        "why": "No. A flow of money: fully additive."
+      }
+    ]
+  },
+  {
+    "id": "ex-zny8mzty",
+    "version": 1,
+    "section": "three-kinds-of-fact-table",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each table of Ana's to its kind of fact table.",
+    "hint": "One row per event, per period, or per lifecycle.",
+    "pairs": [
+      {
+        "left": "fact_sales",
+        "right": "Transaction"
+      },
+      {
+        "left": "fact_inventory",
+        "right": "Periodic snapshot"
+      },
+      {
+        "left": "fact_fulfilment",
+        "right": "Accumulating snapshot"
+      },
+      {
+        "left": "fact_event_attendance",
+        "right": "Factless"
+      }
+    ]
+  },
+  {
+    "id": "ex-3jk9nee5",
+    "version": 1,
+    "section": "three-kinds-of-fact-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which kind of fact table has rows that the load updates after inserting them?",
+    "hint": "A milestone filled in later.",
+    "choices": [
+      {
+        "text": "Accumulating snapshot",
+        "correct": true,
+        "why": "Right. One row per order, filled in at each milestone."
+      },
+      {
+        "text": "Transaction",
+        "correct": false,
+        "why": "No. A sale is written once, when it happens."
+      },
+      {
+        "text": "Periodic snapshot",
+        "correct": false,
+        "why": "No. Each period gets new rows; old ones stay."
+      },
+      {
+        "text": "Factless",
+        "correct": false,
+        "why": "No. Attendance rows are written once."
+      }
+    ]
+  },
+  {
+    "id": "ex-bj3zq245",
+    "version": 1,
+    "section": "three-kinds-of-fact-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Stock movements (each copy received or sold) are loaded as a transaction table, and no month-end table is built. Which question becomes hard?",
+    "hint": "What has no row when nothing moved?",
+    "choices": [
+      {
+        "text": "How many copies were sold in March",
+        "correct": false,
+        "why": "That one is easy: sum the March movements."
+      },
+      {
+        "text": "Which shop received the most copies",
+        "correct": false,
+        "why": "Easy too: sum receipts by shop."
+      },
+      {
+        "text": "Which titles were on the shelf at the end of March, including those that did not move",
+        "correct": true,
+        "why": "Right. A title with no movement has no row, so its level has to be rebuilt from all of history."
+      },
+      {
+        "text": "The first day a title was sold",
+        "correct": false,
+        "why": "Easy: the minimum date of its sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdj290vg",
+    "version": 1,
+    "section": "three-kinds-of-fact-table",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders of December 2025 had not been delivered when the data ends?",
+    "hint": "The last column of the lead-times query.",
+    "value": 4071,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m389kvkg",
+    "version": 1,
+    "section": "factless-facts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A factless fact table has no measures. How does it answer questions?",
+    "hint": "The row is the fact.",
+    "choices": [
+      {
+        "text": "By joining to a measure table",
+        "correct": false,
+        "why": "No. There is no other table of measures."
+      },
+      {
+        "text": "By counting its rows",
+        "correct": true,
+        "why": "Right. Attendances, people and events are all counts."
+      },
+      {
+        "text": "It cannot; it only documents",
+        "correct": false,
+        "why": "No. It answered who came where."
+      },
+      {
+        "text": "By summing its keys",
+        "correct": false,
+        "why": "No. A sum of keys means nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0fdygr6",
+    "version": 1,
+    "section": "factless-facts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop runs a promotion on 40 hand-picked titles and wants the ones that sold nothing. Why is `fact_sales` alone not enough?",
+    "hint": "What does a title with no sales leave in it?",
+    "choices": [
+      {
+        "text": "It has no `promotion_key`",
+        "correct": false,
+        "why": "It does; but a key only appears on lines that exist."
+      },
+      {
+        "text": "It is too large to search",
+        "correct": false,
+        "why": "No. It is searched in milliseconds."
+      },
+      {
+        "text": "Promotions live in the operational database, which the warehouse does not copy",
+        "correct": false,
+        "why": "No. `dim_promotion` exists."
+      },
+      {
+        "text": "Unsold books leave no rows, and the 40 are listed nowhere",
+        "correct": true,
+        "why": "Right. The list of eligible titles needs a coverage table of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgtzxrww",
+    "version": 1,
+    "section": "fact-or-dimension",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`customer_changes` has a timestamp on every row and grows every day. Where does it belong in the warehouse?",
+    "hint": "What will people group by?",
+    "choices": [
+      {
+        "text": "As a transaction fact table of changes",
+        "correct": false,
+        "why": "It would answer how many customers moved, which nobody asks."
+      },
+      {
+        "text": "Nowhere; history is not needed",
+        "correct": false,
+        "why": "Lesson 1 measured what losing it costs."
+      },
+      {
+        "text": "In the customer dimension, as versions of each customer",
+        "correct": true,
+        "why": "Right. It is the history of a dimension, and lesson 5 builds it."
+      },
+      {
+        "text": "In staging only",
+        "correct": false,
+        "why": "Staging feeds the model; the history has to reach the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-mn3v8n8c",
+    "version": 1,
+    "section": "fact-or-dimension",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A book's list price: fact or dimension attribute?",
+    "hint": "Would you sum it across books?",
+    "choices": [
+      {
+        "text": "An attribute of the book, used to filter and group",
+        "correct": true,
+        "why": "Right. The price charged on a line is the fact; the list price describes the book."
+      },
+      {
+        "text": "A fact, because it is a number",
+        "correct": false,
+        "why": "Being a number is not the test; summing it across books means nothing."
+      },
+      {
+        "text": "Neither; prices belong in staging",
+        "correct": false,
+        "why": "No. It is useful in the model, as an attribute."
+      },
+      {
+        "text": "A fact in its own table of prices",
+        "correct": false,
+        "why": "A price list could be, but this question is about a book's current price."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rqy17s2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A gym wants a warehouse for members' visits: each visit has a member, a branch, a date, and the minutes spent. Which design fits?",
+    "hint": "Process, grain, dimensions, facts.",
+    "choices": [
+      {
+        "text": "A dimension of visits with the member as a fact",
+        "correct": false,
+        "why": "Upside down: the visit happens; the member describes it."
+      },
+      {
+        "text": "A periodic snapshot of members per month",
+        "correct": false,
+        "why": "That counts members, not visits; it loses the minutes per visit."
+      },
+      {
+        "text": "An accumulating snapshot per member",
+        "correct": false,
+        "why": "A member has no fixed list of milestones."
+      },
+      {
+        "text": "A transaction table: one row each, keys to who, where and when, and the time spent as the measure",
+        "correct": true,
+        "why": "Right. Each visit is an event; minutes add up across everything."
+      }
+    ]
+  }
+]

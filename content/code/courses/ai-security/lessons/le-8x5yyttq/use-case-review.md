@@ -51,7 +51,7 @@ The review list is where the earlier lessons of this course come back:
 
 | use case | why a person looks first |
 |---|---|
-| `hiring-screening` | a decision about people's work, with the bias of lesson 9 and the right of review in art. 20 of the LGPD |
+| `hiring-screening` | a decision about people's work, with the bias of lesson 3 and the right of review in art. 20 of the LGPD |
 | `health-information` | sensitive data under art. 11, and a patient who acts on a wrong answer |
 | `legal-drafting` | a contract nobody qualified reads before it is signed |
 | `marketing-copy` | usually fine, and the shortest step from there to fake reviews |
@@ -95,6 +95,6 @@ questions settle most reviews:
 4. **What will be measured**, and will Tarefa see the measurement?
 
 For Contrata Já RH, a reasonable outcome is an approval with conditions: no automatic rejection,
-every ranking reviewed by a recruiter, and the group rates of lesson 9 reported to Tarefa each
+every ranking reviewed by a recruiter, and the group rates of lesson 3 reported to Tarefa each
 quarter. A reasonable alternative is a refusal. What is not reasonable is approving the sentence as
 written because the category was on a list.

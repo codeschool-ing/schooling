@@ -83,12 +83,11 @@ seu.
 ::: track ai prompt
 O próximo curso da sua trilha, `prompt-reliability`, parte desse teste: conjuntos de teste, métricas
 de avaliação e prompts versionados, com cada mudança medida. O `ai-security`, mais adiante na
-trilha, volta à lição 7 e trata a injeção de prompt como o problema de segurança que ela é.
+trilha, parte da lição 7 e constrói as defesas em volta dela.
 :::
 
 ::: track *
 Dois cursos se apoiam diretamente neste. O `prompt-reliability` transforma o teste desta lição numa
-prática: conjuntos de teste, métricas de avaliação e prompts versionados. O `ai-security` volta à
-lição 7 e trata a injeção de prompt como o problema de segurança que ela é, e ele está em todas as
+prática: conjuntos de teste, métricas de avaliação e prompts versionados. O `ai-security` parte da lição 7 e constrói as defesas em volta dela, e ele está em todas as
 trilhas que têm este curso.
 :::

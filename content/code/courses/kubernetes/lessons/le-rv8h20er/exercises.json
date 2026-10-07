@@ -1,0 +1,292 @@
+[
+  {
+    "id": "ex-yeze1r7v",
+    "version": 1,
+    "section": "one-host",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana killed the shop's process with `kill -9`, and three seconds later it was serving again. What brought it back?",
+    "hint": "Look at the last line of `compose.yaml`.",
+    "choices": [
+      {
+        "text": "Compose, which watches the containers it started",
+        "correct": false,
+        "why": "Compose read the file once, at `up`, and was not running when the process died."
+      },
+      {
+        "text": "The Docker daemon, applying `restart: always`",
+        "correct": true,
+        "why": "Right. The policy is kept by the daemon on that machine, which saw the exit and started the container again."
+      },
+      {
+        "text": "Nothing: `SIGKILL` cannot stop a container's process",
+        "correct": false,
+        "why": "It did stop it; the restart count went from 0 to 1 because the process exited."
+      },
+      {
+        "text": "The shop itself, which caught the signal and restarted",
+        "correct": false,
+        "why": "No program can catch `SIGKILL`; that is the point of using it here."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cdvshbj",
+    "version": 1,
+    "section": "one-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker compose up -d --scale web=3` stopped with `Bind for 0.0.0.0:8080 failed: port is already allocated`. What is the underlying limit?",
+    "hint": "Three containers, one machine, one published port.",
+    "choices": [
+      {
+        "text": "Compose can only run one replica of a service",
+        "correct": false,
+        "why": "It created `shop-web-2` and `shop-web-3`; what failed was publishing their port."
+      },
+      {
+        "text": "The image was built to listen on one port",
+        "correct": false,
+        "why": "Each container has its own network namespace, so each can listen on 8080 inside it; the clash is on the laptop."
+      },
+      {
+        "text": "The laptop ran out of memory for a third copy",
+        "correct": false,
+        "why": "The error names a port, not memory."
+      },
+      {
+        "text": "One port of one machine can belong to one process",
+        "correct": true,
+        "why": "Right. The first copy owns 8080 on the host; the others need a proxy in front or ports of their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-drp8t7q0",
+    "version": 1,
+    "section": "one-host",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana adds a second laptop and runs the same `compose.yaml` on both, each with `restart: always`. The first laptop loses power. What happens to the copy that was running on it?",
+    "hint": "Who keeps the restart policy, and where does it live?",
+    "choices": [
+      {
+        "text": "The second laptop's daemon starts it there",
+        "correct": false,
+        "why": "Each daemon knows only its own containers; nothing tells the second one that a copy is missing."
+      },
+      {
+        "text": "It is gone until the first laptop comes back",
+        "correct": true,
+        "why": "Right. The policy lived in the first laptop's daemon and went down with it; the second laptop keeps its own copy and no more."
+      },
+      {
+        "text": "Compose moves it, since both laptops share one file",
+        "correct": false,
+        "why": "The file is the same, but nothing reads it continuously on either machine."
+      },
+      {
+        "text": "Both copies stop, because the two daemons are linked",
+        "correct": false,
+        "why": "Two plain Docker daemons are not linked at all; the second copy keeps running."
+      }
+    ]
+  },
+  {
+    "id": "ex-7f81fph7",
+    "version": 1,
+    "section": "the-update",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During the update from `shop:1.0` to `shop:1.1`, how many of the probe's 300 requests got no answer?",
+    "hint": "`uniq -c` counted the `000` lines.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-9fbbwzvf",
+    "version": 1,
+    "section": "the-update",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the update, the shop answered `shop 1.1 on cdb0f6d432ff`, where it had said `7f1b64994482` before. What does the new hostname tell you?",
+    "hint": "The hostname is the start of the container's id.",
+    "choices": [
+      {
+        "text": "The same container was renamed after its image changed",
+        "correct": false,
+        "why": "A container's id is fixed for its life; a new id is a new container."
+      },
+      {
+        "text": "Compose moved the container to a different network",
+        "correct": false,
+        "why": "The network `shop_default` stayed; what changed was the container."
+      },
+      {
+        "text": "The old container was removed and a new one created",
+        "correct": true,
+        "why": "Right. A container is replaced, never updated in place, and the gap is the time between the two."
+      },
+      {
+        "text": "The probe reached a second replica started for the update",
+        "correct": false,
+        "why": "There was only ever one replica; that is why requests were refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-n296g3s2",
+    "version": 1,
+    "section": "the-update",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does an update without a gap need, that the one-machine setup did not have? Choose all that apply.",
+    "hint": "Think of the order: start, wait, move, stop.",
+    "choices": [
+      {
+        "text": "Two copies running at the same moment",
+        "correct": true,
+        "why": "Right: the new one has to be up before the old one goes."
+      },
+      {
+        "text": "Something in front that decides which copy gets a request",
+        "correct": true,
+        "why": "Right: moving the traffic needs a place where traffic is routed."
+      },
+      {
+        "text": "A faster disk, so the new container starts sooner",
+        "correct": false,
+        "why": "A faster start shortens the gap without closing it; the order is still stop, then start."
+      },
+      {
+        "text": "A signal that the new copy is ready, not just started",
+        "correct": true,
+        "why": "Right: otherwise traffic moves to a process that is still loading."
+      },
+      {
+        "text": "A new image tag for every version",
+        "correct": false,
+        "why": "The update already used `shop:1.1`; tags name versions, they do not order the swap."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ye4gqyc",
+    "version": 1,
+    "section": "what-it-adds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an orchestrator do that `docker compose up` does not?",
+    "hint": "Both read a description of what should run. The difference is when.",
+    "choices": [
+      {
+        "text": "It reads a file that describes the containers",
+        "correct": false,
+        "why": "So does Compose; `compose.yaml` is such a file."
+      },
+      {
+        "text": "It starts containers from images",
+        "correct": false,
+        "why": "Compose does that too, through the Docker daemon."
+      },
+      {
+        "text": "It keeps comparing that description with what is running, and acts on the difference",
+        "correct": true,
+        "why": "Right. Compose reads the file when somebody types `up` and stops looking; the loop never stops."
+      },
+      {
+        "text": "It restarts a process that crashes",
+        "correct": false,
+        "why": "The Docker daemon already did that in the first section, with `restart: always`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvkqmnz0",
+    "version": 1,
+    "section": "what-it-adds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need with what handles it on a cluster.",
+    "hint": "The table in this section names a lesson for each.",
+    "pairs": [
+      {
+        "left": "Several copies on one address",
+        "right": "A Service in front of them"
+      },
+      {
+        "left": "An update without a gap",
+        "right": "Start, wait for ready, then stop"
+      },
+      {
+        "left": "More copies under load",
+        "right": "A controller that changes the count"
+      },
+      {
+        "left": "A machine that dies",
+        "right": "Its copies started on the machines left"
+      }
+    ],
+    "right_distractors": [
+      "A restart policy on each machine's daemon"
+    ]
+  },
+  {
+    "id": "ex-5w1ek3w6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs one internal tool on one virtual machine, updates it once a month after hours, and nobody uses it at night. Which reading of this lesson fits them best?",
+    "hint": "Weigh the twelve requests against the price paid before the first one.",
+    "choices": [
+      {
+        "text": "Kubernetes, since a gap during updates is never acceptable",
+        "correct": false,
+        "why": "Nobody is using it during the gap; the twelve requests would hit no one."
+      },
+      {
+        "text": "Compose is enough; the gaps fall where nobody is asking",
+        "correct": true,
+        "why": "Right. The orchestrator's price is paid up front, and here it would buy almost nothing."
+      },
+      {
+        "text": "Neither: a tool on one machine should not run in a container",
+        "correct": false,
+        "why": "Nothing in the lesson argues against containers on one machine; Compose is shown working well there."
+      },
+      {
+        "text": "Kubernetes, because its restart policy is the stronger one",
+        "correct": false,
+        "why": "On one machine the Docker daemon already restarts a crashed process; that is not what a cluster is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7k9049r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an update without a gap in order.",
+    "hint": "The old copy is the last thing to go.",
+    "items": [
+      "Start a copy of the new version",
+      "Wait until the new copy answers as ready",
+      "Send the traffic to the new copy",
+      "Stop the old copy"
+    ],
+    "trap": "Stopping the old copy any earlier is the Compose order, and the gap it measured."
+  }
+]

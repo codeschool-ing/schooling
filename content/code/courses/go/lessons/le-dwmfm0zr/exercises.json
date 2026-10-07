@@ -1,0 +1,567 @@
+[
+  {
+    "id": "ex-t58aq55h",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes two `.go` files part of the same package?",
+    "hint": "`count.go` and `top.go` are both `text`.",
+    "choices": [
+      {
+        "text": "One of them imports the other",
+        "correct": false,
+        "why": "A file never imports a file; `top.go` used `Counts` with no import at all."
+      },
+      {
+        "text": "They sit in the same directory",
+        "correct": true,
+        "why": "Right. The directory is the package, and its files must all give the same package clause."
+      },
+      {
+        "text": "Their file names start with the package name",
+        "correct": false,
+        "why": "File names mean nothing to the compiler: `count.go` and `top.go` both belong to `text`."
+      },
+      {
+        "text": "They are listed together in `go.mod`",
+        "correct": false,
+        "why": "`go.mod` names the module and its requirements, not its packages or files."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3t9m3xs",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The module `example.com/shop` has a package in the directory `store/price`. What does another package write to import it?",
+    "hint": "Module path, then directory.",
+    "choices": [
+      {
+        "text": "`\"store/price\"`",
+        "correct": false,
+        "why": "A path with no dot in its first element is looked for in the standard library, as lesson 38 showed."
+      },
+      {
+        "text": "`\"example.com/shop/price\"`",
+        "correct": false,
+        "why": "The whole directory goes after the module path, `store` included."
+      },
+      {
+        "text": "`\"example.com/shop/store/price\"`",
+        "correct": true,
+        "why": "Right: the module path from `go.mod`, followed by the directory."
+      },
+      {
+        "text": "`\"price\"`, the package's name",
+        "correct": false,
+        "why": "The name is what code writes before a dot; the import line writes the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ckxpfyf",
+    "version": 1,
+    "section": "packages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The files of `math/rand/v2` begin with `package ___`, so a file that imports it calls `rand.N`.",
+    "hint": "`go list -f \"{{.Name}}\"` printed it.",
+    "blanks": [
+      {
+        "accept": [
+          "rand"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qd140r6r",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`count.go` imports `strings`. A new file `text/f.go`, in the same package, calls `strings.Fields` and imports nothing. What happens?",
+    "hint": "Do imports belong to the package or to the file?",
+    "choices": [
+      {
+        "text": "It compiles: the package already imports `strings`",
+        "correct": false,
+        "why": "Names declared in a package are shared between its files; imports are not."
+      },
+      {
+        "text": "It is refused with `undefined: strings`",
+        "correct": true,
+        "why": "Right. Each file imports what it uses, as `top.go` imported `cmp` and `slices` for itself."
+      },
+      {
+        "text": "It compiles, and `go vet` asks for the import",
+        "correct": false,
+        "why": "This one never gets as far as `vet`: the compiler cannot resolve `strings` in that file."
+      },
+      {
+        "text": "It is refused with `found packages text and f`",
+        "correct": false,
+        "why": "That error needs two package clauses; `f.go` says `package text` like the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xr32ndc",
+    "version": 1,
+    "section": "packages",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can sit together in one directory? Choose all that apply.",
+    "hint": "One directory, one package.",
+    "choices": [
+      {
+        "text": "`a.go` and `b.go`, both saying `package text`",
+        "correct": true,
+        "why": "Yes, like `count.go` and `top.go`."
+      },
+      {
+        "text": "`text.go` saying `package text` and `words.go` saying `package words`",
+        "correct": false,
+        "why": "Refused: `found packages text (count.go) and words (words.go)`."
+      },
+      {
+        "text": "Files called anything at all, all saying `package main`",
+        "correct": true,
+        "why": "Yes. File names mean nothing to the compiler; the package clause is what must agree."
+      },
+      {
+        "text": "Two programs, each a file with `package main` and its own `func main`",
+        "correct": false,
+        "why": "Both files would be one package with `main` declared twice. Two programs need two directories, as `cmd/` gives them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndpt7mb3",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A repository needs two programs, `server` and `migrate`, that share code for reading a database. Which layout follows section 02?",
+    "hint": "Each program is a `package main` of its own.",
+    "choices": [
+      {
+        "text": "`server.go` and `migrate.go` in the root, each with `func main`",
+        "correct": false,
+        "why": "One directory is one package, so the two `main` functions would collide."
+      },
+      {
+        "text": "One `main.go` that checks `os.Args` to decide which program it is",
+        "correct": false,
+        "why": "That builds one binary, not two; `go install ./cmd/...` gave two because there were two directories."
+      },
+      {
+        "text": "`cmd/server`, `cmd/migrate`, and the shared code in a package beside `cmd`",
+        "correct": true,
+        "why": "Right, the shape of `wordy`: one directory per program, and the shared package imported by both."
+      },
+      {
+        "text": "Two modules, one per program, each with a copy of the code",
+        "correct": false,
+        "why": "Copies drift apart; one module with a shared package is what `wordy` did."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd867md0",
+    "version": 1,
+    "section": "exported",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these names, declared in `text`, can `cmd/wordtop` use?",
+    "hint": "Look at the first letter.",
+    "choices": [
+      {
+        "text": "`byCount`",
+        "correct": false,
+        "why": "Lower case, so visible only inside `text`: `cmd/peek` got `undefined: text.byCount`."
+      },
+      {
+        "text": "`Top`",
+        "correct": true,
+        "why": "Right. It starts with an upper-case letter, so it is exported."
+      },
+      {
+        "text": "`_Top`",
+        "correct": false,
+        "why": "`_` is not an upper-case letter, so the name is not exported, whatever follows."
+      },
+      {
+        "text": "`entries`",
+        "correct": false,
+        "why": "An unexported method: `cannot refer to unexported method entries`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dj9qsgps",
+    "version": 1,
+    "section": "exported",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A name that starts with an upper-case letter is ___, and every package that imports its package can use it.",
+    "hint": "The word `go/token` uses for it.",
+    "blanks": [
+      {
+        "accept": [
+          "exported"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-brmszv3n",
+    "version": 1,
+    "section": "exported",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cmd/peek` is in the same module as `text`. Why was `c.entries()` still refused?",
+    "hint": "Where is the boundary drawn?",
+    "choices": [
+      {
+        "text": "Methods are private to their type unless declared `public`",
+        "correct": false,
+        "why": "Go has no such keyword; the first letter is the whole rule."
+      },
+      {
+        "text": "`text` is a library and `cmd/peek` is a program",
+        "correct": false,
+        "why": "A program can use every exported name of a library; `Top` worked from `cmd/wordtop`."
+      },
+      {
+        "text": "A lower-case name is hidden from every other package, and `cmd/peek` is one",
+        "correct": true,
+        "why": "Right. The boundary is the package, not the module."
+      },
+      {
+        "text": "`entries` is declared in `top.go` and `cmd/peek` imports nothing from that file",
+        "correct": false,
+        "why": "Nothing imports a file; inside `text`, `count.go` could call `entries` freely."
+      }
+    ]
+  },
+  {
+    "id": "ex-4egm8v4n",
+    "version": 1,
+    "section": "exported",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A struct `Config` has one field, `host string`, tagged `json:\"host\"`. `json.Unmarshal` fills a `Config` from `{\"host\":\"db\"}`. What do `err` and `cfg.host` hold afterwards?",
+    "hint": "`count` in section 03 went the same way.",
+    "choices": [
+      {
+        "text": "`err` is nil and `cfg.host` is `\"db\"`, because the tag names the key",
+        "correct": false,
+        "why": "A tag cannot make a field visible to `encoding/json`; `count` stayed 0 with its tag."
+      },
+      {
+        "text": "`err` is nil and `cfg.host` is still `\"\"`",
+        "correct": true,
+        "why": "Right. The field is skipped in silence; only `go vet` reports the tag on an unexported field."
+      },
+      {
+        "text": "`err` reports that `host` is unexported",
+        "correct": false,
+        "why": "Both directions returned a nil error in section 03; nothing at run time complains."
+      },
+      {
+        "text": "The program does not compile until `host` is capitalised",
+        "correct": false,
+        "why": "It compiles and runs; the tag is just a string to the compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3pwcf80",
+    "version": 1,
+    "section": "exported",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You write a helper that splits one line of a file, used by two functions in the same package and by nothing else. What should it be called?",
+    "hint": "Who needs to see it?",
+    "choices": [
+      {
+        "text": "`splitLine`",
+        "correct": true,
+        "why": "Right. Nothing outside needs it, so it stays out of the API and can be changed freely."
+      },
+      {
+        "text": "`SplitLine`, so that it can be tested and documented later",
+        "correct": false,
+        "why": "Capitalising makes it a promise to every importer; do it on the day another package needs it."
+      },
+      {
+        "text": "`SplitLine`, since both callers are in different files",
+        "correct": false,
+        "why": "Files of one package share every name, whatever its case: `top.go` used `Counts` from `count.go`."
+      },
+      {
+        "text": "Either: the case of a name is a matter of style in Go",
+        "correct": false,
+        "why": "The case is the access rule; `cmd/peek` was refused three times over it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2ey8r4z",
+    "version": 1,
+    "section": "import-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Go refuse `fold` importing `text` while `text` imports `fold`?",
+    "hint": "What has to happen to an imported package before the importer?",
+    "choices": [
+      {
+        "text": "Two packages of one module may import each other only through `internal`",
+        "correct": false,
+        "why": "`fold` already is under `internal`, and the cycle was refused anyway."
+      },
+      {
+        "text": "Each must be compiled and initialised before the other, and neither can be first",
+        "correct": true,
+        "why": "Right: `import cycle not allowed`, whatever the number of packages in the loop."
+      },
+      {
+        "text": "It would make the binary too large",
+        "correct": false,
+        "why": "Each package is compiled once whatever imports it; size is not the reason."
+      },
+      {
+        "text": "`go vet` reports it as a likely mistake",
+        "correct": false,
+        "why": "It never reaches `vet`: `go build` refused it with exit status 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvqcvxzw",
+    "version": 1,
+    "section": "import-rules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which packages may import `example.com/wordy/internal/fold`?",
+    "hint": "Find the parent of `internal`.",
+    "choices": [
+      {
+        "text": "Any package of the module `example.com/wordy`",
+        "correct": true,
+        "why": "Right: the parent of `internal` is the module's root, so the whole module is inside the tree."
+      },
+      {
+        "text": "Only packages in the directory `internal` itself",
+        "correct": false,
+        "why": "`text` imports it from outside that directory, and is allowed."
+      },
+      {
+        "text": "Any package in a workspace that lists `wordy`",
+        "correct": false,
+        "why": "`example.com/other` was in the workspace and was refused."
+      },
+      {
+        "text": "Any package, as long as the names it uses are exported",
+        "correct": false,
+        "why": "`fold.Word` is exported, and `example.com/other` was still refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7q356mf",
+    "version": 1,
+    "section": "import-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `example.com/wordy`, a package sits at `text/internal/cache`. Which package may import it?",
+    "hint": "The tree is rooted at the parent of `internal`, which is no longer the module's root.",
+    "choices": [
+      {
+        "text": "`cmd/wordtop`",
+        "correct": false,
+        "why": "The rule is about the tree, not the module: `cmd/wordtop` is outside `text`, and is refused."
+      },
+      {
+        "text": "`text` and the packages below it",
+        "correct": true,
+        "why": "Right. The parent of `internal` is `text`, so only `text` and the packages below it may."
+      },
+      {
+        "text": "Every package of the module, as with `internal/fold`",
+        "correct": false,
+        "why": "`internal/fold` had the module's root as its parent; this one has `text`."
+      },
+      {
+        "text": "None: `internal` may only sit at the root of a module",
+        "correct": false,
+        "why": "An `internal` element may appear anywhere in a path; the rule finds its parent wherever it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtbmvvkh",
+    "version": 1,
+    "section": "import-rules",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what ran in `~/pkgs-init` before and during `main`.",
+    "hint": "An imported package finishes before its importer starts.",
+    "items": [
+      "`reg`'s `init`",
+      "`main`'s package variable `greeting`",
+      "`main`'s `init`",
+      "The function `main`"
+    ]
+  },
+  {
+    "id": "ex-8s836zmm",
+    "version": 1,
+    "section": "import-rules",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each import line to what it does.",
+    "hint": "Four forms, four effects.",
+    "pairs": [
+      {
+        "left": "`\"strings\"`",
+        "right": "Binds the name `strings`"
+      },
+      {
+        "left": "`str \"strings\"`",
+        "right": "Binds the name `str` instead"
+      },
+      {
+        "left": "`_ \"image/png\"`",
+        "right": "Runs the package's `init` and binds no name"
+      },
+      {
+        "left": "`. \"strings\"`",
+        "right": "Puts every exported name into the file"
+      }
+    ],
+    "right_distractors": [
+      "Loads the package only when a function first uses it"
+    ]
+  },
+  {
+    "id": "ex-dqw9hy8m",
+    "version": 1,
+    "section": "import-rules",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`image/png` registers its decoder in a function called ___, which runs by itself when the package is imported.",
+    "hint": "Line 1052 of `reader.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "init"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c4hvecfd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does `go build` refuse? Choose all that apply.",
+    "hint": "Two are rules about the graph or the directory; one is about an unused name.",
+    "choices": [
+      {
+        "text": "Package `a` imports `b`, `b` imports `c`, and `c` imports `a`",
+        "correct": true,
+        "why": "Yes: a cycle through three packages is a cycle."
+      },
+      {
+        "text": "Importing `crypto/rand` and `math/rand/v2` with no alias",
+        "correct": true,
+        "why": "Yes: `rand redeclared in this block`."
+      },
+      {
+        "text": "A package whose name differs from the last element of its path",
+        "correct": false,
+        "why": "Allowed: `math/rand/v2` says `package rand`."
+      },
+      {
+        "text": "A blank import of a package the file never names",
+        "correct": false,
+        "why": "That is what `_` is for: `image/png` was imported that way and the program ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfzdtfr8",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana adds `cmd/wordjson/main.go`, a third program, to `example.com/wordy`. How many lines does `go list ./...` print now?",
+    "hint": "One line per package, one package per directory with Go files.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "packages"
+  },
+  {
+    "id": "ex-qk9zcx8s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`text` imports `fold`, and a new function in `fold` needs to read a `text.Counts`. Which change compiles and keeps the graph pointing one way?",
+    "hint": "Something has to move, not the import line.",
+    "choices": [
+      {
+        "text": "Importing `text` into `fold` with an alias",
+        "correct": false,
+        "why": "An alias renames the import; the arrow back up is still there, and the cycle is still refused."
+      },
+      {
+        "text": "A blank import of `text` in `fold`, so nothing is named",
+        "correct": false,
+        "why": "A blank import is still an import, and `fold` could not use `Counts` through it anyway."
+      },
+      {
+        "text": "Letting the function take a `map[string]int`, or moving it into `text`",
+        "correct": true,
+        "why": "Right. Either removes the arrow from `fold` back to `text`."
+      },
+      {
+        "text": "Moving `fold` out of `internal`",
+        "correct": false,
+        "why": "`internal` decides who may import `fold`, not whether a cycle is allowed."
+      }
+    ]
+  }
+]

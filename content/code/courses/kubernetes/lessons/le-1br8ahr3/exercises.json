@@ -1,0 +1,221 @@
+[
+  {
+    "id": "ex-rbtacq64",
+    "version": 1,
+    "section": "readiness-liveness",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `/drain`, the first pod showed `0/1` ready. What happened to it?",
+    "hint": "Look at RESTARTS and at where the requests went.",
+    "choices": [
+      {
+        "text": "It was restarted with a clean state",
+        "correct": false,
+        "why": "RESTARTS stayed at 0."
+      },
+      {
+        "text": "It left the Service, and kept running",
+        "correct": true,
+        "why": "Right. A readiness failure removes it from the endpoints and does nothing else."
+      },
+      {
+        "text": "It was deleted and replaced by the ReplicaSet",
+        "correct": false,
+        "why": "The same pod name was listed, still Running."
+      },
+      {
+        "text": "It was moved to another node",
+        "correct": false,
+        "why": "Pods never move; nothing about its node changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnthh892",
+    "version": 1,
+    "section": "readiness-liveness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the liveness probe restarted the broken pod, it was `1/1` ready again, although it had been drained. Why?",
+    "hint": "What does a restarted container start from?",
+    "choices": [
+      {
+        "text": "Liveness overrides readiness",
+        "correct": false,
+        "why": "Each probe decides its own consequence; neither overrides the other."
+      },
+      {
+        "text": "The Service re-adds every pod after a restart",
+        "correct": false,
+        "why": "The Service follows readiness answers, not restarts."
+      },
+      {
+        "text": "Its new process never saw the drain",
+        "correct": true,
+        "why": "Right. Both were in the old process's memory, and `/ready` answered 200 again."
+      },
+      {
+        "text": "The kubelet skips readiness after a restart",
+        "correct": false,
+        "why": "Readiness keeps being asked; it simply succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1rhpavr",
+    "version": 1,
+    "section": "readiness-liveness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team makes `/healthz` fail whenever the database is unreachable, and uses it as the liveness probe. The database goes down for two minutes. What happens?",
+    "hint": "Which probe's consequence is a restart?",
+    "choices": [
+      {
+        "text": "Each pod leaves the Service until the database returns",
+        "correct": false,
+        "why": "That is what a readiness probe would do; this is liveness."
+      },
+      {
+        "text": "Nothing, since the pods themselves are healthy",
+        "correct": false,
+        "why": "The probe says unhealthy, and the kubelet acts on the probe."
+      },
+      {
+        "text": "Every copy restarts in a loop",
+        "correct": true,
+        "why": "Right. Restarts cannot fix a database; the database belongs in readiness."
+      },
+      {
+        "text": "The database is restarted by the shop's probe",
+        "correct": false,
+        "why": "A probe only ever restarts the container it belongs to."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtvrregv",
+    "version": 1,
+    "section": "startup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The pod `slow` needed thirty seconds to start and had only a liveness probe with `periodSeconds: 5` and `failureThreshold: 3`. Why did it never serve?",
+    "hint": "Fifteen seconds against thirty.",
+    "choices": [
+      {
+        "text": "It was killed after fifteen seconds, every time",
+        "correct": true,
+        "why": "Right: three failures five seconds apart, long before it listened."
+      },
+      {
+        "text": "The image was missing",
+        "correct": false,
+        "why": "It ran and restarted three times."
+      },
+      {
+        "text": "The readiness probe kept it out of the Service",
+        "correct": false,
+        "why": "It had no readiness probe at all."
+      },
+      {
+        "text": "Startup probes are on by default and failed",
+        "correct": false,
+        "why": "There is no default startup probe."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vx1k2a9",
+    "version": 1,
+    "section": "startup",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Instead of a startup probe, a colleague proposes `initialDelaySeconds: 60` on the liveness probe. What does that cost?",
+    "hint": "When would a real hang be noticed?",
+    "choices": [
+      {
+        "text": "Nothing: it is equivalent",
+        "correct": false,
+        "why": "The delay applies to every start, and a fast start still waits a minute to be watched."
+      },
+      {
+        "text": "The pod can never become ready",
+        "correct": false,
+        "why": "Liveness does not decide readiness."
+      },
+      {
+        "text": "Early hangs go unseen for a minute",
+        "correct": true,
+        "why": "Right. A startup probe hands over to liveness at the first success instead of after a fixed wait."
+      },
+      {
+        "text": "The kubelet refuses delays over thirty seconds",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-drhvzwb7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each probe with what a failure does.",
+    "hint": "The table at the end of the lesson.",
+    "pairs": [
+      {
+        "left": "Readiness",
+        "right": "Takes the pod out of the Service"
+      },
+      {
+        "left": "Liveness",
+        "right": "Restarts the container"
+      },
+      {
+        "left": "Startup",
+        "right": "Holds the other two until it succeeds"
+      }
+    ],
+    "right_distractors": [
+      "Moves the pod to another node"
+    ]
+  },
+  {
+    "id": "ex-en8raewt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`slow-fixed`'s startup probe has `periodSeconds: 5` and `failureThreshold: 12`. How many seconds does the shop have to start before it is restarted?",
+    "hint": "Multiply.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-48r62deq",
+    "version": 1,
+    "section": "readiness-liveness",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod that fails its ___ probe is taken out of the Service's endpoints and keeps running.",
+    "hint": "The question is: should it get traffic now?",
+    "blanks": [
+      {
+        "accept": [
+          "readiness"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

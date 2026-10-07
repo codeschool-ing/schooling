@@ -1,0 +1,133 @@
+{
+  "ex-3wkvbh6b": {
+    "prompt": "Quatro réplicas têm média de 90% de utilização de CPU contra um alvo de 60%. Quantas réplicas o autoscaler pede?",
+    "hint": "ceil(4 × 90 ÷ 60).",
+    "unit": "réplicas"
+  },
+  "ex-fvvsm5ea": {
+    "prompt": "Um pod pede 200m de CPU e usa 300m. Que utilização, em porcentagem, o autoscaler vê?",
+    "hint": "Uso dividido pelo request.",
+    "unit": "por cento"
+  },
+  "ex-ex5detff": {
+    "prompt": "A carga levou a utilização a 604% e as réplicas pararam em 6. Por que não mais?",
+    "hint": "Leia a spec do HPA.",
+    "choices": [
+      {
+        "text": "Os nós estavam cheios",
+        "why": "As seis rodaram; nenhum pod ficou `Pending`."
+      },
+      {
+        "text": "`maxReplicas` é 6",
+        "why": "Isso. A fórmula pediu mais e foi limitada."
+      },
+      {
+        "text": "A fórmula deu exatamente 6",
+        "why": "Ela deu bem mais que 6 naquela leitura."
+      },
+      {
+        "text": "Subir para depois de um minuto",
+        "why": "Não existe esse limite."
+      }
+    ]
+  },
+  "ex-3hyxnkgm": {
+    "prompt": "Logo depois de o HPA ser criado, os eventos diziam `no metrics returned`. O que ele fez com as réplicas?",
+    "hint": "Sem medição…",
+    "choices": [
+      {
+        "text": "Escalou para o máximo por segurança",
+        "why": "Essa não é a direção segura que ele toma."
+      },
+      {
+        "text": "Escalou para zero",
+        "why": "O mínimo era 1, e nada escalou."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Sem medição, sem mudança."
+      },
+      {
+        "text": "Apagou o HPA",
+        "why": "O HPA fica e tenta de novo."
+      }
+    ]
+  },
+  "ex-max94sdr": {
+    "prompt": "Por padrão, por que o autoscaler espera antes de remover réplicas depois que a carga cai?",
+    "hint": "`stabilizationWindowSeconds`.",
+    "choices": [
+      {
+        "text": "Pods levam cinco minutos para parar",
+        "why": "Parar é rápido; a espera é uma escolha."
+      },
+      {
+        "text": "Usa a maior recomendação dos últimos cinco minutos",
+        "why": "Isso, para uma queda breve não remover pods que logo serão necessários."
+      },
+      {
+        "text": "O metrics-server informa atrasado",
+        "why": "Ele informa a cada quinze segundos de qualquer jeito."
+      },
+      {
+        "text": "Descer precisa de aprovação",
+        "why": "Ninguém aprova."
+      }
+    ]
+  },
+  "ex-tpz1dn81": {
+    "prompt": "Por que memória muitas vezes é uma métrica ruim para escalar um serviço web?",
+    "hint": "O que acontece com a memória quando a carga vai embora?",
+    "choices": [
+      {
+        "text": "O metrics-server não informa memória",
+        "why": "O `kubectl top` mostrou memória."
+      },
+      {
+        "text": "O HPA recusa memória",
+        "why": "`name: memory` é aceito."
+      },
+      {
+        "text": "Memória é medida em bytes",
+        "why": "A utilização é uma porcentagem de qualquer jeito."
+      },
+      {
+        "text": "Raramente cai depois que a carga acaba",
+        "why": "Isso. O autoscaler então sobe e nunca desce."
+      }
+    ]
+  },
+  "ex-bnx6qmkf": {
+    "prompt": "Ligue cada tipo de métrica a quem a serve.",
+    "hint": "A tabela da segunda seção.",
+    "pairs": [
+      {
+        "left": "`Resource` (CPU, memória)",
+        "right": "metrics-server"
+      },
+      {
+        "left": "`Pods`, da aplicação",
+        "right": "Um adaptador de métricas customizadas"
+      },
+      {
+        "left": "`External`, o tamanho de uma fila",
+        "right": "Um adaptador de métricas externas como o KEDA"
+      }
+    ],
+    "right_distractors": [
+      "O kube-scheduler"
+    ]
+  },
+  "ex-8qd0r70q": {
+    "prompt": "O autoscaler mede a CPU como porcentagem do ___ de cada pod.",
+    "hint": "O que `cpu: 200m` era no manifesto.",
+    "blanks": [
+      {
+        "accept": [
+          "request",
+          "requests"
+        ]
+      }
+    ]
+  }
+}

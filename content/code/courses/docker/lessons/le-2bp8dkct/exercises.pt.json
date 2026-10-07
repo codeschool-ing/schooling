@@ -1,0 +1,290 @@
+{
+  "ex-mth3w7q0": {
+    "prompt": "Por que `postgres:17` não tem barra no nome, enquanto a maioria das imagens do Docker Hub tem a forma `alguém/alguma-coisa`?",
+    "hint": "O pull imprimiu o nome completo.",
+    "choices": [
+      {
+        "text": "Barras não são permitidas em nomes de imagem de banco",
+        "why": "Qualquer imagem pode ter namespace; o desta fica escondido por padrão."
+      },
+      {
+        "text": "Ela fica na máquina da Ana, não no Docker Hub",
+        "why": "Ela foi baixada do Docker Hub, pelo espelho."
+      },
+      {
+        "text": "O PostgreSQL é dono do domínio `docker.io`",
+        "why": "O registry é do Docker; `library` é o namespace dele para imagens oficiais."
+      },
+      {
+        "text": "Uma imagem oficial, no namespace `library`",
+        "why": "Isso: o `docker` preenche o namespace, `docker.io/library/postgres:17`."
+      }
+    ]
+  },
+  "ex-49nzs56q": {
+    "prompt": "A `postgres:17` tem `Entrypoint` `docker-entrypoint.sh` e `Cmd` `postgres`. O que roda quando a Ana a inicia sem comando?",
+    "hint": "Como os dois se combinam?",
+    "choices": [
+      {
+        "text": "O script, com `postgres` passado como argumento",
+        "why": "Isso. O script prepara as coisas e depois inicia o servidor."
+      },
+      {
+        "text": "Só o `postgres`; o entrypoint só roda no primeiro início",
+        "why": "O entrypoint sempre roda, e decide o que fazer no primeiro início."
+      },
+      {
+        "text": "Um shell, porque nenhum comando foi dado",
+        "why": "Esse é o `Cmd` padrão do alpine; esta imagem tem o próprio."
+      },
+      {
+        "text": "Os dois programas ao mesmo tempo, em dois processos",
+        "why": "O comando é um argumento para o entrypoint, não um segundo processo."
+      }
+    ]
+  },
+  "ex-4k0s0a7f": {
+    "prompt": "A imagem declara `ExposedPorts` `5432/tcp`. Sem nenhum `-p`, um programa no host da Ana consegue se conectar ao banco em `localhost:5432`?",
+    "hint": "Documentação ou porta aberta?",
+    "choices": [
+      {
+        "text": "Sim, o Docker publica as portas declaradas",
+        "why": "Declarar uma porta a documenta; nada é publicado até o `-p` pedir."
+      },
+      {
+        "text": "Não",
+        "why": "Isso. O `ExposedPorts` é documentação; a aula 17 publica portas."
+      },
+      {
+        "text": "Só programas rodando como root",
+        "why": "Não é questão de privilégio; não há nada escutando no host."
+      },
+      {
+        "text": "Sim, mas só no primeiro minuto depois de o container iniciar",
+        "why": "Não há janela; sem `-p` não há porta publicada."
+      }
+    ]
+  },
+  "ex-c7756jtg": {
+    "prompt": "Ligue cada tag do `postgres` ao que ela nomeia.",
+    "hint": "Umas mudam com mais frequência que outras.",
+    "pairs": [
+      {
+        "left": "`17`",
+        "right": "A versão 17.x mais nova, mudando a cada correção"
+      },
+      {
+        "left": "`17.11`",
+        "right": "Exatamente essa versão menor"
+      },
+      {
+        "left": "`17-alpine`",
+        "right": "O mesmo PostgreSQL construído sobre Alpine"
+      }
+    ],
+    "right_distractors": [
+      "Um build que nunca muda, garantido pelo Docker"
+    ]
+  },
+  "ex-tzsdn89j": {
+    "prompt": "O `docker exec db pg_isready` disse pronto, e então o `psql -h 127.0.0.1` do host falhou com \"server closed the connection unexpectedly\". Com quem o `pg_isready` estava falando de fato?",
+    "hint": "Onde ele olhou, e que servidor estava rodando naquela hora?",
+    "choices": [
+      {
+        "text": "Com o servidor real, que depois caiu",
+        "why": "Nada caiu; o log mostra uma passagem ordenada."
+      },
+      {
+        "text": "Com o PostgreSQL do host da Ana",
+        "why": "Ele rodou dentro do container, pelo `docker exec`."
+      },
+      {
+        "text": "Com o servidor temporário de preparação, no socket Unix",
+        "why": "Isso. Ele só escuta no socket, então a conferência passou e os clientes TCP não conseguiam se conectar."
+      },
+      {
+        "text": "Com ninguém; o `pg_isready` sempre diz pronto",
+        "why": "Ele disse não pronto até o servidor temporário subir."
+      }
+    ]
+  },
+  "ex-0f6s3rvt": {
+    "prompt": "Que conferência esperou até o banco aceitar de verdade conexões de fora?",
+    "hint": "Pergunte do jeito que os clientes vão se conectar.",
+    "choices": [
+      {
+        "text": "O `docker ps` mostrando o container como `Up`",
+        "why": "`Up` quer dizer que o processo principal roda, o que ele fazia o tempo todo."
+      },
+      {
+        "text": "O `pg_isready` sem host dentro do container",
+        "why": "Foi esse que respondeu pelo servidor temporário."
+      },
+      {
+        "text": "Esperar até o `docker logs` imprimir qualquer coisa",
+        "why": "O servidor temporário imprime bastante antes de o real iniciar."
+      },
+      {
+        "text": "O `pg_isready -h 127.0.0.1` dentro do container",
+        "why": "Isso: por TCP, onde o servidor temporário não escuta."
+      }
+    ]
+  },
+  "ex-ty1kpmk2": {
+    "prompt": "Ponha em ordem o primeiro início da imagem.",
+    "hint": "Leia o log de novo.",
+    "items": [
+      "O entrypoint cria os arquivos de dados",
+      "Um servidor temporário inicia, só no socket Unix",
+      "O `01-schema.sql` roda",
+      "O servidor temporário para",
+      "O servidor real inicia e escuta na TCP 5432"
+    ]
+  },
+  "ex-23n7z6j1": {
+    "prompt": "A Ana reiniciou o banco contra o mesmo volume com `POSTGRES_PASSWORD=other`, e essa senha foi recusada. O que faria `other` funcionar?",
+    "hint": "Quando a imagem lê essa variável?",
+    "choices": [
+      {
+        "text": "Um `ALTER USER` rodado dentro do banco",
+        "why": "Isso: mude-a por SQL. A variável só vale quando o diretório de dados está vazio."
+      },
+      {
+        "text": "Reiniciar o container mais uma vez, para a variável ser lida",
+        "why": "Todo início com dados existentes pula a inicialização, quantas vezes for."
+      },
+      {
+        "text": "Usar o `-e` duas vezes",
+        "why": "A variável foi recebida; o entrypoint só pulou o passo que a usa."
+      },
+      {
+        "text": "Baixar a `postgres:17` de novo",
+        "why": "A imagem está boa; os dados do volume guardam a senha antiga."
+      }
+    ]
+  },
+  "ex-t2j4cq2x": {
+    "prompt": "A imagem postgres roda os arquivos `.sql` e `.sh` que encontra em `/docker-entrypoint-___.d` no primeiro início.",
+    "hint": "A mesma palavra da ferramenta do PostgreSQL que cria um cluster.",
+    "blanks": [
+      {
+        "accept": [
+          "initdb"
+        ]
+      }
+    ]
+  },
+  "ex-atkcvvkc": {
+    "prompt": "Em `-p 127.0.0.1:5416:5432`, qual número precisa ser diferente para cada container PostgreSQL na máquina da Ana?",
+    "hint": "Qual lado pertence ao host?",
+    "choices": [
+      {
+        "text": "5432, a porta do container",
+        "why": "Cada container tem a própria rede, então a 5432 lá dentro pode se repetir."
+      },
+      {
+        "text": "5416, a porta do host",
+        "why": "Isso. Cada container pode escutar na 5432 lá dentro; as portas do host não podem colidir."
+      },
+      {
+        "text": "Os dois, ou o segundo container não inicia",
+        "why": "Só o lado do host precisa ser único."
+      },
+      {
+        "text": "Nenhum; o Docker escolhe portas livres sozinho",
+        "why": "Só com `-P` ou uma porta de container sem nada; aqui a Ana escolheu."
+      }
+    ]
+  },
+  "ex-2kjyaxm3": {
+    "prompt": "A Ana falou com o Redis com `docker exec cache redis-cli PING` sem instalar nada. De onde veio o `redis-cli`?",
+    "hint": "O que mais há na imagem além do servidor?",
+    "choices": [
+      {
+        "text": "Do host da Ana, montado no container pelo Docker",
+        "why": "Nada foi montado; o host não tem `redis-cli`."
+      },
+      {
+        "text": "O Docker Hub o rodou remotamente",
+        "why": "O `exec` roda um programa dentro do container local."
+      },
+      {
+        "text": "Ele está dentro da imagem `redis:8`",
+        "why": "Isso. A imagem traz o cliente ao lado do servidor."
+      },
+      {
+        "text": "O Docker o inclui em todo container",
+        "why": "Ele veio com esta imagem; um container alpine não tem."
+      }
+    ]
+  },
+  "ex-g17n8xxm": {
+    "prompt": "Ligue cada imagem a uma variável que o entrypoint dela lê.",
+    "hint": "Cada projeto dá o próprio nome.",
+    "pairs": [
+      {
+        "left": "`postgres`",
+        "right": "`POSTGRES_PASSWORD`"
+      },
+      {
+        "left": "`mariadb`",
+        "right": "`MARIADB_ROOT_PASSWORD`"
+      },
+      {
+        "left": "`mongo`",
+        "right": "`MONGO_INITDB_ROOT_USERNAME`"
+      }
+    ],
+    "right_distractors": [
+      "`DOCKER_DATABASE_PASSWORD`"
+    ]
+  },
+  "ex-0g2kq92x": {
+    "prompt": "Que perguntas um banco iniciado com um `docker run` deixa abertas para produção? Escolha todas as que se aplicam.",
+    "hint": "Quatro foram listadas, cada uma com a sua aula.",
+    "choices": [
+      {
+        "text": "Onde é feito o backup dos dados do volume",
+        "why": "Sim, aula 8."
+      },
+      {
+        "text": "Quanta memória o container pode usar",
+        "why": "Sim, aula 17."
+      },
+      {
+        "text": "Se o PostgreSQL consegue guardar tabelas",
+        "why": "Isso funciona de cara."
+      },
+      {
+        "text": "Quem aplica as atualizações de segurança da imagem",
+        "why": "Sim, aula 20."
+      }
+    ]
+  },
+  "ex-qpe3tzvr": {
+    "prompt": "Na transcrição lado a lado, que versão principal respondeu na porta 5416?",
+    "hint": "`SHOW server_version`."
+  },
+  "ex-nw4zsnv9": {
+    "prompt": "A Ana edita o `01-schema.sql` para acrescentar um terceiro livro e quer um banco montado a partir do script novo. O que ela precisa fazer?",
+    "hint": "Quando o script roda?",
+    "choices": [
+      {
+        "text": "Reiniciar o container",
+        "why": "Um reinício encontra o diretório de dados cheio e pula os scripts."
+      },
+      {
+        "text": "Nada; o entrypoint vigia o diretório",
+        "why": "Ele lê o diretório uma vez, só no primeiro início."
+      },
+      {
+        "text": "Baixar uma `postgres:17` mais nova",
+        "why": "Não é a imagem que guarda os dados antigos."
+      },
+      {
+        "text": "Remover o volume antes",
+        "why": "Isso: o próximo início então inicializa de novo. Um diretório de dados vazio é o que dispara os scripts."
+      }
+    ]
+  }
+}

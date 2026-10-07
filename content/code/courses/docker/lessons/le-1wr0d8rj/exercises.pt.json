@@ -1,0 +1,307 @@
+{
+  "ex-dvw1thm3": {
+    "prompt": "Por que todo comando de ferramenta desta aula começa com `docker run --rm`?",
+    "hint": "O que cem execuções deixariam para trás?",
+    "choices": [
+      {
+        "text": "Ele remove o container quando o comando termina",
+        "why": "Isso; senão cada execução deixa um container parado."
+      },
+      {
+        "text": "Ele roda a ferramenta como root",
+        "why": "O `--rm` não diz nada sobre o usuário; quem diz é o `--user`."
+      },
+      {
+        "text": "Ele faz o container iniciar mais rápido, pulando de vez as camadas da imagem",
+        "why": "As camadas sempre são usadas; o `--rm` só afeta o que acontece depois do fim."
+      },
+      {
+        "text": "Ele monta o diretório atual",
+        "why": "Isso é o `-v \"$PWD\":/work`."
+      }
+    ]
+  },
+  "ex-dhyhaaf6": {
+    "prompt": "Em `docker run --rm -v \"$PWD\":/work -w /work mikefarah/yq:4 \".database.port\" config.yaml`, o que o `-w /work` faz?",
+    "hint": "Onde o `config.yaml` é procurado?",
+    "choices": [
+      {
+        "text": "Deixa o `/work` com permissão de escrita",
+        "why": "A montagem já aceita escrita por padrão; o `-w` é sobre onde o comando começa."
+      },
+      {
+        "text": "Define o diretório de trabalho",
+        "why": "Isso: o comando começa em `/work`, então o `config.yaml` é achado pelo nome relativo."
+      },
+      {
+        "text": "Espera o `/work` ficar pronto",
+        "why": "Não há o que esperar; ele define um diretório."
+      },
+      {
+        "text": "Vigia o `/work` em busca de mudanças",
+        "why": "Não há vigilância; o comando roda uma vez."
+      }
+    ]
+  },
+  "ex-a60e68f0": {
+    "prompt": "O hadolint leu o Dockerfile da Ana sem nada montado. Como?",
+    "hint": "Olhe o fim do comando.",
+    "choices": [
+      {
+        "text": "O Docker copiou o diretório atual para dentro do container",
+        "why": "Nada é copiado para um container a menos que seja montado ou construído na imagem."
+      },
+      {
+        "text": "O hadolint baixa o arquivo do repositório da Ana",
+        "why": "Ele não faz ideia de onde fica o repositório."
+      },
+      {
+        "text": "Pela entrada padrão, aberta pelo `-i`",
+        "why": "Isso: `< Dockerfile` e `-`, lido do stdin."
+      },
+      {
+        "text": "O hadolint está instalado no host, afinal",
+        "why": "O `which` não achou hadolint nenhum."
+      }
+    ]
+  },
+  "ex-xw4tgxk3": {
+    "prompt": "O que pode acontecer com `tar -czf $target/backup.tar.gz /srv/data` se `target` for `/mnt/my disk`?",
+    "hint": "O que o shell faz com uma variável sem aspas?",
+    "choices": [
+      {
+        "text": "Nada de diferente; o `tar` lida sozinho com espaços nos caminhos",
+        "why": "O `tar` nunca vê um argumento só; o shell já o dividiu."
+      },
+      {
+        "text": "O ShellCheck corrige o script quando roda",
+        "why": "Ele aponta; não muda arquivo nenhum."
+      },
+      {
+        "text": "O backup sai criptografado",
+        "why": "Aspas não têm nada a ver com criptografia."
+      },
+      {
+        "text": "O shell o divide, e o `tar` grava em outro lugar",
+        "why": "Isso: SC2086. Ponha aspas, como o ShellCheck sugeriu."
+      }
+    ]
+  },
+  "ex-k5v3chh5": {
+    "prompt": "Ligue cada apontamento do hadolint ao problema por trás dele.",
+    "hint": "Leia de novo as mensagens dos códigos.",
+    "pairs": [
+      {
+        "left": "DL3007",
+        "right": "A `latest` muda sem aviso"
+      },
+      {
+        "left": "DL3014",
+        "right": "O `apt-get install` pararia para fazer uma pergunta"
+      },
+      {
+        "left": "DL3009",
+        "right": "As listas de pacotes ficam dentro da imagem"
+      },
+      {
+        "left": "DL3025",
+        "right": "`CMD` na forma de shell, não em JSON"
+      }
+    ],
+    "right_distractors": [
+      "A imagem é grande demais para o push"
+    ]
+  },
+  "ex-ea8sbr3j": {
+    "prompt": "O `stats.py` imprimiu um `Loan` na `python:3.13-slim` e um `AttributeError` na `python:3.12-slim`. Por quê?",
+    "hint": "Quando o `copy.replace` foi acrescentado?",
+    "choices": [
+      {
+        "text": "O `copy.replace` não existe em versões anteriores ao Python 3.13",
+        "why": "Isso. A tag decidiu que Python rodou o arquivo."
+      },
+      {
+        "text": "A imagem 3.12 está quebrada",
+        "why": "Ela rodou o Python direitinho; a função é que falta nessa versão."
+      },
+      {
+        "text": "Imagens slim removem o módulo `copy`",
+        "why": "As duas são slim, e o `copy` foi importado nas duas."
+      },
+      {
+        "text": "O arquivo foi montado somente leitura para o 3.12",
+        "why": "As duas execuções usaram a mesma montagem, e a leitura funcionou."
+      }
+    ]
+  },
+  "ex-6c11bv92": {
+    "prompt": "Para os arquivos que uma ferramenta em container escreve no seu diretório serem seus, rode-a com `--___ \"$(id -u):$(id -g)\"`.",
+    "hint": "Uma palavra: a identidade que o processo assume.",
+    "blanks": [
+      {
+        "accept": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "ex-srpsv30c": {
+    "prompt": "No invólucro, por que `\"$@\"` e não `$*`?",
+    "hint": "O que acontece com um argumento que contém espaço?",
+    "choices": [
+      {
+        "text": "O `$*` não é válido dentro do corpo de uma função no bash",
+        "why": "Ele é válido; só junta e divide de novo os argumentos."
+      },
+      {
+        "text": "Cada argumento fica intacto, com espaços e tudo",
+        "why": "Isso. O `$*` dividiria `\".x | length\"` em pedaços."
+      },
+      {
+        "text": "O `\"$@\"` é mais rápido",
+        "why": "Velocidade não é a diferença."
+      },
+      {
+        "text": "O `$*` também passaria adiante o nome da imagem para o yq",
+        "why": "Nenhum dos dois inclui nada além dos argumentos da própria função."
+      }
+    ]
+  },
+  "ex-memyf748": {
+    "prompt": "A função da Ana usa `mikefarah/yq:4`. O que escrever a tag faz por ela?",
+    "hint": "O que aconteceria sem tag nenhuma?",
+    "choices": [
+      {
+        "text": "Baixa a versão 4 a cada chamada",
+        "why": "Depois do pull, a imagem é reaproveitada até ela baixar de novo."
+      },
+      {
+        "text": "Faz o yq rodar quatro vezes mais rápido",
+        "why": "O número é uma versão, não uma velocidade."
+      },
+      {
+        "text": "Mantém o yq na versão principal 4",
+        "why": "Isso. Sem tag ela receberia a `latest`, seja o que for naquele dia."
+      },
+      {
+        "text": "Limita o container a quatro processos",
+        "why": "Isso seria o `--pids-limit`, da aula 4."
+      }
+    ]
+  },
+  "ex-3z1pt0s0": {
+    "prompt": "O `yq \".x\" ../other.yaml` diz \"no such file or directory\", e mesmo assim o arquivo existe um diretório acima. Por quê?",
+    "hint": "O que o invólucro montou?",
+    "choices": [
+      {
+        "text": "O yq não lê arquivos cujo nome termina em `.yaml`",
+        "why": "Ele leu o `config.yaml` um instante antes."
+      },
+      {
+        "text": "O arquivo pertence ao root",
+        "why": "A Ana o criou como ela mesma; dono não é o problema."
+      },
+      {
+        "text": "O Docker esconde arquivos que começam com `..`",
+        "why": "Nada é escondido; o diretório pai simplesmente não está lá."
+      },
+      {
+        "text": "Só o diretório atual foi montado",
+        "why": "Isso: o caminho sai dos arquivos do container; lá dentro, `../other.yaml` é `/other.yaml`."
+      }
+    ]
+  },
+  "ex-d4a9y80d": {
+    "prompt": "Quantos segundos de relógio o `time yq --version` informou? Use o valor de `real`.",
+    "hint": "A primeira das três linhas.",
+    "unit": "segundos"
+  },
+  "ex-0earntg7": {
+    "prompt": "Montar o `~/.aws` somente leitura numa imagem faz a ferramenta da AWS funcionar. O que mais isso faz?",
+    "hint": "Quem consegue ler o que está montado?",
+    "choices": [
+      {
+        "text": "Entrega as credenciais a qualquer programa que esteja nessa imagem",
+        "why": "Isso, então a origem da imagem importa; aula 20."
+      },
+      {
+        "text": "Faz as credenciais expirarem",
+        "why": "Nada na montagem muda as credenciais."
+      },
+      {
+        "text": "Envia as credenciais para o Docker Hub",
+        "why": "Uma montagem fica na máquina."
+      },
+      {
+        "text": "Nada além disso, porque o `:ro` protege as credenciais contra a imagem",
+        "why": "O `:ro` impede a escrita, não a leitura."
+      }
+    ]
+  },
+  "ex-n0qgzcve": {
+    "prompt": "O que uma ferramenta de linha de comando em container NÃO enxerga, a menos que você arrume? Escolha todas as que se aplicam.",
+    "hint": "Arquivos, variáveis, rede, tela.",
+    "choices": [
+      {
+        "text": "Arquivos fora do diretório montado",
+        "why": "Sim: só o que está montado existe lá dentro."
+      },
+      {
+        "text": "Serviços no `localhost` do host",
+        "why": "Sim: dentro de um container, `localhost` é o container. Aula 23."
+      },
+      {
+        "text": "Os argumentos digitados depois do nome da imagem",
+        "why": "Esses vão para o entrypoint toda vez."
+      },
+      {
+        "text": "Uma tela gráfica",
+        "why": "Sim: um container não tem uma sem trabalho extra."
+      }
+    ]
+  },
+  "ex-52qgd0pz": {
+    "prompt": "Por que pipelines de CI rodam linters e scanners como `docker run` de uma imagem fixada?",
+    "hint": "O que o runner precisa ter instalado?",
+    "choices": [
+      {
+        "text": "Imagens Docker rodam linters mais rápido que instalações nativas",
+        "why": "Velocidade não é o motivo; um container acrescenta tempo de início."
+      },
+      {
+        "text": "Só o Docker, e a mesma linha dá a mesma resposta num notebook",
+        "why": "Isso. A versão da ferramenta viaja na tag."
+      },
+      {
+        "text": "Linters se recusam a rodar fora de containers",
+        "why": "Eles rodam bem de forma nativa; a questão é não precisar instalá-los."
+      },
+      {
+        "text": "Isso esconde o código-fonte do linter",
+        "why": "O código é montado justamente para o linter ler."
+      }
+    ]
+  },
+  "ex-94ntye15": {
+    "prompt": "Um script chama o invólucro `yq` uma vez para cada um de 2.000 arquivos YAML. Qual é o custo principal, e a correção?",
+    "hint": "O que acontece a cada chamada?",
+    "choices": [
+      {
+        "text": "Espaço em disco para 2.000 imagens; rode um prune depois",
+        "why": "Uma imagem é reaproveitada; nenhuma imagem nova é criada."
+      },
+      {
+        "text": "Tráfego de rede até o Docker Hub; use um espelho",
+        "why": "A imagem é local depois do primeiro pull."
+      },
+      {
+        "text": "2.000 inicializações de container; dê todos os arquivos ao yq numa execução, ou instale-o",
+        "why": "Isso: cerca de um terço de segundo cada."
+      },
+      {
+        "text": "Memória; acrescente `--memory`",
+        "why": "Cada container é curto e pequeno; o tempo de início é o que se acumula."
+      }
+    ]
+  }
+}

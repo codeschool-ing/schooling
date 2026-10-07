@@ -1,0 +1,399 @@
+{
+  "ex-k0b5gvrb": {
+    "prompt": "Uma função declara `var s string` e, sem atribuir nada, a imprime com `fmt.Printf(\"%#v\\n\", s)`. O que aparece?",
+    "hint": "Todo tipo tem um valor zero.",
+    "choices": [
+      {
+        "text": "`\"\"`",
+        "why": "Isso. O valor zero de uma string é a string vazia, e o `%#v` a escreve com as aspas."
+      },
+      {
+        "text": "`<nil>`",
+        "why": "É o que uma interface sem nada imprime. String não é um dos tipos cujo zero é `nil`."
+      },
+      {
+        "text": "Os bytes que estavam antes naquela memória",
+        "why": "Essa é a regra do C para uma variável local não atribuída. Go põe toda variável no valor zero ao declará-la."
+      },
+      {
+        "text": "Nada: o compilador se recusa a ler `s` antes de ser atribuída",
+        "why": "Algumas linguagens recusam isso; Go não precisa, porque `s` já tem um valor desde o momento em que é declarada."
+      }
+    ]
+  },
+  "ex-km1vb0qm": {
+    "prompt": "Quais destes tipos têm `nil` como valor zero? Marque todos os que se aplicam.",
+    "hint": "A seção 02 leu a saída em três grupos.",
+    "choices": [
+      {
+        "text": "`*int`",
+        "why": "Sim: um ponteiro que não aponta para nada é `(*int)(nil)`."
+      },
+      {
+        "text": "`[]int`",
+        "why": "Sim: `[]int(nil)`, e o tamanho dele é 0."
+      },
+      {
+        "text": "`[3]int`",
+        "why": "Um array é zero até o fim: `[3]int{0, 0, 0}`, nunca `nil`."
+      },
+      {
+        "text": "`map[string]int`",
+        "why": "Sim: `map[string]int(nil)`, que pode ser lido e não escrito."
+      },
+      {
+        "text": "um tipo struct como `point`",
+        "why": "O zero de uma struct é cada campo no seu próprio zero: `main.point{X:0, Y:0, Label:\"\"}`."
+      }
+    ]
+  },
+  "ex-2kypqyqs": {
+    "prompt": "`var m map[string]int` e depois `fmt.Println(len(m), m[\"a\"])`. O que acontece?",
+    "hint": "Ler e escrever não são a mesma coisa num map nil.",
+    "choices": [
+      {
+        "text": "Dá panic, porque `m` é nil",
+        "why": "Só escrever num map nil dá panic. Ler uma chave e pedir o tamanho funcionam."
+      },
+      {
+        "text": "Imprime `0 <nil>`",
+        "why": "Uma chave ausente devolve o zero do tipo de valor do map, que é `int`, então é `0`."
+      },
+      {
+        "text": "Imprime `0 0`",
+        "why": "Isso. Um map nil tem tamanho 0, e ler qualquer chave devolve o zero de `int`."
+      },
+      {
+        "text": "Não compila, porque `m` nunca foi criado com `make`",
+        "why": "O compilador não tem como saber e não pergunta. O `make` só importa quando você escreve no map."
+      }
+    ]
+  },
+  "ex-2p9qwa32": {
+    "prompt": "Você escreve `type Counter struct { hits int; seen map[string]bool }`. Alguém declara `var c Counter` e o seu código roda `c.seen[\"/home\"] = true`. O que acontece?",
+    "hint": "Qual é o valor zero do campo `seen`?",
+    "choices": [
+      {
+        "text": "Funciona: o map zero de um campo é um map vazio pronto para uso",
+        "why": "Isso vale para `strings.Builder`, não para um map. Um campo map começa `nil`, e um map nil não pode ser escrito."
+      },
+      {
+        "text": "Dá panic, porque `seen` é um map nil",
+        "why": "Isso. O valor zero deste tipo não está pronto para uso. A lição 14 mostra o panic e o `make` que o evita."
+      },
+      {
+        "text": "Não compila enquanto `c` não for inicializada",
+        "why": "`var c Counter` já a inicializou, com o valor zero. O compilador aceita a escrita."
+      },
+      {
+        "text": "A escrita é ignorada e `seen` continua vazio",
+        "why": "Go não descarta uma escrita em silêncio. Escrever num map nil para o programa com um panic."
+      }
+    ]
+  },
+  "ex-rkytdxqk": {
+    "prompt": "O `go doc strings.Builder` diz, nas palavras dele: \"The zero value is ready to ___.\"",
+    "hint": "Três letras, em inglês: o que dá para fazer com ele de imediato.",
+    "blanks": [
+      {
+        "accept": [
+          "use"
+        ]
+      }
+    ]
+  },
+  "ex-3g1r94p0": {
+    "prompt": "Dentro de um bloco `const`, o que é `iota`?",
+    "hint": "Olhe `Saturday`, na sétima linha do bloco.",
+    "choices": [
+      {
+        "text": "Um contador que sobe um a cada vez que é lido",
+        "why": "Ele é fixo por linha: dois usos na mesma linha dão o mesmo número."
+      },
+      {
+        "text": "A posição da linha no bloco, contando a partir de 0",
+        "why": "Isso. `Sunday` está na linha 0 e `Saturday` na linha 6, e um bloco novo recomeça em 0."
+      },
+      {
+        "text": "O número de constantes que o pacote declarou até ali",
+        "why": "Ele recomeça em cada bloco: o bloco dos tamanhos começou de novo em 0 depois dos dias."
+      },
+      {
+        "text": "Uma palavra-chave que transforma o bloco num tipo enum",
+        "why": "Go não tem tipo enum e `iota` não é palavra-chave; o `go doc builtin` o lista como constante pré-declarada."
+      }
+    ]
+  },
+  "ex-zd1e3chb": {
+    "prompt": "No bloco `_ = iota`, `KiB = 1 << (10 * iota)`, `MiB`, `GiB`, `TiB`, quantos bytes vale `MiB`?",
+    "hint": "`MiB` está na linha 2 e repete a expressão de cima.",
+    "unit": "bytes"
+  },
+  "ex-bzzfzw08": {
+    "prompt": "Por que o programa dá a linha 0 do bloco `Status` a `Unknown` e não a `Active`?",
+    "hint": "O que guarda um campo que ninguém definiu?",
+    "choices": [
+      {
+        "text": "Porque o `iota` não pode ser usado para o valor 0",
+        "why": "Pode e foi: `Sunday` é 0. A escolha é sobre o que o 0 deve significar."
+      },
+      {
+        "text": "Para um campo esquecido dizer que nunca foi definido",
+        "why": "Isso. O campo esquecido guarda o `Status` zero, e chamar o 0 de `Unknown` faz ele dizer isso."
+      },
+      {
+        "text": "Porque Go exige que a primeira constante de um bloco não seja usada",
+        "why": "Não existe essa regra; o bloco dos dias usa a primeira linha para `Sunday`."
+      },
+      {
+        "text": "Porque em Go o 0 é reservado para erros",
+        "why": "Erros são valores do tipo `error`, não números; nada reserva o 0."
+      }
+    ]
+  },
+  "ex-ehcrqb3x": {
+    "prompt": "`fmt.Println(Monday)` com o `Weekday` da lição imprime `1`, e `fmt.Println(time.Monday)` imprime `Monday`. Por que a diferença?",
+    "hint": "Os dois são declarados com `iota` do mesmo jeito.",
+    "choices": [
+      {
+        "text": "As constantes do `time` são strings, e as nossas são números",
+        "why": "O `go doc time.Sunday` mostrou `Sunday Weekday = iota`, e o `%d` imprimiu `time.Saturday` como 6: são números."
+      },
+      {
+        "text": "O `fmt` tem uma lista dos nomes da biblioteca padrão",
+        "why": "O `fmt` não sabe nada sobre o `time`; ele pergunta ao tipo do valor como se imprimir."
+      },
+      {
+        "text": "O `time.Weekday` tem um método que transforma o número numa palavra",
+        "why": "Isso. A constante é o número 1 nos dois; o tipo do `time` também tem um método `String`, que a lição 25 trata."
+      },
+      {
+        "text": "As nossas constantes perderam o nome por causa do `iota`",
+        "why": "O nome de uma constante nunca chega ao programa rodando, com `iota` ou sem ele."
+      }
+    ]
+  },
+  "ex-hh3zgf1g": {
+    "prompt": "Um programa gravou números de `Weekday` num banco de dados na semana passada. Hoje você insere uma linha `Holiday` entre `Monday` e `Tuesday` no bloco do `iota`. O que acontece com as linhas gravadas?",
+    "hint": "Conte as linhas de novo depois da inserção.",
+    "choices": [
+      {
+        "text": "Os dias guardados a partir do 2 viram outros",
+        "why": "Isso. Um 2 gravado era terça e agora é `Holiday`: toda constante depois da inserção subiu um, e os números gravados não."
+      },
+      {
+        "text": "Nada: cada constante mantém o número do primeiro build",
+        "why": "Constantes são calculadas a cada build, pela posição; nada lembra a numeração antiga."
+      },
+      {
+        "text": "O build falha, porque agora duas constantes têm o valor 2",
+        "why": "Nenhuma divide valor: `Holiday` é 2 e `Tuesday` passou a 3. O compilador não vê nada errado."
+      },
+      {
+        "text": "O Go renumera as linhas gravadas",
+        "why": "Go não sabe nada sobre o seu banco. É por isso que números que saem do programa ficam mais seguros escritos à mão."
+      }
+    ]
+  },
+  "ex-rh70f264": {
+    "prompt": "`const primes = []int{2, 3, 5}` é recusado como \"not constant\". Um slice assim pertence a uma declaração feita com a palavra-chave `___`.",
+    "hint": "A outra forma de declarar um nome, que a lição 5 viu primeiro.",
+    "blanks": [
+      {
+        "accept": [
+          "var"
+        ]
+      }
+    ]
+  },
+  "ex-vpfhynj1": {
+    "prompt": "Num pacote, `main.go` importa `fmt` e `report.go` chama `fmt.Println` sem importá-lo. O que acontece?",
+    "hint": "A qual escopo pertence um import?",
+    "choices": [
+      {
+        "text": "Compila, porque os dois arquivos estão no pacote `main`",
+        "why": "Isso vale para `limit`, declarado no nível do pacote. Um import não é compartilhado."
+      },
+      {
+        "text": "Falha: `undefined: fmt`",
+        "why": "Isso, o build falha no `report.go`. Um import pertence só ao arquivo que o escreveu."
+      },
+      {
+        "text": "Compila com um aviso, e roda",
+        "why": "Go não avisa sobre escopo; um nome fora de escopo é erro."
+      },
+      {
+        "text": "Compila, e dá panic quando `report` é chamada",
+        "why": "Um nome indefinido é encontrado na compilação, antes de qualquer coisa rodar."
+      }
+    ]
+  },
+  "ex-dt1wnk68": {
+    "prompt": "O que isto imprime? `x := 1`, depois `if true { x := 2; x++ }`, depois `fmt.Println(x)`",
+    "hint": "Quantas variáveis chamadas `x` existem?",
+    "choices": [
+      {
+        "text": "`3`",
+        "why": "Isso exigiria que o `if` mudasse o `x` de fora. O `:=` dele declarou um segundo `x`."
+      },
+      {
+        "text": "`2`",
+        "why": "Isso trata `:=` como `=` e esquece o `++`; de todo jeito, nenhum dos dois mexe no `x` de fora."
+      },
+      {
+        "text": "`1`",
+        "why": "Isso. O `x` do bloco é uma variável nova que escondeu a de fora até a chave fechar."
+      },
+      {
+        "text": "Nada: o build falha com \"no new variables on left side of :=\"",
+        "why": "Esse erro é para `:=` no mesmo bloco do nome existente. Dentro do `if`, `x` é novo."
+      }
+    ]
+  },
+  "ex-brtr8m60": {
+    "prompt": "Associe cada escopo a algo que os programas da lição declararam nele.",
+    "hint": "A tabela no começo da seção 04.",
+    "pairs": [
+      {
+        "left": "universo",
+        "right": "`len` e `nil`"
+      },
+      {
+        "left": "pacote",
+        "right": "`var limit = 3`, fora de qualquer função"
+      },
+      {
+        "left": "arquivo",
+        "right": "`import \"fmt\"`"
+      },
+      {
+        "left": "bloco",
+        "right": "o `x := x` dentro do `if`"
+      }
+    ],
+    "right_distractors": [
+      "todo programa da máquina"
+    ]
+  },
+  "ex-e4zdkt1y": {
+    "prompt": "O `total` parou em `\"x\"` e mesmo assim devolveu `3 <nil>`. Por que `<nil>`?",
+    "hint": "Conte as variáveis chamadas `err`.",
+    "choices": [
+      {
+        "text": "O `strconv.Atoi` não devolve erro para uma string que não consegue ler",
+        "why": "Devolveu sim: a versão corrigida imprimiu `strconv.Atoi: parsing \"x\": invalid syntax`."
+      },
+      {
+        "text": "O `break` volta todas as variáveis do laço ao valor zero",
+        "why": "O `break` só sai do laço. O erro se perdeu porque foi para outra variável."
+      },
+      {
+        "text": "O `:=` do laço declarou um segundo `err`, e o devolvido nunca foi atribuído",
+        "why": "Isso. O `err` de dentro guardou a falha e acabou com a iteração; o de fora continuou `nil`."
+      },
+      {
+        "text": "O `return sum, err` devolve o `err` atribuído por último",
+        "why": "Um nome significa a variável em escopo onde ele está escrito, e no `return` essa é a de fora."
+      }
+    ]
+  },
+  "ex-74serzqn": {
+    "prompt": "Quais destas mudanças fazem o `total` devolver o erro de `\"x\"`? Marque todas as que se aplicam.",
+    "hint": "Pergunte, para cada uma, qual `err` acaba guardando a falha.",
+    "choices": [
+      {
+        "text": "Trocar o `break` por `return sum, err`",
+        "why": "Sim: esse `err` é o de dentro, o que guarda a falha. É a correção da seção."
+      },
+      {
+        "text": "Declarar `var n int` antes do laço e escrever `n, err = strconv.Atoi(a)`",
+        "why": "Sim: com `=` nada novo é declarado, então a falha cai no `err` de fora, que é devolvido."
+      },
+      {
+        "text": "Renomear a variável de dentro para `e` e manter o `break`",
+        "why": "A falha ficaria em `e`, e o `err` de fora continuaria sem nunca ser atribuído."
+      },
+      {
+        "text": "Rodar o `go vet` antes do build",
+        "why": "O `go vet` saiu com 0 neste programa. Não apontou o `err` sombreado."
+      }
+    ]
+  },
+  "ex-w866ybvq": {
+    "prompt": "Uma função começa com `len := 3`, e vinte linhas abaixo chama `len(names)`. O que acontece?",
+    "hint": "`len` é uma palavra-chave ou um nome?",
+    "choices": [
+      {
+        "text": "A primeira linha é recusada, porque `len` é palavra-chave",
+        "why": "`len` é um nome pré-declarado no escopo universo, então declarar uma variável com ele é permitido."
+      },
+      {
+        "text": "Funciona: os parênteses fazem o Go escolher a função embutida",
+        "why": "Os parênteses não escolhem; o `len` mais interno em escopo é a variável."
+      },
+      {
+        "text": "A chamada é recusada: ali `len` é uma variável do tipo `int`",
+        "why": "Isso. A variável esconde a função embutida até o fim do bloco, e um `int` não pode ser chamado."
+      },
+      {
+        "text": "Compila e dá panic quando a chamada roda",
+        "why": "Chamar algo que não é função é erro de tipo, encontrado na compilação."
+      }
+    ]
+  },
+  "ex-dpm8wn6h": {
+    "prompt": "Ponha os cinco escopos em ordem, do mais externo ao mais interno.",
+    "hint": "A figura da seção 04 os desenha como caixas aninhadas.",
+    "items": [
+      "universo",
+      "pacote",
+      "arquivo",
+      "função",
+      "bloco"
+    ]
+  },
+  "ex-4te0gwrc": {
+    "prompt": "`type Config struct { Retries int; Verbose bool; Name string }` e `var cfg Config`. O que `fmt.Printf(\"%#v\\n\", cfg)` imprime?",
+    "hint": "Cada campo no seu próprio zero.",
+    "choices": [
+      {
+        "text": "`<nil>`",
+        "why": "Uma struct nunca é `nil`; só ponteiros, slices, maps, funções e interfaces são."
+      },
+      {
+        "text": "`main.Config{Retries:0, Verbose:false, Name:nil}`",
+        "why": "O zero de uma string é `\"\"`, não `nil`; `nil` não é um valor que uma string possa ter."
+      },
+      {
+        "text": "`main.Config{Retries:0, Verbose:false, Name:\"\"}`",
+        "why": "Isso. Cada campo recebeu o zero do seu próprio tipo, como o `point` na seção 02."
+      },
+      {
+        "text": "`main.Config{}`",
+        "why": "O `%#v` escreve todo campo de uma struct, definido ou não, como as linhas do `point` mostraram."
+      }
+    ]
+  },
+  "ex-7c4y0tj7": {
+    "prompt": "Qual destas declarações compila?",
+    "hint": "Uma constante é calculada antes de o programa rodar.",
+    "choices": [
+      {
+        "text": "`const now = time.Now()`",
+        "why": "Uma chamada de função roda junto com o programa; o compilador diz que `time.Now()` não é constante."
+      },
+      {
+        "text": "`const limit = 10 * 1024`",
+        "why": "Isso. Aritmética com números que o compilador já conhece dá uma constante."
+      },
+      {
+        "text": "`const names = []string{\"ana\", \"bia\"}`",
+        "why": "Um slice é montado em tempo de execução; é o erro do `primes` de novo, e ele pertence a um `var`."
+      },
+      {
+        "text": "`n := iota`, dentro de `main`",
+        "why": "O `iota` só significa algo dentro de uma declaração `const`, e o compilador diz isso."
+      }
+    ]
+  }
+}

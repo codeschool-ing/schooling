@@ -4,9 +4,9 @@ version: 1
 ---
 
 Dois tipos de lista atravessam este curso. Uma **lista de bloqueio** nomeia o que é recusado: a lista de
-palavras da moderação da aula 16, a lista de frases da aula 18. Uma **lista permitida** nomeia o que é
-aceito e recusa todo o resto: as categorias e os campos da aula 19, os hosts, o snapshot de registro da
-aula 8. Elas falham em direções opostas, e a diferença aparece em dois comandos:
+palavras da moderação da aula 6, a lista de frases da aula 8. Uma **lista permitida** nomeia o que é
+aceito e recusa todo o resto: as categorias e os campos da aula 9, os hosts, o snapshot de registro da
+aula 2. Elas falham em direções opostas, e a diferença aparece em dois comandos:
 
 ```
 ana@lab:~/guard$ guard moderate 'Shut up, you clown'
@@ -29,7 +29,7 @@ Essa assimetria dá a regra prática:
   uma entrada.
 - **Onde os valores bons são abertos, uma lista de bloqueio é a única opção**, e ela é tratada como sinal e
   não como garantia. Texto livre é o caso: ninguém lista toda frase aceitável, então a moderação pontua e
-  uma pessoa revisa a faixa duvidosa, como na aula 16.
+  uma pessoa revisa a faixa duvidosa, como na aula 6.
 
 O erro a evitar é uma lista de bloqueio onde uma lista permitida era possível. Um filtro de links que
 bloqueia hosts ruins conhecidos precisa saber de cada host ruim antes de ele aparecer; um que permite só

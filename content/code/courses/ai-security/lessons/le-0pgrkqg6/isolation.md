@@ -33,12 +33,12 @@ c7  update_contact DENY   budget of 4 calls per conversation is spent
 
 With a budget of four, the fifth proposal is refused whatever it is. The lab's manifest allows eight,
 which is enough for a support conversation and too few for a runaway one. When the budget is spent,
-the conversation goes to a person, the same fallback as the retry loop of lesson 19.
+the conversation goes to a person, the same fallback as the retry loop of lesson 9.
 
 ## Everything leaves a record
 
 Every proposal, every decision and its reason, every confirmation and its author goes to the log,
-under the request id and the end-user identifier from lesson 17. The logs of lesson 21 apply: the
+under the request id and the end-user identifier from lesson 7. The logs of lesson 11 apply: the
 arguments of a call are personal data when they name a person, and are redacted and expire like the
 rest.
 

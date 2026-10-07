@@ -1,0 +1,227 @@
+{
+  "ex-hmgp9btm": {
+    "prompt": "Por que o pipeline mora no `ci/pipeline.sh`, e não como passos no arquivo do workflow?",
+    "hint": "Quem mais consegue rodá-lo?",
+    "choices": [
+      {
+        "text": "Quem tem Docker reproduz uma falha da CI com um comando",
+        "why": "Isso: o notebook e o runner rodam a mesma coisa."
+      },
+      {
+        "text": "O GitHub Actions não consegue rodar `docker`",
+        "why": "Consegue; o workflow o chama."
+      },
+      {
+        "text": "Scripts de shell rodam mais rápido que passos de workflow",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Arquivos de workflow não aceitam mais de quatro passos",
+        "why": "Não existe esse limite."
+      }
+    ]
+  },
+  "ex-8nd1jjwy": {
+    "prompt": "Como um runner `amd64` constrói a imagem `arm64` do `shelf` sem emular ARM?",
+    "hint": "Onde roda o estágio de build?",
+    "choices": [
+      {
+        "text": "O QEMU vem embutido no BuildKit",
+        "why": "Nenhuma emulação foi usada; nada a instalou."
+      },
+      {
+        "text": "O Go compila para `TARGETARCH` na `BUILDPLATFORM`",
+        "why": "Isso; o estágio final não roda comandos, então não precisa de emulação."
+      },
+      {
+        "text": "A imagem `arm64` é copiada da `amd64`",
+        "why": "Os binários são diferentes; são compilados para cada alvo."
+      },
+      {
+        "text": "O registry converte no push",
+        "why": "Registries guardam bytes; não convertem nada."
+      }
+    ]
+  },
+  "ex-xmne7xsq": {
+    "prompt": "A linha que faz o script parar no primeiro comando que falha é `set -___`.",
+    "hint": "O primeiro ajuste do script.",
+    "blanks": [
+      {
+        "accept": [
+          "e",
+          "eu"
+        ]
+      }
+    ]
+  },
+  "ex-r9545pss": {
+    "prompt": "Na primeira execução da Ana, o que a varredura que falhou impediu?",
+    "hint": "Que passo vem depois dela?",
+    "choices": [
+      {
+        "text": "Nada; a imagem foi enviada mesmo assim, com um aviso",
+        "why": "O pipeline saiu com status 1 antes do push."
+      },
+      {
+        "text": "Os testes de integração",
+        "why": "Eles rodaram antes da varredura, e passaram."
+      },
+      {
+        "text": "O build e o push de uma imagem de release",
+        "why": "Isso: nada com o achado chegou ao registry."
+      },
+      {
+        "text": "Os testes de unidade",
+        "why": "Eles vieram primeiro, e passaram."
+      }
+    ]
+  },
+  "ex-1nx80jwk": {
+    "prompt": "Ponha os passos do pipeline na ordem em que o script os roda.",
+    "hint": "Os mais baratos primeiro.",
+    "items": [
+      "Testes de unidade",
+      "Testes de integração",
+      "Varredura",
+      "Build e push"
+    ]
+  },
+  "ex-vjza46zf": {
+    "prompt": "Por que o workflow faz login com o `GITHUB_TOKEN`, e não com um token pessoal guardado como segredo?",
+    "hint": "Quanto tempo cada um vive?",
+    "choices": [
+      {
+        "text": "Tokens pessoais não conseguem enviar pacotes",
+        "why": "Conseguem, e isso é parte do risco."
+      },
+      {
+        "text": "O `GITHUB_TOKEN` não precisa de passo de login",
+        "why": "Ele é passado ao `docker login` como qualquer outro."
+      },
+      {
+        "text": "O GHCR recusa qualquer outra credencial",
+        "why": "Ele aceita tokens pessoais também."
+      },
+      {
+        "text": "Ele é revogado quando o job termina",
+        "why": "Isso: uma cópia vazada perde o valor quase na hora."
+      }
+    ]
+  },
+  "ex-gc1cwd9z": {
+    "prompt": "Por que o `actions/checkout` está escrito com um hash de commit e a versão num comentário?",
+    "hint": "Aula 16, aplicada às ferramentas do pipeline.",
+    "choices": [
+      {
+        "text": "Tags se movem; um hash de commit, nunca",
+        "why": "Isso: o código que roda com o token fica fixo."
+      },
+      {
+        "text": "O GitHub exige hashes para actions oficiais",
+        "why": "Ele aceita tags; a escolha é do workflow."
+      },
+      {
+        "text": "Hashes baixam mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O comentário é o que o GitHub de fato lê",
+        "why": "O GitHub lê o hash; o comentário é para pessoas."
+      }
+    ]
+  },
+  "ex-nkhdfw9b": {
+    "prompt": "O que o `if: always()` no passo de logout garante?",
+    "hint": "E se o pipeline falhar?",
+    "choices": [
+      {
+        "text": "O workflow sempre termina com sucesso, aconteça o que acontecer",
+        "why": "Não muda nada no resultado do job."
+      },
+      {
+        "text": "O logout roda mesmo se o pipeline falhar",
+        "why": "Isso: nenhuma credencial fica para trás numa falha."
+      },
+      {
+        "text": "O logout roda antes de o passo do pipeline começar",
+        "why": "A ordem não muda; só a condição."
+      },
+      {
+        "text": "O token é renovado",
+        "why": "Nada o renova."
+      }
+    ]
+  },
+  "ex-6s8hsx5q": {
+    "prompt": "Para `REF_NAME=v1.8.0`, que tags o pipeline enviou? Escolha todas as que se aplicam.",
+    "hint": "Leia a lista de tags depois da versão.",
+    "choices": [
+      {
+        "text": "`1.8.0`",
+        "why": "Sim."
+      },
+      {
+        "text": "`1.8`",
+        "why": "Sim, a linha menor."
+      },
+      {
+        "text": "`1`",
+        "why": "Sim, a linha maior."
+      },
+      {
+        "text": "`latest`",
+        "why": "Não: nada no script escreve `latest`, de propósito."
+      }
+    ]
+  },
+  "ex-fw1j9b7b": {
+    "prompt": "Com o cache de build local esvaziado, quantos passos do build da versão voltaram `CACHED`?",
+    "hint": "O `grep -c` depois da execução.",
+    "unit": "passos"
+  },
+  "ex-fwm2ey2c": {
+    "prompt": "O build da `main` e o da `v1.8.0` vieram do mesmo commit, e mesmo assim enviaram digests diferentes. Por quê?",
+    "hint": "O que cada um passou como `VERSION`?",
+    "choices": [
+      {
+        "text": "Registries acrescentam um horário a cada push",
+        "why": "Registries guardam exatamente os bytes que recebem."
+      },
+      {
+        "text": "Tags fazem parte daquilo de que o digest é calculado",
+        "why": "Uma tag aponta para um digest; ela não está dentro dele."
+      },
+      {
+        "text": "A versão é compilada no binário",
+        "why": "Isso: `dev` e `1.8.0` são bytes diferentes."
+      },
+      {
+        "text": "O cache foi esvaziado",
+        "why": "O cache muda a velocidade, e não o que é construído."
+      }
+    ]
+  },
+  "ex-jg1r8qdm": {
+    "prompt": "Um colega propõe um workflow que constrói e envia `:latest` a cada push, e roda os testes depois, contra a imagem enviada. O que há de errado?",
+    "hint": "Ordem, e nomes.",
+    "choices": [
+      {
+        "text": "Nada; testar a imagem enviada é mais realista",
+        "why": "Todo build que falha já está no registry a essa altura."
+      },
+      {
+        "text": "Só a tag: `latest` deveria ter se chamado `main` no lugar",
+        "why": "A ordem é o problema maior."
+      },
+      {
+        "text": "Workflows não conseguem enviar a cada commit",
+        "why": "Conseguem; o gatilho está certo."
+      },
+      {
+        "text": "Imagens não testadas chegam ao registry sob uma tag móvel",
+        "why": "Isso: testar antes, enviar por commit e versão, fazer deploy pelo digest."
+      }
+    ]
+  }
+}

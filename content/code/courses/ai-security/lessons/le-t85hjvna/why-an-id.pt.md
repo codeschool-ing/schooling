@@ -18,7 +18,7 @@ usuários da Tarefa. Sem mais nada em que se apoiar, o fornecedor não distingue
 cliente ruim.
 
 **Na Tarefa.** Quando o aviso do fornecedor chega, ou quando o monitoramento da própria Tarefa vê algo
-estranho, a primeira pergunta é *quem*. Os logs da aula 21 respondem se cada chamada registrou a
+estranho, a primeira pergunta é *quem*. Os logs da aula 11 respondem se cada chamada registrou a
 conta. O mesmo identificador permite à Tarefa limitar, cobrar e investigar por usuário, que é o
 assunto das próximas duas seções.
 
@@ -46,7 +46,7 @@ JSON que uma aplicação enviaria; esta aula não envia nada a lugar nenhum:
 ```
 
 `eu-fe47aa8e7cd5e1b6f8bc` é o identificador que o laboratório produz para a conta `ac-7Q2M`, o cliente
-cujo e-mail você viu na aula 21. A próxima seção é como ele é feito.
+cujo e-mail você viu na aula 11. A próxima seção é como ele é feito.
 
 ## O que o fornecedor faz com ele
 
@@ -54,5 +54,5 @@ Um identificador permite ao fornecedor dizer à Tarefa *qual* usuário disparou 
 para que a Tarefa trate de uma conta em vez de ter a chave restrita. O que cada fornecedor faz de fato
 com o campo, quanto tempo o guarda e se age sobre ele automaticamente está nos termos e na
 documentação, e varia entre fornecedores. Leia-os para o fornecedor que você usa, do mesmo jeito que a
-aula 22 leu o contrato. O campo custa poucos bytes por requisição, e o dia em que ele importa é o dia
+aula 12 leu o contrato. O campo custa poucos bytes por requisição, e o dia em que ele importa é o dia
 em que um relatório de abuso cita a sua chave.

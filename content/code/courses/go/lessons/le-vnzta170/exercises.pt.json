@@ -1,0 +1,379 @@
+{
+  "ex-mj9bv1r6": {
+    "prompt": "Qual destas é a forma de Go escrever um laço que repete enquanto `n > 1`?",
+    "hint": "Go tem uma palavra-chave para laços.",
+    "choices": [
+      {
+        "text": "`while n > 1 { … }`",
+        "why": "`while` não é palavra-chave de Go; a seção 02 mostra o erro de sintaxe que ele causa."
+      },
+      {
+        "text": "`do { … } while n > 1`",
+        "why": "Go também não tem `do … while`; todo laço é um `for`."
+      },
+      {
+        "text": "`for n > 1 { … }`",
+        "why": "Isso. Um `for` só com a condição é o `while` de Go."
+      },
+      {
+        "text": "`for range n > 1 { … }`, com `range` antes da condição",
+        "why": "O `range` precisa de algo para percorrer, e uma condição é um `bool`: `cannot range over n > 1 (untyped bool value)`."
+      }
+    ]
+  },
+  "ex-rm44a25k": {
+    "prompt": "`for i := 0; i < 3; i++ { … }` roda o corpo três vezes. Quantas vezes a condição `i < 3` é testada?",
+    "hint": "Siga a figura: o teste que encerra o laço também é um teste.",
+    "unit": "vezes"
+  },
+  "ex-4sfvhnw7": {
+    "prompt": "Um `fmt.Println(i)` posto logo depois de `for i := 0; i < 3; i++ { … }` faz o quê?",
+    "hint": "Onde `i` foi declarada?",
+    "choices": [
+      {
+        "text": "Imprime 3, o valor que encerrou o laço",
+        "why": "Seria verdade se `i` sobrevivesse ao laço; declarada na primeira cláusula, não sobrevive."
+      },
+      {
+        "text": "Imprime 2, o último valor que o corpo viu",
+        "why": "A linha não compila, então não imprime nada."
+      },
+      {
+        "text": "Não compila: `undefined: i`, porque `i` só pertence ao laço",
+        "why": "Isso. A variável da primeira cláusula pertence ao comando `for`."
+      },
+      {
+        "text": "Imprime 0, já que `i` é zerada quando o laço termina",
+        "why": "Nada a zera; ela simplesmente está fora de escopo."
+      }
+    ]
+  },
+  "ex-jnz553vd": {
+    "prompt": "O `go.mod` de um módulo diz `go 1.21`. Quais destes laços compilam nele? Marque todos os que se aplicam.",
+    "hint": "A seção 02 mudou a linha `go` e rodou de novo.",
+    "choices": [
+      {
+        "text": "`for i := 0; i < 3; i++ { … }`",
+        "why": "Sim. O laço de três cláusulas sempre foi Go."
+      },
+      {
+        "text": "`for i := range 3 { … }`",
+        "why": "Não: `cannot range over 3 (untyped int constant): requires go1.22 or later`."
+      },
+      {
+        "text": "`for n > 1 { … }`",
+        "why": "Sim. A condição sozinha é tão antiga quanto as três cláusulas."
+      },
+      {
+        "text": "`for range 2 { … }`",
+        "why": "Não. Percorrer um inteiro, com ou sem variável, chegou no Go 1.22."
+      }
+    ]
+  },
+  "ex-efqcc8sp": {
+    "prompt": "Um arquivo falha com `syntax error: unexpected name n at end of statement` na linha `while n > 1 {`, e com um segundo erro na linha 10 sobre uma instrução fora do corpo da função. O que deve ser corrigido?",
+    "hint": "Qual erro causou o outro?",
+    "choices": [
+      {
+        "text": "A linha 10 antes, porque o último erro da lista é o verdadeiro",
+        "why": "É o contrário: o parser perdeu a conta das chaves por causa do primeiro erro."
+      },
+      {
+        "text": "`while` vira `for`; o erro da linha 10 vai junto",
+        "why": "Isso. Corrija o primeiro erro e rode de novo; o segundo era o parser tropeçando no mesmo engano."
+      },
+      {
+        "text": "Renomear `n`, já que a mensagem diz que ele é inesperado",
+        "why": "`n` só é inesperado porque o `while` antes dele é lido como nome; qualquer nome ali falha igual."
+      },
+      {
+        "text": "Escrever `while (n > 1) {`, com parênteses, como em C",
+        "why": "Parênteses não fazem de `while` uma palavra-chave; Go não tem nenhuma com esse nome."
+      }
+    ]
+  },
+  "ex-rzw5mksx": {
+    "prompt": "`for i := ___ 5 { … }` roda o corpo cinco vezes, com `i` indo de 0 a 4.",
+    "hint": "A palavra que também percorre slices, maps e strings.",
+    "blanks": [
+      {
+        "accept": [
+          "range"
+        ]
+      }
+    ]
+  },
+  "ex-kv2qs6d1": {
+    "prompt": "O que `for x := range []string{\"a\", \"b\"} { fmt.Println(x) }` imprime?",
+    "hint": "Uma variável só, sobre uma slice.",
+    "choices": [
+      {
+        "text": "`a` e depois `b`",
+        "why": "Esse é o `for x in xs` de Python. Em Go uma variável só recebe o índice."
+      },
+      {
+        "text": "`0` e depois `1`",
+        "why": "Isso. Com uma variável só, o `range` sobre uma slice dá os índices, seja qual for o nome da variável."
+      },
+      {
+        "text": "`0 a` e depois `1 b`",
+        "why": "Os dois pediriam duas variáveis, `for i, x := range …`."
+      },
+      {
+        "text": "Nada, porque uma variável só é recusada e o `_` é obrigatório",
+        "why": "Uma variável só é permitida; o `_` é como você pula o índice quando quer os elementos."
+      }
+    ]
+  },
+  "ex-7whqdhps": {
+    "prompt": "`team` guarda `{Ana 10}` e `{Bia 7}`. Depois de `for _, p := range team { p.Score += 5 }`, o que `fmt.Println(team)` imprime?",
+    "hint": "O que é `p` a cada volta?",
+    "choices": [
+      {
+        "text": "`[{Ana 15} {Bia 12}]`",
+        "why": "Isso pede escrever pelo índice, `team[i].Score`; `p` era uma cópia."
+      },
+      {
+        "text": "`[{Ana 10} {Bia 7}]`, as pontuações intactas",
+        "why": "Isso. Cada `p` foi uma cópia de um elemento, alterada e jogada fora."
+      },
+      {
+        "text": "`[{Ana 10} {Bia 12}]`, já que só a última cópia é escrita de volta",
+        "why": "Nenhuma cópia é escrita de volta, a última inclusive."
+      },
+      {
+        "text": "Nada, porque o `go vet` recusa um laço que muda a sua cópia",
+        "why": "O `go vet` saiu com 0 exatamente neste laço, e o `go run` nem roda o vet."
+      }
+    ]
+  },
+  "ex-6n9mjscr": {
+    "prompt": "Qual laço de fato soma 5 ao `Score` de cada jogadora na slice `team`?",
+    "hint": "O laço tem de escrever na slice, não numa cópia.",
+    "choices": [
+      {
+        "text": "`for _, p := range team { p.Score += 5 }`",
+        "why": "`p` é uma cópia de cada elemento, então a slice fica intacta."
+      },
+      {
+        "text": "`for p := range team { p.Score += 5 }`",
+        "why": "Com uma variável só, `p` é o índice, um `int`: `p.Score undefined (type int has no field or method Score)`."
+      },
+      {
+        "text": "`for i := range team { team[i].Score += 5 }`",
+        "why": "Isso. `team[i]` é o próprio elemento dentro da slice."
+      },
+      {
+        "text": "`for i, p := range team { p.Score = team[i].Score + 5 }`",
+        "why": "Ele lê o valor certo e mesmo assim o escreve na cópia `p`."
+      }
+    ]
+  },
+  "ex-e6eg7fb5": {
+    "prompt": "`nums := []int{1}`, depois `for _, n := range nums { nums = append(nums, n+1) }`. O que `fmt.Println(nums)` imprime?",
+    "hint": "Quando o `range` decide quantas voltas vai haver?",
+    "choices": [
+      {
+        "text": "Sem saída: o laço continua achando o elemento que acabou de acrescentar, e não para",
+        "why": "É o que faria um laço de três cláusulas testando `len(nums)`; o `range` leu o comprimento uma vez."
+      },
+      {
+        "text": "`[1 2]`: uma volta, já que `nums` tinha um elemento quando o laço começou, e um append",
+        "why": "Isso. A slice tinha um elemento quando o laço começou, então houve uma volta."
+      },
+      {
+        "text": "`[1]`, porque um `append` dentro do `range` é descartado",
+        "why": "O `append` fica, já que o resultado volta para `nums`; ele só não acrescenta voltas."
+      },
+      {
+        "text": "Um panic, pois mudar uma slice enquanto se percorre ela é proibido",
+        "why": "É permitido; a seção 03 fez `append` dentro de um `range` e imprimiu `[1 2 3 10 20 30]`."
+      }
+    ]
+  },
+  "ex-5zmp0gdv": {
+    "prompt": "Quais destas valem para `for i, v := range s`, em que `s` é uma slice? Marque todas as que se aplicam.",
+    "hint": "Duas tratam de cópias e contagens; duas tratam de variáveis.",
+    "choices": [
+      {
+        "text": "`v` é uma cópia de `s[i]`",
+        "why": "Sim. O `range` atribui o elemento a `v`, e atribuição copia."
+      },
+      {
+        "text": "Atribuir a `v` muda `s[i]`",
+        "why": "Não. O time manteve as pontuações antigas exatamente por isso."
+      },
+      {
+        "text": "O número de voltas é fixado quando o laço começa",
+        "why": "Sim. O `range` lê a slice uma vez, antes da primeira volta."
+      },
+      {
+        "text": "Desde o Go 1.22, `i` e `v` são um par só, reaproveitado a cada volta",
+        "why": "É o contrário: desde o 1.22 cada volta ganha o seu próprio `i` e `v`."
+      }
+    ]
+  },
+  "ex-04x8751t": {
+    "prompt": "Que valores `i` assume em `for i := range \"café\"`?",
+    "hint": "O `é` ocupa dois bytes.",
+    "choices": [
+      {
+        "text": "0, 1, 2, 3 e 4",
+        "why": "Esses são os índices de byte que um laço de três cláusulas sobre `len(s)` percorre; o `range` para uma vez por rune."
+      },
+      {
+        "text": "1, 2, 3 e 4, um por caractere",
+        "why": "Os deslocamentos começam em 0, e contam bytes, não caracteres."
+      },
+      {
+        "text": "0, 1, 2 e 3: um deslocamento por rune, onde cada uma começa",
+        "why": "Isso. Quatro runes, cada uma no deslocamento em bytes onde começa; o `é` começa no 3."
+      },
+      {
+        "text": "0, 1, 2 e 5, o deslocamento logo depois do `é`",
+        "why": "O deslocamento é onde uma rune começa, não onde termina."
+      }
+    ]
+  },
+  "ex-q64hqr5q": {
+    "prompt": "O `range` encontra o byte `\\xff`, que não começa caractere UTF-8 nenhum. O que ele faz?",
+    "hint": "A seção 04 imprimiu uma linha para ele.",
+    "choices": [
+      {
+        "text": "Dá um panic com um erro de UTF-8 inválido",
+        "why": "Nada falhou: o laço seguiu até o `!`."
+      },
+      {
+        "text": "Dá a rune U+FFFD e avança um byte",
+        "why": "Isso. O caractere de substituição, `utf8.RuneError`, e a próxima volta começa no byte seguinte."
+      },
+      {
+        "text": "Pula o byte sem dar volta",
+        "why": "Houve uma volta para ele, no deslocamento 5, imprimindo `U+FFFD`."
+      },
+      {
+        "text": "Dá o próprio byte, 255, como rune",
+        "why": "A rune foi U+FFFD, não U+00FF; o `range` decodifica, e um byte que não decodifica em nada recebe a substituição."
+      }
+    ]
+  },
+  "ex-5gx6qapg": {
+    "prompt": "`len(\"señor\")` é 6, porque `ñ` ocupa dois bytes. Quantas voltas `for range \"señor\"` dá?",
+    "hint": "Uma volta por rune.",
+    "unit": "voltas"
+  },
+  "ex-asdwa2w6": {
+    "prompt": "Um laço sobre um map apaga toda entrada cujo valor é 0, dentro do mesmo `range`. O que acontece?",
+    "hint": "A seção 04 fez exatamente isso com `stock`.",
+    "choices": [
+      {
+        "text": "Funciona: toda entrada assim some, seja qual for a ordem do percurso",
+        "why": "Isso. Apagar enquanto se percorre um map é permitido, e `stock` ficou só com `apples` e `plums`."
+      },
+      {
+        "text": "Erro de compilação: `delete` não pode aparecer dentro de um `range` sobre o mesmo map",
+        "why": "O compilador não procura isso, e o programa da seção 04 rodou."
+      },
+      {
+        "text": "Um erro fatal sobre o map ter sido mudado durante a iteração",
+        "why": "Esse tipo de falha é de duas goroutines dividindo um map, assunto do curso `go-concurrency`; um laço só não tem problema."
+      },
+      {
+        "text": "Algumas entradas sobrevivem, já que o percurso pula o que vem depois de uma remoção",
+        "why": "Todo zero foi removido; uma remoção só esconde a entrada removida."
+      }
+    ]
+  },
+  "ex-zp2jjzqq": {
+    "prompt": "Um relatório precisa listar as entradas de um map na mesma ordem toda vez que roda. Qual laço dá isso?",
+    "hint": "Só um deles ordena alguma coisa.",
+    "choices": [
+      {
+        "text": "`for k, v := range m`",
+        "why": "A lição 14 rodou o mesmo percurso duas vezes e teve duas ordens."
+      },
+      {
+        "text": "`for k := range maps.Keys(m)`",
+        "why": "`maps.Keys` entrega as chaves na ordem do próprio map, que é aleatória."
+      },
+      {
+        "text": "`for k, v := range m`, rodado duas vezes para a ordem assentar",
+        "why": "A ordem nunca assenta; ela é sorteada de novo a cada percurso."
+      },
+      {
+        "text": "`for _, k := range slices.Sorted(maps.Keys(m))`",
+        "why": "Isso. As chaves são ordenadas numa slice, e uma slice é percorrida na ordem dos índices."
+      }
+    ]
+  },
+  "ex-c5b0vffm": {
+    "prompt": "`maps.Values(m)` devolve um ___: uma função que o `range` chama para receber os valores um de cada vez.",
+    "hint": "O tipo dele é `iter.Seq[V]`.",
+    "blanks": [
+      {
+        "accept": [
+          "iterador"
+        ]
+      }
+    ]
+  },
+  "ex-bw659vtb": {
+    "prompt": "Ligue o que é percorrido ao que a primeira variável guarda.",
+    "hint": "A tabela no fim da seção 04.",
+    "pairs": [
+      {
+        "left": "Um inteiro `n`",
+        "right": "De 0 até `n`-1"
+      },
+      {
+        "left": "Uma slice",
+        "right": "O índice"
+      },
+      {
+        "left": "Uma string",
+        "right": "O deslocamento em bytes onde uma rune começa"
+      },
+      {
+        "left": "Um map",
+        "right": "A chave"
+      }
+    ],
+    "right_distractors": [
+      "O número de caracteres vistos até ali"
+    ]
+  },
+  "ex-td0vjym8": {
+    "prompt": "Ponha os passos de `for i := 0; i < 2; i++ { body }` na ordem em que acontecem, do começo ao fim do laço.",
+    "hint": "A condição é testada antes de cada volta, e mais uma vez no fim.",
+    "items": [
+      "`i := 0`",
+      "`i < 2` é verdadeira",
+      "O corpo roda com `i` valendo 0",
+      "`i++`",
+      "O corpo roda com `i` valendo 1",
+      "`i < 2` é falsa, e o laço termina"
+    ]
+  },
+  "ex-he6avznq": {
+    "prompt": "`for i, r := range s` imprimiu os deslocamentos 0, 1, 3 e 4. O que você sabe sobre a rune no deslocamento 1?",
+    "hint": "A distância entre dois deslocamentos é o tamanho da rune entre eles.",
+    "choices": [
+      {
+        "text": "É um byte quebrado, trocado por U+FFFD",
+        "why": "Depois de um byte quebrado o `range` avança um byte, então o próximo deslocamento seria 2."
+      },
+      {
+        "text": "Não dá para saber: os deslocamentos podem pular em qualquer rune",
+        "why": "Eles pulam exatamente o tamanho da rune, e é isso que torna a distância legível."
+      },
+      {
+        "text": "Ocupou dois bytes, então não é ASCII",
+        "why": "Isso. A rune seguinte começa no 3, dois bytes adiante, e todo caractere ASCII ocupa um byte."
+      },
+      {
+        "text": "O laço pulou a rune do deslocamento 2",
+        "why": "Nenhuma rune começa no 2; esse byte é a segunda metade da rune do 1."
+      }
+    ]
+  }
+}

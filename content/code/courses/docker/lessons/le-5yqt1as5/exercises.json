@@ -1,0 +1,446 @@
+[
+  {
+    "id": "ex-fkb5bkpf",
+    "version": 1,
+    "section": "ports",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`shelf` was listening on 8080 inside `web`, yet `curl localhost:8080` failed. Why?",
+    "hint": "Whose network was `shelf` listening on?",
+    "choices": [
+      {
+        "text": "`shelf` had not finished starting",
+        "correct": false,
+        "why": "Its log said it was listening; time was not the issue."
+      },
+      {
+        "text": "`curl` cannot reach containers",
+        "correct": false,
+        "why": "It reached `shelf` as soon as a port was published."
+      },
+      {
+        "text": "Port 8080 is reserved on Ubuntu",
+        "correct": false,
+        "why": "The very next command used it."
+      },
+      {
+        "text": "No port was published to the host",
+        "correct": true,
+        "why": "Right: the container's network is its own until `-p` connects it."
+      }
+    ]
+  },
+  {
+    "id": "ex-83hvepwm",
+    "version": 1,
+    "section": "ports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `-p 8080:8080`, `ss` showed `0.0.0.0:8080`. Who can reach `shelf`?",
+    "hint": "Which addresses does `0.0.0.0` mean?",
+    "choices": [
+      {
+        "text": "Any machine that reaches this one",
+        "correct": true,
+        "why": "Right: every address the machine has, the network card included."
+      },
+      {
+        "text": "Only programs on Ana's machine",
+        "correct": false,
+        "why": "That would be `127.0.0.1`."
+      },
+      {
+        "text": "Only other containers",
+        "correct": false,
+        "why": "The host's own `curl` reached it."
+      },
+      {
+        "text": "Nobody until `ufw` opens the port",
+        "correct": false,
+        "why": "Docker's rules take effect before `ufw`'s."
+      }
+    ]
+  },
+  {
+    "id": "ex-4knje0er",
+    "version": 1,
+    "section": "ports",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To publish a database's port to programs on the same machine only, write `-p ___:5432:5432`.",
+    "hint": "The loopback address.",
+    "blanks": [
+      {
+        "accept": [
+          "127.0.0.1"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vm30tc4d",
+    "version": 1,
+    "section": "ports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`web2` asked for `127.0.0.1:8080` while `web` held it. What happened?",
+    "hint": "Read the error, and the line before it.",
+    "choices": [
+      {
+        "text": "Docker queued `web2` until `web` stopped",
+        "correct": false,
+        "why": "There is no queue; the start failed."
+      },
+      {
+        "text": "`web2` was created, and refused at start",
+        "correct": true,
+        "why": "Right: an id was printed, then `port is already allocated`."
+      },
+      {
+        "text": "The two shared the port, taking turns",
+        "correct": false,
+        "why": "One host port, one container."
+      },
+      {
+        "text": "Docker moved `web` to another port",
+        "correct": false,
+        "why": "A running container's ports do not move."
+      }
+    ]
+  },
+  {
+    "id": "ex-0szss5tv",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-e PORT=9090 -p 127.0.0.1:8080:9090`, which port does Ana's `curl` use?",
+    "hint": "The first number is the door on the machine.",
+    "choices": [
+      {
+        "text": "9090, the port `shelf` listens on",
+        "correct": false,
+        "why": "That is inside the container; the host's door is 8080."
+      },
+      {
+        "text": "Either, since Docker opens both",
+        "correct": false,
+        "why": "Only the host port in `-p` is opened."
+      },
+      {
+        "text": "8080",
+        "correct": true,
+        "why": "Right: the host's 8080, passed to the container's 9090."
+      },
+      {
+        "text": "Neither; `PORT` breaks publishing",
+        "correct": false,
+        "why": "The `curl` answered `1.0.0`."
+      }
+    ]
+  },
+  {
+    "id": "ex-55k1h0qk",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`DATABASE_URL` carries a password. Who can read it once the container is created with `--env-file`?",
+    "hint": "What did `docker inspect` print?",
+    "choices": [
+      {
+        "text": "Only Ana, since the file is hers",
+        "correct": false,
+        "why": "The values were copied into the container's configuration."
+      },
+      {
+        "text": "Nobody: Docker encrypts env files",
+        "correct": false,
+        "why": "`docker inspect` printed it in plain text."
+      },
+      {
+        "text": "Only root, through `/proc`",
+        "correct": false,
+        "why": "No `/proc` needed; `docker inspect` is enough."
+      },
+      {
+        "text": "Anyone in the `docker` group, and the program",
+        "correct": true,
+        "why": "Right, which is everyone with root, plus whatever runs inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2129pt6",
+    "version": 1,
+    "section": "variables",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these ways of giving `shelf` its database password, from the most exposed to the least.",
+    "hint": "The lesson listed the improvements in order of effort.",
+    "items": [
+      "`-e` typed on the command line",
+      "An env file kept outside the project",
+      "A file mounted into the container",
+      "Fetched at start from a secret manager"
+    ]
+  },
+  {
+    "id": "ex-6kze9mk9",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `shelf.env`, `shelf` logged `hostname resolving error` and stopped. Why?",
+    "hint": "Which host did `DATABASE_URL` name?",
+    "choices": [
+      {
+        "text": "No host called `db` existed",
+        "correct": true,
+        "why": "Right; the lab has no database here, which this lesson uses on purpose."
+      },
+      {
+        "text": "The env file had a syntax error",
+        "correct": false,
+        "why": "Both variables were read; `PORT` and the URL are in `docker inspect`."
+      },
+      {
+        "text": "Distroless images cannot use DNS",
+        "correct": false,
+        "why": "The lookup happened and got an answer: no such host."
+      },
+      {
+        "text": "The password was wrong",
+        "correct": false,
+        "why": "It never got as far as a password."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8rzrjyk",
+    "version": 1,
+    "section": "limits-and-restarts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `hog` container ended with exit code 137 and `OOMKilled: true`. What happened?",
+    "hint": "137 is 128 plus a signal number.",
+    "choices": [
+      {
+        "text": "`tail` exited with an error of its own",
+        "correct": false,
+        "why": "An exit of its own would not set `OOMKilled`."
+      },
+      {
+        "text": "The kernel killed it at the 64 MB limit",
+        "correct": true,
+        "why": "Right, with `SIGKILL`, signal 9: no warning and no clean-up."
+      },
+      {
+        "text": "Docker stopped it after a timeout",
+        "correct": false,
+        "why": "No timeout was set; the limit was memory."
+      },
+      {
+        "text": "Alpine has no `/dev/zero`",
+        "correct": false,
+        "why": "It read from it until it ran out of room."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2bbn3zk",
+    "version": 1,
+    "section": "limits-and-restarts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker stats` showed the `spin` container, limited with `--cpus 0.5`, using what percentage of a CPU? Give the number shown.",
+    "hint": "The second row.",
+    "value": 49.21,
+    "tolerance": 0.01,
+    "unit": "%"
+  },
+  {
+    "id": "ex-tvrka0p3",
+    "version": 1,
+    "section": "limits-and-restarts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shelf` gets `--cpus 0.25` and a traffic spike arrives. What do users see?",
+    "hint": "What does a CPU limit do when it is reached?",
+    "choices": [
+      {
+        "text": "Errors, as the container is killed and restarted",
+        "correct": false,
+        "why": "That is what a memory limit does, not a CPU one."
+      },
+      {
+        "text": "Nothing, because limits apply only at start",
+        "correct": false,
+        "why": "The limit applies all the time; the loop showed it."
+      },
+      {
+        "text": "Slower responses",
+        "correct": true,
+        "why": "Right: the scheduler holds it back; nothing is killed."
+      },
+      {
+        "text": "A `429 Too Many Requests` from Docker",
+        "correct": false,
+        "why": "Docker does not answer HTTP for a container."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzqxeq1f",
+    "version": 1,
+    "section": "limits-and-restarts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `docker run` flag to what it limits or decides.",
+    "hint": "Four cgroup and daemon settings.",
+    "pairs": [
+      {
+        "left": "`--memory 64m`",
+        "right": "Memory, enforced by the kernel's OOM killer"
+      },
+      {
+        "left": "`--cpus 0.5`",
+        "right": "Processor time, by the scheduler"
+      },
+      {
+        "left": "`--pids-limit 64`",
+        "right": "How many processes and threads"
+      },
+      {
+        "left": "`--restart on-failure:3`",
+        "right": "What the daemon does when the process exits"
+      }
+    ],
+    "right_distractors": [
+      "How much disk the container may write"
+    ]
+  },
+  {
+    "id": "ex-g9spqvtx",
+    "version": 1,
+    "section": "limits-and-restarts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--restart on-failure:3` and a database that does not exist, how many times did `shelf` start in total?",
+    "hint": "Count the `database:` lines.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "starts"
+  },
+  {
+    "id": "ex-5pk08nsq",
+    "version": 1,
+    "section": "limits-and-restarts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana stopped `web`, which had `--restart unless-stopped`. What does it do when the daemon restarts later?",
+    "hint": "The table's last column.",
+    "choices": [
+      {
+        "text": "It starts, as with `always`",
+        "correct": false,
+        "why": "`always` starts again after a daemon restart; `unless-stopped` does not."
+      },
+      {
+        "text": "It is deleted",
+        "correct": false,
+        "why": "No policy deletes a container."
+      },
+      {
+        "text": "It starts once, then stops again",
+        "correct": false,
+        "why": "There is no such behaviour; it simply stays stopped."
+      },
+      {
+        "text": "It stays stopped",
+        "correct": true,
+        "why": "Right: a manual stop is remembered across daemon restarts."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3dwynkc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which `docker run` is right for a database that only `shelf`, on the same machine, should reach?",
+    "hint": "Address, limits, and a restart policy.",
+    "choices": [
+      {
+        "text": "`docker run -d -p 127.0.0.1:5432:5432 --memory 512m --restart unless-stopped postgres:17`",
+        "correct": true,
+        "why": "Right: loopback only, a ceiling, and back after a reboot unless stopped."
+      },
+      {
+        "text": "`docker run -d -p 5432:5432 --restart always postgres:17`",
+        "correct": false,
+        "why": "Published on every address, and no limit."
+      },
+      {
+        "text": "`docker run -d -e PORT=5432 postgres:17`",
+        "correct": false,
+        "why": "Nothing is published, and `PORT` is `shelf`'s variable, not Postgres's."
+      },
+      {
+        "text": "`docker run -d -p 127.0.0.1:5432:5432 --restart no postgres:17`",
+        "correct": false,
+        "why": "It would stay down after the first crash or reboot, and has no limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cpg8883",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container keeps disappearing from `docker ps`. `docker inspect` shows `OOMKilled: true` and `RestartCount` at 3. What is the first thing to look at?",
+    "hint": "What killed it, and what was it allowed?",
+    "choices": [
+      {
+        "text": "The CPU limit",
+        "correct": false,
+        "why": "A CPU limit slows a program down; it does not kill it."
+      },
+      {
+        "text": "Memory limit against real use",
+        "correct": true,
+        "why": "Right: either the limit is too low or the program leaks."
+      },
+      {
+        "text": "The published ports",
+        "correct": false,
+        "why": "Ports do not end processes."
+      },
+      {
+        "text": "The image tag it was started from",
+        "correct": false,
+        "why": "The tag does not explain an out-of-memory kill."
+      }
+    ]
+  }
+]

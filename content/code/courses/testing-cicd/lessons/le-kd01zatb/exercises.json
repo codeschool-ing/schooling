@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "ex-2k87wvd4",
+    "version": 1,
+    "section": "recreate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did curl print while shipquote was being restarted?",
+    "choices": [
+      {
+        "text": "503, the status of a service that is starting",
+        "correct": false,
+        "why": "Nothing answered to send a status."
+      },
+      {
+        "text": "000, because the connection was refused",
+        "correct": true,
+        "why": "Right. No process held the port."
+      },
+      {
+        "text": "200, the old process answered until the new one took over",
+        "correct": false,
+        "why": "The old one was stopped first."
+      },
+      {
+        "text": "500, from the new release's start-up error",
+        "correct": false,
+        "why": "There was no error; there was no process."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3xvzsjk",
+    "version": 1,
+    "section": "recreate",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many health checks in a row got no answer during the restart?",
+    "value": 24,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rve4y6h0",
+    "version": 1,
+    "section": "recreate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is recreate the right strategy, by the lesson?",
+    "choices": [
+      {
+        "text": "When the service has many instances",
+        "correct": false,
+        "why": "Many instances are what rolling updates use."
+      },
+      {
+        "text": "When the release changes only the user interface",
+        "correct": false,
+        "why": "A UI change is what two versions handle well."
+      },
+      {
+        "text": "When two versions must never overlap",
+        "correct": true,
+        "why": "Right. It is the one strategy where they never overlap."
+      },
+      {
+        "text": "When the deploy happens during business hours",
+        "correct": false,
+        "why": "That is when its gap hurts most."
+      }
+    ]
+  },
+  {
+    "id": "ex-sze9rgk2",
+    "version": 1,
+    "section": "recreate",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What adds to the gap of a recreate deploy? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The old process shutting down",
+        "correct": true,
+        "why": "Right. The port is busy until it lets go."
+      },
+      {
+        "text": "The interpreter starting and importing the program",
+        "correct": true,
+        "why": "Right. Every start pays it."
+      },
+      {
+        "text": "Work done before listening, like warming a cache",
+        "correct": true,
+        "why": "Right. The port opens only after it."
+      },
+      {
+        "text": "The number of tests in the suite",
+        "correct": false,
+        "why": "Tests run before the deploy, not inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bgchja2",
+    "version": 1,
+    "section": "rolling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a rolling update trade for having no gap in service?",
+    "choices": [
+      {
+        "text": "Two versions serve customers during the rollout",
+        "correct": true,
+        "why": "Right. The middle steps run both."
+      },
+      {
+        "text": "A second complete copy of production, running all the time",
+        "correct": false,
+        "why": "That is blue-green's price."
+      },
+      {
+        "text": "Code paths for both behaviours",
+        "correct": false,
+        "why": "That is a feature flag's price."
+      },
+      {
+        "text": "A longer test suite",
+        "correct": false,
+        "why": "The suite is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8hedv15",
+    "version": 1,
+    "section": "rolling",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four instances. Match each setting to what it does during the rollout.",
+    "pairs": [
+      {
+        "left": "maxUnavailable: 1, maxSurge: 0",
+        "right": "Serves with three instances, no extra machine"
+      },
+      {
+        "left": "maxUnavailable: 0, maxSurge: 1",
+        "right": "Starts a fifth instance so capacity never drops"
+      }
+    ],
+    "right_distractors": [
+      "Stops all four, then starts all four"
+    ]
+  },
+  {
+    "id": "ex-f9szgcwd",
+    "version": 1,
+    "section": "rolling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Release 2 writes data that release 1 cannot read. What goes wrong in a rolling update?",
+    "choices": [
+      {
+        "text": "The load balancer refuses the new instances",
+        "correct": false,
+        "why": "It has no idea what the data looks like."
+      },
+      {
+        "text": "Some later requests land on old instances",
+        "correct": true,
+        "why": "Right. It meets data it cannot read."
+      },
+      {
+        "text": "The rollout stops by itself at the first error",
+        "correct": false,
+        "why": "Nothing in the strategy compares the versions."
+      },
+      {
+        "text": "The new instances fail their health check",
+        "correct": false,
+        "why": "Health checks do not read stored data."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtja887j",
+    "version": 1,
+    "section": "blue-green",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does ops/router.py decide which side serves a request?",
+    "choices": [
+      {
+        "text": "It alternates, one request each",
+        "correct": false,
+        "why": "There is no counter in it."
+      },
+      {
+        "text": "It picks the side that answered faster last time",
+        "correct": false,
+        "why": "It measures nothing."
+      },
+      {
+        "text": "A hash of X-Request-Id",
+        "correct": true,
+        "why": "Right. The same id lands on the same side."
+      },
+      {
+        "text": "The customer's CEP",
+        "correct": false,
+        "why": "The router never reads the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyf27weg",
+    "version": 1,
+    "section": "blue-green",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During the switch to green, how many of the 2000 requests went unanswered?",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rdzeqt5s",
+    "version": 1,
+    "section": "blue-green",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The smoke test passed on green, and green then failed one order in twenty. Why did the smoke test miss it?",
+    "choices": [
+      {
+        "text": "It ran against blue by mistake",
+        "correct": false,
+        "why": "It ran against port 8302, green."
+      },
+      {
+        "text": "It only checks /health and the version",
+        "correct": true,
+        "why": "Right. It asked whether 1.6.0 was running, and it was."
+      },
+      {
+        "text": "The bug appears only under load",
+        "correct": false,
+        "why": "One request to Alagoas reproduces it."
+      },
+      {
+        "text": "Smoke tests skip the quote endpoint by rule",
+        "correct": false,
+        "why": "No such rule; this one just does not ask."
+      }
+    ]
+  },
+  {
+    "id": "ex-grvr1z0w",
+    "version": 1,
+    "section": "blue-green",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In blue-green, the side not serving customers keeps ___ , so going back needs no deploy.",
+    "blanks": [
+      {
+        "accept": [
+          "running"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cay36phh",
+    "version": 1,
+    "section": "blue-green-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How long did switching back to blue take?",
+    "choices": [
+      {
+        "text": "About a second, the length of a restart",
+        "correct": false,
+        "why": "Nothing was restarted."
+      },
+      {
+        "text": "Three milliseconds",
+        "correct": true,
+        "why": "Right. One edit to a file; blue never stopped."
+      },
+      {
+        "text": "As long as building 1.5.0 again",
+        "correct": false,
+        "why": "The 1.5.0 build already existed and was running."
+      },
+      {
+        "text": "Five seconds, the router's timeout",
+        "correct": false,
+        "why": "The timeout plays no part in a switch."
+      }
+    ]
+  },
+  {
+    "id": "ex-6q3rvhwj",
+    "version": 1,
+    "section": "blue-green-costs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Green's log held 77 identical lines: error: ___ : 57.",
+    "blanks": [
+      {
+        "accept": [
+          "KeyError"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c9s4c3g6",
+    "version": 1,
+    "section": "blue-green-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are costs of blue-green, by the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A second production running",
+        "correct": true,
+        "why": "Right. At least during each release."
+      },
+      {
+        "text": "Every customer moves in one step",
+        "correct": true,
+        "why": "Right. A bug reaches all of them until the flip back."
+      },
+      {
+        "text": "Sessions kept in a process's memory are lost",
+        "correct": true,
+        "why": "Right. Keep them in a store both sides read."
+      },
+      {
+        "text": "Going back requires a rebuild",
+        "correct": false,
+        "why": "Going back is the fast part."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjhd9c1x",
+    "version": 1,
+    "section": "blue-green-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Blue and green share one database. What must the release on green respect while switching back stays possible?",
+    "choices": [
+      {
+        "text": "It must not read the database until blue is gone",
+        "correct": false,
+        "why": "It serves customers; it has to read."
+      },
+      {
+        "text": "Blue must still work with the data green writes",
+        "correct": true,
+        "why": "Right. The rolling update's rule applies here too."
+      },
+      {
+        "text": "It needs its own copy of production's data",
+        "correct": false,
+        "why": "Copying at every release is what the lesson calls impractical."
+      },
+      {
+        "text": "It must run the same version of Python as blue",
+        "correct": false,
+        "why": "Versions are not the point here."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0q5kpzg",
+    "version": 1,
+    "section": "canary",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 10%, how many of green's 102 requests failed?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1m7w6faq",
+    "version": 1,
+    "section": "canary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same 1.6.0 failed 77 requests under blue-green and 2 as a canary. What made the difference?",
+    "choices": [
+      {
+        "text": "The canary run had fewer orders to Alagoas in its mix",
+        "correct": false,
+        "why": "The mix was the same twenty orders."
+      },
+      {
+        "text": "Green got one request in ten",
+        "correct": true,
+        "why": "Right. A canary limits how far the bug reaches."
+      },
+      {
+        "text": "The router retried green's errors on blue",
+        "correct": false,
+        "why": "The router does not retry."
+      },
+      {
+        "text": "1.6.0 had been fixed in between",
+        "correct": false,
+        "why": "The fix came in 1.6.1."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7jdgrnk",
+    "version": 1,
+    "section": "canary",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the steps of a canary rollout.",
+    "items": [
+      "Deploy the new version beside the old",
+      "Send it a small share of traffic",
+      "Compare it with the old version",
+      "Widen the share, or send it back to 0"
+    ],
+    "trap": "Widening before comparing is the slip: the share grows on no evidence."
+  },
+  {
+    "id": "ex-qa0dky56",
+    "version": 1,
+    "section": "canary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are a canary's first steps the smallest?",
+    "choices": [
+      {
+        "text": "Nothing is known yet; few are put at risk",
+        "correct": true,
+        "why": "Right. Trust is earned step by step."
+      },
+      {
+        "text": "The router cannot send more than 5% at first",
+        "correct": false,
+        "why": "The router takes any weight."
+      },
+      {
+        "text": "Small shares produce more precise measurements",
+        "correct": false,
+        "why": "Small shares produce less evidence."
+      },
+      {
+        "text": "To save the cost of green's machine",
+        "correct": false,
+        "why": "Green runs whatever the share."
+      }
+    ]
+  },
+  {
+    "id": "ex-4amf53tw",
+    "version": 1,
+    "section": "canary-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule says: stop the canary if its error rate is above 3%. What is wrong with it?",
+    "choices": [
+      {
+        "text": "3% is too strict for any real service",
+        "correct": false,
+        "why": "The number is not the problem."
+      },
+      {
+        "text": "Error rates cannot be measured separately for each version",
+        "correct": false,
+        "why": "The router's header does exactly that."
+      },
+      {
+        "text": "It should count errors, not rates",
+        "correct": false,
+        "why": "Counts depend on traffic; rates compare better."
+      },
+      {
+        "text": "It ignores the baseline measured at the same time",
+        "correct": true,
+        "why": "Right. It passes green's 2% and stops a fine release on a bad day."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfdb7knq",
+    "version": 1,
+    "section": "canary-metrics",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the measurement that shows it first.",
+    "pairs": [
+      {
+        "left": "one request in a hundred takes five seconds",
+        "right": "99th percentile latency"
+      },
+      {
+        "left": "memory grows by the hour",
+        "right": "saturation"
+      },
+      {
+        "left": "every answer is a 200 with a wrong price",
+        "right": "quotes that become orders"
+      }
+    ],
+    "right_distractors": [
+      "average latency"
+    ]
+  },
+  {
+    "id": "ex-6j4t5x1e",
+    "version": 1,
+    "section": "canary-metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lab's router picks a side per request id. What does a real canary usually pick by, and why?",
+    "choices": [
+      {
+        "text": "By server load, to keep both sides equally busy",
+        "correct": false,
+        "why": "That is load balancing, not a canary."
+      },
+      {
+        "text": "By customer, one version each",
+        "correct": true,
+        "why": "Right. Their experience is consistent and measurable."
+      },
+      {
+        "text": "By region, so a bug is limited to one city",
+        "correct": false,
+        "why": "A region-only canary measures one region."
+      },
+      {
+        "text": "By time of day, sending night traffic to the canary",
+        "correct": false,
+        "why": "Night traffic is a different mix."
+      }
+    ]
+  },
+  {
+    "id": "ex-dv4xrhs2",
+    "version": 1,
+    "section": "canary-size",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Green fails 5% of requests. To have a 95% chance of seeing at least one error, how many requests must it answer?",
+    "hint": "Find the smallest n with 0.95 to the power n below 0.05.",
+    "value": 59,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-s656ss54",
+    "version": 1,
+    "section": "canary-size",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Green answered 8 requests without an error. What does that tell you about 1.6.0?",
+    "choices": [
+      {
+        "text": "That the bug is gone",
+        "correct": false,
+        "why": "The same 1.6.0 failed in the next run."
+      },
+      {
+        "text": "That its error rate is under 1%",
+        "correct": false,
+        "why": "Eight requests cannot measure 1%."
+      },
+      {
+        "text": "Nothing; a 5% bug passes 8 requests 66% of the time",
+        "correct": true,
+        "why": "Right. 0.95 to the 8th is 66%."
+      },
+      {
+        "text": "That the router is sending it the wrong orders from the mix",
+        "correct": false,
+        "why": "The orders are the usual mix."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6s00ymk",
+    "version": 1,
+    "section": "canary-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does ops/canary.py wait for 50 answers rather than for ten minutes?",
+    "choices": [
+      {
+        "text": "Ten minutes is longer than any canary should take",
+        "correct": false,
+        "why": "Duration is not the concern."
+      },
+      {
+        "text": "A clock holds less evidence at 3 a.m.",
+        "correct": true,
+        "why": "Right. Evidence is a count of requests."
+      },
+      {
+        "text": "A Python script cannot measure time",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "Fifty is the number of orders in the lab's fixed mix of requests",
+        "correct": false,
+        "why": "The mix has twenty."
+      }
+    ]
+  },
+  {
+    "id": "ex-04y0c8q8",
+    "version": 1,
+    "section": "deploy-is-not-release",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "1.6.1 took all the traffic with no flags file. What did customers see?",
+    "choices": [
+      {
+        "text": "A quote just like 1.5.0's, without days",
+        "correct": true,
+        "why": "Right. The feature was deployed and off."
+      },
+      {
+        "text": "An error, because the flags file was missing",
+        "correct": false,
+        "why": "A missing file means no flags."
+      },
+      {
+        "text": "The delivery estimate for every customer",
+        "correct": false,
+        "why": "Nobody was in the flag."
+      },
+      {
+        "text": "The estimate for 10% of customers",
+        "correct": false,
+        "why": "The 10% came later, with the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-yw7q12q9",
+    "version": 1,
+    "section": "deploy-is-not-release",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Putting code in production with its feature switched off is called a dark ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "launch"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qwmhghas",
+    "version": 1,
+    "section": "deploy-is-not-release",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does separating deploy from release make possible? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Deploying at any hour, since customers see no change",
+        "correct": true,
+        "why": "Right. The risky moment moves to the flag."
+      },
+      {
+        "text": "Merging an unfinished feature every day, switched off",
+        "correct": true,
+        "why": "Right. No long-lived branch."
+      },
+      {
+        "text": "Withdrawing a feature without a rollback",
+        "correct": true,
+        "why": "Right. Turn the flag off."
+      },
+      {
+        "text": "Skipping the tests for code behind a flag",
+        "correct": false,
+        "why": "Code behind a flag still runs in production."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1cxjxsj",
+    "version": 1,
+    "section": "flag-rollout",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 10%, how many of the thousand customers got the delivery estimate?",
+    "value": 110,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wkjegf3p",
+    "version": 1,
+    "section": "flag-rollout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "c3 had the estimate at 10%. Why does c3 still have it at 50%?",
+    "choices": [
+      {
+        "text": "The flag remembers who has seen the feature",
+        "correct": false,
+        "why": "It stores nothing."
+      },
+      {
+        "text": "c3 was added to an allow list",
+        "correct": false,
+        "why": "There is no list."
+      },
+      {
+        "text": "Its bucket was below 10, and so it is below 50 as well",
+        "correct": true,
+        "why": "Right. Widening only adds buckets."
+      },
+      {
+        "text": "The router keeps c3 on green",
+        "correct": false,
+        "why": "Every customer is on green by then."
+      }
+    ]
+  },
+  {
+    "id": "ex-n4n68c3y",
+    "version": 1,
+    "section": "flag-rollout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does flags.enabled hash the flag's name together with the customer's id?",
+    "choices": [
+      {
+        "text": "To make the bucket harder to guess",
+        "correct": false,
+        "why": "Secrecy is not the point."
+      },
+      {
+        "text": "Because sha256 needs at least two inputs",
+        "correct": false,
+        "why": "It takes any bytes."
+      },
+      {
+        "text": "So that a renamed flag keeps the same customers as before",
+        "correct": false,
+        "why": "Renaming would change the buckets."
+      },
+      {
+        "text": "So two flags at 10% pick different customers",
+        "correct": true,
+        "why": "Right. Otherwise one tenth would test everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgnxt1m5",
+    "version": 1,
+    "section": "flag-kinds-and-debt",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each flag to its kind.",
+    "pairs": [
+      {
+        "left": "delivery_estimate, until it is on for all",
+        "right": "release flag"
+      },
+      {
+        "left": "turn off the carrier call under pressure",
+        "right": "operational flag"
+      },
+      {
+        "left": "two checkout steps compared",
+        "right": "experiment flag"
+      },
+      {
+        "left": "the feature of a paid plan",
+        "right": "permission flag"
+      }
+    ]
+  },
+  {
+    "id": "ex-v5as64vk",
+    "version": 1,
+    "section": "flag-kinds-and-debt",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With ten on-or-off flags, how many combinations can the program run in?",
+    "value": 1024,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x8cd501q",
+    "version": 1,
+    "section": "flag-kinds-and-debt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A release flag has been at 100% for a month. What should happen?",
+    "choices": [
+      {
+        "text": "Keep it, in case the feature has to be withdrawn",
+        "correct": false,
+        "why": "That is a kill switch's job, and a test."
+      },
+      {
+        "text": "Remove it and delete the losing path",
+        "correct": true,
+        "why": "Right. A flag at 100% is a dead branch."
+      },
+      {
+        "text": "Turn it into an experiment flag",
+        "correct": false,
+        "why": "There is nothing left to compare."
+      },
+      {
+        "text": "Move it to the configuration file of each environment",
+        "correct": false,
+        "why": "It would still be two paths in the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-90cj1zrm",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each strategy to its way back.",
+    "pairs": [
+      {
+        "left": "recreate",
+        "right": "redeploy the old release"
+      },
+      {
+        "left": "blue-green",
+        "right": "flip the switch"
+      },
+      {
+        "left": "canary",
+        "right": "set its share to 0"
+      },
+      {
+        "left": "feature flag",
+        "right": "turn the flag off"
+      }
+    ]
+  },
+  {
+    "id": "ex-q113txy6",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service takes a hundred requests a day and must be undone in seconds. Which fits, by the lesson?",
+    "choices": [
+      {
+        "text": "A canary at 1%",
+        "correct": false,
+        "why": "It would see one request a day."
+      },
+      {
+        "text": "Recreate, at night",
+        "correct": false,
+        "why": "Undoing it is another deploy."
+      },
+      {
+        "text": "Blue-green, with flags for its features",
+        "correct": true,
+        "why": "Right. Fast way back, no need for traffic to judge."
+      },
+      {
+        "text": "A rolling update across its single instance",
+        "correct": false,
+        "why": "With one instance it is a recreate."
+      }
+    ]
+  },
+  {
+    "id": "ex-cswxv7v1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which strategy limited 1.6.0's bug to the fewest failed requests in this lesson?",
+    "choices": [
+      {
+        "text": "Recreate",
+        "correct": false,
+        "why": "1.6.0 was never deployed by recreate here."
+      },
+      {
+        "text": "Blue-green",
+        "correct": false,
+        "why": "77 failed before the flip back."
+      },
+      {
+        "text": "The canary at 10%",
+        "correct": true,
+        "why": "Right. Two failed of a thousand."
+      },
+      {
+        "text": "The feature flag",
+        "correct": false,
+        "why": "The flag came with 1.6.1, after the fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmva7qj1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order this lesson's events as they happened.",
+    "items": [
+      "Green gets 1.6.0 and all traffic",
+      "Traffic goes back to blue",
+      "Green gets 10% as a canary",
+      "Green gets 1.6.1 with the estimate off",
+      "The flag opens to 10%, then 50%"
+    ],
+    "trap": "The canary used 1.6.0, the release with the bug; the fix came after it."
+  },
+  {
+    "id": "ex-1exkcxpe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every strategy here limits a bug that got past the tests. What does none of them do?",
+    "choices": [
+      {
+        "text": "Reduce how many customers a bug reaches",
+        "correct": false,
+        "why": "Canaries and flags do exactly that."
+      },
+      {
+        "text": "Shorten how long a bug stays",
+        "correct": false,
+        "why": "Blue-green brought it back in milliseconds."
+      },
+      {
+        "text": "Stand in for the earlier tests",
+        "correct": true,
+        "why": "Right. They limit damage; they do not find bugs early."
+      },
+      {
+        "text": "Run two versions at once",
+        "correct": false,
+        "why": "Most of them do."
+      }
+    ]
+  }
+]

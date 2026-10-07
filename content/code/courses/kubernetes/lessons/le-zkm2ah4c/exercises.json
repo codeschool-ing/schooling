@@ -1,0 +1,246 @@
+[
+  {
+    "id": "ex-5jcgvnee",
+    "version": 1,
+    "section": "ingress",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A fresh cluster has an Ingress applied and no ingress controller installed. What routes the traffic for it?",
+    "hint": "Kubernetes ships the object, not the thing that obeys it.",
+    "choices": [
+      {
+        "text": "kube-proxy, which handles every Service",
+        "correct": false,
+        "why": "kube-proxy routes Service addresses; it never reads an Ingress."
+      },
+      {
+        "text": "The API server, which stores the rules",
+        "correct": false,
+        "why": "Storing the object is all it does with it."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. An Ingress is a request; without a controller it is accepted and ignored."
+      },
+      {
+        "text": "CoreDNS, by pointing the host at a Service",
+        "correct": false,
+        "why": "CoreDNS answers cluster names; the Ingress host is not one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-7we3hv7z",
+    "version": 1,
+    "section": "ingress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Ingress sends `/admin` to `admin` and `/` to `shop`. A request for `shop.example.test/admin` matches both. Where did it go?",
+    "hint": "Which path is more specific?",
+    "choices": [
+      {
+        "text": "To `shop`, because `/` is listed first",
+        "correct": false,
+        "why": "Order in the file does not decide; the controller prefers the longest match."
+      },
+      {
+        "text": "To `admin`, the longest matching path",
+        "correct": true,
+        "why": "Right: the reply said `admin 1.0`."
+      },
+      {
+        "text": "To both, alternating",
+        "correct": false,
+        "why": "Each request reaches one backend, chosen by the rule."
+      },
+      {
+        "text": "Nowhere: overlapping paths are refused",
+        "correct": false,
+        "why": "Overlap is normal; it is how a site nests sections."
+      }
+    ]
+  },
+  {
+    "id": "ex-7m98n9kb",
+    "version": 1,
+    "section": "ingress",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Ingress with `ingressClassName: nginx` was applied in a cluster with only Traefik. What told Ana that nobody was serving it?",
+    "hint": "The API server saw nothing wrong.",
+    "choices": [
+      {
+        "text": "An error from `kubectl apply`",
+        "correct": false,
+        "why": "It printed `created`; the object is only data."
+      },
+      {
+        "text": "A warning event on the Ingress",
+        "correct": false,
+        "why": "No component was watching that class, so nobody wrote one."
+      },
+      {
+        "text": "The empty `ADDRESS` column, which was different from the working one",
+        "correct": false,
+        "why": "Traefik publishes no address here, so both rows were empty and looked alike."
+      },
+      {
+        "text": "Only the `404` when she asked for its host",
+        "correct": true,
+        "why": "Right. Nothing reports an Ingress nobody adopts; the Gateway API's status conditions are the improvement."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjkr56ck",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Gateway API object with who usually writes it.",
+    "hint": "The table at the start of the section.",
+    "pairs": [
+      {
+        "left": "GatewayClass",
+        "right": "Whoever installs the controller"
+      },
+      {
+        "left": "Gateway",
+        "right": "The people who run the cluster"
+      },
+      {
+        "left": "HTTPRoute",
+        "right": "The team that owns the application"
+      }
+    ],
+    "right_distractors": [
+      "The API server, from the Ingress"
+    ]
+  },
+  {
+    "id": "ex-0zbjf5dz",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The HTTPRoute sends `/admin` to `admin` only with the header `X-Staff: yes`. What did a request for `/admin` without the header reach?",
+    "hint": "The first rule needs both matches.",
+    "choices": [
+      {
+        "text": "A `404`, because `/admin` needs the header",
+        "correct": false,
+        "why": "The route has a fallback rule with no matches, which caught it."
+      },
+      {
+        "text": "The shop, through the fallback rule",
+        "correct": true,
+        "why": "Right: `shop 1.0` answered; only with the header did `admin` answer."
+      },
+      {
+        "text": "`admin`, since the path matched",
+        "correct": false,
+        "why": "Matches inside one rule must all hold."
+      },
+      {
+        "text": "Traefik's dashboard",
+        "correct": false,
+        "why": "No route points there."
+      }
+    ]
+  },
+  {
+    "id": "ex-yke0ge21",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a cluster need the Gateway API's CRDs installed before any of its objects can be applied?",
+    "hint": "Count the API resources a fresh cluster knows (lesson 2).",
+    "choices": [
+      {
+        "text": "The types are not built into Kubernetes; the CRDs add them",
+        "correct": true,
+        "why": "Right. Lesson 43 shows how a CRD adds a type to the API."
+      },
+      {
+        "text": "The CRDs contain the controller's program",
+        "correct": false,
+        "why": "A CRD defines a type; the controller is a separate Deployment."
+      },
+      {
+        "text": "Ingress must be disabled first",
+        "correct": false,
+        "why": "Both ran side by side in this lesson."
+      },
+      {
+        "text": "The Gateway API is still `v1alpha1`",
+        "correct": false,
+        "why": "Its core types are `v1`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jjgqk7h",
+    "version": 1,
+    "section": "ingress",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which controller should carry out an Ingress is named by the field `___`.",
+    "hint": "It refers to an IngressClass.",
+    "blanks": [
+      {
+        "accept": [
+          "ingressClassName",
+          "spec.ingressClassName"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r7bdna06",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can an HTTPRoute express in its standard fields, without controller-specific annotations? Choose all that apply.",
+    "hint": "The section names three.",
+    "choices": [
+      {
+        "text": "A match on a request header",
+        "correct": true,
+        "why": "Right: `X-Staff: yes`."
+      },
+      {
+        "text": "Splitting traffic between Services by weight",
+        "correct": true,
+        "why": "Right: lesson 36 uses it for a canary."
+      },
+      {
+        "text": "Which node the controller runs on",
+        "correct": false,
+        "why": "That is the controller's own Deployment, not a route."
+      },
+      {
+        "text": "A path prefix",
+        "correct": true,
+        "why": "Right: `PathPrefix /admin`."
+      },
+      {
+        "text": "The image the Service's pods run",
+        "correct": false,
+        "why": "Routes point at Services; pods are their own business."
+      }
+    ]
+  }
+]

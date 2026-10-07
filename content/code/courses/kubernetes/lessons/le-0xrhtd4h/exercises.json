@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-jap4kypn",
+    "version": 1,
+    "section": "identity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A StatefulSet named `db` asks for three replicas. What are the pods called?",
+    "hint": "The names are not random.",
+    "choices": [
+      {
+        "text": "`db` followed by a template hash and a random suffix",
+        "correct": false,
+        "why": "That is a Deployment's naming; a StatefulSet's names are fixed."
+      },
+      {
+        "text": "`db-0`, `db-1`, `db-2`",
+        "correct": true,
+        "why": "Right, and a replacement for `db-1` is called `db-1` again."
+      },
+      {
+        "text": "Whatever names the template lists for them",
+        "correct": false,
+        "why": "A template describes one pod; the ordinal numbers are added by the controller."
+      },
+      {
+        "text": "The names of the nodes they run on",
+        "correct": false,
+        "why": "Two of them ran on the same node; names come from the StatefulSet."
+      }
+    ]
+  },
+  {
+    "id": "ex-txfxhny7",
+    "version": 1,
+    "section": "identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`db-0` started at 16:49:56, `db-1` four seconds later, `db-2` five seconds after that. Why not all at once?",
+    "hint": "What does a database cluster need from its first member?",
+    "choices": [
+      {
+        "text": "The scheduler places one pod per second",
+        "correct": false,
+        "why": "The scheduler placed three Deployment pods in one second in lesson 8."
+      },
+      {
+        "text": "Each pod waited for its disk to be formatted",
+        "correct": false,
+        "why": "Disks were provisioned, but the order comes from the StatefulSet itself."
+      },
+      {
+        "text": "The StatefulSet waits for each pod to be ready before starting the next one",
+        "correct": true,
+        "why": "Right. Ordered start is the default, because later members often join the first one."
+      },
+      {
+        "text": "Busybox images start slowly",
+        "correct": false,
+        "why": "They start in well under a second; the wait is deliberate."
+      }
+    ]
+  },
+  {
+    "id": "ex-95fn37p6",
+    "version": 1,
+    "section": "identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `nslookup db-1.db.default.svc.cluster.local` return?",
+    "hint": "The first label of the name is a pod.",
+    "choices": [
+      {
+        "text": "The three pods' addresses",
+        "correct": false,
+        "why": "That is what the Service's own name returned."
+      },
+      {
+        "text": "The address of `db-1` alone",
+        "correct": true,
+        "why": "Right: a headless Service gives each pod a name of its own."
+      },
+      {
+        "text": "The Service's ClusterIP",
+        "correct": false,
+        "why": "A headless Service has none; `clusterIP: None`."
+      },
+      {
+        "text": "An error, because pods have no DNS names",
+        "correct": false,
+        "why": "Pods behind a headless Service do; it answered with one address."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqddtrbj",
+    "version": 1,
+    "section": "storage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `db-1` was deleted and came back, what did `cat /data/born /data/last-order` print, and why?",
+    "hint": "Which object did the data live in?",
+    "choices": [
+      {
+        "text": "Nothing: a new pod starts with an empty disk",
+        "correct": false,
+        "why": "The new pod was given the old pod's claim, `data-db-1`."
+      },
+      {
+        "text": "Only `db-1`; the order was in the deleted pod's memory",
+        "correct": false,
+        "why": "`order-1042` was written to a file on the disk, and it was printed."
+      },
+      {
+        "text": "`db-0` and `order-1042`, from the first pod's disk",
+        "correct": false,
+        "why": "Each pod has its own claim; `db-1` never sees `db-0`'s."
+      },
+      {
+        "text": "`db-1` and `order-1042`: the disk is bound to the name",
+        "correct": true,
+        "why": "Right. The claim `data-db-1` outlived the pod and went to its replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mq8evt0",
+    "version": 1,
+    "section": "storage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana scaled `db` from three replicas to one. Which claims were left afterwards?",
+    "hint": "A disk is the one thing that cannot be recreated from a file.",
+    "choices": [
+      {
+        "text": "Only `data-db-0`",
+        "correct": false,
+        "why": "All three were listed afterwards, still `Bound`."
+      },
+      {
+        "text": "All three",
+        "correct": true,
+        "why": "Right. Scaling down keeps the disks, so scaling up again finds them."
+      },
+      {
+        "text": "`data-db-0` and `data-db-1`, because `db-2` was deleted first",
+        "correct": false,
+        "why": "`db-2` went first, but its claim stayed with the other two."
+      },
+      {
+        "text": "None: the volumes are deleted with the StatefulSet's pods",
+        "correct": false,
+        "why": "Deleting them is left to somebody, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-wggnsdt3",
+    "version": 1,
+    "section": "storage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the replacement `db-1` come back on `shop-worker2`, the node it had been on?",
+    "hint": "Where does a local-path disk live?",
+    "choices": [
+      {
+        "text": "StatefulSets always keep a pod on its first node",
+        "correct": false,
+        "why": "With network storage the pod could move; here the disk decided."
+      },
+      {
+        "text": "The scheduler picked it at random",
+        "correct": false,
+        "why": "It had no choice: only one node holds that directory."
+      },
+      {
+        "text": "Its disk is a directory on that node",
+        "correct": true,
+        "why": "Right. The pod has to go where its disk is; lesson 26 shows how the volume says so."
+      },
+      {
+        "text": "The headless Service only resolves names on that node",
+        "correct": false,
+        "why": "DNS answers from any pod in the cluster, as the probe on another node showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv19fe0k",
+    "version": 1,
+    "section": "identity",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Service with `clusterIP: None` has no address of its own. It is called ___, and its name answers with the pods' addresses.",
+    "hint": "It has no single address at its top.",
+    "blanks": [
+      {
+        "accept": [
+          "headless"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dg5sggy5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need with the controller that fits it.",
+    "hint": "Ask whether the copies are interchangeable.",
+    "pairs": [
+      {
+        "left": "Ten identical web servers",
+        "right": "Deployment"
+      },
+      {
+        "left": "Three database members that each keep their own data",
+        "right": "StatefulSet"
+      },
+      {
+        "left": "A message broker whose members find each other by name",
+        "right": "StatefulSet with a headless Service"
+      }
+    ],
+    "right_distractors": [
+      "A bare pod per member"
+    ]
+  }
+]

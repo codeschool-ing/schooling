@@ -57,7 +57,7 @@ The second message is about illness and contains no word on the list. The third 
 health, which is sensitive data about a third party, and the list has never heard of autism. Both
 would go to the provider unchanged.
 
-A longer list moves the line without removing it. A classifier moves it further, whether it is a model or a moderation endpoint like the ones in lesson 16, and its error rate is one you would have to measure on your own tickets. So the list is a net with holes in it, and **the design decisions stay where the
+A longer list moves the line without removing it. A classifier moves it further, whether it is a model or a moderation endpoint like the ones in lesson 6, and its error rate is one you would have to measure on your own tickets. So the list is a net with holes in it, and **the design decisions stay where the
 safety is**:
 
 - **Do not ask for it.** A form that offers *"reason for the delay"* as a free text box will collect

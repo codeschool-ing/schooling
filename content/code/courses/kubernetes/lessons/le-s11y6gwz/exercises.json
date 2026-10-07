@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-hpgqwbp1",
+    "version": 1,
+    "section": "what-a-secret-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kubectl get secret db -o jsonpath=\"{.data}\"` showed `bGFiLW9ubHktN0hxMg==`. What protects that value from somebody who can run that command?",
+    "hint": "`base64 -d` needed no key.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Base64 is an encoding; anyone who can read the object can read the value."
+      },
+      {
+        "text": "The base64 encoding, which needs the cluster's key",
+        "correct": false,
+        "why": "Base64 has no key; one command reversed it."
+      },
+      {
+        "text": "Encryption at rest, which is on by default",
+        "correct": false,
+        "why": "It is off by default, and it protects copies of etcd, not readers of the API."
+      },
+      {
+        "text": "The `tmpfs` the Secret is mounted on",
+        "correct": false,
+        "why": "That protects the node's disk, not the API."
+      }
+    ]
+  },
+  {
+    "id": "ex-05h7e5qb",
+    "version": 1,
+    "section": "what-a-secret-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the Secret volume in the pod a `tmpfs`?",
+    "hint": "Where does a tmpfs keep its files?",
+    "choices": [
+      {
+        "text": "So the pod can write new secrets into it",
+        "correct": false,
+        "why": "It was mounted read-only."
+      },
+      {
+        "text": "Because Secrets are larger than ConfigMaps",
+        "correct": false,
+        "why": "Both share the same one-mebibyte limit."
+      },
+      {
+        "text": "So the value stays in the node's memory",
+        "correct": true,
+        "why": "Right. A disk that is replaced or copied carries nothing."
+      },
+      {
+        "text": "Because tmpfs encrypts its contents",
+        "correct": false,
+        "why": "It does not; it keeps them in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwfyymcz",
+    "version": 1,
+    "section": "what-a-secret-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service reads its database password from the variable `DB_PASSWORD`. A crash report it sends to an external tool includes the process environment. What does this lesson recommend?",
+    "hint": "Which delivery is read only when the program chooses?",
+    "choices": [
+      {
+        "text": "Encode the variable in base64 twice",
+        "correct": false,
+        "why": "Any encoding is reversed by whoever reads the report."
+      },
+      {
+        "text": "Read it from a mounted file instead",
+        "correct": true,
+        "why": "Right. A file is not inherited, dumped or listed in `/proc` with the environment."
+      },
+      {
+        "text": "Turn on encryption at rest",
+        "correct": false,
+        "why": "That protects etcd's copy; the leak here is from the running process."
+      },
+      {
+        "text": "Mark the Secret immutable",
+        "correct": false,
+        "why": "Immutability stops edits; it hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-re1g7t71",
+    "version": 1,
+    "section": "real-protection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before encryption at rest, `strings` on the stored value showed `lab-only-7Hq2`. Who could read that?",
+    "hint": "Think of copies of etcd's data.",
+    "choices": [
+      {
+        "text": "Only the API server",
+        "correct": false,
+        "why": "Anything that reads etcd's data reads it, including a backup file."
+      },
+      {
+        "text": "Nobody, because etcd encrypts everything it writes to its disk",
+        "correct": false,
+        "why": "The plain text was right there."
+      },
+      {
+        "text": "Anyone holding a copy of etcd's data, such as a leaked backup",
+        "correct": true,
+        "why": "Right. That is the case encryption at rest exists for."
+      },
+      {
+        "text": "Every pod in the cluster",
+        "correct": false,
+        "why": "Pods reach the API server, not etcd."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vsb8bd7",
+    "version": 1,
+    "section": "real-protection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the API server was given the encryption configuration, `strings | grep -c lab-only` still printed `1`. Why?",
+    "hint": "When does a value get encrypted?",
+    "choices": [
+      {
+        "text": "The flag needs a reboot of the node",
+        "correct": false,
+        "why": "The API server restarted on its own when its manifest changed."
+      },
+      {
+        "text": "Only new writes are encrypted, and it was old",
+        "correct": true,
+        "why": "Right. Replacing every Secret with itself rewrote them, and the count went to 0."
+      },
+      {
+        "text": "`identity` was listed first, so nothing is encrypted",
+        "correct": false,
+        "why": "`secretbox` was first; `identity` was last, for reading old data."
+      },
+      {
+        "text": "grep found the string in the key name",
+        "correct": false,
+        "why": "The key is called `password`; the count was the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gjc1x6q",
+    "version": 1,
+    "section": "real-protection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With encryption at rest on, `kubectl get secret db` still returned the password. Is the encryption broken?",
+    "hint": "Who decrypts, and for whom?",
+    "choices": [
+      {
+        "text": "Yes; the value should come back encrypted",
+        "correct": false,
+        "why": "The API server decrypts on the way out for anyone allowed to read it."
+      },
+      {
+        "text": "Yes; secretbox only works on new clusters",
+        "correct": false,
+        "why": "It worked here; etcd held `k8s:enc:secretbox:v1:key1:`."
+      },
+      {
+        "text": "No; kubectl reads etcd directly and has the key",
+        "correct": false,
+        "why": "kubectl never talks to etcd; only the API server does."
+      },
+      {
+        "text": "No; it protects copies of the data, while API readers are RBAC's job",
+        "correct": true,
+        "why": "Right. The two protections answer different worries."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nbjwgvw",
+    "version": 1,
+    "section": "real-protection",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After encryption at rest, the stored value began with `k8s:enc:___:v1:key1:`, naming the provider that encrypted it.",
+    "hint": "The first provider in the list.",
+    "blanks": [
+      {
+        "accept": [
+          "secretbox"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-53dcaxcr",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each worry with what protects against it.",
+    "hint": "The table at the end of the lesson.",
+    "pairs": [
+      {
+        "left": "Somebody reads the Secret through the API",
+        "right": "RBAC rules on who may get Secrets"
+      },
+      {
+        "left": "A copy of etcd's data leaks",
+        "right": "Encryption at rest"
+      },
+      {
+        "left": "The value leaks from the running process",
+        "right": "A file in a tmpfs instead of a variable"
+      }
+    ],
+    "right_distractors": [
+      "Encoding the value in base64"
+    ]
+  }
+]

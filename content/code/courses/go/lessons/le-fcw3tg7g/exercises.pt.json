@@ -1,0 +1,380 @@
+{
+  "ex-pyvy3yhf": {
+    "prompt": "Qual linha declara uma função que recebe dois parâmetros `int` chamados `width` e `height`?",
+    "hint": "Em Go o nome vem antes do tipo.",
+    "choices": [
+      {
+        "text": "`func area(int width, int height) int`",
+        "why": "Essa é a ordem de C. Go lê isso como dois parâmetros chamados `int`, de um tipo chamado `width` e outro chamado `height`."
+      },
+      {
+        "text": "`func area(width, height int) int`",
+        "why": "Isso. O nome vem primeiro, e parâmetros vizinhos do mesmo tipo o compartilham."
+      },
+      {
+        "text": "`func area(width: int, height: int) int`",
+        "why": "É assim que as anotações de tipo de Python e o TypeScript escrevem. Go não põe dois-pontos entre o nome e o tipo."
+      },
+      {
+        "text": "`func area(int, int width, height) int`",
+        "why": "O agrupamento compartilha um tipo entre os nomes antes dele; não lista os tipos primeiro e os nomes depois."
+      }
+    ]
+  },
+  "ex-fc4sj2pc": {
+    "prompt": "`func area(int width, int height) int` falha com `int redeclared in this block`. Por que o compilador fala de `int`?",
+    "hint": "Leia cada par como Go lê: nome, depois tipo.",
+    "choices": [
+      {
+        "text": "Porque `int` é uma palavra-chave e não pode aparecer duas vezes numa lista de parâmetros",
+        "why": "`int` é um nome predeclarado, não uma palavra-chave, e é justamente por isso que pode servir de nome de parâmetro."
+      },
+      {
+        "text": "Porque Go só admite um tipo inteiro por função",
+        "why": "Uma função pode receber qualquer mistura de tipos; `label` recebia uma `string`, dois `int` e uma `string`."
+      },
+      {
+        "text": "Cada par declara um parâmetro chamado `int`, então o segundo é uma redeclaração",
+        "why": "Isso. `int width` é um parâmetro chamado `int` de um tipo chamado `width`; dois deles colidem, e `width` não existe."
+      },
+      {
+        "text": "Porque o tipo de resultado `int` repete o tipo de um parâmetro",
+        "why": "Resultados e parâmetros podem ter o mesmo tipo à vontade: `area(width, height int) int` compilou."
+      }
+    ]
+  },
+  "ex-mat1x2b1": {
+    "prompt": "Go não tem valores padrão para parâmetros. Como o pacote `strings` oferece uma divisão com limite de pedaços?",
+    "hint": "Veja os nomes que o `go doc strings` listou.",
+    "choices": [
+      {
+        "text": "`Split` recebe um terceiro argumento opcional",
+        "why": "Argumentos opcionais não existem; `Split` recebe exatamente `(s, sep string)`."
+      },
+      {
+        "text": "Um segundo `Split` com três parâmetros sobrecarrega o primeiro",
+        "why": "Duas funções com o mesmo nome num pacote são recusadas: `redeclared in this block`."
+      },
+      {
+        "text": "Uma função separada, com nome próprio, `SplitN`, que tem um parâmetro `n int`",
+        "why": "Isso. Cada variante é uma função própria, então uma chamada nomeia exatamente o código que roda."
+      },
+      {
+        "text": "Você passa `-1` para `Split` para dizer sem limite",
+        "why": "Isso confunde as duas: `SplitN` recebe a contagem, e `Split` não tem parâmetro para recebê-la."
+      }
+    ]
+  },
+  "ex-xv35vdk7": {
+    "prompt": "Duas funções chamadas `area` num pacote, mesmo com parâmetros diferentes, param o build com `area ___ in this block`.",
+    "hint": "A mesma palavra aparece quando um nome é declarado duas vezes em qualquer lugar.",
+    "blanks": [
+      {
+        "accept": [
+          "redeclared"
+        ]
+      }
+    ]
+  },
+  "ex-yc9e9e1h": {
+    "prompt": "`func area(width, height int, unit string) int` nunca lê `unit`. O que acontece no build?",
+    "hint": "A regra da lição 5 era sobre variáveis locais.",
+    "choices": [
+      {
+        "text": "O build para com `declared and not used: unit`",
+        "why": "Essa regra vale para variáveis declaradas no corpo da função; um parâmetro faz parte da assinatura e fica de fora."
+      },
+      {
+        "text": "Compila, e o `go vet` também não diz nada",
+        "why": "Isso. A lista de parâmetros é um contrato com quem chama, e às vezes uma assinatura precisa aceitar um valor que ignora."
+      },
+      {
+        "text": "Compila, mas o `go vet` aponta o parâmetro sem uso",
+        "why": "`go vet && go run .` imprimiu 12 e nada mais: o vet não reclamou."
+      },
+      {
+        "text": "Só compila se o parâmetro for renomeado para `_`",
+        "why": "Chamá-lo de `_` é permitido e diz que você o ignora de propósito, mas não é obrigatório."
+      }
+    ]
+  },
+  "ex-ds57x7w1": {
+    "prompt": "Associe cada mensagem do compilador à linha de código que a produz.",
+    "hint": "`area` recebe `(width, height int)`.",
+    "pairs": [
+      {
+        "left": "`not enough arguments in call to area`",
+        "right": "`area(3)`"
+      },
+      {
+        "left": "`too many arguments in call to area`",
+        "right": "`area(3, 4, 5)`"
+      },
+      {
+        "left": "`cannot use \"4\" (untyped string constant) as int value`",
+        "right": "`area(3, \"4\")`"
+      },
+      {
+        "left": "`unexpected = in parameter list`",
+        "right": "`func greet(name string, greeting string = \"Hello\")`"
+      }
+    ],
+    "right_distractors": [
+      "`area(3, 4)`"
+    ]
+  },
+  "ex-x9z1vrpe": {
+    "prompt": "`divmod` devolve `(int, int)`. O que `q := divmod(17, 5)` faz?",
+    "hint": "Conte os nomes à esquerda e os valores à direita.",
+    "choices": [
+      {
+        "text": "`q` recebe o primeiro resultado, 3, e o resto é descartado",
+        "why": "Algumas linguagens fazem isso; Go recusa, para que nenhum resultado se perca sem você dizer."
+      },
+      {
+        "text": "Não compila: uma variável para dois valores",
+        "why": "Isso: `assignment mismatch: 1 variable but divmod returns 2 values`."
+      },
+      {
+        "text": "`q` guarda um par, `(3, 2)`, que dá para indexar depois",
+        "why": "Go não tem tuplas. `(int, int)` é uma lista de resultados, não um tipo que uma variável possa ter."
+      },
+      {
+        "text": "`q` recebe o último resultado, 2",
+        "why": "Nenhum resultado é escolhido por você, nem o primeiro nem o último; a atribuição é recusada."
+      }
+    ]
+  },
+  "ex-qddwr6zz": {
+    "prompt": "`fmt.Println(divmod(17, 5))` imprime `3 2`, mas `fmt.Println(\"result:\", divmod(17, 5))` não compila. Por quê?",
+    "hint": "Quando uma chamada com vários resultados pode preencher os argumentos de outra?",
+    "choices": [
+      {
+        "text": "`Println` não consegue imprimir uma string e um número na mesma chamada",
+        "why": "Consegue: `Println` aceita valores de qualquer tipo, misturados à vontade."
+      },
+      {
+        "text": "A string precisa vir depois da chamada",
+        "why": "A ordem não é o problema. Misturada com qualquer outro argumento, antes ou depois, a chamada é recusada."
+      },
+      {
+        "text": "Uma chamada com vários resultados só se espalha pelos argumentos quando é a lista inteira",
+        "why": "Isso. Com qualquer coisa ao lado, o compilador quer um valor ali: `multiple-value … in single-value context`."
+      },
+      {
+        "text": "Os dois resultados viram uma string antes, e isso falha",
+        "why": "Nada é juntado. Os resultados são valores separados, e o erro diz que se esperava um valor só."
+      }
+    ]
+  },
+  "ex-tsd2vf9z": {
+    "prompt": "O que isto imprime?\n\n```go\nn, _ := strconv.Atoi(\"12a\")\nfmt.Println(n + 5)\n```",
+    "hint": "O que um `Atoi` que falhou devolve como número?",
+    "unit": "valor impresso"
+  },
+  "ex-5hw89fj0": {
+    "prompt": "Quando escrever `_` no lugar de um `error` devolvido é uma escolha defensável?",
+    "hint": "A lição 12 fez isso uma vez, e esta lição disse por que era seguro.",
+    "choices": [
+      {
+        "text": "Sempre que o programa já foi testado e funciona",
+        "why": "Os testes passam com a entrada que você tentou; `\"42x\"` virou 0 sem aviso, e um teste com entrada boa nunca veria isso."
+      },
+      {
+        "text": "Nunca: o compilador recusa `_` no lugar de um `error`",
+        "why": "Ele aceita, e é por isso que pede cuidado: `n, _ := strconv.Atoi(\"42x\")` compilou e imprimiu 1."
+      },
+      {
+        "text": "Quando o valor é impresso logo, então um errado aparece",
+        "why": "Um `Atoi` que falhou imprimiu 0, que parece um número perfeitamente bom; nada apareceu."
+      },
+      {
+        "text": "Quando você sabe dizer por que a falha não pode acontecer ou não importa",
+        "why": "Isso. `json.Marshal` numa slice de strings é um caso assim: nenhuma das falhas listadas pode ocorrer."
+      }
+    ]
+  },
+  "ex-kapdppm9": {
+    "prompt": "`divmod` devolve `(int, int)`. Quais destas linhas compilam? Escolha todas as que compilam.",
+    "hint": "Um `_` ocupa um lugar; não remove um.",
+    "choices": [
+      {
+        "text": "`_, r := divmod(17, 5)`",
+        "why": "Compila: `_` fica com o quociente e `r` com o resto."
+      },
+      {
+        "text": "`fmt.Println(divmod(17, 5))`",
+        "why": "Compila: a chamada é a lista inteira de argumentos, então os dois resultados viram argumentos."
+      },
+      {
+        "text": "`r := divmod(17, 5)[1]`",
+        "why": "Não há tupla para indexar: os resultados são dois valores, não um valor com duas partes."
+      },
+      {
+        "text": "`q, r := divmod(17, 5)` seguido só de `fmt.Println(q)`",
+        "why": "`r` é declarado e nunca usado, o que impede o build: `declared and not used: r`."
+      }
+    ]
+  },
+  "ex-06b2ye2c": {
+    "prompt": "Uma função `func sign(n int) string` devolve `\"negative\"` dentro de `if n < 0 { … }` e `\"other\"` dentro de `if n >= 0 { … }`, e não tem nada depois dos dois `if`. Todo inteiro está coberto. O que o compilador diz?",
+    "hint": "A verificação olha para valores ou para a forma do código?",
+    "choices": [
+      {
+        "text": "Nada: as duas condições cobrem todo `n`, então todo caminho retorna",
+        "why": "Verdade quanto aos valores, mas a verificação não raciocina sobre eles; ela vê um `if` que pode não rodar antes da chave final."
+      },
+      {
+        "text": "`missing return`, na chave de fechamento",
+        "why": "Isso. O compilador confere a forma dos caminhos, e depois de um `if` sem `else` há um caminho que passa direto."
+      },
+      {
+        "text": "Nada, e devolve `\"\"` se nenhum ramo rodar",
+        "why": "Go não fornece um valor zero para um `return` que falta; ele se recusa a compilar."
+      },
+      {
+        "text": "Um aviso do `go vet`, mas o programa compila",
+        "why": "Essa regra é do compilador, não do vet, e é um erro: o build para."
+      }
+    ]
+  },
+  "ex-xm5g3kc6": {
+    "prompt": "`func nothing() (n int, s string, err error)` contém só `return`. O que ela devolve?",
+    "hint": "Um resultado com nome é uma variável.",
+    "choices": [
+      {
+        "text": "Nada: um `return` vazio numa função com resultados é erro",
+        "why": "Com resultados nomeados, um `return` vazio é válido; ele devolve o que os nomes guardam."
+      },
+      {
+        "text": "`0`, `\"\"` e `nil`, o zero de cada um",
+        "why": "Isso. Resultados nomeados são declarados quando a função começa, com seus valores zero, e ela imprimiu `0 \"\" <nil>`."
+      },
+      {
+        "text": "Valores indefinidos, já que ninguém atribuiu nada",
+        "why": "Go não tem valores indefinidos; toda variável começa no zero do seu tipo, como a lição 6 mostrou."
+      },
+      {
+        "text": "Só `err`, como `nil`",
+        "why": "Uma função devolve todos os resultados toda vez; quem chamou recebeu três valores."
+      }
+    ]
+  },
+  "ex-wb34gdab": {
+    "prompt": "Um `return` sem nada depois, numa função cujos resultados têm nome, se chama return ___.",
+    "hint": "Em português dizemos que ele está vazio; o nome em inglês também é aceito.",
+    "blanks": [
+      {
+        "accept": [
+          "vazio",
+          "bare",
+          "naked"
+        ]
+      }
+    ]
+  },
+  "ex-cteaj9wg": {
+    "prompt": "`port(\"8080\")` declara `n, err := strconv.Atoi(s)` dentro de um `if`, devolve `n, err` por extenso ali em caso de falha, e termina com um `return` vazio. O `go vet` não diz nada. O que `fmt.Println(port(\"8080\"))` imprime depois de `parsed 8080`?",
+    "hint": "Qual `n` o último `return` enxerga?",
+    "choices": [
+      {
+        "text": "`8080 <nil>`",
+        "why": "É o que se queria, e é por isso que o bug passa numa revisão: o 8080 está no `n` de dentro, que o último `return` não enxerga."
+      },
+      {
+        "text": "`0 <nil>`",
+        "why": "Isso. O `return` vazio devolve os resultados de fora, a que ninguém atribuiu nada."
+      },
+      {
+        "text": "Nada: o compilador recusa o `return` vazio do fim",
+        "why": "Ele recusa um `return` vazio só onde um resultado está escondido, dentro do `if`; no fim nada os esconde."
+      },
+      {
+        "text": "`8080` seguido de um erro dizendo que `err` foi sombreado",
+        "why": "Sombreamento não produz erro em tempo de execução; o programa rodou e imprimiu valores zero."
+      }
+    ]
+  },
+  "ex-gq2at5me": {
+    "prompt": "Por que `strings.Cut` dá nome aos resultados, `(before, after string, found bool)`, em vez de escrever `(string, string, bool)`?",
+    "hint": "Onde você encontra essa assinatura primeiro?",
+    "choices": [
+      {
+        "text": "Para que a assinatura no `go doc` diga qual string é qual",
+        "why": "Isso. Os nomes documentam a ordem que dois resultados do mesmo tipo esconderiam."
+      },
+      {
+        "text": "Porque uma função que devolve três valores precisa nomeá-los",
+        "why": "Nomes nunca são obrigatórios; `divmod` devolvia dois resultados sem nome e o compilador não objetou."
+      },
+      {
+        "text": "Para que quem chama pegue resultados pelo nome, como em `Cut(s, \"=\").after`",
+        "why": "Os nomes pertencem à função; quem chama recebe valores simples e dá os próprios nomes."
+      },
+      {
+        "text": "Resultados com nome rodam mais rápido",
+        "why": "Nada na lição mediu velocidade; o motivo dado é a documentação."
+      }
+    ]
+  },
+  "ex-zm7ac6eq": {
+    "prompt": "O que `f()` devolve?\n\n```go\nfunc f() (n int) {\n\tdefer func() { n *= 2 }()\n\treturn 5\n}\n```",
+    "hint": "`return 5` define `n` primeiro. O que roda depois disso?",
+    "unit": "valor devolvido"
+  },
+  "ex-5aktdpem": {
+    "prompt": "Ponha em ordem o que acontece quando `answer()` roda, `func answer() (n int)` com um `n++` adiado e `return 41`.",
+    "hint": "A função adiada roda entre a instrução `return` e quem chamou.",
+    "items": [
+      "`n` é declarado com valor 0",
+      "o `defer` agenda a função literal",
+      "`return 41` põe 41 em `n`",
+      "a função adiada soma um a `n`",
+      "quem chamou recebe 42"
+    ]
+  },
+  "ex-p359t3z8": {
+    "prompt": "O que `g()` devolve?\n\n```go\nfunc g() int {\n\tn := 5\n\tdefer func() { n *= 2 }()\n\treturn n\n}\n```",
+    "hint": "Aqui `n` é o resultado, ou uma variável local cujo valor o `return` copia?",
+    "choices": [
+      {
+        "text": "10, porque a função adiada roda antes de o valor sair",
+        "why": "Ela roda, mas dobra uma variável local depois que `return n` já copiou 5 para o resultado sem nome."
+      },
+      {
+        "text": "5: a chamada adiada muda um `n` local, não o resultado",
+        "why": "Isso. Só um resultado com nome é uma variável que a função adiada alcança depois do `return`; este não tem nome."
+      },
+      {
+        "text": "Nada: o `defer` precisa de um resultado com nome para compilar",
+        "why": "O `defer` funciona em qualquer função; só alterar o resultado precisa de um nome."
+      },
+      {
+        "text": "0, porque o `defer` zera o resultado",
+        "why": "Nada é zerado; `n *= 2` dobra uma variável, e o resultado nunca a vê."
+      }
+    ]
+  },
+  "ex-2ffadsdm": {
+    "prompt": "Uma função de 40 linhas de um colega tem resultados com nome e quatro `return` vazios, dois dentro de blocos `if` aninhados que usam `:=`. Quais preocupações desta lição se aplicam? Escolha todas as que se aplicam.",
+    "hint": "Pense em quem lê, e no sombreamento.",
+    "choices": [
+      {
+        "text": "Quem lê um `return` tem de rolar para cima e procurar no corpo para saber o que ele devolve",
+        "why": "Sim. A forma vazia só se lê bem quando os resultados estão visíveis na mesma tela."
+      },
+      {
+        "text": "Um `:=` num bloco pode declarar variáveis novas que escondem os resultados",
+        "why": "Sim. É o bug de `port`: o trabalho caiu em variáveis internas e quem chamou recebeu zeros."
+      },
+      {
+        "text": "Resultados com nome deixam a função mais lenta que os sem nome",
+        "why": "A lição não afirmou nada sobre velocidade, e nenhuma das capturas mediu isso."
+      },
+      {
+        "text": "Go permite no máximo um `return` vazio por função",
+        "why": "Esse limite não existe; a regra é sobre resultados escondidos, não sobre quantos returns há."
+      }
+    ]
+  }
+}

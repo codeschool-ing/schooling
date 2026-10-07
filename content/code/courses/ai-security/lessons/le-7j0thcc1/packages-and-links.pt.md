@@ -10,7 +10,7 @@ modelo sugere sempre o mesmo nome inventado, quem registrá-lo primeiro decide o
 desenvolvedor que confiar na sugestão vai instalar. Pesquisadores mediram modelos inventando nomes de
 pacotes numa taxa perceptível, e o truque de registrá-los ganhou um apelido próprio, *slopsquatting*.
 
-A defesa é a mesma dos links da aula 19: **um nome que um modelo produziu é conferido contra uma lista
+A defesa é a mesma dos links da aula 9: **um nome que um modelo produziu é conferido contra uma lista
 confiável antes de qualquer coisa agir sobre ele.** No laboratório, as sugestões de um modelo para um
 recurso de QR code Pix estão em `data/suggested-deps.txt`, escrito pelo curso, e o
 `data/registry-snapshot.txt` é um substituto curto dos pacotes que a Tarefa já revisou:
@@ -47,7 +47,7 @@ Três hábitos fazem isso valer numa equipe:
 
 ## Links também são nomes
 
-O `out-6` da aula 19 tinha um link para `pay-tarefa.example`, um host que parecia o da Tarefa. Um modelo
+O `out-6` da aula 9 tinha um link para `pay-tarefa.example`, um host que parecia o da Tarefa. Um modelo
 que inventa um link plausível produz o mesmo risco que um que inventa um pacote: um nome que outra pessoa
-pode possuir. A lista de hosts da aula 19 é a mesma defesa que o snapshot de registro daqui, uma para o
+pode possuir. A lista de hosts da aula 9 é a mesma defesa que o snapshot de registro daqui, uma para o
 navegador do cliente e outra para a máquina de quem desenvolve.

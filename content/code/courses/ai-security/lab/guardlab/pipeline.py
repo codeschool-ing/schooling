@@ -1,8 +1,8 @@
 """The filters a reply passes through before a client sees it, in order.
 
 Each layer is a module from an earlier lesson: detect.py (personal data and
-secrets, lesson 21), the canary check below, moderation.py (lesson 16) and the
-host allowlist of shapes.py (lesson 19). A reply is blocked by the first layer
+secrets, lesson 11), the canary check below, moderation.py (lesson 6) and the
+host allowlist of shapes.py (lesson 9). A reply is blocked by the first layer
 that objects, and the report names the layer, so that a block can be traced
 to the rule that made it.
 

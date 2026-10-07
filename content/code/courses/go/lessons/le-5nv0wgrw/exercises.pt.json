@@ -1,0 +1,395 @@
+{
+  "ex-t64gsap9": {
+    "prompt": "`func double(n int) { n = n * 2 }` é chamada como `double(n)` com `n := 21`. Quanto vale `n` depois?",
+    "hint": "De quem é a variável que a função dobrou?",
+    "choices": [
+      {
+        "text": "42, porque a função o dobrou",
+        "why": "Ela dobrou o seu próprio `n`, uma variável criada para a chamada. O `n` de quem chamou nunca foi entregue."
+      },
+      {
+        "text": "Nada: atribuir a um parâmetro é erro de compilação",
+        "why": "Um parâmetro é uma variável local comum, e `double` compilou e rodou na seção 02."
+      },
+      {
+        "text": "21, porque a função dobrou uma cópia dele",
+        "why": "Isso. A chamada copiou 21 para o `n` da própria função; a primeira linha da saída foi 21."
+      },
+      {
+        "text": "0, já que um parâmetro é zerado quando a função retorna",
+        "why": "Nada zera a variável de quem chamou; ela mantém o 21 que tinha, porque só o seu valor saiu dela."
+      }
+    ]
+  },
+  "ex-pcngpbms": {
+    "prompt": "`Player` tem um campo `Last [3]int`. Depois de `bia := ana` e `bia.Last[1] = 50`, quanto vale `ana.Last`?",
+    "hint": "Um campo array faz parte da struct, ou está em outro lugar?",
+    "choices": [
+      {
+        "text": "`[0 50 0]`, porque as duas structs compartilham o array",
+        "why": "Isso valeria para um campo slice. Um campo array fica dentro da struct e foi copiado com ela."
+      },
+      {
+        "text": "`[0 0 0]`",
+        "why": "Isso. Copiar a struct copiou o array dela, então escrever no de `bia` não mexeu no de `ana`."
+      },
+      {
+        "text": "`[50 50 50]`",
+        "why": "`bia.Last[1] = 50` escreve um elemento, e ainda por cima no array de `bia`."
+      },
+      {
+        "text": "Um erro de compilação, já que uma struct com um array não pode ser atribuída",
+        "why": "`bia := ana` compilou na seção 02; uma struct é atribuída inteira, sejam quais forem os campos."
+      }
+    ]
+  },
+  "ex-ztsefrz5": {
+    "prompt": "Um parâmetro é uma ___ local comum que a chamada preenche com uma cópia do argumento.",
+    "hint": "A função pode lê-la, mudá-la e jogá-la fora.",
+    "blanks": [
+      {
+        "accept": [
+          "variável",
+          "variavel"
+        ]
+      }
+    ]
+  },
+  "ex-8atz0gxb": {
+    "prompt": "`win(p Player) Player` muda `p.Score` e devolve `p`; quem chama escreve `ana = win(ana)`. O que esse formato dá a quem lê a chamada?",
+    "hint": "Olhe o lado esquerdo da chamada.",
+    "choices": [
+      {
+        "text": "Poupa a cópia que passar `ana` custaria",
+        "why": "Ele faz três cópias, não menos: para `p`, para fora como resultado e para `ana`."
+      },
+      {
+        "text": "Nada a mais: é o único jeito que Go dá para uma função mudar um valor para quem chamou",
+        "why": "Existe um segundo jeito, passar o endereço, que é o assunto da lição 23."
+      },
+      {
+        "text": "A atribuição mostra, na própria chamada, que `ana` muda",
+        "why": "Isso. Ninguém precisa abrir `win` para saber que `ana` é substituída."
+      },
+      {
+        "text": "Faz `win` rodar mais rápido que uma função sem valor de retorno",
+        "why": "Devolver um valor acrescenta uma cópia; o ganho é de leitura, não de velocidade."
+      }
+    ]
+  },
+  "ex-50k2ypnd": {
+    "prompt": "Uma função recebe `players []Player` e executa `for _, p := range players { p.Score = 0 }`. O que acontece com os jogadores de quem chamou?",
+    "hint": "O que é `p` a cada volta do laço?",
+    "choices": [
+      {
+        "text": "Toda pontuação vira 0, já que o array é compartilhado",
+        "why": "O array é compartilhado, mas o laço nunca escreve nele: escreve em `p`."
+      },
+      {
+        "text": "Nada: `p` é uma cópia de cada elemento, e o laço muda a cópia",
+        "why": "Isso. O `range` entrega uma cópia de cada elemento, a mesma cópia que uma chamada faz; `players[i].Score = 0` alcançaria o array."
+      },
+      {
+        "text": "Só o primeiro jogador muda, já que a cópia é feita uma vez",
+        "why": "Uma cópia é feita a cada volta, e nenhuma delas é o elemento."
+      },
+      {
+        "text": "Não compila, porque não se pode atribuir a `p`",
+        "why": "`p` é uma variável comum e atribuir ao seu campo compila; só não muda nada lá fora."
+      }
+    ]
+  },
+  "ex-dphepvsk": {
+    "prompt": "Na máquina do laboratório, quantos bytes o `unsafe.Sizeof` informa para uma variável do tipo `map[string]int` que guarda um milhão de chaves?",
+    "hint": "O que uma variável de map guarda?",
+    "unit": "bytes"
+  },
+  "ex-anh4v42j": {
+    "prompt": "`replace(m map[string]int)` executa `m = map[string]int{\"carla\": 3}`. Quem chamou passou `ages`, com `ana` e `bia`. O que o `ages` de quem chamou guarda depois?",
+    "hint": "A função escreveu através do ponteiro, ou o trocou?",
+    "choices": [
+      {
+        "text": "Só `carla`, porque maps são passados por referência",
+        "why": "É o que a passagem por referência faria, e o programa imprimiu o contrário."
+      },
+      {
+        "text": "`ana`, `bia` e `carla`, porque os dois maps se juntam",
+        "why": "Nada junta maps; `carla` foi para uma tabela nova para a qual só `m` apontava."
+      },
+      {
+        "text": "Nada: `ages` fica nil depois da chamada",
+        "why": "A variável de quem chamou não foi tocada, então continua apontando para a sua tabela."
+      },
+      {
+        "text": "`ana` e `bia`, como antes da chamada",
+        "why": "Isso. A atribuição mudou `m`, a cópia do ponteiro da função, e mais nada."
+      }
+    ]
+  },
+  "ex-8r9ycse0": {
+    "prompt": "`load(m map[string]int)` faz `if m == nil { m = make(map[string]int) }` e acrescenta uma chave. Quem chamou declarou `var ages map[string]int`, chamou `load(ages)`, depois escreveu `ages[\"bia\"] = 2` e o programa entrou em panic. Por quê?",
+    "hint": "Em que variável foi parar o `make`?",
+    "choices": [
+      {
+        "text": "`load` esvaziou o map quando retornou",
+        "why": "Retornar não esvazia nada; o map que `load` criou apenas nunca foi guardado onde quem chamou olha."
+      },
+      {
+        "text": "O map novo foi para a variável do próprio `load`, e `ages` continuou nil",
+        "why": "Isso. O programa imprimiu `true` para `ages == nil`, e escrever num map nil causa panic."
+      },
+      {
+        "text": "Maps criados dentro de uma função são liberados quando ela retorna",
+        "why": "Um map vive enquanto algo aponta para ele; nada em `main` apontava."
+      },
+      {
+        "text": "Um map tem de ser criado com `make` dentro da mesma função que escreve nele",
+        "why": "O `load` corrigido criou o map e `main` escreveu nele, depois que o map foi devolvido."
+      }
+    ]
+  },
+  "ex-k4te3a4w": {
+    "prompt": "Ligue cada tipo ao que a cópia do seu valor compartilha com o original.",
+    "hint": "A tabela da seção 03, a última coluna.",
+    "pairs": [
+      {
+        "left": "slice",
+        "right": "os elementos de um array, mas não o comprimento"
+      },
+      {
+        "left": "map",
+        "right": "a tabela inteira, inclusive chaves acrescentadas por qualquer das cópias"
+      },
+      {
+        "left": "string",
+        "right": "bytes que ninguém pode mudar"
+      },
+      {
+        "left": "interface guardando uma struct",
+        "right": "uma struct copiada para dentro quando foi guardada"
+      }
+    ],
+    "right_distractors": [
+      "a própria variável de quem chamou, que ela renomeia"
+    ]
+  },
+  "ex-1y5av03n": {
+    "prompt": "`var v any = ana` guarda um `Player` com pontuação 10; depois, `ana.Score = 99`. O que `fmt.Println(v)` imprime?",
+    "hint": "Um valor de interface são duas palavras. Para onde aponta a segunda?",
+    "choices": [
+      {
+        "text": "`{Ana 99}`, porque uma interface aponta para a variável que recebeu",
+        "why": "Ela aponta para um valor guardado, e esse valor foi uma cópia feita em `v = ana`."
+      },
+      {
+        "text": "`{Ana 10}`",
+        "why": "Isso. Guardar uma struct numa interface a copiou; a execução imprimiu `{Ana 10} {Ana 99}`."
+      },
+      {
+        "text": "`<nil>`, já que `any` não guarda campos",
+        "why": "`any` guarda o que foi guardado nele, com campos e tudo."
+      },
+      {
+        "text": "Nada: atribuir uma struct a `any` não compila",
+        "why": "Todo tipo satisfaz `any`, então a atribuição compila; a lição 28 trata disso."
+      }
+    ]
+  },
+  "ex-dezmpqwc": {
+    "prompt": "Uma função recebe `m map[string]int`. Quais destas coisas quem chamou vê depois que a função retorna? Marque todas as que se aplicam.",
+    "hint": "Através do ponteiro, ou no ponteiro?",
+    "choices": [
+      {
+        "text": "`m[\"bia\"] = 2`",
+        "why": "Sim: escreve na tabela para a qual as duas cópias apontam."
+      },
+      {
+        "text": "`delete(m, \"ana\")`",
+        "why": "Sim: apagar passa pelo ponteiro até a mesma tabela, como acrescentar."
+      },
+      {
+        "text": "`m = map[string]int{}`",
+        "why": "Não: isso muda a tabela para a qual `m` aponta, e `m` é a cópia da própria função."
+      },
+      {
+        "text": "`m = nil`",
+        "why": "Não: a variável de quem chamou mantém o seu ponteiro seja o que for que a função atribua a `m`."
+      }
+    ]
+  },
+  "ex-k8qkrx3x": {
+    "prompt": "Uma função só precisa ler alguns elementos de um `[1_000_000]int`. Qual é o jeito de costume de impedir que cada chamada copie 8.000.000 de bytes?",
+    "hint": "O que `viaSlice` recebia?",
+    "choices": [
+      {
+        "text": "Declarar o array como variável global e não passá-lo mais",
+        "why": "Isso evita a cópia fazendo toda função depender de uma variável, o que é outro problema."
+      },
+      {
+        "text": "Marcar a função com `//go:noinline`",
+        "why": "Essa diretiva impede o inlining, o que mantém a cópia; o benchmark a usou para que a cópia fosse medida."
+      },
+      {
+        "text": "Passar uma slice sobre o array, 24 bytes",
+        "why": "Isso. A slice levou 2,026 ns onde o array levou 350.746 ns, e ela compartilha os elementos."
+      },
+      {
+        "text": "Dividi-lo em mil arrays menores",
+        "why": "Passar todos ainda copiaria cada byte; o problema é o tamanho da cópia."
+      }
+    ]
+  },
+  "ex-ma1ywq95": {
+    "prompt": "`Point` (16 bytes) levou 1,954 ns por chamada e `Record` (1.024 bytes), 15,51 ns. O que o par mostra?",
+    "hint": "Compare a razão dos bytes com a razão dos tempos.",
+    "choices": [
+      {
+        "text": "O custo cresce com os bytes, e os dois são pequenos perto do array de 8 MB",
+        "why": "Isso. Sessenta e quatro vezes os bytes custaram cerca de oito vezes o tempo, e os dois ficam em nanossegundos."
+      },
+      {
+        "text": "Toda struct acima de 16 bytes tem de ser passada por ponteiro",
+        "why": "15,51 ns não é nada que um programa perceba fora de um laço muito quente; a seção diz para passar structs pequenas por valor."
+      },
+      {
+        "text": "Copiar é de graça, já que os dois ficam abaixo de um microssegundo",
+        "why": "A linha do array mostra que não é: 350.746 ns por uma cópia."
+      },
+      {
+        "text": "O tempo é o custo da chamada em si, que é igual qualquer que seja o tamanho do valor",
+        "why": "Os tempos variam com o tamanho; só com 16 ou 24 bytes a chamada é o custo inteiro."
+      }
+    ]
+  },
+  "ex-37vtgpxv": {
+    "prompt": "Por que cada função medida em `~/byvalue-cost` leva `//go:noinline`?",
+    "hint": "O que o compilador faria com uma função de uma linha, sem isso?",
+    "choices": [
+      {
+        "text": "É um comentário para quem lê, ignorado pelo compilador",
+        "why": "Sem espaço depois das barras, é uma diretiva que o compilador obedece."
+      },
+      {
+        "text": "`testing.Benchmark` se recusa a medir uma função sem ela",
+        "why": "`testing.Benchmark` mede o que a sua função fizer; a diretiva é sobre o compilador."
+      },
+      {
+        "text": "Deixa a cópia mais rápida, para os números saírem menores",
+        "why": "Ela mantém a cópia exatamente como é; é esse o objetivo."
+      },
+      {
+        "text": "Para que a chamada, e a cópia que ela faz, não seja colada no laço e eliminada pelo otimizador",
+        "why": "Isso. Uma função de uma linha embutida deixa o compilador pular a cópia que estava sendo medida."
+      }
+    ]
+  },
+  "ex-chwm9emr": {
+    "prompt": "Um colega muda toda função que recebe uma struct `Customer` de três campos para receber um ponteiro, \"pela velocidade\". O que a medição desta lição diz sobre isso?",
+    "hint": "Onde uma struct de três campos fica na tabela?",
+    "choices": [
+      {
+        "text": "Está certo: um ponteiro tem 8 bytes, então cada chamada fica umas duas vezes mais rápida",
+        "why": "Nesse tamanho o tempo é da chamada, não da cópia, então cortar os bytes pela metade quase não poupa nada."
+      },
+      {
+        "text": "Quase não ganha tempo e abre mão da cópia que protegia quem chama",
+        "why": "Isso. Uma struct pequena é copiada pelo custo da chamada, e a lição 24 mostra que um ponteiro tem custos próprios."
+      },
+      {
+        "text": "Não muda nada, porque Go já passa structs por ponteiro",
+        "why": "Go copia uma struct para o parâmetro; a seção 02 mostrou a struct de quem chamou intacta."
+      },
+      {
+        "text": "É obrigatório quando uma struct tem um campo string",
+        "why": "Um campo string tem 16 bytes e é copiado como qualquer outro; nada exige um ponteiro."
+      }
+    ]
+  },
+  "ex-0syd30ka": {
+    "prompt": "Ponha as cópias de `ana = win(ana)` na ordem em que acontecem, sendo que `win(p Player) Player` incrementa `p.Score` e devolve `p`.",
+    "hint": "A chamada vem antes do corpo, e a atribuição vem por último.",
+    "items": [
+      "`ana` é copiada para o parâmetro `p`",
+      "`win` incrementa `p.Score`, a sua própria cópia",
+      "`p` é copiada para fora como resultado",
+      "o resultado é copiado para `ana`"
+    ]
+  },
+  "ex-w54kdsp4": {
+    "prompt": "`func reset(s []int) { s = nil }` é chamada como `reset(nums)` com `nums` valendo `[1 2 3]`. Quanto vale `nums` depois?",
+    "hint": "É o `replace` da seção 03, com uma slice.",
+    "choices": [
+      {
+        "text": "`[]`, porque uma slice é passada por referência",
+        "why": "Uma slice é passada como cópia das suas três palavras, e `s = nil` mudou só a cópia."
+      },
+      {
+        "text": "`[1 2 3]`",
+        "why": "Isso. Atribuir ao parâmetro troca a cópia da função e deixa a slice de quem chamou como estava."
+      },
+      {
+        "text": "`[0 0 0]`, já que o array é compartilhado e `nil` o zera",
+        "why": "`nil` não é escrito em elemento nenhum; é um valor novo só para `s`."
+      },
+      {
+        "text": "Um panic, porque o array por trás de `nums` foi liberado",
+        "why": "`nums` continua apontando para o seu array, então ele está vivo e nada entra em panic."
+      }
+    ]
+  },
+  "ex-vff2s6kq": {
+    "prompt": "`func zero(s []int) { for i := range s { s[i] = 0 } }` é chamada como `zero(nums)` com `nums` valendo `[1 2 3]`. Quanto vale `nums` depois?",
+    "hint": "Este laço escreve por `s[i]`, não numa variável do laço.",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, porque Go passa tudo a uma função por valor, sem exceção",
+        "why": "Passa, e o valor copiado guarda um ponteiro para o array de quem chamou; escritas através dele caem lá."
+      },
+      {
+        "text": "`[]`, já que zerar uma slice a esvazia",
+        "why": "Escrever zeros nos elementos mantém o comprimento em 3."
+      },
+      {
+        "text": "`[0 0 0]`, porque `s[i]` escreve no array que `nums` usa",
+        "why": "Isso. A cópia da slice aponta para o mesmo array, como o `setFirst` da lição 11 mostrou."
+      },
+      {
+        "text": "`[0 2 3]`, já que só a primeira escrita chega a quem chamou",
+        "why": "Todo `s[i]` passa pelo mesmo ponteiro, então todo elemento é alcançado."
+      }
+    ]
+  },
+  "ex-34f12yz2": {
+    "prompt": "Cada função muda o seu parâmetro como mostrado. Quais delas mudam algo que quem chamou vê? Marque todas as que se aplicam. (`Team` é `struct { Members []string }`.)",
+    "hint": "Pergunte para onde cada valor aponta.",
+    "choices": [
+      {
+        "text": "`func a(p Player) { p.Score = 0 }`",
+        "why": "Não: `p` é uma cópia inteira da struct, e os seus campos não apontam para nada de quem chamou."
+      },
+      {
+        "text": "`func b(t Team) { t.Members[0] = \"Bia\" }`",
+        "why": "Sim: a struct foi copiada, e o seu campo slice ainda aponta para o array de quem chamou."
+      },
+      {
+        "text": "`func c(a [3]int) { a[0] = 0 }`",
+        "why": "Não: um array é copiado elemento a elemento, como a lição 11 mostrou com `zero`."
+      },
+      {
+        "text": "`func d(m map[string]int) { m[\"x\"] = 1 }`",
+        "why": "Sim: o valor do map é um ponteiro para uma tabela, e a chave vai para ela."
+      }
+    ]
+  },
+  "ex-2aa0hzyh": {
+    "prompt": "Go passa todo argumento por ___; para um map, o que é copiado é um ponteiro para a tabela.",
+    "hint": "O contrário de \"por referência\".",
+    "blanks": [
+      {
+        "accept": [
+          "valor"
+        ]
+      }
+    ]
+  }
+}

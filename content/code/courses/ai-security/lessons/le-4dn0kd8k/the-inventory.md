@@ -44,7 +44,7 @@ Read the columns as three questions:
   altogether. Text that goes to the tools is the most dangerous, because it becomes an action.
 - **trusted?** is who wrote it. Only two entries are trusted outright, the system prompt and the help
   centre, both written by Tarefa. The log is Tarefa's own and the provider is trusted by contract,
-  which lesson 22 said is a trust with conditions.
+  which lesson 12 said is a trust with conditions.
 - **controls in the lab** names the commands from this course that cover the entry. Every one of them
   was built in a lesson, and the lesson numbers are in the file.
 
@@ -56,9 +56,9 @@ hard way.
 ## Two rows worth reading closely
 
 `model-reply` is marked untrusted, though Tarefa runs the model. The model's output is shaped by every
-untrusted input that reached it, so it inherits their trust level. That is why lesson 19 checks every
-reply against a schema and lesson 15 filters it before a client sees it.
+untrusted input that reached it, so it inherits their trust level. That is why lesson 9 checks every
+reply against a schema and lesson 5 filters it before a client sees it.
 
 `tool-calls` are untrusted for the same reason, and they go to the tools. A proposal is text the model
 wrote after reading things nobody at Tarefa wrote, so it is checked like any other untrusted input,
-by the gate of lesson 20, before it becomes an effect.
+by the gate of lesson 10, before it becomes an effect.
