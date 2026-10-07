@@ -7,7 +7,7 @@ For a while OpenAI sold reasoning as a separate line: the **o series**, models t
 through a problem before answering (lesson 1 section 07's third kind). The sheet still prices them:
 
 ```
-ana@desk:~/desk$ sheet compare o1 o3 o3-mini o4-mini
+ana@desk:~/desk$ python sheet.py compare o1 o3 o3-mini o4-mini
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 o1                                              200,000   100000       15       60  VFSCRP
@@ -19,7 +19,7 @@ o4-mini                                         200,000   100000      1.1      4
 And it dates most of them:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider openai | grep -E "  o[0-9]"
+ana@desk:~/desk$ python sheet.py retiring --provider openai | grep -E "  o[0-9]"
 2026-10-23  o1                                                 openai
 2026-10-23  o1-2024-12-17                                      openai
 2026-10-23  o3-mini                                            openai
@@ -48,7 +48,7 @@ Seven levels, from `none` to `max`. The sheet records which a model accepts and 
 the request says nothing:
 
 ```
-ana@desk:~/desk$ sheet show gpt-5.4-mini | grep -E "reasoning"
+ana@desk:~/desk$ python sheet.py show gpt-5.4-mini | grep -E "reasoning"
 default_reasoning_effort                   none
 supports_minimal_reasoning_effort          False
 supports_none_reasoning_effort             True
@@ -57,7 +57,7 @@ supports_xhigh_reasoning_effort            True
 ```
 
 ```
-ana@desk:~/desk$ sheet show gpt-5.5 | grep -E "reasoning"
+ana@desk:~/desk$ python sheet.py show gpt-5.5 | grep -E "reasoning"
 supports_minimal_reasoning_effort          False
 supports_none_reasoning_effort             True
 supports_reasoning                         True
