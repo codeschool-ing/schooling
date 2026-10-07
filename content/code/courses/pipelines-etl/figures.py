@@ -912,6 +912,98 @@ def l09_two_schedules(lang):
         f.text(b, 204, t['runs_at'] + ' ' + t['d'][i + 1], size=9.5, fill='--paper-dim')
     return f, t['cap']
 
+@figure('l10-failures', 10)
+def l10_failures(lang):
+    t = {'en': dict(
+            label='Three kinds of failure and what each asks for. A passing failure, such as a 503, '
+                  'a 429 or a timeout, is retried later and alerts nobody unless the tries run out. '
+                  'A permanent one, such as a 401, a 400 or a file in the wrong shape, fails at '
+                  'once and alerts. A failure in the code itself, such as an import error, stops '
+                  'the DAG from being scheduled at all and is fixed by changing the code.',
+            head=['the failure', 'for example', 'what Airflow should do'],
+            rows=[('passing', '503 · 429 · timeout', 'try again, later each time'),
+                  ('permanent', '401 · 400 · a bad file', 'fail now, and say so'),
+                  ('in the code', 'an import error', 'nothing runs: fix the code')],
+            cap='Asking again only helps when the cause can go away by itself.'),
+         'pt': dict(
+            label='Três tipos de falha e o que cada um pede. Uma falha passageira, como um 503, um '
+                  '429 ou um timeout, é tentada de novo mais tarde e não alerta ninguém, a menos '
+                  'que as tentativas acabem. Uma permanente, como um 401, um 400 ou um arquivo no '
+                  'formato errado, falha na hora e alerta. Uma falha no próprio código, como um '
+                  'erro de importação, impede o DAG de ser agendado e se resolve mudando o código.',
+            head=['a falha', 'por exemplo', 'o que o Airflow deve fazer'],
+            rows=[('passageira', '503 · 429 · timeout', 'tentar de novo, cada vez mais tarde'),
+                  ('permanente', '401 · 400 · um arquivo ruim', 'falhar agora, e avisar'),
+                  ('no código', 'um erro de importação', 'nada roda: corrigir o código')],
+            cap='Pedir de novo só ajuda quando a causa pode sumir sozinha.')}[lang]
+    f = Fig('l10-failures', 720, 230, t['label'])
+    cols = [30, 200, 410]
+    for x, h in zip(cols, t['head']):
+        f.text(x, 28, h, size=10.5, anchor='start', fill='--paper-dim', weight='600')
+    f.line(30, 44, 690, 44, stroke='--wire')
+    tones = ['--phosphor', '--amber', '--amber']
+    for i, ((kind, eg, todo), tone) in enumerate(zip(t['rows'], tones)):
+        y = 78 + i * 52
+        f.rect(30, y - 17, 150, 34, stroke=tone, fill='--scan')
+        f.text(105, y, kind, size=11.5, weight='600')
+        f.text(cols[1], y, eg, size=10.5, anchor='start')
+        f.text(cols[2], y, todo, size=11, anchor='start')
+    return f, t['cap']
+
+
+@figure('l10-night', 10)
+def l10_night(lang):
+    t = {'en': dict(
+            label='The run for 03:00 on 10 March on a time line of a few minutes. Five tries, each '
+                  'a failure, with the waits between them growing: about fifteen seconds, then '
+                  'thirty, sixty and a hundred and twenty. Two minutes after the run was queued '
+                  'the deadline passes and a LATE line is written while the run is still trying. '
+                  'After the fifth try the task has failed for good and a FAILED line is written.',
+            tries='tries', wait='waits', dl='deadline: 2 min after queued',
+            late='LATE', failed='FAILED', queued='queued', mins='min',
+            cap='The deadline speaks while the run is still trying; the failure callback only '
+                'when the trying is over.'),
+         'pt': dict(
+            label='A execução das 03:00 de 10 de março numa linha do tempo de alguns minutos. Cinco '
+                  'tentativas, todas falhas, com as esperas entre elas crescendo: uns quinze '
+                  'segundos, depois trinta, sessenta e cento e vinte. Dois minutos depois de a '
+                  'execução entrar na fila, o prazo passa e uma linha LATE é escrita enquanto a '
+                  'execução ainda tenta. Depois da quinta tentativa a tarefa falhou de vez e uma '
+                  'linha FAILED é escrita.',
+            tries='tentativas', wait='esperas', dl='prazo: 2 min depois da fila',
+            late='LATE', failed='FAILED', queued='na fila', mins='min',
+            cap='O prazo fala enquanto a execução ainda tenta; o callback de falha só quando as '
+                'tentativas acabaram.')}[lang]
+    f = Fig('l10-night', 720, 250, t['label'])
+    x0, x1, tmax = 90, 680, 330.0
+    sx = lambda s: x0 + s / tmax * (x1 - x0)
+    y = 200
+    f.line(x0, y, x1 + 10, y, stroke='--paper-dim', arrow=True)
+    for m in range(0, 6):
+        x = sx(m * 60)
+        f.line(x, y - 4, x, y + 4, stroke='--paper-dim')
+        f.text(x, y + 18, f'{m} {t["mins"]}', size=9.5, fill='--paper-dim')
+    starts, waits = [4], [22, 45, 90, 150]
+    for w in waits:
+        starts.append(starts[-1] + 3 + w)
+    f.text(x0 - 10, 110, t['tries'], size=10, anchor='end', fill='--paper-dim')
+    f.text(x0 - 10, 150, t['wait'], size=10, anchor='end', fill='--paper-dim')
+    for i, s in enumerate(starts):
+        f.circle(sx(s), 110, 6, fill='--amber')
+        f.text(sx(s), 92, str(i + 1), size=10, weight='600')
+        if i < len(waits):
+            a, b = sx(s) + 8, sx(starts[i + 1]) - 8
+            f.line(a, 150, b, 150, stroke='--phosphor-dim')
+            f.text(a + (b - a) * (0.75 if i == 2 else 0.5), 164, ['15', '30', '60', '120'][i] + ' s', size=9.5,
+                   fill='--paper-dim')
+    xd = sx(120)
+    f.line(xd, 40, xd, y, stroke='--phosphor', dash='4 3')
+    f.text(xd + 6, 30, t['dl'], size=10, anchor='start')
+    f.text(xd + 6, 56, t['late'], size=10.5, anchor='start', weight='600', mono=True,
+           fill='--phosphor')
+    f.text(sx(starts[-1]), 66, t['failed'], size=10.5, weight='600', mono=True, fill='--amber')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:

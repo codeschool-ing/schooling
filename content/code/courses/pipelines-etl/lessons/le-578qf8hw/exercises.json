@@ -1,0 +1,808 @@
+[
+  {
+    "id": "ex-g2mjc7sj",
+    "version": 1,
+    "section": "kinds-of-failure",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each failure of the price fetch to what Airflow should do with it.",
+    "hint": "Will asking again change the answer?",
+    "pairs": [
+      {
+        "left": "The API answers 503",
+        "right": "Try again, later each time"
+      },
+      {
+        "left": "The API answers 401",
+        "right": "Fail now and alert"
+      },
+      {
+        "left": "The DAG file does not import",
+        "right": "Fix the code; nothing runs until then"
+      }
+    ],
+    "right_distractors": [
+      "Mark the task as a success"
+    ]
+  },
+  {
+    "id": "ex-z4nv8csn",
+    "version": 1,
+    "section": "kinds-of-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should a `401` from the price API not be retried?",
+    "hint": "What would be different a minute later?",
+    "choices": [
+      {
+        "text": "The key will still be wrong",
+        "correct": true,
+        "why": "Right. Every retry gets the same answer, and the alert is only delayed."
+      },
+      {
+        "text": "Retrying a 401 locks the account",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the point is that nothing changes."
+      },
+      {
+        "text": "Airflow cannot retry HTTP errors",
+        "correct": false,
+        "why": "It retried the 503 without complaint."
+      },
+      {
+        "text": "A 401 is always the API's fault and it will be fixed in a few minutes by its owners",
+        "correct": false,
+        "why": "A 401 is about the request's key, which is Ana's to fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wxwpsky",
+    "version": 1,
+    "section": "the-dag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A DAG file fails to import. What does the scheduler do with its 03:00 run?",
+    "hint": "Can the scheduler see the DAG?",
+    "choices": [
+      {
+        "text": "It runs it and fails every task",
+        "correct": false,
+        "why": "There are no tasks to run: the file did not load."
+      },
+      {
+        "text": "It calls `on_failure_callback`",
+        "correct": false,
+        "why": "That is a task's callback, and no task exists."
+      },
+      {
+        "text": "It retries the import with the DAG's `retries`",
+        "correct": false,
+        "why": "`retries` belong to tasks, and there are none yet."
+      },
+      {
+        "text": "Nothing: the DAG cannot be scheduled",
+        "correct": true,
+        "why": "Right. No run, no try and no failure callback. Only `list-import-errors` shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q5w1fqte",
+    "version": 1,
+    "section": "the-dag",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The command that shows why a DAG file did not load: `airflow dags ___`",
+    "hint": "Two words joined by hyphens, listing errors.",
+    "blanks": [
+      {
+        "accept": [
+          "list-import-errors"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8msye5qj",
+    "version": 1,
+    "section": "the-dag",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana edits `failed` in `~/airflow/plugins/oncall.py` while Airflow runs. The next failure writes the old line. Why?",
+    "hint": "When is a module imported?",
+    "choices": [
+      {
+        "text": "The plugins folder is locked read-only once Airflow has started",
+        "correct": false,
+        "why": "She wrote the file without trouble."
+      },
+      {
+        "text": "The running processes keep the module they imported",
+        "correct": true,
+        "why": "Right. A plugin change needs a restart."
+      },
+      {
+        "text": "Callbacks are cached in the metadata database",
+        "correct": false,
+        "why": "The function is imported, not stored."
+      },
+      {
+        "text": "A DAG must be renamed before its callbacks change",
+        "correct": false,
+        "why": "Renaming is not needed; restarting is."
+      }
+    ]
+  },
+  {
+    "id": "ex-735psev3",
+    "version": 1,
+    "section": "the-dag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `oncall.py` in the plugins folder rather than in `dags/`?",
+    "hint": "Which process runs the deadline's callback?",
+    "choices": [
+      {
+        "text": "Plugins run faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "Files in `dags/` must contain a DAG",
+        "correct": false,
+        "why": "A helper module there is skipped as a DAG but can still be imported by tasks."
+      },
+      {
+        "text": "The triggerer runs the deadline callback and cannot import from `dags/`",
+        "correct": true,
+        "why": "Right. The first version beside the DAG failed with No module named 'oncall' in the triggerer's log."
+      },
+      {
+        "text": "Airflow refuses to call functions defined in a DAG folder",
+        "correct": false,
+        "why": "Tasks call such functions all the time; the triggerer is the exception."
+      }
+    ]
+  },
+  {
+    "id": "ex-vab30wz6",
+    "version": 1,
+    "section": "failing-fast",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fetch` raises `AirflowFailException` on its first try, and `retries` is 4. How many tries does it make?",
+    "hint": "What does that exception tell Airflow?",
+    "choices": [
+      {
+        "text": "Five",
+        "correct": false,
+        "why": "That is what an ordinary exception would get."
+      },
+      {
+        "text": "Four",
+        "correct": false,
+        "why": "That is the number of retries it would have had."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right. The exception overrides `retries`."
+      },
+      {
+        "text": "It depends on the retry delay",
+        "correct": false,
+        "why": "The delay sets when, not whether."
+      }
+    ]
+  },
+  {
+    "id": "ex-j813wpba",
+    "version": 1,
+    "section": "failing-fast",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each failure in `airflow tasks test` to the state it left the task in.",
+    "hint": "One will be tried again.",
+    "pairs": [
+      {
+        "left": "503 from the API",
+        "right": "up_for_retry"
+      },
+      {
+        "left": "401 from the API",
+        "right": "failed"
+      }
+    ],
+    "right_distractors": [
+      "success",
+      "skipped"
+    ]
+  },
+  {
+    "id": "ex-qgrgwaff",
+    "version": 1,
+    "section": "failing-fast",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A status code nobody listed in the `if` comes back, say `418`. What happens?",
+    "hint": "Where does an unlisted code go?",
+    "choices": [
+      {
+        "text": "`raise_for_status()` raises, and it is retried",
+        "correct": true,
+        "why": "Right. The safe default: a mistaken retry costs minutes."
+      },
+      {
+        "text": "The task fails at once",
+        "correct": false,
+        "why": "Only the listed codes do that."
+      },
+      {
+        "text": "The loop waits and asks for the same page",
+        "correct": false,
+        "why": "That is only for 429."
+      },
+      {
+        "text": "The rows are written and the task succeeds",
+        "correct": false,
+        "why": "`raise_for_status()` raises for any 4xx or 5xx."
+      }
+    ]
+  },
+  {
+    "id": "ex-tysspgm9",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task waits on a connection that never answers, with no timeout set anywhere. What does the on-call person see?",
+    "hint": "Does a task that never ends ever fail?",
+    "choices": [
+      {
+        "text": "A failure alert after the retries",
+        "correct": false,
+        "why": "No try ever ends, so none is retried."
+      },
+      {
+        "text": "The scheduler kills it at midnight",
+        "correct": false,
+        "why": "Nothing does that."
+      },
+      {
+        "text": "An AirflowTaskTimeout after an hour",
+        "correct": false,
+        "why": "There is no default execution timeout."
+      },
+      {
+        "text": "Nothing, unless a deadline is set",
+        "correct": true,
+        "why": "Right. The run stays in running, and only a deadline can notice that."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5rt918b",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, how many seconds after the command started did Airflow stop the hanging task?",
+    "hint": "The execution_timeout.",
+    "value": 20,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gv2p6779",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `execution_timeout` limit that `timeout=10` on each request does not?",
+    "hint": "One request, or the whole try?",
+    "choices": [
+      {
+        "text": "The time to open a connection",
+        "correct": false,
+        "why": "That is part of what the request timeout covers."
+      },
+      {
+        "text": "The whole try, however many requests it makes",
+        "correct": true,
+        "why": "Right. A hundred slow pages each under ten seconds can still take far too long."
+      },
+      {
+        "text": "The wait between retries",
+        "correct": false,
+        "why": "That is `retry_delay`."
+      },
+      {
+        "text": "How long the run may queue",
+        "correct": false,
+        "why": "A try's timeout starts when the try does."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrb8nafy",
+    "version": 1,
+    "section": "retries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`retries` is 4. How many tries can a task make in all?",
+    "hint": "The first one is not a retry.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vc01x37j",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old DAG says `retry_exponential_backoff: True` with a delay of 15 seconds. In Airflow 3.3, how long is the base wait before each retry?",
+    "hint": "What number is True?",
+    "choices": [
+      {
+        "text": "15, 30, 60, 120 seconds",
+        "correct": false,
+        "why": "That needs `2.0`."
+      },
+      {
+        "text": "15 seconds every time",
+        "correct": true,
+        "why": "Right. True is 1, and a multiplier of 1 changes nothing."
+      },
+      {
+        "text": "It refuses to parse the DAG",
+        "correct": false,
+        "why": "It accepts it without a word."
+      },
+      {
+        "text": "No wait at all",
+        "correct": false,
+        "why": "The delay is still 15 seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6s2zesq",
+    "version": 1,
+    "section": "retries",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `retry_delay` of 15 seconds and a multiplier of 2.0, what is the base wait in seconds before the fourth retry?",
+    "hint": "15, 30, 60, …",
+    "value": 120,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2z4g624g",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The run that recovered after two failed tries wrote nothing to `alerts.log`. Was that right?",
+    "hint": "Was there anything for a person to do?",
+    "choices": [
+      {
+        "text": "No: two failures should always wake somebody",
+        "correct": false,
+        "why": "They were absorbed; nothing was left to do."
+      },
+      {
+        "text": "No: the callback was broken",
+        "correct": false,
+        "why": "It wrote its line later, on the night the retries ran out."
+      },
+      {
+        "text": "Yes: a slower success is not news",
+        "correct": true,
+        "why": "Right. The failure callback runs only when the task has failed for good."
+      },
+      {
+        "text": "Yes, because the API was the lab's own",
+        "correct": false,
+        "why": "Whose API it is does not change what the callback is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-amv1qken",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A task appends rows to a table, fails halfway, and is retried. What goes wrong?",
+    "hint": "What is still there from the first try?",
+    "choices": [
+      {
+        "text": "The first half is loaded twice",
+        "correct": true,
+        "why": "Right. A retried task must be safe to run twice."
+      },
+      {
+        "text": "Nothing: Airflow rolls back a failed try",
+        "correct": false,
+        "why": "Airflow knows nothing about the table."
+      },
+      {
+        "text": "The retry is refused",
+        "correct": false,
+        "why": "Airflow retries it as usual."
+      },
+      {
+        "text": "Only the second half is loaded",
+        "correct": false,
+        "why": "The retry starts from the beginning."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tz62jmz",
+    "version": 1,
+    "section": "alerts-and-deadlines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does `on_failure_callback` run?",
+    "hint": "A try, or the task?",
+    "choices": [
+      {
+        "text": "After every failed try",
+        "correct": false,
+        "why": "That is `on_retry_callback`."
+      },
+      {
+        "text": "Before the first try",
+        "correct": false,
+        "why": "Nothing has failed then."
+      },
+      {
+        "text": "When the run passes its deadline",
+        "correct": false,
+        "why": "That is the deadline's callback."
+      },
+      {
+        "text": "When the task has failed for good",
+        "correct": true,
+        "why": "Right. Retries spent, or a refusal to retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d4zmh6g",
+    "version": 1,
+    "section": "alerts-and-deadlines",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a deadline notice that a failure callback cannot? Choose all that apply.",
+    "hint": "Which of them never fail?",
+    "choices": [
+      {
+        "text": "A run still retrying at the time the report is read",
+        "correct": true,
+        "why": "Right. It has not failed yet, and it is already late."
+      },
+      {
+        "text": "A task stuck behind a lock with no timeout",
+        "correct": true,
+        "why": "Right. It never fails, so only a deadline sees it."
+      },
+      {
+        "text": "A wrong API key",
+        "correct": false,
+        "why": "That fails at once, and the failure callback says so."
+      },
+      {
+        "text": "A DAG file that does not import",
+        "correct": false,
+        "why": "With no DAG there is no run, and no deadline to pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s8c8p5b",
+    "version": 1,
+    "section": "alerts-and-deadlines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What replaced Airflow 2's SLAs in Airflow 3?",
+    "hint": "A reference, an interval and a callback.",
+    "choices": [
+      {
+        "text": "Deadlines",
+        "correct": true,
+        "why": "Right. `DeadlineAlert` on the DAG."
+      },
+      {
+        "text": "`execution_timeout`",
+        "correct": false,
+        "why": "That stops a try; it does not report lateness."
+      },
+      {
+        "text": "Sensors",
+        "correct": false,
+        "why": "A sensor waits for something; it does not alert."
+      },
+      {
+        "text": "`on_retry_callback`",
+        "correct": false,
+        "why": "That runs on failed tries."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhjyqqmj",
+    "version": 1,
+    "section": "the-3am-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the staged night, which line reached `alerts.log` first, and why?",
+    "hint": "One waits for the end of the trying, one does not.",
+    "choices": [
+      {
+        "text": "FAILED, because a failure is more urgent",
+        "correct": false,
+        "why": "It could only come once the tries ran out."
+      },
+      {
+        "text": "LATE, because deadlines are always checked before failures",
+        "correct": false,
+        "why": "It is about timing, not a rule of precedence."
+      },
+      {
+        "text": "They arrived together, in the same second, once the run had ended",
+        "correct": false,
+        "why": "Minutes apart."
+      },
+      {
+        "text": "LATE, because the deadline passed while the run was still retrying",
+        "correct": true,
+        "why": "Right. Two minutes after queuing; the tries took several."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgzg70kr",
+    "version": 1,
+    "section": "the-3am-failure",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tries did `fetch` make on the staged night before the failure callback ran?",
+    "hint": "retries: 4",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-v41af5mf",
+    "version": 1,
+    "section": "the-3am-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The alert says `503`. Why does Ana ask the API herself before doing anything else?",
+    "hint": "The alert describes the past.",
+    "choices": [
+      {
+        "text": "Because the alert might have the wrong code",
+        "correct": false,
+        "why": "The logs agreed with it, five times."
+      },
+      {
+        "text": "To check whether it is still down now",
+        "correct": true,
+        "why": "Right. A rerun into an API that is still down only fails again."
+      },
+      {
+        "text": "To reset the API's rate limit",
+        "correct": false,
+        "why": "One request does not do that."
+      },
+      {
+        "text": "Because Airflow cannot rerun a task whose last error was an HTTP one",
+        "correct": false,
+        "why": "It reran it with a clear."
+      }
+    ]
+  },
+  {
+    "id": "ex-rv616ghr",
+    "version": 1,
+    "section": "the-3am-failure",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order Ana's morning, from the alert to the rerun.",
+    "hint": "What Airflow saw, then what the source says now.",
+    "items": [
+      "Read alerts.log",
+      "List the run's tries",
+      "Read the exception in each try's log",
+      "Ask the API by hand",
+      "Clear the failed task"
+    ]
+  },
+  {
+    "id": "ex-5t92xk1k",
+    "version": 1,
+    "section": "clearing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why clear the failed task instead of triggering a new run for the same night?",
+    "hint": "What would the list of runs say afterwards?",
+    "choices": [
+      {
+        "text": "A new run would load a different day",
+        "correct": false,
+        "why": "Given the same logical date, it would load the same one."
+      },
+      {
+        "text": "Triggering is not allowed after a failure",
+        "correct": false,
+        "why": "It is allowed; it is just the wrong record."
+      },
+      {
+        "text": "The same run succeeds, and its history stays in one place",
+        "correct": true,
+        "why": "Right. A second run would leave the failed one saying the night failed."
+      },
+      {
+        "text": "Clearing skips the retries and marks the run a success at once",
+        "correct": false,
+        "why": "The cleared task gets its tries as usual."
+      }
+    ]
+  },
+  {
+    "id": "ex-hz3jb1q6",
+    "version": 1,
+    "section": "clearing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the clear, which try number succeeded?",
+    "hint": "Five had failed.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5hwf1fka",
+    "version": 1,
+    "section": "clearing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A task loads `date.today()` minus one day. It failed on Monday and is cleared on Thursday. What does it load?",
+    "hint": "Where does it get the day from?",
+    "choices": [
+      {
+        "text": "Sunday, the day that failed",
+        "correct": false,
+        "why": "Only a task that reads the logical date would."
+      },
+      {
+        "text": "Both days, Sunday first and Wednesday after it",
+        "correct": false,
+        "why": "Nothing in it knows about Sunday."
+      },
+      {
+        "text": "Wednesday, and Sunday is never loaded",
+        "correct": true,
+        "why": "Right. A task that reads the clock cannot be rerun."
+      },
+      {
+        "text": "Nothing: Airflow refuses to clear it",
+        "correct": false,
+        "why": "Airflow cannot tell what the code reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-y578emzp",
+    "version": 1,
+    "section": "clearing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To rerun `transform` and the loads after it: `airflow tasks clear shop_nightly -t transform ___ -s … -e …`",
+    "hint": "The flag that includes the tasks that follow.",
+    "blanks": [
+      {
+        "accept": [
+          "--downstream",
+          "-d"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a9rvy0xt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A DAG has `retries: 3` and no other setting about failure. A task's database password expires. What happens?",
+    "hint": "Which kind of failure, and what is missing?",
+    "choices": [
+      {
+        "text": "Four tries fail, and nobody is told",
+        "correct": true,
+        "why": "Right. A permanent failure retried, and no callback to tell anyone."
+      },
+      {
+        "text": "It fails at once and alerts",
+        "correct": false,
+        "why": "Nothing raises AirflowFailException and nothing alerts."
+      },
+      {
+        "text": "It retries until the password is renewed",
+        "correct": false,
+        "why": "Three retries, then it stops."
+      },
+      {
+        "text": "The deadline fires",
+        "correct": false,
+        "why": "There is none."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh50me16",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to the question it answers.",
+    "hint": "Four settings, four questions.",
+    "pairs": [
+      {
+        "left": "retries",
+        "right": "How many more times?"
+      },
+      {
+        "left": "retry_exponential_backoff",
+        "right": "How much longer each time?"
+      },
+      {
+        "left": "execution_timeout",
+        "right": "How long may one try last?"
+      },
+      {
+        "left": "deadline",
+        "right": "By when must the run be done?"
+      }
+    ],
+    "right_distractors": [
+      "Which day does the run load?"
+    ]
+  }
+]
