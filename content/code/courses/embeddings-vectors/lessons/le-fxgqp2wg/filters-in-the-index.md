@@ -67,7 +67,7 @@ the parameter is how you choose a side of it per query.
 ## Qdrant
 
 This is Qdrant's Python client in **local mode**, the in-process implementation lesson 13 used,
-because the Qdrant server was out of reach from the lab:
+because the Qdrant server was out of reach from the machine this course was recorded on:
 
 ```schooling-example
 {

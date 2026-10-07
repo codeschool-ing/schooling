@@ -93,7 +93,7 @@ Traceback (most recent call last):
   File "/home/ana/emb/tenant_search.py", line 12, in <module>
     rows = conn.execute("""SELECT id, title FROM articles
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/emb/lib/python3.11/site-packages/psycopg/connection.py", line 304, in execute
+  File "/home/ana/.venvs/emb/lib/python3.12/site-packages/psycopg/connection.py", line 304, in execute
     raise ex.with_traceback(None)
 psycopg.errors.UndefinedObject: unrecognized configuration parameter "app.shop"
 ```

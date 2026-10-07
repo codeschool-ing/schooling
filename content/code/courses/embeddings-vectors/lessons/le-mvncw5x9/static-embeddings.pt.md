@@ -36,12 +36,12 @@ ana@lab:~/emb$ python static.py
 (32000, 256) float32
 14 tokens
 same as embed(): True
-ana@lab:~/emb$ ls -l /opt/emb/lib/python3.11/site-packages/wordllama/weights/ /opt/emb/share/all-MiniLM-L6-v2/model.onnx
--rw-r--r-- 1 root root 90387606 Oct  5 13:23 /opt/emb/share/all-MiniLM-L6-v2/model.onnx
+ana@lab:~/emb$ ls -l ~/.venvs/emb/lib/python3.12/site-packages/wordllama/weights/ ~/models/all-MiniLM-L6-v2/model.onnx
+-rw-r--r-- 1 ana ana 90387606 Mar 30  2023 /home/ana/models/all-MiniLM-L6-v2/model.onnx
 
-/opt/emb/lib/python3.11/site-packages/wordllama/weights/:
+/home/ana/.venvs/emb/lib/python3.12/site-packages/wordllama/weights/:
 total 16004
--rw-r--r-- 1 root root 16384096 Oct  5 13:21 l2_supercat_256.safetensors
+-rw-r--r-- 1 ana ana 16384096 Oct  7 12:27 l2_supercat_256.safetensors
 ```
 
 **A tabela tem 32.000 linhas de 256 números**, uma linha para cada token do vocabulário do

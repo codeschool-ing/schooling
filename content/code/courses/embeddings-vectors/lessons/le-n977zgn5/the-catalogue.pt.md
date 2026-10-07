@@ -1,3 +1,20 @@
+---
+title: O catálogo
+version: 1
+---
+
+Esta aula recomenda livros, então precisa de mais dois arquivos da Marginalia: os livros e as
+pessoas que os leem. Cole cada bloco no terminal, em `~/emb`, como você fez com a central de ajuda
+na aula 1.
+
+## 60 livros
+
+`books.jsonl` é o catálogo: 60 livros cujos textos estão em domínio público, cada um com autor, ano
+e gênero, e um `blurb` de uma ou duas frases escrito para o curso. **O título e o `blurb`, juntos, são o que vira
+embedding.**
+
+```bash
+cat > ~/emb/data/books.jsonl <<'EOF'
 {"id": "b01", "title": "Pride and Prejudice", "author": "Jane Austen", "year": 1813, "genre": "romance", "blurb": "A sharp-tongued young woman and a proud rich man misjudge each other at country dances, and slowly learn better."}
 {"id": "b02", "title": "Emma", "author": "Jane Austen", "year": 1815, "genre": "romance", "blurb": "A wealthy young woman who meddles in her neighbours' love lives gets every match wrong, including her own."}
 {"id": "b03", "title": "Jane Eyre", "author": "Charlotte Brontë", "year": 1847, "genre": "romance", "blurb": "An orphaned governess falls for her brooding employer, whose house hides a terrible secret in the attic."}
@@ -58,3 +75,39 @@
 {"id": "b58", "title": "The Phantom of the Opera", "author": "Gaston Leroux", "year": 1910, "genre": "horror", "blurb": "A masked genius living under the Paris opera house falls for a young singer and terrorises anyone in his way."}
 {"id": "b59", "title": "Sense and Sensibility", "author": "Jane Austen", "year": 1811, "genre": "romance", "blurb": "Two sisters, one cautious and one passionate, lose their home and their hopes and find love by different roads."}
 {"id": "b60", "title": "The Scarlet Pimpernel", "author": "Baroness Orczy", "year": 1905, "genre": "adventure", "blurb": "An English fop is secretly the masked hero who smuggles French aristocrats away from the guillotine."}
+EOF
+```
+
+## 12 leitores
+
+`readers.jsonl` diz que livros cada um de 12 leitores terminou. Um leitor é um nome e uma lista de
+ids de livros, que é tudo de que um recomendador feito de embeddings precisa para começar.
+
+```bash
+cat > ~/emb/data/readers.jsonl <<'EOF'
+{"reader": "r01", "name": "Bia", "finished": ["b01", "b06", "b03", "b59"]}
+{"reader": "r02", "name": "Caio", "finished": ["b13", "b14", "b16"]}
+{"reader": "r03", "name": "Davi", "finished": ["b07", "b55", "b11", "b09"]}
+{"reader": "r04", "name": "Elisa", "finished": ["b19", "b22", "b20"]}
+{"reader": "r05", "name": "Fábio", "finished": ["b25", "b26", "b31", "b29"]}
+{"reader": "r06", "name": "Gabi", "finished": ["b36", "b34", "b39"]}
+{"reader": "r07", "name": "Hugo", "finished": ["b41", "b43", "b42"]}
+{"reader": "r08", "name": "Íris", "finished": ["b47", "b52", "b48"]}
+{"reader": "r09", "name": "João", "finished": ["b07", "b19", "b15"]}
+{"reader": "r10", "name": "Lia", "finished": ["b01", "b07"]}
+{"reader": "r11", "name": "Marcos", "finished": []}
+{"reader": "r12", "name": "Nina", "finished": ["b28"]}
+EOF
+```
+
+## Conferindo os arquivos
+
+```
+ana@lab:~/emb$ wc -l data/books.jsonl data/readers.jsonl
+   60 data/books.jsonl
+   12 data/readers.jsonl
+   72 total
+```
+
+60 e 12 linhas. Um número diferente quer dizer que um bloco entrou pela metade ou duas vezes; a
+seção *A central de ajuda*, da aula 1, diz como consertar.
