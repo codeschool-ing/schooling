@@ -17,6 +17,7 @@
 #                    started here in the background
 #   llama3.2:3b      the course's model, the same in every AI course
 #   llama3.2:1b      the smaller one lesson 1 names for a weaker computer
+#   qwen2.5:3b       lesson 5's third candidate, a second family at the same size
 #   /home/ana/desk   cases/, prompts/, desk.env, .venv, and the programs the
 #                    lessons write
 #
@@ -46,7 +47,7 @@ L2=$HERE/lessons/le-jpys8tc0
 AUTHOR=/opt/aimodels-author
 SHARE=/opt/aimodels-author/share
 TZ_LAB=America/Sao_Paulo
-MODELS="llama3.2:3b llama3.2:1b"
+MODELS="llama3.2:3b llama3.2:1b qwen2.5:3b"
 DESK=/home/ana/desk
 
 need() {

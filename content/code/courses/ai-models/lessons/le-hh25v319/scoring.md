@@ -9,7 +9,7 @@ your program can accept**, and it should be written down with the cases.
 
 ## Strict and loose
 
-For the sorting task, `lab/evalkit.py` judges every reply twice:
+For the sorting task, `evalkit.py` judges every reply twice:
 
 - **strict**: the reply is exactly the label, character for character;
 - **loose**: the reply matches after removing spaces at the ends, folding to lower case, and
@@ -18,7 +18,7 @@ For the sorting task, `lab/evalkit.py` judges every reply twice:
 Four replies to a case whose label is `refund`:
 
 ```
-ana@desk:~/desk$ python -c "from lab.evalkit import score_triage as s; c = {'label': 'refund'}; print(s('refund', c), s('Refund', c), s('refund.', c), s('order-status', c))"
+ana@desk:~/desk$ python -c "from evalkit import score_triage as s; c = {'label': 'refund'}; print(s('refund', c), s('Refund', c), s('refund.', c), s('order-status', c))"
 (True, True) (False, True) (False, True) (False, False)
 ```
 
@@ -39,7 +39,7 @@ and the order is right**, and loose as **some `{...}` inside the reply parses an
 right**:
 
 ```
-ana@desk:~/desk$ python -c "from lab.evalkit import score_extract as s; c = {'order': 'LB-20452'}; print(s('{\"order\": \"LB-20452\"}', c), s('Here is the JSON: {\"order\": \"LB-20452\"}', c))"
+ana@desk:~/desk$ python -c "from evalkit import score_extract as s; c = {'order': 'LB-20452'}; print(s('{\"order\": \"LB-20452\"}', c), s('Here is the JSON: {\"order\": \"LB-20452\"}', c))"
 (True, True) (False, True)
 ```
 
