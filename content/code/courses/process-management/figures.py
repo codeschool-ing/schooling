@@ -1104,6 +1104,89 @@ def l07_hump(lang):
 # ---- end of lesson 7
 
 
+# ------------------------------------------------------------------ lesson 8
+
+@figure('l08-priority', 8)
+def l08_priority(lang):
+    t = {
+        'en': dict(impact='rows, impact: how much of the service, for how many', urgency='columns, urgency: how soon it hurts',
+                   lv=['high', 'medium', 'low'],
+                   label='A three by three grid. Impact runs down the side, high, medium and low; urgency runs '
+                         'across the top, high, medium and low. High impact and high urgency give priority 1; high '
+                         'and medium, or medium and high, give 2; high and low, medium and medium, or low and high, '
+                         'give 3; medium and low, or low and medium, give 4; low and low give 5.',
+                   cap='A priority matrix of the kind ITIL describes. Priority is computed from two questions somebody '
+                       'can answer, so it does not depend on who shouts loudest.'),
+        'pt': dict(impact='linhas, impacto: quanto do serviço, para quantos', urgency='colunas, urgência: quão cedo dói',
+                   lv=['alto', 'médio', 'baixo'],
+                   label='Uma grade de três por três. O impacto desce pela lateral, alto, médio e baixo; a urgência '
+                         'corre pelo topo, alta, média e baixa. Impacto alto e urgência alta dão prioridade 1; alto e '
+                         'média, ou médio e alta, dão 2; alto e baixa, médio e média, ou baixo e alta, dão 3; médio e '
+                         'baixa, ou baixo e média, dão 4; baixo e baixa dão 5.',
+                   cap='Uma matriz de prioridade do tipo que o ITIL descreve. A prioridade é calculada a partir de duas '
+                       'perguntas que alguém consegue responder, então não depende de quem grita mais alto.'),
+    }[lang]
+    ulv = t['lv'] if lang == 'en' else ['alta', 'média', 'baixa']
+    f = Fig('l08-priority', 560, 310, t['label'])
+    x0, y0, c = 200, 70, 90
+    f.text(x0 + 1.5 * c, 22, t['urgency'], size=10, weight='600')
+    for j, u in enumerate(ulv):
+        f.text(x0 + j * c + c / 2, 50, u, size=10, fill='--paper-dim')
+    f.text(x0 - 12, 298, t['impact'], size=10, anchor='start', weight='600')
+    for i, im in enumerate(t['lv']):
+        f.text(x0 - 12, y0 + i * c / 1.3 + c / 2.6, im, size=10, anchor='end', fill='--paper-dim')
+        for j in range(3):
+            pr = i + j + 1
+            f.rect(x0 + j * c, y0 + i * c / 1.3, c - 6, c / 1.3 - 6, stroke='--wire', fill='--panel' if pr > 1 else '--scan',
+                   rx=4, width=1.2)
+            f.text(x0 + j * c + (c - 6) / 2, y0 + i * c / 1.3 + (c / 1.3 - 6) / 2, f'P{pr}', size=14, weight='600',
+                   fill='--amber' if pr == 1 else '--phosphor' if pr == 2 else '--paper', mono=True)
+    return f, t['cap']
+
+
+@figure('l08-change', 8)
+def l08_change(lang):
+    t = {
+        'en': dict(req='change proposed', std='standard', stdn='low risk, done often, pre-authorised',
+                   norm='normal', normn='assessed and authorised by a change authority',
+                   emer='emergency', emern='authorised fast, by a smaller authority',
+                   do='implemented', rev='reviewed',
+                   label='A change is proposed and takes one of three routes. A standard change, low risk and '
+                         'pre-authorised, goes straight to implementation. A normal change is assessed and '
+                         'authorised by a change authority first. An emergency change is authorised quickly by a '
+                         'smaller authority. All three are implemented and then reviewed.',
+                   cap='Three kinds of change, three routes to production. The work of change enablement is mostly '
+                       'deciding which route a change deserves, and moving as many changes as possible onto the '
+                       'first.'),
+        'pt': dict(req='mudança proposta', std='padrão', stdn='baixo risco, frequente, pré-autorizada',
+                   norm='normal', normn='avaliada e autorizada por uma autoridade de mudança',
+                   emer='emergencial', emern='autorizada rápido, por uma autoridade menor',
+                   do='implementada', rev='revista',
+                   label='Uma mudança é proposta e segue um de três caminhos. Uma mudança padrão, de baixo risco e '
+                         'pré-autorizada, vai direto para a implementação. Uma mudança normal é avaliada e autorizada '
+                         'por uma autoridade de mudança antes. Uma mudança emergencial é autorizada rapidamente por '
+                         'uma autoridade menor. As três são implementadas e depois revistas.',
+                   cap='Três tipos de mudança, três caminhos até a produção. O trabalho da habilitação de mudanças é '
+                       'sobretudo decidir que caminho uma mudança merece, e passar o máximo possível de mudanças para '
+                       'o primeiro.'),
+    }[lang]
+    f = Fig('l08-change', 680, 250, t['label'])
+    box(f, 14, 100, 120, 44, [t['req']], weights=['600'], size=10)
+    rows = [(t['std'], t['stdn'], '--phosphor', 30), (t['norm'], t['normn'], '--paper', 100),
+            (t['emer'], t['emern'], '--amber', 170)]
+    for name, note, c, y in rows:
+        f.path(f'M136 122 C160 122 160 {y + 22} 184 {y + 22}', stroke='--paper-dim', width=1.2, arrow=True)
+        box(f, 186, y, 250, 44, [name, note], stroke=c, fills=['--paper', '--paper-dim'], weights=['600', None],
+            size=9.5)
+        f.path(f'M438 {y + 22} C462 {y + 22} 462 122 486 122', stroke='--paper-dim', width=1.2, arrow=True)
+    box(f, 488, 100, 90, 44, [t['do']], size=10, weights=['600'])
+    arrow(f, 580, 122, 594, 122)
+    box(f, 596, 100, 76, 44, [t['rev']], size=10, weights=['600'])
+    return f, t['cap']
+
+# ---- end of lesson 8
+
+
 # ------------------------------------------------------------------ the figures
 
 

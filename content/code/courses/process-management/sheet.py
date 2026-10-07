@@ -144,6 +144,15 @@ def cpm():
 
 EVM = {'BAC': 200_000, 'PV': 120_000, 'EV': 100_000, 'AC': 125_000}
 
+# ------------------------------------------------- lesson 8: a service level
+SLA = {'availability': 0.995, 'hours_a_day': 14, 'days': 30}   # booking, 7:00 to 21:00
+
+
+def priority(impact, urgency):
+    """ITIL-style matrix: 1 high, 2 medium, 3 low on each axis; 1 is the most urgent."""
+    return impact + urgency - 1
+
+
 # ----------------------------------------------- lesson 9: estimating a feature
 # task: (optimistic, most likely, pessimistic), working days
 TASKS = {
@@ -254,6 +263,17 @@ def lesson6():
     print('  ETC', e['BAC'] / cpi - e['AC'], 'percent complete', e['EV'] / e['BAC'])
 
 
+def lesson8():
+    a = SLA
+    window = a['hours_a_day'] * a['days']
+    allowed = window * (1 - a['availability'])
+    print(f"  booking window {window} hours a month; {a['availability']:.1%} allows "
+          f"{allowed:.2f} hours = {allowed * 60:.0f} minutes down")
+    names = {1: 'high', 2: 'medium', 3: 'low'}
+    for i in (1, 2, 3):
+        print('  impact', names[i], [f'urgency {names[u]}: P{priority(i, u)}' for u in (1, 2, 3)])
+
+
 def lesson9():
     tm, tv, tri, mm, pp, oo = 0, 0, 0, 0, 0, 0
     for k, (o, m, p) in TASKS.items():
@@ -336,7 +356,7 @@ def lesson14():
     print('  ten sprints of interest:', per * 10, 'and', per2 * 10)
 
 
-LESSONS = {2: lesson2, 3: lesson3, 5: lesson5, 6: lesson6, 9: lesson9, 10: lesson10,
+LESSONS = {2: lesson2, 3: lesson3, 5: lesson5, 6: lesson6, 8: lesson8, 9: lesson9, 10: lesson10,
            11: lesson11, 12: lesson12, 13: lesson13, 14: lesson14}
 
 if __name__ == '__main__':
