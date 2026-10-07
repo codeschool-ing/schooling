@@ -7,7 +7,8 @@ One decision shapes a remote-access user's day more than any other: **does only 
 go through the tunnel, or everything?** The first is a split tunnel and the second a full tunnel. On
 WireGuard it is one line, the laptop's `AllowedIPs`, which lesson 4 showed is also its routing table.
 
-Ana's laptop first, split:
+Ana's laptop first, split, as lesson 4 wrote her file. She brings the tunnel up with
+`sudo wg-quick up wg0` on `remote`:
 
 ```
 ana@remote:~$ sudo grep AllowedIPs /etc/wireguard/wg0.conf
@@ -31,8 +32,14 @@ kernel which way a packet would go without sending one. To `files` through `wg0`
 address `10.20.0.3`; to `web1` out of `eth0`, through the home router `192.168.1.1`. The traceroute
 agrees, home router, ISP, `web1`. **The company never sees her web traffic at all.**
 
-Then her file was changed to `AllowedIPs = 0.0.0.0/0`, with the tunnel taken down first, as root and
-not shown, and she brought it up again:
+Then her file changes to `AllowedIPs = 0.0.0.0/0`, with the tunnel taken down first. On `remote`:
+
+```sh
+sudo wg-quick down wg0
+sudo sed -i 's|^AllowedIPs = .*|AllowedIPs = 0.0.0.0/0|' /etc/wireguard/wg0.conf
+```
+
+And she brings it up again:
 
 ```
 ana@remote:~$ sudo wg-quick up wg0
@@ -87,7 +94,7 @@ ana@web1:~$ tail -n 2 /lab/web1/www/logs/access.log | cut -d" " -f1-7
 
 Now the route to `web1` is `dev wg0 table 51820`, and the traceroute goes to `hq` first, `10.20.0.1`,
 then out to the ISP from the head office. The page is the same. The last two lines of `web1`'s access
-log are the two requests, made in the same second: **the same laptop and the same page, and `web1` saw
+log, which `netlab.sh` keeps under `/lab/web1`, are the two requests, made in the same second: **the same laptop and the same page, and `web1` saw
 two different clients.** Split, the request came from `198.51.100.77`, Ana's home router. Full, it came
 from `203.0.113.2`, because `hq` forwarded her traffic to the internet and translated it to its own
 address (NAT, lesson 11 of `networks-addressing`).

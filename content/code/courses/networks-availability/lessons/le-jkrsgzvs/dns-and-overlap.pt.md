@@ -28,9 +28,16 @@ configuração de túnel completo indica um resolvedor do lado da empresa exatam
 ## Duas redes com os mesmos números
 
 A LAN de casa aqui é `192.168.1.0/24`, um padrão muito comum de roteadores domésticos. Suponha que a
-matriz tivesse mantido o mesmo padrão, como muitos escritórios pequenos fazem. Para montar a cena, uma
-terceira faixa, `192.168.1.0/24`, foi acrescentada ao `AllowedIPs` da Ana representando essa rede do
-escritório, com o túnel derrubado antes, como root e fora da tela:
+matriz tivesse mantido o mesmo padrão, como muitos escritórios pequenos fazem. Para montar a cena,
+acrescente uma terceira faixa, `192.168.1.0/24`, ao `AllowedIPs` da Ana, representando essa rede do
+escritório, com o túnel derrubado antes. Em `remote`:
+
+```sh
+sudo wg-quick down wg0
+sudo sed -i 's|^AllowedIPs = .*|AllowedIPs = 10.20.0.0/24, 192.168.10.0/24, 192.168.1.0/24|' /etc/wireguard/wg0.conf
+```
+
+Depois olhe as rotas dela, e tente:
 
 ```
 ana@remote:~$ ip route | grep 192.168.1.0
@@ -61,7 +68,8 @@ RTNETLINK answers: File exists
 O laptop já tem uma rota para `192.168.1.0/24`, na `eth0`: a própria LAN de casa. O `wg-quick` tenta
 acrescentar o mesmo prefixo pelo `wg0`, e o kernel recusa, `RTNETLINK answers: File exists`. **O
 `wg-quick` trata qualquer passo que falha como fatal e apaga o `wg0`**, então o túnel inteiro some, não
-só aquela faixa.
+só aquela faixa. O mesmo `sed` com a lista que havia antes, `10.20.0.0/24, 192.168.10.0/24`, e um
+`sudo wg-quick up wg0` a trazem de volta.
 
 Aqui a falha é barulhenta, que é o caso bom. Um cliente que instala as rotas de outro jeito pode deixar
 uma das duas vencer sem uma palavra, e aí ou a impressora de casa ou o servidor do escritório para de

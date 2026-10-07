@@ -8,7 +8,8 @@ passa pelo túnel, ou tudo?** O primeiro é um túnel dividido (split tunnel) e 
 (full tunnel). No WireGuard é uma linha, o `AllowedIPs` do laptop, que a aula 4 mostrou ser também a
 tabela de rotas dele.
 
-Primeiro o laptop da Ana, dividido:
+Primeiro o laptop da Ana, dividido, como a aula 4 escreveu o arquivo dela. Ela sobe o túnel com
+`sudo wg-quick up wg0` em `remote`:
 
 ```
 ana@remote:~$ sudo grep AllowedIPs /etc/wireguard/wg0.conf
@@ -32,8 +33,14 @@ por onde um pacote iria, sem mandar nenhum. Para o `files`, pelo `wg0`, com o en
 `10.20.0.3`; para o `web1`, pela `eth0`, via o roteador de casa, `192.168.1.1`. O traceroute concorda:
 roteador de casa, provedor, `web1`. **A empresa nunca vê o tráfego web dela.**
 
-Depois o arquivo dela foi mudado para `AllowedIPs = 0.0.0.0/0`, com o túnel derrubado antes, como root
-e fora da tela, e ela o subiu de novo:
+Depois o arquivo dela muda para `AllowedIPs = 0.0.0.0/0`, com o túnel derrubado antes. Em `remote`:
+
+```sh
+sudo wg-quick down wg0
+sudo sed -i 's|^AllowedIPs = .*|AllowedIPs = 0.0.0.0/0|' /etc/wireguard/wg0.conf
+```
+
+E ela o sobe de novo:
 
 ```
 ana@remote:~$ sudo wg-quick up wg0
@@ -88,7 +95,7 @@ ana@web1:~$ tail -n 2 /lab/web1/www/logs/access.log | cut -d" " -f1-7
 
 Agora a rota para o `web1` é `dev wg0 table 51820`, e o traceroute passa primeiro por `hq`,
 `10.20.0.1`, e depois sai para o provedor a partir da matriz. A página é a mesma. As duas últimas linhas
-do log de acesso do `web1` são os dois pedidos, feitos no mesmo segundo: **o mesmo laptop e a mesma
+do log de acesso do `web1`, que o `netlab.sh` guarda em `/lab/web1`, são os dois pedidos, feitos no mesmo segundo: **o mesmo laptop e a mesma
 página, e o `web1` viu dois clientes diferentes.** Dividido, o pedido veio de `198.51.100.77`, o
 roteador da casa da Ana. Completo, veio de `203.0.113.2`, porque `hq` encaminhou o tráfego dela para a
 internet e o traduziu para o próprio endereço (NAT, aula 11 de `networks-addressing`).

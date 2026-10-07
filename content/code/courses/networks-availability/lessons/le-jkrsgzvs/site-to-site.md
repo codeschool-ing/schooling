@@ -7,8 +7,12 @@ version: 1
 no button and no user.** It joins two networks, router to router, and the people and machines on them
 never learn it is there.
 
-The lab's two offices are joined that way, by the WireGuard tunnel of lesson 4 between `hq` and
-`branch`. This is the till tracing its way to the file server at the head office:
+The two offices are joined that way, by the WireGuard tunnel of lesson 4 between `hq` and `branch`.
+**This lesson starts where lesson 4's first section left off**, on a freshly reset network: make the
+three key pairs as lesson 4 did, write the three `wg0.conf` files from that section with your own keys
+in them, and bring the tunnel up with `sudo wg-quick up wg0` on `hq` and on `branch`. Ana's laptop comes
+up later, in the section on split tunnels. This is the till tracing its way to the file server at the
+head office:
 
 ```
 ana@till:~$ traceroute -n -q 1 192.168.10.10
