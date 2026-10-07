@@ -1,0 +1,400 @@
+{
+  "ex-add7a9ht": {
+    "prompt": "O que é um estouro de cache?",
+    "hint": "O instante em que uma chave popular vence.",
+    "choices": [
+      {
+        "text": "Muitos erros numa chave só",
+        "why": "Certo."
+      },
+      {
+        "text": "O Redis ficar sem memória",
+        "why": "Isso é despejo."
+      },
+      {
+        "text": "Dois escritores correndo",
+        "why": "Isso foi a aula 10."
+      },
+      {
+        "text": "Um cache que nunca vence nada",
+        "why": "O contrário."
+      }
+    ]
+  },
+  "ex-9d7ja955": {
+    "prompt": "Cinquenta leitores de uma vez erraram o livro 2 pelo `bookcache`. Quantas consultas ao banco eles causaram?",
+    "hint": "Uma cada.",
+    "unit": "consultas"
+  },
+  "ex-qn4q74ae": {
+    "prompt": "Uma página é lida 500 vezes por segundo e a consulta dela leva 120 ms. Cerca de quantas consultas idênticas chegam ao banco quando a chave vence?",
+    "hint": "Toda requisição dentro dos 120 ms.",
+    "unit": "consultas"
+  },
+  "ex-khrmx3bm": {
+    "prompt": "Por que um estouro pode piorar depois que começa?",
+    "hint": "A janela.",
+    "choices": [
+      {
+        "text": "O Redis fica lento sob carga e larga chaves",
+        "why": "Quem está sob carga é o banco."
+      },
+      {
+        "text": "A janela cresce quando o banco fica lento",
+        "why": "Certo."
+      },
+      {
+        "text": "Cada erro apaga outra chave",
+        "why": "Não."
+      },
+      {
+        "text": "O tempo de vida da chave fica mais curto",
+        "why": "Ele não é tocado."
+      }
+    ]
+  },
+  "ex-54v019an": {
+    "prompt": "Por que o lock do `lockcache.py` tem `px=LOCK_MS`?",
+    "hint": "E se o dono morrer?",
+    "choices": [
+      {
+        "text": "Para o lock ser mais rápido de pegar",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para um dono caído não travar ninguém para sempre",
+        "why": "Certo."
+      },
+      {
+        "text": "O Redis exige tempo de vida em toda chave",
+        "why": "Não exige."
+      },
+      {
+        "text": "Para manter a cópia fresca por esse tempo",
+        "why": "Isso é o TTL da cópia."
+      }
+    ]
+  },
+  "ex-hsdakx3r": {
+    "prompt": "O que dá errado se um leitor libera o lock com um `DEL` simples, sem o token?",
+    "hint": "Um leitor mais lento que o tempo de vida do lock.",
+    "choices": [
+      {
+        "text": "Nada; o DEL é atômico",
+        "why": "Atômico, e ainda o lock errado."
+      },
+      {
+        "text": "O Redis recusa apagar uma chave com NX",
+        "why": "Não recusa."
+      },
+      {
+        "text": "Apaga o lock de outro leitor",
+        "why": "Certo."
+      },
+      {
+        "text": "A cópia em cache é apagada também",
+        "why": "Chave diferente."
+      }
+    ]
+  },
+  "ex-j62aq84m": {
+    "prompt": "Com o lock de um leitor caído deixado por 2.000 ms, aproximadamente quanto tempo os cinquenta leitores levaram, em milissegundos?",
+    "hint": "O tempo de vida do lock, mais uma consulta.",
+    "unit": "ms"
+  },
+  "ex-ptkfvn8m": {
+    "prompt": "No `swrcache.py`, por que a chave vive uma hora a mais do que a cópia fica fresca?",
+    "hint": "Algo precisa estar lá para servir.",
+    "choices": [
+      {
+        "text": "Para haver uma cópia velha para servir",
+        "why": "Certo."
+      },
+      {
+        "text": "O Redis arredonda tempos de vida para a hora",
+        "why": "Não."
+      },
+      {
+        "text": "Para poupar memória",
+        "why": "Usa mais."
+      },
+      {
+        "text": "Para que a marca de atualização dure tanto também",
+        "why": "A marca dura dois segundos."
+      }
+    ]
+  },
+  "ex-wdvxr3fe": {
+    "prompt": "Onde servir o velho é a escolha errada?",
+    "hint": "Uma resposta velha precisa ser aceitável.",
+    "choices": [
+      {
+        "text": "A descrição de um livro",
+        "why": "Alguns segundos de atraso servem."
+      },
+      {
+        "text": "A lista de mais vendidos da semana",
+        "why": "Alguns segundos de atraso servem."
+      },
+      {
+        "text": "A biografia de um autor",
+        "why": "Ela quase não muda."
+      },
+      {
+        "text": "Um estoque que acabou de zerar",
+        "why": "Certo. Vende um livro que a loja não tem."
+      }
+    ]
+  },
+  "ex-mg279zcd": {
+    "prompt": "Cinquenta leitores pediram o livro velho. O que receberam?",
+    "hint": "A transcrição.",
+    "choices": [
+      {
+        "text": "O preço novo, depois de esperar a atualização",
+        "why": "Ninguém esperou."
+      },
+      {
+        "text": "O preço velho, na hora",
+        "why": "Certo."
+      },
+      {
+        "text": "Um erro até a atualização terminar",
+        "why": "Sem erros."
+      },
+      {
+        "text": "Metade velho, metade novo",
+        "why": "Todos 8990."
+      }
+    ]
+  },
+  "ex-jm8cmxhv": {
+    "prompt": "Como um leitor decide atualizar antes no XFetch?",
+    "hint": "Sem lock, sem coordenação.",
+    "choices": [
+      {
+        "text": "Pergunta aos outros leitores",
+        "why": "Cada um decide sozinho."
+      },
+      {
+        "text": "Atualiza em toda leitura depois de passar metade do tempo de vida",
+        "why": "Isso estouraria."
+      },
+      {
+        "text": "Por sorteio, mais provável perto do vencimento",
+        "why": "Certo."
+      },
+      {
+        "text": "Um cron avisa",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-278pwp2f": {
+    "prompt": "Por que o XFetch não garante exatamente uma atualização?",
+    "hint": "Probabilística.",
+    "choices": [
+      {
+        "text": "O Redis descarta uma das atualizações",
+        "why": "Não."
+      },
+      {
+        "text": "beta precisa ser 1",
+        "why": "beta move a decisão, só."
+      },
+      {
+        "text": "Cada leitor sorteia sozinho",
+        "why": "Certo."
+      },
+      {
+        "text": "Ele só atualiza chaves quietas",
+        "why": "As movimentadas são a questão."
+      }
+    ]
+  },
+  "ex-1x1mm7c3": {
+    "prompt": "1.000 chaves gravadas de uma vez com tempo de vida fixo de 300 segundos. Quando elas vencem?",
+    "hint": "A transcrição.",
+    "choices": [
+      {
+        "text": "Espalhadas por cinco minutos",
+        "why": "Concordam até o segundo."
+      },
+      {
+        "text": "Todas no mesmo segundo",
+        "why": "Certo."
+      },
+      {
+        "text": "Nunca, porque foram gravadas juntas",
+        "why": "Elas vencem."
+      },
+      {
+        "text": "Uma por segundo, em ordem",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-mwepx50f": {
+    "prompt": "Com 0 a 60 segundos de jitter, no máximo quantas das 1.000 chaves venceram num segundo?",
+    "hint": "A linha jittered.",
+    "unit": "chaves"
+  },
+  "ex-hnkfp3e2": {
+    "prompt": "Uma diretiva do Nginx faz erros simultâneos de uma entrada esperarem o primeiro: `proxy_cache_lock ___;`.",
+    "hint": "Uma chave liga-desliga.",
+    "blanks": [
+      {
+        "accept": [
+          "on"
+        ]
+      }
+    ]
+  },
+  "ex-8tma00z8": {
+    "prompt": "Com `proxy_cache_lock on`, quarenta visitantes pediram uma página fora do cache. O que chegou à loja?",
+    "hint": "Um erro.",
+    "choices": [
+      {
+        "text": "Quarenta requisições, vinte por cópia",
+        "why": "Isso foi sem o lock."
+      },
+      {
+        "text": "Nada; o Nginx inventou a página",
+        "why": "Uma requisição foi."
+      },
+      {
+        "text": "Uma requisição",
+        "why": "Certo."
+      },
+      {
+        "text": "Duas requisições, uma por cópia da loja",
+        "why": "Uma."
+      }
+    ]
+  },
+  "ex-fg7qhfn9": {
+    "prompt": "O que acontece com uma requisição que espera mais que o `proxy_cache_lock_timeout`?",
+    "hint": "O tempo de vida do lock.",
+    "choices": [
+      {
+        "text": "Recebe um 504 Gateway Timeout do Nginx",
+        "why": "Ela é repassada."
+      },
+      {
+        "text": "Vai ao upstream, sem cache",
+        "why": "Certo."
+      },
+      {
+        "text": "Espera para sempre",
+        "why": "É o que o timeout evita."
+      },
+      {
+        "text": "Recebe a cópia velha",
+        "why": "Isso é o use_stale."
+      }
+    ]
+  },
+  "ex-6atzsvb1": {
+    "prompt": "Ligue cada camada à resposta dela ao estouro.",
+    "hint": "Esta aula e as aulas 6 e 7.",
+    "pairs": [
+      {
+        "left": "Nginx, um erro por vez",
+        "right": "proxy_cache_lock"
+      },
+      {
+        "left": "Nginx, servindo a cópia velha",
+        "right": "proxy_cache_use_stale updating"
+      },
+      {
+        "left": "Varnish",
+        "right": "agrupamento, por padrão"
+      },
+      {
+        "left": "a aplicação, com Redis",
+        "right": "SET NX PX"
+      }
+    ],
+    "right_distractors": [
+      "proxy_cache_valid"
+    ]
+  },
+  "ex-257bajxc": {
+    "prompt": "Por que o `warm.py` busca os livros um por vez?",
+    "hint": "Compare com um estouro.",
+    "choices": [
+      {
+        "text": "O Redis aceita uma gravação por vez",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Para o banco mal notar",
+        "why": "Certo."
+      },
+      {
+        "text": "O Python não usa threads",
+        "why": "Esta aula usou cinquenta."
+      },
+      {
+        "text": "A ordem importa para o cache",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-pmnts8kw": {
+    "prompt": "Qual é uma escolha ruim do que aquecer?",
+    "hint": "Memória.",
+    "choices": [
+      {
+        "text": "As páginas mais lidas pelo log de acesso",
+        "why": "Essa é a fonte comum."
+      },
+      {
+        "text": "Todo item, um milhão raramente lido",
+        "why": "Certo."
+      },
+      {
+        "text": "As chaves da próxima versão antes de um deploy",
+        "why": "Um bom uso."
+      },
+      {
+        "text": "A página inicial",
+        "why": "A primeira a aquecer."
+      }
+    ]
+  },
+  "ex-qg63hqjn": {
+    "prompt": "Ponha em ordem os passos do `lockcache.get_book` num erro, para o leitor que ganha o lock.",
+    "hint": "Olhe de novo dentro do lock.",
+    "items": [
+      "Não encontrar nada no cache",
+      "Pegar o lock com NX e PX",
+      "Olhar no cache mais uma vez",
+      "Ler o banco e guardar a cópia",
+      "Liberar o lock se o token bater"
+    ],
+    "trap": "Liberar vem por último, mesmo num erro."
+  },
+  "ex-m2s3t7wp": {
+    "prompt": "Quais destes reduzem um estouro numa chave popular?",
+    "hint": "O jitter é para muitas chaves.",
+    "choices": [
+      {
+        "text": "Um lock com tempo de vida",
+        "why": "Certo."
+      },
+      {
+        "text": "Servir o velho enquanto um leitor atualiza",
+        "why": "Certo."
+      },
+      {
+        "text": "Atualização antecipada probabilística",
+        "why": "Certo."
+      },
+      {
+        "text": "Jitter no tempo de vida da chave",
+        "why": "Uma chave ainda vence uma vez."
+      }
+    ]
+  }
+}

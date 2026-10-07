@@ -1,0 +1,602 @@
+[
+  {
+    "id": "ex-add7a9ht",
+    "version": 1,
+    "section": "the-stampede",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a cache stampede?",
+    "hint": "The moment a popular key expires.",
+    "choices": [
+      {
+        "text": "Many misses on one key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Redis running out of memory",
+        "correct": false,
+        "why": "That is eviction."
+      },
+      {
+        "text": "Two writers racing",
+        "correct": false,
+        "why": "That was lesson 10."
+      },
+      {
+        "text": "A cache that never expires anything",
+        "correct": false,
+        "why": "The opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d7ja955",
+    "version": 1,
+    "section": "the-stampede",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fifty readers at once missed book 2 through `bookcache`. How many database queries did they cause?",
+    "hint": "One each.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-qn4q74ae",
+    "version": 1,
+    "section": "the-stampede",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page is read 500 times a second and its query takes 120 ms. About how many identical queries reach the database when its key expires?",
+    "hint": "Every request inside the 120 ms.",
+    "value": 60,
+    "tolerance": 5,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-khrmx3bm",
+    "version": 1,
+    "section": "the-stampede",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a stampede get worse once it starts?",
+    "hint": "The window.",
+    "choices": [
+      {
+        "text": "Redis slows down under load and drops keys",
+        "correct": false,
+        "why": "The database is the one under load."
+      },
+      {
+        "text": "The window widens as the database slows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each miss deletes another key",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "The lifetime of the key gets shorter",
+        "correct": false,
+        "why": "It is not touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-54v019an",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lock in `lockcache.py` have `px=LOCK_MS`?",
+    "hint": "What if its holder dies?",
+    "choices": [
+      {
+        "text": "To make the lock faster to take",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "So a crashed holder blocks nobody forever",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Redis requires a lifetime on every key",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "To keep the copy fresh for that long",
+        "correct": false,
+        "why": "That is the TTL of the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-hsdakx3r",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What goes wrong if a reader releases the lock with a plain `DEL`, without the token?",
+    "hint": "A reader slower than the lock's lifetime.",
+    "choices": [
+      {
+        "text": "Nothing; DEL is atomic",
+        "correct": false,
+        "why": "Atomic, and still the wrong lock."
+      },
+      {
+        "text": "Redis refuses to delete a key with NX",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "It deletes another reader's lock",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The cached copy is deleted as well",
+        "correct": false,
+        "why": "Different key."
+      }
+    ]
+  },
+  {
+    "id": "ex-j62aq84m",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a crashed reader's lock left behind for 2,000 ms, roughly how long did the fifty readers take, in milliseconds?",
+    "hint": "The lock's lifetime, plus one query.",
+    "value": 2040,
+    "tolerance": 100,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-ptkfvn8m",
+    "version": 1,
+    "section": "serving-stale",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `swrcache.py`, why does the key live an hour longer than the copy is fresh?",
+    "hint": "Something must be there to serve.",
+    "choices": [
+      {
+        "text": "So there is a stale copy to serve",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Redis rounds lifetimes up to the hour",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "To save memory",
+        "correct": false,
+        "why": "It uses more."
+      },
+      {
+        "text": "So that the refresh flag lasts that long too",
+        "correct": false,
+        "why": "The flag lasts two seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdvxr3fe",
+    "version": 1,
+    "section": "serving-stale",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where is serving stale the wrong choice?",
+    "hint": "An old answer must be acceptable.",
+    "choices": [
+      {
+        "text": "A book's description",
+        "correct": false,
+        "why": "A few seconds old is fine."
+      },
+      {
+        "text": "The list of this week's bestsellers",
+        "correct": false,
+        "why": "A few seconds old is fine."
+      },
+      {
+        "text": "An author's biography",
+        "correct": false,
+        "why": "It hardly changes."
+      },
+      {
+        "text": "Stock that just reached zero",
+        "correct": true,
+        "why": "Right. It sells a book the shop lacks."
+      }
+    ]
+  },
+  {
+    "id": "ex-mg279zcd",
+    "version": 1,
+    "section": "serving-stale",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fifty readers asked for the stale book. What did they get?",
+    "hint": "The transcript.",
+    "choices": [
+      {
+        "text": "The new price, after waiting for the refresh",
+        "correct": false,
+        "why": "Nobody waited."
+      },
+      {
+        "text": "The old price, at once",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An error until the refresh finished",
+        "correct": false,
+        "why": "No errors."
+      },
+      {
+        "text": "Half old, half new",
+        "correct": false,
+        "why": "All 8990."
+      }
+    ]
+  },
+  {
+    "id": "ex-jm8cmxhv",
+    "version": 1,
+    "section": "refreshing-early",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a reader decide to refresh early under XFetch?",
+    "hint": "No lock, no coordination.",
+    "choices": [
+      {
+        "text": "It asks the other readers",
+        "correct": false,
+        "why": "Each decides alone."
+      },
+      {
+        "text": "It refreshes on every read after half the lifetime has gone",
+        "correct": false,
+        "why": "That would stampede."
+      },
+      {
+        "text": "By chance, more likely near expiry",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A cron job tells it",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-278pwp2f",
+    "version": 1,
+    "section": "refreshing-early",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does XFetch not guarantee exactly one refresh?",
+    "hint": "Probabilistic.",
+    "choices": [
+      {
+        "text": "Redis drops one of the refreshes",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "beta must be 1",
+        "correct": false,
+        "why": "beta moves the decision, no more."
+      },
+      {
+        "text": "Each reader rolls independently",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It refreshes only quiet keys",
+        "correct": false,
+        "why": "Busy ones are the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-1x1mm7c3",
+    "version": 1,
+    "section": "jitter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "1,000 keys written at once with a fixed 300-second lifetime. When do they expire?",
+    "hint": "The transcript.",
+    "choices": [
+      {
+        "text": "Spread over five minutes",
+        "correct": false,
+        "why": "They agree to the second."
+      },
+      {
+        "text": "All in the same second",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Never, because they were written together",
+        "correct": false,
+        "why": "They expire."
+      },
+      {
+        "text": "One per second, in order",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwepx50f",
+    "version": 1,
+    "section": "jitter",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 0 to 60 seconds of jitter, at most how many of the 1,000 keys expired in one second?",
+    "hint": "The jittered line.",
+    "value": 27,
+    "tolerance": 0,
+    "unit": "keys"
+  },
+  {
+    "id": "ex-hnkfp3e2",
+    "version": 1,
+    "section": "at-the-proxy",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One Nginx directive makes concurrent misses for one entry wait for the first: `proxy_cache_lock ___;`.",
+    "hint": "A switch.",
+    "blanks": [
+      {
+        "accept": [
+          "on"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8tma00z8",
+    "version": 1,
+    "section": "at-the-proxy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `proxy_cache_lock on`, forty visitors asked for one uncached page. What reached the shop?",
+    "hint": "One miss.",
+    "choices": [
+      {
+        "text": "Forty requests, twenty per copy",
+        "correct": false,
+        "why": "That was without the lock."
+      },
+      {
+        "text": "Nothing; Nginx made the page up",
+        "correct": false,
+        "why": "One request went."
+      },
+      {
+        "text": "One request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Two requests, one per copy of the shop",
+        "correct": false,
+        "why": "One."
+      }
+    ]
+  },
+  {
+    "id": "ex-fg7qhfn9",
+    "version": 1,
+    "section": "at-the-proxy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What happens to a request that waits longer than `proxy_cache_lock_timeout`?",
+    "hint": "The lock's lifetime.",
+    "choices": [
+      {
+        "text": "It gets a 504 Gateway Timeout from Nginx",
+        "correct": false,
+        "why": "It is passed on."
+      },
+      {
+        "text": "It goes to the upstream, uncached",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It waits forever",
+        "correct": false,
+        "why": "That is what the timeout prevents."
+      },
+      {
+        "text": "It is served the stale copy",
+        "correct": false,
+        "why": "That is use_stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-6atzsvb1",
+    "version": 1,
+    "section": "at-the-proxy",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer to its answer to the stampede.",
+    "hint": "This lesson and lessons 6 and 7.",
+    "pairs": [
+      {
+        "left": "Nginx, one miss at a time",
+        "right": "proxy_cache_lock"
+      },
+      {
+        "left": "Nginx, serving the old copy",
+        "right": "proxy_cache_use_stale updating"
+      },
+      {
+        "left": "Varnish",
+        "right": "coalescing, by default"
+      },
+      {
+        "left": "the application, with Redis",
+        "right": "SET NX PX"
+      }
+    ],
+    "right_distractors": [
+      "proxy_cache_valid"
+    ]
+  },
+  {
+    "id": "ex-257bajxc",
+    "version": 1,
+    "section": "warming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `warm.py` fetch books one at a time?",
+    "hint": "Compare with a stampede.",
+    "choices": [
+      {
+        "text": "Redis accepts one write at a time",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "So the database barely notices",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Python cannot use threads",
+        "correct": false,
+        "why": "This lesson used fifty."
+      },
+      {
+        "text": "Order matters to the cache",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmnts8kw",
+    "version": 1,
+    "section": "warming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is a poor choice of what to warm?",
+    "hint": "Memory.",
+    "choices": [
+      {
+        "text": "The most read pages from the access log",
+        "correct": false,
+        "why": "That is the usual source."
+      },
+      {
+        "text": "Every item, a million rarely read",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The next version's keys before a deploy",
+        "correct": false,
+        "why": "A good use."
+      },
+      {
+        "text": "The home page",
+        "correct": false,
+        "why": "The first to warm."
+      }
+    ]
+  },
+  {
+    "id": "ex-qg63hqjn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of `lockcache.get_book` on a miss in order, for the reader that wins the lock.",
+    "hint": "Look again inside the lock.",
+    "items": [
+      "Find nothing in the cache",
+      "Take the lock with NX and PX",
+      "Look in the cache once more",
+      "Read the database and store the copy",
+      "Release the lock if the token matches"
+    ],
+    "trap": "Releasing comes last, even on an error."
+  },
+  {
+    "id": "ex-m2s3t7wp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these reduce a stampede on one popular key?",
+    "hint": "Jitter is for many keys.",
+    "choices": [
+      {
+        "text": "A lock with a lifetime",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Serving stale while one reader refreshes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Probabilistic early refresh",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Jitter on the key's lifetime",
+        "correct": false,
+        "why": "One key still expires once."
+      }
+    ]
+  }
+]
