@@ -3,7 +3,7 @@ title: O que tudo isso pode perder
 version: 1
 ---
 
-O vídeo do laboratório foi construído para ter um ponto cego, e cada método desta aula teve o seu. Em vídeo real os pontos cegos não são plantados, então ajuda saber onde eles costumam estar.
+O vídeo do curso foi construído para ter um ponto cego, e cada método desta aula teve o seu. Em vídeo real os pontos cegos não são plantados, então ajuda saber onde eles costumam estar.
 
 **O que é mostrado e não dito.** O arquivo de verdade lista o que cada slide mostra e o que a narração diz por cima:
 

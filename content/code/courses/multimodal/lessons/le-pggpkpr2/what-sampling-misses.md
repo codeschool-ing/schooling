@@ -3,7 +3,7 @@ title: What any of this can miss
 version: 1
 ---
 
-The lab's video was built to have one blind spot, and every method in this lesson had one of its own. In real video the blind spots are not planted, so it helps to know where they tend to be.
+The course's video was built to have one blind spot, and every method in this lesson had one of its own. In real video the blind spots are not planted, so it helps to know where they tend to be.
 
 **What is shown and not said.** The truth file lists what each slide shows and what the narration says over it:
 
