@@ -5,34 +5,54 @@ version: 1
 
 Every API in lessons 6 to 20 asked for the same thing before it answered: a key. **Whoever holds
 the key spends the money**, and nothing in the request says who that is. A key is not a password
-that protects ana's data; it is a card number that charges her account.
+that protects ana's data; it is a card number that charges ana's account.
 
-The lab keeps its keys where a program finds them and a file does not: in the environment, loaded
-from one file outside the project. Its names, without their values:
+Lesson 1 section 04 put the course's keys where a program finds them and a file of code does not:
+in the environment, loaded from `desk.env`. They are placeholders, because Ollama ignores the key:
 
 ```
-ana@desk:~/desk$ grep -oE "^[A-Z_]+(KEY|TOKEN)=" /etc/aimodels.env
-ANTHROPIC_API_KEY=
-OPENAI_API_KEY=
-GEMINI_API_KEY=
-MISTRAL_API_KEY=
-CO_API_KEY=
-HF_TOKEN=
-OPENROUTER_API_KEY=
+ana@desk:~/desk$ grep -E "_KEY|_TOKEN" desk.env
+export OPENAI_API_KEY=ollama
+export ANTHROPIC_API_KEY=ollama
 ```
 
-A week of real work leaves keys in other places. ana pasted one into a note while debugging, and
-started a support widget for the shop's website that sorts a customer's message in the browser.
-`lab/keyscan.py` looks for anything shaped like the keys this course has used:
+A real key goes in the same kind of place, and a week of real work leaves keys in other places
+too. To see what that looks like, make the two files such a week might leave behind: a note pasted
+while debugging, `notes.txt`:
+
+```
+2026-09-30 OpenRouter test - works with the key below, move it to the env file later
+  sk-or-v1-example-0001
+```
+
+and the start of a support widget for the shop's website, `page/widget.js`, which sorts a
+customer's message in the browser:
+
+```javascript
+// Sort the customer's message in the browser before it is sent to us.
+const OPENROUTER_KEY = "sk-or-v1-example-0001";
+export async function sortMessage(text) {
+  const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${OPENROUTER_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ model: "meta-llama/llama-3.3-70b-instruct", messages: [{ role: "user", content: text }] }),
+  });
+  return (await r.json()).choices[0].message.content;
+}
+```
+
+The key in them is made up, and shaped like OpenRouter's. `keyscan.py` looks for anything shaped
+like the keys this course has used, and prints only the start of what it finds:
 
 ```python
 import pathlib
 import re
 
-# the shapes of the keys this course has used: OpenRouter's sk-or-, Hugging Face's hf_, the lab's own
-SHAPES = re.compile(r"\b(sk-or-[\w-]{6,}|sk-[\w-]{16,}|hf_\w{8,}|lab-[a-z]+-key-\d+)")
+# the shapes of the keys this course has used: OpenRouter's sk-or-, Anthropic's sk-ant-, OpenAI's sk-,
+# Hugging Face's hf_
+SHAPES = re.compile(r"\b(sk-or-[\w-]{6,}|sk-ant-[\w-]{6,}|sk-[\w-]{16,}|hf_\w{8,})")
 for path in sorted(pathlib.Path(".").rglob("*")):
-    if not path.is_file() or "node_modules" in path.parts:
+    if not path.is_file() or ".venv" in path.parts or "node_modules" in path.parts:
         continue
     for n, line in enumerate(path.read_text(errors="ignore").splitlines(), 1):
         for key in SHAPES.findall(line):
@@ -40,9 +60,9 @@ for path in sorted(pathlib.Path(".").rglob("*")):
 ```
 
 ```
-ana@desk:~/desk$ python lab/keyscan.py
-notes.txt:2: sk-or-************
-page/widget.js:2: sk-or-************
+ana@desk:~/desk$ python keyscan.py
+notes.txt:2: sk-or-***************
+page/widget.js:2: sk-or-***************
 ```
 
 Two findings, and the second is the serious one. `page/widget.js` is meant to be served to every
@@ -61,5 +81,5 @@ The rules that follow cost nothing to keep:
   program spent what.
 - **Revoke, then replace.** A key that appeared somewhere it should not is revoked at the provider
   at once, before anybody works out whether it was used. Deleting the file does not un-publish it.
-- **Logs print the start of a key, never the whole.** The scan masks what it finds, and the lab's
-  `wire` printed `lab-anthropi…` in lesson 17 for the same reason.
+- **Logs print the start of a key, never the whole.** The scan masks what it finds, and the relay
+  printed `ollama…` in lesson 17 for the same reason.

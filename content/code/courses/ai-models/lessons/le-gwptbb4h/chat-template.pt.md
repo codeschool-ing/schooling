@@ -8,7 +8,7 @@ nada disso. Ela lê **uma única sequência de tokens**, e os papéis precisam s
 sequência de algum jeito. A convenção para escrevê-los é o **template de chat**, e cada família de
 modelos tem o seu.
 
-A Meta publica o da Llama 3.1 no mesmo documento. O `lab/template.py` segue o documento ao pé da
+A Meta publica o da Llama 3.1 no mesmo documento. O `template.py` segue o documento ao pé da
 letra e monta o prompt de classificação da ana com o primeiro e-mail de `cases/triage.jsonl`:
 
 ```python
