@@ -12,6 +12,15 @@ keeps granting access its reasons no longer support.
 
 The lab shows the gap precisely. The database stand-in on `db` now keeps a session open, as a real
 database keeps a client's connection. `app` opens one, sends a line, and six seconds later another.
+Both halves are started as root, the new stand-in on `db` and the client on `app`:
+
+```sh
+# on db: the one-line stand-in replaced by one that repeats what it is sent
+kill $(ss -Hltnp "sport = :5432" | grep -o "pid=[0-9]*" | cut -d= -f2); sleep 0.3; setsid socat TCP-LISTEN:5432,bind=192.168.20.30,fork,reuseaddr EXEC:cat </dev/null >/dev/null 2>&1 &
+# on app: the client, in the background, writing what comes back to client.out
+rm -f /root/client.out; setsid bash -c "(echo first; sleep 6; echo second; sleep 1) | nc -N -w8 192.168.20.30 5432 > /root/client.out" </dev/null >/dev/null 2>&1 &
+```
+
 While it waits, the session is in `db`'s connection table:
 
 ```

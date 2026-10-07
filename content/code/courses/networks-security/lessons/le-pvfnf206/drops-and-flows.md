@@ -77,8 +77,8 @@ machines is a scan**, small as it is.
 
 The flow records are written later, and that is the first thing to know about them. A connection's
 record is written when the firewall **forgets** it, not when it closes: a closed TCP connection stays in
-the table for two minutes, and the kernel notices it has expired up to a minute after that. The capture
-script waited three minutes before this:
+the table for two minutes, and the kernel notices it has expired up to a minute after that. So wait
+three minutes after the traffic before reading them:
 
 ```
 root@fw:~# wc -l /var/log/lab/flows.json

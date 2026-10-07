@@ -3,8 +3,10 @@ title: One timeline
 version: 1
 ---
 
-The sensor saw `remote` too. Its `eve.json` has been copied into the collection, and the three sources
-now describe the same stranger from three sides: the firewall's refusals, the firewall's flows and the
+The sensor saw `remote` too. Its `eve.json` has been copied into the collection, which in the lab is
+one command on your own computer, since the sensor has no address to ship anything from:
+`sudo mkdir -p /lab/admin/var/log/lab/remote/sensor; sudo cp /lab/sensor/var/log/suricata/eve.json /lab/admin/var/log/lab/remote/sensor/`.
+The three sources now describe the same stranger from three sides: the firewall's refusals, the firewall's flows and the
 sensor's alert. Read separately, each is a list. **Put in one order by time, they tell what happened.**
 
 That is the core of what a **SIEM** does, and the lab's version is small enough to read whole:

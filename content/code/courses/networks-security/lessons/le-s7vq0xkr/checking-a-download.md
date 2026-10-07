@@ -4,7 +4,15 @@ version: 1
 ---
 
 Software is usually published with a list of digests beside it. The shop's server offers an agent
-for the company's machines, and its list:
+for the company's machines, and its list. In the lab the agent is 20,000 bytes of the letter `a`;
+put it and its list on `www`, and give nginx a location to serve them from, as root there:
+
+```sh
+mkdir -p /var/www/downloads; cd /var/www/downloads; head -c 20000 /dev/zero | tr "\0" "a" > agent-2.4.1.tar.gz; sha256sum agent-2.4.1.tar.gz > SHA256SUMS
+sed -i "s|    location / {|    location /downloads/ {\n        root /var/www;\n    }\n    location / {|" /etc/nginx/sites-enabled/shop; nginx -s reload
+```
+
+Then, from `laptop`:
 
 ```
 ana@laptop:~$ curl -sO https://www.example.com/downloads/agent-2.4.1.tar.gz; curl -sO https://www.example.com/downloads/SHA256SUMS; cat SHA256SUMS

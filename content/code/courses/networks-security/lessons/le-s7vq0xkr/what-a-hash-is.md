@@ -5,7 +5,9 @@ version: 1
 
 A **cryptographic hash function** turns any input, one byte or a whole disk, into a fixed-length
 value, its **digest**. SHA-256, the one used everywhere in this course, always produces 256 bits,
-printed as 64 hexadecimal digits. Two instructions that differ in one character:
+printed as 64 hexadecimal digits. In your lab this lesson starts from `sudo bash nslab.sh reset`, with
+the company's policy loaded on `fw` by `nft -f baseline.nft`. Two instructions that differ in one
+character:
 
 ```
 ana@laptop:~$ printf "transfer 100 to 4471\n" | sha256sum

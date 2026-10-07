@@ -8,7 +8,8 @@ other machines. A defender does it all the time: an intrusion detection sensor (
 nothing else. Whoever else manages it on the same segment reads exactly what the sensor reads, so
 the question worth asking is **what is there to read**.
 
-The lab has a sensor plugged into the DMZ, with no address of its own:
+In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy loaded on
+`fw` by `nft -f baseline.nft`. The lab has a sensor plugged into the DMZ, with no address of its own:
 
 ```
 root@sensor:~# ip -br addr show eth0
@@ -17,7 +18,14 @@ eth0@if70        UP
 
 `UP` and no address. It listens and never speaks, which is how a sensor should be connected. Now a
 client on the internet asks the shop for a page over **plain HTTP**, carrying a session cookie, and
-the sensor records the segment:
+the sensor records the segment. Each recording in this lesson is started on `sensor`, as root, a
+moment before the client acts, and stops itself after eight seconds; the filter at the end is the
+traffic it keeps. This one is `http.pcap` with `tcp port 80`; later ones are `dns.pcap` with
+`udp port 53` and `tls.pcap` with `tcp port 443`:
+
+```sh
+setsid timeout 8 tcpdump -i eth0 -s0 -w /root/http.pcap tcp port 80 </dev/null >/dev/null 2>&1 &
+```
 
 ```
 ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" -b "session=7f3a9c2e" http://www.example.com/orders

@@ -6,7 +6,7 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash ana               # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/nslab.sh          # the lab, beside course.json
+#   sudo ln -sf "$(realpath ../../lab.sh)" /var/tmp/nslab.sh   # the lab, beside course.json
 #   sudo bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh; lesson 1
