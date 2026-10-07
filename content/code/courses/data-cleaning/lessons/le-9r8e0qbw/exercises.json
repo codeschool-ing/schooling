@@ -1,0 +1,656 @@
+[
+  {
+    "id": "ex-1mq8thjt",
+    "version": 1,
+    "section": "unmask-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `NULLIF(birth_year, '1900')` return for a row whose year is `1900`?",
+    "hint": "The name says when it returns NULL.",
+    "choices": [
+      {
+        "text": "NULL",
+        "correct": true,
+        "why": "Right. Equal to the second argument, so NULL; any other year passes through."
+      },
+      {
+        "text": "`1900`",
+        "correct": false,
+        "why": "That is what it returns for a different value; for `1900` it returns NULL."
+      },
+      {
+        "text": "`0`",
+        "correct": false,
+        "why": "It never invents a zero; that would be `COALESCE` with a constant."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "Both arguments are text; it compares them quietly."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1qsff9z",
+    "version": 1,
+    "section": "unmask-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`COALESCE(discount, '0')` turns the website's blanks into zeros. What makes that safe here?",
+    "hint": "A constant is a statement about meaning.",
+    "choices": [
+      {
+        "text": "Zero is the most common discount in the whole file",
+        "correct": false,
+        "why": "Being common does not make it the meaning of a blank."
+      },
+      {
+        "text": "`COALESCE` only replaces values it can prove are zero",
+        "correct": false,
+        "why": "It replaces every NULL with whatever it is given; the proof is the analyst's."
+      },
+      {
+        "text": "Lesson 2 showed the blank means no coupon",
+        "correct": true,
+        "why": "Right. Without that evidence, the zero would be a guess."
+      },
+      {
+        "text": "The website sends no coupons",
+        "correct": false,
+        "why": "It does: the four coupon values appear on the website too."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z7affqm",
+    "version": 1,
+    "section": "unmask-first",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The birth-year column had 338 blanks and 348 placeholders. How many missing years are there once the placeholders are blanked?",
+    "hint": "Add them.",
+    "value": 686,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vxtzek00",
+    "version": 1,
+    "section": "dropping-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After dropping customers without a usable birth year, the shops' share of the customers falls from 25.5% to 8.4%. What does that mean for an average age?",
+    "hint": "Who is left?",
+    "choices": [
+      {
+        "text": "It is unbiased, since dropping never invents data",
+        "correct": false,
+        "why": "Not inventing is true; unbiased needs the dropped rows to be like the kept ones."
+      },
+      {
+        "text": "It is too small a sample to compute",
+        "correct": false,
+        "why": "1,601 customers is plenty for an average."
+      },
+      {
+        "text": "It overstates the shops' customers",
+        "correct": false,
+        "why": "The shops are under-represented now, not over."
+      },
+      {
+        "text": "It describes mostly website and app customers",
+        "correct": true,
+        "why": "Right. It is right for everyone only if the shops' customers are the same age."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvv5qetd",
+    "version": 1,
+    "section": "dropping-rows",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which practices make dropping rows more defensible? Choose all that apply.",
+    "hint": "Three were listed.",
+    "choices": [
+      {
+        "text": "Dropping per question with `dropna(subset=...)`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Reporting how many rows the answer rests on",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Dropping every row with any blank, once, at the start",
+        "correct": false,
+        "why": "That removes rows from questions that never needed the blank column."
+      },
+      {
+        "text": "Comparing the mix of the rows before and after",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tqc9b4g",
+    "version": 1,
+    "section": "filling-a-constant",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is zero the worst constant for the own fleet's missing delivery times?",
+    "hint": "What is known about those deliveries?",
+    "choices": [
+      {
+        "text": "Zero is not a valid number of minutes for a delivery",
+        "correct": false,
+        "why": "It is valid; it is wrong."
+      },
+      {
+        "text": "They took 120 minutes or more; zero calls them instantaneous",
+        "correct": true,
+        "why": "Right. The largest possible error per row, in the flattering direction."
+      },
+      {
+        "text": "pandas refuses to fill a numeric column with zero",
+        "correct": false,
+        "why": "`fillna(0)` ran without complaint."
+      },
+      {
+        "text": "It moves the mean by only 1.7 minutes",
+        "correct": false,
+        "why": "The small shift is why it looks harmless, not why it is bad."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcanswz6",
+    "version": 1,
+    "section": "filling-a-constant",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a category nobody recorded, what is the honest constant?",
+    "hint": "It should say what is not known.",
+    "choices": [
+      {
+        "text": "The most frequent category in the column",
+        "correct": false,
+        "why": "That inflates the biggest group with guesses."
+      },
+      {
+        "text": "The category of the row above it in the file",
+        "correct": false,
+        "why": "File order says nothing about a category."
+      },
+      {
+        "text": "An empty string, so the column looks filled",
+        "correct": false,
+        "why": "That hides the blank without explaining it."
+      },
+      {
+        "text": "A word such as `unknown`",
+        "correct": true,
+        "why": "Right. The row stays and the chart shows the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-djmqw2wj",
+    "version": 1,
+    "section": "filling-the-centre",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Filling missing values with the column's mean leaves which statistic exactly where it was?",
+    "hint": "Every new value equals it.",
+    "choices": [
+      {
+        "text": "The standard deviation",
+        "correct": false,
+        "why": "It fell from 21.1 to 20.8."
+      },
+      {
+        "text": "The share of late deliveries",
+        "correct": false,
+        "why": "It fell from 10.5% to 10.2%."
+      },
+      {
+        "text": "The mean",
+        "correct": true,
+        "why": "Right; the spread shrinks and extremes are undercounted."
+      },
+      {
+        "text": "The maximum",
+        "correct": false,
+        "why": "The maximum is unchanged here too, but only because the mean is below it; it is not guaranteed."
+      }
+    ]
+  },
+  {
+    "id": "ex-9eyj37ck",
+    "version": 1,
+    "section": "filling-the-centre",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Filled with the median, birth years keep the right mean and are wrong by 14.1 years per filled row. What follows?",
+    "hint": "Who is the imputation for?",
+    "choices": [
+      {
+        "text": "Imputation serves summaries, never the person in the row",
+        "correct": true,
+        "why": "Right. A filled age in a customer's record is a fabrication."
+      },
+      {
+        "text": "The median should be replaced by the mean in numeric columns",
+        "correct": false,
+        "why": "The mean would err by about as much per row."
+      },
+      {
+        "text": "A random draw would get each person right",
+        "correct": false,
+        "why": "It was worse per row: 18.9 years."
+      },
+      {
+        "text": "The truth file has errors in it",
+        "correct": false,
+        "why": "It is the generator's own record; the errors are the fill's."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjj8z682",
+    "version": 1,
+    "section": "filling-the-centre",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The true birth years have a standard deviation of 16.2; filled with the median, 13.3. By how many years did the fill shrink it?",
+    "hint": "Subtract.",
+    "value": 2.9,
+    "tolerance": 0.05,
+    "unit": "years"
+  },
+  {
+    "id": "ex-f5v6cjay",
+    "version": 1,
+    "section": "borrowing-a-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Filling birth years by signup channel gave the same result as the overall median. Why?",
+    "hint": "Group imputation works as well as the group predicts the value.",
+    "choices": [
+      {
+        "text": "pandas ignores `groupby` inside `fillna`",
+        "correct": false,
+        "why": "`transform` gave each row its own group's median; they happen to be equal."
+      },
+      {
+        "text": "Channel says nothing about age here",
+        "correct": true,
+        "why": "Right; a group that does not predict the value cannot improve the guess."
+      },
+      {
+        "text": "Every channel has the same number of customers",
+        "correct": false,
+        "why": "They do not, and sizes would not matter anyway."
+      },
+      {
+        "text": "The shops have no birth years at all",
+        "correct": false,
+        "why": "Some shop customers do have a year."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp86qp6f",
+    "version": 1,
+    "section": "borrowing-a-value",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can no imputation from the recorded delivery times fix the timer's blanks?",
+    "hint": "What has a model of the recorded times never seen?",
+    "choices": [
+      {
+        "text": "There are too few blanks to fit any model to them",
+        "correct": false,
+        "why": "A model is fitted on the recorded rows, of which there are thousands."
+      },
+      {
+        "text": "Delivery times are not numbers",
+        "correct": false,
+        "why": "They are minutes, the most numeric column here."
+      },
+      {
+        "text": "Every blank lies above the longest time ever logged",
+        "correct": true,
+        "why": "Right. Borrowing from the rows you have borrows from the wrong ones."
+      },
+      {
+        "text": "The blanks are MCAR",
+        "correct": false,
+        "why": "They are MNAR, which is why imputation fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfcxx27m",
+    "version": 1,
+    "section": "borrowing-a-value",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Filling each blank several times, analysing each copy and combining the results is called ___ imputation.",
+    "hint": "More than one.",
+    "blanks": [
+      {
+        "accept": [
+          "multiple"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n9gdx07d",
+    "version": 1,
+    "section": "carrying-forward",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each case to the right way to fill a day with no record.",
+    "hint": "States persist; flows restart.",
+    "pairs": [
+      {
+        "left": "Daily sales, shop closed",
+        "right": "Zero"
+      },
+      {
+        "left": "The price of a banana",
+        "right": "The last value, carried forward"
+      },
+      {
+        "left": "Daily sales, till crashed",
+        "right": "Blank, flagged as lost"
+      }
+    ],
+    "right_distractors": [
+      "The week's average"
+    ]
+  },
+  {
+    "id": "ex-k41vm8pb",
+    "version": 1,
+    "section": "carrying-forward",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ffill` filled Good Friday with R$ 348.00 and Sunday and Tiradentes with R$ 800.90 each. How many reais of sales did it invent?",
+    "hint": "348.00 + 2 × 800.90.",
+    "value": 1949.8,
+    "tolerance": 0.005,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-mnba954x",
+    "version": 1,
+    "section": "carrying-forward",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop was open all day but its till crashed and recorded nothing. What should the day's sales be?",
+    "hint": "Something happened that nobody recorded.",
+    "choices": [
+      {
+        "text": "Blank, and flagged as lost",
+        "correct": true,
+        "why": "Right. Zero would claim no sales; the day is genuinely missing."
+      },
+      {
+        "text": "Zero, since nothing was recorded that day",
+        "correct": false,
+        "why": "Zero is right only when nothing happened."
+      },
+      {
+        "text": "The day before's sales, carried forward",
+        "correct": false,
+        "why": "Sales are a flow; yesterday says nothing about today."
+      },
+      {
+        "text": "The average of the same weekday in the year",
+        "correct": false,
+        "why": "A guess for a total, at best; written into the day's row, it is invented."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wm9p35w",
+    "version": 1,
+    "section": "flagging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does flagging the own fleet's blanks give the late share exactly right?",
+    "hint": "Every flagged delivery took at least how long?",
+    "choices": [
+      {
+        "text": "Flags are filled with the median of late deliveries",
+        "correct": false,
+        "why": "A flag fills nothing."
+      },
+      {
+        "text": "The truth file is used to set the flags",
+        "correct": false,
+        "why": "The flags come from the blanks and what operations said, not from the truth file."
+      },
+      {
+        "text": "Each flagged one is at least 120, so each is late",
+        "correct": true,
+        "why": "Right. The bound answers the question with no guess."
+      },
+      {
+        "text": "Flagged rows are dropped from the denominator",
+        "correct": false,
+        "why": "They stay, counted as late."
+      }
+    ]
+  },
+  {
+    "id": "ex-35z4jjcs",
+    "version": 1,
+    "section": "flagging",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Treating every flagged delivery as exactly 120 minutes gave a mean of 61.2. The real mean is 61.9. By how many minutes did the floor fall short?",
+    "hint": "Subtract.",
+    "value": 0.7,
+    "tolerance": 0.05,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-d4xk02fd",
+    "version": 1,
+    "section": "flagging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a flag give the next person that a column filled with medians does not?",
+    "hint": "Which rows are guesses?",
+    "choices": [
+      {
+        "text": "A smaller file that loads faster in every later tool",
+        "correct": false,
+        "why": "A flag adds a column."
+      },
+      {
+        "text": "Which values are guesses, so a better method fits in later",
+        "correct": true,
+        "why": "Right. A filled column looks complete and hides its guesses."
+      },
+      {
+        "text": "A faster query",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "A complete column with no blanks left in it for anybody to handle",
+        "correct": false,
+        "why": "The blanks stay; that is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-74xhtaak",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each blank to the move for an average over it.",
+    "hint": "The mechanism decides.",
+    "pairs": [
+      {
+        "left": "A website discount",
+        "right": "Fill the known constant"
+      },
+      {
+        "left": "MCAR readings from a faulty cable",
+        "right": "Drop, or fill the centre"
+      },
+      {
+        "left": "A timer that stops at 120",
+        "right": "Flag, and report a floor"
+      },
+      {
+        "left": "Income missing by employment type",
+        "right": "Fill within groups"
+      }
+    ]
+  },
+  {
+    "id": "ex-fk9hfrqb",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Ana write the decisions as a view over the raw table instead of updating it?",
+    "hint": "What happens to the raw rows?",
+    "choices": [
+      {
+        "text": "Views run faster than tables because they are cached",
+        "correct": false,
+        "why": "A view runs its query each time; speed is not the reason."
+      },
+      {
+        "text": "PostgreSQL forbids `UPDATE` on text columns",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "A view hides the flags from other analysts",
+        "correct": false,
+        "why": "The flags are a column of the view, visible to all."
+      },
+      {
+        "text": "Raw rows stay intact; queries read the decisions",
+        "correct": true,
+        "why": "Right. A decision can be changed by editing the view, and nothing is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q3bfj7h",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `fill.sql`, the `WHEN status = 'cancelled'` line comes before `WHEN courier = 'Rapidex'`. What would change if they were swapped?",
+    "hint": "The first match wins.",
+    "choices": [
+      {
+        "text": "Nothing, since `CASE` checks every line",
+        "correct": false,
+        "why": "`CASE` stops at the first true condition."
+      },
+      {
+        "text": "They would read `not reported`",
+        "correct": true,
+        "why": "Right, and they would wrongly count as deliveries without a time."
+      },
+      {
+        "text": "The query would fail with an error",
+        "correct": false,
+        "why": "Both orders are valid SQL."
+      },
+      {
+        "text": "Pickups would become `over 120`",
+        "correct": false,
+        "why": "The pickup line is still first."
+      }
+    ]
+  },
+  {
+    "id": "ex-gktqpche",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Ana's work on a column with blanks in order.",
+    "hint": "Meaning before method.",
+    "items": [
+      "Unmask placeholders and blanks that mean a value",
+      "Read the mechanism from the missingness log",
+      "Choose a move for the question being asked",
+      "Record what was done in the log"
+    ],
+    "trap": "Choosing a move before unmasking means the 1900s get averaged as real years."
+  },
+  {
+    "id": "ex-kca984am",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager asks Ana to fill the survey's blanks with the average score so the report covers every order. What should she answer?",
+    "hint": "Lesson 3 measured what the answers do to the NPS.",
+    "choices": [
+      {
+        "text": "Yes, since the mean does not move when blanks are filled with it",
+        "correct": false,
+        "why": "The mean stays at the flattered value; covering every order is an illusion."
+      },
+      {
+        "text": "Yes, but with the median instead of the mean",
+        "correct": false,
+        "why": "Any centre carries the same bias."
+      },
+      {
+        "text": "No: it repeats the flattered score with more confidence",
+        "correct": true,
+        "why": "Right. Report the score with its response rate instead."
+      },
+      {
+        "text": "No, because the scores are text",
+        "correct": false,
+        "why": "They convert to numbers; the problem is the selection."
+      }
+    ]
+  }
+]
