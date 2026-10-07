@@ -1,6 +1,6 @@
 ---
 title: Waiting between items
-version: 1
+version: 2
 ---
 
 So far every value was ready the moment it was asked for. Data from a network is not: the second page
@@ -44,5 +44,5 @@ Three new pieces of syntax are in this file, and lessons 13 and 14 are where the
   to arrive.
 
 **The shape is what to take from this lesson**: the same pull-one-at-a-time conversation as `for…of`,
-with a pause between the asking and the answer. Lesson 16 uses it on the lab's server, where the
+with a pause between the asking and the answer. Lesson 16 uses it on a server, where the
 pause is a real request.

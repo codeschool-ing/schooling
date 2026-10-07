@@ -1,6 +1,6 @@
 ---
 title: Two places to run it
-version: 1
+version: 2
 ---
 
 **JavaScript is a language, and a language needs a program to run it.** That program is called a
@@ -20,7 +20,7 @@ deliberate**: a later course on Node needs everything here except the page.
 
 ## Node: a file and a command
 
-The lab has Node.js 22 installed. The first thing to check on any machine is the version:
+The first thing to check on any machine is the version of Node, from `~/js`, where your work goes:
 
 ```
 ana@dev:~/js$ node --version
@@ -64,9 +64,9 @@ browser runs it while it reads the page:
 </script>
 ```
 
-On your own computer you would open this file in a browser and look at the **console**, the panel
-the browser's developer tools keep for messages from scripts. In this course a terminal transcript
-cannot show a browser window, so the lab has a command, `page`. It serves `~/js` at
+With a browser on your desktop you could open this file and look at the **console**, the panel the
+browser's developer tools keep for messages from scripts. A terminal transcript cannot show a
+window, so this course uses the `page` command from the previous section. It serves `~/js` at
 `http://127.0.0.1:8080`, opens the page in a real Chromium, and prints what the console said:
 
 ```
@@ -101,15 +101,3 @@ undefined object
 
 **Node has `process` and no `document`; the browser has the opposite.** Everything else in this
 lesson works in both, and from here on a program runs in whichever host makes the point clearer.
-
-## Three ways to set this up at home
-
-| | what it costs | what you get |
-|---|---|---|
-| **install Node.js** (recommended) | a download from nodejs.org and a few minutes | `node file.js` exactly as in this course |
-| your browser's console | nothing: press F12 in Chrome, Edge or Firefox | the language, one line at a time, with no files |
-| an online playground | nothing, but you need to be online | a page with an editor; your code lives on someone else's server |
-
-**Install Node.** Pick the version marked LTS, which is the one supported for longest, and any
-editor you like. The console is fine for trying a line, and lesson 22 uses it on purpose. A
-playground is fine on a borrowed computer, as long as you remember it is not your machine.

@@ -1,6 +1,6 @@
 ---
 title: An install runs code
-version: 1
+version: 2
 ---
 
 **A package can carry a script that the manager runs during installation, with your user's
@@ -15,13 +15,13 @@ npm ecosystem that made the news, an install script was usually where the code r
 
 ## Seeing one run
 
-The lab's `shelf-banner` has a `postinstall` that does something harmless and visible: it writes a
+`shelf-banner`, from `publish-shelf.sh`, has a `postinstall` that does something harmless and visible: it writes a
 file into the project that installed it.
 
 ```
 ana@dev:~/js/scripts$ npm install shelf-banner
 
-added 1 package in 564ms
+added 1 package in 569ms
 ana@dev:~/js/scripts$ ls
 banner-was-here.txt
 node_modules
@@ -43,7 +43,7 @@ been anywhere ana's user may write.
 ana@dev:~/js/scripts$ rm -rf node_modules banner-was-here.txt
 ana@dev:~/js/scripts$ npm ci --ignore-scripts
 
-added 1 package in 277ms
+added 1 package in 299ms
 ana@dev:~/js/scripts$ ls
 node_modules
 package-lock.json
@@ -74,7 +74,7 @@ dependencies:
 │   to run scripts.                                                            │
 │                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
-Done in 638ms using pnpm v10.28.0
+Done in 824ms using pnpm v10.28.0
 ana@dev:~/js/pnpm$ ls
 node_modules
 package.json
@@ -101,8 +101,8 @@ YN0000: └ Completed
 YN0000: ┌ Link step
 YN0000: │ ESM support for PnP uses the experimental loader API and is therefore experimental
 YN0007: │ shelf-banner@npm:1.0.0 must be built because it never has been before or the last one failed
-YN0000: └ Completed
-YN0000: · Done with warnings in 0s 326ms
+YN0000: └ Completed in 0s 239ms
+YN0000: · Done with warnings in 0s 369ms
 ana@dev:~/js/yarn$ ls
 banner-was-here.txt
 package.json
@@ -127,6 +127,6 @@ yarn.lock
 - **fewer dependencies**: each one is code and people you trust. A ten-line function is often
   cheaper to write than to depend on;
 - **`npm audit`**: it sends the installed versions to the registry and lists known
-  vulnerabilities with the version that fixes each. The lab's registry has no advisory database, so
+  vulnerabilities with the version that fixes each. Your registry has no advisory database, so
   it was not run here. `secure-pipeline`, lesson 5, runs this kind of check in a pipeline, and
   `secure-code`, lesson 17, decides when to update and when to pin.

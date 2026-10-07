@@ -1,11 +1,12 @@
 ---
 title: Tempo limite e cancelamento
-version: 1
+version: 2
 ---
 
 **O `fetch` não tem tempo limite próprio.** Um servidor que aceita a conexão e nunca responde deixa a
 promessa pendente enquanto o sistema operacional deixar a conexão viva. O jeito de desistir é um
-**sinal**:
+**sinal**. Isto roda com `node`, então o servidor da seção anterior tem de estar rodando no segundo
+terminal dele:
 
 ```javascript
 const round = (ms) => Math.round(ms / 100) * 100;
@@ -48,3 +49,7 @@ Os dois erros têm nomes diferentes de propósito, para o código distinguir **"
 Abortar para a espera deste lado. **Não desfaz o que o servidor já fez**: um `POST` que o servidor já
 tinha salvado continua salvo. Esse é um dos motivos de as duas próximas seções tratarem com cuidado o
 envio de dados e a tentativa de novo.
+
+As próximas seções voltam ao `page`, que sobe um servidor próprio no mesmo endereço. **Pare antes o
+do segundo terminal**, com Ctrl+C, ou o `page` para com `EADDRINUSE` (aula 1, "Quando a instalação
+falha").

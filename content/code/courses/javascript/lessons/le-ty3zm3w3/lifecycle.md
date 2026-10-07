@@ -1,10 +1,10 @@
 ---
 title: Allocate, use, release
-version: 1
+version: 2
 ---
 
 Every value your program creates takes memory. **Allocating it is automatic, using it is your code,
-and releasing it is the garbage collector's job.** The lab can show all three, with one switch meant
+and releasing it is the garbage collector's job.** Node can show all three, with one switch meant
 for experiments, `--expose-gc`, which lets a script run the collector on demand so that each figure is
 taken after a collection:
 

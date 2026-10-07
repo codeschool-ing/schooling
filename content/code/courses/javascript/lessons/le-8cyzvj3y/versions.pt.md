@@ -1,6 +1,6 @@
 ---
 title: Versões e faixas
-version: 1
+version: 2
 ---
 
 **Um número de versão é `MAJOR.MINOR.PATCH`, e cada parte é uma promessa sobre o que mudou.** Essa
@@ -13,7 +13,7 @@ nela:
 - **MAJOR** sobe quando algo que funcionava para de funcionar: uma função renomeada, um argumento
   removido, um padrão alterado.
 
-O registro do laboratório tem cinco versões de `shelf-slug`, uma de cada tipo de mudança:
+O `publish-shelf.sh` publicou cinco versões de `shelf-slug`, uma de cada tipo de mudança:
 
 ```
 ana@dev:~/js/first$ npm view shelf-slug versions
@@ -68,7 +68,7 @@ ana instala uma versão antiga de propósito:
 ```
 ana@dev:~/js/first$ npm install shelf-slug@1.0.0
 
-changed 1 package in 506ms
+changed 1 package in 574ms
 ana@dev:~/js/first$ node slug.js
 grande-sertão:-veredas
 ana@dev:~/js/first$ npm outdated
@@ -90,7 +90,7 @@ Pedir `@2` instala a `2.0.0` e reescreve a faixa para `^2.0.0`:
 ```
 ana@dev:~/js/first$ npm install shelf-slug@2
 
-changed 1 package in 508ms
+changed 1 package in 534ms
 ana@dev:~/js/first$ node slug.js 2>&1 | head -n 5
 file:///home/ana/js/first/slug.js:1
 import { slug } from "shelf-slug";

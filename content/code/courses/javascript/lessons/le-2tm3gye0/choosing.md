@@ -1,6 +1,6 @@
 ---
 title: Choosing a collection
-version: 1
+version: 2
 ---
 
 Six shapes now hold data in your programs, and **picking the right one makes the code that uses
@@ -46,4 +46,4 @@ Dom Casmurro 2
 
 `map` turns each book into an `[id, book]` pair, and the `Map` is built from the pairs. After that,
 `byId.get(12)` replaces a `find` that walked the whole array. Lesson 16 does this with books fetched
-from the lab's server.
+from a server.

@@ -38,18 +38,11 @@ put() {
 block() { printf '##### %s\n' "$1"; }
 lab reset >/dev/null
 
-put books/7.json <<'JSON'
-{ "id": 7, "title": "Iracema", "authorId": 3 }
-JSON
-put books/12.json <<'JSON'
-{ "id": 12, "title": "Dom Casmurro", "authorId": 1 }
-JSON
-put authors/1.json <<'JSON'
-{ "id": 1, "name": "Machado de Assis" }
-JSON
-put authors/3.json <<'JSON'
-{ "id": 3, "name": "José de Alencar" }
-JSON
+# The four data files, made by the commands callbacks.md shows, taken out of
+# it: the first sh block in that section.
+DATA=$(awk '/^```sh$/{f=1;next} f&&/^```$/{exit} f' callbacks.md)
+[ -n "$DATA" ] || { echo "no sh block in callbacks.md" >&2; exit 1; }
+lab exec ana "$DATA"
 
 put callbacks.js <<'JS'
 const fs = require("node:fs");

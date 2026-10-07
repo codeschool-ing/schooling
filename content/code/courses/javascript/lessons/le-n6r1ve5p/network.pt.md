@@ -1,11 +1,11 @@
 ---
 title: A aba de rede
-version: 1
+version: 2
 ---
 
 **O painel Network lista toda requisição que uma página faz: o que pediu, o status que voltou, o
 tamanho e o tempo.** Quando uma página mostra o dado errado, ou nenhum, é aqui que você descobre se
-o problema está na página ou no servidor. O `--network` do laboratório imprime uma linha por
+o problema está na página ou no servidor. O `page --network` imprime uma linha por
 resposta. O `missing.html` carrega este script com `<script type="module">`, porque ele usa `await`
 no nível de cima, como a aula 9 explicou:
 
@@ -31,7 +31,7 @@ net  GET /api/broken  500  fetch  41 B
 ```
 
 Cada linha `net` tem o método, o endereço, o **status**, o **tipo** da requisição e o tamanho do
-corpo. O laboratório imprime a linha quando o corpo chega, então as linhas das três requisições vêm
+corpo. O `page` imprime a linha quando o corpo chega, então as linhas das três requisições vêm
 depois das mensagens da própria página.
 
 Duas coisas aqui valem saber antes que confundam você:
@@ -90,7 +90,7 @@ start  took    request
  1200   400  GET /api/slow?ms=400&book=3              ####
 ```
 
-O `--waterfall` do laboratório desenha a mesma linha do tempo em texto, arredondada a 100 ms, com
+O `--waterfall`, do `devtools.mjs`, desenha a mesma linha do tempo em texto, arredondada a 100 ms, com
 um `#` a cada 100 ms. As três primeiras requisições formam uma escada. Cada uma começa quando a
 anterior termina, porque cada `await` espera antes de o próximo `fetch` ser enviado. As três últimas
 começam juntas, porque o `Promise.all` enviou as três antes de esperar por qualquer uma.

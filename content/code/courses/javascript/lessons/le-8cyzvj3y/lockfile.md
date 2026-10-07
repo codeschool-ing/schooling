@@ -1,6 +1,6 @@
 ---
 title: The lockfile
-version: 1
+version: 2
 ---
 
 **A range says what you accept. The lockfile says what was chosen.** Two people running
@@ -13,7 +13,7 @@ A second project, with the same `.npmrc`, installs `shelf-format`, a package tha
 ```
 ana@dev:~/js/lock$ npm install shelf-format
 
-added 2 packages in 624ms
+added 2 packages in 615ms
 ana@dev:~/js/lock$ npm ls --all
 lock@1.0.0 /home/ana/js/lock
 └─┬ shelf-format@1.0.0
@@ -81,7 +81,7 @@ names, and changes no file:
 ana@dev:~/js/lock$ rm -rf node_modules
 ana@dev:~/js/lock$ npm ci
 
-added 2 packages in 307ms
+added 2 packages in 331ms
 ```
 
 ```schooling-figure

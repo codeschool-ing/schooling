@@ -1,6 +1,6 @@
 ---
 title: pnpm e Yarn
-version: 1
+version: 2
 ---
 
 **O pnpm e o Yarn leem o mesmo `package.json` e o mesmo registro que o npm, e arrumam o resultado no
@@ -49,7 +49,7 @@ Progress: resolved 2, reused 0, downloaded 2, added 2, done
 dependencies:
 + shelf-format 1.0.0
 
-Done in 886ms using pnpm v10.28.0
+Done in 773ms using pnpm v10.28.0
 ana@dev:~/js/pnpm$ ls -A node_modules
 .modules.yaml
 .pnpm
@@ -94,7 +94,7 @@ O pnpm escreve `pnpm-lock.yaml` em vez de `package-lock.json`. Os comandos espel
 
 ## Yarn
 
-O Yarn lê a configuração do `.yarnrc.yml`. Este aponta para o registro do laboratório e permite HTTP
+O Yarn lê a configuração do `.yarnrc.yml`. Este aponta para o seu registro e permite HTTP
 simples para esse endereço, porque o Yarn recusa um registro sem criptografia a menos que o host dele
 esteja nesta lista:
 
@@ -116,7 +116,7 @@ YN0000: └ Completed
 YN0000: ┌ Link step
 YN0000: │ ESM support for PnP uses the experimental loader API and is therefore experimental
 YN0000: └ Completed
-YN0000: · Done with warnings in 0s 165ms
+YN0000: · Done with warnings in 0s 258ms
 ana@dev:~/js/yarn$ ls -A
 .pnp.cjs
 .pnp.loader.mjs

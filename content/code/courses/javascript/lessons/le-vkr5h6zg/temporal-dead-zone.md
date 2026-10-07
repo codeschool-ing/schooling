@@ -1,6 +1,6 @@
 ---
 title: The temporal dead zone
-version: 1
+version: 2
 ---
 
 **The temporal dead zone is the part of a block between its opening brace and a `let` or `const`
@@ -12,6 +12,13 @@ about when the line runs, not where it sits:
 ```
 
 ## Two different errors
+
+`tdz-read.js` reads the name a line too early:
+
+```javascript
+console.log(title);
+let title = "Iracema";
+```
 
 ```
 ana@dev:~/js$ node tdz-read.js 2>&1 | grep Error
