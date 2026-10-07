@@ -214,6 +214,11 @@ class Shop(BaseHTTPRequestHandler):
             return self.json(200, {"server": NAME, "db_queries": 0})
         return self.json(404, {"error": "not found"})
 
+    def do_DELETE(self):
+        return self.json(405, {"error": "method not allowed"})
+
+    do_PATCH = do_DELETE
+
     def caching(self):
         return [("Cache-Control", CACHE_CONTROL)] if CACHE_CONTROL else []
 
@@ -474,6 +479,79 @@ LABFILE
   fi
   in_vm ln -sf ../sites-available/ipelivros /etc/nginx/sites-enabled/ipelivros
   in_vm systemctl enable --now nginx >/dev/null 2>&1
+  [ "$n" -ge 4 ] || return 0
+  stage_tls
+}
+
+stage_tls() { # lesson 3's end: Pebble, a certificate from it, and the site on HTTPS
+  in_vm bash -c 'mkdir -p /etc/pebble && cd /etc/pebble &&
+    openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 365 \
+      -subj "/CN=Lab ACME API" -addext "subjectAltName=DNS:localhost" \
+      -keyout api.key -out api.crt 2>/dev/null && chmod 644 api.key'
+  in_vm tee /etc/pebble/pebble.json >/dev/null <<'LABFILE'
+{
+  "pebble": {
+    "listenAddress": "127.0.0.1:14000",
+    "managementListenAddress": "127.0.0.1:15000",
+    "certificate": "/etc/pebble/api.crt",
+    "privateKey": "/etc/pebble/api.key",
+    "httpPort": 80,
+    "tlsPort": 443,
+    "ocspResponderURL": "",
+    "externalAccountBindingRequired": false,
+    "certificateValidityPeriod": 7776000
+  }
+}
+LABFILE
+  in_vm tee /etc/systemd/system/pebble.service >/dev/null <<'LABFILE'
+[Unit]
+Description=Pebble, Let's Encrypt's ACME server for testing
+After=network.target
+
+[Service]
+Environment=PEBBLE_VA_NOSLEEP=1 PEBBLE_WFE_NONCEREJECT=0
+ExecStart=/usr/bin/pebble -config /etc/pebble/pebble.json
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
+LABFILE
+  in_vm bash -c 'systemctl daemon-reload && systemctl enable --now pebble >/dev/null 2>&1 && sleep 1 &&
+    curl -s --cacert /etc/pebble/api.crt https://localhost:15000/roots/0 > /usr/local/share/ca-certificates/pebble-root.crt &&
+    update-ca-certificates >/dev/null 2>&1 &&
+    REQUESTS_CA_BUNDLE=/etc/pebble/api.crt certbot certonly --webroot -w /var/www/ipe \
+      -d ipelivros.example -d www.ipelivros.example --server https://localhost:14000/dir \
+      --agree-tos -m ana@ipelivros.example --no-eff-email --non-interactive >/dev/null 2>&1'
+  in_vm tee /etc/nginx/snippets/ipelivros-tls.conf >/dev/null <<'LABFILE'
+ssl_certificate     /etc/letsencrypt/live/ipelivros.example/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/ipelivros.example/privkey.pem;
+ssl_protocols       TLSv1.2 TLSv1.3;
+ssl_session_cache   shared:TLS:10m;
+ssl_session_timeout 1d;
+LABFILE
+  in_vm mkdir -p /etc/letsencrypt/renewal-hooks/deploy
+  in_vm tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx >/dev/null <<'LABFILE'
+#!/bin/sh
+# Run by certbot after every certificate it renews: load the new files.
+systemctl reload nginx
+LABFILE
+  in_vm chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx
+  in_vm sed -i -e 's/^    listen 80;/    listen 443 ssl;\n    include snippets\/ipelivros-tls.conf;/' /etc/nginx/sites-available/ipelivros
+  in_vm tee -a /etc/nginx/sites-available/ipelivros >/dev/null <<'LABFILE'
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/ipe;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+LABFILE
+  in_vm bash -c 'nginx -t 2>/dev/null && systemctl reload nginx'
 }
 
 reset() {
