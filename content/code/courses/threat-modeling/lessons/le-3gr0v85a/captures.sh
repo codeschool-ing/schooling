@@ -25,7 +25,7 @@ run() {   # run DIR 'command': ana's prompt in DIR with the venv active, then th
 }
 block() { printf '##### %s\n' "$1"; }
 
-"$AS_ANA" bash /var/tmp/tmlab.sh reset
+"$AS_ANA" bash /var/tmp/tmlab.sh reset 3   # the repository as it was after lesson 3
 M=/home/ana/tm/portal-model
 
 block 'tool'

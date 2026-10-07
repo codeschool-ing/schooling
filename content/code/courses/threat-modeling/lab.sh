@@ -5,6 +5,8 @@
 #
 #   bash lab.sh reset      rebuild ~/tm/portal-model from nothing
 #                          (the virtual environment is kept if it is there)
+#   bash lab.sh reset N    the same, stopping after the Nth commit: the state
+#                          of the repository when an earlier lesson was recorded
 #
 # Lesson 1 builds this by hand, step by step, and every later lesson adds a
 # file to it. This script is those steps written down, so that the captures in
@@ -25,16 +27,22 @@
 #   - Every commit has a fixed author and date, so the history the lessons
 #     show repeats byte for byte.
 #   - The files come from lab/ beside this script. The lessons print each one
-#     in full; what is here is what they print.
+#     in full; what is here is what they print. model.py is the one file a
+#     later lesson changes, and that change is console.patch, applied as its
+#     own commit, so model.py itself stays as lesson 2 prints it.
 
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 TM=${TM:-$HOME/tm}
 export TZ=America/Sao_Paulo
 
-commit() {   # commit 'YYYY-MM-DD HH:MM' 'message'
+STOP=999
+MADE=0
+commit() {   # commit 'YYYY-MM-DD HH:MM' 'message', and stop if that was the last one asked for
   GIT_AUTHOR_DATE="$1:00 -0300" GIT_COMMITTER_DATE="$1:00 -0300" \
     git -c user.name=ana -c user.email=ana@vereda.example commit -q -m "$2"
+  MADE=$((MADE + 1))
+  if [ "$MADE" -ge "$STOP" ]; then exit 0; fi
 }
 
 add() {      # add FILE...: copy from lab/ into the repository and stage it
@@ -64,9 +72,13 @@ reset() {
   commit '2026-09-03 17:05' 'List the threats found with STRIDE'
   add tree.py
   commit '2026-09-08 11:30' 'Model one goal as an attack tree'
+  add surface.py
+  commit '2026-09-10 09:40' 'List the entry and exit points'
+  git apply "$here/lab/console.patch" && git add model.py
+  commit '2026-09-10 10:15' 'Draw the console as it is: reachable from the internet'
 }
 
 case ${1:-} in
-  reset) reset ;;
-  *) echo "usage: bash lab.sh reset" >&2; exit 2 ;;
+  reset) STOP=${2:-999}; reset ;;
+  *) echo "usage: bash lab.sh reset [N]" >&2; exit 2 ;;
 esac
