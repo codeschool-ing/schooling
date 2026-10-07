@@ -1,6 +1,6 @@
 ---
 title: Recuperando o que foi escrito
-version: 1
+version: 2
 ---
 
 O vazamento foi achado. Agora as linhas que já chegaram aos armazenamentos têm de sair, e **é aqui
@@ -38,3 +38,12 @@ ferramenta: a linha que nunca guardou o dado de uma pessoa não precisa ser apag
 com que esta aula termina. Registre identificadores que não significam nada fora do sistema, guarde
 linhas só enquanto forem úteis, e trate um armazenamento cheio de dados pessoais como o incidente
 que ele é.
+
+Antes da próxima aula, devolva tudo o que esta mudou:
+
+```sh
+cp /tmp/storefront.app.py services/storefront/app.py
+cp /tmp/collector-logs.yaml.orig otel/collector-logs.yaml
+rm compose.override.yaml otel/collector-redact.yaml
+docker compose up -d storefront otel-collector
+```

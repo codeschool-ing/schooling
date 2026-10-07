@@ -1,16 +1,16 @@
 ---
 title: Removing it at the source
-version: 1
+version: 2
 ---
 
 The first defence is in the code, where the line is born, and it does not trust every call site to
 remember. **A logging filter sits between every call and the formatter**, so it sees every record
-every service writes. The shop's, in `common/redact.py`:
+every service writes. The shop's, in `services/common/redact.py`:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "common/redact.py",
+  "file": "services/common/redact.py",
   "parts": [
     {
       "code": "\"\"\"A logging filter that keeps secrets and card numbers out of every line.\"\"\"\nimport logging\nimport re\n\n"
@@ -29,6 +29,12 @@ every service writes. The shop's, in `common/redact.py`:
     }
   ]
 }
+```
+
+Save it, and keep a copy of `logs.py` before the formatter's set-up gains one line and one import:
+
+```sh
+cp services/common/logs.py /tmp/logs.py
 ```
 
 Two lines in the shared `logs.py` install it on the handler, so every service that calls

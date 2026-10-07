@@ -1,11 +1,18 @@
 ---
 title: A leak, made on purpose
-version: 1
+version: 2
 ---
 
 Leaks are rarely somebody deciding to log a password. **They are a helpful debug line that logs a
 whole object**, written while chasing a bug and left behind. Here is one, added to the storefront the
-way it usually happens, right after the request's body is read:
+way it usually happens, right after the request's body is read. Keep a copy of the storefront's code first, to put back at the
+end of the lesson:
+
+```sh
+cp services/storefront/app.py /tmp/storefront.app.py
+```
+
+Then the line:
 
 ```
 ana@obs:~/shop$ sed -i 's/^        body = request.get_json()$/&\n        log.debug("request", extra={"fields": {"headers": dict(request.headers), "body": body}})/' services/storefront/app.py && grep -n 'log.debug' services/storefront/app.py
@@ -14,7 +21,7 @@ ana@obs:~/shop$ sed -i 's/^        body = request.get_json()$/&\n        log.deb
 
 The line logs every header and the whole body at `DEBUG`, which lesson 8 showed is off by default.
 Somebody then turns `DEBUG` on to investigate, in the override file that already points the Collector
-at Loki and Elasticsearch:
+at Loki and Elasticsearch. Replace `compose.override.yaml` with this:
 
 ```yaml
 services:

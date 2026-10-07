@@ -1,12 +1,23 @@
 ---
 title: Removing it in the pipeline, and what that misses
-version: 1
+version: 2
 ---
 
 The second defence is in the Collector, where every service's lines pass whether or not their code
-was careful. The filter was taken back out of `logs.py` to show the pipeline working alone. A third
-Collector file adds two statements to the `transform` processor, before the JSON is parsed, so the
-parsed fields are made from the cleaned text:
+was careful. Take the filter back out of `logs.py` first, to see the pipeline working alone:
+
+```sh
+cp /tmp/logs.py services/common/logs.py
+```
+
+A third Collector file adds two statements to the `transform` processor, before the JSON is parsed, so the
+parsed fields are made from the cleaned text. Make it as a copy of `collector-logs.yaml`, and add the
+two `replace_pattern` lines that the `diff` below shows, just above the `merge_maps` line:
+
+```sh
+cp otel/collector-logs.yaml otel/collector-redact.yaml
+```
+
 
 ```
 ana@obs:~/shop$ diff otel/collector-logs.yaml otel/collector-redact.yaml
