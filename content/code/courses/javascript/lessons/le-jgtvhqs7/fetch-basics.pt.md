@@ -71,9 +71,9 @@ export function api(req, res, url, state) {
 ```
 
 Seis endereços, cada um feito para mostrar uma coisa. `/api/books` responde com três livros, e
-recebe um novo por `POST`; `/api/books/1` a `/api/books/3` respondem com um deles, e qualquer outro
-número com um 404; `/api/broken` é um erro do servidor, `/api/html` a página HTML que um proxy
-quebrado manda no lugar do JSON, `/api/slow` demora o quanto mandarem e `/api/flaky` falha as
+recebe um novo por `POST`. `/api/books/1` a `/api/books/3` respondem com um deles, e qualquer outro
+número com um 404. `/api/broken` é um erro do servidor, e `/api/html` a página HTML que um proxy
+quebrado manda no lugar do JSON. `/api/slow` demora o quanto mandarem, e `/api/flaky` falha as
 primeiras requisições de propósito. As seções abaixo usam um cada. A primeira pede a lista:
 
 ```html

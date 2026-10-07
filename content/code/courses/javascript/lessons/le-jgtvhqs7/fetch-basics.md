@@ -71,10 +71,10 @@ export function api(req, res, url, state) {
 ```
 
 Six addresses, each made to show one thing. `/api/books` answers with three books, and takes a new
-one by `POST`; `/api/books/1` to `/api/books/3` answer with one of them, and any other number with a
-404; `/api/broken` is a server error, `/api/html` the HTML page a broken proxy sends instead of JSON,
-`/api/slow` takes as long as it is told to and `/api/flaky` fails its first requests on purpose. The
-sections below use one each. The first asks for the list:
+one by `POST`. `/api/books/1` to `/api/books/3` answer with one of them, and any other number with a
+404. `/api/broken` is a server error, and `/api/html` the HTML page a broken proxy sends instead of
+JSON. `/api/slow` takes as long as it is told to, and `/api/flaky` fails its first requests on
+purpose. The sections below use one each. The first asks for the list:
 
 ```html
 <!doctype html>
