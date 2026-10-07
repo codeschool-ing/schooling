@@ -60,7 +60,7 @@ POST /v1/chat/completions -> 400 llama3.2:3b:groq
 diferem nessa string. O roteador do Hugging Face lê o que vem depois dos últimos dois-pontos como
 uma política ou um provedor. O Ollama lê `llama3.2:3b:cheapest` como nome de modelo, acha malformado
 e diz isso com um 400. É o contrário da seção 03 da aula 15, em que o Ollama ignorou o objeto
-`provider` do OpenRouter e respondeu: um ajuste num campo próprio pode ser descartado em silêncio
+`provider` do OpenRouter e respondeu. Um ajuste num campo próprio pode ser descartado em silêncio
 por um servidor que não o conhece, e um ajuste dentro do nome do modelo não pode. O preço são os
 próprios dois-pontos, que o Ollama já usa para uma tag, então a mesma string quer dizer coisas
 diferentes para os dois servidores.

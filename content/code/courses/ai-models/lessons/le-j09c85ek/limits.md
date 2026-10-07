@@ -59,9 +59,9 @@ ana@desk:~/desk$ python long.py auto
 
 **No 400.** Ollama read 4,093 tokens both times, cut the rest, and answered as if nothing had
 happened, which is what it did in lesson 14 section 04 too. OpenAI's documented default is the
-opposite: **too long is an error ana sees**, and the cut happens only when she asks for it with
-`auto`, by dropping the oldest items. A program written against that default trusts the error to
-arrive, and pointed at a server that cuts silently, it never does. The one defence that works on
+opposite: **too long is an error ana sees**, and the cut happens only when the request asks for it
+with `auto`, by dropping the oldest items. A program written against that default trusts the error
+to arrive, and pointed at a server that cuts silently, it never does. The one defence that works on
 both is lesson 14's: compare `input_tokens` with what was sent.
 
 ## A schema becomes an object

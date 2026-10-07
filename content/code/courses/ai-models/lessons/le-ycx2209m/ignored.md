@@ -77,7 +77,7 @@ max_completion_tokens  8 ->  37 tokens, finish_reason stop
 
 The first limit held: eight tokens and `length`, the model cut off. The second was **accepted and
 ignored**: no error, and the model wrote its whole sentence. The library's own documentation of the
-older name says why a program would send the newer one:
+older name says why a program would send the newer one. `chatdoc.py` prints it:
 
 ```python
 import re

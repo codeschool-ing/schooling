@@ -91,7 +91,7 @@ llama3.2:1b  c07 wrong     expected refund          got 'order-status\nrefund'
 ```
 
 A lista inteira de rótulos, em coluna ou numa linha só, e `No.` para uma pergunta sobre visitar uma
-loja. **O llama3.2:1b não é um classificador mais fraco, ele não está classificando**: não segue a
+loja. **O llama3.2:1b quase não classifica**: não segue a
 instrução de responder com um rótulo. Isso também é uma conclusão, e custa a um modelo uma linha
 numa tabela em vez de um mês em produção.
 

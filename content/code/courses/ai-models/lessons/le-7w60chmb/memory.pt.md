@@ -23,7 +23,7 @@ da Meta descreve cada Llama que ela lançou como um bloco de números de arquite
  246|             },
 ```
 
-Esses sete números, com o tamanho do vocabulário, determinam todos os pesos da rede. O
+Seis desses números, com o tamanho do vocabulário, determinam todos os pesos da rede. O
 O `size.py` lê os números dos três tamanhos da Llama 3.1 e faz a conta:
 
 ```schooling-example
@@ -69,8 +69,8 @@ os modelos são publicados, cada parâmetro ocupa dois bytes, então 8 bilhões 
 cada token de contexto, para não recalcular o prompt inteiro a cada token novo. Esse é o **cache
 KV**, e a última coluna de memória é o tamanho dele por token: 128 KiB para o 8B. Um prompt de 8.192
 tokens precisa então de 1 GiB de cache além dos pesos, e a janela inteira do modelo, de 131.072
-tokens, precisa de **16 GiB**, mais ou menos o mesmo que os próprios pesos em 16 bits. Cada requisição atendida ao mesmo
-tempo precisa do seu.
+tokens, precisa de **16 GiB**, mais ou menos o mesmo que os próprios pesos em 16 bits. Cada
+requisição atendida ao mesmo tempo precisa do seu.
 
 ## O que isso significa em hardware
 
@@ -84,5 +84,6 @@ acelerador. Então:
 - o **405B** em 4 bits (203 GB) precisa de vários dos maiores aceleradores trabalhando juntos, o que
   é um cluster, não uma máquina.
 
-Os números são da Llama, e a aritmética é a mesma para todo modelo com arquitetura publicada. Para um
-modelo fechado não há nada a calcular: o provedor não diz, e nem precisa, porque você nunca vai tê-lo.
+Os números são da Llama, e a aritmética é a mesma para todo modelo com arquitetura publicada. Para
+um modelo fechado não há nada a calcular: o provedor não diz, e nem precisa, porque você nunca vai
+tê-lo.

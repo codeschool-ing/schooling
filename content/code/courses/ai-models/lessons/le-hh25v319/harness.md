@@ -57,7 +57,7 @@ Two choices in it are worth naming.
 **It talks to every model through one API.** All three candidates are called through the OpenAI
 SDK's Chat Completions, with the same messages, the same `max_tokens` and the same temperature.
 OpenAI's own documentation now prefers a newer name for the cap, `max_completion_tokens`, and Ollama
-ignores that one without a word, which lesson 20 shows; `max_tokens` is the one both read. Lesson 20
+ignores that one without a word; `max_tokens` is the one both read. Lesson 20
 shows how far that reaches: many providers accept this shape. When a candidate needs its own SDK,
 the harness grows a second way of making the request, and everything after it stays the same.
 

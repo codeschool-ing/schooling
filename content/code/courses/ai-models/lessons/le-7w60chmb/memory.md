@@ -22,7 +22,7 @@ describes every Llama it released as a block of architecture numbers. This is Ll
  246|             },
 ```
 
-Those seven numbers, with the vocabulary size, determine every weight in the network. `size.py`
+Six of those numbers, with the vocabulary size, determine every weight in the network. `size.py`
 reads them for the three Llama 3.1 sizes and does the sum:
 
 ```schooling-example

@@ -10,12 +10,12 @@ primeiro fica para cada tipo, lido na tabela.
 
 ## A tabela
 
-Cada provedor publica os preços na própria página, no próprio formato. O **LiteLLM**, uma
-biblioteca de código aberto que chama cem provedores por uma interface só, guarda todos eles num
-arquivo JSON, para poder dar preço às chamadas que faz. Esse arquivo é a tabela que este curso lê:
-uma cópia, feita por terceiros, das páginas dos provedores, e é por isso que todo número tirado dela
-diz de onde veio, lida num commit só, para que os mesmos números saiam no ano que vem. O `sheet.py`
-baixa o arquivo uma vez, guarda-o ao lado de si em `~/desk`, e responde oito perguntas sobre ele:
+Cada provedor publica os preços na própria página, no próprio formato. O **LiteLLM**, uma biblioteca
+de código aberto que chama cem provedores por uma interface só, guarda todos eles num arquivo JSON,
+para poder dar preço às chamadas que faz. Esse arquivo é a tabela que este curso lê: uma cópia,
+feita por terceiros, das páginas dos provedores. Todo número tirado dela diz isso, e ela é lida num
+commit só, para que os mesmos números saiam no ano que vem. O `sheet.py` baixa o arquivo uma vez,
+guarda-o ao lado de si em `~/desk`, e responde oito perguntas sobre ele:
 
 ```python
 """sheet.py: the model catalogue every number in ai-models comes from.

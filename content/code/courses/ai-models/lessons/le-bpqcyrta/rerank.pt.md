@@ -57,7 +57,7 @@ propósito, para as aulas sobre erros e limites:
 
     python relay.py                 listen on 127.0.0.1:8500 and pass every request on to Ollama
     python relay.py --fail 529:2    answer the next two requests with 529 instead (lesson 17)
-    python relay.py --rpm 3         allow three requests a minute, and 429 the rest (lesson 21)
+    python relay.py --rpm 5         allow five requests a minute, and 429 the rest (lesson 21)
     python relay.py show [--headers H,H] [--body] [--count N]
                                     print the last request, or a line for each of the last N
 

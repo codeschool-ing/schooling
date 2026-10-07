@@ -75,12 +75,12 @@ ana@desk:~/desk$ python relay.py show --body | head -6
 }
 ```
 
-The third request sent one e-mail and an id, and the relay shows the id went with it. The model
-read 89 tokens. Against OpenAI, the docstring above says what that id is for: the server finds the
-first turn and its answer and puts them in front of the new e-mail, so **the history travels from
-the provider's side, not from ana's**. Here it did not travel at all. The first request, with the
-instructions and one e-mail, was 75 tokens; the third, with the instructions and a different
-e-mail, is 89, which is about the size of that request alone. **Ollama accepted
+The third request sent the instructions, one e-mail and an id, and the relay shows the id went with
+it. The model read 89 tokens. Against OpenAI, the docstring above says what that id is for: the
+server finds the first turn and its answer and puts them in front of the new e-mail, so **the
+history travels from the provider's side, not from ana's**. Here it did not travel at all. The first
+request, with the instructions and one e-mail, was 75 tokens; the third, with the instructions and a
+different e-mail, is 89, which is about the size of that request alone. **Ollama accepted
 `previous_response_id` and ignored it**, and the answer gave no sign of it.
 
 The second request is the trap the documentation warns about, and that one shows on any server: it

@@ -67,7 +67,7 @@ Ollama       4/10
 LM Studio    no connection: [Errno 111] Connection refused
 ```
 
-Oito provedores, um laço, e oito resultados diferentes, todos reais:
+Oito provedores, um laço, e um resultado de cada, todos reais:
 
 - **O Ollama respondeu os dez**, e acertou o que o llama3.2:3b acerta nesses casos com temperatura
   0.

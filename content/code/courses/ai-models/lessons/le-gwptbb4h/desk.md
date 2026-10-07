@@ -4,9 +4,9 @@ version: 1
 ---
 
 Every lesson in this course follows one person. **ana** runs the support desk of Lantern Books, a
-small online bookshop, and has to choose the model that will sort the shop's e-mail. Her project is
-a folder called `desk`, and the lessons are what she types at it. You build the same folder on your
-own machine now, and every program the course shows goes into it.
+small online bookshop, and has to choose the model that will sort the shop's e-mail. ana's project
+is a folder called `desk`, and the lessons are what ana types at it. You build the same folder on
+your own machine now, and every program the course shows goes into it.
 
 ## A folder and a Python of its own
 
@@ -66,7 +66,7 @@ Answer with exactly one label and nothing else:
 order-status, refund, address-change, product-question, other.
 ```
 
-Her second is pulling the order number out of an e-mail, so the reply can look it up.
+The second job is pulling the order number out of an e-mail, so the reply can look it up.
 `prompts/extract.txt`:
 
 ```

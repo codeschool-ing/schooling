@@ -60,7 +60,7 @@ POST /v1/chat/completions -> 400 llama3.2:3b:groq
 in that string. Hugging Face's router reads what comes after the last colon as a policy or a
 provider. Ollama reads `llama3.2:3b:cheapest` as a model name, finds it malformed, and says so with
 a 400. That is the opposite of lesson 15 section 03, where Ollama ignored OpenRouter's `provider`
-object and answered: a setting in a field of its own can be dropped in silence by a server that does
+object and answered. A setting in a field of its own can be dropped in silence by a server that does
 not know it, and a setting inside the model's name cannot. The price is the colon itself, which
 Ollama already uses for a tag, so the same string means different things to the two servers.
 

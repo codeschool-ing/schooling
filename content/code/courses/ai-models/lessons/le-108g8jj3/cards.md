@@ -19,7 +19,7 @@ documentation says how:
 ```
 
 The YAML at the top is what the Hub filters and links by: the licence, the languages, the task, the
-model it was built from. `cards.py` writes the metadata a fine-tune of ana's would carry, if she
+model it was built from. `cards.py` writes the metadata a fine-tune of ana's would carry, if ana
 ever published one, with `huggingface_hub`'s own classes, and reads it back:
 
 ```python
@@ -59,7 +59,7 @@ Five fields carry most of what a buyer needs before downloading anything:
 | field | answers | lesson |
 |---|---|---|
 | `license` | may I use it, and how | 2 |
-| `language` | was it tested in mine | 1, section 05 |
+| `language` | was it tested in mine | 1 |
 | `pipeline_tag` | which task it was made for | 12, section 02 |
 | `base_model` | what it started as, and so which licence it inherits | 2, section 04 |
 | `tags` | anything else the author wanted searchable | |

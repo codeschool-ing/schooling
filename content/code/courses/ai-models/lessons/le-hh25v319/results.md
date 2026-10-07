@@ -63,8 +63,8 @@ Sixteen to two, `0.001`: the 3b is better than the 1b, by a margin forty cases s
 
 - **qwen2.5:3b sorts better than llama3.2:3b**, on these cases, by a margin the paired comparison
   supports even though the intervals touch. The model the course installs for everything is not
-  the best sorter of Lantern Books' mail, and only her own cases could have said so.
-- **None of the three reaches her floor.** Lesson 4 wrote it as 35 of 40; the best here is 30.
+  the best sorter of Lantern Books' mail, and only ana's own cases could have said so.
+- **None of the three reaches the floor.** Lesson 4 wrote it as 35 of 40; the best here is 30.
   Section 10 says what that means.
 - **More cases would narrow every interval, slowly.** An interval narrows with the square root of
   the number of cases: four times as many halve its width. The cheaper move is often to add cases

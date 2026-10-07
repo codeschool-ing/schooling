@@ -5,8 +5,8 @@ version: 1
 
 A model for Transformers.js is a Hub repository with a known layout, and lesson 12 section 03
 said what is in one. **huggingface.co could not be reached from the machine this course was
-recorded on**, so ana's model does not come from the Hub: she trains one, in seconds, with
-`train_sorter.py`. It reads the first thirty of her forty cases, learns which words point at which
+recorded on**, so ana's model does not come from the Hub: ana trains one, in seconds, with
+`train_sorter.py`. It reads the first thirty of the forty cases, learns which words point at which
 label, and writes the result in the layout Transformers.js expects. The last ten cases are kept
 back, untouched, for section 04. It needs two libraries the desk does not have yet, NumPy for the
 arithmetic and `onnx` to write the file:

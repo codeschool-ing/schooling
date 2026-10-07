@@ -34,7 +34,7 @@ quanto tempo cada parte levou, em nanossegundos. A linha de tokens por segundo �
 documentação do Ollama dá, e é a vazão da seção 05 da aula 3 medida no seu hardware em vez de
 calculada a partir de uma largura de banda. A maior parte dos 7,73 segundos foi o servidor
 carregando o modelo do disco, o que a primeira requisição depois de um intervalo paga, e é o assunto
-da seção 03.
+de *Carregado, e por quanto tempo*, abaixo.
 
 O que foi pelo fio é JSON simples para `localhost`, sem chave. A biblioteca lê o endereço do
 servidor em `OLLAMA_HOST`, então uma execução pelo relay da seção 03 da aula 9 o mostra:

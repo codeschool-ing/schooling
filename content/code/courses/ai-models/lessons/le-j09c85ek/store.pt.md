@@ -54,9 +54,9 @@ GET /v1/responses/resp_977775 -> 404
 Contra o Ollama o programa para no primeiro `retrieve`, e o relay mostra por quê: a resposta foi
 criada, e o `GET` que a pede de volta é um 404. **O Ollama não guarda nada**, então não há o que
 recuperar, apagar ou encadear, e um servidor local responde à pergunta desta seção do jeito mais
-simples que existe. Na OpenAI, a docstring diz que os três passos do programa vão no sentido
-contrário: a resposta é guardada e volta, **apagar depois de usar** a remove, e o `retrieve`
-seguinte é um 404, e **nunca guardar**, `store=False`, não deixa nada para buscar nem para encadear.
+simples que existe. Na OpenAI, o programa foi escrito para o outro resultado: a resposta é guardada,
+por pelo menos os 30 dias que a docstring dá, e volta. Depois **apagar depois de usar** a remove, e
+**nunca guardar**, `store=False`, pede que nada seja mantido.
 
 As duas coisas não prometem o mesmo. Apagar remove o que a API devolve; o que o provedor guarda para
 os próprios fins é regido pela política de dados dele, para onde o link da docstring aponta e que

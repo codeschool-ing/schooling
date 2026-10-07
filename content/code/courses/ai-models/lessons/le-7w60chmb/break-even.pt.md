@@ -36,14 +36,15 @@ ana@desk:~/desk$ python volume.py
 Uns 81 tokens de entrada e quatro de saída. A entrada é o prompt de três linhas e um e-mail, mais o
 que o template de chat do modelo põe em volta deles, os tokens especiais da aula 1 seção 08; a saída
 é um rótulo de uma ou duas palavras, e às vezes dois rótulos onde o prompt pediu um. **As contagens
-são da Llama**, feitas com o tokenizador dela: o Claude conta o mesmo texto com outro, então o número
-é uma estimativa do tamanho, que é tudo de que um ponto de equilíbrio precisa. O servidor informa a
-parte do prompt que já tinha lido na requisição anterior como leitura de cache, e o `volume.py` soma
-as duas de volta; a aula 17 trata de por que uma API as conta separadas.
+são da Llama**, feitas com o tokenizador dela: o Claude conta o mesmo texto com outro, então o
+número é uma estimativa do tamanho, que é tudo de que um ponto de equilíbrio precisa. O servidor
+informa a parte do prompt que já tinha lido na requisição anterior como leitura de cache, e o
+`volume.py` soma as duas de volta; a aula 17 trata de por que uma API as conta separadas.
 
-O `breakeven.py` pega esses números, arredondados para cima, 82 de entrada e 5 de saída, os preços de um modelo na tabela e o
-custo mensal de uma máquina. A Lantern Books recebe uns 400 e-mails por dia, e a máquina custa US$
-1.500 por mês: os dois são suposições do curso, redondas o bastante para serem lidas como tais.
+O `breakeven.py` pega esses números, 82 de entrada e 5 de saída, um pouco acima das médias, os
+preços de um modelo na tabela e o custo mensal de uma máquina. A Lantern Books recebe uns 400
+e-mails por dia, e a máquina custa US$ 1.500 por mês: os dois são suposições do curso, redondas o
+bastante para serem lidas como tais.
 
 ```python
 import json
@@ -67,9 +68,9 @@ claude-haiku-4-5: $107 per million requests
 ```
 
 **Um dólar e vinte e oito centavos por mês.** A 400 e-mails por dia, toda a carga de classificação
-da Lantern Books custa menos que um café no modelo mais barato que a tabela lista para a Anthropic, e
-uma máquina teria de classificar **467.290 e-mails por dia** para custar o mesmo. Agora o Claude Opus
-5.5, a que a tabela dá quatro vezes esse preço por token:
+da Lantern Books custa menos que um café no modelo mais barato que a tabela lista para a Anthropic,
+e uma máquina teria de classificar **467.290 e-mails por dia** para custar o mesmo. Agora o Claude
+Opus 5.5, a que a tabela dá quatro vezes esse preço por token:
 
 ```
 ana@desk:~/desk$ python breakeven.py claude-opus-5-5 1500

@@ -3,8 +3,9 @@ title: When the setup fails
 version: 1
 ---
 
-Every failure below happened while this course was being recorded, on the Ubuntu Server 24.04 the
-virtual machine path installs, and each one names its own cause if you read the last line first.
+Every failure below with a transcript happened while this course was being recorded, on the Ubuntu
+Server 24.04 the virtual machine path installs, and each one names its own cause if you read the
+last line first.
 
 ## The installer stops before it starts
 

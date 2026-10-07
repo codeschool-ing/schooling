@@ -66,7 +66,7 @@ Ollama       4/10
 LM Studio    no connection: [Errno 111] Connection refused
 ```
 
-Eight providers, one loop, and eight different outcomes, every one of them real:
+Eight providers, one loop, and an outcome from each, every one of them real:
 
 - **Ollama answered all ten**, and scored what llama3.2:3b scores on these cases at temperature 0.
 - **Anthropic and Google read the request and refused the key.** That is the most this machine

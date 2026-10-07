@@ -43,7 +43,7 @@ ana@desk:~/desk$ python -m http.server 8600 --bind 127.0.0.1
 Serving HTTP on 127.0.0.1 port 8600 (http://127.0.0.1:8600/) ...
 ```
 
-Then she opens `http://127.0.0.1:8600/sort.html` in her browser, opens the developer tools on the
+Then ana opens `http://127.0.0.1:8600/sort.html` in a browser, opens the developer tools on the
 **Network** tab, and presses **Sort**. Here is the same visit made by a headless Chromium, the
 browser this course was recorded with, which prints what the page said and every request it made:
 

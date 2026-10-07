@@ -15,7 +15,7 @@ worth being precise about what that thing physically is.
 
 Meta's model card for Llama 3.1 is one of the few that says it in numbers. This course quotes a
 document the way it does here: the first line names the repository, the commit it was read at and
-the file, and every quoted line starts with its line number in that file, so you can open the same
+the file, and every quoted line starts with its line number in that file. So you can open the same
 file on GitHub at that commit and read around it. Nothing in a quotation is for you to type.
 
 ```

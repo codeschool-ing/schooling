@@ -54,9 +54,9 @@ GET /v1/responses/resp_977775 -> 404
 Against Ollama the program stops at its first `retrieve`, and the relay shows why: the response was
 created, and the `GET` that asks for it back is a 404. **Ollama keeps nothing**, so there is nothing
 to retrieve, delete or chain from, and a local server answers this section's question in the
-simplest way there is. Against OpenAI, the docstring says the program's three steps go the other
-way: the response is stored and comes back, **delete after use** removes it so the next `retrieve`
-is a 404, and **never store it**, `store=False`, leaves nothing to fetch and nothing to chain from.
+simplest way there is. Against OpenAI, the program is written for the other outcome: the response is
+stored, for at least the 30 days the docstring gives, and comes back. Then **delete after use**
+removes it, and **never store it**, `store=False`, asks for nothing to be kept at all.
 
 The two are not equivalent in what they promise. Deleting removes what the API returns; what the
 provider keeps for its own purposes is governed by its data policy, which the docstring's link

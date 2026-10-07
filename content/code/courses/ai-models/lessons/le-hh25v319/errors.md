@@ -90,13 +90,13 @@ llama3.2:1b  c07 wrong     expected refund          got 'order-status\nrefund'
 ```
 
 The whole list of labels, in a column or on one line, and `No.` to a question about visiting a
-shop. **llama3.2:1b is not a weaker sorter, it is not sorting**: it does not
+shop. **llama3.2:1b mostly does not sort at all**: it does not
 follow the instruction to answer with one label. That is a finding too, and it costs a model one
 line in a table rather than a month in production.
 
 ## What to do about a suspect label
 
-Not change it quietly. Ana takes c24 and c26 back to the person who labelled with her, and they
+Not change it quietly. Ana takes c24 and c26 back to the person who labelled with ana, and they
 decide again, this time with the models' answers in front of them:
 
 - c24, thirty copies for a school: a price for a quantity is answered by whoever negotiates, not

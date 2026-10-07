@@ -4,8 +4,8 @@ version: 1
 ---
 
 Everything is now on the table: lesson 4's thresholds, and this lesson's scores. Ana's floor for
-sorting was 35 of 40, and for extraction she sets it where a wrong order number is rare enough to
-catch by hand: **no invented or altered numbers at all**, and misses only if they are rare.
+sorting was 35 of 40, and for extraction ana sets it at **no invented or altered numbers at all**,
+with misses allowed only if they are rare.
 
 | task | llama3.2:3b | qwen2.5:3b | llama3.2:1b |
 |---|---|---|---|

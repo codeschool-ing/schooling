@@ -76,13 +76,13 @@ ana@desk:~/desk$ python relay.py show --body | head -6
 }
 ```
 
-A terceira requisição mandou um e-mail e um id, e o relay mostra que o id foi junto. O modelo leu 89
-tokens. Na OpenAI, a docstring acima diz para que serve esse id: o servidor acha o primeiro turno e
-a resposta dele e os põe antes do e-mail novo, então **o histórico vem do lado do provedor, não do
-lado da ana**. Aqui ele não veio de lado nenhum. A primeira requisição, com as instruções e um
-e-mail, teve 75 tokens; a terceira, com as instruções e outro e-mail, tem 89, que é mais ou menos o
-tamanho dessa requisição sozinha. **O Ollama aceitou o `previous_response_id` e o ignorou**, e a
-resposta não deu sinal disso.
+A terceira requisição mandou as instruções, um e-mail e um id, e o relay mostra que o id foi junto.
+O modelo leu 89 tokens. Na OpenAI, a docstring acima diz para que serve esse id: o servidor acha o
+primeiro turno e a resposta dele e os põe antes do e-mail novo, então **o histórico vem do lado do
+provedor, não do lado da ana**. Aqui ele não veio de lado nenhum. A primeira requisição, com as
+instruções e um e-mail, teve 75 tokens; a terceira, com as instruções e outro e-mail, tem 89, que é
+mais ou menos o tamanho dessa requisição sozinha. **O Ollama aceitou o `previous_response_id` e o
+ignorou**, e a resposta não deu sinal disso.
 
 A segunda requisição é a armadilha de que a documentação avisa, e essa aparece em qualquer servidor:
 ela não mandou instruções, e `instructions` voltou `None`, porque instruções não são levadas

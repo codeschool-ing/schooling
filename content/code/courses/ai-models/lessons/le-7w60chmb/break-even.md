@@ -35,15 +35,16 @@ ana@desk:~/desk$ python volume.py
 
 About 81 tokens in and four out. The input is the three-line prompt and an e-mail, plus what the
 model's chat template wraps around them, lesson 1 section 08's special tokens; the output is a label
-of a word or two, and sometimes two labels where the prompt asked for one. **The counts are Llama's**,
-made with its own tokenizer: Claude counts the same text with another, so the figure is an estimate
-of the size, which is all a break-even needs. The server reports the part of the prompt it had
-already read on the previous request as a cache read, and `volume.py` adds the two back together;
-lesson 17 is about why an API counts them apart.
+of a word or two, and sometimes two labels where the prompt asked for one. **The counts are
+Llama's**, made with its own tokenizer: Claude counts the same text with another, so the figure is
+an estimate of the size, which is all a break-even needs. The server reports the part of the prompt
+it had already read on the previous request as a cache read, and `volume.py` adds the two back
+together; lesson 17 is about why an API counts them apart.
 
-`breakeven.py` takes those numbers, rounded up to 82 in and 5 out, a model's prices from the sheet, and the monthly
-cost of a machine. Lantern Books receives about 400 e-mails a day, and the machine costs $1,500 a
-month: both are the course's assumptions, round enough to be read as such.
+`breakeven.py` takes those numbers, 82 in and 5 out, a little above the averages, a model's prices
+from the sheet, and the monthly cost of a machine. Lantern Books receives about 400 e-mails a day,
+and the machine costs $1,500 a month: both are the course's assumptions, round enough to be read as
+such.
 
 ```python
 import json
@@ -66,9 +67,10 @@ claude-haiku-4-5: $107 per million requests
   a $1,500 machine pays for itself at 467,290 requests a day
 ```
 
-**A dollar and twenty-eight cents a month.** At 400 e-mails a day, Lantern Books' whole sorting
-load costs less than a coffee on the cheapest model the sheet lists for Anthropic, and a machine
-would have to sort **467,290 e-mails a day** to cost the same. Now Claude Opus 5.5, which the sheet prices at four times as much per token:
+**A dollar and twenty-eight cents a month.** At 400 e-mails a day, Lantern Books' whole sorting load
+costs less than a coffee on the cheapest model the sheet lists for Anthropic, and a machine would
+have to sort **467,290 e-mails a day** to cost the same. Now Claude Opus 5.5, which the sheet prices
+at four times as much per token:
 
 ```
 ana@desk:~/desk$ python breakeven.py claude-opus-5-5 1500

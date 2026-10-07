@@ -35,7 +35,7 @@ ana@desk:~/desk$ python relay.py show --body | grep -A2 '"provider"'
 What the field changes happens on OpenRouter's side: a provider that keeps data is skipped, and if
 every provider of the model keeps data, there is nobody left to send to. That is the behaviour to
 want: a privacy setting that quietly fell back to the provider it was meant to exclude would be no
-setting at all. And it is the setting a server that does not know it ignores most quietly of all,
+setting at all. And a server that does not know the field ignores it without a word,
 as Ollama did with `provider` in section 03, so **a privacy field is checked against the service it
 is sent to**, never assumed from the request.
 

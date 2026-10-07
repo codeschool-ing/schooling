@@ -59,7 +59,7 @@ Cinco campos trazem quase tudo o que um comprador precisa antes de baixar qualqu
 | campo | responde | aula |
 |---|---|---|
 | `license` | posso usar, e como | 2 |
-| `language` | foi testado no meu idioma | 1, seção 05 |
+| `language` | foi testado no meu idioma | 1 |
 | `pipeline_tag` | para que tarefa foi feito | 12, seção 02 |
 | `base_model` | de onde partiu, e portanto que licença herda | 2, seção 04 |
 | `tags` | qualquer outra coisa que o autor quis tornar buscável | |

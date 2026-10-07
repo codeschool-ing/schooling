@@ -35,7 +35,7 @@ ana@desk:~/desk$ python relay.py show --body | grep -A2 '"provider"'
 O que o campo muda acontece do lado do OpenRouter: um provedor que guarda dados é pulado, e se todo
 provedor do modelo guarda dados, não sobra ninguém para quem mandar. Esse é o comportamento a
 querer: um ajuste de privacidade que caísse quieto no provedor que devia excluir não seria ajuste
-nenhum. E é o ajuste que um servidor que não o conhece ignora mais quieto de todos, como o Ollama
+nenhum. E um servidor que não conhece o campo o ignora sem dizer nada, como o Ollama
 fez com o `provider` na seção 03, então **um campo de privacidade é conferido contra o serviço a que
 é mandado**, nunca suposto pela requisição.
 

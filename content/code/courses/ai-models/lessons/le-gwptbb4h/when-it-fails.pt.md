@@ -3,8 +3,9 @@ title: Quando a montagem falha
 version: 1
 ---
 
-Cada falha abaixo aconteceu enquanto este curso era gravado, no Ubuntu Server 24.04 que o caminho
-da máquina virtual instala, e cada uma diz a própria causa se você ler a última linha primeiro.
+Cada falha abaixo que tem transcrição aconteceu enquanto este curso era gravado, no Ubuntu Server
+24.04 que o caminho da máquina virtual instala, e cada uma diz a própria causa se você ler a última
+linha primeiro.
 
 ## O instalador para antes de começar
 

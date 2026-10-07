@@ -34,7 +34,7 @@ accounting**: how many tokens were read
 nanoseconds. The tokens-per-second line is the formula Ollama's documentation gives, and it is
 lesson 3 section 05's throughput measured on your own hardware instead of computed from a
 bandwidth. Most of the 7.73 seconds in all was the server loading the model from disk, which the
-first request after a quiet spell pays for, and section 03 is about.
+first request after a quiet spell pays for, and which *Loaded, and for how long* below is about.
 
 What went over the wire is plain JSON to `localhost`, with no key. The library reads the server's
 address from `OLLAMA_HOST`, so one run through the relay from lesson 9 section 03 shows it:

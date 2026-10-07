@@ -13,8 +13,8 @@ looks like for each kind, read off the sheet.
 Every provider publishes its prices on its own page, in its own format. **LiteLLM**, an open-source
 library that calls a hundred providers through one interface, keeps all of them in one JSON file,
 so that it can price the calls it makes. That file is the sheet this course reads: a third party's
-copy of the providers' pages, which is why every number taken from it is said to come from it, read
-at one commit, so that the same numbers come out next year. `sheet.py` downloads it once, keeps it
+copy of the providers' pages. Every number taken from it says so, and it is read at one commit, so
+the same numbers come out next year. `sheet.py` downloads it once, keeps it
 beside itself in `~/desk`, and answers eight questions about it:
 
 ```python

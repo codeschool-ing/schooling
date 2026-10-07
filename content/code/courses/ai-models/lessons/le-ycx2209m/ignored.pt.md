@@ -76,7 +76,7 @@ max_completion_tokens  8 ->  37 tokens, finish_reason stop
 
 O primeiro limite valeu: oito tokens e `length`, o modelo cortado. O segundo foi **aceito e
 ignorado**: nenhum erro, e o modelo escreveu a frase inteira. A documentação do nome antigo na
-própria biblioteca diz por que um programa mandaria o novo:
+própria biblioteca diz por que um programa mandaria o novo. O `chatdoc.py` a imprime:
 
 ```python
 import re
