@@ -15,6 +15,7 @@
 #   sudo bash lab.sh down
 #   sudo bash lab.sh exec HOST USER 'command'
 #   sudo bash lab.sh host 'command'      on the VM itself, as ubuntu@netlab
+#   bash lab.sh check                    every file a captures.sh writes is in a lesson
 #
 # The student types these as the user ubuntu, on a machine called netlab, which
 # is what Multipass gives them; the files go in ~ubuntu/netlab. Recorded on
@@ -120,7 +121,36 @@ fresh_home() {
   fi
 }
 
+# check: every file a lesson's captures.sh writes for ana (its `put` blocks) is
+# printed in some lesson, line for line: in the lesson that writes it, or in
+# the earlier one it is staged from. A file that exists only here is a file the
+# student never receives.
+check() {
+  python3 - "$L" <<'PY'
+import glob, json, re, sys
+L = sys.argv[1]
+shown = set()
+for md in glob.glob(f"{L}/*/*.md"):
+    if md.endswith(".pt.md"):
+        continue
+    t = open(md, encoding="utf-8").read()
+    shown |= {x.rstrip() for x in t.splitlines()}
+    for m in re.finditer(r"```schooling-example\n(.*?)\n```", t, re.S):
+        for part in json.loads(m.group(1))["parts"]:
+            shown |= {x.rstrip() for x in part["code"].splitlines()}
+bad = 0
+for cap in sorted(glob.glob(f"{L}/*/captures.sh")):
+    for name, _, body in re.findall(r"^put (\S+) <<'(\w+)'\n(.*?)^\2$", open(cap).read(), re.S | re.M):
+        missing = [x for x in body.splitlines() if x.strip() and x.rstrip() not in shown]
+        if missing:
+            bad += 1
+            print(f"{cap}: {name}: {len(missing)} line(s) in no lesson, first: {missing[0]!r}")
+sys.exit(1 if bad else 0)
+PY
+}
+
 case ${1:-} in
+  check) check ;;
   tools) tools ;;
   up)    files; "$NETLAB/netlab.sh" up ;;
   reset) files; "$NETLAB/netlab.sh" down; fresh_home; "$NETLAB/netlab.sh" up ;;

@@ -1,10 +1,36 @@
 ---
 title: Reading every router at once
-version: 1
+version: 2
 ---
 
 The backup reuses lesson 8's Nornir inventory, cut down to the three routers, and asks each one for
-its running configuration through NAPALM. The same script then commits whatever changed:
+its running configuration through NAPALM. The project is a new directory, `~/net` on `ctl`, put
+together from two earlier lessons: lesson 8's `config.yaml` and the two inventory files that do
+not change, and lesson 10's data, templates and `render.py`, which section 07 uses. Git also needs
+to know who is committing, once per account:
+
+```
+ana@ctl:~$ git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main
+ana@ctl:~$ mkdir -p net/inventory && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/templates tpl/render.py net/
+```
+
+The one inventory file that changes is the list of hosts, which here is the three routers and
+nothing else. `net/inventory/hosts.yaml`:
+
+```yaml
+---
+core1:
+  hostname: core1.example.net
+  groups: [routers]
+edge1:
+  hostname: edge1.example.net
+  groups: [routers]
+edge2:
+  hostname: edge2.example.net
+  groups: [routers]
+```
+
+The same script then commits whatever changed:
 
 ```schooling-example
 {
