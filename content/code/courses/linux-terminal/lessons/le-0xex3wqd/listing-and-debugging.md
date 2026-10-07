@@ -1,6 +1,6 @@
 ---
 title: What is scheduled on this machine, and did it run
-version: 1
+version: 2
 ---
 
 Two questions, and you will ask them on a machine you did not set up.
@@ -29,32 +29,38 @@ sudo grep -rs --include='*' '' /etc/cron.d /etc/crontab /var/spool/cron
 
 ## `systemctl list-timers`
 
-This machine cannot run it, and says so plainly:
-
 ```
-ana@vm:~/work/cron/units$ systemctl list-timers --all
-System has not been booted with systemd as init system (PID 1). Can't operate.
-Failed to connect to bus: Host is down
-```
+ana@vm:~$ systemctl list-timers --all
+NEXT                                 LEFT LAST                              PASSED UNIT                           ACTIVATES
+Wed 2026-10-07 14:40:00 UTC           40s Wed 2026-10-07 14:30:01 UTC     9min ago sysstat-collect.timer          sysstat-collect.service
+Wed 2026-10-07 15:31:43 UTC         52min Wed 2026-10-07 14:34:48 UTC 4min 31s ago anacron.timer                  anacron.service
+Wed 2026-10-07 15:32:38 UTC         53min Wed 2026-10-07 14:11:30 UTC    27min ago fwupd-refresh.timer            fwupd-refresh.service
+Thu 2026-10-08 00:00:00 UTC            9h Wed 2026-10-07 13:18:17 UTC            - dpkg-db-backup.timer           dpkg-db-backup.service
+Thu 2026-10-08 00:00:00 UTC            9h Wed 2026-10-07 13:18:17 UTC            - logrotate.timer                logrotate.service
+Thu 2026-10-08 00:07:00 UTC            9h -                                      - sysstat-summary.timer          sysstat-summary.service
+Thu 2026-10-08 03:01:02 UTC           12h -                                      - report.timer                   report.service
+Thu 2026-10-08 04:17:01 UTC           13h Wed 2026-10-07 13:18:17 UTC            - apt-daily.timer                apt-daily.service
+Thu 2026-10-08 06:11:38 UTC           15h Wed 2026-10-07 13:18:17 UTC            - motd-news.timer                motd-news.service
+Thu 2026-10-08 06:18:06 UTC           15h Wed 2026-10-07 13:18:17 UTC            - apt-daily-upgrade.timer        apt-daily-upgrade.service
+Thu 2026-10-08 10:23:07 UTC           19h Wed 2026-10-07 13:18:17 UTC            - man-db.timer                   man-db.service
+Thu 2026-10-08 13:58:57 UTC           23h Wed 2026-10-07 13:58:57 UTC    40min ago update-notifier-download.timer update-notifier-download.service
+Thu 2026-10-08 14:08:38 UTC           23h Wed 2026-10-07 14:08:38 UTC    30min ago systemd-tmpfiles-clean.timer   systemd-tmpfiles-clean.service
+Sun 2026-10-11 03:10:52 UTC        3 days Wed 2026-10-07 13:18:17 UTC            - e2scrub_all.timer              e2scrub_all.service
+Mon 2026-10-12 01:21:44 UTC        4 days Wed 2026-10-07 13:18:17 UTC            - fstrim.timer                   fstrim.service
+Sat 2026-10-17 13:44:00 UTC 1 week 2 days Wed 2026-10-07 13:18:17 UTC            - update-notifier-motd.timer     update-notifier-motd.service
+-                                       - -                                      - apport-autoreport.timer        apport-autoreport.service
+-                                       - -                                      - snapd.snap-repair.timer        snapd.snap-repair.service
+-                                       - -                                      - ua-timer.timer                 ua-timer.service
 
-PID 1 in this container is not systemd — the same limit lesson 5 hit, for the
-same reason, and the same honesty applies here: **what follows is a drawing of
-that command's output, not a capture.**
-
-```
-NEXT                        LEFT     LAST                        PASSED  UNIT             ACTIVATES
-Tue 2026-09-15 13:00:00 UTC 14min    Tue 2026-09-15 12:00:00 UTC 45min   sysstat-collect… sysstat-collect.service
-Wed 2026-09-16 00:00:00 UTC 11h      Tue 2026-09-15 00:00:12 UTC 12h     logrotate.timer  logrotate.service
-Wed 2026-09-16 03:00:00 UTC 14h      Tue 2026-09-15 03:00:19 UTC 9h      report.timer     report.service
-Wed 2026-09-16 06:12:44 UTC 17h      Tue 2026-09-15 06:12:44 UTC 6h      apt-daily.timer  apt-daily.service
--                           -        -                           -       systemd-tmpfile… systemd-tmpfiles-clean.service
-
-5 timers listed.
+19 timers listed.
 ```
 
 **`NEXT` and `LAST` are the two columns worth the command.** A timer whose `LAST`
-is older than its period did not run, and that is a fact you can act on. The
-dashes on the last row are a timer that is loaded but has never fired.
+is older than its period did not run, and that is a fact you can act on.
+`report.timer` from section 12 is there, waiting for 03:01:02 with a dash for
+`LAST`, because it has never fired; `anacron.timer` is section 09's anacron,
+started by systemd. The three rows of dashes at the bottom are timers that are
+loaded and not active.
 
 `--all` includes the ones that are not active; without it you see only the live
 ones, and a disabled timer is exactly what you are looking for when a job has
@@ -70,6 +76,32 @@ stopped.
 | `journalctl -u report.service --since yesterday` | since when |
 | `systemctl status report.timer` | when it fires next |
 | `systemctl status report.service` | how the last run ended |
+
+Section 12's `report.timer` will not fire until three in the morning, but its
+service can be started by hand, which is the test section 12 recommended — and
+then everything in that table has something to say:
+
+```
+ana@vm:~$ sudo systemctl start report.service
+ana@vm:~$ journalctl -u report.service --no-pager | tail -4
+Oct 07 14:39:21 vm systemd[1]: Starting report.service - Nightly report...
+Oct 07 14:39:21 vm report.sh[5031]: report ran
+Oct 07 14:39:21 vm systemd[1]: report.service: Deactivated successfully.
+Oct 07 14:39:21 vm systemd[1]: Finished report.service - Nightly report.
+ana@vm:~$ systemctl status report.service --no-pager | head -6
+○ report.service - Nightly report
+     Loaded: loaded (/etc/systemd/system/report.service; static)
+     Active: inactive (dead) since Wed 2026-10-07 14:39:21 UTC; 849ms ago
+TriggeredBy: ● report.timer
+    Process: 5031 ExecStart=/home/ana/bin/report.sh (code=exited, status=0/SUCCESS)
+   Main PID: 5031 (code=exited, status=0/SUCCESS)
+```
+
+**The journal has the run**: systemd starting it, the script's own output under
+its name and process id — `report.sh[5031]: report ran` — and the service
+finishing. `status` says how the last run ended, `status=0/SUCCESS`, and which
+timer starts it. That is everything a cron job's mail would have said, and more,
+with no mail system involved.
 
 **The journal is the timer's advantage over cron here.** A cron job's output goes
 to mail — if there is an MTA, if somebody reads it. A timer's job runs under

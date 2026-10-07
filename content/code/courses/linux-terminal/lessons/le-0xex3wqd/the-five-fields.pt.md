@@ -1,16 +1,16 @@
 ---
 title: Os cinco campos, e a única regra que é um OU
-version: 2
+version: 3
 ---
 
 ```localised
-*  *  *  *  *  comando
+*  *  *  *  *  command
 │  │  │  │  │
-│  │  │  │  └── dia da semana  0-7   (0 e 7 são os dois domingo)
-│  │  │  └───── mês            1-12
-│  │  └──────── dia do mês     1-31
-│  └─────────── hora           0-23
-└────────────── minuto         0-59
+│  │  │  │  └── day of week   0-7   (0 and 7 are both Sunday)
+│  │  │  └───── month         1-12
+│  │  └──────── day of month  1-31
+│  └─────────── hour          0-23
+└────────────── minute        0-59
 ```
 
 **A menor unidade é um minuto.** Nada no cron roda mais frequentemente que isso,
@@ -51,27 +51,47 @@ de agora.
 cron roda o job quando *qualquer um dos dois* casar.** Em todo o resto da linha
 os campos são combinados com E. Esses dois são combinados com OU.
 
-Isso vale medir em vez de acreditar. Três jobs, instalados numa terça-feira que
-não era dia treze:
+Isso vale medir em vez de acreditar. Três jobs, somados ao crontab da seção 03
+numa quarta-feira que não era dia treze. Eles nomeiam esse dia: no seu, ponha o
+dia da semana de hoje onde está o `3` — o `date +%w` o imprime, e domingo é 0 —,
+use outro dia que não hoje onde está o `1`, e se hoje for dia treze, use 14 para
+o dia do mês.
+
+```sh
+cd ~/work/cron
+cat > or.cron <<'END'
+* * 13 * 3 echo "dom 13 OR dow Wed fired at $(date +\%T)" >> /home/ana/work/cron/or.log
+* * 13 * 1 echo "dom 13 OR dow Mon fired at $(date +\%T)" >> /home/ana/work/cron/or2.log
+* * * * 3 echo "dow Wed only fired at $(date +\%T)" >> /home/ana/work/cron/or3.log
+END
+(crontab -l; cat or.cron) | crontab -
+sleep 150          # two runs, at least
+```
+
+O `crontab -l`, ligado por pipe ao `crontab -` com as linhas novas depois, é como
+você soma linhas a um crontab a partir de um script: o traço é a entrada padrão,
+e o resultado inteiro substitui o antigo.
 
 ```
 ana@vm:~/work/cron$ date "+today is %A %F"
-today is Tuesday 2026-09-15
+today is Wednesday 2026-10-07
 ana@vm:~/work/cron$ crontab -l | tail -3
-* * 13 * 2 echo "dom 13 OR dow Tue fired at $(date +\%T)" >> /home/ana/work/cron/or.log
+* * 13 * 3 echo "dom 13 OR dow Wed fired at $(date +\%T)" >> /home/ana/work/cron/or.log
 * * 13 * 1 echo "dom 13 OR dow Mon fired at $(date +\%T)" >> /home/ana/work/cron/or2.log
-* * * * 2 echo "dow Tue only fired at $(date +\%T)" >> /home/ana/work/cron/or3.log
+* * * * 3 echo "dow Wed only fired at $(date +\%T)" >> /home/ana/work/cron/or3.log
 ana@vm:~/work/cron$ cat or.log
-dom 13 OR dow Tue fired at 12:37:01
-dom 13 OR dow Tue fired at 12:38:01
+dom 13 OR dow Wed fired at 14:28:02
+dom 13 OR dow Wed fired at 14:29:02
+dom 13 OR dow Wed fired at 14:30:02
 ana@vm:~/work/cron$ cat or2.log
 cat: or2.log: No such file or directory
 ana@vm:~/work/cron$ cat or3.log
-dow Tue only fired at 12:37:01
-dow Tue only fired at 12:38:01
+dow Wed only fired at 14:28:02
+dow Wed only fired at 14:29:02
+dow Wed only fired at 14:30:02
 ```
 
-**O primeiro job rodou no dia quinze**, porque é uma terça — o dia do mês nunca
+**O primeiro job rodou no dia sete**, porque é uma quarta — o dia do mês nunca
 casou e não precisou. **O segundo não rodou nenhuma vez**, porque nem o dia treze
 nem segunda-feira eram verdade. O terceiro é o controle: uma restrição simples de
 dia da semana faz o que você espera.

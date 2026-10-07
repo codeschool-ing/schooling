@@ -1,6 +1,6 @@
 ---
 title: Cinco coisas que rodam algo mais tarde, e a que você não deve escrever
-version: 1
+version: 2
 ---
 
 O trabalho tem sempre o mesmo formato. Alguma coisa tem que acontecer às três da
@@ -16,9 +16,12 @@ done
 ```
 
 **É a primeira coisa que todo mundo escreve e ela está errada de cinco jeitos**,
-e o primeiro deles é mensurável em quinze segundos:
+e o primeiro deles é mensurável em quinze segundos, com um script no diretório
+que a aula 9 criou:
 
 ```sh
+mkdir -p ~/work/scripts && cd ~/work/scripts
+cat > drift.sh <<'END'
 #!/bin/bash
 # the "run it in a loop" pattern: work, then sleep
 for i in 1 2 3; do
@@ -26,13 +29,15 @@ for i in 1 2 3; do
   sleep 2                 # the work
   sleep 3                 # the interval
 done
+END
+chmod +x drift.sh
 ```
 
 ```
 ana@vm:~/work/scripts$ ./drift.sh
-12:33:41  cycle start
-12:33:46  cycle start
-12:33:51  cycle start
+14:27:13  cycle start
+14:27:18  cycle start
+14:27:23  cycle start
 ```
 
 **O intervalo é de três segundos e os ciclos estão a cinco de distância.** O
@@ -65,15 +70,38 @@ Esta aula é sobre os quatro primeiros. O quinto importa e é documentação de
 outra pessoa, tirando uma coisa que ele compartilha com todos os outros, que é o
 assunto da seção 16.
 
+## O que falta num Ubuntu Server recém-instalado
+
+Três das ferramentas que esta aula usa não vêm instaladas no Ubuntu Server: o
+`anacron` e o `at`, e algo para entregar o e-mail que o cron manda — a seção 07 é
+sobre esse e-mail. O `postfix` é a escolha comum:
+
+```sh
+sudo apt install anacron at postfix
+```
+
+O `postfix` faz uma pergunta durante a instalação, sobre o tipo de configuração
+de e-mail. Escolha **Local only**: o e-mail é entregue para contas desta máquina
+e não vai para nenhum outro lugar, que é tudo de que um job do cron precisa.
+Aceite o nome de e-mail do sistema que ele oferece.
+
 ## Quais deles estão nesta máquina
 
 ```
 ana@vm:~$ ls /etc/cron.d /etc/cron.daily
 /etc/cron.d:
-anacron  e2scrub_all  php  sysstat
+anacron
+e2scrub_all
+sysstat
 
 /etc/cron.daily:
-0anacron  apt-compat  dpkg  sysstat
+0anacron
+apport
+apt-compat
+dpkg
+logrotate
+man-db
+sysstat
 ```
 
 **O cron já está rodando, e já está rodando coisas**, o que é verdade em quase

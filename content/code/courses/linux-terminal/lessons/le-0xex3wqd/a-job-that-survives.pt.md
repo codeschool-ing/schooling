@@ -1,6 +1,6 @@
 ---
 title: Nove coisas de que um job agendado precisa, seja quem for que o inicie
-version: 1
+version: 2
 ---
 
 Esta é a seção que sobrevive ao agendador. Cron, um timer do systemd, um
@@ -25,7 +25,21 @@ Oito dessas são uma linha cada. A nona é a que é de fato difícil.
 
 ## A forma
 
+O script precisa de logs para arquivar. Três dias de logs de uma aplicação
+pequena, com o nome pela data, do jeito que a maioria das aplicações nomeia:
+
 ```sh
+mkdir -p ~/srv/app/logs ~/srv/archive && cd ~/srv/app/logs
+for d in "$(date -d '2 days ago' +%F)" "$(date -d yesterday +%F)" "$(date +%F)"; do
+  printf '%s 03:00:01 app started\n%s 03:00:02 app ready\n' "$d" "$d" > "app-$d.log"
+done
+```
+
+E o script, no diretório da aula 9:
+
+```sh
+cd ~/work/scripts
+cat > upload-logs.sh <<'END'
 #!/bin/bash
 # Archives yesterday's logs.
 # Scheduled: 03:17 daily, ana's crontab. Safe to run by hand, safe to run twice.
@@ -48,6 +62,8 @@ fi
 tar czf "$archive.tmp" "app-$yesterday".*
 mv "$archive.tmp" "$archive"
 echo "=== $(date '+%F %T') archived $(basename "$archive")"
+END
+chmod +x upload-logs.sh
 ```
 
 E rodado duas vezes, uma atrás da outra:
@@ -60,13 +76,13 @@ exit 0
 ana@vm:~/work/scripts$ ./upload-logs.sh; echo "exit $?"
 exit 0
 ana@vm:~/work/scripts$ cat /home/ana/work/cron/upload-logs.log
-=== 2026-09-15 12:46:28 starting
-=== 2026-09-15 12:46:28 archived logs-2026-09-14.tar.gz
-=== 2026-09-15 12:46:28 starting
-already done for 2026-09-14
+=== 2026-10-07 14:39:34 starting
+=== 2026-10-07 14:39:35 archived logs-2026-10-06.tar.gz
+=== 2026-10-07 14:39:35 starting
+already done for 2026-10-06
 ana@vm:~/work/scripts$ ls -l /home/ana/srv/archive/
 total 4
--rw-r--r-- 1 ana ana 187 Sep 15 12:46 logs-2026-09-14.tar.gz
+-rw-rw-r-- 1 ana ana 159 Oct  7 14:39 logs-2026-10-06.tar.gz
 ```
 
 **As duas execuções não imprimiram nada e saíram com 0**, que é o que o cron quer:
@@ -103,8 +119,26 @@ três da manhã, e o crontab não está aberto na frente dessa pessoa.
 
 Longa, e cada palavra dela é uma das nove.
 
-Eis aquela linha, numa agenda de um minuto para poder ser observada, depois de
-três minutos:
+Eis aquela linha, numa agenda de um minuto para poder ser observada. O arquivo
+e o log das duas execuções acima são apagados antes, para a primeira execução
+agendada ter trabalho a fazer, e o crontab é substituído:
+
+```sh
+cd ~/work/cron
+rm -f ~/srv/archive/* upload-logs.log
+cat > survive.cron <<'END'
+MAILTO=ana
+PATH=/usr/local/bin:/usr/bin:/bin
+
+# every minute (for this demonstration) — archive yesterday's logs.
+# skip if the last run is still going; give up after 60 seconds.
+* * * * * /usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh
+END
+crontab survive.cron
+sleep 190
+```
+
+Três minutos depois:
 
 ```
 ana@vm:~/work/cron$ crontab -l
@@ -115,31 +149,34 @@ PATH=/usr/local/bin:/usr/bin:/bin
 # skip if the last run is still going; give up after 60 seconds.
 * * * * * /usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh
 ana@vm:~/work/cron$ cat upload-logs.log
-=== 2026-09-15 12:48:01 starting
-=== 2026-09-15 12:48:01 archived logs-2026-09-14.tar.gz
-=== 2026-09-15 12:49:01 starting
-already done for 2026-09-14
-=== 2026-09-15 12:50:01 starting
-already done for 2026-09-14
+=== 2026-10-07 14:40:02 starting
+=== 2026-10-07 14:40:03 archived logs-2026-10-06.tar.gz
+=== 2026-10-07 14:41:01 starting
+already done for 2026-10-06
+=== 2026-10-07 14:42:02 starting
+already done for 2026-10-06
 ana@vm:~/work/cron$ ls -l /home/ana/srv/archive/
 total 4
--rw-rw-r-- 1 ana ana 187 Sep 15 12:48 logs-2026-09-14.tar.gz
+-rw-rw-r-- 1 ana ana 159 Oct  7 14:40 logs-2026-10-06.tar.gz
 ```
 
 ```
 root@vm:~# grep upload-logs /var/log/syslog | tail -4
-2026-09-15T12:49:01.514081+00:00 vm CRON[20499]: (ana) CMD ([20501] /usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
-2026-09-15T12:49:01.525648+00:00 vm CRON[20499]: (ana) END ([20501] /usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
-2026-09-15T12:50:01.529509+00:00 vm CRON[20531]: (ana) CMD ([20533] /usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
-2026-09-15T12:50:01.542141+00:00 vm CRON[20531]: (ana) END ([20533] /usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
+2026-10-07T14:40:01.902937+00:00 vm CRON[5076]: (ana) CMD (/usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
+2026-10-07T14:41:01.343089+00:00 vm CRON[5093]: (ana) CMD (/usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
+2026-10-07T14:42:02.108397+00:00 vm CRON[5100]: (ana) CMD (/usr/bin/flock -E 0 -n /home/ana/work/cron/upload.lock /usr/bin/timeout 60 /home/ana/work/scripts/upload-logs.sh)
 ```
 
 **Três execuções, um arquivo, e nenhum e-mail.** O log distingue a execução que
 fez o trabalho das duas que corretamente não fizeram nada; o syslog diz que o cron
-iniciou e terminou o job a cada minuto; e a caixa de correio não cresceu, porque
+iniciou o job a cada minuto; e a caixa de correio não cresceu, porque
 silêncio é o que um job funcionando parece.
 
 Que é o problema inteiro com o nono item, abaixo.
+
+Este crontab é uma demonstração e roda a cada minuto; depois de observá-lo, o
+`crontab -r` o remove — a única vez em que aquela flag é exatamente o que você
+quer.
 
 ## A nona: saber quando ele para
 

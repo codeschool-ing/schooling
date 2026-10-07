@@ -85,7 +85,8 @@ class Shell:
         self.pid, self.fd, self.cwd, self._answered, self._answers = pid, fd, home(user), False, []
         self._raw(f"bind 'set enable-bracketed-paste off'; bind 'set disable-completion on'; stty -echo cols {cols} rows 50; PS2='> '; "
                   f"PROMPT_COMMAND='{MARK}'; unset HISTFILE; cd ~\n")
-        self._read_until_prompt(10)
+        # Logging in to an emulated guest can take longer than starting a local bash.
+        self._read_until_prompt(60 if os.environ.get("REPLAY_SSH") else 10)
         # The transcripts in this course were taken from a shell whose output is
         # not a terminal: `ls` prints one name a line and quotes nothing. Output
         # goes through a pipe to the pty; a password prompt still reaches the pty.

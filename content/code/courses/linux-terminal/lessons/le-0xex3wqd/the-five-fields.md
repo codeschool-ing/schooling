@@ -1,6 +1,6 @@
 ---
 title: The five fields, and the one rule that is an OR
-version: 2
+version: 3
 ---
 
 ```localised
@@ -50,27 +50,47 @@ at 13:05, it runs at 13:00. The step counts from zero, not from now.
 the job when *either* matches.** Everywhere else in the line the fields are ANDed
 together. These two are ORed.
 
-That is worth measuring rather than believing. Three jobs, installed on a
-Tuesday that was not the thirteenth:
+That is worth measuring rather than believing. Three jobs, added to the crontab
+of section 03 on a Wednesday that was not the thirteenth. They name that day:
+in yours, put today's weekday where the `3` is — `date +%w` prints it, and Sunday
+is 0 — use another day than today where the `1` is, and if today is the
+thirteenth, use 14 for the day of the month.
+
+```sh
+cd ~/work/cron
+cat > or.cron <<'END'
+* * 13 * 3 echo "dom 13 OR dow Wed fired at $(date +\%T)" >> /home/ana/work/cron/or.log
+* * 13 * 1 echo "dom 13 OR dow Mon fired at $(date +\%T)" >> /home/ana/work/cron/or2.log
+* * * * 3 echo "dow Wed only fired at $(date +\%T)" >> /home/ana/work/cron/or3.log
+END
+(crontab -l; cat or.cron) | crontab -
+sleep 150          # two runs, at least
+```
+
+`crontab -l`, piped into `crontab -` with the new lines after it, is how you add
+to a crontab from a script: the dash is standard input, and the whole result
+replaces the old one.
 
 ```
 ana@vm:~/work/cron$ date "+today is %A %F"
-today is Tuesday 2026-09-15
+today is Wednesday 2026-10-07
 ana@vm:~/work/cron$ crontab -l | tail -3
-* * 13 * 2 echo "dom 13 OR dow Tue fired at $(date +\%T)" >> /home/ana/work/cron/or.log
+* * 13 * 3 echo "dom 13 OR dow Wed fired at $(date +\%T)" >> /home/ana/work/cron/or.log
 * * 13 * 1 echo "dom 13 OR dow Mon fired at $(date +\%T)" >> /home/ana/work/cron/or2.log
-* * * * 2 echo "dow Tue only fired at $(date +\%T)" >> /home/ana/work/cron/or3.log
+* * * * 3 echo "dow Wed only fired at $(date +\%T)" >> /home/ana/work/cron/or3.log
 ana@vm:~/work/cron$ cat or.log
-dom 13 OR dow Tue fired at 12:37:01
-dom 13 OR dow Tue fired at 12:38:01
+dom 13 OR dow Wed fired at 14:28:02
+dom 13 OR dow Wed fired at 14:29:02
+dom 13 OR dow Wed fired at 14:30:02
 ana@vm:~/work/cron$ cat or2.log
 cat: or2.log: No such file or directory
 ana@vm:~/work/cron$ cat or3.log
-dow Tue only fired at 12:37:01
-dow Tue only fired at 12:38:01
+dow Wed only fired at 14:28:02
+dow Wed only fired at 14:29:02
+dow Wed only fired at 14:30:02
 ```
 
-**The first job ran on the fifteenth**, because it is a Tuesday — the day of the
+**The first job ran on the seventh**, because it is a Wednesday — the day of the
 month never matched and did not have to. **The second did not run at all**,
 because neither the thirteenth nor Monday was true. The third is the control: a
 plain weekday restriction does what you expect.

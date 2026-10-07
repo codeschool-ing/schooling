@@ -1,6 +1,6 @@
 ---
 title: O cron te manda e-mail, até alguém impedir
-version: 1
+version: 2
 ---
 
 **Qualquer coisa que um job do cron escreva na saída padrão ou na saída de erro é
@@ -8,18 +8,20 @@ mandada para você por e-mail.** Esse é o mecanismo inteiro de relatar erro, el
 de 1975, e é melhor que o que a maioria das pessoas põe no lugar dele.
 
 ```
-ana@vm:~$ grep "^Subject:" /var/mail/ana
-Subject: Cron <ana@vm> report.sh (failed)
-Subject: Cron <ana@vm> echo "ran at $(date + (failed)
-Subject: Anacron job 'daily-report' on vm
-Subject: Anacron job 'weekly-report' on vm
-Subject: Cron <ana@vm> echo "ran at $(date + (failed)
-Subject: Cron <ana@vm> report.sh (failed)
+ana@vm:~$ grep "^Subject:" /var/mail/ana | sort | uniq -c
+      6 Subject: Cron <ana@vm> echo "ran at $(date +
+      6 Subject: Cron <ana@vm> report.sh
 ```
 
-Seis mensagens, de quatro jobs. **A linha de assunto é o comando**, e `(failed)`
-quer dizer que ele saiu com status diferente de zero. Um job que dá certo em
-silêncio não manda nada.
+**Dois jobs, uma mensagem por minuto cada, enquanto estavam quebrados.** A linha
+de assunto é o comando, e o corpo é o que ele imprimiu.
+
+**O cron manda por e-mail a saída, não a falha.** Um job que falha sem imprimir
+nada não manda nada — um `false` num crontab sai com 1 a cada minuto e a caixa
+de correio nunca fica sabendo — e um job que dá certo fazendo barulho manda uma
+mensagem toda vez que roda. É por isso que a correção da seção 06 mandou a saída
+do `report.sh` para um arquivo: agora ele funciona, e mandaria `report ran` por
+e-mail a cada minuto.
 
 ## A linha que esconde tudo
 
@@ -76,19 +78,19 @@ quinta é um registro, não um alerta. A seção 16 é sobre a diferença.
 
 ## Como saber que rodou
 
-O cron registra todo início e todo fim, pelo syslog:
+O cron registra todo job que inicia, pelo syslog:
 
 ```
 root@vm:~# grep CRON /var/log/syslog | tail -4
-2026-09-15T12:38:01.113104+00:00 vm CRON[19857]: (ana) CMD ([19862] echo "plain ran at $(date +%T)" >> /home/ana/work/cron/plain.log)
-2026-09-15T12:38:01.116771+00:00 vm CRON[19858]: (ana) END ([19860] echo "dow Tue only fired at $(date +%T)" >> /home/ana/work/cron/or3.log)
-2026-09-15T12:38:01.117034+00:00 vm CRON[19857]: (ana) END ([19862] echo "plain ran at $(date +%T)" >> /home/ana/work/cron/plain.log)
-2026-09-15T12:38:01.117359+00:00 vm CRON[19859]: (ana) END ([19861] echo "dom 13 OR dow Tue fired at $(date +%T)" >> /home/ana/work/cron/or.log)
+2026-10-07T14:35:01.962380+00:00 vm CRON[4813]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+2026-10-07T14:35:02.033012+00:00 vm CRON[4814]: (ana) CMD (echo "ran at $(date +%H:%M)" >> /home/ana/work/cron/pct.log)
+2026-10-07T14:35:02.046340+00:00 vm CRON[4815]: (ana) CMD (/home/ana/work/cron/heartbeat.sh)
+2026-10-07T14:35:02.080983+00:00 vm CRON[4817]: (ana) CMD (report.sh >> /home/ana/work/cron/report.log 2>&1)
 ```
 
-**`CMD` é o cron iniciando o job e `END` é o job terminando**, com o usuário
-entre parênteses e o comando como o cron o interpretou — repare no `%T` ali, sem
-escape no log porque o cron já fez a substituição dele.
+**`CMD` é o cron iniciando o job**, com o usuário entre parênteses e o comando
+como o cron o interpretou — repare no `%` ali, sem escape no log porque o cron já
+fez a substituição dele.
 
 | onde olhar | em que |
 |---|---|
@@ -96,23 +98,25 @@ escape no log porque o cron já fez a substituição dele.
 | `journalctl -u cron` ou `-u crond` | qualquer coisa com systemd |
 | `/var/log/cron` | Red Hat, SUSE |
 
-**O que o log não te diz é se o job funcionou** — o `END` aparece para um job que
-saiu com 1 do mesmo jeito que para um que saiu com 0. O log responde *ele
-começou*; o e-mail responde *ele funcionou*; e você precisa dos dois quando um
-job que rodou toda noite por um ano para.
+**O que o log não te diz é se o job funcionou.** No Ubuntu ele registra o início
+e mais nada — nem quando o job terminou, nem como. O log responde *ele começou*;
+a saída, por e-mail ou num arquivo, responde *ele funcionou*; e você precisa das
+duas quando um job que rodou toda noite por um ano para.
 
 Mudanças num crontab também são registradas, que é a trilha de auditoria:
 
 ```
 root@vm:~# grep -E "crontab\[" /var/log/syslog | tail -3
-2026-09-15T12:36:37.464006+00:00 vm crontab[19813]: (root) LIST (ana)
-2026-09-15T12:36:37.471514+00:00 vm crontab[19816]: (root) REPLACE (ana)
-2026-09-15T12:38:25.419561+00:00 vm crontab[19902]: (ana) LIST (ana)
+2026-10-07T14:31:57.411126+00:00 vm crontab[4736]: (ana) REPLACE (ana)
+2026-10-07T14:33:09.341222+00:00 vm crontab[4795]: (ana) REPLACE (ana)
+2026-10-07T14:35:39.573063+00:00 vm crontab[4825]: (ana) LIST (ana)
 ```
 
-`REPLACE (ana)` é alguém instalando um crontab novo para a `ana` — o root, naquela
-linha, e o `(root)` na frente diz quem. **Aquela entrada muitas vezes é a resposta
-para "quando foi que este job mudou?"**
+`REPLACE (ana)` é alguém instalando um crontab novo para a conta `ana`, e o nome
+entre parênteses na frente diz quem fez isso: `(ana)` nestas linhas, porque a
+conta mudou o próprio crontab, e `(root)` quando um administrador roda
+`crontab -u ana`. **Aquela entrada muitas vezes é a resposta para "quando foi que
+este job mudou?"**
 
 ## A falha que ninguém pega
 
