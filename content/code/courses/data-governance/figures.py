@@ -625,11 +625,11 @@ def _l7_bases(f):
 @figure('l7-incident', L7, 720, 230,
         ('A timeline of an incident. Day zero is when the controller learns that personal data '
          'was affected. Within three working days it notifies the ANPD and the people affected. '
-         'Within twenty working days it completes the information. The record of the incident '
+         'Within twenty working days of the notice it completes the information. The record of the incident '
          'is kept for at least five years, whether or not it was communicated.',
          'Uma linha do tempo de um incidente. O dia zero é quando o controlador sabe que dados '
          'pessoais foram afetados. Em até três dias úteis ele comunica a ANPD e as pessoas '
-         'afetadas. Em até vinte dias úteis completa as informações. O registro do incidente '
+         'afetadas. Em até vinte dias úteis da comunicação completa as informações. O registro do incidente '
          'é guardado por pelo menos cinco anos, comunicado ou não.'),
         ('Resolução CD/ANPD nº 15/2024: the clock starts when the controller knows, not when '
          'the investigation ends.',
@@ -642,7 +642,7 @@ def _l7_incident(f):
            (275, '--phosphor', ('3 working days', '3 dias úteis'),
             ('notify the ANPD', 'comunicar a ANPD'),
             ('and the people affected', 'e as pessoas afetadas')),
-           (450, '--phosphor', ('20 working days', '20 dias úteis'),
+           (450, '--phosphor', ('+20 working days', '+20 dias úteis'),
             ('complete the', 'completar as'), ('information', 'informações')),
            (625, '--paper-dim', ('5 years', '5 anos'), ('keep the record,', 'guardar o registro,'),
             ('communicated or not', 'comunicado ou não'))]
@@ -655,6 +655,78 @@ def _l7_incident(f):
     f.text(360, 200, ('investigation goes on throughout; what is not known yet is said to be '
                       'not known yet', 'a investigação continua o tempo todo; o que ainda não '
                       'se sabe é dito como ainda não sabido'), size=10.5, fill='--paper-dim')
+
+
+# ===================================================================== lesson 8
+L8 = 'le-sf7z08wp'
+
+
+@figure('l8-ai-tiers', L8, 720, 250,
+        ('The four levels of risk in the EU AI Act, from the top: prohibited practices, '
+         'high-risk systems, systems with transparency obligations, and minimal risk. Each of '
+         'Ipê\'s systems sits on one level: the CV screening tool is high-risk, the support '
+         'chatbot carries transparency obligations, and the fraud score and the recommender are '
+         'minimal risk.',
+         'Os quatro níveis de risco do AI Act europeu, de cima para baixo: práticas proibidas, '
+         'sistemas de alto risco, sistemas com obrigações de transparência, e risco mínimo. '
+         'Cada sistema da Ipê fica num nível: a triagem de currículos é de alto risco, o '
+         'chatbot de suporte tem obrigações de transparência, e o score de fraude e o '
+         'recomendador são de risco mínimo.'),
+        ('The class follows from what the system is used for, not from how it is built.',
+         'A classe decorre do uso do sistema, e não de como ele é construído.'))
+def _l8_ai_tiers(f):
+    rows = [(20, '--amber', ('prohibited', 'proibido'), ('art. 5 · may not be used at all',
+                                                          'art. 5 · não pode ser usado'), None),
+            (75, '--amber', ('high-risk', 'alto risco'),
+             ('Annex III · most of the Act', 'Anexo III · a maior parte da lei'), 'cv-screen'),
+            (130, '--phosphor', ('transparency', 'transparência'),
+             ('art. 50 · say it is an AI', 'art. 50 · dizer que é uma IA'), 'support-bot'),
+            (185, '--wire', ('minimal', 'mínimo'),
+             ('no specific duties', 'sem deveres específicos'), 'fraud-score · recommender')]
+    for k, (y, c, name, what, ipe) in enumerate(rows):
+        inset = 60 - k * 18
+        f.rect(20 + inset, y, 440 - 2 * inset, 45, stroke=c, fill='--panel')
+        f.text(240, y + 15, name, size=12, weight='600')
+        f.text(240, y + 32, what, size=10, fill='--paper-dim')
+        if ipe:
+            f.line(462 - inset, y + 22, 500, y + 22, stroke='--wire', dash='3 3')
+            f.box(500, y + 6, 200, 32, {'s': ipe, 'mono': True, 'size': 10.5}, fill='--ink')
+        else:
+            f.text(600, y + 22, ('nothing at Ipê', 'nada na Ipê'), size=10.5, fill='--paper-dim')
+
+
+@figure('l8-ai-timeline', L8, 720, 230,
+        ('A timeline of the EU AI Act. In force on 1 August 2024. Prohibitions apply from 2 '
+         'February 2025. General-purpose model rules from 2 August 2025. Transparency and most '
+         'of the rest from 2 August 2026. After the Digital Omnibus of July 2026, the Annex III '
+         'high-risk obligations apply from 2 December 2027 instead of 2 August 2026, and the '
+         'Annex I ones from 2 August 2028 instead of 2 August 2027.',
+         'Uma linha do tempo do AI Act europeu. Em vigor em 1º de agosto de 2024. As proibições '
+         'valem desde 2 de fevereiro de 2025. As regras de modelos de propósito geral desde 2 de '
+         'agosto de 2025. Transparência e quase todo o resto desde 2 de agosto de 2026. Depois '
+         'do Digital Omnibus de julho de 2026, as obrigações de alto risco do Anexo III valem a '
+         'partir de 2 de dezembro de 2027, em vez de 2 de agosto de 2026, e as do Anexo I a '
+         'partir de 2 de agosto de 2028, em vez de 2 de agosto de 2027.'),
+        ('Checked in October 2026. A schedule set by law is changed by law.',
+         'Conferido em outubro de 2026. Um cronograma fixado em lei muda por lei.'))
+def _l8_ai_timeline(f):
+    f.line(30, 100, 700, 100, stroke='--wire', width=2)
+    pts = [(60, '--paper-dim', '2024-08', ('in force', 'em vigor')),
+           (160, '--amber', '2025-02', ('prohibitions', 'proibições')),
+           (260, '--phosphor', '2025-08', ('general-purpose', 'propósito geral')),
+           (360, '--phosphor', '2026-08', ('transparency', 'transparência')),
+           (520, '--amber', '2027-12', ('Annex III', 'Anexo III')),
+           (650, '--amber', '2028-08', ('Annex I', 'Anexo I'))]
+    for x, c, when, what in pts:
+        f.circle(x, 100, 6, fill=c)
+        f.text(x, 75, when, size=11, mono=True)
+        f.text(x, 125, what, size=10.5)
+    f.line(385, 90, 385, 110, stroke='--paper', width=2)
+    f.text(385, 145, ('today, October 2026', 'hoje, outubro de 2026'), size=10, fill='--paper-dim')
+    f.rect(440, 160, 260, 50, stroke='--amber', fill='--panel', dash='5 4')
+    f.lines(570, 185, [('moved by Regulation (EU) 2026/1744:', 'movidos pelo Regulamento (UE) 2026/1744:'),
+                       ('from 2026-08 and 2027-08', 'antes 2026-08 e 2027-08')], size=10,
+            fill='--paper-dim')
 
 
 # ===================================================================== driver
