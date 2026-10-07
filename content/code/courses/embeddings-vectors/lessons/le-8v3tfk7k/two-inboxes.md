@@ -96,3 +96,6 @@ ana@lab:~/emb$ wc -l data/inbox.jsonl data/week2.jsonl
   20 data/week2.jsonl
   60 total
 ```
+
+40 and 20 lines. A different number means a block went in short or twice; lesson 1's
+*The help centre* says how to put it right.

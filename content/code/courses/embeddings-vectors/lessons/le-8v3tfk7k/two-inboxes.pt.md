@@ -96,3 +96,6 @@ ana@lab:~/emb$ wc -l data/inbox.jsonl data/week2.jsonl
   20 data/week2.jsonl
   60 total
 ```
+
+40 e 20 linhas. Um número diferente quer dizer que um bloco entrou pela metade ou duas vezes; a
+seção *A central de ajuda*, da aula 1, diz como consertar.

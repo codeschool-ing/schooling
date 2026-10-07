@@ -103,5 +103,11 @@ EOF
 ## Checking the files
 
 ```
-@@WC@@
+ana@lab:~/emb$ wc -l data/books.jsonl data/readers.jsonl
+   60 data/books.jsonl
+   12 data/readers.jsonl
+   72 total
 ```
+
+60 and 12 lines. A different number means a block went in short or twice; lesson 1's
+*The help centre* says how to put it right.

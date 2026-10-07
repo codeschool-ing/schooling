@@ -103,5 +103,11 @@ EOF
 ## Conferindo os arquivos
 
 ```
-@@WC@@
+ana@lab:~/emb$ wc -l data/books.jsonl data/readers.jsonl
+   60 data/books.jsonl
+   12 data/readers.jsonl
+   72 total
 ```
+
+60 e 12 linhas. Um número diferente quer dizer que um bloco entrou pela metade ou duas vezes; a
+seção *A central de ajuda*, da aula 1, diz como consertar.
