@@ -7,9 +7,9 @@ Um inventário se paga mostrando o que falta. O `--gaps` imprime só as entradas
 
 ```
 ana@lab:~/guard$ guard surface --gaps
-entry point     goes to  trusted?           controls in the lab
+entry point     goes to  trusted?           controls
 uploaded-files  prompt   no                 NONE
-10 entry points, 1 with no control in this lab
+10 entry points, 1 with no control
 ```
 
 Uma entrada. Clientes podem anexar briefings e arquivos a um trabalho, e o assistente os lê para
