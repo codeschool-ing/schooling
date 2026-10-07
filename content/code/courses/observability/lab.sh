@@ -64,6 +64,7 @@ as_ana() { su - "$USER_LAB" -c "cd $SHOP && $*"; }
 FILES_FROM=(
   le-7fgac3dc/the-shop.md
   le-7fgac3dc/what-watches-it.md
+  le-aamwg2qb/shipping.md
 )
 
 extract() {
@@ -91,7 +92,7 @@ write_files() {
   mkdir -p "$SHOP/faults" "$SHOP/scratch" "$SHOP/grafana/dashboards"
   touch "$SHOP/services/common/__init__.py" 2>/dev/null || { mkdir -p "$SHOP/services/common"; touch "$SHOP/services/common/__init__.py"; }
   n=$(extract "${FILES_FROM[@]/#/$here/lessons/}")
-  [ "$n" -ge 22 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
+  [ "$n" -ge 23 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
   mkdir -p "$SHOP/envoy"
   cat > "$SHOP/envoy/envoy.yaml" <<'LABFILE'
 # Envoy for lesson 19: one proxy, two listeners, playing the part a mesh's
@@ -261,85 +262,6 @@ service:
       receivers: [fluent_forward]
       processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
       exporters: [otlp_http/loki]
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector-logs.yaml" <<'LABFILE'
-# The same Collector, sending every log line to three stores at once:
-# Loki, Elasticsearch and Graylog. Lesson 9 switches to it.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-processors:
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-  elasticsearch:
-    endpoints: [http://elasticsearch:9200]
-  otlp_grpc/graylog:
-    endpoint: graylog:4317
-    tls:
-      insecure: true
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp_grpc/jaeger, zipkin]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki, elasticsearch, otlp_grpc/graylog]
 LABFILE
   mkdir -p "$SHOP/otel"
   cat > "$SHOP/otel/collector-sampling.yaml" <<'LABFILE'
