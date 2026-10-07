@@ -1,10 +1,15 @@
 ---
 title: Novas tentativas e timeouts, e o que eles escondem
-version: 1
+version: 2
 ---
 
 O segundo listener do Envoy fica entre `orders` e payments, na porta 10001. Um override aponta `orders`
-para ele:
+para ele, salvo do jeito que o `cat` abaixo o imprime, e o `orders` é recriado com ele:
+
+```sh
+docker compose up -d orders
+```
+
 
 ```
 ana@obs:~/shop$ cat compose.override.yaml
@@ -26,7 +31,15 @@ ana@obs:~/shop$ sed -n '/cluster: payments$/,/num_retries/p' envoy/envoy.yaml
                               num_retries: 2
 ```
 
-Então payments recebe a ordem de falhar uma cobrança em cada dez, a falha que paginou alguém na aula 16.
+Então payments recebe a ordem de falhar uma cobrança em cada dez, a falha que paginou alguém na aula 16,
+com dez minutos de clientes a mais por cima dos que já estão comprando:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 600
+echo '{"fail_every": 10}' > faults/payments.json
+sleep 90
+```
+
 Noventa segundos depois, as taxas por serviço e status:
 
 ```
@@ -72,6 +85,12 @@ Três consequências:
 
 Depois, o timeout. Payments recebe a ordem de levar 2,5 segundos por cobrança, mais do que a rota permite:
 
+```sh
+echo '{"latency_ms": 2500}' > faults/payments.json
+sleep 30
+```
+
+
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"payments"' | tail -1 | jq -c .
 {"attempts":1,"code":504,"flags":"UT","listener":"payments","method":"POST","ms":1999,"path":"/charge"}
@@ -88,3 +107,11 @@ ana@obs:~/shop$ curl -s -X POST localhost:8080/checkout -H 'Content-Type: applic
 O cliente vê o mesmo `try again later` da aula 14. O proxy transformou uma dependência lenta numa falha
 rápida, o que costuma ser a troca certa: uma resposta em dois segundos é melhor que uma em dez, e uma
 requisição esperando segura uma thread de que o próximo cliente precisa.
+
+Antes da próxima seção, tire a falha e o override, para que o `orders` volte a chamar o payments
+direto:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d orders
+```

@@ -2,9 +2,20 @@
 # The machine every transcript in the observability course was recorded on.
 #
 # IT IS ONE LINUX COMPUTER RUNNING DOCKER. The shop the course instruments is
-# five small Python services and a nightly job, written for this course and
-# printed in full below; everything that watches it is real, unmodified
-# open-source software, each in the official image named beside it:
+# five small Python services and a nightly job, written for this course;
+# everything that watches it is real, unmodified open-source software, each in
+# the official image named beside it.
+#
+# THE STUDENT NEVER RECEIVES THIS SCRIPT, and needs nothing from it. Every file
+# it writes into ~/shop is a fence in a lesson, under a paragraph that opens
+# with its path, and this script reads it from there (FILES_FROM below):
+# lesson 1's "The shop, written in full" and "What watches it" carry the shop
+# and its configuration, and lessons 9, 12, 13 and 19 the files only they use.
+# Lesson 1's "Your lab, built by you" tells the student to build the machine
+# with Multipass and Docker's own packages; this script builds the same thing
+# on the machine the course is recorded on, which cannot run a hypervisor.
+# Every file a capture writes goes through `lab.sh put`, which refuses one
+# whose whole text is not in a lesson.
 #
 #   the shop (written for the course, image shop:1.4.0 built from python:3.12-slim)
 #     storefront   where a checkout arrives; instrumented by hand (lesson 2)
@@ -33,21 +44,22 @@
 #
 # Elasticsearch and OpenSearch run with their disk watermarks switched off:
 # they measure the host's whole disk, and on the machine this was recorded on
-# that disk is shared, so its free space said nothing about the lab's. On a
-# machine of your own, leave them on.
+# that disk is shared, so its free space said nothing about the lab's.
 #
 # Every port is published on 127.0.0.1 only. Nothing here reaches the internet
-# once the images and the Python wheels are downloaded.
+# once the images are downloaded and the shop's image is built.
 #
 #   sudo bash lab.sh up           write ~/shop, build the image, start it all
 #   sudo bash lab.sh reset        stop it, delete every volume, start again
 #   sudo bash lab.sh down
 #   sudo bash lab.sh as 'cmd'     run a command as ana, in ~/shop
+#   sudo bash lab.sh put PATH < file   write ~/shop/PATH, if a lesson shows it whole
 #   sudo bash lab.sh up PROFILE   also start a profile: elastic, graylog, mesh
 #   sudo bash lab.sh kind-up | kind-down
 #   sudo bash lab.sh kind-load IMAGE...   pull an image here, copy it into kind
 #
-# Recorded on Ubuntu 24.04 with Docker Engine 29.6 and Compose 5.3,
+# Recorded on Ubuntu 24.04 with Docker Engine 29.6 and Compose 5.3 (lessons 2
+# to 19) and Docker Engine 29.8 and Compose 5.6 (lesson 1's set-up sections),
 # TZ=America/Sao_Paulo. The machine needs 4 CPUs and 8 GB of memory, and
 # 16 GB while the graylog profile runs.
 set -euo pipefail
@@ -67,6 +79,7 @@ FILES_FROM=(
   le-aamwg2qb/shipping.md
   le-68t063mj/tail-sampling.md
   le-af8knzar/fan-out.md
+  le-m2spgnw3/envoy.md
 )
 
 extract() {
@@ -92,100 +105,9 @@ write_files() {
   local here n
   here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
   mkdir -p "$SHOP/faults" "$SHOP/scratch" "$SHOP/grafana/dashboards"
-  touch "$SHOP/services/common/__init__.py" 2>/dev/null || { mkdir -p "$SHOP/services/common"; touch "$SHOP/services/common/__init__.py"; }
   n=$(extract "${FILES_FROM[@]/#/$here/lessons/}")
-  [ "$n" -ge 25 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
-  mkdir -p "$SHOP/envoy"
-  cat > "$SHOP/envoy/envoy.yaml" <<'LABFILE'
-# Envoy for lesson 19: one proxy, two listeners, playing the part a mesh's
-# sidecars play. :10000 sits in front of the storefront; :10001 sits between
-# orders and payments, with a timeout and retries. :9901 is Envoy's admin page.
-static_resources:
-  listeners:
-    - name: storefront
-      address: {socket_address: {address: 0.0.0.0, port_value: 10000}}
-      filter_chains:
-        - filters:
-            - name: envoy.filters.network.http_connection_manager
-              typed_config:
-                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-                stat_prefix: storefront
-                access_log:
-                  - name: envoy.access_loggers.stdout
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
-                      log_format:
-                        json_format:
-                          listener: storefront
-                          method: "%REQ(:METHOD)%"
-                          path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                          code: "%RESPONSE_CODE%"
-                          ms: "%DURATION%"
-                          upstream_ms: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
-                          attempts: "%UPSTREAM_REQUEST_ATTEMPT_COUNT%"
-                          flags: "%RESPONSE_FLAGS%"
-                route_config:
-                  virtual_hosts:
-                    - name: storefront
-                      domains: ["*"]
-                      routes:
-                        - match: {prefix: /}
-                          route: {cluster: storefront, timeout: 5s}
-                http_filters:
-                  - name: envoy.filters.http.router
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-    - name: payments
-      address: {socket_address: {address: 0.0.0.0, port_value: 10001}}
-      filter_chains:
-        - filters:
-            - name: envoy.filters.network.http_connection_manager
-              typed_config:
-                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-                stat_prefix: payments
-                access_log:
-                  - name: envoy.access_loggers.stdout
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
-                      log_format:
-                        json_format:
-                          listener: payments
-                          method: "%REQ(:METHOD)%"
-                          path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                          code: "%RESPONSE_CODE%"
-                          ms: "%DURATION%"
-                          attempts: "%UPSTREAM_REQUEST_ATTEMPT_COUNT%"
-                          flags: "%RESPONSE_FLAGS%"
-                route_config:
-                  virtual_hosts:
-                    - name: payments
-                      domains: ["*"]
-                      routes:
-                        - match: {prefix: /}
-                          route:
-                            cluster: payments
-                            timeout: 2s
-                            retry_policy:
-                              retry_on: 5xx
-                              num_retries: 2
-                http_filters:
-                  - name: envoy.filters.http.router
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-  clusters:
-    - name: storefront
-      type: STRICT_DNS
-      load_assignment:
-        cluster_name: storefront
-        endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: storefront, port_value: 8080}}}}]}]
-    - name: payments
-      type: STRICT_DNS
-      load_assignment:
-        cluster_name: payments
-        endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: payments, port_value: 8082}}}}]}]
-admin:
-  address: {socket_address: {address: 0.0.0.0, port_value: 9901}}
-LABFILE
+  touch "$SHOP/services/common/__init__.py"
+  [ "$n" -ge 26 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
 }
 
 put_shown() {
