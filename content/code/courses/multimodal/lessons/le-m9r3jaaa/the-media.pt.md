@@ -406,7 +406,7 @@ if __name__ == "__main__":
             print(f"{name:24} {os.path.getsize(f'{OUT}/{name}'):>9,} bytes")
 ```
 
-**Nada na mídia do curso foi fotografado ou gravado.** Este programa escreve os roteiros e os layouts no topo e faz tudo a partir deles: as vozes do Piper falam a ligação de suporte e o recado, o ffmpeg estraga uma cópia da ligação com um zumbido e um chiado e espreme outra por uma linha telefônica, o Pillow desenha uma nota fiscal, uma capa de livro e seis slides, e o ffmpeg junta os slides e uma narração num vídeo. A única exceção é o `cat_and_dog.jpg`, uma fotografia dos próprios exemplos do MediaPipe, que o `setup.sh` baixou.
+**Nada na mídia do curso foi fotografado ou gravado.** Este programa escreve os roteiros e os layouts no topo e faz tudo a partir deles. As vozes do Piper falam a ligação de suporte e o recado. O ffmpeg estraga uma cópia da ligação com um zumbido e um chiado, e espreme outra por uma linha telefônica. O Pillow desenha uma nota fiscal, uma capa de livro e seis slides, e o ffmpeg junta os slides e uma narração num vídeo. A única exceção é o `cat_and_dog.jpg`, uma fotografia dos próprios exemplos do MediaPipe, que o `setup.sh` baixou.
 
 O que isso compra é o que uma gravação de verdade nunca tem: **a verdade é conhecida**. Cada palavra da ligação e quem a disse, quando cada slide está na tela, cada caractere da nota. O `make_media.py` escreve tudo isso em `media/truth`, e a maioria das aulas mede um modelo contra isso. Rode-o no `~/mm`:
 
@@ -434,7 +434,7 @@ ana@lab:~/mm$ python -c "import json; print(json.load(open(\"media/truth/call-10
 {'who': 'bia', 'start': 6.014, 'end': 14.475, 'text': "Hi Caio. I'm calling about order M-1042. It's a copy of Dom Casmurro, by Machado de Assis, and it arrived on the twenty-fourth of September."}
 ```
 
-Os mesmos nove arquivos, byte a byte, em toda máquina que o rode com as bibliotecas que o `setup.sh` fixou: as vozes não têm mais aleatoriedade, o ruído do escaneado vem de um gerador com semente, e o ffmpeg é instruído a deixar de fora tudo o que muda entre execuções, como a hora em que um arquivo foi feito. É por isso que as transcrições deste curso podem citar a saída de um modelo e esperar que a sua bata. Se um tamanho acima for diferente na sua máquina, a próxima seção diz onde olhar.
+Os mesmos nove arquivos, byte a byte, em toda máquina que o rode com as bibliotecas que o `setup.sh` fixou. As vozes não têm mais aleatoriedade, o ruído do escaneado vem de um gerador com semente, e o ffmpeg é instruído a deixar de fora tudo o que muda entre execuções, como a hora em que um arquivo foi feito. É por isso que as transcrições deste curso podem citar a saída de um modelo e esperar que a sua bata. Se um tamanho acima for diferente na sua máquina, a próxima seção diz onde olhar.
 
 ## A primeira imagem do modelo de visão
 

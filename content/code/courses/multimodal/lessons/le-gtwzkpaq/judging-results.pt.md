@@ -19,7 +19,7 @@ Cada imagem recebe sim ou não por linha, e só uma imagem com cinco sins é can
 
 A geração de imagens é cobrada por imagem. Este curso lê os preços de um lugar só, uma tabela que a biblioteca de código aberto LiteLLM mantém de todo modelo que sabe chamar, e a lê com um programa curto. A tabela é a cópia que um terceiro faz das páginas dos próprios provedores, e o programa fixa uma versão dela, então os números abaixo continuam os mesmos por mais tempo que passe até você rodá-lo.
 
-`prices.py`, que as aulas seguintes também usam:
+`prices.py`, que as aulas 9, 10 e 13 também usam:
 
 ```python
 """prices: what LiteLLM's price sheet says about a model, read at one pinned commit.

@@ -59,4 +59,4 @@ Quatro achados, e o último é o que importa.
 | a transcrição alimenta um índice de busca ou um resumo | o menor modelo cujo WER for aceitável no seu áudio; a etapa seguinte perdoa erros pequenos |
 | ela é mostrada às pessoas como legenda | o maior modelo que você puder pagar, porque todo erro aparece na tela (aula 14) |
 | ela precisa rodar no aparelho ou em tempo real | tiny ou base, medidos naquele aparelho |
-| ela passa por uma API hospedada | o modelo do provedor; a aula 10 manda a mesma ligação ao Whisper do labmm no formato da API da OpenAI |
+| ela passa por uma API hospedada | o modelo do provedor; a aula 10 faz a chamada da OpenAI contra um Whisper na sua própria máquina |

@@ -19,7 +19,7 @@ Each picture gets a yes or no per line, and only a picture with five yeses is a 
 
 Image generation is priced per picture. This course reads prices from one place, a sheet the open-source library LiteLLM keeps of every model it can call, and reads it with a short program. The sheet is a third party's copy of the providers' own pages, and the program pins one version of it, so the numbers below stay the same however long after today you run it.
 
-`prices.py`, which later lessons use as well:
+`prices.py`, which lessons 9, 10 and 13 use as well:
 
 ```python
 """prices: what LiteLLM's price sheet says about a model, read at one pinned commit.

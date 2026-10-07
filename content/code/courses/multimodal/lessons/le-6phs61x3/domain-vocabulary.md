@@ -7,7 +7,7 @@ A speech model is trained on general speech, and every business has words that g
 
 There are three places to fix them, and only the last one runs in this lab.
 
-**Before decoding, by biasing the model.** Some hosted APIs take a list of words to favour. OpenAI's transcription endpoint takes a `prompt`: text that Whisper treats as what came before the audio, so the spellings in it become more likely. Google's and Amazon's services take phrase lists. Lesson 10 shows where the prompt goes, and why labmm accepts it and cannot use it: the ONNX export this lab runs has no way to take one.
+**Before decoding, by biasing the model.** Some hosted APIs take a list of words to favour. OpenAI's transcription endpoint takes a `prompt`: text that Whisper treats as what came before the audio, so the spellings in it become more likely. Google's and Amazon's services take phrase lists. Lesson 10 shows where the prompt goes, and why the course's `audio_server.py` accepts it and cannot use it: the ONNX export of Whisper it runs has no way to take one.
 
 **By training**, on recordings of your own speakers saying your own words. That is the strongest fix and the most expensive, and it is out of this course's reach.
 

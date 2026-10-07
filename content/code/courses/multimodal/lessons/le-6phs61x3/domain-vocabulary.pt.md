@@ -7,7 +7,7 @@ Um modelo de fala é treinado com fala em geral, e todo negócio tem palavras qu
 
 Há três lugares para corrigi-las, e só o último roda neste laboratório.
 
-**Antes de decodificar, inclinando o modelo.** Algumas APIs hospedadas recebem uma lista de palavras a favorecer. O endpoint de transcrição da OpenAI recebe um `prompt`: um texto que o Whisper trata como o que veio antes do áudio, de modo que as grafias dele ficam mais prováveis. Os serviços do Google e da Amazon recebem listas de frases. A aula 10 mostra onde o prompt entra, e por que o labmm o aceita e não consegue usá-lo: a exportação ONNX que este laboratório roda não tem como recebê-lo.
+**Antes de decodificar, inclinando o modelo.** Algumas APIs hospedadas recebem uma lista de palavras a favorecer. O endpoint de transcrição da OpenAI recebe um `prompt`: um texto que o Whisper trata como o que veio antes do áudio, de modo que as grafias dele ficam mais prováveis. Os serviços do Google e da Amazon recebem listas de frases. A aula 10 mostra onde o prompt entra, e por que o `audio_server.py` do curso o aceita e não consegue usá-lo: a exportação ONNX do Whisper que ele roda não tem como recebê-lo.
 
 **Treinando**, com gravações dos seus próprios falantes dizendo as suas próprias palavras. É a correção mais forte e a mais cara, e está fora do alcance deste curso.
 

@@ -406,7 +406,7 @@ if __name__ == "__main__":
             print(f"{name:24} {os.path.getsize(f'{OUT}/{name}'):>9,} bytes")
 ```
 
-**Nothing in the course's media was photographed or recorded.** This program writes the scripts and the layouts at the top and makes everything from them: Piper's voices speak the support call and the voicemail, ffmpeg spoils a copy of the call with a hum and a hiss and squeezes another through a telephone line, Pillow draws an invoice and a book cover and six slides, and ffmpeg puts the slides and a narration together as a video. The one exception is `cat_and_dog.jpg`, a photograph from MediaPipe's own examples, which `setup.sh` downloaded.
+**Nothing in the course's media was photographed or recorded.** This program writes the scripts and the layouts at the top and makes everything from them. Piper's voices speak the support call and the voicemail. ffmpeg spoils a copy of the call with a hum and a hiss, and squeezes another through a telephone line. Pillow draws an invoice, a book cover and six slides, and ffmpeg puts the slides and a narration together as a video. The one exception is `cat_and_dog.jpg`, a photograph from MediaPipe's own examples, which `setup.sh` downloaded.
 
 What that buys is the thing a real recording never has: **the truth is known**. Every word of the call and who said it, when each slide is on screen, every character on the invoice. `make_media.py` writes all of it into `media/truth`, and most lessons measure a model against it. Run it in `~/mm`:
 
@@ -434,7 +434,7 @@ ana@lab:~/mm$ python -c "import json; print(json.load(open(\"media/truth/call-10
 {'who': 'bia', 'start': 6.014, 'end': 14.475, 'text': "Hi Caio. I'm calling about order M-1042. It's a copy of Dom Casmurro, by Machado de Assis, and it arrived on the twenty-fourth of September."}
 ```
 
-The same nine files, to the byte, on every machine that runs it with the libraries `setup.sh` pinned: the voices have no randomness left, the scan's noise comes from a seeded generator, and ffmpeg is told to leave out anything that changes between runs, such as the time a file was made. That is why the transcripts in this course can quote a model's output and expect yours to match it. If a size above differs on your machine, the next section says where to look.
+The same nine files, to the byte, on every machine that runs it with the libraries `setup.sh` pinned. The voices have no randomness left, the scan's noise comes from a seeded generator, and ffmpeg is told to leave out anything that changes between runs, such as the time a file was made. That is why the transcripts in this course can quote a model's output and expect yours to match it. If a size above differs on your machine, the next section says where to look.
 
 ## The vision model's first picture
 

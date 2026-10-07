@@ -43,14 +43,14 @@ O pedido mais barato é o que nunca é enviado. Uma loja faz as mesmas perguntas
 
 ```
 ana@lab:~/mm$ python cached.py media/invoice-0931.png "What is the total?" "What is the total?" "What is the total of this invoice?"
-provider 2798 tokens  The total amount specified in the invoice is 758
-cache    2798 tokens  The total amount specified in the invoice is 758
-provider 2801 tokens  The total of this invoice is **758.50 BRL**.
+provider 2798 tokens  The total amount for the invoice from Lantern & 
+cache    2798 tokens  The total amount for the invoice from Lantern & 
+provider 2801 tokens  The total of the invoice is 758,50 BRL.
 ana@lab:~/mm$ ls cache | wc -l
 2
 ```
 
-Três perguntas, dois pedidos ao modelo: o cache guarda dois arquivos. O segundo "What is the total?" veio do disco, com os 2.798 tokens que teria custado anotados ao lado. A terceira pergunta quer dizer a mesma coisa com outras palavras e **errou o cache**, porque a chave é o prompt exato. Um cache por significado é possível, gerando o embedding do prompt como a aula 12 gerou o dos pedaços, e aí ele pode devolver a resposta a uma pergunta que só parecia parecida.
+Três perguntas, dois pedidos ao modelo: o cache guarda dois arquivos. O segundo "What is the total?" veio do disco, com os 2.798 tokens que teria custado anotados ao lado. O `cached.py` não fixa a temperatura, então o modelo formula a resposta de um jeito diferente a cada execução, e a sua não vai ser igual a estas; a linha do cache é a única resposta garantida a repetir a primeira palavra por palavra. A terceira pergunta quer dizer a mesma coisa com outras palavras e **errou o cache**, porque a chave é o prompt exato. Um cache por significado é possível, gerando o embedding do prompt como a aula 12 gerou o dos pedaços, e aí ele pode devolver a resposta a uma pergunta que só parecia parecida.
 
 Um cache guarda as respostas do provedor, que podem conter dados pessoais das imagens. Ele precisa das mesmas regras de retenção e de exclusão que as imagens.
 

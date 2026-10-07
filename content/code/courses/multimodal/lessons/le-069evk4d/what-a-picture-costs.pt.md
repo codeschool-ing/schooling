@@ -6,7 +6,8 @@ version: 1
 A aula 8 mediu a regra de blocos do GPT-4o numa capa. Este programa aplica essa regra, e a do Google para o Gemini, a três imagens de tamanhos muito diferentes. A terceira é o `cat_and_dog.jpg` ampliado para 4032 por 3024 pixels, o tamanho que uma câmera de celular de 12 megapixels salva, para uma foto de celular ter um substituto. Uma linha a faz:
 
 ```
-@@phone@@
+ana@lab:~/mm$ python -c "from PIL import Image; Image.open(\"media/cat_and_dog.jpg\").resize((4032, 3024)).save(\"media/phone.jpg\", quality=90)"; stat -c "%s %n" media/phone.jpg
+883497 media/phone.jpg
 ```
 
 O programa lê as regras de tokens do `tokens.py` da aula 4:

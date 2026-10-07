@@ -59,4 +59,4 @@ Four findings, and the last is the one that matters.
 | the transcript feeds a search index or a summary | the smallest model whose WER is acceptable on your audio; the downstream step forgives small errors |
 | it is shown to people as captions | the largest model you can afford, because every error is on screen (lesson 14) |
 | it must run on the device or in real time | tiny or base, measured on that device |
-| it goes through a hosted API | the provider's model; lesson 10 sends the same call to labmm's Whisper and to OpenAI's API shape |
+| it goes through a hosted API | the provider's model; lesson 10 makes OpenAI's call against a Whisper on your own machine |

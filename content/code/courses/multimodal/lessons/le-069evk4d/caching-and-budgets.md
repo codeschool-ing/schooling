@@ -43,14 +43,14 @@ The cheapest request is the one never sent. A shop asks the same questions of th
 
 ```
 ana@lab:~/mm$ python cached.py media/invoice-0931.png "What is the total?" "What is the total?" "What is the total of this invoice?"
-provider 2798 tokens  The total amount specified in the invoice is 758
-cache    2798 tokens  The total amount specified in the invoice is 758
-provider 2801 tokens  The total of this invoice is **758.50 BRL**.
+provider 2798 tokens  The total amount for the invoice from Lantern & 
+cache    2798 tokens  The total amount for the invoice from Lantern & 
+provider 2801 tokens  The total of the invoice is 758,50 BRL.
 ana@lab:~/mm$ ls cache | wc -l
 2
 ```
 
-Three questions, two requests to the model: the cache holds two files. The second "What is the total?" came from disk, with the 2,798 tokens it would have cost written beside it. The third question means the same thing in other words and **missed**, because the key is the exact prompt. A cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and then it can return an answer to a question that only looked similar.
+Three questions, two requests to the model: the cache holds two files. The second "What is the total?" came from disk, with the 2,798 tokens it would have cost written beside it. `cached.py` sets no temperature, so the model words its answer differently from run to run, and yours will not read like these; the cached line is the one answer guaranteed to repeat the first word for word. The third question means the same thing in other words and **missed**, because the key is the exact prompt. A cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and then it can return an answer to a question that only looked similar.
 
 A cache holds the provider's answers, which can hold personal data from the pictures. It needs the same retention and erasure rules as the pictures do.
 
