@@ -2200,6 +2200,105 @@ def l14_pilot(lang):
                 'O interior chegou à meta na quarta semana e ficou lá; a capital, que manteve a conferência, '
                 'não se mexeu. Essa comparação é o que deixou o Paulo decidir em dez minutos.')
 
+# ------------------------------------------------------------------ lesson 15
+
+@figure('l15-hypotheses', 15)
+def l15_hypotheses(lang):
+    f = Fig('l15-hypotheses', 680, 300, T(
+        lang,
+        'A tree. At the top, the decision: can operations change something this quarter that keeps '
+        'more new subscribers? Five hypotheses below it, each with the data that would test it. Price: '
+        'not operations, passed to commercial. The food itself: not operations, passed to product. '
+        'Region alone: tested, set aside. Month of joining: tested, set aside. The first delivery: '
+        'tested, survived, and became the analysis.',
+        'Uma árvore. No alto, a decisão: as operações podem mudar algo neste trimestre que mantenha mais '
+        'assinantes novos? Cinco hipóteses abaixo, cada uma com o dado que a testaria. Preço: não é '
+        'operação, passado ao comercial. A própria ração: não é operação, passada a produto. Só a '
+        'região: testada, deixada de lado. Mês de entrada: testado, deixado de lado. A primeira entrega: '
+        'testada, sobreviveu e virou a análise.'))
+    f.rect(130, 10, 420, 40, stroke='--amber', width=1.5)
+    f.lines(340, 24, T(lang, ['can operations change something this quarter', 'that keeps more new subscribers?'],
+                      ['as operações podem mudar algo neste trimestre', 'que mantenha mais assinantes novos?']),
+            size=10.5, weight='600', gap=14)
+    hyps = [(T(lang, 'price', 'preço'), T(lang, ['price paid', 'by cancellers'], ['preço pago por', 'quem cancelou']),
+             T(lang, 'to commercial', 'ao comercial'), 'out'),
+            (T(lang, 'the food', 'a ração'), T(lang, ['complaints', 'about the food'], ['reclamações', 'da ração']),
+             T(lang, 'to product', 'a produto'), 'out'),
+            (T(lang, 'region alone', 'só a região'), T(lang, ['cancellations', 'by region'], ['cancelamento', 'por região']),
+             T(lang, 'set aside', 'deixada de lado'), 'no'),
+            (T(lang, 'month joined', 'mês de entrada'), T(lang, ['cancellations', 'by cohort'], ['cancelamento', 'por coorte']),
+             T(lang, 'set aside', 'deixado de lado'), 'no'),
+            (T(lang, 'first delivery', '1ª entrega'), T(lang, ['cancellations', 'by first box'], ['cancelamento', 'pela 1ª caixa']),
+             T(lang, 'the analysis', 'a análise'), 'yes')]
+    for i, (name, data, fate, kind) in enumerate(hyps):
+        x = 14 + i * 132
+        stroke = {'out': '--wire', 'no': '--paper-dim', 'yes': '--phosphor'}[kind]
+        f.line(340, 52, x + 61, 98, stroke='--paper-dim', width=1)
+        f.rect(x, 100, 122, 34, stroke=stroke, fill='--panel', width=1.6 if kind == 'yes' else 1.2)
+        f.text(x + 61, 117, name, size=10.5, weight='600', fill='--phosphor' if kind == 'yes' else '--paper')
+        f.line(x + 61, 134, x + 61, 160, stroke='--paper-dim', width=1)
+        f.rect(x + 6, 160, 110, 44, stroke='--wire', fill='--ink', width=1)
+        f.lines(x + 61, 175, data, size=9, gap=13, fill='--paper-dim')
+        f.text(x + 61, 226, fate, size=9.5, italic=True,
+               fill='--phosphor' if kind == 'yes' else '--paper-dim')
+    f.text(14, 262, T(lang, 'top row: the hypothesis; box below: the data that would test it; last line: what happened',
+                      'linha de cima: a hipótese; caixa abaixo: o dado que a testaria; última linha: o que aconteceu'),
+           size=9.5, anchor='start', fill='--paper-dim')
+    f.text(14, 282, T(lang, 'each branch, if true, would lead to a different action',
+                      'cada galho, se verdadeiro, levaria a uma ação diferente'), size=9.5, anchor='start',
+           fill='--paper-dim')
+    return f, T(lang,
+                'The possible answers, listed before looking for any of them. Two belong to other teams, '
+                'two were tested and set aside, and one became the analysis.',
+                'As respostas possíveis, listadas antes de procurar qualquer uma. Duas são de outras '
+                'equipes, duas foram testadas e deixadas de lado, e uma virou a análise.')
+
+
+TIMELINE = [  # (label en, label pt, start, end) as days from 23 June 2025
+    ('brief agreed', 'briefing combinado', 0, 1),
+    ('data access and definitions', 'acesso aos dados e definições', 0, 18),
+    ('first cut', 'primeiro recorte', 7, 11),
+    ('checks and money', 'conferências e dinheiro', 21, 32),
+    ('ghost deck', 'deck fantasma', 33, 35),
+    ('previews', 'prévias', 45, 51),
+    ('decision meeting', 'reunião de decisão', 53, 54),
+]
+
+
+@figure('l15-timeline', 15)
+def l15_timeline(lang):
+    f = Fig('l15-timeline', 680, 270, T(
+        lang,
+        'A timeline from 23 June to 15 August 2025. The brief is agreed on 23 June. Data access and '
+        'definitions run for the first two and a half weeks, and the first cut appears on 4 July, '
+        'inside that period. The checks and the money run from 14 to 25 July, the ghost deck on 28 '
+        'July, the previews from 7 to 13 August, and the decision meeting is on 15 August.',
+        'Uma linha do tempo de 23 de junho a 15 de agosto de 2025. O briefing é combinado em 23 de junho. '
+        'Acesso aos dados e definições ocupam as duas semanas e meia iniciais, e o primeiro recorte aparece '
+        'em 4 de julho, dentro desse período. As conferências e o dinheiro vão de 14 a 25 de julho, o deck '
+        'fantasma fica em 28 de julho, as prévias de 7 a 13 de agosto, e a reunião de decisão é em 15 de '
+        'agosto.'))
+    x0, x1 = 210, 660
+
+    def sx(d):
+        return x0 + d / 54 * (x1 - x0)
+    ticks = [(0, T(lang, '23 Jun', '23/jun')), (8, T(lang, '1 Jul', '1º/jul')), (38, T(lang, '31 Jul', '31/jul')),
+             (53, T(lang, '15 Aug', '15/ago'))]
+    for d, lab in ticks:
+        f.line(sx(d), 20, sx(d), 236, stroke='--wire', width=1, dash='2 4')
+        f.text(sx(d), 252, lab, size=9, fill='--paper-dim')
+    for i, (en, pt, a, b) in enumerate(TIMELINE):
+        y = 26 + i * 30
+        f.text(x0 - 10, y + 9, T(lang, en, pt), size=10, anchor='end')
+        hl = en in ('first cut', 'decision meeting')
+        f.bar(sx(a), y, max(sx(b) - sx(a), 6), 18, fill='--scan' if hl else '--phosphor-dim',
+              stroke='--amber' if hl else '--phosphor', width=1.2)
+    return f, T(lang,
+                'Seven milestones, each with something to show on its date. The first cut arrives while '
+                'the data work is still going on, which is the point.',
+                'Sete marcos, cada um com algo para mostrar na sua data. O primeiro recorte chega enquanto o '
+                'trabalho com os dados ainda está em andamento, e esse é o ponto.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
