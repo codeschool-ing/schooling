@@ -67,3 +67,8 @@ for line in sys.stdin.read().splitlines():
         print(line + " 2>&1")')
   lab exec ana "$script" < /dev/null
 }
+
+# via: as `on`, in a terminal where the student has sent both libraries to the
+# relay with the export line lessons 16 to 21 show once, at their start.
+RELAY_EXPORT='export OPENAI_BASE_URL=http://127.0.0.1:8500/v1 ANTHROPIC_BASE_URL=http://127.0.0.1:8500'
+via() { printf 'ana@desk:~/desk$ %s\n' "$*"; lab exec ana "$RELAY_EXPORT; $*" 2>&1 < /dev/null || true; }
