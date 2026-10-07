@@ -1,6 +1,6 @@
 ---
 title: Uma nota para cada próxima palavra possível
-version: 1
+version: 2
 ---
 
 A imagem comum de um assistente de chat é a de um programa que procura a resposta em algum lugar,
@@ -9,9 +9,10 @@ que acontece. **Um modelo de linguagem faz uma coisa: dado um trecho de texto, e
 próxima palavra possível uma probabilidade.** Tudo o que ele parece fazer, de responder a traduzir
 a escrever código, é esse passo, repetido.
 
-A bancada em que este curso roda tem um modelo de linguagem pequeno o bastante para ser lido. Ele se
-chama `toylm`, aprendeu com um arquivo de 761 palavras sobre um café, e você pode perguntar a ele o
-que vem depois:
+Este curso tem um modelo de linguagem pequeno o bastante para ser lido. Ele se chama `toylm`,
+aprendeu com um arquivo de 761 palavras sobre um café, e você pode perguntar a ele o que vem depois.
+Você mesmo o monta no fim desta lição; por enquanto, leia o que ele imprimiu, e os comandos vão
+funcionar igual para você depois:
 
 ```
 ana@lab:~/pe$ toylm next "the coffee is"
