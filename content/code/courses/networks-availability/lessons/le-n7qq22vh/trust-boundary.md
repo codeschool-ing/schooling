@@ -41,7 +41,7 @@ rtt min/avg/max/mdev = 24.483/26.292/27.973/1.185 ms
 
 **26 ms on average: the laptop's ping is back in the upload's queue.** The laptop still marks its ping EF; `hq` no
 longer believes it. And `files` sends one datagram to port 5004, with `echo voice | nc -u -w1
-192.0.2.21 5004`, a command with no marking option at all, run off screen. The ISP sees it arrive:
+192.0.2.21 5004` typed on `files`, a command with no marking option at all. The ISP sees it arrive:
 
 ```
 ana@isp:~$ sudo tcpdump -n -v -i eth0 -c 1 udp port 5004

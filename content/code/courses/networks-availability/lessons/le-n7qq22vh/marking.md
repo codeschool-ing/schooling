@@ -19,8 +19,8 @@ A few values are agreed across the industry, which is the point of having a code
 
 The third column is the one tools print, because they show the whole byte. Moving six bits two places
 to the left multiplies by four: **46 × 4 = 184, which is `0xb8`**. `ping -Q` takes the whole byte too,
-so a ping that asks to be treated as voice is `ping -Q 0xb8`. Here is one, captured on the ISP's side
-of `hq`'s uplink:
+so a ping that asks to be treated as voice is `ping -Q 0xb8`. Here is one, `ping -c 1 -Q 0xb8 192.0.2.21` on
+`laptop`, captured on the ISP's side of `hq`'s uplink:
 
 ```
 ana@isp:~$ sudo tcpdump -n -v -i eth0 -c 2 icmp

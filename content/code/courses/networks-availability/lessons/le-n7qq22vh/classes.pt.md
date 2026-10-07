@@ -5,8 +5,8 @@ version: 1
 
 Um roteador que respeita uma marcação precisa de três coisas, e no Linux cada uma é uma linha separada de
 `tc`. **Um classificador decide a que classe um pacote pertence, cada classe ganha uma fila própria, e um
-escalonador decide qual fila envia a seguir.** A configuração de fila única é removida antes, fora da tela,
-e esta é montada no lugar:
+escalonador decide qual fila envia a seguir.** A configuração de fila única é removida antes, com
+`sudo tc qdisc del dev eth1 root` em `hq`, e esta é montada no lugar:
 
 ```
 ana@hq:~$ sudo tc qdisc add dev eth1 root handle 1: htb default 20 && sudo tc class add dev eth1 parent 1: classid 1:1 htb rate 5mbit
@@ -37,7 +37,7 @@ Ele só espera atrás de outros pacotes de voz, e há muito poucos deles.
 
 ## Os mesmos dois pings, de novo
 
-O mesmo upload roda, e os mesmos dois pings vêm em seguida, um sem marcação e outro marcado como EF:
+O mesmo upload roda, o mesmo `iperf3` num segundo shell, e os mesmos dois pings vêm em seguida, um sem marcação e outro marcado como EF:
 
 ```
 ana@laptop:~$ ping -c 5 -q 192.0.2.21 | tail -n 1

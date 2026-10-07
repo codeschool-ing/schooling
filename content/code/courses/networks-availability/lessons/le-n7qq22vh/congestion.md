@@ -37,8 +37,9 @@ file and fast for five pings, so the queue was empty each time and there was not
 
 ## One upload changes everything
 
-Now the laptop uploads to `web1`, with an `iperf3` started in the background and not shown, and two
-seconds later the same ping runs again:
+Now the laptop uploads to `web1`, with `iperf3 -c 192.0.2.21 -t 10` in a second shell on `laptop`,
+which sends as fast as it can for ten seconds, and two seconds later the same ping runs again in the
+first:
 
 ```
 ana@laptop:~$ ping -c 5 -q 192.0.2.21 | tail -n 1
