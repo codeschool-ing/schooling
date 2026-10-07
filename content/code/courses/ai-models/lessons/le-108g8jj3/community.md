@@ -8,7 +8,6 @@ on somebody's data, quantized to fit a laptop, merged from two others. The Hub's
 the relationships and the field that records them:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "is a fine-tune, an adapter, or a quantized|infer the type of relationship"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
  105: If your model is a fine-tune, an adapter, or a quantized version of a base model, you
       can specify the base model in the model card metadata section. This information can also

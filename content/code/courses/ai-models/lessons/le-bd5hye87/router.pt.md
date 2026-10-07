@@ -8,7 +8,6 @@ requisições** para provedores que os servem, com um token e um cliente, o `Inf
 biblioteca `huggingface_hub` que a aula 12 já usou. A documentação diz como um provedor é escolhido:
 
 ```
-ana@desk:~/desk$ sources lines hf-providers 135 139
 # huggingface/hub-docs@08175d0f docs/inference-providers/index.md
  135| By default, our system automatically selects the fastest available provider for the specified model (equivalent to the `:fastest` policy — highest throughput in tokens per second).
  136|

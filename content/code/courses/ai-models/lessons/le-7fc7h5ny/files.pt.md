@@ -104,6 +104,6 @@ ana@desk:~/desk$ node tokens.mjs "Where is my order LB-20488? It has not arrived
 Quinze ids. `[CLS]` e `[SEP]` marcam o começo e o fim. O número do pedido `20488`, o hífen e os dois
 sinais de pontuação viraram `[UNK]`, o token para qualquer coisa fora do vocabulário, que não carrega
 evidência nenhuma. **Uma palavra que o modelo nunca viu no treino é uma palavra que ele não sabe
-ler**, e isso vale para todo modelo de todo tamanho. O tokenizador da caixa da seção 02 da aula 1 é
+ler**, e isso vale para todo modelo de todo tamanho. O tokenizador da caixa da seção 06 da aula 1 é
 a mesma ideia com um vocabulário muito maior, cortado em pedaços de palavras para que menos coisas
 fiquem de fora.

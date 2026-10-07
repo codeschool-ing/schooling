@@ -40,7 +40,7 @@ A window is a limit, not a promise of good use. Three things to know before fill
 - **Long prompts are slower to start.** The whole prompt is read before the first token, and the
   first-token time of section 06 grows with it.
 - **Models use the middle of a long context less reliably than its ends**, a pattern seen across
-  many models and the reason retrieval (lesson 1 section 07) still exists in an age of
+  many models and the reason retrieval (lesson 1 section 11) still exists in an age of
   million-token windows: sending the relevant page beats sending the whole book.
 
 ## The other ceiling

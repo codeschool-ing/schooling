@@ -5,7 +5,7 @@ version: 1
 
 A **reranker** is a model with one job: given a question and a list of documents, put the documents
 in order of how well they answer it. It writes nothing. It is the second stage of retrieval, the
-fix lesson 1 section 07 named for missing facts: a fast search finds fifty passages that might be
+fix lesson 1 section 11 named for missing facts: a fast search finds fifty passages that might be
 relevant, and a reranker picks the five worth putting in the prompt. `embeddings-vectors` and `rag`,
 the two courses after this one, build that pipeline; this section is about what the model is and
 how it is sold.

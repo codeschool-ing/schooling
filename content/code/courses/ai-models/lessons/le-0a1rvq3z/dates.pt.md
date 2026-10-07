@@ -23,7 +23,7 @@ Claude Haiku 4.5
   Retirement                  Not sooner than October 15, 2026
 ```
 
-**Reliable knowledge cutoff** (corte de conhecimento confiável) é a data da aula 1 seção 06: o que se
+**Reliable knowledge cutoff** (corte de conhecimento confiável) é a data da aula 1 seção 10: o que se
 pode confiar que o modelo sabe sobre o mundo. Os três modelos mais novos param em junho de 2026; o
 Haiku 4.5 em fevereiro de 2025, dezesseis meses antes. Para a classificação e a extração da ana essa
 diferença não custa nada, como a aula 1 argumentou. Para uma tarefa sobre acontecimentos,

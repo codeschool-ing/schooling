@@ -40,7 +40,7 @@ Uma janela é um limite, não uma promessa de bom uso. Três coisas a saber ante
 - **Prompts longos demoram mais para começar.** O prompt inteiro é lido antes do primeiro token, e
   o tempo até o primeiro token da seção 06 cresce junto.
 - **Os modelos usam o meio de um contexto longo com menos confiabilidade que as pontas**, um padrão
-  visto em muitos modelos e o motivo de a recuperação (aula 1 seção 07) continuar existindo na era
+  visto em muitos modelos e o motivo de a recuperação (aula 1 seção 11) continuar existindo na era
   das janelas de um milhão de tokens: mandar a página relevante é melhor que mandar o livro inteiro.
 
 ## O outro teto

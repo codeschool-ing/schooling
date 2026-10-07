@@ -7,7 +7,6 @@ Routing chooses among providers of one model. The `models` field goes further an
 **models**:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-fallbacks "lets you automatically try other models"
 # OpenRouterTeam/docs@3e840a21 guides/routing/model-fallbacks.mdx
   21: The `models` parameter lets you automatically try other models if the primary model's
       providers are down, rate-limited, or refuse to reply due to content moderation.

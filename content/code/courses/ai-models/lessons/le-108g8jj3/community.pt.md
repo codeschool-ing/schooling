@@ -8,7 +8,6 @@ ajustada com os dados de alguém, quantizada para caber num notebook, mesclada a
 documentação do Hub dá nome às relações e ao campo que as registra:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "is a fine-tune, an adapter, or a quantized|infer the type of relationship"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
  105: If your model is a fine-tune, an adapter, or a quantized version of a base model, you
       can specify the base model in the model card metadata section. This information can also

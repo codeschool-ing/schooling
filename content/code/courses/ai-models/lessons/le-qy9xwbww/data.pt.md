@@ -8,7 +8,6 @@ depois ao provedor que o roteamento escolheu, e provedores diferem no que guarda
 `provider` tem um campo para isso, e o padrão dele merece ser lido devagar:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-routing "^- .allow.: |^- .deny.: |not a definitive source"
 # OpenRouterTeam/docs@3e840a21 guides/routing/provider-selection.mdx
 1192: - `allow`: (default) allow providers which store user data non-transiently and may train
       on it

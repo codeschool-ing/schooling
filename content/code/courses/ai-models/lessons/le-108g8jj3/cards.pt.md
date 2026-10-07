@@ -3,11 +3,10 @@ title: Um cartão é metadado e texto
 version: 1
 ---
 
-A aula 1 seção 05 leu um cartão de modelo como documento. No Hub ele também é **dado**, e a documentação
+A aula 1 seção 09 leu um cartão de modelo como documento. No Hub ele também é **dado**, e a documentação
 do Hub diz como:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "simple Markdown files with additional metadata|YAML.*section at the top"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
    6: Model cards are files that accompany the models and provide handy information. Under the
       hood, model cards are simple Markdown files with additional metadata. Model cards are

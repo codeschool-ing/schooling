@@ -7,7 +7,6 @@ The size of a model in memory is arithmetic, and the inputs are published. Meta'
 describes every Llama it released as a block of architecture numbers. This is Llama 3.1 8B:
 
 ```
-ana@desk:~/desk$ sources lines llama-skus 235 246
 # meta-llama/llama-models@0e0b8c51 models/sku_list.py
  235|             arch_args={
  236|                 "dim": 4096,

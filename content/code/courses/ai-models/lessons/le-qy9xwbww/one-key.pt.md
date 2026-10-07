@@ -37,7 +37,6 @@ openrouter/google/gemini-2.5-flash            1,048,576    65535      0.3      2
 Idênticos, e a documentação diz por quê:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-faq "there is no markup|fee when you purchase credits"
 # OpenRouterTeam/docs@3e840a21 faq.mdx
   72: We pass through the pricing of the underlying providers; there is no markup
   83: OpenRouter charges a {getTotalFeeString('stripe', null)} fee when you purchase credits.
@@ -48,7 +47,6 @@ A taxa é um modelo de texto nessa página, preenchido por um arquivo de constan
 diz quanto dá:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-fees "getTotalFeeString = |stripe"
 # OpenRouterTeam/docs@3e840a21 snippets/exports/constants.mdx
  141: export const getTotalFeeString = (type, value) => {
  142: if (type === 'stripe') return '5.5% ($0.80 minimum)';
@@ -66,7 +64,6 @@ O OpenRouter devolve o custo de cada requisição dentro da resposta, em `usage.
 documentação separa o que foi cobrado da conta do que o provedor cobrou:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-usage "upstream_inference_cost.: The|.cost.: The total"
 # OpenRouterTeam/docs@3e840a21 cookbook/administration/usage-accounting.mdx
   73: - `cost`: The total amount charged to your account
   74: - `cost_details.upstream_inference_cost`: The actual cost charged by the upstream AI

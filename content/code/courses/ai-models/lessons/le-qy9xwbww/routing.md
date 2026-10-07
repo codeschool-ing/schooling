@@ -9,7 +9,6 @@ OpenRouter, one model name can stand for several of them, and **OpenRouter picks
 request**. Its documentation says how, by default:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-routing "inverse square of the price|9x more likely"
 # OpenRouterTeam/docs@3e840a21 guides/routing/provider-selection.mdx
   65: 2. For the stable providers, look at the lowest-cost candidates and select one weighted
       by inverse square of the price (example below).

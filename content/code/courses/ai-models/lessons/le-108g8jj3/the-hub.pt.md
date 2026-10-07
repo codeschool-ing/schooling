@@ -33,7 +33,7 @@ bytes toda vez, e a avaliação da aula 5 continua valendo para ele.
 
 ## O que tem num repositório
 
-Os arquivos que formam a caixa da aula 1 seção 02: os pesos, muitas vezes divididos em vários arquivos;
+Os arquivos que formam a caixa da aula 1 seção 06: os pesos, muitas vezes divididos em vários arquivos;
 o tokenizador e a configuração dele, que guarda o template de chat; um arquivo de configuração com os
 números de arquitetura com que a aula 3 fez as contas; e o `README.md`, que é o cartão do modelo.
 Arquivos de pesos no formato `safetensors` guardam só números. Alguns repositórios mais antigos ainda

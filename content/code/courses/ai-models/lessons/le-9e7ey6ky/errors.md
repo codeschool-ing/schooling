@@ -7,7 +7,6 @@ A shared service is sometimes too busy to answer. Anthropic's API says so with i
 and its documentation says what the library does about it:
 
 ```
-ana@desk:~/desk$ sources quote claude-errors "overloaded_error|529 errors can occur|automatically retries"
 # https://platform.claude.com/docs/en/api/errors, read 2026-10-05
  247: overloaded_error
  250: 529 errors can occur when the API experiences high traffic across all users.

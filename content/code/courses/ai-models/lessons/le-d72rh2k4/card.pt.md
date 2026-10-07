@@ -7,7 +7,6 @@ A aula 1 leu o cartão da Llama 3.1. Três parágrafos do da Llama 4 respondem �
 respostas mudaram:
 
 ```
-ana@desk:~/desk$ sources quote llama4-card "^\*\*Overview|Data Freshness|^\*\*Supported languages"
 # meta-llama/llama-models@0e0b8c51 models/llama4/MODEL_CARD.md
   48: **Supported languages:** Arabic, English, French, German, Hindi, Indonesian, Italian,
       Portuguese, Spanish, Tagalog, Thai, and Vietnamese.

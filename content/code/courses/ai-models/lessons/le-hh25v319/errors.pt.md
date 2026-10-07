@@ -36,7 +36,7 @@ Dezoito linhas, e elas caem em quatro grupos.
 **Uma fronteira que o modelo traça em outro lugar.** O c22 pede para retirar um pedido no depósito; a
 loja chama isso de `address-change`, o standin-small de `other`, o standin-local de `order-status`. O
 c26 quer um reembolso parcial por uma edição errada, e dois modelos leem a edição e respondem
-`product-question`. Esses são os casos que a aula 1 seção 07 manda para **exemplos no prompt**: o
+`product-question`. Esses são os casos que a aula 1 seção 11 manda para **exemplos no prompt**: o
 modelo entende a tarefa e traça uma linha em outro lugar, e alguns casos de fronteira rotulados mudam
 a linha de lugar.
 

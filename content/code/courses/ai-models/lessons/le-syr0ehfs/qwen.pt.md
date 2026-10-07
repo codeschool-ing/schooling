@@ -8,7 +8,6 @@ limite de 100 milhões de usuários e a proibição de usar as saídas para melh
 repositório da geração atual diz outra coisa:
 
 ```
-ana@desk:~/desk$ sources quote qwen3-readme "open-weight models are licensed|license files"
 # QwenLM/Qwen3@7a2f61ff README.md
  397: All our open-weight models are licensed under Apache 2.0.
  398: You can find the license files in the respective Hugging Face repositories.

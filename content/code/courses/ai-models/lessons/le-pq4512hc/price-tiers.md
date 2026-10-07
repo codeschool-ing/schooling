@@ -54,7 +54,6 @@ That is what `sheet cost` does, and it is wrong for this model. LiteLLM's own co
 same fields to bill its users, says how the threshold applies:
 
 ```
-ana@desk:~/desk$ sources quote litellm-cost "If input_tokens > threshold|for all token types"
 # BerriAI/litellm@21881c57 litellm/litellm_core_utils/llm_cost_calc/utils.py
  627: If input_tokens > threshold and `input_cost_per_token_above_[x]k_tokens` or
       `input_cost_per_token_above_[x]_tokens` is set,

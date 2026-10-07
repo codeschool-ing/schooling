@@ -9,7 +9,6 @@ cache. Aqui está como uma requisição pede o cache, e como saber se conseguiu.
 sobre a segunda parte:
 
 ```
-ana@desk:~/desk$ sources quote claude-caching "Shorter prompts cannot be cached|processed without caching|To verify whether"
 # https://platform.claude.com/docs/en/build-with-claude/prompt-caching, read 2026-10-05
  786: Shorter prompts cannot be cached, even if marked with
  788: . Any requests to cache fewer than this number of tokens will be processed without

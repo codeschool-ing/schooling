@@ -17,7 +17,6 @@ Ollama is a server that runs in the background and a command, `ollama`, that tal
 downloads models from its own library at ollama.com and names them like this:
 
 ```
-ana@desk:~/desk$ sources quote ollama-api "Model names follow"
 # ollama/ollama@42e911bc docs/api.md
   24: Model names follow a `model:tag` format, where `model` can have an optional namespace
       such as `example/model`. Some examples are `orca-mini:3b-q8_0` and `llama3:70b`. The tag
@@ -34,7 +33,6 @@ Underneath, the arithmetic is done by llama.cpp, an open-source runtime built to
 weights, lesson 3 section 04's fewer bits per weight, on ordinary CPUs and GPUs:
 
 ```
-ana@desk:~/desk$ sources quote ollama-readme "Supported backends|llama.cpp\\]"
 # ollama/ollama@42e911bc README.md
  141: ## Supported backends
  143: - [llama.cpp](https://github.com/ggml-org/llama.cpp) project founded by Georgi Gerganov.
@@ -46,7 +44,6 @@ LM Studio is a desktop application: search Hugging Face, download a model, chat 
 on a server. It comes in two more forms, and its documentation says what they are for:
 
 ```
-ana@desk:~/desk$ sources quote lmstudio-tools "llmster is LM Studio|listens on"
 # lmstudio-ai/docs@9b8bc200 0_app/1_basics/lmstudio-vs-llmster-vs-lms.md
   28: llmster is LM Studio’s headless daemon – a standalone background service that can run
       without a GUI. This means you do not have to download the LM Studio app to use llmster

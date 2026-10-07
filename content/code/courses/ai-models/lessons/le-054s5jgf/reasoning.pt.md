@@ -4,7 +4,7 @@ version: 1
 ---
 
 Por um tempo a OpenAI vendeu raciocínio como uma linha separada: a **série o**, modelos ajustados para
-trabalhar um problema antes de responder (o terceiro tipo da aula 1 seção 03). A tabela ainda dá
+trabalhar um problema antes de responder (o terceiro tipo da aula 1 seção 07). A tabela ainda dá
 preço a eles:
 
 ```

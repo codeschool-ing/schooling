@@ -7,7 +7,6 @@ Anthropic's documentation of its compatible endpoint is unusually frank about wh
 promises, and it is worth reading as a description of every compatible API, not only this one:
 
 ```
-ana@desk:~/desk$ sources quote claude-openai-compat "silently ignored|not considered a long-term"
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
   62: This compatibility layer is primarily intended to test and compare model capabilities,
       and is not considered a long-term or production-ready solution for most use cases. While
@@ -22,14 +21,12 @@ changed the answer elsewhere changed nothing. The documentation then lists the f
 Two of them matter to the work this course has done:
 
 ```
-ana@desk:~/desk$ sources lines claude-openai-compat 283 284
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
  283| response_format
  284| Ignored. For JSON output, use
 ```
 
 ```
-ana@desk:~/desk$ sources lines claude-openai-compat 293 294
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
  293| seed
  294| Ignored
@@ -43,7 +40,6 @@ nothing. Two
 more change values rather than dropping them, or take a feature away:
 
 ```
-ana@desk:~/desk$ sources quote claude-openai-compat "Values greater than 1|Prompt caching is not supported"
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
  181: Prompt caching is not supported, but it is supported in the
  276: Between 0 and 1 (inclusive). Values greater than 1 are capped at 1.
@@ -54,7 +50,6 @@ all through this endpoint. And lesson 14 found the same shape of gap at Ollama, 
 direction: a setting its own API has and OpenAI's shape has no room for:
 
 ```
-ana@desk:~/desk$ sources quote ollama-openai "does not have a way of setting the context size"
 # ollama/ollama@42e911bc docs/api/openai-compatibility.mdx
  386: The OpenAI API does not have a way of setting the context size for a model. If you need
       to change the context size, create a `Modelfile` which looks like:

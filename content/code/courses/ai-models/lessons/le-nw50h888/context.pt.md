@@ -7,7 +7,6 @@ A seção 07 da aula 4 comparou modelos pela janela de contexto que os autores p
 local acrescenta um segundo número, a janela que **ele** dá ao modelo, e essa é um ajuste:
 
 ```
-ana@desk:~/desk$ sources quote ollama-faq "By default, Ollama uses a context window"
 # ollama/ollama@42e911bc docs/faq.mdx
   25: By default, Ollama uses a context window size of 4096 tokens.
 ```

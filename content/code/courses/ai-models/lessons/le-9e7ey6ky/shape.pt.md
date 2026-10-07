@@ -57,7 +57,6 @@ a Chat Completions tem um padrão. E dois cabeçalhos levam a conta e a versão:
 `anthropic-version`, que a documentação fixa numa data:
 
 ```
-ana@desk:~/desk$ sources quote claude-versioning "anthropic-version: 2023"
 # https://platform.claude.com/docs/en/api/versioning, read 2026-10-05
  186: anthropic-version: 2023-06-01
 ```

@@ -5,7 +5,7 @@ version: 1
 
 Um **reranker** é um modelo com uma tarefa só: dada uma pergunta e uma lista de documentos, pôr os
 documentos em ordem de quão bem eles a respondem. Ele não escreve nada. É o segundo estágio da
-recuperação, o conserto que a aula 1 seção 07 apontou para fatos ausentes: uma busca rápida acha
+recuperação, o conserto que a aula 1 seção 11 apontou para fatos ausentes: uma busca rápida acha
 cinquenta trechos que podem ser relevantes, e um reranker escolhe os cinco que valem ir para o prompt.
 `embeddings-vectors` e `rag`, os dois cursos depois deste, constroem esse caminho; esta seção é sobre o
 que o modelo é e como ele é vendido.

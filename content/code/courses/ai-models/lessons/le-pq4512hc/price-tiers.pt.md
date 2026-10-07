@@ -54,7 +54,6 @@ total $0.6120
 esses mesmos campos para cobrar os usuários dele, diz como o limite se aplica:
 
 ```
-ana@desk:~/desk$ sources quote litellm-cost "If input_tokens > threshold|for all token types"
 # BerriAI/litellm@21881c57 litellm/litellm_core_utils/llm_cost_calc/utils.py
  627: If input_tokens > threshold and `input_cost_per_token_above_[x]k_tokens` or
       `input_cost_per_token_above_[x]_tokens` is set,

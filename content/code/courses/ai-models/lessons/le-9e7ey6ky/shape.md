@@ -57,7 +57,6 @@ Completions has a default. And two headers carry the account and the version: `x
 `anthropic-version`, which the documentation fixes at one date:
 
 ```
-ana@desk:~/desk$ sources quote claude-versioning "anthropic-version: 2023"
 # https://platform.claude.com/docs/en/api/versioning, read 2026-10-05
  186: anthropic-version: 2023-06-01
 ```

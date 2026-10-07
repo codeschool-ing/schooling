@@ -36,7 +36,7 @@ The fix is in the program or the prompt (section 04), not in the choice of model
 **A boundary the model draws differently.** c22 asks to collect an order from the warehouse; the
 shop calls that `address-change`, standin-small calls it `other`, standin-local `order-status`. c26
 wants a partial refund for a wrong edition, and two models read the edition and answer
-`product-question`. These are the cases lesson 1 section 07 sends to **examples in the prompt**: the
+`product-question`. These are the cases lesson 1 section 11 sends to **examples in the prompt**: the
 model understands the task and draws a line in a different place, and a few labelled borderline
 cases move the line.
 

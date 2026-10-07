@@ -13,7 +13,7 @@ que uma proposta de auto-hospedar possa ser conferida contra eles.
 | **controle do tempo** | o modelo não pode mudar até você decidir (aula 2 seção 06) | em parte: um identificador datado fixado dá a ela quase tudo isso |
 | **sem rede** | o modelo precisa funcionar offline, num aparelho, numa fábrica, no mar | não |
 | **volume** | carga constante na casa das centenas de milhares de requisições por dia | não: 400 por dia |
-| **um modelo que ninguém vende** | um modelo com fine-tuning, ou um modelo aberto que nenhum host oferece | ainda não: a aula 1 seção 07 diz que fine-tuning vem por último |
+| **um modelo que ninguém vende** | um modelo com fine-tuning, ou um modelo aberto que nenhum host oferece | ainda não: a aula 1 seção 11 diz que fine-tuning vem por último |
 | **latência ao lado dos dados** | o modelo precisa ficar no mesmo prédio de quem o chama | não |
 
 Leia a tabela como um filtro, não como uma nota. **Uma linha que se aplica de verdade pode bastar**:

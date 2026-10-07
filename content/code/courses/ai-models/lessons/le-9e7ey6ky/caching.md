@@ -9,7 +9,6 @@ is how a request asks for it, and how to tell whether it got it. The documentati
 the second part:
 
 ```
-ana@desk:~/desk$ sources quote claude-caching "Shorter prompts cannot be cached|processed without caching|To verify whether"
 # https://platform.claude.com/docs/en/build-with-claude/prompt-caching, read 2026-10-05
  786: Shorter prompts cannot be cached, even if marked with
  788: . Any requests to cache fewer than this number of tokens will be processed without

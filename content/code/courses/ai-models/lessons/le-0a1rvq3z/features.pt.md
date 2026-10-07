@@ -33,7 +33,7 @@ Claude Haiku 4.5
 
 ## Raciocínio e esforço
 
-**Thinking** é o raciocínio da aula 1 seção 03: o modelo escreve o caminho antes de responder. A
+**Thinking** é o raciocínio da aula 1 seção 07: o modelo escreve o caminho antes de responder. A
 tabela distingue três tipos. No Fable e no Opus ele é *adaptive* e *always on*: o modelo decide quanto
 pensar, e sempre pensa um pouco. No Sonnet a tabela diz adaptativo, sem o
 always on. O Haiku tem o

@@ -4,7 +4,7 @@ version: 1
 ---
 
 For a while OpenAI sold reasoning as a separate line: the **o series**, models tuned to work
-through a problem before answering (lesson 1 section 03's third kind). The sheet still prices them:
+through a problem before answering (lesson 1 section 07's third kind). The sheet still prices them:
 
 ```
 ana@desk:~/desk$ sheet compare o1 o3 o3-mini o4-mini

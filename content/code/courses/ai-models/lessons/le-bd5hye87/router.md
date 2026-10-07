@@ -8,7 +8,6 @@ providers that serve them, through one token and one client, `InferenceClient` i
 `huggingface_hub` library lesson 12 already used. Its documentation says how a provider is chosen:
 
 ```
-ana@desk:~/desk$ sources lines hf-providers 135 139
 # huggingface/hub-docs@08175d0f docs/inference-providers/index.md
  135| By default, our system automatically selects the fastest available provider for the specified model (equivalent to the `:fastest` policy — highest throughput in tokens per second).
  136|

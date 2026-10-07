@@ -3,11 +3,10 @@ title: A card is metadata and prose
 version: 1
 ---
 
-Lesson 1 section 05 read a model card as a document. On the Hub it is also **data**, and the Hub's
+Lesson 1 section 09 read a model card as a document. On the Hub it is also **data**, and the Hub's
 documentation says how:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "simple Markdown files with additional metadata|YAML.*section at the top"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
    6: Model cards are files that accompany the models and provide handy information. Under the
       hood, model cards are simple Markdown files with additional metadata. Model cards are

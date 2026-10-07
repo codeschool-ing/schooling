@@ -7,7 +7,6 @@ Um serviço compartilhado às vezes está ocupado demais para responder. A API d
 com um código de status próprio, e a documentação diz o que a biblioteca faz a respeito:
 
 ```
-ana@desk:~/desk$ sources quote claude-errors "overloaded_error|529 errors can occur|automatically retries"
 # https://platform.claude.com/docs/en/api/errors, read 2026-10-05
  247: overloaded_error
  250: 529 errors can occur when the API experiences high traffic across all users.

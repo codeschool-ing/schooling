@@ -7,7 +7,6 @@ Lesson 4 section 07 compared models by the context window their makers publish. 
 adds a second number, the window **it** gives the model, and that one is a setting:
 
 ```
-ana@desk:~/desk$ sources quote ollama-faq "By default, Ollama uses a context window"
 # ollama/ollama@42e911bc docs/faq.mdx
   25: By default, Ollama uses a context window size of 4096 tokens.
 ```

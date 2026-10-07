@@ -55,7 +55,7 @@ Llama 4 Scout (17b 16 experts model)
 Leia como quatro gerações, cada uma respondendo a uma pergunta diferente:
 
 - **Llama 2 e Llama 3**: dois ou três tamanhos, cada um como `model` base e como modelo ajustado
-  `chat` ou `instruct`, os dois tipos da aula 1 seção 03 lado a lado.
+  `chat` ou `instruct`, os dois tipos da aula 1 seção 07 lado a lado.
 - **Llama 3.1**: 8B, 70B e 405B, os tamanhos para os quais a aula 3 calculou memória, e o 405B
   publicado de três jeitos: pesos BF16 para dois arranjos de máquina, e **FP8 quantized**, a precisão
   menor da aula 3 seção 04 lançada pelos próprios autores.
@@ -66,6 +66,6 @@ Leia como quatro gerações, cada uma respondendo a uma pergunta diferente:
   tamanho, o que a seção 03 explica.
 
 Duas coisas que essa lista ensina sobre famílias abertas em geral. **Nem sempre o modelo base é
-publicado**, então fazer fine-tuning a partir de uma base (aula 1 seção 07) depende do lançamento. E
+publicado**, então fazer fine-tuning a partir de uma base (aula 1 seção 11) depende do lançamento. E
 **o mesmo modelo pode sair em várias precisões**: "Llama 3.1 405B" são três downloads diferentes, e uma
 avaliação precisa dizer em qual rodou.

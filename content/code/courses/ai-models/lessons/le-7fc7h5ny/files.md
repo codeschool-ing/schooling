@@ -104,5 +104,5 @@ ana@desk:~/desk$ node tokens.mjs "Where is my order LB-20488? It has not arrived
 Fifteen ids. `[CLS]` and `[SEP]` mark the start and the end. The order number `20488`, the hyphen
 and both punctuation marks became `[UNK]`, the token for anything outside the vocabulary, which
 carries no evidence. **A word the model never saw in training is a word it cannot read**, and that
-is true of every model at every size. The tokenizer in lesson 1 section 02's box is the same idea
+is true of every model at every size. The tokenizer in lesson 1 section 06's box is the same idea
 with a far larger vocabulary, cut into pieces of words so that fewer things fall outside it.

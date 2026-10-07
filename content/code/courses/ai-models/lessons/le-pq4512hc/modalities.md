@@ -35,7 +35,7 @@ token:
 
 A grounded request costs its tokens **plus** the query. At 400 requests a day that would be $5.60
 a day, $168 a month, for searches alone, many times the $8.02 lesson 4 priced ana's whole drafting
-task at. Grounding is the answer to lesson 1 section 06's first gap, public facts after the cutoff,
+task at. Grounding is the answer to lesson 1 section 10's first gap, public facts after the cutoff,
 and ana's tasks do not have that gap. **A feature priced per use is a feature to switch on per
 task**, not per account.
 

@@ -76,7 +76,6 @@ standin-local:latest 2026-10-05 18:13:34-03:00
 ```
 
 ```
-ana@desk:~/desk$ sources quote ollama-faq "By default models are kept in memory"
 # ollama/ollama@42e911bc docs/faq.mdx
  291: By default models are kept in memory for 5 minutes before being unloaded. This allows
       for quicker response times if you're making numerous requests to the LLM. If you want to
@@ -99,7 +98,6 @@ manhã tão rápido quanto o centésimo, e segura a memória a noite inteira par
 ## Local é uma propriedade de onde roda
 
 ```
-ana@desk:~/desk$ sources quote ollama-faq "Ollama runs locally"
 # ollama/ollama@42e911bc docs/faq.mdx
  161: Ollama runs locally. We don't see your prompts or data when you run locally. When using
       cloud-hosted models, we process your prompts and responses to provide the service but do
@@ -112,7 +110,6 @@ ana@desk:~/desk$ sources quote ollama-faq "Ollama runs locally"
 compatível com a OpenAI em ollama.com que não precisa de instalação nenhuma:
 
 ```
-ana@desk:~/desk$ sources quote ollama-openai "No Ollama installation required|base_url=\"https://ollama.com"
 # ollama/ollama@42e911bc docs/api/openai-compatibility.mdx
    9: Set your [API key](https://ollama.com/settings/keys) in `OLLAMA_API_KEY`. Install the
       client with `pip install openai`. No Ollama installation required.

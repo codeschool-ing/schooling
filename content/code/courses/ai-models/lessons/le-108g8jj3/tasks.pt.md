@@ -9,7 +9,6 @@ todo mundo, e ele os organiza por **tarefa**. A lista de tarefas mora no própri
 Face, que o laboratório lê num commit fixado; o comentário acima dela diz para que ela serve:
 
 ```
-ana@desk:~/desk$ sources quote hf-tasks "To determine which|filters at the left"
 # huggingface/huggingface.js@3064743f packages/tasks/src/pipelines.ts
   60: ///  - To determine which widget to show.
   61: ///  - To determine which endpoint of Inference Endpoints to use.
@@ -64,7 +63,7 @@ modelo de chat faz isso porque o prompt lhe diz os rótulos. Um modelo de classi
 foi treinado com exemplos rotulados, e responde com um rótulo e uma nota, nunca com uma frase, nunca com
 `Refund.`. Para uma tarefa de alto volume e rótulos fixos, um classificador pequeno ajustado com alguns
 milhares de e-mails da própria loja pode ser mais barato, mais rápido e mais consistente que qualquer
-modelo de chat, e é o tipo de modelo que a aula 1 seção 07 tinha em mente no quarto degrau.
+modelo de chat, e é o tipo de modelo que a aula 1 seção 11 tinha em mente no quarto degrau.
 
 Duas outras linhas merecem nome por causa dos cursos seguintes: `feature-extraction` e
 `sentence-similarity` são os modelos de embedding de que trata o `embeddings-vectors`, e `text-ranking`

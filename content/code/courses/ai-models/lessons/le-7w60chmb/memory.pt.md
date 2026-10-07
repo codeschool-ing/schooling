@@ -8,7 +8,6 @@ da Meta descreve cada Llama que ela lançou como um bloco de números de arquite
 3.1 8B:
 
 ```
-ana@desk:~/desk$ sources lines llama-skus 235 246
 # meta-llama/llama-models@0e0b8c51 models/sku_list.py
  235|             arch_args={
  236|                 "dim": 4096,

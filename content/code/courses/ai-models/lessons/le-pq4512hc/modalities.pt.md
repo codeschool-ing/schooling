@@ -35,7 +35,7 @@ não por token:
 
 Uma requisição ancorada custa os tokens **mais** a consulta. A 400 requisições por dia seriam US$ 5,60
 por dia, US$ 168 por mês, só em buscas, muitas vezes os US$ 8,02 em que a aula 4 precificou toda a
-tarefa de rascunho da ana. Ancoragem é a resposta para a primeira lacuna da aula 1 seção 06, fatos
+tarefa de rascunho da ana. Ancoragem é a resposta para a primeira lacuna da aula 1 seção 10, fatos
 públicos depois do corte, e as tarefas da ana não têm essa lacuna. **Um recurso cobrado por uso é um
 recurso para ligar por tarefa**, não por conta.
 

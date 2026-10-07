@@ -8,7 +8,6 @@ to whichever provider the routing picked, and providers differ in what they keep
 object has a field for that, and its default deserves to be read slowly:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-routing "^- .allow.: |^- .deny.: |not a definitive source"
 # OpenRouterTeam/docs@3e840a21 guides/routing/provider-selection.mdx
 1192: - `allow`: (default) allow providers which store user data non-transiently and may train
       on it

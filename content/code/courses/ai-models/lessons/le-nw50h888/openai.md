@@ -49,7 +49,6 @@ which is why the program asks rather than assuming.
 The shape also has a cost, and Ollama's documentation states it:
 
 ```
-ana@desk:~/desk$ sources quote ollama-openai "does not have a way of setting the context size"
 # ollama/ollama@42e911bc docs/api/openai-compatibility.mdx
  386: The OpenAI API does not have a way of setting the context size for a model. If you need
       to change the context size, create a `Modelfile` which looks like:

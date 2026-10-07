@@ -7,7 +7,6 @@ Um provedor limita a velocidade com que uma conta pode mandar, e a documentaçã
 que unidades e como o limite se recompõe:
 
 ```
-ana@desk:~/desk$ sources quote claude-rate-limits "measured in requests per minute|token bucket algorithm|continuously replenished|Short bursts"
 # https://platform.claude.com/docs/en/api/rate-limits, read 2026-10-05
  217: You might hit rate limits over shorter time intervals. For instance, a rate of 60
       requests per minute (RPM) might be enforced as 1 request per second. Short bursts of
@@ -25,7 +24,6 @@ continuamente, então uma rajada pode bater no limite mesmo quando o total do mi
 bate, a resposta é um 429, e um cabeçalho diz quanto esperar:
 
 ```
-ana@desk:~/desk$ sources lines claude-rate-limits 686 687
 # https://platform.claude.com/docs/en/api/rate-limits, read 2026-10-05
  686| retry-after
  687| The number of seconds to wait until you can retry the request. Earlier retries will fail. Not sent with the spend-cap 429 (see

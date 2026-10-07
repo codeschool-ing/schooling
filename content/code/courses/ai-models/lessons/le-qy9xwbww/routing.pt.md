@@ -9,7 +9,6 @@ No OpenRouter, um nome de modelo pode representar vários deles, e **o OpenRoute
 requisição**. A documentação diz como, por padrão:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-routing "inverse square of the price|9x more likely"
 # OpenRouterTeam/docs@3e840a21 guides/routing/provider-selection.mdx
   65: 2. For the stable providers, look at the lowest-cost candidates and select one weighted
       by inverse square of the price (example below).

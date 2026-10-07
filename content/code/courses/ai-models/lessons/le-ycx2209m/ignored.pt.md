@@ -7,7 +7,6 @@ A documentação da Anthropic sobre o endpoint compatível dela é invulgarmente
 formato promete, e vale ler como descrição de toda API compatível, não só desta:
 
 ```
-ana@desk:~/desk$ sources quote claude-openai-compat "silently ignored|not considered a long-term"
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
   62: This compatibility layer is primarily intended to test and compare model capabilities,
       and is not considered a long-term or production-ready solution for most use cases. While
@@ -22,14 +21,12 @@ resposta em outro lugar não mudou nada. A documentação lista depois os campos
 importam para o trabalho que este curso fez:
 
 ```
-ana@desk:~/desk$ sources lines claude-openai-compat 283 284
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
  283| response_format
  284| Ignored. For JSON output, use
 ```
 
 ```
-ana@desk:~/desk$ sources lines claude-openai-compat 293 294
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
  293| seed
  294| Ignored
@@ -42,7 +39,6 @@ faz nada.
 Mais dois mudam valores em vez de descartá-los, ou tiram um recurso:
 
 ```
-ana@desk:~/desk$ sources quote claude-openai-compat "Values greater than 1|Prompt caching is not supported"
 # https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk, read 2026-10-05
  181: Prompt caching is not supported, but it is supported in the
  276: Between 0 and 1 (inclusive). Values greater than 1 are capped at 1.
@@ -53,7 +49,6 @@ este endpoint. E a aula 14 achou a mesma forma de lacuna no Ollama, pelo outro l
 API própria dele tem e para o qual o formato da OpenAI não tem lugar:
 
 ```
-ana@desk:~/desk$ sources quote ollama-openai "does not have a way of setting the context size"
 # ollama/ollama@42e911bc docs/api/openai-compatibility.mdx
  386: The OpenAI API does not have a way of setting the context size for a model. If you need
       to change the context size, create a `Modelfile` which looks like:

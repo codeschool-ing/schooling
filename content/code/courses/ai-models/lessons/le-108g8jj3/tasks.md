@@ -9,7 +9,6 @@ it organises them by **task**. The list of tasks lives in Hugging Face's own sou
 lab reads at a pinned commit; the comment above it says what the list is for:
 
 ```
-ana@desk:~/desk$ sources quote hf-tasks "To determine which|filters at the left"
 # huggingface/huggingface.js@3064743f packages/tasks/src/pipelines.ts
   60: ///  - To determine which widget to show.
   61: ///  - To determine which endpoint of Inference Endpoints to use.
@@ -63,7 +62,7 @@ by being told the labels in a prompt. A classification model does it by having b
 labelled examples, and answers with a label and a score, never with a sentence, never with
 `Refund.`. For a high-volume, fixed-label task, a small classifier fine-tuned on a few thousand of
 the shop's own e-mails can be cheaper, faster and more consistent than any chat model, and it is
-the kind of model lesson 1 section 07 meant by its fourth step.
+the kind of model lesson 1 section 11 meant by its fourth step.
 
 Two other rows are worth a name for the courses that follow: `feature-extraction` and
 `sentence-similarity` are the embedding models `embeddings-vectors` is about, and `text-ranking` is

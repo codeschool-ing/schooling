@@ -7,7 +7,6 @@ A rate limit bounds how fast money is spent; a cap bounds how much. Providers se
 account set a lower one. Anthropic's, in its own words:
 
 ```
-ana@desk:~/desk$ sources quote claude-rate-limits "carries a monthly spend cap|cannot exceed your current tier|You have reached your specified API usage limits"
 # https://platform.claude.com/docs/en/api/rate-limits, read 2026-10-05
  233: Each of the Start, Build, and Scale tiers carries a monthly spend cap, which is the
       maximum your organization can spend on the API each calendar month. You can view your
@@ -25,7 +24,6 @@ A router adds a narrower one. OpenRouter's documentation lists three sources of 
 the second is the one that matters to a desk with several programs:
 
 ```
-ana@desk:~/desk$ sources quote openrouter-limits "Per-key credit limits"
 # OpenRouterTeam/docs@3e840a21 api_reference/limits.mdx
  130: 2. **Per-key credit limits**, an optional spending cap configured on an individual API
       key. The `limit`, `limit_reset`, and `limit_remaining` fields in the `GET /api/v1/key`

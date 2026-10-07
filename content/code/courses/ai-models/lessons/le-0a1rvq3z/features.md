@@ -33,7 +33,7 @@ Claude Haiku 4.5
 
 ## Thinking and effort
 
-**Thinking** is the reasoning of lesson 1 section 03: the model writes out working before it
+**Thinking** is the reasoning of lesson 1 section 07: the model writes out working before it
 answers. The table distinguishes three kinds. On Fable and Opus it is *adaptive* and *always on*:
 the model decides how much to think, and always does some. On Sonnet the table says adaptive and
 not always on. Haiku has the older *extended* thinking, which the request turns on and gives a

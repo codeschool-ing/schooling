@@ -7,7 +7,6 @@ A provider limits how fast an account may send, and Anthropic's documentation sa
 and how the limit refills:
 
 ```
-ana@desk:~/desk$ sources quote claude-rate-limits "measured in requests per minute|token bucket algorithm|continuously replenished|Short bursts"
 # https://platform.claude.com/docs/en/api/rate-limits, read 2026-10-05
  217: You might hit rate limits over shorter time intervals. For instance, a rate of 60
       requests per minute (RPM) might be enforced as 1 request per second. Short bursts of
@@ -25,7 +24,6 @@ burst can hit the limit even when the minute's total would have fit. When it doe
 429, and one header says how long to wait:
 
 ```
-ana@desk:~/desk$ sources lines claude-rate-limits 686 687
 # https://platform.claude.com/docs/en/api/rate-limits, read 2026-10-05
  686| retry-after
  687| The number of seconds to wait until you can retry the request. Earlier retries will fail. Not sent with the spend-cap 429 (see

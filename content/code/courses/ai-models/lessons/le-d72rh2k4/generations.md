@@ -54,7 +54,7 @@ Llama 4 Scout (17b 16 experts model)
 Read it as four generations, each answering a different question:
 
 - **Llama 2 and Llama 3**: two sizes or three, each as a base `model` and a tuned `chat` or
-  `instruct` model, lesson 1 section 03's two kinds side by side.
+  `instruct` model, lesson 1 section 07's two kinds side by side.
 - **Llama 3.1**: 8B, 70B and 405B, the sizes lesson 3 computed memory for, and the 405B published
   three ways: BF16 weights for two machine layouts, and **FP8 quantized**, lesson 3 section 04's
   smaller precision released by the makers themselves.
@@ -65,6 +65,6 @@ Read it as four generations, each answering a different question:
   which section 03 explains.
 
 Two things this list teaches about open families in general. **The base model is not always
-published**, so fine-tuning from a base (lesson 1 section 07) depends on the release. And **the
+published**, so fine-tuning from a base (lesson 1 section 11) depends on the release. And **the
 same model can ship in several precisions**: "Llama 3.1 405B" is three different downloads, and an
 evaluation has to name which one it ran.
