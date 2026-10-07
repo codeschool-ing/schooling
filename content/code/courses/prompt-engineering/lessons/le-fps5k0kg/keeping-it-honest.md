@@ -1,12 +1,12 @@
 ---
 title: Keeping the search honest
-version: 1
+version: 2
 ---
 
 A search that tries many prompts and keeps the top score will always find a top score. **What the
 score cannot tell you on its own is whether the winner is good, or merely the one that happened to
-fit these few examples.** Four habits keep the method honest, and the workbench shows three of
-them.
+fit these few examples.** Four habits keep the method honest, and the transcripts here show three
+of them.
 
 ## Score the winner on examples it was not chosen on
 
@@ -54,7 +54,9 @@ inputs the prompt will really see, with the held-out share kept large enough to 
 wrong**, and a search driven by that metric would push towards prompts that say `gone`, whether or
 not that is what you wanted.
 
-Every metric has a version of this. Exact match punishes a right answer in other words; a metric
+The local model's run in the previous reading section is the same failure at full size: four
+fair one-word descriptions, scored 0/4 against labels nobody wrote for it. Every metric has a
+version of this. Exact match punishes a right answer in other words; a metric
 that rewards length finds wordy prompts; a model asked to grade replies has preferences of its own.
 Choosing the metric is choosing what the search will optimise, so write it down and check it on a
 few replies by hand before trusting a ranking built on it.
