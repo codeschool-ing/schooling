@@ -1,11 +1,11 @@
 ---
 title: A data é uma dimensão, não uma coluna
-version: 1
+version: 2
 ---
 
 `fact_sales` tem um `date_key` em vez de uma data, e o aponta para uma tabela com uma linha para cada
 dia. Parece um desvio, já que todo banco consegue tirar o mês de uma data. A tabela existe para tudo
-o que uma função de data não consegue calcular.
+o que uma função de data não consegue calcular. Este é o `dim_date.sql`:
 
 ```sql
 -- One row per calendar day of the period, and one for a date not reached yet.

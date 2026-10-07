@@ -1,6 +1,6 @@
 ---
 title: Trazendo os dados
-version: 1
+version: 2
 ---
 
 Antes de qualquer modelagem, os dados precisam estar no warehouse. Como eles são movidos, em que
@@ -8,7 +8,7 @@ agenda, e o que acontece quando uma carga falha no meio são o assunto de `pipel
 laboratório da Ana faz a coisa mais simples que funciona, e vale a pena vê-la uma vez porque toda
 tabela seguinte é construída a partir dela.
 
-A extração é um script de shell que pede ao PostgreSQL cada tabela como um arquivo CSV:
+A extração é um script de shell, `extract.sh`, que pede ao PostgreSQL cada tabela como um arquivo CSV:
 
 ```sh
 #!/bin/sh
@@ -58,7 +58,7 @@ ana@lab:~/wh$ duckdb -c "SELECT isbn, typeof(isbn) AS type FROM read_csv('extrac
 **Um ISBN é um identificador feito de dígitos, não um número.** Ninguém soma dois deles. Lido como
 inteiro, um código que começa com zero perde o zero, como perderiam um ISBN antigo de dez dígitos ou
 um CEP de São Paulo, e uma junção com uma coluna de tipo correto em outro lugar não encontra nada, sem
-avisar. Por isso o script de staging diz o que a coluna é:
+avisar. Por isso o script de staging, `staging.sql`, diz o que a coluna é:
 
 ```sql
 -- The extract, loaded as it arrived: one table per CSV file, in a schema of

@@ -1,11 +1,11 @@
 ---
 title: The date is a dimension, not a column
-version: 1
+version: 2
 ---
 
 `fact_sales` has a `date_key` rather than a date, and points it at a table with a row for every day.
 It looks like a detour, since every database can take the month out of a date. The table exists for
-everything a date function cannot work out.
+everything a date function cannot work out. This is `dim_date.sql`:
 
 ```sql
 -- One row per calendar day of the period, and one for a date not reached yet.
