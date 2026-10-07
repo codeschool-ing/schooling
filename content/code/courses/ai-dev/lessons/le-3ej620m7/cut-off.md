@@ -55,7 +55,7 @@ Decide per call site, and write the decision down:
   that stopped there is a failed call: retry with more room or report the failure, never parse it.
 - **Continue, where the text is prose.** Send the partial reply back as the start of the
   assistant's turn and ask for the rest. It works because the model will continue from whatever
-  text it is given, which lesson 1 section 02 made the definition of a model.
+  text it is given, which lesson 1 section 06 made the definition of a model.
 
 ## Stopping on purpose
 

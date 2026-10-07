@@ -3,7 +3,7 @@ title: Um arquivo de instruções para o projeto
 version: 1
 ---
 
-Toda requisição começa do nada (aula 1 seção 06), então um assistente não conhece as regras do seu
+Toda requisição começa do nada (aula 1 seção 10), então um assistente não conhece as regras do seu
 projeto a menos que algo as ponha no contexto toda vez. **Um arquivo de instruções é um arquivo no
 repositório que o assistente lê em toda requisição**, e é o jeito mais barato de parar de corrigir
 o mesmo erro duas vezes.

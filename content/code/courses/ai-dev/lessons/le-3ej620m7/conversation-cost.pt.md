@@ -3,7 +3,7 @@ title: Por que uma conversa longa custa mais do que parece
 version: 1
 ---
 
-A aula 1 seção 06 mostrou que um chat manda a conversa inteira a cada mensagem nova. A
+A aula 1 seção 10 mostrou que um chat manda a conversa inteira a cada mensagem nova. A
 consequência para o custo é a que as pessoas não esperam: **o preço de uma conversa cresce com o
 quadrado do tamanho dela**, e não em proporção a ele. A décima mensagem não custa dez vezes a
 primeira; a décima *requisição* leva as nove trocas anteriores, e a nona também levava, e a oitava.

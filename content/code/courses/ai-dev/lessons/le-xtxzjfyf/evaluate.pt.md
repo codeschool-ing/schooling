@@ -64,7 +64,7 @@ with examples
 mostrar a mecânica, então este resultado é uma ilustração, não a medição de modelo nenhum. O que é
 real é o harness: os mesmos casos, as mesmas checagens, uma nota por prompt, e toda falha listada com
 o motivo. Contra um modelo real você rodaria cada caso várias vezes, já que as respostas variam (aula
-1 seção 04), e informaria com que frequência cada prompt passa.
+1 seção 08), e informaria com que frequência cada prompt passa.
 
 ## O que torna uma avaliação útil
 

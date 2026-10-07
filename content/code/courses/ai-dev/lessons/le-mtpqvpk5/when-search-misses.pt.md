@@ -3,7 +3,7 @@ title: Quando a busca pelo significado erra
 version: 1
 ---
 
-Embeddings são bons com paráfrase e ruins com sequências exatas. A aula 1 seção 05 previu isso, e o
+Embeddings são bons com paráfrase e ruins com sequências exatas. A aula 1 seção 09 previu isso, e o
 manual tem o caso que prova: um código de erro. Um cliente cola o que o fechamento de compra disse:
 
 ```

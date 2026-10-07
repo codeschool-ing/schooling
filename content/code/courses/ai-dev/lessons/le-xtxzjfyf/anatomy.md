@@ -53,7 +53,7 @@ Answer with: a unified diff against shop/money.py, and nothing else.
 | part | what it does |
 |---|---|
 | goal | the change, and why it is wanted: the reason lets a reader pick between two ways of doing it |
-| context | the code and the rules, sent with the prompt (lesson 1 section 06: if it is not in the request, the model does not know it) |
+| context | the code and the rules, sent with the prompt (lesson 1 section 10: if it is not in the request, the model does not know it) |
 | constraints | what must not change, and the rules the change must keep |
 | done when | the cases that decide whether it worked, which are also the tests |
 | answer with | the form of the reply, so a program can check it (lesson 5 section 05) |

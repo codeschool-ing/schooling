@@ -76,7 +76,7 @@ model rather than about code it imagines.
   file path says which copy of the code ran.
 - **The command that produced it**, so the input is exact.
 - **Versions**, when the problem might be one: the library version from `pip list`, the Python
-  version. Lesson 1 section 07's "API that used to exist" is answered by this line.
+  version. Lesson 1 section 11's "API that used to exist" is answered by this line.
 - **What you already tried**, so the reply does not suggest it.
 
 And one thing to take out first: **secrets**. A traceback can carry a connection string, a log line

@@ -60,7 +60,7 @@ citations: every citation checks out
 
 None of the three is about products, and the answer says the passages do not say. **That sentence is
 the reason for the third instruction.** Without it, the likely continuation of a question about
-bicycles in a shop's support chat is an answer about bicycles, and lesson 1 section 07 showed where
+bicycles in a shop's support chat is an answer about bicycles, and lesson 1 section 11 showed where
 likely continuations come from.
 
 ## Choices in the prompt

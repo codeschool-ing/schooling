@@ -54,7 +54,7 @@ Answer with: a unified diff against shop/money.py, and nothing else.
 | parte | o que faz |
 |---|---|
 | objetivo (goal) | a mudança, e por que ela é desejada: o motivo deixa quem lê escolher entre dois jeitos de fazer |
-| contexto (context) | o código e as regras, mandados com o prompt (aula 1 seção 06: se não está na requisição, o modelo não sabe) |
+| contexto (context) | o código e as regras, mandados com o prompt (aula 1 seção 10: se não está na requisição, o modelo não sabe) |
 | restrições (constraints) | o que não pode mudar, e as regras que a mudança tem de manter |
 | pronto quando (done when) | os casos que decidem se deu certo, que também são os testes |
 | responda com (answer with) | a forma da resposta, para um programa poder conferi-la (aula 5 seção 05) |

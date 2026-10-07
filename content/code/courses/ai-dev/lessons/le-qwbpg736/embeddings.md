@@ -1,6 +1,6 @@
 ---
 title: Meaning as a position
-version: 1
+version: 2
 ---
 
 Before a model can do anything with a token, it turns it into a list of numbers, a **vector**.
@@ -15,8 +15,9 @@ the numbers are and what they cannot do.
 
 ## A text becomes 256 numbers
 
-The lab's embedding model is **WordLlama**, a small model that runs on a laptop's processor in
-milliseconds. It turns any text into 256 numbers:
+The embedding model you installed with the libraries is **WordLlama**, a small model that runs on
+a laptop's processor in milliseconds. The first time it is loaded it downloads one small file, its
+tokenizer's settings, and keeps it. It turns any text into 256 numbers:
 
 ```
 ana@dev:~/shop$ python -c 'from wordllama import WordLlama; v = WordLlama.load().embed(["the cart total is wrong"]); print(v.shape, v.dtype); print(v[0][:6].round(3))'
@@ -35,12 +36,29 @@ apart.
 
 ## Asking which sentences are close
 
-`lab/similar.py` embeds a query and a few candidate texts, and lists the candidates by cosine
-similarity to the query. Here is a support question against four sentences, two of which are
-the same complaint in other words:
+`~/shop/scratch/similar.py` embeds a query and a few candidate texts, and lists the candidates by
+cosine similarity to the query:
+
+```python
+import sys
+
+import numpy as np
+from wordllama import WordLlama
+
+wl = WordLlama.load()
+query, *texts = [line.strip() for line in sys.stdin if line.strip()]
+vectors = wl.embed([query] + texts, norm=True)
+scores = vectors[1:] @ vectors[0]
+print(f"query: {query}")
+for i in np.argsort(-scores):
+    print(f"  {scores[i]:+.3f}  {texts[i]}")
+```
+
+Here is a support question against four sentences, two of which are the same complaint in other
+words:
 
 ```
-ana@dev:~/shop$ printf "%s\n" "the cart total is wrong" "checkout adds up the order incorrectly" "the sum shown at checkout is too high" "the cart page loads slowly" "our office opens at nine" | python lab/similar.py
+ana@dev:~/shop$ printf "%s\n" "the cart total is wrong" "checkout adds up the order incorrectly" "the sum shown at checkout is too high" "the cart page loads slowly" "our office opens at nine" | python scratch/similar.py
 query: the cart total is wrong
   +0.529  the cart page loads slowly
   +0.347  checkout adds up the order incorrectly
@@ -58,7 +76,7 @@ and no score tells you when they have.
 The second limit shows up even in good models:
 
 ```
-ana@dev:~/shop$ printf "%s\n" "the coupon was accepted" "the coupon was not accepted" "the coupon was refused" "the voucher was accepted" | python lab/similar.py
+ana@dev:~/shop$ printf "%s\n" "the coupon was accepted" "the coupon was not accepted" "the coupon was refused" "the voucher was accepted" | python scratch/similar.py
 query: the coupon was accepted
   +0.964  the coupon was not accepted
   +0.664  the coupon was refused

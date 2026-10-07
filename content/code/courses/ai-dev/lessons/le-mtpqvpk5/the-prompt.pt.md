@@ -60,7 +60,7 @@ citations: every citation checks out
 
 Nenhum dos três fala de produtos, e a resposta diz que os trechos não dizem. **Essa frase é o motivo
 da terceira instrução.** Sem ela, a continuação provável de uma pergunta sobre bicicletas no chat de
-suporte de uma loja é uma resposta sobre bicicletas, e a aula 1 seção 07 mostrou de onde vêm as
+suporte de uma loja é uma resposta sobre bicicletas, e a aula 1 seção 11 mostrou de onde vêm as
 continuações prováveis.
 
 ## Escolhas no prompt

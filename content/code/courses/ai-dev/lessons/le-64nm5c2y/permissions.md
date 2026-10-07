@@ -4,7 +4,7 @@ version: 1
 ---
 
 An agent can do whatever its tools can do, and a model's choice of tool and arguments is the output
-of the loop of lesson 1 section 02: likely, not guaranteed. Lesson 11 adds a worse case, text inside
+of the loop of lesson 1 section 06: likely, not guaranteed. Lesson 11 adds a worse case, text inside
 a tool result written to steer the model. **So every limit is enforced below the model, in the host
 or in the tool, where the model's choices cannot reach.**
 

@@ -3,7 +3,7 @@ title: When search by meaning misses
 version: 1
 ---
 
-Embeddings are good at paraphrase and bad at exact strings. Lesson 1 section 05 predicted it, and
+Embeddings are good at paraphrase and bad at exact strings. Lesson 1 section 09 predicted it, and
 the handbook has the case that proves it: an error code. A customer pastes what the checkout said:
 
 ```

@@ -3,7 +3,7 @@ title: An instruction file for the project
 version: 1
 ---
 
-Every request starts from nothing (lesson 1 section 06), so an assistant does not know your
+Every request starts from nothing (lesson 1 section 10), so an assistant does not know your
 project's rules unless something puts them in the context every time. **An instruction file is a
 file in the repository that the assistant reads into every request**, and it is the cheapest way
 to stop correcting the same mistake twice.

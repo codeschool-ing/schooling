@@ -4,7 +4,7 @@ version: 1
 ---
 
 A support assistant for the shop has to answer from the shop's own rules: thirty days for a
-return, 15.00 for shipping, what E1042 means. No model was trained on those, and lesson 1 section 07
+return, 15.00 for shipping, what E1042 means. No model was trained on those, and lesson 1 section 11
 showed what a model does with a question it was not trained on. **Retrieval-augmented generation
 (RAG) puts the relevant rules into the request**, at the moment of the question, so the model
 continues from the right text instead of reconstructing it.

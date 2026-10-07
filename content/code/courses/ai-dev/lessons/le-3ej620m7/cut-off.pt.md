@@ -57,7 +57,7 @@ Decida por ponto de chamada, e escreva a decisão:
   interprete.
 - **Continue, quando o texto é prosa.** Mande a resposta parcial de volta como começo do turno do
   assistente e peça o resto. Funciona porque o modelo continua a partir de qualquer texto que
-  receba, que a aula 1 seção 02 fez ser a definição de um modelo.
+  receba, que a aula 1 seção 06 fez ser a definição de um modelo.
 
 ## Parando de propósito
 

@@ -4,7 +4,7 @@ version: 1
 ---
 
 Para saber se uma requisição cabe, e quanto vai custar, você precisa da contagem de tokens **antes**
-de ela sair. A aula 1 seção 03 mostrou que uma contagem pertence a um tokenizador, e que só a
+de ela sair. A aula 1 seção 07 mostrou que uma contagem pertence a um tokenizador, e que só a
 OpenAI publica os tokenizadores dela. Então há dois jeitos de contar, e eles respondem perguntas
 um pouco diferentes:
 

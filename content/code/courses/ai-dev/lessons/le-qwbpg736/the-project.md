@@ -1,7 +1,24 @@
-#!/usr/bin/env bash
-# ana's project as it stands before lesson 1, built into the directory given:
-# a shop's cart, its prices and its tests, in five commits with fixed dates, so
-# every `git log` and every hash in the lessons comes out the same.
+---
+title: The project the course works on
+version: 1
+---
+
+The lessons need code to work on, and it is the same code all the way through: **`~/shop`, the
+cart, the prices and the coupons of a small online shop**, in Python, with its tests, in git. Money
+is integer cents everywhere. It is small on purpose, about a hundred lines, so that a model can be
+shown all of it and you can check every answer it gives. The lessons add to it: an assistant's
+suggestions in lessons 3 to 5, a support handbook to search in lesson 6, tools for a model to call
+in lessons 7 and 8.
+
+You build it with the script below. Save it as `~/make-shop.sh`, in an editor or by pasting it
+between `cat > ~/make-shop.sh <<'SCRIPT'` and a line with `SCRIPT` on its own. It makes the
+directory you name, writes each file, and commits them in five steps with the dates and the author
+fixed, so your history is the one the lessons show, hash for hash:
+
+```sh
+# make-shop.sh DIR: the shop project as the course starts it
+# Five commits with fixed dates and a fixed author, so every hash in the
+# lessons comes out the same on your machine.
 set -euo pipefail
 D=$1
 mkdir -p "$D" && cd "$D"
@@ -215,3 +232,27 @@ purpose: each one is here because breaking it once cost somebody an afternoon.
   the change does, under sixty characters.
 EOF
 commit "2026-09-25T16:20:00-03:00" "Conventions"
+```
+
+Run it, and look at what it made:
+
+```
+ana@dev:~$ bash make-shop.sh ~/shop
+ana@dev:~/shop$ git log --oneline
+19265e0 Conventions
+b88cbb3 README
+c2b5d79 Coupons
+fe437dd A cart with lines, a discount and shipping
+33fefcf Prices are integer cents
+ana@dev:~/shop$ python -m pytest -q
+........                                                                 [100%]
+8 passed in 0.72s
+```
+
+Eight tests pass, and the five hashes are the ones above. If yours differ, the script was changed
+on the way in, often by an editor that turned its quotes into typographic ones; save it again.
+
+**Every program you write in this course goes into `~/shop/scratch/`**, which the lessons create as
+they need it. They are experiments about the model rather than part of the shop, and keeping them
+in one directory keeps the project's own history clean. Run them from `~/shop`, with the
+environment active, as the transcripts do.

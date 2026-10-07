@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um agente pode fazer o que as ferramentas dele podem fazer, e a escolha de ferramenta e de argumentos
-de um modelo é a saída do laço da aula 1 seção 02: provável, não garantida. A aula 11 acrescenta um
+de um modelo é a saída do laço da aula 1 seção 06: provável, não garantida. A aula 11 acrescenta um
 caso pior, texto dentro de um resultado de ferramenta escrito para conduzir o modelo. **Então todo
 limite é imposto abaixo do modelo, no host ou na ferramenta, onde as escolhas do modelo não
 alcançam.**

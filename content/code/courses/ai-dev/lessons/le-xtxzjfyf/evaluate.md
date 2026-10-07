@@ -64,7 +64,7 @@ with examples
 show the mechanics, so this result is an illustration, not a measurement of any model. What is real
 is the harness: the same cases, the same checks, a score per prompt, and every failure listed with its
 reason. Against a real model you would run each case several times, since replies vary (lesson 1
-section 04), and report how often each prompt passes.
+section 08), and report how often each prompt passes.
 
 ## What makes an evaluation useful
 

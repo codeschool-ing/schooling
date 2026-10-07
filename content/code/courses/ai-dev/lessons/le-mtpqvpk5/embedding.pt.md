@@ -4,7 +4,7 @@ version: 1
 ---
 
 Para buscar pelo significado, cada trecho vira um embedding uma vez, antes, e é guardado. Uma
-pergunta vira embedding quando chega, e é comparada com todos eles. A aula 1 seção 05 mostrou o que é
+pergunta vira embedding quando chega, e é comparada com todos eles. A aula 1 seção 09 mostrou o que é
 um embedding e o que ele não enxerga; esta seção os guarda.
 
 ## Construindo o índice

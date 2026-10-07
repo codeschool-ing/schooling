@@ -76,7 +76,7 @@ código que ele imagina.
   caminho do arquivo diz que cópia do código rodou.
 - **O comando que o produziu**, para a entrada ser exata.
 - **Versões**, quando o problema pode ser uma: a versão da biblioteca no `pip list`, a do Python. A
-  "API que existia" da aula 1 seção 07 se resolve com esta linha.
+  "API que existia" da aula 1 seção 11 se resolve com esta linha.
 - **O que você já tentou**, para a resposta não sugerir isso.
 
 E uma coisa a tirar antes: **segredos**. Um traceback pode levar uma string de conexão, uma linha de

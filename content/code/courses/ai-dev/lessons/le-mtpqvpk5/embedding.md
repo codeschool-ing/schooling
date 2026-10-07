@@ -4,7 +4,7 @@ version: 1
 ---
 
 To search by meaning, every passage is turned into an embedding once, ahead of time, and kept. A
-question is embedded when it arrives, and compared with all of them. Lesson 1 section 05 showed what
+question is embedded when it arrives, and compared with all of them. Lesson 1 section 09 showed what
 an embedding is and what it cannot see; this section stores them.
 
 ## Building the index

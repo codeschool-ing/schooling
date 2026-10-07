@@ -3,7 +3,7 @@ title: Why a long conversation costs more than it looks
 version: 1
 ---
 
-Lesson 1 section 06 showed that a chat sends the whole conversation with every new message. The
+Lesson 1 section 10 showed that a chat sends the whole conversation with every new message. The
 consequence for cost is the one people do not expect: **the price of a conversation grows with the
 square of its length**, not in proportion to it. The tenth message is not ten times the first; the
 tenth *request* carries the first nine exchanges, and so did the ninth, and the eighth.

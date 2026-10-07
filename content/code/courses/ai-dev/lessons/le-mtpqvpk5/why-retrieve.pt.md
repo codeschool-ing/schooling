@@ -5,7 +5,7 @@ version: 1
 
 Um assistente de suporte da loja tem de responder a partir das regras da própria loja: trinta dias
 para uma devolução, 15,00 de frete, o que quer dizer E1042. Nenhum modelo foi treinado com isso, e a
-aula 1 seção 07 mostrou o que um modelo faz com uma pergunta para a qual não foi treinado. **A geração
+aula 1 seção 11 mostrou o que um modelo faz com uma pergunta para a qual não foi treinado. **A geração
 aumentada por recuperação (RAG) põe as regras relevantes na requisição**, no momento da pergunta, para
 o modelo continuar a partir do texto certo em vez de reconstruí-lo.
 
