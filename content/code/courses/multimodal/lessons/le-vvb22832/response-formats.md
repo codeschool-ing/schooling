@@ -1,6 +1,6 @@
 ---
 title: Five shapes for one transcript
-version: 1
+version: 2
 ---
 
 The same audio can come back in five shapes, and choosing the right one saves writing a converter.

@@ -1,6 +1,6 @@
 ---
 title: The translations endpoint
-version: 1
+version: 2
 ---
 
 Whisper was trained to transcribe speech in many languages and to **translate it into English**, and the API exposes the second job as its own endpoint: `audio.translations`. It takes a recording in any language Whisper knows and returns English text, in one step.

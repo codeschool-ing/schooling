@@ -1,6 +1,6 @@
 ---
 title: O endpoint de transcrição
-version: 1
+version: 2
 ---
 
 A API de fala para texto da OpenAI é uma chamada: **envie um arquivo, diga um modelo, receba texto de volta**. O arquivo vai como upload de formulário multipart, não como JSON, e o SDK esconde isso.
@@ -162,13 +162,13 @@ print(result.text if fmt == "json" else result)
 ```
 ana@lab:~/mm$ python transcribe.py media/call-1042.wav | cut -c1-160
 Good morning, you're through to Marginalia Support. My name is Kyo. How can it help Hi Kau, I'm calling about Order M1042. It's a copy of Dom Kazmuro by Machado
-ana@lab:~/mm$ tail -n 1 /var/log/labmm/requests.jsonl | python -c "import json, sys; r = json.loads(sys.stdin.read()); print({k: r[k] for k in (\"model\", \"file\", \"bytes\", \"duration\", \"segments\", \"seconds\")})"
-{'model': 'lab-whisper-base', 'file': 'call-1042.wav', 'bytes': 1772316, 'duration': 55.38, 'segments': 11, 'seconds': 12.96}
+ana@lab:~/mm$ tail -n 1 audio_server.log
+{"path": "/v1/audio/transcriptions", "upload": 1772690, "model": "whisper-base", "file": "call-1042.wav", "bytes": 1772316, "seconds_of_audio": 55.38, "segments": 11, "prompt": null, "status": 200, "seconds": 8.22}
 ```
 
-**Esta transcrição é real, e não é da OpenAI.** O labmm responde à rota com o `lab-whisper-base`, que é o Whisper base rodando na máquina do laboratório, depois de cortar a gravação nos silêncios: o mesmo modelo e os mesmos erros da aula 7 (*Kyo*, *Kau*, *M1042*, *Dom Kazmuro*). O `whisper-1` da OpenAI é um Whisper maior e cometeria menos erros, e outros. O que é igual é a chamada: o SDK, o upload e os campos.
+**Esta transcrição é real, e não é da OpenAI.** O servidor respondeu com o Whisper base, depois de cortar a gravação nos silêncios: o mesmo modelo e os mesmos erros da aula 7 (*Kyo*, *Kau*, *M1042*, *Dom Kazmuro*). O `whisper-1` da OpenAI é um Whisper maior e cometeria erros menos frequentes e diferentes. O que é igual é a chamada: o SDK, o upload e os campos.
 
-O registro do labmm diz o que ele recebeu: o nome do arquivo, **1.772.316 bytes**, 55,38 segundos de áudio, cortados em 11 segmentos, e quanto tempo tudo levou nesta máquina. Uma API hospedada informa menos, e um programa em produção deveria registrar as mesmas coisas por conta própria: arquivo, tamanho, duração e modelo são o que explica uma conta e um pedido lento um mês depois.
+O registro do servidor diz o que ele recebeu: o nome do arquivo, **1.772.316 bytes** de áudio num upload de 1.772.690 (o resto é o formulário em volta), 55,38 segundos, cortados em 11 segmentos, e quanto tempo tudo levou nesta máquina. Uma API hospedada informa menos, e um programa em produção deveria registrar as mesmas coisas por conta própria: arquivo, tamanho, duração e modelo são o que explicam uma conta e um pedido lento um mês depois.
 
 Os campos que valem configurar:
 

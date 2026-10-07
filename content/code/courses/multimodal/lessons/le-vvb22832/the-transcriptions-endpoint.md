@@ -1,6 +1,6 @@
 ---
 title: The transcriptions endpoint
-version: 1
+version: 2
 ---
 
 OpenAI's speech-to-text API is one call: **upload a file, name a model, get text back**. The file goes as a multipart form upload, not as JSON, and the SDK hides that.
@@ -160,10 +160,15 @@ print(result.text if fmt == "json" else result)
 ```
 
 ```
-@@json@@
+ana@lab:~/mm$ python transcribe.py media/call-1042.wav | cut -c1-160
+Good morning, you're through to Marginalia Support. My name is Kyo. How can it help Hi Kau, I'm calling about Order M1042. It's a copy of Dom Kazmuro by Machado
+ana@lab:~/mm$ tail -n 1 audio_server.log
+{"path": "/v1/audio/transcriptions", "upload": 1772690, "model": "whisper-base", "file": "call-1042.wav", "bytes": 1772316, "seconds_of_audio": 55.38, "segments": 11, "prompt": null, "status": 200, "seconds": 8.22}
 ```
 
-DRAFT-JSON
+**This transcript is real, and it is not OpenAI's.** The server answered with Whisper base, after cutting the recording at its silences: the same model and the same errors as lesson 7 (*Kyo*, *Kau*, *M1042*, *Dom Kazmuro*). OpenAI's `whisper-1` is a larger Whisper and would make fewer and different mistakes. What is the same is the call: the SDK, the upload and the fields.
+
+The server's log says what it received: the file name, **1,772,316 bytes** of audio in an upload of 1,772,690 (the rest is the form around it), 55.38 seconds, cut into 11 segments, and how long the whole thing took on this machine. A hosted API reports less, and a production program should log the same things itself: file, size, duration and model are what explain a bill and a slow request a month later.
 
 The fields worth setting:
 

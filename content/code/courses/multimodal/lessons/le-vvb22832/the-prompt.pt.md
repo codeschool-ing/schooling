@@ -1,6 +1,6 @@
 ---
 title: O campo prompt, e por que aqui ele não faz nada
-version: 1
+version: 2
 ---
 
 O Whisper decodifica uma gravação um token por vez, e cada token é previsto a partir do som **e do texto que veio antes**. O campo `prompt` da API deixa você fornecer esse texto anterior. O modelo o trata como se tivesse acabado de ser dito, então as palavras e grafias dele ficam mais prováveis no que vem a seguir.
@@ -22,7 +22,7 @@ print(result.text[:150])
 ```
 ana@lab:~/mm$ python hint.py
 Good morning, you're through to Marginalia Support. My name is Kyo. How can it help Hi Kau, I'm calling about Order M1042. It's a copy of Dom Kazmuro 
-ana@lab:~/mm$ tail -n 1 /var/log/labmm/requests.jsonl | python -c "import json, sys; r = json.loads(sys.stdin.read()); print(r[\"prompt\"])"
+ana@lab:~/mm$ tail -n 1 audio_server.log | python -c "import json, sys; print(json.load(sys.stdin)[\"prompt\"])"
 Marginalia support. Caio. Order M-1042: Dom Casmurro, by Machado de Assis.
 ```
 

@@ -220,6 +220,6 @@ block pieces
 on 'python pieces.py long.wav'
 
 block prices
-on 'python prices.py find transcribe'
-on 'for m in whisper-1 gpt-4o-transcribe gpt-4o-mini-transcribe; do printf "%-24s" $m; python prices.py show $m | grep -E "input_cost_per_second|deprecation" | tr -s " " | tr "\n" " "; echo; done'
+on 'python prices.py find transcribe | grep " openai "'
+on 'for m in whisper-1 gpt-4o-transcribe gpt-4o-mini-transcribe; do printf "%-24s" $m; python prices.py show $m | grep -E "input_cost_per_second|input_cost_per_token|deprecation" | tr -s " " | tr "\n" " "; echo; done'
 lab down

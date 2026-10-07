@@ -1,6 +1,6 @@
 ---
 title: Cinco formatos para uma transcrição
-version: 1
+version: 2
 ---
 
 O mesmo áudio pode voltar em cinco formatos, e escolher o certo poupa escrever um conversor.

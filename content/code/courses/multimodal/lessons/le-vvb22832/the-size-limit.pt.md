@@ -1,6 +1,6 @@
 ---
 title: O limite de 25 MB, e gravações longas
-version: 1
+version: 2
 ---
 
 A OpenAI documenta um limite de **25 MB por arquivo enviado** para transcrição, e aceita uma lista de formatos: `flac`, `mp3`, `mp4`, `mpeg`, `mpga`, `m4a`, `ogg`, `wav` e `webm`. O servidor do curso aplica os dois. Meia hora da ligação do curso, feita juntando 32 cópias uma atrás da outra, mostra por que o limite importa na prática:
@@ -29,7 +29,7 @@ ana@lab:~/mm$ for i in $(seq 32); do echo "file '$PWD/media/call-1042.wav'"; don
 1772.272000
 ana@lab:~/mm$ python long.py long.wav
 long.wav: 56,712,782 bytes, the limit is 26,214,400
-whole file: 413 Maximum content size limit (26214400) exceeded (56713055 bytes read)
+whole file: 413 Maximum content size limit (26214400) exceeded (56713051 bytes read)
 ana@lab:~/mm$ ffmpeg -nostdin -loglevel error -y -i long.wav -ac 1 -ar 16000 -b:a 32k long.mp3 && stat -c "%s %n" long.mp3
 7089633 long.mp3
 ```
