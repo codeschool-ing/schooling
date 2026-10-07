@@ -36,14 +36,12 @@ rate  double precision -- approximate: about 15 significant digits
 não é representável em binário**, do mesmo modo que um terço não é em decimal. A consequência, num
 banco em que nenhum bug jamais encostou:
 
-```sql
-SELECT 0.1::double precision + 0.2::double precision = 0.3::double precision;
 ```
-
-```
- ?column?
+shop=# SELECT 0.1::double precision + 0.2::double precision = 0.3::double precision;
+ ?column? 
 ----------
  f
+(1 row)
 ```
 
 Falso. Não é um problema de exibição de arredondamento — os dois valores são genuinamente números
@@ -65,14 +63,12 @@ jeito, e em que velocidade de aritmética importa porque você faz milhões de o
 
 ## Dividir inteiros surpreende todo mundo uma vez
 
-```sql
-SELECT 7 / 2;
 ```
-
-```
- ?column?
+shop=# SELECT 7 / 2;
+ ?column? 
 ----------
         3
+(1 row)
 ```
 
 Inteiro dividido por inteiro é inteiro, e o resto é descartado — não arredondado, descartado.

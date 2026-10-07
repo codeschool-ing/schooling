@@ -41,29 +41,59 @@ ambíguo retroativamente, porque nada registrou que fuso ele queria dizer.
 Apesar do nome, **ele não guarda um fuso**. Guarda um momento absoluto — internamente UTC — e
 converte na entrada e na saída usando o fuso da sessão:
 
-```sql
-SET TIME ZONE 'Europe/Lisbon';
-INSERT INTO invoices (paid_at) VALUES ('2026-10-25 01:30:00');
-
-SET TIME ZONE 'UTC';
-SELECT paid_at FROM invoices;
 ```
+shop=# CREATE TABLE payments (paid_at timestamptz NOT NULL);
+CREATE TABLE
 
-```
-        paid_at
+shop=# SET TIME ZONE 'Europe/Lisbon';
+SET
+
+shop=# INSERT INTO payments (paid_at) VALUES ('2026-10-24 01:30:00');
+INSERT 0 1
+
+shop=# SET TIME ZONE 'UTC';
+SET
+
+shop=# SELECT paid_at FROM payments;
+        paid_at         
 ------------------------
- 2026-10-25 00:30:00+00
+ 2026-10-24 00:30:00+00
+(1 row)
 ```
 
-O mesmo instante, escrito do jeito que o leitor pediu. É esse o recurso inteiro: **o momento é
+Uma e meia do dia 24 em Lisboa, escrita em Lisboa, lida de volta em UTC como meia-noite e meia. O
+mesmo instante, escrito do jeito que o leitor pediu. É esse o recurso inteiro: **o momento é
 guardado uma vez, e cada leitor o vê nos termos dele.** Comparações, ordenação e aritmética ficam
 todas corretas porque acontecem sobre o valor absoluto.
 
-O custo é que você precisa saber qual é o fuso da sessão quando uma string pelada chega. Diga
-explicitamente e a ambiguidade some:
+O custo é que uma string pelada é lida no fuso da sessão, e a noite seguinte é a do desenho acima,
+quando o `01:30` de Lisboa acontece duas vezes:
+
+```
+shop=# SET TIME ZONE 'Europe/Lisbon';
+SET
+
+shop=# INSERT INTO payments (paid_at) VALUES ('2026-10-25 01:30:00');
+INSERT 0 1
+
+shop=# SET TIME ZONE 'UTC';
+SET
+
+shop=# SELECT paid_at FROM payments ORDER BY paid_at;
+        paid_at         
+------------------------
+ 2026-10-24 00:30:00+00
+ 2026-10-25 01:30:00+00
+(2 rows)
+```
+
+Não recusou e não avisou. Dos dois momentos que aquela string podia significar, ficou com o segundo
+— `01:30` em UTC, que é o `01:30` depois que os relógios voltaram —, e o único sinal é uma distância
+de vinte e cinco horas entre duas linhas escritas com um dia de diferença. Diga o deslocamento e a
+ambiguidade some:
 
 ```sql
-INSERT INTO invoices (paid_at) VALUES ('2026-10-25 01:30:00+01');
+INSERT INTO payments (paid_at) VALUES ('2026-10-25 01:30:00+01');
 ```
 
 ## Quando `date` é certo, e quando é erro

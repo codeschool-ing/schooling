@@ -36,14 +36,12 @@ rate  double precision -- approximate: about 15 significant digits
 is not representable in binary** any more than a third is in decimal. The consequence, in a
 database that has never been touched by a bug:
 
-```sql
-SELECT 0.1::double precision + 0.2::double precision = 0.3::double precision;
 ```
-
-```
- ?column?
+shop=# SELECT 0.1::double precision + 0.2::double precision = 0.3::double precision;
+ ?column? 
 ----------
  f
+(1 row)
 ```
 
 False. Not a rounding display issue — the two values are genuinely different numbers.
@@ -64,14 +62,12 @@ where arithmetic speed matters because you are doing millions of operations.
 
 ## Dividing integers surprises everybody once
 
-```sql
-SELECT 7 / 2;
 ```
-
-```
- ?column?
+shop=# SELECT 7 / 2;
+ ?column? 
 ----------
         3
+(1 row)
 ```
 
 Integer divided by integer is integer, and the remainder is discarded — not rounded, discarded.

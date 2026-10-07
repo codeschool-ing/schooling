@@ -51,11 +51,10 @@ def main():
     out = out.replace(b'\r\n', b'\n').decode()
     if banner:
         sys.stdout.write(out if out.endswith('\n\n') else out + '\n')
-    first = True
+    gap = False
     for line in lines:
-        if not first:
+        if gap:
             sys.stdout.write('\n')
-        first = False
         os.write(fd, line.encode() + b'\n')
         out, nprompt = read_until_prompt(fd)
         text = out.replace(b'\r\n', b'\n').decode()
@@ -66,6 +65,7 @@ def main():
         sys.stdout.write(prompt + line + '\n')
         if text:
             sys.stdout.write(text + '\n')
+        gap = bool(text)
         prompt = nprompt
         if prompt is None:
             break

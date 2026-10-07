@@ -28,24 +28,55 @@ id  name                         id    customer_id  total
 A Ana tem três pedidos, o Bruno tem um, a Célia não tem nenhum, e o pedido 1005 não é de ninguém —
 uma compra sem conta, da relação opcional da aula 1.
 
-## Pareando
+Elas são pequenas de propósito, e não são a loja: um banco só delas as mantém separadas. Salve isto
+como `joins.sql`, do mesmo jeito que o `shop.sql` da aula 1:
 
 ```sql
-SELECT c.name, o.id, o.total
-FROM   customers c
-JOIN   orders o ON o.customer_id = c.id;
+-- joins.sql: the two tables of lesson 5, in a database of their own.
+CREATE TABLE customers (
+    id   integer PRIMARY KEY,
+    name text    NOT NULL
+);
+
+CREATE TABLE orders (
+    id          integer PRIMARY KEY,
+    customer_id integer REFERENCES customers (id),
+    total       numeric(10,2) NOT NULL
+);
+
+INSERT INTO customers (id, name) VALUES
+    (1, 'Ana Lopes'), (2, 'Bruno Sá'), (3, 'Célia Reis');
+
+INSERT INTO orders (id, customer_id, total) VALUES
+    (1001, 1, 34.90), (1002, 2, 69.80), (1003, 1, 51.00),
+    (1004, 1, 34.90), (1005, NULL, 12.00);
 ```
 
-```
- name       | id   | total
-------------+------+-------
- Ana Lopes  | 1001 | 34.90
- Ana Lopes  | 1003 | 51.00
- Ana Lopes  | 1004 | 34.90
- Bruno Sá   | 1002 | 69.80
+```sh
+createdb joins
+psql joins -f joins.sql
+psql joins
 ```
 
-Quatro linhas. Leia como pares, não como tabela:
+O prompt diz `joins=#` daqui até o fim da aula.
+
+## Pareando
+
+```
+joins=# SELECT c.name, o.id, o.total
+joins-# FROM   customers c
+joins-# JOIN   orders o ON o.customer_id = c.id;
+   name    |  id  | total 
+-----------+------+-------
+ Ana Lopes | 1001 | 34.90
+ Bruno Sá  | 1002 | 69.80
+ Ana Lopes | 1003 | 51.00
+ Ana Lopes | 1004 | 34.90
+(4 rows)
+```
+
+Quatro linhas, na ordem em que o motor calhou de encontrá-las — sem um `ORDER BY` não há outra
+promessa, que é a regra da aula 4. Leia como pares, não como tabela:
 
 - `(Ana, 1001)` — a condição vale, então é uma linha.
 - `(Ana, 1002)` — pedido do Bruno, então `o.customer_id = c.id` é falso. Não é linha.
