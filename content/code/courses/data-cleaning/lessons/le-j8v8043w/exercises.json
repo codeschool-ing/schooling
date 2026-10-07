@@ -1,0 +1,658 @@
+[
+  {
+    "id": "ex-s8d5qh0a",
+    "version": 1,
+    "section": "ambiguous-dates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does reading a day-first date as month-first rarely raise an error?",
+    "hint": "What does the wrong reading produce?",
+    "choices": [
+      {
+        "text": "It produces another valid date",
+        "correct": true,
+        "why": "Right; only a day above 12 can expose it."
+      },
+      {
+        "text": "pandas tries both readings and keeps the more recent date",
+        "correct": false,
+        "why": "It applies one convention to every row."
+      },
+      {
+        "text": "Dates are stored as text, so nothing is ever checked",
+        "correct": false,
+        "why": "They are converted; the conversion simply succeeds wrongly."
+      },
+      {
+        "text": "The error is raised, but only as a warning nobody reads",
+        "correct": false,
+        "why": "No warning is raised at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vzspx8c",
+    "version": 1,
+    "section": "ambiguous-dates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shops have 380 values whose first number is above 12 and none whose second is. What does that prove?",
+    "hint": "A month cannot exceed 12.",
+    "choices": [
+      {
+        "text": "The shops write the month first, like the app does",
+        "correct": false,
+        "why": "A first number of 13 or more cannot be a month."
+      },
+      {
+        "text": "The shops mix both conventions in one column",
+        "correct": false,
+        "why": "A mix would leave witnesses on both sides; there are none on the second."
+      },
+      {
+        "text": "The shops write the day first",
+        "correct": true,
+        "why": "Right: 380 witnesses and no exception."
+      },
+      {
+        "text": "Nothing, until the values are converted",
+        "correct": false,
+        "why": "The count proves it before any conversion."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kzmjv7g",
+    "version": 1,
+    "section": "ambiguous-dates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 2023 migration has 3 values with the first number above 12 and 8 with the second. What follows?",
+    "hint": "Witnesses on both sides.",
+    "choices": [
+      {
+        "text": "It is month first, since 8 is more than 3",
+        "correct": false,
+        "why": "A majority does not overrule the three day-first witnesses."
+      },
+      {
+        "text": "It is day first, like the shops",
+        "correct": false,
+        "why": "Eight values cannot be day first."
+      },
+      {
+        "text": "Its dates are invalid and must be dropped",
+        "correct": false,
+        "why": "Most of them parse; only ten are undecidable."
+      },
+      {
+        "text": "Each value is decided on its own",
+        "correct": true,
+        "why": "Right, and the ones nothing decides stay blank."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tyx72g7",
+    "version": 1,
+    "section": "parsing-by-source",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After parsing every source with its own format, how many sign-up dates stayed blank because nothing decided them?",
+    "hint": "The first number printed.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m12192f2",
+    "version": 1,
+    "section": "parsing-by-source",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why look at the minimum and maximum date of each source right after parsing?",
+    "hint": "What does a wrong format produce?",
+    "choices": [
+      {
+        "text": "pandas requires it before saving a date column",
+        "correct": false,
+        "why": "Nothing requires it; it is a cheap check."
+      },
+      {
+        "text": "A wrong format lands out of range",
+        "correct": true,
+        "why": "Right: in the future, or before the company's records begin."
+      },
+      {
+        "text": "To find the customers who signed up first",
+        "correct": false,
+        "why": "That is a use of the data, not a check of the parsing."
+      },
+      {
+        "text": "To convert the dates to UTC",
+        "correct": false,
+        "why": "Sign-up dates have no time and no zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-k51g7fwk",
+    "version": 1,
+    "section": "parsing-by-source",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The database lesson 1 made has `datestyle` set to DMY. What would `signed_up::date` do to the app's dates?",
+    "hint": "The app writes the month first.",
+    "choices": [
+      {
+        "text": "Read them day first: wrong where the day is 12 or less, an error above",
+        "correct": true,
+        "why": "Right; the silent half is the dangerous one."
+      },
+      {
+        "text": "Read them correctly, since PostgreSQL detects the format",
+        "correct": false,
+        "why": "It follows the date style; it does not detect anything."
+      },
+      {
+        "text": "Leave them as text",
+        "correct": false,
+        "why": "A cast converts or fails; it does not leave text."
+      },
+      {
+        "text": "Convert them to UTC",
+        "correct": false,
+        "why": "A date has no time zone to convert."
+      }
+    ]
+  },
+  {
+    "id": "ex-43mcstfm",
+    "version": 1,
+    "section": "time-zones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The website writes `11:24:01Z`. What time was it in São Paulo?",
+    "hint": "São Paulo is three hours behind UTC.",
+    "choices": [
+      {
+        "text": "08:24:01",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "14:24:01",
+        "correct": false,
+        "why": "That is three hours ahead, the wrong direction."
+      },
+      {
+        "text": "11:24:01",
+        "correct": false,
+        "why": "That reads the UTC clock as if it were local."
+      },
+      {
+        "text": "09:24:01",
+        "correct": false,
+        "why": "That would be a two-hour difference, as with daylight saving, which Brazil no longer has."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqbb00z9",
+    "version": 1,
+    "section": "time-zones",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many website orders move to a different day when converted to São Paulo time?",
+    "hint": "The number under the three examples.",
+    "value": 1335,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yw803cs1",
+    "version": 1,
+    "section": "time-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which website orders move to the previous day?",
+    "hint": "Three hours back from midnight UTC.",
+    "choices": [
+      {
+        "text": "Those stamped 21:00 to 23:59 UTC",
+        "correct": false,
+        "why": "Those were placed at 18:00 to 20:59 local, the same day."
+      },
+      {
+        "text": "Every order placed on a Sunday",
+        "correct": false,
+        "why": "The weekday has nothing to do with the offset."
+      },
+      {
+        "text": "Only the orders of 31 December",
+        "correct": false,
+        "why": "Every night has its late orders."
+      },
+      {
+        "text": "Those stamped 00:00 to 02:59 UTC",
+        "correct": true,
+        "why": "Right: placed between 21:00 and 23:59 local time."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjhw5jf6",
+    "version": 1,
+    "section": "time-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why name the zone `America/Sao_Paulo` rather than `-03:00`?",
+    "hint": "São Paulo had daylight saving until 2019.",
+    "choices": [
+      {
+        "text": "Offsets are not accepted by pandas",
+        "correct": false,
+        "why": "It accepts them; they are just less safe."
+      },
+      {
+        "text": "A region knows its own history",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Region names are shorter to type",
+        "correct": false,
+        "why": "They are longer."
+      },
+      {
+        "text": "UTC has no offset to subtract from",
+        "correct": false,
+        "why": "UTC is the reference every offset is measured from."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg729e0p",
+    "version": 1,
+    "section": "money-as-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `'1.234,56'.replace(',', '.')` fail to give a number?",
+    "hint": "Look at the result.",
+    "choices": [
+      {
+        "text": "`replace` only changes the first comma it finds",
+        "correct": false,
+        "why": "It changes every one; there is only one here."
+      },
+      {
+        "text": "Python cannot convert text containing a point",
+        "correct": false,
+        "why": "`float('1234.56')` works."
+      },
+      {
+        "text": "It leaves two points: `1.234.56`",
+        "correct": true,
+        "why": "Right; the thousands point must go first."
+      },
+      {
+        "text": "The `R$` is still in the text",
+        "correct": false,
+        "why": "This example has no `R$`, and still fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-2b0tr79w",
+    "version": 1,
+    "section": "money-as-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `0.1 + 0.2` printing `0.30000000000000004` say about money?",
+    "hint": "Errors accumulate.",
+    "choices": [
+      {
+        "text": "Floats cannot hold most decimals exactly",
+        "correct": true,
+        "why": "Right: money goes to `Decimal` or integer cents."
+      },
+      {
+        "text": "Python has a bug in its addition",
+        "correct": false,
+        "why": "Every language with binary floats gives the same result."
+      },
+      {
+        "text": "Amounts must be rounded before they are added",
+        "correct": false,
+        "why": "Rounding each step hides the error and adds its own."
+      },
+      {
+        "text": "Money should be stored as text",
+        "correct": false,
+        "why": "Text cannot be added at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-atv9r9ex",
+    "version": 1,
+    "section": "money-as-text",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`R$ 1.234,56` in integer cents is what number?",
+    "hint": "Reais times a hundred.",
+    "value": 123456,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-q44ndsfy",
+    "version": 1,
+    "section": "currencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rate of 5.3961 is reais per dollar. How is US$ 669.73 converted to reais?",
+    "hint": "Reais per dollar, times dollars.",
+    "choices": [
+      {
+        "text": "Divide by the rate",
+        "correct": false,
+        "why": "That gives about a hundred and twenty, far too small."
+      },
+      {
+        "text": "Multiply by the rate",
+        "correct": true,
+        "why": "Right: R$ 3,535.64 at June's rate."
+      },
+      {
+        "text": "Add the rate to the amount",
+        "correct": false,
+        "why": "Rates multiply."
+      },
+      {
+        "text": "Use January's rate for every invoice of the year",
+        "correct": false,
+        "why": "Each invoice takes its own month's rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-2t7evbkn",
+    "version": 1,
+    "section": "currencies",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which decisions does a currency conversion need written down? Choose all that apply.",
+    "hint": "Three were listed.",
+    "choices": [
+      {
+        "text": "Which rate table",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Which date picks the rate",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Which way the rate is applied",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Which font the report uses",
+        "correct": false,
+        "why": "Irrelevant to the number."
+      }
+    ]
+  },
+  {
+    "id": "ex-jkg6a81g",
+    "version": 1,
+    "section": "currencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep the original amount and currency beside the amount in reais?",
+    "hint": "A conversion has a choice inside it.",
+    "choices": [
+      {
+        "text": "Because pandas cannot drop columns after a merge",
+        "correct": false,
+        "why": "It can; keeping them is a choice."
+      },
+      {
+        "text": "The finance team reads only dollars and euros",
+        "correct": false,
+        "why": "Nothing says so."
+      },
+      {
+        "text": "The reais amount is an estimate and will be deleted",
+        "correct": false,
+        "why": "It is the number reports use; it stays."
+      },
+      {
+        "text": "So the conversion is checkable and repeatable",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0e6xvhs",
+    "version": 1,
+    "section": "units",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each spelling to its unit after cleaning.",
+    "hint": "Eight spellings, three units.",
+    "pairs": [
+      {
+        "left": "`Kg`",
+        "right": "kg"
+      },
+      {
+        "left": "`gr`",
+        "right": "g, then converted to kg"
+      },
+      {
+        "left": "`unid`",
+        "right": "un"
+      }
+    ],
+    "right_distractors": [
+      "l"
+    ]
+  },
+  {
+    "id": "ex-tvhsh20p",
+    "version": 1,
+    "section": "units",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An invoice weighs 1,012 lb. How many kilos is that, to one decimal place?",
+    "hint": "1,012 × 0.45359237.",
+    "value": 459.0,
+    "tolerance": 0.05,
+    "unit": "kg"
+  },
+  {
+    "id": "ex-n9s6sapx",
+    "version": 1,
+    "section": "units",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "28,519 order totals match their lines to the centavo and 7 do not. Why does that support the conversions?",
+    "hint": "What would a wrong conversion do?",
+    "choices": [
+      {
+        "text": "The seven are orders without lines",
+        "correct": false,
+        "why": "They have lines; their totals disagree with them."
+      },
+      {
+        "text": "Matching totals prove every line's unit price is right",
+        "correct": false,
+        "why": "A wrong price charged would still match; the check tests consistency, not accuracy."
+      },
+      {
+        "text": "A wrong conversion would break thousands of orders, not seven",
+        "correct": true,
+        "why": "Right; seven is a different problem, lesson 9's."
+      },
+      {
+        "text": "Seven is within the tolerance of floating point",
+        "correct": false,
+        "why": "The comparison is in integer cents; no tolerance applies."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzsn50f5",
+    "version": 1,
+    "section": "codes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After padding to five digits, 98.83% of line codes exist in the catalogue. What are most of the rest?",
+    "hint": "Two codes.",
+    "choices": [
+      {
+        "text": "Two products dropped from the catalogue",
+        "correct": true,
+        "why": "Right: `00123` and `00584`, orphans for lesson 11."
+      },
+      {
+        "text": "App lines that still lack their zeros after padding",
+        "correct": false,
+        "why": "Padding restored every app code."
+      },
+      {
+        "text": "Codes with letters in them that padding cannot fix",
+        "correct": false,
+        "why": "No code has a letter."
+      },
+      {
+        "text": "Lines whose unit could not be mapped",
+        "correct": false,
+        "why": "Units have nothing to do with codes."
+      }
+    ]
+  },
+  {
+    "id": "ex-vz96y6gf",
+    "version": 1,
+    "section": "codes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In pandas, `.str.___(5)` pads a code on the left with zeros to five characters.",
+    "hint": "Zero fill.",
+    "blanks": [
+      {
+        "accept": [
+          "zfill"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-whz2xkw4",
+    "version": 1,
+    "section": "codes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why join CEPs on their bare digits but display them with the hyphen?",
+    "hint": "Two formats of one code.",
+    "choices": [
+      {
+        "text": "Because the post office forbids storing the hyphen",
+        "correct": false,
+        "why": "No such rule; the hyphen is the canonical display."
+      },
+      {
+        "text": "Bare digits sort in the right order and hyphens do not",
+        "correct": false,
+        "why": "Both sort the same way."
+      },
+      {
+        "text": "So two formats of one code always meet",
+        "correct": true,
+        "why": "Right; the hyphen is for people."
+      },
+      {
+        "text": "The hyphen changes the code's numeric value",
+        "correct": false,
+        "why": "A code has no numeric value to change."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnycrmmn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the general method of this lesson in order.",
+    "hint": "Find, write, convert, check.",
+    "items": [
+      "Find the convention each source uses",
+      "Write it down as a table of formats or factors",
+      "Convert each source with its own convention",
+      "Check the result against something independent"
+    ],
+    "trap": "Converting before the convention is proved bakes a guess into every row."
+  },
+  {
+    "id": "ex-a3m270v4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A supplier's file arrives with dates like `07/08/2025` and no other clue. What should Ana do before converting?",
+    "hint": "Count the witnesses.",
+    "choices": [
+      {
+        "text": "Read it day first, since the supplier is Brazilian",
+        "correct": false,
+        "why": "A Brazilian company can run an American system; prove it first."
+      },
+      {
+        "text": "Let pandas infer the format from the first row",
+        "correct": false,
+        "why": "The first row is exactly the ambiguous kind."
+      },
+      {
+        "text": "Convert both ways and keep the earlier date",
+        "correct": false,
+        "why": "Picking the earlier is a guess with a rule attached."
+      },
+      {
+        "text": "Count values with a number above 12 in each position",
+        "correct": true,
+        "why": "Right; if no witness exists, ask the supplier."
+      }
+    ]
+  }
+]

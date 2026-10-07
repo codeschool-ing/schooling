@@ -1,0 +1,552 @@
+{
+  "ex-bczs7rgn": {
+    "prompt": "O `file` diz que o `store_sales.csv` é `ISO-8859 text`. Que codificação o pandas deve usar?",
+    "hint": "O Latin-1 pertence a essa família.",
+    "choices": [
+      {
+        "text": "`latin-1`",
+        "why": "Isso. Cada letra acentuada ocupa um byte nela, como o `od` mostrou."
+      },
+      {
+        "text": "`utf-8`",
+        "why": "É o padrão, e foi o que falhou no byte `0xe3`."
+      },
+      {
+        "text": "`utf-8-sig`",
+        "why": "É UTF-8 com marca de ordem de bytes, lido como UTF-8 do mesmo jeito, e falha no mesmo byte."
+      },
+      {
+        "text": "`utf-16`",
+        "why": "O UTF-16 poria um byte zero ao lado de cada letra do cabeçalho, e o dump não mostra nenhum."
+      }
+    ]
+  },
+  "ex-z21gzedq": {
+    "prompt": "Ler o `store_sales.csv` com a codificação padrão levantou `UnicodeDecodeError`. Por que a aula chama isso de desfecho bom?",
+    "hint": "Como seria o outro desfecho?",
+    "choices": [
+      {
+        "text": "Erros fazem o pandas trocar sozinho para Latin-1 na próxima tentativa",
+        "why": "O pandas não tenta de novo sozinho; você precisa dizer o que o arquivo é."
+      },
+      {
+        "text": "O erro lista todo byte que falhou na decodificação",
+        "why": "Ele nomeia só o primeiro, na posição 106."
+      },
+      {
+        "text": "Uma decodificação errada daria certo em silêncio e produziria `CartÃ£o`",
+        "why": "Isso. Uma falha te para; uma decodificação errada que dá certo escreve `Ã£` em todo relatório adiante."
+      },
+      {
+        "text": "Prova que o arquivo está danificado e precisa ser exportado de novo",
+        "why": "O arquivo está bom; está escrito numa codificação diferente da suposta."
+      }
+    ]
+  },
+  "ex-qmsqhtf1": {
+    "prompt": "O `od -c` imprimiu o byte do `ã` como `343`, que é octal. Quanto é em decimal?",
+    "hint": "3 × 64 + 4 × 8 + 3."
+  },
+  "ex-d9cd29qd": {
+    "prompt": "Um arquivo tem 5.001 linhas e o `csv.reader` acha 4.998 registros depois do cabeçalho. O que isso significa?",
+    "hint": "Sem quebras de linha dentro de campos, linhas são registros mais um.",
+    "choices": [
+      {
+        "text": "Três registros estão duplicados",
+        "why": "Um duplicado continua sendo registro e linha; não muda nenhuma das contagens."
+      },
+      {
+        "text": "Campos guardam quebras",
+        "why": "Isso. Duas linhas a mais além do cabeçalho quer dizer quebras dentro de campos entre aspas."
+      },
+      {
+        "text": "O arquivo tem três linhas de cabeçalho",
+        "why": "Possível num arquivo mal exportado, mas aí o `csv.reader` contaria os cabeçalhos extras como registros."
+      },
+      {
+        "text": "O separador está errado e os campos se fundiram",
+        "why": "Um separador errado muda as colunas de cada registro, não quantos registros existem."
+      }
+    ]
+  },
+  "ex-ns323s4d": {
+    "prompt": "Lido sem opções, `birth_year` voltou como `float64`. Por que float para números inteiros?",
+    "hint": "Conte as linhas vazias.",
+    "choices": [
+      {
+        "text": "Alguns anos têm ponto decimal no arquivo",
+        "why": "O arquivo tem `1986`, nunca `1986.0`; o ponto é o pandas que põe."
+      },
+      {
+        "text": "O pandas lê todo número como float",
+        "why": "`itens` no arquivo das lojas voltou como `int64`."
+      },
+      {
+        "text": "Os anos de dois dígitos forçaram um tipo decimal",
+        "why": "`87` é um inteiro perfeitamente bom; os vazios são a causa."
+      },
+      {
+        "text": "Algumas linhas estão vazias, e uma coluna inteira simples não guarda valor faltante",
+        "why": "Isso. 338 vazios forçaram o único tipo numérico que guarda."
+      }
+    ]
+  },
+  "ex-sx1tkr0z": {
+    "prompt": "Lido sem opções, o código `00833` virou `833`. O que mais essa leitura apagou?",
+    "hint": "Lida como texto, a coluna mostra dois tipos de linha.",
+    "choices": [
+      {
+        "text": "A prova de dois sistemas com dois formatos",
+        "why": "Isso. Como texto, `00833` e `438` aparecem lado a lado e apontam para o aplicativo."
+      },
+      {
+        "text": "Os nomes de produto que pertencem a cada código",
+        "why": "Os nomes moram no `products.csv`, que esta leitura não tocou."
+      },
+      {
+        "text": "A ordem dos itens dentro de cada pedido",
+        "why": "`line_no` é uma coluna própria e sobrevive de qualquer jeito."
+      },
+      {
+        "text": "Todo código acima de 999, que estourou",
+        "why": "Um `int64` guarda números muito maiores que cinco dígitos."
+      }
+    ]
+  },
+  "ex-94qd5749": {
+    "prompt": "Com as opções padrão, quais destes valores de campo o pandas transforma em faltantes? Marque todos que se aplicam.",
+    "hint": "A lista é longa, e é por isso que `keep_default_na=False` existe.",
+    "choices": [
+      {
+        "text": "`NA`",
+        "why": "Sim, e é assim que o código de país da Namíbia some."
+      },
+      {
+        "text": "`null`",
+        "why": "Sim."
+      },
+      {
+        "text": "`0`",
+        "why": "Não. Zero é um número, e os descontos `0` do aplicativo continuam zeros."
+      },
+      {
+        "text": "um campo vazio",
+        "why": "Sim, e esse se quer."
+      },
+      {
+        "text": "`1900`",
+        "why": "Não. Um marcador com cara de dado continua dado."
+      }
+    ]
+  },
+  "ex-bt5rb1ky": {
+    "prompt": "`customer_id` está preenchido 2.413 vezes com 2.376 valores distintos. O que a diferença diz?",
+    "hint": "Numa chave, os dois deveriam ser iguais.",
+    "choices": [
+      {
+        "text": "37 clientes não têm id",
+        "why": "`empty` é 0 nesta coluna."
+      },
+      {
+        "text": "37 ids estão no formato errado",
+        "why": "Todo id tem seis caracteres; o formato é coerente."
+      },
+      {
+        "text": "37 linhas repetem um id que já aparece",
+        "why": "Isso. Numa chave, preenchidos menos distintos é o número de cópias a mais."
+      },
+      {
+        "text": "37 clientes foram apagados a pedido próprio",
+        "why": "Clientes apagados faltam no arquivo, o que não faz ids se repetirem."
+      }
+    ]
+  },
+  "ex-04j5cy4g": {
+    "prompt": "O perfil mostra valores de `cep` de 7 a 9 caracteres. Que tamanho é impossível para um CEP escrito corretamente?",
+    "hint": "Um CEP tem oito dígitos, e o hífen é opcional.",
+    "choices": [
+      {
+        "text": "8",
+        "why": "Oito dígitos sem o hífen: não é a forma canônica, mas nada se perdeu."
+      },
+      {
+        "text": "7",
+        "why": "Isso. Com ou sem hífen, oito dígitos não cabem em sete caracteres."
+      },
+      {
+        "text": "9",
+        "why": "Nove é o canônico `99999-999`."
+      },
+      {
+        "text": "Nenhum; os três aparecem em arquivos válidos",
+        "why": "Sete caracteres não guardam oito dígitos."
+      }
+    ]
+  },
+  "ex-z81xzhng": {
+    "prompt": "`marketing_opt_in` é uma pergunta de sim ou não, e o perfil mostra 10 valores distintos. O que Ana deve concluir?",
+    "hint": "Duas respostas, dez grafias.",
+    "choices": [
+      {
+        "text": "A pergunta foi feita de dez jeitos diferentes",
+        "why": "O perfil conta respostas, não perguntas."
+      },
+      {
+        "text": "Dez clientes se recusaram a responder",
+        "why": "Recusas apareceriam em `empty`, que é 61."
+      },
+      {
+        "text": "A coluna tem dez clientes distintos",
+        "why": "Distintos conta valores, não pessoas."
+      },
+      {
+        "text": "Sim e não têm várias grafias",
+        "why": "Isso. O número é o achado; o mapeamento vem depois."
+      }
+    ]
+  },
+  "ex-49rms3pq": {
+    "prompt": "Um perfil mostra uma coluna `city` com 28 valores distintos. Do que Ana precisa, além do perfil, para dizer se 28 está errado?",
+    "hint": "O perfil diz onde olhar.",
+    "choices": [
+      {
+        "text": "Saber quantas cidades a empresa atende",
+        "why": "Isso. Cinco cidades e 28 valores é um achado; 28 cidades e 28 valores não é."
+      },
+      {
+        "text": "Um segundo perfil, rodado amanhã sobre o mesmo arquivo",
+        "why": "Imprimiria 28 de novo."
+      },
+      {
+        "text": "O valor mais longo da coluna, em caracteres",
+        "why": "O tamanho pode sugerir uma variante; não diz quantas cidades existem."
+      },
+      {
+        "text": "O valor mais comum e a sua contagem",
+        "why": "Isso já está no perfil, e ainda não diz se 28 é demais."
+      }
+    ]
+  },
+  "ex-n1g5a2p8": {
+    "prompt": "`courier` está preenchido 22.834 vezes, o mesmo número dos pedidos `delivery`. O que essa coincidência exata sugere sobre os 5.717 entregadores vazios?",
+    "hint": "Duas contagens que batem exatamente raramente são coincidência.",
+    "choices": [
+      {
+        "text": "São pedidos da Rapidex cujo entregador se perdeu",
+        "why": "A Rapidex aparece pelo nome na coluna; as linhas dela estão preenchidas."
+      },
+      {
+        "text": "São as retiradas, onde não existe entregador",
+        "why": "Isso. Uma coluna explica os vazios da outra, e esses vazios estão certos."
+      },
+      {
+        "text": "São pedidos cancelados",
+        "why": "Entregas canceladas ainda nomeiam um entregador; a contagem não bateria com as retiradas."
+      },
+      {
+        "text": "Precisam ser preenchidos antes de qualquer análise",
+        "why": "Preenchê-los inventaria entregadores para pedidos que ninguém entregou."
+      }
+    ]
+  },
+  "ex-z9kns3z8": {
+    "prompt": "`ordered_at` vai de 19 a 20 caracteres. Qual é a conclusão mais barata?",
+    "hint": "Um formato tem tamanho fixo.",
+    "choices": [
+      {
+        "text": "Alguns horários não têm segundos",
+        "why": "Sem segundos, o horário seria três caracteres mais curto, não um."
+      },
+      {
+        "text": "Alguns pedidos foram feitos depois da meia-noite",
+        "why": "`00:15:00` tem o mesmo tamanho que `23:15:00`."
+      },
+      {
+        "text": "A coluna tem dois formatos",
+        "why": "Isso: o do aplicativo, e o do site com o seu `Z`."
+      },
+      {
+        "text": "Os 25 pedidos repetidos são mais longos",
+        "why": "Uma repetição é uma cópia, caractere por caractere."
+      }
+    ]
+  },
+  "ex-kzp5q25b": {
+    "prompt": "No arquivo de pedidos, o site escreve sem desconto como vazio e o aplicativo como ___.",
+    "hint": "Um único dígito.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-ejj2n4ne": {
+    "prompt": "`discount` tem 5 valores distintos em 14.668 linhas preenchidas. O que uma contagem baixa de distintos diz sobre uma coluna numérica?",
+    "hint": "Pense nos quatro cupons.",
+    "choices": [
+      {
+        "text": "A maioria dos valores falta",
+        "why": "Faltantes se contam em `empty`, não em `distinct`."
+      },
+      {
+        "text": "Foi arredondada para reais inteiros",
+        "why": "Arredondar deixaria muito mais que cinco valores numa coluna de preços."
+      },
+      {
+        "text": "É uma chave e deveria ser única",
+        "why": "Uma chave tem tantos distintos quanto linhas, o caso oposto."
+      },
+      {
+        "text": "Ela age como categoria",
+        "why": "Isso: zero e os quatro valores de cupom."
+      }
+    ]
+  },
+  "ex-xah0hesx": {
+    "prompt": "137 pedidos têm total negativo. O que eles têm em comum?",
+    "hint": "Compare o desconto com a cesta.",
+    "choices": [
+      {
+        "text": "Um cupom que vale mais que a cesta mais o frete",
+        "why": "Isso. O site o subtraiu assim mesmo; quanto foi cobrado é pergunta para pagamentos."
+      },
+      {
+        "text": "São reembolsos registrados como vendas negativas",
+        "why": "Reembolsos têm status próprio e mantêm um total positivo."
+      },
+      {
+        "text": "Foram digitados com sinal de menos por engano",
+        "why": "Todos têm um cupom maior que o pedido, o que explica o sinal sem erro de digitação."
+      },
+      {
+        "text": "Vêm do caixa das lojas",
+        "why": "São pedidos online; os totais das lojas estão em outro arquivo."
+      }
+    ]
+  },
+  "ex-zw4b190q": {
+    "prompt": "Os totais têm desvio padrão de 242,55 e média de 94,11. Qual é a razão entre os dois? Dê duas casas decimais.",
+    "hint": "242,55 ÷ 94,11."
+  },
+  "ex-5zt17a0f": {
+    "prompt": "Por que o perfil de uma coluna numérica olha primeiro o mínimo, o máximo e os percentis altos?",
+    "hint": "Onde vai parar um erro com um zero a mais?",
+    "choices": [
+      {
+        "text": "A média não pode ser calculada enquanto houver atípicos",
+        "why": "Pode ser calculada; só é puxada, e é por isso que não basta."
+      },
+      {
+        "text": "Erros e marcadores ficam nas pontas",
+        "why": "Isso. Um zero a mais ou um sinal de menos vai parar numa ponta, não no meio."
+      },
+      {
+        "text": "Percentis são mais baratos de calcular que a mediana",
+        "why": "A mediana é um percentil, o 50."
+      },
+      {
+        "text": "O meio dos dados é checado pelo perfil de padrões",
+        "why": "Padrões descrevem formas de texto, não onde os números ficam."
+      }
+    ]
+  },
+  "ex-nz6q6c6a": {
+    "prompt": "O percentil 99,9 dos totais é R$ 764,39 e o máximo é R$ 26.928,50. Quantas vezes maior é o máximo? Dê um número inteiro.",
+    "hint": "26.928,50 ÷ 764,39."
+  },
+  "ex-rvmnjqq0": {
+    "prompt": "Qual é o padrão do valor `R$ 45,90`?",
+    "hint": "Dígitos viram 9, letras viram a, o resto fica.",
+    "choices": [
+      {
+        "text": "`R$ 99,99`",
+        "why": "A função também troca letras por `a`; a captura em SQL trocou só dígitos, e por isso imprimiu `R$`."
+      },
+      {
+        "text": "`aa 99,99`",
+        "why": "`$` não é letra, então fica."
+      },
+      {
+        "text": "`a$ 99,99`",
+        "why": "Isso. O `R` é letra; o `$`, o espaço e a vírgula ficam."
+      },
+      {
+        "text": "`a$ 9999`",
+        "why": "A vírgula fica: é ela que separa um formato de outro."
+      }
+    ]
+  },
+  "ex-wetjfrs7": {
+    "prompt": "O perfil de padrões de `signed_up` mostra duas formas, mas a coluna tem três formatos. Por que ele não enxerga o terceiro?",
+    "hint": "Escreva `14/03/2025` e `03/14/2025` como padrões.",
+    "choices": [
+      {
+        "text": "O terceiro formato está em outro arquivo",
+        "why": "Os três estão no `customers.csv`."
+      },
+      {
+        "text": "A função ignora as barras",
+        "why": "A pontuação fica de propósito; é assim que `99/99/9999` difere de `9999-99-99`."
+      },
+      {
+        "text": "Poucas linhas usam o terceiro formato para ele aparecer",
+        "why": "O aplicativo escreveu 730 delas."
+      },
+      {
+        "text": "Dia primeiro e mês primeiro têm a mesma forma",
+        "why": "Isso. Um padrão vê forma, não significado; separar por origem as distingue."
+      }
+    ]
+  },
+  "ex-cghasfem": {
+    "prompt": "Por que o perfil de padrões de `birth_year` não revela as 348 linhas de `1900`?",
+    "hint": "Qual é o padrão de `1900`?",
+    "choices": [
+      {
+        "text": "`1900` é válido, só inexato",
+        "why": "Isso. Padrões acham valores inválidos, nunca os inexatos."
+      },
+      {
+        "text": "A função pula valores que se repetem",
+        "why": "Ela conta todo valor; repetições são o que `value_counts` soma."
+      },
+      {
+        "text": "Os 1900 foram removidos como faltantes pelo pandas",
+        "why": "`1900` não está na lista do pandas, e a leitura só tratou vazios como faltantes."
+      },
+      {
+        "text": "Anos de quatro e de dois dígitos têm o mesmo padrão",
+        "why": "`9999` e `99` são padrões diferentes, e os dois foram impressos."
+      }
+    ]
+  },
+  "ex-s646rzpc": {
+    "prompt": "Ponha em ordem os passos da regra de limpeza do CEP.",
+    "hint": "O zero tem de voltar antes do hífen.",
+    "items": [
+      "Tirar o hífen, se houver",
+      "Completar com zeros à esquerda até oito dígitos",
+      "Pôr o hífen de volta depois do quinto dígito"
+    ],
+    "trap": "Pôr o hífen antes de completar o deixa no lugar errado em todo código de sete dígitos."
+  },
+  "ex-9ef1g9n7": {
+    "prompt": "No perfil em SQL, que expressão dá o número de células `cep` vazias?",
+    "hint": "Uma das duas contagens pula os NULL.",
+    "choices": [
+      {
+        "text": "`count(DISTINCT cep)`",
+        "why": "Isso conta valores diferentes, não vazios."
+      },
+      {
+        "text": "`count(cep) - count(DISTINCT cep)`",
+        "why": "Isso é o número de repetições entre os preenchidos."
+      },
+      {
+        "text": "`min(length(cep))`",
+        "why": "Isso é o menor valor."
+      },
+      {
+        "text": "`count(*) - count(cep)`",
+        "why": "Isso. `count(cep)` pula os NULL e `count(*)` não."
+      }
+    ]
+  },
+  "ex-f59w4s5a": {
+    "prompt": "Todo total das lojas em 2025 tem a forma `R$ 9,99` com até três dígitos antes da vírgula. Por que isso é um aviso sobre a conversão que Ana escreve?",
+    "hint": "Como o caixa escreve mil e duzentos reais?",
+    "choices": [
+      {
+        "text": "Três dígitos não bastam para os totais reais das lojas",
+        "why": "Bastaram em 2025; a questão é o formato de um maior."
+      },
+      {
+        "text": "O ponto de milhar do caixa nunca aparece, então uma conversão testada em 2025 poderia estragar a primeira venda grande",
+        "why": "Isso. `R$ 1.234,56` é uma forma que os dados deste ano nunca mostraram, então precisa ser tratada de propósito."
+      },
+      {
+        "text": "A vírgula indica que os totais estão em euros",
+        "why": "A vírgula é a marca decimal brasileira, e o `R$` diz reais."
+      },
+      {
+        "text": "O padrão esconde totais negativos",
+        "why": "Um sinal de menos sobreviveria ao padrão e apareceria como forma própria."
+      }
+    ]
+  },
+  "ex-k3vtednx": {
+    "prompt": "Associe cada achado a quem pode responder por ele.",
+    "hint": "Siga cada defeito até o sistema que o escreveu.",
+    "pairs": [
+      {
+        "left": "CEPs de sete dígitos",
+        "right": "O time do aplicativo"
+      },
+      {
+        "left": "Ano de nascimento 1900",
+        "right": "A gerência das lojas"
+      },
+      {
+        "left": "Totais de pedido negativos",
+        "right": "Pagamentos"
+      },
+      {
+        "left": "Ids de cliente repetidos",
+        "right": "O time do CRM"
+      }
+    ],
+    "right_distractors": [
+      "O fornecedor"
+    ]
+  },
+  "ex-yza087sz": {
+    "prompt": "Um colega manda um arquivo novo de 40.000 linhas e pede um gráfico por região para amanhã. Quais destes cabem na primeira hora? Marque todos que se aplicam.",
+    "hint": "Olhe antes de mexer.",
+    "choices": [
+      {
+        "text": "Conferir a codificação e o separador com `file` e um olhar nos bytes",
+        "why": "Sim. Um palpite errado aqui corrompe tudo o que vem depois."
+      },
+      {
+        "text": "Ler toda coluna como texto e perfilá-la",
+        "why": "Sim. O perfil diz onde olhar, inclusive na coluna de região."
+      },
+      {
+        "text": "Corrigir à mão toda grafia de toda região",
+        "why": "Ainda não. Corrigir vem depois de o perfil mostrar o que há para corrigir."
+      },
+      {
+        "text": "Rodar um perfil de padrões nos códigos e nas datas",
+        "why": "Sim. Formatos são mais baratos de achar do que de descobrir num gráfico quebrado."
+      },
+      {
+        "text": "Desenhar o gráfico primeiro e perfilar só se parecer errado",
+        "why": "Um gráfico sobre onze grafias de uma região parece perfeitamente plausível."
+      }
+    ]
+  },
+  "ex-da2v450q": {
+    "prompt": "As primeiras linhas do `orders.csv` mostram um desconto vazio e um `0`. O que o perfil acrescenta que o `head()` não podia?",
+    "hint": "Conte, e separe por canal.",
+    "choices": [
+      {
+        "text": "Que os pedidos vazios tinham um cupom que se perdeu",
+        "why": "Cupons aparecem como valores nos dois canais; os vazios são pedidos sem cupom."
+      },
+      {
+        "text": "Que os dois pedidos foram feitos pelo mesmo cliente",
+        "why": "Nada na coluna de desconto diz quem comprou."
+      },
+      {
+        "text": "Vazio e `0` são um sentido vindo de dois sistemas",
+        "why": "Isso. Todo vazio é do site e todo `0` é do aplicativo."
+      },
+      {
+        "text": "Que a coluna de desconto deveria ser descartada",
+        "why": "Ela guarda todo cupom usado; precisa de uma grafia, não de ser apagada."
+      }
+    ]
+  }
+}
