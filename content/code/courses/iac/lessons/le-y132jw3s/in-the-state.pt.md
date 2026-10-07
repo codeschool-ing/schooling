@@ -1,11 +1,12 @@
 ---
 title: O estado guarda todo valor em texto puro
-version: 1
+version: 2
 ---
 
 Uma conclusão razoável a esta altura é que o problema veio de uma pessoa digitando a senha. Se o Terraform
 a gerar, ninguém digita, ninguém commita, e não há nada para vazar. A Ana tenta isso: um
-`random_password` cria a senha, e o AWS Secrets Manager a guarda, onde a aplicação pode buscá-la:
+`random_password` cria a senha, e o AWS Secrets Manager a guarda, onde a aplicação pode buscá-la.
+`~/shop/secrets/main.tf`:
 
 ```hcl
 terraform {
@@ -89,7 +90,7 @@ senha fica guardada para que a próxima execução a reaproveite em vez de gerar
 O que um provider devolve para um recurso vai para o estado, e um provider devolve o que recebeu.
 
 **Ler um segredo também o coloca lá.** A configuração da aplicação da Ana não cria a senha; só
-precisa consultá-la, com um data source (aula 5):
+precisa consultá-la, com um data source (aula 5), aqui em `read.tf`, ao lado do `main.tf`:
 
 ```hcl
 data "aws_secretsmanager_secret_version" "db" {
@@ -122,3 +123,15 @@ Então a ordem das defesas importa. Proteger o estado vem por último, em "prote
 guarda o que quer que tenha entrado. Antes disso, o melhor caminho é impedir que o valor entre, e
 há dois jeitos: dar ao Terraform um valor que ele não tem permissão de guardar, ou não dar o valor a
 ele. As duas próximas seções tratam de cada um.
+
+Antes de seguir, a Ana desmonta este experimento, porque a próxima seção cria um secret com o mesmo
+nome:
+
+```sh
+rm read.tf
+terraform destroy -auto-approve
+aws secretsmanager delete-secret --secret-id shop/db --force-delete-without-recovery
+```
+
+O último comando é necessário porque o `destroy` só agenda a exclusão de um secret, como a AWS faz,
+e um secret à espera de exclusão continua ocupando o nome.

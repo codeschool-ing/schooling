@@ -1,6 +1,6 @@
 ---
 title: Quatro lugares por onde uma senha vaza
-version: 1
+version: 2
 ---
 
 A imagem comum de um segredo vazado é um arquivo enviado por engano para um repositório público.
@@ -11,7 +11,7 @@ cópias.
 
 O servidor web da Ana precisa da senha do banco de dados da loja. O jeito mais rápido de levá-la até
 lá é uma variável e um script de `user_data` que a grava num arquivo que a aplicação lê quando a
-máquina sobe:
+máquina sobe. `~/shop/main.tf`:
 
 ```hcl
 terraform {
@@ -63,8 +63,23 @@ db_password = "s3cr3t-Shop-2026"
 
 ## Cópia um: o histórico do git
 
-O `.gitignore` da Ana tem as linhas que a aula 7 deu a ele, para o estado e para o `.terraform/`.
-Não diz nada sobre `*.tfvars`, e semanas atrás um `git add .` levou o arquivo junto:
+O `.gitignore` da Ana tem as linhas que a aula 7 deu a ele, para o estado e para o `.terraform/`:
+
+```
+.terraform/
+*.tfstate
+*.tfstate.*
+```
+
+Não diz nada sobre `*.tfvars`, e semanas atrás um `git add .` levou o arquivo junto. Para que o seu
+diretório tenha o mesmo histórico, inicialize-o e faça esse commit:
+
+```sh
+terraform init -input=false
+git init -q && git add . && git commit -qm "web server with its database password"
+```
+
+O Git agora acompanha quatro arquivos:
 
 ```
 ana@laptop:~/shop$ git ls-files
