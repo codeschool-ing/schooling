@@ -616,6 +616,84 @@ def l03_cycle_times(lang):
 # ---- end of lesson 3
 
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-loops', 4)
+def l04_loops(lang):
+    t = {
+        'en': dict(rows=[('seconds', 'pair programming', 'the partner reads every line as it is typed'),
+                         ('minutes', 'test-first', 'a failing test, then the code that passes it'),
+                         ('hours', 'continuous integration', 'everybody’s work merged and built'),
+                         ('one day', 'stand-up', 'the team sees where everyone is'),
+                         ('a week or two', 'iteration', 'the customer sees working software'),
+                         ('a few months', 'release', 'the users have it')],
+                   title='how long until somebody tells you that you are wrong',
+                   label='Six feedback loops of Extreme Programming, from the fastest to the slowest: pair '
+                         'programming in seconds, test-first programming in minutes, continuous integration in '
+                         'hours, the stand-up in a day, the iteration in a week or two and the release in a few '
+                         'months.',
+                   cap='XP is a stack of feedback loops, each catching a different kind of mistake at the earliest '
+                       'moment it can be caught. The outer loops are what every agile method has; the inner three '
+                       'are what XP added.'),
+        'pt': dict(rows=[('segundos', 'programação em par', 'o parceiro lê cada linha enquanto é digitada'),
+                         ('minutos', 'teste primeiro', 'um teste que falha, depois o código que o faz passar'),
+                         ('horas', 'integração contínua', 'o trabalho de todos integrado e compilado'),
+                         ('um dia', 'reunião diária', 'o time vê onde cada um está'),
+                         ('uma ou duas semanas', 'iteração', 'o cliente vê software funcionando'),
+                         ('alguns meses', 'release', 'os usuários o têm')],
+                   title='quanto tempo até alguém dizer que você está errado',
+                   label='Seis ciclos de feedback do Extreme Programming, do mais rápido ao mais lento: '
+                         'programação em par em segundos, teste primeiro em minutos, integração contínua em horas, '
+                         'a reunião diária em um dia, a iteração em uma ou duas semanas e o release em alguns meses.',
+                   cap='O XP é uma pilha de ciclos de feedback, cada um pegando um tipo diferente de erro no momento '
+                       'mais cedo em que ele pode ser pego. Os ciclos de fora são o que todo método ágil tem; os três '
+                       'de dentro são o que o XP acrescentou.'),
+    }[lang]
+    f = Fig('l04-loops', 660, 300, t['label'])
+    f.text(20, 20, t['title'], size=10.5, anchor='start', weight='600')
+    for i, (when, what, note) in enumerate(t['rows']):
+        y = 40 + i * 42
+        inner = i < 3
+        f.rect(20, y, 620, 34, stroke='--phosphor' if inner else '--wire', fill='--scan' if inner else '--panel', rx=4)
+        f.text(32, y + 17, when, size=10, anchor='start', fill='--paper-dim')
+        f.text(190, y + 11, what, size=10.5, anchor='start', weight='600')
+        f.text(190, y + 25, note, size=9.5, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l04-tdd', 4)
+def l04_tdd(lang):
+    t = {
+        'en': dict(red='red', redn='write a test that fails', green='green', greenn='write just enough code to pass',
+                   ref='refactor', refn='improve the code, tests still passing',
+                   label='Three steps in a loop: red, write a test that fails; green, write just enough code to '
+                         'pass it; refactor, improve the code while the tests still pass; then back to red.',
+                   cap='The test-first loop. Each turn takes minutes, and the code is never more than one small '
+                       'step away from a state where every test passes.'),
+        'pt': dict(red='vermelho', redn='escreva um teste que falha', green='verde',
+                   greenn='escreva só o código para passar', ref='refatorar',
+                   refn='melhore o código, com os testes passando',
+                   label='Três passos em ciclo: vermelho, escreva um teste que falha; verde, escreva só o código '
+                         'necessário para passar; refatorar, melhore o código com os testes ainda passando; e de '
+                         'volta ao vermelho.',
+                   cap='O ciclo do teste primeiro. Cada volta leva minutos, e o código nunca está a mais de um passo '
+                       'pequeno de um estado em que todos os testes passam.'),
+    }[lang]
+    f = Fig('l04-tdd', 620, 230, t['label'])
+    pts = [(110, 110), (310, 110), (510, 110)]
+    names = [(t['red'], t['redn'], '--amber'), (t['green'], t['greenn'], '--phosphor'), (t['ref'], t['refn'], '--paper')]
+    for (x, y), (n, note, c) in zip(pts, names):
+        f.circle(x, y - 20, 34, fill='--panel', stroke=c, width=2.2)
+        f.text(x, y - 20, n, size=11.5, weight='600', fill=c)
+        f.text(x, y + 34, note, size=9.5, fill='--paper-dim')
+    arrow(f, 148, 90, 272, 90)
+    arrow(f, 348, 90, 472, 90)
+    f.path('M510 158 C510 212 110 212 110 160', stroke='--paper-dim', width=1.4, arrow=True)
+    return f, t['cap']
+
+# ---- end of lesson 4
+
+
 # ------------------------------------------------------------------ the figures
 
 
