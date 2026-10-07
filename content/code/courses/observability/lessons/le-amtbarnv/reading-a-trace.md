@@ -46,8 +46,8 @@ services:
               --storage.tsdb.path=/prometheus, --enable-feature=exemplar-storage]
 ```
 
-Then slow payments, start Prometheus again with the override, set the customers going for
-twenty-five minutes, and a minute and a half later pick one of their checkouts from the storefront's
+Then slow payments, start Prometheus again with the override, and set the customers going for
+twenty-five minutes. A minute and a half later, pick one of their checkouts from the storefront's
 log by its last line, with lesson 3's `last_trace`:
 
 ```sh

@@ -233,10 +233,9 @@ services:
 
 Duas configurações nele seguram o laboratório. **Todo contêiner da loja manda sua saída para o
 Collector** pelo driver de log `fluentd` do Docker, então as linhas de log chegam ao Loki sem que o
-serviço saiba que o Loki existe. E **toda porta é publicada só em `127.0.0.1`**, então
-`localhost:8080` é a loja e `localhost:9090` é o Prometheus a partir de um shell na máquina do
-laboratório, e nada na sua rede, nem na internet se a máquina for alugada, alcança qualquer parte
-disso.
+serviço saiba que o Loki existe. E **toda porta é publicada só em `127.0.0.1`**. De um shell
+na máquina do laboratório, `localhost:8080` é a loja e `localhost:9090` é o Prometheus, e nada na sua
+rede alcança qualquer parte disso, nem nada na internet se a máquina for alugada.
 
 ## Para onde os sinais vão
 

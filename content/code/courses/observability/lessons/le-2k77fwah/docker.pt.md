@@ -28,7 +28,7 @@ em que as falhas não contam, a versão do Docker de uma sonda de startup. Salve
 docker compose up -d orders
 ```
 
-Com o banco no ar, ele fica saudável em um quarto de minuto:
+Com o banco no ar, ele fica saudável:
 
 ```
 ana@obs:~/shop$ docker compose ps orders --format '{{.Name}}  {{.Status}}'

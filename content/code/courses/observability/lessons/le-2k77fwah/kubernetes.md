@@ -6,8 +6,8 @@ version: 2
 Kubernetes is where the three questions get their consequences, and this lesson needs a cluster of
 its own. **kind** runs one inside Docker, a whole Kubernetes in one container, which is all a probe
 needs. These lines install kind and `kubectl` from their official releases, at the versions this
-lesson was recorded with, create the cluster, and copy the shop's image into it, because the
-manifests below run that image and the cluster cannot build it:
+lesson was recorded with, and create the cluster. The last one copies the shop's image into it:
+the manifests below run that image, and the cluster cannot build it:
 
 ```sh
 ARCH=$(dpkg --print-architecture)

@@ -233,9 +233,9 @@ services:
 
 Two settings in it hold the lab together. **Every shop container sends its output to the
 Collector** through Docker's `fluentd` logging driver, so its log lines reach Loki without the
-service knowing Loki exists. And **every port is published on `127.0.0.1` only**, so
-`localhost:8080` is the shop and `localhost:9090` is Prometheus from a shell on the lab machine, and
-nothing on your network, or on the internet if the machine is rented, can reach any of it.
+service knowing Loki exists. And **every port is published on `127.0.0.1` only**. From a
+shell on the lab machine `localhost:8080` is the shop and `localhost:9090` is Prometheus, and
+nothing on your network can reach any of it, nor anything on the internet if the machine is rented.
 
 ## Where the signals go
 

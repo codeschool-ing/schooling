@@ -28,7 +28,7 @@ recreate `orders` with it:
 docker compose up -d orders
 ```
 
-With the database up, it turns healthy within a quarter of a minute:
+With the database up, it turns healthy:
 
 ```
 ana@obs:~/shop$ docker compose ps orders --format '{{.Name}}  {{.Status}}'

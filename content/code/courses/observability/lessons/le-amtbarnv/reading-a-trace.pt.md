@@ -46,8 +46,8 @@ services:
               --storage.tsdb.path=/prometheus, --enable-feature=exemplar-storage]
 ```
 
-Depois deixe o payments lento, reinicie o Prometheus com o override, ponha os clientes para rodar por
-vinte e cinco minutos, e um minuto e meio depois escolha um dos checkouts deles no log da vitrine pela
+Depois deixe o payments lento, reinicie o Prometheus com o override e ponha os clientes para rodar por
+vinte e cinco minutos. Um minuto e meio depois, escolha um dos checkouts deles no log da vitrine pela
 última linha, com o `last_trace` da aula 3:
 
 ```sh

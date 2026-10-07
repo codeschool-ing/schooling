@@ -35,8 +35,8 @@ printf 'GRAYLOG_PASSWORD_SECRET=%s\nGRAYLOG_ROOT_PASSWORD_SHA2=%s\n' "$(openssl 
 
 Depois o laboratório é iniciado de novo do zero com os dois perfis que trazem os armazenamentos, o
 que sobe o Elasticsearch, o MongoDB, o OpenSearch e o Graylog ao lado do resto. O payments falha uma
-cobrança em vinte desde o começo, para que haja falhas a procurar. O Graylog leva um ou dois minutos
-até a API dele responder na porta 9000:
+cobrança em vinte desde o começo, para que haja falhas a procurar. O Graylog demora a subir, e
+`curl -s localhost:9000/api/` responde quando a API dele está pronta na porta 9000:
 
 ```sh
 docker compose --profile '*' down -v

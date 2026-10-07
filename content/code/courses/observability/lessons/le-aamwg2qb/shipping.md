@@ -33,8 +33,8 @@ printf 'GRAYLOG_PASSWORD_SECRET=%s\nGRAYLOG_ROOT_PASSWORD_SHA2=%s\n' "$(openssl 
 
 Then the lab is started again from nothing with the two profiles that hold the stores, which brings
 up Elasticsearch, MongoDB, OpenSearch and Graylog beside the rest. Payments fails one charge in
-twenty from the start, so that there are failures to look for. Graylog takes a minute or two before
-its API answers on port 9000:
+twenty from the start, so that there are failures to look for. Graylog takes a while to start, and
+`curl -s localhost:9000/api/` answers once its API is ready on port 9000:
 
 ```sh
 docker compose --profile '*' down -v

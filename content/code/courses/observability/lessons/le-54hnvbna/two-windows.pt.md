@@ -14,7 +14,7 @@ produção o page rápido usa uma hora e cinco minutos; o laboratório usa cinco
 poder vê-lo funcionar. A loja está comprando há meia hora, então toda janela tem tráfego real.
 
 Para ter a mesma meia hora, inicie o laboratório de novo do zero, ponha os clientes para rodar por
-setenta minutos e provoque uma única cobrança com falha logo de cara; a última parte desta seção diz
+setenta minutos e provoque uma única cobrança com falha logo de cara. A última parte desta seção diz
 por que essa importa:
 
 ```sh

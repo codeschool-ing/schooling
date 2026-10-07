@@ -15,7 +15,7 @@ lesson can watch it work. The shop has been buying for half an hour, so every wi
 traffic.
 
 To have the same half hour, start the lab again from nothing, set the customers going for seventy
-minutes, and cause a single failed charge right away; the last part of this section says why that
+minutes, and cause a single failed charge right away. The last part of this section says why that
 one matters:
 
 ```sh

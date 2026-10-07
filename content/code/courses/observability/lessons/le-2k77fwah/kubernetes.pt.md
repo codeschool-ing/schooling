@@ -6,8 +6,8 @@ version: 2
 O Kubernetes é onde as três perguntas ganham consequências, e esta aula precisa de um cluster
 próprio. O **kind** roda um dentro do Docker, um Kubernetes inteiro num contêiner, que é tudo de que
 uma sonda precisa. Estas linhas instalam o kind e o `kubectl` pelos releases oficiais, nas versões com
-que esta aula foi gravada, criam o cluster e copiam a imagem da loja para dentro dele, porque os
-manifestos abaixo rodam essa imagem e o cluster não consegue construí-la:
+que esta aula foi gravada, e criam o cluster. A última copia a imagem da loja para dentro dele: os
+manifestos abaixo rodam essa imagem, e o cluster não consegue construí-la:
 
 ```sh
 ARCH=$(dpkg --print-architecture)
