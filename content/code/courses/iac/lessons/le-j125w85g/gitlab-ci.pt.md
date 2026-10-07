@@ -1,11 +1,12 @@
 ---
 title: GitLab CI, e o plan como artefato
-version: 1
+version: 2
 ---
 
 O mesmo pipeline no GitLab é mais curto, porque o GitLab diz mais coisas com palavras-chave. Como o
-workflow do GitHub, **este arquivo foi escrito para a aula e nunca executado**: aqui também não há
-GitLab.
+workflow do GitHub, **este arquivo foi escrito para a aula e não executado por ela**: isso exige uma
+conta no GitLab, que este curso também não pede. Ele é o `.gitlab-ci.yml`, na raiz do `~/shop`, e o
+plano gratuito do GitLab é um lugar para experimentá-lo se você tem uma conta.
 
 ```yaml
 # Illustrative: written for lesson 15 and never run by it. Every job calls
@@ -65,8 +66,9 @@ apply:
     - ./ci.sh apply
 ```
 
-O que o laboratório consegue dizer dos dois arquivos é que eles são YAML válido, e que cada um tem
-os jobs que deveria ter:
+O que dá para conferir sem nenhum dos dois serviços é que os dois arquivos são YAML válido, e que cada
+um tem os jobs que deveria ter. O `python3` aqui é o do `~/iac-venv`, e o módulo de YAML dele, o
+PyYAML, veio junto com o AWS CLI:
 
 ```
 ana@laptop:~/shop$ python3 -c 'import yaml; print(list(yaml.safe_load(open(".github/workflows/terraform.yml"))["jobs"]))'
@@ -84,7 +86,7 @@ testado.
 
 O `stages` dá a ordem; jobs do mesmo estágio rodam em paralelo, então `check` e `scan` rodam lado a
 lado e o `plan` espera pelos dois. O `default: image` roda todo job na imagem `hashicorp/terraform`,
-na mesma versão que o laboratório usa. O `entrypoint` dela está vazio porque essa imagem inicia o
+na mesma versão que este curso usa. O `entrypoint` dela está vazio porque essa imagem inicia o
 próprio `terraform`, e o GitLab precisa de um shell para rodar as linhas de `script`. O `scan` usa
 a imagem do Trivy, que é como um job ganha uma ferramenta que a imagem padrão não tem.
 
