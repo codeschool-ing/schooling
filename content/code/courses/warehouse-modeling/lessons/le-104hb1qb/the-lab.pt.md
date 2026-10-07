@@ -76,8 +76,8 @@ mkdir ~/wh && cd ~/wh
 
 As duas primeiras linhas instalam o **PostgreSQL 16**, a versão que o Ubuntu 24.04 traz, e o põem
 para rodar. As duas seguintes criam um ambiente virtual Python em `~/wh-env` e instalam nele o
-DuckDB na versão em que o curso foi gravado: o programa de linha de comando, a biblioteca Python que
-as lições 11 e 12 usam, e o `deltalake` com o `pyarrow` para a lição 10. Um ambiente virtual mantém
+DuckDB, na versão em que o curso foi gravado. Os quatro pacotes são o programa de linha de comando,
+a biblioteca Python que as lições 11 e 12 usam, e o `deltalake` com o `pyarrow` para a lição 10. Um ambiente virtual mantém
 tudo isso fora do Python do sistema, e apagar a pasta remove tudo.
 
 As três linhas acrescentadas ao `~/.bashrc` rodam em todo terminal novo. `PGDATABASE` deixa você

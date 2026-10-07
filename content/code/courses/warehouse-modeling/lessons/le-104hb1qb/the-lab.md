@@ -75,9 +75,9 @@ mkdir ~/wh && cd ~/wh
 ```
 
 The first two lines install **PostgreSQL 16**, the version Ubuntu 24.04 ships, and start it. The
-next two make a Python virtual environment in `~/wh-env` and install DuckDB into it at the version
-the course was recorded with: the command-line program, the Python library lessons 11 and 12 use,
-and `deltalake` with `pyarrow` for lesson 10. A virtual environment keeps all of that out of the
+next two make a Python virtual environment in `~/wh-env` and install DuckDB into it, at the version
+the course was recorded with. The four packages are the command-line program, the Python library
+lessons 11 and 12 use, and `deltalake` with `pyarrow` for lesson 10. A virtual environment keeps all of that out of the
 system's own Python, and deleting the folder removes it.
 
 The three lines added to `~/.bashrc` run in every new terminal. `PGDATABASE` lets you type `psql`

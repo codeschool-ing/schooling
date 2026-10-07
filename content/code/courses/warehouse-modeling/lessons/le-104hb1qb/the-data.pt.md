@@ -126,8 +126,8 @@ ana@lab:~/wh$ psql -c 'SELECT count(*) AS orders, min(ordered_at) AS first, max(
 (1 row)
 ```
 
-577.468 pedidos, o primeiro alguns minutos depois da meia-noite do Ano-Novo de 2024 e o último
-alguns minutos antes da meia-noite, dois anos depois. Isto é o que o laboratório inteiro ocupa em
+577.468 pedidos, o primeiro à 01:26 do Ano-Novo de 2024 e o último às 23:22 do último dia de
+2025. Isto é o que o laboratório inteiro ocupa em
 disco:
 
 ```

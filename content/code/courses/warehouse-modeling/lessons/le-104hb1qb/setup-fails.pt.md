@@ -3,7 +3,7 @@ title: Quando a instalação falha
 version: 1
 ---
 
-A maioria das instalações falha num passo pulado ou feito duas vezes, e cada falha se anuncia com as
+**A maioria das instalações falha num passo pulado ou feito duas vezes**, e cada falha se anuncia com as
 próprias palavras. Aqui estão as que uma primeira execução encontra, cada uma provocada na máquina de
 gravação pulando ou repetindo o passo, com o que a mensagem quer dizer e o que digitar.
 

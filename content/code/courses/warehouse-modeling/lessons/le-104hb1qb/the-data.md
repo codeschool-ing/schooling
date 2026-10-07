@@ -125,8 +125,8 @@ ana@lab:~/wh$ psql -c 'SELECT count(*) AS orders, min(ordered_at) AS first, max(
 (1 row)
 ```
 
-577,468 orders, the first a few minutes after midnight on New Year's Day 2024 and the last a few
-minutes before midnight two years later. Here is what the whole lab takes on disk:
+577,468 orders, the first at 01:26 on New Year's Day 2024 and the last at 23:22 on the last day of
+2025. Here is what the whole lab takes on disk:
 
 ```
 ana@lab:~/wh$ sudo du -sh /var/lib/postgresql/16/main ~/wh-env ~/wh

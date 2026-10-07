@@ -3,9 +3,9 @@ title: When the setup fails
 version: 1
 ---
 
-Most setups fail on a step that was skipped or done twice, and each says so in its own words. Here are
-the ones a first run meets, each taken by skipping or repeating that step on the recording machine,
-with what the message means and what to type.
+**Most setups fail on a step that was skipped or done twice**, and each says so in its own words.
+Here are the ones a first run meets, each taken by skipping or repeating that step on the recording
+machine, with what the message means and what to type.
 
 ## The server is not running
 
