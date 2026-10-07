@@ -498,6 +498,23 @@ Two courses are most of the way there already: `python` lesson 1 installs the in
 `operating-systems` lessons 2 to 4 install the three systems. What the rule adds to lessons like
 those is the other two paths and the section on failure, not a new lesson.
 
+**The student is given what the lesson uses, inside the lesson** (`C-40`). The lab that proves a
+capture — `lab.sh` beside `course.json`, a lesson's `captures.sh`, the programs in the course's
+`lab/` — is the author's, and the loader reads none of it. So a program the student runs is shown
+whole in a lesson, or written by a short program a lesson shows; a data file is small enough to
+paste, or generated the same way; an example project is built in the lessons rather than assumed.
+Where that makes an example smaller than the author would like, the example gets smaller. The
+prose never names an authoring file, and `validate-content` refuses `lab.sh`, `captures.sh` and a
+path under the course's own `lab/` in anything a student reads — fences included, because a
+command in a fence is the one somebody types. It cannot see a command the lab installs under a
+plain name, or a project the lessons use and never show; those are still the author's to catch.
+
+**A course that needs a language model recommends a local one, run with Ollama**, and names a paid
+API key as the other path. Ollama is free and needs no account and no card, so the course can be
+finished by anybody who can open it. It asks for a reasonable computer, and the setup lesson says
+how much memory and disk the recommended model needs and what to do with less. A capture of a
+model's answer names the model and the date it was taken, like any other capture.
+
 ### `exercises.pt.json`
 
 Keyed by the question's id, and carrying **only what a student reads**.
