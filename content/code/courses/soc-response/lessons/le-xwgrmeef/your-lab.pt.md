@@ -62,7 +62,7 @@ on() {  # on HOST COMMAND...: run a command inside a machine, under its own name
 }
 
 sshd_on() {  # sshd_on HOST ADDRESS: an SSH server whose log lines carry time and name
-  on "$1" sh -c "/usr/sbin/sshd -D -e -o ListenAddress=$2 2>&1 |
+  on "$1" sh -c "/usr/sbin/sshd -D -e -o ListenAddress=$2 2>&1 | sed -u 's/\\r$//' |
     ts '%Y-%m-%dT%H:%M:%S%z $1 sshd:' >> $LOG/$1-auth.log" &
 }
 
@@ -129,7 +129,8 @@ cada uma com suas interfaces, endereços e firewall. `cable` liga duas delas com
 e `-` quer dizer este computador. `on` roda um programa dentro de uma delas com o nome daquela máquina,
 para os logs dela dizerem `gw` e não o nome do seu computador. O resto liga as quatro coisas que escrevem
 evidência: o log do firewall, pelo `ulogd`; os registros de fluxo, pelo `nfpcapd`; e dois servidores SSH
-cujas linhas recebem carimbo de hora do `ts`. Suba o laboratório e olhe:
+cujas linhas recebem carimbo de hora do `ts` (o `sed` antes dele tira o retorno de carro que o `sshd`
+põe no fim de cada linha que escreve num terminal). Suba o laboratório e olhe:
 
 ```
 root@soc:~# bash soclab.sh up
@@ -140,10 +141,10 @@ fw (id: 0)
 outside (id: 1)
 root@soc:~# ip -n fw -br addr
 lo               UNKNOWN        127.0.0.1/8 
-eth0@if77        UP             203.0.113.1/24 
-eth1@if79        UP             198.51.100.1/24 
-eth2@if81        UP             192.168.20.1/24 
-eth3@if83        UP             192.168.99.1/24 
+eth0@if117       UP             203.0.113.1/24 
+eth1@if119       UP             198.51.100.1/24 
+eth2@if121       UP             192.168.20.1/24 
+eth3@if123       UP             192.168.99.1/24 
 ```
 
 Nenhuma notícia do `up` é boa notícia: o script para no primeiro comando que falha, e diz qual. Quatro

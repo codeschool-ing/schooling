@@ -25,7 +25,7 @@ on() {  # on HOST COMMAND...: run a command inside a machine, under its own name
 }
 
 sshd_on() {  # sshd_on HOST ADDRESS: an SSH server whose log lines carry time and name
-  on "$1" sh -c "/usr/sbin/sshd -D -e -o ListenAddress=$2 2>&1 |
+  on "$1" sh -c "/usr/sbin/sshd -D -e -o ListenAddress=$2 2>&1 | sed -u 's/\\r$//' |
     ts '%Y-%m-%dT%H:%M:%S%z $1 sshd:' >> $LOG/$1-auth.log" &
 }
 
