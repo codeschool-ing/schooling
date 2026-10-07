@@ -1,6 +1,6 @@
 ---
 title: Recursos, verbos e códigos de status
-version: 1
+version: 2
 ---
 
 A aula 1 controlou os roteadores pelo CLI: texto entra, texto sai, e um script que precisa
@@ -9,10 +9,8 @@ maior parte do equipamento de rede vendido hoje tem uma ao lado do CLI, e o tipo
 API REST sobre HTTPS: o equipamento publica **recursos** em endereços, e um cliente age sobre
 eles com os **verbos** do HTTP.
 
-Os roteadores do lab têm uma em `https://<router>.example.net/api/v1`. Ela foi escrita para este
-curso, porque o FRR não tem nenhuma, e segue o padrão que o equipamento real segue; a última
-seção da aula 1 diz o que é real no lab e o que não é. Perguntando alguma coisa a ela sem dizer
-quem você é:
+Os roteadores do lab têm uma em `https://<router>.example.net/api/v1`, servida pelo `devapid`, o
+programa que a seção anterior ligou. Perguntando alguma coisa a ela sem dizer quem você é:
 
 ```
 ana@ctl:~$ curl -si --cacert lab-ca.pem https://edge1.example.net/api/v1/system

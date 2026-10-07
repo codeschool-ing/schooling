@@ -1,9 +1,10 @@
 ---
 title: Confiando no servidor com quem você fala
-version: 1
+version: 2
 ---
 
-Toda requisição desta aula passou por HTTPS e indicou `lab-ca.pem`. Esse arquivo é o motivo de a
+Toda requisição desta aula passou por HTTPS e indicou `lab-ca.pem`, o certificado da autoridade
+certificadora do próprio lab, que o `netlab.sh` criou e copiou para a home da `ana`. Esse arquivo é o motivo de a
 senha estar segura para ser enviada. Sem ele:
 
 ```
