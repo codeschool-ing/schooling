@@ -24,6 +24,10 @@
 #     REST API on the date below, by run id, so they are records GitHub kept
 #     and not anything this script started.
 #
+# Both workflow files are shown whole, in "anatomy" and "gitlab-ci", and
+# `../../lab.sh shown` fails this script before its first block if either is
+# not the file ../../lab.sh wrote at step 8.
+#
 # What is STAGED rather than typed, and not shown in the lesson: the project
 # at step 8 in /home/ana/shipquote with a remote named origin pointing at an
 # address nobody answers (the emulator reads it for CI_PROJECT_* variables);
@@ -42,6 +46,7 @@ ACTIONLINT=${ACTIONLINT:-/tmp/claude-0/bin/actionlint}
 GCL=${GCL:-/tmp/claude-0/gcl/node_modules/.bin/gitlab-ci-local}
 export PATH="$(dirname "$ACTIONLINT"):$(dirname "$GCL"):$PATH"
 bash "$LAB" stage 8 >/dev/null
+bash "$LAB" shown "$HERE" || exit 1
 cd "$HOME/shipquote" || exit 1
 git remote add origin https://gitlab.example.com/livraria/shipquote.git
 git update-ref refs/remotes/origin/main HEAD

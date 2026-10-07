@@ -1,11 +1,11 @@
 ---
 title: O mesmo pipeline no GitLab CI
-version: 1
+version: 2
 ---
 
 O GitLab lê o pipeline de um arquivo só na raiz do repositório, `.gitlab-ci.yml`. As ideias são as
-das últimas quatro seções; o vocabulário e o arranjo mudam. O passo 8 do `shipquote` escreveu as
-mesmas verificações para ele:
+das últimas quatro seções; o vocabulário e o arranjo mudam. O `shipquote` tem as mesmas
+verificações escritas para ele, na raiz do projeto. Salve como `.gitlab-ci.yml`:
 
 ```schooling-example
 {
@@ -13,7 +13,7 @@ mesmas verificações para ele:
   "file": ".gitlab-ci.yml",
   "parts": [
     {
-      "code": "stages: [fast, test, report]\n\nworkflow:\n  rules:\n    - if: $CI_PIPELINE_SOURCE == \"merge_request_event\"\n    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH",
+      "code": "stages: [fast, test, report]\n\nworkflow:\n  rules:\n    - if: $CI_PIPELINE_SOURCE == \"merge_request_event\"\n    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH\n",
       "note": "**Estágios** rodam em ordem, e todo job de um estágio roda em paralelo. As regras do `workflow` são os gatilhos: um pipeline para um merge request, e um para o branch padrão."
     },
     {
@@ -43,6 +43,22 @@ Este arquivo **rodou**, nesta máquina, pelo `gitlab-ci-local`, um programa de c
 GitLab, e o laboratório deixa isso claro porque importa: ele não mostra um merge request, não impõe
 nada, e o comportamento dele pode diferir do GitLab em detalhes. Para conferir que um pipeline faz o
 que quem o escreveu quis, antes do push, é uma boa ferramenta.
+
+**Rodá-lo você mesmo é opcional**, porque ele precisa de Docker e de Node.js, o que são algumas
+centenas de megabytes e um serviço rodando em segundo plano. No Ubuntu 24.04 os pacotes são os do
+próprio sistema, e o seu usuário precisa entrar no grupo `docker`, o que vale a partir do próximo
+login:
+
+```sh
+sudo apt-get install -y docker.io npm
+sudo usermod -aG docker "$USER"
+sudo npm install -g gitlab-ci-local@4.76.0
+```
+
+Essa instalação não foi executada para este curso; a transcrição abaixo é a mesma versão do
+`gitlab-ci-local`, rodada contra o Docker 29. Se você pular, o que importa é a saída, e nada adiante
+depende disso. De todo jeito, faça o commit do arquivo:
+`git add .gitlab-ci.yml && git commit -m "Run the checks on GitLab CI"`.
 
 Primeiro os jobs que o arquivo define, e depois o próprio pipeline:
 
