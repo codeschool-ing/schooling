@@ -1,9 +1,9 @@
 ---
 title: Elementos pelas relações entre eles
-version: 1
+version: 2
 ---
 
-A seção 05 da aula 1 nomeou as relações na árvore: pai, filho, irmão, descendente. **Combinadores** são como um seletor as usa. São quatro:
+A seção 07 da aula 1 nomeou as relações na árvore: pai, filho, irmão, descendente. **Combinadores** são como um seletor as usa. São quatro:
 
 | combinador | escrito | quer dizer |
 | --- | --- | --- |

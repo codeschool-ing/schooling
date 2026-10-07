@@ -1,6 +1,6 @@
 ---
 title: Elementos, tags e atributos
-version: 1
+version: 2
 ---
 
 Um arquivo HTML é texto, e o texto é de dois tipos: **conteúdo**, que é o que o leitor lê, e **marcação**, que diz o que o conteúdo é. A marcação se escreve em tags, e vale acertar exatamente o vocabulário para falar delas, porque o resto do curso o usa o tempo todo.
@@ -29,7 +29,7 @@ Isto está errado, porque o `<em>` continua aberto quando o `<p>` fecha:
 <p>Open <em>every day.</p></em>
 ```
 
-O navegador mostra o segundo sem reclamar, e a seção 07 mostra o que ele monta a partir de uma marcação assim. Essa tolerância é a razão de um erro desses sobreviver por anos num site de verdade.
+O navegador mostra o segundo sem reclamar, e a seção 09 mostra o que ele monta a partir de uma marcação assim. Essa tolerância é a razão de um erro desses sobreviver por anos num site de verdade.
 
 ## Elementos sem nada dentro
 
@@ -37,6 +37,6 @@ Alguns elementos não podem ter conteúdo, então não têm tag de fechamento. E
 
 ## Caracteres que significam algo
 
-Como `<` começa uma tag, uma página que precisa mostrar um sinal de menor literal tem de escrevê-lo de outro jeito: `&lt;`. São as **referências de caractere**, e quatro valem a pena saber: `&lt;` para `<`, `&gt;` para `>`, `&amp;` para `&` e `&quot;` para aspas duplas dentro do valor de um atributo. Uma página que lista *Pride & Prejudice* escreve o e comercial como `&amp;` no HTML, e o leitor vê `&`. Qualquer outro caractere, um `ã` ou um `€`, você simplesmente digita, desde que o arquivo declare que é UTF-8, o que é a seção 08.
+Como `<` começa uma tag, uma página que precisa mostrar um sinal de menor literal tem de escrevê-lo de outro jeito: `&lt;`. São as **referências de caractere**, e quatro valem a pena saber: `&lt;` para `<`, `&gt;` para `>`, `&amp;` para `&` e `&quot;` para aspas duplas dentro do valor de um atributo. Uma página que lista *Pride & Prejudice* escreve o e comercial como `&amp;` no HTML, e o leitor vê `&`. Qualquer outro caractere, um `ã` ou um `€`, você simplesmente digita, desde que o arquivo declare que é UTF-8, o que é a seção 10.
 
 O HTML não diferencia maiúsculas de minúsculas nos nomes dos elementos, então `<P>` e `<p>` são o mesmo elemento. Escreva em minúsculas: todo guia de estilo faz assim, e o resto deste curso também.

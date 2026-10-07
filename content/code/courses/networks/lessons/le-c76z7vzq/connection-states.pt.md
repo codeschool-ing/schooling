@@ -1,10 +1,12 @@
 ---
 title: O que o ss diz sobre uma conexão
-version: 1
+version: 2
 ---
 
 Uma conexão tem um **estado** em cada ponta, e o `ss` mostra. Aqui o laptop mantém uma conexão SSH
-aberta com o servidor web, e cada lado é consultado:
+aberta com o servidor web, e cada lado é consultado. No seu laboratório, abra-a de um segundo shell no
+laptop com `sleep 60 | nc 192.0.2.80 22`, pergunte dentro do minuto e depois pare o `nc` com Ctrl+C
+antes do último comando:
 
 ```
 ana@laptop:~$ ss -tn

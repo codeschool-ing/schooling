@@ -1,6 +1,6 @@
 ---
 title: Quatro falhas, quatro mensagens
-version: 1
+version: 2
 ---
 
 O modelo mostra o seu valor quando algo quebra, porque **cada camada falha com a sua mensagem**. O
@@ -18,6 +18,8 @@ eth0@if107       DOWN           52:54:00:a8:0a:14 <BROADCAST,MULTICAST>
 
 O `Network is unreachable` voltou na hora, sem nenhum pacote enviado: sem enlace não há rota, e o
 sistema sabe que não tem para onde mandar nada. O `LOWER_UP` sumiu das flags.
+Trazer o enlace de volta pede dois comandos, porque derrubá-lo também apagou a rota padrão que o
+usava: `sudo ip link set eth0 up` e depois `sudo ip route add default via 192.168.10.1`.
 
 Camadas 2 e 3, o vizinho. `192.168.10.99` está dentro do `/24` do escritório, então o laptop tenta
 ARP, e ninguém responde:

@@ -1,0 +1,346 @@
+{
+  "ex-pwg4kkrg": {
+    "prompt": "Como o `load_raw.py` deposita os preços das editoras no warehouse?",
+    "hint": "Interpretar é trabalho de outra etapa.",
+    "choices": [
+      {
+        "text": "Como `jsonb`, um documento por linha",
+        "why": "Isso. O staging interpreta; o raw o guarda intocado."
+      },
+      {
+        "text": "Interpretados em colunas com tipo, com linhas ruins descartadas no caminho",
+        "why": "Isso seria limpar na camada crua, o que a lição mantém fora dela."
+      },
+      {
+        "text": "Como arquivos de texto CSV no diretório do warehouse",
+        "why": "Eles vão para uma tabela, não para um arquivo."
+      },
+      {
+        "text": "Como uma linha por editora com todos os preços num array",
+        "why": "Cada preço continua sendo a sua linha, exatamente como a API mandou."
+      }
+    ]
+  },
+  "ex-ve9xe99f": {
+    "prompt": "Por que o `load_raw.py` pede à loja as colunas de cada tabela em vez de tê-las escritas no script?",
+    "hint": "O que acontece quando a loja acrescenta uma coluna?",
+    "choices": [
+      {
+        "text": "O PostgreSQL exige isso para o `COPY`",
+        "why": "O `COPY` funciona com qualquer tabela compatível; o motivo é a mudança."
+      },
+      {
+        "text": "Uma coluna nova chega sem editar o carregador",
+        "why": "Isso. A decisão sobre ela é então tomada no staging."
+      },
+      {
+        "text": "Ele esconde o schema da loja de quem usa o warehouse",
+        "why": "As tabelas cruas mostram o schema da loja exatamente."
+      },
+      {
+        "text": "Ele deixa a cópia mais rápida",
+        "why": "As colunas são lidas uma vez por tabela; a velocidade não muda."
+      }
+    ]
+  },
+  "ex-8d9zw4w6": {
+    "prompt": "Antes da limpeza, 839 dos 909 preços batiam com um livro. Quantos não batiam?",
+    "hint": "Subtraia."
+  },
+  "ex-vt3dq8af": {
+    "prompt": "Ligue cada problema do feed das editoras à expressão de `staging/prices.sql` que o corrige.",
+    "hint": "Uma decisão por problema.",
+    "pairs": [
+      {
+        "left": "ISBNs com hífen da Maré",
+        "right": "replace(trim(doc->>'isbn'), '-', '')"
+      },
+      {
+        "left": "O espaço no fim da Granito",
+        "right": "trim(doc->>'publisher')"
+      },
+      {
+        "left": "O preço da Farol mandado como texto",
+        "right": "(doc->>'list_price_cents')::integer"
+      },
+      {
+        "left": "A moeda da Farol em minúsculas",
+        "right": "upper(doc->>'currency')"
+      }
+    ],
+    "right_distractors": [
+      "coalesce(doc->>'list_price_cents', '0')"
+    ]
+  },
+  "ex-hjg4xfhd": {
+    "prompt": "Por que a lição se recusa a trocar um preço que falta pela média de preço dos livros da editora?",
+    "hint": "Forma ou fatos?",
+    "choices": [
+      {
+        "text": "Médias são lentas de calcular em SQL",
+        "why": "Elas são baratas; a objeção é o que o número afirmaria."
+      },
+      {
+        "text": "Inventaria um fato que ninguém disse",
+        "why": "Isso. Conserte como um valor é escrito, nunca o que ele é."
+      },
+      {
+        "text": "A editora veria",
+        "why": "Ninguém de fora vê o warehouse; o problema é a verdade interna."
+      },
+      {
+        "text": "Preços faltando são ilegais pela LGPD",
+        "why": "Preços não são dados pessoais."
+      }
+    ]
+  },
+  "ex-vzvgr15y": {
+    "prompt": "A `raw.events` tinha 18.308 entregas e a `staging.events` 18.230 eventos. Quantas entregas eram segundas cópias?",
+    "hint": "Subtraia."
+  },
+  "ex-zynsd82s": {
+    "prompt": "Dois clientes de fato compraram o mesmo livro no mesmo segundo na mesma loja. Qual jeito de tirar duplicatas os juntaria por engano?",
+    "hint": "Qual definição de igual ignora a identidade?",
+    "choices": [
+      {
+        "text": "Por um id que o produtor deu",
+        "why": "Duas compras ganham dois ids, então ficam separadas."
+      },
+      {
+        "text": "Pelo id do pedido",
+        "why": "Duas compras são dois pedidos."
+      },
+      {
+        "text": "`SELECT DISTINCT` em livro e hora",
+        "why": "Isso. Colunas iguais não são o mesmo evento."
+      },
+      {
+        "text": "Uma chave de negócio que inclui o cliente",
+        "why": "O cliente os diferencia."
+      }
+    ]
+  },
+  "ex-2mym3qyq": {
+    "prompt": "O `staging/events.sql` numera as cópias de cada evento com a função de janela ___() e guarda a cópia número um.",
+    "hint": "Ela numera linhas dentro de uma partição.",
+    "blanks": [
+      {
+        "accept": [
+          "row_number"
+        ]
+      }
+    ]
+  },
+  "ex-5zw8cxms": {
+    "prompt": "Juntar pedidos concluídos com pagamentos e linhas deu uma receita de R$ 4.173.913,50 em vez de R$ 2.121.622,90. Por quê?",
+    "hint": "Em quantas linhas vira um pedido com três linhas?",
+    "choices": [
+      {
+        "text": "Pedidos estornados foram contados",
+        "why": "As duas consultas filtram pedidos concluídos."
+      },
+      {
+        "text": "Cada pagamento se repete uma vez por linha",
+        "why": "Isso. Isso é fan-out."
+      },
+      {
+        "text": "Pagamentos incluem imposto que as linhas não incluem",
+        "why": "Linhas e pagamentos concordam até o centavo, como a conciliação mostrou."
+      },
+      {
+        "text": "Cada pedido aparece em duas lojas",
+        "why": "Um pedido pertence a uma loja."
+      }
+    ]
+  },
+  "ex-jtnfp2se": {
+    "prompt": "Uma consulta soma `orders.discount_cents` depois de juntar pedidos com linhas. Em que dias o total dela vai estar certo?",
+    "hint": "O fan-out depende dos dados.",
+    "choices": [
+      {
+        "text": "Todo dia, porque o join é pela chave",
+        "why": "Um join pela chave ainda repete o pedido uma vez por linha."
+      },
+      {
+        "text": "Nenhum dia, porque descontos ficam nas linhas",
+        "why": "A pergunta põe o desconto no pedido."
+      },
+      {
+        "text": "Quando cada um tinha uma linha",
+        "why": "Isso. É por isso que o bug se esconde até um dia movimentado."
+      },
+      {
+        "text": "Só fins de semana",
+        "why": "Dias movimentados pioram, não melhoram."
+      }
+    ]
+  },
+  "ex-vc1q9yqy": {
+    "prompt": "Quais destas protegem uma transformação contra fan-out? Escolha todas as que se aplicam.",
+    "hint": "Grão, e uma contagem.",
+    "choices": [
+      {
+        "text": "Contar as linhas antes e depois de cada join",
+        "why": "Sim. Uma mudança inesperada é o sintoma."
+      },
+      {
+        "text": "Somar colunas só no grão onde moram",
+        "why": "Sim. Receita das linhas, não pagamentos repetidos pelas linhas."
+      },
+      {
+        "text": "Agregar cada lado a um grão comum antes do join",
+        "why": "Sim. Aí o join casa uma linha com uma linha."
+      },
+      {
+        "text": "Acrescentar `DISTINCT` à soma",
+        "why": "O `sum(DISTINCT valor)` junta dois pedidos diferentes que custaram o mesmo."
+      }
+    ]
+  },
+  "ex-z0j7knxk": {
+    "prompt": "Por que o `is_sale` é derivado em `staging/orders.sql` em vez de escrito como `status = 'completed'` em cada relatório?",
+    "hint": "Uma decisão escrita uma vez.",
+    "choices": [
+      {
+        "text": "Um booleano é menor que texto",
+        "why": "Tamanho não é o argumento."
+      },
+      {
+        "text": "Relatórios não sabem filtrar por texto",
+        "why": "Sabem; o risco é filtrar diferente."
+      },
+      {
+        "text": "Para ser definido uma vez",
+        "why": "Isso. Uma definição de venda, herdada por tudo o que a lê."
+      },
+      {
+        "text": "A coluna de status da loja vai ser removida",
+        "why": "Nada diz isso; o motivo é consistência."
+      }
+    ]
+  },
+  "ex-y5wmjrsz": {
+    "prompt": "Em 6 e 7 de março houve 623 pedidos. Datados em UTC, 34 deles caíram em 8 de março. Quantos pedidos a datação em UTC passou da sexta, dia 6, para o sábado, dia 7, se a sexta tinha 279 em São Paulo e 252 em UTC?",
+    "hint": "A sexta perdeu o que o sábado ganhou."
+  },
+  "ex-b0g6tctj": {
+    "prompt": "Um colega roda o warehouse num servidor em UTC e escreve `ordered_at::date` num relatório novo. Quais pedidos ficam no dia errado?",
+    "hint": "São Paulo está três horas atrás do UTC.",
+    "choices": [
+      {
+        "text": "Nenhum; o `::date` usa o fuso do próprio pedido",
+        "why": "Um `timestamptz` não guarda fuso; o `::date` usa o da sessão."
+      },
+      {
+        "text": "Todos os pedidos, deslocados três horas",
+        "why": "Só a data muda, e só para alguns."
+      },
+      {
+        "text": "Pedidos feitos antes das 03:00 em São Paulo",
+        "why": "Esses já estão no dia seguinte tanto em UTC quanto em São Paulo."
+      },
+      {
+        "text": "Os de depois das 21:00 local",
+        "why": "Isso. Em UTC eles já estão no dia seguinte."
+      }
+    ]
+  },
+  "ex-tqn05xr4": {
+    "prompt": "Por que os joins de `marts/daily_sales.sql` não fazem fan-out?",
+    "hint": "Em que direção eles vão?",
+    "choices": [
+      {
+        "text": "Eles sobem, de cada linha para um pedido e um livro",
+        "why": "Isso. Cada linha casa com exatamente uma linha do outro lado."
+      },
+      {
+        "text": "Eles usam `USING` em vez de `ON`",
+        "why": "O `USING` é abreviação; não muda quantas linhas casam."
+      },
+      {
+        "text": "O mart tem chave primária",
+        "why": "Ele não tem, e uma chave não impediria um join de multiplicar linhas."
+      },
+      {
+        "text": "O staging tirou duplicatas",
+        "why": "Pedidos e linhas não tinham; a direção é o motivo."
+      }
+    ]
+  },
+  "ex-qts76pmt": {
+    "prompt": "O que é frágil no `run_sql.sh`?",
+    "hint": "De onde vem a ordem dele?",
+    "choices": [
+      {
+        "text": "Ele para no primeiro arquivo que falha",
+        "why": "Isso é uma força: nada roda em cima de uma tabela quebrada."
+      },
+      {
+        "text": "A ordem dele vem dos nomes dos arquivos",
+        "why": "Isso. Nada registra que uma tabela precisa de outra."
+      },
+      {
+        "text": "Ele esconde mensagens NOTICE",
+        "why": "Isso mantém a saída legível; avisos e erros ainda aparecem."
+      },
+      {
+        "text": "Ele precisa de Python",
+        "why": "É um script shell chamando o psql."
+      }
+    ]
+  },
+  "ex-g4j52b6a": {
+    "prompt": "O mart, as linhas e os pagamentos deram R$ 2.121.622,90. Se o mart tivesse dado mais que os pagamentos, o que isso mais provavelmente significaria?",
+    "hint": "Qual erro acrescenta linhas?",
+    "choices": [
+      {
+        "text": "Um caixa cobrou de menos",
+        "why": "Isso faria linhas e pagamentos discordarem, não o mart."
+      },
+      {
+        "text": "O mart fez fan-out",
+        "why": "Isso. Um total maior depois dos joins é o sintoma clássico."
+      },
+      {
+        "text": "Alguns pagamentos foram estornados",
+        "why": "Todos os totais são só de pedidos concluídos."
+      },
+      {
+        "text": "A camada crua foi carregada duas vezes",
+        "why": "Aí linhas e pagamentos também estariam dobrados."
+      }
+    ]
+  },
+  "ex-rhzwx77p": {
+    "prompt": "Ordene as camadas e os passos que montam `marts.daily_sales`.",
+    "hint": "Depositar, limpar, depois responder.",
+    "items": [
+      "o load_raw.py copia a loja para o raw",
+      "o staging deriva order_date, is_sale e line_cents",
+      "o mart junta as linhas aos pedidos e livros, e agrupa",
+      "três totais são comparados"
+    ]
+  },
+  "ex-a27xfgjh": {
+    "prompt": "Um mart novo relata visualizações por livro por dia direto da `raw.events`, datando cada evento pelo arquivo em que caiu. Quais dois erros ele carrega?",
+    "hint": "O que o staging consertou nos eventos?",
+    "choices": [
+      {
+        "text": "Fan-out e uma data em UTC",
+        "why": "Não há join para fazer fan-out, e as datas de arquivo são locais."
+      },
+      {
+        "text": "Preços faltando e ISBNs com hífen",
+        "why": "Esses são problemas dos preços, não dos eventos."
+      },
+      {
+        "text": "Duplicatas contadas, e eventos atrasados no dia errado",
+        "why": "Isso. O staging tira as cópias e data pelo horário do evento."
+      },
+      {
+        "text": "Nenhum, se os arquivos estiverem completos",
+        "why": "Arquivos completos ainda trazem duplicatas e chegadas atrasadas."
+      }
+    ]
+  }
+}

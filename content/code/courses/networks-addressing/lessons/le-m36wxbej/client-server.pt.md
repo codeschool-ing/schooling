@@ -1,6 +1,6 @@
 ---
 title: Quem espera e quem pede
-version: 1
+version: 2
 ---
 
 A imagem comum de um servidor é uma máquina: uma caixa grande num rack, mais potente que um PC de
@@ -9,9 +9,9 @@ avisa o sistema operacional que vai aceitar conexões ali e não faz nada até a
 o programa que chega: ele conhece de antemão o endereço e a porta do servidor, e é ele quem começa a
 conversa.
 
-No laboratório do escritório da aula 1, o `srv` é um namespace no mesmo computador que todos os PCs,
+No escritório da aula 1, montado com `sudo bash ~/netlab/netlab.sh up office`, o `srv` é um namespace no mesmo computador que todos os PCs,
 com o mesmo tipo de placa virtual. O que faz dele um servidor é um programa, um pequeno servidor web
-que o laboratório inicia nele. O `ss -tln` lista os sockets TCP que estão escutando (`-t` para TCP,
+que o `office.sh` inicia nele. O `ss -tln` lista os sockets TCP que estão escutando (`-t` para TCP,
 `-l` para os que escutam, `-n` para números em vez de nomes):
 
 ```
@@ -34,7 +34,8 @@ O `curl` fez o que todo cliente faz. Procurou o nome `srv`, que o laboratório e
 do pc1, conectou na porta 80, mandou um pedido e imprimiu o que o servidor respondeu: `served by srv`.
 
 **Um único socket escutando atende muitos clientes ao mesmo tempo.** Três PCs conectam e mantêm as
-conexões abertas, e o servidor lista suas conexões TCP com `ss -tn`, que deixa de fora o socket que
+conexões abertas, cada um com `sleep 4 | timeout 6 nc -N srv 80`, porque a conexão de uma página web
+fecha em milissegundos e nunca seria flagrada. Enquanto isso, o servidor lista suas conexões TCP com `ss -tn`, que deixa de fora o socket que
 escuta:
 
 ```

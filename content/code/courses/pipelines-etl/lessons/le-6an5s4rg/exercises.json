@@ -1,0 +1,481 @@
+[
+  {
+    "id": "ex-snmb0wrd",
+    "version": 1,
+    "section": "measure-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the first thing to do with a slow pipeline?",
+    "hint": "Before changing anything.",
+    "choices": [
+      {
+        "text": "Buy a faster machine",
+        "correct": false,
+        "why": "That comes last, if at all."
+      },
+      {
+        "text": "Find out where the time goes",
+        "correct": true,
+        "why": "Right. Measure, then change."
+      },
+      {
+        "text": "Add an index to every column",
+        "correct": false,
+        "why": "Indexes cost on every load."
+      },
+      {
+        "text": "Rewrite it in another tool, since the one in use is probably the reason it is slow",
+        "correct": false,
+        "why": "A guess, not a measurement."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6142xy4",
+    "version": 1,
+    "section": "measure-first",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each instrument to what it reports.",
+    "hint": "Time, route, pages.",
+    "pairs": [
+      {
+        "left": "\\timing on",
+        "right": "How long each statement took"
+      },
+      {
+        "left": "EXPLAIN ANALYZE",
+        "right": "The route the database took, and the rows"
+      },
+      {
+        "left": "EXPLAIN (ANALYZE, BUFFERS)",
+        "right": "The pages it read"
+      }
+    ]
+  },
+  {
+    "id": "ex-fb5qsrvj",
+    "version": 1,
+    "section": "rows-or-bulk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is one INSERT per row so much slower than COPY for the same rows?",
+    "hint": "Count the conversations.",
+    "choices": [
+      {
+        "text": "INSERT checks every constraint on the table and COPY skips them",
+        "correct": false,
+        "why": "Both check them."
+      },
+      {
+        "text": "INSERT compresses the data before it reaches the table",
+        "correct": false,
+        "why": "Nothing was compressed."
+      },
+      {
+        "text": "COPY skips the transaction",
+        "correct": false,
+        "why": "All three ran in one transaction."
+      },
+      {
+        "text": "Each row is a round trip between client and server",
+        "correct": true,
+        "why": "Right. Thirty thousand conversations."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsb3ragf",
+    "version": 1,
+    "section": "rows-or-bulk",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Roughly how many times faster was COPY than one INSERT per row, in the recording? Round to the nearest ten.",
+    "hint": "2.41 s against 0.04 s.",
+    "value": 60,
+    "tolerance": 10
+  },
+  {
+    "id": "ex-4kcmheg6",
+    "version": 1,
+    "section": "rows-or-bulk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the timing script put all three methods inside one transaction?",
+    "hint": "A fair comparison.",
+    "choices": [
+      {
+        "text": "COPY requires it",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "To roll back the rows afterwards, leaving the table as it was",
+        "correct": false,
+        "why": "Each was committed."
+      },
+      {
+        "text": "So the slow method is not made slower by a commit per row",
+        "correct": true,
+        "why": "Right. The comparison is about round trips."
+      },
+      {
+        "text": "Temporary tables need a transaction around each write to them",
+        "correct": false,
+        "why": "They do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-32w2va8a",
+    "version": 1,
+    "section": "a-larger-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the made-up large table keep from the real data?",
+    "hint": "Not the sales themselves.",
+    "choices": [
+      {
+        "text": "Its shape: days, shops and books in the same mix",
+        "correct": true,
+        "why": "Right. So what holds for reading it holds for a real table."
+      },
+      {
+        "text": "Real sales from six years",
+        "correct": false,
+        "why": "The copies are not real sales."
+      },
+      {
+        "text": "Nothing; it is random",
+        "correct": false,
+        "why": "It is copied from the real table."
+      },
+      {
+        "text": "Only the March rows",
+        "correct": false,
+        "why": "It holds six years."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzpxpyqj",
+    "version": 1,
+    "section": "finding-a-day",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines did the 16th have in the large table?",
+    "hint": "actual rows=",
+    "value": 446,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pqehas0z",
+    "version": 1,
+    "section": "finding-a-day",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without an index, why does finding one day take longer as the table grows?",
+    "hint": "Seq Scan.",
+    "choices": [
+      {
+        "text": "Every row of the table is read to find it",
+        "correct": true,
+        "why": "Right. Rows Removed by Filter."
+      },
+      {
+        "text": "The day has more lines each year as the shop grows",
+        "correct": false,
+        "why": "It had 446 either way."
+      },
+      {
+        "text": "The planner gets slower",
+        "correct": false,
+        "why": "Planning took under a millisecond."
+      },
+      {
+        "text": "DELETE locks the whole table while it looks for the rows",
+        "correct": false,
+        "why": "Locking was not what took the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8f8tk00",
+    "version": 1,
+    "section": "finding-a-day",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does an index on `order_date` cost the nightly load?",
+    "hint": "Every insert…",
+    "choices": [
+      {
+        "text": "Nothing; indexes only help",
+        "correct": false,
+        "why": "Every insert also writes the index."
+      },
+      {
+        "text": "It forbids deletes on the table",
+        "correct": false,
+        "why": "Deletes became faster."
+      },
+      {
+        "text": "Every insert also writes to the index",
+        "correct": true,
+        "why": "Right. Space, and time during the load."
+      },
+      {
+        "text": "It must be rebuilt by hand every night",
+        "correct": false,
+        "why": "PostgreSQL keeps it up to date."
+      }
+    ]
+  },
+  {
+    "id": "ex-r00qqkwk",
+    "version": 1,
+    "section": "finding-a-day",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the plan without an index, PostgreSQL read every row: a `___ Scan`.",
+    "hint": "Short for sequential.",
+    "blanks": [
+      {
+        "accept": [
+          "Seq"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cxrktw5b",
+    "version": 1,
+    "section": "whole-or-window",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the gap between a full rebuild and a 30-day window widen every year?",
+    "hint": "Which one grows with the table?",
+    "choices": [
+      {
+        "text": "The window gets slower each year",
+        "correct": false,
+        "why": "It stays thirty days."
+      },
+      {
+        "text": "PostgreSQL slows down with age",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Indexes stop working on old data",
+        "correct": false,
+        "why": "They keep working."
+      },
+      {
+        "text": "One grows with the table; the other stays at thirty days",
+        "correct": true,
+        "why": "Right. History only adds to one side."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsqs34jm",
+    "version": 1,
+    "section": "whole-or-window",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the window give up in exchange for its speed?",
+    "hint": "Lessons 11 and 15.",
+    "choices": [
+      {
+        "text": "Idempotency, because a second run now writes the month twice",
+        "correct": false,
+        "why": "It is still idempotent."
+      },
+      {
+        "text": "Changes older than the window, which need a full rebuild",
+        "correct": true,
+        "why": "Right. The drift test says when."
+      },
+      {
+        "text": "The index",
+        "correct": false,
+        "why": "The index is what makes it fast."
+      },
+      {
+        "text": "Transactions",
+        "correct": false,
+        "why": "It runs in one."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtb72mrx",
+    "version": 1,
+    "section": "reading-less",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many pages did the query for March read through the index?",
+    "hint": "Buffers: shared hit=",
+    "value": 220,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pd01m59m",
+    "version": 1,
+    "section": "reading-less",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does asking for fewer columns save little in PostgreSQL and a lot in a columnar warehouse?",
+    "hint": "How are rows stored?",
+    "choices": [
+      {
+        "text": "PostgreSQL compresses columns",
+        "correct": false,
+        "why": "Not the point."
+      },
+      {
+        "text": "Columnar warehouses keep no indexes, so every query reads each column in full",
+        "correct": false,
+        "why": "That is not why."
+      },
+      {
+        "text": "PostgreSQL stores rows together; a columnar store, each column apart",
+        "correct": true,
+        "why": "Right. Reading one column there skips the rest."
+      },
+      {
+        "text": "PostgreSQL ignores the select list and reads every column of each row",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-286r4r2c",
+    "version": 1,
+    "section": "reading-less",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the morning report read `daily_sales` rather than `fact_sales`?",
+    "hint": "What is a mart for?",
+    "choices": [
+      {
+        "text": "It is a small summary; the report reads far less",
+        "correct": true,
+        "why": "Right. That ratio is the point of a mart."
+      },
+      {
+        "text": "fact_sales is wrong",
+        "correct": false,
+        "why": "Both are right."
+      },
+      {
+        "text": "daily_sales has an index",
+        "correct": false,
+        "why": "It is small; that is the reason."
+      },
+      {
+        "text": "Reports cannot read incremental models",
+        "correct": false,
+        "why": "They can."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxrwdc43",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps for a pipeline that is too slow.",
+    "hint": "Measure first; hardware last.",
+    "items": [
+      "Measure where the time goes",
+      "Change the costliest thing the measurement found",
+      "Measure again",
+      "Consider bigger hardware"
+    ]
+  },
+  {
+    "id": "ex-e7bje9c5",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these savings has a price somewhere else? Choose all that apply.",
+    "hint": "Every one of them.",
+    "choices": [
+      {
+        "text": "An index on the date",
+        "correct": true,
+        "why": "Right. Slower loads, more space."
+      },
+      {
+        "text": "A 30-day window",
+        "correct": true,
+        "why": "Right. It misses older changes."
+      },
+      {
+        "text": "A mart for the reports",
+        "correct": true,
+        "why": "Right. One more thing to keep right."
+      },
+      {
+        "text": "Measuring first",
+        "correct": false,
+        "why": "That costs a few minutes and saves the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxjdrsr1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loader writes a million rows a night with one INSERT per row and takes two hours. What is the first change to try?",
+    "hint": "The cheapest measured win.",
+    "choices": [
+      {
+        "text": "A bigger server",
+        "correct": false,
+        "why": "The time is in round trips, not in the server."
+      },
+      {
+        "text": "Load every other night",
+        "correct": false,
+        "why": "That halves freshness, not the work per row."
+      },
+      {
+        "text": "Add more indexes to the target table",
+        "correct": false,
+        "why": "That makes writing slower."
+      },
+      {
+        "text": "Write with COPY",
+        "correct": true,
+        "why": "Right. One stream instead of a million conversations."
+      }
+    ]
+  }
+]

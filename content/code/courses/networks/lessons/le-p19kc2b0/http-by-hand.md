@@ -1,11 +1,21 @@
 ---
 title: HTTP by hand
-version: 1
+version: 2
 ---
 
 HTTP/1.1 is text, and a person can speak it. `nc` opens a TCP connection to port 80 and sends whatever
 it is given; `printf` gives it a request, each line ended with `\r\n` and the whole request ended
-with an empty line:
+with an empty line.
+
+This lesson's web server has two things lesson 1 did not put there: lesson 2's price list and an
+empty folder, `/private/`. Add them from your virtual machine before you start, and again after any
+`reset`:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'for i in $(seq 1 2000); do echo "line $i of the price list, padded to a hundred characters so the file is large enough ....."; done > /var/www/example/prices.txt; mkdir /var/www/example/private'
+```
+
+Then, on the laptop:
 
 ```
 ana@laptop:~$ printf 'GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: close\r\n\r\n' | nc -w 3 192.0.2.80 80

@@ -18,8 +18,8 @@ ana@pc1:~$ sudo journalctl _COMM=sudo --no-pager -o cat | grep "COMMAND=/usr/bin
 - O `sudo` registrou **cada comando rodado com ele**, com quem rodou e como quem.
 
 Leia a segunda parte com atenção, porque ela registra algo que a história acima deixou de fora. **Foi a
-`ana` quem rodou os comandos da Elisa**, com `sudo -u elisa`, inclusive o que deu acesso à `ana`. No
-laboratório a técnica fez o papel da Elisa, e o registro diz isso com clareza. Num computador de verdade,
+`ana` quem rodou os comandos da Elisa**, com `sudo -u elisa`, inclusive o que deu acesso à `ana`. Nesta
+gravação a técnica fez o papel da Elisa, e o registro diz isso com clareza. Num computador de verdade,
 essa mesma linha seria o alarme: uma técnica que dá a si mesma o consentimento do usuário não o recebeu.
 
 É para isso que servem os logs no suporte remoto: **eles protegem os dois lados**. O usuário consegue ver

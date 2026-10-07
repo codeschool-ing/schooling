@@ -1,6 +1,6 @@
 ---
 title: Uma regra, e onde o CSS mora
-version: 1
+version: 2
 ---
 
 A aula 2 transformou os subtítulos da página de horários em `<h2>` e prometeu que, se ficassem grandes demais, isso era CSS. Aqui está esse CSS, a primeira regra desta aula:
@@ -15,7 +15,40 @@ h2 { font-size: 1.1rem; }
 
 Uma **regra** é um **seletor**, aqui `h2`, que escolhe os elementos a que ela se aplica, seguido de um **bloco de declarações** entre chaves. Dentro do bloco, cada **declaração** é uma **propriedade**, dois-pontos, um **valor** e um ponto e vírgula. Uma regra pode ter quantas declarações quiser; esta tem uma.
 
-A regra mora em `events.css`, e a página a referencia como a seção 10 da aula 1 mostrou. Aqui está o que ela fez com os títulos:
+A regra mora em `events.css`, e a página a referencia como a seção 12 da aula 1 mostrou. A página é a de eventos do sebo, `events.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Events · Andorinha Books</title>
+    <link rel="stylesheet" href="events.css">
+  </head>
+  <body>
+    <main id="events">
+      <h1>Events</h1>
+      <p class="intro">Everything here is free unless it says otherwise.</p>
+      <article class="event">
+        <h2>Poetry reading: Hilda Hilst</h2>
+        <p>Thursday 8 October, 7 pm.</p>
+        <p class="note">Bring a poem of your own.</p>
+      </article>
+      <article class="event featured">
+        <h2>Book swap</h2>
+        <p>Saturday 10 October, from 10 am.</p>
+        <a href="swap.html" class="more">How the swap works</a>
+      </article>
+      <article class="event cancelled">
+        <h2>Bookbinding class</h2>
+        <p>Cancelled: the teacher is ill.</p>
+      </article>
+    </main>
+  </body>
+</html>
+```
+
+Toda página desta aula é esta, ligada a outra folha de estilos. Salve uma cópia para cada folha de estilos que uma seção mostrar, com o nome dela, e mude o `<link>`: `cascade.html` liga o `cascade.css`, `states.html` liga o `states.css`, e o mesmo vale para `extras`, `order` e `inherit`. Aqui está o que o `events.css` fez com os títulos:
 
 ```
 ana@laptop:~/site$ probe events.html rules h2 font-size

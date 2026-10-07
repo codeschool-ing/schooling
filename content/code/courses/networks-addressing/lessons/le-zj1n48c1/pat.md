@@ -1,6 +1,6 @@
 ---
 title: Many connections, one address, told apart by port
-version: 1
+version: 2
 ---
 
 Rewriting the address alone would let one conversation per destination out at a time: with every
@@ -11,8 +11,9 @@ every home router does, and in everyday speech it is simply called NAT; Cisco ca
 
 Lesson 5 gave the rule PAT has to keep: a connection is four numbers, and no two connections may share
 all four. To watch r1 keep it, three PCs connect at once to `192.0.2.80` port 80, and two of them
-insist on the same source port: pc1 and pc2 both ask for 40000, pc3 for 51000. r1's table, emptied
-just before, then holds:
+insist on the same source port: pc1 and pc2 both ask for 40000, pc3 for 51000, each with
+`sleep 4 | timeout 6 nc -N -p 40000 192.0.2.80 80` and its own port, which holds the connection open
+for a few seconds. r1's table, emptied just before with `conntrack -F`, then holds:
 
 ```
 root@r1:~# conntrack -L -p tcp

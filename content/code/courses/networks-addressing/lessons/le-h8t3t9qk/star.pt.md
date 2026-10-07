@@ -1,10 +1,11 @@
 ---
 title: A estrela, e as duas maneiras de ela quebrar
-version: 1
+version: 2
 ---
 
 Numa **estrela**, cada aparelho tem seu próprio cabo até um aparelho central — hoje, um switch. É a
-forma de quase todo escritório, e do cenário `office` deste curso: pc1, pc2, pc3, o servidor `srv` em
+forma de quase todo escritório, e do escritório da aula 1, montado com
+`sudo bash ~/netlab/netlab.sh up office`: pc1, pc2, pc3, o servidor `srv` em
 `10.20.10.10` e o roteador r1 têm cada um um cabo até o switch sw1, e nada mais os liga.
 
 Uma estrela tem exatamente dois tipos de falha: um braço, ou o centro. Vistos de uma mesa, eles

@@ -1,12 +1,13 @@
 ---
 title: One packet, taken apart
-version: 1
+version: 2
 ---
 
 Each layer wraps what it receives from the layer above in a header of its own, and the layer below
 treats the whole thing as data. That is **encapsulation**, and one packet shows it. The laptop
 fetched `http://www.example.com/` while `tcpdump -XX` printed the frame carrying the request, byte by
-byte:
+byte. To see it yourself, start this `tcpdump` on the laptop and, from a second shell on the laptop,
+run `curl -s -o /dev/null http://www.example.com/`:
 
 ```
 ana@laptop:~$ sudo tcpdump -n -e -XX -c 1 "tcp dst port 80 and tcp[tcpflags] & tcp-push != 0"
@@ -39,7 +40,7 @@ Three things can be read straight off the bytes:
 
 - The frame starts with **`5254 00a8 0a01`, the destination MAC, and it is the router's**, not the
   web server's. The laptop sends everything outside the office to its gateway, the default route of
-  section 04 at work. The IP destination, `c000 0250`, is `192.0.2.80`, the web server. Layer 2 says the next hop;
+  section 11 at work. The IP destination, `c000 0250`, is `192.0.2.80`, the web server. Layer 2 says the next hop;
   layer 3 says the final destination.
 - `0800` after the two MACs says "IPv4 follows". `45` starts the IP header: version 4, header 5 words
   of 4 bytes. `4006` a few bytes later is the TTL, `0x40` or 64, and the protocol, 6 for TCP.

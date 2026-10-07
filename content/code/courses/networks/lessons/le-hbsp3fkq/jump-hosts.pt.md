@@ -1,10 +1,18 @@
 ---
 title: Saltando por uma máquina
-version: 1
+version: 2
 ---
 
 O servidor web da empresa, `www`, só aceita SSH do endereço público do escritório, uma regra comum e
-sensata. De casa, a conexão não vai a lugar nenhum:
+sensata. O administrador dele já pôs a chave pública da Ana no `~/.ssh/authorized_keys` de lá; no seu
+laboratório, faça isso da sua máquina virtual:
+
+```sh
+sudo install -d -o ana -g ana -m 700 /lab/www/home/ana/.ssh
+sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/www/home/ana/.ssh/authorized_keys
+```
+
+De casa, a conexão não vai a lugar nenhum:
 
 ```
 ana@home:~$ ssh -o ConnectTimeout=5 192.0.2.80 hostname

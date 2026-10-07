@@ -6,9 +6,8 @@
 # the lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo useradd -m -s /bin/bash ana       # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh    # the lab, beside course.json
-#   sudo bash captures.sh
+#   sudo bash captures.sh       # on the machine ../../lab.sh describes; it runs
+#                               # the lab files the lessons show, copied out of them
 #
 # The lab is lab.sh's "igp" scenario: four routers in a ring (r1, r2, r3, r4),
 # pc1 behind r1 and pc2 behind r2. FRR 8.4 runs on every router
@@ -29,7 +28,7 @@
 # Recorded on Ubuntu 24.04 in a virtual machine, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -88,7 +87,8 @@ root r1 'vtysh -c "show ip ospf route"'
 
 block convergence
 bgon ana pc1 'ping -c 70 -i 1 -q 10.20.2.10'
-quiet r1 'nft add table netdev cut; nft add chain netdev cut in "{ type filter hook ingress device eth4 priority 0; policy drop; }"; nft add table inet cutout; nft add chain inet cutout out "{ type filter hook output priority 0; }"; nft add rule inet cutout out oifname eth4 drop; nft add chain inet cutout fwd "{ type filter hook forward priority 0; }"; nft add rule inet cutout fwd oifname eth4 drop'
+# the rules of the "cut", read out of convergence.md's own fence
+quiet r1 "$(awk '/^```sh$/{f=1;next} f&&/^```$/{exit} f' "$(dirname "$0")/convergence.md")"
 sleep 20
 root r1 'vtysh -c "show ip ospf neighbor"'
 fgon

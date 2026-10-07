@@ -1,6 +1,6 @@
 ---
 title: O macOS, e os três lado a lado
-version: 1
+version: 2
 ---
 
 **O macOS usa os dois modelos.** Por baixo ele é Unix: todo arquivo tem um dono, um grupo e as nove
@@ -38,3 +38,16 @@ disser o `ls -l`.
 O hábito que vale nos três: **dê permissão a grupos, não a pessoas**. Um grupo com o nome de uma função,
 *accounts*, sobrevive ao dia em que alguém muda de função; uma permissão dada a uma pessoa tem de ser
 achada e removida à mão.
+
+## Arrumando
+
+O seu servidor ainda tem `bruno` e `carla`, o grupo `accounts` e duas pastas em `/srv`. A aula 10 cria a
+`carla` de novo do zero, então remova tudo agora. O `userdel` pode avisar que não achou caixa de correio
+(*mail spool*) de cada uma; essas contas nunca receberam correio, e não havia nada a remover.
+
+```sh
+cd ~
+sudo rm -rf /srv/accounts /srv/office
+for u in bruno carla; do sudo userdel -r $u; done
+sudo groupdel accounts
+```

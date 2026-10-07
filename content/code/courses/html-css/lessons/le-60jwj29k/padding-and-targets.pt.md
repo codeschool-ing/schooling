@@ -1,9 +1,9 @@
 ---
 title: Padding que aumenta um alvo
-version: 1
+version: 2
 ---
 
-A aula 2 deixou uma regra do axe falhando na página inicial semântica: **target-size**. Cada link do menu tinha 17 pixels de altura, com o seguinte 18 pixels abaixo, e a WCAG 2.2 pede alvos de 24 por 24 pixels, ou espaço suficiente em volta de um menor. Aquela aula disse que a correção era padding. Aqui está ela, em `menu.css`, referenciado pela mesma página:
+A aula 2 deixou uma regra do axe falhando na página inicial semântica: **target-size**. Cada link do menu tinha 17 pixels de altura, com o seguinte 18 pixels abaixo, e a WCAG 2.2 pede alvos de 24 por 24 pixels, ou espaço suficiente em volta de um menor. Aquela aula disse que a correção era padding. Aqui está ela, em `menu.css`, referenciado pela mesma página. O `menu.html` é o `semantic.html` da aula 2 com uma linha a mais depois do título, `<link rel="stylesheet" href="menu.css">`:
 
 ```css
 nav ul { list-style: none; padding: 0; }

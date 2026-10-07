@@ -1,6 +1,6 @@
 ---
 title: Two drawings of one network
-version: 1
+version: 2
 ---
 
 A **topology** is a network drawn as dots and lines: every device a dot, every connection a line.
@@ -48,7 +48,7 @@ call.
 
 Every machine in this course's lab is a **network namespace** on one Linux computer, and every
 "cable" is a pair of virtual network interfaces joined in the kernel (lesson 7 builds it in
-detail). So the lab has no physical topology to photograph. What it does have is the drawing in
-`lab.sh`, and the kernel honours it: a namespace only reaches what its virtual cables reach. When
+detail). So the lab has no physical topology to photograph. What it does have is the drawing at
+the top of each network's file in `~/netlab`, and the kernel honours it: a namespace only reaches what its virtual cables reach. When
 a section below "cuts a cable", it sets one end of a virtual cable down, and the other end sees the
 signal disappear exactly as it would if somebody pulled the plug.

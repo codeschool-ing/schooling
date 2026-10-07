@@ -1,0 +1,360 @@
+{
+  "ex-zn3363qt": {
+    "prompt": "Quais destas a captura de mudanças vê e uma marca d'água sobre o `updated_at` não vê? Escolha todas as que se aplicam.",
+    "hint": "Pense nos quatro buracos.",
+    "choices": [
+      {
+        "text": "Uma linha apagada",
+        "why": "Sim. A exclusão é escrita no log como qualquer mudança."
+      },
+      {
+        "text": "O estado de um pedido antes de uma atualização no mesmo dia",
+        "why": "Sim. Cada mudança chega, não só o estado mais recente."
+      },
+      {
+        "text": "Uma atualização que esqueceu de preencher o `updated_at`",
+        "why": "Sim. O log registra a escrita, quaisquer que sejam as colunas tocadas."
+      },
+      {
+        "text": "Uma linha que nunca foi confirmada",
+        "why": "Uma transação desfeita nunca chega ao fluxo."
+      }
+    ]
+  },
+  "ex-c7bxfm3t": {
+    "prompt": "Por que o PostgreSQL mantém um log de escrita antecipada, para começo de conversa?",
+    "hint": "Ele não foi feito para pipelines.",
+    "choices": [
+      {
+        "text": "Para alimentar ferramentas de captura de mudanças",
+        "why": "Esse é um uso posterior de algo feito por outro motivo."
+      },
+      {
+        "text": "Para sobreviver a uma queda",
+        "why": "Isso. Ele reproduz o log depois de uma queda, e as réplicas o seguem também."
+      },
+      {
+        "text": "Para manter uma trilha de auditoria de quem mudou o quê",
+        "why": "O WAL registra mudanças, não quem as fez."
+      },
+      {
+        "text": "Para deixar as consultas mais rápidas",
+        "why": "Consultas leem tabelas; o WAL torna as escritas duráveis."
+      }
+    ]
+  },
+  "ex-p582r1be": {
+    "prompt": "A transação de um caixa é escrita às 23:40 e confirmada às 00:05. Onde ela aparece no fluxo do slot?",
+    "hint": "O fluxo segue uma ordem particular.",
+    "choices": [
+      {
+        "text": "Às 23:40, entre as mudanças escritas então",
+        "why": "Nada aparece antes de ser confirmado."
+      },
+      {
+        "text": "Em lugar nenhum, porque demorou demais",
+        "why": "A duração não importa; a confirmação sim."
+      },
+      {
+        "text": "Às 00:05, na confirmação",
+        "why": "Isso. O fluxo segue a ordem de confirmação, então o problema do caixa lento some."
+      },
+      {
+        "text": "Duas vezes, uma ao ser escrita e outra ao ser confirmada",
+        "why": "Cada transação confirmada chega uma vez, inteira."
+      }
+    ]
+  },
+  "ex-z5fd882a": {
+    "prompt": "O slot tinha 1.088 linhas para 1º de março, de 211 transações. Cada transação acrescenta uma linha BEGIN e uma COMMIT. Quantas linhas eram mudanças de linhas?",
+    "hint": "Subtraia duas linhas por transação."
+  },
+  "ex-drg8nvzw": {
+    "prompt": "Uma posição em bytes no log de escrita antecipada do PostgreSQL se chama número de sequência do log, abreviado ___.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "LSN"
+        ]
+      }
+    ]
+  },
+  "ex-a4xad9s0": {
+    "prompt": "Qual é a diferença entre `pg_logical_slot_peek_changes` e `pg_logical_slot_get_changes`?",
+    "hint": "Uma delas move o slot.",
+    "choices": [
+      {
+        "text": "O `peek` mostra só inserções",
+        "why": "Ele mostra cada mudança, como o `get`."
+      },
+      {
+        "text": "O `get` as consome",
+        "why": "Isso. O `peek` lê sem consumir, então pode ser repetido."
+      },
+      {
+        "text": "O `get` precisa do protocolo de replicação",
+        "why": "As duas são funções SQL comuns."
+      },
+      {
+        "text": "O `peek` lê o WAL do disco, o `get` da memória",
+        "why": "Os dois decodificam o mesmo WAL; um deles avança o slot."
+      }
+    ]
+  },
+  "ex-2qbf0h4n": {
+    "prompt": "Por que a Ana criou o slot antes de copiar os clientes inteiros, e não depois?",
+    "hint": "O que poderia acontecer entre a cópia e o slot?",
+    "choices": [
+      {
+        "text": "Um slot se recusa a começar numa tabela que já foi copiada",
+        "why": "Um slot não sabe nada de cópias."
+      },
+      {
+        "text": "Copiar primeiro é mais lento",
+        "why": "A ordem muda a correção, não a velocidade."
+      },
+      {
+        "text": "A cópia precisa do LSN do slot como nome de arquivo",
+        "why": "A cópia é um `\\copy` comum."
+      },
+      {
+        "text": "Para nada confirmado no meio cair no vão",
+        "why": "Isso. As mudanças durante a cópia estão no slot, e aplicá-las duas vezes não faz mal."
+      }
+    ]
+  },
+  "ex-5yw8y2k6": {
+    "prompt": "O `apply_cdc.py` escreve no warehouse, e o warehouse confirma; depois a conexão da loja falha antes de confirmar. O que acontece na próxima vez?",
+    "hint": "O slot só anda quando a transação da loja é confirmada.",
+    "choices": [
+      {
+        "text": "As mudanças se perdem",
+        "why": "O slot não andou, então elas continuam lá."
+      },
+      {
+        "text": "Elas vêm de novo, sem dano",
+        "why": "Isso. Upserts e exclusões por chave deixam as mesmas linhas."
+      },
+      {
+        "text": "O warehouse desfaz para combinar",
+        "why": "Ele confirmou; nada o desfaz."
+      },
+      {
+        "text": "O PostgreSQL se recusa a decodificar o slot até ele ser reiniciado",
+        "why": "O slot está bem; só não andou."
+      }
+    ]
+  },
+  "ex-vx6v2g0h": {
+    "prompt": "O `apply_cdc.py` lê 666 mudanças para aplicar 23 a clientes. O que uma montagem de produção usaria para evitar ler o resto?",
+    "hint": "Uma lista de tabelas que o banco respeita.",
+    "choices": [
+      {
+        "text": "Uma publicação, com o plugin `pgoutput`",
+        "why": "Isso. O leitor recebe só as tabelas que pediu."
+      },
+      {
+        "text": "Uma cláusula `WHERE` no `get_changes`",
+        "why": "Isso filtra depois de decodificar e ainda consome tudo."
+      },
+      {
+        "text": "Um slot por tabela, todos com `test_decoding`",
+        "why": "Cada slot decodificaria as mudanças de todas as tabelas."
+      },
+      {
+        "text": "Um gatilho que copia as mudanças de clientes para outra tabela",
+        "why": "Esse é outro desenho; o slot ainda vê todas as tabelas."
+      }
+    ]
+  },
+  "ex-f4b1s8nf": {
+    "prompt": "O que o `ALTER TABLE customers REPLICA IDENTITY FULL` acrescenta a cada atualização no fluxo?",
+    "hint": "`old-key:` e `new-tuple:`.",
+    "choices": [
+      {
+        "text": "O nome do usuário que fez a mudança",
+        "why": "A identidade de réplica trata da linha antiga, não do usuário."
+      },
+      {
+        "text": "Um checksum da linha nova",
+        "why": "Nenhum checksum é acrescentado."
+      },
+      {
+        "text": "A linha antiga inteira",
+        "why": "Isso. Um histórico agora sabe dizer onde o cliente morava antes."
+      },
+      {
+        "text": "Só a chave primária",
+        "why": "Esse é o padrão, antes do `FULL`."
+      }
+    ]
+  },
+  "ex-q7089akt": {
+    "prompt": "Por que a lição diz que o `REPLICA IDENTITY FULL` é uma decisão do dono da origem e não do pipeline?",
+    "hint": "Quem paga por ele?",
+    "choices": [
+      {
+        "text": "Só superusuários podem rodar `ALTER TABLE`",
+        "why": "O dono da tabela pode; o ponto é o custo."
+      },
+      {
+        "text": "A origem paga pelo WAL extra",
+        "why": "Isso. O sistema que registra as vendas carrega a escrita extra."
+      },
+      {
+        "text": "Ele muda a chave primária da tabela",
+        "why": "A chave não muda."
+      },
+      {
+        "text": "Ele para os caixas enquanto roda",
+        "why": "É uma mudança rápida no catálogo."
+      }
+    ]
+  },
+  "ex-ccwqdr7x": {
+    "prompt": "O slot esquecido segurava 6.085 kB depois de catorze dias. Cerca de quantos kB por dia é isso? Dê um número inteiro.",
+    "hint": "Divida por catorze."
+  },
+  "ex-wk2artbf": {
+    "prompt": "Uma equipe desliga o seu pipeline de captura para uma migração e esquece o slot. Um mês depois o banco de origem para de aceitar escritas. Por quê?",
+    "hint": "Onde o WAL mora?",
+    "choices": [
+      {
+        "text": "O slot travou as tabelas que lia",
+        "why": "Slots não pegam travas de tabela."
+      },
+      {
+        "text": "O WAL guardado encheu o disco onde o banco mora",
+        "why": "Isso. Um mês de WAL, guardado para um leitor que nunca voltou."
+      },
+      {
+        "text": "O PostgreSQL limita um banco a um slot",
+        "why": "O laboratório teve dois ao mesmo tempo."
+      },
+      {
+        "text": "A configuração `wal_level` voltou ao padrão",
+        "why": "Nada a reverte."
+      }
+    ]
+  },
+  "ex-xbx67ksh": {
+    "prompt": "Ligue cada defesa contra um slot esquecido ao que ela faz.",
+    "hint": "Uma limita, uma avisa, uma remove.",
+    "pairs": [
+      {
+        "left": "`max_slot_wal_keep_size`",
+        "right": "Invalida o slot antes de o disco encher"
+      },
+      {
+        "left": "Uma consulta ao `pg_replication_slots`",
+        "right": "Mostra quanto WAL cada slot segura"
+      },
+      {
+        "left": "`pg_drop_replication_slot`",
+        "right": "Libera um slot que ninguém usa"
+      }
+    ],
+    "right_distractors": [
+      "Desliga a captura de mudanças"
+    ]
+  },
+  "ex-2s14c9a7": {
+    "prompt": "Com o `max_slot_wal_keep_size` ajustado, um slot esquecido passa do limite. O que acontece, e por que esse é o jeito certo?",
+    "hint": "Qual sistema deve sobreviver?",
+    "choices": [
+      {
+        "text": "O banco para as escritas até o slot ser lido",
+        "why": "Isso é o que acontece sem limite."
+      },
+      {
+        "text": "O WAL mais antigo é comprimido",
+        "why": "Nada é comprimido; o slot é invalidado."
+      },
+      {
+        "text": "O slot é invalidado e a origem sobrevive",
+        "why": "Isso. Perder o lugar do pipeline é mais barato que parar os caixas."
+      },
+      {
+        "text": "O slot anda sozinho e pula as mudanças mais antigas",
+        "why": "Ele é invalidado, e um leitor que dependia dele precisa recomeçar."
+      }
+    ]
+  },
+  "ex-gx01ra3v": {
+    "prompt": "O que exportar o snapshot do slot dá à cópia inicial?",
+    "hint": "A cópia e o fluxo começam num momento só.",
+    "choices": [
+      {
+        "text": "Uma cópia mais rápida",
+        "why": "Velocidade não é o que ele compra."
+      },
+      {
+        "text": "O próprio momento de partida do fluxo",
+        "why": "Isso. Nada perdido, nada aplicado duas vezes."
+      },
+      {
+        "text": "Uma cópia que inclui transações desfeitas",
+        "why": "Snapshots veem só dados confirmados."
+      },
+      {
+        "text": "Uma cópia em JSON em vez de CSV",
+        "why": "O formato não tem nada a ver."
+      }
+    ]
+  },
+  "ex-5w2apt8g": {
+    "prompt": "Quando a lição recomenda o padrão outbox em vez da captura sobre as tabelas da origem?",
+    "hint": "Quem precisa escrever as linhas do outbox?",
+    "choices": [
+      {
+        "text": "Quando a origem é um banco que ninguém vai mudar",
+        "why": "Aí o outbox não pode ser acrescentado; captura sobre as tabelas é a ferramenta."
+      },
+      {
+        "text": "Quando o pipeline não tem acesso de rede ao Kafka",
+        "why": "O transporte é outra questão."
+      },
+      {
+        "text": "Quando os desenvolvedores dela vão escrever os eventos",
+        "why": "Isso. Eles escrevem os eventos, e as tabelas internas ficam livres para mudar."
+      },
+      {
+        "text": "Sempre que exclusões importam",
+        "why": "A captura sobre as tabelas também vê exclusões."
+      }
+    ]
+  },
+  "ex-5h87kd0g": {
+    "prompt": "Ordene os passos que a Ana deu para manter `cdc.customers` em dia.",
+    "hint": "O slot vem antes da cópia.",
+    "items": [
+      "Conferir que o wal_level é logical",
+      "Criar o slot de replicação",
+      "Copiar os clientes inteiros",
+      "Ler e aplicar as mudanças do slot toda noite"
+    ]
+  },
+  "ex-3dcnc3g5": {
+    "prompt": "Um colega propõe trocar o upsert do `apply_cdc.py` por um `INSERT` simples, já que toda mudança de cliente é inserção ou atualização. O que quebra?",
+    "hint": "Uma atualização é para uma chave que já existe.",
+    "choices": [
+      {
+        "text": "Nada: uma inserção e uma atualização trazem as mesmas colunas",
+        "why": "As colunas batem; a chave colide."
+      },
+      {
+        "text": "As exclusões param de funcionar",
+        "why": "As exclusões são um ramo separado."
+      },
+      {
+        "text": "O slot para de avançar",
+        "why": "O slot avança na confirmação, quaisquer que sejam os comandos."
+      },
+      {
+        "text": "Toda atualização falha na chave primária, e uma mudança repetida também",
+        "why": "Isso. O upsert é o que faz atualizações e repetições funcionarem."
+      }
+    ]
+  }
+}

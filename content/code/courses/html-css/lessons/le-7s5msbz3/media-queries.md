@@ -1,6 +1,6 @@
 ---
 title: Media queries
-version: 1
+version: 2
 ---
 
 A **media query** is a condition about the device or the window, and a block of rules that only applies while the condition is true. The part in parentheses is a **media feature**:
@@ -28,7 +28,27 @@ A stylesheet can also be conditional as a whole: `<link rel="stylesheet" href="p
 
 ## rem in a query is not your rem
 
-`rem` inside a media query does not use the font size you set on `html`. It uses the browser's **initial** font size, usually 16 pixels, because the query has to be answered before your stylesheet is applied. This page sets `html { font-size: 20px; }`:
+`rem` inside a media query does not use the font size you set on `html`. It uses the browser's **initial** font size, usually 16 pixels, because the query has to be answered before your stylesheet is applied. This page, `rem.html`, sets `html { font-size: 20px; }`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      html { font-size: 20px; }
+      .box { width: 40rem; }
+    </style>
+  </head>
+  <body>
+    <div class="box">40rem wide</div>
+  </body>
+</html>
+```
+
+Measured on a window 700 wide:
 
 ```
 ana@laptop:~/site$ probe --width 700 rem.html box .box media "(width >= 40rem)" media "(width >= 45rem)"

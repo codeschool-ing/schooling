@@ -1,10 +1,17 @@
 ---
 title: Bounces and the queue
-version: 1
+version: 2
 ---
 
 A mistyped address, `brunno@example.net`, is accepted by Ana's server, which only then tries to deliver
-it, and fails:
+it, and fails. The message is `order.txt` from section 04 with the address mistyped, made on the
+laptop with:
+
+```sh
+sed "s/Bruno <bruno@example.net>/<brunno@example.net>/; s/order-2231/order-2231b/" order.txt > wrong.txt
+```
+
+Then:
 
 ```
 ana@laptop:~$ curl -sS --url smtp://mail.example.com:587/laptop.example.com --ssl-reqd --user ana:office-2026 --mail-from ana@example.com --mail-rcpt brunno@example.net -T wrong.txt && echo accepted
@@ -35,7 +42,20 @@ unknown … (in reply to RCPT TO command)` means `example.net`'s server has no s
 starting with 5 is permanent, and the server gives up at once.
 
 A code starting with 4, or no answer at all, is temporary, and the message waits in the **queue**.
-With Bruno's server stopped:
+Here Bruno's server is stopped. In your lab, the first line below stops it, from your virtual machine,
+and the second starts it again, which is what has to happen before `postqueue -f` can deliver
+anything; the corrected message is made on the laptop with the `sed` after them:
+
+```sh
+sudo bash ~/netlab/netlab exec netmail root 'postfix stop'
+sudo bash ~/netlab/netlab exec netmail root 'postfix start'
+```
+
+```sh
+sed "s/order-2231/order-2231c/; s/Subject: Order 2231/Subject: Order 2231, corrected/" order.txt > again.txt
+```
+
+Then:
 
 ```
 ana@laptop:~$ curl -sS --url smtp://mail.example.com:587/laptop.example.com --ssl-reqd --user ana:office-2026 --mail-from ana@example.com --mail-rcpt bruno@example.net -T again.txt && echo accepted

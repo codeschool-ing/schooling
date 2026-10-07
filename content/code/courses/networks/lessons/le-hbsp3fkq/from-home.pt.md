@@ -1,6 +1,6 @@
 ---
 title: Chegando ao escritório de casa
-version: 1
+version: 2
 ---
 
 O servidor tem um endereço privado, `192.168.10.10`, que não quer dizer nada na internet (aula 2). De
@@ -22,7 +22,19 @@ table ip nat {
 ```
 
 Isso é **redirecionamento de porta** (*port forwarding*), NAT de destino: o router reescreve para onde
-a conexão vai. De casa:
+a conexão vai.
+
+Em casa, a Ana usa a chave que criou no laptop na seção 03, levada como se leva num pendrive. No seu
+laboratório, copie-a para a pasta da `ana` na máquina chamada `home`, da sua máquina virtual, e depois
+abra um shell lá com `sudo bash ~/netlab/netlab shell home`:
+
+```sh
+sudo install -d -o ana -g ana -m 700 /lab/home/home/ana/.ssh
+sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519 /lab/home/home/ana/.ssh/id_ed25519
+sudo install -o ana -g ana -m 644 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/home/home/ana/.ssh/id_ed25519.pub
+```
+
+De casa:
 
 ```
 ana@home:~$ ssh -p 2222 office.example.com

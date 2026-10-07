@@ -1,6 +1,6 @@
 ---
 title: A ring of routers, and one cut
-version: 1
+version: 2
 ---
 
 The ring in this section is not the shared loop of Token Ring. It is four routers, **each cabled to
@@ -12,6 +12,36 @@ star lacks: **there are two ways from any router to any other**.
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"The ring scenario of the lab. Four routers in a square: r1 top left, r2 top right, r3 bottom right, r4 bottom left, each cabled to the two beside it, each cable its own /30. pc1 hangs from r1 and pc2 from r2. Before the cut, pc1 reaches pc2 through r1 and r2. The cable r1 to r2 is cut, and the path becomes r1, r4 at 10.20.0.13, r3 at 10.20.0.9, r2 at 10.20.0.5.\"><rect x=\"120\" y=\"22\" width=\"70\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"155.0\" y=\"39.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pc1</text><path d=\"M155.0 56 L155.0 120\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><rect x=\"380\" y=\"22\" width=\"70\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"415.0\" y=\"39.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pc2</text><path d=\"M415.0 56 L415.0 120\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M190.0 137.0 L380.0 137.0\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" stroke-dasharray=\"5 4\"></path><text x=\"206.0\" y=\"149.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.1</text><text x=\"364.0\" y=\"149.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.2</text><text x=\"285.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">cut</text><path d=\"M279.0 129.0 L291.0 145.0\" stroke=\"var(--amber)\" stroke-width=\"2.4\" fill=\"none\"></path><path d=\"M291.0 129.0 L279.0 145.0\" stroke=\"var(--amber)\" stroke-width=\"2.4\" fill=\"none\"></path><path d=\"M415.0 154.0 L415.0 250.0\" stroke=\"var(--phosphor)\" stroke-width=\"2.4\" fill=\"none\"></path><text x=\"401.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.5</text><text x=\"401.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.6</text><path d=\"M380.0 267.0 L190.0 267.0\" stroke=\"var(--phosphor)\" stroke-width=\"2.4\" fill=\"none\"></path><text x=\"364.0\" y=\"255.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.9</text><text x=\"206.0\" y=\"255.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.10</text><path d=\"M155.0 250.0 L155.0 154.0\" stroke=\"var(--phosphor)\" stroke-width=\"2.4\" fill=\"none\"></path><text x=\"169.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.13</text><text x=\"169.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">.14</text><rect x=\"120\" y=\"120\" width=\"70\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"155.0\" y=\"137.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r1</text><rect x=\"380\" y=\"120\" width=\"70\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"415.0\" y=\"137.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r2</text><rect x=\"380\" y=\"250\" width=\"70\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"415.0\" y=\"267.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r3</text><rect x=\"120\" y=\"250\" width=\"70\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"155.0\" y=\"267.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r4</text><rect x=\"520\" y=\"110\" width=\"188\" height=\"120\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"></rect><text x=\"532\" y=\"128\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">before the cut</text><text x=\"532\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r1, r2</text><text x=\"532\" y=\"180\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">after the cut</text><text x=\"532\" y=\"198\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r1, r4, r3, r2</text></svg>", "caption": "The ring of lesson 3. The numbers beside each cable are the last byte of the address at that end, the ones traceroute prints: 10.20.0.13 is r4, 10.20.0.9 is r3, 10.20.0.5 is r2."}
 ```
+
+This ring is a network of its own. Save it as `~/netlab/ring.sh`:
+
+```bash
+# ~/netlab/ring.sh: four routers in a ring, each cable its own /30, and a PC
+# behind r1 and another behind r2. OSPF finds the paths, with a hello every
+# second so a broken cable is noticed in four seconds instead of forty.
+#
+#        pc1    pc2        10.20.0.0/30  r1-r2      10.20.0.8/30   r3-r4
+#         |      |         10.20.0.4/30  r2-r3      10.20.0.12/30  r4-r1
+#   r4 -- r1 -- r2         10.20.1.0/24  behind r1  10.20.2.0/24   behind r2
+#    |           |
+#    +--- r3 ----+
+local n
+for n in r1 r2 r3 r4; do node $n router; done
+node pc1; node pc2
+link r1 eth1 r2 eth1; addr r1 eth1 10.20.0.1/30;  addr r2 eth1 10.20.0.2/30
+link r2 eth2 r3 eth2; addr r2 eth2 10.20.0.5/30;  addr r3 eth2 10.20.0.6/30
+link r3 eth3 r4 eth3; addr r3 eth3 10.20.0.9/30;  addr r4 eth3 10.20.0.10/30
+link r4 eth4 r1 eth4; addr r4 eth4 10.20.0.13/30; addr r1 eth4 10.20.0.14/30
+link pc1 eth0 r1 eth0; addr pc1 eth0 10.20.1.10/24; addr r1 eth0 10.20.1.1/24; gw pc1 10.20.1.1
+link pc2 eth0 r2 eth0; addr pc2 eth0 10.20.2.10/24; addr r2 eth0 10.20.2.1/24; gw pc2 10.20.2.1
+ospf_p2p r1 10.255.0.1 "eth1 eth4"; ospf_p2p r2 10.255.0.2 "eth1 eth2"
+ospf_p2p r3 10.255.0.3 "eth2 eth3"; ospf_p2p r4 10.255.0.4 "eth3 eth4"
+wait_for 90 ip netns exec pc1 ping -c1 -W1 10.20.2.10
+```
+
+`ospf_p2p` is the function in `netlab.sh` that writes one router's OSPF configuration, and lesson 16
+explains every line of it. The last line waits until pc1 can reach pc2, because OSPF takes a few
+seconds to find the paths. Build it with `sudo bash ~/netlab/netlab.sh up ring`.
 
 r1 shows its cables. `eth0` is pc1's network; `eth1` and `eth4` are its two neighbours in the ring:
 

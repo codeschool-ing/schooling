@@ -3,7 +3,7 @@ title: Consentimento, um passo de cada vez
 version: 1
 ---
 
-Os computadores do laboratório não têm área de trabalho para compartilhar, então a tela compartilhada aqui
+Os computadores do escritório não têm área de trabalho para compartilhar, então a tela compartilhada aqui
 é de terminal, o **tmux**, que tem os mesmos estados de uma ferramenta de suporte remoto. A Elisa abre uma
 sessão própria:
 

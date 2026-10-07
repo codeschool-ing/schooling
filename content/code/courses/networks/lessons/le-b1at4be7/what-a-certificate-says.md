@@ -1,11 +1,13 @@
 ---
 title: What a certificate says
-version: 1
+version: 2
 ---
 
 A certificate is a public key with a statement attached: "this key belongs to these names, until this
 date", signed by somebody who checked. `openssl s_client` fetches the one `www.example.com` sends, and
-`openssl x509` prints the fields that matter:
+`openssl x509` prints the fields that matter. Your lab makes new keys and certificates every time it
+is built, so your dates, serial numbers and fingerprints will differ from the ones in this lesson;
+the fields and what they say will not.
 
 ```
 ana@laptop:~$ openssl s_client -connect www.example.com:443 -servername www.example.com </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates -ext subjectAltName,basicConstraints,extendedKeyUsage

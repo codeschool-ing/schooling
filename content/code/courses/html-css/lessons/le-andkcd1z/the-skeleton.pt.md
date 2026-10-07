@@ -1,15 +1,15 @@
 ---
 title: O documento de onde toda página parte
-version: 1
+version: 2
 ---
 
 Toda página HTML que você escrever parte das mesmas doze linhas. Aqui estão elas para a primeira página do sebo, com a função de cada parte ao lado:
 
 ```schooling-example
 {"language": "html", "file": "skeleton.html", "parts": [
- {"code": "<!doctype html>", "note": "Diz que a página é HTML moderno. Sem isso o navegador recorre a um conjunto de regras mais antigo, seção 06."},
+ {"code": "<!doctype html>", "note": "Diz que a página é HTML moderno. Sem isso o navegador recorre a um conjunto de regras mais antigo, seção 08."},
  {"code": "<html lang=\"en\">", "note": "O elemento raiz: todo o resto está dentro dele. `lang` diz a língua do conteúdo, que decide a voz que um leitor de tela usa e como as palavras são hifenizadas."},
- {"code": "  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Andorinha Books</title>\n  </head>", "note": "Informações sobre a página, nenhuma delas desenhada. A codificação de caracteres, como dimensionar a página no celular (as duas na seção 08) e o título que o navegador mostra na aba."},
+ {"code": "  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Andorinha Books</title>\n  </head>", "note": "Informações sobre a página, nenhuma delas desenhada. A codificação de caracteres, como dimensionar a página no celular (as duas na seção 10) e o título que o navegador mostra na aba."},
  {"code": "  <body>\n    <h1>Andorinha Books</h1>\n    <p>Second-hand books in Pinheiros, São Paulo.</p>\n  </body>", "note": "A página em si: tudo o que o leitor vê está aqui dentro."},
  {"code": "</html>", "note": "Fecha a raiz, e o documento termina."}
 ]}

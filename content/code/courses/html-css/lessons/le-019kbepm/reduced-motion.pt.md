@@ -1,9 +1,9 @@
 ---
 title: Movimento que quem lê pode desligar
-version: 1
+version: 2
 ---
 
-A seção 08 da aula 11 apresentou **`prefers-reduced-motion`**. Um site com muitas animações pode responder a ela num lugar só, com uma regra como esta, carregada depois das outras:
+A seção 08 da aula 11 apresentou **`prefers-reduced-motion`**. Um site com muitas animações pode responder a ela num lugar só, com uma regra como esta, carregada depois das outras. Salve-a como `reduced.css`:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -16,6 +16,8 @@ A seção 08 da aula 11 apresentou **`prefers-reduced-motion`**. Um site com mui
 ```
 
 Para quem pediu menos movimento, toda animação e transição passa a durar **0,01 ms** e roda **uma vez**. A página é a mesma, sem o movimento: o que desliza para dentro simplesmente está lá, porque, como a seção 08 recomendou, os estilos normais são o estado final.
+
+O `reduced.html` é o `keyframes.html` da seção 08 com uma linha a mais no fim do head, depois do `</style>`: `<link rel="stylesheet" href="reduced.css">`. Medido como alguém que pediu menos movimento:
 
 ```
 ana@laptop:~/site$ probe --reduced-motion reduced.html style .spinner animation-duration,animation-iteration-count style .notice opacity

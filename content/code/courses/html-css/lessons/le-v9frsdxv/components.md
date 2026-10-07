@@ -1,6 +1,6 @@
 ---
 title: Components without repeating yourself
-version: 1
+version: 2
 ---
 
 Twenty event cards with the same fifteen classes is the repetition from section 02. **The first answer is not CSS**: the site's templates should produce the card from one place, so the list is written once. A template in a server language, a component in a framework, an include in a static site generator: each one is a single file for "an event card", and the classes live there.
@@ -13,7 +13,7 @@ In the framework you choose after `javascript`, a component is a file that takes
 Server-rendered sites solve it the same way with templates: the HTML for an event card is written once and filled in for each event.
 :::
 
-When the markup cannot be controlled, a class added by a content management system or by a library, **`@apply`** copies utilities into a class of your own:
+When the markup cannot be controlled, a class added by a content management system or by a library, **`@apply`** copies utilities into a class of your own, here in `components/input.css`:
 
 ```css
 @import "tailwindcss";
@@ -23,6 +23,24 @@ When the markup cannot be controlled, a class added by a content management syst
     @apply rounded-md bg-emerald-700 px-4 py-2 font-semibold text-white;
   }
 }
+```
+
+The page beside it, `components/index.html`, has two buttons with that class:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="out.css">
+  </head>
+  <body class="p-4">
+    <button id="reserve" type="button" class="btn">Reserve a place</button>
+    <button id="wait" type="button" class="btn bg-stone-700">Join the waiting list</button>
+  </body>
+</html>
 ```
 
 ```

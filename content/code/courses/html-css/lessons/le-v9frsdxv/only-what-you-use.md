@@ -1,6 +1,6 @@
 ---
 title: The build writes only the classes you use
-version: 1
+version: 2
 ---
 
 Tailwind knows thousands of classes, and the stylesheet it wrote is small. It **scanned the files** in the folder for anything that looks like one of its class names, and wrote a rule only for those it found:
@@ -26,7 +26,7 @@ The colour is printed as **`oklch(0.508 0.118 165.612)`**. Tailwind's palette is
 
 ## Building for production
 
-The scanning is what keeps the file small, and the size still matters, lesson 1 section 10. For production, **`--minify`** removes the spaces and comments:
+The scanning is what keeps the file small, and the size still matters, lesson 1 section 12. For production, **`--minify`** removes the spaces and comments:
 
 ```
 ana@laptop:~/site$ npx @tailwindcss/cli --cwd first -i input.css -o out.min.css --minify --silent

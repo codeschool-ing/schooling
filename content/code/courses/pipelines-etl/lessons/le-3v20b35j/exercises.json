@@ -1,0 +1,536 @@
+[
+  {
+    "id": "ex-zn3363qt",
+    "version": 1,
+    "section": "why-cdc",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can change data capture see that a watermark on `updated_at` cannot? Choose all that apply.",
+    "hint": "Think of the four holes.",
+    "choices": [
+      {
+        "text": "A deleted row",
+        "correct": true,
+        "why": "Yes. The delete is written to the log like any change."
+      },
+      {
+        "text": "An order's state before a later update the same day",
+        "correct": true,
+        "why": "Yes. Each change arrives, not just the latest state."
+      },
+      {
+        "text": "An update that forgot to set `updated_at`",
+        "correct": true,
+        "why": "Yes. The log records the write whatever columns it touched."
+      },
+      {
+        "text": "A row that was never committed",
+        "correct": false,
+        "why": "A rolled-back transaction never reaches the stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7bxfm3t",
+    "version": 1,
+    "section": "why-cdc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does PostgreSQL keep a write-ahead log in the first place?",
+    "hint": "It was not built for pipelines.",
+    "choices": [
+      {
+        "text": "To feed change data capture tools",
+        "correct": false,
+        "why": "That is a later use of something built for another reason."
+      },
+      {
+        "text": "To survive a crash",
+        "correct": true,
+        "why": "Right. It replays the log after a crash, and replicas follow it too."
+      },
+      {
+        "text": "To keep an audit trail of who changed what",
+        "correct": false,
+        "why": "The WAL records changes, not who made them."
+      },
+      {
+        "text": "To make queries faster",
+        "correct": false,
+        "why": "Queries read tables; the WAL makes writes durable."
+      }
+    ]
+  },
+  {
+    "id": "ex-p582r1be",
+    "version": 1,
+    "section": "the-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A till's transaction is written at 23:40 and commits at 00:05. Where does it appear in the slot's stream?",
+    "hint": "The stream is in one particular order.",
+    "choices": [
+      {
+        "text": "At 23:40, among the changes written then",
+        "correct": false,
+        "why": "Nothing appears before it commits."
+      },
+      {
+        "text": "Nowhere, because it took too long",
+        "correct": false,
+        "why": "Duration does not matter; committing does."
+      },
+      {
+        "text": "At 00:05, its commit",
+        "correct": true,
+        "why": "Right. The stream is in commit order, so the slow till's problem disappears."
+      },
+      {
+        "text": "Twice, once when written and once when committed",
+        "correct": false,
+        "why": "Each committed transaction arrives once, whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5fd882a",
+    "version": 1,
+    "section": "the-slot",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The slot held 1,088 lines for 1 March, from 211 transactions. Each transaction adds a BEGIN and a COMMIT line. How many lines were row changes?",
+    "hint": "Subtract two lines per transaction.",
+    "value": 666,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-drg8nvzw",
+    "version": 1,
+    "section": "the-slot",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A byte position in PostgreSQL's write-ahead log is called a log sequence number, abbreviated ___.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "LSN"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a4xad9s0",
+    "version": 1,
+    "section": "the-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `pg_logical_slot_peek_changes` and `pg_logical_slot_get_changes`?",
+    "hint": "One of them moves the slot.",
+    "choices": [
+      {
+        "text": "`peek` shows only inserts",
+        "correct": false,
+        "why": "It shows every change, like `get`."
+      },
+      {
+        "text": "`get` consumes them",
+        "correct": true,
+        "why": "Right. `peek` reads without consuming, so it can be repeated."
+      },
+      {
+        "text": "`get` needs the replication protocol",
+        "correct": false,
+        "why": "Both are ordinary SQL functions."
+      },
+      {
+        "text": "`peek` reads the WAL from disk, `get` from memory",
+        "correct": false,
+        "why": "Both decode the same WAL; one of them advances the slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qbf0h4n",
+    "version": 1,
+    "section": "applying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana create the slot before copying the customers whole, and not after?",
+    "hint": "What could happen between the copy and the slot?",
+    "choices": [
+      {
+        "text": "A slot refuses to start on a table that has been copied",
+        "correct": false,
+        "why": "A slot knows nothing about copies."
+      },
+      {
+        "text": "Copying first is slower",
+        "correct": false,
+        "why": "The order changes correctness, not speed."
+      },
+      {
+        "text": "The copy needs the slot's LSN as a file name",
+        "correct": false,
+        "why": "The copy is an ordinary `\\copy`."
+      },
+      {
+        "text": "So nothing committed in between falls through the gap",
+        "correct": true,
+        "why": "Right. Changes during the copy are in the slot, and applying them twice is harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yw8y2k6",
+    "version": 1,
+    "section": "applying",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`apply_cdc.py` writes to the warehouse, and the warehouse commits; then the shop's connection fails before its commit. What happens next time?",
+    "hint": "The slot moves only when the shop's transaction commits.",
+    "choices": [
+      {
+        "text": "The changes are lost",
+        "correct": false,
+        "why": "The slot did not move, so they are still there."
+      },
+      {
+        "text": "They come again, harmlessly",
+        "correct": true,
+        "why": "Right. Upserts and deletes by key leave the same rows."
+      },
+      {
+        "text": "The warehouse rolls back to match",
+        "correct": false,
+        "why": "It committed; nothing rolls it back."
+      },
+      {
+        "text": "PostgreSQL refuses to decode the slot until it is reset",
+        "correct": false,
+        "why": "The slot is fine; it just has not moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx6v2g0h",
+    "version": 1,
+    "section": "applying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`apply_cdc.py` reads 666 changes to apply 23 to customers. What would a production setup use to avoid reading the rest?",
+    "hint": "A list of tables the database honours.",
+    "choices": [
+      {
+        "text": "A publication, with the `pgoutput` plugin",
+        "correct": true,
+        "why": "Right. The reader receives only the tables it asked for."
+      },
+      {
+        "text": "A `WHERE` clause on `get_changes`",
+        "correct": false,
+        "why": "That filters after decoding and still consumes everything."
+      },
+      {
+        "text": "One slot per table, all with `test_decoding`",
+        "correct": false,
+        "why": "Every slot would decode every table's changes."
+      },
+      {
+        "text": "A trigger that copies customer changes to another table",
+        "correct": false,
+        "why": "That is a different design; the slot still sees every table."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4b1s8nf",
+    "version": 1,
+    "section": "replica-identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `ALTER TABLE customers REPLICA IDENTITY FULL` add to each update in the stream?",
+    "hint": "`old-key:` and `new-tuple:`.",
+    "choices": [
+      {
+        "text": "The name of the user who made the change",
+        "correct": false,
+        "why": "Replica identity is about the old row, not the user."
+      },
+      {
+        "text": "A checksum of the new row",
+        "correct": false,
+        "why": "No checksum is added."
+      },
+      {
+        "text": "The whole old row",
+        "correct": true,
+        "why": "Right. A history can now say where the customer lived before."
+      },
+      {
+        "text": "The primary key only",
+        "correct": false,
+        "why": "That is the default, before `FULL`."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7089akt",
+    "version": 1,
+    "section": "replica-identity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson call `REPLICA IDENTITY FULL` a decision for the source's owner rather than for the pipeline?",
+    "hint": "Who pays for it?",
+    "choices": [
+      {
+        "text": "Only superusers can run `ALTER TABLE`",
+        "correct": false,
+        "why": "The table's owner can; the point is the cost."
+      },
+      {
+        "text": "The source pays for the extra WAL",
+        "correct": true,
+        "why": "Right. The system taking sales carries the extra writing."
+      },
+      {
+        "text": "It changes the table's primary key",
+        "correct": false,
+        "why": "The key is unchanged."
+      },
+      {
+        "text": "It stops the tills while it runs",
+        "correct": false,
+        "why": "It is a quick catalogue change."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccwqdr7x",
+    "version": 1,
+    "section": "slots-hold-wal",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The forgotten slot held back 6,085 kB after fourteen days. About how many kB a day is that? Give a whole number.",
+    "hint": "Divide by fourteen.",
+    "value": 435,
+    "tolerance": 2
+  },
+  {
+    "id": "ex-wk2artbf",
+    "version": 1,
+    "section": "slots-hold-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team switches off its CDC pipeline for a migration and forgets its slot. A month later the source database stops accepting writes. Why?",
+    "hint": "Where does the WAL live?",
+    "choices": [
+      {
+        "text": "The slot locked the tables it was reading",
+        "correct": false,
+        "why": "Slots take no table locks."
+      },
+      {
+        "text": "The kept WAL filled the disk the database lives on",
+        "correct": true,
+        "why": "Right. A month of WAL, held for a reader that never came back."
+      },
+      {
+        "text": "PostgreSQL limits a database to one slot",
+        "correct": false,
+        "why": "The lab had two at once."
+      },
+      {
+        "text": "The `wal_level` setting reverted",
+        "correct": false,
+        "why": "Nothing reverts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbx67ksh",
+    "version": 1,
+    "section": "slots-hold-wal",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each defence against a forgotten slot to what it does.",
+    "hint": "One limits, one warns, one removes.",
+    "pairs": [
+      {
+        "left": "`max_slot_wal_keep_size`",
+        "right": "Invalidates the slot before the disk fills"
+      },
+      {
+        "left": "A query on `pg_replication_slots`",
+        "right": "Shows how much WAL each slot holds"
+      },
+      {
+        "left": "`pg_drop_replication_slot`",
+        "right": "Releases a slot nobody uses"
+      }
+    ],
+    "right_distractors": [
+      "Turns change data capture off"
+    ]
+  },
+  {
+    "id": "ex-2s14c9a7",
+    "version": 1,
+    "section": "slots-hold-wal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `max_slot_wal_keep_size` set, a forgotten slot passes the limit. What happens, and why is that the right way round?",
+    "hint": "Which system should survive?",
+    "choices": [
+      {
+        "text": "The database stops writes until the slot is read",
+        "correct": false,
+        "why": "That is what happens without a limit."
+      },
+      {
+        "text": "The oldest WAL is compressed",
+        "correct": false,
+        "why": "Nothing is compressed; the slot is invalidated."
+      },
+      {
+        "text": "The slot is invalidated and the source survives",
+        "correct": true,
+        "why": "Right. Losing the pipeline's place is cheaper than stopping the tills."
+      },
+      {
+        "text": "The slot moves forward on its own and skips the oldest changes",
+        "correct": false,
+        "why": "It is invalidated, and a reader that relied on it has to start again."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx01ra3v",
+    "version": 1,
+    "section": "in-production",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does exporting the slot's snapshot give the initial copy?",
+    "hint": "The copy and the stream start at one moment.",
+    "choices": [
+      {
+        "text": "A faster copy",
+        "correct": false,
+        "why": "Speed is not what it buys."
+      },
+      {
+        "text": "The stream's own starting moment",
+        "correct": true,
+        "why": "Right. Nothing missed, nothing applied twice."
+      },
+      {
+        "text": "A copy that includes rolled-back transactions",
+        "correct": false,
+        "why": "Snapshots see committed data only."
+      },
+      {
+        "text": "A copy in JSON instead of CSV",
+        "correct": false,
+        "why": "Format has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w2apt8g",
+    "version": 1,
+    "section": "in-production",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the lesson recommend the outbox pattern over CDC on the source's tables?",
+    "hint": "Who has to write the outbox rows?",
+    "choices": [
+      {
+        "text": "When the source is a database nobody will change",
+        "correct": false,
+        "why": "Then the outbox cannot be added; CDC on the tables is the tool."
+      },
+      {
+        "text": "When the pipeline has no network access to Kafka",
+        "correct": false,
+        "why": "The transport is a separate question."
+      },
+      {
+        "text": "When its developers will write the events",
+        "correct": true,
+        "why": "Right. They write the events, and the internal tables stay free to change."
+      },
+      {
+        "text": "Whenever deletes matter",
+        "correct": false,
+        "why": "CDC on the tables sees deletes too."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h87kd0g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps Ana took to keep `cdc.customers` current.",
+    "hint": "The slot comes before the copy.",
+    "items": [
+      "Check that wal_level is logical",
+      "Create the replication slot",
+      "Copy the customers whole",
+      "Read and apply the slot's changes each night"
+    ]
+  },
+  {
+    "id": "ex-3dcnc3g5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes replacing `apply_cdc.py`'s upsert with a plain `INSERT`, since every customer change is an insert or an update. What breaks?",
+    "hint": "An update is for a key that already exists.",
+    "choices": [
+      {
+        "text": "Nothing: an insert and an update carry the same columns",
+        "correct": false,
+        "why": "The columns match; the key collides."
+      },
+      {
+        "text": "Deletes stop working",
+        "correct": false,
+        "why": "Deletes are a separate branch."
+      },
+      {
+        "text": "The slot stops advancing",
+        "correct": false,
+        "why": "The slot advances on commit, whatever the statements were."
+      },
+      {
+        "text": "Every update fails on the primary key, and so does a repeated change",
+        "correct": true,
+        "why": "Right. The upsert is what makes both updates and repeats work."
+      }
+    ]
+  }
+]

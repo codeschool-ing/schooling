@@ -1,6 +1,6 @@
 ---
 title: Híbrida, a forma que as redes reais têm
-version: 1
+version: 2
 ---
 
 Pergunte qual é a topologia da rede de uma empresa e a resposta honesta é **todas, cada uma no seu
@@ -29,7 +29,7 @@ Leia essa tabela das mesas para dentro e a rede típica de uma empresa se desenh
 ## O laboratório já é híbrido
 
 O cenário `office` deste curso parece uma estrela, e o switch sw1 é uma. Mas siga o desenho no alto do
-`lab.sh` para fora do escritório: o sw1 está pendurado no r1, o r1 está ligado à operadora `isp`, a
+`office.sh`, da aula 1, para fora do escritório: o sw1 está pendurado no r1, o r1 está ligado à operadora `isp`, a
 `isp` a um balanceador de carga `lb`, e o `lb` é o centro de uma segunda estrela, pequena, com os dois
 servidores web `web1` e `web2`.
 

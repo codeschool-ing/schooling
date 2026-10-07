@@ -22,6 +22,6 @@ exatamente para onde as configurações dele mandam.
 
 Esse é o tipo de causa que a explicação do usuário esconde. "A impressora quebrou" nomeou a última coisa
 que ele conseguia ver, a impressora que ficou quieta. O defeito estava um passo antes, numa escolha que
-ele fez numa caixa de diálogo. No laboratório, o que essa escolha fez foi feito com `lpoptions -d pdf`,
-rodado como o Bruno, e o cabeçalho da captura diz isso: os computadores do laboratório não têm área de
-trabalho para mostrar a janela.
+ele fez numa caixa de diálogo. Os computadores do escritório não têm área de trabalho para mostrar essa
+janela, então nesta gravação a escolha foi feita com `lpoptions -d pdf`, rodado como o Bruno: o comando
+que define o mesmo padrão, só para ele.

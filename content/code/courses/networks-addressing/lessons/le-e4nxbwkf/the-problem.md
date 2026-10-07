@@ -1,6 +1,6 @@
 ---
 title: Two VLANs, and no way between them
-version: 1
+version: 2
 ---
 
 Lesson 19 split a network into VLANs and showed each one sealed off from the other. That was the
@@ -13,7 +13,31 @@ a separate IP subnet. Traffic between subnets is a router's job, which lessons 1
 The lab for this lesson is one switch, sw1, configured the way lesson 19 left its switches. pc1 and
 a web server, srv, are in VLAN 10, in 10.20.10.0/24; pc2 is in VLAN 20, in 10.20.20.0/24. A router,
 r1, is plugged into port p8, and p8 is a trunk carrying both VLANs. r1 has no address yet. Every PC
-already names a default gateway: 10.20.10.1 for the machines in VLAN 10 and 10.20.20.1 for pc2.
+already names a default gateway: 10.20.10.1 for the machines in VLAN 10 and 10.20.20.1 for pc2. Save
+it as `~/netlab/intervlan.sh` and build it with `sudo bash ~/netlab/netlab.sh up intervlan`:
+
+```bash
+# ~/netlab/intervlan.sh: one switch with two VLANs configured, and a router on
+# port p8, which is a trunk carrying both. The router has no address yet.
+#
+#   pc1 (VLAN 10, 10.20.10.21) --p1\
+#   srv (VLAN 10, 10.20.10.10) --p3-- sw1 --p8 (trunk: 10, 20)-- r1
+#   pc2 (VLAN 20, 10.20.20.22) --p2/
+node pc1; node pc2; node srv; node sw1; node r1 router
+link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2; link srv eth0 sw1 p3; link r1 eth0 sw1 p8
+switch sw1 "p1 p2 p3 p8" vlan_filtering 1
+local p
+for p in p1 p3; do ip netns exec sw1 bridge vlan add dev $p vid 10 pvid untagged; ip netns exec sw1 bridge vlan del dev $p vid 1; done
+ip netns exec sw1 bridge vlan add dev p2 vid 20 pvid untagged; ip netns exec sw1 bridge vlan del dev p2 vid 1
+ip netns exec sw1 bridge vlan add dev p8 vid 10; ip netns exec sw1 bridge vlan add dev p8 vid 20
+addr pc1 eth0 10.20.10.21/24; addr srv eth0 10.20.10.10/24; addr pc2 eth0 10.20.20.22/24
+gw pc1 10.20.10.1; gw srv 10.20.10.1; gw pc2 10.20.20.1
+web srv 10.20.10.10
+```
+
+The `bridge vlan` lines are lesson 19's commands: `pvid untagged` makes a port an access port in that
+VLAN, and p8, given both VLANs without that word, is the trunk. `node r1 router` switches forwarding
+on, and nothing else on r1 is configured.
 
 ```
 root@sw1:~# bridge vlan show

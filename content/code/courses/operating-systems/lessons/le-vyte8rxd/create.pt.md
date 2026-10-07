@@ -1,10 +1,18 @@
 ---
 title: Criando pastas e arquivos
-version: 1
+version: 2
 ---
 
 Tudo nesta aula acontece numa pasta, `~/work`, com dois arquivos já dentro: um log de backup e uma lista
-de clientes.
+de clientes. Crie-os no seu servidor primeiro. A segunda linha é um programinha: um laço que escreve 240
+linhas, dez para cada dia a partir de 1º de setembro, como um backup que roda a cada poucos minutos as
+deixaria. A terceira escreve a lista de clientes de uma vez:
+
+```sh
+rm -rf ~/work && mkdir ~/work && cd ~/work
+for i in $(seq 1 240); do printf '2026-09-%02d 09:%02d backup ok\n' $(( (i-1)/10 + 1 )) $(( (i-1) % 60 )); done > backup.log
+printf 'id,name,city\n1,Acme Ltd,Sao Paulo\n2,Bravo & Filhos,Campinas\n3,Casa Verde,Santos\n' > clients.csv
+```
 
 ```
 ana@server:~/work$ mkdir invoices

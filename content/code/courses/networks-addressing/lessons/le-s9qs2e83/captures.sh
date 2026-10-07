@@ -6,9 +6,8 @@
 # the lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo useradd -m -s /bin/bash ana       # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh    # the lab, beside course.json
-#   sudo bash captures.sh
+#   sudo bash captures.sh       # on the machine ../../lab.sh describes; it runs
+#                               # the lab files the lessons show, copied out of them
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. lab.sh builds the "office"
 # scenario out of network namespaces on one Linux computer: four PCs on a
@@ -25,10 +24,19 @@
 # provider towards the office's private network for the firewall block, so the
 # only thing refusing the connection is the firewall.
 #
+# THE SETUP SECTIONS ARE A SEPARATE RUN, on a machine made fresh from the
+# cloud image with nothing installed: `sudo bash captures.sh setup`. It copies
+# the lab files out of the lessons into ~ana/netlab, as a student would have
+# saved them, and types what the sections show, failures first. The package
+# line it installs with is read out of the lesson too, from the first fence of
+# netlab.md. The block fail-modules is not here: it was recorded in a Linux
+# container (kernel 6.18.44-fc-v77, no /lib/modules) by typing
+# `sudo bash ~/netlab/netlab.sh up office` as ana, and no VM can reproduce it.
+#
 # Recorded on Ubuntu 24.04 in a virtual machine, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -48,6 +56,36 @@ bgon() {  # bgon USER HOST 'command'
   sleep 2
 }
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
+# here 'command': typed on the machine itself, outside any device
+here() { printf 'ana@lab:~$ %s\n' "$*"; runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin LANG=C.UTF-8 TERM=xterm COLUMNS=100 bash -c "cd; $*" 2>&1 || true; }
+
+if [ "${1:-}" = setup ]; then
+  lab list >/dev/null
+  rm -rf /home/ana/netlab; cp -r "${NETLAB:-/var/tmp/netlab}" /home/ana/netlab; chown -R ana: /home/ana/netlab
+  block fail-sudo
+  here 'bash ~/netlab/netlab.sh up office'
+  block fail-packages
+  here 'sudo bash ~/netlab/netlab.sh up office'
+  # the package line of netlab.md, as the student runs it
+  awk '/^```sh$/{f=1;next} f&&/^```$/{exit} f' "$(dirname "$0")/netlab.md" > /tmp/packages.sh
+  runuser -u ana -- bash /tmp/packages.sh >/dev/null 2>&1 || { echo "the package line failed" >&2; exit 1; }
+  block setup-up
+  here 'sudo bash ~/netlab/netlab.sh up office'
+  block setup-on
+  here "sudo bash ~/netlab/netlab.sh on pc1 \"\$USER\" 'ping -c 2 srv'"
+  block fail-names
+  here 'sudo bash ~/netlab/netlab.sh up offce'
+  here 'bash ~/netlab/netlab.sh list'
+  here 'sudo bash ~/netlab/netlab.sh down'
+  here 'sudo bash ~/netlab/netlab.sh on pc1'
+  block fail-short
+  # office.sh pasted without its last lines: the first 40 of them
+  cp /home/ana/netlab/office.sh /tmp/office.whole; head -n 40 /tmp/office.whole > /home/ana/netlab/office.sh
+  here 'bash -n ~/netlab/office.sh'
+  here 'sudo bash ~/netlab/netlab.sh up office'
+  cp /tmp/office.whole /home/ana/netlab/office.sh
+  exit 0
+fi
 
 lab up office
 

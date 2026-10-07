@@ -1,11 +1,11 @@
 ---
 title: What the browser does with broken HTML
-version: 1
+version: 2
 ---
 
 The browser's HTML parser never stops with an error. That is a deliberate decision, written into the HTML standard: for every possible sequence of characters, the standard says exactly what tree the parser must build. So broken HTML does not crash anything. **It gets repaired, by rules you did not choose**, and the repaired tree is what the browser draws and what every script and stylesheet sees.
 
-Here is a page with three ordinary mistakes in it: a `<b>` that is never closed in its paragraph, a `</b>` and an `</i>` closed in the wrong order, and a `<div>` inside a paragraph.
+Here is a page with three ordinary mistakes in it: a `<b>` that is never closed in its paragraph, a `</b>` and an `</i>` closed in the wrong order, and a `<div>` inside a paragraph. Save it as `broken.html`.
 
 ```html
 <!doctype html>
@@ -47,7 +47,7 @@ Read it against the file, and three repairs come out.
 
 ## The repair that empties the page
 
-Most repairs are like these: the page looks almost right. One is not. Here is the same page with a single change: the title has no closing tag.
+Most repairs are like these: the page looks almost right. One is not. Save a copy as `unclosed-title.html` with a single change: the title has no closing tag.
 
 ```html
 <title>Opening hours
@@ -66,4 +66,4 @@ body  x 8      y 8      width 1008   height 0
 
 ## What to take from it
 
-You cannot see repairs by looking at the page, because the repaired page is what you see. Two tools show them. **DevTools' Elements panel shows the tree, not the file**, so a `<div>` you wrote inside a `<p>` appears after it there, and that mismatch between what you typed and what you see is the clue. And a validator, section 11, reads the file itself and tells you every place the parser had to guess.
+You cannot see repairs by looking at the page, because the repaired page is what you see. Two tools show them. **DevTools' Elements panel shows the tree, not the file**, so a `<div>` you wrote inside a `<p>` appears after it there, and that mismatch between what you typed and what you see is the clue. And a validator, section 13, reads the file itself and tells you every place the parser had to guess.

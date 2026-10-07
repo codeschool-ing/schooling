@@ -1,6 +1,6 @@
 ---
 title: Escolhendo a versão, e conferindo o download
-version: 1
+version: 2
 ---
 
 A aula 6 trata direito das famílias de distribuições Linux. Para esta aula, a escolha está feita: o
@@ -23,8 +23,24 @@ alguém adulterou. Toda distribuição publica um **checksum** para cada arquivo
 calculado a partir do conteúdo exato dele, num arquivo em geral chamado `SHA256SUMS`. Se um byte do
 download for diferente, o número fica completamente diferente.
 
-Aqui está a conferência num arquivo pequeno que faz o papel do download, com as somas publicadas ao
-lado:
+A aula 1 conferiu o instalador de verdade, e a resposta foi `OK`. Para ver a outra resposta, crie um
+substituto no seu servidor: um arquivo pequeno de números, com a soma dele escrita ao lado do jeito que
+um site de download publica.
+
+```sh
+mkdir ~/downloads && cd ~/downloads
+seq 1 200000 > download.img
+sha256sum download.img > SHA256SUMS
+```
+
+Depois confira, mude um byte dele e confira de novo. O byte é mudado com esta linha, digitada entre as
+duas conferências:
+
+```sh
+printf 'X' | dd of=download.img bs=1 seek=100000 conv=notrunc status=none
+```
+
+Aqui estão as três no servidor:
 
 ```
 ana@server:~/downloads$ cat SHA256SUMS
@@ -36,8 +52,8 @@ download.img: FAILED
 sha256sum: WARNING: 1 computed checksum did NOT match
 ```
 
-`OK` quer dizer que o arquivo é, byte a byte, o que quem publicou fez. Depois um byte dele foi mudado,
-e a mesma conferência diz `FAILED`. Um checksum que falha quer dizer **baixe de novo**, nunca "deve
+`OK` quer dizer que o arquivo é, byte a byte, o que quem publicou fez. Depois que o `dd` escreveu um `X`
+por cima de um byte, a mesma conferência diz `FAILED`. Um checksum que falha quer dizer **baixe de novo**, nunca "deve
 estar tudo bem".
 
 No Windows, o mesmo número vem do `Get-FileHash` no PowerShell, e no macOS do `shasum -a 256`. Para ter

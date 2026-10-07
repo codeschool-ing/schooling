@@ -1,6 +1,6 @@
 ---
 title: Block, inline and inline-block
-version: 1
+version: 2
 ---
 
 Whether width, height and margins do anything to an element depends on its **`display`**. Two values were there before anything else, and the browser gives one of them to every element by default:
@@ -72,6 +72,8 @@ span.tag.as-block         x 20     y 224    width 216    height 68
   </body>
 </html>
 ```
+
+Save it as `gap.html`, with any small picture beside it as `cover.png`; the attributes fix its size.
 
 ```
 ana@laptop:~/site$ probe gap.html box .frame

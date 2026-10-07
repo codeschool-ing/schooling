@@ -1,6 +1,6 @@
 ---
 title: Layers 1 and 2: a link and a hardware address
-version: 1
+version: 2
 ---
 
 Layer 1 is the physical signal: the cable, the radio, the light on the port. A terminal cannot see a
@@ -28,7 +28,10 @@ network card. A switch reads it to decide which port a frame leaves by. It means
 link, and no router ever forwards it.
 
 The laptop knows the server's IP address, but a frame needs the server's MAC. It asks, with **ARP**
-(*Address Resolution Protocol*). The laptop's neighbour table starts empty, and one ping fills it:
+(*Address Resolution Protocol*). The laptop's neighbour table starts empty, and one ping fills it.
+**In your lab**, empty it first, because building the lab already sent a few packets: run
+`sudo ip neigh flush all` on the laptop and on the server. Then start the `tcpdump` further down on
+the server, in a second terminal, before you send the ping.
 
 ```
 ana@laptop:~$ ip neigh

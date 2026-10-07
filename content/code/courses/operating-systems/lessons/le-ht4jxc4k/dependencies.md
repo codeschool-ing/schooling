@@ -1,10 +1,14 @@
 ---
 title: Dependencies: asking for one, getting five
-version: 1
+version: 2
 ---
 
-Most programs are built on others. Lesson 8 found the manual reader missing from this server; installing
-it shows what a package manager is for:
+Most programs are built on others. Lesson 8 found the manual reader missing from the server these
+transcripts were recorded on; installing it shows what a package manager is for.
+
+**Your server already has it**, because the standard installation includes it, so there this command
+answers that `man-db` is already the newest version. Read the transcript here, and type the command
+yourself after the next section, which removes `man-db`, to watch your own list arrive:
 
 ```
 ana@server:~$ sudo apt install -y man-db

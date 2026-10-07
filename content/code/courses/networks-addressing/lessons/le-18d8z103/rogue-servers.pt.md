@@ -1,6 +1,6 @@
 ---
 title: Um segundo servidor que ninguém pediu
-version: 1
+version: 2
 ---
 
 O DHCP não tem noção de servidor oficial. **Um cliente aceita a primeira oferta que chega, de quem
@@ -12,7 +12,8 @@ isolados ou são mandados para outro lugar.
 
 No laboratório, o PC chamado rogue virou um segundo servidor, que empresta do 10.20.10.200 para cima
 e indica a si mesmo, 10.20.10.66, como gateway. Como ele foi iniciado não faz parte desta aula; o que
-ele faz com a rede, sim. O pc2 pede um endereço, com um `tcpdump` rodando no pc2 num segundo terminal,
+ele faz com a rede, sim. O seu `dhcp.sh` não tem um segundo servidor, então esta seção é para ler, não
+para digitar: o que importa é a saída. O pc2 pede um endereço, com um `tcpdump` rodando no pc2 num segundo terminal,
 que imprime depois:
 
 ```

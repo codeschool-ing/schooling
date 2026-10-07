@@ -1,6 +1,6 @@
 ---
 title: "A bridge: o que um switch é por baixo"
-version: 1
+version: 2
 ---
 
 Antes dos switches, uma Ethernet que ficava movimentada demais era cortada em duas, e as metades
@@ -24,8 +24,8 @@ root@sw1:~# bridge link show
 root@sw1:~# bridge fdb show br br0 dynamic
 ```
 
-Cinco portas, `master br0`, e uma tabela de endereços aprendidos vazia. O laboratório a esvaziou
-logo antes deste bloco, para você ver o aprendizado. O pc1 pinga o servidor, depois o pc2:
+Cinco portas, `master br0`, e uma tabela de endereços aprendidos vazia. Ela foi esvaziada logo antes
+deste bloco com `bridge fdb flush dev br0 dynamic`, para você ver o aprendizado. O pc1 pinga o servidor, depois o pc2:
 
 ```
 ana@pc1:~$ ping -c 1 -q 10.20.10.10

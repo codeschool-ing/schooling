@@ -8,6 +8,11 @@
 #   sudo useradd -m -s /bin/bash -G sudo ana   # once, on a throwaway machine
 #   sudo -u ana -i bash /path/to/captures.sh    # hostname `server`
 #
+# THE BLOCKS THE STUDENT TYPES TO SET A SECTION UP ARE READ OUT OF THE LESSON.
+# stage() takes the sh fence of a section whose first line is the one given and
+# runs it as written, so what the lesson shows and what made these transcripts
+# cannot drift apart; a fence that is not there stops the script.
+#
 # ONLY LINUX IS CAPTURED HERE, and PowerShell 7 running on that same Linux.
 # What only Windows or macOS can print is shown in the lesson as commands with
 # no output, and the prose says so where it happens: a transcript nobody ran
@@ -15,11 +20,11 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson:
 # the Ubuntu 24.04 server from lesson 3, with one user, ana, in the sudo group;
-# two more users, bruno and carla, made with useradd for the other side of
-# each permission, and removed again at the end with the group accounts and
-# both folders; /srv/office, owned by ana, holding payroll.txt and
-# reports/q3.txt, dated 1 September 2026 by touch; backup.sh written by
-# printf before its block; and sudo set to ask ana for no password, which a
+# two more users, bruno and carla, for the other side of each permission, and
+# /srv/office with payroll.txt and reports/q3.txt, dated 1 September 2026 by
+# touch; backup.sh before its block; and the tidy-up that removes the users,
+# the group accounts and both folders at the end. All three are the lesson's
+# own fences, run by stage(); the tidy-up's output is not quoted; and sudo set to ask ana for no password, which a
 # real installation does not do.
 # Every line after a prompt is what the command printed.
 #
@@ -43,6 +48,17 @@ psh() {
   pwsh -NoProfile -NoLogo -Command "\$ErrorView='ConciseView'; $* | Out-String -Width 100 -Stream | ForEach-Object { \$_.TrimEnd() }" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+here=$(cd "$(dirname "$0")" && pwd)
+stage() {
+  local fence
+  fence=$(first="$2" awk '
+    /^```sh$/ { inside = 1; n = 0; next }
+    /^```$/ && inside { if (keep) exit; inside = 0; next }
+    inside { n++; if (n == 1 && $0 == ENVIRON["first"]) keep = 1; if (keep) print }
+  ' "$here/$1")
+  [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
+  eval "$fence"
+}
 # Lines from stdin, typed one at a time into an interactive bash in a real
 # terminal, so job numbers and "Terminated" appear exactly as a person sees them.
 session() {
@@ -57,15 +73,8 @@ cd ~
 for u in bruno carla; do sudo userdel -r $u >/dev/null 2>&1; done
 sudo groupdel accounts >/dev/null 2>&1
 sudo rm -rf /srv/accounts
-sudo useradd -m -s /bin/bash bruno
-sudo useradd -m -s /bin/bash carla
-sudo rm -rf /srv/office && sudo mkdir /srv/office && sudo chown ana:ana /srv/office
-cd /srv/office && mkdir reports
-printf 'Q3 figures\n' > reports/q3.txt
-printf 'salaries\n' > payroll.txt
-chmod 755 /srv/office reports
-chmod 644 payroll.txt reports/q3.txt
-find /srv/office -exec touch -h -d '2026-09-01 09:00' {} +
+sudo rm -rf /srv/office
+stage reading-permissions.md 'sudo useradd -m -s /bin/bash bruno'
 
 block read
 show 'ls -l'
@@ -96,7 +105,7 @@ show 'ls -l drop'
 show 'ls -ld /tmp'
 
 block chmod
-printf '#!/bin/sh\necho backup done\n' > backup.sh
+stage changing-them.md "printf '#!/bin/sh\\necho backup done\\n' > backup.sh"
 session <<'S'
 cat backup.sh
 ls -l backup.sh
@@ -132,7 +141,5 @@ show 'ls -ld new.txt newdir'
 block ps-acl
 psh 'Get-Acl payroll.txt'
 
-cd ~
-sudo rm -rf /srv/accounts /srv/office
-for u in bruno carla; do sudo userdel -r $u >/dev/null 2>&1; done
-sudo groupdel accounts >/dev/null 2>&1
+block tidy-up
+stage macos-and-the-three.md 'cd ~'

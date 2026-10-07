@@ -1,12 +1,35 @@
 ---
 title: A mask is a row of ones
-version: 1
+version: 2
 ---
 
 Lesson 8 said the mask decides where the network part of an address ends. This lesson is the
 arithmetic of that, on a lab built for it: one `/24`, `10.20.32.0/24`, cut into three LANs of
 different sizes behind the router r1. Lesson 13 is about how that plan was made; this one is about
-reading it.
+reading it. Save the lab as `~/netlab/plan.sh` and build it with `sudo bash ~/netlab/netlab.sh up plan`:
+
+```bash
+# ~/netlab/plan.sh: one /24 cut into subnets of different sizes, each on its
+# own interface of r1, and r2 upstream holding one route for all of them.
+#
+#   sales1 --(10.20.32.0/25)---+
+#   eng1   --(10.20.32.128/26)-+- r1 --(10.20.32.224/30)-- r2 --(10.20.99.0/24)-- hq1
+#   ops1   --(10.20.32.192/27)-+
+local n
+for n in sales1 eng1 ops1 hq1; do node $n; done
+node r1 router; node r2 router
+link sales1 eth0 r1 eth1; addr sales1 eth0 10.20.32.10/25;  addr r1 eth1 10.20.32.1/25
+link eng1 eth0 r1 eth2;   addr eng1 eth0 10.20.32.140/26;  addr r1 eth2 10.20.32.129/26
+link ops1 eth0 r1 eth3;   addr ops1 eth0 10.20.32.200/27;  addr r1 eth3 10.20.32.193/27
+gw sales1 10.20.32.1; gw eng1 10.20.32.129; gw ops1 10.20.32.193
+link r1 eth0 r2 eth0; addr r1 eth0 10.20.32.225/30; addr r2 eth0 10.20.32.226/30
+gw r1 10.20.32.226
+link r2 eth1 hq1 eth0; addr r2 eth1 10.20.99.1/24; addr hq1 eth0 10.20.99.10/24; gw hq1 10.20.99.1
+ip -n r2 route add 10.20.32.0/24 via 10.20.32.225
+```
+
+Every mask in this lesson is in an `addr` line of that file, and r2's single route for all three LANs
+is its last line.
 
 The shape first. **A subnet mask is 32 bits: a run of ones, then a run of zeros, and nothing else.**
 The ones cover the network part of the address and the zeros cover the host part. The machine

@@ -1,11 +1,13 @@
 ---
 title: An account that can only drop files
-version: 1
+version: 2
 ---
 
 The office scanner saves scans to the server by SFTP, as many scanners and copiers can. Its account,
 `scans`, needs to put files in one folder and nothing else: no shell, and no view of the rest of the
-server. Four lines at the end of the server's `sshd_config` do it:
+server. Four lines at the end of the server's `sshd_config` do it. The scan it sends is a stand-in: on
+the laptop, `cp /usr/share/common-licenses/MPL-2.0 scan-0001.pdf` makes one, and the password of
+`scans` is `scanner-2026`.
 
 ```
 ana@server:~$ tail -4 /etc/ssh/sshd_config

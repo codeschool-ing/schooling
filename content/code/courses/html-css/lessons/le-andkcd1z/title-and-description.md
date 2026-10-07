@@ -1,6 +1,6 @@
 ---
 title: The title, the description and what other programs read
-version: 1
+version: 2
 ---
 
 The rest of the head is information for programs that are not the browser window: the tab bar, the search engine, the chat app that turns a pasted link into a preview. None of it is drawn on the page, and all of it is read by somebody. Here is the head of the bookshop's events page:
@@ -19,7 +19,7 @@ The rest of the head is information for programs that are not the browser window
 
 ## The title is the one that matters most
 
-Of all of these, **`<title>` is the only one a page must have**: a document without one is invalid HTML, and the validator in section 11 says so. It is the first thing a screen reader announces when the page opens, and it is how somebody with twenty tabs open finds yours. `probe` reads it the way the browser does:
+Of all of these, **`<title>` is the only one a page must have**: a document without one is invalid HTML, and the validator in section 13 says so. It is the first thing a screen reader announces when the page opens, and it is how somebody with twenty tabs open finds yours. `probe` reads it the way the browser does:
 
 ```
 ana@laptop:~/site$ probe head.html title
@@ -31,6 +31,12 @@ A good title is specific and short. "Events · Andorinha Books" names the page f
 ## Description, icon and the rest
 
 The description does not change how a page ranks. It is what a search result may show under the title, so it is written for a person deciding whether to click: what is on the page, in one sentence. The icon is cosmetic and it is also how people find your tab among twenty. The `canonical` link and the Open Graph properties matter once the site is public and shared, and a page without them still works.
+
+The icon the page names is one line of SVG, a green circle. Save it beside the page as `icon.svg`:
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#2f6f4e"/></svg>
+```
 
 ## Where the title of a page comes from in a big site
 

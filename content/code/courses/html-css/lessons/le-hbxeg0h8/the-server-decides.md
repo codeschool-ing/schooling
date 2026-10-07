@@ -1,11 +1,11 @@
 ---
 title: The server checks everything again
-version: 1
+version: 2
 ---
 
 Everything in this lesson so far happens in the reader's browser, and that has a consequence that is a matter of security rather than of convenience. **The browser belongs to the reader.** Native validation is a service to the honest person filling in the form; it is not a guard on the server.
 
-The demonstration is short. Here is the order form with one attribute added, `novalidate`, which tells the browser not to check anything before sending:
+The demonstration is short. Save a copy of `order.html` as `unchecked.html` and add one attribute to its form, `novalidate`, which tells the browser not to check anything before sending: `<form action="order" method="post" novalidate>`. Then fill it in with nonsense and send it:
 
 ```
 ana@laptop:~/site$ probe unchecked.html fill '#email' 'not an address' fill '#copies' -40 send button

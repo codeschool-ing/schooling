@@ -1,6 +1,6 @@
 ---
 title: Privado por dentro, um endereço público por fora
-version: 1
+version: 2
 ---
 
 O IPv4 tem 2 elevado a 32 endereços, cerca de 4,3 bilhões, e há mais dispositivos que isso. **O NAT,
@@ -10,7 +10,8 @@ endereço público por fora.** As faixas privadas são reservadas pela RFC 1918 
 endereço existe em milhares de escritórios ao mesmo tempo, e nenhum roteador da internet tem rota
 para nenhum deles.
 
-O laboratório do escritório é montado assim. O pc1 tem um endereço privado:
+O escritório da aula 1 é montado assim, e esta aula roda nele: `sudo bash ~/netlab/netlab.sh up office`.
+O pc1 tem um endereço privado:
 
 ```
 ana@pc1:~$ ip -br addr show eth0

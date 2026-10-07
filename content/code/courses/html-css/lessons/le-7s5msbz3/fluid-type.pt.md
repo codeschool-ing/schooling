@@ -1,6 +1,6 @@
 ---
 title: Tipografia fluida com clamp()
-version: 1
+version: 2
 ---
 
 Um título que fica bem num notebook é grande demais num celular, e a correção de costume era uma media query que muda `font-size` num breakpoint: um tamanho, e de repente outro. O **`clamp()`**, da seção 07 da aula 10, faz o tamanho mudar **suavemente** com a janela, entre um mínimo e um máximo:
@@ -9,7 +9,27 @@ Um título que fica bem num notebook é grande demais num celular, e a correçã
 h1 { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.5rem); }
 ```
 
-Os três argumentos são o **mínimo**, o valor **preferido** e o **máximo**. O valor preferido cresce com a janela: `2.5vw` é 2,5% da largura dela. O navegador o usa sempre que ele fica entre os outros dois, e o limite mais próximo nos outros casos:
+Os três argumentos são o **mínimo**, o valor **preferido** e o **máximo**. O valor preferido cresce com a janela: `2.5vw` é 2,5% da largura dela. O navegador o usa sempre que ele fica entre os outros dois, e o limite mais próximo nos outros casos.
+
+A página, `fluid.html`, é um título com essa regra:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 0; padding: 0 1rem; font-family: system-ui, sans-serif; }
+      h1 { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.5rem); }
+    </style>
+  </head>
+  <body>
+    <h1>Andorinha Books</h1>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe --width 320 fluid.html style h1 font-size width 768 style h1 font-size width 1280 style h1 font-size

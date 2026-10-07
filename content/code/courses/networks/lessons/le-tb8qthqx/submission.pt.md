@@ -1,6 +1,6 @@
 ---
 title: Mandando como pessoa: porta 587
-version: 1
+version: 2
 ---
 
 Um servidor que entregasse qualquer coisa, para qualquer lugar, para qualquer pessoa, seria um **relay
@@ -36,7 +36,14 @@ ana@laptop:~$ swaks --to bruno@example.net --from ana@example.com --server mail.
 
 `554 5.7.1 Relay access denied`: o laptop não tinha entrado, e o `example.net` não é domínio deste
 servidor. Um programa de e-mail manda para a **porta 587**, de envio (*submission*), que é para pessoas
-e não para servidores, e exige senha dentro do TLS:
+e não para servidores, e exige senha dentro do TLS. A mensagem é um arquivo que o programa de e-mail
+da Ana teria escrito, com cada linha terminada em `\r\n` como o SMTP exige; crie-o no laptop com:
+
+```sh
+printf "Date: Fri, 25 Sep 2026 10:02:00 -0300\r\nMessage-ID: <order-2231@example.com>\r\nFrom: Ana <ana@example.com>\r\nTo: Bruno <bruno@example.net>\r\nSubject: Order 2231\r\n\r\nHello Bruno, can you confirm order 2231?\r\n" > order.txt
+```
+
+Depois:
 
 ```
 ana@laptop:~$ cat order.txt

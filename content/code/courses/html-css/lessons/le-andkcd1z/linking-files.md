@@ -1,9 +1,9 @@
 ---
 title: Bringing in CSS, scripts and images
-version: 1
+version: 2
 ---
 
-A page is rarely one file. The bookshop's home page needs a stylesheet, a small script for its menu, and a photograph, and the HTML says where each one is. Here is the page:
+A page is rarely one file. The bookshop's home page needs a stylesheet, a small script for its menu, and a photograph, and the HTML says where each one is. Here is the page, `links.html`:
 
 ```html
 <!doctype html>
@@ -24,8 +24,22 @@ A page is rarely one file. The bookshop's home page needs a stylesheet, a small 
 Three elements point at three other files, and each is written differently because each is a different kind of thing:
 
 - **`<link rel="stylesheet" href="site.css">`** brings in CSS. `rel` says what the relationship is, and `stylesheet` is one of several; the icon in the last section was another. It goes in the head.
-- **`<script src="menu.js" defer></script>`** brings in JavaScript. It is not a void element: it always needs its closing tag, even when empty, and it is the one element where forgetting it swallows the rest of the page as section 07 described. `defer` is explained below.
+- **`<script src="menu.js" defer></script>`** brings in JavaScript. It is not a void element: it always needs its closing tag, even when empty, and it is the one element where forgetting it swallows the rest of the page as section 09 described. `defer` is explained below.
 - **`<img src="cover.png" alt="…">`** brings in an image, and it goes in the body because an image is content. Lesson 4 is about images in detail, including what to write in `alt`.
+
+The two files it points at are one line each, and they go beside the page. `site.css` colours the heading:
+
+```css
+h1 { color: #2f6f4e; }
+```
+
+`menu.js` marks the page as ready for a menu, which is as far as a course about HTML takes it:
+
+```js
+document.documentElement.dataset.menu = 'ready';
+```
+
+`cover.png` is any small picture, as in section 08.
 
 When the browser opens the page it asks for each of them. `probe fetched` lists what it asked for, and `style` confirms the stylesheet arrived and applied:
 

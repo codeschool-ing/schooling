@@ -1,6 +1,6 @@
 ---
 title: A outra versão do IP
-version: 1
+version: 2
 ---
 
 Tudo até aqui foi **IPv4**: endereços de 32 bits, escritos como quatro números. Existem uns quatro
@@ -21,6 +21,6 @@ O que muda para o suporte é menos do que os endereços sugerem:
   começar, quando um programa que não testa os dois em paralelo espera o IPv6 falhar antes de tentar
   o IPv4.
 
-**O laboratório não tem IPv6 nenhum**: a máquina em que ele roda foi montada sem, e o `strace` da seção
+**O laboratório não tem IPv6 nenhum**: a aula 1 seção 03 o desligou na máquina inteira, e o `strace` da seção
 03 mostrou um programa descobrindo isso. A aula 4 mostra o registro `AAAA`, que guarda um endereço IPv6
 no DNS, e o endereçamento em si é assunto do curso networks-addressing.

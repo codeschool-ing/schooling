@@ -1,9 +1,16 @@
 ---
 title: Reading mail with IMAP
-version: 1
+version: 2
 ---
 
-Bruno answered. His reply travelled the other way, to whatever the MX of `example.com` names:
+Bruno answered. In your lab, his answer is sent from `netmail`, as `bruno`, from your virtual
+machine:
+
+```sh
+sudo bash ~/netlab/netlab exec netmail bruno 'printf "Date: Fri, 25 Sep 2026 10:15:00 -0300\nMessage-ID: <re-2231@example.net>\nIn-Reply-To: <order-2231@example.com>\nFrom: Bruno <bruno@example.net>\nTo: Ana <ana@example.com>\nSubject: Re: Order 2231\n\nConfirmed, it ships on Monday.\n" | /usr/sbin/sendmail -t'
+```
+
+His reply travelled the other way, to whatever the MX of `example.com` names:
 
 ```
 ana@laptop:~$ dig +short MX example.com

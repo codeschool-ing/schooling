@@ -1,9 +1,16 @@
 ---
 title: When the server key changes
-version: 1
+version: 2
 ---
 
-The office server was reinstalled, and a reinstallation makes a new host key. The next connection:
+The office server was reinstalled, and a reinstallation makes a new host key. In your lab, give the
+server a new key from your virtual machine:
+
+```sh
+sudo bash ~/netlab/netlab exec server root 'rm -f /etc/ssh/ssh_host_ed25519_key*; ssh-keygen -q -t ed25519 -N "" -C root@server -f /etc/ssh/ssh_host_ed25519_key; kill -HUP $(cat /run/sshd-server.pid)'
+```
+
+The next connection:
 
 ```
 ana@laptop:~$ ssh -o BatchMode=yes office true

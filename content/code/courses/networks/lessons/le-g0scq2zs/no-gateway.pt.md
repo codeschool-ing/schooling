@@ -1,9 +1,15 @@
 ---
 title: Chamado: "a internet caiu"
-version: 1
+version: 2
 ---
 
-O laptop não alcança nada. O primeiro erro fala de um nome, e engana:
+O laptop não alcança nada. O defeito, no seu laboratório:
+
+```sh
+sudo bash ~/netlab/netlab exec laptop root 'ip route del default'
+```
+
+O primeiro erro fala de um nome, e engana:
 
 ```
 ana@laptop:~$ ping -c 2 www.example.com
