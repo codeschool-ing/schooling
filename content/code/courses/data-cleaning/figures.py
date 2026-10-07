@@ -417,6 +417,150 @@ def l02_cep_profile(lang):
                  'CEP que uma tabela de consulta reconheceria como está.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-mechanisms', 3)
+def l03_mechanisms(lang):
+    T = {'en': dict(mcar='completely at random', mar='at random', mnar='not at random',
+                    sub1='nothing explains the gaps', sub2='the courier explains them',
+                    sub3='the value itself explains them', courier='courier', minutes='minutes',
+                    note='hollow: the value is missing; grey: what it would have been'),
+         'pt': dict(mcar='completamente ao acaso', mar='ao acaso', mnar='não ao acaso',
+                    sub1='nada explica os vazios', sub2='o entregador os explica',
+                    sub3='o próprio valor os explica', courier='entregador', minutes='minutos',
+                    note='vazado: o valor falta; cinza: o que ele teria sido')}[lang]
+    fig = Fig('l03-mechanisms', 720, 360, {
+        'en': 'Three panels of the same eight deliveries, each with a courier and a delivery time. In '
+              'the first, two times are missing in rows that have nothing in common. In the second, '
+              'the times are missing exactly where the courier is R, the partner that never reports. '
+              'In the third, the times are missing exactly where the delivery took 120 minutes or '
+              'more. An illustration, not data from the lab.',
+        'pt': 'Três painéis das mesmas oito entregas, cada uma com entregador e tempo de entrega. No '
+              'primeiro, faltam dois tempos em linhas que não têm nada em comum. No segundo, os tempos '
+              'faltam exatamente onde o entregador é R, a parceira que nunca informa. No terceiro, os '
+              'tempos faltam exatamente onde a entrega levou 120 minutos ou mais. Uma ilustração, não '
+              'dados do laboratório.'}[lang])
+    couriers = ['P', 'R', 'P', 'P', 'R', 'P', 'P', 'R']
+    minutes = [42, 55, 131, 38, 61, 47, 126, 50]
+    rules = [lambda i: i in (3, 5), lambda i: couriers[i] == 'R', lambda i: minutes[i] >= 120]
+    heads = [(T['mcar'], T['sub1']), (T['mar'], T['sub2']), (T['mnar'], T['sub3'])]
+    for k in range(3):
+        x0 = 20 + 235 * k
+        fig.text(x0 + 105, 24, heads[k][0], size=12, weight='600')
+        fig.text(x0 + 105, 42, heads[k][1], size=10, fill='--paper-dim')
+        fig.text(x0 + 50, 66, T['courier'], size=10, fill='--paper-dim')
+        fig.text(x0 + 150, 66, T['minutes'], size=10, fill='--paper-dim')
+        for i in range(8):
+            y = 78 + 30 * i
+            fig.rect(x0 + 25, y, 50, 22, stroke='--wire', fill='--panel', rx=2)
+            fig.text(x0 + 50, y + 11, couriers[i], size=11, mono=True)
+            if rules[k](i):
+                fig.rect(x0 + 120, y, 60, 22, stroke='--amber', fill='--scan', rx=2, dash='4 3')
+                fig.text(x0 + 150, y + 11, str(minutes[i]), size=11, mono=True, fill='--paper-dim')
+            else:
+                fig.rect(x0 + 120, y, 60, 22, stroke='--phosphor', fill='--phosphor-dim', rx=2)
+                fig.text(x0 + 150, y + 11, str(minutes[i]), size=11, mono=True)
+    fig.text(360, 338, T['note'], size=10, fill='--paper-dim')
+    cap = {'en': 'The same blanks can come from three mechanisms. Only the first two leave a trace in the '
+                 'columns you have.',
+           'pt': 'Os mesmos vazios podem vir de três mecanismos. Só os dois primeiros deixam rastro nas '
+                 'colunas que você tem.'}
+    return fig, cap[lang]
+
+
+def own_orders():
+    seen, out = set(), []
+    for r in rows('raw/orders.csv'):
+        if r['order_id'] in seen:
+            continue
+        seen.add(r['order_id'])
+        out.append(r)
+    return out
+
+
+@figure('l03-pattern-map', 3)
+def l03_pattern_map(lang):
+    orders = own_orders()
+    segs = [('app', 'delivery', 'Rapidex'), ('app', 'delivery', 'propria'), ('app', 'pickup', ''),
+            ('site', 'delivery', 'Rapidex'), ('site', 'delivery', 'propria'), ('site', 'pickup', '')]
+    cols = ['courier', 'delivery_minutes', 'discount']
+    share = {}
+    for seg in segs:
+        rs = [r for r in orders if (r['channel'], r['fulfilment'], r['courier']) == seg]
+        for c in cols:
+            share[seg, c] = 100 * sum(1 for r in rs if r[c] == '') / len(rs)
+    names = {'en': {'pickup': 'pickup'}, 'pt': {'pickup': 'retirada'}}[lang]
+    fig = Fig('l03-pattern-map', 720, 300, {
+        'en': 'A grid of the share of empty cells in three columns of the orders file, for six groups '
+              'of orders. Courier is empty in every pickup and nowhere else. Delivery minutes is empty '
+              'in every pickup and every Rapidex delivery, and in about seven per cent of the own '
+              'fleet\'s. Discount is empty in almost nine of ten website orders and in no app order.',
+        'pt': 'Uma grade da fração de células vazias em três colunas do arquivo de pedidos, para seis '
+              'grupos de pedidos. O entregador está vazio em toda retirada e em nenhum outro lugar. Os '
+              'minutos de entrega estão vazios em toda retirada e em toda entrega da Rapidex, e em cerca '
+              'de sete por cento das da frota própria. O desconto está vazio em quase nove de dez '
+              'pedidos do site e em nenhum do aplicativo.'}[lang])
+    x0, y0, cw, ch = 250, 50, 140, 36
+    for j, c in enumerate(cols):
+        fig.text(x0 + cw * j + cw / 2, y0 - 14, c, size=11, mono=True)
+    for i, seg in enumerate(segs):
+        y = y0 + ch * i
+        label = f"{seg[0]} · {names.get(seg[1], seg[1]) if seg[1] == 'pickup' else seg[2]}"
+        fig.text(x0 - 12, y + ch / 2, label, size=11, anchor='end', mono=seg[1] != 'pickup')
+        for j, c in enumerate(cols):
+            v = share[seg, c]
+            fill = '--amber' if v >= 99.5 else ('--scan' if v > 0.05 else '--panel')
+            stroke = '--wire'
+            fig.rect(x0 + cw * j + 2, y + 2, cw - 4, ch - 4, stroke=stroke, fill=fill, rx=2)
+            txt = num(lang, v, 1) + '%'
+            fig.text(x0 + cw * j + cw / 2, y + ch / 2, txt, size=11, mono=True,
+                     fill='--ink' if v >= 99.5 else '--paper')
+    cap = {'en': 'Read down a column and across a row: each blank lines up with something you can see, '
+                 'except the 7% of own-fleet times.',
+           'pt': 'Leia descendo uma coluna e atravessando uma linha: cada vazio se alinha com algo que você '
+                 'vê, menos os 7% de tempos da frota própria.'}
+    return fig, cap[lang]
+
+
+@figure('l03-ceiling', 3)
+def l03_ceiling(lang):
+    t = [int(r['value']) for r in rows('truth/orders.csv') if r['what'] == 'minutes']
+    edges = list(range(0, 240, 10))
+    counts = histogram(t, edges)
+    hidden = sum(1 for v in t if v >= 120)
+    fig = Fig('l03-ceiling', 720, 320, {
+        'en': f'A histogram of the real delivery times of {len(t)} own-fleet deliveries, in ten-minute '
+              f'bins from 0 to 230 minutes, as the lab\'s generator knows them. Every bar below 120 '
+              f'minutes was recorded. The {hidden} deliveries of 120 minutes or more, a thin tail out '
+              'to 223, were never recorded, because the timer stops at two hours.',
+        'pt': f'Um histograma dos tempos reais de {len(t)} entregas da frota própria, em faixas de dez '
+              f'minutos de 0 a 230, como o gerador do laboratório os conhece. Toda barra abaixo de 120 '
+              f'minutos foi registrada. As {hidden} entregas de 120 minutos ou mais, uma cauda fina até '
+              '223, nunca foram registradas, porque o cronômetro para em duas horas.'}[lang])
+    ymax = max(counts) * 1.12
+    p = Plot(fig, 70, 50, 690, 250, 0, 230, 0, ymax)
+    step = 1000 if ymax > 3000 else 500
+    p.yaxis(range(0, int(ymax) + 1, step), label={'en': 'deliveries', 'pt': 'entregas'}[lang])
+    p.xaxis(range(0, 231, 30), label={'en': 'real delivery time, minutes', 'pt': 'tempo real de entrega, minutos'}[lang])
+    for i, c in enumerate(counts):
+        if c <= 0:
+            continue
+        x0, x1 = p.sx(edges[i]), p.sx(edges[i + 1])
+        y = p.sy(max(c, ymax * 0.006))
+        if edges[i] >= 120:
+            fig.rect(x0, y, x1 - x0, p.sy(0) - y, stroke='--amber', fill='--scan', rx=0, dash='3 2')
+        else:
+            fig.rect(x0, y, x1 - x0, p.sy(0) - y, stroke='--phosphor', fill='--phosphor-dim', rx=0)
+    p.vline(120, label={'en': 'the timer stops', 'pt': 'o cronômetro para'}[lang], top=70)
+    fig.text(p.sx(175), p.sy(ymax * 0.35), {'en': f'{hidden} never recorded', 'pt': f'{hidden} nunca registradas'}[lang],
+             size=11, fill='--amber', weight='600')
+    cap = {'en': 'Drawn from the lab\'s truth file, which no real data set has. In the orders file, everything '
+                 'right of the line is simply a blank.',
+           'pt': 'Desenhado a partir do arquivo de verdade do laboratório, que nenhum dado real tem. No arquivo '
+                 'de pedidos, tudo à direita da linha é simplesmente um vazio.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
