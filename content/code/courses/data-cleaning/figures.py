@@ -714,6 +714,71 @@ def l07_two_clocks(lang):
                  'cliente: 1.335 deles em 2025.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 8
+
+CATEGORY_MAP = {
+    'frutas': ('Frutas', 'Hortifruti'), 'fruta': ('Frutas', 'Hortifruti'), 'fruits': ('Frutas', 'Hortifruti'),
+    'verduras': ('Verduras', 'Hortifruti'), 'folhas': ('Verduras', 'Hortifruti'),
+    'legumes': ('Legumes', 'Hortifruti'), 'legume': ('Legumes', 'Hortifruti'),
+    'ovos e laticinios': ('Ovos e laticínios', 'Frios'), 'laticinios': ('Ovos e laticínios', 'Frios'),
+    'graos e cereais': ('Grãos e cereais', 'Mercearia'), 'graos': ('Grãos e cereais', 'Mercearia'),
+    'mercearia': ('Mercearia', 'Mercearia'), 'emporio': ('Mercearia', 'Mercearia'),
+    'cestas': ('Cestas', 'Cestas'), 'cesta': ('Cestas', 'Cestas'),
+}
+
+
+@figure('l08-three-levels', 8)
+def l08_three_levels(lang):
+    raw = collections.Counter(r['category'] for r in rows('raw/products.csv'))
+    spellings = sorted(raw, key=lambda v: (CATEGORY_MAP[plain(v)][1], CATEGORY_MAP[plain(v)][0], v))
+    cats = []
+    for v in spellings:
+        c = CATEGORY_MAP[plain(v)][0]
+        if c not in cats:
+            cats.append(c)
+    deps = []
+    for c in cats:
+        d = next(dd for cc, dd in CATEGORY_MAP.values() if cc == c)
+        if d not in deps:
+            deps.append(d)
+    H = 40 + 22 * len(spellings)
+    fig = Fig('l08-three-levels', 720, H + 20, {
+        'en': f'Three columns joined by lines. On the left, the {len(spellings)} spellings of category in '
+              f'products.csv; in the middle, the {len(cats)} categories they mean; on the right, the '
+              f'{len(deps)} departments those roll up to. Several spellings run into each category, and '
+              'several categories into each department.',
+        'pt': f'Três colunas ligadas por linhas. À esquerda, as {len(spellings)} grafias de categoria do '
+              f'products.csv; no meio, as {len(cats)} categorias que elas querem dizer; à direita, os '
+              f'{len(deps)} departamentos em que elas se agrupam. Várias grafias desembocam em cada '
+              'categoria, e várias categorias em cada departamento.'}[lang])
+    ys = {v: 40 + 22 * i for i, v in enumerate(spellings)}
+    span = 22 * (len(spellings) - 1)
+    yc = {c: 40 + span * i / max(1, len(cats) - 1) for i, c in enumerate(cats)}
+    yd = {d: 40 + span * i / max(1, len(deps) - 1) for i, d in enumerate(deps)}
+    xl, xc, xd = 170, 330, 560
+    for v in spellings:
+        c = CATEGORY_MAP[plain(v)][0]
+        fig.line(xl + 6, ys[v], xc - 6, yc[c], stroke='--wire', width=1.2)
+    for c in cats:
+        d = next(dd for cc, dd in CATEGORY_MAP.values() if cc == c)
+        fig.line(xc + 150, yc[c], xd - 6, yd[d], stroke='--phosphor-dim', width=1.6)
+    for v in spellings:
+        fig.text(xl, ys[v], '"' + v + '"', size=10.5, anchor='end', mono=True)
+    for c in cats:
+        fig.text(xc, yc[c], c, size=11, anchor='start', weight='600')
+    for d in deps:
+        fig.text(xd, yd[d], d, size=11, anchor='start', weight='600', fill='--phosphor')
+    lab = {'en': ('as typed', 'category', 'department'), 'pt': ('como digitado', 'categoria', 'departamento')}[lang]
+    fig.text(xl, 16, lab[0], size=10, anchor='end', fill='--paper-dim')
+    fig.text(xc, 16, lab[1], size=10, anchor='start', fill='--paper-dim')
+    fig.text(xd, 16, lab[2], size=10, anchor='start', fill='--paper-dim')
+    cap = {'en': 'One file, category_map.csv, holds both arrows: from a spelling to the category it means, and '
+                 'from the category to the department it belongs to.',
+           'pt': 'Um arquivo, o category_map.csv, guarda as duas setas: da grafia à categoria que ela quer dizer, '
+                 'e da categoria ao departamento a que ela pertence.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
