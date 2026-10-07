@@ -169,8 +169,7 @@ reset_db() {
 
 start_labembed() {
   stop_labembed
-  runuser -u ana -- bash -c "source $ENVFILE; cd $EMB && setsid python labembed.py > /tmp/labembed.out 2>&1 < /dev/null & echo \$! > /tmp/labembed.pid"
-  cp /tmp/labembed.pid /run/labembed.pid
+  runuser -u ana -- bash -c "source $ENVFILE; cd $EMB && setsid python labembed.py > /tmp/labembed.out 2>&1 < /dev/null &"
   for _ in $(seq 100); do
     curl -s -o /dev/null http://127.0.0.1:8500/ 2>/dev/null && return 0
     sleep 0.2
@@ -178,12 +177,15 @@ start_labembed() {
   echo "labembed did not start; see /tmp/labembed.out" >&2; return 1
 }
 
+# setsid forks, so no pid of the server's own survives the shell that started
+# it. It is found by what it is instead: ana's process running labembed.py.
 stop_labembed() {
-  if [ -f /run/labembed.pid ]; then
-    kill "$(cat /run/labembed.pid)" 2>/dev/null || true
-    rm -f /run/labembed.pid
-    sleep 0.3
-  fi
+  pkill -u ana -f '^python labembed.py$' 2>/dev/null || true
+  for _ in $(seq 50); do
+    pgrep -u ana -f '^python labembed.py$' >/dev/null || return 0
+    sleep 0.1
+  done
+  echo "labembed did not stop" >&2; return 1
 }
 
 # ~/emb as it stands before lesson 1's first program: the files the lessons
