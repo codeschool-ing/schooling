@@ -13,7 +13,7 @@
 #   sudo bash lab.sh up [CONFIG]    # a fresh cluster "shop" (CONFIG: a kind config)
 #   sudo bash lab.sh load IMAGE...  # copy images from the laptop into the cluster's nodes
 #   sudo bash lab.sh metrics        # metrics-server, for lessons 21, 33 and 34
-#   sudo bash lab.sh calico         # Calico, on a cluster from lab/cluster-calico.yaml
+#   sudo bash lab.sh calico         # Calico, on a cluster from lesson 24's calico.yaml
 #   sudo bash lab.sh csi            # the CSI host-path driver, for lesson 27
 #   sudo bash lab.sh vpa            # the VPA recommender, for lesson 34
 #   sudo bash lab.sh down           # delete every cluster this lab made
@@ -33,7 +33,8 @@
 #     onto the laptop and copied into the nodes (`lab.sh load`, which is
 #     `kind load`), and the manifests ask for it by tag. On your own computer the
 #     nodes pull for themselves and none of this is needed.
-#   - the shop application is lab/shop, built here, three versions of it.
+#   - the shop application is the one lesson 1 shows, built from its files,
+#     three versions of it.
 #   - Calico's manifest names its images on quay.io; Calico publishes the same
 #     images on Docker Hub, and the lab's copy of the manifest names those.
 #
@@ -110,16 +111,25 @@ wrap() { # NAME VERSION BINARY [USER]: one static binary as an image of its own
   docker build -q -t "lab.local/$name:$version" "$dir" >/dev/null && rm -rf "$dir"
 }
 
-shop_images() { # the course's own application, three versions
-  local v dir
-  for v in 1.0 1.1 2.0; do
-    docker image inspect "shop:$v" >/dev/null 2>&1 && continue
-    dir=$(mktemp -d)
-    (cd "$LAB/lab/shop" && GOTOOLCHAIN=local CGO_ENABLED=0 go build -trimpath \
-      -ldflags "-X main.version=$v" -o "$dir/shop" .)
-    cp "$LAB/lab/shop/Dockerfile" "$dir/"
-    docker build -q -t "shop:$v" "$dir" >/dev/null && rm -rf "$dir"
+shown() { # MD NAME: the file a lesson shows under the line that starts with
+  # `NAME` and ends in a colon, byte for byte (capture.sh has the same reader)
+  local out
+  out=$(awk -v name="\`$2\`" 'f == 0 && index($0, name) == 1 && /:$/ { f = 1; next }
+    f == 1 && /^```/ { f = 2; next } f == 2 && /^```$/ { exit } f == 2 { print }' "$1")
+  [ -n "$out" ] || { echo "$1 shows no $2" >&2; return 1; }
+  printf '%s\n' "$out"
+}
+
+shop_images() { # the course's own application, three versions, built the way
+  # lesson 1 tells the student to: its main.go, Dockerfile and build.sh, read
+  # out of the lesson so the two cannot drift apart.
+  local dir md="$LAB/lessons/le-rv8h20er/the-shop.md" f
+  docker image inspect shop:1.0 shop:1.1 shop:2.0 >/dev/null 2>&1 && return 0
+  dir=$(mktemp -d)
+  for f in main.go Dockerfile build.sh; do
+    shown "$md" "$f" >"$dir/$f" || return 1
   done
+  sh "$dir/build.sh" >/dev/null && rm -rf "$dir"
 }
 
 tools() {
@@ -184,7 +194,11 @@ load() { # IMAGE...: into every node of the cluster kubectl points at
 }
 
 up() { # [CONFIG] [NAME]: a fresh cluster, the base images in it, kubectl pointed at it
-  local config=${1:-$LAB/lab/cluster.yaml} name=${2:-shop}
+  local config=${1:-} name=${2:-shop}
+  if [ -z "$config" ]; then # the cluster.yaml lesson 1 shows the student
+    config=/var/tmp/lab-cluster.yaml
+    shown "$LAB/lessons/le-rv8h20er/a-cluster-of-your-own.md" cluster.yaml >"$config"
+  fi
   docker_up
   kind delete cluster --name "$name" >/dev/null 2>&1 || true
   mkdir -p /home/ana/.kube
@@ -282,7 +296,7 @@ csi() { # the host-path CSI driver, for lesson 27
   kubectl rollout status daemonset/csi-hostpathplugin --timeout=180s >/dev/null
 }
 
-calico() { # Calico as the network plugin, on a cluster made from cluster-calico.yaml
+calico() { # Calico as the network plugin, on a cluster made from lesson 24's calico.yaml
   load "calico/cni:$CALICO" "calico/node:$CALICO" "calico/kube-controllers:$CALICO"
   kubectl apply -f "$OPT/manifests/calico.yaml" >/dev/null
   kubectl -n kube-system rollout status daemonset/calico-node --timeout=300s >/dev/null

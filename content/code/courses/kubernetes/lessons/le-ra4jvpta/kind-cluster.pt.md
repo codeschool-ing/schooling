@@ -3,9 +3,9 @@ title: Um cluster de três nós com o kind
 version: 1
 ---
 
-Três programas são tudo de que o laboratório precisa: o Docker, que roda os nós, o `kind`, que monta
-o cluster, e o `kubectl`, que conversa com ele. Estas são as versões com que todas as transcrições do
-curso foram gravadas:
+Três programas são tudo de que um cluster kind precisa: o Docker, que roda os nós, o `kind`, que monta
+o cluster, e o `kubectl`, que conversa com ele. A aula 1 os instalou, e estas são as versões com que as
+transcrições da aula 2 em diante foram gravadas:
 
 ```
 ana@laptop:~/shop$ docker version --format "client {{.Client.Version}}, server {{.Server.Version}}"
@@ -17,8 +17,8 @@ Client Version: v1.37.1
 Kustomize Version: v5.8.1
 ```
 
-O `kubectl` se instala sozinho a partir dos downloads do projeto Kubernetes, e o kind é um binário
-único, da página de releases dele ou de um gerenciador de pacotes. **Mantenha o `kubectl` a no
+O `go1.24.7` na linha do kind é o Go com que aquela cópia foi compilada; o binário de release da aula
+1 cita um mais novo e é o mesmo kind. **Mantenha o `kubectl` a no
 máximo uma versão menor de distância do cluster**: 1.37 contra um cluster 1.37 aqui, o que o projeto
 garante que funciona, enquanto uma diferença de duas versões não tem suporte.
 

@@ -6,7 +6,16 @@ version: 1
 Two namespaces this time. `shop` runs the shop, its Service, and a busybox pod called `front` that
 plays the shop's web front end. `other` runs a busybox pod called `stranger`, which belongs to some
 other team. Nothing stops `stranger` from calling the shop, because nothing stops any pod from
-calling any other.
+calling any other. After `./up.sh`, these make all of it:
+
+```sh
+kubectl create namespace shop
+kubectl create namespace other
+kubectl -n shop create deployment shop --image=shop:1.0 --replicas=2
+kubectl -n shop expose deployment shop --port 80 --target-port 8080
+kubectl -n shop run front --image=busybox:1.37 --labels=app=front --restart=Never --command -- sleep 3600
+kubectl -n other run stranger --image=busybox:1.37 --restart=Never --command -- sleep 3600
+```
 
 The first policy closes the `shop` namespace to everything:
 
@@ -53,13 +62,55 @@ I1006 18:17:37.603768       1 controller.go:817] "syncing nftables rules" logger
 ```
 
 The engine programs the kernel through nftables, and this laptop's kernel refused the request. Nothing
-else complained. On a cluster whose plugin has no policy support at all, there is not even this line:
+else complained. **On your machine the engine may well start**, and then `stranger` is refused already
+on this cluster; the log shows which you have. The point stands either way, because the API server
+accepted the policy without knowing which of the two would happen. On a cluster whose plugin has no policy support at all, there is not even this line:
 **a NetworkPolicy that nothing enforces looks exactly like one that works, until somebody tests it.**
 
 ## The same policy with Calico
 
-The second cluster was made without kindnet and runs Calico instead, installed from Calico's own
-manifest (`lab.sh calico`). One `calico-node` per node:
+The second cluster is made without kindnet and runs Calico instead. It is the same cluster with kind's
+plugin left out, in a file beside `cluster.yaml`.
+
+`calico.yaml`:
+
+```yaml
+# cluster.yaml without kind's own network plugin, so that Calico can be
+# installed instead. Calico's manifest assumes pods get addresses from
+# 192.168.0.0/16, so the cluster is told the same.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  disableDefaultCNI: true
+  podSubnet: 192.168.0.0/16
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri"]
+    restrict_oom_score_adj = true
+kubeadmConfigPatches:
+- |
+  kind: KubeletConfiguration
+  failCgroupV1: false
+  serverTLSBootstrap: true
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+```
+
+`up.sh` takes it as an argument and stops before waiting for the nodes, which cannot be `Ready` with no
+plugin at all. Calico comes from its own manifest, and then the nodes are ready; the six commands from
+the top of this section put the namespaces and pods back:
+
+```sh
+./up.sh calico.yaml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/calico.yaml
+kubectl -n kube-system rollout status daemonset/calico-node
+kubectl wait --for=condition=Ready nodes --all
+```
+
+The recording machine could not reach the registry Calico's manifest names, so its copy pointed at the
+same images on Docker Hub, where Calico also publishes them. One `calico-node` per node:
 
 ```
 ana@laptop:~/shop$ kubectl get pods -n kube-system -l k8s-app=calico-node -o wide

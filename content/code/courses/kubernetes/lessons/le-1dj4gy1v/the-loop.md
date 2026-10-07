@@ -3,7 +3,14 @@ title: One line of arithmetic, every fifteen seconds
 version: 1
 ---
 
-The shop, with one replica and a CPU request of 200m. **The request matters more here than anywhere
+The autoscaler reads its numbers from metrics-server, which a kind cluster does not have, so this
+lesson starts with `./up.sh` and installs it as lesson 21 did:
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.9.0/components.yaml
+```
+
+Then the shop, with one replica and a CPU request of 200m. **The request matters more here than anywhere
 else**, because the autoscaler measures each pod as a percentage of what it requested:
 
 ```yaml
@@ -85,7 +92,15 @@ alone. It reads its numbers from metrics-server, installed as in lesson 21.
 ## Under load
 
 A busybox pod now runs four loops at once, each asking the shop for 300 milliseconds of work at a
-time. Forty-five seconds in, and again a minute later:
+time, for two and a half minutes. The first line starts the pod; the second starts the loops and holds
+the terminal until they end, so run it in a second terminal:
+
+```sh
+kubectl run load --image=busybox:1.37 --restart=Never --command -- sleep 3600
+kubectl exec load -- sh -c 'for n in 1 2 3 4; do (end=$(($(date +%s)+150)); while [ $(date +%s) -lt $end ]; do wget -qO- "shop/work?ms=300" >/dev/null; done) & done; wait'
+```
+
+Forty-five seconds in, and again a minute later:
 
 ```
 ana@laptop:~/shop$ kubectl get hpa shop

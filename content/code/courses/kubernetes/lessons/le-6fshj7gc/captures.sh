@@ -8,7 +8,7 @@
 #   sudo bash ../../lab.sh tools     # once: the software the lab runs
 #   sudo bash captures.sh
 #
-# What is STAGED rather than typed: the cluster (lab/cluster-ports.yaml) and a
+# What is STAGED rather than typed: the cluster (lesson 8's ports.yaml) and a
 # busybox pod called `probe`; reading the node's rules with `docker exec`,
 # because a kind node is a container; and scaling the shop down to one copy
 # before the requests from outside, which the lesson says. The counts per pod come from 300 real
@@ -17,7 +17,8 @@
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
-fresh "$COURSE/lab/cluster-ports.yaml"
+shown "$COURSE/lessons/le-nf7qt63y/the-manifest.md" ports.yaml >/tmp/ports.yaml || exit 1
+fresh /tmp/ports.yaml
 quiet 'kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600'
 cat >/tmp/shop.yaml <<'CODE'
 apiVersion: apps/v1

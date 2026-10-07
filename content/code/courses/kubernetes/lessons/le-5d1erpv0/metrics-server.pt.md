@@ -9,14 +9,24 @@ lugar só. O metrics-server é esse coletor: a cada quinze segundos ele pede a c
 mais recentes, guarda só o conjunto mais novo na memória, e o serve pela API do Kubernetes. Ele não
 guarda histórico, e essa é a primeira coisa a saber sobre ele.
 
-Neste laboratório ele foi instalado a partir dos manifestos do próprio projeto (`lab.sh metrics`), com
-a imagem compilada do código-fonte.
+Ele não faz parte de um cluster kind, então esta aula começa com `./up.sh` e depois o instala a partir
+do manifesto de release do próprio projeto:
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.9.0/components.yaml
+kubectl -n kube-system rollout status deployment/metrics-server
+```
+
+O segundo comando espera até ele estar rodando. **Esse manifesto é o que todas as transcrições abaixo
+rodaram**, com uma diferença que você não vai ver: a máquina em que o curso foi gravado não alcança o
+registro de onde vem a imagem, então lá a mesma versão foi compilada do código-fonte e o manifesto
+apontou para essa cópia.
 
 ## O certificado do kubelet
 
 O metrics-server fala com cada kubelet por HTTPS, então precisa confiar no certificado que o kubelet
 apresenta. Num cluster kind os kubelets assinam o próprio certificado por padrão, e o contorno comum é
-uma flag que desliga a verificação. Este laboratório faz o contrário: cada kubelet pede à autoridade
+uma flag que desliga a verificação. Este curso faz o contrário: cada kubelet pede à autoridade
 certificadora do cluster um certificado de verdade.
 
 ```
@@ -31,7 +41,7 @@ csr-zc5fw   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:abcde
 ```
 
 Os quatro pedidos `kubelet-serving` são esses, um de cada worker e dois do nó control-plane, cada um
-feito pelo próprio nó e aprovado pelo laboratório assim que chegou. Os dois pedidos
+feito pelo próprio nó e aprovado pelo `up.sh` assim que chegou (aula 1). Os dois pedidos
 `kube-apiserver-client-kubelet` são mais antigos; são como os nós workers ganharam os certificados de
 cliente quando entraram, e o cluster aprova esses sozinho.
 

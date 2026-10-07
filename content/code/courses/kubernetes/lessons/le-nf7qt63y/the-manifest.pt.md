@@ -3,6 +3,39 @@ title: Um arquivo, dois objetos
 version: 1
 ---
 
+Esta aula termina num navegador, então o cluster dela abre uma porta da sua máquina para o cluster. É
+um segundo arquivo ao lado do `cluster.yaml`, o mesmo cluster com três linhas a mais, e as aulas 15, 16,
+17 e 36 também começam dele.
+
+`ports.yaml`:
+
+```yaml
+# cluster.yaml, plus one port of this machine: 8080 reaches port 30080 of
+# the control-plane node, which is where a NodePort Service of that number
+# answers.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri"]
+    restrict_oom_score_adj = true
+kubeadmConfigPatches:
+- |
+  kind: KubeletConfiguration
+  failCgroupV1: false
+  serverTLSBootstrap: true
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 30080
+    hostPort: 8080
+- role: worker
+- role: worker
+```
+
+Comece com `./up.sh ports.yaml`, e apague os dois patches como fez na aula 1. A próxima seção diz o
+que o mapeamento de porta faz.
+
 **Um primeiro manifesto costuma ser copiado de algum lugar e editado até funcionar, e isso deixa quem
 lê sem saber quais linhas importam.** Quase todas importam. Este guarda os dois objetos com que toda
 aplicação web no Kubernetes começa: um Deployment, que mantém cópias da loja rodando, e um Service,

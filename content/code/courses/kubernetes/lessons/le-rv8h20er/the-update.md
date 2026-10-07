@@ -8,7 +8,8 @@ first**, because the new one needs the same name and the same port, and the gap 
 something a customer can hit. This section measures that gap rather than asserting it.
 
 The measurement is a small script that asks the shop 300 times, twenty milliseconds apart, and
-writes down only the status code of each answer:
+writes down only the status code of each answer. It is `~/shop/probe.sh`, made runnable with
+`chmod +x probe.sh`:
 
 ```sh
 #!/bin/sh

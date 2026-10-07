@@ -8,7 +8,8 @@ pará-lo primeiro**, porque o novo precisa do mesmo nome e da mesma porta, e o i
 é algo em que um cliente pode esbarrar. Esta seção mede esse intervalo em vez de afirmá-lo.
 
 A medição é um pequeno script que pergunta à loja 300 vezes, com vinte milissegundos entre uma e
-outra, e anota só o código de status de cada resposta:
+outra, e anota só o código de status de cada resposta. É o `~/shop/probe.sh`, que fica executável com
+`chmod +x probe.sh`:
 
 ```sh
 #!/bin/sh

@@ -8,9 +8,8 @@ toy.** It is not one. For an application that lives on one machine, Compose does
 this lesson starts by watching it do so. What Kubernetes adds only makes sense once you have seen
 where one machine stops.
 
-Ana's shop is one service: `shop`, a small web server this course builds in its lab and packages
-the way the `docker` course packages one, from scratch. The whole description of how it runs is
-six lines:
+Ana's shop is one service: the image `shop:1.0` from the previous section. The whole description of
+how it runs is six lines, in `~/shop/compose.yaml`:
 
 ```yaml
 services:
