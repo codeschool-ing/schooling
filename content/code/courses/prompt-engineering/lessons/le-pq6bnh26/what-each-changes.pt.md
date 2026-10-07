@@ -1,6 +1,6 @@
 ---
 title: O que cada um muda
-version: 1
+version: 2
 ---
 
 O ajuste fino (*fine-tuning*) tem fama de ser a versão adulta do prompt: quando um prompt não
@@ -28,13 +28,15 @@ categorias as mensagens dos clientes do café:
 ```
 ana@lab:~/pe$ wc -l train.jsonl
 3 train.jsonl
-ana@lab:~/pe$ head -1 train.jsonl
+ana@lab:~/pe$ cat train.jsonl
 {"messages": [{"role": "user", "content": "Are you open on Sunday afternoon?"}, {"role": "assistant", "content": "hours"}]}
+{"messages": [{"role": "user", "content": "Does the carrot cake have nuts in it?"}, {"role": "assistant", "content": "allergens"}]}
+{"messages": [{"role": "user", "content": "My latte was cold and I want my money back."}, {"role": "assistant", "content": "refunds"}]}
 ```
 
 Três é pouquíssimo; um trabalho de verdade quer centenas ou milhares, cada um conferido por alguém
-que sabe a resposta certa. Nada foi treinado aqui. A bancada não tem modelo para treinar, e o que
-importa no arquivo é o formato: **cada linha é uma pergunta com a resposta que você decidiu que é a
+que sabe a resposta certa. Nada foi treinado aqui: o Ollama roda modelos e não os treina, e o que
+importa no arquivo é o formato. **Cada linha é uma pergunta com a resposta que você decidiu que é a
 certa.**
 
 ## No que o ajuste fino é bom
