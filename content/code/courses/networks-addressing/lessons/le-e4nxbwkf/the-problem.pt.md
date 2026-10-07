@@ -1,6 +1,6 @@
 ---
 title: Duas VLANs, e nenhum caminho entre elas
-version: 1
+version: 2
 ---
 
 A aula 19 dividiu uma rede em VLANs e mostrou cada uma isolada da outra. Era esse o objetivo, e mais
@@ -15,7 +15,31 @@ O laboratório desta aula é um switch, o sw1, configurado do jeito que a aula 1
 dela. O pc1 e um servidor web, o srv, estão na VLAN 10, em 10.20.10.0/24; o pc2 está na VLAN 20, em
 10.20.20.0/24. Um roteador, o r1, está ligado na porta p8, e a p8 é um tronco que leva as duas VLANs.
 O r1 ainda não tem endereço. Todo PC já indica um gateway padrão: 10.20.10.1 para as máquinas da
-VLAN 10 e 10.20.20.1 para o pc2.
+VLAN 10 e 10.20.20.1 para o pc2. Salve-o como `~/netlab/intervlan.sh` e monte com
+`sudo bash ~/netlab/netlab.sh up intervlan`:
+
+```bash
+# ~/netlab/intervlan.sh: one switch with two VLANs configured, and a router on
+# port p8, which is a trunk carrying both. The router has no address yet.
+#
+#   pc1 (VLAN 10, 10.20.10.21) --p1\
+#   srv (VLAN 10, 10.20.10.10) --p3-- sw1 --p8 (trunk: 10, 20)-- r1
+#   pc2 (VLAN 20, 10.20.20.22) --p2/
+node pc1; node pc2; node srv; node sw1; node r1 router
+link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2; link srv eth0 sw1 p3; link r1 eth0 sw1 p8
+switch sw1 "p1 p2 p3 p8" vlan_filtering 1
+local p
+for p in p1 p3; do ip netns exec sw1 bridge vlan add dev $p vid 10 pvid untagged; ip netns exec sw1 bridge vlan del dev $p vid 1; done
+ip netns exec sw1 bridge vlan add dev p2 vid 20 pvid untagged; ip netns exec sw1 bridge vlan del dev p2 vid 1
+ip netns exec sw1 bridge vlan add dev p8 vid 10; ip netns exec sw1 bridge vlan add dev p8 vid 20
+addr pc1 eth0 10.20.10.21/24; addr srv eth0 10.20.10.10/24; addr pc2 eth0 10.20.20.22/24
+gw pc1 10.20.10.1; gw srv 10.20.10.1; gw pc2 10.20.20.1
+web srv 10.20.10.10
+```
+
+As linhas `bridge vlan` são os comandos da aula 19: `pvid untagged` faz de uma porta uma porta de
+acesso daquela VLAN, e a p8, que recebe as duas VLANs sem essa palavra, é o tronco. `node r1 router`
+liga o encaminhamento, e nada mais no r1 está configurado.
 
 ```
 root@sw1:~# bridge vlan show
