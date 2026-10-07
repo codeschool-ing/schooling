@@ -84,7 +84,7 @@ program() {
   python3 - "$L/$2" "$1" <<'PY'
 import re, sys
 text, name = open(sys.argv[1], encoding="utf-8").read(), sys.argv[2]
-fences = re.findall(r"^```[a-z]*\n(.*?)^```$", text, re.S | re.M)
+fences = re.findall(r"^```[^\n]*\n(.*?)^```$", text, re.S | re.M)
 found = [f for f in fences if re.match(r'#!.*\n("""|// )' + re.escape(name) + r"[ :]", f)]
 if len(found) != 1:
     sys.exit("%s has %d fences that are the program %s, and lab.sh needs one" % (sys.argv[1], len(found), name))
@@ -158,16 +158,18 @@ reset() {
   find $PE -mindepth 1 -maxdepth 1 ! -name .venv ! -name node_modules ! -name package.json \
     ! -name package-lock.json -exec rm -rf {} +
   mkdir -p $PE/bin
-  echo "$PROGRAMS" | while read -r name file; do
+  # A here-string, not a pipe: a fence that cannot be found stops the reset
+  # instead of leaving an empty program behind.
+  while read -r name file; do
     [ -n "$name" ] || continue
     program "$name" "$file" > $PE/bin/$name
-  done
+  done <<< "$PROGRAMS"
   chmod +x $PE/bin/*
   chown -R ana:ana $PE
-  echo "$DATA" | while read -r file; do
+  while read -r file; do
     [ -n "$file" ] || continue
     as_ana "$(data "$file")"
-  done
+  done <<< "$DATA"
   echo "workbench ready in $PE"
 }
 
