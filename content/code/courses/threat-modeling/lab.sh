@@ -92,6 +92,8 @@ reset() {
   commit '2026-10-01 17:30' 'Record the first decisions'
   add mapping.csv crosswalk.py
   commit '2026-10-05 14:00' 'Map the controls to ISO 27001 and the NIST CSF'
+  add pbc.csv pbc.py
+  commit '2026-10-06 09:30' 'List what the insurer asked for, and check it'
 }
 
 case ${1:-} in
