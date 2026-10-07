@@ -119,7 +119,8 @@ on router 'sudo nft list chain ip nat prerouting'
 
 block from-home
 lab exec laptop ana 'cat ~/.ssh/id_ed25519.pub' > /tmp/laptop.pub
-lab exec home ana 'mkdir -p ~/.ssh; chmod 700 ~/.ssh' >/dev/null
+# The three lines section 07 prints, run as it says, from the virtual machine.
+sudo install -d -o ana -g ana -m 700 /lab/home/home/ana/.ssh
 sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519 /lab/home/home/ana/.ssh/id_ed25519
 sudo install -o ana -g ana -m 644 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/home/home/ana/.ssh/id_ed25519.pub
 PAUSE=2 typed home <<'IN'
@@ -132,7 +133,7 @@ IN
 
 block jump
 # www already trusts the key: the admin put it there, as copy-id did on the server.
-lab exec www ana 'mkdir -p ~/.ssh; chmod 700 ~/.ssh' >/dev/null
+sudo install -d -o ana -g ana -m 700 /lab/www/home/ana/.ssh
 sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/www/home/ana/.ssh/authorized_keys
 on home 'ssh -o ConnectTimeout=5 192.0.2.80 hostname'
 # ana has never logged into www; the shared login records would say otherwise.

@@ -1,10 +1,12 @@
 ---
 title: A primeira conexão
-version: 1
+version: 2
 ---
 
 A Ana está no laptop do escritório e quer um shell no servidor do escritório. O `ssh` recebe um
-endereço, ou um nome, e entra com o mesmo usuário se ninguém disser outro:
+endereço, ou um nome, e entra com o mesmo usuário se ninguém disser outro. A senha é `office-2026`. O
+seu laboratório gera chaves de host novas a cada montagem, então as impressões digitais que você vai
+ver não são estas:
 
 ```
 ana@laptop:~$ ssh 192.168.10.10

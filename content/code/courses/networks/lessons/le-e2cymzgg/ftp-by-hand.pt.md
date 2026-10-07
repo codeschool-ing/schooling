@@ -1,11 +1,25 @@
 ---
 title: Mandando um arquivo por FTP
-version: 1
+version: 2
 ---
 
 O site da empresa fica no `www`, num provedor de hospedagem, e a conta dona dos arquivos dele é a
 `example`. O provedor oferece FTP, o File Transfer Protocol, e é assim que o site é atualizado há anos.
-A Ana tem uma página inicial nova para publicar:
+A Ana tem uma página inicial nova para publicar.
+
+No seu laboratório, crie essa página antes, na pasta da `ana` no laptop, junto com a pasta de
+documentos e o arquivo compactado que as seções 07 a 11 levam de um lado para o outro. Todo Ubuntu
+traz os textos das licenças de software mais comuns, e eles servem bem como arquivos para copiar. No
+laptop:
+
+```sh
+mkdir -p Documents
+cp /usr/share/common-licenses/{Apache-2.0,BSD,GPL-3,LGPL-3,MPL-2.0} Documents/
+tar czf licences.tar.gz -C /usr/share common-licenses
+printf "<!doctype html>\n<title>Example Ltd</title>\n<h1>Example Ltd</h1>\n<p>Closed on 12 October for the holiday.</p>\n" > index.html
+```
+
+Depois:
 
 ```
 ana@laptop:~$ ftp www.example.com

@@ -1,11 +1,24 @@
 ---
 title: Sending a file by FTP
-version: 1
+version: 2
 ---
 
 The company website lives on `www`, at a hosting provider, and the account that owns its files is
 `example`. The provider offers FTP, the File Transfer Protocol, which is how the site has been updated
-for years. Ana has a new home page to put up:
+for years. Ana has a new home page to put up.
+
+In your lab, make that page first, in `ana`'s home on the laptop, together with the folder of
+documents and the archive that sections 07 to 11 move around. Every Ubuntu carries the texts of the
+common software licences, and they make good files to copy. On the laptop:
+
+```sh
+mkdir -p Documents
+cp /usr/share/common-licenses/{Apache-2.0,BSD,GPL-3,LGPL-3,MPL-2.0} Documents/
+tar czf licences.tar.gz -C /usr/share common-licenses
+printf "<!doctype html>\n<title>Example Ltd</title>\n<h1>Example Ltd</h1>\n<p>Closed on 12 October for the holiday.</p>\n" > index.html
+```
+
+Then:
 
 ```
 ana@laptop:~$ ftp www.example.com
