@@ -24,7 +24,36 @@ The team deployed **24 times** in the 20 working days of March. Three of those d
 {"svg": "<svg viewBox=\"0 0 680 250\" role=\"img\" data-fig=\"l13-dora\" aria-label=\"Four tiles in two pairs. Throughput: deployment frequency 1.2 a day, 24 deploys in 20 working days; lead time for changes 6 hours, the median from commit to production. Stability: change failure rate 12.5%, 3 of 24 deploys needed a fix; time to restore 50 minutes, the median of the three failures.\"><text x=\"170.0\" y=\"20.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--phosphor)\">throughput: how fast changes flow</text><text x=\"510.0\" y=\"20.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">stability: how often they hurt</text><rect x=\"14.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"92.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">deployment frequency</text><text x=\"92.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--phosphor)\">1.2 a day</text><text x=\"92.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">24 deploys in 20 working days</text><rect x=\"180.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"258.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">lead time for changes</text><text x=\"258.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--phosphor)\">6 hours</text><text x=\"258.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">median, commit to production</text><rect x=\"346.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></rect><text x=\"424.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">change failure rate</text><text x=\"424.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--amber)\">12.5%</text><text x=\"424.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">3 of 24 deploys needed a fix</text><rect x=\"512.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></rect><text x=\"590.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">time to restore</text><text x=\"590.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--amber)\">50 minutes</text><text x=\"590.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">median of the three failures</text></svg>", "caption": "The Agenda team’s four DORA numbers for March 2026. Two say how fast changes reach users and two say how often they cause harm; reading one pair without the other rewards a team for breaking things quickly or for never shipping."}
 ```
 
-With the deploys in rows 2 to 25 of the workbook — hours from commit to production in column B, a 1 in column C for a failed deploy, and the minutes to restore in column D — LibreOffice returned:
+These are the team's twenty-four deploys in March, in order. Type them into a new sheet with the headers in row 1, so the deploys sit in rows 2 to 25 — hours from commit to production in column B, a 1 in column C for a failed deploy, and the minutes to restore in column D:
+
+| Deploy | Lead hours | Failed | Restore minutes |
+|---|---|---|---|
+| 1 | 3 | 0 |  |
+| 2 | 5 | 0 |  |
+| 3 | 26 | 0 |  |
+| 4 | 4 | 0 |  |
+| 5 | 7 | 0 |  |
+| 6 | 22 | 1 | 45 |
+| 7 | 6 | 0 |  |
+| 8 | 2 | 0 |  |
+| 9 | 30 | 0 |  |
+| 10 | 8 | 0 |  |
+| 11 | 5 | 0 |  |
+| 12 | 4 | 0 |  |
+| 13 | 49 | 0 |  |
+| 14 | 6 | 1 | 180 |
+| 15 | 3 | 0 |  |
+| 16 | 21 | 0 |  |
+| 17 | 9 | 0 |  |
+| 18 | 4 | 0 |  |
+| 19 | 27 | 0 |  |
+| 20 | 5 | 0 |  |
+| 21 | 7 | 1 | 50 |
+| 22 | 70 | 0 |  |
+| 23 | 6 | 0 |  |
+| 24 | 4 | 0 |  |
+
+With them in place, LibreOffice returned:
 
 ```localised
 =COUNT(B2:B25)/20                   1.2

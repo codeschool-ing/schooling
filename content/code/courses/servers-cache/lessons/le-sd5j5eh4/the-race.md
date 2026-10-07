@@ -1,0 +1,29 @@
+---
+title: The race that puts the old value back
+version: 1
+---
+
+Refreshing a copy the moment the data changes is the obvious fix for stale data, and it has a flaw that
+is worth seeing before lesson 10 builds on the same idea with Redis. The order of events matters, and
+two requests can interleave so that **the cache ends up holding the old value after the purge, for a
+whole lifetime.**
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 700 300\" role=\"img\" aria-label=\"Three columns, the visitor&#x27;s read, the database and the cache, and the owner&#x27;s update. 1: the read misses the cache. 2: the read gets 8,990 from the database. 3: the update writes 7,990 to the database. 4: the update purges the cache, which is empty. 5: the read stores 8,990 in the cache, after the purge. The cache now holds the old price for a full lifetime.\"><defs><marker id=\"frc-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"30\" y=\"10\" width=\"140\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"100.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">visitor's read</text><rect x=\"240\" y=\"10\" width=\"120\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"300.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">database</text><rect x=\"390\" y=\"10\" width=\"120\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></rect><text x=\"450.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">cache</text><rect x=\"540\" y=\"10\" width=\"140\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"610.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">owner's update</text><line x1=\"100\" y1=\"44\" x2=\"100\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"300\" y1=\"44\" x2=\"300\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"450\" y1=\"44\" x2=\"450\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"610\" y1=\"44\" x2=\"610\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"100\" y1=\"70\" x2=\"447\" y2=\"70\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"275.0\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">1. miss</text><line x1=\"300\" y1=\"105\" x2=\"103\" y2=\"105\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"200.0\" y=\"97\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">2. reads 8,990</text><line x1=\"610\" y1=\"140\" x2=\"303\" y2=\"140\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"455.0\" y=\"132\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">3. writes 7,990</text><line x1=\"610\" y1=\"175\" x2=\"453\" y2=\"175\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"530.0\" y=\"167\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">4. purge (nothing there)</text><line x1=\"100\" y1=\"225\" x2=\"447\" y2=\"225\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"275.0\" y=\"217\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">5. stores 8,990</text><text x=\"450\" y=\"262\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">old price cached after the purge</text></svg>", "caption": "Each step is correct on its own. The order makes the purge useless: the slow read lands after it."}
+```
+
+Read it from the top. A visitor's request misses the cache and the application starts reading the price
+from the database: 8,990. Before that read's answer reaches the cache, the owner's update writes 7,990
+and purges the copy, which is not there yet. Then the slow read finishes and stores what it read:
+**8,990, freshly cached for another sixty seconds, after the purge that was meant to prevent it.**
+
+Nothing in the picture is a bug in any one part. Every step did the right thing in isolation; the order
+is what went wrong, and the window is the time a read spends between the database and the cache, which
+under load is exactly when it grows. The defences, which lesson 10 builds:
+
+- **purge twice**: once right after the write and once a moment later, so a read that started before
+  the write has finished by the second purge;
+- **store a version**, so an older value cannot overwrite a newer one; the price row's `updated_at` is
+  such a version;
+- **a lifetime as the backstop**: whatever goes wrong, the wrong value lives at most one lifetime, which
+  is the strongest argument for never caching anything without one.

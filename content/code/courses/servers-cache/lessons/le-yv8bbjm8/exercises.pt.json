@@ -1,0 +1,493 @@
+{
+  "ex-5jd6n2rn": {
+    "prompt": "Por que duas cópias da loja dividem um cache no Redis mas não num dicionário Python?",
+    "hint": "Onde cada um mora?",
+    "choices": [
+      {
+        "text": "O Redis é um processo à parte, ao qual as duas se conectam",
+        "why": "Certo."
+      },
+      {
+        "text": "Dicionários não guardam JSON",
+        "why": "Guardam; mas moram num processo só."
+      },
+      {
+        "text": "O Python proíbe compartilhar entre threads",
+        "why": "As cópias são processos, e o problema é memória."
+      },
+      {
+        "text": "O Redis se copia para dentro de cada processo ao subir",
+        "why": "É um servidor só, que todo processo alcança por um socket."
+      }
+    ]
+  },
+  "ex-p9aca3sb": {
+    "prompt": "Por que um `INCR` num contador compartilhado está certo mesmo com mil clientes?",
+    "hint": "Quantos comandos rodam ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "Cada cliente recebe a própria cópia do contador",
+        "why": "Há um contador só."
+      },
+      {
+        "text": "Comandos rodam um por vez",
+        "why": "Certo."
+      },
+      {
+        "text": "O Redis trava cada chave que for alterada",
+        "why": "Com uma thread não há locks."
+      },
+      {
+        "text": "O cliente tenta de novo até dar certo",
+        "why": "Nada é repetido."
+      }
+    ]
+  },
+  "ex-8xf4ttt4": {
+    "prompt": "Por que `KEYS *` é um mau hábito num Redis de produção?",
+    "hint": "Uma thread, toda chave.",
+    "choices": [
+      {
+        "text": "Apaga as chaves que lista",
+        "why": "Ele só lista."
+      },
+      {
+        "text": "Bloqueia todos os outros clientes",
+        "why": "Certo. Use --scan."
+      },
+      {
+        "text": "Devolve as chaves em ordem aleatória",
+        "why": "A ordem não é o problema."
+      },
+      {
+        "text": "Precisa de senha",
+        "why": "Não por padrão."
+      }
+    ]
+  },
+  "ex-00n6mg04": {
+    "prompt": "`SET lock:report bruno NX` respondeu com nada. O que aconteceu?",
+    "hint": "NX: só se não existir.",
+    "choices": [
+      {
+        "text": "Nada foi gravado",
+        "why": "Certo. A ana ficou com o lock."
+      },
+      {
+        "text": "O comando falhou com erro",
+        "why": "Sem erro; uma resposta vazia."
+      },
+      {
+        "text": "O bruno tomou o lock da ana",
+        "why": "O GET ainda dizia ana."
+      },
+      {
+        "text": "A chave foi apagada por ele",
+        "why": "Ela continuava lá."
+      }
+    ]
+  },
+  "ex-f7wz6mxv": {
+    "prompt": "Uma aplicação conta visualizações com `GET`, soma um em Python e faz `SET` do resultado. Rodam duas cópias. O que dá errado?",
+    "hint": "Duas leituras antes de qualquer gravação.",
+    "choices": [
+      {
+        "text": "Nada; o Redis tem uma thread só",
+        "why": "Uma thread por comando; a leitura e a gravação são dois comandos."
+      },
+      {
+        "text": "Visualizações se perdem quando as duas leem o mesmo valor",
+        "why": "Certo. O INCR é um passo só."
+      },
+      {
+        "text": "O contador vira string",
+        "why": "Ele sempre foi uma string com um número."
+      },
+      {
+        "text": "O Redis recusa o segundo SET",
+        "why": "SET sem NX sempre grava."
+      }
+    ]
+  },
+  "ex-6j8ht25x": {
+    "prompt": "Ligue cada resposta do TTL ao que ela significa.",
+    "hint": "Dois valores especiais.",
+    "pairs": [
+      {
+        "left": "30",
+        "right": "vence em trinta segundos"
+      },
+      {
+        "left": "-1",
+        "right": "existe e nunca vence"
+      },
+      {
+        "left": "-2",
+        "right": "a chave não existe"
+      }
+    ],
+    "right_distractors": [
+      "venceu há um segundo"
+    ]
+  },
+  "ex-q31wpgq1": {
+    "prompt": "Uma chave vencida que ninguém pede de novo: como o Redis libera a memória dela?",
+    "hint": "A remoção preguiçosa precisa de uma requisição.",
+    "choices": [
+      {
+        "text": "Nunca; só uma leitura feita nela a remove",
+        "why": "A expiração ativa a encontra."
+      },
+      {
+        "text": "No próximo reinício",
+        "why": "Antes disso."
+      },
+      {
+        "text": "Sorteando chaves com tempo de vida",
+        "why": "Certo."
+      },
+      {
+        "text": "Quando o maxmemory é atingido",
+        "why": "A expiração não espera por isso."
+      }
+    ]
+  },
+  "ex-dmy01hnj": {
+    "prompt": "Um Redis de cache enche aos poucos e o `TTL` de muitas chaves responde `-1`. Qual a causa mais provável?",
+    "hint": "O que quer dizer -1?",
+    "choices": [
+      {
+        "text": "Chaves foram gravadas sem tempo de vida",
+        "why": "Certo. Nunca vencem."
+      },
+      {
+        "text": "O relógio está errado",
+        "why": "O -1 não depende do relógio."
+      },
+      {
+        "text": "A expiração ativa está desligada",
+        "why": "-1 quer dizer sem tempo de vida nenhum."
+      },
+      {
+        "text": "O Redis perdeu o snapshot",
+        "why": "Sem relação."
+      }
+    ]
+  },
+  "ex-j74bkwsy": {
+    "prompt": "Ligue cada necessidade ao tipo do Redis que serve.",
+    "hint": "A tabela do fim da seção.",
+    "pairs": [
+      {
+        "left": "mais vendidos, em ranking",
+        "right": "conjunto ordenado"
+      },
+      {
+        "left": "os três últimos livros vistos",
+        "right": "lista"
+      },
+      {
+        "left": "um livro cujo estoque muda sozinho",
+        "right": "hash"
+      },
+      {
+        "left": "as etiquetas de um livro",
+        "right": "conjunto"
+      }
+    ],
+    "right_distractors": [
+      "um contador"
+    ]
+  },
+  "ex-tdw7tdpw": {
+    "prompt": "Cinco visualizações foram empurradas (3, 7, 2, 9, 3) e a lista cortada em 0..2. O que o LRANGE devolveu?",
+    "hint": "O LPUSH acrescenta à esquerda.",
+    "choices": [
+      {
+        "text": "book:3, book:7, book:2",
+        "why": "Essa é a ordem em que foram empurrados."
+      },
+      {
+        "text": "book:3, book:9, book:2",
+        "why": "Certo. O mais recente primeiro."
+      },
+      {
+        "text": "book:9, book:2, book:7",
+        "why": "O último empurrado, book:3, fica na cabeça."
+      },
+      {
+        "text": "book:2, book:9, book:3",
+        "why": "Invertido."
+      }
+    ]
+  },
+  "ex-rhs09pkw": {
+    "prompt": "Por que atualizar o estoque de um livro com `HINCRBY` num hash em vez de reescrever uma string JSON?",
+    "hint": "Conte as idas e voltas e as brechas.",
+    "choices": [
+      {
+        "text": "JSON não é permitido no Redis",
+        "why": "A seção anterior guardou JSON."
+      },
+      {
+        "text": "Hashes nunca vencem",
+        "why": "Qualquer chave pode ter tempo de vida."
+      },
+      {
+        "text": "Um comando atômico, sem corrida",
+        "why": "Certo."
+      },
+      {
+        "text": "Hashes são criptografados no disco",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-ce7b2fwc": {
+    "prompt": "O que o `decode_responses=True` muda na redis-py?",
+    "hint": "Bytes ou texto?",
+    "choices": [
+      {
+        "text": "Strings em vez de bytes",
+        "why": "Certo."
+      },
+      {
+        "text": "Descriptografa valores",
+        "why": "Nada estava criptografado."
+      },
+      {
+        "text": "Lê JSON automaticamente",
+        "why": "O json.loads ainda faz isso."
+      },
+      {
+        "text": "Comprime os valores",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-rvgq9rqq": {
+    "prompt": "O que um pipeline compra no redis_books.py?",
+    "hint": "Idas e voltas.",
+    "choices": [
+      {
+        "text": "Atomicidade entre todos os comandos",
+        "why": "Um pipeline simples não é uma transação."
+      },
+      {
+        "text": "Vários comandos numa ida e volta",
+        "why": "Certo."
+      },
+      {
+        "text": "Tempo de vida em toda chave",
+        "why": "Isso é o `ex=`."
+      },
+      {
+        "text": "Codificação JSON mais rápida",
+        "why": "Sem relação."
+      }
+    ]
+  },
+  "ex-g02qax49": {
+    "prompt": "Com `maxmemory 2mb` e a política padrão do Ubuntu, o que aconteceu depois de 401 chaves?",
+    "hint": "noeviction.",
+    "choices": [
+      {
+        "text": "Chaves velhas foram despejadas para abrir espaço",
+        "why": "Isso exige uma política de despejo."
+      },
+      {
+        "text": "O Redis caiu",
+        "why": "As leituras continuaram."
+      },
+      {
+        "text": "Gravações deram OOM",
+        "why": "Certo."
+      },
+      {
+        "text": "A memória passou do limite",
+        "why": "O limite segurou."
+      }
+    ]
+  },
+  "ex-xsedst5z": {
+    "prompt": "Com allkeys-lru, quantas chaves o Redis despejou para aceitar as 5.000 gravações?",
+    "hint": "evicted_keys.",
+    "unit": "chaves"
+  },
+  "ex-cwngme34": {
+    "prompt": "Um Redis guarda páginas em cache e as sessões da loja, com `volatile-lru`. Um desenvolvedor guarda um valor sem `ex=`. O que acontece?",
+    "hint": "O volatile só despeja chaves com tempo de vida.",
+    "choices": [
+      {
+        "text": "Ela é despejada primeiro",
+        "why": "Ela não tem tempo de vida, então nunca é despejada."
+      },
+      {
+        "text": "O Redis se recusa a guardá-la",
+        "why": "Ele a guarda."
+      },
+      {
+        "text": "As sessões ganham tempo de vida sozinhas",
+        "why": "Não."
+      },
+      {
+        "text": "Nunca é despejada, e elas se acumulam",
+        "why": "Certo. Dois Redis evitam a questão."
+      }
+    ]
+  },
+  "ex-q7dfwwkn": {
+    "prompt": "Depois de `SHUTDOWN NOSAVE` e um reinício só com RDB, qual chave voltou?",
+    "hint": "O snapshot foi tirado entre as duas.",
+    "choices": [
+      {
+        "text": "As duas",
+        "why": "A after-snapshot não estava no snapshot."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "O snapshot tinha uma delas."
+      },
+      {
+        "text": "Só a after-snapshot",
+        "why": "Ela foi gravada depois do save."
+      },
+      {
+        "text": "Só a before-snapshot",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-daymessk": {
+    "prompt": "Com AOF e `appendfsync everysec`, quanto fica em risco numa queda?",
+    "hint": "Vai para o disco uma vez por segundo.",
+    "choices": [
+      {
+        "text": "Tudo desde o último snapshot",
+        "why": "Isso é o RDB."
+      },
+      {
+        "text": "Cerca de um segundo de gravações",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada",
+        "why": "Até um segundo."
+      },
+      {
+        "text": "Tudo",
+        "why": "Isso é sem persistência."
+      }
+    ]
+  },
+  "ex-426rrzjj": {
+    "prompt": "Quando é razoável rodar um Redis de cache sem snapshots e sem AOF?",
+    "hint": "Quanto custa um começo frio?",
+    "choices": [
+      {
+        "text": "Nunca; um cache precisa sobreviver a reinícios",
+        "why": "Um cache pode ser reconstruído; a questão é o custo."
+      },
+      {
+        "text": "Quando a recarga sai barata",
+        "why": "Certo."
+      },
+      {
+        "text": "Quando o servidor tem mais de 8 GB",
+        "why": "O tamanho da memória não é a questão."
+      },
+      {
+        "text": "Quando se usa allkeys-lru",
+        "why": "Despejo e persistência são escolhas separadas."
+      }
+    ]
+  },
+  "ex-pavneydh": {
+    "prompt": "O que o `protected-mode yes` faz?",
+    "hint": "Uma rede embaixo de um bind errado.",
+    "choices": [
+      {
+        "text": "Criptografa conexões entre cliente e servidor",
+        "why": "Não criptografa nada."
+      },
+      {
+        "text": "Recusa clientes remotos quando não há senha",
+        "why": "Certo."
+      },
+      {
+        "text": "Torna toda chave somente leitura",
+        "why": "Não."
+      },
+      {
+        "text": "Desativa o FLUSHALL para todo usuário",
+        "why": "Isso é trabalho de uma ACL."
+      }
+    ]
+  },
+  "ex-33z150yt": {
+    "prompt": "O usuário `shop` recebeu `NOPERM` ao ler `bestsellers`. Por quê?",
+    "hint": "Olhe o `~cache:*`.",
+    "choices": [
+      {
+        "text": "bestsellers é um conjunto ordenado",
+        "why": "Tipos não são restritos."
+      },
+      {
+        "text": "O padrão é cache:*",
+        "why": "Certo."
+      },
+      {
+        "text": "Ler é um comando perigoso",
+        "why": "O +@read foi concedido."
+      },
+      {
+        "text": "A senha estava errada",
+        "why": "O SET antes dele funcionou."
+      }
+    ]
+  },
+  "ex-v02az4a9": {
+    "prompt": "A senha do Redis de uma aplicação vaza. Qual configuração limita mais o estrago?",
+    "hint": "Menor privilégio, como na aula 4.",
+    "choices": [
+      {
+        "text": "Uma senha longa no usuário default",
+        "why": "Com ela, o atacante tem tudo."
+      },
+      {
+        "text": "Um usuário só com as chaves dele",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma porta diferente da 6379 de sempre",
+        "why": "Esconder a porta não protege nada depois de conhecida."
+      },
+      {
+        "text": "Ligar o AOF",
+        "why": "Persistência não é controle de acesso."
+      }
+    ]
+  },
+  "ex-bgjfp9fx": {
+    "prompt": "Quais configurações servem a um Redis usado só como cache que pode subir frio? Marque todas que se aplicam.",
+    "hint": "Despejo, tempos de vida, e a rede.",
+    "choices": [
+      {
+        "text": "maxmemory-policy allkeys-lru",
+        "why": "Certo."
+      },
+      {
+        "text": "Um tempo de vida em todo valor",
+        "why": "Certo."
+      },
+      {
+        "text": "bind 127.0.0.1",
+        "why": "Certo."
+      },
+      {
+        "text": "maxmemory-policy noeviction",
+        "why": "Um cache cheio recusaria gravações."
+      }
+    ]
+  }
+}

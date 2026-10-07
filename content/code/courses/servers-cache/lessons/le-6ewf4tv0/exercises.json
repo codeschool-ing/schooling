@@ -1,0 +1,700 @@
+[
+  {
+    "id": "ex-ecb7qnd0",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In cache-aside, who reads the database on a miss?",
+    "hint": "The cache sits beside the path.",
+    "choices": [
+      {
+        "text": "Redis, by itself",
+        "correct": false,
+        "why": "Redis only stores what it is given."
+      },
+      {
+        "text": "The application",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A background job that refills the cache each night",
+        "correct": false,
+        "why": "Nothing runs in the background."
+      },
+      {
+        "text": "The database pushes the row",
+        "correct": false,
+        "why": "Databases do not push to caches here."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hdsz6bp",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`bookcache.py` read book 2 three times from a clean start. How many database queries did it make?",
+    "hint": "Only the miss.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-qjvzp2nc",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis stops answering. What does an application written with cache-aside lose?",
+    "hint": "The database still has everything.",
+    "choices": [
+      {
+        "text": "Speed",
+        "correct": true,
+        "why": "Right. It can read the database every time."
+      },
+      {
+        "text": "Every write made since the last snapshot",
+        "correct": false,
+        "why": "Writes went to the database."
+      },
+      {
+        "text": "The prices of books nobody has read yet",
+        "correct": false,
+        "why": "Those are in the database."
+      },
+      {
+        "text": "Correct answers about stock",
+        "correct": false,
+        "why": "The database is still right."
+      }
+    ]
+  },
+  {
+    "id": "ex-racn1kyj",
+    "version": 1,
+    "section": "invalidating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`catalogue.set_price` changed book 2. Why did the cache keep saying 8,990?",
+    "hint": "Who told the cache?",
+    "choices": [
+      {
+        "text": "Nobody deleted the key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Redis refuses to change a key",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The price was written in the wrong currency",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "SQLite keeps its own copy",
+        "correct": false,
+        "why": "The database had the new price."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhzjct7s",
+    "version": 1,
+    "section": "invalidating",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `update_price` write the database before deleting the key?",
+    "hint": "Picture a reader between the two steps.",
+    "choices": [
+      {
+        "text": "Deleting first is slower",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Redis needs the database to be written first",
+        "correct": false,
+        "why": "Redis knows nothing of the database."
+      },
+      {
+        "text": "Or a reader re-caches the old row",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The database deletes keys on its own",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-x195fh4q",
+    "version": 1,
+    "section": "delete-dont-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two writers set the cache on write. A wrote the database first and the cache last. What does the cache hold?",
+    "hint": "The transcript said it.",
+    "choices": [
+      {
+        "text": "B's price, which the database also has",
+        "correct": false,
+        "why": "The cache got A's last."
+      },
+      {
+        "text": "A's price, which the database no longer has",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "That is delete on write."
+      },
+      {
+        "text": "Both prices",
+        "correct": false,
+        "why": "One key holds one value."
+      }
+    ]
+  },
+  {
+    "id": "ex-ars33hr7",
+    "version": 1,
+    "section": "delete-dont-set",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What makes deleting safe where setting is not, when two writers race?",
+    "hint": "Order.",
+    "choices": [
+      {
+        "text": "A delete ends the same in any order",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Deletes are faster than sets",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Redis queues deletes and applies them in order",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "A delete also updates the database",
+        "correct": false,
+        "why": "It touches only the cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-2x6fdwet",
+    "version": 1,
+    "section": "the-slow-reader",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps that leave the old price cached after a correct delete in order.",
+    "hint": "The reader stores last.",
+    "items": [
+      "A reader misses the cache",
+      "The reader gets the old row from the database",
+      "A writer changes the database",
+      "The writer deletes the key",
+      "The reader stores the old row"
+    ],
+    "trap": "The writer's delete is not the last step."
+  },
+  {
+    "id": "ex-dmw4sysq",
+    "version": 1,
+    "section": "the-slow-reader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a delayed second delete do?",
+    "hint": "Narrows, not closes.",
+    "choices": [
+      {
+        "text": "Removes a copy a slow reader stored",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Guarantees that no stale value survives",
+        "correct": false,
+        "why": "A reader slower than the delay still wins."
+      },
+      {
+        "text": "Deletes the database row as well",
+        "correct": false,
+        "why": "Only the key."
+      },
+      {
+        "text": "Locks the key",
+        "correct": false,
+        "why": "Nothing is locked."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtgdcycn",
+    "version": 1,
+    "section": "the-slow-reader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these bounds a stale value no matter how the race goes?",
+    "hint": "Lesson 8 insisted on it.",
+    "choices": [
+      {
+        "text": "Deleting the key twice",
+        "correct": false,
+        "why": "A slower reader still wins."
+      },
+      {
+        "text": "A faster database",
+        "correct": false,
+        "why": "It narrows the race, no more."
+      },
+      {
+        "text": "A lifetime on the key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Using Memcached instead of Redis for book data",
+        "correct": false,
+        "why": "Same race."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke7gdvkw",
+    "version": 1,
+    "section": "read-and-write-through",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `books.set_price(2, 5990)`, the next read was a hit. Why?",
+    "hint": "Write-through.",
+    "choices": [
+      {
+        "text": "The write stored a fresh copy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The read went to the database without counting it",
+        "correct": false,
+        "why": "The count is in catalogue."
+      },
+      {
+        "text": "Redis fetched the new row from SQLite",
+        "correct": false,
+        "why": "Redis never reads the database."
+      },
+      {
+        "text": "The old copy had not expired yet",
+        "correct": false,
+        "why": "The key was deleted first; it held 5990."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zfe5njr",
+    "version": 1,
+    "section": "read-and-write-through",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where is read-through different from cache-aside?",
+    "hint": "Compare `get` with `get_book`.",
+    "choices": [
+      {
+        "text": "It never misses",
+        "correct": false,
+        "why": "It misses like any cache."
+      },
+      {
+        "text": "It writes to the database on a read",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "It keeps values without a lifetime",
+        "correct": false,
+        "why": "It sets ex."
+      },
+      {
+        "text": "The same logic lives in one layer",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhb2nayp",
+    "version": 1,
+    "section": "read-and-write-through",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is write-through safe as written in `through.py`?",
+    "hint": "It ends with a set.",
+    "choices": [
+      {
+        "text": "Always",
+        "correct": false,
+        "why": "Two writers can still race."
+      },
+      {
+        "text": "With one writer at a time",
+        "correct": true,
+        "why": "Right, or with a lock."
+      },
+      {
+        "text": "Only when the database is SQLite",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "When the TTL is under a minute and the key has a prefix",
+        "correct": false,
+        "why": "That shortens the damage, no more."
+      }
+    ]
+  },
+  {
+    "id": "ex-e961s3s1",
+    "version": 1,
+    "section": "write-behind",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`behind.py` set three prices. How many were pending before the flush?",
+    "hint": "The pending column.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "writes"
+  },
+  {
+    "id": "ex-j9801xjn",
+    "version": 1,
+    "section": "write-behind",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With write-behind, what is lost if Redis dies before the flush?",
+    "hint": "Where is the newest price?",
+    "choices": [
+      {
+        "text": "Nothing; the database has every change",
+        "correct": false,
+        "why": "It does not have them yet."
+      },
+      {
+        "text": "The writes that were still queued",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only cached copies, which can be rebuilt",
+        "correct": false,
+        "why": "They are the only copies."
+      },
+      {
+        "text": "The database itself",
+        "correct": false,
+        "why": "The database is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3g1gcsd",
+    "version": 1,
+    "section": "write-behind",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which data suits write-behind?",
+    "hint": "Many writes, each worth little.",
+    "choices": [
+      {
+        "text": "Payments",
+        "correct": false,
+        "why": "Never let the cache hold the only copy of money."
+      },
+      {
+        "text": "Prices",
+        "correct": false,
+        "why": "Losing one is a change nobody made."
+      },
+      {
+        "text": "Page-view counters",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Passwords",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjh1vy5z",
+    "version": 1,
+    "section": "negative-caching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without a marker, ten reads of a book that does not exist cost how much?",
+    "hint": "Nothing was stored.",
+    "choices": [
+      {
+        "text": "One query",
+        "correct": false,
+        "why": "That is with the marker."
+      },
+      {
+        "text": "Ten queries",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None; Redis returns None for unknown keys without asking",
+        "correct": false,
+        "why": "Then the application asks the database."
+      },
+      {
+        "text": "Eleven, because of the extra check",
+        "correct": false,
+        "why": "One per read."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0b1cav4",
+    "version": 1,
+    "section": "negative-caching",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the marker's lifetime shorter than a book's?",
+    "hint": "What does being wrong cost?",
+    "choices": [
+      {
+        "text": "Markers use more memory",
+        "correct": false,
+        "why": "They are tiny."
+      },
+      {
+        "text": "Redis refuses long lifetimes for missing keys",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "A book added later must not stay invisible",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Crawlers stop after thirty seconds",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-g920f8xj",
+    "version": 1,
+    "section": "keys-and-versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `INCR catalogue:version`, what happens to the `v1:` keys?",
+    "hint": "Nobody asks for them.",
+    "choices": [
+      {
+        "text": "They are deleted at once",
+        "correct": false,
+        "why": "Nothing deletes them."
+      },
+      {
+        "text": "They become v2 keys",
+        "correct": false,
+        "why": "Keys are not renamed."
+      },
+      {
+        "text": "They stay until their lifetime ends",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Readers keep using them until a restart",
+        "correct": false,
+        "why": "Readers ask for v2 now."
+      }
+    ]
+  },
+  {
+    "id": "ex-tat85v2e",
+    "version": 1,
+    "section": "keys-and-versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `book:grande-sertao` a poor key for book 2?",
+    "hint": "Titles change.",
+    "choices": [
+      {
+        "text": "Hyphens are not allowed in keys",
+        "correct": false,
+        "why": "They are."
+      },
+      {
+        "text": "It is too long for Redis to store",
+        "correct": false,
+        "why": "Keys can be much longer."
+      },
+      {
+        "text": "Titles change; the key would not",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Accents get lost",
+        "correct": false,
+        "why": "There are none in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r83h8ky5",
+    "version": 1,
+    "section": "keys-and-versions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every cached book became a miss at once after one Redis command: `___ catalogue:version`.",
+    "hint": "It adds one.",
+    "blanks": [
+      {
+        "accept": [
+          "INCR"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9t2h1rg7",
+    "version": 1,
+    "section": "choosing-a-pattern",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pattern to where a write goes first.",
+    "hint": "The table's write column.",
+    "pairs": [
+      {
+        "left": "write-through",
+        "right": "the database, then a set in the cache"
+      },
+      {
+        "left": "write-behind",
+        "right": "the cache, the database later"
+      },
+      {
+        "left": "write-around",
+        "right": "the database, and the copy is deleted"
+      }
+    ],
+    "right_distractors": [
+      "the cache only, never the database"
+    ]
+  },
+  {
+    "id": "ex-94kbax0v",
+    "version": 1,
+    "section": "choosing-a-pattern",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pair does this lesson call the right starting point for nearly every application?",
+    "hint": "`update_price`.",
+    "choices": [
+      {
+        "text": "Write-behind with read-through",
+        "correct": false,
+        "why": "That risks losing writes."
+      },
+      {
+        "text": "Write-through on every key",
+        "correct": false,
+        "why": "It costs a read per write and races with two writers."
+      },
+      {
+        "text": "Cache-aside and write-around",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No cache until the database is slow and visitors complain",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-21f1296w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which habits limit how long a wrong value can stay in the cache?",
+    "hint": "Three of the four.",
+    "choices": [
+      {
+        "text": "A lifetime on every key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Deleting rather than setting on write",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A delayed second delete",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Write-behind for prices",
+        "correct": false,
+        "why": "It makes the cache the only copy."
+      }
+    ]
+  }
+]

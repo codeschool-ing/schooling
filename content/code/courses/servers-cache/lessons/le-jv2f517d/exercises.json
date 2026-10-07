@@ -1,0 +1,731 @@
+[
+  {
+    "id": "ex-x4x29t62",
+    "version": 1,
+    "section": "one-job",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Memcached keep under a key?",
+    "hint": "No types.",
+    "choices": [
+      {
+        "text": "Bytes",
+        "correct": true,
+        "why": "Right. The client decides what they mean."
+      },
+      {
+        "text": "A hash of fields, like Redis",
+        "correct": false,
+        "why": "Memcached has no data types."
+      },
+      {
+        "text": "A row of a database table",
+        "correct": false,
+        "why": "It knows nothing about the database."
+      },
+      {
+        "text": "A sorted list of values",
+        "correct": false,
+        "why": "Lists are Redis."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpc7z73z",
+    "version": 1,
+    "section": "one-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`-m 64` is in `/etc/memcached.conf`. What does it mean once the cache has been busy for a while?",
+    "hint": "A full cache is the normal state.",
+    "choices": [
+      {
+        "text": "Memcached is using 64 MB for values",
+        "correct": true,
+        "why": "Right. It fills it and evicts."
+      },
+      {
+        "text": "Memcached starts with 64 MB and grows as it needs more",
+        "correct": false,
+        "why": "It is a limit, not a start."
+      },
+      {
+        "text": "64 connections at most",
+        "correct": false,
+        "why": "That is -c."
+      },
+      {
+        "text": "64 worker threads",
+        "correct": false,
+        "why": "That is -t, 4 by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-wx0xgrvd",
+    "version": 1,
+    "section": "one-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Memcached do that Redis, as lesson 8 ran it, does not?",
+    "hint": "Cores.",
+    "choices": [
+      {
+        "text": "Keeps data on disk across restarts",
+        "correct": false,
+        "why": "Memcached keeps nothing on disk."
+      },
+      {
+        "text": "Answers on several threads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Checks a password on every connection by default",
+        "correct": false,
+        "why": "No password by default."
+      },
+      {
+        "text": "Replicates to a second server",
+        "correct": false,
+        "why": "No replication."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tf772pg",
+    "version": 1,
+    "section": "the-protocol",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`get nothing-here` answers only `END`. What does that mean?",
+    "hint": "Count the VALUE lines.",
+    "choices": [
+      {
+        "text": "The command failed",
+        "correct": false,
+        "why": "A miss is not an error."
+      },
+      {
+        "text": "The key holds an empty string",
+        "correct": false,
+        "why": "That would be a VALUE line with length 0."
+      },
+      {
+        "text": "It is a miss",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The server is out of memory and refusing reads",
+        "correct": false,
+        "why": "Reads are never refused for memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-03x69tzb",
+    "version": 1,
+    "section": "the-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `set greeting 0 0 5`, what happens if the data line is `hello!`, six bytes?",
+    "hint": "Memcached reads exactly the length.",
+    "choices": [
+      {
+        "text": "Memcached stores all six bytes",
+        "correct": false,
+        "why": "It reads five and expects the line to end."
+      },
+      {
+        "text": "The store fails: the data does not end where the length says",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It stores hello and drops the rest silently",
+        "correct": false,
+        "why": "The length must match."
+      },
+      {
+        "text": "The flags are changed to 6",
+        "correct": false,
+        "why": "Flags are the first number."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jqpg4as",
+    "version": 1,
+    "section": "the-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`views` holds 5. What does `decr views 9` return?",
+    "hint": "Counters are unsigned.",
+    "choices": [
+      {
+        "text": "-4",
+        "correct": false,
+        "why": "Counters cannot go below zero."
+      },
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An error saying the counter would be negative",
+        "correct": false,
+        "why": "No error; it stops at zero."
+      },
+      {
+        "text": "5, unchanged",
+        "correct": false,
+        "why": "It changed, to zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-08vhtwyk",
+    "version": 1,
+    "section": "the-protocol",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each answer to the command that gave it in the transcripts.",
+    "hint": "Each store has its condition.",
+    "pairs": [
+      {
+        "left": "add greeting, when greeting exists",
+        "right": "NOT_STORED"
+      },
+      {
+        "left": "delete greeting, the second time",
+        "right": "NOT_FOUND"
+      },
+      {
+        "left": "incr greeting, holding hello",
+        "right": "CLIENT_ERROR"
+      },
+      {
+        "left": "set greeting 0 0 5",
+        "right": "STORED"
+      }
+    ],
+    "right_distractors": [
+      "EXISTS"
+    ]
+  },
+  {
+    "id": "ex-53sm9w7d",
+    "version": 1,
+    "section": "compare-and-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two clients read stock 4 with the same token, and both send `cas` with it. What happens?",
+    "hint": "The first write changes the token.",
+    "choices": [
+      {
+        "text": "Both writes succeed and the stock ends at 3",
+        "correct": false,
+        "why": "That is the lost update cas prevents."
+      },
+      {
+        "text": "Memcached locks the key for the first client until it writes",
+        "correct": false,
+        "why": "Nothing is locked."
+      },
+      {
+        "text": "The second gets EXISTS and must read again",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Both get EXISTS",
+        "correct": false,
+        "why": "The first one matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-mp0j8ajw",
+    "version": 1,
+    "section": "compare-and-set",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a page-view counter belong in `incr` rather than `gets` and `cas`?",
+    "hint": "Think about conflicts.",
+    "choices": [
+      {
+        "text": "cas cannot store numbers",
+        "correct": false,
+        "why": "It stores any bytes."
+      },
+      {
+        "text": "Everybody writes it at once, so cas would keep retrying",
+        "correct": true,
+        "why": "Right. incr never retries."
+      },
+      {
+        "text": "incr is cached and cas is not",
+        "correct": false,
+        "why": "Both act on the cache."
+      },
+      {
+        "text": "gets returns no token for numeric values",
+        "correct": false,
+        "why": "Every item has a token."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpbghahs",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An item is stored with a lifetime of 3,000,000 seconds and is never found again. Why?",
+    "hint": "The thirty-day line.",
+    "choices": [
+      {
+        "text": "It is read as a Unix time in 1970, already past",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Memcached caps lifetimes at a day",
+        "correct": false,
+        "why": "There is no such cap."
+      },
+      {
+        "text": "It was evicted at once",
+        "correct": false,
+        "why": "Nothing was full."
+      },
+      {
+        "text": "The store failed with an error",
+        "correct": false,
+        "why": "It said STORED."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v6tc0ba",
+    "version": 1,
+    "section": "expiry",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the largest lifetime Memcached reads as a number of seconds from now?",
+    "hint": "Thirty days.",
+    "value": 2592000,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-zs2ezmvz",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `touch note 600` do?",
+    "hint": "The value is not sent.",
+    "choices": [
+      {
+        "text": "Rewrites the note with 600 bytes",
+        "correct": false,
+        "why": "No data is sent."
+      },
+      {
+        "text": "Gives it a new lifetime of 600 seconds",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reads it 600 times",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Locks it for 600 seconds",
+        "correct": false,
+        "why": "No locking."
+      }
+    ]
+  },
+  {
+    "id": "ex-trfv9c85",
+    "version": 1,
+    "section": "memory-and-slabs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 1,000-byte value is stored. Where does it go?",
+    "hint": "The smallest chunk that holds it, with its key and header.",
+    "choices": [
+      {
+        "text": "A 1,184-byte chunk in class 12",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A new allocation of exactly 1,000 bytes",
+        "correct": false,
+        "why": "Memory comes in pages cut into chunks."
+      },
+      {
+        "text": "Ten chunks of 96 bytes each in class 1",
+        "correct": false,
+        "why": "A value is never split."
+      },
+      {
+        "text": "A whole page, one megabyte",
+        "correct": false,
+        "why": "That would waste most of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca3mqeff",
+    "version": 1,
+    "section": "memory-and-slabs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-m 8`, after 20,000 writes of 1,000 bytes, how many values had Memcached evicted?",
+    "hint": "The evictions line.",
+    "value": 12920,
+    "tolerance": 0,
+    "unit": "values"
+  },
+  {
+    "id": "ex-215xatjd",
+    "version": 1,
+    "section": "memory-and-slabs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Memcached is restarted. What is in it afterwards?",
+    "hint": "Nothing is written to disk.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The values written before the last snapshot",
+        "correct": false,
+        "why": "Memcached takes no snapshots."
+      },
+      {
+        "text": "The keys, without their values",
+        "correct": false,
+        "why": "Everything is gone."
+      },
+      {
+        "text": "Only the values without a lifetime",
+        "correct": false,
+        "why": "Everything is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzbj1qhb",
+    "version": 1,
+    "section": "memory-and-slabs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Class 3 is full of values nobody reads, and new 1,000-byte values keep arriving. What does Memcached evict?",
+    "hint": "LRU is kept per class.",
+    "choices": [
+      {
+        "text": "The idle values of class 3 first",
+        "correct": false,
+        "why": "Each class keeps its own order."
+      },
+      {
+        "text": "Old values of class 12",
+        "correct": true,
+        "why": "Right, until pages are moved between classes."
+      },
+      {
+        "text": "Nothing; it refuses the new values",
+        "correct": false,
+        "why": "Only with -M."
+      },
+      {
+        "text": "Random values from any class at all",
+        "correct": false,
+        "why": "It is least recently used, per class."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3yv1ph9",
+    "version": 1,
+    "section": "from-python",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With pymemcache's defaults, `mc.add(\"book:2\", b\"{}\")` returns `True` although book:2 exists. Why?",
+    "hint": "What did the client wait for?",
+    "choices": [
+      {
+        "text": "add overwrote the value",
+        "correct": false,
+        "why": "Memcached answered NOT_STORED; nobody listened."
+      },
+      {
+        "text": "It sent noreply and never read the answer",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Python caches the result of add locally",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "The flags were wrong",
+        "correct": false,
+        "why": "Flags do not decide add."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6ccqacs",
+    "version": 1,
+    "section": "from-python",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What are the flags used for in `memcache_books.py`?",
+    "hint": "Memcached never reads them.",
+    "choices": [
+      {
+        "text": "To record that the bytes are JSON",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To set the lifetime of each book",
+        "correct": false,
+        "why": "That is expire."
+      },
+      {
+        "text": "To choose the slab class",
+        "correct": false,
+        "why": "The size does that."
+      },
+      {
+        "text": "To encrypt the value before it leaves Python",
+        "correct": false,
+        "why": "Nothing is encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1e276mx",
+    "version": 1,
+    "section": "many-servers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who decides which of three Memcached servers holds `book:7`?",
+    "hint": "The servers do not know about each other.",
+    "choices": [
+      {
+        "text": "The servers vote",
+        "correct": false,
+        "why": "They do not talk to each other."
+      },
+      {
+        "text": "The first server, which forwards the key",
+        "correct": false,
+        "why": "No server forwards."
+      },
+      {
+        "text": "The client, from a hash of the key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A load balancer in front of the three",
+        "correct": false,
+        "why": "None is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrzx5k7j",
+    "version": 1,
+    "section": "many-servers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Going from two servers to three, roughly what percentage of keys did modulo hashing move?",
+    "hint": "Two in three.",
+    "value": 66,
+    "tolerance": 2,
+    "unit": "%"
+  },
+  {
+    "id": "ex-nhxb473j",
+    "version": 1,
+    "section": "many-servers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does it matter how many keys move when a server is added?",
+    "hint": "Where does a moved key's next read go?",
+    "choices": [
+      {
+        "text": "Moved keys are lost from the disk",
+        "correct": false,
+        "why": "Nothing is on disk."
+      },
+      {
+        "text": "Every moved key is a miss that reaches the database",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The servers copy the moved keys between them",
+        "correct": false,
+        "why": "They never talk."
+      },
+      {
+        "text": "Moving keys takes the cluster offline",
+        "correct": false,
+        "why": "Nothing goes offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kdfhk4e",
+    "version": 1,
+    "section": "securing-memcached",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What protects Ubuntu's Memcached from strangers?",
+    "hint": "Look at `inter`.",
+    "choices": [
+      {
+        "text": "It listens only on 127.0.0.1",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A password every client must send first",
+        "correct": false,
+        "why": "Not by default."
+      },
+      {
+        "text": "TLS on every connection",
+        "correct": false,
+        "why": "Not switched on."
+      },
+      {
+        "text": "Its keys are random",
+        "correct": false,
+        "why": "Keys are chosen by the application."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v1ab4c2",
+    "version": 1,
+    "section": "securing-memcached",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `udpport 0` matter for a Memcached reachable from the internet?",
+    "hint": "2018.",
+    "choices": [
+      {
+        "text": "UDP is slower than TCP for large values",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "UDP needs a password that TCP does not ask for",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Spoofed UDP requests made it flood third parties",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "UDP loses values",
+        "correct": false,
+        "why": "That is not the risk."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7rrhf23",
+    "version": 1,
+    "section": "memcached-or-redis",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which needs point to Redis rather than Memcached?",
+    "hint": "Structures and persistence.",
+    "choices": [
+      {
+        "text": "A ranking kept sorted by the server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Values that should survive a restart",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Caching whole rendered fragments",
+        "correct": false,
+        "why": "Memcached does that well."
+      },
+      {
+        "text": "Using all cores from one server",
+        "correct": false,
+        "why": "That is Memcached's strength."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjb99z99",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Memcached item gets a new lifetime, without its value being sent again, through the `___` command.",
+    "hint": "Five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "touch"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

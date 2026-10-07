@@ -1,0 +1,831 @@
+[
+  {
+    "id": "ex-d7tggmx8",
+    "version": 1,
+    "section": "what-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `server_tokens off` change?",
+    "hint": "Compare the Server header before and after.",
+    "choices": [
+      {
+        "text": "Hides the version number",
+        "correct": true,
+        "why": "Right. `nginx`, no number."
+      },
+      {
+        "text": "Removes the Server header from every response",
+        "correct": false,
+        "why": "The header stayed, saying `nginx`."
+      },
+      {
+        "text": "Fixes the known flaws in that version",
+        "correct": false,
+        "why": "Only an upgrade does that."
+      },
+      {
+        "text": "Hides X-Served-By",
+        "correct": false,
+        "why": "X-Served-By still passed through."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv2r6c0q",
+    "version": 1,
+    "section": "what-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is hiding the version worth doing, given that it does not fix anything?",
+    "hint": "Think of the day a flaw is published.",
+    "choices": [
+      {
+        "text": "It makes every response faster",
+        "correct": false,
+        "why": "A few bytes fewer change nothing measurable."
+      },
+      {
+        "text": "No free list for scanners",
+        "correct": true,
+        "why": "Right. It removes the free list."
+      },
+      {
+        "text": "Browsers trust servers that hide versions",
+        "correct": false,
+        "why": "Browsers do not look at it."
+      },
+      {
+        "text": "TLS requires it",
+        "correct": false,
+        "why": "TLS says nothing about the Server header."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wktade6",
+    "version": 1,
+    "section": "what-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop sends `Server: ipe-shop/1.0` on its own port, but responses through Nginx carry Nginx's Server header. Why?",
+    "hint": "A proxy hides some upstream headers by default.",
+    "choices": [
+      {
+        "text": "The shop changes its header when proxied",
+        "correct": false,
+        "why": "The shop does not know it is proxied."
+      },
+      {
+        "text": "server_tokens off removed it",
+        "correct": false,
+        "why": "It was already replaced before that setting."
+      },
+      {
+        "text": "Nginx drops that header",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "HTTPS strips Server headers",
+        "correct": false,
+        "why": "TLS carries headers untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-q84z278s",
+    "version": 1,
+    "section": "default-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the catch-all block, `curl -k https://127.0.0.1/` returned the bookshop. Why is that a problem?",
+    "hint": "Who asks by address?",
+    "choices": [
+      {
+        "text": "It made the whole site noticeably slower",
+        "correct": false,
+        "why": "Nothing about speed."
+      },
+      {
+        "text": "Scanners index it, and other names reach it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It broke the certificate for the real name",
+        "correct": false,
+        "why": "The certificate was fine for its names."
+      },
+      {
+        "text": "The shop received requests it could not parse at all",
+        "correct": false,
+        "why": "The shop never saw them; Nginx served the static page."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf3fexq2",
+    "version": 1,
+    "section": "default-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `return 444` make Nginx do?",
+    "hint": "curl said `Empty reply from server`.",
+    "choices": [
+      {
+        "text": "Send a page saying the site is unknown",
+        "correct": false,
+        "why": "Nothing at all is sent."
+      },
+      {
+        "text": "Redirect to the main site",
+        "correct": false,
+        "why": "No Location header, no answer."
+      },
+      {
+        "text": "Close the connection silently",
+        "correct": true,
+        "why": "Right. A code of Nginx's own."
+      },
+      {
+        "text": "Wait 444 milliseconds and retry",
+        "correct": false,
+        "why": "The number is just a code."
+      }
+    ]
+  },
+  {
+    "id": "ex-766k679p",
+    "version": 1,
+    "section": "default-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the catch-all's HTTPS listener use `ssl_reject_handshake on` instead of a certificate of its own?",
+    "hint": "What would a certificate tell the stranger?",
+    "choices": [
+      {
+        "text": "Nginx cannot hold two certificates at once",
+        "correct": false,
+        "why": "It can have one per server block."
+      },
+      {
+        "text": "It would reveal the names",
+        "correct": true,
+        "why": "Right. Refusing the handshake shows nothing."
+      },
+      {
+        "text": "Pebble cannot issue a certificate for an IP",
+        "correct": false,
+        "why": "That is not the reason the lesson gives."
+      },
+      {
+        "text": "It is faster than answering with a 444",
+        "correct": false,
+        "why": "Both are cheap; the point is what is revealed."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnp4nqcp",
+    "version": 1,
+    "section": "security-headers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each header to what it tells the browser.",
+    "hint": "The lesson's table.",
+    "pairs": [
+      {
+        "left": "Strict-Transport-Security",
+        "right": "use only HTTPS for this name"
+      },
+      {
+        "left": "X-Content-Type-Options",
+        "right": "do not guess the type of a file"
+      },
+      {
+        "left": "Content-Security-Policy",
+        "right": "load resources only from these places"
+      },
+      {
+        "left": "Referrer-Policy",
+        "right": "send only the origin when following a link away"
+      }
+    ],
+    "right_distractors": [
+      "compress responses"
+    ]
+  },
+  {
+    "id": "ex-gmpcmqp3",
+    "version": 1,
+    "section": "security-headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The redirect on port 80 carries no `Strict-Transport-Security`. Is that a mistake?",
+    "hint": "What does a browser do with HSTS received over HTTP?",
+    "choices": [
+      {
+        "text": "Yes; HSTS belongs on every response",
+        "correct": false,
+        "why": "Browsers ignore it over HTTP."
+      },
+      {
+        "text": "Yes; it should be on port 80 only",
+        "correct": false,
+        "why": "Over HTTP anybody on the path could forge it."
+      },
+      {
+        "text": "No; browsers ignore HSTS sent over HTTP",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No; HSTS only works with preload",
+        "correct": false,
+        "why": "It works on the first HTTPS visit without preload."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wytb637",
+    "version": 1,
+    "section": "security-headers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team sets `max-age=31536000; includeSubDomains; preload` on day one. A month later an old subdomain that serves only HTTP stops working for their users. Why?",
+    "hint": "What does includeSubDomains cover?",
+    "choices": [
+      {
+        "text": "Browsers now force HTTPS for every name under the domain, for a year",
+        "correct": true,
+        "why": "Right. Start short and widen later."
+      },
+      {
+        "text": "The certificate expired",
+        "correct": false,
+        "why": "The subdomain never had HTTPS at all."
+      },
+      {
+        "text": "Preload deletes HTTP sites from search engines",
+        "correct": false,
+        "why": "It is a list inside browsers."
+      },
+      {
+        "text": "max-age is in milliseconds, so it already expired",
+        "correct": false,
+        "why": "It is in seconds: a year."
+      }
+    ]
+  },
+  {
+    "id": "ex-28b6kcpn",
+    "version": 1,
+    "section": "security-headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which page breaks under the bookshop's Content-Security-Policy?",
+    "hint": "`default-src 'self'` and no `'unsafe-inline'`.",
+    "choices": [
+      {
+        "text": "One that loads /js/app.js",
+        "correct": false,
+        "why": "A script file from the same site is allowed."
+      },
+      {
+        "text": "A page using onclick=",
+        "correct": true,
+        "why": "Right. Inline script is refused."
+      },
+      {
+        "text": "One with an image from /img/",
+        "correct": false,
+        "why": "Same-site images are allowed."
+      },
+      {
+        "text": "Any page served over HTTPS",
+        "correct": false,
+        "why": "The scheme has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pdfep7p",
+    "version": 1,
+    "section": "security-headers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a new CSP introduced first as `Content-Security-Policy-Report-Only`?",
+    "hint": "It enforces nothing.",
+    "choices": [
+      {
+        "text": "To find what it would break first",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Report-only mode is stricter than enforcing",
+        "correct": false,
+        "why": "It blocks nothing at all."
+      },
+      {
+        "text": "Browsers need a week to learn a new policy",
+        "correct": false,
+        "why": "They apply it on the next load."
+      },
+      {
+        "text": "It is required before HSTS",
+        "correct": false,
+        "why": "The two are unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaq716nh",
+    "version": 1,
+    "section": "add-header-trap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `add_header Cache-Control \"no-store\";` was added to `location /api/`, the API's responses lost HSTS and CSP. Why?",
+    "hint": "Inheritance of add_header is all or nothing.",
+    "choices": [
+      {
+        "text": "Cache-Control conflicts with HSTS in browsers",
+        "correct": false,
+        "why": "Both appeared together after the fix."
+      },
+      {
+        "text": "Its own add_header stops inheritance",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Proxied responses never carry security headers",
+        "correct": false,
+        "why": "They did once the snippet was included."
+      },
+      {
+        "text": "The reload failed",
+        "correct": false,
+        "why": "The new header was there, so the reload worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcg6ek22",
+    "version": 1,
+    "section": "add-header-trap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What catches the add_header trap before a visitor does?",
+    "hint": "Nginx itself reports nothing.",
+    "choices": [
+      {
+        "text": "`nginx -t`",
+        "correct": false,
+        "why": "The configuration is valid; nothing is wrong syntactically."
+      },
+      {
+        "text": "Reading nginx.conf once a year",
+        "correct": false,
+        "why": "The trap is in what the file means, not what it says."
+      },
+      {
+        "text": "A per-location header test",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "server_tokens off",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tfe0wse",
+    "version": 1,
+    "section": "paths-and-methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the dotfile location answer 404 rather than 403?",
+    "hint": "What does a 403 tell a scanner?",
+    "choices": [
+      {
+        "text": "A 404 is faster for Nginx to send",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "403 is not allowed inside a location",
+        "correct": false,
+        "why": "It is; `deny all` gives one."
+      },
+      {
+        "text": "Existing and missing look alike",
+        "correct": true,
+        "why": "Right. The scan learns nothing."
+      },
+      {
+        "text": "Search engines index pages that answer 403",
+        "correct": false,
+        "why": "Not the reason given."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bwww1dk",
+    "version": 1,
+    "section": "paths-and-methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The dotfile rule is `location ~ /\\.(?!well-known/)`. Why the exception?",
+    "hint": "Lesson 3's renewals.",
+    "choices": [
+      {
+        "text": "ACME challenges live under /.well-known/acme-challenge/",
+        "correct": true,
+        "why": "Right. Renewals must still reach them."
+      },
+      {
+        "text": "well-known files are always safe to publish, whatever they contain",
+        "correct": false,
+        "why": "The exception is for one need, not a blanket trust."
+      },
+      {
+        "text": "Regular expressions cannot match the letter w",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Git needs it",
+        "correct": false,
+        "why": "Git is the thing being hidden."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcmkpja8",
+    "version": 1,
+    "section": "paths-and-methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `limit_except GET HEAD PUT { deny all; }`, what does a DELETE to the API get, and from whom?",
+    "hint": "Before the change it was 405 from the shop.",
+    "choices": [
+      {
+        "text": "405 from the shop",
+        "correct": false,
+        "why": "That was before; now it never reaches the shop."
+      },
+      {
+        "text": "403 from Nginx",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "200, since DELETE is harmless",
+        "correct": false,
+        "why": "Nothing is deleted, and it is refused."
+      },
+      {
+        "text": "444 from the catch-all",
+        "correct": false,
+        "why": "The request was for the right name."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zd1cq0r",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rate=10r/s burst=20 nodelay`: of 60 requests sent back to back, 42 were served. Where do the 42 come from?",
+    "hint": "A bucket, and a refill.",
+    "choices": [
+      {
+        "text": "The burst, then the refill",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Exactly 2 seconds × 21 requests",
+        "correct": false,
+        "why": "That is a coincidence of numbers, not the mechanism."
+      },
+      {
+        "text": "Random sampling by Nginx",
+        "correct": false,
+        "why": "The limit is deterministic."
+      },
+      {
+        "text": "Each of the four workers allows ten of its own",
+        "correct": false,
+        "why": "The zone is shared by every worker."
+      }
+    ]
+  },
+  {
+    "id": "ex-eaafcgre",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why set `limit_req_status 429`?",
+    "hint": "Nginx's default refusal is another code.",
+    "choices": [
+      {
+        "text": "429 is faster for Nginx to send than 503",
+        "correct": false,
+        "why": "Same size."
+      },
+      {
+        "text": "Browsers keep retrying a 429 forever",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "429 says slow down; 503 says down",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "503 is reserved for TLS handshake errors",
+        "correct": false,
+        "why": "It is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-4f8sq2bf",
+    "version": 1,
+    "section": "limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `client_header_timeout 5s`, after how many seconds did Nginx close a connection whose request never finished?",
+    "hint": "The `time` output.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-esajhfrp",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which endpoint deserves the strictest rate limit, measured in requests per minute?",
+    "hint": "What does a limit make slow?",
+    "choices": [
+      {
+        "text": "The catalogue listing",
+        "correct": false,
+        "why": "Real visitors load it often."
+      },
+      {
+        "text": "The stylesheet",
+        "correct": false,
+        "why": "Static and cheap."
+      },
+      {
+        "text": "The health check",
+        "correct": false,
+        "why": "Monitoring calls it on purpose."
+      },
+      {
+        "text": "The login",
+        "correct": true,
+        "why": "Right. It is what makes guessing passwords slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-82a67bee",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Nginx's master process keep running as root while the workers run as www-data?",
+    "hint": "What needs root?",
+    "choices": [
+      {
+        "text": "Ports below 1024 and the key",
+        "correct": true,
+        "why": "Right. Requests are handled by the workers."
+      },
+      {
+        "text": "To serve requests faster than the workers can",
+        "correct": false,
+        "why": "It serves none."
+      },
+      {
+        "text": "Root is needed to write the access logs",
+        "correct": false,
+        "why": "Not the reason given."
+      },
+      {
+        "text": "A bug in Ubuntu's package",
+        "correct": false,
+        "why": "It is the design."
+      }
+    ]
+  },
+  {
+    "id": "ex-63zqjhh8",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the drop-in, `systemd-analyze security` went from 9.2 to 3.6. Which line keeps the shop able to save prices?",
+    "hint": "Everything else became read-only.",
+    "choices": [
+      {
+        "text": "NoNewPrivileges=yes",
+        "correct": false,
+        "why": "That is about gaining privileges."
+      },
+      {
+        "text": "ReadWritePaths=/var/lib/shop",
+        "correct": true,
+        "why": "Right. The one writable path."
+      },
+      {
+        "text": "PrivateTmp=yes",
+        "correct": false,
+        "why": "That gives a private /tmp, not the database."
+      },
+      {
+        "text": "ProtectHome=yes",
+        "correct": false,
+        "why": "That hides the home directories."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p43mt6v",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under `ProtectSystem=strict` with `ReadWritePaths=/var/lib/shop`, even root got `Read-only file system` writing to /opt/shop. What does that protect against?",
+    "hint": "Assume the layer before has already failed.",
+    "choices": [
+      {
+        "text": "A slow client holding a connection open",
+        "correct": false,
+        "why": "That is a timeout's job."
+      },
+      {
+        "text": "An expired certificate on the site",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "A broken-into service rewriting its own code",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A leaked version number in the Server header field",
+        "correct": false,
+        "why": "That was server_tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-jm5bhjmv",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of everything `ss -ltn` listed, which listens on every address?",
+    "hint": "0.0.0.0.",
+    "choices": [
+      {
+        "text": "The shop on 8001 and 8002",
+        "correct": false,
+        "why": "127.0.0.1 only."
+      },
+      {
+        "text": "Pebble",
+        "correct": false,
+        "why": "127.0.0.1 only."
+      },
+      {
+        "text": "Nginx on 80 and 443",
+        "correct": true,
+        "why": "Right. Everything else is loopback."
+      },
+      {
+        "text": "The DNS resolver",
+        "correct": false,
+        "why": "127.0.0.53 and 127.0.0.54."
+      }
+    ]
+  },
+  {
+    "id": "ex-e04ewgjk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new server goes on a public address. Put the hardening steps in a sensible order.",
+    "hint": "Close the doors before opening the shop.",
+    "items": [
+      "Firewall: allow only 22, 80 and 443",
+      "Start Nginx with a catch-all default server",
+      "Obtain a certificate and redirect to HTTPS",
+      "Add security headers, then test every location"
+    ],
+    "trap": "Headers come after HTTPS works, since HSTS is a commitment."
+  },
+  {
+    "id": "ex-sa8zh90d",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should a production response not carry? Choose all that apply.",
+    "hint": "The checklist at the end of the first section.",
+    "choices": [
+      {
+        "text": "A version number in Server or X-Powered-By",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A stack trace on an error",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A directory listing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Strict-Transport-Security",
+        "correct": false,
+        "why": "That one belongs on every HTTPS response."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xcf52k3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A security scan reports that `https://203.0.113.20/` shows a login page for an internal tool, though the tool is meant to be reached only as `tools.example.net`. Which change fixes it at the web server?",
+    "hint": "Which block answers an address?",
+    "choices": [
+      {
+        "text": "Hide the version number with server_tokens off",
+        "correct": false,
+        "why": "The page is still served."
+      },
+      {
+        "text": "Add HSTS",
+        "correct": false,
+        "why": "HSTS does not choose which site answers."
+      },
+      {
+        "text": "Rate-limit the login",
+        "correct": false,
+        "why": "Useful, and the page is still reachable by address."
+      },
+      {
+        "text": "A default server refusing unknown names",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]

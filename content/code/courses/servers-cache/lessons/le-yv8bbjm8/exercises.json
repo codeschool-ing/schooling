@@ -1,0 +1,713 @@
+[
+  {
+    "id": "ex-5jd6n2rn",
+    "version": 1,
+    "section": "what-redis-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can two copies of the shop share a cache in Redis but not in a Python dictionary?",
+    "hint": "Where does each one live?",
+    "choices": [
+      {
+        "text": "Redis is a separate process both connect to",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Dictionaries cannot hold JSON",
+        "correct": false,
+        "why": "They can; they live in one process."
+      },
+      {
+        "text": "Python forbids sharing between threads",
+        "correct": false,
+        "why": "The copies are processes, and the issue is memory."
+      },
+      {
+        "text": "Redis copies itself into each process when it starts up",
+        "correct": false,
+        "why": "It is one server that every process reaches over a socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9aca3sb",
+    "version": 1,
+    "section": "what-redis-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `INCR` on a shared counter correct even with a thousand clients?",
+    "hint": "How many commands run at once?",
+    "choices": [
+      {
+        "text": "Each client gets its own copy of the counter",
+        "correct": false,
+        "why": "There is one counter."
+      },
+      {
+        "text": "Commands run one at a time",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Redis takes a lock on every key it changes",
+        "correct": false,
+        "why": "No locks are needed with one thread."
+      },
+      {
+        "text": "The client retries until it works",
+        "correct": false,
+        "why": "Nothing is retried."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xf4ttt4",
+    "version": 1,
+    "section": "what-redis-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `KEYS *` a bad habit on a production Redis?",
+    "hint": "One thread, every key.",
+    "choices": [
+      {
+        "text": "It deletes the keys it lists",
+        "correct": false,
+        "why": "It only lists them."
+      },
+      {
+        "text": "It blocks all other clients",
+        "correct": true,
+        "why": "Right. Use --scan."
+      },
+      {
+        "text": "It returns keys in random order",
+        "correct": false,
+        "why": "Order is not the problem."
+      },
+      {
+        "text": "It needs a password",
+        "correct": false,
+        "why": "Not by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-00n6mg04",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SET lock:report bruno NX` answered with nothing. What happened?",
+    "hint": "NX: only if absent.",
+    "choices": [
+      {
+        "text": "Nothing was written",
+        "correct": true,
+        "why": "Right. ana kept the lock."
+      },
+      {
+        "text": "The command failed with an error",
+        "correct": false,
+        "why": "No error; an empty answer."
+      },
+      {
+        "text": "bruno took the lock from ana",
+        "correct": false,
+        "why": "GET still said ana."
+      },
+      {
+        "text": "The key was deleted by it",
+        "correct": false,
+        "why": "It was still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7wz6mxv",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application counts views with `GET`, adds one in Python and `SET`s the result. Two copies run. What goes wrong?",
+    "hint": "Two reads before either write.",
+    "choices": [
+      {
+        "text": "Nothing; Redis is single-threaded",
+        "correct": false,
+        "why": "One thread per command; the read and the write are two commands."
+      },
+      {
+        "text": "Views are lost when both read the same value",
+        "correct": true,
+        "why": "Right. INCR is one step."
+      },
+      {
+        "text": "The counter becomes a string",
+        "correct": false,
+        "why": "It always was a string with a number in it."
+      },
+      {
+        "text": "Redis refuses the second SET",
+        "correct": false,
+        "why": "SET without NX always writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j8ht25x",
+    "version": 1,
+    "section": "expiry",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each TTL answer to what it means.",
+    "hint": "Two special values.",
+    "pairs": [
+      {
+        "left": "30",
+        "right": "expires in thirty seconds"
+      },
+      {
+        "left": "-1",
+        "right": "exists and never expires"
+      },
+      {
+        "left": "-2",
+        "right": "no such key"
+      }
+    ],
+    "right_distractors": [
+      "expired a second ago"
+    ]
+  },
+  {
+    "id": "ex-q31wpgq1",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An expired key nobody asks for again: how does Redis free its memory?",
+    "hint": "Lazy deletion needs a request.",
+    "choices": [
+      {
+        "text": "It never does; only a read removes it",
+        "correct": false,
+        "why": "Active expiry finds it."
+      },
+      {
+        "text": "On the next restart",
+        "correct": false,
+        "why": "Sooner than that."
+      },
+      {
+        "text": "By sampling keys with a lifetime",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "When maxmemory is reached",
+        "correct": false,
+        "why": "Expiry does not wait for that."
+      }
+    ]
+  },
+  {
+    "id": "ex-dmy01hnj",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cache Redis slowly fills up and `TTL` on many keys answers `-1`. What is the likeliest cause?",
+    "hint": "What does -1 mean?",
+    "choices": [
+      {
+        "text": "Keys were written without a lifetime",
+        "correct": true,
+        "why": "Right. They can never expire."
+      },
+      {
+        "text": "The clock is wrong",
+        "correct": false,
+        "why": "-1 does not depend on the clock."
+      },
+      {
+        "text": "Active expiry is turned off",
+        "correct": false,
+        "why": "-1 means no lifetime at all."
+      },
+      {
+        "text": "Redis lost its snapshot",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-j74bkwsy",
+    "version": 1,
+    "section": "structures",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the Redis type that fits it.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "bestsellers, ranked",
+        "right": "sorted set"
+      },
+      {
+        "left": "the last three books a visitor viewed",
+        "right": "list"
+      },
+      {
+        "left": "a book whose stock changes on its own",
+        "right": "hash"
+      },
+      {
+        "left": "the tags of a book",
+        "right": "set"
+      }
+    ],
+    "right_distractors": [
+      "a counter"
+    ]
+  },
+  {
+    "id": "ex-tdw7tdpw",
+    "version": 1,
+    "section": "structures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five views were pushed (3, 7, 2, 9, 3) and the list trimmed to 0..2. What did LRANGE return?",
+    "hint": "LPUSH adds to the left.",
+    "choices": [
+      {
+        "text": "book:3, book:7, book:2",
+        "correct": false,
+        "why": "That is the order they were pushed."
+      },
+      {
+        "text": "book:3, book:9, book:2",
+        "correct": true,
+        "why": "Right. Most recent first."
+      },
+      {
+        "text": "book:9, book:2, book:7",
+        "correct": false,
+        "why": "The last push, book:3, is at the head."
+      },
+      {
+        "text": "book:2, book:9, book:3",
+        "correct": false,
+        "why": "Reversed."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhs09pkw",
+    "version": 1,
+    "section": "structures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why update a book's stock with `HINCRBY` on a hash rather than rewriting a JSON string?",
+    "hint": "Count the round trips and the gaps.",
+    "choices": [
+      {
+        "text": "JSON is not allowed in Redis",
+        "correct": false,
+        "why": "The previous section stored JSON."
+      },
+      {
+        "text": "Hashes never expire",
+        "correct": false,
+        "why": "Any key can have a lifetime."
+      },
+      {
+        "text": "One atomic command, no race",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Hashes are encrypted on disk by Redis",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce7b2fwc",
+    "version": 1,
+    "section": "from-python",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `decode_responses=True` change in redis-py?",
+    "hint": "Bytes or text?",
+    "choices": [
+      {
+        "text": "Strings instead of bytes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It decrypts values",
+        "correct": false,
+        "why": "Nothing was encrypted."
+      },
+      {
+        "text": "It parses JSON automatically",
+        "correct": false,
+        "why": "json.loads still does that."
+      },
+      {
+        "text": "It compresses values",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvgq9rqq",
+    "version": 1,
+    "section": "from-python",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a pipeline buy in redis_books.py?",
+    "hint": "Round trips.",
+    "choices": [
+      {
+        "text": "Atomicity across all commands",
+        "correct": false,
+        "why": "A plain pipeline is not a transaction."
+      },
+      {
+        "text": "Several commands in one round trip",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A lifetime on every key",
+        "correct": false,
+        "why": "That is `ex=`."
+      },
+      {
+        "text": "Faster JSON encoding",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-g02qax49",
+    "version": 1,
+    "section": "memory-and-eviction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `maxmemory 2mb` and Ubuntu's default policy, what happened after 401 keys?",
+    "hint": "noeviction.",
+    "choices": [
+      {
+        "text": "Old keys were evicted to make room",
+        "correct": false,
+        "why": "That needs an eviction policy."
+      },
+      {
+        "text": "Redis crashed",
+        "correct": false,
+        "why": "Reads kept working."
+      },
+      {
+        "text": "Every write failed with OOM",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Memory grew past the limit",
+        "correct": false,
+        "why": "The limit held."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsedst5z",
+    "version": 1,
+    "section": "memory-and-eviction",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With allkeys-lru, how many keys did Redis evict to accept the 5,000 writes?",
+    "hint": "evicted_keys.",
+    "value": 4608,
+    "tolerance": 0,
+    "unit": "keys"
+  },
+  {
+    "id": "ex-cwngme34",
+    "version": 1,
+    "section": "memory-and-eviction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One Redis holds both cached pages and the shop's sessions, with `volatile-lru`. A developer caches a value without `ex=`. What follows?",
+    "hint": "volatile evicts only keys with a lifetime.",
+    "choices": [
+      {
+        "text": "It is evicted first",
+        "correct": false,
+        "why": "It has no lifetime, so it can never be evicted."
+      },
+      {
+        "text": "Redis refuses to store it",
+        "correct": false,
+        "why": "It stores it."
+      },
+      {
+        "text": "Sessions get a lifetime automatically",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "It is never evicted, and they pile up",
+        "correct": true,
+        "why": "Right. Two Redis instances avoid the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7dfwwkn",
+    "version": 1,
+    "section": "persistence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `SHUTDOWN NOSAVE` and a restart with only RDB, which key came back?",
+    "hint": "The snapshot was taken between them.",
+    "choices": [
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "after-snapshot was not in the snapshot."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "The snapshot had one of them."
+      },
+      {
+        "text": "Only after-snapshot",
+        "correct": false,
+        "why": "It was written after the save."
+      },
+      {
+        "text": "Only before-snapshot",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-daymessk",
+    "version": 1,
+    "section": "persistence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With AOF and `appendfsync everysec`, how much is at risk in a crash?",
+    "hint": "Flushed once a second.",
+    "choices": [
+      {
+        "text": "Everything since the last snapshot",
+        "correct": false,
+        "why": "That is RDB."
+      },
+      {
+        "text": "About a second of writes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Up to a second."
+      },
+      {
+        "text": "Everything",
+        "correct": false,
+        "why": "That is no persistence."
+      }
+    ]
+  },
+  {
+    "id": "ex-426rrzjj",
+    "version": 1,
+    "section": "persistence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is it reasonable to run a cache Redis with no snapshots and no AOF?",
+    "hint": "What does a cold start cost?",
+    "choices": [
+      {
+        "text": "Never; a cache must survive restarts",
+        "correct": false,
+        "why": "A cache can be rebuilt; the question is the cost."
+      },
+      {
+        "text": "When the refill is cheap",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "When the server has more than 8 GB",
+        "correct": false,
+        "why": "Memory size is not the question."
+      },
+      {
+        "text": "When using allkeys-lru",
+        "correct": false,
+        "why": "Eviction and persistence are separate choices."
+      }
+    ]
+  },
+  {
+    "id": "ex-pavneydh",
+    "version": 1,
+    "section": "securing-redis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `protected-mode yes` do?",
+    "hint": "A safety net under a mistaken bind.",
+    "choices": [
+      {
+        "text": "Encrypts connections between client and server",
+        "correct": false,
+        "why": "It encrypts nothing."
+      },
+      {
+        "text": "Refuses remote clients when no password is set",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Makes every key read-only",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Disables FLUSHALL for every user",
+        "correct": false,
+        "why": "That is an ACL's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-33z150yt",
+    "version": 1,
+    "section": "securing-redis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `shop` user got `NOPERM` reading `bestsellers`. Why?",
+    "hint": "Look at `~cache:*`.",
+    "choices": [
+      {
+        "text": "bestsellers is a sorted set",
+        "correct": false,
+        "why": "Types are not restricted."
+      },
+      {
+        "text": "Its key pattern is cache:*",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reading is a dangerous command",
+        "correct": false,
+        "why": "+@read was granted."
+      },
+      {
+        "text": "The password was wrong",
+        "correct": false,
+        "why": "The SET before it worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-v02az4a9",
+    "version": 1,
+    "section": "securing-redis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application's Redis password leaks. Which setup limits the damage most?",
+    "hint": "Least privilege, as in lesson 4.",
+    "choices": [
+      {
+        "text": "A long password on the default user",
+        "correct": false,
+        "why": "With it, the attacker has everything."
+      },
+      {
+        "text": "A user limited to its own keys",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A different port from the usual 6379",
+        "correct": false,
+        "why": "Hiding the port protects nothing once it is known."
+      },
+      {
+        "text": "Turning on AOF",
+        "correct": false,
+        "why": "Persistence is not access control."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgjfp9fx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which settings fit a Redis used only as a cache that can start cold? Choose all that apply.",
+    "hint": "Eviction, lifetimes, and the network.",
+    "choices": [
+      {
+        "text": "maxmemory-policy allkeys-lru",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A lifetime on every value",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "bind 127.0.0.1",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "maxmemory-policy noeviction",
+        "correct": false,
+        "why": "A full cache would refuse writes."
+      }
+    ]
+  }
+]

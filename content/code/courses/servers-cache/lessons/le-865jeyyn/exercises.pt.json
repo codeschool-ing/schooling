@@ -1,0 +1,609 @@
+{
+  "ex-exb4b9c1": {
+    "prompt": "Por que se chama proxy *reverso*?",
+    "hint": "Para quem trabalha o proxy de um escritório?",
+    "choices": [
+      {
+        "text": "Trabalha para o servidor, onde um proxy comum trabalha para o cliente",
+        "why": "Certo."
+      },
+      {
+        "text": "Inverte a ordem dos cabeçalhos",
+        "why": "A ordem dos cabeçalhos não é o assunto do nome."
+      },
+      {
+        "text": "Manda a resposta antes da requisição",
+        "why": "Nada responde antes de ser perguntado."
+      },
+      {
+        "text": "Conecta do servidor de volta ao cliente",
+        "why": "O cliente ainda se conecta a ele; o proxy é que se conecta adiante, à aplicação."
+      }
+    ]
+  },
+  "ex-ehy9xtqx": {
+    "prompt": "Depois do primeiro `proxy_pass`, o `/api/echo` da loja informou `peer` como `127.0.0.1` em toda requisição. Por quê?",
+    "hint": "Quem abriu a conexão que a loja recebeu?",
+    "choices": [
+      {
+        "text": "Todo cliente era local",
+        "why": "Mesmo um cliente do outro lado do mundo apareceria como 127.0.0.1 agora."
+      },
+      {
+        "text": "O Nginx abriu a conexão",
+        "why": "Certo. A loja só vê a segunda conexão."
+      },
+      {
+        "text": "A loja esconde endereços por privacidade",
+        "why": "Ela imprimiu exatamente o que o socket disse."
+      },
+      {
+        "text": "O `X-Forwarded-For` trocou o endereço no caminho",
+        "why": "Nenhum cabeçalho tinha sido definido; e um cabeçalho nunca muda o par de um socket."
+      }
+    ]
+  },
+  "ex-6hbdm1rg": {
+    "prompt": "Com `location /api/ { proxy_pass http://127.0.0.1:8001/; }` (repare na barra final), que caminho a loja recebe para `/api/books/3`?",
+    "hint": "Um caminho no proxy_pass troca a parte que casou.",
+    "choices": [
+      {
+        "text": "`/api/books/3`",
+        "why": "Isso acontece sem caminho no proxy_pass."
+      },
+      {
+        "text": "`/books/3`",
+        "why": "Certo. `/api/` foi trocado por `/`."
+      },
+      {
+        "text": "`/api/api/books/3`",
+        "why": "Nada é acrescentado duas vezes."
+      },
+      {
+        "text": "`/`",
+        "why": "Só o prefixo que casou é trocado; o resto do caminho fica."
+      }
+    ]
+  },
+  "ex-v19wpt2k": {
+    "prompt": "Qual variável dá à loja o nome que o navegador pediu, sem a porta?",
+    "hint": "`$http_host` mantém a porta.",
+    "choices": [
+      {
+        "text": "`$remote_addr`",
+        "why": "Esse é o endereço do cliente."
+      },
+      {
+        "text": "`$scheme`",
+        "why": "Esse é http ou https."
+      },
+      {
+        "text": "`$host`",
+        "why": "Certo."
+      },
+      {
+        "text": "`$proxy_add_x_forwarded_for`",
+        "why": "Essa é a lista de endereços."
+      }
+    ]
+  },
+  "ex-cpvjyrje": {
+    "prompt": "Um cliente mandou `X-Forwarded-For: 198.51.100.7` e a loja recebeu `198.51.100.7, 127.0.0.1`. Em qual entrada a loja pode confiar como endereço do cliente?",
+    "hint": "Quem escreveu cada entrada?",
+    "choices": [
+      {
+        "text": "A primeira, por ser o cliente original",
+        "why": "Foi o cliente que a escreveu, então foi ele que a escolheu."
+      },
+      {
+        "text": "As duas igualmente",
+        "why": "Uma foi escrita pelo seu proxy e a outra por um desconhecido."
+      },
+      {
+        "text": "A última, acrescentada pelo Nginx",
+        "why": "Certo. Confie no que os seus proxies acrescentaram, em nada à esquerda."
+      },
+      {
+        "text": "Nenhuma: o cabeçalho deve sempre ser ignorado",
+        "why": "A entrada do seu proxy é confiável; é para isso que o cabeçalho existe."
+      }
+    ]
+  },
+  "ex-06zpegs9": {
+    "prompt": "A livraria passa para trás de um balanceador de nuvem que fica na frente do Nginx. No `X-Forwarded-For`, qual entrada agora tem o endereço real do cliente?",
+    "hint": "Conte, da direita, os proxies que você opera.",
+    "choices": [
+      {
+        "text": "A última",
+        "why": "A última é o balanceador, acrescentada pelo Nginx."
+      },
+      {
+        "text": "A penúltima",
+        "why": "Certo. Uma entrada por proxy confiável, contando da direita."
+      },
+      {
+        "text": "A primeira",
+        "why": "O cliente ainda pode escrever qualquer coisa no começo."
+      },
+      {
+        "text": "Está no `X-Real-IP` e em mais nenhum lugar",
+        "why": "O `X-Real-IP` vindo de `$remote_addr` agora seria o balanceador."
+      }
+    ]
+  },
+  "ex-6nwbr46z": {
+    "prompt": "Seis requisições por um upstream sem `zone` voltaram `shop1, shop1, shop1, shop1, shop2, shop1`. O que explica?",
+    "hint": "Quantos workers existem?",
+    "choices": [
+      {
+        "text": "O shop2 estava mais lento que o shop1 naquela hora",
+        "why": "Em cem requisições elas se dividiram meio a meio."
+      },
+      {
+        "text": "O round robin escolhe um membro ao acaso",
+        "why": "É uma vez estrita, guardada por worker."
+      },
+      {
+        "text": "Cada worker guarda a própria vez",
+        "why": "Certo. O `zone` divide uma vez só entre eles."
+      },
+      {
+        "text": "O keepalive prendeu a conexão ao shop1",
+        "why": "Cada curl era uma conexão nova de cliente; o keepalive é em direção à loja."
+      }
+    ]
+  },
+  "ex-03mtp7hf": {
+    "prompt": "A diretiva que faz o estado de um grupo upstream ser compartilhado por todos os workers do Nginx é `___ shop 64k;`.",
+    "hint": "Quatro letras.",
+    "blanks": [
+      {
+        "accept": [
+          "zone"
+        ]
+      }
+    ]
+  },
+  "ex-a154cpte": {
+    "prompt": "Por que um upstream com `keepalive` também precisa de `proxy_http_version 1.1` e `proxy_set_header Connection \"\"`?",
+    "hint": "O que o Nginx fala com a aplicação por padrão?",
+    "choices": [
+      {
+        "text": "Sem elas o Nginx fala HTTP/1.0 e pede que cada conexão seja fechada",
+        "why": "Certo. Aí nada fica aberto para reaproveitar."
+      },
+      {
+        "text": "Elas ligam a compressão",
+        "why": "Compressão é assunto do gzip."
+      },
+      {
+        "text": "Elas ligam o TLS",
+        "why": "Nenhuma das duas fala de criptografia."
+      },
+      {
+        "text": "Elas mandam a loja guardar as próprias sessões",
+        "why": "Sessões são estado da aplicação; isto é sobre a conexão."
+      }
+    ]
+  },
+  "ex-7r4s3tjr": {
+    "prompt": "Com `weight=3` no shop1 e nenhum peso no shop2, quantas de 100 requisições foram para o shop2?",
+    "hint": "O peso padrão é 1.",
+    "unit": "requisições"
+  },
+  "ex-xwhqz36p": {
+    "prompt": "Enquanto uma requisição de quatro segundos rodava no shop1, o `least_conn` mandou as quatro rápidas para o shop2. O que ele comparou?",
+    "hint": "Não requisições enviadas: requisições ainda não terminadas.",
+    "choices": [
+      {
+        "text": "Requisições em andamento em cada membro",
+        "why": "Certo. O shop1 tinha uma, o shop2 nenhuma."
+      },
+      {
+        "text": "O tempo de resposta da última requisição de cada um",
+        "why": "O least_conn do Nginx aberto não mede tempo."
+      },
+      {
+        "text": "A carga de CPU de cada máquina",
+        "why": "O Nginx não enxerga a CPU da aplicação."
+      },
+      {
+        "text": "O total de requisições de cada um desde a subida",
+        "why": "Isso estaria mais perto da visão do round robin."
+      }
+    ]
+  },
+  "ex-59p0gn84": {
+    "prompt": "Uma aplicação guarda o carrinho de cada usuário na própria memória e roda em duas cópias. Qual mudança elimina de vez a necessidade de `hash $remote_addr`?",
+    "hint": "Onde as duas cópias conseguiriam ler o carrinho?",
+    "choices": [
+      {
+        "text": "Trocar o hash por `ip_hash`",
+        "why": "É a mesma afinidade com outro nome."
+      },
+      {
+        "text": "Acrescentar uma terceira cópia da aplicação atrás do Nginx",
+        "why": "Uma terceira cópia tem uma terceira memória separada."
+      },
+      {
+        "text": "Um armazenamento comum, como o Redis",
+        "why": "Certo. Aí qualquer cópia responde a qualquer requisição."
+      },
+      {
+        "text": "Aumentar o `keepalive`",
+        "why": "Conexões com a aplicação não têm nada a ver com onde o carrinho fica."
+      }
+    ]
+  },
+  "ex-239hwwg8": {
+    "prompt": "Ligue cada situação ao método de upstream que serve.",
+    "hint": "A tabela da aula 2.",
+    "pairs": [
+      {
+        "left": "um membro numa máquina três vezes maior",
+        "right": "`weight=3`"
+      },
+      {
+        "left": "algumas requisições levam segundos e outras milissegundos",
+        "right": "`least_conn`"
+      },
+      {
+        "left": "sessões ficam na memória de cada membro",
+        "right": "`hash $remote_addr`"
+      },
+      {
+        "left": "membros iguais, requisições parecidas",
+        "right": "round robin"
+      }
+    ],
+    "right_distractors": [
+      "`proxy_read_timeout`"
+    ]
+  },
+  "ex-qe1s9mf6": {
+    "prompt": "Com o shop2 parado, as seis requisições ainda responderam 200. O que o Nginx fez com a primeira mandada ao shop2?",
+    "hint": "O log diz `Connection refused`, e o cliente viu 200.",
+    "choices": [
+      {
+        "text": "Devolveu uma cópia em cache",
+        "why": "Ainda não há cache."
+      },
+      {
+        "text": "Tentou o próximo membro, o shop1",
+        "why": "Certo. Isso é o proxy_next_upstream."
+      },
+      {
+        "text": "Esperou o shop2 voltar",
+        "why": "Ele não voltou durante o teste."
+      },
+      {
+        "text": "Reiniciou o shop2 sozinho",
+        "why": "O Nginx nunca sobe a aplicação; quem faz isso é o systemd."
+      }
+    ]
+  },
+  "ex-b4x9hfjm": {
+    "prompt": "As duas lojas subiram de novo, e a próxima requisição ainda recebeu 502. Dez segundos depois recebeu 200. Qual configuração explica os dez segundos?",
+    "hint": "O padrão dela é dez segundos.",
+    "choices": [
+      {
+        "text": "`proxy_read_timeout`",
+        "why": "Essa tem sessenta segundos de padrão e trata de respostas lentas."
+      },
+      {
+        "text": "`keepalive`",
+        "why": "Essa é uma contagem de conexões ociosas."
+      },
+      {
+        "text": "`fail_timeout`",
+        "why": "Certo. Um membro que falhou fica de lado por esse tempo."
+      },
+      {
+        "text": "`max_fails`",
+        "why": "Essa é uma contagem de falhas, não uma duração."
+      }
+    ]
+  },
+  "ex-ypezxbpy": {
+    "prompt": "O que um `502 Bad Gateway` diz sobre onde está o problema?",
+    "hint": "O gateway é o servidor da frente.",
+    "choices": [
+      {
+        "text": "O cliente mandou uma requisição malformada",
+        "why": "Isso seria um 400."
+      },
+      {
+        "text": "O próprio Nginx caiu e foi reiniciado",
+        "why": "Um Nginx caído não responde nada."
+      },
+      {
+        "text": "Uma aplicação falhando atrás dele",
+        "why": "Certo. Recusou, fechou ou não falou HTTP."
+      },
+      {
+        "text": "A aplicação demorou demais para responder",
+        "why": "Isso é o 504."
+      }
+    ]
+  },
+  "ex-6x9nfprn": {
+    "prompt": "Por que não há verificação de saúde ativa no Nginx que este curso instala, e o que cobre a lacuna?",
+    "hint": "É uma questão de produto, não técnica.",
+    "choices": [
+      {
+        "text": "Está no NGINX Plus, comercial; o systemd reinicia a aplicação e a verificação passiva cobre os segundos no meio",
+        "why": "Certo."
+      },
+      {
+        "text": "Verificações ativas são inseguras",
+        "why": "HAProxy, Traefik e Caddy fazem."
+      },
+      {
+        "text": "O Ubuntu remove o módulo",
+        "why": "Não existe esse módulo no Nginx aberto para remover."
+      },
+      {
+        "text": "Elas precisam de IPv6",
+        "why": "Nada a ver com a família de endereços."
+      }
+    ]
+  },
+  "ex-10p0kn6v": {
+    "prompt": "`proxy_read_timeout 3s` e uma requisição de cinco segundos: o cliente recebeu 504 depois de seis segundos, não três. Por quê?",
+    "hint": "O log tem duas linhas para uma requisição.",
+    "choices": [
+      {
+        "text": "O tempo-limite conta duas vezes por requisição",
+        "why": "Contou uma vez por membro."
+      },
+      {
+        "text": "Ele tentou de novo no outro membro",
+        "why": "Certo. O proxy_next_upstream repete num estouro de tempo."
+      },
+      {
+        "text": "O curl esperou mais três segundos por conta própria",
+        "why": "O curl não tinha tempo-limite próprio."
+      },
+      {
+        "text": "O reload levou três segundos",
+        "why": "O reload tinha terminado antes da requisição."
+      }
+    ]
+  },
+  "ex-bpw881fg": {
+    "prompt": "Ligue cada status ao que o Nginx está dizendo.",
+    "hint": "Ruim, indisponível, tempo.",
+    "pairs": [
+      {
+        "left": "502",
+        "right": "a aplicação não respondeu direito"
+      },
+      {
+        "left": "503",
+        "right": "ninguém está disponível de propósito"
+      },
+      {
+        "left": "504",
+        "right": "a aplicação aceitou e não respondeu a tempo"
+      }
+    ],
+    "right_distractors": [
+      "o corpo da requisição era grande demais"
+    ]
+  },
+  "ex-m0zqj61t": {
+    "prompt": "Um `POST /api/orders` estoura o tempo no shop1. O Nginx o manda para o shop2?",
+    "hint": "Mandar duas vezes seria seguro?",
+    "choices": [
+      {
+        "text": "Sim, exatamente como faz com uma requisição GET",
+        "why": "Um GET é idempotente; um POST não."
+      },
+      {
+        "text": "Sim, mas uma vez só",
+        "why": "Nem uma vez, por padrão."
+      },
+      {
+        "text": "Só se o keepalive estiver ligado",
+        "why": "Reaproveitar conexão não muda as regras de repetição."
+      },
+      {
+        "text": "Não, a não ser que se acrescente `non_idempotent`",
+        "why": "Certo. Um pedido enviado duas vezes é pior que um que falhou."
+      }
+    ]
+  },
+  "ex-hbwchh60": {
+    "prompt": "Um relatório leva legitimamente quarenta segundos para ser montado, e o `proxy_read_timeout` da API é 10 segundos. O que deve mudar?",
+    "hint": "A regra tem duas metades.",
+    "choices": [
+      {
+        "text": "Subir o tempo-limite do site todo para 60 segundos",
+        "why": "Aí toda outra requisição ganha um minuto para travar."
+      },
+      {
+        "text": "Um `location` só dele, com um tempo-limite maior",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada; um 504 diz ao usuário para esperar",
+        "why": "Um 504 é uma falha, e o relatório nunca aparece."
+      },
+      {
+        "text": "Acrescentar um segundo membro ao grupo upstream",
+        "why": "O segundo membro também leva quarenta segundos, e recebe a repetição."
+      }
+    ]
+  },
+  "ex-jhxp1c29": {
+    "prompt": "Por que `/covers/logo.svg` respondeu 404 mesmo com o `location /covers/` tendo o `alias` certo?",
+    "hint": "As expressões regulares são tentadas depois de o prefixo ser achado.",
+    "choices": [
+      {
+        "text": "O alias não tinha a barra no final dele",
+        "why": "Tinha; e a correção mudou outra coisa."
+      },
+      {
+        "text": "Casamentos exatos são tentados primeiro",
+        "why": "Não havia location exato para esse caminho."
+      },
+      {
+        "text": "A regex de `.svg` ganhou do prefixo",
+        "why": "Certo. O `^~` interrompe a busca por regex."
+      },
+      {
+        "text": "O www-data não lê o arquivo",
+        "why": "Com `^~` o mesmo arquivo foi servido."
+      }
+    ]
+  },
+  "ex-h48nwc4k": {
+    "prompt": "Ponha a seleção de location do Nginx na ordem em que acontece.",
+    "hint": "O casamento exato é a primeira coisa tentada.",
+    "items": [
+      "Um casamento exato `=` ganha na hora",
+      "O prefixo mais longo que casa é achado e guardado",
+      "Se esse prefixo tem `^~`, ele ganha",
+      "As expressões regulares são tentadas na ordem do arquivo",
+      "O prefixo guardado responde"
+    ],
+    "trap": "As regex são tentadas antes de o prefixo guardado responder, e é isso que surpreende as pessoas."
+  },
+  "ex-08zp2jx2": {
+    "prompt": "Com `location /covers/ { alias /var/www/ipe/img/; }`, qual arquivo `/covers/logo.svg` lê?",
+    "hint": "O alias troca a parte que casou.",
+    "choices": [
+      {
+        "text": "`/var/www/ipe/img/logo.svg`",
+        "why": "Certo."
+      },
+      {
+        "text": "`/var/www/ipe/img/covers/logo.svg`",
+        "why": "Isso é o que o `root` daria."
+      },
+      {
+        "text": "`/var/www/ipe/covers/logo.svg`",
+        "why": "Essa é a raiz do servidor mais o caminho, ignorando o alias."
+      },
+      {
+        "text": "`/covers/logo.svg` no disco",
+        "why": "Caminhos ficam sempre sob uma raiz ou um alias."
+      }
+    ]
+  },
+  "ex-c7az25zm": {
+    "prompt": "Os 404 do teste de location não traziam o cabeçalho `X-Location`. Por quê?",
+    "hint": "Uma palavrinha muda isso.",
+    "choices": [
+      {
+        "text": "Nenhum location casou com aqueles três caminhos",
+        "why": "`/nope` casou com `location /`, que então respondeu 404."
+      },
+      {
+        "text": "O `add_header` pula erros sem `always`",
+        "why": "Certo."
+      },
+      {
+        "text": "Cabeçalhos são tirados dos erros por segurança",
+        "why": "Server e Date continuavam lá."
+      },
+      {
+        "text": "O curl esconde os cabeçalhos num 404",
+        "why": "O curl imprimiu a linha de status da mesma resposta."
+      }
+    ]
+  },
+  "ex-mavv54m4": {
+    "prompt": "Com `gzip_types` incluindo `application/json`, quantos bytes o catálogo ocupou para um cliente que aceita gzip?",
+    "hint": "Antes eram 723.",
+    "unit": "bytes"
+  },
+  "ex-2pz55cx9": {
+    "prompt": "Qual destes não vale a pena pôr no `gzip_types`?",
+    "hint": "Alguns formatos já vêm comprimidos.",
+    "choices": [
+      {
+        "text": "`application/json`",
+        "why": "JSON encolhe bem."
+      },
+      {
+        "text": "`text/css`",
+        "why": "CSS é texto."
+      },
+      {
+        "text": "`image/jpeg`",
+        "why": "Certo. Comprimir JPEG de novo gasta CPU e quase não economiza."
+      },
+      {
+        "text": "`image/svg+xml`",
+        "why": "SVG é texto XML."
+      }
+    ]
+  },
+  "ex-q28paqg9": {
+    "prompt": "Um `PUT` de 2 MB recebeu `413` do Nginx. Onde o limite deve ser aumentado para um formulário que envia capas de livro?",
+    "hint": "O mais estreito possível.",
+    "choices": [
+      {
+        "text": "Em `http { }`, para todo site ganhar",
+        "why": "Aí todo endpoint aceita corpos grandes."
+      },
+      {
+        "text": "No `location` do próprio upload",
+        "why": "Certo."
+      },
+      {
+        "text": "No código Python da loja",
+        "why": "O Nginx recusa antes de a loja ver o corpo."
+      },
+      {
+        "text": "Em lugar nenhum; uploads devem ir por FTP",
+        "why": "Uploads por HTTP são normais; precisam de um limite aumentado."
+      }
+    ]
+  },
+  "ex-mvrajw58": {
+    "prompt": "Depois de um deploy, os logs da loja mostram todo visitante com o mesmo endereço, e o limite de tentativas de login agora tranca todo mundo depois de umas poucas falhas em qualquer lugar. Qual a causa mais provável?",
+    "hint": "Quem é o par de toda conexão que a loja recebe?",
+    "choices": [
+      {
+        "text": "O código da loja mudou",
+        "why": "O sintoma aponta para o que contam à loja, não para como ela conta."
+      },
+      {
+        "text": "O Nginx deixou de repassar quem é o cliente",
+        "why": "Certo. Os cabeçalhos repassados faltam ou não são lidos."
+      },
+      {
+        "text": "O round robin precisa de `zone`",
+        "why": "A distribuição não muda o endereço que a loja vê."
+      },
+      {
+        "text": "O gzip está comprimindo os cabeçalhos",
+        "why": "O gzip comprime corpos, e só de respostas."
+      }
+    ]
+  },
+  "ex-9426tawp": {
+    "prompt": "Quais pertencem a um bom bloco upstream para duas cópias iguais de uma API cujas requisições variam muito de custo? Marque todas que se aplicam.",
+    "hint": "As três regras da aula 2 sobre upstreams.",
+    "choices": [
+      {
+        "text": "`zone`",
+        "why": "Certo. Um estado compartilhado por todos os workers."
+      },
+      {
+        "text": "`least_conn`",
+        "why": "Certo. Requisições de custo diferente."
+      },
+      {
+        "text": "`keepalive`",
+        "why": "Certo. Conexões reaproveitadas com a aplicação."
+      },
+      {
+        "text": "`hash $remote_addr`",
+        "why": "Cópias iguais sem memória por usuário não precisam de afinidade."
+      }
+    ]
+  }
+}

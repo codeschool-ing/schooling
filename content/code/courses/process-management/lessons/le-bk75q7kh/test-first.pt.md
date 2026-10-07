@@ -13,7 +13,7 @@ A expressão do próprio Beck para os três passos é **vermelho, verde, refator
 
 ## Uma volta, executada de verdade
 
-O exemplo abaixo constrói a fórmula PERT que a aula 9 usa para estimativas — a média ponderada de um valor otimista, um mais provável e um pessimista — em Python. Você não precisa de Python para este curso; se tiver Python 3, pode acompanhar numa pasta vazia. As transcrições são reproduzidas pelo `captures.sh` da aula.
+O exemplo abaixo constrói a fórmula PERT que a aula 9 usa para estimativas — a média ponderada de um valor otimista, um mais provável e um pessimista — em Python. Você não precisa de Python para este curso, e nada aqui pede que você o rode: o exemplo está aqui para ser lido. Todo arquivo que ele usa aparece por inteiro, e cada transcrição é o que o Python 3.13 imprimiu quando o exemplo rodou.
 
 Primeiro o teste, em `test_estimate.py`, antes de existir qualquer código:
 

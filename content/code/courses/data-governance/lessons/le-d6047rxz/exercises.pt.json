@@ -1,0 +1,657 @@
+{
+  "ex-xgbf5x4n": {
+    "prompt": "Bruno tem `SELECT` em `sales.orders` mas nenhum privilégio no schema `sales`. O que acontece quando ele consulta a tabela?",
+    "hint": "Foram precisas duas concessões para uma tabela.",
+    "choices": [
+      {
+        "text": "Funciona, porque a concessão na tabela é a que conta",
+        "why": "Não. Sem USAGE no schema ele nem consegue olhar dentro dele."
+      },
+      {
+        "text": "É recusada no schema",
+        "why": "Isso. USAGE no schema e SELECT na tabela são os dois necessários."
+      },
+      {
+        "text": "Ele vê os nomes das colunas mas nenhuma linha",
+        "why": "Não. O comando é recusado; não há resposta parcial."
+      },
+      {
+        "text": "Funciona para as linhas do dono e nenhuma outra",
+        "why": "Não. Posse de linha não é um conceito aqui; a recusa é no schema."
+      }
+    ]
+  },
+  "ex-rrmja3my": {
+    "prompt": "Ligue cada letra de `arwdDxt` ao privilégio que ela representa.",
+    "hint": "a é append (acrescentar), r é read (ler).",
+    "pairs": [
+      {
+        "left": "a",
+        "right": "INSERT"
+      },
+      {
+        "left": "r",
+        "right": "SELECT"
+      },
+      {
+        "left": "w",
+        "right": "UPDATE"
+      },
+      {
+        "left": "D",
+        "right": "TRUNCATE"
+      }
+    ],
+    "right_distractors": [
+      "EXECUTE"
+    ]
+  },
+  "ex-fgwv0t5s": {
+    "prompt": "Ana, sem `SET ROLE ipe_owner`, tenta conceder `SELECT` em `sales.order_items`. Por que é recusada?",
+    "hint": "O que a Ana tem sobre o dado como ela mesma?",
+    "choices": [
+      {
+        "text": "CREATEROLE proíbe conceder privilégios de tabela a um papel que ela criou",
+        "why": "Não. CREATEROLE trata de papéis; a recusa é sobre o schema."
+      },
+      {
+        "text": "A tabela está travada por outra sessão",
+        "why": "Não. Uma trava esperaria, não responderia permission denied."
+      },
+      {
+        "text": "Como ela mesma, ela não tem nada sobre o dado da Ipê",
+        "why": "Isso. A associação dela a ipe_owner tem INHERIT FALSE, então ela precisa virar o dono para conceder."
+      },
+      {
+        "text": "Só o superusuário concede em tabelas",
+        "why": "Não. O dono concede, e é isso que SET ROLE ipe_owner a deixa ser."
+      }
+    ]
+  },
+  "ex-d7yrxryx": {
+    "prompt": "A Ipê contrata uma segunda analista. No arranjo que esta aula monta, o que a Ana roda?",
+    "hint": "Os privilégios pertencem ao cargo.",
+    "choices": [
+      {
+        "text": "GRANT analyst TO o novo login",
+        "why": "Isso. Uma associação, e ela tem exatamente o que todo analista tem."
+      },
+      {
+        "text": "Um GRANT por tabela que os analistas leem, para o login dela",
+        "why": "Não. Esse é o arranjo pessoa a pessoa que a aula substituiu."
+      },
+      {
+        "text": "Uma cópia do papel do Bruno com o nome dela",
+        "why": "Não. O PostgreSQL não copia papéis, e o que deve ser compartilhado é o cargo."
+      },
+      {
+        "text": "ALTER DEFAULT PRIVILEGES para o login dela",
+        "why": "Não. Privilégios padrão tratam de objetos futuros, não de pessoas novas."
+      }
+    ]
+  },
+  "ex-j9h90p0f": {
+    "prompt": "No `\\drg`, `bruno` é membro de `analyst` com `INHERIT, SET`. O que `INHERIT` dá a ele?",
+    "hint": "Compare com a associação da Ana a ipe_owner.",
+    "choices": [
+      {
+        "text": "O direito de pôr outras pessoas em analyst",
+        "why": "Não. Isso é ADMIN, que é da Ana."
+      },
+      {
+        "text": "A posse de toda tabela que os analistas leem",
+        "why": "Não. Associação nunca transfere posse."
+      },
+      {
+        "text": "Os privilégios do cargo, sem precisar pedir por eles",
+        "why": "Isso. Com INHERIT os privilégios chegam a ele; só com SET ele precisaria de SET ROLE analyst."
+      },
+      {
+        "text": "Permissão para logar como analyst",
+        "why": "Não. analyst é NOLOGIN; ninguém loga como ele."
+      }
+    ]
+  },
+  "ex-xarcfg47": {
+    "prompt": "O suporte deve poder fechar um chamado mas nunca mudar o que o cliente escreveu. Qual concessão diz isso?",
+    "hint": "Um verbo pode ser mais estreito que uma tabela.",
+    "choices": [
+      {
+        "text": "GRANT UPDATE ON support.tickets TO support_agent",
+        "why": "Não. Isso permite atualizar toda coluna, inclusive o texto."
+      },
+      {
+        "text": "GRANT UPDATE (status) ON support.tickets TO support_agent",
+        "why": "Isso. A lista de colunas torna a decisão legível: status e mais nada."
+      },
+      {
+        "text": "GRANT SELECT ON support.tickets TO support_agent WITH GRANT OPTION",
+        "why": "Não. Isso deixa os atendentes repassarem a leitura; não concede atualização nenhuma."
+      },
+      {
+        "text": "GRANT TRIGGER ON support.tickets TO support_agent",
+        "why": "Não. TRIGGER deixa o papel criar triggers na tabela, o que é outra coisa."
+      }
+    ]
+  },
+  "ex-0dfyc6r7": {
+    "prompt": "Ana roda `ALTER DEFAULT PRIVILEGES … GRANT SELECT ON TABLES TO analyst` hoje. Quais tabelas os analistas leem por causa disso?",
+    "hint": "returns precisou de um GRANT próprio.",
+    "choices": [
+      {
+        "text": "Toda tabela do schema, antiga e nova",
+        "why": "Não. As tabelas existentes não mudam; para isso existe o GRANT."
+      },
+      {
+        "text": "As que o dono criar daqui em diante",
+        "why": "Isso. Privilégio padrão muda o futuro e nunca o passado."
+      },
+      {
+        "text": "Tabelas que a Ana cria como ela mesma",
+        "why": "Não. A regra vale para tabelas que ipe_owner cria."
+      },
+      {
+        "text": "Nenhuma até o servidor reiniciar",
+        "why": "Não. deliveries ficou legível na hora."
+      }
+    ]
+  },
+  "ex-swfj7jch": {
+    "prompt": "Alguém propõe o mesmo padrão — `SELECT` para analistas em tabelas novas — no schema `health`. Qual o argumento contra?",
+    "hint": "Quando é tomada a decisão sobre cada tabela futura?",
+    "choices": [
+      {
+        "text": "Privilégios padrão não funcionam em schemas com dado de saúde",
+        "why": "Não. Funcionam em qualquer schema; a questão é se devem."
+      },
+      {
+        "text": "Os analistas já leem saúde pela concessão de sales",
+        "why": "Não. Ninguém tem USAGE em health."
+      },
+      {
+        "text": "Deixaria toda consulta em health mais lenta",
+        "why": "Não. Privilégios não custam nada mensurável na consulta."
+      },
+      {
+        "text": "Cada tabela médica nova se abre sozinha",
+        "why": "Isso. Decidido uma vez, por alguém pensando noutra tabela: um padrão é uma decisão antecipada sobre tabelas que ninguém desenhou ainda."
+      }
+    ]
+  },
+  "ex-mzkag3t5": {
+    "prompt": "Bruno tem `SELECT` em seis colunas de `sales.customers`. O que `SELECT * FROM sales.customers` devolve?",
+    "hint": "O asterisco pede toda coluna.",
+    "choices": [
+      {
+        "text": "As seis colunas concedidas",
+        "why": "Não. O servidor recusa o comando inteiro em vez de devolver um subconjunto calado."
+      },
+      {
+        "text": "Toda coluna, com as outras em branco",
+        "why": "Não. Nada fica em branco; o comando é recusado."
+      },
+      {
+        "text": "permission denied for table customers",
+        "why": "Isso. Nomear as colunas concedidas é o jeito que funciona."
+      },
+      {
+        "text": "Toda coluna, porque SELECT * é exceção",
+        "why": "Não. O asterisco não é exceção a nada."
+      }
+    ]
+  },
+  "ex-q51c0yds": {
+    "prompt": "Pela contagem do Bruno por estado, quantos clientes da Ipê moram em São Paulo?",
+    "hint": "A primeira linha do resultado."
+  },
+  "ex-34k4g8jj": {
+    "prompt": "Analistas não selecionam `cpf`, `email`, `full_name` nem `birth_date`. Por que o dado de clientes que eles veem ainda não é anônimo?",
+    "hint": "Pense num grupo com uma pessoa só.",
+    "choices": [
+      {
+        "text": "As combinações delas chegam a uma pessoa",
+        "why": "Isso. Cidade, sexo e mês de cadastro juntos reduzem um grupo a uma pessoa: privilégio de coluna filtra o que se seleciona, não o que se deduz, e a aula 5 mede isso."
+      },
+      {
+        "text": "As colunas escondidas ainda são enviadas e o psql as filtra",
+        "why": "Não. O servidor nunca envia uma coluna não concedida."
+      },
+      {
+        "text": "customer_id é o CPF com outro nome",
+        "why": "Não. É um número interno, embora faça join com outras tabelas."
+      },
+      {
+        "text": "Analistas leem as colunas escondidas pelo catálogo",
+        "why": "Não. O catálogo mostra nomes de colunas, não valores."
+      }
+    ]
+  },
+  "ex-k227m141": {
+    "prompt": "Bruno lê `customer_profile`, que lê `birth_date`, e ele não tem direito a `birth_date`. Por que funciona?",
+    "hint": "De quem são os privilégios que a view usa?",
+    "choices": [
+      {
+        "text": "Views ignoram privilégios por completo",
+        "why": "Não. Os privilégios são conferidos, mas os do dono da view."
+      },
+      {
+        "text": "Uma view padrão lê como o dono",
+        "why": "Isso. ipe_owner lê a tabela inteira, e a view a lê em nome do Bruno."
+      },
+      {
+        "text": "A faixa etária é guardada numa coluna própria",
+        "why": "Não. Ela é calculada quando a view é lida."
+      },
+      {
+        "text": "Bruno herda birth_date de analyst",
+        "why": "Não. analyst tem seis colunas de clientes, e birth_date não é uma delas."
+      }
+    ]
+  },
+  "ex-daj7nmkt": {
+    "prompt": "Quantos clientes da Ipê a view de perfil põe na faixa `under 18`?",
+    "hint": "A última linha da contagem do Bruno."
+  },
+  "ex-6b9z26p4": {
+    "prompt": "Quais destes fazem de uma view uma boa interface para analistas? Marque todos que se aplicam.",
+    "hint": "Pense em precisão e estabilidade.",
+    "choices": [
+      {
+        "text": "Expõe valores derivados na precisão de que a pergunta precisa",
+        "why": "Sim. Uma faixa etária, não uma data de nascimento."
+      },
+      {
+        "text": "Não ganha coluna quando a tabela ganha",
+        "why": "Sim. Uma coluna nova chega aos analistas só quando alguém decide."
+      },
+      {
+        "text": "Impede quem lê de filtrar até uma pessoa",
+        "why": "Não. Uma view esconde colunas; a aula 5 trata de filtrar até uma pessoa."
+      },
+      {
+        "text": "Torna a consulta mais rápida que ler a tabela",
+        "why": "Não. Uma view simples é expandida na consulta; velocidade não é a questão."
+      }
+    ]
+  },
+  "ex-8cv33p56": {
+    "prompt": "Com a política de região em vigor, quantos clientes a Carla vê?",
+    "hint": "São Paulo e Rio juntos."
+  },
+  "ex-2vc5njmj": {
+    "prompt": "Logo depois de ligar a segurança de linha em `sales.customers`, o Bruno conta 0 clientes. Por quê?",
+    "hint": "Quais papéis tinham política naquele momento?",
+    "choices": [
+      {
+        "text": "A concessão de coluna dele foi revogada pelo ENABLE ROW LEVEL SECURITY",
+        "why": "Não. Nada foi revogado; as concessões dele estão intactas."
+      },
+      {
+        "text": "Nenhuma política permitia linha alguma a analistas",
+        "why": "Isso. A segurança de linha falha fechada, e falha calada: um zero válido em vez de erro."
+      },
+      {
+        "text": "A política dos atendentes vale para todos",
+        "why": "Não. Ela nomeia support_agent; não alcança analistas."
+      },
+      {
+        "text": "Analistas ficam limitados a São Paulo e Rio",
+        "why": "Não. Aí ele teria contado 3.386, não 0."
+      }
+    ]
+  },
+  "ex-x02m2qwa": {
+    "prompt": "Depois de ligada a segurança de linha, `site_app` recebe `permission denied` em clientes, enquanto o Bruno recebeu 0 linhas. O que explica a diferença?",
+    "hint": "O que é conferido primeiro, a concessão ou a política?",
+    "choices": [
+      {
+        "text": "site_app conecta com senha e o Bruno não",
+        "why": "Não. Os dois conectam com senha SCRAM."
+      },
+      {
+        "text": "Políticas valem para pessoas e não para contas de serviço",
+        "why": "Não. Políticas valem para papéis; ser pessoa ou não é irrelevante."
+      },
+      {
+        "text": "app_web não tem SELECT na tabela; analyst tem",
+        "why": "Isso. A concessão é conferida antes, e a segurança de linha estreita uma concessão, nunca a alarga."
+      },
+      {
+        "text": "O site lê por uma view",
+        "why": "Não. Nenhum dos dois usou view aqui."
+      }
+    ]
+  },
+  "ex-cfn5mb17": {
+    "prompt": "Uma política escrita como `USING (___)` deixa seus papéis verem toda linha da tabela.",
+    "hint": "Uma condição que vale para toda linha.",
+    "blanks": [
+      {
+        "accept": [
+          "true"
+        ]
+      }
+    ]
+  },
+  "ex-sgh7z8aw": {
+    "prompt": "Quais destes veem toda linha de `sales.customers` apesar das políticas, no estado do laboratório? Marque todos que se aplicam.",
+    "hint": "relforcerowsecurity é f.",
+    "choices": [
+      {
+        "text": "ipe_owner, dono da tabela",
+        "why": "Sim. O dono fica isento, a menos que a tabela esteja em modo FORCE."
+      },
+      {
+        "text": "postgres, o superusuário",
+        "why": "Sim. Um superusuário e qualquer papel com BYPASSRLS pulam as políticas."
+      },
+      {
+        "text": "carla, atendente",
+        "why": "Não. Ela segue a política de região e vê 3.386."
+      },
+      {
+        "text": "site_app, o site",
+        "why": "Não. Ele não tem SELECT na tabela."
+      }
+    ]
+  },
+  "ex-j42me3f9": {
+    "prompt": "Carla viu 6.012 clientes pela `customer_profile` e 3.386 pela tabela. O que mudou quando a view passou a `security_invoker = true`?",
+    "hint": "As políticas de quem uma view avalia?",
+    "choices": [
+      {
+        "text": "A view passou a guardar em cache só os estados dela",
+        "why": "Não. Uma view não guarda cache nenhum."
+      },
+      {
+        "text": "A política foi copiada para a view",
+        "why": "Não. Views não têm políticas próprias."
+      },
+      {
+        "text": "A associação dela a support_agent foi atualizada",
+        "why": "Não. A associação dela nunca mudou."
+      },
+      {
+        "text": "A view conferiu como ela, não como o dono",
+        "why": "Isso. E por isso o Bruno passou a ser recusado: como ele mesmo, falta birth_date."
+      }
+    ]
+  },
+  "ex-3k0fbqb8": {
+    "prompt": "Por que um backup é feito por um papel com `BYPASSRLS` e não por um papel comum?",
+    "hint": "O que conteria um backup que obedecesse às políticas?",
+    "choices": [
+      {
+        "text": "Senão ele guarda o que quem o roda vê",
+        "why": "Isso. Ele precisa copiar toda linha, então roda como papel isento de políticas."
+      },
+      {
+        "text": "BYPASSRLS faz o dump comprimir melhor",
+        "why": "Não. Compressão não tem nada a ver."
+      },
+      {
+        "text": "Papéis comuns são proibidos de rodar pg_dump",
+        "why": "Não. Qualquer papel roda; ele copia o que o papel lê."
+      },
+      {
+        "text": "As políticas ficam desligadas à noite",
+        "why": "Não. Políticas não dependem do horário."
+      }
+    ]
+  },
+  "ex-1m92jhak": {
+    "prompt": "Por que a primeira política de chamados, lendo `current_setting('ipe.region')`, estava errada mesmo filtrando direito?",
+    "hint": "Quem escolheu o valor?",
+    "choices": [
+      {
+        "text": "current_setting é lento demais dentro de uma política",
+        "why": "Não. Velocidade nunca foi o problema."
+      },
+      {
+        "text": "A própria Carla definia o atributo",
+        "why": "Isso. Um atributo que decide acesso precisa vir de onde a pessoa não escreve."
+      },
+      {
+        "text": "Configurações próprias se perdem quando a sessão acaba",
+        "why": "Não. É verdade e irrelevante: ela a define de novo na sessão seguinte."
+      },
+      {
+        "text": "Uma política em chamados não consegue ler a tabela de clientes",
+        "why": "Não. A política corrigida lê."
+      }
+    ]
+  },
+  "ex-vnfcf9dm": {
+    "prompt": "Com o atributo lido de `support.agent_regions`, quantos chamados a Carla vê, qualquer que seja o valor de `ipe.region`?",
+    "hint": "Os de São Paulo e do Rio juntos."
+  },
+  "ex-54rq5q85": {
+    "prompt": "Ligue cada cláusula de uma política ao que ela decide.",
+    "hint": "Uma lê, outra escreve.",
+    "pairs": [
+      {
+        "left": "USING",
+        "right": "quais linhas existentes um papel vê, atualiza ou apaga"
+      },
+      {
+        "left": "WITH CHECK",
+        "right": "quais linhas um papel pode escrever"
+      },
+      {
+        "left": "TO support_agent",
+        "right": "a quais papéis a política se aplica"
+      }
+    ],
+    "right_distractors": [
+      "quais colunas um papel seleciona"
+    ]
+  },
+  "ex-a6ygwne0": {
+    "prompt": "Num warehouse, colunas recebem a tag `pii` e pessoas recebem `region:south` do provedor de identidade. Quem deve poder definir cada uma?",
+    "hint": "A mesma regra de agent_regions.",
+    "choices": [
+      {
+        "text": "Cada analista marca as colunas que cria e declara a própria região",
+        "why": "Não. Aí as pessoas de quem a regra trata escrevem as entradas dela."
+      },
+      {
+        "text": "A governança de dado e a de identidade, nessa ordem",
+        "why": "Isso. A governança de dados marca o dado, a de identidade define os atributos das pessoas, e nunca a pessoa de quem a regra trata."
+      },
+      {
+        "text": "Quem roda a consulta, para a regra se ajustar à tarefa",
+        "why": "Não. É de novo o erro da configuração de sessão."
+      },
+      {
+        "text": "A ferramenta de BI, a partir dos filtros do painel",
+        "why": "Não. Um filtro de painel é escolha de quem vê."
+      }
+    ]
+  },
+  "ex-n27sxma6": {
+    "prompt": "A matriz mostra `tickets_upd = f` para a Carla, embora ela tenha atualizado um chamado. Por quê?",
+    "hint": "Que pergunta a função respondeu?",
+    "choices": [
+      {
+        "text": "A atualização dela sofreu rollback",
+        "why": "Não. Ela devolveu UPDATE 1 e foi confirmada."
+      },
+      {
+        "text": "A matriz rodou antes da concessão",
+        "why": "Não. A concessão foi feita no começo da aula."
+      },
+      {
+        "text": "Ela pergunta por toda coluna; a dela é status",
+        "why": "Isso. has_column_privilege em status diria t."
+      },
+      {
+        "text": "A segurança de linha esconde dela os próprios privilégios",
+        "why": "Não. Privilégios não são linhas."
+      }
+    ]
+  },
+  "ex-wapad6m1": {
+    "prompt": "O que faz uma matriz como esta valer a pena rodar periodicamente, e não uma vez só?",
+    "hint": "O que uma revisão procura?",
+    "choices": [
+      {
+        "text": "As funções dão respostas diferentes em horas diferentes do dia",
+        "why": "Não. Elas respondem pelas concessões, que não dependem do horário."
+      },
+      {
+        "text": "As concessões expiram se a matriz não for rodada",
+        "why": "Não. Concessões não expiram."
+      },
+      {
+        "text": "Ela atualiza as associações de papéis",
+        "why": "Não. Ela lê; não muda nada."
+      },
+      {
+        "text": "Uma mudança entre execuções sem explicação",
+        "why": "Isso. Uma célula que virou t desde o mês passado é o que uma revisão existe para achar."
+      }
+    ]
+  },
+  "ex-garqg78h": {
+    "prompt": "Ponha o desligamento da Lia na ordem em que a aula o executou.",
+    "hint": "Primeiro, nenhuma sessão nova.",
+    "items": [
+      "ALTER ROLE lia NOLOGIN",
+      "REVOKE analyst FROM lia",
+      "REASSIGN OWNED BY lia TO ipe_owner",
+      "DROP OWNED BY lia"
+    ]
+  },
+  "ex-85cj2mbx": {
+    "prompt": "Por que o papel da Lia é mantido com `NOLOGIN` em vez de apagado?",
+    "hint": "Pense na trilha de auditoria.",
+    "choices": [
+      {
+        "text": "Para o nome dela na trilha de auditoria continuar levando a um papel",
+        "why": "Isso. Uma linha de log dizendo que lia leu uma tabela deve apontar para algo que existiu."
+      },
+      {
+        "text": "Papéis apagados não podem ser recriados com o mesmo nome",
+        "why": "Não. O nome pode ser reusado, o que é parte do problema de apagar."
+      },
+      {
+        "text": "O PostgreSQL recusa apagar um papel com senha expirada",
+        "why": "Não. Expiração não impede apagar."
+      },
+      {
+        "text": "Ela talvez volte como estagiária no ano que vem",
+        "why": "Não. Quem volta ganha uma decisão nova sobre acesso."
+      }
+    ]
+  },
+  "ex-bahzmwwc": {
+    "prompt": "Ana criou o papel da Lia, mas `REASSIGN OWNED BY lia` foi recusado a ela. Por quê?",
+    "hint": "Administrar um papel não é virar ele.",
+    "choices": [
+      {
+        "text": "REASSIGN OWNED só funciona em papéis que ainda logam",
+        "why": "Não. Funciona em papéis NOLOGIN; a questão é quem o roda."
+      },
+      {
+        "text": "Ela administra o papel sem ter os privilégios dele",
+        "why": "Isso. Só um papel com os privilégios de quem sai pode mover ou apagar o que ele possui."
+      },
+      {
+        "text": "Lia ainda tinha uma sessão aberta",
+        "why": "Não. Sessões abertas não bloqueiam REASSIGN OWNED."
+      },
+      {
+        "text": "ipe_owner recusa objetos criados por estagiários",
+        "why": "Não. A transferência de posse não tem essa regra."
+      }
+    ]
+  },
+  "ex-qab2znmh": {
+    "prompt": "Bruno leu um e-mail por `sales.customer_email`. Quais dois fatos se combinaram para permitir isso?",
+    "hint": "Um é sobre de quem são os privilégios que a função usa, o outro sobre quem a chama.",
+    "choices": [
+      {
+        "text": "Bruno é analista e analistas leem e-mail",
+        "why": "Não. analyst tem seis colunas de clientes, e email não é uma delas."
+      },
+      {
+        "text": "A configuração de search_path e um índice faltando",
+        "why": "Não. O search_path fixo é a parte feita certo."
+      },
+      {
+        "text": "SECURITY DEFINER mais EXECUTE para PUBLIC",
+        "why": "Isso. Rodou como ipe_owner, e todo mundo podia chamá-la."
+      },
+      {
+        "text": "A segurança de linha fica desligada para funções",
+        "why": "Não. É a isenção do dono, não uma regra de função."
+      }
+    ]
+  },
+  "ex-0kx5ae2g": {
+    "prompt": "Ligue cada padrão ao que ele faz.",
+    "hint": "Cada um é uma concessão mais larga que a decisão por trás dela.",
+    "pairs": [
+      {
+        "left": "GRANT ALL",
+        "right": "todo verbo, inclusive TRUNCATE"
+      },
+      {
+        "left": "WITH GRANT OPTION",
+        "right": "quem recebe repassa o privilégio"
+      },
+      {
+        "left": "TO PUBLIC",
+        "right": "todo papel, inclusive os futuros"
+      },
+      {
+        "left": "SECURITY DEFINER",
+        "right": "o corpo roda como o dono"
+      }
+    ]
+  },
+  "ex-dtsrzf3s": {
+    "prompt": "Uma função nova no PostgreSQL é executável por ___ a menos que alguém revogue.",
+    "hint": "O pseudo-papel em que todo papel está.",
+    "blanks": [
+      {
+        "accept": [
+          "PUBLIC",
+          "todos",
+          "todo mundo"
+        ]
+      }
+    ]
+  },
+  "ex-6bk7qcce": {
+    "prompt": "Ana liga a segurança de linha em `support.tickets` com política só para `support_agent`. Qual leitor quebra sem erro?",
+    "hint": "Que papel lê chamados, tem concessão e não tem política?",
+    "choices": [
+      {
+        "text": "carla, que recebe permission denied em todo chamado",
+        "why": "Não. Ela tem política e vê os chamados dos estados dela."
+      },
+      {
+        "text": "site_app, que passa a receber zero linhas",
+        "why": "Não. app_web não tem concessão em chamados, então é recusado com erro."
+      },
+      {
+        "text": "ipe_owner, que não vê nada",
+        "why": "Não. O dono é isento e vê toda linha."
+      },
+      {
+        "text": "Todo papel com SELECT e sem regra que o nomeie",
+        "why": "Isso. Antes de ligar, liste todo papel que lê a tabela e dê uma política a cada um."
+      }
+    ]
+  },
+  "ex-jn64f1j7": {
+    "prompt": "Ponha estas verificações na ordem em que o PostgreSQL as aplica ao `SELECT` da Carla em clientes.",
+    "hint": "Schema, tabela, depois linhas.",
+    "items": [
+      "USAGE no schema sales",
+      "SELECT na tabela, via support_agent",
+      "A política filtra as linhas pelos estados dela"
+    ]
+  }
+}

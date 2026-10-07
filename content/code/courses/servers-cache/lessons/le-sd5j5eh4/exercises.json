@@ -1,0 +1,736 @@
+[
+  {
+    "id": "ex-3xpwzvf6",
+    "version": 1,
+    "section": "the-stale-price",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the `PUT` lowered the price, why did the next GET still show 8,990?",
+    "hint": "Who told the cache about the change?",
+    "choices": [
+      {
+        "text": "The PUT failed to save the new price",
+        "correct": false,
+        "why": "The shop returned 7,990 and stored it."
+      },
+      {
+        "text": "Nobody told the cache",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The database caches values for a minute",
+        "correct": false,
+        "why": "Asked directly, the shop gave 7,990."
+      },
+      {
+        "text": "Nginx sent that PUT to the other shop instead",
+        "correct": false,
+        "why": "Both shops share one database."
+      }
+    ]
+  },
+  {
+    "id": "ex-16mwcyep",
+    "version": 1,
+    "section": "the-stale-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `max-age=60`, what is the longest anybody can be shown the old price after a change?",
+    "hint": "The worst case: the copy was taken just before the change.",
+    "choices": [
+      {
+        "text": "No time at all; the copy updates itself",
+        "correct": false,
+        "why": "The copy does not know about the change."
+      },
+      {
+        "text": "About sixty seconds",
+        "correct": true,
+        "why": "Right. At most one lifetime."
+      },
+      {
+        "text": "Until Nginx is restarted",
+        "correct": false,
+        "why": "The copy expires on its own."
+      },
+      {
+        "text": "Ten minutes, from `inactive=10m`",
+        "correct": false,
+        "why": "inactive removes unused copies; freshness comes from max-age."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8fd1sdz",
+    "version": 1,
+    "section": "how-long-is-too-long",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which should not go into a shared cache at all?",
+    "hint": "Wrong for even a second.",
+    "choices": [
+      {
+        "text": "A book's description",
+        "correct": false,
+        "why": "An hour old costs nothing."
+      },
+      {
+        "text": "The basket",
+        "correct": true,
+        "why": "Right. Personal, and wrong is never acceptable."
+      },
+      {
+        "text": "A hashed stylesheet",
+        "correct": false,
+        "why": "It can be cached for a year."
+      },
+      {
+        "text": "The logo",
+        "correct": false,
+        "why": "A day with validation."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkkfwnrj",
+    "version": 1,
+    "section": "how-long-is-too-long",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team sets every API lifetime to one second \"so nothing is ever stale\". What do they lose?",
+    "hint": "The hit ratio and the gap between requests.",
+    "choices": [
+      {
+        "text": "Nothing at all; one second is free",
+        "correct": false,
+        "why": "Only requests within the same second are spared."
+      },
+      {
+        "text": "Correctness, since one second is still too long",
+        "correct": false,
+        "why": "One second is almost always acceptable."
+      },
+      {
+        "text": "Most of the cache's protection",
+        "correct": true,
+        "why": "Right. Most requests become misses."
+      },
+      {
+        "text": "TLS session reuse",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpypqs5s",
+    "version": 1,
+    "section": "refreshing-a-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a request with the right `X-Cache-Refresh` token do to the cached copy?",
+    "hint": "BYPASS, and then a HIT with the new price.",
+    "choices": [
+      {
+        "text": "Deletes it and stores nothing in its place",
+        "correct": false,
+        "why": "The next request was a HIT, so something was stored."
+      },
+      {
+        "text": "Refetches and replaces it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Extends its lifetime by another minute",
+        "correct": false,
+        "why": "It replaces the copy."
+      },
+      {
+        "text": "Marks it private",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tafhgn3",
+    "version": 1,
+    "section": "refreshing-a-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the refresh header need a secret token?",
+    "hint": "What could a stranger do with the header alone?",
+    "choices": [
+      {
+        "text": "Nginx rejects headers that carry no value",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "To encrypt the cached copy on disk",
+        "correct": false,
+        "why": "Nothing is encrypted by it."
+      },
+      {
+        "text": "Strangers could bypass the cache",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "map only works when a token is given to it",
+        "correct": false,
+        "why": "map works with any value."
+      }
+    ]
+  },
+  {
+    "id": "ex-bffyzq58",
+    "version": 1,
+    "section": "refreshing-a-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can't open-source Nginx simply `PURGE` a URL?",
+    "hint": "Which edition has the module?",
+    "choices": [
+      {
+        "text": "PURGE is forbidden by the HTTP standard",
+        "correct": false,
+        "why": "It is a convention used by many caches."
+      },
+      {
+        "text": "The purge module is in NGINX Plus",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nginx keeps copies in memory",
+        "correct": false,
+        "why": "They are files on disk."
+      },
+      {
+        "text": "Purging needs a restart",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-1eq47b13",
+    "version": 1,
+    "section": "deleting-a-copy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `levels=1:2`, the copy for key hash `e8fb...6679` lives under which directories?",
+    "hint": "Taken from the end of the name.",
+    "choices": [
+      {
+        "text": "e/8f",
+        "correct": false,
+        "why": "From the start; levels count from the end."
+      },
+      {
+        "text": "9/67",
+        "correct": true,
+        "why": "Right: the last character, then the two before it."
+      },
+      {
+        "text": "67/9",
+        "correct": false,
+        "why": "Reversed."
+      },
+      {
+        "text": "9/79",
+        "correct": false,
+        "why": "The second level is the two characters before the last."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdyyf0rj",
+    "version": 1,
+    "section": "deleting-a-copy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script deletes the cache file for `https://ipelivros.example/api/books/2`, and the old price stays. What is the likeliest mistake?",
+    "hint": "Whose name was in the key lesson 5 showed?",
+    "choices": [
+      {
+        "text": "It hashed the site's URL; the key is http://shop/api/books/2",
+        "correct": true,
+        "why": "Right. The hash pointed at nothing."
+      },
+      {
+        "text": "MD5 is not supported on Ubuntu",
+        "correct": false,
+        "why": "md5sum ran fine."
+      },
+      {
+        "text": "Deleting needs a reload",
+        "correct": false,
+        "why": "The MISS came without any reload."
+      },
+      {
+        "text": "Nginx keeps a second copy in memory",
+        "correct": false,
+        "why": "Only the index is in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9myr1wk",
+    "version": 1,
+    "section": "versioned-names",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a hashed file name make a long cache lifetime safe?",
+    "hint": "What happens to the URL when the file changes?",
+    "choices": [
+      {
+        "text": "Browsers purge hashed files daily",
+        "correct": false,
+        "why": "No such thing."
+      },
+      {
+        "text": "A changed file gets a new URL",
+        "correct": true,
+        "why": "Right. No copy is ever wrong."
+      },
+      {
+        "text": "The hash encrypts the file",
+        "correct": false,
+        "why": "A hash encrypts nothing."
+      },
+      {
+        "text": "Nginx compares hashes on every request",
+        "correct": false,
+        "why": "Nginx just serves the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4gh7950",
+    "version": 1,
+    "section": "versioned-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the regular expression `\\.[0-9a-f]{8}\\.(css|js)$` written in double quotes in the Nginx file?",
+    "hint": "What does `{` mean to Nginx's parser?",
+    "choices": [
+      {
+        "text": "Quotes make the match case-insensitive",
+        "correct": false,
+        "why": "That is `~*`."
+      },
+      {
+        "text": "`{` starts a block for Nginx",
+        "correct": true,
+        "why": "Right. Without quotes nginx -t fails."
+      },
+      {
+        "text": "Quotes make the matching run faster",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Every location needs quotes",
+        "correct": false,
+        "why": "Only ones with braces or spaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-xn2n0qpp",
+    "version": 1,
+    "section": "versioned-names",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every asset is hashed and cached for a year as `immutable`. Which file must keep a short lifetime for a new release to reach visitors?",
+    "hint": "Where does the new name appear?",
+    "choices": [
+      {
+        "text": "The stylesheet",
+        "correct": false,
+        "why": "It has a new name; its old copy is never asked for."
+      },
+      {
+        "text": "The logo",
+        "correct": false,
+        "why": "Same argument."
+      },
+      {
+        "text": "The HTML page that names the assets",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "A year-old HTML would point at last year's files."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nvrtmms",
+    "version": 1,
+    "section": "stale-on-purpose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both shops were stopped. Why did book 3 get `STALE` with a price and book 4 get `502`?",
+    "hint": "What did Nginx have for each?",
+    "choices": [
+      {
+        "text": "Book 4 does not exist in the database",
+        "correct": false,
+        "why": "It exists; the shop has twelve."
+      },
+      {
+        "text": "Only book 3 had a copy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "use_stale only covers odd ids",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Book 4's copy was marked private",
+        "correct": false,
+        "why": "Every book had the same headers."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg5qr48y",
+    "version": 1,
+    "section": "stale-on-purpose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `updating` and `proxy_cache_background_update on`, how long did the first request after expiry take?",
+    "hint": "STALE, served at once.",
+    "choices": [
+      {
+        "text": "About 150 ms, the time the shop takes to answer",
+        "correct": false,
+        "why": "That was the first fetch, before any copy."
+      },
+      {
+        "text": "About 27 ms, a cached answer's time",
+        "correct": true,
+        "why": "Right. The fetch happened behind it."
+      },
+      {
+        "text": "Six seconds, the sleep",
+        "correct": false,
+        "why": "The sleep came before the requests."
+      },
+      {
+        "text": "It failed",
+        "correct": false,
+        "why": "It answered STALE."
+      }
+    ]
+  },
+  {
+    "id": "ex-184y6wmn",
+    "version": 1,
+    "section": "stale-on-purpose",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which response should never be served stale during an outage?",
+    "hint": "Old data that becomes a lie.",
+    "choices": [
+      {
+        "text": "The catalogue listing",
+        "correct": false,
+        "why": "Seconds-old prices beat an error page."
+      },
+      {
+        "text": "A book's description",
+        "correct": false,
+        "why": "Harmless when a little old."
+      },
+      {
+        "text": "The logo",
+        "correct": false,
+        "why": "Never really changes."
+      },
+      {
+        "text": "An account balance",
+        "correct": true,
+        "why": "Right. Keep use_stale out of that location."
+      }
+    ]
+  },
+  {
+    "id": "ex-96srrckt",
+    "version": 1,
+    "section": "stale-on-purpose",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An origin asks caches to serve a stale copy while refetching with `Cache-Control: max-age=60, ___=30`.",
+    "hint": "Stale, while…",
+    "blanks": [
+      {
+        "accept": [
+          "stale-while-revalidate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0gcvd74g",
+    "version": 1,
+    "section": "the-race",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of the race that leaves the old price cached in order.",
+    "hint": "The read starts first and finishes last.",
+    "items": [
+      "The visitor's read misses the cache",
+      "The read gets 8,990 from the database",
+      "The update writes 7,990",
+      "The update purges the cache",
+      "The read stores 8,990 in the cache"
+    ],
+    "trap": "The store at the end is what undoes the purge."
+  },
+  {
+    "id": "ex-wb6ctxd3",
+    "version": 1,
+    "section": "the-race",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which defence limits the damage of the race even if every other defence fails?",
+    "hint": "The backstop.",
+    "choices": [
+      {
+        "text": "Purging twice after every write",
+        "correct": false,
+        "why": "It narrows the window but can still miss."
+      },
+      {
+        "text": "A lifetime on everything",
+        "correct": true,
+        "why": "Right. The wrong value lives at most one lifetime."
+      },
+      {
+        "text": "A faster database server underneath",
+        "correct": false,
+        "why": "Narrows the window, does not close it."
+      },
+      {
+        "text": "Turning off keepalive",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-db7r7y55",
+    "version": 1,
+    "section": "the-race",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the race get more likely under load?",
+    "hint": "What is the window?",
+    "choices": [
+      {
+        "text": "Purges are dropped under heavy load",
+        "correct": false,
+        "why": "Nothing drops them."
+      },
+      {
+        "text": "Reads take longer",
+        "correct": true,
+        "why": "Right. The window is that time."
+      },
+      {
+        "text": "More writes happen every second",
+        "correct": false,
+        "why": "That helps, but the window is the read's duration."
+      },
+      {
+        "text": "TLS handshakes slow the purges down a lot",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-vavg67jx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a changed price visible before the copy expires? Choose all that apply.",
+    "hint": "Two from this lesson, one that does nothing.",
+    "choices": [
+      {
+        "text": "A refresh request with the token",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Deleting the copy's file",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sending the PUT twice",
+        "correct": false,
+        "why": "PUTs never touch the cache."
+      },
+      {
+        "text": "A request with a wrong token",
+        "correct": false,
+        "why": "It is served from the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-vm81t821",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy with `max-age=60` was stored at 10:00:00, and the price changed at 10:00:20. Without invalidation, for how many seconds is the wrong price served?",
+    "hint": "Until the copy expires.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-nmh104ha",
+    "version": 1,
+    "section": "refreshing-a-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A price appears on the book's page, the listing and the search results, all cached. How many refresh requests does the token method need?",
+    "hint": "The refresh is per URL.",
+    "choices": [
+      {
+        "text": "One per URL that shows the price",
+        "correct": true,
+        "why": "Right. Lesson 7's purge by tag removes this."
+      },
+      {
+        "text": "One, for the book's id, which updates every page at once",
+        "correct": false,
+        "why": "Nginx knows URLs, not which pages show a book."
+      },
+      {
+        "text": "None; the PUT refreshes them",
+        "correct": false,
+        "why": "PUTs never touch the cache."
+      },
+      {
+        "text": "Two, to beat the race",
+        "correct": false,
+        "why": "Double purging is about timing, not about how many pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-jb3p420m",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to what it does to a stale copy.",
+    "hint": "This lesson's sections.",
+    "pairs": [
+      {
+        "left": "proxy_cache_bypass with a token",
+        "right": "replaces one copy now"
+      },
+      {
+        "left": "deleting the file by its MD5",
+        "right": "removes one copy from disk"
+      },
+      {
+        "left": "a hashed file name",
+        "right": "makes a copy never become wrong"
+      },
+      {
+        "left": "proxy_cache_use_stale",
+        "right": "serves an expired copy on purpose"
+      }
+    ],
+    "right_distractors": [
+      "compresses the copy"
+    ]
+  },
+  {
+    "id": "ex-w0q71v84",
+    "version": 1,
+    "section": "stale-on-purpose",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the use_stale example, how many seconds old was the price served as STALE when the shops were stopped?",
+    "hint": "The copy was taken, then `sleep 6`.",
+    "value": 6,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-15zh355c",
+    "version": 1,
+    "section": "versioned-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The stylesheet changes. What happens to visitors' cached copies of `site.c867bf6d.css`?",
+    "hint": "The new HTML names a different file.",
+    "choices": [
+      {
+        "text": "They are purged by the server",
+        "correct": false,
+        "why": "No server can reach a browser's cache."
+      },
+      {
+        "text": "They show the new styles",
+        "correct": false,
+        "why": "Their bytes never change."
+      },
+      {
+        "text": "They are never asked for again",
+        "correct": true,
+        "why": "Right. They age out unused."
+      },
+      {
+        "text": "They break the page until they expire",
+        "correct": false,
+        "why": "The page points at the new name."
+      }
+    ]
+  }
+]

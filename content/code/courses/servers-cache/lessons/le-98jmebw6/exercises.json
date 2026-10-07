@@ -1,0 +1,860 @@
+[
+  {
+    "id": "ex-06wt5vdt",
+    "version": 1,
+    "section": "what-it-proves",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Besides encrypting the connection, what does TLS prove?",
+    "hint": "Encryption to an impostor is worthless.",
+    "choices": [
+      {
+        "text": "That the site is honest and safe to buy from",
+        "correct": false,
+        "why": "A certificate says nothing about honesty."
+      },
+      {
+        "text": "That the server holds the name",
+        "correct": true,
+        "why": "Right. The other half of the job."
+      },
+      {
+        "text": "That the page has no malware",
+        "correct": false,
+        "why": "Nobody inspects the content before signing."
+      },
+      {
+        "text": "That the company behind it is registered with the government",
+        "correct": false,
+        "why": "A domain-validated certificate checks control of the name only."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgrk4se1",
+    "version": 1,
+    "section": "what-it-proves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field of a certificate do browsers check the requested name against?",
+    "hint": "Not the older one.",
+    "choices": [
+      {
+        "text": "The Common Name field",
+        "correct": false,
+        "why": "Browsers no longer rely on it."
+      },
+      {
+        "text": "The Issuer field",
+        "correct": false,
+        "why": "That names who signed, not who it is for."
+      },
+      {
+        "text": "Subject Alternative Name",
+        "correct": true,
+        "why": "Right. It listed both bookshop names."
+      },
+      {
+        "text": "The certificate's serial number",
+        "correct": false,
+        "why": "The serial identifies the certificate, not the site."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd039zqa",
+    "version": 1,
+    "section": "what-it-proves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a server not send the root certificate in its chain?",
+    "hint": "What would a root the client does not already hold prove?",
+    "choices": [
+      {
+        "text": "A root it does not already trust proves nothing",
+        "correct": true,
+        "why": "Right. Anybody can make a self-signed certificate."
+      },
+      {
+        "text": "Roots are too large to send over a handshake",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "Roots are secret and must never be shared",
+        "correct": false,
+        "why": "A root certificate is public; its private key is what stays secret."
+      },
+      {
+        "text": "TLS 1.3 forbids it",
+        "correct": false,
+        "why": "No version forbids it; it is simply useless."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds51hm2a",
+    "version": 1,
+    "section": "what-it-proves",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A phishing site at `ipe-livros-promo.example` shows a valid padlock. What does that padlock establish?",
+    "hint": "What did the CA check?",
+    "choices": [
+      {
+        "text": "That Ipê Livros approved the site",
+        "correct": false,
+        "why": "Nobody asked Ipê Livros anything."
+      },
+      {
+        "text": "Nothing, because a phishing site cannot obtain a certificate",
+        "correct": false,
+        "why": "It can, for the name it controls."
+      },
+      {
+        "text": "That the connection reaches whoever controls that look-alike name",
+        "correct": true,
+        "why": "Right. Precise, and narrower than people think."
+      },
+      {
+        "text": "That the site was scanned for fraud",
+        "correct": false,
+        "why": "Domain validation checks the name only."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb84mx2s",
+    "version": 1,
+    "section": "self-signed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a self-signed certificate, what is the issuer?",
+    "hint": "Look at the `openssl x509` output.",
+    "choices": [
+      {
+        "text": "The same name as the subject",
+        "correct": true,
+        "why": "Right. It vouched for itself."
+      },
+      {
+        "text": "Let's Encrypt",
+        "correct": false,
+        "why": "No CA was involved."
+      },
+      {
+        "text": "The operating system's root store",
+        "correct": false,
+        "why": "That store was never consulted when it was made."
+      },
+      {
+        "text": "openssl itself, as a built-in authority",
+        "correct": false,
+        "why": "openssl is a tool, not an authority."
+      }
+    ]
+  },
+  {
+    "id": "ex-596mwrtx",
+    "version": 1,
+    "section": "self-signed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `curl -k` against the self-signed site actually prove?",
+    "hint": "-k switches the check off.",
+    "choices": [
+      {
+        "text": "That the certificate is valid",
+        "correct": false,
+        "why": "It was never checked."
+      },
+      {
+        "text": "That the right server answered",
+        "correct": false,
+        "why": "Without the check, anybody could have answered."
+      },
+      {
+        "text": "That the private key is safe",
+        "correct": false,
+        "why": "Nothing about the key's safety is tested by a client."
+      },
+      {
+        "text": "Nothing about who answered",
+        "correct": true,
+        "why": "Right. Encrypted, to whoever was there."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhzhs54v",
+    "version": 1,
+    "section": "self-signed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two of your own servers talk over a private network, and you control both. When is a self-signed certificate acceptable there?",
+    "hint": "The client must have a copy it can believe.",
+    "choices": [
+      {
+        "text": "Never, under any circumstances",
+        "correct": false,
+        "why": "This is exactly its legitimate case."
+      },
+      {
+        "text": "When the client trusts it with --cacert",
+        "correct": true,
+        "why": "Right. You copied it there yourself."
+      },
+      {
+        "text": "When the client skips verification with -k",
+        "correct": false,
+        "why": "-k trusts anything, which is no trust at all."
+      },
+      {
+        "text": "Only if it is valid for more than a full year",
+        "correct": false,
+        "why": "Validity length has nothing to do with trust."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn7qyxsy",
+    "version": 1,
+    "section": "acme",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ACME challenge to what it needs.",
+    "hint": "The lesson's table.",
+    "pairs": [
+      {
+        "left": "HTTP-01",
+        "right": "port 80 reachable from the internet"
+      },
+      {
+        "left": "DNS-01",
+        "right": "an API to change the domain's DNS"
+      },
+      {
+        "left": "TLS-ALPN-01",
+        "right": "port 443 and a server that speaks it"
+      }
+    ],
+    "right_distractors": [
+      "a paid certificate"
+    ]
+  },
+  {
+    "id": "ex-gjdyd4sb",
+    "version": 1,
+    "section": "acme",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company wants a certificate for `*.intra.example` on servers nobody outside can reach. Which challenge?",
+    "hint": "Wildcard, and no inbound access.",
+    "choices": [
+      {
+        "text": "HTTP-01",
+        "correct": false,
+        "why": "It needs port 80 reachable, and cannot issue a wildcard."
+      },
+      {
+        "text": "TLS-ALPN-01",
+        "correct": false,
+        "why": "It needs 443 reachable, and cannot issue a wildcard either."
+      },
+      {
+        "text": "DNS-01",
+        "correct": true,
+        "why": "Right. The only one for wildcards and unreachable machines."
+      },
+      {
+        "text": "None; such names cannot get certificates",
+        "correct": false,
+        "why": "DNS-01 does exactly this."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ec6897w",
+    "version": 1,
+    "section": "acme",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an ACME order in order.",
+    "hint": "Account first, certificate last.",
+    "items": [
+      "Register an account key",
+      "Place an order for the names",
+      "Receive and meet a challenge per name",
+      "The CA validates the challenges",
+      "Send a CSR and download the certificate"
+    ],
+    "trap": "The CSR comes after validation, not before."
+  },
+  {
+    "id": "ex-7rzzca78",
+    "version": 1,
+    "section": "acme",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can't the VM you built in lesson 1 get a certificate from Let's Encrypt?",
+    "hint": "Where does Let's Encrypt check from?",
+    "choices": [
+      {
+        "text": "Let's Encrypt refuses virtual machines",
+        "correct": false,
+        "why": "It cannot even tell."
+      },
+      {
+        "text": "Its names exist only on the VM",
+        "correct": true,
+        "why": "Right. The system working as intended."
+      },
+      {
+        "text": "Ubuntu blocks ACME traffic by default",
+        "correct": false,
+        "why": "Nothing in Ubuntu does that."
+      },
+      {
+        "text": "certbot only works with Pebble servers",
+        "correct": false,
+        "why": "It works with any ACME server."
+      }
+    ]
+  },
+  {
+    "id": "ex-e75ywk9q",
+    "version": 1,
+    "section": "a-local-ca",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab set `\"httpPort\": 80` in Pebble's configuration?",
+    "hint": "Pebble's default is 5002.",
+    "choices": [
+      {
+        "text": "Port 5002 is reserved by the system",
+        "correct": false,
+        "why": "It is not; Pebble picked it to avoid needing root."
+      },
+      {
+        "text": "So challenges are checked on Nginx's port",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To serve Pebble's own API on that port",
+        "correct": false,
+        "why": "The API is on 14000."
+      },
+      {
+        "text": "To redirect all HTTP traffic to HTTPS for the site",
+        "correct": false,
+        "why": "That is Nginx's job, not Pebble's."
+      }
+    ]
+  },
+  {
+    "id": "ex-khekfaz5",
+    "version": 1,
+    "section": "a-local-ca",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`certificateValidityPeriod` was 7776000 seconds. How many days is that?",
+    "hint": "86400 seconds a day.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-tf45aqse",
+    "version": 1,
+    "section": "a-local-ca",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Pebble's root is called `Pebble Root CA` followed by a different number after every start. What follows from that?",
+    "hint": "A new root, every time.",
+    "choices": [
+      {
+        "text": "Old trust in its root stops counting",
+        "correct": true,
+        "why": "Right. You would fetch and trust the new one."
+      },
+      {
+        "text": "Nothing changes, since roots are interchangeable",
+        "correct": false,
+        "why": "A different root means a different key."
+      },
+      {
+        "text": "The number is the root's expiry date",
+        "correct": false,
+        "why": "It is random."
+      },
+      {
+        "text": "Let's Encrypt changes its roots the same way",
+        "correct": false,
+        "why": "Let's Encrypt's roots last for years and ship with every system."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2m0ekxs",
+    "version": 1,
+    "section": "certbot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file should Nginx's `ssl_certificate` point at?",
+    "hint": "The site and its intermediate.",
+    "choices": [
+      {
+        "text": "`cert.pem`",
+        "correct": false,
+        "why": "Without the intermediate, clients that have not cached it fail."
+      },
+      {
+        "text": "`chain.pem`",
+        "correct": false,
+        "why": "That is the intermediate alone."
+      },
+      {
+        "text": "`privkey.pem`",
+        "correct": false,
+        "why": "That goes in ssl_certificate_key."
+      },
+      {
+        "text": "`fullchain.pem`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtgeb2m6",
+    "version": 1,
+    "section": "certbot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did certbot's webroot method prove control of ipelivros.example?",
+    "hint": "Nginx's access log has the evidence.",
+    "choices": [
+      {
+        "text": "It stopped Nginx and listened on port 80",
+        "correct": false,
+        "why": "That is the standalone method; Nginx never stopped."
+      },
+      {
+        "text": "Nginx served a token file it wrote",
+        "correct": true,
+        "why": "Right. The VA fetched it over HTTP."
+      },
+      {
+        "text": "It edited a DNS record for the domain",
+        "correct": false,
+        "why": "That is DNS-01."
+      },
+      {
+        "text": "It sent the private key to the CA",
+        "correct": false,
+        "why": "The private key never leaves the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-jr6pvv74",
+    "version": 1,
+    "section": "certbot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A site works in your browser and fails in `curl` with \"unable to get local issuer certificate\". What is the likeliest cause?",
+    "hint": "Your browser may have cached something.",
+    "choices": [
+      {
+        "text": "The intermediate is missing from the chain",
+        "correct": true,
+        "why": "Right. Use fullchain.pem."
+      },
+      {
+        "text": "curl does not support TLS 1.3 yet",
+        "correct": false,
+        "why": "It does; and this message is about the chain."
+      },
+      {
+        "text": "The certificate expired last night at midnight",
+        "correct": false,
+        "why": "The browser would have failed too."
+      },
+      {
+        "text": "The name is missing from /etc/hosts",
+        "correct": false,
+        "why": "Then curl would not connect at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4evxrs0c",
+    "version": 1,
+    "section": "nginx-tls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `update-ca-certificates`, curl reported `ssl_verify_result` 0. What does 0 mean?",
+    "hint": "Zero is success, as with exit codes.",
+    "choices": [
+      {
+        "text": "The chain was checked and accepted",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Verification was skipped",
+        "correct": false,
+        "why": "Nothing skipped it; there was no -k."
+      },
+      {
+        "text": "Zero certificates were sent",
+        "correct": false,
+        "why": "Two were sent."
+      },
+      {
+        "text": "The session was resumed",
+        "correct": false,
+        "why": "That is a different field."
+      }
+    ]
+  },
+  {
+    "id": "ex-fknwaa2a",
+    "version": 1,
+    "section": "nginx-tls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the port-80 server block keep `location /.well-known/acme-challenge/` instead of redirecting everything?",
+    "hint": "Think ninety days ahead.",
+    "choices": [
+      {
+        "text": "Browsers cannot follow redirects to HTTPS",
+        "correct": false,
+        "why": "They follow them every day."
+      },
+      {
+        "text": "It makes the site faster to load",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Renewals check it over port 80",
+        "correct": true,
+        "why": "Right. A swallowed challenge fails the next renewal."
+      },
+      {
+        "text": "Certbot's files are not allowed under HTTPS",
+        "correct": false,
+        "why": "There is no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmg2bw7k",
+    "version": 1,
+    "section": "nginx-tls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The handshake test with `-tls1_1` got `alert protocol version`. Who refused?",
+    "hint": "The client was told to offer 1.1.",
+    "choices": [
+      {
+        "text": "The client, as OpenSSL does by default",
+        "correct": false,
+        "why": "The client was made to offer it; the alert came back from the server."
+      },
+      {
+        "text": "Pebble",
+        "correct": false,
+        "why": "Pebble is not in this connection."
+      },
+      {
+        "text": "The kernel",
+        "correct": false,
+        "why": "The kernel knows nothing of TLS versions."
+      },
+      {
+        "text": "Nginx, because of `ssl_protocols`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvj70dy9",
+    "version": 1,
+    "section": "nginx-tls",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nginx's TLS session cache is written `ssl_session_cache ___:TLS:10m;` so every worker uses the same one.",
+    "hint": "The same reason as an upstream's zone.",
+    "blanks": [
+      {
+        "accept": [
+          "shared"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sgm9m7ra",
+    "version": 1,
+    "section": "renewal",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, certbot renews a certificate when it has how many days or fewer left?",
+    "hint": "The commented line at the top of the renewal file.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-pq8b5znn",
+    "version": 1,
+    "section": "renewal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "certbot renews the files, and Nginx keeps serving the old certificate. What is missing?",
+    "hint": "Nginx reads certificates when it loads its configuration.",
+    "choices": [
+      {
+        "text": "A deploy hook that reloads Nginx",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A cron job that restarts the whole machine every night",
+        "correct": false,
+        "why": "A reload is enough, and costs nothing."
+      },
+      {
+        "text": "Pointing Nginx at archive/ instead of live/",
+        "correct": false,
+        "why": "archive/ paths change on every renewal; live/ is the stable one."
+      },
+      {
+        "text": "A longer validity period from the CA",
+        "correct": false,
+        "why": "It would only delay the same problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9wkd1xy",
+    "version": 1,
+    "section": "renewal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lab's `certbot renew --dry-run` need `--server`?",
+    "hint": "Which server does --dry-run use by default?",
+    "choices": [
+      {
+        "text": "Dry runs are not allowed against Pebble",
+        "correct": false,
+        "why": "The run against Pebble succeeded."
+      },
+      {
+        "text": "The renewal file no longer named any server",
+        "correct": false,
+        "why": "It said `server = https://localhost:14000/dir`."
+      },
+      {
+        "text": "Dry runs default to Let's Encrypt staging",
+        "correct": true,
+        "why": "Right. On a real server, leave it out."
+      },
+      {
+        "text": "To skip certbot's random sleep before renewing",
+        "correct": false,
+        "why": "That is `--no-random-sleep-on-renew`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzn6a0k8",
+    "version": 1,
+    "section": "renewal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your monitoring reads the expiry date from `/etc/letsencrypt/live/.../cert.pem` and says 60 days left, while visitors see an expired certificate. What is wrong with the check?",
+    "hint": "Which certificate do visitors receive?",
+    "choices": [
+      {
+        "text": "It reads the file, not what the server actually sends",
+        "correct": true,
+        "why": "Right. Nginx was never reloaded after the renewal."
+      },
+      {
+        "text": "60 days is too short a threshold",
+        "correct": false,
+        "why": "The threshold is not the problem; the source of the date is."
+      },
+      {
+        "text": "openssl miscalculates dates in another time zone",
+        "correct": false,
+        "why": "Certificate dates are in GMT and compared correctly."
+      },
+      {
+        "text": "The certificate on disk is the intermediate",
+        "correct": false,
+        "why": "cert.pem is the site's own certificate."
+      }
+    ]
+  },
+  {
+    "id": "ex-2eascpr3",
+    "version": 1,
+    "section": "caddy-auto",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did Caddy need, beyond the site block, to obtain certificates in this lab?",
+    "hint": "Two global options a real server would leave out.",
+    "choices": [
+      {
+        "text": "A certbot installation and a webroot folder",
+        "correct": false,
+        "why": "Caddy is its own ACME client."
+      },
+      {
+        "text": "A port-80 redirect block in the Caddyfile",
+        "correct": false,
+        "why": "Caddy redirects by itself."
+      },
+      {
+        "text": "Pebble's address and API certificate",
+        "correct": true,
+        "why": "Right: acme_ca and acme_ca_root."
+      },
+      {
+        "text": "A deploy hook to reload after renewal",
+        "correct": false,
+        "why": "Caddy loads its own renewals."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx0eahz3",
+    "version": 1,
+    "section": "caddy-auto",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Caddy redirected with 308 where Nginx used 301. What does that change for a form that POSTs to the HTTP address?",
+    "hint": "Which of the two keeps the method?",
+    "choices": [
+      {
+        "text": "Nothing; both codes behave the same",
+        "correct": false,
+        "why": "Browsers turn a POST into a GET on a 301."
+      },
+      {
+        "text": "With 308 the browser repeats the POST to HTTPS; with 301 it would become a GET and lose the body",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "308 is temporary, so it is not cached",
+        "correct": false,
+        "why": "308 is permanent; 307 is the temporary one."
+      },
+      {
+        "text": "308 refuses POST entirely",
+        "correct": false,
+        "why": "It preserves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybg55fex",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would make next season's automatic renewal fail on the lesson's Nginx setup? Choose all that apply.",
+    "hint": "What does an HTTP-01 renewal need?",
+    "choices": [
+      {
+        "text": "A firewall rule that closes port 80",
+        "correct": true,
+        "why": "Right. The CA checks over port 80."
+      },
+      {
+        "text": "Removing the acme-challenge location from the port-80 block",
+        "correct": true,
+        "why": "Right. The token would be redirected away."
+      },
+      {
+        "text": "Disabling certbot.timer",
+        "correct": true,
+        "why": "Right. Nothing would try."
+      },
+      {
+        "text": "Adding `ssl_session_cache`",
+        "correct": false,
+        "why": "A session cache has nothing to do with issuance."
+      }
+    ]
+  },
+  {
+    "id": "ex-6374sanf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate's script calls the internal API with `curl -k` \"because the certificate is self-signed\". What is the better fix?",
+    "hint": "Keep the check, and give it something to check against.",
+    "choices": [
+      {
+        "text": "Keep -k, since nobody outside can reach the network",
+        "correct": false,
+        "why": "Internal networks get compromised too, and -k hides it."
+      },
+      {
+        "text": "Switch the API to plain HTTP instead",
+        "correct": false,
+        "why": "That removes both encryption and identity."
+      },
+      {
+        "text": "Trust its certificate instead, with --cacert",
+        "correct": true,
+        "why": "Right. The check stays on."
+      },
+      {
+        "text": "Make the certificate valid for ten years",
+        "correct": false,
+        "why": "Validity length does not make a certificate trusted."
+      }
+    ]
+  }
+]
