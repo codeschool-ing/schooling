@@ -1381,6 +1381,44 @@ def l15_once(lang):
     f.text(475, 140, t['write'], size=10, fill='--paper-dim')
     return f, t['cap']
 
+@figure('l16-three-places', 16)
+def l16_three_places(lang):
+    t = {'en': dict(
+            label='A pipeline from the sources to the report, with three places to check. At the '
+                  'edge, validation of each record as it arrives, with quarantine for the rejected '
+                  'and a stop for a bad batch. In the middle, tests and expectations as the models '
+                  'are built. At the end, a contract on what the report reads.',
+            nodes=['sources', 'raw', 'models', 'report'],
+            places=['at the edge', 'in the middle', 'at the end'],
+            what=['validate each record', 'tests · expectations', 'a contract'],
+            sees=['one record at a time', 'joins, totals, yesterday', 'the shape promised'],
+            cap='Each place sees something the others cannot.'),
+         'pt': dict(
+            label='Um pipeline das fontes ao relatório, com três lugares para conferir. Na borda, '
+                  'a validação de cada registro quando chega, com quarentena para os rejeitados e '
+                  'uma parada para um lote ruim. No meio, testes e expectativas quando os modelos '
+                  'são construídos. No fim, um contrato sobre o que o relatório lê.',
+            nodes=['fontes', 'raw', 'modelos', 'relatório'],
+            places=['na borda', 'no meio', 'no fim'],
+            what=['validar cada registro', 'testes · expectativas', 'um contrato'],
+            sees=['um registro por vez', 'joins, totais, ontem', 'a forma prometida'],
+            cap='Cada lugar vê algo que os outros não veem.')}[lang]
+    f = Fig('l16-three-places', 720, 230, t['label'])
+    xs = [20, 210, 400, 590]
+    for x, n in zip(xs, t['nodes']):
+        f.rect(x, 40, 110, 40, stroke='--phosphor' if x == 590 else '--wire', fill='--panel')
+        f.text(x + 55, 60, n, size=11)
+    for i in range(3):
+        a, b = xs[i] + 110, xs[i + 1]
+        f.line(a, 60, b - 2, 60, arrow=True)
+        x = [165, 455, 645][i]
+        f.line(x, 84, x, 112, stroke='--amber', dash='3 3')
+        f.circle(x, 84, 4, fill='--amber')
+        f.text(x, 128, t['places'][i], size=11, weight='600', fill='--amber')
+        f.text(x, 150, t['what'][i], size=10.5)
+        f.text(x, 172, t['sees'][i], size=10, fill='--paper-dim')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:
