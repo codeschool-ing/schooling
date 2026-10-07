@@ -1,6 +1,6 @@
 ---
 title: Submódulos: outro projeto, preso a um commit
-version: 1
+version: 2
 ---
 
 Às vezes um projeto precisa de outro projeto dentro dele. O site da padaria e o app de pedidos da
@@ -8,8 +8,24 @@ padaria devem usar as mesmas cores da marca, guardadas num repositório próprio
 Copiar os arquivos para cada projeto daria duas cópias que se afastam. **Um submódulo põe um
 repositório dentro de outro, preso a um commit exato.**
 
+Primeiro o outro projeto, com um commit, e uma cópia compartilhada do site para enviar depois. As duas
+são pastas na sua máquina, como todo remoto deste curso:
+
+```bash
+git init -q --bare ~/remotes/shared-styles.git
+git clone -q ~/remotes/shared-styles.git ~/shared-styles && cd ~/shared-styles
+printf ':root { --brand: darkorange; }\n' > brand.css
+git add brand.css && git commit -qm 'Add the brand colour' && git push -q origin HEAD:main
+cd ~ && rm -rf ~/shared-styles
+git init -q --bare ~/remotes/site.git
+cd ~/site && git remote add origin ~/remotes/site.git
 ```
-ana@vm:~/site$ git submodule add ~/remotes/shared-styles.git styles
+
+O `git clone` avisa que o repositório que copiou está vazio, o que é verdade: ele não tem commit até
+a linha seguinte fazer um. Agora o submódulo:
+
+```
+ana@vm:~/site$ git -c protocol.file.allow=always submodule add ~/remotes/shared-styles.git styles
 Cloning into '/home/ana/site/styles'...
 done.
 ana@vm:~/site$ cat .gitmodules
@@ -24,9 +40,11 @@ ana@vm:~/site$ git submodule status
  d874c59046ca2f86c55a3ff9aaa882624f8973a5 styles (heads/main)
 ```
 
-(O `shared-styles` mora numa pasta local aqui, como todo remoto deste curso, e o Git recusa um
-endereço local para submódulo a não ser que o `protocol.file.allow` esteja configurado, o que o script
-de captura faz. Com o endereço de um servidor de verdade nada disso é necessário.)
+**O `-c protocol.file.allow=always` está ali porque o endereço é uma pasta local.** O Git recusa um
+submódulo vindo de um caminho local a não ser que mandem o contrário, porque senão um repositório
+que você clona poderia apontar um submódulo para qualquer pasta do seu disco. O `-c` permite isso
+naquele comando só. Com o endereço de um servidor de verdade nada disso é necessário, e é melhor não
+permitir para todos os comandos.
 
 Três coisas aconteceram:
 
@@ -41,10 +59,17 @@ mudança no site. Cores novas no `shared-styles` nunca chegam ao site de surpres
 
 ## Clonando um projeto com submódulos
 
+Primeiro o site vai para a cópia compartilhada, com submódulo e tudo:
+
+```bash
+git push -q -u origin main
+```
+
+
 ```
 ana@vm:~$ git clone -q ~/remotes/site.git copy && cd copy
 ana@vm:~/copy$ ls styles
-ana@vm:~/copy$ git submodule update --init
+ana@vm:~/copy$ git -c protocol.file.allow=always submodule update --init
 Submodule 'styles' (/home/ana/remotes/shared-styles.git) registered for path 'styles'
 Cloning into '/home/ana/copy/styles'...
 done.

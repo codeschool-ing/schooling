@@ -54,13 +54,17 @@ given() {
   local md="$lessons/$self/$1.md" n=$2 line name=${GIT_AUTHOR_NAME-} email=${GIT_AUTHOR_EMAIL-}
   shift 2
   unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
-  while IFS= read -r line; do
+  # With no dates there is nothing to place between lines, and the block runs
+  # whole, which is what lets one hold a here-document.
+  if [ $# -eq 0 ]; then
+    eval "$(fence "$md" "$n")"
+  else while IFS= read -r line; do
     case $line in ''|'#'*) continue ;; esac
     if [ $# -gt 0 ] && [[ $line =~ (^|[\;\&\ ])git\ (.*\ )?(commit|merge|revert|rebase|cherry-pick|pull|tag\ -a)(\ |$) ]]; then
       at "$1"; shift
     fi
     eval "$line"
-  done < <(fence "$md" "$n")
+  done < <(fence "$md" "$n"); fi
   [ -z "$name" ] || as "$name" "$email"
 }
 git config --global user.name 'Ana Souza'
