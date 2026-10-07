@@ -1,6 +1,6 @@
 ---
 title: Quantos bytes um modelo precisa
-version: 1
+version: 2
 ---
 
 É tentador ler o tamanho de um modelo como uma impressão: 70B soa grande, 7B soa pequeno, e se um
@@ -83,6 +83,39 @@ de verdade são mais espertos que este, arredondam em grupos pequenos e protegem
 importam, mas a troca é a mesma. **Menos bits compram memória e custam um pouco de qualidade**, e a
 perda cresce conforme a largura encolhe. Quanta qualidade um modelo perde numa largura é medido, não
 suposto: procure essa medição onde a versão quantizada é publicada.
+
+## O modelo na sua própria máquina
+
+Você já tem um destes no disco. O Ollama diz o que ele é:
+
+```
+ana@lab:~/pe$ ollama show llama3.2:3b | head -7
+  Model
+    architecture        llama     
+    parameters          3.2B      
+    context length      131072    
+    embedding length    3072      
+    quantization        Q4_K_M    
+
+```
+
+**3,2 bilhões de pesos, quantizados com um método chamado `Q4_K_M`.** A mesma multiplicação, para
+essa contagem:
+
+```
+ana@lab:~/pe$ python3 size.py 3.2e9
+32 bits:   12.8 GB
+16 bits:    6.4 GB
+ 8 bits:    3.2 GB
+ 4 bits:    1.6 GB
+```
+
+A 4 bits os pesos ocupariam 1,6 GB, e o `ollama list` da lição 1 disse que o arquivo tem 2,0 GB. O
+`Q4_K_M` guarda a maioria dos pesos com uns quatro bits e alguns dos mais sensíveis com mais, então
+a média real fica um pouco acima de quatro, e o arquivo, um pouco acima da conta. Depois, o
+`ollama ps` da lição 1 disse 2,9 GB enquanto ele respondia: os 2,0 GB de pesos, mais a memória de
+trabalho para uma janela de contexto de 4096 tokens, a coluna `CONTEXT` da mesma linha. **A conta dá
+o piso, e a medição dá o total**, e vale ter os dois antes de escolher um modelo para uma máquina.
 
 ## Por que isso decide onde um modelo roda
 

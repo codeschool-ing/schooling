@@ -27,7 +27,7 @@ which is the whole model on disk:
 ```
 ana@lab:~/pe$ toylm save model.json
 ana@lab:~/pe$ ls -l model.json
--rw-r--r-- 1 ana ana 7478 Oct  2 00:14 model.json
+-rw-r--r-- 1 ana ana 7478 Oct  7 12:52 model.json
 ana@lab:~/pe$ head -c 240 model.json; echo
 {"bigram": {",": {"bread": 2}, ".": {"</s>": 98, "question": 6}, ":": {"at": 4, "is": 6, "tomato": 2, "what": 2, "when": 4, "yes": 6}, "<s>": {"ana": 4, "bruno": 5, "it": 6, "question": 6, "the": 77}, "?": {"answer": 12}, "a": {"coffee": 5,
 ```
