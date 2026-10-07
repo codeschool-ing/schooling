@@ -1257,6 +1257,54 @@ def l13_compare(lang):
             f.text(x0 + cw * i + cw / 2, y, c, size=10 if not mono else 10.5, mono=mono)
     return f, t['cap']
 
+@figure('l14-two-ways', 14)
+def l14_two_ways(lang):
+    t = {'en': dict(
+            label='The same nightly said two ways. On the left, imperatively: three numbered steps, '
+                  'load raw, build the models, write the report, run in that order every time. On '
+                  'the right, declaratively: the report is made from the models, the models from '
+                  'raw, raw from the shop, and before each one the tool asks whether it is older '
+                  'than what it is made from.',
+            imp='imperative: the steps', dec='declarative: what is made from what',
+            steps=['load raw', 'build the models', 'write the report'], every='every time, in this order',
+            nodes=['the shop', 'raw', 'the models', 'the report'], ask='older than its inputs?',
+            cap='One list of commands, or one graph of things and a question asked before each.'),
+         'pt': dict(
+            label='A mesma carga noturna dita de dois jeitos. À esquerda, imperativamente: três '
+                  'passos numerados, carregar o raw, construir os modelos, gravar o relatório, '
+                  'rodados nessa ordem toda vez. À direita, declarativamente: o relatório é feito '
+                  'dos modelos, os modelos do raw, o raw da loja, e antes de cada um a ferramenta '
+                  'pergunta se ele é mais velho que aquilo de que é feito.',
+            imp='imperativo: os passos', dec='declarativo: o que é feito de quê',
+            steps=['carregar o raw', 'construir os modelos', 'gravar o relatório'],
+            every='toda vez, nesta ordem',
+            nodes=['a loja', 'raw', 'os modelos', 'o relatório'], ask='mais velho que as entradas?',
+            cap='Uma lista de comandos, ou um grafo de coisas e uma pergunta feita antes de cada uma.')}[lang]
+    f = Fig('l14-two-ways', 720, 260, t['label'])
+    f.text(30, 24, t['imp'], size=11, anchor='start', weight='600')
+    for i, st in enumerate(t['steps']):
+        y = 50 + i * 58
+        f.rect(30, y, 230, 40, stroke='--wire', fill='--panel')
+        f.text(48, y + 20, f'{i + 1}', size=11, weight='600', fill='--amber')
+        f.text(160, y + 20, st, size=11)
+        if i < 2:
+            f.line(145, y + 40, 145, y + 56, arrow=True)
+    f.text(145, 238, t['every'], size=10, fill='--paper-dim')
+    f.line(320, 20, 320, 240, stroke='--wire', dash='3 4')
+    f.text(360, 24, t['dec'], size=11, anchor='start', weight='600')
+    pos = [(370, 60), (570, 60), (370, 160), (570, 160)]
+    w = 120
+    for (x, y), n in zip(pos, t['nodes']):
+        f.rect(x, y, w, 40, stroke='--phosphor' if n == t['nodes'][3] else '--wire', fill='--panel')
+        f.text(x + w / 2, y + 20, n, size=11)
+    f.line(370 + w, 80, 568, 80, arrow=True)
+    f.line(590, 100, 470, 158, arrow=True)
+    f.line(370 + w, 180, 568, 180, arrow=True)
+    for x, y in [(530, 70), (548, 124), (530, 170)]:
+        f.text(x, y, '?', size=12, weight='600', fill='--amber')
+    f.text(530, 238, '? ' + t['ask'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:
