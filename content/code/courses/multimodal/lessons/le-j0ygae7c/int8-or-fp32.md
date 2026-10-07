@@ -15,7 +15,7 @@ ana@lab:~/mm$ cd /opt/multimodal/share && ls -l sherpa-onnx-whisper-base/*.onnx 
 95087154 sherpa-onnx-whisper-base/base-encoder.onnx
 ```
 
-So the question can be measured instead of argued:
+So the question can be measured instead of argued, with lesson 5's `measure.py` for the word error rate:
 
 ```python
 """The same Whisper at full precision and at int8: size on disk, time to load, time to transcribe, words wrong."""

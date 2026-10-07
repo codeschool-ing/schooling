@@ -3,7 +3,7 @@ title: O DALL-E, e os nomes que o substituíram
 version: 1
 ---
 
-O título desta aula cita o **DALL-E**, e o curso foi desenhado quando esse era o nome do modelo de imagem da OpenAI. Já não é o nome a escrever no código. A tabela de onde o curso lê preços (a do LiteLLM, no commit que o `lab.sh` fixa) lista os modelos de imagem da própria OpenAI assim:
+O título desta aula cita o **DALL-E**, e o curso foi desenhado quando esse era o nome do modelo de imagem da OpenAI. Já não é o nome a escrever no código. A tabela do LiteLLM, lida com o `prices.py` da aula 3, lista os modelos de imagem que ela arquiva sob a OpenAI assim:
 
 ```
 ana@lab:~/mm$ sheet provider openai --mode image_generation | grep -vE "^(low|medium|high|standard|[0-9])" 
@@ -37,4 +37,4 @@ Três hábitos decorrem disso, e importam mais em geração de imagens do que em
 2. **Guarde o nome do modelo num só lugar**, lido da configuração, para que sair de um modelo descontinuado seja uma mudança de uma linha e uma rodada de testes, não uma busca pelo código.
 3. **Rode de novo a grade da aula 3 no modelo novo antes de trocar.** O mesmo prompt num modelo novo é outro experimento; um estilo de banner que levou duas rodadas para assentar pode se mover.
 
-O `sheet retiring` lista toda entrada com data de descontinuação, da mais próxima para a mais distante, e vale rodá-lo todo trimestre contra os nomes que o seu código usa.
+O `prices.py find` imprime a data de descontinuação de cada entrada na última coluna, e vale rodá-lo todo trimestre contra os nomes que o seu código usa.

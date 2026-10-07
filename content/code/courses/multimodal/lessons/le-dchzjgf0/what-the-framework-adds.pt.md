@@ -16,7 +16,7 @@ Quatro programas nesta aula, dois frameworks, e uma capa enviada três vezes. Co
 Nada da coluna da direita é motivo para não usar um framework. É uma lista de coisas a conferir **porque** você usa um. Três hábitos cobrem quase tudo:
 
 - **Conte os tokens de uma imagem com e sem o framework.** Aqui deu 765 todas as vezes. Um framework que redimensionasse, recodificasse ou mandasse `detail: high` por padrão apareceria como outro número, e na conta.
-- **Fixe as versões**, como o `lab.sh` faz. Blocos de conteúdo são recentes nos dois pacotes e ainda mudam; o `langchain-core` 1.x mudou a grafia deles, e uma versão menor de uma integração pode mudar o que é enviado.
+- **Fixe as versões**, como o `setup.sh` da aula 1 faz. Blocos de conteúdo são recentes nos dois pacotes e ainda mudam; o `langchain-core` 1.x mudou a grafia deles, e uma versão menor de uma integração pode mudar o que é enviado.
 - **Mantenha o SDK do provedor ao alcance.** A cadeia acima já o usa para transcrever, porque é lá que o endpoint está. Um passo que o framework não cobre é uma função, não um motivo para esperar.
 
 Quando um framework é a ferramenta errada? Quando o programa faz uma chamada só. Uma descrição de capa, uma transcrição, uma imagem gerada: a chamada do SDK tem três linhas, e as aulas 8 a 10 as mostraram. O framework começa a se pagar quando há **vários provedores, vários passos, ou recuperação**: os formatos dos dois últimos programas desta aula.

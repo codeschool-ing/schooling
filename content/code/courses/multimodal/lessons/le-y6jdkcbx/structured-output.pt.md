@@ -22,7 +22,7 @@ Uma descrição é para uma pessoa. O sistema de estoque quer campos, e um model
       "note": "**A imagem, como data URL.** O base64 deixa o arquivo um terço maior no pedido, o preço de não precisar de uma URL pública."
     },
     {
-      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"lab-vision-1\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
+      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"qwen2.5vl:3b\", temperature=0, seed=1,\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
       "note": "**O `parse` manda os modelos como JSON Schema** em `response_format`, e transforma a resposta de volta num `Invoice`. Se a resposta não coubesse no schema, esta linha levantaria um erro em vez de entregar meia nota."
     },
     {

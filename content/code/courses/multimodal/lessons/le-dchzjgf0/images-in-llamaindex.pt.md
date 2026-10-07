@@ -16,11 +16,11 @@ message = ChatMessage(role="user", blocks=[TextBlock(text="Describe this cover."
                                            ImageBlock(path="media/cover-b39.png")])
 if sys.argv[1:] == ["openai"]:
     from llama_index.llms.openai import OpenAI
-    llm = OpenAI(model="lab-vision-1")
+    llm = OpenAI(model="qwen2.5vl:3b")
 else:
     from llama_index.llms.openai_like import OpenAILike
-    print("default api_base:", OpenAILike(model="lab-vision-1").api_base)
-    llm = OpenAILike(model="lab-vision-1", is_chat_model=True, api_base=os.environ["OPENAI_BASE_URL"])
+    print("default api_base:", OpenAILike(model="qwen2.5vl:3b").api_base)
+    llm = OpenAILike(model="qwen2.5vl:3b", is_chat_model=True, api_base=os.environ["OPENAI_BASE_URL"])
 reply = llm.chat([message])
 print(reply.raw.usage.prompt_tokens, "tokens in:", reply.message.content[:60])
 ```

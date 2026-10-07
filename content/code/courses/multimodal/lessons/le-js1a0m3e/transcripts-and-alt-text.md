@@ -12,7 +12,8 @@ from openai import OpenAI
 
 turns = diarizer(speakers=2).process(read_audio("media/call-1042.wav")).sort_by_start_time()
 with open("media/call-1042.wav", "rb") as f:
-    heard = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="verbose_json")
+    heard = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(model="whisper-base", file=f,
+                                                                              response_format="verbose_json")
 
 
 def speaker(start, end):
@@ -82,7 +83,7 @@ for line, a in page.found:
     print("line %d  %-22s %s" % (line, src, verdict))
 ```
 
-```python
+```html
 <main>
   <h1>Dom Casmurro</h1>
   <img src="cover-b39.png" alt="Cover of Dom Casmurro: a moon over a dark house with two lit windows">
@@ -105,4 +106,4 @@ line 7  author.jpg             starts with 'image of': the reader already says i
 
 Four of five need a person to look. The size chart has no `alt`, so many screen readers fall back to announcing its file name. The back cover's `alt` is a file name. The author's starts with "Image of", which the screen reader has already said. The divider's empty `alt` is right, because it is decoration, and the check says so only because the page marked it with `role="presentation"`.
 
-The cover's `alt` passes, and only a person can say whether it is good. It is built from lesson 8's course-written description, cut to what a shopper choosing an edition needs. A vision model's draft is a fair start for alt text; the full description it wrote would be far too long, and **the purpose of the image on that page** decides what to keep. This platform runs `axe` over every screen in both themes, and it finds the missing `alt`; whether an `alt` says the right thing is outside what it can decide. An automated check is where a review starts, not where it ends.
+The cover's `alt` passes, and only a person can say whether it is good. It was written from lesson 8's description, checked against what `make_media.py` drew and cut to what a shopper choosing an edition needs. A vision model's draft is a fair start for alt text; the full description it wrote would be far too long, and **the purpose of the image on that page** decides what to keep. This platform runs `axe` over every screen in both themes, and it finds the missing `alt`; whether an `alt` says the right thing is outside what it can decide. An automated check is where a review starts, not where it ends.

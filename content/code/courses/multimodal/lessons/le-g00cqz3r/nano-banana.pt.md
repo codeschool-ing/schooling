@@ -11,9 +11,9 @@ from google import genai
 from google.genai import types
 from PIL import Image
 
-client = genai.Client()
+client = genai.Client(api_key="none", http_options={"base_url": "http://localhost:8800"})   # images_server.py
 reply = client.models.generate_content(
-    model="lab-flash-image",
+    model="gemini-2.5-flash-image",
     contents=["A poster for a second-hand book fair in a library courtyard, warm afternoon light"],
     config=types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
 )
@@ -48,9 +48,9 @@ from google import genai
 from google.genai import types
 from PIL import Image
 
-client = genai.Client()
+client = genai.Client(api_key="none", http_options={"base_url": "http://localhost:8800"})   # images_server.py
 reply = client.models.generate_content(
-    model="lab-flash-image",
+    model="gemini-2.5-flash-image",
     contents=[Image.open("media/cover-b39.png"), "Make the moon a thin crescent and keep everything else."],
     config=types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
 )
@@ -84,4 +84,4 @@ gemini/gemini-3.1-flash-image
 output_cost_per_image                      0.045
 ```
 
-**A entrada do Gemini 2.5 Flash Image traz uma data de descontinuação em 2 de outubro de 2026**, quatro dias antes do calendário do laboratório, e o sucessor, o 3.1, aparece a 0,045 dólar por imagem. Os hábitos da seção 03 valem aqui sem mudança.
+**A entrada do Gemini 2.5 Flash Image traz uma data de descontinuação em 2 de outubro de 2026**, cinco dias antes de esta aula ser gravada, e o sucessor, o 3.1, aparece a 0,045 dólar por imagem. Os hábitos da seção 03 valem aqui sem mudança.

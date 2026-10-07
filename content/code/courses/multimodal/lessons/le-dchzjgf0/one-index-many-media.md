@@ -14,16 +14,16 @@ from collections import Counter, defaultdict
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import InMemoryVectorStore
-from minilm import embed
 from openai import OpenAI
 
 
 class MiniLM(Embeddings):
+    """all-MiniLM-L6-v2, which Ollama serves as all-minilm, through OpenAI's embeddings route."""
     def embed_documents(self, texts):
-        return embed(texts).tolist()
+        return [d.embedding for d in OpenAI().embeddings.create(model="all-minilm", input=texts).data]
 
     def embed_query(self, text):
-        return embed([text])[0].tolist()
+        return self.embed_documents([text])[0]
 
 
 def invoice_lines(path):
@@ -42,7 +42,8 @@ def invoice_lines(path):
 def call_segments(path):
     """Whisper's timed segments, each one a piece."""
     with open(path, "rb") as f:
-        r = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="verbose_json")
+        r = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(model="whisper-base", file=f,
+                                                                          response_format="verbose_json")
     for s in r.segments:
         yield Document(s.text.strip(), metadata={"source": path, "at": "%.1f-%.1f s" % (s.start, s.end)})
 
@@ -64,20 +65,7 @@ Tesseract reads the invoice into words with boxes, grouped into lines; Whisper r
 ```
 
 ```
-ana@lab:~/mm$ python index.py "How much did one copy of Bleak House cost?" "Is the shipping refunded for a damaged book?" "Which customer wants a call back this afternoon?" "Quem pediu para ligar de volta no fim da tarde?"
-31 pieces: {'invoice-0931.png': 19, 'call-1042.wav': 11, 'voicemail-pt.wav': 1}
-How much did one copy of Bleak House cost?
-  0.598  invoice-0931.png       box 92,671,1148,689    Bleak House 5 32.90 164.50
-  0.398  invoice-0931.png       box 90,719,1148,737    The Secret Garden 10 15.90 159.00
-Is the shipping refunded for a damaged book?
-  0.803  call-1042.wav          41.9-49.6 s            Yes, for a damaged book we refund the full 3
-  0.549  call-1042.wav          39.7-41.3 s            Will I get the shipping back as well?
-Which customer wants a call back this afternoon?
-  0.345  invoice-0931.png       box 951,98,1147,131    INVOICE
-  0.312  call-1042.wav          39.7-41.3 s            Will I get the shipping back as well?
-Quem pediu para ligar de volta no fim da tarde?
-  0.528  voicemail-pt.wav       0.0-12.4 s             Oi, aqui é o Rafael Piente da Maginalia, sou
-  0.479  invoice-0931.png       box 90,408,474,432     Av. Exemplo 1000, Sao Paulo SP
+@@index@@
 ```
 
 **The first two questions were found, and found exactly.** The Bleak House line scored 0.598 and comes with the box it was read from, so a screen can draw a rectangle on the invoice. The refund answer scored 0.803 and comes with 41.9 to 49.6 seconds, so a player can start there. That locator is the point of the design: **a hit that leads back to the original** lets a person check the OCR or the transcript against the thing itself.

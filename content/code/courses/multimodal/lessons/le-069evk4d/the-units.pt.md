@@ -3,7 +3,7 @@ title: Quatro unidades, e nenhuma delas é byte
 version: 1
 ---
 
-A aula 6 de `ai-models` leu a planilha do LiteLLM para modelos de texto, em que tudo tem preço por token. As entradas multimodais usam mais unidades que isso. A mesma planilha, no commit que o `lab.sh` fixa:
+A aula 6 de `ai-models` leu a planilha do LiteLLM para modelos de texto, em que tudo tem preço por token. As entradas multimodais usam mais unidades que isso. A mesma planilha, no commit que o `prices.py` da aula 3 fixa:
 
 ```
 ana@lab:~/mm$ sheet show gpt-4o | grep -E "^(input|output)_cost_per_token "

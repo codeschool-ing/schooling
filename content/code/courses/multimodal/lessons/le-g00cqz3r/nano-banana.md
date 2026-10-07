@@ -11,9 +11,9 @@ from google import genai
 from google.genai import types
 from PIL import Image
 
-client = genai.Client()
+client = genai.Client(api_key="none", http_options={"base_url": "http://localhost:8800"})   # images_server.py
 reply = client.models.generate_content(
-    model="lab-flash-image",
+    model="gemini-2.5-flash-image",
     contents=["A poster for a second-hand book fair in a library courtyard, warm afternoon light"],
     config=types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
 )
@@ -28,10 +28,7 @@ print(f"tokens in {u.prompt_token_count}, out {u.candidates_token_count}")
 ```
 
 ```
-ana@lab:~/mm$ python nano.py 2>/dev/null
-text:  labmm has no reply written for this request. Its image replies are rules the course wrote, in lab/scripted/.
-image: image/png 19775 bytes (1024, 1024)
-tokens in 16, out 1314
+@@nano@@
 ```
 
 A reply comes back as a list of **parts**: here one part of text and one of image, the image as raw bytes with a MIME type. Both are labmm's: the picture is a card, and the text is labmm saying it has no rule for this prompt, which is true. A real Gemini reply often carries a sentence about what it drew beside the picture, and a program should expect either part, both, or a text part alone when the model declines to draw.
@@ -48,9 +45,9 @@ from google import genai
 from google.genai import types
 from PIL import Image
 
-client = genai.Client()
+client = genai.Client(api_key="none", http_options={"base_url": "http://localhost:8800"})   # images_server.py
 reply = client.models.generate_content(
-    model="lab-flash-image",
+    model="gemini-2.5-flash-image",
     contents=[Image.open("media/cover-b39.png"), "Make the moon a thin crescent and keep everything else."],
     config=types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
 )
@@ -60,8 +57,7 @@ print(f"{len(images)} image back; tokens in {u.prompt_token_count}, out {u.candi
 ```
 
 ```
-ana@lab:~/mm$ python nano_edit.py 2>/dev/null
-1 image back; tokens in 528, out 1314
+@@nano-edit@@
 ```
 
 No mask, no alpha channel, no same-size rule: *make the moon a thin crescent and keep everything else*. The cover went in as 528 tokens, 516 of them for the picture by Gemini's rule of 258 per 768-pixel tile (the 600 by 900 cover takes two). That is easier to write and harder to control. A mask says exactly which pixels may change; a sentence says what a person wants and leaves the model to decide where that is. For a product banner that must keep its left two thirds identical, the mask is the safer tool; for "make it brighter" or "remove the cup", the sentence is far less work.
@@ -69,19 +65,7 @@ No mask, no alpha channel, no same-size rule: *make the moon a thin crescent and
 ## Which model, and when it ends
 
 ```
-ana@lab:~/mm$ sheet where flash-image | grep -E "^(gemini|vertex_ai)/"
-gemini/gemini-2.5-flash-image                        gemini                          0.3      2.5
-gemini/gemini-3.1-flash-image                        gemini                          0.5        3
-gemini/gemini-3.1-flash-image-preview                gemini                          0.5        3
-vertex_ai/gemini-2.5-flash-image                     vertex_ai-language-models       0.3      2.5
-vertex_ai/gemini-3.1-flash-image                     vertex_ai-language-models       0.5        3
-vertex_ai/gemini-3.1-flash-image-preview             vertex_ai-language-models       0.5        3
-ana@lab:~/mm$ for m in gemini/gemini-2.5-flash-image gemini/gemini-3.1-flash-image; do echo "$m"; sheet show $m | grep -E "output_cost_per_image |deprecation"; done
-gemini/gemini-2.5-flash-image
-deprecation_date                           2026-10-02
-output_cost_per_image                      0.039
-gemini/gemini-3.1-flash-image
-output_cost_per_image                      0.045
+@@sheet-gemini@@
 ```
 
-**Gemini 2.5 Flash Image's entry carries a deprecation date of 2 October 2026**, four days before the lab's calendar, and its successor, 3.1, is listed at 0.045 dollars a picture. The habits of section 03 apply here unchanged.
+**Gemini 2.5 Flash Image's entry carries a deprecation date of 2 October 2026**, five days before this lesson was recorded, and its successor, 3.1, is listed at 0.045 dollars a picture. The habits of section 03 apply here unchanged.

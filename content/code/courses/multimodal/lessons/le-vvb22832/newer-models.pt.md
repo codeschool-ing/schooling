@@ -3,7 +3,7 @@ title: O Whisper e os modelos depois dele
 version: 1
 ---
 
-O título desta aula é **Whisper API**, e o `whisper-1` ainda é um dos nomes que o endpoint aceita. Agora ele tem companhia. A tabela lista os modelos de transcrição da OpenAI assim:
+O título desta aula é **Whisper API**, e o `whisper-1` ainda é um dos nomes que o endpoint aceita. Agora ele tem companhia. A tabela do LiteLLM, lida com o `prices.py` da aula 3, lista os modelos de transcrição assim:
 
 ```
 ana@lab:~/mm$ sheet compare whisper-1 gpt-4o-transcribe gpt-4o-mini-transcribe
@@ -18,7 +18,7 @@ gpt-4o-transcribe       deprecation_date 2027-02-26 input_cost_per_second 0.0001
 gpt-4o-mini-transcribe  deprecation_date 2027-02-26 input_cost_per_second 5e-05 
 ```
 
-**O `whisper-1` é cobrado por segundo de áudio**, 0,0001 dólar, que dá 0,006 dólar por minuto e 0,36 dólar por hora. Os dois modelos de transcrição `gpt-4o` são cobrados por token de áudio e de texto, e a tabela também lhes dá um valor por segundo, o mesmo 0,0001 para o `gpt-4o-transcribe` e metade disso para o mini. **Os três trazem data de descontinuação em 26 de fevereiro de 2027.** Nenhuma chamada a qualquer deles era possível do laboratório, e a aula 13 transforma esses preços no custo de um mês de ligações de suporte.
+**O `whisper-1` é cobrado por segundo de áudio**, 0,0001 dólar, que dá 0,006 dólar por minuto e 0,36 dólar por hora. Os dois modelos de transcrição `gpt-4o` são cobrados por token de áudio e de texto, e a tabela também lhes dá um valor por segundo, o mesmo 0,0001 para o `gpt-4o-transcribe` e metade disso para o mini. **Os três trazem data de descontinuação em 26 de fevereiro de 2027.** Nenhum deles foi chamado para este curso, porque isso exige uma chave paga, e a aula 13 transforma esses preços no custo de um mês de ligações de suporte.
 
 O que muda ao passar do `whisper-1` para os modelos mais novos, segundo a documentação da OpenAI, vale conferir contra o seu próprio conjunto de teste em vez de aceitar de confiança:
 

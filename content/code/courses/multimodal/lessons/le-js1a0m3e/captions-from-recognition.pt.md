@@ -3,7 +3,7 @@ title: Legendas a partir do reconhecimento, com três regras
 version: 1
 ---
 
-O vídeo de devoluções da aula 4 tem narração, e a aula 10 mostrou o Whisper devolvendo `vtt` direto. Um arquivo de legendas é mais que uma transcrição com tempos, porém: quem assiste precisa ler cada trecho antes que ele suma. Os guias de estilo de legendagem concordam no formato das regras, e estes números são os que o guia de inglês da Netflix usa para programas adultos: no máximo 42 caracteres por linha, no máximo 2 linhas por trecho, e no máximo 20 caracteres por segundo de leitura.
+O vídeo de devoluções da aula 4 tem narração, e a aula 10 mostrou o Whisper devolvendo `vtt` direto. O reconhecimento desta aula passa pelo mesmo `audio_server.py`, então inicie-o num segundo terminal antes de rodar os programas. Um arquivo de legendas é mais que uma transcrição com tempos, porém: quem assiste precisa ler cada trecho antes que ele suma. Os guias de estilo de legendagem concordam no formato das regras, e estes números são os que o guia de inglês da Netflix usa para programas adultos: no máximo 42 caracteres por linha, no máximo 2 linhas por trecho, e no máximo 20 caracteres por segundo de leitura.
 
 ```python
 """The three rules every caption cue is held to, and the two helpers both caption programs share."""
@@ -34,7 +34,8 @@ from cues import CPS, LINES, stamp, wrap
 from openai import OpenAI
 
 with open("media/returns.mp4", "rb") as f:
-    r = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="verbose_json")
+    r = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(model="whisper-base", file=f,
+                                                                          response_format="verbose_json")
 cues = [(s.start, s.end, s.text.strip()) for s in r.segments]
 json.dump(cues, open("recognised.json", "w"))
 

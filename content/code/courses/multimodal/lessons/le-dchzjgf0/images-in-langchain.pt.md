@@ -16,7 +16,7 @@ data = base64.b64encode(open("media/cover-b39.png", "rb").read()).decode()
 openai_block = {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{data}"}}
 standard_block = {"type": "image", "base64": data, "mime_type": "image/png"}
 
-llm = ChatOpenAI(model="lab-vision-1")
+llm = ChatOpenAI(model="qwen2.5vl:3b", temperature=0, seed=1)
 for name, block in (("openai", openai_block), ("standard", standard_block)):
     message = HumanMessage(content=[{"type": "text", "text": "Describe this cover."}, block])
     sent = llm._get_request_payload([message])["messages"][0]["content"][1]   # what goes on the wire

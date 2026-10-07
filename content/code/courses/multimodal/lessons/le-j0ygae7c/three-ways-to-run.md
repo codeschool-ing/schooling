@@ -18,7 +18,7 @@ asr = pipeline("automatic-speech-recognition", model="openai/whisper-base")
 print(asr("media/call-1042.wav")["text"])
 ```
 
-**It was not run in this lab.** The first line of `pipeline` downloads the model from the Hub, and the Hub refused this machine:
+**It was not run for this course.** The first line of `pipeline` downloads the model from the Hub, and the Hub refused the machine this course was recorded on:
 
 ```
 ana@lab:~/mm$ curl -sS -m 10 -o /dev/null -w "%{http_code}\n" https://huggingface.co/api/models/openai/whisper-base

@@ -21,7 +21,7 @@ version: 1
 
 Two task names deserve a closer look.
 
-**`image-text-to-text` is where the vision-language models are**: open models such as Qwen2.5-VL, Llama 3.2 Vision, Gemma 3 and SmolVLM, of very different sizes. SmolVLM's smallest versions run on a laptop; the large ones need a graphics card with tens of gigabytes. This is the task that would have let this lab run a real VLM, if the Hub had been reachable.
+**`image-text-to-text` is where the vision-language models are**: open models such as Qwen2.5-VL, Llama 3.2 Vision, Gemma 3 and SmolVLM, of very different sizes. SmolVLM's smallest versions run on a laptop; the large ones need a graphics card with tens of gigabytes. Qwen2.5-VL is the family of `qwen2.5vl:3b`, the vision model this course runs through Ollama, which fetches it from its own registry rather than from the Hub.
 
 **`zero-shot-image-classification` is the open-vocabulary cousin of lesson 2's detector.** A CLIP-style model scores an image against labels you write at request time ("a damaged book", "an invoice", "a cat"), so the closed list of 80 COCO classes stops being a limit. It is cheap and fast, and it answers *which of these*, never *what is this*.
 

@@ -21,7 +21,7 @@ A aula 12 de `ai-models` apresentou o Hugging Face Hub: modelos, conjuntos de da
 
 Dois nomes de tarefa merecem uma olhada mais de perto.
 
-**`image-text-to-text` é onde estão os modelos de visão e linguagem**: modelos abertos como Qwen2.5-VL, Llama 3.2 Vision, Gemma 3 e SmolVLM, de tamanhos muito diferentes. As menores versões do SmolVLM rodam num notebook; as grandes precisam de uma placa de vídeo com dezenas de gigabytes. É a tarefa que teria deixado este laboratório rodar um VLM de verdade, se o Hub fosse alcançável.
+**`image-text-to-text` é onde estão os modelos de visão e linguagem**: modelos abertos como Qwen2.5-VL, Llama 3.2 Vision, Gemma 3 e SmolVLM, de tamanhos muito diferentes. As menores versões do SmolVLM rodam num notebook; as grandes precisam de uma placa de vídeo com dezenas de gigabytes. O Qwen2.5-VL é a família do `qwen2.5vl:3b`, o modelo de visão que este curso roda pelo Ollama, que o busca no seu próprio repositório e não no Hub.
 
 **`zero-shot-image-classification` é o primo de vocabulário aberto do detector da aula 2.** Um modelo no estilo do CLIP dá notas a uma imagem contra rótulos que você escreve na hora do pedido ("um livro danificado", "uma nota fiscal", "um gato"), e a lista fechada de 80 classes do COCO deixa de ser um limite. É barato e rápido, e responde *qual destes*, nunca *o que é isto*.
 

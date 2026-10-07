@@ -18,11 +18,11 @@ A chain is worth having when several steps run in order and each needs the last 
       "note": "**The ticket's shape, as a Pydantic model.** `with_structured_output` turns it into a JSON schema for the request and parses the reply back into it."
     },
     {
-      "code": "def transcribe(path):\n    with open(path, \"rb\") as f:\n        return {\"transcript\": OpenAI().audio.transcriptions.create(\n            model=\"lab-whisper-base\", file=f, response_format=\"text\")}\n\n\n",
+      "code": "def transcribe(path):\n    with open(path, \"rb\") as f:\n        return {\"transcript\": OpenAI(base_url=\"http://localhost:8700/v1\").audio.transcriptions.create(\n            model=\"whisper-base\", file=f, response_format=\"text\")}\n\n\n",
       "note": "**The audio step is the provider's own SDK**, the transcriptions endpoint of lesson 10, wrapped in a plain function. It returns a dictionary so the next step can name what it needs."
     },
     {
-      "code": "prompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"Turn this support call into a support ticket. Use only what the caller and agent say.\"),\n    (\"user\", \"{transcript}\")])\nllm = ChatOpenAI(model=\"lab-vision-1\").with_structured_output(Ticket, method=\"json_schema\")\nchain = RunnableLambda(transcribe) | {\"transcript\": lambda x: x[\"transcript\"],\n                                      \"ticket\": prompt | llm}\n\n",
+      "code": "prompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"Turn this support call into a support ticket. Use only what the caller and agent say.\"),\n    (\"user\", \"{transcript}\")])\nllm = ChatOpenAI(model=\"qwen2.5vl:3b\").with_structured_output(Ticket, method=\"json_schema\")\nchain = RunnableLambda(transcribe) | {\"transcript\": lambda x: x[\"transcript\"],\n                                      \"ticket\": prompt | llm}\n\n",
       "note": "**The chain.** `RunnableLambda` makes the function a step, the `|` joins steps, and the dictionary runs two branches on the same input: one passes the transcript through, the other turns it into a ticket."
     },
     {
@@ -38,13 +38,7 @@ A chain is worth having when several steps run in order and each needs the last 
 ```
 
 ```
-ana@lab:~/mm$ python ticket.py media/call-1042.wav
-order='M-1042' title='Dom Casmurro' problem='Cover torn and about ten pages folded at the corner' refund_cents=3480
-order  in transcript: True
-title  in transcript: False
-ana@lab:~/mm$ tail -n 2 /var/log/labmm/requests.jsonl | python -c "import json, sys; [print(r[\"path\"], r.get(\"model\"), r.get(\"rule\", \"-\")) for r in map(json.loads, sys.stdin)]"
-/v1/audio/transcriptions lab-whisper-base -
-/v1/chat/completions lab-vision-1 l12-ticket
+@@ticket@@
 ```
 
 The log shows the two requests the chain made: a transcription by Whisper base, which is real, and a chat request answered by `l12-ticket`, **a rule the course wrote**. The ticket says what a model might say about this call; no model said it.

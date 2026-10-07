@@ -22,7 +22,7 @@ A description is for a person. The stock system wants fields, and a vision model
       "note": "**The picture, as a data URL.** Base64 makes the file a third larger in the request, a price paid for not needing a public URL."
     },
     {
-      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"lab-vision-1\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
+      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"qwen2.5vl:3b\", temperature=0, seed=1,\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
       "note": "**`parse` sends the models as a JSON Schema** in `response_format`, and turns the reply back into an `Invoice`. If the reply did not fit the schema, this line would raise rather than hand over half an invoice."
     },
     {

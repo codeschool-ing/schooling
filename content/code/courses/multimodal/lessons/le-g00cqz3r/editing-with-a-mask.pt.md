@@ -30,9 +30,9 @@ import sys
 
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8800/v1")   # lesson 3's images_server.py
 try:
-    result = client.images.edit(model="lab-image-1", image=open("banner.png", "rb"), mask=open(sys.argv[1], "rb"),
+    result = client.images.edit(model="gpt-image-1", image=open("banner.png", "rb"), mask=open(sys.argv[1], "rb"),
                                 prompt="the same café table, with a small pot of basil on the right")
 except Exception as e:
     print(type(e).__name__, e)
@@ -52,11 +52,11 @@ ana@lab:~/mm$ python edit.py banner.png
 BadRequestError Error code: 400 - {'error': {'message': 'The mask must have an alpha channel.', 'type': 'invalid_request_error', 'param': 'mask', 'code': None}}
 ```
 
-A primeira edição passou: o labmm devolveu o banner com o terço direito acinzentado, que é o jeito dele de mostrar onde um modelo real teria pintado. As duas seguintes foram recusadas, e as duas recusas são os jeitos mais comuns de errar uma máscara:
+A primeira edição passou: o substituto devolveu o banner com o terço direito acinzentado, que é o jeito dele de mostrar onde um modelo real teria pintado. As duas seguintes foram recusadas, e as duas recusas são os jeitos mais comuns de errar uma máscara:
 
 - **Uma máscara de outro tamanho.** A imagem tem 1536 por 1024 e a máscara 1024 por 1024, então a região transparente não tem lugar definido na imagem.
-- **Uma máscara sem canal alfa.** Passar o próprio banner como máscara dele significa que nada é transparente, e o labmm o recusou por não ter alfa. Uma máscara desenhada num editor e salva como JPEG, que não tem alfa nenhum, falha do mesmo jeito.
+- **Uma máscara sem canal alfa.** Passar o próprio banner como máscara dele significa que nada é transparente, e o substituto o recusou por não ter alfa. Uma máscara desenhada num editor e salva como JPEG, que não tem alfa nenhum, falha do mesmo jeito.
 
-Essas duas mensagens são do labmm, escritas para dizer o que está errado; a redação de uma API real é outra, e a recusa dela é o que se deve esperar. A conferência que vale escrever é a sua, antes da chamada: mesmo tamanho, modo `RGBA` e pelo menos um pixel transparente.
+Essas duas mensagens são do substituto, escritas para dizer o que está errado; a redação de uma API real é outra, e a recusa dela é o que se deve esperar. A conferência que vale escrever é a sua, antes da chamada: mesmo tamanho, modo `RGBA` e pelo menos um pixel transparente.
 
 **Como exatamente o modelo respeita a máscara é assunto do provedor.** A documentação da OpenAI descreve a máscara como uma orientação: o modelo pode mudar pixels logo fora dela para a edição se misturar. Então a conferência depois de uma edição é a da aula 3: olhar, contra a lista, antes de publicar.

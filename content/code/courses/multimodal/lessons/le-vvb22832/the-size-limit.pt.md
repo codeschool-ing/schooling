@@ -3,7 +3,7 @@ title: O limite de 25 MB, e gravações longas
 version: 1
 ---
 
-A OpenAI documenta um limite de **25 MB por arquivo enviado** para transcrição, e aceita uma lista de formatos: `flac`, `mp3`, `mp4`, `mpeg`, `mpga`, `m4a`, `ogg`, `wav` e `webm`. O labmm aplica os dois. Meia hora da ligação do laboratório, feita juntando 32 cópias uma atrás da outra, mostra por que o limite importa na prática:
+A OpenAI documenta um limite de **25 MB por arquivo enviado** para transcrição, e aceita uma lista de formatos: `flac`, `mp3`, `mp4`, `mpeg`, `mpga`, `m4a`, `ogg`, `wav` e `webm`. O servidor do curso aplica os dois. Meia hora da ligação do curso, feita juntando 32 cópias uma atrás da outra, mostra por que o limite importa na prática:
 
 ```python
 """An hour-long recording is too big to upload whole; cut it at silences and send the pieces."""
@@ -16,10 +16,10 @@ LIMIT = 25 * 1024 * 1024
 src = sys.argv[1]
 size = int(subprocess.run(["stat", "-c", "%s", src], capture_output=True, text=True).stdout)
 print(f"{src}: {size:,} bytes, the limit is {LIMIT:,}")
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8700/v1")   # audio_server.py, on this machine
 try:
     with open(src, "rb") as audio:
-        client.audio.transcriptions.create(model="lab-whisper-tiny", file=audio)
+        client.audio.transcriptions.create(model="whisper-tiny", file=audio)
 except APIStatusError as e:
     print(f"whole file: {e.status_code} {e.body['message'] if isinstance(e.body, dict) else e.body}")
 ```
@@ -51,11 +51,11 @@ A segunda correção cobre gravações longas demais mesmo comprimidas (uma reun
       "note": "**Planeje os cortes antes de mandar qualquer coisa**: pedaços de no máximo dez minutos, cada um terminando no meio de um silêncio que o detector de fala achou, como o `chunks.py` da aula 5 fez para 30 segundos."
     },
     {
-      "code": "client = OpenAI()\nsegments = []\n",
+      "code": "client = OpenAI(base_url=\"http://localhost:8700/v1\")   # audio_server.py, on this machine\nsegments = []\n",
       "note": "**Uma lista para os segmentos do arquivo inteiro.**"
     },
     {
-      "code": "for i, (a, b) in enumerate(cuts):\n    piece = f\"/tmp/piece-{i}.mp3\"\n    subprocess.run([\"ffmpeg\", \"-nostdin\", \"-loglevel\", \"error\", \"-y\", \"-ss\", str(a), \"-to\", str(b), \"-i\", src,\n                    \"-ac\", \"1\", \"-ar\", \"16000\", \"-b:a\", \"32k\", piece], check=True)\n    with open(piece, \"rb\") as audio:\n        r = client.audio.transcriptions.create(model=\"lab-whisper-tiny\", file=audio, language=\"en\",\n                                               response_format=\"verbose_json\")\n",
+      "code": "for i, (a, b) in enumerate(cuts):\n    piece = f\"/tmp/piece-{i}.mp3\"\n    subprocess.run([\"ffmpeg\", \"-nostdin\", \"-loglevel\", \"error\", \"-y\", \"-ss\", str(a), \"-to\", str(b), \"-i\", src,\n                    \"-ac\", \"1\", \"-ar\", \"16000\", \"-b:a\", \"32k\", piece], check=True)\n    with open(piece, \"rb\") as audio:\n        r = client.audio.transcriptions.create(model=\"whisper-tiny\", file=audio, language=\"en\",\n                                               response_format=\"verbose_json\")\n",
       "note": "**Cada pedaço é cortado pelo ffmpeg e comprimido em MP3 a 32 kbit/s**, e é por isso que um pedaço de dez minutos pesa uns 2,4 MB em vez de 19, e é enviado sozinho como `verbose_json`, para voltar com os tempos dos segmentos."
     },
     {

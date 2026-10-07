@@ -15,7 +15,7 @@ ana@lab:~/mm$ cd /opt/multimodal/share && ls -l sherpa-onnx-whisper-base/*.onnx 
 95087154 sherpa-onnx-whisper-base/base-encoder.onnx
 ```
 
-Então a pergunta pode ser medida em vez de discutida:
+Então a pergunta pode ser medida em vez de discutida, com o `measure.py` da aula 5 para a taxa de erro de palavras:
 
 ```python
 """The same Whisper at full precision and at int8: size on disk, time to load, time to transcribe, words wrong."""

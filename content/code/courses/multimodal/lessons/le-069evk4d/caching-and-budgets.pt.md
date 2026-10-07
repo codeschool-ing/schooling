@@ -18,7 +18,7 @@ O pedido mais barato é o que nunca é enviado. Uma loja faz as mesmas perguntas
       "note": "**As respostas ficam como arquivos num diretório**, um por pergunta feita."
     },
     {
-      "code": "def describe(path, prompt, model=\"lab-vision-1\", detail=\"high\"):\n    raw = open(path, \"rb\").read()\n    key = hashlib.sha256(json.dumps([hashlib.sha256(raw).hexdigest(), prompt, model, detail]).encode()).hexdigest()\n    hit = os.path.join(CACHE, key + \".json\")\n",
+      "code": "def describe(path, prompt, model=\"qwen2.5vl:3b\", detail=\"high\"):\n    raw = open(path, \"rb\").read()\n    key = hashlib.sha256(json.dumps([hashlib.sha256(raw).hexdigest(), prompt, model, detail]).encode()).hexdigest()\n    hit = os.path.join(CACHE, key + \".json\")\n",
       "note": "**A chave é um hash de tudo o que molda a resposta**: o hash da própria imagem, o prompt, o modelo e o `detail`. Deixe um de fora e duas perguntas diferentes dividem uma resposta."
     },
     {

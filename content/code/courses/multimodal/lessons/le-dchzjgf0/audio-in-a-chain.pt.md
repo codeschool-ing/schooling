@@ -18,11 +18,11 @@ Uma cadeia vale a pena quando vários passos rodam em ordem e cada um precisa da
       "note": "**O formato do chamado, como um modelo Pydantic.** O `with_structured_output` o transforma num JSON schema para o pedido e converte a resposta de volta nele."
     },
     {
-      "code": "def transcribe(path):\n    with open(path, \"rb\") as f:\n        return {\"transcript\": OpenAI().audio.transcriptions.create(\n            model=\"lab-whisper-base\", file=f, response_format=\"text\")}\n\n\n",
+      "code": "def transcribe(path):\n    with open(path, \"rb\") as f:\n        return {\"transcript\": OpenAI(base_url=\"http://localhost:8700/v1\").audio.transcriptions.create(\n            model=\"whisper-base\", file=f, response_format=\"text\")}\n\n\n",
       "note": "**O passo do áudio é o SDK do próprio provedor**, o endpoint de transcrição da aula 10, embrulhado numa função comum. Ele devolve um dicionário para o próximo passo poder nomear o que precisa."
     },
     {
-      "code": "prompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"Turn this support call into a support ticket. Use only what the caller and agent say.\"),\n    (\"user\", \"{transcript}\")])\nllm = ChatOpenAI(model=\"lab-vision-1\").with_structured_output(Ticket, method=\"json_schema\")\nchain = RunnableLambda(transcribe) | {\"transcript\": lambda x: x[\"transcript\"],\n                                      \"ticket\": prompt | llm}\n\n",
+      "code": "prompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"Turn this support call into a support ticket. Use only what the caller and agent say.\"),\n    (\"user\", \"{transcript}\")])\nllm = ChatOpenAI(model=\"qwen2.5vl:3b\").with_structured_output(Ticket, method=\"json_schema\")\nchain = RunnableLambda(transcribe) | {\"transcript\": lambda x: x[\"transcript\"],\n                                      \"ticket\": prompt | llm}\n\n",
       "note": "**A cadeia.** O `RunnableLambda` faz da função um passo, o `|` junta passos, e o dicionário roda dois ramos sobre a mesma entrada: um deixa a transcrição passar, o outro a transforma num chamado."
     },
     {

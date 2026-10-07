@@ -14,16 +14,16 @@ from collections import Counter, defaultdict
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import InMemoryVectorStore
-from minilm import embed
 from openai import OpenAI
 
 
 class MiniLM(Embeddings):
+    """all-MiniLM-L6-v2, which Ollama serves as all-minilm, through OpenAI's embeddings route."""
     def embed_documents(self, texts):
-        return embed(texts).tolist()
+        return [d.embedding for d in OpenAI().embeddings.create(model="all-minilm", input=texts).data]
 
     def embed_query(self, text):
-        return embed([text])[0].tolist()
+        return self.embed_documents([text])[0]
 
 
 def invoice_lines(path):
@@ -42,7 +42,8 @@ def invoice_lines(path):
 def call_segments(path):
     """Whisper's timed segments, each one a piece."""
     with open(path, "rb") as f:
-        r = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="verbose_json")
+        r = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(model="whisper-base", file=f,
+                                                                          response_format="verbose_json")
     for s in r.segments:
         yield Document(s.text.strip(), metadata={"source": path, "at": "%.1f-%.1f s" % (s.start, s.end)})
 

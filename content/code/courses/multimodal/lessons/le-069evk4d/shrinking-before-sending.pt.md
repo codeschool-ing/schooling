@@ -12,7 +12,7 @@ import re
 import subprocess
 from collections import Counter
 
-from labmm import gpt4o_tokens
+from tokens import gpt4o_tokens
 from PIL import Image
 
 truth = open("media/truth/invoice-0931.txt").read()
