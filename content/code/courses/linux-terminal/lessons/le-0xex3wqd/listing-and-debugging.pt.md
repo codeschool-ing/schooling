@@ -84,23 +84,20 @@ naquela tabela tem algo a dizer:
 ```
 ana@vm:~$ sudo systemctl start report.service
 ana@vm:~$ journalctl -u report.service --no-pager | tail -4
-Oct 07 14:39:21 vm systemd[1]: Starting report.service - Nightly report...
-Oct 07 14:39:21 vm report.sh[5031]: report ran
-Oct 07 14:39:21 vm systemd[1]: report.service: Deactivated successfully.
-Oct 07 14:39:21 vm systemd[1]: Finished report.service - Nightly report.
-ana@vm:~$ systemctl status report.service --no-pager | head -6
-○ report.service - Nightly report
-     Loaded: loaded (/etc/systemd/system/report.service; static)
-     Active: inactive (dead) since Wed 2026-10-07 14:39:21 UTC; 849ms ago
-TriggeredBy: ● report.timer
-    Process: 5031 ExecStart=/home/ana/bin/report.sh (code=exited, status=0/SUCCESS)
-   Main PID: 5031 (code=exited, status=0/SUCCESS)
+Oct 07 14:58:41 vm systemd[1]: Starting report.service - Nightly report...
+Oct 07 14:58:42 vm report.sh[5547]: report ran
+Oct 07 14:58:42 vm systemd[1]: report.service: Deactivated successfully.
+Oct 07 14:58:42 vm systemd[1]: Finished report.service - Nightly report.
+ana@vm:~$ systemctl show report.service -p Result -p ExecMainStatus -p TriggeredBy
+Result=success
+ExecMainStatus=0
+TriggeredBy=report.timer
 ```
 
 **O journal tem a execução**: o systemd iniciando o serviço, a saída do próprio
-script com o nome e o id de processo dele — `report.sh[5031]: report ran` — e o
-serviço terminando. O `status` diz como a última execução terminou,
-`status=0/SUCCESS`, e qual timer o inicia. É tudo o que o e-mail de um job do cron
+script com o nome e o id de processo dele — `report.sh[5547]: report ran` — e o
+serviço terminando. O `systemctl show` diz como a última execução terminou,
+`Result=success` com status de saída 0, e qual timer o inicia. É tudo o que o e-mail de um job do cron
 teria dito, e mais, sem nenhum sistema de e-mail envolvido.
 
 **O journal é a vantagem do timer sobre o cron aqui.** A saída de um job do cron
