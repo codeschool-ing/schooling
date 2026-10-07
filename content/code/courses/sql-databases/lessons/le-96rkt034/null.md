@@ -26,14 +26,12 @@ Those are three different states and the third is not a value at all. It is the 
 
 This is the whole thing, and every surprise below follows from it:
 
-```sql
-SELECT NULL = NULL;
 ```
-
-```
- ?column?
+shop=# SELECT NULL = NULL;
+ ?column? 
 ----------
- (null)
+ NULL
+(1 row)
 ```
 
 Not `true`. **`NULL = NULL` is not true**, because "is this unknown thing the same as that unknown
@@ -42,14 +40,12 @@ unknown.
 
 The same for everything else:
 
-```sql
-SELECT NULL = 5,  NULL <> 5,  NULL > 5,  NULL + 1,  'a' || NULL;
 ```
-
-```
- ?column? | ?column? | ?column? | ?column? | ?column?
+shop=# SELECT NULL = 5, NULL <> 5, NULL > 5, NULL + 1, 'a' || NULL;
+ ?column? | ?column? | ?column? | ?column? | ?column? 
 ----------+----------+----------+----------+----------
- (null)   | (null)   | (null)   | (null)   | (null)
+ NULL     | NULL     | NULL     |     NULL | NULL
+(1 row)
 ```
 
 Every comparison against an unknown is unknown, and every arithmetic on an unknown is unknown. SQL
