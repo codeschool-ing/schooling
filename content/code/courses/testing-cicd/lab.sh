@@ -24,6 +24,14 @@
 # server that answers the same shape of question on 127.0.0.1. The lessons say
 # so wherever it appears.
 #
+# THE STUDENT NEVER SEES THIS FILE (C-40). Every file it writes is shown whole
+# in a lesson, and the student builds the project from those blocks: step 1 to
+# 5 in lesson 1's `the-project`, the carrier in lesson 2's `stub`, the CI hook
+# in lesson 5's `what-ci-is`, and each later step in the lesson that uses it.
+# `lab.sh shown` compares every block a lesson labels as a whole file with the
+# file this script wrote, and each lesson's captures.sh calls it before its
+# first block, so the two cannot drift apart.
+#
 # The venv command needs uv (https://docs.astral.sh/uv/) and, the first time,
 # the network to fetch the three pinned packages.
 set -euo pipefail

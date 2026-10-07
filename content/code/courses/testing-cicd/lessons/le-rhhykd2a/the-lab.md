@@ -19,9 +19,10 @@ The lab is one Linux computer with four things on it:
   versions the transcripts were recorded with: pytest, coverage and Hypothesis;
 - **the project itself**, `shipquote`, which the next section builds.
 
-Nothing else. `shipquote` uses only Python's standard library; the carrier it asks for prices is a
-small server you write in lesson 2; the CI of lesson 5 is a script you write into a git repository;
-and the "environments" of lessons 7 to 11 are directories and processes on this same machine.
+Nothing else. `shipquote` uses only Python's standard library. The carrier it asks for prices is a
+small server you write in lesson 2, and the CI of lesson 5 is a script you write into a git
+repository. The "environments" of lessons 7 to 11 are directories and processes on this same
+machine.
 Lesson 6 adds two optional tools and says how to install them there.
 
 ## Three ways to have one
@@ -44,8 +45,8 @@ running Ubuntu 24.04 is a virtual machine too, and works the same way.
 
 **Installed** is fine on a computer that already runs Ubuntu 24.04, with the same commands. On
 another Linux the package names may differ. On a Mac, git and curl come with Apple's command-line
-developer tools, and uv and jq install with Homebrew; the first six lessons ask for nothing
-Linux-specific, and lessons 7 to 11 need the Linux tools above, which is the reason to use the
+developer tools, and uv and jq install with Homebrew. The first six lessons ask for nothing
+Linux-specific; lessons 7 to 11 need the Linux tools above, and that is the reason to use the
 virtual machine there. None of that was run for this course, so a path or a version in a
 transcript may differ from yours.
 
