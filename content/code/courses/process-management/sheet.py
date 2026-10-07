@@ -296,7 +296,8 @@ def lesson10():
     v = VELOCITY
     print('  velocity', v, 'sum', sum(v), 'mean', mean(v), 'median', median(v), 'min', min(v), 'max', max(v))
     last6 = v[-6:]
-    print('  last six', last6, 'min', min(last6), 'max', max(last6), 'mean', mean(last6))
+    print('  last six', last6, 'min', min(last6), 'max', max(last6), 'mean', round(mean(last6), 4),
+          '; the backlog over that mean', round(BACKLOG_POINTS / mean(last6), 4))
     for label, x in (('mean', mean(v)), ('slowest', min(v)), ('fastest', max(v))):
         print(f'  {BACKLOG_POINTS} points at {x}: {BACKLOG_POINTS / x:.2f} sprints, '
               f'ceiling {math.ceil(BACKLOG_POINTS / x)}')

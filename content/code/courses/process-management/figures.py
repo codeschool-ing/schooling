@@ -1277,6 +1277,82 @@ def l09_totals(lang):
 # ---- end of lesson 9
 
 
+# ------------------------------------------------------------------ lesson 10
+
+@figure('l10-velocity', 10)
+def l10_velocity(lang):
+    v = S.VELOCITY
+    last6 = v[-6:]
+    t = {
+        'en': dict(y='points done', x='sprint', mean=f'mean {S.mean(v):g}', band='range of the last six: 19 to 31',
+                   label='Eight bars, one per sprint: 21, 28, 24, 31, 19, 26, 27 and 24 points. A dashed line marks '
+                         'the mean of 25. A shaded band covers 19 to 31, the range of the last six sprints.',
+                   cap='The Agenda team’s last eight sprints. The mean is 25 points, and no single sprint is '
+                       'unusual; a spread of twelve points between the slowest and the fastest of the last six is '
+                       'what an ordinary team looks like.'),
+        'pt': dict(y='pontos prontos', x='sprint', mean=f'média {S.mean(v):g}',
+                   band='faixa das últimas seis: 19 a 31',
+                   label='Oito barras, uma por sprint: 21, 28, 24, 31, 19, 26, 27 e 24 pontos. Uma linha tracejada '
+                         'marca a média de 25. Uma faixa sombreada cobre de 19 a 31, a faixa das últimas seis sprints.',
+                   cap='As últimas oito sprints do time Agenda. A média é 25 pontos, e nenhuma sprint isolada é fora '
+                       'do comum; uma diferença de doze pontos entre a mais lenta e a mais rápida das últimas seis é '
+                       'como um time comum se parece.'),
+    }[lang]
+    f = Fig('l10-velocity', 620, 280, t['label'])
+    p = Plot(f, 60, 40, 590, 220, 0.4, 8.6, 0, 35)
+    f.path(f'M{p.sx(2.5):.1f} {p.sy(31):.1f} L{p.x1:.1f} {p.sy(31):.1f} L{p.x1:.1f} {p.sy(19):.1f} '
+           f'L{p.sx(2.5):.1f} {p.sy(19):.1f} Z', stroke=None, width=0, fill='--scan')
+    p.yaxis([0, 10, 20, 30], label=t['y'])
+    p.xaxis(range(1, 9), label=t['x'])
+    for i, x in enumerate(v, start=1):
+        f.path(f'M{p.sx(i) - 18:.1f} {p.sy(0):.1f} L{p.sx(i) - 18:.1f} {p.sy(x):.1f} L{p.sx(i) + 18:.1f} {p.sy(x):.1f} '
+               f'L{p.sx(i) + 18:.1f} {p.sy(0):.1f} Z', stroke='--phosphor', width=1, fill='--phosphor-dim')
+        f.text(p.sx(i), p.sy(x) - 9, str(x), size=9.5, weight='600')
+    f.line(p.x0, p.sy(25), p.x1, p.sy(25), stroke='--amber', width=1.4, dash='5 3')
+    f.text(p.x0 + 6, p.sy(25) - 8, t['mean'], size=9.5, anchor='start', fill='--amber', weight='600')
+    f.text(p.x1, p.y0 - 14, t['band'], size=9.5, anchor='end', fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l10-forecast', 10)
+def l10_forecast(lang):
+    t = {
+        'en': dict(y='points done, from today', x='sprints from today', scope='backlog: 150 points',
+                   fast='31 a sprint: sprint 5', mid='25 a sprint: sprint 6', slow='19 a sprint: sprint 8',
+                   label='Three straight lines rise from zero towards a horizontal line at 150 points. The fastest, '
+                         '31 points a sprint, crosses it in sprint 5; the middle, 25 a sprint, in sprint 6; the '
+                         'slowest, 19 a sprint, in sprint 8.',
+                   cap='The backlog of 150 points against three velocities taken from the team’s own history. '
+                       'The honest forecast is the span the three lines cross the scope in: between sprint 5 and '
+                       'sprint 8.'),
+        'pt': dict(y='pontos prontos, a partir de hoje', x='sprints a partir de hoje', scope='backlog: 150 pontos',
+                   fast='31 por sprint: sprint 5', mid='25 por sprint: sprint 6', slow='19 por sprint: sprint 8',
+                   label='Três retas sobem de zero em direção a uma linha horizontal em 150 pontos. A mais rápida, 31 '
+                         'pontos por sprint, cruza na sprint 5; a do meio, 25 por sprint, na sprint 6; a mais lenta, 19 '
+                         'por sprint, na sprint 8.',
+                   cap='O backlog de 150 pontos contra três velocidades tiradas da história do próprio time. A '
+                       'previsão honesta é o intervalo em que as três retas cruzam o escopo: entre a sprint 5 e a '
+                       'sprint 8.'),
+    }[lang]
+    f = Fig('l10-forecast', 620, 290, t['label'])
+    p = Plot(f, 70, 40, 560, 230, 0, 9, 0, 180)
+    p.yaxis([0, 50, 100, 150], label=t['y'])
+    p.xaxis(range(0, 10), label=t['x'])
+    f.path(f'M{p.sx(150 / 31):.1f} {p.sy(150):.1f} L{p.sx(150 / 19):.1f} {p.sy(150):.1f} '
+           f'L{p.sx(150 / 19):.1f} {p.y1:.1f} L{p.sx(150 / 31):.1f} {p.y1:.1f} Z', stroke=None, width=0, fill='--scan')
+    f.line(p.x0, p.sy(150), p.x1, p.sy(150), stroke='--paper', width=1.4)
+    f.text(p.x0 + 6, p.sy(150) - 10, t['scope'], size=10, anchor='start', weight='600')
+    for rate, key, c in ((31, 'fast', '--phosphor'), (25, 'mid', '--paper-dim'), (19, 'slow', '--amber')):
+        end = min(9, 180 / rate)
+        f.line(p.sx(0), p.sy(0), p.sx(end), p.sy(rate * end), stroke=c, width=1.8)
+    f.text(p.sx(4.8), p.sy(170), t['fast'], size=9.5, anchor='end', fill='--phosphor', weight='600')
+    f.text(p.sx(6.4), p.sy(110), t['mid'], size=9.5, anchor='start', fill='--paper-dim', weight='600')
+    f.text(p.sx(8.1), p.sy(140), t['slow'], size=9.5, anchor='start', fill='--amber', weight='600')
+    return f, t['cap']
+
+# ---- end of lesson 10
+
+
 # ------------------------------------------------------------------ the figures
 
 
