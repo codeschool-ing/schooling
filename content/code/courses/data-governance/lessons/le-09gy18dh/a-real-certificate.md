@@ -3,10 +3,37 @@ title: A certificate worth checking
 version: 1
 ---
 
-The lab has a certificate authority of its own, made by `lab.sh` with OpenSSL: a root,
-**Ipe Lab Root CA**, and a certificate it signed for the database's name. In a company this is
-the internal CA the platform team runs, or a public one when the database is reached from
-outside. Before installing anything, read what it says:
+The lab needs a certificate authority of its own, and Ana makes one with OpenSSL: a root,
+**Ipe Lab Root CA**, and two certificates it signs — one for the database's name,
+`db.ipe.example`, and one for `bao.ipe.example`, the key server lesson 4 starts. In a company this
+is the internal CA the platform team runs, or a public one when the database is reached from
+outside, and its key is kept offline. The lab keeps it in `/etc/ipe-pki`, readable by root only.
+
+```sh
+sudo mkdir -p /etc/ipe-pki && cd /etc/ipe-pki
+sudo openssl req -x509 -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
+  -keyout ca.key -subj "/O=Farmacia Ipe/CN=Ipe Lab Root CA" \
+  -addext "basicConstraints=critical,CA:TRUE" \
+  -addext "keyUsage=critical,keyCertSign,cRLSign" \
+  -days 3650 -sha256 -out ca.crt
+for name in db bao; do
+  sudo openssl req -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
+    -keyout $name.key -subj "/O=Farmacia Ipe/CN=$name.ipe.example" -out $name.csr
+  printf 'subjectAltName=DNS:%s.ipe.example\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth,clientAuth\n' $name \
+    | sudo tee $name.ext >/dev/null
+  sudo openssl x509 -req -in $name.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+    -days 825 -sha256 -out $name.crt -extfile $name.ext
+  sudo rm $name.csr $name.ext
+done
+sudo chmod 0600 *.key && sudo chmod 0644 *.crt
+cd ~/gov
+```
+
+The root says it is a CA and may sign certificates (`basicConstraints`, `keyUsage`); each
+certificate names the host in its Subject Alternative Name and says it may be used by a server and
+by a client. Python's TLS library refuses a CA that does not say so, and lesson 4 uses it.
+
+Before installing anything, read what the database's certificate says:
 
 ```
 ana@lab:~/gov$ openssl x509 -in /etc/ipe-pki/db.crt -noout -subject -issuer -ext subjectAltName

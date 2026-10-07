@@ -45,6 +45,17 @@ CREATE POLICY
 CREATE POLICY
 ```
 
+O Davi também ganha uma entrada no `~/.pg_service.conf` da Ana, no mesmo formato das que a aula 2 escreveu e a aula 3 fez conferir o certificado, para o `psql service=davi` conectar como ele:
+
+```ini
+[davi]
+host=db.ipe.example
+port=5433
+dbname=ipe
+user=davi
+sslmode=verify-full
+```
+
 As duas policies importam. `sales.customers` e `support.tickets` têm segurança por linha desde a aula
 2, e um papel com `SELECT` e sem policy lê **zero linhas** sem erro nenhum — a exportação abaixo
 teria voltado com um cliente vazio e ninguém teria notado.

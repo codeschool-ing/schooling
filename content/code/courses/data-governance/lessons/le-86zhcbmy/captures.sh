@@ -9,7 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # STAGED, and not typed in the lesson: the cluster `16/gov` and the database
-# `ipe`, loaded by lab.sh; the lab passwords, written into ~/.pgpass by `put`
+# `ipe`, built by `lab.sh reset` with the commands sections 4 and 5 show; the
+# lab passwords, written into ~/.pgpass by `put`
 # so that ana can connect as each role (the lesson says why a real ~/.pgpass
 # holds one person's password and not five). The passwords are typed at
 # psql's \password prompts by lab/typein.py, which prints the prompts and not
@@ -20,6 +21,19 @@
 lab reset >/dev/null
 TYPEIN="python3 $(cd ../../lab && pwd)/typein.py"
 cp ../../lab/typein.py /usr/local/bin/typein.py
+
+# The two files lesson 1 shows in full, saved in ~/gov the way the student
+# saves them from the page.
+put generate.py < ../../lab/generate.py
+put schema.sql < ../../lab/schema.sql
+
+block data
+on 'ls /var/lib/ipe-data'
+on 'wc -l /var/lib/ipe-data/*.csv'
+on 'python3 generate.py /tmp/again && sha256sum /tmp/again/customers.csv /var/lib/ipe-data/customers.csv'
+
+block loaded
+on 'sudo -u postgres psql -c "SELECT (SELECT count(*) FROM sales.customers) AS customers, (SELECT count(*) FROM sales.products) AS products, (SELECT count(*) FROM sales.orders) AS orders, (SELECT count(*) FROM sales.order_items) AS items, (SELECT count(*) FROM health.prescriptions) AS prescriptions, (SELECT count(*) FROM support.tickets) AS tickets"'
 
 block versions
 on 'psql --version'

@@ -45,6 +45,17 @@ CREATE POLICY
 CREATE POLICY
 ```
 
+Davi also gets an entry in Ana's `~/.pg_service.conf`, the same shape as the ones lesson 2 wrote and lesson 3 made check the certificate, so that `psql service=davi` connects as him:
+
+```ini
+[davi]
+host=db.ipe.example
+port=5433
+dbname=ipe
+user=davi
+sslmode=verify-full
+```
+
 The two policies matter. `sales.customers` and `support.tickets` have row-level security since
 lesson 2, and a role with `SELECT` and no policy reads **zero rows** without an error — the export
 below would have come back with an empty customer and nobody would have noticed.

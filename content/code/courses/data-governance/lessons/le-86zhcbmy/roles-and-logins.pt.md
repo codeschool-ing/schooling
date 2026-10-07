@@ -90,7 +90,7 @@ Bruno. Uma permissão só pode ser revogada da estagiária que saiu se ela tinha
 pergunta da aula 10 — quem leu a tabela de receitas em maio — só tem resposta se a resposta for um
 nome.
 
-Dois deles têm atributos que os outros não têm, e a seção 9 usa os dois: a senha de `lia` para de
+Dois deles têm atributos que os outros não têm, e a seção 12 usa os dois: a senha de `lia` para de
 funcionar em 30 de junho, e `site_app` nunca segura mais de três conexões ao mesmo tempo.
 
 ```

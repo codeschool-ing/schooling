@@ -3,8 +3,28 @@ title: Starting OpenBao
 version: 1
 ---
 
-`lab.sh` installed OpenBao and wrote its configuration; nothing has been stored in it yet. The
-configuration is short:
+OpenBao is one binary. Ana downloads the release this course was recorded with, **checks it
+against the SHA-256 the project publishes** — a key-management server is the last program to run
+without knowing where it came from — and installs it. It runs as a user of its own, with its data,
+its configuration and its log in three directories, and it gets the certificate lesson 3 issued
+for `bao.ipe.example`. The last command opens an editor for the configuration:
+
+```sh
+curl -fsSLO https://github.com/openbao/openbao/releases/download/v2.5.5/bao_2.5.5_Linux_x86_64.tar.gz
+echo "2c5577707e97fc95c2086950f39880ead5e45b356c94388e5cb606f5a5c2b697  bao_2.5.5_Linux_x86_64.tar.gz" | sha256sum -c
+tar -xzf bao_2.5.5_Linux_x86_64.tar.gz bao
+sudo install -m 0755 bao /usr/local/bin/bao
+rm bao bao_2.5.5_Linux_x86_64.tar.gz
+sudo useradd --system --home /var/lib/bao --shell /usr/sbin/nologin bao
+sudo mkdir -p /etc/bao /var/lib/bao/data /var/log/bao
+sudo chown -R bao:bao /var/lib/bao /var/log/bao
+sudo install -m 0644 -o bao -g bao /etc/ipe-pki/bao.crt /etc/bao/bao.crt
+sudo install -m 0600 -o bao -g bao /etc/ipe-pki/bao.key /etc/bao/bao.key
+sudo nano /etc/bao/bao.hcl
+```
+
+On a machine whose processor is ARM rather than x86-64, the release page lists the file for it, with
+its own checksum. The configuration is short:
 
 ```
 ana@lab:~/gov$ cat /etc/bao/bao.hcl
@@ -39,8 +59,18 @@ an audit file**, declared here because this version of OpenBao takes audit devic
 configuration file only: what is audited is part of the file a reviewer reads, not a setting
 somebody with a token can change.
 
-`lab.sh bao-start` started the server as the user `bao`; in the virtual machine a systemd unit
-would do it on boot. It answers, and says it is not ready:
+Ana starts the server as the user `bao`, in the background, and tells her own shell where it is
+and which CA to trust. `BAO_CLI_NO_COLOR` keeps colour codes out of the output, which is how the
+transcripts read:
+
+```sh
+sudo -u bao sh -c 'nohup bao server -config=/etc/bao/bao.hcl >> /var/log/bao/server.log 2>&1 &'
+echo 'export BAO_ADDR=https://bao.ipe.example:8200 BAO_CACERT=/etc/ipe-pki/ca.crt BAO_CLI_NO_COLOR=1' >> ~/.bashrc
+source ~/.bashrc
+```
+
+A systemd unit would start it on every boot; started by hand, it has to be started again after a
+reboot, and unsealed again too, as the next section shows. It answers, and says it is not ready:
 
 ```
 ana@lab:~/gov$ bao status
@@ -69,11 +99,11 @@ a **root key**. Initialising creates that root key and immediately splits it:
 
 ```
 ana@lab:~/gov$ bao operator init -key-shares=3 -key-threshold=2 | tee init.txt
-Unseal Key 1: 7lO0Motm4zDTjj322eJo8vo1TwTY2ZnueWQQ3qqPcTpX
-Unseal Key 2: gaQ1dkP33nYAjVaZWflpEKhJXGFzADlO4jBOzQvqtuDT
-Unseal Key 3: KeCYHX1gaNGzJ30xknQPi7ZxzBh7YobxpGHOXdKTvCib
+Unseal Key 1: ww4p5g5yMarTi+uQqj/RFvlLb9iiPVgowyHdGRnrv8ku
+Unseal Key 2: p8/iqwHalb0j8A8icSj7LSg49v4L9kc8gmbdJvYchQTq
+Unseal Key 3: gL6lUyyvxNjFioURRk0tjCl6FAx5sRpQXqjdm03vI1GA
 
-Initial Root Token: s.c5LGosDv5B2HJo3zt3fSzP4o
+Initial Root Token: s.qM3mk84dD0pyHn59xIaDH4h4
 
 Vault initialized with 3 key shares and a key threshold of 2. Please securely
 distribute the key shares printed above. When the Vault is re-sealed,

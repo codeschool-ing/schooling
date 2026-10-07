@@ -20,7 +20,7 @@ O arquivo é um segredo em disco, e a libpq confere como ele está guardado ante
 
 ```
 ana@lab:~/gov$ ls -l ~/.pgpass
--rw-r--r-- 1 ana ana 269 Oct  6 23:46 /home/ana/.pgpass
+-rw-r--r-- 1 ana ana 269 Oct  7 02:09 /home/ana/.pgpass
 ana@lab:~/gov$ psql -h db.ipe.example -U bruno -c "SELECT current_user"
 WARNING: password file "/home/ana/.pgpass" has group or world access; permissions should be u=rw (0600) or less
 Password for user bruno: 
@@ -63,4 +63,4 @@ sem, e as duas foram recusadas. Esse é o padrão da libpq, `sslmode=prefer`, e 
 que "prefer" é a palavra errada em que confiar.
 
 O servidor, que sabe mais do que conta ao cliente, escreve o motivo real no próprio log. A
-seção 11 o lê.
+seção 14 o lê.

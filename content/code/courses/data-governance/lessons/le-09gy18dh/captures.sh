@@ -9,9 +9,9 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # STAGED, and not typed in the lesson: the state lessons 1 and 2 leave
-# (`lab.sh state 2`); the lab CA in /etc/ipe-pki and its certificate for
-# db.ipe.example, made by `lab.sh up` with openssl, which the lesson reads and
-# installs but does not issue. The passphrase of the LUKS demonstration is
+# (`lab.sh state 2`); the lab CA in /etc/ipe-pki and its certificates for
+# db.ipe.example and bao.ipe.example, made by `lab.sh up` with the openssl
+# commands section 4 shows, and read and installed here. The passphrase of the LUKS demonstration is
 # given on standard input by the script; a person types it at the prompt.
 #
 # NOT RUN: `cryptsetup open` and everything after it. Opening a LUKS volume
@@ -119,7 +119,7 @@ on 'sudo -u postgres pg_dump -d ipe -t sales.customers | grep -m 1 "paula.cavalc
 
 put pgcrypto.sql <<'EOF'
 -- pgcrypto in a schema of its own: the public schema is closed to
--- everybody (lab/schema.sql), and functions should not live there anyway.
+-- everybody (lesson 1's schema), and functions should not live there anyway.
 CREATE SCHEMA crypto;
 CREATE EXTENSION pgcrypto SCHEMA crypto;
 GRANT USAGE ON SCHEMA crypto TO ipe_owner;

@@ -8,24 +8,24 @@ próprio log, onde só quem o administra consegue ler:
 
 ```
 ana@lab:~/gov$ sudo grep DETAIL /var/log/postgresql/postgresql-16-gov.log
-2026-10-06 23:46:05.049 -03 [9907] bruno@ipe DETAIL:  Connection matched file "/etc/postgresql/16/gov/pg_hba.conf" line 123: "local   all             all                                     peer"
-2026-10-06 23:46:05.452 -03 [9992] bruno@ipe DETAIL:  Connection matched file "/etc/postgresql/16/gov/pg_hba.conf" line 4: "host    ipe       all       127.0.0.1/32   scram-sha-256"
-2026-10-06 23:46:05.459 -03 [9993] bruno@ipe DETAIL:  Connection matched file "/etc/postgresql/16/gov/pg_hba.conf" line 4: "host    ipe       all       127.0.0.1/32   scram-sha-256"
-2026-10-06 23:46:05.513 -03 [10000] nobody@ipe DETAIL:  Role "nobody" does not exist.
-2026-10-06 23:46:05.519 -03 [10001] nobody@ipe DETAIL:  Role "nobody" does not exist.
-2026-10-06 23:46:05.574 -03 [10008] lia@ipe DETAIL:  User "lia" has an expired password.
-2026-10-06 23:46:05.580 -03 [10009] lia@ipe DETAIL:  User "lia" has an expired password.
+2026-10-07 02:09:25.030 -03 [1283] bruno@ipe DETAIL:  Connection matched file "/etc/postgresql/16/gov/pg_hba.conf" line 123: "local   all             all                                     peer"
+2026-10-07 02:09:25.473 -03 [1367] bruno@ipe DETAIL:  Connection matched file "/etc/postgresql/16/gov/pg_hba.conf" line 4: "host    ipe       all       127.0.0.1/32   scram-sha-256"
+2026-10-07 02:09:25.480 -03 [1368] bruno@ipe DETAIL:  Connection matched file "/etc/postgresql/16/gov/pg_hba.conf" line 4: "host    ipe       all       127.0.0.1/32   scram-sha-256"
+2026-10-07 02:09:25.537 -03 [1375] nobody@ipe DETAIL:  Role "nobody" does not exist.
+2026-10-07 02:09:25.544 -03 [1376] nobody@ipe DETAIL:  Role "nobody" does not exist.
+2026-10-07 02:09:25.601 -03 [1383] lia@ipe DETAIL:  User "lia" has an expired password.
+2026-10-07 02:09:25.608 -03 [1384] lia@ipe DETAIL:  User "lia" has an expired password.
 ```
 
 Todas as recusas desta aula até aqui estão ali, cada tentativa pela rede duas vezes, e o cliente
 viu quase a mesma frase para todas:
 
-- **A primeira linha é o Bruno no socket**, na seção 7, antes de a Ana trocar o arquivo. Ela bateu
+- **A primeira linha é o Bruno no socket**, na seção 10, antes de a Ana trocar o arquivo. Ela bateu
   com a linha 123 do padrão do Ubuntu, a regra `peer`, e o usuário de sistema era outro.
 - **A senha errada do Bruno** não tem motivo além da regra que bateu: a linha 4 pediu uma senha,
   e a oferecida não servia.
 - **`nobody`** não existe, e o log diz isso com essas palavras.
-- **A senha da Lia** expirou: o controle da seção 9 fazendo seu trabalho, registrado.
+- **A senha da Lia** expirou: o controle da seção 12 fazendo seu trabalho, registrado.
 
 O detalhe `Connection matched` nomeia a regra do `pg_hba.conf` que decidiu. Quando falha um login
 que devia funcionar, é a linha a ler antes de qualquer outra: ela diz qual das suas regras o
@@ -48,8 +48,8 @@ ALTER SYSTEM
 
 ana@lab:~/gov$ psql -h db.ipe.example -U carla -c "SELECT 1" >/dev/null
 ana@lab:~/gov$ sudo tail -n 2 /var/log/postgresql/postgresql-16-gov.log
-2026-10-06 23:46:07.779 -03 [10047] carla@ipe LOG:  connection authenticated: identity="carla" method=scram-sha-256 (/etc/postgresql/16/gov/pg_hba.conf:4)
-2026-10-06 23:46:07.779 -03 [10047] carla@ipe LOG:  connection authorized: user=carla database=ipe application_name=psql SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2026-10-07 02:09:27.810 -03 [1423] carla@ipe LOG:  connection authenticated: identity="carla" method=scram-sha-256 (/etc/postgresql/16/gov/pg_hba.conf:4)
+2026-10-07 02:09:27.810 -03 [1423] carla@ipe LOG:  connection authorized: user=carla database=ipe application_name=psql SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
 ```
 
 `ALTER SYSTEM` grava a configuração no `postgresql.auto.conf`, que sobrepõe o arquivo de

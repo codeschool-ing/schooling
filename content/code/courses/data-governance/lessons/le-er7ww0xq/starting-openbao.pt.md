@@ -3,8 +3,28 @@ title: Subindo o OpenBao
 version: 1
 ---
 
-O `lab.sh` instalou o OpenBao e escreveu a configuração dele; nada foi guardado nele ainda. A
-configuração é curta:
+O OpenBao é um binário só. A Ana baixa a versão com que este curso foi gravado, **confere-a contra
+o SHA-256 que o projeto publica** — um servidor de gestão de chaves é o último programa a rodar sem
+saber de onde veio — e o instala. Ele roda com um usuário próprio, com os dados, a configuração e o
+log em três diretórios, e recebe o certificado que a aula 3 emitiu para `bao.ipe.example`. O último
+comando abre um editor para a configuração:
+
+```sh
+curl -fsSLO https://github.com/openbao/openbao/releases/download/v2.5.5/bao_2.5.5_Linux_x86_64.tar.gz
+echo "2c5577707e97fc95c2086950f39880ead5e45b356c94388e5cb606f5a5c2b697  bao_2.5.5_Linux_x86_64.tar.gz" | sha256sum -c
+tar -xzf bao_2.5.5_Linux_x86_64.tar.gz bao
+sudo install -m 0755 bao /usr/local/bin/bao
+rm bao bao_2.5.5_Linux_x86_64.tar.gz
+sudo useradd --system --home /var/lib/bao --shell /usr/sbin/nologin bao
+sudo mkdir -p /etc/bao /var/lib/bao/data /var/log/bao
+sudo chown -R bao:bao /var/lib/bao /var/log/bao
+sudo install -m 0644 -o bao -g bao /etc/ipe-pki/bao.crt /etc/bao/bao.crt
+sudo install -m 0600 -o bao -g bao /etc/ipe-pki/bao.key /etc/bao/bao.key
+sudo nano /etc/bao/bao.hcl
+```
+
+Numa máquina com processador ARM em vez de x86-64, a página da versão lista o arquivo dela, com o
+checksum próprio. A configuração é curta:
 
 ```
 ana@lab:~/gov$ cat /etc/bao/bao.hcl
@@ -39,8 +59,19 @@ para um arquivo de auditoria**, declarado aqui porque esta versão do OpenBao s�
 de auditoria vindos do arquivo de configuração: o que é auditado faz parte do arquivo que um
 revisor lê, e não de uma configuração que alguém com um token consegue mudar.
 
-O `lab.sh bao-start` subiu o servidor como o usuário `bao`; na máquina virtual uma unit do systemd
-faria isso no boot. Ele responde, e diz que não está pronto:
+A Ana sobe o servidor como o usuário `bao`, em segundo plano, e diz ao próprio shell onde ele está
+e em que CA confiar. O `BAO_CLI_NO_COLOR` tira os códigos de cor da saída, que é como as transcrições
+aparecem:
+
+```sh
+sudo -u bao sh -c 'nohup bao server -config=/etc/bao/bao.hcl >> /var/log/bao/server.log 2>&1 &'
+echo 'export BAO_ADDR=https://bao.ipe.example:8200 BAO_CACERT=/etc/ipe-pki/ca.crt BAO_CLI_NO_COLOR=1' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Uma unit do systemd o subiria a cada boot; subido à mão, ele tem de ser subido de novo depois de um
+reinício, e destrancado de novo também, como a próxima seção mostra. Ele responde, e diz que não
+está pronto:
 
 ```
 ana@lab:~/gov$ bao status
@@ -69,11 +100,11 @@ com uma **chave raiz**. Inicializar cria essa chave raiz e a divide na mesma hor
 
 ```
 ana@lab:~/gov$ bao operator init -key-shares=3 -key-threshold=2 | tee init.txt
-Unseal Key 1: 7lO0Motm4zDTjj322eJo8vo1TwTY2ZnueWQQ3qqPcTpX
-Unseal Key 2: gaQ1dkP33nYAjVaZWflpEKhJXGFzADlO4jBOzQvqtuDT
-Unseal Key 3: KeCYHX1gaNGzJ30xknQPi7ZxzBh7YobxpGHOXdKTvCib
+Unseal Key 1: ww4p5g5yMarTi+uQqj/RFvlLb9iiPVgowyHdGRnrv8ku
+Unseal Key 2: p8/iqwHalb0j8A8icSj7LSg49v4L9kc8gmbdJvYchQTq
+Unseal Key 3: gL6lUyyvxNjFioURRk0tjCl6FAx5sRpQXqjdm03vI1GA
 
-Initial Root Token: s.c5LGosDv5B2HJo3zt3fSzP4o
+Initial Root Token: s.qM3mk84dD0pyHn59xIaDH4h4
 
 Vault initialized with 3 key shares and a key threshold of 2. Please securely
 distribute the key shares printed above. When the Vault is re-sealed,

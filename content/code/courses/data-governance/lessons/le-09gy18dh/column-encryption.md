@@ -10,7 +10,7 @@ careless `SELECT` all carry ciphertext. PostgreSQL ships an extension for it, **
 
 ```sql
 -- pgcrypto in a schema of its own: the public schema is closed to
--- everybody (lab/schema.sql), and functions should not live there anyway.
+-- everybody (lesson 1's schema), and functions should not live there anyway.
 CREATE SCHEMA crypto;
 CREATE EXTENSION pgcrypto SCHEMA crypto;
 GRANT USAGE ON SCHEMA crypto TO ipe_owner;
@@ -23,7 +23,7 @@ CREATE EXTENSION
 GRANT
 ```
 
-The extension goes in a schema of its own, `crypto`, because lab/schema.sql closed `public` to
+The extension goes in a schema of its own, `crypto`, because lesson 1's schema closed `public` to
 everybody, and because a schema named for what is in it can be granted on its own. Then Ana's
 first attempt:
 
@@ -44,7 +44,7 @@ ALTER TABLE
 UPDATE 6012
  customer_id |      cpf       |                 cpf_enc                  
 -------------+----------------+------------------------------------------
-           1 | 372.874.168-09 | c30d040703023dcad4e8eb7cb07470d23f010db9
+           1 | 372.874.168-09 | c30d040703020722140bf6f1c35668d23f0119ea
 (1 row)
 ```
 
@@ -82,7 +82,7 @@ SET
 ana@lab:~/gov$ sudo grep -c "chave-da-ipe-2026" /var/log/postgresql/postgresql-16-gov.log
 1
 ana@lab:~/gov$ sudo grep -m 1 "pgp_sym_decrypt" /var/log/postgresql/postgresql-16-gov.log
-2026-10-07 00:21:19.316 -03 [27950] ana@ipe LOG:  statement: SELECT crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026') FROM sales.customers WHERE customer_id = 1
+2026-10-07 02:17:53.732 -03 [3958] ana@ipe LOG:  statement: SELECT crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026') FROM sales.customers WHERE customer_id = 1
 ```
 
 **The key is in the server's log**, in clear, in the same line as the query that used it. The
@@ -90,7 +90,11 @@ statement travelled to the server as text, so the key did too, and every place a
 land now holds it: the log, `pg_stat_activity` while the query runs, `pg_stat_statements` if it is
 installed, a slow-query report, a screenshot of a monitoring dashboard. And the database server,
 the thing the encryption was supposed to protect the column from, holds the key in memory every
-time it decrypts.
+time it decrypts. Ana turns statement logging off again before going on:
+
+```sh
+sudo -u postgres psql -c "ALTER SYSTEM RESET log_statement" -c "SELECT pg_reload_conf()"
+```
 
 **Encrypting inside the database protects against whoever gets a copy of the data without the
 key.** It does not protect against the database, its administrators or its logs, because the key

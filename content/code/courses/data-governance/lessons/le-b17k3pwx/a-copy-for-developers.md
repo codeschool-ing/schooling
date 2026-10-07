@@ -55,7 +55,7 @@ production; the city, sex, year of birth and sign-up time together single out ma
 section 9 measures. A masked copy belongs in an environment with access control, not in a public
 repository or a vendor's demo.
 
-The alternative is the one this course is built on: **generate the data**. `lab/generate.py` writes
+The alternative is the one this course is built on: **generate the data**. Lesson 1's `generate.py` writes
 6,012 customers with fixed seeds, every CPF failing its check digit and every e-mail under a domain
 reserved for examples. Nobody in it exists, so nobody can be exposed by it, and a test that needs
 "a customer under eighteen" or "a duplicate sign-up" gets one because somebody wrote it into the

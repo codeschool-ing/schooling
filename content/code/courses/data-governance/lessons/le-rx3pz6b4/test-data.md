@@ -4,7 +4,7 @@ version: 1
 ---
 
 Lesson 5 built a masked copy for developers and said that, for most work, generated data is better
-than any copy. Ipê's own data is generated — by `lab/generate.py`, with fixed seeds — and it was built
+than any copy. Ipê's own data is generated — by lesson 1's `generate.py`, with fixed seeds — and it was built
 so that it **cannot be real**, which is a property worth checking rather than trusting.
 
 The CPF is the clearest case. A CPF has eleven digits, and the last two are check digits computed from

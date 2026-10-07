@@ -78,7 +78,13 @@ os dois tipos de view fazem trabalhos diferentes:
 | uma view padrão | o dono | expor colunas derivadas de linhas que todo o cargo pode ver — o perfil dos analistas |
 | uma view `security_invoker` | quem lê | uma conveniência sobre uma tabela cuja segurança de linha precisa continuar valendo |
 
-Ana devolve a view ao que era e a revoga do suporte. A lição que ela anota é a que vale guardar:
+Ana devolve a view ao que era e a revoga do suporte:
+
+```sh
+psql -c "SET ROLE ipe_owner" -c "ALTER VIEW sales.customer_profile SET (security_invoker = false)" -c "REVOKE SELECT ON sales.customer_profile FROM support_agent"
+```
+
+A lição que ela anota é a que vale guardar:
 **a segurança de linha protege uma tabela, não o dado que está nela.** Tudo o que lê a tabela em
 nome de outro — uma view, uma função, uma view materializada, uma cópia noturna para outra
 tabela, uma exportação — carrega o que o dono dele conseguia ver.

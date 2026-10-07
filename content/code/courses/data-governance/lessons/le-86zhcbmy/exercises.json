@@ -71,7 +71,7 @@
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Why does the course recommend building the lab in a virtual machine?",
-    "hint": "Look at what lab.sh changes on the machine.",
+    "hint": "Look at what section 4 changes on the machine.",
     "choices": [
       {
         "text": "PostgreSQL refuses to run on a laptop",
@@ -1073,6 +1073,114 @@
         ],
         "ignore_case": true,
         "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-awwbgdb1",
+    "version": 1,
+    "section": "building-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab put `PGPORT=5433` in Ana's environment when `/etc/postgresql-common/user_clusters` already names the cluster?",
+    "hint": "Socket or host name?",
+    "choices": [
+      {
+        "text": "user_clusters is read only by the postgres user",
+        "correct": false,
+        "why": "No. It applies to every user."
+      },
+      {
+        "text": "A connection by host name does not ask the wrapper",
+        "correct": true,
+        "why": "Right. Lesson 3 connects to db.ipe.example."
+      },
+      {
+        "text": "psql ignores files in /etc",
+        "correct": false,
+        "why": "No. The wrapper reads that one."
+      },
+      {
+        "text": "Port 5433 is reserved for PostgreSQL 16",
+        "correct": false,
+        "why": "No. 5433 is simply the port the lab chose."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4vn5c3k",
+    "version": 1,
+    "section": "ipes-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `schema.sql` given to `psql` on standard input rather than with `-f`?",
+    "hint": "Whose shell opens the file?",
+    "choices": [
+      {
+        "text": "`-f` cannot read SQL files with comments",
+        "correct": false,
+        "why": "No. It reads them fine."
+      },
+      {
+        "text": "Standard input is faster for large files",
+        "correct": false,
+        "why": "No. Speed is not the reason."
+      },
+      {
+        "text": "Ana's shell reads it, so postgres needs no access to her home",
+        "correct": true,
+        "why": "Right. The redirect is opened before sudo runs."
+      },
+      {
+        "text": "`-f` would run it as Ana instead of postgres",
+        "correct": false,
+        "why": "No. The role comes from sudo, not from the flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3gsm666",
+    "version": 1,
+    "section": "ipes-data",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`wc -l` counts 6013 lines in `customers.csv`. How many customers does the table hold?",
+    "hint": "The first line of a CSV.",
+    "value": 6012,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ptr1g7js",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`psql` answers `No such file or directory` for the socket on port 5433. What is the first thing to try?",
+    "hint": "Is anything listening?",
+    "choices": [
+      {
+        "text": "Start the cluster, and read its log if that fails",
+        "correct": true,
+        "why": "Right. The cluster is not running."
+      },
+      {
+        "text": "Reinstall Ubuntu",
+        "correct": false,
+        "why": "No. Far more than the problem needs."
+      },
+      {
+        "text": "Generate the data again",
+        "correct": false,
+        "why": "No. The data is not the problem."
+      },
+      {
+        "text": "Change PGPORT to 5432",
+        "correct": false,
+        "why": "No. That would reach the other cluster."
       }
     ]
   }

@@ -78,7 +78,13 @@ the two kinds of view do different jobs:
 | a default view | its owner | exposing derived columns of rows everybody in the job may see — the analysts' profile |
 | a `security_invoker` view | its reader | a convenience over a table whose row security must still hold |
 
-Ana puts the view back as it was and revokes it from support. The lesson she writes down is the
+Ana puts the view back as it was and revokes it from support:
+
+```sh
+psql -c "SET ROLE ipe_owner" -c "ALTER VIEW sales.customer_profile SET (security_invoker = false)" -c "REVOKE SELECT ON sales.customer_profile FROM support_agent"
+```
+
+The lesson she writes down is the
 one to keep: **row security protects a table, not the data in it.** Anything that reads the table
 on somebody else's behalf — a view, a function, a materialised view, a nightly copy into another
 table, an export — carries whatever its owner could see.

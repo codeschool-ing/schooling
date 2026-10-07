@@ -55,7 +55,7 @@ se ligam à produção; cidade, sexo, ano de nascimento e momento do cadastro ju
 gente, como a seção 9 mede. Uma cópia mascarada pertence a um ambiente com controle de acesso, não a
 um repositório público nem à demonstração de um fornecedor.
 
-A alternativa é aquela em que este curso foi construído: **gerar o dado**. O `lab/generate.py`
+A alternativa é aquela em que este curso foi construído: **gerar o dado**. O `generate.py` da aula 1
 escreve 6.012 clientes com sementes fixas, todo CPF falhando no dígito verificador e todo e-mail num
 domínio reservado para exemplos. Ninguém ali existe, então ninguém pode ser exposto por ele, e um
 teste que precisa de "um cliente menor de dezoito" ou de "um cadastro duplicado" o recebe porque

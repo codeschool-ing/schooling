@@ -46,7 +46,7 @@ gravado em disco.
 
 ```
 ana@lab:~/gov$ BAO_TOKEN=$(cat site-app.token) bao write -field=ciphertext transit/encrypt/ipe-cpf plaintext=MzcyLjg3NC4xNjgtMDk=; echo
-vault:v1:u1P2QlncpgSzGvzSuNmTdKM7rQLM/PLQoxG116HwsHNKckNx9XvsRwOw
+vault:v1:yk8WkpSF5smvxhw4N5RKcUIhoN6KmQkBqgVvw3nRyM+QFWJZpZIKpyZK
 ana@lab:~/gov$ BAO_TOKEN=$(cat site-app.token) bao write transit/decrypt/ipe-cpf ciphertext=$(cat cpf.ct)
 Error writing data to transit/decrypt/ipe-cpf: Error making API request.
 

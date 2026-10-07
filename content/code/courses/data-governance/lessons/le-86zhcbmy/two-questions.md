@@ -33,7 +33,7 @@ authorise. The other gate sounds like this, from a session that got in:
 ERROR:  permission denied for schema sales
 ```
 
-The connection worked. The statement did not. Section 12 of this lesson produces that line, and
+The connection worked. The statement did not. Section 15 of this lesson produces that line, and
 lesson 2 is entirely about the second gate.
 
 ## Why the difference matters for data

@@ -2,8 +2,8 @@
 -- touched it: three schemas, the tables the website and the shops write, and
 -- not one grant. Every privilege in the course is added by a lesson.
 --
--- Run as the superuser, in the database `ipe`. lab.sh loads the CSV files
--- generate.py wrote straight after.
+-- Run as the superuser, in the database `ipe`. The CSV files generate.py
+-- writes are loaded straight after.
 
 CREATE ROLE ipe_owner NOLOGIN;
 COMMENT ON ROLE ipe_owner IS 'owns every table; nobody logs in as it';

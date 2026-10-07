@@ -89,7 +89,7 @@ makes everything else in this course possible.** An audit trail can only say wha
 own. And lesson 10's question — who read the prescriptions table in May — only has an answer if the
 answer is a name.
 
-Two of them carry attributes the others do not, and section 9 uses both: `lia`'s password stops
+Two of them carry attributes the others do not, and section 12 uses both: `lia`'s password stops
 working on 30 June, and `site_app` can never hold more than three connections at once.
 
 ```

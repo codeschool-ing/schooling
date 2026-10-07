@@ -20,7 +20,7 @@ deletion_allowed          false
 derived                   false
 exportable                false
 imported_key              false
-keys                      map[1:1791343891]
+keys                      map[1:1791350397]
 latest_version            1
 min_available_version     0
 min_decryption_version    1
@@ -59,7 +59,7 @@ ana@lab:~/gov$ printf '372.874.168-09' | base64
 MzcyLjg3NC4xNjgtMDk=
 ana@lab:~/gov$ bao write -field=ciphertext transit/encrypt/ipe-cpf plaintext=MzcyLjg3NC4xNjgtMDk= > cpf.ct
 ana@lab:~/gov$ cat cpf.ct; echo
-vault:v1:t+QDwmezRheG3+m55XNJSVWHooTcFCNurwlvKNddUqWUAGnvTK1DTk7Z
+vault:v1:Q06MJl47m09qQtMyfjoC3U7JaFZnQNYL8CesYAq6wVzWKXH5AVG9CPfY
 ana@lab:~/gov$ bao write -field=plaintext transit/decrypt/ipe-cpf ciphertext=$(cat cpf.ct) | base64 -d; echo
 372.874.168-09
 ```

@@ -35,7 +35,7 @@ outro portão soa assim, numa sessão que conseguiu entrar:
 ERROR:  permission denied for schema sales
 ```
 
-A conexão funcionou. O comando, não. A seção 12 desta aula produz essa linha, e a aula 2 é
+A conexão funcionou. O comando, não. A seção 15 desta aula produz essa linha, e a aula 2 é
 inteira sobre o segundo portão.
 
 ## Por que a diferença importa para dados

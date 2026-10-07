@@ -167,16 +167,16 @@ build_hosts() {
     echo '127.0.0.1 db.ipe.example bao.ipe.example' >> /etc/hosts
 }
 
-# The lab CA. A real one keeps its key offline; this one keeps it in a
-# directory only root can read, which is what lesson 3 says not to do.
+# The lab CA, made with the commands lesson 3 shows. A real one keeps its key
+# offline; this one keeps it in a directory only root can read.
 issue() { # issue NAME DNSNAME
   openssl req -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
     -keyout "$PKI/$1.key" -subj "/O=Farmacia Ipe/CN=$2" -out "$PKI/$1.csr" 2>/dev/null
+  printf 'subjectAltName=DNS:%s\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth,clientAuth\n' "$2" \
+    > "$PKI/$1.ext"
   openssl x509 -req -in "$PKI/$1.csr" -CA "$PKI/ca.crt" -CAkey "$PKI/ca.key" \
-    -CAcreateserial -days 825 -sha256 -out "$PKI/$1.crt" \
-    -extfile <(printf 'subjectAltName=DNS:%s\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth,clientAuth\n' "$2") \
-    2>/dev/null
-  rm -f "$PKI/$1.csr"
+    -CAcreateserial -days 825 -sha256 -out "$PKI/$1.crt" -extfile "$PKI/$1.ext" 2>/dev/null
+  rm -f "$PKI/$1.csr" "$PKI/$1.ext"
 }
 build_pki() {
   mkdir -p $PKI
@@ -221,9 +221,10 @@ EOF
   pg_ctlcluster 16 gov start
 }
 
+# The same commands lesson 1 has the student type, in the same order.
 load() {
-  as_pg -c "CREATE DATABASE ipe"
-  as_pg -d ipe -f "$HERE/lab/schema.sql"
+  as_pg -d postgres -c "CREATE DATABASE ipe"
+  as_pg -d ipe < "$HERE/lab/schema.sql"
   local t
   for t in sales.customers sales.products sales.orders sales.order_items \
            sales.payments health.prescriptions support.tickets; do
@@ -260,11 +261,12 @@ case "${1:-}" in
     state "$2" ;;
   bao-start)
     # In the virtual machine a systemd unit would do this; the lab starts it
-    # by hand, as the bao user, detached from the terminal that asked.
+    # by hand, as the bao user, the way lesson 4 does.
     pgrep -u bao -x bao >/dev/null || {
       mkdir -p /var/log/bao && chown bao:bao /var/log/bao
-      setsid runuser -u bao -- env -i PATH=/usr/bin:/bin /usr/local/bin/bao server -config=/etc/bao/bao.hcl \
-        >>/var/log/bao/server.log 2>&1 </dev/null &
+      # The command lesson 4 has the student type, run as the bao user.
+      # sudo clears the environment, and so does env -i here.
+      runuser -u bao -- env -i PATH=/usr/local/bin:/usr/bin:/bin sh -c 'nohup bao server -config=/etc/bao/bao.hcl >> /var/log/bao/server.log 2>&1 &' </dev/null
       for _ in $(seq 50); do
         curl -s --noproxy "*" --cacert $PKI/ca.crt https://bao.ipe.example:8200/v1/sys/health >/dev/null && break
         sleep 0.2

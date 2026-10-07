@@ -22,7 +22,7 @@ deletion_allowed          false
 derived                   false
 exportable                false
 imported_key              false
-keys                      map[1:1791343895]
+keys                      map[1:1791350401]
 latest_version            1
 min_available_version     0
 min_decryption_version    1
@@ -34,8 +34,8 @@ supports_derivation       true
 supports_encryption       true
 supports_signing          false
 type                      aes256-gcm96
-ana@lab:~/gov$ printf '%s\n' vault:v1:yyUANlXaryMx87hy+lIDWOk/ON96J4uh8NOXPUujRtbVwIatK6+yf4criKkZV9qrxc+rQPg=
-vault:v1:yyUANlXaryMx87hy+lIDWOk/ON96J4uh8NOXPUujRtbVwIatK6+yf4criKkZV9qrxc+rQPg=
+ana@lab:~/gov$ printf '%s\n' vault:v1:oE68S349ktS4kJ6juH6FWcjGwhPn/04GvDR+Zv+dfm6+RfcJSAV3amuWWJAMcnBCzdmdaEY=
+vault:v1:oE68S349ktS4kJ6juH6FWcjGwhPn/04GvDR+Zv+dfm6+RfcJSAV3amuWWJAMcnBCzdmdaEY=
 ana@lab:~/gov$ bao write transit/keys/ipe-customer-4711/config deletion_allowed=true
 Key                       Value
 ---                       -----
@@ -45,7 +45,7 @@ deletion_allowed          true
 derived                   false
 exportable                false
 imported_key              false
-keys                      map[1:1791343895]
+keys                      map[1:1791350401]
 latest_version            1
 min_available_version     0
 min_decryption_version    1
@@ -59,7 +59,7 @@ supports_signing          false
 type                      aes256-gcm96
 ana@lab:~/gov$ bao delete transit/keys/ipe-customer-4711
 Success! Data deleted (if it existed) at: transit/keys/ipe-customer-4711
-ana@lab:~/gov$ bao write transit/decrypt/ipe-customer-4711 ciphertext=vault:v1:yyUANlXaryMx87hy+lIDWOk/ON96J4uh8NOXPUujRtbVwIatK6+yf4criKkZV9qrxc+rQPg=
+ana@lab:~/gov$ bao write transit/decrypt/ipe-customer-4711 ciphertext=vault:v1:oE68S349ktS4kJ6juH6FWcjGwhPn/04GvDR+Zv+dfm6+RfcJSAV3amuWWJAMcnBCzdmdaEY=
 Error writing data to transit/decrypt/ipe-customer-4711: Error making API request.
 
 URL: PUT https://bao.ipe.example:8200/v1/transit/decrypt/ipe-customer-4711

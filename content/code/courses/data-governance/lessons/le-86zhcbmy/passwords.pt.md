@@ -24,13 +24,18 @@ ALTER SYSTEM
 ana@lab:~/gov$ psql -c "ALTER ROLE lia PASSWORD 'lab-lia-2026'"
 ALTER ROLE
 ana@lab:~/gov$ sudo grep PASSWORD /var/log/postgresql/postgresql-16-gov.log
-2026-10-06 23:46:03.097 -03 [9816] ana@ipe LOG:  statement: ALTER ROLE lia PASSWORD 'lab-lia-2026'
+2026-10-07 02:09:23.078 -03 [1191] ana@ipe LOG:  statement: ALTER ROLE lia PASSWORD 'lab-lia-2026'
 ```
 
 A senha está no log do servidor, em claro, com a data e o nome de quem a definiu. Está também no
 `~/.psql_history` da máquina em que foi digitada. Uma senha que passou por dois arquivos que
 ninguém considera secretos é uma senha com um número desconhecido de cópias — então Ana desliga a
-opção, apaga o histórico e troca a senha da `lia` de novo, do jeito certo.
+opção, apaga o histórico e troca a senha da `lia` de novo, do jeito certo:
+
+```sh
+sudo -u postgres psql -c "ALTER SYSTEM RESET log_statement" -c "SELECT pg_reload_conf()"
+rm -f ~/.psql_history
+```
 
 O psql tem um comando para isso:
 
@@ -52,7 +57,7 @@ Só o superusuário lê a forma armazenada, na tabela de catálogo `pg_authid`:
 ana@lab:~/gov$ sudo -u postgres psql -d ipe -c "SELECT rolname, rolpassword FROM pg_authid WHERE rolname = 'bruno'"
  rolname |                                                              rolpassword                                                              
 ---------+---------------------------------------------------------------------------------------------------------------------------------------
- bruno   | SCRAM-SHA-256$4096:L6BPX9FurILLFEXFU2nBVg==$y+HwKIN3WfgqrRS46xcoRqCqobdVg0dAQE+9CJUTY2M=:tnkscAO2sr1Q+sJ7MIIqYdKQbvNDtfFp6t9j8uYCJyU=
+ bruno   | SCRAM-SHA-256$4096:EGrxBzlETsmbu22MLvwfLQ==$1EMHD/y93uf78xrPPMD1C7s0PFXIgVTT+HSGmnvYzZU=:1jL0rJ3JwmEHj4BYh3284xBKyjOdZYoV87iW085CPp0=
 (1 row)
 ```
 
@@ -78,6 +83,8 @@ cluster atualizado de uma versão antiga pode ainda ter hashes `md5`: a consulta
 sobre todos os papéis, é como encontrá-los, porque um valor guardado que começa com `md5` é um
 deles.
 
-Os outros cinco papéis recebem as senhas do laboratório do mesmo jeito, sem eco. No laboratório
-elas estão escritas no `lab.sh` e no arquivo de senhas da Ana, que a seção 8 monta; numa empresa
-de verdade cada uma é conhecida por exatamente uma pessoa ou um programa.
+A senha do Bruno no laboratório é `lab-bruno-2026`. Os outros cinco papéis recebem as suas do mesmo
+jeito, sem eco, no mesmo padrão: `lab-carla-2026`, `lab-davi-2026`, `lab-lia-2026`, `lab-site-2026`
+para o `site_app` e `lab-etl-2026` para o `etl_loader`. O arquivo de senhas da Ana, que a seção 11
+monta, guarda todas. Numa empresa de verdade cada uma é conhecida por exatamente uma pessoa ou um
+programa.

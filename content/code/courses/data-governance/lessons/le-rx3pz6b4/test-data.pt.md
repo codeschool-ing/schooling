@@ -4,7 +4,7 @@ version: 1
 ---
 
 A aula 5 montou uma cópia mascarada para desenvolvedores e disse que, para a maior parte do trabalho,
-dado gerado é melhor que qualquer cópia. O dado da própria Ipê é gerado — pelo `lab/generate.py`, com
+dado gerado é melhor que qualquer cópia. O dado da própria Ipê é gerado — pelo `generate.py` da aula 1, com
 sementes fixas — e foi construído para **não poder ser real**, uma propriedade que vale conferir em vez
 de confiar.
 

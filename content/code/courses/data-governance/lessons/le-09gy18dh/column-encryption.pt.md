@@ -10,7 +10,7 @@ descuidado carregarem texto cifrado. O PostgreSQL traz uma extensão para isso, 
 
 ```sql
 -- pgcrypto in a schema of its own: the public schema is closed to
--- everybody (lab/schema.sql), and functions should not live there anyway.
+-- everybody (lesson 1's schema), and functions should not live there anyway.
 CREATE SCHEMA crypto;
 CREATE EXTENSION pgcrypto SCHEMA crypto;
 GRANT USAGE ON SCHEMA crypto TO ipe_owner;
@@ -23,7 +23,7 @@ CREATE EXTENSION
 GRANT
 ```
 
-A extensão vai para um schema próprio, `crypto`, porque o lab/schema.sql fechou o `public` para
+A extensão vai para um schema próprio, `crypto`, porque o schema da aula 1 fechou o `public` para
 todo mundo, e porque um schema com o nome do que contém pode ser concedido sozinho. Depois, a
 primeira tentativa da Ana:
 
@@ -44,7 +44,7 @@ ALTER TABLE
 UPDATE 6012
  customer_id |      cpf       |                 cpf_enc                  
 -------------+----------------+------------------------------------------
-           1 | 372.874.168-09 | c30d040703023dcad4e8eb7cb07470d23f010db9
+           1 | 372.874.168-09 | c30d040703020722140bf6f1c35668d23f0119ea
 (1 row)
 ```
 
@@ -83,7 +83,7 @@ SET
 ana@lab:~/gov$ sudo grep -c "chave-da-ipe-2026" /var/log/postgresql/postgresql-16-gov.log
 1
 ana@lab:~/gov$ sudo grep -m 1 "pgp_sym_decrypt" /var/log/postgresql/postgresql-16-gov.log
-2026-10-07 00:21:19.316 -03 [27950] ana@ipe LOG:  statement: SELECT crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026') FROM sales.customers WHERE customer_id = 1
+2026-10-07 02:17:53.732 -03 [3958] ana@ipe LOG:  statement: SELECT crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026') FROM sales.customers WHERE customer_id = 1
 ```
 
 **A chave está no log do servidor**, em claro, na mesma linha da consulta que a usou. O comando
@@ -91,7 +91,11 @@ viajou ao servidor como texto, então a chave também, e todo lugar onde um coma
 a guarda: o log, o `pg_stat_activity` enquanto a consulta roda, o `pg_stat_statements` se estiver
 instalado, um relatório de consultas lentas, a captura de tela de um painel de monitoramento. E o
 servidor de banco, aquilo de que a criptografia deveria proteger a coluna, guarda a chave na
-memória toda vez que decifra.
+memória toda vez que decifra. A Ana desliga o log de comandos de novo antes de seguir:
+
+```sh
+sudo -u postgres psql -c "ALTER SYSTEM RESET log_statement" -c "SELECT pg_reload_conf()"
+```
 
 **Cifrar dentro do banco protege contra quem obtém uma cópia do dado sem a chave.** Não protege
 contra o banco, os administradores dele ou os logs dele, porque a chave passa pelos três. Isso não é

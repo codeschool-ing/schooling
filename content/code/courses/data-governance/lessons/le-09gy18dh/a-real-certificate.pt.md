@@ -3,10 +3,38 @@ title: Um certificado que vale a conferência
 version: 1
 ---
 
-O laboratório tem uma autoridade certificadora própria, feita pelo `lab.sh` com o OpenSSL: uma
-raiz, **Ipe Lab Root CA**, e um certificado que ela assinou para o nome do banco. Numa empresa,
-essa é a CA interna que o time de plataforma opera, ou uma pública quando o banco é alcançado de
-fora. Antes de instalar qualquer coisa, leia o que ele diz:
+O laboratório precisa de uma autoridade certificadora própria, e a Ana cria uma com o OpenSSL:
+uma raiz, **Ipe Lab Root CA**, e dois certificados que ela assina — um para o nome do banco,
+`db.ipe.example`, e um para `bao.ipe.example`, o servidor de chaves que a aula 4 inicia. Numa
+empresa, essa é a CA interna que o time de plataforma opera, ou uma pública quando o banco é
+alcançado de fora, e a chave dela fica offline. O laboratório a guarda em `/etc/ipe-pki`, legível só
+pelo root.
+
+```sh
+sudo mkdir -p /etc/ipe-pki && cd /etc/ipe-pki
+sudo openssl req -x509 -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
+  -keyout ca.key -subj "/O=Farmacia Ipe/CN=Ipe Lab Root CA" \
+  -addext "basicConstraints=critical,CA:TRUE" \
+  -addext "keyUsage=critical,keyCertSign,cRLSign" \
+  -days 3650 -sha256 -out ca.crt
+for name in db bao; do
+  sudo openssl req -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
+    -keyout $name.key -subj "/O=Farmacia Ipe/CN=$name.ipe.example" -out $name.csr
+  printf 'subjectAltName=DNS:%s.ipe.example\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth,clientAuth\n' $name \
+    | sudo tee $name.ext >/dev/null
+  sudo openssl x509 -req -in $name.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+    -days 825 -sha256 -out $name.crt -extfile $name.ext
+  sudo rm $name.csr $name.ext
+done
+sudo chmod 0600 *.key && sudo chmod 0644 *.crt
+cd ~/gov
+```
+
+A raiz diz que é uma CA e que pode assinar certificados (`basicConstraints`, `keyUsage`); cada
+certificado nomeia o host no seu Subject Alternative Name e diz que pode ser usado por um servidor e
+por um cliente. A biblioteca de TLS do Python recusa uma CA que não diga isso, e a aula 4 a usa.
+
+Antes de instalar qualquer coisa, leia o que o certificado do banco diz:
 
 ```
 ana@lab:~/gov$ openssl x509 -in /etc/ipe-pki/db.crt -noout -subject -issuer -ext subjectAltName

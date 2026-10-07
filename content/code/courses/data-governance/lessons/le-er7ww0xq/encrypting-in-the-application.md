@@ -72,12 +72,12 @@ ana@lab:~/gov$ psql -c "SET ROLE ipe_owner" -c "SELECT customer_id, left(cpf_ct,
 SET
  customer_id |                  cpf_ct                  
 -------------+------------------------------------------
-           1 | vault:v2:BJl6DAMmmN/c9BAQCaxHq6mCYQTNNt5
-           2 | vault:v2:3/kE69frLgsaA6RFecQJbGiufL+MbRl
-           3 | vault:v2:5x4pKSEXifHfU4JFWQ385Z7dqBWKz15
+           1 | vault:v2:6imxF0NlF2vTZrptkc/KgEt/Yzg8I2d
+           2 | vault:v2:iBJqvllnAsO0445cFowNVOjzf5eT6Eg
+           3 | vault:v2:OMTRBdV/vcaK9v/U8B85snk9yKKrLjM
 (3 rows)
 
-ana@lab:~/gov$ BAO_TOKEN=$(cat support.token) bao write -field=plaintext transit/decrypt/ipe-cpf ciphertext=vault:v2:BJl6DAMmmN/c9BAQCaxHq6mCYQTNNt5dPYQ3ZcjvQVXZBpGlb/dHqXLV | base64 -d; echo
+ana@lab:~/gov$ BAO_TOKEN=$(cat support.token) bao write -field=plaintext transit/decrypt/ipe-cpf ciphertext=vault:v2:6imxF0NlF2vTZrptkc/KgEt/Yzg8I2djETTPEwRvNVaJ/bi00tSlxyuu | base64 -d; echo
 372.874.168-09
 ```
 

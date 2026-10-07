@@ -22,7 +22,7 @@ deletion_allowed          false
 derived                   false
 exportable                false
 imported_key              false
-keys                      map[1:1791343891 2:1791343893]
+keys                      map[1:1791350397 2:1791350399]
 latest_version            2
 min_available_version     0
 min_decryption_version    1
@@ -37,7 +37,7 @@ type                      aes256-gcm96
 ana@lab:~/gov$ bao read -field=latest_version transit/keys/ipe-cpf; echo
 2
 ana@lab:~/gov$ bao write -field=ciphertext transit/encrypt/ipe-cpf plaintext=MzcyLjg3NC4xNjgtMDk=; echo
-vault:v2:TAfnVYW24GxKtIwJRUyGpJ03xspQsVyKPrd0Ol8z08oye70Zk2zMUpVe
+vault:v2:3GJFEtaMfyiaQftLrGC5X+ARuxp4PlBVdVdERYfb/0OaiIfDNGv2eFIj
 ana@lab:~/gov$ bao write -field=plaintext transit/decrypt/ipe-cpf ciphertext=$(cat cpf.ct) | base64 -d; echo
 372.874.168-09
 ```
@@ -53,7 +53,7 @@ pode passar para a versão nova **sem que o OpenBao jamais o mostre em claro a n
 
 ```
 ana@lab:~/gov$ bao write -field=ciphertext transit/rewrap/ipe-cpf ciphertext=$(cat cpf.ct); echo
-vault:v2:Txej4JhYdP1wS4HPaAMVtP92S66q0YB/z0TsZv+9+IDMMx9qxOwy4Z4+
+vault:v2:LyvGZ/YOHYorJdLGpMnImUvV2gm85HPJ+y+tEJhRtGPBebgxJ6eV8gY1
 ana@lab:~/gov$ bao write transit/keys/ipe-cpf/config min_decryption_version=2
 Key                       Value
 ---                       -----
@@ -63,7 +63,7 @@ deletion_allowed          false
 derived                   false
 exportable                false
 imported_key              false
-keys                      map[2:1791343893]
+keys                      map[2:1791350399]
 latest_version            2
 min_available_version     0
 min_decryption_version    2

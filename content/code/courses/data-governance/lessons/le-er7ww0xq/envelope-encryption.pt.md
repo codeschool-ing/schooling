@@ -29,7 +29,7 @@ deletion_allowed          false
 derived                   false
 exportable                false
 imported_key              false
-keys                      map[1:1791343892]
+keys                      map[1:1791350399]
 latest_version            1
 min_available_version     0
 min_decryption_version    1
@@ -55,8 +55,8 @@ ana@lab:~/gov$ python3 -c "import json; print(json.load(open('datakey.json'))['d
 ana@lab:~/gov$ python3 -c "import json; print(json.load(open('datakey.json'))['data']['plaintext'])" > backup.key && rm datakey.json
 ana@lab:~/gov$ sudo -u postgres pg_dump -d ipe -t sales.customers | openssl enc -aes-256-cbc -pbkdf2 -pass file:backup.key -out customers.sql.enc
 ana@lab:~/gov$ shred -u backup.key && ls -l customers.sql.enc backup.key.wrapped
--rw-r--r-- 1 ana ana      90 Oct  7 00:31 backup.key.wrapped
--rw-r--r-- 1 ana ana 1847744 Oct  7 00:31 customers.sql.enc
+-rw-r--r-- 1 ana ana      90 Oct  7 02:19 backup.key.wrapped
+-rw-r--r-- 1 ana ana 1847744 Oct  7 02:19 customers.sql.enc
 ana@lab:~/gov$ grep -c paula.cavalcanti customers.sql.enc
 0
 ```

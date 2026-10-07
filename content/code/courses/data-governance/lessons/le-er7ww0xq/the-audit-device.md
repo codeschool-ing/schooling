@@ -9,11 +9,11 @@ The last line is support's refused attempt to read the key, and it is worth read
 ```
 ana@lab:~/gov$ sudo tail -n 1 /var/log/bao/audit.log | python3 -m json.tool
 {
-    "time": "2026-10-07T03:31:32.469348851Z",
+    "time": "2026-10-07T05:19:59.108858315Z",
     "type": "response",
     "auth": {
-        "client_token": "hmac-sha256:e686ccd2a03f9324bbca9c2f4e0b568e9297bdde29e4f80336de4890e00941ba",
-        "accessor": "hmac-sha256:28e7353fa80788e9b4780f56296a6183e860c12f58a8ac0604f38794409a2d89",
+        "client_token": "hmac-sha256:abb713a0478c6addf73f7fd9ae30cad419038b60aabcfa95e70e824b7e3dc996",
+        "accessor": "hmac-sha256:bb13db63cb984fb8a54acdb6f04291685144bffcc7fc4156dcdc35695ac889bf",
         "display_name": "token",
         "policies": [
             "default",
@@ -28,24 +28,24 @@ ana@lab:~/gov$ sudo tail -n 1 /var/log/bao/audit.log | python3 -m json.tool
         },
         "token_type": "service",
         "token_ttl": 3600,
-        "token_issue_time": "2026-10-07T03:31:31Z"
+        "token_issue_time": "2026-10-07T05:19:58Z"
     },
     "request": {
-        "id": "54d19358-f2c4-a195-ae26-f365696091c7",
+        "id": "89bb5343-32dd-877c-3ffa-7aa724735f56",
         "client_id": "YKvI9vKtRWISW5quAhZfWfERA7LcP30yuME/HSu3/W8=",
         "operation": "read",
         "mount_point": "transit/",
         "mount_type": "transit",
         "mount_running_version": "v2.5.5+builtin.bao",
         "mount_class": "secret",
-        "client_token": "hmac-sha256:e686ccd2a03f9324bbca9c2f4e0b568e9297bdde29e4f80336de4890e00941ba",
-        "client_token_accessor": "hmac-sha256:28e7353fa80788e9b4780f56296a6183e860c12f58a8ac0604f38794409a2d89",
+        "client_token": "hmac-sha256:abb713a0478c6addf73f7fd9ae30cad419038b60aabcfa95e70e824b7e3dc996",
+        "client_token_accessor": "hmac-sha256:bb13db63cb984fb8a54acdb6f04291685144bffcc7fc4156dcdc35695ac889bf",
         "namespace": {
             "id": "root"
         },
         "path": "transit/keys/ipe-cpf",
         "remote_address": "127.0.0.1",
-        "remote_port": 35222
+        "remote_port": 56280
     },
     "response": {
         "mount_point": "transit/",
@@ -53,7 +53,7 @@ ana@lab:~/gov$ sudo tail -n 1 /var/log/bao/audit.log | python3 -m json.tool
         "mount_running_plugin_version": "v2.5.5+builtin.bao",
         "mount_class": "secret",
         "data": {
-            "error": "hmac-sha256:5d7ef83fb6db661c7e616c7d331786868549249309a0a85352d82a1d5115e433"
+            "error": "hmac-sha256:fe7ef9a1fa20f8afb9a05eacfeaa7f2cc6702782ce852c8587980c12d3b28dbe"
         }
     },
     "error": "1 error occurred:\n\t* permission denied\n\n"

@@ -38,7 +38,7 @@ Version:       	2
 Epoch:         	3
 Metadata area: 	16384 [bytes]
 Keyslots area: 	16744448 [bytes]
-UUID:          	a0619260-7cae-4f3e-a8df-68dd2d67437e
+UUID:          	1ac389d5-712f-476d-8ddf-3a3d6138a33b
 Label:         	(no label)
 Subsystem:     	(no subsystem)
 Flags:       	(no flags)
@@ -57,11 +57,11 @@ Keyslots:
 	Cipher:     aes-xts-plain64
 	Cipher key: 512 bits
 	PBKDF:      argon2id
-	Time cost:  6
+	Time cost:  5
 	Memory:     1048576
 	Threads:    4
-	Salt:       fa 54 9f 6a 55 25 07 16 4a c1 39 04 9c a8 de b4 
-	            63 ef 65 b5 0a 89 28 72 ab 58 25 2a 0b d1 cd 11 
+	Salt:       26 b8 a9 e7 22 8d 34 31 f3 fb 86 2c 0f 68 0b ec 
+	            99 b1 3a f5 45 71 41 90 cc e8 4e d9 a2 a7 a1 6f 
 	AF stripes: 4000
 	AF hash:    sha256
 	Area offset:32768 [bytes]
@@ -71,15 +71,15 @@ Tokens:
 Digests:
   0: pbkdf2
 	Hash:       sha256
-	Iterations: 218818
-	Salt:       4a 4b 51 15 f5 c0 78 b3 3d 26 c1 50 66 04 43 b4 
-	            f5 e1 d0 39 7f 72 bf a5 d7 63 3a 97 af 0e 63 6b 
-	Digest:     98 c5 3b 9c c2 79 cf 5b df 2a 03 25 91 d6 8f 16 
-	            24 b0 d6 0b 89 e4 51 86 0d 43 db 57 1e 40 53 73 
+	Iterations: 219919
+	Salt:       20 d6 60 ff c2 28 bd 5c 7f 73 bd 35 ad 35 87 a7 
+	            88 81 81 b2 50 a5 fe 62 54 4c 55 e0 df 99 92 5c 
+	Digest:     12 65 5f bc ec d8 5a fd 5b 2d 9e 82 5f a0 10 81 
+	            ef fd bb 9b 15 a2 81 f4 41 4e 77 37 20 59 23 ac 
 ```
 
-`luksFormat` wrote a header and nothing else; the passphrase was given on standard input by the
-capture script, where a person types it twice at a prompt. The header is the interesting part:
+`luksFormat` wrote a header and nothing else; you type the passphrase at its prompt, and
+nothing is echoed. The header is the interesting part:
 
 - **`cipher: aes-xts-plain64`** — AES in XTS mode, the mode designed for disks, with a 512-bit key
   (two 256-bit halves, one of them for XTS's tweak);
