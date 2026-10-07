@@ -1,6 +1,6 @@
 ---
 title: A database in seconds
-version: 1
+version: 2
 ---
 
 **One `docker run` gives you a configured PostgreSQL with your schema and your sample data in it,
@@ -8,7 +8,7 @@ reachable from your own machine.** Four options do it, and one detail of the ima
 whether the first thing that connects to it works.
 
 Ana wants the catalogue's table, with two books in it, every time she starts a fresh database. She
-writes the setup as an SQL file in a directory of its own:
+writes the setup as an SQL file, `initdb/01-schema.sql`, in a directory of its own:
 
 ```sql
 CREATE TABLE books (
@@ -43,7 +43,7 @@ Each option has one job:
 ## Ready, and not ready
 
 Ana waits until PostgreSQL answers inside the container, then connects from her own machine with
-`psql`, the PostgreSQL client installed on the host:
+`psql`, the PostgreSQL client lesson 5 installed on the host:
 
 ```
 ana@vm:~$ time until docker exec db pg_isready -U postgres -q; do sleep 0.2; done
