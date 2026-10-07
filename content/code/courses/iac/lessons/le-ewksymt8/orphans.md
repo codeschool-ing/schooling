@@ -1,6 +1,6 @@
 ---
 title: The resource nobody owns
-version: 1
+version: 2
 ---
 
 Every review in this course looks at a configuration: a diff, a plan, a price. **A resource that is
@@ -23,7 +23,13 @@ They come from a few places, and each has been met before:
 
 A colleague, Bruno, needed space for a one-off export last week. From his own machine he created a
 100 GB volume and reserved a public address, and then the export was done. Neither went through
-Terraform, so neither has a tag.
+Terraform, so neither has a tag. These were Bruno's two commands; run them to have the same two in
+your moto:
+
+```sh
+aws ec2 create-volume --size 100 --availability-zone sa-east-1a --volume-type gp3
+aws ec2 allocate-address --domain vpc
+```
 
 The obvious tool is the one AWS made for finding resources by tag, the Resource Groups Tagging API.
 Ask it for volumes:

@@ -1,6 +1,6 @@
 ---
 title: Pricing a plan before it is applied
-version: 1
+version: 2
 ---
 
 The usual picture is that cost arrives on the bill, a month after the change that caused it, and is
@@ -9,8 +9,25 @@ that will exist, and for the resources sold by the hour it names the attribute t
 an instance's type, a disk's size, the fact that a NAT gateway exists at all. Join that with a price
 list and the month is known before `apply`.
 
-Here is the shop's network and its two web servers. `main.tf` is the plain `terraform` and
-`provider` block from lesson 2.
+Here is the shop's network and its two web servers, in `~/shop`. `main.tf` is the plain `terraform`
+and `provider` block from lesson 2:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "sa-east-1"
+}
+```
+
+`network.tf` holds the network:
 
 ```hcl
 resource "aws_vpc" "shop" {
@@ -48,6 +65,8 @@ resource "aws_nat_gateway" "shop" {
 }
 ```
 
+and `web.tf` the two servers:
+
 ```hcl
 resource "aws_instance" "web" {
   count         = 2
@@ -64,7 +83,9 @@ resource "aws_instance" "web" {
 }
 ```
 
-The plan creates eight things:
+Ana keeps the directory in Git, with a `.gitignore` of `.terraform/`, `*.tfstate*` and `tfplan`.
+After `terraform init` she commits everything, `price.py` below included, as *the shop: network and
+two web servers*. The plan creates eight things:
 
 ```
 ana@laptop:~/shop$ terraform plan -no-color -out tfplan | grep -E "will be created|Plan:"
@@ -90,14 +111,15 @@ ana@laptop:~/shop$ terraform show -json tfplan | jq -c '.resource_changes[] | se
 
 ## The prices, and where they come from
 
-**The lab has no network, and the AWS price list is a download.** So the prices below were not read
-here. They are lines of the cloud course's price sheet, `prices.py`, copied from its `sa-east-1`
-column as that course prints them: AWS's public list prices in USD, before tax, at the offer versions
-it pins, `AmazonEC2` 20260925174521 and `AmazonVPC` 20260917190528. Lesson 10 of the cloud course
-explains how that sheet is read and why a pinned version prints the same numbers next year. What this
-lab does is the arithmetic.
+**The prices are written into the script, not looked up when it runs.** The AWS price list is a
+download that changes, so the prices below are lines of the cloud course's price sheet, `prices.py`,
+copied from its `sa-east-1` column as that course prints them: AWS's public list prices in USD,
+before tax, at the offer versions it pins, `AmazonEC2` 20260925174521 and `AmazonVPC`
+20260917190528. Lesson 10 of the cloud course explains how that sheet is read and why a pinned
+version prints the same numbers next year. What this lesson does is the arithmetic, so your run of
+it prints the figures on this page.
 
-`price.py` reads a plan on its standard input, prices the four kinds of resource it has a line for,
+`price.py`, saved in `~/shop`, reads a plan on its standard input, prices the four kinds of resource it has a line for,
 and counts a month as 730 hours, the cloud course's convention:
 
 ```python
@@ -168,6 +190,9 @@ surprise is the order. The NAT gateway, one line in `network.tf` with a comment 
 67.89, more than either web server at 52.10. Each server's 52.10 is its hours plus its 20 GB disk;
 the address the gateway holds adds 3.65. The VPC, the subnets and the internet gateway have no
 line, because AWS does not charge for them by the hour.
+
+Ana applies the saved plan, `terraform apply -auto-approve tfplan`, so the network exists for the
+rest of the lesson.
 
 ## What a plan cannot price
 

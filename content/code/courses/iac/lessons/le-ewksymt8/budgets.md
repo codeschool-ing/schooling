@@ -1,13 +1,14 @@
 ---
 title: A budget, written as code
-version: 1
+version: 2
 ---
 
 Everything so far happens before the money is spent: a price in the review, a tag that cannot be left
 out, a search for what nobody claimed. **A budget is the check that runs afterwards**, against what
 the account actually spent, and lesson 10 of the cloud course built one with the AWS CLI. The same
 budget is a resource, and written beside what it watches it gets what everything else in this
-configuration gets: a review, a history, and a `destroy` that takes it away with the project.
+configuration gets: a review, a history, and a `destroy` that takes it away with the project. Ana
+writes it in `~/shop/budget.tf`:
 
 ```hcl
 resource "aws_budgets_budget" "shop" {
