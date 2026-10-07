@@ -1,6 +1,6 @@
 ---
 title: Drift, e a mudança que ninguém anotou
-version: 1
+version: 2
 ---
 
 Uma semana depois, alguém precisa olhar, de casa, um dos servidores da loja e abre SSH para o mundo no

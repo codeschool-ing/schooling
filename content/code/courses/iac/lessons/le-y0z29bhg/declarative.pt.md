@@ -1,6 +1,6 @@
 ---
 title: Descrever o resultado em vez dos passos
-version: 1
+version: 2
 ---
 
 De volta à terceira pergunta da rede feita à mão: o que acontece se a Ana rodar o `network.sh` de novo? Ela

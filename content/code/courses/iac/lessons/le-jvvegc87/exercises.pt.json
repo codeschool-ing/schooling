@@ -555,5 +555,27 @@
       "`ansible-playbook -i hosts.ini site.yml`"
     ],
     "trap": "As chaves de host precisam ser confiáveis antes de o Ansible se conectar pelo endereço."
+  },
+  "ex-c3vdz3x8": {
+    "prompt": "A Ana roda o `up.sh` uma segunda vez, e agora `ansible all -m ping` falha com o SSH avisando que a identificação do host remoto mudou. Por quê?",
+    "hint": "O que o `up.sh` faz com as máquinas que já estavam lá?",
+    "choices": [
+      {
+        "text": "As máquinas novas têm chaves de host novas",
+        "why": "Isso. O `up.sh` joga fora os contêineres antigos, e cada novo cria a sua própria chave de host SSH; o `ssh-keygen -R` esquece a antiga."
+      },
+      {
+        "text": "O `up.sh` trocou a chave da própria Ana por uma nova",
+        "why": "Ele só cria uma chave quando `~/.ssh/id_ed25519` não existe, e a dela existia."
+      },
+      {
+        "text": "As máquinas ganharam endereços diferentes na segunda vez",
+        "why": "Os endereços são fixos no script, `172.30.0.11` e os outros, em toda execução."
+      },
+      {
+        "text": "O usuário `deploy` perdeu a permissão de usar `sudo`",
+        "why": "A imagem a concede em toda construção, e o SSH nem chegaria até ali."
+      }
+    ]
   }
 }

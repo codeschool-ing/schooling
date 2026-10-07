@@ -1,6 +1,6 @@
 ---
 title: Describing the result instead of the steps
-version: 1
+version: 2
 ---
 
 Back to the third question from the network built by hand: what happens if Ana runs `network.sh` again? She finds

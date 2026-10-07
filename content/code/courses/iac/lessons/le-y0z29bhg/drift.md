@@ -1,6 +1,6 @@
 ---
 title: Drift, and the change nobody wrote down
-version: 1
+version: 2
 ---
 
 A week later somebody needs to look at one of the shop's servers from home, and opens SSH to the

@@ -1,6 +1,6 @@
 ---
 title: A network built by hand
-version: 1
+version: 2
 ---
 
 Nothing in this lesson asks you to type. Its transcripts are Ana's and are there to be read, and

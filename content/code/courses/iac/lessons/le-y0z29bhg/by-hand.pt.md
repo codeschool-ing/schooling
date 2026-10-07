@@ -1,6 +1,6 @@
 ---
 title: Uma rede feita à mão
-version: 1
+version: 2
 ---
 
 Nada nesta aula pede que você digite. As transcrições são da Ana e estão aqui para serem lidas, e
