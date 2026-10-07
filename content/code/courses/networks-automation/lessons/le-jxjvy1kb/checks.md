@@ -1,6 +1,6 @@
 ---
 title: Checks before and after a change
-version: 1
+version: 2
 ---
 
 Every lesson so far ended with a check: the diff before a commit, the comparison after a push, the
@@ -26,3 +26,14 @@ tests, but the line between them is always the same: whether the test needs the 
 The project is lesson 10's, in a Git repository, with the data in YAML. A pipeline, which lesson
 14 builds, runs on a change to files, and files are what this lesson tests. With NetBox as the
 source, the same tests run on what `render_nb.py` produces.
+
+It starts from lesson 10's files, in a fresh `~/net` on `ctl`. Lesson 11's `~/net` was a different
+project, the backups, so it moves aside first; the data, the template and `push.py` are copied
+from lesson 10's `~/tpl`:
+
+```
+ana@ctl:~$ mv net net-lesson11 2>/dev/null; mkdir -p net/templates && cp -r tpl/data tpl/push.py net/ && cp tpl/templates/frr.j2 net/templates/
+```
+
+The sections below add the rest: a model and a script that checks the data against it, a
+`render.py` the tests can import, and the tests themselves.

@@ -1,7 +1,15 @@
 ---
 title: Um repositório que testa o que recebe
-version: 1
+version: 2
 ---
+
+O projeto é o da aula 13, como aquela aula o deixou em `~/net`. Esta aula o põe num servidor, e a
+cópia de trabalho clonada do servidor fica com o nome `net`, então o diretório da aula 13 sai do
+caminho:
+
+```
+ana@ctl:~$ mv net net-lesson13
+```
 
 Um repositório bare não tem cópia de trabalho, só os arquivos do próprio Git, que é o que um
 servidor guarda. O projeto é clonado dele para o `net`, onde o trabalho acontece:
@@ -19,8 +27,14 @@ objects
 refs
 ```
 
+Os arquivos da aula 13 entram no clone sem mudança, e um diretório para o que esta aula acrescenta:
+
+```
+ana@ctl:~$ cd net-lesson13 && cp -r data templates render.py push.py model.py validate.py test_configs.py test_links.py test_network.py ../net/ && mkdir ../net/ci
+```
+
 Os testes e o deploy ficam **no projeto**, em `ci/`, então uma mudança no pipeline é um commit como
-qualquer outro e é testada pelo pipeline que ela muda:
+qualquer outro e é testada pelo pipeline que ela muda. O `ci/test.sh`:
 
 ```sh
 # The checks every pushed commit has to pass: lesson 13's, in order of cost.
@@ -32,6 +46,8 @@ python validate.py
 echo "== offline tests"
 python -m pytest -q -p no:cacheprovider test_configs.py test_links.py
 ```
+
+O `ci/deploy.sh`:
 
 ```sh
 # Render, apply, and check the network, retrying while it converges.
@@ -59,7 +75,8 @@ primeira que falhar. O `deploy.sh` renderiza, aplica, e depois roda o pós-check
 dez segundos de intervalo, que é a lição da aula 13 sobre convergência transformada num loop: uma
 rede ainda convergindo ganha um minuto, e uma que está quebrada é relatada no fim dele.
 
-Os hooks em si são instalados no repositório do servidor, fora do projeto:
+Os hooks em si são instalados no repositório do servidor, fora do projeto, como
+`net.git/hooks/pre-receive` e `net.git/hooks/post-receive`:
 
 ```schooling-example
 {
@@ -95,6 +112,13 @@ Os hooks em si são instalados no repositório do servidor, fora do projeto:
     }
   ]
 }
+```
+
+Por último, um `.gitignore`, para que o que o pipeline gera nunca entre num commit, e os hooks
+tornados executáveis:
+
+```
+ana@ctl:~$ cd net && printf "configs/\n__pycache__/\n" > .gitignore
 ```
 
 ```

@@ -15,9 +15,10 @@
 # its two hooks: nothing here is a CI product, and the lesson says so.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; ana's git identity; and the files ana wrote
-# (put below), whose contents the lessons show, with lessons 10 and 13's
-# project beside them.
+# itself, built by lab.sh reset; ana's git identity, typed in lesson 11, and
+# advice.detachedHead, which changes no transcript here; lesson 13's ~/net as
+# that lesson left it, which the-server.md moves aside and copies from; and
+# the files ana wrote (put below), whose contents the lessons show.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -58,37 +59,7 @@ fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 lab reset
 lab exec ctl ana 'git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main && git config --global advice.detachedHead false'
 
-block server
-on ctl 'git init --bare -q net.git && git clone -q net.git net 2>&1 && ls net.git'
-put net.git/hooks/pre-receive <<'CODE'
-#!/bin/sh
-# Every commit pushed to any branch is tested before the repository accepts it.
-while read old new ref; do
-  [ "$new" = 0000000000000000000000000000000000000000 ] && continue
-  work=$(mktemp -d)
-  git archive "$new" | tar -x -C "$work"
-  echo "testing $ref at $(git rev-parse --short "$new")"
-  if ! (cd "$work" && sh ci/test.sh); then
-    echo "REFUSED: $ref fails its tests"
-    rm -rf "$work"
-    exit 1
-  fi
-  rm -rf "$work"
-done
-CODE
-put net.git/hooks/post-receive <<'CODE'
-#!/bin/sh
-# What reaches main is deployed, and checked on the network afterwards.
-while read old new ref; do
-  [ "$ref" = refs/heads/main ] || continue
-  work=$HOME/deploy
-  rm -rf "$work" && mkdir -p "$work"
-  git archive "$new" | tar -x -C "$work"
-  echo "deploying main at $(git rev-parse --short "$new")"
-  (cd "$work" && sh ci/deploy.sh) || echo "DEPLOY FAILED at $(git rev-parse --short "$new")"
-done
-CODE
-lab exec ctl ana 'mkdir -p net/data net/templates net/ci'
+# lesson 13's project as it left ana's home, in ~/net: its files, shown there
 put net/data/core1.yaml <<'CODE'
 hostname: core1
 loopback: 203.0.113.251
@@ -343,6 +314,40 @@ def test_every_branch_lan_is_routed(name):
     routes = show(name, "show ip route")
     assert [lan for lan in LANS if lan not in routes] == []
 CODE
+block aside
+on ctl 'mv net net-lesson13'
+block server
+on ctl 'git init --bare -q net.git && git clone -q net.git net 2>&1 && ls net.git'
+put net.git/hooks/pre-receive <<'CODE'
+#!/bin/sh
+# Every commit pushed to any branch is tested before the repository accepts it.
+while read old new ref; do
+  [ "$new" = 0000000000000000000000000000000000000000 ] && continue
+  work=$(mktemp -d)
+  git archive "$new" | tar -x -C "$work"
+  echo "testing $ref at $(git rev-parse --short "$new")"
+  if ! (cd "$work" && sh ci/test.sh); then
+    echo "REFUSED: $ref fails its tests"
+    rm -rf "$work"
+    exit 1
+  fi
+  rm -rf "$work"
+done
+CODE
+put net.git/hooks/post-receive <<'CODE'
+#!/bin/sh
+# What reaches main is deployed, and checked on the network afterwards.
+while read old new ref; do
+  [ "$ref" = refs/heads/main ] || continue
+  work=$HOME/deploy
+  rm -rf "$work" && mkdir -p "$work"
+  git archive "$new" | tar -x -C "$work"
+  echo "deploying main at $(git rev-parse --short "$new")"
+  (cd "$work" && sh ci/deploy.sh) || echo "DEPLOY FAILED at $(git rev-parse --short "$new")"
+done
+CODE
+block copy
+on ctl 'cd net-lesson13 && cp -r data templates render.py push.py model.py validate.py test_configs.py test_links.py test_network.py ../net/ && mkdir ../net/ci'
 put net/ci/test.sh <<'CODE'
 # The checks every pushed commit has to pass: lesson 13's, in order of cost.
 set -e
@@ -373,7 +378,8 @@ cat post-check.log
 echo "post-check still failing after six attempts"
 exit 1
 CODE
-lab exec ctl ana 'cd net && printf "configs/\n__pycache__/\n" > .gitignore'
+block gitignore
+on ctl 'cd net && printf "configs/\n__pycache__/\n" > .gitignore'
 block hooks
 on ctl 'chmod +x net.git/hooks/pre-receive net.git/hooks/post-receive && cd net && find . -path ./.git -prune -o -type f -print | sort'
 block first-push

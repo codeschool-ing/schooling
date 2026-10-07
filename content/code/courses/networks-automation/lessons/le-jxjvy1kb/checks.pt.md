@@ -1,6 +1,6 @@
 ---
 title: Verificações antes e depois de uma mudança
-version: 1
+version: 2
 ---
 
 Toda aula até aqui terminou com uma verificação: o diff antes de um commit, a comparação depois de
@@ -26,3 +26,14 @@ unitários e de integração, mas a linha entre eles é sempre a mesma: se o tes
 O projeto é o da aula 10, num repositório Git, com os dados em YAML. Um pipeline, que a aula 14
 constrói, roda quando arquivos mudam, e arquivos são o que esta aula testa. Com o NetBox como
 fonte, os mesmos testes rodam sobre o que o `render_nb.py` produz.
+
+Ele começa dos arquivos da aula 10, num `~/net` novo no `ctl`. O `~/net` da aula 11 era outro
+projeto, o dos backups, então ele sai do caminho primeiro; os dados, o template e o `push.py` são
+copiados do `~/tpl` da aula 10:
+
+```
+ana@ctl:~$ mv net net-lesson11 2>/dev/null; mkdir -p net/templates && cp -r tpl/data tpl/push.py net/ && cp tpl/templates/frr.j2 net/templates/
+```
+
+As seções abaixo acrescentam o resto: um modelo e um script que confere os dados contra ele, um
+`render.py` que os testes conseguem importar, e os próprios testes.

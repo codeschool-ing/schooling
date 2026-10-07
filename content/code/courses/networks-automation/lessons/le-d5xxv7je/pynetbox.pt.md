@@ -7,7 +7,7 @@ Os scripts desta aula ficam em `~/sot` no `ctl`. Dois arquivos vêm sem mudança
 10, o template e o `push.py`, e são copiados logo no começo:
 
 ```
-ana@ctl:~$ mkdir -p sot/inventory && cp -r tpl/templates tpl/push.py sot/
+ana@ctl:~$ mkdir -p sot/inventory sot/templates && cp tpl/templates/frr.j2 sot/templates/ && cp tpl/push.py sot/
 ```
 
 O `pynetbox` embrulha a API em objetos Python: um endpoint é um atributo, um filtro é um método, um

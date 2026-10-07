@@ -6,12 +6,12 @@ version: 2
 The backup reuses lesson 8's Nornir inventory, cut down to the three routers, and asks each one for
 its running configuration through NAPALM. The project is a new directory, `~/net` on `ctl`, put
 together from two earlier lessons: lesson 8's `config.yaml` and the two inventory files that do
-not change, and lesson 10's data, templates and `render.py`, which section 07 uses. Git also needs
+not change, and lesson 10's data, template and `render.py`, which section 07 uses. Git also needs
 to know who is committing, once per account:
 
 ```
 ana@ctl:~$ git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main
-ana@ctl:~$ mkdir -p net/inventory && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/templates tpl/render.py net/
+ana@ctl:~$ mkdir -p net/inventory net/templates && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/render.py net/ && cp tpl/templates/frr.j2 net/templates/
 ```
 
 The one inventory file that changes is the list of hosts, which here is the three routers and

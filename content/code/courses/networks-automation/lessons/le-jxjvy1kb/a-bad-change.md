@@ -1,7 +1,14 @@
 ---
 title: A change that passes every check before it
-version: 1
+version: 2
 ---
+
+Everything written so far goes into Git first, so that this section has a last good state to
+compare with and to go back to. The rendered configurations and Python's caches are left out:
+
+```
+ana@ctl:~$ cd net && printf "configs/\n__pycache__/\n.pytest_cache/\n" > .gitignore && git init -q && git add . && git commit -qm "lesson 10 project, with tests"
+```
 
 edge2's uplink is changed from point-to-point to passive, a mistake that reads like a reasonable
 edit in a review:

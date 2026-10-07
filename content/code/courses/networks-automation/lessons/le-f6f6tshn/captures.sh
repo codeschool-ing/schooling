@@ -258,7 +258,7 @@ CODE
 
 block setup
 on ctl 'git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main'
-on ctl 'mkdir -p net/inventory && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/templates tpl/render.py net/'
+on ctl 'mkdir -p net/inventory net/templates && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/render.py net/ && cp tpl/templates/frr.j2 net/templates/'
 put net/inventory/hosts.yaml <<'CODE'
 ---
 core1:

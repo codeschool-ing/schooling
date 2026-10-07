@@ -118,7 +118,7 @@ for host in ("core1", "edge1", "edge2"):
             dev.discard_config()
 CODE
 block setup
-on ctl 'mkdir -p sot/inventory && cp -r tpl/templates tpl/push.py sot/'
+on ctl 'mkdir -p sot/inventory sot/templates && cp tpl/templates/frr.j2 sot/templates/ && cp tpl/push.py sot/'
 put sot/nb.py <<'CODE'
 import pynetbox
 
