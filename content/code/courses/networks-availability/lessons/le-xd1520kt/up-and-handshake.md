@@ -4,8 +4,8 @@ version: 1
 ---
 
 `wg-quick` reads the file and does the rest: it creates the interface, loads the keys, adds the address
-and turns every `AllowedIPs` range into a route. On this lab it also shows what happens when the kernel
-has no WireGuard in it:
+and turns every `AllowedIPs` range into a route. On the kernel these transcripts were recorded on, it
+also shows what happens when the kernel has no WireGuard in it:
 
 ```
 ana@hq:~$ sudo wg-quick up wg0
@@ -34,14 +34,16 @@ author. From outside it behaves identically, only slower.
 
 **The banner under it is wrong about this machine.** It says the kernel has first-class support for
 WireGuard, one line after the kernel refused to create the device. WireGuard has been part of Linux
-since version 5.6 and the banner is written for that ordinary case; this lab's kernel was built without
-it. On a normal server the first command succeeds and none of the rest appears.
+since version 5.6 and the banner is written for that ordinary case; the kernel these transcripts were
+recorded on was built without it. On a normal server, and on your Ubuntu, the first command succeeds
+and none of the rest appears.
 
 The last four lines are the file being applied. **`mtu 1420` is 1500 minus 80**, the room WireGuard
 keeps for its own headers when the outer packet is IPv6, the larger of the two cases. And
 `192.168.20.0/24 dev wg0` is the branch LAN from `AllowedIPs`, now a route.
 
-Nothing has crossed the network yet. **WireGuard sends nothing until there is something to send**, so
+Bring `branch` up the same way, with `sudo wg-quick up wg0` in its own shell. Nothing has crossed the
+network yet. **WireGuard sends nothing until there is something to send**, so
 the handshake happens when the laptop pings the till. `tshark` was started first, on the ISP's link
 towards the branch, and printed its four packets when it stopped:
 

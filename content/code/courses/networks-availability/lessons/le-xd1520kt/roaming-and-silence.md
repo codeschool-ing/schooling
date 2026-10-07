@@ -4,9 +4,9 @@ version: 1
 ---
 
 `remote` is Ana's laptop at home, `192.168.1.50`, behind a home router, `homegw`, that translates it to
-`198.51.100.77`. `hq`'s file has no `Endpoint` for her. Her own file, written when the lab was staged
-and not printed here, names `hq` as `vpn.example.com:51820` and carries one extra line,
-`PersistentKeepalive = 25`. She brings the tunnel up and pings the file server:
+`198.51.100.77`. `hq`'s file has no `Endpoint` for her. Her own file, the third in the first section,
+names `hq` as `vpn.example.com:51820` and carries one extra line, `PersistentKeepalive = 25`. She
+brings the tunnel up, `sudo wg-quick up wg0` on `remote`, and pings the file server:
 
 ```
 ana@remote:~$ ping -c 1 192.168.10.10
@@ -46,8 +46,11 @@ addresses, and their files have no such line.
 
 ## The wrong key
 
-For the next capture, `remote`'s file was given the wrong public key for `hq`: `branch`'s, a real key of
-the lab and the wrong one. The ISP listened for her packets while she pinged:
+For the next capture, `remote`'s file gets the wrong public key for `hq`: `branch`'s, a real key of the
+network and the wrong one. Take both ends down and start `hq` again, so that it forgets her session:
+`sudo wg-quick down wg0` on `remote`, and `sudo wg-quick down wg0 && sudo wg-quick up wg0` on `hq`. Then
+edit her file with `sudo nano /etc/wireguard/wg0.conf`, put `branch`'s public key on the `PublicKey`
+line, and bring her tunnel up again. The ISP listened for her packets while she pinged:
 
 ```
 ana@remote:~$ ping -c 7 -W 1 192.168.10.10
@@ -80,7 +83,7 @@ were listening, which is a defence; it is also why this failure has to be diagno
 
 `latest-handshakes` gives the diagnosis in one line. `0` means never, and the key it lists is
 `n/CGaD63…`, which the `wg show` on `hq` said belongs to the branch. **The peer Ana is configured for is
-not the machine at the other end.**
+not the machine at the other end.** Take her tunnel down and put `hq`'s key back before going on.
 
 | what you see | where to look |
 |---|---|

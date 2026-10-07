@@ -15,19 +15,22 @@
 # pages and installs them where that lesson tells the student to; the captures
 # run the student's own copy.
 #
-# EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
-# office (hq), a branch, a home behind its own NAT, an ISP and a small data
-# centre, as network namespaces on one Linux computer.
+# EVERY MACHINE IN THE LESSON IS PART OF ONE NETWORK, the one netlab.sh builds
+# (lesson 1), as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; branch's and remote's keys and wg0.conf,
-# made the same way as hq's (which the lesson shows) and written as root;
-# wg-quick run as root on branch and remote; the wrong key given to remote in
-# the wrong-key block, and the right one put back; for OpenVPN, the
-# certificates from the lab's authority and the two configuration files,
-# written as root (the lesson shows them with cat), and the server started as
-# root. WireGuard here is wireguard-go, because the kernel this was recorded
-# on has no WireGuard module; lab.sh says why.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it. The three wg0.conf files are EXTRACTED from "Two keys and a short
+# file" with `lab.sh example`; the listings carry the keys of the recording
+# the lesson quotes and hide the private key, and the lesson tells the student
+# to put their own machine's keys there, which is what wgfile() does with this
+# run's keys. The OpenVPN server.conf is extracted the same way, and Ana's
+# client.conf is lesson 3's example with the one line the lesson says to add.
+# Every command in an sh fence is extracted with `lab.sh fence` and typed as
+# ana with sudo; the commands the prose gives inline are the `prose` lines,
+# word for word. Two edits the prose describes rather than spells, both of
+# them a key typed into a file, are the sed lines marked `edit`.
+# WireGuard here is wireguard-go, which wg-quick falls back to by itself: the
+# kernel this was recorded on has no WireGuard module.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -56,11 +59,20 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-wgconf() {  # wgconf HOST (body on stdin, with PRIV replaced by HOST's key)
-  local body; body=$(cat)
-  lab exec "$1" root "umask 077; sed \"s|PRIV|\$(cat /etc/wireguard/$1.key)|\" > /etc/wireguard/wg0.conf" <<< "$body"
-}
+HERE=$(cd "$(dirname "$0")" && pwd)
+prose() { local h=$1; shift; lab exec "$h" ana "$*" >/dev/null 2>&1 || true; }
+fence() { prose "$1" "$(bash "$LAB_SH" fence "$HERE/$2" "$3")"; }
 pub() { lab exec "$1" root "cat /etc/wireguard/$1.pub"; }
+# The keys the listings carry, from the recording the lesson quotes.
+OLD_HQ='B6qH2hb1U5hsBki+4mN/m7AxAAKMeL7maFXl3uAeH2I='
+OLD_BR='n/CGaD63Wk0H9pfG6sbwBbJdh+XswYcDf0wmiU4zFT8='
+OLD_RM='FYBqYy68QPdITaZcZGko576tjvRUt5cUWsMsdGzbgkE='
+# wgfile HOST N: the Nth wg0.conf of the lesson, with this run's keys in it.
+wgfile() {
+  bash "$LAB_SH" example "$HERE/keys-and-config.md" wg0.conf "$2" |
+    sed "s|$OLD_HQ|$HQ|; s|$OLD_BR|$BR|; s|$OLD_RM|$RM|" |
+    lab exec "$1" root "umask 077; sed \"s|^PrivateKey = .*|PrivateKey = \$(cat /etc/wireguard/$1.key)|\" > /etc/wireguard/wg0.conf"
+}
 
 lab reset
 
@@ -68,56 +80,19 @@ block keys
 on hq 'sudo sh -c "umask 077; wg genkey > /etc/wireguard/hq.key"'
 on hq 'sudo cat /etc/wireguard/hq.key | wg pubkey | sudo tee /etc/wireguard/hq.pub'
 on hq 'sudo ls -l /etc/wireguard'
-quiet branch 'cd /etc/wireguard && umask 077 && wg genkey | tee branch.key | wg pubkey > branch.pub'
-quiet remote 'cd /etc/wireguard && umask 077 && wg genkey | tee remote.key | wg pubkey > remote.pub'
+for h in branch remote; do
+  prose $h "sudo sh -c \"umask 077; wg genkey > /etc/wireguard/$h.key\""
+  prose $h "sudo cat /etc/wireguard/$h.key | wg pubkey | sudo tee /etc/wireguard/$h.pub"
+done
 HQ=$(pub hq); BR=$(pub branch); RM=$(pub remote)
-
-wgconf hq <<C
-[Interface]
-Address = 10.20.0.1/24
-ListenPort = 51820
-PrivateKey = PRIV
-
-# the branch office
-[Peer]
-PublicKey = $BR
-Endpoint = 198.51.100.2:51820
-AllowedIPs = 10.20.0.2/32, 192.168.20.0/24
-
-# Ana, at home
-[Peer]
-PublicKey = $RM
-AllowedIPs = 10.20.0.3/32
-C
-wgconf branch <<C
-[Interface]
-Address = 10.20.0.2/24
-ListenPort = 51820
-PrivateKey = PRIV
-
-[Peer]
-PublicKey = $HQ
-Endpoint = 203.0.113.2:51820
-AllowedIPs = 10.20.0.1/32, 192.168.10.0/24
-C
-wgconf remote <<C
-[Interface]
-Address = 10.20.0.3/24
-PrivateKey = PRIV
-
-[Peer]
-PublicKey = $HQ
-Endpoint = vpn.example.com:51820
-AllowedIPs = 10.20.0.0/24, 192.168.10.0/24
-PersistentKeepalive = 25
-C
+wgfile hq 1; wgfile branch 2; wgfile remote 3
 
 block config
 on hq 'sudo sed "s|^PrivateKey = .*|PrivateKey = (hidden here, in the file it is the key)|" /etc/wireguard/wg0.conf'
 
 block up
 on hq 'sudo wg-quick up wg0'
-quiet branch 'wg-quick up wg0'
+prose branch 'sudo wg-quick up wg0'
 bg isp 'tshark -n -i eth1 -c 4 -f "udp port 51820"'
 on laptop 'ping -c 2 192.168.20.30'
 fg
@@ -127,70 +102,43 @@ block routes
 on hq 'ip route | grep wg0'
 
 block allowed
-quiet branch "wg set wg0 peer $HQ allowed-ips 10.20.0.1/32"
+prose branch "sudo wg set wg0 peer $HQ allowed-ips 10.20.0.1/32"
 on branch 'sudo wg show wg0 allowed-ips'
 on laptop 'ping -c 2 -W 1 192.168.20.30'
 on branch "sudo wg set wg0 peer $HQ allowed-ips 10.20.0.1/32,192.168.10.0/24"
 on laptop 'ping -c 1 192.168.20.30'
 
 block roaming
-quiet remote 'wg-quick up wg0'
+prose remote 'sudo wg-quick up wg0'
 sleep 2
 on remote 'ping -c 1 192.168.10.10'
 on hq "sudo wg show wg0 endpoints"
 
 block wrong-key
-quiet remote 'wg-quick down wg0'
-quiet hq 'wg-quick down wg0; wg-quick up wg0'
-lab exec remote root "sed -i 's|^PublicKey = .*|PublicKey = $BR|' /etc/wireguard/wg0.conf"
-quiet remote 'wg-quick up wg0'
+prose remote 'sudo wg-quick down wg0'
+prose hq 'sudo wg-quick down wg0 && sudo wg-quick up wg0'
+lab exec remote root "sed -i 's|^PublicKey = .*|PublicKey = $BR|' /etc/wireguard/wg0.conf"   # edit
+prose remote 'sudo wg-quick up wg0'
 bg isp 'sudo tcpdump -n -ttt -i eth1 -c 2 udp port 51820 and host 198.51.100.77'
 on remote 'ping -c 7 -W 1 192.168.10.10'
 fg
 on remote 'sudo wg show wg0 latest-handshakes'
-quiet remote 'wg-quick down wg0'
-lab exec remote root "sed -i 's|^PublicKey = .*|PublicKey = $HQ|' /etc/wireguard/wg0.conf"
+prose remote 'sudo wg-quick down wg0'
+lab exec remote root "sed -i 's|^PublicKey = .*|PublicKey = $HQ|' /etc/wireguard/wg0.conf"   # edit
 
 block openvpn
-quiet hq 'wg-quick down wg0'
-quiet hq 'cp /lab/tls/ca.crt /lab/tls/vpn-server.crt /lab/tls/vpn-server.key /etc/openvpn/; chmod 600 /etc/openvpn/vpn-server.key; openvpn --genkey tls-crypt /etc/openvpn/tc.key'
-quiet remote 'cp /lab/tls/ca.crt /lab/tls/vpn-ana.crt /lab/tls/vpn-ana.key /etc/openvpn/; chmod 600 /etc/openvpn/vpn-ana.key'
-lab exec remote root 'cat > /etc/openvpn/tc.key' < <(lab exec hq root 'cat /etc/openvpn/tc.key')
-lab exec hq root 'cat > /etc/openvpn/server.conf' <<'C'
-dev tun
-proto udp
-port 1194
-server 10.8.0.0 255.255.255.0
-topology subnet
-ca ca.crt
-cert vpn-server.crt
-key vpn-server.key
-dh none
-tls-crypt tc.key
-push "route 192.168.10.0 255.255.255.0"
-keepalive 10 60
-status /run/openvpn-status.log 5
-verb 3
-C
-lab exec remote root 'cat > /etc/openvpn/client.conf' <<'C'
-client
-dev tun
-proto udp
-remote vpn.example.com 1194
-ca ca.crt
-cert vpn-ana.crt
-key vpn-ana.key
-tls-crypt tc.key
-remote-cert-tls server
-verify-x509-name vpn.example.com name
-verb 3
-C
+prose hq 'sudo wg-quick down wg0'
+bash "$LAB_SH" example "$HERE/openvpn.md" server.conf | lab exec hq root 'cat > /etc/openvpn/server.conf'
+bash "$LAB_SH" example "$HERE/../le-swm42nrg/tls-vpn.md" client.conf |
+  sed '/^key vpn-ana.key$/a tls-crypt tc.key' | lab exec remote root 'cat > /etc/openvpn/client.conf'
+fence hq openvpn.md 1
+fence remote openvpn.md 2
 on hq 'cat /etc/openvpn/server.conf'
 on hq 'sudo head -3 /etc/openvpn/tc.key'
-quiet hq 'cd /etc/openvpn && setsid openvpn --config server.conf </dev/null >/run/openvpn.log 2>&1 &'
+fence hq openvpn.md 3
 sleep 1
 bg isp 'tshark -n -i eth1 -c 6 -f "udp port 1194"'
-quiet remote 'cd /etc/openvpn && setsid openvpn --config client.conf </dev/null >/run/openvpn.log 2>&1 &'
+fence remote openvpn.md 4
 sleep 4
 fg
 on remote 'ping -c 1 192.168.10.10'
