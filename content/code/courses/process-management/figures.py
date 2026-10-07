@@ -510,6 +510,112 @@ def l02_burndown(lang):
 # ---- end of lesson 2
 
 
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-board', 3)
+def l03_board(lang):
+    t = {
+        'en': dict(cols=['Ready', 'Developing', 'Review', 'Testing', 'Done'], doing='doing', done='done',
+                   commit='commitment point: the clock starts', deliver='the clock stops',
+                   pull='work is pulled from the left when a column has room',
+                   label='A Kanban board with five columns. Ready has a limit of 5 and holds 4 cards. Developing '
+                         'has a limit of 3, split into doing and done, and holds 3. Review has a limit of 2 and '
+                         'holds 2. Testing has a limit of 2 and holds 1. Done has no limit and holds 10. The clock '
+                         'starts when a card leaves Ready and stops when it reaches Done.',
+                   cap='The Agenda team’s board on the morning of 16 March. Developing and Review are full, so '
+                       'nobody may start anything new there; the free slot is in Testing, and the way to use it is '
+                       'to help finish what is in Review.'),
+        'pt': dict(cols=['Pronto p/ começar', 'Desenvolvendo', 'Revisão', 'Teste', 'Feito'], doing='fazendo',
+                   done='feito', commit='ponto de compromisso: o relógio começa', deliver='o relógio para',
+                   pull='o trabalho é puxado da esquerda quando uma coluna tem espaço',
+                   label='Um quadro Kanban com cinco colunas. Pronto para começar tem limite 5 e quatro cartões. '
+                         'Desenvolvendo tem limite 3, dividida em fazendo e feito, e três cartões. Revisão tem '
+                         'limite 2 e dois cartões. Teste tem limite 2 e um cartão. Feito não tem limite e tem dez '
+                         'cartões. O relógio começa quando um cartão sai de Pronto para começar e para quando '
+                         'chega a Feito.',
+                   cap='O quadro do time Agenda na manhã de 16 de março. Desenvolvendo e Revisão estão cheias, então '
+                       'ninguém pode começar nada novo ali; a vaga livre está em Teste, e o jeito de usá-la é ajudar '
+                       'a terminar o que está em Revisão.'),
+    }[lang]
+    f = Fig('l03-board', 700, 330, t['label'])
+    widths = [118, 150, 118, 118, 150]
+    x = 14
+    cards = {0: ['AG-122', 'AG-123', 'AG-124', 'AG-125'], 1: ['AG-117', 'AG-121', 'AG-111'],
+             2: ['AG-113', 'AG-102'], 3: ['AG-115'],
+             4: [i for i, _, fin in S.FINISHED if fin < '2026-03-16']}
+    for i, (name, lim, n) in enumerate(S.BOARD):
+        w = widths[i]
+        full = lim is not None and n >= lim
+        f.rect(x, 50, w, 230, stroke='--amber' if full else '--wire', fill='--panel', rx=4,
+               width=1.6 if full else 1.2)
+        f.text(x + w / 2, 66, t['cols'][i], size=10.5, weight='600')
+        f.text(x + w / 2, 82, ('WIP ' + str(lim)) if lim else '—', size=9.5, mono=True,
+               fill='--amber' if full else '--paper-dim')
+        if i == 1:
+            f.line(x + w / 2, 92, x + w / 2, 272, stroke='--wire', width=1, dash='3 3')
+            f.text(x + w / 4, 100, t['doing'], size=9, fill='--paper-dim')
+            f.text(x + 3 * w / 4, 100, t['done'], size=9, fill='--paper-dim')
+        for k, c in enumerate(cards[i]):
+            if i == 4:
+                cx, cy = x + 8 + (k % 2) * 70, 94 + (k // 2) * 34
+                cw = 64
+            elif i == 1:
+                cx, cy = x + 6 + (0 if k < 2 else w / 2), 110 + (k % 2 if k < 2 else 0) * 34
+                cw = w / 2 - 12
+            else:
+                cx, cy, cw = x + 10, 94 + k * 34, w - 20
+            f.rect(cx, cy, cw, 26, stroke='--phosphor', fill='--scan', rx=3)
+            f.text(cx + cw / 2, cy + 13, c, size=9.5, mono=True)
+        x += w + 8
+    xs = 14 + widths[0] + 4
+    f.line(xs, 40, xs, 290, stroke='--phosphor', width=1.6, dash='5 3')
+    f.text(xs, 30, t['commit'], size=9.5, anchor='start', fill='--phosphor', weight='600')
+    xd = 14 + sum(widths[:4]) + 4 * 8 - 4
+    f.line(xd, 40, xd, 290, stroke='--phosphor', width=1.6, dash='5 3')
+    f.text(xd, 300, t['deliver'], size=9.5, anchor='middle', fill='--phosphor', weight='600')
+    f.text(14, 318, t['pull'], size=9.5, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l03-cycle-times', 3)
+def l03_cycle_times(lang):
+    ct = S.cycle_times()
+    p50, p85 = S.median(ct), S.percentile_inc(ct, 0.85)
+    t = {
+        'en': dict(y='cycle time, days', x='date finished, March 2026',
+                   p50=f'50% finish within {p50:g} days', p85=f'85% within {num(lang, p85, 1)} days',
+                   label='A scatter of the twenty items the Agenda team finished in March 2026, each a dot at the '
+                         'date it finished and its cycle time in days, from 2 to 19. A line at 7 days marks the '
+                         'median and a line at 11.6 days marks the 85th percentile; three items sit above it, at '
+                         '15, 18 and 19 days.',
+                   cap='Twenty items, one dot each. The 85th-percentile line is the honest answer to "how long does '
+                       'an item take?": 17 of the 20 finished within it, and the three above it are the ones worth '
+                       'asking about.'),
+        'pt': dict(y='tempo de ciclo, dias', x='data em que terminou, março de 2026',
+                   p50=f'50% terminam em até {p50:g} dias', p85=f'85% em até {num(lang, p85, 1)} dias',
+                   label='Um gráfico de dispersão dos vinte itens que o time Agenda terminou em março de 2026, cada '
+                         'um um ponto na data em que terminou e no tempo de ciclo em dias, de 2 a 19. Uma linha em 7 '
+                         'dias marca a mediana e uma linha em 11,6 dias marca o percentil 85; três itens ficam '
+                         'acima dela, em 15, 18 e 19 dias.',
+                   cap='Vinte itens, um ponto cada. A linha do percentil 85 é a resposta honesta a "quanto tempo um '
+                       'item leva?": 17 dos 20 terminaram dentro dela, e os três acima são os que merecem pergunta.'),
+    }[lang]
+    f = Fig('l03-cycle-times', 640, 300, t['label'])
+    p = Plot(f, 60, 40, 600, 240, 1, 28, 0, 20)
+    p.yaxis([0, 5, 10, 15, 20], label=t['y'])
+    p.xaxis([2, 9, 16, 23], fmt=lambda d: f'{d} mar' if lang == 'pt' else f'Mar {d}', label=t['x'])
+    for (_, s, fin), c in zip(S.FINISHED, ct):
+        d = S.day(fin).day
+        f.circle(p.sx(d), p.sy(c), 4, fill='--phosphor' if c <= p85 else '--amber')
+    f.line(p.x0, p.sy(p50), p.x1, p.sy(p50), stroke='--paper-dim', width=1.2, dash='4 3')
+    f.text(p.x0 + 8, p.sy(p50) - 11, t['p50'], size=9.5, anchor='start', fill='--paper-dim')
+    f.line(p.x0, p.sy(p85), p.x1, p.sy(p85), stroke='--amber', width=1.4, dash='5 3')
+    f.text(p.x1, p.sy(p85) - 10, t['p85'], size=10, anchor='end', fill='--amber', weight='600')
+    return f, t['cap']
+
+# ---- end of lesson 3
+
+
 # ------------------------------------------------------------------ the figures
 
 

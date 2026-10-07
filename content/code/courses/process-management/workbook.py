@@ -11,6 +11,7 @@ Calc returned:
 
     python3 workbook.py          # every lesson's sheet
     python3 workbook.py 9        # lesson 9's sheet only
+    python3 workbook.py 30       # lesson 3's broken sheet, for its trouble section
 
 It was last run with LibreOffice 24.2.7.2, in English (en-US), so the function
 names and the decimal point are the English ones. A Portuguese spreadsheet spells
@@ -49,6 +50,16 @@ def lesson3():
             f'=PERCENTILE.INC(D2:D{last},0.85)', f'=MAX(D2:D{last})',
             f'=COUNTIF(D2:D{last},"<=12")', f'=COUNTIF(C2:C{last},"<2026-03-09")']
     return rows, show, ['D2', f'D{last}']
+
+
+def lesson3_trouble():
+    """The three mistakes lesson 3's trouble section shows, made on purpose."""
+    rows = [['Item', 'Started', 'Finished', 'Days'],
+            ['AG-101', '2026-03-02', '2026-03-03', '=C2-B2+1'],
+            ['AG-104', '2026-02-26', "'2026-03-04", '=C3-B3+1'],
+            ['AG-108', '2026-03-04', '2026-03-06', '=C4-B4']]
+    show = ['=PERCENTIL.INC(D2:D4,0.85)', '=MEDIAN(D2:D4)', '=MEDIAN(D2,D4)']
+    return rows, show, ['D2', 'D3', 'D4']
 
 
 def lesson9():
@@ -105,7 +116,7 @@ def lesson13():
     return rows, show, []
 
 
-SHEETS = {3: lesson3, 9: lesson9, 10: lesson10, 11: lesson11, 12: lesson12, 13: lesson13}
+SHEETS = {3: lesson3, 30: lesson3_trouble, 9: lesson9, 10: lesson10, 11: lesson11, 12: lesson12, 13: lesson13}
 
 
 def run(n, tmp):
@@ -127,7 +138,7 @@ def run(n, tmp):
                     '--outdir', outdir, src], check=True, capture_output=True)
     with open(os.path.join(outdir, f'lesson{n}.csv')) as fh:
         got = list(csv.reader(fh))
-    print(f'--- lesson {n}')
+    print(f'--- lesson {n}' if n < 30 else '--- lesson 3, the trouble section')
     for c in cells:
         ci, ri = ord(c[0]) - ord('A'), int(c[1:]) - 1
         print(f'  {c:<6} {rows[ri][ci]:<44} {got[ri][ci]}')

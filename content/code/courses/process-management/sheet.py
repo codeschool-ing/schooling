@@ -102,7 +102,7 @@ BOARD = [
     ('Developing', 3, 3),
     ('Review', 2, 2),
     ('Testing', 2, 1),
-    ('Done', None, 9),
+    ('Done', None, 10),
 ]
 
 # ---------------------------------------------------- lesson 5: talking to people
