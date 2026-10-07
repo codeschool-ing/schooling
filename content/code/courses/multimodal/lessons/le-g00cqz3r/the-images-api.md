@@ -33,7 +33,19 @@ print(f"banner.png: {len(raw):,} bytes, {Image.open('banner.png').size[0]}x{Imag
 ```
 
 ```
-@@generate@@
+ana@lab:~/mm$ python banner.py
+banner.png: 35,712 bytes, 1536x1024
+ana@lab:~/mm$ python banner.py 1792x1024
+BadRequestError: Error code: 400 - {'error': {'message': "Invalid value: '1792x1024'. Supported values are: 'auto', '1024x1024', '1024x1536', '1536x1024'", 'type': 'invalid_request_error', 'param': 'size', 'code': None}}
+ana@lab:~/mm$ cat banner.json; echo
+{
+ "model": "gpt-image-1",
+ "prompt": "a stack of second-hand books on a caf\u00e9 table, watercolour illustration, loose brushwork, wide banner, books on the left third, empty space on the right",
+ "size": "1536x1024",
+ "quality": "medium",
+ "made": "2026-10-07T13:25:28",
+ "approved_by": null
+}
 ```
 
 **The picture is a card that says no model drew it**: the request went to lesson 3's `images_server.py`, which has no image model behind it. The request, the settings, the validation and the file on disk are real.

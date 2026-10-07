@@ -42,7 +42,14 @@ else:
 ```
 
 ```
-@@edit@@
+ana@lab:~/mm$ python mask.py
+mask.png (1536, 1024) RGBA | mask-wrong-size.png (1024, 1024)
+ana@lab:~/mm$ python edit.py mask.png
+banner-edited.png written
+ana@lab:~/mm$ python edit.py mask-wrong-size.png
+BadRequestError Error code: 400 - {'error': {'message': 'The mask must be the same size as the image: the image is 1536x1024 and the mask 1024x1024.', 'type': 'invalid_request_error', 'param': 'mask', 'code': None}}
+ana@lab:~/mm$ python edit.py banner.png
+BadRequestError Error code: 400 - {'error': {'message': 'The mask must have an alpha channel.', 'type': 'invalid_request_error', 'param': 'mask', 'code': None}}
 ```
 
 The first edit went through: the stand-in returned the banner with its right third greyed out, which is its way of showing where a real model would have painted. The next two were refused, and both refusals are the commonest ways to get a mask wrong:

@@ -29,14 +29,14 @@ print(f"tokens in {u.prompt_token_count}, out {u.candidates_token_count}")
 
 ```
 ana@lab:~/mm$ python nano.py 2>/dev/null
-text:  labmm has no reply written for this request. Its image replies are rules the course wrote, in lab/scripted/.
-image: image/png 19775 bytes (1024, 1024)
-tokens in 16, out 1314
+text:  images_server is a stand-in: no model read this request or drew a picture for it.
+image: image/png 20558 bytes (1024, 1024)
+tokens in 16, out 1309
 ```
 
-A resposta volta como uma lista de **partes**: aqui uma parte de texto e uma de imagem, a imagem como bytes crus com um tipo MIME. As duas são do labmm: a imagem é um cartão, e o texto é o labmm dizendo que não tem regra para este prompt, o que é verdade. Uma resposta real do Gemini muitas vezes traz uma frase sobre o que desenhou ao lado da imagem, e um programa deve esperar qualquer uma das partes, as duas, ou só uma parte de texto quando o modelo se recusa a desenhar.
+A resposta volta como uma lista de **partes**: aqui uma parte de texto e uma de imagem, a imagem como bytes crus com um tipo MIME. As duas são do substituto: a imagem é um cartão, e o texto diz que nenhum modelo leu o pedido, o que é verdade. Uma resposta real do Gemini muitas vezes traz uma frase sobre o que desenhou ao lado da imagem, e um programa deve esperar qualquer uma das partes, as duas, ou só uma parte de texto quando o modelo se recusa a desenhar.
 
-As contagens de tokens são do labmm, pelas regras publicadas pelo Google: o prompt custou 16 tokens de texto, e a resposta 1.314, dos quais **1.290 são a imagem**. O Google cobra a saída de imagem por token, e 1.290 tokens aos 30 dólares por milhão da tabela dão os mesmos 0,039 dólar por imagem que a tabela também lista (a aula 3 leu esse preço).
+As contagens de tokens são do substituto, pelas regras que o Google publicou para imagens; ele conta texto com o tokenizador da OpenAI, que não é o do Gemini, então os números de texto são próximos e não exatos. O prompt custou 16 tokens de texto, e a resposta 1.309, dos quais **1.290 são a imagem**, o número pelo qual o Google cobra uma imagem gerada. O Google cobra a saída de imagem por token, e 1.290 tokens aos 30 dólares por milhão da tabela dão os mesmos 0,039 dólar por imagem que a tabela também lista (a aula 3 leu esse preço).
 
 ## Editando sem máscara
 
@@ -61,7 +61,7 @@ print(f"{len(images)} image back; tokens in {u.prompt_token_count}, out {u.candi
 
 ```
 ana@lab:~/mm$ python nano_edit.py 2>/dev/null
-1 image back; tokens in 528, out 1314
+1 image back; tokens in 528, out 1309
 ```
 
 Sem máscara, sem canal alfa, sem regra de mesmo tamanho: *make the moon a thin crescent and keep everything else*. A capa entrou como 528 tokens, 516 deles pela imagem, pela regra do Gemini de 258 por bloco de 768 pixels (a capa de 600 por 900 ocupa dois). É mais fácil de escrever e mais difícil de controlar. Uma máscara diz exatamente quais pixels podem mudar; uma frase diz o que uma pessoa quer e deixa o modelo decidir onde isso fica. Para um banner de produto que precisa manter os dois terços da esquerda idênticos, a máscara é a ferramenta mais segura; para "deixe mais claro" ou "tire a xícara", a frase dá muito menos trabalho.
@@ -69,14 +69,14 @@ Sem máscara, sem canal alfa, sem regra de mesmo tamanho: *make the moon a thin 
 ## Qual modelo, e quando ele acaba
 
 ```
-ana@lab:~/mm$ sheet where flash-image | grep -E "^(gemini|vertex_ai)/"
-gemini/gemini-2.5-flash-image                        gemini                          0.3      2.5
-gemini/gemini-3.1-flash-image                        gemini                          0.5        3
-gemini/gemini-3.1-flash-image-preview                gemini                          0.5        3
-vertex_ai/gemini-2.5-flash-image                     vertex_ai-language-models       0.3      2.5
-vertex_ai/gemini-3.1-flash-image                     vertex_ai-language-models       0.5        3
-vertex_ai/gemini-3.1-flash-image-preview             vertex_ai-language-models       0.5        3
-ana@lab:~/mm$ for m in gemini/gemini-2.5-flash-image gemini/gemini-3.1-flash-image; do echo "$m"; sheet show $m | grep -E "output_cost_per_image |deprecation"; done
+ana@lab:~/mm$ python prices.py find flash-image | grep -E "^(gemini|vertex_ai)/"
+gemini/gemini-2.5-flash-image                gemini                     2026-10-02
+gemini/gemini-3.1-flash-image                gemini                     
+gemini/gemini-3.1-flash-image-preview        gemini                     2026-06-25
+vertex_ai/gemini-2.5-flash-image             vertex_ai-language-models  2027-03-15
+vertex_ai/gemini-3.1-flash-image             vertex_ai-language-models  2027-05-28
+vertex_ai/gemini-3.1-flash-image-preview     vertex_ai-language-models  
+ana@lab:~/mm$ for m in gemini/gemini-2.5-flash-image gemini/gemini-3.1-flash-image; do echo "$m"; python prices.py show $m | grep -E "output_cost_per_image |deprecation"; done
 gemini/gemini-2.5-flash-image
 deprecation_date                           2026-10-02
 output_cost_per_image                      0.039
