@@ -114,4 +114,4 @@ price with both separators is ambiguous. A test checks what happens, not why, wh
 reason to read a change that passes.
 
 The tests now exist before the code that has to meet them, and they say exactly what is wrong.
-Lesson 5 section 06 sends that back.
+Lesson 5 section 07 sends that back.

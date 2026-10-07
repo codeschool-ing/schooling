@@ -84,7 +84,7 @@ def test_a_price_with_both_a_dot_and_a_comma_is_refused():
         parse_price("1.234,56")
 ```
 
-Rodados antes da mudança, eles devem falhar, e falham (a última regra da aula 5, seção 05). O que
+Rodados antes da mudança, eles devem falhar, e falham (a última regra da aula 5 seção 05). O que
 passa é o `12.90`, que a função antiga já lia:
 
 ```
@@ -96,7 +96,7 @@ FAILED tests/test_comma.py::test_a_price_with_both_a_dot_and_a_comma_is_refused
 
 ## A mudança
 
-A função da aula 5, seção 05, ainda está em `scratch/parse_price.py`. Trocada, contra os testes
+A função da aula 5 seção 05, ainda está em `scratch/parse_price.py`. Trocada, contra os testes
 novos:
 
 ```
@@ -114,4 +114,4 @@ separadores é ambíguo. Um teste confere o que acontece, não por quê, o que �
 uma mudança que passa.
 
 Os testes agora existem antes do código que precisa atendê-los, e dizem exatamente o que está errado.
-A aula 5, seção 06, manda isso de volta.
+A aula 5 seção 07, manda isso de volta.

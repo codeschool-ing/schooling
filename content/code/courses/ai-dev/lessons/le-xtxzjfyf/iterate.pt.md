@@ -6,7 +6,7 @@ version: 2
 A primeira resposta raramente é a última, e a pergunta útil é o que mandar de volta. "Está errado,
 tente de novo" não dá nada de novo ao modelo; ele vai produzir uma variação do mesmo palpite. **Mande
 a evidência de que estava errado**: o teste que falha, o erro, a saída, exatamente como as
-ferramentas imprimiram. É a mesma regra da aula 5, seção 03, aplicada à segunda rodada.
+ferramentas imprimiram. É a mesma regra da aula 5 seção 03, aplicada à segunda rodada.
 
 ## A falha, literal
 

@@ -10,7 +10,7 @@ formato é a checagem de qualidade mais barata que existe, porque a checagem já
 
 ## Um diff, conferido antes de ser aplicado
 
-O `comma.diff` da aula 5, seção 03, deveria ser um diff unificado. O `git apply --check` testa um diff
+O `comma.diff` da aula 5 seção 03, deveria ser um diff unificado. O `git apply --check` testa um diff
 contra a árvore de trabalho sem mudar nada:
 
 ```
@@ -147,7 +147,7 @@ FAILED tests/test_money.py::test_parse_price - ValueError: invalid literal fo...
 quebrava, e o teste do próprio projeto para o `parse_price` falha. O formato fez o que lhe foi pedido.
 A resposta pôde ser lida por um programa, posta no lugar por um programa e julgada pelos testes um
 segundo depois de chegar, e é esse o ponto: ninguém precisou lê-la com cuidado para descobrir que
-estava errada. A aula 5, seção 06, volta a esta função.
+estava errada. A aula 5 seção 06, volta a esta função.
 
 ## Formatos que vale pedir
 

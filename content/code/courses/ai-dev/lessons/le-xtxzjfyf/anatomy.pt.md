@@ -63,10 +63,10 @@ Answer with: a unified diff against shop/money.py, and nothing else.
 | parte | o que faz |
 |---|---|
 | objetivo | a mudança, e por que ela é desejada: o motivo deixa quem lê escolher entre dois jeitos de fazer |
-| contexto | o código e as regras, enviados com o prompt (aula 1, seção 10: se não está na requisição, o modelo não sabe) |
+| contexto | o código e as regras, enviados com o prompt (aula 1 seção 10: se não está na requisição, o modelo não sabe) |
 | restrições | o que não pode mudar, e as regras que a mudança precisa manter |
 | pronto quando | os casos que decidem se deu certo, que também são os testes |
-| responda com | a forma da resposta, para que um programa possa conferi-la (aula 5, seção 05) |
+| responda com | a forma da resposta, para que um programa possa conferi-la (aula 5 seção 05) |
 
 ```
 ana@dev:~/shop$ wc -w prompts/comma.md
@@ -83,6 +83,6 @@ paga duas vezes, porque o mesmo texto conta para a próxima pessoa para que serv
 - **Persuasão.** "Você é um engenheiro de nível mundial", "isto é muito importante", "respire
   fundo". O modelo não está com falta de motivação; está com falta de fatos.
 - **Repetição em maiúsculas.** Se uma restrição importa, diga uma vez, com clareza, e confira com um
-  teste. A aula 3, seção 05, disse o mesmo sobre arquivos de instruções.
+  teste. A aula 3 seção 05, disse o mesmo sobre arquivos de instruções.
 - **O repositório inteiro.** Os arquivos que a mudança toca, os testes desses arquivos e as regras que
   valem. A aritmética da aula 2 cobra o resto a cada requisição.

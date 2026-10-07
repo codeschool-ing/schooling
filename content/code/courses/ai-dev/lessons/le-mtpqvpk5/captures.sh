@@ -6,31 +6,35 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the SDKs, labllm
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/shop
 #   sudo bash captures.sh
 #
-# A line that starts with ana@dev:~/shop$ is what ana typed, in her project,
-# and what it printed. What is STAGED rather than typed, and not shown in the
-# lesson: the lab itself (lab.sh reset), and the files ana wrote (put below),
-# whose contents the lesson shows in full.
+# THE ANSWERS COME FROM llama3.2:3b AT TEMPERATURE 0, through scratch/ask.py.
+# That makes a rerun give the same words most of the time and not always: the
+# answer about the broken mug changed between two runs. The chunking, the embeddings (WordLlama),
+# the searches, the prompt and the citation checker are deterministic. The
+# shop's handbook was written for the course, like the rest of the shop, and
+# scratch/make-handbook.sh, which the lesson shows whole, writes it.
 #
-# THE ANSWERS IN THIS LESSON WERE WRITTEN BY THE COURSE. They come from
-# labllm's scripted-1, whose replies are in lab/scripted.json. The
-# chunking, the embeddings (WordLlama), the searches, the prompt and the
-# citation checker are real. The shop's handbook they search was written for
-# the course, like the rest of the shop, and is put below.
+#   model    llama3.2:3b (a80c4f17acd5), Ollama 0.40.0
+#   taken    2026-10-07, on 4 cores and 15 GB with no GPU
+#
+# A line that starts with ana@dev:~/shop$ is what ana typed, in her project,
+# and what it printed. What is STAGED rather than typed, and not shown: the
+# lab's own reset, and the files ana wrote (put below), each of which a lesson
+# shows whole; put refuses one that no lesson shows byte for byte.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@dev:~/shop$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-lab reset >/dev/null
-put docs/handbook/returns.md <<'MD'
+. ../../lab/capture.sh
+
+quiet lab reset
+put scratch/make-handbook.sh <<'SH'
+# make-handbook.sh: the shop's support handbook, eight files in docs/handbook
+mkdir -p docs/handbook
+cat > docs/handbook/returns.md <<'EOF'
 # Returns and refunds
 
 A customer may return any item within 30 days of delivery, for any reason. The
@@ -46,8 +50,8 @@ costs are refunded only when the whole order is returned.
 
 After 30 days the shop does not accept returns, but a faulty item is covered
 by the warranty described in warranty.md.
-MD
-put docs/handbook/shipping.md <<'MD'
+EOF
+cat > docs/handbook/shipping.md <<'EOF'
 # Shipping
 
 Orders ship within two working days from the warehouse in Campinas. Delivery
@@ -62,8 +66,8 @@ not deliver to post office boxes.
 
 A customer can follow the parcel with the tracking code in the shipping email.
 A parcel with no tracking update for ten working days is reported as lost.
-MD
-put docs/handbook/coupons.md <<'MD'
+EOF
+cat > docs/handbook/coupons.md <<'EOF'
 # Coupons
 
 Two coupons are active. WELCOME10 takes 10% off and has no end date.
@@ -75,8 +79,8 @@ placed, and it is never exchanged for cash.
 
 The discount is taken from the items, not from shipping, and is rounded down
 to a whole cent.
-MD
-put docs/handbook/payment-errors.md <<'MD'
+EOF
+cat > docs/handbook/payment-errors.md <<'EOF'
 # Payment errors at checkout
 
 The checkout shows a code when a payment fails. Read the code before anything
@@ -91,8 +95,8 @@ happens three times in a row, escalate to the on-call developer.
 
 E2003: the billing address does not match the card. The customer should check
 the postcode, which is the usual mistake.
-MD
-put docs/handbook/warranty.md <<'MD'
+EOF
+cat > docs/handbook/warranty.md <<'EOF'
 # Warranty
 
 Every item has a 90-day warranty against manufacturing faults, counted from
@@ -105,8 +109,8 @@ from ordinary wear is not covered.
 Under warranty the shop replaces the item, or refunds it if it is out of
 stock. The customer sends a photo of the fault from their account; there is
 no need to send the item back unless the shop asks for it.
-MD
-put docs/handbook/account.md <<'MD'
+EOF
+cat > docs/handbook/account.md <<'EOF'
 # Accounts and passwords
 
 A customer can check out without an account, but needs one to follow orders,
@@ -119,8 +123,8 @@ staff never ask for a password and cannot see one.
 To close an account, the customer writes to support from the account's email
 address. Orders from the last five years are kept for tax reasons; everything
 else is deleted within 30 days.
-MD
-put docs/handbook/contact.md <<'MD'
+EOF
+cat > docs/handbook/contact.md <<'EOF'
 # Contacting support
 
 Support answers by email and chat from 9:00 to 18:00, Monday to Friday,
@@ -129,8 +133,8 @@ are answered the next working day, in the order they arrived.
 
 The target for a first reply is four working hours. Anything about a payment
 taken twice, or a parcel reported as lost, goes to the front of the queue.
-MD
-put docs/handbook/products.md <<'MD'
+EOF
+cat > docs/handbook/products.md <<'EOF'
 # Products
 
 The shop sells mugs, glasses, lamps and small furniture. Mugs and glasses are
@@ -142,8 +146,9 @@ with tools, and the instructions are also on the product page.
 
 Prices on the site include taxes. A price shown in an email or an advert is
 valid only if it is also the price on the product page at checkout.
-MD
-put lab/rag.py <<'PY'
+EOF
+SH
+put scratch/rag.py <<'PY'
 """Retrieval over the shop's handbook: chunk, embed, search, and check citations."""
 import json
 import logging
@@ -224,28 +229,35 @@ def hybrid_search(query, k=3):
     return [(by_id[i], v) for i, v in votes.most_common(k)]
 
 
+NOT_THERE = "The handbook does not say."
+
+
 def prompt(question, found):
     passages = "\n".join(f"[{c['id']}] {c['text']}" for c, _ in found)
     return ("Answer only from the passages below. Cite the passage id in square brackets after "
-            "every sentence that uses it. If the passages do not contain the answer, say so.\n\n"
-            f"{passages}\n\nQuestion: {question}")
+            "every sentence. If the passages do not contain the answer, reply with exactly: "
+            f"{NOT_THERE}\n\n{passages}\n\nQuestion: {question}")
 
 
 def check_citations(answer, found):
-    """Every cited id must be one that was retrieved, and every quoted phrase must be in it."""
+    """Every sentence cites a passage that was retrieved, and every quoted phrase is in it."""
     given = {c["id"]: c["text"] for c, _ in found}
+    if answer.strip() == NOT_THERE:
+        return []
     problems = []
-    for cid in re.findall(r"\[([\w.-]+#\d+)\]", answer):
-        if cid not in given:
-            problems.append(f"cites {cid}, which was not among the passages")
-    for sentence in re.split(r"(?<=\.)\s+", answer):
+    for sentence in re.split(r"(?<=[.!?\]])\s+(?!\[)", answer.strip()):
         cited = re.findall(r"\[([\w.-]+#\d+)\]", sentence)
+        if not cited:
+            problems.append(f'cites nothing: "{sentence[:50]}"')
+        for cid in cited:
+            if cid not in given:
+                problems.append(f"cites {cid}, which was not among the passages")
         for quote in re.findall(r'"([^"]+)"', sentence):
             if cited and not any(quote.lower() in given.get(c, "").lower() for c in cited):
                 problems.append(f'quotes "{quote}", which {", ".join(cited)} does not say')
     return problems
 PY
-put lab/search.py <<'PY'
+put scratch/search.py <<'PY'
 import sys
 
 from rag import hybrid_search, keyword_search, vector_search
@@ -256,7 +268,7 @@ print(f"{mode}: {query}")
 for c, score in search(query):
     print(f"  {score:7.3f}  {c['id']:<20} {c['text'][:62]}…")
 PY
-put lab/ask.py <<'PY'
+put scratch/ask.py <<'PY'
 import sys
 
 import anthropic
@@ -265,7 +277,7 @@ from rag import check_citations, hybrid_search, prompt
 
 question = sys.argv[1]
 found = hybrid_search(question)
-r = anthropic.Anthropic().messages.create(model="scripted-1", max_tokens=400,
+r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=400, extra_body={"temperature": 0},
                                           messages=[{"role": "user", "content": prompt(question, found)}])
 answer = r.content[0].text
 print("retrieved:", ", ".join(c["id"] for c, _ in found))
@@ -275,40 +287,40 @@ print("citations:", "; ".join(problems) if problems else "every citation checks 
 PY
 
 block why-retrieve
-on 'git add docs && git commit -qm "Support handbook" && ls docs/handbook && wc -w docs/handbook/*.md | tail -1'
+on 'bash scratch/make-handbook.sh && git add docs && git commit -qm "Support handbook" && ls docs/handbook && wc -w docs/handbook/*.md | tail -1'
 on "python -c 'import tiktoken, pathlib; print(sum(len(tiktoken.get_encoding(\"o200k_base\").encode(p.read_text())) for p in pathlib.Path(\"docs/handbook\").glob(\"*.md\")), \"tokens in the handbook\")'"
 
 block chunking
-on "PYTHONPATH=lab python -c 'import rag; cs = rag.chunks(); n = [len(rag.ENC.encode(c[\"text\"])) for c in cs]; print(len(cs), \"chunks, from\", min(n), \"to\", max(n), \"tokens\"); [print(c[\"id\"], \"|\", c[\"text\"][:70]) for c in cs[:4]]'"
+on "PYTHONPATH=scratch python -c 'import rag; cs = rag.chunks(); n = [len(rag.ENC.encode(c[\"text\"])) for c in cs]; print(len(cs), \"chunks, from\", min(n), \"to\", max(n), \"tokens\"); [print(c[\"id\"], \"|\", c[\"text\"][:70]) for c in cs[:4]]'"
 
 block embedding
-on "time PYTHONPATH=lab python -c 'import rag; cs, v = rag.build(); print(len(cs), \"chunks,\", v.shape, v.dtype)'"
+on "time PYTHONPATH=scratch python -c 'import rag; cs, v = rag.build(); print(len(cs), \"chunks,\", v.shape, v.dtype)'"
 on 'ls -la .rag'
 
 block searching
-on 'python lab/search.py vector "Can I send back a mug I bought last week?"'
-on 'python lab/search.py vector "How long does delivery take to Recife?"'
+on 'python scratch/search.py vector "Can I send back a mug I bought last week?"'
+on 'python scratch/search.py vector "How long does delivery take to Recife?"'
 
 block when-search-misses
-on 'python lab/search.py vector "checkout says E1042"'
-on 'python lab/search.py keyword "checkout says E1042"'
-on 'python lab/search.py keyword "my parcel never arrived"'
-on 'python lab/search.py vector "my parcel never arrived"'
-on 'python lab/search.py hybrid "checkout says E1042"'
-on 'python lab/search.py hybrid "my parcel never arrived"'
+on 'python scratch/search.py vector "checkout says E1042"'
+on 'python scratch/search.py keyword "checkout says E1042"'
+on 'python scratch/search.py keyword "my parcel never arrived"'
+on 'python scratch/search.py vector "my parcel never arrived"'
+on 'python scratch/search.py hybrid "checkout says E1042"'
+on 'python scratch/search.py hybrid "my parcel never arrived"'
 
 block the-prompt
-on "PYTHONPATH=lab python -c 'import rag; q = \"Do you deliver to Portugal?\"; print(rag.prompt(q, rag.hybrid_search(q)))'"
-on 'python lab/ask.py "Do you deliver to Portugal?"'
-on 'python lab/ask.py "Do you sell bicycles?"'
+on "PYTHONPATH=scratch python -c 'import rag; q = \"Do you deliver to Portugal?\"; print(rag.prompt(q, rag.hybrid_search(q)))'"
+on 'python scratch/ask.py "Do you deliver to Portugal?"'
+on 'python scratch/ask.py "Do you sell bicycles?"'
 
 block citations
-on 'python lab/ask.py "My lamp stopped working after two months. What can I do?"'
-on 'python lab/ask.py "Can I return a mug I bought 40 days ago?"'
-on 'python lab/ask.py "Is the WELCOME10 coupon still valid in December?"'
+on 'python scratch/ask.py "My lamp stopped working after two months. What can I do?"'
+on 'python scratch/ask.py "Is support open on Saturday?"'
+on 'python scratch/ask.py "My mug arrived broken. Can I get my money back?"'
 
 block evaluating-retrieval
-put lab/eval_retrieval.py <<'PY'
+put scratch/eval_retrieval.py <<'PY'
 """Recall at 3: for each question, is the passage that answers it among the three retrieved?"""
 from rag import hybrid_search, keyword_search, vector_search
 
@@ -332,4 +344,4 @@ for name, search in [("vector", vector_search), ("keyword", keyword_search), ("h
     for q in missed:
         print(f"           missed: {q}")
 PY
-on 'python lab/eval_retrieval.py'
+on 'python scratch/eval_retrieval.py'

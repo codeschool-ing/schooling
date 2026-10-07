@@ -11,7 +11,7 @@ testes.
 
 ## Um modelo e um montador
 
-A ana transforma o prompt da vírgula da aula 5, seção 02, com a última linha que ele ganhou na seção
+A ana transforma o prompt da vírgula da aula 5 seção 02, com a última linha que ele ganhou na seção
 05, num modelo, com campos `$` para o que muda de uma tarefa para outra:
 
 ```

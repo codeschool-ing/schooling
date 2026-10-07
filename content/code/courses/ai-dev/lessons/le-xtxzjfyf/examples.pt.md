@@ -51,7 +51,7 @@ palavra por palavra**. O commit que ela descreve acrescenta o `CONVENTIONS.md`; 
 com preços negativos. O modelo copiou o padrão tão de perto que copiou o conteúdo junto.
 
 Aí estão as duas metades da técnica em duas linhas. Os exemplos acertaram a forma na hora, e não
-disseram nada ao modelo sobre o que este diff faz. A aula 5, seção 09, roda os mesmos dois prompts
+disseram nada ao modelo sobre o que este diff faz. A aula 5 seção 09, roda os mesmos dois prompts
 sobre todos os commits, três vezes cada, e conta as duas coisas.
 
 ## Escolhendo os exemplos

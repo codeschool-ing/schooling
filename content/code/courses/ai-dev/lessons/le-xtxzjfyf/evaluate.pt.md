@@ -24,7 +24,7 @@ caracteres, sem ponto final, no imperativo:
     },
     {
       "code": "EXAMPLES = \"\"\"Examples of this project's commit subjects:\nRefuse a coupon after its last day\nKeep shipping free from 200.00 after the discount\nFormat negative prices with the sign first\n\nThe subject is imperative, under sixty characters, with no full stop.\n\"\"\"\nRUNS = 3\nclient = anthropic.Anthropic()\n\n\n",
-      "note": "**A regra, dita, e três exemplos dela**, o prompt com exemplos da aula 5, seção 04. `RUNS` pede cada caso três vezes, porque cada resposta é um sorteio (aula 1, seção 08) e um sorteio por caso daria nota à sorte daquele sorteio."
+      "note": "**A regra, dita, e três exemplos dela**, o prompt com exemplos da aula 5 seção 04. `RUNS` pede cada caso três vezes, porque cada resposta é um sorteio (aula 1 seção 08) e um sorteio por caso daria nota à sorte daquele sorteio."
     },
     {
       "code": "def subject(diff: str, examples: bool) -> str:\n    prompt = (EXAMPLES + \"\\n\" if examples else \"\") + \"Write a commit message for this diff. One line.\\n\\n\" + diff\n    r = client.messages.create(model=\"llama3.2:3b\", max_tokens=100,\n                               messages=[{\"role\": \"user\", \"content\": prompt}])\n    return r.content[0].text.strip()\n\n\n",

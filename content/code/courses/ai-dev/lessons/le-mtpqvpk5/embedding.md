@@ -20,18 +20,18 @@ def build():
 ```
 
 ```
-ana@dev:~/shop$ time PYTHONPATH=lab python -c 'import rag; cs, v = rag.build(); print(len(cs), "chunks,", v.shape, v.dtype)'
+ana@dev:~/shop$ time PYTHONPATH=scratch python -c 'import rag; cs, v = rag.build(); print(len(cs), "chunks,", v.shape, v.dtype)'
 26 chunks, (26, 256) float32
 
-real	0m0.822s
-user	0m1.011s
-sys	0m0.197s
+real	0m1.016s
+user	0m1.020s
+sys	0m0.250s
 ana@dev:~/shop$ ls -la .rag
 total 44
-drwxr-xr-x 2 ana ana  4096 Oct  2 07:04 .
-drwxr-xr-x 8 ana ana  4096 Oct  2 07:04 ..
--rw-r--r-- 1 ana ana  5881 Oct  2 07:04 chunks.json
--rw-r--r-- 1 ana ana 26752 Oct  2 07:04 vectors.npy
+drwxr-xr-x 2 ana ana  4096 Oct  7 15:07 .
+drwxr-xr-x 8 ana ana  4096 Oct  7 15:07 ..
+-rw-r--r-- 1 ana ana  5881 Oct  7 15:07 chunks.json
+-rw-r--r-- 1 ana ana 26752 Oct  7 15:07 vectors.npy
 ```
 
 Twenty-six vectors of 256 numbers, in under two seconds on a laptop processor, most of it loading

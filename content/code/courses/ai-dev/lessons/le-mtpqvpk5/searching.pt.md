@@ -13,11 +13,25 @@ def vector_search(query, k=3):
     return [(cs[i], float(scores[i])) for i in np.argsort(-scores)[:k]]
 ```
 
-O `lab/search.py` imprime os três primeiros com as notas e o começo de cada trecho. Um cliente
-perguntando de uma devolução com as próprias palavras:
+O `scratch/search.py` roda uma das três buscas desta aula e imprime os três primeiros, com as notas
+e o começo de cada trecho:
+
+```python
+import sys
+
+from rag import hybrid_search, keyword_search, vector_search
+
+mode, query = sys.argv[1], sys.argv[2]
+search = {"vector": vector_search, "keyword": keyword_search, "hybrid": hybrid_search}[mode]
+print(f"{mode}: {query}")
+for c, score in search(query):
+    print(f"  {score:7.3f}  {c['id']:<20} {c['text'][:62]}…")
+```
+
+Um cliente perguntando de uma devolução com as próprias palavras:
 
 ```
-ana@dev:~/shop$ python lab/search.py vector "Can I send back a mug I bought last week?"
+ana@dev:~/shop$ python scratch/search.py vector "Can I send back a mug I bought last week?"
 vector: Can I send back a mug I bought last week?
     0.318  returns.md#1         Returns and refunds. A customer may return any item within 30 …
     0.276  returns.md#3         Returns and refunds. The refund goes back to the original paym…
@@ -29,7 +43,7 @@ vector: Can I send back a mug I bought last week?
 o qual embeddings existem, e o que uma busca por palavras erraria, como a aula 6 seção 06 mostra.
 
 ```
-ana@dev:~/shop$ python lab/search.py vector "How long does delivery take to Recife?"
+ana@dev:~/shop$ python scratch/search.py vector "How long does delivery take to Recife?"
 vector: How long does delivery take to Recife?
     0.481  shipping.md#1        Shipping. Orders ship within two working days from the warehou…
     0.327  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
