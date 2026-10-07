@@ -49,11 +49,11 @@ Vereda, e cada repositório que o guarda:
   permite o tratamento enquanto durar a finalidade dele. E agendamentos antigos tornam uma pessoa
   **identificável** muito depois de ela ter deixado de ser paciente.
 
-Nenhum desses precisa de atacante. Cada um se corrige com uma decisão de projeto: um lembrete que
-diz "você tem sessão amanhã às 10:00, responda C para cancelar", um pedido de pagamento com uma
-referência do agendamento e sem CPF, e uma regra de retenção que remove agendamentos depois do
-prazo que a lei e o conselho profissional exigem. O curso `security-fundamentals` (aula 17)
-apresentou a LGPD; o LINDDUN é como os princípios da lei viram perguntas sobre um DFD específico.
+Nenhum desses precisa de atacante. Cada um se corrige com uma decisão de projeto. Um lembrete diz
+"você tem sessão amanhã às 10:00, responda C para cancelar"; um pedido de pagamento leva uma
+referência do agendamento e nenhum CPF; e uma regra de retenção remove agendamentos depois do prazo
+que a lei e o conselho profissional exigem. O curso `security-fundamentals` (aula 17) apresentou a
+LGPD; o LINDDUN é como os princípios da lei viram perguntas sobre um DFD específico.
 
 ### Para onde ir com ele
 

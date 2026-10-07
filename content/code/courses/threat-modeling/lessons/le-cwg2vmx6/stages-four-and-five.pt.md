@@ -26,10 +26,10 @@ linhas:
 - **Ameaças internas existem, e em geral são descuido, e não má-fé.** Uma recepcionista olhando o
   prontuário de um vizinho é o caso clássico em dado de saúde, e não precisa de nada técnico.
 
-Nenhuma dessas é ameaça nova na lista. O que o estágio 4 acrescenta é **quais das catorze têm
-alguém tentando agora**: a T02 (credential stuffing) e a cadeia T03, T12, T09 (uma conta da equipe
-roubada por phishing chegando aos prontuários) sobem; a T14 (um PDF preparado) é possível, mas
-ninguém nos relatórios da carla estava fazendo isso com clínicas.
+Nenhuma dessas é ameaça nova na lista. O que o estágio 4 acrescenta é **quais das catorze têm alguém
+tentando agora**: a T02 (credential stuffing) e a cadeia T03, T12, T09 (uma conta da equipe roubada
+por phishing chegando aos prontuários) sobem. A T14 (um PDF preparado) é possível, mas ninguém nos
+relatórios da carla estava fazendo isso com clínicas.
 
 ### Estágio 5: análise de fraquezas e vulnerabilidades
 

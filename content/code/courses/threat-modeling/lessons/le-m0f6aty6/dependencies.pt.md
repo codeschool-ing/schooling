@@ -5,9 +5,9 @@ version: 1
 
 O DFD mostra o portal como um círculo, e o círculo esconde a maior parte do que está rodando. O
 portal é código da Vereda em cima de um framework web, uma biblioteca de PDF, a biblioteca cliente
-do gateway de pagamento e tudo o que elas importam, rodando nas máquinas de um provedor de nuvem,
-respondendo a um nome que um provedor de DNS publica, construído por um serviço de CI a partir de um
-host de git, com pacotes baixados de registros públicos. **Cada um deles roda com a confiança do
+do gateway de pagamento e tudo o que elas importam. Ele roda nas máquinas de um provedor de nuvem e
+responde a um nome que um provedor de DNS publica. Um serviço de CI o constrói a partir de um host
+de git, com pacotes baixados de registros públicos. **Cada um deles roda com a confiança do
 portal**, e um erro em qualquer um é uma porta de entrada que a Vereda nunca escreveu.
 
 ```schooling-figure

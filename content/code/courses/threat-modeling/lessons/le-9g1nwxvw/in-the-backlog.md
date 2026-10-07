@@ -16,10 +16,10 @@ in practice means after everything else.
 | **acceptance criteria on an existing story** | the requirement constrains a feature being built anyway | R13 on the story that redesigns the upload page |
 | **a rule in the definition of done** | the requirement applies to every story of a kind | R10's ownership check, for every story that returns a patient's data |
 
-The third shape is the most powerful and the least used. A rule in the definition of done is
-checked on every story without anybody having to remember the threat behind it: "any new endpoint
-that returns patient data checks that the data belongs to the signed-in patient, and has a test
-that asks for somebody else's."
+The third shape is the most powerful and the least used. A rule in the definition of done is checked
+on every story, and nobody has to remember the threat behind it. For example: "any new endpoint that
+returns patient data checks that the data belongs to the signed-in patient, and has a test that asks
+for somebody else's."
 
 ### Keeping the thread
 

@@ -26,7 +26,7 @@ For a chain of physiotherapy clinics in Brazil, carla's summary of stage 4 had t
 
 None of these is a new threat on the list. What stage 4 adds is **which of the fourteen have
 somebody actively trying them**: T02 (credential stuffing) and the T03, T12, T09 chain (a phished
-staff account reaching records) move up; T14 (a crafted PDF) is possible but nobody in carla's
+staff account reaching records) move up. T14 (a crafted PDF) is possible, but nobody in carla's
 reports was doing it to clinics.
 
 ### Stage 5: weakness and vulnerability analysis

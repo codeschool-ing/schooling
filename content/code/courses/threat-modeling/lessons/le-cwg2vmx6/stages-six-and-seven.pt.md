@@ -38,7 +38,7 @@ O último estágio volta ao negócio. Para cada caminho, e cada ameaça nele, pe
 propostos no estágio 6**. A saída é uma lista ordenada de riscos, as contramedidas recomendadas
 para cada um e o **risco residual**: o que sobra depois que elas estão no lugar.
 
-Na Vereda, a ordenação do estágio 7 pôs o caminho do phishing em primeiro: os relatórios da carla
+Na Vereda, a ordenação do estágio 7 pôs o caminho do phishing em primeiro. Os relatórios da carla
 diziam que ele está sendo tentado, o estágio 1 dizia que dado clínico é o objetivo em que as
 clínicas menos podem falhar, e segundo fator para a equipe é barato. O webhook forjado ficou em
 segundo, porque 60% dos agendamentos dependem da situação do pagamento. O texto do SMS (T08) ficou

@@ -4,7 +4,7 @@ version: 1
 ---
 
 A ana e a carla escreveram os requisitos numa tarde, ameaça por ameaça, com o daniel respondendo às
-perguntas que eram decisões e não engenharia: quantos logins falhos são demais, de que tamanho um
+perguntas que eram decisões e não engenharia. Quantos logins falhos são demais, de que tamanho um
 exame pode ser, por quanto tempo uma conta da equipe sem uso pode ficar aberta.
 
 | id | ameaças | requisito | verificado por |

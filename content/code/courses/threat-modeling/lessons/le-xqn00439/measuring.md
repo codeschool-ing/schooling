@@ -67,8 +67,9 @@ deciding to cheat.
 ### Where this leaves the course
 
 Fifteen lessons ago this repository was an empty directory. It now holds a diagram that runs, 19
-threats with ids, 21 requirements with their verification, estimates in reais with their ranges, a
-ranked plan, decision records with owners and dates, a mapping to three frameworks, an evidence
-index, and a check that fails when any of it falls out of step. None of those files is the threat
-model on its own. **The threat model is the habit of changing them whenever the system changes**,
-and the check is there so that the habit does not depend on anybody's memory.
+threats with ids and 21 requirements with their verification. It holds estimates in reais with their
+ranges, a ranked plan, and decision records with owners and dates. And it holds a mapping to three
+frameworks, an evidence index, and a check that fails when any of it falls out of step. None of
+those files is the threat model on its own. **The threat model is the habit of changing them
+whenever the system changes**, and the check is there so that the habit does not depend on anybody's
+memory.

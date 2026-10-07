@@ -24,17 +24,17 @@ recebe:
 O webhook de pagamento vai do gateway (zona dos fornecedores) para o portal (nuvem da Vereda), e
 muda um agendamento de não pago para pago.
 
-- **S, a origem:** o pedido é do gateway? O portal não confere. **Esta é a T01**, e é a ameaça de
+- S, a origem: o pedido é do gateway? O portal não confere. **Esta é a T01**, e é a ameaça de
   onde a aula 1 partiu. O gateway assina cada chamada; a correção é verificar a assinatura.
-- **T, o fluxo:** o valor ou o id do agendamento poderiam ser mudados no caminho? Ele viaja por
+- T, o fluxo: o valor ou o id do agendamento poderiam ser mudados no caminho? Ele viaja por
   HTTPS a partir do gateway, então no caminho, não. Quando qualquer um pode mandar o pedido, a
   pergunta perde o sentido: ele escreve o que quiser.
-- **I, o fluxo:** o webhook carrega um id de agendamento e um status, nada que valha a pena ler.
-- **D:** uma enxurrada de webhooks falsos poderia carregar o portal; a mesma resposta de qualquer
+- I, o fluxo: o webhook carrega um id de agendamento e um status, nada que valha a pena ler.
+- D: uma enxurrada de webhooks falsos poderia carregar o portal; a mesma resposta de qualquer
   endereço público.
-- **E, o destino:** marcar um agendamento como pago é mais do que um pedido anônimo deveria
+- E, o destino: marcar um agendamento como pago é mais do que um pedido anônimo deveria
   conseguir fazer. São S e E descrevendo a mesma falha pelas duas pontas.
-- **R:** se o gateway e o portal discordarem sobre uma sessão ter sido paga, a Vereda guarda o
+- R: se o gateway e o portal discordarem sobre uma sessão ter sido paga, a Vereda guarda o
   webhook original? Ninguém sabe, e isso já vale anotar.
 
 Seis perguntas, uma ameaça séria, dois "conferir isto" e três respondidas. Essa proporção é normal.

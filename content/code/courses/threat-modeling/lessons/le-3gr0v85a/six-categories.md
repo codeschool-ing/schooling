@@ -4,11 +4,11 @@ version: 1
 ---
 
 "What can go wrong?" asked of a room produces whatever the room remembers: injection, because
-everybody has heard of it, and whatever hurt somebody last month. The list has no shape, so there
-is no way to tell what it missed. **STRIDE** gives it a shape. It was written at Microsoft in 1999
-by Loren Kohnfelder and Praerit Garg, and it is still the most used way of answering the second
-question, because it does one thing well: **it turns "what can go wrong" into six narrower
-questions, each the violation of a property you want the system to have.**
+everybody has heard of it, and whatever hurt somebody last month. The list has no shape, so there is
+no way to tell what it missed. **STRIDE** gives it a shape. It was written at Microsoft in 1999 by
+Loren Kohnfelder and Praerit Garg. It is still the most used way of answering the second question,
+because it does one thing well: **it turns "what can go wrong" into six narrower questions, each the
+violation of a property you want the system to have.**
 
 | letter | threat | the property it violates | at the portal |
 |---|---|---|---|

@@ -68,9 +68,10 @@ jeito, sem ninguém decidir trapacear.
 
 ### Onde isso deixa o curso
 
-Quinze aulas atrás este repositório era um diretório vazio. Agora ele guarda um diagrama que roda, 19
-ameaças com ids, 21 requisitos com a sua verificação, estimativas em reais com as suas faixas, um
-plano ordenado, registros de decisão com donos e datas, um mapeamento para três frameworks, um índice
-de evidências, e uma checagem que falha quando qualquer parte disso sai do passo. Nenhum desses
-arquivos é o modelo de ameaças sozinho. **O modelo de ameaças é o hábito de mudá-los sempre que o
-sistema muda**, e a checagem existe para esse hábito não depender da memória de ninguém.
+Quinze aulas atrás este repositório era um diretório vazio. Agora ele guarda um diagrama que roda,
+19 ameaças com ids e 21 requisitos com a sua verificação. Guarda estimativas em reais com as suas
+faixas, um plano ordenado e registros de decisão com donos e datas. E guarda um mapeamento para três
+frameworks, um índice de evidências e uma checagem que falha quando qualquer parte disso sai do
+passo. Nenhum desses arquivos é o modelo de ameaças sozinho. **O modelo de ameaças é o hábito de
+mudá-los sempre que o sistema muda**, e a checagem existe para esse hábito não depender da memória
+de ninguém.

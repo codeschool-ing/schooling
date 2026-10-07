@@ -33,11 +33,10 @@ the owner. That is lesson 15's subject.
 ### How serious
 
 Audits grade their findings, with words that vary by kind of audit. A certification audit against
-ISO 27001 distinguishes a **major nonconformity**, where a requirement is not met at all or the
-system has failed, from a **minor nonconformity**, an isolated lapse in a requirement that is
-otherwise met, and both from an **observation** or **opportunity for improvement**, which requires
-nothing. A second-party audit like the insurer's uses whatever its contract says, often high,
-medium and low.
+ISO 27001 has three grades. A **major nonconformity** is a requirement not met at all, or a system
+that has failed. A minor nonconformity is an isolated lapse in a requirement that is otherwise met.
+An observation, or opportunity for improvement, requires nothing. A second-party audit like the
+insurer's uses whatever its contract says, often high, medium and low.
 
 The grade follows the evidence. RA-002's late review is an isolated lapse in a process that exists,
 with two other records that are in order: a minor finding, or a medium. If none of the three

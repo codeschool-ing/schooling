@@ -14,9 +14,9 @@ Quatro achados do artigo explicam cada estranheza da tabela da Vereda.
 | **inversão** | um risco menor recebe nota maior que um risco maior | a T01 tem nota 9 com R$ 6.000 por ano; a T13 tem nota 5 com R$ 15.000 |
 | **aritmética ordinal** | posições de faixa são multiplicadas como se fossem quantidades | "3 × 3 = 9 > 1 × 5 = 5" trata o passo da faixa 1 para a 2 como o passo da 4 para a 5, embora as faixas cubram valores muito diferentes |
 
-A conclusão de Cox foi que uma matriz pode ordenar riscos **pior que o acaso** em alguns casos, o que
-soa exagerado e se vê em inversões como a da T01: uma ordenação que põe o risco mais barato acima do
-mais caro é pior que uma moeda para esse par.
+A conclusão de Cox foi que uma matriz pode ordenar riscos **pior que o acaso** em alguns casos, o
+que soa exagerado e se vê em inversões como a da T01. Uma ordenação que põe o risco mais barato
+acima do mais caro é pior que uma moeda para esse par.
 
 ### Por que as matrizes estão em toda parte mesmo assim
 

@@ -23,17 +23,17 @@ For each crossing, the questions come in a fixed order, from the sender's side t
 The payment webhook goes from the gateway (vendors' zone) to the portal (Vereda's cloud), and it
 changes a booking from unpaid to paid.
 
-- **S, the source:** is the request from the gateway? The portal does not check. **This is T01**,
+- S, the source: is the request from the gateway? The portal does not check. **This is T01**,
   and it is the threat lesson 1 started from. The gateway signs each call; the fix is verifying
   the signature.
-- **T, the flow:** could the amount or the booking id be changed on the way? It travels over HTTPS
+- T, the flow: could the amount or the booking id be changed on the way? It travels over HTTPS
   from the gateway, so on the way, no. Once anybody can send the request, the question is moot:
   they write whatever they like.
-- **I, the flow:** the webhook carries a booking id and a status, nothing worth reading.
-- **D:** a flood of fake webhooks could load the portal; the same answer as for any public address.
-- **E, the receiver:** marking a booking paid is more than an anonymous request should be able to
+- I, the flow: the webhook carries a booking id and a status, nothing worth reading.
+- D: a flood of fake webhooks could load the portal; the same answer as for any public address.
+- E, the receiver: marking a booking paid is more than an anonymous request should be able to
   do. It is S and E describing the same flaw from two ends.
-- **R:** if the gateway and the portal disagree about whether a session was paid, does Vereda keep
+- R: if the gateway and the portal disagree about whether a session was paid, does Vereda keep
   the original webhook? Nobody knows, which is itself worth writing down.
 
 Six questions, one serious threat, two "check this", and three answered. That ratio is normal. The

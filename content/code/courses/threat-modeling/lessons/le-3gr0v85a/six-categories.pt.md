@@ -6,7 +6,7 @@ version: 1
 "O que pode dar errado?", perguntado a uma sala, produz o que a sala lembra: injeção, porque todo
 mundo já ouviu falar, e o que machucou alguém no mês passado. A lista não tem forma, então não há
 como saber o que ela deixou de fora. O **STRIDE** dá forma a ela. Foi escrito na Microsoft em 1999
-por Loren Kohnfelder e Praerit Garg, e ainda é o jeito mais usado de responder à segunda pergunta,
+por Loren Kohnfelder e Praerit Garg. Ainda é o jeito mais usado de responder à segunda pergunta,
 porque faz uma coisa bem: **transforma "o que pode dar errado" em seis perguntas mais estreitas,
 cada uma a violação de uma propriedade que você quer que o sistema tenha.**
 

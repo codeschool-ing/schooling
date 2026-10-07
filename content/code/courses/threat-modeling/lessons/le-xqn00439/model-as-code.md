@@ -61,8 +61,8 @@ supersedes it.
 ### Making it pass, honestly
 
 There are three ways to answer a new problem, and the check does not care which, as long as one is
-chosen: **write a requirement**, **write a decision**, or **add it to the baseline** with a reason in
-the commit. For T18 and T19, ana wrote requirements, R20 for the API key and R21 for the dashboard
+chosen: write a requirement, write a decision, or **add it to the baseline with a reason in the
+commit**. For T18 and T19, ana wrote requirements, R20 for the API key and R21 for the dashboard
 logins. R20 is verified by review of the configuration; R21 is a monthly process with nothing to
 verify yet, so it went into the baseline in the same commit:
 

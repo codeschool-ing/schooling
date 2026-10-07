@@ -53,10 +53,10 @@ The other three functions answer questions the model never asked:
 | **Respond** | what do we do in the first hour? | who can end a staff account's sessions, and who tells daniel |
 | **Recover** | how do we get back? | restoring a clinical note an intruder changed, and telling the patients the LGPD says must be told |
 
-None of these is in the plan, and some of them would have been cheap. For T03, a staff sign-in
-alert is a few lines in the console's log configuration. It does not lower the chance of the attack,
-which is why the cost ranking of lesson 11 could not see it: **a detection control lowers the cost of
-the attack by shortening it**, and the model estimated loss events without asking how long each one
+None of these is in the plan, and some of them would have been cheap. For T03, a staff sign-in alert
+is a few lines in the console's log configuration. It does not lower the chance of the attack, which
+is why the cost ranking of lesson 11 could not see it. **A detection control lowers the cost of the
+attack by shortening it**, and the model estimated loss events without asking how long each one
 would last before somebody noticed.
 
 ### The model's own work, in the CSF

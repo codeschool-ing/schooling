@@ -48,11 +48,11 @@ control, and every store that keeps it:
   which allows processing only for as long as its purpose lasts. And old bookings make a person
   **identifiable** long after they stopped being a patient.
 
-None of these needs an attacker. Each one is fixed by a design decision: a reminder that says "you
-have a session tomorrow at 10:00, reply C to cancel", a payment request with a booking reference
-and no CPF, and a retention rule that removes bookings after the period the law and the clinical
-council require. The `security-fundamentals` course (lesson 17) introduced the LGPD; LINDDUN is
-how the law's principles become questions about a specific DFD.
+None of these needs an attacker. Each one is fixed by a design decision. A reminder says "you have a
+session tomorrow at 10:00, reply C to cancel"; a payment request carries a booking reference and no
+CPF; and a retention rule removes bookings after the period the law and the clinical council
+require. The `security-fundamentals` course (lesson 17) introduced the LGPD; LINDDUN is how the
+law's principles become questions about a specific DFD.
 
 ### Where to go next with it
 

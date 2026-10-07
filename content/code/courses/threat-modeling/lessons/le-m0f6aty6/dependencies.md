@@ -5,8 +5,8 @@ version: 1
 
 The DFD shows the portal as a circle, and the circle hides most of what is running. The portal is
 Vereda's code on top of a web framework, a PDF library, the payment gateway's client library and
-everything those import, running on a cloud provider's machines, answering a name a DNS provider
-publishes, built by a CI service from a git host, with packages pulled from public registries.
+everything those import. It runs on a cloud provider's machines and answers a name a DNS provider
+publishes. A CI service builds it from a git host, with packages pulled from public registries.
 **Every one of those runs with the portal's trust**, and a mistake in any of them is a way in that
 Vereda never wrote.
 

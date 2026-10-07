@@ -5,7 +5,7 @@ version: 1
 
 A table of percentiles answers questions somebody already thought of. A **loss exceedance curve**
 answers all of them at once: for every amount of money, **the chance that one year's total loss is
-larger**. It is the single most useful picture FAIR produces, and the one to put in front of the
+larger**. It is the most useful picture FAIR produces, and the one to put in front of the
 person who decides how much risk the business carries.
 
 `fair.py` prints four points of it:

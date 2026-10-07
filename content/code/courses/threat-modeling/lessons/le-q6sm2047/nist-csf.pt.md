@@ -55,7 +55,7 @@ As outras três funções respondem a perguntas que o modelo nunca fez:
 
 Nada disso está no plano, e parte seria barata. Para a T03, um alerta de login da equipe são poucas
 linhas na configuração de log do console. Ele não reduz a chance do ataque, e é por isso que o
-ranking de custo da aula 11 não podia vê-lo: **um controle de detecção reduz o custo do ataque
+ranking de custo da aula 11 não podia vê-lo. **Um controle de detecção reduz o custo do ataque
 encurtando-o**, e o modelo estimou eventos de perda sem perguntar quanto tempo cada um duraria até
 alguém perceber.
 

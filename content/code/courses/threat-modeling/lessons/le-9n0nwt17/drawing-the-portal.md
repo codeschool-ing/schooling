@@ -45,9 +45,9 @@ Before any method is applied, the drawing says four things that the sketch did n
 
 ### Drawn as it should be, checked as it is
 
-The clinic network boundary around the staff is drawn as the design intended: the console is for
-the clinics. Lesson 1's first fact says the console also answers from the internet. There are two
-honest ways to draw that, and both are better than drawing the intention and saying nothing: add
-a flow from the internet to the console and mark it as a finding, or keep the drawing and write
-the gap in the model's list of assumptions to check. Lesson 6, on the attack surface, takes the
-first route and measures what it adds.
+The clinic network boundary around the staff is drawn as the design intended: the console is for the
+clinics. Lesson 1's first fact says the console also answers from the internet. There are two honest
+ways to draw that, and both are better than drawing the intention and saying nothing. One adds a
+flow from the internet to the console and marks it as a finding; the other keeps the drawing and
+writes the gap in the model's list of assumptions to check. Lesson 6, on the attack surface, takes
+the first route and measures what it adds.

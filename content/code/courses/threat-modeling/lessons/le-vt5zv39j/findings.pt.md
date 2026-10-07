@@ -32,11 +32,11 @@ o assunto da aula 15.
 ### Quão sério
 
 As auditorias classificam os achados, com palavras que variam pelo tipo de auditoria. Uma auditoria
-de certificação contra a ISO 27001 distingue uma **não conformidade maior**, em que um requisito não é
-atendido de jeito nenhum ou o sistema falhou, de uma **não conformidade menor**, um lapso isolado
-num requisito que no resto é atendido, e as duas de uma **observação** ou **oportunidade de
-melhoria**, que não exige nada. Uma auditoria de segunda parte como a da operadora usa o que o
-contrato dela disser, muitas vezes alto, médio e baixo.
+de certificação contra a ISO 27001 tem três classificações. Uma **não conformidade maior** é um
+requisito não atendido de jeito nenhum, ou um sistema que falhou. Uma não conformidade menor é um
+lapso isolado num requisito que no resto é atendido. Uma observação, ou oportunidade de melhoria,
+não exige nada. Uma auditoria de segunda parte como a da operadora usa o que o contrato dela disser,
+muitas vezes alto, médio e baixo.
 
 A classificação segue a evidência. A revisão atrasada do RA-002 é um lapso isolado num processo que
 existe, com dois outros registros em ordem: um achado menor, ou médio. Se nenhum dos três aceites
