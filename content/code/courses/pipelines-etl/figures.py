@@ -808,7 +808,7 @@ def l08_components(lang):
                   'em nome das tarefas que esperam. O servidor da API serve a interface web e a API, '
                   'e também lê e escreve no banco de metadados.',
             folder='pasta de DAGs', files='~/etl/dags/*.py', proc='processador de DAGs',
-            sched='agendador', exe='executor', tasks='processos das tarefas', trig='triggerer',
+            sched='agendador', exe='executor', tasks='processos de tarefa', trig='triggerer',
             api='servidor da API', ui='interface web e API', db='banco de metadados',
             dbname='PostgreSQL: airflow',
             cap='Quatro processos e um banco. Os arquivos são só lidos; tudo o que o Airflow sabe '
