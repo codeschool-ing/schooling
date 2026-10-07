@@ -5,8 +5,14 @@ version: 1
 
 The symptom of ARP spoofing also has an innocent cause, and the innocent one is far more common: two
 machines configured with the same address. The lab has one now. A printer was plugged into the staff
-LAN and, by mistake, given `desk`'s address, `192.168.10.21`. `arping` asks for that address by
-hand and prints every answer:
+LAN and, by mistake, given `desk`'s address, `192.168.10.21`. On your own computer, `plug` puts it
+there:
+
+```sh
+sudo bash nslab.sh plug printer lan 192.168.10.21/24 52:54:00:0a:77:21
+```
+
+`arping` asks for that address by hand and prints every answer:
 
 ```
 ana@laptop:~$ arping -c 3 -I eth0 192.168.10.21

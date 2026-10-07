@@ -1,6 +1,6 @@
 ---
 title: RESTCONF, the same data over HTTPS
-version: 1
+version: 2
 ---
 
 RESTCONF serves the same datastore with the same models, as REST. **The address of a resource is
@@ -54,6 +54,8 @@ HTTP/2 204
 ```
 
 Credentials are HTTP Basic, read by `curl -n` from `~/.netrc` so no password appears in a command.
+`netlab.sh` writes that file with one line, for `nc1`, and checks the same password on the other
+end through the plugin from the start of the lesson.
 **The client manages no candidate here**: each RESTCONF edit is validated and committed by the
 server in one step, and an invalid one is refused before anything changes. The error is the NETCONF error
 wrapped in JSON, with the same tag and the same message:

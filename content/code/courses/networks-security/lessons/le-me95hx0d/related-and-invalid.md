@@ -12,7 +12,22 @@ entry and marks it `related`.
 
 This rule set splits the two states onto separate rules, so each has its own counter, and lets the
 LAN ask two things of UDP port 53: the real name server in the DMZ, and `app`, which runs no DNS at
-all:
+all. It is `related.nft` on `fw`:
+
+```conf
+flush ruleset
+table ip filter {
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    ct state established counter accept
+    ct state related counter accept
+    ct state invalid counter drop
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 tcp dport 8080 ct state new counter accept
+    iifname "eth2" oifname "eth1" ip daddr 192.0.2.53 udp dport 53 ct state new counter accept
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 udp dport 53 ct state new counter accept
+  }
+}
+```
 
 ```
 root@fw:~# nft -f related.nft
@@ -48,8 +63,23 @@ such as a TCP acknowledgement for a connection the table never saw, has no legit
 
 ## Counters say what the rules actually did
 
-A rule with `counter` counts the packets and bytes it matched. After three requests from `laptop`
-and one attempt from `remote` at the database:
+A rule with `counter` counts the packets and bytes it matched. `stateful.nft` gets one on each rule,
+and a last rule with nothing but a counter and a comment:
+
+```conf
+flush ruleset
+table ip filter {
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    ct state established,related counter accept
+    ct state invalid counter drop
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 tcp dport 8080 ct state new counter accept
+    counter comment "everything else, about to be dropped"
+  }
+}
+```
+
+After three requests from `laptop` and one attempt from `remote` at the database:
 
 ```
 root@fw:~# nft -f stateful.nft

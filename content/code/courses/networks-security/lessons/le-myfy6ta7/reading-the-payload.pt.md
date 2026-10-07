@@ -25,6 +25,19 @@ Depois o `laptop` faz três coisas: busca a página web por HTTPS, tenta SSH no 
 pede ao `app` a página dele por HTTP puro na 8080. O login SSH falha porque a `ana` não tem chave no
 `remote`, e isso não importa: a conversa aconteceu do mesmo jeito.
 
+Duas coisas vêm antes no seu laboratório. O `edge.nft` não tem regra para a LAN chegar ao `app`,
+então acrescente uma; e diga ao `ssh` no `laptop` para aceitar sem perguntar uma chave de host que
+ele nunca viu, porque esta aula é sobre o firewall e não sobre SSH. Depois dê alguns segundos para o
+Suricata subir:
+
+```sh
+# on fw, as root
+nft insert rule ip filter forward iifname "eth2" oifname "eth3" tcp dport 8080 ct state new accept
+# on laptop, as you
+mkdir -p ~/.ssh
+printf 'Host *\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile /dev/null\n  LogLevel ERROR\n' > ~/.ssh/config
+```
+
 ```
 ana@laptop:~$ curl -s -o /dev/null https://www.example.com/
 ana@laptop:~$ ssh -p 443 -o BatchMode=yes 203.0.113.50 true; echo "exit $?"
@@ -34,7 +47,8 @@ ana@laptop:~$ curl -s -o /dev/null http://192.168.20.10:8080/
 ```
 
 Quando o Suricata para, ele escreve um **registro de fluxo** (*flow record*) para cada conversa que
-viu, com o protocolo que ele concluiu que a conversa carregava:
+viu, com o protocolo que ele concluiu que a conversa carregava. Pare-o no `fw` com
+`kill -INT $(cat /var/log/suricata/suricata.pid)` e leia-os:
 
 ```
 root@fw:~# jq -c "select(.event_type==\"flow\") | [.src_ip, .dest_ip, .dest_port, .app_proto]" /var/log/suricata/eve.json

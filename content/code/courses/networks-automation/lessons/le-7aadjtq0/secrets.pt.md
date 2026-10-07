@@ -1,12 +1,19 @@
 ---
 title: Segredos num repositório
-version: 1
+version: 2
 ---
 
 Um diretório de playbooks mora no Git, e a aula 14 o roda a partir de um pipeline. **Senhas e
 tokens não podem estar nele como texto**, e precisam estar em algum lugar que o playbook consiga
 ler. A resposta do Ansible é o **Vault**: um valor ou um arquivo inteiro cifrado com uma senha do
 vault, decifrado em memória quando o playbook roda.
+
+A senha do vault é uma sequência aleatória num arquivo que só a `ana` consegue ler, criada uma
+vez:
+
+```
+ana@ctl:~$ head -c 24 /dev/urandom | base64 > ~/.vault-pass; chmod 600 ~/.vault-pass
+```
 
 O token da central de chamados da aula 7, cifrado como variável:
 

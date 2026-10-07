@@ -9,8 +9,10 @@ distinguir uma resposta de qualquer outra coisa que carregue esse número.
 
 A porta de origem é escolhida por quem envia. O servidor web em `app` usa 8080 porque escuta ali, e
 qualquer programa em qualquer servidor pode escolher 8080 também. O `laptop` por acaso roda um
-serviço na porta 9999, e as regras nunca tiveram a intenção de deixar um servidor alcançá-lo. A
-partir de `db`, primeiro com uma porta escolhida pelo sistema e depois com 8080:
+serviço na porta 9999, e as regras nunca tiveram a intenção de deixar um servidor alcançá-lo. No
+laboratório, um processo escutando faz as vezes dele; suba-o no `laptop`, como root, com
+`setsid socat TCP-LISTEN:9999,bind=192.168.10.20,fork,reuseaddr SYSTEM:"echo laptop answered" </dev/null >/dev/null 2>&1 &`.
+A partir de `db`, primeiro com uma porta escolhida pelo sistema e depois com 8080:
 
 ```
 ana@db:~$ nc -w2 192.168.10.20 9999 </dev/null; echo "exit $?"

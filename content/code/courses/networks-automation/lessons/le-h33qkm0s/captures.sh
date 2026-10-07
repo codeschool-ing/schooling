@@ -11,12 +11,12 @@
 # The sender is devapi on edge1, the lab's router API, whose webhooks are
 # signed with HMAC-SHA256 and retried at 1, 2 and 4 seconds when a delivery is
 # not answered with a 2xx. The service desk is deskd, on tickets. Both were
-# written for this course and are printed in full in lab.sh.
+# written for this course; deskd is printed in full in the-desk.md and devapi
+# in lesson 2.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; ~/.hook-secret, a random string only ana can
-# read; devapi.py, lesson 2's client, copied into ana's home; and the files
-# ana wrote (put below), whose contents the lesson shows. Times, delivery ids
+# itself, built by lab.sh reset, and the files ana wrote (put below), whose
+# contents the lesson shows. Times, delivery ids
 # and signatures differ on every run.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -56,7 +56,7 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
-lab exec ctl ana 'head -c 24 /dev/urandom | base64 > .hook-secret; chmod 600 .hook-secret'
+on ctl 'head -c 24 /dev/urandom | base64 > ~/.hook-secret; chmod 600 ~/.hook-secret'
 put devapi.py <<'CODE'
 import time
 from pathlib import Path

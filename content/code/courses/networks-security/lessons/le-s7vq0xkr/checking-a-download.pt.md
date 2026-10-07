@@ -4,7 +4,15 @@ version: 1
 ---
 
 Um software costuma ser publicado com uma lista de digests ao lado. O servidor da loja oferece um
-agente para as máquinas da empresa, e esta é a lista dele:
+agente para as máquinas da empresa, e a lista dele. No laboratório o agente são 20.000 bytes da
+letra `a`; ponha-o no `www` com a lista, e dê ao nginx um location de onde servi-los, como root lá:
+
+```sh
+mkdir -p /var/www/downloads; cd /var/www/downloads; head -c 20000 /dev/zero | tr "\0" "a" > agent-2.4.1.tar.gz; sha256sum agent-2.4.1.tar.gz > SHA256SUMS
+sed -i "s|    location / {|    location /downloads/ {\n        root /var/www;\n    }\n    location / {|" /etc/nginx/sites-enabled/shop; nginx -s reload
+```
+
+Depois, a partir do `laptop`:
 
 ```
 ana@laptop:~$ curl -sO https://www.example.com/downloads/agent-2.4.1.tar.gz; curl -sO https://www.example.com/downloads/SHA256SUMS; cat SHA256SUMS

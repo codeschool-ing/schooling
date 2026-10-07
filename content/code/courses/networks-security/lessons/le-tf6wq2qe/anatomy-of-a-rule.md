@@ -3,7 +3,9 @@ title: The anatomy of a rule
 version: 1
 ---
 
-The rule this lesson loads on `sensor` counts login attempts arriving from outside:
+In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy loaded on
+`fw` by `nft -f baseline.nft`. The rule this lesson loads on `sensor`, written into its empty rule
+file, counts login attempts arriving from outside:
 
 ```
 root@sensor:~# cat /etc/suricata/rules/local.rules
@@ -18,7 +20,11 @@ Engines read a rule as one line, and a backslash at the end of a line continues 
 
 Before anything runs, the configuration is tested, rule files included. This one also loads
 `http-events.rules`, rules shipped with Suricata that fire on malformed HTTP, which the section on
-anomalies uses:
+anomalies uses. One line in `suricata.yaml` adds it to the list:
+
+```sh
+sed -i "/^rule-files:/,/^[a-z]/{s#^  - local.rules#  - local.rules\n  - http-events.rules#}" /etc/suricata/suricata.yaml
+```
 
 ```
 root@sensor:~# grep -A2 "^rule-files" /etc/suricata/suricata.yaml; ls /etc/suricata/rules/http-events.rules

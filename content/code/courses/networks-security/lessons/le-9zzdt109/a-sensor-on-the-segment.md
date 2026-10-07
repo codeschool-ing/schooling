@@ -5,7 +5,8 @@ version: 1
 
 The company does not want the shop's admin pages requested from the internet. Lesson 3 showed how to
 refuse that at the proxy; this lesson asks a different question: **would anybody notice it being
-tried?** One rule on `sensor`:
+tried?** In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy
+loaded on `fw` by `nft -f baseline.nft`. One rule on `sensor`, written into its empty rule file:
 
 ```
 root@sensor:~# cat /etc/suricata/rules/local.rules

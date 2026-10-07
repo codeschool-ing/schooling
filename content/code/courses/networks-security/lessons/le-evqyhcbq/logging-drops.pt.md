@@ -5,7 +5,11 @@ version: 1
 
 Uma política `drop` é silenciosa por projeto: quem enviou não recebe nada, e o administrador também
 não. Uma regra colocada **por último na chain**, logo antes da política, pode registrar o que está
-prestes a ser descartado:
+prestes a ser descartado. No `fw`, com a base carregada:
+
+```sh
+nft add rule ip filter forward limit rate 5/second log group 1 prefix \"fw-drop \" comment \"what the policy is about to drop\"
+```
 
 ```
 root@fw:~# nft list chain ip filter forward | tail -3
@@ -18,8 +22,9 @@ O `log group 1` entrega cada pacote ao grupo de log 1 do netfilter, onde qualque
 e o prefixo rotula as linhas. O `limit rate 5/second` importa tanto quanto o próprio log: sem ele,
 qualquer um pode encher o disco enviando pacotes que o firewall descarta, e o log vira o ataque.
 
-O `tcpdump` consegue ler esse grupo diretamente. Com ele escutando no `fw`, o `remote` tenta duas
-células que estão fechadas, e o `laptop` uma:
+O `tcpdump` consegue ler esse grupo diretamente. Com ele escutando no `fw`, iniciado em segundo
+plano com `setsid timeout 10 tcpdump -n -l -i nflog:1 -c 3 > /root/drops.txt 2>/dev/null </dev/null &`,
+o `remote` tenta duas células que estão fechadas, e o `laptop` uma:
 
 ```
 ana@remote:~$ probe db:5432 app:22

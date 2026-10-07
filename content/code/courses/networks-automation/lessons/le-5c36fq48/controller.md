@@ -1,6 +1,6 @@
 ---
 title: A controller that learns
-version: 1
+version: 2
 ---
 
 A controller is a server the switches connect to. OS-Ken listens on `ctl`'s management address and
@@ -77,7 +77,8 @@ OFPST_FLOW reply (OF1.3) (xid=0x2):
 
 **The flows were written by the program**: a table-miss at priority 0 that sends unknown traffic to
 the controller, and one flow for each direction it learnt, each with the thirty-second idle timeout.
-The controller's terminal, stopped afterwards:
+The controller's terminal, stopped afterwards from another terminal on `ctl` with
+`pkill -TERM -f "^python controller.py learning$"`, which is what printed `Terminated`:
 
 ```
 ana@ctl:~$ cd sdn && python controller.py learning

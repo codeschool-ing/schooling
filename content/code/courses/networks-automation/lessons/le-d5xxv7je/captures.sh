@@ -8,14 +8,15 @@
 #   sudo bash ../../lab.sh tools     # once: the software the lab runs
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# NetBox v4.6.10 on the netbox host, seeded by lab.sh with the lab's devices,
+# NetBox v4.6.10 on the netbox host, seeded by netbox_seed.py (installing-netbox.md) with the lab's devices,
 # interfaces, addresses, prefixes and cables. pynetbox 7.8.0, nornir-netbox
 # 0.3.0, Jinja2 3.1.6, NAPALM 5.2.0 with napalm_frr (lesson 8).
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset, NetBox's contents included; ana's NetBox token
-# in ~/.netbox-token; and the files ana wrote (put below), whose contents the
-# lessons show, with lesson 10's template and push.py copied beside them.
+# itself, built by lab.sh reset, NetBox's contents and ~/.netbox-token
+# included; lesson 10's template and push.py where it left them, which
+# pynetbox.md copies; and the files ana wrote (put below), whose contents the
+# lessons show.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -54,8 +55,70 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
-lab exec ctl ana 'mkdir -p sot/templates sot/inventory'
+# lesson 10 as it left ana's home: the two files this lesson copies, shown there
 
+put tpl/templates/frr.j2 <<'CODE'
+frr version 8.4.4
+frr defaults traditional
+hostname {{ hostname }}
+log file /var/log/frr/frr.log informational
+service integrated-vtysh-config
+!
+{% for i in interfaces %}
+interface {{ i.name }}
+{% if i.description %}
+ description {{ i.description }}
+{% endif %}
+ ip address {{ i.address }}
+{% if i.ospf == "point-to-point" %}
+ ip ospf network point-to-point
+{% elif i.ospf == "passive" %}
+ ip ospf passive
+{% endif %}
+exit
+!
+{% endfor %}
+interface lo
+ ip address {{ loopback }}/32
+exit
+!
+router ospf
+ ospf router-id {{ loopback }}
+ redistribute connected
+{% for i in interfaces if i.ospf %}
+ network {{ i.address | network }} area 0
+{% endfor %}
+exit
+!
+line vty
+ exec-timeout 30 0
+exit
+!
+end
+CODE
+put tpl/push.py <<'CODE'
+import sys
+
+from napalm import get_network_driver
+
+driver = get_network_driver("frr")
+for host in ("core1", "edge1", "edge2"):
+    with driver(host, "netops", None, optional_args={"key_file": "/home/ana/.ssh/id_ed25519"}) as dev:
+        dev.load_replace_candidate(filename=f"configs/{host}.conf")
+        diff = dev.compare_config()
+        if not diff:
+            print(f"{host}: matches")
+            dev.discard_config()
+            continue
+        print(f"{host}:\n{diff}")
+        if "--commit" in sys.argv:
+            dev.commit_config()
+            print(f"{host}: committed")
+        else:
+            dev.discard_config()
+CODE
+block setup
+on ctl 'mkdir -p sot/inventory sot/templates && cp tpl/templates/frr.j2 sot/templates/ && cp tpl/push.py sot/'
 put sot/nb.py <<'CODE'
 import pynetbox
 
@@ -127,66 +190,6 @@ for device in nb.dcim.devices.filter(role="router"):
     text = template.render(data)
     pathlib.Path(f"configs/{device.name}.conf").write_text(text)
     print(f"NetBox -> configs/{device.name}.conf, {len(text.splitlines())} lines")
-CODE
-put sot/templates/frr.j2 <<'CODE'
-frr version 8.4.4
-frr defaults traditional
-hostname {{ hostname }}
-log file /var/log/frr/frr.log informational
-service integrated-vtysh-config
-!
-{% for i in interfaces %}
-interface {{ i.name }}
-{% if i.description %}
- description {{ i.description }}
-{% endif %}
- ip address {{ i.address }}
-{% if i.ospf == "point-to-point" %}
- ip ospf network point-to-point
-{% elif i.ospf == "passive" %}
- ip ospf passive
-{% endif %}
-exit
-!
-{% endfor %}
-interface lo
- ip address {{ loopback }}/32
-exit
-!
-router ospf
- ospf router-id {{ loopback }}
- redistribute connected
-{% for i in interfaces if i.ospf %}
- network {{ i.address | network }} area 0
-{% endfor %}
-exit
-!
-line vty
- exec-timeout 30 0
-exit
-!
-end
-CODE
-put sot/push.py <<'CODE'
-import sys
-
-from napalm import get_network_driver
-
-driver = get_network_driver("frr")
-for host in ("core1", "edge1", "edge2"):
-    with driver(host, "netops", None, optional_args={"key_file": "/home/ana/.ssh/id_ed25519"}) as dev:
-        dev.load_replace_candidate(filename=f"configs/{host}.conf")
-        diff = dev.compare_config()
-        if not diff:
-            print(f"{host}: matches")
-            dev.discard_config()
-            continue
-        print(f"{host}:\n{diff}")
-        if "--commit" in sys.argv:
-            dev.commit_config()
-            print(f"{host}: committed")
-        else:
-            dev.discard_config()
 CODE
 put sot/nb_config.yaml <<'CODE'
 inventory:

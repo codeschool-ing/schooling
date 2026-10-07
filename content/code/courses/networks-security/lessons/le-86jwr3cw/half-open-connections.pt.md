@@ -9,7 +9,8 @@ connection) na memória, esperando. Um cliente que envia `SYN`s e nunca termina,
 endereços de origem que não são os seus, enche essa memória, e clientes reais são recusados. Isso é
 um **SYN flood**, o ataque de protocolo clássico.
 
-A defesa já vem no Linux, e ligada por padrão. No `www`:
+A defesa já vem no Linux, e ligada por padrão. No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. No `www`:
 
 ```
 root@www:~# sysctl net.ipv4.tcp_syncookies net.ipv4.tcp_max_syn_backlog net.ipv4.tcp_synack_retries

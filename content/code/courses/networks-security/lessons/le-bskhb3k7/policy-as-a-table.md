@@ -3,7 +3,10 @@ title: The policy as a table, the rules as its output
 version: 1
 ---
 
-The policy lives on `admin`, in a text file anybody can review in a pull request:
+The policy lives on `admin`, in a text file anybody can review in a pull request. In your lab this
+lesson starts from `sudo bash nslab.sh reset`, with the company's policy loaded on `fw` by
+`nft -f baseline.nft`; write `policy.txt` and `segment.py` in `/root` on `admin`, as they are printed
+below.
 
 ```
 root@admin:~# cat policy.txt
@@ -54,7 +57,12 @@ root@admin:~# python3 segment.py app | grep accept
 ```
 
 The application accepts HTTP from the proxy role and SSH from the admin role. Each file is copied to its
-server and loaded, four accept lines on each:
+server and loaded, four accept lines on each. In the lab the copying is one line on your own computer,
+the job a configuration management tool does in a real company:
+
+```sh
+for h in app db; do sudo bash nslab.sh exec admin root "python3 segment.py $h" | sudo tee /lab/$h/root/segment.nft >/dev/null; done
+```
 
 ```
 root@db:~# nft -f segment.nft && nft list chain inet host input | grep -c accept

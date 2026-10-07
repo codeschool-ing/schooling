@@ -1,6 +1,6 @@
 ---
 title: Testing the configurations without a router
-version: 1
+version: 2
 ---
 
 A model checks each file on its own. Some mistakes are only visible across files, or only in the
@@ -29,6 +29,32 @@ files named `test_*.py`, runs it, and counts a test as failed when it raises:
 
 `render.py` is lesson 10's, with its loop moved under `if __name__ == "__main__":` so that the
 tests can import the template without rendering every file as a side effect.
+
+```python
+import ipaddress
+import pathlib
+
+import yaml
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+
+def network(address):
+    return str(ipaddress.ip_interface(address).network)
+
+
+env = Environment(loader=FileSystemLoader("templates"), trim_blocks=True, lstrip_blocks=True,
+                  keep_trailing_newline=True, undefined=StrictUndefined)
+env.filters["network"] = network
+template = env.get_template("frr.j2")
+
+if __name__ == "__main__":
+    pathlib.Path("configs").mkdir(exist_ok=True)
+    for path in sorted(pathlib.Path("data").glob("*.yaml")):
+        data = yaml.safe_load(path.read_text())
+        text = template.render(data)
+        (pathlib.Path("configs") / f"{data['hostname']}.conf").write_text(text)
+        print(f"{path} -> configs/{data['hostname']}.conf, {len(text.splitlines())} lines")
+```
 
 ```
 ana@ctl:~$ cd net && pytest -v test_configs.py

@@ -5,8 +5,14 @@ version: 1
 
 O sintoma do ARP spoofing também tem uma causa inocente, e a inocente é muito mais comum: duas
 máquinas configuradas com o mesmo endereço. O laboratório tem uma agora. Uma impressora foi ligada à
-LAN dos funcionários e, por engano, recebeu o endereço do `desk`, `192.168.10.21`. O `arping`
-pergunta por esse endereço à mão e imprime cada resposta:
+LAN dos funcionários e, por engano, recebeu o endereço do `desk`, `192.168.10.21`. No seu próprio
+computador, o `plug` a põe lá:
+
+```sh
+sudo bash nslab.sh plug printer lan 192.168.10.21/24 52:54:00:0a:77:21
+```
+
+O `arping` pergunta por esse endereço à mão e imprime cada resposta:
 
 ```
 ana@laptop:~$ arping -c 3 -I eth0 192.168.10.21

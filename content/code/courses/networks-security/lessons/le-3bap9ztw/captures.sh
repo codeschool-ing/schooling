@@ -6,7 +6,7 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash ana               # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/nslab.sh          # the lab, beside course.json
+#   sudo ln -sf "$(realpath ../../lab.sh)" /var/tmp/nslab.sh   # the lab, beside course.json
 #   sudo bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh; lesson 1
@@ -17,7 +17,7 @@
 # machines, because the 802.1X client needs root to open the interface.
 #
 # What is STAGED rather than typed, and not shown in the lesson:
-# the lab itself, built by lab.sh reset and lab.sh nac. That second step makes
+# the lab itself, built by lab.sh reset and nac.sh (lab nac). That second step makes
 # the switch and the two machines, issues nac.corp.example.com (the
 # authenticator's certificate) and newpc.corp.example.com (the laptop's) from
 # the lab's issuing CA, lets visitor sign a certificate of its own, writes

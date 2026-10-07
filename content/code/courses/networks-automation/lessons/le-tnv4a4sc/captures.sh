@@ -10,7 +10,7 @@
 #
 # The libraries are Paramiko 5.0.0, Netmiko 4.8.0, NAPALM 5.2.0, Nornir 3.6.0
 # with nornir-netmiko 1.0.1 and nornir-napalm 0.6.0. The NAPALM driver named
-# frr is napalm_frr, written for the lab and printed in full in lab.sh:
+# frr is napalm_frr, written for the lab and printed in full in a-driver.md:
 # NAPALM ships no FRR driver.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab

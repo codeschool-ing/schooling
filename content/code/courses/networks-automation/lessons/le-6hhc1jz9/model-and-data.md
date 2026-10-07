@@ -1,6 +1,6 @@
 ---
 title: A model, and data that fits it
-version: 1
+version: 2
 ---
 
 Lessons 3 and 4 kept meeting names that came from somewhere: `ietf-interfaces`, `ietf-ip`,
@@ -33,7 +33,22 @@ The models themselves come from three kinds of publisher, and a network engineer
 | operator groups | `openconfig-interfaces`, `openconfig-bgp` | what large operators need, versioned fast |
 | each vendor | FRR's `frr-interface`, and every vendor's own | everything that device can do |
 
-The IETF modules used in this lesson are the ones `pyang` installs beside itself, 69 of them:
+The IETF modules used in this lesson are the ones `pyang` installs beside itself, in the virtual
+environment. OpenConfig's are published in one repository, `openconfig/public`, and are cloned
+once on the virtual machine, outside the lab, at the commit this course used:
+
+```sh
+sudo git clone https://github.com/openconfig/public.git /opt/openconfig
+sudo git -C /opt/openconfig checkout 806f013
+```
+
+Then three short names in `ana`'s home on `ctl`, so the commands below stay short:
+
+```
+ana@ctl:~$ ln -s /opt/netauto/share/yang/modules/ietf ietf; ln -s /opt/netauto/share/yang/modules/iana iana; ln -s /opt/openconfig/release/models openconfig
+```
+
+There are 69 IETF modules:
 
 ```
 ana@ctl:~$ ls ietf | head -8; ls ietf | wc -l

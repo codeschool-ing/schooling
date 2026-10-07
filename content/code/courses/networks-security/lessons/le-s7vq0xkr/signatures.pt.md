@@ -20,15 +20,25 @@ MCowBQYDK2VwAyEATZYYS8vjlrhJ22IsXQ/grXnj1Llczs89wImxSNp4Bjk=
 
 A chave pública é o que se publica, uma vez, em algum lugar em que os usuários já confiam: a
 documentação da empresa, o wiki interno, a configuração que instala o agente. Então a versão é
-assinada:
+assinada, no `admin`, depois que uma cópia do agente é posta na sua pasta pessoal lá com
+`sudo cp /lab/www/var/www/downloads/agent-2.4.1.tar.gz /lab/admin/home/$USER/` e
+`sudo chown $USER: /lab/admin/home/$USER/agent-2.4.1.tar.gz` no seu próprio computador:
 
 ```
 ana@admin:~$ openssl pkeyutl -sign -rawin -inkey release.key -in agent-2.4.1.tar.gz -out agent-2.4.1.tar.gz.sig; wc -c agent-2.4.1.tar.gz.sig
 64 agent-2.4.1.tar.gz.sig
 ```
 
-A assinatura tem 64 bytes, qualquer que seja o tamanho do arquivo. No `laptop`, que tem a chave
-pública, o arquivo baixado é conferido contra ela:
+A assinatura tem 64 bytes, qualquer que seja o tamanho do arquivo. O `laptop` recebe a chave
+pública, a assinatura e uma cópia intacta do arquivo, já que o que ele baixou foi alterado na seção
+anterior:
+
+```sh
+sudo cp /lab/admin/home/$USER/release.pub /lab/admin/home/$USER/agent-2.4.1.tar.gz.sig /lab/admin/home/$USER/agent-2.4.1.tar.gz /lab/laptop/home/$USER/
+sudo chown $USER: /lab/laptop/home/$USER/*
+```
+
+e confere o arquivo contra elas:
 
 ```
 ana@laptop:~$ openssl pkeyutl -verify -rawin -pubin -inkey release.pub -in agent-2.4.1.tar.gz -sigfile agent-2.4.1.tar.gz.sig

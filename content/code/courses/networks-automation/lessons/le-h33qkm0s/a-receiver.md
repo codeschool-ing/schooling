@@ -1,6 +1,6 @@
 ---
 title: The smallest receiver
-version: 1
+version: 2
 ---
 
 A receiver is a web server with one handler, and Python's standard library has one:
@@ -27,8 +27,15 @@ A receiver is a web server with one handler, and Python's standard library has o
 ```
 
 The router needs to know where to send, so the first step is a subscription, created through the
-same API client lesson 2 wrote. The events are the two the router offers, a link going down and
-coming up:
+same API client lesson 2 wrote, `devapi.py`, which is still in `ana`'s home. The router signs each
+delivery with a secret both ends know, and `ana` makes it once, as a random string in a file only
+she can read:
+
+```
+ana@ctl:~$ head -c 24 /dev/urandom | base64 > ~/.hook-secret; chmod 600 ~/.hook-secret
+```
+
+The events are the two the router offers, a link going down and coming up:
 
 ```schooling-example
 {

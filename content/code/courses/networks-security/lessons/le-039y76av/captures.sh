@@ -6,7 +6,7 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash ana               # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/nslab.sh          # the lab, beside course.json
+#   sudo ln -sf "$(realpath ../../lab.sh)" /var/tmp/nslab.sh   # the lab, beside course.json
 #   sudo bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh; lesson 1
@@ -17,7 +17,7 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson:
 # the lab itself, built by lab.sh reset, with the baseline rule set of lesson 4
-# loaded on fw; three certificates issued by the lab's issuing CA with fixed
+# loaded on fw; three certificates issued by identities.sh, shown in the lesson, with fixed
 # dates, as lesson 12 issued one: app.corp.example.com for the application's
 # TLS listener, www-client for the proxy to prove who it is, and an old
 # client certificate for the proxy that expired on 31 August 2026; each copied
@@ -48,21 +48,16 @@ block() { printf '##### %s\n' "$1"; }
 
 lab reset
 quiet fw 'nft -f baseline.nft'
-# three certificates from the lab's CA, with fixed dates
-( cd /lab/ca
-  mk() { # mk NAME EXT START END SAN
-    openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj "/CN=$1" -keyout "$1.key" -out "$1.csr" 2>/dev/null
-    { sed -n "/^\[$2\]/,/^\[/p" ca.cnf | sed '$d'; [ -n "$5" ] && echo "subjectAltName = $5"; } > "$1.ext"
-    openssl ca -batch -config ca.cnf -cert issuing.crt -keyfile issuing.key -extfile "$1.ext" -extensions "$2" -startdate "$3" -enddate "$4" -in "$1.csr" -out "$1.crt" -notext 2>/dev/null
-  }
-  mk app.corp.example.com server 20260928000000Z 20261228000000Z DNS:app.corp.example.com
-  mk www-client client 20260928000000Z 20261228000000Z ""
-  mk www-client-old client 20260601000000Z 20260831000000Z ""
-  mkdir -p /lab/app/root/tls /lab/www/root/tls
-  cat app.corp.example.com.crt issuing.crt > /lab/app/root/tls/app.crt; cp app.corp.example.com.key /lab/app/root/tls/app.key
-  cat issuing.crt root.crt > /lab/app/root/tls/clients-ca.crt
-  cp www-client.crt www-client.key www-client-old.crt www-client-old.key /lab/www/root/tls/
-  chmod 600 /lab/app/root/tls/*.key /lab/www/root/tls/*.key )
+# the three certificates, by identities.sh as the lesson shows it, extracted
+# byte for byte the way the copy button gives it
+python3 - "$(dirname "$(readlink -f "$0")")/inside-is-not-enough.md" > /var/tmp/nslab/identities.sh <<'PY'
+import json, re, sys
+for b in re.findall(r"^```schooling-example\n(.*?)\n```$", open(sys.argv[1]).read(), re.S | re.M):
+    ex = json.loads(b)
+    if ex.get("file") == "identities.sh":
+        print("\n".join(p["code"] for p in ex["parts"]))
+PY
+bash /var/tmp/nslab/identities.sh
 quiet app 'cat > /root/nginx-app.conf <<"CONF"
 pid /var/log/lab/nginx.pid;
 error_log /var/log/lab/nginx-error.log;
