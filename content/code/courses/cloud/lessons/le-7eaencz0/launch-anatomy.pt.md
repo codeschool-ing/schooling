@@ -1,6 +1,6 @@
 ---
 title: O que lançar uma instância pede
-version: 1
+version: 2
 ---
 
 A página de lançamento de um console faz iniciar uma instância parecer um formulário com um botão
@@ -9,7 +9,9 @@ desse pedido. O jeito mais rápido de ver todos é pedir à ferramenta de linha 
 pedido, sem enviá-lo.
 
 O AWS CLI faz isso localmente. Ele rodou aqui com o ambiente vazio e um diretório home novo, então
-não tinha credenciais, nem configuração, nem conta com quem falar:
+não tinha credenciais, nem configuração, nem conta com quem falar. O CLI que a aula 1 instalou também
+nunca recebeu uma chave, então na sua máquina os mesmos comandos respondem do mesmo jeito, tirando o
+sistema citado na linha de versão:
 
 ```
 ana@laptop:~/cloud$ aws --version

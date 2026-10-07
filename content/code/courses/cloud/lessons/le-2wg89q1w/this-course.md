@@ -1,6 +1,6 @@
 ---
 title: What this course is, and where its numbers come from
-version: 1
+version: 2
 ---
 
 This course is about **the shape of the cloud, not anybody's console**. A diagram of what a managed

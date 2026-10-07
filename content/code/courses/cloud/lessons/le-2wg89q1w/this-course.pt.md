@@ -1,6 +1,6 @@
 ---
 title: O que é este curso, e de onde vêm os números dele
-version: 1
+version: 2
 ---
 
 Este curso é sobre **a forma da nuvem, não sobre o console de ninguém**. Um diagrama do que um banco
