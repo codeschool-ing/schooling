@@ -670,6 +670,74 @@ def l03_minto(lang):
                 'Cada nível resume o de baixo. Se uma parte da análise não cabe em lugar nenhum da '
                 'árvore, ela não faz parte desta apresentação.')
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-openings', 4)
+def l04_openings(lang):
+    f = Fig('l04-openings', 680, 360, T(
+        lang,
+        'Four opening slides for the same finding. For the board: late first deliveries cost about '
+        'R$ 793 thousand a year in margin. For management: cut late first deliveries with an '
+        'eight-week pilot, with the owner and the start date. For the technical team: what late means '
+        'in this analysis, with a table of definitions. For Ligeiro, the carrier: the contract '
+        'promises two working days, and first orders miss it 17.3% of the time.',
+        'Quatro slides de abertura para o mesmo achado. Para o conselho: as primeiras entregas '
+        'atrasadas custam cerca de R$ 793 mil por ano em margem. Para a gestão: reduzir o atraso da '
+        'primeira entrega com um piloto de oito semanas, com dono e data de início. Para a área '
+        'técnica: o que atraso quer dizer nesta análise, com uma tabela de definições. Para a '
+        'Ligeiro, a transportadora: o contrato promete dois dias úteis, e os primeiros pedidos '
+        'falham nisso 17,3% das vezes.'))
+    rooms = [T(lang, 'board', 'conselho'), T(lang, 'management', 'gestão'),
+             T(lang, 'technical team', 'área técnica'), T(lang, 'client: Ligeiro', 'cliente: Ligeiro')]
+    titles = [T(lang, ['Late first deliveries cost us', 'about R$ 793 thousand a year'],
+                ['A 1ª entrega atrasada nos custa', 'cerca de R$ 793 mil por ano']),
+              T(lang, ['Cut late first deliveries with', 'an 8-week pilot from 1 Sept'],
+                ['Reduzir o atraso da 1ª entrega', 'com um piloto de 8 semanas']),
+              T(lang, ['What late means in this', 'analysis, and how it is counted'],
+                ['O que atraso quer dizer nesta', 'análise, e como é contado']),
+              T(lang, ['Our contract promises two', 'working days; first orders miss it'],
+                ['O contrato promete dois dias', 'úteis; os 1ºs pedidos falham'])]
+    for i in range(4):
+        col, row = i % 2, i // 2
+        x, y = 14 + col * 336, 24 + row * 172
+        f.text(x, y - 10, rooms[i], size=10, anchor='start', fill='--paper-dim', weight='600')
+        f.rect(x, y, 316, 150, stroke='--wire', fill='--ink', rx=3)
+        f.lines(x + 14, y + 20, titles[i], size=11.5, anchor='start', weight='600', gap=16)
+        cx, cy = x + 14, y + 62
+        if i == 0:
+            k = round(S.LOSS_PER_YEAR / 100 / 1000)
+            f.text(x + 158, cy + 32, T(lang, f'R$ {k} thousand', f'R$ {k} mil'), size=22,
+                   weight='600', fill='--amber')
+            f.text(x + 158, cy + 60, T(lang, 'customer margin lost each year', 'margem de clientes perdida por ano'),
+                   size=9.5, fill='--paper-dim')
+        elif i == 1:
+            rows = [T(lang, 'lever: remove the address check', 'alavanca: tirar a conferência'),
+                    T(lang, 'owner: Sandra’s team', 'dono: equipe da Sandra'),
+                    T(lang, 'goal: 17.3% late → 8%', 'meta: 17,3% de atraso → 8%'),
+                    T(lang, 'start: 1 September', 'início: 1º de setembro')]
+            f.lines(cx, cy + 4, rows, size=10, anchor='start', gap=18)
+        elif i == 2:
+            rows = [('late', T(lang, 'after the checkout date', 'depois da data da compra')),
+                    ('first_delivery', T(lang, 'first box of the subscription', '1ª caixa da assinatura')),
+                    ('cancelled_90d', T(lang, 'within 90 days of it', 'em até 90 dias dela'))]
+            for k, (term, d) in enumerate(rows):
+                f.text(cx, cy + 4 + k * 22, term, size=9.5, anchor='start', mono=True, fill='--phosphor')
+                f.text(cx + 120, cy + 4 + k * 22, d, size=9.5, anchor='start')
+        else:
+            for k, (lab, v, col_) in enumerate([
+                    (T(lang, 'renewals', 'renovações'), S.RENEWAL_ON_TIME, '--phosphor'),
+                    (T(lang, 'first orders', '1ºs pedidos'), S.FIRST_ON_TIME, '--amber')]):
+                yy = cy + 6 + k * 30
+                f.text(cx + 82, yy + 8, lab, size=9.5, anchor='end')
+                w = (x + 260 - (cx + 90)) * v
+                f.bar(cx + 90, yy, w, 16, fill='--scan', stroke=col_, width=1.4)
+                f.text(cx + 94 + w, yy + 8, pct(lang, v), size=9.5, anchor='start', fill=col_)
+    return f, T(lang,
+                'Same finding, four first slides. Each opens with what that room decides and the unit '
+                'it thinks in; none would work in another room.',
+                'O mesmo achado, quatro primeiros slides. Cada um abre com o que aquela sala decide e a '
+                'unidade em que ela pensa; nenhum funcionaria em outra sala.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
