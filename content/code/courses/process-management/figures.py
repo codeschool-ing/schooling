@@ -415,6 +415,101 @@ def l01_cone(lang):
 # ---- end of lesson 1
 
 
+# ------------------------------------------------------------------ lesson 2
+
+@figure('l02-sprint', 2)
+def l02_sprint(lang):
+    t = {
+        'en': dict(pb='Product Backlog', pg='Product Goal', planning='Sprint Planning',
+                   sb='Sprint Backlog', sg='Sprint Goal', daily='Daily Scrum', daily2='15 minutes, every day',
+                   sprint='the Sprint: one month or less', inc='Increment', dod='Definition of Done',
+                   review='Sprint Review', retro='Sprint Retrospective', refine='refinement, ongoing',
+                   next='the next Sprint starts at once',
+                   label='The Scrum cycle. The Product Backlog, committed to a Product Goal, feeds Sprint '
+                         'Planning, which produces the Sprint Backlog with its Sprint Goal. Inside a Sprint of '
+                         'one month or less the Developers meet each day in a 15-minute Daily Scrum. The Sprint '
+                         'produces an Increment that meets the Definition of Done, shown at the Sprint Review; '
+                         'the Sprint Retrospective follows, and the next Sprint starts at once.',
+                   cap='Five events, three artefacts and the commitment attached to each artefact, as the 2020 Scrum '
+                       'Guide arranges them. Refinement is an activity, not an event, which is why it has no box.'),
+        'pt': dict(pb='Product Backlog', pg='Meta do Produto', planning='Planejamento da Sprint',
+                   sb='Sprint Backlog', sg='Meta da Sprint', daily='Daily Scrum', daily2='15 minutos, todo dia',
+                   sprint='a Sprint: um mês ou menos', inc='Incremento', dod='Definição de Pronto',
+                   review='Revisão da Sprint', retro='Retrospectiva da Sprint', refine='refinamento, contínuo',
+                   next='a próxima Sprint começa em seguida',
+                   label='O ciclo do Scrum. O Product Backlog, comprometido com uma Meta do Produto, alimenta o '
+                         'Planejamento da Sprint, que produz o Sprint Backlog com a Meta da Sprint. Dentro de uma '
+                         'Sprint de um mês ou menos, os Desenvolvedores se reúnem todo dia numa Daily Scrum de 15 '
+                         'minutos. A Sprint produz um Incremento que atende à Definição de Pronto, mostrado na '
+                         'Revisão da Sprint; depois vem a Retrospectiva, e a próxima Sprint começa em seguida.',
+                   cap='Cinco eventos, três artefatos e o compromisso preso a cada artefato, como o Guia do Scrum de '
+                       '2020 os organiza. O refinamento é uma atividade, não um evento, e por isso não tem caixa.'),
+    }[lang]
+    f = Fig('l02-sprint', 700, 300, t['label'])
+    box(f, 14, 40, 130, 54, [t['pb'], t['pg']], stroke='--phosphor', fills=['--paper', '--paper-dim'],
+        weights=['600', None], size=10)
+    f.text(79, 112, t['refine'], size=9.5, fill='--paper-dim')
+    arrow(f, 146, 67, 172, 67)
+    box(f, 174, 44, 120, 46, [t['planning']], weights=['600'], size=10)
+    arrow(f, 296, 67, 318, 67)
+    box(f, 320, 40, 120, 54, [t['sb'], t['sg']], stroke='--phosphor', fills=['--paper', '--paper-dim'],
+        weights=['600', None], size=10)
+    # the sprint band
+    f.rect(170, 130, 360, 70, stroke='--amber', fill='--scan', rx=6, dash='5 3')
+    f.text(350, 145, t['sprint'], size=10, fill='--amber', weight='600')
+    f.circle(350, 176, 13, fill=None, stroke='--paper', width=1.4)
+    f.text(350, 176, '24h' if lang == 'en' else '24h', size=8.5, mono=True)
+    f.text(372, 172, t['daily'], size=10, anchor='start', weight='600')
+    f.text(372, 186, t['daily2'], size=9.5, anchor='start', fill='--paper-dim')
+    arrow(f, 380, 96, 380, 128)
+    arrow(f, 532, 165, 556, 165)
+    box(f, 558, 138, 128, 54, [t['inc'], t['dod']], stroke='--phosphor', fills=['--paper', '--paper-dim'],
+        weights=['600', None], size=10)
+    arrow(f, 622, 194, 622, 222)
+    box(f, 520, 224, 166, 34, [t['review']], weights=['600'], size=10)
+    arrow(f, 518, 241, 452, 241)
+    box(f, 270, 224, 180, 34, [t['retro']], weights=['600'], size=10)
+    f.path('M268 241 L120 241 L120 96', stroke='--paper-dim', width=1.4, dash='4 3', arrow=True)
+    f.text(194, 272, t['next'], size=9.5, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l02-burndown', 2)
+def l02_burndown(lang):
+    t = {
+        'en': dict(y='points still open', x='day of the sprint', ideal='ideal line', actual='what happened',
+                   left='5 points left over', flat='flat: nothing finished',
+                   label='A burndown over ten days. The ideal line falls from 34 points to zero. The actual line '
+                         'stays at 34 after day 1, drops to 31, stays flat on day 3, falls to 26, 23, stays at 23 '
+                         'on day 6, then falls to 18, 13, 8 and ends at 5 points on day 10.',
+                   cap='The Agenda team’s sprint, from the course’s sheet. The flat stretches are days on which '
+                       'work was done and nothing reached Done, and the line ends above zero.'),
+        'pt': dict(y='pontos ainda abertos', x='dia da sprint', ideal='linha ideal', actual='o que aconteceu',
+                   left='sobraram 5 pontos', flat='plano: nada terminou',
+                   label='Um burndown de dez dias. A linha ideal cai de 34 pontos a zero. A linha real fica em 34 '
+                         'depois do dia 1, cai para 31, fica plana no dia 3, cai para 26 e 23, fica em 23 no dia 6, '
+                         'depois cai para 18, 13, 8 e termina em 5 pontos no dia 10.',
+                   cap='A sprint do time Agenda, a partir da planilha do curso. Os trechos planos são dias em que '
+                       'houve trabalho e nada chegou a Pronto, e a linha termina acima de zero.'),
+    }[lang]
+    f = Fig('l02-burndown', 640, 300, t['label'])
+    p = Plot(f, 70, 40, 510, 240, 0, 10, 0, 35)
+    p.yaxis([0, 5, 10, 15, 20, 25, 30, 35], label=t['y'])
+    p.xaxis(range(0, 11), label=t['x'])
+    f.line(p.sx(0), p.sy(34), p.sx(10), p.sy(0), stroke='--paper-dim', width=1.4, dash='5 4')
+    d = 'M' + ' L'.join(f'{p.sx(i):.1f} {p.sy(v):.1f}' for i, v in enumerate(S.BURNDOWN))
+    f.path(d, stroke='--phosphor', width=2.2)
+    for i, v in enumerate(S.BURNDOWN):
+        f.circle(p.sx(i), p.sy(v), 3, fill='--phosphor')
+    f.text(p.sx(2.6), p.sy(17), t['ideal'], size=10, anchor='middle', fill='--paper-dim')
+    f.text(p.sx(4.2), p.sy(30), t['actual'], size=10, anchor='start', fill='--phosphor', weight='600')
+    f.text(p.sx(10) + 10, p.sy(5), t['left'], size=10, anchor='start', fill='--amber', weight='600')
+    f.text(p.sx(6), p.sy(23) - 14, t['flat'], size=9.5, anchor='middle', fill='--amber')
+    return f, t['cap']
+
+# ---- end of lesson 2
+
+
 # ------------------------------------------------------------------ the figures
 
 
