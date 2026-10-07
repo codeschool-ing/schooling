@@ -1,6 +1,6 @@
 ---
 title: HTML is not how the page looks
-version: 1
+version: 2
 ---
 
 Most people meet HTML with a picture already in their head: **HTML is the code that makes the page look the way it does**. A heading is big because it is in an `<h1>`; text is bold because it is in a `<b>`; a page has two columns because somebody wrote the right tags. That picture is wrong in a way that costs you later, so it is worth replacing now.
@@ -21,6 +21,6 @@ So the question to ask while writing HTML is never "how will this look?" but **"
 
 The other belief worth naming is that a page which displays correctly has correct HTML. **The browser is the most forgiving reader your HTML will ever have.** It was built to show something for any input, because the early web was written by hand by people who made mistakes, and a browser that refused broken pages lost to one that showed them.
 
-So it repairs. It closes elements you left open, moves elements that cannot go where you put them, and invents the ones you left out. This lesson shows it doing all three, with the exact document the browser built printed beside the file it was given. Most repairs are harmless. Some change what is bold, what is inside a link or what a form sends. And one of them, in section 07 of this lesson, turns a whole page into a blank window because of a single missing closing tag.
+So it repairs. It closes elements you left open, moves elements that cannot go where you put them, and invents the ones you left out. This lesson shows it doing all three, with the exact document the browser built printed beside the file it was given. Most repairs are harmless. Some change what is bold, what is inside a link or what a form sends. And one of them, in section 09 of this lesson, turns a whole page into a blank window because of a single missing closing tag.
 
-A page is correct when its HTML says what it means without the browser having to guess, and the tool that tells you whether that is true is a validator, section 11.
+A page is correct when its HTML says what it means without the browser having to guess, and the tool that tells you whether that is true is a validator, section 13.

@@ -1,9 +1,9 @@
 ---
 title: Os seus design tokens em @theme
-version: 1
+version: 2
 ---
 
-A aula 10 prometeu que o Tailwind poderia usar os seus tokens em vez dos dele. É o bloco **`@theme`** na folha de entrada:
+A aula 10 prometeu que o Tailwind poderia usar os seus tokens em vez dos dele. É o bloco **`@theme`** na folha de entrada, aqui `theme/input.css`:
 
 ```css
 @import "tailwindcss";
@@ -17,7 +17,32 @@ A aula 10 prometeu que o Tailwind poderia usar os seus tokens em vez dos dele. �
 }
 ```
 
-Cada variável em `@theme` é um token e **também cria utilitários**. O nome dela diz quais: `--color-andorinha-700` cria `bg-andorinha-700`, `text-andorinha-700`, `border-andorinha-700` e todo outro utilitário de cor para essa cor; `--font-display` cria `font-display`. A página os usa como os embutidos:
+Cada variável em `@theme` é um token e **também cria utilitários**. O nome dela diz quais: `--color-andorinha-700` cria `bg-andorinha-700`, `text-andorinha-700`, `border-andorinha-700` e todo outro utilitário de cor para essa cor; `--font-display` cria `font-display`. A página os usa como os embutidos.
+
+A página ao lado, `theme/index.html`, usa esses nomes:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="out.css">
+  </head>
+  <body class="bg-andorinha-50 text-andorinha-900">
+    <main class="mx-auto max-w-3xl p-4">
+      <h1 id="title" class="font-display text-3xl">This week</h1>
+      <article class="mt-4 border-l-4 border-andorinha-700 p-4">
+        <h2 id="poetry" class="font-semibold">Poetry reading</h2>
+      </article>
+      <article class="mt-4 border-l-4 border-cancelled p-4">
+        <h2 id="swap" class="font-semibold text-cancelled">Book swap, cancelled</h2>
+      </article>
+    </main>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ npx @tailwindcss/cli --cwd theme -i input.css -o out.css --silent

@@ -1,6 +1,6 @@
 ---
 title: Viewport units
-version: 1
+version: 2
 ---
 
 Four units measure the browser window, the **viewport**, rather than any element: **`vw`** is one per cent of its width, **`vh`** one per cent of its height, and `vmin` and `vmax` are one per cent of the smaller or the larger of the two. A section that should fill the first screen is `min-height: 100vh`.
@@ -38,8 +38,8 @@ On a 1024 by 768 window, `100vw` by `100vh` is 1024 by 768. On a phone 390 wide 
 
 ## The phone's toolbar
 
-On a phone, the browser's address bar slides away as the reader scrolls and comes back when they scroll up, so the visible height changes while they read. `100vh` was defined as the **largest** of those heights, so a section of `100vh` is taller than the screen while the bar is showing, and its bottom is hidden under the bar. Three newer units say which height they mean: **`svh`**, the small viewport, with the bars showing; **`lvh`**, the large one, with them hidden; and **`dvh`**, the dynamic one, which follows the bar as it moves. `min-height: 100svh` is the safe choice for a first screen that must fit. The headless Chromium in this lab has no address bar to slide away, so it cannot show the difference; on a real phone the units differ by the height of the bar.
+On a phone, the browser's address bar slides away as the reader scrolls and comes back when they scroll up, so the visible height changes while they read. `100vh` was defined as the **largest** of those heights, so a section of `100vh` is taller than the screen while the bar is showing, and its bottom is hidden under the bar. Three newer units say which height they mean: **`svh`**, the small viewport, with the bars showing; **`lvh`**, the large one, with them hidden; and **`dvh`**, the dynamic one, which follows the bar as it moves. `min-height: 100svh` is the safe choice for a first screen that must fit. The headless Chromium these measurements come from has no address bar to slide away, so it cannot show the difference; on a real phone the units differ by the height of the bar.
 
 ## The scrollbar
 
-On a desktop with classic scrollbars, `100vw` includes the width of the vertical scrollbar, so an element of `width: 100vw` is a few pixels wider than the page and makes it scroll sideways. The headless Chromium in this lab draws no scrollbar, so the measurement above cannot show it, and you will see it on Windows and on most Linux desktops. **`width: 100%` is what to use for "the full width of the page"**; keep `vw` for things that really are a share of the window, such as a heading whose size grows with it, which lesson 11 builds with `clamp()`.
+On a desktop with classic scrollbars, `100vw` includes the width of the vertical scrollbar, so an element of `width: 100vw` is a few pixels wider than the page and makes it scroll sideways. The headless Chromium these measurements come from draws no scrollbar, so the measurement above cannot show it, and you will see it on Windows and on most Linux desktops. **`width: 100%` is what to use for "the full width of the page"**; keep `vw` for things that really are a share of the window, such as a heading whose size grows with it, which lesson 11 builds with `clamp()`.

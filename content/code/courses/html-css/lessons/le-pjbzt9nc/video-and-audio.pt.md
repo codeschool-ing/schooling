@@ -1,6 +1,6 @@
 ---
 title: Vídeo e áudio
-version: 1
+version: 2
 ---
 
 `<video>` e `<audio>` põem uma gravação na página, tocada pelo próprio navegador, sem plug-in. O sebo tem a gravação do sarau de poesia do mês passado:
@@ -37,9 +37,18 @@ O que cada parte faz:
 - **O conteúdo dentro de `<video>`**, o link de download, só aparece num navegador que não consegue tocar vídeo nenhum.
 - **`preload`** diz quanto buscar antes de alguém apertar o play.
 
+O arquivo de legendas, `reading.vtt`, é texto puro, e este tem uma única legenda:
+
+```
+WEBVTT
+
+00:00.000 --> 00:02.000
+Good evening, and welcome to Andorinha Books.
+```
+
 ## O que o `preload` muda
 
-Com `preload="none"` e depois com `preload="metadata"`:
+Com `preload="none"`, e depois com uma cópia salva como `video-metadata.html` que diz `preload="metadata"` no lugar:
 
 ```
 ana@laptop:~/site$ probe video.html fetched

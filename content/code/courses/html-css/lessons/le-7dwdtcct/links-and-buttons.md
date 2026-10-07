@@ -1,6 +1,6 @@
 ---
 title: Links go somewhere, buttons do something
-version: 1
+version: 2
 ---
 
 Two elements make a page interactive without a single line of CSS: `<a href>` and `<button>`. They look different by default and people style them to look alike, so the difference is easy to lose. It is simple to state: **a link takes you to another place, a button does something here**. Going to the events page is a link. Reserving a book, opening a menu, submitting a form are buttons.
@@ -30,6 +30,18 @@ The choice matters because each element comes with behaviour you would otherwise
     </script>
   </body>
 </html>
+```
+
+Save it as `controls.html`, and beside it `controls.css`, which is what makes the `<div>` look like a button:
+
+```css
+.button {
+  display: inline-block;
+  padding: 0.4em 0.8em;
+  background: #2f6f4e;
+  color: white;
+  cursor: pointer;
+}
 ```
 
 Clicked with a mouse, the two buttons behave identically. The accessibility tree is the first sign that they are not:

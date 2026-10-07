@@ -1,6 +1,6 @@
 ---
 title: sticky: no fluxo até que fosse sair
-version: 1
+version: 2
 ---
 
 **`position: sticky`** é o híbrido. A caixa está no fluxo normal e ocupa o espaço dela, como uma static, **até que a rolagem a levasse para além da borda definida pelo inset**; aí ela gruda nessa borda, e fica ali até o fim do pai passar. Os meses da página de eventos têm títulos sticky, `top: 0`, e a seção de cada mês tem 900 pixels de altura:
@@ -29,7 +29,50 @@ No topo da página, os títulos estão onde o fluxo os pôs: outubro em 0, novem
 
 ## Por que o sticky às vezes não faz nada
 
-A reclamação mais comum sobre o sticky é que ele não gruda, e a causa mais comum é esta:
+A reclamação mais comum sobre o sticky é que ele não gruda, e a causa mais comum é esta. Aqui está o `fixed.html` salvo como `sticky-broken.html`, com as duas seções envolvidas numa `<div>` e uma regra a mais para ela:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Fixed and sticky · Andorinha Books</title>
+    <style>
+      body { margin: 0; font: 16px/1.5 sans-serif; }
+      .chat {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        padding: 8px 16px;
+        background: #2f6f4e;
+        color: white;
+      }
+      .month h2 {
+        position: sticky;
+        top: 0;
+        margin: 0;
+        padding: 8px;
+        background: #f4f1ea;
+      }
+      .month { height: 900px; }
+      .wrapper { overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+    <section class="month" id="october">
+      <h2>October</h2>
+      <p>Poetry reading, book swap and a bookbinding class.</p>
+    </section>
+    <section class="month" id="november">
+      <h2>November</h2>
+      <p>Nothing is planned yet.</p>
+    </section>
+    </div>
+    <a class="chat" href="contact.html">Ask us</a>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe sticky-broken.html scroll 500 box h2
@@ -37,6 +80,6 @@ h2  x 0      y 0      width 1024   height 52
 h2  x 0      y 900    width 1024   height 52
 ```
 
-A mesma página com as seções envolvidas numa `<div>` que tem **`overflow: hidden`**, rolada até 500: o título continua em **0**. Não grudou. Uma caixa sticky gruda no ancestral **com rolagem** mais próximo, e `overflow: hidden`, `auto` ou `scroll` em qualquer ancestral transforma esse ancestral no escolhido, mesmo que ele próprio nunca role. O título grudou fielmente no topo de uma caixa que nunca se mexeu. A correção é tirar o `overflow`, ou usar `overflow: clip`, que corta o conteúdo que transborda sem criar um contêiner de rolagem.
+Envolvidas numa `<div>` que tem **`overflow: hidden`**, e com a página rolada até 500, o título continua em **0**. Não grudou. Uma caixa sticky gruda no ancestral **com rolagem** mais próximo, e `overflow: hidden`, `auto` ou `scroll` em qualquer ancestral transforma esse ancestral no escolhido, mesmo que ele próprio nunca role. O título grudou fielmente no topo de uma caixa que nunca se mexeu. A correção é tirar o `overflow`, ou usar `overflow: clip`, que corta o conteúdo que transborda sem criar um contêiner de rolagem.
 
 As outras duas causas: **nenhum inset**, porque `position: sticky` sem `top` ou outro inset nunca gruda; e **um pai sem altura maior que a caixa sticky**, o que não lhe deixa espaço para se mover.

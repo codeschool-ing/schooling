@@ -1,9 +1,9 @@
 ---
 title: Camadas de cascata
-version: 1
+version: 2
 ---
 
-A seção 07 da aula 5 desenhou a cascata como quatro perguntas, e a segunda, **camadas**, ficou para esta aula. Uma camada de cascata (*cascade layer*) é um grupo de regras com nome, e **entre camadas, a ordem das camadas decide antes de a especificidade ser consultada**. Isso faz da ordem de arquivos da seção 09 algo que o navegador impõe, em vez de algo de que todo mundo tem de se lembrar. Aqui estão quatro camadas, três delas com regras, e um link que duas delas estilizam:
+A seção 07 da aula 5 desenhou a cascata como quatro perguntas, e a segunda, **camadas**, ficou para esta aula. Uma camada de cascata (*cascade layer*) é um grupo de regras com nome, e **entre camadas, a ordem das camadas decide antes de a especificidade ser consultada**. Isso faz da ordem de arquivos da seção 09 algo que o navegador impõe, em vez de algo de que todo mundo tem de se lembrar. Aqui estão quatro camadas, três delas com regras, e um link que duas delas estilizam, em `layers.css`:
 
 ```css
 @layer reset, base, components, utilities;
@@ -21,7 +21,28 @@ A seção 07 da aula 5 desenhou a cascata como quatro perguntas, e a segunda, **
 }
 ```
 
-A primeira linha declara a **ordem** das camadas: `reset` é a mais fraca, `utilities` a mais forte. As regras então entram na camada delas com `@layer nome { … }`. O link tem a classe `button` e fica dentro de `#events`:
+A primeira linha declara a **ordem** das camadas: `reset` é a mais fraca, `utilities` a mais forte. As regras então entram na camada delas com `@layer nome { … }`. O link tem a classe `button` e fica dentro de `#events`, em `layers.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Layers · Andorinha Books</title>
+    <link rel="stylesheet" href="layers.css">
+  </head>
+  <body>
+    <main id="events">
+      <article class="event">
+        <h2>Book swap</h2>
+        <a class="button" href="swap.html">How it works</a>
+      </article>
+    </main>
+  </body>
+</html>
+```
+
+Perguntando que regras definem a cor dele:
 
 ```
 ana@laptop:~/site$ probe layers.html rules .button color
@@ -39,7 +60,7 @@ computed color: rgb(255, 255, 255)
 
 ## Estilos fora de camada vencem
 
-Mais uma regra, acrescentada fora de qualquer camada, `a { color: #8a1c1c; }`:
+Mais uma regra, acrescentada fora de qualquer camada, `a { color: #8a1c1c; }`. Salve o `layers.css` com essa linha no fim como `layers-plus.css`, e uma cópia do `layers.html` que o liga como `layers-plus.html`:
 
 ```
 ana@laptop:~/site$ probe layers-plus.html rules .button color

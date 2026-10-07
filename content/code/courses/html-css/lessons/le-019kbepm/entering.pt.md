@@ -1,6 +1,6 @@
 ---
 title: Animando algo que aparece
-version: 1
+version: 2
 ---
 
 A seção 05 disse que `display` não pode ter transição: não há valor entre `none` e `block`. Isso tornava impossível fazer surgir aos poucos algo que aparece mudando o `display`, um aviso, um dropdown, um diálogo, e é o caso que mais importa. Dois recursos recentes resolvem:
@@ -34,7 +34,7 @@ A seção 05 disse que `display` não pode ter transição: não há valor entre
 
 **`@starting-style`** diz quais eram os estilos de um elemento **antes de ele ser exibido**. Sem isso, um elemento que vai de `display: none` para `block` não tem estilo anterior de onde partir a transição, então aparece direto na opacidade final. Com isso, o navegador faz a transição de `opacity: 0` para 1. **`transition-behavior: allow-discrete`**, escrito aqui como `display 400ms allow-discrete` dentro do atalho, deixa o `display` participar da transição: na saída ele espera a opacidade terminar antes de virar `none`, então o esmaecimento de saída também é visto.
 
-O botão alterna a classe `open` com uma linha de JavaScript, que o curso `javascript` explica. 200 ms depois de um clique, com e sem o bloco `@starting-style`:
+O botão alterna a classe `open` com uma linha de JavaScript, que o curso `javascript` explica. 200 ms depois de um clique, com o bloco `@starting-style` e depois no `nostart.html`, uma cópia com esse bloco inteiro apagado:
 
 ```
 ana@laptop:~/site$ probe starting.html click button at 200 style .toast display,opacity

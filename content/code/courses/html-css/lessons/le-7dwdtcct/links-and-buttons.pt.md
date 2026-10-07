@@ -1,6 +1,6 @@
 ---
 title: Links levam a algum lugar, botões fazem algo
-version: 1
+version: 2
 ---
 
 Dois elementos tornam uma página interativa sem uma linha de CSS: `<a href>` e `<button>`. Eles aparecem diferentes por padrão e as pessoas os estilizam para ficarem parecidos, então a diferença se perde fácil. Ela é simples de dizer: **um link leva você a outro lugar, um botão faz algo aqui**. Ir para a página de eventos é um link. Reservar um livro, abrir um menu, enviar um formulário são botões.
@@ -30,6 +30,18 @@ A escolha importa porque cada elemento vem com um comportamento que você teria 
     </script>
   </body>
 </html>
+```
+
+Salve-a como `controls.html`, e ao lado dela o `controls.css`, que é o que faz a `<div>` parecer um botão:
+
+```css
+.button {
+  display: inline-block;
+  padding: 0.4em 0.8em;
+  background: #2f6f4e;
+  color: white;
+  cursor: pointer;
+}
 ```
 
 Clicados com o mouse, os dois botões se comportam igual. A árvore de acessibilidade é o primeiro sinal de que não são iguais:

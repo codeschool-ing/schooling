@@ -1,9 +1,9 @@
 ---
 title: Trazendo CSS, scripts e imagens
-version: 1
+version: 2
 ---
 
-Uma página raramente é um arquivo só. A página inicial do sebo precisa de uma folha de estilos, de um scriptzinho para o menu e de uma foto, e o HTML diz onde cada um está. Aqui está a página:
+Uma página raramente é um arquivo só. A página inicial do sebo precisa de uma folha de estilos, de um scriptzinho para o menu e de uma foto, e o HTML diz onde cada um está. Aqui está a página, `links.html`:
 
 ```html
 <!doctype html>
@@ -24,8 +24,22 @@ Uma página raramente é um arquivo só. A página inicial do sebo precisa de um
 Três elementos apontam para três outros arquivos, e cada um se escreve de um jeito porque cada um é um tipo diferente de coisa:
 
 - **`<link rel="stylesheet" href="site.css">`** traz CSS. `rel` diz qual é a relação, e `stylesheet` é uma de várias; o ícone da seção anterior era outra. Vai no head.
-- **`<script src="menu.js" defer></script>`** traz JavaScript. Não é um elemento vazio: sempre precisa da tag de fechamento, mesmo vazio, e é o elemento em que esquecê-la engole o resto da página, como a seção 07 descreveu. O `defer` é explicado abaixo.
+- **`<script src="menu.js" defer></script>`** traz JavaScript. Não é um elemento vazio: sempre precisa da tag de fechamento, mesmo vazio, e é o elemento em que esquecê-la engole o resto da página, como a seção 09 descreveu. O `defer` é explicado abaixo.
 - **`<img src="cover.png" alt="…">`** traz uma imagem, e vai no body porque uma imagem é conteúdo. A aula 4 trata de imagens em detalhe, incluindo o que escrever no `alt`.
+
+Os dois arquivos para os quais ela aponta têm uma linha cada, e vão ao lado da página. O `site.css` dá cor ao título:
+
+```css
+h1 { color: #2f6f4e; }
+```
+
+O `menu.js` marca a página como pronta para um menu, que é até onde um curso de HTML vai com ele:
+
+```js
+document.documentElement.dataset.menu = 'ready';
+```
+
+O `cover.png` é qualquer imagem pequena, como na seção 08.
 
 Quando o navegador abre a página, ele pede cada um. `probe fetched` lista o que ele pediu, e `style` confirma que a folha de estilos chegou e foi aplicada:
 

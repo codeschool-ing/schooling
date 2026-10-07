@@ -1,9 +1,9 @@
 ---
 title: Redrawing the page shell at two widths
-version: 1
+version: 2
 ---
 
-Lesson 9 section 11 left a page with a problem: on a window 700 wide, the 240-pixel aside stayed beside the content and took a third of the screen. Lesson 9 section 06 promised the fix, rewriting `grid-template-areas` inside a media query. Here is the shell rewritten mobile first, with a navigation added:
+Lesson 9 section 11 left a page with a problem: on a window 700 wide, the 240-pixel aside stayed beside the content and took a third of the screen. Lesson 9 section 06 promised the fix, rewriting `grid-template-areas` inside a media query. Here is the shell rewritten mobile first, with a navigation added, in `shell.css`:
 
 ```css
 *, *::before, *::after { box-sizing: border-box; }
@@ -59,7 +59,36 @@ footer       { grid-area: footer; }
 .cards article { padding: 16px; background: #f4f1ea; }
 ```
 
-The base is one column, five areas stacked in the order of the HTML. At **48rem**, 768 pixels, the aside moves beside `main`. At **64rem**, 1024, the navigation becomes a column of its own on the left. Each step only rewrites the template strings and the columns; the five `grid-area` lines are written once:
+The base is one column, five areas stacked in the order of the HTML. At **48rem**, 768 pixels, the aside moves beside `main`. At **64rem**, 1024, the navigation becomes a column of its own on the left. Each step only rewrites the template strings and the columns; the five `grid-area` lines are written once.
+
+The page, `shell.html`, has the five areas in the order a phone shows them:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="shell.css">
+  </head>
+  <body>
+    <header class="site-header"><p>Andorinha Books</p></header>
+    <nav aria-label="Main"><p>Events · Order a book · Opening hours</p></nav>
+    <main>
+      <h1>This week</h1>
+      <div class="cards">
+        <article><h2>Poetry reading</h2><p>Thursday, 7 pm.</p></article>
+        <article><h2>Book swap</h2><p>Saturday, from 10 am.</p></article>
+        <article><h2>Bookbinding</h2><p>Saturday, 2 pm.</p></article>
+        <article><h2>New arrivals</h2><p>Forty paperbacks.</p></article>
+      </div>
+    </main>
+    <aside><h2>Opening hours</h2><p>10 am to 7 pm.</p></aside>
+    <footer><p>Rua dos Pinheiros, 1000 · São Paulo</p></footer>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe --width 700 shell.html box "body > *"

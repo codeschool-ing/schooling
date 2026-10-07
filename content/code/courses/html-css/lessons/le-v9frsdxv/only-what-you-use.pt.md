@@ -1,6 +1,6 @@
 ---
 title: O build escreve só as classes que você usa
-version: 1
+version: 2
 ---
 
 O Tailwind conhece milhares de classes, e a folha que ele escreveu é pequena. Ele **varreu os arquivos** da pasta atrás de qualquer coisa que pareça um dos seus nomes de classe, e escreveu regra só para os que encontrou:
@@ -26,7 +26,7 @@ A cor é impressa como **`oklch(0.508 0.118 165.612)`**. A paleta do Tailwind é
 
 ## Build para produção
 
-A varredura é o que mantém o arquivo pequeno, e o tamanho continua importando, seção 10 da aula 1. Para produção, **`--minify`** tira os espaços e os comentários:
+A varredura é o que mantém o arquivo pequeno, e o tamanho continua importando, seção 12 da aula 1. Para produção, **`--minify`** tira os espaços e os comentários:
 
 ```
 ana@laptop:~/site$ npx @tailwindcss/cli --cwd first -i input.css -o out.min.css --minify --silent
