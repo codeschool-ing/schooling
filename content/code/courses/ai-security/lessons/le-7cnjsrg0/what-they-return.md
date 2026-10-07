@@ -1,6 +1,6 @@
 ---
 title: What a moderation endpoint answers, and where it goes
-version: 1
+version: 2
 ---
 
 A moderation endpoint is usually pictured as a yes or no: send it a message and it says whether the
@@ -9,10 +9,11 @@ message is acceptable. **What it returns is a score per category**, sometimes a 
 is a decision your code makes from those scores, with a line you chose, and the line is where
 nearly all of the work in this lesson is.
 
-Every provider of this product class answers in roughly that shape. The lab's version is a stand-in,
-and **it is not a moderation model**: it is a list of English words and phrases per category, each
-with a weight the course chose, combined into a score that behaves like one. Its header in
-`guardlab/moderation.py` lists the mistakes it makes on purpose. It answers like this:
+Every provider of this product class answers in roughly that shape. The one in this course is a
+stand-in, `moderation.py`, which lesson 5 gave you along with `guard moderate`, and **it is not a
+moderation model**: it is a list of English words and phrases per category, each with a weight the
+course chose, combined into a score that behaves like one. The comment at its top lists the mistakes it
+makes on purpose. It answers like this:
 
 ```
 ana@lab:~/guard$ guard moderate 'Shut up, you clown'
