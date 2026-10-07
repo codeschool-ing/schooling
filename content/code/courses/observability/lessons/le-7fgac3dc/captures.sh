@@ -7,11 +7,10 @@
 #
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by `lab.sh reset`; checkout.json, whose content the lesson
-# shows; and one minute of simulated customers (`docker compose run loadgen`),
-# run while payments is slowed down, so that the metric and the logs have more
-# than one request in them. Trace ids, times and dates differ on every run.
+# What is STAGED rather than typed: the lab itself, built by `lab.sh reset`
+# from the files the lesson shows in "The shop, written in full" and "What
+# watches it"; and checkout.json, whose content the lesson shows. Trace ids,
+# times and dates differ on every run.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -40,7 +39,9 @@ on "curl -s -o /dev/null -w '%{http_code} in %{time_total} s\n' -X POST localhos
 block slow
 on "echo '{\"latency_ms\": 1500}' > faults/payments.json"
 on "curl -s -o /dev/null -w '%{http_code} in %{time_total} s\n' -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @checkout.json"
-quiet "docker compose run --rm loadgen python -m loadgen.load 2 60"
+
+block customers
+on "docker compose run --rm loadgen python -m loadgen.load 2 60"
 sleep 20
 
 block metrics
@@ -60,3 +61,29 @@ block loki
 on "curl -sG localhost:3100/loki/api/v1/query_range --data-urlencode 'query={service_name=\"payments\"} |= \"$TRACE\"' | jq -r '.data.result[].values[][1]' | jq -c '{level, message, order_id}'"
 
 quiet "rm faults/payments.json"
+
+# The section on failures: three that a student building this lab meets,
+# each made to happen on purpose and put back.
+block no-group
+gpasswd -d ana docker >/dev/null
+on "docker compose ps"
+gpasswd -a ana docker >/dev/null
+
+block no-password
+quiet "docker compose rm -sf grafana && mv .grafana-password /tmp/grafana-password"
+on "docker compose up -d grafana"
+on "ls -ld .grafana-password"
+on "cat .grafana-password"
+quiet "docker compose rm -sf grafana"
+rm -rf /home/ana/shop/.grafana-password
+quiet "mv /tmp/grafana-password .grafana-password && docker compose up -d grafana"
+
+block port-taken
+quiet "docker compose stop grafana"
+python3 -m http.server --bind 127.0.0.1 3000 >/dev/null 2>&1 &
+HOLDER=$!
+sleep 2
+on "docker compose up -d grafana"
+on "ss -ltn 'sport = :3000'"
+kill $HOLDER
+quiet "docker compose up -d grafana"
