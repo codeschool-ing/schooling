@@ -22,7 +22,7 @@ without knowing what to look for, form their own conclusion, and then listen to 
 it matches yours. **With an assertion title, they look at the chart to check a claim they have already
 read**, which is faster and leaves them listening to you instead of to their own reading.
 
-This is not only a matter of taste. Michael Alley, an engineering educator at Penn State, calls the
+There is evidence behind this. Michael Alley, an engineering educator at Penn State, calls the
 pairing of a sentence headline with visual evidence the **assertion–evidence** approach, and studies he
 and colleagues ran with engineering students found that audiences understood and remembered more from
 slides built that way than from slides with a topic title and bullet points. The effect was measured on

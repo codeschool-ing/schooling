@@ -22,7 +22,7 @@ que procurar, tira a própria conclusão e depois ouve você para saber se ela b
 título-afirmação, ele olha o gráfico para conferir uma afirmação que já leu**, o que é mais rápido e o
 deixa ouvindo você em vez da própria leitura.
 
-Não é só questão de gosto. Michael Alley, professor de engenharia em Penn State, chama a combinação de uma
+Há evidência por trás disso. Michael Alley, professor de engenharia em Penn State, chama a combinação de uma
 frase no título com evidência visual de abordagem **afirmação–evidência**, e estudos que ele e colegas
 fizeram com estudantes de engenharia mostraram que o público entendia e lembrava mais com slides feitos
 assim do que com slides de título-assunto e tópicos. O efeito foi medido com material técnico, em sala de

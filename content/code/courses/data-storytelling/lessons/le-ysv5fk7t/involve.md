@@ -3,7 +3,7 @@ title: Involve the people who will change
 version: 1
 ---
 
-The single most reliable way to reduce resistance is to **make the people who will change part of designing
+The most reliable way to reduce resistance is to **make the people who will change part of designing
 the change**. It is slower at the start and much faster overall, because a plan the team helped write
 does not need to be sold to them.
 

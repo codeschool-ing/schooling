@@ -22,7 +22,7 @@ be rerun by somebody else is a one-off, however good it was.**
 ## This course does it
 
 Every number in this course is computed by a script, `sheet.py`, from a seeded generator, so that running it
-next year prints the same values; every figure is drawn by another, `figures.py`, from the same numbers; and
+next year prints the same values. Every figure is drawn by another, `figures.py`, from the same numbers. And
 every spreadsheet formula quoted in a lesson is typed into LibreOffice Calc by a third, `lab.sh`, which prints
 what Calc answered. **None of that is visible to a student reading a lesson**, and all of it is why a number
 in lesson 11 and the same number in lesson 4 cannot disagree.

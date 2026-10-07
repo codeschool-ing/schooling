@@ -23,7 +23,7 @@ cético abre em segundo, e o deck é o que mostra a comunicação.
 Lida em ordem, a pasta conta a história deste curso: uma pergunta do Paulo, uma primeira tentativa que
 fracassou numa reunião, uma segunda construída da decisão para trás, um achado que sobreviveu à conferência
 por região, uma recomendação dimensionada em dinheiro com uma faixa, um piloto com o critério escrito antes,
-e um resultado: as primeiras entregas atrasadas do interior caíram de 23,6% para 7,1% em oito semanas, e a
+e um resultado. As primeiras entregas atrasadas do interior caíram de 23,6% para 7,1% em oito semanas, e a
 mudança foi para a capital em novembro. **O resultado do cancelamento ainda está em aberto**, e dizer isso faz
 parte da história.
 

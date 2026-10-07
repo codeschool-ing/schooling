@@ -22,8 +22,8 @@ que outra pessoa não consegue rodar de novo é coisa de uma vez só, por melhor
 ## Este curso faz isso
 
 Todo número deste curso é calculado por um script, o `sheet.py`, a partir de um gerador com semente fixa, para
-que rodá-lo no ano que vem imprima os mesmos valores; toda figura é desenhada por outro, o `figures.py`, a
-partir dos mesmos números; e toda fórmula de planilha citada numa aula é digitada no LibreOffice Calc por um
+que rodá-lo no ano que vem imprima os mesmos valores. Toda figura é desenhada por outro, o `figures.py`, a
+partir dos mesmos números. E toda fórmula de planilha citada numa aula é digitada no LibreOffice Calc por um
 terceiro, o `lab.sh`, que imprime o que o Calc respondeu. **Nada disso aparece para quem lê uma aula**, e tudo
 isso é o motivo de um número da aula 11 e o mesmo número da aula 4 não poderem discordar.
 

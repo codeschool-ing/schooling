@@ -23,7 +23,7 @@ sceptical reviewer opens second, and the deck is what shows the communication.
 Read in order, the folder tells the story of this course: a question from Paulo, a first attempt that
 failed in a meeting, a second built from the decision backwards, a finding that survived the regional
 check, a recommendation sized in money with a range, a pilot with its criterion written in advance, and a
-result: the interior's late first deliveries fell from 23.6% to 7.1% in eight weeks, and the change went to
+result. The interior's late first deliveries fell from 23.6% to 7.1% in eight weeks, and the change went to
 the capital in November. **The cancellation result is still open**, and saying so is part of the story.
 
 ## Confidentiality
