@@ -579,6 +579,84 @@ def _l6_inference(f):
            size=11, fill='--paper-dim')
 
 
+# ===================================================================== lesson 7
+L7 = 'le-0gnyvwxs'
+
+
+@figure('l7-bases', L7, 720, 260,
+        ('One column, the customer\'s e-mail, serves two purposes. Delivery notices rest on '
+         'the contract, article 7, V. Marketing rests on consent, article 7, I. When the '
+         'customer withdraws consent, the marketing purpose stops and the delivery purpose '
+         'goes on, on the same column.',
+         'Uma coluna, o e-mail do cliente, serve a duas finalidades. Os avisos de entrega se '
+         'apoiam no contrato, artigo 7, V. O marketing se apoia no consentimento, artigo 7, I. '
+         'Quando o cliente revoga o consentimento, a finalidade de marketing para e a de '
+         'entrega continua, sobre a mesma coluna.'),
+        ('A legal basis belongs to a purpose, not to a column.',
+         'Uma base legal pertence a uma finalidade, não a uma coluna.'))
+def _l7_bases(f):
+    f.box(20, 100, 160, 60, [{'s': 'sales.customers', 'mono': True, 'size': 10,
+                              'fill': '--paper-dim'}, {'s': 'email', 'mono': True}],
+          fill='--ink')
+    f.text(330, 22, ('purpose', 'finalidade'), size=11, fill='--paper-dim')
+    f.text(560, 22, ('legal basis', 'base legal'), size=11, fill='--paper-dim')
+    f.box(240, 40, 180, 60, [('delivery notices', 'avisos de entrega'),
+                             {'s': ('the order is on its way', 'o pedido está a caminho'),
+                              'size': 10, 'fill': '--paper-dim'}])
+    f.box(240, 160, 180, 60, [('marketing e-mails', 'e-mails de marketing'),
+                              {'s': ('offers, news', 'ofertas, novidades'), 'size': 10,
+                               'fill': '--paper-dim'}], stroke='--amber')
+    f.box(480, 40, 220, 60, [('contract', 'contrato'),
+                             {'s': ('art. 7, V', 'art. 7, V'), 'size': 10,
+                              'fill': '--paper-dim'}], stroke='--phosphor')
+    f.box(480, 160, 220, 60, [('consent', 'consentimento'),
+                              {'s': ('art. 7, I · withdrawn on 20 June',
+                                     'art. 7, I · revogado em 20 de junho'), 'size': 10,
+                               'fill': '--paper-dim'}], stroke='--amber', dash='5 4')
+    f.arrow(180, 120, 238, 72)
+    f.arrow(180, 140, 238, 188)
+    f.arrow(420, 70, 478, 70, stroke='--phosphor')
+    f.arrow(420, 190, 478, 190, stroke='--amber')
+    f.text(590, 130, ('goes on', 'continua'), size=10.5, fill='--paper-dim')
+    f.text(590, 240, ('stops; the history stays', 'para; o histórico fica'), size=10.5,
+           fill='--paper-dim')
+
+
+@figure('l7-incident', L7, 720, 230,
+        ('A timeline of an incident. Day zero is when the controller learns that personal data '
+         'was affected. Within three working days it notifies the ANPD and the people affected. '
+         'Within twenty working days it completes the information. The record of the incident '
+         'is kept for at least five years, whether or not it was communicated.',
+         'Uma linha do tempo de um incidente. O dia zero é quando o controlador sabe que dados '
+         'pessoais foram afetados. Em até três dias úteis ele comunica a ANPD e as pessoas '
+         'afetadas. Em até vinte dias úteis completa as informações. O registro do incidente '
+         'é guardado por pelo menos cinco anos, comunicado ou não.'),
+        ('Resolução CD/ANPD nº 15/2024: the clock starts when the controller knows, not when '
+         'the investigation ends.',
+         'Resolução CD/ANPD nº 15/2024: o relógio começa quando o controlador sabe, não quando '
+         'a investigação termina.'))
+def _l7_incident(f):
+    f.line(40, 110, 690, 110, stroke='--wire', width=2)
+    pts = [(105, '--amber', ('day 0', 'dia 0'), ('the controller learns', 'o controlador sabe'),
+            ('personal data was affected', 'que dados pessoais foram afetados')),
+           (275, '--phosphor', ('3 working days', '3 dias úteis'),
+            ('notify the ANPD', 'comunicar a ANPD'),
+            ('and the people affected', 'e as pessoas afetadas')),
+           (450, '--phosphor', ('20 working days', '20 dias úteis'),
+            ('complete the', 'completar as'), ('information', 'informações')),
+           (625, '--paper-dim', ('5 years', '5 anos'), ('keep the record,', 'guardar o registro,'),
+            ('communicated or not', 'comunicado ou não'))]
+    for x, c, when, a, b in pts:
+        f.circle(x, 110, 7, fill=c)
+        f.text(x, 80, when, size=12, weight='600')
+        f.text(x, 140, a, size=10.5)
+        f.text(x, 157, b, size=10.5, fill='--paper-dim')
+    f.rect(40, 185, 640, 30, stroke='--wire', fill='--panel', dash='5 4')
+    f.text(360, 200, ('investigation goes on throughout; what is not known yet is said to be '
+                      'not known yet', 'a investigação continua o tempo todo; o que ainda não '
+                      'se sabe é dito como ainda não sabido'), size=10.5, fill='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():
