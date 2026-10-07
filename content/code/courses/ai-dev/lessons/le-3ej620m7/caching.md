@@ -1,6 +1,6 @@
 ---
 title: Paying less for the part that never changes
-version: 1
+version: 2
 ---
 
 Most requests to a model start the same way: the same system prompt, the same instructions, the
@@ -17,52 +17,62 @@ five minutes by default, renewed every time it is read.
 ## Marking the prefix
 
 With Anthropic's API you mark the end of the part to cache with `cache_control`. Everything up to
-and including that block becomes the cached prefix. `lab/cache.py` puts the whole project, every
-file in git, into the system prompt, and asks two questions in a row:
+and including that block becomes the cached prefix. `~/shop/scratch/cache.py` puts the whole
+project, every file in git, into the system prompt, marks it, and asks two questions in a row. It
+prints what `usage` says about each request, how long it took, and what its input would have
+cost at Sonnet's prices with and without the cache:
 
 ```python
 import subprocess
+import time
 from decimal import Decimal
 
 import anthropic
 
-# Claude Sonnet 5.5, dollars per million tokens, read on 2026-10-02 (prices.py).
-BASE, WRITE, READ = Decimal("2"), Decimal("2.50"), Decimal("0.20")
+# Claude Sonnet 5.5, dollars per million tokens, read on 2026-10-02.
+BASE, READ = Decimal("2"), Decimal("0.20")
 client = anthropic.Anthropic()
 project = subprocess.run("git ls-files | xargs tail -n +1", shell=True,
                          capture_output=True, text=True).stdout
 system = [{"type": "text", "text": "You review changes to this project.\n\n" + project,
            "cache_control": {"type": "ephemeral"}}]
 for question in ["Explain the shop's shipping rule.", "Explain the shipping rule again, shorter."]:
-    r = client.messages.create(model="scripted-1", max_tokens=300, system=system,
+    start = time.monotonic()
+    r = client.messages.create(model="llama3.2:3b", max_tokens=300, system=system,
                                messages=[{"role": "user", "content": question}])
     u = r.usage
-    print(f"input {u.input_tokens:4}  cache write {u.cache_creation_input_tokens:4}  "
-          f"cache read {u.cache_read_input_tokens:4}  output {u.output_tokens}")
-    paid = (u.input_tokens * BASE + u.cache_creation_input_tokens * WRITE
-            + u.cache_read_input_tokens * READ) / 1_000_000
-    plain = (u.input_tokens + u.cache_creation_input_tokens + u.cache_read_input_tokens) * BASE / 1_000_000
-    print(f"    input cost ${paid:.6f}, against ${plain:.6f} with no cache")
+    read = u.cache_read_input_tokens or 0
+    print(f"input {u.input_tokens:4}  cache read {read:4}  output {u.output_tokens:3}  "
+          f"{time.monotonic() - start:4.1f} s")
+    paid = (u.input_tokens * BASE + read * READ) / 1_000_000
+    plain = (u.input_tokens + read) * BASE / 1_000_000
+    print(f"    at Sonnet's prices: input ${paid:.6f}, against ${plain:.6f} with no cache")
 ```
 
 ```
-ana@dev:~/shop$ python lab/cache.py
-input    8  cache write 1398  cache read    0  output 147
-    input cost $0.003511, against $0.002812 with no cache
-input    9  cache write    0  cache read 1398  output 147
-    input cost $0.000298, against $0.002814 with no cache
+ana@dev:~/shop$ python scratch/cache.py
 ```
 
-The first request **wrote** 1,398 tokens to the cache and paid more for them than it would have
-paid without caching: $0.003511 against $0.002812. The second **read** the same 1,398 tokens back
-and paid $0.000298 for its input instead of $0.002814, about a tenth. `input_tokens` is now
-only the part after the cached prefix, the question itself.
+`ollama stop` unloads the model first, which empties Ollama's cache, so the run starts the way it
+would on your machine the first time. The first request read all 1,417 tokens of the project and
+took 47.9 seconds, loading the model included. The second **read 1,407 of them from the cache**,
+read only its own 11 new tokens, and took 8.9, most of it spent writing the 59 tokens of its
+answer. Nothing was charged, since the model runs on your machine, so the saving you can see is
+the wait. The price
+line shows what the same `usage` would have cost at Anthropic: the cached tokens at a tenth.
 
-**labllm's rules here are its own**, written to behave like Anthropic's: a prefix shorter than
-1,024 tokens is not cached, and an entry lives five minutes from its last use. Real minimums
-depend on the model, and the provider's documentation for the model you use is the source.
-OpenAI and Google discount a repeated prefix too, and their recent models do it without being
-asked; the `cache read` column of the price sheet is that discount.
+**Ollama's cache is not Anthropic's, and the differences are worth knowing.** Ollama ignores
+`cache_control`: it keeps the last request's prefix in memory whether you marked it or not, and
+reuses whatever part of the next request starts the same way. It reports that part as
+`cache_read_input_tokens`, which is why every program since lesson 1 adds it to `input_tokens`
+to get the size of a request. And it never charges for writing, so `cache_creation_input_tokens`
+comes back empty. Anthropic charges the write premium on the first request: 1,417 tokens at
+`$2.50` rather than `$2`, about a quarter more than not caching at all, which only pays off if the
+same prefix is read again before it expires. Real minimums depend on the model too: Anthropic does
+not cache a prefix below a minimum size, 1,024 tokens on many of its models, and the provider's
+documentation for the model you use is the source. OpenAI and Google discount a repeated prefix as well, and their
+recent models do it without being asked; the `cache read` column of the price sheet is that
+discount.
 
 ## Getting a cache to hit
 

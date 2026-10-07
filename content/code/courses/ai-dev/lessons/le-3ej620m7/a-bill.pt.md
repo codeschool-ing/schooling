@@ -1,6 +1,6 @@
 ---
 title: Quanto custa uma requisição, e quanto custa uma funcionalidade
-version: 1
+version: 2
 ---
 
 Uma única requisição custa frações de centavo, e por isso ninguém se preocupa com ela; uma
@@ -12,16 +12,16 @@ planilha que alguém fez uma vez.
 
 Dinheiro é calculado com `Decimal`, nunca com `float`, pelo mesmo motivo de a loja guardar os
 preços em centavos inteiros: uma fração de centavo multiplicada por alguns milhões de requisições é
-onde erros de arredondamento ficam visíveis. Os preços são os que o `prices.py` leu, com a data ao
+onde erros de arredondamento ficam visíveis. Os preços são os da tabela da aula 2 seção 04, com a data ao
 lado:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "lab/cost.py",
+  "file": "scratch/cost.py",
   "parts": [
     {
-      "code": "from decimal import Decimal\n\nimport anthropic\n\n# Dollars per million tokens, read from Anthropic's pricing page on 2026-10-02 (prices.py).\nPRICES = {\n    \"claude-opus-5-5\": (Decimal(\"4\"), Decimal(\"20\")),\n    \"claude-sonnet-5-5\": (Decimal(\"2\"), Decimal(\"10\")),\n    \"claude-haiku-4-5\": (Decimal(\"1\"), Decimal(\"5\")),\n}\nMILLION = Decimal(1_000_000)\n\n\n",
+      "code": "from decimal import Decimal\n\nimport anthropic\n\n# Dollars per million tokens, read from Anthropic's pricing page on 2026-10-02.\nPRICES = {\n    \"claude-opus-5-5\": (Decimal(\"4\"), Decimal(\"20\")),\n    \"claude-sonnet-5-5\": (Decimal(\"2\"), Decimal(\"10\")),\n    \"claude-haiku-4-5\": (Decimal(\"1\"), Decimal(\"5\")),\n}\nMILLION = Decimal(1_000_000)\n\n\n",
       "note": "**Uma tabela, com a data e a fonte.** Um preço sem data é um número que ninguém consegue conferir, e esses mudam várias vezes por ano."
     },
     {
@@ -29,24 +29,25 @@ lado:
       "note": "**A fórmula inteira.** Um modelo que falta na tabela levanta `KeyError` em vez de custar zero, e essa é a falha que você quer."
     },
     {
-      "code": "client = anthropic.Anthropic()\nr = client.messages.create(model=\"scripted-1\", max_tokens=300,\n                           messages=[{\"role\": \"user\", \"content\": \"Explain the shop's shipping rule.\"}])\nu = r.usage\nprint(f\"usage: {u.input_tokens} in, {u.output_tokens} out\")\nfor model in PRICES:\n    print(f\"  at {model} prices: ${cost(model, u.input_tokens, u.output_tokens):.6f}\")\n\n",
-      "note": "**O uso de uma requisição real, com três preços.** A resposta vem do `scripted-1`, então o texto dela foi escrito pelo curso; as contagens de tokens são contagens reais desse texto."
+      "code": "client = anthropic.Anthropic()\nr = client.messages.create(model=\"llama3.2:3b\", max_tokens=300,\n                           system=open(\"shop/cart.py\").read(),\n                           messages=[{\"role\": \"user\", \"content\": \"Explain the shop's shipping rule.\"}])\nu = r.usage\nprint(f\"usage: {u.input_tokens} in, {u.output_tokens} out\")\nfor model in PRICES:\n    print(f\"  at {model} prices: ${cost(model, u.input_tokens, u.output_tokens):.6f}\")\n\n",
+      "note": "**O `usage` de uma requisição real, com três preços.** Ela foi ao `llama3.2:3b` no seu próprio computador e não custou nada; as contagens de tokens são reais, e os preços são o que elas custariam na Anthropic."
     },
     {
-      "code": "print(\"a month of 3,000 requests a day, 1,800 tokens in and 250 out each:\")\nfor model in PRICES:\n    print(f\"  {model}: ${cost(model, 1_800, 250) * 3_000 * 30:,.2f}\")",
+      "code": "print(\"a month of 3,000 requests a day, 1,800 tokens in and 250 out each:\")\nfor model in PRICES:\n    print(f\"  {model}: ${cost(model, 1_800, 250) * 3_000 * 30:,.2f}\")\n",
       "note": "**A mesma fórmula no tamanho de uma funcionalidade**, com o volume e as contagens de tokens como suposições escritas no código, onde qualquer um pode mudá-las."
     }
   ],
-  "output": "usage: 10 in, 147 out\n  at claude-opus-5-5 prices: $0.002980\n  at claude-sonnet-5-5 prices: $0.001490\n  at claude-haiku-4-5 prices: $0.000745\na month of 3,000 requests a day, 1,800 tokens in and 250 out each:\n  claude-opus-5-5: $1,098.00\n  claude-sonnet-5-5: $549.00\n  claude-haiku-4-5: $274.50"
+  "output": "usage: 285 in, 122 out\n  at claude-opus-5-5 prices: $0.003580\n  at claude-sonnet-5-5 prices: $0.001790\n  at claude-haiku-4-5 prices: $0.000895\na month of 3,000 requests a day, 1,800 tokens in and 250 out each:\n  claude-opus-5-5: $1,098.00\n  claude-sonnet-5-5: $549.00\n  claude-haiku-4-5: $274.50"
 }
 ```
 
 ## Lendo o resultado
 
-A resposta teve 10 tokens de entrada e 147 de saída. **A saída é quase 99% do custo** dessa
-requisição em qualquer um dos três preços, porque a pergunta era curta e a resposta não. A maioria
-das requisições do tipo chat é assim, e a alavanca que importa ali é quanto você deixa a resposta
-crescer.
+A requisição teve 285 tokens de entrada, quase todos o código do carrinho mandado como prompt de
+sistema, e 122 de saída. **A saída ainda é dois terços do custo** em qualquer um dos três preços,
+embora tenha sido menos da metade, porque um token de saída custa cinco vezes um de entrada. A
+maioria das requisições do tipo chat é assim, e a alavanca que importa ali é quanto você deixa a
+resposta crescer.
 
 O número mensal é o que mostrar a quem aprova a funcionalidade: 3.000 requisições por dia, com
 1.800 tokens de entrada e 250 de saída, dá pouco mais de mil dólares por mês no mais caro dos três e

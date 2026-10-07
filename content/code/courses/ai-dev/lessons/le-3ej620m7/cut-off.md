@@ -1,6 +1,6 @@
 ---
 title: When the reply is cut off
-version: 1
+version: 2
 ---
 
 A reply ends for one of a few reasons, and the response says which in **`stop_reason`**. The two
@@ -11,9 +11,8 @@ if it were not.
 
 ## The same question with too little room
 
-`lab/cutoff.py` asks `scripted-1` to explain the shop's shipping rule and prints why it stopped.
-The explanation is text written by the course; the cut is labllm's, made at exactly the number of
-tokens the request allowed:
+`~/shop/scratch/cutoff.py` sends the cart's code as the system prompt, asks the model to explain the
+shipping rule, and prints why it stopped:
 
 ```python
 import sys
@@ -21,7 +20,8 @@ import sys
 import anthropic
 
 client = anthropic.Anthropic()
-r = client.messages.create(model="scripted-1", max_tokens=int(sys.argv[1]),
+r = client.messages.create(model="llama3.2:3b", max_tokens=int(sys.argv[1]),
+                           system=open("shop/cart.py").read(),
                            messages=[{"role": "user", "content": "Explain the shop's shipping rule."}])
 print(f"stop_reason={r.stop_reason} output_tokens={r.usage.output_tokens}")
 print(r.content[0].text)
@@ -30,19 +30,19 @@ if r.stop_reason == "max_tokens":
 ```
 
 ```
-ana@dev:~/shop$ python lab/cutoff.py 40
-stop_reason=max_tokens output_tokens=40
-The cart charges a flat 15.00 for shipping, and nothing at all once the order reaches 200.00. The threshold is checked after the discount, not before it: a cart of
-!! the reply was cut off; do not use it as if it were complete
-ana@dev:~/shop$ python lab/cutoff.py 300
-stop_reason=end_turn output_tokens=147
-The cart charges a flat 15.00 for shipping, and nothing at all once the order reaches 200.00. The threshold is checked after the discount, not before it: a cart of 210.00 with a 10% coupon comes to 189.00 and pays shipping again. Every amount is held in integer cents, so 15.00 is the constant SHIPPING = 1500 and 200.00 is FREE_SHIPPING_FROM = 20000, both in shop/cart.py. The rule lives in Cart.shipping(), which Cart.total() calls after subtracting the discount. If you change the threshold, test_free_shipping_from_200 in tests/test_cart.py is the test that should change with it.
+ana@dev:~/shop$ python scratch/cutoff.py 40
+ana@dev:~/shop$ python scratch/cutoff.py 400
 ```
 
-Forty tokens ends in the middle of a sentence: *a cart of*. Here the cut is obvious because a
-person can read it. It stops being obvious when the reply is meant for a program. **JSON cut off at
+Forty tokens ends in the middle of a sentence: *If the order's subtotal*. Here the cut is obvious because a person
+can read it. It stops being obvious when the reply is meant for a program. **JSON cut off at
 `max_tokens` is not JSON**, a list cut off is a shorter list that looks complete, and code cut off
 can still be valid code that is missing its last branch. Only `stop_reason` tells them apart.
+
+**And read the complete answer before you trust it.** It ended on its own, `end_turn`, and it is
+wrong twice: 20,000 cents is 200.00 and not "$20", and shipping is a flat 15.00, not "$1.50 per
+unit". The whole of `cart.py` was in the request. A reply that is complete is not a reply that is
+right, and lesson 4 is about checking.
 
 ## What to do with `max_tokens`
 
@@ -59,16 +59,19 @@ Decide per call site, and write the decision down:
 
 ## Stopping on purpose
 
-`stop_sequences` ends the reply early, at a string you choose, and reports it:
+`stop_sequences` ends the reply early, at a string you choose. Here the model is asked for a list
+of five and stopped at the third item's number:
 
 ```
-ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="tiny-1", max_tokens=60, stop_sequences=["\n\n"], messages=[{"role": "user", "content": "Return the"}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'
-stop_sequence '\n\n'
-' number of data.\nmode                Mode (most common values of data.\nstdev               Sample standard deviation.'
+ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=80, stop_sequences=["3."], messages=[{"role": "user", "content": "Write a numbered list of five fruits."}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'
 ```
 
-`stop_reason` is `stop_sequence`, `stop_sequence` names which one matched, and the sequence itself
-is not in the text. A stop sequence is useful when the output has a natural end marker, such as a
+The text stopped where it should, and the sequence itself is not in it. **But `stop_reason` says
+`end_turn` and `stop_sequence` is `None`.** Anthropic's API would report `stop_sequence` and name
+the string that matched; Ollama's copy of the format stops at the string and reports the stop as if
+the model had finished on its own. A compatible API is compatible until a detail like this one,
+and it is why code that branches on `stop_reason` deserves a test against the provider it will
+really run on. A stop sequence is useful when the output has a natural end marker, such as a
 closing tag you asked for, and is cheaper than letting the model write past it and trimming the
 rest.
 

@@ -1,6 +1,6 @@
 ---
 title: Lendo uma tabela de preços
-version: 1
+version: 2
 ---
 
 APIs de modelos cobram **por milhão de tokens**, escrito `MTok`, com um preço diferente para cada
@@ -9,21 +9,20 @@ mais que a entrada**, porque gerar um token é uma passada pelo modelo inteiro e
 feito em bloco. A maioria das tabelas acrescenta uma terceira e uma quarta colunas para entrada em
 cache, que a aula 2 seção 07 explica.
 
-Esta é a tabela que o curso usa, impressa pelo `prices.py` ao lado dos arquivos do curso. Ela lê
-duas fontes, e a diferença entre elas importa:
+Esta é a tabela que o curso usa. Ela foi montada a partir de duas fontes, e a diferença entre elas
+importa:
 
 - **A própria página de preços da Anthropic**, lida no dia em que o script rodou. Uma página não tem
   versão, então a data faz parte de cada número.
 - **A lista de preços do LiteLLM num commit fixado**, para OpenAI e Google. O LiteLLM é um projeto
   de código aberto que guarda preços e limites de todos os provedores num arquivo só. É a cópia de
   um terceiro: as páginas da própria OpenAI e do Google não estavam ao alcance da máquina em que
-  este curso foi gravado. O script imprime os modelos da Anthropic pelas duas fontes, para você ver
+  este curso foi gravado. A tabela mostra os modelos da Anthropic pelas duas fontes, para você ver
   a cópia concordar com o original onde os dois existem.
 
-Ele rodou na máquina de gravação, não no laboratório, já que lê a rede:
+Você não precisa rodar nada nesta seção; o que importa são os números, e eles têm data:
 
 ```
-$ python3 prices.py
 anthropic: https://platform.claude.com/docs/en/about-claude/pricing, read 2026-10-02
   model                  input  output  cache write 5m  cache read
   Claude Opus 5.5           $4     $20              $5       $0.20
@@ -66,7 +65,7 @@ tabela:
 
 ## Quando os preços mudam
 
-Trate a tabela de preços no seu código como o `prices.py` a trata: **um lugar só, com uma data e
+Trate a tabela de preços no seu código como esta tabela é tratada: **um lugar só, com uma data e
 uma fonte ao lado**. A aula 2 seção 05 escreve a função de custo que a lê, e um teste que falha
 quando alguém acrescenta um modelo sem preço é um seguro barato contra um painel que mostra, em
 silêncio, um modelo novo como gratuito.
