@@ -7,8 +7,8 @@ Duas linhas da tabela da Anthropic, e duas linhas da tabela do LiteLLM, dizem qu
 particular desta família.
 
 ```
-ana@desk:~/desk$ python lab/card.py all Thinking "Default effort" "Context window" "Max output"
-# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-05
+ana@desk:~/desk$ python card.py all Thinking "Default effort" "Context window" "Max output"
+# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-07
 Claude Fable 5.1
   Thinking                    Adaptive (always on)
   Default effort              high
@@ -51,7 +51,7 @@ temperatura.
 A aula 4 precificou o rascunho da ana com cache. A tabela diz quanto esse cache custa no Haiku 4.5:
 
 ```
-ana@desk:~/desk$ sheet show claude-haiku-4-5 | grep -E "^(input_cost_per_token|cache|prompt_cache|output_cost_per_token)"
+ana@desk:~/desk$ python sheet.py show claude-haiku-4-5 | grep -E "^(input_cost_per_token|cache|prompt_cache|output_cost_per_token)"
 cache_creation_input_token_cost            1.25e-06
 cache_creation_input_token_cost_above_1hr  2e-06
 cache_creation_input_token_cost_batches    6.25e-07
@@ -71,7 +71,7 @@ custa um décimo do preço em todo reuso depois disso. O **mínimo** é a armadi
 prefixo menor que 4.096 tokens não entra em cache. No Sonnet 5.5:
 
 ```
-ana@desk:~/desk$ sheet show claude-sonnet-5-5 | grep -E "^prompt_cache_min"
+ana@desk:~/desk$ python sheet.py show claude-sonnet-5-5 | grep -E "^prompt_cache_min"
 prompt_cache_min_tokens                    512
 ```
 

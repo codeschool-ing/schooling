@@ -7,8 +7,8 @@ Two rows of Anthropic's table, and two lines of the sheet, say most of what is p
 family.
 
 ```
-ana@desk:~/desk$ python lab/card.py all Thinking "Default effort" "Context window" "Max output"
-# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-05
+ana@desk:~/desk$ python card.py all Thinking "Default effort" "Context window" "Max output"
+# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-07
 Claude Fable 5.1
   Thinking                    Adaptive (always on)
   Default effort              high
@@ -50,7 +50,7 @@ record the effort it ran at, as section 08 of lesson 5 recorded the temperature.
 Lesson 4 priced ana's drafting with a cache. The sheet says what that cache costs on Haiku 4.5:
 
 ```
-ana@desk:~/desk$ sheet show claude-haiku-4-5 | grep -E "^(input_cost_per_token|cache|prompt_cache|output_cost_per_token)"
+ana@desk:~/desk$ python sheet.py show claude-haiku-4-5 | grep -E "^(input_cost_per_token|cache|prompt_cache|output_cost_per_token)"
 cache_creation_input_token_cost            1.25e-06
 cache_creation_input_token_cost_above_1hr  2e-06
 cache_creation_input_token_cost_batches    6.25e-07
@@ -70,7 +70,7 @@ the price on every reuse after that. The **minimum** is the trap: on Haiku 4.5 a
 4,096 tokens is not cached at all. On Sonnet 5.5:
 
 ```
-ana@desk:~/desk$ sheet show claude-sonnet-5-5 | grep -E "^prompt_cache_min"
+ana@desk:~/desk$ python sheet.py show claude-sonnet-5-5 | grep -E "^prompt_cache_min"
 prompt_cache_min_tokens                    512
 ```
 
