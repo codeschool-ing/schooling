@@ -227,7 +227,9 @@ def l19_phone_image():
             'A phone with no words on its screen: a tiny downward triangle at the top right, a row of '
             'columns whose labels are short strokes turned sideways, a line chart whose five axis '
             'labels overlap, and a wide grey table that runs past the right edge of the screen.')
-    f.rect(190, 10, 220, 340, stroke='--paper-dim', fill='--panel', rx=20, width=2.5)
+    # The phone is drawn as a mark, not a box: the table is meant to run out of it.
+    f.path('M210 10 H390 A20 20 0 0 1 410 30 V330 A20 20 0 0 1 390 350 H210 A20 20 0 0 1 190 330 '
+           'V30 A20 20 0 0 1 210 10 Z', stroke='--paper-dim', fill='--panel', width=2.5)
     f.path('M384 30 L392 30 L388 35 Z', stroke='--paper-dim', fill='--paper-dim', width=1)
     for i, v in enumerate((60.5, 44.8, 30.0, 23.5, 14.6)):
         x = 214 + i * 34
