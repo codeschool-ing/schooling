@@ -1,6 +1,6 @@
 ---
 title: The loop, and who decides what happens in it
-version: 1
+version: 2
 ---
 
 It is tempting to picture an agent as a model that has been handed the keys: it decides what to
@@ -11,8 +11,11 @@ where those decisions sit.
 
 ## A tool that does not exist
 
-A model can ask for anything it can name, including a tool nobody built. Here the turn asks for
-the weather:
+Three of the four runs below play back turns from a file, so that each rule shows on its own; each
+file holds the `model>` lines its run prints, one block per turn, separated by `---`, and the
+weather one starts with a `#` note saying what the question was. A
+model can ask for anything it can name, including a tool nobody built. Here the turn asks for the
+weather:
 
 ```
 ana@lab:~/pe$ agent runs/weather.txt
@@ -54,13 +57,32 @@ done: an answer after 3 steps
 The request for the date was **refused by the program**, and the calculator still ran. The refusal
 does not depend on the model agreeing to anything: `today` was not on the list, so it did not run.
 
-Now read the answer. It still says "Saturday 3 October", because the turns were written in advance
-and played back whatever happened. **A real model at step 3 would have no date in front of it**,
-only the refusal. It should say it cannot tell what day tomorrow is; if it named a day anyway, that
-day would be invented. The allow-list controlled what the agent could do, and it did nothing to
-make the answer true. Both still have to be checked, by different means.
+Now read the answer. It still says "Saturday 3 October", because the turns were played back
+whatever happened. **A real model at step 3 would have no date in front of it**, only the refusal.
+Here is what one did, with the same allow-list:
 
-The workbench has a fifth tool, `send_email`, which changes something outside the conversation
+```
+ana@lab:~/pe$ agent --live "Bruno wants three whole cakes at R\$ 42.50 each, to collect tomorrow. What day is tomorrow, and what is the total?" --allow calculator
+tools allowed: calculator
+step 1
+  model> Action: today[] 
+  model> Action: calculator[3 * 42.50]
+  tool>  refused: today is not allowed in this task
+step 2
+  model> Action: calculator[42.50 * 3]
+  tool>  127.5
+step 3
+  model> Answer: You will collect three whole cakes at R$ 127.50 each tomorrow.
+done: an answer after 3 steps
+```
+
+It asked for the date and was refused; asked the calculator and got 127.5; and answered. The
+answer names no day, which is honest, since it had none, and it does not say it could not find
+one, which is less so. It also says the cakes are R$ 127.50 **each**: the right number, attached to
+the wrong thing. The allow-list controlled what the agent could do, and it did nothing to make the
+answer true. Both still have to be checked, by different means.
+
+`agent` has a fifth tool, `send_email`, which changes something outside the conversation
 and is never on the default list. Lesson 7 shows why a tool like that is treated differently.
 
 ## A run that hits its limit

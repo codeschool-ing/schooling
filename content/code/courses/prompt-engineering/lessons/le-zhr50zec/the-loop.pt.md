@@ -1,6 +1,6 @@
 ---
 title: O laço, e quem decide o que acontece nele
-version: 1
+version: 2
 ---
 
 É tentador imaginar um agente como um modelo que recebeu as chaves: ele decide o que fazer, e faz.
@@ -11,8 +11,11 @@ decisões.
 
 ## Uma ferramenta que não existe
 
-Um modelo pode pedir qualquer coisa a que consiga dar nome, inclusive uma ferramenta que ninguém
-construiu. Aqui o turno pede a previsão do tempo:
+Três das quatro execuções abaixo reproduzem turnos de um arquivo, para que cada regra apareça
+sozinha; cada arquivo traz as linhas `model>` que a execução imprime, um bloco por turno, separados
+por `---`, e o do tempo começa com uma nota `#` dizendo qual era a pergunta. Um modelo pode pedir
+qualquer coisa a que consiga dar nome, inclusive uma ferramenta que ninguém construiu. Aqui o turno
+pede a previsão do tempo:
 
 ```
 ana@lab:~/pe$ agent runs/weather.txt
@@ -54,14 +57,32 @@ done: an answer after 3 steps
 O pedido da data foi **recusado pelo programa**, e a calculadora rodou mesmo assim. A recusa não
 depende de o modelo concordar com nada: `today` não estava na lista, então não rodou.
 
-Agora leia a resposta. Ela ainda diz "Saturday 3 October", porque os turnos foram escritos antes e
-reproduzidos acontecesse o que acontecesse. **Um modelo de verdade, no passo 3, não teria data
-nenhuma na frente dele**, só a recusa. Ele deveria dizer que não sabe que dia é amanhã; se citasse
-um dia mesmo assim, esse dia seria inventado. A lista de permissões controlou o que o agente podia
-fazer, e não fez nada para tornar a resposta verdadeira. As duas coisas ainda precisam ser
-conferidas, por meios diferentes.
+Agora leia a resposta. Ela ainda diz "Saturday 3 October", porque os turnos foram reproduzidos
+acontecesse o que acontecesse. **Um modelo de verdade, no passo 3, não teria data nenhuma na frente
+dele**, só a recusa. Eis o que um fez, com a mesma lista de permissões:
 
-A bancada tem uma quinta ferramenta, `send_email`, que muda algo fora da conversa e nunca está na
+```
+ana@lab:~/pe$ agent --live "Bruno wants three whole cakes at R\$ 42.50 each, to collect tomorrow. What day is tomorrow, and what is the total?" --allow calculator
+tools allowed: calculator
+step 1
+  model> Action: today[] 
+  model> Action: calculator[3 * 42.50]
+  tool>  refused: today is not allowed in this task
+step 2
+  model> Action: calculator[42.50 * 3]
+  tool>  127.5
+step 3
+  model> Answer: You will collect three whole cakes at R$ 127.50 each tomorrow.
+done: an answer after 3 steps
+```
+
+Ele pediu a data e foi recusado; pediu a calculadora e recebeu 127.5; e respondeu. A resposta não
+cita dia nenhum, o que é honesto, já que ele não tinha um, e não diz que não conseguiu achar, o que
+é menos. Ela também diz que os bolos custam R$ 127.50 **cada**: o número certo, preso à coisa errada.
+A lista de permissões controlou o que o agente podia fazer, e não fez nada para tornar a resposta
+verdadeira. As duas coisas ainda precisam ser conferidas, por meios diferentes.
+
+O `agent` tem uma quinta ferramenta, `send_email`, que muda algo fora da conversa e nunca está na
 lista padrão. A lição 7 mostra por que uma ferramenta assim é tratada de outro jeito.
 
 ## Uma execução que chega ao limite
