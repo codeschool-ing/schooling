@@ -30,6 +30,7 @@ import os
 import pty
 import re
 import select
+import subprocess
 import signal
 import sys
 import time
@@ -65,6 +66,9 @@ class Shell:
                            "/usr/games:/usr/local/games:/snap/bin")
         pid, fd = pty.fork()
         if pid == 0:
+            # Python ignores SIGPIPE and a child inherits that; a terminal's shell
+            # does not, and `grep ... | head` must die quietly as it does there.
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             os.chdir(home(user))
             argv = ["/bin/bash", "--noprofile", "--norc", "-i"]
             if user != "root":
@@ -170,6 +174,17 @@ def fences(text):
     return lines, out
 
 
+def incomplete(cmd):
+    """Whether bash would print PS2 and wait for more after this much of a command."""
+    m = re.search(r"<<-?\s*['\"]?(\w+)['\"]?", cmd)
+    if m and not re.search(r"^\s*" + m.group(1) + r"\s*$", cmd.split("\n", 1)[1] if "\n" in cmd else "", re.M):
+        return True  # a here-document still waiting for its last line
+    if cmd.rstrip().endswith("\\") or cmd.rstrip().endswith("|"):
+        return True
+    p = subprocess.run(["bash", "-n", "-c", cmd], capture_output=True, text=True)
+    return "unexpected end of file" in p.stderr or "unexpected EOF" in p.stderr
+
+
 def steps(body):
     """Split a transcript into (prompt line, user, cwd, command, expected output)."""
     res, cur = [], None
@@ -180,7 +195,7 @@ def steps(body):
                 res.append(cur)
             user = m.group("user")
             cur = [ln, user, m.group("cwd"), m.group("cmd"), []]
-        elif cur is not None and ln.startswith("> ") and not cur[4]:
+        elif cur is not None and ln.startswith(">") and not cur[4] and incomplete(cur[3]):
             cur[3] += "\n" + ln[2:]
             cur[0] += "\n" + ln
         elif cur is not None:

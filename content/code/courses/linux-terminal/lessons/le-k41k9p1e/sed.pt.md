@@ -1,6 +1,6 @@
 ---
 title: O `sed`, e o único comando que é noventa por cento dele
-version: 1
+version: 2
 ---
 
 O `sed` é um editor de fluxo: ele lê linhas, aplica comandos a elas, e imprime o resultado. Ele tem
@@ -69,8 +69,8 @@ app started
 
 ```
 ana@vm:~/work$ sed "1d" data/sales.csv | head -2
-north,ana,Q1,171,8721
-north,bruno,Q1,49,4116
+north,ana,Q1,145,18850
+north,bruno,Q1,275,23100
 ```
 
 **O `1d` apaga a primeira linha**, que é a expressão idiomática para descartar cabeçalho ao lado do

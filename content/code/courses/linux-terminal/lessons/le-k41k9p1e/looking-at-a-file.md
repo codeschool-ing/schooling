@@ -1,6 +1,6 @@
 ---
 title: Looking at a file before you process it
-version: 1
+version: 2
 ---
 
 Every pipeline in this lesson starts the same way: look at one line and work out what the fields
@@ -8,7 +8,7 @@ are. Skipping that step is how people write a `cut -f9` that takes the wrong col
 
 ```
 ana@vm:~/work$ head -1 logs/access.log
-10.0.1.6 - - [14/Sep/2026:06:01:23 +0000] "GET /static/app.js HTTP/1.1" 200 3484 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 87
+198.51.100.10 - - [14/Sep/2026:06:01:15 +0000] "GET / HTTP/1.1" 200 23295 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 27
 ```
 
 Count the space-separated fields and you have the map the rest of the lesson uses: the address is
@@ -46,7 +46,7 @@ use constantly with section 08's `cut`.
 
 ```
 ana@vm:~/work$ head -c 40 logs/access.log; echo
-10.0.1.6 - - [14/Sep/2026:06:01:23 +0000
+198.51.100.10 - - [14/Sep/2026:06:01:15
 ```
 
 Useful for looking at the start of something that may not have lines at all.

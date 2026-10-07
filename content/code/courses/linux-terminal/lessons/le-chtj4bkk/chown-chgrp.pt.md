@@ -1,6 +1,6 @@
 ---
 title: Propriedade, e por que dar um arquivo exige root
-version: 2
+version: 3
 ---
 
 Dois comandos, e uma regra que explica a seção inteira.

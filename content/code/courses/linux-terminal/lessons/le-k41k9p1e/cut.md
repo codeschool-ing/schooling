@@ -1,6 +1,6 @@
 ---
 title: `cut`, and where it stops being enough
-version: 1
+version: 2
 ---
 
 `cut` keeps some of each line and throws the rest away. It has exactly three modes and you will use
@@ -9,12 +9,12 @@ two of them.
 ```
 ana@vm:~/work$ head -2 data/sales.csv
 region,rep,quarter,units,revenue
-north,ana,Q1,171,8721
+north,ana,Q1,145,18850
 ana@vm:~/work$ cut -d, -f2,5 data/sales.csv | head -4
 rep,revenue
-ana,8721
-bruno,4116
-carla,37084
+ana,18850
+bruno,23100
+carla,16555
 ```
 
 | | |
@@ -29,8 +29,8 @@ fields there are:
 ```
 ana@vm:~/work$ cut -d, -f2- data/sales.csv | head -3
 rep,quarter,units,revenue
-ana,Q1,171,8721
-bruno,Q1,49,4116
+ana,Q1,145,18850
+bruno,Q1,275,23100
 ```
 
 ## `-d` is one character, not a string
@@ -42,8 +42,8 @@ The usual fix is section 12's `tr -s`, which squeezes runs of a character into o
 
 ```
 ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
-10.0.1.6 "GET /static/app.js
-10.0.1.11 "GET /
+198.51.100.10 "GET /
+198.51.100.15 "GET /
 ```
 
 The other fix is to use `awk`, which splits on runs of whitespace by default and is section 14.
@@ -52,21 +52,21 @@ The other fix is to use `awk`, which splits on runs of whitespace by default and
 
 ```
 ana@vm:~/work$ cut -d" " -f1,7,9 logs/access.log | head -3
-10.0.1.6 /static/app.js 200
-10.0.1.11 / 200
-10.0.1.25 /index.html 404
+198.51.100.10 / 200
+198.51.100.15 / 200
+198.51.100.38 / 200
 ```
 
-Address, path, status, from lines of a hundred and fifty characters. **This is the workhorse use**:
+Address, path, status, from lines of well over a hundred characters. **This is the workhorse use**:
 narrow to the columns the question is about, then let `sort` and `uniq` do the counting.
 
 ## `-c`, for fixed-width text
 
 ```
 ana@vm:~/work$ cut -c1-15 logs/access.log | head -3
-10.0.1.6 - - [1
-10.0.1.11 - - [
-10.0.1.25 - - [
+198.51.100.10 -
+198.51.100.15 -
+198.51.100.38 -
 ```
 
 **That output is useless and it is the point.** Character positions only work when the columns
@@ -85,10 +85,10 @@ Three limits, and each one is a reason to move to `awk`:
 ```
 ana@vm:~/work$ cut -d, -f5,2 data/sales.csv | head -2
 rep,revenue
-ana,8721
+ana,18850
 ana@vm:~/work$ awk -F, 'NR<3 {print $5, $2}' data/sales.csv
 revenue rep
-8721 ana
+18850 ana
 ```
 
 I asked for field 5 then field 2 and `cut` gave me 2 then 5. **`cut` outputs fields in file order**
@@ -126,7 +126,7 @@ the header, you can add the arithmetic:
 
 ```
 ana@vm:~/work$ cut -d, -f5 data/sales.csv | tail -n +2 | paste -sd+ | bc
-573278
+571083
 ```
 
 Four programs to add up a column: take the field, drop the header, join the lines with `+` signs,
@@ -135,7 +135,7 @@ section 14 does the same thing in one:
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv
-573278
+571083
 ```
 
 Same number, one process instead of four, and no `bc` to install.

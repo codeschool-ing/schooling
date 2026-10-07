@@ -1,6 +1,6 @@
 ---
 title: `uniq`, which does not do what its name says
-version: 1
+version: 2
 ---
 
 `uniq` collapses **adjacent** identical lines. It is not a de-duplicator; it is a run-length
@@ -30,11 +30,11 @@ A real de-duplicator would have to remember every line it had seen.
 ```
 ana@vm:~/work$ cut -d" " -f7 logs/access.log | sort | uniq -c | sort -rn | head -6
     287 /health
-    261 /
-    147 /api/orders
-    110 /static/app.js
-    104 /static/app.css
-     76 /index.html
+    279 /
+    169 /api/orders
+    121 /static/app.js
+     89 /static/app.css
+     72 /index.html
 ```
 
 **`sort | uniq -c | sort -rn` is the single most useful pipeline in this lesson**, and it is worth
@@ -62,6 +62,9 @@ ana@vm:~/work$ cut -d" " -f1 logs/access.log | sort | uniq -d | head -3
 10.0.1.11
 10.0.1.12
 ana@vm:~/work$ cut -d" " -f1 logs/access.log | sort | uniq -u | head -3
+203.0.113.13
+203.0.113.16
+203.0.113.21
 ```
 
 | | |
@@ -69,9 +72,10 @@ ana@vm:~/work$ cut -d" " -f1 logs/access.log | sort | uniq -u | head -3
 | `-d` | only lines that appear **more than once** |
 | `-u` | only lines that appear **exactly once** |
 
-The second command printed nothing, and that is an answer: **every address in this log appears more
-than once.** An empty result from `uniq -u` says "no value here is unique", which on a list of user
-IDs or checksums is often exactly what you wanted to know.
+The second command found addresses that came **exactly once**, and all three are from `203.0.113`,
+the range outside the company. That is often the interesting list: one request from somewhere that
+never came back. And an empty result from `uniq -u` is an answer too — "no value here is unique",
+which on a list of user IDs or checksums is often exactly what you wanted to know.
 
 `-d` is the duplicate finder. `sort file | uniq -d` on a list of anything that should be unique —
 IDs, email addresses, filenames — names the collisions in one line.
@@ -93,18 +97,18 @@ Here is the bug in the wild. You want the ten busiest paths:
 
 ```
 ana@vm:~/work$ cut -d" " -f7 logs/access.log | uniq -c | sort -rn | head -4
+      5 /health
       5 /
-      5 /
-      5 /
+      4 /health
       4 /health
 ```
 
 The same pipeline **with the `sort` left out**. `uniq -c` on unsorted input counts *runs*, so a path
-that appears two hundred and sixty times scattered through the file produces dozens of separate
-small counts — and `/` appears three times in four lines of output, each time claiming to have been
-seen five times.
+that appears nearly three hundred times scattered through the file produces dozens of separate
+small counts — and `/health` appears three times in four lines of output, claiming five, then four,
+then four.
 
-Compare it with the correct version at the top of this section: `287 /health`, `261 /`. Not one
+Compare it with the correct version at the top of this section: `287 /health`, `279 /`. Not one
 number here is right.
 
 **And nothing in that output looks incorrect at a glance.** The counts are plausible and the paths
@@ -119,9 +123,9 @@ can check the answer by eye.
 ```
 ana@vm:~/work$ awk '{c[$7]++} END {for (p in c) print c[p], p}' logs/access.log | sort -rn | head -4
 287 /health
-261 /
-147 /api/orders
-110 /static/app.js
+279 /
+169 /api/orders
+121 /static/app.js
 ```
 
 Same answer as the top of this section, and no `sort` before the counting — so on a very large file
