@@ -1,6 +1,6 @@
 ---
 title: Five times you do not get to choose
-version: 1
+version: 2
 ---
 
 You have an editor you like. This lesson is not about it, because these five
@@ -98,6 +98,10 @@ printf 'pear\napple\ncherry\nbanana\n' > list.txt
 
 ```
 ana@vm:~/work/edit$ wc -lc server.conf notes.txt list.txt
+  6 101 server.conf
+  3  46 notes.txt
+  4  25 list.txt
+ 13 172 total
 ```
 
 Each section starts in that directory, and each one that changes a file says

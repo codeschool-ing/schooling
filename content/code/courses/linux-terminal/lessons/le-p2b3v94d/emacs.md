@@ -1,6 +1,6 @@
 ---
 title: Emacs, honestly and briefly
-version: 1
+version: 2
 ---
 
 Emacs is the third editor, and the honest framing is: you are unlikely to meet

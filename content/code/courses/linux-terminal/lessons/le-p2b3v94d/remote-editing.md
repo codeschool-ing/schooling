@@ -1,6 +1,6 @@
 ---
 title: Editing a file that is on another machine
-version: 1
+version: 2
 ---
 
 The whole reason for this lesson is that the file is somewhere else. There are
