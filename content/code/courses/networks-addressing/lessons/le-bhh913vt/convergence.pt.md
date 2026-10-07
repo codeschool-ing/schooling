@@ -1,6 +1,6 @@
 ---
 title: Convergência: a falha com a luz ainda acesa
-version: 1
+version: 2
 ---
 
 **Convergência** é o tempo entre algo mudar e todos os roteadores concordarem com os novos caminhos.
@@ -9,8 +9,19 @@ Até ela terminar, alguns pacotes vão em direção a um caminho que não funcio
 A falha fácil é um cabo puxado. A interface perde o sinal, o roteador vê na hora, como r1 viu na aula 15,
 e o OSPF recalcula em instantes. **A falha difícil é a que deixa o sinal no ar**: um conversor de mídia, ou
 um switch entre dois roteadores, morre ainda alimentando a porta, e o cabo parece perfeito das duas
-pontas. O laboratório encenou isso entre r1 e r4, com uma regra em r1 que descarta todo quadro em `eth4`
-nos dois sentidos. A interface continua no ar; nada passa.
+pontas. O laboratório encenou isso entre r1 e r4, com regras em r1 que descartam todo quadro em `eth4`
+nos dois sentidos. A interface continua no ar; nada passa. Estas são as regras, digitadas num prompt de
+root no r1, e `nft delete table netdev cut; nft delete table inet cutout` as remove:
+
+```sh
+nft add table netdev cut
+nft add chain netdev cut in "{ type filter hook ingress device eth4 priority 0; policy drop; }"
+nft add table inet cutout
+nft add chain inet cutout out "{ type filter hook output priority 0; }"
+nft add rule inet cutout out oifname eth4 drop
+nft add chain inet cutout fwd "{ type filter hook forward priority 0; }"
+nft add rule inet cutout fwd oifname eth4 drop
+```
 
 Primeiro começou um ping de pc1 para pc2, um pacote por segundo durante 70 segundos, e o corte veio dois
 segundos depois. Vinte segundos após o corte, r1 ainda acreditava em r4:

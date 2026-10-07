@@ -87,7 +87,8 @@ root r1 'vtysh -c "show ip ospf route"'
 
 block convergence
 bgon ana pc1 'ping -c 70 -i 1 -q 10.20.2.10'
-quiet r1 'nft add table netdev cut; nft add chain netdev cut in "{ type filter hook ingress device eth4 priority 0; policy drop; }"; nft add table inet cutout; nft add chain inet cutout out "{ type filter hook output priority 0; }"; nft add rule inet cutout out oifname eth4 drop; nft add chain inet cutout fwd "{ type filter hook forward priority 0; }"; nft add rule inet cutout fwd oifname eth4 drop'
+# the rules of the "cut", read out of convergence.md's own fence
+quiet r1 "$(awk '/^```sh$/{f=1;next} f&&/^```$/{exit} f' "$(dirname "$0")/convergence.md")"
 sleep 20
 root r1 'vtysh -c "show ip ospf neighbor"'
 fgon
