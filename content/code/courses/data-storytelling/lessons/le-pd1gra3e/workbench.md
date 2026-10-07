@@ -22,13 +22,19 @@ asks you to make something: a slide, a summary, a chart with the right title.
 
 - **Installed, and recommended: LibreOffice.** Free, open source, and the same on Windows, macOS and
   Linux. Download it from libreoffice.org and install it like any program; Calc is the spreadsheet and
-  Impress is the slide tool. It works offline, nothing you make leaves your computer, and every formula
-  in this course was checked in it.
+  Impress is the slide tool. It costs a few hundred megabytes of disk, works offline, nothing you make
+  leaves your computer, and every formula in this course was checked in it.
+- **In a virtual machine.** For a computer whose own system you would rather not touch: install
+  VirtualBox, create a Linux virtual machine with Ubuntu or Debian, and inside it run
+  `sudo apt install libreoffice`. It costs several gigabytes of disk and a share of the computer's memory
+  while it runs, which is a lot for a spreadsheet, so take this path only if the first one is closed to
+  you.
 - **Online: Google Sheets and Google Slides.** Nothing to install, and it runs on a weak computer or a
-  Chromebook. It needs a Google account and a connection, and your files live on Google's servers, which
-  matters when the analysis is your employer's data.
-- **Already licensed: Microsoft Excel and PowerPoint.** If your company or university gives you Microsoft
-  365, use it. Every formula here has the same name in Excel.
+  Chromebook. It costs your computer nothing, but it needs a Google account and a connection, and your
+  files live on Google's servers, which matters when the analysis is your employer's data.
+
+If your company or university already gives you Microsoft 365, Excel and PowerPoint do the same job, and
+every formula here has the same name in Excel.
 
 Whichever you pick, the lessons describe what to do rather than which menu to open, because the menus
 differ and the ideas do not.
@@ -58,6 +64,8 @@ computed them rather than taken them on trust, which is a habit lesson 12 makes 
 - **The formula shows as text.** The cell was formatted as text before you typed. Clear the format and
   type it again.
 - **Accents look wrong** in a file you made yourself later. Save CSV files as UTF-8.
+- **The installer is refused** on a work computer. Use the online path for Faro, and ask IT before you put
+  your employer's data anywhere: the analysis of your own may have to stay on the tools they allow.
 
 ## Your own analysis
 

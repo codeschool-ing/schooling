@@ -22,13 +22,19 @@ pede que você faça algo: um slide, um sumário, um gráfico com o título cert
 
 - **Instalado, e recomendado: LibreOffice.** Gratuito, de código aberto, e igual no Windows, no macOS e no
   Linux. Baixe em libreoffice.org e instale como qualquer programa; o Calc é a planilha e o Impress é a
-  ferramenta de slides. Funciona sem internet, nada do que você faz sai do seu computador, e toda
-  fórmula deste curso foi conferida nele.
+  ferramenta de slides. Custa algumas centenas de megabytes de disco, funciona sem internet, nada do que
+  você faz sai do seu computador, e toda fórmula deste curso foi conferida nele.
+- **Numa máquina virtual.** Para um computador cujo sistema você prefere não mexer: instale o VirtualBox,
+  crie uma máquina virtual Linux com Ubuntu ou Debian e, dentro dela, rode
+  `sudo apt install libreoffice`. Custa vários gigabytes de disco e uma parte da memória do computador
+  enquanto roda, o que é muito para uma planilha, então use esse caminho só se o primeiro estiver fechado
+  para você.
 - **Online: Planilhas Google e Apresentações Google.** Nada para instalar, e roda num computador fraco ou
-  num Chromebook. Exige conta Google e conexão, e os seus arquivos ficam nos servidores do Google, o que
-  importa quando a análise é com dados do seu empregador.
-- **Com licença: Microsoft Excel e PowerPoint.** Se a sua empresa ou faculdade te dá o Microsoft 365, use.
-  Toda fórmula daqui tem o mesmo nome no Excel.
+  num Chromebook. Não custa nada ao seu computador, mas exige conta Google e conexão, e os seus arquivos
+  ficam nos servidores do Google, o que importa quando a análise é com dados do seu empregador.
+
+Se a sua empresa ou faculdade já te dá o Microsoft 365, o Excel e o PowerPoint fazem o mesmo trabalho, e
+toda fórmula daqui tem o mesmo nome no Excel.
 
 Seja qual for a escolha, as aulas descrevem o que fazer, e não qual menu abrir, porque os menus mudam e as
 ideias não.
@@ -59,6 +65,9 @@ em método.
 - **A fórmula aparece como texto.** A célula estava formatada como texto antes de você digitar. Limpe a
   formatação e digite de novo.
 - **Os acentos aparecem errados** num arquivo que você fez depois. Salve CSV como UTF-8.
+- **O instalador é recusado** num computador do trabalho. Use o caminho online para a Faro, e pergunte à
+  TI antes de pôr dados do seu empregador em qualquer lugar: a sua própria análise talvez tenha de ficar
+  nas ferramentas que eles permitem.
 
 ## A sua análise
 

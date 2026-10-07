@@ -21,14 +21,14 @@ be rerun by somebody else is a one-off, however good it was.**
 
 ## This course does it
 
-Every number in this course is computed by a script, `sheet.py`, from a seeded generator, so that running it
-next year prints the same values. Every figure is drawn by another, `figures.py`, from the same numbers. And
-every spreadsheet formula quoted in a lesson is typed into LibreOffice Calc by a third, `lab.sh`, which prints
-what Calc answered. **None of that is visible to a student reading a lesson**, and all of it is why a number
-in lesson 11 and the same number in lesson 4 cannot disagree.
+Every number in this course about Faro's customers can be recomputed from the twenty-four rows of
+`faro.csv`, the table you saved in lesson 1, and the lessons that compute one show the formula. The facts the
+table does not hold, such as the price of a box, the margin, the renewal deliveries and the pilot's weekly
+rates, are stated once, in the lesson that introduces them, and reused from there. **Nothing is retyped**,
+which is why a number in lesson 11 and the same number in lesson 4 cannot disagree.
 
-That is the standard to aim at, scaled down. You do not need scripts: a spreadsheet whose numbers all come
-from formulas over one data tab is reproducible. What breaks reproducibility is the number typed by hand
+That is the standard to aim at, and it needs no programming: a spreadsheet whose numbers all come from
+formulas over one data tab is reproducible. What breaks reproducibility is the number typed by hand
 into a slide, which nobody can trace and nobody updates when the data changes.
 
 ## Versions

@@ -21,14 +21,14 @@ que outra pessoa não consegue rodar de novo é coisa de uma vez só, por melhor
 
 ## Este curso faz isso
 
-Todo número deste curso é calculado por um script, o `sheet.py`, a partir de um gerador com semente fixa, para
-que rodá-lo no ano que vem imprima os mesmos valores. Toda figura é desenhada por outro, o `figures.py`, a
-partir dos mesmos números. E toda fórmula de planilha citada numa aula é digitada no LibreOffice Calc por um
-terceiro, o `lab.sh`, que imprime o que o Calc respondeu. **Nada disso aparece para quem lê uma aula**, e tudo
-isso é o motivo de um número da aula 11 e o mesmo número da aula 4 não poderem discordar.
+Todo número deste curso sobre os clientes da Faro pode ser recalculado a partir das vinte e quatro linhas do
+`faro.csv`, a tabela que você salvou na aula 1, e as aulas que calculam um deles mostram a fórmula. Os fatos que
+a tabela não guarda, como o preço de uma caixa, a margem, as entregas de renovação e as taxas semanais do
+piloto, são ditos uma vez, na aula que os apresenta, e reaproveitados dali. **Nada é redigitado**, e é por isso
+que um número da aula 11 e o mesmo número da aula 4 não podem discordar.
 
-Esse é o padrão a buscar, em escala menor. Você não precisa de scripts: uma planilha cujos números vêm todos de
-fórmulas sobre uma aba de dados é reproduzível. O que quebra a reprodutibilidade é o número digitado à mão num
+Esse é o padrão a buscar, e ele não exige programação: uma planilha cujos números vêm todos de fórmulas sobre
+uma aba de dados é reproduzível. O que quebra a reprodutibilidade é o número digitado à mão num
 slide, que ninguém consegue rastrear e ninguém atualiza quando os dados mudam.
 
 ## Versões
