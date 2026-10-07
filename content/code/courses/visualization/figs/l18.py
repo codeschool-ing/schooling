@@ -128,8 +128,7 @@ def l18_eye_path(lang):
     for (xa, ya), (xb, yb) in zip(pts, pts[1:]):
         f.line(xa, ya, xb, yb, stroke='--amber', width=2, dash='6 4', arrow=True)
     for k, ((x, y), s) in enumerate(zip(pts, w['steps'])):
-        f.circle(x, y, 13, fill='--amber')
-        f.text(x, y, str(k + 1), size=11, weight='600', fill='#ffffff')
+        f.badge(x, y, 13, str(k + 1), size=11)
         f.text(x + 18, y + (16 if k != 1 else 22), s, size=9.5, anchor='start' if k != 1 else 'middle',
                fill='--amber', weight='600')
     return f, w['cap']

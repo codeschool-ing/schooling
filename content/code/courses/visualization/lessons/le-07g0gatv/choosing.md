@@ -41,5 +41,5 @@ stops being updated the week its author goes on holiday.
 
 Every rule in this course applies in every tool: the baseline at zero, the claim in the title, one
 colour used with intent, contrast and direct labels. What changes is **where you set them**, in a
-menu or a line of code, and **what the tool does if you do not**. The rest of this lesson goes
+menu or a line of code, and what the tool does if you do not. The rest of this lesson goes
 through the families with that question in mind.

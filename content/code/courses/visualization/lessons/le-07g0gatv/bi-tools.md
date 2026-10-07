@@ -3,7 +3,7 @@ title: Business intelligence tools
 version: 1
 ---
 
-**Power BI**, from Microsoft, and **Tableau**, owned by Salesforce, are the two business intelligence
+Power BI, from Microsoft, and Tableau, owned by Salesforce, are the two business intelligence
 tools you are most likely to meet. They are built for the subject of lessons 18 and 19: dashboards
 that many people open, filter and come back to.
 

@@ -60,5 +60,5 @@ counts printed above are the tallest bars in each.
 ## In a spreadsheet
 
 Excel and LibreOffice both draw histograms from a column of values. Look for the **bin width** or
-**number of bins** setting in the horizontal axis options and change it by hand: the automatic choice
+number of bins setting in the horizontal axis options and change it by hand: the automatic choice
 comes from a rule like the ones above, and you have just seen how far such rules disagree.

@@ -8,7 +8,7 @@ length. Lesson 6 gave the rule for bubbles: size them by area, never by radius. 
 the same mistake into the places it hides.
 
 North took 7,384 orders in 2024 and 11,852 in 2025, a rise of 60.5%. Draw each year as a circle and
-make the **radius** 1.6 times larger, and the **area**, which is what the eye compares, becomes 2.58
+make the radius 1.6 times larger, and the **area**, which is what the eye compares, becomes 2.58
 times larger:
 
 ```schooling-figure

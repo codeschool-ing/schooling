@@ -28,7 +28,7 @@ Three features of every correlation matrix are visible here.
 - **It is symmetric.** The correlation of km with minutes, 0.88, appears twice, above and below the
   diagonal. Half the matrix is a mirror of the other half.
 - **Most of it is small.** Of the ten distinct pairs, two are strong: **items with basket, 0.95**,
-  because more items cost more, and **km with minutes, 0.88**, from lesson 6. Rain and items each
+  because more items cost more, and km with minutes, 0.88, from lesson 6. Rain and items each
   add a little to minutes, 0.26 and 0.23. Everything else is close to zero.
 
 ## Reading it with care

@@ -13,7 +13,7 @@ views of a distribution have no bins, and they are worth knowing for exactly tha
 ## A strip of dots
 
 Draw **one small dot per value** along an axis, with a little random vertical scatter, called
-**jitter**, so dots with similar values do not hide each other. Nothing is grouped and nothing is
+jitter, so dots with similar values do not hide each other. Nothing is grouped and nothing is
 chosen. The density of the dots shows the bulk, and every extreme value is visible as itself: the
 101-minute delivery is one dot, on its own, far to the right.
 
@@ -22,7 +22,7 @@ merge into a smear, and a histogram or a density curve does better.
 
 ## A cumulative curve
 
-The **empirical cumulative distribution**, usually shortened to **ECDF**, plots for every time the
+The **empirical cumulative distribution**, usually shortened to ECDF, plots for every time the
 share of deliveries that took that long or less. It rises from 0% to 100%, steeply where values are
 common and slowly where they are rare.
 

@@ -43,7 +43,7 @@ rule of thumb was that anything outside 0.95 to 1.05 is a distortion worth fixin
 
 ## Lines are different
 
-A line is read by its **position** and its **slope**, not by its distance from the bottom of the
+A line is read by its **position** and its slope, not by its distance from the bottom of the
 chart, so it may start where the data is. With the axis from zero, Southeast's monthly orders sit in
 the top third of the chart and every change is squeezed into a narrow band:
 

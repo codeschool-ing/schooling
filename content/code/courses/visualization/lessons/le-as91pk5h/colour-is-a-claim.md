@@ -29,7 +29,7 @@ is decoration, and it should go.
 ## Where the default comes from
 
 Spreadsheets and some BI tools colour each mark differently when a chart has one series and "vary
-colours by point" is switched on, which is the default for pies and an option, easily left on, for
+colours by point" is switched on. It is the default for pies, and an option easily left on for
 bars. matplotlib colours a single bar series in one colour, which is the better default. **In every
 tool, check what the colours are doing before the chart leaves your hands.**
 

@@ -8,8 +8,8 @@ cell. Four habits cover most of it.
 
 ## Round to what the reader can use
 
-**20,586 orders** is right for a table and often too precise for a chart label, where **20.6k** or
-**about 21,000** is what the reader will remember. Use the precision the decision needs: a growth rate
+**20,586 orders** is right for a table and often too precise for a chart label, where 20.6k or
+about 21,000 is what the reader will remember. Use the precision the decision needs: a growth rate
 of 60.5% says more than 60.4713%, and 61% may be enough. Keep the same precision across a chart, so
 that 60.5% does not sit beside 14%.
 
@@ -32,7 +32,7 @@ Portuguese pages, and its program outputs, which are captures, keep what the pro
 ## Name the unit once, clearly
 
 "R$ thousands" in the axis title, then 412 on the bar, is clearer than "R$ 412,000" on every bar.
-**Percent and percentage points are different**: Southeast's growth was 11.3 **percentage points**
+**Percent and percentage points are different**: Southeast's growth was 11.3 percentage points
 below the company's 25.9%, not 11.3% below it. Lesson 12's map said "pp" for exactly this reason.
 
 ## Align and order

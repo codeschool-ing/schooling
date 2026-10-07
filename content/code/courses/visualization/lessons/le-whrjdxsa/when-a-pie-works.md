@@ -25,7 +25,7 @@ That works best under three conditions, and the figure meets all of them.
 
 The worst use of pies is two of them, for two years or two regions, placed next to each other. The
 reader has to compare an angle in one circle with an angle in another, which is the lowest rung of
-the ladder twice. A **stacked bar for each year**, or a **line per category** over time, does the
+the ladder twice. A **stacked bar for each year**, or a line per category over time, does the
 same job with position and length.
 
 ## If you have to draw one

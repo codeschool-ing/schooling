@@ -21,13 +21,13 @@ The five numbers, for Horta's 400 deliveries:
 | **lowest** | 12.2 min | the fastest delivery |
 | **highest** | 101.3 min | the slowest |
 
-The **box** runs from Q1 to Q3, so it holds **the middle half of the data**, and its length, 12.8
-minutes, is the **interquartile range** from lesson 5. The line inside the box is the median.
+The box runs from Q1 to Q3, so it holds **the middle half of the data**, and its length, 12.8
+minutes, is the interquartile range from lesson 5. The line inside the box is the median.
 
 ## The rule for the whiskers
 
 The whiskers do not simply run to the lowest and highest values. They stop at the last value within
-**one and a half box lengths** of the box, a limit called the **fence**:
+one and a half box lengths of the box, a limit called the **fence**:
 
 ```localised
 upper fence = Q3 + 1.5 × (Q3 − Q1) = 39.82 + 1.5 × 12.82 = 59.05 minutes

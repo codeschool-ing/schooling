@@ -63,6 +63,44 @@ def num(lang, x, d=0):
     return s
 
 
+# The palette in both themes, as ui/assets/base.css defines it, so a label drawn on a tint can be
+# given the ink that reads on it in both. tools/figure-contrast measures the same thing.
+THEMES = {
+    'dark': {'--ink': '#0a0e14', '--panel': '#111721', '--scan': '#1b2431', '--phosphor': '#5b8cff',
+             '--phosphor-dim': '#33549e', '--amber': '#ff4d5e', '--paper': '#e8e6df',
+             '--paper-dim': '#9aa0a8', '--wire': '#233043'},
+    'light': {'--ink': '#f2f4f9', '--panel': '#ffffff', '--scan': '#e7ebf4', '--phosphor': '#2b52c9',
+              '--phosphor-dim': '#6c86c9', '--amber': '#d40f28', '--paper': '#20263c',
+              '--paper-dim': '#5a6274', '--wire': '#ccd4e3'},
+}
+
+
+def _lum(hx):
+    c = [int(hx[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    c = [v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4 for v in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+
+def _ratio(a, b):
+    la, lb = sorted([_lum(a), _lum(b)], reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def tint(token, alpha, theme):
+    a, b = THEMES[theme][token], THEMES[theme]['--panel']
+    return '#' + ''.join(f'{round(int(a[i:i + 2], 16) * alpha + int(b[i:i + 2], 16) * (1 - alpha)):02x}'
+                         for i in (1, 3, 5))
+
+
+def ink_on(token, alpha):
+    """The text token that reads at AA on `token` at `alpha` over the panel in both themes, or
+    None when neither does."""
+    for ink in ('--paper', '--ink'):
+        if all(_ratio(THEMES[t][ink], tint(token, alpha, t)) >= 4.5 for t in THEMES):
+            return ink
+    return None
+
+
 def col(v):
     """A palette token, or a literal colour as it is."""
     if v is None:
@@ -134,6 +172,12 @@ class Fig:
         op = f' fill-opacity="{opacity}"' if opacity is not None else ''
         self.parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" '
                           f'fill="{col(fill)}"{st}{op}></circle>')
+
+    def badge(self, x, y, r, label, fill='--amber', size=10):
+        """A numbered disc. Drawn as a rounded rect so the label's ground is a fill the contrast
+        check can see, and labelled in --ink, which reads on both accents in both themes."""
+        self.rect(x - r, y - r, 2 * r, 2 * r, stroke=fill, fill=fill, rx=r, width=1)
+        self.text(x, y, label, size=size, weight='600', fill='--ink')
 
     def wedge(self, cx, cy, r, a0, a1, fill='--phosphor-dim', stroke='--panel', width=1.5):
         """A pie slice from angle a0 to a1, in degrees clockwise from twelve o'clock."""

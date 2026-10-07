@@ -4,7 +4,7 @@ version: 1
 ---
 
 The maps in this lesson draw every state as the same square. That is not a shortcut; it is a design
-with a name, the **tile map**, and it solves the problem the second section raised: **on a
+with a name, the tile map, and it solves the problem the second section raised: **on a
 geographic map, big places dominate**.
 
 On a real map of Brazil, Amazonas, Pará and Mato Grosso together cover nearly half the country, and

@@ -117,8 +117,7 @@ def l20_fixes(lang):
         f.text(p.sx(v) + 6, y + 11, str(v), size=9, anchor='start', mono=True)
     marks = [(92, 20), (30, 150), (110, 262), (p.sx(412) + 40, 61), (p.sx(386) + 40, 95)]
     for k, ((x, y), note) in enumerate(zip(marks, w['notes'])):
-        f.circle(x, y, 9, fill='--amber')
-        f.text(x, y, str(k + 1), size=9.5, weight='600', fill='#ffffff')
+        f.badge(x, y, 9, str(k + 1), size=9.5)
     for k, note in enumerate(w['notes']):
         f.text(470, 70 + k * 30, f'{k + 1}  {note}', size=10, anchor='start', fill='--amber')
     return f, w['cap']

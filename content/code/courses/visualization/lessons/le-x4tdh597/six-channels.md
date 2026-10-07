@@ -5,7 +5,7 @@ version: 1
 
 The quickest way to feel the difference between channels is to hold the data still and change only
 the channel. Here are the same five numbers, Horta's 2025 orders by region, drawn six times. In
-every panel the regions run from **1**, the largest (Southeast, 77,567), to **5**, the smallest
+every panel the regions run from 1, the largest (Southeast, 77,567), to 5, the smallest
 (North, 11,852).
 
 ```schooling-figure

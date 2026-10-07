@@ -16,7 +16,7 @@ for nineteen lessons. Most languages used for data have several:
 | D3.js | JavaScript | drawing anything in the browser, from the ground up |
 
 They differ in style. **matplotlib** asks you to say how to draw: this bar here, this label there.
-**ggplot2** and **Altair** ask you to say what the chart is: this column on x, that one on y, this
+ggplot2 and Altair ask you to say what the chart is: this column on x, that one on y, this
 one as colour, and the library works out the drawing. The second style is quicker for standard
 charts; the first gives the last few per cent of control that a published chart sometimes needs.
 

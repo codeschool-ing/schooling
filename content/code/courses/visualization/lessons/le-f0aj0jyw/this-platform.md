@@ -7,7 +7,7 @@ The page you are reading is held to the rules in this lesson, by machines, on ev
 
 ## The interface
 
-This school's interface is checked with **axe**, an open-source accessibility engine, at **WCAG 2.2
+This school's interface is checked with axe, an open-source accessibility engine, at **WCAG 2.2
 AA**, on every screen, in **both the light and the dark theme**. The check runs in the repository's
 continuous integration, so a change that drops a label's contrast below 4.5:1 fails before it reaches
 a student.

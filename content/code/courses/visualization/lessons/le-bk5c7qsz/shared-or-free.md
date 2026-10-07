@@ -4,7 +4,7 @@ version: 1
 ---
 
 The most important decision in a grid of small charts is whether the panels **share one vertical
-scale** or each get **their own**.
+scale** or each get their own.
 
 The previous figure shared one scale, 0 to 9,000. Here is the same grid with each panel fitted to its
 own data.

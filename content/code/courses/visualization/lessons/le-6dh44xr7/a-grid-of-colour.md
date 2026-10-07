@@ -51,6 +51,6 @@ Sun: busiest at 11:00 with 189 orders, quietest 48
 ## In a spreadsheet
 
 Lay out the pivot table with days as rows and hours as columns, select the values and apply
-**conditional formatting** with a **colour scale**. Choose a scale that runs from white or pale to one
+**conditional formatting** with a colour scale. Choose a scale that runs from white or pale to one
 strong colour. The three-colour red, yellow and green scale that spreadsheets offer first is the
 wrong choice here, and lesson 12 explains why.

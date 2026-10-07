@@ -32,8 +32,8 @@ A aula 1 dividiu a cor em dois canais. Agora eles têm nome.
 | saturação | fracamente | ênfase: viva no que importa, apagada no resto |
 
 **A luminosidade é a dimensão que carrega quantidade**, e é também a que o olho lê com mais
-confiança, porque é a que sobrevive na luz fraca, num projetor ruim, numa impressão em preto e branco
-e, como explica a aula 14, para a maioria das pessoas que enxergam cores de outro jeito.
+confiança. Ela sobrevive à luz fraca, a um projetor ruim e a uma impressão em preto e branco, e, como
+explica a aula 14, sobrevive para a maioria das pessoas que enxergam cores de outro jeito.
 
 **A saturação é a dimensão da ênfase.** Uma única cor viva entre cores apagadas é para onde o olho vai
 primeiro, o que a aula 13 usa de propósito e o que um gráfico cheio de cores vivas desperdiça.

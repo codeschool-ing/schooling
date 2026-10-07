@@ -3,7 +3,7 @@ title: What a histogram shows
 version: 1
 ---
 
-A bar chart compares categories. A **histogram** shows how the values of **one quantity** are spread
+A bar chart compares categories. A **histogram** shows how the values of one quantity are spread
 out: which values are common, which are rare, where the bulk sits and how far the extremes reach.
 That spread is called a **distribution**, and seeing its shape is often the first thing to do with a
 column of numbers.

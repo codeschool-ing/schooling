@@ -17,7 +17,7 @@ People describe colour with three different questions, and chart design uses the
 - **Hue** answers *which colour?* Red, orange, yellow, green, blue, purple. It is measured as an angle
   round a circle, 0 to 360 degrees, with red at 0, green near 120 and blue near 240, and the circle
   closes back on red.
-- **Saturation**, also called **chroma**, answers *how much colour, against grey?* At zero a colour is
+- **Saturation**, also called chroma, answers *how much colour, against grey?* At zero a colour is
   a grey; at full saturation it is as vivid as it can be.
 - **Lightness** answers *how light or dark?* From black, through the colour, to white.
 
@@ -32,13 +32,13 @@ Lesson 1 split colour into two channels. Now they have names.
 | saturation | weakly | emphasis: vivid for what matters, muted for the rest |
 
 **Lightness is the dimension that carries quantity**, and it is also the one the eye reads most
-reliably, because it is what survives in dim light, on a bad projector, in a black-and-white printout
-and, as lesson 14 explains, for most people who see colour differently.
+reliably. It survives dim light, a bad projector and a black-and-white printout, and, as lesson 14
+explains, it survives for most people who see colour differently.
 
 **Saturation is the dimension of emphasis.** A single vivid colour among muted ones is where the eye
 goes first, which lesson 13 uses on purpose and which a chart full of vivid colours wastes.
 
 ## The colour picker's version
 
-Most software exposes these three as **HSL** (hue, saturation, lightness) or its cousin **HSV**. They
+Most software exposes these three as **HSL** (hue, saturation, lightness) or its cousin HSV. They
 are easy to use and they are not what they claim to be, which is the next section.

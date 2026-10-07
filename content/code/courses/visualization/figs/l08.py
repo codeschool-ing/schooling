@@ -26,8 +26,15 @@ def tile_map(f, x0, y0, size, value, vmax, labels=True, gap=3):
         f.rect(x, y, size - gap, size - gap, stroke='--wire', fill='--phosphor', rx=2, width=1,
                opacity=round(0.06 + 0.94 * v, 2))
         if labels:
-            f.text(x + (size - gap) / 2, y + (size - gap) / 2, s, size=9, mono=True,
-                   fill='--ink' if v > 0.5 else '--paper')
+            alpha = round(0.06 + 0.94 * v, 2)
+            ink = ink_on('--phosphor', alpha)
+            cx, cy = x + (size - gap) / 2, y + (size - gap) / 2
+            if ink is None:
+                # A mid tint has no ink that reads on it in both themes, so the label gets a chip
+                # of the panel under it, and the tint still shows around the chip.
+                f.rect(cx - 9, cy - 6, 18, 12, stroke='--panel', fill='--panel', rx=2, width=1)
+                ink = '--paper'
+            f.text(cx, cy, s, size=9, mono=True, fill=ink)
 
 
 @figure('l08-counts-vs-rates', 8)

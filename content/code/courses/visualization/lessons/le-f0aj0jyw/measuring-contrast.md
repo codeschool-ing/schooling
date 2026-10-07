@@ -10,7 +10,7 @@ lesson 11 computed:
 contrast = (lighter luminance + 0.05) ÷ (darker luminance + 0.05)
 ```
 
-It runs from **1:1**, two identical colours, to **21:1**, black on white. The Web Content Accessibility
+It runs from **1:1**, two identical colours, to 21:1, black on white. The Web Content Accessibility
 Guidelines, **WCAG 2.2**, set the thresholds that most organisations and many laws adopt:
 
 | what | WCAG 2.2 criterion | level AA asks |
@@ -41,7 +41,7 @@ Five pairs, five lessons:
 
 - **Red and green**, matplotlib's `tab:red` and `tab:green`, have a contrast of only 1.48:1, and for
   deuteranopia they become `#8b7c1f` and `#968838`, two olives at 1.17:1. Nothing separates them.
-- **Red and blue** have even less contrast, 1.04:1, and still work as two series, because for
+- Red and blue have even less contrast, 1.04:1, and still work as two series, because for
   deuteranopia they become olive and blue: **the hues stay different**. Contrast measures lightness;
   telling two series apart can also come from hue, as long as the hues survive.
 - **`#c8ccd4` on white, 1.61:1, fails the 3:1 that a needed bar requires.** It is the grey lesson 13's

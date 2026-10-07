@@ -48,5 +48,5 @@ copying, fix the vertical axis minimum and maximum by hand, so the copies share 
 automatic, each chart picks its own range and the grid becomes a set of free scales without anyone
 deciding it.
 
-BI tools such as Power BI and Tableau do have them, under names like **small multiples** or **trellis**;
+BI tools such as Power BI and Tableau do have them, under names like **small multiples** or trellis;
 lesson 20 comes back to the tools.

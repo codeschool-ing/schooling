@@ -97,8 +97,7 @@ def l19_order(lang):
     boxes = [(20, 34, 150, 50), (176, 34, 150, 50), (20, 90, 226, 170), (252, 90, 74, 170)]
     for k, (x, y, bw, bh) in enumerate(boxes):
         f.rect(x, y, bw, bh, stroke='--wire', fill='--scan', rx=4, width=1)
-        f.circle(x + 16, y + 16, 10, fill='--phosphor')
-        f.text(x + 16, y + 16, str(k + 1), size=10, weight='600', fill='#ffffff')
+        f.badge(x + 16, y + 16, 10, str(k + 1), fill='--phosphor')
         if k < 3:
             f.text(x + 32, y + 16, w['names'][k], size=9, anchor='start')
     f.text(289, 190, w['names'][3], size=9, rotate=90)
@@ -108,8 +107,7 @@ def l19_order(lang):
     for k, h in enumerate((36, 36, 70, 56)):
         y = 48 + sum((36, 36, 70, 56)[:k]) + k * 6
         f.rect(X + 10, y, 130, h, stroke='--wire', fill='--scan', rx=4, width=1)
-        f.circle(X + 26, y + 14, 10, fill='--phosphor')
-        f.text(X + 26, y + 14, str(k + 1), size=10, weight='600', fill='#ffffff')
+        f.badge(X + 26, y + 14, 10, str(k + 1), fill='--phosphor')
         f.text(X + 42, y + 14, w['names'][k], size=9, anchor='start')
     return f, w['cap']
 
