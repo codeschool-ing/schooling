@@ -291,7 +291,7 @@
     ]
   },
   "ex-kmzrkf2f": {
-    "prompt": "Depois de o `network.sh` rodar duas vezes e o `terraform apply` rodar duas vezes, quantas VPCs existiam no total na conta do laboratório?",
+    "prompt": "Depois de o `network.sh` rodar duas vezes e o `terraform apply` rodar duas vezes, quantas VPCs a Ana tinha criado no total?",
     "hint": "Duas de um, uma do outro.",
     "unit": "VPCs"
   },
@@ -555,19 +555,85 @@
     "choices": [
       {
         "text": "Os providers são os que a HashiCorp publica",
-        "why": "Sim; só muda de onde foram baixados."
+        "why": "Sim; o `terraform init` baixa os providers do Terraform Registry, como faria com qualquer configuração."
       },
       {
         "text": "O moto guarda o que lhe disseram depois de parar",
         "why": "Ele guarda tudo na memória e esquece quando para."
       },
       {
-        "text": "Uma configuração destas aulas funciona numa conta real depois de desfazer `AWS_ENDPOINT_URL`",
-        "why": "Sim, com credenciais reais, e com uma conta real a pagar."
+        "text": "Nada que um `apply` cria no moto é cobrado",
+        "why": "Sim; o moto é um programa no seu próprio computador, e não há conta por trás dele para cobrar."
       },
       {
         "text": "O Terraform imprime planos diferentes contra o moto e contra a AWS para o mesmo arquivo",
         "why": "O plano é calculado a partir do arquivo e do estado; o moto só responde às chamadas de API."
+      }
+    ]
+  },
+  "ex-4waa5sgk": {
+    "prompt": "Por que o `iac-env.sh` é lido com `. ~/iac-env.sh`, e não executado com `sh ~/iac-env.sh`?",
+    "hint": "Onde moram as variáveis que um script define?",
+    "choices": [
+      {
+        "text": "Um script executado define variáveis no próprio shell",
+        "why": "Isso. O `.` lê o arquivo no shell em que você está digitando, e as variáveis ficam."
+      },
+      {
+        "text": "O `sh` recusa um arquivo sem a linha `#!/bin/sh` no começo",
+        "why": "`sh arquivo` executa o arquivo, diga o que disser a primeira linha; a primeira linha importa para `./arquivo`."
+      },
+      {
+        "text": "O `.` executa o arquivo com `sudo`, de que as variáveis precisam",
+        "why": "Nada no arquivo precisa de root; o `.` o executa como você, no seu próprio shell."
+      },
+      {
+        "text": "Executá-lo com `sh` iniciaria uma segunda cópia do moto",
+        "why": "O arquivo nunca inicia o moto; o moto roda num terminal só dele."
+      }
+    ]
+  },
+  "ex-2h0njkhv": {
+    "prompt": "Num terminal novo, `aws sts get-caller-identity` responde `Unable to locate credentials`. O que está faltando?",
+    "hint": "O CLI foi encontrado, então o ambiente Python está ativo.",
+    "choices": [
+      {
+        "text": "As variáveis `AWS_`: só o venv está ativo",
+        "why": "Isso. O `. ~/iac-env.sh` define a chave e o endpoint, além de ativar o ambiente Python (o venv)."
+      },
+      {
+        "text": "O moto: nada está escutando na porta 4566 deste computador",
+        "why": "Nesse caso o CLI diria que não conseguiu se conectar à URL do endpoint."
+      },
+      {
+        "text": "O próprio AWS CLI, que o script de instalação nunca instalou",
+        "why": "Nesse caso o shell diria `aws: command not found`."
+      },
+      {
+        "text": "Uma conta da AWS, porque o moto só aceita chaves reais",
+        "why": "O moto aceita a palavra `test` como chave; não existe conta nenhuma neste laboratório."
+      }
+    ]
+  },
+  "ex-wjcnk1rz": {
+    "prompt": "O primeiro plano de uma aula encontra duas VPCs chamadas `shop` onde a página mostra uma. O que você faz?",
+    "hint": "Cada aula foi gravada com um moto vazio.",
+    "choices": [
+      {
+        "text": "Reiniciar o moto, rodar o `fresh-lesson.sh`, recomeçar",
+        "why": "Isso. A segunda VPC sobrou de uma aula anterior, e um moto vazio é aquilo em que a página foi gravada."
+      },
+      {
+        "text": "Pôr o id da VPC no data source para que encontre só uma",
+        "why": "Isso esconde a sobra e amarra o arquivo a um id que muda a cada execução."
+      },
+      {
+        "text": "Apagar a VPC padrão, que é a que sobra aqui",
+        "why": "A VPC padrão não se chama `shop`; a que sobra foi criada por uma aula anterior."
+      },
+      {
+        "text": "Rodar `terraform destroy` no diretório da própria aula",
+        "why": "O estado desse diretório não conhece a VPC que sobrou, então o destroy não tocaria nela."
       }
     ]
   }

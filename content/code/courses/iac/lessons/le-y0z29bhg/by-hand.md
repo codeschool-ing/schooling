@@ -3,6 +3,9 @@ title: A network built by hand
 version: 1
 ---
 
+Nothing in this lesson asks you to type. Its transcripts are Ana's and are there to be read, and
+its last four sections build the lab you will type in from lesson 2 on.
+
 Ana runs the infrastructure of a small online shop. The first time she needed a network for it, she
 did what almost everybody does the first time: she typed it. A virtual network (a **VPC**), one
 subnet inside it, and a **security group**, the firewall AWS puts in front of a machine, letting the

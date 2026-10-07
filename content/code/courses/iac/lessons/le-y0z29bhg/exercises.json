@@ -424,12 +424,12 @@
   },
   {
     "id": "ex-kmzrkf2f",
-    "version": 1,
+    "version": 2,
     "section": "declarative",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "After `network.sh` ran twice and `terraform apply` ran twice, how many VPCs existed in the lab's account in total?",
+    "prompt": "After `network.sh` ran twice and `terraform apply` ran twice, how many VPCs had Ana created in total?",
     "hint": "Two from one, one from the other.",
     "value": 3,
     "tolerance": 0,
@@ -803,7 +803,7 @@
   },
   {
     "id": "ex-ek1qr1vg",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "multiple-choice",
     "difficulty": "hard",
@@ -814,7 +814,7 @@
       {
         "text": "The providers are the ones HashiCorp publishes",
         "correct": true,
-        "why": "Yes; only where they were downloaded from differs."
+        "why": "Yes; `terraform init` downloads them from the Terraform Registry, as it would for any configuration."
       },
       {
         "text": "moto keeps what it is told after it stops",
@@ -822,14 +822,110 @@
         "why": "It keeps everything in memory and forgets it when it stops."
       },
       {
-        "text": "A configuration from these lessons works on a real account once `AWS_ENDPOINT_URL` is unset",
+        "text": "Nothing an `apply` makes in moto is billed",
         "correct": true,
-        "why": "Yes, with real credentials, and with a real bill."
+        "why": "Yes; moto is a program on your own computer, and there is no account behind it to bill."
       },
       {
         "text": "Terraform prints different plans against moto than against AWS for the same file",
         "correct": false,
         "why": "The plan is computed from the file and the state; moto only answers the API calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-4waa5sgk",
+    "version": 1,
+    "section": "building-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `iac-env.sh` read with `. ~/iac-env.sh` rather than run with `sh ~/iac-env.sh`?",
+    "hint": "Where do the variables a script sets live?",
+    "choices": [
+      {
+        "text": "A run script sets variables in its own shell",
+        "correct": true,
+        "why": "Yes. `.` reads the file into the shell you are typing in, so the variables stay."
+      },
+      {
+        "text": "`sh` refuses a file that has no `#!/bin/sh` line at the top",
+        "correct": false,
+        "why": "`sh file` runs it whatever its first line says; the first line matters to `./file`."
+      },
+      {
+        "text": "`.` runs the file with `sudo`, which the variables need to be set",
+        "correct": false,
+        "why": "Nothing in the file needs root; `.` runs it as you, in your own shell."
+      },
+      {
+        "text": "Running it with `sh` would start a second copy of moto",
+        "correct": false,
+        "why": "The file never starts moto; moto runs in a terminal of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h0njkhv",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a new terminal, `aws sts get-caller-identity` answers `Unable to locate credentials`. What is missing?",
+    "hint": "The CLI was found, so the Python environment is active.",
+    "choices": [
+      {
+        "text": "The `AWS_` variables: only the venv is active",
+        "correct": true,
+        "why": "Yes. `. ~/iac-env.sh` sets the key and the endpoint as well as activating the Python environment (the venv)."
+      },
+      {
+        "text": "moto: nothing is listening on port 4566 of this computer",
+        "correct": false,
+        "why": "Then the CLI would say it could not connect to the endpoint URL."
+      },
+      {
+        "text": "The AWS CLI itself, which the setup script never installed",
+        "correct": false,
+        "why": "Then the shell would say `aws: command not found`."
+      },
+      {
+        "text": "An AWS account, because moto only accepts real keys",
+        "correct": false,
+        "why": "moto accepts the word `test` as a key; no account exists anywhere in this lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjcnk1rz",
+    "version": 1,
+    "section": "working-in-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A lesson's first plan finds two VPCs named `shop` where the page shows one. What do you do?",
+    "hint": "Each lesson was recorded on an empty moto.",
+    "choices": [
+      {
+        "text": "Restart moto, run `fresh-lesson.sh`, start again",
+        "correct": true,
+        "why": "Yes. The second VPC is left over from an earlier lesson, and an empty moto is what the page was recorded on."
+      },
+      {
+        "text": "Add the VPC's id to the data source so it matches only one",
+        "correct": false,
+        "why": "That hides the leftover and ties the file to an id that changes on every run."
+      },
+      {
+        "text": "Delete the default VPC, which is the extra one here",
+        "correct": false,
+        "why": "The default VPC is not named `shop`; the extra one was made by an earlier lesson."
+      },
+      {
+        "text": "Run `terraform destroy` in the lesson's own directory",
+        "correct": false,
+        "why": "That directory's state does not know the leftover VPC, so destroy would not touch it."
       }
     ]
   }
