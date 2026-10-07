@@ -34,7 +34,7 @@ signature algorithm or the key needs to be weak. The hash was the weak link.
 in 1996, and in 2004 Xiaoyun Wang and colleagues published real MD5 collisions. Within a few years a
 collision on an ordinary computer took seconds. In 2008 a team of researchers used MD5 collisions
 to obtain, from a real certificate authority that still signed with MD5, a certificate that could
-act as a CA itself; they made it expire in the past so it could not be abused, and the CAs stopped
+act as a CA itself. They made it expire in the past so it could not be abused, and the CAs stopped
 using MD5 within weeks. In 2012 the Flame espionage malware was found signed with a forged Microsoft
 code-signing certificate built from an MD5 collision against a forgotten Microsoft licensing CA. By
 then MD5 had been deprecated for a decade, and that was the problem: it had been deprecated, not

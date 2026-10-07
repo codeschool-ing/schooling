@@ -31,7 +31,7 @@ vezes do que "não".** Uma pergunta por aula, com a resposta a procurar:
 
 Faça as perguntas a alguém que opera o sistema, não à documentação dele, e peça a evidência por trás
 de cada resposta: o arquivo de configuração, o último relatório do scanner, a data em que a chave foi
-trocada pela última vez. Uma resposta escrita que ninguém consegue mostrar é uma esperança.
+trocada pela última vez. Uma resposta escrita que ninguém consegue sustentar com evidência não foi conferida.
 
 A maior parte do que uma revisão encontra está na coluna da direita das aulas 14 a 17. Os algoritmos
 das primeiras linhas em geral são escolhidos por uma biblioteca ou por um fornecedor e em geral estão

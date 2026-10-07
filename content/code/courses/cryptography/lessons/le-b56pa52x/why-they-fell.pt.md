@@ -35,7 +35,7 @@ assinatura nem na chave precisa ser fraco. O hash era o elo fraco.
 foram achadas em 1996, e em 2004 Xiaoyun Wang e colegas publicaram colisões reais de MD5. Em poucos
 anos, uma colisão num computador comum levava segundos. Em 2008, uma equipe de pesquisadores usou
 colisões de MD5 para obter, de uma autoridade certificadora real que ainda assinava com MD5, um
-certificado capaz de agir como uma AC; eles o fizeram expirar no passado para que não pudesse ser
+certificado capaz de agir como uma AC. Eles o fizeram expirar no passado para que não pudesse ser
 abusado, e as ACs pararam de usar MD5 em poucas semanas. Em 2012, o malware de espionagem Flame foi
 encontrado assinado com um certificado de assinatura de código da Microsoft forjado a partir de uma
 colisão de MD5 contra uma AC de licenciamento esquecida da Microsoft. Àquela altura o MD5 já estava

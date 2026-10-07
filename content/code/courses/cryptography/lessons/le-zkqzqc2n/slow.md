@@ -67,5 +67,5 @@ GiB with 1 pass where the server can afford it.
 
 A quarter of a second is a budget, not a law. The cost is set by measuring the sign-in server: pick
 the largest parameters that keep one verification under the time you are willing to make a user
-wait, and remember that an attacker sending many sign-in attempts can use that cost against the
+wait. Remember also that an attacker sending many sign-in attempts can use that cost against the
 server, which is one reason sign-in is also rate-limited.

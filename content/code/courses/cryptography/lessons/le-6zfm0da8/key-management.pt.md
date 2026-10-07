@@ -3,7 +3,7 @@ title: Gestão de chaves: cifragem em envelope e onde a chave mora
 version: 1
 ---
 
-**Toda camada desta aula é tão forte quanto a guarda da sua chave, e o arranjo que venceu quase em
+**Toda camada desta aula é tão forte quanto a guarda da sua chave. O arranjo que venceu quase em
 toda parte é a cifragem em envelope: dados cifrados com uma chave de dados, chaves de dados cifradas
 com uma chave mestra, e a chave mestra num serviço que nunca a deixa sair.** A estrutura é o
 cabeçalho LUKS da seção 03 e o esquema híbrido da aula 3, aplicados a uma organização inteira.

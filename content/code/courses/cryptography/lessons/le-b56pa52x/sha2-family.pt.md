@@ -49,7 +49,7 @@ Fora do NIST, o **BLAKE2** e o **BLAKE3** são hashes modernos e rápidos, usado
 do Argon2 (aula 5) e de muitas ferramentas de sincronização de arquivos. São escolhas sólidas onde
 nenhum padrão exige SHA-2.
 
-## Uma propriedade do SHA-256 que importa depois
+## Uma propriedade do SHA-256 que importa na aula 6
 
 Como o SHA-256 e o SHA-512 entregam todo o seu estado interno, quem conhece o resumo de uma
 mensagem e o tamanho dela consegue calcular o resumo dessa mensagem **com mais bytes acrescentados

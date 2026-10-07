@@ -40,7 +40,7 @@ its first sixteen bytes, and anybody can read it. What it must be depends on the
 
 The difference between *unpredictable* and *unique* is real. A CBC vector that an outsider can
 guess before a message is sent, for example the last block of the previous message, let the BEAST
-attack on TLS 1.0 learn plaintext in 2011, and that is one reason TLS 1.1 changed to an explicit
+attack on TLS 1.0 learn plaintext in 2011. That is one reason TLS 1.1 changed to an explicit
 random vector per record. A CTR or GCM nonce, by contrast, may be a simple counter, 1, 2, 3, as long
 as it never repeats under the same key. TLS 1.3 builds each record's nonce from a sequence number
 for exactly that reason: a counter cannot repeat while the connection lasts.

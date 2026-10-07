@@ -61,7 +61,7 @@ certificate per service where automation makes that cheap.
 
 `openssl verify` only checked the name because it was asked to with `-verify_hostname`. Browsers and
 most HTTP libraries check by default. The danger is lower-level code: a raw TLS socket, an old
-library, or a configuration flag can check the chain and skip the name, and **a certificate that
+library, or a configuration flag can check the chain and skip the name. **A certificate that
 chains to a trusted root, checked without its name, proves only that somebody somewhere has a
 certificate.** In Python, `ssl.create_default_context()` checks both; code that builds an
 `SSLContext` by hand and sets `check_hostname = False` does not. Lesson 10 shows the same mismatch

@@ -3,8 +3,8 @@ title: Key management: envelope encryption and where the key lives
 version: 1
 ---
 
-**Every layer in this lesson is as strong as the custody of its key, and the arrangement that has
-won almost everywhere is envelope encryption: data encrypted with a data key, data keys encrypted
+**Every layer in this lesson is as strong as the custody of its key. The arrangement that has won
+almost everywhere is envelope encryption: data encrypted with a data key, data keys encrypted
 with a master key, and the master key in a service that never lets it out.** The structure is the
 LUKS header of section 03 and the hybrid scheme of lesson 3, applied to a whole organisation.
 

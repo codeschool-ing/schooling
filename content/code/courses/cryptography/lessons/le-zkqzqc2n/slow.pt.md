@@ -69,5 +69,5 @@ passadas e paralelismo. O mínimo da OWASP, usado no laboratório, é 19 MiB com
 
 Um quarto de segundo é um orçamento, não uma lei. O custo é definido medindo o servidor de login:
 escolha os maiores parâmetros que mantenham uma verificação abaixo do tempo que você aceita fazer um
-usuário esperar, e lembre que um atacante mandando muitas tentativas de login pode usar esse custo
+usuário esperar. Lembre também que um atacante mandando muitas tentativas de login pode usar esse custo
 contra o servidor, e esse é um dos motivos de o login também ter limite de tentativas.

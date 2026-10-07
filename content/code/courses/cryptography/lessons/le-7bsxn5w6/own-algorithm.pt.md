@@ -52,8 +52,8 @@ AES-GCM, one byte changed:    refused
 
 Nenhum desses defeitos aparece num teste que cifra, decifra e compara. A função devolve o registro
 certo toda vez. **Todo defeito diz respeito ao que a função faz com a entrada de outra pessoa ou ao
-longo de muitas chamadas**: dois registros que começam com os mesmos dezesseis bytes produzem o mesmo
-primeiro bloco, uma senha adivinhável entrega a chave por mais forte que o AES seja, e uma alteração
+longo de muitas chamadas.** Dois registros que começam com os mesmos dezesseis bytes produzem o mesmo
+primeiro bloco. Uma senha adivinhável entrega a chave por mais forte que o AES seja. Uma alteração
 nos bytes guardados é decifrada em algo que ninguém percebe.
 
 ## Por que o teste passou e o projeto falhou

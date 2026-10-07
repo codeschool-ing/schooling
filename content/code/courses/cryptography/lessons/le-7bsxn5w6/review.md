@@ -31,7 +31,7 @@ more often than "no".** One question per lesson, with the answer to look for:
 
 Ask the questions of somebody who runs the system, not of its documentation, and ask for the evidence
 behind each answer: the configuration file, the scanner's last report, the date the key was last
-rotated. A written answer that nobody can show is a hope.
+rotated. A written answer that nobody can back with evidence has not been checked.
 
 Most of what a review finds is in the right-hand column of lessons 14 to 17. The algorithms in the
 left-hand rows are usually chosen by a library or a vendor and are usually fine. **The keys, the

@@ -41,7 +41,7 @@ depende do modo:
 
 A diferença entre *imprevisível* e *único* é real. Um vetor CBC que alguém de fora consegue
 adivinhar antes de a mensagem ser enviada, por exemplo o último bloco da mensagem anterior,
-permitiu ao ataque BEAST contra o TLS 1.0 descobrir texto claro em 2011, e esse é um dos motivos de
+permitiu ao ataque BEAST contra o TLS 1.0 descobrir texto claro em 2011. Esse é um dos motivos de
 o TLS 1.1 ter passado a usar um vetor aleatório explícito por registro. Um nonce de CTR ou GCM, por
 outro lado, pode ser um simples contador, 1, 2, 3, desde que nunca se repita sob a mesma chave. O
 TLS 1.3 monta o nonce de cada registro a partir de um número de sequência exatamente por isso: um

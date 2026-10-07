@@ -62,7 +62,7 @@ preferem um certificado por serviço onde a automação torna isso barato.
 O `openssl verify` só conferiu o nome porque foi pedido com `-verify_hostname`. Navegadores e a
 maioria das bibliotecas HTTP conferem por padrão. O perigo está no código de nível mais baixo: um
 socket TLS cru, uma biblioteca antiga ou uma opção de configuração podem conferir a cadeia e pular o
-nome, e **um certificado que se encadeia a uma raiz confiável, conferido sem o nome, prova só que
+nome. **Um certificado que se encadeia a uma raiz confiável, conferido sem o nome, prova só que
 alguém em algum lugar tem um certificado.** No Python, o `ssl.create_default_context()` confere os
 dois; um código que monta um `SSLContext` à mão e põe `check_hostname = False` não confere. A aula
 10 mostra o mesmo erro de nome do lado do cliente num handshake real.

@@ -47,7 +47,7 @@ Outside NIST, **BLAKE2** and **BLAKE3** are fast, modern hashes used inside Wire
 (lesson 5) and many file-synchronisation tools. They are sound choices where a standard does not
 require SHA-2.
 
-## A property of SHA-256 that matters later
+## A property of SHA-256 that matters in lesson 6
 
 Because SHA-256 and SHA-512 output their entire internal state, anybody who knows the digest of a
 message and its length can compute the digest of that message **with more bytes appended**,

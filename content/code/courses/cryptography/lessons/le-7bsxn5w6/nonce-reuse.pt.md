@@ -56,8 +56,8 @@ exit status 1
 ```
 
 O código de saída 1 permite que a auditoria rode como uma verificação agendada que alerta. Ela achou
-os três dias que a restauração repetiu, e é o tipo de verificação que vale rodar sobre qualquer
-depósito de registros selados: uma coluna de nonces no banco com um índice único faz o mesmo trabalho
+os três dias que a restauração repetiu. A mesma verificação vale para qualquer depósito de registros
+selados, e uma coluna de nonces no banco com um índice único faz o mesmo trabalho
 continuamente, e recusa a segunda inserção no momento em que ela acontece.
 
 ## Corrigir

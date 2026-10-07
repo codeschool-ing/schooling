@@ -52,8 +52,8 @@ AES-GCM, one byte changed:    refused
 
 None of those defects shows up in a test that encrypts, decrypts and compares. The function returns
 the right record every time. **Every defect is about what the function does with somebody else's
-input or over many calls**: two records that start with the same sixteen bytes produce the same first
-block, a guessable password gives the key away no matter how strong AES is, and a change to the
+input or over many calls.** Two records that start with the same sixteen bytes produce the same first
+block. A guessable password gives the key away no matter how strong AES is. A change to the
 stored bytes decrypts to something nobody notices.
 
 ## Why the test passed and the design failed

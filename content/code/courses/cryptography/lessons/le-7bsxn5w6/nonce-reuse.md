@@ -54,7 +54,7 @@ exit status 1
 ```
 
 The exit status of 1 lets the audit run as a scheduled check that alerts. It found the three days the
-restore repeated, and it is the kind of check worth running over any store of sealed records: a
+restore repeated. The same check is worth running over any store of sealed records, and a
 database column of nonces with a unique index on it does the same job continuously, and refuses the
 second insert at the moment it happens.
 
