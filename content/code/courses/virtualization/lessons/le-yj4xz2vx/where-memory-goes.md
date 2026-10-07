@@ -1,9 +1,9 @@
 ---
 title: Where the memory goes
-version: 1
+version: 2
 ---
 
-Lesson 1 found vm1's QEMU process using about 1.5 GiB for a guest given 1 GiB, and promised to find out
+Lesson 1 found vm1's QEMU process using about 1.6 GiB for a guest given 1 GiB, and promised to find out
 why. Here is the same kind of guest, with the host's view of its memory:
 
 ```

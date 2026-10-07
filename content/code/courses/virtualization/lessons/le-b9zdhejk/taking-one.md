@@ -1,9 +1,9 @@
 ---
 title: Taking one
-version: 1
+version: 2
 ---
 
-Inside vm1 there is a file worth keeping. Then a snapshot, from the host:
+vm1 is a fresh guest from `bash newvm.sh vm1`, lesson 1, and inside it there is a file worth keeping. Then a snapshot, from the host:
 
 ```
 ana@vm1:~$ echo "checked, all fine" > notes.txt; cat notes.txt

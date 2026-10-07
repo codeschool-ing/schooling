@@ -1,10 +1,11 @@
 ---
 title: O que uma rede isolada deixa aberto
-version: 1
+version: 2
 ---
 
 O laboratório é a rede da aula 14, a `labnet`, com dois convidados nela, e a rede do escritório da aula
-11 fazendo o papel da rede de verdade. Primeiro, a parede que já existe:
+11 fazendo o papel da rede de verdade (`sudo bash office.sh` a traz de volta se o host reiniciou desde
+então). Primeiro, a parede que já existe:
 
 ```
 ana@host:~$ ip route get 10.0.0.50
@@ -24,7 +25,16 @@ pacote sair. E os dois convidados continuam se alcançando, que é a razão de s
 
 Agora olhe o host a partir do mesmo convidado. Duas coisas no host escutam em **todo** endereço,
 `0.0.0.0`: o servidor ssh, e um pequeno servidor web servindo uma pasta de notas, o tipo de coisa que
-alguém liga por cinco minutos e esquece:
+alguém liga por cinco minutos e esquece. Para ter os dois no seu host, o segundo é uma linha num terminal
+que você deixa aberto, e o primeiro é o pacote `openssh-server`, que o Ubuntu Server tem e o Ubuntu
+Desktop não:
+
+```bash
+mkdir -p ~/notes && echo "renew the office printer's toner" > ~/notes/todo.txt
+python3 -m http.server 8000 --directory ~/notes
+```
+
+Então, no host e a partir do convidado:
 
 ```
 ana@host:~$ ss -tln | grep -E ":(22|8000) "

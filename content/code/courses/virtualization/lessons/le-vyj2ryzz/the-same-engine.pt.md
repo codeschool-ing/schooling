@@ -1,10 +1,10 @@
 ---
 title: O mesmo motor
-version: 1
+version: 2
 ---
 
 Seja quem for que o gerencie, um convidado QEMU acaba sendo uma linha de comando comprida: o libvirt
-escreve uma para o `virsh`, e o Proxmox escreve uma para o `qm`. Eis a do laboratório, para a vm1, com as
+escreve uma para o `virsh`, e o Proxmox escreve uma para o `qm`. Eis a do laboratório, para uma vm1 recém-saída do `newvm.sh`, aula 1, com as
 opções que descrevem o hardware separadas, uma por linha:
 
 ```
