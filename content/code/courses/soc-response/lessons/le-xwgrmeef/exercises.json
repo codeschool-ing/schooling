@@ -1,0 +1,598 @@
+[
+  {
+    "id": "ex-4cq4m4pn",
+    "version": 1,
+    "section": "what-a-log-answers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A firewall line records the source and destination addresses, the ports and the time. Which of the six questions can it NOT answer by itself?",
+    "hint": "Think about the person at the keyboard.",
+    "choices": [
+      {
+        "text": "Where",
+        "correct": false,
+        "why": "The line says which firewall wrote it and through which interfaces the packet passed."
+      },
+      {
+        "text": "Who",
+        "correct": true,
+        "why": "Right. It knows addresses, not accounts; another record has to say which person it was."
+      },
+      {
+        "text": "When",
+        "correct": false,
+        "why": "The time stamp is on the line."
+      },
+      {
+        "text": "From where",
+        "correct": false,
+        "why": "The source address is exactly what a firewall records."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4p6sm4j",
+    "version": 1,
+    "section": "what-a-log-answers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule flags twelve failed logins for one account in a minute. An analyst checks and finds the user had changed their password and an old phone kept retrying. What was it?",
+    "hint": "Three words, three stages.",
+    "choices": [
+      {
+        "text": "An incident, because a rule fired and an analyst had to spend time investigating it",
+        "correct": false,
+        "why": "A rule firing makes an alert. An incident needs somebody to confirm that something is actually wrong."
+      },
+      {
+        "text": "Twelve separate incidents",
+        "correct": false,
+        "why": "Twelve events, grouped by the rule into one alert; none of them is an incident."
+      },
+      {
+        "text": "An alert that turned out not to be an incident",
+        "correct": true,
+        "why": "Right. A rule chose it for a person to look at, and the person found nothing wrong."
+      },
+      {
+        "text": "Not even an event, since nothing harmful happened",
+        "correct": false,
+        "why": "Every failed login is an event. Harm is not what makes something an event."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8xc23be",
+    "version": 1,
+    "section": "what-a-log-answers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say the fields of a record matter more than its format?",
+    "hint": "What does an analyst do with two partial records?",
+    "choices": [
+      {
+        "text": "Because JSON logs are smaller than text logs",
+        "correct": false,
+        "why": "Size is not the argument, and JSON is usually larger."
+      },
+      {
+        "text": "Because a SIEM rejects any line in a format it was not configured to parse, so unknown formats are lost before anybody reads them",
+        "correct": false,
+        "why": "Collectors take unknown formats and store them as text; the problem is what the line says, not how."
+      },
+      {
+        "text": "Because a shared field, such as an address and port, is what lets two partial records be joined into one story",
+        "correct": true,
+        "why": "Right. A format can be converted; a field that was never written cannot be recovered."
+      },
+      {
+        "text": "Because the format is fixed by RFC 5424 for every program",
+        "correct": false,
+        "why": "RFC 5424 defines the syslog envelope, not what a program writes inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-96m1f87h",
+    "version": 1,
+    "section": "five-sources",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each source to what it cannot tell you.",
+    "hint": "Each one is blind to something.",
+    "pairs": [
+      {
+        "left": "a firewall log",
+        "right": "who was typing"
+      },
+      {
+        "left": "a flow record",
+        "right": "what was said in the conversation"
+      },
+      {
+        "left": "a packet capture",
+        "right": "the content of an encrypted session"
+      },
+      {
+        "left": "a host's event log",
+        "right": "traffic that never touched that machine"
+      }
+    ]
+  },
+  {
+    "id": "ex-yneh121d",
+    "version": 1,
+    "section": "five-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is syslog in the list of five even though it records nothing of its own?",
+    "hint": "A road, not a destination.",
+    "choices": [
+      {
+        "text": "Because it replaces flow records on small networks",
+        "correct": false,
+        "why": "It carries lines; it does not summarise conversations the way a flow record does."
+      },
+      {
+        "text": "Because it is the format and protocol most Linux and network logs travel on to a collector",
+        "correct": true,
+        "why": "Right. A router, a firewall and a server can all send to one collector through it."
+      },
+      {
+        "text": "Because it signs and encrypts every log line on the way, so a collector receiving syslog knows that nothing was altered in transit",
+        "correct": false,
+        "why": "Classic syslog is plain text over UDP or TCP; protecting it is lesson 3's subject."
+      },
+      {
+        "text": "Because Windows writes its Event Log in syslog format, which makes it the one format every operating system in the company shares",
+        "correct": false,
+        "why": "The Windows Event Log has its own binary format; lesson 2 shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gq577s1e",
+    "version": 1,
+    "section": "five-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do most organisations not keep packet capture running everywhere, all the time?",
+    "hint": "Compare the size of one connection in each source.",
+    "choices": [
+      {
+        "text": "It is illegal to record traffic inside a company's own network",
+        "correct": false,
+        "why": "Monitoring one's own network is ordinary; what is captured and who may read it is a policy question."
+      },
+      {
+        "text": "Once traffic is encrypted, which is most of it now, a capture records nothing an investigation could use",
+        "correct": false,
+        "why": "Addresses, ports, sizes, timing and the unencrypted start of a session are all still there."
+      },
+      {
+        "text": "It costs as much storage as the traffic itself, so flow records cover the rest",
+        "correct": true,
+        "why": "Right. A flow record of a conversation is a few dozen bytes; its capture is everything that was sent."
+      },
+      {
+        "text": "Recording packets adds a delay to every connection, and users on a busy network would notice it",
+        "correct": false,
+        "why": "A passive capture reads a copy of the traffic; the cost is disk, not delay."
+      }
+    ]
+  },
+  {
+    "id": "ex-20aydp9r",
+    "version": 1,
+    "section": "five-sources",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, flow records are made from the traffic crossing fw's eth0. A computer on the files network copies a large file to another computer on the same network. What do the flow records show?",
+    "hint": "Where does that traffic pass?",
+    "choices": [
+      {
+        "text": "A summary with the bytes but no addresses",
+        "correct": false,
+        "why": "When a flow is recorded it has addresses; here none is recorded."
+      },
+      {
+        "text": "Nothing about it, since that traffic does not cross eth0",
+        "correct": true,
+        "why": "Right. A sensor sees only what passes it; two machines on one network talk without crossing fw at all."
+      },
+      {
+        "text": "The file's name, taken from the copy",
+        "correct": false,
+        "why": "Flow records never hold content, and this one does not exist."
+      },
+      {
+        "text": "One record per direction, exactly as for the SSH login, because flow records follow every conversation on the company's networks",
+        "correct": false,
+        "why": "That login crossed eth0. This copy does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gpydvr2",
+    "version": 1,
+    "section": "five-sources",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The syslog message format, with its priority, time stamp, host name, program and text, is defined by RFC ___.",
+    "hint": "Four digits, from 2009.",
+    "blanks": [
+      {
+        "accept": [
+          "5424"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nsr74466",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Your laptop has 16 GB of memory and runs Windows. Which path does the lesson recommend for the lab?",
+    "hint": "One of the three was what the course was recorded on.",
+    "choices": [
+      {
+        "text": "WSL2, because it is already part of Windows and namespaces work in it, so there is nothing extra to install or pay for",
+        "correct": false,
+        "why": "Namespaces work there, but nothing in the course was recorded on it."
+      },
+      {
+        "text": "Running soclab.sh in PowerShell",
+        "correct": false,
+        "why": "It is a bash script that drives the Linux kernel."
+      },
+      {
+        "text": "A cloud server rented from any provider and left running for the whole course, so it is ready whenever you are",
+        "correct": false,
+        "why": "Possible, and paid by the hour; the lesson keeps it for when nothing can be installed locally."
+      },
+      {
+        "text": "An Ubuntu 24.04 virtual machine in VirtualBox, VMware or Hyper-V",
+        "correct": true,
+        "why": "Right. It fits, and a snapshot undoes mistakes."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpeb7gak",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does each of the lab's four machines actually consist of?",
+    "hint": "One kernel, four of something.",
+    "choices": [
+      {
+        "text": "A network namespace: its own interfaces, addresses, routes and firewall inside the same kernel",
+        "correct": true,
+        "why": "Right. They share the disk and the accounts, which is why one key works on all of them."
+      },
+      {
+        "text": "A small virtual machine with its own copy of Ubuntu 24.04, its own kernel and its own disk, started by the script",
+        "correct": false,
+        "why": "That would need four installed systems; the lab is one script on one system."
+      },
+      {
+        "text": "A separate user account on soc",
+        "correct": false,
+        "why": "Accounts are shared; what is separated is the network stack."
+      },
+      {
+        "text": "A Docker container started from an Ubuntu image, with its own filesystem, process list and network, managed by the script",
+        "correct": false,
+        "why": "No image and no container runtime are involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-60hfq3fx",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bash soclab.sh up` stops with `RTNETLINK answers: File exists`, and `ip route` shows that your computer's own network is 192.168.20.0/24. What do you do?",
+    "hint": "The script and your computer want the same thing.",
+    "choices": [
+      {
+        "text": "Run the script a few more times, since the error comes from a race between two commands and passes once the timing is right",
+        "correct": false,
+        "why": "The collision is still there on every run."
+      },
+      {
+        "text": "Delete your computer's own route to 192.168.20.0/24 so that the lab can add its route there, then run up again",
+        "correct": false,
+        "why": "That breaks your own network to make room for a lab."
+      },
+      {
+        "text": "Install the missing package",
+        "correct": false,
+        "why": "Nothing is missing; something is already there."
+      },
+      {
+        "text": "Change 192.168.20 to an unused network in every line of the script where it appears",
+        "correct": true,
+        "why": "Right. The lab's network collides with yours; moving the lab is the safe side."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnxt7ne6",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first `ip netns add` answers `Operation not permitted`, and you did run `sudo -i`. Where are you most likely to be?",
+    "hint": "Root is not enough everywhere.",
+    "choices": [
+      {
+        "text": "On a machine without the nfdump package",
+        "correct": false,
+        "why": "A missing package says `command not found`."
+      },
+      {
+        "text": "On a network that already uses 198.51.100.0/24",
+        "correct": false,
+        "why": "That collision says `File exists`."
+      },
+      {
+        "text": "In a container that is not allowed to create namespaces",
+        "correct": true,
+        "why": "Right. Many online shells are containers; a virtual machine has no such limit."
+      },
+      {
+        "text": "In a lab left behind by an interrupted `up`",
+        "correct": false,
+        "why": "Leftover machines produce `File exists` for the namespace file."
+      }
+    ]
+  },
+  {
+    "id": "ex-srwsw4cg",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A previous `up` was interrupted halfway. What gets you back to a known state?",
+    "hint": "Two commands.",
+    "choices": [
+      {
+        "text": "`bash soclab.sh up` twice",
+        "correct": false,
+        "why": "The second one fails on the leftovers of the first."
+      },
+      {
+        "text": "Reinstall Ubuntu",
+        "correct": false,
+        "why": "Far more than needed; the lab lives in memory and in two folders."
+      },
+      {
+        "text": "`apt install` the packages again",
+        "correct": false,
+        "why": "The packages are fine; the leftovers are the problem."
+      },
+      {
+        "text": "`bash soclab.sh down`, then `bash soclab.sh up`",
+        "correct": true,
+        "why": "Right. down removes whatever exists; up builds from nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1wbdh7j",
+    "version": 1,
+    "section": "one-login-four-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field ties the sshd line, the firewall line, the flow records and the packets of the login together?",
+    "hint": "It is in all four and was chosen by outside's kernel.",
+    "choices": [
+      {
+        "text": "The key fingerprint",
+        "correct": false,
+        "why": "Only sshd prints it."
+      },
+      {
+        "text": "The source port, 33586",
+        "correct": true,
+        "why": "Right. Same address and same port in all four records."
+      },
+      {
+        "text": "The time stamp, to the second",
+        "correct": false,
+        "why": "The sshd line is stamped when written and the capture when the packet arrived; time alone joins the wrong things."
+      },
+      {
+        "text": "The account name, ana",
+        "correct": false,
+        "why": "Only the sshd line knows the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-gfmtg2vc",
+    "version": 1,
+    "section": "one-login-four-records",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The two flow records of the login show 19 and 22 packets. How many packets did tcpdump count in one.pcap?",
+    "hint": "The same conversation, seen from the same interface.",
+    "value": 41,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-x2094c80",
+    "version": 1,
+    "section": "one-login-four-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the packet capture show about the login that no other record held?",
+    "hint": "Look at the fourth packet.",
+    "choices": [
+      {
+        "text": "The total bytes of the conversation",
+        "correct": false,
+        "why": "The flow records already add those up."
+      },
+      {
+        "text": "The SSH client's version, sent in clear text before encryption started",
+        "correct": true,
+        "why": "Right. `SSH-2.0-OpenSSH_9.6p1`, readable because the handshake starts unencrypted."
+      },
+      {
+        "text": "The command that was run, hostname",
+        "correct": false,
+        "why": "Commands travel encrypted."
+      },
+      {
+        "text": "The account that logged in",
+        "correct": false,
+        "why": "The account travels inside the encrypted part; sshd's log has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyjpj0f7",
+    "version": 1,
+    "section": "one-login-four-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the firewall's line lack that the sshd line in this lab has?",
+    "hint": "Compare how each one writes the date.",
+    "choices": [
+      {
+        "text": "The year and the time zone",
+        "correct": true,
+        "why": "Right. `Oct  7 04:24:43` is the old syslog format; the sshd line has `2026-10-07T04:24:40-0300`."
+      },
+      {
+        "text": "The source address",
+        "correct": false,
+        "why": "`SRC=203.0.113.66` is on it."
+      },
+      {
+        "text": "The destination port",
+        "correct": false,
+        "why": "`DPT=22` is on it."
+      },
+      {
+        "text": "The name of the machine that wrote it",
+        "correct": false,
+        "why": "It says `fw`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctb6z6j1",
+    "version": 1,
+    "section": "one-login-four-records",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The firewall used 250 bytes to record the login and the capture used 11,536. Roughly how many times larger is the capture? Round to the nearest whole number.",
+    "hint": "Divide.",
+    "value": 46,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8nb61kry",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these from what happens first to what happens last, for an event that ends up in front of an analyst.",
+    "hint": "A record has to exist before anything can read it.",
+    "items": [
+      "a program writes a log line",
+      "syslog carries the line to a collector",
+      "a rule matches it and raises an alert",
+      "an analyst confirms an incident"
+    ]
+  },
+  {
+    "id": "ex-gy5ctkmh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Months later, somebody asks whether a server sent 2 GB to an unknown address last March. Only one source was kept that long. Which one would answer the question?",
+    "hint": "Who, whom, when, how much.",
+    "choices": [
+      {
+        "text": "Flow records",
+        "correct": true,
+        "why": "Right. Addresses, time and bytes per conversation, cheap enough to keep for months."
+      },
+      {
+        "text": "A firewall log of new connections",
+        "correct": false,
+        "why": "It would show the connection started, not how much it carried."
+      },
+      {
+        "text": "The server's SSH log",
+        "correct": false,
+        "why": "It records logins, not how many bytes left afterwards."
+      },
+      {
+        "text": "The packet capture",
+        "correct": false,
+        "why": "It would answer, but the lesson's point is that it is rarely kept that long."
+      }
+    ]
+  },
+  {
+    "id": "ex-stwvacdz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the login to the record in the lab that holds it.",
+    "hint": "Each record knows one thing the others do not.",
+    "pairs": [
+      {
+        "left": "the key fingerprint",
+        "right": "gw-auth.log"
+      },
+      {
+        "left": "the interfaces the packet came in and went out of",
+        "right": "fw.log"
+      },
+      {
+        "left": "how long the conversation lasted",
+        "right": "the flow records"
+      },
+      {
+        "left": "the client's software version",
+        "right": "one.pcap"
+      }
+    ]
+  }
+]
