@@ -10,13 +10,13 @@
 #
 # The models are the files that ship with the tools: the IETF modules pyang
 # 2.7.1 installs under /opt/netauto/share/yang/modules, FRR 8.4's own under
-# /usr/share/yang, and OpenConfig's from openconfig/public at the commit lab.sh
-# names. yanglint is libyang 2.1.30, Ubuntu's libyang-tools.
+# /usr/share/yang, and OpenConfig's from openconfig/public at the commit
+# model-and-data.md checks out. yanglint is libyang 2.1.30, Ubuntu's libyang-tools.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; three links in ana's home, ietf, iana and
-# openconfig, to the directories above, so the commands stay short; and the
-# files ana wrote (put below), whose contents the lesson shows.
+# itself, built by lab.sh reset, and the files ana wrote (put below), whose
+# contents the lesson shows. The three links in her home are typed, in
+# model-and-data.md.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -55,8 +55,8 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
-IETF=/opt/netauto/share/yang/modules
-lab exec ctl ana "ln -s $IETF/ietf ietf; ln -s $IETF/iana iana; ln -s /opt/labsrc/openconfig/release/models openconfig"
+block links
+on ctl 'ln -s /opt/netauto/share/yang/modules/ietf ietf; ln -s /opt/netauto/share/yang/modules/iana iana; ln -s /opt/openconfig/release/models openconfig'
 
 block ls
 on ctl 'ls ietf | head -8; ls ietf | wc -l'

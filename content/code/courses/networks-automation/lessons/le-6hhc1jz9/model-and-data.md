@@ -1,6 +1,6 @@
 ---
 title: A model, and data that fits it
-version: 1
+version: 2
 ---
 
 Lessons 3 and 4 kept meeting names that came from somewhere: `ietf-interfaces`, `ietf-ip`,

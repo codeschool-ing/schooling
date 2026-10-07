@@ -1,6 +1,6 @@
 ---
 title: Um modelo, e dados que cabem nele
-version: 1
+version: 2
 ---
 
 As aulas 3 e 4 viviam encontrando nomes que vinham de algum lugar: `ietf-interfaces`, `ietf-ip`,
@@ -34,7 +34,22 @@ Os próprios modelos vêm de três tipos de publicador, e um engenheiro de redes
 | grupos de operadores | `openconfig-interfaces`, `openconfig-bgp` | o que grandes operadoras precisam, versionado rápido |
 | cada fabricante | o `frr-interface` do FRR, e os próprios de cada fabricante | tudo o que aquele equipamento sabe fazer |
 
-Os módulos do IETF usados nesta aula são os que o `pyang` instala junto de si, 69 deles:
+Os módulos do IETF usados nesta aula são os que o `pyang` instala junto de si, no ambiente virtual.
+Os da OpenConfig são publicados num repositório, `openconfig/public`, e são clonados uma vez na
+máquina virtual, fora do laboratório, no commit que este curso usou:
+
+```sh
+sudo git clone https://github.com/openconfig/public.git /opt/openconfig
+sudo git -C /opt/openconfig checkout 806f013
+```
+
+Depois, três nomes curtos na home da `ana` no `ctl`, para os comandos abaixo continuarem curtos:
+
+```
+ana@ctl:~$ ln -s /opt/netauto/share/yang/modules/ietf ietf; ln -s /opt/netauto/share/yang/modules/iana iana; ln -s /opt/openconfig/release/models openconfig
+```
+
+São 69 módulos do IETF:
 
 ```
 ana@ctl:~$ ls ietf | head -8; ls ietf | wc -l
