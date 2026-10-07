@@ -43,9 +43,10 @@
 #     first thing lesson 1 shows; a lab that left that race to the boot order
 #     would print a different winner on different runs.
 #   - THE COMPUTER HAD NO IPv6, so a socket on [::] cannot be opened at all.
-#     The one line that asks for one, `listen [::]:80 default_server;` in
-#     nginx's packaged default site, is deleted. On a virtual machine of your
-#     own it stays, and costs nothing.
+#     The two lines that ask for one are deleted: `listen [::]:80
+#     default_server;` in nginx's packaged default site, and `-l ::1` in
+#     /etc/memcached.conf, which here stops memcached from starting at all.
+#     On a virtual machine of your own both stay, and cost nothing.
 #   - Pebble, Let's Encrypt's ACME server for testing, stands in for Let's
 #     Encrypt in lesson 3: a real CA will only issue for a name it can reach
 #     from the internet, and this machine has no such name. Pebble speaks the
@@ -392,7 +393,8 @@ build() { # the lab's server: a container standing in for the virtual machine
     echo "ana ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ana
     systemctl mask console-getty.service >/dev/null 2>&1 || true
     SUDO_USER=ana bash /root/lab.sh install
-    sed -i "/listen \[::\]:80/d" /etc/nginx/sites-available/default'
+    sed -i "/listen \[::\]:80/d" /etc/nginx/sites-available/default
+    sed -i "/^-l ::1\$/d" /etc/memcached.conf'
   rm -f "$BASE/root/lab.sh"
 }
 

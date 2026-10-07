@@ -24,7 +24,7 @@ ana@web:~/work$ redis-cli GET book:2:json
 ```
 
 O valor é uma string de JSON, exatamente o texto que o `json.dumps` produziu, com os acentos escapados
-como `ã`, que é o padrão do JSON e custa alguns bytes por acento. **O Redis não sabe nem se importa
+como `\u00e3`, que é o padrão do JSON e custa alguns bytes por acento. **O Redis não sabe nem se importa
 que é JSON**: para o Redis são bytes com um tempo de vida. Esse é o jeito comum de guardar um objeto que
 é sempre lido e gravado inteiro, e um hash, da seção anterior, é o jeito comum para um cujos campos
 mudam separados.

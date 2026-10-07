@@ -1,0 +1,493 @@
+{
+  "ex-x4x29t62": {
+    "prompt": "O que o Memcached guarda sob uma chave?",
+    "hint": "Sem tipos.",
+    "choices": [
+      {
+        "text": "Bytes",
+        "why": "Certo. O cliente decide o que significam."
+      },
+      {
+        "text": "Um hash de campos, como o Redis",
+        "why": "O Memcached não tem tipos de dados."
+      },
+      {
+        "text": "Uma linha de uma tabela do banco",
+        "why": "Ele não sabe nada do banco."
+      },
+      {
+        "text": "Uma lista ordenada de valores",
+        "why": "Listas são do Redis."
+      }
+    ]
+  },
+  "ex-tpc7z73z": {
+    "prompt": "`-m 64` está no `/etc/memcached.conf`. O que isso significa depois que o cache trabalhou um tempo?",
+    "hint": "Um cache cheio é o estado normal.",
+    "choices": [
+      {
+        "text": "O Memcached usa 64 MB para valores",
+        "why": "Certo. Ele enche e despeja."
+      },
+      {
+        "text": "O Memcached começa com 64 MB e cresce quando precisa de mais",
+        "why": "É um limite, não um começo."
+      },
+      {
+        "text": "No máximo 64 conexões",
+        "why": "Isso é o -c."
+      },
+      {
+        "text": "64 threads de trabalho",
+        "why": "Isso é o -t, 4 por padrão."
+      }
+    ]
+  },
+  "ex-wx0xgrvd": {
+    "prompt": "O que o Memcached faz que o Redis, como a aula 8 o rodou, não faz?",
+    "hint": "Núcleos.",
+    "choices": [
+      {
+        "text": "Guarda dados em disco entre reinícios",
+        "why": "O Memcached não guarda nada em disco."
+      },
+      {
+        "text": "Responde em várias threads",
+        "why": "Certo."
+      },
+      {
+        "text": "Confere senha em toda conexão por padrão",
+        "why": "Sem senha por padrão."
+      },
+      {
+        "text": "Replica para um segundo servidor",
+        "why": "Sem replicação."
+      }
+    ]
+  },
+  "ex-5tf772pg": {
+    "prompt": "`get nothing-here` responde só `END`. O que isso quer dizer?",
+    "hint": "Conte as linhas VALUE.",
+    "choices": [
+      {
+        "text": "O comando falhou",
+        "why": "Um erro de cache não é um erro do comando."
+      },
+      {
+        "text": "A chave guarda uma string vazia",
+        "why": "Isso seria uma linha VALUE de tamanho 0."
+      },
+      {
+        "text": "É um erro de cache",
+        "why": "Certo."
+      },
+      {
+        "text": "O servidor está sem memória e recusando leituras",
+        "why": "Leituras nunca são recusadas por memória."
+      }
+    ]
+  },
+  "ex-03x69tzb": {
+    "prompt": "Em `set greeting 0 0 5`, o que acontece se a linha de dados for `hello!`, seis bytes?",
+    "hint": "O Memcached lê exatamente o tamanho.",
+    "choices": [
+      {
+        "text": "O Memcached guarda os seis bytes",
+        "why": "Ele lê cinco e espera a linha acabar."
+      },
+      {
+        "text": "O armazenamento falha: os dados não acabam onde o tamanho diz",
+        "why": "Certo."
+      },
+      {
+        "text": "Guarda hello e descarta o resto calado",
+        "why": "O tamanho precisa bater."
+      },
+      {
+        "text": "As flags mudam para 6",
+        "why": "As flags são o primeiro número."
+      }
+    ]
+  },
+  "ex-4jqpg4as": {
+    "prompt": "`views` guarda 5. O que `decr views 9` devolve?",
+    "hint": "Contadores não têm sinal.",
+    "choices": [
+      {
+        "text": "-4",
+        "why": "Contadores não descem abaixo de zero."
+      },
+      {
+        "text": "0",
+        "why": "Certo."
+      },
+      {
+        "text": "Um erro dizendo que o contador ficaria negativo",
+        "why": "Sem erro; ele para no zero."
+      },
+      {
+        "text": "5, sem mudança",
+        "why": "Mudou, para zero."
+      }
+    ]
+  },
+  "ex-08vhtwyk": {
+    "prompt": "Ligue cada resposta ao comando que a deu nas transcrições.",
+    "hint": "Cada armazenamento tem sua condição.",
+    "pairs": [
+      {
+        "left": "add greeting, com greeting existindo",
+        "right": "NOT_STORED"
+      },
+      {
+        "left": "delete greeting, na segunda vez",
+        "right": "NOT_FOUND"
+      },
+      {
+        "left": "incr greeting, guardando hello",
+        "right": "CLIENT_ERROR"
+      },
+      {
+        "left": "set greeting 0 0 5",
+        "right": "STORED"
+      }
+    ],
+    "right_distractors": [
+      "EXISTS"
+    ]
+  },
+  "ex-53sm9w7d": {
+    "prompt": "Dois clientes leem o estoque 4 com o mesmo token, e os dois mandam `cas` com ele. O que acontece?",
+    "hint": "A primeira gravação muda o token.",
+    "choices": [
+      {
+        "text": "As duas gravações dão certo e o estoque termina em 3",
+        "why": "Essa é a atualização perdida que o cas evita."
+      },
+      {
+        "text": "O Memcached trava a chave para o primeiro cliente até ele gravar",
+        "why": "Nada é travado."
+      },
+      {
+        "text": "O segundo recebe EXISTS e precisa ler de novo",
+        "why": "Certo."
+      },
+      {
+        "text": "Os dois recebem EXISTS",
+        "why": "O primeiro bate."
+      }
+    ]
+  },
+  "ex-mp0j8ajw": {
+    "prompt": "Por que um contador de visualizações pertence ao `incr` e não ao `gets` com `cas`?",
+    "hint": "Pense nos conflitos.",
+    "choices": [
+      {
+        "text": "O cas não guarda números",
+        "why": "Ele guarda quaisquer bytes."
+      },
+      {
+        "text": "Todo mundo grava ao mesmo tempo, então o cas viveria tentando de novo",
+        "why": "Certo. O incr nunca tenta de novo."
+      },
+      {
+        "text": "O incr fica em cache e o cas não",
+        "why": "Os dois agem sobre o cache."
+      },
+      {
+        "text": "O gets não devolve token para valores numéricos",
+        "why": "Todo item tem token."
+      }
+    ]
+  },
+  "ex-vpbghahs": {
+    "prompt": "Um item é guardado com tempo de vida de 3.000.000 de segundos e nunca mais é encontrado. Por quê?",
+    "hint": "A linha dos trinta dias.",
+    "choices": [
+      {
+        "text": "É lido como um instante Unix em 1970, já passado",
+        "why": "Certo."
+      },
+      {
+        "text": "O Memcached limita tempos de vida a um dia",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Foi despejado na hora",
+        "why": "Nada estava cheio."
+      },
+      {
+        "text": "O armazenamento falhou com erro",
+        "why": "Ele disse STORED."
+      }
+    ]
+  },
+  "ex-8v6tc0ba": {
+    "prompt": "Qual é o maior tempo de vida que o Memcached lê como número de segundos a partir de agora?",
+    "hint": "Trinta dias.",
+    "unit": "segundos"
+  },
+  "ex-zs2ezmvz": {
+    "prompt": "O que `touch note 600` faz?",
+    "hint": "O valor não é enviado.",
+    "choices": [
+      {
+        "text": "Regrava a nota com 600 bytes",
+        "why": "Nenhum dado é enviado."
+      },
+      {
+        "text": "Dá a ela um tempo de vida novo de 600 segundos",
+        "why": "Certo."
+      },
+      {
+        "text": "Lê ela 600 vezes",
+        "why": "Não."
+      },
+      {
+        "text": "Trava ela por 600 segundos",
+        "why": "Sem trava."
+      }
+    ]
+  },
+  "ex-trfv9c85": {
+    "prompt": "Um valor de 1.000 bytes é guardado. Para onde ele vai?",
+    "hint": "O menor pedaço que o comporta, com a chave e o cabeçalho.",
+    "choices": [
+      {
+        "text": "Um pedaço de 1.184 bytes na classe 12",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma alocação nova de exatamente 1.000 bytes",
+        "why": "A memória vem em páginas cortadas em pedaços."
+      },
+      {
+        "text": "Dez pedaços de 96 bytes cada na classe 1",
+        "why": "Um valor nunca é dividido."
+      },
+      {
+        "text": "Uma página inteira, um megabyte",
+        "why": "Isso desperdiçaria quase tudo."
+      }
+    ]
+  },
+  "ex-ca3mqeff": {
+    "prompt": "Com `-m 8`, depois de 20.000 gravações de 1.000 bytes, quantos valores o Memcached tinha despejado?",
+    "hint": "A linha evictions.",
+    "unit": "valores"
+  },
+  "ex-215xatjd": {
+    "prompt": "O Memcached é reiniciado. O que há nele depois?",
+    "hint": "Nada é gravado em disco.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Certo."
+      },
+      {
+        "text": "Os valores gravados antes do último snapshot",
+        "why": "O Memcached não tira snapshots."
+      },
+      {
+        "text": "As chaves, sem os valores",
+        "why": "Tudo some."
+      },
+      {
+        "text": "Só os valores sem tempo de vida",
+        "why": "Tudo some."
+      }
+    ]
+  },
+  "ex-xzbj1qhb": {
+    "prompt": "A classe 3 está cheia de valores que ninguém lê, e chegam valores novos de 1.000 bytes. O que o Memcached despeja?",
+    "hint": "O LRU é mantido por classe.",
+    "choices": [
+      {
+        "text": "Os valores parados da classe 3 primeiro",
+        "why": "Cada classe mantém a própria ordem."
+      },
+      {
+        "text": "Valores velhos da classe 12",
+        "why": "Certo, até páginas serem movidas entre classes."
+      },
+      {
+        "text": "Nada; ele recusa os valores novos",
+        "why": "Só com -M."
+      },
+      {
+        "text": "Valores aleatórios de qualquer classe",
+        "why": "É o menos usado recentemente, por classe."
+      }
+    ]
+  },
+  "ex-t3yv1ph9": {
+    "prompt": "Com os padrões do pymemcache, `mc.add(\"book:2\", b\"{}\")` devolve `True` embora book:2 exista. Por quê?",
+    "hint": "O que o cliente esperou?",
+    "choices": [
+      {
+        "text": "O add sobrescreveu o valor",
+        "why": "O Memcached respondeu NOT_STORED; ninguém escutou."
+      },
+      {
+        "text": "Mandou noreply e nunca leu a resposta",
+        "why": "Certo."
+      },
+      {
+        "text": "O Python guarda o resultado do add localmente",
+        "why": "Não."
+      },
+      {
+        "text": "As flags estavam erradas",
+        "why": "Flags não decidem o add."
+      }
+    ]
+  },
+  "ex-z6ccqacs": {
+    "prompt": "Para que servem as flags no `memcache_books.py`?",
+    "hint": "O Memcached nunca as lê.",
+    "choices": [
+      {
+        "text": "Para registrar que os bytes são JSON",
+        "why": "Certo."
+      },
+      {
+        "text": "Para definir o tempo de vida de cada livro",
+        "why": "Isso é o expire."
+      },
+      {
+        "text": "Para escolher a classe de slab",
+        "why": "O tamanho faz isso."
+      },
+      {
+        "text": "Para criptografar o valor antes de sair do Python",
+        "why": "Nada é criptografado."
+      }
+    ]
+  },
+  "ex-n1e276mx": {
+    "prompt": "Quem decide qual de três servidores Memcached guarda o `book:7`?",
+    "hint": "Os servidores não sabem uns dos outros.",
+    "choices": [
+      {
+        "text": "Os servidores votam",
+        "why": "Eles não conversam entre si."
+      },
+      {
+        "text": "O primeiro servidor, que repassa a chave",
+        "why": "Nenhum servidor repassa."
+      },
+      {
+        "text": "O cliente, a partir de um hash da chave",
+        "why": "Certo."
+      },
+      {
+        "text": "Um balanceador na frente dos três",
+        "why": "Nenhum é necessário."
+      }
+    ]
+  },
+  "ex-yrzx5k7j": {
+    "prompt": "Indo de dois servidores para três, aproximadamente que porcentagem das chaves o hashing por módulo moveu?",
+    "hint": "Duas em três.",
+    "unit": "%"
+  },
+  "ex-nhxb473j": {
+    "prompt": "Por que importa quantas chaves se movem quando um servidor é acrescentado?",
+    "hint": "Para onde vai a próxima leitura de uma chave movida?",
+    "choices": [
+      {
+        "text": "Chaves movidas se perdem do disco",
+        "why": "Nada está em disco."
+      },
+      {
+        "text": "Toda chave movida é um erro que chega ao banco",
+        "why": "Certo."
+      },
+      {
+        "text": "Os servidores copiam as chaves movidas entre si",
+        "why": "Eles nunca conversam."
+      },
+      {
+        "text": "Mover chaves derruba o cluster",
+        "why": "Nada sai do ar."
+      }
+    ]
+  },
+  "ex-2kdfhk4e": {
+    "prompt": "O que protege o Memcached do Ubuntu de estranhos?",
+    "hint": "Veja o `inter`.",
+    "choices": [
+      {
+        "text": "Ele só escuta em 127.0.0.1",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma senha que todo cliente precisa mandar antes",
+        "why": "Não por padrão."
+      },
+      {
+        "text": "TLS em toda conexão",
+        "why": "Não está ligado."
+      },
+      {
+        "text": "As chaves dele são aleatórias",
+        "why": "As chaves são escolhidas pela aplicação."
+      }
+    ]
+  },
+  "ex-0v1ab4c2": {
+    "prompt": "Por que o `udpport 0` importa para um Memcached alcançável da internet?",
+    "hint": "2018.",
+    "choices": [
+      {
+        "text": "UDP é mais lento que TCP para valores grandes",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O UDP exige uma senha que o TCP não pede",
+        "why": "Não."
+      },
+      {
+        "text": "Requisições UDP forjadas o faziam inundar terceiros",
+        "why": "Certo."
+      },
+      {
+        "text": "O UDP perde valores",
+        "why": "Esse não é o risco."
+      }
+    ]
+  },
+  "ex-w7rrhf23": {
+    "prompt": "Quais necessidades apontam para o Redis em vez do Memcached?",
+    "hint": "Estruturas e persistência.",
+    "choices": [
+      {
+        "text": "Um ranking mantido em ordem pelo servidor",
+        "why": "Certo."
+      },
+      {
+        "text": "Valores que devem sobreviver a um reinício",
+        "why": "Certo."
+      },
+      {
+        "text": "Guardar fragmentos renderizados inteiros",
+        "why": "O Memcached faz isso bem."
+      },
+      {
+        "text": "Usar todos os núcleos de um servidor",
+        "why": "Esse é o forte do Memcached."
+      }
+    ]
+  },
+  "ex-gjb99z99": {
+    "prompt": "Um item do Memcached ganha um tempo de vida novo, sem que o valor seja enviado de novo, pelo comando `___`.",
+    "hint": "Cinco letras.",
+    "blanks": [
+      {
+        "accept": [
+          "touch"
+        ]
+      }
+    ]
+  }
+}

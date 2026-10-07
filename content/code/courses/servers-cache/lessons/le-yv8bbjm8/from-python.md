@@ -24,7 +24,7 @@ ana@web:~/work$ redis-cli GET book:2:json
 ```
 
 The value is a string of JSON, exactly the text `json.dumps` produced, with the accents escaped as
-`ã`, which is JSON's default and costs a few bytes per accent. **Redis does not know or care that it
+`\u00e3`, which is JSON's default and costs a few bytes per accent. **Redis does not know or care that it
 is JSON**: to Redis it is bytes with a lifetime. That is the usual way to cache an object that is always
 read and written whole, and a hash, from the previous section, is the usual way for one whose fields
 change separately.
