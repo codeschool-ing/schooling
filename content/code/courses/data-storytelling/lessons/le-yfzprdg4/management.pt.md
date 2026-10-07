@@ -36,7 +36,7 @@ a decisão diante das pessoas afetadas:
 A gestão não precisa do método, a não ser como uma frase ("juntei pedidos a entregas e a cancelamentos,
 conferido pelo analista da Sandra") que diz ao Paulo que foi conferido. Não precisa da história da
 análise. E não precisa do enquadramento em dinheiro do conselho no primeiro slide: o Paulo sabe que
-cancelamento custa dinheiro, e abrir com R$ 793 mil soaria como uma tentativa de passar por cima dele.
+cancelamento custa dinheiro, e abrir com R$ 790 mil soaria como uma tentativa de passar por cima dele.
 
 ## A pergunta por trás de toda pergunta da gestão
 

@@ -14,11 +14,11 @@ renovações pulam essa etapa, porque o endereço já é conhecido. Então a rec
 etapa:
 
 > Fazer um piloto de oito semanas no interior que retira a conferência manual de endereço dos primeiros
-> pedidos, com o objetivo de levar as primeiras entregas atrasadas de 17,3% para 8%. A equipe da Sandra é
-> dona dele; revisamos em outubro.
+> pedidos, com o objetivo de levar as primeiras entregas atrasadas ali de 23,6% para 8%. A equipe da
+> Sandra é dona dele; revisamos em outubro.
 
 Ela nomeia **o quê** (tirar uma etapa dos primeiros pedidos), **onde** (no interior, onde o problema é
-maior), **quanto** (de 17,3% para 8%), **quem** (a equipe da Sandra) e **quando** (oito semanas, com revisão
+maior), **quanto** (de 23,6%, a taxa do interior, para 8%), **quem** (a equipe da Sandra) e **quando** (oito semanas, com revisão
 em outubro). A aula 9 desmonta cada um desses; por ora o ponto é que uma recomendação sem eles é uma
 constatação vestida de conselho.
 

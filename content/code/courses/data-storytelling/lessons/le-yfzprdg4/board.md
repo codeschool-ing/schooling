@@ -13,7 +13,7 @@ size of what is at stake, and one decision it can make.**
 interesting and asks the obvious question: *how much does it cost us?* So the board version starts
 there:
 
-> Late first deliveries are costing us about R$ 793 thousand a year in customer margin, and they can be
+> Late first deliveries are costing us about R$ 790 thousand a year in customer margin, and they can be
 > fixed without new spending.
 
 The number comes from lesson 11's arithmetic: each extra early cancellation loses the margin a customer

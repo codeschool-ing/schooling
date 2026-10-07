@@ -35,7 +35,7 @@ defend his decision to the people affected:
 Management does not need the method, except as a sentence ("joined orders to deliveries to
 cancellations, checked by Sandra's analyst") that tells Paulo it has been checked. It does not need the
 history of the analysis. And it does not need the board's money framing on the first slide: Paulo knows
-cancellations cost money, and leading with R$ 793 thousand would read as an attempt to go over his head.
+cancellations cost money, and leading with R$ 790 thousand would read as an attempt to go over his head.
 
 ## The question behind every management question
 

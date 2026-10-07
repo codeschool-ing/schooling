@@ -12,7 +12,7 @@ compartilhar, como enquadra a responsabilidade e o que pode pedir.**
 As taxas de cancelamento da Faro, a margem e o comportamento dos clientes são assunto dela, e parte disso é
 comercialmente sensível. Uma apresentação à Ligeiro compartilha **o que a Ligeiro precisa para agir e nada
 mais**: a fatia de primeiras entregas atrasadas, as datas e o fato de que a primeira entrega é a que mais
-importa para os clientes da Faro. Ela não compartilha os R$ 793 mil, que dizem a um fornecedor exatamente
+importa para os clientes da Faro. Ela não compartilha os R$ 790 mil, que dizem a um fornecedor exatamente
 quanta vantagem ele tem na próxima negociação do contrato.
 
 ## A responsabilidade, enquadrada com honestidade

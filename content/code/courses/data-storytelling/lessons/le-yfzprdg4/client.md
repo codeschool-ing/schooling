@@ -12,7 +12,7 @@ you frame responsibility, and what you can ask for.**
 Faro's cancellation rates, its margin and its customers' behaviour are its own business, and some of it
 is commercially sensitive. A presentation to Ligeiro shares **what Ligeiro needs to act and nothing
 more**: the share of first deliveries that are late, the dates, and the fact that the first delivery is
-the one that matters most to Faro's customers. It does not share the R$ 793 thousand, which tells a
+the one that matters most to Faro's customers. It does not share the R$ 790 thousand, which tells a
 supplier exactly how much leverage it has in the next contract negotiation.
 
 ## Responsibility, framed honestly

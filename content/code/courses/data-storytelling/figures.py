@@ -677,20 +677,20 @@ def l04_openings(lang):
     f = Fig('l04-openings', 680, 360, T(
         lang,
         'Four opening slides for the same finding. For the board: late first deliveries cost about '
-        'R$ 793 thousand a year in margin. For management: cut late first deliveries with an '
+        'R$ 790 thousand a year in margin. For management: cut late first deliveries with an '
         'eight-week pilot, with the owner and the start date. For the technical team: what late means '
         'in this analysis, with a table of definitions. For Ligeiro, the carrier: the contract '
         'promises two working days, and first orders miss it 17.3% of the time.',
         'Quatro slides de abertura para o mesmo achado. Para o conselho: as primeiras entregas '
-        'atrasadas custam cerca de R$ 793 mil por ano em margem. Para a gestão: reduzir o atraso da '
+        'atrasadas custam cerca de R$ 790 mil por ano em margem. Para a gestão: reduzir o atraso da '
         'primeira entrega com um piloto de oito semanas, com dono e data de início. Para a área '
         'técnica: o que atraso quer dizer nesta análise, com uma tabela de definições. Para a '
         'Ligeiro, a transportadora: o contrato promete dois dias úteis, e os primeiros pedidos '
         'falham nisso 17,3% das vezes.'))
     rooms = [T(lang, 'board', 'conselho'), T(lang, 'management', 'gestão'),
              T(lang, 'technical team', 'área técnica'), T(lang, 'client: Ligeiro', 'cliente: Ligeiro')]
-    titles = [T(lang, ['Late first deliveries cost us', 'about R$ 793 thousand a year'],
-                ['A 1ª entrega atrasada nos custa', 'cerca de R$ 793 mil por ano']),
+    titles = [T(lang, ['Late first deliveries cost us', 'about R$ 790 thousand a year'],
+                ['A 1ª entrega atrasada nos custa', 'cerca de R$ 790 mil por ano']),
               T(lang, ['Cut late first deliveries with', 'an 8-week pilot from 1 Sept'],
                 ['Reduzir o atraso da 1ª entrega', 'com um piloto de 8 semanas']),
               T(lang, ['What late means in this', 'analysis, and how it is counted'],
@@ -705,7 +705,7 @@ def l04_openings(lang):
         f.lines(x + 14, y + 20, titles[i], size=11.5, anchor='start', weight='600', gap=16)
         cx, cy = x + 14, y + 62
         if i == 0:
-            k = round(S.LOSS_PER_YEAR / 100 / 1000)
+            k = round(S.LOSS_PER_YEAR / 100 / 10000) * 10
             f.text(x + 158, cy + 32, T(lang, f'R$ {k} thousand', f'R$ {k} mil'), size=22,
                    weight='600', fill='--amber')
             f.text(x + 158, cy + 60, T(lang, 'customer margin lost each year', 'margem de clientes perdida por ano'),
@@ -810,7 +810,7 @@ GHOST = [
     (['But first deliveries are', 'on time only 82.7%'], ['Mas as primeiras saem', 'no prazo só 82,7%']),
     (['Late first box: 41.5%', 'cancel, against 17.4%'], ['1ª caixa atrasada: 41,5%', 'cancelam, contra 17,4%']),
     (['The gap holds in the', 'capital and the interior'], ['A distância se mantém na', 'capital e no interior']),
-    (['It costs about R$ 793', 'thousand a year in margin'], ['Custa cerca de R$ 793 mil', 'por ano em margem']),
+    (['It costs about R$ 790', 'thousand a year in margin'], ['Custa cerca de R$ 790 mil', 'por ano em margem']),
     (['Pilot: no address check', 'in the interior, 8 weeks'], ['Piloto: sem conferência', 'no interior, 8 semanas']),
 ]
 
@@ -822,12 +822,12 @@ def l05_ghost_deck(lang):
         'Seven empty slides with only their titles. One: late first boxes more than double early '
         'cancellations; we propose a pilot. Two: deliveries are on time 94.5% of the time. Three: but '
         'first deliveries are on time only 82.7%. Four: late first box, 41.5% cancel against 17.4%. '
-        'Five: the gap holds in the capital and the interior. Six: it costs about R$ 793 thousand a '
+        'Five: the gap holds in the capital and the interior. Six: it costs about R$ 790 thousand a '
         'year in margin. Seven: pilot, no address check in the interior for eight weeks.',
         'Sete slides vazios, só com os títulos. Um: a primeira caixa atrasada mais que dobra o '
         'cancelamento; propomos um piloto. Dois: as entregas saem no prazo 94,5% das vezes. Três: mas '
         'as primeiras saem no prazo só 82,7%. Quatro: primeira caixa atrasada, 41,5% cancelam contra '
-        '17,4%. Cinco: a distância se mantém na capital e no interior. Seis: custa cerca de R$ 793 mil '
+        '17,4%. Cinco: a distância se mantém na capital e no interior. Seis: custa cerca de R$ 790 mil '
         'por ano em margem. Sete: piloto sem conferência no interior por oito semanas.'))
     for i, (en, pt) in enumerate(GHOST):
         row, col = (0, i) if i < 4 else (1, i - 4)
@@ -1458,6 +1458,144 @@ def p_l07_dashboard():
     f.line(612, 360, 684, 360, stroke='--paper-dim', width=1)
     f.line(670, 352, 670, 368, stroke='--paper', width=2)
     marks = [(120, 110), (330, 100), (570, 95), (648, 340), (150, 262)]
+    return f, marks
+
+# ------------------------------------------------------------------ lesson 8
+
+PAGE = {
+    'en': {
+        'header': [('To', 'Paulo, Director of Operations (cc Renata, Sandra)'), ('From', 'Marina, Data'),
+                   ('Date', 'Monday 18 August 2025'), ('Decision by', 'Friday 22 August')],
+        'title': 'Late first deliveries are costing us customers',
+        'blocks': [
+            ('Finding', 'One new subscriber in six gets their first box late (17.3% in the first half of '
+                        '2025), and those customers cancel within 90 days at 41.5%, against 17.4% for '
+                        'everybody else. The gap holds in the capital and in the interior.'),
+            ('Impact', 'About 510 customers a year cancel early who would otherwise have stayed. The '
+                       'margin they would have brought over their lifetime is about R$ 790 thousand a '
+                       'year, and Faro also spends about R$ 78 thousand a year acquiring them. The cause '
+                       'is mostly inside our warehouse: a manual address check on first orders that uses '
+                       'one of the two promised days.'),
+            ('Next step', 'Approve an eight-week pilot in the interior, from 1 September, that removes the '
+                          'manual check for addresses the postcode lookup confirms. Owner: Sandra’s team. '
+                          'Cost: no new spending; the risk of more mis-delivered boxes is measured during '
+                          'the pilot. Success: late first deliveries in the interior down from 23.6% to 8% '
+                          'or less. Review: 27 October.'),
+        ],
+        'foot': 'Full analysis, definitions and arithmetic: first-delivery deck, appendix A to F.',
+    },
+    'pt': {
+        'header': [('Para', 'Paulo, diretor de operações (cc Renata, Sandra)'), ('De', 'Marina, Dados'),
+                   ('Data', 'segunda-feira, 18 de agosto de 2025'), ('Decisão até', 'sexta-feira, 22 de agosto')],
+        'title': 'As primeiras entregas atrasadas estão nos custando clientes',
+        'blocks': [
+            ('Achado', 'Um em cada seis assinantes novos recebe a primeira caixa atrasada (17,3% no '
+                       'primeiro semestre de 2025), e esses clientes cancelam em 90 dias em 41,5%, contra '
+                       '17,4% de todos os outros. A distância se mantém na capital e no interior.'),
+            ('Impacto', 'Cerca de 510 clientes por ano cancelam cedo e de outro modo teriam ficado. A '
+                        'margem que eles trariam ao longo da vida é de cerca de R$ 790 mil por ano, e a '
+                        'Faro ainda gasta cerca de R$ 78 mil por ano para conquistá-los. A causa está '
+                        'principalmente no nosso depósito: uma conferência manual de endereço nos primeiros '
+                        'pedidos que gasta um dos dois dias prometidos.'),
+            ('Próximo passo', 'Aprovar um piloto de oito semanas no interior, a partir de 1º de setembro, '
+                              'que retira a conferência manual dos endereços que a consulta de CEP confirma. '
+                              'Dono: equipe da Sandra. Custo: nenhum gasto novo; o risco de mais caixas '
+                              'entregues no endereço errado é medido durante o piloto. Sucesso: primeiras '
+                              'entregas atrasadas no interior caindo de 23,6% para 8% ou menos. Revisão: 27 '
+                              'de outubro.'),
+        ],
+        'foot': 'Análise completa, definições e contas: deck da primeira entrega, apêndice A a F.',
+    },
+}
+
+
+@figure('l08-page', 8)
+def l08_page(lang):
+    import textwrap
+    P = PAGE[lang]
+    counts = [len(textwrap.wrap(b, 104)) for _, b in PAGE['en']['blocks']]
+
+    def wrap_n(text, n):
+        # the same number of lines in both languages, so the labels pair up
+        for w in range(60, 140):
+            ls = textwrap.wrap(text, w)
+            if len(ls) == n:
+                return ls
+        raise SystemExit(f'l08-page: cannot wrap into {n} lines')
+    wrapped = [(h, wrap_n(b, n)) for (h, b), n in zip(P['blocks'], counts)]
+    h = 150 + sum(30 + 15 * len(ls) for _, ls in wrapped) + 40
+    f = Fig('l08-page', 680, h, T(
+        lang,
+        'Faro’s executive summary as one page. A header says it is for Paulo, from Marina, dated '
+        '18 August 2025, with a decision needed by 22 August. A title states that late first '
+        'deliveries are costing customers. Three headed blocks follow: Finding, Impact and Next step, '
+        'each a short paragraph. A last line points to the full analysis.',
+        'O sumário executivo da Faro numa página. Um cabeçalho diz que é para o Paulo, da Marina, '
+        'datado de 18 de agosto de 2025, com decisão necessária até 22 de agosto. Um título diz que as '
+        'primeiras entregas atrasadas estão custando clientes. Seguem três blocos com título: Achado, '
+        'Impacto e Próximo passo, cada um um parágrafo curto. Uma última linha aponta para a análise '
+        'completa.'))
+    f.rect(20, 8, 640, h - 16, stroke='--wire', fill='--panel', rx=3)
+    y = 32
+    for k, v in P['header']:
+        f.text(44, y, k, size=9.5, anchor='start', fill='--paper-dim', weight='600')
+        f.text(150, y, v, size=9.5, anchor='start', fill='--amber' if k in ('Decision by', 'Decisão até') else '--paper')
+        y += 16
+    f.line(44, y, 636, y, stroke='--wire', width=1)
+    y += 26
+    f.text(44, y, P['title'], size=14, anchor='start', weight='600')
+    y += 30
+    for head, ls in wrapped:
+        f.text(44, y, head, size=11, anchor='start', weight='600', fill='--phosphor')
+        y += 18
+        for line in ls:
+            f.text(44, y, line, size=9.5, anchor='start')
+            y += 15
+        y += 12
+    f.line(44, y - 4, 636, y - 4, stroke='--wire', width=1)
+    f.text(44, y + 12, P['foot'], size=9, anchor='start', fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'Header, title, three blocks and a pointer to the rest. Each reader can find their own '
+                'part without reading the others.',
+                'Cabeçalho, título, três blocos e um ponteiro para o resto. Cada leitor acha a sua parte '
+                'sem ler as outras.')
+
+
+@picture('l08-summary-page')
+def p_l08_summary_page():
+    """Marks, in label order: header, finding, impact, next step, pointer to the rest."""
+    f = Fig('l08-summary-page', 720, 405,
+            'A page drawn with no words. At the top, four short lines of small bars in two columns form '
+            'a header. Below, one thick bar stands for a title. Then three blocks, each led by a short '
+            'heavy bar: the first block has two lines of text bars; the second has three lines and the '
+            'number 790; the third has three lines and a small box with a tick. At the bottom, one thin '
+            'line of bars under a rule.')
+    f.rect(150, 8, 420, 389, stroke='--paper-dim', fill='--ink', rx=3)
+    for k in range(4):
+        f.bar(176, 24 + k * 12, 50, 5, fill='--paper-dim', stroke='--paper-dim', width=0.5)
+        f.bar(240, 24 + k * 12, [180, 90, 140, 110][k], 5, fill='--paper-dim', stroke='--paper-dim', width=0.5)
+    f.line(176, 76, 544, 76, stroke='--paper-dim', width=1)
+    f.bar(176, 88, 300, 12, fill='--paper', stroke='--paper')
+    y = 118
+    marks = [(300, 42)]
+    for b, (lines, extra) in enumerate([(2, None), (3, '790'), (3, 'tick')]):
+        f.bar(176, y, 70, 8, fill='--phosphor', stroke='--phosphor')
+        top = y
+        y += 16
+        for k in range(lines):
+            full = 300 if extra else 360
+            f.bar(176, y, full - (40 if k == lines - 1 else 0), 5, fill='--paper-dim', stroke='--paper-dim', width=0.5)
+            y += 11
+        if extra == '790':
+            f.text(500, top + 20, '790', size=18, weight='600', fill='--amber')
+        if extra == 'tick':
+            f.rect(500, top + 6, 26, 26, stroke='--paper', fill='--panel', rx=2)
+            f.path(f'M506 {top + 19} L512 {top + 26} L522 {top + 12}', stroke='--phosphor', width=2.4)
+        marks.append((300, (top + y) / 2))
+        y += 26
+    f.line(176, 340, 544, 340, stroke='--paper-dim', width=1)
+    f.bar(176, 352, 240, 5, fill='--paper-dim', stroke='--paper-dim', width=0.5)
+    marks.append((300, 355))
     return f, marks
 
 def main():

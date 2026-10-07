@@ -13,11 +13,11 @@ check the new address by hand, and on a promise of two working days that check c
 Renewals skip it, because the address is already known. So her recommendation is about that step:
 
 > Run an eight-week pilot in the interior that removes the manual address check from first orders, with
-> the aim of bringing late first deliveries from 17.3% to 8%. Sandra's team owns it; we review in
-> October.
+> the aim of bringing late first deliveries there from 23.6% to 8%. Sandra's team owns it; we review
+> in October.
 
 It names **what** (remove one step for first orders), **where** (the interior, where the problem is
-largest), **how much** (from 17.3% to 8%), **who** (Sandra's team) and **when** (eight weeks, reviewed in
+largest), **how much** (from 23.6%, the interior's rate, to 8%), **who** (Sandra's team) and **when** (eight weeks, reviewed in
 October). Lesson 9 takes each of those apart; for now the point is that a recommendation without them is
 an observation dressed as advice.
 

@@ -12,7 +12,7 @@ em jogo e de uma decisão que possa tomar.**
 "A primeira entrega atrasada mais que dobra o cancelamento" é um fato de operação. Um conselho ouve isso
 como interessante e faz a pergunta óbvia: *quanto isso nos custa?* Então a versão do conselho começa ali:
 
-> As primeiras entregas atrasadas estão nos custando cerca de R$ 793 mil por ano em margem de clientes, e
+> As primeiras entregas atrasadas estão nos custando cerca de R$ 790 mil por ano em margem de clientes, e
 > dá para consertar sem gasto novo.
 
 O número vem da conta da aula 11: cada cancelamento precoce a mais perde a margem que o cliente traria ao
