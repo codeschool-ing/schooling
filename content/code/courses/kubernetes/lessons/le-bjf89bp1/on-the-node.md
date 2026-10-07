@@ -68,4 +68,4 @@ reason `Retain` exists.
 | `DeleteVolume` | `csi-provisioner` | the claim is deleted and the policy is `Delete` |
 
 Snapshots, resizing and attaching to a machine are further calls with further sidecars, left out of
-this lab's driver. Lesson 28 is about protecting what a database keeps on a volume.
+this lesson's driver. Lesson 28 is about protecting what a database keeps on a volume.

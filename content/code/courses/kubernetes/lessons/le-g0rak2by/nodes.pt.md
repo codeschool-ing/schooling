@@ -60,8 +60,10 @@ e o `kubeadm token delete` o encerra antes. O `--discovery-token-ca-cert-hash` �
 a autoridade certificadora do cluster, então um nó que recebeu o endereço errado se recusa a entrar num
 control plane que não é este, em vez de confiar em quem respondeu.
 
-Duas coisas nesta transcrição são do laboratório e não do método. O `--ignore-preflight-errors=all` está
-ali porque a máquina que gravou falha numa verificação prévia que o kind também pula; **numa máquina de
-verdade, deixe-o de fora** e corrija o que as verificações apontarem. E o pedido do nó por um certificado
-de servidor foi aprovado por um script em segundo plano, como o `lab.sh` faz para todo nó, para o
-metrics-server poder verificar o kubelet com que fala.
+Duas coisas nesta transcrição são do kind e não do método. O `--ignore-preflight-errors=all` está ali
+porque um nó que é um container falha em verificações prévias que o próprio kind pula quando monta um
+cluster; **numa máquina de verdade, deixe-o de fora** e corrija o que as verificações apontarem. E o nó
+que voltou pede um certificado de servidor, como todo nó dos clusters deste curso (aula 1), e ninguém o
+aprova por ele. O `up.sh` aprovou os primeiros; este você aprova à mão enquanto o nó entra, com
+`kubectl get csr` para achar o pedido `Pending` e `kubectl certificate approve` seguido do nome dele.
+Até lá o `kubectl logs` e o `kubectl exec` falham para todo pod desse nó.

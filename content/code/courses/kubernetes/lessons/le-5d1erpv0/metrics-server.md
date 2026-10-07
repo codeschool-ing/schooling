@@ -9,14 +9,24 @@ collects those numbers in one place. metrics-server is that collector: every fif
 each kubelet for its latest figures, keeps only the newest set in memory, and serves it through the
 Kubernetes API. It keeps no history, which is the first thing to know about it.
 
-In this lab it was installed from the project's own manifests (`lab.sh metrics`), with the image
-built from its source.
+It is not part of a kind cluster, so this lesson starts with `./up.sh` and then installs it from the
+project's own release manifest:
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.9.0/components.yaml
+kubectl -n kube-system rollout status deployment/metrics-server
+```
+
+The second command waits until it is running. **That manifest is what every transcript below ran**,
+with one difference you will not see. The machine this course was recorded on cannot reach the
+registry its image comes from, so there the same version was built from its source and the manifest
+pointed at that copy.
 
 ## The kubelet's certificate
 
 metrics-server talks to each kubelet over HTTPS, so it has to trust the certificate the kubelet
 presents. In a kind cluster the kubelets sign their own by default, and the common workaround is a
-flag that turns the check off. This lab does the other thing: each kubelet asks the cluster's
+flag that turns the check off. This course does the other thing: each kubelet asks the cluster's
 certificate authority for a proper one.
 
 ```
@@ -31,7 +41,7 @@ csr-zc5fw   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:abcde
 ```
 
 The four `kubelet-serving` requests are those, one from each worker and two from the control-plane
-node, each made by the node itself and approved by the lab as it arrived. The two `kube-apiserver-client-kubelet` requests are
+node, each made by the node itself and approved by `up.sh` as it arrived (lesson 1). The two `kube-apiserver-client-kubelet` requests are
 older; they are how the worker nodes got their client certificates when they joined, and the cluster
 approves those on its own.
 

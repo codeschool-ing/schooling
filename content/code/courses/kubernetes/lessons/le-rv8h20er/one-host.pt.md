@@ -8,9 +8,8 @@ um brinquedo.** Não é. Para uma aplicação que vive numa máquina só, o Comp
 esta lição começa vendo isso acontecer. O que o Kubernetes acrescenta só faz sentido depois que você
 viu onde uma máquina termina.
 
-A loja da Ana é um serviço só: `shop`, um pequeno servidor web que este curso constrói no seu
-laboratório e empacota do jeito que o curso `docker` empacota um, a partir do zero. A descrição
-inteira de como ela roda cabe em seis linhas:
+A loja da Ana é um serviço só: a imagem `shop:1.0` da seção anterior. A descrição inteira de como
+ela roda cabe em seis linhas, em `~/shop/compose.yaml`:
 
 ```yaml
 services:

@@ -23,7 +23,7 @@ cliente, e nada no Kubernetes consegue fornecê-la.
 
 **O OpenTelemetry é o fio comum**: um conjunto de bibliotecas e um coletor que conseguem produzir os
 três sinais em formatos padrão, para que a escolha de onde guardá-los continue aberta. Nada disto foi
-instalado neste laboratório, então esta seção descreve e não roda.
+instalado para este curso, então esta seção descreve e não roda.
 
 ::: track devops
 O curso `observability`, mais adiante na sua trilha, monta essa pilha: o Prometheus na lição 5,

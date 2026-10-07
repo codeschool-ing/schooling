@@ -9,8 +9,13 @@ wait. **A topology spread constraint asks for something weaker and more useful**
 across the domains, and never let the busiest domain hold more than `maxSkew` pods above the
 emptiest.
 
-kind nodes have no zones, so the two workers were given the zone labels a cloud's nodes carry from
-the start:
+kind nodes have no zones, so after `./up.sh` the two workers are given the zone labels a cloud's
+nodes carry from the start:
+
+```sh
+kubectl label node shop-worker topology.kubernetes.io/zone=sa-east-1a
+kubectl label node shop-worker2 topology.kubernetes.io/zone=sa-east-1b
+```
 
 ```
 ana@laptop:~/shop$ kubectl get nodes -L topology.kubernetes.io/zone

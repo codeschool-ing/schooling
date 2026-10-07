@@ -3,10 +3,175 @@ title: Um Ingress é um pedido que um controlador executa
 version: 1
 ---
 
+## Onde esta aula começa
+
+Três arquivos e cinco comandos, antes da primeira transcrição. O controlador é o Traefik v3.6, a partir
+dos manifestos que o fornecedor documenta, reunidos num arquivo só.
+
+`traefik.yaml`:
+
+```yaml
+# Traefik as the cluster's ingress controller AND its Gateway API
+# implementation, for lessons 16 and 36. The RBAC rules are the two that
+# Traefik's own documentation publishes for v3.6 — one for the Ingress
+# provider, one for the Gateway provider — joined into one role. Its web
+# entry point is published as NodePort 30080, which lesson 8's ports.yaml
+# maps to port 8080 of your machine.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik
+  namespace: traefik
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: traefik
+rules:
+- apiGroups: [""]
+  resources: [namespaces, nodes]
+  verbs: [list, watch]
+- apiGroups: [""]
+  resources: [services, secrets, configmaps]
+  verbs: [get, list, watch]
+- apiGroups: [discovery.k8s.io]
+  resources: [endpointslices]
+  verbs: [get, list, watch]
+- apiGroups: [networking.k8s.io]
+  resources: [ingresses, ingressclasses]
+  verbs: [get, list, watch]
+- apiGroups: [networking.k8s.io]
+  resources: [ingresses/status]
+  verbs: [update]
+- apiGroups: [gateway.networking.k8s.io]
+  resources: [gatewayclasses, gateways, httproutes, grpcroutes, referencegrants, backendtlspolicies]
+  verbs: [get, list, watch]
+- apiGroups: [gateway.networking.k8s.io]
+  resources: [gatewayclasses/status, gateways/status, httproutes/status, grpcroutes/status, referencegrants/status, backendtlspolicies/status]
+  verbs: [update]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: traefik
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik
+subjects:
+- kind: ServiceAccount
+  name: traefik
+  namespace: traefik
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik
+      containers:
+      - name: traefik
+        image: traefik:v3.6
+        args:
+        - --entryPoints.web.address=:8000
+        - --providers.kubernetesingress
+        - --providers.kubernetesgateway
+        - --log.level=INFO
+        ports:
+        - name: web
+          containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  type: NodePort
+  selector:
+    app: traefik
+  ports:
+  - name: web
+    port: 80
+    targetPort: web
+    nodePort: 30080
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: traefik
+spec:
+  controller: traefik.io/ingress-controller
+```
+
+`apps.yaml`, dois Deployments pequenos para onde rotear: a loja, e `admin`, que é a imagem da loja de
+novo com outra saudação:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: shop}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: shop}}
+  template:
+    metadata: {labels: {app: shop}}
+    spec: {containers: [{name: shop, image: "shop:1.0"}]}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: shop}
+spec: {selector: {app: shop}, ports: [{port: 80, targetPort: 8080}]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: admin}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: admin}}
+  template:
+    metadata: {labels: {app: admin}}
+    spec: {containers: [{name: admin, image: "shop:1.0", env: [{name: GREETING, value: "admin"}]}]}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: admin}
+spec: {selector: {app: admin}, ports: [{port: 80, targetPort: 8080}]}
+```
+
+O cluster é o da aula 8, com a porta 8080 da sua máquina no NodePort do controlador. Os tipos da
+Gateway API vêm da release do próprio projeto, na v1.4.0, a versão contra a qual este Traefik foi
+compilado; a próxima seção é sobre eles.
+
+```sh
+./up.sh ports.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
+kubectl apply -f traefik.yaml
+kubectl -n traefik rollout status deployment/traefik
+kubectl apply -f apps.yaml
+```
+
+## O controlador
+
 **A parte surpreendente do Ingress é que o Kubernetes entrega o objeto e não a coisa que o obedece.**
 Não existe controlador de Ingress embutido. Você instala um (aqui o Traefik, a partir dos manifestos
 do fornecedor) e ele observa os objetos Ingress e se configura para rotear de acordo. O controlador
-deste laboratório escuta na porta 8080 do laptop, por um NodePort:
+desta aula escuta na porta 8080 do laptop, por um NodePort:
 
 ```
 ana@laptop:~/shop$ kubectl get pods -n traefik

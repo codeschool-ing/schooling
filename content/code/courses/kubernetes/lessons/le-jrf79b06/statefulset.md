@@ -8,7 +8,7 @@ volume they mount. **A StatefulSet gives each pod an identity that survives repl
 (`pg-0`, `pg-1`), a DNS name of its own, and a claim of its own that follows that name from one pod to
 the next.
 
-The password comes first, in a Secret as lesson 14 did it; this one is made up for the lab.
+The password comes first, in a Secret as lesson 14 did it; this one is made up for this lesson.
 
 ```yaml
 apiVersion: v1

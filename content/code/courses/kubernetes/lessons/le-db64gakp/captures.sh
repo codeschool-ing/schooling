@@ -13,7 +13,7 @@
 #     kind's network plugin, kindnet. Kindnet carries a network-policy engine
 #     built on nftables, and on the machine this was recorded on the kernel
 #     refused it: the engine logged the error and enforced nothing, which the
-#     lesson shows. The second cluster is made from lab/cluster-calico.yaml and
+#     lesson shows. The second cluster is made from the calico.yaml the lesson shows and
 #     runs Calico v3.32.1 instead, from Calico's own manifest (lab.sh calico).
 #   - the namespaces, the shop and the busybox pods that ask it questions.
 # Pod addresses and names differ on every run.
@@ -53,7 +53,8 @@ run 'kubectl apply -f deny-all.yaml'
 quiet 'sleep 5'
 run 'kubectl -n other exec stranger -- wget -qO- -T 3 shop.shop'
 run "kubectl -n kube-system logs \$(kubectl -n kube-system get pods -l app=kindnet -o name | head -n 1) | grep -A 1 'syncing nftables'"
-fresh "$COURSE/lab/cluster-calico.yaml"
+shown "$(dirname "$0")/enforcement.md" calico.yaml >/tmp/calico.yaml || exit 1
+fresh /tmp/calico.yaml
 setup
 
 block calico

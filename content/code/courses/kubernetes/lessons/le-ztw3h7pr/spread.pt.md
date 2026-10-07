@@ -8,8 +8,13 @@ cópias e três nós, e falha para seis cópias e duas zonas: a regra não pode 
 a mais esperam. **Uma topology spread constraint pede algo mais fraco e mais útil**: espalhe os pods
 pelos domínios, e nunca deixe o domínio mais cheio ter mais do que `maxSkew` pods acima do mais vazio.
 
-Nós do kind não têm zonas, então os dois workers receberam os rótulos de zona que os nós de uma nuvem
-já trazem desde o início:
+Nós do kind não têm zonas, então depois do `./up.sh` os dois workers recebem os rótulos de zona que os
+nós de uma nuvem já trazem desde o início:
+
+```sh
+kubectl label node shop-worker topology.kubernetes.io/zone=sa-east-1a
+kubectl label node shop-worker2 topology.kubernetes.io/zone=sa-east-1b
+```
 
 ```
 ana@laptop:~/shop$ kubectl get nodes -L topology.kubernetes.io/zone

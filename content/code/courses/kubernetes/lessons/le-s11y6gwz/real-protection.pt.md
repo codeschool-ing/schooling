@@ -22,7 +22,7 @@ criptografia em repouso.
 ## Criptografia em repouso
 
 O API server pode criptografar tipos escolhidos antes de escrevê-los, com chaves de um arquivo que ele
-recebe. No plano de controle deste laboratório o arquivo é assim, com a própria chave fora da
+recebe. No plano de controle deste cluster o arquivo é assim, com a própria chave fora da
 transcrição:
 
 ```
@@ -41,7 +41,29 @@ resources:
 
 `secretbox` é um dos provedores, uma cifra autenticada com chave de 32 bytes, e a lista tem ordem:
 **escritas novas usam o primeiro provedor**, e o `identity` no fim, que significa "sem criptografia",
-deixa o API server ainda ler o que foi escrito antes. A flag aponta o API server para o arquivo:
+deixa o API server ainda ler o que foi escrito antes. O arquivo e a flag são escritos no nó do control plane a partir da sua máquina, com `docker exec`,
+porque o nó é um container. O primeiro comando escreve o arquivo com uma chave aleatória nova que nunca
+aparece na tela. O segundo acrescenta a flag ao manifesto do API server, e o kubelet reinicia o API
+server assim que esse arquivo muda, então o `kubectl` para de responder por mais ou menos meio minuto:
+
+```sh
+docker exec shop-control-plane sh -c 'KEY=$(head -c 32 /dev/urandom | base64); cat > /etc/kubernetes/pki/encryption.yaml <<CONF
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+- resources: ["secrets"]
+  providers:
+  - secretbox:
+      keys:
+      - name: key1
+        secret: $KEY
+  - identity: {}
+CONF
+chmod 600 /etc/kubernetes/pki/encryption.yaml'
+docker exec shop-control-plane sed -i 's#- --etcd-servers=#- --encryption-provider-config=/etc/kubernetes/pki/encryption.yaml\n    - --etcd-servers=#' /etc/kubernetes/manifests/kube-apiserver.yaml
+```
+
+A flag aponta o API server para o arquivo:
 
 ```
 ana@laptop:~/shop$ docker exec shop-control-plane grep encryption-provider /etc/kubernetes/manifests/kube-apiserver.yaml

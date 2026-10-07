@@ -40,4 +40,4 @@ built this way:
 kubectl get crds
 ```
 
-The lab cluster of this lesson has only the one just created, so that command was not captured here.
+The cluster of this lesson has only the one just created, so that command was not captured here.

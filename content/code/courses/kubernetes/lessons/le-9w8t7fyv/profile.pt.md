@@ -26,9 +26,20 @@ próprio:
 ```
 ```
 
-O `kube-scheduler` é o mesmo binário que o control plane roda. Neste laboratório ele roda no laptop,
-iniciado pelo script de captura e não digitado, como `kube-scheduler --config shop-scheduler.yaml --secure-port=0`;
-a última flag desliga a porta própria de saúde e métricas, que ninguém lê aqui. **Um de verdade roda no
+O `kube-scheduler` é o mesmo binário que o control plane roda. Aqui ele roda na sua máquina ao lado do
+`kubectl`, baixado e conferido do jeito que a aula 1 fez, e iniciado num segundo terminal, onde continua
+rodando e escrevendo o log até o `Ctrl+C`. Antes, troque o caminho do `kubeconfig` no arquivo pela sua
+própria home, `/home/ubuntu/.kube/config` na VM:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -fsSLo kube-scheduler https://dl.k8s.io/release/v1.37.1/bin/linux/$ARCH/kube-scheduler
+echo "$(curl -fsSL https://dl.k8s.io/release/v1.37.1/bin/linux/$ARCH/kube-scheduler.sha256)  kube-scheduler" | sha256sum --check
+chmod +x kube-scheduler
+./kube-scheduler --config shop-scheduler.yaml --secure-port=0
+```
+
+O `--secure-port=0` desliga a porta própria de saúde e métricas, que ninguém lê aqui. **Um de verdade roda no
 cluster**, como um Deployment com uma ServiceAccount autorizada a ler pods e nós e a escrever bindings, e
 com eleição de líder ligada para uma segunda réplica poder assumir.
 

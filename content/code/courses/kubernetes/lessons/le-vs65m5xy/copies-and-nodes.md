@@ -50,7 +50,7 @@ serverTLSBootstrap: true
 ```
 
 The kubelet's configuration file, read from the laptop with no SSH: `failCgroupV1: false` and
-`serverTLSBootstrap: true` are the two settings lab.sh changed, and here they are on the node. That
+`serverTLSBootstrap: true` are two settings `cluster.yaml` added in lesson 1, and here they are on the node. That
 pod runs with access to the node's files, so it is as powerful as a login on the machine, and RBAC
 should treat the right to create it that way.
 

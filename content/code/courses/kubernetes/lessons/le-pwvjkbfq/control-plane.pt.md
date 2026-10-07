@@ -64,8 +64,14 @@ dentro do cluster.
 
 ## O que o etcd guarda
 
-Tudo. Os objetos da lição 2 são chaves sob `/registry`, por tipo, namespace e nome. Isto lê só as
-chaves, com o cliente do próprio etcd, de dentro do pod do etcd e com os certificados dele:
+Tudo. Os objetos da lição 2 são chaves sob `/registry`, por tipo, namespace e nome. Com um Deployment
+de duas cópias criado antes, como a lição 2 criou um,
+
+```sh
+kubectl create deployment web --image=shop:1.0 --replicas=2
+```
+
+isto lê só as chaves, com o cliente do próprio etcd, de dentro do pod do etcd e com os certificados dele:
 
 ```
 ana@laptop:~/shop$ kubectl -n kube-system exec etcd-shop-control-plane -- etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key get /registry/deployments/default --prefix --keys-only
