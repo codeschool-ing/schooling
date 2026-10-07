@@ -225,7 +225,7 @@ load() {
 reset() {
   pkill -u bao -x bao 2>/dev/null || true
   rm -rf /var/lib/bao/data && mkdir -p /var/lib/bao/data && chown bao:bao /var/lib/bao/data
-  rm -rf $GOV /home/ana/.pgpass /home/ana/.psql_history
+  rm -rf $GOV /home/ana/.pgpass /home/ana/.psql_history /home/ana/.pg_service.conf
   mkdir -p $GOV
   chown -R ana:ana $GOV
   pg_cluster

@@ -215,6 +215,86 @@ def _l1_hba(f):
            size=11, fill='--paper-dim')
 
 
+# ===================================================================== lesson 2
+L2 = 'le-d6047rxz'
+
+
+@figure('l2-rbac', L2, 720, 300,
+        ('Role-based access control in Ipê\'s database. On the left, the logins: bruno, carla, '
+         'site_app and etl_loader. In the middle, the jobs they are members of: analyst, '
+         'support_agent, app_web and pipeline. On the right, what each job may do. Privileges '
+         'are granted to the jobs only; no arrow goes from a person to a table.',
+         'Controle de acesso baseado em papéis no banco da Ipê. À esquerda, os logins: bruno, '
+         'carla, site_app e etl_loader. No meio, os cargos de que são membros: analyst, '
+         'support_agent, app_web e pipeline. À direita, o que cada cargo pode fazer. Os '
+         'privilégios são concedidos só aos cargos; nenhuma seta vai de uma pessoa a uma tabela.'),
+        ('People are members of jobs; jobs hold privileges. A new analyst is one membership, '
+         'not forty grants.',
+         'Pessoas são membros de cargos; cargos têm privilégios. Um analista novo é uma '
+         'associação, não quarenta concessões.'))
+def _l2_rbac(f):
+    f.text(80, 22, ('logins', 'logins'), size=12, weight='600')
+    f.text(300, 22, ('jobs', 'cargos'), size=12, weight='600')
+    f.text(560, 22, ('privileges', 'privilégios'), size=12, weight='600')
+    rows = [('bruno', 'analyst', ['SELECT orders, items, products', 'SELECT 6 columns of customers']),
+            ('carla', 'support_agent', ['SELECT customers, orders', 'UPDATE (status) tickets']),
+            ('site_app', 'app_web', ['SELECT products', 'INSERT orders, items, payments']),
+            ('etl_loader', 'pipeline', ['SELECT customers, orders, items,', 'payments, products'])]
+    for i, (who, job, privs) in enumerate(rows):
+        y = 44 + i * 64
+        f.box(20, y, 120, 44, {'s': who, 'mono': True}, fill='--ink')
+        f.box(225, y, 150, 44, {'s': job, 'mono': True}, stroke='--phosphor', fill='--panel')
+        f.rect(440, y - 4, 260, 52, stroke='--wire', fill='--ink')
+        items = [{'s': p, 'mono': True, 'size': 10} for p in privs if p]
+        f.lines(570, y + 22, items, size=10, gap=17)
+        f.arrow(140, y + 22, 223, y + 22)
+        f.arrow(375, y + 22, 438, y + 22, stroke='--phosphor')
+
+
+@figure('l2-row-and-column', L2, 720, 290,
+        ('The customers table drawn as a grid of rows by state and columns. Bruno, an analyst, '
+         'sees every row but only six columns: id, sex, city, state, created_at and '
+         'marketing_opt_in. Carla, a support agent, sees every column but only the rows from '
+         'São Paulo and Rio de Janeiro. Column privileges cut the table one way and row '
+         'security the other.',
+         'A tabela de clientes desenhada como uma grade de linhas por estado e colunas. Bruno, '
+         'analista, vê todas as linhas mas só seis colunas: id, sexo, cidade, estado, '
+         'created_at e marketing_opt_in. Carla, atendente, vê todas as colunas mas só as linhas '
+         'de São Paulo e do Rio de Janeiro. Privilégio de coluna corta a tabela num sentido, e '
+         'segurança de linha no outro.'),
+        ('Two cuts through one table: a grant on columns, and a policy on rows.',
+         'Dois cortes numa tabela: uma permissão em colunas, e uma política em linhas.'))
+def _l2_grid(f):
+    cols = ['id', 'name', 'email', 'cpf', 'birth', 'sex', 'city', 'state', 'since', 'opt']
+    analyst = {'id', 'sex', 'city', 'state', 'since', 'opt'}
+    states = ['SP', 'RJ', 'MG', 'PR', 'RS']
+    for panel, (x0, title, colok, rowok) in enumerate([
+            (20, ('bruno · analyst', 'bruno · analyst'), lambda c: c in analyst, lambda s: True),
+            (375, ('carla · support_agent', 'carla · support_agent'), lambda c: True,
+             lambda s: s in ('SP', 'RJ'))]):
+        f.text(x0 + 162, 22, title, size=12, weight='600', mono=True)
+        cw, rh = 33, 34
+        for j, c in enumerate(cols):
+            f.text(x0 + 2 + j * cw + cw / 2, 46, c, size=9, mono=True, fill='--paper-dim')
+        for i, st in enumerate(states):
+            y = 58 + i * rh
+            for j, c in enumerate(cols):
+                ok = colok(c) and rowok(st)
+                f.rect(x0 + 2 + j * cw + 2, y + 2, cw - 4, rh - 4,
+                       stroke='--phosphor' if ok else '--wire',
+                       fill='--panel' if ok else '--ink', width=1.2, rx=2,
+                       dash=None if ok else '3 3')
+                if c == 'state':
+                    f.text(x0 + 2 + j * cw + cw / 2, y + rh / 2, st, size=9.5, mono=True,
+                           fill='--paper' if ok else '--paper-dim')
+    f.text(182, 245, ('column privileges: every row,', 'privilégio de coluna: toda linha,'),
+           size=11, fill='--paper-dim')
+    f.text(182, 263, ('six columns', 'seis colunas'), size=11, fill='--paper-dim')
+    f.text(537, 245, ('row security: every column,', 'segurança de linha: toda coluna,'),
+           size=11, fill='--paper-dim')
+    f.text(537, 263, ('two states', 'dois estados'), size=11, fill='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():
