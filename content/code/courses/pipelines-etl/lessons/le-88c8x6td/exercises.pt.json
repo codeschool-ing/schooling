@@ -1,0 +1,364 @@
+{
+  "ex-wxxpkhfn": {
+    "prompt": "Ligue cada parte do Airflow ao seu trabalho.",
+    "hint": "Quatro processos e um banco.",
+    "pairs": [
+      {
+        "left": "Processador de DAGs",
+        "right": "Lê os arquivos de DAG e guarda cada DAG"
+      },
+      {
+        "left": "Agendador",
+        "right": "Decide quais execuções e tarefas estão na hora"
+      },
+      {
+        "left": "Triggerer",
+        "right": "Espera em nome das tarefas que esperam"
+      },
+      {
+        "left": "Banco de metadados",
+        "right": "Guarda cada execução e o estado de cada tarefa"
+      }
+    ],
+    "right_distractors": [
+      "Transforma as linhas que as tarefas leem"
+    ]
+  },
+  "ex-s8bhxth8": {
+    "prompt": "A tarefa de um colega lê um milhão de pedidos numa lista Python, os ordena e devolve a lista para a próxima tarefa. O que há de errado nisso, no Airflow?",
+    "hint": "O que o Airflow não é?",
+    "choices": [
+      {
+        "text": "Nada; é para isso que servem as tarefas",
+        "why": "Tarefas rodam trabalho; os dados pertencem ao warehouse, não ao Airflow."
+      },
+      {
+        "text": "Listas Python não comportam um milhão de itens",
+        "why": "Comportam; o problema é onde a lista vai parar."
+      },
+      {
+        "text": "O Airflow não é um motor de dados",
+        "why": "Isso. As linhas vão para o banco do próprio Airflow; a ordenação pertence ao SQL."
+      },
+      {
+        "text": "Devolver um valor não é permitido no Airflow 3",
+        "why": "Devolver valores pequenos é como as XComs funcionam."
+      }
+    ]
+  },
+  "ex-hxcafmyq": {
+    "prompt": "Por que o `shop_nightly` estava pausado quando apareceu pela primeira vez no `airflow dags list`?",
+    "hint": "Pense num arquivo copiado por engano.",
+    "choices": [
+      {
+        "text": "Todo DAG novo começa pausado",
+        "why": "Isso. Nada roda sozinho até alguém tirar a pausa."
+      },
+      {
+        "text": "Ele tinha um erro",
+        "why": "Um erro o impediria de carregar; ele carregou."
+      },
+      {
+        "text": "A data de início estava no passado, então o agendador o recusou",
+        "why": "Uma data de início no passado é normal."
+      },
+      {
+        "text": "O `dags test` pausa os DAGs enquanto os roda",
+        "why": "Ele estava pausado antes de qualquer teste."
+      }
+    ]
+  },
+  "ex-34qa8n2q": {
+    "prompt": "Quantas linhas uma execução de `airflow dags test` do `shop_nightly` imprimiu antes do filtro?",
+    "hint": "O segundo comando da primeira execução."
+  },
+  "ex-rypa20wv": {
+    "prompt": "Na primeira execução de teste, o `transform` falhou. Quais tarefas nunca rodaram?",
+    "hint": "Tudo depois de uma tarefa que falhou espera por ela.",
+    "choices": [
+      {
+        "text": "`extract` e `day_to_load`",
+        "why": "As duas rodaram e deram certo antes do `transform`."
+      },
+      {
+        "text": "Só o `fact_sales`",
+        "why": "As cargas de dimensão também esperam o `transform`."
+      },
+      {
+        "text": "As três cargas depois dele",
+        "why": "Isso. Cada uma espera, direta ou indiretamente, pelo `transform`."
+      },
+      {
+        "text": "As seis, porque a execução falhou",
+        "why": "Duas já tinham dado certo."
+      }
+    ]
+  },
+  "ex-kac1mjxe": {
+    "prompt": "Por que o `bash_command=\"sh run_sql.sh\"` falhou com `TemplateNotFound`?",
+    "hint": "Veja como o valor termina.",
+    "choices": [
+      {
+        "text": "O `run_sql.sh` não era executável",
+        "why": "Ele é rodado com `sh`, e nem chegou lá."
+      },
+      {
+        "text": "Um valor terminado em `.sh` é lido como nome de arquivo de template",
+        "why": "Isso. O Airflow procurou um arquivo chamado `sh run_sql.sh` na pasta do DAG."
+      },
+      {
+        "text": "O `cwd` estava errado",
+        "why": "O diretório de trabalho só é usado quando o comando roda."
+      },
+      {
+        "text": "O Jinja não permite espaços",
+        "why": "A correção é justamente um espaço."
+      }
+    ]
+  },
+  "ex-bnpcr6ms": {
+    "prompt": "Por que a lição prefere `BashOperator`s que chamam os scripts da Ana a operadores que fazem o trabalho dentro do Airflow?",
+    "hint": "Onde mais o mesmo trabalho pode ser rodado?",
+    "choices": [
+      {
+        "text": "O `BashOperator` é mais rápido que qualquer outro operador",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Outros operadores precisam de licença paga",
+        "why": "Os providers são de código aberto."
+      },
+      {
+        "text": "O Airflow 3 removeu os operadores SQL",
+        "why": "O `SQLExecuteQueryOperator` está lá."
+      },
+      {
+        "text": "O mesmo comando roda de novo à mão",
+        "why": "Isso. Terminal, `nightly.sh` e Airflow o rodam do mesmo jeito."
+      }
+    ]
+  },
+  "ex-xdpkrvz5": {
+    "prompt": "O Airflow lê uma conexão de uma variável de ambiente chamada `AIRFLOW_CONN_` seguida do id da conexão em maiúsculas, então a conexão `wh` é `AIRFLOW_CONN____`.",
+    "hint": "Duas letras.",
+    "blanks": [
+      {
+        "accept": [
+          "WH"
+        ]
+      }
+    ]
+  },
+  "ex-1ywqdes5": {
+    "prompt": "O `fact_sales` tem setas vindas do `day_to_load` e do `dim_customer`. Quando ele começa?",
+    "hint": "Duas setas chegando.",
+    "choices": [
+      {
+        "text": "Quando qualquer uma der certo",
+        "why": "Por padrão uma tarefa espera todas as anteriores."
+      },
+      {
+        "text": "Quando as duas deram certo",
+        "why": "Isso. Todas as anteriores, por padrão."
+      },
+      {
+        "text": "Às 02:00, seja qual for o estado delas",
+        "why": "O agendamento inicia a execução; as setas iniciam as tarefas."
+      },
+      {
+        "text": "Depois do `dim_book`, porque está escrito antes no arquivo",
+        "why": "A ordem do arquivo não significa nada; não há seta vindo do `dim_book`."
+      }
+    ]
+  },
+  "ex-sfdqj843": {
+    "prompt": "Um colega acrescenta uma tarefa `report` que lê `marts.fact_sales`, e esquece de dar a ela uma seta vinda do `fact_sales`. O que acontece?",
+    "hint": "Dependências que faltam falham em silêncio.",
+    "choices": [
+      {
+        "text": "O Airflow se recusa a carregar o DAG",
+        "why": "Isso é o que um ciclo faz; uma seta que falta é válida."
+      },
+      {
+        "text": "O `report` espera por todas as outras tarefas",
+        "why": "Uma tarefa sem setas não espera nada."
+      },
+      {
+        "text": "O `report` é pulado",
+        "why": "Ele roda, que é o problema."
+      },
+      {
+        "text": "O `report` lê o que estiver lá, e dá certo",
+        "why": "Isso. Nada falha; o relatório fica um dia velho em silêncio."
+      }
+    ]
+  },
+  "ex-gtgzqz9k": {
+    "prompt": "Ordene estas tarefas do `shop_nightly` para que cada uma venha depois de todas as que ela espera.",
+    "hint": "Siga as setas.",
+    "items": [
+      "extract",
+      "transform",
+      "dim_customer",
+      "fact_sales"
+    ]
+  },
+  "ex-g8yavx4s": {
+    "prompt": "A execução com data lógica 02:00 de 3 de março começa seis meses atrasada, em setembro. Qual dia o `day_to_load` devolve?",
+    "hint": "Ele pergunta à execução, não ao relógio.",
+    "choices": [
+      {
+        "text": "Um dia de setembro",
+        "why": "Isso é o que perguntar ao relógio daria."
+      },
+      {
+        "text": "3 de março",
+        "why": "Ele subtrai um dia da data lógica."
+      },
+      {
+        "text": "2 de março",
+        "why": "Isso. O mesmo dia, quando quer que a execução aconteça."
+      },
+      {
+        "text": "Nada: uma execução atrasada é cancelada",
+        "why": "Execuções atrasadas rodam; é isso que torna o reprocessamento possível."
+      }
+    ]
+  },
+  "ex-n4hsf3wg": {
+    "prompt": "No Airflow 2, a execução de um DAG diário rotulada 2 de março executava no começo de 3 de março. O que um `schedule=\"0 2 * * *\"` simples significa por padrão no Airflow 3?",
+    "hint": "Um gatilho, não um intervalo.",
+    "choices": [
+      {
+        "text": "Uma execução às 02:00 cuja data lógica é 02:00 do mesmo dia",
+        "why": "Isso. Nenhum intervalo por trás; o DAG decide o que carrega."
+      },
+      {
+        "text": "Uma execução rotulada com o dia anterior, como no Airflow 2",
+        "why": "Isso exige um agendamento declarado com intervalos."
+      },
+      {
+        "text": "Uma execução a cada duas horas",
+        "why": "`0 2 * * *` é o minuto 0 da hora 2, todo dia."
+      },
+      {
+        "text": "Uma execução às 02:00 UTC",
+        "why": "A data de início do DAG está no horário de São Paulo, e o agendamento também."
+      }
+    ]
+  },
+  "ex-qhmd1dxf": {
+    "prompt": "O `dim_book` e o `dim_customer` não têm seta entre si. O que muda em como eles rodam sob o `dags test` e sob o agendador?",
+    "hint": "Um processo, ou vários.",
+    "choices": [
+      {
+        "text": "Nada; os dois os rodam ao mesmo tempo",
+        "why": "O `dags test` roda as tarefas uma depois da outra no terminal."
+      },
+      {
+        "text": "Um depois do outro, depois juntos",
+        "why": "Isso. É por isso que uma seta que falta pode passar num teste."
+      },
+      {
+        "text": "O agendador os roda em ordem alfabética",
+        "why": "Sem seta, nenhuma ordem é prometida."
+      },
+      {
+        "text": "O `dags test` pula tarefas sem nada depois",
+        "why": "O `dim_book` rodou no teste."
+      }
+    ]
+  },
+  "ex-pcf4ebb5": {
+    "prompt": "Qual comando roda uma tarefa só de um DAG, sem as tarefas antes dela, para testar uma mudança?",
+    "hint": "Como o `dags test`, para uma tarefa.",
+    "choices": [
+      {
+        "text": "`airflow dags test DAG DATA`",
+        "why": "Isso roda todas as tarefas."
+      },
+      {
+        "text": "`airflow tasks test DAG TAREFA DATA`",
+        "why": "Isso."
+      },
+      {
+        "text": "`airflow dags unpause DAG`",
+        "why": "Isso deixa o agendador iniciar execuções; não roda nada agora."
+      },
+      {
+        "text": "`airflow dags reserialize`",
+        "why": "Isso relê a pasta de DAGs; não roda tarefa nenhuma."
+      }
+    ]
+  },
+  "ex-2h6jmmhk": {
+    "prompt": "Para que serve uma XCom?",
+    "hint": "Bytes, não megabytes.",
+    "choices": [
+      {
+        "text": "Um valor pequeno de que a próxima tarefa precisa",
+        "why": "Isso. Uma data, um nome de arquivo, uma contagem."
+      },
+      {
+        "text": "Levar os pedidos de um dia entre tarefas",
+        "why": "Dados passam pelo warehouse, não pelo banco do Airflow."
+      },
+      {
+        "text": "Guardar o código do DAG",
+        "why": "O processador de DAGs guarda os DAGs; XComs são valores de tarefas."
+      },
+      {
+        "text": "Mandar uma mensagem para quem está de plantão",
+        "why": "Isso são os alertas da lição 10."
+      }
+    ]
+  },
+  "ex-nyvrvjzm": {
+    "prompt": "O banco da loja confirmou 14 transações em dois minutos tranquilos enquanto o `by_shop.py` estava na pasta de DAGs, uma delas a consulta que mediu. Nesse ritmo, cerca de quantas transações por dia o DAG que nunca rodou causaria? Dê um número inteiro.",
+    "hint": "Treze a cada dois minutos, vezes os períodos de dois minutos de um dia."
+  },
+  "ex-b2ycyggy": {
+    "prompt": "Onde a lição diz que um DAG cujo formato depende de dados deve ler esses dados?",
+    "hint": "Declare em cima; busque em tempo de execução.",
+    "choices": [
+      {
+        "text": "No topo do arquivo do DAG, em cache numa global",
+        "why": "O topo do arquivo roda em cada leitura, com cache ou não."
+      },
+      {
+        "text": "Na configuração do agendador",
+        "why": "A configuração guarda ajustes, não dados."
+      },
+      {
+        "text": "Numa variável de ambiente definida pelo laboratório",
+        "why": "Isso fixa o formato quando o laboratório é montado, não quando os dados mudam."
+      },
+      {
+        "text": "Dentro de uma tarefa, mapeada em tempo de execução",
+        "why": "Isso. O mapeamento dinâmico de tarefas existe para isso."
+      }
+    ]
+  },
+  "ex-h94x3mh3": {
+    "prompt": "Um DAG passa no `airflow dags test` toda vez, e sob o agendador às vezes carrega fatos com os clientes da noite anterior. Qual é a causa mais provável?",
+    "hint": "O que roda em sequência num teste e em paralelo sob o agendador?",
+    "choices": [
+      {
+        "text": "O agendador usa UTC",
+        "why": "Fusos deslocariam dias, não clientes."
+      },
+      {
+        "text": "Uma seta que falta da carga de clientes para a de fatos",
+        "why": "Isso. A sequência do teste a escondeu; execuções em paralelo a expõem."
+      },
+      {
+        "text": "As XComs se perdem entre execuções agendadas",
+        "why": "Cada execução guarda as suas próprias XComs."
+      },
+      {
+        "text": "O DAG está pausado",
+        "why": "Um DAG pausado não rodaria sob o agendador."
+      }
+    ]
+  }
+}

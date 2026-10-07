@@ -1,0 +1,571 @@
+[
+  {
+    "id": "ex-vvpycst3",
+    "version": 1,
+    "section": "full-load",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a full load right by construction?",
+    "hint": "It does not need to know what happened.",
+    "choices": [
+      {
+        "text": "It copies the source as it is now",
+        "correct": true,
+        "why": "Right. Nothing has to be detected."
+      },
+      {
+        "text": "It reads faster",
+        "correct": false,
+        "why": "It reads more, not faster."
+      },
+      {
+        "text": "It locks the source while copying",
+        "correct": false,
+        "why": "`COPY` from a query takes no lock that stops the tills."
+      },
+      {
+        "text": "It checks every row against the last copy",
+        "correct": false,
+        "why": "It never compares; it throws the old copy away."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7dbekg1",
+    "version": 1,
+    "section": "full-load",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`full_customers.py` runs `TRUNCATE` and `COPY` in one transaction. What does a report reading `raw.customers` during the load see?",
+    "hint": "When does the truncate become visible?",
+    "choices": [
+      {
+        "text": "An empty table",
+        "correct": false,
+        "why": "The empty table is never committed on its own."
+      },
+      {
+        "text": "Half of the new rows",
+        "correct": false,
+        "why": "Nothing is visible until the transaction commits."
+      },
+      {
+        "text": "The old copy, until the new one commits",
+        "correct": true,
+        "why": "Right. In PostgreSQL it may also wait on the lock `TRUNCATE` takes, but it never sees half a table."
+      },
+      {
+        "text": "An error, because the table is being replaced",
+        "correct": false,
+        "why": "No error is raised; the reader is served the committed state."
+      }
+    ]
+  },
+  {
+    "id": "ex-3x4ak377",
+    "version": 1,
+    "section": "incremental",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the night of 2 March the incremental extraction read 261 rows, where a full load of orders would have read 17,453. About how many times fewer rows is that? Give a whole number.",
+    "hint": "Divide.",
+    "value": 67,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-srwnvt6f",
+    "version": 1,
+    "section": "incremental",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which promises must the source keep about `updated_at` for an incremental extraction to be trusted? Choose all that apply.",
+    "hint": "Three of them.",
+    "choices": [
+      {
+        "text": "Every write sets it",
+        "correct": true,
+        "why": "Yes. A write that forgets is a change nobody sees."
+      },
+      {
+        "text": "It never goes backwards for a row",
+        "correct": true,
+        "why": "Yes. A smaller value would hide under the watermark."
+      },
+      {
+        "text": "It is indexed",
+        "correct": true,
+        "why": "Yes. Otherwise each night is a full scan in disguise."
+      },
+      {
+        "text": "It is stored in UTC",
+        "correct": false,
+        "why": "A `timestamptz` compares correctly whatever zone it is shown in."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv64nmfz",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer fixes a typo in a customer's city with a hand-written `UPDATE` that does not touch `updated_at`. What happens in the warehouse?",
+    "hint": "What does the extraction ask for?",
+    "choices": [
+      {
+        "text": "The fix arrives the next night",
+        "correct": false,
+        "why": "Only rows with a newer `updated_at` are read."
+      },
+      {
+        "text": "The typo stays there for good",
+        "correct": true,
+        "why": "Right. No incremental run will ever see the change."
+      },
+      {
+        "text": "The extraction fails with a conflict between the two versions",
+        "correct": false,
+        "why": "It never sees a second version to conflict with."
+      },
+      {
+        "text": "PostgreSQL sets `updated_at` itself",
+        "correct": false,
+        "why": "Only if a trigger does it, and the shop has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x4qnfyq",
+    "version": 1,
+    "section": "watermark",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `incremental.py` take its new watermark from `max(updated_at)` inside the snapshot rather than from the time the job started?",
+    "hint": "What is the watermark a claim about?",
+    "choices": [
+      {
+        "text": "The job's start time is not available in Python",
+        "correct": false,
+        "why": "It is; `datetime.now()` gives it."
+      },
+      {
+        "text": "A clock could claim rows the snapshot never saw",
+        "correct": true,
+        "why": "Right. The watermark must describe what was actually read."
+      },
+      {
+        "text": "The shop's timestamps are in March and the machine's clock is in October",
+        "correct": false,
+        "why": "True in the lab, but the reason holds in production too."
+      },
+      {
+        "text": "`max` is faster than reading the clock",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxkzfa4d",
+    "version": 1,
+    "section": "watermark",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague changes the script to save the new watermark in its own transaction, before loading the rows. One night the load crashes halfway. What is the result?",
+    "hint": "A watermark that runs ahead of the data.",
+    "choices": [
+      {
+        "text": "Tomorrow reads the same window again",
+        "correct": false,
+        "why": "That is what keeping them together gives."
+      },
+      {
+        "text": "The rows are loaded twice tomorrow",
+        "correct": false,
+        "why": "Tomorrow starts above the saved watermark and never re-reads them."
+      },
+      {
+        "text": "The night's changes are lost, silently",
+        "correct": true,
+        "why": "Right. The watermark claims rows the warehouse never got."
+      },
+      {
+        "text": "PostgreSQL rolls back the watermark automatically",
+        "correct": false,
+        "why": "It was committed in its own transaction; nothing rolls it back."
+      }
+    ]
+  },
+  {
+    "id": "ex-dv1ggrrh",
+    "version": 1,
+    "section": "watermark",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The highest `updated_at` a pipeline has already loaded is called its ___.",
+    "hint": "It marks how far the tide came.",
+    "blanks": [
+      {
+        "accept": [
+          "watermark",
+          "high-water mark",
+          "high water mark"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v09t14n0",
+    "version": 1,
+    "section": "late-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order 900001 has `updated_at` 23:40 on 2 March but committed after that night's extraction. Why did the next night's plain extraction miss it?",
+    "hint": "Compare 23:40 with the watermark.",
+    "choices": [
+      {
+        "text": "Its time sits below the watermark",
+        "correct": true,
+        "why": "Right. The next night only asks for rows above 23:59:47."
+      },
+      {
+        "text": "The till deleted it after committing",
+        "correct": false,
+        "why": "It is still in the shop."
+      },
+      {
+        "text": "Cash orders are not extracted",
+        "correct": false,
+        "why": "Payment method plays no part in the extraction."
+      },
+      {
+        "text": "Its shop, Paulista, is filtered out",
+        "correct": false,
+        "why": "The extraction reads every shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yyjnfk6",
+    "version": 1,
+    "section": "late-rows",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`raw.orders_changes_60m` held 17,766 rows but 17,758 distinct versions. How many rows did the lookback load twice?",
+    "hint": "Rows minus versions.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ssmjh91k",
+    "version": 1,
+    "section": "late-rows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A source runs a nightly batch job whose transactions stay open for up to 90 minutes. What lookback does the lesson's reasoning suggest?",
+    "hint": "The longest open transaction, with a margin.",
+    "choices": [
+      {
+        "text": "Sixty minutes, as in the lab",
+        "correct": false,
+        "why": "Rows from the last half hour of a long transaction would still be missed."
+      },
+      {
+        "text": "More than 90 minutes",
+        "correct": true,
+        "why": "Right. The window must reach back past the longest transaction."
+      },
+      {
+        "text": "None: a lookback only creates duplicates",
+        "correct": false,
+        "why": "Duplicates are the cheap half; missed rows are the expensive one."
+      },
+      {
+        "text": "Exactly 90 minutes and not a second more",
+        "correct": false,
+        "why": "The lesson says with a margin."
+      }
+    ]
+  },
+  {
+    "id": "ex-db48s233",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order 113697 appears twice in `raw.orders_changes`, once completed and once refunded. Which row is wrong?",
+    "hint": "Each was read at a different moment.",
+    "choices": [
+      {
+        "text": "The completed one, because the order was refunded",
+        "correct": false,
+        "why": "It was completed when it was read; that is a true record."
+      },
+      {
+        "text": "Neither",
+        "correct": true,
+        "why": "Right. Each is what the shop said at the moment it was read."
+      },
+      {
+        "text": "The refunded one, because it was extracted later",
+        "correct": false,
+        "why": "Later is newer, not wrong."
+      },
+      {
+        "text": "Both, because an order has one status",
+        "correct": false,
+        "why": "An order has one status at a time; the raw layer keeps the times."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9br2y00",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The view `raw.orders_latest` had 17,749 orders while the shop had 17,750 updated by the same moment. What explains the difference?",
+    "hint": "Which extraction is the view built on?",
+    "choices": [
+      {
+        "text": "`DISTINCT ON` dropped one order with two identical versions",
+        "correct": false,
+        "why": "`DISTINCT ON` keeps one row per order; it never drops an order."
+      },
+      {
+        "text": "The slow till's order, which the plain extraction never saw",
+        "correct": true,
+        "why": "Right. The view sits on the extraction without a lookback."
+      },
+      {
+        "text": "An order deleted by an erasure request",
+        "correct": false,
+        "why": "Erasures delete customers, not orders, and the first is on the 14th."
+      },
+      {
+        "text": "A time zone difference at midnight",
+        "correct": false,
+        "why": "Both sides compare `timestamptz` values; zones do not shift them."
+      }
+    ]
+  },
+  {
+    "id": "ex-am8sfqpr",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `DISTINCT ON (order_id)` with `ORDER BY order_id, updated_at DESC` return?",
+    "hint": "The first row of each order, in that order.",
+    "choices": [
+      {
+        "text": "The oldest version of each order",
+        "correct": false,
+        "why": "`DESC` puts the newest first."
+      },
+      {
+        "text": "Every version, sorted",
+        "correct": false,
+        "why": "`DISTINCT ON` keeps one per order."
+      },
+      {
+        "text": "Orders that changed more than once",
+        "correct": false,
+        "why": "Every order appears, changed or not."
+      },
+      {
+        "text": "The newest version of each order",
+        "correct": true,
+        "why": "Right. One row per order, the latest."
+      }
+    ]
+  },
+  {
+    "id": "ex-bns3zc4d",
+    "version": 1,
+    "section": "deletes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the incremental extraction of customers on 14 March not see customer 1880's deletion?",
+    "hint": "Where would it look for the change?",
+    "choices": [
+      {
+        "text": "A deleted row has no `updated_at` to find",
+        "correct": true,
+        "why": "Right. There is no row, so nothing is above the watermark."
+      },
+      {
+        "text": "The deletion happened before the watermark",
+        "correct": false,
+        "why": "It happened that day; time is not the problem."
+      },
+      {
+        "text": "The role `etl_reader` cannot see deletes",
+        "correct": false,
+        "why": "No role sees a row that no longer exists."
+      },
+      {
+        "text": "The extraction skipped customers that day",
+        "correct": false,
+        "why": "It ran and read 294 changed customers."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xzzbjma",
+    "version": 1,
+    "section": "deletes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of seeing deletes to its cost or limit.",
+    "hint": "Four ways, four trade-offs.",
+    "pairs": [
+      {
+        "left": "A full load",
+        "right": "Reads every row, every night"
+      },
+      {
+        "left": "Comparing keys",
+        "right": "Reads every key, every night"
+      },
+      {
+        "left": "Soft deletes",
+        "right": "Wrong when the row has to go"
+      },
+      {
+        "left": "Reading the log",
+        "right": "Lesson 5's subject"
+      }
+    ]
+  },
+  {
+    "id": "ex-npz9jjhe",
+    "version": 1,
+    "section": "deletes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An erased customer's orders had `customer_id` set to `NULL`. Did the incremental extraction of orders see that, and why?",
+    "hint": "An update or a disappearance?",
+    "choices": [
+      {
+        "text": "No, because the customer was deleted",
+        "correct": false,
+        "why": "The orders were updated, not deleted."
+      },
+      {
+        "text": "Yes, because `updated_at` moved on each order",
+        "correct": true,
+        "why": "Right. An update is visible to a watermark."
+      },
+      {
+        "text": "No, because `NULL` is not compared by `>`",
+        "correct": false,
+        "why": "The comparison is on `updated_at`, which is not null."
+      },
+      {
+        "text": "Yes, but only with the lookback",
+        "correct": false,
+        "why": "The plain extraction sees it too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx96zk8j",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Ponto Final reload `customers` whole every night even though it has a good `updated_at`?",
+    "hint": "Read the deletes column.",
+    "choices": [
+      {
+        "text": "It is the biggest table",
+        "correct": false,
+        "why": "Orders and lines are bigger."
+      },
+      {
+        "text": "Erasures, which only a full load sees",
+        "correct": true,
+        "why": "Right. And at five thousand rows the full load is cheap."
+      },
+      {
+        "text": "Its `updated_at` is not indexed",
+        "correct": false,
+        "why": "That would slow an incremental load, but is not the reason given."
+      },
+      {
+        "text": "The LGPD forbids incremental loads of personal data",
+        "correct": false,
+        "why": "It forbids keeping data after an erasure, not a method."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zv8g59q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of one night of `incremental.py`.",
+    "hint": "Read the old, find the new, load, then move.",
+    "items": [
+      "Read and lock the watermark",
+      "Take the newest updated_at in a snapshot of the shop",
+      "Read the rows between the old and new watermark",
+      "Insert the rows and move the watermark, in one commit"
+    ]
+  },
+  {
+    "id": "ex-ttqj1sap",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table has 2 million rows, grows by 1,000 a day, has a reliable indexed `updated_at`, and its rows are sometimes deleted. Which extraction does the lesson's reasoning point to?",
+    "hint": "Too big to reload, and deletes matter.",
+    "choices": [
+      {
+        "text": "A nightly full load",
+        "correct": false,
+        "why": "Two million rows nightly for a thousand changes is the cost the lesson warns about."
+      },
+      {
+        "text": "Incremental, plus a nightly comparison of keys or the log for deletes",
+        "correct": true,
+        "why": "Right. The watermark finds updates; something else must find deletes."
+      },
+      {
+        "text": "Incremental with a long lookback, which also catches deletes",
+        "correct": false,
+        "why": "No lookback can find a row that is gone."
+      },
+      {
+        "text": "Incremental alone, since deletes are rare",
+        "correct": false,
+        "why": "Rare is not never, and each one leaves a row that should not exist."
+      }
+    ]
+  }
+]

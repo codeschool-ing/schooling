@@ -1,0 +1,766 @@
+[
+  {
+    "id": "ex-w8qqzbw2",
+    "version": 1,
+    "section": "what-dbt-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a dbt model file contain?",
+    "hint": "dbt writes the rest.",
+    "choices": [
+      {
+        "text": "A `CREATE TABLE … AS` statement",
+        "correct": false,
+        "why": "dbt writes that from the materialisation."
+      },
+      {
+        "text": "One `select`",
+        "correct": true,
+        "why": "Right. Everything around it is dbt's."
+      },
+      {
+        "text": "A Python function",
+        "correct": false,
+        "why": "These models are SQL."
+      },
+      {
+        "text": "A list of the models to run before it",
+        "correct": false,
+        "why": "The order comes from the refs inside the select."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxxpt2zy",
+    "version": 1,
+    "section": "what-dbt-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of Ana's pipeline does dbt take over?",
+    "hint": "E, L or T?",
+    "choices": [
+      {
+        "text": "Extracting the shop's tables",
+        "correct": false,
+        "why": "That is still load_raw.py."
+      },
+      {
+        "text": "Scheduling the nightly run",
+        "correct": false,
+        "why": "That is still Airflow."
+      },
+      {
+        "text": "Copying data from PostgreSQL into a dbt server",
+        "correct": false,
+        "why": "There is no dbt server; the SQL runs in PostgreSQL."
+      },
+      {
+        "text": "The T, inside the warehouse",
+        "correct": true,
+        "why": "Right. The T of ELT, run where the data already is."
+      }
+    ]
+  },
+  {
+    "id": "ex-bsbh6zf2",
+    "version": 1,
+    "section": "what-dbt-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the connection in `~/.dbt/profiles.yml` rather than in the project?",
+    "hint": "Who else reads the project?",
+    "choices": [
+      {
+        "text": "So the project is shared without credentials in it",
+        "correct": true,
+        "why": "Right. Each person keeps their own profile."
+      },
+      {
+        "text": "dbt cannot read YAML inside the project",
+        "correct": false,
+        "why": "dbt_project.yml is YAML inside the project."
+      },
+      {
+        "text": "PostgreSQL requires connection details to live in the home directory",
+        "correct": false,
+        "why": "PostgreSQL knows nothing about dbt."
+      },
+      {
+        "text": "It makes dbt run faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-gemx6zcm",
+    "version": 1,
+    "section": "sources-and-refs",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each function to what it refers to.",
+    "hint": "Built by dbt, or not.",
+    "pairs": [
+      {
+        "left": "source('raw', 'orders')",
+        "right": "A table dbt did not build"
+      },
+      {
+        "left": "ref('stg_orders')",
+        "right": "Another model of the project"
+      }
+    ],
+    "right_distractors": [
+      "A column of the current model"
+    ]
+  },
+  {
+    "id": "ex-k7y7bhy7",
+    "version": 1,
+    "section": "sources-and-refs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model reads `dbt_staging.stg_orders` by name instead of `{{ ref('stg_orders') }}`. What can go wrong?",
+    "hint": "What does the ref record?",
+    "choices": [
+      {
+        "text": "It can fail to compile, as dbt only accepts names written through ref or source",
+        "correct": false,
+        "why": "It compiles and runs."
+      },
+      {
+        "text": "PostgreSQL refuses names with a schema",
+        "correct": false,
+        "why": "It accepts them."
+      },
+      {
+        "text": "dbt may build it before stg_orders, and nothing complains",
+        "correct": true,
+        "why": "Right. The dependency is invisible to dbt."
+      },
+      {
+        "text": "The model becomes ephemeral",
+        "correct": false,
+        "why": "The materialisation does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-49t9z7e5",
+    "version": 1,
+    "section": "sources-and-refs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a dbt project, a model reads another model with `{{ ___('stg_orders') }}`.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "ref"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-er6x83y3",
+    "version": 1,
+    "section": "first-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The profile's schema is `dbt` and a folder says `+schema: staging`. Where do the views go?",
+    "hint": "Added, not replaced.",
+    "choices": [
+      {
+        "text": "staging",
+        "correct": false,
+        "why": "Only with a replaced generate_schema_name."
+      },
+      {
+        "text": "dbt",
+        "correct": false,
+        "why": "The folder's setting is not ignored."
+      },
+      {
+        "text": "dbt_staging",
+        "correct": true,
+        "why": "Right. The target schema, then the custom one."
+      },
+      {
+        "text": "staging_dbt",
+        "correct": false,
+        "why": "The target comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-vd5ndky8",
+    "version": 1,
+    "section": "first-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is adding the custom schema to the target's schema a useful default?",
+    "hint": "Think of a team of three.",
+    "choices": [
+      {
+        "text": "Each person builds the whole project without overwriting anybody else's",
+        "correct": true,
+        "why": "Right. Each profile names its own target schema."
+      },
+      {
+        "text": "It keeps schema names under PostgreSQL's limit on the length of identifiers",
+        "correct": false,
+        "why": "It makes them longer, not shorter."
+      },
+      {
+        "text": "PostgreSQL needs a prefix on every schema",
+        "correct": false,
+        "why": "It needs nothing of the kind."
+      },
+      {
+        "text": "It stops dbt from reading raw",
+        "correct": false,
+        "why": "Sources are read wherever they are."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy9q6ag2",
+    "version": 1,
+    "section": "first-run",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows did the old pipeline's `daily_sales` have that the dbt one did not?",
+    "hint": "EXCEPT, old minus new.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rq01c807",
+    "version": 1,
+    "section": "compiled",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A model returns the wrong rows. Which file can Ana paste into psql as it is?",
+    "hint": "After Jinja, before the DDL.",
+    "choices": [
+      {
+        "text": "The model file in models/",
+        "correct": false,
+        "why": "It still has Jinja in it, which psql cannot read."
+      },
+      {
+        "text": "dbt_project.yml, with the model's settings",
+        "correct": false,
+        "why": "That holds settings, not SQL."
+      },
+      {
+        "text": "target/run/…",
+        "correct": false,
+        "why": "That would create a table, not show rows."
+      },
+      {
+        "text": "target/compiled/…",
+        "correct": true,
+        "why": "Right. The select with every ref resolved."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jhqr7gb",
+    "version": 1,
+    "section": "compiled",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report reads `daily_sales` while dbt rebuilds it as a table. What does the report see?",
+    "hint": "Built under another name, then swapped.",
+    "choices": [
+      {
+        "text": "An empty table",
+        "correct": false,
+        "why": "The new table is built under a temporary name."
+      },
+      {
+        "text": "The old table or the new one, never half of one",
+        "correct": true,
+        "why": "Right. The renames happen in one transaction."
+      },
+      {
+        "text": "An error, because the table is locked for the whole run",
+        "correct": false,
+        "why": "Only the short swap at the end takes a lock."
+      },
+      {
+        "text": "Rows from both tables, mixed together in one result",
+        "correct": false,
+        "why": "The swap is atomic."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4901f57",
+    "version": 1,
+    "section": "materialisations",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each materialisation to what it leaves in the database.",
+    "hint": "One leaves nothing.",
+    "pairs": [
+      {
+        "left": "view",
+        "right": "A stored query"
+      },
+      {
+        "left": "table",
+        "right": "Rows, rebuilt on every run"
+      },
+      {
+        "left": "ephemeral",
+        "right": "Nothing; it becomes a CTE"
+      },
+      {
+        "left": "incremental",
+        "right": "Rows, with only new ones added after the first run"
+      }
+    ]
+  },
+  {
+    "id": "ex-1ep5wdsv",
+    "version": 1,
+    "section": "materialisations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `int_sales` missing from the list `dbt run` printed?",
+    "hint": "What is there to build?",
+    "choices": [
+      {
+        "text": "It failed silently",
+        "correct": false,
+        "why": "The run passed and the marts were built from it."
+      },
+      {
+        "text": "Nothing in the project referred to it with a ref",
+        "correct": false,
+        "why": "Both marts do."
+      },
+      {
+        "text": "dbt skips models in the staging folder when no selector is given",
+        "correct": false,
+        "why": "It built the three stg views."
+      },
+      {
+        "text": "It is ephemeral, so nothing is built",
+        "correct": true,
+        "why": "Right. It is pasted into daily_sales and fact_sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-psqwrnmd",
+    "version": 1,
+    "section": "materialisations",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are good reasons to make a staging model a view? Choose all that apply.",
+    "hint": "Cheap, and always current.",
+    "choices": [
+      {
+        "text": "It costs nothing to build",
+        "correct": true,
+        "why": "Right. Creating a view stores a query."
+      },
+      {
+        "text": "It always shows what is in raw now",
+        "correct": true,
+        "why": "Right. It is read live."
+      },
+      {
+        "text": "Reports read it all day",
+        "correct": false,
+        "why": "That argues for a table: every read reruns the view."
+      },
+      {
+        "text": "It lets the loader drop and recreate raw freely",
+        "correct": false,
+        "why": "It is exactly what stopped that."
+      }
+    ]
+  },
+  {
+    "id": "ex-70qyq5dy",
+    "version": 1,
+    "section": "views-and-the-loader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `load_raw.py` fail on the 10th when it had worked every day before?",
+    "hint": "What now sits on raw.books?",
+    "choices": [
+      {
+        "text": "The shop's tables changed shape",
+        "correct": false,
+        "why": "They did not."
+      },
+      {
+        "text": "dbt was still holding a lock on the raw schema from its last run",
+        "correct": false,
+        "why": "No dbt run was going on."
+      },
+      {
+        "text": "A dbt view depends on raw.books, so it cannot be dropped",
+        "correct": true,
+        "why": "Right. PostgreSQL refuses to leave a view pointing at nothing."
+      },
+      {
+        "text": "The 10th has too many rows",
+        "correct": false,
+        "why": "Size had nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-233phc89",
+    "version": 1,
+    "section": "views-and-the-loader",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why not fix the loader with `DROP TABLE … CASCADE`?",
+    "hint": "What else would go?",
+    "choices": [
+      {
+        "text": "It would drop dbt's views too, silently",
+        "correct": true,
+        "why": "Right. Staging would vanish until the next dbt run."
+      },
+      {
+        "text": "CASCADE is slower",
+        "correct": false,
+        "why": "Speed is not the problem."
+      },
+      {
+        "text": "PostgreSQL does not support it",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "It needs a superuser's privileges, which the loader's connection lacks",
+        "correct": false,
+        "why": "The owner can do it."
+      }
+    ]
+  },
+  {
+    "id": "ex-42nrfd5p",
+    "version": 1,
+    "section": "views-and-the-loader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the change, the shop adds a column to `orders`. What happens on the next load?",
+    "hint": "CREATE TABLE IF NOT EXISTS does nothing the second time.",
+    "choices": [
+      {
+        "text": "raw.orders grows the new column",
+        "correct": false,
+        "why": "The table already exists, so it is not recreated."
+      },
+      {
+        "text": "The COPY fails because the columns no longer match",
+        "correct": true,
+        "why": "Right. Loud, which is the right kind of failure."
+      },
+      {
+        "text": "The new column is dropped quietly",
+        "correct": false,
+        "why": "COPY does not skip columns."
+      },
+      {
+        "text": "dbt adds the column",
+        "correct": false,
+        "why": "dbt does not touch raw."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdbee7mt",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On its second run, which days did the incremental `fact_sales` replace?",
+    "hint": "max(order_date), and after.",
+    "choices": [
+      {
+        "text": "Only the 10th",
+        "correct": false,
+        "why": "The where uses >=, so the 9th came too."
+      },
+      {
+        "text": "The 9th and the 10th",
+        "correct": true,
+        "why": "Right. The newest day it had, and the new one."
+      },
+      {
+        "text": "Every day",
+        "correct": false,
+        "why": "That is the first run, or --full-refresh."
+      },
+      {
+        "text": "The last seven days",
+        "correct": false,
+        "why": "There is no lookback in the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c88ffnv",
+    "version": 1,
+    "section": "incremental",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many days did the drift query find wrong in the incremental table?",
+    "hint": "Before the full refresh.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5bn2vt9h",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An order from 25 February is refunded on 9 March. Which run puts `fact_sales` right?",
+    "hint": "Which days does the nightly run look at?",
+    "choices": [
+      {
+        "text": "The nightly incremental run on 10 March",
+        "correct": false,
+        "why": "It only replaces the newest days."
+      },
+      {
+        "text": "None: refunds never reach fact_sales",
+        "correct": false,
+        "why": "The full refresh removed exactly such lines."
+      },
+      {
+        "text": "Any run, because dbt notices which rows of raw changed since the run before",
+        "correct": false,
+        "why": "dbt tracks nothing; the where decides."
+      },
+      {
+        "text": "Only a full refresh, or a lookback reaching back to February",
+        "correct": true,
+        "why": "Right. The incremental window never sees that day again."
+      }
+    ]
+  },
+  {
+    "id": "ex-9195kz3y",
+    "version": 1,
+    "section": "incremental",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To rebuild an incremental model from scratch: `dbt run -s fact_sales ___`",
+    "hint": "Two words joined by a hyphen, after two dashes.",
+    "blanks": [
+      {
+        "accept": [
+          "--full-refresh"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y2ak76q4",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `is_incremental()` return on the very first run of `fact_sales`?",
+    "hint": "Is there a table yet?",
+    "choices": [
+      {
+        "text": "False",
+        "correct": true,
+        "why": "Right. The whole history is selected."
+      },
+      {
+        "text": "True",
+        "correct": false,
+        "why": "There is no table to add to yet."
+      },
+      {
+        "text": "It raises an error",
+        "correct": false,
+        "why": "It is safe to call."
+      },
+      {
+        "text": "It depends on the day of the week",
+        "correct": false,
+        "why": "Days have nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k7tp6d3",
+    "version": 1,
+    "section": "the-graph",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each selector to what it runs.",
+    "hint": "Before the name, or after.",
+    "pairs": [
+      {
+        "left": "-s +daily_sales",
+        "right": "daily_sales and everything it depends on"
+      },
+      {
+        "left": "-s stg_books+",
+        "right": "stg_books and everything that depends on it"
+      },
+      {
+        "left": "-s fact_sales",
+        "right": "fact_sales alone"
+      }
+    ],
+    "right_distractors": [
+      "Every model in the project"
+    ]
+  },
+  {
+    "id": "ex-s2yb34me",
+    "version": 1,
+    "section": "the-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana is about to change `stg_orders`. Which command lists what the change can affect?",
+    "hint": "Downstream.",
+    "choices": [
+      {
+        "text": "dbt ls -s +stg_orders",
+        "correct": false,
+        "why": "That lists what it depends on."
+      },
+      {
+        "text": "dbt debug --config-dir",
+        "correct": false,
+        "why": "That shows where the profile is."
+      },
+      {
+        "text": "dbt ls -s stg_orders+",
+        "correct": true,
+        "why": "Right. Everything downstream of it."
+      },
+      {
+        "text": "dbt run --full-refresh",
+        "correct": false,
+        "why": "That builds, it does not list."
+      }
+    ]
+  },
+  {
+    "id": "ex-pennc5h9",
+    "version": 1,
+    "section": "the-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Airflow still do once the transformations are in dbt?",
+    "hint": "When, and what if it fails.",
+    "choices": [
+      {
+        "text": "Orders the models",
+        "correct": false,
+        "why": "dbt does that from the refs."
+      },
+      {
+        "text": "Writes the CREATE statements",
+        "correct": false,
+        "why": "dbt writes them."
+      },
+      {
+        "text": "Decides when to run, waits for the load, retries and alerts",
+        "correct": true,
+        "why": "Right. Airflow owns when; dbt owns in what order."
+      },
+      {
+        "text": "Nothing; dbt replaces it",
+        "correct": false,
+        "why": "dbt has no schedule or retries of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkvg82ze",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happened when Ana ran `dbt run` on the project with four models.",
+    "hint": "Parse, then the views, then the table.",
+    "items": [
+      "dbt parsed the project and found the models",
+      "The three staging views were created together",
+      "daily_sales was built under a temporary name",
+      "The new table was swapped into place"
+    ]
+  },
+  {
+    "id": "ex-6wykkkea",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly `dbt run` builds `fact_sales` incrementally with no lookback. A month later the finance team's revenue is higher than the shop's. What is the likeliest cause?",
+    "hint": "Which way do late changes go?",
+    "choices": [
+      {
+        "text": "Sales cancelled or refunded after their day was loaded",
+        "correct": true,
+        "why": "Right. The table still counts them; the shop does not."
+      },
+      {
+        "text": "Duplicate rows from a retry",
+        "correct": false,
+        "why": "delete+insert replaces whole days, so a retry does not duplicate."
+      },
+      {
+        "text": "The views are out of date",
+        "correct": false,
+        "why": "Views are read live."
+      },
+      {
+        "text": "dbt rounds money",
+        "correct": false,
+        "why": "It runs the SQL as written."
+      }
+    ]
+  }
+]
