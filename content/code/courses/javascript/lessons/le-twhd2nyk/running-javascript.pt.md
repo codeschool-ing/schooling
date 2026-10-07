@@ -1,6 +1,6 @@
 ---
 title: Dois lugares para rodar
-version: 1
+version: 2
 ---
 
 **JavaScript é uma linguagem, e uma linguagem precisa de um programa que a execute.** Esse

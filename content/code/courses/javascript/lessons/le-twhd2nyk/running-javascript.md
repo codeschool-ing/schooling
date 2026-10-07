@@ -1,6 +1,6 @@
 ---
 title: Two places to run it
-version: 1
+version: 2
 ---
 
 **JavaScript is a language, and a language needs a program to run it.** That program is called a

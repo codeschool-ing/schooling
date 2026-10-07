@@ -1,11 +1,12 @@
 ---
 title: Timeouts and cancelling
-version: 1
+version: 2
 ---
 
 **`fetch` has no timeout of its own.** A server that accepts the connection and never answers leaves
 the promise pending for as long as the operating system lets the connection live. The way to give up
-is a **signal**:
+is a **signal**. This runs with `node`, so the server from the previous section has to be running in
+its second terminal:
 
 ```javascript
 const round = (ms) => Math.round(ms / 100) * 100;
@@ -48,3 +49,7 @@ stopped wanting it"**: the first is worth reporting to the user, the second usua
 Aborting stops the waiting on this side. **It cannot undo what the server already did**: a `POST` that
 the server had already saved stays saved. That is one reason the next two sections treat sending data
 and retrying it with care.
+
+The next sections go back to `page`, which starts a server of its own on the same address. **Stop
+the one in the second terminal first**, with Ctrl+C, or `page` stops with `EADDRINUSE` (lesson 1,
+"When the setup fails").

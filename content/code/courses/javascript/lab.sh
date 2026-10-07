@@ -15,7 +15,8 @@
 #                        is the program's and is described in page.mjs; what
 #                        they say is what the browser said.
 #   serve                the same web server on its own (serve.mjs, lesson 1), for a
-#                        program in node to fetch from: lesson 16
+#                        program in node to fetch from: lesson 16, which shows
+#                        the api.mjs that answers under /api/
 #   npm, pnpm, yarn      the three package managers of lesson 21: npm as it
 #                        ships with Node.js 22.22.0 (10.9.4), pnpm 10.28.0 and
 #                        Yarn 4.10.3, the last two installed here at those
@@ -84,7 +85,8 @@ install_lab() {
   mkdir -p $OPT/lab
   shown le-twhd2nyk your-computer page.mjs
   shown le-twhd2nyk your-computer serve.mjs
-  install -m 0644 "$HERE"/lab/api.mjs "$HERE"/lab/devtools.mjs $OPT/lab/
+  shown le-jgtvhqs7 fetch-basics api.mjs
+  shown le-n6r1ve5p breakpoints devtools.mjs
   ln -sfn $OPT/node_modules $OPT/lab/node_modules
   printf '#!/bin/sh\nexec node %s/lab/page.mjs "$@"\n' $OPT > $OPT/bin/page
   printf '#!/bin/sh\nexec node %s/lab/serve.mjs "$@"\n' $OPT > $OPT/bin/serve
