@@ -1,0 +1,37 @@
+---
+title: Somando estimativas
+version: 1
+---
+
+Uma funcionalidade são várias tarefas, e a estimativa dela é alguma combinação das delas. Como são combinadas muda a resposta mais do que o cuidado com que cada uma foi estimada.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 640 250\" role=\"img\" data-fig=\"l09-totals\" aria-label=\"Quatro barras horizontais para a funcionalidade de agendamento online. A soma dos valores mais prováveis é 17 dias; a soma das médias PERT é 20,5; perto do percentil 85 é 24,1; a soma dos pessimistas é 46.\"><path d=\"M220.0 200.0 L600.0 200.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M220.0 200.0 L220.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"220.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0</text><path d=\"M296.0 200.0 L296.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"296.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10</text><path d=\"M372.0 200.0 L372.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"372.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">20</text><path d=\"M448.0 200.0 L448.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"448.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">30</text><path d=\"M524.0 200.0 L524.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"524.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">40</text><path d=\"M600.0 200.0 L600.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"600.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">50</text><text x=\"410.0\" y=\"231.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">dias úteis das quatro tarefas juntas</text><rect x=\"220.0\" y=\"32.0\" width=\"129.2\" height=\"26.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"45.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">soma dos mais prováveis</text><text x=\"357.2\" y=\"45.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">17,0</text><rect x=\"220.0\" y=\"74.0\" width=\"155.8\" height=\"26.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"87.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">soma das médias PERT</text><text x=\"383.8\" y=\"87.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">20,5</text><rect x=\"220.0\" y=\"116.0\" width=\"183.5\" height=\"26.0\" rx=\"2\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"129.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">perto do percentil 85</text><text x=\"411.5\" y=\"129.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--amber)\">24,1</text><rect x=\"220.0\" y=\"158.0\" width=\"349.6\" height=\"26.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"171.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">soma dos pessimistas</text><text x=\"577.6\" y=\"171.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">46,0</text></svg>", "caption": "Quatro jeitos de somar as mesmas quatro tarefas. A soma dos mais prováveis é o número que as pessoas citam, e é o mais otimista dos quatro; a soma dos pessimistas é um mundo em que tudo dá errado ao mesmo tempo."}
+```
+
+## Quatro totais para as mesmas quatro tarefas
+
+**A soma dos valores mais prováveis é 17 dias.** É o número a partir do qual a maioria dos planos é feita, porque é o que cada pessoa disse quando perguntaram quanto tempo a tarefa dela levaria. É também o total mais otimista dos quatro, pelo motivo que a seção anterior deu: cada valor mais provável fica abaixo da média da sua tarefa.
+
+**A soma das médias PERT é 20,5 dias.** Médias podem ser somadas, então este é o total esperado. Ele é três dias e meio mais longo que a soma dos mais prováveis, e nenhum desses dias foi inventado: eles vêm das caudas direitas longas.
+
+**A soma dos valores pessimistas é 46 dias.** Ela descreve um mundo em que toda tarefa atinge o pior caso ao mesmo tempo. Isso é muito improvável quando as tarefas são independentes, e um plano feito sobre ela teria folga além de qualquer utilidade.
+
+**Perto do percentil 85, 24,1 dias**, é o número para planejar, e ele precisa de mais um passo.
+
+## Desvios padrão não se somam; variâncias sim
+
+Para obter um percentil do total, é preciso a dispersão do total. Se as tarefas variam independentemente umas das outras, suas **variâncias** — os quadrados dos desvios padrão — se somam, e o desvio padrão do total é a raiz quadrada da soma:
+
+```localised
+variância do total = 1,67² + 1,00² + 2,83² + 0,67² = 12,25
+desvio padrão      = raiz de 12,25 = 3,5 dias
+```
+
+Somar os desvios padrão diretamente daria 6,17 dias, o que exagera a dispersão: pressupõe que toda tarefa se alonga junto. A raiz quadrada reflete que tarefas independentes se compensam em parte — uma se alonga enquanto outra encurta.
+
+Com média de 20,5 e desvio padrão de 3,5, e um total que se comporta mais ou menos como uma distribuição normal, cerca de 85% dos resultados ficam abaixo da média mais 1,04 desvio padrão: **24,1 dias**.
+
+## A suposição que quebra isso
+
+A raiz quadrada só vale se as tarefas forem de fato independentes. As quatro tarefas do time Agenda compartilham uma causa: se o ambiente de testes do provedor de pagamento ficar indisponível por uma semana, a integração de pagamento e o teste de ponta a ponta se alongam juntos. Causas compartilhadas fazem as tarefas se mexerem juntas, e aí a dispersão real é maior que 3,5 dias. **A aritmética desta seção é um piso para a incerteza, não um teto.** A aula 11 trata causas compartilhadas explicitamente, como riscos com probabilidade e custo próprios, em vez de escondê-las dentro do número pessimista de cada tarefa.
