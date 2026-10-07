@@ -66,7 +66,7 @@ combina com quem as pessoas do arquivo podem ser.
 Este laboratório tem um gabarito que o trabalho real nunca tem, então dá para conferir a regra:
 
 ```
-ana@lab:~/clean$ python -c "import pandas as pd; from years import customers as c; t = pd.read_csv('/var/lib/clean-data/truth/people.csv', dtype={'birth_year': 'Int64'}); m = c[c['birth_year'].str.len() == 2].merge(t[['customer_id', 'birth_year']], on='customer_id', suffixes=('', '_true')); print(len(m), (m['birth'] == m['birth_year_true']).sum())"
+ana@lab:~/clean$ python -c "import pandas as pd; from years import customers as c; t = pd.read_csv('~/clean-data/truth/people.csv', dtype={'birth_year': 'Int64'}); m = c[c['birth_year'].str.len() == 2].merge(t[['customer_id', 'birth_year']], on='customer_id', suffixes=('', '_true')); print(len(m), (m['birth'] == m['birth_year_true']).sum())"
 103 103
 ```
 

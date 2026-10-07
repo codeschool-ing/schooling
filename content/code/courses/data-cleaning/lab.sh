@@ -1,153 +1,130 @@
 #!/usr/bin/env bash
-# The machine every transcript in data-cleaning was recorded on.
+# The machine every transcript in data-cleaning was recorded on, built the way
+# lesson 1 teaches a student to build theirs.
+#
+# THE STUDENT NEVER SEES THIS FILE. Lesson 1 gives them the commands, section
+# `the-lab`, and the generator and the loading script in full, section
+# `your-data`. This script runs those same commands, in that order, so that a
+# transcript is what the student's own machine prints; it adds only what a
+# script needs and a person does not: the user `ana`, a way to start
+# PostgreSQL in a machine with no systemd, and `reset` between lessons. The
+# generator and the loader are NOT kept here: they are read out of the lesson's
+# own fences, so the program the course ran is the program the student types.
 #
 # ONE LINUX COMPUTER AND ONE PERSON. ana is the data analyst of Quitanda Verde, an
 # organic grocer that does not exist: five shops, in São Paulo, Campinas, Rio
 # de Janeiro, Belo Horizonte and Curitiba, and a website and an app that
 # deliver. In the first week of January 2026 she is handed what the company's
-# systems export, and asked whether 2025 can be trusted. ~/clean is where she
-# works, and the course cleans what is in it.
+# systems export, and asked whether 2025 can be trusted.
 #
-#   /var/lib/clean-data  the files, made once by lab/generate.py: raw/ is what
-#                        the systems exported, ref/ is reference data from
-#                        outside the company, truth/ says where every planted
-#                        defect is, so a lesson can measure a technique
-#   /var/lib/clean-pg    PostgreSQL 16, socket in /run/clean-pg, database
-#                        `quitanda`, owned by ana; `reset` loads every raw file
-#                        into the schema `raw`, every column as text
-#                        (lab/raw.sql)
-#   /opt/clean           Python 3 in a virtual environment with pandas,
-#                        RapidFuzz and Matplotlib, pinned in PYLIBS
-#   R 4.3 with dplyr, tidyr and readr, from Ubuntu's own packages, for the one
-#                        lesson (16) that compares the tools
-#   /home/ana/clean      the working directory, rebuilt by `reset`: raw/ and
-#                        ref/ are copied in and raw/ is made read-only
-#
-# WHAT IS REAL AND WHAT WAS WRITTEN FOR THE COURSE.
-#
-#   real      PostgreSQL 16, pandas 3.0, RapidFuzz, Matplotlib, R and dplyr,
-#             which every command in the course runs on; the IBGE codes of the
-#             27 federative units and of the five cities; the national
-#             holidays and optional days of the federal calendar for 2025.
-#   written   every person, order, product, price, sale, survey answer,
-#             invoice, target and exchange rate. lab/generate.py draws them
-#             from random.Random with fixed seeds, and plants the defects the
-#             lessons find: duplicates exact and near, homonyms, NFD and
-#             mangled accents, three date formats, a decimal comma, lost
-#             leading zeros, a column where blank means zero, a timer that
-#             stops at two hours, three repriced products listed twice, seven
-#             totals typed with a zero too many, the corporate orders of
-#             December, an account that cycles refunds, and the customers the
-#             export is too old to know. The e-mail addresses are under the
-#             domains reserved for examples.
+#   ~/clean-data   the generator and the loader as lesson 1 shows them, and
+#                  what the generator writes: raw/ is what the systems
+#                  exported, ref/ is reference data from outside the company,
+#                  truth/ says where every planted defect is
+#   ~/clean        the working directory: raw/ (read-only) and ref/ copied in
+#   ~/venv         Python 3.12 with pandas, RapidFuzz and Matplotlib, pinned
+#   PostgreSQL 16  Ubuntu's own cluster, database `quitanda` owned by ana,
+#                  schema `raw` with every file loaded as text
+#   R 4.3          with dplyr, tidyr and readr, from Ubuntu's own packages
 #
 # NOT REACHABLE, AND THEREFORE NOT RUN: Microsoft Excel and Power Query.
-# Lesson 16 shows what they do and says it was not run here.
 #
 #   sudo bash lab.sh up              build it (idempotent)
-#   sudo bash lab.sh reset           rebuild ~/clean and reload `raw`
-#   sudo bash lab.sh down            stop PostgreSQL
-#   sudo bash lab.sh exec 'COMMAND'  run COMMAND as ana, in ~/clean
+#   sudo bash lab.sh reset           lesson 1's "start everything again": ~/clean and
+#                                    `quitanda` made afresh, the files loaded
+#   sudo bash lab.sh exec 'COMMAND'  run COMMAND as ana, in ~/clean, in the
+#                                    shell lesson 1's lines in ~/.bashrc make
+#   sudo bash lab.sh stop | start    the server, for lesson 1's failures; start
+#                                    is the command the lesson gives
 #
-# Recorded on Ubuntu 24.04 with Python 3.13, PostgreSQL 16 and R 4.3.3,
-# 4 cores, TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with Python 3.12, PostgreSQL 16 and R 4.3.3, 4 cores.
 set -euo pipefail
 # The capture scripts hold a lock on fd 9 while they run. The server started
 # here must not inherit it, or it holds the lock for as long as it lives.
 exec 9>&-
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-VENV=/opt/clean
-DATA=/var/lib/clean-data
-PGDATA=/var/lib/clean-pg
-PGSOCK=/run/clean-pg
-WORK=/home/ana/clean
-PGBIN=/usr/lib/postgresql/16/bin
+LESSON1=$HERE/lessons/le-kzw67m5d
+PACKAGES="postgresql python3-venv r-base-core r-cran-dplyr r-cran-tidyr r-cran-readr"
 PYLIBS="pandas==3.0.6 numpy==2.5.3 rapidfuzz==3.14.6 matplotlib==3.11.2"
-RPKGS="r-base-core r-cran-dplyr r-cran-tidyr r-cran-readr"
 
-ENVFILE=/etc/clean.env
-write_env() {
-  cat > "$ENVFILE" <<EOF
-PATH=$VENV/bin:$PGBIN:/usr/local/bin:/usr/bin:/bin
-TZ=America/Sao_Paulo
-LANG=C.UTF-8
-LC_ALL=C.UTF-8
-PYTHONDONTWRITEBYTECODE=1
-PGHOST=$PGSOCK
-PGDATABASE=quitanda
-PAGER=cat
-COLUMNS=100
-EOF
+# Ubuntu 24.04's python3 is 3.12. The machine this was recorded on had a 3.13
+# installed as an alternative, so `python3` here is pointed back at the stock
+# interpreter, which is the one a student's fresh machine has.
+STOCK=/usr/local/lib/clean-stock
+stock_python() {
+  mkdir -p $STOCK && ln -sfn /usr/bin/python3.12 $STOCK/python3
 }
 
+# What a terminal gives a person and a script does not: a width, and a locale.
+# Everything else comes from the lines lesson 1 adds to ~/.bashrc.
 as_ana() {
-  # shellcheck disable=SC2046
-  runuser -u ana -- env -i HOME=/home/ana USER=ana $(cat "$ENVFILE") bash -c "$1"
+  runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana SHELL=/bin/bash \
+    LANG=C.UTF-8 COLUMNS=100 PATH=$STOCK:/usr/local/bin:/usr/bin:/bin \
+    bash -c 'eval "$(sed -n "/^# data-cleaning$/,\$p" ~/.bashrc)"; '"$1"
 }
 
-need() {
-  command -v python3 >/dev/null || { echo "python3 is required" >&2; exit 1; }
-  [ -x $PGBIN/initdb ] || {
-    echo "PostgreSQL 16 is required: apt-get install postgresql-16" >&2; exit 1; }
-  command -v Rscript >/dev/null || {
-    echo "R is required for lesson 16: apt-get install $RPKGS" >&2; exit 1; }
+# The one fence of LANG in your-data.md, which is the whole file a student saves.
+fence() {
+  python3 - "$LESSON1/your-data.md" "$1" <<'PY2'
+import re, sys
+text, lang = open(sys.argv[1], encoding="utf-8").read(), sys.argv[2]
+found = re.findall(r"^```" + lang + r"\n(.*?)^```$", text, re.S | re.M)
+if len(found) != 1:
+    sys.exit(f"your-data.md has {len(found)} {lang} fences, and lab.sh needs exactly one")
+sys.stdout.write(found[0])
+PY2
 }
 
-build_user() {
+cluster_up() {
+  # In a virtual machine apt starts it and systemd keeps it running.
+  pg_lsclusters -h | grep -q ' online ' || pg_ctlcluster 16 main start
+}
+
+build() {
+  DEBIAN_FRONTEND=noninteractive apt-get install -y -q $PACKAGES >/dev/null
+  cluster_up
   id ana >/dev/null 2>&1 || useradd -m -s /bin/bash ana
-}
-
-build_venv() {
-  [ -x $VENV/bin/python ] || python3 -m venv $VENV
-  # shellcheck disable=SC2086
-  $VENV/bin/pip install -q $PYLIBS
-}
-
-build_data() {
-  if [ ! -f $DATA/.done ]; then
-    rm -rf $DATA && mkdir -p $DATA
-    python3 "$HERE/lab/generate.py" $DATA
-    touch $DATA/.done
-  fi
-  chmod -R a+rX $DATA
-}
-
-pg_up() {
-  mkdir -p $PGSOCK && chown ana $PGSOCK
-  if [ ! -f $PGDATA/PG_VERSION ]; then
-    mkdir -p $PGDATA && chown ana $PGDATA
-    as_ana "initdb -D $PGDATA -U ana -A trust --encoding=UTF8 --locale=C.UTF-8 >/dev/null"
-    cat >> $PGDATA/postgresql.conf <<EOF
-listen_addresses = ''
-unix_socket_directories = '$PGSOCK'
-timezone = 'America/Sao_Paulo'
-datestyle = 'iso, dmy'
-jit = off
+  runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_roles WHERE rolname = 'ana'" | grep -q 1 ||
+    runuser -u postgres -- createuser --createdb ana
+  stock_python
+  as_ana "cd && { [ -x venv/bin/python ] || python3 -m venv venv; } && venv/bin/pip install -q $PYLIBS"
+  grep -q '^# data-cleaning$' /home/ana/.bashrc || cat >> /home/ana/.bashrc <<'EOF'
+# data-cleaning
+export TZ=America/Sao_Paulo
+export PGDATABASE=quitanda
+source ~/venv/bin/activate
 EOF
-  fi
-  as_ana "pg_ctl -D $PGDATA status >/dev/null 2>&1 || pg_ctl -D $PGDATA -l $PGDATA/server.log -w start >/dev/null"
+  runuser -u ana -- mkdir -p /home/ana/clean-data
+  fence python > /home/ana/clean-data/generate.py
+  fence sql > /home/ana/clean-data/raw.sql
+  chown ana:ana /home/ana/clean-data/generate.py /home/ana/clean-data/raw.sql
+  as_ana "cd ~/clean-data && rm -rf raw ref truth && python3 generate.py ."
 }
 
 reset() {
-  rm -rf $WORK
-  mkdir -p $WORK
-  cp -r $DATA/raw $DATA/ref $WORK/
-  chown -R ana:ana $WORK
-  chmod -R a-w $WORK/raw
-  as_ana "dropdb --maintenance-db=postgres --if-exists quitanda && createdb quitanda"
-  as_ana "cd $WORK && psql -q -v ON_ERROR_STOP=1 -f '$HERE/lab/raw.sql'"
+  cluster_up
+  as_ana "chmod -R u+w ~/clean 2>/dev/null; rm -rf ~/clean
+    dropdb --if-exists quitanda
+    createdb --template=template0 --locale=C.UTF-8 quitanda
+    psql -q -c \"ALTER DATABASE quitanda SET datestyle = 'ISO, DMY'\" \
+            -c \"ALTER DATABASE quitanda SET timezone = 'America/Sao_Paulo'\"
+    mkdir ~/clean && cp -r ~/clean-data/raw ~/clean-data/ref ~/clean/
+    chmod -R a-w ~/clean/raw
+    cd ~/clean && psql -q -f ~/clean-data/raw.sql"
 }
 
 case "${1:-}" in
   up)
-    need; build_user; write_env; build_venv; build_data; pg_up; reset ;;
+    build; reset ;;
   reset)
-    pg_up; reset ;;
-  down)
-    as_ana "pg_ctl -D $PGDATA -m fast stop" || true ;;
+    reset ;;
   exec)
-    as_ana "cd $WORK && $2" ;;
+    as_ana "cd ~/clean && $2" ;;
+  stop)
+    pg_ctlcluster 16 main stop ;;
+  start)
+    service postgresql start ;;
   *)
-    echo "usage: lab.sh up | reset | down | exec 'COMMAND'" >&2; exit 2 ;;
+    echo "usage: lab.sh up | reset | exec 'COMMAND' | stop | start" >&2; exit 2 ;;
 esac

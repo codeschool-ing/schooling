@@ -98,8 +98,8 @@ ana@lab:~/clean$ psql -c "SELECT signup_channel, min(d), max(d) FROM (SELECT sig
 (4 rows)
 ```
 
-As três origens comuns concordam exatamente com o pandas. A migração sai vazia porque o `CASE` não lhe
-dá formato, o que é o padrão certo: uma origem com convenções misturadas não recebe formato até
+As três origens comuns concordam exatamente com o pandas. A migração sai vazia porque o `CASE` não
+lhe dá formato, o que é o padrão certo: uma origem com convenções misturadas não recebe formato até
 alguém escrever a regra para ela. **Nunca defina um estilo de data global e o deixe ler tudo**; o
-servidor do laboratório está em `DMY`, e um `::date` teria lido toda data do aplicativo com o dia
+banco que a aula 1 criou está em `DMY`, e um `::date` teria lido toda data do aplicativo com o dia
 primeiro sem dizer uma palavra.

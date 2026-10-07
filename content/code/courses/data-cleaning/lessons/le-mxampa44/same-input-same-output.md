@@ -25,7 +25,7 @@ code, and the usual suspects are worth knowing:
   different answer each run unless the seed is fixed and written down.
 - **Order that nobody asked for.** A table written in whatever order a `groupby` or a hash returned
   it can change between versions of a library; sort before writing when the order matters.
-- **The environment.** The lab script of lesson 1 pins every library to a version, `pandas==3.0.6`
+- **The environment.** Lesson 1 installs every library at a pinned version, `pandas==3.0.6`
   and the rest, because a new version can change a default and, with it, an output.
 
 A pipeline that passes this test turns a disagreement into something tractable. If two people get

@@ -12,12 +12,12 @@
 # ana wrote (put below), whose contents the lesson shows in full or which an
 # earlier lesson showed (cities.py, cascade.py and abbreviations.csv from
 # lesson 6, when.py from lesson 7); and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it. The reference
 # files in ref/ are real: IBGE's codes and the federal holidays of 2025, typed
 # into the generator from the published lists.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8

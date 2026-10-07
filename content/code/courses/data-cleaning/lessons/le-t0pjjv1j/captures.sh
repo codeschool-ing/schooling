@@ -13,10 +13,10 @@
 # earlier lesson showed (when.py from lesson 7, keyed.py, categorise.py and
 # category_map.csv from lesson 8, lines.py, orders.py and typos.py from
 # lesson 9, ready.py and derive.py from lesson 12); and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8

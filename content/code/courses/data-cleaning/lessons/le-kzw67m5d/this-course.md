@@ -25,9 +25,9 @@ produce. The website writes dates one way, the app another and the shops' old ti
 customer file was exported on a different day from the orders. Some people signed up twice. A
 blank in one column means zero and a blank in the next means the timer gave up.
 
-None of that was found by accident. The lab's generator plants each defect on purpose and writes
-down where it put it. So a lesson can say **how many of the real duplicates a technique found**, a
-question real work almost never lets you answer.
+None of that was found by accident. The generator you run in this lesson plants each defect on
+purpose and writes down where it put it. So a lesson can say **how many of the real duplicates a
+technique found**, a question real work almost never lets you answer.
 
 ## How a lesson runs
 

@@ -4,21 +4,21 @@ version: 1
 ---
 
 Every lesson in this course read from `raw/` and none of them wrote to it. That was not politeness.
-**The raw files are the only evidence of what arrived**, and a cleaning that edits them destroys
-the thing it would need to be checked against. Lesson 1 set the lab up so that this rule is
-enforced rather than remembered:
+**The raw files are the only evidence of what arrived**, and a cleaning that edits them destroys the
+thing it would need to be checked against. Lesson 1 set the files up so that this rule is enforced
+rather than remembered:
 
 ```
 ana@lab:~/clean$ ls -ld raw; ls -l raw | head -4
-dr-xr-xr-x 2 ana ana 4096 Oct  7 01:52 raw
+dr-xr-xr-x 2 ana ana 4096 Oct  7 02:59 raw
 total 6908
--r--r--r-- 1 ana ana  244696 Oct  7 01:52 customers.csv
--r--r--r-- 1 ana ana     286 Oct  7 01:52 fx_rates_2025.csv
--r--r--r-- 1 ana ana    3659 Oct  7 01:52 invoices.csv
+-r--r--r-- 1 ana ana  244696 Oct  7 02:59 customers.csv
+-r--r--r-- 1 ana ana     286 Oct  7 02:59 fx_rates_2025.csv
+-r--r--r-- 1 ana ana    3659 Oct  7 02:59 invoices.csv
 ana@lab:~/clean$ touch raw/notes.txt
 touch: cannot touch 'raw/notes.txt': Permission denied
 ana@lab:~/clean$ sed -i 's/Pepino/Pepino japonês/' raw/products.csv
-sed: couldn't open temporary file raw/sedCSmpNw: Permission denied
+sed: couldn't open temporary file raw/sed7rOYyY: Permission denied
 ```
 
 The directory and every file in it are read-only, so a stray `touch` or an in-place `sed` fails

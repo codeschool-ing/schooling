@@ -1,3 +1,192 @@
+---
+title: Your data, from a program you can read
+version: 1
+---
+
+The files this course cleans are not a download. They come from one Python program, printed in
+full at the end of this section, which you save on the lab and run once. It draws every customer,
+order and price from random number generators started with fixed seeds, so **your files come out
+byte for byte the same as the ones in every transcript**, and every number in the course is the
+number you get.
+
+**A warning before you scroll down to it.** The program plants every defect the course finds, and
+its comments say what each one is and how many there are. Reading it now is reading the answers
+before the questions. Save it without reading it, and come back after lesson 17, when it reads as a
+checklist of everything you found. Nothing in lessons 1 to 17 needs you to have read it.
+
+## Making the files
+
+Make a directory for it, open a new file there and paste the program into it. Any editor will do;
+`nano` is on every Ubuntu, saves with Ctrl+O and quits with Ctrl+X:
+
+```sh
+mkdir ~/clean-data
+cd ~/clean-data
+nano generate.py
+```
+
+Then run it, with the directory to write into as its only argument. It prints nothing:
+
+```
+ana@lab:~/clean-data$ python3 generate.py .
+ana@lab:~/clean-data$ ls
+generate.py
+raw
+raw.sql
+ref
+truth
+ana@lab:~/clean-data$ du -sh raw ref truth
+6.8M	raw
+16K	ref
+668K	truth
+```
+
+`raw/` is what the company's systems exported, and what the course cleans. `ref/` is reference data
+from outside the company, which lesson 14 uses. `truth/` is something real work never has: **where
+every planted defect is**, so that a lesson can say how many of the real duplicates a technique
+found. Lessons read from it and say so each time.
+
+To know that your copy of the program is the one the course ran, compare these with yours. One
+character pasted wrong changes a line here:
+
+```
+ana@lab:~/clean-data$ sha256sum raw/*.csv ref/*.csv
+8a594c4c04516e4398bebea1c3d13357730d214f5ce8b7e14927d717217860c1  raw/customers.csv
+828ced3123e1715e6b6df68071cd4461ba91e019c4f0f5194760b43c759f8302  raw/fx_rates_2025.csv
+351f51e69a37b56975b307f8c8e8de040751857e947bc2f1aad1a5a7591c8351  raw/invoices.csv
+085adf85843b7e9755e083d9e890a17962fd8652a41ed1a98c92f48e11c5b3a0  raw/order_items.csv
+ab7a46c7e27cd756b167d203f441426723dce262e43b222df5df077d268b5d41  raw/orders.csv
+5a41a149038a44f9bf5a9f95b7454e8b3f211e4fd96af6539da18f0312f8155b  raw/products.csv
+adef7b526a94a127a8791081c28ecec00d5252bad37bc9e4a9312b2b1c01168c  raw/store_sales.csv
+23ca72d26aab4162665493c2833e2291cbf9871c3f07006ccf4234b076c82660  raw/survey.csv
+3e4c0e2d09e9b788ca6e49dddd1993d12c4f1a6087184efd8bcf6a0bc26fbb88  raw/targets_2025.csv
+76da77428e8100542b69e5d98fc1f60c7c1b69434308d1e367fede00fd169c9c  ref/holidays_2025.csv
+af52492c14244124d8023252445a5c182dbd2ad343fd6d02ce3504504220830e  ref/ibge_cities.csv
+a7ea4008e80c7f9ed52824838efd76f6e543e86e58deee80928441d7173c1b98  ref/ibge_states.csv
+```
+
+## Loading them into PostgreSQL
+
+The second file is the loading script. Save it as `~/clean-data/raw.sql` the same way:
+
+```sql
+-- The landing schema: every file exactly as it arrived, every column text.
+--
+-- Nothing is typed, trimmed or converted here. A column declared `date` would
+-- refuse `14/03/2025` or, worse, read it the way the server's DateStyle says;
+-- a column declared `numeric` would refuse `R$ 94,50` and stop the load. The
+-- cleaning is the course, and it starts from what the systems really sent.
+SET client_min_messages = warning;
+DROP SCHEMA IF EXISTS raw CASCADE;
+CREATE SCHEMA raw;
+
+CREATE TABLE raw.customers (
+  customer_id text, name text, email text, cep text, city text, state text,
+  signed_up text, birth_year text, signup_channel text, marketing_opt_in text);
+
+CREATE TABLE raw.orders (
+  order_id text, customer_id text, channel text, ordered_at text, fulfilment text,
+  total text, discount text, delivery_fee text, payment text, status text,
+  courier text, delivery_minutes text);
+
+CREATE TABLE raw.order_items (
+  order_id text, line_no text, product_code text, quantity text, unit text,
+  unit_price text);
+
+CREATE TABLE raw.products (
+  product_code text, name text, category text, unit text, price text);
+
+CREATE TABLE raw.store_sales (
+  venda text, loja text, data text, hora text, cliente text, total text,
+  pagamento text, itens text);
+
+CREATE TABLE raw.survey (
+  order_id text, sent_on text, answered_on text, nps text);
+
+CREATE TABLE raw.invoices (
+  invoice text, supplier text, issued text, currency text, amount text,
+  weight text, weight_unit text);
+
+CREATE TABLE raw.fx_rates_2025 (month text, usd_brl text, eur_brl text);
+
+CREATE TABLE raw.targets_2025 (
+  loja text, "jan/25" text, "fev/25" text, "mar/25" text, "abr/25" text,
+  "mai/25" text, "jun/25" text, "jul/25" text, "ago/25" text, "set/25" text,
+  "out/25" text, "nov/25" text, "dez/25" text, "Total" text);
+
+\copy raw.customers FROM 'raw/customers.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.orders FROM 'raw/orders.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.order_items FROM 'raw/order_items.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.products FROM 'raw/products.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.store_sales FROM 'raw/store_sales.csv' WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'LATIN1')
+\copy raw.survey FROM 'raw/survey.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.invoices FROM 'raw/invoices.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.fx_rates_2025 FROM 'raw/fx_rates_2025.csv' WITH (FORMAT csv, HEADER true)
+\copy raw.targets_2025 FROM 'raw/targets_2025.csv' WITH (FORMAT csv, HEADER true)
+```
+
+Then make the database, give it two settings, and make the working directory the lessons run in:
+
+```sh
+createdb --template=template0 --locale=C.UTF-8 quitanda
+psql -c "ALTER DATABASE quitanda SET datestyle = 'ISO, DMY'" \
+     -c "ALTER DATABASE quitanda SET timezone = 'America/Sao_Paulo'"
+mkdir ~/clean
+cp -r ~/clean-data/raw ~/clean-data/ref ~/clean/
+chmod -R a-w ~/clean/raw
+cd ~/clean
+```
+
+Each line has a reason:
+
+- `--locale=C.UTF-8` fixes how text is **sorted**, so an `ORDER BY` puts the same rows in the same
+  order on your machine as on this one. Without it the database takes the machine's language, and
+  two machines can disagree.
+- `datestyle` set to `DMY` is what a Brazilian company's server usually has: `03/04/2025` reads as
+  the 3rd of April. Lesson 7 shows what that does to dates written the other way.
+- `timezone` is the company's clock, for the server as `TZ` was for the shell.
+- `chmod -R a-w` makes the copy of `raw/` **read-only**. Lesson 17 says why.
+
+And the load itself, from `~/clean`, because the script reads `raw/` relative to where it runs:
+
+```
+ana@lab:~/clean$ psql -f ~/clean-data/raw.sql
+SET
+DROP SCHEMA
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+COPY 2413
+COPY 28551
+COPY 99161
+COPY 72
+COPY 23594
+COPY 26494
+COPY 60
+COPY 12
+COPY 6
+```
+
+Nine `COPY` lines, one per file, each with the rows it loaded. That is the lab finished.
+
+**To start a table again**, run the same `psql -f` line: the script drops the schema `raw` and loads
+it from the files, and leaves alone every table and file you made yourself. To start everything
+again, delete `~/clean` and the database (`chmod -R u+w ~/clean`, `rm -rf ~/clean`,
+`dropdb quitanda`) and repeat this section from `createdb`.
+
+## The program
+
+Saved as `~/clean-data/generate.py`. It uses nothing outside Python's own library, so it runs with
+the `python3` Ubuntu ships as well as with the one in `~/venv`.
+
+```python
 """The raw data of Quitanda Verde, an organic grocer that does not exist.
 
 Writes the files the course cleans into the directory given as the only
@@ -719,3 +908,4 @@ write(os.path.join(REF, "holidays_2025.csv"), ["date", "name", "kind"], [
     ["2025-11-02", "Finados", "holiday"], ["2025-11-15", "Proclamação da República", "holiday"],
     ["2025-11-20", "Dia Nacional de Zumbi e da Consciência Negra", "holiday"],
     ["2025-12-25", "Natal", "holiday"]])
+```

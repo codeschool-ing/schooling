@@ -10,15 +10,15 @@ directory:
 ```
 ana@lab:~/clean$ ls -l raw
 total 6908
--r--r--r-- 1 ana ana  244696 Oct  6 23:50 customers.csv
--r--r--r-- 1 ana ana     286 Oct  6 23:50 fx_rates_2025.csv
--r--r--r-- 1 ana ana    3659 Oct  6 23:50 invoices.csv
--r--r--r-- 1 ana ana 2488556 Oct  6 23:50 order_items.csv
--r--r--r-- 1 ana ana 2405696 Oct  6 23:50 orders.csv
--r--r--r-- 1 ana ana    2790 Oct  6 23:50 products.csv
--r--r--r-- 1 ana ana 1270312 Oct  6 23:50 store_sales.csv
--r--r--r-- 1 ana ana  638586 Oct  6 23:50 survey.csv
--r--r--r-- 1 ana ana     630 Oct  6 23:50 targets_2025.csv
+-r--r--r-- 1 ana ana  244696 Oct  7 03:03 customers.csv
+-r--r--r-- 1 ana ana     286 Oct  7 03:03 fx_rates_2025.csv
+-r--r--r-- 1 ana ana    3659 Oct  7 03:03 invoices.csv
+-r--r--r-- 1 ana ana 2488556 Oct  7 03:03 order_items.csv
+-r--r--r-- 1 ana ana 2405696 Oct  7 03:03 orders.csv
+-r--r--r-- 1 ana ana    2790 Oct  7 03:03 products.csv
+-r--r--r-- 1 ana ana 1270312 Oct  7 03:03 store_sales.csv
+-r--r--r-- 1 ana ana  638586 Oct  7 03:03 survey.csv
+-r--r--r-- 1 ana ana     630 Oct  7 03:03 targets_2025.csv
 ana@lab:~/clean$ wc -l raw/*.csv
    2414 raw/customers.csv
      13 raw/fx_rates_2025.csv

@@ -75,7 +75,7 @@ Sete categorias em quatro departamentos, com todo produto no lugar. Como o labor
 categoria real de cada produto, o mapeamento também recebe nota:
 
 ```
-ana@lab:~/clean$ python -c "import pandas as pd; from categorise import products as p; t = pd.read_csv('/var/lib/clean-data/truth/categories.csv', dtype=str); m = p.merge(t, on='product_code', suffixes=('', '_true')); print(len(m), (m['category'] == m['category_true']).sum())"
+ana@lab:~/clean$ python -c "import pandas as pd; from categorise import products as p; t = pd.read_csv('~/clean-data/truth/categories.csv', dtype=str); m = p.merge(t, on='product_code', suffixes=('', '_true')); print(len(m), (m['category'] == m['category_true']).sum())"
 72 72
 ```
 

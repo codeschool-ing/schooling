@@ -95,6 +95,7 @@ ana@lab:~/clean$ file months.png
 months.png: PNG image data, 960 x 480, 8-bit/color RGBA, non-interlaced
 ```
 
-`matplotlib.use("Agg")` tells it to draw into a file rather than a window, because the lab has no
-screen. The figures on this page are drawn from the same numbers by the course itself, so they look
-the same in both themes; the PNG is what you would attach to a message or open on your own machine.
+`matplotlib.use("Agg")` tells it to draw into a file rather than a window, because a program that
+cleans data should not need one: it runs the same in a terminal, over SSH and in a job at night. The
+figures on this page are drawn from the same numbers by the course itself, so they look the same in
+both themes; the PNG is what you would attach to a message or open on your own machine.

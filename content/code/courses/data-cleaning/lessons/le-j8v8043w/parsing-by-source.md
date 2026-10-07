@@ -101,5 +101,5 @@ ana@lab:~/clean$ psql -c "SELECT signup_channel, min(d), max(d) FROM (SELECT sig
 The three ordinary sources agree with pandas exactly. The migration comes out blank because the
 `CASE` gives it no format, which is the right default: a source with mixed conventions gets no
 format until somebody writes the rule for it. **Never set a global date style and let it read
-everything**; the lab's server is set to `DMY`, and a `::date` cast would have read every app date
-day first without a word.
+everything**; the database lesson 1 made is set to `DMY`, and a `::date` cast would have read every
+app date day first without a word.

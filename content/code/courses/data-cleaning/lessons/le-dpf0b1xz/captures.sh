@@ -10,10 +10,10 @@
 #
 # What is STAGED rather than typed: the lab, as lesson 1 left it; the files
 # ana wrote (put below), whose contents the lesson shows in full; and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8

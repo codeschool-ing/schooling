@@ -15,9 +15,9 @@ ValueError: time data "fev/25" doesn't match format "%b/%y". You might want to t
 ```
 
 `%b` quer dizer "nome abreviado do mês", e **de que idioma é a abreviação depende do locale da
-máquina**. Este laboratório roda num locale neutro, que conhece `Feb` e não `fev`. Uma máquina
-configurada em português talvez leia, e aí o mesmo script funcionaria num notebook e falharia no
-servidor que o roda toda noite.
+máquina**. O Python lê nomes de mês num locale neutro, a menos que um programa peça outro, então
+conhece `Feb` e não `fev`. Uma máquina configurada em português talvez leia, e aí o mesmo script
+funcionaria num notebook e falharia no servidor que o roda toda noite.
 
 Por isso o `targets.py`, na seção anterior, escreve os doze meses num dicionário. São doze linhas
 sem nada de esperto, e têm duas virtudes que um leitor de datas não tem: leem igual em toda

@@ -38,7 +38,7 @@ dizer pelo menos 120 minutos.** Isso transforma um valor faltante num limite, e 
 Contra o arquivo de verdade:
 
 ```
-ana@lab:~/clean$ python -c "import pandas as pd; t = pd.read_csv('/var/lib/clean-data/truth/orders.csv'); m = t.loc[t['what'] == 'minutes', 'value']; print(f'real: mean {m.mean():.1f}, late {(m >= 90).mean() * 100:.1f}%')"
+ana@lab:~/clean$ python -c "import pandas as pd; t = pd.read_csv('~/clean-data/truth/orders.csv'); m = t.loc[t['what'] == 'minutes', 'value']; print(f'real: mean {m.mean():.1f}, late {(m >= 90).mean() * 100:.1f}%')"
 real: mean 61.9, late 13.2%
 ```
 

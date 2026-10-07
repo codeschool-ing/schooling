@@ -38,7 +38,7 @@ least 120 minutes.** That turns a missing value into a bound, and a bound can be
 Against the truth file:
 
 ```
-ana@lab:~/clean$ python -c "import pandas as pd; t = pd.read_csv('/var/lib/clean-data/truth/orders.csv'); m = t.loc[t['what'] == 'minutes', 'value']; print(f'real: mean {m.mean():.1f}, late {(m >= 90).mean() * 100:.1f}%')"
+ana@lab:~/clean$ python -c "import pandas as pd; t = pd.read_csv('~/clean-data/truth/orders.csv'); m = t.loc[t['what'] == 'minutes', 'value']; print(f'real: mean {m.mean():.1f}, late {(m >= 90).mean() * 100:.1f}%')"
 real: mean 61.9, late 13.2%
 ```
 

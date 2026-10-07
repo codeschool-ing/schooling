@@ -6,7 +6,7 @@ These are computed: every bar, point and count comes from the files
 lab/generate.py writes, the same files every capture in the course reads, so a
 figure cannot drift from the transcript beside it.
 
-    sudo bash lab.sh up           # once: the data lives in /var/lib/clean-data
+    sudo bash lab.sh up           # once: the data lives in /home/ana/clean-data
     python3 figures.py            # rewrite every figure in the lessons
     python3 figures.py --list     # the names, and the lesson each lives in
 
@@ -37,7 +37,7 @@ import unicodedata
 sys.dont_write_bytecode = True
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.environ.get('CLEAN_DATA', '/var/lib/clean-data')
+DATA = os.environ.get('CLEAN_DATA', '/home/ana/clean-data')
 SANS = "'IBM Plex Sans', sans-serif"
 MONO = "'IBM Plex Mono', monospace"
 

@@ -26,7 +26,7 @@ entradas e o seu código, e vale conhecer os suspeitos de sempre:
 - **Uma ordem que ninguém pediu.** Uma tabela gravada na ordem em que um `groupby` ou um hash a
   devolveu pode mudar entre versões de uma biblioteca; ordene antes de gravar quando a ordem
   importar.
-- **O ambiente.** O script do laboratório da aula 1 fixa cada biblioteca numa versão,
+- **O ambiente.** A aula 1 instala cada biblioteca numa versão fixa,
   `pandas==3.0.6` e as outras, porque uma versão nova pode mudar um padrão e, com ele, uma saída.
 
 Um pipeline que passa nesse teste transforma uma discordância em algo tratável. Se duas pessoas

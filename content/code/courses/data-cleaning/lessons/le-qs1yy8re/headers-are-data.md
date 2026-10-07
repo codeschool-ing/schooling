@@ -15,9 +15,9 @@ ValueError: time data "fev/25" doesn't match format "%b/%y". You might want to t
 ```
 
 `%b` means "abbreviated month name", and **whose abbreviations depends on the machine's locale**.
-This lab runs in a neutral locale, which knows `Feb` and not `fev`. A machine set to Portuguese
-might parse it, and then the same script would work on one laptop and fail on the server that runs
-it every night.
+Python reads month names in a neutral locale unless a program asks for another, so it knows `Feb`
+and not `fev`. A machine set to Portuguese might parse it, and then the same script would work on
+one laptop and fail on the server that runs it every night.
 
 So `targets.py`, in the previous section, spells the twelve months out in a dictionary. That is
 twelve lines of nothing clever, and it has two virtues a parser lacks: it reads the same on every

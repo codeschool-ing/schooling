@@ -4,8 +4,8 @@ version: 1
 ---
 
 A reference table that arrived without a note is a liability: a year later nobody knows whether it
-was official, how old it is or whether it may be shared. So the lab keeps a small file beside the
-references, written by hand, one row per source:
+was official, how old it is or whether it may be shared. So this lesson writes a small file by hand
+beside the references, one row per source:
 
 ```
 file,publisher,document,obtained,valid_for,terms
@@ -21,7 +21,7 @@ there:
   IBGE's, the national statistics office, which is the authority on them. The holidays come from the
   federal laws that create them and from the federal government's calendar for the year, which also
   lists the optional days.
-- **`obtained`** says how the file got here. In this lab the values were typed in from the
+- **`obtained`** says how the file got here. Here the values were typed in from the
   published lists, which is honest and weaker than a download: a typed value can carry a typo, and
   only a comparison with the source would show it.
 - **`valid_for`** says when the values hold. Holidays are the clearest case: 20 November, Black

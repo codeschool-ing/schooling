@@ -3,9 +3,9 @@ title: Anotando de onde veio
 version: 1
 ---
 
-Uma tabela de referência que chegou sem nenhuma nota é um passivo: um ano depois ninguém sabe se
-era oficial, de quando é ou se pode ser compartilhada. Por isso o laboratório guarda um arquivo
-pequeno ao lado das referências, escrito à mão, uma linha por fonte:
+Uma tabela de referência que chegou sem nenhuma nota é um passivo: um ano depois ninguém sabe se era
+oficial, de quando é ou se pode ser compartilhada. Por isso esta aula escreve à mão um arquivo
+pequeno ao lado das referências, uma linha por fonte:
 
 ```
 file,publisher,document,obtained,valid_for,terms
@@ -21,7 +21,7 @@ estar lá:
   são do IBGE, o instituto nacional de estatística, que é a autoridade neles. Os feriados vêm das
   leis federais que os criam e do calendário do governo federal para o ano, que também lista os
   pontos facultativos.
-- **`obtained`** diz como o arquivo chegou aqui. Neste laboratório os valores foram digitados a
+- **`obtained`** diz como o arquivo chegou aqui. Aqui os valores foram digitados a
   partir das listas publicadas, o que é honesto e mais fraco que um download: um valor digitado
   pode ter erro, e só uma comparação com a fonte mostraria.
 - **`valid_for`** diz quando os valores valem. Feriados são o caso mais claro: 20 de novembro, Dia

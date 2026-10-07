@@ -10,10 +10,10 @@
 #
 # What is STAGED rather than typed: the lab, as lesson 1 left it; the files
 # ana wrote (put below), whose contents the lesson shows in full; and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -101,7 +101,7 @@ on "psql -c \"SELECT delivery_minutes::int / 10 * 10 AS from_minute, count(*) FR
 put truth_minutes.py <<'PY'
 import pandas as pd
 
-truth = pd.read_csv("/var/lib/clean-data/truth/orders.csv")
+truth = pd.read_csv("~/clean-data/truth/orders.csv")
 real = truth.loc[truth["what"] == "minutes", "value"]
 unseen = real[real >= 120]
 print(f"deliveries the timer never recorded: {len(unseen)}")
@@ -142,7 +142,7 @@ def nps(scores):
 
 
 survey = pd.read_csv("raw/survey.csv")
-truth = pd.read_csv("/var/lib/clean-data/truth/nps.csv")
+truth = pd.read_csv("~/clean-data/truth/nps.csv")
 print("NPS from the answers:      ", nps(survey["nps"].dropna()))
 print("NPS of everybody invited:  ", nps(truth["nps"]))
 PY

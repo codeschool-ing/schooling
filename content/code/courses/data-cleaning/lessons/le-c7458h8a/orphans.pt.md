@@ -82,7 +82,7 @@ contam como pedidos de clientes cujos dados foram removidos, e só.
 O gabarito do laboratório confirma a leitura:
 
 ```
-ana@lab:~/clean$ python -c "import pandas as pd; from orphans import first; e = pd.read_csv('/var/lib/clean-data/truth/erased.csv'); gone = first[first['kind'] == 'left the CRM']; print(len(gone), gone.index.isin(e['customer_id']).sum(), len(e))"
+ana@lab:~/clean$ python -c "import pandas as pd; from orphans import first; e = pd.read_csv('~/clean-data/truth/erased.csv'); gone = first[first['kind'] == 'left the CRM']; print(len(gone), gone.index.isin(e['customer_id']).sum(), len(e))"
 12 12 12
 ```
 

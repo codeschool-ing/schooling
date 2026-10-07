@@ -24,8 +24,8 @@ ela:
 
 O laboratório guarda três arquivos de referência em `ref/`, e diferente de tudo em `raw/` eles são
 reais: os códigos do IBGE para as 27 unidades da federação e para as cinco cidades que a empresa
-atende, e os feriados nacionais e pontos facultativos de 2025. Foram digitados no laboratório a
-partir das listas publicadas, o que já é um fato de procedência que vale registrar, e a quinta
+atende, e os feriados nacionais e pontos facultativos de 2025. Foram digitados no gerador da aula 1
+a partir das listas publicadas, o que já é um fato de procedência que vale registrar, e a quinta
 seção desta aula registra.
 
 Enriquecer também limpa. Uma coluna com treze grafias de quatro estados, casada com a lista

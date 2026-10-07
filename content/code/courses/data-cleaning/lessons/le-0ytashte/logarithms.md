@@ -17,7 +17,7 @@ the 137 coupon orders lesson 9 decided were charged nothing:
 
 ```
 ana@lab:~/clean$ python -c "import numpy as np; from ready import orders; t = orders['total']; print((t == 0).sum()); print(np.log10(t).min())" 2>&1
-/opt/clean/lib/python3.13/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
+/home/ana/venv/lib/python3.12/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
   result = getattr(ufunc, method)(*inputs, **kwargs)
 137
 -inf

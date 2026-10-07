@@ -72,7 +72,7 @@ def nps(scores):
 
 
 survey = pd.read_csv("raw/survey.csv")
-truth = pd.read_csv("/var/lib/clean-data/truth/nps.csv")
+truth = pd.read_csv("~/clean-data/truth/nps.csv")
 print("NPS from the answers:      ", nps(survey["nps"].dropna()))
 print("NPS of everybody invited:  ", nps(truth["nps"]))
 ```

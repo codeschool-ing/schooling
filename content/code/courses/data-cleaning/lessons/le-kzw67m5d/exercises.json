@@ -6,7 +6,7 @@
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The lab's generator plants every defect on purpose and writes down where it put each one. What does that make possible?",
+    "prompt": "The generator you run in this lesson plants every defect on purpose and writes down where it put each one. What does that make possible?",
     "hint": "Think about a question real work almost never lets you answer.",
     "choices": [
       {
@@ -52,7 +52,7 @@
   {
     "id": "ex-804vmzaj",
     "version": 1,
-    "section": "the-lab",
+    "section": "your-data",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
@@ -88,13 +88,13 @@
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Why is a virtual machine the recommended way to build the lab?",
-    "hint": "Look at what `lab.sh up` adds to the system.",
+    "prompt": "Why is a virtual machine the recommended path for the lab?",
+    "hint": "Look at what the setup adds to the system.",
     "choices": [
       {
-        "text": "The script adds a user, a database server and packages, and a snapshot gives a clean start",
+        "text": "The setup changes the whole system, and a snapshot undoes it",
         "correct": true,
-        "why": "Right. Those are system-wide changes, and a snapshot after `up` undoes any experiment."
+        "why": "Right. A database server and system packages are system-wide changes, and a snapshot taken once the setup is done gives a clean start after any experiment."
       },
       {
         "text": "pandas only runs inside virtual machines",
@@ -104,12 +104,108 @@
       {
         "text": "The data is too large for an ordinary computer",
         "correct": false,
-        "why": "They are under 7 MB."
+        "why": "The files the course cleans are under 7 MB."
       },
       {
-        "text": "PostgreSQL 16 has no installer for Windows or macOS",
+        "text": "Only a virtual machine has Ubuntu's packages",
         "correct": false,
-        "why": "It has both; installing on your own computer is the second path the lesson describes."
+        "why": "A computer that already runs Ubuntu 24.04 takes the same commands; that is the installed path."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7mwnsta",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`psql` answers `FATAL:  role \"bia\" does not exist`. Which step of the setup was skipped?",
+    "hint": "The server answered, so it is running.",
+    "choices": [
+      {
+        "text": "Starting the server",
+        "correct": false,
+        "why": "A server that is down cannot say anything; `psql` fails earlier, at the socket."
+      },
+      {
+        "text": "Activating the virtual environment",
+        "correct": false,
+        "why": "`psql` is not part of Python, and the venv changes nothing about who connects."
+      },
+      {
+        "text": "`createuser`, so the server has no role for that login",
+        "correct": true,
+        "why": "Right. The server knows only `postgres` until somebody asks it to create a role with your login name."
+      },
+      {
+        "text": "Setting `PGDATABASE`",
+        "correct": false,
+        "why": "That names the database. The refusal is about who you are, not where you are going."
+      }
+    ]
+  },
+  {
+    "id": "ex-340qgcn5",
+    "version": 1,
+    "section": "your-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do the files you generate match the course's byte for byte?",
+    "hint": "How does the program draw its customers and orders?",
+    "choices": [
+      {
+        "text": "It downloads them from the course",
+        "correct": false,
+        "why": "Nothing is downloaded; the program writes every file itself."
+      },
+      {
+        "text": "Its random generators start from fixed seeds",
+        "correct": true,
+        "why": "Right. The same seeds draw the same sequence on every run and every machine, so every number in the course is yours too."
+      },
+      {
+        "text": "pandas sorts the rows before writing",
+        "correct": false,
+        "why": "The generator uses nothing outside Python's own library, pandas included."
+      },
+      {
+        "text": "Python draws the same numbers whatever the seed",
+        "correct": false,
+        "why": "A different seed draws a different sequence. The seed is what makes the run repeatable."
+      }
+    ]
+  },
+  {
+    "id": "ex-d99yx9wr",
+    "version": 1,
+    "section": "your-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The database is created with `--locale=C.UTF-8`. What does that keep the same from one machine to another?",
+    "hint": "Think about `ORDER BY` on a text column.",
+    "choices": [
+      {
+        "text": "How dates are read",
+        "correct": false,
+        "why": "That is `datestyle`, the next setting."
+      },
+      {
+        "text": "Which time zone the server uses",
+        "correct": false,
+        "why": "That is `timezone`."
+      },
+      {
+        "text": "Which files may be written",
+        "correct": false,
+        "why": "That is `chmod -R a-w`, on the files rather than the database."
+      },
+      {
+        "text": "The order text sorts in",
+        "correct": true,
+        "why": "Right. Without it the database takes the machine's language, and two machines can put the same rows in different orders."
       }
     ]
   },

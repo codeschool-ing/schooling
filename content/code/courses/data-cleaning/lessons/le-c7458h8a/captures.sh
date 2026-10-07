@@ -12,10 +12,10 @@
 # ana wrote (put below), whose contents the lesson shows in full or which an
 # earlier lesson showed (lines.py and when.py from lessons 7 and 9, keys.py,
 # match.py and merge.py from lesson 5, run once to write survivors.csv); and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -191,7 +191,7 @@ block orphans
 on "python orphans.py"
 
 block orphans-truth
-on "python -c \"import pandas as pd; from orphans import first; e = pd.read_csv('/var/lib/clean-data/truth/erased.csv'); gone = first[first['kind'] == 'left the CRM']; print(len(gone), gone.index.isin(e['customer_id']).sum(), len(e))\""
+on "python -c \"import pandas as pd; from orphans import first; e = pd.read_csv('~/clean-data/truth/erased.csv'); gone = first[first['kind'] == 'left the CRM']; print(len(gone), gone.index.isin(e['customer_id']).sum(), len(e))\""
 
 block sql-orphans
 on "psql -c 'SELECT count(DISTINCT o.order_id) AS orders, count(DISTINCT o.customer_id) AS customers FROM raw.orders o WHERE NOT EXISTS (SELECT 1 FROM raw.customers c WHERE c.customer_id = o.customer_id)'"

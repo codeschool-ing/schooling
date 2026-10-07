@@ -17,7 +17,7 @@ lists the 58 people who really signed up twice, so every rule gets an exact scor
       "code": "import pandas as pd\n\nfrom match import pairs\n\n"
     },
     {
-      "code": "truth = pd.read_csv(\"/var/lib/clean-data/truth/duplicates.csv\")\nreal = {frozenset(p) for p in zip(truth[\"customer_id\"], truth[\"same_as\"])}\n",
+      "code": "truth = pd.read_csv(\"~/clean-data/truth/duplicates.csv\")\nreal = {frozenset(p) for p in zip(truth[\"customer_id\"], truth[\"same_as\"])}\n",
       "note": "**The lab's answer**: the 58 pairs it planted, each as an unordered pair so `a, b` and `b, a` are the same."
     },
     {

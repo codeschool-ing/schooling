@@ -45,7 +45,7 @@ younger customers. The lab's truth file has every real birth year, so each fill 
       "code": "import pandas as pd\n\nfrom customers import customers\n\n"
     },
     {
-      "code": "truth = pd.read_csv(\"/var/lib/clean-data/truth/people.csv\", dtype={\"birth_year\": \"Int64\"})\nboth = customers.merge(truth[[\"customer_id\", \"birth_year\"]], on=\"customer_id\",\n                       suffixes=(\"\", \"_true\"))\n",
+      "code": "truth = pd.read_csv(\"~/clean-data/truth/people.csv\", dtype={\"birth_year\": \"Int64\"})\nboth = customers.merge(truth[[\"customer_id\", \"birth_year\"]], on=\"customer_id\",\n                       suffixes=(\"\", \"_true\"))\n",
       "note": "**The lab's truth file**, joined by customer id. No real data set has this column; it is what lets each fill be scored."
     },
     {

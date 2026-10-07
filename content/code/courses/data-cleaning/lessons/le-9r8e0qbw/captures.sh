@@ -10,10 +10,10 @@
 #
 # What is STAGED rather than typed: the lab, as lesson 1 left it; the files
 # ana wrote (put below), whose contents the lesson shows in full; and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -75,7 +75,7 @@ import pandas as pd
 
 from customers import customers
 
-truth = pd.read_csv("/var/lib/clean-data/truth/people.csv", dtype={"birth_year": "Int64"})
+truth = pd.read_csv("~/clean-data/truth/people.csv", dtype={"birth_year": "Int64"})
 both = customers.merge(truth[["customer_id", "birth_year"]], on="customer_id",
                        suffixes=("", "_true"))
 blank = both["birth_year"].isna()
@@ -122,7 +122,7 @@ block flag
 on 'python flag.py'
 
 block truth-again
-on "python -c \"import pandas as pd; t = pd.read_csv('/var/lib/clean-data/truth/orders.csv'); m = t.loc[t['what'] == 'minutes', 'value']; print(f'real: mean {m.mean():.1f}, late {(m >= 90).mean() * 100:.1f}%')\""
+on "python -c \"import pandas as pd; t = pd.read_csv('~/clean-data/truth/orders.csv'); m = t.loc[t['what'] == 'minutes', 'value']; print(f'real: mean {m.mean():.1f}, late {(m >= 90).mean() * 100:.1f}%')\""
 
 put fill.sql <<'SQL'
 CREATE OR REPLACE VIEW orders_filled AS

@@ -18,7 +18,7 @@ regra recebe uma nota exata:
       "code": "import pandas as pd\n\nfrom match import pairs\n\n"
     },
     {
-      "code": "truth = pd.read_csv(\"/var/lib/clean-data/truth/duplicates.csv\")\nreal = {frozenset(p) for p in zip(truth[\"customer_id\"], truth[\"same_as\"])}\n",
+      "code": "truth = pd.read_csv(\"~/clean-data/truth/duplicates.csv\")\nreal = {frozenset(p) for p in zip(truth[\"customer_id\"], truth[\"same_as\"])}\n",
       "note": "**A resposta do laboratório**: os 58 pares que ele plantou, cada um como par sem ordem, para `a, b` e `b, a` serem o mesmo."
     },
     {

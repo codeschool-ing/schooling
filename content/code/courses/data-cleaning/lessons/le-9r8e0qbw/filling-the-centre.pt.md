@@ -46,7 +46,7 @@ cada preenchimento pode receber uma nota:
       "code": "import pandas as pd\n\nfrom customers import customers\n\n"
     },
     {
-      "code": "truth = pd.read_csv(\"/var/lib/clean-data/truth/people.csv\", dtype={\"birth_year\": \"Int64\"})\nboth = customers.merge(truth[[\"customer_id\", \"birth_year\"]], on=\"customer_id\",\n                       suffixes=(\"\", \"_true\"))\n",
+      "code": "truth = pd.read_csv(\"~/clean-data/truth/people.csv\", dtype={\"birth_year\": \"Int64\"})\nboth = customers.merge(truth[[\"customer_id\", \"birth_year\"]], on=\"customer_id\",\n                       suffixes=(\"\", \"_true\"))\n",
       "note": "**O arquivo de verdade do laboratório**, ligado pelo id do cliente. Nenhum dado real tem esta coluna; é ela que permite dar nota a cada preenchimento."
     },
     {

@@ -129,7 +129,7 @@ work, and it shows what the blanks were hiding:
 ```python
 import pandas as pd
 
-truth = pd.read_csv("/var/lib/clean-data/truth/orders.csv")
+truth = pd.read_csv("~/clean-data/truth/orders.csv")
 real = truth.loc[truth["what"] == "minutes", "value"]
 unseen = real[real >= 120]
 print(f"deliveries the timer never recorded: {len(unseen)}")

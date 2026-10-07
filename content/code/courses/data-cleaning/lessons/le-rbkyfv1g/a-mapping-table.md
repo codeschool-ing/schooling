@@ -74,7 +74,7 @@ Seven categories in four departments, with every product placed. Because the lab
 product's real category, the mapping can be scored too:
 
 ```
-ana@lab:~/clean$ python -c "import pandas as pd; from categorise import products as p; t = pd.read_csv('/var/lib/clean-data/truth/categories.csv', dtype=str); m = p.merge(t, on='product_code', suffixes=('', '_true')); print(len(m), (m['category'] == m['category_true']).sum())"
+ana@lab:~/clean$ python -c "import pandas as pd; from categorise import products as p; t = pd.read_csv('~/clean-data/truth/categories.csv', dtype=str); m = p.merge(t, on='product_code', suffixes=('', '_true')); print(len(m), (m['category'] == m['category_true']).sum())"
 72 72
 ```
 

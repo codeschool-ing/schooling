@@ -10,10 +10,10 @@
 #
 # What is STAGED rather than typed: the lab, as lesson 1 left it; the files
 # ana wrote (put below), whose contents the lesson shows in full; and
-# /var/lib/clean-data/truth, which the lab's generator wrote and which no real
+# ~/clean-data/truth, which the lab's generator wrote and which no real
 # data set has. The lesson says so wherever it reads from it.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6,
 # TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -81,7 +81,7 @@ block categorise
 on "python -c \"from categorise import products as p; print(p.groupby(['department', 'category']).size().to_string())\""
 
 block truth
-on "python -c \"import pandas as pd; from categorise import products as p; t = pd.read_csv('/var/lib/clean-data/truth/categories.csv', dtype=str); m = p.merge(t, on='product_code', suffixes=('', '_true')); print(len(m), (m['category'] == m['category_true']).sum())\""
+on "python -c \"import pandas as pd; from categorise import products as p; t = pd.read_csv('~/clean-data/truth/categories.csv', dtype=str); m = p.merge(t, on='product_code', suffixes=('', '_true')); print(len(m), (m['category'] == m['category_true']).sum())\""
 
 block new-label
 on "cp category_map.csv map.bak && grep -v '^emporio' map.bak > category_map.csv && python -c 'import categorise' ; cp map.bak category_map.csv"

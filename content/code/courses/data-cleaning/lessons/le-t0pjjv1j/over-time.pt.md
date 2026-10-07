@@ -96,7 +96,8 @@ ana@lab:~/clean$ file months.png
 months.png: PNG image data, 960 x 480, 8-bit/color RGBA, non-interlaced
 ```
 
-`matplotlib.use("Agg")` diz a ele para desenhar num arquivo em vez de numa janela, porque o
-laboratório não tem tela. As figuras desta página são desenhadas pelo próprio curso a partir dos
-mesmos números, para ficarem iguais nos dois temas; o PNG é o que você anexaria a uma mensagem ou
-abriria na sua própria máquina.
+`matplotlib.use("Agg")` diz a ele para desenhar num arquivo em vez de numa janela, porque um
+programa que limpa dados não deveria precisar de uma: ele roda igual num terminal, por SSH e num job
+à noite. As figuras desta página são desenhadas pelo próprio curso a partir dos mesmos números, para
+ficarem iguais nos dois temas; o PNG é o que você anexaria a uma mensagem ou abriria na sua própria
+máquina.

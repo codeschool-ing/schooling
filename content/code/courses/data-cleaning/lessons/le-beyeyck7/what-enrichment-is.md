@@ -21,10 +21,11 @@ join. **The reference table is somebody else's data**, and it arrives with four 
 - **What did you send to get it?** Downloading a public file sends nothing. Calling a web service
   with your customers' postcodes sends personal data to whoever runs it.
 
-The lab keeps three reference files in `ref/`, and unlike everything in `raw/` they are real:
-the IBGE codes for the 27 federative units and for the five cities the company serves, and the
-national holidays and optional days of 2025. They were typed into the lab from the published lists,
-which is itself a provenance fact worth recording, and the fifth section of this lesson records it.
+The lab keeps three reference files in `ref/`, and unlike everything in `raw/` they are real: the
+IBGE codes for the 27 federative units and for the five cities the company serves, and the national
+holidays and optional days of 2025. They were typed into lesson 1's generator from the published
+lists, which is itself a provenance fact worth recording, and the fifth section of this lesson
+records it.
 
 Enrichment also cleans. A column with thirteen spellings of four states, matched against the
 official list, comes out as four codes; a city column with twenty-eight spellings of five cities

@@ -8,31 +8,75 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# What is STAGED rather than typed: the lab itself, built by lab.sh, which
-# leaves ~/clean/raw (read-only), ~/clean/ref and the schema `raw` in the
-# database `quitanda`, every file loaded with every column as text. The dates
-# `ls -l` prints are the day the lab was built and differ on every machine.
+# What is STAGED rather than typed: the machine as section `the-lab` builds it
+# and the data as section `your-data` makes and loads it, which is what
+# lab.sh does, with the generator and the loader read out of your-data.md.
+# The user `bia` exists only for the length of one transcript, as somebody
+# who skipped `createuser`. The dates `ls -l` prints are the day the data was
+# made and differ on every machine.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.13, pandas 3.0.6, R 4.3.3,
+# Recorded on Ubuntu 24.04, PostgreSQL 16, Python 3.12, pandas 3.0.6, R 4.3.3,
 # 4 cores, TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 LAB_SH=${LAB_SH:-../../lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 on() { printf 'ana@lab:~/clean$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
+at() { local dir=$1; shift; printf 'ana@lab:%s$ %s\n' "$dir" "$*"; lab exec "cd $dir && $*" 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }
 put() { lab exec "cat > '$1'"; }
 exec 9>/var/tmp/clean-capture.lock; flock 9
 lab reset >/dev/null
 
 block versions
-on 'psql --version'
-on 'python --version'
-on "python -c 'import pandas; print(pandas.__version__)'"
-on 'R --version | head -1'
+at '~' 'psql --version'
+at '~' 'python --version'
+at '~' "python -c 'import pandas; print(pandas.__version__)'"
+at '~' 'R --version | head -1'
 
 block disk
-on 'du -sh raw ref /var/lib/clean-pg /opt/clean'
+at '~' 'du -sh venv /usr/lib/R /usr/lib/postgresql'
+
+block cluster
+at '~' 'pg_lsclusters'
+
+block generate
+at '~/clean-data' 'python3 generate.py .'
+at '~/clean-data' 'ls'
+at '~/clean-data' 'du -sh raw ref truth'
+
+block checksums
+at '~/clean-data' 'sha256sum raw/*.csv ref/*.csv'
+
+block load
+on 'psql -f ~/clean-data/raw.sql'
+
+block bashrc
+at '~' 'tail -4 .bashrc'
+
+block fail-server
+lab stop >/dev/null 2>&1
+at '~' 'psql -c "SELECT 1"'
+at '~' 'pg_lsclusters'
+
+block fail-start
+printf 'ana@lab:~$ sudo service postgresql start\n'
+lab start 2>&1
+at '~' 'pg_lsclusters'
+at '~' 'psql -c "SELECT 1"'
+
+block fail-role
+id bia >/dev/null 2>&1 || useradd -m -s /bin/bash bia
+printf 'bia@lab:~$ psql\n'
+runuser -u bia -- env -i HOME=/home/bia USER=bia LANG=C.UTF-8 PATH=/usr/bin:/bin bash -c 'cd && psql' 2>&1 || true
+userdel -r bia 2>/dev/null
+
+block fail-pip
+# A shell without lesson 1's lines, so without the venv: Ubuntu's own Python.
+# /usr/local/lib/clean-stock is lab.sh's python3 -> python3.12, which is what
+# `python3` is on a stock Ubuntu 24.04; python3-pip is installed on this one.
+printf 'ana@lab:~$ python3 -m pip install pandas==3.0.6\n'
+runuser -u ana -- env -i HOME=/home/ana USER=ana LANG=C.UTF-8 COLUMNS=100 PATH=/usr/local/lib/clean-stock:/usr/local/bin:/usr/bin:/bin bash -c 'cd && python3 -m pip install pandas==3.0.6' 2>&1 || true
 
 block files
 on 'ls -l raw'

@@ -5,20 +5,20 @@ version: 1
 
 Toda aula deste curso leu de `raw/` e nenhuma escreveu lá. Não foi por educação. **Os arquivos
 brutos são a única prova do que chegou**, e uma limpeza que os edita destrói justamente aquilo
-contra o que precisaria ser conferida. A aula 1 montou o laboratório para que essa regra seja
+contra o que precisaria ser conferida. A aula 1 deixou os arquivos de um jeito que essa regra é
 garantida e não lembrada:
 
 ```
 ana@lab:~/clean$ ls -ld raw; ls -l raw | head -4
-dr-xr-xr-x 2 ana ana 4096 Oct  7 01:52 raw
+dr-xr-xr-x 2 ana ana 4096 Oct  7 02:59 raw
 total 6908
--r--r--r-- 1 ana ana  244696 Oct  7 01:52 customers.csv
--r--r--r-- 1 ana ana     286 Oct  7 01:52 fx_rates_2025.csv
--r--r--r-- 1 ana ana    3659 Oct  7 01:52 invoices.csv
+-r--r--r-- 1 ana ana  244696 Oct  7 02:59 customers.csv
+-r--r--r-- 1 ana ana     286 Oct  7 02:59 fx_rates_2025.csv
+-r--r--r-- 1 ana ana    3659 Oct  7 02:59 invoices.csv
 ana@lab:~/clean$ touch raw/notes.txt
 touch: cannot touch 'raw/notes.txt': Permission denied
 ana@lab:~/clean$ sed -i 's/Pepino/Pepino japonês/' raw/products.csv
-sed: couldn't open temporary file raw/sedCSmpNw: Permission denied
+sed: couldn't open temporary file raw/sed7rOYyY: Permission denied
 ```
 
 O diretório e todos os arquivos nele são só de leitura, então um `touch` perdido ou um `sed` que

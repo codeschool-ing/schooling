@@ -27,8 +27,8 @@ terceiro. O arquivo de clientes foi exportado num dia diferente do de pedidos. A
 cadastraram duas vezes. Um vazio numa coluna quer dizer zero, e um vazio na coluna seguinte quer
 dizer que o cronômetro desistiu.
 
-Nada disso foi achado por acaso. O gerador do laboratório planta cada defeito de propósito e anota
-onde o pôs. Assim uma aula consegue dizer **quantos dos duplicados verdadeiros uma técnica
+Nada disso foi achado por acaso. O gerador que você roda nesta aula planta cada defeito de propósito
+e anota onde o pôs. Assim uma aula consegue dizer **quantos dos duplicados verdadeiros uma técnica
 encontrou**, uma pergunta que o trabalho real quase nunca deixa responder.
 
 ## Como uma aula funciona

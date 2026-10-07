@@ -22,7 +22,7 @@ ana@lab:~/clean$ psql -c "SELECT channel, count(*), percentile_cont(0.5) WITHIN 
 ana@lab:~/clean$ psql -c "SELECT corr(n.items, o.total::numeric) AS pearson FROM (SELECT DISTINCT * FROM raw.orders) o JOIN (SELECT order_id, count(*) AS items FROM raw.order_items GROUP BY order_id) n USING (order_id) WHERE o.status = 'delivered'"
        pearson       
 ---------------------
- 0.22300728275886414
+ 0.22300728275886306
 (1 row)
 ```
 
