@@ -278,3 +278,37 @@ def shapes_picture():
     f.arrow([(175, 130), (325, 130)], stroke='--paper', width=1.6)
     f.arrow([(435, 130), (525, 130)], stroke='--paper', width=1.6)
     return f
+
+
+@figure('l02-as-code', 2)
+def as_code():
+    f = Fig('l02-as-code', 720, 220, T(
+        'The diagram as code. model.py describes the elements, flows and boundaries in Python. '
+        'Running it with --json writes model.json. Small programs read model.json: flows.py lists '
+        'the flows and which boundaries they cross, and lesson 3’s findings.py summarises what '
+        'pytm finds. model.py lives in git, so the drawing changes in the same commits as the '
+        'system it describes.',
+        'O diagrama como código. O model.py descreve elementos, fluxos e fronteiras em Python. '
+        'Rodá-lo com --json escreve o model.json. Programas pequenos leem o model.json: o flows.py '
+        'lista os fluxos e as fronteiras que eles cruzam, e o findings.py da aula 3 resume o que o '
+        'pytm acha. O model.py mora no git, então o desenho muda nos mesmos commits que o sistema '
+        'que ele descreve.'))
+    f.rect(20, 70, 150, 60, stroke='--phosphor', fill='--panel', width=1.4)
+    f.text(95, 92, 'model.py', size=11, mono=True, weight='600')
+    f.text(95, 112, T('elements, flows', 'elementos, fluxos'), size=9.5, fill='--paper-dim')
+    f.rect(250, 70, 150, 60, stroke='--paper-dim', fill='--panel', width=1.2)
+    f.text(325, 92, 'model.json', size=11, mono=True, weight='600')
+    f.text(325, 112, T('written by pytm', 'escrito pelo pytm'), size=9.5, fill='--paper-dim')
+    f.line(170, 100, 250, 100, arrow=True)
+    f.text(210, 88, '--json', size=9.5, mono=True, fill='--paper-dim')
+    for i, (name, what) in enumerate([('flows.py', T('flows and boundaries', 'fluxos e fronteiras')),
+                                      ('findings.py', T('what pytm finds (lesson 3)', 'o que o pytm acha (aula 3)'))]):
+        y = 40 + i * 80
+        f.rect(480, y, 220, 50, stroke='--paper-dim', fill='--panel', width=1.2)
+        f.text(494, y + 18, name, size=10.5, mono=True, weight='600', anchor='start')
+        f.text(494, y + 36, what, size=9.5, anchor='start', fill='--paper-dim')
+        f.line(400, 100, 480, y + 25, arrow=True)
+    f.text(95, 160, T('in git, beside the code', 'no git, ao lado do código'), size=9.5, italic=True, fill='--phosphor')
+    f.text(360, 205, T('the drawing becomes something a program can check', 'o desenho vira algo que um programa consegue conferir'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('A picture only a person can read is checked when a person remembers to. A file a program reads is checked on every run.',
+                'Um desenho que só uma pessoa lê é conferido quando alguém lembra. Um arquivo que um programa lê é conferido a cada execução.')

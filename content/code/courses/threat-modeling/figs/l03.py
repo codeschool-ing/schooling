@@ -139,3 +139,67 @@ def anatomy():
            size=10, fill='--paper-dim', italic=True)
     return f, T('A threat names somebody doing something to something, and what happens then. The letter and the element say where it lives.',
                 'Uma ameaça nomeia alguém fazendo algo com alguma coisa, e o que acontece então. A letra e o elemento dizem onde ela mora.')
+
+
+@figure('l03-letters', 3)
+def letters():
+    pairs = [('S', T('spoofing', 'falsificação'), T('authentication', 'autenticação')),
+             ('T', T('tampering', 'adulteração'), T('integrity', 'integridade')),
+             ('R', T('repudiation', 'repúdio'), T('non-repudiation', 'não repúdio')),
+             ('I', T('information disclosure', 'vazamento de informação'), T('confidentiality', 'confidencialidade')),
+             ('D', T('denial of service', 'negação de serviço'), T('availability', 'disponibilidade')),
+             ('E', T('elevation of privilege', 'elevação de privilégio'), T('authorisation', 'autorização'))]
+    f = Fig('l03-letters', 720, 300, T(
+        'The six STRIDE threats and the property each one violates. Spoofing violates '
+        'authentication; tampering, integrity; repudiation, non-repudiation; information disclosure, '
+        'confidentiality; denial of service, availability; elevation of privilege, authorisation. '
+        'Integrity, confidentiality and availability are the CIA triad; the other three are about '
+        'people: who they are, what they did, and what they may do.',
+        'As seis ameaças do STRIDE e a propriedade que cada uma viola. Falsificação viola '
+        'autenticação; adulteração, integridade; repúdio, não repúdio; vazamento de informação, '
+        'confidencialidade; negação de serviço, disponibilidade; elevação de privilégio, '
+        'autorização. Integridade, confidencialidade e disponibilidade são a tríade CIA; as outras '
+        'três são sobre pessoas: quem são, o que fizeram e o que podem fazer.'))
+    people = {'S', 'R', 'E'}
+    for i, (letter, threat, prop) in enumerate(pairs):
+        y = 20 + i * 44
+        c = '--amber' if letter in people else '--phosphor'
+        f.rect(20, y, 40, 34, stroke=c, fill='--panel', width=1.6)
+        f.text(40, y + 17, letter, size=13, mono=True, weight='600')
+        f.text(76, y + 17, threat, size=10.5, anchor='start')
+        f.line(300, y + 17, 380, y + 17, arrow=True)
+        f.rect(390, y, 190, 34, stroke=c, fill='--panel', width=1.2)
+        f.text(485, y + 17, prop, size=10.5)
+    f.text(600, 82, T('people', 'pessoas'), size=10, anchor='start', fill='--amber', weight='600')
+    f.text(600, 100, 'S, R, E', size=10, anchor='start', mono=True, fill='--amber')
+    f.text(600, 192, T('the CIA triad', 'a tríade CIA'), size=10, anchor='start', fill='--phosphor', weight='600')
+    f.text(600, 210, 'T, I, D', size=10, anchor='start', mono=True, fill='--phosphor')
+    return f, T('Each letter is a property turned inside out. Knowing the property tells you what a fix has to restore.',
+                'Cada letra é uma propriedade virada do avesso. Conhecer a propriedade diz o que uma correção precisa restaurar.')
+
+
+@figure('l03-webhook-letters', 3)
+def webhook_letters():
+    f = Fig('l03-webhook-letters', 720, 220, T(
+        'STRIDE per interaction on the payment webhook. At the source, the gateway: S, is it really '
+        'the gateway? On the flow: T and I, can it be changed or read on the way, and D, can it be '
+        'sent too often? At the receiver, the portal: E, does an anonymous request get to mark a '
+        'booking paid? And R on both ends: is the original kept?',
+        'STRIDE por interação no webhook de pagamento. Na origem, o gateway: S, é mesmo o gateway? '
+        'No fluxo: T e I, pode ser mudado ou lido no caminho, e D, pode ser mandado vezes demais? '
+        'No destino, o portal: E, um pedido anônimo consegue marcar um agendamento como pago? E R '
+        'nas duas pontas: o original fica guardado?'))
+    f.entity(110, 100, 150, 50, [T('Payment gateway', 'Gateway de pagamento')])
+    f.process(600, 100, 52, [T('Portal', 'Portal')])
+    f.line(185, 100, 548, 100, arrow=True)
+    f.text(366, 88, T('payment webhook', 'webhook de pagamento'), size=10)
+    f.boundary([(290, 30), (290, 170)], T('vendors | Vereda', 'fornecedores | Vereda'), (296, 30), size=9.5)
+    tags = [(110, 155, 'S', T('is it the gateway?', 'é o gateway?')),
+            (366, 140, 'T  I  D', T('changed, read, flooded?', 'mudado, lido, inundado?')),
+            (600, 180, 'E', T('more than anonymous may do?', 'mais do que um anônimo pode?'))]
+    for x, y, letters, q in tags:
+        f.text(x, y, letters, size=12, mono=True, weight='600', fill='--amber')
+        f.text(x, y + 18, q, size=9.5, fill='--paper-dim')
+    f.text(366, 210, T('R at both ends: is the original webhook kept?', 'R nas duas pontas: o webhook original fica guardado?'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('S and E describe the same flaw from two ends: the portal does not ask who sent the request, and then lets it do what only the gateway should.',
+                'S e E descrevem a mesma falha das duas pontas: o portal não pergunta quem mandou o pedido, e depois o deixa fazer o que só o gateway deveria.')

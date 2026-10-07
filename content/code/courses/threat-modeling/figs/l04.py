@@ -134,3 +134,85 @@ def attack_paths():
     f.text(700, 290, T('reaches exams, not notes', 'alcança exames, não notas'), size=9, anchor='end', fill='--paper-dim', italic=True)
     return f, T('Each path is a chain of threats already on the list. Breaking any one step breaks the path, which is how stage 7 chooses where to spend.',
                 'Cada caminho é uma cadeia de ameaças que já estão na lista. Quebrar qualquer passo quebra o caminho, e é assim que o estágio 7 escolhe onde gastar.')
+
+
+@figure('l04-first-stages', 4)
+def first_stages():
+    f = Fig('l04-first-stages', 720, 230, T(
+        'What PASTA’s first three stages produced at Vereda. Stage 1, objectives: about 60% of '
+        'bookings come through the portal, and health data is sensitive under the LGPD. Stage 2, '
+        'technical scope: what is modelled and what is not, such as the clinics’ Wi-Fi and laptops. Stage 3, '
+        'decomposition: the DFD of lesson 2, with the use cases beside it.',
+        'O que os três primeiros estágios do PASTA produziram na Vereda. Estágio 1, objetivos: cerca '
+        'de 60% dos agendamentos passam pelo portal, e dado de saúde é sensível pela LGPD. Estágio 2, '
+        'escopo técnico: o que é modelado e o que não é, como o Wi-Fi e os laptops das clínicas. Estágio 3, '
+        'decomposição: o DFD da aula 2, com os casos de uso ao lado.'))
+    cols = [(T('1 · objectives', '1 · objetivos'), [T('60% of bookings', '60% dos agendamentos'), T('via the portal', 'pelo portal'), T('health data is', 'dado de saúde é'), T('sensitive (LGPD)', 'sensível (LGPD)')]),
+            (T('2 · technical scope', '2 · escopo técnico'), [T('what is modelled,', 'o que é modelado,'), T('and what is not:', 'e o que não é:'), T('the clinics’ Wi-Fi', 'o Wi-Fi e os laptops'), T('and laptops', 'das clínicas')]),
+            (T('3 · decomposition', '3 · decomposição'), [T('the DFD of lesson 2', 'o DFD da aula 2'), T('and the use cases', 'e os casos de uso'), T('beside it', 'ao lado dele'), T('', '')])]
+    for i, (head, rows) in enumerate(cols):
+        x = 20 + i * 235
+        f.rect(x, 20, 210, 180, stroke='--phosphor' if i == 0 else '--paper-dim', fill='--panel', width=1.4)
+        f.text(x + 105, 42, head, size=11, weight='600')
+        f.lines(x + 105, 120, [r for r in rows if r], size=10)
+        if i < 2:
+            f.line(x + 210, 110, x + 235, 110, arrow=True)
+    f.text(360, 220, T('the business first, then the system', 'primeiro o negócio, depois o sistema'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('Stage 1 is the one STRIDE never asks for, and it is the one that later decides which threats are expensive.',
+                'O estágio 1 é o que o STRIDE nunca pede, e é ele que depois decide quais ameaças são caras.')
+
+
+@figure('l04-cwe-join', 4)
+def cwe_join():
+    rows = [('T01', T('forged webhook', 'webhook forjado'), 'CWE-345'), ('T07', T('other patients’ PDFs', 'PDFs de outros pacientes'), 'CWE-639'),
+            ('T10', T('uploads with no limit', 'uploads sem limite'), 'CWE-770'), ('T13', T('worker as owner', 'worker como dono'), 'CWE-250')]
+    f = Fig('l04-cwe-join', 720, 250, T(
+        'Stage 5 names a weakness for each threat with a CWE id, so findings from different sources '
+        'join. T01, the forged webhook, is CWE-345. T07, other patients’ PDFs, is CWE-639. T10, '
+        'uploads with no limit, is CWE-770. T13, the worker as owner, is CWE-250. A scanner’s '
+        'finding or a pentest report naming the same CWE lands on the same threat.',
+        'O estágio 5 nomeia uma fraqueza para cada ameaça com um id CWE, para achados de fontes '
+        'diferentes se juntarem. A T01, o webhook forjado, é CWE-345. A T07, PDFs de outros '
+        'pacientes, é CWE-639. A T10, uploads sem limite, é CWE-770. A T13, o worker como dono, é '
+        'CWE-250. Um achado de scanner ou um relatório de pentest que nomeie o mesmo CWE cai na '
+        'mesma ameaça.'))
+    for i, (tid, name, cwe) in enumerate(rows):
+        y = 20 + i * 50
+        f.rect(20, y, 260, 38, stroke='--paper-dim', fill='--panel', width=1.2)
+        f.text(32, y + 19, tid, size=10.5, mono=True, weight='600', anchor='start')
+        f.text(76, y + 19, name, size=10, anchor='start')
+        f.rect(330, y, 120, 38, stroke='--phosphor', fill='--panel', width=1.4)
+        f.text(390, y + 19, cwe, size=10.5, mono=True, weight='600')
+        f.line(280, y + 19, 330, y + 19)
+    for i, src in enumerate([T('a scanner’s finding', 'um achado de scanner'), T('a pentest report', 'um relatório de pentest')]):
+        y = 60 + i * 80
+        f.rect(530, y, 170, 40, stroke='--paper-dim', fill='--panel', width=1.2)
+        f.text(615, y + 20, src, size=10)
+        f.line(530, y + 20, 450, 39 + i * 100, arrow=True)
+    f.text(360, 232, T('the CWE id is the join, as an opaque id is everywhere else', 'o id CWE é a junção, como um id opaco é em todo o resto'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('Three sources of findings, one vocabulary. Without the id, the same weakness found three ways is three tickets.',
+                'Três fontes de achados, um vocabulário. Sem o id, a mesma fraqueza achada de três jeitos são três chamados.')
+
+
+@figure('l04-kept', 4)
+def kept():
+    f = Fig('l04-kept', 720, 200, T(
+        'The part of PASTA Vereda kept. Stage 1, the business objectives, revised once a year with '
+        'daniel. STRIDE does the work of stages 3 to 5 on each change. Stage 7, the ranking by '
+        'business impact, is applied to anything new on the list.',
+        'A parte do PASTA que a Vereda manteve. O estágio 1, os objetivos de negócio, revisto uma vez '
+        'por ano com o daniel. O STRIDE faz o trabalho dos estágios 3 a 5 a cada mudança. O estágio '
+        '7, a ordenação por impacto no negócio, é aplicado a tudo o que for novo na lista.'))
+    boxes = [(T('stage 1', 'estágio 1'), T('once a year, with daniel', 'uma vez por ano, com o daniel'), '--amber'),
+             (T('stages 3 to 5', 'estágios 3 a 5'), T('STRIDE, on each change', 'STRIDE, a cada mudança'), '--phosphor'),
+             (T('stage 7', 'estágio 7'), T('for anything new on the list', 'para o que for novo na lista'), '--amber')]
+    for i, (head, sub, c) in enumerate(boxes):
+        x = 20 + i * 235
+        f.rect(x, 40, 210, 80, stroke=c, fill='--panel', width=1.5)
+        f.text(x + 105, 66, head, size=11, weight='600')
+        f.text(x + 105, 94, sub, size=10)
+        if i < 2:
+            f.line(x + 210, 80, x + 235, 80, arrow=True)
+    f.text(360, 160, T('STRIDE inside a PASTA frame', 'STRIDE dentro de uma moldura PASTA'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('The business stages are the cheap ones to keep and the expensive ones to lose.',
+                'Os estágios do negócio são os baratos de manter e os caros de perder.')

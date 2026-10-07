@@ -158,3 +158,69 @@ def controls():
             f.text(250 + 34 * days + 8, y + 13, T(f'{days} days', f'{days} dias'), size=10, anchor='start', weight='600')
     return f, T('The fourth row is the one to remember: a control on a path that is already broken buys nothing.',
                 'A quarta linha é a que vale lembrar: um controle num caminho que já está quebrado não compra nada.')
+
+
+@figure('l05-tree-numbers', 5)
+def tree_numbers():
+    f = Fig('l05-tree-numbers', 720, 290, T(
+        'The attack tree with the team’s estimates of an outsider’s effort, in days, on its leaves. '
+        'Forging the webhook needs both the address, 1 day, and an accepted request, 1 day: an AND '
+        'node, 2 days. Changing the status in the console needs a staff account, 5 days, and reaching '
+        'the console, 2: 7 days. Changing the row in the database needs the reminder worker, 10 '
+        'days, and its owner account, 1: 11 days. The root is an OR, worth its cheapest child: 2 '
+        'days.',
+        'A árvore de ataque com as estimativas da equipe do esforço de alguém de fora, em dias, nas '
+        'folhas. Forjar o webhook precisa do endereço, 1 dia, e de um pedido aceito, 1 dia: um nó '
+        'AND, 2 dias. Mudar a situação no console precisa de uma conta da equipe, 5 dias, e de chegar '
+        'ao console, 2: 7 dias. Mudar a linha no banco precisa do worker de lembretes, 10 dias, e da '
+        'conta de dono dele, 1: 11 dias. A raiz é um OR, que vale o filho mais barato: 2 dias.'))
+    f.rect(220, 10, 280, 44, stroke='--amber', fill='--panel', width=1.6)
+    f.text(360, 26, T('mark a booking paid without paying', 'marcar como pago sem pagar'), size=10, weight='600')
+    f.text(360, 43, T('OR = cheapest child: 2 days', 'OR = filho mais barato: 2 dias'), size=9.5, fill='--amber')
+    mids = [(120, T('forge the webhook', 'forjar o webhook'), 'AND 1 + 1 = 2', [(T('address', 'endereço'), 1), (T('accepted request', 'pedido aceito'), 1)], '--amber'),
+            (360, T('use the console', 'usar o console'), 'AND 5 + 2 = 7', [(T('staff account', 'conta da equipe'), 5), (T('reach console', 'chegar ao console'), 2)], '--paper-dim'),
+            (600, T('change the row', 'mudar a linha'), 'AND 10 + 1 = 11', [(T('take the worker', 'tomar o worker'), 10), (T('owner account', 'conta de dono'), 1)], '--paper-dim')]
+    for x, name, calc, leaves, c in mids:
+        f.line(360, 54, x, 100)
+        f.rect(x - 100, 100, 200, 44, stroke=c, fill='--panel', width=1.4)
+        f.text(x, 116, name, size=10, weight='600')
+        f.text(x, 133, calc, size=9.5, mono=True, fill='--paper-dim')
+        for j, (leaf, days) in enumerate(leaves):
+            lx = x - 55 + j * 110
+            f.line(x, 144, lx, 200)
+            f.rect(lx - 52, 200, 104, 52, stroke='--wire', fill='--panel', width=1)
+            f.text(lx, 216, leaf, size=9)
+            f.text(lx, 238, T(f'{days} day' + ('s' if days > 1 else ''), f'{days} dia' + ('s' if days > 1 else '')), size=10, weight='600')
+    f.text(360, 278, T('AND adds its children; OR takes the cheapest', 'AND soma os filhos; OR fica com o mais barato'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('With no controls, the webhook is the cheapest route by a wide margin, which is why the signature check comes first.',
+                'Sem controles, o webhook é a rota mais barata com folga, e é por isso que a conferência da assinatura vem primeiro.')
+
+
+@figure('l05-routine', 5)
+def routine():
+    f = Fig('l05-routine', 720, 200, T(
+        'Vereda’s routine for a change, one method per step. First STRIDE, on the flows the change '
+        'touches, per interaction where a boundary is crossed. Then LINDDUN, on any flow that '
+        'carries personal data out of Vereda, or any new store that keeps it. Then an attack tree, '
+        'only when a goal from PASTA’s stage 1 has a new route to it. PASTA’s frame orders the '
+        'findings; DREAD is not used.',
+        'A rotina da Vereda para uma mudança, um método por passo. Primeiro o STRIDE, nos fluxos que '
+        'a mudança toca, por interação onde uma fronteira é cruzada. Depois o LINDDUN, em qualquer '
+        'fluxo que leve dado pessoal para fora da Vereda, ou qualquer repositório novo que o guarde. '
+        'Depois uma árvore de ataque, só quando um objetivo do estágio 1 do PASTA ganha uma rota '
+        'nova. A moldura do PASTA ordena os achados; o DREAD não é usado.'))
+    steps = [('STRIDE', T('the flows the change touches', 'os fluxos que a mudança toca')),
+             ('LINDDUN', T('personal data leaving Vereda', 'dado pessoal saindo da Vereda')),
+             (T('attack tree', 'árvore de ataque'), T('a goal with a new route', 'um objetivo com rota nova'))]
+    for i, (name, when) in enumerate(steps):
+        x = 20 + i * 235
+        f.rect(x, 40, 210, 70, stroke='--phosphor', fill='--panel', width=1.4)
+        f.text(x + 105, 62, name, size=11, weight='600')
+        f.text(x + 105, 88, when, size=9.5)
+        if i < 2:
+            f.line(x + 210, 75, x + 235, 75, arrow=True)
+    f.rect(20, 135, 680, 30, stroke='--amber', fill='--panel', width=1.2, dash='5 4')
+    f.text(360, 150, T('PASTA’s frame decides the order the findings are dealt with', 'a moldura do PASTA decide a ordem em que os achados são tratados'), size=10, fill='--amber')
+    f.text(360, 188, T('DREAD is not used: lessons 9 to 11 rank with numbers that can be checked', 'o DREAD não é usado: as aulas 9 a 11 ordenam com números conferíveis'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('Each step answers a different question, so dropping one leaves its question unasked rather than answered by the others.',
+                'Cada passo responde a uma pergunta diferente, então tirar um deixa a pergunta dele sem fazer, não respondida pelos outros.')

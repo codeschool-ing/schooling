@@ -122,3 +122,57 @@ def portal():
            size=10, fill='--paper-dim', italic=True)
     return f, T('Vereda’s portal as somebody would draw it on a whiteboard. Every lesson of the course models this system.',
                 'O portal da Vereda como alguém o desenharia num quadro branco. Todas as aulas do curso modelam este sistema.')
+
+
+@figure('l01-proportional', 1)
+def proportional():
+    f = Fig('l01-proportional', 720, 260, T(
+        'How much modelling a change deserves, by what is at stake and how much changed. A small '
+        'change with little at stake, such as a new field on a form: ten minutes at the next '
+        'refinement. A large change with a lot at stake, such as a new system holding clinical '
+        'records: an afternoon with the people who will build it. Between them, a short design '
+        'review.',
+        'Quanta modelagem uma mudança merece, pelo que está em jogo e pelo quanto mudou. Uma '
+        'mudança pequena com pouco em jogo, como um campo novo num formulário: dez minutos no '
+        'próximo refinamento. Uma mudança grande com muito em jogo, como um sistema novo guardando '
+        'prontuários: uma tarde com as pessoas que vão construí-lo. Entre os dois, uma revisão de '
+        'projeto curta.'))
+    f.line(90, 220, 690, 220, arrow=True)
+    f.line(90, 220, 90, 20, arrow=True)
+    f.text(390, 244, T('how much changed', 'quanto mudou'), size=10, fill='--paper-dim')
+    f.text(30, 120, T('at stake', 'em jogo'), size=10, fill='--paper-dim')
+    boxes = [(110, 150, T('ten minutes in refinement', 'dez minutos no refinamento'), T('a new field on a form', 'um campo novo num formulário'), '--paper-dim'),
+             (300, 95, T('a short design review', 'uma revisão de projeto curta'), T('a new upload or integration', 'um upload ou integração novos'), '--phosphor'),
+             (490, 35, T('an afternoon with the builders', 'uma tarde com quem constrói'), T('a new system with clinical data', 'um sistema novo com dado clínico'), '--amber')]
+    for x, y, head, ex, c in boxes:
+        f.rect(x, y, 190, 56, stroke=c, fill='--panel', width=1.4)
+        f.text(x + 95, y + 20, head, size=10, weight='600')
+        f.text(x + 95, y + 40, ex, size=9.5, fill='--paper-dim')
+    return f, T('The effort follows the change, not the calendar. Most changes deserve ten minutes, and that is still a threat model.',
+                'O esforço segue a mudança, não o calendário. A maioria das mudanças merece dez minutos, e isso continua sendo um modelo de ameaças.')
+
+
+@figure('l01-workspace', 1)
+def workspace():
+    f = Fig('l01-workspace', 720, 250, T(
+        'The workspace this course builds. A folder called tm in your home directory holds two '
+        'things: .venv, a Python virtual environment with pytm 1.4.0 installed in it, and '
+        'portal-model, a git repository where every file of the threat model lives. Each lesson '
+        'adds a file to portal-model and commits it.',
+        'O ambiente de trabalho que este curso monta. Uma pasta chamada tm no seu diretório pessoal '
+        'guarda duas coisas: .venv, um ambiente virtual Python com o pytm 1.4.0 instalado, e '
+        'portal-model, um repositório git onde mora cada arquivo do modelo de ameaças. Cada aula '
+        'acrescenta um arquivo ao portal-model e faz o commit.'))
+    f.rect(40, 30, 160, 44, stroke='--paper-dim', fill='--panel', width=1.4)
+    f.text(120, 52, '~/tm', size=11, mono=True, weight='600')
+    f.rect(280, 20, 400, 80, stroke='--paper-dim', fill='--panel', width=1.2)
+    f.text(296, 42, '.venv', size=10.5, mono=True, weight='600', anchor='start')
+    f.text(296, 70, T('Python, and pytm 1.4.0, pinned', 'Python, e o pytm 1.4.0, fixado'), size=10, anchor='start')
+    f.rect(280, 120, 400, 110, stroke='--phosphor', fill='--panel', width=1.4)
+    f.text(296, 142, 'portal-model', size=10.5, mono=True, weight='600', anchor='start')
+    f.text(296, 170, T('git: one commit per step of the course', 'git: um commit por passo do curso'), size=10, anchor='start')
+    f.text(296, 196, 'model.py  threats.csv  requirements.csv  …', size=9.5, mono=True, anchor='start', fill='--paper-dim')
+    f.arrow([(200, 52), (240, 52), (240, 60), (280, 60)])
+    f.arrow([(200, 60), (230, 60), (230, 175), (280, 175)])
+    return f, T('Two things and nothing else: a pinned tool, and a repository where the model lives beside its history.',
+                'Duas coisas e nada mais: uma ferramenta fixada, e um repositório onde o modelo mora ao lado da sua história.')
