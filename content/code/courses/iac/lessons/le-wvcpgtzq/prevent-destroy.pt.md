@@ -1,6 +1,6 @@
 ---
 title: prevent_destroy, e o que ele não impede
-version: 1
+version: 2
 ---
 
 Alguns recursos são baratos de perder e outros não. Uma instância substituída volta a partir da
@@ -30,10 +30,14 @@ resource "aws_s3_bucket" "logs" {
 }
 ```
 
+Ela a aplicou e fez commit, como em `~/shop/app`. **Na AWS o nome de um bucket precisa ser único
+entre todas as contas do mundo**, então numa conta real você poria um prefixo seu na frente desses
+nomes; o moto os aceita como estão.
+
 ## A recusa
 
-Um `terraform destroy` aqui planeja a destruição dos dois buckets, imprime esse plan inteiro e
-para antes de perguntar qualquer coisa:
+A Ana roda `terraform destroy`. Ele planeja a destruição dos dois buckets, imprime esse plan
+inteiro e para antes de perguntar qualquer coisa. O fim da saída:
 
 ```
 Plan: 0 to add, 0 to change, 2 to destroy.
@@ -53,8 +57,8 @@ Plan: 0 to add, 0 to change, 2 to destroy.
 **A execução inteira é recusada, não só o recurso protegido.** O bucket de logs, que não tem
 proteção nenhuma, também não foi destruído: o Terraform não aplica parte de um plan que rejeitou.
 
-Uma renomeação é pega do mesmo jeito, porque o nome de um bucket não muda no lugar. A Ana tenta
-`shop-assets-prod`:
+Uma renomeação é pega do mesmo jeito, porque o nome de um bucket não muda no lugar. A Ana troca o
+nome por `shop-assets-prod` e roda `terraform plan`. Parte do que ele imprime:
 
 ```
 -/+ destroy and then create replacement
@@ -77,7 +81,8 @@ pode rodar.
 ## O que ele não impede
 
 **A configuração mora no bloco do recurso, então só protege o recurso enquanto o bloco estiver no
-arquivo.** Apague o bloco inteiro e a proteção vai junto:
+arquivo.** Apague o bloco inteiro e a proteção vai junto. A Ana volta o nome com
+`git checkout main.tf` e apaga o bloco `assets`:
 
 ```
 ana@laptop:~/shop/assets$ git diff --stat

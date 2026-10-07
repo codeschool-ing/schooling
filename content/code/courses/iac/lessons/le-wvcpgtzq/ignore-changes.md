@@ -1,6 +1,6 @@
 ---
 title: ignore_changes, for an attribute somebody else owns
-version: 1
+version: 2
 ---
 
 Terraform assumes that it owns every argument it was given. If the real value differs from the
@@ -9,8 +9,16 @@ most of the time it is exactly right. **Sometimes, though, a second system is su
 an attribute**, and then Terraform undoing its work on every apply is the bug.
 
 The shop's finance team runs a cost tool that walks the account and tags every instance it finds
-with the cost centre it belongs to. It tagged `web` this morning. Ana's next plan, about something
-else entirely, contains this:
+with the cost centre it belongs to. It tagged `web` this morning, with the command below. Your lab
+has no cost tool, so play its part: run these two lines in `~/shop/app`, the first of which reads
+the instance's id out of the state.
+
+```sh
+ID=$(terraform state show -no-color aws_instance.web | awk '$1=="id"{gsub(/"/,"",$3); print $3}')
+aws ec2 create-tags --resources $ID --tags Key=CostCenter,Value=cc-4410
+```
+
+Ana's next plan, about something else entirely, contains this:
 
 ```
 ana@laptop:~/shop/app$ terraform plan
@@ -88,7 +96,7 @@ and found no differences, so no changes are needed.
 
 `tags["CostCenter"]` names one key of the map rather than the whole `tags` argument. Ana still owns
 `Name`, and a change to it in the file is still applied; only the key the cost tool writes is
-ignored.
+ignored. Ana commits the change.
 
 **Ignore as little as possible.** `ignore_changes = [tags]` would also have silenced this plan, and
 it would silence every future change Ana makes to the tags in the file, which would then look
