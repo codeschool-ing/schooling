@@ -11,16 +11,66 @@ pacientes para um servidor escolhido por outra pessoa.
 
 ## A zona da Vereda, antes de assinar
 
+As ferramentas de assinatura vêm do BIND, o servidor DNS com que a maioria das zonas é assinada, e o
+Ubuntu as empacota à parte:
+
+```sh
+sudo apt-get install -y bind9-utils
 ```
-ana@lab:~/lab$ cat data/dns/db.vereda.example
+
+A zona em si é um arquivo de texto: quem responde por ela, e dois nomes com seus endereços, da faixa
+reservada para documentação:
+
+```sh
+cd ~/lab
+mkdir -p data/dns
+cat > data/dns/db.vereda.example <<'EOF'
 $TTL 3600
 @       IN SOA ns1.vereda.example. hostmaster.vereda.example. 2026061501 7200 900 1209600 300
 @       IN NS  ns1.vereda.example.
 ns1     IN A   192.0.2.53
 portal  IN A   192.0.2.10
+EOF
+vcrypt dnskeys
 ```
 
-E dois pares de chaves Ed25519, no formato de arquivo do BIND, feitos pelo laboratório:
+O `vcrypt dnskeys` grava dois pares de chaves Ed25519, no formato de arquivo do BIND. O próprio
+`dnssec-keygen` do BIND faz os mesmos arquivos a partir de bytes aleatórios; esta ferramenta os
+deriva de rótulos, para que a zona assinada abaixo seja a que você obtém:
+
+```py
+# ~/lab/tools/dnskeys.py
+"""vcrypt dnskeys: Vereda's two DNSSEC keys, a key-signing key (flags 257)
+and a zone-signing key (flags 256), both Ed25519 (algorithm 15), written
+into data/dns/ in the file format BIND's tools read. `dnssec-keygen -a
+ED25519` makes the same files from fresh random bytes; these come from
+keys.py so that the signed zone in the lesson is the one you get."""
+import base64
+import struct
+
+from cryptography.hazmat.primitives import serialization
+
+import keys
+
+for label, flags in (("ksk", 257), ("zsk", 256)):
+    k = keys.ed25519_key("dns/" + label)
+    pub = k.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    priv = k.private_bytes(serialization.Encoding.Raw, serialization.PrivateFormat.Raw,
+                           serialization.NoEncryption())
+    # The key tag that names the files, computed over the DNSKEY record as
+    # RFC 4034 appendix B says: flags, protocol 3, algorithm 15, the key.
+    rdata = struct.pack("!HBB", flags, 3, 15) + pub
+    acc = sum(b if i & 1 else b << 8 for i, b in enumerate(rdata))
+    tag = (acc + ((acc >> 16) & 0xFFFF)) & 0xFFFF
+    base = f"data/dns/Kvereda.example.+015+{tag:05d}"
+    open(base + ".key", "w").write(
+        f"vereda.example. IN DNSKEY {flags} 3 15 {base64.b64encode(pub).decode()}\n")
+    open(base + ".private", "w").write(
+        f"Private-key-format: v1.3\nAlgorithm: 15 (ED25519)\nPrivateKey: {base64.b64encode(priv).decode()}\n"
+        "Created: 20260101000000\nPublish: 20260101000000\nActivate: 20260101000000\n")
+```
+
+Agora o diretório tem a zona e os dois pares:
 
 ```
 ana@lab:~/lab$ ls data/dns

@@ -10,9 +10,15 @@ nenhum, e é o que esta seção faz.
 
 ## A chave, calculada
 
-O `wpa_passphrase` vem com o `wpa_supplicant`, o programa que conecta a redes Wi-Fi no Linux. Com um
-nome de rede, o SSID, e uma frase secreta, ele imprime o bloco de configuração que um cliente usaria,
-com a chave derivada em `psk`. A rede da recepção da Vereda, com a frase do laboratório:
+O `wpa_passphrase` vem com o `wpa_supplicant`, o programa que conecta a redes Wi-Fi no Linux, e o
+Ubuntu o empacota como `wpasupplicant`. Ele não precisa de placa Wi-Fi para o que esta seção faz:
+
+```sh
+sudo apt-get install -y wpasupplicant
+```
+
+Com um nome de rede, o SSID, e uma frase secreta, ele imprime o bloco de configuração que um cliente
+usaria, com a chave derivada em `psk`. A rede da recepção da Vereda, com a frase do laboratório:
 
 ```
 ana@lab:~/lab$ wpa_passphrase Vereda-Recepcao 'sala de espera, cadeira azul 2026'
@@ -50,7 +56,8 @@ exit status 1
 ## A derivação inteira, em Python
 
 Não há ingrediente secreto naquela saída. A derivação cabe numa função, e rodá-la reproduz as duas
-chaves acima byte a byte:
+chaves acima byte a byte. O botão de copiar do bloco entrega o arquivo inteiro; salve-o como
+`~/lab/wifi_pmk.py`:
 
 ```schooling-example
 {
