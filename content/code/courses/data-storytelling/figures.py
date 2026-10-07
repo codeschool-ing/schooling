@@ -1186,6 +1186,280 @@ def p_l06_layout():
     marks = [(190, 90), (686, 182), (520, 260), (230, 364), (515, 50)]
     return f, marks
 
+# ------------------------------------------------------------------ lesson 7
+
+TARGET_FIRST = 0.95
+
+
+def june_rate():
+    rows = [r for r in S.ROWS if r['cohort'] == S.MONTHS[-1]]
+    return sum(r['cancelled_90d'] for r in rows) / sum(r['subscribers'] for r in rows)
+
+
+def sparkline(f, x0, y0, w, h, ys, stroke='--phosphor', target=None, lo=None, hi=None):
+    lo = min(ys) if lo is None else lo
+    hi = max(ys) if hi is None else hi
+    pts = [(x0 + w * i / (len(ys) - 1), y0 + h - (v - lo) / (hi - lo) * h) for i, v in enumerate(ys)]
+    if target is not None:
+        ty = y0 + h - (target - lo) / (hi - lo) * h
+        f.line(x0, ty, x0 + w, ty, stroke='--paper-dim', width=1, dash='3 3')
+    f.path('M' + ' L'.join(f'{x:.1f} {y:.1f}' for x, y in pts), stroke=stroke, width=1.6)
+    f.circle(pts[-1][0], pts[-1][1], 2.6, fill=stroke)
+
+
+@figure('l07-wireframe', 7)
+def l07_wireframe(lang):
+    last = S.WEEKLY_FIRST[-1] / 100
+    f = Fig('l07-wireframe', 680, 330, T(
+        lang,
+        'Faro’s redesigned dashboard in four numbered zones. Zone 1, top left: first deliveries on '
+        'time last week, 84.1% against a target of 95%, and the June cohort’s 90-day cancellation '
+        'rate, 21.6%. Zone 2, top right: first deliveries on time by region, 86.7% in the capital and '
+        '76.4% in the interior. Zone 3: the weekly first-delivery rate over 26 weeks with the target '
+        'line above it. Zone 4, along the bottom: orders, revenue and all deliveries on time, 94.5%, '
+        'drawn small.',
+        'O painel redesenhado da Faro em quatro zonas numeradas. Zona 1, no alto à esquerda: primeiras '
+        'entregas no prazo na semana passada, 84,1% contra meta de 95%, e a taxa de cancelamento em '
+        '90 dias da coorte de junho, 21,6%. Zona 2, no alto à direita: primeiras entregas no prazo por '
+        'região, 86,7% na capital e 76,4% no interior. Zona 3: a taxa semanal de primeira entrega em 26 '
+        'semanas com a linha da meta acima. Zona 4, embaixo: pedidos, receita e todas as entregas no '
+        'prazo, 94,5%, em tamanho pequeno.'))
+    f.rect(10, 10, 660, 310, stroke='--wire', fill='--ink', rx=4)
+
+    def badge(x, y, n):
+        f.circle(x, y, 9, fill='--amber')
+        f.text(x, y + 0.5, str(n), size=10, weight='600', fill='--ink')
+
+    # zone 1
+    for k, (val, lab, sub) in enumerate([
+            (pct(lang, last), T(lang, 'first deliveries on time', '1ªs entregas no prazo'),
+             T(lang, 'target 95%, below', 'meta 95%, abaixo')),
+            (pct(lang, june_rate()), T(lang, 'cancelled in 90 days', 'cancelaram em 90 dias'),
+             T(lang, 'June cohort', 'coorte de junho'))]):
+        x = 24 + k * 162
+        f.rect(x, 26, 150, 96, stroke='--amber' if k == 0 else '--wire', fill='--panel', rx=3)
+        f.text(x + 12, 56, val, size=24, anchor='start', weight='600',
+               fill='--amber' if k == 0 else '--paper')
+        f.text(x + 12, 84, lab, size=9.5, anchor='start')
+        f.text(x + 12, 102, sub, size=9, anchor='start', fill='--paper-dim')
+    badge(24, 26, 1)
+    # zone 2
+    f.rect(356, 26, 300, 96, stroke='--wire', fill='--panel', rx=3)
+    f.text(368, 42, T(lang, 'first deliveries on time, by region', '1ªs entregas no prazo, por região'),
+           size=9.5, anchor='start', fill='--paper-dim')
+    for k, r in enumerate(S.REGIONS):
+        v = 1 - S.BY_REGION[r]['late_share']
+        y = 58 + k * 28
+        f.text(430, y + 8, T(lang, r, r), size=9.5, anchor='end')
+        w = 170 * v
+        f.bar(438, y, w, 16, fill='--scan', stroke='--amber' if v < 0.8 else '--paper-dim', width=1.3)
+        f.text(442 + w, y + 8, pct(lang, v), size=9.5, anchor='start')
+    badge(356, 26, 2)
+    # zone 3
+    f.rect(24, 136, 632, 112, stroke='--wire', fill='--panel', rx=3)
+    f.text(36, 152, T(lang, 'first deliveries on time, weekly, with the 95% target',
+                      '1ªs entregas no prazo, por semana, com a meta de 95%'),
+           size=9.5, anchor='start', fill='--paper-dim')
+    sparkline(f, 40, 168, 600, 66, [v / 100 for v in S.WEEKLY_FIRST], stroke='--amber',
+              target=TARGET_FIRST, lo=0.78, hi=0.97)
+    badge(24, 136, 3)
+    # zone 4
+    small = [(T(lang, 'orders', 'pedidos'), None), (T(lang, 'revenue', 'receita'), None),
+             (T(lang, 'all deliveries on time', 'todas no prazo'), pct(lang, S.ALL_ON_TIME))]
+    for k, (lab, val) in enumerate(small):
+        x = 24 + k * 214
+        f.rect(x, 262, 204, 44, stroke='--wire', fill='--panel', rx=3)
+        f.text(x + 10, 278, lab, size=9, anchor='start', fill='--paper-dim')
+        if val:
+            f.text(x + 10, 294, val, size=11, anchor='start')
+        else:
+            f.bar(x + 10, 290, 60, 6, fill='--paper-dim', stroke='--paper-dim', width=0.6)
+    badge(24, 262, 4)
+    return f, T(lang,
+                'The answer to “are we all right?” is where the eye lands first; where the problem is '
+                'sits beside it; what changed runs underneath; everything else is small at the bottom.',
+                'A resposta a “estamos bem?” fica onde o olho cai primeiro; onde está o problema fica ao '
+                'lado; o que mudou corre embaixo; todo o resto fica pequeno no rodapé.')
+
+
+@figure('l07-kpi-context', 7)
+def l07_kpi_context(lang):
+    last = S.WEEKLY_FIRST[-1] / 100
+    f = Fig('l07-kpi-context', 680, 190, T(
+        lang,
+        'The same number on three tiles. The first shows only 84.1%. The second adds the target, '
+        '95%, and says it is below. The third adds the week before, level, and a sparkline of 26 '
+        'weeks that stays between 80% and 85%, well under the dashed target line.',
+        'O mesmo número em três blocos. O primeiro mostra só 84,1%. O segundo acrescenta a meta, 95%, '
+        'e diz que está abaixo. O terceiro acrescenta a semana anterior, igual, e uma sparkline de 26 '
+        'semanas que fica entre 80% e 85%, bem abaixo da linha tracejada da meta.'))
+    heads = [T(lang, 'a number', 'um número'), T(lang, 'against a target', 'contra uma meta'),
+             T(lang, 'target, last week and trend', 'meta, semana anterior e tendência')]
+    for k in range(3):
+        x = 10 + k * 226
+        f.text(x + 103, 14, heads[k], size=10, fill='--paper-dim')
+        f.rect(x, 26, 206, 152, stroke='--amber' if k else '--wire', fill='--panel', rx=3)
+        f.text(x + 14, 46, T(lang, 'first deliveries on time', '1ªs entregas no prazo'), size=9.5,
+               anchor='start', fill='--paper-dim')
+        f.text(x + 14, 80, pct(lang, last), size=26, anchor='start', weight='600',
+               fill='--amber' if k else '--paper')
+        if k >= 1:
+            f.text(x + 14, 110, T(lang, 'below the 95% target', 'abaixo da meta de 95%'), size=9.5,
+                   anchor='start', fill='--amber')
+        if k == 2:
+            f.text(x + 14, 128, T(lang, 'level with the week before', 'igual à semana anterior'),
+                   size=9.5, anchor='start')
+            sparkline(f, x + 14, 140, 176, 28, [v / 100 for v in S.WEEKLY_FIRST], stroke='--amber',
+                      target=TARGET_FIRST, lo=0.78, hi=0.97)
+    return f, T(lang,
+                'Only the third tile answers “are we all right?”, “is it moving?” and “is this week '
+                'typical?” in one look.',
+                'Só o terceiro bloco responde “estamos bem?”, “está mudando?” e “esta semana é típica?” '
+                'numa olhada.')
+
+
+@figure('l07-leading', 7)
+def l07_leading(lang):
+    f = Fig('l07-leading', 680, 200, T(
+        lang,
+        'A timeline in weeks from 0 to 14. At week 0 a new subscriber’s first box arrives on time or '
+        'late, and the first-delivery rate shows it the same week: the leading indicator. At about '
+        'week 13, ninety days later, the cancellation within 90 days is finally known: the lagging '
+        'indicator. A bracket between them is labelled ninety days in which only the leading one can '
+        'warn you.',
+        'Uma linha do tempo em semanas de 0 a 14. Na semana 0 a primeira caixa de um assinante novo '
+        'chega no prazo ou atrasada, e a taxa de primeira entrega mostra isso na mesma semana: o '
+        'indicador antecedente. Por volta da semana 13, noventa dias depois, o cancelamento em 90 dias '
+        'finalmente é conhecido: o indicador consequente. Uma chave entre os dois diz noventa dias em '
+        'que só o antecedente pode avisar.'))
+    p = Plot(f, 40, 60, 640, 120, 0, 14, 0, 1)
+    p.baseline()
+    for w in range(0, 15, 2):
+        f.line(p.sx(w), 120, p.sx(w), 125, stroke='--paper-dim', width=1)
+        f.text(p.sx(w), 136, str(w), size=9, fill='--paper-dim')
+    f.text(640, 156, T(lang, 'weeks after the first box', 'semanas depois da 1ª caixa'), size=9.5,
+           anchor='end', fill='--paper-dim')
+    for wk, col, head, sub in [(0, '--phosphor', T(lang, 'first box: on time or late', '1ª caixa: no prazo ou atrasada'),
+                                T(lang, 'leading: seen this week', 'antecedente: visto nesta semana')),
+                               (90 / 7, '--amber', T(lang, 'cancelled within 90 days?', 'cancelou em 90 dias?'),
+                                T(lang, 'lagging: known now', 'consequente: conhecido agora'))]:
+        x = p.sx(wk)
+        f.circle(x, 120, 6, fill=col)
+        f.line(x, 114, x, 70, stroke=col, width=1.4)
+        f.text(x, 46, head, size=10.5, weight='600', fill=col,
+               anchor='start' if wk == 0 else 'end')
+        f.text(x, 62, sub, size=9.5, anchor='start' if wk == 0 else 'end', fill='--paper-dim')
+    x0, x1 = p.sx(0) + 10, p.sx(90 / 7) - 10
+    f.path(f'M{x0:.1f} 100 L{x0:.1f} 106 L{x1:.1f} 106 L{x1:.1f} 100', stroke='--paper-dim', width=1)
+    f.text((x0 + x1) / 2, 92, T(lang, 'ninety days in which only the leading indicator can warn you',
+                                'noventa dias em que só o antecedente pode avisar'),
+           size=9.5, fill='--paper-dim')
+    f.text(40, 180, T(lang, 'a change made today appears in the cancellation rate a quarter later',
+                      'uma mudança feita hoje aparece no cancelamento um trimestre depois'),
+           size=9.5, anchor='start')
+    return f, T(lang,
+                'The outcome Faro cares about arrives ninety days late. The first-delivery rate moves '
+                'the same week, which is why it gets the top-left corner.',
+                'O resultado que importa à Faro chega com noventa dias de atraso. A taxa de primeira '
+                'entrega se mexe na mesma semana, e é por isso que ganha o canto superior esquerdo.')
+
+
+@figure('l07-bullet', 7)
+def l07_bullet(lang):
+    last = S.WEEKLY_FIRST[-1] / 100
+    f = Fig('l07-bullet', 680, 200, T(
+        lang,
+        'The same number twice. On the left, a gauge: a half-circle dial with a needle at 84.1% and '
+        'coloured arcs, taking a large square of space. On the right, a bullet graph: a thin bar to '
+        '84.1%, a short vertical line at the 95% target, and three grey bands behind it for poor, fair '
+        'and good, in a single row.',
+        'O mesmo número duas vezes. À esquerda, um mostrador: um semicírculo com ponteiro em 84,1% e '
+        'arcos coloridos, ocupando um quadrado grande. À direita, um gráfico de bala: uma barra fina até '
+        '84,1%, um traço vertical na meta de 95% e três faixas cinza ao fundo para ruim, regular e bom, '
+        'numa única linha.'))
+    import math
+    f.text(130, 14, T(lang, 'gauge', 'mostrador'), size=10, fill='--paper-dim')
+    f.text(450, 14, T(lang, 'bullet graph', 'gráfico de bala'), size=10, fill='--paper-dim')
+    f.rect(10, 26, 240, 164, stroke='--wire', fill='--ink', rx=3)
+    cx, cy, r = 130, 150, 90
+
+    def arc(a0, a1, col):
+        p0 = (cx - r * math.cos(math.pi * a0), cy - r * math.sin(math.pi * a0))
+        p1 = (cx - r * math.cos(math.pi * a1), cy - r * math.sin(math.pi * a1))
+        f.path(f'M{p0[0]:.1f} {p0[1]:.1f} A{r} {r} 0 0 1 {p1[0]:.1f} {p1[1]:.1f}', stroke=col, width=10)
+    arc(0.0, 0.6, '--amber')
+    arc(0.6, 0.85, '--paper-dim')
+    arc(0.85, 1.0, '--phosphor')
+    a = last
+    f.line(cx, cy, cx - 70 * math.cos(math.pi * a), cy - 70 * math.sin(math.pi * a), stroke='--paper',
+           width=2.4)
+    f.circle(cx, cy, 5, fill='--paper')
+    f.text(cx, cy + 20, pct(lang, last), size=12, weight='600')
+    f.rect(270, 26, 400, 164, stroke='--phosphor', fill='--ink', rx=3)
+    x0, x1 = 300, 640
+    lo = 0.7
+
+    def sx(v):
+        return x0 + (v - lo) / (1 - lo) * (x1 - x0)
+    for a_, b_, fill in [(0.7, 0.85, '--panel'), (0.85, 0.92, '--scan'), (0.92, 1.0, '--wire')]:
+        f.bar(sx(a_), 84, sx(b_) - sx(a_), 34, fill=fill, stroke=None, width=0)
+    f.bar(sx(lo), 94, sx(last) - sx(lo), 14, fill='--amber', stroke='--amber')
+    f.line(sx(TARGET_FIRST), 80, sx(TARGET_FIRST), 122, stroke='--paper', width=2.4)
+    f.text(sx(TARGET_FIRST), 70, T(lang, 'target 95%', 'meta 95%'), size=9.5)
+    f.text(sx(last), 134, pct(lang, last), size=10, weight='600', fill='--amber')
+    for v in (0.7, 0.8, 0.9, 1.0):
+        f.text(sx(v), 156, pct(lang, v, 0), size=9, fill='--paper-dim')
+    f.text(x0, 46, T(lang, 'first deliveries on time', '1ªs entregas no prazo'), size=10, anchor='start')
+    f.text(x0, 178, T(lang, 'grey bands: poor, fair, good', 'faixas cinza: ruim, regular, bom'), size=9,
+           anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The bullet graph carries the value, the target and the ranges in one row, and lines up '
+                'with the next one. The gauge spends a square on one number.',
+                'O gráfico de bala carrega o valor, a meta e as faixas numa linha, e se alinha com o '
+                'próximo. O mostrador gasta um quadrado num número só.')
+
+
+@picture('l07-dashboard')
+def p_l07_dashboard():
+    """Marks, in label order: a gauge, a pie with too many slices, a number with no
+    comparison, the key number placed last, a map nobody asked for."""
+    import math
+    f = Fig('l07-dashboard', 720, 405,
+            'A dashboard drawn with no words. Top left, a large half-circle gauge with a needle. Top '
+            'middle, a pie chart cut into ten thin slices. Top right, a tile holding the number 94 and '
+            'nothing else. Middle left, a blob-shaped map filled with shades. Middle right, a table of '
+            'grey bars. Bottom right corner, a small tile with a coloured number 84 and a thin target '
+            'line.')
+    f.rect(10, 10, 700, 385, stroke='--paper-dim', fill='--ink', rx=4)
+    cx, cy, r = 120, 140, 80
+    f.path(f'M{cx - r} {cy} A{r} {r} 0 0 1 {cx + r} {cy}', stroke='--paper-dim', width=12)
+    f.line(cx, cy, cx + 50, cy - 50, stroke='--paper', width=3)
+    f.circle(cx, cy, 6, fill='--paper')
+    pcx, pcy, pr = 330, 100, 64
+    fills = ['--panel', '--scan', '--paper-dim', '--wire']
+    a0 = 0.0
+    for k, share in enumerate([0.2, 0.15, 0.12, 0.1, 0.1, 0.09, 0.08, 0.07, 0.05, 0.04]):
+        a1 = a0 + share * 2 * math.pi
+        p0 = (pcx + pr * math.cos(a0), pcy + pr * math.sin(a0))
+        p1 = (pcx + pr * math.cos(a1), pcy + pr * math.sin(a1))
+        large = 1 if share > 0.5 else 0
+        f.path(f'M{pcx} {pcy} L{p0[0]:.1f} {p0[1]:.1f} A{pr} {pr} 0 {large} 1 {p1[0]:.1f} {p1[1]:.1f} Z',
+               stroke='--ink', width=1, fill=fills[k % 4])
+        a0 = a1
+    f.rect(470, 40, 200, 110, stroke='--paper-dim', fill='--panel', rx=3)
+    f.text(570, 98, '94', size=44, weight='600', fill='--paper')
+    f.path('M40 220 C70 190 140 190 170 215 C200 240 250 230 260 270 C270 310 200 330 150 320 '
+           'C100 312 60 300 50 270 C42 250 30 240 40 220 Z', stroke='--paper-dim', width=1.4,
+           fill='--scan')
+    for k in range(5):
+        f.bar(320, 200 + k * 20, 260, 8, fill='--paper-dim', stroke='--paper-dim', width=0.5)
+    f.rect(600, 300, 96, 80, stroke='--paper-dim', fill='--panel', rx=3)
+    f.text(648, 334, '84', size=24, weight='600', fill='--amber')
+    f.line(612, 360, 684, 360, stroke='--paper-dim', width=1)
+    f.line(670, 352, 670, 368, stroke='--paper', width=2)
+    marks = [(120, 110), (330, 100), (570, 95), (648, 340), (150, 262)]
+    return f, marks
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
