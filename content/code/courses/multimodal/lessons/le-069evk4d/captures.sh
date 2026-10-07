@@ -280,7 +280,7 @@ on 'python prices.py show tts-1 | grep -E "cost_per_character"'
 on 'python prices.py show gpt-image-1 | grep -E "^(input|output)_cost_per_(image_)?token "; python prices.py show high/1024-x-1024/gpt-image-1 | grep input_cost_per_image'
 
 block phone
-on 'python -c "from PIL import Image; Image.open(\"media/cat_and_dog.jpg\").resize((4032, 3024)).save(\"media/phone.jpg\", quality=90)"; ls -l media/phone.jpg | cut -d\" \" -f5-'
+on 'python -c "from PIL import Image; Image.open(\"media/cat_and_dog.jpg\").resize((4032, 3024)).save(\"media/phone.jpg\", quality=90)"; stat -c \"%s %n\" media/phone.jpg'
 
 block picture
 on 'python picture_cost.py media/cover-b39.png media/invoice-0931.png media/phone.jpg'

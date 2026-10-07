@@ -42,10 +42,15 @@ The cheapest request is the one never sent. A shop asks the same questions of th
 ```
 
 ```
-@@cache@@
+ana@lab:~/mm$ python cached.py media/invoice-0931.png "What is the total?" "What is the total?" "What is the total of this invoice?"
+provider 2798 tokens  The total amount specified in the invoice is 758
+cache    2798 tokens  The total amount specified in the invoice is 758
+provider 2801 tokens  The total of this invoice is **758.50 BRL**.
+ana@lab:~/mm$ ls cache | wc -l
+2
 ```
 
-DRAFT-CACHE
+Three questions, two requests to the model: the cache holds two files. The second "What is the total?" came from disk, with the 2,798 tokens it would have cost written beside it. The third question means the same thing in other words and **missed**, because the key is the exact prompt. A cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and then it can return an answer to a question that only looked similar.
 
 A cache holds the provider's answers, which can hold personal data from the pictures. It needs the same retention and erasure rules as the pictures do.
 

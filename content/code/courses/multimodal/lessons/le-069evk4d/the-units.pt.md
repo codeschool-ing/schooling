@@ -6,19 +6,19 @@ version: 1
 A aula 6 de `ai-models` leu a planilha do LiteLLM para modelos de texto, em que tudo tem preço por token. As entradas multimodais usam mais unidades que isso. A mesma planilha, no commit que o `prices.py` da aula 3 fixa:
 
 ```
-ana@lab:~/mm$ sheet show gpt-4o | grep -E "^(input|output)_cost_per_token "
+ana@lab:~/mm$ python prices.py show gpt-4o | grep -E "^(input|output)_cost_per_token "
 input_cost_per_token                       2.5e-06
 output_cost_per_token                      1e-05
-ana@lab:~/mm$ sheet show gemini/gemini-2.5-flash | grep -E "^(input_cost_per_token|input_cost_per_audio_token|output_cost_per_token) "
+ana@lab:~/mm$ python prices.py show gemini/gemini-2.5-flash | grep -E "^(input_cost_per_token|input_cost_per_audio_token|output_cost_per_token) "
 input_cost_per_audio_token                 1e-06
 input_cost_per_token                       3e-07
 output_cost_per_token                      2.5e-06
-ana@lab:~/mm$ sheet show whisper-1 | grep -E "cost_per_second"
+ana@lab:~/mm$ python prices.py show whisper-1 | grep -E "cost_per_second"
 input_cost_per_second                      0.0001
 output_cost_per_second                     0.0001
-ana@lab:~/mm$ sheet show tts-1 | grep -E "cost_per_character"
+ana@lab:~/mm$ python prices.py show tts-1 | grep -E "cost_per_character"
 input_cost_per_character                   1.5e-05
-ana@lab:~/mm$ sheet show gpt-image-1 | grep -E "^(input|output)_cost_per_(image_)?token "; sheet show high/1024-x-1024/gpt-image-1 | grep input_cost_per_image
+ana@lab:~/mm$ python prices.py show gpt-image-1 | grep -E "^(input|output)_cost_per_(image_)?token "; python prices.py show high/1024-x-1024/gpt-image-1 | grep input_cost_per_image
 input_cost_per_image_token                 1e-05
 input_cost_per_token                       5e-06
 output_cost_per_image_token                4e-05
