@@ -1090,6 +1090,123 @@ def l11_materialisations(lang):
         f.text(cols[2], y, run, size=11, anchor='start')
     return f, t['cap']
 
+@figure('l12-two-answers', 12)
+def l12_two_answers(lang):
+    t = {'en': dict(
+            label='A failed test leads to one question: is the rule wrong or the data? If the rule '
+                  'is wrong, correct the test so that it says what is actually true, and keep it. '
+                  'If the data is wrong, keep the test as it is and fix the data where it comes '
+                  'from. Deleting the test is drawn crossed out, as the move that is never right.',
+            fail='a test fails', q='the rule or the data?', rule='the rule is wrong',
+            data='the data is wrong', fix_rule='narrow the test until it is true',
+            fix_data='fix it upstream; the test stays', never='delete the test',
+            cap='Both answers keep a test. The only wrong move is the one that keeps none.'),
+         'pt': dict(
+            label='Um teste que falha leva a uma pergunta: a regra está errada, ou os dados? Se a '
+                  'regra está errada, corrija o teste para ele dizer o que é de fato verdade, e '
+                  'mantenha-o. Se os dados estão errados, mantenha o teste como está e corrija os '
+                  'dados de onde eles vêm. Apagar o teste aparece riscado, como o movimento que '
+                  'nunca está certo.',
+            fail='um teste falha', q='a regra ou os dados?', rule='a regra está errada',
+            data='os dados estão errados', fix_rule='estreitar o teste até ele ser verdade',
+            fix_data='corrigir na origem; o teste fica', never='apagar o teste',
+            cap='As duas respostas mantêm um teste. O único movimento errado é o que não mantém '
+                'nenhum.')}[lang]
+    f = Fig('l12-two-answers', 720, 260, t['label'])
+    box(f, 270, 16, 180, 40, t['fail'], stroke='--amber')
+    box(f, 270, 86, 180, 40, t['q'])
+    f.line(360, 56, 360, 84, arrow=True)
+    box(f, 40, 150, 230, 40, t['rule'])
+    box(f, 450, 150, 230, 40, t['data'])
+    f.line(300, 126, 200, 148, arrow=True)
+    f.line(420, 126, 520, 148, arrow=True)
+    f.text(155, 214, t['fix_rule'], size=11)
+    f.text(565, 214, t['fix_data'], size=11)
+    f.line(155, 190, 155, 202)
+    f.line(565, 190, 565, 202)
+    f.text(360, 244, t['never'], size=11, fill='--paper-dim')
+    f.line(300, 244, 420, 244, stroke='--amber', width=1.5)
+    return f, t['cap']
+
+
+@figure('l12-build', 12)
+def l12_build(lang):
+    t = {'en': dict(
+            label='dbt build in graph order. stg_orders is built and then tested; its customer test '
+                  'fails. Everything downstream of it is skipped: int_sales, and so daily_sales and '
+                  'fact_sales, which keep the rows they had. stg_books, which does not depend on '
+                  'stg_orders, is built and tested as usual.',
+            built='built', tested='tested', failed='test failed', skipped='skipped',
+            kept='kept yesterday\'s rows',
+            cap='A failed test stops what reads the model, and nothing else.'),
+         'pt': dict(
+            label='O dbt build na ordem do grafo. O stg_orders é construído e depois testado; o '
+                  'teste de cliente dele falha. Tudo abaixo dele é pulado: o int_sales, e portanto '
+                  'o daily_sales e o fact_sales, que ficam com as linhas que tinham. O stg_books, '
+                  'que não depende do stg_orders, é construído e testado normalmente.',
+            built='construído', tested='testado', failed='teste falhou', skipped='pulado',
+            kept='ficaram com as linhas de ontem',
+            cap='Um teste que falha para o que lê o modelo, e mais nada.')}[lang]
+    f = Fig('l12-build', 720, 210, t['label'])
+    W, H = 140, 44
+    def node(x, y, name, sub, stroke, dash=None):
+        f.rect(x, y, W, H, stroke=stroke, fill='--panel', dash=dash)
+        f.text(x + W / 2, y + 16, name, size=10.5, mono=True)
+        f.text(x + W / 2, y + 32, sub, size=9.5, fill='--paper-dim')
+    node(30, 40, 'stg_orders', t['failed'], '--amber')
+    node(30, 150, 'stg_books', t['built'] + ' · ' + t['tested'], '--phosphor')
+    node(270, 40, 'int_sales', t['skipped'], '--wire', dash='4 3')
+    node(510, 20, 'fact_sales', t['skipped'], '--wire', dash='4 3')
+    node(510, 110, 'daily_sales', t['skipped'], '--wire', dash='4 3')
+    f.line(30 + W, 62, 268, 62, arrow=True)
+    f.line(270 + W, 56, 508, 42, arrow=True)
+    f.line(270 + W, 70, 508, 128, arrow=True)
+    f.line(30 + W, 172, 508, 140, arrow=True)
+    f.text(580, 182, t['kept'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l12-lineage', 12)
+def l12_lineage(lang):
+    t = {'en': dict(
+            label='Lineage from a source to a report. raw.orders feeds stg_orders, which feeds '
+                  'int_sales, which feeds daily_sales and fact_sales; daily_sales feeds the morning '
+                  'report, an exposure owned by Ana. Reading leftwards answers where a number came '
+                  'from; reading rightwards answers what a change will reach.',
+            up='where did this number come from?', down='what will this change reach?',
+            exp='exposure · Ana',
+            cap='One graph, read in two directions for two questions.'),
+         'pt': dict(
+            label='A linhagem de uma fonte até um relatório. O raw.orders alimenta o stg_orders, '
+                  'que alimenta o int_sales, que alimenta o daily_sales e o fact_sales; o '
+                  'daily_sales alimenta o relatório da manhã, uma exposure da Ana. Ler para a '
+                  'esquerda responde de onde um número veio; ler para a direita responde o que uma '
+                  'mudança vai alcançar.',
+            up='de onde veio este número?', down='o que esta mudança vai alcançar?',
+            exp='exposure · Ana',
+            cap='Um grafo, lido em duas direções para duas perguntas.')}[lang]
+    f = Fig('l12-lineage', 720, 230, t['label'])
+    W, H = 112, 40
+    xs = [14, 154, 294, 434, 580]
+    y = 100
+    names = ['raw.orders', 'stg_orders', 'int_sales', 'daily_sales', 'morning_report']
+    for i, (x, n) in enumerate(zip(xs, names)):
+        stroke = '--phosphor' if i == 4 else '--wire'
+        w = 126 if i == 4 else W
+        f.rect(x, y, w, H, stroke=stroke, fill='--panel')
+        f.text(x + w / 2, y + H / 2, n, size=10.5, mono=True)
+        if i < 4:
+            f.line(x + W, y + H / 2, xs[i + 1] - 2, y + H / 2, arrow=True)
+    f.text(643, y + H + 16, t['exp'], size=9.5, fill='--paper-dim')
+    f.rect(434, 180, W, H - 8, stroke='--wire', fill='--panel')
+    f.text(434 + W / 2, 196, 'fact_sales', size=10.5, mono=True)
+    f.path(f'M{294 + W} {y + H - 6} C 420 {y + H + 10}, 400 196, 432 196', arrow=True)
+    f.line(690, 40, 30, 40, stroke='--amber', arrow=True)
+    f.text(360, 26, t['up'], size=11)
+    f.line(30, 70, 690, 70, stroke='--phosphor', arrow=True)
+    f.text(360, 84, t['down'], size=11)
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:
