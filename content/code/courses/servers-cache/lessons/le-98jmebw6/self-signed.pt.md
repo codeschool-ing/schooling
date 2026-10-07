@@ -3,6 +3,53 @@ title: Um certificado que assina a si mesmo
 version: 1
 ---
 
+## De onde esta aula parte
+
+Esta aula parte do site como a aula 2 o montou, sem os experimentos de `location` das últimas seções
+dela. Ponha isto em `/etc/nginx/sites-available/ipelivros`, no lugar do que estiver lá:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## Um certificado que assina a si mesmo
+
 Qualquer um pode fazer um certificado. O `openssl` faz em um comando, com uma chave P-256, válido por
 trinta dias, para os dois nomes da livraria:
 
@@ -26,6 +73,15 @@ chave privada, e o bloco server do site ganha um segundo `listen`:
 ```conf
 ssl_certificate     /etc/ssl/ipelivros/self.crt;
 ssl_certificate_key /etc/ssl/ipelivros/self.key;
+```
+
+Salve essas duas linhas como `/etc/nginx/snippets/ipelivros-self.conf`. O `listen` novo e o
+`include` entram abaixo do `listen 80;` no bloco server do site; este `sed` os põe lá, e o teste e o
+reload vêm em seguida, como sempre:
+
+```sh
+sudo sed -i 's/^    listen 80;/    listen 80;\n    listen 443 ssl;\n    include snippets\/ipelivros-self.conf;/' /etc/nginx/sites-available/ipelivros
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ```

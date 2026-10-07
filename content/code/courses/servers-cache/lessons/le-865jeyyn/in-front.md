@@ -3,6 +3,17 @@ title: Nginx in front of the application
 version: 1
 ---
 
+## Where this lesson starts
+
+Lesson 1 left Apache and Caddy running beside Nginx. This lesson needs only Nginx and the shop's two
+copies:
+
+```sh
+sudo systemctl stop apache2 caddy
+```
+
+## The shop, asked directly
+
 Asked directly, the bookshop answers on its own port, and it can see exactly who asked:
 
 ```

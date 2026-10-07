@@ -4,8 +4,22 @@ version: 1
 ---
 
 O `redis-cli` é para olhar. A aplicação fala com o Redis por uma biblioteca cliente, e para Python é a
-`redis-py`, que o Ubuntu empacota como `python3-redis` e o `lab.sh install` pôs no seu servidor. Este
-programa guarda o livro que o `catalogue.py` lê do banco lento, o lê de volta e atualiza os mais
+`redis-py`, que o Ubuntu empacota como `python3-redis` e a aula 1 instalou. **Todo programa das aulas 8 a 11 é salvo em `~/work`**, com o nome escrito acima dele, e rodado de
+lá. Eles chegam ao banco da loja por um módulo pequeno, o `catalogue.py`, que faz o que a loja faz:
+dorme 120 milissegundos antes de cada consulta e conta as consultas que fez, para que um programa
+possa dizer quantas vezes chegou ao banco. Crie o diretório e salve o módulo primeiro:
+
+```sh
+mkdir -p ~/work
+```
+
+```schooling-example
+{"language": "python", "file": "catalogue.py", "parts": [{"code": "\"\"\"The bookshop's database, as a module, for the cache code of lessons 8 to 11.\n\nEvery call sleeps QUERY_MS first, as the shop's API does, and counts itself in\n`queries`, so a script can say how many times it reached the database.\"\"\"\nimport sqlite3, threading, time\n\nDB = \"/var/lib/shop/catalogue.db\"\nQUERY_MS = 120\nqueries = 0\n_lock = threading.Lock()\n\n\ndef get_book(book_id):\n    global queries\n    time.sleep(QUERY_MS / 1000)\n    with _lock:\n        queries += 1\n    with sqlite3.connect(DB) as db:\n        db.row_factory = sqlite3.Row\n        row = db.execute(\"SELECT * FROM books WHERE id = ?\", (book_id,)).fetchone()\n        return dict(row) if row else None\n\n\ndef set_price(book_id, price_cents):\n    with sqlite3.connect(DB) as db:\n        db.execute(\"UPDATE books SET price_cents = ?, updated_at = ? WHERE id = ?\",\n                   (price_cents, int(time.time()), book_id))\n", "note": "**O banco da loja, do jeito lento.** Toda chamada dorme antes e se conta em `queries`."}]}
+```
+
+O `set_price` grava no banco como você, e é para isso que serviu o grupo `shop` da aula 1.
+
+Este programa guarda o livro que o `catalogue.py` lê do banco lento, o lê de volta e atualiza os mais
 vendidos:
 
 ```schooling-example

@@ -48,3 +48,9 @@ in clear text**, so it keeps out a neighbour on a private network who connects b
 stop one who can read the traffic. That needs TLS, `-Z`, which Ubuntu's build includes. And the restart
 that switched the password on emptied the cache again, which is easy to forget the first time it
 happens in production.
+
+The rest of the course does not log in to Memcached, so take the password off again:
+
+```sh
+sudo sed -i '/^-Y /d' /etc/memcached.conf && sudo systemctl restart memcached && sudo rm -f /etc/memcached-auth
+```

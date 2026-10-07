@@ -14,6 +14,14 @@ ssl_session_cache   shared:TLS:10m;
 ssl_session_timeout 1d;
 ```
 
+Save it as `/etc/nginx/snippets/ipelivros-tls.conf`, and point the site at it instead of the
+self-signed one:
+
+```sh
+sudo sed -i 's/ipelivros-self.conf/ipelivros-tls.conf/' /etc/nginx/sites-available/ipelivros
+sudo nginx -t && sudo systemctl reload nginx
+```
+
 `ssl_protocols TLSv1.2 TLSv1.3` drops the versions before 1.2, which every current browser has stopped
 using and every audit flags. The session cache lets a returning client resume its previous TLS session
 instead of doing the whole handshake again, for a day; `shared` means every worker uses the same cache,
@@ -101,6 +109,19 @@ server {
         return 301 https://$host$request_uri;
     }
 }
+```
+
+Save that block as `/etc/nginx/sites-available/ipelivros.redirect`. Then delete the `listen 80;` line
+from the site's own block, append the new block to the site's file, and remove the copy:
+
+```sh
+sudo sed -i '/^    listen 80;/d' /etc/nginx/sites-available/ipelivros
+sudo sh -c 'cat /etc/nginx/sites-available/ipelivros.redirect >> /etc/nginx/sites-available/ipelivros'
+sudo rm /etc/nginx/sites-available/ipelivros.redirect
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+```
 ana@web:~$ grep -nE 'server \{|listen|include snippets' /etc/nginx/sites-available/ipelivros
 9:server {
 10:    listen 443 ssl;

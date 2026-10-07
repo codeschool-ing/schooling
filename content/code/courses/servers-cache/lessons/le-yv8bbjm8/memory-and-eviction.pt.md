@@ -8,20 +8,8 @@ configuração, `maxmemory-policy`, e escolhê-la é o momento em que se diz ao 
 banco de dados. Para ver os dois comportamentos, dê a ele dois megabytes e um programinha que grava
 valores de um kilobyte até ser parado:
 
-```python
-import sys
-
-import redis
-
-r = redis.Redis()
-written = 0
-try:
-    for i in range(int(sys.argv[1])):
-        r.set(f"filler:{i}", "x" * 1000)
-        written += 1
-except redis.exceptions.ResponseError as e:
-    print("error after", written, "keys:", e)
-print("written", written)
+```schooling-example
+{"language": "python", "file": "fill.py", "parts": [{"code": "import sys\n\nimport redis\n\nr = redis.Redis()\nwritten = 0\ntry:\n    for i in range(int(sys.argv[1])):\n        r.set(f\"filler:{i}\", \"x\" * 1000)\n        written += 1\nexcept redis.exceptions.ResponseError as e:\n    print(\"error after\", written, \"keys:\", e)\nprint(\"written\", written)\n", "note": "Grava quantos valores de um kilobyte lhe disserem, e diz quantos o Redis aceitou antes de recusar um."}]}
 ```
 
 ```

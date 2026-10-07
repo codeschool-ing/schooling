@@ -3,7 +3,79 @@ title: An edge of your own, with Varnish
 version: 1
 ---
 
-**Varnish** is a cache that does nothing but cache HTTP, and the CDN Fastly grew out of it. It is in Ubuntu's archive and `lab.sh install` put it on your server, stopped. Here it plays
+## Where this lesson starts
+
+This lesson starts from the site as lesson 5 left it, with the shop's lifetime back at sixty seconds.
+Lesson 6's refresh token, versioned assets and stale copies would each change what the edge is shown:
+
+```sh
+sudo rm /etc/nginx/conf.d/refresh.conf /etc/nginx/snippets/versioned-assets.conf
+echo 'SHOP_CACHE_CONTROL=public, max-age=60' | sudo tee /etc/shop/shop.env
+sudo systemctl restart shop@1 shop@2
+```
+
+`/etc/nginx/sites-available/ipelivros`:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 443 ssl;
+    include snippets/ipelivros-tls.conf;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_cache api_cache;
+        proxy_cache_bypass $http_authorization;
+        proxy_no_cache     $http_authorization;
+        add_header X-Cache-Status $upstream_cache_status always;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/ipe;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## Varnish in front of Nginx
+
+**Varnish** is a cache that does nothing but cache HTTP, and the CDN Fastly grew out of it. It is in Ubuntu's archive, and lesson 1 installed it and left it stopped. Here it plays
 the edge, and Nginx plays the origin.
 
 The origin needs one more server block: plain HTTP, on an address only the machine itself reaches,

@@ -3,6 +3,76 @@ title: The price that did not change
 version: 1
 ---
 
+## Where this lesson starts
+
+Lesson 5 left a log format, an `expires` for the static files and a second access log in the site.
+This lesson starts without them, from the site with the cache on:
+
+```sh
+sudo rm /etc/nginx/conf.d/cache-log.conf
+```
+
+`/etc/nginx/sites-available/ipelivros`:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 443 ssl;
+    include snippets/ipelivros-tls.conf;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_cache api_cache;
+        proxy_cache_bypass $http_authorization;
+        proxy_no_cache     $http_authorization;
+        add_header X-Cache-Status $upstream_cache_status always;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/ipe;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## The price that did not change
+
 Lesson 5 ended with a cache that answers seventeen times faster than the application behind it. This
 lesson starts with what it costs. The shop's owner lowers the price of a book:
 

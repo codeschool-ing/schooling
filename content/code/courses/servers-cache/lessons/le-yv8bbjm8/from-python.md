@@ -4,7 +4,22 @@ version: 1
 ---
 
 `redis-cli` is for looking. The application talks to Redis through a client library, and for Python
-that is `redis-py`, which Ubuntu packages as `python3-redis` and `lab.sh install` put on your server.
+that is `redis-py`, which Ubuntu packages as `python3-redis` and lesson 1 installed.
+**Every program in lessons 8 to 11 is saved in `~/work`**, under the name written above it, and run
+from there. They reach the shop's database through one small module, `catalogue.py`, which does what
+the shop does: it sleeps 120 milliseconds before each query and counts the queries it made, so a
+program can say how often it reached the database. Make the directory and save the module first:
+
+```sh
+mkdir -p ~/work
+```
+
+```schooling-example
+{"language": "python", "file": "catalogue.py", "parts": [{"code": "\"\"\"The bookshop's database, as a module, for the cache code of lessons 8 to 11.\n\nEvery call sleeps QUERY_MS first, as the shop's API does, and counts itself in\n`queries`, so a script can say how many times it reached the database.\"\"\"\nimport sqlite3, threading, time\n\nDB = \"/var/lib/shop/catalogue.db\"\nQUERY_MS = 120\nqueries = 0\n_lock = threading.Lock()\n\n\ndef get_book(book_id):\n    global queries\n    time.sleep(QUERY_MS / 1000)\n    with _lock:\n        queries += 1\n    with sqlite3.connect(DB) as db:\n        db.row_factory = sqlite3.Row\n        row = db.execute(\"SELECT * FROM books WHERE id = ?\", (book_id,)).fetchone()\n        return dict(row) if row else None\n\n\ndef set_price(book_id, price_cents):\n    with sqlite3.connect(DB) as db:\n        db.execute(\"UPDATE books SET price_cents = ?, updated_at = ? WHERE id = ?\",\n                   (price_cents, int(time.time()), book_id))\n", "note": "**The shop's database, the slow way.** Every call sleeps first and counts itself in `queries`."}]}
+```
+
+`set_price` writes the database as you, which is what the `shop` group of lesson 1 was for.
+
 This program stores the book that `catalogue.py` reads from the slow database, reads it back, and
 updates the bestsellers:
 

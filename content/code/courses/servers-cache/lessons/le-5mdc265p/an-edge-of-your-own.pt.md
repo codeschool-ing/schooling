@@ -3,8 +3,81 @@ title: Uma borda sua, com o Varnish
 version: 1
 ---
 
+## De onde esta aula parte
+
+Esta aula parte do site como a aula 5 o deixou, com o tempo de vida da loja de volta a sessenta
+segundos. O token de atualização, os recursos versionados e as cópias velhas da aula 6 mudariam, cada
+um, o que a borda recebe:
+
+```sh
+sudo rm /etc/nginx/conf.d/refresh.conf /etc/nginx/snippets/versioned-assets.conf
+echo 'SHOP_CACHE_CONTROL=public, max-age=60' | sudo tee /etc/shop/shop.env
+sudo systemctl restart shop@1 shop@2
+```
+
+`/etc/nginx/sites-available/ipelivros`:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 443 ssl;
+    include snippets/ipelivros-tls.conf;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_cache api_cache;
+        proxy_cache_bypass $http_authorization;
+        proxy_no_cache     $http_authorization;
+        add_header X-Cache-Status $upstream_cache_status always;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/ipe;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## O Varnish na frente do Nginx
+
 O **Varnish** é um cache que não faz nada além de cache HTTP, e a CDN Fastly nasceu dele. Ele está no
-repositório do Ubuntu e o `lab.sh install` o pôs no seu servidor, parado. Aqui ele faz o papel da borda,
+repositório do Ubuntu, e a aula 1 o instalou e o deixou parado. Aqui ele faz o papel da borda,
 e o Nginx faz o papel da origem.
 
 A origem precisa de mais um bloco server: HTTP simples, num endereço que só a própria máquina alcança,

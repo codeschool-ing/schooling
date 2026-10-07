@@ -5,6 +5,10 @@ version: 1
 
 A price changes in the database. The cached copy does not know:
 
+```schooling-example
+{"language": "python", "file": "stale.py", "parts": [{"code": "import catalogue\nfrom bookcache import get_book, r, update_price\n\nr.delete(\"book:2\")\nprint(\"cached:\", get_book(2)[\"price_cents\"])\n\ncatalogue.set_price(2, 7990)\nprint(\"database changed, cache says:\", get_book(2)[\"price_cents\"], \"for\", r.ttl(\"book:2\"), \"more seconds\")\n\nupdate_price(2, 6990)\nprint(\"update_price, cache says:\", get_book(2)[\"price_cents\"])\n", "note": "Caches book 2, changes its price behind the cache's back, then changes it again through `update_price`."}]}
+```
+
 ```
 ana@web:~/work$ python3 stale.py
 cached: 8990

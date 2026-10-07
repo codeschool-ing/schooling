@@ -16,14 +16,8 @@ ana@web:~$ sudo memcached -d -u memcache -l 127.0.0.1 -p 11212 -m 64 && sudo mem
 
 This program gives a thousand keys to a client that knows two of them:
 
-```python
-from pymemcache.client.hash import HashClient
-
-servers = [("127.0.0.1", 11211), ("127.0.0.1", 11212)]
-mc = HashClient(servers, default_noreply=False)
-for i in range(1000):
-    mc.set(f"book:{i}", b"1")
-print("book:7 lives on", mc.hasher.get_node("book:7"))
+```schooling-example
+{"language": "python", "file": "spread.py", "parts": [{"code": "from pymemcache.client.hash import HashClient\n\nservers = [(\"127.0.0.1\", 11211), (\"127.0.0.1\", 11212)]\nmc = HashClient(servers, default_noreply=False)\nfor i in range(1000):\n    mc.set(f\"book:{i}\", b\"1\")\nprint(\"book:7 lives on\", mc.hasher.get_node(\"book:7\"))\n", "note": "A thousand keys through a client that knows two servers, and the server `book:7` went to."}]}
 ```
 
 ```
@@ -43,25 +37,8 @@ different one. `HashClient` uses **rendezvous hashing**: for each key it scores 
 hash of the server's name and the key together, and takes the highest. A new server wins the keys where
 its score is now the highest, and no other key moves. This program counts both:
 
-```python
-import zlib
-
-from pymemcache.client.rendezvous import RendezvousHash
-
-keys = [f"book:{i}" for i in range(10000)]
-
-
-def modulo(key, n):
-    return zlib.crc32(key.encode()) % n
-
-
-def rendezvous(key, n):
-    return RendezvousHash(nodes=list(range(n))).get_node(key)
-
-
-for name, place in (("modulo", modulo), ("rendezvous", rendezvous)):
-    moved = sum(place(k, 2) != place(k, 3) for k in keys)
-    print(f"{name:>10}: {moved} of {len(keys)} keys move ({moved / len(keys):.0%})")
+```schooling-example
+{"language": "python", "file": "moves.py", "parts": [{"code": "import zlib\n\nfrom pymemcache.client.rendezvous import RendezvousHash\n\nkeys = [f\"book:{i}\" for i in range(10000)]\n\n\ndef modulo(key, n):\n    return zlib.crc32(key.encode()) % n\n\n\ndef rendezvous(key, n):\n    return RendezvousHash(nodes=list(range(n))).get_node(key)\n\n\nfor name, place in ((\"modulo\", modulo), (\"rendezvous\", rendezvous)):\n    moved = sum(place(k, 2) != place(k, 3) for k in keys)\n    print(f\"{name:>10}: {moved} of {len(keys)} keys move ({moved / len(keys):.0%})\")\n", "note": "Counts the keys that change server when two servers become three, by modulo and by rendezvous."}]}
 ```
 
 ```
@@ -83,3 +60,9 @@ the same property another way, and many Memcached clients use it.
 A server that stops answering is the same event the other way round: its share of the keys becomes
 misses and the others carry on. A cache is allowed to lose data, and that is the moment the database
 pays for it.
+
+When you have finished with them, stop the two extra servers:
+
+```sh
+sudo kill $(pgrep -f 'memcached -d -u memcache')
+```

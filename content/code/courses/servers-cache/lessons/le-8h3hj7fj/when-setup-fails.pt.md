@@ -39,11 +39,10 @@ casos neste curso. Outro programa já ocupa a porta, o que a seção sobre o Apa
 Ou o arquivo de configuração tem um erro, o que a última seção desta aula também mostra de propósito.
 
 **O `curl http://ipelivros.example/` diz que não conseguiu resolver o host.** Faltam os nomes no
-`/etc/hosts`. `grep ipelivros /etc/hosts` deve imprimir uma linha; se não imprimir nada, o `lab.sh
-install` não terminou, e rodá-lo de novo é seguro, porque ele confere antes de acrescentar qualquer
-coisa.
+`/etc/hosts`. `grep ipelivros /etc/hosts` deve imprimir uma linha; se não imprimir nada, o `printf`
+do fim da seção sobre os pacotes não rodou, e rodá-lo uma vez agora resolve.
 
 **E quando nada mais funciona**, apague a máquina e monte de novo. Com o Multipass é
-`multipass delete --purge web` seguido dos dois comandos da seção anterior, e uns dez minutos. Parece
+`multipass delete --purge web` seguido dos comandos das duas seções anteriores, e cerca de meia hora. Parece
 desistir. É o que profissionais fazem com uma máquina cujo estado ninguém mais sabe explicar, e é o
-motivo de este curso montar tudo a partir de um script.
+motivo de este curso montar tudo a partir dos comandos das duas seções antes desta.

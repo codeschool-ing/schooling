@@ -12,25 +12,8 @@ A correção é fazê-las parar de concordar: somar um número aleatório de seg
 que se chama **jitter**. Este programa grava mil chaves de uma vez, primeiro com 300 segundos fixos e
 depois com 300 mais até 60, e conta os segundos em que elas vão vencer:
 
-```python
-import random
-from collections import Counter
-
-import redis
-
-r = redis.Redis(decode_responses=True)
-random.seed(7)
-
-for name, ttl in (("fixed", lambda: 300), ("jittered", lambda: 300 + random.randint(0, 60))):
-    with r.pipeline() as pipe:
-        for i in range(1000):
-            pipe.set(f"{name}:book:{i}", "x", ex=ttl())
-        pipe.execute()
-    with r.pipeline() as pipe:
-        for i in range(1000):
-            pipe.ttl(f"{name}:book:{i}")
-        per_second = Counter(pipe.execute())
-    print(f"{name:>8}: different expiry seconds: {len(per_second):>2}, most keys expiring in one second: {max(per_second.values())}")
+```schooling-example
+{"language": "python", "file": "jitter.py", "parts": [{"code": "import random\nfrom collections import Counter\n\nimport redis\n\nr = redis.Redis(decode_responses=True)\nrandom.seed(7)\n\nfor name, ttl in ((\"fixed\", lambda: 300), (\"jittered\", lambda: 300 + random.randint(0, 60))):\n    with r.pipeline() as pipe:\n        for i in range(1000):\n            pipe.set(f\"{name}:book:{i}\", \"x\", ex=ttl())\n        pipe.execute()\n    with r.pipeline() as pipe:\n        for i in range(1000):\n            pipe.ttl(f\"{name}:book:{i}\")\n        per_second = Counter(pipe.execute())\n    print(f\"{name:>8}: different expiry seconds: {len(per_second):>2}, most keys expiring in one second: {max(per_second.values())}\")\n", "note": "Mil chaves com tempo de vida fixo, depois com jitter, e em quantos segundos elas vencem."}]}
 ```
 
 ```

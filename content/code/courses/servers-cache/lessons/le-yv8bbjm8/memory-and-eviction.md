@@ -8,20 +8,8 @@ Everything Redis holds is in memory, and memory ends. What Redis does when it en
 watch both behaviours, give it two megabytes and a small program that writes one-kilobyte values until
 it is stopped:
 
-```python
-import sys
-
-import redis
-
-r = redis.Redis()
-written = 0
-try:
-    for i in range(int(sys.argv[1])):
-        r.set(f"filler:{i}", "x" * 1000)
-        written += 1
-except redis.exceptions.ResponseError as e:
-    print("error after", written, "keys:", e)
-print("written", written)
+```schooling-example
+{"language": "python", "file": "fill.py", "parts": [{"code": "import sys\n\nimport redis\n\nr = redis.Redis()\nwritten = 0\ntry:\n    for i in range(int(sys.argv[1])):\n        r.set(f\"filler:{i}\", \"x\" * 1000)\n        written += 1\nexcept redis.exceptions.ResponseError as e:\n    print(\"error after\", written, \"keys:\", e)\nprint(\"written\", written)\n", "note": "Writes as many one-kilobyte values as it is told, and says how many Redis took before it refused one."}]}
 ```
 
 ```

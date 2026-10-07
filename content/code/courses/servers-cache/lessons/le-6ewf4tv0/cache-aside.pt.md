@@ -9,6 +9,14 @@ aplicação pergunta primeiro ao cache e, num erro de cache, lê ela mesma o ban
 próximo leitor. O cache fica ao lado do caminho da aplicação, e não dentro dele, que é de onde vem o
 nome.
 
+O Redis ainda guarda as chaves das aulas 8 e 9. Esta aula parte de um vazio:
+
+```sh
+redis-cli FLUSHALL
+```
+
+O padrão, como um módulo:
+
 ```schooling-example
 {"language": "python", "file": "bookcache.py", "parts": [{"code": "import json\nimport time\n\nimport redis\n\nimport catalogue\n\n", "note": "`catalogue` é o banco lento, 120 ms por consulta."}, {"code": "r = redis.Redis(decode_responses=True)\nTTL = 300\n\n\n", "note": "Uma conexão e um tempo de vida para toda cópia, cinco minutos."}, {"code": "def get_book(book_id):\n    key = f\"book:{book_id}\"\n    cached = r.get(key)\n    if cached is not None:\n        return json.loads(cached)\n    book = catalogue.get_book(book_id)\n    r.set(key, json.dumps(book), ex=TTL)\n    return book\n\n\n", "note": "**Cache-aside.** Pergunta ao cache; num erro de cache, lê o banco e deixa uma cópia com tempo de vida."}, {"code": "def update_price(book_id, price_cents):\n    catalogue.set_price(book_id, price_cents)\n    r.delete(f\"book:{book_id}\")\n\n\n", "note": "**Uma gravação muda o banco primeiro, depois apaga a cópia.** A seção seguinte diz por que apaga em vez de gravar."}, {"code": "if __name__ == \"__main__\":\n    r.delete(\"book:2\")\n    for attempt in (1, 2, 3):\n        start = time.perf_counter()\n        book = get_book(2)\n        ms = (time.perf_counter() - start) * 1000\n        print(f\"read {attempt}: {book['price_cents']} in {ms:.1f} ms, queries {catalogue.queries}\")\n", "note": "Rodado como programa, lê o livro 2 três vezes e cronometra cada leitura."}], "output": "read 1: 8990 in 121.1 ms, queries 1\nread 2: 8990 in 0.2 ms, queries 1\nread 3: 8990 in 0.1 ms, queries 1\n"}
 ```

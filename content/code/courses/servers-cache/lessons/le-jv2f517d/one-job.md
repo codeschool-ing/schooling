@@ -8,7 +8,7 @@ falling behind its readers, and the answer was a server that holds values in mem
 forgets them freely. **It has kept that single job ever since**, and the list of what it lacks is the
 design rather than a backlog: no data types beyond bytes, no persistence, no replication, no scripting.
 
-Ubuntu packages it as `memcached`, and `lab.sh install` put it on your server. Start it the way you
+Ubuntu packages it as `memcached`, and lesson 1 installed it. Start it the way you
 started Redis, and read its configuration:
 
 ```

@@ -9,18 +9,8 @@ early. Every popular page is a stampede at once, and the database meets all of t
 
 **Warming** fills the cache before visitors arrive, and the important part is the word *before*:
 
-```python
-import sys
-import time
-
-import catalogue
-from bookcache import get_book
-
-start = time.perf_counter()
-for book_id in map(int, sys.argv[1:]):
-    get_book(book_id)
-ms = (time.perf_counter() - start) * 1000
-print(f"warmed {len(sys.argv) - 1} books in {ms:.0f} ms, {catalogue.queries} queries, one at a time")
+```schooling-example
+{"language": "python", "file": "warm.py", "parts": [{"code": "import sys\nimport time\n\nimport catalogue\nfrom bookcache import get_book\n\nstart = time.perf_counter()\nfor book_id in map(int, sys.argv[1:]):\n    get_book(book_id)\nms = (time.perf_counter() - start) * 1000\nprint(f\"warmed {len(sys.argv) - 1} books in {ms:.0f} ms, {catalogue.queries} queries, one at a time\")\n", "note": "Fetches the books named on the command line, one at a time."}]}
 ```
 
 ```

@@ -10,30 +10,17 @@ banco pela mesma linha. Isso é um **estouro de cache** (*cache stampede*), tamb
 trovejante ou de pilha de cachorros, e é a falha que um leitor deste curso tem mais chance de encontrar
 em produção.
 
+Parta de um Redis vazio, como as transcrições:
+
+```sh
+redis-cli FLUSHALL
+```
+
 Este programa manda um número de leitores para o `bookcache.get_book(2)` de uma vez, cada um na própria
 thread, depois de apagar a chave para que o primeiro deles não encontre nada:
 
-```python
-import importlib
-import sys
-import threading
-import time
-
-import catalogue
-
-readers, module = int(sys.argv[1]), importlib.import_module(sys.argv[2])
-if "--keep" not in sys.argv:
-    module.r.delete("book:2")
-
-before = catalogue.queries
-start = time.perf_counter()
-threads = [threading.Thread(target=module.get_book, args=(2,)) for _ in range(readers)]
-for t in threads:
-    t.start()
-for t in threads:
-    t.join()
-ms = (time.perf_counter() - start) * 1000
-print(f"{sys.argv[2]}, readers at once: {readers}, database queries: {catalogue.queries - before}, {ms:.0f} ms")
+```schooling-example
+{"language": "python", "file": "stampede.py", "parts": [{"code": "import importlib\nimport sys\nimport threading\nimport time\n\nimport catalogue\n\nreaders, module = int(sys.argv[1]), importlib.import_module(sys.argv[2])\nif \"--keep\" not in sys.argv:\n    module.r.delete(\"book:2\")\n\nbefore = catalogue.queries\nstart = time.perf_counter()\nthreads = [threading.Thread(target=module.get_book, args=(2,)) for _ in range(readers)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nms = (time.perf_counter() - start) * 1000\nprint(f\"{sys.argv[2]}, readers at once: {readers}, database queries: {catalogue.queries - before}, {ms:.0f} ms\")\n", "note": "Manda um número de leitores de uma vez pelo módulo de cache nomeado na linha de comando."}]}
 ```
 
 ```

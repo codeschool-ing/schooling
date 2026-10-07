@@ -9,7 +9,7 @@ memória sob chaves e os esquece sem cerimônia. **Ele mantém esse trabalho ún
 do que lhe falta é o projeto, não uma lista de pendências: nenhum tipo de dado além de bytes, nenhuma
 persistência, nenhuma replicação, nenhum script.
 
-O Ubuntu o empacota como `memcached`, e o `lab.sh install` o pôs no seu servidor. Suba do jeito que você
+O Ubuntu o empacota como `memcached`, e a aula 1 o instalou. Suba do jeito que você
 subiu o Redis, e leia a configuração:
 
 ```

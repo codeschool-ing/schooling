@@ -15,7 +15,13 @@ ana@web:~$ sudo sed -i 's|    access_log /var/log/nginx/ipelivros.access.log;|  
 ```
 
 The same site can write two logs, one in the ordinary format and one for the cache. Two hundred
-requests, spread over ten books, after emptying the cache:
+requests, spread over ten books, after emptying the cache, which is deleting its files:
+
+```sh
+sudo find /var/cache/nginx/shop -type f -delete
+```
+
+Then the requests:
 
 ```
 ana@web:~$ for i in $(seq 200); do curl -s -o /dev/null https://ipelivros.example/api/books/$(( (i % 10) + 1 )); done; tail -n 3 /var/log/nginx/ipelivros.cache.log

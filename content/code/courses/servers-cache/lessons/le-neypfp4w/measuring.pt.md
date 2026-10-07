@@ -16,7 +16,13 @@ ana@web:~$ sudo sed -i 's|    access_log /var/log/nginx/ipelivros.access.log;|  
 ```
 
 O mesmo site pode escrever dois logs, um no formato comum e outro para o cache. Duzentas requisições,
-espalhadas por dez livros, depois de esvaziar o cache:
+espalhadas por dez livros, depois de esvaziar o cache, o que é apagar os arquivos dele:
+
+```sh
+sudo find /var/cache/nginx/shop -type f -delete
+```
+
+Depois as requisições:
 
 ```
 ana@web:~$ for i in $(seq 200); do curl -s -o /dev/null https://ipelivros.example/api/books/$(( (i % 10) + 1 )); done; tail -n 3 /var/log/nginx/ipelivros.cache.log

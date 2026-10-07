@@ -7,36 +7,8 @@ version: 1
 reaches the database later, in the background. The application is answered at memory speed, and the
 database sees fewer, larger writes on its own schedule.
 
-```python
-import json
-
-import redis
-
-import catalogue
-
-r = redis.Redis(decode_responses=True)
-
-
-def set_price(book_id, price_cents):
-    with r.pipeline() as pipe:          # MULTI ... EXEC: both or neither
-        pipe.set(f"price:{book_id}", price_cents)
-        pipe.rpush("pending-prices", json.dumps([book_id, price_cents]))
-        pipe.execute()
-
-
-def flush():
-    written = 0
-    while (item := r.lpop("pending-prices")) is not None:
-        catalogue.set_price(*json.loads(item))
-        written += 1
-    return written
-
-
-r.delete("pending-prices")
-for price in (5490, 4990, 4490):
-    set_price(2, price)
-print("cache", r.get("price:2"), "| database", catalogue.get_book(2)["price_cents"], "| pending", r.llen("pending-prices"))
-print("flushed", flush(), "writes | database", catalogue.get_book(2)["price_cents"])
+```schooling-example
+{"language": "python", "file": "behind.py", "parts": [{"code": "import json\n\nimport redis\n\nimport catalogue\n\nr = redis.Redis(decode_responses=True)\n\n\ndef set_price(book_id, price_cents):\n    with r.pipeline() as pipe:          # MULTI ... EXEC: both or neither\n        pipe.set(f\"price:{book_id}\", price_cents)\n        pipe.rpush(\"pending-prices\", json.dumps([book_id, price_cents]))\n        pipe.execute()\n\n\ndef flush():\n    written = 0\n    while (item := r.lpop(\"pending-prices\")) is not None:\n        catalogue.set_price(*json.loads(item))\n        written += 1\n    return written\n\n\nr.delete(\"pending-prices\")\nfor price in (5490, 4990, 4490):\n    set_price(2, price)\nprint(\"cache\", r.get(\"price:2\"), \"| database\", catalogue.get_book(2)[\"price_cents\"], \"| pending\", r.llen(\"pending-prices\"))\nprint(\"flushed\", flush(), \"writes | database\", catalogue.get_book(2)[\"price_cents\"])\n", "note": "Writes go to Redis and to a queue at once; `flush` replays the queue into the database."}]}
 ```
 
 ```

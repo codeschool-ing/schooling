@@ -38,16 +38,8 @@ END
 nothing was ever written to disk. Now this program writes twenty thousand values of a thousand bytes,
 about 20 MB, into 8 MB:
 
-```python
-import sys
-
-from pymemcache.client.base import Client
-
-mc = Client(("127.0.0.1", 11211))
-count, size = int(sys.argv[1]), int(sys.argv[2])
-for i in range(count):
-    mc.set(f"filler:{i}", b"x" * size, noreply=False)
-print("written", count, "values of", size, "bytes")
+```schooling-example
+{"language": "python", "file": "fill_mc.py", "parts": [{"code": "import sys\n\nfrom pymemcache.client.base import Client\n\nmc = Client((\"127.0.0.1\", 11211))\ncount, size = int(sys.argv[1]), int(sys.argv[2])\nfor i in range(count):\n    mc.set(f\"filler:{i}\", b\"x\" * size, noreply=False)\nprint(\"written\", count, \"values of\", size, \"bytes\")\n", "note": "Writes COUNT values of SIZE bytes and waits for every answer, so a refusal stops it with an error."}]}
 ```
 
 ```
@@ -92,3 +84,9 @@ pymemcache.exceptions.MemcacheServerError: b'object too large for cache'
 **No value may be larger than a megabyte**, the page size, unless `-I` raises it. A program that caches
 a large page fragment without checking gets this error, or, with replies switched off, nothing at all,
 which is what the next section is about.
+
+Before going on, give Memcached its 64 megabytes back:
+
+```sh
+sudo sed -i 's/^-m 8$/-m 64/' /etc/memcached.conf && sudo systemctl restart memcached
+```

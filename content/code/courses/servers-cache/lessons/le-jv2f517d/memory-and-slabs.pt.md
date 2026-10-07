@@ -39,16 +39,8 @@ END
 nunca foi gravado em disco. Agora este programa grava vinte mil valores de mil bytes, cerca de 20 MB,
 em 8 MB:
 
-```python
-import sys
-
-from pymemcache.client.base import Client
-
-mc = Client(("127.0.0.1", 11211))
-count, size = int(sys.argv[1]), int(sys.argv[2])
-for i in range(count):
-    mc.set(f"filler:{i}", b"x" * size, noreply=False)
-print("written", count, "values of", size, "bytes")
+```schooling-example
+{"language": "python", "file": "fill_mc.py", "parts": [{"code": "import sys\n\nfrom pymemcache.client.base import Client\n\nmc = Client((\"127.0.0.1\", 11211))\ncount, size = int(sys.argv[1]), int(sys.argv[2])\nfor i in range(count):\n    mc.set(f\"filler:{i}\", b\"x\" * size, noreply=False)\nprint(\"written\", count, \"values of\", size, \"bytes\")\n", "note": "Grava COUNT valores de SIZE bytes e espera cada resposta, então uma recusa o para com um erro."}]}
 ```
 
 ```
@@ -93,3 +85,9 @@ pymemcache.exceptions.MemcacheServerError: b'object too large for cache'
 **Nenhum valor pode passar de um megabyte**, o tamanho da página, a não ser que o `-I` aumente. Um
 programa que guarda um fragmento de página grande sem conferir recebe esse erro, ou, com as respostas
 desligadas, nada, e é disso que trata a próxima seção.
+
+Antes de seguir, devolva ao Memcached os 64 megabytes:
+
+```sh
+sudo sed -i 's/^-m 8$/-m 64/' /etc/memcached.conf && sudo systemctl restart memcached
+```

@@ -11,37 +11,8 @@ never absorbs.
 The fix is to cache the absence, with a marker that cannot be confused with a real value and a short
 lifetime of its own:
 
-```python
-import json
-
-import catalogue
-from bookcache import r
-
-MISSING = "missing"
-
-
-def get_book(book_id, negative_ttl=None):
-    key = f"book:{book_id}"
-    cached = r.get(key)
-    if cached == MISSING:
-        return None
-    if cached is not None:
-        return json.loads(cached)
-    book = catalogue.get_book(book_id)
-    if book is None:
-        if negative_ttl:
-            r.set(key, MISSING, ex=negative_ttl)
-        return None
-    r.set(key, json.dumps(book), ex=300)
-    return book
-
-
-for negative_ttl in (None, 30):
-    r.delete("book:99")
-    before = catalogue.queries
-    for _ in range(10):
-        get_book(99, negative_ttl)
-    print(f"negative_ttl={negative_ttl}: 10 reads of book 99, queries: {catalogue.queries - before}")
+```schooling-example
+{"language": "python", "file": "missing.py", "parts": [{"code": "import json\n\nimport catalogue\nfrom bookcache import r\n\nMISSING = \"missing\"\n\n\ndef get_book(book_id, negative_ttl=None):\n    key = f\"book:{book_id}\"\n    cached = r.get(key)\n    if cached == MISSING:\n        return None\n    if cached is not None:\n        return json.loads(cached)\n    book = catalogue.get_book(book_id)\n    if book is None:\n        if negative_ttl:\n            r.set(key, MISSING, ex=negative_ttl)\n        return None\n    r.set(key, json.dumps(book), ex=300)\n    return book\n\n\nfor negative_ttl in (None, 30):\n    r.delete(\"book:99\")\n    before = catalogue.queries\n    for _ in range(10):\n        get_book(99, negative_ttl)\n    print(f\"negative_ttl={negative_ttl}: 10 reads of book 99, queries: {catalogue.queries - before}\")\n", "note": "Ten reads of a book that does not exist, without a marker for its absence and then with one."}]}
 ```
 
 ```

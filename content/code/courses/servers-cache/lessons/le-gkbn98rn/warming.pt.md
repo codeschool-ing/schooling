@@ -10,18 +10,8 @@ banco recebe todos.
 
 **Aquecer** enche o cache antes de os visitantes chegarem, e a parte importante é a palavra *antes*:
 
-```python
-import sys
-import time
-
-import catalogue
-from bookcache import get_book
-
-start = time.perf_counter()
-for book_id in map(int, sys.argv[1:]):
-    get_book(book_id)
-ms = (time.perf_counter() - start) * 1000
-print(f"warmed {len(sys.argv) - 1} books in {ms:.0f} ms, {catalogue.queries} queries, one at a time")
+```schooling-example
+{"language": "python", "file": "warm.py", "parts": [{"code": "import sys\nimport time\n\nimport catalogue\nfrom bookcache import get_book\n\nstart = time.perf_counter()\nfor book_id in map(int, sys.argv[1:]):\n    get_book(book_id)\nms = (time.perf_counter() - start) * 1000\nprint(f\"warmed {len(sys.argv) - 1} books in {ms:.0f} ms, {catalogue.queries} queries, one at a time\")\n", "note": "Busca os livros nomeados na linha de comando, um por vez."}]}
 ```
 
 ```

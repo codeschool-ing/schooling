@@ -3,7 +3,7 @@ title: A certificate authority of your own, for practice
 version: 1
 ---
 
-Pebble is in Ubuntu's archive, and `lab.sh install` put it on your server. It needs three things
+Pebble is in Ubuntu's archive, and lesson 1 installed it. It needs three things
 before it runs: a certificate for its own API, which is HTTPS like every ACME server; a small
 configuration file; and a systemd unit to keep it running.
 

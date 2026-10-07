@@ -3,6 +3,78 @@ title: Fresca, por quanto tempo
 version: 1
 ---
 
+## De onde esta aula parte
+
+O endurecimento da aula 4 pertence a um servidor de verdade, e duas partes dele atrapalham o que esta
+aula mede: o limite de taxa recusa a maior parte das requisições de um benchmark, e o `Cache-Control:
+no-store` da própria API esconde os cabeçalhos de que esta aula trata. Guarde uma cópia do site da aula
+4, tire os acréscimos dela e parta do site como a aula 3 o deixou:
+
+```sh
+sudo cp /etc/nginx/sites-available/ipelivros ~/ipelivros.lesson-4
+sudo rm /etc/nginx/sites-enabled/catch-all /etc/nginx/conf.d/limits.conf
+sudo rm -r /var/www/ipe/.git /etc/systemd/system/shop@.service.d
+sudo sed -i 's/server_tokens off;/# server_tokens off;/' /etc/nginx/nginx.conf
+sudo systemctl daemon-reload && sudo systemctl restart shop@1 shop@2
+```
+
+`/etc/nginx/sites-available/ipelivros`, no lugar do que estiver lá:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 443 ssl;
+    include snippets/ipelivros-tls.conf;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/ipe;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## Por quanto tempo uma cópia vale
+
 Um cache precisa de uma resposta antes de guardar qualquer coisa: **por quanto tempo esta cópia ainda
 serve?** Uma cópia que ainda serve está **fresca** (*fresh*), e o cache a entrega sem perguntar a
 ninguém. Quando o tempo dela acaba, ela fica **velha** (*stale*), e o cache precisa conferir com a

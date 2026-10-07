@@ -3,6 +3,17 @@ title: O Nginx na frente da aplicação
 version: 1
 ---
 
+## De onde esta aula parte
+
+A aula 1 deixou o Apache e o Caddy rodando ao lado do Nginx. Esta aula precisa do Nginx e das duas
+cópias da loja, e de mais nada:
+
+```sh
+sudo systemctl stop apache2 caddy
+```
+
+## A loja, perguntada direto
+
 Consultada diretamente, a livraria responde na própria porta, e enxerga exatamente quem perguntou:
 
 ```

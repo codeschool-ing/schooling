@@ -8,36 +8,8 @@ próximo leitor do erro de cache? Porque **dois escritores podem terminar numa o
 começaram**. Este programa roda dois deles, cada um na própria thread, uma vez gravando no cache e outra
 apagando:
 
-```python
-import json
-import threading
-import time
-
-import catalogue
-from bookcache import get_book, r
-
-base = catalogue.get_book(2)
-
-
-def set_on_write(price, before_db, before_cache):
-    time.sleep(before_db)
-    catalogue.set_price(2, price)
-    time.sleep(before_cache)
-    r.set("book:2", json.dumps(dict(base, price_cents=price)), ex=300)
-
-
-def delete_on_write(price, before_db, before_cache):
-    time.sleep(before_db)
-    catalogue.set_price(2, price)
-    time.sleep(before_cache)
-    r.delete("book:2")
-
-
-for name, write in (("set on write", set_on_write), ("delete on write", delete_on_write)):
-    a = threading.Thread(target=write, args=(7990, 0.0, 0.2))
-    b = threading.Thread(target=write, args=(6990, 0.1, 0.0))
-    a.start(); b.start(); a.join(); b.join()
-    print(f"{name:>15}: database {catalogue.get_book(2)['price_cents']}, cache {get_book(2)['price_cents']}")
+```schooling-example
+{"language": "python", "file": "writers.py", "parts": [{"code": "import json\nimport threading\nimport time\n\nimport catalogue\nfrom bookcache import get_book, r\n\nbase = catalogue.get_book(2)\n\n\ndef set_on_write(price, before_db, before_cache):\n    time.sleep(before_db)\n    catalogue.set_price(2, price)\n    time.sleep(before_cache)\n    r.set(\"book:2\", json.dumps(dict(base, price_cents=price)), ex=300)\n\n\ndef delete_on_write(price, before_db, before_cache):\n    time.sleep(before_db)\n    catalogue.set_price(2, price)\n    time.sleep(before_cache)\n    r.delete(\"book:2\")\n\n\nfor name, write in ((\"set on write\", set_on_write), (\"delete on write\", delete_on_write)):\n    a = threading.Thread(target=write, args=(7990, 0.0, 0.2))\n    b = threading.Thread(target=write, args=(6990, 0.1, 0.0))\n    a.start(); b.start(); a.join(); b.join()\n    print(f\"{name:>15}: database {catalogue.get_book(2)['price_cents']}, cache {get_book(2)['price_cents']}\")\n", "note": "Dois escritores em duas threads, cronometrados para que o primeiro a gravar o banco seja o último a gravar o cache."}]}
 ```
 
 As pausas arranjam o que um servidor ocupado faz por acidente: o escritor A atualiza o banco primeiro e

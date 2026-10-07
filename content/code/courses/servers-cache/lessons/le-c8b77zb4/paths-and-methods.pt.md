@@ -4,8 +4,14 @@ version: 1
 ---
 
 Uma raiz web acumula coisas que ninguém pretendia publicar: o backup de um editor, um `.env` com uma
-senha dentro, um diretório `.git` inteiro copiado junto num deploy. Esta tem um `.git`, e o Nginx serve
-o que estiver numa raiz web:
+senha dentro, um diretório `.git` inteiro copiado junto num deploy. Dê um `.git` a esta, como um deploy descuidado daria, com um arquivo dentro que diz de onde vem o
+código:
+
+```sh
+sudo mkdir -p /var/www/ipe/.git && printf "[core]\n\trepositoryformatversion = 0\n[remote \"origin\"]\n\turl = git@git.example:ipe/site.git\n" | sudo tee /var/www/ipe/.git/config >/dev/null
+```
+
+O Nginx serve o que estiver numa raiz web:
 
 ```
 ana@web:~$ ls -A /var/www/ipe

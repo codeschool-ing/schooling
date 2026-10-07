@@ -7,39 +7,8 @@ In cache-aside the application does the cache's work: it checks, it loads, it st
 moves that work into one place, a cache layer the application calls instead of the database. **Write-through** does the same for writes: every write goes through the layer, which writes the
 database and then the cache.
 
-```python
-import json
-
-import redis
-
-import catalogue
-
-
-class BookCache:
-    """Read-through and write-through: the application talks only to this."""
-
-    def __init__(self, client, ttl=300):
-        self.r, self.ttl = client, ttl
-
-    def get(self, book_id):
-        cached = self.r.get(f"book:{book_id}")
-        if cached is not None:
-            return json.loads(cached)
-        book = catalogue.get_book(book_id)
-        self.r.set(f"book:{book_id}", json.dumps(book), ex=self.ttl)
-        return book
-
-    def set_price(self, book_id, price_cents):
-        catalogue.set_price(book_id, price_cents)
-        book = catalogue.get_book(book_id)
-        self.r.set(f"book:{book_id}", json.dumps(book), ex=self.ttl)
-
-
-books = BookCache(redis.Redis(decode_responses=True))
-books.r.delete("book:2")
-books.set_price(2, 5990)
-print("after the write: ttl", books.r.ttl("book:2"), "queries", catalogue.queries)
-print("read:", books.get(2)["price_cents"], "queries", catalogue.queries)
+```schooling-example
+{"language": "python", "file": "through.py", "parts": [{"code": "import json\n\nimport redis\n\nimport catalogue\n\n\nclass BookCache:\n    \"\"\"Read-through and write-through: the application talks only to this.\"\"\"\n\n    def __init__(self, client, ttl=300):\n        self.r, self.ttl = client, ttl\n\n    def get(self, book_id):\n        cached = self.r.get(f\"book:{book_id}\")\n        if cached is not None:\n            return json.loads(cached)\n        book = catalogue.get_book(book_id)\n        self.r.set(f\"book:{book_id}\", json.dumps(book), ex=self.ttl)\n        return book\n\n    def set_price(self, book_id, price_cents):\n        catalogue.set_price(book_id, price_cents)\n        book = catalogue.get_book(book_id)\n        self.r.set(f\"book:{book_id}\", json.dumps(book), ex=self.ttl)\n\n\nbooks = BookCache(redis.Redis(decode_responses=True))\nbooks.r.delete(\"book:2\")\nbooks.set_price(2, 5990)\nprint(\"after the write: ttl\", books.r.ttl(\"book:2\"), \"queries\", catalogue.queries)\nprint(\"read:\", books.get(2)[\"price_cents\"], \"queries\", catalogue.queries)\n", "note": "A cache layer that loads on a miss and writes through on a change."}]}
 ```
 
 ```

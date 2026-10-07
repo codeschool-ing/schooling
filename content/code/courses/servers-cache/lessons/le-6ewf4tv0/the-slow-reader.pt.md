@@ -7,37 +7,8 @@ Apagar não fecha todas as brechas. Um leitor que erra o cache, lê a linha velh
 de guardar a cópia pode guardá-la depois do apagamento do escritor. É a corrida da aula 6, agora na
 aplicação:
 
-```python
-import json
-import threading
-import time
-
-import catalogue
-from bookcache import get_book, r, update_price
-
-
-def slow_reader():
-    book = catalogue.get_book(2)        # the cache missed; this is the old price
-    time.sleep(0.2)                     # a pause: a busy CPU, a garbage collection
-    r.set("book:2", json.dumps(book), ex=300)
-
-
-def writer(price, delete_again):
-    time.sleep(0.2)                     # the reader has its row by now
-    update_price(2, price)
-    if delete_again:
-        time.sleep(0.5)                 # longer than any read takes
-        r.delete("book:2")
-
-
-for price, delete_again in ((7990, False), (6990, True)):
-    r.delete("book:2")
-    threads = [threading.Thread(target=slow_reader), threading.Thread(target=writer, args=(price, delete_again))]
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
-    print(f"delete again {delete_again!s:>5}: database {price}, cache {get_book(2)['price_cents']}, ttl {r.ttl('book:2')}")
+```schooling-example
+{"language": "python", "file": "readers.py", "parts": [{"code": "import json\nimport threading\nimport time\n\nimport catalogue\nfrom bookcache import get_book, r, update_price\n\n\ndef slow_reader():\n    book = catalogue.get_book(2)        # the cache missed; this is the old price\n    time.sleep(0.2)                     # a pause: a busy CPU, a garbage collection\n    r.set(\"book:2\", json.dumps(book), ex=300)\n\n\ndef writer(price, delete_again):\n    time.sleep(0.2)                     # the reader has its row by now\n    update_price(2, price)\n    if delete_again:\n        time.sleep(0.5)                 # longer than any read takes\n        r.delete(\"book:2\")\n\n\nfor price, delete_again in ((7990, False), (6990, True)):\n    r.delete(\"book:2\")\n    threads = [threading.Thread(target=slow_reader), threading.Thread(target=writer, args=(price, delete_again))]\n    for t in threads:\n        t.start()\n    for t in threads:\n        t.join()\n    print(f\"delete again {delete_again!s:>5}: database {price}, cache {get_book(2)['price_cents']}, ttl {r.ttl('book:2')}\")\n", "note": "Um leitor que pausa entre o banco e o cache, e um escritor que apaga uma vez, depois duas."}]}
 ```
 
 ```

@@ -7,6 +7,14 @@ Lessons 8 and 9 stored values and read them back. What turns that into a cache i
 the cache first, and on a miss reads the database itself and leaves a copy for the next reader. The cache
 sits beside the application's path rather than in it, which is where the name comes from.
 
+Redis still holds the keys of lessons 8 and 9. This lesson starts from an empty one:
+
+```sh
+redis-cli FLUSHALL
+```
+
+The pattern, as a module:
+
 ```schooling-example
 {"language": "python", "file": "bookcache.py", "parts": [{"code": "import json\nimport time\n\nimport redis\n\nimport catalogue\n\n", "note": "`catalogue` is the slow database, 120 ms a query."}, {"code": "r = redis.Redis(decode_responses=True)\nTTL = 300\n\n\n", "note": "One connection and one lifetime for every copy, five minutes."}, {"code": "def get_book(book_id):\n    key = f\"book:{book_id}\"\n    cached = r.get(key)\n    if cached is not None:\n        return json.loads(cached)\n    book = catalogue.get_book(book_id)\n    r.set(key, json.dumps(book), ex=TTL)\n    return book\n\n\n", "note": "**Cache-aside.** Ask the cache; on a miss, read the database and leave a copy with a lifetime."}, {"code": "def update_price(book_id, price_cents):\n    catalogue.set_price(book_id, price_cents)\n    r.delete(f\"book:{book_id}\")\n\n\n", "note": "**A write changes the database first, then deletes the copy.** The next section says why it deletes rather than writes."}, {"code": "if __name__ == \"__main__\":\n    r.delete(\"book:2\")\n    for attempt in (1, 2, 3):\n        start = time.perf_counter()\n        book = get_book(2)\n        ms = (time.perf_counter() - start) * 1000\n        print(f\"read {attempt}: {book['price_cents']} in {ms:.1f} ms, queries {catalogue.queries}\")\n", "note": "Run as a program, it reads book 2 three times and times each read."}], "output": "read 1: 8990 in 121.1 ms, queries 1\nread 2: 8990 in 0.2 ms, queries 1\nread 3: 8990 in 0.1 ms, queries 1\n"}
 ```

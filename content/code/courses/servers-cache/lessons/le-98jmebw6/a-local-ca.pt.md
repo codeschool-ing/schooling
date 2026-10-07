@@ -3,7 +3,7 @@ title: Uma autoridade certificadora sua, para treinar
 version: 1
 ---
 
-O Pebble está no repositório do Ubuntu, e o `lab.sh install` o pôs no seu servidor. Ele precisa de
+O Pebble está no repositório do Ubuntu, e a aula 1 o instalou. Ele precisa de
 três coisas antes de rodar: um certificado para a própria API, que é HTTPS como todo servidor ACME; um
 arquivo de configuração pequeno; e uma unidade do systemd para mantê-lo rodando.
 

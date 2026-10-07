@@ -10,39 +10,8 @@ large keyspace on every deploy is slow and races with the readers that refill it
 
 The cheaper answer is to **put a version in every key and change the version**:
 
-```python
-import json
-
-import catalogue
-from bookcache import r
-
-r.set("catalogue:version", 1, nx=True)
-
-
-def key(book_id):
-    return f"v{r.get('catalogue:version')}:book:{book_id}"
-
-
-def get_book(book_id):
-    cached = r.get(key(book_id))
-    if cached is not None:
-        return json.loads(cached)
-    book = catalogue.get_book(book_id)
-    r.set(key(book_id), json.dumps(book), ex=300)
-    return book
-
-
-def read_three():
-    before = catalogue.queries
-    for book_id in (1, 2, 3):
-        get_book(book_id)
-    return catalogue.queries - before
-
-
-print("first pass, queries:", read_three())
-print("second pass, queries:", read_three())
-print("version is now", r.incr("catalogue:version"))
-print("third pass, queries:", read_three())
+```schooling-example
+{"language": "python", "file": "versions.py", "parts": [{"code": "import json\n\nimport catalogue\nfrom bookcache import r\n\nr.set(\"catalogue:version\", 1, nx=True)\n\n\ndef key(book_id):\n    return f\"v{r.get('catalogue:version')}:book:{book_id}\"\n\n\ndef get_book(book_id):\n    cached = r.get(key(book_id))\n    if cached is not None:\n        return json.loads(cached)\n    book = catalogue.get_book(book_id)\n    r.set(key(book_id), json.dumps(book), ex=300)\n    return book\n\n\ndef read_three():\n    before = catalogue.queries\n    for book_id in (1, 2, 3):\n        get_book(book_id)\n    return catalogue.queries - before\n\n\nprint(\"first pass, queries:\", read_three())\nprint(\"second pass, queries:\", read_three())\nprint(\"version is now\", r.incr(\"catalogue:version\"))\nprint(\"third pass, queries:\", read_three())\n", "note": "Every key carries the catalogue's version, and one `INCR` retires them all."}]}
 ```
 
 ```

@@ -3,6 +3,53 @@ title: A certificate that signs itself
 version: 1
 ---
 
+## Where this lesson starts
+
+This lesson starts from the site as lesson 2 built it, without the `location` experiments of that
+lesson's last sections. Put this in `/etc/nginx/sites-available/ipelivros`, in place of what is there:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## A certificate that signs itself
+
 Anybody can make a certificate. `openssl` does it in one command, with a P-256 key, valid for thirty
 days, for the bookshop's two names:
 
@@ -26,6 +73,15 @@ certificate and its private key are, and the site's server block gets a second `
 ```conf
 ssl_certificate     /etc/ssl/ipelivros/self.crt;
 ssl_certificate_key /etc/ssl/ipelivros/self.key;
+```
+
+Save those two lines as `/etc/nginx/snippets/ipelivros-self.conf`. The new `listen` and the
+`include` go under `listen 80;` in the site's server block; this `sed` puts them there, and the test
+and the reload follow as always:
+
+```sh
+sudo sed -i 's/^    listen 80;/    listen 80;\n    listen 443 ssl;\n    include snippets\/ipelivros-self.conf;/' /etc/nginx/sites-available/ipelivros
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ```

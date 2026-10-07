@@ -4,8 +4,14 @@ version: 1
 ---
 
 A web root collects things nobody meant to publish: an editor's backup file, an `.env` with a
-password in it, a whole `.git` directory copied along with a deploy. This one has a `.git`, and Nginx
-serves whatever is in a web root:
+password in it, a whole `.git` directory copied along with a deploy. Give this one a `.git`, the way a careless deploy would, with a file inside it that names where the
+code comes from:
+
+```sh
+sudo mkdir -p /var/www/ipe/.git && printf "[core]\n\trepositoryformatversion = 0\n[remote \"origin\"]\n\turl = git@git.example:ipe/site.git\n" | sudo tee /var/www/ipe/.git/config >/dev/null
+```
+
+Nginx serves whatever is in a web root:
 
 ```
 ana@web:~$ ls -A /var/www/ipe

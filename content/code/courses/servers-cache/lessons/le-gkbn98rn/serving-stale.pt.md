@@ -11,36 +11,8 @@ aula 6 fez isso no Nginx com `proxy_cache_use_stale updating`; esta é a mesma i
 O truque são dois tempos de vida. O valor carrega o próprio `fresh_until`, cinco minutos, e a chave vive
 uma hora a mais que isso, para que ainda haja uma cópia velha para servir:
 
-```python
-import json
-import threading
-import time
-
-import redis
-
-import catalogue
-
-r = redis.Redis(decode_responses=True)
-FRESH, STALE = 300, 3600
-REFRESH_MS = 2000
-
-
-def load(book_id):
-    book = catalogue.get_book(book_id)
-    entry = {"book": book, "fresh_until": time.time() + FRESH}
-    r.set(f"book:{book_id}", json.dumps(entry), ex=FRESH + STALE)
-    return book
-
-
-def get_book(book_id):
-    cached = r.get(f"book:{book_id}")
-    if cached is None:
-        return load(book_id)
-    entry = json.loads(cached)
-    if entry["fresh_until"] < time.time():
-        if r.set(f"refresh:book:{book_id}", 1, nx=True, px=REFRESH_MS):
-            threading.Thread(target=load, args=(book_id,)).start()
-    return entry["book"]
+```schooling-example
+{"language": "python", "file": "swrcache.py", "parts": [{"code": "import json\nimport threading\nimport time\n\nimport redis\n\nimport catalogue\n\nr = redis.Redis(decode_responses=True)\nFRESH, STALE = 300, 3600\nREFRESH_MS = 2000\n\n\ndef load(book_id):\n    book = catalogue.get_book(book_id)\n    entry = {\"book\": book, \"fresh_until\": time.time() + FRESH}\n    r.set(f\"book:{book_id}\", json.dumps(entry), ex=FRESH + STALE)\n    return book\n\n\ndef get_book(book_id):\n    cached = r.get(f\"book:{book_id}\")\n    if cached is None:\n        return load(book_id)\n    entry = json.loads(cached)\n    if entry[\"fresh_until\"] < time.time():\n        if r.set(f\"refresh:book:{book_id}\", 1, nx=True, px=REFRESH_MS):\n            threading.Thread(target=load, args=(book_id,)).start()\n    return entry[\"book\"]\n", "note": "Serve uma cópia velha na hora e a atualiza em segundo plano, no máximo uma vez a cada dois segundos."}]}
 ```
 
 A marca de atualização é um lock que ninguém libera: **ela simplesmente vence depois de dois segundos**,
@@ -50,38 +22,8 @@ falhe.
 Para ver, este programa planta uma cópia que ficou velha há um minuto, com o preço antigo, depois muda o
 preço no banco e manda cinquenta leitores:
 
-```python
-import json
-import threading
-import time
-
-import catalogue
-import swrcache
-
-book = catalogue.get_book(2)
-stale = {"book": dict(book, price_cents=8990), "fresh_until": time.time() - 60}
-swrcache.r.set("book:2", json.dumps(stale), ex=3600)
-catalogue.set_price(2, 7990)
-
-prices, slowest = set(), 0.0
-before = catalogue.queries
-
-
-def visitor():
-    global slowest
-    start = time.perf_counter()
-    prices.add(swrcache.get_book(2)["price_cents"])
-    slowest = max(slowest, (time.perf_counter() - start) * 1000)
-
-
-threads = [threading.Thread(target=visitor) for _ in range(50)]
-for t in threads:
-    t.start()
-for t in threads:
-    t.join()
-print(f"50 readers: prices {sorted(prices)}, slowest {slowest:.1f} ms")
-time.sleep(0.3)
-print(f"a moment later: {swrcache.get_book(2)['price_cents']}, queries {catalogue.queries - before}")
+```schooling-example
+{"language": "python", "file": "stale_demo.py", "parts": [{"code": "import json\nimport threading\nimport time\n\nimport catalogue\nimport swrcache\n\nbook = catalogue.get_book(2)\nstale = {\"book\": dict(book, price_cents=8990), \"fresh_until\": time.time() - 60}\nswrcache.r.set(\"book:2\", json.dumps(stale), ex=3600)\ncatalogue.set_price(2, 7990)\n\nprices, slowest = set(), 0.0\nbefore = catalogue.queries\n\n\ndef visitor():\n    global slowest\n    start = time.perf_counter()\n    prices.add(swrcache.get_book(2)[\"price_cents\"])\n    slowest = max(slowest, (time.perf_counter() - start) * 1000)\n\n\nthreads = [threading.Thread(target=visitor) for _ in range(50)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(f\"50 readers: prices {sorted(prices)}, slowest {slowest:.1f} ms\")\ntime.sleep(0.3)\nprint(f\"a moment later: {swrcache.get_book(2)['price_cents']}, queries {catalogue.queries - before}\")\n", "note": "Planta uma cópia que ficou velha há um minuto, muda o preço e manda cinquenta leitores."}]}
 ```
 
 ```

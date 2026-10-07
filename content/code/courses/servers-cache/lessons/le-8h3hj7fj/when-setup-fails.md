@@ -40,10 +40,11 @@ on purpose. Or the configuration file has an error, which the last section of th
 shows on purpose too.
 
 **`curl http://ipelivros.example/` says it could not resolve the host.** The names in `/etc/hosts`
-are missing. `grep ipelivros /etc/hosts` should print one line; if it prints nothing, `lab.sh
-install` did not finish, and running it again is safe, because it checks before adding anything.
+are missing. `grep ipelivros /etc/hosts` should print one line; if it prints nothing, the `printf`
+at the end of the section on the packages did not run, and running it once now fixes it.
 
 **And when nothing else works**, delete the machine and build it again. With Multipass that is
-`multipass delete --purge web` followed by the two commands of the previous section, and about ten
-minutes. It feels like giving up. It is what professionals do with a machine whose state nobody can
-explain any more, and it is the reason this course builds everything from one script.
+`multipass delete --purge web` followed by the commands of the two previous sections, and about
+half an hour. It feels like giving up. It is what professionals do with a machine whose state nobody can
+explain any more, and it is the reason this course builds everything from the commands in the two
+sections before this one.

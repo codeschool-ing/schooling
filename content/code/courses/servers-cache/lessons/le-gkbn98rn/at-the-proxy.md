@@ -3,36 +3,31 @@ title: The same stampede at the proxy
 version: 1
 ---
 
+This section uses the site and the shop as lesson 5 left them: the cache on, and the shop's lifetime
+at sixty seconds. If you went on through lessons 6 and 7, put them back, and stop the edge:
+
+```sh
+echo 'SHOP_CACHE_CONTROL=public, max-age=60' | sudo tee /etc/shop/shop.env
+sudo systemctl restart shop@1 shop@2
+sudo systemctl stop varnish
+sudo rm /etc/nginx/sites-enabled/origin
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+The shop counts its database queries per copy, at `/api/stats`. Set both counts to zero before each run
+below, as the transcripts did:
+
+```sh
+curl -s -X POST http://127.0.0.1:8001/api/stats/reset
+curl -s -X POST http://127.0.0.1:8002/api/stats/reset
+```
+
 Nginx's cache from lesson 5 has the same problem, one layer up. This program is forty visitors, each in
 its own thread. Each one connects first, then waits at a barrier, so that all forty ask at the same
 instant for a page that is not yet cached:
 
-```python
-import http.client
-import sys
-import threading
-from collections import Counter
-
-host, path, visitors = sys.argv[1], sys.argv[2], int(sys.argv[3])
-gate = threading.Barrier(visitors)
-seen = Counter()
-
-
-def visitor():
-    conn = http.client.HTTPSConnection(host)
-    conn.connect()                      # the TLS handshake, before the start
-    gate.wait()                         # then everybody asks at the same moment
-    conn.request("GET", path)
-    response = conn.getresponse()
-    seen[response.status, response.getheader("X-Cache-Status")] += 1
-
-
-threads = [threading.Thread(target=visitor) for _ in range(visitors)]
-for t in threads:
-    t.start()
-for t in threads:
-    t.join()
-print(sorted(seen.items()))
+```schooling-example
+{"language": "python", "file": "visitors.py", "parts": [{"code": "import http.client\nimport sys\nimport threading\nfrom collections import Counter\n\nhost, path, visitors = sys.argv[1], sys.argv[2], int(sys.argv[3])\ngate = threading.Barrier(visitors)\nseen = Counter()\n\n\ndef visitor():\n    conn = http.client.HTTPSConnection(host)\n    conn.connect()                      # the TLS handshake, before the start\n    gate.wait()                         # then everybody asks at the same moment\n    conn.request(\"GET\", path)\n    response = conn.getresponse()\n    seen[response.status, response.getheader(\"X-Cache-Status\")] += 1\n\n\nthreads = [threading.Thread(target=visitor) for _ in range(visitors)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(sorted(seen.items()))\n", "note": "Visitors that each connect first and then all ask for one page at the same instant."}]}
 ```
 
 ```
@@ -57,8 +52,7 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
 `proxy_cache_lock on` is this lesson's lock, built into Nginx: **the first request for a missing entry
-goes to the upstream, and the rest wait for it to fill the cache.** Another page, another forty
-visitors:
+goes to the upstream, and the rest wait for it to fill the cache.** Another page, another forty visitors, with both counts set to zero first:
 
 ```
 ana@web:~/work$ python3 visitors.py ipelivros.example /api/books/4 40

@@ -17,14 +17,26 @@
 #     nginx, apache2, caddy, redis-server, memcached, libmemcached-tools,
 #     varnish, apache2-utils (ab), certbot, python3-certbot-nginx, pebble,
 #     python3-redis, python3-pymemcache
-#   written for the course, and printed in full below:
+#   written for the course, and printed in full below AND in lesson 1's
+#   section "The bookshop", byte for byte, which is where the student gets
+#   them (the student never receives this script):
 #     /opt/shop/shop.py     the bookshop's catalogue API, Ipê Livros: Python's
 #                           standard library and SQLite, nothing else
 #     shop@.service         one unit, two instances: shop@1 on 127.0.0.1:8001
 #                           and shop@2 on 127.0.0.1:8002
 #     /var/www/ipe          the shop's static front: HTML, CSS, JS, a logo
-#     ~/work/catalogue.py   the same database, as a Python module, for the
-#                           cache code of lessons 8 to 11
+#   and, from lesson 8 on, ~/work/catalogue.py, the same database as a Python
+#   module, which lesson 8 shows and tells the student to save.
+#
+# WHERE EACH LESSON STARTS
+#   `reset N` builds the server as lesson N starts. Where that is not exactly
+#   where a student who followed lesson N-1 to the end stands, lesson N opens
+#   with a section "Where this lesson starts" that gives the commands and the
+#   whole site file to get there (lessons 2, 3, 5, 6, 7, and 11's last
+#   section; lessons 10 and 11 also start from an empty Redis), so the
+#   transcripts were recorded on the machine the text builds.
+#   Measured, not assumed: each lesson's captures were run to the end and the
+#   configuration compared with the next lesson's `reset`.
 #
 # WHAT IS STAGED, AND WHY
 #   - THE DATABASE IS SLOW ON PURPOSE. Every query the shop makes sleeps for
@@ -87,8 +99,8 @@ in_vm() { local l; l=$(leader) || { echo "lab is not running" >&2; exit 1; }
   nsenter -t "$l" -a env -i TERM=dumb LANG=C.UTF-8 TZ=America/Sao_Paulo \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin "$@"; }
 
-write_files() { # $1 = root of the machine's filesystem, $2 = the work directory under it
-  local R=$1 W=$2
+write_files() { # $1 = root of the machine's filesystem
+  local R=$1
   mkdir -p "$R/opt/shop" "$R/var/lib/shop" "$R/var/www/ipe/css" "$R/var/www/ipe/js" \
            "$R/var/www/ipe/img" "$R/etc/shop"
 
@@ -315,39 +327,10 @@ LABFILE
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#e9a3c4"/><circle cx="24" cy="24" r="8" fill="#b5527e"/></svg>
 LABFILE
 
-  mkdir -p "$R$W"
-  cat > "$R$W/catalogue.py" <<'LABFILE'
-"""The bookshop's database, as a module, for the cache code of lessons 8 to 11.
 
-Every call sleeps QUERY_MS first, as the shop's API does, and counts itself in
-`queries`, so a script can say how many times it reached the database."""
-import sqlite3, threading, time
-
-DB = "/var/lib/shop/catalogue.db"
-QUERY_MS = 120
-queries = 0
-_lock = threading.Lock()
-
-
-def get_book(book_id):
-    global queries
-    time.sleep(QUERY_MS / 1000)
-    with _lock:
-        queries += 1
-    with sqlite3.connect(DB) as db:
-        db.row_factory = sqlite3.Row
-        row = db.execute("SELECT * FROM books WHERE id = ?", (book_id,)).fetchone()
-        return dict(row) if row else None
-
-
-def set_price(book_id, price_cents):
-    with sqlite3.connect(DB) as db:
-        db.execute("UPDATE books SET price_cents = ?, updated_at = ? WHERE id = ?",
-                   (price_cents, int(time.time()), book_id))
-LABFILE
-
-  # Fixed dates, so Last-Modified and nginx's ETag repeat on every run.
-  find "$R/var/www/ipe" "$R/opt/shop" "$R$W/catalogue.py" -exec touch -h -d '2026-09-01 10:00:00 -0300' {} +
+  # Fixed dates, so Last-Modified and nginx's ETag repeat on every run. Lesson 1
+  # gives the student the same command.
+  find "$R/var/www/ipe" "$R/opt/shop" -exec touch -h -d '2026-09-01 10:00:00 -0300' {} +
 }
 
 install() { # on the server itself, as root: what lesson 1 tells the student to run
@@ -359,14 +342,13 @@ install() { # on the server itself, as root: what lesson 1 tells the student to 
   id shop >/dev/null 2>&1 || useradd -r -s /usr/sbin/nologin -d /var/lib/shop shop
   grep -q ipelivros.example /etc/hosts ||
     printf '127.0.0.1\tipelivros.example www.ipelivros.example static.ipelivros.example\n' >> /etc/hosts
-  write_files "" "$home/work"
+  write_files ""
   chown -R shop: /var/lib/shop
   # The cache code of lessons 10 and 11 writes prices through catalogue.py, as
   # you: the group can write the database, and new files in its directory
   # (SQLite's journal) stay in the group.
   chmod 2775 /var/lib/shop && chmod 664 /var/lib/shop/catalogue.db
   usermod -aG shop "$user"
-  chown -R "$user": "$home/work"
   # Ubuntu starts every server it installs, and they cannot all have port 80.
   # Stop them all; each lesson starts the ones it uses.
   local booted=; [ -d /run/systemd/system ] && booted=--now
@@ -492,6 +474,36 @@ LABFILE
   stage_cache
   [ "$n" -ge 8 ] || return 0
   in_vm systemctl enable --now redis-server >/dev/null 2>&1
+  # Lesson 8 has the student make ~/work and save this module in it.
+  in_vm su - ana -c 'mkdir -p ~/work && cat > ~/work/catalogue.py' <<'LABFILE'
+"""The bookshop's database, as a module, for the cache code of lessons 8 to 11.
+
+Every call sleeps QUERY_MS first, as the shop's API does, and counts itself in
+`queries`, so a script can say how many times it reached the database."""
+import sqlite3, threading, time
+
+DB = "/var/lib/shop/catalogue.db"
+QUERY_MS = 120
+queries = 0
+_lock = threading.Lock()
+
+
+def get_book(book_id):
+    global queries
+    time.sleep(QUERY_MS / 1000)
+    with _lock:
+        queries += 1
+    with sqlite3.connect(DB) as db:
+        db.row_factory = sqlite3.Row
+        row = db.execute("SELECT * FROM books WHERE id = ?", (book_id,)).fetchone()
+        return dict(row) if row else None
+
+
+def set_price(book_id, price_cents):
+    with sqlite3.connect(DB) as db:
+        db.execute("UPDATE books SET price_cents = ?, updated_at = ? WHERE id = ?",
+                   (price_cents, int(time.time()), book_id))
+LABFILE
   [ "$n" -ge 9 ] || return 0
   in_vm systemctl enable --now memcached >/dev/null 2>&1
 }

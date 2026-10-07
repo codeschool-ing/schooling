@@ -49,3 +49,9 @@ dados; antes disso, todo comando é recusado como `unauthenticated`. **A senha a
 claro**, então ela barra um vizinho numa rede privada que conecta por engano e não detém um que consiga
 ler o tráfego. Para isso existe o TLS, `-Z`, que o build do Ubuntu inclui. E o reinício que ligou a senha
 esvaziou o cache de novo, coisa fácil de esquecer na primeira vez que acontece em produção.
+
+O resto do curso não faz login no Memcached, então tire a senha de novo:
+
+```sh
+sudo sed -i '/^-Y /d' /etc/memcached.conf && sudo systemctl restart memcached && sudo rm -f /etc/memcached-auth
+```

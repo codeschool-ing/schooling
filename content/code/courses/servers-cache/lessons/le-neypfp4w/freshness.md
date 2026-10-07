@@ -3,6 +3,78 @@ title: Fresh, for how long
 version: 1
 ---
 
+## Where this lesson starts
+
+Lesson 4's hardening belongs on a real server, and two parts of it get in the way of what this lesson
+measures: the rate limit refuses most of a benchmark's requests, and the API's own `Cache-Control:
+no-store` hides the headers this lesson is about. Keep a copy of lesson 4's site, take its additions
+out, and start from the site as lesson 3 left it:
+
+```sh
+sudo cp /etc/nginx/sites-available/ipelivros ~/ipelivros.lesson-4
+sudo rm /etc/nginx/sites-enabled/catch-all /etc/nginx/conf.d/limits.conf
+sudo rm -r /var/www/ipe/.git /etc/systemd/system/shop@.service.d
+sudo sed -i 's/server_tokens off;/# server_tokens off;/' /etc/nginx/nginx.conf
+sudo systemctl daemon-reload && sudo systemctl restart shop@1 shop@2
+```
+
+`/etc/nginx/sites-available/ipelivros`, in place of what is there:
+
+```conf
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 443 ssl;
+    include snippets/ipelivros-tls.conf;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/ipe;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+```sh
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+## How long a copy is good for
+
 A cache needs one answer before it can keep anything: **for how long is this copy still good?** A copy
 that is still good is **fresh**, and a cache serves it without asking anybody. Once its time runs out
 it is **stale**, and the cache has to check with the origin before using it again, which is the next
