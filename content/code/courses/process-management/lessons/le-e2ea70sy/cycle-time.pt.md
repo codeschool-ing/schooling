@@ -3,7 +3,7 @@ title: Tempo de ciclo e vazão, calculados
 version: 1
 ---
 
-O time Agenda terminou vinte itens nas quatro semanas a partir de 2 de março de 2026. As datas de início e fim estão na planilha do curso, e com elas na sua planilha da quinta seção desta aula, dois números descrevem como o time entrega.
+O time Agenda terminou vinte itens nas quatro semanas a partir de 2 de março de 2026. As datas de início e fim são a tabela da quinta seção desta aula, e com elas na sua planilha desta aula, dois números descrevem como o time entrega.
 
 ## Tempo de ciclo
 

@@ -3,7 +3,7 @@ title: When the workbook disagrees with you
 version: 1
 ---
 
-Most of the trouble a first spreadsheet gives comes from four mistakes, and each one shows a different symptom. The values below are what LibreOffice Calc returned when the course's `workbook.py` made each mistake on purpose; Excel and Google Sheets use the same error names.
+Most of the trouble a first spreadsheet gives comes from four mistakes, and each one shows a different symptom. The values below are what LibreOffice Calc returned when each mistake was made on purpose in a copy of the sheet; Excel and Google Sheets use the same error names.
 
 ## A date that is really text
 
