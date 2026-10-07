@@ -8,8 +8,14 @@ provedor não tem motivo para guardar o excesso de um cliente. O cliente não mu
 pode mudar é **o que chega ao policer: se nada chegar mais rápido do que o contrato, o policer nunca tem o
 que descartar.** Então o cliente faz shaping do próprio uplink um pouco abaixo da taxa que comprou.
 
-O laboratório põe os dois no lugar ao mesmo tempo. O policer no provedor continua em 625 kbytes por
-segundo, com o contador zerado fora da tela, apagando a regra e criando-a de novo. `hq` ganha um shaper a
+Agora os dois entram no lugar ao mesmo tempo. O policer no provedor continua em 625 kbytes por segundo,
+com o contador zerado apagando a regra e criando-a de novo, em `isp`:
+
+```sh
+sudo nft flush chain ip contract police
+sudo nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop
+```
+ `hq` ganha um shaper a
 **4500 kbit**, dez por cento abaixo do contrato, e o upload roda de novo:
 
 ```

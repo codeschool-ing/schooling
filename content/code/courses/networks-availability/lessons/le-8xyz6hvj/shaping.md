@@ -3,7 +3,7 @@ title: A shaper on hq's uplink
 version: 1
 ---
 
-First, how fast the lab's uplink is with nothing in the way. An `iperf3` upload from the laptop to `web1`:
+First, how fast the network's uplink is with nothing in the way. An `iperf3` upload from the laptop to `web1`:
 
 ```
 ana@laptop:~$ iperf3 -c 192.0.2.21 -t 3 | tail -n 4

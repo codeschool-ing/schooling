@@ -3,7 +3,8 @@ title: Um policer no provedor
 version: 1
 ---
 
-O shaper foi removido, fora da tela, e o limite foi para onde um provedor o poria: o roteador do
+O shaper é removido, `sudo tc qdisc del dev eth1 root` em `hq`, e o limite vai para onde um provedor o
+poria: o roteador do
 provedor, no tráfego que chega de `hq`. É uma regra de `nftables` com a mesma taxa e o mesmo balde, e um
 final diferente, `drop`:
 

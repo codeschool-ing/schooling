@@ -23,10 +23,10 @@
 # and a policer (an nftables limit that drops what exceeds it) on the ISP's
 # side of the same link, which is where a provider polices a contract.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; the shaper removed as root before the
-# policer is set; and the policer's counter zeroed, by deleting the rule and
-# adding it again as root, before the last block.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it: the shaper removed before the policer, the command policing's
+# prose gives, word for word; and the policer's counter zeroed before the last
+# block, shape-under-police's sh fence, EXTRACTED with `lab.sh fence`.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -69,7 +69,7 @@ fg
 on hq 'tc -s qdisc show dev eth1'
 
 block police
-quiet hq 'tc qdisc del dev eth1 root'
+lab exec hq ana 'sudo tc qdisc del dev eth1 root' >/dev/null 2>&1
 on isp 'sudo nft add table ip contract && sudo nft add chain ip contract police "{ type filter hook forward priority 0; }"'
 on isp 'sudo nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop'
 BG_WAIT=0.2 bg laptop 'sleep 2; ping -c 5 -q 192.0.2.21 | tail -n 2'
@@ -79,6 +79,6 @@ on isp 'sudo nft list chain ip contract police'
 
 block both
 on hq 'sudo tc qdisc add dev eth1 root tbf rate 4500kbit burst 16kb latency 50ms'
-quiet isp 'nft flush chain ip contract police; nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop'
+lab exec isp ana "$(bash "$LAB_SH" fence "$(cd "$(dirname "$0")" && pwd)/shape-under-police.md" 1)" >/dev/null 2>&1
 on laptop 'iperf3 -c 192.0.2.21 -t 8 | tail -n 4'
 on isp 'sudo nft list chain ip contract police | grep counter'
