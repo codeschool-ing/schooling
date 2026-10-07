@@ -10,8 +10,8 @@ centre in lesson 1.
 ## 60 books
 
 `books.jsonl` is the catalogue: 60 books whose texts are in the public domain, each with its
-author, year and genre, and a `blurb` of one or two sentences written for the course. The blurb is
-what gets embedded.
+author, year and genre, and a `blurb` of one or two sentences written for the course. **The title
+and the blurb, together, are what gets embedded.**
 
 ```bash
 cat > ~/emb/data/books.jsonl <<'EOF'

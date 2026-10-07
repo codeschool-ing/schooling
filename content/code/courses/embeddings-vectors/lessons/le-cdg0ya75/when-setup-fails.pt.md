@@ -115,8 +115,8 @@ do ambiente: é o primeiro caso acima.
 
 Dois hábitos resolvem quase todo o resto. Leia primeiro a **última** linha de um erro comprido,
 porque um traceback do Python lista cada chamada no caminho para baixo, e a causa vem no fim. E
-compare o seu comando com a página caractere por caractere: uma aspa que virou aspa curva ao passar
-por um programa de chat, ou uma linha de um bloco colado que ficou para trás, explicam muitos dos
-que sobram. Quando um passo inteiro deu errado, o `setup.sh` pode ser rodado de novo sem medo: ele
+compare o seu comando com a página caractere por caractere. Uma aspa que virou aspa curva ao passar
+por um programa de chat explica muitos dos que sobram, e a última linha de um bloco colado que
+nunca chegou explica outros tantos. Quando um passo inteiro deu errado, o `setup.sh` pode ser rodado de novo sem medo: ele
 instala no mesmo ambiente, baixa e confere o modelo outra vez, e só acrescenta as suas linhas ao
 `~/.bashrc` uma vez.

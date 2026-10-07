@@ -10,7 +10,7 @@ tickets from lesson 1. Paste each block into the terminal, in `~/emb`.
 
 `inbox.jsonl` holds the 40 messages of one day. `odd` marks the 8 that do not belong, and `kind`
 says why: spam, a job application, questions about nothing the shop does, a line of keyboard
-noise, and two messages in other languages. That is the answer key. The scores in this lesson are
+noise, and two messages in other languages. **That is the answer key.** The scores in this lesson are
 computed from the text alone, and the key only counts afterwards what they caught.
 
 ```bash

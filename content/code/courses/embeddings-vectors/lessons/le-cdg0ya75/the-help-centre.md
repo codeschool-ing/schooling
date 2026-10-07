@@ -5,7 +5,7 @@ version: 1
 
 The course works on the files of **Marginalia**, an online bookshop that does not exist. Its help
 centre, the questions its customers type and the messages they send were written for the course,
-in English with a few in Portuguese, and the lessons search them, sort them and measure how well a
+in English with a few in Portuguese. The lessons search them, sort them and measure how well a
 model understands them. They are JSON Lines files: one JSON object per line, which Python reads a
 line at a time with `json.loads`.
 

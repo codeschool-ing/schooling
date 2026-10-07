@@ -113,8 +113,8 @@ that is the first case above.
 
 Two habits get through most of the rest. Read the **last** line of a long error first, because a
 Python traceback lists every call on the way down and the cause comes at the bottom. And compare
-your command with the page character by character: a quote that became a curly quote on the way
-through a chat program, or a line of a pasted block that did not make it, accounts for many of the
-remaining ones. When a whole step has gone wrong, `setup.sh` can safely be run again: it installs
+your command with the page character by character. A quote that became a curly quote on the way
+through a chat program accounts for many of the remaining ones, and so does the last line of a
+pasted block that never arrived. When a whole step has gone wrong, `setup.sh` can safely be run again: it installs
 into the same environment, downloads and checks the model again, and adds its lines to `~/.bashrc`
 only once.

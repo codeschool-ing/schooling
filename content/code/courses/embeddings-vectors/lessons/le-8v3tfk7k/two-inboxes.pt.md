@@ -10,7 +10,7 @@ além dos tickets da aula 1. Cole cada bloco no terminal, em `~/emb`.
 
 `inbox.jsonl` guarda as 40 mensagens de um dia. `odd` marca as 8 que não pertencem, e `kind` diz
 por quê: spam, uma candidatura a emprego, perguntas sobre nada que a loja faz, uma linha de teclado
-batido a esmo e duas mensagens em outros idiomas. Esse é o gabarito. As notas desta aula são
+batido a esmo e duas mensagens em outros idiomas. **Esse é o gabarito.** As notas desta aula são
 calculadas só a partir do texto, e o gabarito só conta depois o que elas pegaram.
 
 ```bash

@@ -5,7 +5,7 @@ version: 1
 
 O curso trabalha sobre os arquivos da **Marginalia**, uma livraria online que não existe. A sua
 central de ajuda, as perguntas que os clientes digitam e as mensagens que eles mandam foram
-escritas para o curso, em inglês, com algumas em português, e as aulas as buscam, as classificam e
+escritas para o curso, em inglês, com algumas em português. As aulas as buscam, as classificam e
 medem o quanto um modelo as entende. São arquivos JSON Lines: um objeto JSON por linha, que o Python
 lê uma linha de cada vez com `json.loads`.
 

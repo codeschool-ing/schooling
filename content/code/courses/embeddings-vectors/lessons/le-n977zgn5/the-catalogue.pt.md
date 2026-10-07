@@ -10,7 +10,8 @@ na aula 1.
 ## 60 livros
 
 `books.jsonl` é o catálogo: 60 livros cujos textos estão em domínio público, cada um com autor, ano
-e gênero, e um `blurb` de uma ou duas frases escrito para o curso. O `blurb` é o que vira embedding.
+e gênero, e um `blurb` de uma ou duas frases escrito para o curso. **O título e o `blurb`, juntos, são o que vira
+embedding.**
 
 ```bash
 cat > ~/emb/data/books.jsonl <<'EOF'
