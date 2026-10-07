@@ -39,10 +39,16 @@ func main() {
 		root = os.Args[1]
 	}
 
-	problems, schools, err := check(root)
+	problems, notes, schools, err := check(root)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
+	}
+
+	// Said whether or not the run fails, because a list of known defects that
+	// only appears on a red run is read on the days nobody is looking at it.
+	for _, n := range notes {
+		fmt.Println(" ·", n)
 	}
 
 	for _, p := range problems {
@@ -834,24 +840,30 @@ func firstOf(stack string) string {
 	return strings.ToLower(strings.Trim(strings.TrimSpace(strings.Split(stack, ",")[0]), `'"`))
 }
 
-func check(root string) (problems []error, schools int, err error) {
+func check(root string) (problems []error, notes []string, schools int, err error) {
 	entries, err := os.ReadDir(root)
 	if os.IsNotExist(err) {
-		return nil, 0, nil
+		return nil, nil, 0, nil
 	}
 	if err != nil {
-		return nil, 0, fmt.Errorf("reading %s: %w", root, err)
+		return nil, nil, 0, fmt.Errorf("reading %s: %w", root, err)
 	}
 
 	families, err := servedFonts()
 	if err != nil {
-		return nil, 0, err
+		return nil, nil, 0, err
 	}
 
 	mono, err := servedGlyphs("IBM Plex Mono")
 	if err != nil {
-		return nil, 0, err
+		return nil, nil, 0, err
 	}
+
+	pending, err := pendingCourses()
+	if err != nil {
+		return nil, nil, 0, err
+	}
+	schoolsSeen := map[string]bool{}
 	used := map[rune]bool{}
 
 	for _, entry := range entries {
@@ -915,6 +927,21 @@ func check(root string) (problems []error, schools int, err error) {
 		problems = append(problems, checkFenceGlyphs(entry.Name(), school, mono, used)...)
 		problems = append(problems, checkExamples(entry.Name(), school)...)
 		problems = append(problems, checkTranslatedCode(entry.Name(), school)...)
+
+		// AND THAT NO LESSON HANDS THE STUDENT A FILE ONLY THE AUTHOR HAS. See
+		// `checkLabReferences`: `lab.sh` is how a capture is proved, and the
+		// student's own machine is the only lab there is (C-38).
+		schoolsSeen[entry.Name()] = true
+		found, said := checkLabReferences(entry.Name(), os.DirFS(dir), pending)
+		problems = append(problems, found...)
+		notes = append(notes, said...)
+	}
+
+	for key := range pending {
+		if school, _, _ := strings.Cut(key, "/"); !schoolsSeen[school] {
+			problems = append(problems, fmt.Errorf(
+				"tools/validate-content/lab-pending/%s names a school that does not exist", key))
+		}
 	}
 
 	// An exception that outlived what it excused reads as current, and the next
@@ -929,5 +956,6 @@ func check(root string) (problems []error, schools int, err error) {
 	}
 
 	sort.Slice(problems, func(i, j int) bool { return problems[i].Error() < problems[j].Error() })
-	return problems, schools, nil
+	sort.Strings(notes)
+	return problems, notes, schools, nil
 }
