@@ -68,7 +68,10 @@ aside=/var/tmp/pe-aside
 mkdir -p $aside
 restore() {
   [ -e $aside/zstd ] && mv $aside/zstd /usr/bin/zstd
-  [ -e $aside/ollama-lib ] && mv $aside/ollama-lib /usr/local/lib/ollama
+  # The installer has made an empty /usr/local/lib/ollama by the time it stops.
+  if [ -e $aside/ollama-lib ]; then
+    rm -rf /usr/local/lib/ollama && mv $aside/ollama-lib /usr/local/lib/ollama
+  fi
   return 0
 }
 trap restore EXIT
