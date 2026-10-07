@@ -59,7 +59,15 @@ IP. Tamanho é o teste que a aula 21 usou para achar o buraco negro dela. Este c
 ## Quanto se perde
 
 A rodada seguinte foi encenada. Uma regra no roteador do provedor descarta **dois pacotes em cada dez, ao
-acaso**, dos que ele encaminha para o web2, `192.0.2.22`. Cinquenta pings, dez por segundo:
+acaso**, dos que ele encaminha para o web2, `192.0.2.22`. Em `isp`:
+
+```sh
+sudo nft add table ip faults
+sudo nft add chain ip faults loss '{ type filter hook forward priority 0; }'
+sudo nft add rule ip faults loss 'ip daddr 192.0.2.22 numgen random mod 10 < 2 drop'
+```
+
+Cinquenta pings, dez por segundo:
 
 ```
 ana@laptop:~$ ping -c 50 -i 0.1 -q 192.0.2.22
