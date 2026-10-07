@@ -1,6 +1,6 @@
 ---
 title: Histogramas, e o que um bucket não sabe dizer
-version: 1
+version: 2
 ---
 
 Durações não cabem num counter nem num gauge: a pergunta não é *quantas* mas *como se espalharam*.
@@ -68,5 +68,9 @@ ana@obs:~/shop$ ./promq 'sum(rate(http_server_request_duration_seconds_bucket{jo
 ```
 
 *Que fração dos checkouts terminou em meio segundo?* Todos, 1, sem interpolação nenhuma, porque 0,5 é
-um limite de bucket. A aula 15 constrói o objetivo de latência da loja sobre essa forma. O arquivo de
-falhas foi removido depois destas consultas.
+um limite de bucket. A aula 15 constrói o objetivo de latência da loja sobre essa forma. Remova o arquivo
+de falhas agora:
+
+```sh
+rm faults/payments.json
+```

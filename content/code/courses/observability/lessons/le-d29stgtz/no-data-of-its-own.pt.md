@@ -1,6 +1,6 @@
 ---
 title: Uma interface sem dados próprios
-version: 1
+version: 2
 ---
 
 A imagem comum do Grafana é *o sistema de monitoramento*. **Ele não guarda nenhum dos dados que
@@ -9,7 +9,14 @@ de dados** (data source): um backend que o Grafana sabe como consultar. O Promet
 métricas, o Loki os logs, o Jaeger os rastros, e o Grafana guarda os painéis, os usuários e a lista
 de onde perguntar. Perder o Grafana perde os desenhos, nem um único dado.
 
-O Grafana do laboratório responde na porta 3000:
+Esta aula desenha uma loja sob carga, então comece de um laboratório iniciado de novo do zero e
+ponha os clientes simulados para rodar por meia hora:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1800
+```
+
+O Grafana responde na porta 3000:
 
 ```
 ana@obs:~/shop$ curl -s localhost:3000/api/health | jq -c .
@@ -50,5 +57,5 @@ Prometheus	prometheus	prometheus	http://prometheus:9090
 **O `uid` é aquilo a que todo o resto se refere**, e o arquivo o escolheu de propósito. Um painel
 que nomeia a fonte de dados por um `uid` escrito no arquivo funciona igual em todo Grafana que
 carregou o mesmo arquivo. Um que a nomeia por um id que o Grafana gerou só funciona no Grafana que o
-gerou. A senha de administrador vem de um arquivo que o laboratório escreveu, `.grafana-password`,
+gerou. A senha de administrador vem do arquivo que você escreveu na aula 1, `.grafana-password`,
 lido por `$(cat ...)` para nunca aparecer na tela. A seção seguinte deixa de precisar dela.

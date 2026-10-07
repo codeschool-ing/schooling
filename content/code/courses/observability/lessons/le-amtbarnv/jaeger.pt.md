@@ -1,6 +1,6 @@
 ---
 title: Achando rastros no Jaeger
-version: 1
+version: 2
 ---
 
 Ler um rastro exige o id dele, e até aqui o id veio de uma linha de log. A outra porta de entrada é uma
@@ -9,7 +9,13 @@ atributos, então dá para pedir os rastros que se parecem com o problema.
 
 O formulário de busca do Jaeger em `localhost:16686` aceita esses campos, e a API HTTP documentada
 dele, a versão 3, aceita os mesmos. Todo checkout dos últimos três minutos que levou pelo menos
-400 ms:
+400 ms, com as duas pontas desses três minutos escritas do jeito que a API aceita:
+
+```sh
+START=$(date -u -d '-3 min' +%Y-%m-%dT%H:%M:%SZ) END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+```
+
+O `$START` e o `$END` vão onde a transcrição tem dois horários:
 
 ```
 ana@obs:~/shop$ curl -sG localhost:16686/api/v3/traces --data-urlencode query.service_name=storefront --data-urlencode 'query.operation_name=POST /checkout' --data-urlencode query.duration_min=400ms --data-urlencode query.start_time_min=2026-10-02T16:36:11Z --data-urlencode query.start_time_max=2026-10-02T16:39:11Z --data-urlencode query.search_depth=5 | jq -r '[.result.resourceSpans[].scopeSpans[].spans[] | select(.name == "POST /checkout")] | .[] | [.traceId, ((((.endTimeUnixNano | tonumber) - (.startTimeUnixNano | tonumber)) / 1e6) | floor)] | @tsv'

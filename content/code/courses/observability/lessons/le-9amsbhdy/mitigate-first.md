@@ -1,6 +1,6 @@
 ---
 title: Mitigate first, understand later
-version: 1
+version: 2
 ---
 
 There is a release of payments, three minutes old, and payments is failing. **What the bug is does not
@@ -12,7 +12,13 @@ ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Con
 {"id":3,"message":"Annotation added"}
 ```
 
-The fault file is removed, which is the lab's rollback, and ninety seconds later:
+Here the rollback is removing the fault file, and ninety seconds later:
+
+```sh
+rm faults/payments.json
+sleep 90
+```
+
 
 ```
 ana@obs:~/shop$ ./promq '{__name__=~"checkout:burn_rate:.*"}'

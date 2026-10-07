@@ -1,6 +1,6 @@
 ---
 title: Taking it back
-version: 1
+version: 2
 ---
 
 The leak was found. Now the lines that already reached the stores have to go, and **this is where
@@ -37,3 +37,12 @@ into an argument about design rather than about tooling: the line that never hel
 needs no deletion. That is the rule this lesson ends on. Log identifiers that mean nothing outside
 the system, keep lines only as long as they are useful, and treat a store full of personal data as
 the incident it is.
+
+Before the next lesson, put back everything this one changed:
+
+```sh
+cp /tmp/storefront.app.py services/storefront/app.py
+cp /tmp/collector-logs.yaml.orig otel/collector-logs.yaml
+rm compose.override.yaml otel/collector-redact.yaml
+docker compose up -d storefront otel-collector
+```

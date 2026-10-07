@@ -1,10 +1,16 @@
 ---
 title: Spending it
-version: 1
+version: 2
 ---
 
 For four minutes, payments is told to fail one charge in twenty. Three minutes in, the five-minute SLI
 and how fast it is spending the budget:
+
+```sh
+echo '{"fail_every": 20}' > faults/payments.json
+sleep 180
+```
+
 
 ```
 ana@obs:~/shop$ ./promq 'checkout:sli_availability:ratio_rate5m'
@@ -19,7 +25,14 @@ the ratio the objective permits, here 0.5%. A burn rate of 1 spends the budget i
 window. A burn rate of 5.9 would spend an hour's budget in about ten minutes, and a 28-day budget in
 under five days. Lesson 16 alerts on it.
 
-The fault is removed, and a minute and a half later the hour is read again:
+The fault is removed after the fourth minute, and a minute and a half later the hour is read again:
+
+```sh
+sleep 60
+rm faults/payments.json
+sleep 90
+```
+
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (code) (increase(http_server_requests_total{job="storefront",route="/checkout"}[1h]))'

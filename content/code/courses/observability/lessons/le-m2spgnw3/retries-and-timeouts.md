@@ -1,10 +1,15 @@
 ---
 title: Retries and timeouts, and what they hide
-version: 1
+version: 2
 ---
 
 Envoy's second listener sits between `orders` and payments, on port 10001. An override points `orders`
-at it:
+at it, saved as the `cat` below prints it, and `orders` is recreated with it:
+
+```sh
+docker compose up -d orders
+```
+
 
 ```
 ana@obs:~/shop$ cat compose.override.yaml
@@ -25,8 +30,16 @@ ana@obs:~/shop$ sed -n '/cluster: payments$/,/num_retries/p' envoy/envoy.yaml
                               num_retries: 2
 ```
 
-Then payments is told to fail one charge in ten, the fault lesson 16 paged on. Ninety seconds later,
-the rates by service and status:
+Then payments is told to fail one charge in ten, the fault lesson 16 paged on, with ten minutes of
+customers on top of the ones already buying:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 600
+echo '{"fail_every": 10}' > faults/payments.json
+sleep 90
+```
+
+Ninety seconds later, the rates by service and status:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (job, code) (rate(http_server_requests_total{job=~"storefront|payments",route=~"/checkout|/charge"}[1m]))'
@@ -69,6 +82,12 @@ consequences follow:
 
 Then the timeout. Payments is told to take 2.5 seconds per charge, longer than the route allows:
 
+```sh
+echo '{"latency_ms": 2500}' > faults/payments.json
+sleep 30
+```
+
+
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"payments"' | tail -1 | jq -c .
 {"attempts":1,"code":504,"flags":"UT","listener":"payments","method":"POST","ms":1999,"path":"/charge"}
@@ -85,3 +104,11 @@ ana@obs:~/shop$ curl -s -X POST localhost:8080/checkout -H 'Content-Type: applic
 The customer sees the same `try again later` as in lesson 14. The proxy turned a slow dependency into a
 fast failure, which is usually the right trade: a two-second answer is better than a ten-second one, and
 a waiting request holds a thread that the next customer needs.
+
+Before the next section, take the fault and the override away, so `orders` calls payments directly
+again:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d orders
+```

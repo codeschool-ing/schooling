@@ -1,10 +1,10 @@
 ---
 title: LogQL: filters, parsers, and metrics from logs
-version: 1
+version: 2
 ---
 
 LogQL, Loki's query language, is a stream selector followed by a pipeline of stages separated by
-`|`. Payments was set to fail one charge in twenty, so there is something to find. The simplest stage
+`|`. Payments fails one charge in twenty since the start of the lesson, so there is something to find. The simplest stage
 is a **line filter**, `|= "text"`, which keeps lines containing the text, like `grep`:
 
 ```

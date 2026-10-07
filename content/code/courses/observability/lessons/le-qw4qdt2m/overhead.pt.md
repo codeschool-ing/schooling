@@ -1,10 +1,10 @@
 ---
 title: Quanto custa
-version: 1
+version: 2
 ---
 
 Envolver cada chamada ao banco e cada requisição HTTP num span é trabalho, e "é barato" é uma
-afirmação a medir, não a repetir. O `bench.py` manda 300 pedidos direto ao `orders`, um depois do
+afirmação a medir, não a repetir. O `bench.py`, em `~/shop/scratch` como todo script, manda 300 pedidos direto ao `orders`, um depois do
 outro, e informa quanto cada um levou. Cada pedido é real: uma inserção no banco, uma chamada ao
 payments, uma atualização e uma mensagem na fila.
 
@@ -25,7 +25,8 @@ print(f"300 orders: median {statistics.median(times):.1f} ms, mean {statistics.m
 
 Rodado uma vez contra o `orders` como o laboratório o roda, e de novo com o lançador retirado. O
 Compose lê o `compose.override.yaml` por cima do `compose.yaml` quando ele existe, e é assim que o
-comando é trocado sem editar o arquivo principal:
+comando é trocado sem editar o arquivo principal. Entre as duas execuções, salve as três linhas que o
+`cat` abaixo imprime como `~/shop/compose.override.yaml`:
 
 ```
 ana@obs:~/shop$ docker compose run --rm sandbox python bench.py 2>/dev/null

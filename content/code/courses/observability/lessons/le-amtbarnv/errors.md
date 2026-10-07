@@ -1,14 +1,23 @@
 ---
 title: Following an error to where it began
-version: 1
+version: 2
 ---
 
 A failed request rarely fails in one span. **The error starts in one place and every caller above it
 reports a failure of its own.** So a trace of a failure is a column of red, and the work is finding
 the bottom of it.
 
-For one minute, every tenth charge fails, as the lab's payments service is told to in its fault
-file. Then Zipkin is asked for the traces in the last two minutes where payments carries an error:
+For one minute, every tenth charge fails, as payments is told to in its fault file, keeping the
+400 ms:
+
+```sh
+echo '{"latency_ms": 400, "fail_every": 10}' > faults/payments.json
+sleep 60
+echo '{"latency_ms": 400}' > faults/payments.json
+sleep 10
+```
+
+Then Zipkin is asked for the traces in the last two minutes where payments carries an error:
 
 ```
 ana@obs:~/shop$ curl -sG localhost:9411/api/v2/traces --data-urlencode serviceName=payments --data-urlencode annotationQuery=error --data-urlencode lookback=120000 --data-urlencode limit=3 | jq -r '.[] | .[] | select(.tags.error) | [.traceId, .localEndpoint.serviceName, .name, .tags.error] | @tsv'

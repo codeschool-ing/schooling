@@ -1,6 +1,6 @@
 ---
 title: What the SDK sends without asking
-version: 1
+version: 2
 ---
 
 Look again at the frame of `checkout` above: **`"card": "'4111 1111 1111 1111'"`**. Nobody wrote the
@@ -15,7 +15,66 @@ and about thirty others in all, and replaces their values with `[Filtered]`. `ca
 list, and nor is any name your own code invented.
 
 The fix is the same shape as lesson 10's: a list of names whose values are secrets, applied before
-anything leaves. Here it is one argument to `init`:
+anything leaves. Here it is one argument to `init`, and the import it needs. The whole
+file again, with those two lines added:
+
+`~/shop/scratch/tracked.py`
+
+```python
+"""An error reported the way an error tracker's SDK reports it.
+
+The DSN names a project and points nowhere; the transport writes each event
+to event.json instead of sending it.
+"""
+import json
+import logging
+
+import sentry_sdk
+from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
+from sentry_sdk.transport import Transport
+
+
+class ToFile(Transport):
+    def capture_envelope(self, envelope):
+        for item in envelope.items:
+            if item.type == "event":
+                with open("event.json", "w") as f:
+                    json.dump(item.payload.json, f, indent=1)
+
+
+sentry_sdk.init(
+    dsn="https://key@errors.example.invalid/1",
+    transport=ToFile,
+    release="shop@1.4.0",
+    environment="lab",
+    event_scrubber=EventScrubber(denylist=DEFAULT_DENYLIST + ["card"]),
+)
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("checkout")
+
+COUPONS = {"WELCOME10": 10, "FRIEND15": 15}
+
+
+def apply_coupon(total_cents, coupon):
+    return total_cents * (100 - COUPONS[coupon]) // 100
+
+
+def checkout(sku, qty, card, coupon):
+    sentry_sdk.set_tag("sku", sku)
+    log.info("pricing %s x %d", sku, qty)
+    total_cents = 4900 * qty
+    log.info("applying coupon %s", coupon)
+    return apply_coupon(total_cents, coupon)
+
+
+try:
+    checkout("kettle", 2, "4111 1111 1111 1111", "WELCOME20")
+except KeyError:
+    sentry_sdk.capture_exception()
+sentry_sdk.flush()
+```
+
+The `init` call, as the file now has it:
 
 ```
 ana@obs:~/shop$ sed -n '/^sentry_sdk.init/,/^)/p' scratch/tracked.py

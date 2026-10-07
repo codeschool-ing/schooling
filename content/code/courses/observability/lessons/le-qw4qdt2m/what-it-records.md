@@ -1,9 +1,21 @@
 ---
 title: What it records, and in which names
-version: 1
+version: 2
 ---
 
-A checkout, then the spans `orders` produced for it, with the kind each one was given:
+From here on, *a checkout is sent* means the `curl` of lesson 1, and the trace a transcript asks
+Jaeger for is the one the storefront logged last. Two shell functions save typing either again.
+Paste them into the shell in `~/shop` once; they last until that shell closes, and `last_trace`
+takes another service and another message when a lesson needs one:
+
+```sh
+checkout() { curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @checkout.json; echo; }
+last_trace() { docker compose logs --no-log-prefix "${1:-storefront}" | grep "${2:-checkout finished}" | tail -1 | jq -r .trace_id; }
+```
+
+Spans leave each service in batches, a few seconds apart, so wait five seconds or so after a
+checkout before asking Jaeger. Then `TRACE=$(last_trace)`, and `$TRACE` goes where a transcript
+has an id. A checkout, then the spans `orders` produced for it, with the kind each one was given:
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/56414d8c2542c07251f5be873161653b | jq -r '.data[0] as $t | $t.spans | sort_by(.startTime) | .[] | select($t.processes[.processID].serviceName == "orders") | [.operationName, (.tags[] | select(.key == "span.kind") | .value)] | @tsv'

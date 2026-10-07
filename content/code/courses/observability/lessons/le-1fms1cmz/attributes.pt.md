@@ -1,6 +1,6 @@
 ---
 title: Atributos: o que um span sabe
-version: 1
+version: 2
 ---
 
 Um span com só um nome e uma duração diz que algo levou tempo. **Atributos dizem com o que esse
@@ -33,7 +33,14 @@ começava:
 }
 ```
 
-E isto é o que esse span carregava para um checkout de uma chaleira, como o Jaeger o guardou:
+E isto é o que esse span carregava para um checkout de uma chaleira, como o Jaeger o guardou. Para
+ver o seu, mande um checkout e peça ao log da vitrine o trace id do último; esse id vai no lugar do
+que está no endereço abaixo:
+
+```sh
+curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @checkout.json
+docker compose logs --no-log-prefix storefront | grep 'checkout finished' | tail -1 | jq -r .trace_id
+```
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/7649c3dfb988a9ca71e4bec16bfca43f | jq -c '.data[0].spans[] | select(.operationName == "POST /checkout") | .tags[] | {key, value}'

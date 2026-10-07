@@ -1,11 +1,11 @@
 ---
 title: Roteamento: pages, tickets e inibição
-version: 1
+version: 2
 ---
 
 O Prometheus decide que um alerta está disparando. **O Alertmanager decide quem fica sabendo**, com que
-frequência e junto com o quê. A configuração da aula 5 mandava tudo para o pager. A nova do
-laboratório, `alertmanager/routes.yml`, separa as duas severidades:
+frequência e junto com o quê. A configuração da aula 5 mandava tudo para o pager. A nova,
+`alertmanager/routes.yml`, salva do jeito que o `cat` abaixo a imprime, separa as duas severidades:
 
 ```
 ana@obs:~/shop$ cat alertmanager/routes.yml
@@ -48,6 +48,16 @@ Três partes, cada uma com um trabalho:
   devagar.
 
 Um override aponta o Alertmanager para o arquivo novo:
+
+`~/shop/compose.override.yaml`
+
+```yaml
+services:
+  alertmanager:
+    command: [--config.file=/etc/alertmanager/routes.yml]
+```
+
+E o Alertmanager é recriado com ele:
 
 ```
 ana@obs:~/shop$ docker compose up -d alertmanager 2>&1 | tail -1

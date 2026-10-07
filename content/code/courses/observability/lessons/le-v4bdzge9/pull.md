@@ -1,13 +1,23 @@
 ---
 title: Pull, targets, and what a scrape reads
-version: 1
+version: 2
 ---
 
 Lessons 2 to 4 had every service **send** its spans to the Collector. Prometheus works the other way
 round, and most of its design follows from it. **Each target publishes its current numbers at an
 address, and Prometheus asks for them on a schedule.** The asking is called a scrape, every fifteen
 seconds in this lab, and the list of addresses comes from `prometheus.yml`. Prometheus says what it
-is scraping and how the last attempt went:
+is scraping and how the last attempt went.
+
+Every number in this lesson needs traffic, so start it from a lab started again from nothing, and
+set the simulated customers going first: five requests a second for twenty-five minutes. `-d`
+leaves them running in the background, and a minute and a quarter later there is something to read:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1500
+```
+
+Then the targets:
 
 ```
 ana@obs:~/shop$ curl -s localhost:9090/api/v1/targets | jq -r '.data.activeTargets[] | [.labels.job, .labels.instance, .health, .lastScrapeDuration] | @tsv' | sort
