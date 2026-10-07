@@ -5,8 +5,8 @@ version: 2
 
 Leaks are rarely somebody deciding to log a password. **They are a helpful debug line that logs a
 whole object**, written while chasing a bug and left behind. Here is one, added to the storefront the
-way it usually happens, right after the request's body is read. Keep a copy of the storefront's code first, to put back at the
-end of the lesson:
+way it usually happens, right after the request's body is read.
+Keep a copy of the storefront's code first, to put back at the end of the lesson:
 
 ```sh
 cp services/storefront/app.py /tmp/storefront.app.py

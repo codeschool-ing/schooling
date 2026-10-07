@@ -1,6 +1,6 @@
 ---
 title: The trace that crosses a queue
-version: 1
+version: 2
 ---
 
 Lesson 4 carried the context through RabbitMQ and saw one message wait 22.8 seconds. One trace
@@ -17,7 +17,15 @@ ana@obs:~/shop$ docker compose start mailer 2>&1 | tail -1
 
 Twenty seconds later, five of the confirmations the mailer sent in the last minute are picked at
 even steps through its log. Each trace is asked one question: how long between the `UPDATE`, after
-which `orders` publishes, and the mailer taking the message?
+which `orders` publishes, and the mailer taking the message? The loop below does both; `awk` keeps
+every thirtieth trace id, and the transcript shows each `curl` it ran:
+
+```sh
+for t in $(docker compose logs --no-log-prefix --since 60s mailer | grep 'confirmation sent' | jq -r .trace_id | awk 'NR % 30 == 1' | head -5); do
+  curl -s localhost:16686/api/traces/$t | jq -r '.data[0].spans as $s | ($s[] | select(.operationName == "UPDATE") | .startTime + .duration) as $published | ($s[] | select(.operationName == "orders.placed process") | .startTime) as $taken | "waited in the queue: \(($taken - $published) / 1000 | floor) ms"'
+done
+```
+
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/30062f0fab08e70ae9b00866cb0d05e4 | jq -r '.data[0].spans as $s | ($s[] | select(.operationName == "UPDATE") | .startTime + .duration) as $published | ($s[] | select(.operationName == "orders.placed process") | .startTime) as $taken | "waited in the queue: \(($taken - $published) / 1000 | floor) ms"'

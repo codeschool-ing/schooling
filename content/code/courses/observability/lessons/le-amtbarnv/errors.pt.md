@@ -1,14 +1,23 @@
 ---
 title: Seguindo um erro até onde ele começou
-version: 1
+version: 2
 ---
 
 Uma requisição que falha raramente falha num span só. **O erro começa num lugar e todo chamador
 acima dele relata uma falha própria.** Então o rastro de uma falha é uma coluna de vermelho, e o
 trabalho é achar o fundo dela.
 
-Durante um minuto, uma em cada dez cobranças falha, como o arquivo de falhas manda o payments do
-laboratório fazer. Depois o Zipkin é consultado pelos rastros dos últimos dois minutos em que o payments
+Durante um minuto, uma em cada dez cobranças falha, como o arquivo de falhas manda o payments fazer,
+mantendo os 400 ms:
+
+```sh
+echo '{"latency_ms": 400, "fail_every": 10}' > faults/payments.json
+sleep 60
+echo '{"latency_ms": 400}' > faults/payments.json
+sleep 10
+```
+
+Depois o Zipkin é consultado pelos rastros dos últimos dois minutos em que o payments
 leva um erro:
 
 ```

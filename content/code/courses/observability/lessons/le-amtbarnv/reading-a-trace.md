@@ -1,6 +1,6 @@
 ---
 title: Reading one trace
-version: 1
+version: 2
 ---
 
 A trace view looks like a timeline, and the habit it invites is reading the longest bar. **The
@@ -8,8 +8,8 @@ longest bar is nearly always the root**, because a parent lasts at least as long
 waits for, so it tells you nothing about where the time went. The question to ask of each span is
 how much of its duration was its own: its **self time**, the part not spent inside a child span.
 
-Jaeger's interface does not print self time, so the lab computes it with a small `jq` program over
-the trace as Jaeger's API returns it:
+Jaeger's interface does not print self time, so it is computed here with a small `jq` program over
+the trace as Jaeger's API returns it. Save it as `~/shop/selftime.jq`:
 
 ```
 # One line per span of a Jaeger trace: service, name, duration, and self time,
@@ -32,8 +32,33 @@ It builds a table of every span by id, then walks each child and adds to its par
 the child that falls inside the parent's own interval**. A child that starts after its parent has
 ended, like a message taken off a queue, adds nothing. What remains of each duration is self time.
 
-The shop runs with payments slowed by 400 ms, and five simulated customers a second are buying. One
-of their checkouts, picked from the storefront's log by its last line:
+The shop runs with payments slowed by 400 ms, and five simulated customers a second are buying. To
+set that up, start the lab again from nothing and save this override first. It switches on a
+feature of Prometheus that the last section of this lesson is about, and Prometheus needs it from
+the start, before the traffic it will read:
+
+`~/shop/compose.override.yaml`
+
+```yaml
+services:
+  prometheus:
+    command: [--config.file=/etc/prometheus/prometheus.yml, --web.enable-lifecycle,
+              --storage.tsdb.path=/prometheus, --enable-feature=exemplar-storage]
+```
+
+Then slow payments, start Prometheus again with the override, set the customers going for
+twenty-five minutes, and a minute and a half later pick one of their checkouts from the storefront's
+log by its last line, with lesson 3's `last_trace`:
+
+```sh
+echo '{"latency_ms": 400}' > faults/payments.json
+docker compose up -d prometheus
+docker compose run -d --rm loadgen python -m loadgen.load 5 1500
+sleep 90
+TRACE=$(last_trace)
+```
+
+`$TRACE` goes where the transcripts of this lesson have that checkout's id:
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/2317d16ea481cf7a0350d6d965f983e9 | jq -r -f selftime.jq

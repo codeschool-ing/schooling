@@ -1,6 +1,6 @@
 ---
 title: Lendo um rastro
-version: 1
+version: 2
 ---
 
 Uma visão de rastro parece uma linha do tempo, e o hábito que ela convida é ler a barra mais longa.
@@ -8,8 +8,8 @@ Uma visão de rastro parece uma linha do tempo, e o hábito que ela convida é l
 que ele espera, então ela não diz nada sobre onde o tempo foi parar. A pergunta a fazer a cada span é
 quanto da duração dele foi dele mesmo: o **tempo próprio**, a parte não passada dentro de um span filho.
 
-A interface do Jaeger não mostra o tempo próprio, então o laboratório o calcula com um pequeno
-programa `jq` sobre o rastro como a API do Jaeger o devolve:
+A interface do Jaeger não mostra o tempo próprio, então ele é calculado aqui com um pequeno programa
+`jq` sobre o rastro como a API do Jaeger o devolve. Salve-o como `~/shop/selftime.jq`:
 
 ```
 # One line per span of a Jaeger trace: service, name, duration, and self time,
@@ -33,7 +33,32 @@ filho que cai dentro do intervalo do próprio pai**. Um filho que começa depois
 como uma mensagem tirada de uma fila, não soma nada. O que sobra de cada duração é o tempo próprio.
 
 A loja roda com o payments atrasado em 400 ms, e cinco clientes simulados por segundo estão comprando.
-Um dos checkouts deles, escolhido no log da vitrine pela última linha:
+Para montar isso, inicie o laboratório de novo do zero e salve antes este override. Ele liga um
+recurso do Prometheus que é o assunto da última seção desta aula, e o Prometheus precisa dele desde o
+começo, antes do tráfego que vai ler:
+
+`~/shop/compose.override.yaml`
+
+```yaml
+services:
+  prometheus:
+    command: [--config.file=/etc/prometheus/prometheus.yml, --web.enable-lifecycle,
+              --storage.tsdb.path=/prometheus, --enable-feature=exemplar-storage]
+```
+
+Depois deixe o payments lento, reinicie o Prometheus com o override, ponha os clientes para rodar por
+vinte e cinco minutos, e um minuto e meio depois escolha um dos checkouts deles no log da vitrine pela
+última linha, com o `last_trace` da aula 3:
+
+```sh
+echo '{"latency_ms": 400}' > faults/payments.json
+docker compose up -d prometheus
+docker compose run -d --rm loadgen python -m loadgen.load 5 1500
+sleep 90
+TRACE=$(last_trace)
+```
+
+O `$TRACE` vai onde as transcrições desta aula têm o id desse checkout:
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/2317d16ea481cf7a0350d6d965f983e9 | jq -r -f selftime.jq

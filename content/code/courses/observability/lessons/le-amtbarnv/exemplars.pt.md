@@ -1,6 +1,6 @@
 ---
 title: Exemplares, de uma métrica para um rastro
-version: 1
+version: 2
 ---
 
 A aula 1 deixou uma ligação para esta aula. Um histograma de latência diz que alguns checkouts levaram
@@ -31,7 +31,7 @@ duração, o `web.py` compartilhado da loja:
 ```
 
 A segunda é o Prometheus, que descarta exemplares a não ser que uma flag de recurso o mande guardá-los.
-O Prometheus do laboratório é reiniciado com um override:
+É o override salvo no começo desta aula:
 
 ```
 ana@obs:~/shop$ cat compose.override.yaml
@@ -80,3 +80,10 @@ já terminou quando o `after_request` mede a duração, então não há span atu
 só pode apontar para um span que ainda está aberto no momento da medição**. A instrumentação automática
 no `orders` mantém o span do Flask aberto em volta da requisição inteira, e é por isso que o `orders`
 os tem.
+
+Antes da próxima aula, tire a falha e o override:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d prometheus
+```
