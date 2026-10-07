@@ -1,6 +1,6 @@
 ---
 title: Alternando, e o que acontece com os seus arquivos
-version: 1
+version: 2
 ---
 
 **O `git switch` leva o `HEAD` para outro branch, e muda o diretório de trabalho para bater com o
@@ -12,6 +12,7 @@ ana@vm:~/site$ git switch opening-hours
 Switched to branch 'opening-hours'
 ana@vm:~/site$ cat .git/HEAD
 ref: refs/heads/opening-hours
+ana@vm:~/site$ sed -i 's/half past five/half past five; Sundays from seven/' index.html
 ana@vm:~/site$ git commit -qam "Open on Sundays from seven"
 ana@vm:~/site$ git log --oneline -2
 9677eef Open on Sundays from seven
@@ -38,6 +39,7 @@ Uma edição sem commit pertence ao diretório de trabalho, não a um branch. En
 conflito, ela viaja:
 
 ```
+ana@vm:~/site$ printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
 ana@vm:~/site$ git status --short
  M style.css
 ana@vm:~/site$ git switch opening-hours
@@ -48,22 +50,26 @@ ana@vm:~/site$ git status --short
 ana@vm:~/site$ git switch main
 Switched to branch 'main'
 M	style.css
+ana@vm:~/site$ git restore style.css
 ```
 
 A edição no `style.css` estava lá antes da troca e depois dela, e o Git a listou em cada troca
 (`M	style.css`) para ela não passar despercebida. Os dois branches têm o mesmo `style.css`, então levar
-a edição junto não tinha como estragar nada.
+a edição junto não tinha como estragar nada. O `git restore` no fim é o da aula 4, e joga a edição
+fora para que a próxima parte comece de um diretório de trabalho limpo.
 
 ## E quando isso as perderia, o Git se recusa
 
 Agora uma edição sem commit no `index.html`, o único arquivo em que os dois branches discordam:
 
 ```
+ana@vm:~/site$ sed -i 's/half past five/half past six/' index.html
 ana@vm:~/site$ git switch opening-hours
 error: Your local changes to the following files would be overwritten by checkout:
 	index.html
 Please commit your changes or stash them before you switch branches.
 Aborting
+ana@vm:~/site$ git restore index.html
 ```
 
 **O Git não sobrescreve uma mudança da qual não tem cópia.** Trocar de branch teria substituído o

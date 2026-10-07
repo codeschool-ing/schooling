@@ -12,10 +12,13 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; and the edits each
-# branch commits, made with sed or printf between the commands shown.
+# Nothing the student types is staged. Lesson 3's week is the program lesson 3
+# prints, started afresh by the block what-a-branch-is prints, and the edits
+# each branch commits are typed in the transcripts, with sed or printf, where a
+# person would use an editor.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids
+# printed in the prose are reproducible.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -70,8 +73,8 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
+cd ~ && given what-a-branch-is 1
 
 
 block pointer
@@ -86,24 +89,24 @@ block switch
 at '2026-09-21T09:10:00-03:00'
 show 'git switch opening-hours'
 show 'cat .git/HEAD'
-sed -i 's/half past five/half past five; Sundays from seven/' index.html
+show "sed -i 's/half past five/half past five; Sundays from seven/' index.html"
 show 'git commit -qam "Open on Sundays from seven"'
 show 'git log --oneline -2'
 show 'git switch main'
 show 'cat index.html'
 
 block carry
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+show "printf 'h1 { color: darkorange; }\\np { line-height: 1.5; }\\n' > style.css"
 show 'git status --short'
 show 'git switch opening-hours'
 show 'git status --short'
 show 'git switch main'
-git restore style.css
+show 'git restore style.css'
 
 block refuse
-sed -i 's/half past five/half past six/' index.html
+show "sed -i 's/half past five/half past six/' index.html"
 show 'git switch opening-hours'
-git restore index.html
+show 'git restore index.html'
 
 block fast-forward
 show 'git merge opening-hours'
@@ -112,11 +115,11 @@ show 'git log --oneline -3'
 block diverge
 at '2026-09-21T11:00:00-03:00'
 show 'git switch -c menu-prices'
-sed -i 's/0.90/0.95/' menu.html
+show "sed -i 's/0.90/0.95/' menu.html"
 show 'git commit -qam "Charge 0.95 for French bread"'
 show 'git switch main'
 at '2026-09-21T11:30:00-03:00'
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+show "printf 'h1 { color: darkorange; }\\np { line-height: 1.5; }\\n' > style.css"
 show 'git commit -qam "Give paragraphs more room"'
 show 'git log --oneline --graph --all -4'
 
@@ -129,7 +132,7 @@ show 'git cat-file -p HEAD'
 block delete
 at '2026-09-21T14:00:00-03:00'
 show 'git switch -c experiment'
-sed -i 's/darkorange/purple/' style.css
+show "sed -i 's/darkorange/purple/' style.css"
 show 'git commit -qam "Try purple"'
 show 'git switch main'
 show 'git branch -v'
