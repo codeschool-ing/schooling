@@ -24,6 +24,8 @@
 # WHAT IS NOT THE STUDENT'S, and is only how the captures are made:
 #   lab/extract.py   reads a file out of the lesson that shows it
 #   lab/screen.py    renders what a terminal showed (ollama pull/run draw)
+#   lab/browse.mjs   lesson 13's page, opened in a headless Chromium and quoted;
+#                    the student opens it in their own browser instead
 #   lab/sources.py   the documents the lessons QUOTE, at pinned commits; a
 #                    quotation is printed with its repository, commit, path and
 #                    line numbers, and the student is never asked to run it
@@ -60,6 +62,12 @@ x() { "$AUTHOR/bin/python" "$HERE/lab/extract.py" "$@"; }
 
 build_author() {
   [ -x $AUTHOR/bin/python ] || python3 -m venv $AUTHOR
+  # lab/browse.mjs records lesson 13's page in a headless Chromium, with the
+  # machine's own browsers (PLAYWRIGHT_BROWSERS_PATH) rather than a download
+  mkdir -p $AUTHOR/node
+  ( cd $AUTHOR/node && { [ -f package.json ] || npm init -y >/dev/null; } \
+    && npm install --silent --ignore-scripts playwright@1.56.0 )
+  install -m 0644 "$HERE/lab/browse.mjs" $AUTHOR/node/browse.mjs
   mkdir -p $SHARE
   SOURCES_CACHE=$SHARE/sources $AUTHOR/bin/python "$HERE/lab/sources.py" fetch
 }
@@ -112,6 +120,7 @@ exec_as() {  # exec_as USER COMMAND: in ~/desk, with desk.env and the venv, and 
   runuser -u "$u" -- env -i HOME=/home/$u USER="$u" TZ=$TZ_LAB LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PATH=/usr/local/bin:/usr/bin:/bin PYTHONDONTWRITEBYTECODE=1 \
     ${HTTPS_PROXY:+HTTPS_PROXY=$HTTPS_PROXY https_proxy=$HTTPS_PROXY NO_PROXY=${NO_PROXY:-} no_proxy=${NO_PROXY:-}} \
+    ${HTTPS_PROXY:+NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt} \
     bash -c "cd $dir || exit 1; [ -f desk.env ] && . ./desk.env; [ -f .venv/bin/activate ] && . .venv/bin/activate; $*"
 }
 

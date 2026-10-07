@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // browse: open a page in a headless Chromium, press its button, and say what
-// happened. It stands in for ana opening the page and clicking, so a lesson
-// can show what a browser did: what the page printed, what it fetched and from
-// where, and what it answered.
+// happened. It is the AUTHOR'S, and the student never runs it: the student opens
+// the page in their own browser and reads the Network tab. This records the same
+// visit for the lesson to quote: what the page printed, what it fetched and from
+// where, and what it answered. The first line names the browser and the page.
 //
 //   browse URL            open, wait for #go to be enabled, click it, print #out
 //   browse URL --wait N   give up after N seconds (default 60)
@@ -10,6 +11,7 @@ import { chromium } from "playwright";
 
 const [url, , wait = "60"] = process.argv.slice(2);
 const browser = await chromium.launch();
+console.log(`# headless Chromium ${browser.version()}, ${url}`);
 const page = await browser.newPage();
 const fetched = [];
 page.on("console", m => console.log(`console  ${m.text()}`));
