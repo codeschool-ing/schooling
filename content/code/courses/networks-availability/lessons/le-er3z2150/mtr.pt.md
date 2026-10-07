@@ -6,7 +6,8 @@ version: 1
 O mtr é um traceroute que não para. Ele manda sondas para todos os saltos, rodada após rodada, e mantém
 uma tabela do que voltou: `-r` imprime a tabela como relatório no fim, `-c` diz quantas rodadas e `-i`
 define o intervalo entre elas. Duas rodadas a partir do laptop. Na primeira, o descarte aleatório para o
-web2 da seção do ping ainda estava ativo; antes da segunda ele foi removido:
+web2 da seção do ping ainda estava ativo; antes da segunda ele foi removido, com
+`sudo nft flush chain ip faults loss` em `isp`:
 
 ```
 ana@laptop:~$ sudo mtr -n -r -c 20 192.0.2.22

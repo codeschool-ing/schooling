@@ -7,6 +7,7 @@ Para ver o que os usuários do site veem, o laptop pede a página trinta vezes s
 até o milissegundo antes de cada requisição. `curl -m 1` dá a cada requisição no máximo um segundo, e uma
 requisição que falha imprime `(no answer)`. Pouco mais de dois segundos depois do início, o HAProxy em
 `lb1` foi morto de uma vez, do jeito que um crash ou um kill por falta de memória o terminaria:
+`sudo bash netlab.sh kill lb1 haproxy KILL` na máquina virtual. Comece o laço em `laptop` antes:
 
 ```
 ana@laptop:~$ for i in $(seq 1 30); do printf "%s " $(date +%T.%N | cut -c1-12); curl -s -m 1 http://www.example.com/ || echo "(no answer)"; sleep 0.2; done

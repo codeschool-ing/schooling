@@ -29,12 +29,31 @@ The public key was printed because it is the half that gets handed to other mach
 never appeared on the screen, and **it does not belong in a chat window, a ticket or a repository
 either**: whoever has it is `hq`, as far as every peer is concerned.
 
-`branch` and `remote` made their pairs the same way, which is not shown. Each machine then gets a
-configuration file naming its own private key and the public key of every peer it talks to. This is
-`hq`'s, printed with `sed` replacing the private key, since the real file holds it in clear:
+Make `branch`'s and `remote`'s pairs the same way, each on its own machine and with its own name in
+place of `hq`: `branch.key` and `branch.pub` on `branch`, `remote.key` and `remote.pub` on `remote`.
+Each machine then gets a configuration file, `/etc/wireguard/wg0.conf`, naming its own private key and
+the public key of every peer it talks to. Write each with `sudo nano` on its machine. This is `hq`'s,
+with the private key hidden, since the real file holds it in clear:
 
 ```schooling-example
 {"language": "ini", "file": "wg0.conf", "parts": [{"code": "[Interface]\nAddress = 10.20.0.1/24\nListenPort = 51820", "note": "This machine. `Address` is `hq`'s own address inside the tunnel, which `wg-quick` puts on the interface. `ListenPort` is the UDP port it waits on, 51820 by convention."}, {"code": "PrivateKey = (hidden here, in the file it is the key)", "note": "The private key, in clear in the real file. That is why the file is root's and readable by nobody else, like the key it was copied from."}, {"code": "# the branch office\n[Peer]\nPublicKey = n/CGaD63Wk0H9pfG6sbwBbJdh+XswYcDf0wmiU4zFT8=", "note": "One block per peer, and the public key is the peer's whole identity: whoever holds the matching private key is `branch`, as far as `hq` is concerned. The comment is for people."}, {"code": "Endpoint = 198.51.100.2:51820", "note": "Where to send. `branch` has a fixed public address, so `hq` can start the conversation."}, {"code": "AllowedIPs = 10.20.0.2/32, 192.168.20.0/24", "note": "The addresses behind this peer: its tunnel address and the branch LAN. Packets for them go to `branch`, and packets from `branch` have to come from them."}, {"code": "# Ana, at home\n[Peer]\nPublicKey = FYBqYy68QPdITaZcZGko576tjvRUt5cUWsMsdGzbgkE=", "note": "The second peer, Ana's laptop at home."}, {"code": "AllowedIPs = 10.20.0.3/32", "note": "One address, hers, and no `Endpoint`: `hq` learns where she is from her first packet."}]}
+```
+
+**The keys in these listings are the ones this recording made, and yours are different.** On each
+`PrivateKey` line goes that machine's own private key, which `sudo cat /etc/wireguard/hq.key` prints on
+`hq`; on each `PublicKey` line goes the peer's public key, from its `.pub` file on its own machine. A
+public key copied from this page would name a machine you do not have.
+
+`branch` has one peer, `hq`:
+
+```schooling-example
+{"language": "ini", "file": "wg0.conf", "parts": [{"code": "[Interface]\nAddress = 10.20.0.2/24\nListenPort = 51820\nPrivateKey = (hidden here, in the file it is the key)", "note": "`branch`, the same shape as `hq`: its own tunnel address, the same port, and its own private key on the last line."}, {"code": "[Peer]\nPublicKey = B6qH2hb1U5hsBki+4mN/m7AxAAKMeL7maFXl3uAeH2I=\nEndpoint = 203.0.113.2:51820\nAllowedIPs = 10.20.0.1/32, 192.168.10.0/24", "note": "One peer, `hq`, by its public key, at its fixed public address. Behind it are `hq`'s tunnel address and the head-office LAN."}]}
+```
+
+And `remote`, Ana's laptop, also has one, `hq` again:
+
+```schooling-example
+{"language": "ini", "file": "wg0.conf", "parts": [{"code": "[Interface]\nAddress = 10.20.0.3/24\nPrivateKey = (hidden here, in the file it is the key)", "note": "Ana's laptop. No `ListenPort`: nobody starts a conversation with a laptop at home, so any free port will do."}, {"code": "[Peer]\nPublicKey = B6qH2hb1U5hsBki+4mN/m7AxAAKMeL7maFXl3uAeH2I=\nEndpoint = vpn.example.com:51820\nAllowedIPs = 10.20.0.0/24, 192.168.10.0/24", "note": "`hq`, found by name, which the network's DNS server answers. Through the tunnel go the tunnel's own network and the head-office LAN, and nothing else."}, {"code": "PersistentKeepalive = 25", "note": "The one line a laptop behind NAT needs and a router does not. The section on roaming says why."}]}
 ```
 
 **A peer has no name in the protocol, only a public key.** `# the branch office` and `# Ana, at home`

@@ -6,7 +6,8 @@ version: 1
 When a tunnel will not come up, people read the configuration again, and both files look right to
 whoever wrote them. **The log of one negotiation says which step failed**, and that narrows the search to
 a few lines. `swanctl --initiate` starts a negotiation by hand and prints the daemon's log as it goes. A
-working one is the reference to read a broken one against:
+working one is the reference to read a broken one against. Tear the connection down first, as in the
+previous section, so that there is something to negotiate:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans
@@ -44,7 +45,9 @@ was for, two SPIs and `TS 192.168.10.0/24 === 192.168.20.0/24`.
 
 ## A wrong key
 
-`branch`'s secret lost its last letter, the `l` of `Quill`, and was reloaded. Then `hq` tried again:
+Take the last letter, the `l` of `Quill`, off `branch`'s secret and reload it, on `branch`:
+`sudo sed -i 's/7294-Quill/7294-Quil/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all`. Tear the
+connection down on `hq` again, and try:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans
@@ -68,6 +71,9 @@ The verdict came out first, above the log it sums up. **The first exchange succe
 IKE_SA_INIT involves no key. The answer to IKE_AUTH was 80 bytes instead of 224, carrying only
 `N(AUTH_FAILED)`: `branch` checked `hq`'s proof against its own secret, and they did not match.
 
+Put the letter back before going on, with the opposite substitution, on `branch`:
+`sudo sed -i 's/7294-Quil"/7294-Quill"/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all`.
+
 The notification says that authentication failed and not why. **The side that refused knows more than
 the side that asked**, and `branch`'s own log, not captured here, would say more. A wrong `id` ends in
 the same notification as a wrong secret, a case not captured either, so check both on both routers.
@@ -75,8 +81,10 @@ the same notification as a wrong secret, a case not captured either, so check bo
 ## Networks that do not match
 
 The classic failure between two companies, or two vendors' routers, is a disagreement about which
-networks the tunnel joins. `hq`'s `remote_ts` was changed to `192.168.30.0/24`, a network `branch` does
-not have:
+networks the tunnel joins. Change `hq`'s `remote_ts` to `192.168.30.0/24`, a network `branch` does not
+have, with the connection torn down first:
+`sudo sed -i 's/192.168.20.0/192.168.30.0/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all`.
+Then initiate:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans 2>&1 | tail -5
@@ -89,7 +97,7 @@ ana@hq:~$ sudo swanctl --initiate --child lans 2>&1 | tail -5
 
 **The IKE SA was established and the CHILD SA was refused**: `TS_UNACCEPTABLE`, traffic selectors
 unacceptable. The two routers trust each other and carry nothing, the state people call "phase 1 up,
-phase 2 down". The safe rule is to make the selectors on the two sides mirror each other exactly. IKEv2
+phase 2 down". The same `sed` the other way round, `s/192.168.30.0/192.168.20.0/`, puts the file back. The safe rule is to make the selectors on the two sides mirror each other exactly. IKEv2
 lets a responder narrow a request to the part it accepts, and implementations use that differently. A
 `/24` against a `/16` may work with one pair of routers and fail with another.
 

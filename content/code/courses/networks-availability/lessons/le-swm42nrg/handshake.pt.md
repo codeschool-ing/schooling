@@ -4,7 +4,8 @@ version: 1
 ---
 
 O cliente foi iniciado na mão por seis segundos, com o log filtrado para as linhas que dizem o que foi
-combinado, enquanto o roteador do provedor capturava a UDP 1194:
+combinado, enquanto o roteador do provedor capturava a UDP 1194. Comece a captura em `isp` primeiro, e
+depois o cliente em `remote`:
 
 ```
 ana@remote:~$ cd /etc/openvpn && sudo timeout 6 openvpn --config client.conf | grep -E "VERIFY OK|Control Channel:|Data Channel:|Initialization"
@@ -67,7 +68,14 @@ um número de versão antigo no cabeçalho do registro, para que equipamentos an
 deixem passar, e diz lá dentro a versão que quer de verdade. A resposta do servidor decide, e o tshark
 rotula tudo depois dela como `TLSv1.3`.
 
-Com o cliente deixado rodando, o laptop tinha um túnel:
+Iniciado de novo e deixado rodando, em segundo plano como o servidor, o cliente dá um túnel ao laptop. Em
+`remote`:
+
+```sh
+sudo setsid openvpn --cd /etc/openvpn --config client.conf >/dev/null 2>&1 &
+```
+
+Alguns segundos depois:
 
 ```
 ana@remote:~$ ip -br addr show tun0; ip route | grep tun0
@@ -80,4 +88,4 @@ served by files
 
 O `tun0` recebeu `10.8.0.2`, o primeiro endereço que o servidor distribui. **Ninguém configurou no laptop
 a rota para `192.168.10.0/24`**: ela é a linha `push` do arquivo do servidor, e chegou pelo canal de
-controle.
+controle. Pare o cliente antes da próxima seção, na máquina virtual: `sudo bash netlab.sh kill remote openvpn`.

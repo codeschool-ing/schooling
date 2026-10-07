@@ -28,14 +28,28 @@ The server behind a layer 7 balancer sees a connection from the balancer, not fr
 client's own address, if the server needs it, travels in a header the proxy adds, conventionally
 `X-Forwarded-For`; nothing in this lesson's lab reads it, so it is named here and not shown.
 
-## The lab's balancer
+## The balancer
 
 In the data centre, `www.example.com` resolves to `192.0.2.80`, and that address sits on `lb1`, put there
-by hand for this lesson; lesson 16 is where two balancers share it. `lb1` runs **HAProxy**, the open
+by hand for this lesson, `sudo ip addr add 192.0.2.80/24 dev eth0` on `lb1`; lesson 16 is where two
+balancers share it. `lb1` runs **HAProxy**, the open
 source balancer most Linux shops meet first, as a layer 7 proxy in `mode http`, the configuration of
 lesson 16. Behind it are three `nginx` servers, `web1`, `web2` and `web3`, each answering a request for
 `/` with one line naming itself, so every choice the balancer makes is printed on the laptop's screen.
 
 What changes from section to section is one block of HAProxy's configuration, the `backend`: the list
-of servers and the rule for choosing among them. Each section prints it with `sed` before using it,
-and HAProxy was restarted off screen after each change.
+of servers and the rule for choosing among them. The rest of `/etc/haproxy/haproxy.cfg` on `lb1` stays
+as it is here:
+
+```schooling-example
+{"language": "conf", "file": "haproxy.cfg", "parts": [{"code": "global\n    log stdout format raw local0\n    stats socket /run/haproxy.sock mode 600 level admin", "note": "As in lesson 16: the log goes to standard output, which the start command below sends to `/run/haproxy.log`, and the control socket is where the section on least connections reads its statistics."}, {"code": "defaults\n    mode http\n    log global\n    option httplog\n    timeout connect 2s\n    timeout client 30s\n    timeout server 30s", "note": "A layer 7 proxy. The client and server timeouts are 30 seconds here, longer than lesson 16's ten, which is room enough for the slow downloads of this lesson."}, {"code": "frontend www\n    bind 192.0.2.80:80\n    default_backend web", "note": "One public address, and every request to it goes to the backend called `web`, the block each section replaces."}]}
+```
+
+Each section prints its `backend` with `sed` before using it: write that block at the end of the file,
+in place of the previous section's. HAProxy reads its file only when it starts, so after each change
+stop it, on the virtual machine, with `sudo bash netlab.sh kill lb1 haproxy`, and start it again on
+`lb1`. The first time, only the second command:
+
+```sh
+sudo sh -c 'setsid haproxy -db -f /etc/haproxy/haproxy.cfg >> /run/haproxy.log 2>&1 &'
+```

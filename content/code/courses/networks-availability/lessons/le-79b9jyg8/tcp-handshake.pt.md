@@ -7,7 +7,8 @@ Toda conexão TCP abre com três pacotes, e o resumo de sempre para nos nomes de
 **Os nomes são a metade fácil. Os números dentro deles são a base contra a qual o resto da conexão é
 contado**, e lê-los é como se distingue uma conexão que funcionou de uma que só pareceu funcionar.
 
-O laptop buscou `http://192.0.2.21/` enquanto o `tshark` imprimia seis campos de cada pacote: o número
+O laptop buscou `http://192.0.2.21/`, com `curl -s http://192.0.2.21/` num shell de `laptop`, enquanto o
+`tshark`, iniciado antes noutro, imprimia seis campos de cada pacote: o número
 do quadro, quem mandou, as flags, o número de sequência, o número de confirmação e os bytes de dados.
 
 ```
@@ -49,8 +50,8 @@ confirma 245.
 ## Números relativos são uma gentileza do Wireshark
 
 Um número de sequência nunca começa de verdade em 0. **Cada lado escolhe um número inicial aleatório
-de 32 bits, e o Wireshark o subtrai para você.** A mesma requisição feita de novo, imprimindo os
-campos brutos:
+de 32 bits, e o Wireshark o subtrai para você.** A mesma requisição feita de novo, do mesmo jeito,
+imprimindo os campos brutos:
 
 ```
 ana@laptop:~$ tshark -n -i eth0 -c 3 -f "host 192.0.2.21 and tcp port 80" -T fields -e frame.number -e tcp.flags.str -e tcp.seq_raw -e tcp.ack_raw

@@ -31,7 +31,8 @@ recebeu o código 3, que é NXDOMAIN, "nome inexistente", e nenhum endereço. O 
 manter pergunta e resposta juntas, então é o id que faz isso, e o cliente joga fora uma resposta cujo id não corresponde a nenhuma consulta pendente.
 
 Para uma resposta inteira, `-O dns` imprime a camada DNS completa. O mesmo nome inexistente foi
-consultado mais uma vez para isso, então o id é novo:
+consultado mais uma vez para isso, com `dig +short nosuch.example.com` em `laptop` enquanto a captura
+rodava, então o id é novo:
 
 ```
 ana@laptop:~$ tshark -n -i eth0 -c 2 -f "udp port 53" -O dns 2>/dev/null | sed -n "/^Frame 2/,/Authority RRs/p"

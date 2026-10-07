@@ -20,7 +20,7 @@ Alguns valores são combinados no mercado inteiro, que é a razão de existir um
 A terceira coluna é a que as ferramentas imprimem, porque mostram o byte inteiro. Deslocar seis bits
 duas casas para a esquerda multiplica por quatro: **46 × 4 = 184, que é `0xb8`**. O `ping -Q` também
 recebe o byte inteiro, então um ping que pede para ser tratado como voz é `ping -Q 0xb8`. Eis um,
-capturado do lado do provedor, no uplink de `hq`:
+`ping -c 1 -Q 0xb8 192.0.2.21` em `laptop`, capturado do lado do provedor, no uplink de `hq`:
 
 ```
 ana@isp:~$ sudo tcpdump -n -v -i eth0 -c 2 icmp

@@ -6,7 +6,9 @@ version: 1
 Um failover é tão bom quanto o buraco que deixa, e um buraco pode ser medido. O laptop pinga `web1` no data
 center, depois do gateway, cinco vezes por segundo: `-i 0.2`. O `-D` põe um carimbo de tempo na frente de cada linha, em segundos desde 1970. O `-O` imprime uma linha para cada resposta que não voltou até a
 saída do próximo ping, então uma resposta que falta aparece como uma linha, e não como nada. Pouco mais de
-dois segundos depois do início, o cabo de `hq` para a LAN foi puxado:
+dois segundos depois do início, o cabo de `hq` para a LAN foi puxado. O cabo é o par que o `netlab.sh`
+chamou de `hq-hq`, a porta de `hq` no switch da matriz, e puxá-lo é derrubar essa ponta, na máquina
+virtual: `sudo ip -n wire link set hq-hq down`. Comece o ping em `laptop`, depois puxe o cabo:
 
 ```
 ana@laptop:~$ ping -D -O -i 0.2 -c 40 -W 1 192.0.2.21
@@ -63,7 +65,7 @@ Depois quinze pings seguidos, do 14 ao 28, ficam sem resposta. A resposta 29 che
 resumo do próprio ping concorda pelo outro lado: 40 enviados, 25 recebidos, 37,5% de perda, que são esses
 quinze.
 
-Os dois carimbos são 18:11:06,65 e 18:11:09,92 no relógio do laboratório, horário de São Paulo, e os logs
+Os dois carimbos são 18:11:06,65 e 18:11:09,92 no relógio da rede, horário de São Paulo, e os logs
 dos dois roteadores põem as próprias linhas dentro dessa janela:
 
 ```

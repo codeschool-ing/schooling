@@ -8,8 +8,11 @@
 #
 #   sudo useradd -m -s /bin/bash ana     # once, on a throwaway machine,
 #                                        # with passwordless sudo for ana
-#   sudo cp ../../lab.sh /var/tmp/lab.sh  # the lab, beside course.json
 #   sudo -u ana -i bash /path/to/captures.sh
+#
+# lab.sh, beside course.json, extracts netlab.sh and tunnel.py from lesson 1's
+# pages and installs them where that lesson tells the student to; the captures
+# run the student's own copy.
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
@@ -21,16 +24,18 @@
 # which is the shape of a small office's upload: that command is shown, and
 # everything after it is measured through it.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; and the upload that fills the link, an
-# iperf3 run from laptop to web1, started as ana beside each measurement
-# (the lesson shows its summary where it matters).
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it, word for word: the upload that fills the link, `iperf3 -c
+# 192.0.2.21 -t 10` in a second shell on laptop (congestion, classes); the
+# one-queue setup removed with `sudo tc qdisc del dev eth1 root` on hq
+# (classes); and the traffic each capture catches, the marked ping (marking)
+# and the datagram from files (trust-boundary).
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -74,7 +79,7 @@ sleep 5
 on laptop 'iperf3 -c 192.0.2.21 -t 5 | tail -n 4'
 
 block classes
-quiet hq 'tc qdisc del dev eth1 root'
+lab exec hq ana 'sudo tc qdisc del dev eth1 root' >/dev/null 2>&1
 on hq 'sudo tc qdisc add dev eth1 root handle 1: htb default 20 && sudo tc class add dev eth1 parent 1: classid 1:1 htb rate 5mbit'
 on hq 'sudo tc class add dev eth1 parent 1:1 classid 1:10 htb rate 1mbit ceil 5mbit prio 0 && sudo tc class add dev eth1 parent 1:1 classid 1:20 htb rate 4mbit ceil 5mbit prio 1'
 on hq 'sudo tc qdisc add dev eth1 parent 1:10 pfifo limit 100 && sudo tc qdisc add dev eth1 parent 1:20 pfifo limit 100'
