@@ -1,6 +1,6 @@
 ---
 title: One question, three SDKs
-version: 1
+version: 2
 ---
 
 Anthropic, OpenAI and Google each publish an API and an SDK for it, and the three agree on the idea:
@@ -9,8 +9,9 @@ disagree on almost every name. This lesson puts the three side by side, then dea
 running against any of them involves: keys, rate limits, retries, prices, and what happens to the
 data you send.
 
-Every request here goes to labllm, which speaks all three wire formats. The SDKs are the real ones
-and send what they would send to the real providers; the replies were written by the course.
+Every request here goes to Ollama, which speaks Anthropic's format and OpenAI's. The SDKs are the
+real ones and send what they would send to the real providers. Ollama does not speak Google's, and
+the recording machine has no key for Google, so the third one is shown and not run.
 
 ## The same question, three ways
 
@@ -27,20 +28,20 @@ and send what they would send to the real providers; the replies were written by
       "note": "**The same system instruction and question for all three**, so only the SDKs differ."
     },
     {
-      "code": "def ask_anthropic():\n    r = anthropic.Anthropic().messages.create(\n        model=\"scripted-1\", max_tokens=300, system=SYSTEM,\n        messages=[{\"role\": \"user\", \"content\": QUESTION}])\n    return r.content[0].text, r.usage.input_tokens, r.usage.output_tokens, r.stop_reason\n\n\n",
-      "note": "**Anthropic**: `system` is its own argument, and `max_tokens` is required."
+      "code": "def ask_anthropic():\n    r = anthropic.Anthropic().messages.create(\n        model=\"llama3.2:3b\", max_tokens=300, system=SYSTEM,\n        messages=[{\"role\": \"user\", \"content\": QUESTION}])\n    n_in = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)  # lesson 2 section 07\n    return r.content[0].text, n_in, r.usage.output_tokens, r.stop_reason\n\n\n",
+      "note": "**Anthropic**: `system` is its own argument, and `max_tokens` is required. Ollama reports the part of the prompt it reused apart, so the count adds it back, as in lesson 2 section 07."
     },
     {
-      "code": "def ask_openai():\n    r = openai.OpenAI().chat.completions.create(\n        model=\"scripted-1\", max_completion_tokens=300,\n        messages=[{\"role\": \"system\", \"content\": SYSTEM}, {\"role\": \"user\", \"content\": QUESTION}])\n    return r.choices[0].message.content, r.usage.prompt_tokens, r.usage.completion_tokens, r.choices[0].finish_reason\n\n\n",
+      "code": "def ask_openai():\n    r = openai.OpenAI().chat.completions.create(\n        model=\"llama3.2:3b\", max_completion_tokens=300,\n        messages=[{\"role\": \"system\", \"content\": SYSTEM}, {\"role\": \"user\", \"content\": QUESTION}])\n    return r.choices[0].message.content, r.usage.prompt_tokens, r.usage.completion_tokens, r.choices[0].finish_reason\n\n\n",
       "note": "**OpenAI**: the system instruction is the first message, and the limit is `max_completion_tokens`."
     },
     {
-      "code": "def ask_google():\n    client = genai.Client(http_options=types.HttpOptions(base_url=os.environ[\"GEMINI_BASE_URL\"]))\n    r = client.models.generate_content(\n        model=\"scripted-1\", contents=QUESTION,\n        config=types.GenerateContentConfig(\n            system_instruction=SYSTEM, max_output_tokens=300,\n            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)))\n    u = r.usage_metadata\n    return r.text, u.prompt_token_count, u.candidates_token_count, r.candidates[0].finish_reason\n\n\n",
-      "note": "**Google**: the address of labllm goes in `http_options`; the instruction and the limit go in a config object, with automatic function calling turned off."
+      "code": "def ask_google():\n    r = genai.Client().models.generate_content(\n        model=\"gemini-3.5-flash\", contents=QUESTION,\n        config=types.GenerateContentConfig(\n            system_instruction=SYSTEM, max_output_tokens=300,\n            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)))\n    u = r.usage_metadata\n    return r.text, u.prompt_token_count, u.candidates_token_count, r.candidates[0].finish_reason\n\n\n",
+      "note": "**Google**: the instruction and the limit go in a config object, with automatic function calling turned off. There is no address to change: Ollama has no Gemini endpoint, so this one only runs against Google itself, with a key."
     },
     {
-      "code": "for name, ask in [(\"anthropic\", ask_anthropic), (\"openai\", ask_openai), (\"google\", ask_google)]:\n    text, n_in, n_out, why = ask()\n    print(f\"{name:9} {n_in:3} in {n_out:3} out  {why!s:18} {text[:34]}…\")",
-      "note": "**Each function returns the same four things**, so the loop can print them in one format."
+      "code": "for name, ask in [(\"anthropic\", ask_anthropic), (\"openai\", ask_openai), (\"google\", ask_google)]:\n    if name == \"google\" and \"GEMINI_API_KEY\" not in os.environ:\n        print(f\"{name:9} skipped: no GEMINI_API_KEY, and Ollama has no Gemini endpoint\")\n        continue\n    text, n_in, n_out, why = ask()\n    print(f\"{name:9} {n_in:3} in {n_out:3} out  {why!s:18} {' '.join(text.split())[:34]}…\")\n",
+      "note": "**Each function returns the same four things**, so the loop can print them in one format, and a provider with no key is said to be skipped rather than left out in silence."
     }
   ]
 }
@@ -48,15 +49,21 @@ and send what they would send to the real providers; the replies were written by
 
 ```
 ana@dev:~/shop$ python three.py
-anthropic  20 in  82 out  end_turn           The cart stores prices as integer …
-openai     20 in  82 out  stop               The cart stores prices as integer …
-google     20 in  82 out  FinishReason.STOP  The cart stores prices as integer …
+anthropic  43 in 156 out  end_turn           The practice of storing prices in …
+openai     43 in 128 out  stop               The carton stores in the US often …
+google    skipped: no GEMINI_API_KEY, and Ollama has no Gemini endpoint
 ```
 
-Same text, same counts, three ways of saying the reply ended. **The counts match only because
-labllm counts every request with one tokenizer.** Real providers each count with their own, so the
-same prompt is a different number of tokens at each. A price per million tokens is only comparable
-after you count your own text with each provider's counter.
+Two replies, two ways of saying the reply ended, and **the same 43 input tokens**, because both
+went to the same model behind one server and were counted by its one tokenizer. Real providers each
+count with their own, so the same prompt is a different number of tokens at each. A price per million
+tokens is only comparable after you count your own text with each provider's counter.
+
+The replies differ because each is a draw, and the second one starts with "The carton stores", which
+is the model misreading "cart stores", and fluently.
+
+**Google was skipped, and the program says so.** A provider left out of a comparison without a word is
+how a table ends up comparing two things while its title says three.
 
 ## Where the differences are
 

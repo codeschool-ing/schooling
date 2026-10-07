@@ -1,17 +1,17 @@
 ---
 title: What a month costs
-version: 1
+version: 2
 ---
 
 Lesson 2 read the price lists. This section uses them to compare providers on one workload: **the
 shop's support assistant, 2,000 questions a day, each with 1,500 tokens of prompt and 300 of
-reply**. The prices were read with `prices.py` on 2 October 2026: Anthropic's from its own pricing
-page, OpenAI's and Google's from LiteLLM's copy at a pinned commit, because their own pages could
+reply**. The prices are the ones lesson 2 section 04 listed, read on 2 October 2026: Anthropic's from
+its own pricing page, OpenAI's and Google's from LiteLLM's copy at a pinned commit, because their own pages could
 not be reached from the machine the course was recorded on.
 
 ```python
 """What one workload costs a month at each model's list price."""
-# Dollars per million tokens, input and output, read with prices.py on 2026-10-02.
+# Dollars per million tokens, input and output: the list prices of lesson 2, read on 2026-10-02.
 PRICES = {
     "claude-opus-5-5": (4, 20), "claude-sonnet-5-5": (2, 10), "claude-haiku-4-5": (1, 5),
     "gpt-5.5": (5, 30), "gpt-5.4": (2.5, 15), "gpt-5.4-mini": (0.75, 4.5), "gpt-5.4-nano": (0.2, 1.25),

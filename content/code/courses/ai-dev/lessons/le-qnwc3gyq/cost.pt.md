@@ -1,17 +1,17 @@
 ---
 title: Quanto custa um mês
-version: 1
+version: 2
 ---
 
 A aula 2 leu as tabelas de preço. Esta seção as usa para comparar provedores numa carga: **o
 assistente de suporte da loja, 2.000 perguntas por dia, cada uma com 1.500 tokens de prompt e 300 de
-resposta**. Os preços foram lidos com o `prices.py` em 2 de outubro de 2026. Os da Anthropic vêm da
-própria página de preços dela; os da OpenAI e do Google, da cópia do LiteLLM num commit fixo, porque
+resposta**. Os preços são os que a aula 2 seção 04 listou, lidos em 2 de outubro de 2026. Os da
+Anthropic vêm da própria página de preços dela; os da OpenAI e do Google, da cópia do LiteLLM num commit fixo, porque
 as páginas deles não puderam ser acessadas da máquina em que o curso foi gravado.
 
 ```python
 """What one workload costs a month at each model's list price."""
-# Dollars per million tokens, input and output, read with prices.py on 2026-10-02.
+# Dollars per million tokens, input and output: the list prices of lesson 2, read on 2026-10-02.
 PRICES = {
     "claude-opus-5-5": (4, 20), "claude-sonnet-5-5": (2, 10), "claude-haiku-4-5": (1, 5),
     "gpt-5.5": (5, 30), "gpt-5.4": (2.5, 15), "gpt-5.4-mini": (0.75, 4.5), "gpt-5.4-nano": (0.2, 1.25),

@@ -1,6 +1,6 @@
 ---
 title: Rate limits
-version: 1
+version: 2
 ---
 
 Every provider limits how much one account can ask for: requests per minute, tokens per minute, and
@@ -8,35 +8,52 @@ often tokens per day. The numbers depend on the account's tier and the model, an
 provider's console. **What matters to the code is what happens at the limit**: the provider answers
 429, and says when to try again.
 
-labllm can be told to allow three requests a minute, so the limit can be seen at work:
+A 429 needs an account, and this lesson spends nothing, so it is described here rather than shown.
+**A provider's reply carries the count before the limit is reached**: Anthropic's headers include
+`anthropic-ratelimit-requests-remaining` and `anthropic-ratelimit-tokens-remaining`, and the request
+that goes over gets 429 with a `retry-after` header, the number of seconds to wait. The other
+providers send the same information under their own names. The SDK raises the 429 as
+`RateLimitError`, after its own retries, which section 05 measures.
+
+Your own machine has a limit too, and it is not a count per minute. Five questions sent at the same
+moment:
 
 ```python
-"""Five requests in a row, with the SDK's retries off, to see the limit as it is."""
+"""Five requests at the same moment, and when each one is answered."""
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 import anthropic
 
-model = anthropic.Anthropic(max_retries=0)
-for n in range(1, 6):
-    try:
-        raw = model.messages.with_raw_response.create(
-            model="scripted-1", max_tokens=20, messages=[{"role": "user", "content": "Say hello in five words."}])
-        print(n, raw.http_response.status_code, "remaining:", raw.headers["anthropic-ratelimit-requests-remaining"])
-    except anthropic.RateLimitError as e:
-        print(n, e.status_code, "retry-after:", e.response.headers["retry-after"], "|", e.message)
+model = anthropic.Anthropic()
+t0 = time.monotonic()
+
+
+def ask(n):
+    model.messages.create(model="llama3.2:3b", max_tokens=20,
+                          messages=[{"role": "user", "content": "Say hello in five words."}])
+    return n, time.monotonic() - t0
+
+
+with ThreadPoolExecutor(5) as pool:
+    for n, seconds in pool.map(ask, range(1, 6)):
+        print(f"request {n}: answered after {seconds:.1f} s")
 ```
 
 ```
-ana@dev:~/shop$ curl -s localhost:8400/lab/config -d '{"rpm": 3, "clear": true}' >/dev/null; python burst.py
-1 200 remaining: 2
-2 200 remaining: 1
-3 200 remaining: 0
-4 429 retry-after: 60 | Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit of 3 requests per minute.'}, 'request_id': 'req_lab_0009'}
-5 429 retry-after: 60 | Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit of 3 requests per minute.'}, 'request_id': 'req_lab_0010'}
+ana@dev:~/shop$ python burst.py
+request 1: answered after 3.7 s
+request 2: answered after 1.2 s
+request 3: answered after 1.9 s
+request 4: answered after 2.7 s
+request 5: answered after 4.3 s
 ```
 
-**The headers count down before the limit is reached.** Each successful reply says how many
-requests are left in the window: 2, 1, 0. The fourth gets 429 and `retry-after: 60`, the number of
-seconds until the oldest request leaves the window. Anthropic's real headers have these names; the
-other providers send the same information under their own.
+**Five answers, about eight tenths of a second apart**, in an order nobody chose: the second request
+was answered first and the fifth last. Ollama answers one question at a time on this machine, and the
+others wait their turn. The model never runs faster for being asked more often; a queue forms, and
+the last person in it waits for everybody else's reply. A provider's limit and your machine's are
+both reasons to put a queue of your own in front of the model, where you decide who waits.
 
 ## What to do with a 429
 
