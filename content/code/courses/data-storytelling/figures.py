@@ -391,6 +391,149 @@ def l01_what_so_what(lang):
                 'na primeira, e a sala tem de completar as outras duas na hora.')
 
 
+# ------------------------------------------------------------------ lesson 2
+
+@figure('l02-arc', 2)
+def l02_arc(lang):
+    f = Fig('l02-arc', 680, 250, T(
+        lang,
+        'Four boxes in a row under a curve of tension. Context: deliveries are 94.5% on time. '
+        'Conflict: first deliveries are only 82.7% on time. Evidence: late first boxes more than '
+        'double early cancellations. Recommendation: a pilot that removes the manual address check. '
+        'The curve rises through the conflict and the evidence and falls at the recommendation.',
+        'Quatro caixas em fila sob uma curva de tensão. Contexto: as entregas saem 94,5% no prazo. '
+        'Conflito: as primeiras entregas saem só 82,7% no prazo. Evidência: a primeira caixa '
+        'atrasada mais que dobra o cancelamento precoce. Recomendação: um piloto que tira a '
+        'conferência manual de endereço. A curva sobe no conflito e na evidência e cai na '
+        'recomendação.'))
+    xs = [14, 182, 350, 518]
+    heads = [T(lang, 'context', 'contexto'), T(lang, 'conflict', 'conflito'),
+             T(lang, 'evidence', 'evidência'), T(lang, 'recommendation', 'recomendação')]
+    bodies = [T(lang, ['deliveries are', '94.5% on time'], ['as entregas saem', '94,5% no prazo']),
+              T(lang, ['first deliveries are', 'only 82.7% on time'],
+                ['as primeiras saem', 'só 82,7% no prazo']),
+              T(lang, ['a late first box more', 'than doubles cancelling'],
+                ['a 1ª caixa atrasada mais', 'que dobra o cancelamento']),
+              T(lang, ['pilot: remove the manual', 'address check'],
+                ['piloto: tirar a conferência', 'manual de endereço'])]
+    tension = [150, 92, 64, 132]
+    pts = [(x + 74, t) for x, t in zip(xs, tension)]
+    d = f'M{pts[0][0]:.1f} {pts[0][1]:.1f}'
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        mx = (x0 + x1) / 2
+        d += f' C{mx:.1f} {y0:.1f} {mx:.1f} {y1:.1f} {x1:.1f} {y1:.1f}'
+    f.path(d, stroke='--amber', width=2)
+    for x, y in pts:
+        f.circle(x, y, 4, fill='--amber')
+    f.text(14, 40, T(lang, 'tension in the room', 'tensão na sala'), size=10, anchor='start',
+           fill='--amber')
+    for i, (x, h, b) in enumerate(zip(xs, heads, bodies)):
+        f.rect(x, 170, 148, 70, stroke='--phosphor' if i == 3 else '--wire', width=1.3)
+        f.text(x + 74, 186, h, size=11, weight='600')
+        f.lines(x + 74, 206, b, size=9.5, gap=14)
+    return f, T(lang,
+                'Each part prepares the next: the context gives the conflict something to '
+                'disturb, and the recommendation is what releases the tension the evidence built.',
+                'Cada parte prepara a seguinte: o contexto dá ao conflito algo para perturbar, e a '
+                'recomendação é o que libera a tensão que a evidência construiu.')
+
+
+@figure('l02-sliver', 2)
+def l02_sliver(lang):
+    renew_on = S.RENEWAL_DELIVERIES - S.RENEWAL_LATE
+    f = Fig('l02-sliver', 680, 232, T(
+        lang,
+        f'Two horizontal bars. The top one is every delivery in the half-year, '
+        f'{S.ALL_DELIVERIES:,}: renewals fill almost all of it and first deliveries are a sliver of '
+        f'4.6% at the right-hand end. The bottom bar enlarges that sliver: of {S.NEW:,} first '
+        f'deliveries, 82.7% were on time and 17.3% late.',
+        f'Duas barras horizontais. A de cima é toda entrega do semestre, '
+        f'{num(lang, S.ALL_DELIVERIES, 0)}: as renovações ocupam quase tudo e as primeiras entregas '
+        f'são uma fatia de 4,6% na ponta direita. A barra de baixo amplia essa fatia: das '
+        f'{num(lang, S.NEW, 0)} primeiras entregas, 82,7% chegaram no prazo e 17,3% atrasaram.'))
+    x0, x1 = 30, 650
+    W = x1 - x0
+    tot = S.ALL_DELIVERIES
+    f.text(x0, 24, T(lang, f'all deliveries, {num(lang, tot, 0)}: {pct(lang, S.ALL_ON_TIME)} on time',
+                     f'todas as entregas, {num(lang, tot, 0)}: {pct(lang, S.ALL_ON_TIME)} no prazo'),
+           size=11, anchor='start', weight='600')
+    segs = [(renew_on, '--phosphor-dim', '--phosphor'), (S.RENEWAL_LATE, '--scan', '--amber'),
+            (S.NEW, '--paper-dim', '--paper')]
+    x = x0
+    for n, fill, stroke in segs:
+        w = W * n / tot
+        f.bar(x, 40, w, 30, fill=fill, stroke=stroke)
+        x += w
+    first_x = x0 + W * (renew_on + S.RENEWAL_LATE) / tot
+    f.text(x0 + 8, 85, T(lang, 'renewals', 'renovações'), size=10, anchor='start')
+    f.text(x1, 85, T(lang, 'first deliveries, 4.6%', 'primeiras entregas, 4,6%'), size=10,
+           anchor='end')
+    f.path(f'M{first_x:.1f} 94 L{x0:.1f} 120 M{x1:.1f} 94 L{x1:.1f} 120', stroke='--paper-dim',
+           width=1, dash='3 3')
+    won = W * S.FIRST_ON_TIME
+    f.bar(x0, 120, won, 30, fill='--phosphor-dim', stroke='--phosphor')
+    f.bar(x0 + won, 120, W - won, 30, fill='--scan', stroke='--amber', width=1.6)
+    f.text(x0 + won / 2, 164, T(lang, f'on time, {num(lang, S.ON_TIME, 0)}',
+                                f'no prazo, {num(lang, S.ON_TIME, 0)}'), size=10)
+    f.text(x0 + won + (W - won) / 2, 164, T(lang, f'late, {num(lang, S.LATE, 0)}',
+                                             f'atrasadas, {num(lang, S.LATE, 0)}'),
+           size=10, fill='--amber')
+    f.text(x0, 190, T(lang, f'first deliveries, {num(lang, S.NEW, 0)}: '
+                            f'{pct(lang, S.FIRST_ON_TIME)} on time',
+                      f'primeiras entregas, {num(lang, S.NEW, 0)}: '
+                      f'{pct(lang, S.FIRST_ON_TIME)} no prazo'),
+           size=11, anchor='start', weight='600')
+    f.text(x0, 218, T(lang, 'the overall rate is set by the renewals; the first box is too small to '
+                            'move it',
+                      'a taxa geral é definida pelas renovações; a primeira caixa é pequena demais '
+                      'para mexer nela'), size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Sandra’s 94.5% and Marina’s 17.3% late are both correct. First deliveries are '
+                'one delivery in twenty-two, so a problem confined to them barely shows in the '
+                'overall rate.',
+                'Os 94,5% da Sandra e os 17,3% de atraso da Marina estão certos. As primeiras '
+                'entregas são uma em cada vinte e duas, então um problema restrito a elas mal aparece '
+                'na taxa geral.')
+
+
+@figure('l02-evidence', 2)
+def l02_evidence(lang):
+    f = Fig('l02-evidence', 680, 230, T(
+        lang,
+        'One claim at the top, late first deliveries are costing us customers, resting on three '
+        'boxes. The gap is real: 41.5% against 17.4%. It is not the region: the gap holds inside '
+        'each one. It is big enough: sized in money in lesson 11. Under each box, the question it '
+        'answers.',
+        'Uma afirmação no alto, as primeiras entregas atrasadas estão nos custando clientes, apoiada '
+        'em três caixas. A distância é real: 41,5% contra 17,4%. Não é a região: a distância se '
+        'mantém em cada uma. É grande o bastante: medida em dinheiro na aula 11. Embaixo de cada '
+        'caixa, a pergunta que ela responde.'))
+    f.rect(140, 12, 400, 40, stroke='--amber', width=1.5)
+    f.text(340, 32, T(lang, 'late first deliveries are costing us customers',
+                      'as primeiras entregas atrasadas nos custam clientes'),
+           size=11.5, weight='600')
+    cols = [(T(lang, 'the gap is real', 'a distância é real'),
+             T(lang, ['41.5% cancel against', '17.4% in 90 days'], ['41,5% cancelam contra', '17,4% em 90 dias']),
+             T(lang, 'is it real?', 'é real?')),
+            (T(lang, 'it is not the region', 'não é a região'),
+             T(lang, ['the gap holds inside', 'capital and interior'], ['a distância se mantém', 'na capital e no interior']),
+             T(lang, 'is it something else?', 'é outra coisa?')),
+            (T(lang, 'it is big enough', 'é grande o bastante'),
+             T(lang, ['1,058 late first boxes;', 'margin lost: lesson 11'], ['1.058 primeiras atrasadas;', 'margem perdida: aula 11']),
+             T(lang, 'does it matter?', 'importa?'))]
+    for i, (h, body, q) in enumerate(cols):
+        x = 30 + i * 214
+        f.line(340, 54, x + 95, 92, stroke='--paper-dim', width=1)
+        f.rect(x, 94, 190, 86, stroke='--phosphor', width=1.3)
+        f.text(x + 95, 114, h, size=11, weight='600')
+        f.lines(x + 95, 140, body, size=9.5, gap=15)
+        f.text(x + 95, 202, q, size=10, fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'Each support answers a question a reasonable sceptic would ask. Evidence that '
+                'answers no such question belongs in the appendix.',
+                'Cada apoio responde a uma pergunta que um cético razoável faria. Evidência que não '
+                'responde a nenhuma pergunta assim vai para o apêndice.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
