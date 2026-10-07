@@ -15,8 +15,8 @@ como toda máquina do laboratório passa a confiar no servidor web, e é por iss
 novo. `cert` emite um certificado de servidor válido por 90 dias, o prazo que o Let's Encrypt usa.
 
 **Quatro certificados estão quebrados de propósito**, porque a aula 6 seção 06 precisa de uma falha de
-cada tipo: um que venceu em 2025, um que o próprio servidor assinou, um servido sem a intermediária e
-um assinado pela autoridade certificadora do próprio escritório, em que ninguém confia até alguém
+cada tipo. Um venceu em 2025, um foi assinado pelo próprio servidor, um é servido sem a intermediária
+e um foi assinado pela autoridade certificadora do próprio escritório, em que ninguém confia até alguém
 instalá-la. `ca_dated` usa o `openssl ca`, a única ferramenta aqui que aceita datas explícitas, já que
 um certificado vencido não se faz pedindo uma validade no passado.
 

@@ -15,8 +15,8 @@ in the lab comes to trust the web server, and why `down` takes it out again. `ce
 server certificate valid for 90 days, the period Let's Encrypt uses.
 
 **Four certificates are broken on purpose**, because lesson 6 section 06 needs one of each kind of
-failure: one that expired in 2025, one the server signed itself, one served without its
-intermediate, and one signed by the office's own certificate authority, which nobody trusts until
+failure. One expired in 2025, one was signed by the server itself, one is served without its
+intermediate, and one is signed by the office's own certificate authority, which nobody trusts until
 somebody installs it. `ca_dated` uses `openssl ca`, the one tool here that accepts explicit dates,
 since an expired certificate cannot be made by asking for a validity in the past.
 

@@ -26,9 +26,9 @@ nas três máquinas que roteiam e dá ao roteador do escritório uma regra de tr
 aula 2 seção 05 explica.
 
 Uma máquina precisa de mais que uma rede para ser uma máquina. **`overlay` e `exec_on` fazem um
-comando rodar "em" uma delas**: `ip netns exec` o põe no namespace da máquina e põe os arquivos de
-`/etc/netns/laptop/` por cima de `/etc` para aquele comando, o que dá a cada máquina o seu próprio
-`/etc/hosts` e o seu `/etc/resolv.conf`; `unshare --uts` lhe dá um hostname próprio; e `overlay`
+comando rodar "em" uma delas.** O `ip netns exec` o põe no namespace da máquina e estende os arquivos
+de `/etc/netns/laptop/` por cima de `/etc` para aquele comando, o que dá a cada máquina o seu próprio
+`/etc/hosts` e o seu `/etc/resolv.conf`. O `unshare --uts` lhe dá um hostname próprio. E o `overlay`
 estende as pastas da máquina, de `/lab/laptop/`, por cima de `/home`, `/etc/nginx` e o resto, para que
 cada máquina tenha sua pasta pessoal e a configuração dos seus servidores. A última parte, de `daemon`
 em diante, inicia os servidores nas suas máquinas e dá ao arquivo os seus comandos: `up`, `down`,
@@ -116,7 +116,7 @@ need() {
   for p in iproute2 bind9 bind9-dnsutils unbound nginx openssl tcpdump traceroute mtr-tiny \
            netcat-openbsd curl openssh-server nftables vsftpd tnftp rsync \
            postfix dovecot-imapd dovecot-pop3d opendkim opendkim-tools opendmarc swaks \
-           iputils-ping iputils-tracepath net-tools strace python3; do
+           iputils-ping iputils-tracepath strace python3; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }

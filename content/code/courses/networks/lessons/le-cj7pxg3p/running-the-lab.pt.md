@@ -17,7 +17,7 @@ ubuntu@netlab:~$ wc -l ~/netlab/*
   773 total
 ubuntu@netlab:~$ sha256sum ~/netlab/*
 daf483d8acf2d462d38865bdca7bbb5c58d06a712cb5a1a0f1a74e3cb1fbcfa3  /home/ubuntu/netlab/dns.sh
-7db7f1e9c08a4d7e9ae56a5ad210fffb62b4df31b33b99b2736403e5391b685c  /home/ubuntu/netlab/netlab
+23b5272b271fd2e07222c012898c112b12568066898d9a0744d91deff3b52351  /home/ubuntu/netlab/netlab
 3ceccc37953adaac60fce0cc4b4216f1392cb969c2ed4dba7db8c34d01cdeca6  /home/ubuntu/netlab/services.sh
 7e8aecfb9c0a408b30171beea77bc2f941bb7e312ac036f9cea29da7e0731309  /home/ubuntu/netlab/web.sh
 ```
@@ -35,7 +35,7 @@ ana@laptop:~$ hostname
 laptop
 ana@laptop:~$ ip -br addr
 lo               UNKNOWN        127.0.0.1/8 
-eth0@if424       UP             192.168.10.20/24 
+eth0@if778       UP             192.168.10.20/24 
 ana@laptop:~$ curl -sI https://www.example.com/ | head -1
 HTTP/2 200 
 ana@laptop:~$ exit

@@ -82,7 +82,7 @@ sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2 bind9 bind9-dnsutils unbound \
     nginx openssl tcpdump traceroute mtr-tiny netcat-openbsd curl openssh-server nftables vsftpd \
     tnftp rsync postfix dovecot-imapd dovecot-pop3d opendkim opendkim-tools opendmarc swaks \
-    iputils-ping iputils-tracepath net-tools strace python3
+    iputils-ping iputils-tracepath strace python3
 sudo systemctl disable --now named unbound nginx vsftpd postfix dovecot opendkim opendmarc
 ```
 

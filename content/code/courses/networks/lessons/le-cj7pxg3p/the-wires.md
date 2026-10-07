@@ -27,9 +27,9 @@ in the three machines that route, and gives the office router one rule of addres
 which lesson 2 section 05 explains.
 
 A machine needs more than a network to be a machine. **`overlay` and `exec_on` make a command run
-"on" one of them**: `ip netns exec` puts it in the machine's namespace and puts the files in
+"on" one of them.** `ip netns exec` puts it in the machine's namespace, and lays the files in
 `/etc/netns/laptop/` over `/etc` for that one command, which gives each machine its own
-`/etc/hosts` and `/etc/resolv.conf`; `unshare --uts` gives it its own hostname; and `overlay` lays
+`/etc/hosts` and `/etc/resolv.conf`. `unshare --uts` gives it its own hostname. And `overlay` lays
 the machine's own folders from `/lab/laptop/` over `/home`, `/etc/nginx` and the rest, so that
 each machine has its own home folder and its own server configuration. The last part, from
 `daemon` on, starts the servers on their machines and gives the file its commands: `up`, `down`,
@@ -117,7 +117,7 @@ need() {
   for p in iproute2 bind9 bind9-dnsutils unbound nginx openssl tcpdump traceroute mtr-tiny \
            netcat-openbsd curl openssh-server nftables vsftpd tnftp rsync \
            postfix dovecot-imapd dovecot-pop3d opendkim opendkim-tools opendmarc swaks \
-           iputils-ping iputils-tracepath net-tools strace python3; do
+           iputils-ping iputils-tracepath strace python3; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
