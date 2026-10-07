@@ -1,12 +1,20 @@
 ---
 title: O cabeçalho traceparent
-version: 1
+version: 2
 ---
 
 Cada serviço guarda o seu span corrente na própria memória, como a aula 2 mostrou, e memória não
 atravessa a rede. **O que atravessa é um cabeçalho.** O `orders` por acaso guarda o que recebeu com
 cada pedido, numa coluna própria, então o cabeçalho pode ser lido direto do banco depois de um
-checkout:
+checkout. Comece esta aula de um laboratório iniciado de novo do zero, com os três comandos do fim
+de *O que a vigia, e como subir tudo*, na aula 1, e os ids de pedido aqui serão os seus: o primeiro
+checkout é o pedido 1. Depois mande um, com a função da aula 3:
+
+```sh
+checkout
+```
+
+E leia de volta:
 
 ```
 ana@obs:~/shop$ docker compose exec postgres psql -U shop -tAc 'SELECT id, traceparent FROM orders ORDER BY id DESC LIMIT 1'

@@ -1,6 +1,6 @@
 ---
 title: Links: quando um trabalho tem muitas causas
-version: 1
+version: 2
 ---
 
 Um pai diz *este span foi causado por aquele*, e um span tem no máximo um. Certos trabalhos não
@@ -12,8 +12,13 @@ rastro só.
 
 O relatório noturno é o caso do laboratório. Ele conta os pedidos desde uma data e, para cada um,
 acrescenta um link para o rastro da requisição que o criou. Consegue fazer isso porque o `orders`
-guardou o `traceparent` de cada pedido. Depois de vinte e dois checkouts, o relatório é rodado à
-mão:
+guardou o `traceparent` de cada pedido. Esta aula mandou três checkouts até aqui;
+mais dezenove fazem vinte e dois, e então o relatório é rodado à mão:
+
+```sh
+for i in $(seq 1 19); do checkout; done
+```
+
 
 ```
 ana@obs:~/shop$ docker compose run --rm report 2>&1 | grep -v Container | jq -c '{message, orders, paid, trace_id}'

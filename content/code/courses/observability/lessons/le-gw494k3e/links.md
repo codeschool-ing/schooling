@@ -1,6 +1,6 @@
 ---
 title: Links: when one piece of work has many causes
-version: 1
+version: 2
 ---
 
 A parent says *this span was caused by that one*, and a span has at most one. Some work does not
@@ -12,7 +12,13 @@ them one trace.
 
 The nightly report is the lab's case. It counts the orders since a date and, for each one, adds a
 link to the trace of the request that created it. It can do that because `orders` kept every order's
-`traceparent`. After twenty-two checkouts, the report is run by hand:
+`traceparent`. This lesson has sent three checkouts so far; nineteen
+more make twenty-two, and then the report is run by hand:
+
+```sh
+for i in $(seq 1 19); do checkout; done
+```
+
 
 ```
 ana@obs:~/shop$ docker compose run --rm report 2>&1 | grep -v Container | jq -c '{message, orders, paid, trace_id}'
