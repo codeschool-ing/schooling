@@ -8,7 +8,7 @@
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE, and nothing below reaches one.
 #
-# - prices.py (beside course.json) reads the AWS public price list, which AWS
+# - prices.py (read out of lesson 1, which prints it) reads the AWS public price list, which AWS
 #   publishes as JSON with no account and no key, at the offer versions pinned
 #   inside it. Nothing here is a bill.
 # - The AWS CLI v2 runs with an EMPTY environment and an empty home directory, so
@@ -34,7 +34,8 @@ set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 COURSE=$(cd "$(dirname "$0")/../.." && pwd)
 WORK=$(mktemp -d)
-cp "$COURSE/prices.py" "$WORK/"
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+prices_py "$WORK" || exit 1
 cd "$WORK" || exit 1
 BIN=$(mktemp -d)
 trap 'rm -rf "$WORK" "$BIN"' EXIT

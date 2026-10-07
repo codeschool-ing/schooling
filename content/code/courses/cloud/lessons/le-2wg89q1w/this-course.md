@@ -16,15 +16,16 @@ in one account. So nothing here is a screenshot of a console, a bill, or an answ
 to a command. Where a lesson shows configuration, such as a policy document or a boot script, it was
 written for the lesson and says so, and what a provider would do with it is described rather than
 shown. Where a lesson shows a terminal, the command ran on a laptop with no credentials, and the
-prompt says `ana@laptop`.
+prompt says `ana@laptop`. **Every one of those commands is one you can run on your own computer**,
+and the next three sections set it up.
 
 ## The prices are a published list, read by a program
 
 Cloud is sold by the unit, so a course about it with no prices would be a course about half of it.
 **Every price in these lessons is a line of the AWS public price list**, which AWS publishes as JSON
-files anybody can download without an account. The course carries a small program beside its
-`course.json`, `prices.py`, that reads one pinned version of each file and prints the lines the
-lessons quote. Here it is printing its header and one block:
+files anybody can download without an account. A small program, `prices.py`, reads one pinned
+version of each file and prints the lines the lessons quote. Here it is printing its header and one
+block; three sections on, it is printed whole, and you run it yourself:
 
 ```
 ana@laptop:~/cloud$ python3 prices.py lambda

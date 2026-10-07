@@ -14,8 +14,8 @@
 # own with no credentials. Nothing creates, reads or bills anything in any cloud.
 #
 # What is STAGED rather than typed, and not shown in the lesson:
-# a directory standing in for ~/cloud, holding a copy of the course's prices.py
-# (two directories up from this one) and the two files the lesson writes out in
+# a directory standing in for ~/cloud, holding prices.py as lesson 1 prints it
+# and the two files the lesson writes out in
 # full, estimate.py and budget.json; the price list's cache in
 # ~/.cache/cloud-prices, filled by an earlier run of prices.py, because the EC2
 # files are hundreds of megabytes. The prompt printed is ana@laptop:~/cloud$.
@@ -32,7 +32,8 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 AWS_BIN=${AWS_BIN:-/tmp/claude-0/-home-user-schooling/38751d58-75f6-5497-bf91-568c8cabc4c1/scratchpad/bin}
 W=$(mktemp -d)/cloud
 mkdir -p "$W"
-cp "$HERE/../../prices.py" "$W/"
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+prices_py "$W" || exit 1
 cd "$W"
 
 cat > estimate.py <<'EOF'

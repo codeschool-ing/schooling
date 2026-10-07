@@ -5,7 +5,7 @@
 # this lesson, and the output under the program in "speed-of-light", was copied
 # from running it, so the next person can run it and see what moved.
 #
-#   bash captures.sh            # from anywhere; it finds prices.py beside course.json
+#   bash captures.sh            # from anywhere; prices.py is read out of lesson 1
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE, and nothing here was measured on a
 # network. Three things are read, all published with no account and no key:
@@ -36,7 +36,8 @@ PARTITIONS_SRC=$(dirname "$(readlink -f "$AWSBIN/aws")")/../dist/awscli/botocore
 
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
-cp "$COURSE/prices.py" "$WORK/"
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+prices_py "$WORK" || exit 1
 cp "$PARTITIONS_SRC" "$WORK/partitions.json"
 cd "$WORK" || exit 1
 

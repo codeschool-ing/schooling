@@ -56,7 +56,10 @@ awsrun() {
     bash -c "$*" 2>&1 || true
 }
 
-cd "$COURSE" || exit 1
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+SHEET=$(mktemp -d)   # the student's ~/cloud, holding prices.py
+prices_py "$SHEET" || exit 1
+cd "$SHEET" || exit 1
 
 block prices-storage
 run 'python3 prices.py storage'
