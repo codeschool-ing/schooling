@@ -124,7 +124,7 @@ ninguém estava no teclado, e o host leu isso como não. A resposta que vem depo
 pelo mesmo motivo da primeira: agora tem os 30 dias e continua sem o hoje, e diz que 30 dias se
 passaram.
 
-Duas lições de duas rodadas. **O host é o que ficou entre uma pergunta e um reembolso**, que é o
+Duas coisas de duas rodadas. **O host é o que ficou entre uma pergunta e um reembolso**, que é o
 assunto da aula 7 seção 08. E um fato de que o modelo precisa e que nenhuma ferramenta dá, como a
 data, tem de vir do host; a aula 7 seção 09 o acrescenta.
 
@@ -132,7 +132,7 @@ data, tem de vir do host; a aula 7 seção 09 o acrescenta.
 
 - **Ele para.** O `MAX_STEPS` é um limite rígido, imposto por um laço `for` e não pedido num prompt.
 - **Ele recusa repetições.** A mesma chamada duas vezes na mesma tarefa quase sempre é um laço de que
-  o modelo não sai sozinho; a aula 7 seção 09 diz por que ela fica mesmo este modelo nunca tendo entrado num.
+  o modelo não sai sozinho; a aula 7 seção 09 mostra a guarda disparando.
 - **Ele pergunta antes de agir.** Uma ferramenta não marcada como só leitura não é chamada até uma
   pessoa dizer sim, e acima ela não foi chamada; a aula 7 seção 08 mostra as duas respostas.
 - **Ele informa erros como resultados.** Uma ferramenta que falha devolve `is_error` ao modelo, que

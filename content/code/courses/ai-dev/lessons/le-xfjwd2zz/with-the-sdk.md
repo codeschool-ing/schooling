@@ -70,4 +70,4 @@ finish_reason: stop
 Different pieces, because it is a second draw, and the same wrapping underneath: `cash|iers`,
 `penn|ies`, `denomin|ations`. **Each chunk carries a `delta`** with the new text, and the last one
 carries a `finish_reason` and no text. Underneath, it is the same server-sent events format with no
-`event:` names, ending in a line that says `data: [DONE]`.
+`event:` names.

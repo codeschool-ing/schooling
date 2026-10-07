@@ -1,12 +1,12 @@
 ---
 title: A call that happens twice
-version: 1
+version: 2
 ---
 
 `get_stock` can run a hundred times and the shop is the same afterwards. `create_return` cannot:
 **every run opens a return**. That difference decides how a host may retry, and retries happen
 for ordinary reasons: a request that timed out after the work was done, a host restarted halfway
-through a loop, a model that asks for the same call again.
+through a loop.
 
 ## The same call, run twice
 

@@ -10,9 +10,16 @@ que é um chamado.
 
 ## O e-mail e o chamado
 
+Dois e-mails, salvos como `data/emails/1.txt` e `data/emails/2.txt`:
+
 ```
 Hello, I got order 1042 last week. I'd like to return one of the two mugs:
 it's unused and still in its box. How do I do that? Thanks, Marta
+```
+
+```
+Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
+no update since. I need it for Saturday. Can you check? João
 ```
 
 A fila precisa de quatro campos, e o esquema diz que valores cada um pode ter:

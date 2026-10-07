@@ -1,6 +1,6 @@
 ---
 title: An MCP server for the shop
-version: 1
+version: 2
 ---
 
 The `mcp` Python SDK turns ordinary functions into MCP tools. A decorator registers each one, the
@@ -39,7 +39,7 @@ contract of lesson 7 section 04 is written once, in the code:
 }
 ```
 
-The orders are a JSON file written for the course, holding two orders:
+The orders are in `data/orders.json`, two of them:
 
 ```json
 {
@@ -52,7 +52,7 @@ The orders are a JSON file written for the course, holding two orders:
 
 ## What the SDK did
 
-Compare the code with the `tools/list` reply of lesson 7 section 05: `order_id: str` became
+Behind the cut in the `tools/list` reply of lesson 7 section 05, `order_id: str` became
 `{"order_id": {"type": "string"}}` with `required`, the docstring became `description`, and the
 annotation became `readOnlyHint`. **A change to the function is a change to the contract**, which is
 the reason to generate one from the other rather than writing the schema by hand next to it.

@@ -53,8 +53,8 @@ tabela:
 - **A unidade é dólar por milhão de tokens.** Tome o Claude Sonnet 5.5 a `$2` de entrada e `$10`
   de saída. Uma requisição com 2.000 tokens de entrada e 500 de saída custa 2.000 × 2 /
   1.000.000 mais 500 × 10 / 1.000.000: US$ 0,004 mais US$ 0,005, nove décimos de centavo.
-- **A saída custa cinco ou seis vezes a entrada aqui**: 5× nos três modelos Claude, 6× na maioria
-  dos da OpenAI, 6× no Pro do Gemini. Uma funcionalidade que escreve respostas longas custa outra
+- **A saída custa de cinco a oito vezes a entrada aqui**: 5× nos três modelos Claude, 6× na
+  maioria dos da OpenAI e no Pro e no Flash do Gemini, e mais de 8× no Flash-Lite. Uma funcionalidade que escreve respostas longas custa outra
   ordem de grandeza de dinheiro que uma que lê documentos longos e responde sim ou não.
 - **A diferença dentro de um provedor é maior que entre provedores.** O `gpt-5.4-nano` é 25 vezes
   mais barato por token de entrada que o `gpt-5.5`; o Haiku 4.5 custa um quarto do Opus 5.5. A

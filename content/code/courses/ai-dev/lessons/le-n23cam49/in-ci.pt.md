@@ -21,7 +21,7 @@ cuidadoso é útil, e perigoso do mesmo jeito que uma leitura não conferida ser
 ## O que manter fora das mãos dele
 
 - **Nunca a decisão de fazer o merge.** A aprovação de um robô é uma afirmação, e a aula 4 seção 03
-  mostrou três afirmações confiantes em três estarem erradas. As checagens que liberam um merge são
+  mostrou três afirmações confiantes, nenhuma delas um bug, e o bug de verdade de fora. As checagens que liberam um merge são
   as que são verdadeiras ou falsas: os testes, o linter, o verificador de tipos. Os comentários do
   robô informam a pessoa que decide.
 - **Não a própria triagem.** Um achado em que o robô está errado deve ser respondido no pull

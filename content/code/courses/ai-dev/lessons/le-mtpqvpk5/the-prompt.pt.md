@@ -40,7 +40,7 @@ ignorar o que não responde.
 
 O `scratch/ask.py` recupera, monta o prompt, pergunta ao `llama3.2:3b` e roda a checagem de citações
 da aula 6 seção 08, na resposta. Ele põe a temperatura em 0, para o modelo pegar o token mais
-provável toda vez (aula 1 seção 08) e a mesma pergunta receber quase sempre as mesmas palavras; esta
+provável toda vez (aula 1 seção 08) e a mesma pergunta receber quase sempre as mesmas palavras. Esta
 versão do SDK da Anthropic não tem o argumento `temperature`, então ele vai em `extra_body`, que é
 enviado como está e que o Ollama lê:
 

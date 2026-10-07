@@ -38,14 +38,14 @@ srv  update_slots: all slots are idle
 ```
 
 **Ollama stopped too.** `cancel task` is the server noticing the closed connection, and
-`n_tokens = 47` is how far it got: the 38 tokens of the question and its template, and 9 of reply,
-about the forty characters the script kept. A provider behaves the same way from the outside.
+`n_tokens = 47` is how far it got, counting the question and its template as well as the few
+tokens of reply behind the forty characters the script kept. A provider behaves the same way from the outside.
 Whether the tokens it wrote before noticing are billed is in its terms; plan as if they are.
 
 ## What Stop has to mean
 
 - **Close the stream to the provider**, not only the one to the browser. A relay that keeps
-  reading after the page has gone pays for a reply nobody will see. In lesson 9 section 04's relay,
+  reading after the page has gone pays for a reply nobody will see. In lesson 9 section 05's relay,
   a closed browser connection makes the next write fail, which leaves the `with` block and closes
   the request upstream.
 - **Keep what was shown, and mark it.** Forty characters of an answer are not an answer. If the

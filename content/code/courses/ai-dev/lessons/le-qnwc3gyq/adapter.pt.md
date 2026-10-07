@@ -28,7 +28,7 @@ fora.
     },
     {
       "code": "def _anthropic(system, question, max_tokens):\n    try:\n        r = anthropic.Anthropic().messages.create(model=os.environ[\"LLM_MODEL_ANTHROPIC\"], max_tokens=max_tokens,\n                                                  system=system, messages=[{\"role\": \"user\", \"content\": question}])\n    except (anthropic.APIConnectionError, anthropic.RateLimitError, anthropic.InternalServerError) as e:\n        raise Unavailable(f\"anthropic: {type(e).__name__}\") from e\n    tokens_in = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)  # Ollama reports reuse apart\n    return Reply(r.content[0].text, tokens_in, r.usage.output_tokens, \"anthropic\")\n\n\n",
-      "note": "**Cada provedor é uma função pequena** que traduz a pergunta na ida e a resposta na volta, e transforma as falhas que espera em `Unavailable`. Quais falhas ela espera é a parte que a seção 08 mostra estar errada."
+      "note": "**Cada provedor é uma função pequena** que traduz a pergunta na ida e a resposta na volta, e transforma as falhas que espera em `Unavailable`. Quais falhas ela espera é a parte que o fim desta seção mostra estar errada."
     },
     {
       "code": "def _openai(system, question, max_tokens):\n    try:\n        r = openai.OpenAI().chat.completions.create(\n            model=os.environ[\"LLM_MODEL_OPENAI\"], max_completion_tokens=max_tokens,\n            messages=[{\"role\": \"system\", \"content\": system}, {\"role\": \"user\", \"content\": question}])\n    except (openai.APIConnectionError, openai.RateLimitError, openai.InternalServerError) as e:\n        raise Unavailable(f\"openai: {type(e).__name__}\") from e\n    return Reply(r.choices[0].message.content, r.usage.prompt_tokens, r.usage.completion_tokens, \"openai\")\n\n\n",
@@ -87,7 +87,7 @@ ana@dev:~/shop$ set -a; . ./.env; ANTHROPIC_BASE_URL=http://127.0.0.1:11400 LLM_
 openai: 43 in, 157 out | The practice of pricing items in cents in retail…
 ```
 
-O SDK da Anthropic tentou três vezes, lançou `APIConnectionError`, o adaptador o transformou em
+O SDK da Anthropic fez as suas tentativas, como na seção 05, lançou `APIConnectionError`, o adaptador o transformou em
 `Unavailable`, e o lado da OpenAI respondeu. Isso funciona.
 
 ## O fallback que não teria caído para o próximo

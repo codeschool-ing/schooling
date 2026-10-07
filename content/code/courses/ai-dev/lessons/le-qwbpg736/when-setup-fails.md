@@ -141,7 +141,7 @@ appear; lesson 10 is about those retries.
 ## Slow is not broken
 
 The first question after a while takes longer than the next ones, because Ollama loads the model
-into memory first and unloads it after five minutes of nobody asking. On the recording machine a
-reply of a hundred words took about twelve seconds. If every answer takes minutes, or the whole
+into memory first and unloads it after five minutes of nobody asking. At the 11 tokens a second of
+section 02, a reply of a hundred words takes about twelve seconds. If every answer takes minutes, or the whole
 computer stalls while the model writes, the model is too big for the memory you have: section 02
 says how much the recommended one needs, and which smaller one to use instead.

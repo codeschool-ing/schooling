@@ -1,6 +1,6 @@
 ---
 title: Buscando pelo significado
-version: 1
+version: 2
 ---
 
 Com cada trecho como um vetor normalizado, a busca é uma multiplicação: o vetor da pergunta contra a
@@ -51,7 +51,7 @@ vector: How long does delivery take to Recife?
 ```
 
 O manual nunca menciona Recife. Menciona *a entrega dentro do Brasil leva de três a oito dias úteis*,
-e esse trecho vem primeiro, com a vantagem mais clara de todas as buscas desta aula: 0,481 contra
+e esse trecho vem primeiro, com uma vantagem clara: 0,481 contra
 0,327 do seguinte.
 
 ## Lendo as notas

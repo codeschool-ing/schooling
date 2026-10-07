@@ -3,13 +3,7 @@ title: Quando a resposta não cabe
 version: 2
 ---
 
-O segundo e-mail é o que dá errado:
-
-```
-Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
-no update since. I need it for Saturday. Can you check? João
-```
-
+O segundo e-mail da seção 06, o do João, é o que dá errado.
 A primeira resposta a ele nem é JSON.
 
 ## Mais uma tentativa, com o motivo
@@ -21,8 +15,8 @@ attempt 1: not JSON: Expecting ',' delimiter
 ```
 
 A primeira linha é o programa falando consigo mesmo no `stderr`: **a tentativa 1 falhou, por um
-motivo com nome**: o texto não é JSON, e o parser diz o que esperava onde desistiu. O `extract` então acrescentou à conversa a resposta ruim e uma mensagem citando
-esses motivos, e pediu de novo. A segunda resposta passou. Esse é o laço de reparo inteiro:
+motivo com nome.** O texto não é JSON, e o parser diz o que esperava onde desistiu. O `extract`
+então acrescentou à conversa a resposta ruim e uma mensagem citando esses motivos, e pediu de novo. A segunda resposta passou. Esse é o laço de reparo inteiro:
 
 ```python
 def extract(email, attempts=2):
@@ -67,7 +61,7 @@ email goes to a person"**. Essa última linha importa mais que o laço:
 
 O chamado reparado diz `"urgent": true`, uma leitura justa de *I need it for Saturday*, e o resumo
 deixa o sábado de fora, uma escolha justa em menos de 120 caracteres. **Nenhum dos dois é algo que um
-esquema consiga conferir**. A aula 8 seção 02 tinha
-a mesma lacuna: os $21,000 da resposta eram a conversão do modelo, e errada por cem. Quando um valor importa, calcule-o a
-partir da fonte, no código, como a loja faz com centavos, e use o campo do modelo só para
+esquema consiga conferir**. A aula 8 seção 02 tinha a mesma lacuna: os
+$21,000 da resposta eram a conversão do modelo, e errada por cem. Quando um valor importa, calcule-o
+a partir da fonte, no código, como a loja faz com centavos, e use o campo do modelo só para
 encaminhar.

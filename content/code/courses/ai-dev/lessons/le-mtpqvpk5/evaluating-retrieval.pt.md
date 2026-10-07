@@ -1,6 +1,6 @@
 ---
 title: Medindo a recuperação
-version: 1
+version: 2
 ---
 
 Uma resposta só pode ser tão boa quanto os trechos que recebeu. Então a primeira coisa a medir num

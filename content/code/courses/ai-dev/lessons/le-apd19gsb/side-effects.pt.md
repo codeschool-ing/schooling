@@ -1,12 +1,12 @@
 ---
 title: Uma chamada que acontece duas vezes
-version: 1
+version: 2
 ---
 
 O `get_stock` pode rodar cem vezes e a loja fica igual depois. O `create_return` não: **cada execução
 abre uma devolução**. Essa diferença decide como um host pode repetir, e repetições acontecem por
 motivos comuns: uma requisição que estourou o tempo depois de o trabalho estar feito, um host
-reiniciado no meio de um laço, um modelo que pede a mesma chamada de novo.
+reiniciado no meio de um laço.
 
 ## A mesma chamada, rodada duas vezes
 

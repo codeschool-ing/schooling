@@ -42,7 +42,7 @@ get_stock {'sku': 'LAMP-02'}
 `input_json_delta`, once the model has finished writing them. Anthropic's API sends them in pieces
 as they are written, and a piece such as `'{"sku": "LAM'` is half a string inside half an object,
 which no JSON parser can read. Code written against one server meets the other the day the
-provider changes, so it has to be right for both: only after the last piece is there a complete
+provider changes, so it has to be right for both. Only after the last piece is there a complete
 object, and the SDK hands it over as `input` on the message it builds at the end, whichever way
 it arrived.
 

@@ -51,7 +51,7 @@ to send it.
 
 ## Through the relay
 
-The relay of lesson 9 section 04 catches the same failure, with the same broad `except`, and sends
+The relay of lesson 9 section 05 catches the same failure, with the same broad `except`, and sends
 its own `error` event to the page:
 
 ```

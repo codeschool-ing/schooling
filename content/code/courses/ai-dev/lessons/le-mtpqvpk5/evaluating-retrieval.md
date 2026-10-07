@@ -1,6 +1,6 @@
 ---
 title: Measuring retrieval
-version: 1
+version: 2
 ---
 
 An answer can only be as good as the passages it was given. So the first thing to measure in a RAG

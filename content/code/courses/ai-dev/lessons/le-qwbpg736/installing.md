@@ -3,8 +3,8 @@ title: Installing Ollama, Python and the libraries
 version: 1
 ---
 
-These steps are for Ubuntu 24.04, which is what you have on all three paths of the previous
-section: on Linux directly, inside WSL on Windows, and in the virtual machine. A Mac takes a
+These steps are for Ubuntu 24.04, which is what you have on the first two paths of the previous
+section: on Linux directly, inside WSL on Windows, or in the virtual machine. A Mac takes a
 different first step and then the same ones, and the end of this section says where they part.
 
 Open a terminal. Everything below is typed in it.

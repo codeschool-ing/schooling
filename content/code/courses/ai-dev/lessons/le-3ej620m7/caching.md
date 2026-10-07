@@ -50,6 +50,7 @@ for question in ["Explain the shop's shipping rule.", "Explain the shipping rule
 ```
 
 ```
+ana@dev:~/shop$ ollama stop llama3.2:3b
 ana@dev:~/shop$ python scratch/cache.py
 input 1417  cache read    0  output 107  47.9 s
     at Sonnet's prices: input $0.002834, against $0.002834 with no cache
@@ -58,7 +59,7 @@ input   11  cache read 1407  output  59   8.9 s
 ```
 
 `ollama stop` unloads the model first, which empties Ollama's cache, so the run starts the way it
-would on your machine the first time. The first request read all 1,417 tokens of the project and
+would on your machine the first time. The first request read all 1,417 tokens of the request and
 took 47.9 seconds, loading the model included. The second **read 1,407 of them from the cache**,
 read only its own 11 new tokens, and took 8.9, most of it spent writing the 59 tokens of its
 answer. Nothing was charged, since the model runs on your machine, so the saving you can see is

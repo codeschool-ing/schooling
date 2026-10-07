@@ -104,7 +104,7 @@ is yours rather than another round.
 
 ## By hand
 
-ana stops, as the first rule below says, and writes the function herself. It is eight lines, and the
+ana stops, as the second rule below says, and writes the function herself. It is eight lines, and the
 first round's idea of refusing a price with both separators is worth keeping:
 
 ```python

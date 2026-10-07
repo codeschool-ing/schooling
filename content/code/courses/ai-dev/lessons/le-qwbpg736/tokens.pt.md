@@ -46,8 +46,8 @@ Cinco coisas para ler aí:
 - **A frase em português custa mais.** Dez tokens para uma frase que um leitor brasileiro não acha
   mais longa que a inglesa. Texto em línguas que eram mais raras nos dados de treino do tokenizador
   se divide em mais pedaços, então a mesma requisição custa mais e enche a janela mais depressa.
-- **Código se divide na pontuação.** `(self`, `.sub` e `total` são tokens; os oito espaços de
-  indentação são mais um.
+- **Código se divide na pontuação.** `(self`, `.sub` e `total` são tokens; sete dos oito
+  espaços de indentação são mais um, e o oitavo vai junto com ` return`.
 - **Números são cortados em grupos de até três dígitos.** O modelo nunca vê `1290000` como um
   número, só como os pedaços `129`, `000` e `0`. Esse é um dos motivos de modelos não serem
   confiáveis em contas feitas dígito a dígito, e de a loja deste curso fazer as contas de

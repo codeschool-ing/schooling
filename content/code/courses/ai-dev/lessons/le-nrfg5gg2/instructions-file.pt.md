@@ -42,7 +42,7 @@ context sent (755 of 3000 tokens):
 ```
 
 **87 tokens, em toda requisição**, que é o preço do arquivo e o motivo de mantê-lo curto. A aula 2
-seção 03 contou o `CONVENTIONS.md` em 374 tokens como prompt de sistema; mandá-lo inteiro em cada
+seção 03 mediu o `CONVENTIONS.md` somando 378 tokens como prompt de sistema; mandá-lo inteiro em cada
 completação disparada por uma tecla seria a maior parte da requisição. Um ponteiro e quatro regras
 é a troca. Numa completação, o `assist` o põe no topo como comentários, junto com as abas abertas,
 onde um modelo de código o lê como contexto; se um modelo tão pequeno o segue é outra história, e

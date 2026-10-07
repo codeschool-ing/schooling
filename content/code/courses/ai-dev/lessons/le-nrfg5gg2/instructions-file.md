@@ -42,7 +42,7 @@ context sent (755 of 3000 tokens):
 ```
 
 **87 tokens, on every request**, which is the price of the file and the reason to keep it short.
-Lesson 2 section 03 counted `CONVENTIONS.md` at 374 tokens as a system prompt; sending the whole of
+Lesson 2 section 03 measured `CONVENTIONS.md` adding 378 tokens as a system prompt; sending the whole of
 it with every keystroke-triggered completion would be most of the request. A pointer and four
 rules is the trade. For a completion, `assist` puts it at the top as comments, with the open
 tabs, where a code model reads it as context; whether a model that small follows it is another

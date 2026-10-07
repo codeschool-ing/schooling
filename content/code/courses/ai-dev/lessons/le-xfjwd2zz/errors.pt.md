@@ -51,7 +51,7 @@ mandá-lo.
 
 ## Pelo relay
 
-O relay da aula 9 seção 04 pega a mesma falha, com o mesmo `except` amplo, e manda à página o
+O relay da aula 9 seção 05 pega a mesma falha, com o mesmo `except` amplo, e manda à página o
 próprio evento `error`:
 
 ```

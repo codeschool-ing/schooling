@@ -6,8 +6,8 @@ version: 2
 Uma suíte de testes pode estar verde e testar quase nada. A aula 3 seção 06 mostrou isso: oito
 testes passando, e uma mudança que não fazia o que foi pedido passou direto, como passaria a que
 mudava o que o cliente paga, que o mesmo pedido produziu em outra execução. A cobertura, a
-fração de linhas que os testes executam, teria dito 100% para o `shipping()`, porque todo teste o
-executa. **Executar uma linha não é o mesmo que conferir o que ela faz.**
+fração de linhas que os testes executam, teria contado toda linha do `shipping()` como coberta, porque todo
+teste a executa. **Executar uma linha não é o mesmo que conferir o que ela faz.**
 
 O **teste de mutação** faz a pergunta direta. Mude o código de propósito, uma mudança pequena por
 vez (um `>=` vira `>`, um `-` vira `+`), e rode os testes depois de cada uma. Uma mudança que os
@@ -87,10 +87,9 @@ ninguém testa:
 - **linha 32, `//` para `/`**: o desconto poderia virar fração de centavo e nada falharia. Todo
   desconto testado por acaso dá conta exata, então divisão inteira e divisão real concordam.
 - **linha 35, `-` para `+`**: o limite do frete grátis poderia somar o desconto em vez de
-  subtraí-lo, o tipo de mudança que o assistente da aula 3 seção 06 fez na aritmética do
-  carrinho, ainda sem guarda neste branch.
-- **linha 40, `-` para `+`**: o total poderia somar o desconto em vez de subtraí-lo. Nenhum teste
-  tem um desconto e confere o total.
+  subtraí-lo. O teste da aula 3 seção 06 guarda isso, e este branch não tem esse teste.
+- **linha 40, `-` para `+`**: o total poderia somar o desconto em vez de subtraí-lo, a mudança que o
+  assistente da aula 3 seção 06 fez em outra execução. Nenhum teste tem um desconto e confere o total.
 
 ## Matando-os
 

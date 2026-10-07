@@ -89,7 +89,7 @@ Now read the passes. Five of the fourteen are `Format negative prices with the s
 the examples, for two commits that never touch a negative price: the conventions and the first
 version of `money.py`. Two more are wrapped in quotation marks and one in backticks, which the
 project does not write either. **The checks measured exactly what they were written to measure**, and
-an example copied word for word meets every rule of form. A sixth check, a subject equal to an
+an example copied word for word meets every rule of form. A fifth check, a subject equal to an
 example fails, would take the score from fourteen to nine, and that is the next thing ana adds,
 because a check is cheaper to write than the argument about whether the score was real.
 
@@ -107,8 +107,7 @@ have. The score is only as good as the checks behind it.
 - **Run on every change to the prompt, and to the model.** A prompt that scored well on one model
   can score differently on the next version, or on `llama3.2:1b`. Lesson 10 changes providers; this is the harness that
   says what the change cost.
-- **Kept small enough to run often.** Thirty short requests take a couple of minutes on the
-  recording machine. A hundred cases that run in a few minutes get run; a thousand that take an afternoon get
-  skipped.
+- **Kept small enough to run often.** Thirty short requests take a couple of minutes. A set that
+  runs in a few minutes gets run; one that takes an afternoon gets skipped.
 
 The prompt, the cases and the checks all go in the repository, beside the code they test.

@@ -256,3 +256,16 @@ caminho, muitas vezes por um editor que trocou as aspas pelas tipográficas; sal
 quando precisam. São experimentos sobre o modelo, não parte da loja, e mantê-los num diretório
 só deixa limpo o histórico do próprio projeto. Rode-os de dentro de `~/shop`, com o ambiente
 ativo, como fazem as transcrições.
+
+**Cada aula começa da loja como este script a faz.** O que uma aula muda em `shop/` e `tests/`, ou
+commita, pertence àquela aula, e as transcrições da seguinte contam que isso sumiu. Antes de uma
+aula nova, ou de uma seção que diz que começa de novo, volte o projeto. O `scratch/` e os outros
+arquivos que você escreveu não são tocados:
+
+```
+ana@dev:~/shop$ git checkout -qf main && git reset -q --hard 19265e0 && git clean -qfd shop tests
+ana@dev:~/shop$ git log --oneline -1 && python -m pytest -q
+19265e0 Conventions
+........                                                                 [100%]
+8 passed in 0.73s
+```

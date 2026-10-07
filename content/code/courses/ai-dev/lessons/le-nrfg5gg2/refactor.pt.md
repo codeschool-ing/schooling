@@ -3,6 +3,9 @@ title: Refatorando com um assistente
 version: 2
 ---
 
+Esta seção começa de novo da loja como o `make-shop.sh` a faz (aula 1 seção 04), então o
+`remove()` da seção 04 não está nela.
+
 Uma refatoração muda a forma do código sem mudar o que ele faz. A segunda metade é a definição
 inteira, e é a metade que um assistente não consegue conferir: ele pode deixar o código mais curto,
 não pode saber de qual comportamento alguém depende. **Os testes decidem se uma refatoração foi
@@ -10,8 +13,8 @@ mesmo uma**, e a lição desta seção é que testes que passam valem o quanto v
 
 ## Pedindo um diff
 
-O `Cart.total()` chama o `subtotal()` três vezes, uma diretamente e duas por meio do `discount()`
-e do `shipping()`. A ana pede que ele seja calculado uma vez, e pede um diff, que é o formato certo
+O `Cart.total()` calcula o subtotal quatro vezes: uma diretamente, uma por meio do `discount()` e
+duas por meio do `shipping()`, que chama os dois. A ana pede que ele seja calculado uma vez, e pede um diff, que é o formato certo
 para uma mudança que ela vai revisar:
 
 ```
@@ -91,6 +94,10 @@ context sent (265 of 3000 tokens):
     265  shop/cart.py
 ---
 assist: the reply has no block of code to write
+ana@dev:~/shop$ python scratch/assist.py ask "Refactor Cart so total() computes the subtotal once. Reply with the complete new shop/cart.py in one block of code." --open shop/cart.py --write shop/cart.py > /dev/null
+context sent (265 of 3000 tokens):
+    265  shop/cart.py
+---
 ana@dev:~/shop$ git diff
 diff --git a/shop/cart.py b/shop/cart.py
 index 230a8bd..0b521e0 100644
@@ -111,8 +118,8 @@ ana@dev:~/shop$ python -m pytest -q
 A primeira resposta não tinha nenhum bloco de código, então o `assist` não escreveu nada, e a ana
 pediu de novo. A mudança da segunda resposta tem três linhas: o `total()` guarda o subtotal numa
 variável. Os oito testes passam, e desta vez com razão, porque o comportamento não mudou. **Também
-não é o que foi pedido.** O `discount()` continua chamando o `subtotal()` por conta própria, então
-o subtotal é calculado duas vezes onde era calculado três. Os testes não dizem se uma mudança fez o
+não é o que foi pedido.** O `discount()` continua chamando o `subtotal()` por conta própria, e o
+`shipping()` chama os dois, então a mudança não economiza nada. Os testes não dizem se uma mudança fez o
 que você pediu; só lê-la contra o pedido diz.
 
 ## Fixando o comportamento antes
@@ -146,7 +153,7 @@ Updated 1 path from the index
 
 O teste fixado passa no código do assistente, e no original, que o `git checkout` devolve; ele
 agora faz parte do projeto, nove testes onde havia oito. Nesta execução ele confirmou que a mudança
-era segura. O mesmo pedido, feito na máquina da gravação mais cedo no mesmo dia, voltou com um
+era segura. O mesmo pedido, feito mais cedo no mesmo dia, voltou com um
 `total()` que somava o desconto em vez de subtraí-lo, e essa resposta também passou nos oito
 testes: este é o teste que teria falhado.
 

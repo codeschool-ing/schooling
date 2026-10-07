@@ -33,8 +33,8 @@ então ele parte onde o tokenizador parte: `C|ents` são dois pedaços, e `1970s
 espaço, `197`, `0` e `s`. A última linha vem do `get_final_message()`, montado depois de o stream
 acabar, com o `stop_reason` e as contagens de tokens que uma requisição comum teria dado.
 
-A resposta também está errada sobre o mundo: atribui o hábito a uma "Uniform Pricing Act" dos anos
-1970. A pergunta não diz nada sobre o código da ana, então o modelo respondeu sobre lojas em geral
+A resposta também está errada sobre o mundo: atribui o hábito a uma "Uniform Pricing Act"
+dos anos 1970. A pergunta não diz nada sobre o código da ana, então o modelo respondeu sobre lojas em geral
 (aula 1 seção 10), e respondeu com confiança (aula 1 seção 11). O streaming muda quando você vê uma
 resposta, não quanto ela vale.
 
@@ -70,4 +70,4 @@ finish_reason: stop
 Outros pedaços, porque é um segundo sorteio, e o mesmo embrulho por baixo: `cash|iers`, `penn|ies`,
 `denomin|ations`. **Cada chunk leva um `delta`** com o texto novo, e o último leva um
 `finish_reason` e nenhum texto. Por baixo, é o mesmo formato de server-sent events sem nomes em
-`event:`, terminando numa linha que diz `data: [DONE]`.
+`event:`.

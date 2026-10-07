@@ -90,7 +90,7 @@ host: 3 requests, 1147 input tokens: [289, 402, 456]
 JSON for a function call*, applies on every step, so every step is a call. The lamp question reads
 the products page, which has no prices, and asks for it again; the return question looks up the
 order and then asks, twice, to refund it, for `"0"` cents, which nobody wanted. **The repeat guard
-ends both at step 3**, the approval step had already refused the refund once, and the last line says
+ends both at step 3.** The approval step had already refused the refund once. The last line says
 what each cost: 1,193 and 1,147 input tokens, each request bigger than the one before because it
 carries everything so far. With the tools in sight, the second request is the bigger one, as it
 should have been all along.
@@ -100,8 +100,7 @@ round of tools, with it it never stops calling them. Two other models of about t
 `qwen2.5:3b` and `qwen2.5:7b`, were asked the same questions while this lesson was prepared; their
 templates keep the tools in sight, and both still answered after one call, with the same wrong
 conclusion about order 1042. **The host's guards are what made every one of these failures cheap**,
-and they are the part of this lesson that does not depend on the model. A loop of five steps over real tool results, pages of documents or rows of data, adds up
-quickly.
+and they are the part of this lesson that does not depend on the model.
 
 ## The guards
 
@@ -114,5 +113,5 @@ quickly.
 - **A record of every step**, so a stopped run can be read afterwards and the case added to an
   evaluation (lesson 5 section 09) of tasks the agent should be able to finish.
 
-Most runaway agents in production are not malicious or broken. They are a model doing the likely
-next thing, correctly, forever, with nothing in the host to say stop.
+A runaway agent is usually a model doing the likely next thing, correctly, forever, with nothing in
+the host to say stop.

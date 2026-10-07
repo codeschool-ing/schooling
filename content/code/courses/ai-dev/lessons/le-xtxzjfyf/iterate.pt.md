@@ -104,7 +104,7 @@ próximo movimento é seu, e não mais uma rodada.
 
 ## À mão
 
-A ana para, como diz a primeira regra abaixo, e escreve a função ela mesma. São oito linhas, e a
+A ana para, como diz a segunda regra abaixo, e escreve a função ela mesma. São oito linhas, e a
 ideia da primeira rodada, de recusar um preço com os dois separadores, vale a pena manter:
 
 ```python

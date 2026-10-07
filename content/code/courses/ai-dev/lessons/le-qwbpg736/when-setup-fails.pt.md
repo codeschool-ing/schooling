@@ -142,8 +142,8 @@ segundos para aparecer; a aula 10 é sobre essas novas tentativas.
 ## Lento não é quebrado
 
 A primeira pergunta depois de um tempo demora mais que as seguintes, porque o Ollama primeiro
-carrega o modelo na memória e o descarrega depois de cinco minutos sem ninguém perguntar. Na
-máquina da gravação, uma resposta de cem palavras levou uns doze segundos. Se toda
+carrega o modelo na memória e o descarrega depois de cinco minutos sem ninguém perguntar. Nos
+11 tokens por segundo da seção 02, uma resposta de cem palavras leva uns doze segundos. Se toda
 resposta leva minutos, ou o computador inteiro trava enquanto o modelo escreve, o modelo é grande
 demais para a memória que você tem: a seção 02 diz quanto o recomendado precisa, e que modelo
 menor usar no lugar.

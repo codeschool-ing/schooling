@@ -1,6 +1,6 @@
 ---
 title: Keys stay out of the code
-version: 1
+version: 2
 ---
 
 An API key is a password that spends money. **Whoever holds it can make requests on your account**,

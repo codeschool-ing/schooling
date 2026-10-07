@@ -41,9 +41,8 @@ escaped:    <div class="review">&lt;p&gt;Love the lamp, the light is warm.&lt;/p
 
 **O modelo manteve a tag**, como lhe pediram manter a marcação. Posta na página como veio, ela é um
 script que roda no navegador de todo visitante. Escapada, é texto que mostra o que diz. Um pedido que
-soava inofensivo, manter a formatação da avaliação, foi tudo o que bastou; pedido um resumo de uma
-frase, o mesmo modelo descartou a tag enquanto esta aula era preparada, e o escape é para o dia em que
-não descartar. Ele é uma chamada, e o lugar dele é o ponto em que texto vira HTML, como para qualquer
+soava inofensivo, manter a formatação da avaliação, foi tudo o que bastou. O escape é o que a torna
+inofensiva. Ele é uma chamada, e o lugar dele é o ponto em que texto vira HTML, como para qualquer
 outro conteúdo de usuário. Sistemas de template que escapam por padrão fazem isso por você; desligar
 isso para a saída "confiável" do modelo é o erro.
 

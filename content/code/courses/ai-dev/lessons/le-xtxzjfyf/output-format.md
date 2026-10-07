@@ -106,8 +106,8 @@ index 9af0e26..d22f18f 100644
  
 ```
 
-`swap` accepted it, and `git diff` shows exactly what changed: two lines, and a docstring that now
-says `'12,90'`. The checks the prompt named in "Done when" settle the rest in a second:
+`swap` accepted it, and `git diff` shows exactly what changed: two lines, the docstring, which now
+says `'12,90'`, and the split, now on a comma. The checks the prompt named in "Done when" settle the rest in a second:
 
 ```
 ana@dev:~/shop$ python -c 'from shop.money import parse_price; print(parse_price("12,90"), parse_price("12,9"), parse_price("12.90"))'

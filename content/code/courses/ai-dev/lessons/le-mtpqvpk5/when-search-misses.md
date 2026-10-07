@@ -1,6 +1,6 @@
 ---
 title: When search by meaning misses
-version: 1
+version: 2
 ---
 
 Embeddings are good at paraphrase and bad at exact strings. Lesson 1 section 09 predicted it, and
@@ -69,8 +69,8 @@ vector: my parcel never arrived
 ```
 
 *Never arrived* shares no rare words with *no tracking update for ten working days*, so keyword search
-puts the right passage first only because *parcel* is in it, and fills the rest with passages about
-support hours that happen to contain common words. Vector search ranks the same passage first with a
+puts the right passage first only because *parcel* is in it, and fills the rest with support passages
+that share *parcel* or *arrived*. Vector search ranks the same passage first with a
 clear lead, 0.568, because it reads the meaning.
 
 ## Both at once

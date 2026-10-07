@@ -24,8 +24,8 @@ editor juntou, e só.
 
 ## Chat
 
-Um painel onde você faz perguntas e recebe respostas, código e diffs, como na aula 3 seções 06 e
-07. Você escolhe o contexto (a seleção, os arquivos abertos, os arquivos que cita), e **nada muda no
+Um painel onde você faz perguntas e recebe respostas, código e diffs, como na aula 3
+seções 06 e 07. Você escolhe o contexto (a seleção, os arquivos abertos, os arquivos que cita), e **nada muda no
 projeto até você aplicar**. A unidade de revisão é uma resposta, e o hábito que importa é o da aula
 3 seção 06: leia a mudança como um diff, contra o código que ela substitui.
 

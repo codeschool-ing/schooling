@@ -1,6 +1,6 @@
 ---
 title: Talking to the server from Python
-version: 1
+version: 2
 ---
 
 The host of lesson 7 section 03 and every assistant that supports MCP do the same three things as a

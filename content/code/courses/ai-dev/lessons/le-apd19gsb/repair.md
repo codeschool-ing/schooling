@@ -3,13 +3,7 @@ title: When the reply does not fit
 version: 2
 ---
 
-The second email is the one that goes wrong:
-
-```
-Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
-no update since. I need it for Saturday. Can you check? João
-```
-
+The second email of section 06, João's, is the one that goes wrong.
 The first reply to it is not JSON at all.
 
 ## One more try, with the reason
@@ -21,8 +15,9 @@ attempt 1: not JSON: Expecting ',' delimiter
 ```
 
 The first line is the program talking to itself on `stderr`: **attempt 1 failed, for a named
-reason**: the text is not JSON, and the parser says what it expected where it gave up. `extract` then appended the bad reply and a message quoting those reasons to the
-conversation, and asked again. The second reply passed. That is the whole repair loop:
+reason.** The text is not JSON, and the parser says what it expected where it gave up. `extract`
+then appended the bad reply and a message quoting those reasons to the conversation, and asked
+again. The second reply passed. That is the whole repair loop:
 
 ```python
 def extract(email, attempts=2):

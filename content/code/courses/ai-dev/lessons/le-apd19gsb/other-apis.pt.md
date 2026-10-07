@@ -43,8 +43,8 @@ ana@dev:~/shop$ python openai_stock.py "Is LAMP-02 in stock?"
    The LAMP-02 is currently in stock. It has 4 units available, and the unit price is $21,000.
 ```
 
-Mesma pergunta, mesma ferramenta, mesma resposta, $21,000 incluídos. **Os argumentos são a diferença**: o `repr` mostra
-aspas em volta deles porque chegam como uma string de JSON, não como um objeto. O código precisa
+Mesma pergunta, mesma ferramenta, mesma resposta, $21,000 incluídos. **Os argumentos são a
+diferença**: o `repr` mostra aspas em volta deles porque chegam como uma string de JSON, não como um objeto. O código precisa
 chamar `json.loads` ele mesmo, e uma string pode falhar na leitura de um jeito que um objeto já
 lido não falha. Sem o modo estrito, uma string malformada é uma possibilidade real, e ela pertence
 ao mesmo caminho de erro que uma falha de esquema.
@@ -61,9 +61,8 @@ ao mesmo caminho de erro que uma falha de esquema.
 | a ligação | `tool_use_id` | `tool_call_id` |
 
 A API Gemini do Google segue o mesmo desenho com nomes próprios: uma declaração de função com um
-esquema, uma parte `functionCall` na resposta, uma parte `functionResponse` devolvida. A máquina
-da gravação não tem chave do Gemini e o Ollama não serve endpoint do Gemini, então esta aula não
-mostra captura dela.
+esquema, uma parte `functionCall` na resposta, uma parte `functionResponse` devolvida. O Ollama
+não serve endpoint do Gemini, então esta aula não mostra captura dela.
 
 ## Mantenha suas ferramentas num formato só
 

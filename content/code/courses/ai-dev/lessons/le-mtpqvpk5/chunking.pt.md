@@ -1,6 +1,6 @@
 ---
 title: Cortando documentos em trechos
-version: 1
+version: 2
 ---
 
 A recuperação devolve trechos, não documentos, e o tamanho de um trecho é a primeira decisão.

@@ -4,8 +4,9 @@ version: 2
 ---
 
 The model cannot be relied on to ignore instructions in the data. **The host can be relied on to
-limit what any instruction achieves**, because the host is code. Three changes, each of which would
-have stopped lesson 11 section 05's refund on its own.
+limit what any instruction achieves**, because the host is code. Three changes. The first and the
+third would each have stopped lesson 11 section 05's refund on its own; the second stops the draft
+that announced it.
 
 ## Give a task only the tools it needs
 

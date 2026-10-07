@@ -78,7 +78,7 @@ FAILED tests/test_money_properties.py::test_a_negative_price_reads_as_minus_the_
 ```
 
 **The round trip passed.** The symmetry property failed at once, shrunk to `n = -1`: minus one cent
-reads as `'-1.99'`. So `format_price` is wrong for every negative number, and the round trip did
+reads as `'-1.99'`. So `format_price` is wrong for a negative amount that is not a whole number of units, and the round trip did
 not notice, because `parse_price` is wrong in the matching way: `'-1.99'` parses back to minus one.
 **Two bugs that cancel each other pass a round trip.** That is worth knowing about round-trip
 properties in general: they test that two functions agree, not that either is right.
@@ -107,38 +107,33 @@ def format_price(cents: int) -> str:
 
 ```
 ana@dev:~/shop$ python -m pytest -q -p no:cacheprovider --hypothesis-seed=0 tests/test_money_properties.py
-.F                                                                       [100%]
+F.                                                                       [100%]
 =================================== FAILURES ===================================
-____________ test_a_negative_price_reads_as_minus_the_positive_one _____________
+_______________ test_a_price_survives_a_round_trip_through_text ________________
 
     @given(cents)
->   def test_a_negative_price_reads_as_minus_the_positive_one(n):
+>   def test_a_price_survives_a_round_trip_through_text(n):
                    ^^^
 
-tests/test_money_properties.py:15: 
+tests/test_money_properties.py:10: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 n = -1
 
     @given(cents)
-    def test_a_negative_price_reads_as_minus_the_positive_one(n):
-        if n < 0:
->           assert format_price(n) == "-" + format_price(-n)
-E           AssertionError: assert '-1.99' == '-0.01'
-E             
-E             - -0.01
-E             + -1.99
-E           Failing test case: test_a_negative_price_reads_as_minus_the_positive_one(
-E               n=-1,
-E           )
-E           Explanation:
-E               These lines were always and only run by failing test cases:
-E                   /home/ana/shop/tests/test_money_properties.py:17
+    def test_a_price_survives_a_round_trip_through_text(n):
+>       assert parse_price(format_price(n)) == n
+E       AssertionError: assert 1 == -1
+E        +  where 1 = parse_price('-0.01')
+E        +    where '-0.01' = format_price(-1)
+E       Failing test case: test_a_price_survives_a_round_trip_through_text(
+E           n=-1,
+E       )
 
-tests/test_money_properties.py:17: AssertionError
+tests/test_money_properties.py:11: AssertionError
 =========================== short test summary info ============================
-FAILED tests/test_money_properties.py::test_a_negative_price_reads_as_minus_the_positive_one
-1 failed, 1 passed in 0.19s
+FAILED tests/test_money_properties.py::test_a_price_survives_a_round_trip_through_text
+1 failed, 1 passed in 0.21s
 ```
 
 Now the symmetry holds and the round trip fails, on the same simplest input: `'-0.01'` parses as

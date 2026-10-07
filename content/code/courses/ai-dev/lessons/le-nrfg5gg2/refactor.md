@@ -3,6 +3,9 @@ title: Refactoring with an assistant
 version: 2
 ---
 
+This section starts again from the shop as `make-shop.sh` makes it (lesson 1 section 04), so the
+`remove()` of section 04 is not in it.
+
 A refactoring changes the shape of code without changing what it does. That second half is the
 whole definition, and it is the half an assistant cannot check: it can make the code shorter, it
 cannot know which of its behaviours somebody depends on. **The tests decide whether a refactoring
@@ -11,8 +14,8 @@ test.
 
 ## Asking for a diff
 
-`Cart.total()` calls `subtotal()` three times, once directly and twice through `discount()` and
-`shipping()`. ana asks for it to be computed once, and asks for a diff, which is the right format
+`Cart.total()` computes the subtotal four times: once directly, once through `discount()`, and
+twice through `shipping()`, which calls both. ana asks for it to be computed once, and asks for a diff, which is the right format
 for a change she will review:
 
 ```
@@ -91,6 +94,10 @@ context sent (265 of 3000 tokens):
     265  shop/cart.py
 ---
 assist: the reply has no block of code to write
+ana@dev:~/shop$ python scratch/assist.py ask "Refactor Cart so total() computes the subtotal once. Reply with the complete new shop/cart.py in one block of code." --open shop/cart.py --write shop/cart.py > /dev/null
+context sent (265 of 3000 tokens):
+    265  shop/cart.py
+---
 ana@dev:~/shop$ git diff
 diff --git a/shop/cart.py b/shop/cart.py
 index 230a8bd..0b521e0 100644
@@ -111,8 +118,8 @@ ana@dev:~/shop$ python -m pytest -q
 The first reply had no block of code in it, so `assist` wrote nothing, and ana asked again. The
 second reply's change is three lines: `total()` keeps the subtotal in a variable. The eight tests
 pass, and this time they are right to, because the behaviour did not change. **It is also not what
-was asked.** `discount()` still calls `subtotal()` itself, so the subtotal is computed twice where
-it was computed three times. The tests cannot tell you whether a change did what you asked; only
+was asked.** `discount()` still calls `subtotal()` itself, and `shipping()` calls both, so the change saves
+nothing. The tests cannot tell you whether a change did what you asked; only
 reading it against the request can.
 
 ## Pinning the behaviour first
@@ -146,7 +153,7 @@ Updated 1 path from the index
 
 The pinned test passes on the assistant's code, and on the original, which `git checkout` puts
 back; it is now part of the project, nine tests where there were eight. On this run it confirmed
-that the change was safe. The same request, asked on the recording machine earlier the same day,
+that the change was safe. The same request, asked earlier the same day,
 came back with `total()` adding the discount instead of subtracting it, and that reply passed all
 eight tests as well: this one is the test that would have failed.
 

@@ -1,6 +1,6 @@
 ---
 title: Searching by meaning
-version: 1
+version: 2
 ---
 
 With every passage a normalised vector, the search is one multiplication: the question's vector
@@ -52,7 +52,7 @@ vector: How long does delivery take to Recife?
 ```
 
 The handbook never mentions Recife. It mentions *delivery inside Brazil takes three to eight working
-days*, and that passage comes first, with the clearest lead of any search in this lesson: 0.481
+days*, and that passage comes first, with a clear lead: 0.481
 against 0.327 for the next.
 
 ## Reading the scores
@@ -61,7 +61,7 @@ against 0.327 for the next.
   always returns three passages, relevant or not. Lesson 6 section 07 shows what the prompt does
   about that.
 - **A threshold is tempting and fragile.** "Ignore anything below 0.3" looks sensible on these two
-  questions and would have thrown away the right answer to the first, at 0.318. Scores move with the
+  questions and would nearly have thrown away the right answer to the first, at 0.318. Scores move with the
   model, the length of the question and the wording of the passages. If you use one, set it from an
   evaluation (lesson 6 section 09), not from two examples.
 - **The second and third results are part of the answer's context.** Here they are other passages

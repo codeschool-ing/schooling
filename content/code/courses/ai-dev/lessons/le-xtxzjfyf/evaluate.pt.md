@@ -89,7 +89,7 @@ Agora leia os aprovados. Cinco dos catorze são `Format negative prices with the
 exemplos, para dois commits que nunca tocam num preço negativo: as convenções e a primeira versão do
 `money.py`. Mais dois vêm entre aspas e um entre crases, o que o projeto também não escreve. **As
 checagens mediram exatamente o que foram escritas para medir**, e um exemplo copiado palavra por
-palavra cumpre toda regra de forma. Uma sexta checagem, de que um assunto igual a um exemplo falha,
+palavra cumpre toda regra de forma. Uma quinta checagem, de que um assunto igual a um exemplo falha,
 levaria a nota de catorze para nove, e é a próxima coisa que a ana acrescenta, porque uma checagem é
 mais barata de escrever do que a discussão sobre se a nota era real.
 
@@ -107,8 +107,7 @@ devia ter passado. A nota é tão boa quanto as checagens por trás dela.
 - **Rodada a cada mudança no prompt, e no modelo.** Um prompt que foi bem num modelo pode ir
   diferente na versão seguinte, ou no `llama3.2:1b`. A aula 10 troca de provedor; este é o harness
   que diz quanto a troca custou.
-- **Pequena o bastante para rodar sempre.** Trinta requisições curtas levam uns dois minutos na
-  máquina da gravação. Cem casos que rodam em poucos minutos são rodados; mil que levam uma tarde são
-  pulados.
+- **Pequena o bastante para rodar sempre.** Trinta requisições curtas levam uns dois minutos. Um
+  conjunto que roda em poucos minutos é rodado; um que leva uma tarde é pulado.
 
 O prompt, os casos e as checagens vão todos para o repositório, ao lado do código que testam.

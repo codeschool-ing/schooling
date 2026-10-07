@@ -39,10 +39,38 @@ Três exemplos, e eles parecem os óbvios. A ana os cola na docstring e, antes d
 roda:
 
 ```
+ana@dev:~/shop$ sed -n 11,22p shop/money.py
+def format_price(cents: int) -> str:
+    """Turn cents into a price as people read it: 1290 -> '12.90'.
 
-Three examples, and they look like the obvious ones. ana pastes them into the docstring and,
-before committing it, runs it:
+    >>> format_price(1290)
+    '12.90'
 
+    >>> format_price(-1290)
+    '-12.90'
+
+    >>> format_price(1000)
+    '10.00'
+    """
+ana@dev:~/shop$ python -m pytest -q --doctest-modules shop/money.py
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ [doctest] shop.money.format_price _______________________
+012 Turn cents into a price as people read it: 1290 -> '12.90'.
+013 
+014     >>> format_price(1290)
+015     '12.90'
+016 
+017     >>> format_price(-1290)
+Expected:
+    '-12.90'
+Got:
+    '-13.10'
+
+/home/ana/shop/shop/money.py:17: DocTestFailure
+=========================== short test summary info ============================
+FAILED shop/money.py::shop.money.format_price
+1 failed in 0.74s
 ```
 
 **O segundo exemplo está errado, e o código também.** A docstring diz que `-1290` centavos

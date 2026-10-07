@@ -42,7 +42,7 @@ after 120 pieces, bold closed: 'r competitive.\n*   **Practicality**:'
 at the end, 172 pieces and 884 characters
 ```
 
-**Cinco palavras em negrito, e cada uma fica aberta por três ou quatro pedaços**: depois de 16
+**Cinco trechos em negrito, e cada uma fica aberta por três ou quatro pedaços**: depois de 16
 pedaços o texto termina em `**`, um marcador de abertura sem fechamento, e `**Rounding**` só fica
 completo no pedaço 19. Renderizado assim, a página mostra dois asteriscos; uma página que espera o
 fechamento ainda não mostra nada; uma página que adivinha mostra um negrito que vira texto comum, ou o
@@ -62,7 +62,7 @@ de segundo nesta velocidade, o que é tempo bastante para ser visto.
 ## O que o resto da página deve fazer
 
 - **Mostrar que algo está acontecendo antes da primeira palavra.** O tempo até o primeiro token foi
-  de três décimos de segundo na seção 01, e são vários segundos com um prompt longo ou um modelo
+  de três décimos de segundo na seção 02, e são vários segundos com um prompt longo ou um modelo
   ainda carregando. Um aviso de que a
   resposta está vindo é melhor que nada na tela.
 - **Oferecer Parar durante o stream**, e cumprir, como a aula 9 seção 06 faz.

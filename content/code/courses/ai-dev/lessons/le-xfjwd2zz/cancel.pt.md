@@ -38,15 +38,15 @@ srv  update_slots: all slots are idle
 ```
 
 **O Ollama parou também.** `cancel task` é o servidor percebendo a conexão fechada, e `n_tokens = 47`
-é até onde ele chegou: os 38 tokens da pergunta e do template, e 9 de resposta, mais ou menos os
-quarenta caracteres que o script guardou. Um provedor se comporta do mesmo jeito visto de fora. Se
+é até onde ele chegou, contando a pergunta e o template além dos poucos tokens de resposta por trás
+dos quarenta caracteres que o script guardou. Um provedor se comporta do mesmo jeito visto de fora. Se
 os tokens que ele escreveu antes de perceber são cobrados está nos termos dele; planeje como se
 fossem.
 
 ## O que Parar precisa querer dizer
 
 - **Fechar o stream até o provedor**, não só o que vai ao navegador. Um relay que continua lendo
-  depois de a página sumir paga por uma resposta que ninguém vai ver. No relay da aula 9 seção 04,
+  depois de a página sumir paga por uma resposta que ninguém vai ver. No relay da aula 9 seção 05,
   uma conexão de navegador fechada faz a escrita seguinte falhar, o que sai do bloco `with` e fecha
   a requisição a montante.
 - **Manter o que foi mostrado, e marcá-lo.** Quarenta caracteres de uma resposta não são uma

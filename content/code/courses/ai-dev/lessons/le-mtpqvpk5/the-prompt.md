@@ -41,7 +41,7 @@ model it may ignore what does not answer.
 
 `scratch/ask.py` retrieves, builds the prompt, asks `llama3.2:3b` and runs the citation check of
 lesson 6 section 08 on the reply. It sets the temperature to 0, so the model takes the likeliest
-token every time (lesson 1 section 08) and the same question mostly gets the same words; this
+token every time (lesson 1 section 08) and the same question mostly gets the same words. This
 version of the Anthropic SDK has no `temperature` argument, so it goes in `extra_body`, which is
 sent as it is and which Ollama reads:
 

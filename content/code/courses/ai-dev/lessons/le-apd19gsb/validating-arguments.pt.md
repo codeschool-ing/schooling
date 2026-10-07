@@ -75,7 +75,7 @@ deixaria o modelo adivinhando, e um palpite é uma segunda chamada errada.
 
 ## As regras da própria loja
 
-O esquema passou nestas duas, e a loja recusou mesmo assim:
+As duas passariam no esquema, e a loja as recusa mesmo assim:
 
 ```
 ana@dev:~/shop$ python -c 'from shop_tools import create_return; create_return("1042", "MUG-01", 2, "changed_mind")' 2>&1 | tail -n 1

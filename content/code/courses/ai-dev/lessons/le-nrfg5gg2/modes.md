@@ -24,8 +24,8 @@ the editor gathered, and that is all.
 
 ## Chat
 
-A panel where you ask questions and get answers, code and diffs, as in lesson 3 sections 06 and
-07. You choose the context (the selection, the open files, the files you name), and **nothing
+A panel where you ask questions and get answers, code and diffs, as in lesson 3 sections
+06 and 07. You choose the context (the selection, the open files, the files you name), and **nothing
 changes in the project until you apply it**. The unit of review is a reply, and the habit that
 matters is the one from lesson 3 section 06: read the change as a diff, against the code it
 replaces.

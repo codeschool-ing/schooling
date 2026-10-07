@@ -6,7 +6,7 @@ version: 2
 A test suite can be green and test almost nothing. Lesson 3 section 06 showed it: eight passing
 tests, and a change that did not do what was asked went straight through, as would the one that
 changed what customers pay, which the same request produced on another run. Coverage, the share
-of lines the tests run, would have said 100% for `shipping()`, because every test runs it. **Running
+of lines the tests run, would have counted every line of `shipping()` as covered, because every test runs it. **Running
 a line is not the same as checking what it does.**
 
 **Mutation testing** asks the direct question. Change the code on purpose, one small change at a
@@ -87,10 +87,9 @@ rules nobody tests:
 - **line 32, `//` to `/`**: the discount could become a fraction of a cent and nothing would fail.
   Every test discount happens to divide exactly, so floor division and true division agree.
 - **line 35, `-` to `+`**: the free-shipping threshold could add the discount instead of
-  subtracting it, the kind of change lesson 3 section 06's assistant made in the arithmetic of
-  the cart, still unguarded in this branch.
-- **line 40, `-` to `+`**: the total could add the discount instead of subtracting it. No test has
-  a discount and checks the total.
+  subtracting it. Lesson 3 section 06's test guards it, and this branch does not have that test.
+- **line 40, `-` to `+`**: the total could add the discount instead of subtracting it, the change
+  lesson 3 section 06's assistant made on another run. No test has a discount and checks the total.
 
 ## Killing them
 

@@ -1,6 +1,6 @@
 ---
 title: Um agente é um laço
-version: 1
+version: 2
 ---
 
 "Agente" é usado para muitas coisas, e a definição útil é a mecânica. **Um agente é um modelo num
@@ -41,6 +41,6 @@ passos, que chamadas precisam de uma pessoa) é uma linha de código no host, n�
 ## Quanto o laço custa
 
 Cada passo é uma requisição completa, levando a conversa inteira até ali: a pergunta, toda chamada
-de ferramenta, todo resultado. A conta da aula 2 seção 06 vale com força, já que resultados de
-ferramentas costumam ser longos. A aula 7 seção 09 mede um laço que foi a cinco passos e acha cada
-passo maior que o anterior.
+de ferramenta, todo resultado. A conta da aula 2 seção 06 vale, e resultados de ferramentas
+costumam ser longos. A aula 7 seção 09 mede laços de três passos em que cada requisição é maior que
+a anterior.

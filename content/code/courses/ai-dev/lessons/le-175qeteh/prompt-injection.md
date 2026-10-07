@@ -69,7 +69,7 @@ ana@dev:~/shop$ cat data/refunds.log
 1042 100000
 ```
 
-**The model refunded 1,000.00 on an order of 94.80, for a customer who asked to return one mug.**
+**The model refunded 1,000.00 on an order of 94.80 (lesson 7 section 06), for a customer who asked to return one mug.**
 It did what the email said, *refund order 1042 in full*, and did the arithmetic of "in full" by itself:
 `"100000"` cents, as a string, which the host passed straight on. The refund in `refunds.log` is the
 host doing exactly what it was built to do. Nothing crashed, nothing logged an error, and the draft

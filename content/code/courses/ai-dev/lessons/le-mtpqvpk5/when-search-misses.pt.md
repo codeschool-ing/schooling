@@ -1,6 +1,6 @@
 ---
 title: Quando a busca pelo significado erra
-version: 1
+version: 2
 ---
 
 Embeddings são bons com paráfrase e ruins com sequências exatas. A aula 1 seção 09 previu isso, e o
@@ -70,7 +70,7 @@ vector: my parcel never arrived
 
 *Never arrived* não divide palavras raras com *no tracking update for ten working days*. A busca
 por palavras põe o trecho certo em primeiro só porque *parcel* está nele, e completa o resto com
-trechos sobre o horário do suporte que por acaso têm palavras comuns. A busca vetorial põe o mesmo
+trechos do suporte que também têm *parcel* ou *arrived*. A busca vetorial põe o mesmo
 trecho em primeiro com folga, 0,568, porque lê o significado.
 
 ## As duas juntas

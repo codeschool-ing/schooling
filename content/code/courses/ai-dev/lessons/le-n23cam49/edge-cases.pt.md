@@ -90,8 +90,8 @@ FAILED tests/test_format_edges.py::test_format_price[-1290--12.90] - Assertio...
 ```
 
 Seis linhas passam e as duas negativas falham, cada uma com a saída errada exata: `-5` vira `-1.95`
-e `-1290` vira `-13.10`. Uma tabela torna o padrão visível de uma vez. **Todo valor negativo está
-errado, não um**, o que diz que o bug está na conta e não num caso especial.
+e `-1290` vira `-13.10`. Uma tabela torna o padrão visível de uma vez. **As duas linhas negativas estão
+erradas, não só uma**, o que diz que o bug está na conta e não num caso especial.
 
 ## De onde vem a lista de bordas
 

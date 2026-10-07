@@ -256,3 +256,16 @@ on the way in, often by an editor that turned its quotes into typographic ones; 
 they need it. They are experiments about the model rather than part of the shop, and keeping them
 in one directory keeps the project's own history clean. Run them from `~/shop`, with the
 environment active, as the transcripts do.
+
+**Each lesson starts from the shop as this script makes it.** What a lesson changes in `shop/` and
+`tests/`, or commits, belongs to that lesson, and the transcripts of the next one assume it is gone.
+Before a new lesson, or a section that says it starts again, put the project back. `scratch/` and
+the other files you wrote are not touched:
+
+```
+ana@dev:~/shop$ git checkout -qf main && git reset -q --hard 19265e0 && git clean -qfd shop tests
+ana@dev:~/shop$ git log --oneline -1 && python -m pytest -q
+19265e0 Conventions
+........                                                                 [100%]
+8 passed in 0.73s
+```

@@ -9,10 +9,9 @@ that downloads open models and answers requests for them on your machine, in the
 big providers use, so the code you write here is the code you would write against them. It needs
 no account and no card.
 
-Every transcript in the course was recorded that way: Ubuntu 24.04 on a computer with four
-processor cores, 15 GB of memory and no graphics card, a user called `ana` on a machine called
-`dev`, and Ollama 0.40.0 serving **`llama3.2:3b`**, Meta's Llama 3.2 with three billion
-parameters. Your prompt will carry your own name. The model's replies will not match the lesson's
+Every transcript in the course was recorded that way. The machine runs Ubuntu 24.04 on four
+processor cores and 15 GB of memory, with no graphics card, a user called `ana` and the host name
+`dev`. Ollama 0.40.0 serves **`llama3.2:3b`**, Meta's Llama 3.2 with three billion parameters. Your prompt will carry your own name. The model's replies will not match the lesson's
 word for word, even on an identical computer, and section 08 of this lesson shows why; what each
 lesson asks you to look at in them will be there.
 

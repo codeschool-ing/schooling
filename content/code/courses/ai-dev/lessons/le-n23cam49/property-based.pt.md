@@ -80,7 +80,7 @@ FAILED tests/test_money_properties.py::test_a_negative_price_reads_as_minus_the_
 ```
 
 **A ida e volta passou.** A propriedade de simetria falhou na hora, encolhida até `n = -1`: menos um
-centavo vira `'-1.99'`. Então o `format_price` está errado para todo número negativo, e a ida e volta
+centavo vira `'-1.99'`. Então o `format_price` está errado para um valor negativo que não é um número inteiro de unidades, e a ida e volta
 não percebeu, porque o `parse_price` está errado do jeito correspondente: `'-1.99'` volta a ser menos
 um. **Dois bugs que se anulam passam numa ida e volta.** Vale saber isso sobre propriedades de ida e
 volta em geral: elas testam que duas funções concordam, não que alguma delas esteja certa.
@@ -109,38 +109,33 @@ def format_price(cents: int) -> str:
 
 ```
 ana@dev:~/shop$ python -m pytest -q -p no:cacheprovider --hypothesis-seed=0 tests/test_money_properties.py
-.F                                                                       [100%]
+F.                                                                       [100%]
 =================================== FAILURES ===================================
-____________ test_a_negative_price_reads_as_minus_the_positive_one _____________
+_______________ test_a_price_survives_a_round_trip_through_text ________________
 
     @given(cents)
->   def test_a_negative_price_reads_as_minus_the_positive_one(n):
+>   def test_a_price_survives_a_round_trip_through_text(n):
                    ^^^
 
-tests/test_money_properties.py:15: 
+tests/test_money_properties.py:10: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 n = -1
 
     @given(cents)
-    def test_a_negative_price_reads_as_minus_the_positive_one(n):
-        if n < 0:
->           assert format_price(n) == "-" + format_price(-n)
-E           AssertionError: assert '-1.99' == '-0.01'
-E             
-E             - -0.01
-E             + -1.99
-E           Failing test case: test_a_negative_price_reads_as_minus_the_positive_one(
-E               n=-1,
-E           )
-E           Explanation:
-E               These lines were always and only run by failing test cases:
-E                   /home/ana/shop/tests/test_money_properties.py:17
+    def test_a_price_survives_a_round_trip_through_text(n):
+>       assert parse_price(format_price(n)) == n
+E       AssertionError: assert 1 == -1
+E        +  where 1 = parse_price('-0.01')
+E        +    where '-0.01' = format_price(-1)
+E       Failing test case: test_a_price_survives_a_round_trip_through_text(
+E           n=-1,
+E       )
 
-tests/test_money_properties.py:17: AssertionError
+tests/test_money_properties.py:11: AssertionError
 =========================== short test summary info ============================
-FAILED tests/test_money_properties.py::test_a_negative_price_reads_as_minus_the_positive_one
-1 failed, 1 passed in 0.19s
+FAILED tests/test_money_properties.py::test_a_price_survives_a_round_trip_through_text
+1 failed, 1 passed in 0.21s
 ```
 
 Agora a simetria vale e a ida e volta falha, na mesma entrada mais simples: `'-0.01'` vira `1`. A

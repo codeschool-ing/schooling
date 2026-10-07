@@ -92,5 +92,5 @@ e a primeira não estava.
   como um código de rastreio longo. Decida qual erro é pior para a tarefa, e teste esse.
 - **Guarde os valores reais do seu lado.** A resposta ainda precisa chegar a `[EMAIL]`. O programa
   que a manda usa o endereço que já tinha; o modelo nunca precisou dele.
-- **Segredos também são dados pessoais.** O padrão `SECRET` é o que o assistente da aula 3 usou, pelo
-  mesmo motivo: uma chave colada numa mensagem de suporte não pode ir adiante.
+- **Segredos também são dados pessoais.** O padrão `SECRET` é o da aula 3, com uma fronteira de palavra a
+  mais, pelo mesmo motivo: uma chave colada numa mensagem de suporte não pode ir adiante.

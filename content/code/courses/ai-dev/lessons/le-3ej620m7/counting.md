@@ -4,8 +4,8 @@ version: 2
 ---
 
 To know whether a request fits, and what it will cost, you need its token count **before** it
-goes. Lesson 1 section 07 showed that a count belongs to a tokenizer, and that only OpenAI
-publishes its tokenizers. So there are two ways to count, and they answer slightly different
+goes. Lesson 1 section 07 showed that a count belongs to a tokenizer, and that of the three
+providers only OpenAI publishes its tokenizers. So there are two ways to count, and they answer slightly different
 questions:
 
 - **locally, with a tokenizer library**: fast, free, offline, and exact only for the models that

@@ -41,7 +41,7 @@ after 120 pieces, bold closed: 'r competitive.\n*   **Practicality**:'
 at the end, 172 pieces and 884 characters
 ```
 
-**Five bold words, and for three or four pieces each one is open**: after 16 pieces the text ends
+**Five bold phrases, and for three or four pieces each one is open**: after 16 pieces the text ends
 in `**`, an opening marker with no close, and `**Rounding**` is only complete at piece 19. Rendered
 as it stands, a page shows two asterisks; a page that waits for the close shows nothing yet; a page
 that guesses shows bold that turns plain, or the reverse, as pieces arrive. Five times in one short
@@ -60,7 +60,7 @@ answer, each for about a third of a second at this speed, which is long enough t
 ## What the rest of the page should do
 
 - **Show that something is happening before the first word.** Time to first token was three tenths
-  of a second in section 01, and is several seconds with a long prompt or a model still loading. A placeholder that says the
+  of a second in section 02, and is several seconds with a long prompt or a model still loading. A placeholder that says the
   reply is coming is better than nothing on the screen.
 - **Offer Stop while it streams**, and mean it, as lesson 9 section 06 does.
 - **Announce the reply once, when it is complete, to a screen reader.** A live region updated on

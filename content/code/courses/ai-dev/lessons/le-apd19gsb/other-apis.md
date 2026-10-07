@@ -61,9 +61,8 @@ schema failure.
 | the join | `tool_use_id` | `tool_call_id` |
 
 Google's Gemini API follows the same outline with its own names: a function declaration with a
-schema, a `functionCall` part in the reply, a `functionResponse` part sent back. The
-recording machine has no Gemini key and Ollama serves no Gemini endpoint, so this lesson shows no
-capture of it.
+schema, a `functionCall` part in the reply, a `functionResponse` part sent back. Ollama
+serves no Gemini endpoint, so this lesson shows no capture of it.
 
 ## Keep your tools in one shape
 

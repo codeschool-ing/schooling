@@ -50,6 +50,7 @@ for question in ["Explain the shop's shipping rule.", "Explain the shipping rule
 ```
 
 ```
+ana@dev:~/shop$ ollama stop llama3.2:3b
 ana@dev:~/shop$ python scratch/cache.py
 input 1417  cache read    0  output 107  47.9 s
     at Sonnet's prices: input $0.002834, against $0.002834 with no cache
@@ -58,7 +59,7 @@ input   11  cache read 1407  output  59   8.9 s
 ```
 
 O `ollama stop` descarrega o modelo antes, o que esvazia o cache do Ollama, então a execução começa
-como começaria na sua máquina da primeira vez. A primeira requisição leu os 1.417 tokens do projeto
+como começaria na sua máquina da primeira vez. A primeira requisição leu os 1.417 tokens da requisição
 e levou 47,9 segundos, com a carga do modelo incluída. A segunda **leu 1.407 deles do cache**, leu
 só os seus 11 tokens novos, e levou 8,9, a maior parte escrevendo os 59 tokens da resposta. Nada foi
 cobrado, já que o modelo roda na sua máquina, então a economia que se vê é a espera. A linha de

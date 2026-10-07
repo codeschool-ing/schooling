@@ -1,6 +1,6 @@
 ---
 title: Cutting documents into passages
-version: 1
+version: 2
 ---
 
 Retrieval returns passages, not documents, and the size of a passage is the first decision. Too

@@ -89,8 +89,8 @@ host: 3 requests, 1147 input tokens: [289, 402, 456]
 a JSON for a function call*, vale em todo passo, então todo passo é uma chamada. A pergunta da
 luminária lê a página de produtos, que não tem preços, e a pede de novo; a de devolução consulta o
 pedido e depois pede, duas vezes, para reembolsá-lo, em `"0"` centavos, o que ninguém queria. **A
-guarda de repetição encerra as duas no passo 3**, a aprovação já tinha recusado o reembolso uma vez, e
-a última linha diz quanto cada uma custou: 1.193 e 1.147 tokens de entrada, cada requisição maior que
+guarda de repetição encerra as duas no passo 3.** A aprovação já tinha recusado o reembolso uma vez. A
+última linha diz quanto cada uma custou: 1.193 e 1.147 tokens de entrada, cada requisição maior que
 a anterior porque leva tudo até ali. Com as ferramentas à vista, a segunda requisição é a maior, como
 devia ter sido desde o começo.
 
@@ -99,8 +99,7 @@ uma rodada de ferramentas, com ele nunca para de chamá-las. Dois outros modelos
 tamanho, `qwen2.5:3b` e `qwen2.5:7b`, receberam as mesmas perguntas enquanto esta aula era preparada;
 os templates deles mantêm as ferramentas à vista, e os dois ainda responderam depois de uma chamada,
 com a mesma conclusão errada sobre o pedido 1042. **As guardas do host são o que deixou cada uma
-dessas falhas barata**, e são a parte desta aula que não depende do modelo. Um laço de cinco passos
-sobre resultados de ferramenta de verdade, páginas de documentos ou linhas de dados, soma depressa.
+dessas falhas barata**, e são a parte desta aula que não depende do modelo.
 
 ## As guardas
 
@@ -113,5 +112,5 @@ sobre resultados de ferramenta de verdade, páginas de documentos ou linhas de d
 - **Um registro de todo passo**, para uma execução parada poder ser lida depois e o caso entrar numa
   avaliação (aula 5 seção 09) de tarefas que o agente deveria conseguir terminar.
 
-A maioria dos agentes descontrolados em produção não é maliciosa nem está quebrada. É um modelo
-fazendo a próxima coisa provável, corretamente, para sempre, sem nada no host para dizer pare.
+Um agente descontrolado costuma ser um modelo fazendo a próxima coisa provável, corretamente, para
+sempre, sem nada no host para dizer pare.

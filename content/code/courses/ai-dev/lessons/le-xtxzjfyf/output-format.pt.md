@@ -104,8 +104,8 @@ index 9af0e26..d22f18f 100644
  
 ```
 
-O `swap` aceitou, e o `git diff` mostra exatamente o que mudou: duas linhas, e uma docstring que agora
-diz `'12,90'`. As checagens que o prompt listou em "Done when" resolvem o resto em um segundo:
+O `swap` aceitou, e o `git diff` mostra exatamente o que mudou: duas linhas, a docstring, que agora
+diz `'12,90'`, e a divisão, agora na vírgula. As checagens que o prompt listou em "Done when" resolvem o resto em um segundo:
 
 ```
 ana@dev:~/shop$ python -c 'from shop.money import parse_price; print(parse_price("12,90"), parse_price("12,9"), parse_price("12.90"))'

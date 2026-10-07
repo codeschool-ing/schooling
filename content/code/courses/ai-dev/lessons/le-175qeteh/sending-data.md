@@ -92,5 +92,5 @@ the second run is right and the first was not.
   long tracking number. Decide which mistake is worse for the task, and test for that one.
 - **Keep the real values on your side.** The reply still has to reach `[EMAIL]`. The program that
   sends it uses the address it already had; the model never needed it.
-- **Secrets are personal data too.** The `SECRET` pattern is the one lesson 3's assistant used, for
-  the same reason: a key pasted into a support message must not travel further.
+- **Secrets are personal data too.** The `SECRET` pattern is lesson 3's, with a word boundary added,
+  for the same reason: a key pasted into a support message must not travel further.

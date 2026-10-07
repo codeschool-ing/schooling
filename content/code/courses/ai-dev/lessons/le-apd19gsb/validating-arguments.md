@@ -74,7 +74,7 @@ would leave the model guessing, and a guess is a second wrong call.
 
 ## The shop's own rules
 
-The schema passed in both of these, and the shop still refused:
+Both of these would pass the schema, and the shop still refuses them:
 
 ```
 ana@dev:~/shop$ python -c 'from shop_tools import create_return; create_return("1042", "MUG-01", 2, "changed_mind")' 2>&1 | tail -n 1

@@ -41,9 +41,8 @@ escaped:    <div class="review">&lt;p&gt;Love the lamp, the light is warm.&lt;/p
 
 **The model kept the tag**, as it was asked to keep the markup. Put into the page as it came, it is a
 script that runs in every visitor's browser. Escaped, it is text that shows what it says. A request
-that sounded harmless, keep the review's formatting, is all it took; asked for a one-line summary
-instead, the same model dropped the tag while this lesson was being prepared, and the escape is for
-the day it does not. It is one call, and it belongs at the point where text becomes HTML, the same as
+that sounded harmless, keep the review's formatting, is all it took. The escape is what makes it
+harmless. It is one call, and it belongs at the point where text becomes HTML, the same as
 for any other user content. Templating systems that escape by default do this for you; turning that
 off for "trusted" model output is the mistake.
 

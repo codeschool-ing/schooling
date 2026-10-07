@@ -9,9 +9,16 @@ email into a ticket the support queue can sort, with a schema saying what a tick
 
 ## The email and the ticket
 
+Two emails, saved as `data/emails/1.txt` and `data/emails/2.txt`:
+
 ```
 Hello, I got order 1042 last week. I'd like to return one of the two mugs:
 it's unused and still in its box. How do I do that? Thanks, Marta
+```
+
+```
+Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
+no update since. I need it for Saturday. Can you check? João
 ```
 
 The queue needs four fields, and the schema says which values each may take:

@@ -9,10 +9,9 @@ gratuito que baixa modelos abertos e responde a pedidos para eles na sua máquin
 formatos que os grandes provedores usam, então o código que você escreve aqui é o código que
 escreveria contra eles. Ele não pede conta nem cartão.
 
-Toda transcrição do curso foi gravada assim: Ubuntu 24.04 num computador com quatro núcleos de
-processador, 15 GB de memória e nenhuma placa de vídeo, um usuário chamado `ana` numa máquina
-chamada `dev`, e o Ollama 0.40.0 servindo o **`llama3.2:3b`**, o Llama 3.2 da Meta com três
-bilhões de parâmetros. O seu prompt vai ter o seu nome. As respostas do modelo não vão bater com
+Toda transcrição do curso foi gravada assim. A máquina roda Ubuntu 24.04 em quatro núcleos de
+processador e 15 GB de memória, sem placa de vídeo, com um usuário chamado `ana` e o nome `dev`. O
+Ollama 0.40.0 serve o **`llama3.2:3b`**, o Llama 3.2 da Meta com três bilhões de parâmetros. O seu prompt vai ter o seu nome. As respostas do modelo não vão bater com
 as da aula palavra por palavra, nem num computador idêntico, e a seção 08 desta aula mostra por
 quê; o que cada aula pede para você observar nelas vai estar lá.
 

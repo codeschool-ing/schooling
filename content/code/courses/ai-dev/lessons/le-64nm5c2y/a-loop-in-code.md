@@ -124,7 +124,7 @@ it for approval; nobody was at the keyboard, and the host read that as a no. The
 is wrong again, for the reason the first one was: it now has the 30 days and still has no today, and
 says that 30 days have passed.
 
-Two lessons from two runs. **The host is what stood between a question and a refund**, which is the
+Two things from two runs. **The host is what stood between a question and a refund**, which is the
 subject of lesson 7 section 08. And a fact the model needs and no tool gives, like the date, has to
 come from the host; lesson 7 section 09 adds it.
 
@@ -133,7 +133,7 @@ come from the host; lesson 7 section 09 adds it.
 - **It stops.** `MAX_STEPS` is a hard limit, enforced by a `for` loop rather than requested in a
   prompt.
 - **It refuses repeats.** The same call twice in one task is almost always a loop the model will not
-  leave on its own; lesson 7 section 09 says why it stays in even though this model never looped.
+  leave on its own; lesson 7 section 09 shows it firing.
 - **It asks before acting.** A tool not marked read-only is not called until a person says yes, and
   above it was not called; lesson 7 section 08 shows both answers.
 - **It reports errors as results.** A tool that fails returns `is_error` to the model, which can try

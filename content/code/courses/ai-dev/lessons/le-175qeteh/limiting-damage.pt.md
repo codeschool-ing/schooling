@@ -4,8 +4,9 @@ version: 2
 ---
 
 Não dá para contar com o modelo para ignorar instruções nos dados. **Dá para contar com o host para
-limitar o que qualquer instrução consegue**, porque o host é código. Três mudanças, cada uma das
-quais teria impedido sozinha o reembolso da aula 11 seção 05.
+limitar o que qualquer instrução consegue**, porque o host é código. Três mudanças. A primeira e a
+terceira teriam, cada uma sozinha, impedido o reembolso da aula 11 seção 05; a segunda segura o
+rascunho que o anunciou.
 
 ## Dê a uma tarefa só as ferramentas de que ela precisa
 

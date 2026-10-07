@@ -47,8 +47,8 @@ Five things to read off that:
 - **The Portuguese sentence costs more.** Ten tokens for a sentence a Portuguese reader finds
   no longer than the English one. Text in languages that were rarer in the tokenizer's training
   data splits into more pieces, so the same request costs more and fills the window faster.
-- **Code splits at its punctuation.** `(self`, `.sub` and `total` are tokens; the eight spaces of
-  indentation are one more.
+- **Code splits at its punctuation.** `(self`, `.sub` and `total` are tokens; seven of the eight
+  spaces of indentation are one more, and the eighth goes with ` return`.
 - **Numbers are cut into groups of up to three digits.** The model never sees `1290000` as a
   number, only as the pieces `129`, `000` and `0`. That is one reason models are unreliable at
   arithmetic done digit by digit, and why the shop in this course does its money in code

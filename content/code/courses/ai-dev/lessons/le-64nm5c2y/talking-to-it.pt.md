@@ -1,6 +1,6 @@
 ---
 title: Falando com o servidor a partir do Python
-version: 1
+version: 2
 ---
 
 O host da aula 7 seção 03 e todo assistente que suporta MCP fazem as mesmas três coisas como
