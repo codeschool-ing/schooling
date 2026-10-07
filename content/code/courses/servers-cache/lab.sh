@@ -481,6 +481,21 @@ LABFILE
   in_vm systemctl enable --now nginx >/dev/null 2>&1
   [ "$n" -ge 4 ] || return 0
   stage_tls
+  [ "$n" -ge 6 ] || return 0
+  stage_cache
+}
+
+stage_cache() { # lesson 5's end: Nginx caches the API, as the shop's headers allow
+  echo 'SHOP_CACHE_CONTROL=public, max-age=60' | in_vm tee /etc/shop/shop.env >/dev/null
+  in_vm systemctl restart shop@1 shop@2
+  in_vm mkdir -p /var/cache/nginx
+  in_vm tee /etc/nginx/conf.d/cache.conf >/dev/null <<'LABFILE'
+proxy_cache_path /var/cache/nginx/shop levels=1:2 keys_zone=api_cache:10m
+                 max_size=100m inactive=10m use_temp_path=off;
+LABFILE
+  in_vm sed -i -e 's|        proxy_pass http://shop;|        proxy_pass http://shop;\n        proxy_cache api_cache;\n        proxy_cache_bypass $http_authorization;\n        proxy_no_cache     $http_authorization;\n        add_header X-Cache-Status $upstream_cache_status always;|' /etc/nginx/sites-available/ipelivros
+  in_vm bash -c 'nginx -t 2>/dev/null && systemctl reload nginx'
+  sleep 1
 }
 
 stage_tls() { # lesson 3's end: Pebble, a certificate from it, and the site on HTTPS

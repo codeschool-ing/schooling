@@ -1,0 +1,500 @@
+{
+  "ex-3xpwzvf6": {
+    "prompt": "Depois que o `PUT` baixou o preço, por que o GET seguinte ainda mostrou 8.990?",
+    "hint": "Quem avisou o cache da mudança?",
+    "choices": [
+      {
+        "text": "O PUT não conseguiu gravar o preço novo",
+        "why": "A loja devolveu 7.990 e gravou."
+      },
+      {
+        "text": "Ninguém avisou o cache",
+        "why": "Certo."
+      },
+      {
+        "text": "O banco guarda valores por um minuto",
+        "why": "Consultada direto, a loja deu 7.990."
+      },
+      {
+        "text": "O Nginx mandou aquele PUT para a outra loja",
+        "why": "As duas lojas dividem um banco."
+      }
+    ]
+  },
+  "ex-16mwcyep": {
+    "prompt": "Com `max-age=60`, qual o maior tempo em que alguém pode ver o preço antigo depois de uma mudança?",
+    "hint": "O pior caso: a cópia foi tirada logo antes da mudança.",
+    "choices": [
+      {
+        "text": "Tempo nenhum; a cópia se atualiza sozinha",
+        "why": "A cópia não sabe da mudança."
+      },
+      {
+        "text": "Cerca de sessenta segundos",
+        "why": "Certo. No máximo um tempo de vida."
+      },
+      {
+        "text": "Até o Nginx ser reiniciado",
+        "why": "A cópia vence sozinha."
+      },
+      {
+        "text": "Dez minutos, do `inactive=10m`",
+        "why": "O inactive remove cópias não usadas; o frescor vem do max-age."
+      }
+    ]
+  },
+  "ex-w8fd1sdz": {
+    "prompt": "O que não deve ir para um cache compartilhado de jeito nenhum?",
+    "hint": "Errado nem por um segundo.",
+    "choices": [
+      {
+        "text": "A descrição de um livro",
+        "why": "Uma hora de idade não custa nada."
+      },
+      {
+        "text": "O carrinho",
+        "why": "Certo. Pessoal, e errado nunca é aceitável."
+      },
+      {
+        "text": "Uma folha de estilo com hash",
+        "why": "Pode ficar em cache por um ano."
+      },
+      {
+        "text": "O logo",
+        "why": "Um dia com validação."
+      }
+    ]
+  },
+  "ex-fkkfwnrj": {
+    "prompt": "Uma equipe põe todo tempo de vida da API em um segundo \"para nada ficar velho\". O que perdem?",
+    "hint": "A taxa de acerto e o intervalo entre requisições.",
+    "choices": [
+      {
+        "text": "Nada; um segundo é de graça",
+        "why": "Só requisições dentro do mesmo segundo são poupadas."
+      },
+      {
+        "text": "A correção, já que um segundo ainda é demais",
+        "why": "Um segundo quase sempre é aceitável."
+      },
+      {
+        "text": "Quase toda a proteção do cache",
+        "why": "Certo. A maioria das requisições vira erro."
+      },
+      {
+        "text": "A retomada de sessão TLS",
+        "why": "Sem relação."
+      }
+    ]
+  },
+  "ex-tpypqs5s": {
+    "prompt": "O que uma requisição com o token `X-Cache-Refresh` certo faz com a cópia em cache?",
+    "hint": "BYPASS, e depois um HIT com o preço novo.",
+    "choices": [
+      {
+        "text": "Apaga e não guarda nada no lugar",
+        "why": "A requisição seguinte foi HIT, então algo foi guardado."
+      },
+      {
+        "text": "Busca de novo e troca",
+        "why": "Certo."
+      },
+      {
+        "text": "Estende o tempo de vida por mais um minuto",
+        "why": "Ela troca a cópia."
+      },
+      {
+        "text": "Marca como privada",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-3tafhgn3": {
+    "prompt": "Por que o cabeçalho de atualização precisa de um token secreto?",
+    "hint": "O que um desconhecido faria só com o cabeçalho?",
+    "choices": [
+      {
+        "text": "O Nginx rejeita cabeçalhos sem valor algum",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Para cifrar a cópia no disco",
+        "why": "Nada é criptografado por ele."
+      },
+      {
+        "text": "Estranhos pulariam o cache",
+        "why": "Certo."
+      },
+      {
+        "text": "O map só funciona quando recebe um token",
+        "why": "O map funciona com qualquer valor."
+      }
+    ]
+  },
+  "ex-bffyzq58": {
+    "prompt": "Por que o Nginx de código aberto não faz simplesmente `PURGE` de uma URL?",
+    "hint": "Qual edição tem o módulo?",
+    "choices": [
+      {
+        "text": "O padrão HTTP proíbe o PURGE",
+        "why": "É uma convenção usada por muitos caches."
+      },
+      {
+        "text": "O módulo de purge é do NGINX Plus",
+        "why": "Certo."
+      },
+      {
+        "text": "O Nginx guarda cópias na memória",
+        "why": "São arquivos no disco."
+      },
+      {
+        "text": "Limpar exige restart",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-1eq47b13": {
+    "prompt": "Com `levels=1:2`, a cópia de hash `e8fb...6679` fica em quais diretórios?",
+    "hint": "Tirados do fim do nome.",
+    "choices": [
+      {
+        "text": "e/8f",
+        "why": "Do começo; os níveis contam do fim."
+      },
+      {
+        "text": "9/67",
+        "why": "Certo: o último caractere, depois os dois anteriores."
+      },
+      {
+        "text": "67/9",
+        "why": "Invertido."
+      },
+      {
+        "text": "9/79",
+        "why": "O segundo nível são os dois caracteres antes do último."
+      }
+    ]
+  },
+  "ex-cdyyf0rj": {
+    "prompt": "Um script apaga o arquivo de cache de `https://ipelivros.example/api/books/2`, e o preço velho continua. Qual o erro mais provável?",
+    "hint": "De quem era o nome na chave que a aula 5 mostrou?",
+    "choices": [
+      {
+        "text": "Fez o hash da URL do site; a chave é http://shop/api/books/2",
+        "why": "Certo. O hash apontou para nada."
+      },
+      {
+        "text": "O MD5 não é suportado no Ubuntu",
+        "why": "O md5sum rodou bem."
+      },
+      {
+        "text": "Apagar exige reload",
+        "why": "O MISS veio sem reload nenhum."
+      },
+      {
+        "text": "O Nginx guarda uma segunda cópia na memória",
+        "why": "Só o índice fica na memória."
+      }
+    ]
+  },
+  "ex-j9myr1wk": {
+    "prompt": "Como um nome de arquivo com hash torna seguro um tempo de vida longo?",
+    "hint": "O que acontece com a URL quando o arquivo muda?",
+    "choices": [
+      {
+        "text": "Navegadores limpam arquivos com hash diariamente",
+        "why": "Não existe isso."
+      },
+      {
+        "text": "Um arquivo mudado ganha uma URL nova",
+        "why": "Certo. Nenhuma cópia fica errada."
+      },
+      {
+        "text": "O hash criptografa o arquivo",
+        "why": "Um hash não criptografa nada."
+      },
+      {
+        "text": "O Nginx compara hashes a cada requisição",
+        "why": "O Nginx só serve o arquivo."
+      }
+    ]
+  },
+  "ex-y4gh7950": {
+    "prompt": "Por que a expressão regular `\\.[0-9a-f]{8}\\.(css|js)$` foi escrita entre aspas no arquivo do Nginx?",
+    "hint": "O que `{` significa para o leitor do Nginx?",
+    "choices": [
+      {
+        "text": "As aspas tornam o casamento sem distinção de maiúsculas",
+        "why": "Isso é o `~*`."
+      },
+      {
+        "text": "`{` abre um bloco no Nginx",
+        "why": "Certo. Sem aspas o nginx -t falha."
+      },
+      {
+        "text": "As aspas fazem o casamento rodar mais rápido",
+        "why": "Não."
+      },
+      {
+        "text": "Todo location precisa de aspas",
+        "why": "Só os que têm chaves ou espaços."
+      }
+    ]
+  },
+  "ex-xn2n0qpp": {
+    "prompt": "Todo arquivo tem hash e fica um ano em cache como `immutable`. Qual arquivo precisa manter um tempo de vida curto para uma versão nova chegar aos visitantes?",
+    "hint": "Onde o nome novo aparece?",
+    "choices": [
+      {
+        "text": "A folha de estilo",
+        "why": "Ela tem um nome novo; a cópia antiga nunca é pedida."
+      },
+      {
+        "text": "O logo",
+        "why": "O mesmo argumento."
+      },
+      {
+        "text": "A página HTML que dá nome aos arquivos",
+        "why": "Certo."
+      },
+      {
+        "text": "Nenhum deles",
+        "why": "Um HTML de um ano atrás apontaria para os arquivos do ano passado."
+      }
+    ]
+  },
+  "ex-0nvrtmms": {
+    "prompt": "As duas lojas pararam. Por que o livro 3 recebeu `STALE` com preço e o livro 4 recebeu `502`?",
+    "hint": "O que o Nginx tinha de cada um?",
+    "choices": [
+      {
+        "text": "O livro 4 não existe no banco",
+        "why": "Existe; a loja tem doze."
+      },
+      {
+        "text": "Só o livro 3 tinha cópia",
+        "why": "Certo."
+      },
+      {
+        "text": "O use_stale só cobre ids ímpares",
+        "why": "Não."
+      },
+      {
+        "text": "A cópia do livro 4 era privada",
+        "why": "Todo livro tinha os mesmos cabeçalhos."
+      }
+    ]
+  },
+  "ex-dg5qr48y": {
+    "prompt": "Com `updating` e `proxy_cache_background_update on`, quanto levou a primeira requisição depois do vencimento?",
+    "hint": "STALE, entregue na hora.",
+    "choices": [
+      {
+        "text": "Cerca de 150 ms, o tempo que a loja leva para responder",
+        "why": "Esse foi a primeira busca, antes de qualquer cópia."
+      },
+      {
+        "text": "Cerca de 27 ms, o de uma resposta em cache",
+        "why": "Certo. A busca aconteceu por trás."
+      },
+      {
+        "text": "Seis segundos, o sleep",
+        "why": "O sleep veio antes das requisições."
+      },
+      {
+        "text": "Falhou",
+        "why": "Respondeu STALE."
+      }
+    ]
+  },
+  "ex-184y6wmn": {
+    "prompt": "Qual resposta nunca deve ser entregue velha durante uma queda?",
+    "hint": "Dado velho que vira mentira.",
+    "choices": [
+      {
+        "text": "A listagem do catálogo",
+        "why": "Preços de segundos atrás são melhores que uma página de erro."
+      },
+      {
+        "text": "A descrição de um livro",
+        "why": "Inofensiva quando um pouco velha."
+      },
+      {
+        "text": "O logo",
+        "why": "Quase nunca muda."
+      },
+      {
+        "text": "Um saldo de conta",
+        "why": "Certo. Deixe o use_stale fora desse location."
+      }
+    ]
+  },
+  "ex-96srrckt": {
+    "prompt": "Uma origem pede aos caches que entreguem a cópia velha enquanto buscam outra com `Cache-Control: max-age=60, ___=30`.",
+    "hint": "Velho, enquanto…",
+    "blanks": [
+      {
+        "accept": [
+          "stale-while-revalidate"
+        ]
+      }
+    ]
+  },
+  "ex-0gcvd74g": {
+    "prompt": "Ponha em ordem os passos da corrida que deixa o preço velho em cache.",
+    "hint": "A leitura começa primeiro e termina por último.",
+    "items": [
+      "A leitura do visitante erra o cache",
+      "A leitura pega 8.990 do banco",
+      "A atualização grava 7.990",
+      "A atualização limpa o cache",
+      "A leitura guarda 8.990 no cache"
+    ],
+    "trap": "A gravação no fim é o que desfaz a limpeza."
+  },
+  "ex-wb6ctxd3": {
+    "prompt": "Qual defesa limita o estrago da corrida mesmo que todas as outras falhem?",
+    "hint": "A rede de segurança.",
+    "choices": [
+      {
+        "text": "Limpar duas vezes depois de cada escrita",
+        "why": "Estreita a janela, mas ainda pode falhar."
+      },
+      {
+        "text": "Tempo de vida em tudo",
+        "why": "Certo. O valor errado vive no máximo um tempo de vida."
+      },
+      {
+        "text": "Um servidor de banco mais rápido por baixo",
+        "why": "Estreita a janela, não a fecha."
+      },
+      {
+        "text": "Desligar o keepalive",
+        "why": "Sem relação."
+      }
+    ]
+  },
+  "ex-db7r7y55": {
+    "prompt": "Por que a corrida fica mais provável sob carga?",
+    "hint": "Qual é a janela?",
+    "choices": [
+      {
+        "text": "Limpezas se perdem sob carga pesada",
+        "why": "Nada as perde."
+      },
+      {
+        "text": "Leituras demoram mais",
+        "why": "Certo. A janela é esse tempo."
+      },
+      {
+        "text": "Mais escritas acontecem a cada segundo",
+        "why": "Isso ajuda, mas a janela é a duração da leitura."
+      },
+      {
+        "text": "Handshakes TLS atrasam muito as limpezas",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-vavg67jx": {
+    "prompt": "Quais destes fazem um preço mudado aparecer antes de a cópia vencer? Marque todos que se aplicam.",
+    "hint": "Dois desta aula, um que não faz nada.",
+    "choices": [
+      {
+        "text": "Uma requisição de atualização com o token",
+        "why": "Certo."
+      },
+      {
+        "text": "Apagar o arquivo da cópia",
+        "why": "Certo."
+      },
+      {
+        "text": "Mandar o PUT duas vezes",
+        "why": "PUTs nunca mexem no cache."
+      },
+      {
+        "text": "Uma requisição com token errado",
+        "why": "É entregue da cópia."
+      }
+    ]
+  },
+  "ex-vm81t821": {
+    "prompt": "Uma cópia com `max-age=60` foi guardada às 10:00:00, e o preço mudou às 10:00:20. Sem invalidação, por quantos segundos o preço errado é entregue?",
+    "hint": "Até a cópia vencer.",
+    "unit": "segundos"
+  },
+  "ex-nmh104ha": {
+    "prompt": "Um preço aparece na página do livro, na listagem e nos resultados de busca, todos em cache. Quantas requisições de atualização o método do token precisa?",
+    "hint": "A atualização é por URL.",
+    "choices": [
+      {
+        "text": "Uma por URL que mostra o preço",
+        "why": "Certo. A limpeza por etiqueta da aula 7 resolve isso."
+      },
+      {
+        "text": "Uma, pelo id do livro, que atualiza todas as páginas de uma vez",
+        "why": "O Nginx conhece URLs, não quais páginas mostram um livro."
+      },
+      {
+        "text": "Nenhuma; o PUT as atualiza",
+        "why": "PUTs nunca mexem no cache."
+      },
+      {
+        "text": "Duas, para vencer a corrida",
+        "why": "Limpar duas vezes é sobre tempo, não sobre quantas páginas."
+      }
+    ]
+  },
+  "ex-jb3p420m": {
+    "prompt": "Ligue cada ferramenta ao que ela faz com uma cópia velha.",
+    "hint": "As seções desta aula.",
+    "pairs": [
+      {
+        "left": "proxy_cache_bypass com token",
+        "right": "troca uma cópia agora"
+      },
+      {
+        "left": "apagar o arquivo pelo MD5",
+        "right": "remove uma cópia do disco"
+      },
+      {
+        "left": "um nome de arquivo com hash",
+        "right": "faz uma cópia nunca ficar errada"
+      },
+      {
+        "left": "proxy_cache_use_stale",
+        "right": "entrega uma cópia vencida de propósito"
+      }
+    ],
+    "right_distractors": [
+      "comprime a cópia"
+    ]
+  },
+  "ex-w0q71v84": {
+    "prompt": "No exemplo do use_stale, quantos segundos de idade tinha o preço entregue como STALE quando as lojas pararam?",
+    "hint": "A cópia foi tirada, depois `sleep 6`.",
+    "unit": "segundos"
+  },
+  "ex-15zh355c": {
+    "prompt": "A folha de estilo muda. O que acontece com as cópias de `site.c867bf6d.css` em cache nos visitantes?",
+    "hint": "O HTML novo nomeia outro arquivo.",
+    "choices": [
+      {
+        "text": "O servidor as limpa",
+        "why": "Nenhum servidor alcança o cache de um navegador."
+      },
+      {
+        "text": "Mostram os estilos novos",
+        "why": "Os bytes delas nunca mudam."
+      },
+      {
+        "text": "Nunca mais são pedidas",
+        "why": "Certo. Envelhecem sem uso."
+      },
+      {
+        "text": "Quebram a página até vencer",
+        "why": "A página aponta para o nome novo."
+      }
+    ]
+  }
+}

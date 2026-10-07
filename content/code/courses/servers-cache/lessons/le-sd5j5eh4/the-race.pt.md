@@ -1,0 +1,29 @@
+---
+title: A corrida que devolve o valor velho
+version: 1
+---
+
+Atualizar uma cópia no momento em que o dado muda é a correção óbvia para dado velho, e ela tem uma
+falha que vale ver antes de a aula 10 construir a mesma ideia com Redis. A ordem dos eventos importa, e
+duas requisições podem se intercalar de modo que **o cache termina com o valor velho depois da limpeza,
+por um tempo de vida inteiro.**
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 700 300\" role=\"img\" aria-label=\"Três colunas: a leitura do visitante, o banco e o cache, e a atualização do dono. 1: a leitura erra o cache. 2: a leitura pega 8.990 do banco. 3: a atualização grava 7.990 no banco. 4: a atualização limpa o cache, que está vazio. 5: a leitura guarda 8.990 no cache, depois da limpeza. O cache agora guarda o preço antigo por um tempo de vida inteiro.\"><defs><marker id=\"frc-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"30\" y=\"10\" width=\"140\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"100.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">leitura do visitante</text><rect x=\"240\" y=\"10\" width=\"120\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"300.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">banco</text><rect x=\"390\" y=\"10\" width=\"120\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></rect><text x=\"450.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">cache</text><rect x=\"540\" y=\"10\" width=\"140\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"610.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">atualização do dono</text><line x1=\"100\" y1=\"44\" x2=\"100\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"300\" y1=\"44\" x2=\"300\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"450\" y1=\"44\" x2=\"450\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"610\" y1=\"44\" x2=\"610\" y2=\"290\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"100\" y1=\"70\" x2=\"447\" y2=\"70\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"275.0\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">1. erro</text><line x1=\"300\" y1=\"105\" x2=\"103\" y2=\"105\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"200.0\" y=\"97\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">2. lê 8.990</text><line x1=\"610\" y1=\"140\" x2=\"303\" y2=\"140\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"455.0\" y=\"132\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">3. grava 7.990</text><line x1=\"610\" y1=\"175\" x2=\"453\" y2=\"175\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"530.0\" y=\"167\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">4. limpa (não há nada)</text><line x1=\"100\" y1=\"225\" x2=\"447\" y2=\"225\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#frc-ah)\"></line><text x=\"275.0\" y=\"217\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">5. guarda 8.990</text><text x=\"450\" y=\"262\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">preço velho em cache depois da limpeza</text></svg>", "caption": "Cada passo está certo sozinho. A ordem torna a limpeza inútil: a leitura lenta chega depois dela.", "same": ["cache"]}
+```
+
+Leia de cima para baixo. A requisição de um visitante erra o cache e a aplicação começa a ler o preço do
+banco: 8.990. Antes de a resposta dessa leitura chegar ao cache, a atualização da dona grava 7.990 e
+limpa a cópia, que ainda não está lá. Então a leitura lenta termina e guarda o que leu: **8.990,
+recém-guardado por mais sessenta segundos, depois da limpeza que devia impedir isso.**
+
+Nada na figura é um bug de uma parte só. Cada passo fez a coisa certa isoladamente; foi a ordem que deu
+errado, e a janela é o tempo que uma leitura passa entre o banco e o cache, que cresce justamente sob
+carga. As defesas, que a aula 10 constrói:
+
+- **limpar duas vezes**: uma logo depois da escrita e outra um instante depois, para que uma leitura que
+  começou antes da escrita já tenha terminado na segunda limpeza;
+- **guardar uma versão**, para um valor mais antigo não sobrescrever um mais novo; o `updated_at` da
+  linha do preço é uma versão assim;
+- **um tempo de vida como rede de segurança**: dê errado o que der, o valor errado vive no máximo um
+  tempo de vida, o argumento mais forte para nunca guardar nada sem um.
