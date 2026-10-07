@@ -1,0 +1,703 @@
+[
+  {
+    "id": "ex-jpactnvp",
+    "version": 1,
+    "section": "edge-and-origin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a CDN's vocabulary, what is the origin?",
+    "hint": "The edges fetch from it on a miss.",
+    "choices": [
+      {
+        "text": "The nearest edge to a visitor",
+        "correct": false,
+        "why": "That is the edge itself."
+      },
+      {
+        "text": "Your server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The DNS server that answers the site's name",
+        "correct": false,
+        "why": "DNS steers visitors; it serves no content."
+      },
+      {
+        "text": "The visitor's browser cache",
+        "correct": false,
+        "why": "That is a private cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9wxtj08",
+    "version": 1,
+    "section": "edge-and-origin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a CDN make the site faster for a visitor far from the origin, even though the origin's server is unchanged?",
+    "hint": "What did no server setting change?",
+    "choices": [
+      {
+        "text": "Edges compress better than origins can",
+        "correct": false,
+        "why": "Compression is not the distance."
+      },
+      {
+        "text": "Hits are answered nearby",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Edges use a faster HTTP version than origins",
+        "correct": false,
+        "why": "Protocol versions are not the point here."
+      },
+      {
+        "text": "The CDN rewrites the site's code",
+        "correct": false,
+        "why": "It copies responses, it does not rewrite them."
+      }
+    ]
+  },
+  {
+    "id": "ex-62q6p762",
+    "version": 1,
+    "section": "edge-and-origin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With anycast, how does a visitor's packet reach the nearest edge?",
+    "hint": "Many edges, one address.",
+    "choices": [
+      {
+        "text": "The browser pings every edge first",
+        "correct": false,
+        "why": "No browser does that."
+      },
+      {
+        "text": "The origin forwards it",
+        "correct": false,
+        "why": "The origin is never asked to route."
+      },
+      {
+        "text": "Routing picks the nearest of many",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A cookie stores the closest edge",
+        "correct": false,
+        "why": "No cookie is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd69pd19",
+    "version": 1,
+    "section": "an-edge-of-your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do you tell a Varnish hit from a miss by `X-Varnish` alone?",
+    "hint": "Count the numbers.",
+    "choices": [
+      {
+        "text": "A hit shows two numbers",
+        "correct": true,
+        "why": "Right: this request's and the one that stored the copy."
+      },
+      {
+        "text": "A hit's number is always an even one",
+        "correct": false,
+        "why": "Parity means nothing."
+      },
+      {
+        "text": "A miss has no X-Varnish header at all",
+        "correct": false,
+        "why": "Every response carries it."
+      },
+      {
+        "text": "A hit says HIT inside X-Varnish",
+        "correct": false,
+        "why": "That word came from our own X-Cache header."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq25kccj",
+    "version": 1,
+    "section": "an-edge-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy with `max-age=60` arrives at a browser with `Age: 50`. For how long is it fresh in the browser?",
+    "hint": "The browser subtracts.",
+    "choices": [
+      {
+        "text": "60 seconds",
+        "correct": false,
+        "why": "The age is subtracted."
+      },
+      {
+        "text": "110 seconds",
+        "correct": false,
+        "why": "Ages do not add to the lifetime."
+      },
+      {
+        "text": "50 seconds",
+        "correct": false,
+        "why": "That is how long it already spent at the edge."
+      },
+      {
+        "text": "10 seconds",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjnma8kr",
+    "version": 1,
+    "section": "an-edge-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the VCL remove `Surrogate-Key` in `vcl_deliver`?",
+    "hint": "Who is the tag for?",
+    "choices": [
+      {
+        "text": "Browsers reject headers they do not know",
+        "correct": false,
+        "why": "They ignore them."
+      },
+      {
+        "text": "It is for the edge only",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To save bandwidth",
+        "correct": false,
+        "why": "A few bytes; not the reason."
+      },
+      {
+        "text": "Varnish cannot store such headers",
+        "correct": false,
+        "why": "It stored it; the ban used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7kkxg4t",
+    "version": 1,
+    "section": "what-the-edge-will-not-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two requests with `Cookie: session=abc` both missed, each with a single X-Varnish number. What did Varnish do?",
+    "hint": "It did not even look.",
+    "choices": [
+      {
+        "text": "Stored two copies, one per cookie",
+        "correct": false,
+        "why": "Nothing was stored."
+      },
+      {
+        "text": "Passed them to the origin without storing",
+        "correct": true,
+        "why": "Right. A cookie usually means a personal answer."
+      },
+      {
+        "text": "Refused them with 403",
+        "correct": false,
+        "why": "They got answers."
+      },
+      {
+        "text": "Served the copy stored for everybody",
+        "correct": false,
+        "why": "That is what Nginx did with Authorization in lesson 5."
+      }
+    ]
+  },
+  {
+    "id": "ex-9c0xfj92",
+    "version": 1,
+    "section": "what-the-edge-will-not-keep",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A site behind Varnish has a hit ratio near zero although every page is public. What is the likeliest cause?",
+    "hint": "What do almost all browser requests carry?",
+    "choices": [
+      {
+        "text": "The edge has too little memory for the site",
+        "correct": false,
+        "why": "Size would cause evictions, not passes on every request."
+      },
+      {
+        "text": "A cookie on every request",
+        "correct": true,
+        "why": "Right. Strip the cookies the origin never reads."
+      },
+      {
+        "text": "The max-age is far too long",
+        "correct": false,
+        "why": "A longer lifetime would raise hits."
+      },
+      {
+        "text": "TLS ends at the edge",
+        "correct": false,
+        "why": "That is normal and unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-kg4ada2r",
+    "version": 1,
+    "section": "the-key-at-the-edge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why were `?utm_source=news` and `?utm_source=ads&utm_medium=cpc` served from one copy?",
+    "hint": "The first lines of vcl_recv.",
+    "choices": [
+      {
+        "text": "Varnish ignores every query string",
+        "correct": false,
+        "why": "?page=2 was stored separately."
+      },
+      {
+        "text": "They are stripped before hashing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The origin redirected them",
+        "correct": false,
+        "why": "No redirect happened."
+      },
+      {
+        "text": "The browser removed them",
+        "correct": false,
+        "why": "curl sent them as typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaq4f7mz",
+    "version": 1,
+    "section": "the-key-at-the-edge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone strips every query parameter at the edge to raise the hit ratio. What breaks?",
+    "hint": "Some parameters change the answer.",
+    "choices": [
+      {
+        "text": "Nothing; parameters never matter",
+        "correct": false,
+        "why": "?page=2 is a different page."
+      },
+      {
+        "text": "TLS to the origin",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "Purging by tag stops working",
+        "correct": false,
+        "why": "Purges still work by URL and tag."
+      },
+      {
+        "text": "Page 2 shows page 1",
+        "correct": true,
+        "why": "Right. Page 2 would show page 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-evkp8ng8",
+    "version": 1,
+    "section": "purging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the VCL check `client.ip !~ purgers` before accepting a PURGE?",
+    "hint": "Who else could send one?",
+    "choices": [
+      {
+        "text": "PURGE requests are slow to process",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Strangers could empty the cache",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "HTTP requires an ACL for PURGE",
+        "correct": false,
+        "why": "HTTP does not define PURGE at all."
+      },
+      {
+        "text": "Varnish refuses PURGE without one",
+        "correct": false,
+        "why": "Without the check it would accept anybody's."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwdckvah",
+    "version": 1,
+    "section": "purging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the price of book 2 changed, which single request cleared both its page and the listing?",
+    "hint": "Tags, not URLs.",
+    "choices": [
+      {
+        "text": "A PURGE of /api/books/2",
+        "correct": false,
+        "why": "That clears one URL."
+      },
+      {
+        "text": "A BAN on two tags",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Restarting Varnish",
+        "correct": false,
+        "why": "That empties everything."
+      },
+      {
+        "text": "A PUT through the edge",
+        "correct": false,
+        "why": "The PUT changed the database, not the cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnn085c6",
+    "version": 1,
+    "section": "purging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the ban pattern use `\\bbook-2\\b` instead of just `book-2`?",
+    "hint": "Twelve books, and one more digit.",
+    "choices": [
+      {
+        "text": "Varnish needs \\b in every regex",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "It makes the ban faster",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "So book-2 does not also match book-21",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To match uppercase too",
+        "correct": false,
+        "why": "\\b is a word boundary."
+      }
+    ]
+  },
+  {
+    "id": "ex-v97rpgjp",
+    "version": 1,
+    "section": "purging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a commercial CDN call the `Surrogate-Key` idea at Cloudflare?",
+    "hint": "The table in the last section.",
+    "choices": [
+      {
+        "text": "Cache tags",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Page rules for each URL",
+        "correct": false,
+        "why": "Those configure behaviour per URL pattern."
+      },
+      {
+        "text": "Workers",
+        "correct": false,
+        "why": "Those run code at the edge."
+      },
+      {
+        "text": "Argo",
+        "correct": false,
+        "why": "A routing product."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgnpvv1x",
+    "version": 1,
+    "section": "when-the-origin-is-down",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the shops stopped, book 7 came back `HIT` with `Age: 11` and book 8 got `503`. Why the difference?",
+    "hint": "Grace needs something to serve.",
+    "choices": [
+      {
+        "text": "Only book 7 was in grace",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Book 8 is private",
+        "correct": false,
+        "why": "Every book has the same headers."
+      },
+      {
+        "text": "The probe only checks odd ids",
+        "correct": false,
+        "why": "It checks /healthz."
+      },
+      {
+        "text": "Varnish answers 503 to every second request",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwe1tg84",
+    "version": 1,
+    "section": "when-the-origin-is-down",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How long does `beresp.grace = 1h` keep an expired object, in minutes?",
+    "hint": "One hour.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-k7c8sz4s",
+    "version": 1,
+    "section": "when-the-origin-is-down",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A popular copy expires and a hundred requests for it arrive at once. With grace, how many go to the origin?",
+    "hint": "Identical requests queue behind one fetch.",
+    "choices": [
+      {
+        "text": "A hundred",
+        "correct": false,
+        "why": "That is the stampede an edge prevents."
+      },
+      {
+        "text": "Fifty",
+        "correct": false,
+        "why": "No such halving."
+      },
+      {
+        "text": "One, while the rest are served from grace",
+        "correct": true,
+        "why": "Right. Lesson 11 measures it."
+      },
+      {
+        "text": "None",
+        "correct": false,
+        "why": "One fetch is needed to refresh."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9pv85xj",
+    "version": 1,
+    "section": "when-the-origin-is-down",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which number on a CDN's dashboard best shows whether the edge is doing its job?",
+    "hint": "What is the edge for?",
+    "choices": [
+      {
+        "text": "The number of edges in the network",
+        "correct": false,
+        "why": "That is the CDN's size, not your result."
+      },
+      {
+        "text": "The total bandwidth served",
+        "correct": false,
+        "why": "It grows with traffic whether or not the cache works."
+      },
+      {
+        "text": "Requests reaching the origin",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The number of purges",
+        "correct": false,
+        "why": "Purges are a tool, not a result."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3ntcgr1",
+    "version": 1,
+    "section": "real-cdns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CDN is set to \"flexible\" TLS: HTTPS from the visitor to the edge, plain HTTP from the edge to the origin. What is the risk?",
+    "hint": "Which half is plain?",
+    "choices": [
+      {
+        "text": "None; the visitor sees a padlock",
+        "correct": false,
+        "why": "The padlock covers only the first half."
+      },
+      {
+        "text": "The certificate expires sooner",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "Half the path is in the clear",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The edge cannot cache",
+        "correct": false,
+        "why": "It caches either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwdkfc7y",
+    "version": 1,
+    "section": "real-cdns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should the origin accept requests only from the CDN's address ranges?",
+    "hint": "What could somebody do by reaching it directly?",
+    "choices": [
+      {
+        "text": "To make the origin answer faster",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "The edge could be bypassed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "CDNs require it by contract",
+        "correct": false,
+        "why": "It is your protection, not theirs."
+      },
+      {
+        "text": "So the origin can drop TLS entirely",
+        "correct": false,
+        "why": "The origin should keep TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxpq93xc",
+    "version": 1,
+    "section": "real-cdns",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the lab to its commercial counterpart.",
+    "hint": "The last section's table.",
+    "pairs": [
+      {
+        "left": "Varnish on port 6081",
+        "right": "the CDN's edges"
+      },
+      {
+        "left": "Nginx on 127.0.0.1:8080",
+        "right": "your origin"
+      },
+      {
+        "left": "BAN by Surrogate-Key",
+        "right": "purge by cache tag"
+      },
+      {
+        "left": "beresp.grace",
+        "right": "serve stale"
+      }
+    ],
+    "right_distractors": [
+      "a CNAME to the origin"
+    ]
+  },
+  {
+    "id": "ex-4m75n6cd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which requests does Varnish's built-in logic pass to the origin without storing? Choose all that apply.",
+    "hint": "Personal signs, and writes.",
+    "choices": [
+      {
+        "text": "A GET with a Cookie header",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A GET with an Authorization header",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A PUT",
+        "correct": true,
+        "why": "Right. Writes are never cached."
+      },
+      {
+        "text": "A plain GET for a public book",
+        "correct": false,
+        "why": "That one is cached."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs903hcy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a price change on a site behind a tag-aware edge in order.",
+    "hint": "Write, then invalidate, then the next visitor.",
+    "items": [
+      "The new price is written to the database",
+      "A BAN names the tags book-2 and listing",
+      "The next request for the listing misses",
+      "The edge stores the listing with the new price"
+    ],
+    "trap": "Banning before the write would let a request store the old price again."
+  }
+]
