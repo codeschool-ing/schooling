@@ -1729,6 +1729,96 @@ def l09_range(lang):
                 'A faixa é larga e o piso dela ainda supera o custo com folga, então a decisão não '
                 'depende de qual ponta acabe certa.')
 
+# ------------------------------------------------------------------ lesson 10
+
+@figure('l10-strata', 10)
+def l10_strata(lang):
+    f = Fig('l10-strata', 680, 280, T(
+        lang,
+        'Three pairs of bars: cancellation within 90 days for late and on-time first deliveries. '
+        'Capital: 38.8% against 16.0%, a gap of 22.8 points. Interior: 43.9% against 20.0%, a gap of '
+        '23.9 points. Both together: 41.5% against 17.4%, a gap of 24.1 points. The gap survives inside '
+        'each region.',
+        'Três pares de barras: cancelamento em 90 dias para primeira entrega atrasada e no prazo. '
+        'Capital: 38,8% contra 16,0%, distância de 22,8 pontos. Interior: 43,9% contra 20,0%, distância '
+        'de 23,9 pontos. As duas juntas: 41,5% contra 17,4%, distância de 24,1 pontos. A distância '
+        'sobrevive dentro de cada região.'))
+    groups = [(T(lang, 'capital', 'capital'), S.BY_REGION['capital']['late'], S.BY_REGION['capital']['on time']),
+              (T(lang, 'interior', 'interior'), S.BY_REGION['interior']['late'], S.BY_REGION['interior']['on time']),
+              (T(lang, 'both together', 'as duas juntas'), S.RATE_LATE, S.RATE_ON)]
+    p = Plot(f, 60, 40, 640, 220, 0, 3, 0, 0.5)
+    p.yaxis([0.1, 0.2, 0.3, 0.4, 0.5], fmt=lambda v: pct(lang, v, 0), size=9)
+    for i, (name, late, on) in enumerate(groups):
+        for j, (v, col) in enumerate([(late, '--amber'), (on, '--paper-dim')]):
+            xa = p.sx(i + 0.2 + j * 0.32)
+            xb = xa + (p.sx(0.28) - p.sx(0))
+            f.bar(xa, p.sy(v), xb - xa, p.sy(0) - p.sy(v), fill='--scan' if j == 0 else '--panel',
+                  stroke=col, width=1.4)
+            f.text((xa + xb) / 2, p.sy(v) - 9, pct(lang, v), size=9.5,
+                   fill='--amber' if j == 0 else '--paper')
+        gap = 100 * late - 100 * on
+        f.text(p.sx(i + 0.5), 244, name, size=10.5, weight='600')
+        f.text(p.sx(i + 0.5), 262, T(lang, f'gap {num(lang, round(100 * late, 1) - round(100 * on, 1))} points',
+                                     f'distância {num(lang, round(100 * late, 1) - round(100 * on, 1))} pontos'),
+               size=9.5, fill='--paper-dim')
+    p.baseline()
+    f.line(p.sx(2), 40, p.sx(2), 228, stroke='--wire', width=1, dash='3 3')
+    f.text(60, 20, T(lang, 'cancelled within 90 days', 'cancelaram em 90 dias'), size=10, anchor='start',
+           weight='600')
+    f.text(640, 20, T(lang, 'late first box', '1ª caixa atrasada'), size=9.5, anchor='end', fill='--amber')
+    return f, T(lang,
+                'Late customers cancel at more than twice the rate inside each region. Region explains a '
+                'little of the pooled gap, and none of the rest.',
+                'Os clientes atrasados cancelam mais que o dobro dentro de cada região. A região explica um '
+                'pouco da distância conjunta, e nada do resto.')
+
+
+APPENDIX = [
+    ('A', ('Late means after the checkout date', 'Atraso é depois da data da compra'),
+     ('whose timestamp?', 'de quem é o registro?')),
+    ('B', ('Three tables joined; counts at each step', 'Três tabelas juntadas; contagens a cada passo'),
+     ('how was it built?', 'como foi montada?')),
+    ('C', ('The gap holds in both regions', 'A distância se mantém nas duas regiões'),
+     ('is it just the interior?', 'é só o interior?')),
+    ('D', ('The gap is there every month', 'A distância aparece todo mês'),
+     ('was it one bad month?', 'foi um mês ruim?')),
+    ('E', ('The exit survey and who answered it', 'A pesquisa de saída e quem respondeu'),
+     ('customers say it is price?', 'os clientes dizem que é preço?')),
+    ('F', ('The money, step by step', 'O dinheiro, passo a passo'),
+     ('do you believe R$ 790 thousand?', 'dá para acreditar em R$ 790 mil?')),
+]
+
+
+@figure('l10-appendix', 10)
+def l10_appendix(lang):
+    f = Fig('l10-appendix', 680, 290, T(
+        lang,
+        'Six likely questions on the left, each joined by a line to one appendix slide on the right. '
+        'Whose timestamp: A, late means after the checkout date. How was it built: B, three tables '
+        'joined with counts at each step. Is it just the interior: C, the gap holds in both regions. '
+        'Was it one bad month: D, the gap is there every month. Customers say it is price: E, the exit '
+        'survey and who answered it. Do you believe the money: F, the money step by step.',
+        'Seis perguntas prováveis à esquerda, cada uma ligada por uma linha a um slide de apêndice à '
+        'direita. De quem é o registro: A, atraso é depois da data da compra. Como foi montada: B, três '
+        'tabelas juntadas com contagens a cada passo. É só o interior: C, a distância se mantém nas duas '
+        'regiões. Foi um mês ruim: D, a distância aparece todo mês. Os clientes dizem que é preço: E, a '
+        'pesquisa de saída e quem respondeu. Dá para acreditar no dinheiro: F, o dinheiro passo a passo.'))
+    f.text(14, 14, T(lang, 'the question', 'a pergunta'), size=10, anchor='start', fill='--paper-dim')
+    f.text(330, 14, T(lang, 'the appendix slide that answers it', 'o slide de apêndice que responde'),
+           size=10, anchor='start', fill='--paper-dim')
+    for i, (letter, title, q) in enumerate(APPENDIX):
+        y = 30 + i * 43
+        f.text(14, y + 17, T(lang, *q), size=10, anchor='start', italic=True)
+        f.line(226, y + 17, 326, y + 17, stroke='--paper-dim', width=1, arrow=True)
+        f.rect(330, y, 336, 34, stroke='--wire', fill='--ink', rx=3)
+        f.text(346, y + 17, letter, size=12, weight='600', fill='--phosphor')
+        f.text(366, y + 17, T(lang, *title), size=10, anchor='start', weight='600')
+    return f, T(lang,
+                'Every slide in the appendix exists because a question on the premortem list needed it, '
+                'and nothing else is there.',
+                'Cada slide do apêndice existe porque uma pergunta da lista do pré-mortem precisou dele, '
+                'e nada mais está lá.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
