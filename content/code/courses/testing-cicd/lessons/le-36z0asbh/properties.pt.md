@@ -1,6 +1,6 @@
 ---
 title: Deixando a máquina escolher as entradas
-version: 1
+version: 2
 ---
 
 Todo teste até aqui confere exemplos que alguém escolheu: 1205 centavos, 501 g, 19.900. Escolher
@@ -9,8 +9,9 @@ pensou. **Testes baseados em propriedades** invertem isso. Você declara uma reg
 para toda entrada, e uma biblioteca gera entradas, centenas delas, procurando uma que a quebre.
 
 `split` tem duas regras assim. Seja qual for o total e quantas forem as parcelas, as parcelas somam
-de volta o total, e nenhuma difere de outra em mais de um centavo. Em
-`tests/test_money_properties.py`, escritas com a biblioteca Hypothesis:
+de volta o total, e nenhuma difere de outra em mais de um centavo. Escritas com a biblioteca
+Hypothesis, que a aula 1 já instalou, elas são um arquivo novo. Salve como
+`tests/test_money_properties.py`:
 
 ```python
 """Properties of split that hold for every total and every number of parts."""
@@ -98,6 +99,11 @@ nenhuma intuição sobre onde o arredondamento erra; precisou da regra.
 `--hypothesis-seed=0` fixou a semente desta captura para a execução poder ser repetida. Sem isso, o
 Hypothesis ainda guarda os exemplos com falha num banco local, `.hypothesis/`, e os tenta primeiro
 na execução seguinte, então uma falha achada uma vez continua falhando até ser corrigida.
+
+Ponha o `split` de volta com `git checkout shipquote/money.py`. Este é o último arquivo que a aula
+acrescenta ao projeto, então faça o commit da fábrica, do CSV, dos dois arquivos de teste novos e
+dos testes do store reescritos, juntos:
+`git add tests && git commit -m "Build test data with a factory, a table and a property"`.
 
 ## Onde propriedades se encaixam
 

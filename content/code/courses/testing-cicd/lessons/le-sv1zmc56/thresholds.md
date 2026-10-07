@@ -1,6 +1,6 @@
 ---
 title: A minimum, and what a minimum invites
-version: 1
+version: 2
 ---
 
 The obvious way to use coverage in a team is a rule: the build fails below some percentage.
@@ -23,7 +23,8 @@ status 5, and lesson 5 shows how a CI shell is configured so that it cannot happ
 
 ## What the minimum invites
 
-Now somebody needs the build green by the end of the day. They add one file:
+Now somebody needs the build green by the end of the day. They add one file, which you can add too
+and delete afterwards. Save it as `tests/test_touch_everything.py`:
 
 ```python
 from unittest import mock
@@ -56,7 +57,8 @@ exit status 0
 **90%, and the threshold passes.** The two tests execute the carrier client and the mailer and
 check nothing at all; the first even swallows whatever exception the client raises. Every line they
 touch is now "covered". The contract test from lesson 2 is still skipped, so `CarrierClient` is no
-better tested than an hour ago, and the report now says otherwise.
+better tested than an hour ago, and the report now says otherwise. Delete the file before going
+on.
 
 This is Goodhart's law in miniature: **when a measure becomes a target, it stops being a good
 measure.** Nobody meant to deceive anyone. The rule asked for a number and the number was the
