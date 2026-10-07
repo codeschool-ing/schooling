@@ -44,6 +44,7 @@ RENEWAL_DELIVERIES = 126_400  # renewal boxes shipped in the half-year
 RENEWAL_ON_TIME = 0.951
 SURVEY_RESPONSE = 0.23       # share of early cancellers answering the exit survey
 PILOT_LATE_TARGET = 0.08     # the pilot's aim for late first deliveries
+EXPRESS_EXTRA_CENTS = 900    # Ligeiro's express service, extra per first box
 
 
 def draw():
@@ -135,6 +136,9 @@ GAIN_PER_YEAR = AVOIDED_PER_YEAR * LOSS_PER_EARLY_CANCEL
 GAIN_LOW = GAIN_PER_YEAR // 2
 GAIN_HIGH = GAIN_PER_YEAR
 
+# The alternative lesson 9 prices: every first box by express, for a year.
+EXPRESS_PER_YEAR = 2 * NEW * EXPRESS_EXTRA_CENTS           # cents
+
 # ---------------------------------------------------------- the exit survey
 
 EARLY_CANCELLERS = CANCELLED
@@ -200,6 +204,7 @@ def main():
     p(f'margin lost per year          {brl(LOSS_PER_YEAR)}')
     p(f'CAC wasted per year           {brl(CAC_WASTED_PER_YEAR)}')
     p(f'pilot: avoided per year       {AVOIDED_PER_YEAR}  gain {brl(GAIN_LOW)} to {brl(GAIN_HIGH)}')
+    p(f'express for every first box, a year: {brl(EXPRESS_PER_YEAR)}')
     p(f'survey: cancellers {EARLY_CANCELLERS}  answers {SURVEY_ANSWERS}')
     p(f'weekly first on-time          {WEEKLY_FIRST}')
     p(f'  min {min(WEEKLY_FIRST)} max {max(WEEKLY_FIRST)}')

@@ -1598,6 +1598,137 @@ def p_l08_summary_page():
     marks.append((300, 355))
     return f, marks
 
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-ladder', 9)
+def l09_ladder(lang):
+    f = Fig('l09-ladder', 680, 260, T(
+        lang,
+        'A ladder of three rungs, climbing to the right. Bottom rung, observation: 17.3% of first '
+        'deliveries are late. Middle rung, interpretation: late first boxes more than double early '
+        'cancellations, and the manual address check causes the delay. Top rung, recommendation: '
+        'remove the check in the interior from 1 September; Sandra’s team; 8% or less; review 27 '
+        'October. Beside the ladder: what the reader can do with each rung, nothing, worry, approve.',
+        'Uma escada de três degraus subindo para a direita. Degrau de baixo, constatação: 17,3% das '
+        'primeiras entregas atrasam. Degrau do meio, interpretação: a primeira caixa atrasada mais '
+        'que dobra o cancelamento, e a conferência manual de endereço causa o atraso. Degrau de cima, '
+        'recomendação: tirar a conferência no interior a partir de 1º de setembro; equipe da Sandra; '
+        '8% ou menos; revisão em 27 de outubro. Ao lado: o que o leitor pode fazer com cada degrau, '
+        'nada, preocupar-se, aprovar.'))
+    rungs = [
+        (T(lang, 'observation', 'constatação'),
+         T(lang, ['17.3% of first deliveries are late'], ['17,3% das primeiras entregas atrasam']),
+         T(lang, 'the reader can: nothing', 'o leitor pode: nada'), '--wire'),
+        (T(lang, 'interpretation', 'interpretação'),
+         T(lang, ['late first boxes more than double cancellations;', 'the manual address check causes the delay'],
+           ['a 1ª caixa atrasada mais que dobra o cancelamento;', 'a conferência manual causa o atraso']),
+         T(lang, 'the reader can: worry', 'o leitor pode: preocupar-se'), '--paper-dim'),
+        (T(lang, 'recommendation', 'recomendação'),
+         T(lang, ['remove the check in the interior from 1 Sept;', 'Sandra’s team; 8% or less; review 27 Oct'],
+           ['tirar a conferência no interior em 1º/set;', 'equipe da Sandra; 8% ou menos; revisão 27/out']),
+         T(lang, 'the reader can: approve', 'o leitor pode: aprovar'), '--phosphor'),
+    ]
+    for i, (head, body, can, stroke) in enumerate(rungs):
+        x, y = 14 + i * 60, 184 - i * 76
+        f.rect(x, y, 400, 62, stroke=stroke, fill='--panel', width=1.4)
+        f.text(x + 12, y + 16, head, size=11, anchor='start', weight='600',
+               fill='--phosphor' if i == 2 else '--paper')
+        f.lines(x + 12, y + 34, body, size=9.5, anchor='start', gap=14)
+        f.text(x + 418, y + 31, can, size=10, anchor='start',
+               fill='--phosphor' if i == 2 else '--paper-dim')
+    return f, T(lang,
+                'Each rung needs the one below it. Most reports stop on the first, because it is the '
+                'only one that cannot be wrong.',
+                'Cada degrau precisa do de baixo. A maioria dos relatórios para no primeiro, porque é o '
+                'único que não pode estar errado.')
+
+
+@figure('l09-options', 9)
+def l09_options(lang):
+    f = Fig('l09-options', 680, 300, T(
+        lang,
+        'A chart of four options by yearly cost, from none to about R$ 110 thousand, against whether '
+        'the option treats the cause. Do nothing: no cost now, treats nothing, and loses about R$ 790 '
+        'thousand of margin a year. Promise three days: no cost, changes the measure but not the wait. '
+        'Express service: about R$ 110 thousand a year, faster but the check stays. Remove the check: '
+        'no new cost and treats the cause; it is the recommended option.',
+        'Um gráfico de quatro opções pelo custo anual, de nenhum a cerca de R$ 110 mil, contra tratar '
+        'ou não a causa. Não fazer nada: sem custo agora, não trata nada, e perde cerca de R$ 790 mil '
+        'de margem por ano. Prometer três dias: sem custo, muda a medida mas não a espera. Serviço '
+        'expresso: cerca de R$ 110 mil por ano, mais rápido, mas a conferência fica. Tirar a '
+        'conferência: sem custo novo e trata a causa; é a opção recomendada.'))
+    x0, x1, y0, y1 = 120, 650, 30, 230
+    f.line(x0, y1, x1, y1, stroke='--paper-dim', width=1.2)
+    f.line(x0, y0, x0, y1, stroke='--paper-dim', width=1.2)
+    f.text(x0, y1 + 16, T(lang, 'no new cost', 'sem custo novo'), size=9.5, anchor='start', fill='--paper-dim')
+    f.text(x1, y1 + 16, T(lang, 'about R$ 110 thousand a year', 'cerca de R$ 110 mil por ano'), size=9.5,
+           anchor='end', fill='--paper-dim')
+    f.text((x0 + x1) / 2, y1 + 36, T(lang, 'yearly cost of the option', 'custo anual da opção'), size=10,
+           weight='600')
+    f.text(x0 - 8, y0 + 20, T(lang, 'treats', 'trata'), size=9.5, anchor='end', fill='--paper-dim')
+    f.text(x0 - 8, y0 + 34, T(lang, 'the cause', 'a causa'), size=9.5, anchor='end', fill='--paper-dim')
+    f.text(x0 - 8, y1 - 34, T(lang, 'leaves', 'deixa'), size=9.5, anchor='end', fill='--paper-dim')
+    f.text(x0 - 8, y1 - 20, T(lang, 'the cause', 'a causa'), size=9.5, anchor='end', fill='--paper-dim')
+    pts = [
+        (x0 + 40, y1 - 40, T(lang, 'do nothing', 'não fazer nada'),
+         T(lang, 'margin lost: about R$ 790 thousand a year', 'margem perdida: cerca de R$ 790 mil/ano'), '--amber'),
+        (x0 + 40, y1 - 110, T(lang, 'promise three days', 'prometer três dias'),
+         T(lang, 'the measure improves, the wait does not', 'a medida melhora, a espera não'), '--paper-dim'),
+        (x1 - 40, y1 - 70, T(lang, 'express service', 'serviço expresso'),
+         T(lang, 'faster; the check stays', 'mais rápido; a conferência fica'), '--paper-dim'),
+        (x0 + 40, y0 + 26, T(lang, 'remove the check', 'tirar a conferência'),
+         T(lang, 'recommended: no new cost, treats the cause', 'recomendada: sem custo novo, trata a causa'),
+         '--phosphor'),
+    ]
+    for x, y, name, note, col in pts:
+        f.circle(x, y, 7, fill=col)
+        right = x < (x0 + x1) / 2
+        f.text(x + (14 if right else -14), y - 6, name, size=10.5, weight='600',
+               anchor='start' if right else 'end', fill=col if col != '--paper-dim' else '--paper')
+        f.text(x + (14 if right else -14), y + 9, note, size=9, anchor='start' if right else 'end',
+               fill='--paper-dim')
+    return f, T(lang,
+                'Laid out by cost and by whether each option treats the cause, the recommended option is '
+                'the only one in the top-left corner.',
+                'Organizadas pelo custo e por tratarem ou não a causa, a opção recomendada é a única no '
+                'canto superior esquerdo.')
+
+
+@figure('l09-range', 9)
+def l09_range(lang):
+    hi = S.GAIN_HIGH / 100
+    lo = S.GAIN_LOW / 100
+    f = Fig('l09-range', 680, 170, T(
+        lang,
+        'A horizontal scale of yearly margin kept, from zero to R$ 500 thousand. A thick bar runs from '
+        'about R$ 210 thousand, half the effect, to about R$ 430 thousand, the whole effect. At zero, a '
+        'mark shows the cost of the recommended option: no new spending.',
+        'Uma escala horizontal de margem mantida por ano, de zero a R$ 500 mil. Uma barra grossa vai de '
+        'cerca de R$ 210 mil, metade do efeito, a cerca de R$ 430 mil, o efeito inteiro. No zero, uma '
+        'marca mostra o custo da opção recomendada: nenhum gasto novo.'))
+    x0, x1 = 60, 640
+
+    def sx(v):
+        return x0 + v / 500000 * (x1 - x0)
+    f.line(x0, 110, x1, 110, stroke='--paper-dim', width=1.2)
+    for v in range(0, 500001, 100000):
+        f.line(sx(v), 110, sx(v), 115, stroke='--paper-dim', width=1)
+        f.text(sx(v), 128, T(lang, f'R$ {v // 1000}k', f'R$ {v // 1000} mil'), size=9, fill='--paper-dim')
+    f.bar(sx(lo), 76, sx(hi) - sx(lo), 20, fill='--phosphor-dim', stroke='--phosphor')
+    f.text(sx(lo), 62, T(lang, f'half the effect: about R$ {round(lo / 10000) * 10} thousand',
+                         f'metade do efeito: cerca de R$ {round(lo / 10000) * 10} mil'), size=9.5, anchor='end')
+    f.text(sx(hi), 62, T(lang, f'whole effect: about R$ {round(hi / 10000) * 10} thousand',
+                         f'efeito inteiro: cerca de R$ {round(hi / 10000) * 10} mil'), size=9.5, anchor='end')
+    f.line(sx(0), 70, sx(0), 110, stroke='--amber', width=2.4)
+    f.text(sx(0) + 6, 92, T(lang, 'cost', 'custo'), size=9.5, anchor='start', fill='--amber')
+    f.text((x0 + x1) / 2, 154, T(lang, 'margin kept each year if the pilot is rolled out',
+                                 'margem mantida por ano se o piloto for estendido'), size=10, weight='600')
+    return f, T(lang,
+                'The range is wide and its bottom still clears the cost by a long way, so the decision '
+                'does not depend on which end turns out to be right.',
+                'A faixa é larga e o piso dela ainda supera o custo com folga, então a decisão não '
+                'depende de qual ponta acabe certa.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
