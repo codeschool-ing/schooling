@@ -1,6 +1,6 @@
 ---
 title: Configuration lives outside the code
-version: 1
+version: 2
 ---
 
 If the artifact is the same in every environment, the differences have to come from somewhere else,
@@ -15,9 +15,138 @@ environment's settings. `shipquote` reads four:
 | `SHIPQUOTE_CARRIER_URL` | the carrier it asks for prices | none: the shop's own table |
 | `SHIPQUOTE_CARRIER_TOKEN` | the key it presents to the carrier | empty |
 
-Step 10 of the project, tagged `v1.5.0`, added the two carrier variables. Here are the three
-environments' configurations, with the token lines filtered out for now, since lesson 9 is about
-them:
+The two carrier variables are this lesson's change to the code. When `SHIPQUOTE_CARRIER_URL` names
+a carrier, a quote asks it, through lesson 2's `carrier.price`, and `/version` says where prices
+come from. Save it as `shipquote/app.py`:
+
+```python
+"""The HTTP face of shipquote: /health, /version and /quote."""
+import json
+import os
+import sys
+import time
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import parse_qs, urlparse
+
+from . import carrier, money, quote
+from .version import VERSION
+
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.started = time.monotonic()
+        url = urlparse(self.path)
+        if url.path == "/health":
+            return self.reply(200, {"status": "ok"})
+        if url.path == "/version":
+            env = os.environ.get("SHIPQUOTE_ENV", "dev")
+            source = os.environ.get("SHIPQUOTE_CARRIER_URL") or "table"
+            return self.reply(200, {"version": VERSION, "env": env,
+                                    "carrier": source})
+        if url.path != "/quote":
+            return self.reply(404, {"error": "not found"})
+        args = parse_qs(url.query)
+        try:
+            cep = args["cep"][0]
+            weight_g = int(args["weight"][0])
+            subtotal = int(args.get("subtotal", ["0"])[0])
+            cents = quote.freight(cep, weight_g, subtotal)
+        except KeyError as e:
+            return self.reply(400, {"error": f"missing {e.args[0]}"})
+        except ValueError as e:
+            return self.reply(400, {"error": str(e)})
+        carrier_url = os.environ.get("SHIPQUOTE_CARRIER_URL")
+        if carrier_url and cents:
+            client = carrier.CarrierClient(
+                carrier_url, os.environ.get("SHIPQUOTE_CARRIER_TOKEN", ""))
+            cents = carrier.price(client, cep, weight_g, subtotal,
+                                  log=lambda line: print(line, file=sys.stderr))
+        try:
+            body = self.quote_body(cep, cents)
+        except Exception as e:  # noqa: BLE001 -- answered as a 500 and logged
+            print(f"error: {type(e).__name__}: {e}", file=sys.stderr)
+            return self.reply(500, {"error": "internal error"})
+        self.reply(200, body)
+
+    def quote_body(self, cep, cents):
+        return {"cep": cep, "zone": quote.zone_of(cep),
+                "cents": cents, "price": money.brl(cents)}
+
+    def reply(self, status, body):
+        data = json.dumps(body).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, fmt, *args):
+        ms = (time.monotonic() - getattr(self, "started", time.monotonic())) * 1000
+        print(f"{self.command} {self.path} {args[1]} {ms:.1f}ms v={VERSION}",
+              file=sys.stderr)
+
+
+def main():
+    port = int(os.environ.get("SHIPQUOTE_PORT", "8080"))
+    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    print(f"shipquote {VERSION} listening on 127.0.0.1:{port}", file=sys.stderr)
+    server.serve_forever()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+One test is added, for the answer when no carrier is named. Save them as `tests/test_app.py`:
+
+```python
+import pytest
+
+from tests.conftest import get
+
+pytestmark = pytest.mark.functional
+
+
+def test_health_answers_ok(base_url):
+    assert get(base_url + "/health") == (200, {"status": "ok"})
+
+
+def test_a_quote_comes_back_as_json_with_the_price_formatted(base_url):
+    status, body = get(base_url + "/quote?cep=01310-100&weight=1200&subtotal=5000")
+    assert status == 200
+    assert body == {"cep": "01310-100", "zone": "SP",
+                    "cents": 2190, "price": "R$ 21,90"}
+
+
+def test_a_bad_cep_is_a_400_that_says_why(base_url):
+    status, body = get(base_url + "/quote?cep=abc&weight=1200")
+    assert status == 400
+    assert body == {"error": "not a CEP: 'abc'"}
+
+
+def test_version_says_the_table_is_used_when_no_carrier_is_named(base_url):
+    assert get(base_url + "/version")[1]["carrier"] == "table"
+```
+
+Commit it, tag the commit as release 1.5.0 and build its artifact:
+
+```sh
+git commit -am "Ask the carrier when the environment names one"
+git tag -a v1.5.0 -m "shipquote 1.5.0"
+ops/build.sh
+```
+
+Then the three configurations. Development has a port and nothing else; staging and production
+each name a carrier and carry its token:
+
+```sh
+mkdir -p ~/envs/dev ~/envs/staging ~/envs/production
+echo SHIPQUOTE_PORT=8100 > ~/envs/dev/config.env
+printf 'SHIPQUOTE_PORT=8200\nSHIPQUOTE_CARRIER_URL=http://127.0.0.1:9091\nSHIPQUOTE_CARRIER_TOKEN=lab-sandbox-token\n' > ~/envs/staging/config.env
+printf 'SHIPQUOTE_PORT=8300\nSHIPQUOTE_CARRIER_URL=http://127.0.0.1:9092\nSHIPQUOTE_CARRIER_TOKEN=lab-live-token\n' > ~/envs/production/config.env
+```
+
+Here they are, with the token lines filtered out from now on, since lesson 9 is about them:
 
 ```
 ana@laptop:~/shipquote$ grep -v TOKEN ~/envs/*/config.env

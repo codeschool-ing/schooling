@@ -15,7 +15,12 @@
 # lab made up and open nothing; the sections print the configuration with the
 # token lines filtered out, and lesson 9 is about why.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# What step 10 changes, app.py and test_app.py, is shown whole in
+# "config-not-code", with the commands that write the three configurations, and
+# `../../lab.sh shown` fails this script before its first block if either file
+# is not the one ../../lab.sh wrote.
+#
+# What is STAGED rather than typed:
 #   - the project at step 10 (tag v1.5.0) in /home/ana/shipquote, by
 #     ../../lab.sh; ~/envs emptied; the three config.env files, whose
 #     non-secret lines the section "three-configs" prints;
@@ -38,11 +43,12 @@ stop_all() {
 stop_all
 rm -rf "$HOME/envs"
 bash "$LAB" stage 10 >/dev/null
+bash "$LAB" shown "$(dirname "$LAB")/lessons/le-mnmcav0k" || exit 1
 bash "$LAB" carrier "$HOME/carrier"
 CARRIER_TOKEN=lab-sandbox-token CARRIER_PORT=9091 setsid python3 "$HOME/carrier/server.py" </dev/null >/dev/null 2>&1 & C1=$!
 CARRIER_TOKEN=lab-live-token CARRIER_PORT=9092 setsid python3 "$HOME/carrier/server.py" </dev/null >/dev/null 2>&1 & C2=$!
 mkdir -p "$HOME/envs/dev" "$HOME/envs/staging" "$HOME/envs/production"
-printf 'SHIPQUOTE_PORT=8100\n' > "$HOME/envs/dev/config.env"
+echo SHIPQUOTE_PORT=8100 > "$HOME/envs/dev/config.env"
 printf 'SHIPQUOTE_PORT=8200\nSHIPQUOTE_CARRIER_URL=http://127.0.0.1:9091\nSHIPQUOTE_CARRIER_TOKEN=lab-sandbox-token\n' > "$HOME/envs/staging/config.env"
 printf 'SHIPQUOTE_PORT=8300\nSHIPQUOTE_CARRIER_URL=http://127.0.0.1:9092\nSHIPQUOTE_CARRIER_TOKEN=lab-live-token\n' > "$HOME/envs/production/config.env"
 cd "$HOME/shipquote" || exit 1
@@ -74,7 +80,7 @@ run 'ops/deploy.sh staging dist/shipquote-1.5.0.tar.gz && diff -r -x __pycache__
 
 block preview
 mkdir -p "$HOME/envs/pr-42"
-printf 'SHIPQUOTE_PORT=8442\n' > "$HOME/envs/pr-42/config.env"
+echo SHIPQUOTE_PORT=8442 > "$HOME/envs/pr-42/config.env"
 run 'cat ~/envs/pr-42/config.env'
 run 'time ops/deploy.sh pr-42 dist/shipquote-1.5.0.tar.gz'
 run 'kill $(cat ~/envs/pr-42/pid) && rm -rf ~/envs/pr-42 && ls ~/envs'

@@ -1,6 +1,6 @@
 ---
 title: Drift, and how it is found
-version: 1
+version: 2
 ---
 
 **Drift** is the difference that accumulates between environments, or between an environment and
@@ -10,7 +10,15 @@ into a unique object, and a release tested on one no longer says anything about 
 
 Here is drift made deliberately. During a sales weekend somebody edits staging's deployed copy by
 hand to lower the free-shipping threshold to R$ 190,00, intending to try a promotion, and restarts
-it. Nothing goes through the pipeline. Then the two environments are asked the usual questions:
+it. Nothing goes through the pipeline. Do the same, with one `sed` on the deployed file and the
+restart script:
+
+```sh
+sed -i 's/FREE_FROM = 19900 /FREE_FROM = 19000 /' ~/envs/staging/current/shipquote/quote.py
+ops/restart.sh staging
+```
+
+Then the two environments are asked the usual questions:
 
 ```
 ana@laptop:~/shipquote$ for port in 8200 8300; do curl -s http://127.0.0.1:$port/version; echo; done
