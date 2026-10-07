@@ -1,0 +1,854 @@
+[
+  {
+    "id": "ex-q7r4nx7q",
+    "version": 1,
+    "section": "what-it-protects",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each place the data is to what protects it there.",
+    "hint": "One of them is not encryption at all.",
+    "pairs": [
+      {
+        "left": "on the network",
+        "right": "TLS"
+      },
+      {
+        "left": "in the data files",
+        "right": "volume encryption"
+      },
+      {
+        "left": "in a backup file",
+        "right": "encrypting the file"
+      },
+      {
+        "left": "inside the running database",
+        "right": "grants and policies"
+      }
+    ]
+  },
+  {
+    "id": "ex-zpgz6ssv",
+    "version": 1,
+    "section": "what-it-protects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analyst with the wrong grant runs `SELECT cpf FROM sales.customers` on a server whose disk is encrypted and whose connections use TLS. What does she get?",
+    "hint": "Where does each kind of encryption end?",
+    "choices": [
+      {
+        "text": "Ciphertext, because the disk is encrypted",
+        "correct": false,
+        "why": "No. The disk's encryption ends when the operating system reads the block."
+      },
+      {
+        "text": "Every CPF in clear",
+        "correct": true,
+        "why": "Right. Both layers end before a SELECT; only grants would have stopped her."
+      },
+      {
+        "text": "An error, because TLS refuses sensitive columns",
+        "correct": false,
+        "why": "No. TLS encrypts the connection; it knows nothing about columns."
+      },
+      {
+        "text": "The CPFs, encrypted with her session key",
+        "correct": false,
+        "why": "No. She receives them encrypted on the wire and decrypted by her own client."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q2ps5jc",
+    "version": 1,
+    "section": "what-it-protects",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Data stored in files, backups and exports is said to be at ___; data moving between a client and a server is in transit.",
+    "hint": "The opposite of moving.",
+    "blanks": [
+      {
+        "accept": [
+          "rest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4wbr83xn",
+    "version": 1,
+    "section": "the-default-certificate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is wrong with the snakeoil certificate Ubuntu installs?",
+    "hint": "Read the issuer.",
+    "choices": [
+      {
+        "text": "It uses a weak cipher",
+        "correct": false,
+        "why": "No. The session negotiated TLS 1.3 with AES-256-GCM."
+      },
+      {
+        "text": "It encrypts only the password exchange",
+        "correct": false,
+        "why": "No. It encrypts the whole connection."
+      },
+      {
+        "text": "It is self-signed",
+        "correct": true,
+        "why": "Right. Issued for localhost by localhost, it cannot be checked against anything a client trusts."
+      },
+      {
+        "text": "It expires the day the cluster is created",
+        "correct": false,
+        "why": "No. Nothing in the capture shows an expiry problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t74dpw4",
+    "version": 1,
+    "section": "the-default-certificate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A connection is encrypted with TLS but the client does not check the certificate. What can somebody in the middle of the path still do?",
+    "hint": "Encryption keeps a listener out. Who is the client talking to?",
+    "choices": [
+      {
+        "text": "Use their own key and read the traffic",
+        "correct": true,
+        "why": "Right. The client encrypts happily, to the wrong party, and the queries and results are theirs."
+      },
+      {
+        "text": "Nothing, because the traffic is encrypted",
+        "correct": false,
+        "why": "No. It is encrypted to whoever answered, and nobody checked who that was."
+      },
+      {
+        "text": "Read only the password, which SCRAM sends first",
+        "correct": false,
+        "why": "No. SCRAM never sends the password; the risk is the queries and rows."
+      },
+      {
+        "text": "Slow the connection down, nothing more",
+        "correct": false,
+        "why": "No. Interception is worse than delay."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryskr6p8",
+    "version": 1,
+    "section": "sslmode",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these sslmode values from the one that checks least to the one that checks most.",
+    "hint": "The last one also checks the host name.",
+    "items": [
+      "disable",
+      "prefer",
+      "require",
+      "verify-ca",
+      "verify-full"
+    ]
+  },
+  {
+    "id": "ex-9ye3n02d",
+    "version": 1,
+    "section": "sslmode",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `prefer`, the default, unsafe against somebody who can interfere with the connection?",
+    "hint": "Lesson 1 saw each wrong password refused twice.",
+    "choices": [
+      {
+        "text": "It encrypts with an older protocol",
+        "correct": false,
+        "why": "No. When it encrypts, it negotiates the same TLS as require."
+      },
+      {
+        "text": "It sends the password in clear first",
+        "correct": false,
+        "why": "No. With SCRAM the password is never sent."
+      },
+      {
+        "text": "It falls back to plaintext silently",
+        "correct": true,
+        "why": "Right. Making the first attempt fail on purpose hands over a plaintext second one."
+      },
+      {
+        "text": "It trusts every CA on the operating system",
+        "correct": false,
+        "why": "No. prefer checks no certificate at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfeeg3p8",
+    "version": 1,
+    "section": "sslmode",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `sslmode=disable`, Bruno connected and `pg_stat_ssl` showed `f`. What made that possible?",
+    "hint": "Which side refuses plaintext?",
+    "choices": [
+      {
+        "text": "The snakeoil certificate was invalid",
+        "correct": false,
+        "why": "No. A certificate is not consulted for a plaintext connection."
+      },
+      {
+        "text": "A host line in pg_hba.conf matched it",
+        "correct": true,
+        "why": "Right. host matches with or without TLS; hostssl would not have."
+      },
+      {
+        "text": "Bruno is an analyst and analysts are exempt",
+        "correct": false,
+        "why": "No. pg_hba.conf has no notion of jobs."
+      },
+      {
+        "text": "The server had ssl turned off",
+        "correct": false,
+        "why": "No. SHOW ssl said on."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4w1mgp6",
+    "version": 1,
+    "section": "a-real-certificate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`verify-full` refused a connection to `127.0.0.1` with a valid certificate signed by the trusted root. Why is that refusal useful?",
+    "hint": "What would a certificate for another machine be worth if names were not checked?",
+    "choices": [
+      {
+        "text": "It forces clients to use DNS, which is faster",
+        "correct": false,
+        "why": "No. Speed is not the point."
+      },
+      {
+        "text": "It shows the certificate has expired",
+        "correct": false,
+        "why": "No. The certificate was valid; the name did not match."
+      },
+      {
+        "text": "IP addresses cannot appear in certificates",
+        "correct": false,
+        "why": "No. They can, in the SAN; this one simply carries a DNS name."
+      },
+      {
+        "text": "It stops a certificate for another host",
+        "correct": true,
+        "why": "Right. Dropping to verify-ca to get past it removes exactly that protection."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvqnf4w0",
+    "version": 1,
+    "section": "a-real-certificate",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did `verify-full` check before Bruno's connection was accepted? Choose all that apply.",
+    "hint": "Two checks, one about the signature, one about the name.",
+    "choices": [
+      {
+        "text": "That the certificate was signed by the root in root.crt",
+        "correct": true,
+        "why": "Yes. That is the CA half."
+      },
+      {
+        "text": "That it was issued for db.ipe.example",
+        "correct": true,
+        "why": "Yes. That is the full half, against the SAN."
+      },
+      {
+        "text": "That Bruno's password matched",
+        "correct": false,
+        "why": "No. That is authentication, done by SCRAM after TLS is set up."
+      },
+      {
+        "text": "That the server's private key file has mode 600",
+        "correct": false,
+        "why": "No. The client cannot see the server's files."
+      }
+    ]
+  },
+  {
+    "id": "ex-wz57c27c",
+    "version": 1,
+    "section": "a-real-certificate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does libpq look, by default, for the certificate authorities that `verify-full` trusts?",
+    "hint": "The error message named the file.",
+    "choices": [
+      {
+        "text": "/etc/ssl/certs, the system's store",
+        "correct": false,
+        "why": "No. That is what sslrootcert=system asks for; the default is a file in the user's home."
+      },
+      {
+        "text": "~/.postgresql/root.crt",
+        "correct": true,
+        "why": "Right. Ana copied the lab root there."
+      },
+      {
+        "text": "~/.pgpass, beside the passwords",
+        "correct": false,
+        "why": "No. ~/.pgpass holds passwords and nothing else."
+      },
+      {
+        "text": "The server sends it at connection time",
+        "correct": false,
+        "why": "No. A CA sent by the server would be trusting the server's own word."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwfgxhf9",
+    "version": 1,
+    "section": "requiring-tls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the `hostnossl … reject` line, what still depends on each client rather than the server?",
+    "hint": "The server insists on encryption. What can it not insist on?",
+    "choices": [
+      {
+        "text": "Checking the certificate of the server it reaches",
+        "correct": true,
+        "why": "Right. A client with sslmode=require satisfies hostssl and trusts any certificate."
+      },
+      {
+        "text": "Whether the connection is encrypted at all",
+        "correct": false,
+        "why": "No. That is now the server's decision."
+      },
+      {
+        "text": "Which TLS version is used",
+        "correct": false,
+        "why": "No. ssl_min_protocol_version is set on the server."
+      },
+      {
+        "text": "Which authentication method applies",
+        "correct": false,
+        "why": "No. pg_hba.conf, on the server, picks the method."
+      }
+    ]
+  },
+  {
+    "id": "ex-73dh833g",
+    "version": 1,
+    "section": "requiring-tls",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each pg_hba.conf connection type to what it matches.",
+    "hint": "One of them is the socket.",
+    "pairs": [
+      {
+        "left": "local",
+        "right": "the Unix socket"
+      },
+      {
+        "left": "host",
+        "right": "TCP, with or without TLS"
+      },
+      {
+        "left": "hostssl",
+        "right": "TCP with TLS only"
+      },
+      {
+        "left": "hostnossl",
+        "right": "TCP without TLS only"
+      }
+    ]
+  },
+  {
+    "id": "ex-q65nrc2g",
+    "version": 1,
+    "section": "client-certificates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `cert` method, how does PostgreSQL decide which role the certificate belongs to?",
+    "hint": "Look at the subject Ana wrote in the request.",
+    "choices": [
+      {
+        "text": "From the file name etl_loader.crt",
+        "correct": false,
+        "why": "No. File names never reach the server."
+      },
+      {
+        "text": "From a password stored in the certificate",
+        "correct": false,
+        "why": "No. A certificate carries a public key, not a password."
+      },
+      {
+        "text": "Its CN must equal the role",
+        "correct": true,
+        "why": "Right. CN=etl_loader, user=etl_loader."
+      },
+      {
+        "text": "From the client's IP address",
+        "correct": false,
+        "why": "No. The address picks the pg_hba.conf line, not the role."
+      }
+    ]
+  },
+  {
+    "id": "ex-ha9ccvj6",
+    "version": 1,
+    "section": "client-certificates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's `~/.pgpass` still holds `etl_loader`'s old password, yet connecting without the certificate is refused. Why?",
+    "hint": "Which method does the matching line name?",
+    "choices": [
+      {
+        "text": "The password was revoked when the certificate was issued",
+        "correct": false,
+        "why": "No. Issuing a certificate changes nothing about the role's password."
+      },
+      {
+        "text": "The first matching line for etl_loader says cert, not a password",
+        "correct": true,
+        "why": "Right. For that role the method is no longer a password, whatever the file holds."
+      },
+      {
+        "text": "libpq ignores .pgpass when sslmode is verify-full",
+        "correct": false,
+        "why": "No. It reads it; the server never asks for a password."
+      },
+      {
+        "text": "The certificate expired",
+        "correct": false,
+        "why": "No. It was issued for ninety days moments before."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfwxpc1n",
+    "version": 1,
+    "section": "client-certificates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the private key generated on the machine that will use it, with only the request sent to the CA?",
+    "hint": "Which half has to stay secret?",
+    "choices": [
+      {
+        "text": "Because the CA cannot generate keys",
+        "correct": false,
+        "why": "No. A CA could; it should not."
+      },
+      {
+        "text": "To make the certificate valid for longer",
+        "correct": false,
+        "why": "No. Validity is set by the CA when it signs."
+      },
+      {
+        "text": "So the secret half never travels",
+        "correct": true,
+        "why": "Right. The request carries only the public key."
+      },
+      {
+        "text": "Because OpenSSL refuses to sign a key from another machine",
+        "correct": false,
+        "why": "No. OpenSSL signs any valid request."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3ekckq5",
+    "version": 1,
+    "section": "client-certificates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For how many days was the `etl_loader` certificate issued?",
+    "hint": "The -days option.",
+    "value": 90,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gg2414z3",
+    "version": 1,
+    "section": "on-the-disk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did Ana run `CHECKPOINT` before searching the table's file for an e-mail address?",
+    "hint": "Where does a changed page live until then?",
+    "choices": [
+      {
+        "text": "Pages reach the file at a checkpoint",
+        "correct": true,
+        "why": "Right. Until then they can sit in memory."
+      },
+      {
+        "text": "CHECKPOINT decrypts the file for reading",
+        "correct": false,
+        "why": "No. Nothing is encrypted there to decrypt."
+      },
+      {
+        "text": "grep cannot read a file PostgreSQL has open",
+        "correct": false,
+        "why": "No. grep reads it; the point is whether the bytes are there yet."
+      },
+      {
+        "text": "To compress the table first",
+        "correct": false,
+        "why": "No. A checkpoint compresses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wh2s4nkx",
+    "version": 1,
+    "section": "on-the-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the LUKS header, the keyslot uses `argon2id`. What is the passphrase used for?",
+    "hint": "It is not the key that encrypts the disk.",
+    "choices": [
+      {
+        "text": "It is the AES key itself",
+        "correct": false,
+        "why": "No. The volume key is separate and stored in a slot."
+      },
+      {
+        "text": "It names the device under /dev/mapper",
+        "correct": false,
+        "why": "No. The name is chosen when opening the volume."
+      },
+      {
+        "text": "It sets the size of the volume",
+        "correct": false,
+        "why": "No. The size comes from the device."
+      },
+      {
+        "text": "It opens the key's slot",
+        "correct": true,
+        "why": "Right. The slot holds the real volume key; several slots each open the volume, and one is removable without re-encrypting."
+      }
+    ]
+  },
+  {
+    "id": "ex-edfnbq54",
+    "version": 1,
+    "section": "on-the-disk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cloud volume is encrypted at rest, and the key is stored in a file on that same volume. What does the encryption protect against?",
+    "hint": "What does somebody who takes the volume also take?",
+    "choices": [
+      {
+        "text": "A stolen snapshot of the volume",
+        "correct": false,
+        "why": "No. Whoever has the snapshot has the key, which is on it."
+      },
+      {
+        "text": "Nothing that matters",
+        "correct": true,
+        "why": "Right. Every layer ends at a key, and a key beside the data protects against nobody."
+      },
+      {
+        "text": "Readers who log in to the database",
+        "correct": false,
+        "why": "No. Volume encryption never protects against them."
+      },
+      {
+        "text": "Network eavesdroppers",
+        "correct": false,
+        "why": "No. That is TLS's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3z7kkvc",
+    "version": 1,
+    "section": "what-disk-encryption-misses",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The data directory is on an encrypted volume. Which of these copies are still plaintext unless encrypted separately? Choose all that apply.",
+    "hint": "Which copies leave the volume?",
+    "choices": [
+      {
+        "text": "A pg_dump file on a backup server",
+        "correct": true,
+        "why": "Yes. The dump showed Paula's row in clear."
+      },
+      {
+        "text": "A CSV export written for another team",
+        "correct": true,
+        "why": "Yes. It is a new file outside the volume."
+      },
+      {
+        "text": "Temporary sort files in the data directory",
+        "correct": false,
+        "why": "No. They are inside the data directory, on the encrypted volume."
+      },
+      {
+        "text": "The server log on another disk",
+        "correct": true,
+        "why": "Yes. A log carries values, and lives where it lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-eswr8t71",
+    "version": 1,
+    "section": "what-disk-encryption-misses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does volume encryption protect against, completely and cheaply?",
+    "hint": "One threat, and only one.",
+    "choices": [
+      {
+        "text": "Analysts with too many grants",
+        "correct": false,
+        "why": "No. They read through the database, which reads plaintext."
+      },
+      {
+        "text": "A backup copied to the wrong bucket",
+        "correct": false,
+        "why": "No. The backup is a new file outside the volume."
+      },
+      {
+        "text": "A disk that leaves your control",
+        "correct": true,
+        "why": "Right. Stolen hardware, a drive sent for repair, a snapshot copied out."
+      },
+      {
+        "text": "A superuser who runs SELECT",
+        "correct": false,
+        "why": "No. The superuser reads plaintext like everybody else with a login."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xcj0sq8",
+    "version": 1,
+    "section": "column-encryption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana decrypted one CPF with `pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026')` while statement logging was on. What did the log then hold?",
+    "hint": "The statement travelled as text.",
+    "choices": [
+      {
+        "text": "The CPF, decrypted",
+        "correct": false,
+        "why": "No. The statement is logged, not its result."
+      },
+      {
+        "text": "Only the hash of the key",
+        "correct": false,
+        "why": "No. The statement is logged as written."
+      },
+      {
+        "text": "Nothing, because pgcrypto masks its arguments",
+        "correct": false,
+        "why": "No. The grep found the key."
+      },
+      {
+        "text": "The key, in clear, inside the text of the query",
+        "correct": true,
+        "why": "Right. A key that travels in SQL lands wherever SQL is recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhdbge5h",
+    "version": 1,
+    "section": "column-encryption",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Against whom does encrypting a column inside the database, with pgcrypto, give no protection?",
+    "hint": "Who sees the key when it is used?",
+    "choices": [
+      {
+        "text": "The database's administrators and its logs",
+        "correct": true,
+        "why": "Right. The key passes through the server every time it decrypts."
+      },
+      {
+        "text": "Somebody holding a stolen backup without the key",
+        "correct": false,
+        "why": "No. That is exactly whom it protects against."
+      },
+      {
+        "text": "Somebody reading a replica without the key",
+        "correct": false,
+        "why": "No. The replica holds ciphertext too."
+      },
+      {
+        "text": "An analyst with SELECT on cpf_enc but not the key",
+        "correct": false,
+        "why": "No. Without the key the column is ciphertext to them."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm9nmzhh",
+    "version": 1,
+    "section": "column-encryption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `pgp_sym_encrypt` give two different ciphertexts for two equal CPFs?",
+    "hint": "Something random goes in each time.",
+    "choices": [
+      {
+        "text": "It encrypts the customer_id with the CPF",
+        "correct": false,
+        "why": "No. Only the CPF is encrypted."
+      },
+      {
+        "text": "A random salt goes into every message",
+        "correct": true,
+        "why": "Right. Equal plaintexts do not reveal themselves as equal."
+      },
+      {
+        "text": "The key changes for every row",
+        "correct": false,
+        "why": "No. The passphrase was the same for all 6,012."
+      },
+      {
+        "text": "Because the second one is compressed",
+        "correct": false,
+        "why": "No. Compression is not what makes them differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xxj7bpv",
+    "version": 1,
+    "section": "choosing-the-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is application-level encryption wrong as a default for every column?",
+    "hint": "What can the database no longer do with the value?",
+    "choices": [
+      {
+        "text": "It is weaker than disk encryption",
+        "correct": false,
+        "why": "No. It protects against more people, not fewer."
+      },
+      {
+        "text": "Applications are not allowed to hold keys",
+        "correct": false,
+        "why": "No. The question is where they get them, which is lesson 4."
+      },
+      {
+        "text": "Searching, sorting and joining on it",
+        "correct": true,
+        "why": "Right. It is worth that cost only where the people inside are the threat."
+      },
+      {
+        "text": "It doubles the size of every table",
+        "correct": false,
+        "why": "No. Size is not the main cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqt55jmy",
+    "version": 1,
+    "section": "choosing-the-layer",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer to the person it does NOT protect against.",
+    "hint": "Where does each one end?",
+    "pairs": [
+      {
+        "left": "TLS with verify-full",
+        "right": "anybody at either end"
+      },
+      {
+        "left": "volume encryption",
+        "right": "every reader with a login"
+      },
+      {
+        "left": "column encryption in the database",
+        "right": "the database's administrators"
+      },
+      {
+        "left": "encryption in the application",
+        "right": "whoever controls the application"
+      }
+    ]
+  },
+  {
+    "id": "ex-15kh8qjs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A BI tool connects to Ipê with `sslmode=require`. The server has `hostnossl … reject`. What is still missing?",
+    "hint": "Encrypted, yes. To whom?",
+    "choices": [
+      {
+        "text": "Nothing; require plus hostnossl is complete",
+        "correct": false,
+        "why": "No. Neither of them checks the server's certificate."
+      },
+      {
+        "text": "verify-full in the tool's settings",
+        "correct": true,
+        "why": "Right. Only the client can insist on checking whom it talks to."
+      },
+      {
+        "text": "A client certificate for every analyst who uses the tool",
+        "correct": false,
+        "why": "No. That is about proving the client; the gap is proving the server."
+      },
+      {
+        "text": "TLS 1.2 instead of 1.3 for compatibility",
+        "correct": false,
+        "why": "No. A lower version adds nothing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqzxwqj2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving etl_loader from a password to a certificate in order.",
+    "hint": "The key first, on its own machine.",
+    "items": [
+      "Generate a key and a request with CN=etl_loader",
+      "The CA signs the request",
+      "A hostssl line for etl_loader with method cert",
+      "Connect with sslcert and sslkey"
+    ]
+  }
+]

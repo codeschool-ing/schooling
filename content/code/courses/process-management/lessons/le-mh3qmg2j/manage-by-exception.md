@@ -1,0 +1,35 @@
+---
+title: Managing by exception
+version: 1
+---
+
+The principle that gives PRINCE2 most of its character is **management by exception**. It answers a question every organisation with layers of management faces: how much should the people above know about what the people below are doing, and when?
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 660 290\" role=\"img\" data-fig=\"l07-levels\" aria-label=\"Four levels of management stacked from top to bottom: corporate or programme management, the Project Board, the Project Manager and the Team Managers. Arrows on the left run down from each level to the next, labelled tolerances handed down. Arrows on the right run up, labelled exception escalated up.\"><defs><marker id=\"pm-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"pm-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"150.0\" y=\"20.0\" width=\"360.0\" height=\"48.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"330.0\" y=\"37.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">Corporate or programme</text><text x=\"330.0\" y=\"50.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">sets the project’s tolerances</text><path d=\"M200.0 70.0 L200.0 84.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#pm-ah-phosphor)\"></path><path d=\"M460.0 84.0 L460.0 70.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#pm-ah-amber)\"></path><rect x=\"150.0\" y=\"86.0\" width=\"360.0\" height=\"48.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"330.0\" y=\"103.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">Directing: the Project Board</text><text x=\"330.0\" y=\"116.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">Executive, Senior User, Senior Supplier</text><path d=\"M200.0 136.0 L200.0 150.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#pm-ah-phosphor)\"></path><path d=\"M460.0 150.0 L460.0 136.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#pm-ah-amber)\"></path><rect x=\"150.0\" y=\"152.0\" width=\"360.0\" height=\"48.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"330.0\" y=\"169.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">Managing: the Project Manager</text><text x=\"330.0\" y=\"182.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">runs each stage day to day</text><path d=\"M200.0 202.0 L200.0 216.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#pm-ah-phosphor)\"></path><path d=\"M460.0 216.0 L460.0 202.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#pm-ah-amber)\"></path><rect x=\"150.0\" y=\"218.0\" width=\"360.0\" height=\"48.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"330.0\" y=\"235.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">Delivering: Team Managers</text><text x=\"330.0\" y=\"248.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">produce the products</text><text x=\"140.0\" y=\"150.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">tolerances handed down</text><text x=\"520.0\" y=\"150.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">exception: escalated up</text></svg>", "caption": "PRINCE2’s levels of management. Each level gives the one below it room to work, in tolerances, and hears from it only when a forecast says the room will be exceeded."}
+```
+
+## Tolerances
+
+Each level of management sets the level below it **tolerances**: the permissible deviation from the plan before the higher level must be told. The 2017 edition lists six kinds:
+
+| tolerance | an example for the Agenda team's online booking |
+|---|---|
+| time | the stage may finish up to a week late |
+| cost | the stage may spend up to 10% over its budget |
+| scope | two low-priority reports may be dropped |
+| quality | the response time may reach 2 seconds on the slowest screen |
+| risk | no single risk may threaten more than R$ 20,000 |
+| benefits | the online share of bookings may come in 5 points below the forecast |
+
+Inside the tolerances, the Project Manager decides alone and reports at the regular intervals. When a **forecast** — not an event — says a tolerance will be exceeded, the Project Manager raises an **exception** to the Project Board, with options and a recommendation. The board then decides, and may ask for an **exception plan** that replaces the rest of the stage.
+
+## Why it is cleverer than it looks
+
+Management by exception solves two problems at once. Senior people stop spending their time on routine reports they cannot act on, and the people doing the work stop asking permission for decisions they understand better than anybody above them. The board's attention is spent only where it is needed: when a forecast says the plan has stopped being true.
+
+The same idea appears, under other names, all over this course. A Scrum Sprint Goal leaves the Developers free to change the plan inside the Sprint and brings the Product Owner in only when the goal itself is at risk. A Kanban work-in-progress limit is a tolerance for queues. **Agile teams and PRINCE2 boards both work by setting limits and acting when a limit is about to be crossed**; they differ in how far apart the levels are and how formally the limit is written down.
+
+## Where it goes wrong
+
+The failure is to set tolerances of zero, so that every small deviation becomes an exception and the board is consulted on everything. The opposite failure is to set them so wide that the first exception arrives when the project is already lost. Good tolerances are a judgement about where the board's decision would actually change something.

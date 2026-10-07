@@ -1,0 +1,571 @@
+{
+  "ex-d7tggmx8": {
+    "prompt": "O que o `server_tokens off` muda?",
+    "hint": "Compare o cabeçalho Server antes e depois.",
+    "choices": [
+      {
+        "text": "Esconde o número de versão",
+        "why": "Certo. `nginx`, sem número."
+      },
+      {
+        "text": "Remove o cabeçalho Server de toda resposta",
+        "why": "O cabeçalho ficou, dizendo `nginx`."
+      },
+      {
+        "text": "Corrige as falhas conhecidas daquela versão",
+        "why": "Só uma atualização faz isso."
+      },
+      {
+        "text": "Esconde o X-Served-By",
+        "why": "O X-Served-By continuou passando."
+      }
+    ]
+  },
+  "ex-zv2r6c0q": {
+    "prompt": "Por que vale esconder a versão, se isso não conserta nada?",
+    "hint": "Pense no dia em que uma falha é publicada.",
+    "choices": [
+      {
+        "text": "Deixa toda resposta mais rápida",
+        "why": "Alguns bytes a menos não mudam nada mensurável."
+      },
+      {
+        "text": "Nada de lista grátis aos scanners",
+        "why": "Certo. Some a lista de graça."
+      },
+      {
+        "text": "Navegadores confiam em quem esconde versões",
+        "why": "Navegadores nem olham isso."
+      },
+      {
+        "text": "O TLS exige",
+        "why": "O TLS não diz nada sobre o cabeçalho Server."
+      }
+    ]
+  },
+  "ex-7wktade6": {
+    "prompt": "A loja manda `Server: ipe-shop/1.0` na própria porta, mas as respostas pelo Nginx trazem o Server do Nginx. Por quê?",
+    "hint": "Um proxy esconde alguns cabeçalhos do upstream por padrão.",
+    "choices": [
+      {
+        "text": "A loja muda o cabeçalho quando está atrás de proxy",
+        "why": "A loja não sabe que está atrás de proxy."
+      },
+      {
+        "text": "O server_tokens off o removeu",
+        "why": "Já era trocado antes dessa configuração."
+      },
+      {
+        "text": "O Nginx descarta esse",
+        "why": "Certo."
+      },
+      {
+        "text": "O HTTPS tira cabeçalhos Server",
+        "why": "O TLS carrega cabeçalhos sem mexer."
+      }
+    ]
+  },
+  "ex-q84z278s": {
+    "prompt": "Antes do bloco que pega tudo, `curl -k https://127.0.0.1/` devolveu a livraria. Por que isso é um problema?",
+    "hint": "Quem pergunta pelo endereço?",
+    "choices": [
+      {
+        "text": "Deixou o site inteiro visivelmente mais lento",
+        "why": "Nada sobre velocidade."
+      },
+      {
+        "text": "Scanners o indexam, e outros nomes chegam a ele",
+        "why": "Certo."
+      },
+      {
+        "text": "Quebrou o certificado do nome verdadeiro",
+        "why": "O certificado estava bom para os nomes dele."
+      },
+      {
+        "text": "A loja recebeu requisições que não sabia ler de jeito nenhum",
+        "why": "A loja nem as viu; o Nginx serviu a página estática."
+      }
+    ]
+  },
+  "ex-yf3fexq2": {
+    "prompt": "O que o `return 444` faz o Nginx fazer?",
+    "hint": "O curl disse `Empty reply from server`.",
+    "choices": [
+      {
+        "text": "Mandar uma página dizendo que o site é desconhecido",
+        "why": "Nada é mandado."
+      },
+      {
+        "text": "Redirecionar para o site principal",
+        "why": "Nenhum Location, nenhuma resposta."
+      },
+      {
+        "text": "Fechar a conexão calado",
+        "why": "Certo. Um código próprio do Nginx."
+      },
+      {
+        "text": "Esperar 444 milissegundos e tentar de novo",
+        "why": "O número é só um código."
+      }
+    ]
+  },
+  "ex-766k679p": {
+    "prompt": "Por que o listener HTTPS do bloco que pega tudo usa `ssl_reject_handshake on` em vez de um certificado próprio?",
+    "hint": "O que um certificado contaria ao desconhecido?",
+    "choices": [
+      {
+        "text": "O Nginx não segura dois certificados ao mesmo tempo",
+        "why": "Pode ter um por bloco server."
+      },
+      {
+        "text": "Revelaria os nomes",
+        "why": "Certo. Recusar o handshake não mostra nada."
+      },
+      {
+        "text": "O Pebble não emite certificado para um IP",
+        "why": "Esse não é o motivo da aula."
+      },
+      {
+        "text": "É mais rápido que responder com um 444",
+        "why": "Os dois são baratos; o ponto é o que se revela."
+      }
+    ]
+  },
+  "ex-dnp4nqcp": {
+    "prompt": "Ligue cada cabeçalho ao que ele diz ao navegador.",
+    "hint": "A tabela da aula.",
+    "pairs": [
+      {
+        "left": "Strict-Transport-Security",
+        "right": "use só HTTPS para este nome"
+      },
+      {
+        "left": "X-Content-Type-Options",
+        "right": "não adivinhe o tipo de um arquivo"
+      },
+      {
+        "left": "Content-Security-Policy",
+        "right": "carregue recursos só destes lugares"
+      },
+      {
+        "left": "Referrer-Policy",
+        "right": "mande só a origem ao seguir um link para fora"
+      }
+    ],
+    "right_distractors": [
+      "comprima as respostas"
+    ]
+  },
+  "ex-gmpcmqp3": {
+    "prompt": "O redirecionamento na porta 80 não traz `Strict-Transport-Security`. Isso é um erro?",
+    "hint": "O que um navegador faz com HSTS recebido por HTTP?",
+    "choices": [
+      {
+        "text": "Sim; o HSTS vai em toda resposta",
+        "why": "Navegadores o ignoram por HTTP."
+      },
+      {
+        "text": "Sim; devia estar só na porta 80",
+        "why": "Por HTTP qualquer um no caminho poderia forjá-lo."
+      },
+      {
+        "text": "Não; navegadores ignoram HSTS mandado por HTTP",
+        "why": "Certo."
+      },
+      {
+        "text": "Não; o HSTS só funciona com preload",
+        "why": "Funciona na primeira visita HTTPS sem preload."
+      }
+    ]
+  },
+  "ex-7wytb637": {
+    "prompt": "Uma equipe põe `max-age=31536000; includeSubDomains; preload` no primeiro dia. Um mês depois, um subdomínio antigo que só serve HTTP para de funcionar para os usuários. Por quê?",
+    "hint": "O que o includeSubDomains cobre?",
+    "choices": [
+      {
+        "text": "Os navegadores agora forçam HTTPS para todo nome sob o domínio, por um ano",
+        "why": "Certo. Comece curto e amplie depois."
+      },
+      {
+        "text": "O certificado venceu",
+        "why": "O subdomínio nunca teve HTTPS."
+      },
+      {
+        "text": "O preload apaga sites HTTP dos buscadores",
+        "why": "É uma lista dentro dos navegadores."
+      },
+      {
+        "text": "O max-age é em milissegundos, então já venceu",
+        "why": "É em segundos: um ano."
+      }
+    ]
+  },
+  "ex-28b6kcpn": {
+    "prompt": "Qual página quebra com a Content-Security-Policy da livraria?",
+    "hint": "`default-src 'self'` e nenhum `'unsafe-inline'`.",
+    "choices": [
+      {
+        "text": "Uma que carrega /js/app.js",
+        "why": "Um arquivo de script do mesmo site é permitido."
+      },
+      {
+        "text": "Uma página com onclick=",
+        "why": "Certo. Script embutido é recusado."
+      },
+      {
+        "text": "Uma com uma imagem de /img/",
+        "why": "Imagens do mesmo site são permitidas."
+      },
+      {
+        "text": "Qualquer página servida por HTTPS",
+        "why": "O esquema não tem nada a ver."
+      }
+    ]
+  },
+  "ex-1pdfep7p": {
+    "prompt": "Por que uma CSP nova entra primeiro como `Content-Security-Policy-Report-Only`?",
+    "hint": "Ela não bloqueia nada.",
+    "choices": [
+      {
+        "text": "Para achar antes o que quebraria",
+        "why": "Certo."
+      },
+      {
+        "text": "O modo report-only é mais rígido que o bloqueio",
+        "why": "Não bloqueia nada."
+      },
+      {
+        "text": "Navegadores precisam de uma semana para aprender uma política nova",
+        "why": "Aplicam na próxima carga."
+      },
+      {
+        "text": "É exigido antes do HSTS",
+        "why": "Os dois não têm relação."
+      }
+    ]
+  },
+  "ex-kaq716nh": {
+    "prompt": "Depois que `add_header Cache-Control \"no-store\";` entrou no `location /api/`, as respostas da API perderam o HSTS e o CSP. Por quê?",
+    "hint": "A herança do add_header é tudo ou nada.",
+    "choices": [
+      {
+        "text": "O Cache-Control conflita com o HSTS nos navegadores",
+        "why": "Os dois apareceram juntos depois da correção."
+      },
+      {
+        "text": "O add_header próprio corta a herança",
+        "why": "Certo."
+      },
+      {
+        "text": "Respostas via proxy nunca trazem cabeçalhos de segurança",
+        "why": "Trouxeram depois de o snippet ser incluído."
+      },
+      {
+        "text": "O reload falhou",
+        "why": "O cabeçalho novo estava lá, então o reload funcionou."
+      }
+    ]
+  },
+  "ex-tcg6ek22": {
+    "prompt": "O que pega a armadilha do add_header antes de um visitante?",
+    "hint": "O próprio Nginx não avisa nada.",
+    "choices": [
+      {
+        "text": "`nginx -t`",
+        "why": "A configuração é válida; não há erro de sintaxe."
+      },
+      {
+        "text": "Ler o nginx.conf uma vez por ano",
+        "why": "A armadilha está no que o arquivo significa, não no que diz."
+      },
+      {
+        "text": "Um teste de cabeçalhos por location",
+        "why": "Certo."
+      },
+      {
+        "text": "server_tokens off",
+        "why": "Sem relação."
+      }
+    ]
+  },
+  "ex-6tfe0wse": {
+    "prompt": "Por que o location de arquivos ocultos responde 404 em vez de 403?",
+    "hint": "O que um 403 conta a um scanner?",
+    "choices": [
+      {
+        "text": "Um 404 é mais rápido para o Nginx mandar",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O 403 não é permitido dentro de um location",
+        "why": "É; o `deny all` dá um."
+      },
+      {
+        "text": "Existente e ausente parecem iguais",
+        "why": "Certo. A varredura não aprende nada."
+      },
+      {
+        "text": "Buscadores indexam páginas que respondem 403",
+        "why": "Não é o motivo dado."
+      }
+    ]
+  },
+  "ex-2bwww1dk": {
+    "prompt": "A regra é `location ~ /\\.(?!well-known/)`. Por que a exceção?",
+    "hint": "As renovações da aula 3.",
+    "choices": [
+      {
+        "text": "Os desafios ACME ficam sob /.well-known/acme-challenge/",
+        "why": "Certo. As renovações precisam alcançá-los."
+      },
+      {
+        "text": "Arquivos well-known são sempre seguros de publicar, contenham o que contiverem",
+        "why": "A exceção é para uma necessidade, não uma confiança geral."
+      },
+      {
+        "text": "Expressões regulares não casam a letra w",
+        "why": "Casam."
+      },
+      {
+        "text": "O Git precisa disso",
+        "why": "O Git é o que está sendo escondido."
+      }
+    ]
+  },
+  "ex-vcmkpja8": {
+    "prompt": "Com `limit_except GET HEAD PUT { deny all; }`, o que um DELETE na API recebe, e de quem?",
+    "hint": "Antes da mudança era 405 da loja.",
+    "choices": [
+      {
+        "text": "405 da loja",
+        "why": "Isso era antes; agora nem chega à loja."
+      },
+      {
+        "text": "403 do Nginx",
+        "why": "Certo."
+      },
+      {
+        "text": "200, já que DELETE é inofensivo",
+        "why": "Nada é apagado, e é recusado."
+      },
+      {
+        "text": "444 do bloco que pega tudo",
+        "why": "A requisição era para o nome certo."
+      }
+    ]
+  },
+  "ex-6zd1cq0r": {
+    "prompt": "`rate=10r/s burst=20 nodelay`: de 60 requisições mandadas em sequência, 42 foram atendidas. De onde vêm as 42?",
+    "hint": "Um balde, e um reabastecimento.",
+    "choices": [
+      {
+        "text": "A rajada, e depois a recarga",
+        "why": "Certo."
+      },
+      {
+        "text": "Exatamente 2 segundos × 21 requisições",
+        "why": "É coincidência de números, não o mecanismo."
+      },
+      {
+        "text": "Amostragem aleatória do Nginx",
+        "why": "O limite é determinístico."
+      },
+      {
+        "text": "Cada um dos quatro workers permite dez por conta própria",
+        "why": "A zona é compartilhada por todos os workers."
+      }
+    ]
+  },
+  "ex-eaafcgre": {
+    "prompt": "Por que definir `limit_req_status 429`?",
+    "hint": "A recusa padrão do Nginx é outro código.",
+    "choices": [
+      {
+        "text": "O 429 é mais rápido de mandar que o 503",
+        "why": "Mesmo tamanho."
+      },
+      {
+        "text": "Navegadores repetem um 429 para sempre",
+        "why": "Não."
+      },
+      {
+        "text": "429 diz vá devagar; 503 diz fora",
+        "why": "Certo."
+      },
+      {
+        "text": "O 503 é reservado a erros de handshake TLS",
+        "why": "Não é."
+      }
+    ]
+  },
+  "ex-4f8sq2bf": {
+    "prompt": "Com `client_header_timeout 5s`, depois de quantos segundos o Nginx fechou uma conexão cuja requisição nunca terminou?",
+    "hint": "A saída do `time`.",
+    "unit": "segundos"
+  },
+  "ex-esajhfrp": {
+    "prompt": "Qual endpoint merece o limite de taxa mais rígido, medido em requisições por minuto?",
+    "hint": "O que um limite torna lento?",
+    "choices": [
+      {
+        "text": "A listagem do catálogo",
+        "why": "Visitantes reais a carregam com frequência."
+      },
+      {
+        "text": "A folha de estilo",
+        "why": "Estática e barata."
+      },
+      {
+        "text": "O health check",
+        "why": "O monitoramento o chama de propósito."
+      },
+      {
+        "text": "O login",
+        "why": "Certo. É o que torna lento adivinhar senhas."
+      }
+    ]
+  },
+  "ex-82a67bee": {
+    "prompt": "Por que o mestre do Nginx continua como root enquanto os workers rodam como www-data?",
+    "hint": "O que precisa de root?",
+    "choices": [
+      {
+        "text": "Portas abaixo de 1024 e a chave",
+        "why": "Certo. As requisições ficam com os workers."
+      },
+      {
+        "text": "Para atender mais rápido do que os workers conseguem",
+        "why": "Ele não atende nenhuma."
+      },
+      {
+        "text": "Root é necessário para gravar os logs de acesso",
+        "why": "Não é o motivo dado."
+      },
+      {
+        "text": "Um bug no pacote do Ubuntu",
+        "why": "É o desenho."
+      }
+    ]
+  },
+  "ex-63zqjhh8": {
+    "prompt": "Depois do drop-in, o `systemd-analyze security` foi de 9.2 para 3.6. Qual linha mantém a loja capaz de gravar preços?",
+    "hint": "Todo o resto ficou somente leitura.",
+    "choices": [
+      {
+        "text": "NoNewPrivileges=yes",
+        "why": "Esse trata de ganhar privilégios."
+      },
+      {
+        "text": "ReadWritePaths=/var/lib/shop",
+        "why": "Certo. O único caminho gravável."
+      },
+      {
+        "text": "PrivateTmp=yes",
+        "why": "Esse dá um /tmp privado, não o banco."
+      },
+      {
+        "text": "ProtectHome=yes",
+        "why": "Esse esconde as pastas pessoais."
+      }
+    ]
+  },
+  "ex-0p43mt6v": {
+    "prompt": "Com `ProtectSystem=strict` e `ReadWritePaths=/var/lib/shop`, até o root recebeu `Read-only file system` ao gravar em /opt/shop. Contra o que isso protege?",
+    "hint": "Suponha que a camada anterior já falhou.",
+    "choices": [
+      {
+        "text": "Um cliente lento segurando uma conexão",
+        "why": "Isso é trabalho de um tempo-limite."
+      },
+      {
+        "text": "Um certificado vencido no site",
+        "why": "Sem relação."
+      },
+      {
+        "text": "Um serviço invadido reescrevendo o próprio código",
+        "why": "Certo."
+      },
+      {
+        "text": "Um número de versão vazado no campo do cabeçalho Server",
+        "why": "Isso era o server_tokens."
+      }
+    ]
+  },
+  "ex-jm5bhjmv": {
+    "prompt": "De tudo o que o `ss -ltn` listou, o que escuta em todos os endereços?",
+    "hint": "0.0.0.0.",
+    "choices": [
+      {
+        "text": "A loja em 8001 e 8002",
+        "why": "Só 127.0.0.1."
+      },
+      {
+        "text": "O Pebble",
+        "why": "Só 127.0.0.1."
+      },
+      {
+        "text": "O Nginx em 80 e 443",
+        "why": "Certo. Todo o resto é loopback."
+      },
+      {
+        "text": "O resolvedor de DNS",
+        "why": "127.0.0.53 e 127.0.0.54."
+      }
+    ]
+  },
+  "ex-e04ewgjk": {
+    "prompt": "Um servidor novo vai para um endereço público. Ponha os passos de endurecimento numa ordem sensata.",
+    "hint": "Feche as portas antes de abrir a loja.",
+    "items": [
+      "Firewall: permitir só 22, 80 e 443",
+      "Subir o Nginx com um servidor padrão que pega tudo",
+      "Obter um certificado e redirecionar para HTTPS",
+      "Acrescentar cabeçalhos de segurança, e testar cada location"
+    ],
+    "trap": "Os cabeçalhos vêm depois de o HTTPS funcionar, já que o HSTS é um compromisso."
+  },
+  "ex-sa8zh90d": {
+    "prompt": "Quais destes uma resposta de produção não deve carregar? Marque todos que se aplicam.",
+    "hint": "A lista no fim da primeira seção.",
+    "choices": [
+      {
+        "text": "Um número de versão em Server ou X-Powered-By",
+        "why": "Certo."
+      },
+      {
+        "text": "Um stack trace num erro",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma listagem de diretório",
+        "why": "Certo."
+      },
+      {
+        "text": "Strict-Transport-Security",
+        "why": "Esse vai em toda resposta HTTPS."
+      }
+    ]
+  },
+  "ex-5xcf52k3": {
+    "prompt": "Uma varredura de segurança relata que `https://203.0.113.20/` mostra a página de login de uma ferramenta interna, embora ela só devesse ser acessada como `tools.example.net`. Qual mudança resolve isso no servidor web?",
+    "hint": "Qual bloco responde a um endereço?",
+    "choices": [
+      {
+        "text": "Esconder o número de versão com server_tokens off",
+        "why": "A página continua sendo servida."
+      },
+      {
+        "text": "Acrescentar HSTS",
+        "why": "O HSTS não escolhe qual site responde."
+      },
+      {
+        "text": "Limitar a taxa do login",
+        "why": "Útil, e a página continua alcançável pelo endereço."
+      },
+      {
+        "text": "Um servidor padrão que recusa nomes",
+        "why": "Certo."
+      }
+    ]
+  }
+}

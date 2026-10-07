@@ -1,0 +1,818 @@
+[
+  {
+    "id": "ex-bczs7rgn",
+    "version": 1,
+    "section": "the-file-itself",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`file` reports `store_sales.csv` as `ISO-8859 text`. Which encoding should pandas be told to use?",
+    "hint": "Latin-1 belongs to that family.",
+    "choices": [
+      {
+        "text": "`latin-1`",
+        "correct": true,
+        "why": "Right. Each accented letter is one byte in it, as the `od` dump showed."
+      },
+      {
+        "text": "`utf-8`",
+        "correct": false,
+        "why": "That is the default, and it is what failed on byte `0xe3`."
+      },
+      {
+        "text": "`utf-8-sig`",
+        "correct": false,
+        "why": "That is UTF-8 with a byte-order mark, read as UTF-8 all the same, and it fails on the same byte."
+      },
+      {
+        "text": "`utf-16`",
+        "correct": false,
+        "why": "UTF-16 would put a zero byte beside every letter of the header, and the dump shows none."
+      }
+    ]
+  },
+  {
+    "id": "ex-z21gzedq",
+    "version": 1,
+    "section": "the-file-itself",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading `store_sales.csv` with the default encoding raised `UnicodeDecodeError`. Why does the lesson call that the good outcome?",
+    "hint": "What would the other outcome have looked like?",
+    "choices": [
+      {
+        "text": "Errors make pandas switch to Latin-1 on the next attempt by itself",
+        "correct": false,
+        "why": "pandas retries nothing on its own; you have to say what the file is."
+      },
+      {
+        "text": "The error lists every byte that failed to decode",
+        "correct": false,
+        "why": "It names the first one only, at position 106."
+      },
+      {
+        "text": "A wrong decoding could succeed silently and produce `CartÃ£o`",
+        "correct": true,
+        "why": "Right. A failure stops you; a successful wrong decoding writes `Ã£` into every report downstream."
+      },
+      {
+        "text": "It proves the file is damaged and must be exported again",
+        "correct": false,
+        "why": "The file is fine; it is written in a different encoding from the one assumed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmsqhtf1",
+    "version": 1,
+    "section": "the-file-itself",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`od -c` printed the byte for `ã` as `343`, which is octal. What is it in decimal?",
+    "hint": "3 × 64 + 4 × 8 + 3.",
+    "value": 227,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-d9cd29qd",
+    "version": 1,
+    "section": "the-file-itself",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file has 5,001 lines and `csv.reader` finds 4,998 records after the header. What does that mean?",
+    "hint": "With no line breaks inside fields, lines are records plus one.",
+    "choices": [
+      {
+        "text": "Three records are duplicated",
+        "correct": false,
+        "why": "A duplicate is still a record and still a line; it changes neither count."
+      },
+      {
+        "text": "Fields hold line breaks",
+        "correct": true,
+        "why": "Right. Two extra lines beyond the header means line breaks inside quoted fields."
+      },
+      {
+        "text": "The file has three header lines",
+        "correct": false,
+        "why": "Possible in a badly exported file, but `csv.reader` would then count the extra headers as records."
+      },
+      {
+        "text": "The separator is wrong and fields were merged",
+        "correct": false,
+        "why": "A wrong separator changes the columns of each record, not how many records there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns323s4d",
+    "version": 1,
+    "section": "what-the-reader-guessed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Read with no options, `birth_year` came back as `float64`. Why a float for whole numbers?",
+    "hint": "Count the empty rows.",
+    "choices": [
+      {
+        "text": "Some years have a decimal point in the file",
+        "correct": false,
+        "why": "The file has `1986`, never `1986.0`; the point is added by pandas."
+      },
+      {
+        "text": "pandas reads every number as a float",
+        "correct": false,
+        "why": "`itens` in the shops' file came back as `int64`."
+      },
+      {
+        "text": "The two-digit years forced a decimal type",
+        "correct": false,
+        "why": "`87` is a perfectly good integer; the blanks are the cause."
+      },
+      {
+        "text": "Some rows are empty, and a plain integer column cannot hold a missing value",
+        "correct": true,
+        "why": "Right. 338 blanks forced the one numeric type that can."
+      }
+    ]
+  },
+  {
+    "id": "ex-sx1tkr0z",
+    "version": 1,
+    "section": "what-the-reader-guessed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Read without options, the product code `00833` became `833`. What else did that reading erase?",
+    "hint": "Read as text, the column shows two kinds of row.",
+    "choices": [
+      {
+        "text": "Evidence that two systems use two formats",
+        "correct": true,
+        "why": "Right. As text, `00833` and `438` sit side by side and point at the app."
+      },
+      {
+        "text": "The product names that belong to each code",
+        "correct": false,
+        "why": "Names live in `products.csv`, which this reading did not touch."
+      },
+      {
+        "text": "The order of the lines inside each order",
+        "correct": false,
+        "why": "`line_no` is its own column and survives either way."
+      },
+      {
+        "text": "Every code above 999, which overflowed",
+        "correct": false,
+        "why": "An `int64` holds numbers far larger than five digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-94qd5749",
+    "version": 1,
+    "section": "what-the-reader-guessed",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With default options, which of these field values does pandas turn into missing values? Choose all that apply.",
+    "hint": "The list is long, and it is why `keep_default_na=False` exists.",
+    "choices": [
+      {
+        "text": "`NA`",
+        "correct": true,
+        "why": "Yes, which is how Namibia's country code disappears."
+      },
+      {
+        "text": "`null`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`0`",
+        "correct": false,
+        "why": "No. Zero is a number, and the app's `0` discounts stay zeros."
+      },
+      {
+        "text": "an empty field",
+        "correct": true,
+        "why": "Yes, and that one is wanted."
+      },
+      {
+        "text": "`1900`",
+        "correct": false,
+        "why": "No. A placeholder that looks like data stays data."
+      }
+    ]
+  },
+  {
+    "id": "ex-bt5rb1ky",
+    "version": 1,
+    "section": "a-column-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`customer_id` is filled 2,413 times with 2,376 distinct values. What does the gap say?",
+    "hint": "For a key, the two should be equal.",
+    "choices": [
+      {
+        "text": "37 customers have no id",
+        "correct": false,
+        "why": "`empty` is 0 for this column."
+      },
+      {
+        "text": "37 ids are in the wrong format",
+        "correct": false,
+        "why": "Every id is six characters long; the format is consistent."
+      },
+      {
+        "text": "37 rows repeat an id that already appears",
+        "correct": true,
+        "why": "Right. For a key, filled less distinct is the number of extra copies."
+      },
+      {
+        "text": "37 customers were erased at their own request",
+        "correct": false,
+        "why": "Erased customers are missing from the file, which cannot make ids repeat."
+      }
+    ]
+  },
+  {
+    "id": "ex-04j5cy4g",
+    "version": 1,
+    "section": "a-column-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The profile shows `cep` values from 7 to 9 characters long. Which length is impossible for a correctly written CEP?",
+    "hint": "A CEP has eight digits, and the hyphen is optional.",
+    "choices": [
+      {
+        "text": "8",
+        "correct": false,
+        "why": "Eight digits with the hyphen dropped: not the canonical form, but nothing is lost."
+      },
+      {
+        "text": "7",
+        "correct": true,
+        "why": "Right. With or without the hyphen, eight digits cannot fit in seven characters."
+      },
+      {
+        "text": "9",
+        "correct": false,
+        "why": "Nine is the canonical `99999-999`."
+      },
+      {
+        "text": "None of them; all three occur in valid files",
+        "correct": false,
+        "why": "Seven characters cannot hold eight digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-z81xzhng",
+    "version": 1,
+    "section": "a-column-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`marketing_opt_in` is a yes-or-no question, and the profile shows 10 distinct values. What should Ana conclude?",
+    "hint": "Two answers, ten spellings.",
+    "choices": [
+      {
+        "text": "The question was asked ten different ways",
+        "correct": false,
+        "why": "The profile counts answers, not questions."
+      },
+      {
+        "text": "Ten customers refused to answer",
+        "correct": false,
+        "why": "Refusals would show in `empty`, which is 61."
+      },
+      {
+        "text": "The column has ten distinct customers",
+        "correct": false,
+        "why": "Distinct counts values, not people."
+      },
+      {
+        "text": "Yes and no have several spellings",
+        "correct": true,
+        "why": "Right. The number is the finding; the mapping comes later."
+      }
+    ]
+  },
+  {
+    "id": "ex-49rms3pq",
+    "version": 1,
+    "section": "a-column-profile",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A profile shows a `city` column with 28 distinct values. What does Ana need, besides the profile, to say whether 28 is wrong?",
+    "hint": "The profile tells you where to look.",
+    "choices": [
+      {
+        "text": "Knowing how many cities the company serves",
+        "correct": true,
+        "why": "Right. Five cities and 28 values is a finding; 28 cities and 28 values is not."
+      },
+      {
+        "text": "A second profile, run on the same file tomorrow",
+        "correct": false,
+        "why": "It would print 28 again."
+      },
+      {
+        "text": "The longest value in the column, in characters",
+        "correct": false,
+        "why": "Length can hint at a variant; it cannot say how many cities exist."
+      },
+      {
+        "text": "The most common value and its count",
+        "correct": false,
+        "why": "That is in the profile already, and it still does not say whether 28 is too many."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1g5a2p8",
+    "version": 1,
+    "section": "reading-a-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`courier` is filled 22,834 times, the same number as the `delivery` orders. What does the exact match suggest about the 5,717 empty couriers?",
+    "hint": "Two counts that match exactly are rarely a coincidence.",
+    "choices": [
+      {
+        "text": "They are Rapidex orders whose courier was lost",
+        "correct": false,
+        "why": "Rapidex appears by name in the column; its rows are filled."
+      },
+      {
+        "text": "They are the pickups, where no courier exists",
+        "correct": true,
+        "why": "Right. One column explains the other's blanks, and those blanks are correct."
+      },
+      {
+        "text": "They are cancelled orders",
+        "correct": false,
+        "why": "Cancelled deliveries still name a courier; the count would not match pickups."
+      },
+      {
+        "text": "They need to be filled before any analysis",
+        "correct": false,
+        "why": "Filling them would invent couriers for orders nobody delivered."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9kns3z8",
+    "version": 1,
+    "section": "reading-a-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ordered_at` runs from 19 to 20 characters. What is the cheapest conclusion?",
+    "hint": "A format has a fixed length.",
+    "choices": [
+      {
+        "text": "Some timestamps lack seconds",
+        "correct": false,
+        "why": "Without seconds a timestamp would be three characters shorter, not one."
+      },
+      {
+        "text": "Some orders were placed after midnight",
+        "correct": false,
+        "why": "`00:15:00` has the same length as `23:15:00`."
+      },
+      {
+        "text": "The column holds two formats",
+        "correct": true,
+        "why": "Right: the app's, and the website's with its `Z`."
+      },
+      {
+        "text": "The 25 repeated orders are longer",
+        "correct": false,
+        "why": "A repeat is a copy, character for character."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzp5q25b",
+    "version": 1,
+    "section": "reading-a-profile",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the orders file, the website writes no discount as a blank and the app writes it as ___.",
+    "hint": "A single digit.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ejj2n4ne",
+    "version": 1,
+    "section": "reading-a-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`discount` has 5 distinct values over 14,668 filled rows. What does a low distinct count say about a numeric column?",
+    "hint": "Think of the four coupons.",
+    "choices": [
+      {
+        "text": "Most of its values are missing",
+        "correct": false,
+        "why": "Missing values are counted in `empty`, not in `distinct`."
+      },
+      {
+        "text": "It has been rounded to whole reais",
+        "correct": false,
+        "why": "Rounding would leave far more than five values in a column of prices."
+      },
+      {
+        "text": "It is a key and should be unique",
+        "correct": false,
+        "why": "A key has as many distinct values as rows, the opposite case."
+      },
+      {
+        "text": "It acts as a category",
+        "correct": true,
+        "why": "Right: zero and the four coupon values."
+      }
+    ]
+  },
+  {
+    "id": "ex-xah0hesx",
+    "version": 1,
+    "section": "numbers-at-a-glance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "137 orders have a negative total. What do they have in common?",
+    "hint": "Compare the discount with the basket.",
+    "choices": [
+      {
+        "text": "A coupon worth more than the basket plus the delivery fee",
+        "correct": true,
+        "why": "Right. The website subtracted it anyway; what was charged is a question for payments."
+      },
+      {
+        "text": "They are refunds recorded as negative sales",
+        "correct": false,
+        "why": "Refunds have their own status and keep a positive total."
+      },
+      {
+        "text": "They were typed with a minus sign by mistake",
+        "correct": false,
+        "why": "Every one has a coupon larger than the order, which explains the sign without a typo."
+      },
+      {
+        "text": "They come from the shops' till",
+        "correct": false,
+        "why": "These are online orders; the shops' totals are in another file."
+      }
+    ]
+  },
+  {
+    "id": "ex-zw4b190q",
+    "version": 1,
+    "section": "numbers-at-a-glance",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The totals have a standard deviation of 242.55 and a mean of 94.11. What is the ratio of the two? Give two decimal places.",
+    "hint": "242.55 ÷ 94.11.",
+    "value": 2.58,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-5zt17a0f",
+    "version": 1,
+    "section": "numbers-at-a-glance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a profile of a numeric column look first at the minimum, the maximum and the high percentiles?",
+    "hint": "Where does a typo with an extra zero end up?",
+    "choices": [
+      {
+        "text": "The mean cannot be computed while outliers remain",
+        "correct": false,
+        "why": "It can be computed; it is just pulled, which is why it is not enough."
+      },
+      {
+        "text": "Typos and placeholders sit at the ends",
+        "correct": true,
+        "why": "Right. An extra zero or a minus sign lands at an end, not in the middle."
+      },
+      {
+        "text": "Percentiles are cheaper to compute than the median",
+        "correct": false,
+        "why": "The median is a percentile, the 50th."
+      },
+      {
+        "text": "The middle of the data is checked by the pattern profile instead",
+        "correct": false,
+        "why": "Patterns describe shapes of text, not where numbers sit."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz6q6c6a",
+    "version": 1,
+    "section": "numbers-at-a-glance",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 99.9th percentile of the totals is R$ 764.39 and the maximum is R$ 26,928.50. How many times larger is the maximum? Give a whole number.",
+    "hint": "26,928.50 ÷ 764.39.",
+    "value": 35,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-rvmnjqq0",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the pattern of the value `R$ 45,90`?",
+    "hint": "Digits become 9, letters become a, the rest stays.",
+    "choices": [
+      {
+        "text": "`R$ 99,99`",
+        "correct": false,
+        "why": "The function turns letters into `a` too; the SQL capture replaced only digits, which is why it printed `R$`."
+      },
+      {
+        "text": "`aa 99,99`",
+        "correct": false,
+        "why": "`$` is not a letter, so it stays."
+      },
+      {
+        "text": "`a$ 99,99`",
+        "correct": true,
+        "why": "Right. The `R` is a letter; the `$`, the space and the comma stay."
+      },
+      {
+        "text": "`a$ 9999`",
+        "correct": false,
+        "why": "The comma is kept: it is what separates one format from another."
+      }
+    ]
+  },
+  {
+    "id": "ex-wetjfrs7",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The pattern profile of `signed_up` shows two shapes, but the column holds three formats. Why can it not see the third?",
+    "hint": "Write `14/03/2025` and `03/14/2025` as patterns.",
+    "choices": [
+      {
+        "text": "The third format is in a different file",
+        "correct": false,
+        "why": "All three are in `customers.csv`."
+      },
+      {
+        "text": "The function ignores the slashes",
+        "correct": false,
+        "why": "Punctuation is kept on purpose; that is how `99/99/9999` differs from `9999-99-99`."
+      },
+      {
+        "text": "Too few rows use the third format to appear",
+        "correct": false,
+        "why": "The app wrote 730 of them."
+      },
+      {
+        "text": "Day-first and month-first share one shape",
+        "correct": true,
+        "why": "Right. A pattern sees shape, not meaning; splitting by source tells them apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-cghasfem",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the pattern profile of `birth_year` not reveal the 348 rows of `1900`?",
+    "hint": "What is the pattern of `1900`?",
+    "choices": [
+      {
+        "text": "`1900` is valid, only inaccurate",
+        "correct": true,
+        "why": "Right. Patterns find invalid values, never inaccurate ones."
+      },
+      {
+        "text": "The function skips values that repeat",
+        "correct": false,
+        "why": "It counts every value; repeats are what `value_counts` adds up."
+      },
+      {
+        "text": "The 1900s were removed as missing by pandas",
+        "correct": false,
+        "why": "`1900` is not on pandas' list, and the reading kept only blanks as missing anyway."
+      },
+      {
+        "text": "Four-digit years and two-digit years share a pattern",
+        "correct": false,
+        "why": "`9999` and `99` are different patterns, and both were printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-s646rzpc",
+    "version": 1,
+    "section": "patterns",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the CEP cleaning rule in order.",
+    "hint": "The zero has to go back before the hyphen does.",
+    "items": [
+      "Remove the hyphen, if there is one",
+      "Pad on the left with zeros to eight digits",
+      "Put the hyphen back after the fifth digit"
+    ],
+    "trap": "Inserting the hyphen before padding puts it in the wrong place for every seven-digit code."
+  },
+  {
+    "id": "ex-9ef1g9n7",
+    "version": 1,
+    "section": "profiling-in-sql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the SQL profile, which expression gives the number of empty `cep` cells?",
+    "hint": "One of the two counts skips NULLs.",
+    "choices": [
+      {
+        "text": "`count(DISTINCT cep)`",
+        "correct": false,
+        "why": "That counts different values, not empty ones."
+      },
+      {
+        "text": "`count(cep) - count(DISTINCT cep)`",
+        "correct": false,
+        "why": "That is the number of repeats among the filled values."
+      },
+      {
+        "text": "`min(length(cep))`",
+        "correct": false,
+        "why": "That is the shortest value."
+      },
+      {
+        "text": "`count(*) - count(cep)`",
+        "correct": true,
+        "why": "Right. `count(cep)` skips the NULLs and `count(*)` does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-f59w4s5a",
+    "version": 1,
+    "section": "profiling-in-sql",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every store total in 2025 has the shape `R$ 9,99` with up to three digits before the comma. Why is that a warning about the conversion Ana writes?",
+    "hint": "How does the till write one thousand two hundred reais?",
+    "choices": [
+      {
+        "text": "Three digits are not enough for the store's real totals",
+        "correct": false,
+        "why": "They were enough in 2025; the question is the format of a larger one."
+      },
+      {
+        "text": "The till's thousands point never appears, so a conversion tested on 2025 could mangle the first large sale",
+        "correct": true,
+        "why": "Right. `R$ 1.234,56` is a shape this year's data never showed, so it must be handled on purpose."
+      },
+      {
+        "text": "The comma means the totals are in euros",
+        "correct": false,
+        "why": "The comma is the Brazilian decimal mark, and the `R$` says reais."
+      },
+      {
+        "text": "The pattern hides negative totals",
+        "correct": false,
+        "why": "A minus sign would survive the pattern and show as its own shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3vtednx",
+    "version": 1,
+    "section": "profiling-in-sql",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each finding to who can answer for it.",
+    "hint": "Follow each defect to the system that wrote it.",
+    "pairs": [
+      {
+        "left": "Seven-digit CEPs",
+        "right": "The app team"
+      },
+      {
+        "left": "Birth year 1900",
+        "right": "The shops' manager"
+      },
+      {
+        "left": "Negative order totals",
+        "right": "Payments"
+      },
+      {
+        "left": "Repeated customer ids",
+        "right": "The CRM team"
+      }
+    ],
+    "right_distractors": [
+      "The supplier"
+    ]
+  },
+  {
+    "id": "ex-yza087sz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague sends a new file of 40,000 rows and asks for a chart by region by tomorrow. Which of these belong in the first hour? Choose all that apply.",
+    "hint": "Look before you touch.",
+    "choices": [
+      {
+        "text": "Check the encoding and separator with `file` and a look at the bytes",
+        "correct": true,
+        "why": "Yes. A wrong guess here corrupts everything after it."
+      },
+      {
+        "text": "Read every column as text and profile it",
+        "correct": true,
+        "why": "Yes. The profile says where to look, including the region column."
+      },
+      {
+        "text": "Fix every spelling of every region by hand",
+        "correct": false,
+        "why": "Not yet. Fixing comes after the profile shows what there is to fix."
+      },
+      {
+        "text": "Run a pattern profile on the codes and dates",
+        "correct": true,
+        "why": "Yes. Formats are cheaper to find than to discover in a broken chart."
+      },
+      {
+        "text": "Draw the chart first and profile only if it looks wrong",
+        "correct": false,
+        "why": "A chart over eleven spellings of one region looks perfectly plausible."
+      }
+    ]
+  },
+  {
+    "id": "ex-da2v450q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first rows of `orders.csv` show one blank discount and one `0`. What does the profile add that `head()` could not?",
+    "hint": "Count, and split by channel.",
+    "choices": [
+      {
+        "text": "That the blank orders had a coupon that was lost",
+        "correct": false,
+        "why": "Coupons appear as values in both channels; the blanks are orders without one."
+      },
+      {
+        "text": "That the two orders were placed by the same customer",
+        "correct": false,
+        "why": "Nothing in the discount column says who bought."
+      },
+      {
+        "text": "Blank and `0` are one meaning from two systems",
+        "correct": true,
+        "why": "Right. Every blank is the website's and every `0` is the app's."
+      },
+      {
+        "text": "That the discount column should be dropped",
+        "correct": false,
+        "why": "It holds every coupon used; it needs one spelling, not deletion."
+      }
+    ]
+  }
+]

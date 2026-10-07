@@ -1,0 +1,829 @@
+[
+  {
+    "id": "ex-pxk104c2",
+    "version": 1,
+    "section": "what-a-type-promises",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why has every file in this course been read with `dtype=str`?",
+    "hint": "What would a reader that guesses types do first?",
+    "choices": [
+      {
+        "text": "Because pandas cannot read numbers from a CSV file",
+        "correct": false,
+        "why": "It reads them by default; that is the problem."
+      },
+      {
+        "text": "So no value is changed before anyone has looked at it",
+        "correct": true,
+        "why": "Right: text keeps every value as it was written."
+      },
+      {
+        "text": "Because text columns take less memory than numbers",
+        "correct": false,
+        "why": "They take more; the reason is safety."
+      },
+      {
+        "text": "So that sorting the years works without any conversion",
+        "correct": false,
+        "why": "Text sorts years only by luck."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xkj0t02",
+    "version": 1,
+    "section": "what-a-type-promises",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Python, what is `\"9\" > \"10\"`?",
+    "hint": "Text is compared character by character.",
+    "choices": [
+      {
+        "text": "`False`, because nine is less than ten",
+        "correct": false,
+        "why": "That is the comparison of numbers, not of text."
+      },
+      {
+        "text": "An error, since strings cannot be compared",
+        "correct": false,
+        "why": "Strings compare; just not by value."
+      },
+      {
+        "text": "`True`, because the character `9` comes after `1`",
+        "correct": true,
+        "why": "Right: the first characters decide."
+      },
+      {
+        "text": "`None`, since the result is undefined",
+        "correct": false,
+        "why": "The comparison has a defined answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jyss8dz",
+    "version": 1,
+    "section": "coerce-and-count",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`birth_year.astype(int)` stops with `cannot convert float NaN to integer`. What is the error saying?",
+    "hint": "What does the column have that a plain integer cannot hold?",
+    "choices": [
+      {
+        "text": "The column has blanks and a plain integer has no blank",
+        "correct": true,
+        "why": "Right, and refusing is the honest answer."
+      },
+      {
+        "text": "The column holds years too large to fit in an integer",
+        "correct": false,
+        "why": "Four-digit years fit easily."
+      },
+      {
+        "text": "Some years were typed with letters in them",
+        "correct": false,
+        "why": "The message names `NaN`, the blank."
+      },
+      {
+        "text": "pandas needs `errors='raise'` to convert",
+        "correct": false,
+        "why": "`astype` has no such argument here."
+      }
+    ]
+  },
+  {
+    "id": "ex-eczkv579",
+    "version": 1,
+    "section": "coerce-and-count",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pd.to_numeric(['12.90', '1.234,56', 'R$ 5,00', '7'], errors='coerce')` gives 12.9, NaN, NaN and 7.0. What went wrong?",
+    "hint": "Were the two missing prices missing in the file?",
+    "choices": [
+      {
+        "text": "Nothing: the two values were not prices at all",
+        "correct": false,
+        "why": "Both are prices in a Brazilian format."
+      },
+      {
+        "text": "The 7 should have been refused, as it is an integer",
+        "correct": false,
+        "why": "An integer is a valid number."
+      },
+      {
+        "text": "pandas rounded 12.90 to 12.9 and lost a digit",
+        "correct": false,
+        "why": "12.90 and 12.9 are the same number."
+      },
+      {
+        "text": "Two real prices became blanks that look unrecorded",
+        "correct": true,
+        "why": "Right, and nothing on the screen says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksn20817",
+    "version": 1,
+    "section": "coerce-and-count",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `to_number`, which values count as lost?",
+    "hint": "Compare before and after.",
+    "choices": [
+      {
+        "text": "Every blank in the converted column",
+        "correct": false,
+        "why": "That would count missing data as a failure."
+      },
+      {
+        "text": "Every value that has a comma in it",
+        "correct": false,
+        "why": "The rule does not look at characters."
+      },
+      {
+        "text": "Present before the conversion, blank after",
+        "correct": true,
+        "why": "Right; a blank that was already blank is kept."
+      },
+      {
+        "text": "Values that pandas had to round",
+        "correct": false,
+        "why": "Rounding does not produce a blank."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g10bgv9",
+    "version": 1,
+    "section": "coerce-and-count",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A column has 50 blanks before `pd.to_numeric(..., errors='coerce')` and 62 after. How many values did the conversion lose?",
+    "hint": "After minus before.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "values"
+  },
+  {
+    "id": "ex-fpdje4jp",
+    "version": 1,
+    "section": "integers-and-blanks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do birth years come out as `1986.0` after `pd.to_numeric`?",
+    "hint": "Where does `NaN` live?",
+    "choices": [
+      {
+        "text": "Years are stored with a decimal part in the file",
+        "correct": false,
+        "why": "The file has `1986`."
+      },
+      {
+        "text": "The blanks force the column into floating point",
+        "correct": true,
+        "why": "Right: `NaN` is a float."
+      },
+      {
+        "text": "pandas converts every number to a float",
+        "correct": false,
+        "why": "A column with no blanks becomes an integer."
+      },
+      {
+        "text": "The `.0` marks a year that was guessed",
+        "correct": false,
+        "why": "Nothing was guessed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wngfrmj",
+    "version": 1,
+    "section": "integers-and-blanks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pandas' nullable integer type is written `___`, with a capital letter.",
+    "hint": "Capital I, sixty-four bits.",
+    "blanks": [
+      {
+        "accept": [
+          "Int64"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wsyzydzk",
+    "version": 1,
+    "section": "integers-and-blanks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are real risks of keeping whole numbers as floats? Choose all that apply.",
+    "hint": "Think of large codes and of files written back.",
+    "choices": [
+      {
+        "text": "A sixteen-digit number coming back with different last digits",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A key written as `1986.0` that no longer matches `1986` as text",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A year that cannot be compared with another year",
+        "correct": false,
+        "why": "Floats compare fine."
+      },
+      {
+        "text": "A blank that turns into zero",
+        "correct": false,
+        "why": "The blank stays `NaN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6qq3rkz",
+    "version": 1,
+    "section": "integers-and-blanks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these columns should stay as text?",
+    "hint": "Would adding two of them mean anything?",
+    "choices": [
+      {
+        "text": "The quantity bought on each line",
+        "correct": false,
+        "why": "Quantities are summed."
+      },
+      {
+        "text": "The delivery time in minutes",
+        "correct": false,
+        "why": "Minutes are averaged."
+      },
+      {
+        "text": "The discount in reais",
+        "correct": false,
+        "why": "Money is summed."
+      },
+      {
+        "text": "A product code such as `00123`",
+        "correct": true,
+        "why": "Right: an identifier, and the zeros matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-48r6vngy",
+    "version": 1,
+    "section": "two-digit-years",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the century rule in `years.py` lean on?",
+    "hint": "Who are the people in the file?",
+    "choices": [
+      {
+        "text": "Python's `%y` convention for two-digit years",
+        "correct": false,
+        "why": "That would put 1952 in 2052."
+      },
+      {
+        "text": "The year the app was launched by the company",
+        "correct": false,
+        "why": "The launch says nothing about birth."
+      },
+      {
+        "text": "That every customer is an adult alive today",
+        "correct": true,
+        "why": "Right: that rules out 2087 and 1887."
+      },
+      {
+        "text": "The average age of the other customers",
+        "correct": false,
+        "why": "An average cannot fix one person's year."
+      }
+    ]
+  },
+  {
+    "id": "ex-7w1cv2b6",
+    "version": 1,
+    "section": "two-digit-years",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under the lesson's rule (above `25` is 19xx, `25` or below is 20xx), what year does `52` become?",
+    "hint": "Is 52 above 25?",
+    "value": 1952,
+    "tolerance": 0,
+    "unit": "year"
+  },
+  {
+    "id": "ex-kezphce9",
+    "version": 1,
+    "section": "two-digit-years",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under the same rule, what year does `04` become?",
+    "hint": "Is 04 above 25?",
+    "value": 2004,
+    "tolerance": 0,
+    "unit": "year"
+  },
+  {
+    "id": "ex-tyk5faj4",
+    "version": 1,
+    "section": "two-digit-years",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which customer does the lesson's century rule get wrong?",
+    "hint": "Where is the line drawn?",
+    "choices": [
+      {
+        "text": "One born in 1987 who typed `87` in the app",
+        "correct": false,
+        "why": "87 is above 25: 1987, correctly."
+      },
+      {
+        "text": "One born in 1925 who typed `25`",
+        "correct": true,
+        "why": "Right: listed as born in 2025."
+      },
+      {
+        "text": "One born in 2004 who typed `04`",
+        "correct": false,
+        "why": "04 is 25 or below: 2004, correctly."
+      },
+      {
+        "text": "One born in 1999 who typed `99`",
+        "correct": false,
+        "why": "99 is above 25: 1999, correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-w08hx2fc",
+    "version": 1,
+    "section": "two-digit-years",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `years.py` blank `1900` before applying the century rule?",
+    "hint": "Is 1900 anybody's birth year here?",
+    "choices": [
+      {
+        "text": "It is a placeholder, so it means unknown",
+        "correct": true,
+        "why": "Right, not the year 1900: lesson 4 established it."
+      },
+      {
+        "text": "The rule would turn it into a two-digit year",
+        "correct": false,
+        "why": "It has four digits; the rule ignores it."
+      },
+      {
+        "text": "`pd.to_numeric` cannot read the value 1900",
+        "correct": false,
+        "why": "1900 is a valid number."
+      },
+      {
+        "text": "Its order matters only for the speed of the script",
+        "correct": false,
+        "why": "It decides what the value means."
+      }
+    ]
+  },
+  {
+    "id": "ex-jje0wf2h",
+    "version": 1,
+    "section": "booleans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `marketing_opt_in.astype(bool)` do to this file?",
+    "hint": "Which strings are true in Python?",
+    "choices": [
+      {
+        "text": "Maps `true`, `1`, `sim` and `S` to `True`",
+        "correct": false,
+        "why": "It does not read the words at all."
+      },
+      {
+        "text": "Stops with an error on `não`",
+        "correct": false,
+        "why": "It runs without a word."
+      },
+      {
+        "text": "Makes all 2,376 customers consent",
+        "correct": true,
+        "why": "Right: every non-empty string, and `NaN`, is truthy."
+      },
+      {
+        "text": "Turns the 57 blanks into `False`",
+        "correct": false,
+        "why": "`NaN` is truthy too."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgk7m89r",
+    "version": 1,
+    "section": "booleans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `consent.py` write out the no list as well as the yes list?",
+    "hint": "What happens to a spelling nobody has seen yet?",
+    "choices": [
+      {
+        "text": "Because pandas needs both lists for `map`",
+        "correct": false,
+        "why": "`map` takes any function."
+      },
+      {
+        "text": "To make the script run faster on large files",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Because the yes list alone would miss `Sim`",
+        "correct": false,
+        "why": "Case is removed first."
+      },
+      {
+        "text": "So a new spelling stops the script",
+        "correct": true,
+        "why": "Right: a new spelling is a decision someone makes."
+      }
+    ]
+  },
+  {
+    "id": "ex-exp3fsy4",
+    "version": 1,
+    "section": "booleans",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What should happen to the 57 customers with no recorded consent?",
+    "hint": "Is no answer a yes?",
+    "choices": [
+      {
+        "text": "They become `True`, as most customers agreed",
+        "correct": false,
+        "why": "A majority does not answer for a person."
+      },
+      {
+        "text": "They stay `<NA>`, neither yes nor no",
+        "correct": true,
+        "why": "Right; and under the LGPD no answer is not permission."
+      },
+      {
+        "text": "They become `False`, to be on the safe side",
+        "correct": false,
+        "why": "Not contacting them is safe; recording a no is false."
+      },
+      {
+        "text": "Their rows are removed from the table",
+        "correct": false,
+        "why": "They are still customers."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c6p5jsm",
+    "version": 1,
+    "section": "booleans",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each spelling to what `consent.py` makes of it.",
+    "hint": "Case and spaces go first.",
+    "pairs": [
+      {
+        "left": "` SIM `",
+        "right": "True"
+      },
+      {
+        "left": "`nao`",
+        "right": "False"
+      },
+      {
+        "left": "a blank",
+        "right": "<NA>"
+      },
+      {
+        "left": "`yes`",
+        "right": "an error naming it"
+      }
+    ]
+  },
+  {
+    "id": "ex-165cx2be",
+    "version": 1,
+    "section": "casts-in-sql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does PostgreSQL do with `SELECT sum(total::numeric)` when one total is `R$ 94,50`?",
+    "hint": "Does it skip the value?",
+    "choices": [
+      {
+        "text": "Sums the totals it can read and skips the rest",
+        "correct": false,
+        "why": "That is what `errors='coerce'` would do."
+      },
+      {
+        "text": "Counts the bad value as zero and warns",
+        "correct": false,
+        "why": "There is no partial answer."
+      },
+      {
+        "text": "Stops with an error naming the value",
+        "correct": true,
+        "why": "Right: loud by design."
+      },
+      {
+        "text": "Converts the comma and returns 94.50",
+        "correct": false,
+        "why": "A cast reads only its own format."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw98gs22",
+    "version": 1,
+    "section": "casts-in-sql",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The PostgreSQL 16 function that answers whether text can be cast to a type, without raising an error, is `___`.",
+    "hint": "pg, input, is, valid.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_input_is_valid"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j8rybnza",
+    "version": 1,
+    "section": "casts-in-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "All 2,075 written birth years pass `pg_input_is_valid(birth_year, 'int')`. What does that prove?",
+    "hint": "Is `1900` a valid integer?",
+    "choices": [
+      {
+        "text": "That the column holds no placeholders",
+        "correct": false,
+        "why": "1900 passes."
+      },
+      {
+        "text": "That each one reads as an integer",
+        "correct": true,
+        "why": "Right, and nothing more: 1900 and 87 both pass."
+      },
+      {
+        "text": "That every year is a four-digit year",
+        "correct": false,
+        "why": "87 is a valid integer too."
+      },
+      {
+        "text": "That the column is ready to be cast and used",
+        "correct": false,
+        "why": "Readable is not the same as correct."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt72gga6",
+    "version": 1,
+    "section": "casts-in-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pg_input_is_valid('31/02/2025', 'date')` catch something a pattern check on `dd/mm/yyyy` would miss?",
+    "hint": "Does February have a 31st?",
+    "choices": [
+      {
+        "text": "It reads the year as two digits",
+        "correct": false,
+        "why": "The year has four digits."
+      },
+      {
+        "text": "It rejects every date that is written with slashes",
+        "correct": false,
+        "why": "`dmy` dates with slashes are read."
+      },
+      {
+        "text": "It checks the date is a working day",
+        "correct": false,
+        "why": "It knows nothing of calendars of work."
+      },
+      {
+        "text": "It checks the date exists, not only its shape",
+        "correct": true,
+        "why": "Right: the shape is fine and the day is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-r08vhbk3",
+    "version": 1,
+    "section": "a-typed-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `CHECK (birth_year BETWEEN 1920 AND 2010)` add that the cleaning script does not?",
+    "hint": "Next month's file.",
+    "choices": [
+      {
+        "text": "A wrong row is refused even if nobody runs the script",
+        "correct": true,
+        "why": "Right: the rule becomes a property of the data."
+      },
+      {
+        "text": "It corrects years outside the range to the nearest end",
+        "correct": false,
+        "why": "A check refuses; it never corrects."
+      },
+      {
+        "text": "It converts two-digit years to four",
+        "correct": false,
+        "why": "The insert does that, not the check."
+      },
+      {
+        "text": "It makes the column faster to query",
+        "correct": false,
+        "why": "A check is about correctness."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypabccqx",
+    "version": 1,
+    "section": "a-typed-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pandas and the SQL insert both give 2,376 customers, 1952 to 2006, 1,288 yes. Why is that worth checking?",
+    "hint": "If they ever disagreed…",
+    "choices": [
+      {
+        "text": "SQL is the reference and pandas must match it",
+        "correct": false,
+        "why": "Neither is the reference."
+      },
+      {
+        "text": "Matching counts prove both are free of errors",
+        "correct": false,
+        "why": "They could share the same mistake."
+      },
+      {
+        "text": "The database refuses data that pandas had accepted",
+        "correct": false,
+        "why": "Here both accepted the same rows."
+      },
+      {
+        "text": "Two implementations that agree check each other",
+        "correct": true,
+        "why": "Right: a disagreement means a rule exists in one only."
+      }
+    ]
+  },
+  {
+    "id": "ex-v010b4g6",
+    "version": 1,
+    "section": "a-typed-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `clean_customers.sql`, what happens to a consent spelling in neither list?",
+    "hint": "A `CASE` with no `ELSE`.",
+    "choices": [
+      {
+        "text": "The insert stops with an error naming it",
+        "correct": false,
+        "why": "A `CASE` with no `ELSE` gives `NULL`."
+      },
+      {
+        "text": "It becomes `false`, the safe default",
+        "correct": false,
+        "why": "There is no default branch."
+      },
+      {
+        "text": "It quietly becomes `NULL` in the table",
+        "correct": true,
+        "why": "Right, which is why the pandas check runs first."
+      },
+      {
+        "text": "The boolean column stores the text as is",
+        "correct": false,
+        "why": "A boolean cannot hold text."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj8kksa8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the safe conversion of a column in order.",
+    "hint": "Read, decide, convert, count, enforce.",
+    "items": [
+      "Read the file as text",
+      "Turn placeholders into blanks",
+      "Convert and count what was lost",
+      "Cast to the nullable type",
+      "Load into a table with checks"
+    ],
+    "trap": "Converting before the placeholders are blanked makes 1900 a real year."
+  },
+  {
+    "id": "ex-x85gbv0z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A supplier's weights column has `12.5`, `3,2`, `7` and blanks. `to_number` stops: 1 value lost, `['3,2']`. What do you do?",
+    "hint": "The error named the value for a reason.",
+    "choices": [
+      {
+        "text": "Switch to `errors='coerce'` without the count",
+        "correct": false,
+        "why": "That hides the value instead of reading it."
+      },
+      {
+        "text": "Ask which format the supplier writes numbers in",
+        "correct": true,
+        "why": "Right: is `3,2` 3.2, or a list of two?"
+      },
+      {
+        "text": "Drop the row, since only one value failed",
+        "correct": false,
+        "why": "One failure says the format is mixed."
+      },
+      {
+        "text": "Replace every comma in the file with a dot",
+        "correct": false,
+        "why": "Before knowing what the comma means, it is a guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4je6vrc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A survey's `newsletter` column has `Y`, `N`, `y`, `yes` and blanks. Which conversion is safe?",
+    "hint": "Both sides, and the blank.",
+    "choices": [
+      {
+        "text": "Map `y` and `yes` to true, `n` to false",
+        "correct": true,
+        "why": "Right, after lower-casing, with blanks kept as `<NA>` and others refused."
+      },
+      {
+        "text": "`astype(bool)` on the column",
+        "correct": false,
+        "why": "Every `N` would become true."
+      },
+      {
+        "text": "Map `Y` to true and everything else to false",
+        "correct": false,
+        "why": "`y`, `yes` and the blanks would become no."
+      },
+      {
+        "text": "Fill the blanks with `N` and then map the values",
+        "correct": false,
+        "why": "No answer is not a no."
+      }
+    ]
+  }
+]

@@ -1,0 +1,951 @@
+[
+  {
+    "id": "ex-f1amb955",
+    "version": 1,
+    "section": "the-key-problem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do a key in the code, a key in a config file and a key in a query have in common?",
+    "hint": "Think about who ends up holding the key.",
+    "choices": [
+      {
+        "text": "Each uses a weaker algorithm than a KMS would",
+        "correct": false,
+        "why": "No. The algorithm can be identical; the problem is where the key is."
+      },
+      {
+        "text": "The key sits next to the data or the people",
+        "correct": true,
+        "why": "Right. Next to the data it protects, or the people it should protect it from."
+      },
+      {
+        "text": "Each one is illegal under the LGPD",
+        "correct": false,
+        "why": "No. The LGPD names no technique; it asks for adequate security."
+      },
+      {
+        "text": "They can only be used for symmetric encryption",
+        "correct": false,
+        "why": "No. That has nothing to do with where they are kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rf63mtc",
+    "version": 1,
+    "section": "the-key-problem",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of a key's life in order.",
+    "hint": "It ends with destruction.",
+    "items": [
+      "generate",
+      "store",
+      "use",
+      "rotate",
+      "revoke",
+      "destroy"
+    ]
+  },
+  {
+    "id": "ex-ad2fdy2f",
+    "version": 1,
+    "section": "what-a-kms-does",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In one sentence, what does a key-management service hand out?",
+    "hint": "Not the key.",
+    "choices": [
+      {
+        "text": "Copies of the key, each with an expiry date",
+        "correct": false,
+        "why": "No. Copies of a key are what it exists to avoid."
+      },
+      {
+        "text": "Passwords for the database",
+        "correct": false,
+        "why": "No. That is a secret store's job, a different engine."
+      },
+      {
+        "text": "The result of using a key",
+        "correct": true,
+        "why": "Right. Plaintext in, ciphertext out, and the key stays inside."
+      },
+      {
+        "text": "Certificates for TLS",
+        "correct": false,
+        "why": "No. That is a certificate authority, lesson 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6d0hryx",
+    "version": 1,
+    "section": "what-a-kms-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Support decrypts a CPF through the service and reads it to a caller. What does the service no longer protect?",
+    "hint": "Where does the plaintext go after the call?",
+    "choices": [
+      {
+        "text": "The CPF on support's screen",
+        "correct": true,
+        "why": "Right. The service narrows who can decrypt; what they do afterwards is lessons 1 and 2."
+      },
+      {
+        "text": "The key, which support now holds",
+        "correct": false,
+        "why": "No. Support received the CPF, never the key."
+      },
+      {
+        "text": "Every other CPF encrypted with the same key",
+        "correct": false,
+        "why": "No. Each decryption is a separate, recorded request."
+      },
+      {
+        "text": "The audit log, which support can now edit",
+        "correct": false,
+        "why": "No. Decrypting gives no access to the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nzn3jj9",
+    "version": 1,
+    "section": "what-a-kms-does",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property of a key service to the stage of a key's life it answers.",
+    "hint": "One of them is about versions.",
+    "pairs": [
+      {
+        "left": "the key never leaves the service",
+        "right": "store"
+      },
+      {
+        "left": "encrypt and decrypt are separate grants",
+        "right": "use"
+      },
+      {
+        "left": "a ciphertext names the version that made it",
+        "right": "rotate"
+      },
+      {
+        "left": "deleting the key makes its ciphertext unreadable",
+        "right": "destroy"
+      }
+    ]
+  },
+  {
+    "id": "ex-1cbqskq5",
+    "version": 1,
+    "section": "starting-openbao",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `bao operator init -key-shares=3 -key-threshold=2`, how many shares are needed to unseal OpenBao?",
+    "hint": "The threshold.",
+    "choices": [
+      {
+        "text": "One, any of the three",
+        "correct": false,
+        "why": "No. One share alone rebuilds nothing."
+      },
+      {
+        "text": "Two of the three",
+        "correct": true,
+        "why": "Right. Any two rebuild the root key; Ana used shares 1 and 3."
+      },
+      {
+        "text": "All three",
+        "correct": false,
+        "why": "No. That would lock everybody out the day one share is lost."
+      },
+      {
+        "text": "None; the root token unseals it",
+        "correct": false,
+        "why": "No. The root token works only once the store is unsealed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzdnes87",
+    "version": 1,
+    "section": "starting-openbao",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does OpenBao not store the root key itself?",
+    "hint": "Where would it be stored, and who could read it there?",
+    "choices": [
+      {
+        "text": "Because it is too large to fit in storage",
+        "correct": false,
+        "why": "No. Size has nothing to do with it."
+      },
+      {
+        "text": "Because the root token replaces it",
+        "correct": false,
+        "why": "No. The token authorises requests; the root key encrypts storage."
+      },
+      {
+        "text": "Because the cloud provider keeps it",
+        "correct": false,
+        "why": "No. This OpenBao runs in the lab, with no cloud involved."
+      },
+      {
+        "text": "So a copied disk is unreadable",
+        "correct": true,
+        "why": "Right. The root key exists only while shares rebuild it, so the stored data stays encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bagtm7v",
+    "version": 1,
+    "section": "starting-openbao",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many unseal key shares did `bao operator init` print?",
+    "hint": "The -key-shares option.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-f5xebq4s",
+    "version": 1,
+    "section": "unsealing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana suspects an intrusion on the OpenBao machine. What does sealing the store achieve?",
+    "hint": "What is in memory while it is unsealed?",
+    "choices": [
+      {
+        "text": "It deletes every key so nothing can leak",
+        "correct": false,
+        "why": "No. Sealing deletes nothing; the data stays encrypted on disk."
+      },
+      {
+        "text": "Nothing decrypts until two share holders reopen it",
+        "correct": true,
+        "why": "Right. The root key leaves memory, and opening again needs the threshold."
+      },
+      {
+        "text": "It rotates every transit key",
+        "correct": false,
+        "why": "No. Rotation is a separate operation on each key."
+      },
+      {
+        "text": "It revokes the root token only",
+        "correct": false,
+        "why": "No. Sealing stops all service, not one token."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6jzgj1r",
+    "version": 1,
+    "section": "unsealing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the initial root token be revoked once setup is done?",
+    "hint": "Read its policies and its duration.",
+    "choices": [
+      {
+        "text": "It stops working after an hour anyway",
+        "correct": false,
+        "why": "No. Its ttl is 0, which means it never expires."
+      },
+      {
+        "text": "Because it cannot create policies",
+        "correct": false,
+        "why": "No. It can do everything, which is the problem."
+      },
+      {
+        "text": "It allows everything and never expires",
+        "correct": true,
+        "why": "Right. Two share holders can generate a new one when it is needed again."
+      },
+      {
+        "text": "Because OpenBao refuses root tokens after unsealing",
+        "correct": false,
+        "why": "No. Ana used it right after unsealing."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4cwr5xe",
+    "version": 1,
+    "section": "unsealing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company configures auto-unseal with a cloud KMS so that reboots need nobody awake. What has it traded?",
+    "hint": "Who holds the means to open the store now?",
+    "choices": [
+      {
+        "text": "Nothing; auto-unseal is the same protection with less effort",
+        "correct": false,
+        "why": "No. The root key's protection has moved to somebody else's service."
+      },
+      {
+        "text": "The audit log, which auto-unseal disables",
+        "correct": false,
+        "why": "No. Auditing is unaffected."
+      },
+      {
+        "text": "Encryption at rest, which stops",
+        "correct": false,
+        "why": "No. Storage stays encrypted."
+      },
+      {
+        "text": "The share holders' control, for the cloud KMS's",
+        "correct": true,
+        "why": "Right. Whoever controls that KMS key can now open the store with no quorum of people."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekdnr0kf",
+    "version": 1,
+    "section": "transit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `vault:v1:wGzg…`, what does `v1` say?",
+    "hint": "Keys have versions.",
+    "choices": [
+      {
+        "text": "Which version of the key made it",
+        "correct": true,
+        "why": "Right. That is what lets old ciphertext decrypt after a rotation."
+      },
+      {
+        "text": "That it is the first ciphertext ever made",
+        "correct": false,
+        "why": "No. Every encryption with version 1 starts the same way."
+      },
+      {
+        "text": "The version of OpenBao",
+        "correct": false,
+        "why": "No. That was 2.5.5."
+      },
+      {
+        "text": "The base64 variant used",
+        "correct": false,
+        "why": "No. Base64 has no version in the string."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3q680qq",
+    "version": 1,
+    "section": "transit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the configuration of `ipe-cpf` say? Choose all that apply.",
+    "hint": "Read the four decisions the section picked out.",
+    "choices": [
+      {
+        "text": "AES-256 in GCM mode",
+        "correct": true,
+        "why": "Yes. type aes256-gcm96."
+      },
+      {
+        "text": "The key can never be exported",
+        "correct": true,
+        "why": "Yes. exportable false."
+      },
+      {
+        "text": "The key is deleted after a year",
+        "correct": false,
+        "why": "No. deletion_allowed was false, and nothing set an expiry."
+      },
+      {
+        "text": "Only the root token may encrypt with it",
+        "correct": false,
+        "why": "No. Who may use it is decided by policies, not by the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-01yhed44",
+    "version": 1,
+    "section": "transit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did encrypting the same CPF twice give two different ciphertexts?",
+    "hint": "Something random goes in each time.",
+    "choices": [
+      {
+        "text": "The key changed between the two calls",
+        "correct": false,
+        "why": "No. Both were version 1 until section 10 rotated it."
+      },
+      {
+        "text": "Each encryption includes a random nonce",
+        "correct": true,
+        "why": "Right. Equal CPFs do not reveal themselves as equal, which is also why the database cannot search them."
+      },
+      {
+        "text": "Base64 encodes differently each time",
+        "correct": false,
+        "why": "No. Base64 is deterministic."
+      },
+      {
+        "text": "The second call was refused and retried",
+        "correct": false,
+        "why": "No. Neither call was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-sf1m2edn",
+    "version": 1,
+    "section": "who-may-use-a-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The website's token tried to decrypt a CPF. What happened?",
+    "hint": "Its policy names one path.",
+    "choices": [
+      {
+        "text": "It got the CPF, because it had encrypted it",
+        "correct": false,
+        "why": "No. Having encrypted something gives no right to decrypt it."
+      },
+      {
+        "text": "It got ciphertext again",
+        "correct": false,
+        "why": "No. It got an error."
+      },
+      {
+        "text": "403, permission denied",
+        "correct": true,
+        "why": "Right. Its policy allows transit/encrypt/ipe-cpf and nothing else."
+      },
+      {
+        "text": "OpenBao sealed itself",
+        "correct": false,
+        "why": "No. A refused request does not seal the store."
+      }
+    ]
+  },
+  {
+    "id": "ex-49qstcjf",
+    "version": 1,
+    "section": "who-may-use-a-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody steals the website's token. With the policies of this lesson, what can they do with Ipê's CPFs?",
+    "hint": "What does the site-app policy allow?",
+    "choices": [
+      {
+        "text": "Read every CPF in the database",
+        "correct": false,
+        "why": "No. The database holds ciphertext, and the token cannot decrypt."
+      },
+      {
+        "text": "Export the key and decrypt offline",
+        "correct": false,
+        "why": "No. The key is not exportable, and the policy does not reach it."
+      },
+      {
+        "text": "Make new ciphertexts, and read none",
+        "correct": true,
+        "why": "Right. It may encrypt; decrypting is support's policy."
+      },
+      {
+        "text": "Rotate the key so support loses access",
+        "correct": false,
+        "why": "No. Rotation needs a capability on the key's own path, which it lacks."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9gshhqp",
+    "version": 1,
+    "section": "who-may-use-a-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an OpenBao policy, both encrypting and decrypting with transit need the capability ___ on their path.",
+    "hint": "They are both writes.",
+    "blanks": [
+      {
+        "accept": [
+          "update"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2vmx3pcv",
+    "version": 1,
+    "section": "the-audit-device",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The audit log shows tokens as `hmac-sha256:…` values. How can an investigator still find where a suspect token was used?",
+    "hint": "The same key, the same hash.",
+    "choices": [
+      {
+        "text": "By reversing the HMAC",
+        "correct": false,
+        "why": "No. An HMAC cannot be reversed."
+      },
+      {
+        "text": "By reading the plaintext copy OpenBao keeps",
+        "correct": false,
+        "why": "No. There is no plaintext copy."
+      },
+      {
+        "text": "By turning the HMAC off for a day",
+        "correct": false,
+        "why": "No. That would put secrets in the log."
+      },
+      {
+        "text": "Hash it with OpenBao's key and search",
+        "correct": true,
+        "why": "Right. The log can confirm a value it cannot reveal."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwt3wr7h",
+    "version": 1,
+    "section": "the-audit-device",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The disk holding OpenBao's audit log fills up. What happens to encryption and decryption, and why is that right?",
+    "hint": "Record or availability?",
+    "choices": [
+      {
+        "text": "They stop, because an unrecorded decryption is worse than a delay",
+        "correct": true,
+        "why": "Right. OpenBao refuses a request it cannot write to any audit device."
+      },
+      {
+        "text": "They continue and the log catches up later",
+        "correct": false,
+        "why": "No. There is no later for a request already answered."
+      },
+      {
+        "text": "Only decryption stops; encryption goes on",
+        "correct": false,
+        "why": "No. Every request needs the record."
+      },
+      {
+        "text": "OpenBao deletes the oldest lines to make room",
+        "correct": false,
+        "why": "No. It does not rotate its own log."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gqqtthh",
+    "version": 1,
+    "section": "envelope-encryption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a 1.8 MB backup not encrypted by sending it to transit directly?",
+    "hint": "Think of 180 GB, and of what the service would see.",
+    "choices": [
+      {
+        "text": "Transit only accepts text, not binary data",
+        "correct": false,
+        "why": "No. Transit takes base64, which can carry any bytes."
+      },
+      {
+        "text": "It is slow at scale, and the service would see all the data",
+        "correct": true,
+        "why": "Right. Envelope encryption sends a key to be wrapped, not the data."
+      },
+      {
+        "text": "Backups must be encrypted with RSA",
+        "correct": false,
+        "why": "No. The data key is symmetric."
+      },
+      {
+        "text": "Transit keys cannot encrypt more than once a minute",
+        "correct": false,
+        "why": "No. There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-fz7cx8rj",
+    "version": 1,
+    "section": "envelope-encryption",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of encrypting the backup in the order Ana ran them.",
+    "hint": "The clear key is used once and destroyed.",
+    "items": [
+      "Ask transit for a data key",
+      "Save the wrapped copy",
+      "Encrypt the dump with the clear copy",
+      "Shred the clear copy"
+    ]
+  },
+  {
+    "id": "ex-4ncdn82p",
+    "version": 1,
+    "section": "envelope-encryption",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes long was the wrapped data key, `backup.key.wrapped`?",
+    "hint": "The ls line.",
+    "value": 90,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bhw9rgnz",
+    "version": 1,
+    "section": "envelope-encryption",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The encrypted dump and its wrapped key are stored in the same bucket. Why is that acceptable here when lesson 3 called a key beside its backup useless?",
+    "hint": "What does the wrapped key need to become useful?",
+    "choices": [
+      {
+        "text": "Because the bucket is encrypted at rest",
+        "correct": false,
+        "why": "No. Bucket encryption ends when the bucket is read."
+      },
+      {
+        "text": "Because 90 bytes is too short to be a real key",
+        "correct": false,
+        "why": "No. It is a real key, wrapped."
+      },
+      {
+        "text": "The wrapped key opens only through OpenBao, with a token allowed to decrypt",
+        "correct": true,
+        "why": "Right. The key beside the data is ciphertext; the key that unwraps it never left the service."
+      },
+      {
+        "text": "Because shred removed the dump's plaintext too",
+        "correct": false,
+        "why": "No. shred removed the clear data key; the dump was never written in clear."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z087m71",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `rotate`, Ana decrypted the old `v1` ciphertext. What came back?",
+    "hint": "min_decryption_version was still 1.",
+    "choices": [
+      {
+        "text": "An error, because version 1 was replaced",
+        "correct": false,
+        "why": "No. Rotation adds a version; it does not retire the old one."
+      },
+      {
+        "text": "The CPF, unchanged",
+        "correct": true,
+        "why": "Right. Old ciphertext keeps decrypting until the minimum is raised."
+      },
+      {
+        "text": "A v2 ciphertext",
+        "correct": false,
+        "why": "No. That is what rewrap returns, not decrypt."
+      },
+      {
+        "text": "The CPF of another customer",
+        "correct": false,
+        "why": "No. Decryption is exact or it fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-jh4j6jbe",
+    "version": 1,
+    "section": "rotation",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of retiring a key version safely in order.",
+    "hint": "Raising the minimum makes anything left unreadable.",
+    "items": [
+      "Rotate the key",
+      "Rewrap every old ciphertext",
+      "Count the v1 ciphertexts left",
+      "Raise min_decryption_version"
+    ]
+  },
+  {
+    "id": "ex-ygs82my1",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `rewrap` do that a decrypt followed by an encrypt by the job would not?",
+    "hint": "Where is the plaintext during the call?",
+    "choices": [
+      {
+        "text": "It is faster because it skips encryption",
+        "correct": false,
+        "why": "No. It encrypts again, inside the service."
+      },
+      {
+        "text": "It keeps the v1 version alive",
+        "correct": false,
+        "why": "No. It moves the ciphertext off v1."
+      },
+      {
+        "text": "The plaintext never leaves OpenBao",
+        "correct": true,
+        "why": "Right. The job moves data to the new version without being able to read it."
+      },
+      {
+        "text": "It changes the key's type to something stronger",
+        "correct": false,
+        "why": "No. The type stays aes256-gcm96."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bgew5c1",
+    "version": 1,
+    "section": "encrypting-in-the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the CPFs are encrypted by the application, why is the plaintext `cpf` column still in the table?",
+    "hint": "What does support do with a CPF when a customer calls?",
+    "choices": [
+      {
+        "text": "Because ciphertext cannot be stored in text columns",
+        "correct": false,
+        "why": "No. cpf_ct is a text column holding ciphertext."
+      },
+      {
+        "text": "Support searches by CPF, and ciphertext is not searchable",
+        "correct": true,
+        "why": "Right. Lesson 5's token is the searchable column that lets it go."
+      },
+      {
+        "text": "Because the LGPD requires the CPF in clear",
+        "correct": false,
+        "why": "No. The LGPD requires no such thing."
+      },
+      {
+        "text": "Because OpenBao needs it to decrypt",
+        "correct": false,
+        "why": "No. Decryption needs only the ciphertext and the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-jj9e8twa",
+    "version": 1,
+    "section": "encrypting-in-the-application",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The website encrypts CPFs before they reach the database, but logs each request body for debugging. What has happened to the protection?",
+    "hint": "Encryption in the application moves the trust to the application.",
+    "choices": [
+      {
+        "text": "Nothing, because the database still holds ciphertext",
+        "correct": false,
+        "why": "No. The plaintext now lives in the application's log."
+      },
+      {
+        "text": "OpenBao refuses requests from applications that log",
+        "correct": false,
+        "why": "No. OpenBao cannot see what an application logs."
+      },
+      {
+        "text": "The ciphertext becomes readable by the database",
+        "correct": false,
+        "why": "No. The database still has no key."
+      },
+      {
+        "text": "It leaks through the application's own log",
+        "correct": true,
+        "why": "Right. The application has to be reviewed as carefully as the database was."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5vxvk33",
+    "version": 1,
+    "section": "cloud-kms",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each idea of this lesson to its name in AWS.",
+    "hint": "One of them is a log.",
+    "pairs": [
+      {
+        "left": "a transit key",
+        "right": "a KMS key"
+      },
+      {
+        "left": "transit/datakey",
+        "right": "GenerateDataKey"
+      },
+      {
+        "left": "the audit file",
+        "right": "CloudTrail"
+      },
+      {
+        "left": "a policy on a path",
+        "right": "a key policy and IAM"
+      }
+    ]
+  },
+  {
+    "id": "ex-mt9jjhn4",
+    "version": 1,
+    "section": "cloud-kms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company moves to hold-your-own-key so the cloud must ask its own key service for every use. What new risk does it take on?",
+    "hint": "What if the company's service cannot be reached?",
+    "choices": [
+      {
+        "text": "The provider can now read the keys it was refused before",
+        "correct": false,
+        "why": "No. The provider can read less, not more."
+      },
+      {
+        "text": "The data stops being encrypted at rest",
+        "correct": false,
+        "why": "No. It is still encrypted; the key is elsewhere."
+      },
+      {
+        "text": "If its service is down, data is unreadable",
+        "correct": true,
+        "why": "Right. More control makes more of the availability problem the company's."
+      },
+      {
+        "text": "Keys can no longer be rotated",
+        "correct": false,
+        "why": "No. Rotation still happens, in the company's service."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq0xxd5b",
+    "version": 1,
+    "section": "crypto-shredding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `ipe-customer-4711` was deleted, decrypting its ciphertext said `encryption key not found`. Why is that stronger than `permission denied`?",
+    "hint": "Could a different token get past it?",
+    "choices": [
+      {
+        "text": "Because it is logged and permission denied is not",
+        "correct": false,
+        "why": "No. Both are logged."
+      },
+      {
+        "text": "No token anywhere has a key left to use",
+        "correct": true,
+        "why": "Right. A permission can be granted; a destroyed key cannot be."
+      },
+      {
+        "text": "Because the ciphertext was also deleted",
+        "correct": false,
+        "why": "No. The ciphertext still exists, unreadable."
+      },
+      {
+        "text": "It is not stronger; it is the same refusal",
+        "correct": false,
+        "why": "No. One is a decision about a person, the other the absence of a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-smkcgasb",
+    "version": 1,
+    "section": "crypto-shredding",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer's notes were encrypted with a key of their own, which is then destroyed. Which copies are now unreadable? Choose all that apply.",
+    "hint": "Only what was encrypted with that key alone.",
+    "choices": [
+      {
+        "text": "The encrypted notes in last year's backup",
+        "correct": true,
+        "why": "Yes. Every copy of that ciphertext lost its key."
+      },
+      {
+        "text": "The encrypted notes on a replica in another region",
+        "correct": true,
+        "why": "Yes. Same ciphertext, same missing key."
+      },
+      {
+        "text": "The same notes pasted in clear into a support ticket",
+        "correct": false,
+        "why": "No. Plaintext copies are not affected by destroying a key."
+      },
+      {
+        "text": "A backup of OpenBao itself, taken last month",
+        "correct": false,
+        "why": "No. That backup still holds the key, which is why its retention matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqata59s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline needs to copy encrypted CPFs from Ipê's database to a partner, who will decrypt them with their own key. Which transit operation fits, without the pipeline ever seeing a CPF?",
+    "hint": "One operation turned ciphertext into ciphertext in this lesson.",
+    "choices": [
+      {
+        "text": "decrypt, then encrypt with the partner's key",
+        "correct": false,
+        "why": "No. Then the pipeline holds every CPF in clear in between."
+      },
+      {
+        "text": "datakey, to give the partner a copy of ipe-cpf",
+        "correct": false,
+        "why": "No. A data key is a new key; it is not ipe-cpf, which is not exportable."
+      },
+      {
+        "text": "rotate, so the partner gets version 2",
+        "correct": false,
+        "why": "No. Rotation changes Ipê's key, not whom it serves."
+      },
+      {
+        "text": "A rewrap-like step inside the service, from Ipê's key to the partner's",
+        "correct": true,
+        "why": "Right. The idea of rewrap: plaintext exists only inside the service. Transit's own rewrap stays within one key, so this needs both keys in one service or a key exchange agreed with the partner."
+      }
+    ]
+  }
+]
