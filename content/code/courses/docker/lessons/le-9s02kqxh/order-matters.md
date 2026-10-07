@@ -1,6 +1,6 @@
 ---
 title: Order matters
-version: 1
+version: 2
 ---
 
 **Put what changes rarely at the top of the Dockerfile and what changes often at the bottom.**
@@ -167,6 +167,7 @@ the command that installs them, then the code.
 | Java, with Maven | `pom.xml` | `mvn dependency:go-offline` | `src/` |
 
 Those install commands download from the internet, which the lab's containers cannot reach, as
-`lab.sh` explains; that is why `shelf` keeps its dependency vendored and compiles it instead. The
-ordering argument does not change: the slow step sits above the code, keyed only on the files that
+lesson 5's last section showed; that is why `shelf` keeps its dependency in `vendor/`, as lesson 11
+set it up, and compiles it instead. On your machine `go mod download` works, and both arrangements
+are sound. The ordering argument does not change: the slow step sits above the code, keyed only on the files that
 describe the dependencies.

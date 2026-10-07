@@ -79,8 +79,12 @@ tools() {
   daemon
 
   # shelf, as ana's repository: the source from lab/shelf, its dependency
-  # vendored, and one commit at a fixed date so its hash is the same on every
-  # machine that builds this lab.
+  # vendored, and one commit at a fixed date. Every file of it is one lesson 11
+  # shows the student whole, and the lab refuses to start when they differ.
+  # The commit is root's, so it carries whatever root's git configuration adds:
+  # on the recording machine that was a signature, which is why lessons 16 and
+  # 20 show a hash no student's commit would have.
+  python3 "$LAB/lab/fences.py" files "$LAB/lab/shelf" "$LAB"
   rm -rf "$OPT/shelf" && mkdir -p "$OPT"
   cp -r "$LAB/lab/shelf" "$OPT/shelf"
   (cd "$OPT/shelf" && GOFLAGS=-mod=mod go mod vendor)

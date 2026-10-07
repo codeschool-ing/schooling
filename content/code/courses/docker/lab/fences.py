@@ -6,7 +6,9 @@ to be one a lesson shows whole, and the only way the two cannot drift apart is
 for the lab to take it from the lesson, or to refuse to start when they differ.
 
   fences.py block MD FIRSTLINE   print the one fence in MD whose first line is
-                                 FIRSTLINE, for the lab to run
+                                 FIRSTLINE, for the lab to run or to write
+  fences.py example MD FILE      print the program the one annotated example in
+                                 MD naming FILE adds up to
   fences.py has COURSE           read stdin and fail unless some English lesson
                                  of COURSE shows exactly that text as a fence
   fences.py files DIR COURSE     fail unless every file under DIR (vendor/ and
@@ -54,6 +56,11 @@ def main(argv):
         if len(found) != 1:
             die("%d fences in %s start with %r, want exactly 1" % (len(found), argv[1], argv[2]))
         sys.stdout.write(found[0])
+    elif len(argv) == 3 and argv[0] == "example":
+        found = [t for name, t in fences(argv[1]) if name == argv[2]]
+        if len(found) != 1:
+            die("%d annotated examples in %s name %s, want exactly 1" % (len(found), argv[1], argv[2]))
+        sys.stdout.write(found[0])
     elif len(argv) == 2 and argv[0] == "has":
         want = sys.stdin.read()
         if not any(t == want for md in lessons(argv[1]) for _, t in fences(md)):
@@ -77,7 +84,7 @@ def main(argv):
         if bad:
             sys.exit(1)
     else:
-        die("usage: block MD FIRSTLINE | has COURSE | files DIR COURSE")
+        die("usage: block MD FIRSTLINE | example MD FILE | has COURSE | files DIR COURSE")
 
 
 if __name__ == "__main__":
