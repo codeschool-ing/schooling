@@ -126,3 +126,53 @@ def ranges():
     f.text((x0 + x1) / 2, yb + 24, T('events per year, 90% range (log scale)', 'eventos por ano, faixa de 90% (escala log)'), size=10, weight='600')
     return f, T('A range says how much the team does not know. A single number hides it, and lesson 10 puts the ranges to work.',
                 'Uma faixa diz quanto a equipe não sabe. Um número único esconde isso, e a aula 10 põe as faixas para trabalhar.')
+
+
+@figure('l09-ale', 9)
+def ale():
+    f = Fig('l09-ale', 720, 200, T(
+        'Expected loss per year for T01, the forged webhook. Likelihood: 0.5 events a year, one '
+        'every two years on average. Impact: R$ 12,000 per event. Multiplied: R$ 6,000 a year.',
+        'Perda esperada por ano para a T01, o webhook forjado. Probabilidade: 0,5 evento por ano, um '
+        'a cada dois anos em média. Impacto: R$ 12.000 por evento. Multiplicados: R$ 6.000 por ano.'))
+    parts = [(T('likelihood', 'probabilidade'), T('0.5 a year', '0,5 por ano'), T('one event every two years', 'um evento a cada dois anos')),
+             (T('impact', 'impacto'), 'R$ 12,000' if T('en', 'pt') == 'en' else 'R$ 12.000', T('per event', 'por evento')),
+             (T('expected loss', 'perda esperada'), 'R$ 6,000' if T('en', 'pt') == 'en' else 'R$ 6.000', T('per year', 'por ano'))]
+    for i, (name, value, sub) in enumerate(parts):
+        x = 20 + i * 240
+        f.rect(x, 40, 200, 100, stroke='--amber' if i == 2 else '--paper-dim', fill='--panel', width=1.5 if i == 2 else 1.2)
+        f.text(x + 100, 62, name, size=10, fill='--paper-dim')
+        f.text(x + 100, 92, value, size=16, weight='600', mono=True)
+        f.text(x + 100, 120, sub, size=9.5, fill='--paper-dim')
+    f.text(230, 90, '×', size=18, weight='600')
+    f.text(470, 90, '=', size=18, weight='600')
+    f.text(360, 175, T('SLE × ARO = ALE, in the classic names', 'SLE × ARO = ALE, nos nomes clássicos'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('An average over many years, not a forecast for next year: most years T01 costs nothing, and some years it costs twelve thousand.',
+                'Uma média de muitos anos, não uma previsão para o ano que vem: na maioria dos anos a T01 não custa nada, e em alguns custa doze mil.')
+
+
+@figure('l09-t03-impact', 9)
+def t03_impact():
+    lines = [(T('investigation', 'investigação'), 40000), (T('notifying', 'notificar'), 15000), (T('legal', 'jurídico'), 60000),
+             (T('patients who leave', 'pacientes que saem'), 100000), (T('staff time', 'tempo da equipe'), 35000)]
+    total = sum(v for _, v in lines)
+    money = lambda v: f'R$ {v:,}' if T('en', 'pt') == 'en' else f'R$ {v:,}'.replace(',', '.')
+    f = Fig('l09-t03-impact', 720, 200, T(
+        'The cost of one T03 event, line by line: the investigation R$ 40,000, notifying the ANPD '
+        'and the patients R$ 15,000, legal advice R$ 60,000, patients who leave R$ 100,000, and staff '
+        'time R$ 35,000. Total R$ 250,000.',
+        'O custo de um evento da T03, linha por linha: a investigação R$ 40.000, notificar a ANPD e '
+        'os pacientes R$ 15.000, assessoria jurídica R$ 60.000, pacientes que saem R$ 100.000, e '
+        'tempo da equipe R$ 35.000. Total R$ 250.000.'))
+    x = 20
+    scale = 680 / total
+    for i, (name, v) in enumerate(lines):
+        w = v * scale
+        f.rect(x, 60, w - 3, 50, stroke=None, fill='--amber' if v == 100000 else '--phosphor-dim', rx=2)
+        f.text(x + w / 2, 85, T(f'{v // 1000}k', f'{v // 1000} mil'), size=9.5, weight='600')
+        f.text(x + w / 2, 128 + (i % 2) * 16, name, size=9.5, fill='--paper-dim')
+        x += w
+    f.text(360, 36, T('one event of T03, in thousands of reais', 'um evento da T03, em milhares de reais') + ': ' + money(total), size=11, weight='600')
+    f.text(360, 185, T('the largest line is the patients who leave, and it is the one daniel and carla argued over', 'a maior linha são os pacientes que saem, e é a que o daniel e a carla discutiram'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('An impact is a sum of things somebody can argue about one by one, which is easier than arguing about one big number.',
+                'Um impacto é uma soma de coisas que dá para discutir uma a uma, o que é mais fácil que discutir um número grande.')

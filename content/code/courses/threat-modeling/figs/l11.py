@@ -171,3 +171,32 @@ def curves():
     f.text((x0 + x1) / 2, y1 + 34, T('total loss in one year, R$ (log scale)', 'perda total em um ano, R$ (escala log)'), size=10, weight='600')
     return f, T('Four controls costing R$ 5,700 a year bring the curve under daniel’s point. The other five are worth their cost too, and are not what meets the appetite.',
                 'Quatro controles custando R$ 5.700 por ano trazem a curva para baixo do ponto do daniel. Os outros cinco também valem o custo, e não são eles que atendem o apetite.')
+
+
+@figure('l11-c1-worth', 11)
+def c1_worth():
+    m = (lambda v: f'R$ {v:,}') if T('en', 'pt') == 'en' else (lambda v: f'R$ {v:,}'.replace(',', '.'))
+    f = Fig('l11-c1-worth', 720, 250, T(
+        'What C1, a second factor for staff, is worth on T03. Before it, T03’s expected loss is '
+        'R$ 75,000 a year. C1 removes 80% of its frequency, leaving R$ 15,000. The difference, '
+        'R$ 60,000 a year, is C1’s value; it costs R$ 3,000 a year, so it saves twenty reais for '
+        'each real it costs.',
+        'Quanto vale o C1, segundo fator para a equipe, na T03. Antes dele, a perda esperada da T03 é '
+        'R$ 75.000 por ano. O C1 remove 80% da frequência, deixando R$ 15.000. A diferença, '
+        'R$ 60.000 por ano, é o valor do C1; ele custa R$ 3.000 por ano, então economiza vinte reais '
+        'para cada real que custa.'))
+    k = 2.2 / 1000
+    bars = [(120, 75000, T('T03 before', 'T03 antes'), '--amber'), (300, 15000, T('T03 after C1', 'T03 depois do C1'), '--phosphor-dim')]
+    for x, v, lab, c in bars:
+        h = v * k
+        f.rect(x, 200 - h, 110, h, stroke=None, fill=c, rx=2)
+        f.text(x + 55, 200 - h - 12, m(v), size=10.5, weight='600')
+        f.text(x + 55, 218, lab, size=9.5, fill='--paper-dim')
+    f.rect(300, 200 - 75000 * k, 110, 60000 * k, stroke='--phosphor', fill='--panel', width=1.2, dash='4 3')
+    f.text(355, 200 - 45000 * k, T('value', 'valor') + ' ' + m(60000), size=10, weight='600', fill='--phosphor')
+    f.rect(500, 200 - 3000 * k, 110, 3000 * k, stroke=None, fill='--paper-dim', rx=1)
+    f.text(555, 200 - 3000 * k - 12, m(3000), size=10.5, weight='600')
+    f.text(555, 218, T('C1’s cost a year', 'custo do C1 por ano'), size=9.5, fill='--paper-dim')
+    f.text(555, 120, T('saved ÷ cost = 20', 'economia ÷ custo = 20'), size=11, weight='600', fill='--phosphor')
+    return f, T('A control’s value is the expected loss it removes; its ratio is that value over what it costs, every year.',
+                'O valor de um controle é a perda esperada que ele remove; a razão é esse valor sobre o que ele custa, por ano.')

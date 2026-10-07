@@ -160,3 +160,67 @@ def matrix():
     f.text(20, y0 + 2.5 * ch + 6, T('R$ per event', 'R$ por evento'), size=10, anchor='start', weight='600')
     return f, T('The same nine estimates as lesson 9, put through bands. T01 now sits above T07 and T13, and three risks share a score of 4.',
                 'As mesmas nove estimativas da aula 9, passadas por faixas. A T01 agora fica acima da T07 e da T13, e três riscos dividem a nota 4.')
+
+
+@figure('l10-years', 10)
+def years():
+    totals = simulate()
+    n = len(totals)
+    mean = sum(totals) / n
+    p90 = sorted(totals)[int(0.9 * n)]
+    edges = list(range(0, 1_500_001, 100_000))
+    counts = [sum(1 for t in totals if lo <= t < lo + 100_000) for lo in edges[:-1]]
+    counts.append(sum(1 for t in totals if t >= 1_500_000))
+    fmt = (lambda v: f'R$ {v:,.0f}') if T('en', 'pt') == 'en' else (lambda v: f'R$ {v:,.0f}'.replace(',', '.'))
+    f = Fig('l10-years', 720, 300, T(
+        f'The {n:,} simulated years of fair.py, by total loss in steps of R$ 100,000. Most years '
+        f'lose less than R$ 300,000, and the bars fall away to the right with a long tail. The mean '
+        f'is {fmt(mean)}; one year in ten loses {fmt(p90)} or more.',
+        f'Os {n:,} anos simulados do fair.py, pela perda total em passos de R$ 100.000. A maioria '
+        f'dos anos perde menos de R$ 300.000, e as barras caem para a direita com uma cauda longa. A '
+        f'média é {fmt(mean)}; um ano em dez perde {fmt(p90)} ou mais.'.replace(f'{n:,}', f'{n:,}'.replace(',', '.'))))
+    x0, w, base, top = 60, 40, 210, 30
+    peak = max(counts)
+    for i, c in enumerate(counts):
+        h = c / peak * (base - top)
+        f.rect(x0 + i * w, base - h, w - 4, h, stroke=None, fill='--phosphor-dim' if i < 6 else '--amber', rx=1)
+    f.line(x0, base, x0 + len(counts) * w, base, stroke='--paper-dim')
+    for i in (0, 5, 10):
+        f.text(x0 + i * w, base + 14, T(f'{i * 100}k', f'{i * 100} mil'), size=9, fill='--paper-dim')
+    f.text(x0 + 15 * w + 18, base + 28, '1.5M+' if T('en', 'pt') == 'en' else '1,5 mi+', size=9, fill='--paper-dim')
+    mx = x0 + mean / 100_000 * w
+    f.line(mx, base + 22, mx, base + 34, stroke='--paper', width=2)
+    f.text(mx, base + 46, T('mean', 'média') + ' ' + fmt(mean), size=9.5)
+    px = x0 + p90 / 100_000 * w
+    f.line(px, base + 22, px, base + 34, stroke='--amber', width=2)
+    f.text(px + 4, base + 46, T('1 year in 10', '1 ano em 10') + ': ' + fmt(p90), size=9.5, anchor='start', fill='--amber')
+    f.text(360, 290, T('each bar counts the years whose total fell in that step', 'cada barra conta os anos cujo total caiu naquele passo'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('The average year does not exist: most years cost less than the mean, and a few cost several times more.',
+                'O ano médio não existe: a maioria dos anos custa menos que a média, e alguns custam várias vezes mais.')
+
+
+@figure('l10-compression', 10)
+def compression():
+    import math
+    f = Fig('l10-compression', 720, 210, T(
+        'The impact bands of matrix.py on a scale of reais, with their edges at R$ 2,000, 10,000, '
+        '50,000 and 200,000. R$ 60,000 and R$ 200,000 both fall in band 4, though one is more than '
+        'three times the other.',
+        'As faixas de impacto do matrix.py numa escala de reais, com as bordas em R$ 2.000, 10.000, '
+        '50.000 e 200.000. R$ 60.000 e R$ 200.000 caem os dois na faixa 4, embora um seja mais de '
+        'três vezes o outro.'))
+    lo, hi, x0, x1 = 500, 1_000_000, 40, 680
+    X = lambda v: x0 + (math.log10(v) - math.log10(lo)) / (math.log10(hi) - math.log10(lo)) * (x1 - x0)
+    edges = [lo, 2_000, 10_000, 50_000, 200_000, hi]
+    for b in range(5):
+        a, z = X(edges[b]), X(edges[b + 1])
+        f.rect(a, 60, z - a - 2, 50, stroke=None, fill='--phosphor-dim' if b != 3 else '--phosphor', rx=2)
+        f.text((a + z) / 2, 85, T(f'band {b + 1}', f'faixa {b + 1}'), size=10, weight='600')
+    for v in edges[1:-1]:
+        f.text(X(v), 126, f'{v:,}' if T('en', 'pt') == 'en' else f'{v:,}'.replace(',', '.'), size=9, fill='--paper-dim')
+    for v in (60_000, 200_000):
+        f.line(X(v) - 1, 40, X(v) - 1, 60, arrow=True, stroke='--amber')
+        f.text(X(v) - 1, 30, ('R$ 60,000' if v == 60_000 else 'R$ 200,000') if T('en', 'pt') == 'en' else ('R$ 60.000' if v == 60_000 else 'R$ 200.000'), size=9.5, fill='--amber', weight='600')
+    f.text(360, 165, T('the same band, the same score: a matrix cannot see a factor of three inside one cell', 'a mesma faixa, a mesma nota: uma matriz não enxerga um fator de três dentro de uma célula'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('Range compression: everything between two edges is one number, however far apart the values are.',
+                'Compressão de faixa: tudo entre duas bordas vira um número, por mais longe que os valores estejam.')

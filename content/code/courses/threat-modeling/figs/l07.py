@@ -138,3 +138,88 @@ def misuse():
     f.text(392, 272, T('mitigates', 'mitiga'), size=9, anchor='start', fill='--phosphor', italic=True)
     return f, T('A misuse case sits in the same picture as the feature it attacks, so the people who own the feature see it.',
                 'Um caso de abuso fica na mesma figura que a funcionalidade que ele ataca, para quem é dono da funcionalidade enxergá-lo.')
+
+
+@figure('l07-crossing', 7)
+def crossing():
+    uses = [T('book a session', 'agendar sessão'), T('view my exams', 'ver meus exames'), T('upload an exam', 'enviar exame'),
+            T('receive a reminder', 'receber lembrete'), T('manage the agenda', 'gerenciar agenda'), T('view my bookings', 'ver agendamentos'),
+            T('change my phone', 'mudar telefone'), T('pay for a session', 'pagar sessão')]
+    actors = [T('password-list runner', 'quem testa senhas vazadas'), T('any patient', 'qualquer paciente'), T('signed-in patient', 'paciente logado'),
+              T('someone close to a patient', 'alguém próximo do paciente'), T('curious receptionist', 'recepcionista curiosa'), T('former employee', 'quem saiu da equipe')]
+    cells = [(0, 0, 'A1', 0), (0, 1, 'A2', 0), (1, 2, 'A3', 0), (2, 2, 'A4', 0), (3, 3, 'A5', 0), (4, 4, 'A6', 0),
+             (4, 5, 'A7', 1), (5, 3, 'A8', 1), (6, 3, 'A9', 1), (7, 1, 'A10', 0)]
+    f = Fig('l07-crossing', 720, 330, T(
+        'The portal’s use cases crossed with the actors, and the ten abuse cases found in the '
+        'crossings. Three of them, A7, A8 and A9, found threats nobody had listed: a former employee '
+        'still signing in to manage the agenda; someone close to a patient viewing their bookings '
+        'with the patient’s password; and the same person changing the phone number.',
+        'Os casos de uso do portal cruzados com os atores, e os dez casos de abuso achados nos '
+        'cruzamentos. Três deles, A7, A8 e A9, acharam ameaças que ninguém tinha listado: um '
+        'ex-funcionário ainda entrando para gerenciar a agenda; alguém próximo de um paciente vendo '
+        'os agendamentos dele com a senha do paciente; e a mesma pessoa mudando o telefone.'))
+    x0, y0, cw, ch = 180, 120, 88, 24
+    for j, a in enumerate(actors):
+        x = x0 + j * cw + cw / 2
+        words = a.split()
+        half = (len(words) + 1) // 2
+        f.lines(x, 80, [r for r in (' '.join(words[:half]), ' '.join(words[half:])) if r], size=9, fill='--paper-dim')
+    for i, u in enumerate(uses):
+        y = y0 + i * ch + ch / 2
+        f.text(x0 - 8, y, u, size=9.5, anchor='end')
+        f.line(x0, y0 + i * ch, x0 + 6 * cw, y0 + i * ch, stroke='--wire', width=0.6)
+    f.line(x0, y0 + 8 * ch, x0 + 6 * cw, y0 + 8 * ch, stroke='--wire', width=0.6)
+    for i, j, label, new in cells:
+        x = x0 + j * cw + cw / 2
+        y = y0 + i * ch + ch / 2
+        f.rect(x - 20, y - 9, 40, 18, stroke=None, fill='--amber' if new else '--phosphor-dim', rx=3)
+        f.text(x, y, label, size=9, weight='600', mono=True)
+    f.text(360, 320, T('amber: a crossing that found a threat nobody had listed', 'âmbar: um cruzamento que achou uma ameaça que ninguém tinha listado'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('Most crossings are empty, and a few retell a known threat. The ones worth the hour are the three that told a new one.',
+                'A maioria dos cruzamentos é vazia, e alguns recontam uma ameaça conhecida. Os que valem a hora são os três que contaram uma nova.')
+
+
+@figure('l07-refusal', 7)
+def refusal():
+    f = Fig('l07-refusal', 720, 220, T(
+        'The refusal an abuse-case test demands. Patient P1 asks for exam E2, which belongs to '
+        'patient P2, and separately for an exam that does not exist. The portal gives the same '
+        'answer to both, so the asker learns nothing about whether E2 exists, and the first attempt '
+        'is recorded with P1’s account and the time.',
+        'A recusa que um teste de caso de abuso exige. A paciente P1 pede o exame E2, que é da '
+        'paciente P2, e, separadamente, um exame que não existe. O portal dá a mesma resposta aos '
+        'dois, então quem pede não descobre se o E2 existe, e a primeira tentativa é registrada com '
+        'a conta de P1 e a hora.'))
+    reqs = [(50, T('P1 asks for E2 (P2’s exam)', 'P1 pede o E2 (exame de P2)')), (130, T('P1 asks for an exam that does not exist', 'P1 pede um exame que não existe'))]
+    for y, lab in reqs:
+        f.rect(20, y - 22, 280, 44, stroke='--paper-dim', fill='--panel', width=1.2)
+        f.text(160, y, lab, size=10)
+        f.line(300, y, 400, 90, arrow=True)
+    f.rect(400, 65, 160, 50, stroke='--phosphor', fill='--panel', width=1.5)
+    f.text(480, 90, T('the same answer', 'a mesma resposta'), size=10.5, weight='600')
+    f.rect(400, 150, 300, 40, stroke='--amber', fill='--panel', width=1.2)
+    f.text(550, 170, T('recorded: P1’s account and the time', 'registrado: a conta de P1 e a hora'), size=10)
+    f.line(330, 62, 400, 165, arrow=True, stroke='--amber')
+    f.text(630, 90, T('nothing learnt', 'nada se aprende'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('A “forbidden” would confirm that E2 exists. Answering as for a missing exam turns the refusal into nothing an asker can use.',
+                'Um “proibido” confirmaria que o E2 existe. Responder como para um exame inexistente faz da recusa nada que quem pede possa usar.')
+
+
+@figure('l07-by-letter', 7)
+def by_letter():
+    counts = [('S', 5), ('T', 1), ('R', 2), ('I', 4), ('D', 2), ('E', 3)]
+    f = Fig('l07-by-letter', 720, 220, T(
+        'Threats in threats.csv by STRIDE letter after the abuse cases: S 5, T 1, R 2, I 4, D 2, '
+        'E 3. Spoofing went from three to five, both new ones about who holds an account.',
+        'Ameaças em threats.csv por letra do STRIDE depois dos casos de abuso: S 5, T 1, R 2, I 4, '
+        'D 2, E 3. Falsificação foi de três para cinco, as duas novas sobre quem está com uma '
+        'conta.'))
+    for i, (letter, n) in enumerate(counts):
+        x = 80 + i * 100
+        h = n * 28
+        f.rect(x, 170 - h, 60, h, stroke=None, fill='--amber' if letter == 'S' else '--phosphor-dim', rx=2)
+        f.text(x + 30, 170 - h - 12, str(n), size=11, weight='600')
+        f.text(x + 30, 188, letter, size=12, mono=True, weight='600')
+    f.text(360, 210, T('S was 3 before the abuse cases; T15 and T17 made it 5', 'S era 3 antes dos casos de abuso; T15 e T17 o fizeram 5'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('STRIDE asked who an element talks to; the abuse cases asked who the people are, and the S column grew.',
+                'O STRIDE perguntou com quem um elemento conversa; os casos de abuso perguntaram quem são as pessoas, e a coluna S cresceu.')

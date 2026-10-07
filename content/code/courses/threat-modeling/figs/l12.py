@@ -97,3 +97,61 @@ def timeline():
     f.text(today + 6, 18, T('7 Oct 2026: RA-002 overdue', '7 out 2026: RA-002 atrasado'), size=9.5, anchor='start', fill='--amber', weight='600')
     return f, T('Each bar is a decision from the day it was made to the day it must be looked at again. The dashed line is the day acceptances.py was run.',
                 'Cada barra é uma decisão do dia em que foi tomada ao dia em que precisa ser revista. A linha tracejada é o dia em que o acceptances.py rodou.')
+
+
+@figure('l12-two-readers', 12)
+def two_readers():
+    f = Fig('l12-two-readers', 720, 260, T(
+        'A decision record has two readers. Its front matter, the lines between the two --- '
+        'markers with id, threat, decision, owner, decided and review by, is read by a program, '
+        'acceptances.py, which lists what is due. Its prose, the risk, why it is accepted, what is '
+        'in place instead and when it is looked at again, is read by a person a year later who was '
+        'not in the room.',
+        'Um registro de decisão tem dois leitores. O front matter, as linhas entre os dois '
+        'marcadores --- com id, threat, decision, owner, decided e review by, é lido por um '
+        'programa, o acceptances.py, que lista o que está vencendo. A prosa, o risco, por que é '
+        'aceito, o que está no lugar e quando vai ser revisto, é lida por uma pessoa um ano depois '
+        'que não estava na sala.'))
+    f.rect(240, 20, 240, 220, stroke='--paper-dim', fill='--panel', width=1.4)
+    f.text(252, 36, 'RA-001-crafted-pdf.md', size=9.5, mono=True, anchor='start', fill='--paper-dim')
+    fm = ['---', 'id: RA-001', 'threat: T14', 'decision: accept', 'owner: daniel', 'review by: 2027-04-01', '---']
+    for i, line in enumerate(fm):
+        f.text(256, 56 + i * 14, line, size=9.5, mono=True, anchor='start', fill='--phosphor')
+    prose = [T('## The risk', '## O risco'), T('## Why it is accepted', '## Por que é aceito'), T('## What is in place instead', '## O que está no lugar'), T('## When this is looked at again', '## Quando é revisto')]
+    for i, line in enumerate(prose):
+        f.text(256, 168 + i * 16, line, size=9.5, anchor='start')
+    f.rect(20, 60, 170, 50, stroke='--phosphor', fill='--panel', width=1.4)
+    f.text(105, 78, 'acceptances.py', size=10, mono=True, weight='600')
+    f.text(105, 96, T('what is due, and when', 'o que vence, e quando'), size=9.5, fill='--paper-dim')
+    f.line(240, 85, 190, 85, arrow=True, stroke='--phosphor')
+    f.rect(530, 160, 170, 50, stroke='--paper-dim', fill='--panel', width=1.2)
+    f.text(615, 178, T('a person, a year later', 'uma pessoa, um ano depois'), size=10, weight='600')
+    f.text(615, 196, T('who was not in the room', 'que não estava na sala'), size=9.5, fill='--paper-dim')
+    f.line(480, 185, 530, 185, arrow=True)
+    return f, T('The machine reads the dates so nobody has to remember them; the person reads the reasons so nobody has to reconstruct them.',
+                'A máquina lê as datas para ninguém precisar lembrá-las; a pessoa lê os motivos para ninguém precisar reconstruí-los.')
+
+
+@figure('l12-supersede', 12)
+def supersede():
+    f = Fig('l12-supersede', 720, 200, T(
+        'A changed decision is a new record. The old record, say RA-001 as daniel signed it, stays '
+        'exactly as it was. The new record says, in its front matter, that it supersedes RA-001, '
+        'and carries the new decision, owner and review date. The only field a team may change in '
+        'place is a status, because it describes the present.',
+        'Uma decisão que muda é um registro novo. O registro antigo, digamos o RA-001 como o daniel '
+        'assinou, fica exatamente como era. O registro novo diz, no front matter, que substitui o '
+        'RA-001, e traz a decisão, o dono e a data de revisão novos. O único campo que uma equipe '
+        'pode mudar no lugar é uma situação, porque ela descreve o presente.'))
+    f.rect(40, 50, 240, 90, stroke='--paper-dim', fill='--panel', width=1.2)
+    f.text(160, 72, 'RA-001', size=11, mono=True, weight='600')
+    f.text(160, 96, T('as signed, never edited', 'como assinado, nunca editado'), size=10)
+    f.text(160, 118, T('status: superseded', 'situação: substituído'), size=9.5, mono=True, fill='--paper-dim')
+    f.rect(440, 50, 240, 90, stroke='--phosphor', fill='--panel', width=1.4)
+    f.text(560, 72, T('the new record', 'o registro novo'), size=11, weight='600')
+    f.text(560, 96, 'supersedes: RA-001', size=10, mono=True, fill='--phosphor')
+    f.text(560, 118, T('new decision, owner, date', 'decisão, dono, data novos'), size=9.5, fill='--paper-dim')
+    f.line(440, 95, 280, 95, arrow=True, stroke='--phosphor')
+    f.text(360, 172, T('git log shows that the old file was never touched after its commit', 'o git log mostra que o arquivo antigo nunca foi tocado depois do commit'), size=9.5, italic=True, fill='--paper-dim')
+    return f, T('The history stays true: anybody can still read what was decided in October, and with what was known then.',
+                'A história continua verdadeira: qualquer um ainda lê o que foi decidido em outubro, e com o que se sabia então.')
