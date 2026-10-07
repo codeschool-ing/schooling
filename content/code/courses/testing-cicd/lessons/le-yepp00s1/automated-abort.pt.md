@@ -4,7 +4,16 @@ version: 2
 ---
 
 A produção voltou para onde a aula 10 a encontrou: o blue no 1.5.0 com todo o tráfego, o green no
-1.6.0, o release que não cota Alagoas. Desta vez ninguém edita os pesos. O `canary.py` edita:
+1.6.0, o release que não cota Alagoas. Ponha-a de volta assim, com o roteador da aula 10 ainda
+rodando no terminal dele (a seção 06 da aula 10 tem a linha que o sobe, se não estiver):
+
+```sh
+ops/deploy.sh production-blue dist/shipquote-1.5.0.tar.gz
+ops/deploy.sh production-green dist/shipquote-1.6.0.tar.gz
+printf '{"backends": {"blue": "http://127.0.0.1:8301", "green": "http://127.0.0.1:8302"}, "weights": {"blue": 100, "green": 0}}\n' > ~/envs/routes.json
+```
+
+Desta vez ninguém edita os pesos. O `canary.py` edita:
 
 ```
 ana@laptop:~/shipquote$ curl -s http://127.0.0.1:8302/version; echo

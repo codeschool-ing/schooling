@@ -4,7 +4,16 @@ version: 2
 ---
 
 Production is back where lesson 10 found it: blue on 1.5.0 with all the traffic, green on 1.6.0,
-the release that cannot quote Alagoas. This time nobody edits the weights. `canary.py` does:
+the release that cannot quote Alagoas. Put it back that way, with lesson 10's router still running
+in its terminal (lesson 10 section 06 has the line that starts it, if it is not):
+
+```sh
+ops/deploy.sh production-blue dist/shipquote-1.5.0.tar.gz
+ops/deploy.sh production-green dist/shipquote-1.6.0.tar.gz
+printf '{"backends": {"blue": "http://127.0.0.1:8301", "green": "http://127.0.0.1:8302"}, "weights": {"blue": 100, "green": 0}}\n' > ~/envs/routes.json
+```
+
+This time nobody edits the weights. `canary.py` does:
 
 ```
 ana@laptop:~/shipquote$ curl -s http://127.0.0.1:8302/version; echo
