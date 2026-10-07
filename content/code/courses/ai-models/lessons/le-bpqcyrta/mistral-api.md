@@ -3,38 +3,37 @@ title: Calling Mistral
 version: 1
 ---
 
-Mistral has its own Python SDK, `mistralai`, at version 3.0.0 in the lab. `lab/mistral_sort.py`
-sends ana's sorting prompt and one e-mail through it:
+Mistral has its own Python SDK, `mistralai`, at version 3.0.0 in the desk. `mistral_sort.py` sends
+ana's sorting prompt and one e-mail through it. Without a Mistral key it sends them to the relay
+from section 03, which passes them to Ollama and the course's model:
 
 ```python
-import os
-
 from mistralai.client import Mistral
 
-client = Mistral(api_key=os.environ["MISTRAL_API_KEY"], server_url=os.environ["MISTRAL_SERVER_URL"])
-r = client.chat.complete(model="standin-small", messages=[
+# with a Mistral key: api_key=os.environ["MISTRAL_API_KEY"], and no server_url
+client = Mistral(api_key="ollama", server_url="http://127.0.0.1:8500")
+r = client.chat.complete(model="llama3.2:3b", messages=[
     {"role": "system", "content": open("prompts/triage.txt").read()},
     {"role": "user", "content": "Hello, where is my parcel? LB-20488"}])
 print(r.choices[0].message.content, r.usage.prompt_tokens, r.usage.completion_tokens)
 ```
 
 ```
-ana@desk:~/desk$ python lab/mistral_sort.py
-order-status 50 2
+ana@desk:~/desk$ python mistral_sort.py
+product-question 72 3
 ```
 
-The answer, `order-status`, is the stand-in's table, as everywhere in this course; the 50 and 2 are
-its token counts. The interesting part is what the SDK put on the wire, which `wire` prints from
-the stand-in's log:
+The answer is llama3.2:3b's, and the two numbers are the tokens it read and wrote. **Mistral's own
+SDK got an answer from Ollama**, which is the interesting part, and the relay shows why it could:
 
 ```
-ana@desk:~/desk$ wire --headers user-agent,authorization
+ana@desk:~/desk$ python relay.py show --headers user-agent,authorization
 POST /v1/chat/completions
 user-agent: mistral-client-python/3.0.0
-authorization: Bearer lab-m…
+authorization: Bearer ollam…
 
 {
-  "model": "standin-small",
+  "model": "llama3.2:3b",
   "messages": [
     {
       "content": "You sort the e-mail of Lantern Books, an online bookshop.\nAnswer with exactly one label and nothing else:\norder-status, refund, address-change, product-question, other.\n",
@@ -51,10 +50,9 @@ authorization: Bearer lab-m…
 
 **`POST /v1/chat/completions`**, with the key as a `Bearer` token and a body of `model` and
 `messages` in roles: the same path and the same shape as OpenAI's Chat Completions, which lesson 20
-teaches as the industry's common format. Only two things say this is Mistral: the `user-agent`,
-naming the SDK and its version, and **the key**, which is what an actual provider uses to decide
-whose account is paying. The stand-in decides the same way, which is the only reason it can answer
-OpenAI and Mistral on one path.
+teaches as the industry's common format, and which Ollama answers. Only two things say this is
+Mistral's SDK: the `user-agent`, naming the SDK and its version, and **the key**, which is what an
+actual provider uses to decide whose account is paying.
 
 ## What that means in practice
 

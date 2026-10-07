@@ -44,6 +44,7 @@ set -euo pipefail
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 L1=$HERE/lessons/le-gwptbb4h
 L2=$HERE/lessons/le-jpys8tc0
+L9=$HERE/lessons/le-bpqcyrta
 AUTHOR=/opt/aimodels-author
 SHARE=/opt/aimodels-author/share
 TZ_LAB=America/Sao_Paulo
@@ -94,6 +95,8 @@ build_desk() {
   [ -f $SHARE/$sheet ] || curl -fsSL -o $SHARE/$sheet \
     https://raw.githubusercontent.com/BerriAI/litellm/21881c571181fc0e409dd717b8a277e5b43152a7/model_prices_and_context_window.json
   install -o ana -m 0644 $SHARE/$sheet $DESK/$sheet
+  # lesson 9 adds relay.py, which lessons 14 to 21 run in front of Ollama
+  x $L9/rerank.md python 1 | runuser -u ana -- tee $DESK/relay.py >/dev/null
   runuser -u ana -- python3 -m venv $DESK/.venv
   # the pip line, exactly as the section's transcript has ana type it
   local pip; pip=$(grep -m1 '^ana@desk:~/desk\$ pip install ' $L1/desk.md | sed 's/^ana@desk:~\/desk\$ //')
