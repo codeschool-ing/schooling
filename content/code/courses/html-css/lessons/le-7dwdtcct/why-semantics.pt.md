@@ -40,7 +40,16 @@ Aqui está a página inicial do sebo escrita como sopa de divs:
 </html>
 ```
 
-Com umas poucas linhas de CSS para o negrito e os tamanhos, ela parece uma página perfeitamente razoável. Agora o mesmo conteúdo, com cada parte no elemento que diz o que ela é:
+Com umas poucas linhas de CSS para o negrito e os tamanhos, o `soup.css`, ela parece uma página perfeitamente razoável:
+
+```css
+.logo { font-size: 2em; font-weight: bold; }
+.title { font-size: 1.5em; font-weight: bold; margin: 0.8em 0; }
+.event-title { font-weight: bold; }
+.event { margin-bottom: 1em; }
+```
+
+Agora o mesmo conteúdo, com cada parte no elemento que diz o que ela é:
 
 ```html
 <!doctype html>

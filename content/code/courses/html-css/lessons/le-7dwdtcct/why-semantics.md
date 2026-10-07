@@ -40,7 +40,16 @@ Here is the bookshop's home page written as div soup:
 </html>
 ```
 
-With a few lines of CSS for the bold and the sizes, it looks like a perfectly reasonable page. Now the same content, with each part in the element that says what it is:
+With a few lines of CSS for the bold and the sizes, `soup.css`, it looks like a perfectly reasonable page:
+
+```css
+.logo { font-size: 2em; font-weight: bold; }
+.title { font-size: 1.5em; font-weight: bold; margin: 0.8em 0; }
+.event-title { font-weight: bold; }
+.event { margin-bottom: 1em; }
+```
+
+Now the same content, with each part in the element that says what it is:
 
 ```html
 <!doctype html>

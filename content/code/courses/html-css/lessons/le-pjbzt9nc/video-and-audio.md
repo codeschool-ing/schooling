@@ -1,6 +1,6 @@
 ---
 title: Video and audio
-version: 1
+version: 2
 ---
 
 `<video>` and `<audio>` put a recording in the page, played by the browser itself, with no plug-in. The bookshop has a recording of last month's poetry reading:
@@ -37,9 +37,18 @@ What each part does:
 - **The content inside `<video>`**, the download link, is shown only by a browser that cannot play video at all.
 - **`preload`** says how much to fetch before somebody presses play.
 
+The captions file, `reading.vtt`, is plain text, and this one has a single caption:
+
+```
+WEBVTT
+
+00:00.000 --> 00:02.000
+Good evening, and welcome to Andorinha Books.
+```
+
 ## What `preload` changes
 
-With `preload="none"` and then with `preload="metadata"`:
+With `preload="none"`, and then with a copy saved as `video-metadata.html` that says `preload="metadata"` instead:
 
 ```
 ana@laptop:~/site$ probe video.html fetched
