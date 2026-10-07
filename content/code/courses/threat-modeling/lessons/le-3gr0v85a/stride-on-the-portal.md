@@ -52,10 +52,26 @@ exactly that kind and finds more.
 
 The list lives in the model's repository as `threats.csv`, one line per threat, with the same
 columns as the table. Later lessons add to it: lesson 8 gives each threat a requirement, lessons 9
-to 11 a risk, and lesson 12 a decision. Counting it by letter is a one-line check that the
-afternoon did not skip a category:
+to 11 a risk, and lesson 12 a decision. The whole file, and then a count by letter, a one-line
+check that the afternoon did not skip a category:
 
 ```
+(.venv) ana@vm:~/tm/portal-model$ cat threats.csv
+id,element,stride,threat
+T01,Payment webhook,S,Anybody who finds the webhook address can mark a booking paid by sending a request that looks like the gateway's.
+T02,Sign in and book,S,An attacker signs in as a patient with a password leaked from another site and sees their bookings and exams.
+T03,Clinic staff,S,A phishing e-mail takes a receptionist's password; with no second factor the attacker signs in to the console as them.
+T04,Exam files,T,The portal's storage key can overwrite any PDF; a flaw in the portal lets an attacker replace a patient's exam with another file.
+T05,Read and write records,R,A staff member changes a clinical note and nothing records who changed it or what it said before.
+T06,Sign in and book,R,A patient denies cancelling a session and Vereda cannot show that the cancellation came from their account.
+T07,Pages and booking status,I,A signed-in patient changes the exam number in the address and downloads another patient's PDF.
+T08,Send reminder,I,The SMS names the clinic and the physiotherapist; anybody who sees the patient's phone screen learns they are in treatment.
+T09,Read and write records,I,Receptionists can read clinical notes they never need; one curious or careless account exposes every patient.
+T10,Upload exam PDF,D,Uploads have no size limit; a few large files fill the storage and the portal stops accepting exams.
+T11,Send reminder,D,Booking and cancelling in a loop sends an SMS each time; Vereda pays for every message and the provider throttles real reminders.
+T12,Staff console,E,The console answers from the internet; one stolen staff password reaches every patient's record from anywhere.
+T13,Reminder worker,E,The worker connects as the database owner; a flaw in it gives an attacker full control of every table.
+T14,Open exam PDF,E,A crafted PDF exploits the viewer a physiotherapist opens it in and runs code on a clinic computer.
 (.venv) ana@vm:~/tm/portal-model$ cut -d, -f3 threats.csv | tail -n +2 | sort | uniq -c
       2 D
       3 E

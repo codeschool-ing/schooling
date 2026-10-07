@@ -31,6 +31,6 @@ block() { printf '##### %s\n' "$1"; }
 M=/home/ana/tm/portal-model
 
 block 'risk'
-run $M 'head -3 risks.csv'
+run $M 'cat risks.csv'
 run $M 'python3 risk.py'
 run $M "python3 -c 'import math; print(1 - math.exp(-6), 1 - math.exp(-0.075))'"

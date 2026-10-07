@@ -31,5 +31,6 @@ block() { printf '##### %s\n' "$1"; }
 M=/home/ana/tm/portal-model
 
 block 'trace'
+run $M 'cat requirements.csv'
 run $M 'python3 trace.py'
 run $M 'git log --oneline -2'

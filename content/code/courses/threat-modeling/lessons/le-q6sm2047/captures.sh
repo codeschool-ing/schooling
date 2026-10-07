@@ -31,7 +31,7 @@ block() { printf '##### %s\n' "$1"; }
 M=/home/ana/tm/portal-model
 
 block 'mapping'
-run $M 'head -4 mapping.csv'
+run $M 'cat mapping.csv'
 run $M 'python3 crosswalk.py'
 
 block 'iso'

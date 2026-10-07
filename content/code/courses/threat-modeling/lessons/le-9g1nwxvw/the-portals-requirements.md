@@ -58,4 +58,28 @@ it would have been missed by a model that only asked about the webhook's sender.
 
 The table lives in `requirements.csv`, beside `threats.csv`, with the same columns. The
 `threats` column names one or more threat ids separated by spaces, which is the join the next
-section uses.
+section uses. An empty `verified by` is how "not yet" is written:
+
+```
+(.venv) ana@vm:~/tm/portal-model$ cat requirements.csv
+id,threats,requirement,verified by
+R01,T01,The portal accepts a payment webhook only when the gateway's signature over its body verifies.,test
+R02,T01,The portal marks a booking paid only when the webhook's amount and booking match an open charge.,test
+R03,T02,Patient sign-in allows at most 10 failed attempts per account per hour.,test
+R04,T02,Sign-up and password changes refuse passwords found in known breach lists.,test
+R05,T03,Staff sign-in requires a second factor every time.,test
+R06,T15,A staff account unused for 30 days is disabled automatically.,test
+R07,T04,The portal's storage credential can create exam files and cannot overwrite or delete them.,review
+R08,T05,Every change to a clinical note is kept as a new version with its author and time.,test
+R09,T06,Every cancellation records the account that made it and when.,test
+R10,T07,The portal returns an exam only to the patient it belongs to and answers any other request as if it did not exist.,test
+R11,T08,A reminder text contains only the date and time and how to cancel.,review
+R12,T09,The receptionist role cannot open clinical notes or exams.,test
+R13,T10,An upload larger than 20 MB or not a PDF is refused.,test
+R14,T11,An account triggers at most 5 reminder messages a day.,
+R15,T12,The staff console answers only requests from the clinics' network.,review
+R16,T13,The reminder worker's database account can read bookings and nothing else.,review
+R17,T16,Patients see their open sessions and can end any of them.,
+R18,T16 T17,Signing in from a new device or changing the phone number sends the patient an e-mail.,test
+R19,T17,Changing the phone number needs a code sent to the old number.,test
+```

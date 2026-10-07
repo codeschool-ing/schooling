@@ -7,11 +7,19 @@ The mapping lives where the model lives, as one more file joined by id. ana adde
 repository on 5 October:
 
 ```
-(.venv) ana@vm:~/tm/portal-model$ head -4 mapping.csv
+(.venv) ana@vm:~/tm/portal-model$ cat mapping.csv
 control,plan,iso27001,csf
 C1,phase 1,8.5,PR.AA-03
 C2,phase 2,8.22,PR.IR-01
 C3,phase 2,8.26,PR.DS-02
+C4,phase 1,8.3,PR.AA-05
+C5,phase 1,8.2,PR.AA-05
+C6,not bought,8.7,PR.PS-05
+C7,phase 2,5.17 8.5,PR.AA-03
+C8,phase 1,5.34,PR.DS-02
+C9,phase 2,8.26,PR.IR-04
+C10,phase 2,8.6,PR.IR-04
+C11,law,5.15 5.34,PR.AA-05
 ```
 
 Four columns. The control, by its id from `controls.csv`. **Where it is in the plan** of lesson 11:

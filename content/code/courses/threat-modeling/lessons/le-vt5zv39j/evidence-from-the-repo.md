@@ -53,10 +53,11 @@ Git is strong evidence of some things and weak evidence of others, and the diffe
 changing an old file changes every hash after it. Once the history is pushed to a remote that other
 people fetch from, rewriting it shows.
 
-**The dates and the names are weak.** Both are written by whoever makes the commit. This course's own
-lab sets every date on purpose, so its captures repeat, and nothing in the history above shows that.
-An auditor treats a commit date as the committer's claim, made stronger by a hosted remote's own
-record of when a push arrived, or by protected branches that only accept changes through review.
+**The dates and the names are weak.** Both are written by whoever makes the commit. The history
+above was recorded with dates chosen for this course, so that the transcripts repeat, and nothing in
+it shows that; yours carries the days you worked, and different hashes. An auditor treats a commit
+date as the committer's claim, made stronger by a hosted remote's own record of when a push arrived,
+or by protected branches that only accept changes through review.
 
 **An approval in a file is only what the file says.** RA-001 names its owner:
 

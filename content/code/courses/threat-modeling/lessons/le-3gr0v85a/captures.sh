@@ -36,4 +36,5 @@ run $M "python3 findings.py model.json 'Staff console' | grep -i php"
 run $M "python3 findings.py model.json 'Payment webhook'"
 
 block 'hand'
+run $M 'cat threats.csv'
 run $M 'cut -d, -f3 threats.csv | tail -n +2 | sort | uniq -c'

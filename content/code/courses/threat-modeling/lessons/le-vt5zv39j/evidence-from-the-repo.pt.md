@@ -55,11 +55,11 @@ O git é evidência forte de algumas coisas e fraca de outras, e a diferença im
 arquivo antigo muda todos os hashes depois dele. Depois que o histórico é enviado a um remoto de onde
 outras pessoas buscam, reescrevê-lo aparece.
 
-**As datas e os nomes são fracos.** Os dois são escritos por quem faz o commit. O próprio laboratório
-deste curso define todas as datas de propósito, para as capturas se repetirem, e nada no histórico
-acima mostra isso. Um auditor trata a data de um commit como a afirmação de quem o fez, mais forte
-com o registro do próprio remoto hospedado de quando um push chegou, ou com branches protegidas que
-só aceitam mudanças por revisão.
+**As datas e os nomes são fracos.** Os dois são escritos por quem faz o commit. O histórico acima
+foi gravado com datas escolhidas para este curso, para as transcrições se repetirem, e nada nele
+mostra isso; o seu traz os dias em que você trabalhou, e outros hashes. Um auditor trata a data de
+um commit como a afirmação de quem o fez, mais forte com o registro do próprio remoto hospedado de
+quando um push chegou, ou com branches protegidas que só aceitam mudanças por revisão.
 
 **Uma aprovação num arquivo é só o que o arquivo diz.** O RA-001 nomeia o dono:
 

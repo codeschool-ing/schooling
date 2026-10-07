@@ -44,11 +44,13 @@ run $M 'tail -2 threats.csv'
 
 block 'check-fails'
 at 17
+run $M 'cat check.sh'
 run $M 'cat baseline.txt'
 run $M 'sh check.sh 2026-10-12; echo "exit $?"'
 
 block 'check-passes'
 at 18
+run $M 'tail -2 requirements.csv'
 run $M 'cat baseline.txt'
 run $M 'sh check.sh 2026-10-12; echo "exit $?"'
 

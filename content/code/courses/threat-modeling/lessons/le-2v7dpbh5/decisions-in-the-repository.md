@@ -50,6 +50,68 @@ By 2027-04-01, or before that if any of these happens: a viewer flaw is publishe
 console's viewer; the insurance quote arrives; a clinic computer is infected by anything.
 ```
 
+The other two records have the same shape. DR-001 is a decision to mitigate, and RA-002 is the
+acceptance daniel signed in April:
+
+```
+(.venv) ana@vm:~/tm/portal-model$ cat decisions/DR-001-second-factor.md
+---
+id: DR-001
+threat: T03
+decision: mitigate
+owner: daniel
+decided: 2026-09-30
+review by: 2027-09-30
+---
+
+# Require a second factor for every staff sign-in (C1)
+
+## The decision
+
+Staff sign in to the console with a password and a code from an authenticator app. Two hardware
+keys per clinic are kept for staff without a suitable phone.
+
+## Why
+
+T03 is more than half of Vereda's expected loss. C1 removes about R$ 60,000 a year of it for
+R$ 3,000 a year, and with C5, C8 and C4 it brings the yearly loss curve under the appetite daniel
+set in lesson 10.
+
+## Consequences
+
+Every sign-in takes a few seconds longer. A lost phone means a call to bruno, who resets the factor
+after checking who is calling. Staff accounts that cannot use a second factor cannot sign in.
+(.venv) ana@vm:~/tm/portal-model$ cat decisions/RA-002-cancellation-record.md
+---
+id: RA-002
+threat: T06
+decision: accept
+owner: daniel
+decided: 2026-04-02
+review by: 2026-10-02
+---
+
+# Accept T06, no record of who cancelled a session, for six months
+
+## The risk
+
+A patient denies cancelling a session and Vereda cannot show that the cancellation came from their
+account. Disputes so far: two in a year, settled by refunding the session.
+
+## Why it is accepted
+
+Recording cancellations needs a change to the booking code that was already planned for the
+second half of the year. Refunding a disputed session costs less than bringing it forward.
+
+## What is in place instead
+
+Reception notes the date and the patient's account in the support inbox when a dispute arrives.
+
+## When this is looked at again
+
+By 2026-10-02, when the booking change is due.
+```
+
 ### Which decisions are due
 
 A review date nobody checks is decoration. `acceptances.py` reads the front matter of every record

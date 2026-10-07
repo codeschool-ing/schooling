@@ -34,5 +34,7 @@ M=/home/ana/tm/portal-model
 block 'decisions'
 run $M 'ls decisions'
 run $M 'cat decisions/RA-001-crafted-pdf.md'
+run $M 'cat decisions/DR-001-second-factor.md'
+run $M 'cat decisions/RA-002-cancellation-record.md'
 run $M 'python3 acceptances.py 2026-10-07'
 run $M 'git log --format="%h %ad %s" --date=short -- decisions'

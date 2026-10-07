@@ -47,6 +47,12 @@ modelo, e a rodou pelo `check.sh`, que constrói o modelo com o pytm antes, para
 quebrado também falhar:
 
 ```
+(.venv) ana@vm:~/tm/portal-model$ cat check.sh
+#!/bin/sh
+# What CI runs on every change to the model. Any failure stops the merge.
+set -e
+python3 model.py --json model.json
+python3 check_model.py "$@"
 (.venv) ana@vm:~/tm/portal-model$ sh check.sh 2026-10-12; echo "exit $?"
 NEW    T18: no requirement and no decision
 NEW    T19: no requirement and no decision
@@ -69,6 +75,9 @@ chave da API e o R21 para os logins do painel. O R20 é verificado por revisão 
 é um processo mensal sem nada para verificar ainda, então entrou no baseline no mesmo commit:
 
 ```
+(.venv) ana@vm:~/tm/portal-model$ tail -2 requirements.csv
+R20,T18,The gateway API key is kept only in the portal's secret store and is rotated every 90 days.,review
+R21,T19,Access to the gateway's dashboard is reviewed every month and removed on the day a person leaves.,
 (.venv) ana@vm:~/tm/portal-model$ cat baseline.txt
 R14: not verified
 R17: not verified
