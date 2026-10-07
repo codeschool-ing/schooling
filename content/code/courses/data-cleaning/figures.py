@@ -666,6 +666,54 @@ def l06_cascade(lang):
                  'que alguém escreveu.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-two-clocks', 7)
+def l07_two_clocks(lang):
+    T = {'en': dict(utc='UTC, as the website writes it', sp='São Paulo, as the customer saw it',
+                    order='one order', moved='same instant, previous day', jan1='1 January', jan2='2 January',
+                    dec31='31 December'),
+         'pt': dict(utc='UTC, como o site escreve', sp='São Paulo, como o cliente viu',
+                    order='um pedido', moved='mesmo instante, dia anterior', jan1='1º de janeiro',
+                    jan2='2 de janeiro', dec31='31 de dezembro')}[lang]
+    fig = Fig('l07-two-clocks', 720, 240, {
+        'en': 'Two time lines, one above the other, for the same stretch of time. The upper one is UTC '
+              'and the lower one São Paulo, three hours behind. An order stamped 02:00 on 2 January in '
+              'UTC sits at 23:00 on 1 January in São Paulo: the same instant, on the previous day.',
+        'pt': 'Duas linhas do tempo, uma acima da outra, para o mesmo trecho de tempo. A de cima é UTC e a '
+              'de baixo São Paulo, três horas atrás. Um pedido carimbado 02:00 de 2 de janeiro em UTC fica '
+              'às 23:00 de 1º de janeiro em São Paulo: o mesmo instante, no dia anterior.'}[lang])
+    x0, x1 = 60, 680
+    hours = 18  # from 15:00 UTC on 1 Jan to 09:00 UTC on 2 Jan
+
+    def sx(h):
+        return x0 + (x1 - x0) * h / hours
+    for y, label, shift in ((70, T['utc'], 0), (170, T['sp'], -3)):
+        fig.text(x0, y - 30, label, size=11, anchor='start', weight='600')
+        fig.line(x0, y, x1, y, stroke='--paper-dim', width=1.2)
+        for h in range(0, hours + 1, 3):
+            clock = (15 + h + shift) % 24
+            fig.line(sx(h), y - 4, sx(h), y + 4, stroke='--paper-dim', width=1)
+            fig.text(sx(h), y + 16, f'{clock:02d}:00', size=9.5, mono=True, fill='--paper-dim')
+        mid = 9 - shift  # midnight on this clock
+        fig.line(sx(mid), y + 24, sx(mid), y + 40, stroke='--wire', width=1.4, dash='3 2')
+        fig.text(sx(mid) - 6, y + 34, T['jan1'], size=9.5, anchor='end', fill='--paper-dim')
+        fig.text(sx(mid) + 6, y + 34, T['jan2'], size=9.5, anchor='start', fill='--paper-dim')
+    t = 11  # 02:00 UTC
+    fig.line(sx(t), 70, sx(t), 170, stroke='--amber', width=1.6, dash='4 3')
+    fig.circle(sx(t), 70, 5, fill='--amber')
+    fig.circle(sx(t), 170, 5, fill='--amber')
+    fig.text(sx(t) + 10, 58, '02:00', size=11, anchor='start', mono=True, fill='--amber')
+    fig.text(sx(t) + 10, 158, '23:00', size=11, anchor='start', mono=True, fill='--amber')
+    fig.text(sx(t) + 54, 158, T['moved'], size=10, anchor='start', fill='--paper-dim')
+    fig.text(sx(t) + 54, 58, T['order'], size=10, anchor='start', fill='--paper-dim')
+    cap = {'en': 'Every website order stamped between 00:00 and 02:59 UTC belongs to the evening before on '
+                 'the clock its customer used: 1,335 of them in 2025.',
+           'pt': 'Todo pedido do site carimbado entre 00:00 e 02:59 UTC pertence à noite anterior no relógio do '
+                 'cliente: 1.335 deles em 2025.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
