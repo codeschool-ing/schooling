@@ -1,9 +1,10 @@
 ---
 title: Trusting the server you talk to
-version: 1
+version: 2
 ---
 
-Every request in this lesson went over HTTPS and named `lab-ca.pem`. That file is the reason the
+Every request in this lesson went over HTTPS and named `lab-ca.pem`, the certificate of the lab's
+own certificate authority, which `netlab.sh` made and copied into `ana`'s home. That file is the reason the
 password was safe to send. Without it:
 
 ```

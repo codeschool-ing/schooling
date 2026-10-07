@@ -9,15 +9,16 @@
 #   sudo bash ../../lab.sh tools     # once: the software the lab runs
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. lab.sh builds three FRR
-# routers, a NETCONF device, NetBox and a service desk out of network
-# namespaces on one Linux computer, and ctl, the machine ana works from. A line
-# that starts with ana@ctl ran on ctl; a line that starts with core1# was typed
-# at core1's CLI over SSH.
+# EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by netlab.sh, which
+# this lesson prints whole; lab.sh reads it out of building-it.md and runs it.
+# A line that starts with ubuntu@netlab ran on the virtual machine itself, as
+# the student types it; ana@ctl ran on ctl; core1# was typed at core1's CLI.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset, and the files ana wrote (put below), whose
-# contents the lesson shows in full.
+# What is STAGED rather than typed, and not shown in the lesson: putting the
+# later lessons' programs aside for the first build, so it is the build a
+# student has after this lesson; the conditions each failure in
+# when-setup-fails needs, each said beside it; and the files ana wrote (put
+# below), whose contents the lesson shows in full.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -54,6 +55,46 @@ bgon() {
   sleep "${3:-1.5}"
 }
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
+
+# on the virtual machine, as ubuntu: what the student types outside the lab
+vm() { printf 'ubuntu@netlab:~$ %s\n' "$1"; lab host "$1" 2>&1 || true; }
+# vm_in 'command' 'line' ...: an interactive session started by command, each
+# line typed at its prompt; the terminal title bash sets is not shown.
+vm_in() {
+  local c=$1 script='sleep 1.5;' l; shift
+  printf 'ubuntu@netlab:~$ %s\n' "$c"
+  for l in "$@"; do script+=" printf '%s\\n' '$l'; sleep 1;"; done
+  lab host "( $script ) | script -qfec '$c' /dev/null" 2>&1 | tr -d '\r' | sed -e 's/\x1b\]0;[^\x07]*\x07//g' -e 's/\x1b\[?2004[hl]//g' || true
+  printf 'ubuntu@netlab:~$ \n'
+}
+LATER="devapid.py lab_restconf.c deskd.py napalm_frr.py netbox_seed.py"
+
+lab down
+lab host "mkdir -p ~/.later && cd ~/netlab && mv $LATER ~/.later/"
+block first-up
+vm 'time sudo ~/netlab/netlab.sh up'
+block enter
+vm_in 'sudo ~/netlab/netlab.sh enter ctl' 'hostname' 'ssh netops@edge1 "show ip ospf neighbor"' 'exit'
+block fail-sudo
+vm '~/netlab/netlab.sh up'
+block fail-twice
+vm 'sudo ~/netlab/netlab.sh up'
+block fail-venv
+lab host 'sudo mv /opt/netauto /opt/netauto.aside'
+vm 'sudo ~/netlab/netlab.sh reset'
+lab host 'sudo mv /opt/netauto.aside /opt/netauto'
+block fail-reboot
+# what a restart does to the lab: its processes and namespaces go, its files stay
+lab host 'for n in $(ip netns list | cut -d" " -f1); do sudo ip netns pids $n | xargs -r sudo kill -9; sudo ip netns del $n; done'
+vm 'sudo ~/netlab/netlab.sh enter ctl'
+vm 'sudo ~/netlab/netlab.sh up 2>&1 | tail -1'
+block fail-crlf
+lab host "sed -i 's/\$/\r/' ~/netlab/netlab.sh"
+vm 'sudo ~/netlab/netlab.sh up'
+vm 'file ~/netlab/netlab.sh'
+vm "sed -i 's/\\r\$//' ~/netlab/netlab.sh"
+vm 'file ~/netlab/netlab.sh'
+lab host "cd ~/.later && mv $LATER ~/netlab/"
 
 lab reset
 

@@ -568,5 +568,115 @@
         "why": "Lentidão não é falha da mudança."
       }
     ]
+  },
+  "ex-ves76snf": {
+    "prompt": "O que permite que nove dispositivos do laboratório rodem numa só máquina Linux?",
+    "hint": "Cada dispositivo tem as próprias interfaces, endereços e rotas.",
+    "choices": [
+      {
+        "text": "Cada um é um network namespace, ligado aos outros por cabos virtuais",
+        "why": "Isso. Um namespace é uma cópia da pilha de rede, e pares veth ligados a bridges são os cabos."
+      },
+      {
+        "text": "Cada equipamento é uma pequena máquina virtual própria, ligada pelo script",
+        "why": "Só o laboratório inteiro é uma máquina virtual; nove delas precisariam de muito mais memória."
+      },
+      {
+        "text": "Cada equipamento é uma porta diferente de um único processo FRR compartilhado",
+        "why": "Cada roteador roda o próprio FRR, dentro do próprio namespace."
+      },
+      {
+        "text": "Os equipamentos são só simulados, e nenhum pacote trafega de verdade entre eles",
+        "why": "Os pacotes trafegam de verdade entre os namespaces; só falta o hardware."
+      }
+    ]
+  },
+  "ex-fzewsp1j": {
+    "prompt": "Por que o curso recomenda uma máquina virtual em vez de instalar o laboratório no computador que você usa todo dia?",
+    "hint": "Pense no que fica para trás quando você terminar.",
+    "choices": [
+      {
+        "text": "O que o laboratório instala fica instalado, e uma VM se apaga com um comando",
+        "why": "Isso. Software de roteamento, um banco de dados e um switch ficam melhor numa máquina que se pode jogar fora."
+      },
+      {
+        "text": "Os comandos do laboratório só funcionam num hipervisor, nunca num Ubuntu instalado",
+        "why": "Funcionam em qualquer Ubuntu 24.04, instalado ou alugado."
+      },
+      {
+        "text": "Uma máquina virtual faz os três roteadores encaminharem pacotes bem mais rápido",
+        "why": "Velocidade não tem nada a ver com a escolha."
+      },
+      {
+        "text": "As transcrições só batem como impresso dentro do Multipass e em nenhum outro lugar",
+        "why": "A tabela diz que os três caminhos batem como impresso."
+      }
+    ]
+  },
+  "ex-ndk2zzpj": {
+    "prompt": "Você começa uma aula nova. O que roda primeiro, e por quê?",
+    "hint": "As transcrições de toda aula foram feitas do mesmo jeito.",
+    "choices": [
+      {
+        "text": "`sudo ~/netlab/netlab.sh reset`, para os roteadores voltarem a como ligam",
+        "why": "Isso. Uma mudança deixada num roteador pela aula anterior apareceria na saída desta."
+      },
+      {
+        "text": "`sudo ~/netlab/netlab.sh up`, porque ele reconstrói o laboratório inteiro toda vez",
+        "why": "O `up` não faz nada num laboratório que já está de pé; avisa e para."
+      },
+      {
+        "text": "Nada: os roteadores esquecem toda mudança no instante em que você sai do `ctl`",
+        "why": "Sair de um shell não muda nada nos roteadores."
+      },
+      {
+        "text": "Apagar a home da `ana`, para sumirem de vez os arquivos da aula anterior",
+        "why": "A home dela sobrevive ao reset de propósito, para o seu trabalho ficar."
+      }
+    ]
+  },
+  "ex-0hd94wfv": {
+    "prompt": "Depois de reiniciar a máquina virtual, `sudo ~/netlab/netlab.sh enter ctl` responde `Cannot open network namespace \"ctl\"`. O que aconteceu?",
+    "hint": "Onde ficam os network namespaces?",
+    "choices": [
+      {
+        "text": "Os namespaces viviam na memória do kernel e foram junto; o `up` os refaz",
+        "why": "Isso. Nada quebrou, e os arquivos da `ana` continuam na home dela."
+      },
+      {
+        "text": "O reinício apagou o `netlab.sh` do disco, e ele precisa ser salvo tudo de novo",
+        "why": "O script é um arquivo em disco e sobrevive ao reinício."
+      },
+      {
+        "text": "O reinício desinstalou o FRR, então a linha do `apt-get` precisa rodar de novo",
+        "why": "Os pacotes sobrevivem ao reinício; só os namespaces sumiram."
+      },
+      {
+        "text": "O `ctl` muda de nome a cada reinício, e o nome novo está na saída do script",
+        "why": "Os nomes estão fixos no script."
+      }
+    ]
+  },
+  "ex-5hycz0k3": {
+    "prompt": "Rodar o script imprime `/usr/bin/env: ‘bash\\r’: No such file or directory`. O que há de errado com ele?",
+    "hint": "Veja o que vem depois de `bash` na mensagem.",
+    "choices": [
+      {
+        "text": "Foi salvo com finais de linha do Windows, um retorno de carro em cada linha",
+        "why": "Isso. O `file` diz `with CRLF line terminators`, e o `sed -i 's/\\r$//'` tira o caractere a mais."
+      },
+      {
+        "text": "O bash não está instalado na máquina virtual, e o `apt-get` precisa pô-lo",
+        "why": "Está; o programa procurado é `bash` seguido de um retorno de carro."
+      },
+      {
+        "text": "O script foi iniciado sem `sudo`, e o shell se recusou a achar o bash",
+        "why": "Isso dá `run it with sudo`."
+      },
+      {
+        "text": "O ambiente virtual em `/opt/netauto` não existe, então nada consegue começar",
+        "why": "Isso tem mensagem própria, e o script nem chegou lá."
+      }
+    ]
   }
 }

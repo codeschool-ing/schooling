@@ -1,6 +1,6 @@
 ---
 title: NAPALM, the same methods everywhere
-version: 1
+version: 2
 ---
 
 Netmiko still leaves the script speaking each vendor's language: the commands, the output format and
@@ -10,8 +10,8 @@ Juniper, an Arista or a Cisco router, and the script never sees a command.
 
 NAPALM ships drivers for EOS, IOS, IOS-XR, Junos and NX-OS, and other platforms have community
 drivers, found by name: `get_network_driver("xyz")` imports a package called `napalm_xyz`. **There is
-none for FRR**, so the lab has one, `napalm_frr`, written for the course; it logs in with Netmiko and
-uses FRR's own tool, `frr-reload.py`, to work out configuration changes. What this section shows is
+none for FRR**, so the lab has one, `napalm_frr`, the driver the previous section printed; it logs in
+with Netmiko and uses FRR's own tool, `frr-reload.py`, to work out configuration changes. What this section shows is
 NAPALM's interface, which is the same whatever the driver.
 
 ```schooling-example

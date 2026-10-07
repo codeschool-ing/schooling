@@ -1,6 +1,6 @@
 ---
 title: Resources, verbs and status codes
-version: 1
+version: 2
 ---
 
 Lesson 1 drove the routers through their CLI: text in, text out, and a script that has to
@@ -9,10 +9,8 @@ Most network equipment sold today has one beside its CLI, and the most common ki
 over HTTPS: the device publishes **resources** at addresses, and a client acts on them with the
 **verbs** of HTTP.
 
-The lab's routers have one at `https://<router>.example.net/api/v1`. It was written for this
-course, because FRR has none, and it follows the pattern real equipment follows; lesson 1's
-last section says what is real in the lab and what is not. Asking it something without saying
-who you are:
+The lab's routers have one at `https://<router>.example.net/api/v1`, served by `devapid`, the
+program the previous section started. Asking it something without saying who you are:
 
 ```
 ana@ctl:~$ curl -si --cacert lab-ca.pem https://edge1.example.net/api/v1/system
