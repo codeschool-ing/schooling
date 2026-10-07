@@ -12,11 +12,12 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; and the three
-# commits of the branch sunday-hours and one of Bruno's on main, made the same
-# way, standing in for a pull request and the work that landed beside it.
+# The branch sunday-hours and Bruno's commit on main beside it, standing in for a
+# pull request and the work that landed next to it, are the ```bash block
+# `the-pull-request` prints, run by `given`.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids in
+# the prose are reproducible.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -71,23 +72,9 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
-
-at '2026-09-21T09:10:00-03:00'
-git switch -q -c sunday-hours
-sed -i 's/half past five/half past five; Sundays from seven/' index.html
-git commit -qam 'Add Sunday hours to the home page'
-at '2026-09-21T09:25:00-03:00'
-sed -i 's/Sundays from seven/Sundays from 7:00/' index.html
-git commit -qam 'Write the Sunday time the way the rest of the page does'
-at '2026-09-21T09:40:00-03:00'
-printf '<p>Open on Sundays too.</p>\n' >> menu.html
-git commit -qam 'Mention Sundays on the menu page'
-git switch -q main
-bruno; at '2026-09-21T10:30:00-03:00'
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
-git commit -qam 'Give paragraphs more room'
+cd ~ && given the-pull-request 1 '2026-09-21T09:10:00-03:00' '2026-09-21T09:25:00-03:00' \
+  '2026-09-21T09:40:00-03:00' '2026-09-21T10:30:00-03:00'
 me; at '2026-09-21T11:00:00-03:00'
 
 block pr-commits
