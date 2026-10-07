@@ -1,6 +1,6 @@
 ---
 title: Provando que continua no ar
-version: 1
+version: 2
 ---
 
 *Continua no ar* é uma afirmação, e esta aula é sobre evidência, então aqui está a evidência. Primeiro, o
@@ -35,9 +35,9 @@ O contador foi de 0 para 1: o systemd viu o serviço morrer e o subiu de novo, e
 mexer. Do laptop, o endereço ainda responde, e a lista ainda tem oito itens, porque o banco mora no volume
 e não no container que morreu.
 
-A última verificação é o boot. Um reinício da máquina não foi gravado, porque as máquinas do laboratório são
-elas mesmas containers e uma que reinicia não volta sozinha. O que dá para mostrar é que os dois serviços
-estão ligados para subir no boot:
+A última verificação é o boot. O srv destas transcrições é um container, que não volta sozinho depois de
+reiniciar, então um reinício não foi gravado. O que dá para mostrar é que os dois serviços estão ligados
+para subir no boot:
 
 ```
 ana@srv:~$ systemctl is-enabled loanbook caddy
@@ -46,8 +46,9 @@ enabled
 ```
 
 `generated` é como o systemd descreve uma unidade que o Quadlet escreveu; o `WantedBy=multi-user.target`
-dela é o que a sobe no boot. `enabled` é o do Caddy. Num servidor de verdade, reinicie uma vez antes de
-dar o deploy por pronto.
+dela é o que a sobe no boot. `enabled` é o do Caddy. O seu srv é uma máquina de verdade, então reinicie-o
+uma vez, com `multipass restart srv`, e peça `https://loans.lab/healthz` de novo antes de dar o deploy por
+pronto.
 
 Essas três verificações, saúde, uma pane e um boot, são a diferença entre *rodei num servidor* e *está
 implantado*, e cada uma é um ou dois comandos. Ponha-as na seção de deploy do README, aula 16, e elas viram

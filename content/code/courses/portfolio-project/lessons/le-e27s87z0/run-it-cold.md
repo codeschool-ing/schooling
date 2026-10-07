@@ -1,15 +1,19 @@
 ---
 title: Run it on a machine where it has never run
-version: 1
+version: 2
 ---
 
 *It needs Python 3.12 or newer and nothing else* is a claim, and the only way to know whether it is true
 is to try it where nothing else is installed. Your own machine is the worst place for that test: it has
 every package you ever installed, every variable you ever set, and a database left over from last week.
 
-srv is a better place. It has Python and git from the lab, and nothing of loanbook's. Following the
-README's *Run it* section, with the clone taken from the lab's own repository instead of the placeholder
-address, and `python3 app.py` started in the background:
+A machine built from nothing is a better place, and lesson 15 already showed how to make one in minutes.
+The transcript below ran on a srv with Python and git and nothing of loanbook's but the bare repository
+pushed to it. Yours has lesson 15's deploy on it, so build a second machine for this test: `multipass
+launch 24.04 --name cold` comes with Python and git. Take the clone from your project's real address, and
+delete the machine afterwards with `multipass delete --purge cold`. Following the README's *Run it* section, with
+the clone taken from srv's bare repository instead of the placeholder address, and `python3 app.py`
+started in the background:
 
 ```
 ana@srv:~$ python3 --version

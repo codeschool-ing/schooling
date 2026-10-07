@@ -1,6 +1,6 @@
 ---
 title: O endereço em cada commit
-version: 1
+version: 2
 ---
 
 Todo commit carrega um nome e um endereço de e-mail, e enviar para um repositório público publica os dois,
@@ -44,6 +44,6 @@ ana@laptop:~/loanbook$ git log --format=%ad --date=format:%a | sort | uniq -c | 
       2 Tue
 ```
 
-As datas do loanbook estão escritas no `lab.sh`, aula 7, então esse padrão não descreve ninguém. Num projeto
-de verdade descreve você, e algumas pessoas preferem não publicar que o projeto foi construído entre as duas e
+As datas do loanbook foram escritas à mão quando a história dele foi gravada para este curso, então esse
+padrão não descreve ninguém. Num projeto de verdade descreve você, e algumas pessoas preferem não publicar que o projeto foi construído entre as duas e
 as quatro da manhã. Nenhuma configuração esconde isso; saber que está ali é o ponto.
