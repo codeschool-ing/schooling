@@ -1,6 +1,6 @@
 ---
 title: Rodar numa máquina onde nunca rodou
-version: 1
+version: 2
 ---
 
 *Precisa de Python 3.12 ou mais novo e de mais nada* é uma afirmação, e o único jeito de saber se é
@@ -8,9 +8,13 @@ verdade é experimentar onde nada mais está instalado. A sua própria máquina 
 tem todo pacote que você já instalou, toda variável que já definiu e um banco que sobrou da semana
 passada.
 
-O srv é um lugar melhor. Tem Python e git do laboratório, e nada do loanbook. Seguindo a seção *Run it* do
-README, com o clone vindo do repositório do próprio laboratório em vez do endereço de exemplo, e o `python3
-app.py` subido em segundo plano:
+Uma máquina montada do zero é um lugar melhor, e a aula 15 já mostrou como fazer uma em minutos. A
+transcrição abaixo rodou num srv com Python e git e nada do loanbook além do repositório bare enviado a ele.
+O seu tem o deploy da aula 15, então monte uma segunda máquina para este teste, `multipass launch 24.04
+--name cold`, que já vem com Python e git, faça o clone a partir do endereço real do seu projeto e apague a
+máquina depois com `multipass delete --purge cold`. Seguindo a seção *Run it* do README, com o clone
+vindo do repositório bare do srv em vez do endereço de exemplo, e o `python3 app.py` subido em segundo
+plano:
 
 ```
 ana@srv:~$ python3 --version

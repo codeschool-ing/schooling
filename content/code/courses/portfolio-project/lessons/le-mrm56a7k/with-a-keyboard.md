@@ -1,12 +1,40 @@
 ---
 title: What a keyboard finds
-version: 1
+version: 2
 ---
 
 The second check is the one any reviewer can do without installing anything: **put the mouse away and
 press Tab**. Each press moves the focus to the next thing you can act on, and a screen reader announces
 its name. This script presses Tab through the page and prints what each stop is called, as a rough
-stand-in for that announcement. Before:
+stand-in for that announcement; it runs like the axe check, with what that one installed:
+
+```javascript
+// Press Tab through the page and print what each stop is called: its label,
+// else its placeholder, else its text. A rough stand-in for what a screen
+// reader announces, and enough to hear a name that says nothing.
+import { chromium } from 'playwright';
+
+const url = process.argv[2] || 'http://127.0.0.1:8000/';
+const browser = await chromium.launch();
+const page = await browser.newPage();
+await page.goto(url);
+await page.waitForSelector('#items tr');
+for (let i = 1; i <= 6; i++) {
+  await page.keyboard.press('Tab');
+  const stop = await page.evaluate(() => {
+    const el = document.activeElement;
+    if (!el || el === document.body) return null;
+    const name = (el.labels && el.labels[0] && el.labels[0].innerText) ||
+      el.getAttribute('placeholder') || el.innerText;
+    return `${el.tagName.toLowerCase()}: ${name.trim()}`;
+  });
+  if (!stop) break;
+  console.log(`${i}. ${stop}`);
+}
+await browser.close();
+```
+
+Before:
 
 ```
 $ node tab-walk.mjs
