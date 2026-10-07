@@ -39,8 +39,30 @@ resources:
 
 `secretbox` is one of the providers, an authenticated cipher with a 32-byte key, and the list is
 ordered: **new writes use the first provider**, and `identity` at the end, which means "no
-encryption", lets the API server still read what was written before. The flag points the API server
-at the file:
+encryption", lets the API server still read what was written before. Both the file and the flag are
+written onto the control-plane node from your machine, with `docker exec`, because the node is a
+container. The first command writes the file with a fresh random key that never appears on screen; the
+second adds the flag to the API server's manifest, and the kubelet restarts the API server as soon as
+that file changes, so `kubectl` stops answering for half a minute or so:
+
+```sh
+docker exec shop-control-plane sh -c 'KEY=$(head -c 32 /dev/urandom | base64); cat > /etc/kubernetes/pki/encryption.yaml <<CONF
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+- resources: ["secrets"]
+  providers:
+  - secretbox:
+      keys:
+      - name: key1
+        secret: $KEY
+  - identity: {}
+CONF
+chmod 600 /etc/kubernetes/pki/encryption.yaml'
+docker exec shop-control-plane sed -i 's#- --etcd-servers=#- --encryption-provider-config=/etc/kubernetes/pki/encryption.yaml\n    - --etcd-servers=#' /etc/kubernetes/manifests/kube-apiserver.yaml
+```
+
+The flag points the API server at the file:
 
 ```
 ana@laptop:~/shop$ docker exec shop-control-plane grep encryption-provider /etc/kubernetes/manifests/kube-apiserver.yaml

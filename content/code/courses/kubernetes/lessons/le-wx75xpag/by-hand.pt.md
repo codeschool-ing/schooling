@@ -28,6 +28,22 @@ spec:
         image: shop:1.0
 ```
 
+Esse arquivo é o `~/shop/platform/shop/deployment.yaml`, depois do `./up.sh`. Ao lado dele, o
+`kustomization.yaml` o cita:
+
+```yaml
+resources:
+- deployment.yaml
+```
+
+E o git cria o repositório, com o seu nome e endereço no lugar dos da Ana:
+
+```sh
+cd ~/shop/platform
+git init -q -b main && git config user.name Ana && git config user.email ana@example.test
+git add . && git commit -q -m "shop 1.0, two copies"
+```
+
 ```
 ana@laptop:~/shop/platform$ git log --oneline
 efea582 shop 1.0, two copies
