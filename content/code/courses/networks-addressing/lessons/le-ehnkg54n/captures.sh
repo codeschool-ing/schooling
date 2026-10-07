@@ -6,9 +6,8 @@
 # the lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo useradd -m -s /bin/bash ana       # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh    # the lab, beside course.json
-#   sudo bash captures.sh
+#   sudo bash captures.sh       # on the machine ../../lab.sh describes; it runs
+#                               # the lab files the lessons show, copied out of them
 #
 # The lab is lab.sh's "office" scenario: pc1, pc2, pc3 and srv on one switch
 # in 10.20.10.0/24, behind the router r1. The calculator is ipcalc 0.51, the
@@ -22,7 +21,7 @@
 # Recorded on Ubuntu 24.04 in a virtual machine, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.

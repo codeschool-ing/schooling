@@ -1,6 +1,6 @@
 ---
 title: "O firewall: uma regra para cada pacote"
-version: 1
+version: 2
 ---
 
 "Firewall" soa como uma caixa com um muro desenhado, ou como o antivírus de um laptop. **Um
@@ -41,9 +41,9 @@ lista diz quanto tráfego cada regra já decidiu: 10 pacotes casaram com a prime
 e nenhum com a última.
 
 Agora uma conexão em cada sentido. O pc1 pede uma página ao serviço web do outro lado do provedor;
-o provedor tenta abrir o servidor web de dentro do escritório. (O laboratório deu ao provedor uma
-rota para a rede privada do escritório neste bloco, para que o firewall seja a única coisa no
-caminho.)
+o provedor tenta abrir o servidor web de dentro do escritório. (Neste bloco o provedor ganhou uma
+rota para a rede privada do escritório, `ip route add 10.20.10.0/24 via 203.0.113.2` num prompt de
+root no isp, para que o firewall seja a única coisa no caminho.)
 
 ```
 ana@pc1:~$ curl -s http://192.0.2.80/
