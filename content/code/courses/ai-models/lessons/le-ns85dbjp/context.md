@@ -11,17 +11,17 @@ does it cost to fill".
 How many priced chat entries reach each size:
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 1000000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 1000000 | sed -n 2p
 761 entries pass
 ```
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 200000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 200000 | sed -n 2p
 1666 entries pass
 ```
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 32000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 32000 | sed -n 2p
 2722 entries pass
 ```
 
@@ -49,7 +49,7 @@ The window has a sibling that is easier to miss: **the most a model will write i
 five of section 05's candidates, side by side:
 
 ```
-ana@desk:~/desk$ sheet compare claude-haiku-4-5 gemini/gemini-3.5-flash-lite gpt-5.4-mini mistral/mistral-small-latest deepseek/deepseek-v3.2
+ana@desk:~/desk$ python sheet.py compare claude-haiku-4-5 gemini/gemini-3.5-flash-lite gpt-5.4-mini mistral/mistral-small-latest deepseek/deepseek-v3.2
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 claude-haiku-4-5                                200,000    64000        1        5  VFSCRP
