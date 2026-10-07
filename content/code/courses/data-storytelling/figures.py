@@ -1227,7 +1227,8 @@ def l07_wireframe(lang):
     f.rect(10, 10, 660, 310, stroke='--wire', fill='--ink', rx=4)
 
     def badge(x, y, n):
-        f.circle(x, y, 9, fill='--amber')
+        # a round rect rather than a circle: figure-contrast reads the box a label sits in
+        f.rect(x - 9, y - 9, 18, 18, fill='--amber', rx=9)
         f.text(x, y + 0.5, str(n), size=10, weight='600', fill='--ink')
 
     # zone 1
