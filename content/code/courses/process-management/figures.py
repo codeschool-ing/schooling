@@ -1353,6 +1353,111 @@ def l10_forecast(lang):
 # ---- end of lesson 10
 
 
+# ------------------------------------------------------------------ lesson 11
+
+RISK_SHORT = {
+    'en': ['payment API changes', 'billing developer leaves', 'clinic data needs cleaning', 'app store rejection',
+           'calendar library fits'],
+    'pt': ['API de pagamento muda', 'dev do faturamento sai', 'dados das clínicas sujos', 'loja recusa o app',
+           'biblioteca de calendário serve'],
+}
+
+
+@figure('l11-matrix', 11)
+def l11_matrix(lang):
+    t = {
+        'en': dict(p='probability', i='impact', lv=['very low', 'low', 'medium', 'high', 'very high'],
+                   zones=['act now', 'watch', 'accept'],
+                   label='A five by five grid, probability up the side and impact along the bottom, each from very '
+                         'low to very high. Cells with a high product of the two are marked act now, the middle '
+                         'band watch, and the low corner accept. Four risks are plotted: payment API changes at low '
+                         'probability and high impact; billing developer leaves at very low probability and very high '
+                         'impact; clinic data needs cleaning at medium and medium; app store rejection at low and low.',
+                   cap='The Agenda team’s four threats on a probability-impact matrix. The grid ranks them for '
+                       'attention; it does not say how many days they could cost, which is the next section’s job.'),
+        'pt': dict(p='probabilidade', i='impacto', lv=['muito baixo', 'baixo', 'médio', 'alto', 'muito alto'],
+                   zones=['agir já', 'observar', 'aceitar'],
+                   label='Uma grade de cinco por cinco, probabilidade subindo pela lateral e impacto ao longo da '
+                         'base, cada um de muito baixo a muito alto. Células com produto alto dos dois estão marcadas '
+                         'agir já, a faixa do meio observar, e o canto baixo aceitar. Quatro riscos estão marcados: '
+                         'API de pagamento muda em probabilidade baixa e impacto alto; dev do faturamento sai em '
+                         'probabilidade muito baixa e impacto muito alto; dados das clínicas sujos em médio e médio; '
+                         'loja recusa o app em baixo e baixo.',
+                   cap='As quatro ameaças do time Agenda numa matriz de probabilidade e impacto. A grade as ordena '
+                       'para atenção; não diz quantos dias podem custar, que é tarefa da próxima seção.'),
+    }[lang]
+    f = Fig('l11-matrix', 660, 340, t['label'])
+    x0, y0, c = 120, 20, 52
+    for pi in range(5):          # probability level 5 at the top
+        for ii in range(5):
+            score = (5 - pi) * (ii + 1)
+            fill = '--scan' if score >= 12 else '--panel'
+            stroke = '--amber' if score >= 12 else '--phosphor' if score >= 5 else '--wire'
+            f.rect(x0 + ii * c, y0 + pi * c, c - 4, c - 4, stroke=stroke, fill=fill, rx=3)
+    for k, lv in enumerate(t['lv']):
+        f.text(x0 - 8, y0 + (4 - k) * c + c / 2 - 2, lv, size=9, anchor='end', fill='--paper-dim')
+        f.text(x0 + k * c + c / 2 - 2, y0 + 5 * c + 10, lv, size=9, fill='--paper-dim')
+    f.text(x0 + 2.5 * c, y0 + 5 * c + 30, t['i'], size=10, weight='600')
+    f.text(14, y0 + 2.5 * c - 30, t['p'], size=10, anchor='start', weight='600')
+    letters = 'ABCD'
+    for k, (pl, il) in enumerate(S.MATRIX):
+        cx = x0 + (il - 1) * c + (c - 4) / 2
+        cy = y0 + (5 - pl) * c + (c - 4) / 2
+        f.circle(cx, cy, 11, fill='--panel', stroke='--paper', width=1.4)
+        f.text(cx, cy, letters[k], size=10, weight='600', mono=True)
+    lx = x0 + 5 * c + 24
+    for k in range(4):
+        y = 40 + k * 26
+        f.text(lx, y, letters[k], size=10, anchor='start', weight='600', mono=True)
+        f.text(lx + 18, y, RISK_SHORT[lang][k], size=9.5, anchor='start')
+    for k, (z, col) in enumerate(zip(t['zones'], ['--amber', '--phosphor', '--paper-dim'])):
+        y = 180 + k * 24
+        f.rect(lx, y - 8, 14, 14, stroke=col, fill='--scan' if k == 0 else '--panel', rx=2)
+        f.text(lx + 22, y - 1, z, size=9.5, anchor='start', fill=col if k < 2 else '--paper-dim')
+    return f, t['cap']
+
+
+@figure('l11-emv', 11)
+def l11_emv(lang):
+    t = {
+        'en': dict(x='expected value, working days', tot='threats: 9.0 days', net='net with the opportunity: 7.4',
+                   label='Horizontal bars of expected value for five risks. Payment API changes, 3 days. Billing '
+                         'developer leaves, 2 days. Clinic data needs cleaning, 3 days. App store rejection, 1 day. '
+                         'Calendar library fits, an opportunity, minus 1.6 days.',
+                   cap='Probability times impact, risk by risk. Two risks that look nothing alike on the matrix — a '
+                       'likely small one and an unlikely large one — can carry the same expected cost.'),
+        'pt': dict(x='valor esperado, dias úteis', tot='ameaças: 9,0 dias', net='líquido com a oportunidade: 7,4',
+                   label='Barras horizontais de valor esperado para cinco riscos. API de pagamento muda, 3 dias. Dev '
+                         'do faturamento sai, 2 dias. Dados das clínicas sujos, 3 dias. Loja recusa o app, 1 dia. '
+                         'Biblioteca de calendário serve, uma oportunidade, menos 1,6 dia.',
+                   cap='Probabilidade vezes impacto, risco a risco. Dois riscos que não se parecem em nada na '
+                       'matriz — um provável e pequeno, outro improvável e grande — podem carregar o mesmo custo '
+                       'esperado.'),
+    }[lang]
+    f = Fig('l11-emv', 640, 290, t['label'])
+    p = Plot(f, 260, 40, 600, 230, -2, 4, 0, 5)
+    p.xaxis([-2, -1, 0, 1, 2, 3, 4], fmt=lambda v: ('−' if v < 0 else '') + str(abs(v)), label=t['x'])
+    f.line(p.sx(0), p.y0, p.sx(0), p.y1, stroke='--paper-dim', width=1.2)
+    for k, (name, pr, im) in enumerate(S.RISKS):
+        e = pr * im
+        y = 48 + k * 34
+        a, b = sorted([p.sx(0), p.sx(e)])
+        c = '--amber' if e > 0 else '--phosphor'
+        f.path(f'M{a:.1f} {y:.1f} L{b:.1f} {y:.1f} L{b:.1f} {y + 22:.1f} L{a:.1f} {y + 22:.1f} Z',
+               stroke=c, width=1, fill='--scan')
+        f.text(p.x0 - 10, y + 11, RISK_SHORT[lang][k], size=9.5, anchor='end')
+        lab = num(lang, e, 1)
+        if e < 0:
+            lab = '−' + num(lang, -e, 1)
+        f.text(b + 6 if e > 0 else a - 6, y + 11, lab, size=9.5, anchor='start' if e > 0 else 'end',
+               fill=c, weight='600')
+    f.text(p.x1, 16, t['tot'], size=9.5, anchor='end', fill='--amber', weight='600')
+    f.text(p.x1, 32, t['net'], size=9.5, anchor='end', fill='--paper-dim')
+    return f, t['cap']
+
+# ---- end of lesson 11
+
+
 # ------------------------------------------------------------------ the figures
 
 
