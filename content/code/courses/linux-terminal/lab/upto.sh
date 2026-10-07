@@ -15,3 +15,6 @@ for l in $lessons; do
   (cd "lessons/$l" && python3 ../../lab/replay.py $mode --quiet $(python3 -c "import json; print(' '.join(s['slug'] + '.md' for s in json.load(open('lesson.json'))['sections'] if s['kind'] != 'practice'))") > /dev/null 2>&1) || true
   echo "lesson $i replayed"
 done
+# A student who stops for the day logs out, and what they left running in the
+# background goes with the session; a replay's shells do not, so end them here.
+pkill -u ana || true

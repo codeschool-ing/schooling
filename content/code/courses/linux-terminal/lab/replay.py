@@ -73,7 +73,13 @@ class Shell:
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             os.chdir(home(user))
             argv = ["/bin/bash", "--noprofile", "--norc", "-i"]
-            if user != "root":
+            if os.environ.get("REPLAY_SSH"):
+                # Another machine: a guest with systemd and cgroup v2, reached by
+                # ssh as the user the prompt names, with a terminal of its own.
+                argv = os.environ["REPLAY_SSH"].split() + ["-tt", f"{user}@127.0.0.1", "env",
+                        "LANG=C.UTF-8", "TERM=linux", f"COLUMNS={cols}", "PAGER=cat",
+                        "SYSTEMD_PAGER=", "bash", "--noprofile", "--norc", "-i"]
+            elif user != "root":
                 argv = ["/usr/sbin/runuser", "-u", user, "--", "/bin/bash"] + argv[1:]
             os.execvpe(argv[0], argv, env)
         self.pid, self.fd, self.cwd, self._answered, self._answers = pid, fd, home(user), False, []
@@ -294,10 +300,13 @@ class Machine:
     def __init__(self, cols):
         self.cols, self.shells, self.stack = cols, {}, [("ana", True)]
         self.pwsh = None
+        self.quiet_jobs = False
 
     def shell(self, user):
         if user not in self.shells:
             self.shells[user] = Shell(user, self.cols)
+            if self.quiet_jobs:
+                self.shells[user].run("set +m")
         return self.shells[user]
 
     def step(self, user, cwd, cmd, answers=(), expect=()):
@@ -364,9 +373,17 @@ def main():
                     help="a `cat NAME` whose file is missing writes NAME from the transcript first, "
                          "as the student is told to, and makes it executable")
     ap.add_argument("--quiet", action="store_true", help="print only fences that differ")
+    ap.add_argument("--select", default="",
+                    help="run only these transcript numbers (setup fences still run): the ones "
+                         "a section captured on another machine, with REPLAY_SSH")
+    ap.add_argument("--no-job-control", action="store_true",
+                    help="`set +m` in every shell: a load started in the background by a setup "
+                         "block then ends without a `[1]+ Done` landing in the next transcript")
     a = ap.parse_args()
     only = {int(x) for x in a.only.split(",") if x}
+    select = {int(x) for x in a.select.split(",") if x}
     mach, n, differ = Machine(a.cols), 0, 0
+    mach.quiet_jobs = a.no_job_control
     try:
         for path in a.files:
             text = open(path).read()
@@ -376,7 +393,7 @@ def main():
                 home_first = bool(body) and re.match(r"^(cd|mkdir)( -p)? (~|/tmp)", body[0])
                 if lang == "sh" and (a.setup or (a.setup_home and home_first)):
                     sh = mach.shell("ana")
-                    out, st = sh.run("{\n" + "\n".join(body) + "\n}")
+                    out, st = sh.run("{\n" + "\n".join(body) + "\n}", timeout=900)
                     print(f"# {path}:{start} setup ran, status {st}" + (f"\n{out}" if out.strip() else ""))
                     if re.search(r"^#.*\blog out\b", "\n".join(body), re.I | re.M):
                         # The block ends by telling the student to sign in again, so a
@@ -387,6 +404,8 @@ def main():
                 if not is_transcript(lang, body):
                     continue
                 n += 1
+                if select and n not in select:
+                    continue
                 got, manual = [], False
                 # A prompt in the middle of a line is output with no final newline
                 # followed by the next prompt; a bare `read` waits for the keyboard.

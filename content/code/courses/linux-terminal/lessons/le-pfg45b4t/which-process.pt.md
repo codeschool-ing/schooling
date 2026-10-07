@@ -1,6 +1,6 @@
 ---
 title: Qual processo, que é a pergunta que você faz por último
-version: 1
+version: 2
 ---
 
 As quatro seções anteriores acham o **recurso**. Esta acha o **culpado**, e ela
@@ -9,16 +9,31 @@ diz nada até você saber que o processador é o problema.
 
 ## O `pidstat`
 
+Com os laços ocupados rodando:
+
+```sh
+cd ~/work/load
+./spin.sh &
+sleep 5
+```
+
 ```
 ana@vm:~$ pidstat -u 1 1
-Linux 6.18.44-fc-v33 (vm)       09/15/26        _x86_64_        (4 CPU)
+Linux 6.18.44-fc-v77 (vm)       10/07/26        _x86_64_        (4 CPU)
 
-11:25:38      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
-11:25:39        0       103    0.99    0.99    0.00    0.99    1.98     3  claude
-11:25:39     1001     15588   99.01    0.00    0.00    0.00   99.01     0  bash
-11:25:39     1001     15589   99.01    0.00    0.00    0.99   99.01     1  bash
-11:25:39     1001     15590   99.01    0.00    0.00    0.00   99.01     2  bash
-11:25:39     1001     15591   98.02    0.00    0.00    1.98   98.02     3  bash
+13:50:24      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+13:50:25        0        85    0.99    0.00    0.00    0.00    0.99     0  claude
+13:50:25     1001     13326   97.03    0.00    0.00    0.99   97.03     0  bash
+13:50:25     1001     13327  100.00    0.00    0.00    0.00  100.00     2  bash
+13:50:25     1001     13328   98.02    0.00    0.00    0.99   98.02     3  bash
+13:50:25     1001     13329   99.01    0.00    0.00    0.99   99.01     1  bash
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        85    0.99    0.00    0.00    0.00    0.99     -  claude
+Average:     1001     13326   97.03    0.00    0.00    0.99   97.03     -  bash
+Average:     1001     13327  100.00    0.00    0.00    0.00  100.00     -  bash
+Average:     1001     13328   98.02    0.00    0.00    0.99   98.02     -  bash
+Average:     1001     13329   99.01    0.00    0.00    0.99   99.01     -  bash
 ```
 
 **O `pidstat` é o `top` que você consegue ler num script.** Ele amostra num
@@ -37,26 +52,39 @@ jeito que a seção 04 fez. O `%wait` é tempo em que o processo ficou **execut�
 e sem rodar** — esperando um núcleo — que é saturação por processo e não está no
 `top`. E o `CPU` é em qual núcleo ele esteve por último.
 
-O processo `claude` a 1,98% é esta máquina ser um sandbox, como a aula 6 seção 06
-explicou: o PID 103 é o agente que conduz estas capturas, e ele está em toda
+O processo `claude` a 0,99% é esta máquina ser um sandbox, como a aula 6 seção 06
+explicou: o PID 85 é o agente que conduz estas capturas, e ele está em toda
 listagem de processos deste curso porque ele está genuinamente lá.
 
 ## Para disco
 
+Troque os laços pelos escritores:
+
+```sh
+cd ~/work/load
+pkill -f spin.sh
+./fill.sh &
+sleep 10
+```
+
 ```
 ana@vm:~$ pidstat -d 1 1
-Linux 6.18.44-fc-v33 (vm)       09/15/26        _x86_64_        (4 CPU)
+Linux 6.18.44-fc-v77 (vm)       10/07/26        _x86_64_        (4 CPU)
 
-11:31:35      UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
-11:31:36     1001     16494      0.00 512016.00      0.00       0  bash
-11:31:36     1001     16495      0.00 512000.00      0.00       0  bash
-11:31:36     1001     16650      0.00  38912.00      0.00       0  dd
-11:31:36     1001     16651      0.00  36864.00      0.00       0  dd
+13:50:35      UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
+13:50:36     1001     13351      0.00 145996.04      0.00       0  dd
+13:50:36     1001     13352      0.00 147009.90      0.00       0  dd
+
+Average:      UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
+Average:     1001     13351      0.00 145996.04      0.00       0  dd
+Average:     1001     13352      0.00 147009.90      0.00       0  dd
 ```
 
-**Aquilo é o fim da investigação** da seção de I/O de disco: dois shells
-escrevendo 512 MB por segundo cada um, com os processos `dd` que eles lançaram
-por baixo.
+**Aquilo é o fim da investigação** da seção de I/O de disco: os dois processos
+`dd` que os escritores do `fill.sh` estavam rodando naquele segundo. Rode de novo
+e os shells em volta deles podem aparecer também, com centenas de megabytes por
+segundo na conta, porque quando um filho termina o kernel soma o I/O dele à
+conta do pai — e cada `dd` aqui vive cerca de um segundo.
 
 | | |
 |---|---|
@@ -70,6 +98,15 @@ temporário e frequentemente um engano.
 
 O `pidstat -d` precisa ler o `/proc/PID/io`, que para processos de outros usuários
 exige privilégio. Como usuário comum você vê os seus.
+
+E pare-os, que é a última carga de que esta aula precisa:
+
+```sh
+cd ~/work/load
+pkill -f fill.sh
+sleep 3
+rm -f fill1.tmp fill2.tmp
+```
 
 ## O `/proc/PID/io`
 
