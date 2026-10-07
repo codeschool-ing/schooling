@@ -516,6 +516,69 @@ def _l5_kanon(f):
            size=10.5, anchor='end', fill='--paper-dim')
 
 
+# ===================================================================== lesson 6
+L6 = 'le-rx3pz6b4'
+
+
+@figure('l6-classes', L6, 720, 220,
+        ("The 53 columns of Ipê's tables by class: 31 personal, 9 sensitive, 9 holding nothing "
+         'about a person, 4 identifying. The sensitive ones are in health.prescriptions, in '
+         'sales.order_items.product_id and in support.tickets.body.',
+         'As 53 colunas das tabelas da Ipê por classe: 31 pessoais, 9 sensíveis, 9 sem nada '
+         'sobre uma pessoa, 4 identificadoras. As sensíveis estão em health.prescriptions, em '
+         'sales.order_items.product_id e em support.tickets.body.'),
+        ('Most columns are personal data, and the sensitive ones are not all in the schema '
+         'called health.',
+         'A maioria das colunas é dado pessoal, e as sensíveis não estão todas no schema '
+         'chamado health.'))
+def _l6_classes(f):
+    rows = [(('personal', 'personal'), 31, '--wire', None),
+            (('sensitive', 'sensitive'), 9, '--amber',
+             ('health.prescriptions (7), order_items.product_id, tickets.body',
+              'health.prescriptions (7), order_items.product_id, tickets.body')),
+            (('none', 'none'), 9, '--wire', None),
+            (('identifying', 'identifying'), 4, '--phosphor',
+             ('name, e-mail, cpf_ct, cpf_hmac', 'nome, e-mail, cpf_ct, cpf_hmac'))]
+    x0, scale = 150, 14
+    for i, (label, n, col, note) in enumerate(rows):
+        y = 26 + i * 46
+        f.text(x0 - 12, y + 14, label, size=11, anchor='end', mono=True)
+        f.rect(x0, y, n * scale, 28, stroke=col, fill='--panel', rx=2)
+        f.text(x0 + n * scale + 10, y + 14, str(n), size=11, anchor='start', mono=True)
+        if note:
+            f.text(x0 + n * scale + 40, y + 14, note, size=10, anchor='start', fill='--paper-dim')
+
+
+@figure('l6-inference', L6, 720, 190,
+        ('An order line holds a product id. The product belongs to a category. The category '
+         'says something about the buyer\'s health: psychiatric, diabetes, contraceptive, a '
+         'pregnancy test. The order line is therefore health data, though no column says so.',
+         'Uma linha de pedido guarda um id de produto. O produto pertence a uma categoria. A '
+         'categoria diz algo da saúde de quem comprou: psiquiátrico, diabetes, '
+         'anticoncepcional, um teste de gravidez. A linha de pedido é, portanto, dado de saúde, '
+         'embora nenhuma coluna diga isso.'),
+        ('What a row reveals, not where it is filed, decides whether it is sensitive.',
+         'O que uma linha revela, e não onde ela está arquivada, decide se ela é sensível.'))
+def _l6_inference(f):
+    f.box(20, 60, 150, 60, [{'s': 'order_items', 'mono': True},
+                            {'s': 'product_id = 25', 'mono': True, 'size': 10,
+                             'fill': '--paper-dim'}], fill='--ink')
+    f.box(215, 60, 150, 60, [{'s': 'products', 'mono': True},
+                             {'s': 'Clonazepam 2 mg', 'size': 10, 'fill': '--paper-dim'}],
+          fill='--ink')
+    f.box(410, 60, 140, 60, [{'s': 'category', 'mono': True},
+                             {'s': 'psychiatric', 'mono': True, 'size': 10,
+                              'fill': '--paper-dim'}], fill='--ink')
+    f.box(595, 50, 105, 80, [('reveals', 'revela'), ('a health', 'uma condição'),
+                            ('condition', 'de saúde')], stroke='--amber', fill='--panel')
+    f.arrow(170, 90, 213, 90)
+    f.arrow(365, 90, 408, 90)
+    f.arrow(550, 90, 593, 90, stroke='--amber')
+    f.text(360, 160, ('no column of order_items is called health, and the row is health data',
+                      'nenhuma coluna de order_items se chama saúde, e a linha é dado de saúde'),
+           size=11, fill='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():

@@ -11,7 +11,7 @@ WHAT IS MADE SO THAT IT CANNOT BE REAL
 
   - Every CPF has a WRONG second check digit, on purpose. A number with a
     valid check digit might be somebody's; one that fails the check cannot
-    be. Lesson 9 measures it, and lesson 6 says why test data is built so.
+    be. Lesson 6 measures it, and says why test data is built so.
   - Every e-mail address is under example.com, example.net or example.org,
     the domains reserved for examples.
   - Names are a first name and two surnames drawn from lists of common ones.
