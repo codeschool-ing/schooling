@@ -1,9 +1,9 @@
 ---
 title: Who is listening, and on which port
-version: 1
+version: 2
 ---
 
-Lesson 1 section 05 used `ss -tln` to list listening TCP ports. Three more letters make it much more
+Lesson 1 section 12 used `ss -tln` to list listening TCP ports. Three more letters make it much more
 useful: `-u` adds UDP, `-p` names the program, and `sudo` is needed to see other users' programs. On
 the provider's DNS resolver:
 
