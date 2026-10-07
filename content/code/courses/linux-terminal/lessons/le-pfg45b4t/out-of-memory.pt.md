@@ -134,7 +134,7 @@ daemon que cuida dos seus caminhos até o disco pode perder os seus discos.
 
 E o shell, usando cinco megabytes, pontua 667. Não é porque ele é grande; é onde
 a escala começa. O kernel soma a fatia de memória do processo, em milésimos, a
-1000, e mostra dois terços do resultado — então um processo que não usa nada lê
+1000, e mostra dois terços do resultado. Então um processo que não usa nada lê
 666 ou 667, um que usa toda a memória lê 1333, e só as diferenças entre dois
 processos querem dizer alguma coisa.
 

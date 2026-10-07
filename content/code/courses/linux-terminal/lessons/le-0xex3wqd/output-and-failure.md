@@ -17,9 +17,9 @@ ana@vm:~$ grep "^Subject:" /var/mail/ana | sort | uniq -c
 subject line is the command, and the body is whatever it printed.
 
 **Output is what cron mails, not failure.** A job that fails without printing
-anything sends nothing — `false` in a crontab exits 1 every minute and the
-mailbox never hears of it — and a job that succeeds noisily sends a message
-every time it runs. That is why section 06's fix sent `report.sh`'s output to a
+anything sends nothing: `false` in a crontab exits 1 every minute and the mailbox
+never hears of it. And a job that succeeds noisily sends a message every time it
+runs. That is why section 06's fix sent `report.sh`'s output to a
 file: it now works, and it would otherwise mail `report ran` every minute.
 
 ## The line that hides everything

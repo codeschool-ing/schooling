@@ -83,8 +83,8 @@ Average:     1001     13352      0.00 147009.90      0.00       0  dd
 **Aquilo é o fim da investigação** da seção de I/O de disco: os dois processos
 `dd` que os escritores do `fill.sh` estavam rodando naquele segundo. Rode de novo
 e os shells em volta deles podem aparecer também, com centenas de megabytes por
-segundo na conta, porque quando um filho termina o kernel soma o I/O dele à
-conta do pai — e cada `dd` aqui vive cerca de um segundo.
+segundo na conta. Quando um filho termina, o kernel soma o I/O dele à conta do
+pai, e cada `dd` aqui vive cerca de um segundo.
 
 | | |
 |---|---|

@@ -17,8 +17,8 @@ ana@vm:~$ grep "^Subject:" /var/mail/ana | sort | uniq -c
 de assunto é o comando, e o corpo é o que ele imprimiu.
 
 **O cron manda por e-mail a saída, não a falha.** Um job que falha sem imprimir
-nada não manda nada — um `false` num crontab sai com 1 a cada minuto e a caixa
-de correio nunca fica sabendo — e um job que dá certo fazendo barulho manda uma
+nada não manda nada: um `false` num crontab sai com 1 a cada minuto e a caixa de
+correio nunca fica sabendo. E um job que dá certo fazendo barulho manda uma
 mensagem toda vez que roda. É por isso que a correção da seção 06 mandou a saída
 do `report.sh` para um arquivo: agora ele funciona, e mandaria `report ran` por
 e-mail a cada minuto.

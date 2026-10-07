@@ -133,7 +133,7 @@ loses the daemon managing its paths to disk can lose its disks.
 
 And the shell, using five megabytes, scores 667. That is not because it is
 large; it is where the scale starts. The kernel adds a process's share of
-memory, in thousandths, to 1000, and shows two thirds of the result — so a
+memory, in thousandths, to 1000, and shows two thirds of the result. So a
 process using nothing reads 666 or 667, one using all the memory reads 1333,
 and only the differences between two processes mean anything.
 

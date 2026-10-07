@@ -158,9 +158,9 @@ throttled_usec 2910354
 ```
 
 **`nr_throttled 58` em 61 períodos.** O laço queria um núcleo inteiro, e a cota
-deu a ele metade de cada período de cem milissegundos, então em quase todo
-período ele usou a sua metade e ficou parado até o próximo começar; o
-`throttled_usec` são os 2,9 segundos que ele passou parado. Nada fora do grupo diz
+deu a ele metade de cada período de cem milissegundos. Em quase todo período ele
+usou a sua metade e ficou parado até o próximo começar, e o `throttled_usec` são
+os 2,9 segundos que ele passou parado. Nada fora do grupo diz
 isso: o `top` teria mostrado um processo a 50% numa máquina com três núcleos e
 meio ociosos.
 

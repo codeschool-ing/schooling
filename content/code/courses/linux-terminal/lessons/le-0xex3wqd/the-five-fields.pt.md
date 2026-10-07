@@ -52,10 +52,10 @@ cron roda o job quando *qualquer um dos dois* casar.** Em todo o resto da linha
 os campos são combinados com E. Esses dois são combinados com OU.
 
 Isso vale medir em vez de acreditar. Três jobs, somados ao crontab da seção 03
-numa quarta-feira que não era dia treze. Eles nomeiam esse dia: no seu, ponha o
-dia da semana de hoje onde está o `3` — o `date +%w` o imprime, e domingo é 0 —,
-use outro dia que não hoje onde está o `1`, e se hoje for dia treze, use 14 para
-o dia do mês.
+numa quarta-feira que não era dia treze. Eles nomeiam esse dia. No seu, ponha o
+dia da semana de hoje onde está o `3`; o `date +%w` o imprime, e domingo é 0.
+Ponha um dia que não seja hoje onde está o `1`, e se hoje for dia treze, use 14
+para o dia do mês.
 
 ```sh
 cd ~/work/cron

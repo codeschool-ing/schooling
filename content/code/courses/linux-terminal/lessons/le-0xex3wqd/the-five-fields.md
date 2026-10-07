@@ -51,9 +51,9 @@ the job when *either* matches.** Everywhere else in the line the fields are ANDe
 together. These two are ORed.
 
 That is worth measuring rather than believing. Three jobs, added to the crontab
-of section 03 on a Wednesday that was not the thirteenth. They name that day:
-in yours, put today's weekday where the `3` is — `date +%w` prints it, and Sunday
-is 0 — use another day than today where the `1` is, and if today is the
+of section 03 on a Wednesday that was not the thirteenth. They name that day.
+In yours, put today's weekday where the `3` is; `date +%w` prints it, and Sunday
+is 0. Put a day that is not today where the `1` is, and if today is the
 thirteenth, use 14 for the day of the month.
 
 ```sh

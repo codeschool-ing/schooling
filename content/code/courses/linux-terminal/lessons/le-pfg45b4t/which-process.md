@@ -83,8 +83,8 @@ Average:     1001     13352      0.00 147009.90      0.00       0  dd
 **That is the end of the investigation** from the disk-io section: the two `dd`
 processes that `fill.sh`'s writers were running at that second. Run it again and
 the shells around them can appear too, credited with hundreds of megabytes a
-second, because when a child exits the kernel adds its I/O to its parent's
-count — and each `dd` here lives for about a second.
+second. When a child exits, the kernel adds its I/O to its parent's count, and
+each `dd` here lives for about a second.
 
 | | |
 |---|---|

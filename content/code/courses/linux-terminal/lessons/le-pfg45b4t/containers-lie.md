@@ -156,8 +156,8 @@ throttled_usec 2910354
 ```
 
 **`nr_throttled 58` out of 61 periods.** The loop wanted a whole core, and the
-quota gave it half of every hundred-millisecond period, so in nearly every period
-it used its half and was stopped until the next one began; `throttled_usec` is
+quota gave it half of every hundred-millisecond period. In nearly every period it
+used its half and was stopped until the next one began, and `throttled_usec` is
 the 2.9 seconds it spent stopped. Nothing outside the group says so: `top` would
 have shown one process at 50% on a machine with three and a half cores idle.
 
