@@ -27,9 +27,9 @@ print(f"{out}: {seconds:.2f} s of audio at {audio.sample_rate} Hz, made in {took
 
 ```
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped. It should arrive on Thursday." lessac.wav
-lessac.wav: 2.76 s of audio at 22050 Hz, made in 0.22 s
+lessac.wav: 2.76 s of audio at 22050 Hz, made in 0.26 s
 ana@lab:~/mm$ python say.py en_GB-alan-medium "Your order has shipped. It should arrive on Thursday." alan.wav
-alan.wav: 3.47 s of audio at 22050 Hz, made in 0.34 s
+alan.wav: 3.47 s of audio at 22050 Hz, made in 0.21 s
 ana@lab:~/mm$ python say.py pt_BR-faber-medium "Seu pedido foi enviado. Deve chegar na quinta-feira." faber.wav
 faber.wav: 2.82 s of audio at 22050 Hz, made in 0.32 s
 ana@lab:~/mm$ grep -E "Language|Samplerate|URL|License" /opt/multimodal/share/vits-piper-en_US-lessac-medium/MODEL_CARD
@@ -39,7 +39,7 @@ ana@lab:~/mm$ grep -E "Language|Samplerate|URL|License" /opt/multimodal/share/vi
 * License: https://www.cstr.ed.ac.uk/projects/blizzard/2013/lessac_blizzard2013/license.html
 ```
 
-As três produzem **22.050 amostras por segundo**, o que é mais do que um telefone transporta (aula 5) e menos do que se usa para gravar música; é uma escolha comum para fala. As três fizeram o áudio muito mais rápido do que ele toca: a lessac fez 2,76 segundos de fala em 0,48 segundo, em quatro núcleos de processador comuns e sem placa de vídeo. A voz *alan* levou 3,47 segundos para as mesmas palavras, um quarto a mais: vozes diferem no ritmo como pessoas diferem, e um menu telefônico feito para uma fica longo com outra.
+As três produzem **22.050 amostras por segundo**, o que é mais do que um telefone transporta (aula 5) e menos do que se usa para gravar música; é uma escolha comum para fala. As três fizeram o áudio muito mais rápido do que ele toca: a lessac fez 2,76 segundos de fala em 0,26 segundo, em quatro núcleos de processador comuns e sem placa de vídeo. A voz *alan* levou 3,47 segundos para as mesmas palavras, um quarto a mais: vozes diferem no ritmo como pessoas diferem, e um menu telefônico feito para uma fica longo com outra.
 
 ## O que olhar ao escolher
 

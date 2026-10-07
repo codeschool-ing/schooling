@@ -24,6 +24,14 @@ for line in open(sys.argv[1]):
     print(f"said:  {text}\nheard: {heard}")
 ```
 
+Três frases que a linha telefônica de uma loja diz todo dia, em `said.txt`:
+
+```
+Your order M-1042 arrived on 24/09/2026.
+Your refund of R$ 34,80 is on its way.
+Dom Casmurro, by Machado de Assis.
+```
+
 ```
 ana@lab:~/mm$ python roundtrip.py said.txt
 said:  Your order M-1042 arrived on 24/09/2026.
@@ -101,6 +109,12 @@ Sistemas reais usam uma biblioteca dessas regras por língua em vez de três exp
 ## Nomes em outra língua
 
 O título voltou como *Dom Kismuro* pela voz em inglês, e truques de grafia não fazem uma voz em inglês falar português. Sobram duas opções honestas. **Usar a voz da língua do nome para o nome**, que é o que uma pessoa bilíngue faz. A voz em português diz o título assim, transcrito pelo Whisper em português:
+
+`titulo.txt` traz o mesmo título do jeito que um brasileiro o diz:
+
+```
+Dom Casmurro, de Machado de Assis.
+```
 
 ```
 ana@lab:~/mm$ python roundtrip.py titulo.txt pt_BR-faber-medium

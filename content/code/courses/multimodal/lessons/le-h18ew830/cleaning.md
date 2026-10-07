@@ -69,7 +69,7 @@ for name, samples in versions.items():
 
 ```
 ana@lab:~/mm$ python clean.py
-GTCRN took 4.9 s for 55.4 s of audio
+GTCRN took 3.2 s for 55.4 s of audio
 clean (the truth)    WER  12.6%   11 stretches of speech found
 noisy, as recorded   WER  20.5%    5 stretches of speech found
 high-pass at 120 Hz  WER  14.6%    4 stretches of speech found
@@ -79,7 +79,7 @@ GTCRN                WER  17.9%   13 stretches of speech found
 
 - A **high-pass filter at 120 Hz** removes everything below 120 Hz. That takes the hum, and the WER falls from 20.5% to 14.6%.
 - **afftdn** is ffmpeg's spectral denoiser: it estimates the noise's spectrum and subtracts it, frame by frame. Added to the high-pass, it reaches 13.2%, close to the 12.6% Whisper scores on the clean call itself.
-- **GTCRN** is a small neural network trained to separate speech from noise. It took 4.8 seconds for 55 seconds of audio, and Whisper scored 17.9% on its output: better than doing nothing and worse than either filter.
+- **GTCRN** is a small neural network trained to separate speech from noise. It took 3.2 seconds for 55 seconds of audio, and Whisper scored 17.9% on its output: better than doing nothing and worse than either filter.
 
 So the cleverest tool lost, on this measure. **It is not that GTCRN is bad**: to a listener its output is the cleanest of the four, with the hiss gone rather than reduced. But a denoiser trained to make speech pleasant for people also changes the speech in small ways, and Whisper was trained on huge amounts of noisy audio and copes with a hiss better than with a voice that has been subtly altered. **What sounds cleaner to you is not what transcribes better for a model.** The only way to know which one your pipeline needs is the measurement in this section, on your own recordings.
 

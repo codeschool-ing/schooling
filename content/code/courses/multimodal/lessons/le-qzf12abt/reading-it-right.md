@@ -24,6 +24,14 @@ for line in open(sys.argv[1]):
     print(f"said:  {text}\nheard: {heard}")
 ```
 
+Three sentences a shop's phone line says every day, in `said.txt`:
+
+```
+Your order M-1042 arrived on 24/09/2026.
+Your refund of R$ 34,80 is on its way.
+Dom Casmurro, by Machado de Assis.
+```
+
 ```
 ana@lab:~/mm$ python roundtrip.py said.txt
 said:  Your order M-1042 arrived on 24/09/2026.
@@ -101,6 +109,12 @@ Real systems use a library of such rules per language rather than three regular 
 ## Names in another language
 
 The title came back as *Dom Kismuro* through the English voice, and spelling tricks will not make an English voice say Portuguese. Two honest options remain. **Use the voice of the name's language for the name**, which is what a bilingual person does. The Portuguese voice says the title like this, transcribed by Whisper in Portuguese:
+
+`titulo.txt` holds the same title the way a Brazilian says it:
+
+```
+Dom Casmurro, de Machado de Assis.
+```
 
 ```
 ana@lab:~/mm$ python roundtrip.py titulo.txt pt_BR-faber-medium
