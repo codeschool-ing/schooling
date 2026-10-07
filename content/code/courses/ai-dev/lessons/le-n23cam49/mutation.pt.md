@@ -1,10 +1,11 @@
 ---
 title: Os testes pegam alguma coisa?
-version: 1
+version: 2
 ---
 
 Uma suíte de testes pode estar verde e testar quase nada. A aula 3 seção 06 mostrou isso: oito
-testes passando, e uma refatoração que mudava o que o cliente paga passou direto. A cobertura, a
+testes passando, e uma mudança que não fazia o que foi pedido passou direto, como passaria a que
+mudava o que o cliente paga, que o mesmo pedido produziu em outra execução. A cobertura, a
 fração de linhas que os testes executam, teria dito 100% para o `shipping()`, porque todo teste o
 executa. **Executar uma linha não é o mesmo que conferir o que ela faz.**
 
@@ -16,7 +17,7 @@ código que nenhum teste fixa.
 ## Um testador de mutação em quarenta linhas
 
 Existem bibliotecas para isso, e num projeto grande você usaria uma. A ideia cabe num script curto,
-então a ana o escreve, o que também deixa todo resultado legível. Ele troca um operador de
+então a ana o escreve, como `~/shop/scratch/mutate.py`, o que também deixa todo resultado legível. Ele troca um operador de
 comparação ou de aritmética por vez, roda a suíte inteira e restaura o arquivo:
 
 ```python
@@ -66,7 +67,7 @@ Rodando nos dois arquivos da loja, com os testes que o projeto tinha antes desta
 ganhou nela:
 
 ```
-ana@dev:~/shop$ python lab/mutate.py shop/cart.py
+ana@dev:~/shop$ python scratch/mutate.py shop/cart.py
 shop/cart.py:20   < -> <=  killed
 shop/cart.py:32  // -> /   SURVIVED
 shop/cart.py:35  >= -> >   killed
@@ -74,7 +75,7 @@ shop/cart.py:40   + -> -   killed
 shop/cart.py:35   - -> +   SURVIVED
 shop/cart.py:40   - -> +   SURVIVED
 3 survived
-ana@dev:~/shop$ python lab/mutate.py shop/coupons.py
+ana@dev:~/shop$ python scratch/mutate.py shop/coupons.py
 shop/coupons.py:24   > -> >=  killed
 0 survived
 ```
@@ -86,7 +87,8 @@ ninguém testa:
 - **linha 32, `//` para `/`**: o desconto poderia virar fração de centavo e nada falharia. Todo
   desconto testado por acaso dá conta exata, então divisão inteira e divisão real concordam.
 - **linha 35, `-` para `+`**: o limite do frete grátis poderia somar o desconto em vez de
-  subtraí-lo. É o bug da aula 3 seção 06, ainda sem guarda neste branch.
+  subtraí-lo, o tipo de mudança que o assistente da aula 3 seção 06 fez na aritmética do
+  carrinho, ainda sem guarda neste branch.
 - **linha 40, `-` para `+`**: o total poderia somar o desconto em vez de subtraí-lo. Nenhum teste
   tem um desconto e confere o total.
 
@@ -116,9 +118,9 @@ def test_free_shipping_threshold_is_checked_after_the_discount():
 ```
 
 ```
-ana@dev:~/shop$ python -m pytest -q tests/test_cart_rules.py && python lab/mutate.py shop/cart.py
+ana@dev:~/shop$ python -m pytest -q tests/test_cart_rules.py && python scratch/mutate.py shop/cart.py
 ..                                                                       [100%]
-2 passed in 0.54s
+2 passed in 0.73s
 shop/cart.py:20   < -> <=  killed
 shop/cart.py:32  // -> /   killed
 shop/cart.py:35  >= -> >   killed

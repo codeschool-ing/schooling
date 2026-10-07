@@ -1,6 +1,6 @@
 ---
 title: Um assistente como revisor
-version: 1
+version: 2
 ---
 
 Pedir a um assistente que revise uma mudança é o contrário de pedir que a escreva, e de certo modo
@@ -57,34 +57,33 @@ Os oito testes passam, porque nenhum deles sabe ainda de datas de fim.
 
 ## A revisão
 
-Ela salva o diff e pede uma revisão dele. A resposta foi escrita pelo curso, do jeito que a revisão
-de um assistente costuma ser: numerada, confiante e específica:
+Ela salva o diff e pede uma revisão dele. Uma revisão é uma lista de afirmações, então ela pede uma
+lista curta, e guarda a resposta num arquivo para poder numerar as linhas:
 
 ```
 ana@dev:~/shop$ git diff main > review.diff
-ana@dev:~/shop$ assist ask "Review this diff. List real problems only, most serious first." --open review.diff
-context sent (328 of 3000 tokens):
-    328  review.diff
----
-Three things in this diff:
-
-1. Expiry is off by one day. `today >= until` refuses a coupon on its last valid day: FRIENDS15 says it runs until 2026-10-31, and on 2026-10-31 it is refused. If `until` is the last day it is valid, the test should be `today > until`.
-
-2. `date.today()` is the server's local date. If the shop runs in UTC and its customers are in Brazil, a coupon expires three hours early for them, every evening. Consider passing the date from the request, in the shop's time zone.
-
-3. The lookup is still case-sensitive: `COUPONS` has upper-case keys, so a customer who types `welcome10` will get UnknownCoupon. Normalise the code before looking it up.
+ana@dev:~/shop$ python scratch/assist.py ask "Review this diff. List the three most serious real problems, one short paragraph each." --open review.diff > review.txt
+ana@dev:~/shop$ cat -n review.txt
 ```
 
-**Três achados, e são três tipos diferentes de coisa.** Um é um bug. Um é uma pergunta real sobre o
-desenho, que nenhum teste pegaria. Um está errado. A aula 4 seção 03 os separa. O que importa aqui é
-a forma:
+Três achados, numerados, confiantes e específicos. Agora leia cada um contra o diff. O primeiro
+quer que o `today` seja obrigatório; o padrão de que ele reclama é o que deixa a loja chamar o
+`apply_coupon` sem passar uma data, então é uma preferência sobre o desenho, não um problema. O
+segundo quer a data de validade na exceção, uma melhoria de que ninguém precisa para entregar isto.
+O terceiro pede uma "dica de tipo mais específica" para `cart: Cart`, que dá o nome da classe que o
+arquivo importa e é tão específica quanto uma dica pode ser, e sugere `Cart = object`, que a
+deixaria menos. **Nenhum dos três é um bug, e o bug não está lá**: o FRIENDS15 é recusado no seu
+último dia válido, 31 de outubro, porque o código diz `today >= until`. A próxima seção o acha.
 
-- **A revisão é uma lista de afirmações**, cada uma sobre uma linha e um comportamento. Isso torna
-  cada uma conferível, o que um vago "parece bom, considere acrescentar testes" não é. Peça essa
-  forma: só problemas reais, o mais sério primeiro, cada um com a linha e o caso que quebra.
-- **O assistente só viu o diff.** Não os testes, não os termos do cupom que o marketing publicou,
-  não o fuso horário em que a loja roda. Um diff sem contexto ganha uma revisão sem contexto, e vale
-  a regra da aula 3 seção 02: os arquivos que definem o que se espera pertencem à requisição.
+O que importa aqui é o formato:
+
+- **Uma revisão é uma lista de afirmações**, cada uma sobre uma linha e um comportamento. Isso torna
+  cada uma conferível, o que um vago "parece bom, considere acrescentar testes" não é. Peça esse
+  formato: só problemas reais, o mais sério primeiro, cada um com a linha e o caso que o quebra.
+- **O assistente viu só o diff.** Não os testes, não os termos dos cupons que o marketing publicou,
+  não o fuso horário em que a loja roda. Um diff sem contexto ganha uma revisão sem contexto, e a
+  regra da aula 3 seção 02 vale: os arquivos que definem a expectativa vão na requisição.
 - **Ele lê o código, não a intenção.** Não tem como saber que "até 31 de outubro" inclui o dia 31 a
-  menos que algo diga, e aqui o comentário no código por acaso diz. Onde nada diz, um assistente
-  chuta, e um revisor humano também.
+  não ser que algo diga, e aqui o comentário no código por acaso diz. Um modelo maior lê esse
+  comentário mais vezes que um pequeno. Nenhum substitui um teste que diga o que o dia 31 deve
+  fazer.

@@ -1,6 +1,6 @@
 ---
 title: Pedindo as bordas
-version: 1
+version: 2
 ---
 
 A maioria dos bugs mora nas bordas da entrada: zero, um, a lista vazia, o maior valor, o número
@@ -10,7 +10,7 @@ lista de entradas se confere lendo, e as saídas esperadas continuam vindo de vo
 
 ## Uma tabela de casos
 
-A aula 3 seção 07 achou que `format_price(-5)` devolve `'-1.95'`. A ana pede casos de borda para a
+A aula 3 seção 07 achou que `format_price(-1290)` devolve `'-13.10'`. A ana pede casos de borda para a
 função, fica com as entradas que a lista sugere (zero, um centavo, logo abaixo e em cima de uma
 unidade inteira, um valor grande, negativos) e escreve ela mesma o texto esperado de cada uma. O
 `parametrize` do pytest transforma a tabela num teste por linha:

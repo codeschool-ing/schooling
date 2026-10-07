@@ -1,6 +1,6 @@
 ---
 title: Testes a partir do que o código deve fazer
-version: 1
+version: 2
 ---
 
 A correção para testes que fixam bugs é mudar de onde vêm os valores esperados. **O valor esperado
@@ -89,47 +89,35 @@ FAILED tests/test_coupon_terms.py::test_friends15_is_valid_on_31_october - sh...
 1 failed, 5 passed in 0.56s
 ```
 
-Uma falha, e é o achado 1 de novo, desta vez achado sem revisor: os termos dizem que o dia 31 está
-incluído, o código o recusa.
+Uma falha, e é o bug da aula 4 seção 03 de novo, achado desta vez só a partir dos termos: eles
+dizem que o dia 31 está incluído, e o código o recusa.
 
 ## A correção, e o que ela quebra
 
 ```
 ana@dev:~/shop$ sed -i "s/today >= until/today > until/" shop/coupons.py && git diff --stat
- shop/coupons.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 ana@dev:~/shop$ python -m pytest -q tests/test_coupon_terms.py tests/test_review.py
-........                                                                 [100%]
-8 passed in 0.56s
-ana@dev:~/shop$ python -m pytest -q tests/test_generated.py
-..F.                                                                     [100%]
-=================================== FAILURES ===================================
-_____________________ test_friends15_expires_on_2026_10_31 _____________________
-
-    def test_friends15_expires_on_2026_10_31():
->       with pytest.raises(ExpiredCoupon):
-E       Failed: DID NOT RAISE ExpiredCoupon
-
-tests/test_generated.py:22: Failed
-=========================== short test summary info ============================
-FAILED tests/test_generated.py::test_friends15_expires_on_2026_10_31 - Failed...
-1 failed, 3 passed in 0.55s
+ana@dev:~/shop$ python -m pytest -q tests/test_generated.py | tail -n 15
 ```
 
-Um caractere no `shop/coupons.py`, e todo teste escrito a partir dos termos ou da revisão passa. O
-teste gerado agora falha, **e essa falha está certa**: ele afirmava o bug. A resposta certa a ela é
-apagá-lo, não desfazer a correção:
+Um caractere no `shop/coupons.py`, e todo teste escrito a partir dos termos ou do que a mudança
+prometia passa. O arquivo gerado vai de cinco falhas para três: os dois testes que esperavam que 31
+de outubro funcionasse agora passam. O terceiro que usava essa data, o
+`test_apply_coupon_code_with_end_date_expired`, continua parando em `NameError: name 'shop' is not
+defined`, e o traceback mostra a linha que ele nunca alcançou: `pytest.raises(...ExpiredCoupon)` em
+31 de outubro. **Ele afirmava o bug**, e com o import consertado agora falharia por isso. A resposta
+certa é apagá-lo, não editar o código de volta, e o resto do arquivo vai junto, já que os valores
+esperados dele vieram de lugar nenhum para onde alguém consiga apontar:
 
 ```
 ana@dev:~/shop$ rm tests/test_generated.py && python -m pytest -q
-................                                                         [100%]
-16 passed in 0.56s
 ```
 
 ## Usando um assistente aqui
 
-O assistente não era o problema na aula 4 seção 04; o que ele recebeu era. Dê a ele a especificação
-e peça testes da especificação, e ele volta a ser útil:
+Parte do que deu errado na aula 4 seção 04 era do próprio modelo, os imports, e parte era o que ele
+recebeu: o código, e nada que dissesse para que o código serve. Dê a ele a especificação e peça
+testes da especificação, e ele volta a ser útil:
 
 - **Ponha os termos, o chamado ou a docstring na requisição**, e diga que os valores esperados têm
   de vir dali, não do código.

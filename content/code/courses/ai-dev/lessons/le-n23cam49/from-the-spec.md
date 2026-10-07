@@ -1,6 +1,6 @@
 ---
 title: Tests from what the code is for
-version: 1
+version: 2
 ---
 
 The fix for tests that pin bugs is to change where the expected values come from. **The expected
@@ -89,47 +89,35 @@ FAILED tests/test_coupon_terms.py::test_friends15_is_valid_on_31_october - sh...
 1 failed, 5 passed in 0.56s
 ```
 
-One failure, and it is finding 1 again, found this time without a reviewer: the terms say the 31st
-is included, the code refuses it.
+One failure, and it is the bug of lesson 4 section 03 again, found this time from the terms alone:
+they say the 31st is included, and the code refuses it.
 
 ## The fix, and what it breaks
 
 ```
 ana@dev:~/shop$ sed -i "s/today >= until/today > until/" shop/coupons.py && git diff --stat
- shop/coupons.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 ana@dev:~/shop$ python -m pytest -q tests/test_coupon_terms.py tests/test_review.py
-........                                                                 [100%]
-8 passed in 0.56s
-ana@dev:~/shop$ python -m pytest -q tests/test_generated.py
-..F.                                                                     [100%]
-=================================== FAILURES ===================================
-_____________________ test_friends15_expires_on_2026_10_31 _____________________
-
-    def test_friends15_expires_on_2026_10_31():
->       with pytest.raises(ExpiredCoupon):
-E       Failed: DID NOT RAISE ExpiredCoupon
-
-tests/test_generated.py:22: Failed
-=========================== short test summary info ============================
-FAILED tests/test_generated.py::test_friends15_expires_on_2026_10_31 - Failed...
-1 failed, 3 passed in 0.55s
+ana@dev:~/shop$ python -m pytest -q tests/test_generated.py | tail -n 15
 ```
 
-One character in `shop/coupons.py`, and every test written from the terms or from the review passes.
-The generated test now fails, **and that failure is correct**: it was asserting the bug. The right
-response to it is to delete it, not to edit the code back:
+One character in `shop/coupons.py`, and every test written from the terms or from what the change
+promised passes. The generated file goes from five failures to three: the two tests that
+expected 31 October to work now pass. The third that used that date,
+`test_apply_coupon_code_with_end_date_expired`, still stops at `NameError: name 'shop' is not
+defined`, and the traceback shows the line it never reached: `pytest.raises(...ExpiredCoupon)` on
+31 October. **It was asserting the bug**, and with its import repaired it would now fail for that
+reason. The right response is to delete it, not to edit the code back, and the rest of the file
+goes with it, since its expected values came from nowhere anybody can point to:
 
 ```
 ana@dev:~/shop$ rm tests/test_generated.py && python -m pytest -q
-................                                                         [100%]
-16 passed in 0.56s
 ```
 
 ## Using an assistant here at all
 
-The assistant was not the problem in lesson 4 section 04; what it was given was. Give it the
-specification and ask for tests of the specification, and it is useful again:
+Part of what went wrong in lesson 4 section 04 was the model's own, the imports, and part was what
+it was given: the code, and nothing that said what the code is for. Give it the specification and
+ask for tests of the specification, and it is useful again:
 
 - **Put the terms, the ticket or the docstring in the request**, and say that the expected values
   must come from it, not from the code.
