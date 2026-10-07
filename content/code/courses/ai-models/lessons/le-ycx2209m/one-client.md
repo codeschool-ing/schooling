@@ -5,71 +5,85 @@ version: 1
 
 Lesson 8 section 05 called Chat Completions the shape most of the industry copied, and lessons 9,
 14, 15 and 19 kept meeting it: Mistral, Ollama, LM Studio, OpenRouter and Hugging Face's router all
-accept a request written for OpenAI's library. Anthropic offers the same, as a separate endpoint
-beside its own API. `lab/compat.py` sends lesson 13's ten held-out cases to seven providers through
-one client, and changes three things per provider:
+accept a request written for OpenAI's library. Anthropic and Google offer the same, as a separate
+endpoint beside their own APIs. `compat.py` sends ten of ana's cases to eight providers through one
+client, and changes three things per provider:
 
 ```python
 import json
 import os
 
+import openai
 from openai import OpenAI
 
-env = os.environ
+
+def key(name):  # your key for each provider, where you have one
+    return os.environ.get(name, "none")
+
+
 # name: (base URL, key, model) -- the only three things that change
 PROVIDERS = {
-    "OpenAI":       (env["OPENAI_BASE_URL"], env["OPENAI_API_KEY"], "standin-small"),
-    "Anthropic":    (env["ANTHROPIC_BASE_URL"] + "/v1/", env["ANTHROPIC_API_KEY"], "standin-large"),
-    "Mistral":      (env["MISTRAL_SERVER_URL"] + "/v1", env["MISTRAL_API_KEY"], "standin-small"),
-    "OpenRouter":   (env["OPENROUTER_BASE_URL"], env["OPENROUTER_API_KEY"], "standin/small"),
-    "Hugging Face": (env["HF_BASE_URL"] + "/v1", env["HF_TOKEN"], "standin/small:cheapest"),
-    "Ollama":       ("http://127.0.0.1:11434/v1", "ollama", "standin-local"),
-    "LM Studio":    ("http://127.0.0.1:1234/v1", "lm-studio", "standin-local"),
+    "OpenAI":       ("https://api.openai.com/v1", key("OPENAI_API_KEY"), "gpt-5.4-mini"),
+    "Anthropic":    ("https://api.anthropic.com/v1/", key("ANTHROPIC_API_KEY"), "claude-haiku-4-5"),
+    "Google":       ("https://generativelanguage.googleapis.com/v1beta/openai/", key("GOOGLE_API_KEY"),
+                     "gemini-3.5-flash"),
+    "Mistral":      ("https://api.mistral.ai/v1", key("MISTRAL_API_KEY"), "mistral-small-latest"),
+    "OpenRouter":   ("https://openrouter.ai/api/v1", key("OPENROUTER_API_KEY"), "meta-llama/llama-3.3-70b-instruct"),
+    "Hugging Face": ("https://router.huggingface.co/v1", key("HF_TOKEN"), "meta-llama/Llama-3.3-70B-Instruct"),
+    "Ollama":       ("http://127.0.0.1:11434/v1", "ollama", "llama3.2:3b"),
+    "LM Studio":    ("http://127.0.0.1:1234/v1", "lm-studio", "llama-3.2-3b-instruct"),
 }
 prompt = open("prompts/triage.txt").read()
 cases = [json.loads(line) for line in open("cases/triage.jsonl")][30:]
 
-for name, (url, key, model) in PROVIDERS.items():
-    client = OpenAI(base_url=url, api_key=key)
-    right, limits = 0, set()
-    for c in cases:
-        raw = client.chat.completions.with_raw_response.create(
-            model=model, temperature=0, max_tokens=16,
-            messages=[{"role": "system", "content": prompt}, {"role": "user", "content": c["text"]}])
-        right += raw.parse().choices[0].message.content.strip() == c["label"]
-        limits |= {h for h in raw.headers if "ratelimit" in h and "requests" in h and "remaining" in h}
-    print(f"{name:12} {model:22} {right}/{len(cases)}  {', '.join(sorted(limits)) or '(no rate-limit header)'}")
+for name, (url, api_key, model) in PROVIDERS.items():
+    client = OpenAI(base_url=url, api_key=api_key, max_retries=0)
+    right = 0
+    try:
+        for c in cases:
+            r = client.chat.completions.create(model=model, temperature=0, max_tokens=16, messages=[
+                {"role": "system", "content": prompt}, {"role": "user", "content": c["text"]}])
+            right += r.choices[0].message.content.strip() == c["label"]
+        print(f"{name:12} {right}/{len(cases)}")
+    except openai.APIStatusError as e:
+        print(f"{name:12} {e.status_code} {type(e).__name__}, its body a {type(e.body).__name__}")
+    except openai.APIConnectionError as e:
+        print(f"{name:12} no connection: {e.__cause__}")
 ```
 
-```
-ana@desk:~/desk$ python lab/compat.py
-OpenAI       standin-small          7/10  x-ratelimit-remaining-requests
-Anthropic    standin-large          9/10  anthropic-ratelimit-requests-remaining
-Mistral      standin-small          7/10  x-ratelimit-remaining-requests
-OpenRouter   standin/small          7/10  x-ratelimit-remaining-requests
-Hugging Face standin/small:cheapest 7/10  x-ratelimit-remaining-requests
-Ollama       standin-local          7/10  (no rate-limit header)
-LM Studio    standin-local          7/10  (no rate-limit header)
-```
+Each key comes from the variable that provider's own library reads, so a key you already have is
+used and the rest are sent as `none`. On the machine this course was recorded on, with no key:
 
 ```
-ana@desk:~/desk$ wire --count 70 | cut -d" " -f1,2,5 | sort | uniq -c
-     10 POST /hf/v1/chat/completions hf
-     10 POST /openrouter/api/v1/chat/completions openrouter
-     10 POST /v1/chat/completions anthropic
-     10 POST /v1/chat/completions lmstudio
-     10 POST /v1/chat/completions mistral
-     10 POST /v1/chat/completions ollama
-     10 POST /v1/chat/completions openai
+ana@desk:~/desk$ python compat.py
+OpenAI       403 PermissionDeniedError, its body a str
+Anthropic    401 AuthenticationError, its body a dict
+Google       400 BadRequestError, its body a list
+Mistral      403 PermissionDeniedError, its body a str
+OpenRouter   403 PermissionDeniedError, its body a str
+Hugging Face 403 PermissionDeniedError, its body a str
+Ollama       4/10
+LM Studio    no connection: [Errno 111] Connection refused
 ```
 
-Seventy requests, one library, and the stand-in behind all of them, so the scores are its tables
-and not seven models. What the run shows is the part that is real: **one loop reached seven
-providers**, five of them at the very same path, and the evaluation harness of lesson 5 could run
-unchanged against each. That is the whole value of the shape, and it is large: comparing candidates
-from different providers is a dictionary of three columns rather than seven integrations.
+Eight providers, one loop, and eight different outcomes, every one of them real:
 
-The last column is the first sign of what the shape does not cover. The request was the same; the
-**headers that came back were not**. Two naming schemes for the same fact, and none at all from the
-two servers on ana's own machine. Lesson 21 reads those headers, and a program that reads them has
-to know which provider it is talking to after all.
+- **Ollama answered all ten**, and scored what llama3.2:3b scores on these cases at temperature 0.
+- **Anthropic and Google read the request and refused the key.** That is the most this machine
+  could get from them, and it is enough to show the request was understood.
+- **The four 403s are not the providers.** Those hosts were refused by the network the course was
+  recorded on, and its proxy answered in their place. At home, each will refuse the placeholder
+  key itself, and with a key of your own, answer.
+- **LM Studio was not running**, which is the state of the machine lesson 14 section 05 found.
+
+What the run shows is the part of the shape that holds: **one loop reached every provider**, and
+lesson 5's harness could run unchanged against each one that has a key. That is the whole value of
+the shape, and it is large: comparing candidates from different providers is a dictionary of three
+columns rather than eight integrations.
+
+The errors are the first sign of what the shape does not cover. The same mistake, a wrong key, came
+back as a 401 `AuthenticationError` from Anthropic and a 400 `BadRequestError` from Google, so a
+program that catches the first to say "check your key" says nothing for Google. And the body of the
+error is a dictionary from one and **a list** from the other: `e.body["message"]` works on
+Anthropic's and raises a `TypeError` on Google's, inside the code that was supposed to handle the
+error. A program that reads an error has to know which provider it is talking to after all.
