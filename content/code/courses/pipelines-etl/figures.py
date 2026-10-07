@@ -484,6 +484,94 @@ def l03_late(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-watermark', 4)
+def l04_watermark(lang):
+    t = {'en': dict(
+            label='Three nights on a line of updated_at times. On the first night the extraction '
+                  'reads everything up to 23:50:30 on 1 March and the watermark is set there. On '
+                  'the second it reads the 261 rows between that watermark and 23:59:47 on 2 '
+                  'March, and the watermark moves to 23:59:47. On the third it reads the 301 rows '
+                  'up to 23:51:38 on 3 March.',
+            axis='updated_at of the shop\'s orders', nights=['night 1', 'night 2', 'night 3'],
+            rows=['17,195 rows', '261 rows', '301 rows'], wm='watermark',
+            ticks=['1 Mar 23:50:30', '2 Mar 23:59:47', '3 Mar 23:51:38'],
+            cap='Each night reads the window between the last watermark and the newest row in its '
+                'snapshot, and the watermark moves only when those rows have been loaded.'),
+         'pt': dict(
+            label='Três noites numa linha de horários updated_at. Na primeira noite a extração lê '
+                  'tudo até 23:50:30 de 1º de março e a marca d\'água é posta ali. Na segunda ela '
+                  'lê as 261 linhas entre essa marca e 23:59:47 de 2 de março, e a marca vai para '
+                  '23:59:47. Na terceira ela lê as 301 linhas até 23:51:38 de 3 de março.',
+            axis='updated_at dos pedidos da loja', nights=['noite 1', 'noite 2', 'noite 3'],
+            rows=['17.195 linhas', '261 linhas', '301 linhas'], wm='marca d\'água',
+            ticks=['1º mar 23:50:30', '2 mar 23:59:47', '3 mar 23:51:38'],
+            cap='Cada noite lê a janela entre a última marca d\'água e a linha mais nova do seu '
+                'snapshot, e a marca só anda quando essas linhas foram carregadas.')}[lang]
+    f = Fig('l04-watermark', 720, 270, t['label'])
+    xs = [90, 330, 490, 650]
+    y = 210
+    f.line(40, y, 690, y, stroke='--paper-dim', arrow=True)
+    f.text(365, 250, t['axis'], size=10.5, fill='--paper-dim')
+    for i in range(3):
+        a, b = xs[i], xs[i + 1]
+        yy = 40 + i * 50
+        f.text(20, yy + 11, t['nights'][i], size=10.5, weight='600', anchor='start')
+        f.rect(a, yy, b - a, 22, stroke='--phosphor', fill='--scan', rx=4)
+        f.text((a + b) / 2, yy + 11, t['rows'][i], size=10)
+        f.line(b, yy + 24, b, y - 4, stroke='--amber', dash='3 3')
+        f.path(f'M{b - 5:.1f} {y - 12} L{b + 5:.1f} {y - 12} L{b:.1f} {y - 2} Z', stroke=None,
+               fill='--amber')
+        f.text(b, y + 16, t['ticks'][i], size=9.5, mono=True, fill='--paper-dim')
+    f.text(xs[1] + 8, y - 20, t['wm'], size=10, fill='--amber', anchor='start')
+    return f, t['cap']
+
+
+@figure('l04-late', 4)
+def l04_late(lang):
+    t = {'en': dict(
+            label='Order 900001 on a time line. Its updated_at is 23:40 on 2 March, but its '
+                  'transaction commits after the night\'s extraction has read up to 23:59:47. The '
+                  'next night reads only what is above 23:59:47, so the order falls in a gap '
+                  'neither night reads. A lookback of sixty minutes starts the next window at '
+                  '22:59:47 and covers it.',
+            written='written: updated_at 23:40', committed='committed, after the extraction',
+            wm='watermark 23:59:47', next='night 3 reads from here', look='with a 60-minute lookback',
+            gap='read by neither night',
+            cap='A row becomes visible when it commits, but carries the time it was written. '
+                'Re-reading the end of the last window is what catches it.'),
+         'pt': dict(
+            label='O pedido 900001 numa linha do tempo. O updated_at dele é 23:40 de 2 de março, mas '
+                  'a transação é confirmada depois de a extração da noite ter lido até 23:59:47. A '
+                  'noite seguinte lê só o que está acima de 23:59:47, então o pedido cai num vão que '
+                  'nenhuma noite lê. Um retrocesso de sessenta minutos começa a próxima janela em '
+                  '22:59:47 e o cobre.',
+            written='escrito: updated_at 23:40', committed='confirmado, depois da extração',
+            wm='marca d\'água 23:59:47', next='a noite 3 lê a partir daqui',
+            look='com retrocesso de 60 minutos', gap='lido por nenhuma noite',
+            cap='Uma linha fica visível quando é confirmada, mas carrega o horário em que foi '
+                'escrita. Reler o fim da última janela é o que a pega.')}[lang]
+    f = Fig('l04-late', 720, 260, t['label'])
+    y = 120
+    f.line(30, y, 690, y, stroke='--paper-dim', arrow=True)
+    wm, wr = 420, 280
+    f.line(wm, 40, wm, 200, stroke='--amber', dash='4 3')
+    f.text(wm, 30, t['wm'], size=10, fill='--amber', weight='600')
+    f.circle(wr, y, 6, fill='--amber')
+    f.text(wr - 10, y - 18, t['written'], size=10, anchor='end')
+    f.path(f'M{wr + 6:.1f} {y - 8} C {wr + 80:.1f} {y - 70}, {wm + 60:.1f} {y - 70}, {wm + 106:.1f} {y - 9}',
+           stroke='--paper-dim', dash='3 3', arrow=True)
+    f.circle(wm + 110, y, 6, fill='--panel', stroke='--paper-dim', width=1.6)
+    f.text(wm + 110, y + 20, t['committed'], size=10, fill='--paper-dim')
+    f.rect(wm, 156, 220, 20, stroke='--phosphor', fill='--scan', rx=4)
+    f.text(wm + 110, 166, t['next'], size=10)
+    f.rect(wm - 160, 194, 380, 20, stroke='--phosphor', fill='--scan', rx=4, dash='4 3')
+    f.text(wm + 30, 204, t['look'], size=10)
+    f.text(wr, y + 20, t['gap'], size=10, fill='--amber')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
