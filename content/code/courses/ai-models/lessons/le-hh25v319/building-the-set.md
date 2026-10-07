@@ -42,15 +42,15 @@ Fifteen of forty. An extraction set where every e-mail names an order would neve
 and separate none of them. Ana kept the e-mails she herself hesitated over. Two of them:
 
 ```
-ana@desk:~/desk$ grep -E "\"c(20|38)\"" cases/triage.jsonl
-{"id": "c20", "text": "Your courier left a card saying they will try again tomorrow, but I won't be home. Order LB-20466. Can they leave it with a neighbour?", "label": "order-status", "order": "LB-20466"}
-{"id": "c38", "text": "Do you ship to Portugal, and how long does it take?", "label": "product-question", "order": null}
+ana@desk:~/desk$ grep -E "\"c(24|26)\"" cases/triage.jsonl
+{"id": "c24", "text": "I'm a teacher and would like to order thirty copies. Do you give discounts to schools?", "label": "other", "order": null}
+{"id": "c26", "text": "I ordered the hardback but you sent the paperback (LB-20431). I'll keep it if you refund the difference.", "label": "refund", "order": "LB-20431"}
 ```
 
-Is a courier's card and a request to leave the parcel with a neighbour about the order's status, or
-about where it is delivered? Is shipping to Portugal a question about a product? **A person decided
-both**, and the decision is the shop's policy as much as a fact about the e-mail. Section 07 shows
-what happens to them.
+Is a teacher asking whether schools get a discount on thirty copies asking about a product, or
+asking for somebody who can negotiate? Is a request to refund the difference between two editions a
+refund, or a complaint about the edition? **A person decided both**, and the decision is the shop's
+policy as much as a fact about the e-mail. Section 07 shows what happens to them.
 
 ## Labels need a second person
 

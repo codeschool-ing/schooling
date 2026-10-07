@@ -3,11 +3,10 @@ title: A card is metadata and prose
 version: 1
 ---
 
-Lesson 1 section 05 read a model card as a document. On the Hub it is also **data**, and the Hub's
+Lesson 1 section 09 read a model card as a document. On the Hub it is also **data**, and the Hub's
 documentation says how:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "simple Markdown files with additional metadata|YAML.*section at the top"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
    6: Model cards are files that accompany the models and provide handy information. Under the
       hood, model cards are simple Markdown files with additional metadata. Model cards are
@@ -20,7 +19,7 @@ ana@desk:~/desk$ sources quote hub-model-cards "simple Markdown files with addit
 ```
 
 The YAML at the top is what the Hub filters and links by: the licence, the languages, the task, the
-model it was built from. `lab/cards.py` writes the metadata a fine-tune of ana's would carry, if she
+model it was built from. `cards.py` writes the metadata a fine-tune of ana's would carry, if ana
 ever published one, with `huggingface_hub`'s own classes, and reads it back:
 
 ```python
@@ -36,7 +35,7 @@ print("read back:", card.data.license, card.data.base_model, card.data.language)
 ```
 
 ```
-ana@desk:~/desk$ python lab/cards.py
+ana@desk:~/desk$ python cards.py
 ---
 base_model: Qwen/Qwen3-8B
 language:
@@ -60,7 +59,7 @@ Five fields carry most of what a buyer needs before downloading anything:
 | field | answers | lesson |
 |---|---|---|
 | `license` | may I use it, and how | 2 |
-| `language` | was it tested in mine | 1, section 05 |
+| `language` | was it tested in mine | 1 |
 | `pipeline_tag` | which task it was made for | 12, section 02 |
 | `base_model` | what it started as, and so which licence it inherits | 2, section 04 |
 | `tags` | anything else the author wanted searchable | |

@@ -8,7 +8,6 @@ on somebody's data, quantized to fit a laptop, merged from two others. The Hub's
 the relationships and the field that records them:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "is a fine-tune, an adapter, or a quantized|infer the type of relationship"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
  105: If your model is a fine-tune, an adapter, or a quantized version of a base model, you
       can specify the base model in the model card metadata section. This information can also
@@ -37,7 +36,8 @@ Lantern Books' e-mail:
 
 1. **Who owns it.** An organisation with a history, or an account created last week.
 2. **What it says it is.** `base_model` and `base_model_relation`, and whether they match the name.
-3. **What licence it can actually have.** The base's licence wins over the YAML (lesson 2 section 04).
+3. **What licence it can actually have.** The base's licence wins over the YAML (lesson 2 section
+   04).
 4. **What format the weights are in.** `safetensors`, as section 03 said, not a pickle.
 5. **Whether it passes the cases.** Lesson 5, pinned to the commit hash of the revision she tested.
 

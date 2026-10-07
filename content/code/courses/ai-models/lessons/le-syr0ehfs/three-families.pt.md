@@ -11,7 +11,7 @@ aula 2. Lado a lado, a partir do que este curso conseguiu ler:
 | Llama | Meta, EUA | própria, com limite de usuários e *Built with Llama* (aula 2) | não tratada aqui | `instruct`, `17Bx128E` |
 | DeepSeek | DeepSeek, China | MIT para o R1; uma licença de modelo com restrições de uso para o V3 (aula 2) | sim, apelidos aposentados em julho de 2026 | `flash`, `pro`, `r1` |
 | Qwen | Alibaba, China | Apache 2.0 para os modelos de pesos abertos da Qwen 3 | sim, com o Max não aberto | `235b-a22b`, `instruct`, `thinking` |
-| Gemma | Google, EUA | termos próprios do Google, inalcançáveis do laboratório | por hosts e pelas plataformas do Google | `-it`, `A4B`, `E4B` |
+| Gemma | Google, EUA | termos próprios do Google, inalcançáveis da máquina em que o curso foi gravado | por hosts e pelas plataformas do Google | `-it`, `A4B`, `E4B` |
 
 Três coisas que esta tabela diz e uma lista de preços não diz.
 

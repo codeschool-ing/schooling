@@ -10,7 +10,6 @@ próprios de modelos, e são esses que se lê antes de qualquer outra coisa.
 ## Um teto para o quanto você pode crescer
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-licence "700 million"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/LICENSE
   33: 2. Additional Commercial Terms. If, on the Llama 3.1 version release date, the monthly
       active users of the products or services made available by or for Licensee, or
@@ -29,7 +28,6 @@ A licença mais antiga da Qwen tem a mesma forma, com um número menor, e uma se
 importa mais para a maioria dos leitores:
 
 ```
-ana@desk:~/desk$ sources quote qwen-licence "100 million|improve any other large"
 # QwenLM/Qwen@2df8e8ac Tongyi Qianwen LICENSE AGREEMENT
   29: If you are commercially using the Materials, and your product or service has more than
       100 million monthly active users, You shall request a license from Us. You cannot
@@ -41,13 +39,12 @@ ana@desk:~/desk$ sources quote qwen-licence "100 million|improve any other large
 **Cem milhões de usuários** ainda está longe para uma livraria. **A cláusula b** não está: ela
 proíbe usar a *saída* do modelo para melhorar qualquer outro grande modelo de linguagem. Gerar
 exemplos de treino com um modelo para fazer fine-tuning de outro (o quarto degrau da aula 1 seção
-07) é um plano comum, e com esta licença ele só é permitido em direção à própria Qwen. O cartão da
+11) é um plano comum, e com esta licença ele só é permitido em direção à própria Qwen. O cartão da
 Llama 3.1, citado na aula 1, diz o contrário: a licença dela permite exatamente esse uso.
 
 ## O que você deve quando distribui
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-licence "Built with Llama"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/LICENSE
   25: i. If you distribute or make available the Llama Materials (or any derivative works
       thereof), or a product or service (including another AI model) that contains any of

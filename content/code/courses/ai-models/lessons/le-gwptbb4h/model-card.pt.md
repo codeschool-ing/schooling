@@ -13,7 +13,6 @@ O cartão da Llama 3.1 passa de mil linhas. Dois parágrafos dele respondem a pe
 precisa fazer sobre qualquer modelo antes de a Lantern Books depender dele:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-card "^\*\*supported languages|^\*\*Intended Use Cases"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/MODEL_CARD.md
   78: **Supported languages:** English, German, French, Italian, Portuguese, Hindi, Spanish,
       and Thai.
@@ -34,12 +33,12 @@ mais idiomas do que esses oito, e "desencoraja fortemente" usá-lo para conversa
 trabalho adicional. Um idioma que funciona num teste rápido e não está na lista é um idioma que
 ninguém mediu.
 
-**Uso pretendido.** O parágrafo acima separa os dois tipos da seção 03: o ajustado para instruções
+**Uso pretendido.** O parágrafo acima separa os dois tipos da seção 07: o ajustado para instruções
 serve para "chat no estilo assistente", o pré-treinado serve para ser adaptado. Ele também diz que a
 licença permite usar as saídas do modelo para melhorar outros modelos, coisa que algumas licenças
 proíbem de forma explícita. A aula 2 mostra uma que proíbe.
 
-**Dados de treino e a data deles.** Do que ele aprendeu, e quando isso parou. A seção 06 trata da
+**Dados de treino e a data deles.** Do que ele aprendeu, e quando isso parou. A seção 10 trata da
 data.
 
 **Avaliações.** Leia pelo **formato**, não pela nota: quais tarefas foram medidas, em quais idiomas,

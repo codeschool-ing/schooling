@@ -3,13 +3,13 @@ title: Dois jeitos de rodar um modelo em casa
 version: 1
 ---
 
-A aula 3 calculou o que é preciso para rodar um modelo por conta própria: memória para os pesos,
-um runtime e alguém para mantê-lo de pé. As aulas 10 a 12 mostraram de onde vêm os pesos abertos.
-Ollama e LM Studio são as duas ferramentas que a maioria das pessoas usa para juntar as duas
-coisas numa máquina. Nenhuma das duas conseguiu rodar na máquina em que este curso foi gravado:
-ambas baixam os modelos de hosts que ela não alcançava, e o LM Studio é um aplicativo de desktop. O
-que esta aula mostra é a documentação delas, lida num commit fixado, e as APIs delas, respondidas
-pelo substituto do lab nas portas que as ferramentas de verdade usam.
+A aula 3 calculou o que é preciso para rodar um modelo por conta própria: memória para os pesos, um
+runtime e alguém para mantê-lo de pé. As aulas 10 a 12 mostraram de onde vêm os pesos abertos.
+Ollama e LM Studio são as duas ferramentas que a maioria das pessoas usa para juntar as duas coisas
+numa máquina. O Ollama é o que a aula 1 instalou, e tudo o que esta aula mostra dele rodou de
+verdade. O LM Studio não: o site dele foi recusado pela rede da máquina em que este curso foi
+gravado, e ele é um aplicativo de desktop. O que esta aula mostra do LM Studio é a documentação
+dele, lida num commit fixado.
 
 ## Ollama
 
@@ -17,7 +17,6 @@ O Ollama é um servidor que roda em segundo plano e um comando, `ollama`, que fa
 baixa modelos da própria biblioteca em ollama.com e os nomeia assim:
 
 ```
-ana@desk:~/desk$ sources quote ollama-api "Model names follow"
 # ollama/ollama@42e911bc docs/api.md
   24: Model names follow a `model:tag` format, where `model` can have an optional namespace
       such as `example/model`. Some examples are `orca-mini:3b-q8_0` and `llama3:70b`. The tag
@@ -34,7 +33,6 @@ Por baixo, quem faz a conta é o llama.cpp, um runtime de código aberto feito p
 quantizados, os menos bits por peso da seção 04 da aula 3, em CPUs e GPUs comuns:
 
 ```
-ana@desk:~/desk$ sources quote ollama-readme "Supported backends|llama.cpp\\]"
 # ollama/ollama@42e911bc README.md
  141: ## Supported backends
  143: - [llama.cpp](https://github.com/ggml-org/llama.cpp) project founded by Georgi Gerganov.
@@ -46,7 +44,6 @@ O LM Studio é um aplicativo de desktop: busque no Hugging Face, baixe um modelo
 ligue um servidor. Ele vem em mais duas formas, e a documentação diz para que servem:
 
 ```
-ana@desk:~/desk$ sources quote lmstudio-tools "llmster is LM Studio|listens on"
 # lmstudio-ai/docs@9b8bc200 0_app/1_basics/lmstudio-vs-llmster-vs-lms.md
   28: llmster is LM Studio’s headless daemon – a standalone background service that can run
       without a GUI. This means you do not have to download the LM Studio app to use llmster

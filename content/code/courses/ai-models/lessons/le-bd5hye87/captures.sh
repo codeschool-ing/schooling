@@ -4,57 +4,42 @@
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED.
 #
-#   bash ../../lab.sh up        # once: the machine, the SDKs, the documents
-#   bash captures.sh
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/desk
+#   sudo bash captures.sh
 #
 # A line that starts with ana@desk:~/desk$ is what ana typed and what it
-# printed. STAGED rather than typed: the lab itself (lab.sh reset) and the
-# programs put below, which the lesson shows in full.
+# printed. A program it runs is the student's, shown whole in the lesson and
+# taken from it here; a quotation carries no prompt, and is read by
+# lab/sources.py at the commit it pins.
 #
-# huggingface.co could not be reached from the machine this was recorded on.
-# What answers at HF_BASE_URL is standin (lab/standin.py), playing Hugging
-# Face's router: two models, standin/large offered by standin-east (40 tokens
-# a second, $15 per million out) and standin-west (80 a second, $18), and the
-# three selection policies Hugging Face documents, applied to those numbers.
-# Its replies come from lab/answers.json. What is real: huggingface_hub's
-# InferenceClient at the version lab.sh pins and what it sends, and Hugging
-# Face's documentation at the commit lab/sources.py pins.
+# huggingface.co and router.huggingface.co were refused by the network of the
+# machine this was recorded on (403 from its proxy). So hf_route.py runs
+# through the student's relay.py (lesson 9) to Ollama, which shows what
+# huggingface_hub's InferenceClient sends, and what a server that does not
+# know the router's suffixes does with them. Nothing here plays the router.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@desk:~/desk$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
+. ../../lab/capture-lib.sh
 
 lab reset >/dev/null
 
-put lab/hf_route.py <<'PY'
-import json
-import os
+give hf_route.py router.md python 1
 
-from huggingface_hub import InferenceClient
-
-client = InferenceClient(base_url=os.environ["HF_BASE_URL"])   # the token comes from HF_TOKEN
-prompt = open("prompts/triage.txt").read()
-case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
-
-for model in ("standin/large", "standin/large:cheapest", "standin/large:standin-east"):
-    r = client.chat_completion(model=model, max_tokens=16, temperature=0, messages=[
-        {"role": "system", "content": prompt}, {"role": "user", "content": case["text"]}])
-    print(f"{model:28} -> {r.model:14} {r.choices[0].message.content}")
-PY
-
+relay_up
 block router
-on 'sources lines hf-providers 135 139'
-on 'python lab/hf_route.py'
-on 'wire --count 3'
-on 'wire --headers authorization,user-agent | head -4'
+quote lines hf-providers 135 139
+session <<'SH'
+export HF_BASE_URL=http://127.0.0.1:8500/v1 HF_TOKEN=ollama MODEL=llama3.2:3b
+python hf_route.py
+python relay.py show --count 3
+python relay.py show --headers authorization,user-agent | head -4
+SH
+relay_down
 
 block billing
-on 'sources lines hf-pricing 3 3'
-on 'sources lines hf-pricing 9 12'
-on 'sources lines hf-pricing 24 27'
+quote lines hf-pricing 3 3
+quote lines hf-pricing 9 12
+quote lines hf-pricing 24 27

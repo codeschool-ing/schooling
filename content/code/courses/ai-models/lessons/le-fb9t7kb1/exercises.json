@@ -1,13 +1,13 @@
 [
   {
     "id": "ex-0t78gxwd",
-    "version": 1,
+    "version": 2,
     "section": "shape",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Where does a Gemini request name its model?",
-    "hint": "Look at the first line of the wire capture.",
+    "hint": "Look at the first line of the relay's capture.",
     "choices": [
       {
         "text": "In a model field of the body",
@@ -17,7 +17,7 @@
       {
         "text": "In the path",
         "correct": true,
-        "why": "Right: /v1beta/models/standin-small:generateContent."
+        "why": "Right: /v1beta/models/gemini-3.5-flash:generateContent."
       },
       {
         "text": "In a header beside the key",
@@ -110,6 +110,38 @@
     ]
   },
   {
+    "id": "ex-vc2dfdtg",
+    "version": 1,
+    "section": "shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "gemini_sort.py ran twice: through the relay, and straight to Google with the placeholder key. What did each answer?",
+    "hint": "One server has no such address; the other has no such key.",
+    "choices": [
+      {
+        "text": "Ollama 404, Google 400 INVALID_ARGUMENT",
+        "correct": true,
+        "why": "Right: Ollama does not speak this API, and Google refused the key."
+      },
+      {
+        "text": "Ollama a label, Google 400 INVALID_ARGUMENT",
+        "correct": false,
+        "why": "Ollama answered 404: it does not speak this API."
+      },
+      {
+        "text": "Both 404, since neither knows gemini-3.5-flash",
+        "correct": false,
+        "why": "Google read the request and refused the key."
+      },
+      {
+        "text": "Ollama 404, Google a label from its free tier",
+        "correct": false,
+        "why": "No key, no answer: Google said 400."
+      }
+    ]
+  },
+  {
     "id": "ex-f8y91gey",
     "version": 1,
     "section": "structured",
@@ -143,33 +175,33 @@
   },
   {
     "id": "ex-7nz018jy",
-    "version": 1,
+    "version": 2,
     "section": "structured",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why is count_tokens worth a round trip for a closed model?",
-    "hint": "Whose tokenizer?",
+    "prompt": "Google's schema for the Order class said \"nullable\": true. Where does that word come from?",
+    "hint": "The library's description of response_schema.",
     "choices": [
       {
-        "text": "The provider counts with the model's own tokenizer",
+        "text": "OpenAPI 3.0, of which response_schema is a subset",
         "correct": true,
-        "why": "Right: no local library can promise that."
+        "why": "Right: the field's description says so."
       },
       {
-        "text": "It reserves capacity for the next request",
+        "text": "JSON Schema, the format OpenAI received",
         "correct": false,
-        "why": "No."
+        "why": "That one said anyOf with null."
       },
       {
-        "text": "It is billed at the output price",
+        "text": "Pydantic, which wrote it for every provider",
         "correct": false,
-        "why": "Nothing says so."
+        "why": "OpenAI got anyOf from the same class."
       },
       {
-        "text": "It caches the prompt",
+        "text": "Ollama, which answered the request",
         "correct": false,
-        "why": "No."
+        "why": "Ollama answered 404 and wrote nothing."
       }
     ]
   },

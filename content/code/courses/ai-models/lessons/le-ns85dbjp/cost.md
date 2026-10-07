@@ -10,13 +10,13 @@ needed now**.
 
 Ana's drafting task is where they show. Its workload, the course's assumption: **400 requests a
 day**, each carrying the shop's **5,000-token policy** (the same on every request), **60 tokens**
-of fresh e-mail, and a reply of **200 tokens**. `lab/monthly.py` prices it three ways from the
+of fresh e-mail, and a reply of **200 tokens**. `monthly.py` prices it three ways from the
 sheet's fields, for six candidates:
 
 ```python
 import json
 
-sheet = json.load(open("/opt/aimodels/share/litellm-21881c57.json"))
+sheet = json.load(open("litellm-21881c57.json"))  # the copy sheet.py keeps
 CANDIDATES = ["claude-haiku-4-5", "claude-sonnet-5-5", "gemini/gemini-3.5-flash-lite",
               "gpt-5.4-mini", "mistral/mistral-small-latest", "deepseek/deepseek-v3.2"]
 # The drafting task, as the course assumes it: the shop's policy is the same
@@ -42,7 +42,7 @@ for m in CANDIDATES:
 ```
 
 ```
-ana@desk:~/desk$ python lab/monthly.py
+ana@desk:~/desk$ python monthly.py
 model                               list    cached     batch   output share
 claude-haiku-4-5               $   72.72 $   18.72 $   36.36      17%
 claude-sonnet-5-5              $  145.44 $   37.44 $   72.72      17%

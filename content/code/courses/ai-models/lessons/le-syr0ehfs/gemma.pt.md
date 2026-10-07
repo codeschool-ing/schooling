@@ -7,7 +7,6 @@ A Gemma é a família de pesos abertos do Google, a contraparte do Gemini fechad
 repositório a descreve numa frase:
 
 ```
-ana@desk:~/desk$ sources lines gemma-readme 7 10
 # google-deepmind/gemma@e2e0a7d3 README.md
    7| [Gemma](https://ai.google.dev/gemma) is a family of open-weights Large Language
    8| Model (LLM) by [Google DeepMind](https://deepmind.google/), based on Gemini
@@ -25,7 +24,7 @@ repositório acima é o código, e o arquivo de licença dele é o do código.
 As entradas Gemma 4 de um host, como a tabela as tem:
 
 ```
-ana@desk:~/desk$ sheet where google/gemma-4 | grep deepinfra
+ana@desk:~/desk$ python sheet.py where google/gemma-4 | grep deepinfra
 deepinfra/google/gemma-4-26B-A4B-it                  deepinfra                      0.07     0.34
 deepinfra/google/gemma-4-31B-it                      deepinfra                      0.13     0.38
 deepinfra/google/gemma-4-31B-it-Ultra                deepinfra                      0.27     0.76
@@ -33,7 +32,7 @@ deepinfra/google/gemma-4-31B-it-turbo                deepinfra                  
 deepinfra/google/gemma-4-E4B-it                      deepinfra                      0.02      0.1
 ```
 
-- `-it` é o sufixo da Gemma para **ajustado para instruções**, o tipo ajustado da aula 1 seção 03,
+- `-it` é o sufixo da Gemma para **ajustado para instruções**, o tipo ajustado da aula 1 seção 07,
   onde a Llama diz `instruct`.
 - `26B-A4B` é a mesma convenção da Qwen: 26 bilhões de parâmetros no total, 4 bilhões ativos, uma
   mistura de especialistas.

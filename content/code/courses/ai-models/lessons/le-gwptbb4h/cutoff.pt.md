@@ -8,7 +8,6 @@ esse texto foi coletado. Essa data é o **corte de conhecimento** (*knowledge cu
 da Llama 3.1 a declara com todas as letras:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-card "data freshness"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/MODEL_CARD.md
  188: **Data Freshness:** The pretraining data has a cutoff of December 2023.
 ```

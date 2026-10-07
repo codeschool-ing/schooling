@@ -8,7 +8,7 @@ leu as licenças dela: o código é MIT, os pesos do V3 estão sob uma licença 
 uso, e o R1 é MIT para código e pesos. Os modelos da API dela, como a tabela os registra:
 
 ```
-ana@desk:~/desk$ sheet compare deepseek/deepseek-v3.2 deepseek/deepseek-v4-flash deepseek/deepseek-v4-pro deepseek/deepseek-r1
+ana@desk:~/desk$ python sheet.py compare deepseek/deepseek-v3.2 deepseek/deepseek-v4-flash deepseek/deepseek-v4-pro deepseek/deepseek-r1
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 deepseek/deepseek-v3.2                          163,840   163840     0.28      0.4  .F.CR.
@@ -21,7 +21,7 @@ deepseek/deepseek-r1                             65,536     8192     0.55     2.
 antigos e ainda têm preço. Os nomes a que a API respondia sumiram:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider deepseek
+ana@desk:~/desk$ python sheet.py retiring --provider deepseek
 # LiteLLM model sheet at 21881c57, 4472 entries
 4 entries carry a deprecation date
 2026-07-24  deepseek-chat                                      deepseek
@@ -41,12 +41,12 @@ A aula 2 viu que ninguém consegue cobrar menos que o autor de um modelo fechado
 acontece o contrário. O V4 Flash é oferecido por muitos hosts:
 
 ```
-ana@desk:~/desk$ sheet where deepseek-v4-flash | tail -n +3 | wc -l
+ana@desk:~/desk$ python sheet.py where deepseek-v4-flash | tail -n +3 | wc -l
 33
 ```
 
 ```
-ana@desk:~/desk$ sheet where deepseek-v4-flash | grep -E "^(deepseek/|azure|tencent|scaleway|novita/deepseek/deepseek-v4-flash )"
+ana@desk:~/desk$ python sheet.py where deepseek-v4-flash | grep -E "^(deepseek/|azure|tencent|scaleway|novita/deepseek/deepseek-v4-flash )"
 azure_ai/deepseek-v4-flash                           azure_ai                       0.19     0.51
 deepseek/deepseek-v4-flash                           deepseek                        0.3      1.2
 deepseek/deepseek-v4-flash-vision-exp                deepseek                        0.3      1.2

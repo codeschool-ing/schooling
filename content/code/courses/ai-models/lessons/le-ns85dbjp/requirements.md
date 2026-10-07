@@ -17,15 +17,15 @@ first:
 | costs as little as possible | the shop is small | rank |
 | replies quickly enough that an agent waiting on a draft does not give up | it sits in front of a person | rank, with a ceiling |
 
-Some of those can be checked against the sheet at once. `sheet pick` filters every chat entry
+Some of those can be checked against the sheet at once. `sheet.py pick` filters every chat entry
 with a price; `--needs` and `--min-window` apply two of her thresholds:
 
 ```
-ana@desk:~/desk$ sheet pick | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick | sed -n 2p
 2990 entries pass
-ana@desk:~/desk$ sheet pick --needs response_schema --min-window 32000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --needs response_schema --min-window 32000 | sed -n 2p
 1617 entries pass
-ana@desk:~/desk$ sheet pick --needs response_schema --min-window 32000 --max-in 1 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --needs response_schema --min-window 32000 --max-in 1 | sed -n 2p
 893 entries pass
 ```
 

@@ -33,43 +33,43 @@
   },
   {
     "id": "ex-cjmebjmp",
-    "version": 1,
+    "version": 2,
     "section": "router",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Match each model string to the provider the stand-in's router picked.",
-    "hint": "wire --count 3.",
+    "prompt": "Match each suffix on the model's name to how Hugging Face's router picks the provider.",
+    "hint": "The documentation section 02 quotes.",
     "pairs": [
       {
-        "left": "standin/large",
-        "right": "standin-west, the faster"
+        "left": "no suffix",
+        "right": "The highest throughput"
       },
       {
-        "left": "standin/large:cheapest",
-        "right": "standin-east, by price"
+        "left": ":cheapest",
+        "right": "The lowest price per output token"
       },
       {
-        "left": "standin/large:standin-east",
-        "right": "standin-east, by name"
+        "left": ":groq",
+        "right": "The provider it names"
       }
     ],
     "right_distractors": [
-      "Neither: an error"
+      "The lowest latency to the first token"
     ]
   },
   {
     "id": "ex-r17segt6",
-    "version": 1,
+    "version": 2,
     "section": "router",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The faster provider charges $18 per million output tokens and the cheaper $15. How many percent more per output token does the default cost here?",
-    "hint": "18 / 15.",
-    "value": 20,
+    "prompt": "hf_route.py sent its three requests through the relay to Ollama. How many did Ollama answer with a 400?",
+    "hint": "relay.py show --count 3.",
+    "value": 2,
     "tolerance": 0,
-    "unit": "%"
+    "unit": "requests"
   },
   {
     "id": "ex-n9d1grdn",
@@ -105,48 +105,48 @@
   },
   {
     "id": "ex-wjned0pc",
-    "version": 1,
+    "version": 2,
     "section": "router",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "What does the answer from hf_route.py tell ana about which provider served it?",
-    "hint": "Compare the three lines.",
+    "prompt": "Through the relay, Ollama answered llama3.2:3b:cheapest with a 400. Why?",
+    "hint": "What does Ollama take the whole string for?",
     "choices": [
       {
-        "text": "The model field names the provider",
-        "correct": false,
-        "why": "It was standin/large each time."
-      },
-      {
-        "text": "Nothing, in any of the three",
+        "text": "It read the whole string as a model name, and found it malformed",
         "correct": true,
-        "why": "Right: only the lab's log knew."
+        "why": "Right: the suffix is the router's convention, not Ollama's."
       },
       {
-        "text": "The speed of the reply",
+        "text": "It has no provider cheap enough to serve it",
         "correct": false,
-        "why": "Not printed, and not a name."
+        "why": "Ollama has no providers at all."
       },
       {
-        "text": "The cost in usage",
+        "text": "The token was a placeholder",
         "correct": false,
-        "why": "Not in this response."
+        "why": "The same token got a 200 on the first request."
+      },
+      {
+        "text": "A suffix needs a provider= argument as well",
+        "correct": false,
+        "why": "The suffix stands on its own at the router."
       }
     ]
   },
   {
     "id": "ex-qh3q34hw",
-    "version": 1,
+    "version": 2,
     "section": "billing",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "ana uses a custom provider key in Hugging Face. Who bills her for the tokens?",
+    "prompt": "ana uses a custom provider key in Hugging Face. Who bills ana for the tokens?",
     "hint": "The table's Billing row.",
     "choices": [
       {
-        "text": "Hugging Face, which then pays the provider on her behalf",
+        "text": "Hugging Face, which then pays the provider on ana's behalf",
         "correct": false,
         "why": "That is the routed way."
       },

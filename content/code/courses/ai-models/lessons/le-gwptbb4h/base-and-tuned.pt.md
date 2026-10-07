@@ -12,7 +12,6 @@ O documento de formato de prompt da Meta mostra um, com uma entrada escrita pela
 que o modelo base deu:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-prompt-format '^<.begin_of_text.>Color|^ red, orange'
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/prompt_format.md
   31: <|begin_of_text|>Color of sky is blue but sometimes can also be
   36: red, orange, yellow, green, purple, pink, brown, gray, black, white, and even rainbow
@@ -32,7 +31,6 @@ assistente prestativo daria. Depois disso ele trata o seu texto como uma vez na 
 e **para**. Parar também é aprendido, e o documento diz como cada tipo termina:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-prompt-format 'end_of_text...: Model|End of turn'
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/prompt_format.md
    7: - `<|end_of_text|>`: Model will cease to generate more tokens. This token is generated
       only by the base models.
@@ -58,7 +56,7 @@ em cada resposta.
   Num hub de modelos, um nome sem *Instruct*, *chat* ou *it* geralmente é o base, e baixar o
   errado é um primeiro erro comum: carrega, roda, e responde a um e-mail de suporte escrevendo
   outro e-mail de suporte.
-- **Um modelo base é o que se usa no fine-tuning**, quando há fine-tuning (seção 07). O ajuste que
+- **Um modelo base é o que se usa no fine-tuning**, quando há fine-tuning (seção 11). O ajuste que
   o provedor fez é uma escolha para o caso geral; partir do base significa fazer essa escolha você
   mesmo.
 

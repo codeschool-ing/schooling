@@ -34,26 +34,37 @@ go.onclick = async () => {
 
 Um navegador não tem pasta de onde ler um modelo, então **local** lá quer dizer *do próprio servidor
 da página*, e começa desligado. O `wasmPaths` diz onde fica o WebAssembly do runtime; sem ele, a
-biblioteca o busca no `cdn.jsdelivr.net`, uma CDN pública, o que é um terceiro sabendo quem abriu a página. A ana serve o
-`~/desk` com o `http.server` do Python na própria máquina, e o `browse` (um Chromium headless, no
-lugar dela) abre a página e aperta o botão:
+biblioteca o busca no `cdn.jsdelivr.net`, uma CDN pública, o que é um terceiro sabendo quem abriu a
+página. A ana serve o `~/desk` com o servidor web do próprio Python, num segundo terminal, e o deixa
+rodando:
 
 ```
-ana@desk:~/desk$ browse http://127.0.0.1:8600/sort.html
+ana@desk:~/desk$ python -m http.server 8600 --bind 127.0.0.1
+Serving HTTP on 127.0.0.1 port 8600 (http://127.0.0.1:8600/) ...
+```
+
+Depois ela abre `http://127.0.0.1:8600/sort.html` no navegador, abre as ferramentas de
+desenvolvedor na aba **Network** e aperta **Sort**. Aqui está a mesma visita feita por um Chromium
+headless, o navegador com que este curso foi gravado, que imprime o que a página disse e toda
+requisição que ela fez:
+
+```
+# headless Chromium 141.0.7390.37, http://127.0.0.1:8600/sort.html
 console  WebGPU is experimental on this platform. See https://github.com/gpuweb/gpuweb/wiki/Implementation-Status#implementation-status
 console  Failed to create WebGPU Context Provider
 page     address-change 0.890
 fetched  200      1106  127.0.0.1:8600/sort.html
 fetched  200    581935  127.0.0.1:8600/node_modules/@huggingface/transformers/dist/transformers.min.js
 fetched  200       326  127.0.0.1:8600/models/lantern-sorter/config.json
-fetched  200      4303  127.0.0.1:8600/models/lantern-sorter/tokenizer.json
 fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
+fetched  200      4303  127.0.0.1:8600/models/lantern-sorter/tokenizer.json
 fetched  200      4949  127.0.0.1:8600/models/lantern-sorter/onnx/model.onnx
 fetched  200     53057  127.0.0.1:8600/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs
 fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  200  26861777  127.0.0.1:8600/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm
 9 requests, to 1 host: 127.0.0.1:8600
 ```
+
 
 `address-change`, com 0,890. As duas linhas de console são do Chromium, sobre WebGPU, que este
 navegador headless não conseguiu oferecer; o runtime rodou em WebAssembly, o arquivo `.wasm` da
@@ -78,25 +89,31 @@ opção e abra a página de novo:
 ```
 ana@desk:~/desk$ sed "s/, { dtype: \"fp32\" }//" sort.html > sort-q8.html && grep -c dtype sort-q8.html
 0
-ana@desk:~/desk$ browse http://127.0.0.1:8600/sort-q8.html --wait 15
+```
+
+E no navegador, ou no headless:
+
+```
+# headless Chromium 141.0.7390.37, http://127.0.0.1:8600/sort-q8.html
 console  Failed to load resource: the server responded with a status of 404 (File not found)
 error    `local_files_only=true` or `env.allowRemoteModels=false` and file was not found locally at "./models/lantern-sorter/onnx/model_quantized.onnx".
 page     loading the model… (no answer after 15 s)
 fetched  200      1087  127.0.0.1:8600/sort-q8.html
 fetched  200    581935  127.0.0.1:8600/node_modules/@huggingface/transformers/dist/transformers.min.js
 fetched  200       326  127.0.0.1:8600/models/lantern-sorter/config.json
-fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  200      4303  127.0.0.1:8600/models/lantern-sorter/tokenizer.json
+fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  404       335  127.0.0.1:8600/models/lantern-sorter/onnx/model_quantized.onnx
 7 requests, to 1 host: 127.0.0.1:8600
 ```
 
 A biblioteca pediu `model_quantized.onnx`, o arquivo que a tabela de sufixos dá para `q8`; o
-repositório da ana só tem o de 32 bits, então o servidor respondeu 404 e a página nunca ficou pronta.
-Com modelos remotos permitidos, o mesmo pedido teria ido para o Hub. **O modelo que uma página roda
-é decidido por um padrão que muda entre o Node e o navegador**, então um programa testado no Node e
-publicado numa página pode rodar outro arquivo. Dizer o `dtype` faz dele o mesmo arquivo nos dois.
+repositório da ana só tem o de 32 bits, então o servidor respondeu 404 e a página nunca ficou
+pronta. Com modelos remotos permitidos, o mesmo pedido teria ido para o Hub. **O modelo que uma
+página roda é decidido por um padrão que muda entre o Node e o navegador**, então um programa
+testado no Node e publicado numa página pode rodar outro arquivo. Dizer o `dtype` faz dele o mesmo
+arquivo nos dois.
 
 ## Quando é o lugar certo
 

@@ -12,7 +12,6 @@ Llama 3.1's card runs to over a thousand lines. Two of its paragraphs answer que
 ask about any model before Lantern Books depends on it:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-card "^\*\*supported languages|^\*\*Intended Use Cases"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/MODEL_CARD.md
   78: **Supported languages:** English, German, French, Italian, Portuguese, Hindi, Spanish,
       and Thai.
@@ -32,12 +31,12 @@ says, a few hundred lines further on, that it was trained on more languages than
 "strongly discourage[s]" using it to converse in the others without further work. A language that
 works in a quick test and is not on the list is a language nobody measured.
 
-**Intended use.** The paragraph above separates the two kinds from section 03: instruction-tuned
+**Intended use.** The paragraph above separates the two kinds from section 07: instruction-tuned
 for "assistant-like chat", pretrained for adapting. It also says the licence allows using the
 model's outputs to improve other models, which some licences forbid outright. Lesson 2 shows one
 that does.
 
-**Training data and its date.** What it learnt from, and when that stopped. Section 06 is about
+**Training data and its date.** What it learnt from, and when that stopped. Section 10 is about
 the date.
 
 **Evaluations.** Read them for the **shape** rather than the score: which tasks were measured,

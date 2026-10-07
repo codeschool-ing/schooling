@@ -4,11 +4,13 @@
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED.
 #
-#   bash ../../lab.sh up        # once: the machine, the SDKs, the documents
-#   bash captures.sh
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/desk
+#   sudo bash captures.sh
 #
 # A line that starts with ana@desk:~/desk$ is what ana typed and what it
-# printed. STAGED rather than typed: the lab itself (lab.sh reset).
+# printed. A program it runs is the student's, shown whole in the lesson and
+# taken from it here; a quotation carries no prompt, and is read by
+# lab/sources.py at the commit it pins.
 #
 # Nothing here talks to a model. The READMEs and licences are the projects'
 # own files at the commits sources.py pins; prices, windows and dates are
@@ -18,24 +20,21 @@
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@desk:~/desk$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-block() { printf '##### %s\n' "$1"; }
+. ../../lab/capture-lib.sh
 
 lab reset >/dev/null
 
 block deepseek
-on 'sheet compare deepseek/deepseek-v3.2 deepseek/deepseek-v4-flash deepseek/deepseek-v4-pro deepseek/deepseek-r1'
-on 'sheet retiring --provider deepseek'
-on 'sheet where deepseek-v4-flash | tail -n +3 | wc -l'
-on 'sheet where deepseek-v4-flash | grep -E "^(deepseek/|azure|tencent|scaleway|novita/deepseek/deepseek-v4-flash )"'
+on 'python sheet.py compare deepseek/deepseek-v3.2 deepseek/deepseek-v4-flash deepseek/deepseek-v4-pro deepseek/deepseek-r1'
+on 'python sheet.py retiring --provider deepseek'
+on 'python sheet.py where deepseek-v4-flash | tail -n +3 | wc -l'
+on 'python sheet.py where deepseek-v4-flash | grep -E "^(deepseek/|azure|tencent|scaleway|novita/deepseek/deepseek-v4-flash )"'
 
 block qwen
-on 'sources quote qwen3-readme "open-weight models are licensed|license files"'
-on 'sheet where qwen3-235b-a22b'
-on 'sheet where qwen3-max | head -4'
+quote quote qwen3-readme "open-weight models are licensed|license files"
+on 'python sheet.py where qwen3-235b-a22b'
+on 'python sheet.py where qwen3-max | head -4'
 
 block gemma
-on 'sources lines gemma-readme 7 10'
-on 'sheet where google/gemma-4 | grep deepinfra'
+quote lines gemma-readme 7 10
+on 'python sheet.py where google/gemma-4 | grep deepinfra'

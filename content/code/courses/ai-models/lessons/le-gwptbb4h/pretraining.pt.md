@@ -13,11 +13,12 @@ O resultado é um **modelo pré-treinado**: aquilo que uma empresa levou meses e
 para produzir, para que você não precise. Este curso trata de escolher um e usá-lo, então vale ser
 preciso sobre o que essa coisa é, fisicamente.
 
-O cartão do modelo Llama 3.1, da Meta, é um dos poucos que dizem isso em números. O `sources` lê o
-cartão no repositório da própria Meta, no commit que o laboratório fixa:
+O cartão do modelo Llama 3.1, da Meta, é um dos poucos que dizem isso em números. Este curso cita
+um documento do jeito que faz aqui: a primeira linha diz o repositório, o commit em que ele foi lido
+e o arquivo, e cada linha citada começa com o número dela nesse arquivo, para você abrir o mesmo
+arquivo no GitHub nesse commit e ler o entorno. Nada numa citação é para você digitar.
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-card "collection of pretrained|~15 trillion"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/MODEL_CARD.md
    3: The Meta Llama 3.1 collection of multilingual large language models (LLMs) is a
       collection of pretrained and instruction tuned generative models in 8B, 70B and 405B
@@ -31,14 +32,14 @@ ana@desk:~/desk$ sources quote llama3.1-card "collection of pretrained|~15 trill
 
 Três coisas desses dois parágrafos voltam em todas as aulas deste curso:
 
-- **"pretrained and instruction tuned"**. Há dois tipos de modelo na coleção, e a seção 03
+- **"pretrained and instruction tuned"**. Há dois tipos de modelo na coleção, e a seção 07
   desta aula trata da diferença.
 - **"8B, 70B and 405B"**: o número de parâmetros, em bilhões. Um parâmetro é um número da
   rede, e esta vem em três tamanhos. A aula 3 transforma uma contagem de parâmetros na memória
   que uma máquina precisa para rodar o modelo.
 - **"~15 trillion tokens of data from publicly available sources"**: de onde ele aprendeu. Texto
   público é tudo o que ele sabe. O histórico de pedidos da Lantern Books nunca esteve lá e nunca
-  vai estar, que é o assunto da seção 06.
+  vai estar, que é o assunto da seção 10.
 
 ## O que vem na caixa
 
@@ -53,8 +54,8 @@ viajam com os pesos, e a falta de qualquer uma pode travar você:
 - **um tokenizador**, que transforma texto nos números que os pesos esperam. O tokenizador
   errado produz bobagem, não um erro;
 - **um template de chat**, a string exata em que uma conversa precisa se transformar antes de o
-  modelo lê-la (seção 04);
-- **um cartão do modelo**, que diz com o que ele foi treinado, para quê, e onde falha (seção 05);
+  modelo lê-la (seção 08);
+- **um cartão do modelo**, que diz com o que ele foi treinado, para quê, e onde falha (seção 09);
 - **uma licença**, que diz o que você pode fazer com tudo isso. A aula 2 lê três delas.
 
 **Um modelo aberto entrega as cinco.** **Um modelo atrás de uma API não entrega nenhuma**: o

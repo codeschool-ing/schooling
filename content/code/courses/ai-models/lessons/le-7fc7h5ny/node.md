@@ -25,7 +25,7 @@ JavaScript. `sort.mjs` runs ana's model over the ten cases it has never seen:
     },
     {
       "code": "const cases = JSON.parse(readFileSync(\"cases/held-out.json\", \"utf8\"));\nlet right = 0;\nfor (const c of cases) {\n  const [top] = await classify(c.text);\n  if (top.label === c.label) right++;\n  console.log(`${c.id} ${top.label.padEnd(16)} ${top.score.toFixed(3)}  (${c.label})`);\n}\nconsole.log(`${right} of ${cases.length} held-out cases right`);\n",
-      "note": "The ten cases `train-sorter` kept back. Each answer is a list of labels with scores, best first; the program keeps the first and prints the person's label beside it, in brackets."
+      "note": "The ten cases `train_sorter.py` kept back. Each answer is a list of labels with scores, best first; the program keeps the first and prints the person's label beside it, in brackets."
     }
   ]
 }
@@ -45,12 +45,12 @@ c39 other            0.483  (other)
 c40 order-status     0.690  (order-status)
 7 of 10 held-out cases right
 
-real	0m0.263s
-user	0m0.390s
-sys	0m0.034s
+real	0m0.259s
+user	0m0.413s
+sys	0m0.028s
 ```
 
-**Seven of ten**, and the whole run took 0.217 seconds, loading included. No key, no request, no
+**Seven of ten**, and the whole run took 0.259 seconds, loading included. No key, no request, no
 bill: the program read four files and did the arithmetic on the CPU.
 
 Read the misses the way lesson 5 section 07 read errors, by what was confused with what. `c34`,

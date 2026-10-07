@@ -10,7 +10,6 @@ badge at the top of the page names only one.
 DeepSeek-V3's README says it outright:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-v3-readme "^This code repository is licensed"
 # deepseek-ai/DeepSeek-V3@9b4e9788 README.md
  345: This code repository is licensed under [the MIT License](LICENSE-CODE). The use of
       DeepSeek-V3 Base/Chat models is subject to [the Model License](LICENSE-MODEL).
@@ -21,7 +20,6 @@ The code is MIT, which sets no conditions. The models are under a separate **Mod
 that one does set conditions. Its preamble says what kind:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-v3-licence "use-based restrictions not"
 # deepseek-ai/DeepSeek-V3@9b4e9788 LICENSE-MODEL
   13: In short, this license strives for both the open and responsible downstream use of the
       accompanying model. When it comes to the open character, we took inspiration from open
@@ -42,7 +40,6 @@ The same thing happens one level down. DeepSeek also released smaller models tra
 R1, and its README is careful about where each one came from:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-r1-readme "^- DeepSeek-R1-Distill"
 # deepseek-ai/DeepSeek-R1@0cf78561 README.md
  259: - DeepSeek-R1-Distill-Qwen-1.5B, DeepSeek-R1-Distill-Qwen-7B, DeepSeek-R1-Distill-
       Qwen-14B and DeepSeek-R1-Distill-Qwen-32B are derived from [Qwen-2.5
@@ -60,7 +57,7 @@ ana@desk:~/desk$ sources quote deepseek-r1-readme "^- DeepSeek-R1-Distill"
 R1 itself is MIT (section 02). **These are not**, or not only: each one started as somebody else's
 model, and keeps that model's licence. The 8B distill is a Llama 3.1 underneath and carries the
 Llama terms from section 03, including *Built with Llama* if you ship it. A fine-tune inherits the
-same way, and that includes one ana might make from any base in lesson 1 section 07.
+same way, and that includes one ana might make from any base in lesson 1 section 11.
 
 ## And the repository you can read is often just the code
 
@@ -68,7 +65,6 @@ Mistral's `mistral-inference` is the code for running Mistral's models. Its lice
 everybody recognises:
 
 ```
-ana@desk:~/desk$ sources quote mistral-inference-licence "Apache License$|Version 2.0, January"
 # mistralai/mistral-inference@9eaeb91c LICENSE
    1: Apache License
    2: Version 2.0, January 2004
