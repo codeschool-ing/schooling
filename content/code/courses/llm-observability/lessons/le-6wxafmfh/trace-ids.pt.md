@@ -1,6 +1,6 @@
 ---
 title: O id de trace é uma alça
-version: 1
+version: 2
 ---
 
 O `assistant.py` imprime um id de trace embaixo de cada resposta. Em produção ele vai além do terminal:
@@ -10,13 +10,17 @@ isso ao registro do que aconteceu.
 
 ## Achando um trace de novo
 
-Depois das três perguntas desta aula, o arquivo guarda dezesseis spans de três traces:
+Mais uma pergunta, a que um cliente poderia fazer sobre um vale-presente, e o arquivo guarda dezesseis
+spans de três traces:
 
 ```
-ana@lab:~/obs$ wc -l spans.jsonl
+ana@dev:~/obs$ python assistant.py "How long is a gift card valid?"
+According to [1], a gift card is valid for two years from the day it was bought.
+trace 7816f4d9ea7282a767b310a42b569fd3
+ana@dev:~/obs$ wc -l spans.jsonl
 16 spans.jsonl
-ana@lab:~/obs$ python -c "import json; print(sorted({json.loads(l)[\"trace\"] for l in open(\"spans.jsonl\")}))"
-['1a218c3902fa97519a4b28d0bd1f155f', '8caa5cd5a78cdc79d1b3e420a1e2399f', 'ce0b5661415f1a83fc75d4de2668184a']
+ana@dev:~/obs$ python -c "import json; print(sorted({json.loads(l)[\"trace\"] for l in open(\"spans.jsonl\")}))"
+['5ea30205e6a9ef29c4b98b45d1595ab9', '7816f4d9ea7282a767b310a42b569fd3', 'b0f29bf4b40469cb859c35e290b1bcec']
 ```
 
 Um id de trace tem 32 caracteres hexadecimais, e ninguém lê isso em voz alta ao telefone. Os oito
@@ -24,22 +28,23 @@ primeiros bastam para achar um trace entre milhares, e é isso que uma tela de a
 referência:
 
 ```
-ana@lab:~/obs$ grep -c 8caa5cd5 spans.jsonl
+ana@dev:~/obs$ grep -c 5ea30205 spans.jsonl
 6
-ana@lab:~/obs$ python tree.py 8caa5cd5
-trace 8caa5cd5a78cdc79d1b3e420a1e2399f   start(ms) took(ms)
-      0   1,237 ms  ask
-      0      51 ms    embed
-     52       5 ms    search
-     57   1,180 ms    generate
-     57   1,180 ms      chat extract-1
-  1,237       0 ms    check_citations
+ana@dev:~/obs$ python tree.py 5ea30205
+trace 5ea30205e6a9ef29c4b98b45d1595ab9   start(ms) took(ms)
+      0   3,021 ms  ask
+      0      25 ms    embed
+     26       4 ms    search
+     31   2,990 ms    generate
+     31   2,990 ms      chat llama3.2:3b
+  3,021       0 ms    check_citations
 ```
 
-Um cliente escreve dizendo que o assistente deu uma resposta estranha sobre o vale-presente. Se a tela
-mostrou uma referência a ele, a equipe de atendimento a digita e recebe a árvore acima: a versão, os
-trechos, a resposta, o tempo. Sem ela, a busca é por horário e por palavras, no meio de todo mundo que
-perguntou sobre vale-presentes naquela tarde.
+Um cliente escreve dizendo que o assistente lhe disse que ele pagaria a postagem de uma devolução, e o
+site diz que as devoluções são gratuitas. Se a tela mostrou uma referência a ele, a equipe de
+atendimento a digita e recebe a árvore acima, e com `--attrs` tudo o que a seção 08 leu: a versão, o
+trecho, a resposta, o tempo. Sem ela, a busca é por horário e por palavras, no meio de todo mundo que
+perguntou sobre devoluções naquela tarde.
 
 ## O que se liga por ele
 

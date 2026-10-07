@@ -1,6 +1,6 @@
 ---
 title: Deixando uma biblioteca escrever os spans
-version: 1
+version: 2
 ---
 
 Escrever cada span à mão é o que o `assistant.py` faz, e não é o que a maioria das equipes faz
@@ -14,7 +14,7 @@ O OpenInference é uma delas. É o conjunto de instrumentadores e convenções d
 aula 7, lê o que ele escreve. O `auto.py` é o `one_call.py` sem nenhum span:
 
 ```python
-"""The same call with no span written by hand: OpenInference instruments the SDK."""
+"""auto.py: the same call with no span written by hand: OpenInference instruments the SDK."""
 from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
 
@@ -25,7 +25,8 @@ OpenAIInstrumentor().instrument(tracer_provider=provider)
 
 client = OpenAI()
 reply = client.chat.completions.create(
-    model="extract-1", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
+    model="llama3.2:3b", temperature=0,
+    messages=[{"role": "user", "content": "How long is a Marginalia gift card valid?"}])
 print(reply.choices[0].message.content)
 ```
 
@@ -33,25 +34,28 @@ O `instrument()` troca os métodos do SDK por versões que abrem um span, chamam
 o span com o que entrou e o que saiu.
 
 ```
-ana@lab:~/obs$ python auto.py
-Marginalia gift cards are valid for one year from purchase.
-ana@lab:~/obs$ python tree.py --spans auto.jsonl --attrs
-trace 2c7a843d776d088f6cef8f657c830b0a   start(ms) took(ms)
-      0     605 ms  ChatCompletion
+ana@dev:~/obs$ python auto.py
+I couldn't find any information on a gift card called "Marginalia." It's possible that it's a lesser-known or regional gift card, or it may be a misspelling or incorrect name.
+
+If you could provide more context or clarify the name of the gift card, I'd be happy to try and help you find the information you're looking for.
+ana@dev:~/obs$ python tree.py --spans auto.jsonl --attrs
+trace 89dce4abc53cd3ca204f04e7edf8a68d   start(ms) took(ms)
+      0   7,307 ms  ChatCompletion
                      llm.system = "openai"
-                     input.value = "{\"model\": \"extract-1\", \"messages\": [{\"role\": \"user\", \"content\": \"How long is a gift card valid?\"}]}"
+                     input.value = "{\"model\": \"llama3.2:3b\", \"messages\": [{\"role\": \"user\", \"content\": \"How long is a Marginalia gift card valid?\"}], \"temperature\": 0}"
                      input.mime_type = "application/json"
-                     output.value = "{\"id\":\"chatcmpl-lab0015\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"Marginalia gift cards are valid for one year from purchase.\",\"role\":\"assistant\"}}],\"created\":1791255600,\"model\":\"extract-1\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":13,\"prompt_tokens\":11,\"total_tokens\":24}}"
+                     output.value = "{\"id\":\"chatcmpl-771\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"I couldn't find any information on a gift card called \\\"Marginalia.\\\" It's possible that it's a lesser-known or regional gift card, or it may be a misspelling or incorrect name.\\n\\nIf you could provide more context or clarify the name of the gift card, I'd be happy to try and help you find the information you're looking for.\",\"role\":\"assistant\"}}],\"created\":1791416895,\"model\":\"llama3.2:3b\",\"object\":\"chat.completion\",\"system_fingerprint\":\"fp_ollama\",\"usage\":{\"completion_tokens\":75,\"prompt_tokens\":36,\"total_tokens\":111,\"prompt_tokens_details\":{\"cached_tokens\":35}}}"
                      output.mime_type = "application/json"
-                     llm.invocation_parameters = "{\"model\": \"extract-1\"}"
+                     llm.invocation_parameters = "{\"model\": \"llama3.2:3b\", \"temperature\": 0}"
                      llm.input_messages.0.message.role = "user"
-                     llm.input_messages.0.message.content = "How long is a gift card valid?"
-                     llm.model_name = "extract-1"
-                     llm.token_count.total = 24
-                     llm.token_count.prompt = 11
-                     llm.token_count.completion = 13
+                     llm.input_messages.0.message.content = "How long is a Marginalia gift card valid?"
+                     llm.model_name = "llama3.2:3b"
+                     llm.token_count.total = 111
+                     llm.token_count.prompt = 36
+                     llm.token_count.completion = 75
+                     llm.token_count.prompt_details.cache_read = 35
                      llm.output_messages.0.message.role = "assistant"
-                     llm.output_messages.0.message.content = "Marginalia gift cards are valid for one year from purchase."
+                     llm.output_messages.0.message.content = "I couldn't find any information on a gift card called \"Marginalia.\" It's possible that it's a lesser-known or regional gift card, or it may be a misspelling or incorrect name.\n\nIf you could provide more context or clarify the name of the gift card, I'd be happy to try and help you find the information you're looking for."
                      llm.finish_reason = "stop"
                      openinference.span.kind = "LLM"
 ```
@@ -65,29 +69,40 @@ não na do OpenTelemetry: `llm.model_name` onde a seção anterior tinha `gen_ai
 é a primeira coisa a acertar ao escolher uma ferramenta: o que ela escreve e o que ela lê. A aula 7
 volta a isso.
 
-As duas convenções estão convergindo. A versão do OpenInference do laboratório tem uma configuração
+As duas convenções estão convergindo. A versão do OpenInference instalada na seção 03 tem uma configuração
 que a faz escrever os nomes do OpenTelemetry no lugar dos seus:
 
 ```
-ana@lab:~/obs$ rm auto.jsonl; OPENINFERENCE_ENABLE_GENAI_SEMCONV=true python auto.py
-Marginalia gift cards are valid for one year from purchase.
-ana@lab:~/obs$ python tree.py --spans auto.jsonl --attrs | grep gen_ai
+ana@dev:~/obs$ rm auto.jsonl; OPENINFERENCE_ENABLE_GENAI_SEMCONV=true python auto.py
+I couldn't find any information on a gift card called "Marginalia." It's possible that it's a lesser-known or regional gift card, or it may be a misspelling or incorrect name.
+
+If you could provide more context or clarify the name of the gift card, I'd be happy to try and help you find the information you're looking for.
+ana@dev:~/obs$ python tree.py --spans auto.jsonl --attrs | grep gen_ai
                      gen_ai.operation.name = "chat"
                      gen_ai.provider.name = "openai"
-                     gen_ai.request.model = "extract-1"
-                     gen_ai.usage.input_tokens = 11
-                     gen_ai.usage.output_tokens = 13
-                     gen_ai.input.messages = "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"How long is a gift card valid?\"}]}]"
-                     gen_ai.output.messages = "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"Marginalia gift cards are valid for one year from purchase.\"}], \"finish_reason\": \"stop\"}]"
+                     gen_ai.request.model = "llama3.2:3b"
+                     gen_ai.request.temperature = 0.0
+                     gen_ai.usage.input_tokens = 36
+                     gen_ai.usage.output_tokens = 75
+                     gen_ai.usage.cache_read.input_tokens = 35
+                     gen_ai.input.messages = "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"How long is a Marginalia gift card valid?\"}]}]"
+                     gen_ai.output.messages = "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"I couldn't find any information on a gift card called \\\"Marginalia.\\\" It's possible that it's a lesser-known or regional gift card, or it may be a misspelling or incorrect name.\\n\\nIf you could provide more context or clarify the name of the gift card, I'd be happy to try and help you find the information you're looking for.\"}], \"finish_reason\": \"stop\"}]"
                      gen_ai.response.finish_reasons = ["stop"]
-                     gen_ai.response.id = "chatcmpl-lab0016"
-                     gen_ai.response.model = "extract-1"
+                     gen_ai.response.id = "chatcmpl-603"
+                     gen_ai.response.model = "llama3.2:3b"
 ```
 
 Mesma chamada, e agora `gen_ai.request.model` e `gen_ai.usage.input_tokens`, que qualquer ferramenta
 que leia a convenção do OpenTelemetry entende. Espere que configurações assim mudem de nome e de
 padrão de uma versão para a outra enquanto a convenção for nova; leia o span depois de toda
 atualização.
+
+Leia mais um atributo: `gen_ai.provider.name = "openai"`. A biblioteca enxerga o SDK da OpenAI e
+escreve o que o SDK é, e não tem como saber que o servidor do outro lado é o Ollama. O span escrito à
+mão da seção 07 diz `ollama`, porque quem o escreveu sabia. Um relatório de custos que agrupasse as
+chamadas por fornecedor poria todas estas sob o nome errado. Ela também registrou algo que os spans
+escritos à mão não registram: 35 dos 36 tokens do prompt foram lidos do cache do Ollama, porque a
+mesma pergunta tinha sido feita pouco antes.
 
 ## E o que ela registrou sem que ninguém pedisse
 
