@@ -9,7 +9,7 @@ announced it to each of the four audiences.
 
 ## To the board, in Otávio's monthly report
 
-> Friday-evening checkout failures, about 180 lost payments a week, will be fixed in April for
+> Friday-evening checkout failures, about 180 failed payments a week, will be fixed in April for
 > six engineer-weeks and R$ 4,000 a month. The fix also removes the risk of checkout stopping
 > completely at peak, which is what caused the 32-minute outage on 6 March.
 

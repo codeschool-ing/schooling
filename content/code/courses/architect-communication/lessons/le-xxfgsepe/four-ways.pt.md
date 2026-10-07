@@ -9,7 +9,7 @@ Lívia a anunciou a cada um dos quatro públicos.
 
 ## Para o conselho, no relatório mensal de Otávio
 
-> As falhas de checkout das noites de sexta, cerca de 180 pagamentos perdidos por semana, serão
+> As falhas de checkout das noites de sexta, cerca de 180 pagamentos que falham por semana, serão
 > corrigidas em abril, por seis semanas-engenheiro e R$ 4.000 por mês. A correção também elimina o
 > risco de o checkout parar por completo no pico, que foi o que causou a queda de 32 minutos em 6
 > de março.
