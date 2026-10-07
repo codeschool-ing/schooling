@@ -1,6 +1,6 @@
 ---
 title: O pipeline carrega objetos, e todo o resto decorre disso
-version: 1
+version: 2
 ---
 
 Toda ferramenta da aula 8 lia texto e escrevia texto. O `grep` casava caracteres,
@@ -12,14 +12,59 @@ denominador comum.
 propriedades nomeadas e tipadas — e o comando seguinte do pipeline recebe esses
 objetos em vez de uma representação deles.
 
+## Primeiro, o próprio PowerShell
+
+O Ubuntu não o traz. A Microsoft o publica num repositório próprio, e estes são
+os passos da página de instalação da Microsoft para o Ubuntu:
+
+```sh
+sudo apt-get update
+sudo apt-get install -y wget
+source /etc/os-release
+wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+sudo apt-get update
+sudo apt-get install -y powershell
+```
+
+O `packages-microsoft-prod` é um pacote cujo conteúdo inteiro é um repositório e
+a sua chave de assinatura: o repositório de terceiros da aula 7 seção 13,
+configurado por um pacote em vez de à mão. O `source /etc/os-release` está ali
+pelo `$VERSION_ID`, que é `24.04` na máquina que este curso usa.
+
+```
+ana@vm:~$ pwsh --version
+PowerShell 7.6.6
+```
+
+Em outra distribuição, ou no macOS, a página "Install PowerShell" da Microsoft
+tem os passos equivalentes. No Windows, o que já vem instalado é o Windows
+PowerShell 5.1, que não é o desta aula: a seção sobre conversar com o Windows
+distingue os dois.
+
+Os dados são o log de acesso e o arquivo de vendas que a aula 8 criou. Copie-os
+para um diretório só deles, para que uma listagem mostre apenas os dois:
+
+```sh
+mkdir -p ~/work/ps
+cp ~/work/logs/access.log ~/work/data/sales.csv ~/work/ps/
+```
+
+Depois, `cd ~/work/ps` e digite `pwsh`. O prompt vira
+`PS /home/ana/work/ps>`, que é o prompt com que começa toda transcrição desta
+aula, e `exit` leva você de volta ao bash.
+
+## Uma listagem são dois objetos
+
 ```
 PS /home/ana/work/ps> Get-ChildItem | Select-Object -First 3
     Directory: /home/ana/work/ps
 
 UnixMode         User Group         LastWriteTime         Size Name
 --------         ---- -----         -------------         ---- ----
--rw-r--r--        ana ana        09/15/2026 10:48       148233 access.log
--rw-r--r--        ana ana        09/15/2026 10:48          788 sales.csv
+-rw-r--r--        ana ana        10/07/2026 13:07       153934 access.log
+-rw-r--r--        ana ana        10/07/2026 13:07          807 sales.csv
 ```
 
 Aquela tabela parece a saída do `ls -l`. Não é. **É uma representação, produzida
@@ -49,7 +94,7 @@ responde "o que é esta coisa, e o que posso perguntar a ela".
 
 ```
 PS /home/ana/work/ps> (Get-ChildItem sales.csv).Length
-788
+807
 PS /home/ana/work/ps> (Get-ChildItem sales.csv).LastWriteTime.Year
 2026
 ```
@@ -119,13 +164,13 @@ E ela foi capturada no PowerShell 7 rodando em Linux:
 PS /home/ana/work/ps> $PSVersionTable
 Name                           Value
 ----                           -----
-PSVersion                      7.4.6
+PSVersion                      7.6.6
 PSEdition                      Core
-GitCommitId                    7.4.6
-OS                             Ubuntu 24.04.4 LTS
+GitCommitId                    7.6.6
+OS                             Ubuntu 24.04.5 LTS
 Platform                       Unix
 PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0…}
-PSRemotingProtocolVersion      2.3
+PSRemotingProtocolVersion      2.4
 SerializationVersion           1.1.0.1
 WSManStackVersion              3.0
 ```

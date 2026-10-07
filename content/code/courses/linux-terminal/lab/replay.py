@@ -38,6 +38,8 @@ import time
 HOST = "vm"
 PROMPT = re.compile(r"^(?:(?P<user>[a-z][a-z0-9]*)@" + HOST +
                     r":(?P<cwd>[^\s$#]*)(?P<sigil>[$#])(?: |$)|(?P<bare>\$) )(?P<cmd>.*)$")
+# PowerShell's prompt. It is typed into one pwsh kept for the whole run.
+PSPROMPT = re.compile(r"^PS (?P<cwd>/\S*)> (?P<cmd>.*)$")
 SENTINEL = "@@REPLAY@@"
 MARK = 'printf "@@REP""LAY@@ %s %s\\n" "$?" "$PWD"'
 PASSWORDS = {"ana": "ana-lab-password", "bruno": "practice", "carla": "practice"}
@@ -157,6 +159,65 @@ class Shell:
             pass
 
 
+class Pwsh:
+    """One pwsh, as ana. Commands go in through a pipe, which is how `-Command -`
+    reads them, and come out on a pty, so that tables are as wide as a terminal
+    and not as wide as nothing. A marker line after each command says where it
+    ended; the transcripts in this course hold one statement line per prompt."""
+
+    MARK = '[Console]::Out.WriteLine("@@REP" + "LAY@@ 0 " + $PWD.Path)'
+
+    def __init__(self, cols):
+        rd, self.wr = os.pipe()
+        pid, fd = pty.fork()
+        if pid == 0:
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+            os.dup2(rd, 0)
+            os.chdir(home("ana"))
+            env = {"HOME": home("ana"), "USER": "ana", "LOGNAME": "ana", "SHELL": "/bin/bash",
+                   "TERM": "dumb", "LANG": "C.UTF-8", "TZ": os.environ.get("TZ", "UTC"),
+                   "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"}
+            os.execvpe("/usr/sbin/runuser", ["runuser", "-u", "ana", "--", "pwsh", "-NoLogo",
+                                              "-NoProfile", "-Command", "-"], env)
+        os.close(rd)
+        import fcntl, struct, termios
+        fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack("HHHH", 50, cols, 0, 0))
+        self.pid, self.fd, self.cwd = pid, fd, home("ana")
+        self.run("$PSStyle.OutputRendering = 'PlainText'")
+
+    def run(self, cmd, timeout=60):
+        os.write(self.wr, (cmd + "\n" + self.MARK + "\n").encode())
+        buf, end = b"", time.time() + timeout
+        pat = re.compile(re.escape(SENTINEL.encode()) + rb" \d+ (.*?)\r?\n")
+        while time.time() < end:
+            m = pat.search(buf)
+            if m:
+                self.cwd = m.group(1).decode()
+                out = buf[:m.start()].decode(errors="replace").replace("\r\n", "\n")
+                # The host puts a blank line before and after a table; the
+                # transcripts were trimmed of both.
+                lines = out.split("\n")
+                while lines and not lines[0].strip():
+                    lines.pop(0)
+                while lines and not lines[-1].strip():
+                    lines.pop()
+                return "\n".join(lines) + ("\n" if lines else ""), 0
+            r, _, _ = select.select([self.fd], [], [], 0.2)
+            if r:
+                buf += os.read(self.fd, 65536)
+        return buf.decode(errors="replace") + "\n[replay: TIMEOUT]", -1
+
+    def cd(self, path):
+        if path and path != self.cwd:
+            self.run(f"Set-Location '{path}'")
+
+    def close(self):
+        try:
+            os.kill(self.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+
+
 def fences(text):
     """(start, end, lang, lines) for every fence, end exclusive of the closing line."""
     lines = text.split("\n")
@@ -193,6 +254,12 @@ def steps(body):
     """Split a transcript into (prompt line, user, cwd, command, expected output)."""
     res, cur = [], None
     for ln in body:
+        m = PSPROMPT.match(ln)
+        if m:
+            if cur:
+                res.append(cur)
+            cur = [ln, "@pwsh", m.group("cwd"), m.group("cmd"), []]
+            continue
         m = PROMPT.match(ln)
         if m:
             if cur:
@@ -210,7 +277,7 @@ def steps(body):
 
 
 def is_transcript(lang, body):
-    return lang == "" and any(PROMPT.match(ln) for ln in body)
+    return lang == "" and any(PROMPT.match(ln) or PSPROMPT.match(ln) for ln in body)
 
 
 def screen(cmd):
@@ -226,6 +293,7 @@ def screen(cmd):
 class Machine:
     def __init__(self, cols):
         self.cols, self.shells, self.stack = cols, {}, [("ana", True)]
+        self.pwsh = None
 
     def shell(self, user):
         if user not in self.shells:
@@ -233,6 +301,11 @@ class Machine:
         return self.shells[user]
 
     def step(self, user, cwd, cmd, answers=(), expect=()):
+        if user == "@pwsh":
+            if self.pwsh is None:
+                self.pwsh = Pwsh(self.cols)
+            self.pwsh.cd(cwd)
+            return self.pwsh.run(cmd)
         user = user or self.stack[-1][0]
         c = cmd.strip()
         if re.match(r"^sudo\b", c) and user != "root" and c not in ("sudo -k", "sudo -v"):
@@ -272,6 +345,8 @@ class Machine:
     def close(self):
         for s in self.shells.values():
             s.close()
+        if self.pwsh:
+            self.pwsh.close()
 
 
 def main():
@@ -326,7 +401,7 @@ def main():
                         manual = True
                         break
                     mc = re.match(r"^cat ([\w.-]+\.(?:sh|py|txt|ps1))$", cmd.strip())
-                    if a.materialize and mc and expect:
+                    if a.materialize and mc and expect and user != "@pwsh":
                         sh = mach.shell(user or "ana")
                         if cwd:
                             sh.cd(cwd)

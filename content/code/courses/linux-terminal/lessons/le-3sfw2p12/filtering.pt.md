@@ -1,6 +1,6 @@
 ---
 title: O `Where-Object`, e a comparação que responde errado em silêncio
-version: 1
+version: 2
 ---
 
 O `Where-Object` fica com os objetos para os quais uma condição é verdadeira. Ele
@@ -8,15 +8,14 @@ O `Where-Object` fica com os objetos para os quais uma condição é verdadeira.
 
 ```
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { [int]$_.revenue -gt 30000 } | Select-Object rep, revenue
-rep    revenue
----    -------
-carla  37084
-ana    43731
-carla  30272
-elena  34122
-hugo   35541
-carla  34417
-felipe 41574
+rep     revenue
+---     -------
+elena   36036
+felipe  31375
+diego   39072
+gabriel 35880
+gabriel 31089
+helena  39865
 ```
 
 Duas grafias, e as duas estão em todo lugar:
@@ -78,17 +77,17 @@ Aqui está o mesmo arquivo, o mesmo limite, e duas respostas:
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { $_.revenue -gt 30000 } | Measure-Object | Select-Object Count
 Count
 -----
-   16
+   15
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { [int]$_.revenue -gt 30000 } | Measure-Object | Select-Object Count
 Count
 -----
-    7
+    6
 ```
 
-**Dezesseis contra sete, e nada avisou sobre as outras nove.**
+**Quinze contra seis, e nada avisou sobre as outras nove.**
 
 A seção anterior explica: o `Import-Csv` produziu strings, então o `$_.revenue` é
-o texto `8721`. Os operadores de comparação do PowerShell **convertem o lado
+o texto `18850`. Os operadores de comparação do PowerShell **convertem o lado
 direito para o tipo do lado esquerdo** — então o `30000` virou a string `"30000"`,
 e a comparação foi alfabética.
 

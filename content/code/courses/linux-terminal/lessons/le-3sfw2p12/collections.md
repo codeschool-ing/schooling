@@ -1,6 +1,6 @@
 ---
 title: Arrays and hashtables, and the count that is not there
-version: 1
+version: 2
 ---
 
 ```
@@ -50,8 +50,11 @@ name
 file. Read a value with either `$h["name"]` or `$h.name` — the dot form is
 shorter and fails on a key with a space in it.
 
-**The order is not the insertion order.** `port` came back before `name`, the
-same as bash's associative arrays in lesson 9 section 12. `[ordered]@{ }` keeps it:
+**The order is not the insertion order, and not even the same from one session to
+the next.** Here `port` came back before `name`. Eight new `pwsh` processes, asked
+the same thing, put `name` first six times, because .NET seeds its string hashing
+afresh in every process. Bash's associative arrays in lesson 9 section 12 make the
+same refusal to promise an order. `[ordered]@{ }` keeps it:
 
 ```
 PS /home/ana/work/ps> $h = [ordered]@{ name = "web01"; port = 8080 }; $h.Keys
