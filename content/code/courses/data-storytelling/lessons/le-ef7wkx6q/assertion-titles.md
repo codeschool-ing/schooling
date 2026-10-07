@@ -31,7 +31,7 @@ precise number for it there.
 
 ## Writing one
 
-A good assertion title:
+A good assertion title, point by point:
 
 - **is a complete sentence**, with a verb. "Late first deliveries and cancellations" is still a topic;
   "Late first deliveries more than double cancellations" is a claim.
