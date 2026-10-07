@@ -1,13 +1,14 @@
 ---
 title: Providers além da AWS, e as suas versões
-version: 1
+version: 2
 ---
 
 É fácil sair das primeiras seções acreditando que provider quer dizer nuvem. **Um provider é
 qualquer plugin que dá ao Terraform tipos de recurso para gerenciar**, e vários dos mais usados
 nunca falam com nuvem nenhuma. A loja precisa de um bucket para as imagens, e o nome de um bucket
 precisa ser único entre todas as contas da AWS do mundo, então a Ana lhe dá um sufixo aleatório.
-Dois providers se juntam ao `aws` no `versions.tf`:
+Dois providers se juntam ao `aws` no `versions.tf`. A Ana fez commit dos outputs antes, com
+`git add . && git commit -m "Variables and outputs"`, então o diff mostra só as linhas novas:
 
 ```
 ana@laptop:~/shop$ git diff versions.tf
@@ -31,7 +32,30 @@ index 208a27a..1cceb9e 100644
  }
 ```
 
-Os recursos que os usam vão num arquivo só deles:
+O arquivo inteiro, como fica agora:
+
+```hcl
+terraform {
+  required_version = ">= 1.10"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.8.0"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.9"
+    }
+  }
+}
+```
+
+Os recursos que os usam vão num arquivo só deles, o `storage.tf`:
 
 ```hcl
 resource "random_id" "bucket" {
@@ -157,8 +181,8 @@ cobrem quase todos os casos:
 | `~> 3.8` | a 3.8 ou mais nova, mas não a 4.0: o último número escrito pode crescer |
 | `~> 3.8.0` | a 3.8.0 ou mais nova, mas não a 3.9: só o patch pode crescer |
 
-A Ana escreveu `~> 3.8.0` para o random, e o mirror do laboratório tem a 3.8.1 e a 3.9.1, então o
-init escolheu a 3.8.1, a mais nova que o intervalo permitia:
+A Ana escreveu `~> 3.8.0` para o random. O registry já tinha a 3.9.1, e o intervalo deixa de fora
+tudo da 3.9 em diante, então o init escolheu a 3.8.1, a versão 3.8 mais nova:
 
 ```
 ana@laptop:~/shop$ grep -A2 "^provider" .terraform.lock.hcl

@@ -113,7 +113,7 @@
     ]
   },
   "ex-rjc2ebcd": {
-    "prompt": "A Ana faz commit do lock file do laboratório, que tem um único hash `h1:` para `linux_amd64`. Um colega num Mac roda `terraform init`. O que acontece?",
+    "prompt": "O lock file da Ana foi escrito numa máquina sem internet, a partir de uma cópia local do pacote de Linux, então tem um único hash `h1:` para `linux_amd64`. Ela faz commit dele, e um colega num Mac roda `terraform init`. O que acontece?",
     "hint": "O aviso que o init imprimiu disse quais plataformas o arquivo cobre.",
     "choices": [
       {
@@ -126,7 +126,7 @@
       },
       {
         "text": "O init falha: nenhum hash confere com o pacote do Mac",
-        "why": "Certo. O aviso disse isso, e o `terraform providers lock` com acesso à internet acrescenta as outras plataformas."
+        "why": "Certo. O aviso disse isso, e o `terraform providers lock -platform=darwin_arm64`, rodado onde o registry responde, acrescenta o hash do Mac."
       },
       {
         "text": "O init ignora o lock file e escolhe a 6.x mais nova",
@@ -397,7 +397,7 @@
     ]
   },
   "ex-v0bfdtrz": {
-    "prompt": "O mirror tem o random 3.8.1 e o 3.9.1, e nada está travado ainda. O `versions.tf` pede `version = \"~> 3.8.0\"`. Qual versão o `terraform init` instala?",
+    "prompt": "O registry tem o random 3.8.0, 3.8.1, 3.9.0 e 3.9.1, e nada está travado ainda. O `versions.tf` pede `version = \"~> 3.8.0\"`. Qual versão o `terraform init` instala?",
     "hint": "Com três números escritos, qual deles pode crescer?",
     "choices": [
       {
@@ -414,7 +414,7 @@
       },
       {
         "text": "A 3.8.0, a versão escrita na restrição",
-        "why": "A restrição é um limite inferior, não uma trava, e a 3.8.0 nem está no mirror."
+        "why": "A restrição é um limite inferior, não uma trava, e o init pega a versão mais nova dentro dela."
       }
     ]
   },
