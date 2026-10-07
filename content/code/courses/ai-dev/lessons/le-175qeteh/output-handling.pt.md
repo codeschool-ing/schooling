@@ -1,6 +1,6 @@
 ---
 title: A resposta é entrada não confiável
-version: 1
+version: 2
 ---
 
 A resposta de um modelo vai para algum lugar: uma página, uma query, um comando de shell, um
@@ -9,31 +9,43 @@ copia texto do que leu, e o que ele leu foi escrito por outra pessoa.
 
 ## Numa página
 
-Uma avaliação de produto, com uma tag de script dentro, é resumida para a página do produto:
+Uma avaliação de produto chega com uma tag de script dentro, o `review.html`:
+
+```html
+<p>Love the lamp, the light is warm.</p><script>alert("hi")</script>
+```
+
+e o modelo é pedido a reescrevê-la como HTML para a página do produto. O `render.py` guarda o bloco de
+código da resposta, numa linha só, e o põe na página duas vezes:
 
 ```python
-"""Put a model's summary into a page, twice: as it came, and escaped."""
+"""Put a model's rewrite of a review into a page, twice: as it came, and escaped."""
 import html
+import re
 import subprocess
 import sys
 
-summary = subprocess.run([sys.executable, "ask.py", "Summarise this product review: " + open("review.html").read()],
-                         capture_output=True, text=True).stdout.strip()
-print("as it came: <div class=\"summary\">" + summary + "</div>")
-print("escaped:    <div class=\"summary\">" + html.escape(summary) + "</div>")
+reply = subprocess.run([sys.executable, "ask.py", "Rewrite this product review as HTML for the product page, "
+                        "keeping its markup: " + open("review.html").read()], capture_output=True, text=True).stdout
+block = re.search(r"```\w*\n(.*?)\n```", reply, re.S)
+fragment = " ".join((block.group(1) if block else reply).split())
+print("as it came: <div class=\"review\">" + fragment + "</div>")
+print("escaped:    <div class=\"review\">" + html.escape(fragment) + "</div>")
 ```
 
 ```
 ana@dev:~/shop$ python render.py
-as it came: <div class="summary">Customers like the lamp's warm light. One review ends with: <script>alert("hi")</script></div>
-escaped:    <div class="summary">Customers like the lamp&#x27;s warm light. One review ends with: &lt;script&gt;alert(&quot;hi&quot;)&lt;/script&gt;</div>
+as it came: <div class="review"><p>Love the lamp, the light is warm.</p> <script>alert("hi")</script></div>
+escaped:    <div class="review">&lt;p&gt;Love the lamp, the light is warm.&lt;/p&gt; &lt;script&gt;alert(&quot;hi&quot;)&lt;/script&gt;</div>
 ```
 
-**O modelo copiou a tag da avaliação para o resumo.** Posta na página como veio, ela é um script que
-roda no navegador de todo visitante. Escapada, é texto que mostra o que diz. O escape é uma chamada,
-e o lugar dele é o ponto em que texto vira HTML, como para qualquer outro conteúdo de usuário.
-Sistemas de template que escapam por padrão fazem isso por você; desligar isso para a saída
-"confiável" do modelo é o erro.
+**O modelo manteve a tag**, como lhe pediram manter a marcação. Posta na página como veio, ela é um
+script que roda no navegador de todo visitante. Escapada, é texto que mostra o que diz. Um pedido que
+soava inofensivo, manter a formatação da avaliação, foi tudo o que bastou; pedido um resumo de uma
+frase, o mesmo modelo descartou a tag enquanto esta aula era preparada, e o escape é para o dia em que
+não descartar. Ele é uma chamada, e o lugar dele é o ponto em que texto vira HTML, como para qualquer
+outro conteúdo de usuário. Sistemas de template que escapam por padrão fazem isso por você; desligar
+isso para a saída "confiável" do modelo é o erro.
 
 ## Numa query
 
@@ -43,7 +55,8 @@ import sqlite3
 import subprocess
 import sys
 
-name = subprocess.run([sys.executable, "ask.py", "Which customer wrote this email? Reply with the name only."],
+EMAIL = "The lamp from my last order flickers when I turn it on. Can you help?\n\nDara O'Brien"
+name = subprocess.run([sys.executable, "ask.py", "Which customer wrote this email? Reply with the name only.\n\n" + EMAIL],
                       capture_output=True, text=True).stdout.strip()
 db = sqlite3.connect(":memory:")
 db.execute("create table customers (name text, email text)")
@@ -61,7 +74,8 @@ pasted:    sqlite3 error: near "Brien": syntax error
 parameter: [('dara@example.com',)]
 ```
 
-**Um apóstrofo num nome real quebra a query colada.** Aqui ela falha alto. Uma resposta com outro
+O modelo leu o nome na assinatura do e-mail, como pedido: `Dara O'Brien`. **Um apóstrofo num nome
+real quebra a query colada.** Aqui ela falha alto. Uma resposta com outro
 formato mudaria o que a query faz em vez de quebrá-la. Um parâmetro nunca faz parte do SQL, então a
 mesma resposta acha o e-mail da Dara.
 
