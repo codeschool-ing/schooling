@@ -1,6 +1,6 @@
 ---
 title: The grounded prompt
-version: 1
+version: 2
 ---
 
 Pasting passages above a question is not enough on its own. A model given some sources and a
@@ -22,14 +22,17 @@ Question: when does the café open on sundays
 ```
 
 Three parts, in a fixed order: the instruction, the numbered sources with the file each came from,
-and the question last. This whole text is what would be sent to the model, and it is the only
-thing the model would know about the café.
+and the question last. This whole text is what is sent to the model, and it is the only thing the
+model knows about the café. Pipe it into `ask`:
 
-What a model might reply to it was written by this course as an illustration; no model was run:
-
-```localised
-On Sundays the café opens at 08:00 and closes at 12:00 [1].
 ```
+ana@lab:~/pe$ retrieve --prompt "when does the café open on sundays" | ask - --temperature 0
+According to the sources, the café opens on Sundays at 08:00. [1]
+-- llama3.2:3b, finish: stop, prompt 153 tokens, output 20 tokens
+```
+
+Right, and cited, and half the hours: the closing time is in the same source and the reply left it
+out, because the question only asked when it opens.
 
 ## Why the citation matters
 
@@ -56,11 +59,18 @@ does not say, and do not answer from general knowledge.
 Question: can I bring my dog
 ```
 
-The reply the instruction asks for, again written by the course as an illustration:
+The instruction asks for one reply here, that the handbook does not say. The model gave another:
 
-```localised
-The handbook does not say whether dogs are allowed in the café.
 ```
+ana@lab:~/pe$ retrieve --prompt "can I bring my dog" | ask - --temperature 0
+I don't have enough information to answer your question. Could you please provide more context or clarify what you are referring to? Are you asking about bringing a dog into a specific location, such as a building or a park?
+-- llama3.2:3b, finish: stop, prompt 82 tokens, output 46 tokens
+```
+
+It did not invent a policy on dogs, which is the outcome that matters most, and it did not say the
+handbook was silent either. With no sources under the instruction, it read the prompt as a question
+with something missing and asked for more. A program that checks replies would have to treat this
+as a refusal too, and a test that only looks for the exact words "does not say" would miss it.
 
 **Without that permission, a model asked a question tends to produce an answer**, because an answer
 is the likely continuation of a question (lesson 1), and the likely answer about dogs in cafés is

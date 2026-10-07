@@ -1,6 +1,6 @@
 ---
 title: Onde falha
-version: 1
+version: 2
 ---
 
 Um prompt ancorado faz uma resposta valer exatamente o que valem os trechos dentro dele. A maior
@@ -25,7 +25,17 @@ query words: wifi password
 `wireless internet` e `Wi-Fi` querem dizer a mesma coisa para uma pessoa. Para uma busca por
 palavra-chave, não têm nenhuma palavra em comum, então a primeira pergunta tira zero contra todas as
 linhas. **A resposta existia, e a recuperação informou que não existia nada.** Com o prompt ancorado
-da seção anterior, o modelo faria o que mandaram e diria que o manual não diz, o que é falso.
+da seção anterior, o modelo faz o que mandaram:
+
+```
+ana@lab:~/pe$ retrieve --prompt "is there wireless internet for customers" | ask - --temperature 0
+I couldn't find any information on the availability of wireless internet for customers in the provided sources.
+
+Handbook does not say.
+-- llama3.2:3b, finish: stop, prompt 83 tokens, output 26 tokens
+```
+
+"Handbook does not say", o que é falso: um arquivo inteiro do manual é sobre a rede de visitantes.
 
 ## Um trecho cortado no lugar errado
 
@@ -41,7 +51,22 @@ query words: time caf open public holidays
 O primeiro trecho está exatamente certo e não diz horário nenhum: os horários estão em outra linha,
 `On Sundays it opens at 08:00`, que não tem palavra em comum com a pergunta e não foi recuperada. Os
 únicos horários nas fontes são os dos dias de semana. **Um modelo respondendo a partir desses dois
-trechos tem todos os motivos para dizer 07:00**, e estaria citando fontes reais ao fazer isso.
+trechos tem uma fonte real apontando para o horário errado.** Este não caiu:
+
+```
+ana@lab:~/pe$ retrieve --prompt "what time does the café open on public holidays" | ask - --temperature 0
+According to the provided sources, the café's hours on public holidays are the same as on Sundays, which is not explicitly stated in the sources. However, the source [1] states that the café follows the Sunday hours on public holidays.
+
+Since the source [2] only provides the hours for Monday to Saturday, it does not provide information on public holidays.
+
+Therefore, the answer is: The handbook does not say.
+-- llama3.2:3b, finish: stop, prompt 130 tokens, output 85 tokens
+```
+
+Ele leu a fonte 1 direito, que feriado segue o horário de domingo, não achou horário de domingo na
+frente dele, e disse que o manual não diz. É a resposta honesta ao que ele recebeu, e está errada
+sobre o manual, que diz exatamente quando o café abre num feriado, numa linha que ninguém recuperou.
+Outro modelo, ou este num outro dia, poderia muito bem ter escrito 07:00 e citado a fonte 2.
 
 O lugar onde o texto é cortado em trechos, o que se chama *chunking*, decide o que pode ser achado
 junto. Um corte que separa uma regra do detalhe a que ela se refere é a versão mais comum dessa
@@ -68,8 +93,18 @@ vieram três trechos que dividem uma palavra cada com a pergunta e respondem out
 pergunta, com as palavras do próprio manual, põe a regra certa em primeiro.
 
 A busca não tem como saber a diferença. **Não existe uma nota que queira dizer "não relevante"**: os
-três primeiros são devolvidos sejam eles quais forem, e um modelo instruído a responder a partir deles
-vai fazer isso.
+três primeiros são devolvidos sejam eles quais forem. Com os três da primeira pergunta, o modelo os
+julgou direito:
+
+```
+ana@lab:~/pe$ retrieve --prompt "can I get a refund for a cold coffee" | ask - --temperature 0
+The handbook does not say.
+-- llama3.2:3b, finish: stop, prompt 161 tokens, output 7 tokens
+```
+
+E isso também é falso, pelo mesmo motivo do Wi-Fi: o manual diz que uma bebida que não veio como
+descrita é reembolsada na hora, e a busca não trouxe essa linha. O modelo acertou sobre as fontes e
+errou sobre o café, e nada na resposta mostra a diferença.
 
 ## Busca por palavra e busca por significado
 
