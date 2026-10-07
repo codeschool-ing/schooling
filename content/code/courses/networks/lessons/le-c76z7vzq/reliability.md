@@ -1,11 +1,16 @@
 ---
 title: Losing packets and delivering anyway
-version: 1
+version: 2
 ---
 
 Acknowledgements are what let TCP promise delivery. When a segment is not acknowledged in time, the
 sender sends it again. The kernel counts every retransmission, and `nstat` prints the counter. First
-the price list from lesson 2, 186893 bytes, over a healthy network:
+the price list from lesson 2, 186893 bytes, over a healthy network. If your lab has been reset since
+lesson 2, put the price list back first, from your virtual machine:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'for i in $(seq 1 2000); do echo "line $i of the price list, padded to a hundred characters so the file is large enough ....."; done > /var/www/example/prices.txt'
+```
 
 ```
 ana@www:~$ nstat -az TcpRetransSegs
@@ -19,7 +24,13 @@ TcpRetransSegs                  0                  0.0
 ```
 
 No retransmissions, and 0.024 seconds. Then the office router is made to lose one in five of the
-packets the web server sends, and the same file is fetched again:
+packets the web server sends, and the same file is fetched again. The rule, from your virtual machine,
+and the one that takes it away afterwards; the loss is random, so your count will not be 46:
+
+```sh
+sudo bash ~/netlab/netlab exec router root 'nft add table inet lossy; nft add chain inet lossy forward "{ type filter hook forward priority 0; }"; nft add rule inet lossy forward tcp sport 443 numgen random mod 100 lt 20 drop'
+sudo bash ~/netlab/netlab exec router root 'nft delete table inet lossy'
+```
 
 ```
 ana@laptop:~$ curl -sS -o /dev/null -w '%{http_code} %{size_download} bytes in %{time_total} s\n' https://www.example.com/prices.txt
