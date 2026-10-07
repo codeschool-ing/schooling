@@ -11,7 +11,7 @@ version: 1
 
 WER = (S + D + I) / N, where N is the number of words actually said. Because insertions are counted, a transcript full of invented words can score above 100%.
 
-`jiwer` computes it and can show the alignment, word by word. Here are two of Bia's and Caio's turns, each cut out of the call by the script's own times and transcribed alone:
+`jiwer` computes it and can show the alignment, word by word. The programs in this lesson also import `measure.py`, the module of two functions lesson 5 wrote in `~/mm`: `words()` makes a transcript comparable, and `transcript()` cuts a recording at its silences and transcribes it. Here are two of Bia's and Caio's turns, each cut out of the call by the script's own times and transcribed alone:
 
 ```python
 """Each turn of the call cut out by the script's own times and transcribed alone, aligned with what was said."""

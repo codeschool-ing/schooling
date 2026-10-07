@@ -28,12 +28,12 @@ for size in ("tiny", "base"):
 
 ```
 ana@lab:~/mm$ python score.py
-tiny call-1042        WER  16.6%  substituted 15  deleted  7  inserted  3   6.7 s
-tiny call-1042-phone  WER  13.2%  substituted 16  deleted  2  inserted  2   6.7 s
-tiny call-1042-noisy  WER  20.5%  substituted 21  deleted  4  inserted  6   7.2 s
-base call-1042        WER  12.6%  substituted 12  deleted  6  inserted  1  11.2 s
-base call-1042-phone  WER  11.9%  substituted 14  deleted  3  inserted  1  10.8 s
-base call-1042-noisy  WER  20.5%  substituted 14  deleted 17  inserted  0  11.6 s
+tiny call-1042        WER  16.6%  substituted 15  deleted  7  inserted  3   5.1 s
+tiny call-1042-phone  WER  13.2%  substituted 16  deleted  2  inserted  2   4.4 s
+tiny call-1042-noisy  WER  20.5%  substituted 21  deleted  4  inserted  6   4.6 s
+base call-1042        WER  12.6%  substituted 12  deleted  6  inserted  1   7.2 s
+base call-1042-phone  WER  11.9%  substituted 14  deleted  3  inserted  1   8.0 s
+base call-1042-noisy  WER  20.5%  substituted 14  deleted 17  inserted  0   8.4 s
 ```
 
 ```schooling-figure
@@ -46,7 +46,7 @@ Quatro achados, e o último é o que importa.
 
 **A linha telefônica quase não custou nada.** O base fez 11,9% na versão de telefone, um pouco melhor que na limpa. Isso está dentro do ruído de uma única ligação de 151 palavras, e confirma a aula 5: a fala sobrevive à faixa do telefone.
 
-**O base é mais lento**: uns 11 segundos para a ligação contra uns 7 do tiny, em quatro núcleos de processador. Os dois são mais rápidos que o tempo real (a ligação tem 55 segundos), e os dois tempos incluem o detector de fala.
+**O base é mais lento**: uns 8 segundos para a ligação contra uns 5 do tiny, em quatro núcleos de processador. Os dois são mais rápidos que o tempo real (a ligação tem 55 segundos), e os dois tempos incluem o detector de fala.
 
 **Na ligação ruidosa, os dois fizeram 20,5%.** O modelo maior não comprou nada, e o jeito como o base falhou diz muito: 17 remoções e nenhuma inserção, onde o tiny fez 4 remoções e 6 inserções. O base, diante do ruído, disse menos; o tiny chutou mais. A mesma nota esconde dois comportamentos diferentes, e qual você prefere depende de se uma palavra faltando ou uma inventada faz mais estrago lá na frente.
 

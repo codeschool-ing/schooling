@@ -11,7 +11,26 @@ Há três lugares para corrigi-las, e só o último roda neste laboratório.
 
 **Treinando**, com gravações dos seus próprios falantes dizendo as suas próprias palavras. É a correção mais forte e a mais cara, e está fora do alcance deste curso.
 
-**Depois de decodificar, corrigindo o texto contra o que a loja sabe.** A loja tem um catálogo, então sabe como se escreve todo título e todo autor. Um programa pode procurar sequências de palavras escritas quase como uma delas, e trocá-las:
+**Depois de decodificar, corrigindo o texto contra o que a loja sabe.** A loja tem um catálogo, então sabe como se escreve todo título e todo autor. Um programa pode procurar sequências de palavras escritas quase como uma delas, e trocá-las.
+
+Primeiro o catálogo. O de uma loja de verdade tem milhares de linhas; este tem doze, o bastante para a ligação. Salve-o como `data/books.jsonl` no `~/mm`, um livro por linha:
+
+```json
+{"title": "Dom Casmurro", "author": "Machado de Assis"}
+{"title": "The Posthumous Memoirs of Brás Cubas", "author": "Machado de Assis"}
+{"title": "Bleak House", "author": "Charles Dickens"}
+{"title": "Great Expectations", "author": "Charles Dickens"}
+{"title": "The Secret Garden", "author": "Frances Hodgson Burnett"}
+{"title": "Pride and Prejudice", "author": "Jane Austen"}
+{"title": "Emma", "author": "Jane Austen"}
+{"title": "Jane Eyre", "author": "Charlotte Brontë"}
+{"title": "Middlemarch", "author": "George Eliot"}
+{"title": "Madame Bovary", "author": "Gustave Flaubert"}
+{"title": "Anna Karenina", "author": "Leo Tolstoy"}
+{"title": "Crime and Punishment", "author": "Fyodor Dostoevsky"}
+```
+
+Depois o programa que o usa:
 
 ```schooling-example
 {

@@ -28,12 +28,12 @@ for size in ("tiny", "base"):
 
 ```
 ana@lab:~/mm$ python score.py
-tiny call-1042        WER  16.6%  substituted 15  deleted  7  inserted  3   6.7 s
-tiny call-1042-phone  WER  13.2%  substituted 16  deleted  2  inserted  2   6.7 s
-tiny call-1042-noisy  WER  20.5%  substituted 21  deleted  4  inserted  6   7.2 s
-base call-1042        WER  12.6%  substituted 12  deleted  6  inserted  1  11.2 s
-base call-1042-phone  WER  11.9%  substituted 14  deleted  3  inserted  1  10.8 s
-base call-1042-noisy  WER  20.5%  substituted 14  deleted 17  inserted  0  11.6 s
+tiny call-1042        WER  16.6%  substituted 15  deleted  7  inserted  3   5.1 s
+tiny call-1042-phone  WER  13.2%  substituted 16  deleted  2  inserted  2   4.4 s
+tiny call-1042-noisy  WER  20.5%  substituted 21  deleted  4  inserted  6   4.6 s
+base call-1042        WER  12.6%  substituted 12  deleted  6  inserted  1   7.2 s
+base call-1042-phone  WER  11.9%  substituted 14  deleted  3  inserted  1   8.0 s
+base call-1042-noisy  WER  20.5%  substituted 14  deleted 17  inserted  0   8.4 s
 ```
 
 ```schooling-figure
@@ -46,7 +46,7 @@ Four findings, and the last is the one that matters.
 
 **The phone line cost almost nothing.** Base scored 11.9% on the telephone version, slightly better than on the clean one. That is within the noise of a single 151-word call, and it confirms lesson 5: speech survives the telephone band.
 
-**Base is slower**: about 11 seconds for the call against about 7 for tiny, on four processor cores. Both are faster than real time (the call is 55 seconds), and both times include the speech detector.
+**Base is slower**: about 8 seconds for the call against about 5 for tiny, on four processor cores. Both are faster than real time (the call is 55 seconds), and both times include the speech detector.
 
 **On the noisy call, both scored 20.5%.** The larger model bought nothing, and the way base failed is telling: 17 deletions and no insertions, where tiny made 4 deletions and 6 insertions. Base, faced with noise, said less; tiny guessed more. The same score hides two different behaviours, and which one you prefer depends on whether a missing word or an invented one does more harm downstream.
 
