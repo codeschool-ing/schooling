@@ -1,9 +1,20 @@
 ---
 title: How full is the disk, and with what?
-version: 1
+version: 2
 ---
 
-Two different questions, and each has its own command.
+Two different questions, and each has its own command. The second needs a folder to measure. Lesson 12
+left a `work` folder in your home; this replaces it with four small files and one of 3 MB, all zeros,
+standing in for a scanned document, dated like the ones here:
+
+```sh
+rm -rf ~/work && mkdir -p ~/work/invoices ~/work/reports
+printf 'id,name,city\n1,Acme Ltd,Sao Paulo\n2,Bravo & Filhos,Campinas\n' > ~/work/clients.csv
+printf 'Invoice 104 for Acme Ltd\n' > ~/work/invoices/104.txt
+printf 'Q3 summary, Bravo & Filhos\n' > ~/work/reports/q3.txt
+head -c 3000000 /dev/zero > ~/work/reports/scan.pdf
+find ~/work -exec touch -h -d '2026-09-01 09:00' {} +
+```
 
 ```
 ana@server:~$ df -h /

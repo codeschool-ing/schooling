@@ -1,12 +1,20 @@
 ---
 title: Programs and processes
-version: 1
+version: 2
 ---
 
 **A program is a file on the disk. A process is that program running.** Open the calculator twice
 and there is one program and two processes, each with its own memory and its own state. When
 somebody says a computer is slow, the question is almost never *which program is installed*. It is
 *which processes are running*, and what each one is doing.
+
+Everything in this lesson happens in a folder called `office` in your home folder, with one short
+file in it. Make them first, on your server:
+
+```sh
+mkdir ~/office && cd ~/office
+printf 'Ribeiro Contabilidade\nOpen 8:00 to 18:00\n' > notice.txt
+```
 
 On the Linux server, Ana starts two copies of `sleep`, a program that does nothing for a number of
 seconds, and asks for the list:

@@ -1,9 +1,13 @@
 ---
 title: Finding a process and stopping it
-version: 1
+version: 2
 ---
 
-A `sleep` was left running in the background for this section, to have something to find.
+This section needs something to find. Leave a `sleep` running in the background, as in lesson 1:
+
+```sh
+sleep 600 &
+```
 
 ```
 ana@server:~$ ps -eo pid,user,comm --sort=pid | head -6
@@ -32,7 +36,8 @@ Count
   `systemd`, and the services it started.
 - `pgrep -a` finds processes by name and prints their ID and command line.
 - `Get-Process -Name` found the same process, with the same ID, from PowerShell, and **counted 12**
-  on the whole machine. A desktop runs hundreds; this is a minimal server.
+  on the whole machine. A desktop runs hundreds; this is a minimal server, and
+  yours, the standard installation, runs more than this one.
 
 Stopping it takes the ID:
 

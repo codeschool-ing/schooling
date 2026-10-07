@@ -1,10 +1,12 @@
 ---
 title: Automatic security updates
-version: 1
+version: 2
 ---
 
-A standard Ubuntu Server installs **unattended-upgrades** and turns it on. Lesson 3's minimal server
-left it out, so it is installed here, with lesson 11's tool:
+A standard Ubuntu Server installs **unattended-upgrades** and turns it on, and the one you built in
+lesson 1 has it. The server these transcripts were recorded on was built without it, so there it is
+installed here, with lesson 11's tool. On yours the first command answers that it is already the newest
+version, and the rest read the same files:
 
 ```
 ana@server:~$ sudo apt install -y unattended-upgrades > uu.log 2>&1; grep "^Setting up" uu.log

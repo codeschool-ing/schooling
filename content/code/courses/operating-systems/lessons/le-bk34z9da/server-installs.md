@@ -1,10 +1,11 @@
 ---
 title: A server has no desktop
-version: 1
+version: 2
 ---
 
 The office server needs no screen: nobody sits in front of it. For that job there is **Ubuntu Server**,
-and it is different in three ways worth knowing before you choose it.
+and it is different in three ways worth knowing before you choose it. It is also the system you
+installed in lesson 1, in a virtual machine, so the three will look familiar.
 
 **The installer is text.** Same questions as the desktop one (language, keyboard, network, disk,
 account), answered with the arrow keys and Enter. It looks old-fashioned and it is quicker.

@@ -1,6 +1,6 @@
 ---
 title: Between your programs and the hardware
-version: 1
+version: 2
 ---
 
 **An operating system is the program that runs the computer for the other programs.** A browser, a
@@ -17,7 +17,7 @@ The part that does the refereeing is the **kernel**. It is the first program loa
 computer starts and the last one to stop, and it is the only program allowed to touch the hardware
 directly. Everything else, including the parts of the system you see, asks the kernel for what it
 needs through **system calls**: open this file, read from it, start that program, give me more
-memory. Section 06 watches a program do exactly that.
+memory. Section 09 watches a program do exactly that.
 
 ## What it looks after
 

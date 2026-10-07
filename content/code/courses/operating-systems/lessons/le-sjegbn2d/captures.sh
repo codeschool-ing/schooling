@@ -8,6 +8,11 @@
 #   sudo useradd -m -s /bin/bash -G sudo ana   # once, on a throwaway machine
 #   sudo -u ana -i bash /path/to/captures.sh    # hostname `server`
 #
+# THE BLOCKS THE STUDENT TYPES TO SET A SECTION UP ARE READ OUT OF THE LESSON.
+# stage() takes the sh fence of a section whose first line is the one given and
+# runs it as written, so what the lesson shows and what made these transcripts
+# cannot drift apart; a fence that is not there stops the script.
+#
 # ONLY LINUX IS CAPTURED HERE, and PowerShell 7 running on that same Linux.
 # What only Windows or macOS can print is shown in the lesson as commands with
 # no output, and the prose says so where it happens: a transcript nobody ran
@@ -18,7 +23,7 @@
 # holding clients.csv, invoices/104.txt, reports/q3.txt and a 3 MB
 # reports/scan.pdf of zeros, all dated 1 September 2026 by touch; one
 # `sleep 600` started in the background before the first block, to have a
-# process to find and stop; the PowerShell lines of a block run in ONE pwsh
+# process to find and stop; both the lesson's own fences, run by stage(); the PowerShell lines of a block run in ONE pwsh
 # process, each shown after its prompt; and sudo set to ask ana for no
 # password, which a real installation does not do.
 # Every line after a prompt is what the command printed.
@@ -43,6 +48,17 @@ psh() {
   pwsh -NoProfile -NoLogo -Command "\$ErrorView='ConciseView'; $* | Out-String -Width 100 -Stream | ForEach-Object { \$_.TrimEnd() }" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+here=$(cd "$(dirname "$0")" && pwd)
+stage() {
+  local fence
+  fence=$(first="$2" awk '
+    /^```sh$/ { inside = 1; n = 0; next }
+    /^```$/ && inside { if (keep) exit; inside = 0; next }
+    inside { n++; if (n == 1 && $0 == ENVIRON["first"]) keep = 1; if (keep) print }
+  ' "$here/$1")
+  [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
+  eval "$fence"
+}
 # Lines from stdin, typed one at a time into an interactive bash in a real
 # terminal, so job numbers and "Terminated" appear exactly as a person sees them.
 session() {
@@ -54,12 +70,7 @@ session() {
 }
 
 cd ~
-rm -rf ~/work && mkdir -p ~/work/invoices ~/work/reports
-printf 'id,name,city\n1,Acme Ltd,Sao Paulo\n2,Bravo & Filhos,Campinas\n' > ~/work/clients.csv
-printf 'Invoice 104 for Acme Ltd\n' > ~/work/invoices/104.txt
-printf 'Q3 summary, Bravo & Filhos\n' > ~/work/reports/q3.txt
-head -c 3000000 /dev/zero > ~/work/reports/scan.pdf
-find ~/work -exec touch -h -d '2026-09-01 09:00' {} +
+stage disk-space.md 'rm -rf ~/work && mkdir -p ~/work/invoices ~/work/reports'
 # PowerShell as one session: each line is shown after the PS prompt and run in
 # the same process, so Set-Location carries over to the next line as it does
 # for a person typing at it.
@@ -73,7 +84,7 @@ pss() {
   pwsh -NoProfile -NoLogo -File $f 2>&1
   rm -f $f
 }
-sleep 600 &
+stage processes.md 'sleep 600 &'
 SLEEPER=$!
 
 block machine

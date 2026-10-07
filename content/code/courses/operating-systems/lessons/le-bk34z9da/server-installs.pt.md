@@ -1,10 +1,11 @@
 ---
 title: Um servidor não tem área de trabalho
-version: 1
+version: 2
 ---
 
 O servidor do escritório não precisa de tela: ninguém se senta na frente dele. Para esse trabalho existe
-o **Ubuntu Server**, e ele é diferente em três pontos que vale conhecer antes de escolhê-lo.
+o **Ubuntu Server**, e ele é diferente em três pontos que vale conhecer antes de escolhê-lo. É também o sistema
+que você instalou na aula 1, numa máquina virtual, então os três vão parecer conhecidos.
 
 **O instalador é em texto.** As mesmas perguntas do Desktop (idioma, teclado, rede, disco, conta),
 respondidas com as setas e o Enter. Parece antiquado e é mais rápido.

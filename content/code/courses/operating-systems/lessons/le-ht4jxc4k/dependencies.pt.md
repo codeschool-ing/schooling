@@ -1,10 +1,15 @@
 ---
 title: Dependências: pedir um, receber cinco
-version: 1
+version: 2
 ---
 
 A maioria dos programas é construída sobre outros. A aula 8 descobriu que o leitor de manuais não estava
-neste servidor; instalá-lo mostra para que serve um gerenciador de pacotes:
+no servidor em que estas transcrições foram gravadas; instalá-lo mostra para que serve um gerenciador de
+pacotes.
+
+**O seu servidor já o tem**, porque a instalação padrão o inclui, então lá este comando responde que o
+`man-db` já está na versão mais nova. Leia a transcrição aqui e digite o comando você mesmo depois da
+próxima seção, que remove o `man-db`, para ver a sua própria lista chegar:
 
 ```
 ana@server:~$ sudo apt install -y man-db
