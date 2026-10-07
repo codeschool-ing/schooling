@@ -120,6 +120,15 @@ class Fig:
             f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" '
             f'fill="{col(fill)}" stroke="{col(stroke)}" stroke-width="{width}"{extra}></rect>')
 
+    def bar(self, x, y, w, h, stroke='--phosphor', fill='--phosphor-dim', width=1.2, rx=0,
+            opacity=None):
+        """A data bar, drawn as a path: a mark of the chart rather than a box to put things in,
+        so a gridline behind it is not a line through a box."""
+        op = f' fill-opacity="{opacity}"' if opacity is not None else ''
+        self.parts.append(
+            f'<path d="M{x:.1f} {y:.1f} h{w:.1f} v{h:.1f} h{-w:.1f} Z" fill="{col(fill)}" '
+            f'stroke="{col(stroke)}" stroke-width="{width}"{op}></path>')
+
     def circle(self, x, y, r, fill='--phosphor', stroke=None, width=1.2, opacity=None):
         st = f' stroke="{col(stroke)}" stroke-width="{width}"' if stroke else ''
         op = f' fill-opacity="{opacity}"' if opacity is not None else ''

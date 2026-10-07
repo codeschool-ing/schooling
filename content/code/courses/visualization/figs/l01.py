@@ -41,7 +41,7 @@ def l01_anatomy(lang):
     p = Plot(f, 120, 40, 430, 220, 0, 80, 0, 5)
     for i, r in enumerate(order):
         y = 50 + i * 34
-        f.rect(p.sx(0), y, p.sx(t[r] / 1000) - p.sx(0), 22, stroke='--phosphor',
+        f.bar(p.sx(0), y, p.sx(t[r] / 1000) - p.sx(0), 22, stroke='--phosphor',
                fill='--phosphor-dim', rx=1)
         f.text(p.x0 - 8, y + 11, REGION[lang][r], size=10, anchor='end')
     p.xaxis(range(0, 81, 20), label=w['x'])
@@ -104,7 +104,7 @@ def l01_six_ways(lang):
         elif k == 1:
             for i, v in enumerate(vals):
                 y = cy0 + 32 + i * 19
-                f.rect(cx0 + 24, y, 160 * v / top, 13, stroke='--phosphor', fill='--phosphor-dim',
+                f.bar(cx0 + 24, y, 160 * v / top, 13, stroke='--phosphor', fill='--phosphor-dim',
                        rx=1)
                 f.text(cx0 + 14, y + 7, str(i + 1), size=9, mono=True, fill='--paper-dim')
         elif k == 2:

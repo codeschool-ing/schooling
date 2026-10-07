@@ -49,8 +49,8 @@ def l02_ranking(lang):
                 f.line(bx, y + 10, bx + 60, y + 10, stroke='--paper-dim', width=1)
                 f.circle(bx + v * 0.6, y + 10, 4, fill='--phosphor')
         elif i == 2:
-            f.rect(x0, y - 8, 60, 7, stroke='--phosphor', fill='--phosphor-dim', rx=1)
-            f.rect(x0, y + 4, 38, 7, stroke='--phosphor', fill='--phosphor-dim', rx=1)
+            f.bar(x0, y - 8, 60, 7, stroke='--phosphor', fill='--phosphor-dim', rx=1)
+            f.bar(x0, y + 4, 38, 7, stroke='--phosphor', fill='--phosphor-dim', rx=1)
             f.wedge(x0 + 110, y + 1, 13, 0, 70, fill='--phosphor-dim', stroke='--phosphor', width=1)
         elif i == 3:
             f.circle(x0 + 15, y + 1, 12, fill='--phosphor-dim', stroke='--phosphor')
@@ -101,7 +101,7 @@ def l02_pie_vs_bar(lang):
     p = Plot(f, 400, 30, 640, 220, 0, 450, 0, 6)
     for i, (name, v) in enumerate(cats):
         y = 34 + i * 31
-        f.rect(p.sx(0), y, p.sx(v) - p.sx(0), 20, stroke='--phosphor', fill='--phosphor-dim', rx=1)
+        f.bar(p.sx(0), y, p.sx(v) - p.sx(0), 20, stroke='--phosphor', fill='--phosphor-dim', rx=1)
         f.text(p.x0 - 8, y + 10, CATEGORY[lang][name], size=10, anchor='end')
         f.text(p.sx(v) + 5, y + 10, str(v), size=9.5, anchor='start', mono=True,
                fill='--paper-dim')
