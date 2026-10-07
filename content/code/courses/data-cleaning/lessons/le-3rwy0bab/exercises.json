@@ -1,0 +1,672 @@
+[
+  {
+    "id": "ex-82506zb0",
+    "version": 1,
+    "section": "exact-duplicates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The customer file has 2,413 rows and 2,376 distinct rows. How many extra copies does it hold?",
+    "hint": "Rows less distinct rows.",
+    "value": 37,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rgjyp15e",
+    "version": 1,
+    "section": "exact-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is it safe to remove the customer file's exact duplicates without asking anybody?",
+    "hint": "Look at what repeats.",
+    "choices": [
+      {
+        "text": "pandas removes only rows it can prove are copies",
+        "correct": false,
+        "why": "`drop_duplicates` compares values; the judgement that equal values mean one thing is yours."
+      },
+      {
+        "text": "The CRM team asked for them to be removed",
+        "correct": false,
+        "why": "Nobody asked; the evidence is in the rows."
+      },
+      {
+        "text": "The copies share the id and every other column",
+        "correct": true,
+        "why": "Right. One customer counted twice, not two customers who look alike."
+      },
+      {
+        "text": "Duplicates never carry information of their own",
+        "correct": false,
+        "why": "Two identical orders could be a real repeat purchase; ids decide here."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqaepawf",
+    "version": 1,
+    "section": "exact-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `row_number() OVER (PARTITION BY order_id ...)` give that `SELECT DISTINCT` cannot?",
+    "hint": "Which copy survives?",
+    "choices": [
+      {
+        "text": "A chosen copy to keep",
+        "correct": true,
+        "why": "Right. With an `ORDER BY` in the window, you decide which copy is number 1."
+      },
+      {
+        "text": "A faster removal of identical rows on large tables",
+        "correct": false,
+        "why": "Speed is not the difference; choice is."
+      },
+      {
+        "text": "A count of how many distinct orders the file contains",
+        "correct": false,
+        "why": "`count(DISTINCT order_id)` gives that directly."
+      },
+      {
+        "text": "The removal of orders with no customer",
+        "correct": false,
+        "why": "Orphans are a different problem, for lesson 11."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhw3krk5",
+    "version": 1,
+    "section": "same-key-different-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A product code appears twice in the catalogue with two prices. Why not just drop one copy?",
+    "hint": "Which price would survive?",
+    "choices": [
+      {
+        "text": "Product codes cannot be compared as text",
+        "correct": false,
+        "why": "They compare fine; the prices disagree."
+      },
+      {
+        "text": "Both rows are needed to keep the file's row count stable",
+        "correct": false,
+        "why": "A row count is not a reason to keep a contradiction."
+      },
+      {
+        "text": "Dropping is only allowed in pandas, never in SQL",
+        "correct": false,
+        "why": "Both tools can drop; the question is which row."
+      },
+      {
+        "text": "It would pick a price at random",
+        "correct": true,
+        "why": "Right. It is a contradiction to resolve, with a date the file lacks."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjfnhz6m",
+    "version": 1,
+    "section": "same-key-different-values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What would turn the catalogue's repeated codes into a usable price history?",
+    "hint": "Each price applies from when?",
+    "choices": [
+      {
+        "text": "A second product code for the new price",
+        "correct": false,
+        "why": "That would split one product's sales across two codes."
+      },
+      {
+        "text": "A date from which each price applies",
+        "correct": true,
+        "why": "Right. Then each order line joins to the price in force on its day."
+      },
+      {
+        "text": "The average of the two prices",
+        "correct": false,
+        "why": "No order was ever charged that."
+      },
+      {
+        "text": "Sorting the file by price",
+        "correct": false,
+        "why": "Sorting says which is higher, not which is current."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4fqspk4",
+    "version": 1,
+    "section": "same-key-different-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sugar is listed at R$ 12.90 and R$ 134.90. Why does the lesson suspect a typo rather than a price change?",
+    "hint": "Compare with the other two changes.",
+    "choices": [
+      {
+        "text": "A rise of more than ten times for a kilo of sugar is implausible",
+        "correct": true,
+        "why": "Right; the other two changes are a few percent. Lesson 9 follows it into the orders."
+      },
+      {
+        "text": "Sugar is not sold by the kilo",
+        "correct": false,
+        "why": "The product is `Açúcar mascavo 1 kg`."
+      },
+      {
+        "text": "The higher price appears first in the file",
+        "correct": false,
+        "why": "The listing was ordered by price; position says nothing."
+      },
+      {
+        "text": "Typos only ever add a digit at the end",
+        "correct": false,
+        "why": "A typo can be anywhere; the evidence here is the size."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4314r7t",
+    "version": 1,
+    "section": "the-same-person-twice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `plain('  MARIANA  Souza')` return?",
+    "hint": "Case, spaces and accents collapse.",
+    "choices": [
+      {
+        "text": "`'MARIANA SOUZA'`",
+        "correct": false,
+        "why": "The function lower-cases."
+      },
+      {
+        "text": "`'mariana  souza'`",
+        "correct": false,
+        "why": "Runs of spaces collapse to one."
+      },
+      {
+        "text": "`'  mariana  souza'`",
+        "correct": false,
+        "why": "Leading spaces go too."
+      },
+      {
+        "text": "`'mariana souza'`",
+        "correct": true,
+        "why": "Right: lower case, one space, none at the ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-q162kqpw",
+    "version": 1,
+    "section": "the-same-person-twice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "262 records share a plain name with an earlier one. Why is that not 262 duplicates?",
+    "hint": "Think of the five Alices.",
+    "choices": [
+      {
+        "text": "Plain names lose letters that told people apart",
+        "correct": false,
+        "why": "Accents rarely separate people; the Alices are identical even with them."
+      },
+      {
+        "text": "Many different people share a name",
+        "correct": true,
+        "why": "Right. Five Alice Pereiras in two cities with four addresses."
+      },
+      {
+        "text": "The 37 exact duplicates are counted inside the 262",
+        "correct": false,
+        "why": "They were dropped before the keys were built."
+      },
+      {
+        "text": "Names were randomised by the lab and mean nothing",
+        "correct": false,
+        "why": "Real files have homonyms too; that is why the lab has them."
+      }
+    ]
+  },
+  {
+    "id": "ex-r000rg56",
+    "version": 1,
+    "section": "the-same-person-twice",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fields help decide that two customer records are one person? Choose all that apply.",
+    "hint": "Strong evidence is rarely shared by strangers.",
+    "choices": [
+      {
+        "text": "The e-mail address, trimmed and lower-cased",
+        "correct": true,
+        "why": "Yes, strong when present."
+      },
+      {
+        "text": "The CEP as eight digits",
+        "correct": true,
+        "why": "Yes, strong together with a similar name."
+      },
+      {
+        "text": "The signup channel",
+        "correct": false,
+        "why": "A duplicate signs up in another channel by definition; it separates rather than links."
+      },
+      {
+        "text": "The name in plain form",
+        "correct": true,
+        "why": "Yes, as a narrower, never alone."
+      },
+      {
+        "text": "The marketing consent",
+        "correct": false,
+        "why": "Half the customers share each answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtj14sqg",
+    "version": 1,
+    "section": "similarity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fuzz.ratio('ana lima', 'lima ana')` printed 50.0. What did `token_sort_ratio` print for the same pair?",
+    "hint": "It sorts the words first.",
+    "value": 100,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yxsj4ckj",
+    "version": 1,
+    "section": "similarity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two names score 85 with `token_sort_ratio`. What does 85 mean?",
+    "hint": "It is a measure of strings, not of people.",
+    "choices": [
+      {
+        "text": "There is an 85% chance they are the same person",
+        "correct": false,
+        "why": "A similarity score is not a probability."
+      },
+      {
+        "text": "85 characters were compared",
+        "correct": false,
+        "why": "The score is a percentage, not a count."
+      },
+      {
+        "text": "The strings are 85% alike by that measure",
+        "correct": true,
+        "why": "Right. Whether that is enough is decided by checking pairs."
+      },
+      {
+        "text": "The records should be merged automatically",
+        "correct": false,
+        "why": "The lesson found 491 strangers above 85."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdybxchj",
+    "version": 1,
+    "section": "similarity",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field to the comparison that fits it.",
+    "hint": "How does the field go wrong?",
+    "pairs": [
+      {
+        "left": "A person's name",
+        "right": "`token_sort_ratio`"
+      },
+      {
+        "left": "A product code",
+        "right": "`ratio`"
+      },
+      {
+        "left": "An e-mail address in plain form",
+        "right": "Exact equality"
+      }
+    ],
+    "right_distractors": [
+      "The average of all three"
+    ]
+  },
+  {
+    "id": "ex-x9qk535v",
+    "version": 1,
+    "section": "blocking",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Blocking compared 46,299 of 2,821,500 possible pairs. What percentage is that? Give one decimal place.",
+    "hint": "46,299 ÷ 2,821,500 × 100.",
+    "value": 1.6,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-z0mkapj1",
+    "version": 1,
+    "section": "blocking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six real duplicates were never compared. Why?",
+    "hint": "Look at `Babrosa` and `Barbosa`.",
+    "choices": [
+      {
+        "text": "A typo in the surname put them in different blocks",
+        "correct": true,
+        "why": "Right; that is the price of blocking."
+      },
+      {
+        "text": "Their names scored under 85",
+        "correct": false,
+        "why": "They were never scored at all."
+      },
+      {
+        "text": "They had no e-mail address",
+        "correct": false,
+        "why": "The e-mail plays no part in choosing the block."
+      },
+      {
+        "text": "The truth file lists them by mistake",
+        "correct": false,
+        "why": "They are real: the generator mistyped one copy on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmz107x6",
+    "version": 1,
+    "section": "blocking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How would Ana catch duplicates whose surname was mistyped, without comparing every pair?",
+    "hint": "Each pass is cheap.",
+    "choices": [
+      {
+        "text": "Lower the name threshold from 85 to 60",
+        "correct": false,
+        "why": "The pairs were never compared, so no threshold reaches them."
+      },
+      {
+        "text": "Block on the first name instead",
+        "correct": false,
+        "why": "That trades this miss for typos in first names."
+      },
+      {
+        "text": "A second blocking pass on another key, such as the CEP",
+        "correct": true,
+        "why": "Right, then combine the candidates of both passes."
+      },
+      {
+        "text": "Correct all surnames by hand first",
+        "correct": false,
+        "why": "By hand is the comparison of everything, done slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xc1z1ty",
+    "version": 1,
+    "section": "deciding-a-match",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Matching on identical names alone found 41 real duplicates. What else did it do?",
+    "hint": "Count the wrong ones.",
+    "choices": [
+      {
+        "text": "Missed every duplicate with an accent",
+        "correct": false,
+        "why": "Accents were removed by the plain form."
+      },
+      {
+        "text": "Found all 58 real duplicates",
+        "correct": false,
+        "why": "It found 41."
+      },
+      {
+        "text": "Nothing else; identical names are safe",
+        "correct": false,
+        "why": "Homonyms are common, as the Alices show."
+      },
+      {
+        "text": "Merged 259 pairs of different people",
+        "correct": true,
+        "why": "Right: six times more wrong than right."
+      }
+    ]
+  },
+  {
+    "id": "ex-382nqq1q",
+    "version": 1,
+    "section": "deciding-a-match",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Loosening the name rule from identical to 85 found 7 more real duplicates and added how many wrong merges?",
+    "hint": "491 − 259.",
+    "value": 232,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pkvmg951",
+    "version": 1,
+    "section": "deciding-a-match",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which rule gave 48 right matches and 1 wrong?",
+    "hint": "The name narrows; the identifier confirms.",
+    "choices": [
+      {
+        "text": "Identical names",
+        "correct": false,
+        "why": "41 right, 259 wrong."
+      },
+      {
+        "text": "A similar name plus a shared e-mail or CEP",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Names at least 85 alike",
+        "correct": false,
+        "why": "48 right, 491 wrong."
+      },
+      {
+        "text": "A shared signup channel",
+        "correct": false,
+        "why": "Not a rule the lesson tried, and a weak one."
+      }
+    ]
+  },
+  {
+    "id": "ex-y872q9n1",
+    "version": 1,
+    "section": "deciding-a-match",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One wrong match shares name and e-mail with its pair, and the truth file says they are two people. What is the right response?",
+    "hint": "Nothing in the data separates them.",
+    "choices": [
+      {
+        "text": "Keep merges reversible and measure the residue",
+        "correct": true,
+        "why": "Right. Every matcher has a residue; a mapping file makes it fixable."
+      },
+      {
+        "text": "Stop matching on e-mail addresses entirely",
+        "correct": false,
+        "why": "That would lose most of the real duplicates to avoid one error."
+      },
+      {
+        "text": "Raise the name threshold to 100",
+        "correct": false,
+        "why": "Their names are already identical."
+      },
+      {
+        "text": "Delete both records",
+        "correct": false,
+        "why": "Two real customers would disappear."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1vk91y3",
+    "version": 1,
+    "section": "merging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which id survives a merge in Ana's rules?",
+    "hint": "Ids are given in signup order.",
+    "choices": [
+      {
+        "text": "The one with more orders",
+        "correct": false,
+        "why": "A reasonable rule, but not Ana's."
+      },
+      {
+        "text": "The one with an e-mail address",
+        "correct": false,
+        "why": "That is a field choice, not the id rule."
+      },
+      {
+        "text": "The earliest",
+        "correct": true,
+        "why": "Right: the first account, with the longer history."
+      },
+      {
+        "text": "The most recent",
+        "correct": false,
+        "why": "That would move the older history onto a new id."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7nbm6tx",
+    "version": 1,
+    "section": "merging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Ana write the merges to `survivors.csv` instead of overwriting ids in place?",
+    "hint": "Think about next year.",
+    "choices": [
+      {
+        "text": "Overwriting ids is not possible in pandas",
+        "correct": false,
+        "why": "`replace` did exactly that in memory."
+      },
+      {
+        "text": "Anyone checks, reverses or reapplies it",
+        "correct": true,
+        "why": "Right. The whole decision in one readable file."
+      },
+      {
+        "text": "A CSV file is smaller than a database table",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "The orders file must not be read again after the merge",
+        "correct": false,
+        "why": "The mapping is meant to be applied to every new read."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxxnyhtc",
+    "version": 1,
+    "section": "merging",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of record matching in order.",
+    "hint": "Cheap before expensive, decision before data.",
+    "items": [
+      "Bring names, e-mails and CEPs to a plain form",
+      "Block records on a shared key",
+      "Score each pair inside a block",
+      "Choose a rule and measure its mistakes",
+      "Write the survivors to a mapping file"
+    ],
+    "trap": "Blocking before the plain form puts `Souza` and `SOUZA` in different blocks."
+  },
+  {
+    "id": "ex-xcjcgh14",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Only 2 orders changed owner after 49 merges. What does that say?",
+    "hint": "What happened to most second accounts?",
+    "choices": [
+      {
+        "text": "The merge failed on most records",
+        "correct": false,
+        "why": "49 mappings were written; few had orders to move."
+      },
+      {
+        "text": "Orders were already merged by the website",
+        "correct": false,
+        "why": "The website knows nothing of the CRM's duplicates."
+      },
+      {
+        "text": "Duplicates cannot place orders",
+        "correct": false,
+        "why": "They can; these mostly did not."
+      },
+      {
+        "text": "Most second accounts were opened and never used",
+        "correct": true,
+        "why": "Right. The merge matters for customer counts more than for orders here."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0x3atce",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each case to the treatment it needs.",
+    "hint": "Exact, contradiction, or identity.",
+    "pairs": [
+      {
+        "left": "The same order row twice",
+        "right": "Keep one copy"
+      },
+      {
+        "left": "A product code with two prices",
+        "right": "Find the date each applies"
+      },
+      {
+        "left": "One person with two accounts",
+        "right": "Match, then map to a survivor"
+      }
+    ],
+    "right_distractors": [
+      "Delete both rows"
+    ]
+  }
+]

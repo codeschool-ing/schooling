@@ -561,6 +561,54 @@ def l03_ceiling(lang):
                  'de pedidos, tudo à direita da linha é simplesmente um vazio.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 5
+
+def plain(text):
+    text = unicodedata.normalize('NFKD', text)
+    text = ''.join(ch for ch in text if not unicodedata.combining(ch))
+    return ' '.join(text.lower().split())
+
+
+@figure('l05-blocking', 5)
+def l05_blocking(lang):
+    seen, people = set(), []
+    for r in rows('raw/customers.csv'):
+        key = tuple(r.values())
+        if key not in seen:
+            seen.add(key)
+            people.append(r)
+    n = len(people)
+    allp = n * (n - 1) // 2
+    blocks = collections.Counter(plain(r['name']).split()[-1] for r in people)
+    within = sum(k * (k - 1) // 2 for k in blocks.values())
+    fig = Fig('l05-blocking', 720, 340, {
+        'en': f'Two squares drawn to scale by area. The large one is every possible pair of the {n} '
+              f'customers, {allp:,}. The small one in its corner is the {within:,} pairs that share a '
+              f'surname, the only ones compared: {100 * within / allp:.1f}% of the work.',
+        'pt': f'Dois quadrados em escala de área. O grande é todo par possível dos {n} clientes, '
+              f'{num(lang, allp, 0)}. O pequeno no canto é o dos {num(lang, within, 0)} pares que '
+              f'compartilham sobrenome, os únicos comparados: {num(lang, 100 * within / allp, 1)}% do '
+              'trabalho.'}[lang])
+    side = 260
+    small = side * math.sqrt(within / allp)
+    x0, y0 = 60, 40
+    fig.rect(x0, y0, side, side, stroke='--wire', fill='--scan', rx=0)
+    fig.rect(x0, y0 + side - small, small, small, stroke='--phosphor', fill='--phosphor-dim', rx=0)
+    t = {'en': (f'every pair: {allp:,}', 'compared each with each', f'same surname: {within:,}',
+                f'{len(blocks)} blocks, one per surname'),
+         'pt': (f'todo par: {num(lang, allp, 0)}', 'comparados cada um com cada um',
+                f'mesmo sobrenome: {num(lang, within, 0)}', f'{len(blocks)} blocos, um por sobrenome')}[lang]
+    fig.text(390, 90, t[0], size=13, anchor='start', weight='600')
+    fig.text(390, 110, t[1], size=11, anchor='start', fill='--paper-dim')
+    fig.text(390, 245, t[2], size=13, anchor='start', weight='600', fill='--phosphor')
+    fig.text(390, 265, t[3], size=11, anchor='start', fill='--paper-dim')
+    cap = {'en': 'Blocking compares only records that already share something. The price is every real pair '
+                 'that does not share it.',
+           'pt': 'Bloquear compara só registros que já compartilham alguma coisa. O preço é todo par real que '
+                 'não compartilha.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
