@@ -8,7 +8,7 @@ Três comandos fazem quase tudo: o **`pwd`** diz onde você está, o `ls` lista 
 
 Esta aula anda pela pasta do escritório, e você precisa da mesma para acompanhar. Cole isto no seu
 servidor. A primeira linha apaga o `office` da aula 1, para que o seu tenha exatamente o que estas
-transcrições mostram; o resto cria três pastas, quatro arquivos e um arquivo oculto, e a última linha
+transcrições mostram. O resto cria três pastas, quatro arquivos e um arquivo oculto, e a última linha
 data todos de 1º de setembro de 2026, para que uma listagem mostre as mesmas datas daqui:
 
 ```sh

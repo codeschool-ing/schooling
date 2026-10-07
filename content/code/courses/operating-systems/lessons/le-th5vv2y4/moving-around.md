@@ -8,7 +8,7 @@ Three commands do almost all of it: **`pwd`** says where you are, `ls` lists wha
 
 This lesson walks around the office's folder, and you need the same one to follow it. Paste this on
 your server. The first line removes lesson 1's `office`, so that yours holds exactly what these
-transcripts show; the rest makes three folders, four files and one hidden file, and the last line
+transcripts show. The rest makes three folders, four files and one hidden file, and the last line
 dates them all 1 September 2026, so that a listing shows the same dates as the ones here:
 
 ```sh
