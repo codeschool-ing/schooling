@@ -168,8 +168,8 @@ def t03_impact():
     scale = 680 / total
     for i, (name, v) in enumerate(lines):
         w = v * scale
-        f.rect(x, 60, w - 3, 50, stroke=None, fill='--amber' if v == 100000 else '--phosphor-dim', rx=2)
-        f.text(x + w / 2, 85, T(f'{v // 1000}k', f'{v // 1000} mil'), size=9.5, weight='600')
+        f.rect(x, 60, w - 3, 50, stroke=None if v == 100000 else '--phosphor', fill='--amber' if v == 100000 else '--panel', width=1.4, rx=2)
+        f.text(x + w / 2, 85, T(f'{v // 1000}k', f'{v // 1000} mil'), size=9.5, weight='600', fill='--ink' if v == 100000 else '--paper')
         f.text(x + w / 2, 128 + (i % 2) * 16, name, size=9.5, fill='--paper-dim')
         x += w
     f.text(360, 36, T('one event of T03, in thousands of reais', 'um evento da T03, em milhares de reais') + ': ' + money(total), size=11, weight='600')

@@ -143,9 +143,9 @@ def matrix():
     for l in range(1, 6):
         for i in range(1, 6):
             score = l * i
-            fill = '--amber' if score >= 12 else '--phosphor-dim' if score >= 6 else '--panel'
+            fill = '--amber' if score >= 12 else '--panel'
             x, y = x0 + (l - 1) * cw, y0 + (5 - i) * ch
-            f.rect(x + 2, y + 2, cw - 4, ch - 4, stroke='--wire', fill=fill, width=1, rx=2)
+            f.rect(x + 2, y + 2, cw - 4, ch - 4, stroke='--phosphor' if 6 <= score < 12 else '--wire', fill=fill, width=1.6 if 6 <= score < 12 else 1, rx=2)
             f.text(x + cw - 10, y + 13, str(score), size=8.5, anchor='end', fill='--ink' if score >= 12 else '--paper-dim')
             ids = cells.get((l, i), [])
             for k, rid in enumerate(ids):
@@ -214,7 +214,7 @@ def compression():
     edges = [lo, 2_000, 10_000, 50_000, 200_000, hi]
     for b in range(5):
         a, z = X(edges[b]), X(edges[b + 1])
-        f.rect(a, 60, z - a - 2, 50, stroke=None, fill='--phosphor-dim' if b != 3 else '--phosphor', rx=2)
+        f.rect(a, 60, z - a - 2, 50, stroke='--phosphor' if b == 3 else '--wire', fill='--panel', width=2.2 if b == 3 else 1, rx=2)
         f.text((a + z) / 2, 85, T(f'band {b + 1}', f'faixa {b + 1}'), size=10, weight='600')
     for v in edges[1:-1]:
         f.text(X(v), 126, f'{v:,}' if T('en', 'pt') == 'en' else f'{v:,}'.replace(',', '.'), size=9, fill='--paper-dim')

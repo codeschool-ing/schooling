@@ -141,7 +141,7 @@ def preparation():
         f.line(x, 114, x, y + 8, stroke='--paper-dim')
         f.text(x, y, label, size=10, weight='600', anchor='start' if x < 360 else 'end')
         f.text(x, 140, date, size=9.5, fill='--paper-dim')
-    f.rect(m(10, 7), 160, m(11, 8) - m(10, 7), 22, stroke=None, fill='--phosphor-dim', rx=3)
+    f.rect(m(10, 7), 160, m(11, 8) - m(10, 7), 22, stroke='--phosphor', fill='--panel', width=1.3, rx=3)
     f.text((m(10, 7) + m(11, 8)) / 2, 171, T('fix or explain each gap; rehearse the walkthrough', 'corrigir ou explicar cada lacuna; ensaiar o walkthrough'), size=9.5)
     f.text(360, 205, T('nothing is created to look older than it is', 'nada é criado para parecer mais antigo do que é'), size=9.5, italic=True, fill='--amber')
     return f, T('Five weeks between the request and the fieldwork. Most of the value of an audit is spent in them, by the side being audited.',

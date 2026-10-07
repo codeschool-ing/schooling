@@ -31,13 +31,13 @@ def assets():
     for j, c in enumerate(cols):
         f.text(x0 + j * cw + cw / 2, 30, c, size=10.5, weight='600')
     word = {H: T('high', 'alta'), M: T('medium', 'média'), L: T('low', 'baixa')}
-    fill = {H: '--amber', M: '--phosphor-dim', L: '--panel'}
+    fill = {H: '--amber', M: '--panel', L: '--panel'}
     for i, (name, *vals) in enumerate(rows):
         y = y0 + i * rh
         f.text(x0 - 12, y + rh / 2 - 2, name, size=10.5, anchor='end')
         for j, v in enumerate(vals):
             x = x0 + j * cw
-            f.rect(x + 6, y, cw - 12, rh - 6, stroke='--wire', fill=fill[v], width=1, rx=3)
+            f.rect(x + 6, y, cw - 12, rh - 6, stroke='--phosphor' if v == M else '--wire', fill=fill[v], width=1.6 if v == M else 1, rx=3)
             f.text(x + cw / 2, y + rh / 2 - 3, word[v], size=10, weight='600' if v == H else None,
                    fill='--ink' if v == H else '--paper')
     return f, T('Two assets are high on both confidentiality and integrity, and they are the two the LGPD calls sensitive. The portal itself is an asset too, and only its availability matters.',
@@ -172,8 +172,8 @@ def crossing():
     for i, j, label, new in cells:
         x = x0 + j * cw + cw / 2
         y = y0 + i * ch + ch / 2
-        f.rect(x - 20, y - 9, 40, 18, stroke=None, fill='--amber' if new else '--phosphor-dim', rx=3)
-        f.text(x, y, label, size=9, weight='600', mono=True)
+        f.rect(x - 20, y - 9, 40, 18, stroke=None if new else '--phosphor', fill='--amber' if new else '--panel', width=1.3, rx=3)
+        f.text(x, y, label, size=9, weight='600', mono=True, fill='--ink' if new else '--paper')
     f.text(360, 320, T('amber: a crossing that found a threat nobody had listed', 'âmbar: um cruzamento que achou uma ameaça que ninguém tinha listado'), size=9.5, italic=True, fill='--paper-dim')
     return f, T('Most crossings are empty, and a few retell a known threat. The ones worth the hour are the three that told a new one.',
                 'A maioria dos cruzamentos é vazia, e alguns recontam uma ameaça conhecida. Os que valem a hora são os três que contaram uma nova.')
