@@ -18,7 +18,7 @@ exit status 2
 The first command printed the failure message and then `exit status 0`. The second printed
 `exit status 2`. Same report, same threshold, and the difference is the pipe: `| tail -1` makes the
 line's status the status of `tail`, which succeeded. **A pipeline step written like the first line
-passes with coverage below the minimum.** Lesson 1 section 11 warned about this with pytest's exit
+passes with coverage below the minimum.** Lesson 1 section 14 warned about this with pytest's exit
 status 5, and lesson 5 shows how a CI shell is configured so that it cannot happen.
 
 ## What the minimum invites

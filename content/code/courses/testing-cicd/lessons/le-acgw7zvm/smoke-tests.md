@@ -68,6 +68,6 @@ Keep it short, fast and safe to run against production:
 - **nothing that writes data** a customer could see, and nothing that costs money, such as a paid
   carrier call.
 
-The acceptance test of lesson 1 section 08, free shipping from R$ 199,00 in every region, is a good
+The acceptance test of lesson 1 section 11, free shipping from R$ 199,00 in every region, is a good
 candidate to run against staging after the smoke test: it is the promise, checked through the
 deployed program.

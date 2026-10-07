@@ -111,4 +111,4 @@ vez, até os testes que conseguem vê-las.
 Uma regra útil para decidir onde um teste fica: **teste cada regra na camada mais baixa que
 consegue observá-la.** O limite do frete grátis é aritmética, então suas bordas são testadas aqui,
 três linhas, em milissegundos. Se o cliente vê de fato "R$ 0,00" na página é outra pergunta, e a
-seção 08 a faz uma vez, no topo.
+seção 11 a faz uma vez, no topo.

@@ -110,4 +110,4 @@ code does today and calls it correct.
 The CSV is short on purpose. Its eight rows include one per zone that matters, a weight that
 crosses several bands (2600 g, five extra bands), the largest weight in the table and the
 free-shipping edge. A table with five hundred rows of ordinary cases adds run time and review time
-and catches nothing the eight do not; the edges of lesson 1 section 10 are what earn a row.
+and catches nothing the eight do not; the edges of lesson 1 section 13 are what earn a row.

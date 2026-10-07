@@ -1513,6 +1513,71 @@ EOF
   chmod +x "$dir/shipquote.git/hooks/post-receive"
 }
 
+# Every file a lesson shows WHOLE must be the file the lab runs, byte for byte.
+# A lesson marks a whole file by ending the line before the block with "as",
+# its path in backticks and a colon ("Save it as `shipquote/money.py`:"); a path that
+# starts with ~/ is under $HOME, anything else is under the project. With REF,
+# the project's files are read from that commit instead of the working tree,
+# and with SECTIONs only those sections are read. Each captures.sh calls this
+# before its first block, so a lesson cannot drift from what was run.
+shown() {
+  python3 - "$REPO" "$HOME" "$@" <<'PY'
+import json, re, subprocess, sys
+from pathlib import Path
+repo, home, lesson = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+ref = sys.argv[4] if len(sys.argv) > 4 else None
+only = set(sys.argv[5:])
+bad = seen = 0
+for md in sorted(lesson.glob("*.md")):
+    if md.name.endswith(".pt.md") or (only and md.stem not in only):
+        continue
+    lines = md.read_text().split("\n")
+    i, prev, ended = 0, "", False
+    while i < len(lines):
+        m = re.match(r"^(`{3,})(\S*)\s*$", lines[i])
+        if not m:
+            # the paragraph before the block, joined, so a label that wrapped
+            # across two lines is still read as one
+            if not lines[i].strip():
+                ended = True
+            else:
+                prev = lines[i].strip() if ended else prev + " " + lines[i].strip()
+                ended = False
+            i += 1
+            continue
+        fence, lang = m.groups()
+        j = i + 1
+        while lines[j].rstrip() != fence:
+            j += 1
+        body = "\n".join(lines[i + 1:j])
+        label = re.search(r"\bas `([~\w./-]+)`:$", prev.rstrip())
+        if label:
+            path = label.group(1)
+            if lang == "schooling-example":
+                body = "\n".join(p["code"] for p in json.loads(body)["parts"])
+            if path.startswith("~/"):
+                f = home / path[2:]
+                text = f.read_text() if f.is_file() else None
+            elif ref:
+                r = subprocess.run(["git", "-C", repo, "show", f"{ref}:{path}"],
+                                   capture_output=True, text=True)
+                text = r.stdout if r.returncode == 0 else None
+            else:
+                f = repo / path
+                text = f.read_text() if f.is_file() else None
+            seen += 1
+            if text != body + "\n":
+                print(f"shown: {md.name} shows {path}, and it is not the file the lab runs",
+                      file=sys.stderr)
+                bad += 1
+        prev = ""
+        i = j + 1
+if bad:
+    sys.exit(1)
+print(f"shown: {seen} whole files in {lesson.name} match what the lab runs", file=sys.stderr)
+PY
+}
+
 case ${1:-} in
   stage)
     n=$2; [ "$n" = last ] && n=$LAST
@@ -1523,5 +1588,6 @@ case ${1:-} in
   carrier) carrier "$2" ;;
   ci) ci "$2" ;;
   steps) steps ;;
-  *) echo "usage: lab.sh stage N|last [DIR] | venv DIR [PY] | carrier DIR | ci DIR | steps" >&2; exit 2 ;;
+  shown) shift; shown "$@" ;;
+  *) echo "usage: lab.sh stage N|last [DIR] | venv DIR [PY] | carrier DIR | ci DIR | steps | shown LESSON [REF [SECTION...]]" >&2; exit 2 ;;
 esac

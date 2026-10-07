@@ -4,7 +4,7 @@ version: 1
 ---
 
 Every test so far checks examples somebody chose: 1205 cents, 501 g, 19,900. Choosing well is the
-skill lesson 1 section 10 taught, and it has a limit: you only test the cases you thought of.
+skill lesson 1 section 13 taught, and it has a limit: you only test the cases you thought of.
 **Property-based testing** turns it round. You state a rule that must hold for every input, and a
 library generates inputs, hundreds of them, looking for one that breaks it.
 

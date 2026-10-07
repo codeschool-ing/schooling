@@ -1,13 +1,15 @@
 ---
 title: Testes funcionais
-version: 1
+version: 2
 ---
 
 Um **teste funcional** exercita a aplicação pela interface que os usuários usam, aqui HTTP, e
 confere o que volta. Ele não sabe de `freight` nem de `Store`. Sabe que um GET em `/quote` com um
 CEP e um peso precisa responder 200 e um corpo JSON com o preço formatado.
 
-Antes de automatizar, eis a mesma verificação à mão, contra o servidor rodando num notebook:
+Antes de automatizar, eis a mesma verificação à mão. O servidor sobe num segundo terminal, em
+`~/shipquote` com o ambiente ativo, com `python -m shipquote.app`; ele diz que está escutando em
+127.0.0.1:8080 e fica com o terminal até um Ctrl-C pará-lo. Do primeiro terminal:
 
 ```
 ana@laptop:~/shipquote$ curl -s 'http://127.0.0.1:8080/quote?cep=01310-100&weight=1200&subtotal=5000'; echo
@@ -98,7 +100,7 @@ tests/test_app.py::test_a_bad_cep_is_a_400_that_says_why PASSED          [100%]
 
 ## O que esta camada custa
 
-Três testes levaram 0,68 segundo, contra 0,16 de onze testes unitários. A seção 09 mede para onde o
+Três testes levaram 0,68 segundo, contra 0,16 de onze testes unitários. A seção 12 mede para onde o
 tempo vai; não são as requisições. O que importa aqui é a troca: **um teste funcional vê a ligação
 que todas as outras camadas supõem**, a rota, a leitura dos parâmetros, a codificação, o código de
 status, ao preço de ser mais lento e de apontar com menos precisão a causa quando falha. Um teste

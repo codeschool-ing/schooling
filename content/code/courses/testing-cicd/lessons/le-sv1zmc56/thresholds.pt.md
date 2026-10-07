@@ -18,7 +18,7 @@ exit status 2
 O primeiro comando imprimiu a mensagem de falha e depois `exit status 0`. O segundo imprimiu
 `exit status 2`. Mesmo relatório, mesmo limite, e a diferença é o pipe: `| tail -1` faz o código de
 saída da linha ser o do `tail`, que deu certo. **Um passo de pipeline escrito como a primeira linha
-passa com a cobertura abaixo do mínimo.** A aula 1 seção 11 avisou disso com o código 5 do pytest, e
+passa com a cobertura abaixo do mínimo.** A aula 1 seção 14 avisou disso com o código 5 do pytest, e
 a aula 5 mostra como um shell de CI é configurado para isso não acontecer.
 
 ## O que o mínimo convida

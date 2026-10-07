@@ -110,4 +110,4 @@ nada; registra o que o código faz hoje e chama isso de certo.
 O CSV é curto de propósito. As oito linhas incluem uma por zona que importa, um peso que cruza
 várias faixas (2600 g, cinco faixas extras), o maior peso da tabela e a borda do frete grátis. Uma
 tabela com quinhentas linhas de casos comuns acrescenta tempo de execução e de revisão e não pega
-nada que as oito não peguem; as bordas da aula 1 seção 10 é que merecem uma linha.
+nada que as oito não peguem; as bordas da aula 1 seção 13 é que merecem uma linha.

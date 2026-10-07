@@ -68,6 +68,6 @@ Mantenha-o curto, rápido e seguro de rodar contra a produção:
 - **nada que grave dados** que um cliente possa ver, e nada que custe dinheiro, como uma chamada paga
   à transportadora.
 
-O teste de aceitação da aula 1 seção 08, frete grátis a partir de R$ 199,00 em todas as regiões, é
+O teste de aceitação da aula 1 seção 11, frete grátis a partir de R$ 199,00 em todas as regiões, é
 um bom candidato a rodar contra a homologação depois do smoke test: é a promessa, conferida pelo
 programa implantado.

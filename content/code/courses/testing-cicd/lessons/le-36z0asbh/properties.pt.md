@@ -4,7 +4,7 @@ version: 1
 ---
 
 Todo teste até aqui confere exemplos que alguém escolheu: 1205 centavos, 501 g, 19.900. Escolher
-bem é a habilidade que a aula 1 seção 10 ensinou, e ela tem um limite: você só testa os casos em que
+bem é a habilidade que a aula 1 seção 13 ensinou, e ela tem um limite: você só testa os casos em que
 pensou. **Testes baseados em propriedades** invertem isso. Você declara uma regra que precisa valer
 para toda entrada, e uma biblioteca gera entradas, centenas delas, procurando uma que a quebre.
 
