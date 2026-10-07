@@ -418,6 +418,9 @@ either. With nothing set, it asks llama3.2:3b on this machine.
 
   ask PROMPT [options]        PROMPT, or - to read it from standard input
     --system TEXT             a system message, sent before the prompt
+    --chat FILE               send the conversation in FILE, a JSON list of
+                              {"role", "content"}; PROMPT, if given, is added
+                              as the last user turn
     --temperature T  --top-p P  --seed S  --max-tokens N
     --stop TEXT               (repeatable)
     --json                    ask for a JSON object and nothing else
@@ -466,8 +469,9 @@ def ask(messages, a, seed):
 
 def main():
     ap = argparse.ArgumentParser(prog="ask")
-    ap.add_argument("prompt")
+    ap.add_argument("prompt", nargs="?")
     ap.add_argument("--system")
+    ap.add_argument("--chat")
     ap.add_argument("--temperature", type=float)
     ap.add_argument("--top-p", type=float)
     ap.add_argument("--seed", type=int)
@@ -477,8 +481,15 @@ def main():
     ap.add_argument("--samples", type=int, default=1)
     ap.add_argument("--plain", action="store_true")
     a = ap.parse_args()
-    prompt = sys.stdin.read() if a.prompt == "-" else a.prompt
-    messages = [{"role": "user", "content": prompt}]
+    messages = []
+    if a.chat:
+        with open(a.chat, encoding="utf-8") as f:
+            messages = json.load(f)
+    elif a.prompt is None:
+        ap.error("give a PROMPT, or a conversation with --chat")
+    if a.prompt is not None:
+        prompt = sys.stdin.read() if a.prompt == "-" else a.prompt
+        messages.append({"role": "user", "content": prompt})
     if a.system:
         messages.insert(0, {"role": "system", "content": a.system})
     for i in range(a.samples):
@@ -505,9 +516,9 @@ chmod +x ~/pe/bin/ask
 
 ```
 ana@lab:~/pe$ ask "the café opens at" --temperature 0
-ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \\u0026\\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
+ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \u0026\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
 ana@lab:~/pe$ ask "When does a café usually open? Answer in one sentence." --temperature 0
-ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \\u0026\\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
+ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \u0026\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
 ```
 
 O primeiro prompt é o texto que o `toylm generate` continuou com `seven.` no começo desta lição. O modelo

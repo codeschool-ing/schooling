@@ -21,7 +21,9 @@ com `chmod +x`:
 //
 //   tok show TEXT [-e ENC]            the pieces, with their ids
 //   tok count FILE... [-e ENC]        tokens, words and characters per file
-//   tok fit CHAT.json -b BUDGET       which turns of a conversation fit
+//   tok fit CHAT.json -b BUDGET [-w OUT.json]
+//                                     which turns of a conversation fit, and
+//                                     with -w, the conversation cut to fit
 //   tok cost FILE -o OUT -i PRICE_IN -p PRICE_OUT
 //                                     what a request would cost, from prices
 //                                     per million tokens given on the line
@@ -33,7 +35,7 @@ function args(argv) {
   const a = { _: [], e: 'o200k_base' };
   for (let i = 0; i < argv.length; i++) {
     const x = argv[i];
-    if (/^-[eboip]$/.test(x)) a[x[1]] = argv[++i];
+    if (/^-[eboipw]$/.test(x)) a[x[1]] = argv[++i];
     else a._.push(x);
   }
   return a;
@@ -78,6 +80,7 @@ if (cmd === 'show') {
     console.log(`  ${mark} ${String(i + 1).padStart(2)} ${m.role.padEnd(9)} ${String(cost(m)).padStart(4)}  ${head}`);
   });
   console.log(`sent: ${used} tokens, ${kept.length} of ${turns.length} turns`);
+  if (a.w) fs.writeFileSync(a.w, JSON.stringify([system, ...kept.map((i) => turns[i])], null, 2) + '\n');
 } else if (cmd === 'cost') {
   const input = enc.encode(fs.readFileSync(rest[0], 'utf8')).length;
   const output = Number(a.o);

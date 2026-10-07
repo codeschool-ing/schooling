@@ -1,6 +1,6 @@
 ---
 title: Cutting a conversation down to fit
-version: 1
+version: 2
 ---
 
 When a conversation outgrows its budget, most people assume the model loses the details at random,
@@ -9,7 +9,7 @@ before the model sees anything, and the usual rule is to drop the oldest turns f
 that loses something important depends on where the important thing was said.
 
 Here is a short conversation with the café's assistant, as the list of messages an application
-would send:
+would send. To follow along, save it as `~/pe/chat.json`:
 
 ```
 ana@lab:~/pe$ cat chat.json
@@ -44,10 +44,11 @@ budget 200, system prompt 53
 sent: 173 tokens, 7 of 7 turns
 ```
 
-The whole conversation is 173 tokens. Now give it 120:
+The whole conversation is 173 tokens. Now give it 120, and with `-w` write what was kept to a file
+that can be sent:
 
 ```
-ana@lab:~/pe$ tok fit chat.json -b 120
+ana@lab:~/pe$ tok fit chat.json -b 120 -w sent.json
 budget 120, system prompt 53
   dropped  1 user        21  Hi, I'm Bruno. I'm allergic to nuts, s
   dropped  2 assistant   20  Thanks, Bruno. I'll keep your nut alle
@@ -65,23 +66,27 @@ sent: 98 tokens, 3 of 7 turns
 
 Four turns went, and **the first of them was the one that mattered**: Bruno is allergic to nuts.
 What the model receives now is the café's instructions, a question about public holidays, and
-"Which cake would you recommend for me?" Nothing it can see says who "me" is. Here is what a model
-might reply in each case, written by the course as an illustration:
+"Which cake would you recommend for me?" Nothing it can see says who "me" is. Send both versions
+to the model, the whole conversation and the one that was cut:
 
-```localised
-With all seven turns:
-  Our kitchen uses nuts, so I can't promise any cake is safe for your
-  allergy. Please ask the staff at the counter before you order.
-
-With only the last three turns:
-  The carrot and walnut cake is our favourite. It goes very well with
-  a flat white.
+```
+ana@lab:~/pe$ ask --chat chat.json --temperature 0
+Our lemon cake is a popular choice, and it's nut-free. Would you like to try a slice?
+-- llama3.2:3b, finish: stop, prompt 199 tokens, output 23 tokens
+ana@lab:~/pe$ ask --chat sent.json --temperature 0
+Our most popular cake is the Cinnamon Swirl, made with a rich cinnamon-spiced batter and topped with a crumbly oat and nut mixture.
+-- llama3.2:3b, finish: stop, prompt 117 tokens, output 32 tokens
 ```
 
-The second reply is polite and fluent and answers the question it was given. **Nothing failed in
-a way a log would show**: the request was valid, the model answered, the application stayed inside
-its budget. The only symptom is in the content, and only somebody who remembers the first message
-would see it.
+With the cut, it recommended a cake topped with nuts. **Nothing failed in a way a log would
+show**: the request was valid, the model answered, the application stayed inside its budget. The
+only symptom is in the content, and only somebody who remembers the first message would see it.
+
+The reply with every turn is not safe either, and it is worth reading twice. It remembered the
+allergy and promised a nut-free lemon cake: a cake the café's instructions never mention, from a
+kitchen they say uses nuts. Keeping the allergy in the window was necessary, and it was not enough.
+Lesson 5 is about the invented cake, and lesson 22 about the rule that would have stopped the
+promise.
 
 Squeeze harder and only the question survives:
 

@@ -415,6 +415,9 @@ either. With nothing set, it asks llama3.2:3b on this machine.
 
   ask PROMPT [options]        PROMPT, or - to read it from standard input
     --system TEXT             a system message, sent before the prompt
+    --chat FILE               send the conversation in FILE, a JSON list of
+                              {"role", "content"}; PROMPT, if given, is added
+                              as the last user turn
     --temperature T  --top-p P  --seed S  --max-tokens N
     --stop TEXT               (repeatable)
     --json                    ask for a JSON object and nothing else
@@ -463,8 +466,9 @@ def ask(messages, a, seed):
 
 def main():
     ap = argparse.ArgumentParser(prog="ask")
-    ap.add_argument("prompt")
+    ap.add_argument("prompt", nargs="?")
     ap.add_argument("--system")
+    ap.add_argument("--chat")
     ap.add_argument("--temperature", type=float)
     ap.add_argument("--top-p", type=float)
     ap.add_argument("--seed", type=int)
@@ -474,8 +478,15 @@ def main():
     ap.add_argument("--samples", type=int, default=1)
     ap.add_argument("--plain", action="store_true")
     a = ap.parse_args()
-    prompt = sys.stdin.read() if a.prompt == "-" else a.prompt
-    messages = [{"role": "user", "content": prompt}]
+    messages = []
+    if a.chat:
+        with open(a.chat, encoding="utf-8") as f:
+            messages = json.load(f)
+    elif a.prompt is None:
+        ap.error("give a PROMPT, or a conversation with --chat")
+    if a.prompt is not None:
+        prompt = sys.stdin.read() if a.prompt == "-" else a.prompt
+        messages.append({"role": "user", "content": prompt})
     if a.system:
         messages.insert(0, {"role": "system", "content": a.system})
     for i in range(a.samples):
