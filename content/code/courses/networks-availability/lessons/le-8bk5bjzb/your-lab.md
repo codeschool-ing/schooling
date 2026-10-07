@@ -3,9 +3,10 @@ title: Your lab, on your own computer
 version: 1
 ---
 
-This course has sixteen machines in it: a head office with two routers, a file server and a laptop; a
-branch with its router and a till; a home with its router and Ana's laptop; an ISP; a data centre with a
-DNS server, two load balancers and three web servers; and an analyst's machine for capturing traffic. **You build all of them yourself, inside one Linux
+This course has sixteen machines in it. The head office has two routers, a file server and a laptop;
+the branch has its router and a till; Ana's home has its router and her laptop. Between them is an ISP,
+behind it a data centre with a DNS server, two load balancers and three web servers, and one more
+machine belongs to an analyst who captures traffic. **You build all of them yourself, inside one Linux
 machine, and every command in every lesson is typed there.** Nothing runs on a computer we host.
 
 They are not twenty virtual machines. Each one is a **network namespace**: a copy of the Linux network
@@ -31,8 +32,8 @@ computer you use every day is not.
 
 **The virtual machine** is the recommended path because it costs nothing and goes away with one
 command. Multipass uses the hypervisor each system already has: Hyper-V on Windows, the macOS
-virtualisation framework on a Mac, KVM on Linux. Any other hypervisor works too, with the Ubuntu Server
-24.04 installer image and half an hour of installer screens: VirtualBox on Windows, Linux or an Intel
+virtualisation framework on a Mac, KVM on Linux. Any other hypervisor works too, at the price of the Ubuntu
+Server 24.04 installer image and half an hour of its screens: VirtualBox on Windows, Linux or an Intel
 Mac, UTM on an Apple-silicon Mac, Hyper-V Manager on Windows, GNOME Boxes or virt-manager on Linux.
 
 **Online** is named so that you know it exists. Any provider's smallest Ubuntu 24.04 server is enough.

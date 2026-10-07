@@ -3,10 +3,10 @@ title: O seu laboratório, no seu computador
 version: 1
 ---
 
-Este curso tem dezesseis máquinas: uma matriz com dois roteadores, um servidor de arquivos e um laptop;
-uma filial com o roteador dela e um caixa; uma casa com o roteador dela e o laptop da Ana; um provedor;
-um data center com um servidor DNS, dois balanceadores de carga e três servidores web; e uma máquina de
-analista para capturar tráfego. **Você monta todas elas, dentro de uma máquina Linux, e cada comando de
+Este curso tem dezesseis máquinas. A matriz tem dois roteadores, um servidor de arquivos e um laptop; a
+filial tem o roteador dela e um caixa; a casa da Ana tem o roteador dela e o laptop dela. Entre elas há
+um provedor, atrás dele um data center com um servidor DNS, dois balanceadores de carga e três servidores
+web, e mais uma máquina é de um analista que captura tráfego. **Você monta todas elas, dentro de uma máquina Linux, e cada comando de
 cada aula é digitado lá.** Nada roda num computador nosso.
 
 Não são dezesseis máquinas virtuais. Cada uma é um **namespace de rede**: uma cópia da pilha de rede do
