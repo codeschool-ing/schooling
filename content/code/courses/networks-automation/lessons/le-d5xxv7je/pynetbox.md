@@ -1,7 +1,14 @@
 ---
 title: NetBox from Python
-version: 1
+version: 2
 ---
+
+The scripts of this lesson live in `~/sot` on `ctl`. Two files come unchanged from lesson 10's
+`~/tpl`, the template and `push.py`, and are copied in at the start:
+
+```
+ana@ctl:~$ mkdir -p sot/inventory sot/templates && cp tpl/templates/frr.j2 sot/templates/ && cp tpl/push.py sot/
+```
 
 `pynetbox` wraps the API in Python objects: an endpoint is an attribute, a filter is a method, a
 result is an object whose fields are attributes. Every script in this lesson connects through one
@@ -67,7 +74,7 @@ edge2  site=branch-2  platform=frr  mgmt=192.0.2.13/24
 Two things in that output are NetBox's model at work. `device.site.slug` followed a link from the
 device to its site without another line of code; pynetbox fetched what was needed. And
 `primary_ip4` is NetBox's answer to the question "which address do I use to reach this device",
-which is the management address on `eth0`. Section 07 uses exactly that to build an inventory.
+which is the management address on `eth0`. Section 08 uses exactly that to build an inventory.
 
 **Each loop is a request per device**, and that is worth noticing before it is three thousand
 devices. NetBox's filters take lists, `device_id=[1, 2, 3]`, so the addresses of every router can

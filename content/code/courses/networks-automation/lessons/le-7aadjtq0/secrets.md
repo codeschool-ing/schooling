@@ -1,12 +1,18 @@
 ---
 title: Secrets in a repository
-version: 1
+version: 2
 ---
 
 A playbook directory lives in Git, and lesson 14 runs it from a pipeline. **Passwords and tokens
 cannot be in it as text**, and they have to be somewhere the playbook can read. Ansible's answer is
 **Vault**: a value or a whole file encrypted with a vault password, decrypted in memory when the
 playbook runs.
+
+The vault password is a random string in a file only `ana` can read, made once:
+
+```
+ana@ctl:~$ head -c 24 /dev/urandom | base64 > ~/.vault-pass; chmod 600 ~/.vault-pass
+```
 
 The service desk's token from lesson 7, encrypted as a variable:
 

@@ -1,6 +1,6 @@
 ---
 title: Data apart from the template
-version: 1
+version: 2
 ---
 
 The three routers in the lab have configurations that are nearly the same. Each has a hostname, two
@@ -24,6 +24,57 @@ every router has, a timeout or a logging level, means editing the template once 
 again. **And a configuration typed by hand on one router stops being the truth**: the truth is the
 data and the template, and the router is expected to match what they render. Lesson 11 compares the
 two every night; lesson 12 moves the data into NetBox.
+
+The data, in this lesson, is a directory in `ana`'s home on `ctl`, `~/tpl/data`, with one file
+per router, and the templates go beside it in `~/tpl/templates`. Make both with
+`mkdir -p ~/tpl/data ~/tpl/templates`, and save the three data files; they are short because they
+hold only what differs. `data/core1.yaml`:
+
+```yaml
+hostname: core1
+loopback: 203.0.113.251
+interfaces:
+  - name: eth1
+    description: link to edge1
+    address: 198.51.100.1/30
+    ospf: point-to-point
+  - name: eth2
+    description: link to edge2
+    address: 198.51.100.5/30
+    ospf: point-to-point
+```
+
+`data/edge1.yaml`:
+
+```yaml
+hostname: edge1
+loopback: 203.0.113.252
+interfaces:
+  - name: eth1
+    description: uplink to core1
+    address: 198.51.100.2/30
+    ospf: point-to-point
+  - name: eth2
+    description: branch LAN
+    address: 203.0.113.1/26
+    ospf: passive
+```
+
+`data/edge2.yaml`:
+
+```yaml
+hostname: edge2
+loopback: 203.0.113.253
+interfaces:
+  - name: eth1
+    description: uplink to core1
+    address: 198.51.100.6/30
+    ospf: point-to-point
+  - name: eth2
+    description: branch LAN
+    address: 203.0.113.65/26
+    ospf: passive
+```
 
 The template language here is **Jinja2**, the one Python's network tools share. Ansible's
 `template` module renders Jinja2, a Nornir plugin does, NetBox uses it for configuration

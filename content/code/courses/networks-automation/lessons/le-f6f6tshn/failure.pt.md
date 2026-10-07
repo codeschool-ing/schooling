@@ -1,10 +1,12 @@
 ---
 title: Um backup que falhou tem que dizer isso
-version: 1
+version: 2
 ---
 
 Para a execução seguinte, o servidor SSH do edge2 foi parado, do jeito que um roteador para de
-responder depois de um crash, de uma ACL errada ou de uma chave trocada:
+responder depois de um crash, de uma ACL errada ou de uma chave trocada. Para fazer o mesmo, pare-o
+a partir da máquina virtual com `sudo ~/netlab/netlab.sh enter edge2 root 'kill $(cat /run/sshd-edge2.pid)'`,
+e ligue-o de novo depois com `sudo ~/netlab/netlab.sh enter edge2 root '/usr/sbin/sshd -f /etc/ssh/sshd_config'`:
 
 ```
 ana@ctl:~$ cd net && python backup.py; echo "exit status $?"
@@ -25,4 +27,4 @@ o log toda manhã, ou seja, para ninguém.
 
 Os outros dois roteadores tiveram backup mesmo assim; o Nornir roda cada host independentemente
 dos outros, como a aula 8 mostrou. O servidor SSH do edge2 foi iniciado de novo depois desta
-execução.
+execução, com o segundo comando acima.

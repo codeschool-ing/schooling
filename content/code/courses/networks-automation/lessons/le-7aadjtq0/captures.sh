@@ -13,8 +13,9 @@
 # desk is deskd, written for the lab.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; ~/.vault-pass, a random string only ana can
-# read; and the files ana wrote (put below), whose contents the lesson shows.
+# itself, built by lab.sh reset; the empty ~/net, which the lesson tells the
+# student to make; and the files ana wrote (put below), whose contents the
+# lesson shows. ~/.vault-pass is typed, in secrets.md.
 # The vault ciphertext differs on every run, because encryption is salted.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -54,7 +55,8 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
-lab exec ctl ana 'head -c 24 /dev/urandom | base64 > .vault-pass; chmod 600 .vault-pass; mkdir -p net'
+lab exec ctl ana 'mkdir -p net'
+on ctl 'head -c 24 /dev/urandom | base64 > ~/.vault-pass; chmod 600 ~/.vault-pass'
 
 put net/ansible.cfg <<'CODE'
 [defaults]

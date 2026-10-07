@@ -1,7 +1,14 @@
 ---
 title: NetBox a partir do Python
-version: 1
+version: 2
 ---
+
+Os scripts desta aula ficam em `~/sot` no `ctl`. Dois arquivos vêm sem mudança do `~/tpl` da aula
+10, o template e o `push.py`, e são copiados logo no começo:
+
+```
+ana@ctl:~$ mkdir -p sot/inventory sot/templates && cp tpl/templates/frr.j2 sot/templates/ && cp tpl/push.py sot/
+```
 
 O `pynetbox` embrulha a API em objetos Python: um endpoint é um atributo, um filtro é um método, um
 resultado é um objeto cujos campos são atributos. Todo script desta aula se conecta por um módulo
@@ -67,7 +74,7 @@ edge2  site=branch-2  platform=frr  mgmt=192.0.2.13/24
 Duas coisas nessa saída são o modelo do NetBox em ação. `device.site.slug` seguiu um link do
 dispositivo para o site dele sem outra linha de código; o pynetbox buscou o que era preciso. E
 `primary_ip4` é a resposta do NetBox à pergunta "qual endereço eu uso para alcançar este dispositivo",
-que é o endereço de gerência na `eth0`. A seção 07 usa exatamente isso para montar um inventário.
+que é o endereço de gerência na `eth0`. A seção 08 usa exatamente isso para montar um inventário.
 
 **Cada laço é uma requisição por dispositivo**, e vale a pena notar isso antes de serem três mil
 devices. Os filtros do NetBox aceitam listas, `device_id=[1, 2, 3]`, então os endereços de todos

@@ -13,7 +13,7 @@ escrito em Python, com `requests`:
   "parts": [
     {
       "code": "from pathlib import Path\n\nimport requests\n\nBASE = \"https://edge1.example.net/api/v1\"\nCA = \"lab-ca.pem\"\npassword = Path(\"~/.netops-password\").expanduser().read_text().strip()\n",
-      "note": "**O endereço da API e o arquivo que prova quem é o servidor.** `lab-ca.pem` é a autoridade certificadora do laboratório; a seção 08 explica por que ela é nomeada aqui."
+      "note": "**O endereço da API e o arquivo que prova quem é o servidor.** `lab-ca.pem` é a autoridade certificadora do laboratório; a seção 09 explica por que ela é nomeada aqui."
     },
     {
       "code": "r = requests.post(f\"{BASE}/auth/login\", json={\"username\": \"netops\", \"password\": password},\n                  verify=CA, timeout=10)\nr.raise_for_status()\ntoken = r.json()[\"token\"]\n",
@@ -44,7 +44,7 @@ Três detalhes no script importam mais do que parecem:
 - **`timeout=10`**. `requests` não tem timeout a não ser que você dê um, e um equipamento que
   aceita a conexão e nunca responde vai prender o script para sempre.
 - **`verify=CA`** diz qual autoridade certificadora usar para verificar o certificado do
-  roteador. A seção 08 mostra o que acontece sem isso.
+  roteador. A seção 09 mostra o que acontece sem isso.
 
 Todo script daqui em diante precisa do mesmo endereço, da mesma autoridade certificadora e do
 mesmo token, então eles vão para um pequeno cliente que o resto da aula importa. O construtor

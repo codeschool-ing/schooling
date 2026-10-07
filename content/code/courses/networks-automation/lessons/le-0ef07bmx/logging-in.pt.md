@@ -1,6 +1,6 @@
 ---
 title: Fazendo login, e o que volta
-version: 1
+version: 2
 ---
 
 A maioria das APIs de equipamentos autentica de um de dois jeitos. **HTTP Basic** envia o
@@ -18,7 +18,7 @@ ana@ctl:~$ curl -s --cacert lab-ca.pem -H "Content-Type: application/json" -d @l
 ```
 
 A senha nunca aparece no comando. Ela é lida de `~/.netops-password`, um arquivo que só a `ana`
-consegue ler, e o `jq` monta o corpo JSON a partir dela em `login.json`. **Uma senha digitada
+consegue ler e que o `netlab.sh` grava na home dela a cada construção, e o `jq` monta o corpo JSON a partir dela em `login.json`. **Uma senha digitada
 numa linha de comando acaba no histórico do shell e na lista de processos**, onde qualquer um na
 máquina pode vê-la enquanto o comando roda.
 
