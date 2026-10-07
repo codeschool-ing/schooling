@@ -1,6 +1,6 @@
 ---
 title: Quatro camadas em vez de sete
-version: 1
+version: 2
 ---
 
 Os protocolos que carregam a internet, TCP e IP, foram desenhados nos anos 1970 com um modelo próprio,
@@ -16,7 +16,7 @@ registrado na **RFC 1122** em 1989. Ele tem quatro camadas, e cada uma é um gru
 - **Transporte**: levar dados a um programa, com garantia pelo TCP ou do jeito que vierem pelo UDP. A
   camada 4 do OSI.
 - **Aplicação**: tudo o que o programa faz. As camadas 5, 6 e 7 do OSI juntas, porque na prática um
-  programa faz as três, como a aula 1 seção 06 mostrou com o `curl`.
+  programa faz as três, como a aula 1 seção 13 mostrou com o `curl`.
 
 Alguns livros dividem a camada de enlace em duas e contam cinco camadas. Descrevem os mesmos
 protocolos; a discussão é só sobre onde traçar uma linha.

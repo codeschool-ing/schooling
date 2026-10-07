@@ -1,10 +1,12 @@
 ---
 title: What ss says about a connection
-version: 1
+version: 2
 ---
 
 A connection has a **state** on each end, and `ss` shows it. Here the laptop holds an SSH connection
-to the web server open, and each side is asked:
+to the web server open, and each side is asked. In your lab, open it from a second shell on the laptop
+with `sleep 60 | nc 192.0.2.80 22`, ask within the minute, and then stop `nc` with Ctrl+C before the
+last command:
 
 ```
 ana@laptop:~$ ss -tn

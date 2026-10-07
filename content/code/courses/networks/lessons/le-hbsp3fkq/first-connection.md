@@ -1,10 +1,11 @@
 ---
 title: The first connection
-version: 1
+version: 2
 ---
 
 Ana is on the office laptop and wants a shell on the office server. `ssh` takes an address, or a
-name, and logs in as the same user unless told otherwise:
+name, and logs in as the same user unless told otherwise. The password is `office-2026`. Your lab
+makes new host keys each time it is built, so the fingerprints you see will not be these:
 
 ```
 ana@laptop:~$ ssh 192.168.10.10

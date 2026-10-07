@@ -1,6 +1,6 @@
 ---
 title: Camadas 1 e 2: um enlace e um endereço de hardware
-version: 1
+version: 2
 ---
 
 A camada 1 é o sinal físico: o cabo, o rádio, a luz na porta. Um terminal não vê um sinal, mas vê o
@@ -29,7 +29,9 @@ fora do enlace, e nenhum roteador o encaminha.
 
 O laptop sabe o endereço IP do servidor, mas um quadro precisa do MAC do servidor. Ele pergunta, com
 **ARP** (*Address Resolution Protocol*). A tabela de vizinhos do laptop começa vazia, e um ping a
-preenche:
+preenche. **No seu laboratório**, esvazie-a antes, porque montar o laboratório já mandou alguns
+pacotes: rode `sudo ip neigh flush all` no laptop e no servidor. Depois inicie o `tcpdump` mais
+abaixo no servidor, num segundo terminal, antes de mandar o ping.
 
 ```
 ana@laptop:~$ ip neigh

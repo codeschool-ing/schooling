@@ -1,9 +1,9 @@
 ---
 title: Quem está escutando, e em qual porta
-version: 1
+version: 2
 ---
 
-A aula 1 seção 05 usou o `ss -tln` para listar portas TCP escutando. Mais três letras o tornam muito
+A aula 1 seção 12 usou o `ss -tln` para listar portas TCP escutando. Mais três letras o tornam muito
 mais útil: `-u` acrescenta UDP, `-p` dá nome ao programa, e o `sudo` é necessário para ver programas
 de outros usuários. No resolver de DNS do provedor:
 

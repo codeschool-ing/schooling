@@ -1,6 +1,6 @@
 ---
 title: O tamanho que um pacote pode ter
-version: 1
+version: 2
 ---
 
 Todo enlace tem um **MTU**, *maximum transmission unit*, a unidade máxima de transmissão: o maior
@@ -30,8 +30,16 @@ ping: local error: message too long, mtu=1500
 byte a mais e o laptop se recusou até a enviar: `message too long, mtu=1500`.
 
 Agora a linha do escritório vira o tipo que muitos escritórios pequenos têm, DSL com **PPPoE**, que
-gasta 8 bytes de cada quadro com o próprio cabeçalho e deixa um MTU de **1492**. O mesmo ping de 1500
-bytes:
+gasta 8 bytes de cada quadro com o próprio cabeçalho e deixa um MTU de **1492**. Para fazer essa
+mudança no seu laboratório, baixe o MTU nas duas pontas da linha entre o roteador e o provedor, da sua
+máquina virtual:
+
+```sh
+sudo bash ~/netlab/netlab exec router root 'ip link set eth1 mtu 1492'
+sudo bash ~/netlab/netlab exec isp root 'ip link set eth0 mtu 1492'
+```
+
+O mesmo ping de 1500 bytes:
 
 ```
 ana@laptop:~$ ping -c 2 -M do -s 1472 192.0.2.80

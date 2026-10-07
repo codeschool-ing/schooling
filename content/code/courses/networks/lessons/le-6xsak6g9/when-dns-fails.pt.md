@@ -1,6 +1,6 @@
 ---
 title: Quatro jeitos de uma resposta dar errado
-version: 1
+version: 2
 ---
 
 O `status` do cabeçalho é a primeira coisa a ler quando um nome não funciona, porque cada valor aponta
@@ -58,7 +58,13 @@ ns1.example.com.        172800  IN      A       192.0.2.53
 Perguntado direto, o servidor para o qual `old` foi delegado nem responde à pergunta: ele aponta de
 volta para os servidores de `example.com`, que apontaram para ele. O resolver desistiu em 4
 milissegundos. Um servidor autoritativo fora do ar também dá SERVFAIL, só que devagar; perguntado
-direto, ele fica assim:
+direto, ele fica assim. No seu laboratório, deixe este para o fim da aula, porque as
+seções 08 e 09 ainda precisam do `ns1`. Depois pare o servidor dele da sua máquina virtual, e dê
+`reset` no laboratório em seguida:
+
+```sh
+sudo bash ~/netlab/netlab exec ns1 root 'for p in $(ip netns pids ns1); do [ "$(cat /proc/$p/comm)" = named ] && kill $p; done'
+```
 
 ```
 ana@laptop:~$ dig @192.0.2.53 www.example.com +tries=1 +time=2

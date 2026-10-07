@@ -1,10 +1,12 @@
 ---
 title: O que o caminho consegue ver
-version: 1
+version: 2
 ---
 
 O roteador do escritório é onde começa a visão do provedor de internet, então é o lugar para testar a
-promessa. Primeiro a lista de preços por HTTP puro, gravada num arquivo e depois procurada:
+promessa. Primeiro a lista de preços por HTTP puro, gravada num arquivo e depois procurada. Enquanto
+a captura roda, dentro dos três segundos dela, busque o arquivo de um shell no laptop, `curl -s -o /dev/null
+http://www.example.com/prices.txt`, e o mesmo com `https://` para a segunda captura:
 
 ```
 ana@router:~$ sudo timeout 3 tcpdump -n -i eth1 -w /tmp/http.pcap tcp port 80

@@ -1,10 +1,21 @@
 ---
 title: scp: one file over SSH
-version: 1
+version: 2
 ---
 
 Between machines that run SSH, which is every Linux server, there is no need for an FTP server at all.
-`scp` copies files over an SSH connection, with the same key, agent and `~/.ssh/config` as lesson 7:
+`scp` copies files over an SSH connection, with the same key, agent and `~/.ssh/config` as lesson 7.
+If your lab has been reset since lesson 7, set them up again on the laptop; it is lesson 7's sections
+03 to 06 in four lines, with the passphrase `blue kettle on the roof` and the password `office-2026`:
+
+```sh
+ssh-keygen -t ed25519 -C ana@laptop -f ~/.ssh/id_ed25519
+ssh-copy-id -i ~/.ssh/id_ed25519.pub 192.168.10.10
+eval $(ssh-agent); ssh-add
+printf "Host office\n    HostName 192.168.10.10\n    User ana\n" > ~/.ssh/config
+```
+
+Then:
 
 ```
 ana@laptop:~$ ls -l licences.tar.gz

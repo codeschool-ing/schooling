@@ -1,12 +1,21 @@
 ---
 title: mtr: loss per hop, and how to read it
-version: 1
+version: 2
 ---
 
 `mtr` runs traceroute over and over and counts, per hop, how many probes got an answer. For this
 ticket, "the site is slow at times", the lab was set up with two things wrong at once. The ISP's router
 answers only some of the probes that expire on it, as busy routers do, and then `core` was made to drop
-one packet in five on the way to `www`:
+one packet in five on the way to `www`. In your lab, the first fault before the first `mtr`, the
+second before the second; the loss is random, so your percentages will differ:
+
+```sh
+sudo bash ~/netlab/netlab exec isp root 'nft add table inet slow; nft "add chain inet slow out { type filter hook output priority 0; }"; nft add rule inet slow out icmp type time-exceeded numgen random mod 2 == 0 drop'
+```
+
+```sh
+sudo bash ~/netlab/netlab exec core root 'nft add table inet lossy; nft "add chain inet lossy lose { type filter hook forward priority 0; }"; nft add rule inet lossy lose ip daddr 192.0.2.80 numgen random mod 5 == 0 drop'
+```
 
 ```
 ana@laptop:~$ mtr -rwn -c 20 www.example.com

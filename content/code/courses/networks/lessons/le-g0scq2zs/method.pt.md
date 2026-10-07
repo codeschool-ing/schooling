@@ -1,6 +1,6 @@
 ---
 title: Um método antes das ferramentas
-version: 1
+version: 2
 ---
 
 "A internet caiu" pode ser um cabo solto, uma configuração errada num laptop, um servidor DNS que parou,
@@ -19,3 +19,7 @@ respondido. Cada chamado desta aula para num degrau diferente, e o degrau é o d
 Dois hábitos fazem o método funcionar. Teste com **endereços** além de nomes, porque um nome envolve o
 DNS e um endereço não. E anote o que cada degrau imprimiu, porque quem pegar o chamado depois, ou o
 provedor ao telefone, vai perguntar.
+
+**Cada chamado começa de um defeito que alguém montou no laboratório**, e cada um dá o comando que o
+monta no seu, da sua máquina virtual. Rode-o sem ler se quiser diagnosticar às cegas, e dê `reset` no
+laboratório quando o chamado for fechado.

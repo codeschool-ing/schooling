@@ -1,6 +1,6 @@
 ---
 title: Sending as a person: port 587
-version: 1
+version: 2
 ---
 
 A server that delivered anything, to anywhere, for anybody, would be an **open relay**, and spammers find
@@ -35,7 +35,14 @@ ana@laptop:~$ swaks --to bruno@example.net --from ana@example.com --server mail.
 
 `554 5.7.1 Relay access denied`: the laptop had not logged in, and `example.net` is not this server's
 domain. A mail program sends to **port 587**, submission, which is for people rather than for servers,
-and requires a password over TLS:
+and requires a password over TLS. The message is a file Ana's mail program would have written, with
+every line ended by `\r\n` as SMTP requires; make it on the laptop with:
+
+```sh
+printf "Date: Fri, 25 Sep 2026 10:02:00 -0300\r\nMessage-ID: <order-2231@example.com>\r\nFrom: Ana <ana@example.com>\r\nTo: Bruno <bruno@example.net>\r\nSubject: Order 2231\r\n\r\nHello Bruno, can you confirm order 2231?\r\n" > order.txt
+```
+
+Then:
 
 ```
 ana@laptop:~$ cat order.txt

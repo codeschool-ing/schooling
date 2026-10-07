@@ -1,6 +1,6 @@
 ---
 title: The other version of IP
-version: 1
+version: 2
 ---
 
 Everything so far was **IPv4**: 32-bit addresses, written as four numbers. There are about four
@@ -21,6 +21,6 @@ What changes for support is less than the addresses suggest:
   has an IPv6 address. A fault that affects only IPv6 looks like a site that is slow to start, when a
   program that does not race the two waits for IPv6 to fail before it tries IPv4.
 
-**The lab has no IPv6 at all**: the machine it runs on was built without it, and section 03's `strace`
+**The lab has no IPv6 at all**: lesson 1 section 03 switched it off in the whole machine, and section 03's `strace`
 showed a program finding that out. Lesson 4 shows the `AAAA` record that holds an IPv6 address in DNS,
 and the addressing itself belongs to the networks-addressing course.

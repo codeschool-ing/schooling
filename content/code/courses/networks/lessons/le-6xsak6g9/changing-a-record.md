@@ -1,6 +1,6 @@
 ---
 title: Changing a record, and "propagation"
-version: 1
+version: 2
 ---
 
 The website is moving to a new server, `192.0.2.81`. On `ns1`, the zone file gets the new address,
@@ -26,6 +26,16 @@ off the internet, and the check costs a second. Then `ns1` was told to reload, a
 at the end tell the story. `ns1` answers **`192.0.2.81`** at once. The resolver still answers
 **`192.0.2.80`**, with 293 seconds to go: it asked before the change, and it was told it could keep the
 answer for 300 seconds.
+
+In your lab, the reload is one signal to `ns1`'s own `named`, sent from your virtual machine:
+
+```sh
+sudo bash ~/netlab/netlab exec ns1 root 'for p in $(ip netns pids ns1); do [ "$(cat /proc/$p/comm)" = named ] && kill -HUP $p; done'
+```
+
+The loop is there because the lab's machines share one list of processes: a namespace separates the
+network and not the programs, so `pkill -HUP named` would reach the DNS servers on `rootns` and
+`tldns` as well.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 180\" role=\"img\" aria-label=\"A timeline of the address change, read off the TTLs the resolver gave. The resolver answers 192.0.2.80 with a TTL of 299. Five seconds later, 192.0.2.80 with 294. Then ns1 is changed to 192.0.2.81. Asked again, the resolver still answers .80, with 293 seconds left. After its cache is flushed, it answers .81 with a fresh TTL of 300. Without the flush it would have kept answering .80 until the TTL reached zero, 300 seconds after it cached the record.\"><defs><marker id=\"tl-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><path d=\"M30 70 L690 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#tl-ah)\"></path><text x=\"650\" y=\"88\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">time</text><circle cx=\"40\" cy=\"70\" r=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></circle><text x=\"34\" y=\"48\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">answer .80, TTL 299</text><circle cx=\"180\" cy=\"70\" r=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></circle><text x=\"174\" y=\"30\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">again: .80, TTL 294</text><circle cx=\"320\" cy=\"70\" r=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></circle><text x=\"314\" y=\"48\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">ns1 changed to .81</text><circle cx=\"450\" cy=\"70\" r=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></circle><text x=\"444\" y=\"30\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">resolver: .80, TTL 293</text><circle cx=\"580\" cy=\"70\" r=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></circle><text x=\"574\" y=\"48\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">flushed: .81, TTL 300</text><rect x=\"40\" y=\"118\" width=\"640\" height=\"26\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"></rect><text x=\"52\" y=\"131\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">without the flush: .80 until the TTL reached zero, 300 seconds after it was cached</text></svg>", "caption": "What gets called propagation is caches expiring. Every resolver that asked before the change keeps the old answer for as long as the TTL it was given."}

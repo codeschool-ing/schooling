@@ -1,6 +1,6 @@
 ---
 title: FTPS: FTP inside TLS
-version: 1
+version: 2
 ---
 
 The same server can speak **FTPS**, FTP wrapped in the TLS of lessons 5 and 6, with the same
@@ -26,7 +26,16 @@ TLS 1.3 handshake, and only then `USER`. On the ISP's machine, all that could st
 greeting and those two lines. Everything after them, password included, is encrypted.
 
 Offering encryption is not the same as requiring it: a client that does not ask still logs in the old
-way. The server can refuse that:
+way. The server can refuse that, with two settings in `vsftpd.conf` and a restart. In your lab, from
+your virtual machine:
+
+```sh
+sudo sed -i "s/^force_local_logins_ssl=NO/force_local_logins_ssl=YES/; s/^force_local_data_ssl=NO/force_local_data_ssl=YES/" /lab/www/etc/vsftpd.conf
+sudo pkill -x vsftpd
+sudo bash ~/netlab/netlab exec www root 'vsftpd /etc/vsftpd.conf </dev/null >/dev/null 2>&1 &'
+```
+
+Then:
 
 ```
 ana@www:~$ grep -E "^(ssl_enable|force_local)" /etc/vsftpd.conf

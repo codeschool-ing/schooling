@@ -1,13 +1,14 @@
 ---
 title: One public address for the whole office
-version: 1
+version: 2
 ---
 
 `192.168.10.20` is a **private address**. The ranges `10.0.0.0/8`, `172.16.0.0/12` and
 `192.168.0.0/16` are set aside by RFC 1918 for use inside any building, and the internet does not
 route them: millions of offices use `192.168.10.20` at the same time. To go out, the office borrows
 the one public address its provider gave it, `203.0.113.2`. That is **NAT**, *network address
-translation*, and it is one rule on the office router:
+translation*, and it is one rule on the office router. The log line after it is the laptop fetching
+the home page, `curl -s -o /dev/null https://www.example.com/`, as the web server saw it:
 
 ```
 ana@router:~$ sudo nft list ruleset

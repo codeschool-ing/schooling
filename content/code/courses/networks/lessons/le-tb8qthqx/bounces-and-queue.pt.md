@@ -1,10 +1,17 @@
 ---
 title: Devoluções e a fila
-version: 1
+version: 2
 ---
 
 Um endereço digitado errado, `brunno@example.net`, é aceito pelo servidor da Ana, que só então tenta
-entregar, e falha:
+entregar, e falha. A mensagem é o `order.txt` da seção 04 com o endereço errado, criada no laptop
+com:
+
+```sh
+sed "s/Bruno <bruno@example.net>/<brunno@example.net>/; s/order-2231/order-2231b/" order.txt > wrong.txt
+```
+
+Depois:
 
 ```
 ana@laptop:~$ curl -sS --url smtp://mail.example.com:587/laptop.example.com --ssl-reqd --user ana:office-2026 --mail-from ana@example.com --mail-rcpt brunno@example.net -T wrong.txt && echo accepted
@@ -34,8 +41,21 @@ A devolução, *Undelivered Mail Returned to Sender*, chegou na própria caixa d
 (in reply to RCPT TO command)` quer dizer que o servidor do `example.net` não tem essa caixa. Um código
 que começa com 5 é permanente, e o servidor desiste na hora.
 
-Um código que começa com 4, ou nenhuma resposta, é temporário, e a mensagem espera na **fila**. Com o
-servidor do Bruno parado:
+Um código que começa com 4, ou nenhuma resposta, é temporário, e a mensagem espera na **fila**. Aqui o servidor
+do Bruno está parado. No seu laboratório, a primeira linha abaixo o para, da sua máquina virtual,
+e a segunda o inicia de novo, o que precisa acontecer antes de o `postqueue -f` conseguir entregar
+alguma coisa; a mensagem corrigida é criada no laptop com o `sed` depois delas:
+
+```sh
+sudo bash ~/netlab/netlab exec netmail root 'postfix stop'
+sudo bash ~/netlab/netlab exec netmail root 'postfix start'
+```
+
+```sh
+sed "s/order-2231/order-2231c/; s/Subject: Order 2231/Subject: Order 2231, corrected/" order.txt > again.txt
+```
+
+Depois:
 
 ```
 ana@laptop:~$ curl -sS --url smtp://mail.example.com:587/laptop.example.com --ssl-reqd --user ana:office-2026 --mail-from ana@example.com --mail-rcpt bruno@example.net -T again.txt && echo accepted

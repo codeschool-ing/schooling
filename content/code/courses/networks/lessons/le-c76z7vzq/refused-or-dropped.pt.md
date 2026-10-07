@@ -1,6 +1,6 @@
 ---
 title: Sim, não, e nada
-version: 1
+version: 2
 ---
 
 Uma porta TCP pode responder a uma conexão de três jeitos, e um firewall decide qual dos dois últimos
@@ -35,7 +35,8 @@ sys     0m0.000s
 ```
 
 A porta 8080 e a porta 5432 dão a mesma resposta, `Connection refused`, na hora. No fio, é um SYN que
-sai e um RST que volta:
+sai e um RST que volta, visto enquanto o laptop roda `nc -z -w 3 192.0.2.80 8080` de novo num segundo
+shell:
 
 ```
 ana@laptop:~$ sudo tcpdump -n -i eth0 -c 2 tcp port 8080
@@ -50,7 +51,7 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 **De fora, um firewall que rejeita é indistinguível de uma porta fechada.** A porta 3306 é a diferente:
 o nc esperou os três segundos inteiros que recebeu (`real 0m3.006s`), e o lado do laptop no fio mostra
-por quê:
+por quê, enquanto `nc -z -w 5 192.0.2.80 3306` roda de novo num segundo shell:
 
 ```
 ana@laptop:~$ sudo tcpdump -n -i eth0 -c 3 tcp port 3306

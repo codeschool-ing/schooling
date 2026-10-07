@@ -1,11 +1,22 @@
 ---
 title: Small pages load, big ones hang
-version: 1
+version: 2
 ---
 
 Path MTU discovery depends on one ICMP message getting back. Plenty of firewalls drop ICMP as a matter
 of habit, on the theory that `ping` is only for attackers. Here the provider's router is given that
-habit, and the route caches are cleared so nobody remembers the smaller MTU:
+habit, and the route caches are cleared so nobody remembers the smaller MTU. In your lab the MTU from
+section 06 has to be in place (after a `reset`, set it again), and the web server needs a page large
+enough to fill full-sized packets: a price list of 2000 lines. From your virtual machine:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'for i in $(seq 1 2000); do echo "line $i of the price list, padded to a hundred characters so the file is large enough ....."; done > /var/www/example/prices.txt'
+sudo bash ~/netlab/netlab exec isp root 'nft add table inet f; nft add chain inet f out "{ type filter hook output priority 0; }"; nft add rule inet f out icmp type destination-unreachable drop'
+sudo bash ~/netlab/netlab exec laptop root 'ip route flush cache'
+sudo bash ~/netlab/netlab exec www root 'ip route flush cache'
+```
+
+Then, on the laptop:
 
 ```
 ana@laptop:~$ curl -sS -m 5 -o /dev/null -w '%{http_code} %{size_download} bytes\n' https://www.example.com/
