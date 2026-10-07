@@ -1,6 +1,6 @@
 ---
 title: One key, thousands of people
-version: 1
+version: 2
 ---
 
 Tarefa's assistant calls its model provider with one API key, the key of the company. From the
@@ -46,8 +46,9 @@ body an application would send; this lesson sends nothing anywhere:
 }
 ```
 
-`eu-fe47aa8e7cd5e1b6f8bc` is the identifier the lab produces for the account `ac-7Q2M`, the client
-whose e-mail address you met in lesson 11. The next section is how it is made.
+`eu-fe47aa8e7cd5e1b6f8bc` is the identifier `guard enduser`, in the next section, produces for the
+account `ac-7Q2M`, the client whose e-mail address you met in lesson 11. The next section is how it
+is made.
 
 ## What the provider does with it
 
