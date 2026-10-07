@@ -44,13 +44,13 @@ for size in ("tiny", "base"):
 
 ```
 ana@lab:~/mm$ python precision.py
-tiny fp32   152.2 MB  load  1.2 s  transcribe   7.5 s  WER  17.2%
-tiny int8   102.8 MB  load  0.5 s  transcribe   7.1 s  WER  16.6%
-base fp32   291.6 MB  load  2.6 s  transcribe  13.9 s  WER  11.9%
-base int8   159.8 MB  load  1.1 s  transcribe  11.2 s  WER  12.6%
+tiny fp32   152.2 MB  load  1.2 s  transcribe   4.9 s  WER  17.2%
+tiny int8   102.8 MB  load  0.4 s  transcribe   4.1 s  WER  16.6%
+base fp32   291.6 MB  load  2.4 s  transcribe   8.5 s  WER  11.9%
+base int8   159.8 MB  load  0.8 s  transcribe   6.8 s  WER  12.6%
 ```
 
-**On this call, int8 cost nothing measurable.** Tiny int8 scored 16.6% against 17.2% for fp32, and base int8 12.6% against 11.9%. One went up and one went down, by less than one word in a hundred, on 151 words of speech: that is the noise of a single recording, not a difference between the copies. What int8 bought is plain: **base at 160 MB instead of 292**, loaded in 1.1 seconds instead of 2.6, and transcribing in 11.2 seconds instead of 13.9.
+**On this call, int8 cost nothing measurable.** Tiny int8 scored 16.6% against 17.2% for fp32, and base int8 12.6% against 11.9%. One went up and one went down, by less than one word in a hundred, on 151 words of speech: that is the noise of a single recording, not a difference between the copies. What int8 bought is plain: **base at 160 MB instead of 292**, loaded in 0.8 seconds instead of 2.4, and transcribing in 6.8 seconds instead of 8.5.
 
 The sizes did not quite fall to a quarter, because not every part of a model is quantised. The encoders shrank about three times; the decoders much less, since a large share of a Whisper decoder is its vocabulary table, which this export keeps at higher precision.
 

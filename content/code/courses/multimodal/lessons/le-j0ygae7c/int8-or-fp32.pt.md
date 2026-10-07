@@ -44,13 +44,13 @@ for size in ("tiny", "base"):
 
 ```
 ana@lab:~/mm$ python precision.py
-tiny fp32   152.2 MB  load  1.2 s  transcribe   7.5 s  WER  17.2%
-tiny int8   102.8 MB  load  0.5 s  transcribe   7.1 s  WER  16.6%
-base fp32   291.6 MB  load  2.6 s  transcribe  13.9 s  WER  11.9%
-base int8   159.8 MB  load  1.1 s  transcribe  11.2 s  WER  12.6%
+tiny fp32   152.2 MB  load  1.2 s  transcribe   4.9 s  WER  17.2%
+tiny int8   102.8 MB  load  0.4 s  transcribe   4.1 s  WER  16.6%
+base fp32   291.6 MB  load  2.4 s  transcribe   8.5 s  WER  11.9%
+base int8   159.8 MB  load  0.8 s  transcribe   6.8 s  WER  12.6%
 ```
 
-**Nesta ligação, o int8 não custou nada mensurável.** O tiny int8 fez 16,6% contra 17,2% do fp32, e o base int8 12,6% contra 11,9%. Um subiu e outro desceu, menos de uma palavra em cem, em 151 palavras de fala: isso é o ruído de uma gravação só, não uma diferença entre as cópias. O que o int8 comprou é claro: **o base com 160 MB em vez de 292**, carregado em 1,1 segundo em vez de 2,6, e transcrevendo em 11,2 segundos em vez de 13,9.
+**Nesta ligação, o int8 não custou nada mensurável.** O tiny int8 fez 16,6% contra 17,2% do fp32, e o base int8 12,6% contra 11,9%. Um subiu e outro desceu, menos de uma palavra em cem, em 151 palavras de fala: isso é o ruído de uma gravação só, não uma diferença entre as cópias. O que o int8 comprou é claro: **o base com 160 MB em vez de 292**, carregado em 0,8 segundo em vez de 2,4, e transcrevendo em 6,8 segundos em vez de 8,5.
 
 Os tamanhos não caíram bem a um quarto, porque nem toda parte de um modelo é quantizada. Os codificadores encolheram umas três vezes; os decodificadores bem menos, já que uma grande parte de um decodificador do Whisper é a tabela de vocabulário, que esta exportação mantém com mais precisão.
 
