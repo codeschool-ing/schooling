@@ -14,6 +14,7 @@
 #   sudo bash lab.sh install                 extract and install, then stop
 #   sudo bash lab.sh up|down|reset           install, then netlab.sh VERB
 #   sudo bash lab.sh exec|kill|span|shell …  netlab.sh VERB … (installed copy)
+#   bash lab.sh example FILE.md NAME [N]     print a lesson's example NAME
 #
 # Run it with sudo from the account the captures are recorded as (ana): that
 # account's home gets netlab.sh, as the student's does.
@@ -33,23 +34,28 @@ set -euo pipefail
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 L1="$HERE/lessons/le-8bk5bjzb"
-ME=${SUDO_USER:?run it with sudo from the account the captures are recorded as}
-NETLAB="/home/$ME/netlab.sh"
 
-# extract FILE.md NAME: the schooling-example whose "file" is NAME, as the copy
-# button hands it over.
+# extract FILE.md NAME [N]: the Nth (from 1) schooling-example whose "file" is
+# NAME, as the copy button hands it over. The captures use it too, through
+# `lab.sh example`, for every configuration file a lesson shows.
 extract() {
-  python3 - "$1" "$2" <<'PY'
+  python3 - "$1" "$2" "${3:-1}" <<'PY'
 import json, re, sys
-md, name = open(sys.argv[1], encoding="utf-8").read(), sys.argv[2]
+md, name, n = open(sys.argv[1], encoding="utf-8").read(), sys.argv[2], int(sys.argv[3])
 for body in re.findall(r"^```schooling-example\n(.*?)\n```$", md, re.S | re.M):
     ex = json.loads(body)
     if ex.get("file") == name:
-        sys.stdout.write("\n".join(p["code"] for p in ex["parts"]) + "\n")
-        sys.exit(0)
-sys.exit(f"{sys.argv[1]}: no schooling-example for {name}")
+        n -= 1
+        if n == 0:
+            sys.stdout.write("\n".join(p["code"] for p in ex["parts"]) + "\n")
+            sys.exit(0)
+sys.exit(f"{sys.argv[1]}: no schooling-example number {sys.argv[3]} for {name}")
 PY
 }
+
+[ "${1:-}" = example ] && { shift; extract "$@"; exit; }
+ME=${SUDO_USER:?run it with sudo from the account the captures are recorded as}
+NETLAB="/home/$ME/netlab.sh"
 
 install_files() {
   extract "$L1/building-the-network.md" netlab.sh > "$NETLAB.new"

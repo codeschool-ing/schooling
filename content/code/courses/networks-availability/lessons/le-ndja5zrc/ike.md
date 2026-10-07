@@ -10,15 +10,30 @@ IKE, Internet Key Exchange, here in version 2, on UDP port 500.
 
 ## The configuration
 
-`hq` runs strongSwan, whose IPsec configuration is one file, `/etc/swanctl/swanctl.conf`. `sudo cat`
-printed it, and here it is cut into its pieces:
+`hq` runs strongSwan, whose IPsec configuration is one file, `/etc/swanctl/swanctl.conf`. Here it is,
+cut into its pieces. On `hq`, open the file with `sudo nano /etc/swanctl/swanctl.conf` and paste it
+whole with the listing's button:
 
 ```schooling-example
 {"language": "conf", "file": "swanctl.conf", "parts": [{"code": "connections {\n  offices {\n    version = 2\n    local_addrs = 203.0.113.2\n    remote_addrs = 198.51.100.2\n    mobike = no", "note": "One connection, `offices`, in IKEv2, between the two routers' public addresses. `mobike = no` turns off the extension that lets a peer change address mid-connection. With it on, strongSwan moves IKE to port 4500 as soon as the first exchange is done, even with no NAT in the way. This lesson wants port 500 to stay port 500 until the section on NAT."}, {"code": "    proposals = aes256-sha256-modp2048", "note": "The algorithms for the IKE connection itself, not for the traffic: AES with a 256-bit key to encrypt, SHA-256 for integrity and for deriving keys, and Diffie-Hellman group MODP 2048 to agree on a secret. The other side has to accept at least one proposal, or nothing starts."}, {"code": "    local {\n      auth = psk\n      id = hq.example.com\n    }\n    remote {\n      auth = psk\n      id = branch.example.com\n    }", "note": "Who each side is and how it proves it. `auth = psk` means with a pre-shared key; the `id` values are names, and each side checks that the other presented the name it expects. They do not have to resolve in DNS."}, {"code": "    children {\n      lans {\n        local_ts = 192.168.10.0/24\n        remote_ts = 192.168.20.0/24\n        esp_proposals = aes256gcm16\n        start_action = trap\n      }\n    }", "note": "The tunnel itself, a CHILD SA called `lans`. The two `_ts` lines are the traffic selectors, the networks it joins, and must mirror the other side's. `esp_proposals` names the traffic's algorithm, AES-GCM with a 256-bit key. `start_action = trap` waits for the first packet that needs the tunnel."}, {"code": "  }\n}", "note": "Closing the connection. What follows is a separate block that `swanctl` loads into the daemon's store of secrets."}, {"code": "secrets {\n  ike-offices {\n    id-1 = hq.example.com\n    id-2 = branch.example.com\n    secret = \"Tide-Lantern-Orbit-7294-Quill\"\n  }\n}", "note": "The pre-shared key, and the two identities it is valid between. The lab's secret is printed here because it is the lab's; on a real router this block is the one part of the file nobody pastes into a ticket."}]}
 ```
 
-`branch` has the mirror image. `swanctl --load-all` hands the file to the running daemon, `charon`, and
-`--list-conns` shows what the daemon understood:
+`branch` has the mirror image: the same file, written the same way, with six values swapped. The
+`secrets` block stays exactly as it is, because both ends hold the same key under the same two names.
+
+| line | on `hq` | on `branch` |
+|---|---|---|
+| `local_addrs` | `203.0.113.2` | `198.51.100.2` |
+| `remote_addrs` | `198.51.100.2` | `203.0.113.2` |
+| `id` under `local` | `hq.example.com` | `branch.example.com` |
+| `id` under `remote` | `branch.example.com` | `hq.example.com` |
+| `local_ts` | `192.168.10.0/24` | `192.168.20.0/24` |
+| `remote_ts` | `192.168.20.0/24` | `192.168.10.0/24` |
+
+The file is read by strongSwan's daemon, `charon`, which has to be running first. Start it on both
+routers, in each one's shell, with `sudo setsid /usr/lib/ipsec/charon >/dev/null 2>&1 &`, and on
+`branch` load the file with `sudo swanctl --load-all`. On `hq`, the same command hands the file to the
+daemon, and `--list-conns` shows what the daemon understood:
 
 ```
 ana@hq:~$ sudo swanctl --load-all
@@ -77,7 +92,8 @@ an `ikev2_auth` and its reply. A health check that sends one ping reports a trap
 time the tunnel starts.
 
 `tshark`, Wireshark's engine on the command line, which lesson 11 uses at length, names the messages.
-This is a second run, after the connection was torn down, and it lost its first ping the same way:
+This is a second run: on `hq`, `sudo swanctl --terminate --ike offices` tore the connection down, and the
+ping lost its first packet the same way:
 
 ```
 ana@laptop:~$ ping -c 2 192.168.20.30

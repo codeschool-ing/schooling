@@ -9,9 +9,23 @@ because ESP has no ports.** A router sharing one address tells conversations apa
 lesson 11 of `networks-addressing` showed, and an ESP packet gives it nothing to go on.
 
 IPsec's answer is **NAT traversal**: detect the NAT during the first exchange, then carry IKE and ESP
-alike in UDP on port 4500. `remote` asks for an address of its own with `vips = 0.0.0.0`, and `hq` has a
-second connection, `home`, that hands them out of `10.30.0.0/24`. The laptop started it, and the log
-was filtered down to the lines that matter:
+alike in UDP on port 4500. `hq` gets a second connection, `home`, that hands out addresses from
+`10.30.0.0/24`. Add it at the end of `hq`'s `/etc/swanctl/swanctl.conf`, after what is already there:
+
+```schooling-example
+{"language": "conf", "file": "swanctl.conf", "parts": [{"code": "connections {\n  home {\n    version = 2\n    local_addrs = 203.0.113.2\n    pools = homes", "note": "A second connection on `hq`, `home`, added at the end of the same file. It names only `hq`'s own address: the laptop may arrive from any address, which is the point of remote access. `pools = homes` says where its address comes from."}, {"code": "    local {\n      auth = psk\n      id = hq.example.com\n    }\n    remote {\n      auth = psk\n      id = ana@example.com\n    }", "note": "`hq` proves itself as before; the other side is a person now, `ana@example.com`, not a router."}, {"code": "    children {\n      office {\n        local_ts = 192.168.10.0/24\n        esp_proposals = aes256gcm16\n      }\n    }\n  }\n}", "note": "Only `hq`'s side of the tunnel is named, the office network. The far side is whatever address the pool hands out."}, {"code": "pools {\n  homes {\n    addrs = 10.30.0.0/24\n  }\n}", "note": "The pool: one address per laptop, from `10.30.0.0/24`, a range no office and no home here uses."}, {"code": "secrets {\n  ike-ana {\n    id-1 = hq.example.com\n    id-2 = ana@example.com\n    secret = \"Harbour-Violet-Candle-3381\"\n  }\n}", "note": "Ana's own secret. In a real company each person would have one, or a certificate, which the end of this section comes back to."}]}
+```
+
+On `remote`, the laptop, `/etc/swanctl/swanctl.conf` is new, and asks for an address of its own with
+`vips = 0.0.0.0`:
+
+```schooling-example
+{"language": "conf", "file": "swanctl.conf", "parts": [{"code": "connections {\n  office {\n    version = 2\n    remote_addrs = 203.0.113.2\n    vips = 0.0.0.0", "note": "The laptop's side. It knows where the office is, `remote_addrs`, and not where it is itself. `vips = 0.0.0.0` asks the office for an address."}, {"code": "    local {\n      auth = psk\n      id = ana@example.com\n    }\n    remote {\n      auth = psk\n      id = hq.example.com\n    }", "note": "The same two identities as `hq`'s `home` connection, the other way round."}, {"code": "    children {\n      office {\n        remote_ts = 192.168.10.0/24\n        esp_proposals = aes256gcm16\n      }\n    }\n  }\n}", "note": "The tunnel carries what goes to the office network, and nothing else: the rest of Ana's traffic still leaves through her home router. Lesson 5 calls that split tunnelling."}, {"code": "secrets {\n  ike-ana {\n    id-1 = hq.example.com\n    id-2 = ana@example.com\n    secret = \"Harbour-Violet-Candle-3381\"\n  }\n}", "note": "The same secret as on `hq`."}]}
+```
+
+Start `charon` on `remote` as on the routers, with `sudo setsid /usr/lib/ipsec/charon >/dev/null 2>&1 &`,
+then run `sudo swanctl --load-all` on `hq` and on `remote`. The laptop started the connection, and the
+log was filtered down to the lines that matter:
 
 ```
 ana@remote:~$ sudo swanctl --initiate --child office | grep -E "NAT|sending|received|virtual|established"

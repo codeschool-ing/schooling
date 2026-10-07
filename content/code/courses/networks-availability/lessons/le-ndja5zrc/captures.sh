@@ -14,17 +14,22 @@
 # pages and installs them where that lesson tells the student to; the captures
 # run the student's own copy.
 #
-# EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
-# office (hq), a branch, a home behind its own NAT, an ISP and a small data
-# centre, as network namespaces on one Linux computer.
+# EVERY MACHINE IN THE LESSON IS PART OF ONE NETWORK, the one netlab.sh builds
+# (lesson 1): a head office (hq), a branch, a home behind its own NAT, an ISP
+# and a small data centre, as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; the swanctl.conf files on hq, branch and
-# remote, written below as root (the lesson shows hq's with cat); the charon
-# daemon, started as root on each of the three before anything is loaded;
-# and, for the wrong-key block, branch's secret replaced and reloaded, then
-# put back. IPsec here is strongSwan's userspace ESP (kernel-libipsec), because
-# the kernel this was recorded on has no ESP; lab.sh says why.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it. Every configuration file is EXTRACTED from the lesson's own
+# examples with `lab.sh example`, so what the page hands over is what ran:
+# hq's swanctl.conf from "IKEv2", branch's as that file with the six values
+# the same section's table swaps, and hq's `home` connection and remote's file
+# from "NAT traversal". The commands below marked `prose` are given in the
+# lesson's text, word for word, rather than in a transcript: starting charon,
+# loading a file on the other router, tearing a connection down between runs,
+# and the two sed edits and their reversal. They run as ana with sudo, as the
+# student types them.
+# IPsec here is strongSwan's userspace ESP (kernel-libipsec), which netlab.sh
+# switches on; the kernel this was recorded on has no ESP.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -53,56 +58,29 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-conf() {  # conf HOST LOCAL REMOTE LOCAL_NET REMOTE_NET MY_ID PEER_ID SECRET
-  lab exec "$1" root "cat > /etc/swanctl/swanctl.conf" <<C
-connections {
-  offices {
-    version = 2
-    local_addrs = $2
-    remote_addrs = $3
-    mobike = no
-    proposals = aes256-sha256-modp2048
-    local {
-      auth = psk
-      id = $6
-    }
-    remote {
-      auth = psk
-      id = $7
-    }
-    children {
-      lans {
-        local_ts = $4
-        remote_ts = $5
-        esp_proposals = aes256gcm16
-        start_action = trap
-      }
-    }
-  }
+HERE=$(cd "$(dirname "$0")" && pwd)
+# prose HOST 'command': a command the lesson gives in its text; its output is
+# not quoted there.
+prose() { local h=$1; shift; lab exec "$h" ana "$*" >/dev/null 2>&1 || true; }
+# branch's file is hq's with the six values the lesson's table swaps.
+mirror() {
+  sed -e 's/local_addrs = 203.0.113.2/local_addrs = @R/; s/remote_addrs = 198.51.100.2/remote_addrs = 203.0.113.2/; s/@R/198.51.100.2/' \
+      -e '/local {/,/}/s/id = hq.example.com/id = @B/; /remote {/,/}/s/id = branch.example.com/id = hq.example.com/; s/@B/branch.example.com/' \
+      -e 's|local_ts = 192.168.10.0/24|local_ts = @T|; s|remote_ts = 192.168.20.0/24|remote_ts = 192.168.10.0/24|; s|@T|192.168.20.0/24|'
 }
-secrets {
-  ike-offices {
-    id-1 = hq.example.com
-    id-2 = branch.example.com
-    secret = "$8"
-  }
-}
-C
-}
-charon() { quiet "$1" 'setsid /usr/lib/ipsec/charon </dev/null >/run/charon.log 2>&1 &'; }
+charon() { prose "$1" 'sudo setsid /usr/lib/ipsec/charon >/dev/null 2>&1 &'; }
 
 lab reset
-KEY='Tide-Lantern-Orbit-7294-Quill'
-conf hq 203.0.113.2 198.51.100.2 192.168.10.0/24 192.168.20.0/24 hq.example.com branch.example.com "$KEY"
-conf branch 198.51.100.2 203.0.113.2 192.168.20.0/24 192.168.10.0/24 branch.example.com hq.example.com "$KEY"
+bash "$LAB_SH" example "$HERE/ike.md" swanctl.conf | lab exec hq root 'cat > /etc/swanctl/swanctl.conf'
+bash "$LAB_SH" example "$HERE/ike.md" swanctl.conf | mirror | lab exec branch root 'cat > /etc/swanctl/swanctl.conf'
 charon hq; charon branch; sleep 1
 
 block config
 on hq 'sudo cat /etc/swanctl/swanctl.conf'
 
 block load
+prose branch 'sudo swanctl --load-all'
 on hq 'sudo swanctl --load-all'
-quiet branch 'swanctl --load-all'
 on hq 'sudo swanctl --list-conns'
 
 block trap
@@ -125,104 +103,37 @@ fg
 on till 'curl -s http://192.168.10.10/'
 
 block tshark-ike
-quiet hq 'swanctl --terminate --ike offices'
+prose hq 'sudo swanctl --terminate --ike offices'
 sleep 1
 bg isp 'tshark -n -i eth0 -c 4 -f "udp port 500"'
 on laptop 'ping -c 2 192.168.20.30'
 fg
 
 block initiate
-quiet hq 'swanctl --terminate --ike offices'
+prose hq 'sudo swanctl --terminate --ike offices'
 sleep 1
 on hq 'sudo swanctl --initiate --child lans'
 
 block wrong-key
-quiet hq 'swanctl --terminate --ike offices'
-conf branch 198.51.100.2 203.0.113.2 192.168.20.0/24 192.168.10.0/24 branch.example.com hq.example.com 'Tide-Lantern-Orbit-7294-Quil'
-quiet branch 'swanctl --load-all'
+prose hq 'sudo swanctl --terminate --ike offices'
+prose branch "sudo sed -i 's/7294-Quill/7294-Quil/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all"
 sleep 1
 on hq 'sudo swanctl --initiate --child lans'
-conf branch 198.51.100.2 203.0.113.2 192.168.20.0/24 192.168.10.0/24 branch.example.com hq.example.com "$KEY"
-quiet branch 'swanctl --load-all'
+prose branch "sudo sed -i 's/7294-Quil\"/7294-Quill\"/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all"
 
 block selectors
-quiet hq 'swanctl --terminate --ike offices'
-quiet hq "sed -i 's|remote_ts = 192.168.20.0/24|remote_ts = 192.168.30.0/24|' /etc/swanctl/swanctl.conf"
-quiet hq 'swanctl --load-all'
+prose hq 'sudo swanctl --terminate --ike offices'
+prose hq "sudo sed -i 's/192.168.20.0/192.168.30.0/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all"
 sleep 1
 on hq 'sudo swanctl --initiate --child lans 2>&1 | tail -5'
-quiet hq "sed -i 's|remote_ts = 192.168.30.0/24|remote_ts = 192.168.20.0/24|' /etc/swanctl/swanctl.conf"
-quiet hq 'swanctl --load-all'
+prose hq "sudo sed -i 's/192.168.30.0/192.168.20.0/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all"
 
 block nat
-lab exec hq root "cat >> /etc/swanctl/swanctl.conf" <<'C'
-connections {
-  home {
-    version = 2
-    local_addrs = 203.0.113.2
-    pools = homes
-    local {
-      auth = psk
-      id = hq.example.com
-    }
-    remote {
-      auth = psk
-      id = ana@example.com
-    }
-    children {
-      office {
-        local_ts = 192.168.10.0/24
-        esp_proposals = aes256gcm16
-      }
-    }
-  }
-}
-pools {
-  homes {
-    addrs = 10.30.0.0/24
-  }
-}
-secrets {
-  ike-ana {
-    id-1 = hq.example.com
-    id-2 = ana@example.com
-    secret = "Harbour-Violet-Candle-3381"
-  }
-}
-C
-lab exec remote root "cat > /etc/swanctl/swanctl.conf" <<'C'
-connections {
-  office {
-    version = 2
-    remote_addrs = 203.0.113.2
-    vips = 0.0.0.0
-    local {
-      auth = psk
-      id = ana@example.com
-    }
-    remote {
-      auth = psk
-      id = hq.example.com
-    }
-    children {
-      office {
-        remote_ts = 192.168.10.0/24
-        esp_proposals = aes256gcm16
-      }
-    }
-  }
-}
-secrets {
-  ike-ana {
-    id-1 = hq.example.com
-    id-2 = ana@example.com
-    secret = "Harbour-Violet-Candle-3381"
-  }
-}
-C
+bash "$LAB_SH" example "$HERE/nat-traversal.md" swanctl.conf 1 | lab exec hq root 'cat >> /etc/swanctl/swanctl.conf'
+bash "$LAB_SH" example "$HERE/nat-traversal.md" swanctl.conf 2 | lab exec remote root 'cat > /etc/swanctl/swanctl.conf'
 charon remote; sleep 1
-quiet hq 'swanctl --load-all'
-quiet remote 'swanctl --load-all'
+prose hq 'sudo swanctl --load-all'
+prose remote 'sudo swanctl --load-all'
 bg isp 'sudo tcpdump -n -t -i eth1 -c 6 udp and host 198.51.100.77'
 on remote 'sudo swanctl --initiate --child office | grep -E "NAT|sending|received|virtual|established"'
 lab exec remote ana 'ping -c 1 192.168.10.10' >/dev/null 2>&1
