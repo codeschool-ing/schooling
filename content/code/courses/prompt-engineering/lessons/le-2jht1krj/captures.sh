@@ -8,10 +8,12 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# Nothing is staged beyond the workbench lab.sh builds. bin/tot is printed in
-# full there: a program proposes and judges every step, exactly, where the
-# method's paper uses a model for both. The tree figure in "search-not-a-line"
-# is drawn from the first transcript below.
+# tot is read out of search-not-a-line.md. prompts/judge.txt is staged with
+# put and shown with cat; judge-dead.txt is made from it by the sed shown.
+#
+# THE MODEL'S REPLIES in judge and judge-dead are llama3.2:3b served by Ollama
+# 0.40.0, at temperature 0, captured on 7 October 2026. The 2,962-token run
+# without --max-tokens that the lesson mentions was the same prompt, that day.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -31,3 +33,16 @@ block search-not-a-line
 on 'tot 4 9 10 13'
 on 'tot 4 9 10 13 --breadth 1'
 on 'tot 1 1 1 1'
+
+put prompts/judge.txt <<'P'
+Numbers left: 4 13 19
+Goal: make 24 using each number exactly once, with + - * /.
+Try a few combinations, then give your verdict on the last line:
+sure (you found a way), likely (it looks reachable), or impossible (every attempt is far off).
+P
+block judge
+on 'cat prompts/judge.txt'
+on 'ask - --temperature 0 < prompts/judge.txt'
+block judge-dead
+on 'sed "s/4 13 19/1 1 2/" prompts/judge.txt > prompts/judge-dead.txt'
+on 'ask - --temperature 0 --max-tokens 150 < prompts/judge-dead.txt'

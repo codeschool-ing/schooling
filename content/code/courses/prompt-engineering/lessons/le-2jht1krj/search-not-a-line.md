@@ -1,6 +1,6 @@
 ---
 title: A search, not a line
-version: 1
+version: 2
 ---
 
 Chain of thought (lesson 26) writes one path from the question to the answer. If its first step
@@ -17,8 +17,77 @@ The Game of 24: given four numbers, combine them with `+`, `-`, `*` and `/`, eac
 once, to make 24. It suits the method well, because every intermediate state can be judged. After
 one step you have three numbers left, and either 24 can still be reached from them or it cannot.
 
-`tot` is a real program, printed in `lab.sh`. **A "thought" is one step**: pick two of the
-numbers left, combine them, put the result back. At each level `tot` proposes every possible
+`tot` searches for a solution the way the method does, with a program in the places a model
+would sit: it proposes every step, and judges every state exactly. Save it as `~/pe/bin/tot` and
+make it executable:
+
+```python
+#!/usr/bin/env python3
+"""tot A B C D [--breadth B]: the Game of 24 as a tree of thoughts.
+
+Each "thought" is one step: pick two of the numbers left, combine them with
++ - * or /, and put the result back. Every possible step is PROPOSED; each new
+state is then EVALUATED as sure (24 can still be reached from it), or
+impossible; only the best BREADTH states are kept for the next level.
+
+In the method's paper a model writes the proposals and judges the states.
+Here a program does both, exactly, so the search itself can be watched.
+"""
+import itertools
+import sys
+from fractions import Fraction as F
+
+args = sys.argv[1:]
+breadth = 3
+if "--breadth" in args:
+    i = args.index("--breadth"); breadth = int(args[i + 1]); del args[i : i + 2]
+start = [F(int(x)) for x in args]
+
+
+def show(x):
+    return str(x.numerator) if x.denominator == 1 else "%d/%d" % (x.numerator, x.denominator)
+
+
+def steps(nums):
+    for i, j in itertools.permutations(range(len(nums)), 2):
+        a, b = nums[i], nums[j]
+        rest = [n for k, n in enumerate(nums) if k not in (i, j)]
+        for op, v in (("+", a + b), ("-", a - b), ("*", a * b), ("/", a / b if b else None)):
+            if v is None or (op in "+*" and i > j):
+                continue
+            yield "%s %s %s = %s" % (show(a), op, show(b), show(v)), rest + [v]
+
+
+def reachable(nums):
+    if len(nums) == 1:
+        return nums[0] == 24
+    return any(reachable(n) for _, n in steps(nums))
+
+
+frontier = [([], start)]
+level = 0
+while frontier and len(frontier[0][1]) > 1:
+    level += 1
+    proposed = [(path + [s], n) for path, n in frontier for s, n in steps(n)]
+    seen, unique = set(), []
+    for path, n in proposed:
+        key = tuple(sorted(n))
+        if key not in seen:
+            seen.add(key)
+            unique.append((path, n))
+    sure = [(p, n) for p, n in unique if reachable(n)]
+    print("level %d: %d proposed, %d different, %d sure, %d impossible"
+          % (level, len(proposed), len(unique), len(sure), len(unique) - len(sure)))
+    frontier = sure[:breadth]
+    for path, n in frontier:
+        print("  keep  [%s]  after  %s" % (" ".join(show(x) for x in n), path[-1]))
+if frontier:
+    print("solved: " + "; ".join(frontier[0][0]))
+else:
+    print("no state left: 24 cannot be made from %s" % " ".join(args))
+```
+
+**A "thought" is one step**: pick two of the numbers left, combine them, put the result back. At each level `tot` proposes every possible
 step from every state it kept, judges each new state as `sure` (24 can still be reached) or
 `impossible`, and keeps the best `--breadth` of them, three by default:
 
