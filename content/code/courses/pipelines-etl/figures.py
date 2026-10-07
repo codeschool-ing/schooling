@@ -572,6 +572,94 @@ def l04_late(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 5
+
+@figure('l05-two-views', 5)
+def l05_two_views(lang):
+    t = {'en': dict(
+            label='One order during one day. At 10:00 it is inserted as completed; at 15:00 it is '
+                  'updated to refunded. A watermark extraction at night reads the table once and '
+                  'sees one row, refunded. Change data capture reads the log and sees two changes, '
+                  'the insert and the update, in the order they committed.',
+            day='one order, one day', ins='10:00 INSERT completed', upd='15:00 UPDATE refunded',
+            night='night', wm='watermark: reads the table', wmsees='one row: refunded',
+            cdc='change data capture: reads the log', cdcsees='two changes, in commit order',
+            cap='A table holds the present. The log holds what happened, which is the only place '
+                'the completed sale still exists.'),
+         'pt': dict(
+            label='Um pedido durante um dia. Às 10:00 ele é inserido como concluído; às 15:00 é '
+                  'atualizado para estornado. Uma extração por marca d\'água à noite lê a tabela uma '
+                  'vez e vê uma linha, estornada. A captura de mudanças lê o log e vê duas mudanças, '
+                  'a inserção e a atualização, na ordem em que foram confirmadas.',
+            day='um pedido, um dia', ins='10:00 INSERT concluído', upd='15:00 UPDATE estornado',
+            night='noite', wm='marca d\'água: lê a tabela', wmsees='uma linha: estornado',
+            cdc='captura de mudanças: lê o log', cdcsees='duas mudanças, em ordem de confirmação',
+            cap='Uma tabela guarda o presente. O log guarda o que aconteceu, que é o único lugar onde '
+                'a venda concluída ainda existe.')}[lang]
+    f = Fig('l05-two-views', 720, 270, t['label'])
+    y = 60
+    f.text(40, 22, t['day'], size=11, weight='600', anchor='start')
+    f.line(40, y, 680, y, stroke='--paper-dim', arrow=True)
+    for x, lab in [(200, t['ins']), (420, t['upd'])]:
+        f.circle(x, y, 6, fill='--phosphor')
+        f.text(x, y + 20, lab, size=10, mono=True)
+    f.line(620, y - 12, 620, y + 12, stroke='--amber', width=2)
+    f.text(620, y - 22, t['night'], size=10, fill='--amber')
+    f.rect(40, 130, 300, 100, stroke='--wire', fill='--panel')
+    f.text(190, 152, t['wm'], size=11, weight='600')
+    f.rect(80, 176, 220, 26, stroke='--amber', fill='--scan', rx=4)
+    f.text(190, 189, t['wmsees'], size=10.5)
+    f.rect(380, 130, 300, 100, stroke='--wire', fill='--panel')
+    f.text(530, 152, t['cdc'], size=11, weight='600')
+    f.rect(400, 170, 125, 24, stroke='--phosphor', fill='--scan', rx=4)
+    f.text(462, 182, 'INSERT', size=10, mono=True)
+    f.rect(535, 170, 125, 24, stroke='--phosphor', fill='--scan', rx=4)
+    f.text(597, 182, 'UPDATE', size=10, mono=True)
+    f.text(530, 214, t['cdcsees'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l05-slots', 5)
+def l05_slots(lang):
+    t = {'en': dict(
+            label='The write-ahead log drawn as a strip, oldest on the left. The slot wh_cdc sits '
+                  'near the right-hand end, so almost nothing behind it is kept. The slot forgotten '
+                  'sits at the left-hand end, where it was created, and every byte between it and '
+                  'the end of the log is kept on the source\'s disk: 6085 kB after fourteen days.',
+            wal='the write-ahead log, on the source\'s disk', old='older', new='now',
+            kept='kept for forgotten: 6085 kB', kept2='176 bytes',
+            cap='PostgreSQL keeps every byte a slot has not consumed. A slot nobody reads keeps all '
+                'of them, until the disk is full.'),
+         'pt': dict(
+            label='O log de escrita antecipada desenhado como uma faixa, o mais antigo à esquerda. O '
+                  'slot wh_cdc fica perto da ponta direita, então quase nada atrás dele é guardado. '
+                  'O slot forgotten fica na ponta esquerda, onde foi criado, e cada byte entre ele e '
+                  'o fim do log é guardado no disco da origem: 6085 kB depois de catorze dias.',
+            wal='o log de escrita antecipada, no disco da origem', old='mais antigo', new='agora',
+            kept='guardado para forgotten: 6085 kB', kept2='176 bytes',
+            cap='O PostgreSQL guarda cada byte que um slot ainda não consumiu. Um slot que ninguém '
+                'lê guarda todos, até o disco encher.')}[lang]
+    f = Fig('l05-slots', 720, 230, t['label'])
+    x0, x1, y = 60, 660, 100
+    f.text(x0, 40, t['wal'], size=11, weight='600', anchor='start')
+    n = 24
+    for i in range(n):
+        x = x0 + (x1 - x0) * i / n
+        f.rect(x + 1, y, (x1 - x0) / n - 2, 30, stroke='--wire',
+               fill='--scan' if i >= 2 else '--panel', rx=2)
+    f.text(x0, y + 48, t['old'], size=10, fill='--paper-dim', anchor='start')
+    f.text(x1, y + 48, t['new'], size=10, fill='--paper-dim', anchor='end')
+    fx, wx = x0 + (x1 - x0) * 2 / n, x1 + 6
+    for x, name, col in [(fx, 'forgotten', '--amber'), (wx, 'wh_cdc', '--phosphor')]:
+        f.line(x, y - 18, x, y + 34, stroke=col, width=2)
+        f.text(x, y - 26, name, size=10.5, mono=True, fill=col,
+               anchor='middle' if x < 600 else 'end')
+    f.path(f'M{fx:.1f} {y + 70} L{wx:.1f} {y + 70}', stroke='--amber', width=1.4, arrow=True)
+    f.text((fx + wx) / 2, y + 88, t['kept'], size=10.5, fill='--amber', weight='600')
+    f.text(wx, y + 106, t['kept2'] + ' (wh_cdc)', size=10, fill='--paper-dim', anchor='end', mono=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
