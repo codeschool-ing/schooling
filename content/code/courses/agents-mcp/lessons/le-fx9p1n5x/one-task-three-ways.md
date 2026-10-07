@@ -62,7 +62,7 @@ handbook = "\n\n".join(f"# {a['title']}\n{a['body']}" for a in articles)
 
 client = anthropic.Anthropic()
 reply = client.messages.create(
-    model="scripted-1",
+    model="llama3.2:3b",
     max_tokens=1024,
     system="You draft replies for Marginalia's support team. The help centre follows.\n\n" + handbook,
     messages=[{"role": "user", "content": sys.argv[1]}],
@@ -106,7 +106,7 @@ The draft is good, and it is careful about the one thing it could not know. **It
       "note": "**The conversation starts with Bia's message**, and grows by one reply and one batch of results per step."
     },
     {
-      "code": "for step in range(1, 6):\n    reply = client.messages.create(model=\"scripted-1\", max_tokens=1024, system=SYSTEM,\n                                   tools=TOOLS, messages=messages)\n    messages.append({\"role\": \"assistant\", \"content\": reply.content})\n    if reply.stop_reason != \"tool_use\":\n        print(f\"[{step}] answer: {reply.content[0].text}\")\n        break\n",
+      "code": "for step in range(1, 6):\n    reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=SYSTEM,\n                                   tools=TOOLS, messages=messages)\n    messages.append({\"role\": \"assistant\", \"content\": reply.content})\n    if reply.stop_reason != \"tool_use\":\n        print(f\"[{step}] answer: {reply.content[0].text}\")\n        break\n",
       "note": "**The loop.** Send everything so far, read the reply, and stop if the model did not ask for a tool. Five steps at most, whatever the model wants."
     },
     {

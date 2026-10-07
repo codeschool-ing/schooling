@@ -21,19 +21,80 @@ The picture to get rid of is a model reaching into a database. In the run for Bi
 
 ## The conversation travels in full
 
-A model API keeps nothing between requests. So each step sends everything again: the system prompt, the tool definitions, Bia's message, every earlier call and every earlier result. labllm logs every request, and here are the token counts for the four runs in this lesson:
+A model API keeps nothing between requests. So each step sends everything again: the system prompt, the tool definitions, Bia's message, every earlier call and every earlier result. To see it, put a recorder between the program and Ollama. This one listens on port 11435, passes each request on to 11434 unchanged, and writes it down. Save it as `~/agents/recorder.py`; later lessons use it whenever they ask what a program actually sent.
+
+```python
+"""recorder.py: stands between your programs and Ollama, and writes down every request.
+
+Point a program at http://127.0.0.1:11435 instead of 11434 and it works as
+before, while each request lands in requests.jsonl as one JSON line: the path,
+the body the program sent, the status, how long the reply took, and the tokens
+the reply says it used.
+"""
+import http.client
+import json
+import time
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+LOG = "requests.jsonl"
+
+
+def usage_in(raw):
+    """Tokens from a JSON reply, or from a stream's events: in (all of the prompt), of those cached, and out."""
+    found = {}
+    for line in raw.decode(errors="replace").splitlines():
+        line = line.removeprefix("data:").strip()
+        if not line.startswith("{"):
+            continue
+        event = json.loads(line)
+        u = event.get("usage") or (event.get("message") or {}).get("usage")
+        if not u:
+            continue
+        if "prompt_tokens" in u:   # OpenAI's shape: the cached tokens are part of prompt_tokens
+            cached = (u.get("prompt_tokens_details") or {}).get("cached_tokens") or 0
+            found.update(input_tokens=u["prompt_tokens"], cached_tokens=cached, output_tokens=u["completion_tokens"])
+        else:                      # Anthropic's shape: input_tokens leaves the cached ones out
+            if "input_tokens" in u:   # a stream's last event may carry the output count alone
+                cached = u.get("cache_read_input_tokens") or 0
+                found.update(input_tokens=u["input_tokens"] + cached, cached_tokens=cached)
+            found["output_tokens"] = u.get("output_tokens", found.get("output_tokens"))
+    return found
+
+
+class Recorder(BaseHTTPRequestHandler):
+    def do_POST(self):
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        started = time.monotonic()
+        upstream = http.client.HTTPConnection("127.0.0.1", 11434, timeout=900)
+        upstream.request(self.command, self.path, body, {"Content-Type": "application/json"})
+        reply = upstream.getresponse()
+        self.send_response(reply.status)
+        self.send_header("Content-Type", reply.getheader("Content-Type", "application/json"))
+        self.send_header("Connection", "close")
+        self.end_headers()
+        raw = b""
+        while chunk := reply.read1(65536):
+            raw += chunk
+            self.wfile.write(chunk)
+            self.wfile.flush()
+        with open(LOG, "a") as log:
+            log.write(json.dumps({"path": self.path, "request": json.loads(body or b"{}"),
+                                  "status": reply.status, "ms": round(1000 * (time.monotonic() - started)),
+                                  "usage": usage_in(raw)}) + "\n")
+
+    do_GET = do_POST
+
+    def log_message(self, *args):
+        pass
+
+
+ThreadingHTTPServer(("127.0.0.1", 11435), Recorder).serve_forever()
+```
+
+Start it in the background, and run Bia's question again with `ANTHROPIC_BASE_URL` pointed at the recorder for that one command:
 
 ```
-ana@lab:~/agents$ python -c 'import json; [print(r["n"], r["rule"], r["usage"]["input_tokens"], r["usage"]["output_tokens"]) for r in map(json.loads, open("/var/log/labllm/requests.jsonl"))]'
-3 l01-assistant 2250 83
-4 l01-agent-return-1 180 10
-5 l01-agent-return-2 303 8
-6 l01-agent-return-3 498 68
-7 l01-agent-late-1 169 10
-8 l01-agent-late-2 330 8
-9 l01-agent-late-3 545 48
-10 l01-agent-pay-1 160 7
-11 l01-agent-pay-2 366 49
+@@REQ@@
 ```
 
-The columns are the request number, the rule labllm answered with, input tokens and output tokens. For Bia's question the input grew from 180 to 303 to 498, because each request carried the previous one plus a call and a result. **The assistant's single request was the largest of all, 2250 tokens**, because it carried the whole help centre whether the question needed it or not; the agent carried only the three articles it asked for. Neither is cheaper as a rule. Lesson 18 measures when each wins, and it starts from this growth.
+@@REQPROSE@@

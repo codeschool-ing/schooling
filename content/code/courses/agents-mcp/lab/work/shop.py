@@ -1,17 +1,17 @@
-"""Marginalia's data as plain functions: what the agents in this course are given to call.
+"""shop.py: Marginalia's data as plain functions, which every lesson wraps as tools.
 
-Nothing here knows about models, tools or MCP. Each lesson wraps these
-functions in whatever a model needs (a schema, a decorator, an MCP server),
-and the functions stay the same underneath.
+Nothing here knows about models, tools or MCP. The help-centre search asks
+Ollama for embeddings from all-minilm, the model embeddings-vectors uses.
 """
 import json
-import os
+import math
 import sqlite3
+import urllib.request
 from datetime import date
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent / "data"
-TODAY = date.fromisoformat(os.environ.get("LAB_TODAY", "2026-10-06"))
+TODAY = date(2026, 10, 6)   # the shop's calendar stops here, so every date in the lessons holds
 
 
 def _db(readonly=True):
@@ -47,39 +47,37 @@ def get_customer(customer_id):
 
 
 def get_book(book_id):
-    """A book from the catalogue, with its price and stock where Marginalia sells it."""
+    """A book from the catalogue, with its price and stock."""
     for line in open(DATA / "books.jsonl"):
         b = json.loads(line)
         if b["id"] == book_id:
             with _db() as db:
                 p = db.execute("SELECT cents, stock FROM prices WHERE book_id = ?", (book_id,)).fetchone()
-            b.update(dict(p) if p else {"cents": None, "stock": 0})
+            b.update(dict(p))
             return b
     raise LookupError(f"no book {book_id}")
 
 
-_help = None
+def _embed(texts):
+    req = urllib.request.Request("http://127.0.0.1:11434/api/embed",
+                                 json.dumps({"model": "all-minilm", "input": texts}).encode(),
+                                 {"Content-Type": "application/json"})
+    with urllib.request.urlopen(req) as r:
+        return json.load(r)["embeddings"]   # each one already has length 1
 
 
 def search_help(query, k=3):
     """The k help-centre articles closest in meaning to QUERY, by cosine similarity."""
-    global _help
-    import numpy as np
-    from minilm import embed
-    if _help is None:
-        arts = [json.loads(line) for line in open(DATA / "help.jsonl")]
-        cache = DATA / "help.npy"
-        if cache.exists():
-            vecs = np.load(cache)
-        else:
-            vecs = embed([a["title"] + ". " + a["body"] for a in arts])
-            np.save(cache, vecs)
-        _help = (arts, vecs)
-    arts, vecs = _help
-    scores = vecs @ embed(query)[0]
-    best = scores.argsort()[::-1][:k]
+    arts = [json.loads(line) for line in open(DATA / "help.jsonl")]
+    cache = DATA / "help.vectors.json"
+    if not cache.exists():
+        cache.write_text(json.dumps(_embed([a["title"] + ". " + a["body"] for a in arts])))
+    vecs = json.loads(cache.read_text())
+    q = _embed([query])[0]
+    scores = [math.sumprod(v, q) for v in vecs]
+    best = sorted(range(len(arts)), key=lambda i: -scores[i])[:k]
     return [{"id": arts[i]["id"], "title": arts[i]["title"], "body": arts[i]["body"],
-             "score": round(float(scores[i]), 3)} for i in best]
+             "score": round(scores[i], 3)} for i in best]
 
 
 def refund(order_id, cents, reason, approved_by):
