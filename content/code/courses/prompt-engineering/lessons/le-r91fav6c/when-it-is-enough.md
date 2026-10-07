@@ -138,7 +138,7 @@ What to try next depends on the kind of failure:
 
 The third row is where `r5` sits. A description of sarcasm did not move the model; an example of a
 sarcastic message with its label often shows the boundary better than a sentence describing it.
-That is lesson 21.
+Lesson 21 tries it on this test set, and counts.
 
 **Two warnings about the test set itself.** Eight messages is enough to find the kinds of failure
 above and far too few to measure an error rate: one more miss moves the score by twelve and a half points. A test

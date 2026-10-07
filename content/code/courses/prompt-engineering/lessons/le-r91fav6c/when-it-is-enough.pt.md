@@ -139,7 +139,7 @@ O que tentar em seguida depende do tipo de falha:
 
 A terceira linha é onde a `r5` está. Uma descrição de ironia não moveu o modelo; um exemplo de
 mensagem irônica com o seu rótulo muitas vezes mostra a fronteira melhor que uma frase que a
-descreve. Essa é a lição 21.
+descreve. A lição 21 tenta isso neste conjunto de teste, e conta.
 
 **Dois avisos sobre o próprio conjunto de teste.** Oito mensagens bastam para achar os tipos de
 falha acima e são poucas demais para medir uma taxa de erro: um erro a mais move a nota em doze

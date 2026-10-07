@@ -1,6 +1,6 @@
 ---
 title: Exemplos são uma especificação
-version: 1
+version: 2
 ---
 
 É natural tratar exemplos como um extra simpático, um jeito de ser gentil com o modelo depois das
@@ -66,35 +66,53 @@ fortes na primeira coisa e não dão garantia nenhuma sobre a segunda.
 
 ## A mesma tarefa, zero-, one- e few-shot
 
-A tarefa de rotular da lição 20, em três versões. O curso escreveu as três como ilustração, e elas
-estão encurtadas para a parte que muda.
+A tarefa de rotular da lição 20, em três versões curtas, todas terminando na mesma mensagem
+sarcástica. Zero-shot, só a descrição:
 
-Zero-shot, só a descrição:
-
-```localised
-Rotule a mensagem como positive, negative, mixed ou not_a_review.
-Responda só com o rótulo.
+```
+ana@lab:~/pe$ cat prompts/shot-zero.txt
+Label the message as positive, negative, mixed or not_a_review.
+Reply with the label only.
 
 <message>Great, another forty minutes for a coffee.</message>
+ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-zero.txt
+negative
+-- llama3.2:3b, finish: stop, prompt 58 tokens, output 2 tokens
 ```
 
-One-shot, a descrição e um exemplo resolvido:
+Certo, sem exemplo nenhum: este modelo leu o sarcasmo desta mensagem. One-shot, a descrição e um
+exemplo resolvido:
 
-```localised
-Rotule a mensagem como positive, negative, mixed ou not_a_review.
-Responda só com o rótulo.
+```
+ana@lab:~/pe$ cat prompts/shot-one.txt
+Label the message as positive, negative, mixed or not_a_review.
+Reply with the label only.
 
 <message>Can I book the terrace for six on Saturday?</message>
 not_a_review
 
 <message>Great, another forty minutes for a coffee.</message>
+ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-one.txt
+negative
+
+<message>Can I book the terrace for six on Saturday?</message>
+mixed
+
+<message>Great, another forty minutes for a coffee.</message>
+negative
+-- llama3.2:3b, finish: stop, prompt 76 tokens, output 33 tokens
 ```
 
-Few-shot, com um exemplo para cada rótulo, inclusive um irônico:
+O rótulo veio primeiro, e estava certo, e depois o modelo **continuou**. Escreveu outra `<message>`,
+uma reserva que ele inventou, rotulou-a, e depois rotulou de novo a mensagem de verdade. É o padrão
+fazendo o seu trabalho: o prompt era mensagem, rótulo, mensagem, e a continuação mais provável de
+mensagem, rótulo, mensagem, rótulo é outra mensagem. Few-shot, com um exemplo para cada rótulo,
+inclusive um sarcástico:
 
-```localised
-Rotule a mensagem como positive, negative, mixed ou not_a_review.
-Responda só com o rótulo.
+```
+ana@lab:~/pe$ cat prompts/shot-few.txt
+Label the message as positive, negative, mixed or not_a_review.
+Reply with the label only.
 
 <message>Oh lovely, a cold croissant again.</message>
 negative
@@ -109,14 +127,27 @@ mixed
 positive
 
 <message>Great, another forty minutes for a coffee.</message>
+ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-few.txt
+1. negative
+2. not_a_review
+3. mixed
+4. positive
+5. not_a_review
+-- llama3.2:3b, finish: stop, prompt 120 tokens, output 24 tokens
 ```
 
-A versão one-shot fixa a **forma**: um rótulo puro, numa linha só, que a descrição também pedia.
-Ela não resolve a ironia, porque o seu único exemplo não é irônico. A versão few-shot tem uma
-mensagem irônica rotulada `negative`, que mostra a fronteira que a lição 20 só conseguia descrever.
-Esse é o argumento a favor dos exemplos numa frase: **eles respondem à pergunta "de que lado da
-linha isto cai?" pondo alguma coisa de cada lado.**
+Cinco rótulos para cinco mensagens, numerados: ele rotulou os exemplos além da mensagem, e é a
+última linha que responde à pergunta. Quatro dos cinco exemplos foram rotulados certo, e o quinto é
+a própria mensagem, `Great, another forty minutes for a coffee.`, agora rotulada `not_a_review`. A
+resposta zero-shot estava certa.
 
-O one-shot tem um risco próprio. Com um único exemplo, tudo nele parece parte do padrão: o rótulo,
-o tamanho, o assunto. Um modelo que viu só `not_a_review` pode pender para esse rótulo na próxima
-mensagem, e é por isso que a próxima seção de leitura pede exemplos que cubram todas as classes.
+Então os exemplos resolveram a **forma**, um rótulo puro por linha, e também ensinaram uma forma que
+ninguém pediu: nestes prompts um exemplo e a entrada são idênticos, `<message>` e um rótulo, e nada
+marca onde os exemplos acabam e a tarefa começa. **Exemplos são a especificação de tudo o que têm em
+comum, inclusive o layout**, e um modelo deste tamanho segue o layout mais longe do que a instrução.
+A próxima seção de leitura marca a fronteira, e depois conta.
+
+O one-shot tem também um risco só dele. Com um único exemplo, tudo nele parece fazer parte do padrão:
+o rótulo, o tamanho, o assunto. Um modelo que só viu `not_a_review` pode pender para esse rótulo na
+mensagem seguinte, e é por isso que a próxima seção de leitura pede exemplos que cubram todas as
+classes.
