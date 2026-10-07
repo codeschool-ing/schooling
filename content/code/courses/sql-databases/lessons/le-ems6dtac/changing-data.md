@@ -19,6 +19,10 @@ refusing to equal itself — lesson 4 taught all of it and not one rule changes 
 What changes is what a mistake costs. That is why these arrive in this lesson and not in lesson 4:
 the next section is about the mistake, and the rest of this one is about the statements.
 
+**Every session in this lesson starts from the shop as lesson 1 loads it.** A write changes what
+the next one finds, so to see the same rows as the page, put the shop back between them with the
+three lines from the end of lesson 1: `dropdb shop`, `createdb shop`, `psql shop -f shop.sql`.
+
 ## `INSERT`
 
 ```
@@ -70,7 +74,7 @@ fire:
 shop=# INSERT INTO orders (customer_id, total) VALUES (3, 39.90) RETURNING id, ordered_on, status;
  id | ordered_on | status 
 ----+------------+--------
-  5 | 2026-09-18 | placed
+  5 | 2026-10-07 | placed
 (1 row)
 
 INSERT 0 1
