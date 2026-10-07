@@ -51,11 +51,10 @@ printf '<p><a href="menu.html">See the menu</a></p>\n' >> index.html
 ana 2026-09-18T15:30:00-03:00 'Link the menu from the home page'
 ```
 
-Três comandos nele são novos, e cada um faz o papel de algo que você faria num editor.
-`printf '…' > arquivo` escreve um arquivo com exatamente aquelas linhas, sendo `\n` o fim de uma
-linha, e `>>` as acrescenta ao fim do arquivo em vez disso. `sed -i 's/velho/novo/' arquivo` troca
-`velho` por `novo` dentro do arquivo, e `sed -i '/Rye bread/d'` apaga a linha que menciona o pão de
-centeio. O resto é o Git que você conhece da aula 2, com um acréscimo: as variáveis `GIT_AUTHOR_…`
+Os arquivos são escritos do jeito que a aula 2 os escreveu, cada comando fazendo o papel de algo
+que você faria num editor. `printf '…' > arquivo` escreve um arquivo com exatamente aquelas linhas, e
+`>>` as acrescenta ao fim do arquivo em vez disso. `sed -i 's/velho/novo/' arquivo` troca `velho` por
+`novo` dentro do arquivo, e `sed -i '/Rye bread/d'` apaga a linha que menciona o pão de centeio. O resto é o Git que você conhece da aula 2, com um acréscimo: as variáveis `GIT_AUTHOR_…`
 e `GIT_COMMITTER_…`, que dizem ao Git quem fez um commit e quando, passando por cima das suas
 configurações naquele comando só.
 

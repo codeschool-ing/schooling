@@ -51,12 +51,12 @@ printf '<p><a href="menu.html">See the menu</a></p>\n' >> index.html
 ana 2026-09-18T15:30:00-03:00 'Link the menu from the home page'
 ```
 
-Three commands in it are new, and each stands for something you would do in an editor.
-`printf '…' > file` writes a file with exactly those lines, `\n` being the end of a line, and `>>`
-adds them to the end of the file instead. `sed -i 's/old/new/' file` replaces `old` with `new` inside
-the file, and `sed -i '/Rye bread/d'` deletes the line that mentions rye bread. The rest is Git you
-know from lesson 2, with one addition: the `GIT_AUTHOR_…` and `GIT_COMMITTER_…` variables, which tell
-Git who made a commit and when, overriding your settings for that one command.
+The files are written the way lesson 2 wrote them, each command standing for something you would
+do in an editor. `printf '…' > file` writes a file with exactly those lines, and `>>` adds them to
+the end of the file instead. `sed -i 's/old/new/' file` replaces `old` with `new` inside the file,
+and `sed -i '/Rye bread/d'` deletes the line that mentions rye bread. The rest is Git you know from
+lesson 2, with one addition: the `GIT_AUTHOR_…` and `GIT_COMMITTER_…` variables, which tell Git who
+made a commit and when, overriding your settings for that one command.
 
 ## Making the week
 
