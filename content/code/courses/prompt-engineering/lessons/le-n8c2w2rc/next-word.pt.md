@@ -22,6 +22,10 @@ context: trigram after 'coffee is'
   ready     11.1%  ####
   cold       7.4%  ###
   bitter     3.7%  #
+ana@lab:~/pe$ toylm next "the café opens at"
+context: trigram after 'opens at'
+  seven     75.0%  ##############################
+  eight     25.0%  ##########
 ```
 
 Ele não respondeu a uma pergunta, porque nenhuma foi feita. Ele disse quais palavras vieram depois

@@ -19,6 +19,23 @@ score, which is the simplest rule there is:
 ana@lab:~/pe$ toylm generate "the café opens at" --temperature 0
 seven.
 -- finish: end, prompt 4 tokens, output 2 tokens
+ana@lab:~/pe$ toylm next "the café opens at seven"
+context: trigram after 'at seven'
+  .        100.0%  ########################################
+ana@lab:~/pe$ toylm next "the cat sat on the"
+context: trigram after 'on the'
+  chair     50.0%  ####################
+  mat       33.3%  #############
+  counter   16.7%  #######
+ana@lab:~/pe$ toylm generate "the cat sat on the" --temperature 0
+chair by the window.
+-- finish: end, prompt 5 tokens, output 5 tokens
+ana@lab:~/pe$ toylm generate "the coffee is" --samples 5
+[seed 1] hot.
+[seed 2] cold and the cat wakes.
+[seed 3] hot.
+[seed 4] hot.
+[seed 5] strong.
 ```
 
 Two words came out, `seven` and the full stop, and then the model picked the end. You can watch

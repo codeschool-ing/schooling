@@ -513,9 +513,11 @@ chmod +x ~/pe/bin/ask
 
 ```
 ana@lab:~/pe$ ask "the café opens at" --temperature 0
-ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \u0026\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
+I'm not sure what time the café opens at. Can you provide more context or information about the café you're referring to?
+-- llama3.2:3b, finish: stop, prompt 29 tokens, output 27 tokens
 ana@lab:~/pe$ ask "When does a café usually open? Answer in one sentence." --temperature 0
-ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \u0026\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
+A typical café usually opens between 7:00 AM and 11:00 AM, with peak hours often between 8:00 AM and 10:00 AM, when customers are looking for a morning coffee or breakfast.
+-- llama3.2:3b, finish: stop, prompt 37 tokens, output 47 tokens
 ```
 
 The first prompt is the text `toylm generate` continued with `seven.` earlier in this lesson. The chat

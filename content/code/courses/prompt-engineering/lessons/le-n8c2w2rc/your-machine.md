@@ -79,12 +79,13 @@ Python 3.12.3
 v18.19.1
 ollama version is 0.40.0
 ana@lab:~$ ollama list
-NAME           ID              SIZE      MODIFIED      
-llama3.2:3b    a80c4f17acd5    2.0 GB    2 minutes ago    
+NAME           ID              SIZE      MODIFIED    
+llama3.2:3b    a80c4f17acd5    2.0 GB    2 hours ago    
 ana@lab:~$ ask "Say hello in three words." --temperature 0 --plain
-ask: http://localhost:11434/v1 answered 500: {"error":{"message":"error starting llama-server: llama-server binary not found (checked: /usr/local/lib/ollama/llama-server, /usr/local/bin/build/lib/ollama/llama-server, /usr/local/bin/dist/linux-amd64/lib/ollama/llama-server, /usr/local/bin/dist/linux_amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/build/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux-amd64/lib/ollama/llama-server, /home/user/schooling/content/code/courses/prompt-engineering/lessons/le-n8c2w2rc/dist/linux_amd64/lib/ollama/llama-server). Run 'cmake -S llama/server --preset cpu \u0026\u0026 cmake --build --preset cpu' first ","type":"api_error","param":null,"code":null}}
+Hello there friend.
 ana@lab:~$ ollama ps
-NAME    ID    SIZE    PROCESSOR    CONTEXT    RUNNER    UNTIL 
+NAME           ID              SIZE      PROCESSOR          CONTEXT    RUNNER      UNTIL              
+llama3.2:3b    a80c4f17acd5    2.9 GB    30%/70% CPU/GPU    4096       llamacpp    4 minutes from now    
 ana@lab:~$ du -sh /usr/local/lib/ollama
 2.1G	/usr/local/lib/ollama
 ```

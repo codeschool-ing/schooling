@@ -30,8 +30,8 @@ Error: could not connect to ollama server, run 'ollama serve' to start it
 ana@lab:~$ ask "Say hello in three words."
 ask: cannot reach http://localhost:11434/v1 ([Errno 111] Connection refused). Is the model server running?
 ana@lab:~$ ollama list
-NAME           ID              SIZE      MODIFIED      
-llama3.2:3b    a80c4f17acd5    2.0 GB    2 minutes ago    
+NAME           ID              SIZE      MODIFIED    
+llama3.2:3b    a80c4f17acd5    2.0 GB    2 hours ago    
 ```
 
 Both say the same thing in two ways: the program that serves the model is not running, so nothing

@@ -21,6 +21,10 @@ context: trigram after 'coffee is'
   ready     11.1%  ####
   cold       7.4%  ###
   bitter     3.7%  #
+ana@lab:~/pe$ toylm next "the café opens at"
+context: trigram after 'opens at'
+  seven     75.0%  ##############################
+  eight     25.0%  ##########
 ```
 
 It did not answer a question, because none was asked. It said which words followed `coffee is`
