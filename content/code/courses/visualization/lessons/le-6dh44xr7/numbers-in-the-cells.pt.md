@@ -28,7 +28,7 @@ falha em mais. A aula 14 dá um número a esse contraste.
 Correlações vão de −1 a +1, com **o 0 como um meio que significa algo**: nenhuma relação. Então a
 escala de cores tem dois lados: um matiz para o negativo, outro para o positivo, e claro no zero. Essa
 é uma escala **divergente**. Um mapa de calor de contagens de pedidos não tem meio com significado,
-só mais e menos, e usa uma escala **sequencial**, um matiz do claro ao escuro, como o mapa de calor da
+só mais e menos, e usa uma escala **sequencial**, um matiz do fraco ao forte, como o mapa de calor da
 semana.
 
 A aula 12 trata de escolher entre as duas. Por ora, uma regra resolve a maioria dos casos: **uma
@@ -37,6 +37,6 @@ ganha uma sequencial.**
 
 ## Mostre sempre a escala
 
-Um mapa de calor sem legenda de cores faz o leitor adivinhar o que escuro quer dizer. Ponha uma escala
+Um mapa de calor sem legenda de cores faz o leitor adivinhar o que uma cor forte quer dizer. Ponha uma escala
 pequena ao lado com as pontas rotuladas, como as duas figuras desta aula fazem, e diga em palavras o
 que está sendo medido.
