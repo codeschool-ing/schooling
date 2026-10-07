@@ -1,11 +1,17 @@
 ---
 title: Primeiras consultas: selecionando séries
-version: 1
+version: 2
 ---
 
 O PromQL, a linguagem de consulta do Prometheus, é perguntado por uma API HTTP, e as respostas são
 JSON. Um script curto, o `promq`, manda uma expressão e imprime cada série devolvida numa linha, os
-labels dela e depois o valor:
+labels dela e depois o valor. Salve-o como `~/shop/promq`, do jeito que o `cat` abaixo o imprime, e
+torne-o executável; toda aula depois desta também o usa:
+
+```sh
+chmod +x promq
+```
+
 
 ```
 ana@obs:~/shop$ cat promq
