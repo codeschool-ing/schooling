@@ -3,7 +3,7 @@ title: Quando a planilha discorda de você
 version: 1
 ---
 
-A maior parte dos problemas que uma primeira planilha dá vem de quatro erros, e cada um mostra um sintoma diferente. Os valores abaixo são o que o LibreOffice Calc, em inglês, devolveu quando o `workbook.py` do curso cometeu cada erro de propósito; o Excel e o Google Planilhas usam os mesmos nomes de erro em inglês, e um Excel em português os escreve `#VALOR!` e `#NOME?`.
+A maior parte dos problemas que uma primeira planilha dá vem de quatro erros, e cada um mostra um sintoma diferente. Os valores abaixo são o que o LibreOffice Calc, em inglês, devolveu quando cada erro foi cometido de propósito numa cópia da planilha; o Excel e o Google Planilhas usam os mesmos nomes de erro em inglês, e um Excel em português os escreve `#VALOR!` e `#NOME?`.
 
 ## Uma data que na verdade é texto
 

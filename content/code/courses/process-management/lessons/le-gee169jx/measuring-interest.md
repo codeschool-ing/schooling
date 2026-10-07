@@ -7,7 +7,7 @@ The most useful thing a team can do for its technical debt is **measure the inte
 
 ## Two debts, priced
 
-The Agenda team's two largest debts, from the course's sheet:
+The Agenda team's two largest debts, as the team recorded them:
 
 **The flaky test suite.** Five developers each lose about half an hour a day to re-running tests that fail at random. Over a ten-day Sprint that is:
 
