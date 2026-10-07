@@ -9,6 +9,21 @@ nem achar duas entradas que compartilhem um resumo.** Ela não tem chave. Qualqu
 o hash de qualquer coisa, e é isso que importa: ela é uma impressão digital pública, e a impressão
 é útil porque não pode ser forjada.
 
+## Os arquivos desta aula
+
+Uma coisa nova, que faz as vezes de uma versão de software: o portal da Vereda, versão 2.4.1, como
+20.480 bytes do `vcrypt derive` em vez de um programa de verdade, uma nota sobre ele e o arquivo de
+resumos que um projeto publica ao lado de uma versão, que a seção 05 lê. Aqui você mesmo cria esse
+arquivo, como faria quem publica a versão:
+
+```sh
+cd ~/lab
+mkdir -p data/release
+vcrypt derive --raw release/portal-2.4.1 20480 > data/release/portal-2.4.1.tar
+echo 'Vereda portal 2.4.1: booking reminders by SMS.' > data/release/NOTES.txt
+(cd data/release && sha256sum NOTES.txt portal-2.4.1.tar > SHA256SUMS)
+```
+
 ## Tamanho fixo, entre o que entrar
 
 O SHA-256 sempre devolve 256 bits, 64 dígitos hexadecimais. A carta de 170 bytes, o arquivo de
@@ -39,7 +54,23 @@ ana@lab:~/lab$ printf 'Eight session' | sha256sum
 ```
 
 Não há semelhança parcial a explorar, nenhum resumo "quase igual" para uma entrada "quase igual".
-Trocar uma letra por minúscula muda cerca de metade dos 256 bits:
+Uma ferramenta curta conta em quantos dos 256 bits dois resumos discordam:
+
+```py
+# ~/lab/tools/avalanche.py
+"""vcrypt avalanche A B: SHA-256 of two strings, and how many of the 256 bits
+differ between the two digests."""
+import hashlib
+import sys
+
+a, b = sys.argv[1], sys.argv[2]
+ha, hb = hashlib.sha256(a.encode()).digest(), hashlib.sha256(b.encode()).digest()
+print(f"{a!r:>20}  {ha.hex()}")
+print(f"{b!r:>20}  {hb.hex()}")
+print(f"{sum(bin(x ^ y).count('1') for x, y in zip(ha, hb))} of 256 bits differ")
+```
+
+Trocar uma letra por minúscula muda cerca de metade deles:
 
 ```
 ana@lab:~/lab$ vcrypt avalanche 'Eight sessions' 'eight sessions'

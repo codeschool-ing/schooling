@@ -7,28 +7,29 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/lab$,
-# followed by what it printed.
+# It rebuilds ~/lab with lab.sh reset, which builds it as the lessons do, in
+# the home of a user `ana` (LAB_HOME moves it), and prints each command after
+# a prompt, ana@lab:~/lab$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/lab, built by lab.sh,
-# including data/users.csv, eight staff accounts with passwords the course
-# wrote, and keys/pepper.hex. Every salt is derived from a label by
-# vlab/passwords.py, so the stores repeat byte for byte; a real system draws
-# each salt at random when it stores the password. Nothing here is a real
-# password store, and no password in it is anybody's.
+# data/users.csv and keys/pepper.hex are what section `unsalted` makes:
+# eight staff accounts with passwords the course wrote, and a pepper from
+# `vcrypt derive`. Every salt is derived from a label by tools/passwords.py,
+# which the lesson shows, so the stores repeat byte for byte; a real system
+# draws each salt at random when it stores the password. Nothing here is a
+# real password store, and no password in it is anybody's.
 #
-# Recorded with Python 3.13, cryptography 50 and bcrypt 5.0,
-# TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with Python 3.12, cryptography 50.0.2 and bcrypt
+# 5.0.0, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/cryptography}
-mkdir -p "$HOME"
+export LAB_HOME=${LAB_HOME:-/home/ana}
+export HOME=$LAB_HOME
 bash "$here/../../lab.sh" reset >/dev/null
 cd "$HOME/lab"
-export PATH=$HOME/lab/bin:$PATH
+# What the three lines lesson 1 adds to ~/.bashrc do.
+export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv
 on() { printf 'ana@lab:~/lab$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 

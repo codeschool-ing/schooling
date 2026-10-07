@@ -60,6 +60,8 @@ export PIP_CACHE_DIR=/var/cache/cryptography-pip   # not ana's home: root runs t
 STEPS="
 le-m9cj97me the-lab
 le-cjcdfccn two-keys
+le-b56pa52x promises
+le-zkqzqc2n unsalted
 "
 
 STOCK=/usr/local/lib/cryptography-stock

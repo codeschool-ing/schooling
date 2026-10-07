@@ -11,8 +11,9 @@ costuma dar. Sem a pimenta, ele não consegue testar um único palpite.
 
 ## Acrescentando uma
 
-A pimenta do laboratório é o `keys/pepper.hex`, 32 bytes aleatórios. O `vcrypt store --pepper`
-primeiro calcula um HMAC da senha com a pimenta como chave e depois entrega isso ao Argon2id
+A pimenta do laboratório é o `keys/pepper.hex`, os 32 bytes criados no começo desta aula; uma de
+verdade são 32 bytes aleatórios. O `vcrypt store --pepper` primeiro calcula um HMAC da senha com a
+pimenta como chave, que é a `peppered()` do `passwords.py`, e depois entrega isso ao Argon2id
 exatamente como antes:
 
 ```
@@ -22,7 +23,40 @@ ana.lima:$argon2id$v=19$m=19456,t=2,p=1$FuRufmOK/RUsaLq6VND23g$0bKIIWlMFo4QB835p
 
 A string guardada parece qualquer outro hash Argon2id. Ela tem até o mesmo sal da linha da Ana na
 seção anterior, porque o laboratório deriva os sais por usuário; o resultado é diferente porque a
-entrada do Argon2id foi o valor com pimenta. Com a pimenta, a senha da Ana é aceita:
+entrada do Argon2id foi o valor com pimenta. Conferir uma senha é a outra metade do arquivo, a
+`verify()`, e o `vcrypt verify` pergunta a ela o que um formulário de login perguntaria:
+
+```py
+# ~/lab/tools/verify.py
+"""vcrypt verify STORE USER PASSWORD [--pepper KEYFILE]: what a sign-in form
+does with what was typed. An unknown user gets the same answer as a wrong
+password, on purpose."""
+import argparse
+import sys
+
+import passwords
+
+p = argparse.ArgumentParser(prog="vcrypt verify")
+p.add_argument("store")
+p.add_argument("user")
+p.add_argument("password")
+p.add_argument("--pepper")
+a = p.parse_args()
+
+pepper = bytes.fromhex(open(a.pepper).read().strip()) if a.pepper else None
+for line in open(a.store):
+    user, stored = line.rstrip("\n").split(":", 1)
+    if user == a.user:
+        ok, weak = passwords.verify(stored, a.password, pepper)
+        if ok:
+            print(f"{a.user}: password accepted" + (f"; rehash now: {weak}" if weak else ""))
+            sys.exit(0)
+        break
+print(f"{a.user}: wrong password")
+sys.exit(1)
+```
+
+Com a pimenta, a senha da Ana é aceita:
 
 ```
 ana@lab:~/lab$ vcrypt verify --pepper keys/pepper.hex store-peppered.txt ana.lima 'Vereda@2026'

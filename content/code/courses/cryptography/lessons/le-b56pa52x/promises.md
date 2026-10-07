@@ -8,6 +8,21 @@ version: 1
 that share one.** It has no key. Anybody can compute the hash of anything, and that is the point:
 it is a public fingerprint, and the fingerprint is useful because it cannot be forged.
 
+## This lesson's files
+
+One new thing, a stand-in for a software release: Vereda's portal, version 2.4.1, as 20,480 bytes
+from `vcrypt derive` rather than a real program, a note about it, and the file of digests a project
+publishes beside a release, which section 05 reads. Here you make that file yourself, as whoever
+publishes the release would:
+
+```sh
+cd ~/lab
+mkdir -p data/release
+vcrypt derive --raw release/portal-2.4.1 20480 > data/release/portal-2.4.1.tar
+echo 'Vereda portal 2.4.1: booking reminders by SMS.' > data/release/NOTES.txt
+(cd data/release && sha256sum NOTES.txt portal-2.4.1.tar > SHA256SUMS)
+```
+
 ## Fixed length, whatever goes in
 
 SHA-256 always returns 256 bits, 64 hexadecimal digits. The 170-byte letter, the 512-byte
@@ -37,7 +52,23 @@ ana@lab:~/lab$ printf 'Eight session' | sha256sum
 ```
 
 There is no partial resemblance to exploit, no "nearly the same" digest for "nearly the same"
-input. Lowercasing one letter changes about half of the 256 bits:
+input. A short tool counts how many of the 256 bits two digests disagree on:
+
+```py
+# ~/lab/tools/avalanche.py
+"""vcrypt avalanche A B: SHA-256 of two strings, and how many of the 256 bits
+differ between the two digests."""
+import hashlib
+import sys
+
+a, b = sys.argv[1], sys.argv[2]
+ha, hb = hashlib.sha256(a.encode()).digest(), hashlib.sha256(b.encode()).digest()
+print(f"{a!r:>20}  {ha.hex()}")
+print(f"{b!r:>20}  {hb.hex()}")
+print(f"{sum(bin(x ^ y).count('1') for x, y in zip(ha, hb))} of 256 bits differ")
+```
+
+Lowercasing one letter changes about half of them:
 
 ```
 ana@lab:~/lab$ vcrypt avalanche 'Eight sessions' 'eight sessions'
