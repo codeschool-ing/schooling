@@ -1,6 +1,6 @@
 ---
 title: What a model cannot see inside a token
-version: 1
+version: 2
 ---
 
 A model that writes fluent paragraphs in several languages seems certain to know how a word is
@@ -24,7 +24,14 @@ ana@lab:~/pe$ tok show "How many r are in strawberry?"
 The word the question is about is one number, 101830. **The three r's are not in the input at
 all**; they are inside a token, and the model has to answer from what it learnt about that token's
 spelling, which is a fact like any other it may have half-learnt. A person counting letters looks
-at the letters. The model has nothing to look at.
+at the letters. The model has nothing to look at. Asked on the day these lessons were recorded,
+`llama3.2:3b` said two:
+
+```
+ana@lab:~/pe$ ask "How many times does the letter r appear in strawberry? Answer with a number." --temperature 0
+2
+-- llama3.2:3b, finish: stop, prompt 41 tokens, output 2 tokens
+```
 
 ## Reversing a word
 
@@ -40,7 +47,19 @@ ana@lab:~/pe$ tok show "yrrebwarts"
 `strawberry` written backwards is three tokens that have nothing to do with the original:
 `"yr"`, `"reb"`, `"warts"`. **Nothing in the numbers 3866, 19100 and 115451 says they spell
 101830 in reverse.** To produce them, the model has to know the letters of the forward word and
-reassemble them into pieces of a different shape, all in one step per token.
+reassemble them into pieces of a different shape, all in one step per token. `llama3.2:3b` lost a
+letter on the way, and one line of Python did not:
+
+```
+ana@lab:~/pe$ ask "Write kitchen backwards." --temperature 0
+The word "kitchen" spelled backwards is "nehcik".
+-- llama3.2:3b, finish: stop, prompt 29 tokens, output 15 tokens
+ana@lab:~/pe$ python3 -c "print(\"kitchen\"[::-1])"
+nehctik
+```
+
+`nehcik` is `kitchen` backwards without its `t`. The model wrote it as confidently as it would have
+written the right answer, which is the part to remember.
 
 ## Digits in chunks
 
@@ -73,6 +92,30 @@ Two remedies, and they come up again in this course:
 - Give the job to a program. Counting, reversing and arithmetic have exact answers that a few
   lines of code produce every time. Lesson 6 lets a model ask a calculator, and that is the right
   tool for 4 × 27.90 whether or not the model would have got it right.
+
+The first remedy, on the same model that said two:
+
+```
+ana@lab:~/pe$ ask "Spell strawberry one letter per line, then count the lines that are the letter r." --temperature 0
+Here is the word "strawberry" spelled one letter per line:
+
+S
+T
+R
+A
+W
+B
+E
+R
+R
+Y
+
+There are 3 lines that are the letter "R".
+-- llama3.2:3b, finish: stop, prompt 42 tokens, output 48 tokens
+```
+
+It wrote the letters in capitals, which nobody asked for, and counted three. **The answer changed
+because the question changed what the model could see**, not because it tried harder.
 
 None of this is a reason to distrust what a model writes about meaning. **A model is good at what
 is visible in tokens, which is which pieces follow which**, and weak at what is hidden inside them.
