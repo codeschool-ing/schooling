@@ -1,4 +1,4 @@
 ---
-title: Putting it together
+title: Juntando tudo
 version: 1
 ---
