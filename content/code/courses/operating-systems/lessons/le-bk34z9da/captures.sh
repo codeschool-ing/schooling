@@ -8,16 +8,20 @@
 #   sudo useradd -m -s /bin/bash -G sudo ana   # once, on a throwaway machine
 #   sudo -u ana -i bash /path/to/captures.sh    # hostname `server`
 #
+# THE BLOCKS THE STUDENT TYPES TO SET A SECTION UP ARE READ OUT OF THE LESSON.
+# stage() takes the sh fence of a section whose first line is the one given and
+# runs it as written, so what the lesson shows and what made these transcripts
+# cannot drift apart; a fence that is not there stops the script.
+#
 # ONLY LINUX IS CAPTURED HERE, and PowerShell 7 running on that same Linux.
 # What only Windows or macOS can print is shown in the lesson as commands with
 # no output, and the prose says so where it happens: a transcript nobody ran
 # is the one thing this course will not print.
 #
 # What is STAGED rather than typed, and not shown in the lesson:
-# a fresh Ubuntu 24.04 with one user, ana, in the sudo group; download.img, a
-# stand-in for a downloaded image, made by seq, with its SHA256SUMS written
-# beside it the way a download site publishes one; one byte of it then
-# changed by dd; DEBIAN_FRONTEND=noninteractive, kept through sudo, so the
+# a fresh Ubuntu 24.04 with one user, ana, in the sudo group; download.img and
+# its SHA256SUMS, and the dd that changes one byte of it, are the lesson's own
+# fences, run by stage(); DEBIAN_FRONTEND=noninteractive, kept through sudo, so the
 # upgrade asks no questions; and sudo set to ask ana for no password, which a
 # real installation does not do.
 # Every line after a prompt is what the command printed.
@@ -42,6 +46,17 @@ psh() {
   pwsh -NoProfile -NoLogo -Command "\$ErrorView='ConciseView'; $* | Out-String -Width 100 -Stream | ForEach-Object { \$_.TrimEnd() }" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+here=$(cd "$(dirname "$0")" && pwd)
+stage() {
+  local fence
+  fence=$(awk -v first="$2" '
+    /^```sh$/ { inside = 1; n = 0; next }
+    /^```$/ && inside { if (keep) exit; inside = 0; next }
+    inside { n++; if (n == 1 && $0 == first) keep = 1; if (keep) print }
+  ' "$here/$1")
+  [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
+  eval "$fence"
+}
 # Lines from stdin, typed one at a time into an interactive bash in a real
 # terminal, so job numbers and "Terminated" appear exactly as a person sees them.
 session() {
@@ -52,15 +67,14 @@ session() {
   rm -f /tmp/inputrc.$$
 }
 
-cd ~ && rm -rf ~/downloads && mkdir ~/downloads && cd ~/downloads
 export DEBIAN_FRONTEND=noninteractive
-seq 1 200000 > download.img
-sha256sum download.img > SHA256SUMS
+cd ~ && rm -rf ~/downloads
+stage choosing-the-download.md 'mkdir ~/downloads && cd ~/downloads'
 
 block checksum
 show 'cat SHA256SUMS'
 show 'sha256sum -c SHA256SUMS'
-printf 'X' | dd of=download.img bs=1 seek=100000 conv=notrunc status=none
+stage choosing-the-download.md "printf 'X' | dd of=download.img bs=1 seek=100000 conv=notrunc status=none"
 show 'sha256sum -c SHA256SUMS'
 
 cd ~
