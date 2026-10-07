@@ -998,6 +998,112 @@ def l06_evm(lang):
 # ---- end of lesson 6
 
 
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-levels', 7)
+def l07_levels(lang):
+    t = {
+        'en': dict(levels=[('Corporate or programme', 'sets the project’s tolerances'),
+                           ('Directing: the Project Board', 'Executive, Senior User, Senior Supplier'),
+                           ('Managing: the Project Manager', 'runs each stage day to day'),
+                           ('Delivering: Team Managers', 'produce the products')],
+                   down='tolerances handed down', up='exception: escalated up',
+                   label='Four levels of management stacked from top to bottom: corporate or programme management, '
+                         'the Project Board, the Project Manager and the Team Managers. Arrows on the left run down '
+                         'from each level to the next, labelled tolerances handed down. Arrows on the right run up, '
+                         'labelled exception escalated up.',
+                   cap='PRINCE2’s levels of management. Each level gives the one below it room to work, in '
+                       'tolerances, and hears from it only when a forecast says the room will be exceeded.'),
+        'pt': dict(levels=[('Corporativo ou programa', 'define as tolerâncias do projeto'),
+                           ('Direção: o Comitê do Projeto', 'Executivo, Usuário Sênior, Fornecedor Sênior'),
+                           ('Gerenciamento: o Gerente de Projeto', 'conduz cada estágio no dia a dia'),
+                           ('Entrega: Gerentes de Equipe', 'produzem os produtos')],
+                   down='tolerâncias passadas para baixo', up='exceção: escalada para cima',
+                   label='Quatro níveis de gerenciamento empilhados de cima para baixo: gerenciamento corporativo ou '
+                         'de programa, o Comitê do Projeto, o Gerente de Projeto e os Gerentes de Equipe. Setas à '
+                         'esquerda descem de cada nível para o seguinte, com o rótulo tolerâncias passadas para '
+                         'baixo. Setas à direita sobem, com o rótulo exceção escalada para cima.',
+                   cap='Os níveis de gerenciamento do PRINCE2. Cada nível dá ao de baixo espaço para trabalhar, em '
+                       'tolerâncias, e só ouve falar dele quando uma previsão diz que o espaço vai ser ultrapassado.'),
+    }[lang]
+    f = Fig('l07-levels', 660, 290, t['label'])
+    for i, (name, note) in enumerate(t['levels']):
+        y = 20 + i * 66
+        box(f, 150, y, 360, 48, [name, note], stroke='--phosphor' if i == 1 else '--wire',
+            fills=['--paper', '--paper-dim'], weights=['600', None], size=10)
+        if i < 3:
+            arrow(f, 200, y + 50, 200, y + 64, stroke='--phosphor', width=1.6)
+            arrow(f, 460, y + 64, 460, y + 50, stroke='--amber', width=1.6)
+    f.text(140, 150, t['down'], size=9.5, anchor='end', fill='--phosphor')
+    f.text(520, 150, t['up'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l07-hump', 7)
+def l07_hump(lang):
+    t = {
+        'en': dict(phases=['Inception', 'Elaboration', 'Construction', 'Transition'],
+                   disc=['Business modelling', 'Requirements', 'Analysis and design', 'Implementation', 'Test',
+                         'Deployment'],
+                   iters='iterations inside every phase',
+                   label='A chart with four phases across the top: inception, elaboration, construction and '
+                         'transition. Six disciplines run down the side. Each discipline is a band whose height is '
+                         'its effort over time: requirements peak in inception and elaboration, analysis and design '
+                         'peak in elaboration, implementation in construction, deployment in transition, and test '
+                         'is present throughout.',
+                   cap='The RUP “hump chart”, redrawn. Every discipline happens in every phase in different '
+                       'amounts, which is the difference between RUP’s phases and the waterfall’s: none of them '
+                       'is a single activity.'),
+        'pt': dict(phases=['Concepção', 'Elaboração', 'Construção', 'Transição'],
+                   disc=['Modelagem de negócio', 'Requisitos', 'Análise e projeto', 'Implementação', 'Teste',
+                         'Implantação'],
+                   iters='iterações dentro de toda fase',
+                   label='Um gráfico com quatro fases no topo: concepção, elaboração, construção e transição. Seis '
+                         'disciplinas descem pela lateral. Cada disciplina é uma faixa cuja altura é o esforço ao '
+                         'longo do tempo: requisitos têm pico na concepção e na elaboração, análise e projeto na '
+                         'elaboração, implementação na construção, implantação na transição, e teste está presente '
+                         'o tempo todo.',
+                   cap='O "gráfico de corcovas" do RUP, redesenhado. Toda disciplina acontece em toda fase em '
+                       'quantidades diferentes, que é a diferença entre as fases do RUP e as da cascata: nenhuma '
+                       'delas é uma atividade só.'),
+    }[lang]
+    f = Fig('l07-hump', 680, 320, t['label'])
+    x0, x1 = 170, 660
+    bounds = [x0, x0 + 70, x0 + 200, x0 + 400, x1]
+    for k, ph in enumerate(t['phases']):
+        f.text((bounds[k] + bounds[k + 1]) / 2, 20, ph, size=10, weight='600')
+        f.line(bounds[k + 1], 30, bounds[k + 1], 290, stroke='--wire', width=1, dash='3 3')
+    # effort profile per discipline as a list of (x fraction, height 0..1)
+    prof = [
+        [(0, .8), (.12, .9), (.3, .4), (.6, .15), (1, .05)],
+        [(0, .6), (.12, 1), (.3, .7), (.6, .25), (1, .1)],
+        [(0, .15), (.15, .6), (.3, 1), (.6, .4), (1, .1)],
+        [(0, .02), (.2, .3), (.45, .7), (.65, 1), (.82, .4), (1, .1)],
+        [(0, .05), (.2, .3), (.4, .6), (.65, .9), (.85, .8), (1, .4)],
+        [(0, 0), (.4, .02), (.7, .2), (.85, .9), (1, .7)],
+    ]
+    for i, (name, pr) in enumerate(zip(t['disc'], prof)):
+        base = 64 + i * 42
+        f.text(x0 - 10, base - 10, name, size=9.5, anchor='end')
+        f.line(x0, base, x1, base, stroke='--wire', width=1)
+        pts = []
+        for k in range(61):
+            u = k / 60
+            for (a, ha), (b, hb) in zip(pr, pr[1:]):
+                if a <= u <= b:
+                    w = (u - a) / (b - a)
+                    w = (1 - math.cos(math.pi * w)) / 2
+                    h = ha + (hb - ha) * w
+                    break
+            pts.append((x0 + u * (x1 - x0), base - h * 30))
+        d = f'M{x0:.1f} {base:.1f} L' + ' L'.join(f'{x:.1f} {y:.1f}' for x, y in pts) + f' L{x1:.1f} {base:.1f} Z'
+        f.path(d, stroke='--phosphor', width=1, fill='--phosphor-dim', opacity=0.8)
+    f.text(x1, 308, t['iters'], size=9.5, anchor='end', fill='--paper-dim')
+    return f, t['cap']
+
+# ---- end of lesson 7
+
+
 # ------------------------------------------------------------------ the figures
 
 
