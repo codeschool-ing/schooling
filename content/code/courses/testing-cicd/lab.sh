@@ -1517,19 +1517,21 @@ EOF
 # A lesson marks a whole file by ending the line before the block with "as",
 # its path in backticks and a colon ("Save it as `shipquote/money.py`:"); a path that
 # starts with ~/ is under $HOME, anything else is under the project. With REF,
-# the project's files are read from that commit instead of the working tree,
-# and with SECTIONs only those sections are read. Each captures.sh calls this
+# the project's files are read from that commit instead of the working tree
+# ("-" for the working tree), and with SECTIONs only those sections are read,
+# or every section but those written as -SECTION. Each captures.sh calls this
 # before its first block, so a lesson cannot drift from what was run.
 shown() {
   python3 - "$REPO" "$HOME" "$@" <<'PY'
 import json, re, subprocess, sys
 from pathlib import Path
 repo, home, lesson = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
-ref = sys.argv[4] if len(sys.argv) > 4 else None
-only = set(sys.argv[5:])
+ref = sys.argv[4] if len(sys.argv) > 4 and sys.argv[4] != "-" else None
+only = {a for a in sys.argv[5:] if not a.startswith("-")}
+skip = {a[1:] for a in sys.argv[5:] if a.startswith("-")}
 bad = seen = 0
 for md in sorted(lesson.glob("*.md")):
-    if md.name.endswith(".pt.md") or (only and md.stem not in only):
+    if md.name.endswith(".pt.md") or (only and md.stem not in only) or md.stem in skip:
         continue
     lines = md.read_text().split("\n")
     i, prev, ended = 0, "", False
@@ -1578,6 +1580,35 @@ print(f"shown: {seen} whole files in {lesson.name} match what the lab runs", fil
 PY
 }
 
+# The block a lesson labels with PATH, as a file: what a capture writes when a
+# section shows a file the lab only needs for one block.
+fence() {
+  python3 - "$1" "$2" <<'PY'
+import re, sys
+lines, want = open(sys.argv[1]).read().split("\n"), sys.argv[2]
+i, prev, ended = 0, "", False
+while i < len(lines):
+    m = re.match(r"^(`{3,})(\S*)\s*$", lines[i])
+    if not m:
+        if not lines[i].strip():
+            ended = True
+        else:
+            prev = lines[i].strip() if ended else prev + " " + lines[i].strip()
+            ended = False
+        i += 1
+        continue
+    j = i + 1
+    while lines[j].rstrip() != m.group(1):
+        j += 1
+    label = re.search(r"\bas `([~\w./-]+)`:$", prev.rstrip())
+    if label and label.group(1) == want:
+        print("\n".join(lines[i + 1:j]))
+        sys.exit(0)
+    prev, i = "", j + 1
+sys.exit(f"fence: {sys.argv[1]} labels no block {want}")
+PY
+}
+
 case ${1:-} in
   stage)
     n=$2; [ "$n" = last ] && n=$LAST
@@ -1589,5 +1620,6 @@ case ${1:-} in
   ci) ci "$2" ;;
   steps) steps ;;
   shown) shift; shown "$@" ;;
-  *) echo "usage: lab.sh stage N|last [DIR] | venv DIR [PY] | carrier DIR | ci DIR | steps | shown LESSON [REF [SECTION...]]" >&2; exit 2 ;;
+  fence) fence "$2" "$3" ;;
+  *) echo "usage: lab.sh stage N|last [DIR] | venv DIR [PY] | carrier DIR | ci DIR | steps | shown LESSON [REF [SECTION...]] | fence SECTION.md PATH" >&2; exit 2 ;;
 esac

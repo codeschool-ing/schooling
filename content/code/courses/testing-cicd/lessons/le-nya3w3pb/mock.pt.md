@@ -1,6 +1,6 @@
 ---
 title: Mock
-version: 1
+version: 2
 ---
 
 Um **mock** é um dublê que carrega expectativas sobre como vai ser chamado, e as confere. Em Python
@@ -20,7 +20,33 @@ Um pedido de R$ 199,00 tem frete grátis, então `price` não deveria gastar uma
 perguntando à transportadora. O valor devolvido sozinho não diz isso: volta 0 de qualquer jeito. Só
 um dublê que registra chamadas diz, e `assert_not_called` é a conferência.
 
-O segundo afirma que algo aconteceu exatamente uma vez, com exatamente estes argumentos:
+O segundo afirma que algo aconteceu exatamente uma vez, com exatamente estes argumentos. Ele
+precisa do mailer real, que o projeto não tinha até agora: desde a aula 1, `place` manda o e-mail
+por qualquer `mailer` que recebeu. O real fala SMTP. Salve como `shipquote/mailer.py`:
+
+```python
+"""E-mail through an SMTP server."""
+import smtplib
+from email.message import EmailMessage
+
+
+class SmtpMailer:
+    def __init__(self, host, port=25):
+        self.host = host
+        self.port = port
+
+    def send(self, to, subject, body):
+        msg = EmailMessage()
+        msg["From"] = "pedidos@livraria.example"
+        msg["To"] = to
+        msg["Subject"] = subject
+        msg.set_content(body)
+        with smtplib.SMTP(self.host, self.port, timeout=5) as smtp:
+            smtp.send_message(msg)
+```
+
+e faça o commit, `git add shipquote/mailer.py && git commit -m "Send e-mail over SMTP"`, porque o
+experimento abaixo o altera e é o git que o põe de volta. O teste:
 
 ```python
 def test_placing_an_order_sends_exactly_one_confirmation():
@@ -77,8 +103,37 @@ AttributeError: Mock object has no attribute 'sned'
 
 É aqui que deixa de ser sobre erros de digitação. Suponha que alguém renomeie `SmtpMailer.send` para
 `deliver` e esqueça `orders.place`, que continua chamando `send`. A produção passa a falhar em todo
-pedido. Eis a troca de nome, depois o teste como era no passo 5 do projeto, com um `mock.Mock()`
-simples, depois o teste como é agora, com `create_autospec`:
+pedido. Faça você mesmo essa troca, `def send` para `def deliver` em `shipquote/mailer.py`. Depois
+rode `tests/test_orders.py` duas vezes: primeiro como a aula 1 o escreveu, com um `mock.Mock()`
+simples, e depois com as duas linhas que esta seção muda, de modo que o arquivo fique, inteiro,
+como abaixo. Salve como `tests/test_orders.py`:
+
+```python
+from unittest import mock
+
+import pytest
+
+from shipquote.mailer import SmtpMailer
+from shipquote.orders import place
+from tests.fakes import FakeOrders
+
+
+def test_placing_an_order_sends_exactly_one_confirmation():
+    mailer = mock.create_autospec(SmtpMailer, instance=True)
+    order_id = place(FakeOrders(), mailer, "bia@example.org", 8990)
+    mailer.send.assert_called_once_with(
+        to="bia@example.org", subject=f"Order {order_id} confirmed",
+        body="Total: R$ 89,90")
+
+
+def test_an_order_of_nothing_is_refused_before_anything_is_written():
+    orders = FakeOrders()
+    with pytest.raises(ValueError, match="must cost something"):
+        place(orders, mailer=None, email="bia@example.org", cents=0)
+    assert orders.rows == []
+```
+
+A troca de nome, o teste antigo e o novo:
 
 ```
 ana@laptop:~/shipquote$ git diff --stat
@@ -98,9 +153,10 @@ FAILED tests/test_orders.py::test_placing_an_order_sends_exactly_one_confirmatio
 ```
 
 **O mock simples passou. O mock com autospec falhou**, com `Mock object has no attribute 'send'`, o
-mesmo erro que a produção levantaria. É por isso que o passo 6 do projeto trocou um pelo outro. Um
-mock que não conhece a forma do que substitui confere o código contra um colaborador imaginário, e o
-imaginário nunca muda.
+mesmo erro que a produção levantaria. É por isso que o projeto fica com a segunda versão. Um mock
+que não conhece a forma do que substitui confere o código contra um colaborador imaginário, e o
+imaginário nunca muda. Ponha o `send` de volta com `git checkout shipquote/mailer.py` e faça o
+commit do teste novo.
 
 A regra prática: **faça o mock pela especificação, a partir da classe real**, e use mock só onde a
 chamada é o que você precisa conferir. Para todo o resto, um stub ou um fake mantém o teste falando

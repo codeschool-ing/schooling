@@ -8,18 +8,22 @@
 #
 #   bash captures.sh           # needs uv, and the network the first time
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# THE STUDENT BUILDS ALL OF THIS FROM THE LESSONS. Lesson 1 shows the project
+# at step 5 whole; this lesson shows what step 6 adds (mailer.py in "mock",
+# the contract tests and the new pyproject.toml in "contract"), the carrier
+# stand-in in "stub" and the throwaway test file in "patching", each whole.
+# `../../lab.sh shown` fails this script before its first block if any of
+# them is not the file ../../lab.sh wrote, and the throwaway file is written
+# from the section's own block. What is STAGED rather than typed:
 #   - the project, rebuilt by ../../lab.sh at step 6 in /home/ana/shipquote,
 #     with its virtual environment;
 #   - in "drift", SmtpMailer.send renamed to deliver with sed, and the step 5
 #     version of tests/test_orders.py put back with `git show`, both undone
 #     with `git checkout` afterwards;
-#   - in "patch-trap", the file tests/test_patch_trap.py, shown in full in the
-#     section, written here and deleted afterwards;
 #   - the carrier stand-in from `lab.sh carrier`, started in the background on
 #     127.0.0.1:9090 with the token below, which is a lab value and opens
-#     nothing; in "contract-drift" its answer key is renamed with sed and the
-#     stand-in restarted.
+#     nothing; in "contract-drift" its answer key is renamed with the sed the
+#     section shows, and the stand-in restarted.
 #
 # Recorded 2026-10-06 on Ubuntu 24.04 with Python 3.13.16, pytest 9.1.1,
 # TZ=America/Sao_Paulo. Run as root with HOME=/home/ana, so the paths read as
@@ -27,9 +31,11 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 HOME=/home/ana
-LAB=$(cd "$(dirname "$0")/../.." && pwd)/lab.sh
+HERE=$(cd "$(dirname "$0")" && pwd)
+LAB=$HERE/../../lab.sh
 bash "$LAB" stage 6 >/dev/null && bash "$LAB" venv "$HOME/shipquote" >/dev/null 2>&1
 bash "$LAB" carrier "$HOME/carrier"
+bash "$LAB" shown "$HERE" - -patching || exit 1
 cd "$HOME/shipquote" || exit 1
 export PATH="$HOME/shipquote/.venv/bin:$PATH"
 run() { printf 'ana@laptop:~/shipquote$ %s\n' "$*"; bash -c "$*" 2>&1; }
@@ -71,28 +77,7 @@ run 'python -m pytest tests/test_orders.py -q --tb=line'
 git checkout -q shipquote/mailer.py
 
 block patch-trap
-cat > tests/test_patch_trap.py <<'PY'
-import io
-from unittest import mock
-
-from shipquote.carrier import CarrierClient
-
-
-def test_patching_the_module_after_the_default_was_taken():
-    answer = mock.MagicMock()
-    answer.__enter__.return_value = io.BytesIO(b'{"cents": 1999}')
-    with mock.patch("urllib.request.urlopen", return_value=answer):
-        client = CarrierClient("http://127.0.0.1:9", "t")
-        assert client.rate("01310100", 1200) == 1999
-
-
-def test_handing_the_double_in_through_the_seam():
-    answer = mock.MagicMock()
-    answer.__enter__.return_value = io.BytesIO(b'{"cents": 1999}')
-    client = CarrierClient("http://127.0.0.1:9", "t",
-                           opener=mock.Mock(return_value=answer))
-    assert client.rate("01310100", 1200) == 1999
-PY
+bash "$LAB" fence "$HERE/patching.md" tests/test_patch_trap.py > tests/test_patch_trap.py || exit 1
 run 'python -m pytest tests/test_patch_trap.py -q --tb=line'
 rm tests/test_patch_trap.py
 
