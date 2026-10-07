@@ -41,7 +41,7 @@ A run at 23:30 on 2 March in São Paulo has a `ds` of 3 March, because in UTC it
 the 3rd. A DAG that loaded `{{ ds }}` from such a run would load tomorrow, with nothing in it yet —
 and succeed.
 
-This is lesson 6's lesson about `::date` arriving again through a template. The cure is the same:
+This is lesson 6's trouble with `::date`, arriving again through a template. The cure is the same:
 **write the time zone where the date is made**. Ana's DAG does it in `day_to_load`, and her sensor
 in the next section does it in the template itself, with
 `logical_date.in_timezone('America/Sao_Paulo')`. Either is fine; what matters is that the zone is

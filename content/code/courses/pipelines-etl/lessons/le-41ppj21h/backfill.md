@@ -51,7 +51,7 @@ ana@vm:~/etl$ grep -ho "ERROR: [^\\]*" ~/airflow/logs/dag_id=shop_nightly/run_id
 
 The backfill started its runs at the same time, and every run of this DAG rebuilds the same `raw`
 and `staging` tables. Two runs creating `staging.books` at once collide in PostgreSQL's catalogue
-— *duplicate key value violates unique constraint* — and one run's `DROP TABLE` pulls a table out
+— *duplicate key value violates unique constraint*. One run's `DROP TABLE` pulls a table out
 from under another's query — *relation does not exist*. Which runs lose is a race, and it is a
 different race every time.
 

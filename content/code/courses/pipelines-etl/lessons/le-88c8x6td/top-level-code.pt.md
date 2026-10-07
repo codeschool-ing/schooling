@@ -49,7 +49,7 @@ ana@vm:~/etl$ psql -d shop -Atc "SELECT xact_commit FROM pg_stat_database WHERE 
 O `by_shop.py` leva mais de quatro vezes o tempo do `shop_nightly.py` para ser lido, e durante dois
 minutos tranquilos o banco da loja confirmou 14 transações, uma delas a consulta que contou as
 outras. **Cada leitura de um DAG que nunca rodou é uma conexão com o banco de produção**, a cada trinta
-segundos, todo dia, enquanto o arquivo estiver na pasta — e se o banco estiver lento ou fora do ar, o
+segundos, todo dia, enquanto o arquivo estiver na pasta. Se o banco estiver lento ou fora do ar, o
 processador de DAGs espera por ele, e as mudanças de todos os outros DAGs esperam na fila atrás.
 
 ## A regra
@@ -57,7 +57,7 @@ processador de DAGs espera por ele, e as mudanças de todos os outros DAGs esper
 **No nível de cima de um arquivo de DAG, declare; nunca busque.** Imports, constantes, o DAG e as
 tarefas dele — nada que abra uma conexão, leia um arquivo que pode ser grande, ou chame uma API. Se o
 formato de um DAG precisa depender de dados, leia os dados dentro de uma tarefa e espalhe em tempo de
-execução — o *mapeamento dinâmico de tarefas* do Airflow existe para isso — ou gere o arquivo do DAG
+execução; o *mapeamento dinâmico de tarefas* do Airflow existe para isso. Ou gere o arquivo do DAG
 a partir dos dados, num passo separado que alguém roda de propósito.
 
 A Ana apaga o `by_shop.py`. O DAG dela importa dois módulos e define constantes, e é lido em um

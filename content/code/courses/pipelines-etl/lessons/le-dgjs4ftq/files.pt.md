@@ -34,9 +34,9 @@ inbox/stock_2026-03-05.csv: ISO-8859 text
 Duas coisas nessa transcrição são esta seção e a próxima. O arquivo de 5 de março é menor que os
 outros, e o `file` o chama de `ISO-8859 text` onde os demais são `ASCII`. Olhe as primeiras linhas e
 o cabeçalho mudou de língua, de separador e de formato de data de uma vez: a distribuidora passou
-para um sistema novo naquele dia e ninguém avisou a Ponto Final. A próxima seção trata disso.
+para um sistema novo naquele dia e ninguém avisou a Ponto Final.
 
-Esta seção trata da pergunta mais quieta: **como um pipeline sabe que um arquivo está completo?**
+Esta seção trata da pergunta mais discreta: **como um pipeline sabe que um arquivo está completo?**
 
 ## O arquivo que carrega perfeitamente
 

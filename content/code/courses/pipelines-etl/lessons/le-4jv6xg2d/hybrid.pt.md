@@ -34,8 +34,8 @@ A maior parte do espaço entre as duas pontas é ocupada pelos meios-termos:
 A última linha é a que as pessoas esquecem: **quando uma resposta precisa estar atual no segundo, o
 pipeline certo muitas vezes é nenhum.** O caixa já sabe o estoque, e uma cópia dele com um segundo
 de idade está só um segundo errada sobre algo que o caixa poderia ter dito exatamente. Pipelines são
-para perguntas que a origem não sabe responder, ou não deve ser perguntada: entre lojas, entre
-meses, entre sistemas.
+para perguntas que a origem não sabe responder, ou que não devem ser feitas a ela: entre lojas,
+entre meses, entre sistemas.
 
 **O warehouse da Ponto Final é alimentado por batch** no resto deste curso, e esse é o caso comum,
 não o simples. O consumidor de streaming volta na lição 3, onde eventos são um tipo de origem, e na

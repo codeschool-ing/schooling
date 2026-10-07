@@ -24,11 +24,11 @@ v1.1.0          Categories start with a capital
 ```
 
 `v1.1.0` and not `v2.0.0`, and the number is a message. A common convention, **semantic
-versioning**, reads a version as *major.minor.patch*: the patch for a fix that changes no output, the
-minor for a change that adds or changes behaviour without breaking anybody who reads the result, the
-major for one that does break them — a renamed column, a removed table, a different grain. With the
-first attempt, renaming five categories that reports filter on, this would have been a major version,
-and that is a good test of whether a change was meant: *would I be happy to call it 2.0?*
+versioning**, reads a version as *major.minor.patch*. The patch is for a fix that changes no output, the
+minor for a change that adds or changes behaviour without breaking anybody who reads the result, and
+the major for one that does break them: a renamed column, a removed table, a different grain. With
+the first attempt, renaming five categories that reports filter on, this would have been a major
+version. That makes a good test of whether a change was meant: *would I be happy to call it 2.0?*
 
 Deploying is moving production to the new tag and building it:
 

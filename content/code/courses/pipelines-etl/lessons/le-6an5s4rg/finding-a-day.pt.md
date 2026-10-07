@@ -5,8 +5,8 @@ version: 1
 
 A troca de dia da lição 7, o `delete+insert` da lição 11 e a janela da lição 15 começam todos do mesmo
 jeito: achar as linhas de um dia e apagá-las. Quanto isso leva depende de como o PostgreSQL as acha. O
-`EXPLAIN ANALYZE` roda o comando e diz, dentro de uma transação desfeita para que nada seja apagado de
-verdade:
+`EXPLAIN ANALYZE` roda o comando e relata como as achou. Aqui ele roda dentro de uma transação
+desfeita, para que nada seja apagado de verdade:
 
 ```
 -- How PostgreSQL finds one day's lines, and how long it takes, without keeping the change.

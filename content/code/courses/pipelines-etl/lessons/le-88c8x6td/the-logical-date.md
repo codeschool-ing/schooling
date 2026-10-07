@@ -28,8 +28,7 @@ day in October.
 
 Airflow 2 called this field the **execution date**, and the name caused a decade of confusion,
 because a daily run did not execute on its execution date. Its runs covered an interval — a whole
-day — and ran when the interval was over: the run for 2 March executed early on 3 March. Every
-team learned that the hard way once.
+day — and ran when the interval was over, so the run for 2 March executed early on 3 March.
 
 Airflow 3 renamed the field to *logical date*, and changed what a plain cron schedule means. By
 default, `schedule="0 2 * * *"` is now a **trigger**: a run happens at 02:00, its logical date *is*

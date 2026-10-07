@@ -65,9 +65,9 @@ ana@vm:~/etl$ curl -s -o /dev/null -w "%{http_code}\n" -H "X-Api-Key: $PRICES_AP
 200
 ```
 
-Agora uma nova execução pode funcionar, e a próxima seção a faz.
+Agora rodar de novo pode funcionar, e a próxima seção faz isso.
 
-Duas coisas fazem esta transcrição valer a lembrança. **Um alerta de falha é o começo de uma
+Desta transcrição, vale lembrar duas coisas. **Um alerta de falha é o começo de uma
 investigação, não o fim**: a linha dizia `503`, mas se a API continuava fora do ar era uma pergunta
 que só um pedido novo podia responder. E **a ordem importa**: primeiro as tentativas da
 execução, depois os logs, depois a fonte — e, quando um DAG parece não ter feito nada, os erros de

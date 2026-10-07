@@ -55,5 +55,5 @@ ana@vm:~/etl$ git ls-files | sed "s|/.*|/…|" | sort | uniq -c
 ```
 
 Fifteen files of the dbt project, ten of tests and their fixture, and the scripts, SQL and DAG of the
-earlier lessons. One
-commit, *the nightly as it runs today*: from here on, every change has a before.
+earlier lessons. One commit, *the nightly as it runs today*: from here on, every change has a
+before.

@@ -54,9 +54,9 @@ ana@vm:~/etl$ psql -d wh -c "SELECT customer_key = -1 AS unknown, count(*) FROM 
 Nearly a third of the order lines carry `customer_key = -1`: no customer the warehouse can name.
 Two kinds of sale end up there, for different reasons:
 
-- **anonymous sales** — a customer at a till who gave no name. The shop has `NULL`, and the
+- anonymous sales — a customer at a till who gave no name. The shop has `NULL`, and the
   warehouse has nobody to point at;
-- **sales of customers who asked to be erased.** The shop set their orders' `customer_id` to
+- sales of customers who asked to be erased. The shop set their orders' `customer_id` to
   `NULL`, and the dimension load deleted every version of them: customer 1880 has no rows left.
 
 **`-1` is a value, not a `NULL`, on purpose.** A report that joins facts to customers with an inner

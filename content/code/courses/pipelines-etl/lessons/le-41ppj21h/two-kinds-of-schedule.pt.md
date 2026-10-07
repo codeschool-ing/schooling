@@ -71,10 +71,10 @@ interval_demo  scheduled__2026-03-02T03:00:00+00:00  success  2026-03-02T03:00:0
 
 Leia as colunas `run_after` e `logical_date` de cada um:
 
-- **`trigger_demo`**: a data lógica de cada execução *é* o seu `run_after`. A execução da meia-noite
+- `trigger_demo`: a data lógica de cada execução *é* o seu `run_after`. A execução da meia-noite
   de 1º de março é para a meia-noite de 1º de março. O intervalo de dados dela, perguntado à API,
   começa e termina no mesmo momento: ele não cobre nada além de um instante.
-- **`interval_demo`**: cada execução acontece no **fim** de um dia e a sua data lógica é o **começo**
+- `interval_demo`: cada execução acontece no *fim* de um dia e a sua data lógica é o *começo*
   desse dia. A execução que pode começar à meia-noite de 2 de março é para 1º de março, e o intervalo
   dela vai de meia-noite a meia-noite — o dia 1º de março inteiro.
 

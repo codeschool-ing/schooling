@@ -7,8 +7,8 @@ A marca d'água tem uma armadilha, e é ela que faz as pessoas desconfiarem de c
 
 O `updated_at` é preenchido quando uma linha é *escrita*. A linha fica visível quando a sua transação
 é *confirmada*. São dois momentos diferentes, e uma transação longa pode pôr minutos entre eles.
-**Uma linha escrita antes da marca d'água e confirmada depois que a extração rodou está acima de nada
-que o pipeline vá pedir de novo.**
+**Uma linha escrita antes da marca d'água e confirmada depois que a extração rodou cai numa janela
+que o pipeline nunca mais vai pedir.**
 
 O laboratório encena uma. Na loja da Paulista em 2 de março, uma maquininha de cartão trava às 23:40
 com a transação aberta; o pedido é confirmado depois de a extração daquela noite ter lido até
@@ -60,8 +60,8 @@ ana@vm:~/etl$ psql -d wh -c "SELECT count(*) AS rows, count(DISTINCT (order_id, 
 ```
 
 Oito linhas foram carregadas duas vezes ao longo das três noites — a última hora de cada noite, lida
-de novo na seguinte. **Um retrocesso troca completude por duplicatas, e as duplicatas são a metade
-fácil**: uma versão de uma linha é identificada pela chave e pelo `updated_at`, e a próxima seção
+de novo na seguinte. **Um retrocesso aceita duplicatas em troca de completude, e as duplicatas são a
+metade fácil**: uma versão de uma linha é identificada pela chave e pelo `updated_at`, e a próxima seção
 transforma muitas versões numa só. Uma linha perdida não tem esse remédio.
 
 Quanto retroceder é um juízo sobre a origem: o tempo mais longo que uma transação pode ficar aberta

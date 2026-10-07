@@ -58,6 +58,6 @@ be — and **it records that `daily_sales` depends on `stg_orders`**. A model th
 directly, as `dbt_staging.stg_orders`, still runs, but dbt does not know about the dependency: it
 may build `daily_sales` first, against yesterday's view, and nothing complains.
 
-That is the rule worth keeping from this section: **inside a dbt project, nothing is named by hand**.
-Raw tables through `source`, models through `ref`. Every arrow in the project's graph is one of the
+**Inside a dbt project, nothing is named by hand**: raw tables through `source`, models through
+`ref`. Every arrow in the project's graph is one of the
 two.

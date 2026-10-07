@@ -17,7 +17,7 @@ O laboratório é uma máquina Linux com isto:
 - **Os dados da loja**, três meses de vendas sorteados por um gerador com sementes fixas, para que
   os seus números sejam os impressos aqui.
 - **Uma pequena API de preços**, escrita para o curso, que pagina as respostas, limita a velocidade
-  com que você pode perguntar, e pode ser feita falhar de propósito.
+  com que você pode perguntar, e que dá para fazer falhar de propósito.
 
 Tudo isso é montado por um script, `lab.sh`, que vem com o material do curso. Copie o diretório
 `lab` para o seu diretório pessoal e rode-o uma vez:

@@ -23,8 +23,8 @@ ana@vm:~/etl$ sh xcom.sh shop_nightly day_to_load
 ```
 
 A execução de 3 de março guardou `'2026-03-02'`. Ela fica lá enquanto a execução existir, então uma
-semana depois qualquer um pode ver exatamente qual dia aquela execução carregou — o que vale mais do
-que parece, na manhã em que alguém pergunta por que um relatório tem um buraco.
+semana depois qualquer um pode ver exatamente qual dia aquela execução carregou, que é o que alguém precisa saber
+na manhã em que pergunta por que um relatório tem um buraco.
 
 ## Para que serve uma XCom
 

@@ -5,8 +5,8 @@ version: 1
 
 Lesson 7's day replace, lesson 11's `delete+insert` and lesson 15's window all start the same way:
 find the rows of a day, and delete them. How long that takes depends on how PostgreSQL finds them.
-`EXPLAIN ANALYZE` runs the statement and says, inside a transaction that is rolled back so that
-nothing is really deleted:
+`EXPLAIN ANALYZE` runs the statement and reports how it found them. Here it runs inside a
+transaction that is rolled back, so that nothing is really deleted:
 
 ```
 -- How PostgreSQL finds one day's lines, and how long it takes, without keeping the change.

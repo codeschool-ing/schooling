@@ -53,7 +53,7 @@ ana@vm:~/etl$ grep -ho "ERROR: [^\\]*" ~/airflow/logs/dag_id=shop_nightly/run_id
 
 O backfill iniciou as execuções ao mesmo tempo, e cada execução deste DAG refaz as mesmas tabelas de
 `raw` e `staging`. Duas execuções criando `staging.books` ao mesmo tempo colidem no catálogo do
-PostgreSQL — *duplicate key value violates unique constraint* — e o `DROP TABLE` de uma execução
+PostgreSQL — *duplicate key value violates unique constraint*. O `DROP TABLE` de uma execução
 puxa uma tabela de baixo da consulta de outra — *relation does not exist*. Quais execuções perdem é
 uma corrida, e é uma corrida diferente a cada vez.
 

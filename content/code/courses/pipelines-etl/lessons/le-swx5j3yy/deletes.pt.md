@@ -34,9 +34,8 @@ eles, e não poderia estar: **uma linha apagada não tem `updated_at`, porque n�
 incremental no warehouse ainda guarda o cliente 1880, nome, e-mail e cidade, e vai guardar até
 alguém perceber. A cópia completa, refeita do zero na mesma noite, simplesmente não o tem.
 
-Para um cliente que pediu para ser apagado, essa diferença não é um detalhe técnico. Um warehouse
-que guarda o e-mail dele depois que a loja o apagou está guardando um dado pessoal que ninguém mais
-pode guardar, e o pipeline é como ele chegou lá.
+Um warehouse que guarda o e-mail de um cliente apagado depois que a loja o apagou está guardando
+um dado pessoal que ninguém mais pode guardar, e foi pelo pipeline que ele chegou lá.
 
 ## Quatro jeitos de ver uma exclusão
 

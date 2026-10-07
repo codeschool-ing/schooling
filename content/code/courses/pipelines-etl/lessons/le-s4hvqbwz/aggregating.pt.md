@@ -73,7 +73,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT order_date, sum(books) AS books, sum(revenue
 
 **A ordem vem dos nomes dos arquivos**, e é por isso que os arquivos de schema se chamam
 `00_schema.sql`: os zeros os põem primeiro. Funciona, e é frágil exatamente do jeito que o curso
-proíbe no seu próprio conteúdo — a ordem de execução é deduzida do sistema de arquivos, então
+proíbe no seu próprio conteúdo. A ordem de execução é deduzida do sistema de arquivos, então
 renomear um arquivo pode quebrar a montagem, e nada registra que `daily_sales` precisa que `orders`
 exista antes. A lição 11 troca este script pelo dbt, que deduz a ordem a partir do próprio SQL.
 

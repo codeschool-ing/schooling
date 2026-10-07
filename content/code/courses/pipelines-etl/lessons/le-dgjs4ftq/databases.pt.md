@@ -75,5 +75,5 @@ PostgreSQL pode pular parte da contabilidade de que uma transação de escrita p
 Um snapshot não é de graça. Enquanto ele está aberto, o PostgreSQL guarda toda versão antiga de toda
 linha de que o snapshot ainda possa precisar, então uma transação aberta por horas faz tabelas e
 índices crescerem na origem. **Extraia num snapshot, e mantenha-o curto**: minutos, não a noite.
-Quando uma leitura completa de uma tabela grande não pode ser curta, ela pertence a uma réplica, que é
-o assunto da próxima seção.
+Quando uma leitura completa de uma tabela grande não pode ser curta, o lugar dela é uma réplica, que
+é o assunto da próxima seção.

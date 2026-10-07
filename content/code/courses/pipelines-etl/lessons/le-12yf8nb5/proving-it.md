@@ -58,8 +58,8 @@ second run finds nobody to move. `dbt build` rebuilt every model and table and l
 documents.
 
 Two things make this worth more than it looks. It is cheap enough to run on every change to a load,
-which is when idempotency is lost: somebody adds a step, and the step appends. And it tests the
-property itself rather than the code that is supposed to provide it. `twice.sh` does not know what
+which is when idempotency is lost: somebody adds a step, and the step appends. And **it tests the
+property itself rather than the code that is supposed to provide it**. `twice.sh` does not know what
 an upsert is; it only knows that the table did not change, which is the thing that matters.
 
 What it cannot show is a step that is idempotent *today* by luck — an insert that happens to find

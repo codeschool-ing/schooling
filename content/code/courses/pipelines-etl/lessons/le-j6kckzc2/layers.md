@@ -49,8 +49,7 @@ somebody fixes one of them.
 ## Why the names matter
 
 Different teams use different names — *bronze, silver, gold*; *landing, clean, presentation*;
-*sources, intermediate, marts* — and the names are not what matters. **What matters is that a
-table's schema says who may read it and who may write it**, so that "can I change this column?"
-has an answer you can look up. Ponto Final uses `raw`, `staging` and `marts`: the last two are the
-names dbt's own guide to structuring a project uses, and dbt arrives in lesson 11 to manage exactly
-this stack.
+*sources, intermediate, marts* — and any of them will do. **A table's schema should say who may read
+it and who may write it**, so that "can I change this column?" has an answer you can look up. Ponto
+Final uses `raw`, `staging` and `marts`: the last two are the names dbt's own guide to structuring a
+project uses, and dbt arrives in lesson 11 to manage exactly this stack.

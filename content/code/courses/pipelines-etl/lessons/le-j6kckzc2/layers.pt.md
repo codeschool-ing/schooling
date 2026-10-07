@@ -49,8 +49,8 @@ alguém consertar um deles.
 ## Por que os nomes importam
 
 Equipes diferentes usam nomes diferentes — *bronze, silver, gold*; *landing, clean, presentation*;
-*sources, intermediate, marts* — e os nomes não são o que importa. **O que importa é que o schema de
-uma tabela diga quem pode lê-la e quem pode escrevê-la**, para que "posso mudar esta coluna?" tenha
-uma resposta que dá para consultar. A Ponto Final usa `raw`, `staging` e `marts`: os dois últimos
-são os nomes que o próprio guia do dbt para estruturar um projeto usa, e o dbt chega na lição 11
-para cuidar exatamente desta pilha.
+*sources, intermediate, marts* — e qualquer um deles serve. **O schema de uma tabela deve dizer quem
+pode lê-la e quem pode escrevê-la**, para que "posso mudar esta coluna?" tenha uma resposta que dá
+para consultar. A Ponto Final usa `raw`, `staging` e `marts`: os dois últimos são os nomes que o
+próprio guia do dbt para estruturar um projeto usa, e o dbt chega na lição 11 para cuidar exatamente
+desta pilha.

@@ -53,7 +53,7 @@ Zero linhas nas duas direções. **A mudança não faz nada com os dados de hoje
 certo para uma mudança cujo propósito é proteger os de amanhã. É o resultado a querer de uma
 refatoração, e a comparação é como saber que ele foi obtido, e não só esperado.
 
-É esse o hábito de que a lição de fato trata. Uma mudança num pipeline é uma mudança em números que
+É esse o hábito que a lição ensina. Uma mudança num pipeline é uma mudança em números que
 outras pessoas leem, e o único jeito de saber o que ela faz com eles é construí-la ao lado da produção
 e comparar. **Os testes dizem que o código continua funcionando; a comparação diz o que ele agora
 diz.** Os dois são necessários, porque uma mudança pode passar em todo teste e ainda renomear cinco

@@ -24,12 +24,12 @@ v1.1.0          Categories start with a capital
 ```
 
 `v1.1.0` e não `v2.0.0`, e o número é uma mensagem. Uma convenção comum, o **versionamento
-semântico**, lê uma versão como *maior.menor.correção*: a correção para um conserto que não muda
+semântico**, lê uma versão como *maior.menor.correção*. A correção é para um conserto que não muda
 nenhuma saída, a menor para uma mudança que acrescenta ou muda comportamento sem quebrar quem lê o
-resultado, a maior para uma que quebra — uma coluna renomeada, uma tabela removida, um grão diferente.
-Com a primeira tentativa, que renomeava cinco categorias que os relatórios filtram, esta teria sido uma
-versão maior, e esse é um bom teste de se uma mudança foi intencional: *eu chamaria isto de 2.0 sem
-problema?*
+resultado, e a maior para uma que quebra: uma coluna renomeada, uma tabela removida, um grão
+diferente. Com a primeira tentativa, que renomeava cinco categorias que os relatórios filtram, esta
+teria sido uma versão maior. Isso dá um bom teste de se uma mudança foi intencional: *eu chamaria isto
+de 2.0 sem problema?*
 
 Fazer o deploy é mover a produção para a tag nova e construí-la:
 
@@ -47,7 +47,7 @@ ana@vm:~/etl-prod$ dbt build --project-dir shop --target prod 2>&1 | grep -E "st
 O `git describe --tags` diz em que versão a produção está, que é a primeira pergunta a fazer quando um
 número parece errado de manhã. O build rodou o projeto inteiro com o target `prod`, e os dois modelos
 que a mudança tocou estão entre os dezesseis nós. O único aviso é o dos clientes apagados da lição 12,
-ainda conhecidos e ainda legais.
+ainda conhecidos e ainda lícitos.
 
 Numa equipe, os mesmos passos são dados por uma máquina. Os testes e a comparação rodam quando uma
 mudança é proposta; o merge espera por eles; a tag e o build vêm depois. Essa maquinaria — integração e

@@ -41,7 +41,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT count(*) AS prices, count(b.book_id) AS matc
 
 ```
 
-Quatro tipos de problema, cada um vindo dos hábitos de uma editora, e a última consulta mostra quanto
+Quatro tipos de problema, cada um vindo dos hábitos de uma editora. A última consulta mostra quanto
 eles custam antes de alguém olhar um único preço: **70 dos 909 preços não batem com livro nenhum**,
 porque os ISBNs da Maré têm hífens e os da loja não. Um relatório de preços de tabela por livro
 estaria, em silêncio, sem o catálogo inteiro da Maré.

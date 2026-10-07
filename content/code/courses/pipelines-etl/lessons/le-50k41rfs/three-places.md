@@ -22,7 +22,7 @@ Checks can sit in three places, and each one sees something the others cannot:
 - **At the end**, on what other people read: a **contract** saying which columns, with which types,
   the morning report can rely on. It protects the reader from the pipeline's own changes.
 
-The kinds of problem are worth naming, because each has its usual check. **Validity**: is the value
+Each kind of problem has a name and its usual check. **Validity**: is the value
 possible at all — a price, an ISBN with the right check digit. **Completeness**: is anything
 missing — a null price, a day short of events. **Uniqueness** and **consistency**: lesson 12's
 `unique` and `relationships`. **Timeliness**: did it arrive on time — lesson 10's deadline.

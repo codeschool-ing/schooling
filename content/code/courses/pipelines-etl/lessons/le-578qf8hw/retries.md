@@ -8,7 +8,7 @@ tries in all. `retry_delay` is how long it waits before the first retry, and
 `retry_exponential_backoff` multiplies the wait every time it is used again.
 
 **In Airflow 3.3 the backoff is a number, not a switch.** Its documentation calls it a multiplier,
-with `0` meaning a constant delay and `2.0` meaning *double each time*; older DAGs wrote `True`
+with `0` meaning a constant delay and `2.0` meaning *double each time*. Older DAGs wrote `True`
 there, and Python counts `True` as `1`, so they get a wait multiplied by one — the same fifteen
 seconds before every try, with nothing in any log to say the backoff is not happening. Ana writes
 `2.0` and a comment with the waits it should produce. Airflow also adds up to that much again, an
@@ -55,7 +55,7 @@ The run succeeded. **Two tries failed, the third found the API back, and nobody 
 because nothing had to be done: `alerts.log` does not even exist yet. The gaps between the tries
 show the backoff working, each wait about twice the last.
 
-That last point is the whole design. **A retry turns a passing failure into a slower success**, and
+**A retry turns a passing failure into a slower success**, and
 a slower success is not news. What is news is the failure the retries could not absorb, which is
 the next section.
 

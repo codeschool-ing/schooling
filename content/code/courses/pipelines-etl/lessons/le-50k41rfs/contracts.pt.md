@@ -86,8 +86,8 @@ ana@vm:~/etl/shop$ dbt build -s daily_sales 2>&1 | grep -vE "^[0-9:]{8}  (Runnin
 ana@vm:~/etl$ sed -i 's/sum(s.line_cents) \/ 100.0 as revenue_cents/sum(s.line_cents)::bigint as revenue_cents/' shop/models/marts/daily_sales.sql
 ```
 
-A tabela não foi construída. O dbt nomeia a coluna, o tipo que o modelo agora produz — `DECIMAL` — e o
-tipo que o contrato prometeu — `LONGINTEGER`, a palavra dele para `bigint` — e para. O relatório
+A tabela não foi construída. O dbt nomeia a coluna, o tipo que o modelo agora produz (`DECIMAL`) e o
+tipo que o contrato prometeu (`LONGINTEGER`, a palavra dele para `bigint`), e para. O relatório
 continua lendo a tabela de ontem com o significado de ontem, e a pessoa que fez a mudança descobre
 pelo build, e não por um gerente. A Ana põe a linha de volta como estava.
 

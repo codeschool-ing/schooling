@@ -38,10 +38,10 @@ viraram 29.152 linhas depois do join, e a figura abaixo é um deles.
 
 Isso se chama **fan-out**, e tem três propriedades que o tornam perigoso:
 
-- **nada falha** — o SQL é válido e o número é plausível;
-- **depende dos dados** — num dia em que todo pedido tem uma linha, os totais estão certos, e o bug
+- nada falha — o SQL é válido e o número é plausível;
+- depende dos dados — num dia em que todo pedido tem uma linha, os totais estão certos, e o bug
   aparece no primeiro sábado movimentado;
-- **ele se esconde em agregados** — as linhas do join nunca são olhadas, só a soma delas.
+- ele se esconde em agregados — as linhas do join nunca são olhadas, só a soma delas.
 
 ## A regra que o evita
 

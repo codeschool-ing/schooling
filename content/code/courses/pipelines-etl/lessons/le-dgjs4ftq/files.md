@@ -34,7 +34,7 @@ inbox/stock_2026-03-05.csv: ISO-8859 text
 Two things in that transcript are this section and the next one. The file for 5 March is smaller
 than the others, and `file` calls it `ISO-8859 text` where the rest are `ASCII`. Look at its first
 lines and the header has changed language, separator and date format at once: the distributor
-moved to a new system that day and nobody told Ponto Final. The next section is about that.
+moved to a new system that day and nobody told Ponto Final.
 
 This section is about the quieter question: **how does a pipeline know a file is complete?**
 

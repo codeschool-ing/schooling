@@ -32,10 +32,14 @@ has, with the client from lesson 3, and runs the loader:
     },
     {
       "code": "        src, dst = shop.cursor(), wh.cursor()\n        with src.copy(f\"COPY {table} TO STDOUT\") as out, \\\n             dst.copy(f\"COPY raw.{table} FROM STDIN\") as into:\n            for chunk in out:\n                into.write(chunk)\n        print(f\"raw.{table}: {src.rowcount} rows\")\n\n",
-      "note": "**JSON lands as JSON.** Each line of the price file and of every event file becomes one `jsonb` value, untouched, beside the name of the file it came from. Parsing it is staging's job."
+      "note": "The rows go from one database to the other in `COPY`'s own stream, a chunk at a time, and Python never splits them into rows."
     },
     {
       "code": "    for name, pattern in [(\"prices\", \"landing/prices.jsonl\"),\n                          (\"events\", \"landing/events/*.jsonl\")]:\n        wh.execute(f\"DROP TABLE IF EXISTS raw.{name}\")\n        wh.execute(f\"CREATE TABLE raw.{name} (doc jsonb NOT NULL, file text NOT NULL)\")\n",
+      "note": "**JSON lands as JSON.** Each line of the price file and of every event file becomes one `jsonb` value, untouched, beside the name of the file it came from. Parsing it is staging's job."
+    },
+    {
+      "code": "        n = 0\n        with wh.cursor().copy(f\"COPY raw.{name} (doc, file) FROM STDIN\") as into:\n            for path in sorted(glob.glob(pattern)):\n                for line in open(path, encoding=\"utf-8\"):\n                    into.write_row((line, path))\n                    n += 1\n        print(f\"raw.{name}: {n} documents\")\n",
       "note": "`write_row` hands one row at a time to the same `COPY`, so the whole file still travels in one statement."
     }
   ]

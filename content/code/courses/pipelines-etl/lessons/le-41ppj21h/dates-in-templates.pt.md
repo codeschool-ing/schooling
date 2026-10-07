@@ -41,7 +41,7 @@ Uma execução às 23:30 de 2 de março em São Paulo tem um `ds` de 3 de março
 02:30 do dia 3. Um DAG que carregasse `{{ ds }}` a partir de uma execução assim carregaria o dia de
 amanhã, ainda sem nada — e daria certo.
 
-Esta é a lição 6 sobre o `::date` chegando de novo por um template. O remédio é o mesmo: **escreva o
+É o problema do `::date` da lição 6, chegando de novo por um template. O remédio é o mesmo: **escreva o
 fuso horário onde a data é feita**. O DAG da Ana faz isso no `day_to_load`, e o sensor dela na próxima
 seção faz isso no próprio template, com `logical_date.in_timezone('America/Sao_Paulo')`. Qualquer um
 dos dois serve; o que importa é que o fuso esteja escrito em vez de herdado.

@@ -23,8 +23,8 @@ ana@vm:~/etl$ sh xcom.sh shop_nightly day_to_load
 ```
 
 The run for 3 March stored `'2026-03-02'`. It is there for as long as the run is, so a week later
-anybody can see exactly which day that run loaded — which is worth more than it sounds, on the
-morning somebody asks why a report has a gap.
+anybody can see exactly which day that run loaded, which is what somebody needs to know on the
+morning they ask why a report has a gap.
 
 ## What an XCom is for
 

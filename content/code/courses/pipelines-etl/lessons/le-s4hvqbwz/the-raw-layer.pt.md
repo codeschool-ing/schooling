@@ -32,10 +32,14 @@ que a API tem, com o cliente da lição 3, e roda o carregador:
     },
     {
       "code": "        src, dst = shop.cursor(), wh.cursor()\n        with src.copy(f\"COPY {table} TO STDOUT\") as out, \\\n             dst.copy(f\"COPY raw.{table} FROM STDIN\") as into:\n            for chunk in out:\n                into.write(chunk)\n        print(f\"raw.{table}: {src.rowcount} rows\")\n\n",
-      "note": "**JSON chega como JSON.** Cada linha do arquivo de preços e de cada arquivo de eventos vira um valor `jsonb`, intocado, ao lado do nome do arquivo de onde veio. Interpretá-lo é trabalho do staging."
+      "note": "As linhas passam de um banco para o outro no próprio fluxo do `COPY`, um pedaço por vez, e o Python nunca as separa em linhas."
     },
     {
       "code": "    for name, pattern in [(\"prices\", \"landing/prices.jsonl\"),\n                          (\"events\", \"landing/events/*.jsonl\")]:\n        wh.execute(f\"DROP TABLE IF EXISTS raw.{name}\")\n        wh.execute(f\"CREATE TABLE raw.{name} (doc jsonb NOT NULL, file text NOT NULL)\")\n",
+      "note": "**JSON chega como JSON.** Cada linha do arquivo de preços e de cada arquivo de eventos vira um valor `jsonb`, intocado, ao lado do nome do arquivo de onde veio. Interpretá-lo é trabalho do staging."
+    },
+    {
+      "code": "        n = 0\n        with wh.cursor().copy(f\"COPY raw.{name} (doc, file) FROM STDIN\") as into:\n            for path in sorted(glob.glob(pattern)):\n                for line in open(path, encoding=\"utf-8\"):\n                    into.write_row((line, path))\n                    n += 1\n        print(f\"raw.{name}: {n} documents\")\n",
       "note": "O `write_row` entrega uma linha por vez ao mesmo `COPY`, então o arquivo inteiro continua viajando num comando só."
     }
   ]

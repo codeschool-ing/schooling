@@ -10,7 +10,7 @@ A lição 4 terminou com três buracos na extração incremental, cada um achado
 - **uma linha confirmada tarde se esconde abaixo da marca d'água** — o pedido do caixa lento;
 - **uma atualização que a origem esquece de marcar com horário é invisível** para sempre.
 
-Há um quarto que o laboratório não encenou porque é ainda mais quieto. **Uma marca d'água vê cada
+Há um quarto que o laboratório não encenou porque é ainda mais discreto. **Uma marca d'água vê cada
 linha como ela está agora, não o que aconteceu com ela.** Um pedido feito às 10:00 e estornado às
 15:00 é extraído naquela noite uma vez, como estornado. O warehouse nunca fica sabendo que ele um dia
 esteve concluído, e uma pergunta como "quantas vendas foram estornadas no mesmo dia?" não tem

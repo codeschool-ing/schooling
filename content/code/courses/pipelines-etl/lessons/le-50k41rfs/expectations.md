@@ -9,8 +9,8 @@ only way to see that is to compare with what usually happens. That is an **expec
 the data must obey, but a range it is expected to fall in, where falling outside is worth a person's
 look.
 
-Ana adds the website's events to the dbt project — a source, and a staging model that is lesson 6's
-`staging/events.sql` with `source` in it — and an expectation on their daily volume:
+Ana adds the website's events to the dbt project as a source and a staging model, which is lesson
+6's `staging/events.sql` with `source` in it. Then she writes an expectation on their daily volume:
 
 ```
 version: 2

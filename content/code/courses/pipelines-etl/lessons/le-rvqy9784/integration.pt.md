@@ -72,7 +72,7 @@ def test_a_second_build_changes_nothing(warehouse):
     assert one(wh, fingerprint) == before
 ```
 
-O primeiro teste é o que mais importa, e a resposta esperada é a parte importante. Ela é
+No primeiro teste, a resposta esperada é a parte que importa. Ela é
 **calculada diretamente da fixture**, por uma consulta em `orders` e `order_lines` que não
 compartilha código com o pipeline: nada de view de staging, nada de `int_sales`, nada de dbt. Se o
 pipeline e o oráculo fossem o mesmo código, um bug nele concordaria consigo mesmo. O segundo confere
@@ -104,15 +104,14 @@ ana@vm:~/etl$ cat /tmp/pytest.out; echo
 ..
 ```
 
-Duas conexões. Uma é a do próprio teste, **idle in transaction**: a última consulta dela, o `md5` do
+Duas conexões. Uma é a do próprio teste, **idle in transaction**. A última consulta dela, o `md5` do
 terceiro teste, terminou, mas o psycopg abre uma transação com a primeira consulta numa conexão e a
-mantém aberta até o commit — e o segundo teste tinha lido o `daily_sales` nessa mesma transação. A
+mantém aberta até o commit. O segundo teste tinha lido o `daily_sales` nessa mesma transação. A
 outra é o dbt, no meio do segundo build, **esperando um lock** para pôr o `daily_sales` no lugar com
 o nome certo. Cada um esperava o outro: o dbt, que a transação do teste acabasse; o teste, que o dbt
 terminasse. O PostgreSQL detecta deadlocks entre as próprias sessões, mas este tem um lado fora do
 banco — um processo Python esperando um filho terminar —, então nada o desfez. Dois testes tinham
-passado (`..`), e o terceiro teria esperado para sempre se o `timeout`
-não o tivesse encerrado.
+passado (`..`), e o terceiro teria esperado para sempre se o `timeout` não o tivesse encerrado.
 
 É a lição sobre locks da lição 7, achada por um teste e não por um relatório de gerente travado às
 oito da manhã. A correção é ler sem deixar uma transação aberta:
@@ -144,5 +143,6 @@ ana@vm:~/etl$ python -m pytest -q tests
 done
 ```
 
-Dez testes, e a primeira execução da bateria de integração achou um bug no teste, e não no pipeline. Isso acontece, e ainda assim vale
-achar: um teste que trava é um teste que ninguém roda.
+Dez testes, e a primeira execução da bateria de integração achou um bug no teste, e não no
+pipeline. Isso acontece, e ainda assim compensa achá-lo: um teste que trava é um teste que ninguém
+roda.

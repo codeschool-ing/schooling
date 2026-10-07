@@ -45,11 +45,11 @@ have been 78 too high, and the error would have grown every day the pipeline ran
 
 Deduplicating needs a definition of *the same*, and that definition is the hard part:
 
-- **an identifier the producer assigned** — `event_id` here. The best case: two rows with the same
+- an identifier the producer assigned — `event_id` here. The best case: two rows with the same
   id are the same event by definition;
-- **every column equal** — `SELECT DISTINCT`. Dangerous: two customers who really did buy the same
+- every column equal — `SELECT DISTINCT`. Dangerous: two customers who really did buy the same
   book at the same second become one;
-- **a business key** — the same ISBN from the same publisher at the same `updated_at`. Workable when
+- a business key — the same ISBN from the same publisher at the same `updated_at`. Workable when
   there is no id, and it needs somebody who knows the business to say which columns make the key.
 
 **Which copy to keep** is the second decision. For events the copies are identical, so the first

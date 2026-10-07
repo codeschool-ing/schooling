@@ -26,7 +26,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT s.name, s.channel, count(*) FILTER (WHERE o.
 (7 rows)
 ```
 
-The six bookshops have thousands each, and the website seven. Of course they do: **a till sells to
+The six bookshops have hundreds each, two of them over a thousand, and the website seven. Of course they do: **a till sells to
 whoever walks in**, and most people buy a book without giving their name. The shop has never
 promised a customer on every order; Ana believed it because the website does. The rule was wrong,
 not the data.

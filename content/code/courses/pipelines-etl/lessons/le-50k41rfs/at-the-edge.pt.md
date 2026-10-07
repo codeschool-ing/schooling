@@ -99,8 +99,8 @@ ana@vm:~/etl$ cat quarantine/prices.jsonl
 
 Todo registro contabilizado: 1.067 aceitos, quatro rejeitados, e uma linha para cada tipo de correção
 com quantas vezes ela foi necessária. As contagens são os hábitos das editoras, medidos: a Maré põe
-hífens nos ISBNs, o nome da Granito tem um espaço no fim, a Farol manda preços como texto em reais
-minúsculos. Se um desses números saltar amanhã, algo mudou numa editora, e a Ana vai saber em qual.
+hífens nos ISBNs, o nome da Granito tem um espaço no fim, a Farol manda preços como texto e a moeda
+em minúsculas. Se um desses números saltar amanhã, algo mudou numa editora, e a Ana vai saber em qual.
 
 Os quatro registros rejeitados estão em quarentena, **como chegaram**, cada um com o motivo. Ninguém
 precisa reconstruir o que estava errado com eles a partir de uma linha de log. São preços que a loja
@@ -108,6 +108,6 @@ não vai ter até uma editora mandá-los de novo, e o arquivo de quarentena é o
 para perguntar.
 
 O validador grava `landing/prices.valid.jsonl` para o carregador. Apontar o `load_raw.py` para ele em
-vez do arquivo cru é uma mudança de uma linha que esta lição deixa para o exercício; o que importa
-aqui é que, daqui em diante, o staging pode confiar que todo preço que lê foi conferido, e que todo
-preço que não foi carregado está escrito em algum lugar com um motivo.
+vez do arquivo cru é uma mudança de uma linha, e esta lição a deixa para o exercício. Daqui em
+diante, o staging pode confiar que todo preço que lê foi conferido, e que todo preço que não foi
+carregado está escrito em algum lugar com um motivo.

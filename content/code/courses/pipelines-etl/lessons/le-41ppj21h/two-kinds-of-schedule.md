@@ -70,11 +70,11 @@ interval_demo  scheduled__2026-03-02T03:00:00+00:00  success  2026-03-02T03:00:0
 
 Read the `run_after` and `logical_date` columns of each:
 
-- **`trigger_demo`**: each run's logical date *is* its `run_after`. The run at midnight on 1 March is
+- `trigger_demo`: each run's logical date *is* its `run_after`. The run at midnight on 1 March is
   for midnight on 1 March. Its data interval, asked of the API, starts and ends at the same moment:
   it covers nothing but an instant.
-- **`interval_demo`**: each run happens at the **end** of a day and its logical date is the
-  **start** of that day. The run allowed to start at midnight on 2 March is for 1 March, and its
+- `interval_demo`: each run happens at the *end* of a day and its logical date is the
+  *start* of that day. The run allowed to start at midnight on 2 March is for 1 March, and its
   interval runs from midnight to midnight — the whole of 1 March.
 
 ```schooling-figure

@@ -26,8 +26,8 @@ exit status 1
 ls: cannot access '/tmp/out.jsonl': No such file or directory
 ```
 
-A hundred and one rejected — the hundred she broke and one that arrived without a price anyway —
-fifty per cent, and the validator stopped: nothing written for the loader, exit status 1. The fixes
+A hundred and one were rejected, the hundred she broke and one that arrived without a price anyway.
+That is fifty per cent, and the validator stopped: nothing written for the loader, exit status 1. The fixes
 were still counted and the quarantine still written, so the reason is on disk; but the load that
 would have followed does not run, because the shell, `make` or Airflow sees the failure.
 

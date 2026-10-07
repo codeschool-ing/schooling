@@ -26,8 +26,8 @@ exit status 1
 ls: cannot access '/tmp/out.jsonl': No such file or directory
 ```
 
-Cento e um rejeitados — os cem que ela quebrou e um que já chegou sem preço —, cinquenta por cento, e o
-validador parou: nada gravado para o carregador, status de saída 1. As correções continuaram contadas
+Cento e um foram rejeitados, os cem que ela quebrou e um que já chegou sem preço. São cinquenta por
+cento, e o validador parou: nada gravado para o carregador, status de saída 1. As correções continuaram contadas
 e a quarentena continuou gravada, então o motivo está no disco; mas a carga que viria depois não roda,
 porque o shell, o `make` ou o Airflow veem a falha.
 

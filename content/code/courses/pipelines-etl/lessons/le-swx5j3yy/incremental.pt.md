@@ -54,6 +54,5 @@ O método inteiro se apoia numa coluna, e em três promessas sobre ela que a ori
 A primeira promessa é a que quebra. Um desenvolvedor corrige à mão um erro de digitação na cidade de
 um cliente, direto no banco, e não pensa no `updated_at`; o warehouse guarda o erro para sempre.
 **Onde o dono da origem concorda, um gatilho que preenche o `updated_at` em toda escrita transforma
-a promessa numa garantia** — a mesma troca que esta plataforma faz com as suas próprias tabelas só de
-inserção. A loja do laboratório não tem um, o que mantém os horários exatamente onde o arquivo do dia
+a promessa numa garantia**. A loja do laboratório não tem um, o que mantém os horários exatamente onde o arquivo do dia
 os pôs.

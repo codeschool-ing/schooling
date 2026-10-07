@@ -35,9 +35,8 @@ The incremental copy in the warehouse still holds customer 1880, name, e-mail an
 until somebody notices. The full copy, rebuilt from scratch the same night, simply does not have
 them.
 
-For a customer who asked to be erased, that difference is not a technicality. A warehouse that
-keeps their e-mail after the shop deleted it is keeping personal data nobody may keep any more,
-and the pipeline is how it got there.
+A warehouse that keeps an erased customer's e-mail after the shop deleted it is keeping personal
+data nobody may keep any more, and the pipeline is how it got there.
 
 ## Four ways to see a delete
 

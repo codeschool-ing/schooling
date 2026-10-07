@@ -44,9 +44,10 @@ ana@vm:~/etl/shop$ dbt test -s test_type:unit 2>&1 | grep -E "PASS|FAIL|Done"
 
 dbt builds the model's SQL against those rows without touching the real tables, and compares. It
 passes, which says the rule from lesson 6 still holds. That is worth checking because the rule is
-fragile: `ordered_at::date` instead of `(ordered_at at time zone 'America/Sao_Paulo')::date` looks
+fragile. `ordered_at::date` instead of `(ordered_at at time zone 'America/Sao_Paulo')::date` looks
 almost the same, and gives the right day only while the connection's time zone happens to be São
-Paulo's; on a server or a client set to UTC, it puts every late-evening sale on the next day. A unit test is how a reviewer finds out without reading every character.
+Paulo's. On a server or a client set to UTC, it puts every late-evening sale on the next day. A unit
+test is how a reviewer finds out without reading every character.
 
 Unit tests are run with `dbt test`, but they are not data tests: they need no data in the warehouse,
 and they belong in the checks run before a change is merged rather than in the nightly build —

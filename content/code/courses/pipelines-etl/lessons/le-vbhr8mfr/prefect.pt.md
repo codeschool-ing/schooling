@@ -97,7 +97,7 @@ ana@vm:~/etl$ /opt/etl/prefect/bin/python nightly_prefect.py 2026-03-15 2>&1 | g
 
 **Tudo rodou de novo.** O Prefect não pergunta se o trabalho de uma task já está lá; a execução de um
 flow é uma chamada, e chamar uma função duas vezes a roda duas vezes. É a troca oposta à do Luigi:
-nenhuma marca pode envelhecer, porque não há nenhuma, e nada é pulado por engano — mas nada é pulado
+nenhuma marca pode envelhecer, porque não há nenhuma, e nada é pulado por engano. Mas nada é pulado
 de propósito também, e um flow que falhou no último passo repete os primeiros na próxima chamada. O
 Prefect consegue fazer **cache** do resultado de uma task sob uma chave, o que traz de volta o pular
 quando ele é desejado; esta lição não usa isso.

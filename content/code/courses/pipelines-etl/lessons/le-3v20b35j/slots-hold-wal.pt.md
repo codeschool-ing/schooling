@@ -45,8 +45,8 @@ por dia num banco de produção movimentado.
 escritas, e os caixas param junto.
 
 Esse é o jeito mais comum de a captura de mudanças derrubar o sistema que ela lê, e o formato é
-sempre o mesmo: um pipeline é desativado, ou cai e não é reiniciado, ou o seu consumidor é pausado
-para uma migração — e o slot dele fica para trás, segurando WAL, sem nada em tela nenhuma dizendo
+sempre o mesmo. Um pipeline é desativado, ou cai e não é reiniciado, ou o seu consumidor é pausado
+para uma migração, e o slot dele fica para trás, segurando WAL, sem nada em tela nenhuma dizendo
 isso.
 
 ## Três defesas

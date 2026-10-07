@@ -34,9 +34,9 @@ ana@vm:~/etl/shop$ dbt build -s fact_sales+ 2>&1 | grep -E " OK | PASS | FAIL |D
 Eight days drifted. The model's `where` is the problem: an incremental run that replaces only the
 newest day is idempotent — running it twice leaves the same table — but it is not **complete**, because
 the days it does not look at can still change. Ana widens what each run is responsible for to the last
-thirty days, and says why in the model. That is the rest of the transcript above — the new model,
-`cat` after the edit, and its first run: `INSERT 0 13475`, a month of lines
-deleted and written again, and the drift test passing without a full refresh. Three more days later:
+thirty days, and says why in the model. That is the rest of the transcript above: the new model,
+`cat` after the edit, and its first run. `INSERT 0 13475` is a month of lines
+deleted and written again, and the drift test passes without a full refresh. Three more days later:
 
 ```
 ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-21

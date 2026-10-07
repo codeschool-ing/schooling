@@ -72,7 +72,7 @@ def test_a_second_build_changes_nothing(warehouse):
     assert one(wh, fingerprint) == before
 ```
 
-The first test is the one that matters most, and its expected answer is the important part. It is
+In the first test, the expected answer is the part that matters. It is
 **worked out from the fixture directly**, by a query on `orders` and `order_lines` that shares no
 code with the pipeline: no staging view, no `int_sales`, no dbt. If the pipeline and the oracle were
 the same code, a bug in it would agree with itself. The second checks that the mart adds up to the
@@ -103,15 +103,14 @@ ana@vm:~/etl$ cat /tmp/pytest.out; echo
 ..
 ```
 
-Two connections. One is the test's own, **idle in transaction**: its last query, the `md5` of the
+Two connections. One is the test's own, **idle in transaction**. Its last query, the `md5` of the
 third test, has finished, but psycopg opens a transaction with the first query on a connection and
-keeps it open until it is committed — and the second test had read `daily_sales` in that same
+keeps it open until it is committed. The second test had read `daily_sales` in that same
 transaction. The other is dbt, in the middle of the second build, **waiting for a lock** to rename
 `daily_sales` into place. Each was waiting for the other: dbt for the test's transaction to end, the
 test for dbt to finish. PostgreSQL detects deadlocks between its own sessions, but this one has one
 side outside the database — a Python process waiting for a child to exit — so nothing broke it. Two
-tests had passed (`..`), and the third would have waited for ever if
-`timeout` had not ended it.
+tests had passed (`..`), and the third would have waited for ever if `timeout` had not ended it.
 
 This is lesson 7's lesson about locks, found by a test rather than by a manager's report freezing at
 eight in the morning. The fix is to read without a transaction left open:
@@ -143,5 +142,5 @@ ana@vm:~/etl$ python -m pytest -q tests
 done
 ```
 
-Ten tests, and the integration suite's first run found a bug in the test rather than in the pipeline. That happens,
-and it is still worth finding: a test that hangs is a test nobody runs.
+Ten tests, and the integration suite's first run found a bug in the test rather than in the
+pipeline. That happens, and it is still worth finding: a test that hangs is a test nobody runs.

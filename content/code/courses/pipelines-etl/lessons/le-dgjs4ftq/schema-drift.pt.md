@@ -41,7 +41,7 @@ A correção tentadora é um carregador que se adapta: detecta a codificação, 
 mapeia `disponível` para `available` e interpreta os dois formatos de data. Cada passo é razoável, e
 juntos eles fazem um pipeline que aceita **qualquer** mudança que o fornecedor faça, inclusive
 aquela em que `disponível` agora significa outra coisa — estoque reservado, digamos, em vez de
-estoque à mão.
+estoque em mãos.
 
 **Mudanças de forma são decisões, e um pipeline não deve tomá-las sozinho.** A regra que serve
 melhor:

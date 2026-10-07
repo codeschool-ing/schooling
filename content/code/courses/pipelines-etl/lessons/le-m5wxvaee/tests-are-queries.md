@@ -5,8 +5,8 @@ version: 1
 
 Lesson 11 ended with a model that was wrong for four days without a single error. dbt's answer is
 the **test**: a statement about the data, written next to the model, checked every time the model is
-built. Ana starts with the beliefs she has carried since lesson 2 about the shop's orders — every
-order has an id, and only one; every order has a customer; the status is one of three words; every
+built. Ana starts with the beliefs about the shop's orders that she has carried since lesson 2.
+Every order has an id, and only one; every order has a customer; the status is one of three words; every
 order line belongs to an order, and is its only line:
 
 ```
@@ -113,4 +113,4 @@ having count(*) > 1
 
 That is all a test is, and it has two useful consequences. A failure can always be looked at: copy
 the compiled query into `psql` and the offending rows are right there. And a rule dbt does not ship
-is a query anybody can write — a later section does.
+is a query anybody can write — section 06 of this lesson writes one.

@@ -20,7 +20,7 @@ The reasons not to are real, and they are worth knowing by name:
 
 Ponto Final's customers asked for their e-mail addresses to be used for receipts, not for a
 warehouse. A raw layer that copies `customers` whole now holds five thousand e-mail addresses in a
-second place, and Brazilian law — the LGPD — gives each of those people the right to ask for them to be
+second place. Brazilian law — the LGPD — gives each of those people the right to ask for them to be
 erased, from **every** place they are kept. A pipeline that drops `email` on the way in, or replaces it with a
 hash, removes the problem before it exists. **That is ETL, and for that column it is the right
 call** even in a warehouse that loads everything else raw.

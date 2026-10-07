@@ -72,7 +72,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT order_date, sum(books) AS books, sum(revenue
 
 **The order comes from the file names**, which is why the schema files are called `00_schema.sql`:
 the zeros sort them first. It works, and it is fragile in exactly the way the course rules out for
-its own content — the order of execution is inferred from the filesystem, so renaming a file can
+its own content. The order of execution is inferred from the filesystem, so renaming a file can
 break the build, and nothing records that `daily_sales` needs `orders` to exist first. Lesson 11
 replaces this script with dbt, which works the order out from the SQL itself.
 

@@ -22,9 +22,9 @@ allows. The `401` left it `failed`, with four retries still unused, because the 
 `AirflowFailException`, which is Airflow's word for *do not bother trying again*.
 
 That one `if` decides how the night goes. Without it, a wrong key costs five tries and the waits
-between them — fifteen seconds, then thirty, sixty and a hundred and twenty, close to four minutes
-here and hours with a production retry delay — **and then** the alert, saying the same thing it
-could have said at the start. With it, the alert is written at the first try.
+between them: fifteen seconds, then thirty, sixty and a hundred and twenty, close to four minutes
+here and hours with a production retry delay. **And then** the alert arrives, saying the same thing
+it could have said at the start. With it, the alert is written at the first try.
 
 The list in the `if` is the judgement, and it has to be made per source. `400`, `401` and `403` are
 the API refusing the request as written. `404` could be either: a page that was removed, or one that

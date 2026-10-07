@@ -58,5 +58,5 @@ schema — e **registra que o `daily_sales` depende do `stg_orders`**. Um modelo
 diretamente, como `dbt_staging.stg_orders`, ainda roda, mas o dbt não fica sabendo da dependência:
 ele pode construir o `daily_sales` primeiro, contra a view de ontem, e nada reclama.
 
-Essa é a regra que vale guardar desta seção: **dentro de um projeto dbt, nada é nomeado à mão**.
-Tabelas cruas por `source`, modelos por `ref`. Toda seta do grafo do projeto é uma das duas.
+**Dentro de um projeto dbt, nada é nomeado à mão**: tabelas cruas por `source`, modelos por
+`ref`. Toda seta do grafo do projeto é uma das duas.

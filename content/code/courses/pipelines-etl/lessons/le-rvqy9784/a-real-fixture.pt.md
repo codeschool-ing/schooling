@@ -34,8 +34,8 @@ wc -l $out/*.csv
 O `pg_dump --schema-only` copia as definições de tabela da loja exatamente, restrições incluídas,
 então o banco da fixture tem a mesma forma do real. Depois um `\copy` por tabela, cada um escrito como
 a consulta que decide o que pertence ao dia: os pedidos feitos no dia 2 no horário de São Paulo, as
-linhas e os pagamentos deles, os clientes que eles nomeiam, e — porque são poucos e todo pedido
-precisa deles — todas as lojas e todos os livros.
+linhas e os pagamentos deles, e os clientes que eles nomeiam. Todas as lojas e todos os livros vão
+junto, porque são poucos e todo pedido precisa deles.
 
 ```
 ana@vm:~/etl$ sh tests/make_fixture.sh 2026-03-02
@@ -53,10 +53,9 @@ repositório ao lado dos testes, e é um dia de verdade, com tudo o que um dia d
 pedidos foram feitos num caixa por ninguém; alguns foram reembolsados; algum cliente pode ter pedido
 depois para ser esquecido. **Nada disso precisou ser imaginado para estar no teste.**
 
-Um recorte de dados reais pede dois cuidados. **Ele é dado pessoal até ser feito deixar de ser.** A
-tabela `customers` da loja guarda nomes e endereços de e-mail, e nenhum teste precisa de nenhum dos
-dois, então o script os troca na saída — `customer 4211`, `4211@example.invalid` — e mantém a cidade
-e o estado que o pipeline usa. Qualquer coisa pessoal de que um teste precise de fato tem de ser
-tratada como o banco de onde veio. E é uma foto: quando as tabelas da
-loja mudam de forma, a fixture é cortada de novo rodando o mesmo script, e é por isso que o script é
-guardado junto com ela.
+Um recorte de dados reais pede dois cuidados. **É dado pessoal até que alguém o faça deixar de ser.**
+A tabela `customers` da loja guarda nomes e endereços de e-mail, e nenhum teste precisa de nenhum dos
+dois. O script os troca na saída — `customer 4211`, `4211@example.invalid` — e mantém a cidade e o
+estado que o pipeline usa. Qualquer coisa pessoal de que um teste precise de fato tem de ser tratada
+como o banco de onde veio. E é uma foto: quando as tabelas da loja mudam de forma, a Ana corta a
+fixture de novo rodando o mesmo script, e é por isso que o script é guardado junto com ela.

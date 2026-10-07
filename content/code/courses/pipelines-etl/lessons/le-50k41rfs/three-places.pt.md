@@ -23,7 +23,7 @@ As conferências podem ficar em três lugares, e cada um vê algo que os outros 
 - **No fim**, sobre o que outras pessoas leem: um **contrato** dizendo em quais colunas, com quais
   tipos, o relatório da manhã pode confiar. Ele protege o leitor das mudanças do próprio pipeline.
 
-Vale dar nome aos tipos de problema, porque cada um tem a sua conferência de costume. **Validade**: o
+Cada tipo de problema tem um nome e a sua conferência de costume. **Validade**: o
 valor é sequer possível — um preço, um ISBN com o dígito verificador certo. **Completude**: falta
 alguma coisa — um preço nulo, um dia com menos eventos. **Unicidade** e **consistência**: o `unique` e
 o `relationships` da lição 12. **Pontualidade**: chegou na hora — o prazo da lição 10. **Volume**: há

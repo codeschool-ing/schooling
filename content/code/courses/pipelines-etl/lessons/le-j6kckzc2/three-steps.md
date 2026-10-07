@@ -14,8 +14,8 @@ Every pipeline in this course does three things, and the names are older than mo
 - **Load** — write the result into the destination, here the warehouse `wh`, in a way its readers
   never see half-done.
 
-**Nobody argues about whether those three happen. The argument is about where the transformation
-happens**, and the two answers have names:
+**The one question about them is where the transformation happens**, and the two answers have
+names:
 
 - **ETL** transforms *before* loading. The data is extracted, reshaped on the way — in a Python
   program, an ETL tool, a server in the middle — and only the finished result reaches the

@@ -54,5 +54,4 @@ The whole method rests on one column, and on three promises about it that the so
 The first promise is the one that breaks. A developer fixes a typo in a customer's city by hand,
 straight in the database, and does not think about `updated_at`; the warehouse keeps the typo for
 ever. **Where the source's owner agrees, a trigger that sets `updated_at` on every write turns the
-promise into a guarantee** — the same trade this platform makes for its own append-only tables.
-The lab's shop does not have one, which keeps its timestamps exactly where the day's file put them.
+promise into a guarantee**. The lab's shop does not have one, which keeps its timestamps exactly where the day's file put them.

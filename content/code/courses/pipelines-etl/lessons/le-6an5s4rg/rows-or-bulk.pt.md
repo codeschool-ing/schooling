@@ -54,7 +54,7 @@ executemany                    0.48 s       63,095 rows a second
 COPY                           0.04 s      711,766 rows a second
 ```
 
-De um método para o seguinte, **um fator de cinco, e depois um fator de dez**: as linhas de pedido
+De um método para o seguinte, **um fator de cinco, e depois um fator de mais de dez**: as linhas de pedido
 que levam dois segundos e meio com um comando por linha levam alguns centésimos de segundo com `COPY`.
 Nada nas linhas mudou, e nada no banco. O que mudou foi quantas vezes o cliente e o servidor tiveram
 de conversar.

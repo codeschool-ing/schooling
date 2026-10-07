@@ -30,8 +30,8 @@ outubro.
 
 O Airflow 2 chamava esse campo de **data de execução** (*execution date*), e o nome causou uma década
 de confusão, porque uma execução diária não executava na sua data de execução. As execuções dele
-cobriam um intervalo — um dia inteiro — e rodavam quando o intervalo acabava: a execução de 2 de março
-executava no começo de 3 de março. Toda equipe aprendeu isso do jeito difícil uma vez.
+cobriam um intervalo — um dia inteiro — e rodavam quando o intervalo acabava, então a execução de 2 de março
+executava no começo de 3 de março.
 
 O Airflow 3 renomeou o campo para *data lógica*, e mudou o que um agendamento cron simples significa.
 Por padrão, `schedule="0 2 * * *"` agora é um **gatilho**: uma execução acontece às 02:00, a data

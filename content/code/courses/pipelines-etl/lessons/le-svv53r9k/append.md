@@ -30,10 +30,10 @@ total built on it is doubled, as lesson 1's first batch was.
 
 An append is safe only when one of two things is true:
 
-- **the input never repeats** — each run reads rows no previous run read, and no run is ever
+- the input never repeats — each run reads rows no previous run read, and no run is ever
   repeated. Lesson 4's watermark is how a pipeline tries to promise the first half; nothing can
   promise the second, because a failed run will be rerun;
-- **the target can tell a repeat from a new row** — a key, and a load that refuses or ignores a
+- the target can tell a repeat from a new row — a key, and a load that refuses or ignores a
   row it already has.
 
 The second is the one that holds up, and it is what the other three loads in this lesson are: each

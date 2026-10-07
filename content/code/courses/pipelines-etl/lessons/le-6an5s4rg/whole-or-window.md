@@ -36,11 +36,11 @@ Time: 0.225 ms
 
 The times are in the order the statements ran. Copying the whole table: **about two and a quarter
 seconds**. Deleting the last thirty days, found through the index, and inserting them again: **about
-thirty milliseconds** between the two statements. Two orders of magnitude, and the gap widens with
+thirty milliseconds** between the two statements. About seventy-five times less, and the gap widens with
 every year of history, because the whole rebuild grows with the table and the window does not.
 
-That is the case for incremental loads, and it comes with the price lessons 11 and 15 paid for it:
-a window only puts right what falls inside it, so it needs the drift test to say when it was not
+That is the case for incremental loads, and it comes with the price lessons 11 and 15 paid for it.
+A window only puts right what falls inside it, so it needs the drift test to say when it was not
 enough, and an occasional full rebuild to put right what it missed. On a table this size a full
 rebuild once a week is affordable; on one a thousand times larger, it is a decision about money as
 much as about time.

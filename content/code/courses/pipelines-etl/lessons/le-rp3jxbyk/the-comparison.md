@@ -53,7 +53,7 @@ Zero rows in either direction. **The change does nothing to today's data**, whic
 for a change whose purpose is to protect tomorrow's. That is the result to want from a refactor,
 and the comparison is how to know it was got rather than hoped for.
 
-This is the habit the lesson is really about. A change to a pipeline is a change to numbers other
+This is the habit the lesson teaches. A change to a pipeline is a change to numbers other
 people read, and the only way to know what it does to them is to build it next to production and
 compare. **The tests say the code still works; the comparison says what it now says.** Both are
 needed, because a change can pass every test and still rename five categories.

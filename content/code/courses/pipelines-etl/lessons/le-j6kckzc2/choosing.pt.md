@@ -20,7 +20,7 @@ Os motivos para não carregar são reais, e vale conhecê-los pelo nome:
 ## A primeira linha é a que se leva a sério
 
 Os clientes da Ponto Final deram o e-mail para receber recibos, não para um warehouse. Uma camada
-crua que copia `customers` inteira agora guarda cinco mil endereços de e-mail num segundo lugar, e a
+crua que copia `customers` inteira agora guarda cinco mil endereços de e-mail num segundo lugar. A
 lei brasileira — a LGPD — dá a cada uma dessas pessoas o direito de pedir que sejam apagados, de
 **todos** os lugares onde são guardados. Um pipeline que descarta o `email` na entrada, ou o troca
 por um hash, remove o problema antes de ele existir. **Isso é ETL, e para essa coluna é a decisão

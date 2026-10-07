@@ -49,15 +49,15 @@ ana@vm:~/etl$ psql -d shop -Atc "SELECT xact_commit FROM pg_stat_database WHERE 
 `by_shop.py` takes more than four times as long to parse as `shop_nightly.py`, and during two quiet minutes the
 shop's database committed 14 transactions, one of them the query that counted the others. **Each
 parse of a DAG that has never run is a connection to the production database**, every thirty
-seconds, every day, for as long as the file is in the folder — and if the database is slow or
+seconds, every day, for as long as the file is in the folder. If the database is slow or
 down, the DAG processor waits on it, and every other DAG's changes wait in the queue behind.
 
 ## The rule
 
 **At the top level of a DAG file, declare; never fetch.** Imports, constants, the DAG and its tasks —
 nothing that opens a connection, reads a file that may be large, or calls an API. If the shape of a
-DAG has to depend on data, read the data inside a task and fan out at run time — Airflow's *dynamic
-task mapping* exists for that — or generate the DAG file from the data, in a separate step that
+DAG has to depend on data, read the data inside a task and fan out at run time; Airflow's *dynamic
+task mapping* exists for that. Or generate the DAG file from the data, in a separate step that
 somebody runs on purpose.
 
 Ana deletes `by_shop.py`. Her own DAG imports two modules and defines constants, and parses in a

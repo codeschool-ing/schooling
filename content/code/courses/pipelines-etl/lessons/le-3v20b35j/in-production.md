@@ -25,8 +25,8 @@ is described here is from their documentation, not from a recording.
 
 **Where the changes land.** Usually not straight in a warehouse table. The changes go to a log
 (Kafka, or a raw table of change rows) and the warehouse table is built from that log, so the
-history of every row is kept and the copy can be rebuilt — lesson 2's raw layer again, one row per
-change instead of one per extraction.
+history of every row is kept and the copy can be rebuilt. That is lesson 2's raw layer again, one
+row per change instead of one per extraction.
 
 ## A different source: the outbox
 

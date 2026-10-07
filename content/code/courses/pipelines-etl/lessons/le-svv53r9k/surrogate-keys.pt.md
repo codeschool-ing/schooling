@@ -54,9 +54,9 @@ ana@vm:~/etl$ psql -d wh -c "SELECT customer_key = -1 AS unknown, count(*) FROM 
 Quase um terço das linhas de pedido tem `customer_key = -1`: nenhum cliente que o warehouse saiba
 nomear. Dois tipos de venda vão parar lá, por motivos diferentes:
 
-- **vendas anônimas** — um cliente no caixa que não deu nome. A loja tem `NULL`, e o warehouse não
+- vendas anônimas — um cliente no caixa que não deu nome. A loja tem `NULL`, e o warehouse não
   tem para quem apontar;
-- **vendas de clientes que pediram para ser apagados.** A loja pôs o `customer_id` dos pedidos deles
+- vendas de clientes que pediram para ser apagados. A loja pôs o `customer_id` dos pedidos deles
   em `NULL`, e a carga da dimensão apagou todas as versões deles: o cliente 1880 não tem mais linha
   nenhuma.
 

@@ -95,4 +95,4 @@ assim.
 **Falhou**, no meio de 134 linhas, que é por isso que o filtro existe. O erro está na tarefa
 `transform`, e o comando dela nunca rodou: `TemplateNotFound: 'sh run_sql.sh'`. O `extract` e o
 `day_to_load` deram certo, e nada depois do `transform` foi tentado, porque tudo depois dele espera
-por ele. A seção depois da próxima diz por que falhou, e como um espaço resolve.
+por ele. A próxima seção diz por que falhou, e como um espaço resolve.

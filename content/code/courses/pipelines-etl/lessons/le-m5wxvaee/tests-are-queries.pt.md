@@ -5,8 +5,8 @@ version: 1
 
 A lição 11 terminou com um modelo que ficou errado por quatro dias sem um único erro. A resposta do
 dbt é o **teste**: uma afirmação sobre os dados, escrita ao lado do modelo, conferida toda vez que o
-modelo é construído. A Ana começa pelas crenças que carrega desde a lição 2 sobre os pedidos da loja
-— todo pedido tem um id, e só um; todo pedido tem um cliente; o status é uma de três palavras; toda
+modelo é construído. A Ana começa pelas crenças que carrega desde a lição 2 sobre os pedidos da loja.
+Todo pedido tem um id, e só um; todo pedido tem um cliente; o status é uma de três palavras; toda
 linha de pedido pertence a um pedido, e é a única linha dele:
 
 ```
@@ -114,4 +114,4 @@ having count(*) > 1
 
 Um teste é só isso, e isso tem duas consequências úteis. Uma falha sempre pode ser examinada: copie
 a consulta compilada no `psql` e as linhas culpadas estão ali. E uma regra que o dbt não traz é uma
-consulta que qualquer um pode escrever — uma seção mais adiante escreve.
+consulta que qualquer um pode escrever — a seção 06 desta lição escreve uma.

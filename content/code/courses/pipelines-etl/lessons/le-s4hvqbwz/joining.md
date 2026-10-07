@@ -40,10 +40,10 @@ orders became 29,152 rows after the join, and the picture below is one of them.
 
 This is called **fan-out**, and it has three properties that make it dangerous:
 
-- **nothing fails** — the SQL is valid and the number is plausible;
-- **it depends on the data** — on a day when every order has one line, the totals are right, and
+- nothing fails — the SQL is valid and the number is plausible;
+- it depends on the data — on a day when every order has one line, the totals are right, and
   the bug appears on the first busy Saturday;
-- **it hides in aggregates** — the joined rows are never looked at, only their sum.
+- it hides in aggregates — the joined rows are never looked at, only their sum.
 
 ## The rule that prevents it
 

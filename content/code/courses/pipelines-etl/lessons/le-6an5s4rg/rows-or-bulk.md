@@ -54,7 +54,7 @@ executemany                    0.48 s       63,095 rows a second
 COPY                           0.04 s      711,766 rows a second
 ```
 
-From one method to the next, **a factor of five, and then a factor of ten**: the order lines that
+From one method to the next, **a factor of five, and then a factor of more than ten**: the order lines that
 take two and a half seconds one statement at a time take a few hundredths of a second with `COPY`.
 Nothing about the rows changed, and nothing about the database. What changed is how many times the
 client and the server had to talk.

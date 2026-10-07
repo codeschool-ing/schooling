@@ -13,7 +13,7 @@ The four measurements, side by side, with the factor between the methods on this
 | answering for a month | reading six years | reading the month | about 120, in pages read |
 
 Not one of them needed a faster machine, a different database or a cluster. Each is a decision about
-**how much work to ask for**, and each was made somewhere in this course for a reason other than
+**how much work to ask for**. Each was also made somewhere in this course for a reason other than
 speed: `COPY` because the raw loader had to be one transaction, the window because the table drifted,
 the mart because reports should not join fact tables. Performance mostly comes from not doing work,
 and the work most worth not doing is the work a design asks for without anybody noticing.

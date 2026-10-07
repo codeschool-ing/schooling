@@ -15,8 +15,7 @@ ferramentas:
 - **Carregar** — escrever o resultado no destino, aqui o warehouse `wh`, de um jeito que quem o lê
   nunca veja pela metade.
 
-**Ninguém discute se essas três coisas acontecem. A discussão é sobre onde a transformação
-acontece**, e as duas respostas têm nome:
+**A única pergunta sobre eles é onde a transformação acontece**, e as duas respostas têm nome:
 
 - **ETL** transforma *antes* de carregar. Os dados são extraídos, remodelados no caminho — num
   programa Python, numa ferramenta de ETL, num servidor no meio — e só o resultado pronto chega ao

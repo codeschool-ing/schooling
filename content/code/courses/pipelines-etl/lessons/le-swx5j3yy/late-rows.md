@@ -7,8 +7,8 @@ The watermark has a trap, and it is the one that makes people distrust increment
 
 `updated_at` is set when a row is *written*. The row becomes visible when its transaction
 *commits*. Those are two different moments, and a long transaction can put minutes between them.
-**A row written before the watermark and committed after the extraction ran is above nothing the
-pipeline will ever ask for again.**
+**A row written before the watermark and committed after the extraction ran falls in a window the
+pipeline will never ask for again.**
 
 The lab stages one. At the Paulista shop on 2 March, a card machine hangs at 23:40 with the
 transaction open; the order commits after that night's extraction has read up to 23:59:47. What
@@ -66,7 +66,6 @@ into one. A missed row has no such remedy.
 
 How long to look back is a judgement about the source: the longest a transaction there can stay
 open, with a margin. If the shop's tills give up on a payment after a few minutes, an hour is
-generous. A
-source that runs hour-long batch jobs needs more. Some databases offer an exact answer instead —
+generous. A source that runs hour-long batch jobs needs more. Some databases offer an exact answer instead —
 PostgreSQL can report the oldest transaction still running — and lesson 5 avoids the question
 entirely by reading changes in commit order from the database's own log.

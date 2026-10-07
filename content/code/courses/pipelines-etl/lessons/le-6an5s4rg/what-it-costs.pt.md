@@ -13,7 +13,7 @@ As quatro medições, lado a lado, com o fator entre os métodos nesta máquina:
 | responder por um mês | ler seis anos | ler o mês | cerca de 120, em páginas lidas |
 
 Nenhuma delas precisou de uma máquina mais rápida, de outro banco ou de um cluster. Cada uma é uma
-decisão sobre **quanto trabalho pedir**, e cada uma foi tomada em algum ponto deste curso por um
+decisão sobre **quanto trabalho pedir**. Cada uma também foi tomada em algum ponto deste curso por um
 motivo que não era velocidade: o `COPY` porque o carregador do raw tinha de ser uma transação, a janela
 porque a tabela derivava, o mart porque relatórios não devem fazer join de tabelas fato. Desempenho
 vem quase sempre de não fazer trabalho, e o trabalho que mais vale não fazer é o que um desenho pede

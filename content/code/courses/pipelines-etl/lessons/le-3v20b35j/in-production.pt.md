@@ -25,7 +25,7 @@ Debezium. O que está descrito aqui vem da documentação deles, não de uma gra
 
 **Onde as mudanças caem.** Quase nunca direto numa tabela do warehouse. As mudanças vão para um log
 (o Kafka, ou uma tabela crua de linhas de mudança) e a tabela do warehouse é montada a partir desse
-log, para que o histórico de cada linha fique guardado e a cópia possa ser reconstruída — a camada
+log, para que o histórico de cada linha fique guardado e a cópia possa ser reconstruída. É a camada
 crua da lição 2 de novo, uma linha por mudança em vez de uma por extração.
 
 ## Uma origem diferente: o outbox

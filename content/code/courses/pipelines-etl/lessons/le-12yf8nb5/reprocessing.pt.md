@@ -35,9 +35,9 @@ ana@vm:~/etl/shop$ dbt build -s fact_sales+ 2>&1 | grep -E " OK | PASS | FAIL |D
 Oito dias derivaram. O `where` do modelo é o problema: uma execução incremental que troca só o dia
 mais novo é idempotente — rodá-la duas vezes deixa a mesma tabela —, mas não é **completa**, porque os
 dias para os quais ela não olha ainda podem mudar. A Ana alarga aquilo de que cada execução é
-responsável para os últimos trinta dias, e diz por quê no modelo. É o resto da transcrição acima — o modelo novo, com `cat` depois da
-edição, e a primeira execução dele: `INSERT 0 13475`, um mês de
-linhas apagado e escrito de novo, e o teste de deriva passando sem recarga completa. Três dias depois:
+responsável para os últimos trinta dias, e diz por quê no modelo. É o resto da transcrição acima: o modelo novo, com `cat` depois da
+edição, e a primeira execução dele. O `INSERT 0 13475` é um mês de
+linhas apagado e escrito de novo, e o teste de deriva passa sem recarga completa. Três dias depois:
 
 ```
 ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-21

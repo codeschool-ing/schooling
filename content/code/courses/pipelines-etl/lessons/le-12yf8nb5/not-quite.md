@@ -31,7 +31,7 @@ ana@vm:~/etl$ psql -d wh -c "TABLE marts.load_log"
 `now()` makes every row different from the last even if the counts were the same. A log is the one
 kind of table where appending is the point.
 
-What matters is to know which kind each table is, and to keep the two apart:
+Every table is one kind or the other, and the two have to be kept apart:
 
 - **A table of facts about the world** — sales, customers, prices — must come out the same however
   many times it is loaded. Nothing in it may depend on when, or how often, the pipeline ran:

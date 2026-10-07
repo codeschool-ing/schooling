@@ -44,8 +44,8 @@ a day here, and gigabytes a day on a busy production database.
 taking writes, and the tills stop with it.
 
 This is the commonest way change data capture takes down the system it reads from, and the shape is
-always the same: a pipeline is decommissioned, or crashes and is not restarted, or its consumer is
-paused for a migration — and its slot stays behind, holding WAL, with nothing on any screen saying
+always the same. A pipeline is decommissioned, or crashes and is not restarted, or its consumer is
+paused for a migration, and its slot stays behind, holding WAL, with nothing on any screen saying
 so.
 
 ## Three defences

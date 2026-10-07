@@ -55,5 +55,5 @@ ana@vm:~/etl$ git ls-files | sed "s|/.*|/…|" | sort | uniq -c
 ```
 
 Quinze arquivos do projeto dbt, dez de testes e da fixture deles, e os scripts, o SQL e o DAG das
-lições anteriores. Um commit,
-*a carga noturna como roda hoje*: daqui em diante, toda mudança tem um antes.
+lições anteriores. Um commit, *a carga noturna como roda hoje*: daqui em diante, toda mudança tem
+um antes.

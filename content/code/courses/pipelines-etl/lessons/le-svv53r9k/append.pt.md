@@ -30,10 +30,10 @@ duas vezes, e todo total montado sobre ela está dobrado, como o primeiro batch 
 
 Uma carga por acréscimo só é segura quando uma de duas coisas é verdade:
 
-- **a entrada nunca se repete** — cada execução lê linhas que nenhuma anterior leu, e nenhuma execução
+- a entrada nunca se repete — cada execução lê linhas que nenhuma anterior leu, e nenhuma execução
   é repetida. A marca d'água da lição 4 é como um pipeline tenta prometer a primeira metade; nada pode
   prometer a segunda, porque uma execução que falhou vai ser rodada de novo;
-- **o destino sabe distinguir uma repetição de uma linha nova** — uma chave, e uma carga que recusa ou
+- o destino sabe distinguir uma repetição de uma linha nova — uma chave, e uma carga que recusa ou
   ignora uma linha que já tem.
 
 A segunda é a que se sustenta, e é o que são as outras três cargas desta lição: cada uma sabe quais

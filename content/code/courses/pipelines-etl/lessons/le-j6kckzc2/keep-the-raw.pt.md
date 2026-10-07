@@ -58,7 +58,7 @@ Os dois números não são um certo e um errado. Eles respondem perguntas difere
 - **3.252 livros** é *o que a loja acredita agora sobre aquela semana*, com os estornos. O
   financeiro precisa dele.
 
-Um warehouse que guarda só um deles um dia vai ser perguntado pelo outro. **A camada crua é como
+Um dia alguém vai pedir o outro a um warehouse que guarda só um deles. **A camada crua é como
 você guarda o primeiro**, e as lições 4 e 5 são como você acha as mudanças que fazem o segundo, para
 que o warehouse possa dizer os dois e dizer qual é qual.
 

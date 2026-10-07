@@ -49,7 +49,7 @@ comando é o valor desta execução, não um valor fixado quando o arquivo foi e
 - **Ele roda as tarefas no processo do terminal**, uma depois da outra. Duas tarefas sem seta entre
   si rodam em sequência aqui; sob o agendador, com o `LocalExecutor`, elas rodam ao mesmo tempo. Um
   DAG que funciona no `dags test` porque duas tarefas por acaso rodaram numa ordem conveniente pode não
-  funcionar sob o agendador — que é a armadilha da dependência que falta, da última seção.
+  funcionar sob o agendador — que é a armadilha da dependência que falta, da seção sobre dependências.
 
 O `airflow tasks test DAG TAREFA DATA` roda uma tarefa só do mesmo jeito, sem as tarefas antes dela,
 que é o jeito mais rápido de testar uma mudança numa delas.

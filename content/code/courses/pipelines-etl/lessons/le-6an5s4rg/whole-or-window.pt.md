@@ -36,11 +36,11 @@ Time: 0.225 ms
 
 Os tempos estão na ordem em que os comandos rodaram. Copiar a tabela inteira: **cerca de dois
 segundos e um quarto**. Apagar os últimos trinta dias, achados pelo índice, e inseri-los de novo:
-**cerca de trinta milissegundos** somando os dois comandos. Duas ordens de grandeza, e a distância
+**cerca de trinta milissegundos** somando os dois comandos. Cerca de setenta e cinco vezes menos, e a distância
 cresce a cada ano de histórico, porque refazer tudo cresce com a tabela e a janela não.
 
 Esse é o argumento a favor das cargas incrementais, e ele vem com o preço que as lições 11 e 15
-pagaram: uma janela só acerta o que cai dentro dela, então precisa do teste de deriva para dizer
+pagaram. Uma janela só acerta o que cai dentro dela, então precisa do teste de deriva para dizer
 quando não bastou, e de uma reconstrução completa de vez em quando para acertar o que ela deixou
 passar. Numa tabela deste tamanho, uma reconstrução completa por semana é viável; numa mil vezes maior,
 é uma decisão sobre dinheiro tanto quanto sobre tempo.

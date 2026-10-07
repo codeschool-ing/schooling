@@ -107,6 +107,6 @@ reconstruct what was wrong with them from a log line. They are prices the shop w
 publisher sends them again, and the quarantine file is what Ana sends the publisher to ask.
 
 The validator writes `landing/prices.valid.jsonl` for the loader. Pointing `load_raw.py` at it
-instead of the raw file is a one-line change that this lesson leaves to the drill; the point here is
-that from now on, staging can trust that every price it reads was checked, and that every price that
-was not loaded is written down somewhere with a reason.
+instead of the raw file is a one-line change, and this lesson leaves it to the drill. From now on,
+staging can trust that every price it reads was checked, and that every price that was not loaded is
+written down somewhere with a reason.

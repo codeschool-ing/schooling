@@ -6,7 +6,7 @@ version: 1
 Um modelo dbt também é código, e as regras dele podem ser testadas do mesmo jeito: algumas linhas de
 entrada inventadas, e a saída que elas devem dar. O dbt chama isso de **teste de unidade** (*unit
 test*), e o escreve em YAML ao lado do modelo. A Ana testa as duas regras do `stg_orders` que mais
-importam e que mais fácil se erra: o dia a que um pedido pertence, e o que conta como venda.
+importam e em que é mais fácil errar: o dia a que um pedido pertence, e o que conta como venda.
 
 ```
 version: 2
@@ -42,11 +42,11 @@ ana@vm:~/etl/shop$ dbt test -s test_type:unit 2>&1 | grep -E "PASS|FAIL|Done"
 ```
 
 O dbt monta o SQL do modelo contra essas linhas sem tocar as tabelas de verdade, e compara. Passa, o
-que diz que a regra da lição 6 continua valendo. Vale conferir porque a regra é frágil: `ordered_at::date`
-em vez de `(ordered_at at time zone 'America/Sao_Paulo')::date` parece quase igual, e só dá o dia
-certo enquanto o fuso da conexão por acaso for o de São Paulo; num servidor ou num cliente em UTC, põe
-toda venda do fim da noite no dia seguinte. Um teste de unidade é
-como um revisor descobre isso sem ler cada caractere.
+que diz que a regra da lição 6 continua valendo. Isso merece conferência porque a regra é
+frágil. `ordered_at::date` em vez de `(ordered_at at time zone 'America/Sao_Paulo')::date` parece
+quase igual, e só dá o dia certo enquanto o fuso da conexão por acaso for o de São Paulo. Num servidor
+ou num cliente em UTC, põe toda venda do fim da noite no dia seguinte. Um teste de unidade é como um
+revisor descobre isso sem ler cada caractere.
 
 Testes de unidade rodam com `dbt test`, mas não são testes de dados: não precisam de dados no
 warehouse, e pertencem às conferências rodadas antes de uma mudança entrar, e não ao build noturno — a

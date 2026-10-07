@@ -14,11 +14,11 @@ v1.1.0
 done
 ```
 
-Production went back to `v1.0.0`, was built, and came forward to `v1.1.0` again. No
-code edited by hand, no guessing which version was the good one: **a tag is a version that can be
+Production went back to `v1.0.0`, was built, and came forward to `v1.1.0` again. No code
+edited by hand, no guessing which version was the good one: **a tag is a version that can be
 returned to**, and that is most of why it is worth making one.
 
-A rollback of the **code** is a rollback of the **data** only as far as the data is rebuilt from the
+A rollback of the code is a rollback of the data only as far as the data is rebuilt from the
 code. Here that is nearly all of it: views are redefined, tables are rebuilt whole, and the
 incremental `fact_sales` replaces its last thirty days on every run, so a rollback rebuilds those
 from the old code as well. What it does not reach is anything older than the window, which would

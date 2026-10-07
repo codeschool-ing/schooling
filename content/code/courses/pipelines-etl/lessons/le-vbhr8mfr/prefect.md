@@ -95,7 +95,7 @@ ana@vm:~/etl$ /opt/etl/prefect/bin/python nightly_prefect.py 2026-03-15 2>&1 | g
 
 **Everything ran again.** Prefect does not ask whether a task's work is already there; a flow run is
 a call, and calling a function twice runs it twice. That is the opposite trade from Luigi's: no
-marker can go stale, because there are none, and nothing is ever skipped by mistake — but nothing is
+marker can go stale, because there are none, and nothing is ever skipped by mistake. But nothing is
 skipped on purpose either, and a flow that failed at its last step repeats its first ones on the next
 call. Prefect can **cache** a task's result under a key, which brings back the skipping when it is
 wanted; this lesson does not use it.

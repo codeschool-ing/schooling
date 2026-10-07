@@ -68,8 +68,7 @@ starting at byte 19649
 stopped at byte 36377
 ```
 
-Os horários são os da gravação, e uma execução sua vai mostrar os seus. Duas coisas nela são o
-ponto:
+Os horários são os da gravação, e uma execução sua vai mostrar os seus. Duas coisas nela importam:
 
 - **O atraso é de cerca de um segundo.** Uma compra chega ao pipeline um segundo depois de
   acontecer, não na manhã seguinte. O piso de um segundo é obra da reprodução: ela escreve

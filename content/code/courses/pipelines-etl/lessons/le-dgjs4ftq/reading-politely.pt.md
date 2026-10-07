@@ -24,14 +24,14 @@ ana@vm:~/etl$ psql -U etl_reader -c "UPDATE orders SET status = 'cancelled' WHER
 ERROR:  permission denied for table orders
 ```
 
-O segundo comando é o ponto. Um bug no pipeline, um `UPDATE` colado no terminal errado, uma
+O que importa é o segundo comando. Um bug no pipeline, um `UPDATE` colado no terminal errado, uma
 biblioteca que "ajuda" criando uma tabela: nenhum deles toca a loja por esse papel. E no
 `pg_stat_activity`, que lista cada sessão aberta, as conexões do pipeline agora têm um nome próprio,
 que é como o responsável pela origem encontra você antes de encontrar o problema.
 
 ## Outro lugar para ler
 
-Uma leitura grande pertence a uma **réplica de leitura**: uma cópia do banco que o PostgreSQL mantém
+O lugar de uma leitura grande é uma **réplica de leitura**: uma cópia do banco que o PostgreSQL mantém
 atualizada a partir do log de escrita antecipada do primário, um segundo ou pouco mais atrás dele, e
 que não registra vendas. Os caixas nunca percebem uma extração que roda lá. O laboratório não tem
 réplica, e o curso lê o primário; em produção, essa é uma decisão que alguém deveria tomar em voz

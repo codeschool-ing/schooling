@@ -41,7 +41,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT count(*) AS prices, count(b.book_id) AS matc
 
 ```
 
-Four kinds of trouble, each from one publisher's habits, and the last query shows what they cost
+Four kinds of trouble, each from one publisher's habits. The last query shows what they cost
 before anybody has looked at a single price: **70 of the 909 prices match no book**, because Maré's
 ISBNs carry hyphens and the shop's do not. A report of list prices per book would silently be
 missing Maré's whole catalogue.

@@ -3,7 +3,7 @@ title: Provar, toda vez
 version: 1
 ---
 
-*Esta carga é idempotente* é uma afirmação, e a lição da lição 12 foi que uma afirmação sobre dados
+*Esta carga é idempotente* é uma afirmação, e o que a lição 12 ensinou foi que uma afirmação sobre dados
 vale o que vale o teste que a confere. Então a Ana escreve o teste uma vez, para qualquer passo:
 
 ```
@@ -59,7 +59,7 @@ encheu de novo com os mesmos documentos.
 
 Duas coisas fazem isso valer mais do que parece. É barato o bastante para rodar a cada mudança numa
 carga, que é quando a idempotência se perde: alguém acrescenta um passo, e o passo acrescenta linhas.
-E testa a propriedade em si, e não o código que deveria garanti-la. O `twice.sh` não sabe o que é um
+E **testa a propriedade em si, e não o código que deveria garanti-la**. O `twice.sh` não sabe o que é um
 upsert; ele só sabe que a tabela não mudou, que é o que importa.
 
 O que ele não consegue mostrar é um passo que é idempotente *hoje* por sorte — um insert que por acaso

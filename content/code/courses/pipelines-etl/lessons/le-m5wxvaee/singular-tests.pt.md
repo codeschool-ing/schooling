@@ -52,8 +52,7 @@ dito isso. A recarga completa do `fact_sales` e de tudo o que vem depois dele ac
 teste volta a passar.
 
 Na lição 11 isso era uma consulta que a Ana lembrava de rodar. Agora faz parte de todo build, e o
-build fica vermelho na manhã em que a tabela erra, e não no dia em que alguém por acaso olha. Uma
-regra que importa não é uma de que alguém se lembra: é uma que a máquina confere.
+build fica vermelho na manhã em que a tabela erra, e não no dia em que alguém por acaso olha.
 
 O teste também sugere a própria correção. Se uma recarga completa é necessária a cada poucos dias,
 a janela de volta que a lição 11 descreveu sai mais barata; quão longe voltar é uma pergunta que o

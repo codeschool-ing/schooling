@@ -52,7 +52,6 @@ refresh of `fact_sales` and everything after it puts the table right, and the te
 
 In lesson 11 this was a query Ana remembered to run. Now it is part of every build, and the build
 is red on the morning the table goes wrong rather than on the day somebody happens to look.
-A rule that matters is not one somebody remembers: it is one the machine checks.
 
 The test also suggests its own fix. If a full refresh is needed every few days, the lookback
 lesson 11 described is cheaper; how far back is a question the test's history answers, by showing

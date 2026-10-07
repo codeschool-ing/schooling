@@ -32,7 +32,7 @@ ana@vm:~/etl$ psql -d wh -c "TABLE marts.load_log"
 O `now()` torna cada linha diferente da anterior mesmo que as contagens fossem iguais. Um registro é o
 único tipo de tabela em que acrescentar é o objetivo.
 
-O que importa é saber de que tipo é cada tabela, e manter os dois separados:
+Toda tabela é de um tipo ou do outro, e os dois têm de ficar separados:
 
 - **Uma tabela de fatos sobre o mundo** — vendas, clientes, preços — tem de sair igual quantas vezes
   for carregada. Nada nela pode depender de quando, ou de quantas vezes, o pipeline rodou: nada de

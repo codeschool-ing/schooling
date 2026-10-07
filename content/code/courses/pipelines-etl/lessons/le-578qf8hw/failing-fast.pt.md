@@ -22,8 +22,8 @@ quantas o `retries` deixar. O `401` a deixou em `failed`, com quatro retries ain
 código levantou `AirflowFailException`, que é a palavra do Airflow para *nem adianta tentar de novo*.
 
 Aquele único `if` decide como vai ser a noite. Sem ele, uma chave errada custa cinco tentativas e as
-esperas entre elas — quinze segundos, depois trinta, sessenta e cento e vinte, quase quatro minutos
-aqui e horas com um intervalo de retry de produção — **e depois** o alerta, dizendo a mesma coisa
+esperas entre elas: quinze segundos, depois trinta, sessenta e cento e vinte, quase quatro minutos
+aqui e horas com um intervalo de retry de produção. **E depois** vem o alerta, dizendo a mesma coisa
 que poderia ter dito no começo. Com ele, o alerta é escrito na primeira tentativa.
 
 A lista no `if` é o julgamento, e ele tem de ser feito fonte por fonte. `400`, `401` e `403` são a

@@ -49,7 +49,7 @@ the value of this run, not a value fixed when the file was written.
 - **It runs the tasks in the terminal's process**, one after another. Two tasks with no arrow
   between them run in sequence here; under the scheduler, with `LocalExecutor`, they run at the same
   time. A DAG that works in `dags test` because two tasks happened to run in a convenient order may
-  not work under the scheduler — which is the missing-dependency trap from the last section.
+  not work under the scheduler — which is the missing-dependency trap from the section on dependencies.
 
 `airflow tasks test DAG TASK DATE` runs a single task the same way, without its upstream tasks,
 which is the fastest way to try a change to one of them.

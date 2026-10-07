@@ -26,7 +26,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT s.name, s.channel, count(*) FILTER (WHERE o.
 (7 rows)
 ```
 
-As seis livrarias têm milhares cada uma, e o site, sete. Claro que têm: **um caixa vende para quem
+As seis livrarias têm centenas cada uma, duas delas mais de mil, e o site, sete. Claro que têm: **um caixa vende para quem
 entrar**, e a maioria das pessoas compra um livro sem dar o nome. A loja nunca prometeu um cliente em
 todo pedido; a Ana acreditou nisso porque o site promete. A regra estava errada, não os dados.
 

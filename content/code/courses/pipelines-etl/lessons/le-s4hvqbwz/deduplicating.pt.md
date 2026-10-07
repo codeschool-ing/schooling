@@ -46,11 +46,11 @@ ana@vm:~/etl$ psql -d wh -c "SELECT (SELECT count(*) FROM raw.events) AS deliver
 
 Tirar duplicatas exige uma definição de *a mesma*, e essa definição é a parte difícil:
 
-- **um identificador que o produtor deu** — o `event_id` aqui. O melhor caso: duas linhas com o
+- um identificador que o produtor deu — o `event_id` aqui. O melhor caso: duas linhas com o
   mesmo id são o mesmo evento por definição;
-- **todas as colunas iguais** — `SELECT DISTINCT`. Perigoso: dois clientes que de fato compraram o
+- todas as colunas iguais — `SELECT DISTINCT`. Perigoso: dois clientes que de fato compraram o
   mesmo livro no mesmo segundo viram um só;
-- **uma chave de negócio** — o mesmo ISBN, da mesma editora, no mesmo `updated_at`. Funciona quando
+- uma chave de negócio — o mesmo ISBN, da mesma editora, no mesmo `updated_at`. Funciona quando
   não há id, e precisa de alguém que conheça o negócio para dizer quais colunas formam a chave.
 
 **Qual cópia guardar** é a segunda decisão. Para eventos as cópias são idênticas, então o primeiro

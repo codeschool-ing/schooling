@@ -27,8 +27,7 @@ das suas linhas — e essa seria uma pergunta para a loja, não para o pipeline.
 
 ## Para que serve uma conciliação
 
-**Ela não é um teste de um arquivo em particular. É um teste da transformação inteira contra um fato
-que a transformação não produziu.** É isso que a faz valer mais que conferir cada passo: um bug em
+**Ela testa a transformação inteira contra um fato que a transformação não produziu.** É isso que a faz valer mais que conferir cada passo: um bug em
 qualquer lugar entre o `raw` e os `marts` aparece no único número do fim.
 
 Três hábitos a tornam rotina:

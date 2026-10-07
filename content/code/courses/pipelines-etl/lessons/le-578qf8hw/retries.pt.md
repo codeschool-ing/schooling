@@ -8,7 +8,7 @@ O `retries` é o número de tentativas que o Airflow pode fazer **depois** da pr
 retry, e o `retry_exponential_backoff` multiplica a espera a cada vez que ela é usada de novo.
 
 **No Airflow 3.3 o backoff é um número, não um interruptor.** A documentação dele o chama de
-multiplicador, com `0` querendo dizer espera constante e `2.0` querendo dizer *dobrar a cada vez*;
+multiplicador, com `0` querendo dizer espera constante e `2.0` querendo dizer *dobrar a cada vez*.
 DAGs mais antigos escreviam `True` ali, e o Python conta `True` como `1`, então eles ganham uma
 espera multiplicada por um — os mesmos quinze segundos antes de cada tentativa, sem nada em log
 nenhum dizendo que o backoff não está acontecendo. A Ana escreve `2.0` e um comentário com as esperas
@@ -56,7 +56,7 @@ A execução deu certo. **Duas tentativas falharam, a terceira achou a API de vo
 avisado**, porque não havia nada a fazer: o `alerts.log` nem existe ainda. Os intervalos entre as
 tentativas mostram o backoff funcionando, cada espera mais ou menos o dobro da anterior.
 
-Esse último ponto é todo o desenho. **Um retry transforma uma falha passageira num sucesso mais
+**Um retry transforma uma falha passageira num sucesso mais
 lento**, e um sucesso mais lento não é notícia. Notícia é a falha que os retries não conseguiram
 absorver, que é a próxima seção.
 

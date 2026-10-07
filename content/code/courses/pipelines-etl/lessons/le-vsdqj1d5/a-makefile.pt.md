@@ -40,8 +40,8 @@ reports/daily_$(DAY).csv: .made/models
 ```
 
 Três regras, cada uma a resposta para *de que isto é feito*. O relatório é feito dos modelos; os
-modelos, do raw **e de cada arquivo do projeto dbt**; o raw, do `load_raw.py` **e do arquivo de
-relógio do laboratório**, que o `lab.sh day` reescreve sempre que a loja vive mais um dia. Nada diz
+modelos, do raw **e de cada arquivo do projeto dbt**. O raw é feito do `load_raw.py` **e do arquivo
+de relógio do laboratório**, que o `lab.sh day` reescreve sempre que a loja vive mais um dia. Nada diz
 *primeiro faça isto, depois aquilo*: o `make` descobre a ordem a partir das regras, como o dbt fez a
 partir dos `ref`s.
 

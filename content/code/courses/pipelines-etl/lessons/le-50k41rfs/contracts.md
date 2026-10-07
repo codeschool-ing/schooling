@@ -86,8 +86,8 @@ ana@vm:~/etl/shop$ dbt build -s daily_sales 2>&1 | grep -vE "^[0-9:]{8}  (Runnin
 ana@vm:~/etl$ sed -i 's/sum(s.line_cents) \/ 100.0 as revenue_cents/sum(s.line_cents)::bigint as revenue_cents/' shop/models/marts/daily_sales.sql
 ```
 
-The table was not built. dbt names the column, the type the model now produces — `DECIMAL` — and the
-type the contract promised — `LONGINTEGER`, its word for `bigint` — and stops. The report goes on
+The table was not built. dbt names the column, the type the model now produces (`DECIMAL`) and the
+type the contract promised (`LONGINTEGER`, its word for `bigint`), and stops. The report goes on
 reading yesterday's table with yesterday's meaning, and the person who made the change finds out
 from the build rather than from a manager. Ana puts the line back as it was.
 

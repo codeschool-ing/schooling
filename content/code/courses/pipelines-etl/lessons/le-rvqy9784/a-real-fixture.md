@@ -34,8 +34,8 @@ wc -l $out/*.csv
 `pg_dump --schema-only` copies the shop's table definitions exactly, constraints included, so the
 fixture database has the same shape as the real one. Then one `\copy` per table, each written as the
 query that decides what belongs in the day: the orders placed on the 2nd in São Paulo time, their
-lines and payments, the customers they name, and — because they are small and every order needs
-them — all the shops and all the books.
+lines and payments, and the customers they name. All the shops and all the books go in too, because
+they are small and every order needs them.
 
 ```
 ana@vm:~/etl$ sh tests/make_fixture.sh 2026-03-02
@@ -54,9 +54,8 @@ were placed at a till by nobody; some were refunded; one customer may since have
 forgotten. **None of that had to be imagined to be in the test.**
 
 A slice of real data needs two cautions. **It is personal data until it is made not to be.** The
-shop's `customers` table holds names and e-mail addresses, and no test needs either, so the script
+shop's `customers` table holds names and e-mail addresses, and no test needs either. The script
 replaces them on the way out — `customer 4211`, `4211@example.invalid` — and keeps the city and state
 the pipeline uses. Anything personal that a test does need must be treated like the database it came
-from. And it is a snapshot: when the shop's
-tables change shape, the fixture is cut again by running the same script, which is why the script is
-kept with it.
+from. And it is a snapshot: when the shop's tables change shape, Ana cuts the fixture again by running
+the same script, which is why the script is kept with it.

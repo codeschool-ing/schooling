@@ -9,8 +9,9 @@ duplicata, nem tipo errado; cada linha dele é um evento perfeitamente bom. O qu
 **expectativa**: não uma regra que os dados devem obedecer, mas uma faixa em que se espera que eles
 caiam, em que cair fora merece o olhar de uma pessoa.
 
-A Ana acrescenta os eventos do site ao projeto dbt — uma fonte, e um modelo de staging que é o
-`staging/events.sql` da lição 6 com `source` dentro — e uma expectativa sobre o volume diário deles:
+A Ana acrescenta os eventos do site ao projeto dbt como uma fonte e um modelo de staging, que é o
+`staging/events.sql` da lição 6 com `source` dentro. Depois escreve uma expectativa sobre o volume
+diário deles:
 
 ```
 version: 2

@@ -15,11 +15,11 @@ v1.1.0
 done
 ```
 
-A produção voltou para a `v1.0.0`, foi construída, e veio de novo para a `v1.1.0`. Sem
-nenhum código editado à mão, sem palpite sobre qual versão era a boa: **uma tag é uma versão para a
+A produção voltou para a `v1.0.0`, foi construída, e veio de novo para a `v1.1.0`. Sem nenhum
+código editado à mão, sem palpite sobre qual versão era a boa: **uma tag é uma versão para a
 qual se pode voltar**, e isso é quase todo o motivo de valer a pena criar uma.
 
-Voltar o **código** só volta os **dados** até onde os dados são reconstruídos a partir do código.
+Voltar o código só volta os dados até onde os dados são reconstruídos a partir do código.
 Aqui isso é quase tudo: views são redefinidas, tabelas são refeitas inteiras, e o `fact_sales`
 incremental troca os últimos trinta dias a cada execução, então voltar atrás reconstrói esses dias
 com o código antigo também. O que isso não alcança é o que for mais antigo que a janela, que pediria

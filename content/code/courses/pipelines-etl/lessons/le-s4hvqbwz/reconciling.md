@@ -28,8 +28,7 @@ pipeline.
 
 ## What a reconciliation is for
 
-**It is not a test of a particular file. It is a test of the whole transformation against a fact
-the transformation did not produce.** That is what makes it worth more than checking each step:
+**It tests the whole transformation against a fact the transformation did not produce.** That is what makes it worth more than checking each step:
 a bug anywhere between `raw` and `marts` shows up in the one number at the end.
 
 Three habits make it routine:

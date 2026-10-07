@@ -94,4 +94,4 @@ anyway.
 **It failed**, in the middle of 134 lines, which is why the filter exists. The error is in the
 `transform` task, and its command never ran: `TemplateNotFound: 'sh run_sql.sh'`. `extract` and
 `day_to_load` succeeded, and nothing after `transform` was attempted, because everything after it
-waits for it. The section after next says why it failed, and how one space fixes it.
+waits for it. The next section says why it failed, and how one space fixes it.
