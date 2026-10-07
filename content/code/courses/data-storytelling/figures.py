@@ -2299,6 +2299,51 @@ def l15_timeline(lang):
                 'Sete marcos, cada um com algo para mostrar na sua data. O primeiro recorte chega enquanto o '
                 'trabalho com os dados ainda está em andamento, e esse é o ponto.')
 
+# ------------------------------------------------------------------ lesson 16
+
+@figure('l16-case-study', 16)
+def l16_case_study(lang):
+    f = Fig('l16-case-study', 680, 330, T(
+        lang,
+        'A case study as a stack. On top, the one-page summary, which most reviewers read and then '
+        'stop. Below it, seven parts: the question and the decision; the data and definitions; the '
+        'approach, including what was ruled out; the finding with its evidence; the recommendation and '
+        'what happened; the limits; what you would do next and what you learnt. At the bottom, the '
+        'files, opened by the sceptical reviewer who checks the numbers.',
+        'Um estudo de caso como uma pilha. No topo, o sumário de uma página, que a maioria dos '
+        'avaliadores lê e para. Abaixo, sete partes: a pergunta e a decisão; os dados e as definições; '
+        'a abordagem, inclusive o que foi descartado; o achado com sua evidência; a recomendação e o '
+        'que aconteceu; os limites; o que faria em seguida e o que aprendeu. Embaixo, os arquivos, '
+        'abertos pelo avaliador cético que confere os números.'))
+    x, w = 20, 430
+    f.rect(x, 10, w, 40, stroke='--amber', width=1.6)
+    f.text(x + w / 2, 30, T(lang, 'the one-page summary', 'o sumário de uma página'), size=11.5, weight='600')
+    parts = [T(lang, '1  the question and the decision', '1  a pergunta e a decisão'),
+             T(lang, '2  the data and its definitions', '2  os dados e as definições'),
+             T(lang, '3  the approach, and what was ruled out', '3  a abordagem, e o que foi descartado'),
+             T(lang, '4  the finding, with its evidence', '4  o achado, com a evidência'),
+             T(lang, '5  the recommendation, and what happened', '5  a recomendação, e o que aconteceu'),
+             T(lang, '6  the limits', '6  os limites'),
+             T(lang, '7  next steps, and what you learnt', '7  próximos passos, e o que aprendeu')]
+    for i, t in enumerate(parts):
+        y = 60 + i * 30
+        f.rect(x, y, w, 26, stroke='--wire', fill='--panel', width=1)
+        f.text(x + 12, y + 13, t, size=10, anchor='start')
+    f.rect(x, 280, w, 36, stroke='--phosphor', fill='--ink', width=1.2, dash='4 3')
+    f.text(x + w / 2, 298, T(lang, 'the files: data, spreadsheet, deck, decision log',
+                             'os arquivos: dados, planilha, deck, registro de decisões'), size=10)
+    notes = [(30, T(lang, 'most reviewers stop here', 'a maioria dos avaliadores para aqui')),
+             (160, T(lang, 'the interested keep reading', 'os interessados continuam')),
+             (298, T(lang, 'the sceptic checks the numbers', 'o cético confere os números'))]
+    for y, t in notes:
+        f.line(x + w + 8, y, x + w + 30, y, stroke='--paper-dim', width=1)
+        f.text(x + w + 36, y, t, size=10, anchor='start', fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'Three depths for three readers. The summary has to stand on its own, because for most '
+                'reviewers it is the whole case study.',
+                'Três profundidades para três leitores. O sumário tem de se sustentar sozinho, porque para '
+                'a maioria dos avaliadores ele é o estudo de caso inteiro.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
