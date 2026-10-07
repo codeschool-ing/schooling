@@ -94,6 +94,16 @@ reset() {
   commit '2026-10-05 14:00' 'Map the controls to ISO 27001 and the NIST CSF'
   add pbc.csv pbc.py
   commit '2026-10-06 09:30' 'List what the insurer asked for, and check it'
+  add decisions/RA-003-cancellation-record-renewed.md
+  commit '2026-10-09 10:30' 'Review RA-002 late, and accept T06 again until December'
+  cat "$here/lab/threats-from-soc2.csv" >> threats.csv && git add threats.csv
+  commit '2026-10-12 09:00' 'Add the threats the gateway SOC 2 report raised'
+  add check_model.py check.sh baseline.txt
+  commit '2026-10-12 09:40' 'Check the model on every change'
+  cat "$here/lab/requirements-from-soc2.csv" >> requirements.csv
+  printf 'R21: not verified\n' >> baseline.txt
+  git add requirements.csv baseline.txt
+  commit '2026-10-12 11:15' 'Write requirements for T18 and T19'
 }
 
 case ${1:-} in
