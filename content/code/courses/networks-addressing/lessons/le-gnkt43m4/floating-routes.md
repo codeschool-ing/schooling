@@ -1,6 +1,6 @@
 ---
 title: A backup route, and what it cannot see
-version: 1
+version: 2
 ---
 
 The spare cable from r1 to r3 is a second way through. A **floating route** puts it to use: a second
@@ -25,7 +25,8 @@ number after the next hop such as `ip route 10.20.3.0 255.255.255.0 10.20.13.2 2
 
 ## Pulling a cable
 
-Then the cable from r1 to r2 was pulled. r1 lost the signal on `eth1`, and its table changed on its own:
+Then the cable from r1 to r2 was pulled, by setting r2's end of it down: `ip link set eth1 down` at a
+root prompt on r2. r1 lost the signal on `eth1`, and its table changed on its own:
 
 ```
 root@r1:~# ip route show 10.20.3.0/24
