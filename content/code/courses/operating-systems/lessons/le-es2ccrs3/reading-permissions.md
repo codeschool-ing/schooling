@@ -1,10 +1,27 @@
 ---
 title: Reading a permission string
-version: 1
+version: 2
 ---
 
 Every file and folder on Linux has **an owner, a group, and three sets of permissions**. `ls -l` shows
-all of it:
+all of it. To see it on your own server you need what this lesson uses: two more people, `bruno` and
+`carla`, who stand on the other side of each permission, and the office's shared folder in `/srv` with
+two files in it. Paste this; the commands that create people are lesson 10's, and `chmod` is two sections
+from here:
+
+```sh
+sudo useradd -m -s /bin/bash bruno
+sudo useradd -m -s /bin/bash carla
+sudo mkdir /srv/office && sudo chown $USER:$USER /srv/office
+cd /srv/office && mkdir reports
+printf 'Q3 figures\n' > reports/q3.txt
+printf 'salaries\n' > payroll.txt
+chmod 755 /srv/office reports
+chmod 644 payroll.txt reports/q3.txt
+find /srv/office -exec touch -h -d '2026-09-01 09:00' {} +
+```
+
+Then the listing:
 
 ```
 ana@server:/srv/office$ ls -l

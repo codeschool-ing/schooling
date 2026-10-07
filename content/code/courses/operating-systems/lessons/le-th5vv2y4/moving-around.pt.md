@@ -1,10 +1,27 @@
 ---
 title: Andando por aí: onde, o quê, vá
-version: 1
+version: 2
 ---
 
 Três comandos fazem quase tudo: o **`pwd`** diz onde você está, o `ls` lista o que há ali, e o
 `cd` vai para outro lugar.
+
+Esta aula anda pela pasta do escritório, e você precisa da mesma para acompanhar. Cole isto no seu
+servidor. A primeira linha apaga o `office` da aula 1, para que o seu tenha exatamente o que estas
+transcrições mostram; o resto cria três pastas, quatro arquivos e um arquivo oculto, e a última linha
+data todos de 1º de setembro de 2026, para que uma listagem mostre as mesmas datas daqui:
+
+```sh
+rm -rf ~/office && mkdir -p ~/office/clients ~/office/'invoices 2026' ~/office/scans
+printf 'Acme Ltd\nRua Augusta 100\n' > ~/office/clients/acme.txt
+printf 'Bravo & Filhos\n' > ~/office/clients/bravo.txt
+head -c 48213 /dev/zero > ~/office/'invoices 2026'/march.pdf
+printf 'call the printer company\n' > ~/office/notes.txt
+printf 'keep=30\n' > ~/office/.backup-settings
+find ~/office -exec touch -h -d '2026-09-01 09:00' {} +
+```
+
+Você ainda não precisa entender essas linhas; a aula 12 é sobre criar arquivos e pastas.
 
 ```
 ana@server:~$ pwd

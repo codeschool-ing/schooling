@@ -97,18 +97,20 @@ Setting up packages-microsoft-prod (1.2-ubuntu24.04) ...
 ana@server:~$ sudo apt update > apt.log 2>&1; grep microsoft apt.log
 Get:5 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
 Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [519 kB]
-Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [463 kB]
-Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main all Packages [643 B]
+Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main all Packages [643 B]
+Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [463 kB]
 Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [12.6 kB]
 ana@server:~$ sudo apt install -y powershell > pwsh.log 2>&1; grep "^Setting up" pwsh.log
 Setting up powershell (7.6.6-1.deb) ...
 ana@server:~$ pwsh --version
 PowerShell 7.6.6
+ana@server:~$ rm packages-microsoft-prod.deb apt.log pwsh.log
 ```
 
 O pacote `packages-microsoft-prod` não traz programa nenhum, só o endereço do catálogo da Microsoft e a
 chave que prova que um pacote veio de lá. Depois dele, o `apt update` lê esse catálogo também, e o
-`powershell` é encontrado como qualquer outro pacote; a aula 11 é sobre como isso funciona. Digite `pwsh`
+`powershell` é encontrado como qualquer outro pacote; a aula 11 é sobre como isso funciona. A última
+linha apaga os três arquivos que a instalação deixou na sua pasta pessoal, de que nada precisa mais. Digite `pwsh`
 e o prompt vira `PS /home/ana>`, que é como começa cada linha de PowerShell deste curso; `exit` volta
 para o bash.
 

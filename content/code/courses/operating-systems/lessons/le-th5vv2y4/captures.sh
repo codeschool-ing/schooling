@@ -8,6 +8,11 @@
 #   sudo useradd -m -s /bin/bash -G sudo ana   # once, on a throwaway machine
 #   sudo -u ana -i bash /path/to/captures.sh    # hostname `server`
 #
+# THE BLOCKS THE STUDENT TYPES TO SET A SECTION UP ARE READ OUT OF THE LESSON.
+# stage() takes the sh fence of a section whose first line is the one given and
+# runs it as written, so what the lesson shows and what made these transcripts
+# cannot drift apart; a fence that is not there stops the script.
+#
 # ONLY LINUX IS CAPTURED HERE, and PowerShell 7 running on that same Linux.
 # What only Windows or macOS can print is shown in the lesson as commands with
 # no output, and the prose says so where it happens: a transcript nobody ran
@@ -15,9 +20,8 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson:
 # the Ubuntu 24.04 server from lesson 3, with one user, ana, in the sudo group,
-# and what lesson 3 left in her home; a folder ~/office with three folders
-# (clients, 'invoices 2026', scans), four small files and a hidden one, all
-# dated 1 September 2026 by touch so the listings do not change between runs;
+# and what lessons 1 and 3 left in her home; the folder ~/office, which is the
+# lesson's own fence in moving-around, run by stage();
 # the PowerShell lines of a block run in ONE pwsh process, each shown after its
 # prompt, so a Set-Location carries over to the next line as it does for a
 # person typing; and sudo set to ask ana for no password, which a real
@@ -44,6 +48,17 @@ psh() {
   pwsh -NoProfile -NoLogo -Command "\$ErrorView='ConciseView'; $* | Out-String -Width 100 -Stream | ForEach-Object { \$_.TrimEnd() }" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+here=$(cd "$(dirname "$0")" && pwd)
+stage() {
+  local fence
+  fence=$(first="$2" awk '
+    /^```sh$/ { inside = 1; n = 0; next }
+    /^```$/ && inside { if (keep) exit; inside = 0; next }
+    inside { n++; if (n == 1 && $0 == ENVIRON["first"]) keep = 1; if (keep) print }
+  ' "$here/$1")
+  [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
+  eval "$fence"
+}
 # Lines from stdin, typed one at a time into an interactive bash in a real
 # terminal, so job numbers and "Terminated" appear exactly as a person sees them.
 session() {
@@ -55,13 +70,7 @@ session() {
 }
 
 cd ~
-rm -rf ~/office && mkdir -p ~/office/clients ~/office/'invoices 2026' ~/office/scans
-printf 'Acme Ltd\nRua Augusta 100\n' > ~/office/clients/acme.txt
-printf 'Bravo & Filhos\n' > ~/office/clients/bravo.txt
-head -c 48213 /dev/zero > ~/office/'invoices 2026'/march.pdf
-printf 'call the printer company\n' > ~/office/notes.txt
-printf 'keep=30\n' > ~/office/.backup-settings
-find ~/office -exec touch -h -d '2026-09-01 09:00' {} +
+stage moving-around.md "rm -rf ~/office && mkdir -p ~/office/clients ~/office/'invoices 2026' ~/office/scans"
 # PowerShell as one session: each line is shown after the PS prompt and run in
 # the same process, so Set-Location carries over to the next line as it does
 # for a person typing at it.

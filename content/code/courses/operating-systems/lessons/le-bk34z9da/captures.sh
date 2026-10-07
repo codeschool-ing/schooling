@@ -49,10 +49,10 @@ block() { printf '##### %s\n' "$1"; }
 here=$(cd "$(dirname "$0")" && pwd)
 stage() {
   local fence
-  fence=$(awk -v first="$2" '
+  fence=$(first="$2" awk '
     /^```sh$/ { inside = 1; n = 0; next }
     /^```$/ && inside { if (keep) exit; inside = 0; next }
-    inside { n++; if (n == 1 && $0 == first) keep = 1; if (keep) print }
+    inside { n++; if (n == 1 && $0 == ENVIRON["first"]) keep = 1; if (keep) print }
   ' "$here/$1")
   [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
   eval "$fence"

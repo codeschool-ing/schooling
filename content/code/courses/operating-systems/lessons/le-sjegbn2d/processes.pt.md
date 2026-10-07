@@ -1,6 +1,6 @@
 ---
 title: Achando um processo e parando
-version: 1
+version: 2
 ---
 
 Um `sleep` foi deixado rodando em segundo plano para esta seção, para ter o que achar.
@@ -32,7 +32,8 @@ Count
   aula 1, o `systemd`, e os serviços que ele iniciou.
 - O `pgrep -a` acha processos pelo nome e imprime o ID e a linha de comando deles.
 - O `Get-Process -Name` achou o mesmo processo, com o mesmo ID, pelo PowerShell, e **contou 12** na
-  máquina inteira. Um desktop roda centenas; este é um servidor mínimo.
+  máquina inteira. Um desktop roda centenas; este é um servidor mínimo, e
+  o seu, a instalação padrão, roda mais do que ele.
 
 Para parar, usa-se o ID:
 
