@@ -13,7 +13,7 @@ Beck's own phrase for the three steps is **red, green, refactor**, after the col
 
 ## One turn, run for real
 
-The example below builds the PERT formula that lesson 9 uses for estimates — the weighted average of an optimistic, a most likely and a pessimistic figure — in Python. You do not need Python for this course; if you have Python 3, you can follow along in an empty folder. The transcripts are reproduced by the lesson's `captures.sh`.
+The example below builds the PERT formula that lesson 9 uses for estimates — the weighted average of an optimistic, a most likely and a pessimistic figure — in Python. You do not need Python for this course, and nothing here asks you to run it: the example is here to be read. Every file it uses is shown in full, and each transcript is what Python 3.13 printed when the example was run.
 
 First the test, in `test_estimate.py`, before any code exists:
 

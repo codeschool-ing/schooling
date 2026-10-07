@@ -3,7 +3,7 @@ title: Cycle time and throughput, computed
 version: 1
 ---
 
-The Agenda team finished twenty items in the four weeks from 2 March 2026. Their start and finish dates are in the course's sheet, and with them in the workbook from this lesson's fifth section, two numbers describe how the team delivers.
+The Agenda team finished twenty items in the four weeks from 2 March 2026. Their start and finish dates are the table in this lesson's fifth section, and with them in your workbook, two numbers describe how the team delivers.
 
 ## Cycle time
 
