@@ -1,6 +1,6 @@
 ---
 title: Mobile first: o layout estreito é o padrão
-version: 1
+version: 2
 ---
 
 **Mobile first** é uma ordem para escrever CSS: as regras fora de qualquer media query são o layout da tela **mais estreita**, e cada media query acrescenta algo a ele para telas que têm mais espaço. Aqui está o menu da livraria escrito assim:
@@ -32,7 +32,7 @@ a  x 90.61  y 0      width 130.89 height 44
 a  x 229.5  y 0      width 143.44 height 44
 ```
 
-Num celular de 390 de largura, os três links estão empilhados, cada um com **390 de largura e 44 de altura**. Numa janela de 800, ficam numa fileira em y 0, cada um da largura do próprio texto. É o `<meta name="viewport">` da seção 08 da aula 1 que permite ao celular informar 390 aqui; sem ele, o celular monta a página com 980 de largura e nenhuma query para tela estreita casaria.
+Num celular de 390 de largura, os três links estão empilhados, cada um com **390 de largura e 44 de altura**. Numa janela de 800, ficam numa fileira em y 0, cada um da largura do próprio texto. É o `<meta name="viewport">` da seção 10 da aula 1 que permite ao celular informar 390 aqui; sem ele, o celular monta a página com 980 de largura e nenhuma query para tela estreita casaria.
 
 ## Por que começar pela ponta estreita
 

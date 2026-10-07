@@ -1,6 +1,6 @@
 ---
 title: Organizando a folha de estilos
-version: 1
+version: 2
 ---
 
 Uma folha de estilos que cresce sem plano acaba com o mesmo botão estilizado em quatro lugares e ninguém sabendo qual vence. A saída é uma **ordem**, escolhida uma vez, em que o geral vem antes do específico. Uma ordem comum tem seis partes, e o diretório `css/` do laboratório a segue:
@@ -40,4 +40,4 @@ event-card.css
 utilities.css
 ```
 
-Isso é o que a página pediu, em ordem: `main.css` primeiro, depois os seis arquivos que ele importa. O navegador não tem como saber de `reset.css` antes de baixar e ler o `main.css`, então os imports são descobertos com uma ida e volta de atraso, e nada é desenhado até que todos tenham chegado, seção 10 da aula 1. Num site servido pela rede, esse atraso é real. Então **os arquivos são para quem trabalha no CSS, e o navegador deve receber um arquivo só**: em desenvolvimento o `@import` é prático, e para produção uma etapa de build junta tudo numa folha de estilos. O `front-delivery` é onde esse build é montado. Para um site pequeno com uma folha de estilos, as partes são simplesmente seções de um arquivo, na mesma ordem.
+Isso é o que a página pediu, em ordem: `main.css` primeiro, depois os seis arquivos que ele importa. O navegador não tem como saber de `reset.css` antes de baixar e ler o `main.css`, então os imports são descobertos com uma ida e volta de atraso, e nada é desenhado até que todos tenham chegado, seção 12 da aula 1. Num site servido pela rede, esse atraso é real. Então **os arquivos são para quem trabalha no CSS, e o navegador deve receber um arquivo só**: em desenvolvimento o `@import` é prático, e para produção uma etapa de build junta tudo numa folha de estilos. O `front-delivery` é onde esse build é montado. Para um site pequeno com uma folha de estilos, as partes são simplesmente seções de um arquivo, na mesma ordem.

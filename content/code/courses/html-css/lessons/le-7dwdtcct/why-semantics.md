@@ -1,6 +1,6 @@
 ---
 title: Two pages that look the same
-version: 1
+version: 2
 ---
 
 **Semantic HTML** means choosing each element for what the content is, so that the markup says the meaning out loud. The opposite has a name too, **div soup**: a page built out of `<div>` elements with class names, where the meaning lives in the class names and the CSS, and the HTML says nothing at all.
@@ -78,7 +78,7 @@ With a few lines of CSS for the bold and the sizes, it looks like a perfectly re
 </html>
 ```
 
-Open both and you see the same picture. The difference is in what the browser hands to everything else that reads the page. Lesson 1 section 05 introduced the **accessibility tree**, the version of the page that screen readers and other assistive technology use, and `probe tree` prints it. For the soup:
+Open both and you see the same picture. The difference is in what the browser hands to everything else that reads the page. Lesson 1 section 07 introduced the **accessibility tree**, the version of the page that screen readers and other assistive technology use, and `probe tree` prints it. For the soup:
 
 ```
 ana@laptop:~/site$ probe soup.html tree

@@ -1,6 +1,6 @@
 ---
 title: HTML não é a aparência da página
-version: 1
+version: 2
 ---
 
 Quase todo mundo chega ao HTML com uma imagem pronta na cabeça: **HTML é o código que faz a página ter a cara que tem**. Um título é grande porque está num `<h1>`; um texto é negrito porque está num `<b>`; uma página tem duas colunas porque alguém escreveu as tags certas. Essa imagem está errada de um jeito que cobra seu preço mais tarde, então vale trocá-la agora.
@@ -21,6 +21,6 @@ Então a pergunta a fazer enquanto escreve HTML nunca é "como isto vai aparecer
 
 A outra crença que vale nomear é a de que uma página que aparece direito tem HTML correto. **O navegador é o leitor mais tolerante que o seu HTML vai ter.** Ele foi feito para mostrar alguma coisa para qualquer entrada, porque a web do começo era escrita à mão por gente que errava, e um navegador que recusava páginas quebradas perdia para um que as mostrava.
 
-Então ele conserta. Fecha elementos que você deixou abertos, move elementos que não podem ficar onde você os pôs e inventa os que você esqueceu. Esta aula mostra ele fazendo as três coisas, com o documento exato que o navegador montou impresso ao lado do arquivo que ele recebeu. A maioria dos consertos é inofensiva. Alguns mudam o que fica em negrito, o que fica dentro de um link ou o que um formulário envia. E um deles, na seção 07 desta aula, transforma uma página inteira numa janela em branco por causa de uma única tag de fechamento que faltou.
+Então ele conserta. Fecha elementos que você deixou abertos, move elementos que não podem ficar onde você os pôs e inventa os que você esqueceu. Esta aula mostra ele fazendo as três coisas, com o documento exato que o navegador montou impresso ao lado do arquivo que ele recebeu. A maioria dos consertos é inofensiva. Alguns mudam o que fica em negrito, o que fica dentro de um link ou o que um formulário envia. E um deles, na seção 09 desta aula, transforma uma página inteira numa janela em branco por causa de uma única tag de fechamento que faltou.
 
-Uma página está correta quando o HTML dela diz o que quer dizer sem que o navegador tenha de adivinhar, e a ferramenta que diz se isso é verdade é um validador, seção 11.
+Uma página está correta quando o HTML dela diz o que quer dizer sem que o navegador tenha de adivinhar, e a ferramenta que diz se isso é verdade é um validador, seção 13.

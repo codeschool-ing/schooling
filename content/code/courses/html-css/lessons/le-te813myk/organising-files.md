@@ -1,6 +1,6 @@
 ---
 title: Organising the stylesheet
-version: 1
+version: 2
 ---
 
 A stylesheet that grows without a plan ends up with the same button styled in four places and nobody sure which wins. The fix is an **order**, chosen once, in which the general comes before the specific. A common one has six parts, and the lab's `css/` directory follows it:
@@ -40,4 +40,4 @@ event-card.css
 utilities.css
 ```
 
-That is what the page asked for, in order: `main.css` first, then the six files it imports. The browser cannot know about `reset.css` until it has downloaded and read `main.css`, so the imports are found a round trip late, and nothing is drawn until they have all arrived, lesson 1 section 10. On a site served over a network, that delay is real. So **the files are for the people working on the CSS, and the browser should get one file**: in development `@import` is convenient, and for production a build step joins them into one stylesheet. `front-delivery` is where that build is set up. For a small site with one stylesheet, the parts are simply sections of one file, in the same order.
+That is what the page asked for, in order: `main.css` first, then the six files it imports. The browser cannot know about `reset.css` until it has downloaded and read `main.css`, so the imports are found a round trip late, and nothing is drawn until they have all arrived, lesson 1 section 12. On a site served over a network, that delay is real. So **the files are for the people working on the CSS, and the browser should get one file**: in development `@import` is convenient, and for production a build step joins them into one stylesheet. `front-delivery` is where that build is set up. For a small site with one stylesheet, the parts are simply sections of one file, in the same order.

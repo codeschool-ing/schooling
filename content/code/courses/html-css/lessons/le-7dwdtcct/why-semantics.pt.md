@@ -1,6 +1,6 @@
 ---
 title: Duas páginas que parecem iguais
-version: 1
+version: 2
 ---
 
 **HTML semântico** quer dizer escolher cada elemento pelo que o conteúdo é, para que a marcação diga o significado em voz alta. O contrário também tem nome, **sopa de divs** (*div soup*): uma página feita de elementos `<div>` com nomes de classe, em que o significado mora nos nomes de classe e no CSS, e o HTML não diz nada.
@@ -78,7 +78,7 @@ Com umas poucas linhas de CSS para o negrito e os tamanhos, ela parece uma pági
 </html>
 ```
 
-Abra as duas e você vê a mesma imagem. A diferença está no que o navegador entrega a todo o resto que lê a página. A seção 05 da aula 1 apresentou a **árvore de acessibilidade**, a versão da página que leitores de tela e outras tecnologias assistivas usam, e `probe tree` a imprime. Para a sopa:
+Abra as duas e você vê a mesma imagem. A diferença está no que o navegador entrega a todo o resto que lê a página. A seção 07 da aula 1 apresentou a **árvore de acessibilidade**, a versão da página que leitores de tela e outras tecnologias assistivas usam, e `probe tree` a imprime. Para a sopa:
 
 ```
 ana@laptop:~/site$ probe soup.html tree

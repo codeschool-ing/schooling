@@ -1,6 +1,6 @@
 ---
 title: Mobile first: the narrow layout is the default
-version: 1
+version: 2
 ---
 
 **Mobile first** is an order for writing CSS: the rules outside any media query are the layout for the **narrowest** screen, and each media query adds to it for screens that have more room. Here is the bookshop's menu written that way:
@@ -32,7 +32,7 @@ a  x 90.61  y 0      width 130.89 height 44
 a  x 229.5  y 0      width 143.44 height 44
 ```
 
-On a phone 390 wide, the three links are stacked, each **390 wide and 44 tall**. On a window 800 wide, they sit in a row at y 0, each as wide as its text. The page's `<meta name="viewport">` from lesson 1 section 08 is what lets a phone report 390 here at all; without it the phone lays the page out 980 wide and no query for a narrow screen would ever match.
+On a phone 390 wide, the three links are stacked, each **390 wide and 44 tall**. On a window 800 wide, they sit in a row at y 0, each as wide as its text. The page's `<meta name="viewport">` from lesson 1 section 10 is what lets a phone report 390 here at all; without it the phone lays the page out 980 wide and no query for a narrow screen would ever match.
 
 ## Why start from the narrow end
 

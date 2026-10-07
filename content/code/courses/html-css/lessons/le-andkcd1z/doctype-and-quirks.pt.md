@@ -1,6 +1,6 @@
 ---
 title: O doctype, e o modo sem ele
-version: 1
+version: 2
 ---
 
 A primeira linha de toda página, `<!doctype html>`, parece formalidade. Não é uma tag, e não cria nenhum elemento. **É uma chave**, e deixá-la de fora muda a forma como o navegador monta a página inteira.
@@ -28,6 +28,8 @@ As diferenças são pequenas e espalhadas, e é exatamente por isso que machucam
 </html>
 ```
 
+Salve-o como `standards.html`, com qualquer imagem pequena ao lado chamada `cover.png`: os atributos `width` e `height` fixam o tamanho dela em 120 por 80, seja qual for a imagem. Depois salve uma cópia como `quirks.html`, apague a primeira linha e mude o título para *Cover, without a doctype*.
+
 Com o doctype:
 
 ```
@@ -48,4 +50,4 @@ div.frame  x 8      y 8      width 1008   height 80
 
 Quatro pixels não parece muito. Mas o resto do curso explica o layout no modo padrão, e toda regra sobre caixas e espaço das aulas 6 a 9 o pressupõe. No modo de compatibilidade algumas dessas regras saem diferentes, sem aviso, e você estaria depurando um layout com o livro de regras errado. O espaço embaixo das imagens é algo que a aula 6 mostra como remover de propósito.
 
-**Uma página sem doctype não tem mensagem de erro.** Nada diz em que modo você está, a não ser o DevTools, se você souber onde olhar, e um validador, que o aponta como erro, seção 11. A cura é uma linha, e ela vem primeiro, antes de qualquer outra coisa.
+**Uma página sem doctype não tem mensagem de erro.** Nada diz em que modo você está, a não ser o DevTools, se você souber onde olhar, e um validador, que o aponta como erro, seção 13. A cura é uma linha, e ela vem primeiro, antes de qualquer outra coisa.

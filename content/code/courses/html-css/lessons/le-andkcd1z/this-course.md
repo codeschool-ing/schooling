@@ -1,6 +1,6 @@
 ---
 title: What this course is, and how it measures a page
-version: 1
+version: 2
 ---
 
 This course teaches you to write the two languages every web page is made of. **HTML says what the content is**: this is a heading, this is a list, this is a form field with that label. **CSS says how it looks and where it goes**: this colour, that much space, these three cards side by side on a wide screen and stacked on a phone. Thirteen lessons cover them in that order: four on HTML, then nine on CSS, ending with Tailwind, a framework that writes CSS for you once you know what CSS it should write.
@@ -11,11 +11,11 @@ The course assumes `web-fundamentals`, and leans on two of its lessons in partic
 
 Every example in the course belongs to one small site: **Andorinha Books**, a second-hand bookshop in Pinheiros, São Paulo. It is invented, and it was chosen because a bookshop needs a bit of everything: a home page, a list of events, a form for ordering a book, a table of opening hours, photographs of the shelves, and a layout that has to work on the phone of somebody standing outside the shop. Each lesson adds the part it teaches.
 
-The pages are files, and they are in the course itself, in `lab/pages/`, one directory per lesson. You can open any of them by double-clicking it: a browser reads an HTML file from your disk exactly as it reads one from a server, which is all you need for the first eleven lessons. Lesson 13 adds one command-line tool, and says how to install it when it gets there.
+The pages are files you write, in one folder on your own computer, and the next section sets that folder up. Each lesson shows every page it uses, whole, in the section that uses it. You open a page by double-clicking it: a browser reads an HTML file from your disk exactly as it reads one from a server, which is all this course needs.
 
 ## How this course measures a page
 
-The output of HTML and CSS is a **picture**, and a picture is awkward to quote. "The card is narrower than the one beside it" is a description; it is not something you can check. So every claim this course makes about what the browser did is a measurement, printed by a small program called `probe` that ships with the course.
+The output of HTML and CSS is a **picture**, and a picture is awkward to quote. "The card is narrower than the one beside it" is a description; it is not something you can check. So every claim this course makes about what the browser did is a measurement, printed by a small program called `probe`.
 
 `probe` opens a page in Chromium, the engine inside Chrome and Edge, and asks it the questions the Elements panel answers when you click on something: where is this box, how wide is it, what colour did this rule finally give it, what would a screen reader announce here. It prints the answers as text. Here it is opening this lesson's first page and printing its title and what assistive technology sees in it:
 
@@ -26,13 +26,13 @@ title: "Andorinha Books"
 - paragraph: Second-hand books in Pinheiros, São Paulo.
 ```
 
-You do not need `probe` to follow the course. Everything it prints, you can read in DevTools by clicking on the element and looking at the **Computed** tab and the box diagram beside it, and the course tells you where to look each time. `probe` exists so that the numbers in these lessons are numbers a browser printed, not numbers somebody expected, and so that you can run the same command and see the same thing. The course's `lab.sh` installs it, together with the exact versions of everything it uses.
+**`probe` is the course's measuring instrument, not something you install.** It is a few hundred lines of JavaScript that drive Chromium through Playwright, a browser-testing library, and it exists so that the numbers in these lessons are numbers a browser printed rather than numbers somebody expected. You do not type the lines that start with `probe`: the output is the point. Everything it prints, you can read in DevTools on your own page, by clicking on the element and looking at the **Computed** tab and the box diagram beside it, and the course tells you where to look each time. The lines that do not start with `probe`, the validator in section 13 and Tailwind in lesson 13, are commands you run yourself.
 
 ## The questions are about predicting the browser
 
 A page is checked by looking at it, and nothing in this platform can look at a page you wrote and say whether it is right. So the questions in these lessons ask the other half of the skill: **given this HTML and this CSS, what will the browser do?** How wide will that box be, which rule wins, which element is on top at that point. Those have one right answer, and it is the answer `probe` printed.
 
-That is not a lesser exercise. The difference between somebody who writes CSS by trying things until it looks right and somebody who writes it on purpose is exactly this: the second person can predict the result before reloading. The building you do in your own browser, and the course points at the files to start from.
+That is not a lesser exercise. The difference between somebody who writes CSS by trying things until it looks right and somebody who writes it on purpose is exactly this: the second person can predict the result before reloading. The building you do in your own browser, starting from the pages each lesson shows.
 
 ## Where this course sits in your track
 

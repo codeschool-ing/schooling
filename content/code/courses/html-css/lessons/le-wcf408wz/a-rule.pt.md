@@ -1,6 +1,6 @@
 ---
 title: Uma regra, e onde o CSS mora
-version: 1
+version: 2
 ---
 
 A aula 2 transformou os subtítulos da página de horários em `<h2>` e prometeu que, se ficassem grandes demais, isso era CSS. Aqui está esse CSS, a primeira regra desta aula:
@@ -15,7 +15,7 @@ h2 { font-size: 1.1rem; }
 
 Uma **regra** é um **seletor**, aqui `h2`, que escolhe os elementos a que ela se aplica, seguido de um **bloco de declarações** entre chaves. Dentro do bloco, cada **declaração** é uma **propriedade**, dois-pontos, um **valor** e um ponto e vírgula. Uma regra pode ter quantas declarações quiser; esta tem uma.
 
-A regra mora em `events.css`, e a página a referencia como a seção 10 da aula 1 mostrou. Aqui está o que ela fez com os títulos:
+A regra mora em `events.css`, e a página a referencia como a seção 12 da aula 1 mostrou. Aqui está o que ela fez com os títulos:
 
 ```
 ana@laptop:~/site$ probe events.html rules h2 font-size

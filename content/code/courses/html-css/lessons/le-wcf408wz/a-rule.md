@@ -1,6 +1,6 @@
 ---
 title: A rule, and where CSS lives
-version: 1
+version: 2
 ---
 
 Lesson 2 made the opening-hours subheadings `<h2>` and promised that if they were too big, that was CSS. Here is that CSS, the first rule of this lesson:
@@ -15,7 +15,7 @@ h2 { font-size: 1.1rem; }
 
 A **rule** is a **selector**, here `h2`, which picks the elements it applies to, followed by a **declaration block** in braces. Inside the block, each **declaration** is a **property**, a colon, a **value** and a semicolon. A rule can carry any number of declarations; this one carries one.
 
-The rule lives in `events.css`, and the page links it as lesson 1 section 10 showed. Here is what it did to the headings:
+The rule lives in `events.css`, and the page links it as lesson 1 section 12 showed. Here is what it did to the headings:
 
 ```
 ana@laptop:~/site$ probe events.html rules h2 font-size

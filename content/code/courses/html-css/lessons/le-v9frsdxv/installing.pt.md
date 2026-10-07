@@ -1,11 +1,11 @@
 ---
 title: Instalando a ferramenta de linha de comando
-version: 1
+version: 2
 ---
 
-A aula 1 disse que uma aula precisaria de uma ferramenta de linha de comando, e é esta. O Tailwind é um programa que lê o seu HTML, encontra os nomes de classe nele e escreve uma folha de estilos com uma regra para cada um. Ele roda em **Node.js**, o runtime de JavaScript que também roda a maior parte das ferramentas de build da web.
+O Tailwind é um programa que lê o seu HTML, encontra os nomes de classe nele e escreve uma folha de estilos com uma regra para cada um. Ele roda em **Node.js**, o runtime de JavaScript que também roda a maior parte das ferramentas de build da web.
 
-**Instale o Node.js** a partir de nodejs.org, na versão marcada como LTS, de suporte de longo prazo. Depois, num terminal, `node --version` deve imprimir um número de versão. No Linux e no macOS, um gerenciador de versões como o `nvm` é o caminho de costume, e o Windows tem um instalador.
+**O Node.js já está na sua máquina** se você o instalou na seção 03 da aula 1, para o validador. Se não, essa seção é o caminho curto: instale a LTS a partir do nodejs.org, abra um terminal novo, e `node --version` imprime um número de versão. A seção 04 de lá trata do que dá errado.
 
 **Instale o Tailwind na pasta do site.** Na pasta do seu site, o mesmo comando em todo sistema:
 

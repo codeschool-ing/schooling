@@ -1,11 +1,11 @@
 ---
 title: O que o navegador faz com HTML quebrado
-version: 1
+version: 2
 ---
 
 O parser de HTML do navegador nunca para com um erro. É uma decisão deliberada, escrita no padrão do HTML: para toda sequência possível de caracteres, o padrão diz exatamente que árvore o parser deve montar. Então HTML quebrado não derruba nada. **Ele é consertado, por regras que você não escolheu**, e a árvore consertada é o que o navegador desenha e o que todo script e toda folha de estilos enxergam.
 
-Aqui está uma página com três erros comuns: um `<b>` que nunca é fechado no seu parágrafo, um `</b>` e um `</i>` fechados na ordem errada, e uma `<div>` dentro de um parágrafo.
+Aqui está uma página com três erros comuns: um `<b>` que nunca é fechado no seu parágrafo, um `</b>` e um `</i>` fechados na ordem errada, e uma `<div>` dentro de um parágrafo. Salve-a como `broken.html`.
 
 ```html
 <!doctype html>
@@ -47,7 +47,7 @@ Leia contra o arquivo e saem três consertos.
 
 ## O conserto que esvazia a página
 
-A maioria dos consertos é como esses: a página parece quase certa. Um não é. Aqui está a mesma página com uma única mudança: o título não tem tag de fechamento.
+A maioria dos consertos é como esses: a página parece quase certa. Um não é. Salve uma cópia como `unclosed-title.html` com uma única mudança: o título não tem tag de fechamento.
 
 ```html
 <title>Opening hours
@@ -66,4 +66,4 @@ body  x 8      y 8      width 1008   height 0
 
 ## O que tirar disso
 
-Não dá para ver consertos olhando para a página, porque a página consertada é o que você vê. Duas ferramentas os mostram. **O painel Elements do DevTools mostra a árvore, não o arquivo**, então uma `<div>` que você escreveu dentro de um `<p>` aparece depois dele ali, e essa diferença entre o que você digitou e o que você vê é a pista. E um validador, seção 11, lê o próprio arquivo e aponta cada lugar onde o parser teve de adivinhar.
+Não dá para ver consertos olhando para a página, porque a página consertada é o que você vê. Duas ferramentas os mostram. **O painel Elements do DevTools mostra a árvore, não o arquivo**, então uma `<div>` que você escreveu dentro de um `<p>` aparece depois dele ali, e essa diferença entre o que você digitou e o que você vê é a pista. E um validador, seção 13, lê o próprio arquivo e aponta cada lugar onde o parser teve de adivinhar.

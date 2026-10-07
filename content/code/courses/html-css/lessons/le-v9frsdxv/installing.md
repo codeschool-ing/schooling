@@ -1,11 +1,11 @@
 ---
 title: Installing the command-line tool
-version: 1
+version: 2
 ---
 
-Lesson 1 said one lesson would need a command-line tool, and this is it. Tailwind is a program that reads your HTML, finds the class names in it and writes a stylesheet with a rule for each one. It runs on **Node.js**, the JavaScript runtime that also runs most of the web's build tools.
+Tailwind is a program that reads your HTML, finds the class names in it and writes a stylesheet with a rule for each one. It runs on **Node.js**, the JavaScript runtime that also runs most of the web's build tools.
 
-**Install Node.js** from nodejs.org, the version marked LTS, long-term support. Then, in a terminal, `node --version` should print a version number. On Linux and macOS a version manager such as `nvm` is the usual way, and Windows has an installer.
+**Node.js is already on your machine** if you set it up in lesson 1 section 03, for the validator. If not, that section is the short way: install the LTS from nodejs.org, open a new terminal, and `node --version` prints a version number. Section 04 there covers what goes wrong.
 
 **Install Tailwind in the site's folder.** In the folder of your site, the same command on every system:
 
