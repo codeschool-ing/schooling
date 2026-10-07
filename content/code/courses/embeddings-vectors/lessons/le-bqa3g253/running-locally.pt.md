@@ -60,19 +60,19 @@ próxima seção abre o que o `encode` faz com elas.
 
 O modelo em si não está preso à biblioteca. O Chroma, o banco de dados vetorial que a aula 12 roda,
 distribui o all-MiniLM-L6-v2 exportado para **ONNX**, um formato que um runtime pequeno chamado
-onnxruntime executa sem PyTorch. O `lab.sh` baixou essa exportação do armazenamento do próprio
+onnxruntime executa sem PyTorch. O `setup.sh` da aula 1 baixou essa exportação do armazenamento do próprio
 Chroma e a conferiu contra o SHA-256 que o código do Chroma traz, então estes são os pesos
 publicados, e não uma cópia de origem desconhecida:
 
 ```
 ana@lab:~/emb$ ls -l $MINILM_DIR
 total 89208
--rw-r--r-- 1 root root      650 Oct  5 13:23 config.json
--rw-r--r-- 1 root root 90387606 Oct  5 13:23 model.onnx
--rw-r--r-- 1 root root      125 Oct  5 13:23 special_tokens_map.json
--rw-r--r-- 1 root root   711661 Oct  5 13:23 tokenizer.json
--rw-r--r-- 1 root root      518 Oct  5 13:23 tokenizer_config.json
--rw-r--r-- 1 root root   231508 Oct  5 13:23 vocab.txt
+-rw-r--r-- 1 ana ana      650 Mar 30  2023 config.json
+-rw-r--r-- 1 ana ana 90387606 Mar 30  2023 model.onnx
+-rw-r--r-- 1 ana ana      125 Mar 30  2023 special_tokens_map.json
+-rw-r--r-- 1 ana ana   711661 Mar 30  2023 tokenizer.json
+-rw-r--r-- 1 ana ana      518 Mar 30  2023 tokenizer_config.json
+-rw-r--r-- 1 ana ana   231508 Mar 30  2023 vocab.txt
 ```
 
 `model.onnx` é o transformer, 90.387.606 bytes. O resto é o tokenizador e as configurações dele. O

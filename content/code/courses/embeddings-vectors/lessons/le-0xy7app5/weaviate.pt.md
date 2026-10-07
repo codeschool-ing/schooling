@@ -9,7 +9,7 @@ cliente Python tem um modo **embutido** (*embedded*) que baixa um servidor Weavi
 filho do seu programa. Em todas essas formas **o seu programa é cliente de um servidor Weaviate**,
 nunca o próprio banco, e essa é a diferença em relação ao `PersistentClient` do Chroma.
 
-Nenhuma das três rodou aqui. O modo embutido busca o servidor no GitHub, que este laboratório não
+Nenhuma das três rodou aqui. O modo embutido busca o servidor no GitHub, que a máquina em que este curso foi gravado não
 alcança, e não havia outro servidor a que se conectar. O programa abaixo foi escrito para o pacote
 `weaviate-client` e conferido contra as assinaturas da versão 4.23.1 num ambiente separado. Ele
 nunca recebeu resposta, então nenhuma saída é mostrada.

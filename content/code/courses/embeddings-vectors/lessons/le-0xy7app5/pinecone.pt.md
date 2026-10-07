@@ -7,7 +7,8 @@ O Pinecone é um banco de vetores que você usa como serviço. Você cria uma co
 e o Pinecone roda os índices; não existe diretório seu guardando-os nem processo seu para iniciar.
 **Essa é toda a diferença em relação ao Chroma, e quase tudo o que vem a seguir sai dela.**
 
-Isso também quer dizer que nada nesta seção rodou. O laboratório não tem rota até a API do Pinecone,
+Isso também quer dizer que nada nesta seção rodou. A máquina em que este curso foi gravado não tem rota até a API do
+Pinecone,
 e seria preciso uma conta de qualquer jeito. O programa abaixo foi escrito para o pacote Python
 `pinecone` e conferido contra as assinaturas da versão 10.0.0, num ambiente separado. As requisições
 dele nunca foram respondidas, então nenhuma saída é mostrada e nenhuma é inventada.

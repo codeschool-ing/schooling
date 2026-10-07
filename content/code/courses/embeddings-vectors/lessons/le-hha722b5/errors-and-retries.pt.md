@@ -49,7 +49,7 @@ max_retries 2  timeout Timeout(connect=5.0, read=600, write=600, pool=600)
 answered after 2.2 s with 384 numbers
 gave up after 2.0 s: RateLimitError 429
 not retried: BadRequestError 400
-ana@lab:~/emb$ jq -c '{at, status}' /var/log/labembed/requests.jsonl | tail -n 7
+ana@lab:~/emb$ jq -c '{at, status}' labembed.jsonl | tail -n 7
 {"at":"2026-10-05T14:19:34-03:00","status":429}
 {"at":"2026-10-05T14:19:35-03:00","status":429}
 {"at":"2026-10-05T14:19:36-03:00","status":200}

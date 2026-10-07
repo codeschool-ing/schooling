@@ -7,7 +7,7 @@ O Qdrant é um servidor de banco de vetores, de código aberto e escrito em Rust
 conta própria ou aluga como Qdrant Cloud. O cliente Python dele também tem um **modo local**: passe um
 `path` em vez de uma URL e ele roda, dentro do seu processo, uma implementação em Python da mesma API,
 guardando os dados num diretório. **O modo local é o que rodou aqui.** O servidor do Qdrant é um
-programa à parte que o laboratório não conseguiu baixar, então tudo abaixo é o cliente sozinho, e
+programa à parte que a máquina em que este curso foi gravado não conseguiu baixar, então tudo abaixo é o cliente sozinho, e
 esta seção diz onde isso difere da coisa de verdade.
 
 ```schooling-example

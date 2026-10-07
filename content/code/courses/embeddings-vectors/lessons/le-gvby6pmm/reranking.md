@@ -20,7 +20,7 @@ price is that nothing can be computed in advance: every candidate costs one run 
 every question, which is why it is used on 20 candidates rather than on a whole collection.
 
 In sentence-transformers it looks like this. It was **not run** here: the model is downloaded from
-huggingface.co, which was out of reach from the lab, and the library needs PyTorch, whose index
+huggingface.co, which was out of reach from the machine this course was recorded on, and the library needs PyTorch, whose index
 was out of reach too.
 
 ```python

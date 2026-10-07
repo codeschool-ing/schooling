@@ -1,3 +1,20 @@
+---
+title: The catalogue
+version: 1
+---
+
+This lesson recommends books, so it needs two more of Marginalia's files: the books and the
+people who read them. Paste each block into the terminal, in `~/emb`, as you did with the help
+centre in lesson 1.
+
+## 60 books
+
+`books.jsonl` is the catalogue: 60 books whose texts are in the public domain, each with its
+author, year and genre, and a `blurb` of one or two sentences written for the course. The blurb is
+what gets embedded.
+
+```bash
+cat > ~/emb/data/books.jsonl <<'EOF'
 {"id": "b01", "title": "Pride and Prejudice", "author": "Jane Austen", "year": 1813, "genre": "romance", "blurb": "A sharp-tongued young woman and a proud rich man misjudge each other at country dances, and slowly learn better."}
 {"id": "b02", "title": "Emma", "author": "Jane Austen", "year": 1815, "genre": "romance", "blurb": "A wealthy young woman who meddles in her neighbours' love lives gets every match wrong, including her own."}
 {"id": "b03", "title": "Jane Eyre", "author": "Charlotte Brontë", "year": 1847, "genre": "romance", "blurb": "An orphaned governess falls for her brooding employer, whose house hides a terrible secret in the attic."}
@@ -58,3 +75,33 @@
 {"id": "b58", "title": "The Phantom of the Opera", "author": "Gaston Leroux", "year": 1910, "genre": "horror", "blurb": "A masked genius living under the Paris opera house falls for a young singer and terrorises anyone in his way."}
 {"id": "b59", "title": "Sense and Sensibility", "author": "Jane Austen", "year": 1811, "genre": "romance", "blurb": "Two sisters, one cautious and one passionate, lose their home and their hopes and find love by different roads."}
 {"id": "b60", "title": "The Scarlet Pimpernel", "author": "Baroness Orczy", "year": 1905, "genre": "adventure", "blurb": "An English fop is secretly the masked hero who smuggles French aristocrats away from the guillotine."}
+EOF
+```
+
+## 12 readers
+
+`readers.jsonl` says which books each of 12 readers has finished. A reader is a name and a list of
+book ids, which is all a recommender built from embeddings needs to start.
+
+```bash
+cat > ~/emb/data/readers.jsonl <<'EOF'
+{"reader": "r01", "name": "Bia", "finished": ["b01", "b06", "b03", "b59"]}
+{"reader": "r02", "name": "Caio", "finished": ["b13", "b14", "b16"]}
+{"reader": "r03", "name": "Davi", "finished": ["b07", "b55", "b11", "b09"]}
+{"reader": "r04", "name": "Elisa", "finished": ["b19", "b22", "b20"]}
+{"reader": "r05", "name": "Fábio", "finished": ["b25", "b26", "b31", "b29"]}
+{"reader": "r06", "name": "Gabi", "finished": ["b36", "b34", "b39"]}
+{"reader": "r07", "name": "Hugo", "finished": ["b41", "b43", "b42"]}
+{"reader": "r08", "name": "Íris", "finished": ["b47", "b52", "b48"]}
+{"reader": "r09", "name": "João", "finished": ["b07", "b19", "b15"]}
+{"reader": "r10", "name": "Lia", "finished": ["b01", "b07"]}
+{"reader": "r11", "name": "Marcos", "finished": []}
+{"reader": "r12", "name": "Nina", "finished": ["b28"]}
+EOF
+```
+
+## Checking the files
+
+```
+@@WC@@
+```

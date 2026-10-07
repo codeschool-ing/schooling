@@ -201,6 +201,9 @@ for i, b in enumerate(books):
     print(f"{b['id']} {B[i] @ B[mine[0]]:.3f} {B[i] @ B[mine[1]]:.3f} {'top' if i in top else '-'} {b['title']}")
 EOF_FILE
 
+block wc
+on 'wc -l data/books.jsonl data/readers.jsonl'
+
 block like
 on 'python like.py b07'
 on 'python like.py b13'

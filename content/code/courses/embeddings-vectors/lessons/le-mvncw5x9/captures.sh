@@ -34,7 +34,6 @@ block() { printf '##### %s\n' "$1"; }
 exec 9>/var/tmp/emb-capture.lock; flock 9
 lab reset >/dev/null
 
-put prices.py < "$COURSE/prices.py"
 put jina.py <<'EOF_FILE'
 import os
 import httpx
@@ -184,7 +183,7 @@ block jina
 on 'python jina.py'
 
 block jina-log
-on 'tail -n 4 /var/log/labembed/requests.jsonl | jq -c "{provider, task, dims, status}"'
+on 'tail -n 4 labembed.jsonl | jq -c "{provider, task, dims, status}"'
 
 block prices
 on 'python prices.py'
@@ -194,7 +193,7 @@ on 'python sheet.py'
 
 block static
 on 'python static.py'
-on 'ls -l /opt/emb/lib/python3.11/site-packages/wordllama/weights/ /opt/emb/share/all-MiniLM-L6-v2/model.onnx'
+on 'ls -l ~/.venvs/emb/lib/python3.12/site-packages/wordllama/weights/ ~/models/all-MiniLM-L6-v2/model.onnx'
 
 block speed
 on 'nproc; grep -m1 "model name" /proc/cpuinfo'

@@ -16,7 +16,7 @@
 # Google's and Cohere's endpoints, through the real google-genai 2.28.0 and
 # cohere 7.2.0 SDKs. Its vectors come from all-MiniLM-L6-v2 and WordLlama, run
 # on this machine; it ignores task types and input types, and its int8 and
-# binary encodings are its own arithmetic (lab/labembed.py says how). No
+# binary encodings are its own arithmetic (labembed.py, which lesson 7 shows, says how). No
 # request reached Google or Cohere.
 #
 # Recorded on Ubuntu 24.04, Python 3.11, TZ=America/Sao_Paulo, 2026-10-05.
@@ -221,18 +221,17 @@ for r in rows():
     cost = TOKENS / 1e6 * r["usd_per_mtok"]
     print(f"{r['model']:28} {r['usd_per_mtok']:8.3f} {dims:>5} {r['max_input_tokens']:>7} {size:>6} {cost:12.2f} {gb:>10}")
 EOF_FILE
-put prices.py < "$(dirname "$LAB_SH")/prices.py"
 
 block gemini
 on 'python gemini.py'
-on "jq -c '{path, inputs, dims, task_type}' /var/log/labembed/requests.jsonl"
+on "jq -c '{path, inputs, dims, task_type}' labembed.jsonl"
 
 block gemini-errors
 on 'python gemini_errors.py'
 
 block tasks
 on 'python tasks.py'
-on "jq -c '{inputs, task_type}' /var/log/labembed/requests.jsonl | tail -n 4"
+on "jq -c '{inputs, task_type}' labembed.jsonl | tail -n 4"
 
 block cohere
 on 'python cohere_embed.py'

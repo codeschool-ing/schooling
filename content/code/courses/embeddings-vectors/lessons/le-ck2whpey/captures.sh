@@ -339,7 +339,6 @@ print(f"move to {large['model']}: ${tokens / 1e6 * large['usd_per_mtok']:.2f}"
       f"  raw vectors {CHUNKS * large['dims'] * 4 / GB:.2f} GB,"
       f" {CHUNKS * (small['dims'] + large['dims']) * 4 / GB:.2f} GB while both exist")
 EOF_FILE
-put prices.py < ../../prices.py
 
 block files
 on 'python files.py'

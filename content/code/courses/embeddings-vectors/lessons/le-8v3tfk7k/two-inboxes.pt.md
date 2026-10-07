@@ -1,3 +1,20 @@
+---
+title: Duas caixas de entrada
+version: 1
+---
+
+Esta aula procura mensagens que não pertencem ao resto, então precisa de duas caixas de entrada
+além dos tickets da aula 1. Cole cada bloco no terminal, em `~/emb`.
+
+## Um dia comum
+
+`inbox.jsonl` guarda as 40 mensagens de um dia. `odd` marca as 8 que não pertencem, e `kind` diz
+por quê: spam, uma candidatura a emprego, perguntas sobre nada que a loja faz, uma linha de teclado
+batido a esmo e duas mensagens em outros idiomas. Esse é o gabarito. As notas desta aula são
+calculadas só a partir do texto, e o gabarito só conta depois o que elas pegaram.
+
+```bash
+cat > ~/emb/data/inbox.jsonl <<'EOF'
 {"id": "m01", "odd": false, "text": "My parcel has been stuck at the depot since Monday."}
 {"id": "m02", "odd": false, "text": "I want to return a cookbook, the recipes are not what I hoped."}
 {"id": "m03", "odd": false, "text": "Card declined three times, but there is money in the account."}
@@ -38,3 +55,44 @@
 {"id": "m38", "odd": true, "kind": "off-topic", "text": "Can you recommend a good recipe for vegetable lasagne?"}
 {"id": "m39", "odd": true, "kind": "spam", "text": "Increase your website traffic by 500% with our proven SEO packages, reply for prices"}
 {"id": "m40", "odd": true, "kind": "another language", "text": "Je n'arrive pas à me connecter à mon compte depuis ce matin."}
+EOF
+```
+
+## A semana em que algo mudou
+
+`week2.jsonl` guarda 20 mensagens da semana em que a Marginalia lançou uma assinatura, a Marginalia
+Unlimited. Nada na central de ajuda nem nos tickets fala dela ainda.
+
+```bash
+cat > ~/emb/data/week2.jsonl <<'EOF'
+{"id": "w01", "text": "How do I cancel my Marginalia Unlimited subscription?"}
+{"id": "w02", "text": "I was charged for Unlimited after the free trial, I thought it would remind me first."}
+{"id": "w03", "text": "Which books are included in the Unlimited subscription?"}
+{"id": "w04", "text": "My parcel hasn't arrived yet, it's been five days."}
+{"id": "w05", "text": "Can I share my Unlimited plan with my family?"}
+{"id": "w06", "text": "The Unlimited catalogue doesn't show up in the app."}
+{"id": "w07", "text": "Does the monthly subscription include audiobooks?"}
+{"id": "w08", "text": "I'd like to return a book that arrived damaged."}
+{"id": "w09", "text": "Will I keep the books I borrowed with Unlimited if I stop paying?"}
+{"id": "w10", "text": "How much is the annual subscription compared to monthly?"}
+{"id": "w11", "text": "I can't reset my password."}
+{"id": "w12", "text": "The subscription renewed even though I turned off auto-renew."}
+{"id": "w13", "text": "Can I pause my subscription while I'm travelling?"}
+{"id": "w14", "text": "My card was declined when renewing the Unlimited plan."}
+{"id": "w15", "text": "Why did a book disappear from my Unlimited library?"}
+{"id": "w16", "text": "Is there a student discount on the subscription?"}
+{"id": "w17", "text": "The e-book won't download to my tablet."}
+{"id": "w18", "text": "How many books can I borrow at once on Unlimited?"}
+{"id": "w19", "text": "Upgrade from monthly to yearly, how?"}
+{"id": "w20", "text": "Where is my tracking number?"}
+EOF
+```
+
+## Conferindo os arquivos
+
+```
+ana@lab:~/emb$ wc -l data/inbox.jsonl data/week2.jsonl
+  40 data/inbox.jsonl
+  20 data/week2.jsonl
+  60 total
+```

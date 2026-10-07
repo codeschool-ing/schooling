@@ -67,7 +67,7 @@ way whatever it says:
       "note": "The question as a query, then as three other task types, and the largest difference between any coordinate of the two vectors."
     }
   ],
-  "output": "ana@lab:~/emb$ python tasks.py\nRETRIEVAL_DOCUMENT   max difference from RETRIEVAL_QUERY: 0.0\nSEMANTIC_SIMILARITY  max difference from RETRIEVAL_QUERY: 0.0\nCLASSIFICATION       max difference from RETRIEVAL_QUERY: 0.0\nana@lab:~/emb$ jq -c '{inputs, task_type}' /var/log/labembed/requests.jsonl | tail -n 4\n{\"inputs\":1,\"task_type\":\"RETRIEVAL_QUERY\"}\n{\"inputs\":1,\"task_type\":\"RETRIEVAL_DOCUMENT\"}\n{\"inputs\":1,\"task_type\":\"SEMANTIC_SIMILARITY\"}\n{\"inputs\":1,\"task_type\":\"CLASSIFICATION\"}"
+  "output": "ana@lab:~/emb$ python tasks.py\nRETRIEVAL_DOCUMENT   max difference from RETRIEVAL_QUERY: 0.0\nSEMANTIC_SIMILARITY  max difference from RETRIEVAL_QUERY: 0.0\nCLASSIFICATION       max difference from RETRIEVAL_QUERY: 0.0\nana@lab:~/emb$ jq -c '{inputs, task_type}' labembed.jsonl | tail -n 4\n{\"inputs\":1,\"task_type\":\"RETRIEVAL_QUERY\"}\n{\"inputs\":1,\"task_type\":\"RETRIEVAL_DOCUMENT\"}\n{\"inputs\":1,\"task_type\":\"SEMANTIC_SIMILARITY\"}\n{\"inputs\":1,\"task_type\":\"CLASSIFICATION\"}"
 }
 ```
 

@@ -7,8 +7,8 @@ Pinecone is a vector database you use as a service. You create an account and an
 Pinecone runs the indexes; there is no directory of yours that holds them and no process of yours to
 start. **That is the whole difference from Chroma, and most of what follows comes from it.**
 
-It also means nothing in this section ran. The lab has no route to Pinecone's API, and an account
-would be needed anyway. The program below is written for the `pinecone` Python package and was
+It also means nothing in this section ran. The machine this course was recorded on has no route to
+Pinecone's API, and an account would be needed anyway. The program below is written for the `pinecone` Python package and was
 checked against the signatures of version 10.0.0, in an environment of its own. Its requests were
 never answered, so no output is shown and none is invented.
 

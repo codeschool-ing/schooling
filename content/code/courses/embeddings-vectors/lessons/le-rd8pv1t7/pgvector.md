@@ -10,9 +10,9 @@ database into a vector store. It is an extension, the same mechanism PostGIS use
 types, and it adds three things: a column type called `vector`, operators that measure the distance
 between two vectors, and two kinds of index.
 
-Lesson 2 installed it to compare three distances on two small vectors. Here it holds the help
-centre. The lab runs PostgreSQL 16 with the pgvector package Ubuntu 24.04 ships, and the schema
-is two ordinary tables:
+Lesson 2 added it to the database to compare three distances on two small vectors. Here it holds
+the help centre. It is PostgreSQL 16 with the pgvector package Ubuntu 24.04 ships, both installed
+in lesson 1, and the schema is two ordinary tables:
 
 ```schooling-example
 {
@@ -86,7 +86,7 @@ PostgreSQL does not know what a NumPy array is, and the driver, psycopg, does no
     },
     {
       "code": "with psycopg.connect() as conn:\n    register_vector(conn)\n    cur = conn.cursor()\n    cur.executemany(\n        \"INSERT INTO articles (id, category, lang, title, body, embedding)\"\n        \" VALUES (%s, %s, %s, %s, %s, %s)\",\n        [(h[\"id\"], h[\"category\"], h[\"lang\"], h[\"title\"], h[\"body\"], v)\n         for h, v in zip(help, A)])\n    cur.executemany(\n        \"INSERT INTO queries (id, text, relevant, embedding) VALUES (%s, %s, %s, %s)\",\n        [(q[\"id\"], q[\"text\"], q[\"relevant\"], v) for q, v in zip(queries, Q)])",
-      "note": "With no arguments, `connect()` reads `PGHOST` and `PGDATABASE` from the environment. `register_vector` teaches this connection to send a NumPy array as a `vector` and read one back as an array. Leaving the `with` block commits."
+      "note": "With no arguments, `connect()` reads `PGDATABASE` from the environment, which lesson 1 set to `shop`, and connects as you through the local socket. `register_vector` teaches this connection to send a NumPy array as a `vector` and read one back as an array. Leaving the `with` block commits."
     },
     {
       "code": "print(len(help), \"articles and\", len(queries), \"queries written\")",
