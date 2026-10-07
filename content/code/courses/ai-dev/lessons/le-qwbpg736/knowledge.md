@@ -1,6 +1,6 @@
 ---
 title: What it knows, and what it cannot tell it does not know
-version: 1
+version: 2
 ---
 
 A model's knowledge is whatever its training text contained, compressed into its parameters and
@@ -10,56 +10,78 @@ that training, and for a common fact the likely continuation is usually the true
 fact, a recent one, or one that was never in the training text, **the loop still produces a
 likely-sounding continuation, because producing one is the only thing it can do.**
 
-## The small model on a question it has no business answering
+## A question with an answer, and one without
 
-`tinylm` was trained on Python's documentation, which never mentions France. Ask it anyway:
-
-```
-ana@dev:~/shop$ python lab/next.py "The capital of France is"
-context used: 1 tokens
- 11.5%  ' a'
-  8.0%  ' the'
-  5.9%  '\n'
-  5.2%  ' not'
-  3.8%  ' used'
-ana@dev:~/shop$ python lab/generate.py "The capital of France is" --tokens 14 --temperature 0
-The capital of France is a string, and
-  A binascii.Error is raised if
+`next.py` from section 06 shows what the model rates likeliest after a sentence. Here is a
+sentence it has read thousands of times, and one it can never have read, because the country was
+made up for this lesson:
 
 ```
-
-`context used: 1 tokens`: it had never seen `France is`, so it fell back to what follows ` is`
-alone, and from there it wrote what follows ` is` in its corpus. It is the same text the greedy
-run of lesson 1 section 04 produced after `The default value is`, for the same reason.
-
-**And it gave no sign of any of this.** Here it is on a phrase it has never seen any part of:
-
-```
-ana@dev:~/shop$ python lab/next.py "colourless green ideas"
-context used: 0 tokens
-  3.7%  ' the'
-  3.0%  '\n'
-  2.9%  ','
-  2.4%  '.\n\n'
-  2.0%  ' a'
+ana@dev:~/shop$ python scratch/next.py "The capital of France is"
+ 62.7%  ' Paris'
+  8.4%  ' located'
+  3.7%  '...'
+  3.6%  ' not'
+  3.2%  ' a'
+ana@dev:~/shop$ python scratch/next.py "The capital of the Republic of Veldoria is"
+ 10.3%  ' the'
+  5.8%  ' V'
+  3.8%  ' a'
+  3.4%  ' located'
+  2.7%  ' not'
 ```
 
-With no context at all, it predicts the most common tokens in its corpus. The output is still a
-distribution that adds up to 100%, and the generation loop would draw from it exactly as before.
-**A distribution has no slot for "I have never seen this".** The lab's script prints how much
-context it used because the lab wrote that line; no provider's API returns anything like it.
+The first is a fact the model learnt: one token with most of the probability. The second is
+spread thin. **But it is still a distribution that adds up to 100%**, and the loop draws from it
+exactly as before. A distribution has no slot for "I have never seen this". Let the loop run:
 
-## The large-model version of the same thing
+```
+ana@dev:~/shop$ python scratch/generate.py "The capital of the Republic of Veldoria is" --tokens 30 --temperature 0
+The capital of the Republic of Veldoria is the city of Veldoria, which is located in the heart of the Veldorian Valley. The city is known for its rich history, cultural
+```
 
-A large model is far better at this than `tinylm`, and it can say "I don't know", because it was
-trained on examples of saying so. That is a learnt behaviour, though, not a measurement: the
-model has no reliable internal signal that tells a fact it learnt from a fact it is
-reconstructing. So it makes this mistake on exactly the questions where its training text was
-thin, and it makes it in the same fluent, confident style as everything else. This is called
-**hallucination**, and for a developer it arrives in three common shapes:
+A capital, a valley and a rich history, for a country that does not exist, in the tone of an
+encyclopaedia. Every token was the likeliest continuation of the text before it, which is all the
+loop ever promised.
+
+Now the same question as a question, through `ollama run`, which wraps it in the model's chat
+template the way every chat application does:
+
+```
+ana@dev:~/shop$ ollama run llama3.2:3b "What is the capital of the Republic of Veldoria?"
+I couldn't find any information on a country called the "Republic of
+Veldoria". It's possible that it's a fictional country or not a recognized
+sovereign state. If you could provide more context or details, I'll be
+happy to help you further.
+```
+
+That is better, and the next part of this section says why it is not enough.
+
+## Saying "I don't know" is a habit, not a measurement
+
+The model that invented a valley and the model that declined the question are the same model. The
+difference is the chat template: after training on text, this model was trained further on
+conversations in which an assistant says it does not know, and the template puts it in that
+role. **That is a learnt behaviour, not a measurement.** The model has no reliable internal signal
+that tells a fact it learnt from a fact it is reconstructing, so it declines when the question
+looks like the ones it learnt to decline, and answers fluently otherwise. A made-up country is
+easy to recognise. A made-up function is not:
+
+```
+ana@dev:~/shop$ ollama run llama3.2:3b "In Python's standard library, which function in the statistics module computes the harmonic median? Answer with one line of code."
+The `statistics.hmean` function in Python's standard library computes the
+harmonic mean.
+```
+
+**`statistics.hmean` does not exist.** The module's function is `statistics.harmonic_mean`, and
+there is no harmonic median in it at all. The answer names a plausible function, changes the
+question from median to mean without saying so, and sounds exactly as sure as the answer about
+Paris. Ask it yourself and you may get a different wrong answer, or a right one; section 08 is why.
+
+This is called **hallucination**, and for a developer it arrives in three common shapes:
 
 - **an API that does not exist**: a method name that would be the obvious one, on a library that
-  named it differently;
+  named it differently, as above;
 - **an API that used to exist**: the version of a library from before the training cutoff,
   confidently, for code that runs against the version after it;
 - **a package that does not exist**: a plausible import that nobody ever published, which is

@@ -1,6 +1,6 @@
 ---
 title: Chaves ficam fora do código
-version: 1
+version: 2
 ---
 
 Uma chave de API é uma senha que gasta dinheiro. **Quem a tem consegue fazer requisições na sua
@@ -12,29 +12,29 @@ ambiente, que é onde ela deve ficar.
 ```
 ana@dev:~/shop$ env | grep _API_KEY | cut -d= -f1
 ANTHROPIC_API_KEY
-GEMINI_API_KEY
 OPENAI_API_KEY
 ```
 
-Três variáveis, uma por provedor, definidas pelo laboratório. Os SDKs leem `ANTHROPIC_API_KEY`,
-`OPENAI_API_KEY` e `GEMINI_API_KEY` sem ninguém mandar, então o código desta aula nunca menciona uma
-chave. **Uma chave escrita num arquivo-fonte é uma chave em toda cópia desse arquivo**: no
+Duas variáveis, as que a aula 1 seção 03 definiu, as duas com a palavra `ollama`. Os SDKs leem
+`ANTHROPIC_API_KEY`, `OPENAI_API_KEY` e, para o Google, `GEMINI_API_KEY` sem ninguém mandar, então o
+código desta aula nunca menciona uma chave. **Uma chave escrita num arquivo-fonte é uma chave em toda cópia desse arquivo**: no
 repositório, no histórico dele, em todo fork, e no que quer que um assistente leia do projeto, como
 a aula 3 mostrou.
 
 ## Sem chave, e com a chave errada
 
 ```
-ana@dev:~/shop$ env -u ANTHROPIC_API_KEY python -c 'import anthropic; anthropic.Anthropic().messages.create(model="scripted-1", max_tokens=10, messages=[{"role": "user", "content": "hi"}])' 2>&1 | tail -n 1
+ana@dev:~/shop$ env -u ANTHROPIC_API_KEY python -c 'import anthropic; anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=10, messages=[{"role": "user", "content": "hi"}])' 2>&1 | tail -n 1
 TypeError: "Could not resolve authentication method. Expected one of api_key, auth_token, or credentials to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
-ana@dev:~/shop$ ANTHROPIC_API_KEY=lab-anthropic-key-9999 python -c 'import anthropic; anthropic.Anthropic().messages.create(model="scripted-1", max_tokens=10, messages=[{"role": "user", "content": "hi"}])' 2>&1 | tail -n 1
-anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_lab_0004'}
+ana@dev:~/shop$ ANTHROPIC_API_KEY=not-a-real-key python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=10, messages=[{"role": "user", "content": "hi"}]); print(repr(r.content[0].text))'
+'How can I assist you today?'
 ```
 
 **A primeira falha antes de qualquer requisição.** O SDK não achou chave e se recusou a montar a
-requisição. A segunda fez a requisição com uma chave que o labllm não conhece, e o provedor
-respondeu 401. As duas são barulhentas, o que é bom; o caso perigoso é uma chave que funciona e não
-deveria estar ali.
+requisição. A segunda fez a requisição com uma chave que ninguém emitiu, e o Ollama respondeu: **o
+Ollama não confere chaves**, e é por isso que a aula 1 pôde defini-las com uma palavra. Um provedor a
+teria recusado com um 401, que o SDK da Anthropic lança como `AuthenticationError`. As duas recusas
+são barulhentas, o que é bom; o caso perigoso é uma chave que funciona e não deveria estar ali.
 
 ## Mantendo uma chave local fora do git
 

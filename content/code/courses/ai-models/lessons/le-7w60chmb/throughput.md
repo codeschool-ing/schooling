@@ -19,12 +19,12 @@ two figures below are **the course's assumptions**, chosen to show the shape, no
 any product: 1,000 GB/s, and three times that.
 
 ```
-ana@desk:~/desk$ python lab/size.py 1000 | cut -c1-17,76-
+ana@desk:~/desk$ python size.py 1000 | cut -c1-17,76-
 model            at 4-bit
 Llama-3.1-8B          249
 Llama-3.1-70B          28
 Llama-3.1-405B          5
-ana@desk:~/desk$ python lab/size.py 3000 | cut -c1-17,76-
+ana@desk:~/desk$ python size.py 3000 | cut -c1-17,76-
 model            at 4-bit
 Llama-3.1-8B          747
 Llama-3.1-70B          85

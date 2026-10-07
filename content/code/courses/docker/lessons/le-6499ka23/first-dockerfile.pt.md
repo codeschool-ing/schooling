@@ -1,6 +1,6 @@
 ---
 title: Um primeiro Dockerfile
-version: 1
+version: 2
 ---
 
 **Um Dockerfile é a receita escrita de uma imagem: uma base de onde partir, depois uma instrução por
@@ -8,8 +8,8 @@ passo, lidas de cima para baixo.** Ele substitui o `docker commit` da aula 7 por
 consegue ler, revisar e rodar de novo, e toda imagem do resto deste curso é construída a partir de
 um.
 
-O projeto da Ana é o serviço em Go `shelf`, com a única dependência dele, o driver de PostgreSQL pgx,
-guardada em `vendor/` para compilar sem rede:
+O projeto da Ana é o `shelf`, como a seção anterior o escreveu por extenso, com o pgx em `vendor/`
+para compilar sem rede:
 
 ```
 ana@vm:~/shelf$ ls -A

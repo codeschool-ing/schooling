@@ -1,9 +1,9 @@
 ---
 title: Um escaneado ruim, e o que ajuda
-version: 1
+version: 2
 ---
 
-A segunda cópia da nota é a primeira depois de um scanner barato: girada 1,8 grau, borrada, salpicada de ruído, reduzida a 100 pontos por polegada e salva como JPEG de baixa qualidade. Cada um desses passos está escrito no `build_media.py` do laboratório, então o estrago é conhecido com exatidão. Lida no modo padrão, a tabela se desmancha:
+A segunda cópia da nota é a primeira depois de um scanner barato: girada 1,8 grau, borrada, salpicada de ruído, reduzida a 100 pontos por polegada e salva como JPEG de baixa qualidade. Cada um desses passos está escrito no `make_media.py` da aula 1, então o estrago é conhecido com exatidão. Lida no modo padrão, a tabela se desmancha:
 
 ```
 ana@lab:~/mm$ tesseract media/invoice-0931-scan.jpg - 2>/dev/null | sed -n "/Qty/,/Total/p"
@@ -63,7 +63,30 @@ Os acentos voltaram e o `15.90` está certo. Sobram só a vírgula em `713,50` e
 
 ## Os remédios mais procurados
 
-Dois consertos são sugeridos para todo escaneado ruim: aumentar e endireitar. Os dois foram medidos, com a configuração que leu melhor:
+Dois consertos são sugeridos para todo escaneado ruim: aumentar e endireitar. Os dois foram medidos, com a configuração que leu melhor.
+
+`tidy.py`:
+
+```python
+"""Two cures people reach for on a bad scan: make it bigger, and turn it straight."""
+import subprocess
+
+import jiwer
+from PIL import Image
+
+TRUTH = " ".join(open("media/truth/invoice-0931.txt").read().split())
+scan = Image.open("media/invoice-0931-scan.jpg")
+tries = {
+    "as scanned": scan,
+    "twice the size": scan.resize((scan.width * 2, scan.height * 2), Image.LANCZOS),
+    "turned 1.8 degrees back": scan.rotate(-1.8, resample=Image.BICUBIC, fillcolor=255),
+}
+for name, img in tries.items():
+    img.save("/tmp/try.png")
+    out = subprocess.run(["tesseract", "/tmp/try.png", "-", "--psm", "6", "-l", "eng+por"],
+                         capture_output=True, text=True, check=True).stdout
+    print(f"{name:24} CER {jiwer.cer(TRUTH, ' '.join(out.split())):6.1%}")
+```
 
 ```
 ana@lab:~/mm$ python tidy.py

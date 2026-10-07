@@ -23,7 +23,7 @@ These are the lines worth reading, with what all-MiniLM-L6-v2's card says for ea
 ## The files disagree with each other, and the card decides
 
 The weights arrive with configuration files, and it is tempting to read the limits off them
-instead. Here is what three of the files `lab.sh` downloaded say:
+instead. Here is what three of the files `setup.sh` downloaded in lesson 1 say:
 
 ```
 ana@lab:~/emb$ jq "{vocab_size, hidden_size, num_hidden_layers, max_position_embeddings}" $MINILM_DIR/config.json

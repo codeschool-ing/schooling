@@ -1,10 +1,10 @@
 ---
 title: Andando passo a passo, e a instrução debugger
-version: 1
+version: 2
 ---
 
 **Com a página pausada, você pode avançá-la um passo de cada vez e ver o estado mudar.** O DevTools
-tem três botões para isso, e o `--step` do laboratório aceita as mesmas três palavras:
+tem três botões para isso, e o `--step` do `page` aceita as mesmas três palavras:
 
 - **step over** roda a linha atual, chamadas incluídas, e para na linha seguinte da mesma função;
 - **step into** segue a chamada da linha atual para dentro da função chamada;
@@ -79,7 +79,7 @@ paused at find.js:9
 ```
 
 A primeira execução é uma página sem ninguém olhando: a instrução foi ignorada e a contagem foi
-impressa. Na segunda, o `--break debugger` do laboratório conecta o depurador antes, como abrir o
+impressa. Na segunda, o `--break debugger` conecta o depurador antes, como abrir o
 DevTools faria. A página pausou na linha 9, com `found` já calculado. O escopo **script** guarda a
 `const books` do topo do arquivo.
 
@@ -91,5 +91,5 @@ pararia ali também. A regra `no-debugger` do ESLint existe para pegar a que esc
 
 `node --inspect app.js` inicia um programa com o mesmo protocolo aberto, e a página
 `chrome://inspect` do Chrome conecta o DevTools dele a esse programa, com breakpoints e tudo. Isso
-não foi rodado neste laboratório, que não tem uma área de trabalho onde abrir uma janela do
-DevTools.
+não foi rodado para esta aula: a máquina em que ela foi gravada não tem uma área de trabalho onde
+abrir uma janela do DevTools.

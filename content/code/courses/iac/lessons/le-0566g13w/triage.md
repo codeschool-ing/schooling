@@ -1,10 +1,12 @@
 ---
 title: Triage, and what should fail the build
-version: 1
+version: 2
 ---
 
-A scanner's report is a list of facts about the text, and the list is long. After the suppressions
-and the variable, here is where the three stand:
+A scanner's report is a list of facts about the text, and the list is long. Ana first deletes the
+plan files of section 07, `rm -f tfplan tfplan.json`, so that a scan of the directory reads the
+configuration and not a leftover plan. After the suppressions and the variable, here is where the
+three stand:
 
 ```
 ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact | sed -n 3p
@@ -75,7 +77,7 @@ exit 1
 
 A gate at `CRITICAL` passes this configuration, open bucket settings and all, because Trivy rates
 nothing here `CRITICAL`. A gate at `HIGH,CRITICAL` fails it. Checkov has the same idea in
-`--hard-fail-on`, and offline it has a trap in it:
+`--hard-fail-on`, and without a Prisma Cloud account it has a trap in it:
 
 ```
 ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact --hard-fail-on HIGH > /dev/null; echo "exit $?"
@@ -84,10 +86,10 @@ ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact --hard-fail-on
 exit 1
 ```
 
-**`--hard-fail-on HIGH` exits 0.** Checkov's severities come from the download that `--skip-download`
-switches off, so no finding is `HIGH`, nothing matches, and the gate passes everything, quietly. A
-list of check ids has no such dependency and fails as it should. If your Checkov runs without the
-platform, gate it on ids.
+**`--hard-fail-on HIGH` exits 0.** Checkov's severities come only to a run signed in with a Prisma
+Cloud API key (section 03), so here no finding is `HIGH`, nothing matches, and the gate passes
+everything, quietly. A list of check ids has no such dependency and fails as it should. If your
+Checkov runs without the platform, gate it on ids.
 
 ## Starting from where you are
 
@@ -100,7 +102,7 @@ ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact --create-basel
 Created a checkov baseline file at /home/ana/shop/.checkov.baseline
 ```
 
-Then somebody adds a backups bucket, with every gap the photo bucket had:
+Then somebody adds a backups bucket in `backups.tf`, with every gap the photo bucket had:
 
 ```hcl
 resource "aws_s3_bucket" "backups" {

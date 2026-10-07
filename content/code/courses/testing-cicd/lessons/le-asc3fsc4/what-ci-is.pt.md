@@ -1,6 +1,6 @@
 ---
 title: O que é integração contínua
-version: 1
+version: 2
 ---
 
 **Integração contínua** é uma prática antes de ser uma ferramenta: todo mundo integra o próprio
@@ -18,8 +18,15 @@ funciona?" numa pergunta que se responde sozinha poucos minutos depois de cada p
 
 Serviços hospedados, entre eles o GitHub Actions e o GitLab CI, são o assunto da aula 6. Para ver o
 que eles fazem sem nada do vocabulário deles, esta aula usa uma CI que cabe num arquivo: um **hook
-post-receive** do git, um script que o git roda no repositório que recebe, depois de cada push. O
-`lab.sh ci` o grava num repositório bare em `~/ci/shipquote.git`:
+post-receive** do git, um script que o git roda no repositório que recebe, depois de cada push. Ele
+mora num **repositório bare**, um sem arquivos de trabalho, que é o que um servidor guarda. Crie um
+ao lado do projeto:
+
+```sh
+git init --bare -b main ~/ci/shipquote.git
+```
+
+e ponha o hook no diretório `hooks` dele. Salve como `~/ci/shipquote.git/hooks/post-receive`:
 
 ```schooling-example
 {
@@ -55,6 +62,13 @@ post-receive** do git, um script que o git roda no repositório que recebe, depo
 ```
 
 ## O primeiro push
+
+O git só roda um hook executável, então antes `chmod +x ~/ci/shipquote.git/hooks/post-receive`. O
+hook monta um ambiente com o `uv` para cada versão do Python, e o uv baixa qualquer uma entre 3.11,
+3.12 e 3.13 que a máquina não tenha, o que deixa o primeiro push mais lento que os seguintes. Numa
+rede que recusa esses downloads, dê ao hook as versões que você tem, por exemplo
+`CI_PYTHONS="3.12" git push`: todo push desta aula então mostra duas células onde estes mostram
+seis, e nada mais muda.
 
 A Ana liga o clone dela a esse repositório e envia a `main`:
 

@@ -1,16 +1,24 @@
 ---
 title: The processor, and the seven columns that say where it went
-version: 1
+version: 2
 ---
+
+Start the busy loops again:
+
+```sh
+cd ~/work/load
+./spin.sh &
+sleep 5
+```
 
 ```
 ana@vm:~$ vmstat 1 4
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 4  0      0 14507736  56092 1514136    0    0    71   358  431    1  3  0 97  0  0  0
- 4  0      0 14507736  56092 1514136    0    0     0     0 1074  218 100  0  0  0  0  0
- 5  0      0 14507736  56092 1514136    0    0     0     0 1062  188 100  0  0  0  0  0
- 4  0      0 14507736  56092 1514136    0    0     0     0 1083  296 100  0  0  0  0  0
+ 5  0      0 15719688   6984 371660    0    0   137 14614 1053    2  9  2 89  1  0  0
+ 4  0      0 15719516   6984 371660    0    0     0     0 1030  202 100  0  0  0  1  0
+ 4  0      0 15719436   6984 371660    0    0     0     0 1045  231 99  0  0  0  1  0
+ 4  0      0 15719436   6984 371660    0    0     0     0 1052  245 99  0  0  0  1  0
 ```
 
 **`vmstat 1` is the first command to run on a machine somebody is complaining
@@ -18,12 +26,12 @@ about**, and the most important thing about it is on the first line.
 
 ## Throw the first line away
 
-Look at the first row: `us 1`, `id 97`. The machine was at 100% on the three
+Look at the first row: `us 9`, `id 89`. The machine was at 99% on the three
 rows underneath, and the first row says it was idle.
 
 **The first line of `vmstat` is an average since boot.** So is the first block
-of `iostat`, and the first line of `sar`. Nothing is wrong; you are reading four
-and a half hours of history and mistaking it for now.
+of `iostat`, and the first line of `sar`. Nothing is wrong; you are reading three
+hours of history and mistaking it for now.
 
 This is the single most common misreading in this lesson, and the fix is
 mechanical: **run it with an interval and ignore the first sample.**
@@ -79,9 +87,10 @@ hint to look at `iostat`, not a verdict.
 **`st` is the one you cannot fix.** It means you are on a virtual machine and
 the host is overcommitted — your processor time is being given to another
 tenant. Anything above a few per cent sustained is a conversation with whoever
-sells you the machine. **Every capture in this lesson shows `st 0`**, because
-nothing here is contended; there is no honest way to produce a steal figure on
-this machine, so there is no transcript of one.
+sells you the machine. **The captures in this lesson show `st` at 1 or 2 while
+the loops run**, because this machine is itself a virtual machine on a shared
+host and a little of its time is going elsewhere. That is the harmless end of
+the scale; the same column at 20 is somebody else's workload slowing down yours.
 
 ## Per core
 
@@ -90,17 +99,25 @@ seven cores idle, which averages to 12.5% and looks fine.
 
 ```
 ana@vm:~$ mpstat -P ALL 1 1
-Linux 6.18.44-fc-v33 (vm)       09/15/26        _x86_64_        (4 CPU)
+Linux 6.18.44-fc-v77 (vm)       10/07/26        _x86_64_        (4 CPU)
 
-11:25:35     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-11:25:36     all  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-11:25:36       0  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-11:25:36       1  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-11:25:36       2  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-11:25:36       3  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+13:47:15     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+13:47:16     all   99.50    0.00    0.00    0.00    0.00    0.00    0.50    0.00    0.00    0.00
+13:47:16       0   99.00    0.00    0.00    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+13:47:16       1  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+13:47:16       2  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+13:47:16       3   99.01    0.00    0.00    0.00    0.00    0.00    0.99    0.00    0.00    0.00
+
+Average:     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+Average:     all   99.50    0.00    0.00    0.00    0.00    0.00    0.50    0.00    0.00    0.00
+Average:       0   99.00    0.00    0.00    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+Average:       1  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+Average:       2  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+Average:       3   99.01    0.00    0.00    0.00    0.00    0.00    0.99    0.00    0.00    0.00
 ```
 
-Four loops, four cores, all four at 100%. **`mpstat -P ALL 1` is how you tell a
+Four loops, four cores, each at 99 to 100% user time, and what is left over is
+`%steal`, the column of the previous paragraph. **`mpstat -P ALL 1` is how you tell a
 machine that is out of processor from a program that is single-threaded** — and
 the second is far more common than the first.
 
@@ -111,18 +128,18 @@ network interrupts not being spread across cores.
 
 ```
 ana@vm:~$ top -b -n 1 | head -12
-top - 11:28:24 up  4:33,  0 user,  load average: 0.63, 1.42, 0.84
-Tasks:  86 total,   4 running,  82 sleeping,   0 stopped,   0 zombie
-%Cpu(s): 73.2 us,  0.0 sy,  0.0 ni, 24.4 id,  0.0 wa,  0.0 hi,  2.4 si,  0.0 st
-MiB Mem :  16095.9 total,  14135.3 free,    652.0 used,   1558.0 buff/cache
-MiB Swap:      0.0 total,      0.0 free,      0.0 used.  15443.9 avail Mem
+top - 13:40:26 up  3:10,  0 user,  load average: 1.20, 0.85, 0.94
+Tasks:  98 total,   5 running,  92 sleeping,   0 stopped,   1 zombie
+%Cpu(s): 95.5 us,  2.3 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  2.3 st
+MiB Mem :  16094.7 total,  15378.4 free,    681.0 used,    310.6 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.  15413.7 avail Mem
 
   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-16258 ana       20   0    4720   3380   3080 R 100.0   0.0   0:04.21 bash
-16259 ana       20   0    4720   3348   3048 R 100.0   0.0   0:04.20 bash
-16260 ana       20   0    4720   3388   3088 R 100.0   0.0   0:04.21 bash
-    1 root      20   0   26536   4240   3844 S   0.0   0.0   0:19.51 process_api
-    2 root      20   0       0      0      0 S   0.0   0.0   0:00.01 kthreadd
+ 9684 ana       20   0    4764   3384   3124 R  90.9   0.0   0:05.12 bash
+ 9685 ana       20   0    4764   3376   3120 R  90.9   0.0   0:05.15 bash
+ 9687 ana       20   0    4764   3360   3108 R  90.9   0.0   0:05.11 bash
+ 9686 ana       20   0    4764   3412   3156 R  81.8   0.0   0:05.03 bash
+  102 root      20   0 2097272  42988  27820 S   9.1   0.3   0:08.87 environment-man
 ```
 
 Lesson 6 section 07 covered reading `top`. Two things for this lesson:
@@ -133,10 +150,10 @@ is what you use in a script, over `ssh`, or in a transcript like this one.
 **`%CPU` is per core, so it goes past 100.** A `%CPU` of 380 on this machine is
 one process using nearly all four cores; it is not a bug and not an error.
 
-And the line `Tasks: 86 total, 4 running` is the same count the load average
-feeds on. PID 1 being `process_api` rather than `systemd` is this machine being
-a sandbox, as lesson 5 section 08 explained — the numbers are real, the process list is
-this container's.
+And the line `Tasks: 98 total, 5 running` is the same count the load average
+feeds on: four loops and `top` itself. `environment-man` at the bottom is this
+machine being a sandbox, as lesson 5 section 08 explained — the numbers are real,
+the process list is this container's.
 
 ## When it is the processor
 
@@ -149,3 +166,10 @@ pidstat -u 1                # which process
 Three commands, in that order, and the next one after them is
 `perf top` — which is a profiler and beyond this lesson's scope, but is the
 honest answer to "which *line of code*".
+
+Stop the loops:
+
+```sh
+cd ~/work/load
+pkill -f spin.sh
+```

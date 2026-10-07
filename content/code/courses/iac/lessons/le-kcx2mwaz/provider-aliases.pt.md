@@ -1,6 +1,6 @@
 ---
 title: Uma segunda região, com um alias de provider
-version: 1
+version: 2
 ---
 
 Um bloco `provider "aws"` é uma conexão: uma região, um conjunto de credenciais. Todo resource cujo
@@ -12,7 +12,7 @@ meta-argumento `provider`.**
 Há motivos comuns para querer isso. Uma cópia dos backups da loja não deveria morar na mesma região
 que a loja, ou uma pane regional leva os dois. Alguns serviços da AWS exigem uma região própria: um
 certificado para o CloudFront precisa ser emitido em `us-east-1`, onde quer que o resto do site
-rode. A Ana quer um bucket de backup em Ohio:
+rode. A Ana quer um bucket de backup em Ohio, e o escreve no `backup.tf`:
 
 ```hcl
 provider "aws" {
@@ -66,7 +66,7 @@ ana@laptop:~/shop/network$ aws ec2 describe-vpcs --filters Name=tag:Name,Values=
 
 A versão 6 do provider da AWS, a que este curso usa, acrescentou um argumento `region` à maioria
 dos seus resources. Para "a mesma conta, outra região", isso agora basta, sem um segundo bloco de
-provider:
+provider. O `logs.tf` da Ana:
 
 ```hcl
 resource "aws_s3_bucket" "logs" {
@@ -97,8 +97,8 @@ sendo o único caminho.
 
 ## Quando o alias está errado
 
-Um alias com erro de digitação falha antes de qualquer coisa ser planejada. Em `~/shop/try`, um
-bucket nomeia `aws.eu`, que nunca foi declarado:
+Um alias com erro de digitação falha antes de qualquer coisa ser planejada. Em `~/shop/try`, a Ana
+troca o `main.tf` por um bucket que nomeia `aws.eu`, que nunca foi declarado:
 
 ```hcl
 provider "aws" {

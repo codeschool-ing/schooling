@@ -16,7 +16,39 @@ o último bloco é completado até dezesseis. O resto desta aula decorre da prim
 O arquivo de agendamentos da Vereda foi montado para esta aula. Cada horário da agenda de segunda
 na sala 1 é um registro de largura fixa com exatamente dezesseis bytes, de modo que cada registro é
 um bloco AES. O `vcrypt blocks` mostra um arquivo dezesseis bytes por vez, em hexadecimal, e marca
-um bloco que já viu:
+um bloco que já viu. É a primeira ferramenta do laboratório, e ela inteira é isto:
+
+```py
+# ~/lab/tools/blocks.py
+"""vcrypt blocks FILE: the file sixteen bytes at a time, in hex, marking a
+block already seen. With --letters, one letter per block instead, the same
+letter for the same block. FILE may be -, to read what a pipe sends."""
+import sys
+
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+args = sys.argv[1:]
+letters = "--letters" in args
+path = [a for a in args if a != "--letters"][0]
+data = sys.stdin.buffer.read() if path == "-" else open(path, "rb").read()
+blocks = [data[i:i + 16] for i in range(0, len(data), 16)]
+
+seen = {}
+if letters:
+    row = []
+    for b in blocks:
+        seen.setdefault(b, LETTERS[len(seen)] if len(seen) < len(LETTERS) else "?")
+        row.append(seen[b])
+    print(" ".join("".join(row[i:i + 4]) for i in range(0, len(row), 4)))
+    sys.exit()
+for n, b in enumerate(blocks, 1):
+    mark = f"  same as block {seen[b]}" if b in seen else ""
+    seen.setdefault(b, n)
+    print(f"{n:3}  {b.hex()}{mark}")
+print(f"{len(data)} bytes, {len(blocks)} blocks, {len(seen)} different")
+```
+
+Salva como `~/lab/tools/blocks.py`, ela roda como `vcrypt blocks`:
 
 ```
 ana@lab:~/lab$ vcrypt blocks data/slots.dat | head -6
@@ -77,6 +109,6 @@ termina, um modo que verifica o texto cifrado inteiro antes de decifrar qualquer
 
 O AES cifra dezesseis bytes por vez, e o texto cifrado nunca é menor que o texto claro. O CBC
 acrescenta até dezesseis bytes de preenchimento, e todo modo precisa guardar seu vetor ou nonce ao
-lado do texto cifrado, o que a seção 05 desta aula explica. O GCM acrescenta uma etiqueta de
+lado do texto cifrado, o que a seção 07 desta aula explica. O GCM acrescenta uma etiqueta de
 dezesseis bytes. Para uma coluna de banco de dados com um CPF, esse acréscimo é maior que o próprio
 dado, e a aula 14 volta ao custo de cifrar uma coluna em vez de um disco.

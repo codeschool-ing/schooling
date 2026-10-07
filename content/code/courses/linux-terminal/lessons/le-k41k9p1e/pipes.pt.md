@@ -1,6 +1,6 @@
 ---
 title: O pipe, e a ideia de que o resto desta aula é feito
-version: 1
+version: 2
 ---
 
 Um pipe conecta a saída padrão de um programa à entrada padrão do seguinte. É esse o mecanismo
@@ -8,14 +8,14 @@ inteiro, e é o motivo de o Unix ter centenas de comandos pequenos em vez de uma
 
 ```
 ana@vm:~/work$ cut -d" " -f9 logs/access.log | sort | uniq -c | sort -rn
-   1033 200
-     70 201
-     28 404
-     21 500
-     18 302
-     16 304
-      9 401
-      5 403
+   1017 200
+     59 201
+     41 404
+     27 302
+     24 500
+     19 304
+      7 401
+      6 403
 ```
 
 **Quatro programas, nenhum dos quais sabe nada sobre servidores web**, e a resposta é todo tipo de

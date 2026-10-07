@@ -9,8 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # The programs are the ones the sections show, written into ~/emb by `put`.
-# One file is STAGED and not shown: prices.py, the course's price sheet (it
-# sits beside course.json), copied into ~/emb so that ana can run it there.
+# prices.py is the one lesson 7 shows whole; lab.sh writes it into ~/emb
+# from that lesson, as it does every file the lessons hand over.
 #
 # The 20,000 vectors that every size and build time is measured on are
 # random unit vectors from synth.py, not embeddings of text: a float32 takes
@@ -339,7 +339,6 @@ print(f"move to {large['model']}: ${tokens / 1e6 * large['usd_per_mtok']:.2f}"
       f"  raw vectors {CHUNKS * large['dims'] * 4 / GB:.2f} GB,"
       f" {CHUNKS * (small['dims'] + large['dims']) * 4 / GB:.2f} GB while both exist")
 EOF_FILE
-put prices.py < ../../prices.py
 
 block files
 on 'python files.py'

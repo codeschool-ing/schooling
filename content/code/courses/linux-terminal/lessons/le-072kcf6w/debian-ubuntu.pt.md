@@ -1,6 +1,6 @@
 ---
 title: Debian, Ubuntu, e o arquivo que mente para você
-version: 1
+version: 2
 ---
 
 Esta é a família em que você tem mais chance de estar pisando. A maioria dos tutoriais assume ela,
@@ -70,7 +70,9 @@ sido inventado: **um arquivo, toda distribuição, os mesmos nomes de campo.** F
 | **snaps** | um segundo sistema de empacotamento ao lado do `apt`, isolado e que se atualiza sozinho. Genuinamente polêmico: alguns softwares só vêm assim, e algumas pessoas removem por princípio |
 | **um LTS em que dá para confiar** | cinco anos por padrão, dez com assinatura, e é por isso que é o padrão em toda nuvem |
 
-Dá para ver os repositórios de terceiros de uma máquina direto — eles são arquivos:
+Dá para ver os repositórios de terceiros de uma máquina direto — eles são arquivos. Na máquina que
+você instalou na aula 1 há um, `ubuntu.sources`, que é o do próprio Ubuntu. A máquina em que estas
+transcrições foram capturadas está em uso há mais tempo:
 
 ```
 ana@vm:~$ ls /etc/apt/sources.list.d/
@@ -80,7 +82,8 @@ ondrej-ubuntu-php-noble.sources
 ubuntu.sources
 ```
 
-Quatro entradas: a do próprio Ubuntu, a do Docker, e duas PPAs. **Cada uma delas é alguém em quem
+Quatro entradas: a do próprio Ubuntu, a do Docker, e duas PPAs, cada uma acrescentada por alguém
+em algum momento. **Cada uma delas é alguém em quem
 você decidiu confiar**, e a lista vale ser lida quando você herda uma máquina — a seção 15 da aula
 1 disse que o risco se mudou para fora do repositório, e este diretório é para onde ele se mudou.
 

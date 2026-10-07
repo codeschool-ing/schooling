@@ -1,6 +1,6 @@
 ---
 title: Geolocation: asking where the user is
-version: 1
+version: 2
 ---
 
 **`navigator.geolocation.getCurrentPosition(success, failure)` asks the browser for the user's
@@ -35,12 +35,12 @@ ana@dev:~/js$ page where.html --fresh --geo -23.5503,-46.6339 --do 'click #where
 at -23.5503 -46.6339 within 0 m
 ```
 
-Both runs were staged, as the script's header says. In the first, the lab's browser answered the
-request as a user who clicked **Block** would: **the failure callback ran with code 1,
+Both runs were staged by `page`, because a browser with no window has nobody to click. In the
+first, with no `--geo`, the browser answered the request as a user who clicked **Block** would: **the failure callback ran with code 1,
 `PERMISSION_DENIED`**. In the second, `page --geo` granted the permission and supplied a position,
-the coordinates of Praça da Sé in São Paulo, so the success callback ran with them. A real device
-reports an `accuracy` in metres, larger indoors and from a laptop's Wi-Fi than from a phone's GPS; the
-lab's staged position claims 0.
+the approximate coordinates of Praça da Sé in São Paulo, so the success callback ran with them. A real device
+reports an `accuracy` in metres, larger indoors and from a laptop's Wi-Fi than from a phone's GPS; a
+position supplied by `--geo` claims 0.
 
 ## Writing it so it works for everybody
 

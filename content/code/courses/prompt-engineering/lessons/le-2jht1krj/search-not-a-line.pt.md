@@ -1,6 +1,6 @@
 ---
 title: Uma busca, não uma linha
-version: 1
+version: 2
 ---
 
 A cadeia de pensamento (lição 26) escreve um caminho da pergunta até a resposta. Se o primeiro
@@ -18,7 +18,77 @@ vez, para fazer 24. Ele combina bem com o método, porque todo estado intermedi�
 julgado. Depois de um passo sobram três números, e ou o 24 ainda pode ser alcançado a partir deles,
 ou não pode.
 
-O `tot` é um programa de verdade, impresso no `lab.sh`. **Um "pensamento" é um passo**: escolher
+O `tot` procura uma solução do jeito que o método procura, com um programa nos lugares onde
+ficaria um modelo: ele propõe todo passo e julga todo estado com exatidão. Salve-o como
+`~/pe/bin/tot` e torne-o executável:
+
+```python
+#!/usr/bin/env python3
+"""tot A B C D [--breadth B]: the Game of 24 as a tree of thoughts.
+
+Each "thought" is one step: pick two of the numbers left, combine them with
++ - * or /, and put the result back. Every possible step is PROPOSED; each new
+state is then EVALUATED as sure (24 can still be reached from it), or
+impossible; only the best BREADTH states are kept for the next level.
+
+In the method's paper a model writes the proposals and judges the states.
+Here a program does both, exactly, so the search itself can be watched.
+"""
+import itertools
+import sys
+from fractions import Fraction as F
+
+args = sys.argv[1:]
+breadth = 3
+if "--breadth" in args:
+    i = args.index("--breadth"); breadth = int(args[i + 1]); del args[i : i + 2]
+start = [F(int(x)) for x in args]
+
+
+def show(x):
+    return str(x.numerator) if x.denominator == 1 else "%d/%d" % (x.numerator, x.denominator)
+
+
+def steps(nums):
+    for i, j in itertools.permutations(range(len(nums)), 2):
+        a, b = nums[i], nums[j]
+        rest = [n for k, n in enumerate(nums) if k not in (i, j)]
+        for op, v in (("+", a + b), ("-", a - b), ("*", a * b), ("/", a / b if b else None)):
+            if v is None or (op in "+*" and i > j):
+                continue
+            yield "%s %s %s = %s" % (show(a), op, show(b), show(v)), rest + [v]
+
+
+def reachable(nums):
+    if len(nums) == 1:
+        return nums[0] == 24
+    return any(reachable(n) for _, n in steps(nums))
+
+
+frontier = [([], start)]
+level = 0
+while frontier and len(frontier[0][1]) > 1:
+    level += 1
+    proposed = [(path + [s], n) for path, n in frontier for s, n in steps(n)]
+    seen, unique = set(), []
+    for path, n in proposed:
+        key = tuple(sorted(n))
+        if key not in seen:
+            seen.add(key)
+            unique.append((path, n))
+    sure = [(p, n) for p, n in unique if reachable(n)]
+    print("level %d: %d proposed, %d different, %d sure, %d impossible"
+          % (level, len(proposed), len(unique), len(sure), len(unique) - len(sure)))
+    frontier = sure[:breadth]
+    for path, n in frontier:
+        print("  keep  [%s]  after  %s" % (" ".join(show(x) for x in n), path[-1]))
+if frontier:
+    print("solved: " + "; ".join(frontier[0][0]))
+else:
+    print("no state left: 24 cannot be made from %s" % " ".join(args))
+```
+
+**Um "pensamento" é um passo**: escolher
 dois dos números que sobram, combiná-los e devolver o resultado. A cada nível o `tot` propõe todo
 passo possível a partir de cada estado que manteve, julga cada estado novo como `sure` (o 24 ainda
 é alcançável) ou `impossible`, e fica com os `--breadth` melhores, três por padrão:
@@ -68,7 +138,7 @@ solved: 4 - 10 = -6; 9 - 13 = -4; -6 * -4 = 24
 ```
 
 Ela resolveu o quebra-cabeça com 60 propostas em vez de 102 (36 + 18 + 6 contra 36 + 54 + 12).
-Não foi sorte, e é a coisa mais importante a ler nesta captura: **o juiz do `tot` nunca erra.**
+Não foi sorte: **o juiz do `tot` nunca erra.**
 Ele decide `sure` tentando todas as combinações restantes, então um estado mantido sempre leva ao
 24, e um galho basta.
 

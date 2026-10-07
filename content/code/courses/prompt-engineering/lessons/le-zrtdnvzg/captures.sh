@@ -9,7 +9,7 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # Nothing is staged beyond the workbench lab.sh builds. tok is the real
-# tokenizer printed there; no model is involved.
+# tokenizer, shown whole in lesson 3; no model is involved.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail

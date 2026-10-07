@@ -1,6 +1,6 @@
 ---
 title: Redirection, and why the order of `2>&1` matters
-version: 1
+version: 2
 ---
 
 Six operators, and you will use four of them daily.
@@ -71,6 +71,7 @@ app.log
 app.log.1
 empty.log
 error.log
+today.log
 ```
 
 `2>&1` reads as **"make descriptor 2 a copy of descriptor 1"**, which is lesson 6 section 13's

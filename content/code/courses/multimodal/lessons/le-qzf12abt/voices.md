@@ -1,6 +1,6 @@
 ---
 title: Choosing a voice
-version: 1
+version: 2
 ---
 
 The lab has three Piper voices: **lessac**, American English; **alan**, British English; and **faber**, Brazilian Portuguese. The same short message in each:
@@ -27,9 +27,9 @@ print(f"{out}: {seconds:.2f} s of audio at {audio.sample_rate} Hz, made in {took
 
 ```
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped. It should arrive on Thursday." lessac.wav
-lessac.wav: 2.76 s of audio at 22050 Hz, made in 0.22 s
+lessac.wav: 2.76 s of audio at 22050 Hz, made in 0.26 s
 ana@lab:~/mm$ python say.py en_GB-alan-medium "Your order has shipped. It should arrive on Thursday." alan.wav
-alan.wav: 3.47 s of audio at 22050 Hz, made in 0.34 s
+alan.wav: 3.47 s of audio at 22050 Hz, made in 0.21 s
 ana@lab:~/mm$ python say.py pt_BR-faber-medium "Seu pedido foi enviado. Deve chegar na quinta-feira." faber.wav
 faber.wav: 2.82 s of audio at 22050 Hz, made in 0.32 s
 ana@lab:~/mm$ grep -E "Language|Samplerate|URL|License" /opt/multimodal/share/vits-piper-en_US-lessac-medium/MODEL_CARD
@@ -39,7 +39,7 @@ ana@lab:~/mm$ grep -E "Language|Samplerate|URL|License" /opt/multimodal/share/vi
 * License: https://www.cstr.ed.ac.uk/projects/blizzard/2013/lessac_blizzard2013/license.html
 ```
 
-All three produce **22,050 samples a second**, which is more than a telephone carries (lesson 5) and less than music is recorded at; it is a common choice for speech. All three made their audio far faster than it plays: lessac made 2.76 seconds of speech in 0.48 seconds, on four ordinary processor cores and no graphics card. The *alan* voice took 3.47 seconds for the same words, a quarter longer: voices differ in pace as people do, and a phone menu built for one will run long with another.
+All three produce **22,050 samples a second**, which is more than a telephone carries (lesson 5) and less than music is recorded at; it is a common choice for speech. All three made their audio far faster than it plays: lessac made 2.76 seconds of speech in 0.26 seconds, on four ordinary processor cores and no graphics card. The *alan* voice took 3.47 seconds for the same words, a quarter longer: voices differ in pace as people do, and a phone menu built for one will run long with another.
 
 ## What to look at when choosing
 

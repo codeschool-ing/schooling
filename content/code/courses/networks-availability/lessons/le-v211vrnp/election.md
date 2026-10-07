@@ -4,7 +4,14 @@ version: 1
 ---
 
 Both routers were started with `state BACKUP`, `hq2` about a second before `hq`, and left to sort
-themselves out. A few seconds later, one of them holds two addresses and the other holds one:
+themselves out. keepalived runs in the background, with its log in each router's `/run/keepalived.log`;
+type this on `hq2`, then on `hq`:
+
+```sh
+sudo sh -c 'setsid keepalived -n -l -f /etc/keepalived/keepalived.conf -p /run/keepalived.pid -r /run/vrrp.pid > /run/keepalived.log 2>&1 &'
+```
+
+A few seconds later, one of them holds two addresses and the other holds one:
 
 ```
 ana@hq:~$ ip -br addr show eth0

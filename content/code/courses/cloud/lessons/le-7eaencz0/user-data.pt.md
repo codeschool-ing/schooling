@@ -1,6 +1,6 @@
 ---
 title: "User data: instruções para o primeiro boot"
-version: 1
+version: 2
 ---
 
 **User data é um texto que você entrega ao provedor ao lançar uma instância.** O provedor o guarda, e
@@ -32,14 +32,20 @@ segue em frente**, então uma chave com erro de grafia é pulada e a instância 
 a chave servia. Se a chave era a que instala a sua chave SSH, você está trancado fora de uma máquina
 cujo log diria por quê.
 
-O cloud-init consegue conferir um arquivo contra o schema dele sem dar boot em nada. Ele não é
-publicado no PyPI, então rodou aqui a partir do próprio código-fonte, versão 26.2, no laptop; **nada
-deu boot, em nuvem nenhuma**:
+O cloud-init consegue conferir um arquivo contra o schema dele sem dar boot em nada, e a aula 1
+instalou a versão 26.2 dele, a partir do próprio código-fonte, exatamente para isso. Copie o exemplo
+acima com o botão dele e salve como `web.yaml` em `~/cloud`. O `sed` abaixo faz dele o `typo.yaml`, o
+mesmo arquivo com uma palavra trocada; **nada dá boot, em nuvem nenhuma**:
 
 ```
+ana@laptop:~/cloud$ sed 's/ssh_authorized_keys/ssh_authorised_keys/' web.yaml > typo.yaml
 ana@laptop:~/cloud$ cloud-init schema -c web.yaml
+2026-10-07 10:55:03,190 - log_util.py[WARNING]: Getting data from <class 'cloudinit.sources.DataSourceNone.DataSourceNone'> failed
+2026-10-07 10:55:03,190 - schema.py[WARNING]: datasource not detected, using default instance-data/user-data paths.
 Valid schema web.yaml
 ana@laptop:~/cloud$ cloud-init schema -c typo.yaml 2>&1 | cut -c1-120
+2026-10-07 10:55:03,542 - log_util.py[WARNING]: Getting data from <class 'cloudinit.sources.DataSourceNone.DataSourceNon
+2026-10-07 10:55:03,543 - schema.py[WARNING]: datasource not detected, using default instance-data/user-data paths.
 Error: Cloud config schema errors: users.1: Additional properties are not allowed ('ssh_authorised_keys' was unexpected)
 
 Error: Invalid schema: user-data
@@ -47,7 +53,12 @@ Error: Invalid schema: user-data
 Invalid user-data typo.yaml
 ```
 
-O primeiro arquivo é o de cima. O segundo é o mesmo arquivo com uma palavra escrita à moda britânica,
+As duas linhas `WARNING` vêm antes de toda resposta, e não são sobre o seu arquivo. O cloud-init
+espera estar rodando numa instância, e procura primeiro a fonte de dados, o serviço de metadados do
+provedor; num laptop não há nenhum, então ele avisa e confere o arquivo sozinho. As respostas são as
+linhas depois delas.
+
+O primeiro arquivo é o de cima. O segundo tem a tal palavra escrita à moda britânica,
 `ssh_authorised_keys`, e o schema a recusa: essa chave não existe, e a que existe se escreve com *z*.
 A mensagem foi cortada em 120 caracteres pelo comando, que é onde termina a parte que vale ler. Num
 boot de verdade o mesmo erro seria um aviso no log da instância, e a máquina subiria sem a chave.

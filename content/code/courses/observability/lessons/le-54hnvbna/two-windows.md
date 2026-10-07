@@ -1,6 +1,6 @@
 ---
 title: Two windows at once
-version: 1
+version: 2
 ---
 
 A burn rate needs a window, and every window is a compromise. **A long window is slow to notice and
@@ -14,7 +14,38 @@ production the fast page uses one hour and five minutes; the lab uses five minut
 lesson can watch it work. The shop has been buying for half an hour, so every window holds real
 traffic.
 
+To have the same half hour, start the lab again from nothing, set the customers going for seventy
+minutes, and cause a single failed charge right away. The last part of this section says why that
+one matters:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 4200
+sleep 20
+echo '{"fail_every": 50}' > faults/payments.json
+sleep 12
+rm faults/payments.json
+```
+
+Then save the three files this lesson writes, which the sections after this one explain:
+`prometheus/rules/burn.yml` from *Writing the rule*, and `alertmanager/routes.yml` and
+`compose.override.yaml` from *Routing*. Load them, and let the shop buy for thirty minutes:
+
+```sh
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+sleep 1800
+```
+
+
 First, a blip. For forty seconds, payments fails one charge in four. Five seconds after it stops:
+
+```sh
+echo '{"fail_every": 4}' > faults/payments.json
+sleep 40
+rm faults/payments.json
+sleep 5
+```
+
 
 ```
 ana@obs:~/shop$ ./promq '{__name__=~"checkout:burn_rate:.*"}'
@@ -34,7 +65,15 @@ ana@obs:~/shop$ curl -s localhost:9093/api/v2/alerts | jq -c '.[] | {alertname: 
 **No alert.** The short window alone would have woken somebody for forty seconds of trouble that had
 already ended. The long one says the damage was small, and the rule needs both.
 
-Then a real failure: one charge in ten fails, and stays failing. Four and a half minutes later:
+Then, two minutes later, a real failure: one charge in ten fails, and stays failing. Four and a half
+minutes later:
+
+```sh
+sleep 120
+echo '{"fail_every": 10}' > faults/payments.json
+sleep 270
+```
+
 
 ```
 ana@obs:~/shop$ ./promq '{__name__=~"checkout:burn_rate:.*"}'
@@ -72,9 +111,9 @@ That is **flapping**, and it happens whenever the real rate sits close to a thre
 a short `for:` on the fast rule, a minute or two. It delays the page a little and stops a single dip
 from resolving it.
 
-One trap is worth knowing, because the lab fell into it while this lesson was written. **A counter
+One trap is worth knowing, because this lesson fell into it while it was being written. **A counter
 series that does not exist yet cannot show a rate.** The storefront creates its `code="502"` counter
 on the first failed checkout, and `rate()` needs two samples of a series to see it grow. A blip that is
-the first failure ever can therefore pass almost unseen by every window. The lab avoids it by staging
-one failed charge thirty minutes earlier; in code, the fix is to create the series for the codes you
+the first failure ever can therefore pass almost unseen by every window. This lesson's set-up avoids it
+with the one failed charge it causes thirty minutes earlier; in code, the fix is to create the series for the codes you
 expect at zero, when the service starts.

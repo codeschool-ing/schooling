@@ -1,6 +1,6 @@
 ---
 title: No match, two matches, and an empty list
-version: 1
+version: 2
 ---
 
 A resource block that fails stops at the apply. **A data source that fails stops the plan**, and the
@@ -8,8 +8,21 @@ whole plan with it, because nothing that refers to the answer can be worked out 
 are three ways a lookup can go wrong, and only two of them make any noise.
 
 **No match.** The VPC Ana asked for does not exist, because its tag is `shop` and not `shop-prod`. A
-second directory, `~/shop/probe`, holds small configurations for trying this out, and the first asks
-for the wrong name:
+second directory, `~/shop/probe`, holds small configurations for trying this out. Its `versions.tf`
+stays the same throughout:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+```
+
+The first `main.tf` asks for the wrong name:
 
 ```hcl
 provider "aws" {
@@ -41,7 +54,8 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 **Two matches, for a data source that returns one.** A singular data source (`aws_vpc`, `aws_ami`,
 `aws_subnet`) must find exactly one thing, and refuses to choose between two. Ask for every
-`shop-web-*` image without `most_recent`, now that the image team has published two:
+`shop-web-*` image without `most_recent`, now that the image team has published two, in a new
+`main.tf`:
 
 ```hcl
 provider "aws" {
@@ -120,7 +134,14 @@ exactly the kind of mistake that applies quietly. When an empty list is wrong, s
 `precondition` or a `check` block from lesson 3 can refuse it with a message of your own.
 
 **The match that breaks later** is the one that hurts, because the configuration did not change. The
-network team builds a staging copy of the network and copies the tags along with everything else:
+network team builds a staging copy of the network and copies the tags along with everything else.
+Playing their part once more, from any directory:
+
+```sh
+aws ec2 create-vpc --cidr-block 10.30.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=shop},{Key=Environment,Value=staging},{Key=Owner,Value=network}]'
+```
+
+Now two VPCs answer to the tag:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].[CidrBlock,Tags[?Key==\`Environment\`]|[0].Value]" --output text
@@ -160,7 +181,8 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 Her lookup was correct on the day she wrote it. **A data source's query is a contract with whoever
 owns the thing it looks up**, and the contract was never written down: "there is one VPC tagged
-`shop`" was true by accident. The fix is to ask for what she means, the production network:
+`shop`" was true by accident. The fix is to ask for what she means, the production network, in
+`network.tf`:
 
 ```hcl
 data "aws_vpc" "shop" {

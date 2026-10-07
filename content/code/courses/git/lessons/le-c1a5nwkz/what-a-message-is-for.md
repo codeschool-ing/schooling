@@ -1,9 +1,10 @@
 ---
 title: What a message is for
-version: 1
+version: 2
 ---
 
-Here is a week of work, messaged the way people do when nobody asks them not to:
+Here is a week of work, messaged the way people do when nobody asks them not to. You do not need to
+make this one; it is nine commits of nothing in particular, and the point is how the log reads:
 
 ```
 ana@vm:~/before$ git log --oneline
@@ -18,7 +19,12 @@ b34fabb asdf
 ec3275a first
 ```
 
-And the same week of the bakery's site as this course has kept it:
+And the same week of the bakery's site as this course has kept it, in a fresh copy:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+```
+
 
 ```
 ana@vm:~/site$ git log --oneline
@@ -53,7 +59,16 @@ has to open the commit to find out.
 ## The body
 
 Leave one blank line after the first line and write as much as the change needs. **The body is for
-why**, since the diff already shows what:
+why**, since the diff already shows what. The change here is the winter opening time:
+
+```bash
+sed -i 's/half past five/half past six/' index.html
+```
+
+Commit it with `git commit -a` and no `-m`. nano opens with an empty message: type the three
+paragraphs that `git log` prints below, save with Ctrl+O and leave with Ctrl+X, and the commit is
+made with what you wrote.
+
 
 ```
 ana@vm:~/site$ git log -1

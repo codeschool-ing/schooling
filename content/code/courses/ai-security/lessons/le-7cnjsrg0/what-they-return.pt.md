@@ -1,6 +1,6 @@
 ---
 title: O que um endpoint de moderação responde, e onde ele entra
-version: 1
+version: 2
 ---
 
 Um endpoint de moderação costuma ser imaginado como um sim ou não: você manda uma mensagem e ele diz
@@ -9,11 +9,11 @@ se ela é aceitável. **O que ele devolve é um score por categoria**, às vezes
 decisão que o seu código toma a partir desses scores, com uma linha que você escolheu, e a linha é
 onde está quase todo o trabalho desta aula.
 
-Todo fornecedor dessa classe de produto responde mais ou menos nesse formato. A versão do laboratório
-é um substituto, e **não é um modelo de moderação**: é uma lista de palavras e expressões em inglês por
-categoria, cada uma com um peso que o curso escolheu, combinadas num score que se comporta como um. O
-cabeçalho dele em `guardlab/moderation.py` lista os erros que ele comete de propósito. Ele responde
-assim:
+Todo fornecedor dessa classe de produto responde mais ou menos nesse formato. O deste curso é o
+`moderation.py`, que a aula 5 lhe deu junto com o `guard moderate`. **Ele é um substituto, não um modelo
+de moderação**: uma lista de palavras e expressões em inglês por categoria, cada uma com um peso que o
+curso escolheu, combinadas num score que se comporta como um. O comentário no topo dele lista os erros
+que ele comete de propósito. Ele responde assim:
 
 ```
 ana@lab:~/guard$ guard moderate 'Shut up, you clown'

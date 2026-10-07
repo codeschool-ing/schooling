@@ -1,11 +1,34 @@
 ---
 title: Reading the change
-version: 1
+version: 2
 ---
 
 Bruno's pull request is #31, for ticket #30: *customers want to choose when to pick up their order*. The
 hosting site shows the diff, and for a small change that is enough. For anything you want to **run**, bring
-the branch to your own machine:
+the branch to your own machine.
+
+On yours, there is no Bruno yet. This block makes everything the review needs, from a fresh week: the
+shared copy of lesson 7, Bruno's own clone of it in `~/bruno/site` with his name set in that clone,
+his branch with two commits, and the push. The last line brings you back to Ana's copy:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/bruno && bash ~/make-site.sh && cd ~/site
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main
+git clone -q ~/remotes/site.git ~/bruno/site && cd ~/bruno/site
+git config user.name 'Bruno Lima' && git config user.email bruno@example.com
+git switch -q -c 30-pickup-times
+printf '<h1>Order ahead</h1>\n<form class="order">\n  <label>Pickup time <input name="pickup" type="time"></label>\n  <button>Order</button>\n</form>\n' > order.html
+printf '<p><a href="order.html">Order ahead</a></p>\n' >> index.html
+git add -A && git commit -qm 'Let customers choose a pickup time' -m 'Refs #30'
+sed -i 's/darkorange/saddlebrown/' style.css && printf '.order label { display: block; }\n' >> style.css
+git commit -qam 'Style the order form' -m 'Refs #30'
+git push -q -u origin 30-pickup-times
+cd ~/site
+```
+
+Then Ana's side:
 
 ```
 ana@vm:~/site$ git fetch

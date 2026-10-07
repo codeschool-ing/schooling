@@ -39,8 +39,9 @@ atrás do que esperar.
 
 ## Um upload muda tudo
 
-Agora o laptop faz um upload para `web1`, com um `iperf3` iniciado em segundo plano e não mostrado, e dois
-segundos depois o mesmo ping roda de novo:
+Agora o laptop faz um upload para `web1`, com `iperf3 -c 192.0.2.21 -t 10` num segundo shell de `laptop`,
+que manda o mais rápido que pode durante dez segundos, e dois segundos depois o mesmo ping roda de novo
+no primeiro:
 
 ```
 ana@laptop:~$ ping -c 5 -q 192.0.2.21 | tail -n 1

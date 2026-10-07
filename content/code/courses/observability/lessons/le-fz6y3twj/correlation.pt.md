@@ -1,12 +1,13 @@
 ---
 title: Correlação: o id do rastro em toda linha
-version: 1
+version: 2
 ---
 
 A aula 1 achou as linhas de log de um checkout lento em três serviços buscando pelo id do rastro.
 Isso funciona porque o formatador acrescenta os ids do span corrente a toda linha escrita enquanto um
 span é o corrente, o que num serviço que atende requisições é quase toda linha. **Quase**, e as
-exceções valem ser conhecidas. A primeira linha do mailer depois de um reset:
+exceções valem ser conhecidas. A primeira linha do mailer depois de o laboratório
+ser iniciado de novo do zero:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix mailer | head -1 | jq -c .

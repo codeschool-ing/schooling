@@ -7,26 +7,26 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/guard with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/guard$,
-# followed by what it printed.
+# It rebuilds ~/guard with lab.sh reset under its own HOME (/home/ana), which
+# builds it from the fences of the lessons themselves: modeval.py and
+# data/forum.jsonl here, moderation.py and moderate.py from lesson 5, exactly
+# as the lessons print them. It prints each command after a prompt,
+# ana@lab:~/guard$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/guard, built by lab.sh. The
-# scores come from guardlab/moderation.py, which is NOT A MODERATION MODEL: it
-# is a list of English words with weights the course chose, answering in the
-# shape a moderation endpoint answers in. The sixty messages in
-# data/forum.jsonl and the labels beside them were WRITTEN BY THE COURSE; a
-# person labelling real messages would disagree with some of them, and lesson
-# 16 says so.
+# WRITTEN BY THE COURSE: the sixty forum messages and their labels, and the
+# stand-in moderation word list, which is not a moderation model. No model is
+# called in this lesson.
 #
-# Recorded with Python 3.11, TZ=America/Sao_Paulo.
+# Recorded with Python 3.12.3 (Ubuntu 24.04's), TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/ai-security}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset >/dev/null
+export HOME=${LAB_HOME:-/home/ana}
+mkdir -p "$HOME/.py"
+ln -sf "$(command -v python3.12)" "$HOME/.py/python3"
+export PATH=$HOME/.py:$PATH
+GUARD_HOME=$HOME bash "$here/../../lab.sh" reset >/dev/null || exit 1
 cd "$HOME/guard"
 export PATH=$HOME/guard/bin:$PATH
 on() { printf 'ana@lab:~/guard$ %s\n' "$*"; bash -c "$*" 2>&1; }
@@ -42,7 +42,11 @@ block measuring
 on 'head -3 data/forum.jsonl'
 on 'guard modeval data/forum.jsonl --category harassment --threshold 0.5 --show'
 
-block thresholds
+block spam
 on 'guard modeval data/forum.jsonl --category spam --sweep'
+
+block harassment
 on 'guard modeval data/forum.jsonl --category harassment --sweep'
+
+block lanes
 on 'guard modeval data/forum.jsonl --category harassment --review 0.5 --block 0.85 --show'

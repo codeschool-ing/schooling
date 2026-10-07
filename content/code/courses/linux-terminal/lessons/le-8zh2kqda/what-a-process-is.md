@@ -1,6 +1,6 @@
 ---
 title: A program is a file; a process is a file that is happening
-version: 2
+version: 3
 ---
 
 `/usr/bin/sleep` is a file. It sits on a disk, it has a size and an owner, and it does nothing —
@@ -15,6 +15,75 @@ ana@vm:~$ ps -p $$ -o pid,ppid,user,stat,etime,cmd
 **That is a process.** A number, a parent, an owner, a state, an age, and the command it came
 from. The file on the disk is unchanged and could be running a hundred times over.
 
+## The programs this lesson runs
+
+This lesson starts, watches and stops small programs, and they live in lesson 3's `~/work`. Each
+one is shown again, with `cat`, in the section that explains it; make them all now by copying this
+block into the terminal:
+
+```sh
+cd ~/work
+cat > runaway.sh <<'END'
+#!/bin/bash
+# a loop with nothing in it: the shape of a bug that eats a core
+while true; do :; done
+END
+cat > tree-demo.sh <<'END'
+#!/bin/bash
+# three levels, so pstree has something to draw
+sleep 300 &
+bash -c 'sleep 300 & sleep 300' &
+sleep 300
+END
+cat > polite.sh <<'END'
+#!/bin/bash
+trap 'echo "caught TERM, cleaning up"; exit 0' TERM
+trap 'echo "caught INT, staying"' INT
+echo "running as $$"
+while true; do sleep 1; done
+END
+cat > group-demo.sh <<'END'
+#!/bin/bash
+# a parent and two children: killing the parent alone leaves the children
+sleep 250 &
+sleep 250 &
+sleep 250
+END
+cat > stubborn.sh <<'END'
+#!/bin/bash
+# ignores TERM entirely: the shape of a program that will not shut down
+trap '' TERM
+echo "running as $$, ignoring TERM"
+while true; do sleep 1; done
+END
+cat > zombie.py <<'END'
+#!/usr/bin/env python3
+"""Fork a child, let it exit, and never wait for it. The kernel keeps the
+child's entry in the process table because nobody has collected its status."""
+import os, time
+
+if os.fork() == 0:
+    os._exit(0)          # the child is finished immediately
+time.sleep(60)           # the parent does not call wait()
+END
+cat > sleeper.sh <<'END'
+#!/bin/bash
+# sleeps, a second at a time, until it is stopped
+while true; do sleep 1; done
+END
+cat > watcher.sh <<'END'
+#!/bin/bash
+# stands in for a program that keeps an eye on something: it waits, and prints nothing
+while true; do sleep 1; done
+END
+chmod +x runaway.sh tree-demo.sh polite.sh group-demo.sh stubborn.sh zombie.py sleeper.sh watcher.sh
+```
+
+None of them does anything useful, which is the point: each is the smallest program that behaves
+the way a section needs. **Your process numbers will differ from the ones printed here** — a PID is
+whatever number was free — so wherever a command below names one, use yours. And when a section
+leaves something running, `jobs` lists it and `kill %1` stops it, which section 09 explains.
+
 ## What a process owns
 
 | | |
@@ -28,7 +97,9 @@ from. The file on the disk is unchanged and could be running a hundred times ove
 | **an environment** | variables it was started with, and passes to its children |
 | **a state** | running, sleeping, stopped — section 04 |
 
-Every one of those is readable, from outside, without a special tool:
+Every one of those is readable, from outside, without a special tool. `$FDPID` below is a `tail`
+that section 13 starts; to follow along here, start one first, with
+`tail -f logs/app.log > /dev/null & FDPID=$!`:
 
 ```
 ana@vm:~/work$ ls -l /proc/$FDPID/cwd /proc/$FDPID/exe
@@ -61,6 +132,8 @@ That is the command at the top of this section. `$$` is your own shell's PID, ex
 and you will use it constantly.
 
 ## A process belongs to an account, and that is where lesson 4 lands
+
+With `./runaway.sh &` running in `~/work` — section 07 says what it is:
 
 ```
 ana@vm:~/work$ ps -eo pid,ppid,user,%cpu,%mem,etime,comm --sort=-%cpu | head -5

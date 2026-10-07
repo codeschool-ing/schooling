@@ -1,6 +1,6 @@
 ---
 title: Reading a refusal
-version: 2
+version: 3
 ---
 
 A terminal tells you more when it refuses than any interface you have used tells you when it
@@ -32,6 +32,22 @@ bash: celar: command not found
 
 `bash:` is the speaker — the shell, not a program, because no program was reached. It searched and
 found nothing by that name. A typo, or something that is not installed.
+
+**On Ubuntu the same typo gets a longer answer.** Bash hands a name it cannot find to a helper,
+`command-not-found`, which looks it up among the packages Ubuntu offers and suggests one:
+
+```
+ana@vm:~$ celar
+Command 'celar' not found, did you mean:
+  command 'clear' from deb ncurses-bin (6.4+20240113-1ubuntu2.1)
+Try: sudo apt install <deb name>
+ana@vm:~$ echo $?
+127
+```
+
+The news is the same, nothing by that name was found, and the `127` says it ended the same way too
+(the number is this section's last part). Most transcripts in this course were captured on a machine without the helper, so they show
+bash's single line; on yours, a name that is close to a real one gets this longer answer.
 
 **Permission denied.**
 

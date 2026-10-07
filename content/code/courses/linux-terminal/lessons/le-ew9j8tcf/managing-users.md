@@ -1,6 +1,6 @@
 ---
 title: Making, changing and removing an account
-version: 2
+version: 3
 ---
 
 There are two commands for creating a user and they are not the same tool.
@@ -31,16 +31,18 @@ otherwise.
 `useradd` created a line. It did not create anything else, and it did not warn you.
 
 An account whose home is missing still logs in, and lands in `/` with an error — one of the more
-confusing first experiences a new user can be given. Say what you want:
+confusing first experiences a new user can be given. Remove it with `userdel`, and make it again,
+saying what you want:
 
 ```
+root@vm:~# userdel dora
 root@vm:~# useradd -m -s /bin/bash -c 'Dora Silva' dora
 root@vm:~# getent passwd dora
 dora:x:1005:1008:Dora Silva:/home/dora:/bin/bash
 root@vm:~# ls -la /home/dora
 total 20
-drwxr-x---  2 dora dora 4096 Sep 14 23:22 .
-drwxr-xr-x 10 root root 4096 Sep 14 23:22 ..
+drwxr-x---  2 dora dora 4096 Oct  7 11:36 .
+drwxr-xr-x 10 root root 4096 Oct  7 11:36 ..
 -rw-r--r--  1 dora dora  220 Mar 31  2024 .bash_logout
 -rw-r--r--  1 dora dora 3771 Mar 31  2024 .bashrc
 -rw-r--r--  1 dora dora  807 Mar 31  2024 .profile
@@ -60,8 +62,8 @@ drwxr-xr-x 10 root root 4096 Sep 14 23:22 ..
 ```
 root@vm:~# ls -la /etc/skel
 total 20
-drwxr-xr-x  2 root root 4096 Feb 17  2026 .
-drwxr-xr-x 75 root root 4096 Sep 14 23:22 ..
+drwxr-xr-x  2 root root 4096 Sep 17 02:20 .
+drwxr-xr-x 83 root root 4096 Oct  7 11:36 ..
 -rw-r--r--  1 root root  220 Mar 31  2024 .bash_logout
 -rw-r--r--  1 root root 3771 Mar 31  2024 .bashrc
 -rw-r--r--  1 root root  807 Mar 31  2024 .profile
@@ -101,7 +103,7 @@ root@vm:~# usermod -l dorasilva dora
 root@vm:~# getent passwd dorasilva
 dorasilva:x:1005:1008:Dora Silva:/home/dora:/usr/sbin/nologin
 root@vm:~# ls -ld /home/dora
-drwxr-x--- 2 dorasilva dora 4096 Sep 14 23:22 /home/dora
+drwxr-x--- 2 dorasilva dora 4096 Oct  7 11:36 /home/dora
 ```
 
 The name changed. **The home directory is still `/home/dora`**, and so is the record pointing at
@@ -115,7 +117,7 @@ oldname`, and the pieces are separate because they can be.
 root@vm:~# userdel dorasilva
 root@vm:~# getent passwd dorasilva
 root@vm:~# ls -ld /home/dora
-drwxr-x--- 2 1005 dora 4096 Sep 14 23:22 /home/dora
+drwxr-x--- 2 1005 dora 4096 Oct  7 11:36 /home/dora
 ```
 
 The account is gone — `getent` prints nothing. **The home directory is still there, and `ls` now

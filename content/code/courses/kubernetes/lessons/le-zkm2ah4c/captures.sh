@@ -9,9 +9,9 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed:
-#   - the cluster, from lab/cluster-ports.yaml, so the laptop's 8080 reaches
+#   - the cluster, from lesson 8's ports.yaml, so the laptop's 8080 reaches
 #     the controller's NodePort.
-#   - the controller itself: Traefik v3.6 from lab/traefik.yaml, and the
+#   - the controller itself: Traefik v3.6 from the traefik.yaml the lesson shows, and the
 #     Gateway API's standard CRDs at v1.4.0, the version that Traefik release
 #     is built against (lab.sh copies them from the project's Go module).
 #     Installing a controller is a chart or a manifest from its vendor; the
@@ -24,42 +24,14 @@
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
-fresh "$COURSE/lab/cluster-ports.yaml"
+shown "$COURSE/lessons/le-nf7qt63y/the-manifest.md" ports.yaml >/tmp/ports.yaml || exit 1
+fresh /tmp/ports.yaml
 lab load traefik:v3.6 >/dev/null 2>&1
+shown "$COURSE/lessons/le-zkm2ah4c/ingress.md" traefik.yaml >/tmp/traefik.yaml || exit 1
 quiet 'kubectl apply -f /opt/k8s/manifests/gateway-api-v1.4.0/'
-quiet 'kubectl apply -f "$COURSE/lab/traefik.yaml"'
+quiet 'kubectl apply -f /tmp/traefik.yaml'
 quiet 'kubectl -n traefik rollout status deployment/traefik --timeout=120s'
-cat >/tmp/apps.yaml <<'CODE'
-apiVersion: apps/v1
-kind: Deployment
-metadata: {name: shop}
-spec:
-  replicas: 2
-  selector: {matchLabels: {app: shop}}
-  template:
-    metadata: {labels: {app: shop}}
-    spec: {containers: [{name: shop, image: "shop:1.0"}]}
----
-apiVersion: v1
-kind: Service
-metadata: {name: shop}
-spec: {selector: {app: shop}, ports: [{port: 80, targetPort: 8080}]}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata: {name: admin}
-spec:
-  replicas: 1
-  selector: {matchLabels: {app: admin}}
-  template:
-    metadata: {labels: {app: admin}}
-    spec: {containers: [{name: admin, image: "shop:1.0", env: [{name: GREETING, value: "admin"}]}]}
----
-apiVersion: v1
-kind: Service
-metadata: {name: admin}
-spec: {selector: {app: admin}, ports: [{port: 80, targetPort: 8080}]}
-CODE
+shown "$COURSE/lessons/le-zkm2ah4c/ingress.md" apps.yaml >/tmp/apps.yaml || exit 1
 quiet 'kubectl apply -f /tmp/apps.yaml'
 quiet 'kubectl rollout status deployment/shop --timeout=120s'
 quiet 'kubectl rollout status deployment/admin --timeout=120s'

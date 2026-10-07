@@ -8,13 +8,12 @@
 #
 #   bash captures.sh           # needs uv, and the network the first time
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# THE STUDENT GETS EVERY FILE FROM THE LESSON. mutate.py and the two
+# throwaway test files of "no-asserts" and "gaming" are shown whole in their
+# sections and written here FROM those sections' own blocks (`lab.sh fence`),
+# so the program run is the program shown. What is STAGED rather than typed:
 #   - the project, rebuilt by ../../lab.sh at step 7 in /home/ana/shipquote,
 #     with its virtual environment;
-#   - mutate.py, beside this script, copied into the project; it is shown in
-#     full in the section "mutation";
-#   - in "no-asserts" and "gaming", the test files shown in those sections,
-#     written here and deleted afterwards;
 #   - in "diff-coverage", the surcharge shown in the section, written into
 #     shipquote/quote.py with a small Python edit and undone with git checkout;
 #   - in "exclusions", one line added to pyproject.toml, undone the same way.
@@ -49,22 +48,7 @@ run 'coverage run -m pytest -q tests/test_dispatch.py -k "after_two or friday"'
 run 'coverage report -m --include=shipquote/dispatch.py'
 
 block no-asserts
-cat > tests/test_money_runs.py <<'PY'
-from shipquote.money import brl, split
-
-
-def test_brl_runs():
-    brl(123456)
-    brl(1205)
-
-
-def test_split_runs():
-    split(10000, 3)
-    try:
-        split(10000, 0)
-    except ValueError:
-        pass
-PY
+bash "$LAB" fence "$HERE/what-it-misses.md" tests/test_money_runs.py > tests/test_money_runs.py || exit 1
 run 'coverage run -m pytest -q tests/test_money_runs.py'
 run 'coverage report -m --include=shipquote/money.py'
 sed -i 's/{centavos:02d}/{centavos}/' shipquote/money.py
@@ -73,7 +57,7 @@ git checkout -q shipquote/money.py
 rm tests/test_money_runs.py
 
 block mutation
-cp "$HERE/mutate.py" .
+bash "$LAB" fence "$HERE/mutation.md" mutate.py > mutate.py || exit 1
 run 'python mutate.py'
 rm mutate.py
 
@@ -82,25 +66,7 @@ run 'coverage run -m pytest -q > /dev/null; coverage report --fail-under=85 | ta
 run 'coverage report --fail-under=85 > /dev/null; echo "exit status $?"'
 
 block gaming
-cat > tests/test_touch_everything.py <<'PY'
-from unittest import mock
-
-from shipquote.carrier import CarrierClient
-from shipquote.mailer import SmtpMailer
-
-
-def test_the_client_can_be_used():
-    try:
-        CarrierClient("http://carrier.example", "t",
-                      opener=mock.MagicMock()).rate("01310100", 1)
-    except Exception:
-        pass
-
-
-def test_the_mailer_can_be_used():
-    with mock.patch("smtplib.SMTP"):
-        SmtpMailer("smtp.example").send("bia@example.org", "s", "b")
-PY
+bash "$LAB" fence "$HERE/thresholds.md" tests/test_touch_everything.py > tests/test_touch_everything.py || exit 1
 run 'coverage run -m pytest -q | tail -1; coverage report | tail -1'
 run 'coverage report --fail-under=85 > /dev/null; echo "exit status $?"'
 rm tests/test_touch_everything.py

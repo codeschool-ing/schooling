@@ -59,19 +59,19 @@ gives as 256 and 384, and the next section opens up what `encode` does with them
 
 The model itself is not tied to the library. Chroma, the vector database lesson 12 runs, ships
 all-MiniLM-L6-v2 exported to **ONNX**, a format that a small runtime called onnxruntime can execute
-without PyTorch. `lab.sh` downloaded that export from Chroma's own storage and checked it against
-the SHA-256 that Chroma's code carries, so these are the published weights and not a copy of
+without PyTorch. Lesson 1's `setup.sh` downloaded that export from Chroma's own storage and checked
+it against the SHA-256 that Chroma's code carries, so these are the published weights and not a copy of
 unknown origin:
 
 ```
 ana@lab:~/emb$ ls -l $MINILM_DIR
 total 89208
--rw-r--r-- 1 root root      650 Oct  5 13:23 config.json
--rw-r--r-- 1 root root 90387606 Oct  5 13:23 model.onnx
--rw-r--r-- 1 root root      125 Oct  5 13:23 special_tokens_map.json
--rw-r--r-- 1 root root   711661 Oct  5 13:23 tokenizer.json
--rw-r--r-- 1 root root      518 Oct  5 13:23 tokenizer_config.json
--rw-r--r-- 1 root root   231508 Oct  5 13:23 vocab.txt
+-rw-r--r-- 1 ana ana      650 Mar 30  2023 config.json
+-rw-r--r-- 1 ana ana 90387606 Mar 30  2023 model.onnx
+-rw-r--r-- 1 ana ana      125 Mar 30  2023 special_tokens_map.json
+-rw-r--r-- 1 ana ana   711661 Mar 30  2023 tokenizer.json
+-rw-r--r-- 1 ana ana      518 Mar 30  2023 tokenizer_config.json
+-rw-r--r-- 1 ana ana   231508 Mar 30  2023 vocab.txt
 ```
 
 `model.onnx` is the transformer, 90,387,606 bytes. The rest is the tokenizer and its settings.

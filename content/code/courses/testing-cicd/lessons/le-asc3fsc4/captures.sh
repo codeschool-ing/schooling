@@ -10,7 +10,10 @@
 #                              # uv, and the network the first time
 #
 # THE CI IN THIS LESSON IS THE LAB'S OWN, a git post-receive hook written by
-# `lab.sh ci` and shown in full in the section "what-ci-is". It runs on the
+# `lab.sh ci`, shown whole in the section "what-ci-is" with the commands that
+# make its bare repository; `../../lab.sh shown` fails this script before its
+# first block if the hook shown is not the hook written. The test files of
+# "untracked" and "flaky" are written from their sections' own blocks. It runs on the
 # same machine as Ana's clone, which a hosted CI does not; lesson 6 reads a
 # hosted one.
 #
@@ -34,6 +37,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 LAB=$HERE/../../lab.sh
 bash "$LAB" stage 7 >/dev/null && bash "$LAB" venv "$HOME/shipquote" >/dev/null 2>&1
 bash "$LAB" ci "$HOME/ci"
+bash "$LAB" shown "$HERE" - -clean-checkout -flaky || exit 1
 cd "$HOME/shipquote" || exit 1
 export PATH="$HOME/shipquote/.venv/bin:/root/.local/bin:$PATH"
 run() { printf 'ana@laptop:~/shipquote$ %s\n' "$*"; bash -c "$*" 2>&1; }
@@ -45,17 +49,7 @@ run 'git remote add origin ~/ci/shipquote.git'
 run 'git push -u origin main'
 
 block untracked
-cat > tests/test_carriers.py <<'PY'
-import csv
-from pathlib import Path
-
-CARRIERS = Path(__file__).parent / "data" / "carriers.csv"
-
-
-def test_every_carrier_has_a_positive_base_price():
-    for row in csv.DictReader(open(CARRIERS)):
-        assert int(row["base_cents"]) > 0, row["name"]
-PY
+bash "$LAB" fence "$HERE/clean-checkout.md" tests/test_carriers.py > tests/test_carriers.py || exit 1
 printf 'name,base_cents\nCorreios,1290\nJadlog,1450\n' > tests/data/carriers.csv
 git add tests/test_carriers.py
 commit 2026-10-01T10:15:00-03:00 'Check every carrier has a positive base price'
@@ -110,14 +104,7 @@ rm -rf /tmp/v1 /tmp/v2 /tmp/uv-cold
 unset UV_CACHE_DIR
 
 block flaky
-cat > tests/test_zones_seen.py <<'PY'
-from shipquote.quote import zone_of
-
-
-def test_the_zones_of_two_ceps():
-    seen = {zone_of(cep) for cep in ["01310-100", "20040-002"]}
-    assert list(seen) == ["SP", "SE"]
-PY
+bash "$LAB" fence "$HERE/flaky.md" tests/test_zones_seen.py > tests/test_zones_seen.py || exit 1
 run 'for i in 1 2 3 4 5 6 7 8 9 10; do python -m pytest -q tests/test_zones_seen.py | tail -1; done | sed "s/ in .*//" | sort | uniq -c'
 run 'for i in 1 2 3 4 5 6 7 8 9 10; do PYTHONHASHSEED=0 python -m pytest -q tests/test_zones_seen.py | tail -1; done | sed "s/ in .*//" | sort | uniq -c'
 rm tests/test_zones_seen.py

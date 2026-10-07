@@ -1,6 +1,6 @@
 ---
 title: Reading another configuration's outputs
-version: 1
+version: 2
 ---
 
 After the split the app finds its VPC with a data source that searches for the tag `Name = shop`.
@@ -27,7 +27,8 @@ vpc_id = "vpc-644904a24046c8bab"
 
 A data source of a special kind reads those values. It is not part of the AWS provider; it is
 built into Terraform, and it takes the same settings as a backend block, because what it does is
-read another configuration's state from wherever that state is kept:
+read another configuration's state from wherever that state is kept. Ana puts it in a file of
+its own in the app, `app/network.tf`:
 
 ```hcl
 data "terraform_remote_state" "network" {
@@ -101,6 +102,8 @@ ana@laptop:~/shop/app$ echo "data.terraform_remote_state.network.outputs" | terr
 }
 ```
 
+Ana commits the app as it now stands.
+
 The resources of the network state are not in that object. Their ids, the route tables, the
 subnets' every attribute: none of it can be referenced, only the three values the network chose to
 publish.
@@ -159,7 +162,8 @@ Planning failed. Terraform encountered an error while generating this plan.
 The plan fails before it can do harm, which is the good half. The bad half is that it fails for
 the wrong team, maybe weeks later. So an output is treated the way a function's signature is:
 adding one is free, while renaming or removing one is a change to announce, with the old name kept
-alongside the new until every reader has moved. The network team put `vpc_id` back.
+alongside the new until every reader has moved. The network team put `vpc_id` back, with
+`git checkout outputs.tf` and an apply in `~/shop/network`.
 
 ## What reading a state costs
 

@@ -36,7 +36,7 @@ ana@lab:~/lab$ od -An -tx1 -N48 referral.enc
  12 3c 90 4e 55 85 2f 1f 1e a8 43 4b 7e b7 0d b4
 ```
 
-Decrypting needs the same two inputs, the key and the vector (`-iv`, the subject of section 05 of
+Decrypting needs the same two inputs, the key and the vector (`-iv`, the subject of section 07 of
 this lesson). Given both, the letter comes back exactly:
 
 ```

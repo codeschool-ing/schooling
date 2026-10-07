@@ -1,11 +1,11 @@
 ---
 title: The postmortem of lesson 17's incident
-version: 1
+version: 2
 ---
 
 A postmortem has a shape, and keeping to it makes a team's reviews comparable and quick to read. Here
 is lesson 17's incident written up the way a team would, every time and number taken from that
-lesson's capture.
+lesson's transcripts.
 
 **Summary.** On 2 October, a release of payments made one charge in eight fail. Checkouts failed for
 about four minutes until the release was rolled back. The fast burn-rate alert paged three minutes

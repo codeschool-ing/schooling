@@ -1,10 +1,10 @@
 ---
 title: Trying again, carefully
-version: 1
+version: 2
 ---
 
 Some failures are temporary: a server that is restarting, or busy, answers **`503 Service
-Unavailable`** and expects to be asked again. The lab's `/api/flaky` fails its first two requests that
+Unavailable`** and expects to be asked again. `/api/flaky` in `api.mjs` fails its first two requests that
 way:
 
 ```html
@@ -60,5 +60,5 @@ So a retry loop needs three limits:
   an idempotency key the server uses to recognise a request it has already handled;
 - **how many times**: `attempts = 4` here, and then the error goes to the user, who deserves to know.
 
-`withRetries` has only the last of the three, which is enough for a `GET` in the lab and not for real
+`withRetries` has only the last of the three, which is enough for a `GET` against `api.mjs` and not for real
 code, where the first two decide whether retrying helps or harms.

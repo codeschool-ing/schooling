@@ -1,6 +1,6 @@
 ---
 title: Exemplars, from a metric to a trace
-version: 1
+version: 2
 ---
 
 Lesson 1 left one join for this lesson. A latency histogram says that some checkouts took between
@@ -30,8 +30,8 @@ duration, the shop's shared `web.py`:
 }
 ```
 
-The second is Prometheus, which drops exemplars unless a feature flag tells it to store them. The
-lab's Prometheus is started again with an override:
+The second is Prometheus, which drops exemplars unless a feature flag tells it to store them. That is the
+override saved at the start of this lesson:
 
 ```
 ana@obs:~/shop$ cat compose.override.yaml
@@ -80,3 +80,10 @@ written by hand, and it has ended by the time `after_request` measures the durat
 no current span to name. **An exemplar can only point at a span that is still open when the
 measurement is taken**. Automatic instrumentation in `orders` keeps Flask's span open around the
 whole request, which is why `orders` has them.
+
+Before the next lesson, take the fault and the override away:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d prometheus
+```

@@ -5,7 +5,8 @@ version: 1
 
 ## The name
 
-With the gateway fixed, the next fault arrives by name:
+With the gateway fixed, the next fault arrives by name. It is staged on `laptop` with
+`echo nameserver 192.0.2.54 | sudo tee /etc/resolv.conf`:
 
 ```
 ana@laptop:~$ curl -sS -m 10 http://www.example.com/
@@ -32,7 +33,7 @@ ana@laptop:~$ cat /etc/resolv.conf
 nameserver 192.0.2.54
 ```
 
-The lab's DNS server, `ns` at `192.0.2.53`, answers a ping. A plain `dig`, which asks whatever server the
+The network's DNS server, `ns` at `192.0.2.53`, answers a ping. A plain `dig`, which asks whatever server the
 laptop is configured with, **reports who it asked**: `192.0.2.54`, which never replied. The same question
 put to `192.0.2.53` with `@` gets `192.0.2.80`, the right answer. So the network is fine and DNS is
 fine, and the laptop is asking an address where nothing listens. `/etc/resolv.conf` says so in one line.
@@ -40,9 +41,12 @@ The fix is that line, or whatever writes it on that machine: a DHCP lease, Netwo
 systemd-resolved.
 
 The `grep` for `status` printed nothing, and that is information too. A server that answers, even to say
-a name does not exist, produces a status line; **no status line means no answer at all**.
+a name does not exist, produces a status line; **no status line means no answer at all**. The same `tee`
+with `192.0.2.53` puts the line back.
 
 ## The port
+
+Staged on the virtual machine with `sudo bash netlab.sh kill web1 nginx`:
 
 ```
 ana@laptop:~$ curl -sS http://192.0.2.21/
@@ -72,7 +76,8 @@ LISTEN 0      4096         0.0.0.0:5201      0.0.0.0:*
 ```
 
 The first listing has one listener, on port 5201, the `iperf3` server lesson 22 uses, and **nothing on
-80**: nginx had stopped. The second listing was taken after it was started again, off screen, and
+80**: nginx had stopped. The second listing was taken after it was started again, `sudo nginx -c /lab/web1/www/nginx.conf` on
+`web1`, and
 `0.0.0.0:80` is back. **A layer 4 question is settled on the server, not the client.** `ss -tln` lists
 what listens, and it takes a second.
 

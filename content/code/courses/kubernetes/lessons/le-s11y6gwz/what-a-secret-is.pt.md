@@ -6,7 +6,7 @@ version: 1
 **A crença mais comum sobre Secrets é que os valores são criptografados, porque parecem embaralhados.**
 Eles são codificados. O base64 escreve quaisquer bytes usando 64 caracteres imprimíveis, para que uma
 chave binária ou uma senha com caracteres estranhos caibam num campo JSON ou YAML; ele não tem chave e
-não esconde nada. A senha usada aqui é inventada para o laboratório e não abre nada:
+não esconde nada. A senha usada aqui é inventada para esta aula e não abre nada:
 
 ```
 ana@laptop:~/shop$ kubectl create secret generic db --from-literal=user=shop --from-literal=password=lab-only-7Hq2

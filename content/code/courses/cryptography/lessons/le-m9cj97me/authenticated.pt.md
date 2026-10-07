@@ -10,7 +10,7 @@ o resultado sem dizer uma palavra. Os modos que recusam se chamam **cifragem aut
 
 ## O que os modos simples não conseguem dizer
 
-A seção 02 já mostrou o sintoma pelo outro lado: uma cifra transforma qualquer entrada em alguma
+A seção 04 já mostrou o sintoma pelo outro lado: uma cifra transforma qualquer entrada em alguma
 saída, e o `bad decrypt` que você viu era o preenchimento não se encaixando, não a cifra detectando
 alguma coisa. No CTR, que não tem preenchimento, não há nem isso. Um byte alterado num texto cifrado
 CTR altera o mesmo byte do texto claro e nada mais, e a decifragem dá certo. No CBC, uma alteração
@@ -26,8 +26,67 @@ ordem das duas foi uma fonte duradoura de falhas, e é por isso que os modos com
 
 O GCM, *Galois/Counter Mode*, é o CTR para a cifragem mais uma **etiqueta** (*tag*), dezesseis
 bytes calculados sobre o texto cifrado inteiro com a mesma chave. A decifragem recalcula a etiqueta
-primeiro e se recusa a devolver qualquer coisa se ela for diferente. O `vcrypt seal` cifra o
-arquivo de agendamentos com AES-256-GCM:
+primeiro e se recusa a devolver qualquer coisa se ela for diferente. A biblioteca `cryptography`
+do Python o oferece como `AESGCM`, e duas ferramentas curtas o levam para a linha de comando. O
+`vcrypt seal` cifra um arquivo e grava o nonce na frente do resultado, para que o arquivo carregue o
+que a decifragem precisa:
+
+```py
+# ~/lab/tools/seal.py
+"""vcrypt seal --key KEYFILE --nonce HEX [--aad TEXT] IN OUT: encrypt IN with
+AES-256-GCM and write OUT as nonce + ciphertext + tag. IN may be -."""
+import argparse
+import sys
+
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+p = argparse.ArgumentParser(prog="vcrypt seal")
+p.add_argument("--key", required=True, help="a file holding the key in hex")
+p.add_argument("--nonce", required=True, help="12 bytes in hex, never used twice with one key")
+p.add_argument("--aad", help="associated data: checked by the tag, not encrypted, not stored")
+p.add_argument("infile")
+p.add_argument("outfile")
+a = p.parse_args()
+
+key = bytes.fromhex(open(a.key).read().strip())
+nonce = bytes.fromhex(a.nonce)
+data = sys.stdin.buffer.read() if a.infile == "-" else open(a.infile, "rb").read()
+out = AESGCM(key).encrypt(nonce, data, a.aad.encode() if a.aad else None)
+with open(a.outfile, "wb") as f:
+    f.write(nonce + out)
+print(f"sealed {a.infile}: 12-byte nonce + {len(out) - 16} bytes of ciphertext + 16-byte tag -> {a.outfile}")
+```
+
+O `vcrypt open` lê o nonce de volta e recebe ou o texto claro ou uma exceção, nunca os dois:
+
+```py
+# ~/lab/tools/open.py
+"""vcrypt open --key KEYFILE [--aad TEXT] IN: check the tag of a file seal
+wrote and, only if it holds, print the plaintext."""
+import argparse
+import sys
+
+from cryptography.exceptions import InvalidTag
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+p = argparse.ArgumentParser(prog="vcrypt open")
+p.add_argument("--key", required=True)
+p.add_argument("--aad")
+p.add_argument("infile")
+a = p.parse_args()
+
+key = bytes.fromhex(open(a.key).read().strip())
+blob = sys.stdin.buffer.read() if a.infile == "-" else open(a.infile, "rb").read()
+try:
+    plain = AESGCM(key).decrypt(blob[:12], blob[12:], a.aad.encode() if a.aad else None)
+except InvalidTag:
+    print(f"{a.infile}: authentication failed, nothing decrypted", file=sys.stderr)
+    sys.exit(1)
+sys.stdout.buffer.write(plain)
+```
+
+O `AESGCM` confere a etiqueta dentro de `decrypt`, antes de devolver um único byte. Aqui estão as
+duas no arquivo de agendamentos, com AES-256-GCM:
 
 ```
 ana@lab:~/lab$ vcrypt seal --key keys/aes-256.hex --nonce 000000000000000000000001 data/slots.dat slots.gcm
@@ -43,7 +102,21 @@ room1 free
 ```
 
 Agora um bit do texto cifrado é alterado, o tipo de alteração que um disco com defeito ou uma rede
-hostil poderia fazer, e o arquivo é aberto de novo com a chave certa:
+hostil poderia fazer. Uma terceira ferramenta faz isso:
+
+```py
+# ~/lab/tools/flip.py
+"""vcrypt flip FILE OFFSET: change one bit of one byte of FILE, in place."""
+import sys
+
+path, offset = sys.argv[1], int(sys.argv[2])
+data = bytearray(open(path, "rb").read())
+data[offset] ^= 0x01
+open(path, "wb").write(data)
+print(f"{path}: byte {offset} XOR 0x01")
+```
+
+E o arquivo é aberto de novo com a chave certa:
 
 ```
 ana@lab:~/lab$ vcrypt flip slots.gcm 18

@@ -26,14 +26,12 @@ São três estados diferentes e o terceiro não é um valor. É a ausência de u
 
 Isso é tudo, e toda surpresa abaixo decorre disso:
 
-```sql
-SELECT NULL = NULL;
 ```
-
-```
- ?column?
+shop=# SELECT NULL = NULL;
+ ?column? 
 ----------
- (null)
+ NULL
+(1 row)
 ```
 
 Não `true`. **`NULL = NULL` não é verdadeiro**, porque "esta coisa desconhecida é a mesma que aquela
@@ -42,14 +40,12 @@ própria desconhecida.
 
 O mesmo para todo o resto:
 
-```sql
-SELECT NULL = 5,  NULL <> 5,  NULL > 5,  NULL + 1,  'a' || NULL;
 ```
-
-```
- ?column? | ?column? | ?column? | ?column? | ?column?
+shop=# SELECT NULL = 5, NULL <> 5, NULL > 5, NULL + 1, 'a' || NULL;
+ ?column? | ?column? | ?column? | ?column? | ?column? 
 ----------+----------+----------+----------+----------
- (null)   | (null)   | (null)   | (null)   | (null)
+ NULL     | NULL     | NULL     |     NULL | NULL
+(1 row)
 ```
 
 Toda comparação contra um desconhecido é desconhecida, e toda aritmética sobre um desconhecido é

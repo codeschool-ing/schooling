@@ -9,8 +9,8 @@
 #   bash captures.sh
 #
 # Staged rather than typed: the images below are pulled before the first
-# command, and shelf:1.0.0 is built quietly from the lesson 14 Dockerfile,
-# which is written by `put` and not shown again. The registry is the official
+# command, and shelf:1.0.0 is built quietly, with the Dockerfile and the
+# command a-registry-of-your-own.md shows. The registry is the official
 # `registry:3` image on Ana's machine; its password is a lab value. Nothing in
 # this lesson logs in to Docker Hub, GHCR, ECR, Artifact Registry or ACR: the
 # lab has no account there, and the lesson marks those commands as not run.
@@ -19,14 +19,14 @@
 export LAB_IMAGES="golang:1.25 gcr.io/distroless/static-debian12:nonroot alpine:3.22 registry:3 httpd:2"
 . "$(dirname "$0")/../../capture.sh"
 cd shelf
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .env
 testdata/
 Dockerfile*
 .dockerignore
 IGN
-cat > Dockerfile <<'DF'
+staged Dockerfile <<'DF'
 FROM golang:1.25 AS build
 WORKDIR /src
 COPY go.mod go.sum ./

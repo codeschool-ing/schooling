@@ -28,7 +28,6 @@ sqlite> SELECT order_id, product_id, quantity, typeof(quantity) FROM order_lines
 order_id  product_id  quantity  typeof(quantity)
 --------  ----------  --------  ----------------
 5         2           three     text            
-5         3           2         integer         
 ```
 
 SQLite took it. The column says `INTEGER NOT NULL`, the row holds the string `three`, and the
@@ -95,7 +94,7 @@ mysql> SELECT 0.1 + 0.2 = 0.3 AS exact;
 sqlite> SELECT 0.1 + 0.2 = 0.3 AS exact;
 exact
 -----
-0
+0    
 ```
 
 **SQLite has no decimal type.** If you keep money in SQLite, keep it as an integer number of cents
@@ -187,7 +186,7 @@ Sao Paulo  Bruno Costa   1
 
 Recife's row says `Ana Ribeiro` and `2`. There are two customers in Recife and the engine picked
 one of them — not the first, not the largest, not documented; whichever row the scan happened to
-hold. Carla Meneses has vanished from a report that looks complete.
+hold. Carla Mendes has vanished from a report that looks complete.
 
 That is the shape of this whole section. **The strict engine gives you an error message; the
 lenient one gives you a plausible number.** Which of those you would rather debug at four in the

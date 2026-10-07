@@ -5,7 +5,12 @@ version: 1
 
 Reading lines as they scroll past works for four packets. For anything else, **`tcpdump` writes a
 pcap file, and the reading happens afterwards**, on the server or on somebody else's machine. The
-laptop made four requests, three for the home page and one for a page that does not exist:
+laptop made four requests, three for the home page and one for a page that does not exist. Start the
+capture on `web1`, then type this on `laptop`:
+
+```sh
+for i in 1 2 3; do curl -s http://192.0.2.21/ >/dev/null; done; curl -s http://192.0.2.21/missing >/dev/null
+```
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -c 40 -Z ana -w web1.pcap tcp port 80

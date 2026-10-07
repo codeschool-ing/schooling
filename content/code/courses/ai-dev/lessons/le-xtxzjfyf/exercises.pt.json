@@ -1,23 +1,23 @@
 {
   "ex-5wxtznzx": {
-    "prompt": "O pedido de uma linha recebeu uma resposta que passa por `float`. Por que a seção não culpa o assistente?",
-    "hint": "O que a requisição levava?",
+    "prompt": "O pedido de uma linha recebeu um `parse_price` que apaga toda vírgula, e `12,90` vira 129000 centavos. Por que a seção não culpa o modelo?",
+    "hint": "Como o inglês escreve mil duzentos e noventa?",
     "choices": [
       {
-        "text": "Porque `float` serve para dinheiro se você arredondar depois",
-        "why": "A regra do projeto diz nunca, nem por um instante."
+        "text": "Porque um modelo pequeno não sabe usar métodos de string",
+        "why": "Ele usou `replace` corretamente para o que entendeu."
       },
       {
-        "text": "As regras do projeto não estavam em parte nenhuma da requisição",
-        "why": "Isso: a resposta cabe na pergunta que foi feita."
-      },
-      {
-        "text": "Porque o assistente estava com temperatura alta",
+        "text": "Porque a temperatura estava alta demais",
         "why": "Nada na requisição definiu temperatura."
       },
       {
-        "text": "Porque provedores sempre recusam prompts de uma linha",
-        "why": "Foi respondido."
+        "text": "Nada dizia que a vírgula era decimal",
+        "why": "Isso: lida como `1,290`, apagá-la está certo."
+      },
+      {
+        "text": "Porque 129000 é o número certo de centavos",
+        "why": "Uma caneca a 12,90 custa 1290 centavos."
       }
     ]
   },
@@ -260,24 +260,24 @@
     ]
   },
   "ex-edqwd5h1": {
-    "prompt": "O que `parse_price(\"1.234,56\")` devolveu depois do primeiro diff, em centavos?",
-    "hint": "Uma unidade e vinte e três centavos.",
+    "prompt": "Com a função da seção 05 trocada, o teste de que `1.234,56` é recusado passou. Por que a seção diz que ele passou pelo motivo errado?",
+    "hint": "Onde essa função divide o texto?",
     "choices": [
       {
-        "text": "123456",
-        "why": "Isso seria ler como separador de milhar, o que nada fez."
+        "text": "Porque o pytest o pulou",
+        "why": "Ele rodou, e passou."
       },
       {
-        "text": "Levantou ValueError",
-        "why": "Era o que o teste exigia, e não aconteceu."
+        "text": "Porque o teste espera outra exceção",
+        "why": "Ele espera `ValueError`, e recebeu um."
       },
       {
-        "text": "123",
-        "why": "Isso: foi aceito em silêncio."
+        "text": "Porque o modelo leu o arquivo de testes e tratou o caso à parte",
+        "why": "A função não tem caso para essa entrada."
       },
       {
-        "text": "1234",
-        "why": "A vírgula virou ponto e a divisão pegou o primeiro."
+        "text": "`int(\"1.234\")` falhou por acaso",
+        "why": "Isso: nada nela decidiu que dois separadores são ambíguos."
       }
     ]
   },
@@ -326,7 +326,7 @@
     ]
   },
   "ex-d18ckek2": {
-    "prompt": "Quantos testes passaram depois do segundo diff, na suíte inteira?",
+    "prompt": "Quantos testes passaram na suíte inteira com o `parse_price` escrito pela própria ana?",
     "hint": "A última linha.",
     "unit": "testes"
   },
@@ -347,7 +347,7 @@
         "why": "Sim: falta algo no contexto."
       },
       {
-        "text": "Quando cada diff mexe em mais coisas que o anterior",
+        "text": "Quando cada mudança mexe em mais coisas que a anterior",
         "why": "Sim: está se desviando."
       }
     ]
@@ -419,29 +419,29 @@
     ]
   },
   "ex-yy45w1aw": {
-    "prompt": "Quantos dos cinco assuntos de commit passaram nas checagens sem exemplos?",
-    "hint": "O primeiro bloco da saída.",
+    "prompt": "Dos quinze assuntos pedidos com exemplos, quantos passaram nas checagens?",
+    "hint": "A última linha da saída.",
     "unit": "assuntos"
   },
   "ex-yk1d90fz": {
-    "prompt": "Que parte da avaliação desta seção é uma medição e que parte é uma ilustração?",
-    "hint": "Quem escreveu as respostas?",
+    "prompt": "Catorze de quinze assuntos passaram com exemplos. Por que a seção não lê isso como catorze assuntos bons?",
+    "hint": "Leia os aprovados, não a nota.",
     "choices": [
       {
-        "text": "As duas são medições de um modelo real",
-        "why": "Nenhum modelo escreveu as respostas."
+        "text": "Porque três rodadas por caso são poucas para contar",
+        "why": "A contagem está certa; a questão é o que ela conta."
       },
       {
-        "text": "A nota é uma medição; o harness é uma ilustração",
-        "why": "É o contrário."
+        "text": "Cinco eram um exemplo, copiado palavra por palavra",
+        "why": "Isso: a forma passa em toda checagem, e o conteúdo é de outro commit."
       },
       {
-        "text": "Nenhuma: a seção inteira é inventada",
-        "why": "O harness, os casos e as checagens rodaram de verdade."
+        "text": "Porque as checagens recusaram todo assunto entre aspas",
+        "why": "Os assuntos entre aspas passaram; as checagens não procuram aspas."
       },
       {
-        "text": "O harness é real; a nota o ilustra",
-        "why": "Isso: as respostas foram escritas pelo curso."
+        "text": "Porque o modelo ignorou os exemplos",
+        "why": "Se algo, seguiu-os de perto demais."
       }
     ]
   },
@@ -516,20 +516,20 @@
     "hint": "Uma para cada.",
     "pairs": [
       {
-        "left": "Restrições e convenções no prompt",
-        "right": "Uma resposta que passava por float"
+        "left": "O objetivo, dizendo quem digita o preço",
+        "right": "Uma vírgula lida como separador de milhar"
       },
       {
-        "left": "Um diff conferido com o git",
-        "right": "Uma linha citada que não batia com o arquivo"
+        "left": "`git apply --check`",
+        "right": "Um diff cujo cabeçalho não batia com o corpo"
       },
       {
-        "left": "Testes escritos a partir do plano",
-        "right": "`1.234,56` aceito em silêncio"
+        "left": "Testes escritos antes da mudança",
+        "right": "Uma função que quebrou `12.90`"
       },
       {
         "left": "Exemplos de assuntos de commit",
-        "right": "Assuntos no estilo errado"
+        "right": "Assuntos no passado"
       }
     ],
     "right_distractors": [

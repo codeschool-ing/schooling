@@ -1,13 +1,13 @@
 ---
 title: Outputs, and what a configuration hands back
-version: 1
+version: 2
 ---
 
 The ids AWS invented for the shop's network are in the state file and in the scrollback of an
 apply, and neither is a good place to fetch them from. **The habit to avoid is reading the state
 file directly**, with `jq` or `grep`: its layout is Terraform's own business, and lesson 7 opens it
 to show why. Variables are what a configuration takes in; **outputs are what it promises to give
-back**, declared in blocks like everything else:
+back**, declared in blocks like everything else, here in `outputs.tf`:
 
 ```hcl
 output "vpc_id" {

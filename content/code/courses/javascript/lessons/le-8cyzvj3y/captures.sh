@@ -11,13 +11,13 @@
 #
 # What is STAGED rather than typed:
 #
-#   - the registry. Every install in this lesson comes from the lab's own
-#     Verdaccio at 127.0.0.1:4873, started empty by `lab.sh registry` and
-#     filled by lab/registry.sh with shelf-slug, shelf-format and shelf-banner.
-#     Nothing is downloaded from the public registry, and the packages are
-#     the lab's, written for this lesson;
-#   - ana's login to it. registry.sh writes her token into ~/.npmrc, which is
-#     what `npm login` does after asking for a password;
+#   - the registry, after the first section. Every later install comes from
+#     a Verdaccio at 127.0.0.1:4873 started empty by `lab.sh registry` with
+#     the lesson's config.yaml, and filled by the lesson's publish-shelf.sh.
+#     Nothing is downloaded from the public registry;
+#   - ana's login to it, which the first section makes with npm adduser:
+#     lab.sh sends the same request with curl and writes her token into
+#     ~/.npmrc, where npm adduser writes it;
 #   - the files ana wrote (put below), whose contents the lesson shows in full.
 #
 # The times npm, pnpm and Yarn print ("in 541ms") are this run's and change
@@ -43,6 +43,103 @@ put() {
   lab exec ana "mkdir -p \"\$(dirname '$f')\" && cat > '$f'" <<<"$body"
 }
 block() { printf '##### %s\n' "$1"; }
+# THE FIRST SECTION (your-registry) is run as a student would run it, and not
+# in the lab: a login shell as ana, with Ubuntu's own PATH and Node.js
+# installed the way lesson 1 installs it. The shell reads ana's ~/.profile,
+# which is Ubuntu's, and not the recording machine's /etc/profile. pnpm, Yarn
+# and Verdaccio come from the public npm registry. The proxy variables of the
+# recording machine are passed on unchanged, with NODE_EXTRA_CA_CERTS when it
+# is set: the proxy's certificate, which npm needs and a student does not.
+#
+# STAGED in it: Node.js, installed with lesson 1's commands and not shown
+# again; config.yaml and publish-shelf.sh, taken out of your-registry.md by
+# lab/extract.mjs, so the files in the lesson are the ones that ran; and the
+# second terminal: the registry is started in the background, and its block
+# shows the line typed there and what it printed. npm adduser asks its three
+# questions on a terminal, so it is run on one (a pseudo-terminal opened by
+# Python) and answered from here; the transcript is what that terminal showed.
+STUDENT_PATH=/usr/sbin:/usr/bin:/sbin:/bin
+NET=$(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ')
+STUDENT_ENV="HOME=/home/ana USER=ana LOGNAME=ana LANG=C.UTF-8 TERM=dumb PATH=$STUDENT_PATH TZ=America/Sao_Paulo $NET ${NODE_EXTRA_CA_CERTS:+NODE_EXTRA_CA_CERTS=$NODE_EXTRA_CA_CERTS}"
+# session 'command' ...: one terminal, opened fresh, with each command typed in it.
+session() {
+  local script="cd ~" c
+  for c in "$@"; do
+    script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'"$c 2>&1"
+  done
+  # shellcheck disable=SC2086
+  runuser -u ana -- env -i $STUDENT_ENV bash --noprofile -c ". ~/.profile; $script" 2>&1 || true
+}
+student_clean() {
+  pkill -u ana -f verdaccio 2>/dev/null; sleep 0.5
+  rm -rf /home/ana/.local /home/ana/js-tools /home/ana/js /home/ana/js-registry /home/ana/.npm \
+    /home/ana/.npmrc /home/ana/node-v22.22.0-linux-* /home/ana/.cache/node
+}
+EXTRACT="node $(cd ../.. && pwd)/lab/extract.mjs"
+lab down >/dev/null
+student_clean
+session 'curl -fsSLO https://nodejs.org/dist/v22.22.0/node-v22.22.0-linux-x64.tar.xz' \
+  'mkdir -p ~/.local/node ~/.local/bin' \
+  'tar -xJf node-v22.22.0-linux-x64.tar.xz -C ~/.local/node --strip-components=1' \
+  'ln -s ~/.local/node/bin/node ~/.local/node/bin/npm ~/.local/node/bin/npx ~/.local/bin/' >/dev/null
+
+block managers
+session 'npm install --global pnpm@10.28.0 @yarnpkg/cli-dist@4.10.3' \
+  'ln -s ~/.local/node/bin/pnpm ~/.local/node/bin/yarn ~/.local/bin/' \
+  'pnpm --version' 'yarn --version'
+
+runuser -u ana -- mkdir -p /home/ana/js-registry
+for f in config.yaml publish-shelf.sh; do
+  $EXTRACT your-registry.md "$f" | runuser -u ana -- tee "/home/ana/js-registry/$f" >/dev/null
+done
+
+block registry-start
+START='npx --yes verdaccio@6.1.6 --config ./config.yaml'
+printf 'ana@dev:~/js-registry$ %s\n' "$START"
+# shellcheck disable=SC2086
+runuser -u ana -- env -i $STUDENT_ENV bash --noprofile -c \
+  ". ~/.profile; cd ~/js-registry && setsid $START > /tmp/student-registry.out 2>&1 < /dev/null &"
+for _ in $(seq 120); do
+  curl -s -o /dev/null http://127.0.0.1:4873/-/ping 2>/dev/null && break
+  sleep 0.5
+done
+sleep 1
+cat /tmp/student-registry.out
+rm -f /tmp/student-registry.out
+
+block publish-shelf
+session 'cd ~/js-registry' 'bash publish-shelf.sh'
+
+block adduser
+printf 'ana@dev:~$ %s\n' 'npm adduser --registry http://127.0.0.1:4873/'
+# shellcheck disable=SC2086
+runuser -u ana -- env -i $STUDENT_ENV npm_config_color=false python3 -c '
+import os, pty, select, sys, time
+pid, fd = pty.fork()
+if pid == 0:
+    os.chdir(os.environ["HOME"])
+    os.execvp("bash", ["bash", "--noprofile", "-c", ". ~/.profile; npm adduser --registry http://127.0.0.1:4873/"])
+answers = [(b"Username:", b"ana\r"), (b"Password:", b"ana-registry-password\r"), (b"Email:", b"ana@example.com\r")]
+out = b""
+end = time.time() + 60
+while time.time() < end:
+    if select.select([fd], [], [], 0.5)[0]:
+        try:
+            chunk = os.read(fd, 1024)
+        except OSError:
+            break
+        if not chunk:
+            break
+        out += chunk
+        for asked, answer in list(answers):
+            if asked in out:
+                os.write(fd, answer)
+                answers.remove((asked, answer))
+sys.stdout.write(out.decode().replace("\r\n", "\n"))
+'
+
+student_clean
+
 lab reset >/dev/null
 lab registry >/dev/null
 

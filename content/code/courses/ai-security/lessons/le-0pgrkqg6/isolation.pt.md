@@ -1,6 +1,6 @@
 ---
 title: Ferramentas que rodam longe do modelo, com limites próprios
-version: 1
+version: 2
 ---
 
 O portão decide quais chamadas rodam. **O isolamento decide o que uma chamada alcança quando roda**, e é
@@ -32,7 +32,7 @@ c6  send_message   DENY   budget of 4 calls per conversation is spent
 c7  update_contact DENY   budget of 4 calls per conversation is spent
 ```
 
-Com orçamento de quatro, a quinta proposta é recusada seja ela qual for. O manifesto do laboratório
+Com orçamento de quatro, a quinta proposta é recusada seja ela qual for. O manifesto da Tarefa
 permite oito, o bastante para uma conversa de suporte e pouco para uma descontrolada. Quando o orçamento
 acaba, a conversa vai para uma pessoa, o mesmo destino do laço de novas tentativas da aula 9.
 

@@ -1,6 +1,6 @@
 ---
 title: Expressions, and the console to try them in
-version: 1
+version: 2
 ---
 
 Everything to the right of an `=` is an expression, and an expression is anything that produces a
@@ -11,8 +11,8 @@ another value, compare two, choose between them, or build a string out of pieces
 directory and the state beside it, evaluates whatever you give it, and prints the value. It
 creates nothing and changes nothing. In these lessons the expression is piped in with `echo`, so
 each command and its answer sit on two lines; typed at a terminal, the console waits at a `>`
-prompt instead. The variables it reads are in a new file, which the types section of this lesson
-takes apart:
+prompt instead. The variables it reads are in a new file, `variables.tf`, which the types section
+of this lesson takes apart:
 
 ```hcl
 variable "environment" {
@@ -79,7 +79,7 @@ directive inside a one-line string is hard to read past this size, and when a co
 a whole value the conditional operator says it more plainly.
 
 For text that runs over several lines there is the **heredoc**, which Ana uses for a short
-start-up script:
+start-up script, in `boot.tf`:
 
 ```hcl
 locals {

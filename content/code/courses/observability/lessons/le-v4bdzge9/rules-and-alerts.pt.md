@@ -1,11 +1,16 @@
 ---
 title: Regras, e um alerta da regra ao pager
-version: 1
+version: 2
 ---
 
 As consultas até aqui foram feitas por uma pessoa. **Regras são consultas que o Prometheus faz a si
 mesmo**, a cada quinze segundos, a partir de arquivos listados no `prometheus.yml`. Há dois tipos, e
-o arquivo de regras do laboratório agora tem os dois:
+este arquivo de regras tem os dois. Guarde uma cópia do que a aula 1 escreveu, e então troque
+`~/shop/prometheus/rules/shop.yml` por ele:
+
+```sh
+cp prometheus/rules/shop.yml /tmp/shop.yml.orig
+```
 
 ```yaml
 groups:
@@ -95,5 +100,12 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix pager | grep PAGE | jq -c '{
 
 O Alertmanager mantém o alerta como `active`, e o pager registrou o chamado, com a severidade e o
 resumo que a regra lhe deu. **Cada palavra dessa linha foi escrita na regra**, e é por isso que a
-aula 16 gasta seu tempo com o que uma regra deve dizer e a quem. O arquivo de falhas foi removido
-no fim da captura.
+aula 16 gasta seu tempo com o que uma regra deve dizer e a quem. Remova o arquivo de falhas, e devolva
+as regras da aula 1, para que as aulas seguintes não chamem ninguém por falhas que provocam de
+propósito:
+
+```sh
+rm faults/payments.json
+cp /tmp/shop.yml.orig prometheus/rules/shop.yml
+curl -s -X POST localhost:9090/-/reload
+```

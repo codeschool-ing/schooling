@@ -1,12 +1,22 @@
 ---
 title: Tidying commits before anybody sees them
-version: 1
+version: 2
 ---
 
 Work does not arrive in tidy commits. You commit a feature, then a stylesheet change, then notice the
 feature's text is missing an exclamation mark. The honest history is three commits, one of which fixes
 the first. **Before the branch is shared, you can make it the history you would have written if you had
-got it right the first time.** Lesson 4's `--amend` does this for the last commit. For an older one:
+got it right the first time.** Lesson 4's `--amend` does this for the last commit. For an older one,
+here are the feature, the stylesheet, and the missing mark, not yet committed:
+
+```bash
+printf '<p>Seasonal cakes: ask at the counter.</p>\n' >> menu.html
+git commit -qam 'feat(menu): mention seasonal cakes'
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git commit -qam 'style: give paragraphs more room'
+sed -i 's/ask at the counter/ask at the counter!/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git commit -qa --fixup HEAD~1
@@ -25,11 +35,12 @@ commit it corrects. Nothing else about it is special; it is a note to your futur
 belongs with that one*.
 
 `git rebase -i --autosquash` then does the tidying. `-i` is an **interactive rebase**, which replays
-commits the way lesson 6 described but lets you reorder, combine or reword them on the way, from a plan
-Git writes into your editor. `--autosquash` fills the plan in for you: it moves every `fixup!` commit to
-just after the commit it names and folds it in. Here the plan was accepted unchanged, and the result is
-two commits: the seasonal cakes with the exclamation mark included, and the stylesheet change. **The
-fix no longer exists as a separate commit**, because it never should have needed to.
+commits the way lesson 6 described but lets you reorder, combine or reword them on the way, from a
+plan Git writes into your editor. `--autosquash` fills the plan in for you: it moves every `fixup!`
+commit to just after the commit it names and folds it in. Here the plan was accepted unchanged,
+which in your editor means saving it as it is and closing, and the result is two commits: the
+seasonal cakes with the exclamation mark included, and the stylesheet change. **The fix no longer
+exists as a separate commit**, because it never should have needed to.
 
 ## The rule, one more time
 

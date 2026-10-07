@@ -1,6 +1,6 @@
 ---
 title: O lockfile
-version: 1
+version: 2
 ---
 
 **Uma faixa diz o que você aceita. O lockfile diz o que foi escolhido.** Duas pessoas rodando
@@ -14,7 +14,7 @@ de `shelf-slug`:
 ```
 ana@dev:~/js/lock$ npm install shelf-format
 
-added 2 packages in 624ms
+added 2 packages in 615ms
 ana@dev:~/js/lock$ npm ls --all
 lock@1.0.0 /home/ana/js/lock
 └─┬ shelf-format@1.0.0
@@ -83,7 +83,7 @@ exatamente o que o lockfile nomeia e não muda arquivo nenhum:
 ana@dev:~/js/lock$ rm -rf node_modules
 ana@dev:~/js/lock$ npm ci
 
-added 2 packages in 307ms
+added 2 packages in 331ms
 ```
 
 ```schooling-figure

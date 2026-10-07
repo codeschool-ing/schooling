@@ -1,6 +1,6 @@
 ---
 title: Dev and prod, and what keeps them apart
-version: 1
+version: 2
 ---
 
 An **environment** is a complete copy of the infrastructure, built from the same code for a
@@ -10,8 +10,8 @@ availability zones instead of one, and in a configuration with machines, larger 
 them. **Same code, different values.** That much everybody agrees on.
 
 The idea people arrive with is that the values are the whole difference: one configuration, one
-`.tfvars` file per environment, and the right file passed to each command. Ana writes it that way.
-The variables:
+`.tfvars` file per environment, and the right file passed to each command. Ana writes it that way,
+in a new directory, `~/shop`. The variables, in `variables.tf`:
 
 ```hcl
 variable "environment" {
@@ -30,7 +30,7 @@ variable "azs" {
 }
 ```
 
-The configuration names everything after `var.environment` and builds one public subnet per zone,
+`main.tf` names everything after `var.environment` and builds one public subnet per zone,
 with `for_each` from lesson 4 and `cidrsubnet` from lesson 3:
 
 ```hcl
@@ -81,7 +81,7 @@ resource "aws_security_group" "web" {
 }
 ```
 
-And one file of values for each environment:
+And one file of values for each environment. `dev.tfvars`:
 
 ```hcl
 environment = "dev"
@@ -89,14 +89,55 @@ cidr        = "10.21.0.0/16"
 azs         = ["sa-east-1a"]
 ```
 
+`prod.tfvars`:
+
 ```hcl
 environment = "prod"
 cidr        = "10.20.0.0/16"
 azs         = ["sa-east-1a", "sa-east-1c"]
 ```
 
-The backend is the S3 bucket from lesson 7, with one key, `shop/terraform.tfstate`. She applies
-dev:
+The backend is the S3 bucket from lesson 7, with one key, `shop/terraform.tfstate`, in
+`backend.tf`:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket       = "shop-tfstate-123456789012"
+    key          = "shop/terraform.tfstate"
+    region       = "sa-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+```
+
+Your moto started this lesson empty, so that bucket does not exist yet. Make it again as lesson 7
+did, versioned and closed to the public:
+
+```sh
+aws s3api create-bucket --bucket shop-tfstate-123456789012 --create-bucket-configuration LocationConstraint=sa-east-1
+aws s3api put-bucket-versioning --bucket shop-tfstate-123456789012 --versioning-configuration Status=Enabled
+aws s3api put-public-access-block --bucket shop-tfstate-123456789012 --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+```
+
+The last file is a `.gitignore`, because the next sections compare versions of this configuration
+with `git diff`, and Terraform's working files have no place in that history:
+
+```
+.terraform/
+*.tfstate
+*.tfstate.*
+```
+
+Ana commits the six files and initialises the directory:
+
+```sh
+git init -q && git add . && git commit -qm "the shop network, one environment per tfvars file"
+terraform init -input=false
+```
+
+She applies dev:
 
 ```
 ana@laptop:~/shop$ terraform apply -var-file=dev.tfvars -auto-approve | tail -n 1

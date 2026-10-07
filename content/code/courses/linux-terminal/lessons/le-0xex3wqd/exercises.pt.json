@@ -342,12 +342,12 @@
     ]
   },
   "ex-y6npv2eq": {
-    "prompt": "Os cabeçalhos do próprio e-mail do cron listaram `PATH=/usr/bin:/bin`. O que decorre disso?",
+    "prompt": "O ambiente que um job do cron anotou tinha um `PATH` sem `/home/ana/bin`. O que decorre disso?",
     "hint": "Compare com o `PATH` do seu shell interativo.",
     "choices": [
       {
-        "text": "O cron leu o `/etc/environment` e usou o que achou",
-        "why": "Ele define esse valor sozinho."
+        "text": "O cron roda todo job com o `PATH` do root",
+        "why": "É o padrão do sistema, o mesmo para todas as contas."
       },
       {
         "text": "Um comando em `~/bin` tem que ser nomeado pelo caminho completo",
@@ -386,7 +386,7 @@
     ]
   },
   "ex-fvmnz0k9": {
-    "prompt": "Para reproduzir o ambiente do cron no seu próprio shell, comece o comando com a flag que o esvazia antes: `env __ SHELL=/bin/sh PATH=/usr/bin:/bin ...`",
+    "prompt": "Para reproduzir o ambiente do cron no seu próprio shell, comece o comando com a flag que o esvazia antes: `env __ $(cat cronenv.txt) /bin/sh -c 'report.sh'`",
     "hint": "Dois caracteres, e a letra vem de *ignore*."
   },
   "ex-gvpny90c": {
@@ -451,7 +451,7 @@
       },
       {
         "text": "Impede o cron de registrar o job no log do sistema",
-        "why": "As linhas `CMD` e `END` são escritas de qualquer jeito."
+        "why": "A linha `CMD` é escrita de qualquer jeito."
       }
     ]
   },
@@ -478,12 +478,12 @@
     ]
   },
   "ex-7pzkkxhs": {
-    "prompt": "O syslog mostra uma linha `CMD` e uma linha `END` do job de ontem à noite. O que você aprendeu?",
+    "prompt": "O syslog mostra uma linha `CMD` do job de ontem à noite. O que você aprendeu?",
     "hint": "Uma das duas perguntas é respondida e a outra não.",
     "choices": [
       {
         "text": "O job rodou e deu certo",
-        "why": "O `END` é escrito para um job que saiu com 1 também."
+        "why": "O log registra o início, e nada sobre como o job terminou."
       },
       {
         "text": "O job rodou e a saída dele foi enviada por e-mail",
@@ -494,8 +494,8 @@
         "why": "O `CMD` quer dizer que a agenda casou e o cron o iniciou."
       },
       {
-        "text": "Ele começou e terminou, e nada além disso",
-        "why": "Que é por que você precisa do e-mail também quando um job de um ano para."
+        "text": "Ele começou, e nada além disso",
+        "why": "Que é por que você precisa da saída dele também quando um job de um ano para."
       }
     ]
   },
@@ -615,7 +615,7 @@
     "choices": [
       {
         "text": "Os dois jobs já tinham rodado hoje, e o spool diz isso",
-        "why": "O arquivo tem `20260915` — a data, que é a memória inteira do anacron."
+        "why": "O arquivo tem `20261007` — a data, que é a memória inteira do anacron."
       },
       {
         "text": "A flag `-n` roda cada job no máximo uma vez por invocação",
@@ -742,7 +742,7 @@
     ]
   },
   "ex-dvxnp698": {
-    "prompt": "O `systemd-analyze verify` num timer com `OnCalender` mal escrito imprimiu duas mensagens. Qual delas importava?",
+    "prompt": "O `systemd-analyze verify` num timer com `OnCalender` mal escrito imprimiu três linhas. Qual delas importava?",
     "hint": "Uma delas é um aviso sobre uma chave que o systemd joga fora.",
     "choices": [
       {
@@ -750,8 +750,8 @@
         "why": "Esse é o aviso, e *ignoring* é a palavra que faz dele não um erro."
       },
       {
-        "text": "`Binding to IPv6 address not available`",
-        "why": "Esse é o contêiner em que a aula rodou, falando de si mesmo."
+        "text": "Nenhuma: o `daemon-reload` não tinha rodado, então o verify leu uma cópia velha",
+        "why": "O `verify` lê os arquivos que recebe, pelo caminho; nada tinha sido carregado."
       },
       {
         "text": "Nenhuma — a unidade é válida e teria funcionado",
@@ -1313,7 +1313,7 @@
     "pairs": [
       {
         "left": "`/bin/sh: 1: report.sh: not found`",
-        "right": "o `PATH` do cron é `/usr/bin:/bin`"
+        "right": "o `PATH` do cron não tem `~/bin`"
       },
       {
         "left": "a linha de assunto para em `$(date +`",

@@ -56,7 +56,7 @@ FAILED tests/test_quote.py::test_an_order_of_199_reais_or_more_ships_free[19900-
 One row of three fails, and it is the row **at** the boundary: an order of exactly R$ 199,00 is now
 charged R$ 12,90. The line `where 1290 = freight('01310-100', 300, 19900)` shows the call and what
 it returned. A test that used R$ 250,00 as its "free" example would still pass, and so would the
-acceptance test of section 08 if it had used a round R$ 200,00. The customer who spends exactly the
+acceptance test of section 11 if it had used a round R$ 200,00. The customer who spends exactly the
 advertised amount would find out first.
 
 ## A checklist that catches most of it

@@ -1,6 +1,6 @@
 ---
 title: Uma instrução, a entrada e nenhum exemplo
-version: 1
+version: 2
 ---
 
 **Um prompt zero-shot pede uma tarefa sem mostrar um único exemplo resolvido dela.** Ele dá a
@@ -15,12 +15,14 @@ preencher a lacuna com o que fosse provável. As correções estão na redação
 ## Uma versão fraca
 
 O Café Aurora recebe mensagens pelo site e quer cada uma rotulada, para que as reclamações cheguem
-primeiro ao gerente. O curso escreveu esta primeira tentativa como ilustração:
+primeiro ao gerente. Eis uma primeira tentativa, como um modelo de prompt: `{message}` é onde cada
+mensagem entra. Salve-a como `~/pe/prompts/weak.txt`:
 
-```localised
-Esta avaliação é positiva ou negativa?
+```
+ana@lab:~/pe$ cat prompts/weak.txt
+Is this review positive or negative?
 
-Do you open on public holidays?
+{message}
 ```
 
 Cada parte dela deixa uma decisão para o modelo:
@@ -29,36 +31,36 @@ Cada parte dela deixa uma decisão para o modelo:
   que nem são avaliações;
 - a entrada vem emendada na instrução, sem nada dizendo onde uma termina e a outra começa;
 - a saída não é descrita, então o modelo pode responder com uma palavra, uma frase ou uma resposta;
-- os casos-limite não são mencionados, e esta entrada é um deles: é uma pergunta, não uma avaliação.
+- os casos-limite não são mencionados, e uma mensagem que é uma pergunta, não uma avaliação, é um deles.
 
-Um modelo que recebe esse prompt tem todos os motivos para responder à pergunta, porque responder
-perguntas é o que ele foi treinado para fazer (lição 1), e a mensagem é uma pergunta. Nada no
-prompt dizia o contrário.
+Diante de uma mensagem que é uma pergunta, um modelo tem todos os motivos para respondê-la, porque
+responder perguntas é aquilo para que ele foi treinado (lição 1), ou para inventar um rótulo que
+ninguém listou. Nada no prompt diz o contrário, e a próxima seção de leitura mostra o que ele fez.
 
 ## Uma versão forte
 
-A mesma tarefa, com cada lacuna fechada. O curso também a escreveu como ilustração:
+A mesma tarefa, com cada lacuna fechada. Salve-a como `~/pe/prompts/strong.txt`:
 
-```localised
-Rotule uma mensagem enviada ao Café Aurora pelo site.
+```
+ana@lab:~/pe$ cat prompts/strong.txt
+Label a message sent to Café Aurora through its website.
 
-Rótulos:
-  positive      quem escreveu está satisfeito no geral
-  negative      quem escreveu está insatisfeito no geral
-  mixed         elogio claro e reclamação clara, nenhum dominante
-  not_a_review  uma pergunta, uma reserva, ou qualquer coisa que
-                não seja sobre uma visita
+Labels:
+  positive      the writer is pleased overall
+  negative      the writer is unhappy overall
+  mixed         clear praise and clear complaint, neither dominant
+  not_a_review  a question, a booking, or anything that is not
+                about a visit
 
-Casos-limite:
-  - Ironia conta como o que a pessoa quis dizer, não o que as
-    palavras dizem.
-  - Mensagens em qualquer idioma recebem os mesmos rótulos em inglês.
-  - Não responda perguntas; rotule-as not_a_review.
+Edge cases:
+  - Sarcasm counts as what the writer means, not what the words say.
+  - Messages in any language get the same English labels.
+  - Do not answer questions; label them not_a_review.
 
-Responda só com o rótulo, em minúsculas, e mais nada.
+Reply with the label only, in lower case, nothing else.
 
 <message>
-Do you open on public holidays?
+{message}
 </message>
 ```
 

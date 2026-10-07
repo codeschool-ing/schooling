@@ -1,17 +1,36 @@
 ---
 title: As palavras da própria loja
-version: 1
+version: 2
 ---
 
 Um modelo de fala é treinado com fala em geral, e todo negócio tem palavras que a fala em geral não tem: nomes de produtos, nomes de pessoas, códigos, jargão. São também as palavras que mais importam nas transcrições dele. Na ligação, as palavras que o Whisper errou são quase todas desse tipo: *Kau* e *Kyo* por Caio, *Dom Kazmuro* e *Dom Casmorrow* por Dom Casmurro, *Machado Desiss* por Machado de Assis, *M1042* por M-1042.
 
 Há três lugares para corrigi-las, e só o último roda neste laboratório.
 
-**Antes de decodificar, inclinando o modelo.** Algumas APIs hospedadas recebem uma lista de palavras a favorecer. O endpoint de transcrição da OpenAI recebe um `prompt`: um texto que o Whisper trata como o que veio antes do áudio, de modo que as grafias dele ficam mais prováveis. Os serviços do Google e da Amazon recebem listas de frases. A aula 10 mostra onde o prompt entra, e por que o labmm o aceita e não consegue usá-lo: a exportação ONNX que este laboratório roda não tem como recebê-lo.
+**Antes de decodificar, inclinando o modelo.** Algumas APIs hospedadas recebem uma lista de palavras a favorecer. O endpoint de transcrição da OpenAI recebe um `prompt`: um texto que o Whisper trata como o que veio antes do áudio, de modo que as grafias dele ficam mais prováveis. Os serviços do Google e da Amazon recebem listas de frases. A aula 10 mostra onde o prompt entra, e por que o `audio_server.py` do curso o aceita e não consegue usá-lo: a exportação ONNX do Whisper que ele roda não tem como recebê-lo.
 
 **Treinando**, com gravações dos seus próprios falantes dizendo as suas próprias palavras. É a correção mais forte e a mais cara, e está fora do alcance deste curso.
 
-**Depois de decodificar, corrigindo o texto contra o que a loja sabe.** A loja tem um catálogo, então sabe como se escreve todo título e todo autor. Um programa pode procurar sequências de palavras escritas quase como uma delas, e trocá-las:
+**Depois de decodificar, corrigindo o texto contra o que a loja sabe.** A loja tem um catálogo, então sabe como se escreve todo título e todo autor. Um programa pode procurar sequências de palavras escritas quase como uma delas, e trocá-las.
+
+Primeiro o catálogo. O de uma loja de verdade tem milhares de linhas; este tem doze, o bastante para a ligação. Salve-o como `data/books.jsonl` no `~/mm`, um livro por linha:
+
+```json
+{"title": "Dom Casmurro", "author": "Machado de Assis"}
+{"title": "The Posthumous Memoirs of Brás Cubas", "author": "Machado de Assis"}
+{"title": "Bleak House", "author": "Charles Dickens"}
+{"title": "Great Expectations", "author": "Charles Dickens"}
+{"title": "The Secret Garden", "author": "Frances Hodgson Burnett"}
+{"title": "Pride and Prejudice", "author": "Jane Austen"}
+{"title": "Emma", "author": "Jane Austen"}
+{"title": "Jane Eyre", "author": "Charlotte Brontë"}
+{"title": "Middlemarch", "author": "George Eliot"}
+{"title": "Madame Bovary", "author": "Gustave Flaubert"}
+{"title": "Anna Karenina", "author": "Leo Tolstoy"}
+{"title": "Crime and Punishment", "author": "Fyodor Dostoevsky"}
+```
+
+Depois o programa que o usa:
 
 ```schooling-example
 {

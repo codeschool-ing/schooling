@@ -1,6 +1,6 @@
 ---
 title: O que dispara uma execução
-version: 1
+version: 2
 ---
 
 Um **gatilho** (*trigger*) é o evento que faz a CI começar uma execução. O hook do laboratório tem
@@ -12,7 +12,8 @@ remote: ci: try-new-rounding is not main, nothing to run
  * [new branch]      try-new-rounding -> try-new-rounding
 ```
 
-O branch chegou ao remoto, e o hook disse que não tinha nada para rodar. Se isso está certo depende
+O branch chegou ao remoto, e o hook disse que não tinha nada para rodar. `git switch main` traz
+você de volta, e o resto da aula conta com isso. Se isso está certo depende
 da equipe: algumas querem cada branch conferido, para um problema aparecer antes de alguém abrir um
 pull request; outras guardam os runners para os branches que estão para entrar.
 

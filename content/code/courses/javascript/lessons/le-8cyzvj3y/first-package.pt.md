@@ -1,12 +1,12 @@
 ---
 title: Um pacote e o package.json
-version: 1
+version: 2
 ---
 
 **Um pacote é uma pasta de código com um `package.json` que lhe dá um nome e uma versão.** Um
 **registro** é um servidor que guarda pacotes publicados e os entrega pelo nome. O público é o
-`registry.npmjs.org`; nesta aula o laboratório roda o seu próprio, na mesma máquina, com alguns
-pacotes escritos para a aula. Um **gerenciador de pacotes** é o programa que conversa com o
+`registry.npmjs.org`; nesta aula é o que você subiu na seção anterior, no seu próprio computador,
+com alguns pacotes escritos para a aula. Um **gerenciador de pacotes** é o programa que conversa com o
 registro, baixa o que você pede e põe onde o Node consegue achar.
 
 ## Apontando para um registro
@@ -20,9 +20,9 @@ audit=false
 ```
 
 `registry` diz de onde vêm os pacotes. `audit=false` impede o npm de pedir ao registro alertas de
-segurança a cada instalação. O registro do laboratório não tem nenhum para dar, então a pergunta só
-terminaria num aviso. Sem esse arquivo o npm iria ao registro público, que é o que ele faz na sua
-máquina.
+segurança a cada instalação. O seu registro não tem nenhum para dar, então a pergunta só terminaria
+num aviso. Sem esse arquivo o npm iria ao registro público, como faz em qualquer pasta que não tenha
+um.
 
 ## Uma primeira instalação
 
@@ -42,7 +42,7 @@ recusa a publicá-lo por acidente:
 ```
 ana@dev:~/js/first$ npm install shelf-slug@1
 
-added 1 package in 534ms
+added 1 package in 488ms
 ana@dev:~/js/first$ cat package.json
 {
   "name": "shelf",
@@ -113,6 +113,6 @@ caminho. É assim que a maioria dos projetos guarda os comandos de build e de te
 `dependencies` é o que o código precisa para rodar. **`devDependencies`** é o que você precisa só
 enquanto trabalha nele: um executor de testes, um linter, um bundler. `npm install --save-dev NOME`
 põe um pacote na segunda lista. Quando alguém instala o seu pacote publicado, o npm busca as
-`dependencies` dele e pula as `devDependencies`. O registro do laboratório não tem executor de
-testes para mostrar isso, então não foi rodado aqui. O curso `node`, na aula 4, leva o
+`dependencies` dele e pula as `devDependencies`. O seu registro não tem executor de testes para
+mostrar isso, então não foi rodado aqui. O curso `node`, na aula 4, leva o
 `package.json` e os scripts adiante, do lado do servidor.

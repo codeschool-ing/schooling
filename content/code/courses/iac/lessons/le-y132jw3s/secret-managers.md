@@ -1,6 +1,6 @@
 ---
 title: Letting AWS generate and hold the password
-version: 1
+version: 2
 ---
 
 A write-only argument still has Terraform holding the password for a moment, and still has it
@@ -8,7 +8,7 @@ choosing the password and deciding when it changes. For a database there is a cl
 **the database service generates the password itself, keeps it in Secrets Manager, and Terraform
 never sees it at all.** On RDS that is one argument, `manage_master_user_password`.
 
-Ana's database for the shop, with no password anywhere in the file:
+Ana's database for the shop, in `~/shop/db/main.tf`, with no password anywhere in the file:
 
 ```hcl
 terraform {

@@ -1,6 +1,6 @@
 ---
 title: Rotation, and the first hour after a leak
-version: 1
+version: 2
 ---
 
 **Rotating** a secret means replacing it with a new value and making the old one stop working. Done
@@ -8,7 +8,20 @@ routinely, it limits how long any copy of a secret stays useful. Done after a le
 that matters most, and doing it in the wrong order causes an outage of your own.
 
 Here the carrier rotates the production token: the stand-in is restarted accepting only
-`lab-live-token-2`, and `shipquote` still presents the old one.
+`lab-live-token-2`, and `shipquote` still presents the old one. Stop the carrier on 9092 with Ctrl-C
+and start it again with the new token:
+
+```sh
+CARRIER_TOKEN=lab-live-token-2 CARRIER_PORT=9092 python3 ~/carrier/server.py
+```
+
+Ask for a quote and read the log. Then put the new token in production's configuration,
+
+```sh
+sed -i 's/=lab-live-token$/=lab-live-token-2/' ~/envs/production/config.env
+```
+
+and restart production, which is the last command below:
 
 ```
 ana@laptop:~/shipquote$ curl -s "http://127.0.0.1:8300/quote?cep=01310-100&weight=1200&subtotal=5000"; echo

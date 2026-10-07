@@ -6,13 +6,28 @@ version: 1
 `remote` é um laptop em casa, `192.168.1.50`, atrás de um roteador doméstico, `homegw`, que divide um
 endereço público, `198.51.100.77`, entre tudo o que há na casa. **O ESP não atravessa esse roteador
 como está, porque o ESP não tem portas.** Um roteador que divide um endereço separa as conversas pelo
-número de porta, como mostrou a aula 11 de `networks-addressing`, e um pacote ESP não lhe dá nada com
+número de porta, como mostrou `networks-addressing`, e um pacote ESP não lhe dá nada com
 que trabalhar.
 
 A resposta do IPsec é a **travessia de NAT**: detectar o NAT durante a primeira troca e depois levar IKE
-e ESP, os dois, em UDP na porta 4500. `remote` pede um endereço próprio com `vips = 0.0.0.0`, e `hq` tem
-uma segunda conexão, `home`, que os distribui a partir de `10.30.0.0/24`. O laptop começou, e o log foi
-filtrado até as linhas que importam:
+e ESP, os dois, em UDP na porta 4500. `hq` ganha uma segunda conexão, `home`, que distribui endereços a
+partir de `10.30.0.0/24`. Acrescente-a no fim do `/etc/swanctl/swanctl.conf` de `hq`, depois do que já
+está lá:
+
+```schooling-example
+{"language": "conf", "file": "swanctl.conf", "parts": [{"code": "connections {\n  home {\n    version = 2\n    local_addrs = 203.0.113.2\n    pools = homes", "note": "Uma segunda conexão em `hq`, `home`, acrescentada no fim do mesmo arquivo. Ela cita só o endereço do próprio `hq`: o laptop pode chegar de qualquer endereço, que é a razão de ser do acesso remoto. `pools = homes` diz de onde vem o endereço dele."}, {"code": "    local {\n      auth = psk\n      id = hq.example.com\n    }\n    remote {\n      auth = psk\n      id = ana@example.com\n    }", "note": "`hq` se prova como antes; do outro lado agora está uma pessoa, `ana@example.com`, não um roteador."}, {"code": "    children {\n      office {\n        local_ts = 192.168.10.0/24\n        esp_proposals = aes256gcm16\n      }\n    }\n  }\n}", "note": "Só o lado de `hq` do túnel é nomeado, a rede do escritório. O outro lado é o endereço que o pool distribuir."}, {"code": "pools {\n  homes {\n    addrs = 10.30.0.0/24\n  }\n}", "note": "O pool: um endereço por laptop, de `10.30.0.0/24`, uma faixa que nenhum escritório e nenhuma casa daqui usa."}, {"code": "secrets {\n  ike-ana {\n    id-1 = hq.example.com\n    id-2 = ana@example.com\n    secret = \"Harbour-Violet-Candle-3381\"\n  }\n}", "note": "O segredo da própria Ana. Numa empresa de verdade cada pessoa teria o seu, ou um certificado, ao que o fim desta seção volta."}]}
+```
+
+Em `remote`, o laptop, o `/etc/swanctl/swanctl.conf` é novo, e pede um endereço próprio com
+`vips = 0.0.0.0`:
+
+```schooling-example
+{"language": "conf", "file": "swanctl.conf", "parts": [{"code": "connections {\n  office {\n    version = 2\n    remote_addrs = 203.0.113.2\n    vips = 0.0.0.0", "note": "O lado do laptop. Ele sabe onde fica o escritório, `remote_addrs`, e não onde ele mesmo está. `vips = 0.0.0.0` pede um endereço ao escritório."}, {"code": "    local {\n      auth = psk\n      id = ana@example.com\n    }\n    remote {\n      auth = psk\n      id = hq.example.com\n    }", "note": "As mesmas duas identidades da conexão `home` de `hq`, ao contrário."}, {"code": "    children {\n      office {\n        remote_ts = 192.168.10.0/24\n        esp_proposals = aes256gcm16\n      }\n    }\n  }\n}", "note": "O túnel leva o que vai para a rede do escritório, e mais nada: o resto do tráfego da Ana continua saindo pelo roteador de casa. A aula 5 chama isso de split tunnelling."}, {"code": "secrets {\n  ike-ana {\n    id-1 = hq.example.com\n    id-2 = ana@example.com\n    secret = \"Harbour-Violet-Candle-3381\"\n  }\n}", "note": "O mesmo segredo que em `hq`."}]}
+```
+
+Inicie o `charon` em `remote` como nos roteadores, com
+`sudo setsid /usr/lib/ipsec/charon >/dev/null 2>&1 &`, depois rode `sudo swanctl --load-all` em `hq` e
+em `remote`. O laptop começou a conexão, e o log foi filtrado até as linhas que importam:
 
 ```
 ana@remote:~$ sudo swanctl --initiate --child office | grep -E "NAT|sending|received|virtual|established"

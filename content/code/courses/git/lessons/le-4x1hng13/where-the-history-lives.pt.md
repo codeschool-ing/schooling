@@ -1,6 +1,6 @@
 ---
 title: Onde o histórico mora, e por que Git não é GitHub
-version: 1
+version: 2
 ---
 
 Controle de versão é décadas mais velho que o Git, e os sistemas anteriores fizeram uma escolha que
@@ -43,6 +43,10 @@ d03056f Name the quarter in the title
 
 **Os quatro commits sobreviveram**, com os mesmos ids, porque a cópia nunca dependeu do original. Ela
 era o histórico, não uma janela para ele.
+
+Você não precisa digitar este: `~/notes` é o histórico da seção anterior, e a sua máquina não o tem.
+A aula 7 roda `git clone` num repositório que você mesmo terá feito, e ele se comporta
+exatamente assim.
 
 Três coisas decorrem disso, e você vai se apoiar em cada uma.
 

@@ -5,9 +5,24 @@ version: 1
 
 **O Vertical Pod Autoscaler tem três partes**: um recomendador que observa o uso e calcula requests, um
 updater que despeja pods cujos requests estão longe da recomendação, e um admission controller que
-escreve os requests recomendados nos pods novos. Este laboratório instala só o recomendador, com as
-CRDs e o RBAC do projeto (`lab.sh vpa`), porque ler recomendações é o primeiro passo seguro, e é o que
-`updateMode: "Off"` pede de qualquer jeito.
+escreve os requests recomendados nos pods novos. Esta aula instala só o recomendador, com as CRDs e o
+RBAC do projeto, porque ler recomendações é o primeiro passo seguro, e é o que `updateMode: "Off"` pede
+de qualquer jeito. Ele lê o uso do metrics-server, então um `./up.sh` novo recebe os dois, o
+metrics-server como na aula 21 e depois o recomendador a partir dos manifestos do próprio projeto, na
+versão que este curso usou:
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.9.0/components.yaml
+```
+
+```sh
+BASE=https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.8.0/vertical-pod-autoscaler/deploy
+kubectl apply -f $BASE/vpa-v1-crd-gen.yaml -f $BASE/vpa-rbac.yaml -f $BASE/recommender-deployment.yaml
+kubectl -n kube-system rollout status deployment/vpa-recommender
+```
+
+Na máquina em que o curso foi gravado, as duas imagens foram compiladas do código-fonte dos projetos
+nessas versões, porque o registro delas não era alcançável de lá; os manifestos são os mesmos.
 
 A loja, com requests errados de propósito, muito menos CPU do que ela usa sob carga e muito mais memória
 do que ela usa:
@@ -68,7 +83,13 @@ service/shop created
 verticalpodautoscaler.autoscaling.k8s.io/shop created
 ```
 
-Um pod busybox manteve a loja ocupada, e quatro minutos depois:
+Um pod busybox manteve a loja ocupada, pedindo a ela um décimo de segundo de trabalho em loop:
+
+```sh
+kubectl run load --image=busybox:1.37 --restart=Never --command -- sh -c "while true; do wget -qO- shop/work?ms=100 >/dev/null; done"
+```
+
+Quatro minutos depois:
 
 ```
 ana@laptop:~/shop$ kubectl get vpa shop

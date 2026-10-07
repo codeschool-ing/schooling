@@ -1,6 +1,6 @@
 ---
 title: Checking the stubs against the real thing
-version: 1
+version: 2
 ---
 
 Every stub is a statement: *the carrier answers like this*. `StubCarrier(cents=1999)` assumes the
@@ -9,7 +9,7 @@ answer, the stubs go on saying the old thing, and every test that uses them stay
 production fails. Nothing in the doubles can notice; they are the thing that went stale.
 
 A **contract test** closes the loop by asking the real collaborator the questions the doubles
-answer. `shipquote` has two, in `tests/test_carrier_contract.py`:
+answer. `shipquote` has two. Save them as `tests/test_carrier_contract.py`:
 
 ```python
 """The questions the stubs answer, asked of a real carrier endpoint.
@@ -42,8 +42,35 @@ def test_a_wrong_token_is_a_carrier_error_not_a_crash():
         CarrierClient(URL, "not-the-token").rate("01310100", 1200)
 ```
 
-They are marked `contract` and **skipped unless `CARRIER_URL` says where a carrier is**, because
-they need one. Run them on a laptop with nothing configured and this is what you get:
+They are marked `contract`, a marker lesson 1's `pyproject.toml` does not declare, and
+`--strict-markers` refuses a marker nobody declared. So the list gains one line, and the file
+becomes, whole. Save it as `pyproject.toml`:
+
+```toml
+[project]
+name = "shipquote"
+version = "0"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+markers = [
+    "integration: talks to a real SQLite file",
+    "functional: starts the HTTP server",
+    "acceptance: a promise the shop makes, checked from outside",
+    "contract: asks the real carrier the questions the stubs answer",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["shipquote"]
+
+[tool.coverage.report]
+show_missing = true
+```
+
+The tests are **skipped unless `CARRIER_URL` says where a carrier is**, because they need one. Run them on a laptop with nothing configured and this is what you get:
 
 ```
 ana@laptop:~/shipquote$ python -m pytest -m contract -v -rs
@@ -74,9 +101,15 @@ token in the repository.
 
 ## Against a carrier
 
-The lab cannot reach a real carrier, so it runs a stand-in: a small HTTP server that answers the
-same shape of question on 127.0.0.1:9090, with a token the lab made up. Pointed at it, both
-contract tests pass:
+The lab cannot reach a real carrier, so it uses the stand-in of section 04, started again in the
+second terminal, this time without the delay:
+
+```sh
+CARRIER_TOKEN=lab-token-not-a-secret python3 ~/carrier/server.py
+```
+
+It listens on 127.0.0.1:9090 and accepts the token the lab made up. Pointed at it, both contract
+tests pass:
 
 ```
 ana@laptop:~/shipquote$ CARRIER_URL=http://127.0.0.1:9090 CARRIER_TOKEN=lab-token-not-a-secret python -m pytest -m contract -q
@@ -84,8 +117,15 @@ ana@laptop:~/shipquote$ CARRIER_URL=http://127.0.0.1:9090 CARRIER_TOKEN=lab-toke
 2 passed, 31 deselected in 0.19s
 ```
 
-Now the carrier changes its answer. The stand-in is edited to send `price_cents` instead of
-`cents`, as a real provider might in a new API version, and restarted:
+Now the carrier changes its answer, as a real provider might in a new API version. Stop the
+stand-in with Ctrl-C, make it send `price_cents` instead of `cents`, and start it again:
+
+```sh
+sed -i 's/{"cents": 1500/{"price_cents": 1500/' ~/carrier/server.py
+CARRIER_TOKEN=lab-token-not-a-secret python3 ~/carrier/server.py
+```
+
+Then, in the first terminal, the stubs' tests and the contract's:
 
 ```
 ana@laptop:~/shipquote$ python -m pytest tests/test_carrier.py -q
@@ -107,6 +147,8 @@ FAILED tests/test_carrier_contract.py::test_a_rate_is_a_whole_number_of_cents
 The four stub tests are still green: they never talk to the carrier. The contract test fails with
 `CarrierError: 'cents'`, the key that is no longer there. In production the fallback would quietly
 quote from the table on every request, and only the log line from section 05 would say so.
+Put the stand-in back as it was, `sed -i 's/{"price_cents": 1500/{"cents": 1500/' ~/carrier/server.py`,
+because later lessons ask it for prices again, and commit the contract tests with the marker.
 
 ## Contracts in practice
 

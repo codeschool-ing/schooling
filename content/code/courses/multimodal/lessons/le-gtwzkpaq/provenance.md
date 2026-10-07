@@ -1,6 +1,6 @@
 ---
 title: Saying that a picture was generated
-version: 1
+version: 2
 ---
 
 A generated picture published without saying so can mislead the people who see it, and in more and more places the law asks for a label. The European Union's AI Act requires providers of generative systems to mark their output in a machine-readable way, and to disclose deepfakes. Two technical mechanisms do the marking, and a product team should know what each one survives.
@@ -17,7 +17,7 @@ from PIL import Image, PngImagePlugin
 
 card = Image.open("grid/00-0.png")
 info = PngImagePlugin.PngInfo()
-info.add_text("Source", "labmm stand-in, lab-image-1, 2026-10-06")
+info.add_text("Source", "images_server stand-in, gpt-image-1, 2026-10-07")
 card.save("stamped.png", pnginfo=info)
 print("saved:  ", Image.open("stamped.png").text)
 
@@ -28,7 +28,7 @@ print("edited: ", Image.open("edited.png").text)
 
 ```
 ana@lab:~/mm$ python stamp.py
-saved:   {'Source': 'labmm stand-in, lab-image-1, 2026-10-06'}
+saved:   {'Source': 'images_server stand-in, gpt-image-1, 2026-10-07'}
 edited:  {}
 ```
 

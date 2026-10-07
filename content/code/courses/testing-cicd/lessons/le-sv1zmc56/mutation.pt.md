@@ -1,6 +1,6 @@
 ---
 title: Quebrando o código para testar os testes
-version: 1
+version: 2
 ---
 
 A aula 1 quebrou `brl` de propósito para ver um teste falhar, e a aula 3 fez o mesmo com `split`. O
@@ -11,8 +11,8 @@ código quebrado do real.
 
 Ferramentas como `mutmut` e `cosmic-ray` para Python, PIT para Java e Stryker para JavaScript geram
 milhares de mutantes automaticamente. A ideia cabe num script curto, e vê-lo inteiro é o melhor jeito
-de entender o que essas ferramentas relatam. Este foi escrito para a aula e fica ao lado do script
-de captura dela:
+de entender o que essas ferramentas relatam. Este foi escrito para a aula, e roda a partir do
+diretório do projeto. Salve como `mutate.py`:
 
 ```python
 """Mutation testing by hand: change one thing, run the suite, see who notices.

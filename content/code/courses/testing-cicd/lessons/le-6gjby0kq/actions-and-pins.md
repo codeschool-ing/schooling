@@ -1,6 +1,6 @@
 ---
 title: Actions, and pinning them to a commit
-version: 1
+version: 2
 ---
 
 An **action** is a step somebody packaged for reuse: check out the code, install Python, upload a
@@ -25,7 +25,8 @@ it as a comment: the hash for the machine, the comment for the person deciding w
 ## This repository checks its own pins
 
 The repository that publishes this course has a tool for exactly this, `tools/check-actions`, and
-runs it in CI. With `-offline` it checks the pinning half without fetching anything:
+runs it in CI. With `-offline` it checks the pinning half without fetching anything. You do not need
+to type this one; it runs in that repository, not in `shipquote`:
 
 ```
 ana@laptop:~/schooling$ go run ./tools/check-actions -offline

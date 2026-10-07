@@ -1,6 +1,6 @@
 ---
 title: Catching a broken workflow before it runs
-version: 1
+version: 2
 ---
 
 A mistake in a workflow file is expensive to find the usual way: push, wait for a runner, read a
@@ -8,7 +8,9 @@ failure, fix, push again. Some mistakes do not even fail. A misspelt expression 
 empty string, and a step quietly runs with nothing where a value should be.
 
 Here are two typos made on purpose: `matrix.pyton` for `matrix.python` in the suite job, and
-`cache-dependancy-path` for `cache-dependency-path` in the fast job. actionlint is run again:
+`cache-dependancy-path` for `cache-dependency-path` in the fast job. Make both in
+`.github/workflows/ci.yml`, run actionlint again, and put the file back afterwards with
+`git checkout .github/workflows/ci.yml`:
 
 ```
 ana@laptop:~/shipquote$ actionlint; echo "exit status $?"

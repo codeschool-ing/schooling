@@ -1,6 +1,6 @@
 ---
 title: Baking an image, or configuring at boot
-version: 1
+version: 2
 ---
 
 Every machine starts from an image: a disk with an operating system on it, copied for each new
@@ -27,7 +27,8 @@ run what three different days offered, and nothing in any file says which:
 
 Here is the difference on the laptop, with containers standing in for machines. The first command
 is a fried start: plain Ubuntu, then apt. The second starts from `shop-web:1.0.1`, the image this
-lesson builds in the next two sections:
+lesson builds in the next two sections, so on your computer it works once you have built it there.
+Both use Docker as lesson 18 installed it:
 
 ```
 ana@laptop:~/shop/image$ time docker run --rm ubuntu:24.04 sh -c 'apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx > /dev/null && nginx -v'

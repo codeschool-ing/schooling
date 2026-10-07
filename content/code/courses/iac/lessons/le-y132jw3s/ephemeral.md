@@ -1,22 +1,22 @@
 ---
 title: Values that are never written down
-version: 1
+version: 2
 ---
 
 Terraform 1.10 added a kind of value the state never sees, and 1.11 added the place to put it. An
 **ephemeral** value exists for the length of one run: it is produced when Terraform needs it,
 handed to whatever needs it, and dropped, and it is written neither to the plan file nor to the
 state. A **write-only argument** is an argument of a resource that accepts such a value, passes it
-to the provider during the apply, and keeps no record of it afterwards. The lab runs Terraform
-1.16.4, so both are here.
+to the provider during the apply, and keeps no record of it afterwards. Lesson 1 installed
+Terraform 1.16.4, so your lab has both.
 
 An ephemeral value comes from one of two places. An ephemeral **resource** produces one: the random
 provider has `ephemeral "random_password"`, and the AWS provider has ephemeral resources that read a
 secret out of Secrets Manager or Parameter Store for the length of a run. And a variable declared
 with `ephemeral = true` is one, for a value that arrives from outside, through `TF_VAR_` or `-var`.
 
-Ana rewrites the configuration from the last section in a new directory, with the password made by
-an ephemeral resource. Her first attempt keeps the same argument:
+Ana rewrites the configuration from the last section in a new directory, `~/shop/secrets-wo`, with
+the password made by an ephemeral resource. Her first attempt at `main.tf` keeps the same argument:
 
 ```hcl
 terraform {
@@ -175,7 +175,9 @@ to compare it with.
 
 ## Where write-only arguments exist
 
-Only where a provider has written one. In the AWS provider in the lab, that is a short list:
+Only where a provider has written one. In version 6.67.0 of the AWS provider, the one these lessons
+were recorded with, that is a short list. Yours is the newest 6.x on the day you ran
+`terraform init`, since the configuration asks for `~> 6.0`, and a newer one may list more:
 
 ```
 ana@laptop:~/shop/secrets-wo$ terraform providers schema -json | jq -r ".provider_schemas[].resource_schemas | to_entries[] | select(any(.value.block.attributes[]; .write_only == true)) | .key"

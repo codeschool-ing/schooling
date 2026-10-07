@@ -1,6 +1,6 @@
 ---
 title: `Format-*` is the end of the pipeline, and never the middle
-version: 1
+version: 2
 ---
 
 Every table you have seen in this lesson was produced by a formatter that
@@ -13,14 +13,14 @@ You can ask for one explicitly:
 PS /home/ana/work/ps> Import-Csv sales.csv | Select-Object -First 2 | Format-Table -AutoSize
 region rep   quarter units revenue
 ------ ---   ------- ----- -------
-north  ana   Q1      171   8721
-north  bruno Q1      49    4116
+north  ana   Q1      145   18850
+north  bruno Q1      275   23100
 PS /home/ana/work/ps> Import-Csv sales.csv | Select-Object -First 1 | Format-List
 region  : north
 rep     : ana
 quarter : Q1
-units   : 171
-revenue : 8721
+units   : 145
+revenue : 18850
 ```
 
 | | |
@@ -89,11 +89,11 @@ PS /home/ana/work/ps> Get-ChildItem | Select-Object Name, Length | ConvertTo-Jso
 [
   {
     "Name": "access.log",
-    "Length": 148233
+    "Length": 153934
   },
   {
     "Name": "sales.csv",
-    "Length": 788
+    "Length": 807
   }
 ]
 ```

@@ -1,6 +1,6 @@
 ---
 title: Listing and deleting branches
-version: 1
+version: 2
 ---
 
 A merged branch has done its job. Its commits are part of `main` now, and the name is only clutter.
@@ -9,6 +9,7 @@ Before deleting anything, two ways to look:
 ```
 ana@vm:~/site$ git switch -c experiment
 Switched to a new branch 'experiment'
+ana@vm:~/site$ sed -i 's/darkorange/purple/' style.css
 ana@vm:~/site$ git commit -qam "Try purple"
 ana@vm:~/site$ git switch main
 Switched to branch 'main'

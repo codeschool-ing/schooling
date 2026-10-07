@@ -1,6 +1,6 @@
 ---
 title: Cartões de modelo, e a licença que mora em outro lugar
-version: 1
+version: 2
 ---
 
 Um **cartão do modelo** (model card) é o documento publicado com um modelo: com o que ele foi treinado, para que serve, os limites conhecidos e a licença. É a primeira coisa a ler antes de um modelo entrar num produto, e os próprios modelos do laboratório mostram por que essa leitura não é formalidade. As três vozes Piper carregam os cartões consigo:
@@ -34,4 +34,4 @@ O modelo de segmentação de falantes é mais simples: a pasta dele traz uma lic
 
 **Um modelo convertido herda os termos do original.** Todo modelo deste laboratório é uma conversão: o sherpa-onnx transformou o Whisper, o pyannote e os modelos de falante em arquivos ONNX, e as vozes do Piper foram treinadas e exportadas pelo próprio projeto. Os termos que importam são os do original, então a corrente é: o arquivo convertido → o cartão do modelo original → o conjunto de dados com que ele foi treinado. Cada elo pode acrescentar uma restrição, e um modelo aberto para baixar não está, por isso, aberto para vender.
 
-Uma regra prática para um produto: **mantenha uma tabela de todo modelo que você distribui**, com a origem, a licença, a licença do conjunto de dados quando o cartão cita uma, e a data em que você as leu. O cabeçalho do `lab.sh` do laboratório é uma versão curta dessa tabela, e é o que um revisor pede.
+Uma regra prática para um produto: **mantenha uma tabela de todo modelo que você distribui**, com a origem, a licença, a licença do conjunto de dados quando o cartão cita uma, e a data em que você as leu. A lista de modelos do `setup.sh` da aula 1, cada arquivo com o endereço de onde veio e o seu SHA-256, é o começo de uma, e é o que um revisor pede.

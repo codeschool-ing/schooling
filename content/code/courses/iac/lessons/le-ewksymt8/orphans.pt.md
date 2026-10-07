@@ -1,6 +1,6 @@
 ---
 title: O recurso que não é de ninguém
-version: 1
+version: 2
 ---
 
 Toda revisão deste curso olha para uma configuração: um diff, um plano, um preço. **Um recurso que não
@@ -23,7 +23,13 @@ Eles vêm de poucos lugares, e cada um já apareceu antes:
 
 Um colega, o Bruno, precisou de espaço para uma exportação avulsa na semana passada. Da própria máquina
 ele criou um volume de 100 GB e reservou um endereço público, e aí a exportação terminou. Nenhum dos
-dois passou pelo Terraform, então nenhum tem tag.
+dois passou pelo Terraform, então nenhum tem tag. Estes foram os dois comandos do Bruno; rode-os para
+ter os mesmos dois no seu moto:
+
+```sh
+aws ec2 create-volume --size 100 --availability-zone sa-east-1a --volume-type gp3
+aws ec2 allocate-address --domain vpc
+```
 
 A ferramenta óbvia é a que a AWS fez para achar recursos por tag, a Resource Groups Tagging API. Peça
 volumes a ela:

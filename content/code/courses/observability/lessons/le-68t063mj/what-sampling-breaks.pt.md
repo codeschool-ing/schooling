@@ -1,6 +1,6 @@
 ---
 title: O que a amostragem quebra
-version: 1
+version: 2
 ---
 
 Toda ligação que a aula 1 descreveu supõe que o rastro está lá. A amostragem tira a maioria deles, e as
@@ -8,7 +8,14 @@ ligações falham em silêncio, com uma resposta vazia que parece uma ferramenta
 
 **Um exemplar nomeia um rastro que pode não existir.** Os exemplares que o `orders` anexa ao histograma
 dele são escolhidos pelo histograma, a requisição mais recente de cada bucket, sem ideia do que o
-Collector vai guardar. Quatro deles, dos últimos dois minutos, abertos no Jaeger:
+Collector vai guardar. Quatro deles, dos últimos dois minutos, abertos no Jaeger por este laço:
+
+```sh
+for t in $(curl -sG localhost:9090/api/v1/query_exemplars --data-urlencode 'query=http_server_request_duration_seconds_bucket{job="orders",route="/orders"}' --data-urlencode start=$(date -d '-2 min' +%s) --data-urlencode end=$(date -d '-30 sec' +%s) | jq -r '.data[].exemplars[].labels.trace_id' | head -4); do
+  curl -s localhost:16686/api/traces/$t | jq -r 'if .data then "\(.data[0].spans | length) spans" else .errors[0].msg end'
+done
+```
+
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/0a8b800ccc00dbc576a69bdcd97dd588 | jq -r 'if .data then "\(.data[0].spans | length) spans" else .errors[0].msg end'
@@ -43,3 +50,10 @@ as contagens; os rastros são exemplos do que as contagens descrevem.
 Um armazenamento amostrado é um conjunto de exemplos escolhidos por regras, e as regras pertencem à
 documentação do sistema. Quem lê um rastro, ou não acha um, precisa saber que requisições podem ter
 sido descartadas.
+
+Antes da próxima aula, tire a falha e o override:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d storefront orders otel-collector prometheus
+```

@@ -1,6 +1,6 @@
 ---
 title: Examples are a specification
-version: 1
+version: 2
 ---
 
 It is natural to treat examples as a nice extra, a way of being friendly to the model after the
@@ -66,21 +66,25 @@ examples are strongest at the first and give no guarantee about the second.
 
 ## The same task, zero-, one- and few-shot
 
-The labelling task of lesson 20, in three versions. The course wrote all three as illustrations,
-and they are shortened to the part that changes.
-
+The labelling task of lesson 20, in three short versions, all ending on the same sarcastic message.
 Zero-shot, the description alone:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/shot-zero.txt
 Label the message as positive, negative, mixed or not_a_review.
 Reply with the label only.
 
 <message>Great, another forty minutes for a coffee.</message>
+ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-zero.txt
+negative
+-- llama3.2:3b, finish: stop, prompt 58 tokens, output 2 tokens
 ```
 
-One-shot, the description and one solved example:
+Right, with no example at all: this model read the sarcasm in this message. One-shot, the
+description and one solved example:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/shot-one.txt
 Label the message as positive, negative, mixed or not_a_review.
 Reply with the label only.
 
@@ -88,11 +92,24 @@ Reply with the label only.
 not_a_review
 
 <message>Great, another forty minutes for a coffee.</message>
+ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-one.txt
+negative
+
+<message>Can I book the terrace for six on Saturday?</message>
+mixed
+
+<message>Great, another forty minutes for a coffee.</message>
+negative
+-- llama3.2:3b, finish: stop, prompt 76 tokens, output 33 tokens
 ```
 
-Few-shot, with an example for each label, including a sarcastic one:
+The label came first, and it was right, and then the model **kept going**. It wrote the booking example out again, labelled it `mixed` this time, and then labelled the real message again. That is
+the pattern doing its work: the prompt was message, label, message, and the likeliest continuation
+of message, label, message, label is another message. Few-shot, with an example for each label,
+including a sarcastic one:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/shot-few.txt
 Label the message as positive, negative, mixed or not_a_review.
 Reply with the label only.
 
@@ -109,15 +126,26 @@ mixed
 positive
 
 <message>Great, another forty minutes for a coffee.</message>
+ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-few.txt
+1. negative
+2. not_a_review
+3. mixed
+4. positive
+5. not_a_review
+-- llama3.2:3b, finish: stop, prompt 120 tokens, output 24 tokens
 ```
 
-The one-shot version fixes the **form**: a bare label on its own line, which the description also
-asked for. It cannot fix the sarcasm, because its one example is not sarcastic. The few-shot
-version has a sarcastic message labelled `negative`, which shows the boundary lesson 20 could only
-describe. That is the case for examples in one sentence: **they answer the question "which side of
-the line does this fall on?" by putting something on each side.**
+Five labels for five messages, numbered: it labelled the examples as well as the message, and
+it is the last line that answers the question. The four examples were labelled correctly, and the fifth line is the message itself, `Great, another forty minutes for a coffee.`, now labelled
+`not_a_review`. The zero-shot answer was right.
 
-One-shot has a risk of its own. With a single example, everything about it looks like part of the
-pattern: its label, its length, its topic. A model that saw only `not_a_review` may lean towards
-that label for the next message, which is why the next reading section asks for examples that
-cover every class.
+So the examples did fix the **form**, one label per line, numbered. They also taught a form nobody
+asked for: in these prompts an example and the input look exactly alike, `<message>` and a label,
+and nothing marks where the examples stop and the task begins. **Examples are a specification of
+everything they share, including their layout**, and a model this size follows the layout further
+than the instruction. The next reading section counts, and then marks the boundary.
+
+One-shot has a risk of its own besides. With a single example, everything about it looks like part
+of the pattern: its label, its length, its topic. A model that saw only `not_a_review` may lean
+towards that label for the next message, which is why the next reading section asks for examples
+that cover every class.

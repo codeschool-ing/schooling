@@ -1,10 +1,10 @@
 ---
 title: Stepping, and the debugger statement
-version: 1
+version: 2
 ---
 
 **Once the page is paused, you can move it forward one step at a time and watch the state change.**
-DevTools has three buttons for it, and the lab's `--step` takes the same three words:
+DevTools has three buttons for it, and `page`'s `--step` takes the same three words:
 
 - **step over** runs the current line, calls included, and stops at the next line of the same
   function;
@@ -79,7 +79,7 @@ paused at find.js:9
 ```
 
 The first run is a page with nobody watching: the statement was ignored and the count printed. In
-the second, the lab's `--break debugger` attaches the debugger first, as opening DevTools would.
+the second, `--break debugger` attaches the debugger first, as opening DevTools would.
 The page paused at line 9, with `found` already computed. The **script** scope holds the file's
 top-level `const books`.
 
@@ -90,5 +90,5 @@ there too. ESLint's `no-debugger` rule exists to catch the one that slipped thro
 ## Node has the same debugger
 
 `node --inspect app.js` starts a program with the same protocol open, and Chrome's
-`chrome://inspect` page attaches its DevTools to it, breakpoints and all. That was not run in this
-lab, which has no desktop to open a DevTools window on.
+`chrome://inspect` page attaches its DevTools to it, breakpoints and all. That was not run for this
+lesson: the machine it was recorded on has no desktop to open a DevTools window on.

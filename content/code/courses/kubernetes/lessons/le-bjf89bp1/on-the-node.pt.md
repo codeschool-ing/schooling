@@ -68,4 +68,4 @@ que o `Retain` existe.
 | `DeleteVolume` | `csi-provisioner` | o claim é apagado e a política é `Delete` |
 
 Snapshots, redimensionamento e anexar a uma máquina são outras chamadas com outros sidecars, deixados
-de fora do driver deste laboratório. A lição 28 é sobre proteger o que um banco guarda num volume.
+de fora do driver desta aula. A lição 28 é sobre proteger o que um banco guarda num volume.

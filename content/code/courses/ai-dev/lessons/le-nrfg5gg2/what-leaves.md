@@ -1,6 +1,6 @@
 ---
 title: What leaves your machine
-version: 1
+version: 2
 ---
 
 Every request an assistant makes carries some of your files to somebody else's computer. That is
@@ -12,7 +12,27 @@ provider has left your control**, and it now sits in a request log you cannot re
 
 ana's project has the two places a secret usually hides: a `.env` file with a token, which git
 ignores, and a `settings.py` with a key typed into the code, which is a mistake but a common one.
-Both values are the lab's and open nothing.
+Both values are made up and open nothing. Write the three files into `~/shop` to follow along.
+`.gitignore`:
+
+```
+.env
+__pycache__/
+scratch/
+```
+
+`.env`:
+
+```
+SHOP_PAYMENTS_TOKEN=not-a-real-token-7d41
+```
+
+`settings.py`:
+
+```python
+PAYMENTS_URL = "https://payments.example.com/v1"
+PAYMENTS_KEY = "pk_test_4f9a8c7e1d2b3a6f"  # made up for the course; a real key never belongs in code
+```
 
 ```
 ana@dev:~/shop$ git status --short --ignored
@@ -20,33 +40,48 @@ ana@dev:~/shop$ git status --short --ignored
 ?? .gitignore
 ?? settings.py
 !! .env
-!! lab/
+!! scratch/
 ```
 
 `!! .env` means git ignores the file. **The editor does not care.** An ignored file is still a file
 on disk, and a tab is a tab. ana asks a question with both open:
 
 ```
-ana@dev:~/shop$ assist ask "Why might a payment fail?" --open shop/cart.py .env settings.py
-context sent (384 of 3000 tokens):
+ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open shop/cart.py .env settings.py
+context sent (386 of 3000 tokens):
     332  shop/cart.py
-     52  settings.py
+     54  settings.py
   refused .env: it holds something shaped like a secret
 ---
-Nothing in the files shown takes a payment: shop/cart.py computes the total and settings.py only holds a key for the payment service. A payment that fails is failing in code that is not in this context. Look at whatever reads PAYMENTS_KEY.
+Payment failures can occur due to various reasons, such as:
+
+*   Insufficient funds in the customer's account
+*   Invalid payment token or key
+*   Network connectivity issues
+*   Server-side errors or timeouts
+*   Expiration of the payment token or key
+*   Card expiration or invalid card information
+
+In the context of the provided code, a payment might fail if the `PAYMENTS_KEY` or `PAYMENTS_URL` are incorrect, if the payment token or response is invalid, or if the request to the payment gateway is blocked or timed out. 
+
+It's essential to handle these potential failures by implementing error handling mechanisms, such as try-except blocks, retries, and validation checks, to ensure a smooth and secure payment experience for users.
 ```
 
 `assist` refused `.env`, because its content matched the pattern of a secret, and sent
-`settings.py`, which did not. The key went with it, and labllm's log has it:
+`settings.py`, which did not. The key went with it, and the request `assist` kept has it:
 
 ```
-ana@dev:~/shop$ grep -c pk_lab_4f9a8c7e1d2b3a6f /var/log/labllm/requests.jsonl
+ana@dev:~/shop$ grep -c pk_test_4f9a8c7e1d2b3a6f scratch/sent.json
 1
 ```
 
+The reply itself is the list of reasons any payment fails, and its second paragraph names
+`PAYMENTS_KEY` and `PAYMENTS_URL`: the model read `settings.py`, as the count above proves.
+Nothing in these files takes a payment at all, which a colleague would have said first.
+
 **A pattern check is a net with holes.** `assist` looks for `token`, `secret`, `password` or
-`api_key` followed by a long value. `PAYMENTS_KEY = "pk_lab_…"` is a secret by any reading, and it
-passed because its name is not on the list. Real tools have better patterns and they still miss
+`api_key` followed by a long value. `PAYMENTS_KEY = "pk_test_…"` is a secret by any reading, and
+it passed because its name is not on the list. Real tools have better patterns and they still miss
 things, because a secret is a fact about a value and a pattern can only see its shape.
 
 ## An exclusion list
@@ -57,7 +92,7 @@ different things (a setting, or a file at the root of the project) and it does t
 
 ```
 ana@dev:~/shop$ printf "settings.py\n*.pem\nsecrets/\n" > .assistignore
-ana@dev:~/shop$ assist ask "Why might a payment fail?" --open shop/cart.py .env settings.py 2>&1 >/dev/null
+ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open shop/cart.py .env settings.py 2>&1 >/dev/null
 context sent (332 of 3000 tokens):
     332  shop/cart.py
   refused .env: it holds something shaped like a secret

@@ -1,6 +1,6 @@
 ---
 title: Moving a resource from one state to another
-version: 1
+version: 2
 ---
 
 The split moved three entries with commands nobody reviewed. That was acceptable once, on a quiet
@@ -19,8 +19,8 @@ and the new owner imports**.
 
 ## First, let go
 
-In the app, the bucket's block is deleted, and a `removed` block from lesson 6 says that deleting
-it means "stop managing", not "destroy":
+In the app, the bucket's block is deleted, and a `removed` block from lesson 6, in a new file
+`app/removed.tf`, says that deleting it means "stop managing", not "destroy":
 
 ```hcl
 removed {
@@ -48,7 +48,8 @@ index 72b1aa9..4b7913c 100644
 -}
 ```
 
-The plan is the one lesson 6 showed, a dot instead of a minus:
+Ana runs `terraform apply -auto-approve`, and commits once it has finished. The part of its
+output that matters is the plan lesson 6 showed, a dot instead of a minus:
 
 ```
  # aws_s3_bucket.logs will no longer be managed by Terraform, but will not be destroyed
@@ -84,8 +85,8 @@ by two is not.**
 
 ## Then, import
 
-The data team's configuration is their own, with its own key in the same bucket. Its `main.tf`
-declares the bucket exactly as the app did, with the backend inline this time:
+The data team's configuration is their own, in `~/data`, with its own key in the same bucket.
+Its `main.tf` declares the bucket exactly as the app did, with the backend inline this time:
 
 ```hcl
 terraform {
@@ -115,8 +116,8 @@ resource "aws_s3_bucket" "logs" {
 ```
 
 Declaring the bucket alone would give a plan with `1 to add`: this state has never heard of the
-bucket, so Terraform would try to create it. One more block says the resource is already there,
-and which real object it is:
+bucket, so Terraform would try to create it. One more block, in `imports.tf`, says the resource is
+already there, and which real object it is:
 
 ```hcl
 import {

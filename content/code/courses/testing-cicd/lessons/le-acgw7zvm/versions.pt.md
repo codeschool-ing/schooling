@@ -1,6 +1,6 @@
 ---
 title: A versão é escrita uma vez
-version: 1
+version: 2
 ---
 
 Um programa rodando deveria conseguir dizer o que é. Quando algo dá errado em produção, a primeira
@@ -26,7 +26,9 @@ notebook de alguém.
 
 ## Um build que não é release
 
-O que acontece com um commit sem tag? Aqui uma mudança é commitada num branch descartável e montada:
+O que acontece com um commit sem tag? Aqui uma mudança é commitada num branch descartável e montada.
+O branch é `git switch -c try-a-change`, a mudança uma linha vazia, `echo >> README.md`, e o commit
+`git commit -qam "Try a change"`:
 
 ```
 ana@laptop:~/shipquote$ git describe --tags
@@ -38,7 +40,8 @@ dist/shipquote-dev-7c77050.tar.gz
 O `git describe` diz que o commit está **um depois de `v1.4.0`**, com o hash `7c77050`. O build o chama
 de `dev-7c77050`: um nome que não se confunde com um release e que ainda diz exatamente qual commit é.
 Durante um incidente, "dev-7c77050" é uma resposta; "1.4.0, provavelmente com a correção da Ana" não
-é.
+é. Jogue fora o branch e o build dele depois: `git switch main`, `git branch -D try-a-change` e
+`rm dist/shipquote-dev-*`.
 
 ## Versões semânticas
 

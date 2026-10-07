@@ -110,4 +110,4 @@ climb outwards, one boundary at a time, to the tests that can see them.
 A useful rule for deciding where a test belongs: **test each rule at the lowest layer that can
 observe it.** The free-shipping threshold is arithmetic, so its edges are tested here, three rows,
 in milliseconds. Whether a customer actually sees "R$ 0,00" on the page is a different question,
-and section 08 asks it once, at the top.
+and section 11 asks it once, at the top.

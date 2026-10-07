@@ -1,15 +1,17 @@
 ---
 title: Resolvendo um conflito, ou desistindo dele
-version: 1
+version: 2
 ---
 
 Resolver são três passos, e só o primeiro exige raciocínio.
 
 **1. Faça o arquivo dizer o que deve.** Abra-o, apague os três marcadores e deixe a versão que você
 quer. Muitas vezes ela não é exatamente nenhum dos dois lados. Aqui as duas mudanças estão certas: o
-horário de inverno do Bruno e o horário de domingo da Ana. Então a resolução mantém as duas:
+horário de inverno do Bruno e o horário de domingo da Ana. Então a resolução mantém as duas. No nano você apagaria as linhas dos marcadores e escreveria a
+linha que diz as duas coisas; o primeiro comando abaixo escreve o mesmo arquivo de uma vez:
 
 ```
+ana@vm:~/site$ printf '<h1>Padaria Sol</h1>\n<p>Bread from half past six; Sundays from seven.</p>\n<p><a href="menu.html">See the menu</a></p>\n' > index.html
 ana@vm:~/site$ cat index.html
 <h1>Padaria Sol</h1>
 <p>Bread from half past six; Sundays from seven.</p>
@@ -56,7 +58,16 @@ desenhou; a única diferença é que uma pessoa decidiu o que uma linha dele diz
 ## Desistindo
 
 Às vezes um conflito é maior do que parecia, ou não é a hora. **O `git merge --abort` põe tudo de volta
-como estava antes de o merge começar**:
+como estava antes de o merge começar**. Antes, outro branch, feito a partir do commit anterior ao
+merge e mudando a mesma linha:
+
+```bash
+git switch -q -c lunch HEAD~1
+sed -i 's/half past six/seven/' index.html
+git commit -qam 'Open at seven'
+git switch -q main
+```
+
 
 ```
 ana@vm:~/site$ git merge lunch

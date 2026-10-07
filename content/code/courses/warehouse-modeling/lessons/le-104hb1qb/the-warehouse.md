@@ -1,6 +1,6 @@
 ---
 title: A second database, built to be read
-version: 1
+version: 2
 ---
 
 A **data warehouse** is a database whose only job is to answer questions about the business. It is
@@ -8,7 +8,7 @@ loaded from the operational systems, on a schedule, and read by people and repor
 into it.
 
 Bill Inmon, who coined the term in the early 1990s, gave it four properties, and each one is the
-opposite of something in sections 05 and 08:
+opposite of something in sections 08 and 11:
 
 - **Subject-oriented.** Organised around what the business asks about, such as sales, stock and
   customers, rather than around the screens of the application that wrote the data.
@@ -17,8 +17,9 @@ opposite of something in sections 05 and 08:
 - **Time-variant.** Every row knows the period it describes, and the past is kept.
 - **Non-volatile.** Loaded and then read. A row is not edited by the people who read it.
 
-Ana's lab already has one, built from the shop's database. Lessons 2 to 5 build it piece by piece;
-here it is ready-made, so that it can be asked section 04's question:
+Lessons 2 to 5 build one from the shop's database, piece by piece, and lesson 2 ends with a script
+that builds all of it. Here it is already built, so that it can be asked section 07's question; you
+can type this one once lesson 2 has given you the warehouse.
 
 ```sql
 -- The same question, asked of the warehouse.

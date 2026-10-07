@@ -1,6 +1,6 @@
 ---
 title: Um bucket no notebook
-version: 1
+version: 2
 ---
 
 A interface do S3 é HTTP, então dá para imitá-la. O **moto** é um programa em Python escrito para
@@ -9,7 +9,28 @@ requisições do S3 do jeito que o S3 responde, guardando os objetos na própria
 aponta a AWS CLI de verdade para ele, o que mostra a forma da interface: as requisições, as
 respostas, o que são uma chave e um prefixo. **Ele não diz nada sobre latência, durabilidade ou
 preço do S3.** Nada do que ele guarda sai do notebook, e ele aceita credenciais que a AWS recusaria.
-O `captures.sh` da aula diz como rodar a mesma sessão.
+
+A aula 1 instalou o moto no ambiente virtual do curso. Suba-o em segundo plano, com o log indo para
+um arquivo que esta seção lê mais adiante. Depois faça dois arquivos pequenos para enviar: uma "foto" de
+cem bytes, todos `x`, sobre a qual o S3 não tem opinião, e um relatório de uma linha:
+
+```
+ana@laptop:~/cloud$ moto_server -p 5000 > moto.log 2>&1 &
+ana@laptop:~/cloud$ head -c 100 /dev/zero | tr '\0' 'x' > cat.jpg
+ana@laptop:~/cloud$ printf 'hello\n' > report.txt
+ana@laptop:~/cloud$ wc -c cat.jpg report.txt
+100 cat.jpg
+  6 report.txt
+106 total
+```
+
+O `&` no fim da primeira linha roda o moto em segundo plano, então o mesmo terminal fica livre para o
+resto da sessão; um shell interativo responde com um número de tarefa e um id de processo. Dê um
+segundo para ele subir antes do próximo comando. Quando terminar esta aula, `kill %1` o para, e os
+objetos vão junto, porque ele os guardava na memória. Depois feche o terminal, ou faça `unset` das
+quatro variáveis que o próximo bloco exporta: as aulas seguintes esperam uma CLI sem credenciais, e
+estas mandariam as requisições dela para um moto que já não está lá.
+
 
 A CLI precisa saber para onde mandar as requisições e precisa de alguma credencial para assiná-las.
 Quatro variáveis fazem as duas coisas: a palavra `test` como par de chaves, uma região, e o endereço
@@ -35,8 +56,8 @@ ana@laptop:~/cloud$ aws s3 ls s3://ana-uploads
                            PRE photos/
                            PRE reports/
 ana@laptop:~/cloud$ aws s3 ls s3://ana-uploads --recursive
-2026-09-28 15:15:51        100 photos/2026/cat.jpg
-2026-09-28 15:15:53          6 reports/q3.txt
+2026-10-07 07:57:11        100 photos/2026/cat.jpg
+2026-10-07 07:57:12          6 reports/q3.txt
 ana@laptop:~/cloud$ aws s3api list-objects-v2 --bucket ana-uploads --query 'Contents[].Key'
 [
     "photos/2026/cat.jpg",

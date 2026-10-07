@@ -14,7 +14,7 @@ provider was doing for you without mentioning it:
 works out how big, section 04 how to make them smaller.
 
 **A runtime**, the program that loads the weights onto the hardware and generates tokens: reading
-the prompt, producing one token at a time, applying the chat template from lesson 1 section 04.
+the prompt, producing one token at a time, applying the chat template from lesson 1 section 08.
 llama.cpp, vLLM and Ollama are three; lesson 14 runs the last. Each supports some model formats and
 some hardware and not others.
 

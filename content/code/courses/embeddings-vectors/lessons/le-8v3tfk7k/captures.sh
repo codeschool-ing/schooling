@@ -194,6 +194,9 @@ for m, s in zip(inbox, k5(X)):
     print(f"inbox {m['id']} {int(m['odd'])} {s:.3f}")
 EOF_FILE
 
+block wc
+on 'wc -l data/inbox.jsonl data/week2.jsonl'
+
 block count
 on 'wc -l data/tickets.jsonl data/inbox.jsonl'
 on 'grep -c "\"odd\": true" data/inbox.jsonl'

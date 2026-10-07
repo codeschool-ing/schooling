@@ -1,6 +1,6 @@
 ---
 title: Removing and renaming, so that Git knows
-version: 1
+version: 2
 ---
 
 Deleting or renaming a file is a change like any other, and it has to be staged like any other. The
@@ -12,6 +12,7 @@ its own.
 Rename the stylesheet with the ordinary shell command, and Git sees two unrelated events:
 
 ```
+ana@vm:~/site$ printf 'Ask the supplier about rye flour\n' > todo.txt
 ana@vm:~/site$ git add menu.html todo.txt && git commit -q -m "Add the menu and a to-do list"
 ana@vm:~/site$ mv style.css site.css
 ana@vm:~/site$ git status --short

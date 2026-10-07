@@ -1,12 +1,12 @@
 ---
 title: A package and package.json
-version: 1
+version: 2
 ---
 
 **A package is a folder of code with a `package.json` that names it and gives it a version.** A
 **registry** is a server that stores published packages and hands them out by name. The public one
-is `registry.npmjs.org`; in this lesson the lab runs its own, on the same machine, holding a few
-packages written for the lesson. A **package manager** is the program that talks to the registry,
+is `registry.npmjs.org`; in this lesson it is the one you started in the previous section, on
+your own computer, holding a few packages written for the lesson. A **package manager** is the program that talks to the registry,
 downloads what you ask for and puts it where Node can find it.
 
 ## Pointing at a registry
@@ -20,9 +20,9 @@ audit=false
 ```
 
 `registry` says where packages come from. `audit=false` stops npm from asking the registry for
-security advisories on every install. The lab's registry has none to give, so the question would
-only end in a warning. Without this file npm would go to the public registry, which is what it does
-on your own machine.
+security advisories on every install. Your registry has none to give, so the question would only
+end in a warning. Without this file npm would go to the public registry, as it does in any folder
+that has none.
 
 ## A first install
 
@@ -42,7 +42,7 @@ by accident:
 ```
 ana@dev:~/js/first$ npm install shelf-slug@1
 
-added 1 package in 534ms
+added 1 package in 488ms
 ana@dev:~/js/first$ cat package.json
 {
   "name": "shelf",
@@ -112,6 +112,6 @@ finds them.
 `dependencies` are what the code needs to run. **`devDependencies`** are what you need only while
 working on it: a test runner, a linter, a bundler. `npm install --save-dev NAME` puts a package in
 the second list. When someone installs your published package, npm fetches its `dependencies` and
-skips its `devDependencies`. The lab's registry has no test runner to show this with, so it is not
-run here. The `node` course, in lesson 4, takes `package.json` and its scripts further on the
+skips its `devDependencies`. Your registry has no test runner to show this with, so it is not run
+here. The `node` course, in lesson 4, takes `package.json` and its scripts further on the
 server side.

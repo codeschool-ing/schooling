@@ -1,6 +1,6 @@
 ---
 title: What fine-tuning costs, and the order to try things in
-version: 1
+version: 2
 ---
 
 The argument usually made for fine-tuning is the bill: a prompt carrying instructions and examples
@@ -75,6 +75,36 @@ million requests the difference is 3800 in the same units. **Whether that pays f
 depends on what the fine-tuning costs**. The saving is also smaller than this if the provider bills
 a fine-tuned model at a higher rate than the base model, which is common enough to check before
 you plan around it.
+
+Both prompts can be sent to the local model as they are, and the result is worth seeing before
+any of that arithmetic is trusted:
+
+```
+ana@lab:~/pe$ ask - --temperature 0 < few-shot.txt
+Here are the categories:
+
+1. hours
+2. allergens
+3. refunds
+4. loyalty
+5. wifi
+6. deliveries
+7. other
+8. hours
+9. other
+-- llama3.2:3b, finish: stop, prompt 193 tokens, output 42 tokens
+ana@lab:~/pe$ ask - --temperature 0 < short.txt
+Yes, we can make a flat white with oat milk. Would you like to try it?
+-- llama3.2:3b, finish: stop, prompt 38 tokens, output 20 tokens
+```
+
+The long prompt did not do what it says. It was asked for the category only and replied with a
+numbered list, sorting the eight examples as well as the message, and it put the oat milk question
+under `other`. The short one, sent to a model nobody fine-tuned, was not sorted at all: two lines
+that end in `Category:` read to this model as a customer asking about oat milk, and it answered
+the customer. **The short prompt only works on a model trained to expect it**, which is the whole
+case for fine-tuning; and the long one does not work yet, which puts this job on the first rung of
+the ladder below, not the last.
 
 ## The costs that are not on the bill
 

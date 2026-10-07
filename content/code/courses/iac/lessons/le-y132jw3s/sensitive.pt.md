@@ -1,6 +1,6 @@
 ---
 title: O que o sensitive esconde, e o que não esconde
-version: 1
+version: 2
 ---
 
 A primeira ferramenta que quase todo mundo procura é `sensitive = true`, e vale saber exatamente o
@@ -30,8 +30,8 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 Isso resolve a cópia dois, a tela e o log de CI. **A marcação também se espalha para tudo o que é
 calculado a partir do valor**, e o Terraform a confere na única porta por onde um valor sai de uma
-configuração de propósito. A Ana acrescenta um output, para que o script de um colega possa buscar a
-senha:
+configuração de propósito. A Ana acrescenta um output, em `outputs.tf`, para que o script de um colega
+possa buscar a senha:
 
 ```hcl
 output "db_password" {

@@ -1,6 +1,6 @@
 ---
 title: WeakRef and FinalizationRegistry
-version: 1
+version: 2
 ---
 
 This lesson used `WeakRef` to look at the collector's decisions. It is also a tool programs can use,
@@ -35,7 +35,7 @@ the object itself, since the object no longer exists.
 
 These two exist for rare jobs, such as cleaning up a resource held outside JavaScript when the object
 that represents it is gone. **The specification itself warns against relying on them**, for reasons
-the lab hid by calling `gc()` by hand:
+this lesson hid by calling `gc()` by hand:
 
 - **when collection happens is the engine's choice**, and it may be much later or, for a program that
   ends first, never. A finalisation callback is not guaranteed to run at all;

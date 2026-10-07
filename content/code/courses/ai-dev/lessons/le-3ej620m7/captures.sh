@@ -6,48 +6,57 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the SDKs, labllm
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/shop
 #   sudo bash captures.sh
 #
+# THE MODEL'S REPLIES ARE NOT REPEATABLE, and neither are the timings in
+# cache.py. Every request goes to llama3.2:3b through the anthropic SDK, which
+# cannot set a temperature, so each reply is drawn at Ollama's default and a
+# rerun words it differently. The token counts are repeatable: they are counts
+# of what was sent, not of what came back, apart from output_tokens.
+#
+#   model    llama3.2:3b (a80c4f17acd5), Ollama 0.40.0
+#   taken    2026-10-07, on 4 cores and 15 GB with no GPU
+#
+# The price sheet in price-list.md is not a capture of this script: it was
+# printed by ../../prices.py on 2026-10-02, from Anthropic's pricing page and
+# LiteLLM's list at a pinned commit, and the lesson quotes it as dated data.
+#
 # A line that starts with ana@dev:~/shop$ is what ana typed, in her project,
-# and what it printed. What is STAGED rather than typed, and not shown in the
-# lesson: the lab itself (lab.sh reset), and the files ana wrote (put below),
-# whose contents the lesson shows in full.
+# and what it printed. What is STAGED rather than typed, and not shown: the
+# lab's own reset, and the files ana wrote (put below), each of which a lesson
+# shows whole; put refuses one that no lesson shows byte for byte.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@dev:~/shop$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
+. ../../lab/capture.sh
 
-lab reset >/dev/null
+quiet lab reset
 
-put lab/window.py <<'PY'
+put scratch/window.py <<'PY'
 import sys
 
 import anthropic
+import tiktoken
 
 client = anthropic.Anthropic()
-words = open("/opt/aidev/share/corpus.txt").read().split()
-n, out = int(sys.argv[1]), int(sys.argv[2])
-try:
-    r = client.messages.create(model="tiny-1", max_tokens=out,
-                               messages=[{"role": "user", "content": " ".join(words[:n])}])
-    print(f"{r.stop_reason}: {r.usage.input_tokens} in, {r.usage.output_tokens} out")
-except anthropic.BadRequestError as e:
-    print(e.status_code, e.body["error"]["message"])
+enc = tiktoken.get_encoding("o200k_base")
+copies = int(sys.argv[1])
+text = ("The password for this exercise is PINEAPPLE.\n\n" + open("CONVENTIONS.md").read() * copies
+        + "\n\nWhat is the password for this exercise? Answer with the word only.")
+r = client.messages.create(model="llama3.2:3b", max_tokens=20,
+                           messages=[{"role": "user", "content": text}])
+read = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)
+print(f"sent about {len(enc.encode(text))}, read {read}: {r.stop_reason}, {r.content[0].text!r}")
 PY
 block the-window
-on 'python lab/window.py 900 200'
-on 'python lab/window.py 900 400'
-on 'python lab/window.py 1300 200'
-on 'python lab/window.py 900 600'
+on 'python scratch/window.py 2'
+on 'python scratch/window.py 10'
+on 'python scratch/window.py 12'
 
-put lab/count.py <<'PY'
+put scratch/count.py <<'PY'
 import anthropic
 import tiktoken
 
@@ -63,23 +72,20 @@ cases = [("question only", {}),
          ("with one tool definition", {"tools": [tool]})]
 print(f"tiktoken on the question alone: {len(enc.encode(question))}")
 for label, extra in cases:
-    n = client.messages.count_tokens(model="scripted-1", messages=[{"role": "user", "content": question}],
-                                     **extra).input_tokens
-    print(f"{n:5}  {label}")
+    r = client.messages.create(model="llama3.2:3b", max_tokens=1,
+                               messages=[{"role": "user", "content": question}], **extra)
+    print(f"{r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0):5}  {label}")
 PY
 block counting
-on 'python lab/count.py'
+on 'python scratch/count.py'
+on 'ollama show llama3.2:3b --template | head -n 12'
 
-block price-list
-printf '%s\n' "##### (run on the recording machine, outside the lab: prices.py reads the network)"
-printf '$ python3 prices.py\n'; (cd ../.. && python3 prices.py)
-
-put lab/cost.py <<'PY'
+put scratch/cost.py <<'PY'
 from decimal import Decimal
 
 import anthropic
 
-# Dollars per million tokens, read from Anthropic's pricing page on 2026-10-02 (prices.py).
+# Dollars per million tokens, read from Anthropic's pricing page on 2026-10-02.
 PRICES = {
     "claude-opus-5-5": (Decimal("4"), Decimal("20")),
     "claude-sonnet-5-5": (Decimal("2"), Decimal("10")),
@@ -94,7 +100,8 @@ def cost(model: str, input_tokens: int, output_tokens: int) -> Decimal:
 
 
 client = anthropic.Anthropic()
-r = client.messages.create(model="scripted-1", max_tokens=300,
+r = client.messages.create(model="llama3.2:3b", max_tokens=300,
+                           system=open("shop/cart.py").read(),
                            messages=[{"role": "user", "content": "Explain the shop's shipping rule."}])
 u = r.usage
 print(f"usage: {u.input_tokens} in, {u.output_tokens} out")
@@ -106,59 +113,64 @@ for model in PRICES:
     print(f"  {model}: ${cost(model, 1_800, 250) * 3_000 * 30:,.2f}")
 PY
 block a-bill
-on 'python lab/cost.py'
+on 'python scratch/cost.py'
 
-put lab/conversation.py <<'PY'
+put scratch/conversation.py <<'PY'
 import anthropic
 
 client = anthropic.Anthropic()
-REPLY = "Here is a reply of about a hundred and fifty tokens. " * 15
+REPLY = "Here is a reply of about a hundred tokens. " * 10
 history, sent = [], 0
 for turn in range(1, 21):
     history.append({"role": "user", "content": f"Question number {turn} about the cart, in about thirty tokens of text."})
-    n = client.messages.count_tokens(model="scripted-1", messages=history).input_tokens
+    r = client.messages.create(model="llama3.2:3b", max_tokens=1, messages=history)
+    n = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)
     sent += n
     if turn in (1, 2, 5, 10, 15, 20):
         print(f"turn {turn:2}: this request {n:5} tokens, all requests so far {sent:6}")
     history.append({"role": "assistant", "content": REPLY})
 PY
 block conversation-cost
-on 'python lab/conversation.py'
+on 'python scratch/conversation.py'
 
-put lab/cache.py <<'PY'
+put scratch/cache.py <<'PY'
 import subprocess
+import time
 from decimal import Decimal
 
 import anthropic
 
-# Claude Sonnet 5.5, dollars per million tokens, read on 2026-10-02 (prices.py).
-BASE, WRITE, READ = Decimal("2"), Decimal("2.50"), Decimal("0.20")
+# Claude Sonnet 5.5, dollars per million tokens, read on 2026-10-02.
+BASE, READ = Decimal("2"), Decimal("0.20")
 client = anthropic.Anthropic()
 project = subprocess.run("git ls-files | xargs tail -n +1", shell=True,
                          capture_output=True, text=True).stdout
 system = [{"type": "text", "text": "You review changes to this project.\n\n" + project,
            "cache_control": {"type": "ephemeral"}}]
 for question in ["Explain the shop's shipping rule.", "Explain the shipping rule again, shorter."]:
-    r = client.messages.create(model="scripted-1", max_tokens=300, system=system,
+    start = time.monotonic()
+    r = client.messages.create(model="llama3.2:3b", max_tokens=300, system=system,
                                messages=[{"role": "user", "content": question}])
     u = r.usage
-    print(f"input {u.input_tokens:4}  cache write {u.cache_creation_input_tokens:4}  "
-          f"cache read {u.cache_read_input_tokens:4}  output {u.output_tokens}")
-    paid = (u.input_tokens * BASE + u.cache_creation_input_tokens * WRITE
-            + u.cache_read_input_tokens * READ) / 1_000_000
-    plain = (u.input_tokens + u.cache_creation_input_tokens + u.cache_read_input_tokens) * BASE / 1_000_000
-    print(f"    input cost ${paid:.6f}, against ${plain:.6f} with no cache")
+    read = u.cache_read_input_tokens or 0
+    print(f"input {u.input_tokens:4}  cache read {read:4}  output {u.output_tokens:3}  "
+          f"{time.monotonic() - start:4.1f} s")
+    paid = (u.input_tokens * BASE + read * READ) / 1_000_000
+    plain = (u.input_tokens + read) * BASE / 1_000_000
+    print(f"    at Sonnet's prices: input ${paid:.6f}, against ${plain:.6f} with no cache")
 PY
 block caching
-on 'python lab/cache.py'
+onq 'ollama stop llama3.2:3b'
+on 'python scratch/cache.py'
 
-put lab/cutoff.py <<'PY'
+put scratch/cutoff.py <<'PY'
 import sys
 
 import anthropic
 
 client = anthropic.Anthropic()
-r = client.messages.create(model="scripted-1", max_tokens=int(sys.argv[1]),
+r = client.messages.create(model="llama3.2:3b", max_tokens=int(sys.argv[1]),
+                           system=open("shop/cart.py").read(),
                            messages=[{"role": "user", "content": "Explain the shop's shipping rule."}])
 print(f"stop_reason={r.stop_reason} output_tokens={r.usage.output_tokens}")
 print(r.content[0].text)
@@ -166,17 +178,20 @@ if r.stop_reason == "max_tokens":
     print("!! the reply was cut off; do not use it as if it were complete")
 PY
 block cut-off
-on 'python lab/cutoff.py 40'
-on 'python lab/cutoff.py 300'
+on 'python scratch/cutoff.py 40'
+on 'python scratch/cutoff.py 400'
 block cut-off-stop
-on "python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model=\"tiny-1\", max_tokens=60, stop_sequences=[\"\\n\\n\"], messages=[{\"role\": \"user\", \"content\": \"Return the\"}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'"
+on "python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model=\"llama3.2:3b\", max_tokens=80, stop_sequences=[\"3.\"], messages=[{\"role\": \"user\", \"content\": \"Write a numbered list of five fruits.\"}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'"
 
-put lab/budget.py <<'PY'
+put scratch/budget.py <<'PY'
 import anthropic
+import tiktoken
 
 DAILY_LIMIT = 20_000  # input tokens per user per day
-PER_REQUEST = 4_000
+PER_REQUEST = 3_000
+MARGIN = 1.2  # tiktoken is not this model's tokenizer, so the estimate gets room
 client = anthropic.Anthropic()
+enc = tiktoken.get_encoding("o200k_base")
 spent: dict[str, int] = {}
 
 
@@ -185,25 +200,26 @@ class OverBudget(Exception):
 
 
 def ask(user: str, messages: list, max_tokens: int = 300):
-    n = client.messages.count_tokens(model="scripted-1", messages=messages).input_tokens
+    n = int(sum(len(enc.encode(m["content"])) for m in messages) * MARGIN)
     if n + max_tokens > PER_REQUEST:
-        raise OverBudget(f"{n} input tokens + {max_tokens} out is over {PER_REQUEST} per request")
+        raise OverBudget(f"about {n} input tokens + {max_tokens} out is over {PER_REQUEST} per request")
     if spent.get(user, 0) + n > DAILY_LIMIT:
         raise OverBudget(f"{user} has used {spent.get(user, 0)} of {DAILY_LIMIT} today")
-    r = client.messages.create(model="scripted-1", max_tokens=max_tokens, messages=messages)
-    spent[user] = spent.get(user, 0) + r.usage.input_tokens
-    return r
+    r = client.messages.create(model="llama3.2:3b", max_tokens=max_tokens, messages=messages)
+    used = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)
+    spent[user] = spent.get(user, 0) + used
+    return r, used
 
 
-question = [{"role": "user", "content": "Explain the shop's shipping rule."}]
-huge = [{"role": "user", "content": open("/opt/aidev/share/corpus.txt").read()[:30_000]}]
+code = open("shop/cart.py").read()
+question = [{"role": "user", "content": code + "\nExplain the shipping rule above."}]
+huge = [{"role": "user", "content": open("CONVENTIONS.md").read() * 8}]
 for user, msgs in [("ana", question), ("ana", huge), ("bea", question)]:
     try:
-        r = ask(user, msgs)
-        print(f"{user}: ok, {r.usage.input_tokens} in, {r.usage.output_tokens} out; spent today {spent[user]}")
+        r, used = ask(user, msgs)
+        print(f"{user}: ok, {used} in, {r.usage.output_tokens} out; spent today {spent[user]}")
     except OverBudget as e:
         print(f"{user}: refused before sending: {e}")
 PY
 block budgets
-on 'python lab/budget.py'
-on 'tail -n 3 /var/log/labllm/requests.jsonl | python -c "import json, sys; [print(r[\"n\"], r[\"path\"], r[\"status\"]) for r in map(json.loads, sys.stdin)]"'
+on 'python scratch/budget.py'

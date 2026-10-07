@@ -1,6 +1,6 @@
 ---
 title: `sort`, and the flag that is not optional
-version: 1
+version: 2
 ---
 
 `sort` orders lines. The default order is **alphabetical, by the whole line**, and the first thing
@@ -8,18 +8,18 @@ to know is when that is wrong.
 
 ```
 ana@vm:~/work$ cut -d, -f4 data/sales.csv | tail -n +2 | sort | head -4
-109
-113
-122
+102
+107
 123
+125
 ana@vm:~/work$ cut -d, -f4 data/sales.csv | tail -n +2 | sort -n | head -4
-26
-31
-40
-49
+25
+27
+69
+74
 ```
 
-**Same numbers, two answers, and the first one is wrong.** Alphabetically `109` comes before `26`,
+**Same numbers, two answers, and the first one is wrong.** Alphabetically `102` comes before `25`,
 because `1` comes before `2` — and it is correct alphabetical order, applied to something that is
 not text.
 
@@ -39,9 +39,9 @@ sorting is a number — a count, a size, a duration, a port — it needs `-n`.
 
 ```
 ana@vm:~/work$ sort -t, -k5 -rn data/sales.csv | head -3
-north,ana,Q2,387,43731
-east,felipe,Q4,338,41574
-south,carla,Q1,292,37084
+west,helena,Q4,335,39865
+south,diego,Q3,352,39072
+east,elena,Q1,396,36036
 ```
 
 `-t,` sets the separator, `-k5` is the fifth field, `-rn` is reverse numeric. The biggest revenue
@@ -52,10 +52,10 @@ end of the line", not "field 5". For a single field you want `-k5,5`:
 
 ```
 ana@vm:~/work$ sort -t, -k1,1 -k3,3 data/sales.csv | head -4
-east,elena,Q1,31,3348
-east,felipe,Q1,338,24336
-east,elena,Q2,332,20584
-east,felipe,Q2,109,12862
+east,elena,Q1,396,36036
+east,felipe,Q1,140,8260
+east,elena,Q2,25,2750
+east,felipe,Q2,251,31375
 ```
 
 Region first, then quarter within region. **Two `-k` options are two sort keys**, applied in order,
@@ -123,8 +123,8 @@ And `sort --parallel=4` uses several cores, which on a large file is a real diff
 ## The two habits
 
 **Reduce before you sort.** `grep` and `cut` first: sorting twelve hundred four-character fields is
-cheaper than sorting twelve hundred hundred-and-fifty-character lines, and on a large log the ratio
+cheaper than sorting twelve hundred lines of well over a hundred characters, and on a large log the ratio
 is the same but the numbers are minutes.
 
-**And check `-n` every single time.** The failure is silent, the output looks sorted, and `109`
-before `26` is easy to miss in a list of two hundred.
+**And check `-n` every single time.** The failure is silent, the output looks sorted, and `102`
+before `25` is easy to miss in a list of two hundred.

@@ -1,6 +1,6 @@
 ---
 title: O `cut`, e onde ele deixa de bastar
-version: 1
+version: 2
 ---
 
 O `cut` fica com parte de cada linha e joga o resto fora. Ele tem exatamente três modos e você vai
@@ -9,12 +9,12 @@ usar dois deles.
 ```
 ana@vm:~/work$ head -2 data/sales.csv
 region,rep,quarter,units,revenue
-north,ana,Q1,171,8721
+north,ana,Q1,145,18850
 ana@vm:~/work$ cut -d, -f2,5 data/sales.csv | head -4
 rep,revenue
-ana,8721
-bruno,4116
-carla,37084
+ana,18850
+bruno,23100
+carla,16555
 ```
 
 | | |
@@ -28,8 +28,8 @@ O `-f2-` é "do segundo até o fim", que é a forma que você quer quando não s
 ```
 ana@vm:~/work$ cut -d, -f2- data/sales.csv | head -3
 rep,quarter,units,revenue
-ana,Q1,171,8721
-bruno,Q1,49,4116
+ana,Q1,145,18850
+bruno,Q1,275,23100
 ```
 
 ## O `-d` é um caractere, não uma string
@@ -41,8 +41,8 @@ O conserto de sempre é o `tr -s` da seção 12, que comprime sequências de um 
 
 ```
 ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
-10.0.1.6 "GET /static/app.js
-10.0.1.11 "GET /
+198.51.100.10 "GET /
+198.51.100.15 "GET /
 ```
 
 O outro conserto é usar o `awk`, que divide em sequências de espaço em branco por padrão e é a seção
@@ -52,21 +52,21 @@ O outro conserto é usar o `awk`, que divide em sequências de espaço em branco
 
 ```
 ana@vm:~/work$ cut -d" " -f1,7,9 logs/access.log | head -3
-10.0.1.6 /static/app.js 200
-10.0.1.11 / 200
-10.0.1.25 /index.html 404
+198.51.100.10 / 200
+198.51.100.15 / 200
+198.51.100.38 / 200
 ```
 
-Endereço, caminho, status, de linhas de cento e cinquenta caracteres. **Este é o uso de cavalo de
+Endereço, caminho, status, de linhas de bem mais de cem caracteres. **Este é o uso de cavalo de
 batalha**: estreite para as colunas de que a pergunta trata, e deixe o `sort` e o `uniq` contarem.
 
 ## O `-c`, para texto de largura fixa
 
 ```
 ana@vm:~/work$ cut -c1-15 logs/access.log | head -3
-10.0.1.6 - - [1
-10.0.1.11 - - [
-10.0.1.25 - - [
+198.51.100.10 -
+198.51.100.15 -
+198.51.100.38 -
 ```
 
 **Aquela saída é inútil e é esse o ponto.** Posições de caractere só funcionam quando as colunas de
@@ -85,10 +85,10 @@ Três limites, e cada um é motivo para ir para o `awk`:
 ```
 ana@vm:~/work$ cut -d, -f5,2 data/sales.csv | head -2
 rep,revenue
-ana,8721
+ana,18850
 ana@vm:~/work$ awk -F, 'NR<3 {print $5, $2}' data/sales.csv
 revenue rep
-8721 ana
+18850 ana
 ```
 
 Pedi o campo 5 e depois o 2 e o `cut` me deu 2 e depois 5. **O `cut` produz campos na ordem do
@@ -126,7 +126,7 @@ dá para acrescentar a aritmética:
 
 ```
 ana@vm:~/work$ cut -d, -f5 data/sales.csv | tail -n +2 | paste -sd+ | bc
-573278
+571083
 ```
 
 Quatro programas para somar uma coluna: pegue o campo, descarte o cabeçalho, junte as linhas com
@@ -135,7 +135,7 @@ pessoas fazem isso, e a seção 14 faz a mesma coisa em um:
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv
-573278
+571083
 ```
 
 Mesmo número, um processo em vez de quatro, e nenhum `bc` para instalar.

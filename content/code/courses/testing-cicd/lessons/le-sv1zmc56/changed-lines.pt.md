@@ -1,6 +1,6 @@
 ---
 title: Cobertura das linhas que a mudança tocou
-version: 1
+version: 2
 ---
 
 Um total se move devagar. Num projeto grande, uma mudança que acrescenta quarenta linhas sem teste
@@ -8,7 +8,9 @@ mal mexe na porcentagem, e quem revisa lendo "cobertura 81% → 80%" não aprend
 sua frente. A pergunta útil para um pull request é mais estreita: **os testes rodaram as linhas que
 esta mudança acrescentou?**
 
-Aqui uma sobretaxa para encomendas pesadas entra em `freight`, duas linhas, e nenhum teste:
+Aqui uma sobretaxa para encomendas pesadas entra em `freight`, duas linhas, e nenhum teste. Elas
+vão logo depois da linha `extra = (weight_g - 1) // 500` em `shipquote/quote.py`, com a mesma
+indentação:
 
 ```python
     if weight_g > 30_000:           # heavy parcels go by road freight
@@ -34,6 +36,7 @@ O total foi de **81% para 80%**. No arquivo, o relatório aponta a linha 30, o `
 nunca executada. O `if` acima dela rodou, porque toda cotação passa por ele, então um relatório só de
 linhas diria que metade da mudança estava testada. **Do comportamento novo, nada foi testado**:
 nenhum teste manda uma encomenda acima de 30 kg, e o preço dela poderia ser qualquer coisa.
+(`git checkout shipquote/quote.py` tira a sobretaxa de novo quando você terminar.)
 
 ## Transformando em verificação
 

@@ -1,6 +1,6 @@
 ---
 title: A function or a machine
-version: 1
+version: 2
 ---
 
 The bill in the previous section is small because the load is small. **A function's cost is
@@ -23,7 +23,7 @@ service as a function.** It has no second copy when it fails and nothing in fron
 load; lesson 4 argued for at least two behind a load balancer. Two t3.medium and an Application Load
 Balancer at 0.0225 USD an hour: (2 × 0.04160 + 0.0225) × 730 = 77.16 USD.
 
-The crossing is each monthly cost divided by the function's cost per million:
+The crossing is each monthly cost divided by the function's cost per million. Saved as `crossover.py`:
 
 ```python
 # us-east-1, from `python3 prices.py`: on demand, USD per hour.

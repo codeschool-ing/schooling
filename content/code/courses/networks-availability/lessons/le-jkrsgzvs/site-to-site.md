@@ -7,8 +7,12 @@ version: 1
 no button and no user.** It joins two networks, router to router, and the people and machines on them
 never learn it is there.
 
-The lab's two offices are joined that way, by the WireGuard tunnel of lesson 4 between `hq` and
-`branch`. This is the till tracing its way to the file server at the head office:
+The two offices are joined that way, by the WireGuard tunnel of lesson 4 between `hq` and `branch`.
+**This lesson starts where lesson 4's first section left off**, on a freshly reset network: make the
+three key pairs as lesson 4 did, write the three `wg0.conf` files from that section with your own keys
+in them, and bring the tunnel up with `sudo wg-quick up wg0` on `hq` and on `branch`. Ana's laptop comes
+up later, in the section on split tunnels. This is the till tracing its way to the file server at the
+head office:
 
 ```
 ana@till:~$ traceroute -n -q 1 192.168.10.10
@@ -44,9 +48,9 @@ That arrangement has a character of its own:
 - it authenticates a site, not a person. **Anything plugged into the branch LAN reaches the
   head office as the branch**, a visitor's laptop included. So each end still needs firewall rules saying which
   of the other office's addresses may reach which servers, and a guest network kept off the tunnel, on
-  its own VLAN (lesson 19 of `networks-addressing`);
+  its own VLAN (see `networks-addressing`);
 - it has few peers, with fixed addresses. Its configuration changes when an office opens or moves,
   and the network team owns it;
 - its routes are written by hand here. With two offices that is two lines. With thirty, the offices
-  run a routing protocol across the tunnels, OSPF or BGP from lessons 16 and 17 of `networks-addressing`,
+  run a routing protocol across the tunnels, OSPF or BGP from `networks-addressing`,
   which is where GRE inside IPsec from lessons 1 and 2 still earns its place.

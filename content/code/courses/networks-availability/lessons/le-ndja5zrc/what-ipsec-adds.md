@@ -48,6 +48,8 @@ cross, and protect the GRE with ESP in transport mode.
 ```
 
 **Transport mode is drawn here and not captured.** The kernel this course was recorded on has no ESP, so
-the lab uses strongSwan's user-space implementation, `kernel-libipsec`, which speaks tunnel mode only.
+the network of lesson 1 has strongSwan do ESP itself, with its user-space `kernel-libipsec`, which
+speaks tunnel mode only. Your Ubuntu has ESP in its kernel, but `netlab.sh` switches the same plugin on,
+so your tunnels behave exactly like the ones captured here.
 The tunnel row is a real packet, the laptop's 84-byte ping as the ISP captured it, and the section on
 security associations reads that capture.

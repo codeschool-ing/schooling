@@ -1,6 +1,6 @@
 ---
 title: Quanto a repetição custa em bytes
-version: 1
+version: 2
 ---
 
 O outro argumento contra repetir valores é o espaço. Ele depende quase todo de como o banco guarda os
@@ -29,6 +29,54 @@ SELECT CASE WHEN file LIKE '%sales_wide%' THEN 'one big table'
        sum(size) AS bytes
 FROM (SELECT filename AS file, size FROM read_blob('pq/*.parquet'))
 GROUP BY ALL ORDER BY bytes;
+```
+
+As cópias vêm de mais dois arquivos. O `export.sql` grava a estrela e a tabela larga a partir do
+DuckDB como CSV, e o `pg-load.sql` as carrega num schema próprio no PostgreSQL:
+
+```sql
+-- The star and the wide table, as files PostgreSQL can load and as Parquet.
+COPY fact_sales    TO 'pg/fact_sales.csv'    (HEADER);
+COPY dim_date      TO 'pg/dim_date.csv'      (HEADER);
+COPY dim_shop      TO 'pg/dim_shop.csv'      (HEADER);
+COPY dim_book      TO 'pg/dim_book.csv'      (HEADER);
+COPY dim_customer  TO 'pg/dim_customer.csv'  (HEADER);
+COPY dim_promotion TO 'pg/dim_promotion.csv' (HEADER);
+COPY sales_wide    TO 'pg/sales_wide.csv'    (HEADER);
+```
+
+```sql
+-- The same tables, stored by row in PostgreSQL.
+CREATE SCHEMA wh;
+CREATE TABLE wh.fact_sales (date_key int, shop_key int, book_key int, customer_key int,
+    promotion_key int, order_id bigint, line_no int, quantity int, gross_cents bigint,
+    discount_cents bigint, net_cents bigint);
+CREATE TABLE wh.dim_date (date_key int, date date, year int, quarter int, month int,
+    month_name text, day_of_month int, day_of_week int, day_name text, is_weekend bool,
+    is_holiday bool, holiday text);
+CREATE TABLE wh.dim_shop (shop_key int, shop_id int, shop_name text, city text, state text,
+    region text, channel text, opened_on date);
+CREATE TABLE wh.dim_book (book_key int, book_id int, isbn text, title text, authors text,
+    format text, category text, subcategory text, department text, publisher text,
+    published_on date);
+CREATE TABLE wh.dim_customer (customer_key int, customer_id int, name text, tier text,
+    city text, state text, valid_from timestamptz, valid_to timestamptz, is_current bool);
+CREATE TABLE wh.dim_promotion (promotion_key int, promotion_id int, code text,
+    promotion_name text, percent_off int, starts_on date, ends_on date, applies_to text);
+CREATE TABLE wh.sales_wide (order_id bigint, line_no int, quantity int, gross_cents bigint,
+    discount_cents bigint, net_cents bigint, date date, year int, month int, month_name text,
+    day_name text, is_weekend bool, is_holiday bool, shop_name text, shop_city text,
+    shop_state text, region text, channel text, isbn text, title text, authors text,
+    format text, category text, subcategory text, department text, publisher text, tier text,
+    customer_city text, customer_state text, promotion_code text, promotion_name text);
+\copy wh.fact_sales FROM 'pg/fact_sales.csv' WITH (FORMAT csv, HEADER true)
+\copy wh.dim_date FROM 'pg/dim_date.csv' WITH (FORMAT csv, HEADER true)
+\copy wh.dim_shop FROM 'pg/dim_shop.csv' WITH (FORMAT csv, HEADER true)
+\copy wh.dim_book FROM 'pg/dim_book.csv' WITH (FORMAT csv, HEADER true)
+\copy wh.dim_customer FROM 'pg/dim_customer.csv' WITH (FORMAT csv, HEADER true)
+\copy wh.dim_promotion FROM 'pg/dim_promotion.csv' WITH (FORMAT csv, HEADER true)
+\copy wh.sales_wide FROM 'pg/sales_wide.csv' WITH (FORMAT csv, HEADER true)
+VACUUM ANALYZE;
 ```
 
 ```

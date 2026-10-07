@@ -1,6 +1,6 @@
 ---
 title: WeakRef e FinalizationRegistry
-version: 1
+version: 2
 ---
 
 Esta aula usou `WeakRef` para olhar as decisões do coletor. Ele também é uma ferramenta que programas
@@ -35,7 +35,7 @@ objeto, já que o objeto não existe mais.
 
 Esses dois existem para trabalhos raros, como liberar um recurso guardado fora do JavaScript quando o
 objeto que o representa sumiu. **A própria especificação avisa para não depender deles**, por motivos
-que o laboratório escondeu chamando `gc()` à mão:
+que esta aula escondeu chamando `gc()` à mão:
 
 - **quando a coleta acontece é escolha do motor**, e pode ser muito depois ou, para um programa que
   termina antes, nunca. Não há garantia de que um callback de finalização rode;

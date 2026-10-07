@@ -1,6 +1,6 @@
 ---
 title: What a reviewer looks for
-version: 1
+version: 2
 ---
 
 A guard catches deletes. **The most dangerous change in this lesson deletes nothing**, and a
@@ -139,9 +139,11 @@ index 9a76a4c..ff14c76 100644
 **The lock file's diff is the provider upgrade**, and it belongs in the same review as the code.
 A new provider version can change defaults, add attributes, and occasionally turn an update into a
 replacement on the next plan, so it is reviewed as a change of its own, not slipped in beside
-another one. Two details here are the lab's: its mirror records only an `h1:` hash, where the
-public registry would add `zh:` lines for every platform, and installs the provider
-`(unauthenticated)`. Lesson 2 says why.
+another one. Two details here come from the machine these lessons were recorded on, which had no
+internet and installed providers from a local copy: the lock file records only an `h1:` hash, and
+`init` reports the provider `(unauthenticated)`. On your computer `init` downloads it from the
+public registry and says it is signed by HashiCorp, and the diff also adds `zh:` lines, one for
+every platform. Lesson 1 says why.
 
 ## A reviewer's checklist
 
@@ -160,4 +162,6 @@ The last row is where to start. **Before reading a plan, say what you expect it 
 update, nothing else". Then the plan is a check of your understanding rather than a text you
 skim, and a `2 to destroy` you did not predict is a question with an answer somewhere in the body.
 
-Ana throws the two widening edits away with `git checkout`, and they are never applied.
+Ana throws the two widening edits away with `git checkout`, and they are never applied. The
+upgrade goes too: `git checkout versions.tf .terraform.lock.hcl` puts both files back, and a second
+`terraform init -upgrade` installs the provider the lock file names again.

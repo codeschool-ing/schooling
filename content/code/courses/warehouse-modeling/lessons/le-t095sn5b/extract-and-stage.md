@@ -1,6 +1,6 @@
 ---
 title: Getting the data across
-version: 1
+version: 2
 ---
 
 Before anything can be modelled it has to be in the warehouse. How data is moved, on what
@@ -8,7 +8,7 @@ schedule, and what happens when a load fails halfway is the subject of `pipeline
 does the simplest thing that works, and it is worth seeing once because every later table is
 built from it.
 
-The extract is a shell script that asks PostgreSQL for each table as a CSV file:
+The extract is a shell script, `extract.sh`, that asks PostgreSQL for each table as a CSV file:
 
 ```sh
 #!/bin/sh
@@ -58,7 +58,8 @@ ana@lab:~/wh$ duckdb -c "SELECT isbn, typeof(isbn) AS type FROM read_csv('extrac
 
 **An ISBN is an identifier made of digits, not a number.** Nobody adds two of them. Read as an
 integer, a code that starts with a zero loses it, as an old ten-digit ISBN or a CEP from São Paulo
-would, and a join against a correctly typed column elsewhere silently finds nothing. So the staging script says what the column is:
+would, and a join against a correctly typed column elsewhere silently finds nothing. So the
+staging script, `staging.sql`, says what the column is:
 
 ```sql
 -- The extract, loaded as it arrived: one table per CSV file, in a schema of

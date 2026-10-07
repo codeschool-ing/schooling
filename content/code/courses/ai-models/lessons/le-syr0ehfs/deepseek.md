@@ -8,7 +8,7 @@ DeepSeek is a Chinese company that publishes open weights and also sells an API 
 restrictions, and R1 is MIT for code and weights alike. Its API models, as the sheet records them:
 
 ```
-ana@desk:~/desk$ sheet compare deepseek/deepseek-v3.2 deepseek/deepseek-v4-flash deepseek/deepseek-v4-pro deepseek/deepseek-r1
+ana@desk:~/desk$ python sheet.py compare deepseek/deepseek-v3.2 deepseek/deepseek-v4-flash deepseek/deepseek-v4-pro deepseek/deepseek-r1
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 deepseek/deepseek-v3.2                          163,840   163840     0.28      0.4  .F.CR.
@@ -21,7 +21,7 @@ deepseek/deepseek-r1                             65,536     8192     0.55     2.
 older and still priced. The names the API used to answer to are gone:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider deepseek
+ana@desk:~/desk$ python sheet.py retiring --provider deepseek
 # LiteLLM model sheet at 21881c57, 4472 entries
 4 entries carry a deprecation date
 2026-07-24  deepseek-chat                                      deepseek
@@ -41,12 +41,12 @@ Lesson 2 found that nobody can undercut a closed model's maker. For an open mode
 happens. V4 Flash is offered by many hosts:
 
 ```
-ana@desk:~/desk$ sheet where deepseek-v4-flash | tail -n +3 | wc -l
+ana@desk:~/desk$ python sheet.py where deepseek-v4-flash | tail -n +3 | wc -l
 33
 ```
 
 ```
-ana@desk:~/desk$ sheet where deepseek-v4-flash | grep -E "^(deepseek/|azure|tencent|scaleway|novita/deepseek/deepseek-v4-flash )"
+ana@desk:~/desk$ python sheet.py where deepseek-v4-flash | grep -E "^(deepseek/|azure|tencent|scaleway|novita/deepseek/deepseek-v4-flash )"
 azure_ai/deepseek-v4-flash                           azure_ai                       0.19     0.51
 deepseek/deepseek-v4-flash                           deepseek                        0.3      1.2
 deepseek/deepseek-v4-flash-vision-exp                deepseek                        0.3      1.2

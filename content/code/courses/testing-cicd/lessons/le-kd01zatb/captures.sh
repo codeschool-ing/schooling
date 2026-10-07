@@ -16,7 +16,13 @@
 # the order v1.6.0 cannot answer. Nothing here asks a carrier: the
 # environments name none, so prices come from the shop's table.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# What steps 11 and 12 change is shown whole, release 1.6.0 in "release-160"
+# and 1.6.1 in "release-161", with the commands that build the three artifacts
+# and write the configurations; `../../lab.sh shown` checks each section
+# against its own tag before the first block, and the rest of the lesson
+# against the working tree.
+#
+# What is STAGED rather than typed:
 #   - the project at step 12 (tag v1.6.1) in /home/ana/shipquote, by
 #     ../../lab.sh, and the three artifacts listed in "artifacts", built by
 #     checking out each tag in turn and running ops/build.sh;
@@ -41,15 +47,17 @@ stop_all() {
 stop_all
 rm -rf "$HOME/envs"
 bash "$LAB" stage 12 >/dev/null
+HERE=$(dirname "$LAB")/lessons/le-kd01zatb
+bash "$LAB" shown "$HERE" v1.6.0 release-160 || exit 1
+bash "$LAB" shown "$HERE" v1.6.1 release-161 || exit 1
+bash "$LAB" shown "$HERE" - -release-160 -release-161 || exit 1
 cd "$HOME/shipquote" || exit 1
 for t in v1.5.0 v1.6.0 v1.6.1; do git checkout -q "$t" && ops/build.sh > /dev/null; done
 git checkout -q main
 mkdir -p "$HOME/envs/production" "$HOME/envs/production-blue" "$HOME/envs/production-green"
-printf 'SHIPQUOTE_PORT=8300\n' > "$HOME/envs/production/config.env"
-for side in blue:8301 green:8302; do
-  printf 'SHIPQUOTE_PORT=%s\nSHIPQUOTE_FLAGS=/home/ana/envs/flags.json\n' "${side#*:}" \
-    > "$HOME/envs/production-${side%:*}/config.env"
-done
+echo SHIPQUOTE_PORT=8300 > "$HOME/envs/production/config.env"
+printf 'SHIPQUOTE_PORT=8301\nSHIPQUOTE_FLAGS=%s/envs/flags.json\n' "$HOME" > "$HOME/envs/production-blue/config.env"
+printf 'SHIPQUOTE_PORT=8302\nSHIPQUOTE_FLAGS=%s/envs/flags.json\n' "$HOME" > "$HOME/envs/production-green/config.env"
 run() { printf 'ana@laptop:~/shipquote$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 

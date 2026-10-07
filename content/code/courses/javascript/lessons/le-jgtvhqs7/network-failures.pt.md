@@ -1,6 +1,6 @@
 ---
 title: Quando nenhuma resposta vem
-version: 1
+version: 2
 ---
 
 Com o `getJSON` no lugar, todo jeito de uma requisição dar errado termina no mesmo `catch`, com uma
@@ -51,6 +51,16 @@ o navegador recusou por segurança; a linha do console acima dela, `ERR_CONNECTI
 para quem desenvolve e não fica disponível para o script.
 
 ## O mesmo no Node
+
+Um programa rodado com `node` não tem um `page` para subir o servidor por ele, então suba você
+mesmo, num segundo terminal e de dentro de `~/js`:
+
+```sh
+node ~/js-tools/serve.mjs
+```
+
+Ele diz `serving` e a pasta e o endereço que serve, e fica rodando até você apertar Ctrl+C. De volta
+ao primeiro terminal:
 
 ```javascript
 for (const url of ["http://127.0.0.1:8080/api/books/2", "http://127.0.0.1:8099/api/books"]) {

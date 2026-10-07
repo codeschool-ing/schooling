@@ -7,31 +7,33 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/guard with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/guard$,
-# followed by what it printed.
+# It rebuilds ~/guard with lab.sh reset under its own HOME (/home/ana), which
+# builds it from the fences of the lessons themselves: owasp.py and
+# data/owasp-llm-2025.json are exactly what the lesson prints. It prints each
+# command after a prompt, ana@lab:~/guard$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/guard, built by lab.sh. The
-# category names in data/owasp-llm-2025.json are the OWASP Top 10 for LLM
-# Applications (2025); the one-line meanings and the mapping to this lab were
-# WRITTEN BY THE COURSE.
+# WRITTEN BY THE COURSE: the one-line meanings and the mapping to the
+# course's commands. The ten names are OWASP's (Top 10 for LLM Applications,
+# 2025). No model is called in this lesson.
 #
-# Recorded with Python 3.11, TZ=America/Sao_Paulo.
+# Recorded with Python 3.12.3 (Ubuntu 24.04's), TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/ai-security}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset >/dev/null
+export HOME=${LAB_HOME:-/home/ana}
+mkdir -p "$HOME/.py"
+ln -sf "$(command -v python3.12)" "$HOME/.py/python3"
+export PATH=$HOME/.py:$PATH
+GUARD_HOME=$HOME bash "$here/../../lab.sh" reset >/dev/null || exit 1
 cd "$HOME/guard"
 export PATH=$HOME/guard/bin:$PATH
 on() { printf 'ana@lab:~/guard$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
-block map
+block ten
 on "python3 -c \"import json; [print(r['id'], '-', r['meaning']) for r in json.load(open('data/owasp-llm-2025.json'))]\""
 on 'guard owasp'
 
-block gaps
+block uncovered
 on 'guard owasp --uncovered'

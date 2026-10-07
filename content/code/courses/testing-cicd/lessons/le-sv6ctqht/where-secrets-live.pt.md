@@ -1,6 +1,6 @@
 ---
 title: Onde um segredo fica na máquina
-version: 1
+version: 2
 ---
 
 Fora do repositório, um segredo ainda precisa estar em algum lugar na máquina que roda o programa, e
@@ -28,7 +28,14 @@ como variável pela plataforma, nunca embutido na imagem.
 ## O processo
 
 Como um segredo chega ao processo também importa. Compare um token passado como argumento de linha de
-comando com um passado no ambiente, como o `shipquote` faz:
+comando com um passado no ambiente, como o `shipquote` faz. O primeiro é um processo Python que dorme
+trinta segundos e não faz mais nada, iniciado em segundo plano com um token entre os argumentos:
+
+```sh
+python3 -c 'import time; time.sleep(30)' --carrier-token=lab-live-token &
+```
+
+Depois, dentro desses trinta segundos, o que qualquer pessoa na máquina consegue listar:
 
 ```
 ana@laptop:~/shipquote$ ps -o args= -C python3 | grep "[c]arrier-token"

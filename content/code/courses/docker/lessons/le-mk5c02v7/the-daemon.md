@@ -1,6 +1,6 @@
 ---
 title: Configuring the daemon, and when Engine is enough
-version: 1
+version: 2
 ---
 
 **`dockerd` reads its configuration from one JSON file, `/etc/docker/daemon.json`, when it
@@ -21,7 +21,9 @@ ana@vm:~$ cat /etc/docker/daemon.json
 lab's anonymous pulls from Docker Hub were answered with `429 Too Many Requests`, Docker Hub's
 rate limit, so the lab pulls through `mirror.gcr.io`, a public cache of Docker Hub that Google runs.
 The image names, tags and digests stay Docker Hub's; only the server that sends the bytes changes.
-Companies use the same setting to point every machine at their own cache.
+Companies use the same setting to point every machine at their own cache. Your machine starts with
+no file and needs none; if the `429` from lesson 5's last section reaches you, those three lines and
+a restart are the way round it.
 
 A change to the file takes effect when the daemon restarts, `sudo systemctl restart docker` on a
 systemd machine, and a file with a JSON error stops the daemon from starting at all. That is the

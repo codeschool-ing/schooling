@@ -1,6 +1,6 @@
 ---
 title: `ssh`, because every machine is somewhere else
-version: 2
+version: 3
 ---
 
 This is one section in a lesson whose title does not mention it, and it is here because **every
@@ -17,6 +17,13 @@ ssh -p 2222 ana@localhost       # a port that is not 22
 
 That is it. A shell on another machine, and everything from lessons 1 to 4 works there exactly as
 it does here.
+
+**On the machine from lesson 1 the other machine can be itself.** The installer's "Install OpenSSH
+server" put an SSH server on it, listening on port 22; if you did not tick it, `sudo apt install
+openssh-server` does it now. The machine these transcripts were captured on runs its SSH server on
+port 2222 instead, which is the only reason `-p 2222` appears below: on yours, leave it out, and
+`ssh ana@localhost` is the same command. Below, `ana` also logs in as `bruno`, with the password
+lesson 4 gave him, `practice`.
 
 ## The question it asks the first time
 

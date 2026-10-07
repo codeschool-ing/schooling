@@ -10,12 +10,14 @@
 #
 # This lesson starts from an empty ~/wh and builds the first star in it. The
 # files that the lessons after it reuse are the course's own, in lab/ and
-# lab/warehouse/, copied into ~/wh by `put` and shown in the lesson as they
-# are. The fact tables built here leave out the customer: lesson 4 adds it,
-# and lesson 5 makes it keep its history.
+# lab/warehouse/, copied into ~/wh by `put`; lab.sh refuses to run unless the
+# lesson shows each of them whole, byte for byte. The fact tables built first
+# leave out the customer. The last section gives the student the versions that
+# carry it, and build.sh, which lab.sh's `warehouse` runs for every lesson
+# after this one; the `build` block is that script run here.
 #
 # Recorded on Ubuntu 24.04, PostgreSQL 16, DuckDB 1.5.6, 4 cores,
-# TZ=America/Sao_Paulo, on 2026-10-06.
+# TZ=America/Sao_Paulo, on 2026-10-06; the `build` block on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 LAB_SH=${LAB_SH:-../../lab.sh}
@@ -26,6 +28,7 @@ put() { lab exec "cat > '$1'"; }
 code() { printf '##### %s\n' "$1"; lab exec "cat '$2'"; }
 block() { printf '##### %s\n' "$1"; }
 exec 9>/var/tmp/wh-capture.lock; flock 9
+lab check || exit 1
 lab reset >/dev/null
 
 put extract.sh < "$COURSE/lab/extract.sh"
@@ -37,15 +40,15 @@ on 'head -3 extract/orders.csv'
 block isbn-guess
 on "duckdb -c \"SELECT isbn, typeof(isbn) AS type FROM read_csv('extract/books.csv') LIMIT 2\""
 
-put staging.sql < "$COURSE/lab/warehouse/00_staging.sql"
+put staging.sql < "$COURSE/lab/warehouse/staging.sql"
 block stage
 on 'duckdb wh.duckdb < staging.sql'
 on "duckdb wh.duckdb -c \"SELECT table_name, estimated_size AS rows FROM duckdb_tables() WHERE schema_name = 'staging' ORDER BY rows DESC LIMIT 5\""
 
-put dim_date.sql < "$COURSE/lab/warehouse/10_dim_date.sql"
-put dim_shop.sql < "$COURSE/lab/warehouse/11_dim_shop.sql"
-put dim_book.sql < "$COURSE/lab/warehouse/12_dim_book.sql"
-put dim_promotion.sql < "$COURSE/lab/warehouse/14_dim_promotion.sql"
+put dim_date.sql < "$COURSE/lab/warehouse/dim_date.sql"
+put dim_shop.sql < "$COURSE/lab/warehouse/dim_shop.sql"
+put dim_book.sql < "$COURSE/lab/warehouse/dim_book.sql"
+put dim_promotion.sql < "$COURSE/lab/warehouse/dim_promotion.sql"
 block dims
 on 'for f in dim_date dim_shop dim_book dim_promotion; do duckdb wh.duckdb < $f.sql; done'
 block date-rows
@@ -128,7 +131,7 @@ code ratio-sql ratio.sql
 block ratio
 on 'duckdb wh.duckdb < ratio.sql'
 
-put fact_inventory.sql < "$COURSE/lab/warehouse/21_fact_inventory.sql"
+put fact_inventory.sql < "$COURSE/lab/warehouse/fact_inventory.sql"
 block inventory
 on 'duckdb wh.duckdb < fact_inventory.sql'
 put stock.sql <<'EOF'
@@ -209,3 +212,11 @@ on 'duckdb wh.duckdb < events.sql'
 
 block changes
 on "duckdb wh.duckdb -c \"SELECT field, count(*) AS changes FROM staging.customer_changes GROUP BY ALL ORDER BY changes DESC\""
+
+for f in dim_customer dim_author fact_sales fact_fulfilment fact_payments fact_event_attendance; do
+  put $f.sql < "$COURSE/lab/warehouse/$f.sql"
+done
+put build.sh < "$COURSE/lab/build.sh"
+block build
+on 'time sh build.sh'
+on "duckdb wh.duckdb -c \"SELECT table_name, estimated_size AS rows FROM duckdb_tables() WHERE schema_name = 'main' ORDER BY table_name\""

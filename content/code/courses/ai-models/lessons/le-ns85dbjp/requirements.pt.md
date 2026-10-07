@@ -16,15 +16,15 @@ no projeto, e é a única defesa contra escolher pela tabela que ela calhar de l
 | custa o menos possível | a loja é pequena | ordenação |
 | responde rápido o bastante para um atendente esperando um rascunho não desistir | fica na frente de uma pessoa | ordenação, com teto |
 
-Algumas dessas dá para conferir na tabela na hora. O `sheet pick` filtra toda entrada de chat com
+Algumas dessas dá para conferir na tabela na hora. O `sheet.py pick` filtra toda entrada de chat com
 preço; `--needs` e `--min-window` aplicam dois dos limites dela:
 
 ```
-ana@desk:~/desk$ sheet pick | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick | sed -n 2p
 2990 entries pass
-ana@desk:~/desk$ sheet pick --needs response_schema --min-window 32000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --needs response_schema --min-window 32000 | sed -n 2p
 1617 entries pass
-ana@desk:~/desk$ sheet pick --needs response_schema --min-window 32000 --max-in 1 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --needs response_schema --min-window 32000 --max-in 1 | sed -n 2p
 893 entries pass
 ```
 

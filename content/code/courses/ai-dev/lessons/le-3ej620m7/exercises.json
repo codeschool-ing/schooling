@@ -33,46 +33,46 @@
   },
   {
     "id": "ex-j5vrvxek",
-    "version": 1,
+    "version": 2,
     "section": "the-window",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`window.py 900 200` succeeded and `window.py 900 400` was refused. The prompt was identical. What changed?",
-    "hint": "1,717 + 400.",
+    "prompt": "`window.py 10` found the password and `window.py 12` answered `'shop'`. What happened to the twelve-copy request?",
+    "hint": "Compare what was sent with what was read.",
     "choices": [
       {
-        "text": "The second prompt was tokenized differently because of the larger limit",
+        "text": "It was refused with an error, and the SDK made up an answer",
         "correct": false,
-        "why": "The prompt is counted the same way: 1,717 both times."
+        "why": "An error would have raised an exception; it ended with `end_turn`."
       },
       {
-        "text": "labllm had used up its rate limit on the first request",
+        "text": "The model ran out of `max_tokens` before reaching the password",
         "correct": false,
-        "why": "A rate limit answers 429, not 400 with this message."
+        "why": "It answered in one word, well inside its twenty."
       },
       {
-        "text": "`max_tokens` of 400 is over the per-reply limit of `tiny-1`",
-        "correct": false,
-        "why": "That limit is 512; 600 was the request that broke it."
-      },
-      {
-        "text": "The room asked for the reply pushed the total past 2,048",
+        "text": "Ollama dropped the start of the prompt to fit the window",
         "correct": true,
-        "why": "Right: 1,717 plus 400 is 2,117."
+        "why": "Right: about 4,512 sent, 2,050 read, and the password was at the start."
+      },
+      {
+        "text": "Twelve copies confused the model with repeated text",
+        "correct": false,
+        "why": "Ten copies of the same text did not; the difference is what was read."
       }
     ]
   },
   {
     "id": "ex-t57cx66q",
-    "version": 1,
+    "version": 2,
     "section": "the-window",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "`window.py 900 200` used 1,717 tokens of prompt and allowed 200 of output. How many tokens of `tiny-1`'s 2,048 were left over?",
+    "prompt": "`window.py 10` read 3,829 tokens and allowed 20 of output. How many tokens of Ollama's 4,096-token window were left over?",
     "hint": "Subtract both from the window.",
-    "value": 131,
+    "value": 247,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -110,18 +110,18 @@
   },
   {
     "id": "ex-y8x4h2mh",
-    "version": 1,
+    "version": 2,
     "section": "counting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`tiktoken` counted 15 tokens for the question and labllm's counter said 18, with the same encoding. Where do the other 3 come from?",
-    "hint": "labllm's own rules, listed in lesson 1.",
+    "prompt": "`tiktoken` counted 15 tokens for the question and the model read 40. Where does most of the difference come from?",
+    "hint": "What did `ollama show --template` print?",
     "choices": [
       {
-        "text": "labllm adds 3 per message for wrapping",
+        "text": "The chat template wrapped around the message",
         "correct": true,
-        "why": "Right: its stand-in for what a real API wraps around each message."
+        "why": "Right: headers, and a line with the training cutoff, on every request."
       },
       {
         "text": "`tiktoken` drops punctuation, so it always counts low",
@@ -129,12 +129,12 @@
         "why": "It counts every character; the question's `?` is a token."
       },
       {
-        "text": "The model's reply was counted in advance",
+        "text": "The one token of reply was counted as input",
         "correct": false,
-        "why": "Nothing was generated; this is a counting call."
+        "why": "`max_tokens=1` adds one token of output, not twenty-five of input."
       },
       {
-        "text": "The question was translated before it was counted",
+        "text": "The question was translated before it was read",
         "correct": false,
         "why": "Nothing translates anything."
       }
@@ -142,14 +142,14 @@
   },
   {
     "id": "ex-3mmjtmqy",
-    "version": 1,
+    "version": 2,
     "section": "counting",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "How many tokens did one tool definition add to the question in `count.py`?",
-    "hint": "71 against 18.",
-    "value": 53,
+    "hint": "168 against 40.",
+    "value": 128,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -253,18 +253,18 @@
   },
   {
     "id": "ex-xw3dqnbs",
-    "version": 1,
+    "version": 2,
     "section": "price-list",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does `prices.py` print the date beside Anthropic's prices and a commit beside the others?",
+    "prompt": "Why does the price sheet carry a date beside Anthropic's prices and a commit beside the others?",
     "hint": "One source is versioned and one is not.",
     "choices": [
       {
-        "text": "So the script can refuse prices older than a month",
+        "text": "So that prices older than a month can be refused",
         "correct": false,
-        "why": "It refuses nothing; the date is for the reader."
+        "why": "Nothing refuses them; the date is for the reader."
       },
       {
         "text": "Because the law requires a date on any price",
@@ -349,28 +349,28 @@
   },
   {
     "id": "ex-etm25eyp",
-    "version": 1,
+    "version": 2,
     "section": "a-bill",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The request in `cost.py` was 10 tokens in and 147 out. Which change would cut its cost most?",
-    "hint": "Where is almost 99% of it?",
+    "prompt": "The request in `cost.py` was 285 tokens in, nearly all of them the cart's code, and 122 out. Which change would cut its cost most?",
+    "hint": "Where are two thirds of it?",
     "choices": [
       {
         "text": "A shorter question",
         "correct": false,
-        "why": "The question is 10 tokens; there is almost nothing to cut."
+        "why": "The question is about ten tokens; there is almost nothing to cut."
       },
       {
         "text": "A lower ceiling on the length of the answer",
         "correct": true,
-        "why": "Right, since output is nearly all the cost."
+        "why": "Right: output is two thirds of the cost at these prices."
       },
       {
-        "text": "Caching the question",
+        "text": "Leaving the cart's code out of the request",
         "correct": false,
-        "why": "Ten tokens are below any cache minimum, and they cost almost nothing."
+        "why": "It is a third of the cost, and without it the answer is a guess."
       },
       {
         "text": "Sending it at temperature 0",
@@ -426,16 +426,16 @@
   },
   {
     "id": "ex-fsa6pfqn",
-    "version": 1,
+    "version": 2,
     "section": "conversation-cost",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Turn 10's total was 9,270 tokens and turn 20's was 38,740. Why is doubling the turns roughly four times the input?",
+    "prompt": "Turn 10's total was 6,070 tokens and turn 20's was 24,740. Why is doubling the turns roughly four times the input?",
     "hint": "What does each request carry?",
     "choices": [
       {
-        "text": "labllm charges more per token after the tenth turn",
+        "text": "The price per token goes up after the tenth turn",
         "correct": false,
         "why": "The price per token never changes."
       },
@@ -445,9 +445,9 @@
         "why": "The reply was the same fixed text every turn."
       },
       {
-        "text": "The cache expired halfway through",
+        "text": "The cache emptied halfway through",
         "correct": false,
-        "why": "No cache was used in this run."
+        "why": "Cached tokens are counted in the total all the same."
       },
       {
         "text": "Each request carries every earlier turn",
@@ -485,31 +485,31 @@
   },
   {
     "id": "ex-cpw6t528",
-    "version": 1,
+    "version": 2,
     "section": "conversation-cost",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "How many input tokens did all twenty requests of `conversation.py` add up to?",
     "hint": "The last line.",
-    "value": 38740,
+    "value": 24740,
     "tolerance": 0,
     "unit": "tokens"
   },
   {
     "id": "ex-q1adfb1e",
-    "version": 1,
+    "version": 2,
     "section": "caching",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In `cache.py`, the first request paid $0.003511 for its input and would have paid $0.002812 without a cache. Why more?",
+    "prompt": "At Anthropic, the first request of `cache.py` would pay $2.50 per million for its 1,417 cached tokens, against $2 with no cache. Why more?",
     "hint": "Look at the price columns.",
     "choices": [
       {
-        "text": "labllm counted the system prompt twice",
+        "text": "The system prompt is counted twice when it is cached",
         "correct": false,
-        "why": "It counted it once, as a cache write."
+        "why": "It is counted once, as a cache write."
       },
       {
         "text": "The first request of the day is billed at a higher rate",
@@ -517,14 +517,14 @@
         "why": "No price depends on the time of day here."
       },
       {
-        "text": "Writing to the cache costs more than reading without one",
+        "text": "Writing to the cache costs more than reading with none",
         "correct": true,
-        "why": "Right: $2.50 against $2 per MTok."
+        "why": "Right: $2.50 against $2 per MTok, paid back only by later reads at $0.20."
       },
       {
-        "text": "The question was longer",
+        "text": "Ollama charges for the cache it keeps in memory",
         "correct": false,
-        "why": "It was 8 tokens against 9 in the second."
+        "why": "Ollama charges nothing; the price is Anthropic's."
       }
     ]
   },
@@ -548,7 +548,7 @@
   },
   {
     "id": "ex-7s26s195",
-    "version": 1,
+    "version": 2,
     "section": "caching",
     "type": "quiz",
     "difficulty": "hard",
@@ -564,7 +564,7 @@
       {
         "text": "3,000 tokens is under every provider's minimum",
         "correct": false,
-        "why": "It is well above labllm's 1,024."
+        "why": "Anthropic's minimum is 1,024 tokens on many models, far below 3,000."
       },
       {
         "text": "Caching only works for tools",
@@ -727,14 +727,14 @@
   },
   {
     "id": "ex-qtgfrb8d",
-    "version": 1,
+    "version": 2,
     "section": "budgets",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many input tokens did the refused request in `budget.py` have?",
+    "prompt": "About how many input tokens did the estimate give the refused request in `budget.py`?",
     "hint": "The second line of the run.",
-    "value": 7163,
+    "value": 3590,
     "tolerance": 0,
     "unit": "tokens"
   },

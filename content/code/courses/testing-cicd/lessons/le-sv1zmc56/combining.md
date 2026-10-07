@@ -3,7 +3,7 @@ title: Coverage from several runs
 version: 1
 ---
 
-In a pipeline, the suite rarely runs as one command. Lesson 1 section 11 split it into a fast layer
+In a pipeline, the suite rarely runs as one command. Lesson 1 section 14 split it into a fast layer
 and a slow one, and lesson 5 will run it on three Python versions and two time zones. Each of those
 runs sees part of the code, and **the coverage that matters is the union of all of them**.
 

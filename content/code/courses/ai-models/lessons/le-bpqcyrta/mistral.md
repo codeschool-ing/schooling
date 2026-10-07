@@ -8,7 +8,7 @@ publishes open weights for many of its models, and it is based in France, which 
 buyers for lesson 2 section 07's reason. Its current entries in the sheet, in rough order of size:
 
 ```
-ana@desk:~/desk$ sheet compare mistral/ministral-3b-latest mistral/ministral-8b-latest mistral/mistral-small-latest mistral/mistral-medium-latest mistral/mistral-large-latest mistral/magistral-medium-latest mistral/devstral-latest
+ana@desk:~/desk$ python sheet.py compare mistral/ministral-3b-latest mistral/ministral-8b-latest mistral/mistral-small-latest mistral/mistral-medium-latest mistral/mistral-large-latest mistral/magistral-medium-latest mistral/devstral-latest
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 mistral/ministral-3b-latest                     131,072   131072      0.1      0.1  VFS...

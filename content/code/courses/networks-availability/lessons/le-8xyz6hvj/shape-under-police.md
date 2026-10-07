@@ -9,8 +9,14 @@ customer can change is **what arrives at the policer: if nothing arrives faster 
 policer never has anything to drop.** So the customer shapes its own uplink a little below the rate it
 bought.
 
-The lab puts both in place at once. The policer at the ISP stays at 625 kbytes a second, its counter
-reset off screen by deleting the rule and adding it again. `hq` gets a shaper at **4500 kbit**, ten per
+Now both go in place at once. The policer at the ISP stays at 625 kbytes a second, its counter reset by
+deleting the rule and adding it again, on `isp`:
+
+```sh
+sudo nft flush chain ip contract police
+sudo nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop
+```
+ `hq` gets a shaper at **4500 kbit**, ten per
 cent under the contract, and the upload runs again:
 
 ```

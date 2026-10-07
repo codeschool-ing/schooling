@@ -1,6 +1,6 @@
 ---
 title: Começando do que foi commitado
-version: 1
+version: 2
 ---
 
 "Na minha máquina funciona" costuma ser verdade. A máquina tem arquivos que o repositório não tem,
@@ -9,8 +9,14 @@ trabalho de uma execução de CI é **esquecer tudo isso**: ela começa de um ch
 mais nada, então testa o que todo mundo vai receber ao puxar.
 
 Eis essa diferença pegando um erro de verdade. A Ana acrescenta um teste que lê um arquivo de dados
-novo, `tests/data/carriers.csv`, commita o teste e esquece de adicionar o CSV. O commit, o arquivo e
-o teste são criados pelo laboratório com este conteúdo:
+novo, `tests/data/carriers.csv`, commita o teste e esquece de adicionar o CSV. Cometa o mesmo erro
+de propósito. O arquivo de dados são duas transportadoras:
+
+```sh
+printf 'name,base_cents\nCorreios,1290\nJadlog,1450\n' > tests/data/carriers.csv
+```
+
+O teste o lê. Salve como `tests/test_carriers.py`:
 
 ```python
 import csv
@@ -23,6 +29,15 @@ def test_every_carrier_has_a_positive_base_price():
     for row in csv.DictReader(open(CARRIERS)):
         assert int(row["base_cents"]) > 0, row["name"]
 ```
+
+e só o teste vai para o commit:
+
+```sh
+git add tests/test_carriers.py
+git commit -m "Check every carrier has a positive base price"
+```
+
+Depois o teste, o status e o push:
 
 ```
 ana@laptop:~/shipquote$ python -m pytest -q tests/test_carriers.py
@@ -44,7 +59,9 @@ To /home/ana/ci/shipquote.git
 ```
 
 No notebook o teste passa: o CSV está lá. O `git status --short` entrega com `??`, a marca de um
-arquivo que o git não rastreia, mas nada obriga ninguém a ler isso. A execução da CI começou do
+arquivo que o git não rastreia, mas nada obriga ninguém a ler isso. (Se você rodou os testes de
+propriedade da aula 3, uma segunda linha `??` nomeia `.hypothesis/`, os exemplos que o Hypothesis
+guarda. Também não faz parte do projeto.) A execução da CI começou do
 commit `f3b2545`, que tem o teste e não o arquivo, e **toda célula falhou com uma falha**: o teste não
 conseguiu abrir um arquivo que nunca foi commitado.
 
@@ -70,4 +87,11 @@ máquina virtual nova; um runner próprio precisa ter o espaço de trabalho apag
 onde isso se configura.
 
 A correção do commit da Ana foi um segundo commit tirando o teste até o CSV poder ser revisado,
-enviado como execução 3. A aula segue daí.
+enviado como execução 3. A aula segue daí:
+
+```sh
+rm tests/data/carriers.csv
+git rm -q tests/test_carriers.py
+git commit -m "Remove the carrier test until its data is committed"
+git push
+```

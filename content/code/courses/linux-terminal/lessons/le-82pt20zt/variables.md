@@ -1,7 +1,19 @@
 ---
 title: Variables, and the four characters that are not allowed
-version: 1
+version: 2
 ---
+
+The script this section runs, made in `~/work/scripts` the way section 02 described:
+
+```sh
+cd ~/work/scripts
+cat > child.sh <<'END'
+#!/bin/bash
+echo "shell variable SHELLVAR is [${SHELLVAR:-unset}]"
+echo "environment  ENVVAR   is [${ENVVAR:-unset}]"
+END
+chmod +x child.sh
+```
 
 ```
 ana@vm:~/work/scripts$ name=ana
@@ -150,7 +162,12 @@ declare -i n="7"
 
 `declare -i` makes a variable integer, so assignments to it are evaluated as arithmetic —
 `n=n+2` gave `7` rather than the string `n+2`. It is occasionally handy and mostly a curiosity;
-`$(( ))` is clearer.
+`$(( ))` is clearer. And it sticks: `n` stays an integer for as long as this shell runs, which
+section 14 would trip over, so take it away again:
+
+```
+ana@vm:~/work/scripts$ unset n
+```
 
 `readonly` is the one to actually use, for the handful of things a script must not reassign.
 

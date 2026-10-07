@@ -1,6 +1,6 @@
 ---
 title: Os atalhos: `.`, `..`, `~` e `-`
-version: 2
+version: 3
 ---
 
 Quatro atalhos aparecem em quase todo caminho que você vai digitar na vida. Dois deles são entradas
@@ -128,7 +128,8 @@ parece uma opção e não existe.
 ana@vm:~/work$ ./ledger
 ```
 
-Você precisa escrever `./` para rodar um programa que está no diretório atual. A razão é segurança:
+Você precisa escrever `./` para rodar um programa que está no diretório atual (e, como na seção 03,
+o seu `~/work` não tem um `ledger` para rodar). A razão é segurança:
 se `.` fosse procurado automaticamente, deixar um arquivo chamado `ls` num diretório compartilhado
 bastaria para a próxima pessoa rodá-lo. A seção 03 já fez o ponto mecânico; este é o motivo de
 ninguém nunca ter "consertado" isso.

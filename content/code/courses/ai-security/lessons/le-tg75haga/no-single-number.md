@@ -1,14 +1,15 @@
 ---
 title: Fixing one gap opens another
-version: 1
+version: 2
 ---
 
 The obvious repair for a selection ratio of 0.62 is to shortlist more Northeastern applicants until
 the rates match. `data/shortlist-v2.csv` is what Tarefa's shortlist looks like after that change: a
 lower threshold for the Northeast, chosen so that the same share of each region is shortlisted. As
-before, the counts were written by the course.
+before, the counts were written by the course, and `shortlist.py` writes the table.
 
 ```
+ana@lab:~/guard$ guard shortlist v2 > data/shortlist-v2.csv
 ana@lab:~/guard$ guard fairness data/shortlist-v2.csv --group region
 region        n   base  selected    TPR    FPR  precision
 Sudeste     200   0.60      0.56   0.80   0.20       0.86

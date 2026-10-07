@@ -1,6 +1,6 @@
 ---
 title: ignore_changes, para um atributo que é de outra pessoa
-version: 1
+version: 2
 ---
 
 O Terraform supõe que é dono de todo argumento que recebeu. Se o valor real difere do arquivo, o
@@ -9,8 +9,16 @@ exatamente o certo. **Às vezes, porém, um segundo sistema deveria mudar um atr
 Terraform desfazer o trabalho dele a cada apply é o defeito.
 
 O time financeiro da loja roda uma ferramenta de custos que percorre a conta e marca cada instância
-que encontra com o centro de custo a que ela pertence. Ela marcou a `web` hoje de manhã. O plan
-seguinte da Ana, sobre outra coisa completamente diferente, contém isto:
+que encontra com o centro de custo a que ela pertence. Ela marcou a `web` hoje de manhã, com o
+comando abaixo. O seu laboratório não tem ferramenta de custos, então faça o papel dela: rode estas
+duas linhas em `~/shop/app`, a primeira das quais lê o id da instância no state.
+
+```sh
+ID=$(terraform state show -no-color aws_instance.web | awk '$1=="id"{gsub(/"/,"",$3); print $3}')
+aws ec2 create-tags --resources $ID --tags Key=CostCenter,Value=cc-4410
+```
+
+O plan seguinte da Ana, sobre outra coisa completamente diferente, contém isto:
 
 ```
 ana@laptop:~/shop/app$ terraform plan
@@ -88,7 +96,7 @@ and found no differences, so no changes are needed.
 
 `tags["CostCenter"]` nomeia uma chave do mapa, e não o argumento `tags` inteiro. A Ana continua dona
 de `Name`, e uma mudança nela no arquivo continua sendo aplicada; só a chave que a ferramenta de
-custos escreve é ignorada.
+custos escreve é ignorada. A Ana faz commit da mudança.
 
 **Ignore o mínimo possível.** `ignore_changes = [tags]` também teria calado este plan, e calaria
 toda mudança futura que a Ana fizesse nas tags no arquivo, que pareceriam aplicadas sem estar.

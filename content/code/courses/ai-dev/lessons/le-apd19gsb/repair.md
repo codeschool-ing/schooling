@@ -1,35 +1,29 @@
 ---
 title: When the reply does not fit
-version: 1
+version: 2
 ---
 
-The second email is the one that goes wrong:
-
-```
-Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
-no update since. I need it for Saturday. Can you check? João
-```
-
-The first reply to it, written by the course to fail the way models do, leaves out the order
-number and invents a category the schema does not have.
+The second email of section 06, João's, is the one that goes wrong.
+The first reply to it is not JSON at all.
 
 ## One more try, with the reason
 
 ```
 ana@dev:~/shop$ python extract.py data/emails/2.txt
-attempt 1: category: 'shipping' is not one of ['return', 'delivery', 'payment', 'warranty', 'other']; (top): 'order_id' is a required property
-{"order_id": "1043", "category": "delivery", "summary": "Lamp shipped on 30 September; tracking has had no update since. Needed by Saturday.", "urgent": true}
+attempt 1: not JSON: Expecting ',' delimiter
+{"order_id": "1043", "category": "delivery", "summary": "No update on lamp tracking since 30 September", "urgent": true}
 ```
 
-The first line is the program talking to itself on `stderr`: **attempt 1 failed, for two named
-reasons**. `extract` then appended the bad reply and a message quoting those reasons to the
-conversation, and asked again. The second reply passed. That is the whole repair loop:
+The first line is the program talking to itself on `stderr`: **attempt 1 failed, for a named
+reason.** The text is not JSON, and the parser says what it expected where it gave up. `extract`
+then appended the bad reply and a message quoting those reasons to the conversation, and asked
+again. The second reply passed. That is the whole repair loop:
 
 ```python
 def extract(email, attempts=2):
     messages = [{"role": "user", "content": email}]
     for attempt in range(1, attempts + 1):
-        r = model.messages.create(model="scripted-1", max_tokens=300, system=SYSTEM, messages=messages)
+        r = model.messages.create(model="llama3.2:3b", max_tokens=300, system=SYSTEM, messages=messages, extra_body={"temperature": 0})
         text = r.content[0].text
         ticket, found = problems(text)
         if not found:
@@ -65,7 +59,7 @@ result. Here there is no tool, so the error goes back as an ordinary user messag
 
 ## Checking what a schema cannot
 
-The repaired ticket says `"urgent": true` and the summary says "Needed by Saturday". Both are
-fair readings of the email, and **neither is something a schema can check**. Lesson 8 section 02
-had the same gap: the 210.00 in the answer was the model's division. When a value matters, compute
+The repaired ticket says `"urgent": true`, a fair reading of *I need it for Saturday*, and its
+summary leaves Saturday out, a fair choice in under 120 characters. **Neither is something a schema can check**. Lesson 8 section 02
+had the same gap: the $21,000 in the answer was the model's conversion, and wrong by a hundred. When a value matters, compute
 it from the source in code, as the shop does with cents, and use the model's field only to route.

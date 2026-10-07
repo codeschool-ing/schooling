@@ -1,6 +1,6 @@
 ---
 title: What deploy means for your project
-version: 1
+version: 2
 ---
 
 For a portfolio, deployed means **a reviewer can see the project working without installing anything**,
@@ -48,7 +48,7 @@ Whatever you built, deployed means somebody can see it working without you, next
 today. Read the rest of this lesson for the parts that apply.
 :::
 
-Everything that follows happens in the course's lab: **srv** is a server on a private network, not on
-the internet, and its address, `loans.lab`, is a name only the lab knows. That is deliberate. A lab
-deploy can be repeated by anybody, forever, and costs nothing; the last section says what changes when
-the server is public.
+Everything that follows happens in a lab you build in the next section: **srv** is a server on a private
+network between it and your computer, not on the internet, and its address, `loans.lab`, is a name only
+your computer knows. That is deliberate. A lab deploy can be repeated by anybody, forever, and costs
+nothing; the last section says what changes when the server is public.

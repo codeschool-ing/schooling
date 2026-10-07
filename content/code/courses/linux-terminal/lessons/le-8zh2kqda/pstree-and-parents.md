@@ -1,12 +1,13 @@
 ---
 title: The tree, and what happens when a parent dies
-version: 1
+version: 2
 ---
 
 Every process except PID 1 has a parent, so the processes on a machine are not a list — they are a
 **tree**, with process one at the root.
 
-`pstree` draws it. Here is a small one, made on purpose:
+`pstree` draws it. Here is a small one, made on purpose and started with `./tree-demo.sh &`, whose
+number goes after `-p`:
 
 ```
 ana@vm:~/work$ cat tree-demo.sh

@@ -8,28 +8,31 @@
 #
 #   sudo useradd -m -s /bin/bash ana     # once, on a throwaway machine,
 #                                        # with passwordless sudo for ana
-#   sudo cp ../../lab.sh /var/tmp/lab.sh  # the lab, beside course.json
 #   sudo -u ana -i bash /path/to/captures.sh
+#
+# lab.sh, beside course.json, extracts netlab.sh and tunnel.py from lesson 1's
+# pages and installs them where that lesson tells the student to; the captures
+# run the student's own copy.
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
 # centre, as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset, whose web1 serves TLS on four ports with four
-# certificates made by lab.sh: a good one on 443, an expired one on 8443, one
-# for another name on 9443, and one signed by an authority nobody trusts on
-# 10443; the firewall rule on web1 that drops TCP 8080, added as root before
-# the filtered block; and the lab's root certificate in laptop's trust store,
-# put there by lab.sh. The requests name www.example.com and are sent to
-# web1's own address with curl --resolve, because www's address belongs to
-# the load balancers, which are not running in this lesson.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it. The four certificates and web1's four TLS ports are netlab.sh's
+# (lesson 1), and the lab's root is in laptop's trust store because netlab.sh
+# put it in the machine's. The requests name www.example.com and are sent to
+# web1's own address with curl --resolve, as tls-handshake says, because
+# www's address belongs to the load balancers, which are not running here.
+# The traffic each background capture catches is the command its section's
+# prose gives; the firewall rule that drops TCP 8080 on web1 is the sh fence
+# of refused-or-filtered, EXTRACTED with `lab.sh fence`.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -52,6 +55,7 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
+HERE=$(cd "$(dirname "$0")" && pwd)
 lab reset
 R='--resolve www.example.com:443:192.0.2.21 --resolve www.example.com:8443:192.0.2.21 --resolve www.example.com:9443:192.0.2.21 --resolve www.example.com:10443:192.0.2.21'
 
@@ -69,7 +73,7 @@ on laptop 'curl -sS http://192.0.2.21:81/'
 fg
 
 block filtered
-quiet web1 'nft add table ip filter; nft add chain ip filter input "{ type filter hook input priority 0; }"; nft add rule ip filter input tcp dport 8080 drop'
+lab exec web1 ana "$(bash "$LAB_SH" fence "$HERE/refused-or-filtered.md" 1)" >/dev/null 2>&1
 bg laptop 'tshark -n -i eth0 -c 3 -f "host 192.0.2.21 and tcp port 8080"'
 on laptop 'curl -sS --max-time 5 http://192.0.2.21:8080/'
 fg
@@ -109,6 +113,6 @@ on laptop 'openssl s_client -connect 192.0.2.21:10443 -servername www.example.co
 
 block file
 BG_WAIT=2 bg laptop 'tshark -n -q -i eth0 -a duration:4 -f "host 192.0.2.21" -w failing.pcap'
-lab exec laptop ana "curl -s $R https://www.example.com:8443/" >/dev/null 2>&1
+lab exec laptop ana "curl -s --resolve www.example.com:8443:192.0.2.21 https://www.example.com:8443/" >/dev/null 2>&1
 fg
 on laptop 'tshark -r failing.pcap'

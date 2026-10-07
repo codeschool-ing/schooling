@@ -1,6 +1,6 @@
 ---
 title: Grupos, e o que você não sabia que tinha
-version: 1
+version: 2
 ---
 
 Um grupo é um conjunto nomeado de contas, e é a unidade de compartilhamento numa máquina Linux.
@@ -84,11 +84,14 @@ trancar alguém para fora do `sudo`, e está a um argumento de distância do com
 
 ## A parte que confunde todo mundo: não faz efeito
 
+Um grupo novo, `deploy`, criado com `groupadd`, e a `ana` acrescentada a ele:
+
 ```
 ana@vm:~$ id -nG
 ana sudo team
-ana@vm:~$ sudo usermod -aG deploy ana
+ana@vm:~$ sudo groupadd deploy
 [sudo] password for ana:
+ana@vm:~$ sudo usermod -aG deploy ana
 ana@vm:~$ id -nG
 ana sudo team
 ana@vm:~$ getent group deploy

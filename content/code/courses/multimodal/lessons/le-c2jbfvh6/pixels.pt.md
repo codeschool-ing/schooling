@@ -1,6 +1,6 @@
 ---
 title: O que uma imagem é para um modelo
-version: 1
+version: 2
 ---
 
 **Uma imagem é uma grade de números, e um modelo só lê a grade.** Uma fotografia de 640 por 416 pixels em cores são 640 × 416 × 3 = 798.720 números entre 0 e 255, um para vermelho, verde e azul em cada ponto. Não há "texto" nem "gato" no arquivo. O que há no arquivo é o padrão de números que uma pessoa lê como texto ou gato, e um modelo é algo treinado para transformar esses padrões em respostas.
@@ -46,4 +46,4 @@ A mesma conta vale ao contrário quando você está pagando. Uma API de visão c
 
 ## De onde vieram os números
 
-A nota foi desenhada pelo laboratório a 150 pontos por polegada a partir de uma especificação, então `media/truth/invoice-0931.txt` guarda exatamente o que está impresso nela, linha por linha. A **taxa de erro de caracteres** (CER, na sigla em inglês) destas transcrições é o número de caracteres que você teria de trocar, apagar ou inserir para transformar a leitura na verdade, dividido pelo tamanho da verdade. O `jiwer.cer` calcula isso. 0,4% dos 492 caracteres da página são dois caracteres, e a próxima seção os encontra.
+A nota foi desenhada pelo `make_media.py` a 150 pontos por polegada a partir de uma especificação, então `media/truth/invoice-0931.txt` guarda exatamente o que está impresso nela, linha por linha. A **taxa de erro de caracteres** (CER, na sigla em inglês) destas transcrições é o número de caracteres que você teria de trocar, apagar ou inserir para transformar a leitura na verdade, dividido pelo tamanho da verdade. O `jiwer.cer` calcula isso. 0,4% dos 492 caracteres da página são dois caracteres, e a próxima seção os encontra.

@@ -1,6 +1,6 @@
 ---
 title: Swap, which is not the problem and is not the fix
-version: 1
+version: 2
 ---
 
 ```
@@ -8,7 +8,7 @@ ana@vm:~$ swapon --show; echo "(nothing above means no swap)"
 (nothing above means no swap)
 ana@vm:~$ free -h
                total        used        free      shared  buff/cache   available
-Mem:            15Gi       657Mi        13Gi        11Mi       1.5Gi        15Gi
+Mem:            15Gi       647Mi        14Gi        13Mi       369Mi        15Gi
 Swap:             0B          0B          0B
 ```
 
@@ -17,6 +17,10 @@ almost universal in containers. That means the transcripts in this section stop
 here: there is no honest way to show `si`/`so` moving on a machine with nowhere
 to swap to, so the rest of this section describes rather than demonstrates, and
 says so.
+
+Yours may well have some: the Ubuntu Server installer makes a swap file,
+`/swap.img`, unless it is told not to, and `swapon --show` on your machine will
+list it.
 
 ## What swap is for
 

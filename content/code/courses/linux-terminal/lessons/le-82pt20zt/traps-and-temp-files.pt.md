@@ -1,7 +1,46 @@
 ---
 title: Arquivos temporários, e limpar quando você não planejava parar
-version: 1
+version: 2
 ---
+
+Os scripts que esta seção roda, criados em `~/work/scripts` do jeito que a seção 02 descreveu; cada um aparece de novo onde é explicado:
+
+```sh
+cd ~/work/scripts
+cat > leaky.sh <<'END'
+#!/bin/bash
+tmp=$(mktemp /tmp/leaky.XXXXXX)
+echo "working in $tmp"
+echo data > "$tmp"
+exit 1
+END
+cat > tidy.sh <<'END'
+#!/bin/bash
+tmp=$(mktemp /tmp/tidy.XXXXXX)
+trap 'rm -f "$tmp"' EXIT
+echo "working in $tmp"
+echo data > "$tmp"
+exit 1
+END
+cat > trapped.sh <<'END'
+#!/bin/bash
+cleanup() { echo "cleanup ran, signal or not"; }
+trap cleanup EXIT
+trap 'echo "caught an interrupt"; exit 130' INT
+echo "my pid is $$"
+sleep 30
+echo "not reached"
+END
+cat > errtrap.sh <<'END'
+#!/bin/bash
+set -e
+trap 'echo "failed at line $LINENO" >&2' ERR
+echo "step one"
+cp /etc/nosuchfile /tmp/x 2>/dev/null
+echo "never reached"
+END
+chmod +x leaky.sh tidy.sh trapped.sh errtrap.sh
+```
 
 Um script que precisa de espaço de rascunho tem dois problemas: escolher um nome que mais ninguém
 vá escolher, e apagá-lo de qualquer jeito que o script termine.

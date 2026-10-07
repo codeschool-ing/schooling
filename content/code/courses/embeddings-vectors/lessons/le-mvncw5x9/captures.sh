@@ -9,9 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # The programs are the ones the sections show, written into ~/emb by `put`.
-# One file is STAGED and not shown: prices.py, the course's price sheet, is
-# copied from beside course.json into ~/emb so that sheet.py can import it.
-# It reads LiteLLM's sheet at the pinned commit from ~/.cache/emb-prices.
+# prices.py is the one lesson 7 shows whole; lab.sh writes it into ~/emb
+# from that lesson, as it does every file the lessons hand over.
 #
 # jina.py talks to labembed, the lab's stand-in provider on 127.0.0.1:8500,
 # with the lab's Jina key; no request leaves the machine. Every vector comes
@@ -34,7 +33,6 @@ block() { printf '##### %s\n' "$1"; }
 exec 9>/var/tmp/emb-capture.lock; flock 9
 lab reset >/dev/null
 
-put prices.py < "$COURSE/prices.py"
 put jina.py <<'EOF_FILE'
 import os
 import httpx
@@ -184,7 +182,7 @@ block jina
 on 'python jina.py'
 
 block jina-log
-on 'tail -n 4 /var/log/labembed/requests.jsonl | jq -c "{provider, task, dims, status}"'
+on 'tail -n 4 labembed.jsonl | jq -c "{provider, task, dims, status}"'
 
 block prices
 on 'python prices.py'
@@ -194,7 +192,7 @@ on 'python sheet.py'
 
 block static
 on 'python static.py'
-on 'ls -l /opt/emb/lib/python3.11/site-packages/wordllama/weights/ /opt/emb/share/all-MiniLM-L6-v2/model.onnx'
+on 'ls -l ~/.venvs/emb/lib/python3.12/site-packages/wordllama/weights/ ~/models/all-MiniLM-L6-v2/model.onnx'
 
 block speed
 on 'nproc; grep -m1 "model name" /proc/cpuinfo'

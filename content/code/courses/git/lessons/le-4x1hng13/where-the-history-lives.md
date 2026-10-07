@@ -1,6 +1,6 @@
 ---
 title: Where the history lives, and why Git is not GitHub
-version: 1
+version: 2
 ---
 
 Version control is older than Git by decades, and the systems before it made a choice that Git
@@ -43,6 +43,10 @@ d03056f Name the quarter in the title
 
 **All four commits survived**, with the same ids, because the copy never depended on the original.
 It was the history, not a view of it.
+
+You do not need to type this one: `~/notes` is the history of the last section, and your machine
+does not have it. Lesson 7 runs `git clone` on a repository you will have made yourself, and
+it behaves exactly like this.
 
 Three things follow, and you will lean on each of them.
 

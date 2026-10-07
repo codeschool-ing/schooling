@@ -13,7 +13,7 @@ Separation happens at every layer, and each layer has its own tool:
 | layer | what separates guests | what it prevents |
 |---|---|---|
 | radio | its own SSID | nothing on its own |
-| 2 | its own VLAN (lesson 19 of `networks-addressing`) | guests sharing a broadcast domain with staff |
+| 2 | its own VLAN (see `networks-addressing`) | guests sharing a broadcast domain with staff |
 | 2 | client isolation | one guest reaching another |
 | 3 | a firewall: internet yes, internal ranges no | guests reaching anything inside |
 | use | a rate limit per client and per SSID | one guest's download taking the staff's airtime |

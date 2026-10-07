@@ -1,6 +1,6 @@
 ---
 title: Reset and amend: rewriting what you have not shared
-version: 1
+version: 2
 ---
 
 Revert keeps the history and adds to it. The other two commands in this section **change the
@@ -9,7 +9,14 @@ yours alone, not yet pushed anywhere. Lesson 7 is where commits start leaving yo
 
 ## Amend: fix the commit you just made
 
-A typo in a message, a file you forgot to add. `--amend` replaces the last commit with a corrected one:
+A typo in a message, a file you forgot to add. `--amend` replaces the last commit with a corrected one.
+The change being committed says which days the bakery opens:
+
+```bash
+sed -i 's/half past five/half past five, Monday to Saturday/' index.html
+git add index.html
+```
+
 
 ```
 ana@vm:~/site$ git commit -m "Close on Sundys"
@@ -33,7 +40,12 @@ does.
 
 Ana tried two colours for the heading, committed both, and likes neither. `git reset` moves the branch
 back to an earlier commit, and its three modes decide what happens to the work in the commits it
-steps past.
+steps past. The two tries, committed one after the other:
+
+```bash
+sed -i 's/darkorange/chocolate/' style.css && git commit -qam 'Try a darker orange'
+sed -i 's/chocolate/firebrick/' style.css && git commit -qam 'Try red'
+```
 
 ```
 ana@vm:~/site$ git log --oneline -3

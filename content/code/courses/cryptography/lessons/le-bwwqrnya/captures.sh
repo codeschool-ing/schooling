@@ -7,13 +7,13 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/lab$,
-# followed by what it printed.
+# It rebuilds ~/lab with lab.sh reset, which builds it as the lessons do, in
+# the home of a user `ana` (LAB_HOME moves it), and prints each command after
+# a prompt, ana@lab:~/lab$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/lab, built by lab.sh,
-# and five TLS servers this script starts on 127.0.0.1 with openssl s_server
-# before the first block and stops after the last:
+# The TLS servers: the script runs section `hello`'s own commands, which
+# start openssl s_server four times on 127.0.0.1 before the first block, and
+# stops them after the last:
 #
 #   8443  portal.vereda.example, sending its certificate and the issuing CA
 #   8444  the same certificate, without the issuing CA
@@ -21,30 +21,29 @@
 #   8446  intranet.vereda.example, self-signed
 #
 # Every client check passes -attime 1781535600, the lab's present. A trace
-# carries fresh random bytes on every connection, so the transcripts pipe
-# it through `vcrypt tls-flow`, which keeps the message names and the
-# fields the lesson discusses and drops the random values.
+# carries fresh random bytes on every connection, so the transcripts pipe it
+# through `vcrypt tls-flow`, which the lesson shows, and which keeps the
+# message names and the fields the lesson discusses and drops the random
+# values.
 #
-# Recorded with OpenSSL 3.0.13, Python 3.13 and cryptography 50,
-# TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with OpenSSL 3.0.13, Python 3.12 and cryptography
+# 50.0.2, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/cryptography}
-mkdir -p "$HOME"
+export LAB_HOME=${LAB_HOME:-/home/ana}
+export HOME=$LAB_HOME
 bash "$here/../../lab.sh" reset >/dev/null
 cd "$HOME/lab"
-export PATH=$HOME/lab/bin:$PATH
+# What the three lines lesson 1 adds to ~/.bashrc do.
+export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv
 on() { printf 'ana@lab:~/lab$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 T=1781535600
-serve() { setsid openssl s_server -accept 127.0.0.1:$1 -www -quiet "${@:2}" </dev/null >/dev/null 2>&1 & echo $! >> "$HOME/servers.pid"; }
-: > "$HOME/servers.pid"
-serve 8443 -cert pki/portal.pem -key pki/portal.key -cert_chain pki/issuing1.pem
-serve 8444 -cert pki/portal.pem -key pki/portal.key
-serve 8445 -cert pki/agenda.pem -key pki/agenda.key -cert_chain pki/issuing1.pem
-serve 8446 -cert pki/intranet.pem -key pki/intranet.key
+# The four servers, started by the lesson's own commands (section `hello`).
+pkill -f 'openssl s_server -accept 127.0.0.1:844' 2>/dev/null; sleep 1
+bash "$here/../../lab.sh" steps le-bwwqrnya hello
 sleep 1
 C="openssl s_client -CAfile pki/root.pem -attime $T -verify_return_error"
 
@@ -68,4 +67,4 @@ on "echo | $C -connect 127.0.0.1:8443 -servername portal.vereda.example -tls1_2 
 on "echo | $C -connect 127.0.0.1:8443 -servername portal.vereda.example -tls1_1 2>&1 | grep -o 'no protocols available\|alert protocol version\|unsupported protocol' | head -1"
 on "echo | $C -connect 127.0.0.1:8443 -servername portal.vereda.example -tls1_2 -cipher AES256-GCM-SHA384 2>&1 | grep -o 'handshake failure\|no shared cipher\|no ciphers available' | head -1"
 
-kill $(cat "$HOME/servers.pid") 2>/dev/null
+pkill -f 'openssl s_server -accept 127.0.0.1:844'

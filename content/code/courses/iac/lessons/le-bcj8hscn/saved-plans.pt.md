@@ -1,6 +1,6 @@
 ---
 title: Salvar um plano, e aplicar exatamente esse plano
-version: 1
+version: 2
 ---
 
 Todo plano deste curso que não foi salvo terminou com a mesma nota, e vale levá-la ao pé da letra:
@@ -61,7 +61,16 @@ isso que deve ser tratado como o estado: qualquer segredo que esteja no estado e
 
 A Ana salva o plano no branch dela, `change`, para um colega revisar. Enquanto ele espera, surge
 algo urgente: a VPC precisa de uma tag `Owner` hoje. Ela faz essa mudança num branch só dela,
-`hotfix`, e aplica na hora:
+`hotfix`, e aplica na hora. No Git, ela faz commit da mudança no `main`, marca esse commit com o
+branch `change`, e começa o `hotfix` a partir do commit anterior:
+
+```sh
+git add -A && git commit -qm 'shop: public subnet, new image, assets bucket'
+git branch change
+git checkout -q -b hotfix HEAD~1
+```
+
+O `tfplan` é ignorado pelo Git, então fica onde está em toda troca de branch. A edição e o apply:
 
 ```
 ana@laptop:~/shop$ git diff
@@ -82,6 +91,13 @@ ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 3
 aws_vpc.shop: Modifications complete after 0s [id=vpc-bf1e4c53969619f51]
 
 Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+```
+
+Ela faz commit do hotfix e volta:
+
+```sh
+git add -A && git commit -qm 'tag the VPC with its owner'
+git checkout -q change
 ```
 
 Na manhã seguinte a revisão está feita, e ela volta ao `change` para aplicar o plano aprovado:
@@ -116,7 +132,8 @@ ana@laptop:~/shop$ jq .serial terraform.tfstate
 **O Terraform não aplica um plano calculado sobre um estado que já não existe**, porque não tem como
 saber se o plano ainda quer dizer o que o revisor leu. Aqui o plano antigo é anterior à tag
 `Owner`; aplicado mesmo assim, teria sido a revisão de uma mudança e o apply de outra. A saída é a
-honesta: atualizar o branch, planejar de novo e mandar o plano novo para revisão de novo.
+honesta: atualizar o branch, planejar de novo e mandar o plano novo para revisão de novo. A Ana
+atualiza o branch com `git rebase -q hotfix`, e planeja:
 
 ```
 ana@laptop:~/shop$ git log --format=%s -2

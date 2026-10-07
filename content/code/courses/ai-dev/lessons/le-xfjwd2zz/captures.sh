@@ -6,34 +6,38 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the SDKs, labllm
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/shop
 #   sudo bash captures.sh
 #
 # A line that starts with ana@dev:~/shop$ is what ana typed, in her project,
-# and what it printed. What is STAGED rather than typed, and not shown in the
-# lesson: the lab itself (lab.sh reset), and the files ana wrote (put below),
-# whose contents the lesson shows in full.
+# and what it printed. What is STAGED rather than typed, and not shown: the
+# lab's own reset, the files ana wrote (put below), each of which a lesson
+# shows whole (put refuses one that no lesson shows byte for byte), and the
+# restart of Ollama after errors stops it, which the lesson tells the student
+# to do and does not show.
 #
-# THE MODEL'S REPLIES IN THIS LESSON WERE WRITTEN BY THE COURSE, as rules in
-# lab/scripted.json. labllm sends them at its fixed pace of 40 ms per token,
-# which is slower than a real model's and chosen so a person can watch it.
-# The SDKs, the server-sent events, the relay, the cancel and the error in the
-# middle of a stream are real; the error is made on purpose with labllm's
-# /lab/config switch, which the lesson shows.
+# THE REPLIES COME FROM llama3.2:3b, at the speed the recording machine gives
+# it: about ten tokens a second, on 4 cores with no GPU. A rerun gives other
+# words and other times. The error in the middle of a stream is real: errors
+# stops Ollama itself while a reply is arriving, with `sudo pkill -x ollama`,
+# as closing the terminal that runs `ollama serve` would.
 #
-# TIMES ARE MEASURED, not written: they are rounded to a tenth of a second,
-# and a rerun can move one of them by a tenth.
+# The server's own log is quoted once, in cancel, as the lines the terminal
+# running `ollama serve` prints; on the recording machine they go to a file
+# the lab keeps, so this script prints its last lines under a marker of its
+# own rather than as something ana typed.
+#
+#   model    llama3.2:3b (a80c4f17acd5), Ollama 0.40.0
+#   taken    2026-10-07, on 4 cores and 15 GB with no GPU
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@dev:~/shop$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-lab reset >/dev/null
+. ../../lab/capture.sh
+
+quiet lab reset
+quiet lab exec ana 'sudo apt-get remove -y -qq nodejs'  # the student has no Node before this lesson
 
 put timing.py <<'PY'
 """The same reply twice: once waited for, once streamed. When does the first word arrive?"""
@@ -45,13 +49,13 @@ model = anthropic.Anthropic()
 ASK = [{"role": "user", "content": "Explain in a paragraph why the cart stores prices in cents."}]
 
 t0 = time.monotonic()
-r = model.messages.create(model="scripted-1", max_tokens=300, messages=ASK)
+r = model.messages.create(model="llama3.2:3b", max_tokens=300, messages=ASK)
 done = time.monotonic() - t0
 print(f"create: first word after {done:.1f} s, all {r.usage.output_tokens} tokens after {done:.1f} s")
 
 t0 = time.monotonic()
 first = None
-with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
     for text in stream.text_stream:
         if first is None:
             first = time.monotonic() - t0
@@ -64,7 +68,7 @@ block why-stream
 on 'python timing.py'
 
 block on-the-wire
-on "curl -sN \$ANTHROPIC_BASE_URL/v1/messages -H \"x-api-key: \$ANTHROPIC_API_KEY\" -H 'anthropic-version: 2023-06-01' -H 'content-type: application/json' -d '{\"model\": \"scripted-1\", \"max_tokens\": 50, \"stream\": true, \"messages\": [{\"role\": \"user\", \"content\": \"Say hello in five words.\"}]}' | cut -c1-110"
+on "curl -sN \$ANTHROPIC_BASE_URL/v1/messages -H \"x-api-key: \$ANTHROPIC_API_KEY\" -H 'anthropic-version: 2023-06-01' -H 'content-type: application/json' -d '{\"model\": \"llama3.2:3b\", \"max_tokens\": 50, \"stream\": true, \"messages\": [{\"role\": \"user\", \"content\": \"Say hello in five words.\"}]}' | cut -c1-110"
 
 put pieces.py <<'PY'
 """Print each piece of a streamed reply as it arrives, with a bar between pieces."""
@@ -72,7 +76,7 @@ import anthropic
 
 model = anthropic.Anthropic()
 ASK = [{"role": "user", "content": "Explain in a paragraph why the cart stores prices in cents."}]
-with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
     for text in stream.text_stream:
         print(text, end="|", flush=True)
     final = stream.get_final_message()
@@ -85,7 +89,7 @@ import openai
 
 client = openai.OpenAI()
 ASK = [{"role": "user", "content": "Explain in a paragraph why the cart stores prices in cents."}]
-for chunk in client.chat.completions.create(model="scripted-1", messages=ASK, stream=True):
+for chunk in client.chat.completions.create(model="llama3.2:3b", messages=ASK, stream=True):
     choice = chunk.choices[0]
     if choice.delta.content:
         print(choice.delta.content, end="|", flush=True)
@@ -119,12 +123,12 @@ class Relay(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache")
         self.end_headers()
         try:
-            with model.messages.stream(model="scripted-1", max_tokens=300,
+            with model.messages.stream(model="llama3.2:3b", max_tokens=300,
                                        messages=[{"role": "user", "content": question}]) as stream:
                 for text in stream.text_stream:
                     self.send_event("text", {"text": text})
             self.send_event("done", {"stop_reason": stream.get_final_message().stop_reason})
-        except anthropic.APIError as e:
+        except Exception as e:  # whatever ended it, the page has half an answer
             self.send_event("error", {"message": "the answer stopped halfway; please ask again"})
             self.log_error("model stream failed: %s", e)
 
@@ -161,8 +165,9 @@ for (;;) {
 JS
 
 block to-the-browser
-on 'python relay.py & sleep 1; curl -sN -X POST localhost:8500/ask -d '"'"'{"question": "Say hello in five words."}'"'"'; kill $!'
-on 'python relay.py & sleep 1; node client.mjs "Explain in a paragraph why the cart stores prices in cents."; kill $!'
+on 'sudo apt install -y nodejs 2>&1 | tail -n 1; node --version'
+on 'python relay.py & sleep 3; curl -sN -X POST localhost:8500/ask -d '"'"'{"question": "Say hello in five words."}'"'"'; kill $!'
+on 'python relay.py & sleep 3; node client.mjs "Explain in a paragraph why the cart stores prices in cents."; kill $!'
 
 put cancel.py <<'PY'
 """Stop reading after the first forty characters, as a page does when someone presses Stop."""
@@ -171,7 +176,7 @@ import anthropic
 model = anthropic.Anthropic()
 ASK = [{"role": "user", "content": "Explain in a paragraph why the cart stores prices in cents."}]
 got = ""
-with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
     for text in stream.text_stream:
         got += text
         if len(got) >= 40:
@@ -181,7 +186,9 @@ PY
 
 block cancel
 on 'python cancel.py'
-on "sleep 1; tail -n 1 /var/log/labllm/requests.jsonl | python -c 'import json, sys; r = json.loads(sys.stdin.read()); print(r[\"status\"], \"| planned:\", r[\"usage\"][\"output_tokens\"], \"tokens | sent before the close:\", r[\"sent\"])'"
+sleep 1
+block cancel-log
+tail -n 3 /var/log/ollama-capture.log
 
 put midstream.py <<'PY'
 """A stream that fails partway: what the reader had, and what to do with it."""
@@ -191,19 +198,22 @@ model = anthropic.Anthropic()
 ASK = [{"role": "user", "content": "Explain in a paragraph why the cart stores prices in cents."}]
 shown = ""
 try:
-    with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+    with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
         for text in stream.text_stream:
             shown += text
             print(text, end="", flush=True)
-except anthropic.APIError as e:
-    print(f"\n[{type(e).__name__}: {e.message}]")
+except Exception as e:  # an API error, or the connection itself, as below
+    print(f"\n[{type(e).__module__}.{type(e).__name__}: {e}]")
     print(f"[{len(shown)} characters were on the screen and are not an answer]")
 PY
 
 block errors
-on "curl -s localhost:8400/lab/config -d '{\"stream_error_after\": 12}'; echo"
-on 'python midstream.py'
-on "curl -s localhost:8400/lab/config -d '{\"stream_error_after\": 12}' >/dev/null; python relay.py & sleep 1; node client.mjs 'Explain in a paragraph why the cart stores prices in cents.'; kill \$!"
+quiet lab exec ana 'ollama run llama3.2:3b "Say ready." < /dev/null'  # loaded, so the stop lands mid-reply
+on 'python midstream.py & sleep 5; sudo pkill -x ollama; wait'
+quiet lab serve
+quiet lab exec ana 'ollama run llama3.2:3b "Say ready." < /dev/null'
+on 'python relay.py & sleep 3; node client.mjs "Explain in a paragraph why the cart stores prices in cents." & sleep 5; sudo pkill -x ollama; wait %2; kill %1'
+quiet lab serve
 
 put tool_stream.py <<'PY'
 """A tool call, streamed: its arguments arrive as pieces of JSON that do not parse until the end."""
@@ -214,7 +224,7 @@ import anthropic
 TOOLS = [{"name": "get_stock", "description": "Units in stock and unit price in cents for one product, by its SKU.",
           "input_schema": {"type": "object", "properties": {"sku": {"type": "string"}}, "required": ["sku"]}}]
 model = anthropic.Anthropic()
-with model.messages.stream(model="scripted-1", max_tokens=300, tools=TOOLS,
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, tools=TOOLS,
                            messages=[{"role": "user", "content": "Is LAMP-02 in stock?"}]) as stream:
     sofar = ""
     for event in stream:
@@ -238,14 +248,18 @@ put partial.py <<'PY'
 import anthropic
 
 model = anthropic.Anthropic()
-ASK = [{"role": "user", "content": "The cents rule, as a short list."}]
+ASK = [{"role": "user", "content": "Why does a shop keep prices as whole cents? "
+                                   "A short Markdown list, with the key word of each item in bold."}]
 sofar = ""
-with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+was_open = False
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
     for n, text in enumerate(stream.text_stream, 1):
         sofar += text
-        if n in (2, 5, 12):
-            print(f"after {n:2} pieces: {sofar!r}")
-print(f"at the end:      {sofar!r}")
+        is_open = sofar.count("**") % 2 == 1
+        if is_open != was_open:
+            print(f"after {n:3} pieces, bold {'opened' if is_open else 'closed'}: {sofar[-36:]!r}")
+            was_open = is_open
+print(f"at the end, {n} pieces and {len(sofar)} characters")
 PY
 
 block on-screen

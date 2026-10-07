@@ -7,7 +7,6 @@ The size of a model in memory is arithmetic, and the inputs are published. Meta'
 describes every Llama it released as a block of architecture numbers. This is Llama 3.1 8B:
 
 ```
-ana@desk:~/desk$ sources lines llama-skus 235 246
 # meta-llama/llama-models@0e0b8c51 models/sku_list.py
  235|             arch_args={
  236|                 "dim": 4096,
@@ -23,17 +22,17 @@ ana@desk:~/desk$ sources lines llama-skus 235 246
  246|             },
 ```
 
-Those seven numbers, with the vocabulary size, determine every weight in the network. `lab/size.py`
+Six of those numbers, with the vocabulary size, determine every weight in the network. `size.py`
 reads them for the three Llama 3.1 sizes and does the sum:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "lab/size.py",
+  "file": "size.py",
   "parts": [
     {
-      "code": "import re\nimport subprocess\nimport sys\n\nsrc = subprocess.run([\"sources\", \"lines\", \"llama-skus\", \"1\", \"330\"], capture_output=True, text=True).stdout\nVOCAB = 128256  # LLAMA3_VOCAB_SIZE, line 19 of sku_list.py\n\n\n",
-      "note": "The architecture is read from Meta's own file, through `sources`, so the numbers cannot drift from the published ones. The vocabulary size is a constant at the top of that file."
+      "code": "import re\nimport sys\nimport urllib.request\n\nURL = (\"https://raw.githubusercontent.com/meta-llama/llama-models/\"\n       \"0e0b8c519242d5833d8c11bffc1232b77ad7f301/models/sku_list.py\")\nsrc = urllib.request.urlopen(URL).read().decode()\nVOCAB = 128256  # LLAMA3_VOCAB_SIZE, line 19 of sku_list.py\n\n\n",
+      "note": "The architecture is read from Meta's own file, at the commit quoted above, so the numbers cannot drift from the published ones. The vocabulary size is a constant at the top of that file."
     },
     {
       "code": "def arch(name):\n    block = src[src.index(f'\"meta-llama/{name}\"'):]\n    num = lambda k: float(re.search(rf'\"{k}\": ([0-9.]+)', block).group(1))  # noqa: E731\n    return {k: num(k) for k in (\"dim\", \"n_layers\", \"n_heads\", \"n_kv_heads\", \"ffn_dim_multiplier\", \"multiple_of\")}\n\n\n",

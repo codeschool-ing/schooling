@@ -11,7 +11,8 @@ below. The code is.
 
 Vereda's first booking system came from a contractor, who wrote a function to encrypt patient records
 before storing them. It uses AES with a 256-bit key and runs without error. It was reviewed in the
-lab against a library's authenticated mode:
+lab against a library's authenticated mode. The copy button gives the whole file; save it as
+`~/lab/homemade.py`:
 
 ```schooling-example
 {

@@ -33,7 +33,7 @@ In **16 tracks** — `ai`(14), `backend`(14), `bi`(17), `cloud-engineering`(10),
 
 | | |
 |---|---|
-| runtime | **the student's own, and that is the point** — lesson 15 deploys to a real free tier with a real domain |
+| runtime | **the student's own, and that is the point** — lesson 1 readies the student's computer, and lesson 15 builds a server in a virtual machine of theirs and deploys to it; a free tier and a domain are named, never required (C-38) |
 | browser · database | no · no |
 | exercises **blocked** | **the deliverable itself.** A portfolio project is a repository on somebody else's server, and no grader in this build or any planned one judges one |
 | exercises that would **improve** | ~30 — the checklist items around it (a README, a licence, an empty state) are gradeable where the project is not |

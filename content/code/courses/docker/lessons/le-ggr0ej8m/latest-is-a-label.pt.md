@@ -1,6 +1,6 @@
 ---
 title: "`latest` é só um nome"
-version: 1
+version: 2
 ---
 
 **`latest` não é a versão mais nova de nada. É a tag que o Docker escreve quando você não escreve
@@ -19,6 +19,10 @@ shelf:latest   acc588659f39         28MB         7.84MB
 ela poderia ser o build mais antigo da máquina.
 
 ## Dois containers, os dois "latest"
+
+O registry é do tipo que a aula 15 iniciou, em `127.0.0.1:5000`, aqui sem senha. Se a sua máquina
+não tem um rodando, isto inicia um:
+`docker run -d --name registry -p 127.0.0.1:5000:5000 -v registry-data:/var/lib/registry registry:3`.
 
 A Ana envia essa imagem como `localhost:5000/shelf`, que é `localhost:5000/shelf:latest`, e inicia um
 container a partir dela. Depois constrói a versão 1.1.0, envia com o mesmo nome e inicia um segundo

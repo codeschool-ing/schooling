@@ -1,6 +1,6 @@
 ---
 title: Notificações e a Permissions API
-version: 1
+version: 2
 ---
 
 Uma notificação é uma mensagem que o sistema operacional mostra **fora da página**, mesmo quando a aba
@@ -38,8 +38,8 @@ Cada permissão fica num de três estados:
 
 Mostrar uma notificação são dois passos: `await Notification.requestPermission()`, que mostra a
 pergunta se o estado for `prompt` e devolve a resposta, e depois `new Notification("Iracema is ready
-to collect", { body: "Shelf A, until Friday" })`. **Isso não foi capturado**: o navegador do
-laboratório roda sem tela e não consegue exibir uma notificação, então uma transcrição mostraria só a
+to collect", { body: "Shelf A, until Friday" })`. **Isso não foi capturado**: o navegador que o
+`page` comanda roda sem tela e não consegue exibir uma notificação, então uma transcrição mostraria só a
 falha dele, que não é o que um navegador de verdade faz.
 
 As regras são as que a geolocalização ensinou, pelo mesmo motivo:

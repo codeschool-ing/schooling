@@ -1,6 +1,6 @@
 ---
 title: Git Flow: develop, release and hotfix branches
-version: 1
+version: 2
 ---
 
 Git Flow was described in 2010 for a particular kind of software: **products shipped as numbered
@@ -17,7 +17,71 @@ receiving fixes meanwhile. Desktop software, mobile apps waiting for a store's r
 - **`hotfix/…`** branches start from `main` for an urgent fix to a released version, and merge into
   both `main` and `develop`.
 
-Here is a small ordering app kept that way: two features, a release 1.1, and a hotfix 1.1.1:
+Here is a small ordering app kept that way: two features, a release 1.1, and a hotfix 1.1.1. A short
+program makes its history, and it is worth reading before running, because every block in it is one
+of the lanes above being used:
+
+```bash
+#!/usr/bin/env bash
+# make-app.sh: a small ordering app, kept the Git Flow way by Ana and Bruno.
+# Every date and every name is written down, so the ids match the lesson's.
+set -e
+if [ -e ~/app ]; then
+  echo "~/app already exists. Move it aside or delete it, then run this again." >&2
+  exit 1
+fi
+mkdir ~/app && cd ~/app && git init -q -b main
+
+when()  { export GIT_AUTHOR_DATE="$1" GIT_COMMITTER_DATE="$1"; }
+ana()   { export GIT_AUTHOR_NAME='Ana Souza' GIT_COMMITTER_NAME='Ana Souza' \
+                 GIT_AUTHOR_EMAIL=ana@example.com GIT_COMMITTER_EMAIL=ana@example.com; }
+bruno() { export GIT_AUTHOR_NAME='Bruno Lima' GIT_COMMITTER_NAME='Bruno Lima' \
+                 GIT_AUTHOR_EMAIL=bruno@example.com GIT_COMMITTER_EMAIL=bruno@example.com; }
+commit() { git add -A && git commit -q -m "$1"; }
+# finish BRANCH INTO: merge a finished branch, always with a merge commit
+finish() { git switch -q "$2" && git merge -q --no-ff --no-edit "$1"; }
+
+ana; when 2026-06-01T09:00:00-03:00
+printf 'Padaria Sol ordering app\n' > README.md; commit 'Start the ordering app'
+git tag -a v1.0 -m 'First release'
+git switch -q -c develop
+
+when 2026-06-03T10:00:00-03:00
+git switch -q -c feature/basket develop
+printf 'basket\n' > basket.txt; commit 'Add a basket'
+when 2026-06-04T10:00:00-03:00
+finish feature/basket develop; git branch -q -d feature/basket
+
+bruno; when 2026-06-05T11:00:00-03:00
+git switch -q -c feature/pickup develop
+printf 'pickup\n' > pickup.txt; commit 'Let customers choose a pickup time'
+when 2026-06-08T11:00:00-03:00
+finish feature/pickup develop; git branch -q -d feature/pickup
+
+ana; when 2026-06-09T09:00:00-03:00
+git switch -q -c release/1.1 develop
+sed -i 's/app/app, version 1.1/' README.md; commit 'Prepare release 1.1'
+when 2026-06-10T09:00:00-03:00
+finish release/1.1 main; git tag -a v1.1 -m 'Release 1.1'
+finish release/1.1 develop; git branch -q -d release/1.1
+
+bruno; when 2026-06-11T16:00:00-03:00
+git switch -q -c hotfix/1.1.1 main
+printf 'pickup, not before 06:00\n' > pickup.txt; commit 'Refuse pickup times before we open'
+when 2026-06-11T17:00:00-03:00
+finish hotfix/1.1.1 main; git tag -a v1.1.1 -m 'Release 1.1.1'
+finish hotfix/1.1.1 develop; git branch -q -d hotfix/1.1.1
+```
+
+`finish` is the move Git Flow repeats: switch to the branch the work goes into and merge it there with
+`--no-ff`, so that the merge commit shows where the work joined. The release and the hotfix are each
+finished twice. Save the program as `~/make-app.sh`, the way you saved lesson 3's, and run it:
+
+```bash
+cd ~ && bash ~/make-app.sh && cd ~/app
+```
+
+Then ask what it made:
 
 ```
 ana@vm:~/app$ git branch

@@ -1,6 +1,6 @@
 ---
 title: A pull request is a branch asking to join
-version: 1
+version: 2
 ---
 
 **A pull request is a request to merge one branch into another**, with a web page for discussing it
@@ -8,8 +8,29 @@ first. GitHub and Bitbucket call it a pull request; GitLab calls it a merge requ
 accurate name. Nothing new is stored in Git: the branch is an ordinary branch you pushed, and the page
 is the hosting service reading it.
 
-Ana pushed `sunday-hours`, with three commits, and opened a pull request into `main`. The page has a
-tab listing its commits. That tab is this:
+Ana pushed `sunday-hours`, with three commits, and opened a pull request into `main`. Meanwhile
+Bruno's change to the paragraphs landed on `main`. The branch and the commit beside it, made from a
+fresh week, are these:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+git switch -q -c sunday-hours
+sed -i 's/half past five/half past five; Sundays from seven/' index.html
+git commit -qam 'Add Sunday hours to the home page'
+sed -i 's/Sundays from seven/Sundays from 7:00/' index.html
+git commit -qam 'Write the Sunday time the way the rest of the page does'
+printf '<p>Open on Sundays too.</p>\n' >> menu.html
+git commit -qam 'Mention Sundays on the menu page'
+git switch -q main
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Give paragraphs more room'
+```
+
+This lesson reads them in a terminal, which needs no account anywhere. If you have one on a hosting
+service, pushing the branch there and opening a real pull request shows the same commits in the
+same order; nothing in this course depends on it.
+
+The page has a tab listing the pull request's commits. That tab is this:
 
 ```
 ana@vm:~/site$ git log --oneline main..sunday-hours

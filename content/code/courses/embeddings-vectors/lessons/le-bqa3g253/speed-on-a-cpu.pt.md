@@ -15,7 +15,7 @@ ana@lab:~/emb$ nproc
 4
 ana@lab:~/emb$ grep -m1 "model name" /proc/cpuinfo
 model name	: Intel(R) Xeon(R) Processor @ 2.10GHz
-ana@lab:~/emb$ grep -n "num_threads" /opt/emb/lib/python3.11/site-packages/minilm.py
+ana@lab:~/emb$ grep -n "num_threads" minilm.py
 33:_opts.intra_op_num_threads = 1
 34:_opts.inter_op_num_threads = 1
 ```

@@ -1,12 +1,23 @@
 ---
 title: Indicators, measured from the customer's side
-version: 1
+version: 2
 ---
 
 Lesson 5 wrote the expression this lesson is built on, bad events over all events, and promised it a
 name. **A service level indicator, an SLI, is the share of events that went well, measured where the
 customer meets the service.** For the shop, the event that matters is a checkout, and the place is the
-storefront. Five minutes of them, by status code:
+storefront.
+
+This lesson watches an hour go by, because an objective is measured over a window and the window
+here is one hour. Start the lab again from nothing and set the customers going for seventy minutes;
+the first queries need five of them:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 4200
+sleep 300
+```
+
+Five minutes of checkouts, by status code:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (code) (increase(http_server_requests_total{job="storefront",route="/checkout"}[5m]))'

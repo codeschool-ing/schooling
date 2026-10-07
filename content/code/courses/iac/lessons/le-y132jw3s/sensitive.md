@@ -1,6 +1,6 @@
 ---
 title: What sensitive hides, and what it does not
-version: 1
+version: 2
 ---
 
 The first tool most people reach for is `sensitive = true`, and it is worth knowing exactly what it
@@ -30,7 +30,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 That takes care of copy two, the screen and the CI log. **The marking also spreads to everything
 computed from the value**, and Terraform checks it at the one door through which a value leaves a
-configuration on purpose. Ana adds an output, so that a colleague's script can fetch the password:
+configuration on purpose. Ana adds an output, in `outputs.tf`, so that a colleague's script can fetch the password:
 
 ```hcl
 output "db_password" {

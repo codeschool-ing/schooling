@@ -1,6 +1,6 @@
 ---
 title: O que um revisor procura
-version: 1
+version: 2
 ---
 
 Uma trava pega exclusões. **A mudança mais perigosa desta aula não apaga nada**, e um revisor que lê
@@ -139,9 +139,11 @@ index 9a76a4c..ff14c76 100644
 **O diff do lock file é o upgrade do provider**, e ele entra na mesma revisão que o código. Uma
 versão nova de provider pode mudar padrões, acrescentar atributos e, de vez em quando, transformar
 um update numa substituição no plano seguinte, então ela é revisada como uma mudança própria, e não
-enfiada ao lado de outra. Dois detalhes aqui são do laboratório: o mirror dele registra só um hash
-`h1:`, onde o registry público acrescentaria linhas `zh:` para cada plataforma, e instala o provider
-`(unauthenticated)`. A aula 2 explica por quê.
+enfiada ao lado de outra. Dois detalhes aqui vêm da máquina em que estas aulas foram gravadas, que
+não tinha internet e instalava providers de uma cópia local: o lock file registra só um hash `h1:`,
+e o `init` informa o provider como `(unauthenticated)`. No seu computador o `init` o baixa do
+registry público e diz que ele é assinado pela HashiCorp, e o diff também acrescenta linhas `zh:`,
+uma para cada plataforma. A aula 1 explica por quê.
 
 ## Um checklist de revisor
 
@@ -161,4 +163,6 @@ A última linha é por onde começar. **Antes de ler um plano, diga o que você 
 você passa os olhos, e um `2 to destroy` que você não previu é uma pergunta com resposta em algum
 lugar do corpo.
 
-A Ana descarta as duas edições de alargamento com `git checkout`, e elas nunca são aplicadas.
+A Ana descarta as duas edições de alargamento com `git checkout`, e elas nunca são aplicadas. O
+upgrade vai embora também: `git checkout versions.tf .terraform.lock.hcl` volta os dois arquivos, e
+um segundo `terraform init -upgrade` instala de novo o provider que o lock file nomeia.

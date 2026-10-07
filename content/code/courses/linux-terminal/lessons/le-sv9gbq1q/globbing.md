@@ -1,16 +1,27 @@
 ---
 title: Patterns, and who expands them
-version: 2
+version: 3
 ---
 
 **The single most important fact in this section:** the shell expands a pattern *before* the
 command runs. The command never sees your `*`. It sees the list of filenames the shell handed it.
 
+Five names to match against, one of them hidden and one in a subdirectory:
+
+```sh
+mkdir -p ~/gl/sub
+cd ~/gl
+touch a.txt b.txt c.log sub/d.txt .hidden.txt
+```
+
 Prove it with `echo`, which only prints what it was given:
 
 ```
 ana@vm:~/gl$ ls
-a.txt  b.txt  c.log  sub
+a.txt
+b.txt
+c.log
+sub
 ana@vm:~/gl$ echo *
 a.txt b.txt c.log sub
 ana@vm:~/gl$ echo *.txt
@@ -132,9 +143,14 @@ learns.
 
 ```
 ana@vm:~/gl$ ls
-a.txt  b.txt  c.log  sub
+a.txt
+b.txt
+c.log
+sub
 ana@vm:~/gl$ ls *
-a.txt  b.txt  c.log
+a.txt
+b.txt
+c.log
 
 sub:
 d.txt

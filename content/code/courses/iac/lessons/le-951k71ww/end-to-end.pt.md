@@ -1,6 +1,6 @@
 ---
 title: Uma execução ponta a ponta, contra o moto
-version: 1
+version: 2
 ---
 
 Tudo até aqui perguntou ao Terraform o que ele faria. **Um teste ponta a ponta faz**: ele aplica o
@@ -29,6 +29,8 @@ Neste curso, a "infraestrutura real" é o moto, então nada abaixo foi cobrado. 
 execução deste arquivo cria uma VPC e duas sub-redes, e custa o que elas custam enquanto existem.
 
 ## Construir, e depois perguntar à AWS
+
+O arquivo de teste é o `tests/e2e.tftest.hcl`:
 
 ```hcl
 provider "aws" {
@@ -78,7 +80,8 @@ run "aws_agrees" {
 num plan, agora avaliada contra ids que a AWS de fato devolveu. Mas isso ainda é o Terraform
 corrigindo a própria prova, já que os valores vêm do que o Terraform registrou. **`aws_agrees`
 pergunta à AWS**, por meio de um módulo auxiliar: o bloco `module` de um run troca o módulo testado
-por outro, aqui um diretório de data sources que leem a VPC de volta pelo id.
+por outro, aqui um diretório de data sources que leem a VPC de volta pelo id,
+`tests/aws/main.tf`:
 
 ```hcl
 # A helper module for the tests: it reads the VPC back from AWS.
@@ -142,7 +145,8 @@ ana@laptop:~/shop/modules/network$ aws ec2 describe-vpcs --query "Vpcs[].[CidrBl
 
 Eis o caso que os degraus anteriores não pegavam. Uma sub-rede `10.30.1.0/24` numa VPC
 `10.20.0.0/16` é uma faixa válida, numa zona real, do tipo certo. O `validate` não tem valores para
-olhar, o plan não tem motivo para objetar e um mock aceita qualquer coisa. A AWS recusa:
+olhar, o plan não tem motivo para objetar e um mock aceita qualquer coisa. A AWS recusa, como mostra o
+`tests/range.tftest.hcl`:
 
 ```hcl
 provider "aws" {
@@ -194,7 +198,9 @@ remover.
 Uma falha ponta a ponta é cara de encontrar, então a resposta certa é subir esse conhecimento na
 escada. A Ana acrescenta a `subnets` uma regra que compara a rede de cada sub-rede com a da VPC;
 ela exige Terraform 1.9, porque a condição lê uma segunda variável. Depois acrescenta ao
-`rules.tftest.hcl` um run que espera a recusa da regra:
+`rules.tftest.hcl` um run que espera a recusa da regra. No `variables.tf` o bloco novo entra dentro
+de `variable "subnets"`, depois da `description` e de uma linha em branco, e o run entra no fim do
+arquivo de teste, depois de uma linha em branco:
 
 ```
 ana@laptop:~/shop/modules/network$ tail -n 10 variables.tf
@@ -268,7 +274,8 @@ O outro jeito comum de escrever estes testes é o **Terratest**, uma biblioteca 
 um teste em Go roda `terraform apply`, chama o SDK da própria nuvem para inspecionar o resultado e
 roda `terraform destroy` numa função adiada. Ele alcança mais longe do que um módulo auxiliar, por
 exemplo fazendo uma requisição HTTP a um servidor que acabou de criar, ao preço de uma segunda
-linguagem. Ele é citado aqui e não foi rodado neste laboratório.
+linguagem. Ele é citado aqui e não foi rodado
+nesta aula, porque precisa de Go, que este curso não instala.
 
 Seja qual for, rode testes ponta a ponta com menos frequência que o resto: num pull request que
 muda o módulo, ou toda noite, numa conta só deles que não guarda mais nada. A aula 15 põe os degraus

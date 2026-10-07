@@ -4,7 +4,8 @@ version: 1
 ---
 
 The client was started by hand for six seconds, with its log filtered to the lines that say what was
-agreed, while the ISP's router captured UDP 1194:
+agreed, while the ISP's router captured UDP 1194. Start the capture on `isp` first, then the client on
+`remote`:
 
 ```
 ana@remote:~$ cd /etc/openvpn && sudo timeout 6 openvpn --config client.conf | grep -E "VERIFY OK|Control Channel:|Data Channel:|Initialization"
@@ -66,7 +67,14 @@ talking to itself.
 version number in the record's header, so that old middleboxes let it through, and names the version it
 really wants inside. The server's answer settles it, and tshark labels everything after it `TLSv1.3`.
 
-With the client left running, the laptop had a tunnel:
+Started again and left running, in the background like the server, the client gives the laptop a
+tunnel. On `remote`:
+
+```sh
+sudo setsid openvpn --cd /etc/openvpn --config client.conf >/dev/null 2>&1 &
+```
+
+A few seconds later:
 
 ```
 ana@remote:~$ ip -br addr show tun0; ip route | grep tun0
@@ -79,4 +87,5 @@ served by files
 
 `tun0` got `10.8.0.2`, the first address the server hands out. **Nobody configured the route to
 `192.168.10.0/24` on the laptop**: it is the `push` line of the server's file, and it arrived over the
-control channel.
+control channel. Stop the client before the next section, on the virtual machine:
+`sudo bash netlab.sh kill remote openvpn`.

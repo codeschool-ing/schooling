@@ -1,6 +1,6 @@
 ---
 title: Editing with a mask
-version: 1
+version: 2
 ---
 
 Lesson 3 argued that a nearly-right picture should be **edited, not regenerated**. In the Images API an edit is the original picture, a **mask**, and a prompt for what goes in the masked part. The mask is a PNG the same size as the picture, with an alpha channel: **transparent pixels mark where the model may draw, and opaque ones are kept**.
@@ -30,9 +30,9 @@ import sys
 
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8800/v1")   # lesson 3's images_server.py
 try:
-    result = client.images.edit(model="lab-image-1", image=open("banner.png", "rb"), mask=open(sys.argv[1], "rb"),
+    result = client.images.edit(model="gpt-image-1", image=open("banner.png", "rb"), mask=open(sys.argv[1], "rb"),
                                 prompt="the same café table, with a small pot of basil on the right")
 except Exception as e:
     print(type(e).__name__, e)
@@ -52,11 +52,11 @@ ana@lab:~/mm$ python edit.py banner.png
 BadRequestError Error code: 400 - {'error': {'message': 'The mask must have an alpha channel.', 'type': 'invalid_request_error', 'param': 'mask', 'code': None}}
 ```
 
-The first edit went through: labmm returned the banner with its right third greyed out, which is its way of showing where a real model would have painted. The next two were refused, and both refusals are the commonest ways to get a mask wrong:
+The first edit went through: the stand-in returned the banner with its right third greyed out, which is its way of showing where a real model would have painted. The next two were refused, and both refusals are the commonest ways to get a mask wrong:
 
 - **A mask of a different size.** The picture is 1536 by 1024 and the mask 1024 by 1024, so the transparent region has no defined place on the picture.
-- **A mask with no alpha channel.** Passing the banner itself as its own mask means nothing is transparent, and labmm refused it as having no alpha. A mask drawn in an editor and saved as JPEG, which has no alpha at all, fails the same way.
+- **A mask with no alpha channel.** Passing the banner itself as its own mask means nothing is transparent, and the stand-in refused it as having no alpha. A mask drawn in an editor and saved as JPEG, which has no alpha at all, fails the same way.
 
-These two messages are labmm's, written to say what is wrong; a real API's wording differs, and its refusal is what you should expect. The check worth writing is your own, before the call: same size, mode `RGBA`, and at least one transparent pixel.
+These two messages are the stand-in's, written to say what is wrong; a real API's wording differs, and its refusal is what you should expect. The check worth writing is your own, before the call: same size, mode `RGBA`, and at least one transparent pixel.
 
 **How exactly the model respects the mask is the provider's business.** OpenAI's documentation describes the mask as guidance: the model may change pixels just outside it to make the edit blend in. So the check after an edit is the one from lesson 3: look at it, against the list, before it is published.

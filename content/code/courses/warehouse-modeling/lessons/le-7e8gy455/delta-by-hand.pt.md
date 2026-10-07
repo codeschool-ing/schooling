@@ -1,9 +1,9 @@
 ---
 title: Uma tabela Delta, à mão
-version: 1
+version: 2
 ---
 
-O laboratório tem a biblioteca `deltalake`, o delta-rs, uma implementação do Delta Lake em Rust com interface
+A lição 1 instalou a biblioteca `deltalake`, o delta-rs, uma implementação do Delta Lake em Rust com interface
 Python. Sem servidor e sem cluster: uma tabela Delta é uma pasta, e a biblioteca é o que lê e escreve o log
 dentro dela.
 

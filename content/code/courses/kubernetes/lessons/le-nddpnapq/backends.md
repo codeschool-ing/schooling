@@ -23,7 +23,7 @@ library, and nothing in Kubernetes can supply it.
 
 **OpenTelemetry is the common thread**: one set of libraries and one collector that can produce all
 three signals in standard formats, so the choice of where to store them stays open. Nothing of this
-was installed in this lab, so this section describes and does not run them.
+was installed for this course, so this section describes and does not run them.
 
 ::: track devops
 The `observability` course, later in your track, builds this stack: Prometheus in its lesson 5,

@@ -1,6 +1,6 @@
 ---
 title: Uma chave, milhares de pessoas
-version: 1
+version: 2
 ---
 
 O assistente da Tarefa chama o fornecedor do modelo com uma chave de API, a chave da empresa. Do lado
@@ -45,8 +45,8 @@ JSON que uma aplicação enviaria; esta aula não envia nada a lugar nenhum:
 }
 ```
 
-`eu-fe47aa8e7cd5e1b6f8bc` é o identificador que o laboratório produz para a conta `ac-7Q2M`, o cliente
-cujo e-mail você viu na aula 11. A próxima seção é como ele é feito.
+`eu-fe47aa8e7cd5e1b6f8bc` é o identificador que o `guard enduser`, na próxima seção, produz para a
+conta `ac-7Q2M`, o cliente cujo e-mail você viu na aula 11. A próxima seção é como ele é feito.
 
 ## O que o fornecedor faz com ele
 

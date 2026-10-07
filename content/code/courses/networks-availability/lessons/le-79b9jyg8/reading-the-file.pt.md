@@ -36,7 +36,10 @@ trabalho seu.
 
 ## O arquivo como dado
 
-O caso do vencido foi capturado mais uma vez, inteiro, num arquivo, e lido linha a linha:
+O caso do vencido foi capturado mais uma vez, inteiro, num arquivo, e lido linha a linha. Enquanto a
+captura de quatro segundos rodava, o laptop fez o pedido à porta 8443 de novo, desta vez com `-s`, para
+que o `curl` não imprimisse nada:
+`curl -s --resolve www.example.com:8443:192.0.2.21 https://www.example.com:8443/`.
 
 ```
 ana@laptop:~$ tshark -n -q -i eth0 -a duration:4 -f "host 192.0.2.21" -w failing.pcap

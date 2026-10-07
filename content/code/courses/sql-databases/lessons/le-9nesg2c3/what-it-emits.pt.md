@@ -22,13 +22,47 @@ e o log do ORM não tem.
 ## Pergunte ao banco
 
 O servidor vê exatamente o que chegou, e as duas ferramentas da aula 10 se aplicam sem mudança.
-Com `log_min_duration_statement` em zero toda instrução é escrita no log com seus literais:
+Para elas terem o que ver, este script faz o papel de uma aplicação montando uma página: cinquenta
+clientes, depois os pedidos de cada cliente, buscados do jeito que as quatro linhas de código de
+ORM da próxima etapa os buscam. O `psql` faz as vezes da aplicação, então cada instrução é uma
+conexão curta própria:
+
+```sh
+# page.sh: one page of fifty customers and their orders, a statement at a time.
+psql -At shop -c "SELECT id, name FROM customers ORDER BY id LIMIT 50" |
+while IFS='|' read -r id name; do
+    psql -At shop -c "SELECT id, placed_at, total FROM orders WHERE customer_id = $id" >/dev/null
+done
+```
+
+Salve como `page.sh` na loja grande da aula 9, com o índice que a aula 10 criou em `customer_id`.
+Esvazie as estatísticas e ponha o log para registrar tudo: com `log_min_duration_statement` em
+zero, toda instrução é escrita nele com seus literais. Depois monte a página uma vez:
 
 ```
-2026-09-17 23:32:44.738 UTC [5693] postgres@shop LOG:  duration: 0.845 ms  statement: SELECT id, name FROM customers ORDER BY id LIMIT 50;
-2026-09-17 23:32:44.769 UTC [5695] postgres@shop LOG:  duration: 0.903 ms  statement: SELECT id, placed_at, total FROM orders WHERE customer_id = 1;
-2026-09-17 23:32:44.800 UTC [5697] postgres@shop LOG:  duration: 1.018 ms  statement: SELECT id, placed_at, total FROM orders WHERE customer_id = 2;
-2026-09-17 23:32:44.830 UTC [5699] postgres@shop LOG:  duration: 0.906 ms  statement: SELECT id, placed_at, total FROM orders WHERE customer_id = 3;
+shop=# SELECT pg_stat_statements_reset();
+ pg_stat_statements_reset 
+--------------------------
+ 
+(1 row)
+
+shop=# ALTER SYSTEM SET log_min_duration_statement = 0;
+ALTER SYSTEM
+
+shop=# SELECT pg_reload_conf();
+ pg_reload_conf 
+----------------
+ t
+(1 row)
+```
+
+```
+ana@vm:~$ sh page.sh
+ana@vm:~$ sudo grep 'statement: SELECT id,' /var/log/postgresql/postgresql-16-main.log | tail -n 51 | head -n 4
+2026-10-07 08:06:34.911 UTC [13999] ana@shop LOG:  duration: 1.360 ms  statement: SELECT id, name FROM customers ORDER BY id LIMIT 50
+2026-10-07 08:06:34.944 UTC [14001] ana@shop LOG:  duration: 1.317 ms  statement: SELECT id, placed_at, total FROM orders WHERE customer_id = 1
+2026-10-07 08:06:34.977 UTC [14003] ana@shop LOG:  duration: 0.959 ms  statement: SELECT id, placed_at, total FROM orders WHERE customer_id = 2
+2026-10-07 08:06:35.011 UTC [14005] ana@shop LOG:  duration: 0.934 ms  statement: SELECT id, placed_at, total FROM orders WHERE customer_id = 3
 ```
 
 Isto é uma página da loja, como o servidor a recebeu: uma consulta para cinquenta clientes, e
@@ -37,7 +71,18 @@ código da aplicação diz cinquenta e uma. O log diz, e diz quais valores, em q
 processo.
 
 Zero é uma configuração de desenvolvimento. Num servidor movimentado ela escreve uma linha por
-instrução, que é o disco enchendo enquanto você olha; ponha, olhe, e volte.
+instrução, que é o disco enchendo enquanto você olha; ponha, olhe, e volte:
+
+```
+shop=# ALTER SYSTEM RESET log_min_duration_statement;
+ALTER SYSTEM
+
+shop=# SELECT pg_reload_conf();
+ pg_reload_conf 
+----------------
+ t
+(1 row)
+```
 
 O `pg_stat_statements` mostra a mesma coisa resumida, e é a versão para ficar de olho em produção:
 

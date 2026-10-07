@@ -8,7 +8,7 @@ nada disso. Ela lê **uma única sequência de tokens**, e os papéis precisam s
 sequência de algum jeito. A convenção para escrevê-los é o **template de chat**, e cada família de
 modelos tem o seu.
 
-A Meta publica o da Llama 3.1 no mesmo documento. O `lab/template.py` segue o documento ao pé da
+A Meta publica o da Llama 3.1 no mesmo documento. O `template.py` segue o documento ao pé da
 letra e monta o prompt de classificação da ana com o primeiro e-mail de `cases/triage.jsonl`:
 
 ```python
@@ -29,7 +29,7 @@ print(render([{"role": "system", "content": open("prompts/triage.txt").read().st
 ```
 
 ```
-ana@desk:~/desk$ python lab/template.py
+ana@desk:~/desk$ python template.py
 <|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
 You sort the e-mail of Lantern Books, an online bookshop.
@@ -42,7 +42,7 @@ Hi, I ordered two books on Monday (order LB-20417) and the tracking page still s
 Esse é todo o truque por trás de um chat. Cada vez na conversa fica cercada por tokens especiais que
 dão nome ao papel, e a string **termina com o cabeçalho de uma vez do assistente que ainda não tem
 conteúdo**. A única habilidade do modelo é continuar texto, então ele continua escrevendo a vez do
-assistente, e o ajuste da seção 03 faz com que ele feche essa vez com `<|eot_id|>`.
+assistente, e o ajuste da seção 07 faz com que ele feche essa vez com `<|eot_id|>`.
 
 ## Por que saber disso quando uma API esconde
 

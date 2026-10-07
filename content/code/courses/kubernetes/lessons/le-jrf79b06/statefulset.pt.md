@@ -8,7 +8,7 @@ volume que montam. **Um StatefulSet dá a cada pod uma identidade que sobrevive 
 fixo (`pg-0`, `pg-1`), um nome de DNS próprio, e um claim próprio que segue esse nome de um pod para o
 seguinte.
 
-A senha vem primeiro, num Secret como a lição 14 fez; esta foi inventada para o laboratório.
+A senha vem primeiro, num Secret como a lição 14 fez; esta foi inventada para esta aula.
 
 ```yaml
 apiVersion: v1

@@ -1,6 +1,6 @@
 ---
 title: The other doors
-version: 1
+version: 2
 ---
 
 The network is one way between guest and host. Lesson 12 opened two more on purpose, and a lab that
@@ -22,8 +22,8 @@ The client has **an interface on a network and one channel**, the guest agent's,
 ask the guest things and gives the guest nothing on the host. **No `filesystem`**, so no shared folder;
 **no `graphics`**, so no screen to carry a clipboard or drag and drop.
 
-VirtualBox keeps the same doors as settings. `lab1` started with the clipboard shared both ways, drag and
-drop from host to guest and NAT, lesson 12's arrangement. One command turns off the first two and puts
+VirtualBox keeps the same doors as settings. `lab1`, an empty machine made as in lesson 4, started with
+the clipboard shared both ways, drag and drop from host to guest and NAT, lesson 12's arrangement. One command turns off the first two and puts
 its network card on an **internal network**, VirtualBox's name for lesson 11's fourth mode. The guests
 reach each other, and the host has no address on it at all, so there is no host service to reach.
 

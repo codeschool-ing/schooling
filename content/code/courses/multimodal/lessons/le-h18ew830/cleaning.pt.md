@@ -1,6 +1,6 @@
 ---
 title: Limpando uma gravação, e medindo se ajudou
-version: 1
+version: 2
 ---
 
 Três jeitos de limpar a ligação ruidosa, do mais bruto ao mais esperto, cada um entregue ao Whisper e pontuado contra o roteiro com a taxa de erro de palavras (WER, na sigla em inglês) do `measure.py`:
@@ -69,7 +69,7 @@ for name, samples in versions.items():
 
 ```
 ana@lab:~/mm$ python clean.py
-GTCRN took 4.9 s for 55.4 s of audio
+GTCRN took 3.2 s for 55.4 s of audio
 clean (the truth)    WER  12.6%   11 stretches of speech found
 noisy, as recorded   WER  20.5%    5 stretches of speech found
 high-pass at 120 Hz  WER  14.6%    4 stretches of speech found
@@ -79,7 +79,7 @@ GTCRN                WER  17.9%   13 stretches of speech found
 
 - Um **filtro passa-alta em 120 Hz** tira tudo abaixo de 120 Hz. Isso leva o zumbido, e o WER cai de 20,5% para 14,6%.
 - O **afftdn** é o redutor de ruído espectral do ffmpeg: ele estima o espectro do ruído e o subtrai, quadro a quadro. Somado ao passa-alta, chega a 13,2%, perto dos 12,6% que o Whisper faz na própria ligação limpa.
-- O **GTCRN** é uma pequena rede neural treinada para separar fala de ruído. Levou 4,8 segundos para 55 segundos de áudio, e o Whisper fez 17,9% na saída dele: melhor do que não fazer nada e pior que qualquer um dos filtros.
+- O **GTCRN** é uma pequena rede neural treinada para separar fala de ruído. Levou 3,2 segundos para 55 segundos de áudio, e o Whisper fez 17,9% na saída dele: melhor do que não fazer nada e pior que qualquer um dos filtros.
 
 Então a ferramenta mais esperta perdeu, nesta medida. **Não é que o GTCRN seja ruim**: para quem ouve, a saída dele é a mais limpa das quatro, com o chiado eliminado e não só reduzido. Mas um redutor treinado para deixar a fala agradável para pessoas também altera a fala em pequenos detalhes, e o Whisper foi treinado com quantidades enormes de áudio ruidoso e lida melhor com um chiado do que com uma voz sutilmente alterada. **O que soa mais limpo para você não é o que se transcreve melhor por um modelo.** O único jeito de saber de qual o seu processo precisa é a medida desta seção, nas suas próprias gravações.
 

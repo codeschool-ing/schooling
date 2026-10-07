@@ -33,7 +33,7 @@ same bytes every time, and lesson 5's evaluation stays true of it.
 
 ## What is in a repository
 
-The files that make up lesson 1 section 02's box: the weights, often split into several files; the
+The files that make up lesson 1 section 06's box: the weights, often split into several files; the
 tokenizer and its configuration, which holds the chat template; a configuration file with the
 architecture numbers lesson 3 computed with; and the `README.md`, which is the model card. Weight
 files in the `safetensors` format hold only numbers. Some older repositories still carry weights in

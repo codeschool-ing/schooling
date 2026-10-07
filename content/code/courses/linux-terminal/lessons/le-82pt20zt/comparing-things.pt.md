@@ -1,6 +1,6 @@
 ---
 title: Comparar coisas, e por que o `[[` existe
-version: 1
+version: 2
 ---
 
 Números e strings não se comparam do mesmo jeito, e o shell te obriga a dizer qual você quis.
@@ -172,14 +172,26 @@ A única coisa para a qual o `=~` é genuinamente a ferramenta certa é validar 
 
 ## Testes de arquivo
 
+Um diretório, um arquivo vazio, um arquivo de cinco bytes, um link para ele e um link para nada:
+
+```sh
+cd /tmp/q2
+rm -f 'a b' *.log
+mkdir d
+touch empty
+printf 'four\n' > f
+ln -s nowhere broken
+ln -s f good
+```
+
 ```
 ana@vm:/tmp/q2$ ls -l
 total 8
-lrwxrwxrwx 1 ana ana    7 Sep 15 10:02 broken -> nowhere
-drwxr-xr-x 2 ana ana 4096 Sep 15 10:02 d
--rw-r--r-- 1 ana ana    0 Sep 15 10:02 empty
--rw-r--r-- 1 ana ana    5 Sep 15 10:02 f
-lrwxrwxrwx 1 ana ana    1 Sep 15 10:02 good -> f
+lrwxrwxrwx 1 ana ana    7 Oct  7 12:53 broken -> nowhere
+drwxr-xr-x 2 ana ana 4096 Oct  7 12:53 d
+-rw-r--r-- 1 ana ana    0 Oct  7 12:53 empty
+-rw-r--r-- 1 ana ana    5 Oct  7 12:53 f
+lrwxrwxrwx 1 ana ana    1 Oct  7 12:53 good -> f
 ana@vm:/tmp/q2$ for t in -e -f -d -s -x -L; do [ $t f ] && echo "$t yes" || echo "$t no"; done
 -e yes
 -f yes

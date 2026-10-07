@@ -8,7 +8,8 @@ server, and it does so the same way, with a check that runs whether or not anyth
 `server` line in the configuration ends `check inter 1s fall 2 rise 2`, and `option httpchk GET /` makes
 the check a real HTTP request for the home page rather than a test that the port is open.
 
-With HAProxy on `lb1` started again, which is not shown, nginx on `web2` was stopped. Each balancer checks the servers itself; this is
+With HAProxy on `lb1` started again, with the same command as in the first section, nginx on `web2`
+was stopped: `sudo bash netlab.sh kill web2 nginx` on the virtual machine. Each balancer checks the servers itself; this is
 `lb2`'s view:
 
 ```
@@ -39,8 +40,9 @@ message, and it ends by counting what is left: `2 active and 0 backup servers le
 `show stat` on the administration socket prints a line of comma-separated fields per server, and the
 `cut` keeps three of them: the backend, the server and its status. **`web2` is `DOWN` and the backend as a
 whole is still `UP`**, because two of its three servers are. The six requests that followed went to
-`web1` and `web3` in turn, and none of them failed or even noticed. When nginx was started again, two
-successful checks brought `web2` back, and this time the reason is `Layer7 check passed, code: 200`: the
+`web1` and `web3` in turn, and none of them failed or even noticed. When nginx was started again, with
+`sudo nginx -c /lab/web2/www/nginx.conf` on `web2`, the configuration `netlab.sh` wrote, two successful
+checks brought `web2` back, and this time the reason is `Layer7 check passed, code: 200`: the
 home page itself answered.
 
 ## Two checks, two layers

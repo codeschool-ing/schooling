@@ -1,6 +1,6 @@
 ---
 title: Where it stops
-version: 1
+version: 2
 ---
 
 Automatic instrumentation sees a service from its edges, and it is good at them. **It stops at
@@ -28,7 +28,12 @@ could answer it only because somebody wrote `shop.sku` by hand.
 **It does not cross a client it has no instrumentation for.** `orders` publishes each paid order to
 RabbitMQ through `pika`, and no instrumentation for `pika` is installed. In the lab, two lines of
 `publish()` carry the trace across anyway, written by hand. Here one of them is deleted, so the
-service is exactly what automatic instrumentation alone would leave:
+service is exactly what automatic instrumentation alone would leave. Keep a copy first, to put it
+back afterwards:
+
+```sh
+cp services/orders/app.py /tmp/orders.app.py
+```
 
 ```
 ana@obs:~/shop$ grep -n 'propagate' services/orders/app.py
@@ -63,4 +68,8 @@ the gap between two spans. In lesson 1's trace the slow part was found because p
 wrapped the wait in a span of its own. Had the wait been there with no span around it, the trace
 would have shown `POST /charge` taking 1501 ms and nothing inside it.
 
-The two lines were put back, and `orders` was restarted, before anything else in this lesson ran.
+Put the line back, and restart `orders`, before anything else in this lesson:
+
+```sh
+cp /tmp/orders.app.py services/orders/app.py && docker compose restart orders
+```

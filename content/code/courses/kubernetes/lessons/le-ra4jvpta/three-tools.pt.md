@@ -24,17 +24,10 @@ eles não foram rodados para este curso.
 O Docker Desktop também pode ligar um cluster próprio, nas configurações. É o caminho mais curto no
 Windows e no macOS, e é um cluster só, com um nome só, o que limita na lição 48.
 
-## Três caminhos, e quanto cada um custa ao seu computador
+## Qual caminho
 
-| caminho | o que você instala | quanto custa | quando escolher |
-|---|---|---|---|
-| **na sua máquina** (recomendado) | Docker, `kind`, `kubectl` | cerca de 0,8 GiB de memória para três nós, medido na próxima seção | quase sempre |
-| numa máquina virtual Linux | uma VM com 4 GiB ou mais, e depois os mesmos três | a memória da VM por cima, e o disco dela | sua máquina roda algo que conflita com o Docker, ou você quer o laboratório separado |
-| on-line, no navegador | nada | nada, e a sessão é apagada depois de mais ou menos uma hora | uma máquina em que você não pode instalar nada; nada sobrevive entre sessões |
-
-O caminho do navegador é um playground como o Killercoda, que entrega um cluster novo numa aba. É um
-bom jeito de testar um comando e um jeito ruim de acompanhar um curso, porque toda lição começa
-reconstruindo o que a anterior deixou.
-
-As duas próximas seções montam o recomendado e depois o quebram, porque a instalação é onde a
-maioria das pessoas desiste, e quase sempre é um de quatro erros.
+A aula 1 já fez essa escolha: Docker, `kind` e `kubectl` numa máquina virtual Ubuntu, ou direto num
+computador que roda Linux, com um playground no navegador citado como terceiro caminho e sem depender
+dele. Nada aqui muda isso. A próxima seção monta um cluster à mão, chamado `study`, a partir do mesmo
+tipo de arquivo que o `up.sh` usa, e mede quanto ele custa em memória. A seção seguinte quebra a montagem de propósito, porque é ali que a maioria das pessoas desiste, e quase
+sempre é um de quatro erros.

@@ -22,8 +22,8 @@ muitas vezes e relatada como uma **distribuição**: a mediana (p50), o que uma 
 vê, e o percentil 95 (p95), o que uma requisição em vinte vê, ou pior. O p95 é o número de que um
 usuário irritado se lembra.
 
-O `lab/latency.py` faz streaming da mesma requisição de rascunho vinte vezes para cada modelo do
-substituto e cronometra os dois momentos:
+O `latency.py` faz streaming da mesma requisição de rascunho vinte vezes para cada um dos dois
+modelos que a aula 1 instalou, e cronometra os dois momentos:
 
 ```python
 import statistics
@@ -32,10 +32,10 @@ import time
 
 import anthropic
 
-client = anthropic.Anthropic()
+client = anthropic.Anthropic()  # Ollama, through desk.env
 email = "Hello, where is my parcel? LB-20488"
 print(f"{'model':14} {'first token p50':>16} {'p95':>6} {'whole reply p50':>16} {'p95':>6}")
-for model in ("standin-large", "standin-small", "standin-local"):
+for model in ("llama3.2:3b", "llama3.2:1b"):
     first, whole = [], []
     for _ in range(int(sys.argv[1])):
         start = time.perf_counter()
@@ -51,23 +51,25 @@ for model in ("standin-large", "standin-small", "standin-local"):
 ```
 
 ```
-ana@desk:~/desk$ python lab/latency.py 20
+ana@desk:~/desk$ python latency.py 20
 model           first token p50    p95  whole reply p50    p95
-standin-large             0.85s  1.84s            3.69s  4.68s
-standin-small             0.23s  0.39s            1.17s  1.32s
-standin-local             1.28s  3.01s            6.92s  8.66s
+llama3.2:3b               0.24s  0.38s            9.94s 16.63s
+llama3.2:1b               0.16s 10.35s            5.45s 15.15s
 ```
 
-**Esses tempos medem o substituto, não modelo real nenhum.** O curso definiu o atraso de cada modelo
-do substituto antes do primeiro token e por token depois dele, e mandou esticar o primeiro token por
-um fator aleatório de cauda longa, como faz um serviço compartilhado. O que é real é o método: o
-stream, o relógio, os percentis.
+**Esses tempos são de uma máquina só**: quatro processadores, nenhuma placa de vídeo, e os dois
+modelos no Ollama. Os seus vão ser outros, e o que se lê é o formato. Antes da medição o modelo 1b
+foi descarregado, então a primeira requisição dele teve de carregá-lo do disco, como faz a primeira
+requisição da manhã.
 
-Leia como um padrão. O **standin-small** responde antes de os outros começarem e termina primeiro. O
-**standin-local**, que faz o papel de um modelo auto-hospedado em hardware modesto, tem o primeiro
-token mais lento e a geração mais lenta, e o p95 do primeiro token dele passa do dobro da mediana. A
-distância entre as duas colunas é o tamanho da resposta: uns 3 segundos escrevendo no standin-large,
-quase 6 no standin-local.
+**O primeiro token é rápido nos dois**, um quarto de segundo ou menos na mediana. O **p95** é onde
+eles se separam: 0,38 segundo no 3b e **10,35 no 1b**, e o do 1b é a única requisição que esperou o
+modelo carregar. Uma requisição em vinte é exatamente o assunto de um p95, e a mediana nem se mexe.
+
+**A resposta inteira é outro número.** O 3b levou uns dez segundos na mediana para escrever o
+rascunho, e o 1b uns cinco e meio: num processador sem placa de vídeo, um modelo três vezes maior
+escreve mais devagar. Os p95, 16,63 e 15,15 segundos, são os rascunhos mais longos, e o tamanho da
+resposta de um modelo varia de uma requisição para outra mesmo quando o e-mail não varia.
 
 ## O que importa para a ana
 
@@ -75,7 +77,9 @@ quase 6 no standin-local.
   o que a torna candidata ao preço de lote (seção 05).
 - **O rascunho** tem uma pessoa esperando. O streaming faz do primeiro token o número que ela sente,
   e do p95 o que decide se ela confia na ferramenta. O teto dela, anotado na seção 03 como ordenação
-  com limite, vira um número aqui: **primeiro token em menos de dois segundos no p95**.
+  com limite, vira um número aqui: **primeiro token em menos de dois segundos no p95**. Na medição
+  acima o 3b passa, e o 1b falha só pela partida a frio, o que manter o modelo carregado resolve
+  (aula 14).
 
 Meça nos candidatos reais, de onde o programa vai rodar, no horário em que vai rodar. Uma latência
 medida de um notebook à noite é outra medição que a tirada do servidor da loja numa segunda de manhã.

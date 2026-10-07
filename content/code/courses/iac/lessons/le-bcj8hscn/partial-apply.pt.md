@@ -1,6 +1,6 @@
 ---
 title: Um apply que falha no meio
-version: 1
+version: 2
 ---
 
 É natural pensar num apply como uma transação de banco de dados: ou toda mudança do plano acontece
@@ -44,7 +44,7 @@ index cc59f60..20936a5 100644
 +}
 ```
 
-O plano sai limpo. **O Terraform confere que `10.30.3.0/24` é um CIDR válido, e ele é**; se cabe
+A Ana salva o plano com `terraform plan -out=tfplan`. O plano sai limpo. **O Terraform confere que `10.30.3.0/24` é um CIDR válido, e ele é**; se cabe
 dentro da VPC é algo que só a API sabe. A trava de duas seções atrás também passa, porque nada é
 apagado. Então o apply:
 
@@ -103,7 +103,7 @@ Plan: 2 to add, 0 to change, 0 to destroy.
 É essa propriedade que faz de um apply que falhou algo recuperável, e não uma bagunça. O Terraform
 não precisa lembrar que um apply falhou; o estado já registra o que existe, então planejar de novo
 compara a configuração com isso e acha a diferença, como em qualquer outro plano. A Ana corrige a
-faixa para `10.20.3.0/24` e aplica de novo:
+faixa para `10.20.3.0/24` e aplica de novo, e faz commit quando dá certo:
 
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 6

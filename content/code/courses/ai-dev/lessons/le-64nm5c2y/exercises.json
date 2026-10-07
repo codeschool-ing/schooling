@@ -92,16 +92,16 @@
   },
   {
     "id": "ex-y0e6dv3j",
-    "version": 1,
+    "version": 2,
     "section": "a-loop-in-code",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many steps did the agent take to answer about order 1042?",
-    "hint": "Count the [n] prefixes.",
-    "value": 3,
+    "prompt": "How many requests did the agent make for the first question about order 1042?",
+    "hint": "The last line of the run.",
+    "value": 2,
     "tolerance": 0,
-    "unit": "steps"
+    "unit": "requests"
   },
   {
     "id": "ex-6fghwv8e",
@@ -137,33 +137,33 @@
   },
   {
     "id": "ex-s8ecp0j3",
-    "version": 1,
+    "version": 2,
     "section": "a-loop-in-code",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Where did the 28 October in the answer come from?",
-    "hint": "Two tool results and one step of reasoning.",
+    "prompt": "The first answer about order 1042 said the return window had expired. Which tool result supports that?",
+    "hint": "Which tools were called, and what does neither of them give?",
     "choices": [
       {
-        "text": "From the model's training",
+        "text": "`get_order`, which gave the delivery date",
         "correct": false,
-        "why": "The order is the shop's, and recent."
+        "why": "The date alone says nothing about a window, or about today."
       },
       {
-        "text": "From `get_order` alone",
+        "text": "`read_handbook`, which gave the 30 days",
         "correct": false,
-        "why": "That gave the delivery date, not the window."
+        "why": "It was never called in that run."
       },
       {
-        "text": "From the handbook alone",
-        "correct": false,
-        "why": "That gave 30 days, not the date."
-      },
-      {
-        "text": "Two tool results, added",
+        "text": "None of them",
         "correct": true,
-        "why": "Right: the delivery date plus the 30-day window; each fact has a tool result behind it."
+        "why": "Right: no tool gave the window or today's date."
+      },
+      {
+        "text": "Both, added together",
+        "correct": false,
+        "why": "Only one was called."
       }
     ]
   },
@@ -502,7 +502,7 @@
   },
   {
     "id": "ex-yngmj0s6",
-    "version": 1,
+    "version": 2,
     "section": "permissions",
     "type": "quiz",
     "difficulty": "easy",
@@ -511,7 +511,7 @@
     "hint": "The `cat` after the first refund run.",
     "choices": [
       {
-        "text": "One refund of 7980 cents",
+        "text": "One refund of 0 cents",
         "correct": false,
         "why": "That is after the `y`."
       },
@@ -534,13 +534,13 @@
   },
   {
     "id": "ex-yd47daq7",
-    "version": 1,
+    "version": 2,
     "section": "permissions",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Why does the approval prompt show the exact arguments?",
-    "hint": "\"a refund\" against \"7980 cents on order 1042\".",
+    "hint": "\"a refund\" against \"0 cents on order 1042\".",
     "choices": [
       {
         "text": "Because MCP requires it",
@@ -598,69 +598,77 @@
   },
   {
     "id": "ex-n3e0t2r9",
-    "version": 1,
+    "version": 2,
     "section": "when-it-goes-wrong",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Match each run to the guard that stopped it.",
-    "hint": "Two runs, two guards.",
+    "prompt": "Match each run to what happened.",
+    "hint": "Four runs of section 09.",
     "pairs": [
       {
-        "left": "Products page asked for twice",
-        "right": "The repeat check"
+        "left": "The lamp, with no options",
+        "right": "Two invented products"
       },
       {
-        "left": "Five different pages, no answer",
-        "right": "The step limit"
+        "left": "The lamp, with `--rules`",
+        "right": "It could not find the answer"
+      },
+      {
+        "left": "The lamp, with `--remind`",
+        "right": "The repeat guard stopped it"
+      },
+      {
+        "left": "Order 1042, with `--rules`",
+        "right": "The rule, and never the order"
       }
     ],
     "right_distractors": [
-      "The approval prompt"
+      "The step limit stopped it"
     ]
   },
   {
     "id": "ex-ec00je41",
-    "version": 1,
+    "version": 2,
     "section": "when-it-goes-wrong",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "How many input tokens did the five steps of the wandering run add up to?",
-    "hint": "The total in the last line.",
-    "value": 2665,
+    "prompt": "With `--remind`, how many input tokens did the lamp question cost in all?",
+    "hint": "The last line of that run.",
+    "value": 1193,
     "tolerance": 0,
     "unit": "tokens"
   },
   {
     "id": "ex-v84gnw4c",
-    "version": 1,
+    "version": 2,
     "section": "when-it-goes-wrong",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did each of the five steps carry more input tokens than the one before?",
-    "hint": "What does each step send?",
+    "prompt": "In the first run about order 1042, the second request carried 166 input tokens and the first 289. Why fewer, when it held more conversation?",
+    "hint": "Read the template's `if`.",
     "choices": [
       {
-        "text": "labllm charges more as the task goes on",
+        "text": "Ollama forgets the question after the first step",
         "correct": false,
-        "why": "Prices do not change."
+        "why": "The question is still in the conversation."
       },
       {
-        "text": "The tool definitions grew",
-        "correct": false,
-        "why": "They are the same three tools every step."
-      },
-      {
-        "text": "History accumulates",
+        "text": "The tools were no longer in the prompt",
         "correct": true,
-        "why": "Right: each step carries every earlier call and result."
+        "why": "Right: the template lists them only in a last message that is the user's."
       },
       {
-        "text": "The model's answers got longer",
+        "text": "The cache made the second request cheaper",
         "correct": false,
-        "why": "There were no answers, only calls."
+        "why": "The count includes what was reused."
+      },
+      {
+        "text": "The tool result was cut to 72 characters",
+        "correct": false,
+        "why": "That cut is only in what the host prints."
       }
     ]
   },

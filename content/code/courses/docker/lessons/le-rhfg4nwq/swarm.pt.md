@@ -1,6 +1,6 @@
 ---
 title: O que o Compose não faz
-version: 1
+version: 2
 ---
 
 **O Compose roda uma aplicação numa máquina, e quando essa máquina cai, a aplicação cai junto.** A aula
@@ -25,6 +25,10 @@ vm         Ready     Leader
 **A máquina da Ana agora é um swarm com um nó, que é ao mesmo tempo o gerente e o único trabalhador.** Um
 swarm de verdade acrescenta máquinas com `docker swarm join` e o token que o `init` imprime; tudo abaixo
 funciona igual com mais nós, e espalha os containers entre eles.
+
+A `shelf:1.0.0` e a `shelf:1.0.1` aqui são construídas a partir do Dockerfile da aula 18, o do
+health check: em `~/shelf`, `docker build -q --build-arg VERSION=1.0.0 -t shelf:1.0.0 .`, e o mesmo
+de novo com `1.0.1`.
 
 ## Um serviço, e não um container
 

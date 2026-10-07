@@ -1,7 +1,41 @@
 ---
 title: Depuração, e a ferramenta que lê o seu script por você
-version: 1
+version: 2
 ---
+
+Os scripts que esta seção roda, criados em `~/work/scripts` do jeito que a seção 02 descreveu; cada um aparece de novo onde é explicado:
+
+```sh
+cd ~/work/scripts
+cat > typo.sh <<'END'
+#!/bin/bash
+for i in 1 2 3; do
+  echo "$i"
+done
+if [ 1 -eq 1 ]; then
+  echo yes
+END
+cat > buggy.sh <<'END'
+#!/bin/bash
+files=$1
+count=`ls $files | wc -l`
+if [ $count > 5 ]; then
+  echo "many files"
+fi
+for f in $(ls $files); do
+  rm $f
+done
+END
+cat > traced.sh <<'END'
+#!/bin/bash
+total=0
+for n in 3 4; do
+  total=$((total + n))
+done
+echo "total is $total"
+END
+chmod +x typo.sh buggy.sh traced.sh
+```
 
 Quatro coisas, na ordem em que você deve pegá-las.
 
@@ -31,6 +65,8 @@ embaixo. Quando o `bash -n` diz "unexpected end of file", a resposta é um `fi`,
 O `-n` pega sintaxe e mais nada. Um script que analisa limpo ainda pode fazer algo terrível.
 
 ## O `shellcheck`, que é o importante
+
+Ele é um pacote à parte, e `sudo apt install shellcheck` o traz:
 
 ```
 ana@vm:~/work/scripts$ cat buggy.sh
@@ -197,3 +233,105 @@ E o `>&2`, para a sua depuração não acabar no arquivo que o script está escr
 E um hábito que vale mais que os quatro: **rode a versão destrutiva por último.** Ponha um `echo` na
 frente do `rm`, olhe as vinte linhas que ele imprime, e então tire o `echo`. A aula 8 seção 16 fez o
 mesmo argumento sobre o `xargs`, e é o mesmo argumento aqui.
+
+## O script da próxima seção, inteiro
+
+O vídeo a seguir escreve um script do começo ao fim, e cada pedaço dele é desta aula. Aqui está ele,
+para ler antes e rodar depois, em `~/work/scripts` com os outros:
+
+```sh
+cd ~/work/scripts
+cat > report.sh <<'END'
+#!/usr/bin/env bash
+# report.sh: a summary of a web server's access log
+set -euo pipefail
+
+usage() {
+    cat <<'USAGE'
+usage: report.sh [-t MS] LOGFILE
+  -t MS   slower than this many milliseconds counts as slow (default 1000)
+  -h      this help
+USAGE
+}
+
+die() {
+    echo "report.sh: $*" >&2
+    exit 1
+}
+
+threshold=1000
+logfile=""
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -t) threshold=${2:-}; shift 2 ;;
+        -h) usage; exit 0 ;;
+        -*) echo "report.sh: unknown option $1" >&2; usage >&2; exit 2 ;;
+        *)  logfile=$1; shift ;;
+    esac
+done
+
+[ -n "$logfile" ] || { usage >&2; exit 2; }
+[ -r "$logfile" ] || die "cannot read $logfile"
+[[ $threshold =~ ^[0-9]+$ ]] || die "-t wants a number of milliseconds, not '$threshold'"
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+awk '{print $7}' "$logfile" > "$work/paths"
+awk -v t="$threshold" '$NF > t {print $7}' "$logfile" > "$work/slow"
+
+total=$(wc -l < "$work/paths")
+slow=$(wc -l < "$work/slow")
+echo "requests: $total"
+echo "slower than $threshold ms: $slow"
+echo
+echo "busiest paths:"
+sort "$work/paths" | uniq -c | sort -rn | head -5 | while read -r count path; do
+    printf '  %-24s %6d\n' "$path" "$count"
+done
+
+[ "$slow" -gt 0 ] || { echo; echo "nothing slow"; exit 0; }
+
+echo
+echo "slow paths:"
+sort "$work/slow" | uniq -c | sort -rn | while read -r count path; do
+    printf '  %-24s %6d\n' "$path" "$count"
+done
+END
+chmod +x report.sh
+```
+
+Ele lê o log da aula 8. Rode-o, peça um limite que nada alcança, e dê a ele um limite que não é um
+número:
+
+```
+ana@vm:~/work/scripts$ ./report.sh ~/work/logs/access.log
+requests: 1200
+slower than 1000 ms: 14
+
+busiest paths:
+  /health                     287
+  /                           279
+  /api/orders                 169
+  /static/app.js              121
+  /static/app.css              89
+
+slow paths:
+  /api/reports                 14
+ana@vm:~/work/scripts$ ./report.sh -t 99000 ~/work/logs/access.log; echo "exit $?"
+requests: 1200
+slower than 99000 ms: 0
+
+busiest paths:
+  /health                     287
+  /                           279
+  /api/orders                 169
+  /static/app.js              121
+  /static/app.css              89
+
+nothing slow
+exit 0
+ana@vm:~/work/scripts$ ./report.sh -t lots ~/work/logs/access.log; echo "exit $?"
+report.sh: -t wants a number of milliseconds, not 'lots'
+exit 1
+```

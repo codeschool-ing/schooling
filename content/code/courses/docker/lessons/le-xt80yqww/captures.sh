@@ -21,7 +21,7 @@
 #   machine, is filtered out of the transcripts with grep, which the
 #   commands show.
 # - The images below are pulled before the first command; shelf:1.0.0 is
-#   built quietly for Docker from the lesson 14 Dockerfile. LXC is described
+#   built quietly for Docker from the Dockerfile lesson 15 shows. LXC is described
 #   and not run.
 #
 # Recorded on Ubuntu 24.04, Docker Engine 29.8, containerd 2.3, Podman 4.9,
@@ -34,14 +34,14 @@ fi
 export XDG_RUNTIME_DIR=/tmp/podman-run-$(id -u)
 quiet 'mkdir -p "$XDG_RUNTIME_DIR"; podman system reset -f'
 cd shelf
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .env
 testdata/
 Dockerfile*
 .dockerignore
 IGN
-cat > Dockerfile <<'DF'
+staged Dockerfile <<'DF'
 FROM golang:1.25 AS build
 WORKDIR /src
 COPY go.mod go.sum ./

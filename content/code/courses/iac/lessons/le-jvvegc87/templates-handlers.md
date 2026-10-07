@@ -1,6 +1,6 @@
 ---
 title: Variables, templates and handlers
-version: 1
+version: 2
 ---
 
 The site so far is a fixed file copied to both machines. A real configuration differs in small
@@ -96,28 +96,28 @@ ana@laptop:~/shop/ansible$ ansible-playbook site.yml
 PLAY [Web servers] *************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [Install nginx] ***********************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [Create the site's directory] *********************************************
-changed: [web1]
 changed: [web2]
+changed: [web1]
 
 TASK [Write the index page] ****************************************************
-changed: [web1]
 changed: [web2]
+changed: [web1]
 
 TASK [Configure the shop's site] ***********************************************
 changed: [web2]
 changed: [web1]
 
 TASK [Start nginx] *************************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 RUNNING HANDLER [Reload nginx] *************************************************
 changed: [web1]

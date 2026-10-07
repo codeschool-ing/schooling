@@ -1,6 +1,6 @@
 ---
 title: What the lab costs, and keeping it
-version: 1
+version: 2
 ---
 
 Three guests running at once, and what the host pays for them:
@@ -44,7 +44,7 @@ the snapshots survive a shutdown, so the next practice starts from `broken` when
 Two habits keep a lab useful for a long time:
 
 - **Keep the recipe, not only the machines.** Everything in this lesson is a handful of commands, and
-  written down in a script they rebuild the lab in minutes on any computer. This course's own lab is
-  exactly that, `lab.sh`.
+  written down in a script they rebuild the lab in minutes on any computer. `newvm.sh` from lesson 1 is
+  most of one already: add the network file and three lines calling it, and this lab comes back.
 - **One lab per purpose.** A lab that is also somebody's test server collects changes nobody remembers,
   and the day it is reverted, somebody's work goes with it.

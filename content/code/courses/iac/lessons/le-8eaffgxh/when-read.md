@@ -1,6 +1,6 @@
 ---
 title: When a data source is read
-version: 1
+version: 2
 ---
 
 Every data source so far was read at the start of the plan, before Terraform worked out anything
@@ -15,7 +15,8 @@ configuration that also creates things, that is not always at the start.
 Ana adds a subnet of her own to the shared VPC, for the application tier, and wants to know the
 **zone id** of the zone it lands in. Zone names like `sa-east-1a` are shuffled per account, so two
 accounts mean different buildings by the same name; zone ids name the same one everywhere, which is
-what you compare across accounts. She also wants a by-tag lookup of every subnet in the `app` tier:
+what you compare across accounts. She also wants a by-tag lookup of every subnet in the `app` tier.
+All of it goes in `subnet.tf`:
 
 ```hcl
 resource "aws_subnet" "app" {
@@ -120,9 +121,11 @@ Changes to Outputs:
     ]
 ```
 
-That is the trap in a lookup that finds something the same configuration creates. Nothing failed;
+Ana applies that plan, and the output catches up. That is the trap in a lookup that finds something
+the same configuration creates. Nothing failed;
 for one apply the output was a confident and false empty list, and anything built from it would have
-been built on nothing. The fix is to say what the lookup waits for, with **`depends_on`**:
+been built on nothing. The fix is to say what the lookup waits for, with **`depends_on`**, in a
+new version of `subnet.tf`:
 
 ```hcl
 resource "aws_subnet" "app" {
@@ -181,6 +184,8 @@ Changes to Outputs:
     ] -> (known after apply)
   ~ app_zone_id    = "sae1-az1" -> (known after apply)
 ```
+
+Ana applies this one as well, with `terraform apply -auto-approve`, before going on.
 
 **A deferred read makes everything built from it unknown in the plan.** For an output that costs
 nothing. For an argument that forces replacement, an unknown value in the plan is a planned

@@ -1,6 +1,6 @@
 ---
 title: Repositórios, e por que `update` não é `upgrade`
-version: 1
+version: 2
 ---
 
 Um repositório é um servidor web com pacotes nele e um **índice** descrevendo-os. A sua máquina
@@ -17,6 +17,10 @@ guarda uma lista de repositórios, uma cópia de cada índice, e nada mais até 
 catálogo de ontem e não reporta nada a fazer, que é de onde vem o "mas eu atualizei".
 
 ## Onde a lista mora
+
+Na máquina que você instalou na aula 1, o diretório abaixo tem um arquivo, `ubuntu.sources`. A
+máquina em que estas transcrições foram capturadas tem mais — o repositório do Docker e duas PPAs —,
+o que faz dela um exemplo melhor de máquina que alguém já vem usando:
 
 ```
 root@vm:~# ls /etc/apt/sources.list.d/
@@ -100,7 +104,8 @@ Três palavras carregam a listagem inteira:
 **E esta execução tem duas falhas reais**, o que é mais sorte do que parece, porque este erro é um
 dos dois que você de fato vai encontrar.
 
-O que aconteceu aqui é específico: esta máquina alcança a rede por um proxy que devolve `403
+O que aconteceu aqui é específico: a máquina em que estas transcrições foram capturadas alcança a
+rede por um proxy que devolve `403
 Forbidden` para aquelas duas PPAs. O apt não conseguiu buscar o `InRelease` — o arquivo assinado — e
 `no longer signed` é o que o apt diz quando o índice assinado está faltando, seja qual for o motivo.
 **A mensagem nomeia a consequência, não a causa.**

@@ -1,6 +1,6 @@
 ---
 title: Four resources, and the difference between busy and stuck
-version: 1
+version: 2
 ---
 
 "The machine is slow" is not a report. It becomes one when you can say which of
@@ -20,6 +20,48 @@ so it gets a section of its own but not a new idea.
 asking them in order and stopping when one of them answers rather than
 collecting every number you know how to collect.
 
+## The tools, and the load this lesson puts on the machine
+
+`vmstat`, `free`, `df` and `top` come with every Ubuntu. `mpstat`, `iostat`,
+`pidstat` and `sar` are one package, `sysstat`, which some installations include
+and some do not. If `mpstat` answers `command not found`, install it:
+
+```sh
+sudo apt install sysstat
+```
+
+A machine doing nothing gives numbers with nothing to read in them, so this
+lesson makes two kinds of work on purpose, with two small scripts. `spin.sh`
+keeps every core busy; `fill.sh` writes to the disk as fast as it will take it.
+Both run until you stop them:
+
+```sh
+mkdir -p ~/work/load && cd ~/work/load
+cat > spin.sh <<'END'
+#!/bin/bash
+# One busy loop per core, until this script is stopped: pkill -f spin.sh
+trap 'kill $(jobs -p); exit' TERM INT
+for i in $(seq "$(nproc)"); do
+  bash -c 'while :; do :; done' &
+done
+wait
+END
+cat > fill.sh <<'END'
+#!/bin/bash
+# Two writers, each rewriting a 1000 MB file in place, straight to the disk
+# past the page cache (oflag=direct), until stopped: pkill -f fill.sh
+trap 'kill $(jobs -p); exit' TERM INT
+for i in 1 2; do
+  bash -c "while :; do dd if=/dev/zero of=fill$i.tmp bs=1M count=1000 oflag=direct conv=notrunc status=none; done" &
+done
+wait
+END
+chmod +x spin.sh fill.sh
+```
+
+Each section says when to start one and when to stop it. `fill.sh` needs two
+gigabytes free, and leaves its two files behind for you to delete.
+
 ## Utilisation is not saturation
 
 This is the distinction that makes the numbers readable, and it is why "100%"
@@ -31,19 +73,28 @@ at 100% utilisation is working, which is what you bought it for.
 **Saturation** is how much work is *waiting* because the resource is busy. That
 is the number that corresponds to somebody's request being slow.
 
+Start the busy loops, give them a few seconds, and look:
+
+```sh
+cd ~/work/load
+./spin.sh &
+sleep 5
+```
+
 ```
 ana@vm:~$ vmstat 1 4
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 4  0      0 14507736  56092 1514136    0    0    71   358  431    1  3  0 97  0  0  0
- 4  0      0 14507736  56092 1514136    0    0     0     0 1074  218 100  0  0  0  0  0
- 5  0      0 14507736  56092 1514136    0    0     0     0 1062  188 100  0  0  0  0  0
- 4  0      0 14507736  56092 1514136    0    0     0     0 1083  296 100  0  0  0  0  0
+ 5  0      0 15704828   6896 371396    0    0   140 10094 1040    2  8  2 90  1  0  0
+ 4  0      0 15704828   6896 371396    0    0     0     0 1052  230 98  0  0  0  2  0
+ 4  0      0 15704576   6896 371396    0    0     0     0 1074  199 99  0  0  0  1  0
+ 4  0      0 15704576   6896 371396    0    0     0     0 1063  296 99  0  0  0  1  0
 ```
 
-That is this machine with four busy loops on four cores. `us 100` is
-**utilisation** — the processors are entirely in use. `r 4` and `r 5` is
-**saturation** — that many processes wanted a core at the moment of sampling.
+That is this machine with four busy loops on four cores. `us 98` and `us 99` is
+**utilisation** — the processors are entirely in use, bar the one or two per
+cent in `st` that section 04 explains. `r 4` is **saturation** — that many
+processes wanted a core at the moment of sampling.
 
 Four cores and four runnable processes is a machine working flat out and nobody
 queueing. `r 40` on four cores would be the same utilisation and a very
@@ -51,6 +102,9 @@ different day.
 
 **Read a utilisation number and a saturation number together, or you will
 mistake a working machine for a broken one.**
+
+Leave the loops running: the next section starts by watching the load average
+climb because of them.
 
 ## Errors are the third thing
 
@@ -77,10 +131,14 @@ section, and it is first because you have to unlearn it before the rest helps.
 
 ## What this lesson measures on
 
-Everything here was captured on this machine while it was genuinely busy: four
-processes spinning on four cores, a gigabyte a second of writes to a real disk,
-and a program walking past a hundred-megabyte memory limit until the kernel
-killed it.
+Everything here was captured while the machine was genuinely busy, with the two
+scripts above: four loops spinning on four cores, and a gigabyte a second of
+writes to a real disk. That machine has four cores, 16 GB and no swap, and it is
+a container, which one section turns into a lesson of its own.
 
-Where a number could not be produced here — `%steal`, which needs a hypervisor
-that is overcommitted — the section says so rather than pasting one.
+Two sections needed what it does not have — control groups of the current kind,
+and `systemd` — and were captured on an Ubuntu 24.04 virtual machine, the one
+lesson 1 recommends. Each of them says so where it starts.
+
+Where a number could not be produced at all — swapping, on a machine with no
+swap — the section says so rather than pasting one.

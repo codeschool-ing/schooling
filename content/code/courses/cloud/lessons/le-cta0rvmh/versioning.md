@@ -1,6 +1,6 @@
 ---
 title: "Versioning: getting back what was deleted"
-version: 1
+version: 2
 ---
 
 With versioning off, which is how a new bucket starts, a `PUT` to an existing key replaces the object
@@ -39,16 +39,16 @@ ana@laptop:~/cloud$ aws s3api list-object-versions --bucket ana-uploads --prefix
 notes.txt	13	False
 notes.txt	6	False
 ana@laptop:~/cloud$ aws s3api list-object-versions --bucket ana-uploads --prefix notes.txt --query 'DeleteMarkers[].[Key,VersionId,IsLatest]' --output text
-notes.txt	c5b4844b-24d5-4283-93d7-a818373c7e91	True
+notes.txt	bb803601-dec0-45f2-89d0-c8174c000a93	True
 ```
 
 The two versions are the 6-byte first write and the 13-byte second, and neither is the latest,
 because the marker is. **Deleting the marker, by its version id, brings the last version back:**
 
 ```
-ana@laptop:~/cloud$ aws s3api delete-object --bucket ana-uploads --key notes.txt --version-id c5b4844b-24d5-4283-93d7-a818373c7e91
+ana@laptop:~/cloud$ aws s3api delete-object --bucket ana-uploads --key notes.txt --version-id bb803601-dec0-45f2-89d0-c8174c000a93
 {
-    "VersionId": "c5b4844b-24d5-4283-93d7-a818373c7e91"
+    "VersionId": "bb803601-dec0-45f2-89d0-c8174c000a93"
 }
 ana@laptop:~/cloud$ aws s3 cp s3://ana-uploads/notes.txt -
 hello, again

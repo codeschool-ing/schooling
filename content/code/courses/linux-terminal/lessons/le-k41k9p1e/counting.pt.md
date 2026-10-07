@@ -1,13 +1,13 @@
 ---
 title: O `wc`, e o que "uma linha" quer dizer
-version: 1
+version: 2
 ---
 
 O `wc` conta. Três números, numa ordem fixa:
 
 ```
 ana@vm:~/work$ wc logs/access.log
-  1200  16995 148233 logs/access.log
+  1200  17510 153934 logs/access.log
 ```
 
 **Linhas, palavras, bytes.** E com opções, um de cada vez:
@@ -26,6 +26,7 @@ ana@vm:~/work$ wc -l logs/*.log
     30 logs/app.log
      0 logs/empty.log
      1 logs/error.log
+     0 logs/today.log
   1231 total
 ```
 

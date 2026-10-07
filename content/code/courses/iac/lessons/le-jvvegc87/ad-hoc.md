@@ -1,6 +1,6 @@
 ---
 title: Ad-hoc commands, and modules that look before they act
-version: 1
+version: 2
 ---
 
 Before writing a playbook, you can ask Ansible to do one thing on a group of machines from the
@@ -8,9 +8,9 @@ command line. The shape is always the same: **which hosts, which module, which a
 
 ```
 ana@laptop:~/shop/ansible$ ansible web -m command -a whoami
-web2 | CHANGED | rc=0 >>
-deploy
 web1 | CHANGED | rc=0 >>
+deploy
+web2 | CHANGED | rc=0 >>
 deploy
 ```
 
@@ -57,9 +57,9 @@ because it carries apt's whole output, so here it is filtered to the two lines t
 
 ```
 ana@laptop:~/shop/ansible$ ansible web -m apt -a "name=tree state=present update_cache=true" --become | grep -E "=>|\"changed\""
-web2 | CHANGED => {
-    "changed": true,
 web1 | CHANGED => {
+    "changed": true,
+web2 | CHANGED => {
     "changed": true,
 ```
 
@@ -67,13 +67,13 @@ Run the same thing again:
 
 ```
 ana@laptop:~/shop/ansible$ ansible web -m apt -a "name=tree state=present" --become
-web2 | SUCCESS => {
-    "cache_update_time": 1790954402,
+web1 | SUCCESS => {
+    "cache_update_time": 1791372425,
     "cache_updated": false,
     "changed": false
 }
-web1 | SUCCESS => {
-    "cache_update_time": 1790954403,
+web2 | SUCCESS => {
+    "cache_update_time": 1791372425,
     "cache_updated": false,
     "changed": false
 }
@@ -114,9 +114,9 @@ ii  grep           3.11-4build1 amd64        GNU grep, egrep and fgrepdpkg-query
 dpkg-query: no packages found matching -c
 dpkg-query: no packages found matching ^iiThe command exited with a non-zero return code.
 ana@laptop:~/shop/ansible$ ansible web -m shell -a "dpkg -l | grep -c ^ii"
-web1 | CHANGED | rc=0 >>
-193
 web2 | CHANGED | rc=0 >>
+193
+web1 | CHANGED | rc=0 >>
 193
 ```
 

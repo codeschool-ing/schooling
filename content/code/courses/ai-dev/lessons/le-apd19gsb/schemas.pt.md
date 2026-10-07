@@ -1,6 +1,6 @@
 ---
 title: O esquema é um contrato
-version: 1
+version: 2
 ---
 
 O modelo preenche os argumentos escrevendo JSON. Nada nessa escrita é conferido pelo próprio modelo,
@@ -50,15 +50,32 @@ A descrição faz outro trabalho. **Ela diz quando usar a ferramenta**, e "só q
 O esquema é JSON Schema comum, então um validador qualquer o lê. O `check_args.py` lista todos os
 problemas, não só o primeiro:
 
-```python
-def problems(name, args):
-    v = Draft202012Validator(SCHEMAS[name])
-    return [f"{'.'.join(map(str, e.path)) or '(top)'}: {e.message}"
-            for e in sorted(v.iter_errors(args), key=lambda e: list(map(str, e.path)))]
+```schooling-example
+{
+  "language": "python",
+  "file": "check_args.py",
+  "parts": [
+    {
+      "code": "\"\"\"Check a tool call's arguments against the tool's own schema, and list every problem.\"\"\"\nimport json\nimport sys\n\nfrom jsonschema import Draft202012Validator\n\nfrom shop_tools import TOOLS\n\n"
+    },
+    {
+      "code": "SCHEMAS = {t[\"name\"]: t[\"input_schema\"] for t in TOOLS}\n\n\n",
+      "note": "**Os esquemas são os que o modelo recebe**, lidos de `TOOLS`, então a checagem e a requisição não têm como se separar."
+    },
+    {
+      "code": "def problems(name, args):\n    v = Draft202012Validator(SCHEMAS[name])\n    return [f\"{'.'.join(map(str, e.path)) or '(top)'}: {e.message}\"\n            for e in sorted(v.iter_errors(args), key=lambda e: list(map(str, e.path)))]\n\n\n",
+      "note": "**Todo problema, não só o primeiro**, cada um com o caminho do campo de que trata."
+    },
+    {
+      "code": "if __name__ == \"__main__\":\n    for p in problems(sys.argv[1], json.loads(sys.argv[2])) or [\"ok\"]:\n        print(p)\n",
+      "note": "**Pela linha de comando**, um nome de ferramenta e os argumentos em JSON."
+    }
+  ]
+}
 ```
 
-Três conjuntos de argumentos. O primeiro é o que o `scripted-1` manda na aula 8 seção 04, escrito
-como um modelo plausivelmente escreveria:
+Três conjuntos de argumentos, escritos à mão para cada um mostrar um tipo de falha. O primeiro está
+escrito como um modelo plausivelmente escreveria:
 
 ```
 ana@dev:~/shop$ python check_args.py create_return '{"order_id": 1042, "sku": "MUG-01", "quantity": 1, "reason": "customer changed their mind"}'

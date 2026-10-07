@@ -1,6 +1,6 @@
 ---
 title: A fatura, e descartar o que não se pode pagar
-version: 1
+version: 2
 ---
 
 No seu próprio Prometheus, cardinalidade custa memória e disco. **Num serviço gerenciado ela custa
@@ -13,7 +13,9 @@ quarenta mil.
 
 Quando uma métrica dessas já está em produção, o primeiro remédio fica na coleta. Uma regra de
 **reetiquetagem de métrica** (metric relabeling) na configuração do job roda em toda amostra coletada
-antes de ela ser guardada, e pode descartar uma métrica pelo nome:
+antes de ela ser guardada, e pode descartar uma métrica pelo nome. Acrescente estas quatro linhas
+no fim do `prometheus.yml`, embaixo do job `logins`, que é o último do arquivo, como o `tail` abaixo
+mostra:
 
 ```
 ana@obs:~/shop$ tail -8 prometheus/prometheus.yml
@@ -46,4 +48,10 @@ completo quanto a sua expressão regular.
 **O conserto é no código**: contar por `plan`, ou por nada, e pôr o id do usuário no span do login,
 onde a aula 2 diz que ele não custa nada. Uma regra de reetiquetagem é como uma equipe estanca o
 sangramento numa sexta à noite. Uma mudança na instrumentação é como ela impede que aconteça de
-novo. O experimento foi parado depois desta captura e o `prometheus.yml` restaurado.
+novo. Pare o experimento e devolva o `prometheus.yml` ao que era:
+
+```sh
+docker stop logins
+cp /tmp/prometheus.yml.orig prometheus/prometheus.yml
+curl -s -X POST localhost:9090/-/reload
+```

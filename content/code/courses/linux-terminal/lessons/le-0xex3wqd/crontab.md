@@ -1,6 +1,6 @@
 ---
 title: `crontab`, and the flag that deletes everything
-version: 1
+version: 2
 ---
 
 Every user can have one crontab. It is a file, it is not in your home directory,
@@ -13,6 +13,32 @@ and you never edit it where it lives.
 | `crontab -r` | **delete** yours. No confirmation |
 | `crontab file` | replace yours with the contents of `file` |
 | `crontab -u ana -l` | somebody else's, as root |
+
+The jobs this section and the next three use: two small scripts, and a crontab
+written as an ordinary file and installed with `crontab FILE`.
+
+```sh
+mkdir -p ~/work/cron ~/bin && cd ~/work/cron
+cat > heartbeat.sh <<'END'
+#!/bin/bash
+# One line a minute: the job ran, when, and as which process.
+echo "$(date '+%F %T') heartbeat, pid $$" >> /home/ana/work/cron/beat.log
+END
+cat > ~/bin/report.sh <<'END'
+#!/bin/bash
+echo "report ran"
+END
+chmod +x heartbeat.sh ~/bin/report.sh
+cat > jobs.cron <<'END'
+* * * * * /home/ana/work/cron/heartbeat.sh
+* * * * * report.sh
+* * * * * echo "ran at $(date +%H:%M)" >> /home/ana/work/cron/pct.log
+END
+crontab jobs.cron
+# Ubuntu's ~/.profile puts ~/bin on your PATH when you log in, if it exists.
+# It did not exist when this shell started, so add it here too:
+PATH="$HOME/bin:$PATH"
+```
 
 ```
 ana@vm:~/work/cron$ crontab -l
@@ -61,14 +87,14 @@ The habit that costs nothing, and what it buys:
 
 ```
 ana@vm:~/work/cron$ crontab -l > ~/crontab.backup; wc -l ~/crontab.backup
-4 /home/ana/crontab.backup
+3 /home/ana/crontab.backup
 ana@vm:~/work/cron$ crontab -r
 ana@vm:~/work/cron$ crontab -l; echo "exit $?"
 no crontab for ana
 exit 1
 ana@vm:~/work/cron$ crontab ~/crontab.backup && crontab -l | tail -2
-* * * * * echo "CRON_TZ=[$CRON_TZ]  ran at $(date -u +\%H:\%M) UTC" >> /home/ana/work/cron/tzenv2.log
-30 8 * * * echo "08:30 New York?" >> /home/ana/work/cron/tz830.log
+* * * * * report.sh
+* * * * * echo "ran at $(date +%H:%M)" >> /home/ana/work/cron/pct.log
 ```
 
 **`crontab -r` printed nothing at all** — no prompt, no summary, no "are you
@@ -105,7 +131,12 @@ whole subject and it is the commonest way a job that works in your terminal does
 nothing at all at three in the morning.
 
 **A crontab file needs a final newline**, and a generated one often does not have
-it:
+it. `printf` writes exactly what it is given, so this file ends without one:
+
+```sh
+cd ~/work/cron
+printf '* * * * * echo hello\n* * * * * echo goodbye' > nonl.cron
+```
 
 ```
 ana@vm:~/work/cron$ od -c nonl.cron | tail -2

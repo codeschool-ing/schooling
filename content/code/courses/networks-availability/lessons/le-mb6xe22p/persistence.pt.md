@@ -43,7 +43,8 @@ então não conta nada a um visitante curioso sobre a rede atrás do balanceador
 
 ## O servidor fixado morre
 
-Agora o `nginx` de `web3` é parado, fora da tela, e o cliente preso a ele pede de novo:
+Agora o `nginx` de `web3` é parado, `sudo bash netlab.sh kill web3 nginx` na máquina virtual, e o cliente
+preso a ele pede de novo:
 
 ```
 ana@laptop:~$ curl -s -b "SERVERID=w3" http://www.example.com/
@@ -60,7 +61,7 @@ Persistência sem health checks transforma um servidor morto numa queda justamen
 estavam nele, enquanto todo o resto segue normal e os painéis parecem bem.
 
 Duas linhas resolvem. Eis o backend como o `sed` o imprimiu em `lb1` depois da mudança, com o que cada linha
-faz:
+faz; escreva-o no lugar do anterior e reinicie o HAProxy como antes:
 
 ```schooling-example
 {"language": "conf", "file": "haproxy.cfg", "parts": [{"code": "backend web\n    balance roundrobin", "note": "Os visitantes novos continuam distribuídos por round robin. A persistência só vale para uma requisição que já traz um cookie."}, {"code": "    option redispatch", "note": "Se o servidor que o cookie indica estiver fora do ar, manda a requisição para outro servidor em vez de falhar. Esta linha é nova."}, {"code": "    cookie SERVERID insert indirect nocache", "note": "`insert`: o próprio HAProxy acrescenta o cookie à resposta, então a aplicação não sabe nada dele. `indirect`: um cliente que já tem um válido não o recebe de novo, e ele é tirado da requisição antes de o servidor vê-la. `nocache`: uma resposta que o define é marcada para que um cache compartilhado não a guarde e entregue o cookie de um visitante a outros."}, {"code": "    server web1 192.0.2.21:80 cookie w1 check inter 1s\n    server web2 192.0.2.22:80 cookie w2 check inter 1s\n    server web3 192.0.2.23:80 cookie w3 check inter 1s", "note": "`cookie w1` é o valor que quer dizer este servidor. `check inter 1s` é novo: o HAProxy testa cada servidor a cada segundo, então descobre em segundos que um parou de responder. A aula 16 mostrou essas verificações marcando um servidor como DOWN."}]}

@@ -1,6 +1,6 @@
 ---
 title: A second region, with a provider alias
-version: 1
+version: 2
 ---
 
 A `provider "aws"` block is one connection: one region, one set of credentials. Every resource
@@ -12,7 +12,7 @@ with the `provider` meta-argument.**
 There are ordinary reasons to want that. A copy of the shop's backups should not live in the same
 region as the shop, or one regional outage takes both. Some AWS services insist on a region of
 their own: a certificate for CloudFront has to be issued in `us-east-1`, wherever the rest of the
-site runs. Ana wants a backup bucket in Ohio:
+site runs. Ana wants a backup bucket in Ohio, and writes it in `backup.tf`:
 
 ```hcl
 provider "aws" {
@@ -66,7 +66,7 @@ ana@laptop:~/shop/network$ aws ec2 describe-vpcs --filters Name=tag:Name,Values=
 
 Version 6 of the AWS provider, the one this course uses, added a `region` argument to most of its
 resources. For "the same account, another region", that is now enough, with no second provider
-block:
+block. Ana's `logs.tf`:
 
 ```hcl
 resource "aws_s3_bucket" "logs" {
@@ -96,8 +96,8 @@ argument; where it is missing, the alias is still the only way.
 
 ## When the alias is wrong
 
-A misspelt alias fails before anything is planned. In `~/shop/try`, a bucket names `aws.eu`, which
-was never declared:
+A misspelt alias fails before anything is planned. In `~/shop/try`, Ana replaces `main.tf` with a
+bucket that names `aws.eu`, which was never declared:
 
 ```hcl
 provider "aws" {

@@ -1,6 +1,6 @@
 ---
 title: Várias chamadas numa resposta
-version: 1
+version: 2
 ---
 
 Uma pergunta sobre dois produtos não precisa de duas idas e voltas. **Uma resposta pode levar vários
@@ -12,20 +12,19 @@ blocos `tool_use` de uma vez**, e o host responde a todos antes de perguntar ao 
 ```
 ana@dev:~/shop$ python stock.py "Are MUG-01 and GLASS-03 in stock?"
 <- stop_reason: tool_use
-   {"text": "I will check both.", "type": "text"}
-   {"id": "toolu_lab_0006_1", "input": {"sku": "MUG-01"}, "name": "get_stock", "type": "tool_use"}
-   {"id": "toolu_lab_0006_2", "input": {"sku": "GLASS-03"}, "name": "get_stock", "type": "tool_use"}
+   {"id": "call_8xfkxfof", "input": {"sku": "MUG-01"}, "name": "get_stock", "type": "tool_use"}
+   {"id": "call_6rxmxd6y", "input": {"sku": "GLASS-03"}, "name": "get_stock", "type": "tool_use"}
 -> user:
-   {"type": "tool_result", "tool_use_id": "toolu_lab_0006_1", "content": "{\"in_stock\": 37, \"unit_price\": 3990}"}
-   {"type": "tool_result", "tool_use_id": "toolu_lab_0006_2", "content": "{\"in_stock\": 0, \"unit_price\": 2490}"}
+   {"type": "tool_result", "tool_use_id": "call_8xfkxfof", "content": "{\"in_stock\": 37, \"unit_price\": 3990}"}
+   {"type": "tool_result", "tool_use_id": "call_6rxmxd6y", "content": "{\"in_stock\": 0, \"unit_price\": 2490}"}
 <- stop_reason: end_turn
-   {"text": "MUG-01 is in stock, 37 units at 39.90. GLASS-03 is out of stock.", "type": "text"}
+   {"text": "MUG-01 is currently in stock with 37 units available, priced at $3990 per unit.\n\nUnfortunately, GLASS-03 is currently out of stock.", "type": "text"}
 ```
 
-A primeira resposta tem três blocos: uma frase, depois duas chamadas com ids terminando em `_1` e
-`_2`. **Os dois resultados voltam numa só mensagem `user`**, cada um com o id da chamada que
-responde. A resposta do modelo então usa os dois, e diz que o GLASS-03 está sem estoque porque o
-segundo resultado disse `"in_stock": 0`.
+A primeira resposta tem dois blocos, duas chamadas, cada uma com o próprio id. **Os dois resultados
+voltam numa só mensagem `user`**, cada um com o id da chamada que responde. A resposta do modelo então
+usa os dois: o GLASS-03 está sem estoque porque o segundo resultado disse `"in_stock": 0`. Ela também
+põe a caneca a $3990, que são os centavos da seção 02 lidos como dólares de novo.
 
 A ordem dos resultados não importa para a API; os ids importam. Um host que roda as duas chamadas
 ao mesmo tempo, em threads ou com `asyncio`, pode acrescentar os resultados na ordem em que
@@ -43,36 +42,43 @@ from shop_tools import TOOLS
 
 model = anthropic.Anthropic()
 messages = [{"role": "user", "content": "Are MUG-01 and GLASS-03 in stock?"}]
-r = model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
 calls = [b for b in r.content if b.type == "tool_use"]
+print("asked for:", ", ".join(f"{c.name}({c.input['sku']})" for c in calls))
 messages += [
     {"role": "assistant", "content": r.content},
     {"role": "user", "content": [{"type": "tool_result", "tool_use_id": calls[0].id, "content": "37"}]},
 ]
 try:
-    model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+    r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
+    print("accepted, and answered:", r.content[0].text)
 except anthropic.BadRequestError as e:
     print(e.status_code, e.body["error"]["message"])
 ```
 
 ```
 ana@dev:~/shop$ python one_result.py
-400 messages.2: tool_use ids without a tool_result in the next message: toolu_lab_0008_2
+asked for: get_stock(MUG-01), get_stock(GLASS-03)
+accepted, and answered: Unfortunately, I couldn't find any information on the stock levels of MUG-01 and GLASS-03. However, I can suggest checking with the manufacturer or a authorized distributor for the most up-to-date information on availability.
 ```
 
-**A API recusa a requisição.** A frase é do labllm, e um provedor de verdade também recusa isto, com
-as próprias palavras. Seja como for, a falha é barulhenta e imediata, que é o caso bom: a
-alternativa seria um modelo informado sobre um produto, perguntado sobre dois, e livre para chutar
-o outro. Uma chamada que falha no seu código ainda recebe um resultado. Recebe um com `is_error`
-ligado, como na aula 8 seção 04.
+**O Ollama aceitou.** A segunda requisição passou com uma das duas chamadas sem resposta, e o modelo,
+informado de que o resultado do MUG-01 era 37, respondeu que não achou nada sobre nenhum dos dois
+produtos. A própria API da Anthropic recusa uma requisição assim com um erro 400 que nomeia a
+chamada sem resultado, e o `one_result.py` imprime esse erro quando recebe um; aqui não recebeu,
+porque o Ollama não confere. **A falha foi silenciosa**: uma resposta que parece uma resposta e joga
+fora o único fato que recebeu. Um host não pode contar com o servidor para perceber, então responde
+toda chamada, sempre: uma chamada que falha no seu código ainda recebe um resultado, um com
+`is_error` ligado, como na aula 8 seção 04.
 
 ## Quando as chamadas dependem umas das outras
 
 Duas chamadas numa resposta são chamadas que o modelo achou que podia fazer **sem ver nenhum dos
 resultados**. Quando a segunda precisa da primeira, como em "consulte o pedido, depois o estoque do
-que está nele", o modelo faz uma chamada, lê o resultado e faz a próxima numa resposta seguinte.
-Esse é o laço da aula 7 de novo, e é por isso que um host que trata uma chamada por resposta não
-basta.
+que está nele", o modelo tem de fazer uma chamada, ler o resultado e fazer a próxima numa resposta
+seguinte. Esse é o laço da aula 7 de novo, e a aula 7 seção 03 achou que o `llama3.2:3b` no Ollama
+não faz isso: depois de um resultado, o template dele não lhe mostra ferramenta nenhuma. O que ele
+precisar, tem de pedir na primeira resposta.
 
 ## Desligando
 

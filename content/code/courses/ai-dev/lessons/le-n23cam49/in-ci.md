@@ -1,6 +1,6 @@
 ---
 title: An assistant in the pull request
-version: 1
+version: 2
 ---
 
 The same review of lesson 4 section 02 can run without anybody asking: a bot that reads every pull
@@ -13,18 +13,19 @@ useful, and dangerous in the same way an unchecked one would be.**
 - **It reads every pull request**, including the small ones nobody reviews closely and the ones that
   arrive late on a Friday.
 - **It is good at the local, mechanical findings**: an off-by-one at a boundary, an error ignored, a
-  resource never closed, a test that asserts nothing. Finding 1 of lesson 4 section 02 is the kind.
+  resource never closed, a test that asserts nothing. The off-by-one of lesson 4 section 03 is the
+  kind a good model finds, and the small one of this course did not.
 - **It gives a human reviewer a head start**: a list of places to look, which is faster to check
   than a diff is to read cold.
 
 ## What to keep out of its hands
 
-- **Never the decision to merge.** A bot's approval is a claim, and lesson 4 section 03 showed one
-  confident claim in three being wrong. The checks that gate a merge are the ones that are true or
+- **Never the decision to merge.** A bot's approval is a claim, and lesson 4 section 03 showed three
+  confident claims, none of them a bug, and the real bug missing. The checks that gate a merge are the ones that are true or
   false: the tests, the linter, the type checker. The bot's comments inform the person who decides.
 - **Not its own triage.** A finding the bot is wrong about should be answered on the pull request,
-  with the reason, in the same way ana answered finding 3 with a passing test. Silently ignoring
-  bot comments teaches a team to ignore all of them, including the right ones.
+  with the reason, in the same way ana answered the review's third claim by reading the line it
+  named. Silently ignoring bot comments teaches a team to ignore all of them, including the right ones.
 - **Not more context than it needs.** The job runs with the repository and a key. It should not
   also have the deploy credentials, and the code it sends goes to the provider on every pull
   request, so the policy questions of lesson 3 section 03 apply to it exactly as to an editor.

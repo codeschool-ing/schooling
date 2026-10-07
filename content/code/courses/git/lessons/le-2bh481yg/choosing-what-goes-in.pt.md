@@ -1,11 +1,15 @@
 ---
 title: Escolhendo o que entra num commit
-version: 1
+version: 2
 ---
 
-Duas mudanças esperam. O horário de abertura no `index.html` foi editado, e o `style.css` é novo:
+Duas mudanças esperam. O horário de abertura no `index.html` foi editado, e o `style.css` é novo.
+`sed -i 's/velho/novo/' arquivo` troca `velho` por `novo` dentro do arquivo, a edição que você faria
+no nano:
 
 ```
+ana@vm:~/site$ sed -i 's/six in the morning/half past five/' index.html
+ana@vm:~/site$ printf 'h1 { color: darkorange; }\n' > style.css
 ana@vm:~/site$ git status
 On branch main
 Changes not staged for commit:
@@ -48,6 +52,7 @@ de novo antes do commit:
 
 ```
 ana@vm:~/site$ git add index.html
+ana@vm:~/site$ sed -i 's/half past five/half past five, every day/' index.html
 ana@vm:~/site$ git status
 On branch main
 Changes to be committed:
@@ -106,6 +111,7 @@ O `git commit -a` prepara toda mudança num arquivo que o Git já acompanha e fa
 digitação, e tem um ponto cego:
 
 ```
+ana@vm:~/site$ printf '<h1>Menu</h1>\n<p>French bread, 0.80</p>\n' > menu.html
 ana@vm:~/site$ git status --short
  M index.html
 ?? menu.html

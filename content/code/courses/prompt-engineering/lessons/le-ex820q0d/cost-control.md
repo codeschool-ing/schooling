@@ -1,6 +1,6 @@
 ---
 title: The limit as a budget
-version: 1
+version: 2
 ---
 
 The output limit is usually met as a safety net for runaway text. **It is also the one number in
@@ -32,7 +32,7 @@ tokens  words  chars  file
     79     55    335  request.txt
 ```
 
-If the reply is about the size of the 36-token object in the previous section, call it 40 tokens:
+The reply in the previous section was 39 tokens, so call it 40:
 
 ```
 ana@lab:~/pe$ tok cost request.txt -o 40 -i 2 -p 8

@@ -1,6 +1,6 @@
 ---
 title: Everything you install that the package manager does not know about
-version: 1
+version: 2
 ---
 
 The distribution's repositories do not have everything, and what they do have is often older than
@@ -83,7 +83,9 @@ sudo pip install requests            # the one that breaks things
 the distribution later upgrades `python3-requests`, the two disagree about what is installed, and
 what breaks is usually some system tool written in python rather than the thing you were working on.
 
-**Recent distributions refuse this**, and the refusal is the packaging system protecting itself:
+**Recent distributions refuse this**, and the refusal is the packaging system protecting itself.
+(`pip` itself is the package `python3-pip`, which Ubuntu Server does not install; `sudo apt install
+python3-pip` first, or the answer is `No module named pip` instead.)
 
 ```
 root@vm:~# /usr/bin/python3 -m pip install requests 2>&1 | head -14

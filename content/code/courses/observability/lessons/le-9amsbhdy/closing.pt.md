@@ -1,6 +1,6 @@
 ---
 title: Encerrando um incidente
-version: 1
+version: 2
 ---
 
 Um incidente acaba quando **os usuários não são mais afetados e o sistema está estável**, não quando a
@@ -25,3 +25,11 @@ Mais uma decisão pertence ao encerramento: **se a correção que acabou com o i
 reversão é segura; uma configuração editada à mão, um cluster aumentado ou uma funcionalidade desligada
 é um estado provisório que alguém precisa desfazer ou tornar permanente, e precisa de um dono como
 qualquer outra pendência.
+
+Antes da próxima aula, tire de novo as regras e o override da aula 16:
+
+```sh
+rm prometheus/rules/burn.yml compose.override.yaml
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+```

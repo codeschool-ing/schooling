@@ -4,10 +4,20 @@ version: 1
 ---
 
 O ativo-ativo não precisa de nada novo, só de uma segunda instância VRRP. O keepalived dos dois
-balanceadores foi reconfigurado com duas: `www_a` para `192.0.2.80`, em que `lb1` tem prioridade 150 e
+balanceadores é reconfigurado com duas: `www_a` para `192.0.2.80`, em que `lb1` tem prioridade 150 e
 `lb2` 100, e `www_b` para `192.0.2.81`, VRID 81, com as prioridades invertidas. As duas rastreiam o mesmo
-script `haproxy_alive`. Essa configuração foi escrita durante a montagem do laboratório e não aparece
-aqui; o arquivo do HAProxy não mudou, porque já escutava nos dois endereços.
+script `haproxy_alive`. O arquivo do HAProxy não muda, porque já escutava nos dois endereços.
+
+Pare o keepalived nos dois balanceadores antes, na máquina virtual:
+`sudo bash netlab.sh kill lb1 keepalived` e `sudo bash netlab.sh kill lb2 keepalived`; cada um abre mão do
+seu endereço ao sair. Depois acrescente isto no fim do `keepalived.conf` de cada balanceador, o de `lb1`
+como está aqui, e em `lb2` com as duas prioridades trocadas:
+
+```schooling-example
+{"language": "conf", "file": "keepalived.conf", "parts": [{"code": "vrrp_instance www_b {\n    state BACKUP\n    interface eth0\n    virtual_router_id 81\n    priority 100\n    advert_int 1", "note": "Uma segunda instância, com VRID próprio, 81. Em `lb1` ela fica com a prioridade menor, 100; em `lb2` as duas se invertem, `www_a` com 100 e `www_b` com 150."}, {"code": "    virtual_ipaddress {\n        192.0.2.81/24\n    }", "note": "O segundo endereço público, em que o HAProxy já escuta."}, {"code": "    track_script {\n        haproxy_alive\n    }\n}", "note": "O mesmo check de `www_a`: se o HAProxy morre, este balanceador abre mão dos seus dois endereços."}]}
+```
+
+Inicie o keepalived nos dois com o comando da primeira seção, e alguns segundos depois:
 
 ```
 ana@lb1:~$ ip -br addr show eth0
@@ -27,11 +37,12 @@ ana@lb2:~$ tail -n 1 /run/haproxy.log
 uma para o `.81` por `lb2`, e cada log tem a sua. Cada balanceador também mantém o próprio rodízio, e é por
 isso que as duas respostas vieram de `web1` e `web3`: cada balanceador estava num ponto do próprio rodízio.
 Os clientes normalmente seriam espalhados entre os dois endereços pelo DNS: o nome devolvendo os dois, numa
-ordem diferente para cada um que pergunta. O DNS do laboratório só devolve `192.0.2.80` para
+ordem diferente para cada um que pergunta. O DNS da rede só devolve `192.0.2.80` para
 `www.example.com`, como o `dig` mostrou na seção do ativo-passivo, então aqui os dois endereços foram
 pedidos à mão.
 
-Depois o HAProxy de `lb2` foi morto, e cinco segundos mais tarde:
+Depois o HAProxy de `lb2` foi morto, `sudo bash netlab.sh kill lb2 haproxy KILL`, e cinco segundos mais
+tarde:
 
 ```
 ana@lb1:~$ ip -br addr show eth0

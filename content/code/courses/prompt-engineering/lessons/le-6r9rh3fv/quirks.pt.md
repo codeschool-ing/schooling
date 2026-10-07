@@ -1,6 +1,6 @@
 ---
 title: O que o modelo não vê dentro de um token
-version: 1
+version: 2
 ---
 
 Um modelo que escreve parágrafos fluentes em várias línguas parece saber, com certeza, como se
@@ -23,7 +23,14 @@ ana@lab:~/pe$ tok show "How many r are in strawberry?"
 A palavra sobre a qual é a pergunta é um número só, 101830. **Os três r não estão na entrada**;
 estão dentro de um token, e o modelo precisa responder com o que aprendeu sobre a grafia desse
 token, um fato como qualquer outro, que ele pode ter aprendido pela metade. Uma pessoa que conta
-letras olha para as letras. O modelo não tem para onde olhar.
+letras olha para as letras. O modelo não tem para onde olhar. Perguntado no dia em que estas lições
+foram gravadas, o `llama3.2:3b` disse dois:
+
+```
+ana@lab:~/pe$ ask "How many times does the letter r appear in strawberry? Answer with a number." --temperature 0
+2
+-- llama3.2:3b, finish: stop, prompt 41 tokens, output 2 tokens
+```
 
 ## Escrever uma palavra ao contrário
 
@@ -39,7 +46,19 @@ ana@lab:~/pe$ tok show "yrrebwarts"
 `strawberry` de trás para frente são três tokens que não têm nada a ver com o original: `"yr"`,
 `"reb"`, `"warts"`. **Nada nos números 3866, 19100 e 115451 diz que eles soletram 101830 ao
 contrário.** Para produzi-los, o modelo precisa saber as letras da palavra na ordem normal e
-remontá-las em pedaços de outro formato, um passo por token.
+remontá-las em pedaços de outro formato, um passo por token. O `llama3.2:3b` perdeu uma letra no
+caminho, e uma linha de Python não:
+
+```
+ana@lab:~/pe$ ask "Write kitchen backwards." --temperature 0
+The word "kitchen" spelled backwards is "nehcik".
+-- llama3.2:3b, finish: stop, prompt 29 tokens, output 15 tokens
+ana@lab:~/pe$ python3 -c "print(\"kitchen\"[::-1])"
+nehctik
+```
+
+`nehcik` é `kitchen` ao contrário sem o `t`. O modelo o escreveu com a mesma confiança com que teria
+escrito a resposta certa.
 
 ## Dígitos em blocos
 
@@ -72,6 +91,30 @@ Dois remédios, e os dois voltam neste curso:
 - Passar o trabalho para um programa. Contar, inverter e fazer contas têm respostas exatas que
   umas poucas linhas de código produzem sempre. A lição 6 deixa o modelo pedir uma calculadora, e
   essa é a ferramenta certa para 4 × 27,90, acertasse o modelo ou não.
+
+O primeiro remédio, no mesmo modelo que disse dois:
+
+```
+ana@lab:~/pe$ ask "Spell strawberry one letter per line, then count the lines that are the letter r." --temperature 0
+Here is the word "strawberry" spelled one letter per line:
+
+S
+T
+R
+A
+W
+B
+E
+R
+R
+Y
+
+There are 3 lines that are the letter "R".
+-- llama3.2:3b, finish: stop, prompt 42 tokens, output 48 tokens
+```
+
+Ele escreveu as letras em maiúsculas, o que ninguém pediu, e contou três. **A resposta mudou porque
+a pergunta mudou o que o modelo conseguia ver**.
 
 Nada disso é motivo para desconfiar do que um modelo escreve sobre o sentido das coisas. **Um modelo
 é bom no que é visível nos tokens, que é quais pedaços vêm depois de quais**, e fraco no que está

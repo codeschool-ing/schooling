@@ -16,11 +16,11 @@ linha `Filter` com uma função ou uma expressão em volta.
 shop=# EXPLAIN ANALYZE SELECT * FROM customers WHERE lower(email) = 'user42@example.com';
                                                 QUERY PLAN                                                
 ----------------------------------------------------------------------------------------------------------
- Seq Scan on customers  (cost=0.00..2602.00 rows=500 width=56) (actual time=0.021..12.183 rows=1 loops=1)
+ Seq Scan on customers  (cost=0.00..2487.00 rows=500 width=48) (actual time=0.069..32.713 rows=1 loops=1)
    Filter: (lower(email) = 'user42@example.com'::text)
    Rows Removed by Filter: 99999
- Planning Time: 0.395 ms
- Execution Time: 12.234 ms
+ Planning Time: 0.492 ms
+ Execution Time: 32.818 ms
 (5 rows)
 ```
 
@@ -37,35 +37,36 @@ coisa.
 
 O plano está pedindo um quando uma varredura lê uma tabela grande para ficar com poucas linhas, ou
 quando um nested loop tem uma varredura sequencial no lado interno. Ele diz qual coluna na linha
-`Filter`.
+`Filter`. Estas são as duas rodadas da etapa sobre `EXPLAIN ANALYZE`, antes do índice em
+`customer_id` e depois dele:
 
 ```
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
-                                               QUERY PLAN                                               
---------------------------------------------------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..19966.00 rows=11 width=28) (actual time=1.779..80.362 rows=13 loops=1)
+                                              QUERY PLAN                                               
+-------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..19969.00 rows=11 width=28) (actual time=8.803..54.976 rows=7 loops=1)
    Filter: (customer_id = 42)
-   Rows Removed by Filter: 999987
- Planning Time: 0.237 ms
- Execution Time: 80.451 ms
+   Rows Removed by Filter: 999993
+ Planning Time: 0.594 ms
+ Execution Time: 55.058 ms
 (5 rows)
 ```
 
 ```
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
-                                                           QUERY PLAN                                                            
----------------------------------------------------------------------------------------------------------------------------------
- Bitmap Heap Scan on orders  (cost=4.51..47.38 rows=11 width=28) (actual time=0.046..0.111 rows=13 loops=1)
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=4.51..47.38 rows=11 width=28) (actual time=0.023..0.030 rows=7 loops=1)
    Recheck Cond: (customer_id = 42)
-   Heap Blocks: exact=13
-   ->  Bitmap Index Scan on orders_customer_id_idx  (cost=0.00..4.51 rows=11 width=0) (actual time=0.031..0.031 rows=13 loops=1)
+   Heap Blocks: exact=7
+   ->  Bitmap Index Scan on orders_customer_id_idx  (cost=0.00..4.51 rows=11 width=0) (actual time=0.016..0.016 rows=7 loops=1)
          Index Cond: (customer_id = 42)
- Planning Time: 0.509 ms
- Execution Time: 0.168 ms
+ Planning Time: 0.470 ms
+ Execution Time: 0.104 ms
 (7 rows)
 ```
 
-A mesma consulta, um índice, de 80 ms para 0,17. A aula 9 diz como escolher as colunas e a ordem
+A mesma consulta, um índice, de 55 ms para 0,1. A aula 9 diz como escolher as colunas e a ordem
 delas, e a seção `maintaining-them` dela diz para construir com `CONCURRENTLY`. Faça isso, e então
 rode o `EXPLAIN` de novo — um índice que o planejador recusa é um custo sem benefício, e o plano é
 o único jeito de saber que ele foi aceito.
@@ -77,13 +78,13 @@ pessoas:
 
 ```
 shop=# EXPLAIN ANALYZE SELECT customer_id FROM orders WHERE customer_id = 42;
-                                                              QUERY PLAN                                                              
---------------------------------------------------------------------------------------------------------------------------------------
- Index Only Scan using orders_customer_id_idx on orders  (cost=0.42..4.62 rows=11 width=4) (actual time=0.021..0.023 rows=13 loops=1)
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Index Only Scan using orders_customer_id_idx on orders  (cost=0.42..4.62 rows=11 width=4) (actual time=0.055..0.057 rows=7 loops=1)
    Index Cond: (customer_id = 42)
    Heap Fetches: 0
- Planning Time: 0.325 ms
- Execution Time: 0.062 ms
+ Planning Time: 0.381 ms
+ Execution Time: 0.101 ms
 (5 rows)
 ```
 
@@ -95,12 +96,12 @@ Menos linhas é o argumento da aula 4 com um plano anexado. Paginar com `OFFSET`
 
 ```
 shop=# EXPLAIN ANALYZE SELECT * FROM orders ORDER BY id LIMIT 20 OFFSET 500000;
-                                                                 QUERY PLAN                                                                 
---------------------------------------------------------------------------------------------------------------------------------------------
- Limit  (cost=27744.94..27746.05 rows=20 width=28) (actual time=125.605..125.610 rows=20 loops=1)
-   ->  Index Scan using orders_pkey on orders  (cost=0.42..55489.45 rows=1000000 width=28) (actual time=0.058..111.315 rows=500020 loops=1)
- Planning Time: 0.252 ms
- Execution Time: 125.654 ms
+                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=16726.42..16727.09 rows=20 width=28) (actual time=76.137..76.142 rows=20 loops=1)
+   ->  Index Scan using orders_pkey on orders  (cost=0.42..33452.43 rows=1000000 width=28) (actual time=0.029..58.786 rows=500020 loops=1)
+ Planning Time: 0.246 ms
+ Execution Time: 76.176 ms
 (4 rows)
 ```
 
@@ -108,11 +109,11 @@ shop=# EXPLAIN ANALYZE SELECT * FROM orders ORDER BY id LIMIT 20 OFFSET 500000;
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE id > 500000 ORDER BY id LIMIT 20;
                                                              QUERY PLAN                                                              
 -------------------------------------------------------------------------------------------------------------------------------------
- Limit  (cost=0.42..2.18 rows=20 width=28) (actual time=0.043..0.105 rows=20 loops=1)
-   ->  Index Scan using orders_pkey on orders  (cost=0.42..43600.09 rows=496810 width=28) (actual time=0.042..0.103 rows=20 loops=1)
+ Limit  (cost=0.42..1.14 rows=20 width=28) (actual time=0.023..0.027 rows=20 loops=1)
+   ->  Index Scan using orders_pkey on orders  (cost=0.42..18083.49 rows=502861 width=28) (actual time=0.022..0.025 rows=20 loops=1)
          Index Cond: (id > 500000)
- Planning Time: 0.274 ms
- Execution Time: 0.141 ms
+ Planning Time: 0.115 ms
+ Execution Time: 0.041 ms
 (5 rows)
 ```
 

@@ -18,7 +18,7 @@
 . "$(dirname "$0")/../../capture.sh"
 lab down >/dev/null 2>&1
 fresh
-lab up "$COURSE/lab/cluster.yaml" eu >/dev/null 2>&1 || { echo "##### the second cluster did not come up" >&2; exit 1; }
+lab up /var/tmp/lab-cluster.yaml eu >/dev/null 2>&1 || { echo "##### the second cluster did not come up" >&2; exit 1; }
 
 block contexts
 run 'kubectl config get-contexts'

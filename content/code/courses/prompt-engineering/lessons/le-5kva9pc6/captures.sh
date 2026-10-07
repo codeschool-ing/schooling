@@ -8,15 +8,16 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# What is staged: no model was called. Everything the commands read is a file
-# ana wrote with put, and each one is shown in the lesson with cat: a JSON
-# Schema for triaging complaints to Café Aurora, four triage replies standing
-# for what a model might send back (one valid, two that break the schema, one
-# that obeys it and breaks a rule of the café), two raw replies for repair (one
-# wrapped in a code fence and sentences, one with a category the schema does
-# not allow), one complaint, and rules.py, a check of the café's own rules.
-# What reads them is real: validate and repair from lab.sh (jsonschema 4.26.0),
-# and Python.
+# Everything the commands read is a file ana wrote with put, and each one is
+# shown in the lesson with cat: a JSON Schema for triaging complaints to Café
+# Aurora; four triage replies and two raw replies WRITTEN BY THE COURSE, each to
+# show one thing validate or repair says, and the lesson says so; two
+# complaints; the triage prompt; triage.py, the retry loop; and rules.py, a
+# check of the café's own rules. repair is read out of repair.md.
+#
+# THE MODEL'S REPLIES, inside triage.py's runs in the blocks retry and
+# validating-meaning, are llama3.2:3b served by Ollama 0.40.0, at temperature 0,
+# captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -87,6 +88,64 @@ print("\n".join(problems) or "no rule broken")
 sys.exit(1 if problems else 0)
 EOF
 
+put complaints/3.txt <<'EOF'
+I ordered an oat flat white and got cow's milk. I'm lactose intolerant and paid R$ 14 for it.
+EOF
+put prompts/triage.txt <<'EOF'
+Triage one complaint to Café Aurora. Reply with one JSON object that
+matches this JSON Schema, and nothing else:
+
+{
+  "type": "object",
+  "properties": {
+    "category": {"enum": ["wrong_item", "cold_or_late", "allergen", "billing", "other"]},
+    "refund": {"type": "boolean"},
+    "refund_amount": {"type": "number", "minimum": 0},
+    "summary": {"type": "string", "maxLength": 80}
+  },
+  "required": ["category", "refund", "summary"],
+  "additionalProperties": false
+}
+
+refund is true when the café owes the customer money back, and
+refund_amount is how much, in reais.
+EOF
+put triage.py <<'EOF'
+"""triage.py COMPLAINT: sort one complaint with the model, checked by repair.
+
+The complaint goes to the model with prompts/triage.txt in front of it. Each
+reply goes through repair; when it fails, repair's follow-up message is sent
+back as the next turn. After MAX_ATTEMPTS replies the failure is recorded for
+a person, and nothing is invented to fill the gap.
+"""
+import json
+import subprocess
+import sys
+
+MAX_ATTEMPTS = 3
+
+prompt = open("prompts/triage.txt", encoding="utf-8").read()
+complaint = open(sys.argv[1], encoding="utf-8").read()
+messages = [{"role": "user", "content": prompt + "\nComplaint:\n" + complaint}]
+
+for attempt in range(1, MAX_ATTEMPTS + 1):
+    json.dump(messages, open("triage-chat.json", "w", encoding="utf-8"))
+    reply = subprocess.run(["ask", "--chat", "triage-chat.json", "--plain", "--temperature", "0"],
+                           capture_output=True, text=True).stdout
+    open("triage-reply.txt", "w", encoding="utf-8").write(reply)
+    check = subprocess.run(["repair", "schema.json", "triage-reply.txt"],
+                           capture_output=True, text=True)
+    print("attempt %d" % attempt)
+    print("  " + check.stdout.strip().replace("\n", "\n  "))
+    if check.returncode == 0:
+        sys.exit(0)
+    follow_up = check.stdout.partition("would be:\n\n")[2] or "Reply with only the JSON object."
+    messages += [{"role": "assistant", "content": reply}, {"role": "user", "content": follow_up}]
+
+print("failed after %d attempts: recorded for a person, with the last reply" % MAX_ATTEMPTS)
+sys.exit(1)
+EOF
+
 block a-schema
 on 'cat schema.json'
 on 'cat triage/good.json'
@@ -101,11 +160,19 @@ on 'cat -n replies/fenced.txt'
 on 'repair schema.json replies/fenced.txt; echo "exit $?"'
 on 'cat replies/wrong-enum.txt'
 on 'repair schema.json replies/wrong-enum.txt; echo "exit $?"'
+block retry
+on 'cat prompts/triage.txt'
+on 'cat triage.py'
+on 'cat complaints/3.txt'
+on 'python3 triage.py complaints/3.txt'
 
 block validating-meaning
 on 'cat complaints/7.txt'
+on 'python3 triage.py complaints/7.txt'
+block course-7
 on 'cat triage/7.json'
 on 'validate schema.json triage/7.json; echo "exit $?"'
+block rules
 on 'grep 100 handbook/refunds.md'
 on 'cat rules.py'
 on 'python3 rules.py triage/7.json; echo "exit $?"'

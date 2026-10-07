@@ -1,9 +1,9 @@
 ---
 title: Processadores virtuais
-version: 1
+version: 2
 ---
 
-A vm1 foi feita com dois processadores virtuais, **vCPUs**, e o libvirt consegue dizer o que cada um está
+A vm1, recém-saída do `bash newvm.sh vm1`, aula 1, foi feita com dois processadores virtuais, **vCPUs**, e o libvirt consegue dizer o que cada um está
 fazendo:
 
 ```

@@ -7,47 +7,66 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/guard with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/guard$,
-# followed by what it printed.
+# It rebuilds ~/guard with lab.sh reset under its own HOME (/home/ana), which
+# builds it from the fences of the lessons themselves: tiers.py, redact.py,
+# scan.py, sweep.py, the 22 calls, retention.json and holds.json are exactly
+# what the lesson prints, and detect.py is lesson 5's. It prints each command
+# after a prompt, ana@lab:~/guard$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/guard, built by lab.sh. The
-# log's records, prompts and replies alike, were written by the course and no
-# model produced them; lab.sh's header says so in full. The date the sweep is
-# run on is passed as --now 2026-09-30, so the ages it prints do not depend on
-# the day this script runs.
+# WRITTEN BY THE COURSE: every record in the log, prompts AND replies; no model
+# produced any of them. Every CPF, card, phone, address and key in them is
+# invented: the CPFs have valid check digits on purpose, the cards are the
+# networks' published test numbers, and the AWS key is the one Amazon's own
+# documentation uses as an example. No model is called in this lesson.
 #
-# Recorded with Python 3.11, TZ=America/Sao_Paulo.
+# Recorded with Python 3.12.3 (Ubuntu 24.04's), TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/ai-security}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset >/dev/null
+export HOME=${LAB_HOME:-/home/ana}
+mkdir -p "$HOME/.py"
+ln -sf "$(command -v python3.12)" "$HOME/.py/python3"
+export PATH=$HOME/.py:$PATH
+GUARD_HOME=$HOME bash "$here/../../lab.sh" reset >/dev/null || exit 1
 cd "$HOME/guard"
 export PATH=$HOME/guard/bin:$PATH
 on() { printf 'ana@lab:~/guard$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
-block keep
+block raw
+on 'guard tiers'
 on 'head -1 logs/raw/2026-09-29.jsonl'
+
+block tiers
 on 'ls logs'
 on 'head -1 logs/metrics/2026-09-29.jsonl'
 on 'cat retention.json'
+
+block key
 on 'guard redact logs/raw/2026-06-02.jsonl'
 
-block redaction
+block scan
 on 'guard scan logs/raw'
+
+block show
 on 'guard scan --show logs/raw'
+
+block strict
+on 'guard scan --strict logs/raw'
+
+block shapes
 on 'guard redact logs/raw/2026-09-29.jsonl'
 on 'guard redact logs/raw/2026-07-28.jsonl'
 on 'guard redact logs/raw/2026-04-21.jsonl'
-on 'guard scan --strict logs/raw'
 
-block retention
-on 'cat holds.json'
+block check
 on 'guard sweep --now 2026-09-30 --check; echo "exit $?"'
+
+block holds
+on 'cat holds.json'
+
+block sweep
 on 'guard sweep --now 2026-09-30 --dry-run | tail -4'
 on 'guard sweep --now 2026-09-30 | tail -4'
 on 'guard sweep --now 2026-09-30 --check; echo "exit $?"'

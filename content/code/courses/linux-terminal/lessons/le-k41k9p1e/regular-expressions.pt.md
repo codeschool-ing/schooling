@@ -1,6 +1,6 @@
 ---
 title: Expressões regulares, a metade útil
-version: 1
+version: 2
 ---
 
 Uma expressão regular é um padrão que descreve um conjunto de strings. Há muita coisa nisso e você
@@ -87,7 +87,7 @@ ana@vm:~/work$ printf "cat\ndog\nbird\n" | grep -E "cat|dog"
 cat
 dog
 ana@vm:~/work$ grep -cE "^(10|198)\." logs/access.log
-997
+1078
 ```
 
 O `|` é "ou". Os `( )` agrupam, tanto para o `|` quanto para repetição.
@@ -138,9 +138,9 @@ nome. O `[[:digit:].]` é "um dígito ou um ponto final".
 
 ```
 ana@vm:~/work$ grep -oE "\"[A-Z]+ [^ ]+" logs/access.log | head -3
-"GET /static/app.js
 "GET /
-"POST /index.html
+"GET /
+"GET /
 ```
 
 Aquilo funciona porque o `[^ ]+` para num espaço. A versão que não funciona é `".*"` numa linha com

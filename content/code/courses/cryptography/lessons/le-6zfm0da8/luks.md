@@ -8,6 +8,42 @@ key, and stores that key in a header, encrypted under each passphrase allowed to
 the Linux standard, makes that structure easy to see; BitLocker and FileVault are built the same way.
 Vereda's laptops run Linux, and the lab formats a 32 MiB file in place of a laptop's disk.
 
+## This lesson's packages and files
+
+Two programs, from Ubuntu's packages: `cryptsetup`, the LUKS tool, for this section, and PostgreSQL,
+the database of sections 04 and 05. Installing PostgreSQL also starts it.
+
+```sh
+sudo apt-get install -y cryptsetup-bin postgresql
+```
+
+The two passphrases go in files, so that the commands below run without stopping to ask; a real one
+is typed at the prompt and never written down. Then the database: a role `ana` with a password the
+lab made up, a database `vereda` she owns, and the `pgcrypto` extension section 05 uses. `sudo -iu
+postgres` runs `psql` as PostgreSQL's own administrator, the only role there is on a fresh install:
+
+```sh
+cd ~/lab
+printf 'correct horse battery staple' > disk.pass
+printf 'recovery-7KQ2-M9XD-4TPA' > recovery.pass
+sudo -iu postgres psql -q <<'EOF'
+CREATE ROLE ana LOGIN PASSWORD 'lab-only-db-password';
+CREATE DATABASE vereda OWNER ana;
+\c vereda
+CREATE EXTENSION pgcrypto;
+GRANT pg_checkpoint TO ana;
+EOF
+```
+
+`GRANT pg_checkpoint` lets `ana` run the `CHECKPOINT` of section 04, which normally only an
+administrator may. Last, the line that tells `psql` where to connect and as whom, so that every
+command in this lesson can be a plain `psql -c`. Type it in each new terminal while you work on this
+lesson:
+
+```sh
+export PGHOST=127.0.0.1 PGUSER=ana PGDATABASE=vereda PGPASSWORD=lab-only-db-password
+```
+
 ## Formatting, and a second way in
 
 ```

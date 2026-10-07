@@ -1,6 +1,6 @@
 ---
 title: Lendo os achados
-version: 1
+version: 2
 ---
 
 **Uma lista de achados não é uma lista de tarefas.** O que torna um deles urgente é existir correção,
@@ -76,9 +76,16 @@ UNKNOWN=1
 
 **O `go get` subiu o `x/text` para a versão corrigida**, e o `golang.org/x/sync` junto, porque a versão
 nova precisa dele. O `go mod tidy` e o `go mod vendor` trouxeram o `go.sum` e o `vendor/` junto, e a
-imagem reconstruída passa sem o achado alto. No laboratório, o `GOPROXY=off` faz o Go usar módulos
-baixados antes de o laboratório começar, verificados contra as respostas salvas do banco de checksums;
-numa máquina normal, o mesmo comando os baixa.
+imagem reconstruída passa sem o achado alto. No laboratório, o `-v ~/gopkg:/go/pkg` e o `GOPROXY=off`
+fazem o Go usar módulos baixados antes de o laboratório começar, verificados contra as respostas
+salvas do banco de checksums, porque os containers dele não alcançam a internet. Na sua máquina os
+dois saem, e o próprio Go baixa os módulos:
+
+```sh
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/src -w /src -e GOCACHE=/tmp/gocache -e GOFLAGS=-mod=mod golang:1.25 sh -c "go get golang.org/x/text@v0.39.0 && go mod tidy && go mod vendor"
+```
+
+Essa forma não foi rodada aqui, pelo mesmo motivo.
 
 **O que sobra é o `tzdata` na base**, corrigido no Debian, mas ainda não na imagem distroless. Essa
 correção chega quando o Google reconstruir o distroless e a Ana reconstruir o `shelf` em cima dele.

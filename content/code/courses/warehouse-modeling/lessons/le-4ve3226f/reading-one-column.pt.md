@@ -1,6 +1,6 @@
 ---
 title: Lendo uma coluna
-version: 1
+version: 2
 ---
 
 A pergunta mais simples que se faz a um warehouse: a receita total. Uma coluna, somada. O PostgreSQL,
@@ -62,7 +62,17 @@ Essa é a primeira e mais simples vantagem de guardar por coluna, e ela cresce c
 títulos e nomes de autores, daria a um banco por linhas trinta colunas de bytes para carregar a cada uma
 que ele usa.
 
-Os dois motores, cronometrados nessa soma:
+Os dois motores, cronometrados nessa soma, com `pg-sum.sql` para o PostgreSQL e `duck-sum.sql` para o DuckDB:
+
+```sql
+\timing on
+SELECT sum(net_cents) FROM fact_sales;
+```
+
+```sql
+.timer on
+SELECT sum(net_cents) FROM fact_sales;
+```
 
 ```
 ana@lab:~/wh$ psql -f pg-sum.sql

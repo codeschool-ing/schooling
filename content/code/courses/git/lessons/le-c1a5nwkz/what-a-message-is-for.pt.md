@@ -1,10 +1,11 @@
 ---
 title: Para que serve uma mensagem
-version: 1
+version: 2
 ---
 
 Aqui está uma semana de trabalho, com as mensagens do jeito que as pessoas escrevem quando ninguém pede
-o contrário:
+o contrário. Você não precisa fazer esta; são nove commits de nada em particular, e o que importa é
+como o log se lê:
 
 ```
 ana@vm:~/before$ git log --oneline
@@ -19,7 +20,12 @@ b34fabb asdf
 ec3275a first
 ```
 
-E a mesma semana do site da padaria como este curso a manteve:
+E a mesma semana do site da padaria como este curso a manteve, numa cópia nova:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+```
+
 
 ```
 ana@vm:~/site$ git log --oneline
@@ -54,7 +60,16 @@ descobrir.
 ## O corpo
 
 Deixe uma linha em branco depois da primeira linha e escreva o quanto a mudança precisar. **O corpo é
-para o porquê**, já que o diff mostra o quê:
+para o porquê**, já que o diff mostra o quê. A mudança aqui é o horário de inverno:
+
+```bash
+sed -i 's/half past five/half past six/' index.html
+```
+
+Faça o commit com `git commit -a` e sem `-m`. O nano abre com a mensagem vazia: digite os três
+parágrafos que o `git log` imprime abaixo, salve com Ctrl+O e saia com Ctrl+X, e o commit é feito com
+o que você escreveu.
+
 
 ```
 ana@vm:~/site$ git log -1

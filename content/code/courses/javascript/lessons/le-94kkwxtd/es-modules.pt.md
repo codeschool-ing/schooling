@@ -1,6 +1,6 @@
 ---
 title: ES modules: import e export
-version: 1
+version: 3
 ---
 
 Um ES module diz o que oferece com **`export`** e do que precisa com **`import`**. No Node, um arquivo
@@ -70,6 +70,18 @@ módulo é modo estrito (aula 20) e não é chamado como método de ninguém.
 
 ## Erros que o sistema pega por você
 
+Dois arquivos de uma linha ao lado de `books.mjs`, cada um com um erro. `esm/wrong-name.mjs`:
+
+```javascript
+import { byTitle } from "./books.mjs";
+```
+
+e `esm/no-extension.mjs`:
+
+```javascript
+import { books } from "./books";
+```
+
 ```
 ana@dev:~/js$ node esm/wrong-name.mjs 2>&1 | grep Error
 SyntaxError: The requested module './books.mjs' does not provide an export named 'byTitle'
@@ -84,6 +96,13 @@ erro é o mais comum no Node: **um import de ES module precisa da extensão do a
 escrita por inteiro.
 
 ## `"type": "module"`
+
+Uma pasta `typed` tem um `package.json` e o `hello.js`, que tem duas linhas:
+
+```javascript
+import { basename } from "node:path";
+console.log(basename(import.meta.filename), typeof require);
+```
 
 ```
 ana@dev:~/js$ cat typed/package.json

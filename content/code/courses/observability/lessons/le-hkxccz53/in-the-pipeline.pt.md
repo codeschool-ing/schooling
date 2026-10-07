@@ -1,12 +1,24 @@
 ---
 title: Removendo na esteira, e o que isso deixa passar
-version: 1
+version: 2
 ---
 
 A segunda defesa fica no Collector, por onde passam as linhas de todo serviço, tenha o código dele
-sido cuidadoso ou não. O filtro foi tirado de novo do `logs.py` para mostrar a esteira trabalhando
-sozinha. Um terceiro arquivo do Collector acrescenta duas instruções ao processor `transform`, antes
-de o JSON ser interpretado, para que os campos interpretados saiam do texto já limpo:
+sido cuidadoso ou não. Tire antes o filtro do `logs.py`, para ver a esteira trabalhando sozinha:
+
+```sh
+cp /tmp/logs.py services/common/logs.py
+```
+
+Um terceiro arquivo do Collector acrescenta duas instruções ao processor `transform`, antes
+de o JSON ser interpretado, para que os campos interpretados saiam do texto já limpo. Faça-o como uma cópia do
+`collector-logs.yaml`, e acrescente as duas linhas `replace_pattern` que o `diff` abaixo mostra, logo
+acima da linha `merge_maps`:
+
+```sh
+cp otel/collector-logs.yaml otel/collector-redact.yaml
+```
+
 
 ```
 ana@obs:~/shop$ diff otel/collector-logs.yaml otel/collector-redact.yaml

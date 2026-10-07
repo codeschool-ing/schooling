@@ -1,6 +1,6 @@
 ---
 title: Uma instalação roda código
-version: 1
+version: 2
 ---
 
 **Um pacote pode trazer um script que o gerenciador roda durante a instalação, com as permissões do
@@ -15,13 +15,13 @@ O `secure-pipeline`, na aula 12, segue onde uma cadeia de suprimentos de softwar
 
 ## Vendo um rodar
 
-O `shelf-banner` do laboratório tem um `postinstall` que faz algo inofensivo e visível: escreve um
+O `shelf-banner`, do `publish-shelf.sh`, tem um `postinstall` que faz algo inofensivo e visível: escreve um
 arquivo no projeto que o instalou.
 
 ```
 ana@dev:~/js/scripts$ npm install shelf-banner
 
-added 1 package in 564ms
+added 1 package in 569ms
 ana@dev:~/js/scripts$ ls
 banner-was-here.txt
 node_modules
@@ -43,7 +43,7 @@ de verdade esse arquivo podia estar em qualquer lugar onde o usuário da ana pod
 ana@dev:~/js/scripts$ rm -rf node_modules banner-was-here.txt
 ana@dev:~/js/scripts$ npm ci --ignore-scripts
 
-added 1 package in 277ms
+added 1 package in 299ms
 ana@dev:~/js/scripts$ ls
 node_modules
 package-lock.json
@@ -75,7 +75,7 @@ dependencies:
 │   to run scripts.                                                            │
 │                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
-Done in 638ms using pnpm v10.28.0
+Done in 824ms using pnpm v10.28.0
 ana@dev:~/js/pnpm$ ls
 node_modules
 package.json
@@ -102,8 +102,8 @@ YN0000: └ Completed
 YN0000: ┌ Link step
 YN0000: │ ESM support for PnP uses the experimental loader API and is therefore experimental
 YN0007: │ shelf-banner@npm:1.0.0 must be built because it never has been before or the last one failed
-YN0000: └ Completed
-YN0000: · Done with warnings in 0s 326ms
+YN0000: └ Completed in 0s 239ms
+YN0000: · Done with warnings in 0s 369ms
 ana@dev:~/js/yarn$ ls
 banner-was-here.txt
 package.json
@@ -128,6 +128,6 @@ yarn.lock
 - **menos dependências**: cada uma é código e pessoas em quem você confia. Uma função de dez linhas
   costuma sair mais barata de escrever do que de depender;
 - **`npm audit`**: ele manda as versões instaladas para o registro e lista vulnerabilidades
-  conhecidas com a versão que corrige cada uma. O registro do laboratório não tem base de alertas,
+  conhecidas com a versão que corrige cada uma. O seu registro não tem base de alertas,
   então não foi rodado aqui. O `secure-pipeline`, na aula 5, roda esse tipo de verificação num
   pipeline, e o `secure-code`, na aula 17, decide quando atualizar e quando fixar a versão.

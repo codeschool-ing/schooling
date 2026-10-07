@@ -1,11 +1,40 @@
 ---
 title: O que um teclado encontra
-version: 1
+version: 2
 ---
 
 A segunda verificação é a que qualquer avaliador faz sem instalar nada: **guarde o mouse e aperte Tab**. Cada
 toque move o foco para a próxima coisa em que se pode agir, e um leitor de tela anuncia o nome dela. Este
-script aperta Tab pela página e imprime como cada parada se chama, como uma aproximação desse anúncio. Antes:
+script aperta Tab pela página e imprime como cada parada se chama, como uma aproximação desse anúncio. Ele
+roda como a verificação do axe, com o que aquela instalou:
+
+```javascript
+// Press Tab through the page and print what each stop is called: its label,
+// else its placeholder, else its text. A rough stand-in for what a screen
+// reader announces, and enough to hear a name that says nothing.
+import { chromium } from 'playwright';
+
+const url = process.argv[2] || 'http://127.0.0.1:8000/';
+const browser = await chromium.launch();
+const page = await browser.newPage();
+await page.goto(url);
+await page.waitForSelector('#items tr');
+for (let i = 1; i <= 6; i++) {
+  await page.keyboard.press('Tab');
+  const stop = await page.evaluate(() => {
+    const el = document.activeElement;
+    if (!el || el === document.body) return null;
+    const name = (el.labels && el.labels[0] && el.labels[0].innerText) ||
+      el.getAttribute('placeholder') || el.innerText;
+    return `${el.tagName.toLowerCase()}: ${name.trim()}`;
+  });
+  if (!stop) break;
+  console.log(`${i}. ${stop}`);
+}
+await browser.close();
+```
+
+Antes:
 
 ```
 $ node tab-walk.mjs

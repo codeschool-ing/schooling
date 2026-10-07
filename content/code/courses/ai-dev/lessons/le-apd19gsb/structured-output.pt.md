@@ -1,6 +1,6 @@
 ---
 title: Respostas que o seu código consegue ler
-version: 1
+version: 2
 ---
 
 A chamada de funções tira JSON de um modelo para uma função. A mesma necessidade aparece sem função
@@ -10,9 +10,16 @@ que é um chamado.
 
 ## O e-mail e o chamado
 
+Dois e-mails, salvos como `data/emails/1.txt` e `data/emails/2.txt`:
+
 ```
 Hello, I got order 1042 last week. I'd like to return one of the two mugs:
 it's unused and still in its box. How do I do that? Thanks, Marta
+```
+
+```
+Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
+no update since. I need it for Saturday. Can you check? João
 ```
 
 A fila precisa de quatro campos, e o esquema diz que valores cada um pode ter:
@@ -53,11 +60,11 @@ um esquema que exigisse um empurraria o modelo a inventar um.
       "note": "**Dois tipos de falha, uma lista.** Texto que não é JSON e JSON que quebra o esquema voltam como motivos que uma pessoa, ou um modelo, consegue ler."
     },
     {
-      "code": "def extract(email, attempts=2):\n    messages = [{\"role\": \"user\", \"content\": email}]\n    for attempt in range(1, attempts + 1):\n        r = model.messages.create(model=\"scripted-1\", max_tokens=300, system=SYSTEM, messages=messages)\n        text = r.content[0].text\n        ticket, found = problems(text)\n        if not found:\n            return ticket\n        print(f\"attempt {attempt}: {'; '.join(found)}\", file=sys.stderr)\n        messages += [\n            {\"role\": \"assistant\", \"content\": text},\n            {\"role\": \"user\", \"content\": \"That reply is not valid: \" + \"; \".join(found)\n                                        + \". Reply again with the corrected JSON only.\"},\n        ]\n    return None\n\n\n",
+      "code": "def extract(email, attempts=2):\n    messages = [{\"role\": \"user\", \"content\": email}]\n    for attempt in range(1, attempts + 1):\n        r = model.messages.create(model=\"llama3.2:3b\", max_tokens=300, system=SYSTEM, messages=messages, extra_body={\"temperature\": 0})\n        text = r.content[0].text\n        ticket, found = problems(text)\n        if not found:\n            return ticket\n        print(f\"attempt {attempt}: {'; '.join(found)}\", file=sys.stderr)\n        messages += [\n            {\"role\": \"assistant\", \"content\": text},\n            {\"role\": \"user\", \"content\": \"That reply is not valid: \" + \"; \".join(found)\n                                        + \". Reply again with the corrected JSON only.\"},\n        ]\n    return None\n\n\n",
       "note": "**Numa falha os motivos voltam ao modelo**, depois da própria resposta dele, e ele ganha mais uma tentativa."
     },
     {
-      "code": "ticket = extract(Path(sys.argv[1]).read_text())\nprint(json.dumps(ticket) if ticket else \"no valid ticket; this email goes to a person\")",
+      "code": "if __name__ == \"__main__\":\n    ticket = extract(Path(sys.argv[1]).read_text())\n    print(json.dumps(ticket) if ticket else \"no valid ticket; this email goes to a person\")\n",
       "note": "**Acabar as tentativas também é uma resposta**: `None`, e o e-mail vai para uma pessoa."
     }
   ]
@@ -66,33 +73,75 @@ um esquema que exigisse um empurraria o modelo a inventar um.
 
 ```
 ana@dev:~/shop$ python extract.py data/emails/1.txt
-{"order_id": "1042", "category": "return", "summary": "Wants to return one of two mugs, unused.", "urgent": false}
+attempt 1: not JSON: Expecting ',' delimiter
+{"order_id": "1042", "category": "return", "summary": "Return one of two mugs", "urgent": false}
 ```
 
-**A resposta foi lida e passou**, então o programa imprimiu um chamado. O JSON foi escrito pelo
-curso como resposta do `scripted-1`; a leitura e a validação são o que o seu código rodaria contra
-qualquer modelo.
+**A primeira resposta não era JSON**, e a linha no `stderr` diz onde o parser desistiu. O motivo
+voltou ao modelo, a segunda resposta foi lida e passou, e o programa imprimiu um chamado. A aula 8
+seção 07 olha esse laço no segundo e-mail.
 
 ## Pedindo ao provedor que mantenha o formato
 
-Os provedores oferecem uma versão mais forte: a **decodificação restrita**, em que o modelo só
-consegue produzir tokens que mantêm a saída dentro de um esquema. No SDK da Anthropic que este
-curso instala ela é o `output_config` com um `format`, e uma ferramenta pode dizer `strict`; a da
-OpenAI é o `response_format` com um JSON schema. O SDK confirma que os campos existem:
+Os provedores oferecem uma versão mais forte: a **decodificação restrita**, em que o modelo só consegue
+produzir tokens que mantêm a saída dentro de um esquema. No SDK da Anthropic ela é o `output_config`
+com um `format`; a da OpenAI é o `response_format` com um JSON schema. Pelo endpoint Anthropic do
+Ollama, a primeira não está lá:
 
 ```
-ana@dev:~/shop$ python -c 'import anthropic.types as t; print(sorted(t.OutputConfigParam.__annotations__)); print(sorted(t.JSONOutputFormatParam.__annotations__)); print("strict" in t.ToolParam.__annotations__)'
-['effort', 'format']
-['schema', 'type']
-True
-ana@dev:~/shop$ python -c 'import anthropic; anthropic.Anthropic().messages.create(model="scripted-1", max_tokens=50, messages=[{"role": "user", "content": "hi"}], output_config={"format": {"type": "json_schema", "schema": {"type": "object"}}})' 2>&1 | tail -n 1
-anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'output_config: labllm does not constrain its output; validate the reply yourself'}, 'request_id': 'req_lab_0011'}
+ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=60, messages=[{"role": "user", "content": "Name a colour."}], output_config={"format": {"type": "json_schema", "schema": {"type": "object", "properties": {"colour": {"type": "string"}}, "required": ["colour"]}}}); print(repr(r.content[0].text))'
+'Blue.'
 ```
 
-**O laboratório recusa, de propósito.** O labllm não tem decodificador para restringir, então diz
-isso em vez de aceitar o campo e ignorá-lo, o que deixaria a aula fingir.
+**`Blue.`**, que não é um objeto com um `colour`. O endpoint Anthropic do Ollama aceitou o campo e não
+fez nada com ele, sem erro, que é o pior jeito de uma restrição faltar: um código que contasse com ela
+leria a resposta e falharia em outro lugar. O endpoint OpenAI dele respeita o `response_format`, então
+o `strict.py` pede por esse, com o mesmo esquema e a mesma checagem:
 
-Onde um provedor de verdade oferece isso, use, e **mantenha a verificação mesmo assim**. A
-decodificação restrita garante o formato: os nomes dos campos, os tipos, o enum. Ela não faz do
-`order_id` o pedido certo, e os provedores documentam quais palavras-chave de esquema respeitam, que
-nem sempre são todas. O validador é a linha que segura seja lá o que o provedor fez.
+```schooling-example
+{
+  "language": "python",
+  "file": "strict.py",
+  "parts": [
+    {
+      "code": "\"\"\"The same ticket, with the schema enforced by Ollama while the model writes it.\"\"\"\nimport json\nimport sys\nfrom pathlib import Path\n\n"
+    },
+    {
+      "code": "import openai\n\nfrom extract import TICKET, problems\n\n",
+      "note": "**O esquema e a checagem são os do `extract.py`**, importados e não copiados."
+    },
+    {
+      "code": "client = openai.OpenAI()\nemail = Path(sys.argv[1]).read_text()\nr = client.chat.completions.create(\n    model=\"llama3.2:3b\", temperature=0,\n    messages=[{\"role\": \"user\", \"content\": \"Extract the ticket from the customer's email.\\n\\n\" + email}],\n    response_format={\"type\": \"json_schema\", \"json_schema\": {\"name\": \"ticket\", \"schema\": TICKET, \"strict\": True}},\n)\n",
+      "note": "**`response_format` com um JSON schema**, pelo SDK da OpenAI, que o endpoint compatível do Ollama lê: o modelo só consegue escrever tokens que mantêm a resposta dentro do esquema."
+    },
+    {
+      "code": "text = r.choices[0].message.content\nticket, found = problems(text)\nprint(text)\nprint(\"schema:\", \"; \".join(found) if found else \"every field valid\")\n",
+      "note": "**E a mesma checagem roda mesmo assim**, numa resposta que não tem como falhar nela, que é o ponto das próximas linhas."
+    }
+  ]
+}
+```
+
+```
+ana@dev:~/shop$ python strict.py data/emails/1.txt
+{
+  "order_id": "1042",
+  "category": "return",
+  "summary": "Return one of the two mugs",
+  "urgent": false
+}
+schema: every field valid
+ana@dev:~/shop$ python strict.py data/emails/2.txt
+{"order_id": "1043", "category": "delivery", "summary": "Missing update on tracking", "urgent": true}
+schema: every field valid
+```
+
+**As duas válidas, de primeira**, e a primeira espalhada em várias linhas, o que o JSON permite e a
+checagem não se importa. É isso que a restrição compra: os nomes dos campos, os tipos, o `enum` e o
+padrão do `order_id` se mantêm porque o modelo não tinha como escrever outra coisa.
+
+O que ela não compra são os valores certos. `"summary": "Missing update on tracking"` é uma leitura
+justa do e-mail do João; enquanto esta aula era preparada, o mesmo modelo, pedido do mesmo jeito com
+uma instrução um pouco diferente, arquivou o mesmo e-mail como `"return"`, uma categoria válida e a
+errada. **Mantenha a checagem mesmo assim**, e honesta sobre o que ela confere: o validador segura o
+formato seja lá o que o provedor fez, e só uma pessoa ou uma regra no código seguram o significado.

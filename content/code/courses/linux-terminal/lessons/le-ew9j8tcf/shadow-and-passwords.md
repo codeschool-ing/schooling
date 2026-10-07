@@ -1,14 +1,19 @@
 ---
 title: `/etc/shadow`, and what a stored password is
-version: 2
+version: 3
 ---
 
-The account `demo` was made for this section, and its password is the string
-`example-password`. Here is what the machine kept:
+Make an account for this section, `demo`, and give it the password `example-password`. `useradd`
+makes the account and `chpasswd` sets a password from a line of `name:password`, which is the way
+to do it in a script; at a prompt, `passwd demo` asks for it twice instead. Then look at what the
+machine kept:
 
 ```
+ana@vm:~$ sudo -i
+root@vm:~# useradd -m demo
+root@vm:~# echo 'demo:example-password' | chpasswd
 root@vm:~# grep '^demo:' /etc/shadow
-demo:$y$j9T$iladG9xXy9DklFOvrTOFd0$wisSqn5Qt6jQDW3xy9KJLj3qV2CE7IEoUIfRcRg2l.1:20710:0:99999:7:::
+demo:$y$j9T$v6V9ZMfIlDnqQrWiWB7rO.$QG7CzcW1m9JIpkWdk7ZwPOpnSB9dYz/QZQxO2Upkbu.:20733:0:99999:7:::
 ```
 
 **The password is not in there.** What is in there is a hash: a value computed from the password
@@ -22,7 +27,7 @@ red flag about the system that sent it.
 ## Reading the hash field
 
 ```localised
-$y$j9T$iladG9xXy9DklFOvrTOFd0$wisSqn5Qt6jQDW3xy9KJLj3qV2CE7IEoUIfRcRg2l.1
+$y$j9T$v6V9ZMfIlDnqQrWiWB7rO.$QG7CzcW1m9JIpkWdk7ZwPOpnSB9dYz/QZQxO2Upkbu.
  ─┬─ ─┬─ ───────────┬───────── ─────────────────┬──────────────────────
   │   │             │                           └── the hash
   │   │             └── the salt
@@ -49,14 +54,14 @@ notices it a billion times.
 ## The other eight fields
 
 ```
-demo:HASH:20710:0:99999:7:::
+demo:HASH:20733:0:99999:7:::
 ```
 
 | | is | here |
 |---|---|---|
 | 1 | name | `demo` |
 | 2 | hash | above |
-| 3 | last change, in **days since 1970** | `20710` |
+| 3 | last change, in **days since 1970** | `20733` |
 | 4 | minimum days before it may change again | `0` |
 | 5 | maximum days before it must | `99999` |
 | 6 | days of warning before that | `7` |
@@ -68,7 +73,7 @@ Nobody reads that by eye. `chage -l` reads it for you:
 
 ```
 root@vm:~# chage -l demo
-Last password change                                    : Sep 14, 2026
+Last password change                                    : Oct 07, 2026
 Password expires                                        : never
 Password inactive                                       : never
 Account expires                                         : never
@@ -85,8 +90,8 @@ number.
 ```
 root@vm:~# chage -M 90 -W 14 demo
 root@vm:~# chage -l demo
-Last password change                                    : Sep 14, 2026
-Password expires                                        : Dec 13, 2026
+Last password change                                    : Oct 07, 2026
+Password expires                                        : Jan 05, 2027
 Password inactive                                       : never
 Account expires                                         : never
 Minimum number of days between password change          : 0
@@ -112,15 +117,15 @@ somebody an account with a temporary password honestly.
 
 ```
 root@vm:~# passwd -S demo
-demo P 2026-09-14 0 90 14 -1
+demo P 2026-10-07 0 90 14 -1
 root@vm:~# passwd -l demo
 passwd: password changed.
 root@vm:~# passwd -S demo
-demo L 2026-09-14 0 90 14 -1
+demo L 2026-10-07 0 90 14 -1
 root@vm:~# passwd -u demo
 passwd: password changed.
 root@vm:~# passwd -S demo
-demo P 2026-09-14 0 90 14 -1
+demo P 2026-10-07 0 90 14 -1
 ```
 
 The second field is the state:

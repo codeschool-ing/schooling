@@ -1,10 +1,15 @@
 ---
 title: Editar um arquivo que está em outra máquina
-version: 1
+version: 2
 ---
 
 A razão inteira desta aula é que o arquivo está em outro lugar. Há quatro jeitos
 de lidar com isso e só um deles é "aprender vim".
+
+O `web01` abaixo representa qualquer servidor que você alcança com `ssh`, e o
+`/etc/nginx/nginx.conf`, qualquer arquivo nele. Para testar os comandos, use uma
+máquina em que você entra com `ssh` e um arquivo que exista lá — a máquina
+virtual da aula 1, alcançada a partir do computador em que ela roda, é uma.
 
 ## Um: editar lá
 

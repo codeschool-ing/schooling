@@ -3,7 +3,7 @@ title: A API própria do Ollama
 version: 1
 ---
 
-O Ollama tem uma biblioteca Python oficial, a `ollama`, e o `lab/local_chat.py` a usa para
+O Ollama tem uma biblioteca Python oficial, a `ollama`, e o `local_chat.py` a usa para
 classificar um dos casos da ana com o prompt de triagem da aula 1:
 
 ```python
@@ -14,7 +14,7 @@ import ollama
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
-r = ollama.chat(model="standin-local", options={"temperature": 0},
+r = ollama.chat(model="llama3.2:3b", options={"temperature": 0},
                 messages=[{"role": "system", "content": prompt}, {"role": "user", "content": case["text"]}])
 print(f"{case['id']}: {r.message.content}   (a person said {case['label']})")
 print(f"read {r.prompt_eval_count} tokens, wrote {r.eval_count}")
@@ -22,28 +22,34 @@ print(f"{r.eval_count / r.eval_duration * 1e9:.1f} tokens/s while writing, {r.to
 ```
 
 ```
-ana@desk:~/desk$ python lab/local_chat.py
-c05: other   (a person said other)
-read 51 tokens, wrote 1
-20.0 tokens/s while writing, 0.95 s in all
+ana@desk:~/desk$ python local_chat.py
+c05: other.   (a person said other)
+read 75 tokens, wrote 3
+17.1 tokens/s while writing, 7.73 s in all
 ```
 
-A resposta é do substituto, tirada da tabela dele, e as durações também: o `standin-local` tem 0,9
-segundo antes do primeiro token e 50 milissegundos por token depois. O que é real é o formato.
-**Toda resposta traz a própria contabilidade**: quantos tokens foram lidos (`prompt_eval_count`),
-quantos escritos (`eval_count`) e quanto tempo cada parte levou, em nanossegundos. A linha de
-tokens por segundo é a fórmula que a documentação do Ollama dá, e é a vazão da seção 05 da aula 3
-medida no seu hardware em vez de calculada a partir de uma largura de banda.
+A resposta é do llama3.2:3b, e as durações são desta máquina. **Toda resposta traz a própria
+contabilidade**: quantos tokens foram lidos (`prompt_eval_count`), quantos escritos (`eval_count`) e
+quanto tempo cada parte levou, em nanossegundos. A linha de tokens por segundo é a fórmula que a
+documentação do Ollama dá, e é a vazão da seção 05 da aula 3 medida no seu hardware em vez de
+calculada a partir de uma largura de banda. A maior parte dos 7,73 segundos foi o servidor
+carregando o modelo do disco, o que a primeira requisição depois de um intervalo paga, e é o assunto
+de *Carregado, e por quanto tempo*, abaixo.
 
-O que foi pelo fio é JSON simples para `localhost`, sem chave:
+O que foi pelo fio é JSON simples para `localhost`, sem chave. A biblioteca lê o endereço do
+servidor em `OLLAMA_HOST`, então uma execução pelo relay da seção 03 da aula 9 o mostra:
 
 ```
-ana@desk:~/desk$ wire --headers user-agent
+ana@desk:~/desk$ OLLAMA_HOST=http://127.0.0.1:8500 python local_chat.py
+c05: order-status   (a person said other)
+read 75 tokens, wrote 3
+13.8 tokens/s while writing, 0.42 s in all
+ana@desk:~/desk$ python relay.py show --headers user-agent
 POST /api/chat
-user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.11.15
+user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.13.16
 
 {
-  "model": "standin-local",
+  "model": "llama3.2:3b",
   "stream": false,
   "options": {
     "temperature": 0
@@ -62,21 +68,23 @@ user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.11.15
 }
 ```
 
-Os ajustes que uma API põe no nível de cima, o Ollama põe em `options`: `temperature` aqui, e
-`num_ctx` na seção 04.
+A mesma requisição um instante depois levou 0,42 segundo, porque o modelo já estava carregado, e
+respondeu `order-status` onde a primeira disse `other.`: mesmo com temperatura 0 um modelo pode
+responder a mesma pergunta de dois jeitos, como a seção 08 da aula 5 avisou. Os ajustes que uma API
+põe no nível de cima, o Ollama põe em `options`: `temperature` aqui, e `num_ctx` na seção 04.
 
 ## Carregado, e por quanto tempo
 
-Um modelo local precisa estar na memória para responder, e carregar gigabytes de pesos do disco
-leva tempo, que a primeira requisição paga. O Ollama mantém o modelo carregado depois de uma requisição, e diz até quando:
+Um modelo local precisa estar na memória para responder, e carregar gigabytes de pesos do disco leva
+tempo, que a primeira requisição paga. O Ollama mantém o modelo carregado depois de uma requisição,
+e diz até quando:
 
 ```
 ana@desk:~/desk$ python -c "import ollama; [print(m.model, m.expires_at) for m in ollama.ps().models]"
-standin-local:latest 2026-10-05 18:13:34-03:00
+llama3.2:3b 2026-10-07 17:24:23.909707+00:00
 ```
 
 ```
-ana@desk:~/desk$ sources quote ollama-faq "By default models are kept in memory"
 # ollama/ollama@42e911bc docs/faq.mdx
  291: By default models are kept in memory for 5 minutes before being unloaded. This allows
       for quicker response times if you're making numerous requests to the LLM. If you want to
@@ -88,7 +96,7 @@ muda isso: uma duração o mantém por mais tempo, um número negativo como `-1`
 `0` o descarrega na hora:
 
 ```
-ana@desk:~/desk$ python -c "import ollama; print(ollama.generate(model=\"standin-local\", keep_alive=0).done_reason); print(len(ollama.ps().models), \"models loaded\")"
+ana@desk:~/desk$ python -c "import ollama; print(ollama.generate(model=\"llama3.2:3b\", keep_alive=0).done_reason); print(len(ollama.ps().models), \"models loaded\")"
 unload
 0 models loaded
 ```
@@ -99,7 +107,6 @@ manhã tão rápido quanto o centésimo, e segura a memória a noite inteira par
 ## Local é uma propriedade de onde roda
 
 ```
-ana@desk:~/desk$ sources quote ollama-faq "Ollama runs locally"
 # ollama/ollama@42e911bc docs/faq.mdx
  161: Ollama runs locally. We don't see your prompts or data when you run locally. When using
       cloud-hosted models, we process your prompts and responses to provide the service but do
@@ -112,7 +119,6 @@ ana@desk:~/desk$ sources quote ollama-faq "Ollama runs locally"
 compatível com a OpenAI em ollama.com que não precisa de instalação nenhuma:
 
 ```
-ana@desk:~/desk$ sources quote ollama-openai "No Ollama installation required|base_url=\"https://ollama.com"
 # ollama/ollama@42e911bc docs/api/openai-compatibility.mdx
    9: Set your [API key](https://ollama.com/settings/keys) in `OLLAMA_API_KEY`. Install the
       client with `pip install openai`. No Ollama installation required.

@@ -1,6 +1,6 @@
 ---
 title: Monte uma vez, promova os mesmos bytes
-version: 1
+version: 2
 ---
 
 O artefato é a coisa que um release implanta: um tarball, um wheel, uma imagem de contêiner, um
@@ -9,8 +9,8 @@ bytes em todo lugar.** Um pipeline que monta de novo para a homologação e de n
 testa uma coisa e entrega outra, e cada diferença entre os builds, uma dependência lançada no meio
 tempo, uma opção numa máquina, é uma diferença que ninguém testou.
 
-O artefato do `shipquote` é um tarball da árvore commitada, montado pelo `ops/build.sh` do passo 9 do
-projeto:
+O artefato do `shipquote` é um tarball da árvore commitada, montado por um script num diretório
+novo, `mkdir ops`. Salve como `ops/build.sh`:
 
 ```schooling-example
 {
@@ -37,6 +37,20 @@ projeto:
 }
 ```
 
+O build dá à versão o nome de uma tag, então a versão precisa de uma, num commit que tenha tudo com
+que ela faz deploy. Mais quatro scripts fazem parte dela: `deploy.sh`, `restart.sh` e `rollback.sh`,
+mostrados inteiros na seção 06, e `smoke.sh`, na seção 07. Salve esses quatro agora também, depois
+torne os cinco executáveis, faça o commit e marque o commit com a tag da versão 1.4.0:
+
+```sh
+chmod +x ops/*.sh
+git add ops
+git commit -m "Build one artifact, deploy it, and check it answers"
+git tag -a v1.4.0 -m "shipquote 1.4.0"
+```
+
+Depois o build, duas vezes:
+
 ```
 ana@laptop:~/shipquote$ git describe --tags
 v1.4.0
@@ -48,7 +62,8 @@ ana@laptop:~/shipquote$ rm -rf dist && ops/build.sh > /dev/null && cat dist/ship
 4b61176498717d0fb05adae2b03d1b2dfafb346899610aab7197818b75d0d5f3  shipquote-1.4.0.tar.gz
 ```
 
-O build imprimiu o caminho do artefato, e o hash dele começa com `4b611764`. Depois o `dist/` foi
+O build imprimiu o caminho do artefato, e o hash dele começa com `4b611764`; o seu começa com outra
+coisa, porque o arquivo registra a hora do commit e o seu foi feito em outra. Depois o `dist/` foi
 apagado e o build rodou de novo, e **o hash é o mesmo**. O `git archive` define a data de cada arquivo
 a partir do commit, e não do relógio, então o mesmo commit dá os mesmos bytes. Um build com essa
 propriedade se chama **reproduzível**, e quer dizer que qualquer pessoa consegue conferir que um

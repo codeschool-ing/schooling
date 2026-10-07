@@ -63,8 +63,14 @@ that exists only inside the cluster.
 
 ## What etcd holds
 
-Everything. The objects of lesson 2 are keys under `/registry`, by type, namespace and name. This
-reads the keys only, with etcd's own client, from inside the etcd pod and with its certificates:
+Everything. The objects of lesson 2 are keys under `/registry`, by type, namespace and name. With a
+Deployment of two copies made first, as lesson 2 made one,
+
+```sh
+kubectl create deployment web --image=shop:1.0 --replicas=2
+```
+
+this reads the keys only, with etcd's own client, from inside the etcd pod and with its certificates:
 
 ```
 ana@laptop:~/shop$ kubectl -n kube-system exec etcd-shop-control-plane -- etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key get /registry/deployments/default --prefix --keys-only

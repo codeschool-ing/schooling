@@ -1,6 +1,6 @@
 ---
 title: Procurando vulnerabilidades conhecidas
-version: 1
+version: 2
 ---
 
 **Um scanner de vulnerabilidades faz duas coisas: lista o que há dentro de uma imagem e procura cada
@@ -20,6 +20,17 @@ ana@vm:~$ jq -c "{UpdatedAt}" ~/trivy-cache/db/metadata.json
 Os containers do laboratório não têm rede, então este foi buscado antes de o laboratório começar, no
 mesmo lugar de onde o Trivy o busca, e as flags dizem ao Trivy para não procurar outro. Todo número
 abaixo vale para aquele `UpdatedAt`; a mesma varredura amanhã pode achar mais.
+
+Na sua própria máquina, deixe `--skip-db-update` e `--offline-scan` de fora. A primeira varredura
+então baixa o banco para `~/trivy-cache`, o que leva um minuto, e as seguintes o atualizam uma vez por
+dia:
+
+```sh
+trivy() { docker run --rm -v ~/trivy-cache:/cache -v "$PWD":/work -w /work aquasec/trivy:0.75.0 "$@" --cache-dir /cache --skip-version-check --scanners vuln --quiet; }
+```
+
+Essa versão não foi rodada aqui, pelo motivo acima, e as suas contagens vão diferir destas pelo que
+tiver sido publicado entre os dois bancos.
 
 ## Três imagens, lado a lado
 

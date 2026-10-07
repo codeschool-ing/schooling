@@ -62,8 +62,8 @@ Create Table: CREATE TABLE `orders` (
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE RESTRICT,
   CONSTRAINT `orders_chk_1` CHECK ((`total` >= 0)),
-  CONSTRAINT `orders_chk_2` CHECK ((`status` in (_latin1'placed',_latin1'shipped',_latin1'cancelled')))
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  CONSTRAINT `orders_chk_2` CHECK ((`status` in (_utf8mb4'placed',_utf8mb4'shipped',_utf8mb4'cancelled')))
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ```
 
 ```
@@ -131,7 +131,7 @@ INSERT 0 1
 sqlite> INSERT INTO customers (name, email, city) VALUES ('Felipe Nunes', 'felipe@example.com', 'Recife') RETURNING id;
 id
 --
-6
+6 
 ```
 
 ```
@@ -159,6 +159,15 @@ Lesson 8 said a transaction is all or nothing. Whether that covers `ALTER TABLE`
 decision. Both of these ran `BEGIN`, added a `phone` column and then `ROLLBACK`:
 
 ```
+shop=# BEGIN;
+BEGIN
+
+shop=*# ALTER TABLE customers ADD COLUMN phone varchar(30);
+ALTER TABLE
+
+shop=*# ROLLBACK;
+ROLLBACK
+
 shop=# SELECT column_name FROM information_schema.columns WHERE table_name = 'customers';
  column_name 
 -------------
@@ -170,6 +179,9 @@ shop=# SELECT column_name FROM information_schema.columns WHERE table_name = 'cu
 ```
 
 ```
+mysql> BEGIN;
+mysql> ALTER TABLE customers ADD COLUMN phone varchar(30);
+mysql> ROLLBACK;
 mysql> DESCRIBE customers;
 +-------+--------------+------+-----+---------+----------------+
 | Field | Type         | Null | Key | Default | Extra          |

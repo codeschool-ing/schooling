@@ -1,6 +1,6 @@
 ---
 title: Versioning what you build
-version: 1
+version: 2
 ---
 
 An image is something other people start, so it needs the same thing lesson 10 asked of a module:
@@ -70,7 +70,10 @@ index 87b3f2a..554e9e1 100644
  }
 ```
 
-Three changes, each answering a different question later.
+Make the same edits in yours; the diff shows every line that changes. Ana commits them before
+building, `git add -A && git commit -qm 'version and commit come from outside'`, so that the
+commit an image records is one that contains these lines. Three changes, each answering a
+different question later.
 
 **The variables have no default**, so a build that is not told its version refuses to start:
 
@@ -160,7 +163,7 @@ no rollback at all, because it names whatever was built most recently, which is 
 rolled back.
 
 The base image shows the same thing from the outside. Ubuntu 24.04 was released in April 2024, and
-this is when the image behind the tag `ubuntu:24.04` on this laptop was created:
+this is when the image behind the tag `ubuntu:24.04` on Ana's laptop was created:
 
 ```
 ana@laptop:~/shop/image$ docker image inspect ubuntu:24.04 --format '{{.Created}}'

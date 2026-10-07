@@ -1,11 +1,21 @@
 ---
 title: Import blocks, and letting Terraform write the first draft
-version: 1
+version: 2
 ---
 
 Bruno's bucket had two arguments worth writing, and Ana could guess both. A security group made
 by hand is a different matter. Somebody created one for the monitoring agent, in the shop's VPC,
-with a rule nobody wrote down:
+with a rule nobody wrote down. To make it in your moto, run what they ran; `VPC` holds the shop's
+VPC id and `MSG` the new group's:
+
+```sh
+VPC=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query 'Vpcs[0].VpcId' --output text)
+MSG=$(aws ec2 create-security-group --vpc-id "$VPC" --group-name monitoring --description "node exporter" --query GroupId --output text)
+aws ec2 authorize-security-group-ingress --group-id $MSG --protocol tcp --port 9100 --cidr 10.20.0.0/16
+aws ec2 create-tags --resources $MSG --tags Key=Name,Value=monitoring
+```
+
+The group, as the CLI finds it:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-security-groups --filters Name=group-name,Values=monitoring --query "SecurityGroups[].[GroupId,GroupName]" --output text
@@ -14,8 +24,8 @@ sg-9dc3670bcfa1b0d03	monitoring
 
 To write its block by hand, Ana would have to read every attribute AWS holds for it, decide which
 ones the block must state, and plan until it stopped complaining. **Terraform can write that first
-draft itself.** She declares the import, with the id the CLI just printed, and writes no resource
-block at all:
+draft itself.** She declares the import in `imports.tf`, with the id the CLI just printed (yours
+is the one your CLI printed), and writes no resource block at all:
 
 ```hcl
 import {
@@ -107,7 +117,8 @@ provider read, and that is its problem. Read it as a reviewer would:
 
 What it does get right is everything that matters: the name, the description, the port, the
 range, the tag, and the egress rule that AWS adds to every new group, which moto, standing in for
-AWS here, added too. Ana keeps those, in the house style, with the two values that belong to the network read from its outputs:
+AWS here, added too. Ana keeps those, in the house style, with the two values that belong to the network read from its
+outputs, in `monitoring.tf`, and deletes the draft:
 
 ```hcl
 resource "aws_security_group" "monitoring" {

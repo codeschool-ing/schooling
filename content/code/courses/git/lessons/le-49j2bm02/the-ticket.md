@@ -1,6 +1,6 @@
 ---
 title: Before any code: the ticket
-version: 1
+version: 2
 ---
 
 **Every change a team makes starts somewhere other than the code.** A customer complains, a manager
@@ -42,3 +42,54 @@ pull request, and it is still there in the release:
 None of that is enforced by Git. It is a habit, and it pays off the day somebody runs `git blame` on the
 holiday notice (lesson 3), finds the commit, reads `Refs #23`, and lands on the ticket with Bruno's story about
 the locked door. Without the number they find a line of HTML and have to guess why it is there.
+
+## The same task on your machine
+
+The rest of this lesson follows Ana's terminal, and three things in it are not on your machine yet:
+a shared copy with `v1.0` tagged on it, Bruno's task #21 already merged, and a hosting service to
+merge pull requests. The first is lesson 7's arrangement, from a fresh week:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/platform && bash ~/make-site.sh && cd ~/site
+git tag -a v1.0 -m 'The site as it went live'
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main v1.0
+```
+
+The hosting service is a website, and what it does when somebody presses *Merge pull request* is
+ordinary Git, run in a copy of its own. This short program does the same, so you can play the button
+in a terminal. Save it as `~/merge-button.sh`:
+
+```bash
+#!/usr/bin/env bash
+# merge-button.sh BRANCH NUMBER AUTHOR TITLE: what a hosting service does when
+# somebody presses "Merge pull request", played by its own copy of the project.
+set -e
+[ -d ~/platform/site ] || git clone -q ~/remotes/site.git ~/platform/site
+cd ~/platform/site
+git fetch -q origin
+git merge -q --ff-only origin/main
+git -c user.name=GitHub -c user.email=noreply@github.com merge -q --no-ff "origin/$1" \
+  -m "Merge pull request #$2 from $3/$1" -m "$4"
+git push -q origin main
+git push -q origin --delete "$1"
+```
+
+It makes the merge commit under the name GitHub uses, with the message GitHub writes, then deletes
+the branch from the shared copy, which is the button's other half. Now Bruno's task, done the day
+before: you play him, in your copy, and push his branch:
+
+```bash
+git switch -q -c 21-rye-bread-back
+printf '<p>Rye bread, 1.35</p>\n' >> menu.html
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Put rye bread back on the menu' -m 'Refs #21'
+git push -q origin 21-rye-bread-back
+git switch -q main && git branch -q -D 21-rye-bread-back
+```
+
+And his pull request, #22, merged that afternoon:
+
+```bash
+bash ~/merge-button.sh 21-rye-bread-back 22 bruno 'Put rye bread back on the menu'
+```

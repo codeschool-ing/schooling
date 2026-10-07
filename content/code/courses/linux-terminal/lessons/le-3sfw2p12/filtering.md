@@ -1,6 +1,6 @@
 ---
 title: `Where-Object`, and the comparison that quietly answers wrongly
-version: 1
+version: 2
 ---
 
 `Where-Object` keeps the objects for which a condition is true. It is `grep`
@@ -8,15 +8,14 @@ with a property instead of a pattern.
 
 ```
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { [int]$_.revenue -gt 30000 } | Select-Object rep, revenue
-rep    revenue
----    -------
-carla  37084
-ana    43731
-carla  30272
-elena  34122
-hugo   35541
-carla  34417
-felipe 41574
+rep     revenue
+---     -------
+elena   36036
+felipe  31375
+diego   39072
+gabriel 35880
+gabriel 31089
+helena  39865
 ```
 
 Two spellings, and both are everywhere:
@@ -78,17 +77,17 @@ Here is the same file, the same threshold, and two answers:
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { $_.revenue -gt 30000 } | Measure-Object | Select-Object Count
 Count
 -----
-   16
+   15
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { [int]$_.revenue -gt 30000 } | Measure-Object | Select-Object Count
 Count
 -----
-    7
+    6
 ```
 
-**Sixteen against seven, and nothing warned about the other nine.**
+**Fifteen against six, and nothing warned about the other nine.**
 
 The previous section is why: `Import-Csv` produced strings, so `$_.revenue` is
-the text `8721`. PowerShell's comparison operators **coerce the right-hand side
+the text `18850`. PowerShell's comparison operators **coerce the right-hand side
 to the type of the left-hand side** — so `30000` became the string `"30000"`, and
 the comparison was alphabetical.
 

@@ -1,11 +1,19 @@
 ---
 title: Por que rastros são amostrados
-version: 1
+version: 2
 ---
 
 A aula 1 pôs os rastros na ponta cara da tabela dela: um span por passo, para toda requisição
 rastreada. Eis o que isso significa no laboratório, com cinco clientes simulados comprando e todo
-rastro guardado:
+rastro guardado. Inicie o
+laboratório de novo do zero, e ponha os clientes para rodar por meia hora:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1800
+sleep 90
+```
+
+Depois:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(rate(http_server_requests_total{job="storefront",route="/checkout"}[1m]))'

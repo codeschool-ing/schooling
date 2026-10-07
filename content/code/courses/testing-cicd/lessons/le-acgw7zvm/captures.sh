@@ -13,10 +13,14 @@
 # shipquote as a process on their own port. That is the smallest honest model
 # of "two environments"; lesson 8 says what real ones add.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# The five scripts of ops/ are shown whole, in "the-artifact", "deploying" and
+# "smoke-tests", and `../../lab.sh shown` fails this script before its first
+# block if any of them is not the file ../../lab.sh wrote at step 9.
+#
+# What is STAGED rather than typed:
 #   - the project at step 9 (tag v1.4.0) in /home/ana/shipquote, by
-#     ../../lab.sh; ~/envs emptied, and the config.env files whose contents
-#     the section "deploying" shows written with printf;
+#     ../../lab.sh; ~/envs emptied, and the config.env files written with the
+#     commands the section "deploying" gives;
 #   - in "untagged", a commit on a throwaway branch, deleted afterwards;
 #   - in "tampered", a copy of the artifact with one byte appended;
 #   - in "bad-config", an environment called preview whose config has the
@@ -35,9 +39,10 @@ stop_all() { for p in "$HOME"/envs/*/pid; do [ -f "$p" ] && kill "$(cat "$p")" 2
 stop_all
 rm -rf "$HOME/envs"
 bash "$LAB" stage 9 >/dev/null
+bash "$LAB" shown "$(dirname "$LAB")/lessons/le-acgw7zvm" || exit 1
 mkdir -p "$HOME/envs/staging" "$HOME/envs/production"
-printf 'SHIPQUOTE_PORT=8200\n' > "$HOME/envs/staging/config.env"
-printf 'SHIPQUOTE_PORT=8300\n' > "$HOME/envs/production/config.env"
+echo SHIPQUOTE_PORT=8200 > "$HOME/envs/staging/config.env"
+echo SHIPQUOTE_PORT=8300 > "$HOME/envs/production/config.env"
 cd "$HOME/shipquote" || exit 1
 run() { printf 'ana@laptop:~/shipquote$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
@@ -55,7 +60,7 @@ run "python3 -c 'from shipquote.version import VERSION; print(VERSION)'"
 block untagged
 git switch -q -c try-a-change
 echo >> README.md
-GIT_AUTHOR_DATE=2026-09-25T10:00:00-03:00 GIT_COMMITTER_DATE=2026-09-25T10:00:00-03:00 git commit -qam 'Try a change'
+GIT_AUTHOR_DATE=2026-09-25T10:00:00-03:00 GIT_COMMITTER_DATE=2026-09-25T10:00:00-03:00 git commit -qam "Try a change"
 run 'git describe --tags'
 run 'ops/build.sh'
 git switch -q main
@@ -70,9 +75,8 @@ run 'readlink ~/envs/staging/current'
 run 'curl -s http://127.0.0.1:8200/version; echo'
 
 block tampered
-cp dist/shipquote-1.4.0.tar.gz.sha256 /tmp/
-cp dist/shipquote-1.4.0.tar.gz /tmp/
-printf 'x' >> /tmp/shipquote-1.4.0.tar.gz
+cp dist/shipquote-1.4.0.tar.gz* /tmp/
+printf x >> /tmp/shipquote-1.4.0.tar.gz
 run 'ops/deploy.sh production /tmp/shipquote-1.4.0.tar.gz; echo "exit status $?"'
 rm -f /tmp/shipquote-1.4.0.tar.gz /tmp/shipquote-1.4.0.tar.gz.sha256
 
@@ -82,7 +86,7 @@ run 'for port in 8200 8300; do curl -s http://127.0.0.1:$port/version; echo; don
 
 block bad-config
 mkdir -p "$HOME/envs/preview"
-printf 'SHIPQUOTE_PORT=84OO\n' > "$HOME/envs/preview/config.env"
+echo SHIPQUOTE_PORT=84OO > "$HOME/envs/preview/config.env"
 run 'cat ~/envs/preview/config.env'
 run 'ops/deploy.sh preview dist/shipquote-1.4.0.tar.gz; echo "exit status $?"'
 run 'tail -1 ~/envs/preview/app.log'

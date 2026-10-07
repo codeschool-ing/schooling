@@ -37,9 +37,8 @@ em termos absolutos para uma loja deste tamanho. **A decisão vai ser tomada pel
 modelo que classifica 39 casos em 40 por US$ 8 por mês ganha de um que classifica 34 por US$ 2, e o
 contrário pode valer para o rascunho.
 
-A aula 5 preenche a coluna. No laboratório deste curso os candidatos são interpretados pelos três
-modelos do substituto, um para cada tipo de linha: `standin-large` para a faixa cara,
-`standin-small` para a faixa barata, `standin-local` para um modelo aberto que a ana rodaria ela
-mesma. **As respostas deles foram escritas pelo curso**, então as notas que eles tiram também são do
-curso. O que vale para candidatos reais é o harness, a pontuação e a leitura dos resultados, que são
-as partes difíceis de acertar.
+A aula 5 preenche a coluna. As linhas acima pedem chave e conta, então os candidatos que ela mede
+são três modelos abertos pequenos que você mesmo roda, do tipo que a aula 3 precificou como máquina:
+`llama3.2:3b`, `qwen2.5:3b` e `llama3.2:1b`. **As respostas deles são reais**, e eles não são as
+linhas acima. O que vale para elas é o harness, a pontuação e a leitura dos resultados, que são as
+partes difíceis de acertar.

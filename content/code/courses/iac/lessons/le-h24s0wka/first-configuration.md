@@ -1,6 +1,6 @@
 ---
 title: A configuration is a directory
-version: 1
+version: 2
 ---
 
 Lesson 1 showed one Terraform file and asked you to trust it. This lesson takes it apart, and
@@ -13,8 +13,8 @@ mean nothing to Terraform, and neither does the order of the blocks inside them:
 into a file called `zzz.tf` changes nothing at all. Subdirectories are not read. A directory below
 this one is a configuration of its own, which lesson 10 turns into a module.
 
-Ana's network starts as two files. The first one says what the configuration needs before it can
-run:
+Ana's network starts as two files in a new directory, `~/shop`. The first one, `versions.tf`, says
+what the configuration needs before it can run:
 
 ```hcl
 terraform {
@@ -36,7 +36,7 @@ where the plugin comes from: `hashicorp/aws` is short for `registry.terraform.io
 And `version` limits which releases are acceptable; `~> 6.0` means any 6.x and nothing from 7 on,
 which the providers section takes apart.
 
-The second file is the network:
+The second file, `main.tf`, is the network:
 
 ```hcl
 provider "aws" {
@@ -55,7 +55,7 @@ resource "aws_vpc" "shop" {
 **A `provider` block configures a plugin; a `resource` block asks for a thing to exist.** The
 provider block here sets one argument, the region. The credentials are not in it, and they should
 never be: the AWS provider finds them where the AWS CLI does, and in this lab that is the four
-`AWS_` variables lesson 1 section 08 showed, which also point it at moto. That is why this file
+`AWS_` variables that lesson 1's `iac-env.sh` sets, which also point it at moto. That is why this file
 would work unchanged against a real account.
 
 The resource block carries two labels. `aws_vpc` is the **type**, defined by the provider, and

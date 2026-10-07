@@ -42,7 +42,7 @@ outra coisa usando esse nome. Contra o Google, o código abaixo muda em três lu
       "note": "Imprima os comprimentos como chegaram e depois divida cada vetor pelo próprio comprimento. O Google documenta que só a saída de tamanho cheio vem normalizada, então um vetor truncado precisa desta linha para que o produto escalar seja um cosseno."
     }
   ],
-  "output": "ana@lab:~/emb$ python gemini.py\n1 (384,)\n(3, 128) [1. 1. 1.]\nana@lab:~/emb$ jq -c '{path, inputs, dims, task_type}' /var/log/labembed/requests.jsonl\n{\"path\":\"/v1beta/models/lab-minilm:batchEmbedContents\",\"inputs\":1,\"dims\":384,\"task_type\":null}\n{\"path\":\"/v1beta/models/lab-wordllama:batchEmbedContents\",\"inputs\":3,\"dims\":128,\"task_type\":\"RETRIEVAL_DOCUMENT\"}"
+  "output": "ana@lab:~/emb$ python gemini.py\n1 (384,)\n(3, 128) [1. 1. 1.]\nana@lab:~/emb$ jq -c '{path, inputs, dims, task_type}' labembed.jsonl\n{\"path\":\"/v1beta/models/lab-minilm:batchEmbedContents\",\"inputs\":1,\"dims\":384,\"task_type\":null}\n{\"path\":\"/v1beta/models/lab-wordllama:batchEmbedContents\",\"inputs\":3,\"dims\":128,\"task_type\":\"RETRIEVAL_DOCUMENT\"}"
 }
 ```
 

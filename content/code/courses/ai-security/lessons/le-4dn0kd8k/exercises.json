@@ -433,5 +433,181 @@
         "why": "That is not a control on the entry point."
       }
     ]
+  },
+  {
+    "id": "ex-b854dct0",
+    "version": 1,
+    "section": "your-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is installing on your own computer the recommended path in this course, rather than a virtual machine?",
+    "hint": "What is the heaviest thing in the course?",
+    "choices": [
+      {
+        "text": "The model is the heaviest part, and it runs fastest with no hypervisor taking memory or hiding the graphics card",
+        "correct": true,
+        "why": "Right: the model is the reason."
+      },
+      {
+        "text": "A virtual machine cannot run Python 3, which every program in the course needs",
+        "correct": false,
+        "why": "Ubuntu Server runs Python 3; the lesson recommends it as a guest."
+      },
+      {
+        "text": "Ollama refuses to install inside a virtual machine, so the course could not be followed there",
+        "correct": false,
+        "why": "It installs there; the replies are only slower."
+      },
+      {
+        "text": "The transcripts were recorded inside a virtual machine, so installing directly is what matches them",
+        "correct": false,
+        "why": "The table says installed and virtual both match as printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-abmbdpe4",
+    "version": 1,
+    "section": "your-machine",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many gigabytes of memory did `llama3.2:3b` take while it was loaded, according to `ollama ps` in the lesson?",
+    "hint": "The SIZE column of `ollama ps`, not of `ollama list`.",
+    "value": 2.9,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-rkd8r2ce",
+    "version": 1,
+    "section": "the-workbench",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the command `guard surface --gaps` run?",
+    "hint": "Read `bin/guard`.",
+    "choices": [
+      {
+        "text": "`python3 ~/guard/tools/surface.py --gaps`",
+        "correct": true,
+        "why": "Right: guard finds the program by its name and passes the rest along."
+      },
+      {
+        "text": "A program Ollama installed under the name `guard`",
+        "correct": false,
+        "why": "Ollama installs only itself; `bin/guard` is the script you pasted."
+      },
+      {
+        "text": "`python3 ~/guard/bin/surface --gaps`",
+        "correct": false,
+        "why": "`bin/` holds only `guard`; the programs are in `tools/`."
+      },
+      {
+        "text": "The `surface` found on the PATH",
+        "correct": false,
+        "why": "`guard` looks only in `~/guard/tools`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pdmq66z",
+    "version": 1,
+    "section": "the-workbench",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`guard ask` was run twice with the same question and gave the same reply both times. Why?",
+    "hint": "What is the default temperature?",
+    "choices": [
+      {
+        "text": "At temperature 0 the model takes its most likely word at every step",
+        "correct": true,
+        "why": "Right: and the lessons that quote a reply set it, with a seed."
+      },
+      {
+        "text": "Ollama keeps the first reply and sends it again for the same question",
+        "correct": false,
+        "why": "Nothing is cached; at a higher temperature the reply changed."
+      },
+      {
+        "text": "The seed is ignored by a local model, so it always answers alike",
+        "correct": false,
+        "why": "Changing the seed at 0.8 changed the reply."
+      },
+      {
+        "text": "`ask.py` compares the question with the previous one and repeats the answer",
+        "correct": false,
+        "why": "The program sends every question; read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-embpj2zv",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to the mistake that produced it.",
+    "hint": "One cause on the right produced none of these.",
+    "pairs": [
+      {
+        "left": "`guard: command not found`",
+        "right": "a terminal opened before the lines went into `~/.bashrc`"
+      },
+      {
+        "left": "`Permission denied`",
+        "right": "`bin/guard` saved without `chmod +x`"
+      },
+      {
+        "left": "`no tool named 'sufrace'`",
+        "right": "a misspelt program name"
+      },
+      {
+        "left": "`model 'lama3.2:3b' not found`",
+        "right": "a typo in `ASK_MODEL`"
+      },
+      {
+        "left": "`Connection refused`",
+        "right": "the Ollama server is not running"
+      }
+    ],
+    "right_distractors": [
+      "the computer ran out of memory"
+    ]
+  },
+  {
+    "id": "ex-3rxj57sn",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Ollama service is stopped, and you start the server with `ollama serve` as yourself instead of with `systemctl`. What goes wrong?",
+    "hint": "Whose home directory holds the models?",
+    "choices": [
+      {
+        "text": "It serves the models in your own home directory, which is empty, so `llama3.2:3b` seems to have vanished",
+        "correct": true,
+        "why": "Right: `ollama pull` put the model where the service keeps them."
+      },
+      {
+        "text": "It refuses to start, because only the service may listen on port 11434",
+        "correct": false,
+        "why": "It starts; that is why the mistake is easy to make."
+      },
+      {
+        "text": "It downloads `llama3.2:3b` again into your home directory without asking",
+        "correct": false,
+        "why": "Nothing is downloaded until you run `ollama pull`."
+      },
+      {
+        "text": "It answers, but at a temperature fixed at 1 instead of the course's 0",
+        "correct": false,
+        "why": "The temperature is set by each request, not by who started the server."
+      }
+    ]
   }
 ]

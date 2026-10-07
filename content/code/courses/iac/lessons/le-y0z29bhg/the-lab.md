@@ -1,83 +1,62 @@
 ---
-title: The lab this course runs on
-version: 1
+title: Your lab, and three ways to have one
+version: 2
 ---
 
-Every command in this course was run, and every line of output is what the command printed. **No
-cloud account was used for any of it**, and nothing here was billed to anybody. The AWS that
-Terraform talks to in these lessons is **moto**, the same emulator the cloud course used for S3. It is a Python program that answers the AWS APIs on a port of the laptop, keeps what it is told in memory,
-and forgets everything when it stops.
+From lesson 2 on, this course asks you to type. What you type into is **your lab**: your own
+computer, or a virtual one on it, running Terraform, the AWS CLI and an emulated AWS. The platform
+gives you no machine. These last sections of lesson 1 build the lab, and nothing before them needed
+it, because this lesson's transcripts are Ana's and are there to be read.
 
-```
-ana@laptop:~/shop-tf$ terraform version
-Terraform v1.16.4
-on linux_amd64
-+ provider registry.terraform.io/hashicorp/aws v6.67.0
-ana@laptop:~/shop-tf$ aws --version
-aws-cli/1.46.1 Python/3.11.15 Linux/6.18.44-fc-v51 botocore/1.43.62
-ana@laptop:~/shop-tf$ env | grep ^AWS_ | sort
-AWS_ACCESS_KEY_ID=test
-AWS_DEFAULT_REGION=sa-east-1
-AWS_ENDPOINT_URL=http://localhost:4566
-AWS_SECRET_ACCESS_KEY=test
-ana@laptop:~/shop-tf$ aws sts get-caller-identity
-{
-    "UserId": "AKIAIOSFODNN7EXAMPLE",
-    "Account": "123456789012",
-    "Arn": "arn:aws:sts::123456789012:user/moto"
-}
-```
+**There is no cloud account in this course, and nothing in it is billed.** The AWS that Terraform
+talks to is **moto**, the emulator the cloud course used for S3. It is a Python program that answers
+the AWS APIs on a port of your computer, keeps what it is told in memory, and forgets everything when
+it stops. It is a faithful imitation of the *API*: it checks arguments, invents ids, remembers what
+was created and answers questions about it. It runs no machine and carries no packet. An instance it
+launches is a record with an id and a state, which is exactly what Terraform reads back, so every
+plan, apply, state file and error you produce is the one Terraform would produce against AWS. What
+you will not see is a web server answering on a machine Terraform made; lessons 18 and 20, which need
+machines that run, use Docker containers instead, and lesson 18 builds them.
 
-The four `AWS_` variables are the whole trick, and they are the reason the lessons' Terraform files
-look exactly like ones written for a real account. `AWS_ENDPOINT_URL` sends every call the AWS CLI
-and the AWS provider make to moto instead of to Amazon; the key pair is the word `test`, which moto
-accepts and AWS would refuse; the region is São Paulo. The account moto answers as, `123456789012`,
-is the placeholder AWS itself uses in its documentation.
+## Three paths
 
-**What moto is, and what it is not.** It is a faithful imitation of the *API*: it checks arguments,
-invents ids, remembers what was created and answers questions about it. It runs no machine and
-carries no packet. An instance it launches is a record with an id and a state, which is exactly
-what Terraform reads back, so every plan, apply, state file and error in these lessons is the one
-Terraform would produce. What you will not see is a web server answering on a machine Terraform
-created; lessons 18 to 20, which need machines that run, use containers on the laptop instead, and
-say so.
+| | what it is | what it costs your computer |
+|---|---|---|
+| **a virtual machine** (recommended) | Ubuntu Server 24.04 in a hypervisor on your computer | 2 processors, 4 GB of memory and 25 GB of disk while it runs; a computer with 8 GB of memory runs it comfortably |
+| **installed** | the tools directly on Linux, on macOS, or on Windows inside WSL 2 | about 3 GB of disk by lesson 20, and a dozen programs in your own system |
+| **online** | a cloud development environment, or a small Linux server rented by the hour | nothing locally; money, once whatever is free runs out |
 
-**Everything else is the real program.** Terraform, OpenTofu, Terragrunt, Packer, Ansible and the
-scanners are the released versions, and each provider is the one HashiCorp publishes. The one
-arrangement you would not have at home is where the providers come from: the laptop these lessons
-were recorded on could not reach the Terraform Registry. The providers were downloaded from
-HashiCorp's release site, checked against their published checksums, and served from a local
-directory. `terraform init` prints the same lines either way; lesson 2 shows the one file where
-the difference is visible.
+**The virtual machine is the one this course recommends**, for three reasons. Every transcript in it
+was recorded on Ubuntu 24.04, so a VM running the same system prints the same lines. Over twenty
+lessons you install about a dozen tools, and in a VM they go into a machine you can delete, not into
+the one you work on. And lesson 18 runs three Docker containers as servers and reaches them by their
+addresses, which works inside a Linux VM and does not work with Docker Desktop on macOS or Windows,
+where the containers live in a hidden VM of Docker's own.
 
-## Doing it on your own computer
+Which hypervisor depends on your computer:
 
-You need Terraform, Python 3 and the AWS CLI, on Linux, macOS or Windows with WSL:
+- **Windows**: Hyper-V, built into the Pro, Enterprise and Education editions, or VirtualBox on any
+  edition.
+- **macOS**: UTM. On a Mac with Apple silicon, download the ARM (`arm64`) image of Ubuntu Server;
+  every tool in this course publishes that build.
+- **Linux**: virt-manager, the window in front of libvirt and QEMU, or VirtualBox.
 
-1. **Terraform**, from HashiCorp's downloads page or your system's package manager. The lessons
-   were recorded on the version printed above, and the few features that need a recent one say
-   so where they appear.
-2. **moto and the AWS CLI**, in a Python virtual environment: `pip install "moto[server]" awscli`.
-3. **Start moto** in a terminal of its own, `moto_server -p 4566`, and leave it running.
-4. **In the terminal you work in**, export the four variables shown above. Then add
-   `s3_use_path_style = true` to the AWS provider block of any configuration that creates a
-   bucket, because the AWS SDK addresses a bucket as `<name>.localhost` and most computers do not
-   resolve that name. The lab used a small DNS server for the same job.
+On all three, **Multipass**, from Canonical, makes an Ubuntu VM in one command, with no installer
+to click through: `multipass launch 24.04 --name iac --cpus 2 --memory 4G --disk 25G`, then
+`multipass shell iac` to get a terminal in it. Whichever you use, install the system with OpenSSH
+when the installer offers it, so you can work in the VM from your own computer's terminal.
 
-**When something does not answer, the endpoint is the first suspect.** With nothing listening at
-the address, the CLI says so in one line:
+**Installed** is the right choice if you already work on Linux or in WSL 2, and it costs only disk.
+On macOS the package commands differ, the next section says how, and lesson 18 needs the VM anyway,
+for the Docker reason above.
 
-```
-ana@laptop:~/shop-tf$ AWS_ENDPOINT_URL=http://localhost:4567 aws sts get-caller-identity
+**Online** means a cloud development environment such as GitHub Codespaces or Gitpod, or a small
+Linux server from any provider. Both run Ubuntu and the next section's steps work in them unchanged.
+Each comes with some free hours or free credit, and the terms of that are the provider's and change;
+**no lesson in this course needs any of them**, so treat them as a convenience you may pay for and
+never as a requirement.
 
-Could not connect to the endpoint URL: "http://localhost:4567/"
-```
-
-Check that `moto_server` is still running in its terminal and that the port in `AWS_ENDPOINT_URL`
-is the one it printed when it started. A credentials error instead means the variables are not set
-in the terminal you are typing in, and the call went somewhere else. With `test` as the key, a real
-AWS endpoint refuses it, which is the safety you want.
-
-**And when you move to a real account**, the configurations in these lessons work unchanged: unset
-`AWS_ENDPOINT_URL`, configure real credentials, and remember that from then on every `apply`
-creates something that costs money until a `destroy` removes it. Lesson 16 is about that cost.
+**And a real AWS account is optional.** The configurations in these lessons are written for AWS,
+and pointing them at it is a matter of unsetting one variable, which the next sections show. From
+then on every `apply` creates something that costs money until a `destroy` removes it, and lesson 16
+is about that cost.

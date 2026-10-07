@@ -1,13 +1,13 @@
 ---
 title: Outputs, e o que uma configuração devolve
-version: 1
+version: 2
 ---
 
 Os ids que a AWS inventou para a rede da loja estão no arquivo de state e no histórico do terminal
 de um apply, e nenhum dos dois é um bom lugar para buscá-los. **O hábito a evitar é ler o arquivo
 de state direto**, com `jq` ou `grep`: o formato dele é assunto do Terraform, e a aula 7 o abre
 para mostrar por quê. Variáveis são o que uma configuração recebe; **outputs são o que ela promete
-devolver**, declarados em blocos como todo o resto:
+devolver**, declarados em blocos como todo o resto, aqui no `outputs.tf`:
 
 ```hcl
 output "vpc_id" {

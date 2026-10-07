@@ -3,6 +3,34 @@ title: Inside the cluster, a weighted coin
 version: 1
 ---
 
+This lesson starts where lesson 15 did: lesson 8's cluster, three copies of the shop behind a Service,
+and the `probe` pod to ask from inside.
+
+`shop.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: shop}
+spec:
+  replicas: 3
+  selector: {matchLabels: {app: shop}}
+  template:
+    metadata: {labels: {app: shop}}
+    spec: {containers: [{name: shop, image: "shop:1.0"}]}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: shop}
+spec: {selector: {app: shop}, ports: [{port: 80, targetPort: 8080}]}
+```
+
+```sh
+./up.sh ports.yaml
+kubectl apply -f shop.yaml
+kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600
+```
+
 Lesson 15 showed that a Service's address belongs to no machine, and that kube-proxy turns it into a
 pod's address on every node. **How it picks the pod depends on kube-proxy's mode**, and this cluster
 runs the default one, which writes iptables rules:
@@ -73,4 +101,4 @@ need for affinity altogether. The patch at the end puts the Service back to `Non
 
 kube-proxy also has an `nftables` mode, which makes the same random choice through the kernel's newer
 interface. A smarter choice, such as the pod with fewest connections, comes from replacing kube-proxy
-altogether, which some network plugins do, Cilium among them. This lab did not run either.
+altogether, which some network plugins do, Cilium among them. This course did not run either.

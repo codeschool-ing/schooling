@@ -1,6 +1,6 @@
 ---
 title: Módulos no navegador
-version: 1
+version: 2
 ---
 
 O mesmo `import` e `export` funcionam numa página. **Uma tag de script com `type="module"` carrega um
@@ -55,9 +55,10 @@ arquivo HTML na área de trabalho faz:
 
 - **um módulo não carrega por `file://`.** O navegador trata um arquivo aberto do disco como sem
   origem, e se recusa a buscar módulos para ele. A página carregou e o script não, com um erro no
-  console e nada na página dizendo isso. No laboratório, o `page` serve `~/js` por
-  `http://127.0.0.1:8080` exatamente por isso; em casa, qualquer servidor estático pequeno faz o
-  mesmo, e editores costumam ter um embutido.
+  console e nada na página dizendo isso. O `page` serve `~/js` por
+  `http://127.0.0.1:8080` exatamente por isso, e o `node ~/js-tools/serve.mjs` também, para o seu
+  próprio navegador; qualquer servidor estático pequeno faz o mesmo, e editores costumam ter um
+  embutido.
 
 ## Caminhos no navegador
 

@@ -1,11 +1,11 @@
 ---
 title: Perguntando pelo Grafana
-version: 1
+version: 2
 ---
 
 A consulta de um painel é uma requisição HTTP como qualquer outra, e pode ser enviada à mão. O
 `query.json` pede a taxa total de requisições da vitrine, em PromQL, endereçada à fonte de dados pelo
-seu `uid`:
+seu `uid`. Salve-o como `~/shop/query.json`, do jeito que o `cat` abaixo o imprime:
 
 ```
 ana@obs:~/shop$ cat query.json

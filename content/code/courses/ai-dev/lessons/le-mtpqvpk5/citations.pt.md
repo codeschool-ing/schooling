@@ -1,6 +1,6 @@
 ---
 title: Conferindo as citações
-version: 1
+version: 2
 ---
 
 Uma resposta com citações parece confiável, e isso é um risco próprio. Uma citação é uma afirmação
@@ -9,78 +9,100 @@ qualquer outro texto**: o id com cara de provável, depois da frase com cara de 
 é que essa afirmação, ao contrário da maior parte do que um modelo diz, pode ser conferida por um
 programa.
 
-## Duas checagens que um programa consegue fazer
+## Três checagens que um programa consegue fazer
 
 ```python
 def check_citations(answer, found):
-    """Every cited id must be one that was retrieved, and every quoted phrase must be in it."""
+    """Every sentence cites a passage that was retrieved, and every quoted phrase is in it."""
     given = {c["id"]: c["text"] for c, _ in found}
+    if answer.strip() == NOT_THERE:
+        return []
     problems = []
-    for cid in re.findall(r"\[([\w.-]+#\d+)\]", answer):
-        if cid not in given:
-            problems.append(f"cites {cid}, which was not among the passages")
-    for sentence in re.split(r"(?<=\.)\s+", answer):
+    for sentence in re.split(r"(?<=[.!?\]])\s+(?!\[)", answer.strip()):
         cited = re.findall(r"\[([\w.-]+#\d+)\]", sentence)
+        if not cited:
+            problems.append(f'cites nothing: "{sentence[:50]}"')
+        for cid in cited:
+            if cid not in given:
+                problems.append(f"cites {cid}, which was not among the passages")
         for quote in re.findall(r'"([^"]+)"', sentence):
             if cited and not any(quote.lower() in given.get(c, "").lower() for c in cited):
                 problems.append(f'quotes "{quote}", which {", ".join(cited)} does not say')
     return problems
 ```
 
-- **Todo id citado precisa ser um dos recuperados.** Se a resposta cita um trecho que não estava no
-  prompt, a frase veio de outro lugar: do treino do modelo, ou de lugar nenhum.
-- **Toda frase entre aspas precisa estar no trecho que ela cita.** Uma citação literal é a afirmação
-  mais conferível que existe, e a que os leitores mais levam a sério.
+- **A frase fixa passa como está.** "The handbook does not say." é a única resposta que pode não
+  citar nada, e é reconhecida comparando strings, que é por isso que o prompt a pede exata.
+- **Toda outra frase tem de citar um trecho, e só um trecho que foi recuperado.** Uma frase sem id
+  pode ter vindo dos trechos ou do treino do modelo, e nada na resposta diz de onde. Uma frase que
+  cita um trecho que não estava no prompt veio de outro lugar.
+- **Toda expressão entre aspas tem de estar no trecho que ela cita.** Uma citação literal é a
+  afirmação mais conferível que existe, e a que os leitores mais levam a sério.
+
+A resposta é cortada em frases depois de um ponto final, de interrogação ou de exclamação, ou de um
+colchete que fecha, e nunca logo antes de um que abre, então `abroad. [shipping.md#3]` fica uma frase
+só, com a citação. A primeira versão deste verificador esqueceu o colchete que fecha, e uma frase
+depois de um era colada nele em silêncio e pegava emprestada a citação. A caneca quebrada abaixo
+achou isso.
 
 ## Três respostas, conferidas
 
-Uma resposta cuja única citação está em ordem:
+```
+ana@dev:~/shop$ python scratch/ask.py "My lamp stopped working after two months. What can I do?"
+retrieved: warranty.md#1, shipping.md#1, returns.md#4
+You can return the lamp to the shop, but since it's been more than 30 days, you won't be eligible for a refund. However, since the lamp stopped working within the 90-day warranty period, you can file a claim under the warranty described in [warranty.md#1].
+citations: cites nothing: "You can return the lamp to the shop, but since it'"
+```
+
+**A segunda frase está certa e citada**: dois meses estão dentro da garantia de 90 dias do
+`warranty.md#1`. A primeira é marcada, e merece ser. A segunda metade dela vem do `returns.md#4`, que
+estava no prompt e diz que a loja não aceita devoluções depois de 30 dias, e a primeira metade
+contradiz esse trecho: "You can return the lamp to the shop". Ela não cita nada, então nada na
+resposta diz em qual metade acreditar. Um programa não percebe que a frase está confusa. Percebe que
+ela não tem fonte, e aqui isso bastou.
 
 ```
-ana@dev:~/shop$ python lab/ask.py "My lamp stopped working after two months. What can I do?"
-retrieved: warranty.md#1, shipping.md#1, returns.md#4
-Two months is within the 90-day warranty, and "a lamp that does not light" is one of the faults it covers [warranty.md#1].
+ana@dev:~/shop$ python scratch/ask.py "Is support open on Saturday?"
+retrieved: contact.md#1, account.md#2, contact.md#2
+The handbook does not say.
 citations: every citation checks out
 ```
 
-Uma resposta que cita um trecho que nunca recebeu:
+**Passa, e está errada.** O primeiro trecho recuperado é o `contact.md#1`, e ele diz que o suporte
+atende "Monday to Friday". A resposta à pergunta é não, ela está no prompt, e o modelo respondeu que o
+manual não diz. A frase fixa pode não citar nada, então o verificador não tem a que prendê-la. Uma
+recusa é mais segura que uma resposta inventada, e ainda assim é uma falha: o cliente que perguntou
+não recebe nada que não teria recebido sem resposta nenhuma.
 
 ```
-ana@dev:~/shop$ python lab/ask.py "Can I return a mug I bought 40 days ago?"
-retrieved: returns.md#1, account.md#1, returns.md#2
-No. A customer may return an item "within 30 days of delivery" [returns.md#1], so a mug delivered 40 days ago is past the limit. If the mug is faulty, the 90-day warranty still covers it [warranty.md#1].
-citations: cites warranty.md#1, which was not among the passages
+ana@dev:~/shop$ python scratch/ask.py "My mug arrived broken. Can I get my money back?"
+retrieved: payment-errors.md#3, returns.md#3, warranty.md#1
+The refund goes back to the original payment method once the item arrives at the warehouse and is checked, which takes up to five working days. [returns.md#3]
+
+Note: The warranty information does not mention refunds for broken items, only manufacturing faults.
+citations: cites nothing: "Note: The warranty information does not mention re"
 ```
 
-A primeira frase está sustentada e confere. A segunda cita `warranty.md#1`, e os trechos recuperados
-eram dois sobre devolução e um sobre contas. **A afirmação por acaso é verdadeira**, já que o manual dá
-mesmo 90 dias de garantia, mas não veio dos trechos, então nada nesta requisição a sustenta. Em outra
-pergunta, o mesmo movimento produz uma garantia confiante que a loja não oferece. O verificador não
-distingue as duas, e não precisa: marca as duas.
+A primeira frase copia o `returns.md#3` com fidelidade e o cita, e não responde à pergunta: diz como
+um reembolso é pago, não se este cliente recebe um. A nota depois dela não cita nada e é marcada. A
+resposta de verdade do manual, que uma quebra no transporte é uma entrega danificada e não uma
+devolução, está no `returns.md#1`, que a busca não trouxe para a palavra *broken*, e a aula 6, seção
+09, mede quantas vezes isso acontece.
 
-Uma resposta cuja citação literal não está na fonte:
-
-```
-ana@dev:~/shop$ python lab/ask.py "Is the WELCOME10 coupon still valid in December?"
-retrieved: coupons.md#1, shipping.md#2, coupons.md#2
-Yes. WELCOME10 "takes 10% off and never expires" [coupons.md#1], so it is still valid in December.
-citations: quotes "takes 10% off and never expires", which coupons.md#1 does not say
-```
-
-O manual diz que o WELCOME10 *has no end date*. A resposta cita *never expires*, que quer dizer a mesma
-coisa, e põe entre aspas com uma citação, como se o manual dissesse aquilo. **A resposta está certa e a
-citação literal foi inventada.** Um leitor que confiasse nas aspas repetiria uma frase que a loja nunca
-escreveu.
+**Em todas as rodadas feitas para esta aula, o `llama3.2:3b` nunca citou um trecho que não tinha
+recebido e nunca pôs entre aspas uma expressão que o trecho dela não continha.** As duas checagens
+para isso ficam mesmo assim. Custam uma linha cada, outro modelo ou uma resposta mais longa pode
+falhar nelas, e no dia em que um falhar elas já estão lá.
 
 ## O que fazer com uma resposta marcada
 
-- **Não mostre como conferida.** A resposta mais barata é mostrar a resposta sem as aspas ou sem a
-  frase sem sustentação, ou recorrer a mostrar os próprios trechos.
-- **Pergunte de novo, dizendo o problema**, o laço da aula 5 seção 07: "a frase que cita
-  warranty.md#1 não é sustentada pelos trechos dados".
-- **Conte-as.** A fração de respostas com problema de citação é um número a acompanhar, por prompt e
+- **Não a mostre como conferida.** A resposta mais barata é mostrar a resposta sem a frase que não
+  cita nada, ou cair para mostrar os próprios trechos.
+- **Pergunte de novo, dizendo o problema**, o laço da aula 5 seção 07: "a primeira frase não cita
+  nenhum trecho; cite um, ou deixe a frase de fora".
+- **Conte.** A fração de respostas com problemas de citação é um número para acompanhar, por prompt e
   por modelo, na avaliação da próxima seção.
 
-A checagem prova que uma citação literal está no trecho e que um trecho citado foi dado. Não prova que
-o trecho diz o que a frase afirma; uma frase pode citar o trecho certo e lê-lo errado. Essa parte ainda
-precisa de uma pessoa, numa amostra.
+A checagem prova que uma frase cita alguma coisa, que o que ela cita foi dado, e que uma citação
+literal está nele. Não prova que o trecho diz o que a frase afirma, e não diz nada sobre uma recusa: o
+sábado acima é um trecho mal lido, e passou. Essa parte ainda precisa de uma pessoa, numa amostra.

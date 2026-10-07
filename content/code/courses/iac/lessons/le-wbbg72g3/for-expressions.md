@@ -1,6 +1,6 @@
 ---
 title: for expressions and splats
-version: 1
+version: 2
 ---
 
 A `for` expression builds one collection out of another. It is the nearest thing HCL has to a
@@ -90,7 +90,7 @@ read their ranges from the state. Splats are seen most on resources created with
 ## A for expression in an output
 
 The same expression works anywhere an expression does. Ana adds an output that says which range
-each subnet got:
+each subnet got, in `outputs.tf`:
 
 ```hcl
 output "subnet_cidrs" {

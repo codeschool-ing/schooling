@@ -1,13 +1,14 @@
 ---
 title: Um orçamento escrito como código
-version: 1
+version: 2
 ---
 
 Tudo até aqui acontece antes de o dinheiro ser gasto: um preço na revisão, uma tag que não pode ficar
 de fora, uma busca pelo que ninguém reclamou. **Um orçamento é a conferência que roda depois**, contra o
 que a conta de fato gastou, e a aula 10 do curso de nuvem montou um com o AWS CLI. O mesmo orçamento é
 um recurso e, escrito ao lado do que ele vigia, ganha o que todo o resto desta configuração ganha: uma
-revisão, um histórico e um `destroy` que o leva embora junto com o projeto.
+revisão, um histórico e um `destroy` que o leva embora junto com o projeto. A Ana o escreve em
+`~/shop/budget.tf`:
 
 ```hcl
 resource "aws_budgets_budget" "shop" {

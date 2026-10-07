@@ -1,6 +1,6 @@
 ---
 title: Moving and looking: `pwd`, `cd`, `ls`
-version: 2
+version: 3
 ---
 
 Three commands, and you will type them more than everything else in this course put together.
@@ -107,13 +107,28 @@ one you want is the last line printed rather than somewhere in the scrollback.
 
 ## `-a` and `-A`, and the dot that hides
 
+Make a directory with two hidden files and two hidden directories in it, to look at:
+
+```sh
+mkdir -p ~/hid/.cache ~/hid/.config
+touch ~/hid/visible.txt ~/hid/.hidden.txt
+```
+
 ```
 ana@vm:~/hid$ ls
 visible.txt
 ana@vm:~/hid$ ls -a
-.  ..  .cache  .config  .hidden.txt  visible.txt
+.
+..
+.cache
+.config
+.hidden.txt
+visible.txt
 ana@vm:~/hid$ ls -A
-.cache  .config  .hidden.txt  visible.txt
+.cache
+.config
+.hidden.txt
+visible.txt
 ```
 
 One directory, three answers. **A name beginning with a dot is hidden**, which is the entire

@@ -11,6 +11,9 @@
 #                        the lesson as a fence of its own, and is printed here
 #                        between "file:" markers so it is quoted from the run
 #   block NAME           a marker between transcripts, never quoted
+#   staged FILE <<'EOF'  a file written without showing it, because a lesson
+#                        before this one showed it; refused, and the run
+#                        stopped, unless some lesson shows it whole
 #
 # Two things differ from a terminal, both on purpose. A prompt is printed by
 # this script rather than by a shell, from the directory the command ran in.
@@ -41,3 +44,8 @@ put() { # also printed between file markers, so the lesson quotes the file
   printf '##### file:%s\n' "${PWD/#\/home\/ana/\~}/$1"; cat "$1"; printf '##### end-file\n'
 }
 block() { printf '##### %s\n' "$1"; }
+staged() { # the student has this file from an earlier lesson, or the lab may not use it
+  local text; text=$(cat; printf x); text=${text%x}
+  printf '%s' "$text" | python3 "$COURSE/lab/fences.py" has "$COURSE" || exit 1
+  mkdir -p "$(dirname "$1")" && printf '%s' "$text" > "$1"
+}

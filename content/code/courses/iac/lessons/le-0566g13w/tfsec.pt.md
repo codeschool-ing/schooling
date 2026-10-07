@@ -1,10 +1,20 @@
 ---
 title: tfsec, um scanner que parou de aprender, e o Terrascan
-version: 1
+version: 2
 ---
 
-O tfsec é um binário em Go, feito só para o Terraform e o seu HCL. Pergunte a versão e ele responde
-primeiro com um aviso:
+O tfsec é um binário em Go, feito só para o Terraform e o seu HCL.
+
+**Instalando o tfsec.** É esse único arquivo, baixado das releases do projeto no GitHub e posto no seu
+`PATH`:
+
+```sh
+curl -fsSLo tfsec https://github.com/aquasecurity/tfsec/releases/download/v1.28.14/tfsec-linux-amd64
+sudo install tfsec /usr/local/bin/tfsec && rm tfsec
+```
+
+Numa máquina ARM o arquivo termina em `-linux-arm64`. Pergunte a versão e ele responde primeiro com
+um aviso:
 
 ```
 ana@laptop:~/shop$ tfsec --version
@@ -76,7 +86,8 @@ primeiro plano, não está lá.**
 O tfsec não decidiu que a porta 22 estava bem. O check de entrada pública foi escrito para as formas
 que uma regra de security group podia ter quando o check foi escrito, e
 `aws_vpc_security_group_ingress_rule` não é uma delas. Escreva a mesma regra na forma antiga, como um
-bloco `ingress` dentro do grupo, e o tfsec a encontra na hora:
+bloco `ingress` dentro do grupo, num diretório próprio, `~/legacy/main.tf`, e o tfsec a encontra na
+hora:
 
 ```hcl
 resource "aws_security_group" "web" {
@@ -136,7 +147,7 @@ e conhece o recurso mais novo.
 ## Terrascan
 
 O Terrascan, da Tenable, é uma quarta ferramenta do mesmo tipo, com as políticas escritas em Rego como
-as do Trivy. Ele não está instalado neste laboratório:
+as do Trivy. Ele não foi instalado para esta aula, e de volta ao `~/shop` o shell confirma:
 
 ```
 ana@laptop:~/shop$ which terrascan; echo "exit $?"
@@ -150,7 +161,7 @@ regras conhecem.
 ## Qual usar
 
 Os três que rodaram aqui concordam sobre quase toda a loja e discordam nas bordas. Uma tabela do que
-cada um relatou, tirada das capturas acima:
+cada um relatou, tirada das transcrições acima:
 
 | | Checkov | Trivy | tfsec |
 |---|---|---|---|
@@ -160,5 +171,5 @@ cada um relatou, tirada das capturas acima:
 | regras próprias | Python ou YAML | Rego | (não mostrado aqui) |
 
 O Checkov e o Trivy são mantidos, e rodar os dois custa pouco: nenhum precisa de credenciais, e os dois
-relataram todos os achados num laboratório sem rede. O tfsec está nesta aula porque você vai
+relataram aqui todos os achados com os downloads desligados. O tfsec está nesta aula porque você vai
 encontrá-lo em pipelines que já existem, e agora sabe o que conferir antes de confiar no silêncio dele.

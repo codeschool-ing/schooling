@@ -1,13 +1,13 @@
 ---
 title: for_each, e cópias com nome
-version: 1
+version: 2
 ---
 
 O `for_each` faz cópias como o `count`, com uma diferença que decide todo o resto: **cada cópia é
 nomeada por uma chave que você escolheu**, não numerada pela posição. Remova uma chave e só sai a
 cópia com essa chave, porque o nome de nenhuma outra cópia dependia dela.
 
-A Ana experimenta primeiro num diretório de rascunho, com uma VPC só dele, para que a rede da loja
+A Ana experimenta primeiro num diretório de rascunho, `~/shop/scratch`, com uma VPC só dele, para que a rede da loja
 não faça parte do experimento. As faixas agora são um map de um nome para uma faixa:
 
 ```hcl
@@ -73,7 +73,7 @@ aws_vpc.scratch
 ## A mesma remoção, de novo
 
 Agora o experimento da seção anterior. A sub-rede do meio sai, desta vez deixando a chave dela
-fora do map:
+fora do map, num `terraform.tfvars`:
 
 ```hcl
 subnets = {
@@ -98,13 +98,24 @@ ids, e o que tiver sido colocado nelas fica intacto. O motivo no plano é o equi
 cria uma sub-rede, e a ordem em que as chaves estão escritas no arquivo não faz diferença nenhuma.
 
 Depois do plano a Ana apaga o `terraform.tfvars` e destrói a cópia de rascunho, que já cumpriu seu
-papel.
+papel, com `terraform destroy -auto-approve`.
 
 ## Uma lista não basta
 
 O `for_each` recusa uma lista, mesmo uma lista de strings. Uma lista é ordenada e pode ter o mesmo valor duas vezes, então seus elementos não têm nome além da
-posição, e posição é exatamente o que o `for_each` existe para evitar. Aqui está uma lista escrita
-direto no argumento:
+posição, e posição é exatamente o que o `for_each` existe para evitar. A Ana escreve uma lista
+direto no argumento, em mais um diretório, `~/shop/try`, cujo `main.tf` é só isto:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+resource "aws_vpc" "try" {
+  for_each   = ["10.30.0.0/16", "10.31.0.0/16"]
+  cidr_block = each.value
+}
+```
 
 ```
 ana@laptop:~/shop/try$ terraform plan

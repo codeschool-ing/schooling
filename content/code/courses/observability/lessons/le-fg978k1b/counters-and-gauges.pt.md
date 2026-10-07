@@ -1,11 +1,18 @@
 ---
 title: Counters e gauges
-version: 1
+version: 2
 ---
 
 Toda métrica declara um **tipo** na linha `# TYPE`, e o tipo decide que perguntas a métrica consegue
 responder. A página da vitrine lista todas, as dela e as que a biblioteca cliente de Python
-acrescenta de graça:
+acrescenta de graça. Esta aula lê uma loja sob carga, então comece de um laboratório iniciado de
+novo do zero, ponha os clientes simulados para rodar por meia hora e dê a eles um minuto:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1800
+```
+
+Depois, os tipos:
 
 ```
 ana@obs:~/shop$ curl -s localhost:8080/metrics | grep '^# TYPE'
