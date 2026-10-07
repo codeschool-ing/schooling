@@ -1,0 +1,891 @@
+[
+  {
+    "id": "ex-exb4b9c1",
+    "version": 1,
+    "section": "in-front",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is it called a *reverse* proxy?",
+    "hint": "Whom does an office's proxy work for?",
+    "choices": [
+      {
+        "text": "It works for the server, where an ordinary proxy works for the client",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It reverses the order of the headers",
+        "correct": false,
+        "why": "Header order is not what the name is about."
+      },
+      {
+        "text": "It sends the response before the request",
+        "correct": false,
+        "why": "Nothing can answer before being asked."
+      },
+      {
+        "text": "It connects from the server back to the client",
+        "correct": false,
+        "why": "The client still connects to it; the proxy then connects onwards to the application."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehy9xtqx",
+    "version": 1,
+    "section": "in-front",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the first `proxy_pass`, the shop's `/api/echo` reported `peer` as `127.0.0.1` for every request. Why?",
+    "hint": "Who opened the connection the shop received?",
+    "choices": [
+      {
+        "text": "Every client was local",
+        "correct": false,
+        "why": "Even a client across the world would show 127.0.0.1 now."
+      },
+      {
+        "text": "Nginx opened the connection",
+        "correct": true,
+        "why": "Right. The shop only ever sees the second connection."
+      },
+      {
+        "text": "The shop hides addresses for privacy",
+        "correct": false,
+        "why": "It printed exactly what its socket said."
+      },
+      {
+        "text": "`X-Forwarded-For` replaced the address on the way",
+        "correct": false,
+        "why": "No header was set yet; and a header never changes a socket's peer."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hbdm1rg",
+    "version": 1,
+    "section": "in-front",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `location /api/ { proxy_pass http://127.0.0.1:8001/; }` (note the final slash), what path does the shop receive for `/api/books/3`?",
+    "hint": "A path in proxy_pass replaces the matched part.",
+    "choices": [
+      {
+        "text": "`/api/books/3`",
+        "correct": false,
+        "why": "That is what happens with no path in proxy_pass."
+      },
+      {
+        "text": "`/books/3`",
+        "correct": true,
+        "why": "Right. `/api/` was replaced by `/`."
+      },
+      {
+        "text": "`/api/api/books/3`",
+        "correct": false,
+        "why": "Nothing is added twice."
+      },
+      {
+        "text": "`/`",
+        "correct": false,
+        "why": "Only the matched prefix is replaced; the rest of the path stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-v19wpt2k",
+    "version": 1,
+    "section": "forwarded-headers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which variable gives the shop the name the browser asked for, without the port?",
+    "hint": "`$http_host` keeps the port.",
+    "choices": [
+      {
+        "text": "`$remote_addr`",
+        "correct": false,
+        "why": "That is the client's address."
+      },
+      {
+        "text": "`$scheme`",
+        "correct": false,
+        "why": "That is http or https."
+      },
+      {
+        "text": "`$host`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`$proxy_add_x_forwarded_for`",
+        "correct": false,
+        "why": "That is the list of addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpvjyrje",
+    "version": 1,
+    "section": "forwarded-headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client sent `X-Forwarded-For: 198.51.100.7` and the shop received `198.51.100.7, 127.0.0.1`. Which entry may the shop trust as the client's address?",
+    "hint": "Who wrote each entry?",
+    "choices": [
+      {
+        "text": "The first, since it is the original client",
+        "correct": false,
+        "why": "The client wrote it, so the client chose it."
+      },
+      {
+        "text": "Both equally",
+        "correct": false,
+        "why": "One was written by your proxy and one by a stranger."
+      },
+      {
+        "text": "The last one, added by Nginx",
+        "correct": true,
+        "why": "Right. Trust what your own proxies added, nothing to its left."
+      },
+      {
+        "text": "Neither: the header must always be ignored",
+        "correct": false,
+        "why": "Your own proxy's entry is reliable; that is the point of the header."
+      }
+    ]
+  },
+  {
+    "id": "ex-06zpegs9",
+    "version": 1,
+    "section": "forwarded-headers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The bookshop moves behind a cloud load balancer that sits in front of Nginx. In `X-Forwarded-For`, which entry now holds the real client's address?",
+    "hint": "Count the proxies you run, from the right.",
+    "choices": [
+      {
+        "text": "The last",
+        "correct": false,
+        "why": "The last is the load balancer, added by Nginx."
+      },
+      {
+        "text": "The second from the end",
+        "correct": true,
+        "why": "Right. One entry per trusted proxy, counted from the right."
+      },
+      {
+        "text": "The first",
+        "correct": false,
+        "why": "The client can still write anything at the front."
+      },
+      {
+        "text": "It is in `X-Real-IP` and nowhere else",
+        "correct": false,
+        "why": "`X-Real-IP` set from `$remote_addr` would now be the load balancer."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nwbr46z",
+    "version": 1,
+    "section": "upstream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six requests through an upstream with no `zone` came back `shop1, shop1, shop1, shop1, shop2, shop1`. What explains it?",
+    "hint": "How many workers are there?",
+    "choices": [
+      {
+        "text": "shop2 was slower than shop1 at the time",
+        "correct": false,
+        "why": "Over a hundred requests they split fifty-fifty."
+      },
+      {
+        "text": "Round robin picks a member at random",
+        "correct": false,
+        "why": "It is a strict turn, kept per worker."
+      },
+      {
+        "text": "Each worker keeps its own turn",
+        "correct": true,
+        "why": "Right. `zone` shares one turn among them."
+      },
+      {
+        "text": "keepalive pinned the connection to shop1",
+        "correct": false,
+        "why": "Each curl was a new client connection; keepalive is towards the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-03mtp7hf",
+    "version": 1,
+    "section": "upstream",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The directive that makes an upstream group's state shared by every Nginx worker is `___ shop 64k;`.",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "zone"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a154cpte",
+    "version": 1,
+    "section": "upstream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an upstream with `keepalive` also need `proxy_http_version 1.1` and `proxy_set_header Connection \"\"`?",
+    "hint": "What does Nginx speak to the application by default?",
+    "choices": [
+      {
+        "text": "Without them Nginx speaks HTTP/1.0 and asks for each connection to be closed",
+        "correct": true,
+        "why": "Right. Then nothing is left open to reuse."
+      },
+      {
+        "text": "They enable compression",
+        "correct": false,
+        "why": "Compression is gzip's business."
+      },
+      {
+        "text": "They switch on TLS",
+        "correct": false,
+        "why": "Neither says anything about encryption."
+      },
+      {
+        "text": "They tell the shop to keep its own sessions",
+        "correct": false,
+        "why": "Sessions are application state; this is about the connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-7r4s3tjr",
+    "version": 1,
+    "section": "balancing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `weight=3` on shop1 and no weight on shop2, how many of 100 requests went to shop2?",
+    "hint": "The default weight is 1.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-xwhqz36p",
+    "version": 1,
+    "section": "balancing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While one four-second request ran on shop1, `least_conn` sent all four quick requests to shop2. What did it compare?",
+    "hint": "Not requests sent: requests not yet finished.",
+    "choices": [
+      {
+        "text": "Requests in progress on each member",
+        "correct": true,
+        "why": "Right. shop1 had one, shop2 none."
+      },
+      {
+        "text": "The response time of each member's last request",
+        "correct": false,
+        "why": "Nginx's open-source least_conn does not measure time."
+      },
+      {
+        "text": "The CPU load of each machine",
+        "correct": false,
+        "why": "Nginx cannot see the application's CPU."
+      },
+      {
+        "text": "Each member's total requests since start-up",
+        "correct": false,
+        "why": "That would be closer to round robin's view."
+      }
+    ]
+  },
+  {
+    "id": "ex-59p0gn84",
+    "version": 1,
+    "section": "balancing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application keeps each user's basket in its own memory, and runs as two copies. Which change removes the need for `hash $remote_addr` entirely?",
+    "hint": "Where could both copies read the basket?",
+    "choices": [
+      {
+        "text": "Switching from hash to `ip_hash`",
+        "correct": false,
+        "why": "That is the same affinity under another name."
+      },
+      {
+        "text": "Adding a third copy of the application behind Nginx",
+        "correct": false,
+        "why": "A third copy has a third, separate memory."
+      },
+      {
+        "text": "A shared store for the baskets, like Redis",
+        "correct": true,
+        "why": "Right. Then any copy can answer any request."
+      },
+      {
+        "text": "Raising `keepalive`",
+        "correct": false,
+        "why": "Connections to the application have nothing to do with where a basket is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-239hwwg8",
+    "version": 1,
+    "section": "balancing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the upstream method that fits it.",
+    "hint": "Lesson 2's table.",
+    "pairs": [
+      {
+        "left": "one member on a machine three times larger",
+        "right": "`weight=3`"
+      },
+      {
+        "left": "some requests take seconds and some milliseconds",
+        "right": "`least_conn`"
+      },
+      {
+        "left": "sessions live in each member's memory",
+        "right": "`hash $remote_addr`"
+      },
+      {
+        "left": "identical members, similar requests",
+        "right": "round robin"
+      }
+    ],
+    "right_distractors": [
+      "`proxy_read_timeout`"
+    ]
+  },
+  {
+    "id": "ex-qe1s9mf6",
+    "version": 1,
+    "section": "when-a-backend-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With shop2 stopped, all six requests still answered 200. What did Nginx do with the first one sent to shop2?",
+    "hint": "The error log says `Connection refused`, and the client saw 200.",
+    "choices": [
+      {
+        "text": "Returned a cached copy",
+        "correct": false,
+        "why": "There is no cache yet."
+      },
+      {
+        "text": "Tried the next member, shop1",
+        "correct": true,
+        "why": "Right. That is proxy_next_upstream."
+      },
+      {
+        "text": "Waited for shop2 to come back",
+        "correct": false,
+        "why": "It never came back during the test."
+      },
+      {
+        "text": "Restarted shop2 itself",
+        "correct": false,
+        "why": "Nginx never starts the application; systemd does."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4x9hfjm",
+    "version": 1,
+    "section": "when-a-backend-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both shops were started again, and the next request still got 502. Ten seconds later it got 200. Which setting explains the ten seconds?",
+    "hint": "Its default is ten seconds.",
+    "choices": [
+      {
+        "text": "`proxy_read_timeout`",
+        "correct": false,
+        "why": "That one is sixty seconds by default and concerns slow answers."
+      },
+      {
+        "text": "`keepalive`",
+        "correct": false,
+        "why": "That is a count of idle connections."
+      },
+      {
+        "text": "`fail_timeout`",
+        "correct": true,
+        "why": "Right. A failed member is left alone that long."
+      },
+      {
+        "text": "`max_fails`",
+        "correct": false,
+        "why": "That is a count of failures, not a duration."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypezxbpy",
+    "version": 1,
+    "section": "when-a-backend-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `502 Bad Gateway` say about where the problem is?",
+    "hint": "The gateway is the server in front.",
+    "choices": [
+      {
+        "text": "The client sent a malformed request",
+        "correct": false,
+        "why": "That would be a 400."
+      },
+      {
+        "text": "Nginx itself crashed and restarted",
+        "correct": false,
+        "why": "A crashed Nginx answers nothing at all."
+      },
+      {
+        "text": "A failing application behind it",
+        "correct": true,
+        "why": "Right. Refused, closed or not HTTP."
+      },
+      {
+        "text": "The application took too long to answer",
+        "correct": false,
+        "why": "That is 504."
+      }
+    ]
+  },
+  {
+    "id": "ex-6x9nfprn",
+    "version": 1,
+    "section": "when-a-backend-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is an active health check not available in the Nginx this course installs, and what covers the gap?",
+    "hint": "It is a product question, not a technical one.",
+    "choices": [
+      {
+        "text": "It is in the commercial NGINX Plus; systemd restarts the application and passive checks cover the seconds between",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Active checks are unsafe",
+        "correct": false,
+        "why": "HAProxy, Traefik and Caddy all do them."
+      },
+      {
+        "text": "Ubuntu removes the module",
+        "correct": false,
+        "why": "There is no such module in open-source Nginx to remove."
+      },
+      {
+        "text": "They need IPv6",
+        "correct": false,
+        "why": "Nothing to do with the address family."
+      }
+    ]
+  },
+  {
+    "id": "ex-10p0kn6v",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`proxy_read_timeout 3s` and a five-second request: the client got 504 after six seconds, not three. Why?",
+    "hint": "The log has two lines for one request.",
+    "choices": [
+      {
+        "text": "The timeout counts twice per request",
+        "correct": false,
+        "why": "It counted once per member."
+      },
+      {
+        "text": "It retried on the other member",
+        "correct": true,
+        "why": "Right. proxy_next_upstream retries on a timeout."
+      },
+      {
+        "text": "curl waited three more seconds on its own",
+        "correct": false,
+        "why": "curl had no timeout of its own."
+      },
+      {
+        "text": "The reload took three seconds",
+        "correct": false,
+        "why": "The reload had finished before the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpw881fg",
+    "version": 1,
+    "section": "timeouts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each status to what Nginx is saying.",
+    "hint": "Bad, unavailable, timeout.",
+    "pairs": [
+      {
+        "left": "502",
+        "right": "the application did not answer properly"
+      },
+      {
+        "left": "503",
+        "right": "nobody is available on purpose"
+      },
+      {
+        "left": "504",
+        "right": "the application accepted and did not answer in time"
+      }
+    ],
+    "right_distractors": [
+      "the request body was too large"
+    ]
+  },
+  {
+    "id": "ex-m0zqj61t",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `POST /api/orders` times out on shop1. Does Nginx send it to shop2?",
+    "hint": "Would sending it twice be safe?",
+    "choices": [
+      {
+        "text": "Yes, exactly as it does for a GET request",
+        "correct": false,
+        "why": "A GET is idempotent; a POST is not."
+      },
+      {
+        "text": "Yes, but only once",
+        "correct": false,
+        "why": "Not even once, by default."
+      },
+      {
+        "text": "Only if keepalive is switched on",
+        "correct": false,
+        "why": "Connection reuse does not change retry rules."
+      },
+      {
+        "text": "No, not unless `non_idempotent` is added",
+        "correct": true,
+        "why": "Right. An order sent twice is worse than one that failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbwchh60",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report legitimately takes forty seconds to build, and the API's `proxy_read_timeout` is 10 seconds. What should change?",
+    "hint": "The rule has two halves.",
+    "choices": [
+      {
+        "text": "Raise the timeout for the whole site to 60 seconds",
+        "correct": false,
+        "why": "Every other request then gets a minute to hang."
+      },
+      {
+        "text": "A `location` of its own with a longer timeout",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing; a 504 tells the user to wait",
+        "correct": false,
+        "why": "A 504 is a failure, and the report is never seen."
+      },
+      {
+        "text": "Add a second member to the upstream group",
+        "correct": false,
+        "why": "The second member takes forty seconds as well, and gets the retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhxp1c29",
+    "version": 1,
+    "section": "locations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `/covers/logo.svg` answer 404 even though `location /covers/` had the right `alias`?",
+    "hint": "Regular expressions are tried after the prefix is found.",
+    "choices": [
+      {
+        "text": "The alias had no trailing slash at its end",
+        "correct": false,
+        "why": "It had one; and the fix changed something else."
+      },
+      {
+        "text": "Exact matches are tried first",
+        "correct": false,
+        "why": "There was no exact location for that path."
+      },
+      {
+        "text": "The `.svg` regex won over the prefix",
+        "correct": true,
+        "why": "Right. `^~` stops the regex search."
+      },
+      {
+        "text": "www-data cannot read the file",
+        "correct": false,
+        "why": "With `^~` the same file was served."
+      }
+    ]
+  },
+  {
+    "id": "ex-h48nwc4k",
+    "version": 1,
+    "section": "locations",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put Nginx's location selection in the order it happens.",
+    "hint": "The exact match is the first thing tried.",
+    "items": [
+      "An exact `=` match wins at once",
+      "The longest matching prefix is found and remembered",
+      "If that prefix has `^~`, it wins",
+      "Regular expressions are tried in file order",
+      "The remembered prefix answers"
+    ],
+    "trap": "Regexes are tried before the remembered prefix answers, which is what surprises people."
+  },
+  {
+    "id": "ex-08zp2jx2",
+    "version": 1,
+    "section": "locations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `location /covers/ { alias /var/www/ipe/img/; }`, which file does `/covers/logo.svg` read?",
+    "hint": "alias replaces the matched part.",
+    "choices": [
+      {
+        "text": "`/var/www/ipe/img/logo.svg`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`/var/www/ipe/img/covers/logo.svg`",
+        "correct": false,
+        "why": "That is what `root` would give."
+      },
+      {
+        "text": "`/var/www/ipe/covers/logo.svg`",
+        "correct": false,
+        "why": "That is the server's root plus the path, ignoring the alias."
+      },
+      {
+        "text": "`/covers/logo.svg` on disk",
+        "correct": false,
+        "why": "Paths are always under a root or an alias."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7az25zm",
+    "version": 1,
+    "section": "locations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The 404s in the location test carried no `X-Location` header. Why?",
+    "hint": "A small word changes it.",
+    "choices": [
+      {
+        "text": "No location matched those three paths at all",
+        "correct": false,
+        "why": "`/nope` matched `location /`, which then answered 404."
+      },
+      {
+        "text": "`add_header` skips errors without `always`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Headers are stripped from errors for security",
+        "correct": false,
+        "why": "Server and Date were still there."
+      },
+      {
+        "text": "curl hides response headers on a 404",
+        "correct": false,
+        "why": "curl printed the status line from the same response."
+      }
+    ]
+  },
+  {
+    "id": "ex-mavv54m4",
+    "version": 1,
+    "section": "static-files",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `gzip_types` including `application/json`, how many bytes did the catalogue take for a client accepting gzip?",
+    "hint": "It was 723 before.",
+    "value": 303,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-2pz55cx9",
+    "version": 1,
+    "section": "static-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is not worth adding to `gzip_types`?",
+    "hint": "Some formats are compressed already.",
+    "choices": [
+      {
+        "text": "`application/json`",
+        "correct": false,
+        "why": "JSON shrinks well."
+      },
+      {
+        "text": "`text/css`",
+        "correct": false,
+        "why": "CSS is text."
+      },
+      {
+        "text": "`image/jpeg`",
+        "correct": true,
+        "why": "Right. Compressing JPEG again costs CPU and saves almost nothing."
+      },
+      {
+        "text": "`image/svg+xml`",
+        "correct": false,
+        "why": "SVG is XML text."
+      }
+    ]
+  },
+  {
+    "id": "ex-q28paqg9",
+    "version": 1,
+    "section": "static-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 2 MB `PUT` got `413` from Nginx. Where should the limit be raised for a form that uploads book covers?",
+    "hint": "As narrow as possible.",
+    "choices": [
+      {
+        "text": "In `http { }`, so every site gets it",
+        "correct": false,
+        "why": "Then every endpoint accepts large bodies."
+      },
+      {
+        "text": "In the upload's own `location`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the shop's Python code",
+        "correct": false,
+        "why": "Nginx refuses before the shop sees the body."
+      },
+      {
+        "text": "Nowhere; uploads should go over FTP",
+        "correct": false,
+        "why": "HTTP uploads are normal; they need one raised limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvrajw58",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a deploy, the shop's logs show every visitor with the same address, and its login rate limit now locks everyone out after a few failed attempts anywhere. What is the most likely cause?",
+    "hint": "Who is the peer of every connection the shop receives?",
+    "choices": [
+      {
+        "text": "The shop's code changed",
+        "correct": false,
+        "why": "The symptom points at what the shop is told, not how it counts."
+      },
+      {
+        "text": "Nginx stopped forwarding who the client is",
+        "correct": true,
+        "why": "Right. The forwarded headers are missing or not read."
+      },
+      {
+        "text": "Round robin needs `zone`",
+        "correct": false,
+        "why": "Distribution does not change the address the shop sees."
+      },
+      {
+        "text": "gzip is compressing the headers",
+        "correct": false,
+        "why": "gzip compresses bodies, and only of responses."
+      }
+    ]
+  },
+  {
+    "id": "ex-9426tawp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belong in a sound upstream block for two identical copies of an API whose requests vary a lot in cost? Choose all that apply.",
+    "hint": "Lesson 2's three rules about upstreams.",
+    "choices": [
+      {
+        "text": "`zone`",
+        "correct": true,
+        "why": "Right. One shared state for every worker."
+      },
+      {
+        "text": "`least_conn`",
+        "correct": true,
+        "why": "Right. Requests of different cost."
+      },
+      {
+        "text": "`keepalive`",
+        "correct": true,
+        "why": "Right. Reused connections to the application."
+      },
+      {
+        "text": "`hash $remote_addr`",
+        "correct": false,
+        "why": "Identical copies with no per-user memory need no affinity."
+      }
+    ]
+  }
+]

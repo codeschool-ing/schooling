@@ -101,6 +101,8 @@ PUT  /api/books/<id>      {"price_cents": N} changes a price
 GET  /api/stats           how many database queries this instance has made
 POST /api/stats/reset     sets that count back to zero
 GET  /api/slow?s=N        answers after N seconds (at most 30)
+GET  /api/echo            what this instance was told: the peer's address and
+                          the headers a proxy adds
 GET  /healthz             "ok"
 
 Every answer says which instance gave it in X-Served-By, and every database
@@ -165,6 +167,12 @@ class Shop(BaseHTTPRequestHandler):
             return self.send(200, b"ok\n", [("Content-Type", "text/plain")])
         if url.path == "/api/stats":
             return self.json(200, {"server": NAME, "db_queries": queries})
+        if url.path == "/api/echo":
+            h = self.headers
+            return self.json(200, {"server": NAME, "peer": self.client_address[0],
+                                   "host": h.get("Host"), "x_real_ip": h.get("X-Real-IP"),
+                                   "x_forwarded_for": h.get("X-Forwarded-For"),
+                                   "x_forwarded_proto": h.get("X-Forwarded-Proto")})
         if url.path == "/api/slow":
             s = min(float(parse_qs(url.query).get("s", ["1"])[0]), 30)
             time.sleep(s)
@@ -404,11 +412,24 @@ up() {
   in_vm systemctl is-system-running >/dev/null 2>&1 || in_vm systemctl --failed --no-pager || true
 }
 
-stage() { # what each lesson starts with, beyond the shop's two instances
-  case "${1:-1}" in
-    1) ;;
-    *) in_vm systemctl enable --now nginx >/dev/null 2>&1 ;;
-  esac
+stage() { # where each lesson starts: what the lessons before it left behind
+  local n=${1:-1}
+  [ "$n" -ge 2 ] || return 0
+  # Lesson 1's static site, on port 80, as that lesson wrote it.
+  in_vm tee /etc/nginx/sites-available/ipelivros >/dev/null <<'LABFILE'
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+LABFILE
+  in_vm ln -sf ../sites-available/ipelivros /etc/nginx/sites-enabled/ipelivros
+  in_vm systemctl enable --now nginx >/dev/null 2>&1
 }
 
 reset() {
