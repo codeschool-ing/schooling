@@ -66,6 +66,7 @@ FILES_FROM=(
   le-7fgac3dc/what-watches-it.md
   le-aamwg2qb/shipping.md
   le-68t063mj/tail-sampling.md
+  le-af8knzar/fan-out.md
 )
 
 extract() {
@@ -93,7 +94,7 @@ write_files() {
   mkdir -p "$SHOP/faults" "$SHOP/scratch" "$SHOP/grafana/dashboards"
   touch "$SHOP/services/common/__init__.py" 2>/dev/null || { mkdir -p "$SHOP/services/common"; touch "$SHOP/services/common/__init__.py"; }
   n=$(extract "${FILES_FROM[@]/#/$here/lessons/}")
-  [ "$n" -ge 24 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
+  [ "$n" -ge 25 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
   mkdir -p "$SHOP/envoy"
   cat > "$SHOP/envoy/envoy.yaml" <<'LABFILE'
 # Envoy for lesson 19: one proxy, two listeners, playing the part a mesh's
@@ -184,85 +185,6 @@ static_resources:
         endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: payments, port_value: 8082}}}}]}]
 admin:
   address: {socket_address: {address: 0.0.0.0, port_value: 9901}}
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector-fanout.yaml" <<'LABFILE'
-# The Collector of collector.yaml, sending every trace to one more place
-# (lesson 13): an OTLP endpoint of the kind a hosted product gives you, with the
-# key that identifies the account read from the environment.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-processors:
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-  otlp_http/vendor:
-    endpoint: http://vendor:4318
-    encoding: json
-    headers:
-      api-key: ${env:VENDOR_API_KEY}
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp_grpc/jaeger, zipkin, otlp_http/vendor]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki]
 LABFILE
 }
 

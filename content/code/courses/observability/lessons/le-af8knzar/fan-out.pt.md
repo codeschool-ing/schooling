@@ -1,6 +1,6 @@
 ---
 title: Mandando tudo para mais um lugar
-version: 1
+version: 2
 ---
 
 Experimentar um produto hospedado, ou sair de um, significava mexer em todo serviço. **Com um Collector
@@ -8,9 +8,124 @@ no meio, é um exportador a mais.** Os serviços continuam mandando OTLP ao Coll
 manda cada rastro a tantos lugares quantos exportadores ele tiver.
 
 O laboratório não tem conta em fornecedor nenhum e nem deve ter, então o lugar é um substituto: o
-`standin.py`. É um programa de vinte linhas na sandbox que aceita OTLP por HTTP do jeito que uma
-entrada hospedada aceita e imprime quem mandou o quê. O exportador que aponta para ele, em
-`otel/collector-fanout.yaml`:
+`standin.py`, um programa de vinte linhas na sandbox que aceita OTLP por HTTP do jeito que uma
+entrada hospedada aceita e imprime quem mandou o quê:
+
+`~/shop/scratch/standin.py`
+
+```python
+"""A stand-in for a hosted product's intake: it takes OTLP over HTTP, as JSON,
+and prints who sent it and how much. It stores nothing."""
+import gzip
+import json
+import logging
+
+from flask import Flask, request
+
+logging.getLogger("werkzeug").setLevel(logging.ERROR)
+app = Flask(__name__)
+
+
+@app.post("/v1/traces")
+def traces():
+    sent = request.get_data()
+    body = gzip.decompress(sent) if request.headers.get("Content-Encoding") == "gzip" else sent
+    data = json.loads(body)
+    spans = sum(len(s["spans"]) for r in data["resourceSpans"] for s in r["scopeSpans"])
+    services = sorted({a["value"]["stringValue"] for r in data["resourceSpans"]
+                       for a in r["resource"]["attributes"] if a["key"] == "service.name"})
+    print(f"api-key={request.headers.get('api-key')} spans={spans} bytes={len(sent)}"
+          f" from={','.join(services)}", flush=True)
+    return {}
+
+
+app.run(host="0.0.0.0", port=4318)
+```
+
+A quarta configuração do Collector é a primeira com um exportador a mais. Salve-a inteira:
+
+`~/shop/otel/collector-fanout.yaml`
+
+```yaml
+# The Collector of collector.yaml, sending every trace to one more place
+# (lesson 13): an OTLP endpoint of the kind a hosted product gives you, with the
+# key that identifies the account read from the environment.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  fluent_forward:
+    endpoint: 0.0.0.0:24224
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 400
+  batch: {}
+  # A batch from Docker mixes every container's lines under one resource, so
+  # the lines are regrouped by their own "service" field, one resource each,
+  # before that field becomes the resource's service.name.
+  groupbyattrs/service:
+    keys: [service]
+  transform/service:
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
+  transform/logs:
+    error_mode: ignore
+    log_statements:
+      - context: log
+        conditions:
+          - IsMatch(body, "^\\{")
+        statements:
+          - merge_maps(attributes, ParseJSON(body), "upsert")
+          - set(severity_text, attributes["level"])
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
+
+exporters:
+  debug:
+    verbosity: basic
+  otlp_grpc/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+  otlp_http/vendor:
+    endpoint: http://vendor:4318
+    encoding: json
+    headers:
+      api-key: ${env:VENDOR_API_KEY}
+
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp_grpc/jaeger, zipkin, otlp_http/vendor]
+    logs:
+      receivers: [fluent_forward]
+      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
+      exporters: [otlp_http/loki]
+```
+
+O exportador que aponta para o substituto:
 
 ```
 ana@obs:~/shop$ sed -n '/otlp_http\/vendor:/,/api-key/p' otel/collector-fanout.yaml
@@ -35,6 +150,15 @@ services:
       VENDOR_API_KEY: lab-0000-not-a-real-key
 ana@obs:~/shop$ docker compose run -d --rm --name vendor sandbox python standin.py 2>&1 | tail -1
 5a6fe95e94eb75dfe46b636749a431b2284618806bd069c05d1c88e9742cc54c
+```
+
+O `cat` imprimiu o override, salvo como `~/shop/compose.override.yaml`. Com ele no lugar e o
+substituto rodando, recrie o Collector, e ponha os clientes para rodar por um quarto de hora:
+
+```sh
+docker compose up -d otel-collector
+docker compose run -d --rm loadgen python -m loadgen.load 5 900
+sleep 30
 ```
 
 Trinta segundos depois, com clientes comprando, a saída do próprio substituto:
@@ -88,3 +212,10 @@ tempo de parada você aguenta. O Collector também pode mantê-la em disco com u
 armazenamento. E **a fila é uma métrica**, então o alerta que diz *o fornecedor parou de aceitar
 nossos dados* pode ser escrito no seu próprio Prometheus, que continua funcionando quando o
 fornecedor não funciona.
+
+Antes da próxima seção, devolva o Collector à primeira configuração:
+
+```sh
+rm compose.override.yaml
+docker compose up -d otel-collector
+```
