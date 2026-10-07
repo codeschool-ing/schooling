@@ -1,6 +1,6 @@
 ---
 title: Pull, push, and how often the truth is checked
-version: 1
+version: 2
 ---
 
 Lesson 18 configures machines from Ana's laptop: Ansible connects over SSH, does its work and
@@ -20,7 +20,25 @@ compared with the machine, and that decides how long a hand edit survives.
 
 Puppet is the clearest case. Its agent, `puppet agent`, runs on each machine, connects to a Puppet
 server, sends the facts it has gathered about the machine, and gets back the full list of resources
-that machine should have. The defaults say how that conversation is set up:
+that machine should have.
+
+**Installing Puppet.** This lesson runs Puppet on your own computer, and Ubuntu's own package is the
+one the transcripts were recorded with, version 8.4.0:
+
+```sh
+sudo apt-get install -y puppet
+```
+
+Run as an ordinary user, as it is all through this lesson, Puppet reads its settings from
+`~/.puppet/etc/puppet.conf`. Ana's has one line under its heading, and the transcript below prints
+it, so make the directory with `mkdir -p ~/.puppet/etc` and write the file:
+
+```ini
+[main]
+certname = laptop
+```
+
+The defaults say how that conversation is set up:
 
 ```
 ana@laptop:~$ puppet config print --section agent runinterval server certname
@@ -31,8 +49,9 @@ server = puppet
 
 `runinterval` is in seconds: **1800 is a run every thirty minutes**, on every machine, for as long as
 the agent is running. `server = puppet` is where the agent looks if nobody tells it otherwise, a host
-literally called `puppet`. `certname` is the name the machine is known by; the lab sets it to `laptop`
-in Ana's `puppet.conf` so that it matches the prompt. The name matters because the agent
+literally called `puppet`. `certname` is the name the machine is known by; Ana set it to `laptop` in
+her `puppet.conf` so that it matches the prompt, and without it Puppet uses the computer's full host
+name. The name matters because the agent
 proves who it is with a certificate signed by a certificate authority that, by default, the Puppet
 server runs, so adding a machine to a pull setup means a new certificate as well as a new agent.
 
@@ -69,5 +88,5 @@ the run: the control machine must reach every target then, over SSH, with a key 
 
 All three tools can also run on one machine with no server, reading the description from its own
 disk: `puppet apply`, `salt-call --local`, and Chef's local mode. That is how this lesson runs them,
-because the lab is one laptop. The resources, the language and the run are the same; only the
+because your lab is one computer. The resources, the language and the run are the same; only the
 question "where does the description come from" has a different answer.

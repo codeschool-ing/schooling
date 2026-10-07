@@ -1,9 +1,10 @@
 ---
 title: Chef, recipes written in Ruby
-version: 1
+version: 2
 ---
 
-Chef is the one tool in this lesson the lab does not have:
+Chef is the one tool in this lesson that you do not install, and that the machine these lessons were
+recorded on did not have either. On yours the same check prints the same line:
 
 ```
 ana@laptop:~/shop/salt$ command -v chef-client cinc-client knife || echo "none of them"

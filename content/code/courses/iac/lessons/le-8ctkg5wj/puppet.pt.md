@@ -1,12 +1,12 @@
 ---
 title: Puppet, um manifest e um catálogo
-version: 1
+version: 2
 ---
 
 O Puppet descreve uma máquina como um conjunto de **recursos**, cada um com um tipo, um título e
 atributos, escritos numa linguagem própria. Não é YAML nem Ruby, embora o Puppet em si seja escrito
-em Ruby. O primeiro manifest da Ana cuida de um diretório, dois arquivos e um comando que só deve rodar
-quando o arquivo de configuração muda:
+em Ruby. O primeiro manifest da Ana, `site.pp` em `~/shop/puppet`, cuida de um diretório, dois arquivos e
+um comando que só deve rodar quando o arquivo de configuração muda:
 
 ```
 $root = '/home/ana/web'
@@ -35,9 +35,11 @@ exec { 'reload-web':
 }
 ```
 
-Num servidor web de verdade esses caminhos estariam em `/var/www` e `/etc/nginx`. **No laboratório eles
-ficam na home da Ana**, porque ela não é root e o laptop é a única máquina que existe ali; os recursos e
-o jeito como o Puppet os aplica são os mesmos. `$root` é uma variável, e `"${root}/index.html"` a coloca
+Num servidor web de verdade esses caminhos estariam em `/var/www` e `/etc/nginx`. **Aqui eles
+ficam na home da Ana**, porque o Puppet roda como ela e não como root, e o computador dela é a única
+máquina que existe; os recursos e o jeito como o Puppet os aplica são os mesmos. Escreva o seu com o
+seu próprio diretório home no lugar de `/home/ana`; onde as transcrições abaixo imprimem o caminho
+dela, as suas imprimem o seu. `$root` é uma variável, e `"${root}/index.html"` a coloca
 dentro de uma string, o que só funciona com aspas duplas. Cada `file` diz o que precisa ser verdade
 (`ensure => file`, este `content`, este `mode`), e não como chegar lá.
 
@@ -66,8 +68,9 @@ Notice: /Stage[main]/Main/Exec[reload-web]: Triggered 'refresh' from 1 event
 Notice: Applied catalog in 0.05 seconds
 ```
 
-Leia de cima para baixo. O aviso é do laboratório: o Facter, a parte do Puppet que levanta fatos sobre
-a máquina, não achou endereço de rede, porque uma execução do laboratório não tem rede. **`Compiled
+Leia de cima para baixo. O aviso é da máquina em que estas aulas foram gravadas: o Facter, a parte do
+Puppet que levanta fatos sobre a máquina, não achou endereço de rede, porque cada gravação rodou sem
+rede. O seu computador tem um, e as suas execuções não o imprimem. **`Compiled
 catalog for laptop` é a linha importante.** O catálogo é o manifest resolvido para uma máquina: cada
 recurso, com as variáveis preenchidas e os relacionamentos resolvidos. Com um agente, o servidor o
 compila e o envia; o `puppet apply` compila na hora. Depois vem um `Notice` por mudança: o diretório
@@ -111,7 +114,7 @@ teria feito isso sozinho, na execução seguinte.
 ## Pacote, arquivo, serviço
 
 O formato que um servidor web de verdade recebe são três tipos de recurso que aparecem em quase todo
-código Puppet:
+código Puppet. A Ana os escreve no `server.pp`:
 
 ```
 package { 'nginx':
@@ -137,8 +140,8 @@ numa ordem que o respeita. Onde dois recursos não têm relacionamento, ele segu
 mas um manifest que depende dessa ordem sem dizer quebra no dia em que alguém move um recurso para
 outro arquivo.
 
-A Ana não é root e o laboratório não tem rede para o `apt`, então este roda com `--noop`, que compara e
-informa sem mudar nada:
+Instalar um pacote exige root, e o Puppet roda como a Ana, uma usuária comum, assim como roda como
+você. Então este roda primeiro com `--noop`, que compara e informa sem mudar nada:
 
 ```
 ana@laptop:~/shop/puppet$ puppet apply --noop server.pp
