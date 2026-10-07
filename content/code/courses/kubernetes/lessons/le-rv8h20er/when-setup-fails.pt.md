@@ -76,5 +76,5 @@ de instalá-lo.
 primeira coisa a tentar diante de qualquer coisa estranha numa aula: toda aula começa dele de qualquer
 jeito. Se o próprio Docker está num estado que ninguém consegue explicar, apague a VM com
 `multipass delete --purge k8s` e rode de novo os comandos desta aula. Parece desistir, e é o que quem
-opera clusters faz com uma máquina cujo estado ninguém mais consegue explicar. É também por isso que
+opera clusters faz com uma máquina assim. É também por isso que
 este curso monta tudo a partir de arquivos que você enxerga.

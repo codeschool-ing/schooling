@@ -48,7 +48,7 @@ on the disk of the node it protects is lost with that node.
 
 The restore runs `etcdutl` on the node itself, and kind does not install it there. It ships inside
 the etcd image, which has no shell to copy it out with, so this copies it from the image's unpacked
-files on the node; on a real machine it comes from the etcd release of the same version:
+files on the node. On a real machine it comes from the etcd release of the same version:
 
 ```sh
 docker exec shop-control-plane sh -c 'cp "$(find /var/lib/containerd -path "*/usr/local/bin/etcdutl" -type f | head -n 1)" /usr/local/bin/etcdutl'

@@ -49,7 +49,7 @@ do nó que ele protege se perde com esse nó.
 
 A restauração roda o `etcdutl` no próprio nó, e o kind não o instala lá. Ele vem dentro da imagem do
 etcd, que não tem shell para copiá-lo para fora, então este comando o copia dos arquivos já
-desempacotados da imagem no nó; numa máquina de verdade ele vem da release do etcd da mesma versão:
+desempacotados da imagem no nó. Numa máquina de verdade ele vem da release do etcd da mesma versão:
 
 ```sh
 docker exec shop-control-plane sh -c 'cp "$(find /var/lib/containerd -path "*/usr/local/bin/etcdutl" -type f | head -n 1)" /usr/local/bin/etcdutl'

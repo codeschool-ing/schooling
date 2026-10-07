@@ -35,7 +35,7 @@ Os três `nodes` são o que importa: um control plane e dois workers, para que a
 um nó tenham onde acontecer. `serverTLSBootstrap: true` faz o kubelet de cada nó pedir ao cluster um
 certificado de verdade em vez de assinar o próprio, e a aula 21 precisa disso. **Os dois patches acima
 dele não fazem parte da aula.** A máquina em que o curso foi gravado tem cgroup v1 e proíbe baixar o
-OOM score de um processo; um Ubuntu atual, o Docker Desktop ou o WSL 2 não têm nenhuma das duas
+OOM score de um processo. Um Ubuntu atual, o Docker Desktop ou o WSL 2 não têm nenhuma das duas
 restrições, então apague essas linhas na sua e deixe o `serverTLSBootstrap: true` onde está.
 
 `up.sh`, que joga fora o cluster que existia e monta um novo:
@@ -89,10 +89,10 @@ node/shop-worker condition met
 node/shop-worker2 condition met
 ```
 
-Lido de cima para baixo: o cluster antigo apagado (na primeira vez não havia nenhum, e apagar nada não
-é erro), o novo criado (o `--quiet` guarda para o kind a lista de passos, e a aula 5 os cita), as
-três imagens da loja copiadas para cada um dos três nós, um
-pedido de certificado por nó aprovado, e todo nó `Ready`. **As imagens precisam ser copiadas porque um
+Lido de cima para baixo. O cluster antigo é apagado; na primeira vez não havia nenhum, e apagar nada
+não é erro. O novo é criado, com o `--quiet` guardando para o kind a lista de passos (a aula 5 os
+cita). Depois as três imagens da loja vão para cada um dos três nós, um pedido de certificado por nó é
+aprovado, e todo nó fica `Ready`. **As imagens precisam ser copiadas porque um
 nó é um container com o seu próprio repositório de imagens**: ele não enxerga o que o Docker montou na
 máquina em volta dele, e procuraria `shop:1.0` no Docker Hub sem encontrar. A última seção desta aula
 mostra exatamente isso dando errado.

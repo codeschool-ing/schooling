@@ -43,7 +43,7 @@ resources:
 **escritas novas usam o primeiro provedor**, e o `identity` no fim, que significa "sem criptografia",
 deixa o API server ainda ler o que foi escrito antes. O arquivo e a flag são escritos no nó do control plane a partir da sua máquina, com `docker exec`,
 porque o nó é um container. O primeiro comando escreve o arquivo com uma chave aleatória nova que nunca
-aparece na tela; o segundo acrescenta a flag ao manifesto do API server, e o kubelet reinicia o API
+aparece na tela. O segundo acrescenta a flag ao manifesto do API server, e o kubelet reinicia o API
 server assim que esse arquivo muda, então o `kubectl` para de responder por mais ou menos meio minuto:
 
 ```sh

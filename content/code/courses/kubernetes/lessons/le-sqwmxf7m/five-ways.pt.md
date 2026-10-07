@@ -116,8 +116,8 @@ Events:
 
 **Os eventos contam a história inteira em ordem**: alocado, baixando, falhou, espera. A mensagem de
 falha cita a referência que ele tentou, `docker.io/library/shop:1.O`. Os nós da máquina em que o curso
-foi gravado não alcançam registry nenhum, então o pedido falha antes de o registry conseguir responder;
-nos seus nós, que alcançam o Docker Hub, o fim da linha diz em vez disso que essa imagem não existe. De qualquer jeito a correção é a mesma, e a
+foi gravado não alcançam registry nenhum, então o pedido falha antes de o registry conseguir responder.
+Nos seus nós, que alcançam o Docker Hub, o fim da linha diz em vez disso que essa imagem não existe. De qualquer jeito a correção é a mesma, e a
 referência na mensagem é onde o erro de digitação aparece.
 
 `ImagePullBackOff` quer dizer que o kubelet está esperando cada vez mais entre as tentativas, até cinco

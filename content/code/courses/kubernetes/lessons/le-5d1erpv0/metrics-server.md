@@ -18,7 +18,7 @@ kubectl -n kube-system rollout status deployment/metrics-server
 ```
 
 The second command waits until it is running. **That manifest is what every transcript below ran**,
-with one difference you will not see: the machine this course was recorded on cannot reach the
+with one difference you will not see. The machine this course was recorded on cannot reach the
 registry its image comes from, so there the same version was built from its source and the manifest
 pointed at that copy.
 

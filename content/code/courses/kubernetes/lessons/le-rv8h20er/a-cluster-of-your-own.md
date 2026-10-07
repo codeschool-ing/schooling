@@ -35,7 +35,7 @@ The three `nodes` are what matters: one control plane and two workers, so that s
 and losing a node all have somewhere to happen. `serverTLSBootstrap: true` makes each node's kubelet
 ask the cluster for a proper certificate instead of signing its own, which lesson 21 needs. **The two
 patches above it are not part of the lesson.** The machine this course was recorded on has cgroup v1
-and forbids lowering a process's OOM score; a current Ubuntu, Docker Desktop or WSL 2 has neither
+and forbids lowering a process's OOM score. A current Ubuntu, Docker Desktop or WSL 2 has neither
 restriction, so delete those lines on yours and leave `serverTLSBootstrap: true` where it is.
 
 `up.sh`, which throws away whatever cluster was there and builds a fresh one:
@@ -89,10 +89,10 @@ node/shop-worker condition met
 node/shop-worker2 condition met
 ```
 
-Read from the top: the old cluster deleted (there was none the first time, and deleting nothing is
-not an error), the new one created (`--quiet` keeps kind's list of steps to itself; lesson 5
-names them), the shop's three images copied into each of the
-three nodes, one certificate request per node approved, and every node `Ready`. **The images have to
+Read from the top. The old cluster is deleted; there was none the first time, and deleting nothing
+is not an error. The new one is created, with `--quiet` keeping kind's list of steps to itself
+(lesson 5 names them). Then the shop's three images go into each of the three nodes, one
+certificate request per node is approved, and every node is `Ready`. **The images have to
 be copied because a node is a container with its own image store**: it cannot see what Docker built
 on the machine around it, and it would look for `shop:1.0` on Docker Hub and not find it. The last
 section of this lesson shows exactly that going wrong.

@@ -203,7 +203,7 @@ ENTRYPOINT ["/shop"]
 ```
 
 The first stage makes `main.go` a module called `shop`, which needs nothing outside Go's standard
-library, and compiles it; `-X main.version=$VERSION` writes the version into the variable `version`
+library, and compiles it. `-X main.version=$VERSION` writes the version into the variable `version`
 at the top of `main.go`, so one source makes three images that differ only in the number they print.
 The second stage starts from `scratch`, an image with nothing in it, and keeps the program alone:
 no shell, no package manager, and a user that is not root.

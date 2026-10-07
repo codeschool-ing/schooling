@@ -117,7 +117,7 @@ Events:
 **The events tell the whole story in order**: scheduled, pulling, failed, back-off. The failure
 message names the reference it tried, `docker.io/library/shop:1.O`. The nodes of the machine this course
 was recorded on cannot reach any registry at all, so the request fails before the registry could
-answer; on your nodes, which do reach Docker Hub, the end of the line says instead that there is no
+answer. On your nodes, which do reach Docker Hub, the end of the line says instead that there is no
 such image. Either way the fix is the same, and the
 reference in the message is where the typo shows.
 

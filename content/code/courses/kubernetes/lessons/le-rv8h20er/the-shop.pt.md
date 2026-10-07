@@ -203,7 +203,7 @@ ENTRYPOINT ["/shop"]
 ```
 
 O primeiro estágio transforma `main.go` num módulo chamado `shop`, que não precisa de nada fora da
-biblioteca padrão do Go, e o compila; `-X main.version=$VERSION` escreve a versão na variável `version`
+biblioteca padrão do Go, e o compila. `-X main.version=$VERSION` escreve a versão na variável `version`
 do começo de `main.go`, então um código-fonte produz três imagens que só diferem no número que imprimem.
 O segundo estágio começa de `scratch`, uma imagem sem nada dentro, e guarda só o programa: sem shell,
 sem gerenciador de pacotes, e com um usuário que não é root.

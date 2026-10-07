@@ -76,5 +76,5 @@ again rather than installing it.
 the first thing to try for anything strange in a lesson: every lesson starts from it anyway. If Docker
 itself is in a state nobody can explain, delete the VM with `multipass delete --purge k8s` and run the
 commands of this lesson again. It feels like giving up, and it is what people who run clusters do with
-a machine whose state nobody can explain any more. It is also why this course builds everything from
+such a machine. It is also why this course builds everything from
 files you can see.

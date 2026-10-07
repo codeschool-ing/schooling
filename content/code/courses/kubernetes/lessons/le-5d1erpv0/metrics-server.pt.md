@@ -18,7 +18,7 @@ kubectl -n kube-system rollout status deployment/metrics-server
 ```
 
 O segundo comando espera até ele estar rodando. **Esse manifesto é o que todas as transcrições abaixo
-rodaram**, com uma diferença que você não vai ver: a máquina em que o curso foi gravado não alcança o
+rodaram**, com uma diferença que você não vai ver. A máquina em que o curso foi gravado não alcança o
 registro de onde vem a imagem, então lá a mesma versão foi compilada do código-fonte e o manifesto
 apontou para essa cópia.
 
