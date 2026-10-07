@@ -3,7 +3,7 @@ title: Ollama's own API
 version: 1
 ---
 
-Ollama has an official Python library, `ollama`, and `lab/local_chat.py` uses it to sort one of
+Ollama has an official Python library, `ollama`, and `local_chat.py` uses it to sort one of
 ana's cases with the triage prompt from lesson 1:
 
 ```python
@@ -14,7 +14,7 @@ import ollama
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
-r = ollama.chat(model="standin-local", options={"temperature": 0},
+r = ollama.chat(model="llama3.2:3b", options={"temperature": 0},
                 messages=[{"role": "system", "content": prompt}, {"role": "user", "content": case["text"]}])
 print(f"{case['id']}: {r.message.content}   (a person said {case['label']})")
 print(f"read {r.prompt_eval_count} tokens, wrote {r.eval_count}")
@@ -22,29 +22,34 @@ print(f"{r.eval_count / r.eval_duration * 1e9:.1f} tokens/s while writing, {r.to
 ```
 
 ```
-ana@desk:~/desk$ python lab/local_chat.py
-c05: other   (a person said other)
-read 51 tokens, wrote 1
-20.0 tokens/s while writing, 0.95 s in all
+ana@desk:~/desk$ python local_chat.py
+c05: other.   (a person said other)
+read 75 tokens, wrote 3
+17.1 tokens/s while writing, 7.73 s in all
 ```
 
-The answer is the stand-in's, from its table, and so are the durations: `standin-local` is given
-0.9 seconds before the first token and 50 milliseconds per token after it. What is real is the
-shape. **Every response carries its own accounting**: how many tokens were read
+The answer is llama3.2:3b's, and the durations are this machine's. **Every response carries its own
+accounting**: how many tokens were read
 (`prompt_eval_count`), how many written (`eval_count`), and how long each part took, in
 nanoseconds. The tokens-per-second line is the formula Ollama's documentation gives, and it is
 lesson 3 section 05's throughput measured on your own hardware instead of computed from a
-bandwidth.
+bandwidth. Most of the 7.73 seconds in all was the server loading the model from disk, which the
+first request after a quiet spell pays for, and section 03 is about.
 
-What went over the wire is plain JSON to `localhost`, with no key:
+What went over the wire is plain JSON to `localhost`, with no key. The library reads the server's
+address from `OLLAMA_HOST`, so one run through the relay from lesson 9 section 03 shows it:
 
 ```
-ana@desk:~/desk$ wire --headers user-agent
+ana@desk:~/desk$ OLLAMA_HOST=http://127.0.0.1:8500 python local_chat.py
+c05: order-status   (a person said other)
+read 75 tokens, wrote 3
+13.8 tokens/s while writing, 0.42 s in all
+ana@desk:~/desk$ python relay.py show --headers user-agent
 POST /api/chat
-user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.11.15
+user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.13.16
 
 {
-  "model": "standin-local",
+  "model": "llama3.2:3b",
   "stream": false,
   "options": {
     "temperature": 0
@@ -63,17 +68,20 @@ user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.11.15
 }
 ```
 
-The settings that an API puts at the top level, Ollama puts in `options`: `temperature` here, and
+The same request a moment later took 0.42 seconds, because the model was already loaded, and it
+answered `order-status` where the first said `other.`: even at temperature 0 a model can answer the
+same question two ways, as lesson 5 section 08 warned. The settings that an API puts at the top
+level, Ollama puts in `options`: `temperature` here, and
 `num_ctx` in section 04.
 
 ## Loaded, and for how long
 
-A local model has to be in memory to answer, and loading gigabytes of weights from disk takes
-time, which the first request pays. Ollama keeps a model loaded after a request, and says until when:
+A local model has to be in memory to answer, and loading gigabytes of weights from disk takes time,
+which the first request pays. Ollama keeps a model loaded after a request, and says until when:
 
 ```
 ana@desk:~/desk$ python -c "import ollama; [print(m.model, m.expires_at) for m in ollama.ps().models]"
-standin-local:latest 2026-10-05 18:13:34-03:00
+llama3.2:3b 2026-10-07 17:24:23.909707+00:00
 ```
 
 ```
@@ -88,7 +96,7 @@ that: a duration keeps it longer, a negative number such as `-1` keeps it loaded
 it at once:
 
 ```
-ana@desk:~/desk$ python -c "import ollama; print(ollama.generate(model=\"standin-local\", keep_alive=0).done_reason); print(len(ollama.ps().models), \"models loaded\")"
+ana@desk:~/desk$ python -c "import ollama; print(ollama.generate(model=\"llama3.2:3b\", keep_alive=0).done_reason); print(len(ollama.ps().models), \"models loaded\")"
 unload
 0 models loaded
 ```

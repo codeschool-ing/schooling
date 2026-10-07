@@ -3,13 +3,13 @@ title: Dois jeitos de rodar um modelo em casa
 version: 1
 ---
 
-A aula 3 calculou o que é preciso para rodar um modelo por conta própria: memória para os pesos,
-um runtime e alguém para mantê-lo de pé. As aulas 10 a 12 mostraram de onde vêm os pesos abertos.
-Ollama e LM Studio são as duas ferramentas que a maioria das pessoas usa para juntar as duas
-coisas numa máquina. Nenhuma das duas conseguiu rodar na máquina em que este curso foi gravado:
-ambas baixam os modelos de hosts que ela não alcançava, e o LM Studio é um aplicativo de desktop. O
-que esta aula mostra é a documentação delas, lida num commit fixado, e as APIs delas, respondidas
-pelo substituto do lab nas portas que as ferramentas de verdade usam.
+A aula 3 calculou o que é preciso para rodar um modelo por conta própria: memória para os pesos, um
+runtime e alguém para mantê-lo de pé. As aulas 10 a 12 mostraram de onde vêm os pesos abertos.
+Ollama e LM Studio são as duas ferramentas que a maioria das pessoas usa para juntar as duas coisas
+numa máquina. O Ollama é o que a aula 1 instalou, e tudo o que esta aula mostra dele rodou de
+verdade. O LM Studio não: o site dele foi recusado pela rede da máquina em que este curso foi
+gravado, e ele é um aplicativo de desktop. O que esta aula mostra do LM Studio é a documentação
+dele, lida num commit fixado.
 
 ## Ollama
 

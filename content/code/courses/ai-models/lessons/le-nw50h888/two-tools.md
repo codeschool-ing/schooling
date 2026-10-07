@@ -5,11 +5,10 @@ version: 1
 
 Lesson 3 worked out what it takes to run a model yourself: memory for the weights, a runtime, and
 somebody to keep it going. Lessons 10 to 12 showed where open weights come from. Ollama and
-LM Studio are the two tools most people use to put the two together on one machine. Neither
-could run on the machine this course was recorded on: both download their models from hosts it
-could not reach, and LM Studio is a desktop application. What this lesson shows is their
-documentation, read at a pinned commit, and their APIs, answered by the lab's stand-in on the ports
-the real tools use.
+LM Studio are the two tools most people use to put the two together on one machine. Ollama is the
+one lesson 1 installed, and everything this lesson shows of it ran for real. LM Studio did not: its
+site was refused by the network of the machine this course was recorded on, and it is a desktop
+application. What this lesson shows of LM Studio is its documentation, read at a pinned commit.
 
 ## Ollama
 
