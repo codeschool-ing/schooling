@@ -8,7 +8,8 @@ SYN-ACK, ACK. **The names are the easy half. The numbers inside them are what th
 connection is counted against**, and reading them is how you tell a connection that worked from one
 that only looked like it.
 
-The laptop fetched `http://192.0.2.21/` while `tshark` printed six fields of each packet: the frame
+The laptop fetched `http://192.0.2.21/`, with `curl -s http://192.0.2.21/` in one shell on `laptop`,
+while `tshark`, started first in another, printed six fields of each packet: the frame
 number, the sender, the flags, the sequence number, the acknowledgement number and the bytes of
 data.
 
@@ -51,7 +52,7 @@ acknowledges 245.
 ## Relative numbers are Wireshark's courtesy
 
 A sequence number never really starts at 0. **Each side picks a random 32-bit starting number, and
-Wireshark subtracts it for you.** The same request made again, printing the raw fields:
+Wireshark subtracts it for you.** The same request made again, the same way, printing the raw fields:
 
 ```
 ana@laptop:~$ tshark -n -i eth0 -c 3 -f "host 192.0.2.21 and tcp port 80" -T fields -e frame.number -e tcp.flags.str -e tcp.seq_raw -e tcp.ack_raw

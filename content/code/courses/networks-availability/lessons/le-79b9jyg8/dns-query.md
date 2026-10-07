@@ -31,7 +31,8 @@ answered with reply code 3, which is NXDOMAIN, "no such name", and no address. U
 to hold a question and its answer together, so the id does it, and the client throws away a response whose id matches no outstanding query.
 
 For the whole of one response, `-O dns` prints the DNS layer in full. The same missing name was looked
-up once more for this, so its id is new:
+up once more for this, with `dig +short nosuch.example.com` on `laptop` while the capture ran, so its
+id is new:
 
 ```
 ana@laptop:~$ tshark -n -i eth0 -c 2 -f "udp port 53" -O dns 2>/dev/null | sed -n "/^Frame 2/,/Authority RRs/p"

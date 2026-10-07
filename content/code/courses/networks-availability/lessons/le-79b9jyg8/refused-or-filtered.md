@@ -25,8 +25,16 @@ The laptop sent a SYN, and **72 microseconds later `web1`'s own kernel answered 
 is a machine at this address, it received the SYN, and nothing is listening on that port. `curl` reported `Couldn't connect to server` `after 0 ms`. A refused connection is
 fast, and it proves the network path works all the way to the host.
 
-Port 8080 on `web1` was closed differently: a firewall rule on `web1` drops anything sent to it,
-without a word.
+Port 8080 on `web1` is closed differently: a firewall rule on `web1` drops anything sent to it, without
+a word. Add the rule on `web1`:
+
+```sh
+sudo nft add table ip filter
+sudo nft add chain ip filter input '{ type filter hook input priority 0; }'
+sudo nft add rule ip filter input tcp dport 8080 drop
+```
+
+Then the same test, against 8080:
 
 ```
 ana@laptop:~$ curl -sS --max-time 5 http://192.0.2.21:8080/
@@ -55,4 +63,4 @@ person in front of it.
 **The second column does not say where the packet died.** From the client, silence looks the same in four cases: a firewall on the server dropped the SYN, a firewall on the path dropped it, the server is switched off, or the SYN-ACK was lost on the way back. The capture narrows it to "no answer arrived
 here"; capturing on the other end, as lesson 12 did on `web1`, is what says whether the SYN arrived.
 And a firewall can be told to reject instead of drop, answering with a reset of its own, in which
-case a filtered port looks refused. Nothing in this lab was set up that way.
+case a filtered port looks refused. Nothing in this course's network is set up that way.
