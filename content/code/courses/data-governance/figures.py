@@ -295,6 +295,78 @@ def _l2_grid(f):
     f.text(537, 263, ('two states', 'dois estados'), size=11, fill='--paper-dim')
 
 
+# ===================================================================== lesson 3
+L3 = 'le-09gy18dh'
+
+
+@figure('l3-layers', L3, 720, 270,
+        ('The path of one customer record: from the client, across the network, into the '
+         'running server, onto the data files and out to a backup. Under each stretch, the '
+         'kind of encryption that covers it: TLS on the network, volume encryption on the '
+         'data files, file encryption on the backup. Inside the running server there is none: '
+         'there, grants and policies are what protect the data.',
+         'O caminho de um registro de cliente: do cliente, pela rede, para dentro do servidor '
+         'em execução, para os arquivos de dados e para um backup. Embaixo de cada trecho, o '
+         'tipo de criptografia que o cobre: TLS na rede, criptografia de volume nos arquivos, '
+         'criptografia de arquivo no backup. Dentro do servidor em execução não há nenhuma: '
+         'ali, permissões e políticas protegem o dado.'),
+        ('Every form of encryption ends somewhere. Inside the running database, the data is '
+         'plaintext to anybody with a grant.',
+         'Toda criptografia termina em algum lugar. Dentro do banco em execução, o dado é '
+         'texto claro para quem tem permissão.'))
+def _l3_layers(f):
+    xs = [(20, 110, ('client', 'cliente')), (165, 110, ('network', 'rede')),
+          (310, 120, ('the running server', 'o servidor rodando')),
+          (465, 110, ('data files', 'arquivos de dados')), (610, 90, ('backup', 'backup'))]
+    for x, w, label in xs:
+        f.box(x, 40, w, 50, label, fill='--ink')
+    for i in range(len(xs) - 1):
+        x, w, _ = xs[i]
+        f.arrow(x + w, 65, xs[i + 1][0] - 2, 65)
+    def bracket(x0, x1, y, label, stroke):
+        f.line(x0, y, x1, y, stroke=stroke, width=3)
+        f.line(x0, y - 6, x0, y + 6, stroke=stroke, width=2)
+        f.line(x1, y - 6, x1, y + 6, stroke=stroke, width=2)
+        f.lines((x0 + x1) / 2, y + 30, label, size=11)
+    bracket(130, 300, 130, [('TLS', 'TLS'), ('in transit', 'em trânsito')], '--phosphor')
+    bracket(465, 575, 130, [('volume', 'volume'), ('at rest', 'em repouso')], '--phosphor')
+    bracket(610, 700, 130, [('file', 'arquivo'), ('at rest', 'em repouso')], '--phosphor')
+    f.rect(310, 118, 120, 120, stroke='--amber', fill='--panel', dash='4 3')
+    f.lines(370, 178, [('no encryption', 'sem criptografia'), ('here:', 'aqui:'),
+                       ('grants and', 'permissões e'), ('policies', 'políticas')], size=11)
+
+
+@figure('l3-where-it-ends', L3, 720, 260,
+        ('The database in the middle, on an encrypted volume. Arrows leave it to four copies '
+         'that are plaintext unless encrypted separately: a pg_dump backup, a replica, a CSV '
+         'export for another team, and the server log. Only the copies inside the volume '
+         'boundary are covered by the volume\'s encryption.',
+         'O banco no meio, num volume cifrado. Setas saem dele para quatro cópias que são '
+         'texto claro a menos que cifradas à parte: um backup do pg_dump, uma réplica, uma '
+         'exportação CSV para outro time, e o log do servidor. Só o que está dentro do volume '
+         'é coberto pela criptografia do volume.'),
+        ('An encrypted disk covers one copy. Every copy made through the database starts in '
+         'clear.',
+         'Um disco cifrado cobre uma cópia. Toda cópia feita pelo banco começa em claro.'))
+def _l3_ends(f):
+    f.rect(250, 60, 220, 140, stroke='--phosphor', fill='--panel', dash='5 4')
+    f.text(360, 78, ('encrypted volume', 'volume cifrado'), size=11, fill='--paper-dim')
+    f.box(285, 100, 150, 70, [('PostgreSQL', 'PostgreSQL'), {'s': 'ipe', 'mono': True,
+                                                            'size': 10, 'fill': '--paper-dim'}],
+          fill='--ink')
+    outs = [(20, 30, ('pg_dump backup', 'backup do pg_dump')),
+            (20, 170, ('a replica', 'uma réplica')),
+            (540, 30, ('a CSV export', 'uma exportação CSV')),
+            (540, 170, ('the server log', 'o log do servidor'))]
+    for x, y, label in outs:
+        f.box(x, y, 160, 54, [label, {'s': ('plaintext', 'texto claro'), 'size': 10,
+                                       'fill': '--paper-dim'}], stroke='--amber', fill='--ink')
+    f.arrow(285, 115, 182, 64, stroke='--amber')
+    f.arrow(285, 155, 182, 196, stroke='--amber')
+    f.arrow(435, 115, 538, 64, stroke='--amber')
+    f.arrow(435, 155, 538, 196, stroke='--amber')
+
+
 # ===================================================================== driver
 
 def main():

@@ -225,7 +225,7 @@ load() {
 reset() {
   pkill -u bao -x bao 2>/dev/null || true
   rm -rf /var/lib/bao/data && mkdir -p /var/lib/bao/data && chown bao:bao /var/lib/bao/data
-  rm -rf $GOV /home/ana/.pgpass /home/ana/.psql_history /home/ana/.pg_service.conf
+  rm -rf $GOV /home/ana/.pgpass /home/ana/.psql_history /home/ana/.pg_service.conf /home/ana/.postgresql
   mkdir -p $GOV
   chown -R ana:ana $GOV
   pg_cluster
@@ -252,7 +252,7 @@ case "${1:-}" in
     pkill -u bao -x bao 2>/dev/null || true
     pg_ctlcluster 16 gov stop -m fast 2>/dev/null || true ;;
   exec)
-    as_ana "cd $GOV && $2" ;;
+    as_ana "cd $GOV || exit 1; $2" ;;
   *)
     echo "usage: lab.sh up | reset | state N | down | exec 'COMMAND'" >&2; exit 2 ;;
 esac
