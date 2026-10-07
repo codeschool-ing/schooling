@@ -373,6 +373,19 @@ for b in sorted(books):
     prices.append({"isbn": books[b]["isbn"], "publisher": books[b]["publisher"],
                    "list_price_cents": books[b]["list_price_cents"] + rp.choice([0, 0, 500, 1000]),
                    "currency": "BRL", "updated_at": changed.isoformat()})
+# Three publishers send their feed the way real feeds arrive: Maré writes ISBNs
+# with hyphens, Farol sends the price as a string and the currency in lower
+# case, and Granito's name carries a trailing space. Four prices are missing.
+for p in prices:
+    if p["publisher"] == "Maré":
+        i = p["isbn"]
+        p["isbn"] = f"{i[:3]}-{i[3:5]}-{i[5:10]}-{i[10:12]}-{i[12]}"
+    elif p["publisher"] == "Farol":
+        p["list_price_cents"], p["currency"] = str(p["list_price_cents"]), "brl"
+    elif p["publisher"] == "Granito":
+        p["publisher"] = "Granito "
+for p in rp.sample(prices, 4):
+    p["list_price_cents"] = None
 prices.sort(key=lambda p: (p["updated_at"], p["isbn"]))
 with open(os.path.join(OUT, "prices.json"), "w", encoding="utf-8") as f:
     json.dump(prices, f, indent=0)

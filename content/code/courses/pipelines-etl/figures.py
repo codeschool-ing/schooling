@@ -660,6 +660,90 @@ def l05_slots(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 6
+
+@figure('l06-fanout', 6)
+def l06_fanout(lang):
+    t = {'en': dict(
+            label='One order with three lines and one payment of R$ 159.70. Joined, the result has '
+                  'three rows, each carrying the same payment, so a sum of the payment column says '
+                  'R$ 479.10 for an order that was paid R$ 159.70.',
+            order='order 1', lines='3 lines', pay='1 payment', joined='after the join',
+            line='line', sum_='sum of the payment column', paid='what was paid',
+            cap='The join goes down from the order to its lines, and everything at order grain is '
+                'repeated once per line.'),
+         'pt': dict(
+            label='Um pedido com três linhas e um pagamento de R$ 159,70. Depois do join, o '
+                  'resultado tem três linhas, cada uma levando o mesmo pagamento, então uma soma da '
+                  'coluna de pagamento diz R$ 479,10 para um pedido que pagou R$ 159,70.',
+            order='pedido 1', lines='3 linhas', pay='1 pagamento', joined='depois do join',
+            line='linha', sum_='soma da coluna de pagamento', paid='o que foi pago',
+            cap='O join desce do pedido para as suas linhas, e tudo o que está no grão do pedido '
+                'se repete uma vez por linha.')}[lang]
+    money = (lambda c: f"R$ {c / 100:,.2f}") if lang == 'en' else \
+            (lambda c: "R$ " + f"{c / 100:,.2f}".replace(',', '_').replace('.', ',').replace('_', '.'))
+    f = Fig('l06-fanout', 720, 260, t['label'])
+    f.rect(40, 40, 170, 50, stroke='--wire', fill='--panel')
+    f.text(125, 58, t['order'], size=11, weight='600')
+    f.text(125, 76, t['pay'] + ': ' + money(15970), size=10, fill='--paper-dim')
+    for i in range(3):
+        y = 120 + i * 40
+        f.rect(60, y, 130, 28, stroke='--wire', fill='--scan', rx=4)
+        f.text(125, y + 14, f"{t['line']} {i + 1}", size=10)
+    f.text(125, 112 - 4, t['lines'], size=10, fill='--paper-dim')
+    f.text(470, 28, t['joined'], size=11, weight='600')
+    for i in range(3):
+        y = 50 + i * 40
+        f.rect(330, y, 280, 28, stroke='--wire', fill='--panel', rx=4)
+        f.text(345, y + 14, f"{t['line']} {i + 1}", size=10, anchor='start')
+        f.text(595, y + 14, money(15970), size=10.5, anchor='end', mono=True, fill='--amber')
+        f.line(192, 134 + i * 40, 328, y + 14, stroke='--paper-dim', width=1, arrow=True)
+    f.text(330, 190, t['sum_'], size=10.5, anchor='start')
+    f.text(610, 190, money(47910), size=11, anchor='end', mono=True, fill='--amber', weight='600')
+    f.text(330, 214, t['paid'], size=10.5, anchor='start', fill='--paper-dim')
+    f.text(610, 214, money(15970), size=11, anchor='end', mono=True)
+    return f, t['cap']
+
+
+@figure('l06-zones', 6)
+def l06_zones(lang):
+    t = {'en': dict(
+            label='Two clocks over the same evening. On the São Paulo clock, Friday runs until '
+                  'midnight. On the UTC clock, the day changes at 21:00 São Paulo time, so every '
+                  'order between 21:00 and midnight is dated Saturday.',
+            sp='São Paulo', utc='UTC', fri='Friday 6 March', sat='Saturday 7 March',
+            orders='orders placed 21:00–24:00', moved='dated Saturday in UTC',
+            cap='The same moment falls on two dates. Whose day it is has to be written into the '
+                'derivation, once.'),
+         'pt': dict(
+            label='Dois relógios sobre a mesma noite. No relógio de São Paulo, a sexta-feira vai '
+                  'até a meia-noite. No relógio UTC, o dia muda às 21:00 de São Paulo, então todo '
+                  'pedido entre 21:00 e meia-noite fica com data de sábado.',
+            sp='São Paulo', utc='UTC', fri='sexta, 6 de março', sat='sábado, 7 de março',
+            orders='pedidos feitos entre 21:00 e 24:00', moved='com data de sábado em UTC',
+            cap='O mesmo momento cai em duas datas. De quem é o dia precisa ser escrito na '
+                'derivação, uma vez.')}[lang]
+    f = Fig('l06-zones', 720, 230, t['label'])
+    x0, x1 = 120, 680
+    hx = lambda h: x0 + (x1 - x0) * (h - 12) / 16      # 12:00 to 04:00 next day, SP hours
+    for row, (name, cut_h) in enumerate([(t['sp'], 24), (t['utc'], 21)]):
+        y = 60 + row * 70
+        f.text(x0 - 12, y + 12, name, size=11, weight='600', anchor='end')
+        f.rect(x0, y, hx(cut_h) - x0, 24, stroke='--wire', fill='--panel', rx=3)
+        f.rect(hx(cut_h), y, x1 - hx(cut_h), 24, stroke='--wire', fill='--scan', rx=3)
+        f.text((x0 + hx(cut_h)) / 2, y + 12, t['fri'], size=10)
+        f.text((hx(cut_h) + x1) / 2, y + 12, t['sat'], size=10)
+    for xx in (hx(21), hx(24)):
+        f.line(xx, 40, xx, 56, stroke='--amber', dash='4 3')
+        f.line(xx, 88, xx, 126, stroke='--amber', dash='4 3')
+        f.line(xx, 158, xx, 180, stroke='--amber', dash='4 3')
+    f.text((hx(21) + hx(24)) / 2, 30, t['orders'], size=10, fill='--amber')
+    f.text((hx(21) + hx(24)) / 2, 196, t['moved'], size=10, fill='--amber')
+    for h in (12, 16, 20, 24, 28):
+        f.text(hx(h), 216, f"{h % 24:02d}:00", size=9.5, fill='--paper-dim', mono=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
