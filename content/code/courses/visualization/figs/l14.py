@@ -36,7 +36,7 @@ def l14_simulated(lang):
         label='The same line chart of South and Northeast drawn twice. On the left, South is red '
               'and Northeast green, the default colours of many tools, with a legend. On the right, '
               'the same chart as a person with deuteranopia sees it: both lines become a similar '
-              'olive brown, and where they cross in 2025 there is no way to tell which is which.',
+              'olive brown, and where they cross in 2024 there is no way to tell which is which.',
         a='as drawn', b='as deuteranopia sees it',
         cap='Red and green, the pair most charts reach for first, become two olives for about one '
             'man in twelve. The crossing, the one thing the chart is for, disappears.'),
@@ -44,7 +44,7 @@ def l14_simulated(lang):
         label='O mesmo gráfico de linhas de Sul e Nordeste desenhado duas vezes. À esquerda, o Sul é '
               'vermelho e o Nordeste verde, as cores padrão de muitas ferramentas, com legenda. À '
               'direita, o mesmo gráfico como uma pessoa com deuteranopia o vê: as duas linhas viram '
-              'um marrom-oliva parecido, e onde elas se cruzam em 2025 não há como saber qual é '
+              'um marrom-oliva parecido, e onde elas se cruzam em 2024 não há como saber qual é '
               'qual.',
         a='como desenhado', b='como a deuteranopia vê',
         cap='Vermelho e verde, o par que a maioria dos gráficos escolhe primeiro, viram dois tons de '

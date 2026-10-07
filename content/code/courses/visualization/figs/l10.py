@@ -14,7 +14,7 @@ def l10_spaghetti(lang):
     w = {'en': dict(
         label='Five lines of monthly orders, one per region, all in different colours on one '
               'chart. Southeast runs along the top on its own. South and Northeast tangle and '
-              'cross during 2025. Centre-West and North run close together near the bottom, and '
+              'cross during 2024. Centre-West and North run close together near the bottom, and '
               'their shape is hard to see at this scale.',
         y='orders per month',
         cap='Five series on one chart. The top line is clear; the crossings in the middle and '
@@ -22,7 +22,7 @@ def l10_spaghetti(lang):
         'pt': dict(
         label='Cinco linhas de pedidos mensais, uma por região, todas em cores diferentes num '
               'gráfico só. O Sudeste corre sozinho no alto. Sul e Nordeste se embaraçam e se '
-              'cruzam durante 2025. Centro-Oeste e Norte correm juntos perto do chão, e a forma '
+              'cruzam durante 2024. Centro-Oeste e Norte correm juntos perto do chão, e a forma '
               'deles é difícil de ver nessa escala.',
         y='pedidos por mês',
         cap='Cinco séries num gráfico. A linha de cima é clara; os cruzamentos do meio e as duas '

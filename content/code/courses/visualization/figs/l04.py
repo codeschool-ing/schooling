@@ -82,7 +82,7 @@ def l04_highlight(lang):
         label='Two line charts of monthly orders by region. On the left all five lines are drawn '
               'in five colours with a legend, and they tangle where South and Northeast cross. On '
               'the right four lines are grey and Northeast is drawn in a strong colour and '
-              'labelled at its end, so its climb past South in 2025 is the first thing seen.',
+              'labelled at its end, so its climb past South late in 2024 is the first thing seen.',
         a='five colours and a legend', b='one line that matters',
         cap='When one series is the story, draw it in colour and the rest in grey, and put its '
             'name at the end of the line instead of in a legend.'),
@@ -90,7 +90,7 @@ def l04_highlight(lang):
         label='Dois gráficos de linhas dos pedidos mensais por região. À esquerda as cinco linhas '
               'estão em cinco cores com legenda, e se embaraçam onde Sul e Nordeste se cruzam. À '
               'direita quatro linhas estão em cinza e o Nordeste está numa cor forte e rotulado '
-              'na ponta, então a subida dele passando o Sul em 2025 é a primeira coisa vista.',
+              'na ponta, então a subida dele passando o Sul no fim de 2024 é a primeira coisa vista.',
         a='cinco cores e uma legenda', b='uma linha que importa',
         cap='Quando uma série é a história, desenhe-a em cor e o resto em cinza, e ponha o nome '
             'dela na ponta da linha em vez de numa legenda.')}[lang]
