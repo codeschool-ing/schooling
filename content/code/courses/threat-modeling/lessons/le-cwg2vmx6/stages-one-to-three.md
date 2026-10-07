@@ -19,7 +19,7 @@ statement of impact: what failing each objective costs.
 | reminders reach patients | a missed session is an empty slot nobody pays for | none of its own |
 | Vereda meets the LGPD | the ANPD can fine and order a stop to processing | the law itself |
 
-The table is where daniel earns his place. A developer would not have written that 60% of bookings
+The table is where daniel earns a place in the workshop. A developer would not have written that 60% of bookings
 come through the portal, and that number is what makes T01 and T10 expensive in stage 7.
 
 ### Stage 2: define the technical scope

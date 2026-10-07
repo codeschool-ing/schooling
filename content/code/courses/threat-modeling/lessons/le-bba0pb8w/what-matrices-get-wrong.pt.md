@@ -5,7 +5,7 @@ version: 1
 
 Em 2008 o analista de risco Louis Anthony Cox publicou um artigo com um título sem ambiguidade, *What's
 wrong with risk matrices?*, e mostrou matematicamente o que a seção anterior mostrou com nove riscos.
-Quatro achados dele explicam cada estranheza da tabela da Vereda.
+Quatro achados do artigo explicam cada estranheza da tabela da Vereda.
 
 | problema | o que significa | na Vereda |
 |---|---|---|

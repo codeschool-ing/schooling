@@ -44,5 +44,5 @@ least sure of. Read 4.8% as "a few percent", not as a measurement.
 
 **The appetite is a decision, not a calculation.** No formula produces daniel's point. It depends on
 what Vereda can absorb, what the owners are willing to lose, what insurance would cost, and what the
-patients would accept. The analysis's job is to show him the curve in his units; the decision is
-his, and lesson 12 is about writing it down.
+patients would accept. The analysis's job is to show daniel the curve in reais; the decision is
+daniel's, and lesson 12 is about writing it down.

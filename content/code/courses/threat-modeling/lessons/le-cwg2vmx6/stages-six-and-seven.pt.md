@@ -47,4 +47,4 @@ for editado.
 
 Como o estágio 7 põe números em probabilidade e impacto é o assunto das aulas 9 a 11, e a ordenação
 acima foi feita de forma qualitativa. O que o PASTA contribui é o **raciocínio que liga cada número
-a um objetivo de negócio**, para que a ordenação possa ser explicada ao daniel nos termos dele.
+a um objetivo de negócio**, para que a ordenação possa ser explicada ao daniel nos termos do negócio.

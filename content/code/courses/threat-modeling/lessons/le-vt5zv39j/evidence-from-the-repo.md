@@ -69,8 +69,8 @@ ana <ana@vereda.example>
 
 daniel is the owner, and ana committed the file. Nothing in the repository shows that daniel read it.
 That is not a fault in RA-001; it is a gap in how approvals are recorded, and there are ordinary
-fixes. daniel can approve the change in the hosting platform's review, which records his account and
-the time; or he can make the commit himself, signed with his own key. Either turns "the file says
+fixes. daniel can approve the change in the hosting platform's review, which records daniel's
+account and the time; or daniel can make the commit, signed with their own key. Either turns "the file says
 daniel" into "daniel did it".
 
 ### The model checks itself

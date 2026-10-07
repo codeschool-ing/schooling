@@ -17,7 +17,7 @@ For a chain of physiotherapy clinics in Brazil, carla's summary of stage 4 had t
 
 - **Health providers are a common target for extortion.** Criminal groups encrypt or steal patient
   data and demand payment; the more sensitive the data, the stronger their position. Every sector
-  report she read in the last two years put healthcare near the top.
+  report carla read in the last two years put healthcare near the top.
 - **Credential stuffing hits every consumer login.** Passwords leaked from other sites are tried
   automatically against any sign-in page that answers. The portal's own sign-in log shows bursts
   of failed logins from unfamiliar addresses most weeks.

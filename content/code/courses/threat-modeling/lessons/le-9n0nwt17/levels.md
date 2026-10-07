@@ -20,7 +20,7 @@ The context diagram is cheap and finds real things. It is where somebody says "t
 receives the patient's name and the clinic's address, did we agree that with them?", and that is
 a question about personal data leaving the company, which lesson 5's LINDDUN would ask again. It is
 also the drawing to show daniel, who runs the clinics: it fits on one slide and every box is
-something he recognises.
+something daniel recognises.
 
 ### Level 1: the main parts
 

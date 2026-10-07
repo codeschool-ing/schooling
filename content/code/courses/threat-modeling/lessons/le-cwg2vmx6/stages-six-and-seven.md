@@ -45,4 +45,4 @@ whenever the template is next edited.
 
 How stage 7 puts numbers on likelihood and impact is the subject of lessons 9 to 11, and the
 ranking above was done qualitatively. What PASTA contributes is the **reasoning that connects
-each number to a business objective**, so the ranking can be explained to daniel in his own terms.
+each number to a business objective**, so the ranking can be explained to daniel in the business's own terms.

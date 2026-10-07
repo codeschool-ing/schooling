@@ -45,5 +45,5 @@ certeza. Leia 4,8% como "uns poucos por cento", não como uma medição.
 
 **O apetite é uma decisão, não um cálculo.** Nenhuma fórmula produz o ponto do daniel. Ele depende do
 que a Vereda aguenta, do que os donos estão dispostos a perder, do que um seguro custaria e do que os
-pacientes aceitariam. O trabalho da análise é mostrar a curva a ele nas unidades dele; a decisão é
-dele, e a aula 12 trata de registrá-la.
+pacientes aceitariam. O trabalho da análise é mostrar a curva ao daniel em reais; a decisão é
+do daniel, e a aula 12 trata de registrá-la.

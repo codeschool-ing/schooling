@@ -6,7 +6,7 @@
 #
 #   sudo bash captures.sh        # as root; the commands themselves run as ana
 #
-# It runs the steps of "Your workspace" in order, as the user ana, in her home
+# It runs the steps of "Your workspace" in order, as the user ana, in that account's home
 # directory, starting from no ~/tm at all. What is NOT shown: installing
 # python3, python3-venv and git with apt, because the recording machine already
 # had them; the lesson says so where it gives the command. pip reached PyPI

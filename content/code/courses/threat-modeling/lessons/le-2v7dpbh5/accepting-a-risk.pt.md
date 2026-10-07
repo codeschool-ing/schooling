@@ -42,7 +42,7 @@ infectado por qualquer coisa.
 ### A T14, aceita
 
 O daniel assinou o aceite da T14 em 1º de outubro de 2026, por seis meses. Pelos números, a ana
-poderia ter assinado, já que R$ 9.000 por ano está na faixa dela. O daniel ficou com ele porque o ano
+poderia ter assinado, já que R$ 9.000 por ano está na faixa da ana. O daniel ficou com o aceite porque o ano
 ruim, quase R$ 400.000, é uma questão de negócio, e porque a alternativa sendo cotada, um seguro acima
-de R$ 50.000, é um contrato que só ele pode assinar. O registro completo está na seção depois da
+de R$ 50.000, é um contrato que só o daniel pode assinar. O registro completo está na seção depois da
 próxima.

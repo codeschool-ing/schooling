@@ -19,7 +19,7 @@ linhas:
 
 - **Serviços de saúde são alvo comum de extorsão.** Grupos criminosos cifram ou roubam dados de
   pacientes e pedem pagamento; quanto mais sensível o dado, mais forte a posição deles. Todo
-  relatório setorial que ela leu nos últimos dois anos punha a saúde perto do topo.
+  relatório setorial que a carla leu nos últimos dois anos punha a saúde perto do topo.
 - **Credential stuffing atinge todo login de consumidor.** Senhas vazadas de outros sites são
   testadas automaticamente contra qualquer página de login que responda. O próprio log de login do
   portal mostra rajadas de logins falhos de endereços desconhecidos quase toda semana.

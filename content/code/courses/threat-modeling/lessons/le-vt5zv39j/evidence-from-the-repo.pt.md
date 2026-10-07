@@ -73,7 +73,7 @@ ana <ana@vereda.example>
 O daniel é o dono, e a ana fez o commit do arquivo. Nada no repositório mostra que o daniel o leu.
 Isso não é um defeito do RA-001; é uma lacuna em como as aprovações são registradas, e há correções
 comuns. O daniel pode aprovar a mudança na revisão da plataforma de hospedagem, que registra a conta
-dele e a hora; ou pode fazer o commit ele mesmo, assinado com a própria chave. Qualquer um dos dois
+do daniel e a hora; ou o próprio daniel pode fazer o commit, assinado com a própria chave. Qualquer um dos dois
 transforma "o arquivo diz daniel" em "o daniel fez".
 
 ### O modelo confere a si mesmo

@@ -5,7 +5,7 @@ version: 1
 
 In 2008 the risk analyst Louis Anthony Cox published a paper with an unambiguous title, *What's
 wrong with risk matrices?*, and showed mathematically what the previous section showed with nine
-risks. Four of his findings explain every oddity in Vereda's table.
+risks. Four of the paper's findings explain every oddity in Vereda's table.
 
 | problem | what it means | at Vereda |
 |---|---|---|

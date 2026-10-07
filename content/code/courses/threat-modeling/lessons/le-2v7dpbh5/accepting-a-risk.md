@@ -42,6 +42,6 @@ infected by anything.
 ### T14, accepted
 
 daniel signed T14's acceptance on 1 October 2026, for six months. On the numbers, ana could have
-signed it, since R$ 9,000 a year is in her band. daniel took it because the bad year, nearly
+signed it, since R$ 9,000 a year is in ana's band. daniel took it because the bad year, nearly
 R$ 400,000, is a business question, and because the alternative being priced, insurance above R$
-50,000, is a contract only he can sign. The full record is in the section after next.
+50,000, is a contract only daniel can sign. The full record is in the section after next.

@@ -19,7 +19,7 @@ com que ele conversa e os fluxos entre eles. Nada de dentro aparece.
 O diagrama de contexto é barato e acha coisas reais. É onde alguém diz "o provedor de SMS recebe o
 nome do paciente e o endereço da clínica, combinamos isso com eles?", e essa é uma pergunta sobre
 dado pessoal saindo da empresa, que o LINDDUN da aula 5 faria de novo. É também o desenho para
-mostrar ao daniel, que cuida das clínicas: cabe num slide e ele reconhece cada caixa.
+mostrar ao daniel, que cuida das clínicas: cabe num slide e o daniel reconhece cada caixa.
 
 ### Nível 1: as partes principais
 
