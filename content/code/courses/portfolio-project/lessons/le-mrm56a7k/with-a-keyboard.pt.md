@@ -5,7 +5,7 @@ version: 2
 
 A segunda verificação é a que qualquer avaliador faz sem instalar nada: **guarde o mouse e aperte Tab**. Cada
 toque move o foco para a próxima coisa em que se pode agir, e um leitor de tela anuncia o nome dela. Este
-script aperta Tab pela página e imprime como cada parada se chama, como uma aproximação desse anúncio; ele
+script aperta Tab pela página e imprime como cada parada se chama, como uma aproximação desse anúncio. Ele
 roda como a verificação do axe, com o que aquela instalou:
 
 ```javascript

@@ -18,7 +18,7 @@ section, and lesson 16 uses it again.
 **The virtual machine is the recommended path.** It costs nothing, it can be thrown away and built
 again in minutes, and nothing on it is exposed to the internet while you are still learning what a
 server needs. **Multipass**, from Canonical, the company behind Ubuntu, is free and builds an Ubuntu
-Server virtual machine with one command, using the hypervisor your system already has: Hyper-V on
+Server virtual machine with one command. It uses the hypervisor your system already has: Hyper-V on
 Windows Pro, Enterprise and Education, VirtualBox on Windows Home, QEMU on a Mac, and KVM on Linux.
 On Windows and macOS it comes as an installer from its own site; on Ubuntu, `sudo snap install multipass`.
 
@@ -86,8 +86,8 @@ packages:
 ```
 
 This is a **cloud-init** file. cloud-init runs on the first boot of an Ubuntu Server machine, reads a file
-like this one and does what it says: it names the machine `srv`, creates the account `ana` with
-your public key in it, turns off logging in with a password, and installs Podman, Caddy, git, Python
+like this one and does what it says. This one names the machine `srv` and creates the account `ana` with
+your public key in it. It turns off logging in with a password, and installs Podman, Caddy, git, Python
 and curl from Ubuntu's own packages. Save it as `srv.yaml`, put **your** public key on the line that
 asks for it, and write your own user name where it says `ana`. The `sudo` line lets that account run
 `sudo` without a password, since srv.yaml never sets one; that is fine on a machine only your computer

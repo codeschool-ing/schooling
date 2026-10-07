@@ -10,8 +10,8 @@ passada.
 
 Uma máquina montada do zero é um lugar melhor, e a aula 15 já mostrou como fazer uma em minutos. A
 transcrição abaixo rodou num srv com Python e git e nada do loanbook além do repositório bare enviado a ele.
-O seu tem o deploy da aula 15, então monte uma segunda máquina para este teste, `multipass launch 24.04
---name cold`, que já vem com Python e git, faça o clone a partir do endereço real do seu projeto e apague a
+O seu tem o deploy da aula 15, então monte uma segunda máquina para este teste: `multipass launch 24.04
+--name cold` já vem com Python e git. Faça o clone a partir do endereço real do seu projeto e apague a
 máquina depois com `multipass delete --purge cold`. Seguindo a seção *Run it* do README, com o clone
 vindo do repositório bare do srv em vez do endereço de exemplo, e o `python3 app.py` subido em segundo
 plano:

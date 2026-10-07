@@ -31,8 +31,8 @@ bash: line 1: podman: command not found
 
 Não há nada errado. `cloud-init status --wait` espera até terminar, e aí o `podman` existe. Se o status
 terminar em `error` em vez de `done`, `ssh srv sudo cat /var/log/cloud-init-output.log` mostra o que cada
-passo imprimiu; um pacote que não baixou, porque a máquina não tem rota para a internet, é a causa de
-costume, e a correção está na configuração de rede do hipervisor, não no srv.yaml.
+passo imprimiu. A causa de costume é um pacote que não baixou porque a máquina não tem rota para a
+internet, e a correção para isso está na configuração de rede do hipervisor, não no srv.yaml.
 
 **O ssh recusa a chave.** É assim que uma chave errada ou um nome de usuário errado aparecem:
 

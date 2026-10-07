@@ -18,7 +18,7 @@ vez, nesta seção, e a aula 16 volta a usá-lo.
 **A máquina virtual é o caminho recomendado.** Não custa nada, pode ser jogada fora e montada de novo em
 minutos, e nada nela fica exposto à internet enquanto você ainda está aprendendo do que um servidor
 precisa. O **Multipass**, da Canonical, a empresa por trás do Ubuntu, é gratuito e monta uma máquina
-virtual com Ubuntu Server com um comando, usando o hipervisor que o seu sistema já tem: Hyper-V no Windows
+virtual com Ubuntu Server com um comando. Ele usa o hipervisor que o seu sistema já tem: Hyper-V no Windows
 Pro, Enterprise e Education, VirtualBox no Windows Home, QEMU no Mac e KVM no Linux. No Windows e no macOS
 ele vem como instalador do site dele; no Ubuntu, `sudo snap install multipass`.
 
@@ -86,8 +86,9 @@ packages:
 ```
 
 Este é um arquivo do **cloud-init**. O cloud-init roda no primeiro boot de uma máquina Ubuntu Server, lê um
-arquivo como este e faz o que ele diz: dá à máquina o nome `srv`, cria a conta `ana` com a sua chave pública
-nela, desliga o login por senha e instala Podman, Caddy, git, Python e curl dos pacotes do próprio Ubuntu.
+arquivo como este e faz o que ele diz. Este dá à máquina o nome `srv` e cria a conta `ana` com a sua chave
+pública nela. Ele desliga o login por senha e instala Podman, Caddy, git, Python e curl dos pacotes do
+próprio Ubuntu.
 Salve-o como `srv.yaml`, ponha a **sua** chave pública na linha que pede por ela e escreva o seu nome de
 usuário onde está `ana`. A linha `sudo` deixa essa conta usar `sudo` sem senha, já que o srv.yaml nunca
 define uma; isso é aceitável numa máquina que só o seu computador alcança, e errado numa pública.

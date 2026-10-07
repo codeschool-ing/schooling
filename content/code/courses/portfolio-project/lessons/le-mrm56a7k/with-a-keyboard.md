@@ -6,7 +6,7 @@ version: 2
 The second check is the one any reviewer can do without installing anything: **put the mouse away and
 press Tab**. Each press moves the focus to the next thing you can act on, and a screen reader announces
 its name. This script presses Tab through the page and prints what each stop is called, as a rough
-stand-in for that announcement; it runs like the axe check, with what that one installed:
+stand-in for that announcement. It runs like the axe check, with what that one installed:
 
 ```javascript
 // Press Tab through the page and print what each stop is called: its label,

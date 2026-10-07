@@ -30,8 +30,8 @@ bash: line 1: podman: command not found
 
 Nothing is wrong. `cloud-init status --wait` waits until it is, and then `podman` exists. If the status
 ends in `error` instead of `done`, `ssh srv sudo cat /var/log/cloud-init-output.log` shows what every
-step printed; a package that failed to download, because the machine has no route to the internet, is
-the usual cause, and the fix is the hypervisor's network setting rather than anything in srv.yaml.
+step printed. The usual cause is a package that failed to download because the machine has no route to
+the internet, and the fix for that is the hypervisor's network setting, not srv.yaml.
 
 **ssh refuses the key.** This is what a wrong key or a wrong user name looks like:
 

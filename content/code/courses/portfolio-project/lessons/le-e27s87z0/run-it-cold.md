@@ -9,9 +9,9 @@ every package you ever installed, every variable you ever set, and a database le
 
 A machine built from nothing is a better place, and lesson 15 already showed how to make one in minutes.
 The transcript below ran on a srv with Python and git and nothing of loanbook's but the bare repository
-pushed to it. Yours has lesson 15's deploy on it, so build a second machine for this test, `multipass
-launch 24.04 --name cold`, which comes with Python and git, take the clone from your project's real
-address, and delete the machine afterwards with `multipass delete --purge cold`. Following the README's *Run it* section, with
+pushed to it. Yours has lesson 15's deploy on it, so build a second machine for this test: `multipass
+launch 24.04 --name cold` comes with Python and git. Take the clone from your project's real address, and
+delete the machine afterwards with `multipass delete --purge cold`. Following the README's *Run it* section, with
 the clone taken from srv's bare repository instead of the placeholder address, and `python3 app.py`
 started in the background:
 
