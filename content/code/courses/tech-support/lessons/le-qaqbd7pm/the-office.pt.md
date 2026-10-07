@@ -32,7 +32,8 @@ aula verificam isso, e nenhuma delas precisa de terminal.
 Se mesmo assim quiser rodar alguma coisa, use o Linux que você instalou no curso Sistemas
 Operacionais, aula 3, "Instalação e configuração inicial de uma distribuição Linux". Os comandos que só
 leem, como `getent hosts`, `lpstat` e `df -h`, funcionam lá e respondem sobre o seu computador, então os
-números vão ser outros. Os dois programas que este curso mostra inteiros, a calculadora de horário
-comercial da aula 6 e o script de inventário da aula 11, rodam lá do jeito que estão. O que citar `pc1`,
+números vão ser outros. Os três programas que este curso mostra inteiros, o script de fatos da aula 5,
+a calculadora de horário comercial da aula 6 e o script de inventário da aula 11, rodam lá do jeito que
+estão. O que citar `pc1`,
 `pc2`, `srv1` ou `intranet` não roda: **esses nomes só existem no escritório**. E um comando que muda alguma
 coisa, qualquer um rodado com `sudo`, é para um computador que você pode se dar ao luxo de quebrar.

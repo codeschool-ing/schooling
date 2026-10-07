@@ -31,7 +31,7 @@ after each lesson check that, and none of them needs a terminal.
 If you want to run something anyway, use the Linux you installed in the Operating Systems course,
 lesson 3, "Installing and setting up a Linux distribution". The commands that only read, such as
 `getent hosts`, `lpstat` and `df -h`, work there and answer about your computer, so their numbers will
-differ from the office's. The two programs this course shows whole, the business-hours calculator in
-lesson 6 and the inventory script in lesson 11, run there as they are. Anything that names `pc1`, `pc2`,
+differ from the office's. The three programs this course shows whole, the facts script in lesson 5, the
+business-hours calculator in lesson 6 and the inventory script in lesson 11, run there as they are. Anything that names `pc1`, `pc2`,
 `srv1` or `intranet` will not: **those names exist only in the office**. And a command that changes
 something, anything run with `sudo`, belongs on a computer you can afford to break.
