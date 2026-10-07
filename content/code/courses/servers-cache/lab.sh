@@ -483,6 +483,10 @@ LABFILE
   stage_tls
   [ "$n" -ge 6 ] || return 0
   stage_cache
+  [ "$n" -ge 8 ] || return 0
+  in_vm systemctl enable --now redis-server >/dev/null 2>&1
+  [ "$n" -ge 9 ] || return 0
+  in_vm systemctl enable --now memcached >/dev/null 2>&1
 }
 
 stage_cache() { # lesson 5's end: Nginx caches the API, as the shop's headers allow
