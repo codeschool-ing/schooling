@@ -1,6 +1,6 @@
 ---
 title: Two cables that act as one
-version: 1
+version: 2
 ---
 
 The link between two switches carries everybody's traffic at once: every PC on one side talking to
@@ -31,8 +31,25 @@ LACP**, the subject of the next section.
 
 The lab for this lesson is two switches, `sw1` and `sw2`, joined by two cables, `e1` and `e2` at
 each end. `pc1` is on `sw1`; `pc2`, `pc3` and `pc4` are on `sw2`, with addresses `10.20.10.21`
-to `10.20.10.24`. At the start the two cables are plugged in and up, but neither has been made part
-of either switch:
+to `10.20.10.24`. Save it as `~/netlab/lag.sh` and build it with `sudo bash ~/netlab/netlab.sh up lag`:
+
+```bash
+# ~/netlab/lag.sh: two switches joined by two cables, e1 and e2, that are not
+# yet part of either switch. pc1 is on sw1; pc2, pc3 and pc4 on sw2.
+#
+#   pc1 -- sw1 ==(e1, e2)== sw2 -- pc2, pc3, pc4
+local n
+for n in sw1 sw2 pc1 pc2 pc3 pc4; do node $n; done
+link sw1 e1 sw2 e1; link sw1 e2 sw2 e2
+link pc1 eth0 sw1 p1; link pc2 eth0 sw2 p1; link pc3 eth0 sw2 p2; link pc4 eth0 sw2 p3
+switch sw1 "p1"; switch sw2 "p1 p2 p3"
+addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24
+addr pc3 eth0 10.20.10.23/24; addr pc4 eth0 10.20.10.24/24
+```
+
+The two `link sw1 e… sw2 e…` lines lay the cables, and neither `e1` nor `e2` is in the list of ports
+either `switch` line is given. So at the start the two cables are plugged in and up, but neither has
+been made part of either switch:
 
 ```
 root@sw1:~# ip -br link

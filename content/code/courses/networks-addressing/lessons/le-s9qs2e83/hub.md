@@ -1,6 +1,6 @@
 ---
 title: "The hub: every frame out of every port"
-version: 1
+version: 2
 ---
 
 A hub is often described as a slow switch. It is a different kind of device. **A hub has no table
@@ -20,7 +20,9 @@ removed the problem.
 A hub is hard to buy today, and a namespace has no electrical signal to repeat, so this lab cannot
 run a real one. It can imitate what a hub does to traffic. The switch forgets each learnt address
 after an **ageing time**; set that to zero and it forgets every address the moment it learns it.
-With an empty table, every frame is sent out of every port, which is the behaviour of a hub:
+With an empty table, every frame is sent out of every port, which is the behaviour of a hub. At a
+root prompt on sw1, `ip link set br0 type bridge ageing_time 0` makes the change, and
+`ageing_time 30000`, the default of 300 seconds counted in hundredths, undoes it afterwards:
 
 ```
 root@sw1:~# ip -d link show br0 | grep -o "ageing_time [0-9]*"

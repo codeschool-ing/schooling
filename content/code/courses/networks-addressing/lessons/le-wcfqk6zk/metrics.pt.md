@@ -1,6 +1,6 @@
 ---
 title: "Métricas: duas rotas para o mesmo lugar"
-version: 1
+version: 2
 ---
 
 O prefixo mais longo não consegue escolher entre duas rotas para o mesmo prefixo: elas têm o mesmo
@@ -27,8 +27,8 @@ As duas estão na tabela e só uma é usada: 198.51.100.7, um endereço que nada
 sai via ra. A rota de métrica 200 não está errada nem parada à toa. Ela é uma **rota reserva**,
 mantida na tabela e ignorada enquanto a melhor puder ser usada.
 
-Depois o cabo do r1 até o ra é puxado. (No laboratório, a ponta do ra é desligada, o que o r1 vê
-exatamente como um cabo puxado: o sinal na porta dele some.) O r1 percebe na hora:
+Depois o cabo do r1 até o ra é puxado. (No laboratório, a ponta do ra é desligada, `ip link set eth0 down`
+num prompt de root no ra, o que o r1 vê exatamente como um cabo puxado: o sinal na porta dele some.) O r1 percebe na hora:
 
 ```
 root@r1:~# ip -br link show eth1

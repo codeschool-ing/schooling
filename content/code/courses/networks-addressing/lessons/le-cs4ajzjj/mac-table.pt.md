@@ -1,6 +1,6 @@
 ---
 title: "A tabela MAC: aprendida pela origem, usada pelo destino"
-version: 1
+version: 2
 ---
 
 As aulas 1 e 2 mostraram um switch preenchendo a tabela e chamaram isso de aprender. Esta aula é
@@ -9,8 +9,9 @@ que chega, e usa o que aprendeu para o endereço de destino dos quadros que vêm
 aprende por um destino, e esse único fato explica quase tudo o que um switch faz, inclusive a
 inundação da próxima seção.
 
-Cada bloco desta aula começa com a tabela vazia. Este é o sw1 antes e depois de um único ping do
-pc1 ao servidor:
+Esta aula roda no escritório da aula 1, montado com `sudo bash ~/netlab/netlab.sh up office`, e cada
+bloco dela começa com a tabela vazia: `bridge fdb flush dev br0 dynamic` no sw1, e `ip neigh flush all`
+em cada uma das outras máquinas. Este é o sw1 antes e depois de um único ping do pc1 ao servidor:
 
 ```
 root@sw1:~# bridge fdb show br br0 dynamic

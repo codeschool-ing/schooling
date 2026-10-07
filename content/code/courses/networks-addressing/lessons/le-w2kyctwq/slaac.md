@@ -1,6 +1,6 @@
 ---
 title: SLAAC, an address built from an advertisement
-version: 1
+version: 2
 ---
 
 The IPv4 habit says a PC gets its address from a DHCP server, which lesson 10 covers. IPv6 has
@@ -77,7 +77,7 @@ IPv6: a gateway only has to be reachable on the link, and the link-local address
 never changes when the network is renumbered. It is also why a gateway shown as `fe80::…` is
 always paired with an interface, here `dev eth0`.
 
-srv took no part in any of this. lab.sh turned autoconfiguration off on it and gave it
+srv took no part in any of this. `dualstack.sh` turned autoconfiguration off on it and gave it
 `2001:db8:20:10::10` by hand, as servers are usually given addresses: **a server's address should
 not depend on which network card it happens to have today**. A replaced card under SLAAC with EUI-64
 means a new address, and every client that had the old one written down stops working.

@@ -1,6 +1,6 @@
 ---
 title: Dual stack, two protocols on one cable
-version: 1
+version: 2
 ---
 
 Moving to IPv6 does not mean switching IPv4 off on a chosen day. **The way nearly every network
@@ -19,7 +19,7 @@ ana@pc1:~$ ip -br addr show eth0
 eth0@if27        UP             10.20.10.21/24 2001:db8:20:10:25:70ff:febc:29c6/64 fe80::25:70ff:febc:29c6/64 
 ```
 
-Three addresses on `eth0`. `10.20.10.21/24` is the IPv4 address lab.sh gave it, the one lesson 8
+Three addresses on `eth0`. `10.20.10.21/24` is the IPv4 address `dualstack.sh` gave it, the one lesson 8
 worked with. `2001:db8:20:10:25:70ff:febc:29c6/64` is the global IPv6 address it built by SLAAC, and
 `fe80::25:70ff:febc:29c6/64` is its link-local address. **The two protocols do not share anything
 above the cable**: IPv4 leaves through `10.20.10.1`, IPv6 through `fe80::1f:23ff:fee7:e9d5`, and a
@@ -39,7 +39,7 @@ ana@pc1:~$ getent ahosts web
 
 `web` has two addresses, `2001:db8:99::80` and `192.0.2.80`, and **the IPv6 one comes first**.
 (`STREAM`, `DGRAM` and `RAW` are the three kinds of socket each address could be used for; read only
-the addresses.) In this lab the names come from each machine's `/etc/hosts`, which lab.sh wrote; on
+the addresses.) In this lab the names come from each machine's `/etc/hosts`, which `dualstack.sh` wrote; on
 the internet they come from DNS, where a name has an **A** record for IPv4 and an **AAAA** record for
 IPv6, as the networks course showed. The order is the system's choice, and on a machine with a
 global IPv6 address it puts IPv6 first. A program that tries the addresses in order therefore tries

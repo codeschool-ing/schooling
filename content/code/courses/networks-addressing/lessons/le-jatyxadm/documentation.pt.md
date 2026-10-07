@@ -1,6 +1,6 @@
 ---
 title: Documentação, lida da própria rede
-version: 1
+version: 2
 ---
 
 Todo princípio desta aula depende de alguém saber o que a rede de fato é: qual cabo vai para onde, qual
@@ -128,5 +128,5 @@ as duas fontes discordam do desenho, **o desenho é que está errado**.
   entre aparelhos de rede, ele é a documentação mais barata que existe.
 
 O teste da documentação de uma rede é simples e impiedoso: alguém que nunca a viu conseguiria
-reconstruí-la só com os documentos? Para o laboratório, a resposta é sim, porque o `lab.sh` é a rede
+reconstruí-la só com os documentos? Para o laboratório, a resposta é sim, porque o `campus.sh` é a rede
 inteira. Para uma rede de verdade, a resposta é a documentação.

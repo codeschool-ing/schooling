@@ -1,6 +1,6 @@
 ---
 title: Vazamentos de rota, e os dois filtros que os detêm
-version: 1
+version: 2
 ---
 
 Um **vazamento de rota** (*route leak*) é um anúncio que vai para onde sua política diz que não deveria ir.
@@ -71,7 +71,7 @@ Paths: (1 available, best #1, table default)
 ```
 
 **Um caminho disponível, vindo de `192.0.2.9`, ispa, pelo cabo entre os provedores.** Nada de edge. A
-configuração de ispb no `lab.sh` aplica a tudo o que vem do cliente um route map que permite
+configuração de ispb no `bgp.sh` aplica a tudo o que vem do cliente um route map que permite
 `203.0.113.0/24` e mais nada, o gêmeo, do lado do provedor, do `TO-PROVIDER` de edge. Então o vazamento foi
 pego pelo segundo filtro.
 

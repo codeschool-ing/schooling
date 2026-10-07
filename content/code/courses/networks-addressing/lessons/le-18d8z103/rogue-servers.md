@@ -1,6 +1,6 @@
 ---
 title: A second server nobody asked for
-version: 1
+version: 2
 ---
 
 DHCP has no notion of an official server. **A client takes the first offer that arrives, from
@@ -11,7 +11,8 @@ server. Either way, the clients that listen to it are cut off or sent somewhere 
 
 In the lab, the PC called rogue was turned into a second server that lends 10.20.10.200 upwards and
 names itself, 10.20.10.66, as the gateway. How it was started is not part of this lesson; what it
-does to the network is. pc2 asks for an address, with a `tcpdump` running on pc2 in a second
+does to the network is. Your `dhcp.sh` has no second server, so this section is one to read rather
+than type: the output is the point. pc2 asks for an address, with a `tcpdump` running on pc2 in a second
 terminal that prints after it:
 
 ```

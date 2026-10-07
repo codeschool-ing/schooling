@@ -1,6 +1,6 @@
 ---
 title: Os dois ao mesmo tempo
-version: 1
+version: 2
 ---
 
 No cliente-servidor, os papéis são fixos para o serviço inteiro: navegadores são clientes, o servidor
@@ -9,8 +9,9 @@ outros, e nenhuma máquina sozinha guarda o serviço. Um arquivo compartilhado p
 exemplo que mais gente já viu: cada computador que o baixa também serve aos outros os pedaços que já
 tem.
 
-O laboratório mostra a forma com dois PCs. Cada um abre um socket escutando na porta 8000, e depois
-cada um conecta no do outro. Os dois listam suas conexões TCP com `ss -tn`:
+O laboratório mostra a forma com dois PCs. Cada um abre um socket escutando na porta 8000,
+`timeout 8 nc -l 8000`, e depois cada um conecta no do outro, `sleep 5 | timeout 6 nc pc2 8000` no pc1
+e o mesmo em direção ao pc1 no pc2. Os dois listam suas conexões TCP com `ss -tn`:
 
 ```
 ana@pc1:~$ ss -tn

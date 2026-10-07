@@ -1,6 +1,6 @@
 ---
 title: SLAAC, um endereço montado a partir de um anúncio
-version: 1
+version: 2
 ---
 
 O hábito do IPv4 diz que um PC recebe o endereço de um servidor DHCP, assunto da aula 10. O IPv6 também
@@ -78,7 +78,7 @@ contando o prazo de 300 do roteador. Isso é normal no IPv6: um gateway só prec
 enlace, e o endereço link-local é o que não muda quando a rede troca de numeração. É também por isso
 que um gateway mostrado como `fe80::…` vem sempre junto com uma interface, aqui `dev eth0`.
 
-O srv não participou de nada disso. O lab.sh desligou a autoconfiguração nele e lhe deu
+O srv não participou de nada disso. O `dualstack.sh` desligou a autoconfiguração nele e lhe deu
 `2001:db8:20:10::10` à mão, como costuma ser com servidores: **o endereço de um servidor não deve
 depender de qual placa de rede ele tem hoje**. Uma placa trocada, com SLAAC e EUI-64, quer dizer um
 endereço novo, e todo cliente que tinha o antigo anotado para de funcionar.

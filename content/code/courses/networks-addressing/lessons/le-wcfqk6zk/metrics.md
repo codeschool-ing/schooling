@@ -1,6 +1,6 @@
 ---
 title: "Metrics: two routes to the same place"
-version: 1
+version: 2
 ---
 
 Longest prefix cannot choose between two routes to the same prefix: they are the same length. Then
@@ -27,8 +27,8 @@ Both are in the table and only one is used: 198.51.100.7, an address nothing mor
 leaves via ra. The metric 200 route is not wrong and not idle. It is a **backup route**, kept in the
 table and ignored for as long as the better one is usable.
 
-Then the cable from r1 to ra is pulled. (In the lab, ra's end of it is switched off, which r1 sees
-exactly as a pulled cable: the signal on its port goes.) r1 notices at once:
+Then the cable from r1 to ra is pulled. (In the lab, ra's end of it is switched off, `ip link set eth0 down` at a
+root prompt on ra, which r1 sees exactly as a pulled cable: the signal on its port goes.) r1 notices at once:
 
 ```
 root@r1:~# ip -br link show eth1
