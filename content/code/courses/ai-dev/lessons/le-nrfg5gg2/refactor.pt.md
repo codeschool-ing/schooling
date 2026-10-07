@@ -1,79 +1,133 @@
 ---
 title: Refatorando com um assistente
-version: 1
+version: 2
 ---
+
+Esta seção começa de novo da loja como o `make-shop.sh` a faz (aula 1 seção 04), então o
+`remove()` da seção 04 não está nela.
 
 Uma refatoração muda a forma do código sem mudar o que ele faz. A segunda metade é a definição
 inteira, e é a metade que um assistente não consegue conferir: ele pode deixar o código mais curto,
 não pode saber de qual comportamento alguém depende. **Os testes decidem se uma refatoração foi
 mesmo uma**, e a lição desta seção é que testes que passam valem o quanto vale o que testam.
 
-## Um pedido e um diff
+## Pedindo um diff
 
-O `Cart.total()` chama o `subtotal()` três vezes, uma direto e duas pelo `discount()` e pelo
-`shipping()`. A ana pede ao `assist` que o calcule uma vez só, e pede um diff, que é o formato certo
-para uma mudança que ela vai revisar (a aula 5 fala mais de pedir um). A resposta foi escrita pelo
-curso:
+O `Cart.total()` calcula o subtotal quatro vezes: uma diretamente, uma por meio do `discount()` e
+duas por meio do `shipping()`, que chama os dois. A ana pede que ele seja calculado uma vez, e pede um diff, que é o formato certo
+para uma mudança que ela vai revisar:
 
 ```
 ana@dev:~/shop$ python -m pytest -q
 ........                                                                 [100%]
-8 passed in 0.55s
-ana@dev:~/shop$ assist ask "Refactor Cart so total() computes the subtotal once. Reply with a unified diff." --open shop/cart.py > refactor.diff
+8 passed in 0.73s
+ana@dev:~/shop$ python scratch/assist.py ask "Refactor Cart so total() computes the subtotal once. Reply with a unified diff." --open shop/cart.py > refactor.diff
 context sent (265 of 3000 tokens):
     265  shop/cart.py
 ---
-ana@dev:~/shop$ cat refactor.diff
+ana@dev:~/shop$ cat -n refactor.diff
+     1	Here is the unified diff to refactor `Cart` to compute the subtotal once:
+     2	
+     3	```diff
+     4	--- a/cart.py
+     5	+++ b/cart.py
+     6	@@ -11,7 +11,7 @@ class Cart:
+     7	     discount_percent: int = 0
+     8	
+     9	     def add(self, sku: str, unit_price: int, quantity: int = 1) -> None:
+    10	         if quantity < 1:
+    11	             raise ValueError("quantity must be at least 1")
+    12	-        for line in self.lines:
+    13	-            if line.sku == sku:
+    14	-                line.quantity += quantity
+    15	-                return
+    16	+        for line in self.lines:
+    17	+            if line.sku == sku:
+    18	+                line.quantity += quantity
+    19	+                return
+    20	         self.lines.append(Line(sku, unit_price, quantity))
+    21	
+    22	     def subtotal(self) -> int:
+    23	         return sum(line.unit_price * line.quantity for line in self.lines)
+    24	
+    25	     def discount(self) -> int:
+    26	-        return self.subtotal() * self.discount_percent // 100
+    27	+        return sum(line.unit_price * line.quantity * self.discount_percent // 100 for line in self.lines)
+    28	
+    29	     def shipping(self) -> int:
+    30	         if self.subtotal() - self.discount() >= FREE_SHIPPING_FROM:
+    31	             return 0
+    32	         return SHIPPING
+    33	
+    34	     def total(self) -> int:
+    35	-        return self.subtotal() - self.discount() + self.shipping()
+    36	+        subtotal = self.subtotal()
+    37	+        return subtotal - self.discount() + self.shipping()
+    38	```
+    39	
+    40	The changes made were to compute the subtotal once and then apply the discount and shipping as separate operations, rather than recomputing the subtotal for each operation.
+ana@dev:~/shop$ git apply --check refactor.diff
+error: corrupt patch at line 38
+```
+
+**A resposta não é um diff que o git consiga usar.** Ela abre com uma frase, embrulha o diff num
+bloco de Markdown e fecha com outra frase, e o `git apply` para na linha 38, as crases que fecham o
+bloco. Um diff unificado é um formato de regras exatas, modelos pequenos as quebram com frequência,
+e os maiores com frequência suficiente para que agentes editem arquivos por ferramentas (aula 7).
+
+Leia o que ele teria feito mesmo assim, porque a revisão é isso. As linhas 12 a 19 tiram o laço do
+`add()` e põem as mesmas quatro linhas de volta, o que não muda nada e deixa a mudança mais longa
+de ler. A linha 27 muda o `discount()`: agora ele arredonda para baixo o desconto de cada linha
+separadamente e soma, onde o código antigo arredondava uma vez o desconto do carrinho. Uma caneca e
+um abajur a 39,95 cada com 10% de desconto: a regra antiga tira 7,99, a nova 7,98. **Um centavo,
+uma regra que o `CONVENTIONS.md` diz morar num lugar só, e uma mudança que a explicação lá embaixo
+não menciona.**
+
+## Pedindo o código em vez disso
+
+Então ela pede o arquivo inteiro e deixa o `assist` escrevê-lo, como faria o botão Aplicar de um
+painel de chat, e revisa a mudança com o git em vez de na resposta:
+
+```
+ana@dev:~/shop$ python scratch/assist.py ask "Refactor Cart so total() computes the subtotal once. Reply with the complete new shop/cart.py in one block of code." --open shop/cart.py --write shop/cart.py > /dev/null
+context sent (265 of 3000 tokens):
+    265  shop/cart.py
+---
+assist: the reply has no block of code to write
+ana@dev:~/shop$ python scratch/assist.py ask "Refactor Cart so total() computes the subtotal once. Reply with the complete new shop/cart.py in one block of code." --open shop/cart.py --write shop/cart.py > /dev/null
+context sent (265 of 3000 tokens):
+    265  shop/cart.py
+---
+ana@dev:~/shop$ git diff
 diff --git a/shop/cart.py b/shop/cart.py
-index 230a8bd..38a07b4 100644
+index 230a8bd..0b521e0 100644
 --- a/shop/cart.py
 +++ b/shop/cart.py
-@@ -31,10 +31,14 @@ class Cart:
-     def discount(self) -> int:
-         return self.subtotal() * self.discount_percent // 100
- 
--    def shipping(self) -> int:
--        if self.subtotal() - self.discount() >= FREE_SHIPPING_FROM:
-+    def shipping(self, subtotal: int | None = None) -> int:
-+        if subtotal is None:
-+            subtotal = self.subtotal()
-+        if subtotal >= FREE_SHIPPING_FROM:
-             return 0
+@@ -37,4 +37,5 @@ class Cart:
          return SHIPPING
  
      def total(self) -> int:
 -        return self.subtotal() - self.discount() + self.shipping()
 +        subtotal = self.subtotal()
-+        discount = subtotal * self.discount_percent // 100
-+        return subtotal - discount + self.shipping(subtotal)
-
-```
-
-## Aplicando, e os testes
-
-```
-ana@dev:~/shop$ git apply --stat refactor.diff
- shop/cart.py |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-ana@dev:~/shop$ git apply refactor.diff && python -m pytest -q
++        return subtotal - self.discount() + self.shipping()
+ana@dev:~/shop$ python -m pytest -q
 ........                                                                 [100%]
-8 passed in 0.57s
+8 passed in 0.77s
 ```
 
-Os oito testes passam, e o diff parece a refatoração pedida. **Não é uma.** Leia o `shipping()`
-antigo contra o novo: o antigo comparava `subtotal - discount` com o limite do frete grátis, o
-novo compara só o `subtotal`. Um carrinho de 210,00 com um cupom de 10% pagava 15,00 de frete,
-porque 189,00 está abaixo de 200,00, e agora não paga nada. Se essa é uma regra melhor é uma
-pergunta para quem cuida dos preços da loja. Refatoração não é.
-
-Nenhum dos oito testes tem um cupom e um carrinho perto do limite ao mesmo tempo, então nenhum
-percebeu.
+A primeira resposta não tinha nenhum bloco de código, então o `assist` não escreveu nada, e a ana
+pediu de novo. A mudança da segunda resposta tem três linhas: o `total()` guarda o subtotal numa
+variável. Os oito testes passam, e desta vez com razão, porque o comportamento não mudou. **Também
+não é o que foi pedido.** O `discount()` continua chamando o `subtotal()` por conta própria, e o
+`shipping()` chama os dois, então a mudança não economiza nada. Os testes não dizem se uma mudança fez o
+que você pediu; só lê-la contra o pedido diz.
 
 ## Fixando o comportamento antes
 
 A ordem segura é a outra: **antes de uma refatoração, escreva os testes que fixam o que não pode
-mudar**, em especial os casos em que duas regras se encontram. A ana escreve o que este diff
-quebra:
+mudar**, principalmente os casos em que duas regras se encontram. Aqui elas se encontram num
+carrinho perto do limite do frete grátis com um cupom, que nenhum dos oito testes tem. A ana
+escreve esse, `tests/test_threshold.py`:
 
 ```python
 from shop.cart import Cart
@@ -89,40 +143,24 @@ def test_free_shipping_threshold_is_checked_after_the_discount():
 ```
 
 ```
-ana@dev:~/shop$ python -m pytest -q tests/test_threshold.py
-F                                                                        [100%]
-=================================== FAILURES ===================================
-__________ test_free_shipping_threshold_is_checked_after_the_discount __________
-
-    def test_free_shipping_threshold_is_checked_after_the_discount():
-        cart = Cart()
-        cart.add("LAMP-02", 21000)
-        apply_coupon(cart, "WELCOME10")
-        assert cart.discount() == 2100
->       assert cart.total() == 21000 - 2100 + 1500
-E       AssertionError: assert 18900 == ((21000 - 2100) + 1500)
-E        +  where 18900 = total()
-E        +    where total = Cart(lines=[Line(sku='LAMP-02', unit_price=21000, quantity=1)], discount_percent=10).total
-
-tests/test_threshold.py:10: AssertionError
-=========================== short test summary info ============================
-FAILED tests/test_threshold.py::test_free_shipping_threshold_is_checked_after_the_discount
-1 failed in 0.58s
-```
-
-`18900` contra `20400`: o carrinho refatorado esqueceu o frete. No código original o mesmo teste
-passa, então agora faz parte do projeto:
-
-```
+ana@dev:~/shop$ python -m pytest -q tests/test_threshold.py | tail -n 1
+1 passed in 0.71s
 ana@dev:~/shop$ git checkout shop/cart.py && python -m pytest -q
 Updated 1 path from the index
 .........                                                                [100%]
-9 passed in 0.56s
+9 passed in 0.71s
 ```
+
+O teste fixado passa no código do assistente, e no original, que o `git checkout` devolve; ele
+agora faz parte do projeto, nove testes onde havia oito. Nesta execução ele confirmou que a mudança
+era segura. O mesmo pedido, feito mais cedo no mesmo dia, voltou com um
+`total()` que somava o desconto em vez de subtraí-lo, e essa resposta também passou nos oito
+testes: este é o teste que teria falhado.
 
 ## Como refatorar com um assistente
 
-- **Peça um diff**, e leia-o como uma mudança, linha contra linha, não como código novo.
+- **Revise uma mudança como um diff**, linha contra linha, não como código novo. Se o diff do
+  próprio modelo não aplica, deixe a ferramenta escrever o arquivo e leia o `git diff`.
 - **Diga o que não pode mudar** no pedido: "o comportamento precisa continuar igual, inclusive o
   limite do frete grátis depois do desconto". Isso torna o erro menos provável e dá à revisão algo
   contra o que conferir.

@@ -1,6 +1,6 @@
 ---
 title: An assistant as a reviewer
-version: 1
+version: 2
 ---
 
 Asking an assistant to review a change is the opposite of asking it to write one, and in some ways
@@ -57,35 +57,50 @@ The eight tests pass, because none of them knows about end dates yet.
 
 ## The review
 
-She saves the diff and asks for a review of it. The reply was written by the course, the way an
-assistant's review typically reads: numbered, confident, and specific:
+She saves the diff and asks for a review of it. A review is a list of claims, so she asks for a
+short list, and keeps the reply in a file so she can number its lines:
 
 ```
 ana@dev:~/shop$ git diff main > review.diff
-ana@dev:~/shop$ assist ask "Review this diff. List real problems only, most serious first." --open review.diff
+ana@dev:~/shop$ python scratch/assist.py ask "Review this diff. List the three most serious real problems, one short paragraph each." --open review.diff > review.txt
 context sent (328 of 3000 tokens):
     328  review.diff
 ---
-Three things in this diff:
-
-1. Expiry is off by one day. `today >= until` refuses a coupon on its last valid day: FRIENDS15 says it runs until 2026-10-31, and on 2026-10-31 it is refused. If `until` is the last day it is valid, the test should be `today > until`.
-
-2. `date.today()` is the server's local date. If the shop runs in UTC and its customers are in Brazil, a coupon expires three hours early for them, every evening. Consider passing the date from the request, in the shop's time zone.
-
-3. The lookup is still case-sensitive: `COUPONS` has upper-case keys, so a customer who types `welcome10` will get UnknownCoupon. Normalise the code before looking it up.
+ana@dev:~/shop$ cat -n review.txt
+     1	### Review of `review.diff`
+     2	
+     3	#### 1. Missing input validation for `today` parameter
+     4	
+     5	The `apply_coupon` function now accepts an optional `today` parameter, which defaults to `None` if not provided. However, this default behavior can lead to unexpected behavior when the function is called without specifying the date. Specifically, when `today` is `None`, the function will use the current date, which may not be the intended behavior. To address this, the function should explicitly require the `today` parameter to be a `date` object.
+     6	
+     7	#### 2. Inconsistent handling of coupon expiration
+     8	
+     9	The `apply_coupon` function raises an `ExpiredCoupon` exception when the coupon has expired, but it does not provide any information about the date of expiration. This makes it difficult for the caller to determine when the coupon was last valid. To improve this, the function should include the date of expiration in the exception, or provide an additional parameter to return the expiration date.
+    10	
+    11	#### 3. Lack of type hinting for `cart` parameter
+    12	
+    13	The `apply_coupon` function has a type hint `cart: Cart`, but it does not specify the type of `Cart`. Without this information, it is unclear what type of object `cart` represents, which can make it difficult for other developers to understand and work with the code. To address this, the function should include a more specific type hint for `cart`, such as `Cart = object` or `Cart = shop.Cart`.
 ```
 
-**Three findings, and they are three different kinds of thing.** One is a bug. One is a real
-question about the design that no test would catch. One is wrong. Lesson 4 section 03 sorts them.
+Three findings, numbered, confident and specific. Now read each against the diff. The first wants
+`today` to be required; the default it objects to is what lets the shop call `apply_coupon`
+without passing a date, so it is a preference about the design rather than a problem. The second
+wants the expiry date in the exception, which is an improvement nobody needs before shipping this.
+The third asks for a "more specific type hint" for `cart: Cart`, which names the class the file
+imports and is as specific as a hint gets, and suggests `Cart = object`, which would make it less
+so. **None of the three is a bug, and the bug is not there**: FRIENDS15 is refused on its last
+valid day, 31 October, because the code says `today >= until`. The next section finds it.
+
 What matters here is the shape:
 
-- **The review is a list of claims**, each about a line and a behaviour. That makes each one
+- **A review is a list of claims**, each about a line and a behaviour. That makes each one
   checkable, which a vague "looks good, consider adding tests" is not. Ask for that shape: real
   problems only, most serious first, each with the line and the case that breaks it.
 - **The assistant saw only the diff.** Not the tests, not the coupon terms the marketing team
   published, not the time zone the shop runs in. A diff with no context gets a review with no
   context, and lesson 3 section 02's rule applies: the files that define the expectation belong in
   the request.
-- **It reads the code, not the intent.** It cannot know that "until 31 October" means the
-  31st is included unless something says so, and here the comment in the code happens to. Where
-  nothing says so, an assistant guesses, and so does a human reviewer.
+- **It reads the code, not the intent.** It cannot know that "until 31 October" means the 31st is
+  included unless something says so, and here the comment in the code happens to. A larger model
+  reads that comment more often than a small one does. Neither is a substitute for a test that says
+  what the 31st should do.

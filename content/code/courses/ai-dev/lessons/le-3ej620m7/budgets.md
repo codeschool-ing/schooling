@@ -1,6 +1,6 @@
 ---
 title: Budgets that are enforced, not hoped for
-version: 1
+version: 2
 ---
 
 A model call is the one line in your codebase whose cost is decided by its input, and its input
@@ -11,53 +11,49 @@ invoice.
 
 ## A guard in front of every call
 
-`lab/budget.py` wraps the call in a function that counts first and refuses two ways: a request too
-big on its own, and a user who has used up the day's allowance:
+`~/shop/scratch/budget.py` wraps the call in a function that estimates first and refuses two ways:
+a request too big on its own, and a user who has used up the day's allowance:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "lab/budget.py",
+  "file": "scratch/budget.py",
   "parts": [
     {
-      "code": "import anthropic\n\nDAILY_LIMIT = 20_000  # input tokens per user per day\nPER_REQUEST = 4_000\nclient = anthropic.Anthropic()\nspent: dict[str, int] = {}\n\n\nclass OverBudget(Exception):\n    pass\n\n\n",
-      "note": "**Two limits, in tokens.** Per request, so one paste cannot cost a fortune; per user and day, so one person cannot spend everybody's share."
+      "code": "import anthropic\nimport tiktoken\n\nDAILY_LIMIT = 20_000  # input tokens per user per day\nPER_REQUEST = 3_000\nMARGIN = 1.2  # tiktoken is not this model's tokenizer, so the estimate gets room\nclient = anthropic.Anthropic()\nenc = tiktoken.get_encoding(\"o200k_base\")\nspent: dict[str, int] = {}\n\n\nclass OverBudget(Exception):\n    pass\n\n\n",
+      "note": "**Two limits, in tokens.** Per request, so one paste cannot cost a fortune; per user and day, so one person cannot spend everybody's share. `MARGIN` is there because the estimate comes from a tokenizer that is not this model's."
     },
     {
-      "code": "def ask(user: str, messages: list, max_tokens: int = 300):\n    n = client.messages.count_tokens(model=\"scripted-1\", messages=messages).input_tokens\n    if n + max_tokens > PER_REQUEST:\n        raise OverBudget(f\"{n} input tokens + {max_tokens} out is over {PER_REQUEST} per request\")\n    if spent.get(user, 0) + n > DAILY_LIMIT:\n        raise OverBudget(f\"{user} has used {spent.get(user, 0)} of {DAILY_LIMIT} today\")\n",
-      "note": "**Count first, with the provider's own counter**, and refuse before anything is generated. The refusal is an exception with a name, so the caller cannot mistake it for an empty answer."
+      "code": "def ask(user: str, messages: list, max_tokens: int = 300):\n    n = int(sum(len(enc.encode(m[\"content\"])) for m in messages) * MARGIN)\n    if n + max_tokens > PER_REQUEST:\n        raise OverBudget(f\"about {n} input tokens + {max_tokens} out is over {PER_REQUEST} per request\")\n    if spent.get(user, 0) + n > DAILY_LIMIT:\n        raise OverBudget(f\"{user} has used {spent.get(user, 0)} of {DAILY_LIMIT} today\")\n",
+      "note": "**Estimate first, on your own machine**, and refuse before anything is sent. The refusal is an exception with a name, so the caller cannot mistake it for an empty answer."
     },
     {
-      "code": "    r = client.messages.create(model=\"scripted-1\", max_tokens=max_tokens, messages=messages)\n    spent[user] = spent.get(user, 0) + r.usage.input_tokens\n    return r\n\n\n",
+      "code": "    r = client.messages.create(model=\"llama3.2:3b\", max_tokens=max_tokens, messages=messages)\n    used = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)\n    spent[user] = spent.get(user, 0) + used\n    return r, used\n\n\n",
       "note": "**Charge what was really used**, from `usage`, not the estimate."
     },
     {
-      "code": "question = [{\"role\": \"user\", \"content\": \"Explain the shop's shipping rule.\"}]\nhuge = [{\"role\": \"user\", \"content\": open(\"/opt/aidev/share/corpus.txt\").read()[:30_000]}]\nfor user, msgs in [(\"ana\", question), (\"ana\", huge), (\"bea\", question)]:\n    try:\n        r = ask(user, msgs)\n        print(f\"{user}: ok, {r.usage.input_tokens} in, {r.usage.output_tokens} out; spent today {spent[user]}\")\n    except OverBudget as e:\n        print(f\"{user}: refused before sending: {e}\")"
+      "code": "code = open(\"shop/cart.py\").read()\nquestion = [{\"role\": \"user\", \"content\": code + \"\\nExplain the shipping rule above.\"}]\nhuge = [{\"role\": \"user\", \"content\": open(\"CONVENTIONS.md\").read() * 8}]\nfor user, msgs in [(\"ana\", question), (\"ana\", huge), (\"bea\", question)]:\n    try:\n        r, used = ask(user, msgs)\n        print(f\"{user}: ok, {used} in, {r.usage.output_tokens} out; spent today {spent[user]}\")\n    except OverBudget as e:\n        print(f\"{user}: refused before sending: {e}\")\n"
     }
   ]
 }
 ```
 
-Three requests from two users, the second of them a paste of thirty thousand characters:
+Three requests from two users, the second of them eight copies of `CONVENTIONS.md` pasted into a
+question:
 
 ```
-ana@dev:~/shop$ python lab/budget.py
-ana: ok, 10 in, 147 out; spent today 10
-ana: refused before sending: 7163 input tokens + 300 out is over 4000 per request
-bea: ok, 10 in, 147 out; spent today 10
+ana@dev:~/shop$ python scratch/budget.py
+ana: ok, 299 in, 141 out; spent today 299
+ana: refused before sending: about 3590 input tokens + 300 out is over 3000 per request
+bea: ok, 299 in, 139 out; spent today 299
 ```
 
-**The large request was refused before it was sent**: 7,163 tokens against a limit of 4,000 per
-request. It still cost a counting call. labllm's log shows it as request 36, followed by the count and
-the request that made the third (a real counting call is free of charge on Anthropic's API, and is
-rate-limited):
-
-```
-ana@dev:~/shop$ tail -n 3 /var/log/labllm/requests.jsonl | python -c "import json, sys; [print(r[\"n\"], r[\"path\"], r[\"status\"]) for r in map(json.loads, sys.stdin)]"
-36 /v1/messages/count_tokens 200
-37 /v1/messages/count_tokens 200
-38 /v1/messages 200
-```
+**The large request was refused before it was sent**: about 3,590 tokens by the estimate, against
+a limit of 3,000 per request. It cost nothing at all, not even a call, because the estimate was
+made on this machine. That is the trade against the provider's counting call of lesson 2 section
+03: an exact number for a network round trip, or an estimate with a margin for free. A guard like
+this one is the place for the estimate; the bill is the place for the exact number, and `usage` is
+where it comes from.
 
 ## Where the limits come from
 

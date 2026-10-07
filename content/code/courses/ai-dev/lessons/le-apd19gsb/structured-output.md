@@ -1,6 +1,6 @@
 ---
 title: Answers your code can read
-version: 1
+version: 2
 ---
 
 Function calling gets JSON out of a model for a function. The same need appears without any
@@ -9,9 +9,16 @@ email into a ticket the support queue can sort, with a schema saying what a tick
 
 ## The email and the ticket
 
+Two emails, saved as `data/emails/1.txt` and `data/emails/2.txt`:
+
 ```
 Hello, I got order 1042 last week. I'd like to return one of the two mugs:
 it's unused and still in its box. How do I do that? Thanks, Marta
+```
+
+```
+Hi. My lamp from order 1043 shipped on 30 September and the tracking has had
+no update since. I need it for Saturday. Can you check? João
 ```
 
 The queue needs four fields, and the schema says which values each may take:
@@ -52,11 +59,11 @@ and a schema that demanded one would push the model to invent one.
       "note": "**Two kinds of failure, one list.** Text that is not JSON and JSON that breaks the schema both come back as reasons a person, or a model, can read."
     },
     {
-      "code": "def extract(email, attempts=2):\n    messages = [{\"role\": \"user\", \"content\": email}]\n    for attempt in range(1, attempts + 1):\n        r = model.messages.create(model=\"scripted-1\", max_tokens=300, system=SYSTEM, messages=messages)\n        text = r.content[0].text\n        ticket, found = problems(text)\n        if not found:\n            return ticket\n        print(f\"attempt {attempt}: {'; '.join(found)}\", file=sys.stderr)\n        messages += [\n            {\"role\": \"assistant\", \"content\": text},\n            {\"role\": \"user\", \"content\": \"That reply is not valid: \" + \"; \".join(found)\n                                        + \". Reply again with the corrected JSON only.\"},\n        ]\n    return None\n\n\n",
+      "code": "def extract(email, attempts=2):\n    messages = [{\"role\": \"user\", \"content\": email}]\n    for attempt in range(1, attempts + 1):\n        r = model.messages.create(model=\"llama3.2:3b\", max_tokens=300, system=SYSTEM, messages=messages, extra_body={\"temperature\": 0})\n        text = r.content[0].text\n        ticket, found = problems(text)\n        if not found:\n            return ticket\n        print(f\"attempt {attempt}: {'; '.join(found)}\", file=sys.stderr)\n        messages += [\n            {\"role\": \"assistant\", \"content\": text},\n            {\"role\": \"user\", \"content\": \"That reply is not valid: \" + \"; \".join(found)\n                                        + \". Reply again with the corrected JSON only.\"},\n        ]\n    return None\n\n\n",
       "note": "**On a failure the reasons go back to the model**, after its own reply, and it gets one more try."
     },
     {
-      "code": "ticket = extract(Path(sys.argv[1]).read_text())\nprint(json.dumps(ticket) if ticket else \"no valid ticket; this email goes to a person\")",
+      "code": "if __name__ == \"__main__\":\n    ticket = extract(Path(sys.argv[1]).read_text())\n    print(json.dumps(ticket) if ticket else \"no valid ticket; this email goes to a person\")\n",
       "note": "**Out of tries is an answer too**: `None`, and the email goes to a person."
     }
   ]
@@ -65,33 +72,77 @@ and a schema that demanded one would push the model to invent one.
 
 ```
 ana@dev:~/shop$ python extract.py data/emails/1.txt
-{"order_id": "1042", "category": "return", "summary": "Wants to return one of two mugs, unused.", "urgent": false}
+attempt 1: not JSON: Expecting ',' delimiter
+{"order_id": "1042", "category": "return", "summary": "Return one of two mugs", "urgent": false}
 ```
 
-**The reply parsed and passed**, so the program printed a ticket. The JSON was written by the
-course as `scripted-1`'s reply; the parsing and the validation are what your code would run
-against any model.
+**The first reply was not JSON**, and the line on `stderr` says where the parser gave up. The reason
+went back to the model, the second reply parsed and passed, and the program printed a ticket. Lesson
+8 section 07 looks at that loop on the second email.
 
 ## Asking the provider to keep the shape
 
-Providers offer a stronger version: **constrained decoding**, where the model can only produce
-tokens that keep the output inside a schema. In the Anthropic SDK this course installs it is
-`output_config` with a `format`, and a tool can say `strict`; OpenAI's is `response_format` with a
-JSON schema. The SDK confirms the fields exist:
+Providers offer a stronger version: **constrained decoding**, where the model can only produce tokens
+that keep the output inside a schema. In the Anthropic SDK it is `output_config` with a `format`;
+OpenAI's is `response_format` with a JSON schema. Through Ollama's Anthropic endpoint, the first is
+not there:
 
 ```
-ana@dev:~/shop$ python -c 'import anthropic.types as t; print(sorted(t.OutputConfigParam.__annotations__)); print(sorted(t.JSONOutputFormatParam.__annotations__)); print("strict" in t.ToolParam.__annotations__)'
-['effort', 'format']
-['schema', 'type']
-True
-ana@dev:~/shop$ python -c 'import anthropic; anthropic.Anthropic().messages.create(model="scripted-1", max_tokens=50, messages=[{"role": "user", "content": "hi"}], output_config={"format": {"type": "json_schema", "schema": {"type": "object"}}})' 2>&1 | tail -n 1
-anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'output_config: labllm does not constrain its output; validate the reply yourself'}, 'request_id': 'req_lab_0011'}
+ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=60, messages=[{"role": "user", "content": "Name a colour."}], output_config={"format": {"type": "json_schema", "schema": {"type": "object", "properties": {"colour": {"type": "string"}}, "required": ["colour"]}}}); print(repr(r.content[0].text))'
+'Blue.'
 ```
 
-**The lab refuses it, on purpose.** labllm has no decoder to constrain, so it says so instead of
-accepting the field and ignoring it, which would let the lesson pretend.
+**`Blue.`**, which is not an object with a `colour`. Ollama's Anthropic endpoint accepted the field
+and did nothing with it, without an error, which is the worst way for a constraint to be missing:
+code that relied on it would parse the reply and fail somewhere else. Its OpenAI endpoint does
+honour `response_format`, so `strict.py` asks through that one, with the same schema and the same
+check:
 
-Where a real provider supports it, use it, and **keep the check anyway**. Constrained decoding
-fixes the shape: the field names, the types, the enum. It does not make `order_id` the right
-order, and providers document which schema keywords they honour, which is not always all of them.
-The validator is the line that holds whatever the provider did.
+```schooling-example
+{
+  "language": "python",
+  "file": "strict.py",
+  "parts": [
+    {
+      "code": "\"\"\"The same ticket, with the schema enforced by Ollama while the model writes it.\"\"\"\nimport json\nimport sys\nfrom pathlib import Path\n\n"
+    },
+    {
+      "code": "import openai\n\nfrom extract import TICKET, problems\n\n",
+      "note": "**The schema and the check are `extract.py`'s**, imported rather than copied."
+    },
+    {
+      "code": "client = openai.OpenAI()\nemail = Path(sys.argv[1]).read_text()\nr = client.chat.completions.create(\n    model=\"llama3.2:3b\", temperature=0,\n    messages=[{\"role\": \"user\", \"content\": \"Extract the ticket from the customer's email.\\n\\n\" + email}],\n    response_format={\"type\": \"json_schema\", \"json_schema\": {\"name\": \"ticket\", \"schema\": TICKET, \"strict\": True}},\n)\n",
+      "note": "**`response_format` with a JSON schema**, through the OpenAI SDK, which Ollama's compatible endpoint reads: the model can only write tokens that keep the reply inside the schema."
+    },
+    {
+      "code": "text = r.choices[0].message.content\nticket, found = problems(text)\nprint(text)\nprint(\"schema:\", \"; \".join(found) if found else \"every field valid\")\n",
+      "note": "**And the same check runs anyway**, on a reply that cannot fail it, which is the point the next lines make."
+    }
+  ]
+}
+```
+
+```
+ana@dev:~/shop$ python strict.py data/emails/1.txt
+{
+  "order_id": "1042",
+  "category": "return",
+  "summary": "Return one of the two mugs",
+  "urgent": false
+}
+schema: every field valid
+ana@dev:~/shop$ python strict.py data/emails/2.txt
+{"order_id": "1043", "category": "delivery", "summary": "Missing update on tracking", "urgent": true}
+schema: every field valid
+```
+
+**Both valid, on the first try**, and the first one spread over several lines, which JSON allows and
+the check does not mind. That is what the constraint buys: the field names, the types, the `enum`
+and the pattern of `order_id` hold because the model could not write anything else.
+
+What it does not buy is the right values. `"summary": "Missing update on tracking"` is a fair
+reading of João's email; while this lesson was being prepared, the same model, asked the same way
+with a slightly different instruction, filed the same email under `"return"`, a valid category and
+the wrong one. **Keep the check anyway**, and keep it honest about what it checks: the validator
+holds the shape whatever the provider did, and only a person or a rule in code can hold the
+meaning.

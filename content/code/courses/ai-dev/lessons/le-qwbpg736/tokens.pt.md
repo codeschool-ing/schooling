@@ -1,6 +1,6 @@
 ---
 title: Tokens não são palavras
-version: 1
+version: 2
 ---
 
 O palpite óbvio é que um modelo lê palavras. Não lê: ele lê **tokens**, pedaços de texto de um
@@ -10,12 +10,24 @@ limite e todo preço deste curso são contados em tokens, vale ver onde caem as 
 
 ## Dividindo texto em tokens
 
-O `lab/tokens.py` imprime, para cada linha, quantos tokens ela tem, quantos caracteres, e os
-pedaços com um `|` entre eles. A codificação é a `o200k_base`, pela própria biblioteca `tiktoken`
-da OpenAI; a próxima parte desta seção mostra de que modelos ela é:
+O `~/shop/scratch/tokens.py` imprime, para cada linha, quantos tokens ela tem, quantos
+caracteres, e os pedaços com um `|` entre eles. A codificação é a `o200k_base`, pela própria
+biblioteca `tiktoken` da OpenAI; a próxima parte desta seção mostra de que modelos ela é:
+
+```python
+import sys
+
+import tiktoken
+
+enc = tiktoken.get_encoding(sys.argv[1])
+for line in sys.stdin:
+    text = line.rstrip("\n")
+    ids = enc.encode(text)
+    print(f"{len(ids):3} tokens  {len(text):3} chars  " + "|".join(enc.decode([i]) for i in ids))
+```
 
 ```
-ana@dev:~/shop$ printf "%s\n" "Tokenisation is not splitting on spaces." "Tokenization is not splitting on spaces." "A tokenização não divide o texto nos espaços." "def total(self) -> int:" "        return self.subtotal()" "1290 12900 129000 1290000" | python lab/tokens.py o200k_base
+ana@dev:~/shop$ printf "%s\n" "Tokenisation is not splitting on spaces." "Tokenization is not splitting on spaces." "A tokenização não divide o texto nos espaços." "def total(self) -> int:" "        return self.subtotal()" "1290 12900 129000 1290000" | python scratch/tokens.py o200k_base
   8 tokens   40 chars  Token|isation| is| not| splitting| on| spaces|.
   8 tokens   40 chars  Token|ization| is| not| splitting| on| spaces|.
  10 tokens   45 chars  A| token|ização| não| divide| o| texto| nos| espaços|.
@@ -27,18 +39,18 @@ ana@dev:~/shop$ printf "%s\n" "Tokenisation is not splitting on spaces." "Tokeni
 Cinco coisas para ler aí:
 
 - **O espaço pertence à palavra depois dele.** ` is`, ` not` e ` splitting` são tokens únicos, com
-  o espaço, e é por isso que a distribuição da seção anterior estava cheia de `' message'` e não
-  de `'message'`.
+  o espaço, e é por isso que a distribuição da seção 06 estava cheia de `' sum'` e não de
+  `'sum'`.
 - **Uma palavra que o tokenizador viu muito é um token; uma mais rara é dois.** `Tokenisation` e
   `Tokenization` se dividem em `Token` mais um sufixo.
 - **A frase em português custa mais.** Dez tokens para uma frase que um leitor brasileiro não acha
   mais longa que a inglesa. Texto em línguas que eram mais raras nos dados de treino do tokenizador
   se divide em mais pedaços, então a mesma requisição custa mais e enche a janela mais depressa.
-- **Código se divide na pontuação.** `(self`, `.sub` e `total` são tokens; os oito espaços de
-  indentação são mais um.
+- **Código se divide na pontuação.** `(self`, `.sub` e `total` são tokens; sete dos oito
+  espaços de indentação são mais um, e o oitavo vai junto com ` return`.
 - **Números são cortados em grupos de até três dígitos.** O modelo nunca vê `1290000` como um
   número, só como os pedaços `129`, `000` e `0`. Esse é um dos motivos de modelos não serem
-  confiáveis em contas feitas dígito a dígito, e de a loja deste laboratório fazer as contas de
+  confiáveis em contas feitas dígito a dígito, e de a loja deste curso fazer as contas de
   dinheiro em código em vez de pedir a um modelo que some.
 
 ## Tokenizadores diferentes, contagens diferentes
@@ -56,16 +68,18 @@ gpt-5 o200k_base
 E o mesmo texto dá contagens diferentes em codificações diferentes:
 
 ```
-ana@dev:~/shop$ printf "%s\n" "A tokenização não divide o texto nos espaços." "        return self.subtotal()" | python lab/tokens.py cl100k_base
+ana@dev:~/shop$ printf "%s\n" "A tokenização não divide o texto nos espaços." "        return self.subtotal()" | python scratch/tokens.py cl100k_base
  11 tokens   45 chars  A| token|ização| não| divide| o| texto| nos| espa|ços|.
   6 tokens   30 chars         | return| self|.sub|total|()
 ```
 
 O código saiu igual e o português não: `espaços` é um token no vocabulário novo e dois no antigo.
 **Uma contagem de tokens só tem sentido para um tokenizador com nome.** A OpenAI publica as
-codificações dela, e por isso o laboratório consegue rodá-las. A Anthropic e o Google não publicam
-as deles, e oferecem um endpoint que conta os tokens por você, que a aula 2 usa. O que você mede
-com o `tiktoken` para o modelo de outro provedor é uma estimativa.
+codificações dela, e por isso o `tiktoken` consegue rodá-las na sua máquina. A Anthropic e o
+Google não publicam as deles, e oferecem um endpoint que conta os tokens por você, que a aula 2
+usa. O `llama3.2:3b` tem um tokenizador próprio, o da Meta, e o Ollama informa as contagens dele
+em toda resposta. **O que você mede com o `tiktoken` para qualquer outro modelo é uma
+estimativa.**
 
 ## Quantos tokens tem um arquivo?
 
@@ -80,7 +94,13 @@ ana@dev:~/shop$ python -c 'import tiktoken, pathlib; e = tiktoken.get_encoding("
 ```
 
 O `cart.py` tem 265 tokens para 121 palavras separadas por espaço, pouco mais de dois tokens por
-palavra. O corpus de documentação do laboratório, que é quase todo frases em inglês, tem 78.351
-tokens para 51.699 palavras, cerca de um e meio (a aula 1 seção 08 imprime os dois números).
+palavra. O `CONVENTIONS.md` do projeto, que é frases em inglês, sai bem mais barato por palavra:
+
+```
+ana@dev:~/shop$ python -c 'import tiktoken, pathlib; t = pathlib.Path("CONVENTIONS.md").read_text(); print(len(t.split()), "words,", len(tiktoken.get_encoding("o200k_base").encode(t)), "tokens")'
+272 words, 374 tokens
+```
+
+Isso dá cerca de 1,4 token por palavra.
 **Meça o seu próprio material em vez de confiar numa regra de bolso**, porque a razão muda com a
 língua, o assunto e o tokenizador, e uma estimativa de custo herda o erro que a razão tiver.

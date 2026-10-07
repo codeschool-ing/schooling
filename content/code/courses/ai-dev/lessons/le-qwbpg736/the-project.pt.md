@@ -1,7 +1,24 @@
-#!/usr/bin/env bash
-# ana's project as it stands before lesson 1, built into the directory given:
-# a shop's cart, its prices and its tests, in five commits with fixed dates, so
-# every `git log` and every hash in the lessons comes out the same.
+---
+title: O projeto em que o curso trabalha
+version: 1
+---
+
+As aulas precisam de código para trabalhar, e é o mesmo código do começo ao fim: **`~/shop`, o
+carrinho, os preços e os cupons de uma pequena loja online**, em Python, com os testes, no git.
+Dinheiro é centavo inteiro em todo lugar. Ele é pequeno de propósito, umas cem linhas, para que um
+modelo possa ver tudo dele e você possa conferir cada resposta que o modelo der. As aulas
+acrescentam coisas: as sugestões de um assistente nas aulas 3 a 5, um manual de suporte para
+buscar na aula 6, ferramentas para um modelo chamar nas aulas 7 e 8.
+
+Você o constrói com o script abaixo. Salve-o como `~/make-shop.sh`, num editor ou colando-o entre
+`cat > ~/make-shop.sh <<'SCRIPT'` e uma linha só com `SCRIPT`. Ele cria o diretório que você
+indicar, escreve cada arquivo e faz cinco commits com as datas e o autor fixos, para que o seu
+histórico seja o que as aulas mostram, hash por hash:
+
+```sh
+# make-shop.sh DIR: the shop project as the course starts it
+# Five commits with fixed dates and a fixed author, so every hash in the
+# lessons comes out the same on your machine.
 set -euo pipefail
 D=$1
 mkdir -p "$D" && cd "$D"
@@ -215,3 +232,40 @@ purpose: each one is here because breaking it once cost somebody an afternoon.
   the change does, under sixty characters.
 EOF
 commit "2026-09-25T16:20:00-03:00" "Conventions"
+```
+
+Rode-o, e veja o que ele fez:
+
+```
+ana@dev:~$ bash make-shop.sh ~/shop
+ana@dev:~/shop$ git log --oneline
+19265e0 Conventions
+b88cbb3 README
+c2b5d79 Coupons
+fe437dd A cart with lines, a discount and shipping
+33fefcf Prices are integer cents
+ana@dev:~/shop$ python -m pytest -q
+........                                                                 [100%]
+8 passed in 0.72s
+```
+
+Oito testes passam, e os cinco hashes são os de cima. Se os seus forem outros, o script mudou no
+caminho, muitas vezes por um editor que trocou as aspas pelas tipográficas; salve-o de novo.
+
+**Todo programa que você escrever neste curso vai em `~/shop/scratch/`**, que as aulas criam
+quando precisam. São experimentos sobre o modelo, não parte da loja, e mantê-los num diretório
+só deixa limpo o histórico do próprio projeto. Rode-os de dentro de `~/shop`, com o ambiente
+ativo, como fazem as transcrições.
+
+**Cada aula começa da loja como este script a faz.** O que uma aula muda em `shop/` e `tests/`, ou
+commita, pertence àquela aula, e as transcrições da seguinte contam que isso sumiu. Antes de uma
+aula nova, ou de uma seção que diz que começa de novo, volte o projeto. O `scratch/` e os outros
+arquivos que você escreveu não são tocados:
+
+```
+ana@dev:~/shop$ git checkout -qf main && git reset -q --hard 19265e0 && git clean -qfd shop tests
+ana@dev:~/shop$ git log --oneline -1 && python -m pytest -q
+19265e0 Conventions
+........                                                                 [100%]
+8 passed in 0.73s
+```

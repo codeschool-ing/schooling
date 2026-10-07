@@ -52,14 +52,14 @@
   },
   {
     "id": "ex-j2jzgx9g",
-    "version": 1,
+    "version": 2,
     "section": "what-it-sees",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many tokens of context did the first `assist complete` send?",
+    "prompt": "How many tokens of context did the first `assist.py complete` send?",
     "hint": "The first line it printed.",
-    "value": 602,
+    "value": 599,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -129,12 +129,12 @@
   },
   {
     "id": "ex-69s56dfr",
-    "version": 1,
+    "version": 2,
     "section": "what-leaves",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did `PAYMENTS_KEY = \"pk_lab_…\"` get past `assist`'s secret check while `.env` did not?",
+    "prompt": "Why did `PAYMENTS_KEY = \"pk_test_…\"` get past `assist`'s secret check while `.env` did not?",
     "hint": "What does the check look at?",
     "choices": [
       {
@@ -153,9 +153,9 @@
         "why": "It is sixteen characters after the prefix, over the eight the pattern asks for."
       },
       {
-        "text": "labllm removed the key before logging it",
+        "text": "`assist` removed the key before sending it",
         "correct": false,
-        "why": "The key is in the log: `grep -c` found it once."
+        "why": "The key is in the request: `grep -c` found it in `scratch/sent.json`."
       }
     ]
   },
@@ -257,52 +257,52 @@
   },
   {
     "id": "ex-swercnnj",
-    "version": 1,
+    "version": 2,
     "section": "completion",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many of the four tests in `tests/test_remove.py` failed against the suggestion?",
-    "hint": "The last line of the run.",
-    "value": 2,
+    "prompt": "With the method's body still empty, how many of the four tests in `tests/test_remove.py` failed?",
+    "hint": "The run right after the commit.",
+    "value": 4,
     "tolerance": 0,
     "unit": "tests"
   },
   {
     "id": "ex-rcgwxnc8",
-    "version": 1,
+    "version": 2,
     "section": "completion",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "What does the section call the usual shape of a wrong suggestion?",
-    "hint": "Two tests passed and two failed.",
+    "prompt": "The suggestion of section 02 refused three mugs out of two with `no MUG-01 in cart`. Why would the four tests not have caught it?",
+    "hint": "What does `pytest.raises(ValueError)` check?",
     "choices": [
       {
-        "text": "Wrong from the first line, which makes it easy to spot",
+        "text": "Because that test was skipped",
         "correct": false,
-        "why": "The first lines were right here."
+        "why": "All four ran."
       },
       {
-        "text": "Badly formatted, so review catches it",
-        "correct": false,
-        "why": "It was formatted perfectly."
-      },
-      {
-        "text": "Calling functions that do not exist",
-        "correct": false,
-        "why": "That is a different failure, from lesson 1."
-      },
-      {
-        "text": "Right in the middle, wrong at the edges",
+        "text": "The test asks for any ValueError, not its message",
         "correct": true,
-        "why": "Right: the edges the docstring named."
+        "why": "Right. A message is behaviour only if a test says so."
+      },
+      {
+        "text": "Because the tests were written after the code",
+        "correct": false,
+        "why": "They were written first, from the docstring."
+      },
+      {
+        "text": "Because the suggestion was never run",
+        "correct": false,
+        "why": "Its refusal raises; that is all the test looks for."
       }
     ]
   },
   {
     "id": "ex-q1ddyz3w",
-    "version": 1,
+    "version": 2,
     "section": "completion",
     "type": "ordering",
     "difficulty": "medium",
@@ -311,12 +311,12 @@
     "hint": "The intent comes first.",
     "items": [
       "Write the signature and the docstring",
-      "Ask for the completion",
       "Write tests from the docstring",
-      "Run them against the suggestion",
-      "Fix what fails, and run everything"
+      "Commit, so the next change can be undone",
+      "Accept a suggestion and run the tests",
+      "Undo and ask again while they fail"
     ],
-    "trap": "Writing the tests after reading the suggestion is the usual slip: they end up checking it rather than the docstring."
+    "trap": "Asking for the suggestion before the tests exist is the usual slip: the tests then end up checking it rather than the docstring."
   },
   {
     "id": "ex-sk6xg2dh",
@@ -396,33 +396,33 @@
   },
   {
     "id": "ex-54m4nspg",
-    "version": 1,
+    "version": 3,
     "section": "refactor",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "After `git apply refactor.diff`, all eight tests passed. Why was that not enough?",
-    "hint": "What did the eight tests have in common?",
+    "prompt": "After the assistant rewrote `shop/cart.py`, all eight tests passed. What did that not tell ana?",
+    "hint": "Read the request, then the diff.",
     "choices": [
       {
-        "text": "pytest was run before the patch was applied",
+        "text": "Whether the file had been written at all",
         "correct": false,
-        "why": "It ran after; the command is `git apply … && python -m pytest`."
+        "why": "`git diff` showed the change before the tests ran."
       },
       {
-        "text": "A refactoring always needs a hundred tests",
-        "correct": false,
-        "why": "There is no such number."
-      },
-      {
-        "text": "None covered a coupon near the threshold",
+        "text": "Whether the change did what she asked",
         "correct": true,
-        "why": "Right, so none of them saw the change."
+        "why": "Right: the subtotal is still computed twice."
       },
       {
-        "text": "The diff was applied to the wrong file",
+        "text": "Whether the behaviour had changed",
         "correct": false,
-        "why": "It changed `shop/cart.py`, as intended."
+        "why": "Unchanged behaviour is exactly what the tests can confirm, where they look."
+      },
+      {
+        "text": "Whether pytest had found the tests",
+        "correct": false,
+        "why": "It printed eight dots."
       }
     ]
   },
@@ -473,50 +473,50 @@
   },
   {
     "id": "ex-y5j6gjpe",
-    "version": 1,
+    "version": 3,
     "section": "refactor",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "What exactly changed in `shipping()` in the assistant's diff?",
-    "hint": "Compare the two `if` lines.",
+    "prompt": "What did the assistant's unified diff change in `discount()`, had it applied?",
+    "hint": "Compare where the rounding happens.",
     "choices": [
       {
-        "text": "The threshold went from 200.00 to 189.00",
+        "text": "The coupon's percentage",
         "correct": false,
-        "why": "`FREE_SHIPPING_FROM` did not change."
+        "why": "`discount_percent` is read the same way."
       },
       {
-        "text": "The shipping price went up from 15.00",
-        "correct": false,
-        "why": "`SHIPPING` did not change."
-      },
-      {
-        "text": "The discount is no longer applied to the total",
-        "correct": false,
-        "why": "`total()` still subtracts it."
-      },
-      {
-        "text": "The threshold now ignores the discount and looks at the raw subtotal",
+        "text": "It rounds each line's discount, not the cart's",
         "correct": true,
-        "why": "Right: it is compared with the subtotal before the discount."
+        "why": "Right, which can take a cent less off."
+      },
+      {
+        "text": "Nothing; it only moved a line",
+        "correct": false,
+        "why": "Line 27 replaces the whole calculation."
+      },
+      {
+        "text": "It stopped applying the discount",
+        "correct": false,
+        "why": "It still subtracts a discount, computed differently."
       }
     ]
   },
   {
     "id": "ex-da4wa285",
-    "version": 1,
+    "version": 2,
     "section": "documenting",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The doctest expected `'-0.05'` for `format_price(-5)` and got `___`.",
+    "prompt": "The doctest expected `'-12.90'` for `format_price(-1290)` and got `___`.",
     "hint": "Copy it from the failure, quotes included.",
     "blanks": [
       {
         "accept": [
-          "'-1.95'",
-          "-1.95"
+          "'-13.10'",
+          "-13.10"
         ],
         "ignore_case": true,
         "ignore_accents": true
@@ -525,18 +525,18 @@
   },
   {
     "id": "ex-410vws39",
-    "version": 1,
+    "version": 2,
     "section": "documenting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does `format_price(-5)` return `'-1.95'`?",
-    "hint": "Work out `-5 // 100` and `-5 % 100`.",
+    "prompt": "Why does `format_price(-1290)` return `'-13.10'`?",
+    "hint": "Work out `-1290 // 100` and `-1290 % 100`.",
     "choices": [
       {
         "text": "`//` rounds down, towards minus infinity",
         "correct": true,
-        "why": "Right: the units are -1 and the remainder 95."
+        "why": "Right: the units are -13 and the remainder 10."
       },
       {
         "text": "The docstring changed the function's behaviour",
@@ -557,13 +557,13 @@
   },
   {
     "id": "ex-ext34tr1",
-    "version": 1,
+    "version": 2,
     "section": "documenting",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
     "prompt": "In the doctest failure, which was wrong: the example or the code?",
-    "hint": "What should a price of minus five cents read as?",
+    "hint": "What should a price of minus 12.90 read as?",
     "choices": [
       {
         "text": "The example, since the code has run in production without complaints",
@@ -776,7 +776,7 @@
   },
   {
     "id": "ex-c8w4qngn",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -785,20 +785,20 @@
     "hint": "Four checks, four findings.",
     "pairs": [
       {
-        "left": "A cart line left with zero mugs",
-        "right": "A test written from the docstring"
+        "left": "A suggestion refused for the wrong reason",
+        "right": "Reading it against the docstring"
       },
       {
-        "left": "Shipping charged differently after a refactoring",
-        "right": "A test pinning the old behaviour"
-      },
-      {
-        "left": "`'-1.95'` for minus five cents",
+        "left": "`'-13.10'` for minus 12.90",
         "right": "A doctest"
       },
       {
-        "left": "A key sent to the provider",
-        "right": "labllm's request log"
+        "left": "A key sent with the request",
+        "right": "The request `assist` kept"
+      },
+      {
+        "left": "A diff git could not apply",
+        "right": "`git apply --check`"
       }
     ],
     "right_distractors": [

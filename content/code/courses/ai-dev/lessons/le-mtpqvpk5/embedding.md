@@ -1,10 +1,10 @@
 ---
 title: An index of vectors
-version: 1
+version: 2
 ---
 
 To search by meaning, every passage is turned into an embedding once, ahead of time, and kept. A
-question is embedded when it arrives, and compared with all of them. Lesson 1 section 05 showed what
+question is embedded when it arrives, and compared with all of them. Lesson 1 section 09 showed what
 an embedding is and what it cannot see; this section stores them.
 
 ## Building the index
@@ -20,21 +20,21 @@ def build():
 ```
 
 ```
-ana@dev:~/shop$ time PYTHONPATH=lab python -c 'import rag; cs, v = rag.build(); print(len(cs), "chunks,", v.shape, v.dtype)'
+ana@dev:~/shop$ time PYTHONPATH=scratch python -c 'import rag; cs, v = rag.build(); print(len(cs), "chunks,", v.shape, v.dtype)'
 26 chunks, (26, 256) float32
 
-real	0m0.822s
-user	0m1.011s
-sys	0m0.197s
+real	0m1.016s
+user	0m1.020s
+sys	0m0.250s
 ana@dev:~/shop$ ls -la .rag
 total 44
-drwxr-xr-x 2 ana ana  4096 Oct  2 07:04 .
-drwxr-xr-x 8 ana ana  4096 Oct  2 07:04 ..
--rw-r--r-- 1 ana ana  5881 Oct  2 07:04 chunks.json
--rw-r--r-- 1 ana ana 26752 Oct  2 07:04 vectors.npy
+drwxr-xr-x 2 ana ana  4096 Oct  7 15:07 .
+drwxr-xr-x 8 ana ana  4096 Oct  7 15:07 ..
+-rw-r--r-- 1 ana ana  5881 Oct  7 15:07 chunks.json
+-rw-r--r-- 1 ana ana 26752 Oct  7 15:07 vectors.npy
 ```
 
-Twenty-six vectors of 256 numbers, in under two seconds on a laptop processor, most of it loading
+Twenty-six vectors of 256 numbers, in about a second on a laptop processor, most of it loading
 the model. The index is two files: the vectors, 26,752 bytes as a numpy array, and the passages with
 their ids. **That is a vector database at its smallest**: a matrix, and a list that says which row is
 which passage.

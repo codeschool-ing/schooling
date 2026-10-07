@@ -1,6 +1,6 @@
 ---
 title: A tool is a contract
-version: 1
+version: 2
 ---
 
 A model decides which tool to call from three things, and all three are text you write: the tool's
@@ -35,8 +35,8 @@ good faith.
 - **Errors that say what to do.** `'../../.env' is not a page of the handbook` tells the model to pick
   a page name; a stack trace tells it nothing and costs tokens.
 - **Read-only when it is.** A tool that changes nothing says so in its annotations, and the host can
-  then call it without asking (lesson 7 section 07).
+  then call it without asking (lesson 7 section 08).
 
 The number of tools matters too. Every definition is sent with every request (lesson 2 section 03
-counted 53 tokens for one), and a model choosing among forty similar tools chooses worse than one
+counted 128 tokens for one), and a model choosing among forty similar tools chooses worse than one
 choosing among five. Give an agent the tools its task needs.

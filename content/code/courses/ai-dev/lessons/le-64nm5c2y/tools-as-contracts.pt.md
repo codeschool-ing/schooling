@@ -1,6 +1,6 @@
 ---
 title: Uma ferramenta é um contrato
-version: 1
+version: 2
 ---
 
 Um modelo decide que ferramenta chamar a partir de três coisas, e as três são texto que você
@@ -35,8 +35,8 @@ então uma descrição que diz menos que o código é um contrato que o modelo v
 - **Erros que dizem o que fazer.** `'../../.env' is not a page of the handbook` diz ao modelo que
   escolha um nome de página; um stack trace não diz nada e custa tokens.
 - **Só leitura quando for.** Uma ferramenta que não muda nada diz isso nas anotações, e o host pode
-  então chamá-la sem perguntar (aula 7 seção 07).
+  então chamá-la sem perguntar (aula 7 seção 08).
 
 O número de ferramentas também importa. Toda definição vai em toda requisição (a aula 2 seção 03
-contou 53 tokens para uma), e um modelo escolhendo entre quarenta ferramentas parecidas escolhe pior
+contou 128 tokens para uma), e um modelo escolhendo entre quarenta ferramentas parecidas escolhe pior
 que um escolhendo entre cinco. Dê a um agente as ferramentas de que a tarefa dele precisa.

@@ -22,29 +22,29 @@
     ]
   },
   "ex-j5vrvxek": {
-    "prompt": "O `window.py 900 200` deu certo e o `window.py 900 400` foi recusado. O prompt era idêntico. O que mudou?",
-    "hint": "1.717 + 400.",
+    "prompt": "O `window.py 10` achou a senha e o `window.py 12` respondeu `'shop'`. O que aconteceu com a requisição de doze cópias?",
+    "hint": "Compare o que foi enviado com o que foi lido.",
     "choices": [
       {
-        "text": "O segundo prompt foi tokenizado diferente por causa do limite maior",
-        "why": "O prompt é contado do mesmo jeito: 1.717 nas duas vezes."
+        "text": "Foi recusada com um erro, e o SDK inventou uma resposta",
+        "why": "Um erro teria levantado uma exceção; ela terminou com `end_turn`."
       },
       {
-        "text": "O labllm tinha esgotado o limite de taxa na primeira requisição",
-        "why": "Um limite de taxa responde 429, não 400 com essa mensagem."
+        "text": "O modelo esgotou o `max_tokens` antes de chegar à senha",
+        "why": "Ele respondeu numa palavra, bem dentro dos vinte."
       },
       {
-        "text": "Um `max_tokens` de 400 passa do limite por resposta do `tiny-1`",
-        "why": "Esse limite é 512; quem o quebrou foi a requisição com 600."
+        "text": "O Ollama descartou o começo do prompt para caber na janela",
+        "why": "Isso: uns 4.512 enviados, 2.050 lidos, e a senha estava no começo."
       },
       {
-        "text": "O espaço pedido para a resposta levou o total além de 2.048",
-        "why": "Isso: 1.717 mais 400 dá 2.117."
+        "text": "Doze cópias confundiram o modelo com texto repetido",
+        "why": "Dez cópias do mesmo texto não confundiram; a diferença é o que foi lido."
       }
     ]
   },
   "ex-t57cx66q": {
-    "prompt": "O `window.py 900 200` usou 1.717 tokens de prompt e permitiu 200 de saída. Quantos dos 2.048 tokens do `tiny-1` sobraram?",
+    "prompt": "O `window.py 10` leu 3.829 tokens e permitiu 20 de saída. Quantos tokens da janela de 4.096 do Ollama sobraram?",
     "hint": "Subtraia os dois da janela.",
     "unit": "tokens"
   },
@@ -71,30 +71,30 @@
     ]
   },
   "ex-y8x4h2mh": {
-    "prompt": "O `tiktoken` contou 15 tokens para a pergunta e o contador do labllm disse 18, com a mesma codificação. De onde vêm os outros 3?",
-    "hint": "As regras do próprio labllm, listadas na aula 1.",
+    "prompt": "O `tiktoken` contou 15 tokens para a pergunta e o modelo leu 40. De onde vem a maior parte da diferença?",
+    "hint": "O que o `ollama show --template` imprimiu?",
     "choices": [
       {
-        "text": "O labllm soma 3 por mensagem de embrulho",
-        "why": "Isso: o lugar do que uma API real põe em volta de cada mensagem."
+        "text": "O template de conversa em volta da mensagem",
+        "why": "Isso: cabeçalhos, e uma linha com o corte de treino, em toda requisição."
       },
       {
         "text": "O `tiktoken` ignora pontuação, então sempre conta a menos",
         "why": "Ele conta cada caractere; o `?` da pergunta é um token."
       },
       {
-        "text": "A resposta do modelo foi contada antes",
-        "why": "Nada foi gerado; é uma chamada de contagem."
+        "text": "O token da resposta foi contado como entrada",
+        "why": "O `max_tokens=1` acrescenta um token de saída, não vinte e cinco de entrada."
       },
       {
-        "text": "A pergunta foi traduzida antes de ser contada",
-        "why": "Nada traduz coisa nenhuma."
+        "text": "A pergunta foi traduzida antes de ser lida",
+        "why": "Nada traduz nada."
       }
     ]
   },
   "ex-3mmjtmqy": {
     "prompt": "Quantos tokens uma definição de ferramenta acrescentou à pergunta no `count.py`?",
-    "hint": "71 contra 18.",
+    "hint": "168 contra 40.",
     "unit": "tokens"
   },
   "ex-z5e3ydm9": {
@@ -160,12 +160,12 @@
     "unit": "dólares"
   },
   "ex-xw3dqnbs": {
-    "prompt": "Por que o `prices.py` imprime a data ao lado dos preços da Anthropic e um commit ao lado dos outros?",
+    "prompt": "Por que a tabela de preços traz uma data ao lado dos preços da Anthropic e um commit ao lado dos outros?",
     "hint": "Uma fonte tem versão e a outra não.",
     "choices": [
       {
-        "text": "Para o script recusar preços com mais de um mês",
-        "why": "Ele não recusa nada; a data é para quem lê."
+        "text": "Para poder recusar preços com mais de um mês",
+        "why": "Nada os recusa; a data é para quem lê."
       },
       {
         "text": "Porque a lei exige data em qualquer preço",
@@ -226,23 +226,23 @@
     ]
   },
   "ex-etm25eyp": {
-    "prompt": "A requisição do `cost.py` teve 10 tokens de entrada e 147 de saída. Que mudança cortaria mais o custo?",
-    "hint": "Onde estão quase 99% dele?",
+    "prompt": "A requisição do `cost.py` teve 285 tokens de entrada, quase todos o código do carrinho, e 122 de saída. Que mudança cortaria mais o custo dela?",
+    "hint": "Onde estão dois terços dele?",
     "choices": [
       {
         "text": "Uma pergunta mais curta",
-        "why": "A pergunta tem 10 tokens; quase não há o que cortar."
+        "why": "A pergunta tem uns dez tokens; quase não há o que cortar."
       },
       {
         "text": "Um teto menor para o tamanho da resposta",
-        "why": "Isso, já que a saída é quase todo o custo."
+        "why": "Isso: a saída é dois terços do custo nesses preços."
       },
       {
-        "text": "Pôr a pergunta em cache",
-        "why": "Dez tokens ficam abaixo de qualquer mínimo de cache, e custam quase nada."
+        "text": "Deixar o código do carrinho fora da requisição",
+        "why": "Ele é um terço do custo, e sem ele a resposta é um chute."
       },
       {
-        "text": "Mandar com temperatura 0",
+        "text": "Mandar em temperatura 0",
         "why": "A temperatura não muda o preço."
       }
     ]
@@ -275,24 +275,24 @@
     ]
   },
   "ex-fsa6pfqn": {
-    "prompt": "O total no turno 10 era 9.270 tokens e no turno 20 era 38.740. Por que dobrar os turnos dá umas quatro vezes a entrada?",
+    "prompt": "O total do turno 10 foi 6.070 tokens e o do turno 20 foi 24.740. Por que dobrar os turnos dá umas quatro vezes a entrada?",
     "hint": "O que cada requisição leva?",
     "choices": [
       {
-        "text": "O labllm cobra mais por token depois do décimo turno",
+        "text": "O preço por token sobe depois do décimo turno",
         "why": "O preço por token nunca muda."
       },
       {
         "text": "As respostas ficaram mais longas ao longo da conversa",
-        "why": "A resposta era o mesmo texto fixo em todo turno."
+        "why": "A resposta foi o mesmo texto fixo em todo turno."
       },
       {
-        "text": "O cache expirou no meio",
-        "why": "Nenhum cache foi usado nesta execução."
+        "text": "O cache se esvaziou no meio",
+        "why": "Os tokens em cache entram no total do mesmo jeito."
       },
       {
         "text": "Cada requisição leva todos os turnos anteriores",
-        "why": "Isso, então o total cresce com o quadrado do tamanho."
+        "why": "Isso, então o total cresce com o quadrado do comprimento."
       }
     ]
   },
@@ -323,24 +323,24 @@
     "unit": "tokens"
   },
   "ex-q1adfb1e": {
-    "prompt": "No `cache.py`, a primeira requisição pagou US$ 0,003511 pela entrada e teria pago US$ 0,002812 sem cache. Por que mais?",
+    "prompt": "Na Anthropic, a primeira requisição do `cache.py` pagaria $2,50 por milhão pelos 1.417 tokens em cache, contra $2 sem cache. Por que mais?",
     "hint": "Veja as colunas de preço.",
     "choices": [
       {
-        "text": "O labllm contou o prompt de sistema duas vezes",
-        "why": "Contou uma vez, como escrita no cache."
+        "text": "O prompt de sistema é contado duas vezes quando vai para o cache",
+        "why": "Ele é contado uma vez, como escrita no cache."
       },
       {
         "text": "A primeira requisição do dia é cobrada mais caro",
-        "why": "Nenhum preço depende da hora aqui."
+        "why": "Nenhum preço depende da hora do dia aqui."
       },
       {
         "text": "Escrever no cache custa mais que ler sem cache",
-        "why": "Isso: US$ 2,50 contra US$ 2 por MTok."
+        "why": "Isso: $2,50 contra $2 por MTok, que só se paga com leituras depois, a $0,20."
       },
       {
-        "text": "A pergunta era mais longa",
-        "why": "Tinha 8 tokens contra 9 na segunda."
+        "text": "O Ollama cobra pelo cache que guarda na memória",
+        "why": "O Ollama não cobra nada; o preço é da Anthropic."
       }
     ]
   },
@@ -366,7 +366,7 @@
       },
       {
         "text": "3.000 tokens está abaixo do mínimo de todo provedor",
-        "why": "Está bem acima dos 1.024 do labllm."
+        "why": "O mínimo da Anthropic é 1.024 tokens em muitos modelos, bem abaixo de 3.000."
       },
       {
         "text": "Cache só funciona para ferramentas",
@@ -478,7 +478,7 @@
     ]
   },
   "ex-qtgfrb8d": {
-    "prompt": "Quantos tokens de entrada tinha a requisição recusada no `budget.py`?",
+    "prompt": "Uns quantos tokens de entrada a estimativa deu à requisição recusada no `budget.py`?",
     "hint": "A segunda linha da execução.",
     "unit": "tokens"
   },

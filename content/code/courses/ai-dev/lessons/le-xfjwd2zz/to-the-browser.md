@@ -1,6 +1,6 @@
 ---
 title: From the model to a browser
-version: 1
+version: 2
 ---
 
 A page in a browser cannot call the model's API itself: **the request would need the API key, and
@@ -35,18 +35,18 @@ they arrive, in a stream of its own.
       "note": "**The response starts before the answer exists**: status, content type and headers go out first."
     },
     {
-      "code": "        try:\n            with model.messages.stream(model=\"scripted-1\", max_tokens=300,\n                                       messages=[{\"role\": \"user\", \"content\": question}]) as stream:\n                for text in stream.text_stream:\n                    self.send_event(\"text\", {\"text\": text})\n            self.send_event(\"done\", {\"stop_reason\": stream.get_final_message().stop_reason})\n",
+      "code": "        try:\n            with model.messages.stream(model=\"llama3.2:3b\", max_tokens=300,\n                                       messages=[{\"role\": \"user\", \"content\": question}]) as stream:\n                for text in stream.text_stream:\n                    self.send_event(\"text\", {\"text\": text})\n            self.send_event(\"done\", {\"stop_reason\": stream.get_final_message().stop_reason})\n",
       "note": "**Each piece from the model becomes one event for the page**, and the end becomes `done`."
     },
     {
-      "code": "        except anthropic.APIError as e:\n            self.send_event(\"error\", {\"message\": \"the answer stopped halfway; please ask again\"})\n            self.log_error(\"model stream failed: %s\", e)\n\n",
+      "code": "        except Exception as e:  # whatever ended it, the page has half an answer\n            self.send_event(\"error\", {\"message\": \"the answer stopped halfway; please ask again\"})\n            self.log_error(\"model stream failed: %s\", e)\n\n",
       "note": "**A failure halfway becomes an `error` event**, with a sentence for a person; the provider's detail goes to the server's log."
     },
     {
       "code": "    def log_message(self, *args):\n        pass\n\n\n"
     },
     {
-      "code": "ThreadingHTTPServer((\"127.0.0.1\", 8500), Relay).serve_forever()",
+      "code": "ThreadingHTTPServer((\"127.0.0.1\", 8500), Relay).serve_forever()\n",
       "note": "**One thread per request**, so two pages can stream at once."
     }
   ]
@@ -56,7 +56,7 @@ they arrive, in a stream of its own.
 Started in the background, asked with `curl`, stopped with `kill`:
 
 ```
-ana@dev:~/shop$ python relay.py & sleep 1; curl -sN -X POST localhost:8500/ask -d '{"question": "Say hello in five words."}'; kill $!
+ana@dev:~/shop$ python relay.py & sleep 3; curl -sN -X POST localhost:8500/ask -d '{"question": "Say hello in five words."}'; kill $!
 event: text
 data: {"text": "Hello"}
 
@@ -67,20 +67,16 @@ event: text
 data: {"text": " the"}
 
 event: text
-data: {"text": " shop"}
+data: {"text": " friendly"}
 
 event: text
-data: {"text": "'s"}
-
-event: text
-data: {"text": " assistant"}
+data: {"text": " server"}
 
 event: text
 data: {"text": "."}
 
 event: done
 data: {"stop_reason": "end_turn"}
-
 ```
 
 **The relay's events are its own**, smaller than the provider's: `text`, `done` and `error`. The
@@ -88,6 +84,15 @@ browser does not need to know which provider is behind the relay, or that one ex
 relay can change provider without changing the page.
 
 ## The page's side
+
+The page's side is JavaScript, and to run it outside a browser this lesson uses Node, which Ubuntu
+packages. Ubuntu 24.04's is version 18, which has `fetch` and every other piece the client needs:
+
+```
+ana@dev:~/shop$ sudo apt install -y nodejs 2>&1 | tail -n 1; node --version
+Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+v18.19.1
+```
 
 A browser has two ways to read a stream. `EventSource` is built for server-sent events but sends
 only `GET` requests, with no body. `fetch` can `POST` a question and read the response as it
@@ -114,7 +119,7 @@ arrives. This is the `fetch` version, run with Node, whose `fetch` is the same A
       "note": "**An event ends at a blank line.** Whatever follows the last one is half an event, kept for the next read."
     },
     {
-      "code": "  for (const raw of events) {\n    const name = raw.match(/^event: (.*)$/m)[1];\n    const data = JSON.parse(raw.match(/^data: (.*)$/m)[1]);\n    if (name === \"text\") shown += data.text;\n    if (name === \"done\") console.log(`${shown}\\n[done: ${data.stop_reason}]`);\n    if (name === \"error\") console.log(`${shown}\\n[error: ${data.message}]`);\n  }\n}",
+      "code": "  for (const raw of events) {\n    const name = raw.match(/^event: (.*)$/m)[1];\n    const data = JSON.parse(raw.match(/^data: (.*)$/m)[1]);\n    if (name === \"text\") shown += data.text;\n    if (name === \"done\") console.log(`${shown}\\n[done: ${data.stop_reason}]`);\n    if (name === \"error\") console.log(`${shown}\\n[error: ${data.message}]`);\n  }\n}\n",
       "note": "**Each complete event is acted on**: text is appended, `done` and `error` end the reply."
     }
   ]
@@ -122,12 +127,12 @@ arrives. This is the `fetch` version, run with Node, whose `fetch` is the same A
 ```
 
 ```
-ana@dev:~/shop$ python relay.py & sleep 1; node client.mjs "Explain in a paragraph why the cart stores prices in cents."; kill $!
-The cart stores prices as integer cents because a float cannot hold most decimal amounts exactly. In binary floating point, 0.1 plus 0.2 is not 0.3, and a total built from many such sums drifts by a cent here and there. Integers add exactly, so the cart adds cents and formats them only at the edge, when it prints a price for a person.
+ana@dev:~/shop$ python relay.py & sleep 3; node client.mjs "Explain in a paragraph why the cart stores prices in cents."; kill $!
+The practice of pricing items in cents, particularly in cart or checkout displays, is largely a marketing technique rather than a fundamental principle of commerce. The idea behind this is to create a psychological bias in the consumer's mind, making the item seem more affordable or desirable by presenting a price that ends in zero. This is based on the fact that humans are wired to perceive prices that end in zero as more attractive and less expensive, as it creates a mental association with the word "free." By pricing items in cents, businesses aim to create a positive impression and encourage impulse purchases, as the perceived value of the item is increased.
 [done: end_turn]
 ```
 
-In a page, `shown` would go into an element on every `text` event instead of being printed at the
+The same question as section 02, a different draw. In a page, `shown` would go into an element on every `text` event instead of being printed at the
 end. **The buffer is the part people leave out.** A network read can end in the middle of an event,
 so the code keeps whatever follows the last blank line and waits for the rest.
 

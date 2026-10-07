@@ -1,13 +1,13 @@
 ---
 title: Quando a busca pelo significado erra
-version: 1
+version: 2
 ---
 
-Embeddings são bons com paráfrase e ruins com sequências exatas. A aula 1 seção 05 previu isso, e o
+Embeddings são bons com paráfrase e ruins com sequências exatas. A aula 1 seção 09 previu isso, e o
 manual tem o caso que prova: um código de erro. Um cliente cola o que o fechamento de compra disse:
 
 ```
-ana@dev:~/shop$ python lab/search.py vector "checkout says E1042"
+ana@dev:~/shop$ python scratch/search.py vector "checkout says E1042"
 vector: checkout says E1042
     0.542  payment-errors.md#4  Payment errors at checkout. E2003: the billing address does no…
     0.498  payment-errors.md#1  Payment errors at checkout. The checkout shows a code when a p…
@@ -45,7 +45,7 @@ def keyword_search(query, k=3):
 ```
 
 ```
-ana@dev:~/shop$ python lab/search.py keyword "checkout says E1042"
+ana@dev:~/shop$ python scratch/search.py keyword "checkout says E1042"
 keyword: checkout says E1042
     3.943  payment-errors.md#3  Payment errors at checkout. E1042: the payment timed out betwe…
     2.272  payment-errors.md#1  Payment errors at checkout. The checkout shows a code when a p…
@@ -56,12 +56,12 @@ keyword: checkout says E1042
 da pergunta. A busca por palavras tem a fraqueza oposta, porém:
 
 ```
-ana@dev:~/shop$ python lab/search.py keyword "my parcel never arrived"
+ana@dev:~/shop$ python scratch/search.py keyword "my parcel never arrived"
 keyword: my parcel never arrived
     3.367  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
     2.662  contact.md#1         Contacting support. Support answers by email and chat from 9:0…
     2.417  contact.md#2         Contacting support. The target for a first reply is four worki…
-ana@dev:~/shop$ python lab/search.py vector "my parcel never arrived"
+ana@dev:~/shop$ python scratch/search.py vector "my parcel never arrived"
 vector: my parcel never arrived
     0.568  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
     0.297  contact.md#2         Contacting support. The target for a first reply is four worki…
@@ -70,7 +70,7 @@ vector: my parcel never arrived
 
 *Never arrived* não divide palavras raras com *no tracking update for ten working days*. A busca
 por palavras põe o trecho certo em primeiro só porque *parcel* está nele, e completa o resto com
-trechos sobre o horário do suporte que por acaso têm palavras comuns. A busca vetorial põe o mesmo
+trechos do suporte que também têm *parcel* ou *arrived*. A busca vetorial põe o mesmo
 trecho em primeiro com folga, 0,568, porque lê o significado.
 
 ## As duas juntas
@@ -93,12 +93,12 @@ def hybrid_search(query, k=3):
 ```
 
 ```
-ana@dev:~/shop$ python lab/search.py hybrid "checkout says E1042"
+ana@dev:~/shop$ python scratch/search.py hybrid "checkout says E1042"
 hybrid: checkout says E1042
     0.033  payment-errors.md#4  Payment errors at checkout. E2003: the billing address does no…
     0.033  payment-errors.md#1  Payment errors at checkout. The checkout shows a code when a p…
     0.033  payment-errors.md#3  Payment errors at checkout. E1042: the payment timed out betwe…
-ana@dev:~/shop$ python lab/search.py hybrid "my parcel never arrived"
+ana@dev:~/shop$ python scratch/search.py hybrid "my parcel never arrived"
 hybrid: my parcel never arrived
     0.033  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
     0.033  contact.md#2         Contacting support. The target for a first reply is four worki…
