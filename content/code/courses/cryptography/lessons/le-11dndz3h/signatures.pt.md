@@ -11,7 +11,42 @@ com uma chave SSH e que o Git usa para assinar commits e tags.
 
 ## A chave da Ana, e a quem ela pertence
 
-A chave Ed25519 da Ana, a mesma das aulas 2 e 3, no formato do OpenSSH:
+A chave Ed25519 da Ana é a mesma das aulas 2 e 3, e o OpenSSH a quer num formato próprio. Uma
+ferramenta curta a grava assim, a partir do mesmo rótulo:
+
+```py
+# ~/lab/tools/sshkey.py
+"""vcrypt sshkey LABEL FILE [COMMENT]: an Ed25519 key derived from LABEL, in
+OpenSSH's own format, as FILE; with a COMMENT, its public half as FILE.pub."""
+import os
+import sys
+
+from cryptography.hazmat.primitives import serialization
+
+import keys
+
+label, path = sys.argv[1], sys.argv[2]
+k = keys.ed25519_key(label)
+open(path, "wb").write(k.private_bytes(serialization.Encoding.PEM,
+                                       serialization.PrivateFormat.OpenSSH,
+                                       serialization.NoEncryption()))
+os.chmod(path, 0o600)  # ssh refuses a private key others can read
+if len(sys.argv) > 3:
+    pub = k.public_key().public_bytes(serialization.Encoding.OpenSSH,
+                                      serialization.PublicFormat.OpenSSH).decode()
+    open(path + ".pub", "w").write(f"{pub} {sys.argv[3]}\n")
+```
+
+Os comandos gravam a chave da Ana e sua metade pública, e depois a lista de quem assina com qual
+chave, que os parágrafos seguintes explicam:
+
+```sh
+cd ~/lab
+vcrypt sshkey keys/ed25519-ana keys/ana_ssh ana@vereda.example
+echo "ana@vereda.example $(cut -d' ' -f1,2 keys/ana_ssh.pub)" > data/allowed_signers
+```
+
+A metade pública:
 
 ```
 ana@lab:~/lab$ cat keys/ana_ssh.pub
@@ -20,7 +55,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbrVbLEHhq6u+cmCobYboWrP2Yp4hGI5xXLgb45i5Jn
 
 Uma chave pública não diz de quem é, como a aula 2 avisou, então a verificação precisa de uma lista
 que amarre nomes a chaves. O OpenSSH a chama de arquivo de *allowed signers* (signatários
-permitidos), e o da Vereda tem uma linha:
+permitidos), e o da Vereda é a linha que o `echo` acima gravou:
 
 ```
 ana@lab:~/lab$ cat data/allowed_signers

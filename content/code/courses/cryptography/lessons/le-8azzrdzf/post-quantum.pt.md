@@ -29,7 +29,28 @@ conhecido resolve com eficiência.
 Ele é um **mecanismo de encapsulamento de chave** (KEM) em vez de uma troca: um lado publica uma
 chave pública, o outro a usa para produzir um segredo compartilhado e um texto cifrado que o
 carrega, e o primeiro lado recupera o segredo com sua chave privada. O efeito é o mesmo, os dois
-lados terminam com um segredo de 32 bytes, e o tamanho desse segredo também. Todo o resto é maior:
+lados terminam com um segredo de 32 bytes, e o tamanho desse segredo também. A `cryptography` do
+Python tem o ML-KEM-768 na versão que o laboratório fixou, e o `vcrypt kem` cria um par de chaves,
+encapsula uma vez e mostra os tamanhos:
+
+```py
+# ~/lab/tools/kem.py
+"""vcrypt kem: an ML-KEM-768 key pair, one encapsulation, and the sizes.
+Encapsulation is randomised, so the secret itself is never printed."""
+from cryptography.hazmat.primitives.asymmetric import mlkem
+
+import drbg
+
+k = mlkem.MLKEM768PrivateKey.from_seed_bytes(drbg.stream("keys/mlkem768", 64))
+pub = k.public_key()
+secret, ciphertext = pub.encapsulate()
+print(f"ML-KEM-768 public key      {len(pub.public_bytes_raw()):5} bytes")
+print(f"encapsulation (ciphertext) {len(ciphertext):5} bytes")
+print(f"shared secret              {len(secret):5} bytes")
+print(f"decapsulated secret matches: {'yes' if k.decapsulate(ciphertext) == secret else 'no'}")
+```
+
+Todo o resto é maior:
 
 ```
 ana@lab:~/lab$ vcrypt kem

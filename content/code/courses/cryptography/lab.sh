@@ -62,6 +62,9 @@ le-m9cj97me the-lab
 le-cjcdfccn two-keys
 le-b56pa52x promises
 le-zkqzqc2n unsalted
+le-11dndz3h integrity
+le-11dndz3h signatures
+le-0pfv6eh8 third-party
 "
 
 STOCK=/usr/local/lib/cryptography-stock

@@ -11,7 +11,42 @@ Git uses to sign commits and tags.
 
 ## Ana's key, and who it belongs to
 
-Ana's Ed25519 key, the one from lessons 2 and 3, in OpenSSH's format:
+Ana's Ed25519 key is the one from lessons 2 and 3, and OpenSSH wants it in a format of its own. A
+short tool writes it that way, from the same label:
+
+```py
+# ~/lab/tools/sshkey.py
+"""vcrypt sshkey LABEL FILE [COMMENT]: an Ed25519 key derived from LABEL, in
+OpenSSH's own format, as FILE; with a COMMENT, its public half as FILE.pub."""
+import os
+import sys
+
+from cryptography.hazmat.primitives import serialization
+
+import keys
+
+label, path = sys.argv[1], sys.argv[2]
+k = keys.ed25519_key(label)
+open(path, "wb").write(k.private_bytes(serialization.Encoding.PEM,
+                                       serialization.PrivateFormat.OpenSSH,
+                                       serialization.NoEncryption()))
+os.chmod(path, 0o600)  # ssh refuses a private key others can read
+if len(sys.argv) > 3:
+    pub = k.public_key().public_bytes(serialization.Encoding.OpenSSH,
+                                      serialization.PublicFormat.OpenSSH).decode()
+    open(path + ".pub", "w").write(f"{pub} {sys.argv[3]}\n")
+```
+
+The commands write Ana's key and its public half, and then the list of who signs with which key,
+which the next paragraphs explain:
+
+```sh
+cd ~/lab
+vcrypt sshkey keys/ed25519-ana keys/ana_ssh ana@vereda.example
+echo "ana@vereda.example $(cut -d' ' -f1,2 keys/ana_ssh.pub)" > data/allowed_signers
+```
+
+The public half:
 
 ```
 ana@lab:~/lab$ cat keys/ana_ssh.pub
@@ -19,7 +54,8 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbrVbLEHhq6u+cmCobYboWrP2Yp4hGI5xXLgb45i5Jn
 ```
 
 A public key says nothing about whose it is, as lesson 2 warned, so verification needs a list that
-binds names to keys. OpenSSH calls it an *allowed signers* file, and Vereda's has one line:
+binds names to keys. OpenSSH calls it an *allowed signers* file, and Vereda's is the one line the
+`echo` above wrote:
 
 ```
 ana@lab:~/lab$ cat data/allowed_signers
