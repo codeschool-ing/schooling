@@ -1,6 +1,6 @@
 ---
 title: Dentro de um contêiner, toda ferramenta desta aula lê o número errado
-version: 1
+version: 2
 ---
 
 Esta máquina é um contêiner. Quase toda máquina sobre a qual vão te perguntar
@@ -8,9 +8,9 @@ agora também é, e isso muda a resposta de toda pergunta desta aula.
 
 ```
 ana@vm:~$ head -1 /proc/meminfo
-MemTotal:       16482220 kB
+MemTotal:       16480968 kB
 ana@vm:~$ cg=$(awk -F: '/:memory:/{print $3}' /proc/self/cgroup); echo "$cg"
-/process_api/01a0a3d8-ffc7-75b6-823b-37ba3b6b8c0e/claude-code-bash
+/process_api/01a115ea-1e96-7537-8c10-99a9bebe11ff/claude-code-bash
 ana@vm:~$ numfmt --to=iec $(cat /sys/fs/cgroup/memory/$cg/memory.limit_in_bytes)
 14G
 ana@vm:~$ numfmt --to=iec $(( $(awk '/MemTotal/{print $2}' /proc/meminfo) * 1024 ))
@@ -48,6 +48,49 @@ Os limites estão em outro lugar, no grupo de controle:
 
 O `/proc/self/cgroup` é como você acha o `<path>`, que é o que o `awk` acima está
 fazendo.
+
+## A mesma mentira na sua própria máquina
+
+A máquina virtual da aula 1 não é um contêiner, mas a metade de um contêiner que
+importa aqui é só um grupo de controle com limites, e o `systemd-run` cria um
+para um único comando. Um script para rodar lá dentro, que conta o que consegue
+descobrir e de onde:
+
+```sh
+cd ~/work/load
+cat > inside.sh <<'END'
+#!/bin/bash
+# What a process in a limited control group can find out, and from where.
+cg=$(cut -d: -f3 /proc/self/cgroup)
+echo "my group:       $cg"
+echo "its memory.max: $(numfmt --to=iec "$(cat /sys/fs/cgroup"$cg"/memory.max)")"
+echo "its cpu.max:    $(cat /sys/fs/cgroup"$cg"/cpu.max)"
+echo "/proc/meminfo:  $(numfmt --to=iec $(( $(awk '/MemTotal/{print $2}' /proc/meminfo) * 1024 )))"
+echo "nproc:          $(nproc)"
+END
+chmod +x inside.sh
+```
+
+O `-p MemoryMax=512M` e o `-p CPUQuota=200%` são os limites que um runtime de
+contêiner poria: meio gigabyte, e o equivalente a dois núcleos de tempo de
+processador. Isto foi capturado numa máquina virtual Ubuntu 24.04 com quatro
+núcleos e 4 GB, que usa o cgroup v2:
+
+```
+ana@vm:~/work/load$ sudo systemd-run --scope --quiet -p MemoryMax=512M -p CPUQuota=200% ./inside.sh
+my group:       /system.slice/run-re24852e083fc41c182290b2e94f9e2d4.scope
+its memory.max: 512M
+its cpu.max:    200000 100000
+/proc/meminfo:  3.9G
+nproc:          4
+```
+
+**Meio gigabyte segundo o grupo, 3.9G segundo o `/proc/meminfo`.** O script rodou
+dentro de um grupo que o mata passando de 512 MB, e o arquivo que toda ferramenta
+lê falou da máquina inteira. O `cpu.max` é `200000 100000` — duzentos mil
+microssegundos de processador a cada cem mil, o que dá dois núcleos — e o `nproc`
+continua dizendo 4. É exatamente a situação de um contêiner, criada com um
+comando e desfeita quando o comando termina.
 
 ## O processador é a mesma história
 
@@ -89,6 +132,37 @@ o `%util`, a carga média e o `top` parecem bem, porque do ponto de vista do hos
 nada está errado.
 
 O `/sys/fs/cgroup/cpu.stat`, sem o `cpu/`, é o mesmo arquivo no cgroup v2.
+
+Para vê-lo diferente de zero, dê meio núcleo a um laço ocupado e deixe-o rodar
+cinco segundos. O script lê o `cpu.stat` do próprio grupo no fim, antes de o
+grupo sumir:
+
+```sh
+cd ~/work/load
+cat > throttle.sh <<'END'
+#!/bin/bash
+# Spin for five seconds, then report what the group's quota did to it.
+cg=$(cut -d: -f3 /proc/self/cgroup)
+timeout 5 bash -c 'while :; do :; done'
+grep -E '^(usage_usec|nr_periods|nr_throttled|throttled_usec)' /sys/fs/cgroup"$cg"/cpu.stat
+END
+chmod +x throttle.sh
+```
+
+```
+ana@vm:~/work/load$ sudo systemd-run --scope --quiet -p CPUQuota=50% ./throttle.sh
+usage_usec 2954020
+nr_periods 61
+nr_throttled 58
+throttled_usec 2910354
+```
+
+**`nr_throttled 58` em 61 períodos.** O laço queria um núcleo inteiro, e a cota
+deu a ele metade de cada período de cem milissegundos. Em quase todo período ele
+usou a sua metade e ficou parado até o próximo começar, e o `throttled_usec` são
+os 2,9 segundos que ele passou parado. Nada fora do grupo diz
+isso: o `top` teria mostrado um processo a 50% numa máquina com três núcleos e
+meio ociosos.
 
 ## A carga média é a do host
 

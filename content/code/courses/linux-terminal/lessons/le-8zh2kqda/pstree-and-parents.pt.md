@@ -1,12 +1,13 @@
 ---
 title: A árvore, e o que acontece quando um pai morre
-version: 1
+version: 2
 ---
 
 Todo processo menos o PID 1 tem um pai, então os processos de uma máquina não são uma lista — são
 uma **árvore**, com o processo um na raiz.
 
-O `pstree` a desenha. Aqui está uma pequena, feita de propósito:
+O `pstree` a desenha. Aqui está uma pequena, feita de propósito e iniciada com
+`./tree-demo.sh &`, cujo número vai depois do `-p`:
 
 ```
 ana@vm:~/work$ cat tree-demo.sh

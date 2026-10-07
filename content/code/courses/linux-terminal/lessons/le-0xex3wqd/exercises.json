@@ -505,18 +505,18 @@
   },
   {
     "id": "ex-y6npv2eq",
-    "version": 1,
+    "version": 2,
     "section": "the-environment",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Cron's own mail headers listed `PATH=/usr/bin:/bin`. What follows from that?",
+    "prompt": "The environment a cron job wrote down had a `PATH` without `/home/ana/bin` in it. What follows from that?",
     "hint": "Compare it with the `PATH` in your interactive shell.",
     "choices": [
       {
-        "text": "Cron read `/etc/environment` and used what it found",
+        "text": "Cron runs every job with root's `PATH`",
         "correct": false,
-        "why": "It sets that value itself."
+        "why": "It is the system default, the same for every account."
       },
       {
         "text": "A command in `~/bin` has to be named by its full path",
@@ -569,12 +569,12 @@
   },
   {
     "id": "ex-fvmnz0k9",
-    "version": 1,
+    "version": 2,
     "section": "the-environment",
     "type": "cloze",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "To reproduce cron's environment in your own shell, start the command with the flag that empties it first: `env __ SHELL=/bin/sh PATH=/usr/bin:/bin ...`",
+    "prompt": "To reproduce cron's environment in your own shell, start the command with the flag that empties it first: `env __ $(cat cronenv.txt) /bin/sh -c 'report.sh'`",
     "hint": "Two characters, and the letter stands for *ignore*.",
     "blanks": [
       {
@@ -652,7 +652,7 @@
   },
   {
     "id": "ex-8vqn4rjn",
-    "version": 1,
+    "version": 2,
     "section": "output-and-failure",
     "type": "quiz",
     "difficulty": "medium",
@@ -678,7 +678,7 @@
       {
         "text": "It stops cron recording the job in the system log",
         "correct": false,
-        "why": "The `CMD` and `END` lines are written either way."
+        "why": "The `CMD` line is written either way."
       }
     ]
   },
@@ -716,18 +716,18 @@
   },
   {
     "id": "ex-7pzkkxhs",
-    "version": 1,
+    "version": 2,
     "section": "output-and-failure",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Syslog shows a `CMD` line and an `END` line for last night's job. What have you learned?",
+    "prompt": "Syslog shows a `CMD` line for last night's job. What have you learned?",
     "hint": "One of the two questions is answered and the other is not.",
     "choices": [
       {
         "text": "The job ran and succeeded",
         "correct": false,
-        "why": "`END` is written for a job that exited 1 as well."
+        "why": "The log records the start, and nothing about how the job ended."
       },
       {
         "text": "The job ran and its output was mailed",
@@ -740,9 +740,9 @@
         "why": "`CMD` means the schedule matched and cron started it."
       },
       {
-        "text": "It started and finished, and no more than that",
+        "text": "It started, and no more than that",
         "correct": true,
-        "why": "Which is why you need the mail as well when a year-old job stops."
+        "why": "Which is why you need its output as well when a year-old job stops."
       }
     ]
   },
@@ -908,7 +908,7 @@
   },
   {
     "id": "ex-kpf91wk7",
-    "version": 1,
+    "version": 2,
     "section": "anacron-and-at",
     "type": "quiz",
     "difficulty": "medium",
@@ -919,7 +919,7 @@
       {
         "text": "Both jobs had already run today, and the spool says so",
         "correct": true,
-        "why": "The file holds `20260915` — the date, which is anacron's entire memory."
+        "why": "The file holds `20261007` — the date, which is anacron's entire memory."
       },
       {
         "text": "The `-n` flag runs each job at most once per invocation",
@@ -1100,12 +1100,12 @@
   },
   {
     "id": "ex-dvxnp698",
-    "version": 1,
+    "version": 2,
     "section": "systemd-timers",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "`systemd-analyze verify` on a timer with `OnCalender` misspelt printed two messages. Which one mattered?",
+    "prompt": "`systemd-analyze verify` on a timer with `OnCalender` misspelt printed three lines. Which one mattered?",
     "hint": "One of them is a warning about a key systemd throws away.",
     "choices": [
       {
@@ -1114,9 +1114,9 @@
         "why": "That is the warning, and *ignoring* is the word that makes it not an error."
       },
       {
-        "text": "`Binding to IPv6 address not available`",
+        "text": "Neither: `daemon-reload` had not been run, so verify read an old copy",
         "correct": false,
-        "why": "That is the container the lesson ran in, talking about itself."
+        "why": "`verify` reads the files it is given, by path; nothing had been loaded."
       },
       {
         "text": "Neither — the unit is valid and would have worked",
@@ -1923,7 +1923,7 @@
   },
   {
     "id": "ex-v6pd15dy",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -1933,7 +1933,7 @@
     "pairs": [
       {
         "left": "`/bin/sh: 1: report.sh: not found`",
-        "right": "cron's `PATH` is `/usr/bin:/bin`"
+        "right": "cron's `PATH` has no `~/bin` in it"
       },
       {
         "left": "the subject line stops at `$(date +`",

@@ -1,6 +1,6 @@
 ---
 title: `chmod`, and what recursion does to directories
-version: 2
+version: 3
 ---
 
 `chmod` takes the mode two ways. **Numeric** sets all nine bits at once. **Symbolic** changes the
@@ -24,6 +24,16 @@ your umask — which is section 09, and a good reason to be explicit.
 **How**: `+` add, `-` remove, `=` set exactly this and clear the rest of that row.
 
 **What**: `r`, `w`, `x` — and two more below.
+
+A file, a script and a directory to change:
+
+```sh
+mkdir -p ~/cm/sub
+cd ~/cm
+printf 'test\n' > a.txt
+printf '#!/bin/sh\necho done\n' > run.sh
+chmod 755 run.sh
+```
 
 ```
 ana@vm:~/cm$ ls -l a.txt

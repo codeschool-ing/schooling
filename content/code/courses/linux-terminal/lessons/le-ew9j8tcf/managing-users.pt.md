@@ -1,6 +1,6 @@
 ---
 title: Criar, alterar e remover uma conta
-version: 2
+version: 3
 ---
 
 Existem dois comandos para criar um usuário e eles não são a mesma ferramenta.
@@ -30,16 +30,18 @@ não existe.** O shell é `/bin/sh` em vez de bash, porque ninguém disse o cont
 O `useradd` criou uma linha. Ele não criou mais nada, e não te avisou.
 
 Uma conta cuja casa não existe ainda entra, e cai em `/` com um erro — uma das primeiras
-experiências mais confusas que se pode dar a alguém. Diga o que você quer:
+experiências mais confusas que se pode dar a alguém. Remova-a com `userdel` e crie
+de novo, dizendo o que você quer:
 
 ```
+root@vm:~# userdel dora
 root@vm:~# useradd -m -s /bin/bash -c 'Dora Silva' dora
 root@vm:~# getent passwd dora
 dora:x:1005:1008:Dora Silva:/home/dora:/bin/bash
 root@vm:~# ls -la /home/dora
 total 20
-drwxr-x---  2 dora dora 4096 Sep 14 23:22 .
-drwxr-xr-x 10 root root 4096 Sep 14 23:22 ..
+drwxr-x---  2 dora dora 4096 Oct  7 11:36 .
+drwxr-xr-x 10 root root 4096 Oct  7 11:36 ..
 -rw-r--r--  1 dora dora  220 Mar 31  2024 .bash_logout
 -rw-r--r--  1 dora dora 3771 Mar 31  2024 .bashrc
 -rw-r--r--  1 dora dora  807 Mar 31  2024 .profile
@@ -59,8 +61,8 @@ drwxr-xr-x 10 root root 4096 Sep 14 23:22 ..
 ```
 root@vm:~# ls -la /etc/skel
 total 20
-drwxr-xr-x  2 root root 4096 Feb 17  2026 .
-drwxr-xr-x 75 root root 4096 Sep 14 23:22 ..
+drwxr-xr-x  2 root root 4096 Sep 17 02:20 .
+drwxr-xr-x 83 root root 4096 Oct  7 11:36 ..
 -rw-r--r--  1 root root  220 Mar 31  2024 .bash_logout
 -rw-r--r--  1 root root 3771 Mar 31  2024 .bashrc
 -rw-r--r--  1 root root  807 Mar 31  2024 .profile
@@ -101,7 +103,7 @@ root@vm:~# usermod -l dorasilva dora
 root@vm:~# getent passwd dorasilva
 dorasilva:x:1005:1008:Dora Silva:/home/dora:/usr/sbin/nologin
 root@vm:~# ls -ld /home/dora
-drwxr-x--- 2 dorasilva dora 4096 Sep 14 23:22 /home/dora
+drwxr-x--- 2 dorasilva dora 4096 Oct  7 11:36 /home/dora
 ```
 
 O nome mudou. **A casa continua sendo `/home/dora`**, e o registro que aponta para ela também. Os
@@ -115,7 +117,7 @@ peças são separadas porque podem ser.
 root@vm:~# userdel dorasilva
 root@vm:~# getent passwd dorasilva
 root@vm:~# ls -ld /home/dora
-drwxr-x--- 2 1005 dora 4096 Sep 14 23:22 /home/dora
+drwxr-x--- 2 1005 dora 4096 Oct  7 11:36 /home/dora
 ```
 
 A conta se foi — o `getent` não imprime nada. **O diretório pessoal continua lá, e o `ls` agora

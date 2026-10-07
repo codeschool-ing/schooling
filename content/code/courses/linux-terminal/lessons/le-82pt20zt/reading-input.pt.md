@@ -1,7 +1,42 @@
 ---
 title: Ler linhas, e as quatro coisas que dão errado
-version: 1
+version: 2
 ---
+
+Os scripts que esta seção roda, criados em `~/work/scripts` do jeito que a seção 02 descreveu; cada um aparece de novo onde é explicado:
+
+```sh
+cd ~/work/scripts
+cat > readloop.sh <<'END'
+#!/bin/bash
+n=0
+while IFS= read -r line; do
+  n=$((n+1))
+  echo "$n: $line"
+done < "$1"
+echo "read $n lines"
+END
+cat > fields.sh <<'END'
+#!/bin/bash
+while IFS=, read -r region rep quarter units revenue; do
+  echo "$region/$rep sold $units for $revenue"
+done < <(tail -n +2 "$1" | head -3)
+END
+cat > subshell.sh <<'END'
+#!/bin/bash
+total=0
+printf '%s\n' 10 20 30 | while read -r n; do
+  total=$((total + n))
+done
+echo "after the pipe, total is $total"
+total=0
+while read -r n; do
+  total=$((total + n))
+done < <(printf '%s\n' 10 20 30)
+echo "after the redirect, total is $total"
+END
+chmod +x readloop.sh fields.sh subshell.sh
+```
 
 O laço que lê um arquivo linha a linha tem uma linha e quatro armadilhas dentro. Aqui está ele com
 as quatro já evitadas:
@@ -30,6 +65,13 @@ inteiro.
 pedaço compra.
 
 ## O `-r`, para barras invertidas
+
+Um arquivo com uma barra invertida numa linha e espaços em volta da outra:
+
+```sh
+cd /tmp/q2
+printf '%s\n' 'C:\path\to\file' '   padded   ' > tricky.txt
+```
 
 ```
 ana@vm:/tmp/q2$ cat -A tricky.txt
@@ -69,9 +111,9 @@ while IFS=, read -r region rep quarter units revenue; do
   echo "$region/$rep sold $units for $revenue"
 done < <(tail -n +2 "$1" | head -3)
 ana@vm:~/work/scripts$ ./fields.sh ~/work/data/sales.csv
-north/ana sold 171 for 8721
-north/bruno sold 49 for 4116
-south/carla sold 292 for 37084
+north/ana sold 145 for 18850
+north/bruno sold 275 for 23100
+south/carla sold 215 for 16555
 ```
 
 **O `read` com vários nomes de variável divide a linha entre eles**, e o último fica com tudo que

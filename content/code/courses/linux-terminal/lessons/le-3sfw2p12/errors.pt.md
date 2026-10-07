@@ -1,6 +1,6 @@
 ---
 title: Erros, e dois tipos diferentes de falha
-version: 1
+version: 2
 ---
 
 O PowerShell tem duas classes de erro e elas se comportam de forma diferente.
@@ -71,7 +71,12 @@ um `try` em volta de um cmdlet que informa um não terminante não pega nada, o 
 de que o `try`/`catch` do PowerShell não funciona.
 
 Ou `-ErrorAction Stop` no cmdlet, ou `$ErrorActionPreference = 'Stop'` uma vez no
-topo — e o segundo é o que a maioria dos scripts deveria fazer.
+topo — e o segundo é o que a maioria dos scripts deveria fazer. Num prompt ele
+vale até você mudá-lo, e o resto desta seção espera o padrão, então volte-o:
+
+```
+PS /home/ana/work/ps> $ErrorActionPreference = 'Continue'
+```
 
 Dentro do `catch`, o `$_` é um `ErrorRecord`:
 

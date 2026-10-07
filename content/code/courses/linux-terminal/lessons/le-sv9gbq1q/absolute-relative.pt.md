@@ -1,6 +1,6 @@
 ---
 title: Absoluto e relativo, e a barra que decide
-version: 1
+version: 2
 ---
 
 Um caminho é um endereço. Existem exatamente dois tipos, e **um caractere separa os dois**:
@@ -109,6 +109,9 @@ relativos — é que o shell só procura no `$PATH` por um nome *pelado*, e `.` 
 Acrescentar `./` transforma o nome pelado num caminho, e um caminho não é procurado. A seção sobre
 `$PATH` na aula 9 é a história completa; o hábito a construir agora é que `./alguma-coisa` quer
 dizer *esta aqui, bem aqui*.
+
+O seu `~/work` não tem nenhum `ledger`, porque o projeto nunca é compilado, então na sua máquina
+essa linha responde `No such file or directory`. Leia-a pelo `./`, e não pelo que ela imprimiria.
 
 ### O Windows diz a mesma coisa de outro jeito
 

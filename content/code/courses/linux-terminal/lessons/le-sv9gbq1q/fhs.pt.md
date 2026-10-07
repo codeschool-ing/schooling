@@ -1,6 +1,6 @@
 ---
 title: A hierarquia, diretório por diretório
-version: 1
+version: 2
 ---
 
 A aula 1 seção 13 te deu oito nomes para você parar de se sentir perdido. Este é o mapa inteiro, e o
@@ -137,3 +137,64 @@ contêiner colocou ali.
 **Isso é normal e não é problema.** O padrão diz o que precisa estar lá e para que serve; ele não
 proíbe o resto. Quando você encontrar um nome desconhecido na raiz de uma árvore, dê um `ls -l` e
 olhe quem é o dono — isso responde a pergunta mais vezes do que procurar o nome na internet.
+
+## O diretório de prática desta aula
+
+O resto desta aula anda por um projeto pequeno em `~/work`: alguns arquivos de código, um arquivo
+de dados, alguns logs e duas anotações. As aulas 6, 8 e 9 voltam a ele. Monte-o agora copiando o
+bloco inteiro para o terminal; ele não imprime nada e leva um segundo:
+
+```sh
+mkdir -p ~/work/src ~/work/data ~/work/logs ~/work/notes ~/work/build
+cd ~/work
+cat > README.md <<'END'
+# ledger
+
+A small tool that reads a CSV and totals a column.
+
+Build with `make`. Run with `./ledger data/report.csv`.
+END
+printf 'ledger: src/main.c src/util.c\n\tcc -o ledger src/main.c src/util.c\n' > Makefile
+printf 'CURRENCY=BRL\nDATA=data/report.csv\nDEBUG=false\n' > .env
+printf 'int total(const char *path);\n' > src/util.h
+printf '#include "util.h"\n\nint total(const char *csvpath)\n{\n\treturn 0;\n}\n' > src/util.c
+cat > src/main.c <<'END'
+#include <stdio.h>
+#include "util.h"
+
+int main(int argc, char **argv)
+{
+    if (argc != 2) {
+        fprintf(stderr, "usage: ledger FILE\n");
+        return 2;
+    }
+    printf("%d\n", total(argv[1]));
+    return 0;
+}
+END
+printf 'date,amount\n2025-01-03,1200\n2025-01-09,-340\n2025-02-11,880\n' > data/report.csv
+head -c 2048 /dev/urandom > data/cache.bin
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  printf 'app started\napp ready\napp handled a request\n'
+done > logs/app.log
+printf 'app old\n' > logs/app.log.1
+printf 'could not open data/report.csv\n' > logs/error.log
+touch logs/empty.log
+printf '# January\n\n- read the CSV, by row\n' > notes/2025-01-plan.md
+printf '# February\n\n- total it up\n' > notes/2025-02-plan.md
+head -c 200704 /dev/zero > build/ledger.o
+head -c 200704 /dev/zero > build/util.o
+touch -d '2025-03-22 14:30' README.md Makefile .env
+touch -d '2025-01-15 10:00' notes/2025-01-plan.md
+touch -d '2025-02-15 10:00' notes/2025-02-plan.md
+touch -d '2025-03-19 09:00' logs/app.log.1
+touch -d '2025-03-26 09:00' src/* data/* logs/app.log logs/error.log logs/empty.log build/*
+touch -d '2025-03-26 09:00' src data logs notes build .
+cd
+```
+
+**Você não precisa lê-lo ainda**, e na aula 9 vai conseguir ler cada linha. Duas coisas estão nele
+de propósito. As linhas de `touch -d` no final datam os arquivos em março de 2025, para que as
+buscas por idade da seção 09 tenham algo antigo para achar. E os dois arquivos em `build` são 196 KB
+de zeros, no lugar do que um compilador teria feito: este projeto nunca é compilado, e nada no
+curso o executa.

@@ -1,6 +1,6 @@
 ---
 title: `kill`, e por que o `-9` é a primeira jogada errada
-version: 1
+version: 2
 ---
 
 A seção 08 foi o que é um sinal. Esta é como mirar um, e há quatro jeitos de nomear um alvo: por
@@ -18,7 +18,7 @@ Exato e sem ambiguidade, e a resposta quando você já sabe o número. O `pgrep`
 ser como você chegou nele.
 
 **E o `kill` precisa de permissão.** Você pode sinalizar processos que são seus; qualquer outro é
-recusado:
+recusado. `sudo sleep 600 &` te dá um que é do root para experimentar, e imprime o número dele:
 
 ```
 ana@vm:~/work$ ps -o pid,user,comm -p 2189

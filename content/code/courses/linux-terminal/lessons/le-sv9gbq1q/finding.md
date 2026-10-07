@@ -1,6 +1,6 @@
 ---
 title: Finding things: `find`
-version: 2
+version: 3
 ---
 
 `find` has a reputation for being ugly, and it is earned by one thing: its syntax is older than
@@ -68,6 +68,7 @@ intact, and `find` does its own matching.
 ### The time tests, where the numbers mislead
 
 ```
+ana@vm:~/work$ touch logs/today.log
 ana@vm:~/work$ find . -mtime -1
 ./logs
 ./logs/today.log
@@ -93,6 +94,7 @@ takes one:
 ana@vm:~/work$ find logs -type f -newermt '2025-03-20'
 logs/empty.log
 logs/error.log
+logs/today.log
 logs/app.log
 ```
 

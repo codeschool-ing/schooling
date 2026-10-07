@@ -1,6 +1,6 @@
 ---
 title: `zypper`, no SUSE e no openSUSE
-version: 1
+version: 2
 ---
 
 O SUSE usa arquivos `.rpm` e o `rpm` por baixo, exatamente como a seção 10 descreveu — e uma
@@ -9,7 +9,12 @@ a camada de cima tem palavras novas.
 
 **A mesma ressalva da seção 10**: estas transcrições foram capturadas no Ubuntu com o `zypper`
 instalado e o repositório da aula configurado. Os comandos e a saída deles são reais; a distribuição
-não é SUSE, e o único lugar em que isso aparece é apontado abaixo.
+não é SUSE, e o único lugar em que isso aparece é apontado abaixo. O bloco da seção 10 construiu o
+repositório; isto o apresenta ao `zypper`:
+
+```sh
+sudo zypper --non-interactive addrepo --no-gpgcheck /srv/teaching-repo teaching
+```
 
 ## Repositórios
 

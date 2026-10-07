@@ -1,14 +1,19 @@
 ---
 title: `/etc/shadow`, e o que é uma senha guardada
-version: 2
+version: 3
 ---
 
-A conta `demo` foi criada para esta seção, e a senha dela é a string `example-password`. Eis o que
-a máquina guardou:
+Crie uma conta para esta seção, `demo`, e dê a ela a senha `example-password`. O `useradd` cria a
+conta e o `chpasswd` define uma senha a partir de uma linha `nome:senha`, que é o jeito de fazer
+isso num script; num prompt, `passwd demo` pede a senha duas vezes. Depois veja o que a máquina
+guardou:
 
 ```
+ana@vm:~$ sudo -i
+root@vm:~# useradd -m demo
+root@vm:~# echo 'demo:example-password' | chpasswd
 root@vm:~# grep '^demo:' /etc/shadow
-demo:$y$j9T$iladG9xXy9DklFOvrTOFd0$wisSqn5Qt6jQDW3xy9KJLj3qV2CE7IEoUIfRcRg2l.1:20710:0:99999:7:::
+demo:$y$j9T$v6V9ZMfIlDnqQrWiWB7rO.$QG7CzcW1m9JIpkWdk7ZwPOpnSB9dYz/QZQxO2Upkbu.:20733:0:99999:7:::
 ```
 
 **A senha não está ali.** O que está ali é um hash: um valor calculado a partir da senha que não
@@ -22,12 +27,12 @@ vermelho sobre o sistema que mandou.
 ## Lendo o campo do hash
 
 ```localised
-$y$j9T$iladG9xXy9DklFOvrTOFd0$wisSqn5Qt6jQDW3xy9KJLj3qV2CE7IEoUIfRcRg2l.1
+$y$j9T$v6V9ZMfIlDnqQrWiWB7rO.$QG7CzcW1m9JIpkWdk7ZwPOpnSB9dYz/QZQxO2Upkbu.
  ─┬─ ─┬─ ───────────┬───────── ─────────────────┬──────────────────────
-  │   │             │                           └── o hash
-  │   │             └── o salt
-  │   └── parâmetros: quanto trabalho o hash custa
-  └── o algoritmo
+  │   │             │                           └── the hash
+  │   │             └── the salt
+  │   └── parameters: how much work the hash costs
+  └── the algorithm
 ```
 
 | prefixo `$` | algoritmo |
@@ -49,14 +54,14 @@ bilhão de palpites percebe um bilhão de vezes.
 ## Os outros oito campos
 
 ```
-demo:HASH:20710:0:99999:7:::
+demo:HASH:20733:0:99999:7:::
 ```
 
 | | é | aqui |
 |---|---|---|
 | 1 | nome | `demo` |
 | 2 | hash | acima |
-| 3 | última troca, em **dias desde 1970** | `20710` |
+| 3 | última troca, em **dias desde 1970** | `20733` |
 | 4 | dias mínimos antes de poder trocar de novo | `0` |
 | 5 | dias máximos antes de ter de trocar | `99999` |
 | 6 | dias de aviso antes disso | `7` |
@@ -68,7 +73,7 @@ Ninguém lê isso a olho. O `chage -l` lê por você:
 
 ```
 root@vm:~# chage -l demo
-Last password change                                    : Sep 14, 2026
+Last password change                                    : Oct 07, 2026
 Password expires                                        : never
 Password inactive                                       : never
 Account expires                                         : never
@@ -85,8 +90,8 @@ número.
 ```
 root@vm:~# chage -M 90 -W 14 demo
 root@vm:~# chage -l demo
-Last password change                                    : Sep 14, 2026
-Password expires                                        : Dec 13, 2026
+Last password change                                    : Oct 07, 2026
+Password expires                                        : Jan 05, 2027
 Password inactive                                       : never
 Account expires                                         : never
 Minimum number of days between password change          : 0
@@ -112,15 +117,15 @@ uma conta com senha temporária de forma honesta.
 
 ```
 root@vm:~# passwd -S demo
-demo P 2026-09-14 0 90 14 -1
+demo P 2026-10-07 0 90 14 -1
 root@vm:~# passwd -l demo
 passwd: password changed.
 root@vm:~# passwd -S demo
-demo L 2026-09-14 0 90 14 -1
+demo L 2026-10-07 0 90 14 -1
 root@vm:~# passwd -u demo
 passwd: password changed.
 root@vm:~# passwd -S demo
-demo P 2026-09-14 0 90 14 -1
+demo P 2026-10-07 0 90 14 -1
 ```
 
 O segundo campo é o estado:

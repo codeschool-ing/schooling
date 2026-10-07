@@ -1,6 +1,6 @@
 ---
 title: Descritores de arquivo, e ler um processo pelo `/proc`
-version: 1
+version: 2
 ---
 
 Um processo não segura nomes de arquivo. Ele segura **números**, e cada número é uma entrada numa
@@ -90,7 +90,9 @@ ferramenta mais amigável e o `/proc` é a que está sempre instalada.**
 
 ## O truque que vale a seção inteira
 
-Apague um arquivo que algo ainda tem aberto, e o espaço não volta.
+Apague um arquivo que algo ainda tem aberto, e o espaço não volta. Crie um arquivo grande para
+experimentar, `fallocate -l 2G /tmp/big.bin`, que leva um segundo porque reserva o espaço sem
+escrever nele:
 
 ```
 ana@vm:~/work$ ls -lh /tmp/big.bin

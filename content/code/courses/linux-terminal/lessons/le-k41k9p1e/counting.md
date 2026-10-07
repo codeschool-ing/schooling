@@ -1,13 +1,13 @@
 ---
 title: `wc`, and what "a line" means
-version: 1
+version: 2
 ---
 
 `wc` counts. Three numbers, in a fixed order:
 
 ```
 ana@vm:~/work$ wc logs/access.log
-  1200  16995 148233 logs/access.log
+  1200  17510 153934 logs/access.log
 ```
 
 **Lines, words, bytes.** And with flags, one at a time:
@@ -26,6 +26,7 @@ ana@vm:~/work$ wc -l logs/*.log
     30 logs/app.log
      0 logs/empty.log
      1 logs/error.log
+     0 logs/today.log
   1231 total
 ```
 

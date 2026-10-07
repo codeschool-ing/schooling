@@ -1,6 +1,6 @@
 ---
 title: O `uniq`, que não faz o que o nome dele diz
-version: 1
+version: 2
 ---
 
 O `uniq` agrupa linhas idênticas **adjacentes**. Ele não é um removedor de duplicatas; é um contador
@@ -30,11 +30,11 @@ memória constante. Um removedor de duplicatas de verdade teria que lembrar de t
 ```
 ana@vm:~/work$ cut -d" " -f7 logs/access.log | sort | uniq -c | sort -rn | head -6
     287 /health
-    261 /
-    147 /api/orders
-    110 /static/app.js
-    104 /static/app.css
-     76 /index.html
+    279 /
+    169 /api/orders
+    121 /static/app.js
+     89 /static/app.css
+     72 /index.html
 ```
 
 **O `sort | uniq -c | sort -rn` é o pipeline mais útil desta aula**, e vale aprendê-lo como uma
@@ -62,6 +62,9 @@ ana@vm:~/work$ cut -d" " -f1 logs/access.log | sort | uniq -d | head -3
 10.0.1.11
 10.0.1.12
 ana@vm:~/work$ cut -d" " -f1 logs/access.log | sort | uniq -u | head -3
+203.0.113.13
+203.0.113.16
+203.0.113.21
 ```
 
 | | |
@@ -69,9 +72,11 @@ ana@vm:~/work$ cut -d" " -f1 logs/access.log | sort | uniq -u | head -3
 | `-d` | só as linhas que aparecem **mais de uma vez** |
 | `-u` | só as linhas que aparecem **exatamente uma vez** |
 
-O segundo comando não imprimiu nada, e isso é uma resposta: **todo endereço deste log aparece mais de
-uma vez.** Um resultado vazio do `uniq -u` diz "nenhum valor aqui é único", o que numa lista de IDs
-de usuário ou de somas de verificação muitas vezes é exatamente o que você queria saber.
+O segundo comando achou endereços que vieram **exatamente uma vez**, e os três são de `203.0.113`, a
+faixa de fora da empresa. Essa muitas vezes é a lista interessante: uma requisição de algum lugar que
+nunca voltou. E um resultado vazio do `uniq -u` também é uma resposta — "nenhum valor aqui é único",
+o que numa lista de IDs de usuário ou de somas de verificação muitas vezes é exatamente o que você
+queria saber.
 
 O `-d` é o achador de duplicatas. O `sort arquivo | uniq -d` numa lista de qualquer coisa que
 deveria ser única — IDs, endereços de e-mail, nomes de arquivo — nomeia as colisões numa linha.
@@ -93,18 +98,18 @@ Aqui está o bug na vida real. Você quer os dez caminhos mais movimentados:
 
 ```
 ana@vm:~/work$ cut -d" " -f7 logs/access.log | uniq -c | sort -rn | head -4
+      5 /health
       5 /
-      5 /
-      5 /
+      4 /health
       4 /health
 ```
 
 O mesmo pipeline **com o `sort` deixado de fora**. O `uniq -c` em entrada não ordenada conta
-*sequências*, então um caminho que aparece duzentas e sessenta vezes espalhadas pelo arquivo produz
-dezenas de contagens pequenas separadas — e o `/` aparece três vezes em quatro linhas de saída, cada
-vez alegando ter sido visto cinco vezes.
+*sequências*, então um caminho que aparece quase trezentas vezes espalhadas pelo arquivo produz
+dezenas de contagens pequenas separadas — e o `/health` aparece três vezes em quatro linhas de saída,
+alegando cinco, depois quatro, depois quatro.
 
-Compare com a versão correta no topo desta seção: `287 /health`, `261 /`. Nenhum número aqui está
+Compare com a versão correta no topo desta seção: `287 /health`, `279 /`. Nenhum número aqui está
 certo.
 
 **E nada naquela saída parece incorreto à primeira vista.** As contagens são plausíveis e os caminhos
@@ -119,9 +124,9 @@ O `awk` consegue contar numa passagem só, sem ordenar, porque ele tem array ass
 ```
 ana@vm:~/work$ awk '{c[$7]++} END {for (p in c) print c[p], p}' logs/access.log | sort -rn | head -4
 287 /health
-261 /
-147 /api/orders
-110 /static/app.js
+279 /
+169 /api/orders
+121 /static/app.js
 ```
 
 A mesma resposta do topo desta seção, e sem `sort` antes da contagem — então num arquivo muito grande

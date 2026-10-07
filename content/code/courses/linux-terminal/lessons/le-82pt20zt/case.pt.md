@@ -1,7 +1,73 @@
 ---
 title: O `case`, e o parser de opções em que todo script acaba
-version: 1
+version: 2
 ---
+
+Os scripts que esta seção roda, criados em `~/work/scripts` do jeito que a seção 02 descreveu; cada um aparece de novo onde é explicado:
+
+```sh
+cd ~/work/scripts
+cat > kindof.sh <<'END'
+#!/bin/bash
+case "$1" in
+  *.log)          echo "a log file" ;;
+  *.tar.gz|*.tgz) echo "a compressed tarball" ;;
+  *.txt|*.md)     echo "text" ;;
+  "")             echo "you gave me nothing" ;;
+  *)              echo "no idea what $1 is" ;;
+esac
+END
+cat > deploy.sh <<'END'
+#!/bin/bash
+verbose=0
+env=staging
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -v|--verbose) verbose=1 ;;
+    -e|--env)     env="$2"; shift ;;
+    --env=*)      env="${1#*=}" ;;
+    -h|--help)    echo "usage: deploy.sh [-v] [-e ENV] TARGET"; exit 0 ;;
+    -*)           echo "unknown option: $1" >&2; exit 2 ;;
+    *)            target="$1" ;;
+  esac
+  shift
+done
+echo "target=${target:-none} env=$env verbose=$verbose"
+END
+cat > nodash.sh <<'END'
+#!/bin/bash
+verbose=0
+env=staging
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -v|--verbose) verbose=1 ;;
+    -e|--env)     env="$2"; shift ;;
+    --env=*)      env="${1#*=}" ;;
+    -h|--help)    echo "usage: deploy.sh [-v] [-e ENV] TARGET"; exit 0 ;;
+    *)            target="$1" ;;
+  esac
+  shift
+done
+echo "target=${target:-none} verbose=$verbose"
+END
+cat > getopts.sh <<'END'
+#!/bin/bash
+verbose=0
+threshold=1000
+rows=5
+while getopts ":vt:n:" opt; do
+  case "$opt" in
+    v) verbose=1 ;;
+    t) threshold="$OPTARG" ;;
+    n) rows="$OPTARG" ;;
+    \?) echo "unknown option: -$OPTARG" >&2; exit 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+echo "verbose=$verbose threshold=$threshold rows=$rows rest=$*"
+END
+chmod +x kindof.sh deploy.sh nodash.sh getopts.sh
+```
 
 O `case` compara um valor com uma lista de padrões e roda o primeiro que casar. É o que uma
 sequência de seis `elif` queria ser.

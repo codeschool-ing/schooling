@@ -1,6 +1,6 @@
 ---
 title: setuid, setgid and the sticky bit
-version: 2
+version: 3
 ---
 
 Three more bits, a fourth octal digit, and each one exists because the nine characters could not
@@ -114,13 +114,15 @@ ana@vm:~$ ls -l /tmp/anas.txt
 
 ```
 bruno@vm:~$ ls -ld /tmp
-drwxrwxrwt 38 root root 36864 Sep 14 22:45 /tmp
+drwxrwxrwt 9 root root 4096 Oct  7 11:28 /tmp
 bruno@vm:~$ cat /tmp/anas.txt
 anas file
 bruno@vm:~$ rm /tmp/anas.txt
+rm: remove write-protected regular file '/tmp/anas.txt'? y
 rm: cannot remove '/tmp/anas.txt': Operation not permitted
 ```
 
+`rm` asks first, because the file is not one bruno may write, and answering `y` does not help.
 Bruno has `w` on `/tmp`. He can create files there and delete his own. **The `t` restricts removal
 to the entry's owner** — and to the directory's owner, and to root.
 

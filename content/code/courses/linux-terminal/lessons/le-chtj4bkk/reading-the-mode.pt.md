@@ -1,6 +1,6 @@
 ---
 title: Lendo um modo, caractere por caractere
-version: 1
+version: 2
 ---
 
 Dez caracteres, e eles são a primeira coisa de cada linha de uma listagem longa.
@@ -47,11 +47,12 @@ não é nenhum deles merece um segundo olhar.
 
 ```
 bruno@vm:/srv/perm$ ls -l
-total 16
--rw------- 1 ana ana   9 Sep 14 22:45 private.txt
--rw-r--r-- 1 ana ana  22 Sep 14 22:45 public.txt
--rwxr-xr-x 1 ana ana  34 Sep 14 22:45 script.sh
--rw-r----- 1 ana team 13 Sep 14 22:45 teamonly.txt
+total 20
+-rw------- 1 ana ana   9 Oct  7 11:27 private.txt
+-rw-r--r-- 1 ana ana  22 Oct  7 11:27 public.txt
+-rwxr-xr-x 1 ana ana  34 Oct  7 11:27 script.sh
+-rw-r----- 1 ana team 13 Oct  7 11:27 teamonly.txt
+-r--rwxrwx 1 ana team  9 Oct  7 11:27 trap.txt
 ```
 
 **`private.txt` — `-rw-------`.** Um arquivo. A dona lê e escreve. O grupo não recebe nada. Todo o
@@ -69,7 +70,14 @@ não recebe nada, que é o `---` no fim, e é por isso que a carla foi recusada 
 ## O `x` é o que tem dois significados
 
 Num **arquivo**, `x` quer dizer *isto pode ser executado*. Sem ele, o arquivo é dado, seja lá o que
-tenha dentro:
+tenha dentro. Um script de duas linhas, escrito sem ele:
+
+```sh
+mkdir -p ~/x
+cd ~/x
+printf '#!/bin/bash\necho "the script ran"\n' > script.sh
+```
+
 
 ```
 ana@vm:~/x$ ls -l script.sh

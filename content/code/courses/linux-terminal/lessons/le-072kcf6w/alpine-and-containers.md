@@ -1,6 +1,6 @@
 ---
 title: Alpine, and why your container behaves oddly
-version: 1
+version: 2
 ---
 
 Every other distribution in this lesson is one you might run a server on. **Alpine is the one you
@@ -10,12 +10,24 @@ are using it.
 
 `docker` depends on this course. This section is the part of that dependency that belongs here.
 
+To try what follows, install Docker on the machine from lesson 1 with `sudo apt install docker.io`.
+Every command below starts with `sudo`, because talking to Docker is an administrator's act until
+lesson 4's groups say otherwise; the first `docker run` of an image downloads it.
+
 ## It is small on purpose, and that is the whole design
 
 An Alpine image is a handful of megabytes where a Debian one is a hundred or more. In a container
 that matters more than it sounds: an image is pulled by every machine that runs it, stored in
 every registry that holds it, and rebuilt every time CI runs. Size is bandwidth and money,
 multiplied by a number that keeps growing.
+
+```
+ana@vm:~$ sudo docker image ls --format '{{.Repository}}:{{.Tag}}  {{.Size}}' alpine
+[sudo] password for ana:
+alpine:latest  13MB
+ana@vm:~$ sudo docker image ls --format '{{.Repository}}:{{.Tag}}  {{.Size}}' ubuntu
+ubuntu:24.04  119MB
+```
 
 Alpine gets there by replacing two things that every other distribution in this lesson keeps.
 
@@ -24,6 +36,17 @@ Alpine gets there by replacing two things that every other distribution in this 
 Lesson 1 said the commands are the userland and that GNU supplies it almost everywhere. Alpine
 uses **busybox**: one small program that implements `ls`, `cp`, `grep`, `sed` and a hundred others
 as modes of itself.
+
+```
+ana@vm:~$ sudo docker run --rm alpine readlink -f /bin/ls
+/bin/busybox
+ana@vm:~$ sudo docker run --rm alpine sh -c 'ls --help 2>&1 | head -3'
+BusyBox v1.37.0 (2026-01-10 15:38:28 UTC) multi-call binary.
+
+Usage: ls [-1AaCxdLHRFplinshrSXvctu] [-w WIDTH] [FILE]...
+```
+
+`/bin/ls` is a link to `/bin/busybox`, and so is nearly every other command in the image.
 
 The commands are there and the common uses work. **The extensions do not.** GNU's `ls` has long
 options; busybox's mostly does not. GNU's `sed -i` takes a suffix argument differently. `grep -P`
@@ -39,6 +62,14 @@ beginning `#!/bin/bash` fails outright, and a script beginning `#!/bin/sh` that 
 feature fails in the confusing way lesson 1 section 02 described. If you need bash in an Alpine
 image, you install it.
 
+```
+ana@vm:~$ sudo docker run --rm alpine sh -c 'command -v bash; echo "exit=$?"'
+exit=127
+```
+
+`command -v` prints where a command is and prints nothing when there is none, and `127` is lesson
+1's number for "no such command".
+
 ## It replaces the C library — musl instead of glibc
 
 This is the one that surprises people, because it fails at a distance from its cause.
@@ -47,6 +78,22 @@ Almost every Linux program is linked against **glibc**, the GNU C library. Alpin
 which is smaller and stricter. Most software compiled from source builds fine against either.
 **A binary compiled elsewhere against glibc will not run on Alpine** — it starts, finds the
 library it was built for missing, and refuses.
+
+`ldd` lists the libraries a program loads, and the two `ls` programs answer differently:
+
+```
+ana@vm:~$ sudo docker run --rm alpine ldd /bin/ls
+	/lib/ld-musl-x86_64.so.1 (0x7ff65ce41000)
+	libc.musl-x86_64.so.1 => /lib/ld-musl-x86_64.so.1 (0x7ff65ce41000)
+ana@vm:~$ sudo docker run --rm ubuntu:24.04 ldd /bin/ls
+	linux-vdso.so.1 (0x00007f8fbbb1b000)
+	libselinux.so.1 => /lib/x86_64-linux-gnu/libselinux.so.1 (0x00007f8fbbabf000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f8fbb8ac000)
+	libpcre2-8.so.0 => /lib/x86_64-linux-gnu/libpcre2-8.so.0 (0x00007f8fbb812000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f8fbbb1d000)
+```
+
+`ld-musl` against `libc.so.6`: the same command name, two C libraries underneath.
 
 What that looks like in practice: a language runtime that downloads prebuilt native modules
 — Python wheels, Node native addons — installs them and then cannot load them, with an error
@@ -80,9 +127,7 @@ Three checks, in order, and they are section 11's reflex applied to a container:
 
 ---
 
-**One note about this section, because the course's own rule requires it.** Every other transcript
-in this course was captured by running the command. These were not: the machine this was written
-on cannot reach a container registry, so nothing above is quoted as output — it is stated as
-prose instead. `alpine-and-containers.tape`, beside this file, is the exact session that produces
-those transcripts on a machine that can, and the statements here are meant to be replaced by its
-output rather than to stand in for it.
+**One note about this section, because the course's own rule requires it.** Every transcript in
+it was captured by running the command. The `apk` table was not: the machine this was written on
+could reach Docker's registry but not Alpine's package mirror, so `apk add` could not run there.
+On yours, `sudo docker run -it --rm alpine` gives you an Alpine prompt to try it at.

@@ -1,6 +1,6 @@
 ---
 title: `xargs`, for commands that take arguments instead of input
-version: 1
+version: 2
 ---
 
 Every tool so far reads stdin. A great many do not — `rm`, `cp`, `chmod`, `git`, `grep -l`'s output
@@ -14,10 +14,11 @@ ana@vm:~/work$ ls logs/*.log | xargs wc -l
     30 logs/app.log
      0 logs/empty.log
      1 logs/error.log
+     0 logs/today.log
   1231 total
 ```
 
-Without `xargs`, `wc -l` would have read the *list of names* as its input and counted four lines.
+Without `xargs`, `wc -l` would have read the *list of names* as its input and counted five lines.
 With it, the names became arguments.
 
 ## It packs as many as it can
@@ -127,7 +128,7 @@ ana@vm:~/work$ printf "" | xargs -r echo "ran with:"; echo "(nothing above means
 ana@vm:~/work$ printf "" | xargs ls | head -3
 Makefile
 README.md
-build
+both.txt
 ```
 
 **The third one is the dangerous shape.** Nothing was found, `xargs` ran `ls` with no arguments, and

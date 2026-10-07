@@ -1,35 +1,35 @@
 ---
 title: Disk space, and three ways a full disk is not full
-version: 1
+version: 2
 ---
 
 ```
 ana@vm:~$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  30% /
+/dev/vda        252G   11G   29G  28% /
 ```
 
-Read that line carefully. **252 gigabytes total, 11 used, 27 available — and
-11 plus 27 is not 252.**
+Read that line carefully. **252 gigabytes total, 11 used, 29 available — and
+11 plus 29 is not 252.**
 
 That is not a bug and it is the first thing to understand about `df`:
 
 ```
 ana@vm:~$ stat -f / | head -6
   File: "/"
-    ID: 98cd458b5846bde Namelen: 255     Type: ext2/ext3
+    ID: ea3c3688a915b271 Namelen: 255     Type: ext2/ext3
 Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 66053021   Free: 63208038   Available: 6867148
-Inodes: Total: 16777216   Free: 16553026
+Blocks: Total: 66053021   Free: 63275800   Available: 7433682
+Inodes: Total: 16777216   Free: 16531303
 ```
 
 **`Free` and `Available` are different numbers.** 63 million blocks are unused;
-6.8 million of them are available *to you*. The rest is reserved — by default
+7.4 million of them are available *to you*. The rest is reserved — by default
 ext4 keeps 5% for `root` so that a full disk does not stop the machine being
 repaired, and on this machine a quota reserves a great deal more than that.
 
 And `Use%` is computed against what you can use, not against the total:
-11 / (11 + 27) is 29%, which rounds to the 30% in the output. **`df` is telling
+11 / (11 + 29) is 27.5%, which rounds to the 28% in the output. **`df` is telling
 you the truth about a number you did not ask for**, and the moment you need
 `Size` to equal `Used + Avail` you have the wrong mental model.
 
@@ -38,22 +38,34 @@ data disk recovers a useful amount and on the root filesystem is a bad idea.
 
 ## Full with space free
 
+This needs a filesystem small enough to fill, so make one inside a file, the way
+lesson 3 section 12 did, with very few inodes — `-N 256` asks for 256:
+
+```sh
+cd ~
+truncate -s 32M small.img
+mkfs.ext4 -q -N 256 small.img
+sudo mkdir -p /mnt/small
+sudo mount -o loop small.img /mnt/small
+sudo chown ana:ana /mnt/small
+```
+
 ```
 ana@vm:/mnt/small$ df -h /mnt/small; df -i /mnt/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       28M   24K   26M   1% /mnt/small
+/dev/loop1       28M   24K   26M   1% /mnt/small
 Filesystem     Inodes IUsed IFree IUse% Mounted on
-/dev/loop0        256    11   245    5% /mnt/small
+/dev/loop1        256    11   245    5% /mnt/small
 ana@vm:/mnt/small$ cd /mnt/small && for i in $(seq 1 300); do touch f$i 2>/dev/null; done; ls | wc -l
 246
 ana@vm:/mnt/small$ touch one-more
 touch: cannot touch 'one-more': No space left on device
 ana@vm:/mnt/small$ df -h /mnt/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       28M   24K   26M   1% /mnt/small
+/dev/loop1       28M   24K   26M   1% /mnt/small
 ana@vm:/mnt/small$ df -i /mnt/small
 Filesystem     Inodes IUsed IFree IUse% Mounted on
-/dev/loop0        256   256     0  100% /mnt/small
+/dev/loop1        256   256     0  100% /mnt/small
 ```
 
 **`No space left on device`, with 26 megabytes free and 1% used.**
@@ -72,20 +84,32 @@ exactly the wrong number.
 
 ## Full with the file deleted
 
-The second way, and the one that wastes the most time:
+The second way, and the one that wastes the most time. Empty the small
+filesystem, then make a process that does what a careless log rotation does: it
+opens `big.log`, writes twenty megabytes into it, deletes it, and carries on
+running with the file still open, as descriptor 9:
+
+```sh
+cd ~
+rm -f /mnt/small/f* /mnt/small/one-more
+bash -c 'exec 9> /mnt/small/big.log; head -c 20M /dev/zero >&9; rm /mnt/small/big.log; exec sleep 3600' &
+sleep 1
+```
+
+Now look at the disk as somebody who did not see that would:
 
 ```
 ana@vm:~$ df -h /mnt/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       28M   21M  5.7M  78% /mnt/small
+/dev/loop1       28M   21M  5.7M  78% /mnt/small
 ana@vm:~$ du -sh /mnt/small
 du: cannot read directory '/mnt/small/lost+found': Permission denied
 20K     /mnt/small
 ana@vm:~$ ls -la /mnt/small
 total 24
-drwxr-xr-x 3 ana  ana   4096 Sep 15 11:28 .
-drwxr-xr-x 8 root root  4096 Sep 15 11:27 ..
-drwx------ 2 root root 16384 Sep 15 11:27 lost+found
+drwxr-xr-x 3 ana  ana   4096 Oct  7 13:48 .
+drwxr-xr-x 8 root root  4096 Oct  7 13:21 ..
+drwx------ 2 root root 16384 Oct  7 13:48 lost+found
 ```
 
 **`df` says 21 megabytes are used. `du` says 20 kilobytes. `ls` shows nothing at
@@ -99,7 +123,7 @@ The answer:
 ```
 ana@vm:~$ lsof +L1 /mnt/small
 COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NLINK NODE NAME
-sleep   16238  ana    9w   REG    7,0 20971520     0   12 /mnt/small/big.log (deleted)
+sleep   13124  ana    9w   REG    7,1 20971520     0   12 /mnt/small/big.log (deleted)
 ```
 
 **`NLINK 0` and `(deleted)`.** A process has the file open; somebody deleted the
@@ -114,12 +138,22 @@ restart the process, or, if you cannot, truncate the file through its
 descriptor:
 
 ```sh
-: > /proc/16238/fd/9        # the space comes back immediately
+: > /proc/13124/fd/9        # the space comes back immediately
 ```
 
 This is what happens when somebody rotates a log by deleting it instead of by
 `logrotate`: the disk stays full until the service is restarted, and `du` swears
 the space is not being used.
+
+Here, ending the process is the restart, and it gives the space back. Then the
+small filesystem can go:
+
+```sh
+cd ~
+pkill -xf 'sleep 3600'
+sudo umount /mnt/small
+rm small.img
+```
 
 ## Finding the space
 

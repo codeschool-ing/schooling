@@ -1,6 +1,6 @@
 ---
 title: A machine with more than one person on it
-version: 1
+version: 2
 ---
 
 Linux was built in a world where one computer served a department, and **it never stopped assuming
@@ -13,7 +13,7 @@ That assumption is why you are not the administrator, and why that is a feature.
 
 ```
 ana@vm:~$ id
-uid=1001(ana) gid=1002(ana) groups=1002(ana)
+uid=1001(ana) gid=1002(ana) groups=1002(ana),27(sudo)
 ```
 
 The name is for you; the number is what the system uses. `uid` is the user, `gid` the primary
@@ -59,8 +59,9 @@ ana@vm:~$ grep -c "" /etc/passwd
 26
 ```
 
-Twenty-six accounts on a machine with four humans. The rest belong to **programs**: the web server
-gets one, the database gets one, the printing system gets one.
+Twenty-six accounts on the machine these transcripts were captured on, which has four humans. Yours
+will have a number of the same order, and one human: you. The rest belong to **programs**: the web
+server gets one, the database gets one, the printing system gets one.
 
 This is the deep reason for the multi-user design, and it has nothing to do with sharing a
 computer. If the web server runs as its own user, then a flaw in the web server reaches exactly

@@ -1,6 +1,6 @@
 ---
 title: Arrays e hashtables, e a contagem que não está lá
-version: 1
+version: 2
 ---
 
 ```
@@ -50,8 +50,12 @@ name
 linha num arquivo. Leia um valor com `$h["name"]` ou `$h.name` — a forma com ponto
 é mais curta e falha numa chave com espaço.
 
-**A ordem não é a de inserção.** O `port` voltou antes do `name`, igual aos arrays
-associativos do bash na aula 9 seção 12. O `[ordered]@{ }` a mantém:
+**A ordem não é a de inserção, e nem é a mesma de uma sessão para a outra.** Aqui
+o `port` voltou antes do `name`. Oito processos novos de `pwsh`, com a mesma
+pergunta, puseram o `name` primeiro seis vezes, porque o .NET sorteia de novo a
+semente do hash de strings em cada processo. Os arrays associativos do bash, na
+aula 9 seção 12, também se recusam a prometer uma ordem. O `[ordered]@{ }` a
+mantém:
 
 ```
 PS /home/ana/work/ps> $h = [ordered]@{ name = "web01"; port = 8080 }; $h.Keys

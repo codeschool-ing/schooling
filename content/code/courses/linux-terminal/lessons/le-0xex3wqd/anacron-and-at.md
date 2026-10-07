@@ -1,6 +1,6 @@
 ---
 title: The machine that was off, and the job that runs once
-version: 1
+version: 2
 ---
 
 Cron has one assumption: **the machine is on.** A job scheduled for 03:00 on a
@@ -40,7 +40,18 @@ ran**, and the answer is a file:
 /var/spool/anacron/cron.daily        # one line: the date it last ran
 ```
 
-Two runs of a private anacrontab, a minute apart, say the whole thing:
+Two runs of a private anacrontab, a minute apart, say the whole thing. The
+anacrontab, and an empty directory for it to keep its dates in:
+
+```sh
+cd ~/work/cron
+cat > myanacrontab <<'END'
+SHELL=/bin/sh
+1       0       daily-report    echo "report for $(date +\%F)"
+7       0       weekly-report   echo "weekly report"
+END
+mkdir -p spool
+```
 
 ```
 ana@vm:~/work/cron$ cat myanacrontab
@@ -50,7 +61,7 @@ SHELL=/bin/sh
 ana@vm:~/work/cron$ anacron -T -t myanacrontab && echo "syntax ok"
 syntax ok
 ana@vm:~/work/cron$ anacron -d -n -t myanacrontab -S spool
-Anacron 2.3 started on 2026-09-15
+Anacron 2.3 started on 2026-10-07
 Will run job `daily-report'
 Will run job `weekly-report'
 Jobs will be executed sequentially
@@ -61,17 +72,17 @@ Job `weekly-report' terminated (mailing output)
 Normal exit (2 jobs run)
 ana@vm:~/work/cron$ ls -l spool; cat spool/daily-report
 total 8
--rw------- 1 ana ana 9 Sep 15 12:31 daily-report
--rw------- 1 ana ana 9 Sep 15 12:31 weekly-report
-20260915
+-rw------- 1 ana ana 9 Oct  7 14:36 daily-report
+-rw------- 1 ana ana 9 Oct  7 14:36 weekly-report
+20261007
 ana@vm:~/work/cron$ anacron -d -n -t myanacrontab -S spool
-Anacron 2.3 started on 2026-09-15
+Anacron 2.3 started on 2026-10-07
 Normal exit (0 jobs run)
 ```
 
 **The first run does both jobs and writes the date. The second run does
 nothing** — `Normal exit (0 jobs run)` — because both have already run today.
-That file, `20260915`, is anacron's entire memory.
+That file, `20261007`, is anacron's entire memory.
 
 | | |
 |---|---|
@@ -114,24 +125,31 @@ which is why anacron matters less on a systemd machine than it used to.
 
 ## `at`, which runs it once
 
+One job, for the next minute, that writes the time it ran:
+
+```sh
+cd ~/work/cron
+echo "date +%T >> at.log" | at now + 1 minute
+sleep 120
+```
+
 ```
 ana@vm:~/work/cron$ cat at.log
-12:35:00
+14:37:00
 ana@vm:~/work/cron$ atq
 ana@vm:~/work/cron$ echo "atq printed nothing: the queue is empty"
 atq printed nothing: the queue is empty
 ```
 
-That is the result of `echo "date +%T >> at.log" | at now + 1 minute`, one minute
-later: **it ran at 12:35:00 exactly, and then it was gone.** An `at` job is
+**It ran at 14:37:00 exactly, and then it was gone.** An `at` job is
 consumed by running.
 
 ```
 ana@vm:~/work/cron$ at 03:00 tomorrow <<< "/home/ana/bin/report.sh"
 warning: commands will be executed using /bin/sh
-job 2 at Wed Sep 16 03:00:00 2026
+job 2 at Thu Oct  8 03:00:00 2026
 ana@vm:~/work/cron$ atq
-2       Wed Sep 16 03:00:00 2026 a ana
+2       Thu Oct  8 03:00:00 2026 a ana
 ana@vm:~/work/cron$ atrm $(atq | cut -f1); atq; echo "removed, exit $?"
 removed, exit 0
 ```
@@ -153,18 +171,29 @@ and replays it. `at -c` prints the job it will run, and the top of it is your
 shell:
 
 ```
-ana@vm:~$ at -c 3 | head -10
+ana@vm:~$ at 03:00 tomorrow <<< "/home/ana/bin/report.sh" 2>/dev/null
+ana@vm:~$ at -c "$(atq | cut -f1)" | grep -v LS_COLORS | head -12
 #!/bin/sh
-# atrun uid=1001 gid=1002
+# atrun uid=1000 gid=1000
 # mail ana 0
 umask 2
-NVM_RC_VERSION=; export NVM_RC_VERSION
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64; export JAVA_HOME
-GRADLE_HOME=/opt/gradle; export GRADLE_HOME
-RBENV_SHELL=bash; export RBENV_SHELL
 PWD=/home/ana; export PWD
 LOGNAME=ana; export LOGNAME
+XDG_SESSION_TYPE=tty; export XDG_SESSION_TYPE
+HOME=/home/ana; export HOME
+LANG=C.UTF-8; export LANG
+COLUMNS=100; export COLUMNS
+SSH_CONNECTION=10.0.2.2\ 40208\ 10.0.2.15\ 22; export SSH_CONNECTION
+LESSCLOSE=/usr/bin/lesspipe\ %s\ %s; export LESSCLOSE
+ana@vm:~$ atrm "$(atq | cut -f1)"
 ```
+
+Twelve lines, and the job is nowhere near them yet. Everything set in the shell
+it was queued from — the kind of session, the ssh connection it came in on, the
+width of that terminal — is written into the job, to be set again at three in
+the morning. One line was left out because it is several thousand characters
+long: `LS_COLORS`, which tells `ls` what colour to paint each kind of file, and
+which the job will also carry.
 
 **That is friendlier and no more reliable.** The job runs with whatever happened
 to be set in the terminal you typed it in — including a `JAVA_HOME` from a

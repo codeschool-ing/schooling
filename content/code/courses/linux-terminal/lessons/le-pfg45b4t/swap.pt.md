@@ -1,6 +1,6 @@
 ---
 title: Swap, que não é o problema e não é o conserto
-version: 1
+version: 2
 ---
 
 ```
@@ -8,7 +8,7 @@ ana@vm:~$ swapon --show; echo "(nothing above means no swap)"
 (nothing above means no swap)
 ana@vm:~$ free -h
                total        used        free      shared  buff/cache   available
-Mem:            15Gi       657Mi        13Gi        11Mi       1.5Gi        15Gi
+Mem:            15Gi       647Mi        14Gi        13Mi       369Mi        15Gi
 Swap:             0B          0B          0B
 ```
 
@@ -17,6 +17,10 @@ quase universal em contêineres. Isso quer dizer que as capturas desta seção p
 aqui: não há forma honesta de mostrar o `si`/`so` se mexendo numa máquina sem
 para onde fazer swap, então o resto desta seção descreve em vez de demonstrar, e
 diz isso.
+
+A sua pode muito bem ter: o instalador do Ubuntu Server cria um arquivo de swap,
+o `/swap.img`, a não ser que mandem não criar, e o `swapon --show` na sua máquina
+vai listá-lo.
 
 ## Para que serve o swap
 

@@ -1,6 +1,6 @@
 ---
 title: Laços, e nunca iterar sobre o `ls`
-version: 1
+version: 2
 ---
 
 O `for` percorre uma lista de palavras. É só isso que ele faz, e todo o resto decorre de onde a
@@ -17,6 +17,16 @@ i=3
 quebra de linha também serve.
 
 ## A lista costuma ser um glob
+
+Três logs pequenos em `/tmp/q2`, um com um espaço no nome:
+
+```sh
+cd /tmp/q2
+rm -f *.log
+printf 'one\ntwo\n' > a.log
+printf 'one\n' > b.log
+printf 'one\n' > 'two words.log'
+```
 
 ```
 ana@vm:/tmp/q2$ for f in *.log; do echo "[$f]"; done
@@ -56,7 +66,12 @@ loop over
 ```
 
 **O `shopt -s nullglob` faz um glob sem correspondência expandir para nada**, então o laço roda
-zero vezes, que é o que você quis dizer. Ligue-o uma vez no topo de um script que usa globs.
+zero vezes, que é o que você quis dizer. Ligue-o uma vez no topo de um script que usa globs. Num
+prompt ele dura até você desligá-lo, e o resto desta aula espera que esteja desligado:
+
+```
+ana@vm:/tmp/q2$ shopt -u nullglob
+```
 
 A alternativa, se você prefere não mudar o comportamento do shell globalmente, é conferir dentro do
 laço:
@@ -166,6 +181,7 @@ ana@vm:/tmp/q2$ for f in *.log; do echo "$f: $(wc -l < "$f") lines"; done > summ
 ana@vm:/tmp/q2$ cat summary.txt
 a.log: 2 lines
 b.log: 1 lines
+two words.log: 1 lines
 ```
 
 **Um `>` no `done`, não um dentro do laço.** A versão com `>> summary.txt` no corpo abre e fecha o

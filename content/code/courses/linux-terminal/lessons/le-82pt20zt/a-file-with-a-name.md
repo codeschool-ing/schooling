@@ -1,7 +1,35 @@
 ---
 title: A script is the commands you already type, in a file
-version: 1
+version: 2
 ---
+
+Everything in this lesson happens in `~/work/scripts`, and every script it runs is shown whole. Each section starts with a block that makes its scripts there; copy it into the terminal before you read on. `cat > name <<'END'` writes every line after it, up to the one that says `END`, into the file `name`, and `chmod +x` makes them runnable. This section's four are below; the first script of all, `greeting.sh`, you make by hand in the first transcript after them:
+
+```sh
+mkdir -p ~/work/scripts
+cd ~/work/scripts
+cat > badshebang.sh <<'END'
+#!/usr/bin/bsh
+echo never
+END
+cat > which.sh <<'END'
+echo "the shell running me is $0"
+x=hello
+if [[ $x == h* ]]; then echo "double brackets work"; fi
+END
+cat > shebang.sh <<'END'
+#!/bin/sh
+echo "argv zero is $0"
+[[ x == x ]] && echo "bash-only syntax ran"
+END
+cat > goto.sh <<'END'
+#!/bin/bash
+cd /tmp
+echo "inside the script, pwd is $PWD"
+VISITED=yes
+END
+chmod +x badshebang.sh which.sh shebang.sh goto.sh
+```
 
 There is no new language in this lesson. **A bash script is a file containing the commands you
 would have typed**, and the first one is one line long.

@@ -1,6 +1,6 @@
 ---
 title: The job that is still running when the next one starts
-version: 1
+version: 2
 ---
 
 ```sh
@@ -21,17 +21,20 @@ job is fast.
 
 ```
 ana@vm:~/work/cron$ flock -n job.lock -c 'sleep 8; echo "long job finished"' & sleep 1; echo started
+[1] 5038
 started
 ana@vm:~/work/cron$ flock -n job.lock -c 'echo "second job ran"'; echo "exit $?"
 exit 1
 ana@vm:~/work/cron$ flock -w 20 job.lock -c 'echo "third job waited, then ran"'; echo "exit $?"
 long job finished
 third job waited, then ran
+[1]+  Done                    flock -n job.lock -c 'sleep 8; echo "long job finished"'
 exit 0
 ```
 
-Three runs against one lock file, and all three behaviours are in those six
-lines.
+Three runs against one lock file, and all three behaviours are in those lines,
+between the shell's own notes about the job in the background: `[1] 5038` when it
+starts and `[1]+ Done` when it ends.
 
 **The first holds the lock for eight seconds.** The second asks for it with `-n`
 — *do not wait* — and does not get it: no output, `exit 1`, gone. The third asks
@@ -68,6 +71,7 @@ when the lock is busy**, so `-E 0` says "skipping is not a failure".
 
 ```
 ana@vm:~/work/cron$ flock -n job.lock -c 'sleep 6' & sleep 1; echo held
+[1] 5045
 held
 ana@vm:~/work/cron$ flock -E 0 -n job.lock -c 'echo ran'; echo "exit $?"
 exit 0

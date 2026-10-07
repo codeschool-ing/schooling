@@ -1,7 +1,75 @@
 ---
 title: Functions, which are small scripts that share your variables
-version: 1
+version: 2
 ---
+
+The scripts this section runs, made in `~/work/scripts` the way section 02 described; each is shown again where it is explained:
+
+```sh
+cd ~/work/scripts
+cat > funcs.sh <<'END'
+#!/bin/bash
+log() {
+  echo "[$(date +%H:%M:%S)] $*" >&2
+}
+
+greet() {
+  local who="${1:-world}"
+  echo "hello, $who"
+}
+
+is_even() {
+  [ $(( $1 % 2 )) -eq 0 ]
+}
+
+sum() {
+  local total=0 n
+  for n in "$@"; do total=$((total + n)); done
+  echo "$total"
+}
+
+log "starting"
+greet
+greet ana
+if is_even 4; then echo "4 is even"; fi
+if is_even 7; then echo "7 is even"; else echo "7 is odd"; fi
+t=$(sum 1 2 3 4 5)
+echo "the sum is $t"
+log "done"
+END
+cat > funcbugs.sh <<'END'
+#!/bin/bash
+i=outer
+nolocal() { i=clobbered; }
+withlocal() { local i=safe; }
+echo "before: i=$i"
+nolocal;    echo "after nolocal:    i=$i"
+i=outer
+withlocal;  echo "after withlocal:  i=$i"
+
+big() { return 300; }
+big; echo "return 300 arrived as $?"
+
+neg() { return -1; }
+neg; echo "return -1 arrived as $?"
+
+double() { echo $(( $1 * 2 )); }
+r=$(double 21); echo "double 21 is $r"
+
+talky() { echo "about to compute" ; echo $(( $1 * 2 )); }
+r=$(talky 21); echo "talky 21 is [$r]"
+END
+cat > localstatus.sh <<'END'
+#!/bin/bash
+set -e
+try_one() { local out=$(grep nothing /etc/hostname); echo "local assignment: still here"; }
+try_two() { local out; out=$(grep nothing /etc/hostname); echo "never reached"; }
+try_one
+try_two
+echo "never reached either"
+END
+chmod +x funcs.sh funcbugs.sh localstatus.sh
+```
 
 ```
 ana@vm:~/work/scripts$ cat funcs.sh

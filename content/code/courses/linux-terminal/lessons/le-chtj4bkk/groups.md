@@ -1,6 +1,6 @@
 ---
 title: Groups, and the one you did not know you had
-version: 1
+version: 2
 ---
 
 A group is a named set of accounts, and it is the unit of sharing on a Linux machine. Two people
@@ -84,11 +84,14 @@ somebody out of `sudo`, and it is an argument away from the correct command.
 
 ## The part that confuses everybody: it does not take effect
 
+A new group, `deploy`, made with `groupadd`, and `ana` added to it:
+
 ```
 ana@vm:~$ id -nG
 ana sudo team
-ana@vm:~$ sudo usermod -aG deploy ana
+ana@vm:~$ sudo groupadd deploy
 [sudo] password for ana:
+ana@vm:~$ sudo usermod -aG deploy ana
 ana@vm:~$ id -nG
 ana sudo team
 ana@vm:~$ getent group deploy

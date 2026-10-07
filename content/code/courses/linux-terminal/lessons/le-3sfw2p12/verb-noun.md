@@ -1,6 +1,6 @@
 ---
 title: Verb-Noun, and how to find a command you do not know
-version: 1
+version: 2
 ---
 
 Unix command names are archaeology: `cat` concatenates, `awk` is three people's
@@ -86,7 +86,7 @@ PS /home/ana/work/ps> Get-Help Get-ChildItem -Parameter Recurse
     Position?                    Named
     Accept pipeline input?       false
     Parameter set name           (All)
-    Aliases                      s
+    Aliases                      s, r
     Dynamic?                     false
     Accept wildcard characters?  false
 ```
@@ -112,8 +112,6 @@ Name
 host.conf
 hostname
 hosts
-hosts.allow
-hosts.deny
 ```
 
 **A parameter name can be abbreviated to any prefix that is not ambiguous** —
@@ -136,8 +134,6 @@ Name
 host.conf
 hostname
 hosts
-hosts.allow
-hosts.deny
 ```
 
 ## Aliases, and a cross-platform surprise

@@ -1,6 +1,6 @@
 ---
 title: Uma máquina com mais de uma pessoa nela
-version: 1
+version: 2
 ---
 
 O Linux foi construído num mundo em que um computador servia um departamento, e **ele nunca deixou
@@ -13,7 +13,7 @@ Essa suposição é o motivo de você não ser o administrador, e de isso ser um
 
 ```
 ana@vm:~$ id
-uid=1001(ana) gid=1002(ana) groups=1002(ana)
+uid=1001(ana) gid=1002(ana) groups=1002(ana),27(sudo)
 ```
 
 O nome é para você; o número é o que o sistema usa. `uid` é o usuário, `gid` o grupo primário, e
@@ -59,7 +59,8 @@ ana@vm:~$ grep -c "" /etc/passwd
 26
 ```
 
-Vinte e seis contas numa máquina com quatro humanos. O resto pertence a **programas**: o servidor
+Vinte e seis contas na máquina em que estas transcrições foram capturadas, que tem quatro humanos. A
+sua vai ter um número da mesma ordem, e um humano: você. O resto pertence a **programas**: o servidor
 web ganha uma, o banco de dados ganha uma, o sistema de impressão ganha uma.
 
 Essa é a razão profunda do projeto multiusuário, e não tem nada a ver com dividir um computador. Se

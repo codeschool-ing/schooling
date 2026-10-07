@@ -1,6 +1,6 @@
 ---
 title: Seven verbs, and `enable` is not `start`
-version: 2
+version: 3
 ---
 
 `systemctl` is the front end to all of systemd, and you need seven of its verbs. They divide into
@@ -25,15 +25,45 @@ a service, checked that it works, rebooted, and found it absent — and this is 
 
 ## What `enable` actually does
 
-Here it is, run against a filesystem tree rather than a running system, which is why it works on
-this machine:
+It needs a service to enable, and this lesson uses one of its own, `hello`: a three-line script that
+says hello once a minute, and the unit file that runs it, which section 11 reads line by line.
+Make both now:
+
+```sh
+printf '#!/bin/sh\nwhile true; do echo "hello"; sleep 60; done\n' | sudo tee /usr/local/bin/hello.sh > /dev/null
+sudo chmod 755 /usr/local/bin/hello.sh
+sudo tee /etc/systemd/system/hello.service > /dev/null <<'END'
+[Unit]
+Description=A tiny service that says hello
+Documentation=https://example.com/hello
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/hello.sh
+Restart=on-failure
+RestartSec=5
+User=ana
+
+[Install]
+WantedBy=multi-user.target
+END
+```
+
+(`User=ana` runs it as you. If your account has another name, write that name there.)
+
+Now enable it. `--root=/` makes `systemctl` work on the files under `/` instead of asking the
+running systemd, which is how this works on the machine these transcripts were captured on, where
+no systemd is running. On yours, `sudo systemctl enable hello.service` does the same and then tells
+the running systemd about it:
 
 ```
-root@vm:/srv/machines/ubuntu24# systemctl --root=/srv/machines/ubuntu24 is-enabled hello.service
+ana@vm:~$ sudo -i
+root@vm:~# systemctl --root=/ is-enabled hello.service
 disabled
-root@vm:/srv/machines/ubuntu24# systemctl --root=/srv/machines/ubuntu24 enable hello.service
-Created symlink /srv/machines/ubuntu24/etc/systemd/system/multi-user.target.wants/hello.service → /etc/systemd/system/hello.service.
-root@vm:/srv/machines/ubuntu24# systemctl --root=/srv/machines/ubuntu24 is-enabled hello.service
+root@vm:~# systemctl --root=/ enable hello.service
+Created symlink /etc/systemd/system/multi-user.target.wants/hello.service → /etc/systemd/system/hello.service.
+root@vm:~# systemctl --root=/ is-enabled hello.service
 enabled
 ```
 
@@ -50,14 +80,20 @@ design**, and once you have seen the symlink the rule stops needing to be memori
 `disable` removes it again:
 
 ```
-root@vm:/srv/machines/ubuntu24# ls -l /srv/machines/ubuntu24/etc/systemd/system/multi-user.target.wants/
+root@vm:~# ls -l /etc/systemd/system/multi-user.target.wants/
 total 0
-lrwxrwxrwx 1 root root 40 Sep 14 23:14 e2scrub_reap.service -> /lib/systemd/system/e2scrub_reap.service
-lrwxrwxrwx 1 root root 33 Sep 14 23:23 hello.service -> /etc/systemd/system/hello.service
-lrwxrwxrwx 1 root root 40 Sep 14 23:14 remote-fs.target -> /usr/lib/systemd/system/remote-fs.target
-root@vm:/srv/machines/ubuntu24# systemctl --root=/srv/machines/ubuntu24 disable hello.service
-Removed "/srv/machines/ubuntu24/etc/systemd/system/multi-user.target.wants/hello.service".
-root@vm:/srv/machines/ubuntu24# systemctl --root=/srv/machines/ubuntu24 is-enabled hello.service
+lrwxrwxrwx 1 root root 42 Oct  3 05:42 containerd.service -> /usr/lib/systemd/system/containerd.service
+lrwxrwxrwx 1 root root 38 Oct  3 05:42 docker.service -> /usr/lib/systemd/system/docker.service
+lrwxrwxrwx 1 root root 40 Sep 17 02:20 e2scrub_reap.service -> /lib/systemd/system/e2scrub_reap.service
+lrwxrwxrwx 1 root root 33 Oct  7 11:34 hello.service -> /etc/systemd/system/hello.service
+lrwxrwxrwx 1 root root 42 Oct  3 05:36 postgresql.service -> /usr/lib/systemd/system/postgresql.service
+lrwxrwxrwx 1 root root 44 Oct  3 05:36 redis-server.service -> /usr/lib/systemd/system/redis-server.service
+lrwxrwxrwx 1 root root 40 Oct  3 05:36 remote-fs.target -> /usr/lib/systemd/system/remote-fs.target
+lrwxrwxrwx 1 root root 40 Oct  3 05:36 ssl-cert.service -> /usr/lib/systemd/system/ssl-cert.service
+lrwxrwxrwx 1 root root 51 Oct  7 10:48 unattended-upgrades.service -> /usr/lib/systemd/system/unattended-upgrades.service
+root@vm:~# systemctl --root=/ disable hello.service
+Removed "/etc/systemd/system/multi-user.target.wants/hello.service".
+root@vm:~# systemctl --root=/ is-enabled hello.service
 disabled
 ```
 

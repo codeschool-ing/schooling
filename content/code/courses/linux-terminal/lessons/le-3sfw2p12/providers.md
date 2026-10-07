@@ -1,6 +1,6 @@
 ---
 title: Providers — the registry is a drive, and so is the environment
-version: 1
+version: 2
 ---
 
 Lesson 1 section 09 said everything on Unix is a file. PowerShell's version of that idea
@@ -11,11 +11,11 @@ the same four cmdlets work on all of them.
 PS /home/ana/work/ps> Get-PSDrive | Format-Table -AutoSize
 Name     Used (GB) Free (GB) Provider    Root   CurrentLocation
 ----     --------- --------- --------    ----   ---------------
-/           225.77     26.20 FileSystem  /     home/ana/work/ps
+/           222.80     29.17 FileSystem  /     home/ana/work/ps
 Alias                        Alias
 Env                          Environment
 Function                     Function
-Temp        225.77     26.20 FileSystem  /tmp/
+Temp        222.80     29.17 FileSystem  /tmp/
 Variable                     Variable
 ```
 
@@ -86,7 +86,7 @@ the only untested commands in this lesson and they are marked as such.
 ```
 PS /home/ana/work/ps> Get-Content sales.csv -TotalCount 2
 region,rep,quarter,units,revenue
-north,ana,Q1,171,8721
+north,ana,Q1,145,18850
 PS /home/ana/work/ps> Get-Content sales.csv | Measure-Object -Line
 Lines Words Characters Property
 ----- ----- ---------- --------
@@ -116,9 +116,9 @@ PS /home/ana/work/ps> Get-ChildItem > /tmp/redir.txt; Get-Content /tmp/redir.txt
 
 UnixMode         User Group         LastWriteTime         Size Name
 --------         ---- -----         -------------         ---- ----
--rw-r--r--        ana ana        09/15/2026 10:48       148233 access.log
--rwxr-xr-x        ana ana        09/15/2026 11:01          175 bigfiles.ps1
--rw-r--r--        ana ana        09/15/2026 10:48          788 sales.csv
+-rw-r--r--        ana ana        10/07/2026 13:07       153934 access.log
+-rwxr-xr-x        ana ana        10/07/2026 13:07          175 bigfiles.ps1
+-rw-r--r--        ana ana        10/07/2026 13:07          807 sales.csv
 PS /home/ana/work/ps> Get-ChildItem | Set-Content /tmp/setc.txt; Get-Content /tmp/setc.txt
 /home/ana/work/ps/access.log
 /home/ana/work/ps/bigfiles.ps1
@@ -136,7 +136,7 @@ section 07's rule arriving in a place you did not expect it.
 PS /home/ana/work/ps> Select-String -Path access.log -Pattern "500" | Select-Object -First 1 LineNumber, Line
 LineNumber Line
 ---------- ----
-        13 10.0.1.21 - - [14/Sep/2026:06:09:02 +0000] "POST /api/reports HTTP/1.1" 500 18487 "curl…
+        14 10.0.1.14 - - [14/Sep/2026:06:06:29 +0000] "DELETE /api/orders HTTP/1.1" 500 5465 "Mozi…
 ```
 
 **And it returns objects**, with `LineNumber`, `Line`, `Filename` and `Matches`

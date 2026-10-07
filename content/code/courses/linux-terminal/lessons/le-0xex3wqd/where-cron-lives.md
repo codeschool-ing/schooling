@@ -1,6 +1,6 @@
 ---
 title: Six places a cron job can be, and which one to use
-version: 1
+version: 2
 ---
 
 Your crontab is one of six. A job that "is not in cron" is usually in one of the
@@ -41,6 +41,7 @@ SHELL=/bin/sh
 25 6    * * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.daily; }
 47 6    * * 7   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.weekly; }
 52 6    1 * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.monthly; }
+#
 ```
 
 **Those four lines are how `/etc/cron.daily` works.** There is no magic: a cron
@@ -79,23 +80,52 @@ Two rules the directory enforces, and both bite:
 
 **The file name may not contain a dot.** `run-parts` and cron both skip
 `backup.sh` and `myjob.cron`; name it `backup`. It is the same rule as
-`/etc/cron.daily`, and a job that silently never runs is usually this:
+`/etc/cron.daily`, and a job that silently never runs is usually this. Two files,
+identical except for the name and what they write, and a scratch directory for
+`run-parts` holding an `alpha` and a `beta.sh`:
+
+```sh
+cd ~
+sudo tee /etc/cron.d/plainjob > /dev/null <<'END'
+* * * * * ana echo "plain ran at $(date +\%T)" >> /home/ana/work/cron/plain.log
+END
+sed 's/plain/dotted/g' /etc/cron.d/plainjob | sudo tee /etc/cron.d/dotted.job > /dev/null
+mkdir -p /tmp/rp
+printf '#!/bin/sh\n' > /tmp/rp/alpha
+cp /tmp/rp/alpha /tmp/rp/beta.sh
+chmod +x /tmp/rp/alpha /tmp/rp/beta.sh
+sleep 90
+```
+
+A minute and a half later, as root:
 
 ```
 root@vm:~# ls /etc/cron.d
-anacron  dotted.job  e2scrub_all  php  plainjob  sysstat
+anacron
+dotted.job
+e2scrub_all
+plainjob
+sysstat
 root@vm:~# cat /home/ana/work/cron/plain.log
-plain ran at 12:38:01
+plain ran at 14:31:02
 root@vm:~# cat /home/ana/work/cron/dotted.log
 cat: /home/ana/work/cron/dotted.log: No such file or directory
-root@vm:~# run-parts --test /tmp/claude-0/rp
-/tmp/claude-0/rp/alpha
+root@vm:~# run-parts --test /tmp/rp
+/tmp/rp/alpha
 ```
 
-Two files, identical except for the name. **`plainjob` ran. `dotted.job` never
-ran at all**, and nothing anywhere complained. The last line is `run-parts`
-making the same judgement in a directory holding an `alpha` and a `beta.sh`: only
-the first one appears.
+**`plainjob` ran. `dotted.job` never ran at all**, and nothing anywhere
+complained. The last line is `run-parts` making the same judgement in the
+scratch directory: only `alpha` appears.
+
+Neither file is needed again, and `plainjob` would otherwise write a line every
+minute for as long as the machine is up:
+
+```sh
+cd ~
+sudo rm /etc/cron.d/plainjob /etc/cron.d/dotted.job
+rm -r /tmp/rp
+```
 
 **The file needs its `PATH` set**, exactly as `sysstat` does above, because the
 environment is not yours — section 06.
@@ -105,8 +135,11 @@ environment is not yours — section 06.
 ```
 ana@vm:~$ run-parts --test /etc/cron.daily
 /etc/cron.daily/0anacron
+/etc/cron.daily/apport
 /etc/cron.daily/apt-compat
 /etc/cron.daily/dpkg
+/etc/cron.daily/logrotate
+/etc/cron.daily/man-db
 /etc/cron.daily/sysstat
 ```
 

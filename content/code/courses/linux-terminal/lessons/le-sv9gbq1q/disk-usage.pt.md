@@ -1,6 +1,6 @@
 ---
 title: O que está ocupando o espaço
-version: 1
+version: 2
 ---
 
 Dois comandos, e eles respondem duas perguntas diferentes que as pessoas esperam que concordem.
@@ -18,7 +18,7 @@ Eles discordam mais do que se imagina, e cada uma das discordâncias vale entend
 ```
 ana@vm:~/work$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 `-h` para legível por humanos, sempre. Dê um caminho e ele responde sobre o sistema de arquivos em
@@ -41,7 +41,7 @@ encher.
 ```
 ana@vm:~/work$ df -i /
 Filesystem       Inodes  IUsed    IFree IUse% Mounted on
-/dev/vda       16777216 210406 16566810    2% /
+/dev/vda       16777216 241321 16535895    2% /
 ```
 
 `-i` conta **inodes** em vez de bytes. A seção 11 apresentou: um por arquivo, e um sistema de
@@ -57,7 +57,7 @@ O sintoma é `No space left on device` com um `df -h` de aparência tranquila, e
 
 ```
 ana@vm:~/work$ du -sh
-472K    .
+468K    .
 ```
 
 `-s` para um resumo em vez de uma linha por diretório, `-h` para legível. O idiom que você vai
@@ -68,8 +68,8 @@ ana@vm:~/work$ du -sh * | sort -h
 4.0K    Makefile
 4.0K    README.md
 12K     data
+12K     notes
 16K     logs
-16K     notes
 16K     src
 396K    build
 ```
@@ -83,11 +83,11 @@ entende `K`, `M` e `G`, coisa que o `sort` simples não faz.
 ```
 ana@vm:~/work$ du -h --max-depth=1 | sort -h
 12K     ./data
+12K     ./notes
 16K     ./logs
-16K     ./notes
 16K     ./src
 396K    ./build
-472K    .
+468K    .
 ```
 
 **Rode `du` em `/` e você vai esperar**, porque ele percorre todo arquivo da máquina. Num servidor
@@ -123,13 +123,18 @@ enquanto `du -sh data` diz `12K`, que é essa lista mais tudo que ela nomeia.
 
 ## O que gasta uma tarde: apagado, e ainda lá
 
+Este precisa do disco da seção 12 montado de novo, e de um shell de root:
+
 ```
-root@vm:/root# dd if=/dev/zero of=/mnt/backups/big.bin bs=1M count=30 status=none
-root@vm:/root# tail -f /mnt/backups/big.bin > /dev/null &
-root@vm:/root# rm /mnt/backups/big.bin
-root@vm:/root# du -sh /mnt/backups
+ana@vm:~$ sudo -i
+root@vm:~# mount -o loop /root/img/disk.img /mnt/backups
+root@vm:~# dd if=/dev/zero of=/mnt/backups/big.bin bs=1M count=30 status=none
+root@vm:~# tail -f /mnt/backups/big.bin > /dev/null 2>&1 &
+[1] 17435
+root@vm:~# rm /mnt/backups/big.bin
+root@vm:~# du -sh /mnt/backups
 24K     /mnt/backups
-root@vm:/root# df -h /mnt/backups
+root@vm:~# df -h /mnt/backups
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0       56M   31M   22M  59% /mnt/backups
 ```
@@ -145,19 +150,20 @@ nomes, então não tem como ver este arquivo. O sistema de arquivos conta blocos
 O `lsof` acha:
 
 ```
-root@vm:/root# lsof /mnt/backups 2>/dev/null
-COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-tail    1929 root    3r   REG    7,0 31457280   14 /mnt/backups/big.bin (deleted)
+root@vm:~# lsof /mnt/backups 2>/dev/null
+COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+tail    17435 root    4r   REG    7,0 31457280   14 /mnt/backups/big.bin (deleted)
 ```
 
 Ali está, com `(deleted)` depois do nome e os 31457280 bytes ainda contando. Pare o processo e o
 espaço volta sozinho:
 
 ```
-root@vm:/root# kill %1
-root@vm:/root# df -h /mnt/backups
+root@vm:~# kill %1
+root@vm:~# df -h /mnt/backups
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0       56M   28K   52M   1% /mnt/backups
+[1]+  Terminated              tail -f /mnt/backups/big.bin > /dev/null 2>&1
 ```
 
 **Este é de longe o "apaguei os logs e não aconteceu nada" mais comum.** Um serviço estava com o

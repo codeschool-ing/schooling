@@ -1,18 +1,28 @@
 ---
 title: Vazão de disco, e por que 100% ocupado não é veredito
-version: 1
+version: 2
 ---
 
 Espaço é uma pergunta; se o disco dá conta é outra, e a ferramenta é o `iostat`.
 
-Aqui está esta máquina escrevendo cerca de um gigabyte por segundo:
+Inicie os escritores, e dê alguns segundos a eles:
+
+```sh
+cd ~/work/load
+./fill.sh &
+sleep 10
+```
+
+Aqui está esta máquina escrevendo o mais rápido que o disco aceita:
 
 ```
 ana@vm:~$ iostat -xz 2 2 | tail -6
-           1.25    0.00    6.99   21.35    0.25   70.16
+           0.25    0.00    9.95   41.44    1.01   47.36
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-vda              0.00      0.00     0.00   0.00    0.00     0.00 1482.50 1028608.00     0.00   0.00    0.97   693.83    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.43  93.20
+vda              0.00      0.00     0.00   0.00    0.00     0.00 2062.50 1055746.00     0.00   0.00    1.63   511.88    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    3.36  99.80
+
+
 ```
 
 | | |
@@ -37,13 +47,13 @@ De umas vinte colunas, cinco:
 | `aqu-sz` | profundidade média da fila |
 | `%util` | porcentagem do tempo em que o dispositivo teve ao menos uma requisição em voo |
 
-Lendo a captura acima: 1482 escritas por segundo, um gigabyte por segundo de
-dados, profundidade de fila 1,43, **0,97 milissegundo de espera de escrita**, e
-93% de utilização.
+Lendo a captura acima: 2062 escritas por segundo, um gigabyte por segundo de
+dados, profundidade de fila 3,36, **1,63 milissegundo de espera de escrita**, e
+99,8% de utilização.
 
-**Aquilo é um disco saudável trabalhando duro.** Um milissegundo de espera num
-dispositivo fazendo um gigabyte por segundo não é nada; a fila mal passa de um;
-ninguém está sofrendo.
+**Aquilo é um disco saudável trabalhando duro.** Um milissegundo e meio de espera
+num dispositivo fazendo um gigabyte por segundo não é nada; a fila tem três de
+profundidade, cerca de um e meio por escritor; ninguém está sofrendo.
 
 ## O `%util` parou de significar saturação
 
@@ -56,7 +66,7 @@ uma vez mostra `%util 100` atendendo uma por vez, e mostra `%util 100` atendendo
 trinta e duas. O número é o mesmo e a máquina está em estados completamente
 diferentes.
 
-Então o `%util 93` acima é um fato e não um diagnóstico. **O diagnóstico está no
+Então o `%util 99.80` acima é um fato e não um diagnóstico. **O diagnóstico está no
 `await`**:
 
 | | |
@@ -78,19 +88,28 @@ Nem sempre você precisa do `iostat`:
 ana@vm:~$ vmstat 1 3
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 0  1      0 14476076  56304 1542856    0    0    69  5180  452    1  3  0 96  0  0  0
- 0  1      0 14477244  56304 1542856    0    0     0 883716 3874 4433  6  5 67 22  0  0
- 0  1      0 14485424  56304 1542856    0    0     0 980992 3815 4290  2  4 72 22  0  0
+ 1  2      0 15709852   6988 371876    0    0   137 15593 1056    2  9  2 88  1  0  0
+ 3  1      0 15713056   6988 371876    0    0     0 1010688 3933 4592  0 10 45 43  1  0
+ 0  2      0 15713056   6988 371876    0    0     0 1001472 3914 4764  0 10 52 36  1  0
 ```
 
-**`b 1` e `wa 22` com `r 0` é o diagnóstico inteiro em seis caracteres.** Nada
-quer processador, uma coisa está bloqueada, e um quinto do tempo de processador
-da máquina foi ocioso-por-causa-de-disco. O `bo` são 900 mil blocos por segundo
-saindo.
+**`b 2` e `wa 36` com `r 0` é o diagnóstico inteiro em seis caracteres.** Nada
+quer processador, duas coisas estão bloqueadas, e mais de um terço do tempo de
+processador da máquina foi ocioso-por-causa-de-disco. O `bo` é um milhão de
+blocos por segundo saindo.
 
 Essa combinação — `wa` alto, `b` alto, `r` baixo — é a cara de um problema de I/O
 visto do `vmstat`, e é por que o `vmstat 1` é o primeiro comando e o `iostat` é o
 segundo.
+
+Pare os escritores, e apague o que eles escreveram:
+
+```sh
+cd ~/work/load
+pkill -f fill.sh
+sleep 3
+rm -f fill1.tmp fill2.tmp
+```
 
 ## Leituras, escritas e flushes são diferentes
 

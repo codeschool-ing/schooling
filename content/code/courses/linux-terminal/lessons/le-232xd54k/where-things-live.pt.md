@@ -1,6 +1,6 @@
 ---
 title: Um primeiro mapa da árvore
-version: 1
+version: 2
 ---
 
 A árvore tem um formato, e é o mesmo formato em toda distribuição — é para isso que serve o
@@ -96,8 +96,9 @@ ubuntu
 user
 ```
 
-Quatro contas nesta máquina, quatro diretórios. O seu é o único em que você pode escrever, e quase
-sempre o único que você pode ler — a seção 14 é sobre o porquê.
+Quatro contas na máquina em que estas transcrições foram capturadas, quatro diretórios; na sua,
+recém-instalada, há um. Onde há vários, o seu é o único em que você pode escrever, e quase sempre o
+único que você pode ler — a seção 14 é sobre o porquê.
 
 ## Contra o Windows, onde é a mesma ideia arrumada de outro jeito
 

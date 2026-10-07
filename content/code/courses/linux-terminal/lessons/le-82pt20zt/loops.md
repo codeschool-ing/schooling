@@ -1,6 +1,6 @@
 ---
 title: Loops, and never looping over `ls`
-version: 1
+version: 2
 ---
 
 `for` walks a list of words. That is all it does, and everything else follows from where the list
@@ -17,6 +17,16 @@ i=3
 newline works too.
 
 ## The list is usually a glob
+
+Three small logs in `/tmp/q2`, one with a space in its name:
+
+```sh
+cd /tmp/q2
+rm -f *.log
+printf 'one\ntwo\n' > a.log
+printf 'one\n' > b.log
+printf 'one\n' > 'two words.log'
+```
 
 ```
 ana@vm:/tmp/q2$ for f in *.log; do echo "[$f]"; done
@@ -56,7 +66,12 @@ loop over
 ```
 
 **`shopt -s nullglob` makes an unmatched glob expand to nothing at all**, so the loop runs zero
-times, which is what you meant. Set it once at the top of a script that globs.
+times, which is what you meant. Set it once at the top of a script that globs. At a prompt it
+lasts until you turn it off, and the rest of this lesson expects it off:
+
+```
+ana@vm:/tmp/q2$ shopt -u nullglob
+```
 
 The alternative, if you would rather not change the shell's behaviour globally, is to check inside
 the loop:
@@ -165,6 +180,7 @@ ana@vm:/tmp/q2$ for f in *.log; do echo "$f: $(wc -l < "$f") lines"; done > summ
 ana@vm:/tmp/q2$ cat summary.txt
 a.log: 2 lines
 b.log: 1 lines
+two words.log: 1 lines
 ```
 
 **One `>` on the `done`, not one inside the loop.** The version with `>> summary.txt` inside the
