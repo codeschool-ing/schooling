@@ -1,6 +1,6 @@
 ---
 title: Names, and four rules that are not the ones you expect
-version: 2
+version: 3
 ---
 
 A filename on Linux is freer than you think and stricter than you think, in different places from
@@ -13,9 +13,11 @@ ana@vm:~/case$ ls
 NOTES.TXT
 Notes.txt
 notes.txt
+report.pdf
 ```
 
-**Three different files**, in one directory, at the same time. Windows and macOS would have
+**`NOTES.TXT`, `Notes.txt` and `notes.txt` are three different files**, in one directory, at the
+same time. Windows and macOS would have
 refused to create the second: on those, `Notes.txt` and `notes.txt` are the same name spelled two
 ways.
 

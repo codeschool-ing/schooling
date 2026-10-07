@@ -1,6 +1,6 @@
 ---
 title: A first map of the tree
-version: 1
+version: 2
 ---
 
 The tree has a shape, and it is the same shape on every distribution — that is what the Filesystem
@@ -96,8 +96,9 @@ ubuntu
 user
 ```
 
-Four accounts on this machine, four directories. Yours is the only one you can write in, and
-mostly the only one you can read — section 14 is about why.
+Four accounts on the machine these transcripts were captured on, four directories; on yours,
+freshly installed, there is one. Where there are several, yours is the only one you can write in,
+and mostly the only one you can read — section 14 is about why.
 
 ## Against Windows, where it is the same idea arranged differently
 
