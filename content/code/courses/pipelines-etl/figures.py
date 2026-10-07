@@ -1004,6 +1004,92 @@ def l10_night(lang):
     f.text(sx(starts[-1]), 66, t['failed'], size=10.5, weight='600', mono=True, fill='--amber')
     return f, t['cap']
 
+@figure('l11-graph', 11)
+def l11_graph(lang):
+    t = {'en': dict(
+            label='The graph dbt builds from the shop project. Three sources in the raw schema '
+                  'feed three staging views: orders, order lines and books. Orders and order '
+                  'lines feed int_sales, an ephemeral model drawn dashed because it is never '
+                  'built. int_sales feeds the two marts, daily_sales, which also reads the books, '
+                  'and fact_sales.',
+            src='source', view='view', eph='ephemeral', table='table', inc='incremental',
+            cap='Nobody wrote these arrows. Each one is a ref() or a source() inside a model.'),
+         'pt': dict(
+            label='O grafo que o dbt monta a partir do projeto shop. Três fontes no schema raw '
+                  'alimentam três views de staging: pedidos, linhas de pedido e livros. Pedidos e '
+                  'linhas de pedido alimentam o int_sales, um modelo efêmero desenhado tracejado '
+                  'porque nunca é construído. O int_sales alimenta os dois marts, o daily_sales, '
+                  'que também lê os livros, e o fact_sales.',
+            src='fonte', view='view', eph='efêmero', table='tabela', inc='incremental',
+            cap='Ninguém escreveu estas setas. Cada uma é um ref() ou um source() dentro de um '
+                'modelo.')}[lang]
+    f = Fig('l11-graph', 720, 270, t['label'])
+    W, H = 132, 44
+    cols = [20, 192, 364, 560]
+    rows = [30, 110, 190]
+    def node(x, y, name, kind, stroke='--wire', dash=None):
+        f.rect(x, y, W, H, stroke=stroke, fill='--panel', dash=dash)
+        f.text(x + W / 2, y + 16, name, size=10.5, mono=True)
+        f.text(x + W / 2, y + 32, kind, size=9.5, fill='--paper-dim')
+    names = ['orders', 'order_lines', 'books']
+    for r, n in zip(rows, names):
+        node(cols[0], r, 'raw.' + n, t['src'])
+        node(cols[1], r, 'stg_' + n, t['view'])
+        f.line(cols[0] + W, r + H / 2, cols[1] - 2, r + H / 2, arrow=True)
+    yi = 70
+    node(cols[2], yi, 'int_sales', t['eph'], stroke='--paper-dim', dash='4 3')
+    for r in rows[:2]:
+        f.line(cols[1] + W, r + H / 2, cols[2] - 2, yi + H / 2, arrow=True)
+    yd, yf = 150, 40
+    node(cols[3], yd, 'daily_sales', t['table'], stroke='--amber')
+    node(cols[3], yf, 'fact_sales', t['inc'], stroke='--phosphor')
+    f.line(cols[2] + W, yi + H / 2, cols[3] - 2, yf + H / 2, arrow=True)
+    f.line(cols[2] + W, yi + H / 2, cols[3] - 2, yd + H / 2 - 6, arrow=True)
+    f.line(cols[1] + W, rows[2] + H / 2, cols[3] - 2, yd + H / 2 + 8, arrow=True)
+    return f, t['cap']
+
+
+@figure('l11-materialisations', 11)
+def l11_materialisations(lang):
+    t = {'en': dict(
+            label='The four materialisations side by side. A view is stored as a query and run '
+                  'whenever it is read. A table is rebuilt whole on every dbt run. Ephemeral '
+                  'leaves nothing in the database and is pasted into the models that use it. '
+                  'Incremental is built whole once and then only has new rows added on each run.',
+            head=['materialized=', 'in the database', 'on each dbt run'],
+            rows=[('view', 'a stored query', 'redefined; read runs the query'),
+                  ('table', 'rows', 'rebuilt whole'),
+                  ('ephemeral', 'nothing', 'pasted into its users as a CTE'),
+                  ('incremental', 'rows', 'only the new rows, after the first run')],
+            cap='Where the work happens: when the model is read, when dbt runs, or not at all.'),
+         'pt': dict(
+            label='As quatro materializações lado a lado. Uma view é guardada como consulta e roda '
+                  'sempre que é lida. Uma tabela é refeita inteira a cada dbt run. Efêmero não '
+                  'deixa nada no banco e é colado nos modelos que o usam. Incremental é construído '
+                  'inteiro uma vez e depois só recebe linhas novas a cada execução.',
+            head=['materialized=', 'no banco', 'a cada dbt run'],
+            rows=[('view', 'uma consulta guardada', 'redefinida; ler roda a consulta'),
+                  ('table', 'linhas', 'refeita inteira'),
+                  ('ephemeral', 'nada', 'colado em quem o usa, como CTE'),
+                  ('incremental', 'linhas', 'só as linhas novas, depois da primeira')],
+            cap='Onde o trabalho acontece: quando o modelo é lido, quando o dbt roda, ou em lugar '
+                'nenhum.')}[lang]
+    f = Fig('l11-materialisations', 720, 250, t['label'])
+    cols = [30, 200, 400]
+    f.text(cols[0], 28, t['head'][0], size=10.5, anchor='start', fill='--paper-dim', weight='600',
+           mono=True)
+    for x, h in zip(cols[1:], t['head'][1:]):
+        f.text(x, 28, h, size=10.5, anchor='start', fill='--paper-dim', weight='600')
+    f.line(30, 44, 690, 44, stroke='--wire')
+    for i, (m, db, run) in enumerate(t['rows']):
+        y = 72 + i * 46
+        f.rect(30, y - 16, 140, 32, stroke='--phosphor' if m == 'incremental' else '--wire',
+               fill='--scan')
+        f.text(100, y, m, size=11, mono=True, weight='600')
+        f.text(cols[1], y, db, size=11, anchor='start')
+        f.text(cols[2], y, run, size=11, anchor='start')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:
