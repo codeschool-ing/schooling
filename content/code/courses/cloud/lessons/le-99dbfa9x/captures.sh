@@ -20,9 +20,12 @@
 # floor.py is arithmetic on coordinates written into it; it sends no packet.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the price
-# cache, already filled; a working directory shown as ~/cloud, holding prices.py
-# and a copy of the CLI's partitions.json; and floor.py, written by the heredoc
+# cache, already filled; a working directory shown as ~/cloud, holding prices.py;
+# and floor.py, written by the heredoc
 # below and shown in the lesson as an annotated example.
+#
+# The block partitions, the copy of the CLI's own list, is shown since
+# 2026-10-07 and was recorded that day, as the user ana with lesson 1's CLI.
 #
 # Recorded 2026-09-28 on Ubuntu 24.04, Python 3.11, jq 1.7, no cloud account
 # and no credentials, TZ=America/Sao_Paulo.
@@ -31,14 +34,13 @@ set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 HERE=$(cd "$(dirname "$0")" && pwd)
 COURSE=$(cd "$HERE/../.." && pwd)
-AWSBIN=${AWSBIN:-/tmp/claude-0/-home-user-schooling/38751d58-75f6-5497-bf91-568c8cabc4c1/scratchpad/bin}
-PARTITIONS_SRC=$(dirname "$(readlink -f "$AWSBIN/aws")")/../dist/awscli/botocore/data/partitions.json
+# the CLI where lesson 1 installs it; the block partitions copies its list from there
+AWSBIN=${AWSBIN:-$HOME/.local/bin}
 
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 . "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
 prices_py "$WORK" || exit 1
-cp "$PARTITIONS_SRC" "$WORK/partitions.json"
 cd "$WORK" || exit 1
 
 # what ana typed at her prompt, and everything it printed
@@ -56,6 +58,10 @@ run "python3 prices.py ec2 | sed -n '1,17p'"
 
 block transfer
 run 'python3 prices.py transfer'
+
+block partitions
+run 'cp ~/.local/aws-cli/v2/current/dist/awscli/botocore/data/partitions.json .'
+[ -s partitions.json ] || { echo "no partitions.json: is the CLI installed as lesson 1 installs it?"; exit 1; }
 
 block ranges
 run 'curl -s https://ip-ranges.amazonaws.com/ip-ranges.json -o ip-ranges.json'

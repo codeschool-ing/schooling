@@ -1,11 +1,11 @@
 ---
 title: Reading the public price list
-version: 1
+version: 2
 ---
 
 Every price in this lesson, and in this course, is a line of one document: **the public price list
 AWS publishes as JSON**, readable by anybody without an account. The course reads it with
-`prices.py`, the program beside `course.json`, and this is the whole sheet it prints:
+`prices.py`, the program lesson 1 prints in full, and this is the whole sheet it prints:
 
 ```
 ana@laptop:~/cloud$ python3 prices.py

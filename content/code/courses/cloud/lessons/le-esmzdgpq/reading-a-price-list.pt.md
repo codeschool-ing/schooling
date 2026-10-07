@@ -1,6 +1,6 @@
 ---
 title: Lendo uma lista de preços
-version: 1
+version: 2
 ---
 
 Todo provedor desta aula publica preços, e cada um publica de um jeito. **A AWS publica a lista de
@@ -50,7 +50,9 @@ dizer por quê. O `prices.py` do curso lê uma versão fixada de cada oferta. É
 imprime as versões no topo: **um preço sem a versão de onde veio não pode ser conferido por
 ninguém.**
 
-Quanto cabe no arquivo de uma região depende do serviço:
+Quanto cabe no arquivo de uma região depende do serviço. O arquivo do EC2 é grande demais para baixar
+duas vezes, então o segundo comando lê a cópia que a tabela de preços guarda no cache, desde a primeira
+execução de `ec2` na aula 1:
 
 ```
 ana@laptop:~/cloud$ curl -s https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSLambda/20260919002359/sa-east-1/index.json | jq '.products | length'
