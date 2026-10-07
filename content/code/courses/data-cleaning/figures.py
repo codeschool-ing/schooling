@@ -365,6 +365,58 @@ def l01_export_gap(lang):
                  'de um cliente novo não têm conta a que pertencer.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 2
+
+@figure('l02-cep-profile', 2)
+def l02_cep_profile(lang):
+    vals = [r['cep'] for r in rows('raw/customers.csv')]
+    pat = collections.Counter(re.sub(r'[0-9]', '9', v) for v in vals)
+    items = pat.most_common()
+    lens = [len(v) for v in vals]
+    W = {'en': dict(title='cep, profiled', filled='filled', empty='empty', distinct='distinct',
+                    length='length', chars='characters', shape='pattern', rows='rows',
+                    notes={'99999-999': 'as the post office writes it', '99999999': 'hyphen dropped',
+                           '9999999': 'hyphen dropped and a leading zero lost'}),
+         'pt': dict(title='cep, perfilado', filled='preenchidos', empty='vazios', distinct='distintos',
+                    length='tamanho', chars='caracteres', shape='padrão', rows='linhas',
+                    notes={'99999-999': 'como os Correios escrevem', '99999999': 'sem o hífen',
+                           '9999999': 'sem o hífen e sem um zero à esquerda'})}[lang]
+    fig = Fig('l02-cep-profile', 720, 220, {
+        'en': f'A profile card for the cep column of customers.csv: {len(vals)} filled, none empty, '
+              f'{len(set(vals))} distinct, {min(lens)} to {max(lens)} characters long. Beside it, the '
+              f'three patterns: {items[0][1]} values written as the post office writes them, '
+              f'{items[1][1]} without the hyphen, and {items[2][1]} without the hyphen and with a '
+              'leading zero lost.',
+        'pt': f'Um cartão de perfil da coluna cep do customers.csv: {len(vals)} preenchidos, nenhum vazio, '
+              f'{len(set(vals))} distintos, de {min(lens)} a {max(lens)} caracteres. Ao lado, os três '
+              f'padrões: {items[0][1]} valores escritos como os Correios escrevem, {items[1][1]} sem o '
+              f'hífen e {items[2][1]} sem o hífen e com um zero à esquerda perdido.'}[lang])
+    fig.rect(20, 30, 200, 160, stroke='--wire', fill='--panel')
+    fig.text(120, 50, W['title'], size=12, weight='600')
+    stats = [(W['filled'], f'{len(vals)}'), (W['empty'], '0'), (W['distinct'], f'{len(set(vals))}'),
+             (W['length'], f'{min(lens)}–{max(lens)}')]
+    for i, (k, v) in enumerate(stats):
+        y = 82 + 26 * i
+        fig.text(36, y, k, size=11, anchor='start', fill='--paper-dim')
+        fig.text(204, y, v, size=11, anchor='end', mono=True)
+    fig.text(250, 50, W['shape'], size=11, anchor='start', weight='600')
+    mx = items[0][1]
+    for i, (p, n) in enumerate(items):
+        y = 70 + 44 * i
+        fig.text(250, y + 10, p, size=12, anchor='start', mono=True)
+        w = 200 * n / mx
+        bad = p != '99999-999'
+        fig.rect(345, y, w, 20, stroke='--amber' if bad else '--phosphor',
+                 fill='--scan' if bad else '--phosphor-dim', rx=2)
+        fig.text(351 + w, y + 10, str(n), size=10, anchor='start', mono=True)
+        fig.text(345, y + 32, W['notes'][p], size=10, anchor='start', fill='--paper-dim')
+    cap = {'en': 'The profile says the lengths disagree; the patterns say how. Only the first bar is a '
+                 'postal code a lookup table would match as it stands.',
+           'pt': 'O perfil diz que os tamanhos discordam; os padrões dizem como. Só a primeira barra é um '
+                 'CEP que uma tabela de consulta reconheceria como está.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
