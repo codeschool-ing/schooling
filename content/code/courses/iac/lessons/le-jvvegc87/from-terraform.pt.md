@@ -1,6 +1,6 @@
 ---
 title: Do Terraform ao Ansible: o inventário como passagem de bastão
-version: 1
+version: 2
 ---
 
 A aula 1 dividiu o trabalho em dois: o Terraform cria as máquinas, o Ansible configura o que há
@@ -204,6 +204,6 @@ um provisioner `local-exec` quando uma máquina é criada, o que o roda uma vez,
 mais, a fraqueza que a aula 1 apontou em qualquer script rodado na criação. O Ansible pode montar o
 inventário perguntando à nuvem na hora da execução, com o plugin de inventário `aws_ec2` da coleção
 `amazon.aws`, que é a escolha melhor quando as máquinas vêm e vão mais depressa do que alguém roda
-`terraform apply`. Essa coleção não está instalada neste lab, então ela é nomeada aqui e não
-mostrada. E a aula 20 elimina quase toda a passagem, configurando a imagem antes que exista qualquer
+`terraform apply`. Esta aula instalou só o `ansible-core`, que não inclui essa coleção, então ela é
+nomeada aqui e não mostrada. E a aula 20 elimina quase toda a passagem, configurando a imagem antes que exista qualquer
 máquina.

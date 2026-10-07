@@ -1,6 +1,6 @@
 ---
 title: Dividir a loja em rede e aplicação
-version: 1
+version: 2
 ---
 
 Uma divisão tem duas metades, e o pessoal costuma fazer só a primeira. **Os arquivos se movem com facilidade;
@@ -11,8 +11,9 @@ novas, mover as entradas do estado para elas, e provar com um plan em cada uma q
 
 ## As duas configurações
 
-A rede ganha um diretório só dela, com a VPC e as duas sub-redes, copiadas do `main.tf` sem mudar um
-caractere, já que os endereços precisam continuar os mesmos:
+A rede ganha um diretório só dela, `~/shop/network`, e o `main.tf` dele tem a VPC e as duas
+sub-redes, copiadas do `main.tf` antigo sem mudar um caractere, já que os endereços precisam
+continuar os mesmos:
 
 ```hcl
 terraform {
@@ -48,7 +49,8 @@ resource "aws_subnet" "public_c" {
 }
 ```
 
-Os outputs são novos. São o que a rede oferece ao resto da empresa, e a próxima seção é sobre eles:
+Os outputs são novos, em `network/outputs.tf`. São o que a rede oferece ao resto da empresa, e a
+próxima seção é sobre eles:
 
 ```hcl
 output "vpc_id" {
@@ -67,7 +69,7 @@ output "public_subnet_ids" {
 }
 ```
 
-O backend é o bucket da aula 7, sob uma **key nova**:
+O backend, `network/backend.tf`, é o bucket da aula 7, sob uma **key nova**:
 
 ```hcl
 terraform {
@@ -81,8 +83,14 @@ terraform {
 }
 ```
 
-O `main.tf` e o `backend.tf` antigos vão para `app/`, com o git guardando o histórico deles. Os
-blocos da rede saem do `main.tf`, e o security group encontra a VPC com um data source pela tag, a
+O `main.tf` e o `backend.tf` antigos vão para `app/`, com o git guardando o histórico deles:
+
+```sh
+mkdir network app
+git mv main.tf backend.tf app/
+```
+
+Os blocos da rede saem do `app/main.tf`, e o security group encontra a VPC com um data source pela tag, a
 ferramenta da aula 5, como primeira ponte:
 
 ```hcl
@@ -194,8 +202,8 @@ aws_subnet.public_c
 aws_vpc.shop
 ```
 
-Cada metade é empurrada para a key nova com `terraform state push`, do próprio diretório, e cada uma
-é conferida com um plan antes de qualquer outra coisa. A rede primeiro:
+Cada metade é empurrada para a key nova com `terraform state push`, do próprio diretório, depois de
+um `terraform init` ali, e cada uma é conferida com um plan antes de qualquer outra coisa. A rede primeiro:
 
 ```
 ana@laptop:~/shop/network$ terraform state push ../split/network.tfstate
@@ -251,7 +259,17 @@ O diretório `split` guardava duas cópias completas do estado no disco da Ana, 
 
 Ainda há um jeito de desfazer tudo isso, e ele está no notebook de um colega. Um checkout de antes
 da divisão ainda tem o `main.tf` grande e ainda aponta para `shop/terraform.tfstate`, que não existe
-mais:
+mais. A Ana faz commit da divisão, e faz o papel do colega com `git worktree`, que põe o commit
+anterior num segundo diretório, `~/shop-old`:
+
+```sh
+git add . && git commit -qm "split the network from the app"
+git worktree add -q ~/shop-old HEAD~1
+cd ~/shop-old
+terraform init
+```
+
+Lá:
 
 ```
 ana@laptop:~/shop-old$ git log --oneline -1
@@ -264,7 +282,8 @@ Plan: 6 to add, 0 to change, 0 to destroy.
 essa key, então para a configuração antiga nada existe. O versionamento do bucket ainda guarda o
 objeto apagado, e é assim que você se recuperaria do erro, mas a defesa é evitá-lo. Faça a divisão
 quando ninguém mais estiver aplicando, faça o merge como uma mudança só, e avise todo mundo que roda
-Terraform na loja para dar pull antes de planejar.
+Terraform na loja para dar pull antes de planejar. A Ana remove o segundo diretório com
+`git worktree remove --force ~/shop-old`, de dentro de `~/shop`.
 
 Esse foi o caminho rápido, e ele tem um custo: ninguém revisou os comandos `state mv`, e nada no
 repositório registra que eles rodaram. Duas seções adiante, o mesmo tipo de movimento é feito de

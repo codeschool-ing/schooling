@@ -1,6 +1,6 @@
 ---
 title: A playbook, and how to read what it printed
-version: 1
+version: 2
 ---
 
 A **playbook** is a YAML file with one or more **plays**. A play names a group of hosts and a list
@@ -70,8 +70,8 @@ changed: [web2]
 changed: [web1]
 
 TASK [Configure the site] ******************************************************
-changed: [web1]
 changed: [web2]
+changed: [web1]
 
 TASK [Start nginx] *************************************************************
 changed: [web2]

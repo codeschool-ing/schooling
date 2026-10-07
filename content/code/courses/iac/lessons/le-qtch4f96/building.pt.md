@@ -1,7 +1,19 @@
 ---
 title: Construir a imagem, e rodá-la
-version: 1
+version: 2
 ---
+
+**Instalando o Packer.** O Packer vem do mesmo repositório de pacotes da HashiCorp que o Terraform,
+que o script de instalação da aula 1 já acrescentou, na versão com que as transcrições foram
+gravadas:
+
+```sh
+sudo apt-get install -y packer=1.16.1-1
+```
+
+Ele comanda o Docker que a aula 18 instalou, e roda como você, então precisa do que a aula 18
+preparou para isso: o seu usuário no grupo `docker`. O plugin do Docker não é instalado à mão; o
+primeiro comando abaixo o busca.
 
 Três comandos, na mesma ordem dos do Terraform. `packer init` instala os plugins que o bloco
 `packer` pede, `packer fmt` confere a formatação, e `packer validate` confere o template sem
@@ -14,8 +26,9 @@ ana@laptop:~/shop/image$ packer validate .
 The configuration is valid.
 ```
 
-O `packer init` não imprimiu nada porque o plugin do Docker já estava instalado neste notebook; numa
-máquina nova ele o baixa e avisa. O `fmt -check` fica calado quando o arquivo já está formatado.
+O `packer init` não imprimiu nada porque o plugin do Docker já estava instalado na máquina em que
+estas aulas foram gravadas. Na sua ele baixa o plugin do GitHub, a versão mais nova que a restrição
+permite, e diz qual instalou. O `fmt -check` fica calado quando o arquivo já está formatado.
 Depois, o build:
 
 ```
@@ -81,8 +94,10 @@ ls: cannot access '/proc/net/if_inet6': No such file or directory
 ```
 
 A segunda linha `listen` do site padrão, `[::]:80`, é a que o nginx não consegue abrir, e a ausência
-de `/proc/net/if_inet6` é o kernel dizendo que aqui não há IPv6. No seu notebook a imagem talvez
-ligue sem problema. Esse é justamente o ponto: o build rodou numa máquina e a imagem roda em outras,
+de `/proc/net/if_inet6` é o kernel dizendo que aqui não há IPv6. **No seu computador a imagem
+provavelmente liga**, porque um kernel Linux comum tem IPv6 mesmo quando o Docker não dá ao
+contêiner um endereço próprio: o `docker run` então não imprime nada e mantém o nginx rodando até
+você apertar Ctrl+C, e o `ls` imprime o nome do arquivo. Esse é justamente o ponto: o build rodou numa máquina e a imagem roda em outras,
 e **o código de saída de um provisioner não diz nada sobre o resultado funcionar onde vai rodar**.
 Só ligar a imagem diz, e é por isso que um pipeline de imagens roda a imagem e pergunta algo a ela
 antes de publicá-la, do mesmo jeito que a aula 13 roda um módulo antes de confiar nele.
@@ -114,6 +129,9 @@ index 90e9556..87b3f2a 100644
    }
  }
 ```
+
+Faça a mesma correção no seu, mesmo que a `1.0.0` tenha ligado; o resto da aula parte da `1.0.1`. A
+Ana faz o commit, `git add -A && git commit -qm 'nginx listens on IPv4 only'`, e constrói de novo:
 
 ```
 ana@laptop:~/shop/image$ packer build . 2>&1 | grep -E "Image ID|Repository|finished"

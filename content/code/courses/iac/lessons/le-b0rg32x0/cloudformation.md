@@ -1,6 +1,6 @@
 ---
 title: CloudFormation, where AWS keeps the state
-version: 1
+version: 2
 ---
 
 Terraform runs on your machine, calls the AWS API, and keeps a state file to remember what it made.
@@ -11,7 +11,7 @@ one: it describes AWS and nothing else.
 
 ## A template
 
-The same network, written for CloudFormation in YAML:
+The same network, written for CloudFormation in YAML, in `~/shop/cfn/network.yaml`:
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -75,7 +75,7 @@ exist yet, so every resource is an addition:
 
 ```
 ana@laptop:~/shop/cfn$ aws cloudformation create-change-set --stack-name shop-network --change-set-name first --change-set-type CREATE --template-body file://network.yaml --query Id --output text
-arn:aws:cloudformation:sa-east-1:123456789012:changeSet/first/643e7985-0e57-4160-8103-2ca815cc3e53
+arn:aws:cloudformation:sa-east-1:123456789012:changeSet/first/21e6674d-630c-493a-95a3-d7f59891f4d0
 ana@laptop:~/shop/cfn$ aws cloudformation wait change-set-create-complete --stack-name shop-network --change-set-name first
 ana@laptop:~/shop/cfn$ aws cloudformation describe-change-set --stack-name shop-network --change-set-name first --query "Changes[].ResourceChange.[Action,LogicalResourceId,ResourceType]" --output text
 Add	ShopVpc	AWS::EC2::VPC
@@ -103,9 +103,9 @@ cloud, CloudFormation keeps in the stack and shows on request:
 
 ```
 ana@laptop:~/shop/cfn$ aws cloudformation describe-stack-resources --stack-name shop-network --query "StackResources[].[LogicalResourceId,PhysicalResourceId]" --output text
-ShopVpc	vpc-a3e28d373ad658e89
-WebSubnetA	subnet-010e74ae6d32f65b0
-WebSecurityGroup	sg-8d0ba39ee4cdbecdf
+ShopVpc	vpc-629e2ba218332e0f6
+WebSubnetA	subnet-a3d42d49d2d9bda8a
+WebSecurityGroup	sg-d4bba50dd9be56af4
 ```
 
 You cannot lose that file, leave it in a bucket anybody can read, or edit it by hand, because there

@@ -1,6 +1,6 @@
 ---
 title: Locking, so one run writes at a time
-version: 1
+version: 2
 ---
 
 Two runs that read the same state and both write it back produce a classic lost update. Each read
@@ -23,7 +23,8 @@ ana@laptop:~/shop$ sed -i 's/{ Name = "shop" }/{ Name = "shop", Environment = "d
 
 In one terminal she starts `terraform apply`, reads the plan, and leaves the question *Do you want
 to perform these actions?* on the screen while she checks something. **The apply holds the lock
-from the moment it starts until it exits**, question included. In a second terminal, the bucket:
+from the moment it starts until it exits**, question included. In a second terminal, with
+`. ~/iac-env.sh` read in and in `~/shop`, the bucket:
 
 ```
 ana@laptop:~/shop$ aws s3 ls --recursive s3://shop-tfstate-123456789012
@@ -63,12 +64,13 @@ ana@laptop:~/shop$ terraform plan
 
 The `412` and `PreconditionFailed` are S3 refusing the conditional write: the lock object exists.
 Below them is the lock's own content, and it answers the questions you have at that moment. `Who`
-is the user and machine holding it (the lab's machine calls itself `vm`), `Operation` says it is an
-apply, `Created` says since when, and `ID` is what you need if the holder never comes back. **Plans
-lock too**, though they write nothing to AWS: a plan reads the state, and reading half of a state
+is the user and machine holding it: `ana@vm` on the machine these lessons were recorded on, your
+own user and host name on yours. `Operation` says it is an apply, `Created` says since when, and
+`ID` is what you need if the holder never comes back. **Plans lock too**, though they write nothing to AWS: a plan reads the state, and reading half of a state
 that is being written gives a plan of a world that never existed.
 
-Failing is not the only option. `-lock-timeout` makes a run retry for as long as you allow:
+Failing is not the only option. `-lock-timeout` makes a run retry for as long as you allow. To
+see it, start this plan and then answer `yes` in the first terminal within the minute:
 
 ```
 ana@laptop:~/shop$ terraform plan -lock-timeout=60s
@@ -108,6 +110,15 @@ makes a second change, starts the apply in the first terminal, and the process d
 ```
 ana@laptop:~/shop$ sed -i 's/{ Name = "shop-a" }/{ Name = "shop-a", Environment = "dev" }/' main.tf
 ```
+
+To kill it the way a power cut would, run this in the second terminal while the question is on
+the first one's screen; `pgrep` finds the apply's process id:
+
+```sh
+kill -9 $(pgrep -x terraform)
+```
+
+The next plan meets the lock it left:
 
 ```
 ana@laptop:~/shop$ terraform plan 2>&1 | grep -A 7 "Lock Info"

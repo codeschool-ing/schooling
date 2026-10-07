@@ -1,6 +1,6 @@
 ---
 title: The inventory, and how Ansible reaches a machine
-version: 1
+version: 2
 ---
 
 Terraform ends where the operating system begins. Lesson 1 drew the line: the cloud's API can
@@ -18,10 +18,9 @@ Ansible is installed there, and nothing runs between two of her commands.
 {"svg": "<svg viewBox=\"0 0 720 280\" role=\"img\" aria-label=\"Ana's laptop holds Ansible, the inventory and the playbook. From it, three SSH connections go out, one to each machine: web1 and web2 in the group web, db1 in the group db. Each machine runs only sshd and Python; nothing of Ansible is installed on it.\"><defs><marker id=\"ps-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"50\" width=\"230\" height=\"180\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"135.0\" y=\"72.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Ana's laptop</text><text x=\"135.0\" y=\"90.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">the control node</text><text x=\"135.0\" y=\"125.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ansible-playbook</text><text x=\"135.0\" y=\"155.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">inventory.ini</text><text x=\"135.0\" y=\"177.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">site.yml</text><text x=\"135.0\" y=\"207.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">everything lives here</text><text x=\"470.0\" y=\"38.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">[web]</text><text x=\"470.0\" y=\"203.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">[db]</text><rect x=\"470\" y=\"50\" width=\"210\" height=\"48\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"66.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">web1</text><text x=\"575.0\" y=\"84.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sshd and Python, nothing else</text><path d=\"M250 140 L360 140 L360 74 L468 74\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ps-ah-phosphor)\"></path><rect x=\"470\" y=\"115\" width=\"210\" height=\"48\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"131.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">web2</text><text x=\"575.0\" y=\"149.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sshd and Python, nothing else</text><path d=\"M250 140 L360 140 L360 139 L468 139\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ps-ah-phosphor)\"></path><rect x=\"470\" y=\"215\" width=\"210\" height=\"48\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"231.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">db1</text><text x=\"575.0\" y=\"249.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sshd and Python, nothing else</text><path d=\"M250 140 L360 140 L360 239 L468 239\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ps-ah-phosphor)\"></path><text x=\"320.0\" y=\"128.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">SSH</text></svg>", "caption": "Ansible pushes: everything it needs is on the laptop, and each machine is reached over SSH when a command runs."}
 ```
 
-The machines in this lesson are three containers on the laptop, `web1`, `web2` and `db1`, each
-running Ubuntu 24.04 with `sshd` and a user `deploy` who may use `sudo`. They are real enough for
-everything Ansible does: packages come from the Ubuntu archive and nginx serves pages. Moto is not
-involved, because moto runs no machines.
+The machines are the three the previous section built, `web1`, `web2` and `db1`: Ubuntu 24.04
+with `sshd` and a user `deploy` who may use `sudo`. They are real enough for everything Ansible
+does. Moto is not involved, because moto runs no machines.
 
 The first file is the **inventory**: which machines exist and which groups they belong to.
 
@@ -51,7 +50,10 @@ inventory = inventory.ini
 
 Because the connection is plain SSH, plain SSH rules apply, including host keys. Ana trusts the
 three machines' keys once, before the first command. On machines you did not just create yourself,
-compare the fingerprints with what the machine's console shows before trusting them.
+compare the fingerprints with what the machine's console shows before trusting them. And after every
+run of `up.sh`, which makes machines with new keys, first forget the old ones with
+`ssh-keygen -R web1`, and the same for `web2` and `db1`; otherwise SSH refuses, warning that the
+machine's identification has changed.
 
 ```
 ana@laptop:~/shop/ansible$ ssh-keyscan -t ed25519 web1 web2 db1 >> ~/.ssh/known_hosts 2>/dev/null

@@ -1,6 +1,6 @@
 ---
 title: Dependências que o Terraform não enxerga
-version: 1
+version: 2
 ---
 
 O Terraform decide a ordem das operações a partir das referências. Na aula 2 a sub-rede nomeava
@@ -9,8 +9,9 @@ montado a partir das expressões, então uma dependência que não está numa ex
 ele**, e tudo o que não tem caminho entre si e outra coisa é criado ao mesmo tempo, em paralelo.
 
 Isso costuma ser o que você quer, e falha de um jeito específico: quando um recurso precisa de
-outro por algo que o Terraform não lê. Em `~/shop/boot`, a instância `web` dá boot baixando um
-script de um bucket que a mesma configuração cria:
+outro por algo que o Terraform não lê. Num diretório novo, `~/shop/boot`, a instância `web` dá
+boot baixando um script de um bucket que a mesma configuração cria. A Ana o inicializa e faz commit
+no Git antes de aplicar qualquer coisa:
 
 ```hcl
 provider "aws" {
@@ -104,7 +105,8 @@ apply)` onde nada era de fato desconhecido.
 
 ## Uma referência é melhor
 
-Aqui havia uma referência a fazer. A instância depende mesmo do bucket e da chave do objeto, então
+A Ana tira o `depends_on` de novo com `git checkout main.tf`. Aqui havia uma referência a
+fazer. A instância depende mesmo do bucket e da chave do objeto, então
 pode dizer isso na string:
 
 ```
@@ -130,3 +132,6 @@ bucket é escrito uma vez em vez de duas, e renomear o bucket o renomeia também
 Recorra ao `depends_on` quando de fato não houver o que referenciar: uma policy que precisa estar
 associada antes de um serviço usar uma role, ou um recurso cujo efeito sobre outro é invisível nos
 argumentos dos dois. Quando usar, deixe um comentário ao lado dizendo pelo que ele espera.
+
+A Ana terminou com este diretório, e o destrói com `terraform destroy -auto-approve`, para que o
+bucket dele não apareça na listagem de buckets no fim da aula.

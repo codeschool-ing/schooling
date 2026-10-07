@@ -1,6 +1,6 @@
 ---
 title: O que o terraform init instala
-version: 1
+version: 2
 ---
 
 **O `terraform init` prepara um diretório, e não toca na nuvem.** Ele lê o `required_providers`,
@@ -50,10 +50,12 @@ commands will detect it and remind you to do so if necessary.
 
 As três linhas que começam com hífen trazem a notícia: o Terraform procurou versões de
 `hashicorp/aws` que atendessem a `~> 6.0`, escolheu a 6.67.0 e a instalou. **A palavra
-`(unauthenticated)` é o laboratório falando.** Num computador que alcança o Terraform Registry, o
-init confere a assinatura do provider e imprime `(signed by HashiCorp)` nesse lugar. O laboratório
-instala a partir de um diretório local de pacotes de providers, pelo motivo que a aula 1 seção 08
-explica, e um diretório não tem assinatura para conferir.
+`(unauthenticated)` vem da máquina em que estas aulas foram gravadas.** Ela não tinha internet,
+então instalava os providers a partir de um diretório local de pacotes, e um diretório não tem
+assinatura para conferir. O seu `init` baixa do Terraform Registry, confere a assinatura do
+provider e imprime `(signed by HashiCorp)` nesse lugar. Ele também pode escolher uma 6.x mais nova
+que a 6.67.0, o que o `~> 6.0` permite. O quadro de aviso também é da máquina da gravação, e o seu
+não tem nenhum; o lock file abaixo diz por quê.
 
 Duas coisas apareceram ao lado dos arquivos da Ana:
 
@@ -81,7 +83,9 @@ ana@laptop:~/shop$ du -sh .terraform
 arquivo, `terraform-provider-aws_v6.67.0_x5`. É o programa que o Terraform vai iniciar e com o qual
 vai conversar em todo plano. Cada diretório de trabalho ganha a sua cópia, a não ser que haja um
 cache de plugins configurado, e o diretório pode ser apagado e refeito com `init` a qualquer
-momento. Ele nunca vai para o git.
+momento. Ele nunca vai para o git. O seu tem um cache, ligado pelas duas últimas linhas do
+`iac-env.sh` da aula 1, então na sua tela o `linux_amd64` é um link para dentro de
+`~/.terraform.d/plugin-cache`, o `find` para nele, e o `du` conta poucos kilobytes.
 
 **O `.terraform.lock.hcl` é o contrário: pequeno, e vai, sim, para o git.**
 
@@ -106,13 +110,14 @@ rodando `init` com uma semana de diferença poderiam receber duas versões do pr
 diferentes da mesma configuração. Passar para uma versão mais nova vira um ato deliberado, que a
 seção sobre providers executa.
 
-**Este arquivo é o único lugar em que o laboratório difere do seu computador.** Instalado a partir
-do registry, o `hashes` traz uma linha `h1:` e uma linha `zh:` para cada plataforma para a qual a
-HashiCorp compila o provider, e assim um lock file escrito no Linux também funciona no Mac de um
-colega. O mirror do laboratório só tem o pacote de Linux, então o init só conseguiu calcular o
-hash de `linux_amd64`, e o aviso na saída dele disse isso: um Mac recusaria este lock file. O
-comando que o aviso indica, `terraform providers lock`, baixa os pacotes das outras plataformas
-para calcular os hashes, e no laboratório ele falha, porque o registry está fora de alcance:
+**Este arquivo é onde a sua tela e a página mais diferem.** Instalado a partir do registry, como o
+seu foi, o `hashes` traz uma linha `h1:` para a sua plataforma e uma linha `zh:` para cada
+plataforma para a qual a HashiCorp compila o provider, mais de uma dúzia, e assim um lock file
+escrito no Linux também funciona no Mac de um colega. A cópia local da máquina da gravação só tinha
+o pacote de Linux, então o init só conseguiu calcular o hash de `linux_amd64`, e o aviso na saída
+dele disse isso: um Mac recusaria este lock file. O comando que o aviso indica,
+`terraform providers lock`, baixa os pacotes das outras plataformas para calcular os hashes, e na
+máquina da gravação ele falhou, porque o registry estava fora de alcance:
 
 ```
 ana@laptop:~/shop$ terraform providers lock -platform=darwin_arm64
@@ -129,11 +134,12 @@ ana@laptop:~/shop$ terraform providers lock -platform=darwin_arm64
 ╵
 ```
 
-Num computador com acesso à internet, esse comando acrescenta os hashes que faltam. O laboratório
-não consegue mostrá-lo dando certo, então fique com a palavra do aviso, e não com uma transcrição.
+Rode você mesmo e ele dá certo: baixa o pacote do Mac, acrescenta o hash `h1:` dessa plataforma ao
+arquivo e diz que o lock file foi atualizado. O seu já funcionava num Mac pelas linhas `zh:`, então
+o que ele ganha é só um segundo tipo de hash para mais uma plataforma.
 
-O que vai para o git, então, é a configuração e o lock file, e não os providers. O `.gitignore` da
-Ana diz isso antes do primeiro commit:
+O que vai para o git, então, é a configuração e o lock file, e não os providers. A Ana transforma o
+diretório num repositório com `git init`, e o `.gitignore` dela diz isso antes do primeiro commit:
 
 ```
 .terraform/
@@ -149,5 +155,7 @@ A  main.tf
 A  versions.tf
 ```
 
-Os dois padrões de `tfstate` são para um arquivo que ainda não existe. O primeiro apply o escreve,
-e a aula 7 explica por que ele merece um lugar mais seguro que um repositório.
+Ela faz o commit com `git commit -m "The shop network, first configuration"`, e o `git diff` das
+próximas seções compara com commits como esse. Os dois padrões de `tfstate` são para um arquivo que
+ainda não existe. O primeiro apply o escreve, e a aula 7 explica por que ele merece
+um lugar mais seguro que um repositório.

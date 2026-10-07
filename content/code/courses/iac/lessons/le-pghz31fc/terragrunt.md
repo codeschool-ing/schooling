@@ -1,12 +1,23 @@
 ---
 title: Where Terragrunt fits
-version: 1
+version: 2
 ---
 
 **Terragrunt is a wrapper: it writes the repetitive parts of a root configuration for you, then
 runs Terraform in it.** It is a separate program, by Gruntwork, with its own file, `terragrunt.hcl`,
 and it does not replace Terraform's language; the modules stay exactly as they are. What it takes
 over is the directory-per-environment layout from the last section, minus the copies.
+
+**Installing Terragrunt.** It is a single program, published on GitHub for each release. The
+transcripts below were made with version 1.1.6, and these two commands install the same one:
+
+```sh
+curl -fsSLo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v1.1.6/terragrunt_linux_amd64
+sudo install terragrunt /usr/local/bin/terragrunt && rm terragrunt
+```
+
+On an ARM machine, such as a virtual machine on a Mac with Apple silicon, the file to download ends
+in `_linux_arm64` instead. `terragrunt --version` then names the version.
 
 Ana adds a `live` tree beside `envs`, using the same two modules. Each leaf directory is a
 **unit**: one module, one environment, one state.
@@ -27,7 +38,7 @@ live
 └── root.hcl
 ```
 
-Everything the units share is written once, in `root.hcl`:
+Everything the units share is written once, in `live/root.hcl`:
 
 ```hcl
 terraform_binary = "terraform"
@@ -70,7 +81,8 @@ ana@laptop:~/shop-infra/live$ terragrunt run --help | grep -e --tf-path
    --tf-path value                             Path to the OpenTofu/Terraform binary. Default is tofu (on PATH). [$TG_TF_PATH]
 ```
 
-A unit is short. It includes the root, names its module, and gives the module its inputs:
+A unit is short. It includes the root, names its module, and gives the module its inputs.
+`live/dev/network/terragrunt.hcl`:
 
 ```hcl
 include "root" {
@@ -90,7 +102,8 @@ inputs = {
 
 The `web` unit needs the VPC's id, which is an output of another unit's state. In a single
 configuration that would be a reference; across two states it is a **`dependency`** block, which
-reads the other unit's outputs and also tells Terragrunt to run that unit first:
+reads the other unit's outputs and also tells Terragrunt to run that unit first.
+`live/dev/web/terragrunt.hcl`:
 
 ```hcl
 include "root" {
@@ -107,6 +120,45 @@ dependency "network" {
 
 inputs = {
   environment = "dev"
+  vpc_id      = dependency.network.outputs.vpc_id
+}
+```
+
+Prod's two units are the same with prod's values, `live/prod/network/terragrunt.hcl`:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source = "../../../modules/network"
+}
+
+inputs = {
+  environment = "prod"
+  cidr        = "10.20.0.0/16"
+  azs         = ["sa-east-1a", "sa-east-1c"]
+}
+```
+
+and `live/prod/web/terragrunt.hcl`:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source = "../../../modules/web"
+}
+
+dependency "network" {
+  config_path = "../network"
+}
+
+inputs = {
+  environment = "prod"
   vpc_id      = dependency.network.outputs.vpc_id
 }
 ```
@@ -162,9 +214,12 @@ Are you sure you want to run 'terragrunt apply' in each unit of the run queue di
 12:16:23.959 ERROR  EOF
 ```
 
-The question got no answer, because this terminal's input is empty, and Terragrunt stopped with
-`EOF` before running anything. Answered `y`, or skipped with `--non-interactive`, it applies every
-unit in turn:
+The page shows what happens when the question gets no answer: the machine these lessons were
+recorded on gave the command no input, and Terragrunt stopped with `EOF` before running anything.
+On your terminal it waits for you instead. The question itself may not appear, because `grep` prints
+a line only once it ends, so the cursor just sits under the tree. Type `n` and Enter, and nothing is
+applied, as on the page. Answered `y`, or skipped with `--non-interactive`, it applies every unit in
+turn:
 
 ```
 ana@laptop:~/shop-infra/live/dev$ terragrunt run --all --non-interactive --summary-disable apply 2>&1 | grep -e "units will be run" -e "Apply complete"

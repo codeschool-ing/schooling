@@ -1,6 +1,6 @@
 ---
 title: Um bloco que só pergunta
-version: 1
+version: 2
 ---
 
 Tudo na configuração da aula 2 era algo a criar. Um bloco `resource` diz "isto deve existir", e o
@@ -12,7 +12,7 @@ A imagem errada mais comum é a de que uma fonte de dados (data source) é um ti
 recurso, que o Terraform "gerencia um pouco". Ele não gerencia nada. Uma data source é uma consulta
 enviada pelo mesmo provider, e o resultado é um conjunto de atributos que você referencia como
 qualquer outro. Aqui estão as duas menores perguntas que o provider da AWS sabe responder, quem sou
-eu e onde estou:
+eu e onde estou, no `main.tf` de um diretório novo, `~/shop/app`:
 
 ```hcl
 terraform {

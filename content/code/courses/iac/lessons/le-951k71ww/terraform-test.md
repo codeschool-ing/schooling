@@ -1,6 +1,6 @@
 ---
 title: terraform test, and a run that only plans
-version: 1
+version: 2
 ---
 
 `terraform test` is built into Terraform since 1.6. **It reads files ending in `.tftest.hcl`,
@@ -8,7 +8,8 @@ written in the same HCL as the module, and runs each `run` block as a plan or an
 state of its own**, never the state of a real deployment. Each `run` carries assertions, and the
 command reports which ones held. There is nothing to install and no second language to learn.
 
-Ana's first test file plans the module with the shop's real values and asks two questions:
+Ana's first test file, `tests/plan.tftest.hcl`, plans the module with the shop's real values and
+asks two questions:
 
 ```hcl
 provider "aws" {
@@ -81,7 +82,13 @@ planned there is nothing to destroy, but the line appears all the same.
 
 A month later a colleague decides the subnets should say what they are, and changes one tag in
 `main.tf`. The change is reasonable, and it renames every subnet the module has ever created. The
-test notices:
+colleague's command was:
+
+```sh
+sed -i 's/Name = "${var.name}-${each.key}"/Name = "${var.name}-subnet-${each.key}"/' main.tf
+```
+
+The test notices:
 
 ```
 ana@laptop:~/shop/modules/network$ grep -n "Name =" main.tf
@@ -118,10 +125,38 @@ sides, then prints Ana's message with the real name in it. Anything that finds s
 remember that; the test did. Whether the change is right is
 still a decision for a person. The test made sure it is a decision and not an accident.
 
+Until that decision is made, Ana puts the tag back as it was:
+
+```sh
+sed -i 's/Name = "${var.name}-subnet-${each.key}"/Name = "${var.name}-${each.key}"/' main.tf
+```
+
 ## What a plan cannot answer
 
 A plan knows what you wrote and what AWS already has. It does not know the ids AWS will invent.
-Ana tries to assert, in a plan, that a subnet lands in the module's own VPC:
+Ana tries to assert, in a plan, that a subnet lands in the module's own VPC, in a file of its own,
+`tests/link.tftest.hcl`:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+variables {
+  name    = "shop"
+  cidr    = "10.20.0.0/16"
+  subnets = { a = { cidr = "10.20.1.0/24", az = "sa-east-1a" } }
+}
+
+run "subnet_is_in_the_vpc" {
+  command = plan
+
+  assert {
+    condition     = aws_subnet.this["a"].vpc_id == aws_vpc.this.id
+    error_message = "Subnet a is not in the module's VPC."
+  }
+}
+```
 
 ```
 ana@laptop:~/shop/modules/network$ terraform test -filter=tests/link.tftest.hcl
@@ -154,7 +189,8 @@ Both sides are strings Terraform does not know yet, so the condition cannot be e
 Terraform refuses to call that a pass. The message names the ways out: drop the value, apply the
 run, or supply the value yourself with an override. **An assertion in a plan can only be about
 what is known at plan time**: the values you passed in, and anything computed from them alone. The
-next section answers this one without AWS, and the last section answers it with AWS.
+next section answers this one without AWS, and the last section answers it with AWS. The file was
+only there to show the error, so Ana deletes it, `rm tests/link.tftest.hcl`.
 
 `terraform test` with no arguments runs every test file in `tests/` and in the module's own
 directory, in alphabetical order. `-filter=tests/link.tftest.hcl` runs one file, as above, and

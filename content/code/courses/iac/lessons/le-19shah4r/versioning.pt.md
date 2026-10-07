@@ -1,6 +1,6 @@
 ---
 title: Versionando o que você publica
-version: 1
+version: 2
 ---
 
 Um número de versão é uma mensagem do autor do módulo para todo mundo que o chama. A convenção que
@@ -13,7 +13,13 @@ amplo do que parece.
 A parte óbvia da interface são as variáveis e os outputs. **A parte menos óbvia é o endereço de cada
 recurso lá dentro**, porque o state de cada chamador o registra. A Ana aprende isso com uma mudança
 que ela acha que é só arrumação. Ela pretende acrescentar sub-redes públicas um dia, então as atuais
-deveriam se chamar `private`, e ela manda a renomeação para um branch:
+deveriam se chamar `private`, e ela faz a renomeação num branch, em `~/src/terraform-aws-network`:
+
+```sh
+git checkout -q -b rename
+```
+
+As duas edições:
 
 ```
 ana@laptop:~/src/terraform-aws-network$ git diff
@@ -43,7 +49,15 @@ index ba4964c..6078538 100644
  }
 ```
 
-Duas linhas, nenhuma variável e nenhum output tocados. Quem experimenta o branch recebe isto:
+Duas linhas, nenhuma variável e nenhum output tocados. Ela faz commit e push do branch:
+
+```sh
+git commit -qam "call the subnets private"
+git push -q origin rename
+```
+
+Quem experimenta o branch, trocando `?ref=v1.0.0` por `?ref=rename` nas duas linhas `source` de
+`~/shop` e rodando `terraform init`, recebe isto:
 
 ```
 ana@laptop:~/shop$ terraform plan -no-color | grep -E "^  #|^Plan"
@@ -77,7 +91,18 @@ moved {
 }
 ```
 
-Integrado ao `main` e marcado como `v1.1.0`, ele planeja assim para o mesmo chamador:
+A Ana o salva como `moved.tf` no módulo, no branch, depois integra o branch ao `main` e o publica
+como `v1.1.0`:
+
+```sh
+git add moved.tf && git commit -qm "move the subnets instead of replacing them"
+git checkout -q main && git merge -q rename
+git tag v1.1.0
+git push -q origin main v1.1.0
+```
+
+Em `~/shop` as duas linhas `source` passam para `?ref=v1.1.0`, e depois de um `terraform init` ele
+planeja assim para o mesmo chamador:
 
 ```
 ana@laptop:~/shop$ terraform plan -no-color | grep -E "^  #|^Plan"
@@ -102,7 +127,8 @@ E cada entrada do plan completo mostra que o objeto é o que já existe:
 
 **Zero para adicionar, zero para destruir: uma versão minor, como deveria ser.** O bloco `moved`
 fica no módulo enquanto alguém puder atualizar a partir de uma versão anterior a ele, o que na
-prática quer dizer até a próxima versão major, quando o autor pode decidir parar de carregá-lo.
+prática quer dizer até a próxima versão major, quando o autor pode decidir parar de carregá-lo. A
+Ana aplica a atualização em `~/shop` e faz commit.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Três tags do módulo de rede em sequência. v1.0.0 é a primeira versão, com as sub-redes em aws_subnet.this. v1.1.0 é uma versão minor: as sub-redes mudam de nome e um bloco moved vem junto, então o plan de quem chama dá 0 to add e 0 to destroy, onde sem o bloco dava 3 to add e 3 to destroy. v2.0.0 é uma versão major: a variável cidr vira cidr_block, e todo mundo que chama precisa editar uma linha.\"><defs><marker id=\"vs-ah-wire\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--wire)\"></path></marker></defs><text x=\"130.0\" y=\"34.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--phosphor)\">primeira versão</text><rect x=\"60\" y=\"52\" width=\"140\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"130.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">v1.0.0</text><text x=\"370.0\" y=\"34.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--phosphor)\">minor</text><rect x=\"300\" y=\"52\" width=\"140\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"370.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">v1.1.0</text><text x=\"610.0\" y=\"34.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--amber)\">major</text><rect x=\"540\" y=\"52\" width=\"140\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"610.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">v2.0.0</text><path d=\"M202 70 L297 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vs-ah-wire)\"></path><path d=\"M442 70 L537 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vs-ah-wire)\"></path><text x=\"130.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">uma VPC e suas sub-redes</text><text x=\"130.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">aws_subnet.this</text><text x=\"130.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">quem chama fixa a tag</text><text x=\"370.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">sub-redes renomeadas, mais</text><text x=\"370.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">moved { }</text><text x=\"370.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--phosphor)\">0 to add, 0 to destroy</text><text x=\"370.0\" y=\"195.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">sem o bloco:</text><text x=\"370.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--amber)\">3 to add, 3 to destroy</text><text x=\"610.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">uma variável renomeada</text><text x=\"610.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">cidr → cidr_block</text><text x=\"610.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">quem chama edita uma linha</text></svg>", "caption": "O que cada tag pede de quem chama. A renomeação com um bloco moved é uma versão minor; a de uma variável não tem como ser escondida, então é major.", "same": ["minor", "major"]}
@@ -152,7 +178,9 @@ ana@laptop:~/src/terraform-aws-network$ git push -q origin main v2.0.0
 ```
 
 Não existe `moved` para uma variável: quem passa `cidr` está passando um argumento que não existe
-mais. Então isto é a `v2.0.0`, e a tag vem com uma nota dizendo o que fazer:
+mais. Então isto é a `v2.0.0`, e a tag vem com uma nota dizendo o que fazer, o `CHANGELOG.md`,
+commitado junto com a renomeação antes da tag
+(`git add -A && git commit -qm "rename cidr to cidr_block"`):
 
 ```
 # Changelog
@@ -172,7 +200,7 @@ block carries existing subnets across, so upgrading plans no changes.
 A VPC and a map of subnets.
 ```
 
-Quem sobe o `ref` descobre no `init`, antes de qualquer plan:
+Quem sobe o `ref` para `v2.0.0` descobre no `init`, antes de qualquer plan:
 
 ```
 ana@laptop:~/shop$ terraform init

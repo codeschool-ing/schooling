@@ -1,11 +1,19 @@
 ---
 title: Drift, e a mudança que ninguém anotou
-version: 1
+version: 2
 ---
 
 Uma semana depois, alguém precisa olhar, de casa, um dos servidores da loja e abre SSH para o mundo no
-security group, de outra máquina, à mão. É um comando, e resolve o problema do dia. Ninguém avisa a Ana, e nada a avisa também. Quando ela pergunta à AWS o que o grupo permite, há uma regra que ela
-nunca escreveu:
+security group, de outra máquina, à mão. É um comando, com o id do grupo em `SG`, e resolve o
+problema do dia:
+
+```sh
+aws ec2 authorize-security-group-ingress --group-id "$SG" \
+  --protocol tcp --port 22 --cidr 0.0.0.0/0
+```
+
+Ninguém avisa a Ana, e nada a avisa também. Quando ela pergunta à AWS o que o grupo permite, há uma
+regra que ela nunca escreveu:
 
 ```
 ana@laptop:~/shop$ aws ec2 describe-security-groups --filters Name=group-name,Values=web --query "SecurityGroups[0].IpPermissions[].[IpProtocol,FromPort,IpRanges[0].CidrIp]" --output text

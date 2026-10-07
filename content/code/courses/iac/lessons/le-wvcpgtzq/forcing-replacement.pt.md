@@ -1,6 +1,6 @@
 ---
 title: Pedindo uma substituição
-version: 1
+version: 2
 ---
 
 As duas últimas seções foram sobre impedir o Terraform de fazer alguma coisa. Esta é o inverso:
@@ -116,7 +116,7 @@ Ana quer: uma release nova deveria ser uma máquina nova.
 `replace_triggered_by` diz isso. É uma lista de recursos, ou de atributos deles, e quando qualquer
 um for atualizado ou substituído, este recurso é substituído também. A release não é um recurso,
 então a Ana a embrulha num `terraform_data`, um recurso embutido no Terraform que guarda um valor e
-não faz mais nada, para que o valor tenha algo que possa mudar:
+não faz mais nada, para que o valor tenha algo que possa mudar. Ela aplica isso e faz commit:
 
 ```
 ana@laptop:~/shop/app$ git show --format= -U0

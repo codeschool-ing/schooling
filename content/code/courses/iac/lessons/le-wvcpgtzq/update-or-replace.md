@@ -1,6 +1,6 @@
 ---
 title: Updated in place, or replaced
-version: 1
+version: 2
 ---
 
 A common first picture of Terraform is that editing a line edits the thing. Change the subnet's
@@ -10,7 +10,7 @@ new id, a new address and nothing of the old one's contents. Which of the two it
 decided by the provider, argument by argument, and the plan tells you before anything moves.
 
 This lesson works on a small configuration in `~/shop/app`: the shop's VPC, one subnet and the
-`web` instance. Ana applied it once already, quietly, and committed it to git:
+`web` instance. Ana applied it once already and committed it to Git:
 
 ```hcl
 terraform {
@@ -46,9 +46,20 @@ resource "aws_instance" "web" {
 }
 ```
 
+To start from the same place, save it as `~/shop/app/main.tf` and run these in that directory.
+The `.gitignore` keeps the provider and the state out of Git:
+
+```sh
+terraform init
+terraform apply -auto-approve
+git init -q . && printf ".terraform/\n*.tfstate*\n" > .gitignore
+git add -A && git commit -qm 'the shop network and web'
+```
+
 The AMI ids are two of the sample images moto ships, an older and a newer Ubuntu. They are the
-same on every run of the lab, so they can be quoted; the `vpc-…` and `i-…` ids in the plans below
-are invented afresh each time.
+same in every moto, so they can be quoted; the `vpc-…` and `i-…` ids in the plans below are
+invented afresh each time. **AWS has no images with these two ids.** On a real account you would
+put a real one in their place, looked up with a data source as lesson 5 did.
 
 ## A change AWS can make in place
 
@@ -140,7 +151,7 @@ summary reads `1 to add, 0 to change, 1 to destroy`, which is how a replacement 
 ## A replacement that spreads
 
 A replacement gives the new resource a new id, and everything that references the old id has to
-follow. Ana tries the subnet's range instead:
+follow. Ana puts the image back with `git checkout main.tf` and tries the subnet's range instead:
 
 ```
 ana@laptop:~/shop/app$ git diff

@@ -1,6 +1,6 @@
 ---
 title: Mock providers, and a test that needs no cloud
-version: 1
+version: 2
 ---
 
 A run with `command = plan` creates nothing, and it still talks to AWS. The provider checks its
@@ -35,7 +35,7 @@ Since Terraform 1.7, a test file can replace a provider with a mock. **A mock pr
 real provider's schema and never calls its API**: every attribute a real provider would compute,
 an id or an ARN, it invents. With the mock, a run can even
 `apply`, because applying to a mock creates nothing anywhere. Ana writes the test the previous
-section could not, with the endpoint still pointing at nothing:
+section could not, in `tests/unit.tftest.hcl`, with the endpoint still pointing at nothing:
 
 ```hcl
 mock_provider "aws" {}
@@ -83,7 +83,8 @@ created. The module is right to refuse; the test has to supply the world.
 ## override_data and override_resource
 
 An override fixes the value of one data source or one resource, for the whole file or inside a
-single `run`. Ana gives the zones a real answer and the VPC an id she can assert on:
+single `run`. Ana gives the zones a real answer and the VPC an id she can assert on, in a new
+version of `tests/unit.tftest.hcl`:
 
 ```hcl
 mock_provider "aws" {}

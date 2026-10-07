@@ -161,12 +161,12 @@
   },
   {
     "id": "ex-rjc2ebcd",
-    "version": 1,
+    "version": 2,
     "section": "init",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Ana commits the lock file from the lab, which holds a single `h1:` hash for `linux_amd64`. A colleague on a Mac runs `terraform init`. What happens?",
+    "prompt": "Ana's lock file was written on a machine with no internet, from a local copy of the Linux package, so it holds a single `h1:` hash for `linux_amd64`. She commits it, and a colleague on a Mac runs `terraform init`. What happens?",
     "hint": "The warning init printed said which platforms the file covers.",
     "choices": [
       {
@@ -182,7 +182,7 @@
       {
         "text": "init fails: no hash matches the Mac's package",
         "correct": true,
-        "why": "Right. The warning said so, and `terraform providers lock` with internet access adds the other platforms."
+        "why": "Right. The warning said so, and `terraform providers lock -platform=darwin_arm64`, run where the registry answers, adds the Mac's hash."
       },
       {
         "text": "init ignores the lock file and picks the newest 6.x",
@@ -581,12 +581,12 @@
   },
   {
     "id": "ex-v0bfdtrz",
-    "version": 1,
+    "version": 2,
     "section": "providers",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The mirror holds random 3.8.1 and 3.9.1, and nothing is locked yet. `versions.tf` asks for `version = \"~> 3.8.0\"`. Which version does `terraform init` install?",
+    "prompt": "The registry has random 3.8.0, 3.8.1, 3.9.0 and 3.9.1, and nothing is locked yet. `versions.tf` asks for `version = \"~> 3.8.0\"`. Which version does `terraform init` install?",
     "hint": "With three numbers written, which one may grow?",
     "choices": [
       {
@@ -607,7 +607,7 @@
       {
         "text": "3.8.0, the version written in the constraint",
         "correct": false,
-        "why": "The constraint is a lower bound, not a pin, and 3.8.0 is not in the mirror anyway."
+        "why": "The constraint is a lower bound, not a pin, and init takes the newest release inside it."
       }
     ]
   },

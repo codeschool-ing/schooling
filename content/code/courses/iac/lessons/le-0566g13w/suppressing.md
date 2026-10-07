@@ -1,6 +1,6 @@
 ---
 title: Suppressing a finding, with a reason and a date
-version: 1
+version: 2
 ---
 
 Every scanner lets you silence a finding, and the wrong idea about that is that silencing is how you
@@ -12,7 +12,7 @@ for. The SSH rule is the first kind, and a comment would not make port 22 any le
 
 Ana works through Checkov's list and writes two suppressions with a reason, one Trivy ignore, and
 one Checkov skip with no reason at all, on purpose, to show what the report makes of it. Here they
-are as the reviewer sees them:
+are as the reviewer sees them, and as you make them in your own `main.tf`:
 
 ```
 ana@laptop:~/shop$ git diff
@@ -120,6 +120,11 @@ The finding is back, and the count with it. When the real date passes, the build
 finding again and somebody has to decide once more, with whatever they now know. Checkov's inline
 skip has no expiry field; the same effect there comes from a ticket, or from the baseline in section
 08.
+
+Ana puts the date back with the same `sed`, the two dates swapped,
+`sed -i "s/exp:2026-03-31/exp:2027-03-31/" main.tf`, and commits the three suppressions as *suppress
+three findings*. If you are reading this after 31 March 2027, that date has passed for you too and
+the finding shows in both runs; a later date shows the difference.
 
 ## Where not to suppress
 

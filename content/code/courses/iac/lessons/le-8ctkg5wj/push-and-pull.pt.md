@@ -1,6 +1,6 @@
 ---
 title: Pull, push, e com que frequência a verdade é conferida
-version: 1
+version: 2
 ---
 
 A aula 18 configura máquinas a partir do laptop da Ana: o Ansible se conecta por SSH, faz o trabalho
@@ -20,7 +20,25 @@ máquina, e isso decide quanto tempo uma edição feita à mão sobrevive.
 
 O Puppet é o caso mais claro. O agente dele, `puppet agent`, roda em cada máquina, se conecta a um
 servidor Puppet, envia os fatos que levantou sobre a máquina e recebe de volta a lista completa de
-recursos que aquela máquina deve ter. Os valores padrão dizem como essa conversa é montada:
+recursos que aquela máquina deve ter.
+
+**Instalando o Puppet.** Esta aula roda o Puppet no seu próprio computador, e o pacote do próprio
+Ubuntu é aquele com que as transcrições foram gravadas, a versão 8.4.0:
+
+```sh
+sudo apt-get install -y puppet
+```
+
+Rodado como usuário comum, como em toda esta aula, o Puppet lê as configurações dele de
+`~/.puppet/etc/puppet.conf`. O da Ana tem uma linha sob o cabeçalho, e a transcrição abaixo a
+imprime, então crie o diretório com `mkdir -p ~/.puppet/etc` e escreva o arquivo:
+
+```ini
+[main]
+certname = laptop
+```
+
+Os valores padrão dizem como essa conversa é montada:
 
 ```
 ana@laptop:~$ puppet config print --section agent runinterval server certname
@@ -31,8 +49,9 @@ server = puppet
 
 `runinterval` está em segundos: **1800 é uma execução a cada trinta minutos**, em cada máquina,
 enquanto o agente estiver rodando. `server = puppet` é onde o agente procura se ninguém disser outra
-coisa, um host chamado literalmente `puppet`. `certname` é o nome pelo qual a máquina é conhecida; o
-laboratório o define como `laptop` no `puppet.conf` da Ana para bater com o prompt. O nome importa
+coisa, um host chamado literalmente `puppet`. `certname` é o nome pelo qual a máquina é conhecida; a
+Ana o definiu como `laptop` no `puppet.conf` dela para bater com o prompt, e sem ele o Puppet usa o
+nome completo do computador na rede. O nome importa
 porque o agente prova quem é com um certificado assinado por uma autoridade
 certificadora que, por padrão, o próprio servidor Puppet mantém, então incluir uma máquina num
 arranjo de pull significa um certificado novo, além de um agente novo.
@@ -71,5 +90,5 @@ SSH, com uma chave que funcione.
 
 As três ferramentas também rodam numa máquina só, sem servidor, lendo a descrição do próprio disco:
 `puppet apply`, `salt-call --local` e o modo local do Chef. É assim que esta aula as roda, porque o
-laboratório é um laptop. Os recursos, a linguagem e a execução são os mesmos; só a pergunta "de onde
+seu laboratório é um computador só. Os recursos, a linguagem e a execução são os mesmos; só a pergunta "de onde
 vem a descrição" tem outra resposta.

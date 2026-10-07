@@ -1,6 +1,6 @@
 ---
 title: Versioning what you publish
-version: 1
+version: 2
 ---
 
 A version number is a message from the module's author to everybody who calls it. The convention
@@ -13,7 +13,13 @@ than it looks.
 The obvious part of the interface is the variables and the outputs. **The less obvious part is the
 address of every resource inside**, because every caller's state records it. Ana learns this from a
 change she thinks is a tidy-up. She plans to add public subnets one day, so the existing ones should
-be called `private`, and she pushes the rename to a branch:
+be called `private`, and she makes the rename on a branch, in `~/src/terraform-aws-network`:
+
+```sh
+git checkout -q -b rename
+```
+
+The two edits:
 
 ```
 ana@laptop:~/src/terraform-aws-network$ git diff
@@ -43,7 +49,15 @@ index ba4964c..6078538 100644
  }
 ```
 
-Two lines, no variable and no output touched. A caller who tries the branch gets this:
+Two lines, no variable and no output touched. She commits them and pushes the branch:
+
+```sh
+git commit -qam "call the subnets private"
+git push -q origin rename
+```
+
+A caller who tries the branch, by changing `?ref=v1.0.0` to `?ref=rename` in both `source` lines
+of `~/shop` and running `terraform init`, gets this:
 
 ```
 ana@laptop:~/shop$ terraform plan -no-color | grep -E "^  #|^Plan"
@@ -77,7 +91,18 @@ moved {
 }
 ```
 
-Merged into `main` and tagged `v1.1.0`, it plans like this for the same caller:
+Ana saves it as `moved.tf` in the module, on the branch, then merges the branch into `main` and
+releases it as `v1.1.0`:
+
+```sh
+git add moved.tf && git commit -qm "move the subnets instead of replacing them"
+git checkout -q main && git merge -q rename
+git tag v1.1.0
+git push -q origin main v1.1.0
+```
+
+In `~/shop` the two `source` lines move to `?ref=v1.1.0`, and after a `terraform init` it plans
+like this for the same caller:
 
 ```
 ana@laptop:~/shop$ terraform plan -no-color | grep -E "^  #|^Plan"
@@ -102,7 +127,8 @@ And each entry in the full plan shows that the object is the one that already ex
 
 **Zero to add, zero to destroy: a minor version, as it should be.** The `moved` block stays in the
 module for as long as any caller might upgrade from a version before it, which in practice means
-until the next major version, when the author may decide to stop carrying it.
+until the next major version, when the author may decide to stop carrying it. Ana applies the
+upgrade in `~/shop` and commits it.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Three tags of the network module in a row. v1.0.0 is the first release, with the subnets at aws_subnet.this. v1.1.0 is a minor version: the subnets are renamed and a moved block comes with them, so a caller's plan is 0 to add and 0 to destroy, where without the block it was 3 to add and 3 to destroy. v2.0.0 is a major version: the variable cidr is renamed to cidr_block, and every caller has to edit a line.\"><defs><marker id=\"vs-ah-wire\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--wire)\"></path></marker></defs><text x=\"130.0\" y=\"34.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--phosphor)\">first release</text><rect x=\"60\" y=\"52\" width=\"140\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"130.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">v1.0.0</text><text x=\"370.0\" y=\"34.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--phosphor)\">minor</text><rect x=\"300\" y=\"52\" width=\"140\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"370.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">v1.1.0</text><text x=\"610.0\" y=\"34.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--amber)\">major</text><rect x=\"540\" y=\"52\" width=\"140\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"610.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">v2.0.0</text><path d=\"M202 70 L297 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vs-ah-wire)\"></path><path d=\"M442 70 L537 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vs-ah-wire)\"></path><text x=\"130.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">a VPC and its subnets</text><text x=\"130.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">aws_subnet.this</text><text x=\"130.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">callers pin the tag</text><text x=\"370.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">subnets renamed, plus a</text><text x=\"370.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">moved { }</text><text x=\"370.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--phosphor)\">0 to add, 0 to destroy</text><text x=\"370.0\" y=\"195.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">without the block:</text><text x=\"370.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--amber)\">3 to add, 3 to destroy</text><text x=\"610.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">a variable renamed</text><text x=\"610.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">cidr → cidr_block</text><text x=\"610.0\" y=\"170.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">every caller edits a line</text></svg>", "caption": "What each tag asks of the callers. The rename with a moved block is a minor version; the rename of a variable cannot be hidden, so it is a major one."}
@@ -152,7 +178,9 @@ ana@laptop:~/src/terraform-aws-network$ git push -q origin main v2.0.0
 ```
 
 There is no `moved` for a variable: a caller passing `cidr` is passing an argument that no longer
-exists. So this is `v2.0.0`, and the tag comes with a note saying what to do:
+exists. So this is `v2.0.0`, and the tag comes with a note saying what to do, `CHANGELOG.md`,
+committed with the rename before the tag
+(`git add -A && git commit -qm "rename cidr to cidr_block"`):
 
 ```
 # Changelog
@@ -172,7 +200,7 @@ block carries existing subnets across, so upgrading plans no changes.
 A VPC and a map of subnets.
 ```
 
-A caller who bumps the `ref` finds out at `init`, before any plan:
+A caller who bumps the `ref` to `v2.0.0` finds out at `init`, before any plan:
 
 ```
 ana@laptop:~/shop$ terraform init

@@ -1,6 +1,6 @@
 ---
 title: Um playbook, e como ler o que ele imprimiu
-version: 1
+version: 2
 ---
 
 Um **playbook** é um arquivo YAML com uma ou mais **plays**. Uma play nomeia um grupo de hosts e
@@ -70,8 +70,8 @@ changed: [web2]
 changed: [web1]
 
 TASK [Configure the site] ******************************************************
-changed: [web1]
 changed: [web2]
+changed: [web1]
 
 TASK [Start nginx] *************************************************************
 changed: [web2]

@@ -1,12 +1,13 @@
 ---
 title: Letting go of a resource without destroying it
-version: 1
+version: 2
 ---
 
 Sometimes a resource should leave a configuration and stay in the world. The data team is taking
 over the shop's logs: they will manage `shop-logs-dev` from their own configuration, and lesson 8
 shows how they will import it there. Ana's configuration has to stop managing the bucket **without
-deleting it**, and deleting the block is the obvious move and the wrong one:
+deleting it**, and deleting the block is the obvious move and the wrong one. Ana restores the
+`assets` block with `git checkout main.tf`, deletes the `logs` block instead, and plans:
 
 ```
 ana@laptop:~/shop/assets$ terraform plan | grep -E "will|because|Plan:"

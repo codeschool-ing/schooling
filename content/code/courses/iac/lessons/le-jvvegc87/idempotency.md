@@ -1,6 +1,6 @@
 ---
 title: Running it twice, on purpose
-version: 1
+version: 2
 ---
 
 The test of a playbook is the second run. Nothing has changed on the machines since the first, so a
@@ -24,12 +24,12 @@ ok: [web1]
 ok: [web2]
 
 TASK [Configure the site] ******************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [Start nginx] *************************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=5    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
@@ -39,7 +39,13 @@ web2                       : ok=5    changed=0    unreachable=0    failed=0    s
 **`changed=0` on every host is the result to aim for**, the same property lesson 1 named for
 `terraform apply`: run it twice, and the second time does nothing. It is also what makes the next
 run useful. Some days later a colleague edits the page on `web1` by hand, over `ssh`, from another
-machine:
+machine. This was the command:
+
+```sh
+ssh deploy@web1 'echo "<h1>shop (closed for stocktaking)</h1>" | sudo tee /var/www/html/index.html'
+```
+
+And the page Ana's playbook wrote is gone:
 
 ```
 ana@laptop:~/shop/ansible$ curl -s http://web1/
@@ -54,16 +60,16 @@ ana@laptop:~/shop/ansible$ ansible-playbook site.yml
 PLAY [Web servers] *************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [Install nginx] ***********************************************************
 ok: [web1]
 ok: [web2]
 
 TASK [Write the index page] ****************************************************
-ok: [web2]
 changed: [web1]
+ok: [web2]
 
 TASK [Configure the site] ******************************************************
 ok: [web2]
@@ -179,12 +185,12 @@ ana@laptop:~/shop/ansible$ ansible-playbook cert.yml
 PLAY [A certificate for the shop] **********************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [Make a self-signed certificate, once] ************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
@@ -204,12 +210,12 @@ ana@laptop:~/shop/ansible$ ansible-playbook site.yml --check --diff
 PLAY [Web servers] *************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [Install nginx] ***********************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [Write the index page] ****************************************************
 --- before: /var/www/html/index.html
@@ -218,22 +224,22 @@ TASK [Write the index page] ****************************************************
 -<h1>shop</h1>
 +<h1>shop, now open</h1>
 
-changed: [web1]
+changed: [web2]
 --- before: /var/www/html/index.html
 +++ after: /var/www/html/index.html
 @@ -1 +1 @@
 -<h1>shop</h1>
 +<h1>shop, now open</h1>
 
-changed: [web2]
+changed: [web1]
 
 TASK [Configure the site] ******************************************************
 ok: [web1]
 ok: [web2]
 
 TASK [Start nginx] *************************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

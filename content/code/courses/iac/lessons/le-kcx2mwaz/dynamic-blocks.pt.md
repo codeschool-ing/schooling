@@ -1,6 +1,6 @@
 ---
 title: Blocos dynamic, para o que se repete dentro de um resource
-version: 1
+version: 2
 ---
 
 O `count` e o `for_each` repetem resources inteiros. Parte da repetição acontece um nível abaixo,
@@ -8,7 +8,8 @@ dentro de um único resource: um security group tem um bloco `ingress` por regra
 blocos aninhados e não como argumentos. **Um bloco aninhado não aceita `count` nem `for_each`**, e
 escrever um por porta é de novo o problema de copiar e editar. Um bloco `dynamic` os gera.
 
-Os servidores web da Ana precisam das portas 80 e 443 abertas, e ela espera que a lista cresça:
+Os servidores web da Ana precisam das portas 80 e 443 abertas, e ela espera que a lista cresça. Num
+arquivo novo, o `security.tf`:
 
 ```hcl
 variable "web_ports" {

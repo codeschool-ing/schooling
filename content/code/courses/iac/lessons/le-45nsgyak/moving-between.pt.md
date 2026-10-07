@@ -1,6 +1,6 @@
 ---
 title: Mover um recurso de um estado para outro
-version: 1
+version: 2
 ---
 
 A divisão moveu três entradas com comandos que ninguém revisou. Isso foi aceitável uma vez, numa
@@ -20,8 +20,8 @@ larga, e o dono novo importa**.
 
 ## Primeiro, largar
 
-Na aplicação, o bloco do bucket é apagado, e um bloco `removed` da aula 6 diz que apagar quer dizer
-"parar de gerenciar", e não "destruir":
+Na aplicação, o bloco do bucket é apagado, e um bloco `removed` da aula 6, num arquivo novo
+`app/removed.tf`, diz que apagar quer dizer "parar de gerenciar", e não "destruir":
 
 ```hcl
 removed {
@@ -49,7 +49,8 @@ index 72b1aa9..4b7913c 100644
 -}
 ```
 
-O plan é o que a aula 6 mostrou, um ponto em vez de um sinal de menos:
+A Ana roda `terraform apply -auto-approve`, e faz commit quando ele termina. A parte da saída que
+importa é o plan que a aula 6 mostrou, um ponto em vez de um sinal de menos:
 
 ```
  # aws_s3_bucket.logs will no longer be managed by Terraform, but will not be destroyed
@@ -85,8 +86,9 @@ gerenciado por dois, não.**
 
 ## Depois, importar
 
-A configuração do time de dados é deles, com uma key própria no mesmo bucket. O `main.tf` declara o
-bucket exatamente como a aplicação declarava, com o backend no mesmo arquivo desta vez:
+A configuração do time de dados é deles, em `~/data`, com uma key própria no mesmo bucket. O
+`main.tf` declara o bucket exatamente como a aplicação declarava, com o backend no mesmo arquivo
+desta vez:
 
 ```hcl
 terraform {
@@ -116,7 +118,8 @@ resource "aws_s3_bucket" "logs" {
 ```
 
 Declarar só o bucket daria um plan com `1 to add`: este estado nunca ouviu falar do bucket, então o
-Terraform tentaria criá-lo. Mais um bloco diz que o recurso já existe, e qual objeto real ele é:
+Terraform tentaria criá-lo. Mais um bloco, em `imports.tf`, diz que o recurso já existe, e qual
+objeto real ele é:
 
 ```hcl
 import {

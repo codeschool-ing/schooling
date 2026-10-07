@@ -1,6 +1,6 @@
 ---
 title: Writing the network module
-version: 1
+version: 2
 ---
 
 A module is written exactly like the configurations of the earlier lessons, with one difference in
@@ -95,8 +95,9 @@ Plan: 3 to add, 0 to change, 0 to destroy.
 the state will remember that subnet, and the `shop` in it comes from the label of the `module` block
 in the root, not from anything in the module's directory.
 
-Now the second network. Ana adds three files to the root: another call to the same directory, a
-security group that needs the shop's VPC, and two outputs. Terraform reads every `.tf` file in the
+Now the second network. Ana adds three files to the root: `analytics.tf`, another call to the
+same directory; `web.tf`, a security group that needs the shop's VPC; and `outputs.tf`, two
+outputs. Terraform reads every `.tf` file in the
 root directory as one configuration, so how she splits them is for the reader's sake:
 
 ```hcl
@@ -185,3 +186,10 @@ When the calls differ only in their values, `for_each` works on a `module` block
 with a map of networks replaces the two. Two separate blocks are easier to read when there are two;
 the map earns its place when the list of networks is itself data. That is the choice lesson 4 made
 for resources, and it holds for modules unchanged.
+
+Ana puts `~/shop` in Git at this point, with lesson 7's `.gitignore`, because the next sections
+show its changes as diffs:
+
+```sh
+git init -q && printf ".terraform/\n*.tfstate\n*.tfstate.*\n" > .gitignore && git add . && git commit -qm "the shop network, as a module"
+```

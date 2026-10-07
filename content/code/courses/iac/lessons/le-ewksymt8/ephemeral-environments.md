@@ -1,6 +1,6 @@
 ---
 title: Environments that expire
-version: 1
+version: 2
 ---
 
 A preview environment is a copy of the application built for one pull request, so a reviewer can
@@ -17,8 +17,9 @@ tags.
 ## An expiry date on everything
 
 The defence is to make every preview environment say when it may be removed, on every resource, in
-the one place a search can read without the state: a tag. Ana's preview configuration is a workspace
-per pull request, the arrangement lesson 11 describes, with the expiry passed in by the pipeline:
+the one place a search can read without the state: a tag. Ana's preview configuration, in
+`~/shop-preview/main.tf`, is a workspace per pull request, the arrangement lesson 11 describes, with
+the expiry passed in by the pipeline:
 
 ```hcl
 terraform {
@@ -68,8 +69,17 @@ resource "aws_eip" "web" {
 `Environment` is the workspace's name, and `Expires` is a variable. **The pipeline computes the date
 and passes it in.** Computing it in the configuration with `timestamp()` looks tidier and fails,
 because that function returns a new value on every run. Every later plan would want to change every
-tag, and the date would move forward each time anybody touched the environment. Pull request 21 gets
-its workspace and a week:
+tag, and the date would move forward each time anybody touched the environment.
+
+Pull request 17 got its environment ten days ago, with a week to live, so its date was three days
+ago. To have the same environment in your moto, create it now with that date:
+
+```sh
+terraform workspace new pr-17
+terraform apply -auto-approve -var expires=$(date -d '-3 days' +%F)
+```
+
+Pull request 21 gets its workspace and a week:
 
 ```
 ana@laptop:~/shop-preview$ terraform workspace new pr-21
@@ -89,7 +99,8 @@ ana@laptop:~/shop-preview$ terraform plan -no-color -var "expires=$(date -d +7da
 Plan: 2 to add, 0 to change, 0 to destroy.
 ```
 
-And the price of one environment, with `price.py` from earlier in this lesson:
+And the price of one environment, with `price.py` from earlier in this lesson, copied in with
+`cp ~/shop/price.py .`:
 
 ```
 ana@laptop:~/shop-preview$ terraform show -json tfplan | python3 price.py
@@ -101,13 +112,14 @@ change per month, USD                       +55.75
 **55.75 USD a month for one machine and its address**, cheap enough that nobody worries about one.
 Forgetting them is what adds up: ten preview environments left
 running for a quarter is 10 × 3 × 55.75, or 1,672.50 USD, for review copies of pull requests that
-merged months before.
+merged months before. Ana applies pr-21's plan, `terraform apply -auto-approve tfplan`, and its
+environment is up.
 
 ## Finding the ones that outlived their date
 
 Pull request 17's environment was created ten days ago, and its date has passed. The search for it
 uses the tagging API, which works here because these resources have tags; it lists everything whose
-`Expires` is before today:
+`Expires` is before today, and Ana saves it as `expired.sh`:
 
 ```sh
 #!/bin/sh

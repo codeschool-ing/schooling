@@ -20,10 +20,11 @@
 # Chef is not installed in the lab. Its recipe in the lesson is illustrative
 # and was never run; the last block below only shows that it is not here.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the files ana
-# wrote (put below), whose contents the lesson shows in full, and Puppet's
-# certname, set to `laptop` in ana's puppet.conf so that the name Puppet
-# prints is the one in the prompt rather than the lab machine's hostname. The
+# What is STAGED rather than typed: the files ana wrote (put below), whose
+# contents the lesson shows in full, and Puppet's certname, set to `laptop` in
+# ana's puppet.conf so that the name Puppet prints is the one in the prompt
+# rather than the recording machine's hostname. The lesson shows that file and
+# tells the student to write it; the command that writes it is quiet here. The
 # timings and the Salt pids in the output change on every run.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.

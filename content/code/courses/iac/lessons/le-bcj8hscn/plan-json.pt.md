@@ -1,6 +1,6 @@
 ---
 title: O plano como dado, e uma trava que o lê
-version: 1
+version: 2
 ---
 
 O texto de um plano é escrito para pessoas: colunas alinhadas, atributos inalterados escondidos, um
@@ -45,8 +45,8 @@ resposta de uma palavra em JSON: alguma lista contém `delete`?
 
 Vale fazer essa pergunta por máquina porque o plano em texto facilita deixá-la passar. Uma
 substituição é uma destruição, e num plano comprido ela parece só mais um bloco de linhas `~` com um
-comentário no topo. A Ana escreve uma trava de poucas linhas que recusa qualquer plano que apague,
-pelo motivo que for:
+comentário no topo. A Ana escreve uma trava de poucas linhas, `check-plan.sh`, que recusa qualquer
+plano que apague, pelo motivo que for:
 
 ```sh
 #!/bin/sh
@@ -65,8 +65,8 @@ fi
 echo "ok: this plan deletes nothing"
 ```
 
-`index("delete")` é o jeito do jq de perguntar se a lista contém essa string; o `select` fica com
-as entradas em que contém. Rodada sobre o mesmo plano, a trava nomeia as duas exclusões, a
+Ela o torna executável com `chmod +x check-plan.sh`. `index("delete")` é o jeito do jq de perguntar
+se a lista contém essa string; o `select` fica com as entradas em que contém. Rodada sobre o mesmo plano, a trava nomeia as duas exclusões, a
 substituição primeiro, e falha:
 
 ```
@@ -77,8 +77,8 @@ delete  aws_subnet.b
 exit 1
 ```
 
-Sobre um plano que só acrescenta coisas, ela passa. Este é o plano de duas seções adiante, que cria
-três recursos:
+Sobre um plano que só acrescenta coisas, ela passa. Este é o plano de duas seções adiante, salvo
+lá com `terraform plan -out=tfplan`, que cria três recursos:
 
 ```
 ana@laptop:~/shop$ ./check-plan.sh tfplan; echo "exit $?"

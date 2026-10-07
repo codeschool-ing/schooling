@@ -1,12 +1,20 @@
 ---
 title: "terraform import: adotar um bucket que alguém fez à mão"
-version: 1
+version: 2
 ---
 
 O import do time de dados partiu de um recurso que estava sendo gerenciado até um instante antes, com
 um bloco pronto para copiar. O caso comum é menos arrumado. O Bruno, que cuida dos backups, criou um
 bucket à mão na semana passada, da máquina dele, pôs tags, e pediu à Ana para trazê-lo para a
-configuração da loja. Nada em estado nenhum sabe que ele existe:
+configuração da loja. Estes foram os dois comandos dele; rode-os para criar o mesmo bucket no seu
+moto:
+
+```sh
+aws s3api create-bucket --bucket shop-backups-dev --create-bucket-configuration LocationConstraint=sa-east-1
+aws s3api put-bucket-tagging --bucket shop-backups-dev --tagging "TagSet=[{Key=Owner,Value=bruno},{Key=Purpose,Value=backups}]"
+```
+
+Nada em estado nenhum sabe que o bucket existe:
 
 ```
 ana@laptop:~/shop/app$ aws s3api get-bucket-tagging --bucket shop-backups-dev
@@ -41,7 +49,7 @@ resource "aws_s3_bucket" "backups" {
 ```
 
 O endereço precisa existir na configuração antes, porque a entrada no estado precisa pertencer a um
-bloco. Então a Ana escreve o menor bloco que nomeia o bucket:
+bloco. Então a Ana escreve o menor bloco que nomeia o bucket, num arquivo novo, `backups.tf`:
 
 ```hcl
 resource "aws_s3_bucket" "backups" {

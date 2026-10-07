@@ -1,9 +1,10 @@
 ---
 title: Chef, receitas escritas em Ruby
-version: 1
+version: 2
 ---
 
-O Chef é a única ferramenta desta aula que o laboratório não tem:
+O Chef é a única ferramenta desta aula que você não instala, e que a máquina em que estas aulas foram
+gravadas também não tinha. No seu computador a mesma conferência imprime a mesma linha:
 
 ```
 ana@laptop:~/shop/salt$ command -v chef-client cinc-client knife || echo "none of them"

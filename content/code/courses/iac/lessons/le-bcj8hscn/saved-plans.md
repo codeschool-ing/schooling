@@ -1,6 +1,6 @@
 ---
 title: Saving a plan, and applying exactly that plan
-version: 1
+version: 2
 ---
 
 Every plan in this course that was not saved has ended with the same note, and it is worth taking
@@ -60,7 +60,17 @@ it should be handled like the state: anything secret in the state is in here too
 
 Ana saves the plan on her branch, `change`, for a colleague to review. While it waits, something
 urgent comes up: the VPC needs an `Owner` tag today. She makes that change on a branch of its own,
-`hotfix`, and applies it straight away:
+`hotfix`, and applies it straight away. In Git, she commits the change on `main`, marks that commit
+with the branch `change`, and starts `hotfix` from the commit before it:
+
+```sh
+git add -A && git commit -qm 'shop: public subnet, new image, assets bucket'
+git branch change
+git checkout -q -b hotfix HEAD~1
+```
+
+`tfplan` is ignored by Git, so it stays where it is through every switch of branch. The edit and
+the apply:
 
 ```
 ana@laptop:~/shop$ git diff
@@ -81,6 +91,13 @@ ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 3
 aws_vpc.shop: Modifications complete after 0s [id=vpc-bf1e4c53969619f51]
 
 Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+```
+
+She commits the hotfix and switches back:
+
+```sh
+git add -A && git commit -qm 'tag the VPC with its owner'
+git checkout -q change
 ```
 
 The next morning the review is done, and she goes back to `change` to apply the plan that was
@@ -116,7 +133,7 @@ ana@laptop:~/shop$ jq .serial terraform.tfstate
 cannot know whether the plan still means what the reviewer read. Here the old plan predates the
 `Owner` tag; applied anyway, it would have been a review of one change and an apply of another.
 The fix is the honest one: bring the branch up to date, plan again, and have the new plan
-reviewed again.
+reviewed again. Ana brings it up to date with `git rebase -q hotfix`, and plans:
 
 ```
 ana@laptop:~/shop$ git log --format=%s -2

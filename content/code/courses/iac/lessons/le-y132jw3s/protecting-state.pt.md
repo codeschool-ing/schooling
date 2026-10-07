@@ -1,6 +1,6 @@
 ---
 title: Cifrar o estado antes de ele sair do laptop
-version: 1
+version: 2
 ---
 
 As três últimas seções mantêm segredos fora do estado onde um provider permite. Alguma coisa sempre
@@ -21,13 +21,27 @@ bucket, como um `terraform state pull` no laptop de alguém.
 
 **O Terraform não tem como cifrar o estado antes de gravá-lo.** O OpenTofu, o fork que a aula 1
 apresentou, tem: o estado é cifrado dentro do programa, e o backend, local ou S3, só guarda texto
-cifrado. Este é o recurso que a aula 1 prometeu, e o laboratório tem o `tofu` para mostrá-lo.
+cifrado. Este é o recurso que a aula 1 prometeu.
+
+**Instalando o OpenTofu.** O projeto publica um script de instalação que acrescenta o repositório de
+pacotes dele ao Ubuntu e instala o `tofu` a partir dele. Baixe, leia se quiser, e rode:
+
+```sh
+curl -fsSLo install-opentofu.sh https://get.opentofu.org/install-opentofu.sh
+sh install-opentofu.sh --install-method deb
+```
+
+Ele pede a sua senha onde precisa de `sudo`. As transcrições abaixo foram feitas com o OpenTofu
+1.13.1, e `tofu version` diz qual você tem; a aula 17 volta a usá-lo.
 
 ## Ligando
 
-Uma configuração pequena com uma senha gerada, rodada com `tofu`. O provider é nomeado pelo endereço
-completo porque o espelho offline do laboratório arquiva os providers sob o registry do Terraform,
-enquanto o OpenTofu usa o próprio por padrão; a aula 17 fala mais dos dois registries.
+Uma configuração pequena com uma senha gerada, em `~/shop/tofu/main.tf`, rodada com `tofu`. O
+provider é nomeado pelo endereço completo porque a máquina em que estas aulas foram gravadas não
+tinha internet, e guardava os providers numa cópia local arquivada sob o registry do Terraform. Na
+sua máquina o `tofu` baixa do próprio registry, `registry.opentofu.org`, e o simples
+`hashicorp/random` bastaria; o endereço completo não atrapalha, e a aula 17 fala mais dos dois
+registries. Rode `tofu init` no diretório antes, como faria com `terraform init`.
 
 ```hcl
 terraform {
@@ -52,7 +66,7 @@ ana@laptop:~/shop/tofu$ jq -r ".resources[0].instances[0].attributes.result" ter
 ```
 
 Um estado puro, senha legível, o ponto de partida de toda configuração existente. A Ana acrescenta a
-criptografia num arquivo próprio:
+criptografia num arquivo próprio, `encryption.tf`:
 
 ```hcl
 variable "state_passphrase" {
@@ -89,8 +103,15 @@ método. E o **fallback** deixa esta execução ler o estado que ainda é puro: 
 tentaria decifrar um arquivo que nunca foi cifrado, e pararia.
 
 A frase-senha é uma variável de propósito. Escrita no arquivo, seria mais um segredo no git; aqui ela
-foi exportada no shell antes, como `TF_VAR_state_passphrase`, que é como um pipeline a entregaria a
-partir do seu próprio cofre de segredos. Então o apply, e o arquivo que ele gravou:
+é exportada no shell, como `TF_VAR_state_passphrase`, que é como um pipeline a entregaria a partir do
+seu próprio cofre de segredos. A da Ana, inventada para a aula como a senha do banco, vai no terminal
+em que ela roda o `tofu`:
+
+```sh
+export TF_VAR_state_passphrase='lantern-orbit-velvet-quarry-2026'
+```
+
+Então o apply, e o arquivo que ele gravou:
 
 ```
 ana@laptop:~/shop/tofu$ tofu apply -auto-approve -no-color | grep -E "^Apply"
@@ -130,8 +151,33 @@ No changes. Your infrastructure matches the configuration.
 ## Depois da migração
 
 O fallback cumpriu o papel dele, e se ficasse também aceitaria um estado puro que alguém colocasse de
-volta no bucket. A Ana o remove, junto com o método `unencrypted`, para que o bloco `state` seja só o
-método, e roda o plan mais uma vez:
+volta no bucket. A Ana o remove, junto com o método `unencrypted`, e o `encryption.tf` fica
+assim:
+
+```hcl
+variable "state_passphrase" {
+  type      = string
+  sensitive = true
+}
+
+terraform {
+  encryption {
+    key_provider "pbkdf2" "passphrase" {
+      passphrase = var.state_passphrase
+    }
+
+    method "aes_gcm" "state" {
+      keys = key_provider.pbkdf2.passphrase
+    }
+
+    state {
+      method = method.aes_gcm.state
+    }
+  }
+}
+```
+
+O bloco `state` é só o método. Ela o imprime e roda o plan mais uma vez:
 
 ```
 ana@laptop:~/shop/tofu$ sed -n "/state {/,/^    }/p" encryption.tf
@@ -166,7 +212,8 @@ Acquiring state lock. This may take a few moments...
 A mensagem chega embrulhada num erro de lock, porque a primeira coisa que o backend local faz é um
 backup do estado, e ele não consegue ler o que deveria copiar. A linha que importa é `message
 authentication failed`: o AES-GCM não decifra para lixo, ele recusa. E o Terraform, chamado a
-trabalhar no mesmo diretório e depois a ler uma cópia do mesmo arquivo:
+trabalhar no mesmo diretório e depois a ler uma cópia do mesmo arquivo, num diretório novo ao lado,
+`~/shop/tofu-copy`:
 
 ```
 ana@laptop:~/shop/tofu$ terraform init

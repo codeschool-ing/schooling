@@ -1,12 +1,12 @@
 ---
 title: The state keeps every value in plain text
-version: 1
+version: 2
 ---
 
 A reasonable next thought is that the trouble came from a person typing the password. If Terraform
 generates it, nobody types it, nobody commits it, and there is nothing to leak. Ana tries that: a
 `random_password` makes the password, and AWS Secrets Manager stores it, where the application can
-fetch it:
+fetch it. `~/shop/secrets/main.tf`:
 
 ```hcl
 terraform {
@@ -91,7 +91,8 @@ Whatever a provider returns for a resource goes into the state, and a provider r
 given.
 
 **Reading a secret puts it there too.** Ana's application configuration does not create the
-password; it only needs to look it up, with a data source (lesson 5):
+password; it only needs to look it up, with a data source (lesson 5), here in `read.tf` beside
+`main.tf`:
 
 ```hcl
 data "aws_secretsmanager_secret_version" "db" {
@@ -124,3 +125,15 @@ So the order of the defences matters. Protecting the state comes last, in "prote
 because it guards whatever got in. Before that, the better move is to stop the value getting in at
 all, and there are two ways: give Terraform a value it is not allowed to keep, or do not give it
 the value. The next two sections take them in turn.
+
+Before moving on, Ana takes this experiment down, because the next section creates a secret with
+the same name:
+
+```sh
+rm read.tf
+terraform destroy -auto-approve
+aws secretsmanager delete-secret --secret-id shop/db --force-delete-without-recovery
+```
+
+The last command is needed because `destroy` only schedules a secret for deletion, as AWS does, and
+a secret waiting to be deleted still holds its name.

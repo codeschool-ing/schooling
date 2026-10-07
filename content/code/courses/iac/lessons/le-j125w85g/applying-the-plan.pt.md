@@ -1,6 +1,6 @@
 ---
 title: Aplicar exatamente o plan que foi lido
-version: 1
+version: 2
 ---
 
 A aprovação neste pipeline é uma pessoa lendo um plan salvo e dizendo sim a ele. **O que dá sentido
@@ -15,8 +15,23 @@ plan ou o `plan.txt`, e então deixa o próximo job começar.
 
 ## O arquivo viaja; o checkout é novo
 
-O plan da execução 1 foi salvo antes, no clone dela. O job de apply começa num clone novo, recebe o
-`tfplan` e o aplica. Repare em qual commit este clone tem:
+O plan da execução 1 foi salvo antes, no clone dela. Enquanto ela esperava a aprovação, um pull
+request que acrescenta uma tag `Owner` à VPC entrou por merge. Para fazer o merge da mesma mudança no
+seu remoto, no `~/shop`:
+
+```sh
+sed -i 's/{ Name = "shop", Environment = var.environment }/{ Name = "shop", Environment = var.environment, Owner = "ana" }/' main.tf
+terraform fmt
+git commit -qam "shop: Owner tag on the VPC" && git push -q origin main
+```
+
+A execução 2, o pipeline desse commit, também fez o plan antes de a execução 1 ser aprovada, e a
+próxima seção começa com esse plan. Para ver o mesmo plan, digite agora os três primeiros comandos
+daquela seção: o clone a partir do seu diretório home, os outros dois no `~/ci/run-2`. Depois volte
+para cá.
+
+O job de apply da execução 1 começa num clone novo, recebe o `tfplan` e o aplica. Repare em qual
+commit este clone tem:
 
 ```
 ana@laptop:~$ git clone -q git/shop.git ci/run-1-apply
@@ -26,8 +41,8 @@ ana@laptop:~/ci/run-1-apply$ cp ../run-1/tfplan .
 ana@laptop:~/ci/run-1-apply$ ./ci.sh apply
 ```
 
-Enquanto a execução 1 esperava a aprovação, um pull request que acrescenta uma tag `Owner` à VPC
-entrou por merge, então um clone da `main` agora traz esse commit posterior. O apply segue adiante:
+A tag `Owner` entrou por merge enquanto a execução 1 esperava, então um clone da `main` agora traz esse
+commit posterior. O apply segue adiante:
 
 ```
 + terraform apply -input=false -lock-timeout=5m tfplan
@@ -60,7 +75,7 @@ O checkout não é irrelevante, porém. O `terraform init` do job de apply lê d
 o lock file de dependências, e o Terraform recusa um plan salvo cujas seleções de provider diferem
 do lock file que ele encontra. É por isso que o workflow do GitHub deixa a `actions/checkout` no
 padrão, o commit que disparou a execução: assim todo job de uma execução vê os mesmos arquivos. O
-clone do laboratório foi tirado da `main` como ela estava naquele momento, que é o erro de um
+clone desta aula foi tirado da `main` como ela estava naquele momento, que é o erro de um
 workflow que faz checkout de um nome de branch em vez do commit da própria execução. Desta vez não
 causou dano, porque só uma tag era diferente.
 

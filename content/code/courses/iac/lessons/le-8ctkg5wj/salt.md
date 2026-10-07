@@ -1,6 +1,6 @@
 ---
 title: Salt, states in YAML with Jinja around them
-version: 1
+version: 2
 ---
 
 Salt calls its descriptions **states**, kept in `.sls` files, and writes them in YAML. Before the YAML
@@ -9,8 +9,17 @@ templates, so a state file can hold variables, loops and conditions. The rest of
 short: the server is the *master*, the agent is the *minion*, the facts a minion gathers about its
 machine are *grains*, and data a master hands to particular minions, secrets among it, is *pillar*.
 
-There is no master in the lab. Salt runs masterless here with `salt-call --local`, as Ana, from a
-directory she owns, and the minion's configuration says where everything is:
+**Installing Salt.** Salt is a Python program, and it goes into an environment of its own with
+`pipx`, which lesson 14 installed. If you skipped that lesson, run `sudo apt-get install -y pipx`
+and `pipx ensurepath`, and open a new terminal. Then:
+
+```sh
+pipx install salt==3008.3
+```
+
+There is no master here, as there is no Puppet server. Salt runs masterless with `salt-call --local`,
+as Ana, an ordinary user, from a directory she owns, `~/shop/salt`. The minion's configuration is the
+file `etc/minion` in that directory, and it says where everything is:
 
 ```yaml
 id: laptop
@@ -25,7 +34,8 @@ file_roots:
 `file_client: local` is the masterless switch: read states from this machine's disk instead of asking a
 master. `file_roots` is that place. `root_dir` moves the cache, the logs and the keys Salt would keep
 under `/var` and `/etc` into Ana's directory, and `user: ana` stops Salt expecting to be root. `id` is
-the minion's name. Left to itself, a minion also knows where it would look for a master:
+the minion's name. In yours, put your own user name in place of `ana`, both in `user:` and in the
+two paths. Left to itself, a minion also knows where it would look for a master:
 
 ```
 ana@laptop:~/shop/salt$ salt-call --local -c etc config.get master
@@ -37,14 +47,16 @@ A host called `salt`, as Puppet's agent looks for `puppet`.
 
 ## A top file and a state
 
-The **top file** says which states apply to which minions. `'*'` is every minion, and `web` names
-`web.sls` in the same directory:
+The **top file**, `states/top.sls`, says which states apply to which minions. `'*'` is every minion,
+and `web` names `web.sls` in the same directory:
 
 ```yaml
 base:
   '*':
     - web
 ```
+
+The state itself is `states/web.sls`, with your own home in place of `/home/ana` in its first line:
 
 ```
 {% set root = '/home/ana/www' %}

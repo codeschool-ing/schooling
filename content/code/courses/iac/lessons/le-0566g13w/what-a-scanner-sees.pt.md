@@ -1,6 +1,6 @@
 ---
 title: O que um scanner vê, e o que ele não consegue ver
-version: 1
+version: 2
 ---
 
 Um scanner de segurança para código de infraestrutura parece algo que olha a sua nuvem. **Ele olha
@@ -14,7 +14,8 @@ teste, e é o lugar certo: barato como um linter, e capaz de responder só o que
 A configuração da Ana nesta aula é a rede da loja das aulas anteriores, mais um bucket para as fotos
 dos produtos e um volume de dados. Uma diferença em relação à aula 7 é proposital: cada regra do
 security group é um recurso próprio, `aws_vpc_security_group_ingress_rule`, que é a forma que a
-documentação do provider da AWS recomenda e o que permite que uma regra chegue num arquivo só dela.
+documentação do provider da AWS recomenda e o que permite que uma regra chegue num arquivo só dela. Ela
+vai em `~/shop/main.tf`:
 
 ```hcl
 terraform {
@@ -69,6 +70,18 @@ resource "aws_ebs_volume" "data" {
 }
 ```
 
+Ao lado dele, um `.gitignore` deixa fora do Git o diretório dos providers, o state e os arquivos de
+plan da seção 07:
+
+```
+.terraform/
+*.tfstate*
+tfplan*
+```
+
+A Ana roda `git init` e `terraform init`, faz o commit de tudo como *the shop network, a bucket and a
+volume* e aplica:
+
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 1
 Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
@@ -90,6 +103,9 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   cidr_ipv4         = "0.0.0.0/0"
 }
 ```
+
+Salve-o como `ssh.tf` ao lado do `main.tf`, e não faça o commit ainda. O Checkov, o primeiro dos três
+scanners desta aula, é instalado no começo da seção 03; instale-o antes do comando abaixo.
 
 São oito linhas, a descrição diz *maintenance*, e um revisor numa tarde corrida aprova. **Uma regra
 não tem tarde corrida.** Perguntado só sobre este check, o Checkov aponta o recurso e o arquivo:
@@ -117,8 +133,16 @@ deixa de ser um parágrafo numa wiki e vira um check que falha.
 {"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Dentro de uma borda tracejada, o que uma varredura da configuração lê: os arquivos main.tf e ssh.tf e as regras do scanner. Uma seta leva ao scanner, que não precisa de credenciais nem de API, e daí a um achado que aponta ssh.tf, linhas 1 a 8. Abaixo da borda, três coisas que a varredura nunca lê: a conta da AWS, onde mora uma regra digitada à mão; o state, que registra o que foi aplicado; e os valores dados na hora do plan com -var-file.\"><defs><marker id=\"sv-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"30\" width=\"330\" height=\"170\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"35.0\" y=\"46.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">o que um scanner lê</text><rect x=\"40\" y=\"70\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105.0\" y=\"90.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">main.tf</text><rect x=\"40\" y=\"130\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ssh.tf</text><rect x=\"195\" y=\"70\" width=\"135\" height=\"100\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"262.0\" y=\"90.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">regras</text><text x=\"262.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">CKV_AWS_24</text><text x=\"262.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">AWS-0107</text><text x=\"262.0\" y=\"151.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">…</text><path d=\"M352 115 L388 115\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#sv-ah-phosphor)\"></path><rect x=\"390\" y=\"80\" width=\"130\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"455.0\" y=\"99.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">scanner</text><text x=\"455.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">sem credenciais</text><text x=\"455.0\" y=\"131.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">sem API</text><path d=\"M522 115 L558 115\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#sv-ah-phosphor)\"></path><rect x=\"560\" y=\"80\" width=\"140\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"630.0\" y=\"102.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">um achado</text><text x=\"630.0\" y=\"124.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--amber)\">ssh.tf:1-8</text><text x=\"20.0\" y=\"222.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">nunca lido por uma varredura da configuração</text><rect x=\"20\" y=\"236\" width=\"210\" height=\"52\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"125.0\" y=\"254.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a conta da AWS</text><text x=\"125.0\" y=\"270.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">uma regra digitada à mão</text><rect x=\"255\" y=\"236\" width=\"210\" height=\"52\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"360.0\" y=\"254.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">o state</text><text x=\"360.0\" y=\"270.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o que foi aplicado</text><rect x=\"490\" y=\"236\" width=\"210\" height=\"52\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"595.0\" y=\"252.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">valores dados na hora do plan</text><text x=\"595.0\" y=\"271.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">-var-file=maintenance.tfvars</text></svg>", "caption": "Uma varredura da configuração lê arquivos e regras. A conta, o state e os valores que chegam na hora do plan ficam fora do que ela lê.", "same": ["scanner"]}
 ```
 
-Tire o arquivo e coloque a mesma regra onde a aula 1 a colocou, digitada à mão de outra máquina. Agora
-a AWS tem a porta 22 aberta:
+Tire o arquivo, com `mv ssh.tf ..`, e coloque a mesma regra onde a aula 1 a colocou, digitada à mão
+de outra máquina. Estes foram os comandos do colega; o primeiro descobre o id do grupo `web` e o
+guarda em `SG`:
+
+```sh
+SG=$(aws ec2 describe-security-groups --filters Name=group-name,Values=web --query 'SecurityGroups[0].GroupId' --output text)
+aws ec2 authorize-security-group-ingress --group-id "$SG" --protocol tcp --port 22 --cidr 0.0.0.0/0
+```
+
+Agora a AWS tem a porta 22 aberta:
 
 ```
 ana@laptop:~/shop$ aws ec2 describe-security-groups --filters Name=group-name,Values=web --query "SecurityGroups[0].IpPermissions[].[IpProtocol,FromPort,IpRanges[0].CidrIp]" --output text
@@ -162,3 +186,12 @@ de um arquivo `.tfvars` ou de uma variável de ambiente (a seção 07 desta aula
 sabe se a porta 22 é alcançável, o que depende de rotas e sub-redes que ela talvez não veja. E não sabe
 se alguém precisa da regra. Um achado é um fato sobre o texto. Se ele importa continua sendo um
 julgamento, e a seção 08 é sobre fazê-lo.
+
+Antes da próxima seção, o arquivo vence, como na aula 7. A Ana remove a regra feita à mão, traz o
+`ssh.tf` de volta e faz o commit dele como *ssh for maintenance*:
+
+```sh
+aws ec2 revoke-security-group-ingress --group-id "$SG" --protocol tcp --port 22 --cidr 0.0.0.0/0
+mv ../ssh.tf .
+git add ssh.tf && git commit -qm "ssh for maintenance"
+```

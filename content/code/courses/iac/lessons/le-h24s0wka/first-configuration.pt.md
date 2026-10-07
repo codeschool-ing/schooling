@@ -1,6 +1,6 @@
 ---
 title: Uma configuração é um diretório
-version: 1
+version: 2
 ---
 
 A aula 1 mostrou um arquivo de Terraform e pediu que você confiasse nele. Esta aula o desmonta e
@@ -14,8 +14,8 @@ dentro deles também não: mover a VPC para um arquivo chamado `zzz.tf` não mud
 Subdiretórios não são lidos. Um diretório abaixo deste é uma configuração à parte, que a aula 10
 transforma em módulo.
 
-A rede da Ana começa com dois arquivos. O primeiro diz do que a configuração precisa antes de
-poder rodar:
+A rede da Ana começa com dois arquivos num diretório novo, `~/shop`. O primeiro, `versions.tf`, diz
+do que a configuração precisa antes de poder rodar:
 
 ```hcl
 terraform {
@@ -37,7 +37,7 @@ diz de onde o plugin vem: `hashicorp/aws` é a forma curta de `registry.terrafor
 E `version` limita quais versões são aceitáveis; `~> 6.0` quer dizer qualquer 6.x e nada do 7 em
 diante, o que a seção sobre providers desmonta.
 
-O segundo arquivo é a rede:
+O segundo arquivo, `main.tf`, é a rede:
 
 ```hcl
 provider "aws" {
@@ -56,7 +56,7 @@ resource "aws_vpc" "shop" {
 **Um bloco `provider` configura um plugin; um bloco `resource` pede que uma coisa exista.** O bloco
 do provider aqui define um argumento só, a região. As credenciais não estão nele, e não devem
 estar nunca: o provider da AWS as procura onde o AWS CLI procura, e neste laboratório isso são as
-quatro variáveis `AWS_` que a aula 1 seção 08 mostrou, que também o apontam para o moto. É por isso
+quatro variáveis `AWS_` que o `iac-env.sh` da aula 1 define, que também o apontam para o moto. É por isso
 que este arquivo funcionaria sem mudança numa conta real.
 
 O bloco de recurso leva dois rótulos. `aws_vpc` é o **tipo**, definido pelo provider, e `shop` é o

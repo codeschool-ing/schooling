@@ -1,6 +1,6 @@
 ---
 title: "Workspaces: one directory, a state per name"
-version: 1
+version: 2
 ---
 
 A **workspace** is a named state for one configuration. The directory, the files and the backend
@@ -55,7 +55,9 @@ index e140d1e..c309bff 100644
  }
 ```
 
-Then each environment is applied in its own workspace, with its own values:
+Ana commits that change, `git commit -qam "name things after the workspace"`, so that the next
+`git diff` shows only what comes after it. Then each environment is applied in its own workspace,
+with its own values:
 
 ```
 ana@laptop:~/shop$ terraform workspace select dev

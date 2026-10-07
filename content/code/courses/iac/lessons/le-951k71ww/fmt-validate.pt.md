@@ -1,6 +1,6 @@
 ---
 title: fmt e validate, as duas verificações que não custam nada
-version: 1
+version: 2
 ---
 
 Os dois primeiros degraus são comandos que você já conhece, e a aula 3 mostrou o `validate`
@@ -65,15 +65,20 @@ ana@laptop:~/shop/modules/network$ terraform validate
 ```
 
 Então um pipeline roda `terraform init` antes, e, quando a configuração tem um backend remoto,
-`terraform init -backend=false`, que instala providers e módulos sem tocar no state. Depois disso,
-o mesmo comando responde:
+`terraform init -backend=false`, que instala providers e módulos sem tocar no state. A Ana roda
+`terraform init`, e o mesmo comando responde:
 
 ```
 ana@laptop:~/shop/modules/network$ terraform validate
 Success! The configuration is valid.
 ```
 
-Eis o que ele pega. A Ana digita errado um argumento da VPC:
+Eis o que ele pega. A Ana digita errado um argumento da VPC, `cidr_blocks` em vez de `cidr_block`.
+Para cometer o mesmo deslize na sua cópia do `main.tf`:
+
+```sh
+sed -i 's/^  cidr_block           = var.cidr/  cidr_blocks          = var.cidr/' main.tf
+```
 
 ```
 ana@laptop:~/shop/modules/network$ terraform validate
@@ -90,7 +95,11 @@ ana@laptop:~/shop/modules/network$ terraform validate
 
 O schema do provider não tem `cidr_blocks` em `aws_vpc`, e o Terraform sugere o nome mais próximo
 que tem. Uma referência com erro de digitação, um argumento do tipo errado e um bloco no lugar
-errado são recusados do mesmo jeito, com o arquivo e a linha.
+errado são recusados do mesmo jeito, com o arquivo e a linha. A Ana corrige o nome antes de seguir:
+
+```sh
+sed -i 's/^  cidr_blocks          = var.cidr/  cidr_block           = var.cidr/' main.tf
+```
 
 **Repare no que o `validate` não pediu.** O módulo tem três variáveis e nenhuma tem default. Um plan
 pediria as três, e num pipeline, sem ninguém para responder, pararia. O `validate` imprimiu
