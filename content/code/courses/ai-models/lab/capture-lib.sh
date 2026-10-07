@@ -53,3 +53,17 @@ relay_up() {
   for _ in $(seq 25); do curl -s -o /dev/null http://127.0.0.1:8500/ && return 0; sleep 0.2; done
 }
 relay_down() { lab exec ana 'kill $(cat relay.pid) 2>/dev/null; rm -f relay.pid' < /dev/null; sleep 0.3; }
+
+# session: several commands typed in ONE terminal, so that what the first sets
+# (an export, a cd) holds for the rest; each is printed with its prompt, then
+# run. The commands come one per line on stdin.
+session() {
+  local script
+  script=$($AUTHOR/bin/python -c '
+import shlex, sys
+for line in sys.stdin.read().splitlines():
+    if line.strip():
+        print("printf \"%s\\n\" " + shlex.quote("ana@desk:~/desk$ " + line))
+        print(line + " 2>&1")')
+  lab exec ana "$script" < /dev/null
+}

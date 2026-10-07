@@ -29,64 +29,67 @@ idênticas podem ser servidas por dois provedores diferentes**. A seção 05 da 
 precisão que um host serve é escolha dele; aqui o host é escolhido a cada requisição, por outra
 pessoa.
 
-O `lab/or_sort.py` classifica um dos casos da ana pelo substituto e imprime quem serviu. O único
-argumento dele é JSON extra para o corpo da requisição:
+O `or_sort.py` classifica um dos casos da ana pelo OpenRouter e imprime qual modelo e qual provedor
+responderam. O único argumento dele é um JSON extra para o corpo da requisição, que é onde o
+roteamento é pedido. Duas configurações o apontam para outro lugar: `OPENROUTER_BASE_URL` para o
+relay, e `MODEL` para um modelo que o Ollama tem:
 
 ```python
 import json
 import os
 import sys
 
-from openai import OpenAI, APIStatusError
+from openai import OpenAI
 
-client = OpenAI(base_url=os.environ["OPENROUTER_BASE_URL"], api_key=os.environ["OPENROUTER_API_KEY"])
+# OpenRouter's address and your key; without them, the relay passes the request to Ollama
+client = OpenAI(base_url=os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+                api_key=os.environ.get("OPENROUTER_API_KEY", "none"))
+model = os.environ.get("MODEL", "meta-llama/llama-3.3-70b-instruct")
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
 # the request's extra fields, as JSON on the command line: {"provider": {...}} or {"models": [...]}
 extra = json.loads(sys.argv[1]) if len(sys.argv) > 1 else {}
-try:
-    r = client.chat.completions.create(
-        model="standin/large", extra_body=extra,
-        messages=[{"role": "system", "content": prompt}, {"role": "user", "content": case["text"]}])
-except APIStatusError as e:
-    sys.exit(f"{e.status_code}: {e.body['message']}")
-print(f"{r.choices[0].message.content:6} model={r.model} provider={r.provider} cost=${r.usage.cost:.6f}")
+r = client.chat.completions.create(model=model, extra_body=extra, messages=[
+    {"role": "system", "content": prompt}, {"role": "user", "content": case["text"]}])
+print(r.choices[0].message.content, f"model={r.model}", f"provider={getattr(r, 'provider', None)}")
 ```
 
-O `standin/large` do substituto é servido por dois provedores, `standin-east` e `standin-west`, ao
-mesmo preço. Ele não balanceia carga; tenta os dois em ordem, o que deixa visível o efeito de cada
-ajuste:
+Aqui ele pede a DeepInfra primeiro, depois a Together, e **nenhum recurso a mais ninguém**:
 
 ```
-ana@desk:~/desk$ python lab/or_sort.py
-other  model=standin/large provider=standin-east cost=$0.000168
+ana@desk:~/desk$ export OPENROUTER_BASE_URL=http://127.0.0.1:8500/v1 MODEL=llama3.2:3b
+ana@desk:~/desk$ python or_sort.py '{"provider": {"order": ["deepinfra", "together"], "allow_fallbacks": false}}'
+other. model=llama3.2:3b provider=None
+ana@desk:~/desk$ python relay.py show --body | grep -A6 '"provider"'
+  "provider": {
+    "order": [
+      "deepinfra",
+      "together"
+    ],
+    "allow_fallbacks": false
+  }
 ```
 
-```
-ana@desk:~/desk$ python lab/or_sort.py '{"provider": {"order": ["standin-west"]}}'
-other  model=standin/large provider=standin-west cost=$0.000168
-```
-
-`provider.order` diz quem tentar primeiro. Agora o `standin-east` cai (o lab é avisado disso; no
-mundo, um provedor simplesmente falha), e as mesmas duas requisições rodam de novo, a segunda com os
-fallbacks desligados:
+A resposta voltou, e **`provider=None` é a descoberta**. O Ollama não tem campo `provider` na API
+dele, então ignorou o objeto e respondeu com o modelo que foi pedido, sem dizer nada; o relay mostra
+que o objeto foi mandado. O OpenRouter o lê, e a documentação dele diz o que faz com ele:
 
 ```
-ana@desk:~/desk$ python lab/or_sort.py
-other  model=standin/large provider=standin-west cost=$0.000168
+# OpenRouterTeam/docs@3e840a21 guides/routing/provider-selection.mdx
+  30: | `allow_fallbacks` | boolean | `true` | Whether to allow backup providers when the
+      primary is unavailable. [Learn more](#disabling-fallbacks) |
+ 944: Here's an example with `allow_fallbacks` set to `false` that skips over OpenAI (which
+      doesn't host Mixtral), tries Together, and then fails if Together fails:
 ```
 
-```
-ana@desk:~/desk$ python lab/or_sort.py '{"provider": {"order": ["standin-east"], "allow_fallbacks": false}}'
-503: No allowed providers are available for the selected model. standin/large at standin-east: 503
-```
-
-Com fallbacks permitidos, a queda não custou à ana nada que ela pudesse ver: a requisição foi para o
-outro provedor e a resposta voltou. Com `allow_fallbacks: false` a requisição **falha em vez de
-mudar**. Qual das duas ela quer depende da decisão da seção 10 da aula 5: se a avaliação foi feita
-contra o modelo servido por um provedor, outro provedor é outro candidato, e falhar pode ser o
+Então, no OpenRouter, a mesma requisição vai para a DeepInfra, ou para a Together se a DeepInfra não
+puder atendê-la, e **falha em vez de seguir adiante** com `allow_fallbacks: false`. Qual dos dois a
+ana quer depende da decisão da seção 10 da aula 5: se a avaliação rodou contra o serviço de um
+provedor para o modelo, um provedor diferente é um candidato diferente, e falhar pode ser o
 resultado honesto.
 
-**Registre o provedor junto de cada resposta.** A resposta diz qual foi, e uma avaliação ou um
-incidente que não sabe que provedor respondeu não pode ser repetido.
+**Registre o provedor com cada resposta.** A resposta do OpenRouter o nomeia, e uma avaliação ou um
+incidente que não sabe qual provedor respondeu não pode ser repetido. Um servidor que não conhece o
+campo, como o Ollama aqui, responde sem ele, e é por isso que o `or_sort.py` imprime `None` em vez
+de supor.

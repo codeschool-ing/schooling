@@ -19,23 +19,25 @@ object has a field for that, and its default deserves to be read slowly:
 
 **By default, a provider that stores what it is sent and may train on it is allowed.** The tag
 OpenRouter shows is, by its own description, not definitive. For Lantern Books, whose e-mails carry
-customers' names and addresses, `"deny"` is the setting to start from. The stand-in marks
-`standin-east` as a provider that keeps data:
+customers' names and addresses, `"deny"` is the setting to start from, and it is one more field in
+the request:
 
 ```
-ana@desk:~/desk$ python lab/or_sort.py '{"provider": {"data_collection": "deny"}}'
-other  model=standin/large provider=standin-west cost=$0.000168
+ana@desk:~/desk$ export OPENROUTER_BASE_URL=http://127.0.0.1:8500/v1 MODEL=llama3.2:3b
+ana@desk:~/desk$ python or_sort.py '{"provider": {"data_collection": "deny"}}'
+other model=llama3.2:3b provider=None
+ana@desk:~/desk$ python relay.py show --body | grep -A2 '"provider"'
+  "provider": {
+    "data_collection": "deny"
+  }
 ```
 
-```
-ana@desk:~/desk$ python lab/or_sort.py '{"models": ["standin/small"], "provider": {"data_collection": "deny"}}'
-503: No allowed providers are available for the selected model. standin/small at standin-east: stores data
-```
-
-The first request skipped `standin-east` and was served by `standin-west`. The second asked for a
-model whose only provider keeps data, and **the request failed rather than send the e-mail there**,
-which is the behaviour to want: a privacy setting that quietly falls back to the provider it was
-meant to exclude would be no setting at all.
+What the field changes happens on OpenRouter's side: a provider that keeps data is skipped, and if
+every provider of the model keeps data, there is nobody left to send to. That is the behaviour to
+want: a privacy setting that quietly fell back to the provider it was meant to exclude would be no
+setting at all. And it is the setting a server that does not know it ignores most quietly of all,
+as Ollama did with `provider` in section 03, so **a privacy field is checked against the service it
+is sent to**, never assumed from the request.
 
 The same documentation lists stricter controls beside it: `zdr`, to use only endpoints with zero
 data retention, `only` and `ignore`, to name providers, and `quantizations`, to refuse a host
