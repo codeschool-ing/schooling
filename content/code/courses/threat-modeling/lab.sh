@@ -85,6 +85,8 @@ reset() {
   commit '2026-09-22 10:00' 'Estimate the expected loss of the larger risks'
   add fair.py matrix.py
   commit '2026-09-24 15:00' 'Simulate the ranges, and compare with a matrix'
+  add controls.csv prioritise.py
+  commit '2026-09-29 11:00' 'Rank the controls by what they save'
 }
 
 case ${1:-} in
