@@ -459,7 +459,7 @@ def l03_mechanisms(lang):
                 fig.rect(x0 + 120, y, 60, 22, stroke='--amber', fill='--scan', rx=2, dash='4 3')
                 fig.text(x0 + 150, y + 11, str(minutes[i]), size=11, mono=True, fill='--paper-dim')
             else:
-                fig.rect(x0 + 120, y, 60, 22, stroke='--phosphor', fill='--phosphor-dim', rx=2)
+                fig.rect(x0 + 120, y, 60, 22, stroke='--phosphor', fill='--panel', rx=2)
                 fig.text(x0 + 150, y + 11, str(minutes[i]), size=11, mono=True)
     fig.text(360, 338, T['note'], size=10, fill='--paper-dim')
     cap = {'en': 'The same blanks can come from three mechanisms. Only the first two leave a trace in the '
