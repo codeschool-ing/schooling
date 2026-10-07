@@ -1,0 +1,588 @@
+{
+  "ex-q7r4nx7q": {
+    "prompt": "Ligue cada lugar onde o dado está ao que o protege ali.",
+    "hint": "Um deles nem é criptografia.",
+    "pairs": [
+      {
+        "left": "na rede",
+        "right": "TLS"
+      },
+      {
+        "left": "nos arquivos de dados",
+        "right": "criptografia de volume"
+      },
+      {
+        "left": "num arquivo de backup",
+        "right": "cifrar o arquivo"
+      },
+      {
+        "left": "dentro do banco em execução",
+        "right": "permissões e políticas"
+      }
+    ]
+  },
+  "ex-zpgz6ssv": {
+    "prompt": "Uma analista com a concessão errada roda `SELECT cpf FROM sales.customers` num servidor de disco cifrado e conexões com TLS. O que ela recebe?",
+    "hint": "Onde termina cada tipo de criptografia?",
+    "choices": [
+      {
+        "text": "Texto cifrado, porque o disco é cifrado",
+        "why": "Não. A criptografia do disco termina quando o sistema operacional lê o bloco."
+      },
+      {
+        "text": "Todos os CPFs em claro",
+        "why": "Isso. As duas camadas terminam antes de um SELECT; só as concessões a teriam barrado."
+      },
+      {
+        "text": "Um erro, porque o TLS recusa colunas sensíveis",
+        "why": "Não. O TLS cifra a conexão; não sabe nada de colunas."
+      },
+      {
+        "text": "Os CPFs, cifrados com a chave da sessão dela",
+        "why": "Não. Ela os recebe cifrados no fio e decifrados pelo próprio cliente."
+      }
+    ]
+  },
+  "ex-1q2ps5jc": {
+    "prompt": "Dado guardado em arquivos, backups e exportações está em ___; dado se movendo entre cliente e servidor está em trânsito.",
+    "hint": "O contrário de se mover.",
+    "blanks": [
+      {
+        "accept": [
+          "repouso"
+        ]
+      }
+    ]
+  },
+  "ex-4wbr83xn": {
+    "prompt": "O que há de errado com o certificado snakeoil que o Ubuntu instala?",
+    "hint": "Leia o emissor.",
+    "choices": [
+      {
+        "text": "Usa uma cifra fraca",
+        "why": "Não. A sessão negociou TLS 1.3 com AES-256-GCM."
+      },
+      {
+        "text": "Cifra só a troca de senha",
+        "why": "Não. Cifra a conexão inteira."
+      },
+      {
+        "text": "É autoassinado",
+        "why": "Isso. Emitido para localhost por localhost, não há contra o que um cliente o confira."
+      },
+      {
+        "text": "Expira no dia em que o cluster é criado",
+        "why": "Não. Nada na captura mostra problema de validade."
+      }
+    ]
+  },
+  "ex-3t74dpw4": {
+    "prompt": "Uma conexão é cifrada com TLS, mas o cliente não confere o certificado. O que alguém no meio do caminho ainda consegue fazer?",
+    "hint": "Criptografia mantém o ouvinte do lado de fora. Com quem o cliente está falando?",
+    "choices": [
+      {
+        "text": "Usar chave própria e ler o tráfego",
+        "why": "Isso. O cliente cifra de bom grado, para a parte errada, e as consultas e resultados são dela."
+      },
+      {
+        "text": "Nada, porque o tráfego está cifrado",
+        "why": "Não. Está cifrado para quem respondeu, e ninguém conferiu quem era."
+      },
+      {
+        "text": "Ler só a senha, que o SCRAM envia primeiro",
+        "why": "Não. O SCRAM nunca envia a senha; o risco são as consultas e as linhas."
+      },
+      {
+        "text": "Deixar a conexão lenta, nada mais",
+        "why": "Não. Interceptar é pior que atrasar."
+      }
+    ]
+  },
+  "ex-ryskr6p8": {
+    "prompt": "Ordene estes valores de sslmode do que confere menos ao que confere mais.",
+    "hint": "O último confere também o nome do host.",
+    "items": [
+      "disable",
+      "prefer",
+      "require",
+      "verify-ca",
+      "verify-full"
+    ]
+  },
+  "ex-9ye3n02d": {
+    "prompt": "Por que `prefer`, o padrão, é inseguro contra quem consegue interferir na conexão?",
+    "hint": "A aula 1 viu cada senha errada ser recusada duas vezes.",
+    "choices": [
+      {
+        "text": "Cifra com um protocolo mais antigo",
+        "why": "Não. Quando cifra, negocia o mesmo TLS que require."
+      },
+      {
+        "text": "Envia a senha em claro primeiro",
+        "why": "Não. Com SCRAM a senha nunca é enviada."
+      },
+      {
+        "text": "Volta para texto claro em silêncio",
+        "why": "Isso. Fazer a primeira tentativa falhar de propósito entrega uma segunda em texto claro."
+      },
+      {
+        "text": "Confia em toda CA do sistema operacional",
+        "why": "Não. prefer não confere certificado nenhum."
+      }
+    ]
+  },
+  "ex-cfeeg3p8": {
+    "prompt": "Com `sslmode=disable`, o Bruno conectou e o `pg_stat_ssl` mostrou `f`. O que tornou isso possível?",
+    "hint": "Que lado recusa texto claro?",
+    "choices": [
+      {
+        "text": "O certificado snakeoil era inválido",
+        "why": "Não. Certificado nenhum é consultado numa conexão em texto claro."
+      },
+      {
+        "text": "Uma linha host no pg_hba.conf bateu com ela",
+        "why": "Isso. host bate com ou sem TLS; hostssl não bateria."
+      },
+      {
+        "text": "Bruno é analista e analistas são isentos",
+        "why": "Não. O pg_hba.conf não tem noção de cargo."
+      },
+      {
+        "text": "O servidor estava com o ssl desligado naquela hora",
+        "why": "Não. O SHOW ssl disse on."
+      }
+    ]
+  },
+  "ex-s4w1mgp6": {
+    "prompt": "`verify-full` recusou uma conexão a `127.0.0.1` com um certificado válido, assinado pela raiz confiável. Por que essa recusa é útil?",
+    "hint": "Quanto valeria o certificado de outra máquina se os nomes não fossem conferidos?",
+    "choices": [
+      {
+        "text": "Obriga os clientes a usar DNS, que é mais rápido",
+        "why": "Não. Velocidade não é a questão."
+      },
+      {
+        "text": "Mostra que o certificado expirou",
+        "why": "Não. O certificado era válido; o nome não batia."
+      },
+      {
+        "text": "Endereços IP não podem aparecer em certificados",
+        "why": "Não. Podem, no SAN; este só carrega um nome DNS."
+      },
+      {
+        "text": "Barra certificado emitido para outro host",
+        "why": "Isso. Descer para verify-ca para passar remove exatamente essa proteção."
+      }
+    ]
+  },
+  "ex-kvqnf4w0": {
+    "prompt": "Quais destes o `verify-full` conferiu antes de a conexão do Bruno ser aceita? Marque todos que se aplicam.",
+    "hint": "Duas verificações, uma sobre a assinatura, outra sobre o nome.",
+    "choices": [
+      {
+        "text": "Que o certificado foi assinado pela raiz do root.crt",
+        "why": "Sim. Essa é a metade da CA."
+      },
+      {
+        "text": "Que ele foi emitido para db.ipe.example",
+        "why": "Sim. Essa é a metade full, contra o SAN."
+      },
+      {
+        "text": "Que a senha do Bruno batia",
+        "why": "Não. Isso é autenticação, feita pelo SCRAM depois do TLS."
+      },
+      {
+        "text": "Que o arquivo da chave privada do servidor tem modo 600",
+        "why": "Não. O cliente não enxerga os arquivos do servidor."
+      }
+    ]
+  },
+  "ex-wz57c27c": {
+    "prompt": "Onde a libpq procura, por padrão, as autoridades certificadoras em que o `verify-full` confia?",
+    "hint": "A mensagem de erro nomeou o arquivo.",
+    "choices": [
+      {
+        "text": "/etc/ssl/certs, o repositório do sistema",
+        "why": "Não. Isso é o que sslrootcert=system pede; o padrão é um arquivo no home do usuário."
+      },
+      {
+        "text": "~/.postgresql/root.crt",
+        "why": "Isso. Ana copiou a raiz do laboratório para lá."
+      },
+      {
+        "text": "~/.pgpass, junto com as senhas",
+        "why": "Não. O ~/.pgpass guarda senhas e mais nada."
+      },
+      {
+        "text": "O servidor a envia ao conectar",
+        "why": "Não. Uma CA enviada pelo servidor seria confiar na palavra do próprio servidor."
+      }
+    ]
+  },
+  "ex-nwfgxhf9": {
+    "prompt": "Depois da linha `hostnossl … reject`, o que ainda depende de cada cliente e não do servidor?",
+    "hint": "O servidor exige criptografia. O que ele não consegue exigir?",
+    "choices": [
+      {
+        "text": "Conferir o certificado do servidor a que conecta",
+        "why": "Isso. Um cliente com sslmode=require satisfaz o hostssl e confia em qualquer certificado."
+      },
+      {
+        "text": "Se a conexão é cifrada ou não, afinal",
+        "why": "Não. Isso agora é decisão do servidor."
+      },
+      {
+        "text": "Qual versão de TLS é usada",
+        "why": "Não. ssl_min_protocol_version é definido no servidor."
+      },
+      {
+        "text": "Qual método de autenticação vale",
+        "why": "Não. O pg_hba.conf, no servidor, escolhe o método."
+      }
+    ]
+  },
+  "ex-73dh833g": {
+    "prompt": "Ligue cada tipo de conexão do pg_hba.conf ao que ele casa.",
+    "hint": "Um deles é o socket.",
+    "pairs": [
+      {
+        "left": "local",
+        "right": "o socket Unix"
+      },
+      {
+        "left": "host",
+        "right": "TCP, com ou sem TLS"
+      },
+      {
+        "left": "hostssl",
+        "right": "TCP só com TLS"
+      },
+      {
+        "left": "hostnossl",
+        "right": "TCP só sem TLS"
+      }
+    ]
+  },
+  "ex-q65nrc2g": {
+    "prompt": "Com o método `cert`, como o PostgreSQL decide a que papel o certificado pertence?",
+    "hint": "Veja o subject que a Ana escreveu no pedido.",
+    "choices": [
+      {
+        "text": "Pelo nome do arquivo etl_loader.crt",
+        "why": "Não. Nomes de arquivo nunca chegam ao servidor."
+      },
+      {
+        "text": "Por uma senha guardada no certificado",
+        "why": "Não. Um certificado leva uma chave pública, não uma senha."
+      },
+      {
+        "text": "O CN dele precisa ser igual ao papel",
+        "why": "Isso. CN=etl_loader, user=etl_loader."
+      },
+      {
+        "text": "Pelo endereço IP do cliente",
+        "why": "Não. O endereço escolhe a linha do pg_hba.conf, não o papel."
+      }
+    ]
+  },
+  "ex-ha9ccvj6": {
+    "prompt": "O `~/.pgpass` da Ana ainda guarda a senha antiga do `etl_loader`, e mesmo assim conectar sem o certificado é recusado. Por quê?",
+    "hint": "Que método a linha que bate nomeia?",
+    "choices": [
+      {
+        "text": "A senha foi revogada quando o certificado foi emitido",
+        "why": "Não. Emitir certificado não muda nada na senha do papel."
+      },
+      {
+        "text": "A primeira linha que bate para etl_loader diz cert, não senha",
+        "why": "Isso. Para esse papel o método não é mais senha, tenha o arquivo o que tiver."
+      },
+      {
+        "text": "A libpq ignora o .pgpass quando o sslmode é verify-full",
+        "why": "Não. Ela lê; o servidor é que não pede senha."
+      },
+      {
+        "text": "O certificado expirou",
+        "why": "Não. Ele foi emitido para noventa dias momentos antes."
+      }
+    ]
+  },
+  "ex-nfwxpc1n": {
+    "prompt": "Por que a chave privada é gerada na máquina que vai usá-la, e só o pedido vai à CA?",
+    "hint": "Qual metade precisa ficar secreta?",
+    "choices": [
+      {
+        "text": "Porque a CA não sabe gerar chaves",
+        "why": "Não. Uma CA saberia; não deveria."
+      },
+      {
+        "text": "Para o certificado valer por mais tempo",
+        "why": "Não. A validade é definida pela CA ao assinar."
+      },
+      {
+        "text": "Para a metade secreta nunca viajar",
+        "why": "Isso. O pedido leva só a chave pública."
+      },
+      {
+        "text": "Porque o OpenSSL se recusa a assinar chave de outra máquina",
+        "why": "Não. O OpenSSL assina qualquer pedido válido."
+      }
+    ]
+  },
+  "ex-h3ekckq5": {
+    "prompt": "Por quantos dias o certificado do `etl_loader` foi emitido?",
+    "hint": "A opção -days."
+  },
+  "ex-gg2414z3": {
+    "prompt": "Por que a Ana rodou `CHECKPOINT` antes de procurar um e-mail no arquivo da tabela?",
+    "hint": "Onde mora uma página alterada até lá?",
+    "choices": [
+      {
+        "text": "As páginas chegam ao arquivo no checkpoint",
+        "why": "Isso. Até lá elas podem ficar na memória."
+      },
+      {
+        "text": "CHECKPOINT decifra o arquivo para leitura",
+        "why": "Não. Não há nada cifrado ali para decifrar."
+      },
+      {
+        "text": "O grep não lê um arquivo que o PostgreSQL está usando",
+        "why": "Não. O grep lê; a questão é se os bytes já estão lá."
+      },
+      {
+        "text": "Para comprimir a tabela antes",
+        "why": "Não. Checkpoint não comprime nada."
+      }
+    ]
+  },
+  "ex-wh2s4nkx": {
+    "prompt": "No cabeçalho LUKS, o keyslot usa `argon2id`. Para que serve a frase-senha?",
+    "hint": "Não é a chave que cifra o disco.",
+    "choices": [
+      {
+        "text": "É a própria chave AES",
+        "why": "Não. A chave do volume é separada e fica num slot."
+      },
+      {
+        "text": "Dá nome ao dispositivo em /dev/mapper",
+        "why": "Não. O nome é escolhido ao abrir o volume."
+      },
+      {
+        "text": "Define o tamanho do volume",
+        "why": "Não. O tamanho vem do dispositivo."
+      },
+      {
+        "text": "Abre o slot da chave",
+        "why": "Isso. O slot guarda a chave real do volume; vários slots abrem o volume, e um sai sem recifrar nada."
+      }
+    ]
+  },
+  "ex-edfnbq54": {
+    "prompt": "Um volume na nuvem é cifrado em repouso, e a chave fica num arquivo nesse mesmo volume. Contra o que a criptografia protege?",
+    "hint": "O que leva junto quem leva o volume?",
+    "choices": [
+      {
+        "text": "Um snapshot roubado do volume",
+        "why": "Não. Quem tem o snapshot tem a chave, que está nele."
+      },
+      {
+        "text": "Nada que importe",
+        "why": "Isso. Toda camada termina numa chave, e uma chave ao lado do dado não protege de ninguém."
+      },
+      {
+        "text": "Quem loga no banco",
+        "why": "Não. Criptografia de volume nunca protege deles."
+      },
+      {
+        "text": "Quem escuta a rede",
+        "why": "Não. Isso é trabalho do TLS."
+      }
+    ]
+  },
+  "ex-a3z7kkvc": {
+    "prompt": "O diretório de dados está num volume cifrado. Quais destas cópias continuam em texto claro, a menos que cifradas à parte? Marque todos que se aplicam.",
+    "hint": "Quais cópias saem do volume?",
+    "choices": [
+      {
+        "text": "Um arquivo do pg_dump num servidor de backup",
+        "why": "Sim. O dump mostrou a linha da Paula em claro."
+      },
+      {
+        "text": "Uma exportação CSV escrita para outro time",
+        "why": "Sim. É um arquivo novo fora do volume."
+      },
+      {
+        "text": "Arquivos temporários de ordenação no diretório de dados",
+        "why": "Não. Ficam no diretório de dados, no volume cifrado."
+      },
+      {
+        "text": "O log do servidor noutro disco",
+        "why": "Sim. Um log carrega valores, e mora onde mora."
+      }
+    ]
+  },
+  "ex-eswr8t71": {
+    "prompt": "Contra o que a criptografia de volume protege, por completo e barato?",
+    "hint": "Uma ameaça, e só uma.",
+    "choices": [
+      {
+        "text": "Analistas com concessões demais",
+        "why": "Não. Eles leem pelo banco, que lê texto claro."
+      },
+      {
+        "text": "Um backup copiado para o bucket errado",
+        "why": "Não. O backup é um arquivo novo fora do volume."
+      },
+      {
+        "text": "Um disco que sai do seu controle",
+        "why": "Isso. Hardware roubado, um disco mandado para conserto, um snapshot copiado para fora."
+      },
+      {
+        "text": "Um superusuário que roda SELECT",
+        "why": "Não. O superusuário lê texto claro como todo mundo com login."
+      }
+    ]
+  },
+  "ex-5xcj0sq8": {
+    "prompt": "Ana decifrou um CPF com `pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026')` com o log de comandos ligado. O que o log passou a guardar?",
+    "hint": "O comando viajou como texto.",
+    "choices": [
+      {
+        "text": "O CPF, decifrado",
+        "why": "Não. O comando entra no log, não o resultado."
+      },
+      {
+        "text": "Só o hash da chave",
+        "why": "Não. O comando entra no log como foi escrito."
+      },
+      {
+        "text": "Nada, porque o pgcrypto mascara os argumentos",
+        "why": "Não. O grep achou a chave."
+      },
+      {
+        "text": "A chave, em claro, dentro do texto da consulta",
+        "why": "Isso. Uma chave que viaja no SQL vai parar onde o SQL é registrado."
+      }
+    ]
+  },
+  "ex-rhdbge5h": {
+    "prompt": "Contra quem cifrar uma coluna dentro do banco, com o pgcrypto, não dá proteção nenhuma?",
+    "hint": "Quem vê a chave quando ela é usada?",
+    "choices": [
+      {
+        "text": "Os administradores do banco e os logs dele",
+        "why": "Isso. A chave passa pelo servidor toda vez que ele decifra."
+      },
+      {
+        "text": "Alguém com um backup roubado sem a chave",
+        "why": "Não. É exatamente contra ele que protege."
+      },
+      {
+        "text": "Alguém lendo uma réplica sem a chave",
+        "why": "Não. A réplica também guarda texto cifrado."
+      },
+      {
+        "text": "Um analista com SELECT em cpf_enc mas sem a chave",
+        "why": "Não. Sem a chave a coluna é texto cifrado para ele."
+      }
+    ]
+  },
+  "ex-cm9nmzhh": {
+    "prompt": "Por que `pgp_sym_encrypt` dá dois textos cifrados diferentes para dois CPFs iguais?",
+    "hint": "Algo aleatório entra a cada vez.",
+    "choices": [
+      {
+        "text": "Ele cifra o customer_id junto com o CPF",
+        "why": "Não. Só o CPF é cifrado."
+      },
+      {
+        "text": "Um sal aleatório entra em cada mensagem",
+        "why": "Isso. Textos claros iguais não se revelam iguais."
+      },
+      {
+        "text": "A chave muda a cada linha",
+        "why": "Não. A frase-senha foi a mesma para os 6.012."
+      },
+      {
+        "text": "Porque o segundo é comprimido",
+        "why": "Não. Compressão não é o que os diferencia."
+      }
+    ]
+  },
+  "ex-7xxj7bpv": {
+    "prompt": "Por que criptografia na aplicação é errada como padrão para toda coluna?",
+    "hint": "O que o banco deixa de conseguir fazer com o valor?",
+    "choices": [
+      {
+        "text": "É mais fraca que criptografia de disco",
+        "why": "Não. Protege contra mais gente, não menos."
+      },
+      {
+        "text": "Aplicações não podem ter chaves",
+        "why": "Não. A questão é de onde elas as tiram, que é a aula 4."
+      },
+      {
+        "text": "Buscar, ordenar e fazer join nela",
+        "why": "Isso. Só vale esse custo onde a ameaça é quem está dentro."
+      },
+      {
+        "text": "Dobra o tamanho de toda tabela",
+        "why": "Não. Tamanho não é o custo principal."
+      }
+    ]
+  },
+  "ex-cqt55jmy": {
+    "prompt": "Ligue cada camada à pessoa contra quem ela NÃO protege.",
+    "hint": "Onde cada uma termina?",
+    "pairs": [
+      {
+        "left": "TLS com verify-full",
+        "right": "qualquer um nas pontas"
+      },
+      {
+        "left": "criptografia de volume",
+        "right": "todo leitor com login"
+      },
+      {
+        "left": "criptografia de coluna no banco",
+        "right": "os administradores do banco"
+      },
+      {
+        "left": "criptografia na aplicação",
+        "right": "quem controla a aplicação"
+      }
+    ]
+  },
+  "ex-15kh8qjs": {
+    "prompt": "Uma ferramenta de BI conecta à Ipê com `sslmode=require`. O servidor tem `hostnossl … reject`. O que ainda falta?",
+    "hint": "Cifrado, sim. Para quem?",
+    "choices": [
+      {
+        "text": "Nada; require mais hostnossl é completo",
+        "why": "Não. Nenhum dos dois confere o certificado do servidor."
+      },
+      {
+        "text": "verify-full nas configurações da ferramenta",
+        "why": "Isso. Só o cliente pode exigir conferir com quem fala."
+      },
+      {
+        "text": "Um certificado de cliente para cada analista que usa a ferramenta",
+        "why": "Não. Isso prova o cliente; a lacuna é provar o servidor."
+      },
+      {
+        "text": "TLS 1.2 em vez de 1.3, por compatibilidade",
+        "why": "Não. Uma versão menor não acrescenta nada aqui."
+      }
+    ]
+  },
+  "ex-pqzxwqj2": {
+    "prompt": "Ponha em ordem os passos para passar o etl_loader de senha para certificado.",
+    "hint": "A chave primeiro, na própria máquina.",
+    "items": [
+      "Gerar uma chave e um pedido com CN=etl_loader",
+      "A CA assina o pedido",
+      "Uma linha hostssl para etl_loader com método cert",
+      "Conectar com sslcert e sslkey"
+    ]
+  }
+}
