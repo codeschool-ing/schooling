@@ -1,6 +1,6 @@
 ---
 title: Route leaks, and the two filters that stop them
-version: 1
+version: 2
 ---
 
 A **route leak** is an announcement that goes somewhere its policy says it should not. The commonest shape
@@ -71,7 +71,7 @@ Paths: (1 available, best #1, table default)
 ```
 
 **One path available, from `192.0.2.9`, ispa, over the cable between the providers.** Nothing from edge.
-ispb's configuration in `lab.sh` applies a route map to everything from its customer that permits
+ispb's configuration in `bgp.sh` applies a route map to everything from its customer that permits
 `203.0.113.0/24` and nothing else, the provider-side twin of edge's `TO-PROVIDER`. So the leak was caught
 by the second filter.
 
