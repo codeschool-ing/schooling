@@ -21,8 +21,8 @@ sudo apt-get install -y openssh-server slapd ldap-utils python3-pyftpdlib curl
 
 Um script sobe os três, cada um numa porta de `127.0.0.1`, com os certificados da aula 8 e a chave
 da Ana da aula 6. Ele roda como root porque sobe o `sshd`, cria um usuário `ana` para o servidor
-SSH aceitar, se a sua máquina não tiver um, e acrescenta dois nomes ao `/etc/hosts`. Numa máquina
-virtual, é esse o motivo inteiro para preferir uma:
+SSH aceitar, se a sua máquina não tiver um, e acrescenta dois nomes ao `/etc/hosts`. Essas três
+mudanças são o motivo de a aula 1 recomendar uma máquina virtual:
 
 ```sh
 #!/usr/bin/env bash

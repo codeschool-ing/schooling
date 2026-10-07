@@ -239,9 +239,9 @@ root.key
 root.pem
 ```
 
-Each certificate is a `.pem` file. A `.key` beside it is its private key, which is how the lab can
-start a server with that certificate in lesson 10; a `-chain.pem` is the certificate followed by the
-issuing CA's, which is what a server sends. `issuing1.crl` is lesson 9's revocation list.
+Each certificate is a `.pem` file. A `.key` beside it is its private key, which is how lesson 10
+can start a server with that certificate. A `-chain.pem` is the certificate followed by the issuing
+CA's, which is what a server sends. `issuing1.crl` is lesson 9's revocation list.
 
 ## What a certificate binds
 

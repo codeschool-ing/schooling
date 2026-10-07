@@ -7,10 +7,10 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset, which runs the commands of section
-# `the-lab` and writes the tools out of the lessons' own fences, in the home
-# of a user `ana` (LAB_HOME moves it), and prints each command after a
-# prompt, ana@lab:~/lab$, followed by what it printed.
+# It rebuilds ~/lab with `lab.sh reset le-m9cj97me`, which writes the tools
+# out of the lessons' own fences and runs the commands of section `the-lab`,
+# and stops there, in the home of a user `ana` (LAB_HOME moves it). It prints
+# each command after a prompt, ana@lab:~/lab$, followed by what it printed.
 #
 # The keys come from tools/drbg.py, which the lesson shows, and the IVs and
 # nonces are fixed in the commands below, both so that the transcripts
@@ -28,7 +28,7 @@ here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
 export LAB_HOME=${LAB_HOME:-/home/ana}
 export HOME=$LAB_HOME
-bash "$here/../../lab.sh" reset >/dev/null
+bash "$here/../../lab.sh" reset le-m9cj97me >/dev/null   # the lab at the end of lesson 1
 cd "$HOME/lab"
 # What the three lines section `the-lab` adds to ~/.bashrc do.
 export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv

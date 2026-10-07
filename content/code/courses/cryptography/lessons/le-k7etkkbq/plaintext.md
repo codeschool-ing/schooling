@@ -21,8 +21,8 @@ sudo apt-get install -y openssh-server slapd ldap-utils python3-pyftpdlib curl
 
 One script starts all three, each on its own port of `127.0.0.1`, with lesson 8's certificates and
 lesson 6's key for Ana. It runs as root because it starts `sshd`, creates a user `ana` for the SSH
-server to accept, if your machine has none, and adds two names to `/etc/hosts`. In a virtual machine
-that is the whole reason to prefer one:
+server to accept, if your machine has none, and adds two names to `/etc/hosts`. Those three changes
+are why lesson 1 recommends a virtual machine:
 
 ```sh
 #!/usr/bin/env bash

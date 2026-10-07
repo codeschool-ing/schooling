@@ -5,8 +5,8 @@ version: 1
 
 **Uma montagem que falha avisa, e quase sempre com palavras que dizem o conserto.** As cinco falhas
 abaixo são as comuns, e cada uma foi provocada de propósito na máquina em que estas aulas foram
-gravadas, então as mensagens são as de verdade. Leia a mensagem até o fim antes de tentar qualquer
-outra coisa.
+gravadas, então as mensagens são as de verdade. **Leia a mensagem até o fim antes de tentar qualquer
+outra coisa.**
 
 ## O ambiente virtual não é criado
 
@@ -103,8 +103,8 @@ ana@lab:~/lab$ sha256sum data/slots.dat; wc -c data/slots.dat
 
 O resumo não tem nada em comum com o certo, e o `wc -c` diz o tamanho do desvio: 490 bytes onde
 deveriam ser 512, ou seja, 22 bytes a menos, um para cada horário livre. Toda transcrição posterior
-que usa o arquivo discordaria da sua. O conserto é rodar de novo o comando que gravou o arquivo,
-copiado da aula em vez de redigitado.
+que usa o arquivo discordaria da sua. **O conserto é rodar de novo o comando que gravou o
+arquivo**, copiado da aula em vez de redigitado.
 
 ## Começar de novo
 

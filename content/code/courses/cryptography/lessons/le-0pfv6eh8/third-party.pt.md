@@ -240,9 +240,9 @@ root.key
 root.pem
 ```
 
-Cada certificado é um arquivo `.pem`. Um `.key` ao lado dele é a sua chave privada, e é assim que o
-laboratório consegue subir um servidor com aquele certificado na aula 10; um `-chain.pem` é o
-certificado seguido do da CA emissora, que é o que um servidor envia. O `issuing1.crl` é a lista de
+Cada certificado é um arquivo `.pem`. Um `.key` ao lado dele é a sua chave privada, e é assim que a
+aula 10 consegue subir um servidor com aquele certificado. Um `-chain.pem` é o certificado seguido
+do da CA emissora, que é o que um servidor envia. O `issuing1.crl` é a lista de
 revogação da aula 9.
 
 ## O que um certificado amarra

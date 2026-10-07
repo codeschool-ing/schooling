@@ -41,8 +41,9 @@
 #     Certificates carry fixed dates and every check passes that instant with
 #     -attime, so "expired" means the same thing whenever a capture is run.
 #
-#   bash lab.sh reset            rebuild ~/lab from nothing, as lessons 1 to 17
-#                                build it, without their servers
+#   bash lab.sh reset [LESSON]   rebuild ~/lab from nothing, as lessons 1 to 17
+#                                build it, without their servers; with a lesson
+#                                id, only as far as the end of that lesson
 #   bash lab.sh steps LESSON SECTION
 #                                run the `sh` fences of one section: how a
 #                                lesson's captures.sh starts the servers that
@@ -153,16 +154,21 @@ reset() {
   rm -rf "$HOME/lab"
   cp /etc/skel/.bashrc "$HOME/.bashrc"
   fences write
-  local lesson section
+  # With a lesson id, stop after that lesson's steps: the lab as it stands at
+  # the end of that lesson, which is what lesson 1's checksums describe.
+  local upto=${1:-} lesson section reached=
   while read -r lesson section; do
-    [ -n "$lesson" ] && steps "$lesson" "$section"
+    [ -n "$lesson" ] || continue
+    if [ -n "$upto" ] && [ -n "$reached" ] && [ "$lesson" != "$upto" ]; then break; fi
+    steps "$lesson" "$section"
+    [ "$lesson" = "$upto" ] && reached=1
   done <<< "$STEPS"
   return 0
 }
 
 case "${1:-}" in
-  reset) reset ;;
+  reset) reset "${2:-}" ;;
   steps) steps "$2" "$3" ;;
   files) fences files ;;
-  *) echo "usage: bash lab.sh reset | steps LESSON SECTION | files" >&2; exit 2 ;;
+  *) echo "usage: bash lab.sh reset [LESSON] | steps LESSON SECTION | files" >&2; exit 2 ;;
 esac

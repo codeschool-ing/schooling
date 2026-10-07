@@ -5,7 +5,7 @@ version: 1
 
 **A setup that fails says so, and almost always in words that name the fix.** The five failures
 below are the common ones, and each was made on purpose on the machine these lessons were recorded
-on, so the messages are the real ones. Read the message to the end before trying anything else.
+on, so the messages are the real ones. **Read the message to the end before trying anything else.**
 
 ## The virtual environment is not created
 
@@ -102,8 +102,8 @@ ana@lab:~/lab$ sha256sum data/slots.dat; wc -c data/slots.dat
 
 The digest shares nothing with the right one, and `wc -c` says how far off the file is: 490 bytes
 where there should be 512, which is 22 bytes short, one for each free slot. Every later transcript
-that uses the file would then disagree with yours. The fix is to run the command that wrote the file
-again, copied from the lesson rather than retyped.
+that uses the file would then disagree with yours. **The fix is to run the command that wrote the
+file again**, copied from the lesson rather than retyped.
 
 ## Starting again
 
