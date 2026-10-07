@@ -25,6 +25,7 @@ WHAT IS INVENTED AND WHAT IS NOT.
             for 2025. Lesson 14 says where each comes from.
 """
 
+import collections
 import csv
 import datetime as dt
 import math
@@ -627,6 +628,7 @@ for d in ALL_DAYS:
             pay = pick(rng, [("Cartão", 45), ("cartao", 5), ("Pix", 25), ("PIX", 10), ("pix", 5), ("Dinheiro", 10)])
             srows.append([f"V{sale:06d}", store, d.strftime("%d/%m/%Y"), f"{h:02d}:{rng.randint(0, 59):02d}",
                           cust, brl(cents), pay, items])
+srows_store = srows
 write(os.path.join(RAW, "store_sales.csv"),
       ["venda", "loja", "data", "hora", "cliente", "total", "pagamento", "itens"],
       srows, encoding="latin-1", delimiter=";")
@@ -670,13 +672,20 @@ write(os.path.join(RAW, "invoices.csv"),
 
 # --------------------------------------------------------------------------
 # The sales targets, as the commercial team keeps them: one row per shop,
-# one column per month, and a total at the end.
+# one column per month, and a total at the end. Each starts near what the shop
+# or the site sells in a month, a little below or above, and rises 4% a quarter.
 
 rng = random.Random(6606)
 MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
+yearly = collections.Counter()
+for r in srows_store:
+    yearly[r[1]] += int(r[5][3:].replace(".", "").replace(",", ""))
+for o in orders:
+    if o["status"] == "delivered":
+        yearly["Online"] += o["total"]
 trows = []
 for store in STORES + ["Online"]:
-    base = rng.randint(38, 70) * 1000 if store != "Online" else 260000
+    base = yearly[store] / 100 / 12 * rng.uniform(0.86, 1.0)
     vals = [int(base * (1 + 0.04 * (m // 3)) // 1000 * 1000) for m in range(12)]
     trows.append([store] + vals + [sum(vals)])
 write(os.path.join(RAW, "targets_2025.csv"), ["loja"] + [f"{m}/25" for m in MESES] + ["Total"], trows)

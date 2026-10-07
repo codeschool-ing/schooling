@@ -1001,6 +1001,112 @@ def l12_log_scale(lang):
     return fig, cap[lang]
 
 
+# ----------------------------------------------------------------- lesson 13
+
+@figure('l13-wide-long', 13)
+def l13_wide_long(lang):
+    sheet = {r['loja']: r for r in rows('raw/targets_2025.csv')}
+    shops = ['Pinheiros', 'Cambuí']
+    fig = Fig('l13-wide-long', 720, 290, {
+        'en': 'On the left, the targets sheet in wide format: one row per shop, a column per month and a Total '
+              'column at the end, drawn in amber. An arrow labelled melt leads to the long format on the right: '
+              'one row per shop and month, with columns loja, month and target. The Total column does not '
+              'appear in the long table; it is checked against the months and then left behind.',
+        'pt': 'À esquerda, a planilha de metas no formato largo: uma linha por loja, uma coluna por mês e uma '
+              'coluna Total no fim, desenhada em âmbar. Uma seta com o rótulo melt leva ao formato longo à '
+              'direita: uma linha por loja e mês, com as colunas loja, month e target. A coluna Total não aparece '
+              'na tabela longa; ela é conferida contra os meses e depois deixada para trás.'}[lang])
+    RH, top = 30, 50
+
+    def cell(x, y, w, s, mono=True, head=False, col='--wire', fill='--panel', tcol='--paper'):
+        fig.rect(x, y, w, RH, stroke=col, fill=fill, rx=0, width=1)
+        fig.text(x + w / 2, y + RH / 2, s, size=10, mono=mono, weight='600' if head else None, fill=tcol)
+
+    cols = [('loja', 82), ('jan/25', 58), ('fev/25', 58), ('…', 30), ('Total', 70)]
+    x = 20
+    for i, (h, w) in enumerate(cols):
+        amber = h == 'Total'
+        cell(x, top, w, h, head=True, col='--amber' if amber else '--wire', tcol='--amber' if amber else '--paper')
+        for k, s in enumerate(shops):
+            v = {'loja': s, 'jan/25': sheet[s]['jan/25'], 'fev/25': sheet[s]['fev/25'], '…': '…',
+                 'Total': sheet[s]['Total']}[h]
+            cell(x, top + RH * (k + 1), w, v, col='--amber' if amber else '--wire',
+                 tcol='--amber' if amber else '--paper')
+        x += w
+    fig.text(20 + sum(w for _, w in cols) - 35, top + RH * 3 + 18,
+             {'en': 'checked, then left behind', 'pt': 'conferido, depois deixado'}[lang], size=10,
+             anchor='middle', fill='--amber')
+    fig.line(335, top + RH * 1.5, 405, top + RH * 1.5, stroke='--phosphor', width=1.6, arrow=True)
+    fig.text(370, top + RH * 1.5 - 12, 'melt', size=10.5, mono=True, fill='--phosphor')
+    lcols = [('loja', 92), ('month', 80), ('target', 80)]
+    data = [('Pinheiros', '2025-01', sheet['Pinheiros']['jan/25']),
+            ('Pinheiros', '2025-02', sheet['Pinheiros']['fev/25']),
+            ('…', '…', '…'),
+            ('Cambuí', '2025-01', sheet['Cambuí']['jan/25']),
+            ('Cambuí', '2025-02', sheet['Cambuí']['fev/25']),
+            ('…', '…', '…')]
+    x = 420
+    for j, (h, w) in enumerate(lcols):
+        cell(x, top, w, h, head=True)
+        for k, r in enumerate(data):
+            cell(x, top + RH * (k + 1), w, r[j])
+        x += w
+    fig.text(20, top + RH * 3 + 50, {'en': '6 rows × 12 months', 'pt': '6 linhas × 12 meses'}[lang], size=10.5,
+             anchor='start', fill='--paper-dim')
+    fig.text(420, top + RH * 7 + 22, {'en': '72 rows', 'pt': '72 linhas'}[lang], size=10.5, anchor='start',
+             fill='--paper-dim')
+    cap = {'en': 'One shape for reading, one for computing. The month leaves the header and becomes a value; the '
+                 'Total, which is not a month, does not come along.',
+           'pt': 'Um formato para ler, outro para calcular. O mês sai do cabeçalho e vira valor; o Total, que não é '
+                 'mês, não vem junto.'}
+    return fig, cap[lang]
+
+
+def attainment_by_shop():
+    target = {r['loja']: int(r['Total']) for r in rows('raw/targets_2025.csv')}
+    sold = collections.Counter()
+    for r in rows('raw/store_sales.csv', encoding='latin-1', delimiter=';'):
+        sold[r['loja']] += int(r['total'][3:].replace('.', '').replace(',', ''))
+    fixed = {r['order_id']: int(r['value']) for r in rows('truth/orders.csv') if r['what'] == 'typo-x10'}
+    seen = set()
+    for r in rows('raw/orders.csv'):
+        key = tuple(r.values())
+        if key in seen or r['status'] != 'delivered':
+            continue
+        seen.add(key)
+        cents = fixed.get(r['order_id'], round(float(r['total']) * 100))
+        sold['Online'] += max(cents, 0)
+    return {s: sold[s] / 100 / target[s] for s in target}
+
+
+@figure('l13-attainment', 13)
+def l13_attainment(lang):
+    att = sorted(attainment_by_shop().items(), key=lambda kv: kv[1])
+    fig = Fig('l13-attainment', 720, 280, {
+        'en': 'Horizontal bars of each shop\'s sales in 2025 as a share of its target, against a line at 100%: '
+              + ', '.join(f'{s} {round(a * 100)}%' for s, a in att) + '. Only Pinheiros is short of the line.',
+        'pt': 'Barras horizontais das vendas de cada loja em 2025 como fração da sua meta, contra uma linha em '
+              '100%: ' + ', '.join(f'{s} {round(a * 100)}%' for s, a in att) + '. Só Pinheiros fica antes da linha.'}[lang])
+    p = Plot(fig, 130, 30, 650, 230, 0, 1.2, 0, len(att))
+    for i, (s, a) in enumerate(att):
+        y = 40 + i * 31
+        fig.text(120, y + 11, s, size=11, anchor='end')
+        short = a < 1
+        fig.rect(p.sx(0), y, p.sx(a) - p.sx(0), 22, stroke='--amber' if short else '--phosphor',
+                 fill='--panel' if short else '--phosphor-dim', rx=2)
+        fig.text(p.sx(a) + 6, y + 11, f'{round(a * 100)}%', size=10.5, anchor='start', mono=True)
+    x = p.sx(1)
+    for i in range(len(att) + 1):
+        y0 = 30 if i == 0 else 40 + i * 31 - 8
+        y1 = 40 + i * 31 - 1 if i < len(att) else 40 + i * 31 + 14
+        fig.line(x, y0, x, y1, stroke='--paper', width=2)
+    fig.text(x, 40 + len(att) * 31 + 26, {'en': 'target', 'pt': 'meta'}[lang], size=10, fill='--paper-dim')
+    cap = {'en': 'Sales over target for the year, from the sums rather than an average of months. The largest shop '
+                 'is the only one short.',
+           'pt': 'Vendas sobre meta no ano, pelas somas e não pela média dos meses. A maior loja é a única abaixo.'}
+    return fig, cap[lang]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
