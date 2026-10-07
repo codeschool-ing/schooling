@@ -126,8 +126,7 @@ I don't know the staff Wi-Fi password. You can contact our management team at he
 ```
 
 No street address in any of the three. Each run moved one thing, and the count of what still
-fails is what a version 5 would start from: the refund reply runs to four sentences, where the
-prompt allows three, and none of these replies is a reason to believe a fourth question would be
+fails is what a version 5 would start from. The weather and refund replies each run to four sentences, where the prompt allows three, and none of these replies is a reason to believe a fourth question would be
 fine.
 
 ## Tone and persona belong here, with limits

@@ -76,7 +76,7 @@ No, the kitchen cannot take the order at 11:45 because it stops taking hot food 
 ```
 
 The answer is still no, and **the reason now has a wrong time in it**: 11:15, where the rules in
-the same prompt say 11:30, three times. The step back produced correct rules; the second call
+the same prompt say 11:30, twice. The step back produced correct rules; the second call
 did the subtraction again and got it wrong. Nothing about the technique prevents that, and the
 next reading section comes back to it.
 

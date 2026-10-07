@@ -128,8 +128,7 @@ done: an answer after 4 steps
 
 Four steps and three tool calls. Read the answer against the trace and **every part of it has a
 source**: the approval rule is a line of `refunds.md`, the amount is the calculator's `111.6`, and
-"to the card" is the second handbook line. The only thing the model contributed was the order of
-the questions and the comparison of 111.6 with 100, and both are written down where you can check
+"to the card" is the second handbook line. The only things the turns contributed were the order of the questions and the comparison of 111.6 with 100, and both are written down where you can check
 them.
 
 ```schooling-figure

@@ -103,8 +103,7 @@ negative
 -- llama3.2:3b, finish: stop, prompt 76 tokens, output 33 tokens
 ```
 
-The label came first, and it was right, and then the model **kept going**. It wrote another
-`<message>`, a booking it made up, labelled it, and then labelled the real message again. That is
+The label came first, and it was right, and then the model **kept going**. It wrote the booking example out again, labelled it `mixed` this time, and then labelled the real message again. That is
 the pattern doing its work: the prompt was message, label, message, and the likeliest continuation
 of message, label, message, label is another message. Few-shot, with an example for each label,
 including a sarcastic one:
@@ -137,15 +136,14 @@ ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-few.txt
 ```
 
 Five labels for five messages, numbered: it labelled the examples as well as the message, and
-it is the last line that answers the question. Four of the five examples were labelled correctly,
-and the fifth is the message itself, `Great, another forty minutes for a coffee.`, now labelled
+it is the last line that answers the question. The four examples were labelled correctly, and the fifth line is the message itself, `Great, another forty minutes for a coffee.`, now labelled
 `not_a_review`. The zero-shot answer was right.
 
-So the examples did fix the **form**, a bare label per line, and they also taught a form nobody
+So the examples did fix the **form**, one label per line, numbered. They also taught a form nobody
 asked for: in these prompts an example and the input look exactly alike, `<message>` and a label,
 and nothing marks where the examples stop and the task begins. **Examples are a specification of
 everything they share, including their layout**, and a model this size follows the layout further
-than the instruction. The next reading section marks the boundary, and then counts.
+than the instruction. The next reading section counts, and then marks the boundary.
 
 One-shot has a risk of its own besides. With a single example, everything about it looks like part
 of the pattern: its label, its length, its topic. A model that saw only `not_a_review` may lean

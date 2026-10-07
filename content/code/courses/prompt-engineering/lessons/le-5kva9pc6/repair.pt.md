@@ -215,8 +215,7 @@ attempt 2
 ```
 
 A primeira resposta foi lida e falhou no esquema num campo só: um resumo com mais de 80 caracteres.
-O `repair` escreveu a mensagem de retorno, o `triage.py` a mandou como o turno seguinte, e **a
-segunda resposta consertou exatamente esse campo** e manteve todo o resto. Dois pedidos, e o laço
+O `repair` escreveu a mensagem de retorno, o `triage.py` a mandou como o turno seguinte, e **a segunda resposta consertou esse campo** e passou. Dois pedidos, e o laço
 terminou sozinho. O `range(1, MAX_ATTEMPTS + 1)` é o que o faz terminar quando o modelo não colabora,
 e a última linha é o que quem chamou vê então: uma falha, registrada, nunca um objeto que alguém
 inventou.

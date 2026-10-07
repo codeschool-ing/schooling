@@ -43,9 +43,7 @@ Verdict: sure (I found a way)
 `4 13 19` consegue dar 24: o `tot` achou no nível 2, `19 - 13 = 6`, depois `4 * 6`. O modelo testou
 exatamente essa combinação na linha 5 e escreveu `(19 - 13) * 4 = 6`. Depois, na linha 11, escreveu
 `(13 + 4) * 19 / 13 = 24`, que usa o 13 duas vezes e dá 24,85, e com base nisso disse **sure**. O
-veredito está certo, e o motivo dele é falso. Numa outra execução no mesmo dia, com o mesmo prompt, o
-mesmo modelo errou a linha 5 de outro jeito e declarou o estado impossível, o que teria podado o
-ramo que resolve o quebra-cabeça. **É aí que a busca erra quando tem um modelo dentro**: não na busca,
+veredito está certo, e o motivo dele é falso. Um julgamento feito desse jeito podia muito bem ter dito impossível, e podado o ramo que resolve o quebra-cabeça. **É aí que a busca erra quando tem um modelo dentro**: não na busca,
 que é só contabilidade, mas num julgamento que ninguém confere.
 
 Um estado sem caminho até 24, `1 1 2`, mostra o outro risco. O mesmo prompt, com um limite de 150
@@ -67,9 +65,7 @@ Let's try a few combinations:
 -- llama3.2:3b, finish: length, prompt 88 tokens, output 150 tokens
 ```
 
-Ele foi cortado no meio da lista. Sem o limite, na execução da qual esta lição foi escrita, ele seguiu
-até cinquenta combinações e quase 3.000 tokens antes de escrever `Impossible`. Um juiz que acerta
-ainda pode custar vinte vezes o que um julgamento deveria, e é para isso que serve o limite da lição
+Ele foi cortado no meio da lista, em 150 tokens, e ainda não tinha chegado a um veredito. Um juiz que passa pelas combinações uma a uma pode custar muitas vezes o que um julgamento deveria, e é para isso que serve o limite da lição
 15.
 
 É por isso que a largura da seção anterior importa com um modelo e não com o `tot`, e por isso que as

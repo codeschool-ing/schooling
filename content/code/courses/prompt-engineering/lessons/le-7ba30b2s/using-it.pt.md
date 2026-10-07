@@ -36,8 +36,7 @@ raciocínio num campo e a resposta em outro.
 ## Os passos são saída, e saída é paga
 
 As três respostas são o mesmo pedido de três jeitos, e o último comando acima as contou: 5 tokens
-para a resposta direta, 173 para a cadeia, 293 para a cadeia few-shot. **A resposta certa custou 173
-tokens de saída contra 5 da errada**, quase trinta e cinco vezes mais, e a resposta mais longa estava
+para a resposta direta, 173 para a cadeia, 293 para a cadeia few-shot. **A resposta certa custou 173 tokens de saída contra 5 da errada**, na contagem do `tok`, quase trinta e cinco vezes mais, e a resposta mais longa estava
 errada de todo jeito. Tokens de saída costumam custar mais que os de entrada, e também são a parte
 lenta, já que cada um é um passo do laço da lição 1. Uma cadeia em todo pedido de um serviço
 movimentado multiplica a conta e a espera. O limite de tokens máximos da lição 15 pesa mais aqui

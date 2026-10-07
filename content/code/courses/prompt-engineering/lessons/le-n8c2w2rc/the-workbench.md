@@ -40,7 +40,7 @@ example `export ASK_MODEL=llama3.2:1b`.
 
 ## `toylm`: a language model you can read
 
-The first program is the model the first two sections of this lesson used. Open a new file in `~/pe/bin`,
+The first program is the model the two reading sections before this one used. Open a new file in `~/pe/bin`,
 paste the program into it, save and quit. Any editor will do; `nano` is on every Ubuntu, saves with
 Ctrl+O and quits with Ctrl+X:
 
@@ -264,7 +264,7 @@ chmod +x ~/pe/bin/toylm
 ```
 
 You do not need to read it now. It is about two hundred lines, and the function that turns counts
-into percentages is four of them, at the top of the class `Model`.
+into percentages is four of them, the last method of the class `Model`.
 
 It learns from `corpus.txt`, 98 short lines about a café. Paste this whole block into the terminal:
 the first line opens the file, and the line `EOF` at the end closes it.
@@ -388,7 +388,7 @@ the cake is gone by noon .
 bruno orders a coffee .
 ```
 
-Lesson 8 comes back to that last line, and to what the same word means for a model with billions
+Lesson 8 comes back to the `parameters` line, and to what the same word means for a model with billions
 of them.
 
 **The café, and everything later lessons write about it, was invented for the course.** Café Aurora
@@ -522,14 +522,14 @@ A typical café usually opens between 7:00 AM and 11:00 AM, with peak hours ofte
 
 The first prompt is the text `toylm generate` continued with `seven.` earlier in this lesson. The chat
 model did not continue it. It read the four words as somebody talking to it, said it did not know,
-and asked a question back, which is what the end of the section on writing one word at a time said a
+and asked a question back. That is what the end of the section on writing one word at a time said a
 chat model is trained to do: the most likely next turn after a message is a reply to it. It was also right not
 to guess, since nothing in the prompt names a café. Lesson 5 is about the replies that guess
 anyway.
 
 The second prompt asked something it can answer from what it learnt, and said how long the answer
 should be. One sentence came back. With `--temperature 0` the model takes its most likely word at
-every step, so asking again gives the same reply; lesson 13 is about what the number changes.
+every step, so asking again usually gives the same reply; lesson 13 is about what the number changes.
 
 The line under each reply is the accounting every model API returns in some form: which model
 answered, **why it stopped**, and how many tokens went in and came out. `toylm generate` prints the

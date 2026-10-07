@@ -110,9 +110,7 @@ ana@lab:~/pe$ ask - --temperature 0 < prompts/menu-rules.txt
 ```
 
 The sentence is gone and the quoting is right, and **the prices kept their decimal commas and their
-`R$`**, the one rule the prompt gave with an example. The last rule removes the commonest cause of
-the problem instead of quoting around it, which is worth asking for wherever you control the
-format, and it is still a request: the check is what tells you it was ignored.
+`R$`**, the one rule the prompt gave with an example. The decimal rule removes the commonest cause of the problem instead of quoting around it, which is worth asking for wherever you control the format, and it is still a request: the check is what tells you it was ignored.
 
 ## Checking a CSV reply
 

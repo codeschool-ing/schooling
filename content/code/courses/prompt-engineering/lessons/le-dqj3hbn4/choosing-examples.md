@@ -147,14 +147,14 @@ r8  wanted positive      got mixed
 
 Four of eight: the form is fixed, and the labels are worse than the prompt with no examples at all.
 `r5`, the sarcastic message, is still `positive` though a sarcastic example sits in the prompt, and
-three messages became `mixed`, the label of the one example closest to them in the list. **On this
+three messages became `mixed`. **On this
 model, these examples made the labeller worse**, and only the count says so: every one of the
 replies is a tidy lower-case label. A larger model may well gain from the same four examples. That
 is the reason to measure with your model, not to take this lesson's word for it, or anyone's.
 
 ## Examples are paid for on every request
 
-A prompt is sent in full with every request, so its examples are too. `tok` counts both versions
+A prompt is sent in full with every request, so its examples are too. `tok` counts all three versions
 with the tokenizer of lesson 3:
 
 ```

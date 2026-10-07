@@ -58,7 +58,7 @@ nehctik
 ```
 
 `nehcik` é `kitchen` ao contrário sem o `t`. O modelo o escreveu com a mesma confiança com que teria
-escrito a resposta certa, e é essa a parte para lembrar.
+escrito a resposta certa.
 
 ## Dígitos em blocos
 
@@ -114,7 +114,7 @@ There are 3 lines that are the letter "R".
 ```
 
 Ele escreveu as letras em maiúsculas, o que ninguém pediu, e contou três. **A resposta mudou porque
-a pergunta mudou o que o modelo conseguia ver**, não porque ele se esforçou mais.
+a pergunta mudou o que o modelo conseguia ver**.
 
 Nada disso é motivo para desconfiar do que um modelo escreve sobre o sentido das coisas. **Um modelo
 é bom no que é visível nos tokens, que é quais pedaços vêm depois de quais**, e fraco no que está

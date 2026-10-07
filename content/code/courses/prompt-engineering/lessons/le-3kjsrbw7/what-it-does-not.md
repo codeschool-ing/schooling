@@ -68,8 +68,7 @@ We can't guarantee that our cinnamon bun is nut-free.
 
 One sentence, from the handbook, and the right answer. The role is one line and the rules are the
 rest. A test set (lesson 20) can check the rules, and this reply shows the check has to be written
-with care: a test that failed every reply containing "nut-free" would fail this one, which says the
-café cannot promise it, and a test asking for the reply to mention that the kitchen uses nuts would
+with care. A test that failed every reply containing "nut-free" would fail this one, which says the café cannot promise it. A test asking for the reply to mention that the kitchen uses nuts would
 fail it too, since it does not. Nothing can check "be a world-class specialist", and nothing needs
 to.
 
@@ -99,8 +98,7 @@ Staff at the café ask customers about allergies before recommending a cake to m
 -- llama3.2:3b, finish: stop, prompt 50 tokens, output 99 tokens
 ```
 
-The first is a speech, in quotation marks, that starts "Hey, welcome to the team!" and ends on
-customer service. The second is third person, "a precautionary measure", "minimize the risk", the
+The first is a speech, in quotation marks, that starts "Hey, welcome to the team!" and ends on customer service and a safe environment. The second is third person, "a precautionary measure", "minimize the risk", the
 words a risk document uses. **No role for the model was needed in either**: naming the reader set
 the register, the vocabulary and the angle at once. Neither says anything the café decided, which
 is the other half of this lesson: the second even offers to modify a cake to suit an allergy, a

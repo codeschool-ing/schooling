@@ -6,13 +6,12 @@ version: 2
 É tentador imaginar um agente como um modelo que recebeu as chaves: ele decide o que fazer, e faz.
 O modelo decide o que **pedir**. **Todo o resto é decidido pelo programa que roda o laço**: quais
 ferramentas existem, quais delas esta tarefa pode usar, quantas voltas o laço pode dar e o que conta
-como terminado. Quatro execuções, cada uma terminando de um jeito, mostram onde ficam essas
+como terminado. Cinco execuções, cada uma terminando de um jeito, mostram onde ficam essas
 decisões.
 
 ## Uma ferramenta que não existe
 
-Três das quatro execuções abaixo reproduzem turnos de um arquivo, para que cada regra apareça
-sozinha; cada arquivo traz as linhas `model>` que a execução imprime, um bloco por turno, separados
+Quatro das cinco execuções abaixo reproduzem turnos de um arquivo, para que cada regra apareça sozinha. Cada arquivo traz as linhas `model>` que a execução imprime, um bloco por turno, separados
 por `---`, e o do tempo começa com uma nota `#` dizendo qual era a pergunta. Um modelo pode pedir
 qualquer coisa a que consiga dar nome, inclusive uma ferramenta que ninguém construiu. Aqui o turno
 pede a previsão do tempo:

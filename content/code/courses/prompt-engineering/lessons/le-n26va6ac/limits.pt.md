@@ -23,7 +23,7 @@ tokens  words  chars  file
    203    147    651  chains/s7.txt
 ```
 
-Juntas, são 1.539 tokens de saída para uma resposta, contra 167 a 288 de uma cadeia só, e o prompt
+Juntas, são 1.539 tokens de saída para uma resposta, na contagem do `tok`, contra 167 a 288 de uma cadeia só, e o prompt
 também vai sete vezes (ou uma, se a API aceitar um número de amostras e cobrar a entrada uma vez só;
 confira a documentação). **Sete amostras custam umas sete vezes o que custa uma**, e uma votação de
 vinte custa vinte. As amostras podem rodar em paralelo, então a espera não precisa crescer do mesmo
@@ -88,8 +88,7 @@ Since today is Wednesday, which is a public holiday, Café Aurora follows the Su
 Quatro votos em `yes`, unânime entre as respostas que tinham linha de resposta, e o manual diz `no`.
 A quinta amostra é a única que raciocinou até as 11:30 e chegou à conclusão certa, e nunca escreveu a
 linha de resposta, então não votou. **A votação foi tão confiante quanto uma votação pode ser, e
-errada.** Cada `yes` foi puxado do mesmo jeito, pela palavra *quarta-feira* em direção ao horário de
-dia de semana, o puxão que a lição 25 descreveu, então mais amostras do mesmo prompt muito
+errada.** A causa mais provável é o puxão que a lição 25 descreveu, a palavra *quarta-feira* em direção ao horário de dia de semana. Se todo `yes` compartilha esse puxão, mais amostras do mesmo prompt muito
 provavelmente deixariam a maioria errada mais firme, não mais fraca. A correção está no prompt: recuar
 para as regras primeiro (lição 25), e então votar entre cadeias que partem delas.
 

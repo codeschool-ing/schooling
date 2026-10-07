@@ -6,13 +6,12 @@ version: 2
 It is tempting to picture an agent as a model that has been handed the keys: it decides what to
 do, and it does it. The model decides what to **ask for**. **Everything else is decided by the
 program running the loop**: which tools exist, which of them this task may use, how many rounds
-the loop may take, and what counts as finished. Four runs, each one ending a different way, show
+the loop may take, and what counts as finished. Five runs, each one ending a different way, show
 where those decisions sit.
 
 ## A tool that does not exist
 
-Three of the four runs below play back turns from a file, so that each rule shows on its own; each
-file holds the `model>` lines its run prints, one block per turn, separated by `---`, and the
+Four of the five runs below play back turns from a file, so that each rule shows on its own. Each file holds the `model>` lines its run prints, one block per turn, separated by `---`, and the
 weather one starts with a `#` note saying what the question was. A
 model can ask for anything it can name, including a tool nobody built. Here the turn asks for the
 weather:

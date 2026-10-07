@@ -23,7 +23,7 @@ tokens  words  chars  file
    203    147    651  chains/s7.txt
 ```
 
-Together they are 1,539 output tokens for one answer, against a single chain's 167 to 288, and the
+Together they are 1,539 output tokens for one answer, as `tok` counts them, against a single chain's 167 to 288, and the
 prompt is sent seven times as well (or once, if the API accepts a sample count and bills the input
 once; check its documentation). **Seven samples cost about seven times as much as one**, and a vote
 of twenty costs twenty. The samples can run in parallel, so the wait need not grow the same way,
@@ -87,8 +87,7 @@ Since today is Wednesday, which is a public holiday, Café Aurora follows the Su
 Four votes for `yes`, unanimous among the replies that had an answer line, and the handbook says
 `no`. The fifth sample is the only one that reasoned its way to 11:30 and the right conclusion,
 and it never wrote the answer line, so it cast no vote. **The vote was as confident as a vote can
-be, and wrong.** Each `yes` was pulled the same way, by the word *Wednesday* towards the weekday
-hours, the pull lesson 25 described, so more samples of the same prompt would most likely make the
+be, and wrong.** The likeliest cause is the pull lesson 25 described, the word *Wednesday* towards the weekday hours. If every `yes` shares it, more samples of the same prompt would most likely make the
 wrong majority firmer, not weaker. The fix is in the prompt: step back to the rules first (lesson
 25), and then vote among chains that start from them.
 

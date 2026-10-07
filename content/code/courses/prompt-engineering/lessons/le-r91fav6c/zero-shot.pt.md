@@ -31,7 +31,7 @@ Cada parte dela deixa uma decisão para o modelo:
   que nem são avaliações;
 - a entrada vem emendada na instrução, sem nada dizendo onde uma termina e a outra começa;
 - a saída não é descrita, então o modelo pode responder com uma palavra, uma frase ou uma resposta;
-- os casos-limite não são mencionados, e esta entrada é um deles: é uma pergunta, não uma avaliação.
+- os casos-limite não são mencionados, e uma mensagem que é uma pergunta, não uma avaliação, é um deles.
 
 Diante de uma mensagem que é uma pergunta, um modelo tem todos os motivos para respondê-la, porque
 responder perguntas é aquilo para que ele foi treinado (lição 1), ou para inventar um rótulo que

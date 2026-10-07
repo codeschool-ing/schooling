@@ -68,8 +68,7 @@ We can't guarantee that our cinnamon bun is nut-free.
 
 Uma frase, do manual, e a resposta certa. O papel é uma linha e as regras são o resto. Um conjunto de
 teste (lição 20) consegue conferir as regras, e esta resposta mostra que a conferência precisa ser
-escrita com cuidado: um teste que reprovasse toda resposta com "nut-free" reprovaria esta, que diz
-que o café não pode prometer isso, e um teste que pedisse que a resposta mencionasse que a cozinha
+escrita com cuidado. Um teste que reprovasse toda resposta com "nut-free" reprovaria esta, que diz que o café não pode prometer isso. Um teste que pedisse que a resposta mencionasse que a cozinha
 usa nozes também a reprovaria, já que ela não menciona. Nada consegue conferir "seja um especialista
 de nível mundial", e nada precisa.
 
@@ -100,8 +99,7 @@ Staff at the café ask customers about allergies before recommending a cake to m
 -- llama3.2:3b, finish: stop, prompt 50 tokens, output 99 tokens
 ```
 
-O primeiro é um discurso, entre aspas, que começa com "Hey, welcome to the team!" e termina em
-atendimento ao cliente. O segundo é na terceira pessoa, "a precautionary measure", "minimize the
+O primeiro é um discurso, entre aspas, que começa com "Hey, welcome to the team!" e termina em atendimento ao cliente e num ambiente seguro. O segundo é na terceira pessoa, "a precautionary measure", "minimize the
 risk", as palavras de um documento de risco. **Nenhum papel para o modelo foi preciso em nenhum dos
 dois**: nomear o leitor definiu o registro, o vocabulário e o ângulo de uma vez. Nenhum dos dois diz
 algo que o café decidiu, e essa é a outra metade desta lição: o segundo chega a oferecer adaptar um

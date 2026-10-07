@@ -58,7 +58,7 @@ Both are reasonable, and they are not interchangeable. The barista did not expla
 asked the customer two questions, about the last flat white they enjoyed and about their own beans
 and brewing, as if the customer had made the coffee. The instructor named a cause,
 "over-extraction", gave two ways it happens, and turned to what the trainee should check, with a
-"great question" on the way in. **Neither role added a fact the other lacked**: what makes coffee
+"great question" on the way in. **Neither role gave the model knowledge it did not already have**: what makes coffee
 bitter came from what the model learnt in training, and the instructor put it forward while the
 barista did not. What changed is which part of that knowledge was used, in which words, for whom.
 

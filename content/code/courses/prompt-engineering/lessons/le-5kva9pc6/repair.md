@@ -213,8 +213,7 @@ attempt 2
 ```
 
 The first reply parsed and failed the schema on one field: a summary longer than 80 characters.
-`repair` wrote the follow-up message, `triage.py` sent it back as the next turn, and **the second
-reply fixed exactly that field** and kept everything else. Two requests, and the loop ended on its
+`repair` wrote the follow-up message, `triage.py` sent it back as the next turn, and **the second reply fixed that field** and passed. Two requests, and the loop ended on its
 own. `range(1, MAX_ATTEMPTS + 1)` is what makes it end when the model does not cooperate, and the
 last line is what the caller sees then: a failure, recorded, never an object somebody made up.
 

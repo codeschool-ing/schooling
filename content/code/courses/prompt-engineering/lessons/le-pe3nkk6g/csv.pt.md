@@ -112,7 +112,7 @@ ana@lab:~/pe$ ask - --temperature 0 < prompts/menu-rules.txt
 ```
 
 A frase sumiu e as aspas estão certas, e **os preços ficaram com a vírgula decimal e o `R$`**, a
-única regra que o prompt deu com um exemplo. A última regra remove a causa mais comum do problema
+única regra que o prompt deu com um exemplo. A regra do separador decimal remove a causa mais comum do problema
 em vez de pôr aspas em volta dela, o que vale pedir onde quer que você controle o formato, e
 continua sendo um pedido: é a conferência que diz que ele foi ignorado.
 

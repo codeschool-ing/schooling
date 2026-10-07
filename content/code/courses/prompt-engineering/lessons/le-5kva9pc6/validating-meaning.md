@@ -43,25 +43,6 @@ Valid as well. And this one breaks a rule of the café that the model was never 
 ```
 ana@lab:~/pe$ grep 100 handbook/refunds.md
 A refund above R$ 100 needs the shift manager's approval.
-ana@lab:~/pe$ cat rules.py
-import json, sys
-
-t = json.load(open(sys.argv[1]))
-problems = []
-if t["refund"] and "refund_amount" not in t:
-    problems.append("refund is true but no refund_amount was given")
-if not t["refund"] and t.get("refund_amount", 0) > 0:
-    problems.append("refund is false but refund_amount is above zero")
-if t.get("refund_amount", 0) > 100:
-    problems.append("refund_amount %s is above R$ 100: the shift manager must approve" % t["refund_amount"])
-print("\n".join(problems) or "no rule broken")
-sys.exit(1 if problems else 0)
-ana@lab:~/pe$ python3 rules.py triage/7.json; echo "exit $?"
-refund_amount 140 is above R$ 100: the shift manager must approve
-exit 1
-ana@lab:~/pe$ python3 rules.py triage/good.json; echo "exit $?"
-no rule broken
-exit 0
 ```
 
 Lesson 11 used this same handbook to ground a model's answers. Here it supplies a rule the program
@@ -119,6 +100,5 @@ A reply meant for a program goes through three checks, cheapest first:
 
 And a fourth that is not a program: whether the reply is **true to its input**. Each layer passes
 things the next one stops. **A reply that has passed all three programs has earned more trust,
-and still not all of it**: the model's triage of complaint 7 passed all three and went to the
-queue for slow tea, and the course's would have reached the manager at R$ 140, flagged for approval
+and still not all of it**: the model's triage of complaint 7 passed all three and went to the queue for slow tea. The course's would have reached the manager at R$ 140, flagged for approval
 for the right reason and with the wrong amount.

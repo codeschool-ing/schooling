@@ -36,8 +36,7 @@ in one field and the answer in another.
 ## The steps are output, and output is paid
 
 The three replies are the same order three ways, and the last command above counted them: 5 tokens
-for the direct reply, 173 for the chain, 293 for the few-shot chain. **The right answer cost 173
-output tokens against 5 for the wrong one**, almost thirty-five times as many, and the longest reply
+for the direct reply, 173 for the chain, 293 for the few-shot chain. **The right answer cost 173 output tokens against 5 for the wrong one**, by `tok`'s count, almost thirty-five times as many, and the longest reply
 was wrong anyway. Output tokens are usually priced higher than input tokens, and they are also the
 slow part, since each one is a step of the loop from lesson 1. A chain on every request of a busy
 service multiplies both the bill and the wait. Lesson 15's maximum-tokens limit matters more here

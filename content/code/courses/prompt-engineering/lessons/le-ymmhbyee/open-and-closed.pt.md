@@ -68,5 +68,4 @@ ou do jurídico vai perguntar. Perguntas a responder a partir dos documentos do 
 **Nunca responda a essas perguntas de memória ou com base num post de blog.** Os termos mudam, e
 diferem entre planos do mesmo provedor. Um modelo que você mesmo roda responde às quatro por
 construção, e esse é um dos principais motivos de organizações escolherem pesos abertos apesar do
-hardware. Todo prompt que você mandou com o `ask` até aqui foi para `localhost` e para mais lugar
-nenhum.
+hardware. Todo prompt que você mandou com o `ask` até aqui foi para `localhost` e para mais lugar nenhum, a não ser que você tenha apontado o `ASK_URL` para um provedor.

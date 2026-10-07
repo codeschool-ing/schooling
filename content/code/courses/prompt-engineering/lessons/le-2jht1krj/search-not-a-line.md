@@ -135,8 +135,7 @@ level 3: 6 proposed, 6 different, 1 sure, 5 impossible
 solved: 4 - 10 = -6; 9 - 13 = -4; -6 * -4 = 24
 ```
 
-It solved the puzzle with 60 proposals instead of 102 (36 + 18 + 6 against 36 + 54 + 12). That is
-not luck, and it is the most important thing to read in this capture: **`tot`'s judge is never
+It solved the puzzle with 60 proposals instead of 102 (36 + 18 + 6 against 36 + 54 + 12). It is not luck: **`tot`'s judge is never
 wrong.** It decides `sure` by trying every remaining combination, so a kept state always leads to
 24, and one branch is enough.
 

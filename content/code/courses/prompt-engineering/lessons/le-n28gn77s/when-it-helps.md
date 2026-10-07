@@ -53,8 +53,7 @@ tokens  words  chars  file
 ```
 
 The direct question sends 116 tokens. The step-back version sends 122 and then 301, which is 423
-tokens of input, more than three and a half times as many, and on top of that the first call's reply is output you pay
-for and wait for before the second call can start. **Twice the round trips and more than three times
+tokens of input, more than three and a half times as many. On top of that, the first call's reply is output you pay for and wait for before the second call can start. **Twice the round trips and more than three times
 the input is the price of one answer**, so it is worth paying where a wrong answer is costly and
 the principle is easy to miss, and not on every request.
 

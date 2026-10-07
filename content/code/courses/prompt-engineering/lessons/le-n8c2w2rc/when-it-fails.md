@@ -3,9 +3,7 @@ title: When the setup fails
 version: 1
 ---
 
-Five failures account for most of it, and each one names itself in the first line it prints. All
-five were produced on the machine these lessons were recorded on, by doing the thing wrong on
-purpose. A sixth, running out of memory, comes at the end.
+Five failures account for most of it, and each one names itself in the first line it prints. All five were produced on purpose on the machine these lessons were recorded on, and the first had also happened there for real. A sixth, running out of memory, comes at the end.
 
 ## The installer stops before it starts
 
@@ -42,8 +40,7 @@ or never started by a machine that booted without it. Start it, and check:
 sudo systemctl start ollama
 ```
 
-The last `ollama list` above is after it came back. (The machine the transcripts come from has no
-`systemd`, so the server was started there by the script that records them. On Ubuntu and on WSL,
+The last `ollama list` above is after it came back. (The machine the transcripts come from has no `systemd`, so the server was started there by hand. On Ubuntu and on WSL,
 `systemctl` is the command.)
 
 Do not start it with `ollama serve` as yourself instead. That works, and it serves a different,

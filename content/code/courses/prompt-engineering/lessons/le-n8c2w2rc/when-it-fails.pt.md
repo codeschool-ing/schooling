@@ -3,9 +3,7 @@ title: Quando a preparação falha
 version: 1
 ---
 
-Cinco falhas respondem pela maior parte, e cada uma se apresenta na primeira linha que imprime. As
-cinco foram produzidas na máquina em que estas lições foram gravadas, fazendo a coisa errada de
-propósito. Uma sexta, a falta de memória, vem no fim.
+Cinco falhas respondem pela maior parte, e cada uma se apresenta na primeira linha que imprime. As cinco foram produzidas de propósito na máquina em que estas lições foram gravadas, e a primeira também tinha acontecido lá de verdade. Uma sexta, a falta de memória, vem no fim.
 
 ## O instalador para antes de começar
 
@@ -43,7 +41,7 @@ sudo systemctl start ollama
 ```
 
 O último `ollama list` acima é de depois que ele voltou. (A máquina das transcrições não tem
-`systemd`, então lá o servidor foi iniciado pelo script que as grava. No Ubuntu e no WSL, o comando é
+`systemd`, então lá o servidor foi iniciado à mão. No Ubuntu e no WSL, o comando é
 `systemctl`.)
 
 Não o inicie com `ollama serve` como você mesmo no lugar disso. Funciona, e serve um conjunto de

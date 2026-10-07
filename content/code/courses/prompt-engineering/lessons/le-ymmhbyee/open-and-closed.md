@@ -67,4 +67,4 @@ reviewer will ask about. Questions to answer from the provider's own documents:
 **Never answer these from memory or from a blog post.** Terms change, and differ between plans of
 the same provider. A model you run yourself answers all four by construction, which is one of the
 main reasons organisations choose open weights despite the hardware. Every prompt you have sent
-with `ask` so far went to `localhost` and nowhere else.
+with `ask` so far went to `localhost` and nowhere else, unless you pointed `ASK_URL` at a provider.

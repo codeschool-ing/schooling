@@ -82,8 +82,7 @@ ana@lab:~/pe$ for i in 1 2 3 4 5 6 7 8 9 10; do ask "In one sentence, describe t
 ```
 
 Ten replies, one text. That is one short prompt on one machine, and it is not a rate. While this
-course was recorded, the same model at temperature 0 did give two different replies to the same
-longer prompt on two runs, in lessons 4, 6 and 7: each transcript there is one run, and the
+course was recorded, the same model at temperature 0 did give two different replies to the same longer prompt on two runs, in lessons 4, 6 and 7. Each transcript there is one run, and the
 sentence under it describes that run.
 
 **The practical rule: temperature 0 makes variation rare, and your code still has to handle it.**

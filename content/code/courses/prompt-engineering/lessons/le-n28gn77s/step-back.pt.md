@@ -76,7 +76,7 @@ No, the kitchen cannot take the order at 11:45 because it stops taking hot food 
 ```
 
 A resposta continua sendo não, e **o motivo agora tem um horário errado**: 11:15, onde as regras no
-mesmo prompt dizem 11:30, três vezes. O recuo produziu regras certas; a segunda chamada refez a
+mesmo prompt dizem 11:30, duas vezes. O recuo produziu regras certas; a segunda chamada refez a
 subtração e errou. Nada na técnica impede isso, e a próxima seção de leitura volta a esse ponto.
 
 ```schooling-figure

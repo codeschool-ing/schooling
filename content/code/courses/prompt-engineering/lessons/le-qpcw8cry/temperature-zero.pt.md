@@ -84,7 +84,7 @@ ana@lab:~/pe$ for i in 1 2 3 4 5 6 7 8 9 10; do ask "In one sentence, describe t
 
 Dez respostas, um texto só. Isso é um prompt curto numa máquina, e não é uma taxa. Enquanto este
 curso era gravado, o mesmo modelo na temperatura 0 deu, sim, duas respostas diferentes ao mesmo
-prompt mais longo em duas execuções, nas lições 4, 6 e 7: cada transcrição ali é uma execução, e a
+prompt mais longo em duas execuções, nas lições 4, 6 e 7. Cada transcrição ali é uma execução, e a
 frase embaixo dela descreve aquela execução.
 
 **A regra prática: a temperatura 0 torna a variação rara, e o seu código ainda precisa lidar com

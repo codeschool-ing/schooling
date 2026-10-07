@@ -43,9 +43,7 @@ Verdict: sure (I found a way)
 `4 13 19` can make 24: `tot` found it at level 2, `19 - 13 = 6`, then `4 * 6`. The model tried
 that very combination on line 5 and wrote `(19 - 13) * 4 = 6`. Then on line 11 it wrote
 `(13 + 4) * 19 / 13 = 24`, which uses 13 twice and comes to 24.85, and on the strength of it said
-**sure**. The verdict is right, and the reason for it is false. On another run the same day, with
-the same prompt, the same model got line 5 wrong in a different way and ruled the state
-impossible, which would have pruned the branch that solves the puzzle. **That is where the search
+**sure**. The verdict is right, and the reason for it is false. A judgement reached that way could as easily have said impossible, and pruned the branch that solves the puzzle. **That is where the search
 goes wrong with a model in it**: not in the search, which is plain bookkeeping, but in a judgement
 nobody checks.
 
@@ -68,9 +66,7 @@ Let's try a few combinations:
 -- llama3.2:3b, finish: length, prompt 88 tokens, output 150 tokens
 ```
 
-It was cut off mid-list. Without the limit, on the run this lesson was written from, it went on to
-fifty combinations and nearly 3,000 tokens before writing `Impossible`. A judge that is right can
-still cost twenty times what a judgement should, which is what lesson 15's limit is for.
+It was cut off mid-list, at 150 tokens, and still had not reached a verdict. A judge that goes through combinations one by one can cost many times what a judgement should, which is what lesson 15's limit is for.
 
 This is why the previous section's breadth matters with a model and not with `tot`, and why
 implementations often ask the judge several times per state and combine the verdicts: lesson 27's

@@ -87,7 +87,7 @@ stopped: the reply has neither an Action nor an Answer
 
 Ele copiou o marcador, `calculator[sum]`, e depois explicou em palavras o que queria somar. O laço não
 conseguiu ler e parou. A segunda versão do prompt, a da seção anterior, mostra uma chamada de verdade
-para cada ferramenta, e as Actions do modelo passaram a ser legíveis.
+para cada ferramenta, e as três primeiras Actions do modelo foram legíveis; a quarta, `None needed`, também não era uma chamada.
 
 **Parar é a resposta certa**: adivinhar o que uma linha malformada quis dizer é como um laço acaba
 executando uma chamada que ninguém escreveu. Um sistema de verdade mandaria ao modelo uma mensagem
@@ -180,7 +180,7 @@ para o modelo se comportar bem, e ponha os limites no código para que não faç
 não se comportar.
 
 ::: track ai
-O curso `agents-mcp` constrói este laço contra um modelo de verdade, com as ferramentas descritas
+O curso `agents-mcp` constrói este laço por inteiro, com as ferramentas descritas
 num formato padrão, e mantém cada um destes limites no código.
 :::
 

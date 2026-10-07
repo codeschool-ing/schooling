@@ -43,25 +43,6 @@ Válida também. E esta quebra uma regra do café que o modelo nunca recebeu:
 ```
 ana@lab:~/pe$ grep 100 handbook/refunds.md
 A refund above R$ 100 needs the shift manager's approval.
-ana@lab:~/pe$ cat rules.py
-import json, sys
-
-t = json.load(open(sys.argv[1]))
-problems = []
-if t["refund"] and "refund_amount" not in t:
-    problems.append("refund is true but no refund_amount was given")
-if not t["refund"] and t.get("refund_amount", 0) > 0:
-    problems.append("refund is false but refund_amount is above zero")
-if t.get("refund_amount", 0) > 100:
-    problems.append("refund_amount %s is above R$ 100: the shift manager must approve" % t["refund_amount"])
-print("\n".join(problems) or "no rule broken")
-sys.exit(1 if problems else 0)
-ana@lab:~/pe$ python3 rules.py triage/7.json; echo "exit $?"
-refund_amount 140 is above R$ 100: the shift manager must approve
-exit 1
-ana@lab:~/pe$ python3 rules.py triage/good.json; echo "exit $?"
-no rule broken
-exit 0
 ```
 
 A lição 11 usou este mesmo manual para ancorar as respostas de um modelo. Aqui ele fornece uma regra
@@ -119,6 +100,5 @@ Uma resposta destinada a um programa passa por três conferências, da mais bara
 
 E uma quarta que não é programa: se a resposta é **fiel à sua entrada**. Cada camada deixa passar
 coisas que a seguinte barra. **Uma resposta que passou pelos três programas ganhou mais confiança,
-e ainda não toda**: a triagem do modelo para a reclamação 7 passou pelos três e foi para a fila do
-chá demorado, e a do curso teria chegado ao gerente em R$ 140, marcada para aprovação pelo motivo
+e ainda não toda**: a triagem do modelo para a reclamação 7 passou pelos três e foi para a fila do chá demorado. A do curso teria chegado ao gerente em R$ 140, marcada para aprovação pelo motivo
 certo e com o valor errado.

@@ -103,8 +103,7 @@ negative
 -- llama3.2:3b, finish: stop, prompt 76 tokens, output 33 tokens
 ```
 
-O rótulo veio primeiro, e estava certo, e depois o modelo **continuou**. Escreveu outra `<message>`,
-uma reserva que ele inventou, rotulou-a, e depois rotulou de novo a mensagem de verdade. É o padrão
+O rótulo veio primeiro, e estava certo, e depois o modelo **continuou**. Escreveu de novo o exemplo da reserva, rotulou-o `mixed` desta vez, e depois rotulou de novo a mensagem de verdade. É o padrão
 fazendo o seu trabalho: o prompt era mensagem, rótulo, mensagem, e a continuação mais provável de
 mensagem, rótulo, mensagem, rótulo é outra mensagem. Few-shot, com um exemplo para cada rótulo,
 inclusive um sarcástico:
@@ -137,15 +136,14 @@ ana@lab:~/pe$ ask - --temperature 0 < prompts/shot-few.txt
 ```
 
 Cinco rótulos para cinco mensagens, numerados: ele rotulou os exemplos além da mensagem, e é a
-última linha que responde à pergunta. Quatro dos cinco exemplos foram rotulados certo, e o quinto é
-a própria mensagem, `Great, another forty minutes for a coffee.`, agora rotulada `not_a_review`. A
+última linha que responde à pergunta. Os quatro exemplos foram rotulados certo, e a quinta linha é a própria mensagem, `Great, another forty minutes for a coffee.`, agora rotulada `not_a_review`. A
 resposta zero-shot estava certa.
 
-Então os exemplos resolveram a **forma**, um rótulo puro por linha, e também ensinaram uma forma que
+Então os exemplos resolveram a **forma**, um rótulo por linha, numerado. Também ensinaram uma forma que
 ninguém pediu: nestes prompts um exemplo e a entrada são idênticos, `<message>` e um rótulo, e nada
 marca onde os exemplos acabam e a tarefa começa. **Exemplos são a especificação de tudo o que têm em
 comum, inclusive o layout**, e um modelo deste tamanho segue o layout mais longe do que a instrução.
-A próxima seção de leitura marca a fronteira, e depois conta.
+A próxima seção de leitura conta, e depois marca a fronteira.
 
 O one-shot tem também um risco só dele. Com um único exemplo, tudo nele parece fazer parte do padrão:
 o rótulo, o tamanho, o assunto. Um modelo que só viu `not_a_review` pode pender para esse rótulo na

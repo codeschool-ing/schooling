@@ -41,7 +41,7 @@ duas linhas, por exemplo `export ASK_MODEL=llama3.2:1b`.
 
 ## `toylm`: um modelo de linguagem que dá para ler
 
-O primeiro programa é o modelo que as duas primeiras seções desta lição usaram. Abra um arquivo novo em
+O primeiro programa é o modelo que as duas seções de leitura antes desta usaram. Abra um arquivo novo em
 `~/pe/bin`, cole o programa nele, salve e saia. Qualquer editor serve; o `nano` está em todo Ubuntu,
 salva com Ctrl+O e sai com Ctrl+X:
 
@@ -265,7 +265,7 @@ chmod +x ~/pe/bin/toylm
 ```
 
 Você não precisa lê-lo agora. São umas duzentas linhas, e a função que transforma contagens em
-porcentagens ocupa quatro delas, no começo da classe `Model`.
+porcentagens ocupa quatro delas, o último método da classe `Model`.
 
 Ele aprende com o `corpus.txt`, 98 linhas curtas sobre um café. Cole este bloco inteiro no terminal:
 a primeira linha abre o arquivo, e a linha `EOF` no fim o fecha.
@@ -389,7 +389,7 @@ the cake is gone by noon .
 bruno orders a coffee .
 ```
 
-A lição 8 volta a essa última linha, e ao que a mesma palavra quer dizer num modelo com bilhões
+A lição 8 volta à linha `parameters`, e ao que a mesma palavra quer dizer num modelo com bilhões
 delas.
 
 **O café, e tudo o que as lições seguintes escrevem sobre ele, foi inventado para o curso.** O Café
@@ -525,14 +525,14 @@ A typical café usually opens between 7:00 AM and 11:00 AM, with peak hours ofte
 
 O primeiro prompt é o texto que o `toylm generate` continuou com `seven.` no começo desta lição. O modelo
 de chat não o continuou. Ele leu as quatro palavras como alguém falando com ele, disse que não sabia
-e devolveu uma pergunta, que é o que o fim da seção sobre escrever uma palavra por vez disse que um
+e devolveu uma pergunta. É o que o fim da seção sobre escrever uma palavra por vez disse que um
 modelo de chat é treinado para fazer: o próximo turno mais provável depois de uma mensagem é uma resposta a ela. Ele
 também acertou em não chutar, já que nada no prompt diz que café é esse. A lição 5 trata das
 respostas que chutam mesmo assim.
 
 O segundo prompt perguntou algo que ele sabe responder com o que aprendeu, e disse o tamanho da
 resposta. Veio uma frase. Com `--temperature 0` o modelo pega a palavra mais provável a cada passo,
-então perguntar de novo dá a mesma resposta; a lição 13 trata do que esse número muda.
+então perguntar de novo costuma dar a mesma resposta; a lição 13 trata do que esse número muda.
 
 A linha embaixo de cada resposta é a contabilidade que toda API de modelo devolve de algum jeito:
 qual modelo respondeu, **por que parou**, e quantos tokens entraram e saíram. O `toylm generate`

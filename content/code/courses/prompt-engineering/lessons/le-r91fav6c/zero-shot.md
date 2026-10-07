@@ -33,7 +33,7 @@ Every part of it leaves a decision to the model:
 - the input runs straight on from the instruction, with nothing to say where one ends and the
   other begins;
 - the output is not described, so the model may reply with a word, a sentence, or an answer;
-- the edge cases are not mentioned, and this input is one: it is a question, not a review.
+- the edge cases are not mentioned, and a message that is a question, not a review, is one.
 
 Given a message that is a question, a model has every reason to answer it, because answering
 questions is what it was trained to do (lesson 1), or to invent a label nobody listed. Nothing in

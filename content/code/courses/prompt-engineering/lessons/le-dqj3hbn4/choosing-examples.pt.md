@@ -147,7 +147,7 @@ r8  wanted positive      got mixed
 
 Quatro de oito: a forma está resolvida, e os rótulos estão piores do que no prompt sem exemplo
 nenhum. A `r5`, a mensagem sarcástica, continua `positive`, mesmo com um exemplo sarcástico no
-prompt, e três mensagens viraram `mixed`, o rótulo do exemplo mais parecido com elas na lista.
+prompt, e três mensagens viraram `mixed`.
 **Neste modelo, estes exemplos pioraram o rotulador**, e só a contagem diz isso: cada uma das
 respostas é um rótulo arrumado, em minúsculas. Um modelo maior pode muito bem ganhar com os mesmos
 quatro exemplos. É por isso que se mede com o seu modelo, e não se aceita a palavra desta lição, nem
@@ -155,7 +155,7 @@ a de ninguém.
 
 ## Os exemplos são pagos a cada pedido
 
-Um prompt é enviado inteiro a cada pedido, e os exemplos dele também. O `tok` conta as duas versões
+Um prompt é enviado inteiro a cada pedido, e os exemplos dele também. O `tok` conta as três versões
 com o tokenizador da lição 3:
 
 ```

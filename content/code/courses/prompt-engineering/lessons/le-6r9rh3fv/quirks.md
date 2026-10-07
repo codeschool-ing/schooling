@@ -59,7 +59,7 @@ nehctik
 ```
 
 `nehcik` is `kitchen` backwards without its `t`. The model wrote it as confidently as it would have
-written the right answer, which is the part to remember.
+written the right answer.
 
 ## Digits in chunks
 
@@ -115,7 +115,7 @@ There are 3 lines that are the letter "R".
 ```
 
 It wrote the letters in capitals, which nobody asked for, and counted three. **The answer changed
-because the question changed what the model could see**, not because it tried harder.
+because the question changed what the model could see**.
 
 None of this is a reason to distrust what a model writes about meaning. **A model is good at what
 is visible in tokens, which is which pieces follow which**, and weak at what is hidden inside them.

@@ -86,7 +86,7 @@ stopped: the reply has neither an Action nor an Answer
 
 It copied the placeholder, `calculator[sum]`, and then explained in words what it wanted summed.
 The loop could not read it and stopped. The second version of the prompt, the one in the section
-before, shows a real call for each tool instead, and the model's Actions became readable.
+before, shows a real call for each tool instead, and the model's first three Actions were readable; its fourth, `None needed`, was not a call either.
 
 **Stopping is the right response**: guessing what a malformed line meant is how a loop ends up
 running a call nobody wrote. A real system would send the model a short message saying what the
@@ -176,7 +176,7 @@ is not on the list, so it does not run. Write the instructions in the prompt so 
 well, and put the limits in the code so it does not matter when it does not.
 
 ::: track ai
-The `agents-mcp` course builds this loop against a real model, with tools described in a standard
+The `agents-mcp` course builds this loop properly, with tools described in a standard
 format, and keeps every one of these limits in the code.
 :::
 

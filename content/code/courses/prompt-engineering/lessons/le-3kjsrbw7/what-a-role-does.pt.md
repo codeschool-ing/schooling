@@ -58,7 +58,7 @@ As duas são razoáveis, e não são intercambiáveis. O barista não explicou n
 cliente, sobre o último flat white de que ele gostou e sobre os grãos e o preparo dele, como se o
 cliente tivesse feito o café. O instrutor nomeou uma causa, "over-extraction", deu dois jeitos de
 ela acontecer e passou ao que o aprendiz deve conferir, com um "great question" na entrada.
-**Nenhum papel acrescentou um fato que faltasse ao outro**: o que deixa o café amargo veio do que o
+**Nenhum papel deu ao modelo um conhecimento que ele já não tivesse**: o que deixa o café amargo veio do que o
 modelo aprendeu no treino, e o instrutor o pôs à frente enquanto o barista não. O que mudou foi qual
 parte desse conhecimento foi usada, com que palavras, para quem.
 

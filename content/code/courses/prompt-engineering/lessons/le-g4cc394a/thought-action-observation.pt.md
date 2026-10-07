@@ -129,8 +129,7 @@ done: an answer after 4 steps
 
 Quatro passos e três chamadas de ferramenta. Leia a resposta contra o registro e **cada parte dela
 tem uma fonte**. A regra da aprovação é uma linha de `refunds.md` (acima de R$ 100, o gerente do
-turno aprova), o valor é o `111.6` da calculadora, e "no cartão" é a segunda linha do manual. A
-única contribuição do modelo foi a ordem das perguntas e a comparação de 111,6 com 100, e as duas
+turno aprova), o valor é o `111.6` da calculadora, e "no cartão" é a segunda linha do manual. A única contribuição dos turnos foi a ordem das perguntas e a comparação de 111,6 com 100, e as duas
 estão escritas onde você pode conferir.
 
 ```schooling-figure

@@ -138,7 +138,7 @@ solved: 4 - 10 = -6; 9 - 13 = -4; -6 * -4 = 24
 ```
 
 Ela resolveu o quebra-cabeça com 60 propostas em vez de 102 (36 + 18 + 6 contra 36 + 54 + 12).
-Não foi sorte, e é a coisa mais importante a ler nesta captura: **o juiz do `tot` nunca erra.**
+Não foi sorte: **o juiz do `tot` nunca erra.**
 Ele decide `sure` tentando todas as combinações restantes, então um estado mantido sempre leva ao
 24, e um galho basta.
 

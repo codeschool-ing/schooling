@@ -126,8 +126,7 @@ I don't know the staff Wi-Fi password. You can contact our management team at he
 -- llama3.2:3b, finish: stop, prompt 202 tokens, output 25 tokens
 ```
 
-Nenhum endereço de rua nas três. Cada rodada mudou uma coisa, e a contagem do que ainda falha é de
-onde uma versão 5 partiria: a resposta do reembolso tem quatro frases, onde o prompt permite três, e
+Nenhum endereço de rua nas três. Cada rodada mudou uma coisa, e a contagem do que ainda falha é de onde uma versão 5 partiria. As respostas do tempo e do reembolso têm quatro frases cada, onde o prompt permite três, e
 nenhuma destas respostas é motivo para acreditar que uma quarta pergunta daria certo.
 
 ## Tom e persona cabem aqui, com limites

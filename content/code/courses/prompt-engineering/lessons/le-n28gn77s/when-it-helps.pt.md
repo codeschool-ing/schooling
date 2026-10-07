@@ -52,7 +52,7 @@ tokens  words  chars  file
 ```
 
 A pergunta direta manda 116 tokens. A versão com recuo manda 122 e depois 301, o que dá 423 tokens
-de entrada, mais de três vezes e meia, e além disso a resposta da primeira chamada é saída que você paga e
+de entrada, mais de três vezes e meia. Além disso, a resposta da primeira chamada é saída que você paga e
 espera antes que a segunda possa começar. **O dobro de idas e voltas e mais do triplo de entrada é
 o preço de uma resposta**, então vale pagar onde uma resposta errada sai cara e o princípio é fácil
 de perder, e não em todo pedido.
