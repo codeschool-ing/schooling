@@ -215,7 +215,7 @@ WORKING_DAYS = 20
 
 # ------------------------------------------------- lesson 14: the interest on debt
 DEBT = {
-    'flaky test suite': {'devs': 5, 'hours_per_day': 0.5, 'days': 10, 'fix': 60},
+    'flaky test suite': {'devs': 5, 'hours_per_day': 0.5, 'days': 10, 'fix': 60, 'fails': 'about 1 run in 5'},
     'manual deploy': {'per_deploy': 3, 'deploys': 2, 'fix': 40},
 }
 
@@ -353,6 +353,8 @@ def lesson14():
     d = DEBT['flaky test suite']
     per = d['devs'] * d['hours_per_day'] * d['days']
     print('  flaky suite: interest', per, 'hours a sprint; fix', d['fix'], '; payback', d['fix'] / per, 'sprints')
+    team = d['devs'] * 8 * d['days']
+    print('  the team has', team, 'hours a sprint at 8 a day; the suite takes', round(100 * per / team, 2), '% of them')
     m = DEBT['manual deploy']
     per2 = m['per_deploy'] * m['deploys']
     print('  manual deploy: interest', per2, 'hours a sprint; fix', m['fix'], '; payback', round(m['fix'] / per2, 3), 'sprints')

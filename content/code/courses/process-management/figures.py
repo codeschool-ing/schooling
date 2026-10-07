@@ -1652,6 +1652,87 @@ def l13_lead_times(lang):
 # ---- end of lesson 13
 
 
+# ------------------------------------------------------------------ lesson 14
+
+@figure('l14-quadrant', 14)
+def l14_quadrant(lang):
+    t = {
+        'en': dict(cols=['reckless', 'prudent'], rows=['deliberate', 'inadvertent'],
+                   cells=[[['“We don’t have time', 'for design”'],
+                           ['“We must ship now and deal', 'with the consequences”']],
+                          [['“What’s', 'layering?”'], ['“Now we know how we', 'should have done it”']]],
+                   label='A two by two grid. Columns: reckless and prudent. Rows: deliberate and inadvertent. Reckless '
+                         'and deliberate: we don’t have time for design. Prudent and deliberate: we must ship now and '
+                         'deal with the consequences. Reckless and inadvertent: what’s layering? Prudent and '
+                         'inadvertent: now we know how we should have done it.',
+                   cap='Martin Fowler’s technical debt quadrant, from 2009. Only the right-hand column is debt in '
+                       'Cunningham’s sense; the bottom-right cell is unavoidable for any team that learns.'),
+        'pt': dict(cols=['imprudente', 'prudente'], rows=['deliberada', 'inadvertida'],
+                   cells=[[['“Não temos tempo', 'para design”'],
+                           ['“Precisamos entregar agora e', 'lidar com as consequências”']],
+                          [['“O que é separar', 'em camadas?”'], ['“Agora sabemos como', 'devíamos ter feito”']]],
+                   label='Uma grade de dois por dois. Colunas: imprudente e prudente. Linhas: deliberada e inadvertida. '
+                         'Imprudente e deliberada: não temos tempo para design. Prudente e deliberada: precisamos '
+                         'entregar agora e lidar com as consequências. Imprudente e inadvertida: o que é separar em '
+                         'camadas? Prudente e inadvertida: agora sabemos como devíamos ter feito.',
+                   cap='O quadrante da dívida técnica de Martin Fowler, de 2009. Só a coluna da direita é dívida no '
+                       'sentido de Cunningham; a célula de baixo à direita é inevitável para qualquer time que aprende.'),
+    }[lang]
+    f = Fig('l14-quadrant', 620, 260, t['label'])
+    x0, y0, w, h = 130, 40, 236, 96
+    for j, c in enumerate(t['cols']):
+        f.text(x0 + j * (w + 8) + w / 2, 24, c, size=10.5, weight='600')
+    for i, r in enumerate(t['rows']):
+        f.text(x0 - 10, y0 + i * (h + 8) + h / 2, r, size=10.5, weight='600', anchor='end')
+        for j in range(2):
+            x, y = x0 + j * (w + 8), y0 + i * (h + 8)
+            prudent = j == 1
+            f.rect(x, y, w, h, stroke='--phosphor' if prudent else '--amber', fill='--panel', rx=4,
+                   width=1.6 if (i == 1 and j == 1) else 1.2)
+            lines = t['cells'][i][j]
+            top = y + h / 2 - 7 * (len(lines) - 1)
+            for k, ln in enumerate(lines):
+                f.text(x + w / 2, top + k * 14, ln, size=10, italic=True)
+    return f, t['cap']
+
+
+@figure('l14-payback', 14)
+def l14_payback(lang):
+    d = S.DEBT['flaky test suite']
+    per = d['devs'] * d['hours_per_day'] * d['days']
+    fix = d['fix']
+    t = {
+        'en': dict(y='hours, accumulated', x='sprints from today', keep='keep paying interest: 25 hours a sprint',
+                   pay='pay it down: 60 hours once', even='break-even at 2.4 sprints',
+                   label='Two lines over ten sprints. Keeping the flaky test suite costs 25 hours each sprint, rising '
+                         'in a straight line to 250 hours by sprint 10. Fixing it costs 60 hours once, a flat line. '
+                         'The lines cross at 2.4 sprints.',
+                   cap='The flaky test suite, priced. After two and a half sprints the fix has paid for itself, and '
+                       'every sprint after that is twenty-five hours the team gets back.'),
+        'pt': dict(y='horas, acumuladas', x='sprints a partir de hoje', keep='continuar pagando juros: 25 horas por sprint',
+                   pay='quitar: 60 horas uma vez', even='empate em 2,4 sprints',
+                   label='Duas linhas ao longo de dez sprints. Manter a suíte de testes instável custa 25 horas a cada '
+                         'sprint, subindo em linha reta até 250 horas na sprint 10. Consertá-la custa 60 horas uma vez, '
+                         'uma linha plana. As linhas se cruzam em 2,4 sprints.',
+                   cap='A suíte de testes instável, com preço. Depois de duas sprints e meia a correção se pagou, e '
+                       'cada sprint dali em diante são vinte e cinco horas que o time recebe de volta.'),
+    }[lang]
+    f = Fig('l14-payback', 620, 290, t['label'])
+    p = Plot(f, 70, 40, 580, 230, 0, 10, 0, 260)
+    p.yaxis([0, 50, 100, 150, 200, 250], label=t['y'])
+    p.xaxis(range(0, 11), label=t['x'])
+    f.line(p.sx(0), p.sy(0), p.sx(10), p.sy(per * 10), stroke='--amber', width=2.2)
+    f.line(p.sx(0), p.sy(fix), p.sx(10), p.sy(fix), stroke='--phosphor', width=2.2)
+    be = fix / per
+    f.circle(p.sx(be), p.sy(fix), 5, fill='--panel', stroke='--paper', width=1.6)
+    f.text(p.sx(be) + 10, p.sy(fix) + 16, t['even'], size=9.5, anchor='start', fill='--paper', weight='600')
+    f.text(p.sx(4.6), p.sy(per * 6.4), t['keep'], size=9.5, anchor='end', fill='--amber', weight='600')
+    f.text(p.sx(10), p.sy(fix) - 10, t['pay'], size=9.5, anchor='end', fill='--phosphor', weight='600')
+    return f, t['cap']
+
+# ---- end of lesson 14
+
+
 # ------------------------------------------------------------------ the figures
 
 
