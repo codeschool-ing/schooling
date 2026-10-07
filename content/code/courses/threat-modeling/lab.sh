@@ -90,6 +90,8 @@ reset() {
   add decisions/DR-001-second-factor.md decisions/RA-001-crafted-pdf.md \
     decisions/RA-002-cancellation-record.md acceptances.py
   commit '2026-10-01 17:30' 'Record the first decisions'
+  add mapping.csv crosswalk.py
+  commit '2026-10-05 14:00' 'Map the controls to ISO 27001 and the NIST CSF'
 }
 
 case ${1:-} in
