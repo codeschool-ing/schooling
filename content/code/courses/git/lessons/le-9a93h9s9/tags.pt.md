@@ -1,6 +1,6 @@
 ---
 title: Tags, e limpando a cópia compartilhada
-version: 1
+version: 2
 ---
 
 Um branch é um nome que anda. **Uma tag é um nome que não anda**: ela marca um commit para sempre, que
@@ -53,11 +53,16 @@ A aula 5 apagou branches no seu próprio repositório. Um branch que foi enviado
 `origin`, e apagá-lo lá é um envio à parte:
 
 ```
+ana@vm:~/site$ git switch -c autumn-menu
+Switched to a new branch 'autumn-menu'
 ana@vm:~/site$ git push -u origin autumn-menu
 Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
 To /home/ana/remotes/site.git
  * [new branch]      autumn-menu -> autumn-menu
 branch 'autumn-menu' set up to track 'origin/autumn-menu'.
+ana@vm:~/site$ git switch main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
 ana@vm:~/site$ git push origin --delete autumn-menu
 To /home/ana/remotes/site.git
  - [deleted]         autumn-menu

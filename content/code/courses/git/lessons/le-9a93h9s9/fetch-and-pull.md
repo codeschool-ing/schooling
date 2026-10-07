@@ -1,11 +1,12 @@
 ---
 title: Fetch and pull: nothing happens on its own
-version: 1
+version: 2
 ---
 
 Bruno changes a price and pushes it:
 
 ```
+ana@vm:~/bruno/site$ sed -i 's/Cheese roll, 2.50/Cheese roll, 2.60/' menu.html
 ana@vm:~/bruno/site$ git commit -qam "Charge 2.60 for cheese rolls"
 ana@vm:~/bruno/site$ git push
 Enumerating objects: 5, done.

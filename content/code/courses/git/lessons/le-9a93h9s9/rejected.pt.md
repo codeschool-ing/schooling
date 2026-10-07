@@ -1,10 +1,23 @@
 ---
 title: Quando um push é recusado
-version: 1
+version: 2
 ---
 
 A Ana faz um commit mudando os dias de abertura. Enquanto isso, sem ela saber, o Bruno faz um commit e
-envia uma mudança na folha de estilo. A Ana envia:
+envia uma mudança na folha de estilo. Faça os dois papéis, o da Ana em `~/site` e o do Bruno na cópia
+dele:
+
+```bash
+sed -i 's/half past five/half past five, Monday to Saturday/' index.html
+git commit -qam 'Say which days we open'
+cd ~/bruno/site
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git commit -qam 'Give paragraphs more room'
+git push -q
+cd ~/site
+```
+
+Então a Ana envia:
 
 ```
 ana@vm:~/site$ git push

@@ -12,14 +12,15 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; the shared
-# repository, a bare one in ~/remotes, standing in for GitHub; Bruno's copy,
-# a second clone on the same machine; the edits each of them commits; and
-# colour switched off, since a transcript has none. The push, fetch, pull and
-# clone commands run under `script`, a pseudo-terminal, because git only
-# prints its progress to a terminal and a reader at one sees it.
+# Both people's work is typed: Bruno's in his clone, ~/bruno/site, with his name
+# set in that repository as the lesson shows, and the commits that make the two
+# copies diverge in the ```bash block `rejected` prints, run by `given`.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids in
+# the prose are reproducible; colour switched off, since a transcript has none.
+# The push, fetch, pull and clone commands run under `script`, a
+# pseudo-terminal, because git only prints its progress to a terminal and a
+# reader at one sees it.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -74,10 +75,8 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
-
-cd ~ && rm -rf ~/remotes ~/bruno
+cd ~ && given origin 1
 git config --global color.ui never
 git config --global color.push never
 git config --global color.advice never
@@ -92,7 +91,7 @@ block bare
 show 'git init --bare ~/remotes/site.git'
 
 block add-push
-cd ~/site
+show 'cd site'
 show 'git remote add origin ~/remotes/site.git'
 show 'git remote -v'
 tty 'git push -u origin main'
@@ -109,7 +108,7 @@ show 'git branch -a'
 block bruno-push
 unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 at '2026-09-21T10:15:00-03:00'
-sed -i 's/Cheese roll, 2.50/Cheese roll, 2.60/' menu.html
+show "sed -i 's/Cheese roll, 2.50/Cheese roll, 2.60/' menu.html"
 show 'git commit -qam "Charge 2.60 for cheese rolls"'
 tty 'git push'
 
@@ -127,16 +126,7 @@ block pull
 tty 'git pull'
 
 block diverge
-at '2026-09-21T11:00:00-03:00'
-sed -i 's/half past five/half past five, Monday to Saturday/' index.html
-show 'git commit -qam "Say which days we open"'
-cd ~/bruno/site
-unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
-at '2026-09-21T11:20:00-03:00'
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
-git commit -qam 'Give paragraphs more room'
-git push -q
-cd ~/site
+given rejected 1 '2026-09-21T11:00:00-03:00' '2026-09-21T11:20:00-03:00'
 me
 at '2026-09-21T11:30:00-03:00'
 
@@ -159,7 +149,7 @@ show 'git show v1.0 --no-patch'
 tty 'git push origin v1.0'
 
 block delete-remote-branch
-git switch -q -c autumn-menu
+show 'git switch -c autumn-menu'
 tty 'git push -u origin autumn-menu'
-git switch -q main
+show 'git switch main'
 tty 'git push origin --delete autumn-menu'
