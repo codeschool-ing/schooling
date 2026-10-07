@@ -24,16 +24,16 @@ da Meta descreve cada Llama que ela lançou como um bloco de números de arquite
 ```
 
 Esses sete números, com o tamanho do vocabulário, determinam todos os pesos da rede. O
-`lab/size.py` lê os números dos três tamanhos da Llama 3.1 e faz a conta:
+O `size.py` lê os números dos três tamanhos da Llama 3.1 e faz a conta:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "lab/size.py",
+  "file": "size.py",
   "parts": [
     {
-      "code": "import re\nimport subprocess\nimport sys\n\nsrc = subprocess.run([\"sources\", \"lines\", \"llama-skus\", \"1\", \"330\"], capture_output=True, text=True).stdout\nVOCAB = 128256  # LLAMA3_VOCAB_SIZE, line 19 of sku_list.py\n\n\n",
-      "note": "A arquitetura é lida do próprio arquivo da Meta, pelo `sources`, então os números não têm como se afastar dos publicados. O tamanho do vocabulário é uma constante no topo desse arquivo."
+      "code": "import re\nimport sys\nimport urllib.request\n\nURL = (\"https://raw.githubusercontent.com/meta-llama/llama-models/\"\n       \"0e0b8c519242d5833d8c11bffc1232b77ad7f301/models/sku_list.py\")\nsrc = urllib.request.urlopen(URL).read().decode()\nVOCAB = 128256  # LLAMA3_VOCAB_SIZE, line 19 of sku_list.py\n\n\n",
+      "note": "A arquitetura é lida do próprio arquivo da Meta, no commit citado acima, então os números não têm como se afastar dos publicados. O tamanho do vocabulário é uma constante no topo desse arquivo."
     },
     {
       "code": "def arch(name):\n    block = src[src.index(f'\"meta-llama/{name}\"'):]\n    num = lambda k: float(re.search(rf'\"{k}\": ([0-9.]+)', block).group(1))  # noqa: E731\n    return {k: num(k) for k in (\"dim\", \"n_layers\", \"n_heads\", \"n_kv_heads\", \"ffn_dim_multiplier\", \"multiple_of\")}\n\n\n",
