@@ -1419,6 +1419,53 @@ def l16_three_places(lang):
         f.text(x, 172, t['sees'][i], size=10, fill='--paper-dim')
     return f, t['cap']
 
+@figure('l17-pyramid', 17)
+def l17_pyramid(lang):
+    t = {'en': dict(
+            label='Three kinds of test for a pipeline, as layers. At the bottom, many unit tests: '
+                  'one function or one model, on made-up rows, fast. In the middle, a few '
+                  'integration tests: the whole pipeline in databases of its own, slower. Beside '
+                  'them, the fixture they run on: one real day of the shop. And apart from all '
+                  'three, the data tests of lessons 12 and 16, which run every night on real data.',
+            unit='unit tests', unit_s='one rule, made-up rows · many, fast',
+            integ='integration tests', integ_s='the whole nightly · few, slower',
+            fix='a fixture of real data', fix_s='one day of the shop',
+            data='data tests', data_s='every night, on real data',
+            code='test the code, before a change', night='test the data, every night',
+            cap='Tests of the code run on known inputs before a change; tests of the data run on '
+                'whatever arrived, every night.'),
+         'pt': dict(
+            label='Três tipos de teste para um pipeline, em camadas. Embaixo, muitos testes de '
+                  'unidade: uma função ou um modelo, sobre linhas inventadas, rápidos. No meio, '
+                  'poucos testes de integração: o pipeline inteiro em bancos próprios, mais lentos. '
+                  'Ao lado, a fixture sobre a qual rodam: um dia de verdade da loja. E à parte dos '
+                  'três, os testes de dados das lições 12 e 16, que rodam toda noite sobre dados reais.',
+            unit='testes de unidade', unit_s='uma regra, linhas inventadas · muitos, rápidos',
+            integ='testes de integração', integ_s='a carga noturna inteira · poucos, mais lentos',
+            fix='uma fixture de dados reais', fix_s='um dia da loja',
+            data='testes de dados', data_s='toda noite, sobre dados reais',
+            code='testar o código, antes de uma mudança', night='testar os dados, toda noite',
+            cap='Testes do código rodam sobre entradas conhecidas antes de uma mudança; testes dos '
+                'dados rodam sobre o que chegou, toda noite.')}[lang]
+    f = Fig('l17-pyramid', 720, 230, t['label'])
+    f.text(230, 22, t['code'], size=11, weight='600')
+    f.rect(20, 46, 230, 60, stroke='--amber', fill='--panel')
+    f.text(135, 68, t['integ'], size=11.5, weight='600')
+    f.text(135, 88, t['integ_s'], size=9.5, fill='--paper-dim')
+    f.rect(290, 46, 160, 60, stroke='--wire', fill='--panel')
+    f.text(370, 68, t['fix'], size=10.5, weight='600')
+    f.text(370, 88, t['fix_s'], size=9.5, fill='--paper-dim')
+    f.line(288, 76, 252, 76, arrow=True)
+    f.rect(20, 126, 430, 60, stroke='--phosphor', fill='--panel')
+    f.text(235, 148, t['unit'], size=11.5, weight='600')
+    f.text(235, 168, t['unit_s'], size=10, fill='--paper-dim')
+    f.line(480, 16, 480, 210, stroke='--wire', dash='3 4')
+    f.text(600, 22, t['night'], size=11, weight='600')
+    f.rect(505, 86, 195, 60, stroke='--wire', fill='--panel')
+    f.text(602, 108, t['data'], size=11.5, weight='600')
+    f.text(602, 128, t['data_s'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:
