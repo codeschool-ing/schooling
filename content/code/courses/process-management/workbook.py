@@ -101,7 +101,7 @@ def lesson12():
         rows.append([name, bv, tc, rr, size, f'=B{k}+C{k}+D{k}', f'=ROUND(F{k}/E{k},2)'])
     last = len(rows)
     show = [f'=INDEX(A2:A{last},MATCH(MAX(G2:G{last}),G2:G{last},0))']
-    return rows, show, ['G2', 'G3', 'G4', 'G5']
+    return rows, show, ['F2', 'G2', 'G3', 'G4', 'G5']
 
 
 def lesson13():

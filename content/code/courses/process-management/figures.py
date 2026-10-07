@@ -1458,6 +1458,107 @@ def l11_emv(lang):
 # ---- end of lesson 11
 
 
+# ------------------------------------------------------------------ lesson 12
+
+@figure('l12-urgency', 12)
+def l12_urgency(lang):
+    t = {
+        'en': dict(titles=['standard', 'urgent', 'fixed date', 'intangible'],
+                   notes=['value lost grows steadily', 'value lost grows fast, at once',
+                          'nothing lost, then everything', 'little lost now, much later'],
+                   x='time of delay', y='value lost',
+                   label='Four small charts of value lost against time of delay. Standard: a straight line rising '
+                         'steadily. Urgent: a steep line from the start. Fixed date: flat at zero, then a vertical '
+                         'jump at the deadline. Intangible: nearly flat for a long time, then rising.',
+                   cap='Four urgency profiles. The same feature can be worth the same in total and still deserve '
+                       'opposite places in the queue, because what matters is how fast its value is lost while it '
+                       'waits.'),
+        'pt': dict(titles=['padrão', 'urgente', 'data fixa', 'intangível'],
+                   notes=['a perda cresce de forma constante', 'a perda cresce rápido, já',
+                          'nada se perde, depois tudo', 'pouca perda agora, muita depois'],
+                   x='tempo de atraso', y='valor perdido',
+                   label='Quatro gráficos pequenos de valor perdido contra tempo de atraso. Padrão: uma reta subindo '
+                         'de forma constante. Urgente: uma reta íngreme desde o começo. Data fixa: plana em zero, '
+                         'depois um salto vertical no prazo. Intangível: quase plana por muito tempo, depois subindo.',
+                   cap='Quatro perfis de urgência. A mesma funcionalidade pode valer o mesmo no total e ainda merecer '
+                       'lugares opostos na fila, porque o que importa é a rapidez com que o valor dela se perde '
+                       'enquanto espera.'),
+    }[lang]
+    f = Fig('l12-urgency', 680, 230, t['label'])
+    curves = [
+        lambda u: u * 0.8,
+        lambda u: min(1, u * 2.2),
+        lambda u: 0 if u < 0.6 else 0.95,
+        lambda u: 0.05 + 0.9 * u ** 4,
+    ]
+    for k, (title, note, fn) in enumerate(zip(t['titles'], t['notes'], curves)):
+        x0 = 20 + k * 166
+        w, h, top = 140, 110, 50
+        f.text(x0 + w / 2, 22, title, size=10.5, weight='600')
+        f.line(x0, top + h, x0 + w, top + h, stroke='--paper-dim', width=1.2)
+        f.line(x0, top, x0, top + h, stroke='--paper-dim', width=1.2)
+        if k == 2:
+            d = (f'M{x0:.1f} {top + h:.1f} L{x0 + 0.6 * w:.1f} {top + h:.1f} L{x0 + 0.6 * w:.1f} '
+                 f'{top + h - 0.95 * h:.1f} L{x0 + w:.1f} {top + h - 0.95 * h:.1f}')
+        else:
+            d = 'M' + ' L'.join(f'{x0 + u / 40 * w:.1f} {top + h - fn(u / 40) * h:.1f}' for u in range(41))
+        f.path(d, stroke='--amber', width=2)
+        f.text(x0 + w / 2, top + h + 16, note, size=9, fill='--paper-dim')
+    f.text(20, 210, t['x'] + ' →', size=9.5, anchor='start', fill='--paper-dim')
+    f.text(680 - 14, 210, '↑ ' + t['y'], size=9.5, anchor='end', fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l12-kano', 12)
+def l12_kano(lang):
+    t = {
+        'en': dict(x='how well the feature is provided', y='satisfaction',
+                   basic='basic: expected, noticed only when missing', perf='performance: more is better',
+                   delight='delighter: unexpected, pleases when present',
+                   label='A chart with how well a feature is provided along the bottom and satisfaction up the side. '
+                         'Three curves. Basic features stay below the middle line however well they are done, '
+                         'rising only to neutral. Performance features rise in a straight line. Delighters start at '
+                         'neutral and curve sharply upwards.',
+                   cap='Kano’s three main kinds of requirement. Doing a basic one brilliantly earns nothing; leaving '
+                       'it out is a disaster. Over the years, delighters drift down into basics, as every competitor '
+                       'copies them.'),
+        'pt': dict(x='quão bem a funcionalidade é oferecida', y='satisfação',
+                   basic='básica: esperada, notada só quando falta', perf='de desempenho: mais é melhor',
+                   delight='encantadora: inesperada, agrada quando existe',
+                   label='Um gráfico com quão bem uma funcionalidade é oferecida na base e a satisfação na lateral. '
+                         'Três curvas. Funcionalidades básicas ficam abaixo da linha do meio por melhor que sejam '
+                         'feitas, subindo só até o neutro. As de desempenho sobem em linha reta. As encantadoras '
+                         'começam no neutro e sobem em curva acentuada.',
+                   cap='Os três tipos principais de requisito de Kano. Fazer uma básica de forma brilhante não rende '
+                       'nada; deixá-la de fora é um desastre. Com os anos, as encantadoras descem para básicas, '
+                       'conforme todo concorrente as copia.'),
+    }[lang]
+    f = Fig('l12-kano', 700, 300, t['label'])
+    x0, x1, y0, y1 = 60, 400, 30, 250
+    ym = (y0 + y1) / 2
+    f.line(x0, ym, x1, ym, stroke='--paper-dim', width=1.2)
+    f.line((x0 + x1) / 2, y0, (x0 + x1) / 2, y1, stroke='--paper-dim', width=1.2)
+    f.text((x0 + x1) / 2, y1 + 18, t['x'] + ' →', size=9.5, fill='--paper-dim')
+    f.text(x0 - 10, y0 + 4, t['y'], size=9.5, anchor='start', fill='--paper-dim')
+    w = x1 - x0
+    basic = 'M' + ' L'.join(f'{x0 + u / 40 * w:.1f} {ym + 100 * math.exp(-4 * u / 40) - 6:.1f}' for u in range(41))
+    perf = f'M{x0:.1f} {y1 - 10:.1f} L{x1:.1f} {y0 + 10:.1f}'
+    delight = 'M' + ' L'.join(f'{x0 + u / 40 * w:.1f} {ym - 100 * (math.exp(4 * u / 40) - 1) / (math.e ** 4 - 1) - 4:.1f}'
+                              for u in range(41))
+    f.path(basic, stroke='--paper', width=2)
+    f.path(perf, stroke='--phosphor', width=2)
+    f.path(delight, stroke='--amber', width=2)
+    f.circle(420, 60, 5, fill='--amber')
+    f.text(432, 60, t['delight'], size=9.5, anchor='start', fill='--amber')
+    f.circle(420, 140, 5, fill='--phosphor')
+    f.text(432, 140, t['perf'], size=9.5, anchor='start', fill='--phosphor')
+    f.circle(420, 220, 5, fill='--paper')
+    f.text(432, 220, t['basic'], size=9.5, anchor='start')
+    return f, t['cap']
+
+# ---- end of lesson 12
+
+
 # ------------------------------------------------------------------ the figures
 
 
