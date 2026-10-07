@@ -807,6 +807,79 @@ def _l9_lineage(f):
            size=10.5, fill='--paper-dim')
 
 
+# ===================================================================== lesson 10
+L10 = 'le-2z1py153'
+
+
+@figure('l10-timeline', L10, 720, 230,
+        ('The retention timeline of an order placed in March 2020. The tax rule counts five '
+         'years from the first day of the following year, 1 January 2021, so the order may be '
+         'purged from 1 January 2026. Counting from the order date instead would have deleted '
+         'it in March 2025, nine months too early. A legal hold stops the clock for as long as '
+         'it lasts.',
+         'A linha do tempo de retenção de um pedido feito em março de 2020. A regra tributária '
+         'conta cinco anos a partir do primeiro dia do ano seguinte, 1º de janeiro de 2021, '
+         'então o pedido pode ser expurgado a partir de 1º de janeiro de 2026. Contar da data do '
+         'pedido o teria apagado em março de 2025, nove meses cedo demais. Um bloqueio judicial '
+         'para o relógio enquanto durar.'),
+        ('Counted from the wrong day, a retention rule breaks a different law.',
+         'Contada a partir do dia errado, uma regra de retenção viola outra lei.'))
+def _l10_timeline(f):
+    x0, x1 = 40, 680
+    def X(year):  # 2020.0 .. 2027.0
+        return x0 + (year - 2020) / 7 * (x1 - x0)
+    f.line(x0, 110, x1, 110, stroke='--wire', width=2)
+    for y in range(2020, 2028):
+        f.line(X(y), 104, X(y), 116, stroke='--wire')
+        f.text(X(y), 130, str(y), size=10, mono=True, fill='--paper-dim')
+    f.rect(X(2021), 84, X(2026) - X(2021), 18, stroke='--phosphor', fill='--panel')
+    f.text((X(2021) + X(2026)) / 2, 93, ('five years, from 1 January 2021',
+                                         'cinco anos, a partir de 1º de janeiro de 2021'),
+           size=10.5)
+    f.circle(X(2020.2), 110, 6, fill='--paper')
+    f.text(X(2020.2), 60, ('ordered', 'pedido'), size=11)
+    f.text(X(2020.2), 74, ('March 2020', 'março de 2020'), size=10, fill='--paper-dim')
+    f.circle(X(2026), 110, 6, fill='--phosphor')
+    f.text(X(2026), 60, ('may be purged', 'pode ser expurgado'), size=11)
+    f.text(X(2026), 74, ('1 January 2026', '1º de janeiro de 2026'), size=10, fill='--paper-dim')
+    f.circle(X(2025.2), 160, 5, fill='--amber')
+    f.line(X(2025.2), 116, X(2025.2), 154, stroke='--amber', dash='3 3')
+    f.text(X(2025.2), 182, ('counted from the order: March 2025, too early',
+                            'contado do pedido: março de 2025, cedo demais'), size=10.5,
+           fill='--paper-dim')
+    f.text(360, 212, ('a legal hold stops the clock until it is released',
+                      'um bloqueio judicial para o relógio até ser liberado'), size=10.5,
+           fill='--paper-dim')
+
+
+@figure('l10-copies', L10, 720, 220,
+        ('Where an expired row lives. The purge deletes it from the database. Backups keep it '
+         'until their own retention ends, and a restore must run the purge again. Logs hold '
+         'fragments of it for days or weeks. Extracts and test copies keep it until somebody '
+         'finds them, which only a lineage map makes possible.',
+         'Onde uma linha expirada mora. O expurgo a apaga do banco. Os backups a guardam até a '
+         'retenção deles acabar, e uma restauração precisa rodar o expurgo de novo. Os logs '
+         'guardam fragmentos dela por dias ou semanas. Extrações e cópias de teste a guardam até '
+         'alguém achá-las, o que só um mapa de linhagem torna possível.'),
+        ('A retention schedule covers every copy, or it covers one.',
+         'Um cronograma de retenção cobre toda cópia, ou cobre uma só.'))
+def _l10_copies(f):
+    f.box(20, 80, 130, 60, [('expired row', 'linha expirada'),
+                            {'s': ('2020 order', 'pedido de 2020'), 'size': 10,
+                             'fill': '--paper-dim'}], fill='--ink')
+    rows = [(20, ('database', 'banco'), ('the purge deletes it', 'o expurgo a apaga'), '--phosphor'),
+            (68, ('backups', 'backups'), ('until their window ends', 'até a janela deles acabar'),
+             '--phosphor'),
+            (116, ('logs', 'logs'), ('fragments, days or weeks', 'fragmentos, dias ou semanas'),
+             '--amber'),
+            (164, ('extracts, test copies', 'extrações, cópias de teste'),
+             ('until somebody finds them', 'até alguém achá-las'), '--amber')]
+    for y, name, what, c in rows:
+        f.box(230, y, 200, 38, name, stroke=c, size=11)
+        f.text(450, y + 19, what, size=10.5, anchor='start', fill='--paper-dim')
+        f.arrow(150, 110, 228, y + 19, stroke='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():
