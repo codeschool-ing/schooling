@@ -1,6 +1,6 @@
 ---
 title: The registry, and reading a module before you trust it
-version: 1
+version: 2
 ---
 
 A Git URL works for modules your own company writes. For modules other people publish, there is
@@ -20,8 +20,12 @@ module "vpc" {
 
 `terraform-aws-modules` is the publisher, `vpc` the module and `aws` the provider it is for.
 `~> 6.0` means any `6.x` from `6.0` up, and not `7.0`: when it installs the module, Terraform picks
-the newest version the registry lists inside that range. **This is the one transcript in the
-lesson that needs the internet**, and the lab has none, so here is what `init` does when it cannot reach the registry:
+the newest version the registry lists inside that range. **This is the one step in the lesson
+that needs the internet.** On your computer, `terraform init` in a new directory, `~/try-registry`,
+with this `main.tf` reaches the registry, which hands out the module from its GitHub repository; it
+prints `Downloading` and the version it chose, and succeeds. The lessons were recorded on a machine
+with no internet, and what `init` printed there is worth seeing once, because it is what it says on
+any computer that cannot reach the registry:
 
 ```
 ana@laptop:~/try-registry$ terraform init
@@ -45,13 +49,13 @@ Initializing modules...
 It shows the first step of the protocol. Terraform asks the host for
 `/.well-known/terraform.json`, a small document saying where that host's module and provider APIs
 live; with the answer it would list the module's versions, choose one, and ask where to download it
-from. The lab's DNS knows no `registry.terraform.io`, so the first question never left the laptop.
-On a computer with a network, the same `init` prints `Downloading` and the version it chose, and
-the module lands in `.terraform/modules/vpc` just as the Git copy did two sections back.
+from. The recording machine could not resolve `registry.terraform.io`, so the first question never
+left it. On yours the question is answered, and the module lands in `.terraform/modules/vpc` just as
+the Git copy did two sections back.
 
-**Nothing of that module appears in this lesson**, because nothing of it was ever downloaded here.
-Its inputs, its outputs and what it creates are on its page in the registry, which is where to read
-them.
+**Nothing of that module is quoted in this lesson**, because the machine that recorded it never
+downloaded it. On yours, its files are in `.terraform/modules/vpc` after the `init`, and its
+inputs, its outputs and what it creates are also on its page in the registry.
 
 A registry address can also have four parts, with a host name in front:
 `app.terraform.io/shop/network/aws`. That is a **private registry**, such as the one HCP Terraform

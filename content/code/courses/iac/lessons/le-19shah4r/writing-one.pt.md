@@ -1,6 +1,6 @@
 ---
 title: Escrevendo o módulo de rede
-version: 1
+version: 2
 ---
 
 Um módulo se escreve exatamente como as configurações das aulas anteriores, com uma diferença de
@@ -94,8 +94,9 @@ Plan: 3 to add, 0 to change, 0 to destroy.
 state vai lembrar dessa sub-rede, e o `shop` vem do rótulo do bloco `module` no root, não de nada que
 esteja no diretório do módulo.
 
-Agora a segunda rede. A Ana acrescenta três arquivos ao root: outra chamada ao mesmo diretório, um
-security group que precisa da VPC da loja e dois outputs. O Terraform lê todo arquivo `.tf` do
+Agora a segunda rede. A Ana acrescenta três arquivos ao root: `analytics.tf`, outra chamada ao
+mesmo diretório; `web.tf`, um security group que precisa da VPC da loja; e `outputs.tf`, dois
+outputs. O Terraform lê todo arquivo `.tf` do
 diretório root como uma configuração só, então a divisão é para quem lê:
 
 ```hcl
@@ -184,3 +185,10 @@ Quando as chamadas só diferem nos valores, o `for_each` funciona num bloco `mod
 bloco com um map de redes substitui os dois. Dois blocos separados são mais fáceis de ler quando são
 dois; o map compensa quando a lista de redes é ela mesma um dado. É a escolha que a aula 4 fez para
 recursos, e ela vale igual para módulos.
+
+A Ana põe `~/shop` no Git neste ponto, com o `.gitignore` da aula 7, porque as próximas seções
+mostram as mudanças dele como diffs:
+
+```sh
+git init -q && printf ".terraform/\n*.tfstate\n*.tfstate.*\n" > .gitignore && git add . && git commit -qm "the shop network, as a module"
+```

@@ -1,6 +1,6 @@
 ---
 title: O registry, e ler um módulo antes de confiar nele
-version: 1
+version: 2
 ---
 
 Uma URL Git serve para módulos que a sua própria empresa escreve. Para módulos que outras pessoas
@@ -20,9 +20,12 @@ module "vpc" {
 
 `terraform-aws-modules` é quem publica, `vpc` o módulo e `aws` o provider a que ele se destina.
 `~> 6.0` quer dizer qualquer `6.x` a partir de `6.0`, e não `7.0`: ao instalar o módulo, o Terraform
-escolhe a versão mais nova que o registry lista dentro dessa faixa. **Esta é a única transcrição da
-aula que precisa da internet**, e o laboratório não tem, então aqui está o que o `init` faz quando
-não alcança o registry:
+escolhe a versão mais nova que o registry lista dentro dessa faixa. **Este é o único passo da aula
+que precisa da internet.** No seu computador, o `terraform init` num diretório novo,
+`~/try-registry`, com este `main.tf`, alcança o registry, que entrega o módulo a partir do
+repositório dele no GitHub; ele imprime `Downloading` e a versão escolhida, e termina com sucesso. As
+aulas foram gravadas numa máquina sem internet, e o que o `init` imprimiu lá vale a pena ver uma vez,
+porque é o que ele diz em qualquer computador que não alcança o registry:
 
 ```
 ana@laptop:~/try-registry$ terraform init
@@ -45,13 +48,14 @@ Initializing modules...
 
 Ela mostra o primeiro passo do protocolo. O Terraform pede ao host o `/.well-known/terraform.json`,
 um documento pequeno que diz onde ficam as APIs de módulos e de providers daquele host; com a
-resposta, ele listaria as versões do módulo, escolheria uma e perguntaria de onde baixá-la. O DNS do
-laboratório não conhece nenhum `registry.terraform.io`, então a primeira pergunta nunca saiu do
-laptop. Num computador com rede, o mesmo `init` imprime `Downloading` e a versão escolhida, e o
-módulo cai em `.terraform/modules/vpc` como a cópia do Git caiu duas seções atrás.
+resposta, ele listaria as versões do módulo, escolheria uma e perguntaria de onde baixá-la. A
+máquina da gravação não conseguiu resolver `registry.terraform.io`, então a primeira pergunta nunca
+saiu dela. Na sua a pergunta tem resposta, e o módulo cai em `.terraform/modules/vpc` como a cópia
+do Git caiu duas seções atrás.
 
-**Nada desse módulo aparece nesta aula**, porque nada dele foi baixado aqui. As entradas, as saídas
-e o que ele cria estão na página dele no registry, que é onde lê-los.
+**Nada desse módulo é citado nesta aula**, porque a máquina que a gravou nunca o baixou. Na sua, os
+arquivos dele estão em `.terraform/modules/vpc` depois do `init`, e as entradas, as saídas e o que ele
+cria estão também na página dele no registry.
 
 Um endereço de registry também pode ter quatro partes, com um nome de host na frente:
 `app.terraform.io/shop/network/aws`. Isso é um **registry privado**, como o que o HCP Terraform dá a
