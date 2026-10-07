@@ -12,13 +12,12 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; Bruno's
-# check-links.sh committed on top of it; a bare repository standing in for
-# the hosting service; the allergens picture, which is three bytes and not a
-# picture, and the line of menu.html that shows it, both written by the
-# script; colour switched off.
+# Bruno's check-links.sh is the file the copy button of checks-on-a-clean-machine
+# gives; it, the shared copy and Ana's change for #34, picture included, are the
+# ```bash blocks works-on-my-machine prints, run by `given`.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids in
+# the prose are reproducible; colour switched off.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -82,10 +81,15 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
+# example FILE N: the file the Nth schooling-example of FILE gives to its copy
+# button, which joins the parts' code with a newline.
+example() {
+  python3 -c 'import json, re, sys
+blocks = re.findall(r"^```schooling-example\n(.*?)\n```$", open(sys.argv[1]).read(), re.S | re.M)
+print("\n".join(p["code"] for p in json.loads(blocks[int(sys.argv[2]) - 1])["parts"]))' "$1" "$2"
+}
 
-cd ~ && rm -rf ~/remotes /tmp/fresh
 git config --global color.ui never
 git config --global color.advice never
 git config --global color.remote never
@@ -93,28 +97,13 @@ tty() {
   printf 'ana@vm:%s$ %s\n' "$(pwd | sed "s|^$HOME|~|")" "$*"
   script -qec "$*" /dev/null || true
 }
-cd ~/site
-cat > check-links.sh <<'SH'
-#!/bin/sh
-# Fail if any page links to a file that is not in the repository.
-status=0
-links=$(grep -oh '\(src\|href\)="[^":]*"' *.html | cut -d'"' -f2 | sort -u)
-for f in $links; do
-  [ -e "$f" ] || { echo "missing: $f"; status=1; }
-done
-exit $status
-SH
-chmod +x check-links.sh
-bruno; at '2026-09-19T11:00:00-03:00'; git add check-links.sh; git commit -qm 'Add a check for links to missing files'
-git init -q --bare ~/remotes/site.git
-git remote add origin ~/remotes/site.git
-git push -q -u origin main 2>/dev/null
+# Bruno's check, the shared copy and Ana's change for #34: the two blocks
+# works-on-my-machine prints, with check-links.sh between them saved from the
+# copy button of the example that checks-on-a-clean-machine prints.
+cd ~ && given works-on-my-machine 1
+example "$lessons/$self/checks-on-a-clean-machine.md" 1 > check-links.sh
+given works-on-my-machine 2 '2026-09-19T11:00:00-03:00'
 me
-
-# Ana's ticket #34: the menu shows which items contain allergens.
-git switch -q -c 34-allergens
-mkdir -p images && printf 'PNG' > images/allergens.png
-printf '<p><img src="images/allergens.png" alt="Allergens: gluten, milk, eggs"></p>\n' >> menu.html
 
 block status
 show 'git status --short'
