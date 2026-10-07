@@ -10,8 +10,31 @@ que decorre desse único fato, e ela é pequena o bastante para ser feita à mã
 
 ## O RSA com números que dá para conferir
 
-O `vcrypt toyrsa` roda o RSA com os primos do exemplo clássico dos livros, 61 e 53, e cifra o
-número 65:
+O `vcrypt toyrsa` roda o RSA com os primos do exemplo clássico dos livros, 61 e 53, e cifra um
+número. Cada linha da conta está nele:
+
+```py
+# ~/lab/tools/toyrsa.py
+"""vcrypt toyrsa M: RSA with numbers small enough to follow by hand, on the
+message M (a number below n). This is textbook RSA, with no padding, which
+is NOT how RSA is used; lesson 2 says why."""
+import sys
+
+p, q, e = 61, 53, 17
+m = int(sys.argv[1])
+n, phi = p * q, (p - 1) * (q - 1)
+d = pow(e, -1, phi)
+print(f"p = {p}, q = {q}         two primes, kept secret")
+print(f"n = p*q = {n}           public: the modulus")
+print(f"phi = (p-1)(q-1) = {phi}   secret: needs p and q")
+print(f"e = {e}                  public exponent")
+print(f"d = e^-1 mod phi = {d}   private exponent")
+c = pow(m, e, n)
+print(f"encrypt m = {m}:  c = m^e mod n = {c}")
+print(f"decrypt c = {c}:  m = c^d mod n = {pow(c, d, n)}")
+```
+
+Aqui ele cifra o número 65:
 
 ```
 ana@lab:~/lab$ vcrypt toyrsa 65

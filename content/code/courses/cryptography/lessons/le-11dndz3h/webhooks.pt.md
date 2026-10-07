@@ -10,7 +10,8 @@ separa as mensagens do gateway das de todo mundo.
 
 ## O cabeçalho que o gateway manda
 
-Cada entrega traz um cabeçalho ao lado do corpo. O laboratório o guarda num arquivo `.sig`:
+Cada entrega traz um cabeçalho ao lado do corpo. O laboratório o guarda num arquivo `.sig`, como o
+`vcrypt deliveries` o gravou:
 
 ```
 ana@lab:~/lab$ cat data/webhooks/evt-1.sig
@@ -34,7 +35,50 @@ mensagens.
 ## Quatro entregas
 
 O laboratório tem quatro entregas, e o `vcrypt webhook` confere cada uma como o portal deveria, com
-o relógio do receptor passado em `--now`:
+o relógio do receptor passado em `--now`. A `verify()` dele é a defesa inteira, quatro conferências
+em ordem:
+
+```py
+# ~/lab/tools/webhook.py
+"""vcrypt webhook --key KEYFILE --now EPOCH EVENT.json...: check each delivery
+against the header kept beside it in EVENT.sig, as a receiver whose clock
+says EPOCH would."""
+import argparse
+import hashlib
+import hmac
+
+TOLERANCE = 300  # seconds a delivery may be late before it is treated as a replay
+
+
+def verify(key: bytes, header: str, body: bytes, now: int):
+    """(accepted, why)"""
+    try:
+        fields = dict(part.split("=", 1) for part in header.strip().split(","))
+        timestamp, received = int(fields["t"]), fields["v1"]
+    except (ValueError, KeyError):
+        return False, "no signature header in the expected form"
+    expected = hmac.new(key, str(timestamp).encode() + b"." + body, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected, received):
+        return False, "signature does not match the body"
+    if abs(now - timestamp) > TOLERANCE:
+        return False, f"signed {now - timestamp} s ago, outside the {TOLERANCE} s window"
+    return True, "signature valid, timestamp within the window"
+
+
+p = argparse.ArgumentParser(prog="vcrypt webhook")
+p.add_argument("--key", required=True)
+p.add_argument("--now", type=int, required=True, help="the receiver's clock, in epoch seconds")
+p.add_argument("events", nargs="+")
+a = p.parse_args()
+key = bytes.fromhex(open(a.key).read().strip())
+for path in a.events:
+    body = open(path, "rb").read()
+    header = open(path[:-len(".json")] + ".sig").read()
+    ok, why = verify(key, header, body, a.now)
+    print(f"{path.split('/')[-1]:<12} {'ACCEPT' if ok else 'REJECT'}  {why}")
+```
+
+Nas quatro entregas:
 
 ```
 ana@lab:~/lab$ vcrypt webhook --key keys/webhook.hex --now 1781535600 data/webhooks/*.json
@@ -73,8 +117,8 @@ Uma comparação comum retorna no primeiro caractere diferente, então uma requi
 começa com o caractere certo leva um pouco mais para ser recusada do que uma que não começa. Ao
 longo de muitas requisições essa diferença pode ser medida, e ela permitiria a alguém achar uma
 etiqueta válida um caractere por vez, sem a chave. O `hmac.compare_digest` do Python e o
-`crypto/subtle.ConstantTimeCompare` do Go levam o mesmo tempo quaisquer que sejam as entradas; o
-verificador do laboratório usa o primeiro. Aqui, diferente do que ocorre com hashes de senha, o
+`crypto/subtle.ConstantTimeCompare` do Go levam o mesmo tempo quaisquer que sejam as entradas; a
+`verify()` do `webhook.py` usa o primeiro. Aqui, diferente do que ocorre com hashes de senha, o
 atacante escolhe a entrada, então isso não é opcional.
 
 A ordem das verificações também importa: confira a etiqueta **antes** de interpretar o JSON ou agir

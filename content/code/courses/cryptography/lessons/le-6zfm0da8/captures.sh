@@ -7,16 +7,18 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/lab$,
-# followed by what it printed.
+# It rebuilds ~/lab with lab.sh reset, which builds it as the lessons do, in
+# the home of a user `ana` (LAB_HOME moves it), and prints each command after
+# a prompt, ana@lab:~/lab$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/lab, built by lab.sh;
-# a 32 MiB file, disk.img, standing in for a laptop's disk; and, in the
-# local PostgreSQL 16 cluster, a database `vereda` owned by a role `ana`
-# with the pgcrypto extension, which this script creates (it must run as
-# root to do so) and reaches through PGHOST, PGUSER, PGDATABASE and
-# PGPASSWORD, set below so the commands read as a person would type them.
+# disk.pass, recovery.pass and the database are what section `luks` makes:
+# the two passphrases in files, and, in the local PostgreSQL 16 cluster, a
+# database `vereda` owned by a role `ana` with the pgcrypto extension. The
+# script runs that section's commands (it must run as root, for
+# `sudo -iu postgres`) and reaches the database through PGHOST, PGUSER,
+# PGDATABASE and PGPASSWORD, set as the section's `export` line sets them.
+# disk.img, a 32 MiB file standing in for a laptop's disk, is made by the
+# commands of the luks block.
 #
 # The LUKS volume is formatted with a fixed UUID and fixed Argon2id costs,
 # so that its header prints the same way every time; its salts are random
@@ -28,34 +30,32 @@
 # The CPF in the column block, 111.444.777-35, is the example number used in
 # documentation, with valid check digits; it is not anybody's.
 #
-# Recorded with cryptsetup 2.7 and PostgreSQL 16,
-# TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with cryptsetup 2.7.0, PostgreSQL 16 and GNU
+# binutils' strings, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/cryptography}
-mkdir -p "$HOME"
+export LAB_HOME=${LAB_HOME:-/home/ana}
+export HOME=$LAB_HOME
 bash "$here/../../lab.sh" reset >/dev/null
 cd "$HOME/lab"
-export PATH=$HOME/lab/bin:$PATH
+# What the three lines lesson 1 adds to ~/.bashrc do.
+export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv
 on() { printf 'ana@lab:~/lab$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
 
-pg_ctlcluster 16 main start 2>/dev/null
+# No systemd here to start the cluster, as installing PostgreSQL does on the
+# student's machine; and whatever an earlier run left is dropped first.
+pg_ctlcluster 16 main start >/dev/null 2>&1
 su postgres -c "psql -q" >/dev/null 2>&1 <<'SQL'
 DROP DATABASE IF EXISTS vereda;
 DROP ROLE IF EXISTS ana;
-CREATE ROLE ana LOGIN PASSWORD 'lab-only-db-password';
-CREATE DATABASE vereda OWNER ana;
-\c vereda
-CREATE EXTENSION pgcrypto;
-GRANT pg_checkpoint TO ana;
 SQL
+# The passphrases and the database, by section `luks`'s own commands.
+bash "$here/../../lab.sh" steps le-6zfm0da8 luks
 export PGHOST=127.0.0.1 PGUSER=ana PGDATABASE=vereda PGPASSWORD=lab-only-db-password
-printf 'correct horse battery staple' > disk.pass
-printf 'recovery-7KQ2-M9XD-4TPA' > recovery.pass
 LUKS='--pbkdf argon2id --pbkdf-force-iterations 4 --pbkdf-memory 65536 --pbkdf-parallel 1'
 
 block luks
@@ -77,4 +77,4 @@ on "psql -c \"SELECT id, pgp_sym_decrypt(cpf, 'k-lab-0123456789abcdef0123456789'
 
 block database
 on 'psql -c CHECKPOINT'
-on "strings /var/lib/postgresql/16/main/\$(psql -Atc \"SELECT pg_relation_filepath('patients')\") | grep -oE 'Marina Duarte|Joao Pires|111\\.444\\.777-35' | sort | uniq -c"
+on "sudo strings /var/lib/postgresql/16/main/\$(psql -Atc \"SELECT pg_relation_filepath('patients')\") | grep -oE 'Marina Duarte|Joao Pires|111\\.444\\.777-35' | sort | uniq -c"

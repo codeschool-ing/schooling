@@ -7,27 +7,27 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/lab$,
-# followed by what it printed.
+# It rebuilds ~/lab with lab.sh reset, which builds it as the lessons do, in
+# the home of a user `ana` (LAB_HOME moves it), and prints each command after
+# a prompt, ana@lab:~/lab$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/lab, built by lab.sh,
-# including data/portal-secret.yaml and data/scheduler.ini, two
-# configuration files the course wrote, each with a password stored encoded
-# or obfuscated. The passwords and the accounts are the lab's own.
+# data/portal-secret.yaml and data/scheduler.ini are what sections `encoding`
+# and `obfuscation` write: two configuration files the course wrote, each
+# with a password stored encoded or obfuscated. The passwords and the
+# accounts are the lab's own.
 #
-# Recorded with GNU coreutils 9.4, OpenSSL 3.0.13, Python 3.13 and
-# cryptography 50,
-# TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with GNU coreutils 9.4, OpenSSL 3.0.13, Python 3.12
+# and cryptography 50.0.2, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/cryptography}
-mkdir -p "$HOME"
+export LAB_HOME=${LAB_HOME:-/home/ana}
+export HOME=$LAB_HOME
 bash "$here/../../lab.sh" reset >/dev/null
 cd "$HOME/lab"
-export PATH=$HOME/lab/bin:$PATH
+# What the three lines lesson 1 adds to ~/.bashrc do.
+export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv
 on() { printf 'ana@lab:~/lab$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
@@ -37,11 +37,9 @@ block encoding
 on "printf 'ana.lima:Vereda@2026' | base64"
 on "echo 'YW5hLmxpbWE6VmVyZWRhQDIwMjY=' | base64 -d; echo"
 on "printf 'Vereda' | xxd -p; printf 'Vereda' | base64; printf 'Vereda' | openssl enc -aes-256-cbc -K \$(cat keys/aes-256.hex) -iv \$(cat keys/iv-a.hex) | base64"
-on 'cat data/portal-secret.yaml'
 on "grep password: data/portal-secret.yaml | awk '{print \$2}' | base64 -d; echo"
 
 block obfuscation
-on 'cat data/scheduler.ini'
 on "grep '^password' data/scheduler.ini | cut -d' ' -f3 | base64 -d; echo"
 on "grep '^password' data/scheduler.ini | cut -d' ' -f3 | base64 -d | tr 'A-Za-z' 'N-ZA-Mn-za-m'; echo"
 

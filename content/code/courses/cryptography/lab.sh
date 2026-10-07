@@ -1,210 +1,174 @@
 #!/usr/bin/env bash
-# The lab of the cryptography course: ~/lab, a directory of keys,
-# certificates and data, and one command of its own, `vcrypt`, beside the
-# openssl command line every lesson uses.
+# The machine every transcript in cryptography was recorded on, built the way
+# the lessons teach a student to build theirs.
 #
-#   bash lab.sh reset      rebuild ~/lab from nothing
+# THE STUDENT NEVER SEES THIS FILE, and does not need to. Lesson 1, section
+# `the-lab`, installs the packages, makes ~/lab and its Python, and writes
+# `vcrypt`, a five-line command that runs ~/lab/tools/NAME.py. Every tool in
+# ~/lab/tools is shown whole in the lesson that first uses it, as a fence
+# whose first line (second, after a #!) is its path:
 #
-# It needs the openssl command line, xxd, Python 3.9 or later, and two Python
-# packages: `cryptography` 44 or later (Argon2id arrived in 44) and `bcrypt`.
-# No network, no account, no server outside the machine. Every lesson's
-# captures.sh starts by running it. Set LAB to build it somewhere other than
-# ~/lab.
+#   # ~/lab/tools/seal.py
+#
+# and every file in ~/lab/keys and ~/lab/data is made by commands a lesson
+# shows, in a fence of `sh` whose first line is `cd ~/lab` (or, in lesson 1,
+# the `mkdir -p ~/lab/...` that makes it). This script does not keep a copy of either. It
+# reads the tools out of the lessons' fences and runs the lessons' own `sh`
+# fences, from the sections listed in STEPS below, in course order, so that
+# the program the course ran is the program the student typed.
+#
+# What it adds, and a person does not need: the user `ana` the transcripts
+# print (`ana@lab`); /home/ana as HOME unless LAB_HOME says otherwise; the
+# stock Python 3.12 of Ubuntu 24.04 as `python3`, because the recording
+# machine had a 3.13 beside it; it runs `sudo X` as X, being root already
+# (`sudo -u USER X` stays as it is); and it skips `sudo apt-get`, because
+# the recording machine already has the packages and a capture must not
+# depend on the network for them. The pip install in lesson 1 does use the
+# network.
 #
 # THE STORY. Vereda Fisioterapia is a small chain of physiotherapy clinics in
-# São Paulo, with a patient portal at portal.vereda.example. Vereda is
-# invented, and so is every name, record and password in ~/lab/data.
-#
-# WHAT IS IN IT
-#
-#   vlab/        the Python behind `vcrypt`: drbg.py (where every key comes
-#                from, below), keys.py, pki.py (the certificate authority)
-#                and cli.py (every subcommand)
-#   bin/vcrypt   the command line
-#   keys/        symmetric keys and IVs as hex, and the RSA, P-256, Ed25519
-#                and X25519 key pairs of the asymmetric lessons
-#   pki/         Vereda's CA: a root, an issuing CA, four server
-#                certificates, a self-signed one, a CRL, and an impostor
-#                root with the same name as the real one (pki.py lists them)
-#   data/        what the lessons encrypt, hash and sign
+# Sao Paulo, with a patient portal at portal.vereda.example. Vereda is
+# invented, and so is every name, record and password in ~/lab.
 #
 # WHAT IS FIXED ON PURPOSE, AND WHY IT WOULD BE A DEFECT ANYWHERE ELSE
 #
-#   - EVERY KEY IS DERIVED FROM A PUBLIC LABEL (vlab/drbg.py), so that a
-#     reset gives the same keys on every machine and the transcripts repeat
-#     byte for byte. Anybody who reads this repository can rebuild them. That
-#     is the lab's convenience and lesson 17's first mistake; no key from
-#     here belongs anywhere but here.
-#   - The IVs and nonces the captures pass are written in the captures, for
-#     the same reason. Lesson 1 says why a real IV is never chosen like that,
-#     and lesson 17 shows what a repeated nonce gives away.
-#   - The lab's present is 2026-06-15 12:00 in São Paulo. Certificates carry
-#     fixed dates and every check passes that instant explicitly (-attime),
-#     so "expired" means the same thing whenever the capture is run.
-#   - The weaknesses the lessons show are shown on this data and nothing
-#     else: Vereda's own files, keys and lab-made password lists.
-
+#   - EVERY KEY IS DERIVED FROM A PUBLIC LABEL (tools/drbg.py, in lesson 1),
+#     so that the student's keys are the lesson's and the transcripts repeat
+#     byte for byte. The lessons say so, and lesson 17 says why a key anybody
+#     can rebuild is no key.
+#   - The IVs and nonces the commands pass are written in the commands.
+#   - The lab's present is 2026-06-15 12:00 in Sao Paulo (epoch 1781535600).
+#     Certificates carry fixed dates and every check passes that instant with
+#     -attime, so "expired" means the same thing whenever a capture is run.
+#
+#   bash lab.sh reset [LESSON]   rebuild ~/lab from nothing, as lessons 1 to 17
+#                                build it, without their servers; with a lesson
+#                                id, only as far as the end of that lesson
+#   bash lab.sh steps LESSON SECTION
+#                                run the `sh` fences of one section: how a
+#                                lesson's captures.sh starts the servers that
+#                                lesson asks the student to start
+#   bash lab.sh files            print every tool path the lessons define
+#
+# It needs, beyond what the lessons install: python3.12, and root for the
+# lessons that start servers.
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
-LAB=${LAB:-$HOME/lab}
+export HOME=${LAB_HOME:-/home/ana}
+export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PYTHONDONTWRITEBYTECODE=1
+export PIP_CACHE_DIR=/var/cache/cryptography-pip   # not ana's home: root runs this
+
+# The sections whose `sh` fences build ~/lab, in course order. A section that
+# starts a server is not here: its lesson's captures.sh runs it.
+STEPS="
+le-m9cj97me the-lab
+le-cjcdfccn two-keys
+le-b56pa52x promises
+le-zkqzqc2n unsalted
+le-11dndz3h integrity
+le-11dndz3h signatures
+le-0pfv6eh8 third-party
+le-rjhw1035 encoding
+le-rjhw1035 obfuscation
+le-esc4bcph dnssec
+le-7bsxn5w6 keys-in-code
+le-7bsxn5w6 nonce-reuse
+"
+
+STOCK=/usr/local/lib/cryptography-stock
+mkdir -p $STOCK && ln -sfn /usr/bin/python3.12 $STOCK/python3
+
+# fences.py MODE ...: the one parser of the lessons' fences.
+fences() {
+  python3.12 - "$here" "$@" <<'PY'
+import json, os, re, sys
+
+here, mode, *rest = sys.argv[1:]
+course = json.load(open(os.path.join(here, "course.json")))
+FENCE = re.compile(r"^```([^\n]*)\n(.*?)^```$", re.S | re.M)
+PATH = re.compile(r"^# (~/lab/\S+)$")
+
+def sections():
+    for lesson in course["lessons"]:
+        d = os.path.join(here, "lessons", lesson)
+        for s in json.load(open(os.path.join(d, "lesson.json")))["sections"]:
+            p = os.path.join(d, s["slug"] + ".md")
+            if os.path.exists(p):
+                yield lesson, s["slug"], open(p, encoding="utf-8").read()
+
+if mode in ("files", "write"):
+    seen = {}
+    for lesson, slug, text in sections():
+        for m in FENCE.finditer(text):
+            lines = m.group(2).split("\n")
+            for line in lines[:2]:
+                pm = PATH.match(line)
+                if pm:
+                    path = pm.group(1)
+                    if path in seen:
+                        sys.exit(f"{path} is defined twice: {seen[path]} and {lesson}/{slug}")
+                    seen[path] = f"{lesson}/{slug}"
+                    if mode == "files":
+                        print(f"{path}  {lesson}/{slug}")
+                    else:
+                        dest = os.path.join(os.environ["HOME"], path[2:])
+                        os.makedirs(os.path.dirname(dest), exist_ok=True)
+                        open(dest, "w", encoding="utf-8").write(m.group(2))
+                    break
+elif mode == "steps":
+    lesson, slug = rest
+    found = [t for l, s, t in sections() if (l, s) == (lesson, slug)]
+    if not found:
+        sys.exit(f"no section {lesson}/{slug}")
+    # A step is an `sh` fence that starts in the lab: its first line is
+    # `cd ~/lab` or makes it. Any other `sh` fence in the section is an
+    # illustration (`openssl genpkey` in lesson 2) and is not run.
+    blocks = [m.group(2) for m in FENCE.finditer(found[0]) if m.group(1) == "sh"
+              and re.match(r"(cd|mkdir -p) ~/lab\b", m.group(2))]
+    if not blocks:
+        sys.exit(f"{lesson}/{slug} has no sh fence that starts in ~/lab")
+    for b in blocks:
+        for l in b.split("\n"):
+            if l.startswith("sudo apt-get "):  # a blank line stays: it may be in a heredoc
+                continue
+            # this runs as root already, and sudo would reset PATH to one
+            # whose python3 is not the stock 3.12
+            # (`sudo -iu postgres` is kept: it is about the user, not PATH)
+            plain = l.startswith("sudo ") and not l.startswith("sudo -")
+            sys.stdout.write((l[5:] if plain else l) + "\n")
+PY
+}
+
+steps() {
+  # As the student types them: in a login shell's PATH, from their home, and
+  # with no git configuration, as on a fresh machine.
+  local script
+  script=$(fences steps "$1" "$2")
+  (cd "$HOME" && PATH=$STOCK:$HOME/lab/bin:$PATH GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+     bash -euo pipefail -c "$script")
+}
 
 reset() {
-  rm -rf "$LAB"
-  mkdir -p "$LAB"/{bin,keys,data}
-  cp -r "$here/lab/vlab" "$LAB/vlab"
-  find "$LAB/vlab" -name '__pycache__' -prune -exec rm -rf {} +
-  cat > "$LAB/bin/vcrypt" <<'SH'
-#!/usr/bin/env bash
-lab=$(cd "$(dirname "$0")/.." && pwd)
-PYTHONPATH="$lab" PYTHONDONTWRITEBYTECODE=1 exec python3 -m vlab.cli "$@"
-SH
-  chmod +x "$LAB/bin/vcrypt"
-  cd "$LAB"
-  PYTHONPATH="$LAB" PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'
-from vlab import drbg, keys, pki
-w = lambda p, s: open(p, "w").write(s)
-w("keys/aes-256.hex", drbg.stream("aes-256", 32).hex() + "\n")
-w("keys/aes-256-b.hex", drbg.stream("aes-256-b", 32).hex() + "\n")
-w("keys/aes-128.hex", drbg.stream("aes-128", 16).hex() + "\n")
-w("keys/pepper.hex", drbg.stream("pepper", 32).hex() + "\n")
-w("keys/webhook.hex", drbg.stream("webhook", 32).hex() + "\n")
-w("keys/iv-a.hex", drbg.stream("iv-a", 16).hex() + "\n")
-w("keys/iv-b.hex", drbg.stream("iv-b", 16).hex() + "\n")
-for label, bits in (("rsa-2048", 2048), ("rsa-3072", 3072)):
-    k = keys.rsa_key("keys/" + label, bits)
-    keys.write_private(k, f"keys/{label}.key"); keys.write_public(k, f"keys/{label}.pub")
-k = keys.ec_key("keys/p256"); keys.write_private(k, "keys/p256.key"); keys.write_public(k, "keys/p256.pub")
-for who in ("ana", "bruno"):
-    k = keys.ed25519_key("keys/ed25519-" + who)
-    keys.write_private(k, f"keys/ed25519-{who}.key"); keys.write_public(k, f"keys/ed25519-{who}.pub")
-    k = keys.x25519_key("keys/x25519-" + who)
-    keys.write_private(k, f"keys/x25519-{who}.key"); keys.write_public(k, f"keys/x25519-{who}.pub")
-pki.build("pki")
-import hashlib, os
-from vlab import webhook
-from cryptography.hazmat.primitives import serialization
-# Ana's Ed25519 key again, in OpenSSH's format, for ssh-keygen -Y in lesson 6.
-k = keys.ed25519_key("keys/ed25519-ana")
-open("keys/ana_ssh", "wb").write(k.private_bytes(serialization.Encoding.PEM,
-    serialization.PrivateFormat.OpenSSH, serialization.NoEncryption()))
-os.chmod("keys/ana_ssh", 0o600)
-pub = k.public_key().public_bytes(serialization.Encoding.OpenSSH, serialization.PublicFormat.OpenSSH).decode()
-open("keys/ana_ssh.pub", "w").write(pub + " ana@vereda.example\n")
-open("data/allowed_signers", "w").write("ana@vereda.example " + pub + "\n")
-# The SFTP server's host key for lesson 12, derived like every other key so
-# that its fingerprint repeats.
-k = keys.ed25519_key("keys/sftp-host")
-open("keys/sftp_host_ed25519", "wb").write(k.private_bytes(serialization.Encoding.PEM,
-    serialization.PrivateFormat.OpenSSH, serialization.NoEncryption()))
-os.chmod("keys/sftp_host_ed25519", 0o600)
-# Four deliveries from the payment gateway, as lesson 6 receives them. The
-# lab's present is 1781535600 (2026-06-15 12:00 in Sao Paulo).
-os.makedirs("data/webhooks", exist_ok=True)
-key = drbg.stream("webhook", 32)
-NOW = 1781535600
-events = {
-    "evt-1": (NOW - 42, b'{"event":"payment.confirmed","booking":4471,"amount":12000}', None),
-    "evt-2": (NOW - 37, b'{"event":"payment.confirmed","booking":4472,"amount":15000}', b'{"event":"payment.confirmed","booking":4472,"amount":1500}'),
-    "evt-3": (NOW - 86400, b'{"event":"payment.confirmed","booking":4471,"amount":12000}', None),
-    "evt-4": (NOW - 12, b'{"event":"refund.issued","booking":4471,"amount":12000}', "nokey"),
-}
-for name, (t, body, delivered) in events.items():
-    header = webhook.sign(key, t, body)
-    if delivered == "nokey":
-        header = webhook.sign(b"a key that is not the gateway's", t, body)
-        delivered = None
-    open(f"data/webhooks/{name}.json", "wb").write(delivered or body)
-    open(f"data/webhooks/{name}.sig", "w").write(header + "\n")
-# Vereda's DNS zone and its two Ed25519 DNSSEC keys, in BIND's file format,
-# derived like every other key so that the signed zone repeats (lesson 13).
-import base64, struct
-os.makedirs("data/dns", exist_ok=True)
-open("data/dns/db.vereda.example", "w").write(
-    "$TTL 3600\n"
-    "@       IN SOA ns1.vereda.example. hostmaster.vereda.example. 2026061501 7200 900 1209600 300\n"
-    "@       IN NS  ns1.vereda.example.\n"
-    "ns1     IN A   192.0.2.53\n"
-    "portal  IN A   192.0.2.10\n")
-for label, flags in (("ksk", 257), ("zsk", 256)):
-    k = keys.ed25519_key("dns/" + label)
-    pub = k.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
-    priv = k.private_bytes(serialization.Encoding.Raw, serialization.PrivateFormat.Raw,
-                           serialization.NoEncryption())
-    rdata = struct.pack("!HBB", flags, 3, 15) + pub
-    acc = sum(b if i & 1 else b << 8 for i, b in enumerate(rdata))
-    tag = (acc + ((acc >> 16) & 0xFFFF)) & 0xFFFF  # RFC 4034, appendix B
-    base = f"data/dns/Kvereda.example.+015+{tag:05d}"
-    open(base + ".key", "w").write(f"vereda.example. IN DNSKEY {flags} 3 15 {base64.b64encode(pub).decode()}\n")
-    open(base + ".private", "w").write(
-        f"Private-key-format: v1.3\nAlgorithm: 15 (ED25519)\nPrivateKey: {base64.b64encode(priv).decode()}\n"
-        "Created: 20260101000000\nPublish: 20260101000000\nActivate: 20260101000000\n")
-os.makedirs("data/release", exist_ok=True)
-open("data/release/portal-2.4.1.tar", "wb").write(drbg.stream("release/portal-2.4.1", 20480))
-open("data/release/NOTES.txt", "w").write("Vereda portal 2.4.1: booking reminders by SMS.\n")
-with open("data/release/SHA256SUMS", "w") as f:
-    for n in ("NOTES.txt", "portal-2.4.1.tar"):
-        f.write(hashlib.sha256(open("data/release/" + n, "rb").read()).hexdigest() + "  " + n + "\n")
-PY
-  data
-}
-
-data() {
-  # Monday's thirty-two appointment slots in room 1, 08:00 to 16:45 in
-  # quarters of an hour, one fixed-width record of sixteen bytes per slot, so
-  # that a record is exactly one AES block. The time is the record's
-  # position, as in any fixed-record file. Booked and free records repeat,
-  # which is what lets lesson 1 read the pattern through ECB.
-  : > "$LAB/data/slots.dat"
-  for h in 08 09 10 11 13 14 15 16; do
-    for m in 00 15 30 45; do
-      case "$h$m" in
-        0815|0900|0930|1000|1100|1330|1345|1500|1600|1630) printf 'room1 BOOKED   \n' ;;
-        *) printf 'room1 free     \n' ;;
-      esac >> "$LAB/data/slots.dat"
-    done
-  done
-  # Eight staff accounts of the portal, with passwords the course wrote to
-  # be bad in the usual ways: three people chose the same one, two more
-  # share another. Nobody real has these passwords for anything.
-  cat > "$LAB/data/users.csv" <<'TXT'
-user,password
-ana.lima,Vereda@2026
-bruno.reis,fisio123
-carla.souza,Vereda@2026
-diego.alves,correct horse battery staple
-elisa.prado,fisio123
-fabio.nunes,Vereda@2026
-gabi.torres,m4r3-alta-em-ub@tub@
-hugo.matos,Primavera#2026
-TXT
-  # Two configuration files of the kind lesson 11 finds in real systems,
-  # each holding a password that is encoded or obfuscated and called
-  # protected. The password is the lab's own.
-  cat > "$LAB/data/portal-secret.yaml" <<'TXT'
-apiVersion: v1
-kind: Secret
-metadata:
-  name: portal-db
-type: Opaque
-data:
-  username: cG9ydGFs
-  password: Vi1kYi1zM2NyZXQtMjAyNg==
-TXT
-  cat > "$LAB/data/scheduler.ini" <<'TXT'
-[database]
-host = db.vereda.example
-user = scheduler
-; password is protected (ROT13 then Base64, see the vendor's manual)
-password = SS1xby1mM3BlcmctMjAyNg==
-TXT
-  cat > "$LAB/data/referral.txt" <<'TXT'
-Referral 2026-0417. Patient: Marina Duarte, 41.
-Lower back pain after lifting, eight weeks. Eight sessions of physiotherapy.
-Dr. Paulo Nogueira, CRM-SP 000000 (invented)
-TXT
+  id ana >/dev/null 2>&1 || { useradd -m -s /bin/bash ana; usermod -p '*' ana; }
+  mkdir -p "$HOME"
+  rm -rf "$HOME/lab"
+  cp /etc/skel/.bashrc "$HOME/.bashrc"
+  fences write
+  # With a lesson id, stop after that lesson's steps: the lab as it stands at
+  # the end of that lesson, which is what lesson 1's checksums describe.
+  local upto=${1:-} lesson section reached=
+  while read -r lesson section; do
+    [ -n "$lesson" ] || continue
+    if [ -n "$upto" ] && [ -n "$reached" ] && [ "$lesson" != "$upto" ]; then break; fi
+    steps "$lesson" "$section"
+    [ "$lesson" = "$upto" ] && reached=1
+  done <<< "$STEPS"
+  return 0
 }
 
 case "${1:-}" in
-  reset) reset ;;
-  *) echo "usage: bash lab.sh reset" >&2; exit 2 ;;
+  reset) reset "${2:-}" ;;
+  steps) steps "$2" "$3" ;;
+  files) fences files ;;
+  *) echo "usage: bash lab.sh reset [LESSON] | steps LESSON SECTION | files" >&2; exit 2 ;;
 esac

@@ -9,6 +9,43 @@ desbloqueá-lo.** O LUKS, o padrão do Linux, deixa essa estrutura fácil de ver
 FileVault são construídos do mesmo jeito. Os notebooks da Vereda rodam Linux, e o laboratório formata
 um arquivo de 32 MiB no lugar do disco de um notebook.
 
+## Os pacotes e os arquivos desta aula
+
+Dois programas, dos pacotes do Ubuntu: o `cryptsetup`, a ferramenta do LUKS, para esta seção, e o
+PostgreSQL, o banco das seções 04 e 05. Instalar o PostgreSQL também o põe para rodar.
+
+```sh
+sudo apt-get install -y cryptsetup-bin postgresql
+```
+
+As duas frases-senha vão em arquivos, para que os comandos abaixo rodem sem parar para perguntar;
+uma de verdade é digitada no prompt e nunca escrita. Depois o banco: um papel `ana` com uma senha
+inventada pelo laboratório, um banco `vereda` que é dela e a extensão `pgcrypto` que a seção 05 usa.
+O `sudo -iu postgres` roda o `psql` como o administrador do próprio PostgreSQL, o único papel que
+existe numa instalação nova:
+
+```sh
+cd ~/lab
+printf 'correct horse battery staple' > disk.pass
+printf 'recovery-7KQ2-M9XD-4TPA' > recovery.pass
+sudo -iu postgres psql -q <<'EOF'
+CREATE ROLE ana LOGIN PASSWORD 'lab-only-db-password';
+CREATE DATABASE vereda OWNER ana;
+\c vereda
+CREATE EXTENSION pgcrypto;
+GRANT pg_checkpoint TO ana;
+EOF
+```
+
+O `GRANT pg_checkpoint` deixa a `ana` rodar o `CHECKPOINT` da seção 04, que normalmente só um
+administrador pode. Por último, a linha que diz ao `psql` onde se conectar e como quem, para que
+todo comando desta aula possa ser um `psql -c` simples. Digite-a em cada terminal novo enquanto
+trabalha nesta aula:
+
+```sh
+export PGHOST=127.0.0.1 PGUSER=ana PGDATABASE=vereda PGPASSWORD=lab-only-db-password
+```
+
 ## Formatando, e uma segunda entrada
 
 ```

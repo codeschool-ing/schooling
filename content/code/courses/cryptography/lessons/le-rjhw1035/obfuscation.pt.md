@@ -10,15 +10,17 @@ tem o programa, ou o manual dele, ou um exemplo, também tem o truque.
 ## A senha "protegida" de um fornecedor
 
 O sistema de agendamento da Vereda é um produto comprado de um fornecedor. O arquivo de configuração
-dele guarda a senha do banco "protegida":
+dele guarda a senha do banco "protegida", e isto grava o arquivo no laboratório:
 
-```
-ana@lab:~/lab$ cat data/scheduler.ini
+```sh
+cd ~/lab
+cat > data/scheduler.ini <<'EOF'
 [database]
 host = db.vereda.example
 user = scheduler
 ; password is protected (ROT13 then Base64, see the vendor's manual)
 password = SS1xby1mM3BlcmctMjAyNg==
+EOF
 ```
 
 O comentário diz qual é a proteção, porque o próprio manual do fornecedor diz. Desfazendo o segundo

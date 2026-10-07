@@ -10,7 +10,8 @@ the gateway's messages from everybody else's.
 
 ## The header the gateway sends
 
-Each delivery carries a header beside the body. The lab keeps it in a `.sig` file:
+Each delivery carries a header beside the body. The lab keeps it in a `.sig` file, as `vcrypt
+deliveries` wrote it:
 
 ```
 ana@lab:~/lab$ cat data/webhooks/evt-1.sig
@@ -33,7 +34,49 @@ that wrong is the usual reason a correct implementation rejects every message.
 ## Four deliveries
 
 The lab holds four deliveries, and `vcrypt webhook` checks each one the way the portal should, with
-the receiver's clock passed as `--now`:
+the receiver's clock passed as `--now`. Its `verify()` is the whole defence, four checks in order:
+
+```py
+# ~/lab/tools/webhook.py
+"""vcrypt webhook --key KEYFILE --now EPOCH EVENT.json...: check each delivery
+against the header kept beside it in EVENT.sig, as a receiver whose clock
+says EPOCH would."""
+import argparse
+import hashlib
+import hmac
+
+TOLERANCE = 300  # seconds a delivery may be late before it is treated as a replay
+
+
+def verify(key: bytes, header: str, body: bytes, now: int):
+    """(accepted, why)"""
+    try:
+        fields = dict(part.split("=", 1) for part in header.strip().split(","))
+        timestamp, received = int(fields["t"]), fields["v1"]
+    except (ValueError, KeyError):
+        return False, "no signature header in the expected form"
+    expected = hmac.new(key, str(timestamp).encode() + b"." + body, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected, received):
+        return False, "signature does not match the body"
+    if abs(now - timestamp) > TOLERANCE:
+        return False, f"signed {now - timestamp} s ago, outside the {TOLERANCE} s window"
+    return True, "signature valid, timestamp within the window"
+
+
+p = argparse.ArgumentParser(prog="vcrypt webhook")
+p.add_argument("--key", required=True)
+p.add_argument("--now", type=int, required=True, help="the receiver's clock, in epoch seconds")
+p.add_argument("events", nargs="+")
+a = p.parse_args()
+key = bytes.fromhex(open(a.key).read().strip())
+for path in a.events:
+    body = open(path, "rb").read()
+    header = open(path[:-len(".json")] + ".sig").read()
+    ok, why = verify(key, header, body, a.now)
+    print(f"{path.split('/')[-1]:<12} {'ACCEPT' if ok else 'REJECT'}  {why}")
+```
+
+On the four deliveries:
 
 ```
 ana@lab:~/lab$ vcrypt webhook --key keys/webhook.hex --now 1781535600 data/webhooks/*.json
@@ -70,8 +113,8 @@ ordinary comparison returns at the first different character, so a request whose
 the right character takes slightly longer to refuse than one that does not. Over many requests,
 that difference can be measured, and it would let somebody find a valid tag one character at a time
 without the key. `hmac.compare_digest` in Python and `crypto/subtle.ConstantTimeCompare` in Go take
-the same time whatever the inputs; the lab's verifier uses the first. Here, unlike with password
-hashes, the attacker chooses the input, so this is not optional.
+the same time whatever the inputs; `verify()` in `webhook.py` uses the first. Here, unlike with
+password hashes, the attacker chooses the input, so this is not optional.
 
 The order of the checks matters as well: verify the tag **before** parsing the JSON or acting on
 any field in it. A parser fed by an unauthenticated stranger is attack surface, and a handler that
