@@ -1,6 +1,6 @@
 ---
 title: Perguntar, e ser avisado
-version: 1
+version: 2
 ---
 
 Tudo até aqui foi **polling**: um programa faz uma pergunta a um equipamento e o equipamento
@@ -29,8 +29,32 @@ O gNMI tem quatro operações, chamadas RPCs, e esta aula usa as quatro:
 | `Subscribe` | os valores num caminho, daqui em diante | 05 e 06 |
 | `Set` | mudar um valor | 07 |
 
-A porta gNMI dos roteadores, `9339`, é servida pelo mesmo programa que a API REST deles, escrito
-para o laboratório porque o FRR não tem uma. Ele segue a especificação do gNMI 0.8, serve parte do
+A porta gNMI dos roteadores, `9339`, é servida pelo mesmo programa que a API REST deles, o
+`devapid` da aula 2, escrito para o laboratório porque o FRR não tem uma. Ele segue a especificação do gNMI 0.8, serve parte do
 modelo `openconfig-interfaces` a partir do FRR e dos contadores do kernel, e exige usuário e senha
 nos metadados de cada chamada, como a maioria dos equipamentos. **Os clientes são os de verdade**:
 o `gnmic`, o cliente de linha de comando que a maioria das pessoas usa, e o `pygnmi` em Python.
+
+O `pygnmi` veio com o ambiente virtual da aula 1. O `gnmic` é um programa único publicado pelo
+projeto OpenConfig como pacote para cada processador, e a versão que este curso usou é a 0.42.0.
+Na máquina virtual, não dentro do laboratório, cujas máquinas não alcançam a internet: baixe o
+pacote do seu processador, confira-o contra os checksums que a release publica, e instale.
+
+```sh
+curl -fLO https://github.com/openconfig/gnmic/releases/download/v0.42.0/gnmic_0.42.0_Linux_$(uname -m).deb
+curl -fLO https://github.com/openconfig/gnmic/releases/download/v0.42.0/checksums.txt
+sha256sum --ignore-missing -c checksums.txt
+sudo apt-get install -y ./gnmic_0.42.0_Linux_$(uname -m).deb
+```
+
+O `uname -m` imprime `x86_64` na maioria dos computadores e `aarch64` num Mac com Apple silicon, que
+são os dois nomes que a release usa. O `sha256sum` precisa imprimir `OK` ao lado do nome do arquivo,
+como imprimiu aqui:
+
+```
+ubuntu@netlab:~$ sha256sum --ignore-missing -c checksums.txt
+gnmic_0.42.0_Linux_x86_64.deb: OK
+```
+
+Qualquer outra coisa quer dizer que o download não é o que o projeto publicou, e ele não deve ser
+instalado.
