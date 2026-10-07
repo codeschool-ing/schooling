@@ -8,7 +8,8 @@ in a pseudo-terminal, so the prompt is psql's own (`shop=#`, `shop=*#` inside
 a transaction) and so is every word it prints. What this adds is layout: one
 blank line between one command's output and the next prompt, which is how the
 course lays a session out, and nothing else. The banner psql prints on start is
-kept when the first line of stdin is `#banner`.
+kept when the first line of stdin is `#banner`, and a line that starts
+`#quiet ` is typed and not printed.
 """
 import os, pty, re, select, sys, time
 
@@ -53,6 +54,14 @@ def main():
         sys.stdout.write(out if out.endswith('\n\n') else out + '\n')
     gap = False
     for line in lines:
+        quiet = line.startswith('#quiet ')
+        if quiet:
+            # typed like any other line and left out of the transcript; the
+            # lesson tells the student to type it, once, where it says why
+            line = line[len('#quiet '):]
+            os.write(fd, line.encode() + b'\n')
+            out, prompt = read_until_prompt(fd)
+            continue
         if gap:
             sys.stdout.write('\n')
         os.write(fd, line.encode() + b'\n')

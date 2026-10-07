@@ -42,7 +42,7 @@ The steps, once:
    `ana@vm:~$`, and the next section starts from there.
 
 **What it costs your computer:** the 2 GB of memory while the machine runs, and the disk it grows
-into — a few gigabytes for Ubuntu, plus LARGESHOP once lesson 9 loads its large shop. The first
+into — a few gigabytes for Ubuntu, plus about 300 MB once lesson 9 loads its large shop. The first
 setup takes a while, and most of it is waiting for the installer.
 
 > **Your prompt will not say `ana@vm`.** In this course `ana` is the user and `vm` is the machine;

@@ -43,7 +43,7 @@ Os passos, uma vez só:
    e a próxima etapa começa daí.
 
 **O que custa ao seu computador:** os 2 GB de memória enquanto a máquina roda, e o disco que ela
-vai ocupando — alguns gigabytes para o Ubuntu, mais LARGESHOP quando a aula 9 carregar a loja
+vai ocupando — alguns gigabytes para o Ubuntu, mais uns 300 MB quando a aula 9 carregar a loja
 grande. A primeira instalação demora, e a maior parte é esperar o instalador.
 
 > **Seu prompt não vai dizer `ana@vm`.** Neste curso `ana` é o usuário e `vm` é a máquina; no seu
