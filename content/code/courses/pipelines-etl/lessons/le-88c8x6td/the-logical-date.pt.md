@@ -17,7 +17,7 @@ ano que vem:
 ```
 ana@vm:~/etl$ airflow dags list-runs shop_nightly -o plain
 dag_id        run_id                                    state    run_after                         logical_date               start_date                 end_date
-shop_nightly  manual__2026-10-07T04:01:19.094015+00:00  success  2026-10-07T04:01:19.094015+00:00  2026-03-03T03:00:00+00:00  2026-03-03T03:00:00+00:00  2026-10-07T04:01:24.970007+00:00
+shop_nightly  manual__2026-10-07T08:26:49.538261+00:00  success  2026-10-07T08:26:49.538261+00:00  2026-03-03T03:00:00+00:00  2026-03-03T03:00:00+00:00  2026-10-07T08:26:55.648104+00:00
 ```
 
 O `logical_date` é `2026-03-03T03:00:00+00:00` — meia-noite de 3 de março em São Paulo, escrita em

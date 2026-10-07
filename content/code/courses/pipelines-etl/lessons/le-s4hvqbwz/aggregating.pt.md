@@ -31,6 +31,25 @@ sobe uma hierarquia não faz fan-out**; um que desce, de um pedido para as suas 
 
 ## Montando cada tabela, em ordem
 
+Três arquivos da pasta ainda não apareceram, porque não há nada a dizer sobre eles:
+`sql/staging/00_schema.sql`, `sql/marts/00_schema.sql` e `sql/staging/books.sql`, nessa ordem.
+
+```sql
+CREATE SCHEMA IF NOT EXISTS staging;
+```
+
+```sql
+CREATE SCHEMA IF NOT EXISTS marts;
+```
+
+```sql
+-- One row per book.
+DROP TABLE IF EXISTS staging.books CASCADE;
+CREATE TABLE staging.books AS
+SELECT book_id, isbn, title, category, publisher, list_price_cents
+  FROM raw.books;
+```
+
 Cada arquivo SQL monta uma tabela, e os arquivos precisam rodar numa ordem: staging antes de marts,
 e dentro de cada camada, o schema antes das tabelas. O executor da Ana faz a coisa mais simples que
 funciona:

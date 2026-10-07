@@ -64,7 +64,7 @@ ana@vm:~/etl$ f=$(ls -d ~/airflow/logs/dag_id=sales_report/run_id=*/task_id=repo
 "event":"2026-03-09|23133780"
 ```
 
-O laboratório toca o dia 9 de março, e um backfill o carrega. Quando o `fact_sales` deu certo, o
+O `shop day` toca o dia 9 de março, e um backfill o carrega. Quando o `fact_sales` deu certo, o
 Airflow registrou um evento no asset, e o agendador iniciou o `sales_report` — `asset_triggered`, no
 momento em que a carga terminou, sem horário escrito em lugar nenhum. O relatório viu o dia 9 de
 março, e o total de tudo o que foi carregado até ali.

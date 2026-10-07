@@ -21,6 +21,7 @@
 lab reset >/dev/null
 lab until 2026-03-02 >/dev/null
 lab api >/dev/null
+code file-prices-api-py /home/ana/pontofinal/prices_api.py
 
 put torn.py <<'PY'
 """Read orders, then their lines, as two separate statements."""

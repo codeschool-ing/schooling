@@ -27,9 +27,9 @@ Leia como um conjunto de regras, não como uma sequência:
 - o `fact_sales` começa quando **tanto** o `day_to_load` quanto o `dim_customer` deram certo. Uma
   tarefa com duas setas chegando nela espera todas, por padrão.
 
-O `day_to_load` não tem nada antes, então pode rodar primeiro, junto com o `extract`. Nas duas
-execuções de teste acima ele rodou antes do `extract` numa e depois na outra, e as duas estão
-certas.
+O `day_to_load` não tem nada antes, então pode rodar primeiro, junto com o `extract`. Na execução de
+teste de duas seções atrás ele terminou antes do `extract`, na de duas seções adiante termina
+depois, e as duas estão certas.
 
 ## Por que as setas importam mais que o arquivo
 

@@ -20,7 +20,7 @@ ana@vm:~/etl$ psql -d wh -c "SELECT sum(books) AS books, sum(revenue_cents) AS r
 aconteceram. Ela roda o ETL de novo para a mesma semana:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-11
+ana@vm:~/etl$ sudo shop until 2026-03-11
 ana@vm:~/etl$ python etl.py 2026-03-01 2026-03-07
 read 3048 rows from the shop, wrote 98 to the warehouse
 ana@vm:~/etl$ psql -d wh -c "SELECT sum(books) AS books, sum(revenue_cents) AS revenue_cents FROM etl_sales_by_category WHERE day <= '2026-03-07'"

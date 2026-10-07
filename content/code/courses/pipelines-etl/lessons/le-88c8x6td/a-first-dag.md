@@ -76,10 +76,10 @@ ana@vm:~/etl$ airflow dags test shop_nightly 2026-03-03 2>&1 | wc -l
 ana@vm:~/etl$ airflow dags test shop_nightly 2026-03-03 2>&1 | sh trace.sh
 jinja2.exceptions.TemplateNotFound: 'sh run_sql.sh' not found in search path: '/home/ana/etl/dags'
 jinja2.exceptions.TemplateNotFound: 'sh run_sql.sh' not found in search path: '/home/ana/etl/dags'
+[DAG TEST] end task task_id=day_to_load
 Running command: ['/usr/bin/bash', '-c', 'python load_raw.py']
 Command exited with return code 0
 [DAG TEST] end task task_id=extract
-[DAG TEST] end task task_id=day_to_load
 jinja2.exceptions.TemplateNotFound: 'sh run_sql.sh' not found in search path: '/home/ana/etl/dags'
 jinja2.exceptions.TemplateNotFound: 'sh run_sql.sh' not found in search path: '/home/ana/etl/dags'
 [DAG TEST] end task task_id=transform

@@ -8,6 +8,18 @@ row is not overwritten but closed, and a new row is opened, so a sale made while
 Paulo stays a São Paulo sale after they move. That lesson drew it. This one has to load it, every
 night, from a shop that only ever knows where somebody lives *now*.
 
+It reads `staging.customers`, which lesson 6 never needed. One more file in `sql/staging`,
+`customers.sql`, builds it, and `run_sql.sh` picks it up with the others:
+
+```sql
+-- One row per customer the shop still has: where they live, and since when.
+-- No name and no e-mail: the warehouse does not need them (lesson 2).
+DROP TABLE IF EXISTS staging.customers CASCADE;
+CREATE TABLE staging.customers AS
+SELECT customer_id, city, state, created_at, updated_at
+  FROM raw.customers;
+```
+
 The load is three statements in one transaction:
 
 ```
@@ -55,7 +67,7 @@ COMMIT;
 3. **Erase** every version of a customer the shop no longer has. The next section is about why
    that one is not optional.
 
-The lab plays the days from 4 to 15 March, running `nightly.sh` after each. On the 15th, customer
+Ana plays the days from 4 to 15 March with `shop day`, running `nightly.sh` after each. On the 15th, customer
 3145 moves from São Paulo to Rio de Janeiro:
 
 ```

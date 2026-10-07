@@ -23,10 +23,10 @@ shop.orders+60m: 17195 rows, the first run, watermark now 03-01 23:50:30
 (The third line, with `60` on the end, is a second copy of the same extraction with a setting the
 section after next explains. Read past it for now.)
 
-The next night the lab plays 2 March, and the extraction reads the day:
+The next night `shop` plays 2 March, and the extraction reads the day:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-02
+ana@vm:~/etl$ sudo shop day 2026-03-02
 ```
 
 ```

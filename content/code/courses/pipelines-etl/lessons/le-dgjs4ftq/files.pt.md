@@ -7,14 +7,14 @@ Um arquivo é a interface mais antiga entre duas empresas e ainda a mais comum. 
 escreve um arquivo de estoque por dia e o deixa na caixa de entrada da Ana:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-05
+ana@vm:~/etl$ sudo shop day 2026-03-05
 ana@vm:~/etl$ ls -l inbox
 total 248
--rw-r--r-- 1 ana ana 51310 Oct  7 00:07 stock_2026-03-01.csv
--rw-r--r-- 1 ana ana 51319 Oct  7 00:07 stock_2026-03-02.csv
--rw-r--r-- 1 ana ana 51320 Oct  7 00:07 stock_2026-03-03.csv
--rw-r--r-- 1 ana ana 51322 Oct  7 00:07 stock_2026-03-04.csv
--rw-r--r-- 1 ana ana 40527 Oct  7 00:07 stock_2026-03-05.csv
+-rw-r--r-- 1 ana ana 51310 Oct  7 05:25 stock_2026-03-01.csv
+-rw-r--r-- 1 ana ana 51319 Oct  7 05:25 stock_2026-03-02.csv
+-rw-r--r-- 1 ana ana 51320 Oct  7 05:25 stock_2026-03-03.csv
+-rw-r--r-- 1 ana ana 51322 Oct  7 05:25 stock_2026-03-04.csv
+-rw-r--r-- 1 ana ana 40527 Oct  7 05:25 stock_2026-03-05.csv
 ana@vm:~/etl$ head -3 inbox/stock_2026-03-04.csv
 isbn,available,as_of
 9786557083932,8,2026-03-04T06:00:00-03:00

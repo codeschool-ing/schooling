@@ -15,11 +15,11 @@ update and delete writes the whole old row into the WAL as well:
 ana@vm:~/etl$ grep -A1 "^UPDATE customers" /var/lib/etl-data/days/2026-03-15.sql | head -1
 UPDATE customers SET city = 'Rio de Janeiro', state = 'RJ', updated_at = '2026-03-15 08:16:38-03:00' WHERE customer_id = 3145;
 ana@vm:~/etl$ psql -q -c "ALTER TABLE customers REPLICA IDENTITY FULL"
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-15
+ana@vm:~/etl$ sudo shop day 2026-03-15
 ana@vm:~/etl$ psql -At -c "SELECT data FROM pg_logical_slot_peek_changes('wh_cdc', NULL, NULL) WHERE data LIKE 'table public.customers: UPDATE%' LIMIT 1"
 table public.customers: UPDATE: old-key: customer_id[integer]:3145 name[text]:'Débora Mendes' email[text]:'débora.mendes3145@example.net' city[text]:'São Paulo' state[text]:'SP' created_at[timestamp with time zone]:'2025-05-01 12:00:00-03' updated_at[timestamp with time zone]:'2025-05-01 12:00:00-03' new-tuple: customer_id[integer]:3145 name[text]:'Débora Mendes' email[text]:'débora.mendes3145@example.net' city[text]:'Rio de Janeiro' state[text]:'RJ' created_at[timestamp with time zone]:'2025-05-01 12:00:00-03' updated_at[timestamp with time zone]:'2026-03-15 08:16:38-03'
 ana@vm:~/etl$ python apply_cdc.py
-1246 changes read up to 0/2757AFE8: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 739}
+1246 changes read up to 0/BFA5900: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 739}
 ```
 
 Now the change says `old-key:` with every column as it was, and `new-tuple:` with every column as

@@ -74,7 +74,7 @@ the changes and the slot moved on:
 
 ```
 ana@vm:~/etl$ python apply_cdc.py
-1088 changes read up to 0/2705F940: {'INSERT': 19, 'UPDATE': 4, 'DELETE': 0, 'other tables': 643}
+1088 changes read up to 0/BA8A238: {'INSERT': 19, 'UPDATE': 4, 'DELETE': 0, 'other tables': 643}
 ana@vm:~/etl$ python apply_cdc.py
 0 changes read up to -: {'INSERT': 0, 'UPDATE': 0, 'DELETE': 0, 'other tables': 0}
 ```
@@ -87,13 +87,14 @@ one to run.
 
 ## The day the watermark failed
 
-The lab plays the days from 2 to 13 March, applying each one, and then plays the 14th — the day a
+Ana plays the days from 2 to 13 March with `shop day`, running `apply_cdc.py` after each one,
+and then plays the 14th — the day a
 customer asked to be forgotten:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-14
+ana@vm:~/etl$ sudo shop day 2026-03-14
 ana@vm:~/etl$ python apply_cdc.py
-2268 changes read up to 0/27452620: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}
+2268 changes read up to 0/BE7CF38: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}
 ana@vm:~/etl$ psql -d wh -c "SELECT count(*) FROM cdc.customers WHERE customer_id = 1880"
  count 
 -------

@@ -48,11 +48,11 @@ ana@vm:~/etl$ psql -d wh -c "SELECT count(*) AS versions, count(DISTINCT custome
 (1 row)
 ```
 
-The second night, after the lab plays 2 March, the books did not change and nothing is printed for
+The second night, after `shop` plays 2 March, the books did not change and nothing is printed for
 them; the day's sales go in:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-02
+ana@vm:~/etl$ sudo shop day 2026-03-02
 ana@vm:~/etl$ sh nightly.sh 2026-03-02
 2026-03-02: 415 fact rows
 ```

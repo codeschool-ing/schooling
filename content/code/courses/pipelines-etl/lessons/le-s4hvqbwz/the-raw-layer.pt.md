@@ -7,7 +7,8 @@ As lições 2 a 5 extraíram os dados da loja de quatro jeitos diferentes. **Est
 vem depois**, então ela parte da camada crua mais simples que guarda tudo: as seis tabelas da loja
 copiadas inteiras, os preços das editoras como a API os mandou, e cada arquivo de eventos que caiu.
 
-O laboratório toca a primeira semana de março e inicia a API de preços. A Ana busca todos os preços
+A Ana toca a primeira semana de março e inicia a API de preços, com
+`sudo shop until 2026-03-07` e `sudo shop api`. A Ana busca todos os preços
 que a API tem, com o cliente da lição 3, e roda o carregador:
 
 ```schooling-example

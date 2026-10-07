@@ -14,12 +14,12 @@ Command exited with return code 0
 Running command: ['/usr/bin/bash', '-c', 'sh run_sql.sh ']
 Command exited with return code 0
 [DAG TEST] end task task_id=transform
-Running command: ['/usr/bin/bash', '-c', 'psql -q -v ON_ERROR_STOP=1 -d wh -f load/dim_book.sql']
-Command exited with return code 0
-[DAG TEST] end task task_id=dim_book
 Running command: ['/usr/bin/bash', '-c', 'psql -q -v ON_ERROR_STOP=1 -d wh -f load/dim_customer.sql']
 Command exited with return code 0
 [DAG TEST] end task task_id=dim_customer
+Running command: ['/usr/bin/bash', '-c', 'psql -q -v ON_ERROR_STOP=1 -d wh -f load/dim_book.sql']
+Command exited with return code 0
+[DAG TEST] end task task_id=dim_book
 Running command: ['/usr/bin/bash', '-c', 'psql -q -v ON_ERROR_STOP=1 -d wh -v day=2026-03-02 -f load/fact_sales.sql']
 Command exited with return code 0
 [DAG TEST] end task task_id=fact_sales

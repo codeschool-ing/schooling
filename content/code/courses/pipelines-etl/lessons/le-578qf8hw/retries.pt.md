@@ -22,7 +22,8 @@ pergunta de novo a cada quinze segundos é mais um cliente mantendo aquele servi
 **A espera crescente é educação e aritmética ao mesmo tempo**: o primeiro retry pega um soluço, e o
 último ainda tem chance contra uma queda de vários minutos.
 
-A API do laboratório pode ser desligada. A Ana a desliga, tira a pausa do DAG — o que cria uma
+A API de preços pode ser desligada: `sudo shop outage on` a faz responder 503 a tudo, e
+`sudo shop outage off` acaba com isso. A Ana a desliga, tira a pausa do DAG — o que cria uma
 execução na hora, para as últimas 03:00 que já passaram, como a lição 9 mostrou — e a liga de novo
 depois que a segunda tentativa falhou:
 

@@ -46,7 +46,7 @@ atualização desse livro. Três detalhes nele fazem trabalho de verdade:
 Em 3 de março uma editora mudou o preço de um livro:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-03
+ana@vm:~/etl$ sudo shop day 2026-03-03
 ana@vm:~/etl$ grep "^UPDATE books" /var/lib/etl-data/days/2026-03-03.sql
 UPDATE books SET list_price_cents = 5990, updated_at = '2026-03-03 07:09:32-03:00' WHERE book_id = 136;
 ana@vm:~/etl$ sh nightly.sh 2026-03-03

@@ -3,7 +3,7 @@ title: The night it did not recover
 version: 1
 ---
 
-The lab cannot wait for three in the morning, so the night is staged: the price API goes down, and
+The lab cannot wait for three in the morning, so the night is staged: the price API goes down with `sudo shop outage on`, and
 Ana triggers the run for 03:00 on 10 March by hand, with that logical date, and leaves it alone.
 
 ```

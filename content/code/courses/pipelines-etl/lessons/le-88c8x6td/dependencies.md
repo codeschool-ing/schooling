@@ -27,8 +27,9 @@ Read it as a set of rules, not a sequence:
 - `fact_sales` starts when **both** `day_to_load` and `dim_customer` have succeeded. A task with two
   arrows into it waits for all of them, by default.
 
-`day_to_load` has nothing before it, so it can run first, alongside `extract`. In the two test runs
-above it ran before `extract` once and after it once, and both are correct.
+`day_to_load` has nothing before it, so it can run first, alongside `extract`. In the test run two
+sections back it finished before `extract`, in the one two sections on it finishes after, and both
+are correct.
 
 ## Why the arrows matter more than the file
 

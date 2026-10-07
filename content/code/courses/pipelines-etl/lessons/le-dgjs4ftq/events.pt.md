@@ -3,7 +3,7 @@ title: Eventos: pelo menos uma vez, mais ou menos em ordem
 version: 1
 ---
 
-O coletor do site escreve uma linha por clique, visualização e compra, e o laboratório deixa um dia
+O coletor do site escreve uma linha por clique, visualização e compra, e o `shop day` deixa um dia
 deles em `landing/events/`. Um evento é um fato sobre um momento: ele nunca é atualizado nem
 apagado, o que faz dele a origem mais fácil de ler e a mais fácil de contar errado.
 

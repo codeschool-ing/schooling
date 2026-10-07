@@ -38,12 +38,12 @@ does to the shop's database while the DAG sits there, never run:
 ana@vm:~/etl$ airflow dags reserialize >/dev/null 2>&1; airflow dags report
 file            | duration       | dag_num | task_num | dags        
 ================+================+=========+==========+=============
-by_shop.py      | 0:00:00.085735 | 1       | 7        | by_shop     
-shop_nightly.py | 0:00:00.019797 | 1       | 6        | shop_nightly
+by_shop.py      | 0:00:00.092190 | 1       | 7        | by_shop     
+shop_nightly.py | 0:00:00.022331 | 1       | 6        | shop_nightly
                                                                     
 ana@vm:~/etl$ psql -d shop -Atc "SELECT xact_commit FROM pg_stat_database WHERE datname = current_database()"; sleep 120; psql -d shop -Atc "SELECT xact_commit FROM pg_stat_database WHERE datname = current_database()"
-731
-745
+733
+747
 ```
 
 `by_shop.py` takes more than four times as long to parse as `shop_nightly.py`, and during two quiet minutes the

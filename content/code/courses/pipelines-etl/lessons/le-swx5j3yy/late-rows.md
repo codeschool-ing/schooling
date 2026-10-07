@@ -21,7 +21,7 @@ ana@vm:~/etl$ psql -c "SELECT order_id, ordered_at, updated_at FROM orders WHERE
    900001 | 2026-03-02 23:40:00-03 | 2026-03-02 23:40:00-03
 (1 row)
 
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-03
+ana@vm:~/etl$ sudo shop day 2026-03-03
 ana@vm:~/etl$ python incremental.py orders
 shop.orders: 301 rows since 03-02 23:59:47, watermark now 03-03 23:51:38
 ana@vm:~/etl$ python incremental.py orders 60

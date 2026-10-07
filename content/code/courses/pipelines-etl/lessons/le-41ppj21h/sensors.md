@@ -53,8 +53,8 @@ def stock_file():
 stock_file()
 ```
 
-Ana tests it for 8 March before the lab has played that day. The file is not there; twelve seconds
-later the lab plays the day, and the distributor's file arrives:
+Ana tests it for 8 March before the shop has lived that day. The file is not there; twelve seconds
+later `sudo shop day 2026-03-08`, from a second terminal, plays the day, and the distributor's file arrives:
 
 ```
 ana@vm:~/etl$ airflow dags test stock_file 2026-03-08 2>&1 | grep -oE "Poking for file [^ ]*|Success criteria met|[0-9]+ rows loaded|[A-Za-z]*(Error|NotFound): .*|state=[a-z]+, run_type=[a-z]+" | uniq -c

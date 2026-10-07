@@ -30,16 +30,16 @@ O Airflow 3 roda como quatro processos e um banco:
 - o **banco de metadados** — o banco `airflow` no PostgreSQL da Ana — guarda cada DAG, cada execução,
   o estado de cada tarefa e cada valor que as tarefas passam umas às outras.
 
-O laboratório inicia os quatro processos para você:
+O `shop airflow` inicia os quatro processos:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh airflow
+ana@vm:~/etl$ sudo shop airflow
 ana@vm:~/etl$ pgrep -u ana -fa "bin/airflow [a-z-]*$|airflow api_server"
-1877 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow scheduler
-1883 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow dag-processor
-1889 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow triggerer
-1895 airflow api_server -- host:127.0.0.1 port:8080
-1927 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow triggerer
+7622 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow scheduler
+7629 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow dag-processor
+7636 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow triggerer
+7643 airflow api_server -- host:127.0.0.1 port:8080
+7702 /opt/etl/airflow/bin/python3 /opt/etl/bin/airflow triggerer
 ana@vm:~/etl$ curl -s http://127.0.0.1:8080/api/v2/version; echo
 {"version":"3.3.2","git_version":".release:aa19d2dbb9ed187ec01957a92848d9b005e9ba9d"}
 ```

@@ -7,7 +7,8 @@ Lessons 2 to 5 extracted the shop's data four different ways. **This lesson is a
 next**, so it starts from the simplest raw layer that holds everything: the six shop tables copied
 whole, the publishers' prices as the API sent them, and every event file that has landed.
 
-The lab plays the first week of March and starts the price API. Ana fetches every price the API
+Ana plays the first week of March and starts the price API, with `sudo shop until 2026-03-07`
+and `sudo shop api`. Ana fetches every price the API
 has, with the client from lesson 3, and runs the loader:
 
 ```schooling-example

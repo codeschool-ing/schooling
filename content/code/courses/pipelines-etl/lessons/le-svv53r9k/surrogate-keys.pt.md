@@ -61,7 +61,7 @@ nomear. Dois tipos de venda vão parar lá, por motivos diferentes:
   nenhuma.
 
 **`-1` é um valor, não um `NULL`, de propósito.** Um relatório que junta fatos com clientes por um
-inner join descarta em silêncio todo fato cuja chave é `NULL`, e a receita cai um terço. Com `-1` e
+inner join descarta em silêncio todo fato cuja chave é `NULL`, e quase um terço das linhas vai junto. Com `-1` e
 uma linha na dimensão que case com ele — "cliente desconhecido" — o join guarda as vendas e as rotula
 com honestidade. `warehouse-modeling` chama essa linha de membro desconhecido; é na carga que ela
 mostra o seu valor.

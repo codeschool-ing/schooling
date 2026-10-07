@@ -7,7 +7,7 @@ On 14 March a customer asks Ponto Final to forget them, and the back office does
 requires — it detaches their orders and deletes their row:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-14
+ana@vm:~/etl$ sudo shop until 2026-03-14
 ana@vm:~/etl$ grep -A2 "SET customer_id = NULL" /var/lib/etl-data/days/2026-03-14.sql
 UPDATE orders SET customer_id = NULL, updated_at = '2026-03-14 10:14:53-03:00' WHERE customer_id = 1880;
 DELETE FROM customers WHERE customer_id = 1880;

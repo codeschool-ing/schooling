@@ -21,7 +21,7 @@ commands changes — how a step is declared, how the order is said, what counts 
 remembered afterwards. Those four differences are the lesson.
 
 Each tool is installed in its own virtual environment, because each pins its own versions of the
-same libraries; the lab's header explains the arrangement. And these tools change fast. The versions
+same libraries; lesson 1's `setup.sh` explains the arrangement. And these tools change fast. The versions
 here are the lab's, the names of things may differ in the next major release, and one or another
 of the three may not be maintained by the time this is read. **The questions in the last sections
 outlive the tools**, which is why the lesson ends with them.

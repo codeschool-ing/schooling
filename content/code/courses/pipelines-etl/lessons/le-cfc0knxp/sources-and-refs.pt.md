@@ -35,6 +35,26 @@ select order_id,
   from {{ source('raw', 'orders') }}
 ```
 
+Os outros dois modelos de staging fazem o mesmo com as linhas e os livros, como
+`models/staging/stg_order_lines.sql` e `models/staging/stg_books.sql`:
+
+```sql
+-- One row per order line, with what the line was worth.
+select order_id,
+       line_no,
+       book_id,
+       quantity,
+       unit_price_cents,
+       quantity * unit_price_cents as line_cents
+  from {{ source('raw', 'order_lines') }}
+```
+
+```sql
+-- One row per book.
+select book_id, isbn, title, category, publisher, list_price_cents
+  from {{ source('raw', 'books') }}
+```
+
 Um mart lê outros modelos com `{{ ref('…') }}`, pelo nome do modelo, que é o nome do arquivo dele:
 
 ```

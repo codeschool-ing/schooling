@@ -35,6 +35,26 @@ select order_id,
   from {{ source('raw', 'orders') }}
 ```
 
+The other two staging models make the same move on the lines and the books, as
+`models/staging/stg_order_lines.sql` and `models/staging/stg_books.sql`:
+
+```sql
+-- One row per order line, with what the line was worth.
+select order_id,
+       line_no,
+       book_id,
+       quantity,
+       unit_price_cents,
+       quantity * unit_price_cents as line_cents
+  from {{ source('raw', 'order_lines') }}
+```
+
+```sql
+-- One row per book.
+select book_id, isbn, title, category, publisher, list_price_cents
+  from {{ source('raw', 'books') }}
+```
+
 A mart reads other models with `{{ ref('…') }}`, by the model's name, which is its file's name:
 
 ```

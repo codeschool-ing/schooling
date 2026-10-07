@@ -9,6 +9,18 @@ enquanto ele morava em São Paulo continue sendo uma venda de São Paulo depois 
 lição a desenhou. Esta precisa carregá-la, toda noite, a partir de uma loja que só sabe onde alguém
 mora *agora*.
 
+Ela lê `staging.customers`, de que a lição 6 nunca precisou. Mais um arquivo em `sql/staging`, o
+`customers.sql`, o monta, e o `run_sql.sh` o pega junto com os outros:
+
+```sql
+-- One row per customer the shop still has: where they live, and since when.
+-- No name and no e-mail: the warehouse does not need them (lesson 2).
+DROP TABLE IF EXISTS staging.customers CASCADE;
+CREATE TABLE staging.customers AS
+SELECT customer_id, city, state, created_at, updated_at
+  FROM raw.customers;
+```
+
 A carga são três comandos numa transação:
 
 ```
@@ -56,7 +68,7 @@ COMMIT;
 3. **Apagar** toda versão de um cliente que a loja não tem mais. A próxima seção trata de por que
    esse passo não é opcional.
 
-O laboratório toca os dias de 4 a 15 de março, rodando o `nightly.sh` depois de cada um. No dia 15, o
+A Ana toca os dias de 4 a 15 de março com o `shop day`, rodando o `nightly.sh` depois de cada um. No dia 15, o
 cliente 3145 se muda de São Paulo para o Rio de Janeiro:
 
 ```

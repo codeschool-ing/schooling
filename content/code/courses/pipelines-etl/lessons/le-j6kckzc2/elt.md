@@ -70,9 +70,9 @@ raw.orders: 1933 rows
 raw.order_lines: 3048 rows
 raw.books: 1200 rows
 
-real	0m0.225s
-user	0m0.186s
-sys	0m0.016s
+real	0m0.223s
+user	0m0.177s
+sys	0m0.023s
 ```
 
 The second half is the question, written in SQL and run inside the warehouse:
@@ -98,9 +98,9 @@ psql:sales_by_category.sql:2: NOTICE:  table "elt_sales_by_category" does not ex
 DROP TABLE
 SELECT 98
 
-real	0m0.016s
-user	0m0.000s
-sys	0m0.005s
+real	0m0.017s
+user	0m0.006s
+sys	0m0.000s
 ```
 
 ## The same answer?

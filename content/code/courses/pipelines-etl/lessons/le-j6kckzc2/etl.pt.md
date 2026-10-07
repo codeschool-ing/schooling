@@ -7,7 +7,7 @@ A pergunta desta lição: **quantos livros, e quanta receita, cada categoria ven
 primeira semana de março?** A Ana toca a semana na loja primeiro:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-07
+ana@vm:~/etl$ sudo shop until 2026-03-07
 ```
 
 A versão ETL lê as linhas de que precisa, faz a conta em Python e escreve só a resposta:
@@ -43,9 +43,9 @@ A versão ETL lê as linhas de que precisa, faz a conta em Python e escreve só 
 ana@vm:~/etl$ time python etl.py 2026-03-01 2026-03-07
 read 3048 rows from the shop, wrote 98 to the warehouse
 
-real	0m0.232s
-user	0m0.175s
-sys	0m0.036s
+real	0m0.211s
+user	0m0.170s
+sys	0m0.020s
 ```
 
 Três mil linhas entram, noventa e oito saem: catorze categorias em sete dias. O warehouse não vê

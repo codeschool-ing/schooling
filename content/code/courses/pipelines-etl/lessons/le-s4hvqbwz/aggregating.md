@@ -31,6 +31,25 @@ that goes up a hierarchy cannot fan out**; one that goes down it, from an order 
 
 ## Building every table, in order
 
+Three files in the folder have not appeared yet, because there is nothing to say about them:
+`sql/staging/00_schema.sql`, `sql/marts/00_schema.sql` and `sql/staging/books.sql`, in that order.
+
+```sql
+CREATE SCHEMA IF NOT EXISTS staging;
+```
+
+```sql
+CREATE SCHEMA IF NOT EXISTS marts;
+```
+
+```sql
+-- One row per book.
+DROP TABLE IF EXISTS staging.books CASCADE;
+CREATE TABLE staging.books AS
+SELECT book_id, isbn, title, category, publisher, list_price_cents
+  FROM raw.books;
+```
+
 Each SQL file builds one table, and the files have to run in an order: staging before marts, and
 within each layer, the schema before its tables. Ana's runner does the simplest thing that works:
 

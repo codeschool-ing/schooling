@@ -8,8 +8,8 @@ keeps changing while you read it**, and a pipeline that reads two tables with tw
 get two different moments.
 
 Ana's first attempt reads the orders, then the lines. Between the two, the extraction is slow for
-four seconds — a busy network, a big table — and the lab plays the next day of trade into the shop
-while it waits:
+four seconds — a busy network, a big table — and the next day of trade lands in the shop while it
+waits, played by `sudo shop day` from a second terminal:
 
 ```
 """Read orders, then their lines, as two separate statements."""

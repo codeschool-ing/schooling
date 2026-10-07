@@ -41,7 +41,7 @@ reports/daily_$(DAY).csv: .made/models
 
 Three rules, each the answer to *what is this made from*. The report is made from the models; the
 models from raw **and from every file in the dbt project**. Raw is made from `load_raw.py` **and
-from the lab's clock file**, which `lab.sh day` rewrites whenever the shop lives another day. Nothing says
+from the lab's clock file**, which `shop day` rewrites whenever the shop lives another day. Nothing says
 *first do this, then that*: `make` works the order out from the rules, as dbt did from the `ref`s.
 
 ```

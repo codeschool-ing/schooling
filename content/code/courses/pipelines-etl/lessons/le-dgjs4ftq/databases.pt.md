@@ -8,8 +8,8 @@ Um banco de dados é a origem mais amigável: ele responde a qualquer pergunta q
 dois comandos pode pegar dois momentos diferentes.
 
 A primeira tentativa da Ana lê os pedidos, depois as linhas. Entre as duas, a extração fica lenta por
-quatro segundos — uma rede ocupada, uma tabela grande — e o laboratório toca o dia seguinte de vendas
-na loja enquanto ela espera:
+quatro segundos — uma rede ocupada, uma tabela grande — e o dia seguinte de vendas chega à loja enquanto
+ela espera, tocado pelo `sudo shop day` num segundo terminal:
 
 ```
 """Read orders, then their lines, as two separate statements."""

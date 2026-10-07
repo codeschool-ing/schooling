@@ -11,10 +11,10 @@ them, appended, never updated:
 ana@vm:~/etl$ psql -d wh -c "SELECT order_id, status, updated_at, extracted_at FROM raw.orders_changes WHERE order_id IN (SELECT order_id FROM raw.orders_changes GROUP BY order_id HAVING count(*) > 1) ORDER BY order_id, updated_at LIMIT 4"
  order_id |  status   |       updated_at       |         extracted_at          
 ----------+-----------+------------------------+-------------------------------
-   113697 | completed | 2026-02-17 19:27:23-03 | 2026-10-07 00:17:18.140091-03
-   113697 | refunded  | 2026-03-03 17:17:14-03 | 2026-10-07 00:17:20.763591-03
-   114178 | completed | 2026-02-19 15:57:06-03 | 2026-10-07 00:17:18.140091-03
-   114178 | refunded  | 2026-03-03 10:34:33-03 | 2026-10-07 00:17:20.763591-03
+   113697 | completed | 2026-02-17 19:27:23-03 | 2026-10-07 05:25:18.487912-03
+   113697 | refunded  | 2026-03-03 17:17:14-03 | 2026-10-07 05:25:21.119214-03
+   114178 | completed | 2026-02-19 15:57:06-03 | 2026-10-07 05:25:18.487912-03
+   114178 | refunded  | 2026-03-03 10:34:33-03 | 2026-10-07 05:25:21.119214-03
 (4 rows)
 ```
 

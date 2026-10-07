@@ -3,7 +3,7 @@ title: Events: at least once, roughly in order
 version: 1
 ---
 
-The website's collector writes one line per click, view and purchase, and the lab drops a day of
+The website's collector writes one line per click, view and purchase, and `shop day` drops a day of
 them in `landing/events/`. An event is a fact about a moment: it is never updated and never
 deleted, which makes it the easiest source to read and the easiest to count wrong.
 

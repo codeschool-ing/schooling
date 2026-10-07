@@ -13,6 +13,9 @@
 #                                start or stop Airflow's four processes
 #   sudo shop down               stop everything, the database included
 #
+# `day` and `until` also run as ana herself, without sudo, which is how a task
+# in Airflow plays a day in lesson 9.
+#
 # TIME, WHICH NO COMPUTER PROVIDES. The shop's March has not happened when the
 # machine is built. `shop day 2026-03-01` plays one day of it: every
 # transaction the tills ran that day, in order, the website's event file and
@@ -32,16 +35,23 @@ AFHOME=/home/ana/airflow
 ENVFILE=/etc/etl.env
 TABLES="shops books customers orders order_lines payments"
 
-[ "$(id -u)" = 0 ] || { echo "run it with sudo: sudo shop ${*:-}" >&2; exit 1; }
+case "$(id -un):${1:-}" in
+  root:*|ana:day|ana:until) ;;
+  *) echo "run it with sudo: sudo shop ${*:-}" >&2; exit 1 ;;
+esac
 [ -f $ENVFILE ] || { echo "$ENVFILE is missing: run setup.sh first" >&2; exit 1; }
 
 as_ana() {  # as_ana 'COMMAND' — as ana, in the course's environment
   # shellcheck disable=SC2046
-  runuser -u ana -- env -i HOME=/home/ana USER=ana $(cat $ENVFILE) bash -c "$1"
+  if [ "$(id -un)" = ana ]; then
+    env -i HOME=/home/ana USER=ana $(cat $ENVFILE) bash -c "$1"
+  else
+    runuser -u ana -- env -i HOME=/home/ana USER=ana $(cat $ENVFILE) bash -c "$1"
+  fi
 }
 
 pg_up() {
-  mkdir -p $PGSOCK && chown ana $PGSOCK
+  [ "$(id -u)" = 0 ] && mkdir -p $PGSOCK && chown ana $PGSOCK
   if [ ! -f $PGDATA/PG_VERSION ]; then
     mkdir -p $PGDATA && chown ana $PGDATA
     as_ana "initdb -D $PGDATA -U ana -A trust --encoding=UTF8 --locale=C.UTF-8 >/dev/null"

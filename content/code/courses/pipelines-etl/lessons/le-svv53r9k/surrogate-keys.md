@@ -60,7 +60,7 @@ Two kinds of sale end up there, for different reasons:
   `NULL`, and the dimension load deleted every version of them: customer 1880 has no rows left.
 
 **`-1` is a value, not a `NULL`, on purpose.** A report that joins facts to customers with an inner
-join silently drops every fact whose key is `NULL`, and revenue falls by a third. With `-1` and a
+join silently drops every fact whose key is `NULL`, and nearly a third of the lines with it. With `-1` and a
 row in the dimension to match it — "unknown customer" — the join keeps the sales and labels them
 honestly. `warehouse-modeling` calls that row the unknown member; the load is where it earns its
 keep.

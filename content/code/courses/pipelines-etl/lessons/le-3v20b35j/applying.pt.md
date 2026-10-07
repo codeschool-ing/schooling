@@ -74,7 +74,7 @@ consumiu as mudanças e o slot seguiu em frente:
 
 ```
 ana@vm:~/etl$ python apply_cdc.py
-1088 changes read up to 0/2705F940: {'INSERT': 19, 'UPDATE': 4, 'DELETE': 0, 'other tables': 643}
+1088 changes read up to 0/BA8A238: {'INSERT': 19, 'UPDATE': 4, 'DELETE': 0, 'other tables': 643}
 ana@vm:~/etl$ python apply_cdc.py
 0 changes read up to -: {'INSERT': 0, 'UPDATE': 0, 'DELETE': 0, 'other tables': 0}
 ```
@@ -87,13 +87,14 @@ não o de produção.
 
 ## O dia em que a marca d'água falhou
 
-O laboratório toca os dias de 2 a 13 de março, aplicando cada um, e depois toca o dia 14 — o dia em
+A Ana toca os dias de 2 a 13 de março com o `shop day`, rodando o `apply_cdc.py` depois de
+cada um, e depois toca o dia 14 — o dia em
 que um cliente pediu para ser esquecido:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-14
+ana@vm:~/etl$ sudo shop day 2026-03-14
 ana@vm:~/etl$ python apply_cdc.py
-2268 changes read up to 0/27452620: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}
+2268 changes read up to 0/BE7CF38: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}
 ana@vm:~/etl$ psql -d wh -c "SELECT count(*) FROM cdc.customers WHERE customer_id = 1880"
  count 
 -------

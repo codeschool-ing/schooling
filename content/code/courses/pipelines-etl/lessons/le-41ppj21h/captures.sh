@@ -241,7 +241,7 @@ PSQL = "psql -q -v ON_ERROR_STOP=1 -d wh"
      catchup=False, max_active_runs=1)
 def shop_minute():
     play = BashOperator(task_id="play_a_day",
-                        bash_command="bash ~/lab/lab.sh until $(date -d \"$(cat /var/lib/etl-run/clock) + 1 day\" +%F) && cat /var/lib/etl-run/clock")
+                        bash_command="shop until $(date -d \"$(cat /var/lib/etl-run/clock) + 1 day\" +%F) && cat /var/lib/etl-run/clock")
     load = BashOperator(task_id="nightly",
                         bash_command="sh nightly.sh {{ ti.xcom_pull(task_ids='play_a_day') }} ",
                         cwd=ETL)

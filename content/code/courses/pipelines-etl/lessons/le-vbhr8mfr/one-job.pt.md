@@ -21,7 +21,7 @@ comandos — como um passo é declarado, como a ordem é dita, o que conta como 
 lembrado depois. Essas quatro diferenças são a lição.
 
 Cada ferramenta está instalada num ambiente virtual próprio, porque cada uma fixa as suas próprias
-versões das mesmas bibliotecas; o cabeçalho do laboratório explica o arranjo. E estas ferramentas
+versões das mesmas bibliotecas; o `setup.sh` da lição 1 explica o arranjo. E estas ferramentas
 mudam rápido. As versões aqui são as do laboratório, os nomes das coisas podem ser outros na próxima
 versão principal, e uma ou outra das três pode não ter mais manutenção quando isto for lido. **As
 perguntas das últimas seções sobrevivem às ferramentas**, e é por isso que a lição termina nelas.

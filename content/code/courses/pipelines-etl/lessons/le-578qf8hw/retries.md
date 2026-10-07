@@ -21,7 +21,8 @@ fifteen seconds is one more client keeping that server overloaded. **The growing
 and arithmetic at once**: the first retry catches a blip, and the last one still has a chance
 against an outage of several minutes.
 
-The lab's API can be switched off. Ana switches it off, unpauses the DAG — which creates a run at
+The price API can be switched off: `sudo shop outage on` makes it answer 503 to everything, and
+`sudo shop outage off` ends it. Ana switches it off, unpauses the DAG — which creates a run at
 once, for the most recent 03:00 that has passed, as lesson 9 showed — and switches it back on after
 the second try has failed:
 

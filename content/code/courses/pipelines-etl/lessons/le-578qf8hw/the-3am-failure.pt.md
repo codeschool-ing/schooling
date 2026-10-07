@@ -3,7 +3,7 @@ title: A noite em que não se recuperou
 version: 1
 ---
 
-O laboratório não pode esperar as três da manhã, então a noite é encenada: a API de preços cai, e a
+O laboratório não pode esperar as três da manhã, então a noite é encenada: a API de preços cai com `sudo shop outage on`, e a
 Ana dispara à mão a execução das 03:00 de 10 de março, com essa data lógica, e a deixa em paz.
 
 ```

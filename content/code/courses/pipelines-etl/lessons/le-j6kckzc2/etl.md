@@ -7,7 +7,7 @@ The question for this lesson: **how many books, and how much revenue, did each c
 each day of the first week of March?** Ana plays the week into the shop first:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-07
+ana@vm:~/etl$ sudo shop until 2026-03-07
 ```
 
 The ETL version reads the rows it needs, does the arithmetic in Python, and writes only the answer:
@@ -43,9 +43,9 @@ The ETL version reads the rows it needs, does the arithmetic in Python, and writ
 ana@vm:~/etl$ time python etl.py 2026-03-01 2026-03-07
 read 3048 rows from the shop, wrote 98 to the warehouse
 
-real	0m0.232s
-user	0m0.175s
-sys	0m0.036s
+real	0m0.211s
+user	0m0.170s
+sys	0m0.020s
 ```
 
 Three thousand rows in, ninety-eight out: fourteen categories on seven days. The warehouse sees

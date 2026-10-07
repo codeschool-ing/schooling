@@ -625,18 +625,18 @@ def l05_slots(lang):
             label='The write-ahead log drawn as a strip, oldest on the left. The slot wh_cdc sits '
                   'near the right-hand end, so almost nothing behind it is kept. The slot forgotten '
                   'sits at the left-hand end, where it was created, and every byte between it and '
-                  'the end of the log is kept on the source\'s disk: 6085 kB after fourteen days.',
+                  'the end of the log is kept on the source\'s disk: 6049 kB after fourteen days.',
             wal='the write-ahead log, on the source\'s disk', old='older', new='now',
-            kept='kept for forgotten: 6085 kB', kept2='176 bytes',
+            kept='kept for forgotten: 6049 kB', kept2='176 bytes',
             cap='PostgreSQL keeps every byte a slot has not consumed. A slot nobody reads keeps all '
                 'of them, until the disk is full.'),
          'pt': dict(
             label='O log de escrita antecipada desenhado como uma faixa, o mais antigo à esquerda. O '
                   'slot wh_cdc fica perto da ponta direita, então quase nada atrás dele é guardado. '
                   'O slot forgotten fica na ponta esquerda, onde foi criado, e cada byte entre ele e '
-                  'o fim do log é guardado no disco da origem: 6085 kB depois de catorze dias.',
+                  'o fim do log é guardado no disco da origem: 6049 kB depois de catorze dias.',
             wal='o log de escrita antecipada, no disco da origem', old='mais antigo', new='agora',
-            kept='guardado para forgotten: 6085 kB', kept2='176 bytes',
+            kept='guardado para forgotten: 6049 kB', kept2='176 bytes',
             cap='O PostgreSQL guarda cada byte que um slot ainda não consumiu. Um slot que ninguém '
                 'lê guarda todos, até o disco encher.')}[lang]
     f = Fig('l05-slots', 720, 230, t['label'])
