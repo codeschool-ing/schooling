@@ -1,6 +1,6 @@
 ---
 title: `ssh`, porque toda máquina está em outro lugar
-version: 2
+version: 3
 ---
 
 Esta é uma seção numa aula cujo título não menciona ela, e está aqui porque **toda máquina Linux
@@ -16,6 +16,13 @@ ssh -p 2222 ana@localhost       # a port that is not 22
 ```
 
 É isso. Um shell noutra máquina, e tudo das aulas 1 a 4 funciona lá exatamente como funciona aqui.
+
+**Na máquina da aula 1, a outra máquina pode ser ela mesma.** O "Install OpenSSH server" do
+instalador pôs nela um servidor SSH, ouvindo na porta 22; se você não marcou, `sudo apt install
+openssh-server` faz isso agora. A máquina em que estas transcrições foram capturadas roda o
+servidor SSH na porta 2222, que é o único motivo de `-p 2222` aparecer abaixo: na sua, deixe-o de
+fora, e `ssh ana@localhost` é o mesmo comando. Abaixo, a `ana` também entra como `bruno`, com a
+senha que a aula 4 deu a ele, `practice`.
 
 ## A pergunta que ele faz na primeira vez
 

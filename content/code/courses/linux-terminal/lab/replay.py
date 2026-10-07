@@ -39,7 +39,7 @@ PROMPT = re.compile(r"^(?:(?P<user>[a-z][a-z0-9]*)@" + HOST +
                     r":(?P<cwd>[^\s$#]*)(?P<sigil>[$#])(?: |$)|(?P<bare>\$) )(?P<cmd>.*)$")
 SENTINEL = "@@REPLAY@@"
 MARK = 'printf "@@REP""LAY@@ %s %s\\n" "$?" "$PWD"'
-PASSWORDS = {"ana": "ana-lab-password", "bruno": "bruno-lab-password", "carla": "practice"}
+PASSWORDS = {"ana": "ana-lab-password", "bruno": "practice", "carla": "practice"}
 SCREEN = {"top", "htop", "vim", "vi", "nano", "emacs", "less", "more", "watch",
           "vimtutor", "passwd", "mc", "ssh", "sudoedit", "visudo", "crontab -e"}
 # Commands that read the keyboard when given no file.
@@ -199,6 +199,8 @@ def screen(cmd):
     if not words:
         return False
     first = words[1] if words[0] in ("sudo",) and len(words) > 1 else words[0]
+    if first == "passwd" and any(w.startswith("-") for w in words):
+        return False  # -S, -l, -u: a question about the password, not a prompt for one
     return first in SCREEN or cmd.strip() in SCREEN or cmd.strip() in WAITS or "less" in re.split(r"[|\s]+", cmd)[-1:]
 
 

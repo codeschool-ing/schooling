@@ -25,7 +25,7 @@ tira as letras dele.
 Permissão é sobre quem pergunta, então esta aula precisa de mais de uma pessoa. O `bruno` foi criado
 na seção 14 da aula 3; isto cria a `carla`, um grupo chamado `team` com a `ana` e o `bruno` dentro, e
 alguns arquivos e diretórios em `/srv` com exatamente as permissões que as seções abaixo leem. A
-carla ganha uma senha, `practice`, porque a seção 11 a faz digitar uma. Copie tudo para o terminal;
+carla e o bruno ganham uma senha, `practice`, porque a seção 11 e a aula 5 os fazem digitar uma. Copie tudo para o terminal;
 ele pede a sua senha uma vez:
 
 ```sh
@@ -33,6 +33,7 @@ id bruno >/dev/null 2>&1 || sudo useradd -m -s /bin/bash bruno
 sudo groupadd team
 sudo useradd -m -s /bin/bash carla
 echo 'carla:practice' | sudo chpasswd
+echo 'bruno:practice' | sudo chpasswd
 sudo usermod -aG team ana
 sudo usermod -aG team bruno
 sudo mkdir -p /srv/perm /srv/closed /srv/dirbits/r /srv/dirbits/rx /srv/dirbits/x /srv/team

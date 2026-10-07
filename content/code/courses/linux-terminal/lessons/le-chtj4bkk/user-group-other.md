@@ -24,8 +24,8 @@ gets its letters.
 
 Permissions are about who is asking, so this lesson needs more than one person. `bruno` was made in
 lesson 3 section 14; this makes `carla`, a group called `team` with `ana` and `bruno` in it, and a
-few files and directories under `/srv` with exactly the permissions the sections below read. Carla
-gets a password, `practice`, because section 11 has her type one. Copy it all into the terminal;
+few files and directories under `/srv` with exactly the permissions the sections below read. Carla and
+bruno get a password, `practice`, because section 11 and lesson 5 have them type one. Copy it all into the terminal;
 it asks for your password once:
 
 ```sh
@@ -33,6 +33,7 @@ id bruno >/dev/null 2>&1 || sudo useradd -m -s /bin/bash bruno
 sudo groupadd team
 sudo useradd -m -s /bin/bash carla
 echo 'carla:practice' | sudo chpasswd
+echo 'bruno:practice' | sudo chpasswd
 sudo usermod -aG team ana
 sudo usermod -aG team bruno
 sudo mkdir -p /srv/perm /srv/closed /srv/dirbits/r /srv/dirbits/rx /srv/dirbits/x /srv/team

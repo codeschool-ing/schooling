@@ -19,7 +19,7 @@ sudo useradd -m -s /bin/bash bruno
 sudo -iu bruno mkdir -p projects .ssh .config .local .cache
 sudo -iu bruno git config --global user.name Bruno
 sudo -iu bruno git config --global user.email bruno@example.com
-printf 'Host web\n    HostName 192.0.2.10\n    User bruno\n' | sudo -iu bruno tee .ssh/config > /dev/null
+printf 'Host db\n  HostName 192.0.2.1\n  User bruno\n' | sudo -iu bruno tee .ssh/config > /dev/null
 sudo -iu bruno chmod 700 .ssh
 sudo -iu bruno chmod 600 .ssh/config
 ```
@@ -75,12 +75,12 @@ configurações são arquivos que você pode ler, comparar e copiar para outra m
 
 ```
 bruno@vm:~$ ls -ld .ssh
-drwx------ 2 bruno bruno 4096 Oct  7 11:10 .ssh
+drwx------ 2 bruno bruno 4096 Oct  7 11:31 .ssh
 bruno@vm:~$ ls -la .ssh
 total 12
-drwx------ 2 bruno bruno 4096 Oct  7 11:10 .
-drwxr-x--- 7 bruno bruno 4096 Oct  7 11:10 ..
--rw------- 1 bruno bruno   48 Oct  7 11:10 config
+drwx------ 2 bruno bruno 4096 Oct  7 11:31 .
+drwxr-x--- 7 bruno bruno 4096 Oct  7 11:31 ..
+-rw------- 1 bruno bruno   42 Oct  7 11:31 config
 ```
 
 `drwx------` no diretório, `-rw-------` no que está dentro: ninguém além do dono, de jeito nenhum.
