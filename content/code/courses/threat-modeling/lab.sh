@@ -62,6 +62,8 @@ reset() {
   commit '2026-09-03 15:20' 'Summarise what pytm finds'
   add threats.csv
   commit '2026-09-03 17:05' 'List the threats found with STRIDE'
+  add tree.py
+  commit '2026-09-08 11:30' 'Model one goal as an attack tree'
 }
 
 case ${1:-} in
