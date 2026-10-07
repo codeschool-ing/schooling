@@ -1,21 +1,21 @@
 ---
 title: Entonação, ritmo e dizer do mesmo jeito duas vezes
-version: 1
+version: 2
 ---
 
 **Entonação é como a altura da voz se move por uma frase**, e em inglês ela carrega sentido: uma afirmação cai no fim, uma pergunta sobe. O Piper se guia pela pontuação, que o espeak-ng repassa como uma marca do tipo de oração. As mesmas quatro palavras com ponto final e com ponto de interrogação:
 
 ```
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/a.wav 1.0
-/tmp/a.wav: 1.14 s of audio at 22050 Hz, made in 0.11 s
+/tmp/a.wav: 1.14 s of audio at 22050 Hz, made in 0.09 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped?" /tmp/b.wav 1.0
-/tmp/b.wav: 1.15 s of audio at 22050 Hz, made in 0.11 s
+/tmp/b.wav: 1.15 s of audio at 22050 Hz, made in 0.09 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped!" /tmp/c.wav 1.0
-/tmp/c.wav: 1.14 s of audio at 22050 Hz, made in 0.12 s
+/tmp/c.wav: 1.14 s of audio at 22050 Hz, made in 0.14 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/d.wav 0.8
-/tmp/d.wav: 1.31 s of audio at 22050 Hz, made in 0.13 s
+/tmp/d.wav: 1.31 s of audio at 22050 Hz, made in 0.11 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/e.wav 1.25
-/tmp/e.wav: 1.00 s of audio at 22050 Hz, made in 0.09 s
+/tmp/e.wav: 1.00 s of audio at 22050 Hz, made in 0.10 s
 ```
 
 As durações quase não mudam, 1,14 contra 1,15 segundo. A altura muda, medida por um programinha que estima a frequência fundamental da voz a cada 30 milissegundos:
@@ -86,8 +86,8 @@ for noise in (True, False):
 
 ```
 ana@lab:~/mm$ python twice.py
-noise on   ae68a97ed74a 1.22 s   78f3a3307264 1.24 s   different
+noise on   d811d0d463a8 1.10 s   b818cec6fb86 1.17 s   different
 noise off  8ca881e0ebb4 1.14 s   8ca881e0ebb4 1.14 s   the same
 ```
 
-Com o ruído próprio da voz (`noise_scale` 0,667 na configuração da lessac), a mesma frase saiu como dois arquivos diferentes, de 1,20 e 1,13 segundo. Com o ruído desligado, as duas tomadas são idênticas até a última amostra. **Este laboratório o desliga em todo lugar**, que é a única configuração que o `mmlab.piper` faz: uma gravação que mudasse a cada reconstrução do laboratório não poderia ser citada por aula nenhuma. Um produto poderia escolher o contrário, para uma voz que soe menos mecânica numa ligação longa.
+Com o ruído próprio da voz (`noise_scale` 0,667 na configuração da lessac), a mesma frase saiu como dois arquivos diferentes, de 1,10 e 1,17 segundo. Com o ruído desligado, as duas tomadas são idênticas até a última amostra. **Este laboratório o desliga em todo lugar**, que é a única configuração que o `mmlab.piper` faz: uma gravação que mudasse a cada reconstrução do laboratório não poderia ser citada por aula nenhuma. Um produto poderia escolher o contrário, para uma voz que soe menos mecânica numa ligação longa.

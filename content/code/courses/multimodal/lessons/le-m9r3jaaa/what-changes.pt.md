@@ -1,6 +1,6 @@
 ---
 title: O que muda quando o modelo enxerga e ouve
-version: 1
+version: 2
 ---
 
 **Um modelo multimodal não é outro tipo de inteligência. É um modelo cujas entradas e saídas não são só texto.** Essa é a definição inteira, e vale guardá-la, porque quase tudo o que dá errado em produtos multimodais vem de esquecê-la. O modelo continua prevendo; continua tendo uma janela; continua cobrando pelo que lê e escreve. O que muda é o tamanho e o formato do que entra.
@@ -15,7 +15,36 @@ Uma **modalidade** é um tipo de dado: texto, imagem, áudio, vídeo. Um modelo 
 
 Um modelo de linguagem lê tokens. Antes de chegar a um modelo de visão, a imagem é redimensionada e cortada em blocos ou em pequenos recortes quadrados, e cada um custa tokens. Na aula 8 você vai contá-los: uma regra cobra 765 tokens pela capa de um livro de bolso, e a mesma regra cobra 85 se você pedir a versão de baixo detalhe. O áudio é cortado em quadros curtos de som; o Whisper escuta em janelas de 30 segundos. Um vídeo são imagens amostradas dele mais a trilha de áudio, e quantas imagens amostrar é uma decisão sua, com custo (aula 4).
 
-Então a primeira coisa que muda é **o tamanho de uma entrada**. Esta é a mídia do laboratório, listada por um programa desta aula:
+Então a primeira coisa que muda é **o tamanho de uma entrada**. Esta é a mídia do curso, os arquivos com que toda aula trabalha, listada por um programa curto. Você monta a máquina e a mídia nas seções 07 e 08 desta aula; até lá, leia as transcrições, e rode-as depois.
+
+`inventory.py`:
+
+```python
+"""What is in ~/mm/media: one line per file, and what a model would be handed."""
+import json
+import os
+import subprocess
+
+for name in sorted(os.listdir("media")):
+    path = os.path.join("media", name)
+    if not os.path.isfile(path):
+        continue
+    probe = subprocess.run(["ffprobe", "-v", "error", "-show_format", "-show_streams", "-of", "json", path],
+                           capture_output=True, text=True, check=True)
+    info = json.loads(probe.stdout)
+    kinds, timed = [], False
+    for s in info["streams"]:
+        if s["codec_type"] == "video" and s["codec_name"] in ("png", "mjpeg"):
+            kinds.append(f"image {s['width']}x{s['height']}")
+        elif s["codec_type"] == "video":
+            kinds.append(f"video {s['width']}x{s['height']} {s['codec_name']}")
+            timed = True
+        elif s["codec_type"] == "audio":
+            kinds.append(f"audio {s['sample_rate']} Hz {s['codec_name']}")
+            timed = True
+    seconds = f"{float(info['format']['duration']):6.1f} s" if timed else "       -"
+    print(f"{name:22} {os.path.getsize(path):>10,} B {seconds}  " + " + ".join(kinds))
+```
 
 ```
 ana@lab:~/mm$ python inventory.py

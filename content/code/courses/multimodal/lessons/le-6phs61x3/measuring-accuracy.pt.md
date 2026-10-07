@@ -1,6 +1,6 @@
 ---
 title: Medindo uma transcrição: a taxa de erro de palavras
-version: 1
+version: 2
 ---
 
 A **taxa de erro de palavras (WER)** conta o menor número de edições de uma palavra que transformam uma transcrição na verdade, e divide pelo número de palavras da verdade. Três tipos de edição:
@@ -11,7 +11,7 @@ A **taxa de erro de palavras (WER)** conta o menor número de edições de uma p
 
 WER = (S + D + I) / N, em que N é o número de palavras realmente ditas. Como as inserções contam, uma transcrição cheia de palavras inventadas pode passar de 100%.
 
-O `jiwer` calcula e consegue mostrar o alinhamento, palavra por palavra. Aqui estão duas falas, da Bia e do Caio, cada uma recortada da ligação pelos tempos do próprio roteiro e transcrita sozinha:
+O `jiwer` calcula e consegue mostrar o alinhamento, palavra por palavra. Os programas desta aula também importam o `measure.py`, o módulo de duas funções que a aula 5 escreveu no `~/mm`: `words()` deixa uma transcrição comparável, e `transcript()` corta uma gravação nos silêncios e a transcreve. Aqui estão duas falas, da Bia e do Caio, cada uma recortada da ligação pelos tempos do próprio roteiro e transcrita sozinha:
 
 ```python
 """Each turn of the call cut out by the script's own times and transcribed alone, aligned with what was said."""

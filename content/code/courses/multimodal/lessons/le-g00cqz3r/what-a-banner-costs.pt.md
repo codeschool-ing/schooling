@@ -1,9 +1,9 @@
 ---
 title: Quanto custa um banner, e o que o encarece
-version: 1
+version: 2
 ---
 
-A geração de imagens é cobrada por imagem, por tamanho e qualidade, e os preços por imagem da tabela tornam a comparação simples. Mais um número decide o custo real: **quantas imagens são jogadas fora para cada uma usada**. A aula 3 não mediu nada disso, porque nenhum gerador roda no laboratório, então o programa supõe uma em quatro:
+A geração de imagens é cobrada por imagem, por tamanho e qualidade, e os preços por imagem da tabela tornam a comparação simples. Mais um número decide o custo real: **quantas imagens são jogadas fora para cada uma usada**. A aula 3 não mediu nada disso, porque nenhum gerador roda neste curso, então o programa supõe uma em quatro:
 
 ```python
 """What one accepted banner costs, from the sheet's per-image prices, when one in four is accepted."""

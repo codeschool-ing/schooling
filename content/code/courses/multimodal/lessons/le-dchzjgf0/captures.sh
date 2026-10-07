@@ -6,7 +6,7 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the models, labmm
+#   sudo bash ../../lab.sh up        # once: setup.sh from lesson 1, as ana
 #   sudo bash captures.sh
 #
 # A line that starts with ana@lab:~/mm$ is what ana typed and what it printed.
@@ -14,14 +14,14 @@
 # (lab.sh reset) and the files ana wrote (put below), whose contents the lesson
 # shows in full.
 #
-# WHAT IS REAL AND WHAT IS WRITTEN. The frameworks are real: langchain-core
-# 1.6.6, langchain-openai 1.6.7, llama-index-core 0.14.25 and its OpenAI
-# integrations, at the versions lab.sh pins, and every request they built is
-# the one labmm logged. The transcripts are real (Whisper base, run by labmm on
-# this machine), the OCR is real (Tesseract 5) and the embeddings are real
-# (all-MiniLM-L6-v2). The REPLIES TO IMAGES AND THE TICKET ARE NOT A MODEL'S:
-# labmm answers chat requests with rules the course wrote, in lab/scripted/,
-# and the log names the rule each time.
+# EVERYTHING HERE IS REAL. The frameworks: langchain-core 1.6.6,
+# langchain-openai 1.6.7, llama-index-core 0.14.25 and its OpenAI integrations,
+# at the versions setup.sh pins. The replies about the cover are qwen2.5vl:3b's
+# and the ticket is llama3.2:3b's, both through Ollama 0.40.0 at temperature 0
+# and seed 1, taken on 2026-10-07. The transcripts are Whisper base's, through
+# lesson 10's audio_server.py (lab.sh serve starts it from that lesson's
+# fence), the OCR is Tesseract 5's, and the embeddings are all-MiniLM-L6-v2's,
+# served by Ollama as all-minilm.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -30,9 +30,16 @@ cd "$(dirname "$0")"
 LAB_SH=${LAB_SH:-../../lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on 'command': what ana typed in ~/mm, and what it printed.
-on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-# put PATH: a file ana wrote in ~/mm, from stdin. Its content is shown in the lesson.
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
+on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" </dev/null 2>&1 || true; }
+# put PATH: a file ana wrote in ~/mm, from stdin, which a fence in this lesson
+# (or in $SHOWN, another lesson's .md) must show byte for byte.
+put() {
+  local tmp; tmp=$(mktemp)
+  cat >"$tmp"
+  python3 ../../lab/shown.py check ./*.md ${SHOWN:-} <"$tmp" || { echo "put $1: not shown" >&2; exit 1; }
+  lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" <"$tmp"
+  rm -f "$tmp"
+}
 block() { printf '##### %s\n' "$1"; }
 # One capture at a time: every run rebuilds ~/mm from nothing.
 exec 9>/var/tmp/multimodal-capture.lock; flock 9
@@ -49,7 +56,7 @@ data = base64.b64encode(open("media/cover-b39.png", "rb").read()).decode()
 openai_block = {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{data}"}}
 standard_block = {"type": "image", "base64": data, "mime_type": "image/png"}
 
-llm = ChatOpenAI(model="lab-vision-1")
+llm = ChatOpenAI(model="qwen2.5vl:3b", temperature=0, seed=1)
 for name, block in (("openai", openai_block), ("standard", standard_block)):
     message = HumanMessage(content=[{"type": "text", "text": "Describe this cover."}, block])
     sent = llm._get_request_payload([message])["messages"][0]["content"][1]   # what goes on the wire
@@ -69,11 +76,11 @@ message = ChatMessage(role="user", blocks=[TextBlock(text="Describe this cover."
                                            ImageBlock(path="media/cover-b39.png")])
 if sys.argv[1:] == ["openai"]:
     from llama_index.llms.openai import OpenAI
-    llm = OpenAI(model="lab-vision-1")
+    llm = OpenAI(model="qwen2.5vl:3b")
 else:
     from llama_index.llms.openai_like import OpenAILike
-    print("default api_base:", OpenAILike(model="lab-vision-1").api_base)
-    llm = OpenAILike(model="lab-vision-1", is_chat_model=True, api_base=os.environ["OPENAI_BASE_URL"])
+    print("default api_base:", OpenAILike(model="qwen2.5vl:3b").api_base)
+    llm = OpenAILike(model="qwen2.5vl:3b", is_chat_model=True, api_base=os.environ["OPENAI_BASE_URL"])
 reply = llm.chat([message])
 print(reply.raw.usage.prompt_tokens, "tokens in:", reply.message.content[:60])
 PY
@@ -99,14 +106,14 @@ class Ticket(BaseModel):
 
 def transcribe(path):
     with open(path, "rb") as f:
-        return {"transcript": OpenAI().audio.transcriptions.create(
-            model="lab-whisper-base", file=f, response_format="text")}
+        return {"transcript": OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(
+            model="whisper-base", file=f, response_format="text")}
 
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", "Turn this support call into a support ticket. Use only what the caller and agent say."),
     ("user", "{transcript}")])
-llm = ChatOpenAI(model="lab-vision-1").with_structured_output(Ticket, method="json_schema")
+llm = ChatOpenAI(model="qwen2.5vl:3b").with_structured_output(Ticket, method="json_schema")
 chain = RunnableLambda(transcribe) | {"transcript": lambda x: x["transcript"],
                                       "ticket": prompt | llm}
 
@@ -131,16 +138,16 @@ from collections import Counter, defaultdict
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import InMemoryVectorStore
-from minilm import embed
 from openai import OpenAI
 
 
 class MiniLM(Embeddings):
+    """all-MiniLM-L6-v2, which Ollama serves as all-minilm, through OpenAI's embeddings route."""
     def embed_documents(self, texts):
-        return embed(texts).tolist()
+        return [d.embedding for d in OpenAI().embeddings.create(model="all-minilm", input=texts).data]
 
     def embed_query(self, text):
-        return embed([text])[0].tolist()
+        return self.embed_documents([text])[0]
 
 
 def invoice_lines(path):
@@ -159,7 +166,8 @@ def invoice_lines(path):
 def call_segments(path):
     """Whisper's timed segments, each one a piece."""
     with open(path, "rb") as f:
-        r = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="verbose_json")
+        r = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(model="whisper-base", file=f,
+                                                                          response_format="verbose_json")
     for s in r.segments:
         yield Document(s.text.strip(), metadata={"source": path, "at": "%.1f-%.1f s" % (s.start, s.end)})
 
@@ -176,16 +184,15 @@ PY
 
 block langchain
 on 'python lc_cover.py'
-on 'tail -n 2 /var/log/labmm/requests.jsonl | python -c "import json, sys; [print(r[\"images\"][0][\"sha256\"], r[\"images\"][0][\"tokens\"], r[\"rule\"]) for r in map(json.loads, sys.stdin)]"'
 
 block llamaindex
 on 'python li_cover.py openai 2>&1 | tail -n 1 | cut -c1-120'
 on 'python li_cover.py'
-on 'tail -n 1 /var/log/labmm/requests.jsonl | python -c "import json, sys; r = json.loads(sys.stdin.read()); print(r[\"images\"][0][\"sha256\"], r[\"images\"][0][\"tokens\"], r[\"rule\"])"'
 
 block ticket
+lab serve audio
 on 'python ticket.py media/call-1042.wav'
-on 'tail -n 2 /var/log/labmm/requests.jsonl | python -c "import json, sys; [print(r[\"path\"], r.get(\"model\"), r.get(\"rule\", \"-\")) for r in map(json.loads, sys.stdin)]"'
 
 block index
 on 'python index.py "How much did one copy of Bleak House cost?" "Is the shipping refunded for a damaged book?" "Which customer wants a call back this afternoon?" "Quem pediu para ligar de volta no fim da tarde?"'
+lab down

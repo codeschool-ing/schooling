@@ -1,6 +1,6 @@
 ---
 title: The invoice as data, in a shape you declare
-version: 1
+version: 2
 ---
 
 A description is for a person. The stock system wants fields, and a vision model can be asked for them in a **declared shape**: a JSON Schema the reply must fit, which the API enforces when the model supports **structured outputs**. The openai SDK builds the schema from Pydantic models and parses the reply back into them:
@@ -22,7 +22,7 @@ A description is for a person. The stock system wants fields, and a vision model
       "note": "**The picture, as a data URL.** Base64 makes the file a third larger in the request, a price paid for not needing a public URL."
     },
     {
-      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"lab-vision-1\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
+      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"qwen2.5vl:3b\", temperature=0, seed=1,\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
       "note": "**`parse` sends the models as a JSON Schema** in `response_format`, and turns the reply back into an `Invoice`. If the reply did not fit the schema, this line would raise rather than hand over half an invoice."
     },
     {
@@ -39,14 +39,14 @@ A description is for a person. The stock system wants fields, and a vision model
 
 ```
 ana@lab:~/mm$ python invoice.py media/invoice-0931.png
-INV-0931 from Lantern & Quill Distributors: 4 lines, total 758.50
-checks: every line and total agrees
+INVO-0931 from Lantern & Quill Distributors: 4 lines, total 7585.00
+checks: subtotal and shipping do not make the total
 ana@lab:~/mm$ python invoice.py media/invoice-0931-scan.jpg
 INV-0931 from Lantern & Quill Distributors: 4 lines, total 758.50
-checks: Bleak House: 6 x 3290 is not 16450
+checks: every line and total agrees
 ```
 
-**Both readings were written by the course**, and the second one carries a mistake on purpose: it says 6 copies of *Bleak House* where the page says 5, the kind of digit a blurred scan invites. The schema accepted it, because 6 is a perfectly good integer. **The arithmetic caught it**: 6 × 32.90 is not 164.50.
+**Both readings are qwen2.5vl:3b's, and the clean page is the one it got wrong.** It wrote the invoice number as `INVO-0931`, and the total as 758,500 cents, ten times the real one: a misplaced digit in an integer, where the page has a decimal point. The schema accepted both, because `INVO-0931` is a perfectly good string and 758500 a perfectly good integer. **The arithmetic caught the total**: the subtotal and the shipping do not make it. Nothing caught the number, because no sum depends on it. The blurred scan, read by the same model, came back right in every field; a model's errors do not follow the difficulty a person sees.
 
 That is the whole lesson of this section. **A schema guarantees the shape of an answer, never its truth.** It turns "the model returned a paragraph and I have to dig the total out of it" into "the model returned an `Invoice` or the call failed". That is a great improvement for the program, and it says nothing at all about whether the numbers are the ones on the page.
 
@@ -56,8 +56,8 @@ Lesson 2 read the same invoice with Tesseract and checked it the same way. With 
 
 | the field | vision model | Tesseract (lesson 2) | verdict |
 |---|---|---|---|
-| Bleak House, quantity | 6 | 5 | disagree: check it |
-| Bleak House, amount | 164.50 | 164.50 | agree |
-| total | 758.50 | 758.50 | agree |
+| invoice number | INVO-0931 | INV-0931 | disagree: check it |
+| subtotal | 713.50 | 713.50 | agree |
+| total | 7585.00 | 758.50 | disagree: check it |
 
-Two readers with different weaknesses rarely make the same mistake on the same field, so an agreement is strong evidence and a disagreement is a precise question for a person. It costs an OCR run, which is free and takes a second. On this invoice the arithmetic already caught the mistake; the comparison says *which* reader made it.
+Two readers with different weaknesses rarely make the same mistake on the same field, so an agreement is strong evidence and a disagreement is a precise question for a person. It costs an OCR run, which is free and takes a second. On this invoice the arithmetic caught one mistake and missed the other; the comparison finds both, and says *which* reader made them.

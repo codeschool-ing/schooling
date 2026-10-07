@@ -1,6 +1,6 @@
 ---
 title: O campo prompt, e por que aqui ele não faz nada
-version: 1
+version: 2
 ---
 
 O Whisper decodifica uma gravação um token por vez, e cada token é previsto a partir do som **e do texto que veio antes**. O campo `prompt` da API deixa você fornecer esse texto anterior. O modelo o trata como se tivesse acabado de ser dito, então as palavras e grafias dele ficam mais prováveis no que vem a seguir.
@@ -11,10 +11,10 @@ O Whisper decodifica uma gravação um token por vez, e cada token é previsto a
 """The prompt parameter: text the model is told came before the audio."""
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8700/v1")   # audio_server.py, on this machine
 with open("media/call-1042.wav", "rb") as audio:
     result = client.audio.transcriptions.create(
-        model="lab-whisper-base", file=audio, language="en",
+        model="whisper-base", file=audio, language="en",
         prompt="Marginalia support. Caio. Order M-1042: Dom Casmurro, by Machado de Assis.")
 print(result.text[:150])
 ```
@@ -22,11 +22,11 @@ print(result.text[:150])
 ```
 ana@lab:~/mm$ python hint.py
 Good morning, you're through to Marginalia Support. My name is Kyo. How can it help Hi Kau, I'm calling about Order M1042. It's a copy of Dom Kazmuro 
-ana@lab:~/mm$ tail -n 1 /var/log/labmm/requests.jsonl | python -c "import json, sys; r = json.loads(sys.stdin.read()); print(r[\"prompt\"])"
+ana@lab:~/mm$ tail -n 1 audio_server.log | python -c "import json, sys; print(json.load(sys.stdin)[\"prompt\"])"
 Marginalia support. Caio. Order M-1042: Dom Casmurro, by Machado de Assis.
 ```
 
-**A transcrição não mudou**: continua *Kyo*, *Kau* e *Dom Kazmuro*, com os nomes certos parados no prompt. Isso não é evidência sobre o prompt. **O labmm aceita o campo, registra e não o passa ao modelo**, porque a exportação ONNX do Whisper que este laboratório roda não tem como recebê-lo; o segundo comando mostra que ele chegou. No endpoint real é aqui que os erros da aula 7 seriam atacados primeiro, e o léxico da aula 7 é a alternativa que funciona com ou sem prompt.
+**A transcrição não mudou**: continua *Kyo*, *Kau* e *Dom Kazmuro*, com os nomes certos parados no prompt. Isso não é evidência sobre o prompt. **O servidor do curso aceita o campo, registra e não o passa ao modelo**, porque a exportação ONNX do Whisper que o curso roda não tem como recebê-lo; o segundo comando mostra que ele chegou. No endpoint real é aqui que os erros da aula 7 seriam atacados primeiro, e o léxico da aula 7 é a alternativa que funciona com ou sem prompt.
 
 Dois cuidados da mesma documentação, que vale saber antes de depender dele:
 
