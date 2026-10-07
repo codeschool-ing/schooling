@@ -9,7 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # Nothing is staged beyond the workbench lab.sh builds. toylm and its corpus
-# are printed in full in lab.sh; no other model is involved.
+# are shown whole in lesson 1, and lab.sh takes them from that lesson's
+# fences; no other model is involved.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail

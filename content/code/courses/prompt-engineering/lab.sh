@@ -66,6 +66,7 @@ ape       le-fps5k0kg/generate-and-score.md
 DATA="
 le-n8c2w2rc/the-workbench.md
 le-5xxmsmkr/strategies.md
+le-zhr50zec/tool-calls.md
 le-fmghh3as/what-it-is.md
 "
 

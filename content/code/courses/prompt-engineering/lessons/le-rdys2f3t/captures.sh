@@ -9,9 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # Nothing is staged beyond the workbench lab.sh builds: retrieve and the
-# café's handbook/ are printed in full in lab.sh. No model is called; the
-# replies a model might give to the assembled prompts are illustrations the
-# lesson wrote, and it says so where they appear.
+# café's handbook/ are shown whole in the lessons that introduce them, and
+# lab.sh takes them from those fences.
 #
 # THE MODEL'S REPLIES (every `ask` below) are llama3.2:3b served by Ollama
 # 0.40.0, at temperature 0, captured on 7 October 2026.
