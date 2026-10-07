@@ -1,6 +1,6 @@
 ---
 title: Quando a chamada extra compensa
-version: 1
+version: 2
 ---
 
 O prompting de recuo não é um padrão melhor para toda pergunta. **Ele ajuda quando a redação
@@ -10,7 +10,8 @@ tenha ajudado ou não.
 ## Onde ajuda
 
 O misto quente do feriado é o caso típico: os fatos estão todos presentes, e a redação aponta para
-o errado. Três tipos de pergunta têm esse formato:
+o errado. Este modelo não se deixou enganar, e essa é a primeira coisa a medir antes de acrescentar
+uma chamada: se a pergunta direta falha mesmo. Três tipos de pergunta têm esse formato:
 
 - uma pergunta que é um caso de uma regra dita em outro lugar, sobretudo uma exceção a uma regra
   mais óbvia. Feriado segue o horário de domingo; reembolso acima de R$ 100 precisa do gerente.
@@ -27,7 +28,12 @@ clientes?" não tem princípio por trás para onde recuar; a resposta é uma lin
 ali é uma segunda chamada que repete a primeira**, e o máximo que ela consegue é deixar a resposta
 onde estava.
 
-Ele também não cria conhecimento. Se o modelo não conhece a regra, ou o prompt não a contém, a
+Ele também não faz o último passo por você. As regras do misto quente estavam certas e a segunda
+chamada ainda escreveu 11:15; a lei dos gases estava certa e a resposta ainda foi um fator de 16.
+**Um princípio correto no prompt não é uma conta correta na resposta.** Onde o último passo é
+aritmética, quem o faz é um programa, como fez a calculadora da lição 6.
+
+E ele não cria conhecimento. Se o modelo não conhece a regra, ou o prompt não a contém, a
 resposta de recuo enuncia uma regra plausível no lugar, e a segunda chamada responde fielmente a
 partir do princípio errado. É a falha da lição 5 movida um passo para trás, onde fica mais difícil
 de ver, porque a resposta final decorre logicamente do que vem antes. **Leia a resposta de recuo, e
@@ -42,12 +48,12 @@ ana@lab:~/pe$ tok count direct.txt step1.txt step2.txt
 tokens  words  chars  file
    116     81    457  direct.txt
    122     92    516  step1.txt
-   226    161    891  step2.txt
+   301    220   1247  step2.txt
 ```
 
-A pergunta direta manda 116 tokens. A versão com recuo manda 122 e depois 226, o que dá 348 tokens
-de entrada, três vezes mais, e além disso a resposta da primeira chamada é saída que você paga e
-espera antes que a segunda possa começar. **O dobro de idas e voltas e cerca do triplo de entrada é
+A pergunta direta manda 116 tokens. A versão com recuo manda 122 e depois 301, o que dá 423 tokens
+de entrada, mais de três vezes e meia, e além disso a resposta da primeira chamada é saída que você paga e
+espera antes que a segunda possa começar. **O dobro de idas e voltas e mais do triplo de entrada é
 o preço de uma resposta**, então vale pagar onde uma resposta errada sai cara e o princípio é fácil
 de perder, e não em todo pedido.
 
