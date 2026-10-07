@@ -83,13 +83,13 @@ own. Save it as `~/pe/bin/agent` and make it executable:
 """agent: the loop that lets a model act.
 
   agent RUN [--max-steps N] [--allow TOOL,...]
-  agent --live QUESTION [--max-steps N] [--allow TOOL,...]
+  agent --live QUESTION [--prompt FILE] [--max-steps N] [--allow TOOL,...]
 
 With RUN, the model's side of the conversation is read from a file, one turn
 per block separated by '---', and played back: the turns are fixed, so the
 loop's own behaviour can be watched exactly. With --live, each turn is asked
-of the model through `ask`, with tools.txt as the system message and QUESTION
-as the first message. Either way, the rest is the part an engineer builds:
+of the model through `ask`, with tools.txt (or FILE) as the system message and
+QUESTION as the first message. Either way, the rest is the part an engineer builds:
 reading the reply, finding the Action line, checking the tool is allowed,
 running it, handing back an Observation, and stopping.
 
@@ -151,9 +151,9 @@ def run_tool(name, arg, allowed):
         return "<untrusted>\n%s\n</untrusted>" % body
 
 
-def live(question, steps):
+def live(question, prompt, steps):
     """The model's turns, one at a time, each written after the last Observation."""
-    with open(os.path.join(HERE, "..", "tools.txt"), encoding="utf-8") as f:
+    with open(prompt, encoding="utf-8") as f:
         messages = [{"role": "system", "content": f.read()}, {"role": "user", "content": question}]
     for _ in range(steps):
         with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
@@ -174,8 +174,11 @@ def main():
         i = args.index("--max-steps"); steps = int(args[i + 1]); del args[i : i + 2]
     if "--allow" in args:
         i = args.index("--allow"); allowed = set(args[i + 1].split(",")); del args[i : i + 2]
+    prompt = os.path.join(HERE, "..", "tools.txt")
+    if "--prompt" in args:
+        i = args.index("--prompt"); prompt = args[i + 1]; del args[i : i + 2]
     if args[0] == "--live":
-        turns = live(args[1], steps)
+        turns = live(args[1], prompt, steps)
         result = None
     else:
         text = open(args[0], encoding="utf-8").read()
