@@ -1,13 +1,26 @@
 ---
 title: Rebase: replaying commits on a new base
-version: 1
+version: 2
 ---
 
 Merge joins two histories and keeps both shapes. **Rebase takes the commits of your branch and makes
 them again, one by one, on top of another branch**, as if you had started your work later than you
 did.
 
-Here `cheese` grew from an older `main`, and `main` has moved on since:
+Here `cheese` grew from an older `main`, and `main` has moved on since, with another commit of
+Bruno's. The first line deletes `lunch`, which the last section left for another day, so that it does
+not crowd the drawings below:
+
+```bash
+git branch -q -D lunch
+git switch -q -c cheese
+sed -i 's/2.50/2.60/' menu.html
+git commit -qam 'Charge 2.60 for cheese rolls'
+git switch -q main
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Give paragraphs more room'
+```
+
 
 ```
 ana@vm:~/site$ git switch cheese
@@ -62,7 +75,19 @@ join for every branch.
 
 ## A conflict during a rebase
 
-Rebase replays commits one at a time, so it can stop at any of them with a conflict:
+Rebase replays commits one at a time, so it can stop at any of them with a conflict. Ana's branch
+charges 2.70 for cheese rolls and Bruno, on `main`, rounds them to 2.75:
+
+```bash
+git switch -q -c rolls
+sed -i 's/2.60/2.70/' menu.html
+git commit -qam 'Charge 2.70 for cheese rolls'
+git switch -q main
+sed -i 's/2.60/2.75/' menu.html
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Round cheese rolls up to 2.75'
+git switch -q rolls
+```
+
 
 ```
 ana@vm:~/site$ git rebase main
@@ -74,6 +99,7 @@ hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
 hint: You can instead skip this commit: run "git rebase --skip".
 hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
 Could not apply 5999428... Charge 2.70 for cheese rolls
+ana@vm:~/site$ sed -i '/^<<<<<<<\|^=======\|^>>>>>>>/d; /2.75/d' menu.html
 ana@vm:~/site$ cat menu.html
 <h1>Menu</h1>
 <p>French bread, 0.90</p>
@@ -91,6 +117,9 @@ f30c3fb Round cheese rolls up to 2.75
 
 The steps are the ones you already know, with one word changed: resolve the file, `git add` it, and
 then **`git rebase --continue`** instead of `git commit`, so the rebase can go on to the next commit.
+The `sed` line is the resolution: it deletes the three marker lines and Bruno's 2.75, which is the
+same as deleting those four lines in nano. `--continue` opens your editor with the commit's message,
+so you could change it; save it as it is and close the editor, and the rebase goes on.
 `git rebase --abort` is the way back, exactly like `git merge --abort`. The `[detached HEAD 1b5684f]`
 line is the replayed commit being made while the rebase is still running, before the branch is moved
 to it at the end.

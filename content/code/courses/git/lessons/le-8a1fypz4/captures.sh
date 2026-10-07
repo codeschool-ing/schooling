@@ -12,13 +12,15 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; the branches and
-# commits that meet in each conflict, made between the commands shown; each
-# resolution, written into the file with printf or sed where a person would
-# use an editor; and GIT_EDITOR=true for `rebase --continue`, which accepts
-# the commit's message unchanged the way closing the editor would.
+# The two sides of every conflict are the ```bash blocks the lesson prints,
+# Bruno's commits included (made with `git -c user.name=…`), run by `given`;
+# each resolution is typed in its transcript, with printf or sed where a
+# person would use an editor.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids
+# printed in the prose are reproducible; and GIT_EDITOR=true for
+# `rebase --continue`, which accepts the commit's message unchanged the way
+# saving and closing the editor would, as the prose tells the student to.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -56,7 +58,7 @@ given() {
   unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
   while IFS= read -r line; do
     case $line in ''|'#'*) continue ;; esac
-    if [ $# -gt 0 ] && [[ $line =~ git(\ -c\ [^\ ]+)*\ (commit|merge|revert|rebase|cherry-pick|pull|tag\ -a) ]]; then
+    if [ $# -gt 0 ] && [[ $line =~ (^|[\;\&\ ])git\ (.*\ )?(commit|merge|revert|rebase|cherry-pick|pull|tag\ -a)(\ |$) ]]; then
       at "$1"; shift
     fi
     eval "$line"
@@ -73,19 +75,11 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
 
 
 # The Sunday hours on a branch, and a winter opening time on main: the same line.
-at '2026-09-21T09:10:00-03:00'
-git switch -q -c sunday
-sed -i 's/half past five/half past five; Sundays from seven/' index.html
-git commit -qam 'Open on Sundays from seven'
-git switch -q main
-bruno; at '2026-09-21T09:40:00-03:00'
-sed -i 's/half past five/half past six/' index.html
-git commit -qam 'Open at half past six in winter'
+cd ~ && given a-conflict 1 '2026-09-21T09:10:00-03:00' '2026-09-21T09:40:00-03:00'
 me; at '2026-09-21T10:00:00-03:00'
 
 block conflict
@@ -96,7 +90,7 @@ block markers
 show 'cat index.html'
 
 block resolve
-printf '<h1>Padaria Sol</h1>\n<p>Bread from half past six; Sundays from seven.</p>\n<p><a href="menu.html">See the menu</a></p>\n' > index.html
+show "printf '<h1>Padaria Sol</h1>\\n<p>Bread from half past six; Sundays from seven.</p>\\n<p><a href=\"menu.html\">See the menu</a></p>\\n' > index.html"
 show 'cat index.html'
 show 'git add index.html'
 show 'git status'
@@ -104,26 +98,14 @@ show 'git commit --no-edit'
 show 'git log --oneline --graph -5'
 
 block abort
-at '2026-09-21T11:00:00-03:00'
-git switch -q -c lunch HEAD~1
-sed -i 's/half past six/seven/' index.html
-git commit -qam 'Open at seven'
-git switch -q main
+given resolving 1 '2026-09-21T11:00:00-03:00'
 show 'git merge lunch'
 show 'git merge --abort'
 show 'git status --short'
-git branch -q -D lunch
 
 block before-rebase
-at '2026-09-21T14:00:00-03:00'
-git switch -q -c cheese
-sed -i 's/2.50/2.60/' menu.html
-git commit -qam 'Charge 2.60 for cheese rolls'
-git switch -q main
-bruno; at '2026-09-21T14:30:00-03:00'
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
-git commit -qam 'Give paragraphs more room'
-me; at '2026-09-21T15:00:00-03:00'
+given rebase 1 '2026-09-21T14:00:00-03:00' '2026-09-21T14:30:00-03:00'
+at '2026-09-21T15:00:00-03:00'
 show 'git switch cheese'
 show 'git log --oneline --graph --all -4'
 
@@ -137,18 +119,10 @@ show 'git merge cheese'
 
 block rebase-conflict
 export GIT_EDITOR=true
-at '2026-09-22T09:00:00-03:00'
-git switch -q -c rolls
-sed -i 's/2.60/2.70/' menu.html
-git commit -qam 'Charge 2.70 for cheese rolls'
-git switch -q main
-bruno; at '2026-09-22T09:30:00-03:00'
-sed -i 's/2.60/2.75/' menu.html
-git commit -qam 'Round cheese rolls up to 2.75'
-me; at '2026-09-22T10:00:00-03:00'
-git switch -q rolls
+given rebase 2 '2026-09-22T09:00:00-03:00' '2026-09-22T09:30:00-03:00'
+at '2026-09-22T10:00:00-03:00'
 show 'git rebase main'
-sed -i '/^<<<<<<<\|^=======\|^>>>>>>>/d; /2.75/d' menu.html
+show "sed -i '/^<<<<<<<\\|^=======\\|^>>>>>>>/d; /2.75/d' menu.html"
 show 'cat menu.html'
 show 'git add menu.html'
 show 'git rebase --continue'

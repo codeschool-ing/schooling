@@ -60,7 +60,7 @@ given() {
   unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
   while IFS= read -r line; do
     case $line in ''|'#'*) continue ;; esac
-    if [ $# -gt 0 ] && [[ $line =~ git(\ -c\ [^\ ]+)*\ (commit|merge|revert|rebase|cherry-pick|pull|tag\ -a) ]]; then
+    if [ $# -gt 0 ] && [[ $line =~ (^|[\;\&\ ])git\ (.*\ )?(commit|merge|revert|rebase|cherry-pick|pull|tag\ -a)(\ |$) ]]; then
       at "$1"; shift
     fi
     eval "$line"
