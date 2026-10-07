@@ -22,6 +22,7 @@ lab() { bash "$LAB_SH" "$@"; }
 on() { printf 'ana@lab:~/clean$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }
 put() { lab exec "cat > '$1'"; }
+lab reset >/dev/null
 block unmask-sql
 on "psql -c \"SELECT count(*) FILTER (WHERE birth_year = '1900') AS was_1900, count(*) FILTER (WHERE NULLIF(birth_year, '1900') IS NULL) AS now_blank FROM raw.customers\""
 on "psql -c \"SELECT channel, count(*) FILTER (WHERE discount IS NULL) AS blank, count(*) FILTER (WHERE COALESCE(discount, '0') = '0') AS no_coupon FROM raw.orders GROUP BY channel\""

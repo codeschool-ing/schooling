@@ -36,10 +36,9 @@ roda antes.
 
 ```
 ana@lab:~/clean$ psql -f clean_customers.sql
-psql:clean_customers.sql:1: ERROR:  schema "clean" already exists
-psql:clean_customers.sql:6: ERROR:  relation "customers" already exists
-psql:clean_customers.sql:16: ERROR:  duplicate key value violates unique constraint "customers_pkey"
-DETAIL:  Key (customer_id)=(C00001) already exists.
+CREATE SCHEMA
+CREATE TABLE
+INSERT 0 2376
 ana@lab:~/clean$ psql -c 'SELECT count(*), min(birth_year), max(birth_year), count(*) FILTER (WHERE opt_in) AS yes FROM clean.customers'
  count | min  | max  | yes  
 -------+------+------+------

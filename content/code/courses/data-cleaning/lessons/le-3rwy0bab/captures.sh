@@ -22,6 +22,7 @@ lab() { bash "$LAB_SH" "$@"; }
 on() { printf 'ana@lab:~/clean$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }
 put() { lab exec "cat > '$1'"; }
+lab reset >/dev/null
 block exact
 on "python -c \"import pandas as pd; c = pd.read_csv('raw/customers.csv', dtype=str); print(c.duplicated().sum(), c['customer_id'].duplicated().sum())\""
 on "psql -c 'SELECT count(*) AS rows, count(DISTINCT c) AS distinct_rows FROM raw.customers c'"

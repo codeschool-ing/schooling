@@ -22,6 +22,7 @@ lab() { bash "$LAB_SH" "$@"; }
 on() { printf 'ana@lab:~/clean$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }
 put() { lab exec "cat > '$1'"; }
+lab reset >/dev/null
 put orders.py <<'PY'
 import pandas as pd
 

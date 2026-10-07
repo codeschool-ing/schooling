@@ -43,7 +43,6 @@ GROUP BY 1;
 
 ```
 ana@lab:~/clean$ psql -f city_key.sql
-psql:city_key.sql:1: NOTICE:  extension "unaccent" already exists, skipping
 CREATE EXTENSION
  city_key  | count 
 -----------+-------
