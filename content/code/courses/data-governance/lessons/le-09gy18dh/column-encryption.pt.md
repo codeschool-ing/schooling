@@ -44,7 +44,7 @@ ALTER TABLE
 UPDATE 6012
  customer_id |      cpf       |                 cpf_enc                  
 -------------+----------------+------------------------------------------
-           1 | 372.874.168-09 | c30d04070302186e9493062943e761d23f019c46
+           1 | 372.874.168-09 | c30d040703023dcad4e8eb7cb07470d23f010db9
 (1 row)
 ```
 
@@ -83,7 +83,7 @@ SET
 ana@lab:~/gov$ sudo grep -c "chave-da-ipe-2026" /var/log/postgresql/postgresql-16-gov.log
 1
 ana@lab:~/gov$ sudo grep -m 1 "pgp_sym_decrypt" /var/log/postgresql/postgresql-16-gov.log
-2026-10-07 00:08:46.987 -03 [23518] ana@ipe LOG:  statement: SELECT crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026') FROM sales.customers WHERE customer_id = 1
+2026-10-07 00:21:19.316 -03 [27950] ana@ipe LOG:  statement: SELECT crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026') FROM sales.customers WHERE customer_id = 1
 ```
 
 **A chave está no log do servidor**, em claro, na mesma linha da consulta que a usou. O comando

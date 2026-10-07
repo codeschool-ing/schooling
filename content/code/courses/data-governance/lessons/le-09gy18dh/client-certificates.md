@@ -27,7 +27,7 @@ Certificate request self-signature ok
 subject=O = Farmacia Ipe, CN = etl_loader
 ana@lab:~/gov$ chmod 600 etl_loader.key && openssl x509 -in etl_loader.crt -noout -subject -enddate
 subject=O = Farmacia Ipe, CN = etl_loader
-notAfter=Jan  5 03:08:32 2027 GMT
+notAfter=Jan  5 03:21:03 2027 GMT
 ```
 
 The key is made on the machine where it will be used and **never travels**: only the request,
@@ -55,8 +55,8 @@ ana@lab:~/gov$ psql "host=db.ipe.example port=5433 dbname=ipe user=etl_loader ss
 ana@lab:~/gov$ psql "host=db.ipe.example port=5433 dbname=ipe user=etl_loader sslmode=verify-full" -c "SELECT 1"
 psql: error: connection to server at "db.ipe.example" (127.0.0.1), port 5433 failed: FATAL:  connection requires a valid client certificate
 ana@lab:~/gov$ sudo tail -n 2 /var/log/postgresql/postgresql-16-gov.log
-2026-10-07 00:08:32.380 -03 [22743] [unknown]@[unknown] LOG:  connection received: host=127.0.0.1 port=34106
-2026-10-07 00:08:32.386 -03 [22743] etl_loader@ipe FATAL:  connection requires a valid client certificate
+2026-10-07 00:21:03.816 -03 [27014] [unknown]@[unknown] LOG:  connection received: host=127.0.0.1 port=57900
+2026-10-07 00:21:03.822 -03 [27014] etl_loader@ipe FATAL:  connection requires a valid client certificate
 ```
 
 With the certificate and its key, `etl_loader` is in, and no password was involved. Without

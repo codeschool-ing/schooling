@@ -367,6 +367,92 @@ def _l3_ends(f):
     f.arrow(435, 155, 538, 196, stroke='--amber')
 
 
+# ===================================================================== lesson 4
+L4 = 'le-er7ww0xq'
+
+
+@figure('l4-kms', L4, 720, 250,
+        ('The website sends a CPF and the name of a key to the key-management service and '
+         'receives ciphertext, which it stores in the database. Support sends the ciphertext '
+         'and receives the CPF. The key itself stays inside the service; no arrow carries it '
+         'out. Every request is written to the audit log.',
+         'O site envia um CPF e o nome de uma chave ao serviço de gestão de chaves e recebe '
+         'texto cifrado, que guarda no banco. O suporte envia o texto cifrado e recebe o CPF. '
+         'A chave fica dentro do serviço; nenhuma seta a leva para fora. Toda requisição vai '
+         'para o log de auditoria.'),
+        ('The key stays in the service. What leaves is the result of using it, and every use '
+         'is recorded.',
+         'A chave fica no serviço. O que sai é o resultado de usá-la, e todo uso é registrado.'))
+def _l4_kms(f):
+    f.box(20, 50, 150, 50, [('the website', 'o site'), {'s': 'policy: encrypt', 'mono': True,
+                                                      'size': 9.5, 'fill': '--paper-dim'}],
+          fill='--ink')
+    f.box(20, 170, 150, 50, [('support', 'suporte'), {'s': 'policy: decrypt', 'mono': True,
+                                                     'size': 9.5, 'fill': '--paper-dim'}],
+          fill='--ink')
+    f.rect(285, 60, 150, 150, stroke='--phosphor', fill='--panel')
+    f.text(360, 82, ('key service', 'serviço de chaves'), size=12, weight='600')
+    f.box(310, 102, 100, 36, {'s': 'ipe-cpf', 'mono': True}, stroke='--amber', fill='--ink')
+    f.text(360, 160, ('the key never', 'a chave nunca'), size=10.5, fill='--paper-dim')
+    f.text(360, 176, ('leaves', 'sai'), size=10.5, fill='--paper-dim')
+    f.box(550, 50, 150, 50, [('database', 'banco'), {'s': 'vault:v2:…', 'mono': True,
+                                                  'size': 9.5, 'fill': '--paper-dim'}],
+          fill='--ink')
+    f.box(550, 170, 150, 50, ('audit log', 'log de auditoria'), fill='--ink')
+    f.arrow(170, 66, 283, 90)
+    f.text(228, 66, 'CPF', size=10, mono=True, fill='--paper-dim')
+    f.arrow(283, 104, 170, 86)
+    f.text(228, 112, ('ciphertext', 'cifrado'), size=10, fill='--paper-dim')
+    f.path('M95 50 L95 22 L625 22 L625 48', stroke='--wire', dash='4 3', arrow=True)
+    f.text(360, 14, ('stores the ciphertext', 'guarda o texto cifrado'), size=10,
+           fill='--paper-dim')
+    f.arrow(170, 186, 283, 176)
+    f.text(228, 168, ('ciphertext', 'cifrado'), size=10, fill='--paper-dim')
+    f.arrow(283, 196, 170, 206)
+    f.text(228, 214, 'CPF', size=10, mono=True, fill='--paper-dim')
+    f.arrow(435, 190, 548, 195, stroke='--phosphor')
+    f.text(492, 182, ('every use', 'todo uso'), size=10, fill='--paper-dim')
+
+
+@figure('l4-envelope', L4, 720, 260,
+        ('Envelope encryption of a backup. The key service generates a data key and returns '
+         'it twice: in clear, and wrapped by the ipe-backup key. The clear data key encrypts '
+         'the dump and is shredded. The encrypted dump and the wrapped key are stored '
+         'together. To restore, the wrapped key goes back to the service, which unwraps it.',
+         'Criptografia envelope de um backup. O serviço de chaves gera uma chave de dados e a '
+         'devolve duas vezes: em claro, e embrulhada pela chave ipe-backup. A chave de dados '
+         'em claro cifra o dump e é destruída. O dump cifrado e a chave embrulhada são '
+         'guardados juntos. Para restaurar, a chave embrulhada volta ao serviço, que a '
+         'desembrulha.'),
+        ('The data never goes to the key service, and the key that wraps it never comes out.',
+         'O dado nunca vai ao serviço de chaves, e a chave que o embrulha nunca sai dele.'))
+def _l4_envelope(f):
+    f.rect(20, 30, 170, 200, stroke='--phosphor', fill='--panel')
+    f.text(105, 52, ('key service', 'serviço de chaves'), size=12, weight='600')
+    f.box(45, 72, 120, 36, {'s': 'ipe-backup', 'mono': True}, stroke='--amber', fill='--ink')
+    f.lines(105, 160, [('generates a', 'gera uma'), ('data key', 'chave de dados')], size=10.5,
+            fill='--paper-dim')
+    f.box(260, 40, 170, 50, [('data key, in clear', 'chave em claro'),
+                            {'s': 'backup.key', 'mono': True, 'size': 9.5,
+                             'fill': '--paper-dim'}], stroke='--amber', fill='--ink')
+    f.box(260, 160, 170, 50, [('data key, wrapped', 'chave embrulhada'),
+                             {'s': 'backup.key.wrapped', 'mono': True, 'size': 9.5,
+                              'fill': '--paper-dim'}], fill='--ink')
+    f.arrow(190, 80, 258, 65)
+    f.arrow(190, 180, 258, 185)
+    f.box(500, 40, 200, 50, [('encrypts the dump,', 'cifra o dump,'),
+                            ('then shredded', 'depois destruída')], fill='--ink')
+    f.arrow(430, 65, 498, 65, stroke='--amber')
+    f.rect(500, 140, 200, 90, stroke='--wire', fill='--panel', dash='4 3')
+    f.text(600, 158, ('stored together', 'guardados juntos'), size=10.5, fill='--paper-dim')
+    f.box(515, 170, 170, 26, {'s': 'customers.sql.enc', 'mono': True, 'size': 10},
+          fill='--ink')
+    f.box(515, 200, 170, 24, {'s': 'backup.key.wrapped', 'mono': True, 'size': 10},
+          fill='--ink')
+    f.arrow(430, 185, 498, 205)
+    f.arrow(600, 90, 600, 138)
+
+
 # ===================================================================== driver
 
 def main():

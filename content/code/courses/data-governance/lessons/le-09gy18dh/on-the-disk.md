@@ -38,7 +38,7 @@ Version:       	2
 Epoch:         	3
 Metadata area: 	16384 [bytes]
 Keyslots area: 	16744448 [bytes]
-UUID:          	0a7418e5-e69e-4e24-a9f6-cd1dd3efd0ae
+UUID:          	a0619260-7cae-4f3e-a8df-68dd2d67437e
 Label:         	(no label)
 Subsystem:     	(no subsystem)
 Flags:       	(no flags)
@@ -60,8 +60,8 @@ Keyslots:
 	Time cost:  6
 	Memory:     1048576
 	Threads:    4
-	Salt:       b0 53 bb e0 e7 53 cf 96 ef 76 1a cf ed 32 3d 15 
-	            ca 14 f0 b7 71 5a 3c 03 83 02 bb 89 fd d0 a7 39 
+	Salt:       fa 54 9f 6a 55 25 07 16 4a c1 39 04 9c a8 de b4 
+	            63 ef 65 b5 0a 89 28 72 ab 58 25 2a 0b d1 cd 11 
 	AF stripes: 4000
 	AF hash:    sha256
 	Area offset:32768 [bytes]
@@ -71,11 +71,11 @@ Tokens:
 Digests:
   0: pbkdf2
 	Hash:       sha256
-	Iterations: 222911
-	Salt:       e7 c1 67 b5 e7 55 88 86 94 66 6a 08 23 9c 58 2b 
-	            65 1a 7a a9 6e 79 08 39 eb 85 1c 9f 17 9b 5b a8 
-	Digest:     0d a8 3d 86 dc 76 85 63 95 dc 7e 34 1e 69 15 4d 
-	            54 be 16 e1 7e 74 6f 6e 6e 06 de 63 34 28 7d dc 
+	Iterations: 218818
+	Salt:       4a 4b 51 15 f5 c0 78 b3 3d 26 c1 50 66 04 43 b4 
+	            f5 e1 d0 39 7f 72 bf a5 d7 63 3a 97 af 0e 63 6b 
+	Digest:     98 c5 3b 9c c2 79 cf 5b df 2a 03 25 91 d6 8f 16 
+	            24 b0 d6 0b 89 e4 51 86 0d 43 db 57 1e 40 53 73 
 ```
 
 `luksFormat` wrote a header and nothing else; the passphrase was given on standard input by the

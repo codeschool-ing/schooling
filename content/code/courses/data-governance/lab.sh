@@ -75,6 +75,7 @@ PYTHONDONTWRITEBYTECODE=1
 PGPORT=$PORT
 PGDATABASE=ipe
 PAGER=cat
+BAO_CLI_NO_COLOR=1
 BAO_ADDR=https://bao.ipe.example:8200
 BAO_CACERT=$PKI/ca.crt
 EOF
@@ -119,8 +120,8 @@ install_bao() {
     rm -rf "$tmp"
   fi
   id bao >/dev/null 2>&1 || useradd --system --home /var/lib/bao --shell /usr/sbin/nologin bao
-  mkdir -p /etc/bao /var/lib/bao/data
-  chown -R bao:bao /var/lib/bao
+  mkdir -p /etc/bao /var/lib/bao/data /var/log/bao
+  chown -R bao:bao /var/lib/bao /var/log/bao
   cat > /etc/bao/bao.hcl <<EOF
 # OpenBao for the lab: one node, its data in a directory, TLS on the
 # listener with the lab CA's certificate for bao.ipe.example.
@@ -133,8 +134,15 @@ listener "tcp" {
   tls_key_file  = "/etc/bao/bao.key"
 }
 api_addr      = "https://bao.ipe.example:8200"
-disable_mlock = true
 ui            = false
+
+# Every request and every response, written to a file. OpenBao takes audit
+# devices from this file and refuses to create them through its API.
+audit "file" "to-file" {
+  options {
+    file_path = "/var/log/bao/audit.log"
+  }
+}
 EOF
 }
 
@@ -166,7 +174,7 @@ issue() { # issue NAME DNSNAME
     -keyout "$PKI/$1.key" -subj "/O=Farmacia Ipe/CN=$2" -out "$PKI/$1.csr" 2>/dev/null
   openssl x509 -req -in "$PKI/$1.csr" -CA "$PKI/ca.crt" -CAkey "$PKI/ca.key" \
     -CAcreateserial -days 825 -sha256 -out "$PKI/$1.crt" \
-    -extfile <(printf 'subjectAltName=DNS:%s\nextendedKeyUsage=serverAuth,clientAuth\n' "$2") \
+    -extfile <(printf 'subjectAltName=DNS:%s\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth,clientAuth\n' "$2") \
     2>/dev/null
   rm -f "$PKI/$1.csr"
 }
@@ -176,6 +184,8 @@ build_pki() {
   if [ ! -f $PKI/ca.crt ]; then
     openssl req -x509 -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
       -keyout $PKI/ca.key -subj "/O=Farmacia Ipe/CN=Ipe Lab Root CA" \
+      -addext "basicConstraints=critical,CA:TRUE" \
+      -addext "keyUsage=critical,keyCertSign,cRLSign" \
       -days 3650 -sha256 -out $PKI/ca.crt 2>/dev/null
     issue db db.ipe.example
     issue bao bao.ipe.example
@@ -225,7 +235,7 @@ load() {
 reset() {
   pkill -u bao -x bao 2>/dev/null || true
   rm -rf /var/lib/bao/data && mkdir -p /var/lib/bao/data && chown bao:bao /var/lib/bao/data
-  rm -rf $GOV /home/ana/.pgpass /home/ana/.psql_history /home/ana/.pg_service.conf /home/ana/.postgresql
+  rm -rf $GOV /home/ana/.pgpass /home/ana/.psql_history /home/ana/.pg_service.conf /home/ana/.postgresql /home/ana/.vault-token /var/log/bao/audit.log
   mkdir -p $GOV
   chown -R ana:ana $GOV
   pg_cluster
@@ -248,11 +258,23 @@ case "${1:-}" in
     reset ;;
   state)
     state "$2" ;;
+  bao-start)
+    # In the virtual machine a systemd unit would do this; the lab starts it
+    # by hand, as the bao user, detached from the terminal that asked.
+    pgrep -u bao -x bao >/dev/null || {
+      mkdir -p /var/log/bao && chown bao:bao /var/log/bao
+      setsid runuser -u bao -- env -i PATH=/usr/bin:/bin /usr/local/bin/bao server -config=/etc/bao/bao.hcl \
+        >>/var/log/bao/server.log 2>&1 </dev/null &
+      for _ in $(seq 50); do
+        curl -s --noproxy "*" --cacert $PKI/ca.crt https://bao.ipe.example:8200/v1/sys/health >/dev/null && break
+        sleep 0.2
+      done
+    } ;;
   down)
     pkill -u bao -x bao 2>/dev/null || true
     pg_ctlcluster 16 gov stop -m fast 2>/dev/null || true ;;
   exec)
     as_ana "cd $GOV || exit 1; $2" ;;
   *)
-    echo "usage: lab.sh up | reset | state N | down | exec 'COMMAND'" >&2; exit 2 ;;
+    echo "usage: lab.sh up | reset | state N | bao-start | down | exec 'COMMAND'" >&2; exit 2 ;;
 esac
