@@ -1,6 +1,6 @@
 ---
 title: Um arquivo de instruções para o projeto
-version: 1
+version: 2
 ---
 
 Toda requisição começa do nada (aula 1 seção 10), então um assistente não conhece as regras do seu
@@ -32,10 +32,10 @@ Read CONVENTIONS.md before changing anything. The rules that matter most:
 A mesma requisição de completar de antes agora o leva, em primeiro lugar:
 
 ```
-ana@dev:~/shop$ assist complete shop/cart.py:34 --open shop/coupons.py tests/test_cart.py 2>&1 >/dev/null
-context sent (765 of 3000 tokens):
+ana@dev:~/shop$ python scratch/assist.py complete shop/cart.py:34 --open shop/coupons.py tests/test_cart.py 2>&1 >/dev/null
+context sent (755 of 3000 tokens):
      87  AGENTS.md
-    411  shop/cart.py (cursor at line 34)
+    401  shop/cart.py (cursor at line 34)
      91  shop/coupons.py
     176  tests/test_cart.py
 ---
@@ -44,7 +44,9 @@ context sent (765 of 3000 tokens):
 **87 tokens, em toda requisição**, que é o preço do arquivo e o motivo de mantê-lo curto. A aula 2
 seção 03 contou o `CONVENTIONS.md` em 374 tokens como prompt de sistema; mandá-lo inteiro em cada
 completação disparada por uma tecla seria a maior parte da requisição. Um ponteiro e quatro regras
-é a troca.
+é a troca. Numa completação, o `assist` o põe no topo como comentários, junto com as abas abertas,
+onde um modelo de código o lê como contexto; se um modelo tão pequeno o segue é outra história, e
+o fim desta seção é sobre isso.
 
 ## O que cabe nele
 

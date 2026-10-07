@@ -1,6 +1,6 @@
 ---
 title: O que sai da sua máquina
-version: 1
+version: 2
 ---
 
 Toda requisição que um assistente faz leva alguns dos seus arquivos para o computador de outra
@@ -13,44 +13,55 @@ requisições que você não pode ler nem apagar.
 
 O projeto da ana tem os dois lugares onde um segredo costuma se esconder: um arquivo `.env` com um
 token, que o git ignora, e um `settings.py` com uma chave digitada no código, que é um erro, mas um
-erro comum. Os dois valores são do laboratório e não abrem nada.
+erro comum. Os dois valores são inventados e não abrem nada. Escreva os três arquivos em `~/shop`
+para acompanhar. O `.gitignore`:
+
+```
+.env
+__pycache__/
+scratch/
+```
+
+O `.env`:
+
+```
+SHOP_PAYMENTS_TOKEN=not-a-real-token-7d41
+```
+
+O `settings.py`:
+
+```python
+PAYMENTS_URL = "https://payments.example.com/v1"
+PAYMENTS_KEY = "pk_test_4f9a8c7e1d2b3a6f"  # made up for the course; a real key never belongs in code
+```
 
 ```
 ana@dev:~/shop$ git status --short --ignored
- M shop/cart.py
-?? .gitignore
-?? settings.py
-!! .env
-!! lab/
 ```
 
-`!! .env` quer dizer que o git ignora o arquivo. **O editor não liga.** Um arquivo ignorado
-continua sendo um arquivo no disco, e uma aba é uma aba. A ana faz uma pergunta com os dois
-abertos:
+`!! .env` quer dizer que o git ignora o arquivo. **O editor não liga.** Um arquivo ignorado continua
+sendo um arquivo no disco, e uma aba é uma aba. A ana faz uma pergunta com os dois abertos:
 
 ```
-ana@dev:~/shop$ assist ask "Why might a payment fail?" --open shop/cart.py .env settings.py
-context sent (384 of 3000 tokens):
-    332  shop/cart.py
-     52  settings.py
-  refused .env: it holds something shaped like a secret
----
-Nothing in the files shown takes a payment: shop/cart.py computes the total and settings.py only holds a key for the payment service. A payment that fails is failing in code that is not in this context. Look at whatever reads PAYMENTS_KEY.
+ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open shop/cart.py .env settings.py
 ```
 
-O `assist` recusou o `.env`, porque o conteúdo casou com o padrão de um segredo, e mandou o
-`settings.py`, que não casou. A chave foi junto, e o registro do labllm a tem:
+O `assist` recusou o `.env`, porque o conteúdo bateu com o padrão de um segredo, e mandou o
+`settings.py`, que não bateu. A chave foi junto, e a requisição que o `assist` guardou a tem:
 
 ```
-ana@dev:~/shop$ grep -c pk_lab_4f9a8c7e1d2b3a6f /var/log/labllm/requests.jsonl
-1
+ana@dev:~/shop$ grep -c pk_test_4f9a8c7e1d2b3a6f scratch/sent.json
 ```
 
-**Uma checagem por padrão é uma rede com furos.** O `assist` procura `token`, `secret`,
-`password` ou `api_key` seguidos de um valor longo. `PAYMENTS_KEY = "pk_lab_…"` é um segredo em
-qualquer leitura, e passou porque o nome dele não está na lista. Ferramentas reais têm padrões
-melhores e ainda deixam coisas passar, porque um segredo é um fato sobre um valor e um padrão só
-vê a forma dele.
+A resposta em si é a lista dos motivos por que qualquer pagamento falha, e o segundo parágrafo
+cita `PAYMENTS_KEY` e `PAYMENTS_URL`: o modelo leu o `settings.py`, como a contagem acima prova.
+Nada nesses arquivos recebe um pagamento, que é o que um colega teria dito primeiro.
+
+**Uma verificação por padrão é uma rede com buracos.** O `assist` procura `token`, `secret`,
+`password` ou `api_key` seguidos de um valor longo. `PAYMENTS_KEY = "pk_test_…"` é um segredo em
+qualquer leitura, e passou porque o nome dele não está na lista. Ferramentas de verdade têm
+padrões melhores e ainda deixam coisas passar, porque um segredo é um fato sobre um valor e um
+padrão só enxerga a forma dele.
 
 ## Uma lista de exclusão
 
@@ -60,12 +71,7 @@ trabalho do `.assistignore` do `assist`:
 
 ```
 ana@dev:~/shop$ printf "settings.py\n*.pem\nsecrets/\n" > .assistignore
-ana@dev:~/shop$ assist ask "Why might a payment fail?" --open shop/cart.py .env settings.py 2>&1 >/dev/null
-context sent (332 of 3000 tokens):
-    332  shop/cart.py
-  refused .env: it holds something shaped like a secret
-  skipped settings.py: listed in .assistignore
----
+ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open shop/cart.py .env settings.py 2>&1 >/dev/null
 ```
 
 `skipped settings.py: listed in .assistignore`. **A lista é escrita por uma pessoa que sabe onde

@@ -1,6 +1,6 @@
 ---
 title: Completar, chat e agente
-version: 1
+version: 2
 ---
 
 Assistentes de editor vêm em três modos, e o jeito útil de separá-los não é o que conseguem fazer,
@@ -27,7 +27,7 @@ editor juntou, e só.
 Um painel onde você faz perguntas e recebe respostas, código e diffs, como na aula 3 seções 06 e
 07. Você escolhe o contexto (a seleção, os arquivos abertos, os arquivos que cita), e **nada muda no
 projeto até você aplicar**. A unidade de revisão é uma resposta, e o hábito que importa é o da aula
-3 seção 06: peça um diff, leia-o como uma mudança.
+3 seção 06: leia a mudança como um diff, contra o código que ela substitui.
 
 O chat também é onde um assistente é mais útil sem escrever nada: explicar um módulo desconhecido,
 ler um stack trace com você, listar os casos que uma função não trata. A resposta a uma pergunta é

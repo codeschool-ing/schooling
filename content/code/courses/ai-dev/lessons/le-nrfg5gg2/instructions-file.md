@@ -1,6 +1,6 @@
 ---
 title: An instruction file for the project
-version: 1
+version: 2
 ---
 
 Every request starts from nothing (lesson 1 section 10), so an assistant does not know your
@@ -32,10 +32,10 @@ Read CONVENTIONS.md before changing anything. The rules that matter most:
 The same completion request as before now carries it, first:
 
 ```
-ana@dev:~/shop$ assist complete shop/cart.py:34 --open shop/coupons.py tests/test_cart.py 2>&1 >/dev/null
-context sent (765 of 3000 tokens):
+ana@dev:~/shop$ python scratch/assist.py complete shop/cart.py:34 --open shop/coupons.py tests/test_cart.py 2>&1 >/dev/null
+context sent (755 of 3000 tokens):
      87  AGENTS.md
-    411  shop/cart.py (cursor at line 34)
+    401  shop/cart.py (cursor at line 34)
      91  shop/coupons.py
     176  tests/test_cart.py
 ---
@@ -44,7 +44,9 @@ context sent (765 of 3000 tokens):
 **87 tokens, on every request**, which is the price of the file and the reason to keep it short.
 Lesson 2 section 03 counted `CONVENTIONS.md` at 374 tokens as a system prompt; sending the whole of
 it with every keystroke-triggered completion would be most of the request. A pointer and four
-rules is the trade.
+rules is the trade. For a completion, `assist` puts it at the top as comments, with the open
+tabs, where a code model reads it as context; whether a model that small follows it is another
+matter, and the end of this section is about that.
 
 ## What belongs in it
 

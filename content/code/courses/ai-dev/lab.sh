@@ -13,8 +13,9 @@
 #                        the lessons import, and the four variables lesson 1
 #                        appends to its activate script
 #   /home/ana/shop       the project, as lesson 1 builds it
-#   127.0.0.1:11434      Ollama, serving llama3.2:3b (and llama3.2:1b, the
-#                        smaller model lesson 1 names for a weaker computer)
+#   127.0.0.1:11434      Ollama, serving llama3.2:3b, llama3.2:1b (the smaller
+#                        model lesson 1 names for a weaker computer) and
+#                        qwen2.5-coder:1.5b (the code model of lesson 3)
 #
 # WHAT THIS MACHINE HAS THAT A STUDENT'S DOES NOT, AND THE OTHER WAY ROUND.
 #
@@ -110,6 +111,11 @@ install_models() {
 pull_small() {
   serve
   $FENCES block "$L1/your-machine.md" 'ollama pull llama3.2:1b' | as_ana /home/ana
+}
+# The code model lesson 3's completions use, pulled the way that lesson says.
+pull_code() {
+  serve
+  $FENCES block "$HERE/lessons/le-nrfg5gg2/what-it-sees.md" 'ollama pull qwen2.5-coder:1.5b' | as_ana /home/ana
 }
 install_python() {
   { $FENCES block "$L1/installing.md" "$VENV_FIRST"
@@ -209,9 +215,9 @@ $*"
 
 case ${1:-} in
   up)
-    build_user; install_ollama; install_models; pull_small; install_python
+    build_user; install_ollama; install_models; pull_small; pull_code; install_python
     build_tokenizer; build_embeddings; build_shop ;;
-  user|install_ollama|install_models|pull_small|install_python|build_tokenizer|build_embeddings|build_shop)
+  user|install_ollama|install_models|pull_small|pull_code|install_python|build_tokenizer|build_embeddings|build_shop)
     [ "$1" = user ] && build_user || "$1" ;;
   reset)
     serve; build_shop ;;
