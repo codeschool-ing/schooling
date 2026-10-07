@@ -1819,6 +1819,105 @@ def l10_appendix(lang):
                 'Cada slide do apêndice existe porque uma pergunta da lista do pré-mortem precisou dele, '
                 'e nada mais está lá.')
 
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-payback', 11)
+def l11_payback(lang):
+    per_box = S.PRICE_CENTS * S.MARGIN / 100
+    cac = S.CAC_CENTS / 100
+    payback = cac / per_box
+    f = Fig('l11-payback', 680, 280, T(
+        lang,
+        'Cumulative margin from one customer, rising by R$ 58.87 with each box, against a flat line '
+        'at R$ 152, the cost of acquiring them. The rising line crosses the cost line at about 2.6 '
+        'boxes. A marker at 1.6 boxes, where the average early canceller stops, sits below the cost '
+        'line at R$ 94.19.',
+        'Margem acumulada de um cliente, subindo R$ 58,87 a cada caixa, contra uma linha reta em R$ 152, '
+        'o custo de conquistá-lo. A linha que sobe cruza a do custo em cerca de 2,6 caixas. Uma marca '
+        'em 1,6 caixa, onde o cliente médio que cancela cedo para, fica abaixo da linha do custo, em '
+        'R$ 94,19.'))
+    p = Plot(f, 70, 30, 640, 220, 0, 6, 0, 360)
+    p.yaxis([0, 100, 200, 300], fmt=lambda v: f'R$ {int(v)}', size=9)
+    for b in range(0, 7):
+        f.text(p.sx(b), p.y1 + 14, str(b), size=9, fill='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 34, T(lang, 'boxes paid', 'caixas pagas'), size=10, weight='600')
+    p.baseline()
+    f.line(p.sx(0), p.sy(cac), p.sx(6), p.sy(cac), stroke='--amber', width=1.6, dash='5 3')
+    f.text(p.sx(6), p.sy(cac) - 10, T(lang, 'cost to acquire: R$ 152', 'custo de aquisição: R$ 152'),
+           size=9.5, anchor='end', fill='--amber')
+    p.polyline([0, 6], [0, 6 * per_box], stroke='--phosphor', width=2)
+    f.text(p.sx(5.3), p.sy(5.3 * per_box) - 12, T(lang, 'margin so far', 'margem até aqui'), size=9.5,
+           anchor='end', fill='--phosphor')
+    ex, ey = 1.6, 1.6 * per_box
+    f.circle(p.sx(ex), p.sy(ey), 5, fill='--amber')
+    f.line(p.sx(ex), p.sy(ey), p.sx(ex), p.y1, stroke='--amber', width=1, dash='2 3')
+    f.text(p.sx(ex) + 10, p.sy(ey) + 26, T(lang, f'early canceller: 1.6 boxes, {brl(lang, S.LTV_EARLY, 2)}',
+                                         f'cancela cedo: 1,6 caixa, {brl(lang, S.LTV_EARLY, 2)}'),
+           size=9.5, anchor='start', fill='--amber')
+    f.circle(p.sx(payback), p.sy(cac), 5, fill='--phosphor')
+    f.text(p.sx(payback) - 10, p.sy(cac) - 14, T(lang, f'paid back at {num(lang, payback)} boxes',
+                                                 f'paga de volta em {num(lang, payback)} caixas'),
+           size=9.5, anchor='end', fill='--phosphor')
+    return f, T(lang,
+                'A customer pays back what it cost to win them after about 2.6 boxes. The average early '
+                'canceller stops at 1.6, so every one of them was bought at a loss.',
+                'Um cliente devolve o que custou conquistá-lo depois de cerca de 2,6 caixas. Quem cancela '
+                'cedo para, em média, em 1,6, então cada um deles foi comprado com prejuízo.')
+
+
+@figure('l11-driver-tree', 11)
+def l11_driver_tree(lang):
+    f = Fig('l11-driver-tree', 680, 300, T(
+        lang,
+        'A tree read from the top. Gross margin is boxes sold times margin per box. Margin per box is '
+        'price times the margin rate. Boxes sold come from subscribers and how long they stay. '
+        'Subscribers come from new subscribers acquired minus early cancellations. Early cancellations '
+        'depend on the share of first boxes delivered late, the leaf this analysis found, highlighted.',
+        'Uma árvore lida do topo. A margem bruta é caixas vendidas vezes margem por caixa. A margem por '
+        'caixa é preço vezes a taxa de margem. As caixas vendidas vêm dos assinantes e de quanto tempo '
+        'eles ficam. Os assinantes vêm dos novos conquistados menos os cancelamentos precoces. Os '
+        'cancelamentos precoces dependem da fatia de primeiras caixas atrasadas, a folha que esta '
+        'análise achou, destacada.'))
+
+    def node(cx, cy, label, w=150, hl=False, top=False):
+        f.rect(cx - w / 2, cy - 16, w, 32, stroke='--amber' if hl else ('--phosphor' if top else '--wire'),
+               fill='--panel', width=1.6 if hl else 1.2)
+        f.text(cx, cy, label, size=10, weight='600' if (hl or top) else None,
+               fill='--amber' if hl else '--paper')
+
+    def edge(x1, y1, x2, y2):
+        f.line(x1, y1 + 16, x2, y2 - 16, stroke='--paper-dim', width=1)
+    top = (340, 26)
+    boxes, perbox = (200, 96), (500, 96)
+    subs, stay = (110, 166), (290, 166)
+    price, rate = (430, 166), (590, 166)
+    new, early = (60, 236), (210, 236)
+    late = (380, 236)
+    for a, b in [(top, boxes), (top, perbox), (boxes, subs), (boxes, stay), (perbox, price), (perbox, rate),
+                 (subs, new), (subs, early)]:
+        edge(*a, *b)
+    f.line(early[0] + 75, early[1], late[0] - 75, late[1], stroke='--amber', width=1.4, arrow=True)
+    node(*top, T(lang, 'gross margin', 'margem bruta'), w=180, top=True)
+    node(*boxes, T(lang, 'boxes sold', 'caixas vendidas'))
+    node(*perbox, T(lang, 'margin per box', 'margem por caixa'))
+    node(*subs, T(lang, 'subscribers', 'assinantes'), w=130)
+    node(*stay, T(lang, 'months they stay', 'meses que ficam'), w=140)
+    node(*price, T(lang, 'price', 'preço'), w=110)
+    node(*rate, T(lang, 'margin rate, 31%', 'taxa de margem, 31%'), w=150)
+    node(*new, T(lang, 'acquired', 'conquistados'), w=100)
+    node(*early, T(lang, 'early cancellations', 'cancelamentos precoces'), w=150)
+    node(*late, T(lang, 'first boxes late', '1ªs caixas atrasadas'), w=150, hl=True)
+    f.text(late[0] + 82, late[1], T(lang, 'the finding', 'o achado'), size=9.5, anchor='start',
+           fill='--amber', italic=True)
+    f.text(340, 286, T(lang, 'read upwards: each link is a multiplication finance already does',
+                       'leia para cima: cada ligação é uma multiplicação que o financeiro já faz'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'The first box is a small leaf on a short, steep branch: it decides whether a customer '
+                'stays twenty-eight months or under two.',
+                'A primeira caixa é uma folha pequena num galho curto e íngreme: decide se o cliente '
+                'fica vinte e oito meses ou menos de dois.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

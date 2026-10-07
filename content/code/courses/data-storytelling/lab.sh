@@ -51,6 +51,11 @@ l11 months a survivor stays|=3+1/0.04
 l11 lifetime margin, survivor|=189.9*0.31*(3+1/0.04)
 l11 lifetime margin, early canceller|=189.9*0.31*1.6
 l11 LTV to CAC|=189.9*0.31*(3+1/0.04)/152
+l11 boxes to pay back acquisition|=152/(189.9*0.31)
+l11 margin lost per early cancellation|=189.9*0.31*(3+1/0.04)-189.9*0.31*1.6
+l11 extra early cancellations, half-year|=ROUND(1058*(439/1058-881/5055),0)
+l11 margin lost a year|=2*255*1554.14
+l11 acquisition spent on them a year|=2*255*152
 EOF
 
 WORK=$(mktemp -d)
