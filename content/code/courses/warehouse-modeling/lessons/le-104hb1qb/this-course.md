@@ -1,6 +1,6 @@
 ---
 title: What this course builds, and for whom
-version: 1
+version: 2
 ---
 
 Most databases you have met so far were designed to **record** things: an order, a payment, a
@@ -67,4 +67,5 @@ of this course argues with that last one, so it helps to have it fresh.
 
 **Nothing here needs a programming language beyond SQL.** A few lessons use a short shell script
 or a few lines of Python to move files around; they are shown whole, and you can read them as
-recipes.
+recipes. The longest is the program in section 05 that writes the shop's data, and that one you
+only have to run.
