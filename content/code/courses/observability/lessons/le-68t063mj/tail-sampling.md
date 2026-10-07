@@ -144,7 +144,8 @@ ana@obs:~/shop$ sed -n '/^  tail_sampling:/,/^  memory_limiter:/p' otel/collecto
 
 `decision_wait` is how long the Collector waits after a trace's first span before deciding. To give
 the policies something to find, payments is told to add 1500 ms to every twenty-fifth charge and to
-fail every fortieth. The services go back to their own samplers, the Collector to the new file, and Prometheus gains two
+fail every fortieth. The storefront and orders lose their samplers, the Collector moves to the new
+file, and Prometheus gains two
 flags: one stores exemplars, as in lesson 11, and the other lets the Collector send it the metrics
 of the section on span metrics. All of it is one override, replacing the last:
 

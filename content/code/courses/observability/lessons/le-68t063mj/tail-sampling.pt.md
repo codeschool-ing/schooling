@@ -144,7 +144,8 @@ ana@obs:~/shop$ sed -n '/^  tail_sampling:/,/^  memory_limiter:/p' otel/collecto
 
 O `decision_wait` é quanto o Collector espera depois do primeiro span de um rastro antes de decidir.
 Para as políticas terem o que achar, o payments recebe a ordem de somar 1500 ms a cada vigésima quinta
-cobrança e de falhar a cada quadragésima. Os serviços voltam aos próprios amostradores, o Collector ao arquivo novo, e o Prometheus ganha duas
+cobrança e de falhar a cada quadragésima. A vitrine e o orders perdem os amostradores, o Collector
+passa ao arquivo novo, e o Prometheus ganha duas
 flags: uma guarda exemplares, como na aula 11, e a outra deixa o Collector mandar a ele as métricas
 da seção sobre métricas de spans. É tudo um override só, no lugar do anterior:
 
