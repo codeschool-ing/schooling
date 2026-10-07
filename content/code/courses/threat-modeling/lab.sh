@@ -81,6 +81,8 @@ reset() {
   commit '2026-09-14 16:00' 'Add the threats the abuse cases found'
   add requirements.csv trace.py
   commit '2026-09-17 14:30' 'Write a requirement for each threat'
+  add risks.csv risk.py
+  commit '2026-09-22 10:00' 'Estimate the expected loss of the larger risks'
 }
 
 case ${1:-} in
