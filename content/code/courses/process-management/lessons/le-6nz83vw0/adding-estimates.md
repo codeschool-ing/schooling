@@ -1,0 +1,37 @@
+---
+title: Adding estimates up
+version: 1
+---
+
+A feature is several tasks, and its estimate is some combination of theirs. How they are combined changes the answer more than how carefully each was estimated.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 640 250\" role=\"img\" data-fig=\"l09-totals\" aria-label=\"Four horizontal bars for the online booking feature. The sum of the most likely values is 17 days; the sum of the PERT means is 20.5; about the 85th percentile is 24.1; the sum of the pessimistic values is 46.\"><path d=\"M220.0 200.0 L600.0 200.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M220.0 200.0 L220.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"220.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0</text><path d=\"M296.0 200.0 L296.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"296.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10</text><path d=\"M372.0 200.0 L372.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"372.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">20</text><path d=\"M448.0 200.0 L448.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"448.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">30</text><path d=\"M524.0 200.0 L524.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"524.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">40</text><path d=\"M600.0 200.0 L600.0 204.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"600.0\" y=\"213.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">50</text><text x=\"410.0\" y=\"231.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">working days for the four tasks together</text><rect x=\"220.0\" y=\"32.0\" width=\"129.2\" height=\"26.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"45.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">sum of the most likely values</text><text x=\"357.2\" y=\"45.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">17.0</text><rect x=\"220.0\" y=\"74.0\" width=\"155.8\" height=\"26.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"87.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">sum of the PERT means</text><text x=\"383.8\" y=\"87.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">20.5</text><rect x=\"220.0\" y=\"116.0\" width=\"183.5\" height=\"26.0\" rx=\"2\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"129.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">about the 85th percentile</text><text x=\"411.5\" y=\"129.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--amber)\">24.1</text><rect x=\"220.0\" y=\"158.0\" width=\"349.6\" height=\"26.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"210.0\" y=\"171.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">sum of the pessimistic values</text><text x=\"577.6\" y=\"171.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">46.0</text></svg>", "caption": "Four ways to add up the same four tasks. The sum of the most likely values is the number people quote, and it is the most optimistic of the four; the sum of the pessimistic values is a world in which everything goes wrong at once."}
+```
+
+## Four totals for the same four tasks
+
+**The sum of the most likely values is 17 days.** It is the number most plans are built from, because it is what each person said when asked how long their task would take. It is also the most optimistic total of the four, for the reason the last section gave: each most likely value sits below its task's mean.
+
+**The sum of the PERT means is 20.5 days.** Means can be added, so this is the expected total. It is three and a half days longer than the sum of the most likely values, and none of those days were invented: they come from the long right tails.
+
+**The sum of the pessimistic values is 46 days.** It describes a world in which every task hits its worst case at once. That is very unlikely when the tasks are independent, and a plan built on it would be padded beyond any use.
+
+**About the 85th percentile, 24.1 days**, is the number to plan with, and it needs one more step.
+
+## Standard deviations do not add; variances do
+
+To get a percentile for the total, the spread of the total is needed. If the tasks vary independently of each other, their **variances** — the squares of the standard deviations — add up, and the standard deviation of the total is the square root of the sum:
+
+```localised
+variance of the total = 1.67² + 1.00² + 2.83² + 0.67² = 12.25
+standard deviation    = square root of 12.25 = 3.5 days
+```
+
+Adding the standard deviations directly would give 6.17 days, which overstates the spread: it assumes every task runs long together. The square root reflects that independent tasks partly cancel each other — one runs long while another runs short.
+
+With a mean of 20.5 and a standard deviation of 3.5, and a total that behaves roughly like a normal distribution, about 85% of outcomes fall below the mean plus 1.04 standard deviations: **24.1 days**.
+
+## The assumption that breaks it
+
+The square root only applies if the tasks really are independent. The four Agenda tasks share a cause: if the payment provider's sandbox is unavailable for a week, the payment integration and the end-to-end testing both run long together. Shared causes make tasks move together, and then the true spread is wider than 3.5 days. **The arithmetic of this section is a floor on the uncertainty, not a ceiling.** Lesson 11 handles shared causes explicitly, as risks with their own probability and cost, rather than hiding them inside each task's pessimistic figure.
