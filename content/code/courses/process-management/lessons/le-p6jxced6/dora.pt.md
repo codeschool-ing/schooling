@@ -24,7 +24,36 @@ O time fez **24 deploys** nos 20 dias úteis de março. Três desses deploys cau
 {"svg": "<svg viewBox=\"0 0 680 250\" role=\"img\" data-fig=\"l13-dora\" aria-label=\"Quatro blocos em dois pares. Vazão: frequência de deploy de 1,2 por dia, 24 deploys em 20 dias úteis; lead time de mudanças de 6 horas, a mediana do commit à produção. Estabilidade: taxa de falha de mudanças de 12,5%, 3 de 24 deploys precisaram de correção; tempo de restauração de 50 minutos, a mediana das três falhas.\"><text x=\"170.0\" y=\"20.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--phosphor)\">vazão: quão rápido as mudanças fluem</text><text x=\"510.0\" y=\"20.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">estabilidade: com que frequência causam dano</text><rect x=\"14.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"92.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">frequência de deploy</text><text x=\"92.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--phosphor)\">1,2 por dia</text><text x=\"92.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">24 deploys em 20 dias úteis</text><rect x=\"180.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"258.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">lead time de mudanças</text><text x=\"258.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--phosphor)\">6 horas</text><text x=\"258.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">mediana, do commit à produção</text><rect x=\"346.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></rect><text x=\"424.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">taxa de falha de mudanças</text><text x=\"424.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--amber)\">12,5%</text><text x=\"424.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">3 de 24 deploys pediram correção</text><rect x=\"512.0\" y=\"36.0\" width=\"156.0\" height=\"180.0\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></rect><text x=\"590.0\" y=\"64.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">tempo de restauração</text><text x=\"590.0\" y=\"120.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"22\" font-weight=\"600\" fill=\"var(--amber)\">50 minutos</text><text x=\"590.0\" y=\"176.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">mediana das três falhas</text></svg>", "caption": "Os quatro números DORA do time Agenda em março de 2026. Dois dizem quão rápido as mudanças chegam aos usuários e dois dizem com que frequência causam dano; ler um par sem o outro premia um time por quebrar coisas rápido ou por nunca entregar."}
 ```
 
-Com os deploys nas linhas 2 a 25 da planilha — horas do commit à produção na coluna B, um 1 na coluna C para deploy com falha, e os minutos de restauração na coluna D —, nas fórmulas de uma planilha em português, o LibreOffice devolveu:
+Estes são os vinte e quatro deploys do time em março, em ordem. Digite-os numa folha nova com os cabeçalhos na linha 1, para que os deploys fiquem nas linhas 2 a 25 — horas do commit à produção na coluna B, um 1 na coluna C para deploy com falha, e os minutos de restauração na coluna D:
+
+| Deploy | Horas de lead time | Falhou | Minutos para restaurar |
+|---|---|---|---|
+| 1 | 3 | 0 |  |
+| 2 | 5 | 0 |  |
+| 3 | 26 | 0 |  |
+| 4 | 4 | 0 |  |
+| 5 | 7 | 0 |  |
+| 6 | 22 | 1 | 45 |
+| 7 | 6 | 0 |  |
+| 8 | 2 | 0 |  |
+| 9 | 30 | 0 |  |
+| 10 | 8 | 0 |  |
+| 11 | 5 | 0 |  |
+| 12 | 4 | 0 |  |
+| 13 | 49 | 0 |  |
+| 14 | 6 | 1 | 180 |
+| 15 | 3 | 0 |  |
+| 16 | 21 | 0 |  |
+| 17 | 9 | 0 |  |
+| 18 | 4 | 0 |  |
+| 19 | 27 | 0 |  |
+| 20 | 5 | 0 |  |
+| 21 | 7 | 1 | 50 |
+| 22 | 70 | 0 |  |
+| 23 | 6 | 0 |  |
+| 24 | 4 | 0 |  |
+
+Com eles no lugar, nas fórmulas de uma planilha em português, o LibreOffice devolveu:
 
 ```localised
 =CONT.NÚM(B2:B25)/20                1,2

@@ -1,0 +1,975 @@
+[
+  {
+    "id": "ex-xgbf5x4n",
+    "version": 1,
+    "section": "privileges",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Bruno has `SELECT` on `sales.orders` but no privilege on the schema `sales`. What happens when he queries the table?",
+    "hint": "Two grants were needed for one table.",
+    "choices": [
+      {
+        "text": "It works, because the table grant is the one that counts",
+        "correct": false,
+        "why": "No. Without USAGE on the schema he cannot look inside it at all."
+      },
+      {
+        "text": "It is refused at the schema",
+        "correct": true,
+        "why": "Right. USAGE on the schema and SELECT on the table are both required."
+      },
+      {
+        "text": "He sees the column names but no rows",
+        "correct": false,
+        "why": "No. The statement is refused; there is no partial answer."
+      },
+      {
+        "text": "It works for the owner's rows and no others",
+        "correct": false,
+        "why": "No. Ownership of rows is not a concept here; the refusal is at the schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrmja3my",
+    "version": 1,
+    "section": "privileges",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each letter of `arwdDxt` to the privilege it stands for.",
+    "hint": "a is append, r is read.",
+    "pairs": [
+      {
+        "left": "a",
+        "right": "INSERT"
+      },
+      {
+        "left": "r",
+        "right": "SELECT"
+      },
+      {
+        "left": "w",
+        "right": "UPDATE"
+      },
+      {
+        "left": "D",
+        "right": "TRUNCATE"
+      }
+    ],
+    "right_distractors": [
+      "EXECUTE"
+    ]
+  },
+  {
+    "id": "ex-fgwv0t5s",
+    "version": 1,
+    "section": "privileges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana, without `SET ROLE ipe_owner`, tries to grant `SELECT` on `sales.order_items`. Why is she refused?",
+    "hint": "What does Ana hold on the data as herself?",
+    "choices": [
+      {
+        "text": "CREATEROLE forbids granting table privileges to a role she created",
+        "correct": false,
+        "why": "No. CREATEROLE is about roles; the refusal is about the schema."
+      },
+      {
+        "text": "The table is locked by another session",
+        "correct": false,
+        "why": "No. A lock would wait, not answer with permission denied."
+      },
+      {
+        "text": "As herself she holds nothing on Ipê's data",
+        "correct": true,
+        "why": "Right. Her membership in ipe_owner has INHERIT FALSE, so she has to become the owner to grant."
+      },
+      {
+        "text": "Only the superuser grants on tables",
+        "correct": false,
+        "why": "No. The owner grants, which is what SET ROLE ipe_owner lets her be."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7yrxryx",
+    "version": 1,
+    "section": "roles-as-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ipê hires a second analyst. In the arrangement this lesson builds, what does Ana run?",
+    "hint": "Privileges belong to the job.",
+    "choices": [
+      {
+        "text": "GRANT analyst TO the new login",
+        "correct": true,
+        "why": "Right. One membership, and she has exactly what every analyst has."
+      },
+      {
+        "text": "One GRANT per table the analysts read, to her login",
+        "correct": false,
+        "why": "No. That is the person-by-person arrangement the lesson replaced."
+      },
+      {
+        "text": "A copy of Bruno's role under her name",
+        "correct": false,
+        "why": "No. PostgreSQL has no role copy, and the job is what should be shared."
+      },
+      {
+        "text": "ALTER DEFAULT PRIVILEGES for her login",
+        "correct": false,
+        "why": "No. Default privileges are about future objects, not new people."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9h90p0f",
+    "version": 1,
+    "section": "roles-as-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `\\drg`, `bruno` is a member of `analyst` with `INHERIT, SET`. What does `INHERIT` give him?",
+    "hint": "Compare with Ana's membership in ipe_owner.",
+    "choices": [
+      {
+        "text": "The right to add other people to analyst",
+        "correct": false,
+        "why": "No. That is ADMIN, which Ana holds."
+      },
+      {
+        "text": "The ownership of every table analysts read",
+        "correct": false,
+        "why": "No. Membership never transfers ownership."
+      },
+      {
+        "text": "The job's privileges, without having to ask for them",
+        "correct": true,
+        "why": "Right. With INHERIT the privileges flow to him; with SET alone he would have to SET ROLE analyst."
+      },
+      {
+        "text": "Permission to log in as analyst",
+        "correct": false,
+        "why": "No. analyst is NOLOGIN; nobody logs in as it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xarcfg47",
+    "version": 1,
+    "section": "roles-as-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Support should be able to close a ticket but never change what a customer wrote. Which grant says that?",
+    "hint": "A verb can be narrower than a table.",
+    "choices": [
+      {
+        "text": "GRANT UPDATE ON support.tickets TO support_agent",
+        "correct": false,
+        "why": "No. That allows updating every column, body included."
+      },
+      {
+        "text": "GRANT UPDATE (status) ON support.tickets TO support_agent",
+        "correct": true,
+        "why": "Right. The column list makes the decision readable: status and nothing else."
+      },
+      {
+        "text": "GRANT SELECT ON support.tickets TO support_agent WITH GRANT OPTION",
+        "correct": false,
+        "why": "No. That lets agents pass on reading; it grants no update at all."
+      },
+      {
+        "text": "GRANT TRIGGER ON support.tickets TO support_agent",
+        "correct": false,
+        "why": "No. TRIGGER lets a role create triggers on the table, which is unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dfyc6r7",
+    "version": 1,
+    "section": "default-privileges",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `ALTER DEFAULT PRIVILEGES … GRANT SELECT ON TABLES TO analyst` today. Which tables can analysts read because of it?",
+    "hint": "returns needed its own GRANT.",
+    "choices": [
+      {
+        "text": "Every table in the schema, old and new",
+        "correct": false,
+        "why": "No. Existing tables are untouched; that is what GRANT is for."
+      },
+      {
+        "text": "Those the owner creates from now on",
+        "correct": true,
+        "why": "Right. A default privilege changes the future and never the past."
+      },
+      {
+        "text": "Tables Ana creates as herself",
+        "correct": false,
+        "why": "No. The rule is for tables ipe_owner creates."
+      },
+      {
+        "text": "None until the server restarts",
+        "correct": false,
+        "why": "No. deliveries was readable straight away."
+      }
+    ]
+  },
+  {
+    "id": "ex-swfj7jch",
+    "version": 1,
+    "section": "default-privileges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody proposes the same default — `SELECT` for analysts on new tables — for the schema `health`. What is the argument against it?",
+    "hint": "When is the decision about each future table made?",
+    "choices": [
+      {
+        "text": "Default privileges do not work on schemas holding health data",
+        "correct": false,
+        "why": "No. They work on any schema; the question is whether they should."
+      },
+      {
+        "text": "Analysts already read health through the sales grant",
+        "correct": false,
+        "why": "No. Nobody holds USAGE on health."
+      },
+      {
+        "text": "It would slow down every query on health",
+        "correct": false,
+        "why": "No. Privileges cost nothing measurable at query time."
+      },
+      {
+        "text": "Each new medical table opens itself",
+        "correct": true,
+        "why": "Right. Decided once, by somebody thinking of another table: a default is a decision made in advance for tables nobody has designed yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzkag3t5",
+    "version": 1,
+    "section": "column-privileges",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Bruno has `SELECT` on six columns of `sales.customers`. What does `SELECT * FROM sales.customers` return?",
+    "hint": "The star asks for every column.",
+    "choices": [
+      {
+        "text": "The six granted columns",
+        "correct": false,
+        "why": "No. The server refuses the whole statement rather than return a quiet subset."
+      },
+      {
+        "text": "Every column, with the others blanked out",
+        "correct": false,
+        "why": "No. Nothing is blanked; the statement is refused."
+      },
+      {
+        "text": "permission denied for table customers",
+        "correct": true,
+        "why": "Right. Naming the granted columns is the way that works."
+      },
+      {
+        "text": "Every column, because SELECT * is exempt",
+        "correct": false,
+        "why": "No. The star is not exempt from anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-q51c0yds",
+    "version": 1,
+    "section": "column-privileges",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From Bruno's count by state, how many of Ipê's customers live in São Paulo?",
+    "hint": "The first row of the result.",
+    "value": 2322,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-34k4g8jj",
+    "version": 1,
+    "section": "column-privileges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Analysts cannot select `cpf`, `email`, `full_name` or `birth_date`. Why is the customers data they do see still not anonymous?",
+    "hint": "Think of a group with one person in it.",
+    "choices": [
+      {
+        "text": "Their combinations narrow to one person",
+        "correct": true,
+        "why": "Right. City, sex and sign-up month together narrow a group to one person: column privileges filter what is selected, not what is inferred, and lesson 5 measures it."
+      },
+      {
+        "text": "The hidden columns are still sent and filtered by psql",
+        "correct": false,
+        "why": "No. The server never sends a column that was not granted."
+      },
+      {
+        "text": "customer_id is the CPF under another name",
+        "correct": false,
+        "why": "No. It is an internal number, though it does join to other tables."
+      },
+      {
+        "text": "Analysts can read the hidden columns through the catalogue",
+        "correct": false,
+        "why": "No. The catalogue shows column names, not values."
+      }
+    ]
+  },
+  {
+    "id": "ex-k227m141",
+    "version": 1,
+    "section": "views-as-interface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno reads `customer_profile`, which reads `birth_date`, and he has no right to `birth_date`. Why does it work?",
+    "hint": "Whose privileges does the view use?",
+    "choices": [
+      {
+        "text": "Views ignore privileges entirely",
+        "correct": false,
+        "why": "No. Privileges are checked, but for the view's owner."
+      },
+      {
+        "text": "A default view reads as its owner",
+        "correct": true,
+        "why": "Right. ipe_owner can read the whole table, and the view reads it on Bruno's behalf."
+      },
+      {
+        "text": "The age band is stored as a column of its own",
+        "correct": false,
+        "why": "No. It is computed when the view is read."
+      },
+      {
+        "text": "Bruno inherits birth_date from analyst",
+        "correct": false,
+        "why": "No. analyst has six columns of customers, and birth_date is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-daj7nmkt",
+    "version": 1,
+    "section": "views-as-interface",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of Ipê's customers does the profile view place in the band `under 18`?",
+    "hint": "The last row of Bruno's count.",
+    "value": 20,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6b9z26p4",
+    "version": 1,
+    "section": "views-as-interface",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a view a good interface for analysts? Choose all that apply.",
+    "hint": "Think about precision and stability.",
+    "choices": [
+      {
+        "text": "It exposes values derived to the precision the question needs",
+        "correct": true,
+        "why": "Yes. An age band, not a date of birth."
+      },
+      {
+        "text": "It does not grow a column when the table does",
+        "correct": true,
+        "why": "Yes. A new column reaches analysts only when somebody decides it should."
+      },
+      {
+        "text": "It stops readers filtering down to one person",
+        "correct": false,
+        "why": "No. A view hides columns; lesson 5 deals with filtering to one person."
+      },
+      {
+        "text": "It makes the query faster than reading the table",
+        "correct": false,
+        "why": "No. A plain view is expanded into the query; speed is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cv33p56",
+    "version": 1,
+    "section": "row-security",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the region policy in place, how many customers does Carla see?",
+    "hint": "São Paulo and Rio together.",
+    "value": 3386,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2vc5njmj",
+    "version": 1,
+    "section": "row-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after row security is enabled on `sales.customers`, Bruno counts 0 customers. Why?",
+    "hint": "Which roles had a policy at that moment?",
+    "choices": [
+      {
+        "text": "His column grant was revoked by ENABLE ROW LEVEL SECURITY",
+        "correct": false,
+        "why": "No. Nothing was revoked; his grants are intact."
+      },
+      {
+        "text": "No policy allowed analysts any row",
+        "correct": true,
+        "why": "Right. Row security fails closed, and it fails quietly: a valid zero rather than an error."
+      },
+      {
+        "text": "The policy for support agents applies to everybody",
+        "correct": false,
+        "why": "No. It names support_agent; it does not reach analysts."
+      },
+      {
+        "text": "Analysts are limited to São Paulo and Rio",
+        "correct": false,
+        "why": "No. Then he would have counted 3,386, not 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-x02m2qwa",
+    "version": 1,
+    "section": "row-security",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After row security is enabled, `site_app` gets `permission denied` on customers, while Bruno got 0 rows. What explains the difference?",
+    "hint": "Which is checked first, the grant or the policy?",
+    "choices": [
+      {
+        "text": "site_app connects with a password and Bruno does not",
+        "correct": false,
+        "why": "No. Both connect with SCRAM passwords."
+      },
+      {
+        "text": "Policies apply to people and not to service accounts",
+        "correct": false,
+        "why": "No. Policies apply to roles; whether a role is a person does not matter."
+      },
+      {
+        "text": "app_web has no SELECT on the table; analyst does",
+        "correct": true,
+        "why": "Right. The grant is checked first, and row security narrows a grant, never widens one."
+      },
+      {
+        "text": "The website reads through a view",
+        "correct": false,
+        "why": "No. Neither of them used a view here."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfn5mb17",
+    "version": 1,
+    "section": "row-security",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A policy written as `USING (___)` lets its roles see every row of the table.",
+    "hint": "A condition that holds for every row.",
+    "blanks": [
+      {
+        "accept": [
+          "true"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sgh7z8aw",
+    "version": 1,
+    "section": "who-bypasses",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these see every row of `sales.customers` despite its policies, as the lab stands? Choose all that apply.",
+    "hint": "relforcerowsecurity is f.",
+    "choices": [
+      {
+        "text": "ipe_owner, the table's owner",
+        "correct": true,
+        "why": "Yes. The owner is exempt unless the table is in FORCE mode."
+      },
+      {
+        "text": "postgres, the superuser",
+        "correct": true,
+        "why": "Yes. A superuser and any role with BYPASSRLS skip policies."
+      },
+      {
+        "text": "carla, a support agent",
+        "correct": false,
+        "why": "No. She is bound by the region policy and sees 3,386."
+      },
+      {
+        "text": "site_app, the website",
+        "correct": false,
+        "why": "No. It has no SELECT on the table at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-j42me3f9",
+    "version": 1,
+    "section": "who-bypasses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Carla saw 6,012 customers through `customer_profile` and 3,386 through the table. What changed when the view was set to `security_invoker = true`?",
+    "hint": "Whose policies does a view evaluate?",
+    "choices": [
+      {
+        "text": "The view began to cache only her states",
+        "correct": false,
+        "why": "No. A view caches nothing."
+      },
+      {
+        "text": "The policy was copied onto the view",
+        "correct": false,
+        "why": "No. Views do not carry policies of their own."
+      },
+      {
+        "text": "Her membership in support_agent was refreshed",
+        "correct": false,
+        "why": "No. Her membership never changed."
+      },
+      {
+        "text": "The view checked as her, not its owner",
+        "correct": true,
+        "why": "Right. Which is also why Bruno was then refused: as himself he lacks birth_date."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k0fbqb8",
+    "version": 1,
+    "section": "who-bypasses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a backup taken by a role with `BYPASSRLS` rather than by an ordinary role?",
+    "hint": "What would a backup that obeyed the policies contain?",
+    "choices": [
+      {
+        "text": "Otherwise it holds what its runner sees",
+        "correct": true,
+        "why": "Right. It has to copy every row, so it runs as a role exempt from policies."
+      },
+      {
+        "text": "BYPASSRLS makes the dump compress better",
+        "correct": false,
+        "why": "No. Compression has nothing to do with it."
+      },
+      {
+        "text": "Ordinary roles are not allowed to run pg_dump",
+        "correct": false,
+        "why": "No. Any role can run it; it dumps what that role can read."
+      },
+      {
+        "text": "Policies are disabled at night",
+        "correct": false,
+        "why": "No. Policies do not depend on the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m92jhak",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the first tickets policy, reading `current_setting('ipe.region')`, wrong even though it filtered correctly?",
+    "hint": "Who chose the value?",
+    "choices": [
+      {
+        "text": "current_setting is too slow inside a policy",
+        "correct": false,
+        "why": "No. Speed was never the problem."
+      },
+      {
+        "text": "Carla set the attribute herself",
+        "correct": true,
+        "why": "Right. An attribute that decides access has to come from somewhere the person cannot write."
+      },
+      {
+        "text": "Custom settings are lost when the session ends",
+        "correct": false,
+        "why": "No. That is true and irrelevant: she sets it again in the next session."
+      },
+      {
+        "text": "A policy on tickets cannot read the customers table",
+        "correct": false,
+        "why": "No. The fixed policy reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnfcf9dm",
+    "version": 1,
+    "section": "attributes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the attribute read from `support.agent_regions`, how many tickets does Carla see, whatever she sets `ipe.region` to?",
+    "hint": "São Paulo's and Rio's together.",
+    "value": 854,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-54rq5q85",
+    "version": 1,
+    "section": "attributes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each clause of a policy to what it decides.",
+    "hint": "One reads, one writes.",
+    "pairs": [
+      {
+        "left": "USING",
+        "right": "which existing rows a role may see, update or delete"
+      },
+      {
+        "left": "WITH CHECK",
+        "right": "which rows a role may write"
+      },
+      {
+        "left": "TO support_agent",
+        "right": "which roles the policy applies to"
+      }
+    ],
+    "right_distractors": [
+      "which columns a role may select"
+    ]
+  },
+  {
+    "id": "ex-a6ygwne0",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a warehouse, columns are tagged `pii` and people get `region:south` from the identity provider. Who should be able to set each?",
+    "hint": "The same rule as agent_regions.",
+    "choices": [
+      {
+        "text": "Each analyst tags the columns they create and declares their own region",
+        "correct": false,
+        "why": "No. Then the people the rule is about are writing its inputs."
+      },
+      {
+        "text": "Governance of data and of identity, in that order",
+        "correct": true,
+        "why": "Right. Data governance tags the data, identity governance sets people's attributes, and never the person the rule is about."
+      },
+      {
+        "text": "Whoever runs the query, so the rule fits the task",
+        "correct": false,
+        "why": "No. That is the session-setting mistake again."
+      },
+      {
+        "text": "The BI tool, from the dashboard's filters",
+        "correct": false,
+        "why": "No. A dashboard filter is a choice of the viewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-n27sxma6",
+    "version": 1,
+    "section": "the-access-matrix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The matrix shows `tickets_upd = f` for Carla, though she updated a ticket. Why?",
+    "hint": "Which question did the function answer?",
+    "choices": [
+      {
+        "text": "Her update was rolled back",
+        "correct": false,
+        "why": "No. It returned UPDATE 1 and committed."
+      },
+      {
+        "text": "The matrix ran before the grant",
+        "correct": false,
+        "why": "No. The grant was made at the start of the lesson."
+      },
+      {
+        "text": "It asks about every column; hers is status",
+        "correct": true,
+        "why": "Right. has_column_privilege on status would say t."
+      },
+      {
+        "text": "Row security hides her own privileges from her",
+        "correct": false,
+        "why": "No. Privileges are not rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-wapad6m1",
+    "version": 1,
+    "section": "the-access-matrix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What makes a matrix like this worth running on a schedule rather than once?",
+    "hint": "What does a review look for?",
+    "choices": [
+      {
+        "text": "The functions give different answers at different times of day",
+        "correct": false,
+        "why": "No. They answer from the grants, which do not depend on the time."
+      },
+      {
+        "text": "Grants expire unless the matrix is run",
+        "correct": false,
+        "why": "No. Grants do not expire."
+      },
+      {
+        "text": "It refreshes the role memberships",
+        "correct": false,
+        "why": "No. It reads them; it changes nothing."
+      },
+      {
+        "text": "A change between runs nobody explains",
+        "correct": true,
+        "why": "Right. A cell that turned t since last month is what a review exists to find."
+      }
+    ]
+  },
+  {
+    "id": "ex-garqg78h",
+    "version": 1,
+    "section": "offboarding",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Lia's offboarding in the order the lesson ran it.",
+    "hint": "No new sessions first.",
+    "items": [
+      "ALTER ROLE lia NOLOGIN",
+      "REVOKE analyst FROM lia",
+      "REASSIGN OWNED BY lia TO ipe_owner",
+      "DROP OWNED BY lia"
+    ]
+  },
+  {
+    "id": "ex-85cj2mbx",
+    "version": 1,
+    "section": "offboarding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is Lia's role kept with `NOLOGIN` rather than dropped?",
+    "hint": "Think about the audit trail.",
+    "choices": [
+      {
+        "text": "So her name in the audit trail still resolves to a role",
+        "correct": true,
+        "why": "Right. A log line saying lia read a table should point at something that existed."
+      },
+      {
+        "text": "Dropped roles cannot be created again with the same name",
+        "correct": false,
+        "why": "No. A name can be reused, which is part of the problem with dropping."
+      },
+      {
+        "text": "PostgreSQL refuses to drop a role with an expired password",
+        "correct": false,
+        "why": "No. Expiry does not prevent dropping."
+      },
+      {
+        "text": "She might come back as an intern next year",
+        "correct": false,
+        "why": "No. A returning person gets a fresh decision about access."
+      }
+    ]
+  },
+  {
+    "id": "ex-bahzmwwc",
+    "version": 1,
+    "section": "offboarding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana created Lia's role, yet `REASSIGN OWNED BY lia` was refused to her. Why?",
+    "hint": "Administering a role is not becoming it.",
+    "choices": [
+      {
+        "text": "REASSIGN OWNED only works on roles that can still log in",
+        "correct": false,
+        "why": "No. It works on NOLOGIN roles; the issue is who runs it."
+      },
+      {
+        "text": "She administers the role, lacking its privileges",
+        "correct": true,
+        "why": "Right. Only a role with the departing role's privileges may move or drop what it owns."
+      },
+      {
+        "text": "Lia still had an open session",
+        "correct": false,
+        "why": "No. Open sessions do not block REASSIGN OWNED."
+      },
+      {
+        "text": "ipe_owner refuses objects created by interns",
+        "correct": false,
+        "why": "No. Ownership transfer has no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-qab2znmh",
+    "version": 1,
+    "section": "functions-and-pitfalls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno read an e-mail address through `sales.customer_email`. Which two facts combined to allow it?",
+    "hint": "One is about whose privileges the function uses, the other about who may call it.",
+    "choices": [
+      {
+        "text": "Bruno is an analyst and analysts read e-mail",
+        "correct": false,
+        "why": "No. analyst has six columns of customers, and email is not one."
+      },
+      {
+        "text": "The search_path setting and a missing index",
+        "correct": false,
+        "why": "No. The fixed search_path is the part done right."
+      },
+      {
+        "text": "SECURITY DEFINER plus EXECUTE for PUBLIC",
+        "correct": true,
+        "why": "Right. It ran as ipe_owner, and everybody was allowed to call it."
+      },
+      {
+        "text": "Row security is off for functions",
+        "correct": false,
+        "why": "No. It is the owner's exemption, not a function rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kx5ae2g",
+    "version": 1,
+    "section": "functions-and-pitfalls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pattern to what it does.",
+    "hint": "Each is a grant wider than the decision behind it.",
+    "pairs": [
+      {
+        "left": "GRANT ALL",
+        "right": "every verb, TRUNCATE included"
+      },
+      {
+        "left": "WITH GRANT OPTION",
+        "right": "the grantee passes the privilege on"
+      },
+      {
+        "left": "TO PUBLIC",
+        "right": "every role, including future ones"
+      },
+      {
+        "left": "SECURITY DEFINER",
+        "right": "the body runs as the owner"
+      }
+    ]
+  },
+  {
+    "id": "ex-dtsrzf3s",
+    "version": 1,
+    "section": "functions-and-pitfalls",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A new function in PostgreSQL is executable by ___ unless somebody revokes it.",
+    "hint": "The pseudo-role every role is in.",
+    "blanks": [
+      {
+        "accept": [
+          "PUBLIC",
+          "everybody",
+          "everyone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6bk7qcce",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana enables row security on `support.tickets` with a policy for `support_agent` only. Which reader breaks without an error?",
+    "hint": "Which role reads tickets and has a grant but no policy?",
+    "choices": [
+      {
+        "text": "carla, who gets permission denied on every ticket",
+        "correct": false,
+        "why": "No. She has a policy and sees her states' tickets."
+      },
+      {
+        "text": "site_app, which now gets zero rows back",
+        "correct": false,
+        "why": "No. app_web has no grant on tickets, so it is refused with an error."
+      },
+      {
+        "text": "ipe_owner, which sees nothing",
+        "correct": false,
+        "why": "No. The owner is exempt and sees every row."
+      },
+      {
+        "text": "Any role with SELECT and no rule naming it",
+        "correct": true,
+        "why": "Right. Before enabling, list every role that reads the table and give each a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn64f1j7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these checks in the order PostgreSQL applies them to Carla's `SELECT` on customers.",
+    "hint": "Schema, table, then rows.",
+    "items": [
+      "USAGE on the schema sales",
+      "SELECT on the table, through support_agent",
+      "The policy filters the rows by her states"
+    ]
+  }
+]

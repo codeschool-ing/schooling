@@ -1,0 +1,904 @@
+[
+  {
+    "id": "ex-2cbgvf6b",
+    "version": 1,
+    "section": "four-words",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each technique to what it does.",
+    "hint": "One of them leaves nothing to recover.",
+    "pairs": [
+      {
+        "left": "masking",
+        "right": "hides part of a value when shown"
+      },
+      {
+        "left": "tokenisation",
+        "right": "a stand-in, mapped back elsewhere"
+      },
+      {
+        "left": "pseudonymisation",
+        "right": "a code for the person, records still join"
+      },
+      {
+        "left": "anonymisation",
+        "right": "nobody can be singled out by reasonable means"
+      }
+    ]
+  },
+  {
+    "id": "ex-9r2yedwx",
+    "version": 1,
+    "section": "four-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the LGPD, which of the four techniques produces data that is no longer personal data?",
+    "hint": "Article 12.",
+    "choices": [
+      {
+        "text": "Pseudonymisation, when the key is kept in a KMS",
+        "correct": false,
+        "why": "No. Ipê holds the key, so the data is still personal."
+      },
+      {
+        "text": "Masking, because the value is hidden",
+        "correct": false,
+        "why": "No. The full value is still in the table."
+      },
+      {
+        "text": "Anonymisation, and only while it holds",
+        "correct": true,
+        "why": "Right. Masked, tokenised and pseudonymised data stay personal data in full."
+      },
+      {
+        "text": "Tokenisation, because the token is random",
+        "correct": false,
+        "why": "No. Whoever controls the vault can map it back."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqzz66x2",
+    "version": 1,
+    "section": "four-words",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which need is best served by masking?",
+    "hint": "Recognise, not copy.",
+    "choices": [
+      {
+        "text": "Support recognising a customer on the phone",
+        "correct": true,
+        "why": "Right. Enough to confirm, not enough to copy."
+      },
+      {
+        "text": "Analysts joining a customer's orders over a year",
+        "correct": false,
+        "why": "No. That is a pseudonym's job."
+      },
+      {
+        "text": "A public report on prescriptions by city",
+        "correct": false,
+        "why": "No. A report needs counts nobody can be found in."
+      },
+      {
+        "text": "Finding a customer by CPF in the database",
+        "correct": false,
+        "why": "No. That needs a searchable stand-in."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rkvcbbx",
+    "version": 1,
+    "section": "masking-on-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The support view runs as its owner and so skips the table's row policy. How does Carla still see only her states through it?",
+    "hint": "Read the view's WHERE.",
+    "choices": [
+      {
+        "text": "security_barrier applies the table's policy",
+        "correct": false,
+        "why": "No. security_barrier controls the order conditions run in; it applies no policy."
+      },
+      {
+        "text": "The view filters by agent_regions itself",
+        "correct": true,
+        "why": "Right. current_user in a view is the person reading, so the rule moves into the view."
+      },
+      {
+        "text": "The mask functions refuse other states",
+        "correct": false,
+        "why": "No. They only change how a value is shown."
+      },
+      {
+        "text": "She does not; she sees all 6,012",
+        "correct": false,
+        "why": "No. The count through the view was 3,386."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy6fryhh",
+    "version": 1,
+    "section": "masking-on-read",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was Carla first refused with `permission denied for function mask_cpf`?",
+    "hint": "Lesson 2 changed a default.",
+    "choices": [
+      {
+        "text": "Functions cannot be used inside views",
+        "correct": false,
+        "why": "No. One grant later, the same view worked."
+      },
+      {
+        "text": "mask_cpf was written with a bug",
+        "correct": false,
+        "why": "No. It worked as soon as it was granted."
+      },
+      {
+        "text": "New functions are closed to PUBLIC by default",
+        "correct": true,
+        "why": "Right. Lesson 2 revoked EXECUTE from PUBLIC for every function ipe_owner creates."
+      },
+      {
+        "text": "Carla's token in OpenBao had expired",
+        "correct": false,
+        "why": "No. This is a database privilege, not OpenBao."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tc8r1es",
+    "version": 1,
+    "section": "masking-on-read",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A masked view shows `***.874.168-**`. What does masking NOT protect against?",
+    "hint": "What is under the view?",
+    "choices": [
+      {
+        "text": "A screenshot of support's screen",
+        "correct": false,
+        "why": "No. That is exactly what masking is for."
+      },
+      {
+        "text": "An agent copying the number onto a note",
+        "correct": false,
+        "why": "No. The agent sees only seven digits."
+      },
+      {
+        "text": "A report printed from the view",
+        "correct": false,
+        "why": "No. The report prints what the view shows."
+      },
+      {
+        "text": "A backup of the table under it",
+        "correct": true,
+        "why": "Right. The table still held every CPF in clear; masking changes only what is shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-k993zdxx",
+    "version": 1,
+    "section": "a-copy-for-developers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which decisions in the developers' copy keep it useful while removing who people are? Choose all that apply.",
+    "hint": "Joins and ages still work.",
+    "choices": [
+      {
+        "text": "Keeping customer_id so other tables still join",
+        "correct": true,
+        "why": "Yes. A developer can still find the customer with sixty orders."
+      },
+      {
+        "text": "Keeping the year of birth and losing the day",
+        "correct": true,
+        "why": "Yes. Age-based features stay testable."
+      },
+      {
+        "text": "Keeping the full CEP so delivery code is realistic",
+        "correct": false,
+        "why": "No. The CEP kept only its first two digits."
+      },
+      {
+        "text": "Copying the CPF with its check digits fixed",
+        "correct": false,
+        "why": "No. The CPF was not exported at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-e357xdh4",
+    "version": 1,
+    "section": "a-copy-for-developers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the masked developers' copy still personal data?",
+    "hint": "What can it be joined to, and what do its columns say together?",
+    "choices": [
+      {
+        "text": "Because it has a header line",
+        "correct": false,
+        "why": "No. A header names columns, not people."
+      },
+      {
+        "text": "It joins back, and singles people out",
+        "correct": true,
+        "why": "Right. Its ids join to production, and city, sex, year of birth and sign-up time identify many customers together."
+      },
+      {
+        "text": "Because the names are only replaced, not removed",
+        "correct": false,
+        "why": "No. 'Customer 1' names nobody."
+      },
+      {
+        "text": "Because CSV files are personal data by law",
+        "correct": false,
+        "why": "No. The format decides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3vjz42k",
+    "version": 1,
+    "section": "a-copy-for-developers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines did `wc -l` count in `dev_customers.csv`?",
+    "hint": "Every customer and a header.",
+    "value": 6013,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9y100tqr",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `card_token` let Ipê do without ever holding a card number?",
+    "hint": "The provider holds the vault.",
+    "choices": [
+      {
+        "text": "Read the card number when a customer asks",
+        "correct": false,
+        "why": "No. Only the provider's vault can map the token back."
+      },
+      {
+        "text": "Charge or refund the card through the provider",
+        "correct": true,
+        "why": "Right. The token is a reference the provider honours."
+      },
+      {
+        "text": "Compute the card number from the token",
+        "correct": false,
+        "why": "No. A token has no computable relation to the value."
+      },
+      {
+        "text": "Skip encryption on the payments table",
+        "correct": false,
+        "why": "No. Tokens reduce risk; they do not replace the other layers."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8cm006h",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does tokenising card numbers change about PCI DSS for Ipê's database?",
+    "hint": "Scope is about what a system stores, processes or transmits.",
+    "choices": [
+      {
+        "text": "Nothing; every database of a shop is in scope",
+        "correct": false,
+        "why": "No. Scope follows card numbers, and the database never sees one."
+      },
+      {
+        "text": "It moves the database into a stricter scope",
+        "correct": false,
+        "why": "No. It moves it out."
+      },
+      {
+        "text": "It makes the provider's vault out of scope",
+        "correct": false,
+        "why": "No. The vault holds the numbers, so it is in scope."
+      },
+      {
+        "text": "The database, backups and analysts fall out of scope",
+        "correct": true,
+        "why": "Right. Never receiving a card number keeps them out."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4xnk288",
+    "version": 1,
+    "section": "a-searchable-stand-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can an HMAC from OpenBao be searched while a transit ciphertext cannot?",
+    "hint": "Compare the two HMACs of the same CPF.",
+    "choices": [
+      {
+        "text": "Equal CPFs give equal HMACs",
+        "correct": true,
+        "why": "Right. Encryption adds a random nonce, so two ciphertexts of one CPF differ."
+      },
+      {
+        "text": "HMACs are shorter",
+        "correct": false,
+        "why": "No. Length is not what makes a value searchable."
+      },
+      {
+        "text": "HMACs can be decrypted by the database",
+        "correct": false,
+        "why": "No. Nothing decrypts an HMAC; it is one-way."
+      },
+      {
+        "text": "The index stores the CPF beside the HMAC",
+        "correct": false,
+        "why": "No. The index holds only HMACs."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvga6h9b",
+    "version": 1,
+    "section": "a-searchable-stand-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an unkeyed hash of a CPF not a safe stand-in?",
+    "hint": "How many CPFs exist?",
+    "choices": [
+      {
+        "text": "Hashes collide too often for CPFs",
+        "correct": false,
+        "why": "No. Collisions are not the problem."
+      },
+      {
+        "text": "Hashes are reversible by design",
+        "correct": false,
+        "why": "No. They are one-way; the issue is how few inputs there are."
+      },
+      {
+        "text": "Every CPF can be hashed and compared in an afternoon",
+        "correct": true,
+        "why": "Right. Eleven digits is a small space for a computer."
+      },
+      {
+        "text": "PostgreSQL cannot index a hash",
+        "correct": false,
+        "why": "No. It indexes any text."
+      }
+    ]
+  },
+  {
+    "id": "ex-9042c53d",
+    "version": 1,
+    "section": "a-searchable-stand-in",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many HMACs appeared more than once when the unique index was refused?",
+    "hint": "The same person registered twice.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hwwq43s8",
+    "version": 1,
+    "section": "a-searchable-stand-in",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Support needs to read a CPF back to a customer. Why can it not use `cpf_hmac` for that?",
+    "hint": "What can be done with a one-way stand-in?",
+    "choices": [
+      {
+        "text": "The HMAC is masked in the view",
+        "correct": false,
+        "why": "No. The view shows the HMAC whole."
+      },
+      {
+        "text": "Support's token lacks the HMAC path",
+        "correct": false,
+        "why": "No. Its policy has that path."
+      },
+      {
+        "text": "HMACs expire after an hour",
+        "correct": false,
+        "why": "No. The token expires; the HMAC does not."
+      },
+      {
+        "text": "It is one-way; cpf_ct is decrypted",
+        "correct": true,
+        "why": "Right. Two columns, two jobs: one to find, one to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zqd8d0r",
+    "version": 1,
+    "section": "dropping-the-cpf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `customer_profile`, which never showed a CPF, block dropping the column?",
+    "hint": "Look at its inner query.",
+    "choices": [
+      {
+        "text": "Its inner query said c.*",
+        "correct": true,
+        "why": "Right. A * in a view is a dependency on every column; naming the columns removed it."
+      },
+      {
+        "text": "Views always depend on every column of their tables",
+        "correct": false,
+        "why": "No. Only on the columns they name, or all of them through *."
+      },
+      {
+        "text": "The age band was computed from the CPF",
+        "correct": false,
+        "why": "No. It was computed from birth_date."
+      },
+      {
+        "text": "Analysts had a grant on the cpf column",
+        "correct": false,
+        "why": "No. Grants do not block dropping a column."
+      }
+    ]
+  },
+  {
+    "id": "ex-fktz30ae",
+    "version": 1,
+    "section": "dropping-the-cpf",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of finding Paula by the CPF she reads out in order.",
+    "hint": "The database never sees the CPF.",
+    "items": [
+      "The customer reads out the CPF",
+      "The support application asks OpenBao for its HMAC",
+      "The view is searched by cpf_hmac",
+      "Carla sees the matching customer"
+    ]
+  },
+  {
+    "id": "ex-zcb04rr4",
+    "version": 1,
+    "section": "dropping-the-cpf",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the drop, which of these still holds a CPF in clear anywhere in Ipê's systems?",
+    "hint": "Think about copies made before today.",
+    "choices": [
+      {
+        "text": "A dump of sales.customers taken after the drop",
+        "correct": false,
+        "why": "No. The column no longer exists to be dumped."
+      },
+      {
+        "text": "The cpf_hmac index",
+        "correct": false,
+        "why": "No. It holds HMACs, from which no CPF can be computed."
+      },
+      {
+        "text": "A backup taken before the drop",
+        "correct": true,
+        "why": "Right. Dropping a column changes the database, not its old copies; lesson 10 deals with them."
+      },
+      {
+        "text": "The support view customer_card",
+        "correct": false,
+        "why": "No. It shows the HMAC and the ciphertext."
+      }
+    ]
+  },
+  {
+    "id": "ex-93k5e890",
+    "version": 1,
+    "section": "pseudonymisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The draft export replaced customer_id with its MD5. How did one command undo it?",
+    "hint": "How many ids are there?",
+    "choices": [
+      {
+        "text": "MD5 has a known inverse function",
+        "correct": false,
+        "why": "No. It has none; the space of ids was simply tiny."
+      },
+      {
+        "text": "It hashed ids 1 to 6,012 and compared",
+        "correct": true,
+        "why": "Right. An unkeyed hash of a small, known range is the value written differently."
+      },
+      {
+        "text": "It read the mapping from the database",
+        "correct": false,
+        "why": "No. It needed no mapping at all."
+      },
+      {
+        "text": "It asked OpenBao to decrypt the MD5",
+        "correct": false,
+        "why": "No. OpenBao was never involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-09yvjxvc",
+    "version": 1,
+    "section": "pseudonymisation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the analytics pseudonym use its own key, `ipe-analytics-ref`, rather than `ipe-cpf-index`?",
+    "hint": "Separate purposes should not join.",
+    "choices": [
+      {
+        "text": "ipe-cpf-index cannot compute HMACs of numbers",
+        "correct": false,
+        "why": "No. It computes an HMAC of any input."
+      },
+      {
+        "text": "Analysts are not allowed to read OpenBao keys",
+        "correct": false,
+        "why": "No. Nobody reads either key."
+      },
+      {
+        "text": "To keep the two purposes from joining",
+        "correct": true,
+        "why": "Right. An analytics export can then never be joined to the support index: one key per purpose keeps the pseudonyms apart."
+      },
+      {
+        "text": "Keys can only be used by one policy",
+        "correct": false,
+        "why": "No. A key can be named in several policies."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rbbdbbh",
+    "version": 1,
+    "section": "pseudonymisation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under the LGPD, pseudonymised data remains ___ data, because the controller holds the information that links it back.",
+    "hint": "The opposite of anonymous.",
+    "blanks": [
+      {
+        "accept": [
+          "personal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p1f4mmy2",
+    "version": 1,
+    "section": "quasi-identifiers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With birth date, sex and CEP released, how many of the 6,012 customers were alone in their group?",
+    "hint": "The first line of the result.",
+    "value": 5988,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-14hvprsk",
+    "version": 1,
+    "section": "quasi-identifiers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes a column a quasi-identifier?",
+    "hint": "Alone it is harmless.",
+    "choices": [
+      {
+        "text": "It holds a government number",
+        "correct": false,
+        "why": "No. That is a direct identifier."
+      },
+      {
+        "text": "It is encrypted",
+        "correct": false,
+        "why": "No. Encryption has nothing to do with it."
+      },
+      {
+        "text": "Harmless alone, identifying together",
+        "correct": true,
+        "why": "Right. Birth date, sex and postcode are the classic three."
+      },
+      {
+        "text": "It is the sensitive value the release is about",
+        "correct": false,
+        "why": "No. The sensitive value is what quasi-identifiers would expose."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fq2hp45",
+    "version": 1,
+    "section": "quasi-identifiers",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three releases from most customers alone in their group to fewest.",
+    "hint": "Coarser is safer.",
+    "items": [
+      "birth date, sex, CEP",
+      "birth year, sex, city",
+      "decade of birth, sex, state"
+    ]
+  },
+  {
+    "id": "ex-g4x4vq4s",
+    "version": 1,
+    "section": "k-anonymity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The release by decade, sex and state had 61 groups smaller than 5. Is it 5-anonymous?",
+    "hint": "Every group needs at least k people.",
+    "choices": [
+      {
+        "text": "Yes, because only 22 customers are alone",
+        "correct": false,
+        "why": "No. k = 5 asks for groups of five, not just no groups of one."
+      },
+      {
+        "text": "No; its smallest group has one person",
+        "correct": true,
+        "why": "Right. It needs more generalisation or suppression."
+      },
+      {
+        "text": "Yes, because there are 246 groups",
+        "correct": false,
+        "why": "No. The number of groups says nothing about their sizes."
+      },
+      {
+        "text": "It cannot be measured without names",
+        "correct": false,
+        "why": "No. It was measured, with no names."
+      }
+    ]
+  },
+  {
+    "id": "ex-rb8wnrrr",
+    "version": 1,
+    "section": "k-anonymity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every customer in a 5-anonymous group bought the same psychiatric medicine. What does k-anonymity fail to prevent?",
+    "hint": "You do not need the row to learn the value.",
+    "choices": [
+      {
+        "text": "Finding each person's exact row in the release",
+        "correct": false,
+        "why": "No. That is what the group of five does prevent."
+      },
+      {
+        "text": "Counting the group",
+        "correct": false,
+        "why": "No. Counting is harmless here."
+      },
+      {
+        "text": "Joining two releases made at different times",
+        "correct": false,
+        "why": "No. That is a different weakness, also real."
+      },
+      {
+        "text": "The medicine of anyone known to be in it",
+        "correct": true,
+        "why": "Right. l-diversity asks that the sensitive values in a group vary."
+      }
+    ]
+  },
+  {
+    "id": "ex-2azp2msn",
+    "version": 1,
+    "section": "k-anonymity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many groups did the decade, sex and state release have in all?",
+    "hint": "The last column.",
+    "value": 246,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ga7b8var",
+    "version": 1,
+    "section": "publishing-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The regional report suppresses counts under 10 but also prints the national total. What goes wrong?",
+    "hint": "Subtract.",
+    "choices": [
+      {
+        "text": "The total gives them back",
+        "correct": true,
+        "why": "Right. Subtracting the published cells from the total recovers the suppressed ones; with one suppressed cell, that cell exactly."
+      },
+      {
+        "text": "The total is always below the threshold",
+        "correct": false,
+        "why": "No. The total is the largest number in the report."
+      },
+      {
+        "text": "Nothing; totals are anonymous",
+        "correct": false,
+        "why": "No. A total with the other cells gives the hidden ones back."
+      },
+      {
+        "text": "The report becomes too long",
+        "correct": false,
+        "why": "No. Length is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba82cpse",
+    "version": 1,
+    "section": "publishing-aggregates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many cities in the June report were shown as `<10`?",
+    "hint": "Count them.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-j2rkpjc9",
+    "version": 1,
+    "section": "anonymisation-in-law",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under article 12 of the LGPD, when is anonymised data treated as personal data again?",
+    "hint": "Two conditions, one about own means, one about reasonable effort.",
+    "choices": [
+      {
+        "text": "When it is stored outside Brazil",
+        "correct": false,
+        "why": "No. Location is a transfer question, not an anonymisation one."
+      },
+      {
+        "text": "When it is older than five years",
+        "correct": false,
+        "why": "No. Age has nothing to do with it."
+      },
+      {
+        "text": "When it is reversed by own means, or reversible with reasonable effort",
+        "correct": true,
+        "why": "Right. Cost and time to reverse, with the technology available, decide what is reasonable."
+      },
+      {
+        "text": "Never; once anonymised, always anonymised",
+        "correct": false,
+        "why": "No. The law ties it to reasonable means at the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-t00q76dx",
+    "version": 1,
+    "section": "anonymisation-in-law",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dataset was anonymous when released. Two years later, a new public dataset makes joining it cheap. What is it now?",
+    "hint": "At the time of the processing.",
+    "choices": [
+      {
+        "text": "Still anonymous, because it was when released",
+        "correct": false,
+        "why": "No. The test is the means available at the time of processing, and the time moved."
+      },
+      {
+        "text": "Possibly personal data again",
+        "correct": true,
+        "why": "Right. Releases are re-examined, not certified once."
+      },
+      {
+        "text": "Illegal to hold at all",
+        "correct": false,
+        "why": "No. Personal data can be held with a legal basis."
+      },
+      {
+        "text": "Sensitive data under article 11",
+        "correct": false,
+        "why": "No. Re-identifiable does not mean sensitive."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fcm29vk",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to the technique that serves it.",
+    "hint": "Who needs what from the data?",
+    "pairs": [
+      {
+        "left": "support confirming a caller",
+        "right": "masking"
+      },
+      {
+        "left": "finding a customer by CPF",
+        "right": "a keyed HMAC"
+      },
+      {
+        "left": "analysts studying repeat purchases",
+        "right": "a pseudonym"
+      },
+      {
+        "left": "a public report by city",
+        "right": "counts with small cells suppressed"
+      }
+    ]
+  },
+  {
+    "id": "ex-wtv7rgcs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner asks for 'anonymised' order data with each customer's year of birth, sex, city and the full list of products. What is the right first answer?",
+    "hint": "Measure before you call it anything.",
+    "choices": [
+      {
+        "text": "Send it; there are no names or CPFs",
+        "correct": false,
+        "why": "No. 670 customers were alone on year, sex and city alone, before adding any product."
+      },
+      {
+        "text": "Encrypt the file and send it",
+        "correct": false,
+        "why": "No. The partner decrypts it and has exactly the same data."
+      },
+      {
+        "text": "Ask whether counts would do, and measure any rows before sending",
+        "correct": true,
+        "why": "Right. Treat it as personal data until a measurement says otherwise."
+      },
+      {
+        "text": "Replace customer_id with its MD5 and send",
+        "correct": false,
+        "why": "No. Section 8 reversed that in one command."
+      }
+    ]
+  }
+]

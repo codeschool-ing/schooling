@@ -1,0 +1,43 @@
+---
+title: Depois da decisão: fazendo durar
+version: 1
+---
+
+A reunião que aprova uma mudança é onde os analistas costumam parar de prestar atenção, e **é onde a maioria
+das mudanças começa a falhar**. Os procedimentos voltam ao que eram, a medida nova sai da pauta, as pessoas
+que conduziram vão para outra coisa. Fazer uma mudança durar é o R do ADKAR, e dá trabalho.
+
+## O que o piloto mostrou
+
+Nas oito semanas, a fatia de primeiras entregas atrasadas no interior caiu de 23,6% antes do piloto para
+16,5% na primeira semana, depois 10,8% e 9,5%, e **ficou em 8% ou menos da quarta semana em diante**,
+terminando em 7,1%. Na capital, onde a conferência ficou, ela variou entre 12,2% e 14,0%, perto do nível de
+sempre. A salvaguarda segurou: as devoluções por endereço errado ficaram entre 0,56% e 0,84% dos primeiros
+pedidos, abaixo do 1% combinado antes.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 680 290\" role=\"img\" data-fig=\"l14-pilot\" aria-label=\"Fatia semanal de primeiras entregas atrasadas nas oito semanas do piloto, de 1º de setembro a 20 de outubro de 2025. O interior, sem a conferência manual, começa em 23,6% antes do piloto, cai para 16,5%, 10,8% e 9,5% e depois fica em 8% ou menos a partir da quarta semana, terminando em 7,1%. A capital, que manteve a conferência, fica entre 12,2% e 14,0%.\"><path d=\"M70.0 30.0 L70.0 220.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M70.0 183.5 L610.0 183.5\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"64.0\" y=\"183.5\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">5%</text><path d=\"M70.0 146.9 L610.0 146.9\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"64.0\" y=\"146.9\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">10%</text><path d=\"M70.0 110.4 L610.0 110.4\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"64.0\" y=\"110.4\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">15%</text><path d=\"M70.0 73.8 L610.0 73.8\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"64.0\" y=\"73.8\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">20%</text><path d=\"M70.0 37.3 L610.0 37.3\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"64.0\" y=\"37.3\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">25%</text><text x=\"70.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">antes</text><text x=\"137.5\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">01/09</text><text x=\"205.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">08/09</text><text x=\"272.5\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">15/09</text><text x=\"340.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">22/09</text><text x=\"407.5\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">29/09</text><text x=\"475.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">06/10</text><text x=\"542.5\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">13/10</text><text x=\"610.0\" y=\"234.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">20/10</text><path d=\"M70.0 220.0 L610.0 220.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M70.0 161.5 L610.0 161.5\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"5 3\"></path><text x=\"616.0\" y=\"161.5\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">meta 8%</text><path d=\"M70.0 47.5 L137.5 99.4 L205.0 141.1 L272.5 150.6 L340.0 161.5 L407.5 162.3 L475.0 168.1 L542.5 165.2 L610.0 168.1\" stroke=\"var(--phosphor)\" stroke-width=\"2.2\" fill=\"none\"></path><path d=\"M70.0 122.8 L137.5 117.7 L205.0 125.7 L272.5 128.7 L340.0 125.7 L407.5 129.4 L475.0 130.1 L542.5 124.3 L610.0 130.8\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\" stroke-dasharray=\"4 3\"></path><circle cx=\"70.0\" cy=\"47.5\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"137.5\" cy=\"99.4\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"205.0\" cy=\"141.1\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"272.5\" cy=\"150.6\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"340.0\" cy=\"161.5\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"407.5\" cy=\"162.3\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"475.0\" cy=\"168.1\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"542.5\" cy=\"165.2\" r=\"3\" fill=\"var(--phosphor)\"></circle><circle cx=\"610.0\" cy=\"168.1\" r=\"3\" fill=\"var(--phosphor)\"></circle><text x=\"76.0\" y=\"37.5\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">23,6%</text><text x=\"616.0\" y=\"180.1\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">7,1%</text><text x=\"616.0\" y=\"130.8\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">capital</text><text x=\"218.5\" y=\"103.1\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">interior, sem conferência</text><text x=\"340.0\" y=\"254.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">semana do piloto, 2025</text></svg>", "caption": "O interior chegou à meta na quarta semana e ficou lá; a capital, que manteve a conferência, não se mexeu. Essa comparação é o que deixou o Paulo decidir em dez minutos.", "same": ["capital"]}
+```
+
+Em 27 de outubro, o Paulo decidiu estender a mudança à capital a partir de novembro. A decisão levou dez
+minutos, porque o critério de sucesso, a salvaguarda e a regra de decisão tinham sido escritos antes de o
+piloto começar.
+
+## O que a mantém
+
+- **A medida continua visível.** A taxa de primeira entrega fica no canto superior esquerdo do painel, com a
+  meta, e entre as medidas trimestrais do conselho, como a aula 4 pediu.
+- **Ela entra nas metas de alguém.** A partir do ano seguinte, os objetivos da equipe de logística incluem a
+  taxa de primeira entrega, e não só a geral. Uma medida pela qual ninguém responde se perde.
+- **Uma conferência aos trinta, sessenta e noventa dias.** A Marina marcou três revisões curtas depois da
+  extensão. A de noventa dias é a que mais importa, porque é a primeira vez que a medida consequente, o
+  cancelamento dos clientes cuja primeira caixa veio depois da mudança, pode ser lida.
+- **Um nome para o que fazer se escorregar.** Se a taxa passar de 10% por duas semanas seguidas, a equipe da
+  Sandra confere se a consulta deixou de confirmar endereços, antes de alguém culpar os motoristas.
+
+## O último trabalho do analista
+
+O último trabalho do analista numa mudança é **fechar o ciclo**: dizer, com dados, se o que deveria acontecer
+aconteceu. Na Faro, isso significa a taxa de cancelamento das coortes de outono, lida no começo de 2026. Se
+ela caiu, a história que começou na aula 1 tem um fim. Se não caiu, a próxima análise começa ali, e o hábito
+da aula 12 de dizer o que mudaria a sua opinião é o que torna esse resultado útil, e não constrangedor.

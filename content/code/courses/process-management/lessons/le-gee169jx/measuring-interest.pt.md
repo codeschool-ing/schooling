@@ -7,7 +7,7 @@ A coisa mais útil que um time pode fazer pela sua dívida técnica é **medir o
 
 ## Duas dívidas, com preço
 
-As duas maiores dívidas do time Agenda, pela planilha do curso:
+As duas maiores dívidas do time Agenda, como o time as registrou:
 
 **A suíte de testes instável.** Cinco desenvolvedores perdem cada um cerca de meia hora por dia rodando de novo testes que falham ao acaso. Numa Sprint de dez dias, isso dá:
 
