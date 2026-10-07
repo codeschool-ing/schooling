@@ -35,8 +35,9 @@ de um contrato.
 ## Um aviso sobre esta aula, e ele importa
 
 Toda outra aula deste curso rodou seus exemplos num servidor e mostrou o que voltou. As
-transcrições das aulas 9 a 12 são reais: um PostgreSQL, um MySQL, um MariaDB e um SQLite, cada um
-carregado com a loja da aula 1, com a saída colada sem edição.
+transcrições são reais: um PostgreSQL em toda aula, o que a aula 1 fez você instalar, e na aula 12
+um MySQL, um MariaDB e um SQLite ao lado dele, cada um carregado com a loja da aula 1, com a saída
+colada sem edição.
 
 **Esta aula não tem um Oracle para rodar.** Não existe um Oracle Database gratuito e
 redistribuível que possa ocupar o mesmo lugar que aqueles quatro ocuparam, e inventar uma sessão de
