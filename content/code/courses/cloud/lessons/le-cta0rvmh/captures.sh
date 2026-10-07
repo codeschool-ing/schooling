@@ -25,10 +25,11 @@
 # reaches it: only the variables the transcript shows being exported.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the price cache,
-# already filled; moto_server started in the background with its log going to
-# moto.log; the two files that get uploaded (a 100-byte cat.jpg and a 6-byte
-# report.txt) written into a scratch directory. The prompt shows ~/cloud whatever
-# directory the command ran in.
+# already filled, and a scratch directory standing in for ~/cloud. Starting
+# moto_server and writing the two files it receives are shown and typed (block
+# moto), since 2026-10-07; the session from there on was recorded again that
+# day, as the user ana with the lab of lesson 1 (MOTO_VENV=~/cloud/venv,
+# AWS_BIN=~/.local/bin).
 #
 # The timestamps in the listings and the version ids moto makes up change on every
 # run; the lesson quotes the run recorded below and says so where it matters.
@@ -71,11 +72,16 @@ run "python3 prices.py ec2 | grep -A3 '^EBS'"
 WORK=$(mktemp -d)
 trap 'kill "$MOTO_PID" 2>/dev/null; rm -rf "$WORK"' EXIT
 cd "$WORK" || exit 1
+block moto
+# moto_server is started the way the student starts it, in the background of
+# the same shell; the PATH is the virtual environment's, as lesson 1 leaves it
+show 'moto_server -p 5000 > moto.log 2>&1 &'
 "$MOTO_VENV/bin/moto_server" -p 5000 > moto.log 2>&1 &
 MOTO_PID=$!
 for _ in $(seq 40); do curl -s -o /dev/null http://127.0.0.1:5000/ && break; sleep 0.25; done
-head -c 100 /dev/zero | tr '\0' 'x' > cat.jpg
-printf 'hello\n' > report.txt
+run "head -c 100 /dev/zero | tr '\\0' 'x' > cat.jpg"
+run "printf 'hello\\n' > report.txt"
+run 'wc -c cat.jpg report.txt'
 
 block s3-by-hand
 show "export $EXPORTS"

@@ -1,6 +1,6 @@
 ---
 title: A bucket on the laptop
-version: 1
+version: 2
 ---
 
 The S3 interface is HTTP, so it can be imitated. **moto** is a Python program written for testing
@@ -8,7 +8,26 @@ code that talks to AWS: `moto_server` listens on a port of the laptop and answer
 way S3 answers them, keeping the objects in its own memory. This section points the real AWS CLI at
 it, which shows the shape of the interface: the requests, the answers, what a key and a prefix are.
 **It says nothing about S3's latency, durability or price.** Nothing it stores leaves the laptop, and
-it accepts credentials AWS would refuse. The lesson's `captures.sh` says how to run the same session.
+it accepts credentials AWS would refuse.
+
+Lesson 1 installed moto in the course's virtual environment. Start it in the background, with its
+log going to a file this section reads later, and make two small files to upload: a "photo" of a
+hundred bytes, all of them `x`, which S3 has no opinion about, and a report of one line:
+
+```
+ana@laptop:~/cloud$ moto_server -p 5000 > moto.log 2>&1 &
+ana@laptop:~/cloud$ head -c 100 /dev/zero | tr '\0' 'x' > cat.jpg
+ana@laptop:~/cloud$ printf 'hello\n' > report.txt
+ana@laptop:~/cloud$ wc -c cat.jpg report.txt
+100 cat.jpg
+  6 report.txt
+106 total
+```
+
+The `&` at the end of the first line runs moto in the background, so the same terminal stays free
+for the rest of the session; an interactive shell answers it with a job number and a process id.
+Give it a second to start before the next command. When you finish, `kill %1` stops it, and its
+objects go with it, because it kept them in memory.
 
 The CLI has to be told where to send its requests and needs some credentials to sign them with.
 Four variables do both: the word `test` as the key pair, a region, and moto's address instead of
@@ -34,8 +53,8 @@ ana@laptop:~/cloud$ aws s3 ls s3://ana-uploads
                            PRE photos/
                            PRE reports/
 ana@laptop:~/cloud$ aws s3 ls s3://ana-uploads --recursive
-2026-09-28 15:15:51        100 photos/2026/cat.jpg
-2026-09-28 15:15:53          6 reports/q3.txt
+2026-10-07 07:57:11        100 photos/2026/cat.jpg
+2026-10-07 07:57:12          6 reports/q3.txt
 ana@laptop:~/cloud$ aws s3api list-objects-v2 --bucket ana-uploads --query 'Contents[].Key'
 [
     "photos/2026/cat.jpg",
