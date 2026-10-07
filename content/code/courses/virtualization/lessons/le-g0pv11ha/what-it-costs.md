@@ -1,6 +1,6 @@
 ---
 title: What it is for, and what it costs
-version: 1
+version: 2
 ---
 
 What a support technician uses virtual machines for, in the order you are likely to meet them:
@@ -17,7 +17,7 @@ What a support technician uses virtual machines for, in the order you are likely
   what makes breaking things on purpose affordable.
 
 None of it is free. **Everything a guest has, the host gives up.** The 1 GiB guest here cost the host
-about 1.5 GiB while it ran. Its two processors are time taken from the host's 4, and five
+about 1.6 GiB while it ran. Its two processors are time taken from the host's 4, and five
 busy guests on four processors take turns. Its disk grows as it writes, and ten overlays on one base
 can fill a host's disk slowly, where nobody is watching. And a guest is slower than the host at
 anything that goes through the hypervisor: a little slower with the processor's help, a lot slower
