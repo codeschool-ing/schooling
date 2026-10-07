@@ -32,7 +32,7 @@ than it does outside — which is why a file written by a container turns up own
 
 ```
 ana@vm:~/perm$ ls -l public.txt
--rw-r--r-- 1 ana ana 6 Sep 14 22:44 public.txt
+-rw-r--r-- 1 ana ana 6 Oct  7 11:27 public.txt
 ana@vm:~/perm$ chown bruno public.txt
 chown: changing ownership of 'public.txt': Operation not permitted
 ```

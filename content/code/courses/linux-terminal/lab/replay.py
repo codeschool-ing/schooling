@@ -39,7 +39,7 @@ PROMPT = re.compile(r"^(?:(?P<user>[a-z][a-z0-9]*)@" + HOST +
                     r":(?P<cwd>[^\s$#]*)(?P<sigil>[$#])(?: |$)|(?P<bare>\$) )(?P<cmd>.*)$")
 SENTINEL = "@@REPLAY@@"
 MARK = 'printf "@@REP""LAY@@ %s %s\\n" "$?" "$PWD"'
-PASSWORDS = {"ana": "ana-lab-password", "bruno": "bruno-lab-password", "carla": "carla-lab-password"}
+PASSWORDS = {"ana": "ana-lab-password", "bruno": "bruno-lab-password", "carla": "practice"}
 SCREEN = {"top", "htop", "vim", "vi", "nano", "emacs", "less", "more", "watch",
           "vimtutor", "passwd", "mc", "ssh", "sudoedit", "visudo", "crontab -e"}
 # Commands that read the keyboard when given no file.
@@ -204,26 +204,48 @@ def screen(cmd):
 
 class Machine:
     def __init__(self, cols):
-        self.cols, self.shells, self.stack = cols, {}, ["ana"]
+        self.cols, self.shells, self.stack = cols, {}, [("ana", True)]
 
     def shell(self, user):
         if user not in self.shells:
             self.shells[user] = Shell(user, self.cols)
         return self.shells[user]
 
-    def step(self, user, cwd, cmd, answers=()):
-        user = user or self.stack[-1]
+    def step(self, user, cwd, cmd, answers=(), expect=()):
+        user = user or self.stack[-1][0]
         c = cmd.strip()
+        if re.match(r"^sudo\b", c) and user != "root" and c not in ("sudo -k", "sudo -v"):
+            # Whether sudo asks for the password depends on when it last did,
+            # which is the session's history and not the command's. Ask exactly
+            # where the transcript shows it asking.
+            pre = self.shell(user)
+            asks = bool(expect) and expect[0].startswith("[sudo] password for")
+            pre.run("sudo -k" if asks else "sudo -v")
         m = re.match(r"^(?:sudo -i(?:u (\w+))?|sudo su -(?: (\w+))?|su - (\w+)|sudo -s)$", c)
         if m:
-            self.stack.append(m.group(1) or m.group(2) or m.group(3) or "root")
-            return "", 0
+            # Becoming somebody else opens a second shell; here it is a shell of
+            # its own, kept apart. What the first shell would have printed — sudo
+            # asking for the password, unless it remembers — comes from `sudo -v`.
+            out, st = "", 0
+            if c.startswith("sudo"):
+                sh = self.shell(user)
+                if cwd:
+                    sh.cd(cwd)
+                out, st = sh.run("sudo -v")
+            login = c != "sudo -s"
+            self.stack.append((m.group(1) or m.group(2) or m.group(3) or "root", login))
+            return out, st
         if c in ("exit", "logout") and len(self.stack) > 1:
-            self.stack.pop()
-            return "", 0
+            _, login = self.stack.pop()
+            return ("logout\n" if login else ""), 0
         sh = self.shell(user)
         if cwd:
             sh.cd(cwd)
+        if c.startswith("newgrp"):
+            # A new shell starts inside this one and has never heard of the marker.
+            sh._raw(cmd + "\n")
+            time.sleep(0.5)
+            return sh.run("PROMPT_COMMAND='" + MARK + "'; unset HISTFILE", answers=answers)
         return sh.run(cmd, answers=answers)
 
     def close(self):
@@ -235,7 +257,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("files", nargs="+")
     ap.add_argument("--write", action="store_true")
-    ap.add_argument("--only", default="", help="comma-separated fence numbers (per run)")
+    ap.add_argument("--only", default="", help="write only these fence numbers; every fence still runs")
     ap.add_argument("--setup", action="store_true", help="run `sh` fences instead of skipping them")
     ap.add_argument("--cols", type=int, default=100)
     ap.add_argument("--quiet", action="store_true", help="print only fences that differ")
@@ -252,12 +274,15 @@ def main():
                     sh = mach.shell("ana")
                     out, st = sh.run("{\n" + "\n".join(body) + "\n}")
                     print(f"# {path}:{start} setup ran, status {st}" + (f"\n{out}" if out.strip() else ""))
+                    if re.search(r"^#.*\blog out\b", "\n".join(body), re.I | re.M):
+                        # The block ends by telling the student to sign in again, so a
+                        # group added to them applies: start every shell afresh.
+                        mach.close()
+                        mach.shells = {}
                     continue
                 if not is_transcript(lang, body):
                     continue
                 n += 1
-                if only and n not in only:
-                    continue
                 got, manual = [], False
                 for prompt, user, cwd, cmd, expect in steps(body):
                     got.append(prompt)
@@ -265,7 +290,7 @@ def main():
                         manual = True
                         break
                     answers = [m.group(1) for m in (re.search(r"\? (y|n|yes|no)$", l) for l in expect) if m]
-                    out, st = mach.step(user, cwd, cmd, answers)
+                    out, st = mach.step(user, cwd, cmd, answers, expect)
                     if st == -1 and "[replay: TIMEOUT]" in out:
                         manual = True
                         break
@@ -286,7 +311,8 @@ def main():
                 print(f"## [{n}] {path}:{start} DIFFERS")
                 for d in difflib.unified_diff(want, got, "prose", "replay", lineterm="", n=1):
                     print("   " + d)
-                edits.append((start, end, got))
+                if not only or n in only:
+                    edits.append((start, end, got))
             if a.write and edits:
                 for start, end, got in reversed(edits):
                     lines[start:end] = got

@@ -1,6 +1,6 @@
 ---
 title: Reading a mode, character by character
-version: 1
+version: 2
 ---
 
 Ten characters, and they are the first thing on every line of a long listing.
@@ -47,11 +47,12 @@ them is worth a second look.
 
 ```
 bruno@vm:/srv/perm$ ls -l
-total 16
--rw------- 1 ana ana   9 Sep 14 22:45 private.txt
--rw-r--r-- 1 ana ana  22 Sep 14 22:45 public.txt
--rwxr-xr-x 1 ana ana  34 Sep 14 22:45 script.sh
--rw-r----- 1 ana team 13 Sep 14 22:45 teamonly.txt
+total 20
+-rw------- 1 ana ana   9 Oct  7 11:27 private.txt
+-rw-r--r-- 1 ana ana  22 Oct  7 11:27 public.txt
+-rwxr-xr-x 1 ana ana  34 Oct  7 11:27 script.sh
+-rw-r----- 1 ana team 13 Oct  7 11:27 teamonly.txt
+-r--rwxrwx 1 ana team  9 Oct  7 11:27 trap.txt
 ```
 
 **`private.txt` — `-rw-------`.** A file. The owner reads and writes. The group gets nothing.
@@ -69,7 +70,13 @@ else gets nothing, which is the `---` at the end, and it is why carla was refuse
 ## `x` is the one with two meanings
 
 On a **file**, `x` means *this may be executed*. Without it, the file is data no matter what is
-inside it:
+inside it. A two-line script, written without it:
+
+```sh
+mkdir -p ~/x
+cd ~/x
+printf '#!/bin/bash\necho "the script ran"\n' > script.sh
+```
 
 ```
 ana@vm:~/x$ ls -l script.sh

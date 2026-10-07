@@ -20,3 +20,9 @@ done
 umount /mnt/backups 2>/dev/null || true
 rm -rf /root/img /mnt/backups
 losetup -D 2>/dev/null || true
+for g in team deploy; do groupdel "$g" 2>/dev/null || true; done
+rm -rf /srv/perm /srv/closed /srv/dirbits /srv/team /tmp/anas.txt /tmp/newgrp-test.txt /root/marker.txt
+# A stock Ubuntu has no group above the ordinary range, and this sandbox has
+# one at 30001; capped here, groupadd numbers the course's groups the way a
+# fresh machine would, 1003 onwards, which is what the transcripts show.
+sed -i 's/^GID_MAX\t\t\t60000/GID_MAX\t\t\t30000/' /etc/login.defs

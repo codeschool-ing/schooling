@@ -1,6 +1,6 @@
 ---
 title: Três públicos, e só um deles é você
-version: 1
+version: 2
 ---
 
 Todo arquivo tem um **dono** e um **grupo**, e a aula 3 seção 06 já te mostrou os dois:
@@ -20,6 +20,52 @@ A `ana` é dona. O grupo é `team`. E os nove caracteres da frente são três co
 O Linux chama de *user*, *group* e *other* — **u**, **g**, **o** — que é de onde o `chmod u+x`
 tira as letras dele.
 
+## As contas e os arquivos que esta aula usa
+
+Permissão é sobre quem pergunta, então esta aula precisa de mais de uma pessoa. O `bruno` foi criado
+na seção 14 da aula 3; isto cria a `carla`, um grupo chamado `team` com a `ana` e o `bruno` dentro, e
+alguns arquivos e diretórios em `/srv` com exatamente as permissões que as seções abaixo leem. A
+carla ganha uma senha, `practice`, porque a seção 11 a faz digitar uma. Copie tudo para o terminal;
+ele pede a sua senha uma vez:
+
+```sh
+id bruno >/dev/null 2>&1 || sudo useradd -m -s /bin/bash bruno
+sudo groupadd team
+sudo useradd -m -s /bin/bash carla
+echo 'carla:practice' | sudo chpasswd
+sudo usermod -aG team ana
+sudo usermod -aG team bruno
+sudo mkdir -p /srv/perm /srv/closed /srv/dirbits/r /srv/dirbits/rx /srv/dirbits/x /srv/team
+cd /srv/perm
+printf 'a secret\n' | sudo tee private.txt > /dev/null
+printf 'anybody can read this\n' | sudo tee public.txt > /dev/null
+printf '#!/bin/bash\necho "the script ran"\n' | sudo tee script.sh > /dev/null
+printf 'for the team\n' | sudo tee teamonly.txt > /dev/null
+printf 'the trap\n' | sudo tee trap.txt > /dev/null
+sudo chown ana:ana private.txt public.txt script.sh
+sudo chown ana:team teamonly.txt trap.txt
+sudo chmod 600 private.txt
+sudo chmod 644 public.txt
+sudo chmod 755 script.sh
+sudo chmod 640 teamonly.txt
+sudo chmod 477 trap.txt
+printf 'readable\n' | sudo tee /srv/closed/readable.txt > /dev/null
+sudo chown -R ana:ana /srv/closed
+sudo chmod 700 /srv/closed
+for d in r rx x; do printf 'the contents\n' | sudo tee /srv/dirbits/$d/file.txt > /dev/null; done
+sudo chown -R ana:ana /srv/dirbits
+sudo chmod 444 /srv/dirbits/r
+sudo chmod 555 /srv/dirbits/rx
+sudo chmod 111 /srv/dirbits/x
+sudo chown root:team /srv/team
+sudo chmod 2775 /srv/team
+cd
+# Then log out and back in, so that ana's new group applies to her (section 08 says why).
+```
+
+As aulas 5 e 7 também mexem na máquina, e um snapshot tirado agora é um bom lugar para onde voltar.
+Para ser outra pessoa por um instante, `sudo -iu bruno` abre um shell como ele e `exit` o fecha.
+
 ## Três pessoas, um arquivo, três respostas
 
 Aqui está o mesmo diretório lido por três contas. O `bruno` está no grupo `team`; a `carla` não.
@@ -37,11 +83,12 @@ uid=1001(ana) gid=1002(ana) groups=1002(ana),27(sudo),1004(team)
 bruno@vm:/srv/perm$ id
 uid=1002(bruno) gid=1003(bruno) groups=1003(bruno),1004(team)
 bruno@vm:/srv/perm$ ls -l
-total 16
--rw------- 1 ana ana   9 Sep 14 22:45 private.txt
--rw-r--r-- 1 ana ana  22 Sep 14 22:45 public.txt
--rwxr-xr-x 1 ana ana  34 Sep 14 22:45 script.sh
--rw-r----- 1 ana team 13 Sep 14 22:45 teamonly.txt
+total 20
+-rw------- 1 ana ana   9 Oct  7 11:27 private.txt
+-rw-r--r-- 1 ana ana  22 Oct  7 11:27 public.txt
+-rwxr-xr-x 1 ana ana  34 Oct  7 11:27 script.sh
+-rw-r----- 1 ana team 13 Oct  7 11:27 teamonly.txt
+-r--rwxrwx 1 ana team  9 Oct  7 11:27 trap.txt
 bruno@vm:/srv/perm$ cat public.txt
 anybody can read this
 bruno@vm:/srv/perm$ cat private.txt
@@ -49,7 +96,7 @@ cat: private.txt: Permission denied
 bruno@vm:/srv/perm$ cat teamonly.txt
 for the team
 bruno@vm:/srv/perm$ echo 'bruno' >> teamonly.txt
-bash: line 11: teamonly.txt: Permission denied
+bash: teamonly.txt: Permission denied
 ```
 
 Quatro comandos, quatro resultados diferentes, e cada um decidido por um conjunto diferente de três
@@ -88,13 +135,13 @@ dos dois* — está errada, e aqui está um arquivo feito para provar:
 
 ```
 ana@vm:/srv/perm$ ls -l trap.txt
--r--rwxrwx 1 ana team 9 Sep 14 22:45 trap.txt
+-r--rwxrwx 1 ana team 9 Oct  7 11:27 trap.txt
 ana@vm:/srv/perm$ id -nG
 ana sudo team
 ana@vm:/srv/perm$ cat trap.txt
 the trap
 ana@vm:/srv/perm$ echo 'ana' >> trap.txt
-bash: line 7: trap.txt: Permission denied
+bash: trap.txt: Permission denied
 ```
 
 Leia o modo: `r--` para o dono, `rwx` para o grupo, `rwx` para todo o resto. **A ana é dona, a ana

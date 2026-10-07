@@ -1,12 +1,12 @@
 ---
 title: Lendo um modo, caractere por caractere
-version: 1
+version: 2
 ---
 
 Dez caracteres, e eles são a primeira coisa de cada linha de uma listagem longa.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"A string de modo -rwxr-xr-- dividida em quatro partes: um caractere inicial de tipo e depois três grupos de três caracteres rotulados o dono, o grupo e todo o resto, com os dígitos octais 7, 5 e 4 embaixo deles.\"><rect x=\"182\" y=\"16\" width=\"356\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"207.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--amber)\">-</text><text x=\"241.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--phosphor)\">r</text><text x=\"275.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--phosphor)\">w</text><text x=\"309.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--phosphor)\">x</text><text x=\"343.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper)\">r</text><text x=\"377.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper)\">-</text><text x=\"411.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper)\">x</text><text x=\"445.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper-dim)\">r</text><text x=\"479.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper-dim)\">-</text><text x=\"513.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper-dim)\">-</text><path d=\"M207.0 82 L207.0 100\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"207.0\" y=\"118\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--amber)\">tipo</text><path d=\"M227.0 88 L227.0 82 L323.0 82 L323.0 88\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"275.0\" y=\"110\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">o dono</text><text x=\"275.0\" y=\"136\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"17\" fill=\"var(--phosphor)\">7</text><path d=\"M329.0 88 L329.0 82 L425.0 82 L425.0 88\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"377.0\" y=\"110\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">o grupo</text><text x=\"377.0\" y=\"136\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"17\" fill=\"var(--phosphor)\">5</text><path d=\"M431.0 88 L431.0 82 L527.0 82 L527.0 88\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"479.0\" y=\"110\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">todo o resto</text><text x=\"479.0\" y=\"136\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"17\" fill=\"var(--phosphor)\">4</text><text x=\"360\" y=\"172\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">ler 4, escrever 2, executar 1 — somados dentro de cada grupo de três</text></svg>", "caption": "Dez caracteres: um para o tipo da coisa, depois três públicos de três. Só uma das três linhas vale para você, e é a primeira que casa."}
+{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"The mode string -rwxr-xr-- split into four parts: a leading type character, then three groups of three characters labelled the owner, the group and everybody else, with the octal digits 7, 5 and 4 under them.\"><rect x=\"182\" y=\"16\" width=\"356\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"207.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--amber)\">-</text><text x=\"241.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--phosphor)\">r</text><text x=\"275.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--phosphor)\">w</text><text x=\"309.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--phosphor)\">x</text><text x=\"343.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper)\">r</text><text x=\"377.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper)\">-</text><text x=\"411.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper)\">x</text><text x=\"445.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper-dim)\">r</text><text x=\"479.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper-dim)\">-</text><text x=\"513.0\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"26\" fill=\"var(--paper-dim)\">-</text><path d=\"M207.0 82 L207.0 100\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"207.0\" y=\"118\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--amber)\">type</text><path d=\"M227.0 88 L227.0 82 L323.0 82 L323.0 88\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"275.0\" y=\"110\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">the owner</text><text x=\"275.0\" y=\"136\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"17\" fill=\"var(--phosphor)\">7</text><path d=\"M329.0 88 L329.0 82 L425.0 82 L425.0 88\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"377.0\" y=\"110\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">the group</text><text x=\"377.0\" y=\"136\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"17\" fill=\"var(--phosphor)\">5</text><path d=\"M431.0 88 L431.0 82 L527.0 82 L527.0 88\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\"></path><text x=\"479.0\" y=\"110\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">everybody else</text><text x=\"479.0\" y=\"136\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"17\" fill=\"var(--phosphor)\">4</text><text x=\"360\" y=\"172\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">read 4, write 2, execute 1 — added up within each group of three</text></svg>", "caption": "Ten characters: one for the kind of thing, then three audiences of three. Only one of the three rows applies to you, and it is the first one that matches."}
 ```
 
 ## Caractere 1: o tipo, que não é permissão
@@ -47,11 +47,12 @@ não é nenhum deles merece um segundo olhar.
 
 ```
 bruno@vm:/srv/perm$ ls -l
-total 16
--rw------- 1 ana ana   9 Sep 14 22:45 private.txt
--rw-r--r-- 1 ana ana  22 Sep 14 22:45 public.txt
--rwxr-xr-x 1 ana ana  34 Sep 14 22:45 script.sh
--rw-r----- 1 ana team 13 Sep 14 22:45 teamonly.txt
+total 20
+-rw------- 1 ana ana   9 Oct  7 11:27 private.txt
+-rw-r--r-- 1 ana ana  22 Oct  7 11:27 public.txt
+-rwxr-xr-x 1 ana ana  34 Oct  7 11:27 script.sh
+-rw-r----- 1 ana team 13 Oct  7 11:27 teamonly.txt
+-r--rwxrwx 1 ana team  9 Oct  7 11:27 trap.txt
 ```
 
 **`private.txt` — `-rw-------`.** Um arquivo. A dona lê e escreve. O grupo não recebe nada. Todo o
@@ -69,7 +70,14 @@ não recebe nada, que é o `---` no fim, e é por isso que a carla foi recusada 
 ## O `x` é o que tem dois significados
 
 Num **arquivo**, `x` quer dizer *isto pode ser executado*. Sem ele, o arquivo é dado, seja lá o que
-tenha dentro:
+tenha dentro. Um script de duas linhas, escrito sem ele:
+
+```sh
+mkdir -p ~/x
+cd ~/x
+printf '#!/bin/bash\necho "the script ran"\n' > script.sh
+```
+
 
 ```
 ana@vm:~/x$ ls -l script.sh
