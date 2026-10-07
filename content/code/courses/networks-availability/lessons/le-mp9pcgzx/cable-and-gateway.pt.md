@@ -6,7 +6,9 @@ version: 1
 ## Sem portadora
 
 O laptop não alcança o próprio gateway, o primeiro endereço que todo mundo testa. O ping não diz nada de
-útil, então os dois comandos seguintes perguntam à interface:
+útil, então os dois comandos seguintes perguntam à interface. Cada falha desta aula pode ser encenada na
+sua própria rede, e cada seção diz como antes da transcrição; ler a transcrição antes e adivinhar é o
+exercício melhor. Esta é encenada na máquina virtual com `sudo ip -n wire link set hq-laptop down`:
 
 ```
 ana@laptop:~$ ping -c 2 -W 1 192.168.10.1
@@ -28,9 +30,9 @@ contradição. Ele diz que a interface está ligada no software, e está; **o qu
 `LOWER_UP` indicaria e não indica. O `ethtool` diz o mesmo com todas as letras, `Link detected: no`.
 
 Em hardware de verdade isso é um cabo solto ou rompido, uma porta de switch desabilitada ou um switch sem
-energia. O laboratório não tem cobre. O cabo do laptop é um par de interfaces virtuais, e a falha foi
+energia. Esta rede não tem cobre. O cabo do laptop é um par de interfaces virtuais, e a falha foi
 encenada desligando a ponta do switch, o que o laptop enxerga como um cabo que não leva nada. Com essa
-ponta religada, fora da tela, os mesmos dois comandos:
+ponta religada, `sudo ip -n wire link set hq-laptop up`, os mesmos dois comandos:
 
 ```
 ana@laptop:~$ ip -br link show eth0; sudo ethtool eth0 | grep "Link detected"
@@ -43,8 +45,8 @@ responde na hora, e um ping que falha pode estar falhando em qualquer camada do 
 
 ## Um gateway que ninguém tem
 
-A falha seguinte começa com um chamado dizendo que os servidores web caíram. Do laptop, para o endereço
-de web1:
+A falha seguinte começa com um chamado dizendo que os servidores web caíram. Ela é encenada em `laptop`
+com `sudo ip route replace default via 192.168.10.99`. Do laptop, para o endereço de web1:
 
 ```
 ana@laptop:~$ curl -sS -m 5 http://192.0.2.21/
@@ -84,7 +86,8 @@ rtt min/avg/max/mdev = 0.272/0.272/0.272/0.000 ms
 `INCOMPLETE` quer dizer que um pedido ARP saiu e nenhuma resposta voltou. **O último ping é o teste que
 libera o resto do laptop.** `files`, na mesma rede, responde em 0.272 ms, então o cabo, a placa e o
 próprio endereço do laptop estão bem. Só falha o que precisa passar pelo gateway, e o gateway é a única
-coisa errada. Com a rota de volta para `192.168.10.1`, fora da tela, web1 responde:
+coisa errada. Com a rota de volta para `192.168.10.1`, `sudo ip route replace default via 192.168.10.1`, web1
+responde:
 
 ```
 ana@laptop:~$ ping -c 1 192.0.2.21
