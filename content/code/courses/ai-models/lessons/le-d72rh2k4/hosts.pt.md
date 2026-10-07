@@ -7,7 +7,7 @@ Um modelo aberto é acessado pela máquina de alguém: a sua (aulas 3 e 14) ou a
 em todos os hosts que a tabela conhece:
 
 ```
-ana@desk:~/desk$ sheet where llama-4-maverick
+ana@desk:~/desk$ python sheet.py where llama-4-maverick
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 databricks/databricks-llama-4-maverick               databricks                  0.50001 1.5000300000000002

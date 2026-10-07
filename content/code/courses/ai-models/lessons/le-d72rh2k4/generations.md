@@ -3,14 +3,17 @@ title: Four generations in one file
 version: 1
 ---
 
-Llama is the first family in this directory that is **open-weight from the start**: the
-previous lessons' providers sold access, while Meta publishes the weights, and most people who use
-a Llama reach it on somebody else's machine. So the source here is not a price page but Meta's own repository, which describes every release
-in one Python file, `models/sku_list.py`. Lesson 3 read the architecture numbers out of it. Its
-descriptions list every model Meta has published there:
+Llama is the first family in this directory that is **open-weight from the start**: the previous
+lessons' providers sold access, while Meta publishes the weights, and most people who use a Llama
+reach it on somebody else's machine. So the source here is not a price page but Meta's own
+repository, which describes every release in one Python file, `models/sku_list.py`. Lesson 3 read
+the architecture numbers out of it. Its descriptions list every model Meta has published there.
+`LLAMA` holds the address of the repository at the commit this course reads, and `curl` fetches the
+file for three filters to read:
 
 ```
-ana@desk:~/desk$ sources quote llama-skus 'description="Llama' | grep -o 'Llama [0-9.]* [^"]*' | sort -u
+ana@desk:~/desk$ LLAMA=https://raw.githubusercontent.com/meta-llama/llama-models/0e0b8c519242d5833d8c11bffc1232b77ad7f301
+ana@desk:~/desk$ curl -s $LLAMA/models/sku_list.py | grep 'description="Llama' | grep -o 'Llama [0-9.]* [^"]*' | sort -u
 Llama 2 13b chat model
 Llama 2 13b model
 Llama 2 70b chat model

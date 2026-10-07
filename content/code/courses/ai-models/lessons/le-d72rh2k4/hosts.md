@@ -7,7 +7,7 @@ An open model is reached through somebody's machine: your own (lessons 3 and 14)
 Maverick, by every host the sheet knows:
 
 ```
-ana@desk:~/desk$ sheet where llama-4-maverick
+ana@desk:~/desk$ python sheet.py where llama-4-maverick
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 databricks/databricks-llama-4-maverick               databricks                  0.50001 1.5000300000000002
