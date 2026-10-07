@@ -12,13 +12,12 @@
 # taken from it here; a quotation carries no prompt, and is read by
 # lab/sources.py at the commit it pins.
 #
-# api.openai.com could not be reached from the machine this was recorded on.
-# What answers at OPENAI_BASE_URL is standin (standin.py), speaking the
-# Responses API: its replies come from answers.json and replies.json,
-# it keeps stored responses in memory until it is restarted, and its error
-# messages are its own. What is real: the openai library at the version
-# lab.sh pins, what it sends, and the parameter documentation that ships
-# inside it, which is what the lesson quotes.
+# api.openai.com was refused by the network of the machine this was recorded
+# on. Ollama speaks the Responses API, so what answers is llama3.2:3b, through
+# the student's relay.py (lesson 9), which shows what the openai library
+# sends. Where Ollama does not do what OpenAI documents (it ignores
+# previous_response_id and truncation, and keeps no store), the lesson says
+# so, and quotes the parameter documentation that ships inside the library.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 

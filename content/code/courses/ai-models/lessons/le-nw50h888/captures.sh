@@ -12,14 +12,11 @@
 # taken from it here; a quotation carries no prompt, and is read by
 # lab/sources.py at the commit it pins.
 #
-# NEITHER OLLAMA NOR LM STUDIO RUNS ON THIS MACHINE. Both fetch their models
-# from hosts it cannot reach (ollama.com and huggingface.co), and LM Studio is
-# a desktop application. What answers on their ports, 11434 and 1234, is
-# standin (standin.py), speaking their APIs; its model, standin-local,
-# answers from the table in answers.json, and its durations are the
-# speeds standin.py gives it. What is real: the `ollama` and `openai`
-# libraries and what they send, and the two projects' own documentation, read
-# at the commits sources.py pins.
+# Ollama runs here, installed as lesson 1 shows, with the models lab.sh pulls.
+# LM Studio is a desktop application and does not run on this machine, so the
+# lesson shows what a program sees when nothing listens on its port. What is
+# quoted is the two projects' own documentation, read at the commits
+# sources.py pins.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
