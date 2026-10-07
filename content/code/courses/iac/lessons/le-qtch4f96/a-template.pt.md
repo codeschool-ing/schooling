@@ -1,6 +1,6 @@
 ---
 title: Um template do Packer
-version: 1
+version: 2
 ---
 
 **O Packer constrói imagens de máquina a partir de um template**, e a ideia é a mesma para qualquer
@@ -12,7 +12,15 @@ e o resultado é uma AMI; no Docker é um contêiner, e o resultado é uma image
 O laboratório não tem uma AWS que rode máquinas (o moto guarda registros, não computadores), então
 esta aula constrói imagens Docker, que são reais e rodam no notebook. O template é HCL, a linguagem
 de todos os arquivos Terraform deste curso, num arquivo cujo nome termina em `.pkr.hcl`. A Ana o
-guarda num repositório próprio, `~/shop/image`:
+guarda num repositório próprio, `~/shop/image`, que ignora um arquivo que um build vai escrever ali,
+como mostra a seção sobre versões:
+
+```sh
+mkdir -p ~/shop/image && cd ~/shop/image
+git init -q . && printf "manifest.json\n" > .gitignore
+```
+
+O template é o `web.pkr.hcl`:
 
 ```hcl
 packer {
@@ -65,11 +73,19 @@ contêiner seja salvo como imagem no fim, que é o que faz disto um build e não
 `changes` são configurações gravadas na imagem nova: o comando que ela roda ao ligar e a porta em
 que escuta.
 
-`pull = false` está ali por causa deste laboratório. Por padrão o Packer pede ao Docker Hub o
+`pull = false` está ali por causa da gravação. Por padrão o Packer pede ao Docker Hub o
 `ubuntu:24.04` mais novo antes de cada build, e enquanto esta aula era gravada o Docker Hub respondeu
 a esses pedidos com `429 Too Many Requests`. Com `pull = false` o build usa a cópia que já está no
 notebook. Deixar a linha de fora é o normal; quatro seções adiante, esta aula explica
-por que a imagem base deve ser fixada de qualquer jeito.
+por que a imagem base deve ser fixada de qualquer jeito. Com a linha, o seu Docker precisa dessa
+cópia antes do primeiro build, então busque-a uma vez:
+
+```sh
+docker pull ubuntu:24.04
+```
+
+A sua é a imagem para a qual a tag aponta no dia em que você a busca, e a seção sobre versões volta
+a isso.
 
 **`build`** diz o que acontece. `sources` aponta os blocos source de onde partir, e um build pode
 listar vários para produzir a mesma imagem para vários destinos de uma vez. Dentro dele:
@@ -81,8 +97,11 @@ listar vários para produzir a mesma imagem para vários destinos de uma vez. De
 - um **post-processor** age sobre a imagem depois que ela é salva. `docker-tag` dá a ela o nome
   `shop-web:1.0.0`.
 
+A Ana faz o commit do template como está, `git add -A && git commit -qm 'the web image'`, para que
+os diffs das próximas seções mostrem só o que mudou depois dele.
+
 O mesmo template para a AWS mudaria no bloco `source` e em pouco mais. Este aqui é **ilustrativo,
-não foi rodado**: o plugin `amazon-ebs` não está instalado no laboratório, e o moto não liga
+não foi rodado**: o plugin `amazon-ebs` não foi instalado para esta aula, e o moto não liga
 máquina nenhuma para provisionar.
 
 ```hcl

@@ -34,7 +34,9 @@
 #     is one the Docker daemon can see;
 #   - the two AMIs in rolling-out, made with create-image from a throwaway
 #     instance, as an image pipeline on AWS would have published them. moto
-#     copies a record; there is nothing inside either.
+#     copies a record; there is nothing inside either. The lesson prints these
+#     commands for the student to run, and says where each quiet commit and
+#     git init below happens.
 #
 # Images and containers it makes are all called shop-web…, and it removes them
 # at the end. It never touches anything else Docker is running.
