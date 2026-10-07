@@ -24,15 +24,15 @@ aula 7 seção 04 é escrito uma vez só, no código:
       "note": "**Só leitura, e diz isso.** A dica de tipo `order_id: str` vira o esquema de entrada; a docstring vira a descrição que o modelo lê."
     },
     {
-      "code": "@app.tool(annotations=ToolAnnotations(readOnlyHint=True))\ndef read_handbook(name: str) -> str:\n    \"\"\"Read one page of the support handbook, such as 'returns' or 'shipping'.\"\"\"\n    path = (HANDBOOK / f\"{name}.md\").resolve()\n    if path.parent != HANDBOOK:\n        raise ToolError(f\"{name!r} is not a page of the handbook\")\n    return path.read_text()\n\n\n",
-      "note": "**O caminho é conferido pela ferramenta**, depois de resolvido, para `..` não sair da pasta do manual."
+      "code": "@app.tool(annotations=ToolAnnotations(readOnlyHint=True))\ndef read_handbook(name: str) -> str:\n    \"\"\"Read one page of the support handbook, such as 'returns' or 'shipping'.\"\"\"\n    path = (HANDBOOK / f\"{name}.md\").resolve()\n    if path.parent != HANDBOOK or not path.exists():\n        pages = \", \".join(sorted(p.stem for p in HANDBOOK.glob(\"*.md\")))\n        raise ToolError(f\"{name!r} is not a page of the handbook; the pages are: {pages}\")\n    return path.read_text()\n\n\n",
+      "note": "**O caminho é conferido pela ferramenta**, depois de resolvido, então `..` não sai da pasta do manual; e uma página que não existe responde com a lista das que existem, um erro que diz ao modelo o que fazer."
     },
     {
       "code": "@app.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True))\ndef issue_refund(order_id: str, cents: int) -> str:\n    \"\"\"Refund part or all of an order to the customer's original payment method.\"\"\"\n    with open(\"data/refunds.log\", \"a\") as log:\n        log.write(f\"{order_id} {cents}\\n\")\n    return f\"refunded {cents} cents on order {order_id}\"\n\n\n",
       "note": "**A única ferramenta que muda algo**, marcada como não somente leitura e destrutiva. O host da aula 7 seção 03 não a chama sem o sim de uma pessoa."
     },
     {
-      "code": "if __name__ == \"__main__\":\n    app.run()",
+      "code": "if __name__ == \"__main__\":\n    app.run()\n",
       "note": "**Roda por stdio** quando iniciado como programa, que é como um host o lança."
     }
   ]

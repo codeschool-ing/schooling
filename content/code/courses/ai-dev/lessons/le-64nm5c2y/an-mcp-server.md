@@ -24,15 +24,15 @@ contract of lesson 7 section 04 is written once, in the code:
       "note": "**Read-only, and it says so.** The type hint `order_id: str` becomes the input schema; the docstring becomes the description the model reads."
     },
     {
-      "code": "@app.tool(annotations=ToolAnnotations(readOnlyHint=True))\ndef read_handbook(name: str) -> str:\n    \"\"\"Read one page of the support handbook, such as 'returns' or 'shipping'.\"\"\"\n    path = (HANDBOOK / f\"{name}.md\").resolve()\n    if path.parent != HANDBOOK:\n        raise ToolError(f\"{name!r} is not a page of the handbook\")\n    return path.read_text()\n\n\n",
-      "note": "**The path is checked by the tool**, after resolving it, so `..` cannot leave the handbook's folder."
+      "code": "@app.tool(annotations=ToolAnnotations(readOnlyHint=True))\ndef read_handbook(name: str) -> str:\n    \"\"\"Read one page of the support handbook, such as 'returns' or 'shipping'.\"\"\"\n    path = (HANDBOOK / f\"{name}.md\").resolve()\n    if path.parent != HANDBOOK or not path.exists():\n        pages = \", \".join(sorted(p.stem for p in HANDBOOK.glob(\"*.md\")))\n        raise ToolError(f\"{name!r} is not a page of the handbook; the pages are: {pages}\")\n    return path.read_text()\n\n\n",
+      "note": "**The path is checked by the tool**, after resolving it, so `..` cannot leave the handbook's folder; and a page that does not exist answers with the list of those that do, an error that tells the model what to do instead."
     },
     {
       "code": "@app.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True))\ndef issue_refund(order_id: str, cents: int) -> str:\n    \"\"\"Refund part or all of an order to the customer's original payment method.\"\"\"\n    with open(\"data/refunds.log\", \"a\") as log:\n        log.write(f\"{order_id} {cents}\\n\")\n    return f\"refunded {cents} cents on order {order_id}\"\n\n\n",
       "note": "**The one tool that changes something**, marked not read-only and destructive. The host of lesson 7 section 03 will not call it without a person's yes."
     },
     {
-      "code": "if __name__ == \"__main__\":\n    app.run()",
+      "code": "if __name__ == \"__main__\":\n    app.run()\n",
       "note": "**Run over stdio** when started as a program, which is how a host launches it."
     }
   ]
