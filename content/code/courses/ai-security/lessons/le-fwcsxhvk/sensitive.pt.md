@@ -1,6 +1,6 @@
 ---
 title: Dado sensível, e por que a ferramenta para em vez de adivinhar
-version: 1
+version: 2
 ---
 
 O art. 5, II da LGPD nomeia uma lista curta de dados pessoais que são **sensíveis**: origem racial ou
@@ -37,13 +37,29 @@ Com `--sensitive remove`, a frase é substituída e o resto da mensagem sobreviv
 
 O marcador é de propósito. Apagar a frase sem rastro deixaria o modelo lendo uma freelancer atrasada
 que não dá motivo nenhum, e o resumo seria injusto com ela. O marcador diz ao modelo que houve um
-motivo, e a resposta que o curso escreveu para esta aula diz *"a health matter stopped the work"*,
-que é tudo de que o atendente precisa.
+motivo, e o resumo que o `llama3.2:3b` escreveu na seção anterior diz que ela *"initially mentioned a
+health issue that may have caused a delay"*, que é tudo de que o atendente precisa, e nada sobre qual.
 
 ## A lista de palavras vê palavras
 
-A verificação por trás da retenção é uma lista de palavras por categoria, e ela é exatamente tão boa
-quanto a lista:
+A verificação por trás da retenção é uma lista de palavras por categoria, no `minimise.py`, e ela é
+exatamente tão boa quanto a lista. O `guard sensitive` mostra o que ela vê num texto. Salve-o como
+`~/guard/tools/sensitive.py`:
+
+```python
+# sensitive.py: what the sensitive-data word list of minimise.py sees in a text.
+#
+#   guard sensitive TEXT
+import sys
+
+from minimise import sensitive_terms
+
+found = sensitive_terms(sys.argv[1])
+if not found:
+    print("nothing found")
+for cat, words in found.items():
+    print("%s: %s" % (cat, ", ".join(words)))
+```
 
 ```
 ana@lab:~/guard$ guard sensitive 'I was in hospital for a week with a kidney infection'
