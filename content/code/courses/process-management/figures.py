@@ -1559,6 +1559,99 @@ def l12_kano(lang):
 # ---- end of lesson 12
 
 
+# ------------------------------------------------------------------ lesson 13
+
+@figure('l13-dora', 13)
+def l13_dora(lang):
+    n = len(S.LEAD_HOURS)
+    t = {
+        'en': dict(speed='throughput: how fast changes flow', stab='stability: how often they hurt',
+                   tiles=[('deployment frequency', f'{num(lang, n / S.WORKING_DAYS, 1)} a day',
+                           f'{n} deploys in {S.WORKING_DAYS} working days'),
+                          ('lead time for changes', f'{S.median(S.LEAD_HOURS):g} hours',
+                           'median, commit to production'),
+                          ('change failure rate', f'{len(S.FAILED) / n:.1%}',
+                           f'{len(S.FAILED)} of {n} deploys needed a fix'),
+                          ('time to restore', f'{S.median(sorted(S.FAILED.values())):g} minutes',
+                           'median of the three failures')],
+                   label='Four tiles in two pairs. Throughput: deployment frequency 1.2 a day, 24 deploys in 20 '
+                         'working days; lead time for changes 6 hours, the median from commit to production. '
+                         'Stability: change failure rate 12.5%, 3 of 24 deploys needed a fix; time to restore 50 '
+                         'minutes, the median of the three failures.',
+                   cap='The Agenda team’s four DORA numbers for March 2026. Two say how fast changes reach users '
+                       'and two say how often they cause harm; reading one pair without the other rewards a team for '
+                       'breaking things quickly or for never shipping.'),
+        'pt': dict(speed='vazão: quão rápido as mudanças fluem', stab='estabilidade: com que frequência causam dano',
+                   tiles=[('frequência de deploy', f'{num(lang, n / S.WORKING_DAYS, 1)} por dia',
+                           f'{n} deploys em {S.WORKING_DAYS} dias úteis'),
+                          ('lead time de mudanças', f'{S.median(S.LEAD_HOURS):g} horas',
+                           'mediana, do commit à produção'),
+                          ('taxa de falha de mudanças', f'{len(S.FAILED) / n * 100:.1f}%'.replace('.', ','),
+                           f'{len(S.FAILED)} de {n} deploys pediram correção'),
+                          ('tempo de restauração', f'{S.median(sorted(S.FAILED.values())):g} minutos',
+                           'mediana das três falhas')],
+                   label='Quatro blocos em dois pares. Vazão: frequência de deploy de 1,2 por dia, 24 deploys em 20 '
+                         'dias úteis; lead time de mudanças de 6 horas, a mediana do commit à produção. '
+                         'Estabilidade: taxa de falha de mudanças de 12,5%, 3 de 24 deploys precisaram de correção; '
+                         'tempo de restauração de 50 minutos, a mediana das três falhas.',
+                   cap='Os quatro números DORA do time Agenda em março de 2026. Dois dizem quão rápido as mudanças '
+                       'chegam aos usuários e dois dizem com que frequência causam dano; ler um par sem o outro '
+                       'premia um time por quebrar coisas rápido ou por nunca entregar.'),
+    }[lang]
+    f = Fig('l13-dora', 680, 250, t['label'])
+    f.text(170, 20, t['speed'], size=10.5, weight='600', fill='--phosphor')
+    f.text(510, 20, t['stab'], size=10.5, weight='600', fill='--amber')
+    for k, (name, big, note) in enumerate(t['tiles']):
+        x = 14 + k * 166
+        c = '--phosphor' if k < 2 else '--amber'
+        f.rect(x, 36, 156, 180, stroke=c, fill='--panel', rx=6, width=1.6)
+        f.text(x + 78, 64, name, size=10, weight='600')
+        f.text(x + 78, 120, big, size=22, weight='600', fill=c)
+        f.text(x + 78, 176, note, size=8.5, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l13-lead-times', 13)
+def l13_lead_times(lang):
+    hrs = S.LEAD_HOURS
+    med = S.median(hrs)
+    t = {
+        'en': dict(y='hours from commit to production', x='deploys in March 2026, in order',
+                   med=f'median {med:g} hours', fail='failed in production', day='one day',
+                   label='Twenty-four dots, one per deploy in March 2026, each at the hours its change took from '
+                         'commit to production. Most sit below 10 hours; five are above 24 hours, the longest at 70. '
+                         'A line marks the median of 6 hours. Three dots are marked as deploys that failed in '
+                         'production.',
+                   cap='The median of 6 hours is a fair summary of a typical change; the five changes that waited more '
+                       'than a day are where the next improvement is, and they are worth reading one by one.'),
+        'pt': dict(y='horas do commit à produção', x='deploys em março de 2026, em ordem',
+                   med=f'mediana de {med:g} horas', fail='falhou em produção', day='um dia',
+                   label='Vinte e quatro pontos, um por deploy em março de 2026, cada um nas horas que sua mudança '
+                         'levou do commit à produção. A maioria fica abaixo de 10 horas; cinco ficam acima de 24 horas, '
+                         'a mais longa em 70. Uma linha marca a mediana de 6 horas. Três pontos estão marcados como '
+                         'deploys que falharam em produção.',
+                   cap='A mediana de 6 horas é um resumo justo de uma mudança típica; as cinco mudanças que esperaram '
+                       'mais de um dia são onde está a próxima melhoria, e vale lê-las uma a uma.'),
+    }[lang]
+    f = Fig('l13-lead-times', 640, 280, t['label'])
+    p = Plot(f, 70, 40, 600, 220, 0, 25, 0, 75)
+    p.yaxis([0, 24, 48, 72], label=t['y'])
+    p.xaxis([1, 6, 12, 18, 24], label=t['x'])
+    f.line(p.x0, p.sy(24), p.x1, p.sy(24), stroke='--paper-dim', width=1, dash='2 3')
+    f.text(p.x1, p.sy(24) - 8, t['day'], size=9, anchor='end', fill='--paper-dim')
+    f.line(p.x0, p.sy(med), p.x1, p.sy(med), stroke='--phosphor', width=1.4, dash='5 3')
+    f.text(p.x1, p.sy(med) - 9, t['med'], size=9.5, anchor='end', fill='--phosphor', weight='600')
+    for k, h in enumerate(hrs):
+        failed = k in S.FAILED
+        f.circle(p.sx(k + 1), p.sy(h), 4.5 if failed else 3.5, fill='--amber' if failed else '--paper',
+                 stroke='--amber' if failed else None, width=1.6)
+    f.circle(p.x1 - 150, 20, 4.5, fill='--amber')
+    f.text(p.x1 - 140, 20, t['fail'], size=9.5, anchor='start', fill='--amber')
+    return f, t['cap']
+
+# ---- end of lesson 13
+
+
 # ------------------------------------------------------------------ the figures
 
 

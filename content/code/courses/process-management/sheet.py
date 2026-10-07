@@ -337,6 +337,7 @@ def lesson13():
     rate = len(FINISHED) / days
     print('  Little: throughput', len(FINISHED), 'in', days, 'days =', round(rate, 4),
           'a day; mean cycle time', mean(ct), '; implied average WIP', round(rate * mean(ct), 3))
+    print('  with 4 items in progress at that throughput, mean cycle time', round(4 / rate, 2), 'days')
     n = len(LEAD_HOURS)
     print('  deploys', n, 'over', WORKING_DAYS, 'working days =', n / WORKING_DAYS, 'a day,', n / 4, 'a week')
     print('  lead time for changes: median', median(LEAD_HOURS), 'hours; mean', round(mean(LEAD_HOURS), 2),
