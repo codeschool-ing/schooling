@@ -9,9 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # The programs are the ones the sections show, written into ~/emb by `put`.
-# One file is STAGED and not shown: prices.py, the course's price sheet, is
-# copied from beside course.json into ~/emb so that sheet.py can import it.
-# It reads LiteLLM's sheet at the pinned commit from ~/.cache/emb-prices.
+# prices.py is the one lesson 7 shows whole; lab.sh writes it into ~/emb
+# from that lesson, as it does every file the lessons hand over.
 #
 # jina.py talks to labembed, the lab's stand-in provider on 127.0.0.1:8500,
 # with the lab's Jina key; no request leaves the machine. Every vector comes
