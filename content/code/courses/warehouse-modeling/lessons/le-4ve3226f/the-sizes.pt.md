@@ -1,10 +1,19 @@
 ---
 title: Uma tabela, quatro tamanhos
-version: 1
+version: 2
 ---
 
 A `fact_sales` exportada como arquivo CSV, carregada no PostgreSQL, copiada para um arquivo DuckDB
-próprio, e gravada em Parquet:
+próprio, e gravada em Parquet. A cópia no PostgreSQL é feita pelo `to-postgres.sql`:
+
+```sql
+-- The same fact table, stored by row in PostgreSQL.
+CREATE TABLE fact_sales (date_key int, shop_key int, book_key int, customer_key int,
+    promotion_key int, order_id bigint, line_no int, quantity int, gross_cents bigint,
+    discount_cents bigint, net_cents bigint);
+\copy fact_sales FROM 'fact_sales.csv' WITH (FORMAT csv, HEADER true)
+VACUUM ANALYZE fact_sales;
+```
 
 ```
 ana@lab:~/wh$ duckdb wh.duckdb -c "COPY fact_sales TO 'fact_sales.csv' (HEADER); COPY fact_sales TO 'fact_sales.parquet'"

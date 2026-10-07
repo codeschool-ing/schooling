@@ -27,6 +27,7 @@ put() { lab exec "cat > '$1'"; }
 code() { printf '##### %s\n' "$1"; lab exec "cat '$2'"; }
 block() { printf '##### %s\n' "$1"; }
 exec 9>/var/tmp/wh-capture.lock; flock 9
+lab check || exit 1
 lab reset >/dev/null
 lab warehouse >/dev/null
 for f in comments.sql classification.csv check_docs.py dictionary.py; do
@@ -41,8 +42,6 @@ code check-py check_docs.py
 block before
 on 'python3 check_docs.py; echo "exit status $?"'
 
-printf '##### comments-head\n'
-lab exec "sed -n 1,9p comments.sql"
 block comments
 on 'grep -c "^COMMENT ON" comments.sql'
 on 'duckdb wh.duckdb < comments.sql'
@@ -57,8 +56,6 @@ block drift
 on "duckdb wh.duckdb -c \"ALTER TABLE fact_sales ADD COLUMN gift_wrap BOOLEAN DEFAULT false\""
 on 'python3 check_docs.py; echo "exit status $?"'
 
-printf '##### classification-head\n'
-lab exec "head -6 classification.csv"
 block personal
 on "duckdb -c \"SELECT class, count(*) AS columns FROM read_csv('classification.csv') GROUP BY class ORDER BY columns DESC\""
 on "duckdb -c \"SELECT table_name, string_agg(column_name, ', ') AS personal FROM read_csv('classification.csv') WHERE class = 'personal' GROUP BY table_name ORDER BY table_name\""

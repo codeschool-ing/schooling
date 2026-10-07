@@ -1,6 +1,6 @@
 ---
 title: Descrições guardadas no banco
-version: 1
+version: 2
 ---
 
 Um dicionário guardado num documento separado, uma página de wiki ou uma planilha, começa certo e vai se desviando.
@@ -29,6 +29,6 @@ lista as colunas. Não custa nada na hora da consulta e não precisa de ferramen
 foram explicadas, por quem por acaso se importou.
 
 Guardar descrições no banco tem um limite que vale conhecer. Um comentário está preso a uma coluna, então sobrevive a
-um `SELECT` mas não a uma reconstrução: o warehouse de Ana é reconstruído a partir de arquivos SQL pelo `lab.sh
-warehouse`, e uma tabela reconstruída volta sem comentários. **Os comentários precisam estar num arquivo que a
+um `SELECT` mas não a uma reconstrução: o warehouse de Ana é reconstruído a partir de arquivos SQL pelo `build.sh`
+da lição 2, e uma tabela reconstruída volta sem comentários. **Os comentários precisam estar num arquivo que a
 construção executa**, no controle de versão junto com o SQL que cria as tabelas. Esse arquivo é a seção 6.

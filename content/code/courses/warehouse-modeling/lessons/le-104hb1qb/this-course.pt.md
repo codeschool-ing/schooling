@@ -1,6 +1,6 @@
 ---
 title: O que este curso constrói, e para quem
-version: 1
+version: 2
 ---
 
 Quase todo banco de dados que você viu até aqui foi projetado para **registrar** coisas: um pedido,
@@ -66,4 +66,5 @@ Metade deste curso discute com essa última, então ajuda tê-la fresca na memó
 
 **Nada aqui exige uma linguagem de programação além de SQL.** Algumas lições usam um script de
 shell curto ou umas linhas de Python para mover arquivos; eles aparecem inteiros, e dá para lê-los
-como receitas.
+como receitas. O mais longo é o programa da seção 05 que escreve os dados da rede, e esse basta
+executar.

@@ -1,13 +1,13 @@
 ---
 title: Do que o relatório precisa
-version: 1
+version: 2
 ---
 
 O lado do gerente é **OLAP**, processamento analítico online. Onde uma transação toca poucas linhas
 pela chave, uma consulta analítica toca a maior parte de uma tabela e a resume: um total, uma
 contagem, uma média, agrupados por algo que importa a alguém.
 
-O relatório da seção 04 rodou em 1,6 segundo. Pergunte ao PostgreSQL o que ele leu para chegar lá:
+O relatório da seção 07 rodou em 1,6 segundo. Pergunte ao PostgreSQL o que ele leu para chegar lá:
 
 ```
 ana@lab:~/wh$ { echo 'EXPLAIN (ANALYZE, BUFFERS, COSTS OFF)'; cat report.sql; } | psql | grep -m1 Buffers
@@ -36,5 +36,5 @@ A forma de uma carga analítica, então:
   numa pergunta.
 - **Histórico.** Este ano contra o passado, antes da promoção contra depois.
 
-**Cada item dessa lista é o oposto do item correspondente na seção 05.** Um único projeto não
+**Cada item dessa lista é o oposto do item correspondente na seção 08.** Um único projeto não
 consegue ser o melhor nas duas, então o warehouse é um segundo projeto.

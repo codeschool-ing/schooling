@@ -1,6 +1,6 @@
 ---
 title: Reading one column
-version: 1
+version: 2
 ---
 
 The simplest question a warehouse can be asked: total revenue. One column, summed. PostgreSQL, asked what
@@ -61,7 +61,17 @@ That is the first and simplest advantage of storing by column, and it grows with
 `fact_sales` has eleven narrow columns. A wide table like lesson 6's, with 31 columns including titles and
 author names, would give a row store thirty columns of bytes to carry for every one it uses.
 
-The two engines, timed on that sum:
+The two engines, timed on that sum, with `pg-sum.sql` for PostgreSQL and `duck-sum.sql` for DuckDB:
+
+```sql
+\timing on
+SELECT sum(net_cents) FROM fact_sales;
+```
+
+```sql
+.timer on
+SELECT sum(net_cents) FROM fact_sales;
+```
 
 ```
 ana@lab:~/wh$ psql -f pg-sum.sql

@@ -1,10 +1,10 @@
 """The operational data of Ponto Final, a chain of bookshops that does not exist.
 
-Writes one CSV per table of the shop's operational database into the directory
-given as the only argument, plus the three monthly customer extracts lesson 5
-loads. Everything is drawn from random.Random with fixed seeds, one generator
-per table, so the same files come out on every run and on every machine, and
-changing how one table is drawn does not move the numbers of another.
+Run it in ~/wh. It writes one CSV file per table of the shop's database into
+data/, and the three monthly customer extracts of lesson 5 into extracts/.
+Every table is drawn from its own random.Random with a fixed seed, so the same
+files come out on every run and on every machine, and they are the files the
+course was recorded with.
 
 Nothing here is real. The people, the books, the authors and the publishers
 are made from word lists; the e-mail addresses are under example.com,
@@ -17,9 +17,9 @@ import datetime as dt
 import math
 import os
 import random
-import sys
 
-OUT = sys.argv[1]
+os.makedirs("data", exist_ok=True)
+os.makedirs("extracts", exist_ok=True)
 FIRST = dt.date(2024, 1, 1)
 LAST = dt.date(2025, 12, 31)
 TZ = "-03"  # America/Sao_Paulo has kept UTC-3 all year since 2019
@@ -104,8 +104,8 @@ TIERS = ["reader", "regular", "patron"]
 DOMAINS = ["example.com", "example.net", "example.org"]
 
 
-def writer(name, header):
-    f = open(os.path.join(OUT, name + ".csv"), "w", newline="", encoding="utf-8")
+def writer(name, header, folder="data"):
+    f = open(os.path.join(folder, name + ".csv"), "w", newline="", encoding="utf-8")
     w = csv.writer(f, lineterminator="\n")
     w.writerow(header)
     return f, w
@@ -344,7 +344,8 @@ def as_of(cid_, d):
 # the three monthly extracts of lesson 5: the customer table as the source
 # system held it at midnight on the first of each month
 for d in (dt.date(2025, 10, 1), dt.date(2025, 11, 1), dt.date(2025, 12, 1)):
-    f, w = writer(f"customers_{d}", ["customer_id", "email", "name", "city", "state", "tier"])
+    f, w = writer(f"customers_{d}", ["customer_id", "email", "name", "city", "state", "tier"],
+                  "extracts")
     for cid_, created, _ in customers:
         if created < d:
             c = as_of(cid_, d)

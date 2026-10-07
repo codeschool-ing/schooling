@@ -1,14 +1,15 @@
 ---
 title: Dimensions: the who, what, where and when
-version: 1
+version: 2
 ---
 
 A **dimension table** holds the things a fact is described by, one row per thing, with every
 attribute a person might filter or group by. It answers the questions a number needs before it
 means anything: *which* book, *which* shop, *which* day.
 
-Ana builds three for the sales process, plus a small one for promotions, from the files the course
-keeps in `lab/warehouse/`:
+Ana builds three for the sales process, plus a small one for promotions, one SQL file each.
+`dim_book.sql` and `dim_shop.sql` are in this section and `dim_promotion.sql` at the end of it;
+`dim_date.sql` is the subject of section 06. Save all four in `~/wh`, then:
 
 ```
 ana@lab:~/wh$ for f in dim_date dim_shop dim_book dim_promotion; do duckdb wh.duckdb < $f.sql; done
@@ -81,7 +82,24 @@ all three levels and nobody writing a report has to know which branches are shal
 - **Few rows, many columns.** 3,000 books, 7 shops, 732 rows of dates: small tables that every fact row
   points into.
 
-The shops, all of them:
+The shops come from `dim_shop.sql`:
+
+```sql
+CREATE TABLE dim_shop AS
+SELECT row_number() OVER (ORDER BY opened_on) AS shop_key,
+       shop_id,
+       name                                   AS shop_name,
+       coalesce(city, 'Online')               AS city,
+       coalesce(state, '--')                  AS state,
+       CASE WHEN state IN ('SP', 'MG') THEN 'Southeast'
+            WHEN state IN ('PR', 'RS') THEN 'South'
+            ELSE 'Online' END                 AS region,
+       channel,
+       opened_on
+FROM staging.shops;
+```
+
+All of them:
 
 ```
 ana@lab:~/wh$ duckdb wh.duckdb -c "SELECT * FROM dim_shop"
@@ -104,3 +122,19 @@ the Southeast, and **a dimension is where an attribute like that belongs**: writ
 state, and available to every fact table that points at a shop. The online shop has no city, and
 gets the word `Online` rather than an empty cell, so that a report grouped by city has a row it can
 label.
+
+## The promotions
+
+`dim_promotion.sql` copies the ten promotions and adds a row that is not a promotion at all: key 0,
+*No promotion*, which every sale without one points at. Lesson 4 explains why a row like that is
+better than an empty key.
+
+```sql
+CREATE TABLE dim_promotion AS
+SELECT promotion_id AS promotion_key, promotion_id, code, name AS promotion_name,
+       percent_off, starts_on, ends_on, coalesce(category, 'All departments') AS applies_to
+FROM staging.promotions
+UNION ALL
+SELECT 0, NULL, '', 'No promotion', 0, NULL, NULL, ''
+ORDER BY promotion_key;
+```
