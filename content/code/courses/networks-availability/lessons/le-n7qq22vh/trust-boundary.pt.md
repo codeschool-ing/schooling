@@ -61,5 +61,5 @@ que o enviou**, que é o único tipo de marcação sobre o qual um roteador pode
 
 Num escritório de verdade a fronteira fica no switch de acesso, a primeira coisa em que um telefone ou um
 laptop é ligado. Os switches confiam na marcação numa porta onde há um telefone IP, muitas vezes numa VLAN
-de voz própria, a ideia da aula 19 de `networks-addressing`, e a zeram em todas as outras portas. Um
+de voz própria, a ideia de `networks-addressing`, e a zeram em todas as outras portas. Um
 roteador mais para dentro passa então a ter marcações em que pode acreditar sem perguntar quem as escreveu.

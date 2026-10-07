@@ -59,5 +59,5 @@ sent it**, which is the only kind of mark a router can afford to act on.
 
 Where the boundary goes in a real office is the access switch, the first thing a phone or a laptop is
 plugged into. Switches trust the mark on a port where an IP phone sits, often on a voice VLAN of its
-own, the idea from lesson 19 of `networks-addressing`, and reset it on every other port. A router
+own, the idea from `networks-addressing`, and reset it on every other port. A router
 further in then has marks it can believe without asking who wrote them.

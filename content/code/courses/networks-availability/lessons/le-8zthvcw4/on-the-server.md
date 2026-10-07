@@ -55,7 +55,7 @@ the capture runs. With it, `80` is `80`. Use `-n` on a server always: a name is 
 wrong, and a port called `http` hides the question of whether it is really 80.
 
 The source is `203.0.113.2`, not the laptop's `192.168.10.20`. That is `hq`'s public address: the
-office router translated it, as lesson 11 of `networks-addressing` described, and `web1` never sees
+office router translated it, as `networks-addressing` described, and `web1` never sees
 a private address from the office at all. `4 packets captured` against `10 packets received by
 filter` means ten had matched by the time `tcpdump` stopped, and it printed the four `-c 4` asked for.
 

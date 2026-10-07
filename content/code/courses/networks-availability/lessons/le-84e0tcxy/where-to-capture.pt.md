@@ -5,7 +5,7 @@ version: 1
 
 A imagem comum é que qualquer máquina da rede do escritório consegue ver o tráfego do escritório,
 bastando rodar o programa certo. **Numa rede com switch, não consegue.** O switch aprende qual endereço
-MAC está atrás de cada porta, como a aula 18 de `networks-addressing` mostrou, e manda um quadro
+MAC está atrás de cada porta, como `networks-addressing` mostrou, e manda um quadro
 unicast só por aquela porta. Um laptop na porta vizinha vê o próprio tráfego, os broadcasts e quase
 mais nada.
 

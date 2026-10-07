@@ -55,7 +55,7 @@ durante a captura. Com ele, `80` é `80`. Use `-n` sempre num servidor: um nome 
 estar errado, e uma porta chamada `http` esconde a pergunta de se ela é mesmo a 80.
 
 A origem é `203.0.113.2`, e não o `192.168.10.20` do laptop. Esse é o endereço público de `hq`: o
-roteador do escritório o traduziu, como a aula 11 de `networks-addressing` descreveu, e `web1` nunca
+roteador do escritório o traduziu, como `networks-addressing` descreveu, e `web1` nunca
 vê um endereço privado do escritório. `4 packets captured` contra `10 packets received by filter` quer
 dizer que dez tinham passado pelo filtro quando o `tcpdump` parou, e ele imprimiu os quatro que o
 `-c 4` pediu.

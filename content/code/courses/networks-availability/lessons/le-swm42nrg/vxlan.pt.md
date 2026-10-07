@@ -10,7 +10,7 @@ alcançam pelo endereço MAC como se dividissem um switch.
 
 O VXLAN, Virtual eXtensible LAN, faz isso levando quadros Ethernet inteiros dentro de UDP, porta 4789,
 com um cabeçalho de 8 bytes cujo campo principal é um identificador de rede de 24 bits, o **VNI**.
-Enquanto uma tag de VLAN, a aula 19 de `networks-addressing`, tem 12 bits e uns quatro mil valores, um VNI
+Enquanto uma tag de VLAN, vista em `networks-addressing`, tem 12 bits e uns quatro mil valores, um VNI
 tem uns dezesseis milhões. Diferente do GRE, o kernel em que estas transcrições foram gravadas o tem,
 então o túnel é o do próprio kernel, como no seu. Em `hq`:
 
@@ -78,7 +78,7 @@ ana@hq:~$ ip neigh show dev vx0; bridge fdb show dev vx0
 00:00:00:00:00:00 dst 198.51.100.2 via eth1 self permanent
 ```
 
-A tabela de encaminhamento é a tabela MAC de um switch, a aula 18 de `networks-addressing`, com uma
+A tabela de encaminhamento é a tabela MAC de um switch, vista em `networks-addressing`, com uma
 diferença: **cada entrada aponta não para uma porta, e sim para o endereço público da outra ponta.**
 `96:6b:a3:79:75:aa` foi aprendido da resposta e mora atrás de `198.51.100.2`. A entrada de zeros é a
 lista de inundação, para onde vai um broadcast ou um destino desconhecido. Com mais sites haveria uma

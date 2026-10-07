@@ -48,9 +48,9 @@ That arrangement has a character of its own:
 - it authenticates a site, not a person. **Anything plugged into the branch LAN reaches the
   head office as the branch**, a visitor's laptop included. So each end still needs firewall rules saying which
   of the other office's addresses may reach which servers, and a guest network kept off the tunnel, on
-  its own VLAN (lesson 19 of `networks-addressing`);
+  its own VLAN (see `networks-addressing`);
 - it has few peers, with fixed addresses. Its configuration changes when an office opens or moves,
   and the network team owns it;
 - its routes are written by hand here. With two offices that is two lines. With thirty, the offices
-  run a routing protocol across the tunnels, OSPF or BGP from lessons 16 and 17 of `networks-addressing`,
+  run a routing protocol across the tunnels, OSPF or BGP from `networks-addressing`,
   which is where GRE inside IPsec from lessons 1 and 2 still earns its place.

@@ -48,9 +48,9 @@ Esse arranjo tem um caráter próprio:
 - autentica um local, não uma pessoa. **Qualquer coisa ligada na LAN da filial chega à matriz como
   a filial**, o laptop de um visitante incluído. Então cada ponta ainda precisa de regras de firewall dizendo
   quais endereços do outro escritório alcançam quais servidores, e de uma rede de visitantes mantida fora
-  do túnel, na própria VLAN (aula 19 de `networks-addressing`);
+  do túnel, na própria VLAN (veja `networks-addressing`);
 - tem poucos pares, com endereços fixos. A configuração muda quando um escritório abre ou se muda, e
   quem cuida dela é a equipe de rede;
 - as rotas aqui são escritas à mão. Com dois escritórios são duas linhas. Com trinta, os escritórios
-  rodam um protocolo de roteamento pelos túneis, OSPF ou BGP das aulas 16 e 17 de `networks-addressing`,
+  rodam um protocolo de roteamento pelos túneis, OSPF ou BGP de `networks-addressing`,
   que é onde o GRE dentro de IPsec das aulas 1 e 2 ainda se justifica.

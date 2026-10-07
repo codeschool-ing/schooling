@@ -51,7 +51,7 @@ an ordinary result.
 
 The lab also shows the second reason a source hash balances badly in real life. `lb1` does not see
 `192.168.10.20`, the laptop's own address: it sees the address the connection arrives from, which for the
-laptop is `hq`'s public `203.0.113.2`, after the office's NAT, lesson 11 of `networks-addressing`. Every
+laptop is `hq`'s public `203.0.113.2`, after the office's NAT, covered in `networks-addressing`. Every
 machine in the head office arrives from that one address, so **a whole office behind NAT is one client to
 a source hash**, and it all goes to one server. A mobile operator's carrier-grade NAT does the same to
 thousands of phones at once.

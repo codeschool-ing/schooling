@@ -6,7 +6,7 @@ version: 1
 `remote` é um laptop em casa, `192.168.1.50`, atrás de um roteador doméstico, `homegw`, que divide um
 endereço público, `198.51.100.77`, entre tudo o que há na casa. **O ESP não atravessa esse roteador
 como está, porque o ESP não tem portas.** Um roteador que divide um endereço separa as conversas pelo
-número de porta, como mostrou a aula 11 de `networks-addressing`, e um pacote ESP não lhe dá nada com
+número de porta, como mostrou `networks-addressing`, e um pacote ESP não lhe dá nada com
 que trabalhar.
 
 A resposta do IPsec é a **travessia de NAT**: detectar o NAT durante a primeira troca e depois levar IKE

@@ -79,7 +79,7 @@ e o laptop só alcança um deles.
 | correção | o que custa |
 |---|---|
 | numerar as redes da empresa longe dos padrões de roteador doméstico | uma renumeração, barata só antes de a rede crescer |
-| traduzir a faixa do escritório, no concentrador, para uma que ninguém usa (NAT, aula 11 de `networks-addressing`) | os nomes internos têm de apontar para os endereços traduzidos |
+| traduzir a faixa do escritório, no concentrador, para uma que ninguém usa (NAT, visto em `networks-addressing`) | os nomes internos têm de apontar para os endereços traduzidos |
 | rotear só os poucos hosts de que a pessoa precisa, como `/32` | serve para três servidores, não para uma rede |
 | dar acesso por aplicação em vez de por rede | um produto diferente, na seção sobre a escolha |
 

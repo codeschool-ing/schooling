@@ -5,7 +5,7 @@ version: 1
 
 The usual picture is that any machine on an office network can watch the office's traffic, if it
 only runs the right program. **On a switched network it cannot.** A switch learns which MAC address
-sits behind which port, as lesson 18 of `networks-addressing` showed, and sends a unicast frame out of
+sits behind which port, as `networks-addressing` showed, and sends a unicast frame out of
 that one port and no other. A laptop on the next port sees its own traffic, the broadcasts, and very
 little else.
 

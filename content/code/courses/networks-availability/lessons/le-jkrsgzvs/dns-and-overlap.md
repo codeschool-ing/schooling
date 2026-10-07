@@ -78,7 +78,7 @@ the laptop can reach only one of them.
 | fix | what it costs |
 |---|---|
 | number company networks away from home-router defaults | a renumbering, cheap only before the network grows |
-| translate the office range, on the concentrator, into one nothing uses (NAT, lesson 11 of `networks-addressing`) | internal names have to point at the translated addresses |
+| translate the office range, on the concentrator, into one nothing uses (NAT, covered in `networks-addressing`) | internal names have to point at the translated addresses |
 | route only the few hosts the user needs, as `/32` | fine for three servers, not for a network |
 | give access per application instead of per network | a different product, in the section on choosing |
 

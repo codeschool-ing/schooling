@@ -6,7 +6,7 @@ version: 1
 `remote` is a laptop at home, `192.168.1.50`, behind a home router, `homegw`, that shares one public
 address, `198.51.100.77`, among everything in the house. **ESP cannot cross that router as it is,
 because ESP has no ports.** A router sharing one address tells conversations apart by port number, as
-lesson 11 of `networks-addressing` showed, and an ESP packet gives it nothing to go on.
+`networks-addressing` showed, and an ESP packet gives it nothing to go on.
 
 IPsec's answer is **NAT traversal**: detect the NAT during the first exchange, then carry IKE and ESP
 alike in UDP on port 4500. `hq` gets a second connection, `home`, that hands out addresses from

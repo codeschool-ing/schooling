@@ -10,7 +10,7 @@ other by MAC address as if they shared a switch.
 
 VXLAN, Virtual eXtensible LAN, does it by carrying whole Ethernet frames inside UDP, port 4789, with an
 8-byte header whose main field is a 24-bit network identifier, the **VNI**. Where a VLAN tag,
-lesson 19 of `networks-addressing`, has 12 bits and about four thousand values, a VNI has about sixteen
+from `networks-addressing`, has 12 bits and about four thousand values, a VNI has about sixteen
 million. Unlike GRE, the kernel these transcripts were recorded on has it, so the tunnel is the kernel's own, as it
 is on yours. On `hq`:
 
@@ -78,7 +78,7 @@ ana@hq:~$ ip neigh show dev vx0; bridge fdb show dev vx0
 00:00:00:00:00:00 dst 198.51.100.2 via eth1 self permanent
 ```
 
-The forwarding table is a switch's MAC table, lesson 18 of `networks-addressing`, with one difference:
+The forwarding table is a switch's MAC table, from `networks-addressing`, with one difference:
 **each entry points not at a port but at the public address of the other end.** `96:6b:a3:79:75:aa` was
 learnt from the reply and lives behind `198.51.100.2`. The all-zeros entry is the flood list, where a
 broadcast or an unknown destination goes. With more sites there would be one such line per site, and a
