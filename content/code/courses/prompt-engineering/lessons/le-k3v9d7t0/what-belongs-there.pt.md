@@ -1,6 +1,6 @@
 ---
 title: O que cabe num prompt de sistema, e o que nunca cabe
-version: 1
+version: 2
 ---
 
 Um prompt de sistema cresce. Cada reclamação sobre o assistente acrescenta uma frase, e um ano
@@ -10,8 +10,8 @@ melhor.
 
 ## Um prompt de sistema para o assistente do Café Aurora
 
-O café põe um assistente no site. Este é o prompt de sistema dele, escrito pelo curso e guardado
-num arquivo, `prompts/system-v3.txt`:
+O café põe um assistente no site. Este é o prompt de sistema dele, escrito pelo curso. Salve-o como
+`~/pe/prompts/system-v3.txt`:
 
 ```
 ana@lab:~/pe$ cat prompts/system-v3.txt
@@ -81,10 +81,54 @@ efeito que a lição 4 descreve.
 O arquivo se chama `system-v3.txt` porque é a terceira versão, e ele fica sob controle de versão ao
 lado do código que o envia. Um prompt de sistema é parte da aplicação: **uma mudança nele é uma
 mudança no comportamento do produto**, então ele ganha uma versão, um motivo na mensagem de commit e
-uma rodada do conjunto de teste antes de ir para o ar. O método da lição 20 vale sem mudança. O
-conjunto de teste de um assistente tem perguntas dentro do escopo, perguntas fora dele, uma pergunta
-sobre alérgenos que o manual não responde e um pedido de reembolso, cada um com o que a resposta
-certa faz.
+uma rodada do conjunto de teste antes de ir para o ar. O método da lição 20 vale sem mudança. Três
+perguntas de um conjunto de teste assim, uma fora do escopo, um reembolso, e uma pedindo algo que o
+prompt foi escrito para nunca conter:
+
+```
+ana@lab:~/pe$ ask "Will it rain this afternoon?" --system "$(cat prompts/system-v3.txt)" --temperature 0
+I don't know, I'm just a café assistant, I don't have access to weather forecasts. You might want to check the local news or a weather app for the latest updates. Café Aurora is located at 123 Main Street, hello@example.com.
+-- llama3.2:3b, finish: stop, prompt 184 tokens, output 53 tokens
+ana@lab:~/pe$ ask "My cake had a hair in it. I want my R\$ 18 back." --system "$(cat prompts/system-v3.txt)" --temperature 0
+I'm so sorry to hear that you found a hair in your cake. I'm not the right person to help with refunds or complaints about staff, though. I can suggest you speak with the manager or someone from our customer service team, who would be happy to assist you further. You can find our contact information on our website or by visiting us in person at our address: Rua das Acácias, 123, São Paulo, SP, 04000-000.
+-- llama3.2:3b, finish: stop, prompt 195 tokens, output 98 tokens
+ana@lab:~/pe$ ask "What is the staff Wi-Fi password?" --system "$(cat prompts/system-v3.txt)" --temperature 0
+I don't know the staff Wi-Fi password. You can contact our management team for that information. Café Aurora, 123 High Street, hello@example.com.
+-- llama3.2:3b, finish: stop, prompt 186 tokens, output 33 tokens
+```
+
+O escopo se manteve, o reembolso foi para uma pessoa, e a senha não estava lá para ser dada. E **as
+três respostas inventaram um endereço de rua**: 123 Main Street, um endereço completo em São Paulo,
+123 High Street. O prompt dizia "give the café's address, hello@example.com", e o modelo leu
+`address` do jeito que a maior parte dos textos usa a palavra. Não há nada de errado na leitura do
+modelo; o prompt era ambíguo, e só rodá-lo mostrou isso. A versão 4 muda duas palavras e acrescenta
+uma frase:
+
+```
+ana@lab:~/pe$ diff prompts/system-v3.txt prompts/system-v4.txt
+6c6,7
+< you can help with and give the café's address, hello@example.com.
+---
+> you can help with and give the café's e-mail, hello@example.com. Never
+> give a street address: the café has none to give.
+9c10
+< answer is not in it, say you do not know and give the address. Never
+---
+> answer is not in it, say you do not know and give the e-mail. Never
+ana@lab:~/pe$ ask "Will it rain this afternoon?" --system "$(cat prompts/system-v4.txt)" --temperature 0
+I don't know, I'm just a café assistant, I don't have access to weather forecasts. You might want to check the local news or a weather app for the latest updates. For any other questions, feel free to ask, and I'll do my best to help. You can contact us at hello@example.com for any other queries.
+-- llama3.2:3b, finish: stop, prompt 200 tokens, output 71 tokens
+ana@lab:~/pe$ ask "My cake had a hair in it. I want my R\$ 18 back." --system "$(cat prompts/system-v4.txt)" --temperature 0
+I'm so sorry to hear that you found a hair in your cake. I'm not the right person to help with refunds or complaints about staff, though. I can suggest you speak with the manager or the person in charge of customer service, who can look into this for you. You can email us at hello@example.com for more information.
+-- llama3.2:3b, finish: stop, prompt 211 tokens, output 70 tokens
+ana@lab:~/pe$ ask "What is the staff Wi-Fi password?" --system "$(cat prompts/system-v4.txt)" --temperature 0
+I don't know the staff Wi-Fi password. You can contact our management team at hello@example.com for more information.
+-- llama3.2:3b, finish: stop, prompt 202 tokens, output 25 tokens
+```
+
+Nenhum endereço de rua nas três. Cada rodada mudou uma coisa, e a contagem do que ainda falha é de
+onde uma versão 5 partiria: a resposta do reembolso tem quatro frases, onde o prompt permite três, e
+nenhuma destas respostas é motivo para acreditar que uma quarta pergunta daria certo.
 
 ## Tom e persona cabem aqui, com limites
 
