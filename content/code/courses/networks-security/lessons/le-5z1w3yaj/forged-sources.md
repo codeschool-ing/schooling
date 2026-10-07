@@ -17,9 +17,25 @@ Forged sources matter for three reasons a defender meets:
 | reflection and amplification | the answers go to the forged address, the victim | 6 |
 | hiding where a flood comes from | each packet claims a different, random source | 6 |
 
-The lab can show the first on its own equipment. `remote`, on the internet, has been configured with a
-second address from the company's **server range**, `192.168.20.99`, and uses it as the source of a
-request to the shop. A recording on `www` shows what arrived:
+The lab can show the first on its own equipment. In your lab this lesson starts from
+`sudo bash nslab.sh reset` followed by `sudo bash dnssec.sh`, the script of section 06. On `fw` the
+company's policy is loaded with one rule more, which lets the staff LAN ask that signed zone on its
+port, 5300:
+
+```sh
+# on fw, as root
+nft -f baseline.nft; nft insert rule ip filter forward index 1 iifname "eth2" oifname "eth1" ip daddr 192.0.2.53 meta l4proto { tcp, udp } th dport 5300 ct state new accept comment \"the resolver asks the signed zone\"
+# on remote, as root
+ip addr add 192.168.20.99/32 dev eth0
+# on laptop, as root
+ip addr add 198.51.100.7/32 dev eth0
+```
+
+The last two lines give `remote`, on the internet, a second address from the company's **server
+range**, `192.168.20.99`, and `laptop` one that belongs to nobody, for section 04. `remote` uses its
+new address as the source of a request to the shop. A moment before, a recording starts on `www`:
+`setsid timeout 6 tcpdump -n -i eth0 -c 1 "tcp dst port 443 and src 192.168.20.99" > /root/syn.txt 2>/dev/null </dev/null &`.
+It shows what arrived:
 
 ```
 ana@remote:~$ curl -s -m2 --interface 192.168.20.99 https://www.example.com/; echo "exit $?"

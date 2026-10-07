@@ -14,7 +14,9 @@ db:22                  open
 
 `app` reaches the database and SSH on `db` freely. Nothing in `baseline.nft` allowed it and nothing
 could have stopped it: the rules are on a machine these packets never pass through. The same is true
-on the staff LAN. `desk` shares a folder on port 445, the port Windows file sharing uses:
+on the staff LAN. `desk` shares a folder on port 445, the port Windows file sharing uses. In the lab a
+listener stands in for the share; start it on `desk` as root with
+`setsid socat TCP-LISTEN:445,bind=192.168.10.21,fork,reuseaddr SYSTEM:"echo desk share" </dev/null >/dev/null 2>&1 &`:
 
 ```
 ana@laptop:~$ probe desk:22

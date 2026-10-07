@@ -8,7 +8,7 @@
 #   sudo bash ../../lab.sh tools     # once: the software the lab runs
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# The device is nc1: Clixon (built from the commit named in lab.sh), serving
+# The device is nc1: Clixon (built from the commits building-nc1.md names), serving
 # ietf-interfaces, ietf-ip and iana-if-type over NETCONF on port 830 and
 # RESTCONF on 443. It has no forwarding plane; its configuration is a document
 # Clixon validates and stores. The one piece of nc1 written for the lab is the

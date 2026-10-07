@@ -1,6 +1,6 @@
 ---
 title: Um modelo para os dados
-version: 1
+version: 2
 ---
 
 A primeira verificação é a mais barata: os dados têm ao menos a forma certa? O `StrictUndefined`
@@ -49,7 +49,23 @@ data/edge1.yaml: ok
 data/edge2.yaml: ok
 ```
 
-O arquivo de um roteador novo com três erros, colocado num diretório só dele:
+O arquivo de um roteador novo com três erros, `edge3.yaml`:
+
+```yaml
+hostname: edge3
+loopback: 203.0.113.254
+interfaces:
+  - name: eth1
+    description: uplink to core1
+    adress: 198.51.100.10/30
+    ospf: point-to-point
+  - name: eth2
+    description: branch LAN
+    address: 203.0.113.300/26
+    ospf: p2p
+```
+
+Colocado num diretório só dele e conferido:
 
 ```
 ana@ctl:~$ cd net && mkdir -p new && cp edge3.yaml new/ && python validate.py new; echo "exit status $?"

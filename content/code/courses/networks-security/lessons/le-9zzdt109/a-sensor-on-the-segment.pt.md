@@ -5,7 +5,9 @@ version: 1
 
 A empresa não quer que as páginas de administração da loja sejam pedidas a partir da internet. A aula 3
 mostrou como recusar isso no proxy; esta aula faz outra pergunta: **alguém perceberia a tentativa?**
-Uma regra no `sensor`:
+No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. Uma regra no `sensor`, escrita no seu arquivo de regras
+vazio:
 
 ```
 root@sensor:~# cat /etc/suricata/rules/local.rules

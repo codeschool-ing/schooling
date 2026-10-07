@@ -1,6 +1,6 @@
 ---
 title: Um inventário, e variáveis ao lado dele
-version: 1
+version: 2
 ---
 
 O Ansible é a ferramenta de automação mais usada em redes, e ele chega às mesmas ideias que o
@@ -9,7 +9,9 @@ programas; o Ansible é um programa para o qual você descreve o estado desejado
 chamados playbooks, e ele descobre o que rodar. Os dois mantêm a lista de equipamentos como dados,
 e os dois rodam em muitos equipamentos ao mesmo tempo.
 
-Um projeto é um diretório, e a organização dele é uma convenção que o Ansible lê sozinho:
+Um projeto é um diretório, e a organização dele é uma convenção que o Ansible lê sozinho. Este é o
+`~/net` na home da `ana`, e todo arquivo dele está impresso nesta aula; crie o diretório com
+`mkdir -p ~/net` e salve cada arquivo ali conforme o encontrar.
 
 ```
 ana@ctl:~$ cd net && find . -type f | sort
@@ -87,6 +89,21 @@ O `host_vars/edge1.yaml` vale para um host, e guarda o que o torna diferente:
 
 ```yaml
 router_id: 203.0.113.252
+bgp_neighbours: [203.0.113.251]
+```
+
+Os outros dois têm o mesmo formato. O `host_vars/core1.yaml`, o roteador com que toda filial faz
+peering:
+
+```yaml
+router_id: 203.0.113.251
+bgp_neighbours: [203.0.113.252, 203.0.113.253]
+```
+
+e o `host_vars/edge2.yaml`:
+
+```yaml
+router_id: 203.0.113.253
 bgp_neighbours: [203.0.113.251]
 ```
 

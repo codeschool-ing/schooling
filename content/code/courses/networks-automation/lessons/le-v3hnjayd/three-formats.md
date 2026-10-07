@@ -1,12 +1,29 @@
 ---
 title: One interface, three formats
-version: 1
+version: 2
 ---
 
 Network automation reads and writes three text formats all day, and each came from a different
 place. **XML** is what NETCONF speaks. **JSON** is what REST APIs, RESTCONF and gNMI speak. **YAML**
 is what people write by hand: inventories, Ansible playbooks, the intended state kept in a
-repository. The same interface, `eth1`, from all three:
+repository. The same interface, `eth1`, from all three.
+
+The YAML is a file somebody wrote, `eth1.yaml`, in `ana`'s home on `ctl`:
+
+```yaml
+# The same interface, written by a person for a file in a repository.
+name: eth1
+description: uplink to core1
+type: ethernetCsmacd
+enabled: true
+ipv4:
+  address:
+    - ip: 198.51.100.2
+      prefix-length: 30
+```
+
+The program beside it imports `nc.py`, the NETCONF helper lesson 3 wrote, so that file is in the
+same directory too:
 
 ```schooling-example
 {

@@ -1,11 +1,11 @@
 ---
 title: Uma sessão NETCONF, à mão
-version: 1
+version: 3
 ---
 
 Antes de qualquer biblioteca, o próprio protocolo. O NETCONF roda sobre SSH, na porta 830, como
 um **subsystem** SSH chamado `netconf`: a conexão carrega mensagens XML em vez de um shell. Esta é
-a conversa inteira de uma sessão, escrita num arquivo:
+a conversa inteira de uma sessão, escrita num arquivo, `hello.xml`:
 
 ```
 <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -24,7 +24,22 @@ a conversa inteira de uma sessão, escrita num arquivo:
 Três mensagens, cada uma terminada pelo marcador `]]>]]>`. A primeira é o **hello** do cliente,
 dizendo quais versões do protocolo ele fala. A segunda é um **rpc**, uma requisição, pedindo parte
 da configuração running. A terceira fecha a sessão. `ssh -s` abre o subsystem, o arquivo entra, e
-o `frames.py` só indenta o que volta para que uma pessoa consiga ler:
+o `frames.py` só indenta o que volta para que uma pessoa consiga ler. Ele tem nove linhas, e o
+parser de XML da biblioteca padrão faz o trabalho:
+
+```python
+# Split NETCONF 1.0 messages on their end marker and indent each one, so a
+# person can read what went over the wire. The bytes themselves are unchanged.
+import sys
+from xml.dom import minidom
+
+for message in sys.stdin.read().split("]]>]]>"):
+    if message.strip():
+        print(minidom.parseString(message.strip()).toprettyxml(indent="  ").split("\n", 1)[1].rstrip())
+        print("]]>]]>")
+```
+
+Com os dois arquivos na home da `ana` no `ctl`:
 
 ```
 ana@ctl:~$ (cat hello.xml; sleep 2) | ssh -p 830 -s netops@nc1.example.net netconf | python3 frames.py

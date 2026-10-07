@@ -18,7 +18,8 @@ conexão nova, um `SYN`, não traz nenhuma das duas, então falha no teste; todo
 conexão traz ACK. A chain `wan_in` do `acl-extended.nft`, lá na seção 04, faz o mesmo no lado da internet de
 `branch`: ela descarta o TCP em direção à filial que tenha as flags ACK e RST ambas desligadas.
 
-Um servidor em `branchpc` escuta na 8080. O `remote` tenta abrir uma conexão com ele, e o próprio
+Um servidor em `branchpc` escuta na 8080, iniciado lá como root com
+`setsid socat TCP-LISTEN:8080,bind=192.168.30.20,fork,reuseaddr SYSTEM:"echo branchpc" </dev/null >/dev/null 2>&1 &`. O `remote` tenta abrir uma conexão com ele, e o próprio
 computador da filial abre uma para fora:
 
 ```

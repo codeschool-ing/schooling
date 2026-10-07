@@ -48,8 +48,9 @@ there.
 
 ## The table itself
 
-`conntrack -L` prints what `fw` remembers. `laptop` held one connection open to `app` and had just
-closed another:
+`conntrack -L` prints what `fw` remembers. `laptop` held one connection open to `app` for three
+seconds, with `setsid bash -c "exec 3<>/dev/tcp/192.168.20.10/8080; sleep 3" </dev/null >/dev/null 2>&1 &`,
+and had just closed another, the `curl` above:
 
 ```
 root@fw:~# conntrack -L 2>/dev/null

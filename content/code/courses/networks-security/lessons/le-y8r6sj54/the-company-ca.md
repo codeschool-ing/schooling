@@ -4,8 +4,16 @@ version: 1
 ---
 
 The lab has had a CA since lesson 2: a **root**, which signs an **issuing CA**, which signs the
-servers. It lives on `admin` here. The three certificates, with the fields that decide what each may
-do:
+servers. `nslab.sh` builds it in `/lab/ca` on your own computer, with fixed dates, every time the lab
+comes up. In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy
+loaded on `fw` by `nft -f baseline.nft`, and then the CA is copied to `admin` and told where it now
+lives:
+
+```sh
+sudo cp -a /lab/ca /lab/admin/root/ca; sudo sed -i "s#^dir = .*#dir = /root/ca#" /lab/admin/root/ca/ca.cnf; sudo rm -f /lab/admin/root/ca/*.csr
+```
+
+The three certificates, with the fields that decide what each may do:
 
 ```
 root@admin:~# cd ca; for c in root issuing www.example.com; do echo "== $c"; openssl x509 -in $c.crt -noout -subject -issuer -dates -ext basicConstraints,keyUsage,extendedKeyUsage,subjectAltName 2>/dev/null; done

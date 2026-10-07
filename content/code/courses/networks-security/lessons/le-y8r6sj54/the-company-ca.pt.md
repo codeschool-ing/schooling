@@ -4,8 +4,16 @@ version: 1
 ---
 
 O laboratório tem uma CA desde a aula 2: uma **raiz** (*root*), que assina uma **CA emissora**
-(*issuing CA*), que assina os servidores. Aqui ela fica em `admin`. Os três certificados, com os
-campos que decidem o que cada um pode fazer:
+(*issuing CA*), que assina os servidores. O `nslab.sh` a monta em `/lab/ca` no seu próprio computador, com datas
+fixas, toda vez que o laboratório sobe. No seu laboratório esta aula começa com
+`sudo bash nslab.sh reset`, com a política da empresa carregada no `fw` por `nft -f baseline.nft`, e
+então a CA é copiada para o `admin` e informada de onde mora agora:
+
+```sh
+sudo cp -a /lab/ca /lab/admin/root/ca; sudo sed -i "s#^dir = .*#dir = /root/ca#" /lab/admin/root/ca/ca.cnf; sudo rm -f /lab/admin/root/ca/*.csr
+```
+
+Os três certificados, com os campos que decidem o que cada um pode fazer:
 
 ```
 root@admin:~# cd ca; for c in root issuing www.example.com; do echo "== $c"; openssl x509 -in $c.crt -noout -subject -issuer -dates -ext basicConstraints,keyUsage,extendedKeyUsage,subjectAltName 2>/dev/null; done

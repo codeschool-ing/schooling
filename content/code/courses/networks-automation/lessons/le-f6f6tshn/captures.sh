@@ -12,10 +12,10 @@
 # lab's driver, lesson 8), netutils 1.19.2 and Ubuntu 24.04's git.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; ana's git identity; the files ana wrote (put
-# below), whose contents the lessons show, with lesson 10's data, template and
-# render.py copied beside them; and edge2's SSH server, stopped before the
-# failed backup and started again after it, which the lesson says.
+# itself, built by lab.sh reset; the files lessons 8 and 10 left in ana's home
+# (put below, at their places there), which pulling.md copies into ~/net; the
+# files ana wrote; and edge2's SSH server, stopped before the failed backup
+# and started again after it, with the commands failure.md gives.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -54,9 +54,9 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
-lab exec ctl ana 'git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main && mkdir -p net/inventory net/data net/templates'
+# lessons 8 and 10 as they left ana's home: their files, which those lessons show
 
-put net/config.yaml <<'CODE'
+put config.yaml <<'CODE'
 inventory:
   plugin: SimpleInventory
   options:
@@ -68,19 +68,7 @@ runner:
   options:
     num_workers: 10
 CODE
-put net/inventory/hosts.yaml <<'CODE'
----
-core1:
-  hostname: core1.example.net
-  groups: [routers]
-edge1:
-  hostname: edge1.example.net
-  groups: [routers]
-edge2:
-  hostname: edge2.example.net
-  groups: [routers]
-CODE
-put net/inventory/groups.yaml <<'CODE'
+put inventory/groups.yaml <<'CODE'
 ---
 routers:
   platform: cisco_ios
@@ -90,7 +78,7 @@ routers:
       extras:
         optional_args: {key_file: /home/ana/.ssh/id_ed25519}
 CODE
-put net/inventory/defaults.yaml <<'CODE'
+put inventory/defaults.yaml <<'CODE'
 ---
 username: netops
 connection_options:
@@ -159,7 +147,7 @@ with driver(host, "netops", None, optional_args={"key_file": "/home/ana/.ssh/id_
     else:
         dev.discard_config()
 CODE
-put net/data/core1.yaml <<'CODE'
+put tpl/data/core1.yaml <<'CODE'
 hostname: core1
 loopback: 203.0.113.251
 interfaces:
@@ -172,7 +160,7 @@ interfaces:
     address: 198.51.100.5/30
     ospf: point-to-point
 CODE
-put net/data/edge1.yaml <<'CODE'
+put tpl/data/edge1.yaml <<'CODE'
 hostname: edge1
 loopback: 203.0.113.252
 interfaces:
@@ -185,7 +173,7 @@ interfaces:
     address: 203.0.113.1/26
     ospf: passive
 CODE
-put net/data/edge2.yaml <<'CODE'
+put tpl/data/edge2.yaml <<'CODE'
 hostname: edge2
 loopback: 203.0.113.253
 interfaces:
@@ -198,7 +186,7 @@ interfaces:
     address: 203.0.113.65/26
     ospf: passive
 CODE
-put net/templates/frr.j2 <<'CODE'
+put tpl/templates/frr.j2 <<'CODE'
 frr version 8.4.4
 frr defaults traditional
 hostname {{ hostname }}
@@ -237,7 +225,7 @@ exit
 !
 end
 CODE
-put net/render.py <<'CODE'
+put tpl/render.py <<'CODE'
 import ipaddress
 import pathlib
 
@@ -268,6 +256,21 @@ for path in sorted(pathlib.Path("data").glob("*.yaml")):
     print(f"{path} -> configs/{data['hostname']}.conf, {len(text.splitlines())} lines")
 CODE
 
+block setup
+on ctl 'git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main'
+on ctl 'mkdir -p net/inventory net/templates && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/render.py net/ && cp tpl/templates/frr.j2 net/templates/'
+put net/inventory/hosts.yaml <<'CODE'
+---
+core1:
+  hostname: core1.example.net
+  groups: [routers]
+edge1:
+  hostname: edge1.example.net
+  groups: [routers]
+edge2:
+  hostname: edge2.example.net
+  groups: [routers]
+CODE
 block init
 on ctl 'cd net && git init --quiet backups && ls'
 block first

@@ -1,6 +1,6 @@
 ---
 title: A rule for the whole network, in one place
-version: 1
+version: 2
 ---
 
 A second application runs next to the first. It knows nothing about learning; it holds one policy,
@@ -53,6 +53,9 @@ ana@sw1:~$ ovs-ofctl -O OpenFlow13 dump-flows br0 | grep -E "priority=(100|0)"
  cookie=0x0, duration=13.604s, table=0, n_packets=2, n_bytes=196, priority=100,ip,nw_src=203.0.113.131,nw_dst=203.0.113.129 actions=drop
  cookie=0x0, duration=13.604s, table=0, n_packets=8, n_bytes=448, priority=0 actions=CONTROLLER:65535
 ```
+
+The controller's terminal, stopped with
+`pkill -TERM -f "^python controller.py learning policy$"` once the flows had been read:
 
 ```
 ana@ctl:~$ cd sdn && python controller.py learning policy

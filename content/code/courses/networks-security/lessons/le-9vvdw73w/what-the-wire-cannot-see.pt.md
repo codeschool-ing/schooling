@@ -3,8 +3,19 @@ title: O que o fio não vê
 version: 1
 ---
 
-O sensor de rede na DMZ vigia o caminho de administração pedido de fora, como na aula 14. Um
-desconhecido o pede duas vezes, uma por HTTP puro e outra por HTTPS:
+O sensor de rede na DMZ vigia o caminho de administração pedido de fora, como na aula 14. No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. Ponha a regra da aula 14 em
+`/etc/suricata/rules/local.rules` no `sensor`, na sua terceira revisão, que pede `/admin/` com a barra
+para que uma página como `/admin-guide.html` não case mais:
+
+```conf
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"admin path requested from outside"; flow:to_server,established; http.uri; content:"/admin/"; startswith; classtype:policy-violation; sid:1000101; rev:3;)
+```
+
+Suba o Suricata lá com o comando da aula 14,
+`suricata -c /etc/suricata/suricata.yaml --af-packet=eth0 -D --pidfile /var/log/suricata/suricata.pid`,
+e dê a ele dez segundos. Um desconhecido pede o caminho duas vezes, uma por HTTP puro e outra por
+HTTPS:
 
 ```
 ana@remote:~$ curl -s http://www.example.com/admin/; curl -s https://www.example.com/admin/

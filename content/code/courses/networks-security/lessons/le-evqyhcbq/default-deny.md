@@ -28,7 +28,11 @@ app:8080               open
 
 The database is `blocked`. SSH on the application server and the application itself are `open` to
 the whole internet, because nobody thought to list them. Then a developer installs a cache on `db`,
-listening on 6379, and tells nobody:
+listening on 6379, and tells nobody. In the lab a listener plays the cache; start it on `db` as root:
+
+```sh
+setsid socat TCP-LISTEN:6379,bind=192.168.20.30,fork,reuseaddr SYSTEM:"echo cache ready" </dev/null >/dev/null 2>&1 &
+```
 
 ```
 ana@remote:~$ probe db:6379

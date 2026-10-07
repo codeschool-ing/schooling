@@ -15,7 +15,9 @@ table ip filter
 
 Numa rede com IPv6, uma `table ip` deixa todo pacote IPv6 sem filtro, o que é uma segunda política
 `accept`, invisível. A família `inet` trata os dois com um único conjunto de regras. A base, com
-só a linha `table` alterada, passa limpa na verificação:
+só a linha `table` alterada por
+`sed "s/^table ip filter/table inet filter/" baseline.nft > baseline-inet.nft`, passa limpa na
+verificação:
 
 ```
 root@fw:~# nft -c -f baseline-inet.nft && echo "inet rule set: ok"

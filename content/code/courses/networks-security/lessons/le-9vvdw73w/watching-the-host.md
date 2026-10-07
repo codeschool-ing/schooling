@@ -7,7 +7,10 @@ The configuration change in the previous section pointed at a program on port 80
 the configuration; a check of **what the host is listening on** sees the program itself. It is one of
 the cheapest host checks there is, and the logic is the same as AIDE's: record a baseline, compare.
 
-`www`'s listening sockets, saved as the baseline:
+`www`'s listening sockets are saved as the baseline, and then the program behind `/debug/` is started,
+a listener standing in for it:
+`setsid socat TCP-LISTEN:8081,bind=0.0.0.0,fork,reuseaddr SYSTEM:"echo debug" </dev/null >/dev/null 2>&1 &`.
+The baseline first:
 
 ```
 root@www:~# ss -Hltn | awk "{print \$4}" | sort > listening.baseline; cat listening.baseline

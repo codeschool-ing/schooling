@@ -3,9 +3,17 @@ title: Estar dentro não basta
 version: 1
 ---
 
-A aplicação ganha uma porta de entrada que verifica identidade. Em `app`, o nginx escuta na 8443 com
-TLS e **exige um certificado de cliente** assinado pela CA da empresa, e, entre os válidos, admite só
-o do proxy:
+A aplicação ganha uma porta de entrada que verifica identidade, e as máquinas precisam de identidades
+para mostrar a ela. Salve este script ao lado do `nslab.sh` e rode-o quando o laboratório estiver de
+pé:
+
+```schooling-example
+{"language": "sh", "file": "identities.sh", "parts": [{"code": "#!/bin/bash\n# identities.sh: lesson 20's certificates, issued from the lab's CA.\nset -euo pipefail\ncd /lab/ca\nmk() {  # mk NAME EXTENSIONS START END SAN\n  openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj \"/CN=$1\" -keyout \"$1.key\" -out \"$1.csr\" 2>/dev/null\n  { sed -n \"/^\\[$2\\]/,/^\\[/p\" ca.cnf | sed '$d'; if [ -n \"$5\" ]; then echo \"subjectAltName = $5\"; fi; } > \"$1.ext\"\n  openssl ca -batch -config ca.cnf -cert issuing.crt -keyfile issuing.key -extfile \"$1.ext\" -extensions \"$2\" -startdate \"$3\" -enddate \"$4\" -in \"$1.csr\" -out \"$1.crt\" -notext 2>/dev/null\n}\nmk app.corp.example.com server 20260928000000Z 20261228000000Z DNS:app.corp.example.com\nmk www-client client 20260928000000Z 20261228000000Z \"\"\nmk www-client-old client 20260601000000Z 20260831000000Z \"\"", "note": "Três certificados emitidos pela CA emissora da empresa, com datas fixas, como a aula 12 emitiu um: `app.corp.example.com` para o listener TLS da aplicação, `www-client` para o proxy provar quem é, e um certificado de cliente antigo do proxy, que expirou em 31 de agosto de 2026. Rode-o no seu próprio computador, depois do `nslab.sh up`, com `sudo bash identities.sh`."}, {"code": "mkdir -p /lab/app/root/tls /lab/www/root/tls\ncat app.corp.example.com.crt issuing.crt > /lab/app/root/tls/app.crt; cp app.corp.example.com.key /lab/app/root/tls/app.key\ncat issuing.crt root.crt > /lab/app/root/tls/clients-ca.crt\ncp www-client.crt www-client.key www-client-old.crt www-client-old.key /lab/www/root/tls/\nchmod 600 /lab/app/root/tls/*.key /lab/www/root/tls/*.key", "note": "Cada um vai para a máquina que o usa, com a sua chave, em `/root/tls`. O `app` recebe também os dois certificados de CA contra os quais vai conferir os clientes."}]}
+```
+
+Em `app`, o nginx então escuta na 8443 com TLS e **exige um certificado de cliente** assinado pela CA
+da empresa, e, entre os válidos, admite só o do proxy. O arquivo abaixo é o `/root/nginx-app.conf`
+de lá:
 
 ```
 root@app:~# cat nginx-app.conf

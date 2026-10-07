@@ -9,7 +9,7 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # The gNMI target on each router is devapi, written for this course and printed
-# in full in lab.sh: the gNMI 0.8 service over TLS on port 9339, serving a
+# in full in lesson 2's the-server.md: the gNMI 0.8 service over TLS on port 9339, serving a
 # subset of openconfig-interfaces and openconfig-system from FRR and from the
 # kernel's counters. The clients are real: gnmic v0.42.0 and pygnmi 0.8.15.
 #
@@ -56,6 +56,11 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
+# on the virtual machine, as ubuntu, where gnmic was installed (lab.sh tools ran
+# polling-and-streaming.md's fence, which downloads the two files this checks)
+vm() { printf 'ubuntu@netlab:~$ %s\n' "$1"; lab host "$1" 2>&1 || true; }
+block gnmic-checksum
+vm 'sha256sum --ignore-missing -c checksums.txt'
 
 put .gnmic.yaml <<'CODE'
 username: netops
