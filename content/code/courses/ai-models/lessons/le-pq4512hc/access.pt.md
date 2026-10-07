@@ -6,7 +6,7 @@ version: 1
 A mesma busca da aula 2 seção 05, para o Flash 3.5:
 
 ```
-ana@desk:~/desk$ sheet where gemini-3.5-flash
+ana@desk:~/desk$ python sheet.py where gemini-3.5-flash
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 aihubmix/gemini-3.5-flash-lite                       aihubmix                        0.3 2.499999

@@ -6,7 +6,7 @@ version: 1
 A outra linha que distingue a família é o que ela aceita. A entrada do Flash 3.5:
 
 ```
-ana@desk:~/desk$ sheet show gemini/gemini-3.5-flash | grep -E "^(supported_|input_cost_per_audio|search_context|google_maps)"
+ana@desk:~/desk$ python sheet.py show gemini/gemini-3.5-flash | grep -E "^(supported_|input_cost_per_audio|search_context|google_maps)"
 google_maps_grounding_cost_per_query       0.014
 input_cost_per_audio_token                 1.5e-06
 input_cost_per_audio_token_priority        2.7e-06

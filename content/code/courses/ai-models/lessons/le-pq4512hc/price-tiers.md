@@ -6,7 +6,7 @@ version: 1
 Lesson 4 met two prices per model, standard and batch. Gemini Pro's entry carries more:
 
 ```
-ana@desk:~/desk$ sheet show gemini/gemini-pro-latest | grep -E "^(input|output)_cost_per_token"
+ana@desk:~/desk$ python sheet.py show gemini/gemini-pro-latest | grep -E "^(input|output)_cost_per_token"
 input_cost_per_token                       2e-06
 input_cost_per_token_above_200k_tokens     4e-06
 input_cost_per_token_above_200k_tokens_priority 7.2e-06
@@ -43,14 +43,14 @@ Two lines above carry `above_200k_tokens`, and they change the arithmetic of lon
 estimate of a 300,000-token request uses the standard rate:
 
 ```
-ana@desk:~/desk$ sheet cost gemini/gemini-pro-latest 300000 1000
+ana@desk:~/desk$ python sheet.py cost gemini/gemini-pro-latest 300000 1000
 # LiteLLM model sheet at 21881c57, 4472 entries
 300,000 in  x $2/M = $0.6000
 1,000 out x $12/M = $0.0120
 total $0.6120
 ```
 
-That is what `sheet cost` does, and it is wrong for this model. LiteLLM's own code, which uses these
+That is what `sheet.py cost` does, and it is wrong for this model. LiteLLM's own code, which uses these
 same fields to bill its users, says how the threshold applies:
 
 ```
@@ -61,13 +61,13 @@ same fields to bill its users, says how the threshold applies:
 ```
 
 **Once the prompt passes 200,000 tokens, every token in the request moves to the higher rate**, the
-first 200,000 included, and the output with it. `lab/tiered.py` applies that rule:
+first 200,000 included, and the output with it. `tiered.py` applies that rule:
 
 ```python
 import json
 import sys
 
-sheet = json.load(open("/opt/aimodels/share/litellm-21881c57.json"))
+sheet = json.load(open("litellm-21881c57.json"))  # the copy sheet.py keeps
 model, tokens_in, tokens_out = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 e = sheet[model]
 rate_in, rate_out = e["input_cost_per_token"], e["output_cost_per_token"]
@@ -80,7 +80,7 @@ print(f"{tokens_in:,} in at ${rate_in * 1e6:g}/M, {tokens_out:,} out at ${rate_o
 ```
 
 ```
-ana@desk:~/desk$ python lab/tiered.py gemini/gemini-pro-latest 190000 1000; python lab/tiered.py gemini/gemini-pro-latest 210000 1000
+ana@desk:~/desk$ python tiered.py gemini/gemini-pro-latest 190000 1000; python tiered.py gemini/gemini-pro-latest 210000 1000
 190,000 in at $2/M, 1,000 out at $12/M: $0.3920
 210,000 in at $4/M, 1,000 out at $18/M: $0.8580
 ```
@@ -90,6 +90,6 @@ against $0.8580. A long-context workload that hovers near the line is a workload
 on which side of it each request falls, and the fix is usually upstream: retrieve less (lesson 4
 section 07), or split the document.
 
-A reminder about the tool: the sheet records these tiers; `sheet cost` ignores them. **A cost
+A reminder about the tool: the sheet records these tiers; `sheet.py cost` ignores them. **A cost
 calculator that knows only the standard rate is right until the day it is badly wrong**, which is a
 reason lesson 21 counts what each response reports rather than what a calculator predicts.
