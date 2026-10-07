@@ -1,6 +1,6 @@
 ---
 title: Arrays, para quando uma lista de palavras não basta
-version: 1
+version: 2
 ---
 
 Uma variável comum guarda uma string. Ponha uma lista de nomes de arquivo numa delas, separados por
@@ -78,8 +78,8 @@ você precisa dos índices.
 ## Preencher a partir de um glob
 
 ```
-ana@vm:/tmp/q2$ cd /tmp/q2 && files=(*.txt); echo "${#files[@]} files: ${files[*]}"
-2 files: nonl.txt tricky.txt
+ana@vm:/tmp/q2$ cd /tmp/q2 && files=(*.log); echo "${#files[@]} files: ${files[*]}"
+3 files: a.log b.log two words.log
 ```
 
 **`files=(*.log)` é a forma segura de guardar uma lista de nomes de arquivo**, porque o shell

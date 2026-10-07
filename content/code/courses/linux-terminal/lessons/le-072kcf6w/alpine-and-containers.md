@@ -1,6 +1,6 @@
 ---
 title: Alpine, and why your container behaves oddly
-version: 3
+version: 2
 ---
 
 Every other distribution in this lesson is one you might run a server on. **Alpine is the one you

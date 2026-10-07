@@ -174,6 +174,10 @@ def fences(text):
     return lines, out
 
 
+def shquote(text):
+    return "'" + text.replace("'", "'\\''") + "'"
+
+
 def incomplete(cmd):
     """Whether bash would print PS2 and wait for more after this much of a command."""
     m = re.search(r"<<-?\s*['\"]?(\w+)['\"]?", cmd)
@@ -276,7 +280,14 @@ def main():
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--only", default="", help="write only these fence numbers; every fence still runs")
     ap.add_argument("--setup", action="store_true", help="run `sh` fences instead of skipping them")
+    ap.add_argument("--setup-home", action="store_true",
+                    help="run only the `sh` fences that start in the student's home (`cd ~/…`, "
+                         "`mkdir -p ~/…`): from lesson 9 on, a lesson also shows `sh` fences that "
+                         "are examples to read, not steps to take")
     ap.add_argument("--cols", type=int, default=100)
+    ap.add_argument("--materialize", action="store_true",
+                    help="a `cat NAME` whose file is missing writes NAME from the transcript first, "
+                         "as the student is told to, and makes it executable")
     ap.add_argument("--quiet", action="store_true", help="print only fences that differ")
     a = ap.parse_args()
     only = {int(x) for x in a.only.split(",") if x}
@@ -287,7 +298,8 @@ def main():
             lines, fs = fences(text)
             edits = []
             for start, end, lang, body in fs:
-                if lang == "sh" and a.setup:
+                home_first = bool(body) and re.match(r"^(cd|mkdir)( -p)? (~|/tmp)", body[0])
+                if lang == "sh" and (a.setup or (a.setup_home and home_first)):
                     sh = mach.shell("ana")
                     out, st = sh.run("{\n" + "\n".join(body) + "\n}")
                     print(f"# {path}:{start} setup ran, status {st}" + (f"\n{out}" if out.strip() else ""))
@@ -301,20 +313,36 @@ def main():
                     continue
                 n += 1
                 got, manual = [], False
+                # A prompt in the middle of a line is output with no final newline
+                # followed by the next prompt; a bare `read` waits for the keyboard.
+                # Neither can be typed into a pipe and kept in step.
+                if any(re.search(r"\S(ana|root|bruno|carla|dora|demo)@" + HOST + r":\S*[$#] ", l) for l in body) or \
+                        any(re.match(r"^read\b[^<|]*$", st_[3].strip()) for st_ in steps(body)):
+                    print(f"## [{n}] {path}:{start} MANUAL (typed input, or output with no newline)")
+                    continue
                 for prompt, user, cwd, cmd, expect in steps(body):
                     got.append(prompt)
                     if screen(cmd) or any(l.startswith("^C") or l.startswith("^Z") for l in expect):
                         manual = True
                         break
+                    mc = re.match(r"^cat ([\w.-]+\.(?:sh|py|txt|ps1))$", cmd.strip())
+                    if a.materialize and mc and expect:
+                        sh = mach.shell(user or "ana")
+                        if cwd:
+                            sh.cd(cwd)
+                        name = mc.group(1)
+                        body_text = "\n".join(expect) + "\n"
+                        sh.run(f"[ -e {name} ] || {{ printf '%s' {shquote(body_text)} > {name}; chmod +x {name}; }}")
                     answers = [m.group(1) for m in (re.search(r"[?:] (y|n|yes|no)$", l) for l in expect) if m]
                     out, st = mach.step(user, cwd, cmd, answers, expect)
                     if st == -1 and "[replay: TIMEOUT]" in out:
                         manual = True
                         break
+                    printed = out != ""
                     out = "\n".join(l.rstrip().expandtabs(8) for l in out.split("\n"))
                     if out.endswith("\n"):
                         out = out[:-1]
-                    if out:
+                    if printed:
                         got.extend(out.split("\n"))
                 want = [l.rstrip() for l in body]
                 if manual:

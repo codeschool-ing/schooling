@@ -1,6 +1,6 @@
 ---
 title: Aspas, que é onde os bugs moram
-version: 1
+version: 2
 ---
 
 Mais bugs de shell vêm de aspas do que de todo o resto desta aula somado. O motivo é que **uma
@@ -32,6 +32,13 @@ não o primeiro campo do awk.
 ## O que as aspas duplas de fato impedem
 
 Não a expansão — essa elas deixam passar. Elas impedem as *duas coisas que acontecem depois* dela.
+Esta parte trabalha num diretório de rascunho dentro de `/tmp`, que a máquina esvazia quando
+reinicia:
+
+```sh
+mkdir -p /tmp/q
+cd /tmp/q
+```
 
 ```
 ana@vm:/tmp/q$ touch 'my file.txt' plain.txt a.log b.log

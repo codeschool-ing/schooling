@@ -1,7 +1,19 @@
 ---
 title: Variáveis, e os quatro caracteres que não são permitidos
-version: 1
+version: 2
 ---
+
+O script que esta seção roda, criado em `~/work/scripts` do jeito que a seção 02 descreveu:
+
+```sh
+cd ~/work/scripts
+cat > child.sh <<'END'
+#!/bin/bash
+echo "shell variable SHELLVAR is [${SHELLVAR:-unset}]"
+echo "environment  ENVVAR   is [${ENVVAR:-unset}]"
+END
+chmod +x child.sh
+```
 
 ```
 ana@vm:~/work/scripts$ name=ana
@@ -151,7 +163,12 @@ declare -i n="7"
 
 O `declare -i` torna a variável inteira, então atribuições a ela são avaliadas como aritmética — o
 `n=n+2` deu `7` em vez da string `n+2`. É ocasionalmente prático e principalmente uma curiosidade;
-o `$(( ))` é mais claro.
+o `$(( ))` é mais claro. E ele gruda: o `n` continua inteiro enquanto este shell rodar, o que a
+seção 14 tropeçaria, então tire-o de novo:
+
+```
+ana@vm:~/work/scripts$ unset n
+```
 
 O `readonly` é o que vale usar de fato, para o punhado de coisas que um script não pode
 reatribuir.

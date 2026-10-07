@@ -1,6 +1,6 @@
 ---
 title: Arrays, for when a list of words is not enough
-version: 1
+version: 2
 ---
 
 A plain variable holds one string. Put a list of filenames in one, separated by spaces, and you
@@ -78,8 +78,8 @@ you need the indexes.
 ## Filling one from a glob
 
 ```
-ana@vm:/tmp/q2$ cd /tmp/q2 && files=(*.txt); echo "${#files[@]} files: ${files[*]}"
-2 files: nonl.txt tricky.txt
+ana@vm:/tmp/q2$ cd /tmp/q2 && files=(*.log); echo "${#files[@]} files: ${files[*]}"
+3 files: a.log b.log two words.log
 ```
 
 **`files=(*.log)` is the safe way to hold a list of filenames**, because the shell built the list
