@@ -1107,6 +1107,59 @@ def l13_attainment(lang):
     return fig, cap[lang]
 
 
+# ----------------------------------------------------------------- lesson 14
+
+@figure('l14-calendar', 14)
+def l14_calendar(lang):
+    start, end = dt.date(2025, 3, 1), dt.date(2025, 5, 31)
+    days = [start + dt.timedelta(n) for n in range((end - start).days + 1)]
+    count = collections.Counter()
+    for r in rows('raw/store_sales.csv', encoding='latin-1', delimiter=';'):
+        d = dt.datetime.strptime(r['data'], '%d/%m/%Y').date()
+        if start <= d <= end:
+            count[d] += 1
+    kind = {dt.date.fromisoformat(r['date']): r['kind'] for r in rows('ref/holidays_2025.csv')}
+    fig = Fig('l14-calendar', 720, 300, {
+        'en': 'Daily sales across the five shops from March to May 2025, one bar per day. The bars drop to zero '
+              'every Sunday and on the three national holidays in the period, Good Friday on 18 April, Tiradentes '
+              'on 21 April and Labour Day on 1 May. On the optional days, the two days of Carnival and Ash '
+              'Wednesday in early March, the shops sold as usual.',
+        'pt': 'Vendas diárias das cinco lojas de março a maio de 2025, uma barra por dia. As barras caem a zero '
+              'todo domingo e nos três feriados nacionais do período, a Sexta-feira Santa em 18 de abril, '
+              'Tiradentes em 21 de abril e o Dia do Trabalho em 1º de maio. Nos pontos facultativos, os dois dias '
+              'de Carnaval e a Quarta-feira de Cinzas no começo de março, as lojas venderam normalmente.'}[lang])
+    top = max(count.values()) * 1.12
+    p = Plot(fig, 70, 40, 690, 210, 0, len(days), 0, top)
+    p.yaxis([0, 50, 100], fmt=lambda v: str(int(v)), label={'en': 'shop sales', 'pt': 'vendas nas lojas'}[lang])
+    for i, d in enumerate(days):
+        c = count.get(d, 0)
+        if c:
+            x0, x1 = p.sx(i) + 0.8, p.sx(i + 1) - 0.8
+            fig.rect(x0, p.sy(c), x1 - x0, p.y1 - p.sy(c), stroke='--phosphor', fill='--phosphor-dim', rx=0,
+                     width=0.6)
+        k = kind.get(d)
+        if k:
+            cx = (p.sx(i) + p.sx(i + 1)) / 2
+            fig.circle(cx, p.y1 + 12, 4, fill='--amber' if k == 'holiday' else '--panel', stroke='--amber',
+                       width=1.4)
+    fig.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    names = {'en': ['March', 'April', 'May'], 'pt': ['março', 'abril', 'maio']}[lang]
+    for m, name in zip([3, 4, 5], names):
+        i = days.index(dt.date(2025, m, 1))
+        fig.line(p.sx(i), p.y1, p.sx(i), p.y1 + 4, stroke='--paper-dim', width=1)
+        fig.text(p.sx(i) + 4, p.y1 + 32, name, size=10, anchor='start', fill='--paper-dim')
+    ly = 280
+    fig.circle(80, ly, 4, fill='--amber', stroke='--amber', width=1.4)
+    fig.text(90, ly, {'en': 'national holiday', 'pt': 'feriado nacional'}[lang], size=10.5, anchor='start')
+    fig.circle(250, ly, 4, fill='--panel', stroke='--amber', width=1.4)
+    fig.text(260, ly, {'en': 'optional day', 'pt': 'ponto facultativo'}[lang], size=10.5, anchor='start')
+    cap = {'en': 'Every gap in the bars is a Sunday or a national holiday; every optional day is an ordinary day of '
+                 'trade. Without the calendar, the three April and May gaps would be missing data.',
+           'pt': 'Toda falha nas barras é um domingo ou um feriado nacional; todo ponto facultativo é um dia normal de '
+                 'vendas. Sem o calendário, as três falhas de abril e maio seriam dado faltante.'}
+    return fig, cap[lang]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
