@@ -8,11 +8,13 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# Staged: chains/s1.txt to s5.txt and holiday/h1.txt to h5.txt. Every one
-# of them is a chain of thought WRITTEN BY THE COURSE as an illustration
-# of what sampling a model several times can return; the lesson
-# shows them and says so. No model wrote them. The vote over them is real:
-# bin/vote is printed in lab.sh. The toylm samples are real too.
+# Staged with put, and shown in the lesson with cat: two prompts, lesson 26's
+# café order and lesson 25's holiday question, each asking for a fixed answer
+# line. The samples in chains/ and holiday/ are the model's, drawn by the loops
+# the lesson shows; vote is read out of sample-and-vote.md.
+#
+# THE MODEL'S REPLIES are llama3.2:3b served by Ollama 0.40.0, at temperature
+# 0.7 and 0.8 with seeds 1 to 7 and 1 to 5, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -28,45 +30,31 @@ block() { printf '##### %s\n' "$1"; }
 exec 9>/var/tmp/pe-capture.lock; flock 9
 lab reset >/dev/null
 
-put chains/s1.txt <<'P'
-The card has 9 stamps, so the first flat white is the tenth coffee and free. Two are paid: 2 x 12 = 24. Cake: 2 x 15 = 30. 24 + 30 = 54, so the answer is 54.
+put prompts/order-chain.txt <<'P'
+A table at Café Aurora orders 3 flat whites at R$ 12 each and 2 slices of cake at R$ 15 each. They pay with a loyalty card that already has 9 stamps, and the tenth coffee is free. How much do they pay? Work it out step by step, then write the result on a last line that starts with Answer:
 P
-put chains/s2.txt <<'P'
-Coffees: 3 x 12 = 36. One of them is the tenth stamp, so take off 12: 24. Add the cake, 30. The answer is 54.
-P
-put chains/s3.txt <<'P'
-Three flat whites at 12 is 36 and two slices at 15 is 30. 36 + 30 = 66. The answer is 66.
-P
-put chains/s4.txt <<'P'
-Nine stamps plus this order: the next coffee completes the card and is free. Paid: two coffees (24) and two cakes (30). The answer is 54.
-P
-put chains/s5.txt <<'P'
-The ninth stamp means the next coffee is free, and the one after starts a new free card. One coffee paid, 12, plus cake 30. The answer is 42.
-P
-put holiday/h1.txt <<'P'
-It is Wednesday, and on weekdays the café closes at 18:00, so the kitchen takes hot food until 17:30. 11:45 is before that. The answer is yes.
-P
-put holiday/h2.txt <<'P'
-Wednesday hours are 07:00 to 18:00. The kitchen stops 30 minutes before closing, at 17:30. The answer is yes.
-P
-put holiday/h3.txt <<'P'
-A public holiday follows the Sunday hours: closing at 12:00, so hot food stops at 11:30. 11:45 is too late. The answer is no.
-P
-put holiday/h4.txt <<'P'
-The café is open on Wednesdays until 18:00 and the order is at 11:45, well inside the hours. The answer is yes.
-P
-put holiday/h5.txt <<'P'
-Holidays use Sunday hours, so the café closes at noon and the last hot food order is 11:30. The answer is no.
+put prompts/holiday-vote.txt <<'P'
+Café Aurora opens at 07:00 and closes at 18:00 from Monday to Saturday. On Sundays it opens at 08:00 and closes at 12:00. The kitchen stops taking hot food orders 30 minutes before closing. On public holidays the café follows the Sunday hours.
+
+Today is Wednesday, and it is a public holiday. At 11:45 a customer asks for a hot toastie. Can the kitchen take the order? Think it through, then end with one line: The answer is yes, or The answer is no.
 P
 
 block sample-and-vote
 on 'toylm generate "the café closes at" --temperature 0 --samples 5'
 on 'toylm generate "the café closes at" --samples 7'
-on 'head chains/*.txt'
+block sample
+on 'mkdir -p chains; for i in 1 2 3 4 5 6 7; do ask - --temperature 0.7 --seed $i --plain < prompts/order-chain.txt > chains/s$i.txt; done'
+on 'cat chains/s2.txt'
+on 'cat chains/s3.txt'
+block vote
 on 'vote chains/*.txt'
 
 block limits
 on 'tok count chains/*.txt'
-on 'vote chains/s1.txt chains/s3.txt chains/s5.txt'
-on 'head holiday/*.txt'
+block tie
+on 'vote chains/s1.txt chains/s2.txt chains/s6.txt'
+block holiday
+on 'cat prompts/holiday-vote.txt'
+on 'mkdir -p holiday; for i in 1 2 3 4 5; do ask - --temperature 0.8 --seed $i --plain < prompts/holiday-vote.txt > holiday/h$i.txt; done'
 on 'vote holiday/*.txt'
+on 'tail -1 holiday/h5.txt'
