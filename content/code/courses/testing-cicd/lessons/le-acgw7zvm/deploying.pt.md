@@ -1,11 +1,11 @@
 ---
 title: Um deploy é um comando
-version: 1
+version: 2
 ---
 
 Um deploy que vive na cabeça de alguém, ou numa página de wiki com doze passos, é um deploy que sai
 diferente a cada vez. **Um deploy deveria ser um comando que recebe um artefato e um ambiente e ou dá
-certo por inteiro ou diz que falhou.** O do `shipquote` é o `ops/deploy.sh`:
+certo por inteiro ou diz que falhou.** O do `shipquote` é um script. Salve como `ops/deploy.sh`:
 
 ```schooling-example
 {
@@ -32,7 +32,63 @@ certo por inteiro ou diz que falhou.** O do `shipquote` é o `ops/deploy.sh`:
 }
 ```
 
-A configuração inteira do ambiente de homologação é uma linha, e o deploy para ele imprime uma linha:
+O `deploy.sh` passa dois trabalhos a scripts próprios. Parar o processo antigo e subir o novo é o
+`restart.sh`. Salve como `ops/restart.sh`:
+
+```sh
+#!/usr/bin/env bash
+# Stop the environment's running process, if any, and start `current` with
+# the environment's own configuration.
+set -euo pipefail
+env=$1
+root=${SHIPQUOTE_ENVS:-$HOME/envs}/$env
+if [ -f "$root/pid" ] && kill -0 "$(cat "$root/pid")" 2>/dev/null; then
+  kill "$(cat "$root/pid")"
+  while kill -0 "$(cat "$root/pid")" 2>/dev/null; do sleep 0.1; done
+fi
+set -a; . "$root/config.env"; set +a
+export SHIPQUOTE_ENV=$env
+cd "$root/current"
+setsid python3 -m shipquote.app >> "$root/app.log" 2>&1 < /dev/null &
+echo $! > "$root/pid"
+for _ in $(seq 50); do
+  curl -s --max-time 1 "http://127.0.0.1:$SHIPQUOTE_PORT/health" > /dev/null && exit 0
+  sleep 0.1
+done
+echo "restart: $env did not answer on port $SHIPQUOTE_PORT" >&2
+exit 1
+```
+
+Ele guarda o id do processo no arquivo `pid` do ambiente, sobe o programa desligado do terminal com
+`setsid`, com a saída acrescentada ao `app.log`, e espera até cinco segundos o `/health` responder.
+O outro, `rollback.sh`, aponta o `current` de volta para o `previous`, e a aula 11 trata de quando
+usá-lo. Ele faz parte desta versão, então salve-o agora também. Salve como `ops/rollback.sh`:
+
+```sh
+#!/usr/bin/env bash
+# Point the environment back at the release it ran before, restart, smoke.
+set -euo pipefail
+env=$1
+root=${SHIPQUOTE_ENVS:-$HOME/envs}/$env
+[ -L "$root/previous" ] || { echo "rollback: $env has no previous release" >&2; exit 1; }
+before=$(readlink "$root/previous")
+ln -sfn "$(readlink "$root/current")" "$root/previous"
+ln -sfn "$before" "$root/current"
+"$(dirname "$0")/restart.sh" "$env"
+set -a; . "$root/config.env"; set +a
+"$(dirname "$0")/smoke.sh" "http://127.0.0.1:$SHIPQUOTE_PORT" "${before#releases/shipquote-}"
+```
+
+Um ambiente é um diretório que você cria, com uma configuração de uma linha:
+
+```sh
+mkdir -p ~/envs/staging ~/envs/production
+echo SHIPQUOTE_PORT=8200 > ~/envs/staging/config.env
+echo SHIPQUOTE_PORT=8300 > ~/envs/production/config.env
+```
+
+A configuração inteira do ambiente de homologação é essa linha, e o deploy para ele imprime uma
+linha:
 
 ```
 ana@laptop:~/shipquote$ cat ~/envs/staging/config.env
