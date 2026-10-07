@@ -116,11 +116,13 @@ exec_as() {  # exec_as USER COMMAND: in ~/desk, with desk.env and the venv, and 
   local dir=/home/$u/desk
   [ -d "$dir" ] || dir=/home/$u
   # The proxy is this machine's way out, not the student's; it is passed on so
-  # that what ana fetches goes where it would on any other machine.
+  # that what ana fetches goes where it would on any other machine. Its CA is in
+  # the system store, which node and httpx (certifi) do not read unless told;
+  # told always, since naming the system store changes nothing anywhere else.
   runuser -u "$u" -- env -i HOME=/home/$u USER="$u" TZ=$TZ_LAB LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PATH=/usr/local/bin:/usr/bin:/bin PYTHONDONTWRITEBYTECODE=1 \
     ${HTTPS_PROXY:+HTTPS_PROXY=$HTTPS_PROXY https_proxy=$HTTPS_PROXY NO_PROXY=${NO_PROXY:-} no_proxy=${NO_PROXY:-}} \
-    ${HTTPS_PROXY:+NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt} \
+    NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
     bash -c "cd $dir || exit 1; [ -f desk.env ] && . ./desk.env; [ -f .venv/bin/activate ] && . .venv/bin/activate; $*"
 }
 
