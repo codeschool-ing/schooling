@@ -1,6 +1,6 @@
 ---
 title: Stopping a reply
-version: 1
+version: 2
 ---
 
 A person who sees the reply going the wrong way presses Stop. **In code, stopping is closing the
@@ -14,7 +14,7 @@ import anthropic
 model = anthropic.Anthropic()
 ASK = [{"role": "user", "content": "Explain in a paragraph why the cart stores prices in cents."}]
 got = ""
-with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
     for text in stream.text_stream:
         got += text
         if len(got) >= 40:
@@ -26,15 +26,21 @@ print(repr(got))
 
 ```
 ana@dev:~/shop$ python cancel.py
-'The cart stores prices as integer cents because'
-ana@dev:~/shop$ sleep 1; tail -n 1 /var/log/labllm/requests.jsonl | python -c 'import json, sys; r = json.loads(sys.stdin.read()); print(r["status"], "| planned:", r["usage"]["output_tokens"], "tokens | sent before the close:", r["sent"])'
-client went away | planned: 82 tokens | sent before the close: 9
+'The practice of storing prices in cents in'
 ```
 
-**labllm stopped too.** It had 82 tokens planned and sent 9 before the next write found the
-connection closed; its log says `client went away`. A real provider behaves the same way from the
-outside. Whether the tokens it wrote before noticing are billed is in its terms; plan as if they
-are.
+And this is what the terminal running `ollama serve` printed at that moment, its last three lines:
+
+```
+srv          stop: cancel task, id_task = 1421
+slot      release: id  0 | task 1421 | stop processing: n_tokens = 47, truncated = 0
+srv  update_slots: all slots are idle
+```
+
+**Ollama stopped too.** `cancel task` is the server noticing the closed connection, and
+`n_tokens = 47` is how far it got: the 38 tokens of the question and its template, and 9 of reply,
+about the forty characters the script kept. A provider behaves the same way from the outside.
+Whether the tokens it wrote before noticing are billed is in its terms; plan as if they are.
 
 ## What Stop has to mean
 

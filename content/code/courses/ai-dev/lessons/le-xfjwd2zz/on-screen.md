@@ -1,39 +1,51 @@
 ---
 title: Showing a reply while it is written
-version: 1
+version: 2
 ---
 
 Models answer in Markdown, and a page renders it. **A reply half written is Markdown half
-written**, and the moments in between are what a person sees. `partial.py` prints the text a page
-would have at three moments:
+written**, and the moments in between are what a person sees. `partial.py` asks for a list with
+bold words and prints the end of the text a page would have each time a bold opens or closes:
 
 ```python
 """What a page would have to render at each moment of a reply written in Markdown."""
 import anthropic
 
 model = anthropic.Anthropic()
-ASK = [{"role": "user", "content": "The cents rule, as a short list."}]
+ASK = [{"role": "user", "content": "Why does a shop keep prices as whole cents? "
+                                   "A short Markdown list, with the key word of each item in bold."}]
 sofar = ""
-with model.messages.stream(model="scripted-1", max_tokens=300, messages=ASK) as stream:
+was_open = False
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, messages=ASK) as stream:
     for n, text in enumerate(stream.text_stream, 1):
         sofar += text
-        if n in (2, 5, 12):
-            print(f"after {n:2} pieces: {sofar!r}")
-print(f"at the end:      {sofar!r}")
+        is_open = sofar.count("**") % 2 == 1
+        if is_open != was_open:
+            print(f"after {n:3} pieces, bold {'opened' if is_open else 'closed'}: {sofar[-36:]!r}")
+            was_open = is_open
+print(f"at the end, {n} pieces and {len(sofar)} characters")
 ```
 
 ```
 ana@dev:~/shop$ python partial.py
-after  2 pieces: '**Store'
-after  5 pieces: '**Store cents, never'
-after 12 pieces: '**Store cents, never floats.** Then:\n\n- add'
-at the end:      '**Store cents, never floats.** Then:\n\n- add integers\n- round once, at the end\n- format at the edge'
+after  16 pieces, bold opened: ' keep prices as whole cents:\n\n*   **'
+after  19 pieces, bold closed: 's as whole cents:\n\n*   **Rounding**:'
+after  37 pieces, bold opened: 'lculations and reduce errors.\n*   **'
+after  40 pieces, bold closed: 'uce errors.\n*   **Price stability**:'
+after  59 pieces, bold opened: ' of small price fluctuations.\n*   **'
+after  62 pieces, bold closed: ' fluctuations.\n*   **Cost control**:'
+after  89 pieces, bold opened: 'the accuracy of calculations.\n*   **'
+after  92 pieces, bold closed: 'lations.\n*   **Marketing strategy**:'
+after 116 pieces, bold opened: 'ore appealing or competitive.\n*   **'
+after 120 pieces, bold closed: 'r competitive.\n*   **Practicality**:'
+at the end, 172 pieces and 884 characters
 ```
 
-**After two pieces the text is `**Store`**, an opening marker with no close. Rendered as it stands,
-a page shows two asterisks; a page that waits for the close shows nothing yet; a page that guesses
-shows bold that turns plain, or the reverse, as pieces arrive. The list after twelve pieces is
-a list item with one word in it.
+**Five bold words, and for three or four pieces each one is open**: after 16 pieces the text ends
+in `**`, an opening marker with no close, and `**Rounding**` is only complete at piece 19. Rendered
+as it stands, a page shows two asterisks; a page that waits for the close shows nothing yet; a page
+that guesses shows bold that turns plain, or the reverse, as pieces arrive. Five times in one short
+answer, each for about a third of a second at this speed, which is long enough to be seen.
 
 ## Rendering that does not flicker
 
@@ -47,8 +59,8 @@ a list item with one word in it.
 
 ## What the rest of the page should do
 
-- **Show that something is happening before the first word.** Time to first token is a tenth of a
-  second in the lab and can be several seconds with a long prompt. A placeholder that says the
+- **Show that something is happening before the first word.** Time to first token was three tenths
+  of a second in section 01, and is several seconds with a long prompt or a model still loading. A placeholder that says the
   reply is coming is better than nothing on the screen.
 - **Offer Stop while it streams**, and mean it, as lesson 9 section 06 does.
 - **Announce the reply once, when it is complete, to a screen reader.** A live region updated on

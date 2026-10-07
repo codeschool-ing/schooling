@@ -1,11 +1,11 @@
 ---
 title: Tool calls in a stream
-version: 1
+version: 2
 ---
 
 Lesson 8's tool calls stream too. The text arrives as text deltas, and **a tool call's arguments
-arrive as pieces of JSON**, in `input_json_delta` events. `tool_stream.py` prints each piece and
-says whether everything so far is valid JSON yet.
+arrive as pieces of JSON**, in `input_json_delta` events, as many or as few as the server likes.
+`tool_stream.py` prints each piece and says whether everything so far is valid JSON yet.
 
 ```python
 """A tool call, streamed: its arguments arrive as pieces of JSON that do not parse until the end."""
@@ -16,7 +16,7 @@ import anthropic
 TOOLS = [{"name": "get_stock", "description": "Units in stock and unit price in cents for one product, by its SKU.",
           "input_schema": {"type": "object", "properties": {"sku": {"type": "string"}}, "required": ["sku"]}}]
 model = anthropic.Anthropic()
-with model.messages.stream(model="scripted-1", max_tokens=300, tools=TOOLS,
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, tools=TOOLS,
                            messages=[{"role": "user", "content": "Is LAMP-02 in stock?"}]) as stream:
     sofar = ""
     for event in stream:
@@ -34,14 +34,17 @@ print(call.name, call.input)
 
 ```
 ana@dev:~/shop$ python tool_stream.py
-'{"sku": "LAM'   does not parse yet
-'P-02"}'         parses
+'{"sku":"LAMP-02"}' parses
 get_stock {'sku': 'LAMP-02'}
 ```
 
-**The first piece does not parse.** It is half a string inside half an object, and no JSON parser
-can read it. Only after the last piece is there a complete object, and the SDK hands it over as
-`input` on the message it builds at the end.
+**One piece, and it parses.** Ollama sends a tool call's arguments whole, in a single
+`input_json_delta`, once the model has finished writing them. Anthropic's API sends them in pieces
+as they are written, and a piece such as `'{"sku": "LAM'` is half a string inside half an object,
+which no JSON parser can read. Code written against one server meets the other the day the
+provider changes, so it has to be right for both: only after the last piece is there a complete
+object, and the SDK hands it over as `input` on the message it builds at the end, whichever way
+it arrived.
 
 ## What follows from that
 

@@ -77,6 +77,9 @@ ENV_FIRST="cat >> ~/aidev/bin/activate <<'EOF'"
 
 build_user() {
   mkdir -p $SHIM && ln -sf /usr/bin/python3.12 $SHIM/python3
+  # Ubuntu's own Node, once lesson 9 has ana install it; the recording machine
+  # has a newer one in /usr/local/bin that a student's would not.
+  ln -sf /usr/bin/node $SHIM/node
   if [ -n "${SSL_CERT_FILE:-}" ]; then cp "$SSL_CERT_FILE" $CA; fi
   id ana >/dev/null 2>&1 || useradd -m -s /bin/bash ana
   # The proxy variables survive sudo because the recording network needs them;
@@ -196,6 +199,7 @@ purge() {
   getent group ollama >/dev/null && groupdel ollama 2>/dev/null || true
   id ana >/dev/null 2>&1 && userdel -r ana 2>/dev/null || true
   rm -f /etc/sudoers.d/ana
+  apt-get remove -y -qq nodejs >/dev/null 2>&1 || true  # lesson 9 installs it
 }
 
 exec_as() {  # exec_as USER COMMAND: in ~/shop, with the activated environment

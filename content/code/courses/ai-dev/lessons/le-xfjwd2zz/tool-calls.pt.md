@@ -1,11 +1,12 @@
 ---
 title: Chamadas de ferramenta num stream
-version: 1
+version: 2
 ---
 
 As chamadas de ferramenta da aula 8 também vêm em streaming. O texto chega como deltas de texto, e
-**os argumentos de uma chamada chegam como pedaços de JSON**, em eventos `input_json_delta`. O
-`tool_stream.py` imprime cada pedaço e diz se tudo até ali já é JSON válido.
+**os argumentos de uma chamada chegam como pedaços de JSON**, em eventos `input_json_delta`, tantos
+ou tão poucos quanto o servidor quiser. O `tool_stream.py` imprime cada pedaço e diz se tudo até ali
+já é JSON válido.
 
 ```python
 """A tool call, streamed: its arguments arrive as pieces of JSON that do not parse until the end."""
@@ -16,7 +17,7 @@ import anthropic
 TOOLS = [{"name": "get_stock", "description": "Units in stock and unit price in cents for one product, by its SKU.",
           "input_schema": {"type": "object", "properties": {"sku": {"type": "string"}}, "required": ["sku"]}}]
 model = anthropic.Anthropic()
-with model.messages.stream(model="scripted-1", max_tokens=300, tools=TOOLS,
+with model.messages.stream(model="llama3.2:3b", max_tokens=300, tools=TOOLS,
                            messages=[{"role": "user", "content": "Is LAMP-02 in stock?"}]) as stream:
     sofar = ""
     for event in stream:
@@ -34,14 +35,17 @@ print(call.name, call.input)
 
 ```
 ana@dev:~/shop$ python tool_stream.py
-'{"sku": "LAM'   does not parse yet
-'P-02"}'         parses
+'{"sku":"LAMP-02"}' parses
 get_stock {'sku': 'LAMP-02'}
 ```
 
-**O primeiro pedaço não é lido.** É meia string dentro de meio objeto, e nenhum leitor de JSON
-consegue entendê-lo. Só depois do último pedaço existe um objeto completo, e o SDK o entrega como
-`input` na mensagem que monta no fim.
+**Um pedaço, e ele é lido.** O Ollama manda os argumentos de uma chamada inteiros, num único
+`input_json_delta`, depois que o modelo terminou de escrevê-los. A API da Anthropic os manda em
+pedaços conforme são escritos, e um pedaço como `'{"sku": "LAM'` é meia string dentro de meio objeto,
+que nenhum leitor de JSON consegue entender. Um código escrito contra um servidor encontra o outro no
+dia em que o provedor muda, então ele tem de estar certo para os dois: só depois do último pedaço
+existe um objeto completo, e o SDK o entrega como `input` na mensagem que monta no fim, como quer que
+ele tenha chegado.
 
 ## O que decorre disso
 
