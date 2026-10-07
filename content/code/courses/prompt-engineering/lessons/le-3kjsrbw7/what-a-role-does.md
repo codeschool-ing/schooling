@@ -1,6 +1,6 @@
 ---
 title: What a role changes in a reply
-version: 1
+version: 2
 ---
 
 A role prompt tells the model who to be: "You are a head barista", "You are a patient teacher",
@@ -27,43 +27,44 @@ to it.
 
 ## The same question, two roles
 
-The question is the same in both: a customer's complaint that the flat white tastes bitter. The
-course wrote both prompts and both replies as illustrations; no model was called.
+The question is the same in both: a bitter flat white. With the role of a barista talking to a
+customer:
 
-With the role of a barista talking to a customer:
-
-```localised
+```
+ana@lab:~/pe$ cat prompts/role-barista.txt
 You are a barista at Café Aurora, talking to a customer at the counter.
+Reply in three sentences or fewer.
 
 Customer: My flat white tastes really bitter today. Why?
-```
-
-```localised
-Sorry about that! It can mean the shot ran a little too long. Let me
-make you a fresh one, and if you'd like it milder I can use oat milk,
-at no extra cost.
+ana@lab:~/pe$ ask - --temperature 0 < prompts/role-barista.txt
+I'd be happy to help you troubleshoot. Can you tell me when you last had a flat white from us that you enjoyed, and have you noticed any changes in your coffee beans or brewing method recently?
+-- llama3.2:3b, finish: stop, prompt 61 tokens, output 43 tokens
 ```
 
 With the role of a coffee instructor teaching new staff:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/role-instructor.txt
 You are a coffee instructor at Café Aurora, teaching new staff.
+Reply in three sentences or fewer.
 
 Trainee: A customer said their flat white tasted really bitter. Why?
+ana@lab:~/pe$ ask - --temperature 0 < prompts/role-instructor.txt
+That's a great question, trainee! A flat white's bitterness can be caused by over-extraction of the coffee, which can happen if the brewing time is too long or the coffee-to-water ratio is off. Let's review the brewing technique and make sure we're aiming for a balanced extraction to bring out the smooth, velvety texture and flavors we want in a flat white.
+-- llama3.2:3b, finish: stop, prompt 60 tokens, output 80 tokens
 ```
 
-```localised
-Bitterness usually means over-extraction: the water spent too long
-in contact with the coffee, or the grind was too fine. Check the
-shot time first. If it is running long, coarsen the grind slightly
-and pull a test shot before serving.
-```
+Both are reasonable, and they are not interchangeable. The barista did not explain anything: it
+asked the customer two questions, about the last flat white they enjoyed and about their own beans
+and brewing, as if the customer had made the coffee. The instructor named a cause,
+"over-extraction", gave two ways it happens, and turned to what the trainee should check, with a
+"great question" on the way in. **Neither role added a fact the other lacked**: what makes coffee
+bitter came from what the model learnt in training, and the instructor put it forward while the
+barista did not. What changed is which part of that knowledge was used, in which words, for whom.
 
-Both are reasonable, and they are not interchangeable. The first apologises, offers a remedy and
-mentions a fact from the café's handbook. The second uses the word "over-extraction", gives a
-cause and a procedure, and apologises to nobody. **Neither role added a fact the other lacked**:
-the cause of bitterness is the same in both, and it came from what the model learnt in training.
-What changed is which part of that knowledge was put forward, in which words, for whom.
+The barista's reply also shows what a role does not settle. It sounds like a person at a counter,
+and it answers a complaint with questions the customer cannot answer. A role chooses a voice; it
+does not choose a good reply.
 
 ## A role is cheap, and that is its strength
 

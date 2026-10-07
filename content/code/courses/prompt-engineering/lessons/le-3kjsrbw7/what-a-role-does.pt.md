@@ -1,6 +1,6 @@
 ---
 title: O que um papel muda numa resposta
-version: 1
+version: 2
 ---
 
 Um prompt de papel diz ao modelo quem ele deve ser: "Você é um barista-chefe", "Você é um professor
@@ -27,43 +27,44 @@ ela.
 
 ## A mesma pergunta, dois papéis
 
-A pergunta é a mesma nos dois: a reclamação de um cliente de que o flat white está amargo. O curso
-escreveu os dois prompts e as duas respostas como ilustração; nenhum modelo foi chamado.
+A pergunta é a mesma nos dois: um flat white amargo. Com o papel de um barista falando com um
+cliente:
 
-Com o papel de um barista falando com um cliente:
-
-```localised
-Você é barista no Café Aurora, falando com um cliente no balcão.
-
-Cliente: Meu flat white está muito amargo hoje. Por quê?
 ```
+ana@lab:~/pe$ cat prompts/role-barista.txt
+You are a barista at Café Aurora, talking to a customer at the counter.
+Reply in three sentences or fewer.
 
-```localised
-Desculpe por isso! Pode ser que o shot tenha corrido um pouco demais.
-Vou fazer um novo para você, e se quiser mais suave posso usar leite
-de aveia, sem custo extra.
+Customer: My flat white tastes really bitter today. Why?
+ana@lab:~/pe$ ask - --temperature 0 < prompts/role-barista.txt
+I'd be happy to help you troubleshoot. Can you tell me when you last had a flat white from us that you enjoyed, and have you noticed any changes in your coffee beans or brewing method recently?
+-- llama3.2:3b, finish: stop, prompt 61 tokens, output 43 tokens
 ```
 
 Com o papel de um instrutor de café ensinando a equipe nova:
 
-```localised
-Você é instrutor de café no Café Aurora, ensinando a equipe nova.
+```
+ana@lab:~/pe$ cat prompts/role-instructor.txt
+You are a coffee instructor at Café Aurora, teaching new staff.
+Reply in three sentences or fewer.
 
-Aprendiz: Um cliente disse que o flat white estava muito amargo. Por quê?
+Trainee: A customer said their flat white tasted really bitter. Why?
+ana@lab:~/pe$ ask - --temperature 0 < prompts/role-instructor.txt
+That's a great question, trainee! A flat white's bitterness can be caused by over-extraction of the coffee, which can happen if the brewing time is too long or the coffee-to-water ratio is off. Let's review the brewing technique and make sure we're aiming for a balanced extraction to bring out the smooth, velvety texture and flavors we want in a flat white.
+-- llama3.2:3b, finish: stop, prompt 60 tokens, output 80 tokens
 ```
 
-```localised
-Amargor costuma indicar superextração: a água ficou tempo demais em
-contato com o café, ou a moagem estava fina demais. Confira primeiro
-o tempo do shot. Se estiver longo, engrosse um pouco a moagem e tire
-um shot de teste antes de servir.
-```
+As duas são razoáveis, e não são intercambiáveis. O barista não explicou nada: fez duas perguntas ao
+cliente, sobre o último flat white de que ele gostou e sobre os grãos e o preparo dele, como se o
+cliente tivesse feito o café. O instrutor nomeou uma causa, "over-extraction", deu dois jeitos de
+ela acontecer e passou ao que o aprendiz deve conferir, com um "great question" na entrada.
+**Nenhum papel acrescentou um fato que faltasse ao outro**: o que deixa o café amargo veio do que o
+modelo aprendeu no treino, e o instrutor o pôs à frente enquanto o barista não. O que mudou foi qual
+parte desse conhecimento foi usada, com que palavras, para quem.
 
-As duas são razoáveis, e não são intercambiáveis. A primeira pede desculpas, oferece uma solução e
-cita um fato do manual do café. A segunda usa a palavra "superextração", dá uma causa e um
-procedimento, e não pede desculpas a ninguém. **Nenhum dos papéis acrescentou um fato que o outro
-não tinha**: a causa do amargor é a mesma nas duas, e veio do que o modelo aprendeu no treinamento.
-O que mudou foi qual parte desse conhecimento foi posta à frente, com que palavras, para quem.
+A resposta do barista também mostra o que um papel não resolve. Ela soa como uma pessoa no balcão, e
+responde a uma reclamação com perguntas que o cliente não sabe responder. Um papel escolhe uma voz;
+não escolhe uma boa resposta.
 
 ## Um papel é barato, e essa é a força dele
 
