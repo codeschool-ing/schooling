@@ -60,14 +60,14 @@ tools() {
   # iproute2 for `ip` and `ss`, which the networking lessons read
   command -v ip >/dev/null || { apt-get update -qq && apt-get install -y -qq iproute2 >/dev/null; }
   id ana >/dev/null 2>&1 || useradd --create-home --shell /bin/bash ana
-  # bruno is a second account on the same machine, deliberately NOT in the
-  # docker group: lesson 6 shows what he gets when he tries.
-  id bruno >/dev/null 2>&1 || useradd --create-home --shell /bin/bash bruno
-  # A directory only root may read, with made-up figures, so that lesson 6 can
-  # show what membership of the docker group amounts to.
-  install -d -m 700 -o root -g root /srv/payroll
-  printf 'name,monthly_brl\nana,9800\nbruno,10400\n' > /srv/payroll/salaries.csv
-  chmod 600 /srv/payroll/salaries.csv
+  # bruno, a second account deliberately NOT in the docker group, and
+  # /srv/payroll, a directory only root may read with made-up figures, are
+  # what lesson 6 uses to show what membership of the group amounts to. They
+  # are made by the very block that lesson shows the student, read out of it.
+  if id bruno >/dev/null 2>&1; then userdel -r bruno 2>/dev/null || true; fi
+  rm -rf /srv/payroll
+  python3 "$LAB/lab/fences.py" block "$LAB/lessons/le-mk5c02v7/installing-engine.md" \
+    'sudo useradd --create-home --shell /bin/bash bruno' | bash -e
   getent group docker >/dev/null || groupadd docker
   usermod -aG docker ana
   echo 'ana ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/ana

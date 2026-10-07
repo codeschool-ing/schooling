@@ -12,9 +12,10 @@
 # repository; the transcripts read that installation rather than repeat it,
 # and the lesson marks the install commands as not run here. The machine does
 # not boot with systemd, so dockerd is started by lab.sh, its log is a file
-# rather than the journal, and `systemctl` says so in a transcript. bruno is a
-# second account lab.sh creates outside the docker group, and /srv/payroll is
-# a root-only directory lab.sh fills with made-up figures.
+# rather than the journal, and `systemctl` says so in a transcript. bruno, a
+# second account outside the docker group, and /srv/payroll, a root-only
+# directory with made-up figures, are made by `lab.sh tools` running the block
+# installing-engine.md shows the student, read out of the lesson itself.
 #
 # Recorded on Ubuntu 24.04, Docker Engine 29.8, TZ=America/Sao_Paulo.
 export LAB_IMAGES="alpine:3.22"
