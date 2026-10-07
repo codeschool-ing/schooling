@@ -15,7 +15,36 @@ A **modality** is a kind of data: text, image, audio, video. A model is describe
 
 A language model reads tokens. Before an image reaches a vision model it is resized and cut into tiles or small square patches, and each one costs tokens. In lesson 8 you will count them: one rule charges 765 tokens for the cover of a paperback, and the same rule charges 85 if you ask for the low-detail version. Audio is cut into short frames of sound; Whisper listens in windows of 30 seconds. A video is pictures sampled from it plus its soundtrack, and how many pictures you sample is a decision you make, with a cost attached (lesson 4).
 
-So the first thing that changes is **the size of an input**. Here is the lab's media, listed by a program from this lesson:
+So the first thing that changes is **the size of an input**. Here is the course's media, the files every lesson works on, listed by a short program. You build the machine and the media in sections 07 and 08 of this lesson; until then, read the transcripts, and run them afterwards.
+
+`inventory.py`:
+
+```python
+"""What is in ~/mm/media: one line per file, and what a model would be handed."""
+import json
+import os
+import subprocess
+
+for name in sorted(os.listdir("media")):
+    path = os.path.join("media", name)
+    if not os.path.isfile(path):
+        continue
+    probe = subprocess.run(["ffprobe", "-v", "error", "-show_format", "-show_streams", "-of", "json", path],
+                           capture_output=True, text=True, check=True)
+    info = json.loads(probe.stdout)
+    kinds, timed = [], False
+    for s in info["streams"]:
+        if s["codec_type"] == "video" and s["codec_name"] in ("png", "mjpeg"):
+            kinds.append(f"image {s['width']}x{s['height']}")
+        elif s["codec_type"] == "video":
+            kinds.append(f"video {s['width']}x{s['height']} {s['codec_name']}")
+            timed = True
+        elif s["codec_type"] == "audio":
+            kinds.append(f"audio {s['sample_rate']} Hz {s['codec_name']}")
+            timed = True
+    seconds = f"{float(info['format']['duration']):6.1f} s" if timed else "       -"
+    print(f"{name:22} {os.path.getsize(path):>10,} B {seconds}  " + " + ".join(kinds))
+```
 
 ```
 ana@lab:~/mm$ python inventory.py
