@@ -64,10 +64,11 @@ burst, a refund on everything, and then silence: that is the shape of refund abu
 claims that deliveries failed or arrived spoiled in order to keep the food and get the money back.
 
 **This is a finding for the people who handle fraud, not a value to clean.** The analyst's job is to
-detect and report it, with the evidence that makes it checkable — the account, the dates, the
-counts, the comparison with every other customer — and to keep it out of analyses it would distort,
-such as a refund rate by city. Deciding whether it is fraud is not the analyst's call: there could be
-an explanation the data cannot show, such as a delivery route that failed every day that week.
+detect and report it, with the evidence that makes it checkable: the account, the dates, the counts,
+the comparison with every other customer. The other half of the job is keeping it out of analyses it
+would distort, such as a refund rate by city. Deciding whether it is fraud is not the analyst's
+call: there could be an explanation the data cannot show, such as a delivery route that failed every
+day that week.
 
 What makes the pattern visible is choosing the right unit. **Per order, nothing stands out; per
 customer, one account stands alone.** The same move finds other patterns of abuse — many accounts

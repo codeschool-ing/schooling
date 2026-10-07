@@ -65,10 +65,11 @@ alega que as entregas falharam ou chegaram estragadas para ficar com a comida e 
 volta.
 
 **Isso é um achado para quem cuida de fraude, não um valor a limpar.** O trabalho da analista é
-detectar e informar, com a evidência que torna tudo conferível — a conta, as datas, as contagens, a
-comparação com todos os outros clientes — e mantê-lo fora das análises que ele distorceria, como uma
-taxa de reembolso por cidade. Decidir se é fraude não cabe à analista: pode haver uma explicação que o
-dado não mostra, como uma rota de entrega que falhou todo dia naquela semana.
+detectar e informar, com a evidência que torna tudo conferível: a conta, as datas, as contagens, a
+comparação com todos os outros clientes. A outra metade do trabalho é mantê-lo fora das análises que
+ele distorceria, como uma taxa de reembolso por cidade. Decidir se é fraude não cabe à analista:
+pode haver uma explicação que o dado não mostra, como uma rota de entrega que falhou todo dia
+naquela semana.
 
 O que torna o padrão visível é escolher a unidade certa. **Por pedido, nada se destaca; por cliente,
 uma conta fica sozinha.** O mesmo movimento acha outros padrões de abuso — muitas contas dividindo um

@@ -23,9 +23,9 @@ Então toda coluna com vazios recebe as mesmas cinco perguntas, nesta ordem:
 
 ## O registro de ausências
 
-As respostas vão para uma tabela que viaja com o dado, porque a aula 4 decide o que fazer com cada
-coluna a partir dela, e quem ler o dado limpo no ano que vem precisa saber por que uma coluna foi
-preenchida de um jeito e não de outro:
+As respostas vão para uma tabela que viaja com o dado. A aula 4 decide o que fazer com cada coluna a
+partir dela, e quem ler o dado limpo no ano que vem precisa saber por que uma coluna foi preenchida
+de um jeito e não de outro:
 
 | coluna | o vazio quer dizer | mecanismo | evidência | confirmado por |
 |---|---|---|---|---|
@@ -48,5 +48,5 @@ desconhecido, o que é mais do que a maioria dos relatórios diz sobre si mesma.
 
 Ela não preencheu, descartou nem imputou um único valor. De propósito. Cada opção da aula 4 —
 descartar linhas, preencher com uma constante, imputar a partir de linhas parecidas, sinalizar — é
-certa para um mecanismo e errada para outro, e escolher uma antes de ler os vazios é como a frota
+certa para um mecanismo e errada para outro. Escolher uma antes de ler os vazios é como a frota
 acaba informada como mais rápida do que é.

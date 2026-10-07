@@ -38,7 +38,7 @@ registrados:
   **Transformar Outras Colunas em Linhas** é o melt da aula 13.
 
 O fuso é a cláusula difícil. O Power Query tem um tipo para data e hora com fuso, e o `Z` precisa
-ser lido para dentro dele de propósito; uma célula comum de planilha não tem fuso nenhum, e ali as
+ser lido para dentro dele de propósito. Uma célula comum de planilha não tem fuso nenhum, e ali as
 três horas do site precisam ser subtraídas por alguém que sabe que elas são necessárias.
 
 ::: track bi

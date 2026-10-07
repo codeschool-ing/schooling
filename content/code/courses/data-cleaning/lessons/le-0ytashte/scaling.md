@@ -71,9 +71,9 @@ C01114       28682.5   0.807  19.522  1.0
   neighbours.
 
 None of the three is right in general. A scale is chosen for what it feeds. When an extreme is real
-and belongs in the data, as these companies do, a rescaling that is not dominated by it, the rank
-or the logarithm of the next section, serves the households better; the corporate flag from the
-first section can also keep them out of the fit altogether.
+and belongs in the data, as these companies do, a rescaling it cannot dominate serves the households
+better: the rank, or the logarithm of the next section. The corporate flag from the first section
+can also keep them out of the fit altogether.
 
 ::: track data-science
 The rescaling is a model of the data, and like any model it has parameters: the minimum and

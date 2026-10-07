@@ -3,7 +3,7 @@ title: Derretendo, e a coluna que não é mês
 version: 1
 ---
 
-Ir do largo para o longo se chama **melt** (derreter) no pandas, `pivot_longer` no R e **unpivot**
+Ir do largo para o longo se chama **melt** (derreter) no pandas, `pivot_longer` no R e unpivot
 (despivotar) no Power Query e no SQL. No pandas é uma chamada: diga quais colunas identificam uma
 linha, e todas as outras colunas são dobradas em duas, uma para o cabeçalho antigo e outra para o
 valor.

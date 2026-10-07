@@ -34,7 +34,7 @@ Power Query is the answer to most of that, because it turns the clicks into reco
   Columns** is lesson 13's melt.
 
 The time zone is the hard clause. Power Query has a type for a date and time with a zone, and the
-`Z` has to be read into it on purpose; a plain spreadsheet cell has no zone at all, and there the
+`Z` has to be read into it on purpose. A plain spreadsheet cell has no zone at all, and there the
 site's three hours must be subtracted by somebody who knows they are needed.
 
 ::: track bi

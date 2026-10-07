@@ -28,12 +28,12 @@ cadastraram duas vezes. Um vazio numa coluna quer dizer zero, e um vazio na colu
 dizer que o cronômetro desistiu.
 
 Nada disso foi achado por acaso. O gerador do laboratório planta cada defeito de propósito e anota
-onde o pôs, para que uma aula diga não só que uma técnica encontrou duplicados, mas **quantos dos
-verdadeiros ela encontrou** — uma pergunta que o trabalho real quase nunca deixa responder.
+onde o pôs. Assim uma aula consegue dizer **quantos dos duplicados verdadeiros uma técnica
+encontrou**, uma pergunta que o trabalho real quase nunca deixa responder.
 
 ## Como uma aula funciona
 
-Cada aula faz o trabalho duas vezes, em **SQL no PostgreSQL** e em **pandas**, porque são os dois
+Cada aula faz o trabalho duas vezes, **em SQL no PostgreSQL e em pandas**, porque são os dois
 lugares onde esse trabalho acontece na prática e porque cada um facilita um erro diferente. A aula
 16 junta o Excel e o dplyr do R à comparação e diz quando usar cada um.
 

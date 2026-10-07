@@ -26,14 +26,14 @@ customer file was exported on a different day from the orders. Some people signe
 blank in one column means zero and a blank in the next means the timer gave up.
 
 None of that was found by accident. The lab's generator plants each defect on purpose and writes
-down where it put it, so a lesson can say not only that a technique found duplicates but **how
-many of the real ones it found**, which is a question real work almost never lets you answer.
+down where it put it. So a lesson can say **how many of the real duplicates a technique found**, a
+question real work almost never lets you answer.
 
 ## How a lesson runs
 
-Each lesson does its work twice, in **SQL on PostgreSQL** and in **pandas**, because those are the
-two places this work happens in practice and because each one makes a different mistake easy.
-Lesson 16 adds Excel and R's dplyr to the comparison and says which one to reach for when.
+Each lesson does its work twice, in **SQL on PostgreSQL and in pandas**, because those are the two
+places this work happens in practice and because each one makes a different mistake easy. Lesson 16
+adds Excel and R's dplyr to the comparison and says which one to reach for when.
 
 ::: track bi
 You arrive here from `excel-analytics`, where lessons 13 and 14 did much of this in Power Query,

@@ -3,8 +3,8 @@ title: Melting, and the column that is not a month
 version: 1
 ---
 
-Going from wide to long is called **melting** in pandas, `pivot_longer` in R and **unpivoting** in
-Power Query and SQL. In pandas it is one call: name the columns that identify a row, and every other
+Going from wide to long is called **melting** in pandas, `pivot_longer` in R and unpivoting in Power
+Query and SQL. In pandas it is one call: name the columns that identify a row, and every other
 column is folded into two, one for the old header and one for the value.
 
 The obvious call, on the file as it is:

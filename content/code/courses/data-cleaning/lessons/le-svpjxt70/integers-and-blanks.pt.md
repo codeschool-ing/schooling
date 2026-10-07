@@ -36,5 +36,5 @@ A diferença importa além da aparência:
 
 Então o hábito tem dois passos, nesta ordem: converter com a contagem da seção anterior e depois
 passar para o tipo anulável. Uma coluna que é um identificador e não uma quantidade, como um CEP ou
-um código de produto com zeros à esquerda, nem é convertida; a aula 7 os manteve como texto, e
-**um número só é número se somar dois deles significar alguma coisa**.
+um código de produto com zeros à esquerda, nem é convertida. A aula 7 os manteve como texto, e **um
+número só é número se somar dois deles significar alguma coisa**.

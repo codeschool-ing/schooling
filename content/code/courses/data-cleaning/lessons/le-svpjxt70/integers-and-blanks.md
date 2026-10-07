@@ -34,6 +34,6 @@ The difference matters beyond looks:
   without raising an error.
 
 So the habit is two steps, in this order: convert with the count from the previous section, then
-cast to the nullable type. A column that is an identifier rather than a quantity, such as a CEP or
-a product code with leading zeros, is not converted at all; lesson 7 kept those as text, and **a
+cast to the nullable type. A column that is an identifier rather than a quantity, such as a CEP or a
+product code with leading zeros, is not converted at all. Lesson 7 kept those as text, and **a
 number is only a number if adding two of them means something**.

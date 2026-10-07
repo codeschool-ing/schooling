@@ -71,8 +71,8 @@ C01114       28682.5   0.807  19.522  1.0
   podem ser vizinhos.
 
 Nenhuma das três é certa em geral. Uma escala se escolhe pelo que ela alimenta. Quando um extremo é
-real e pertence aos dados, como estas empresas, uma reescala que não seja dominada por ele, o posto
-ou o logaritmo da próxima seção, serve melhor às famílias; a marca de pedido corporativo da
+real e pertence aos dados, como estas empresas, uma reescala que ele não consiga dominar serve
+melhor às famílias: o posto, ou o logaritmo da próxima seção. A marca de pedido corporativo da
 primeira seção também pode deixá-las fora do ajuste.
 
 ::: track data-science

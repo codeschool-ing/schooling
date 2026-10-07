@@ -23,9 +23,9 @@ So every column with blanks gets the same five questions, in this order:
 
 ## The missingness log
 
-The answers go into a table that travels with the data, because lesson 4 decides what to do with
-each column from it, and the person who reads the cleaned data next year needs to know why a
-column was filled in one way and not another:
+The answers go into a table that travels with the data. Lesson 4 decides what to do with each column
+from it, and the person who reads the cleaned data next year needs to know why a column was filled
+in one way and not another:
 
 | column | blank means | mechanism | evidence | confirmed by |
 |---|---|---|---|---|
@@ -48,5 +48,5 @@ reports ever say about themselves.
 
 It did not fill, drop or impute a single value. That is deliberate. Every option in lesson 4 —
 dropping rows, filling with a constant, imputing from similar rows, flagging — is right for one
-mechanism and wrong for another, and choosing one before reading the blanks is how the fleet ends up
+mechanism and wrong for another. Choosing one before reading the blanks is how the fleet ends up
 reported as faster than it is.
