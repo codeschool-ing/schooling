@@ -60,6 +60,8 @@ reset() {
   commit '2026-09-01 10:00' 'Draw the portal as a data flow diagram'
   add findings.py
   commit '2026-09-03 15:20' 'Summarise what pytm finds'
+  add threats.csv
+  commit '2026-09-03 17:05' 'List the threats found with STRIDE'
 }
 
 case ${1:-} in
