@@ -70,8 +70,8 @@ class Shell:
             if user != "root":
                 argv = ["/usr/sbin/runuser", "-u", user, "--", "/bin/bash"] + argv[1:]
             os.execvpe(argv[0], argv, env)
-        self.pid, self.fd, self.cwd, self._answered = pid, fd, home(user), False
-        self._raw(f"bind 'set enable-bracketed-paste off'; stty -echo cols {cols} rows 50; PS2='> '; "
+        self.pid, self.fd, self.cwd, self._answered, self._answers = pid, fd, home(user), False, []
+        self._raw(f"bind 'set enable-bracketed-paste off'; bind 'set disable-completion on'; stty -echo cols {cols} rows 50; PS2='> '; "
                   f"PROMPT_COMMAND='{MARK}'; unset HISTFILE; cd ~\n")
         self._read_until_prompt(10)
         # The transcripts in this course were taken from a shell whose output is
@@ -109,6 +109,11 @@ class Shell:
                     self.cwd = m.group(2).decode()
                 return buf.decode(errors="replace") + "\n[replay: TIMEOUT]", -1, self.cwd
             tail = buf[-60:].decode(errors="replace")
+            if self._answers and tail.endswith("? "):
+                ans = self._answers.pop(0)
+                os.write(self.fd, (ans + "\n").encode())
+                buf += (ans + "\n").encode()  # what the terminal would have echoed
+                continue
             if tail.endswith(f"password for {self.user}: ") and not self._answered:
                 self._answered = True
                 os.write(self.fd, (PASSWORDS.get(self.user, "") + "\n").encode())
@@ -122,8 +127,9 @@ class Shell:
                 except OSError:
                     return buf.decode(errors="replace") + "\n[replay: SHELL GONE]", -1, self.cwd
 
-    def run(self, cmd, timeout=30):
+    def run(self, cmd, timeout=30, answers=()):
         self._answered = False
+        self._answers = list(answers)
         self._raw(cmd + "\n")
         out, status, cwd = self._read_until_prompt(timeout)
         self.cwd = cwd
@@ -205,7 +211,7 @@ class Machine:
             self.shells[user] = Shell(user, self.cols)
         return self.shells[user]
 
-    def step(self, user, cwd, cmd):
+    def step(self, user, cwd, cmd, answers=()):
         user = user or self.stack[-1]
         c = cmd.strip()
         m = re.match(r"^(?:sudo -i(?:u (\w+))?|sudo su -(?: (\w+))?|su - (\w+)|sudo -s)$", c)
@@ -218,7 +224,7 @@ class Machine:
         sh = self.shell(user)
         if cwd:
             sh.cd(cwd)
-        return sh.run(cmd)
+        return sh.run(cmd, answers=answers)
 
     def close(self):
         for s in self.shells.values():
@@ -258,11 +264,12 @@ def main():
                     if screen(cmd) or any(l.startswith("^C") or l.startswith("^Z") for l in expect):
                         manual = True
                         break
-                    out, st = mach.step(user, cwd, cmd)
+                    answers = [m.group(1) for m in (re.search(r"\? (y|n|yes|no)$", l) for l in expect) if m]
+                    out, st = mach.step(user, cwd, cmd, answers)
                     if st == -1 and "[replay: TIMEOUT]" in out:
                         manual = True
                         break
-                    out = "\n".join(l.rstrip() for l in out.split("\n"))
+                    out = "\n".join(l.rstrip().expandtabs(8) for l in out.split("\n"))
                     if out.endswith("\n"):
                         out = out[:-1]
                     if out:

@@ -1,6 +1,6 @@
 ---
 title: Achar coisas: `find`
-version: 2
+version: 3
 ---
 
 O `find` tem fama de feio, e ela é merecida por um motivo: a sintaxe dele é mais velha que a de
@@ -10,7 +10,7 @@ quase todo comando que você vai usar, e não segue as regras da seção 07 da a
 Aprenda a forma uma vez e ele para de ser estranho:
 
 ```localised
-find   ONDE   O-QUE-CASAR   O-QUE-FAZER
+find   WHERE   WHAT-TO-MATCH   WHAT-TO-DO
 ```
 
 **Onde** é um diretório de partida. **O que casar** são um ou mais testes. **O que fazer** é
@@ -67,6 +67,7 @@ aspas entregam o asterisco intacto ao `find`, e o `find` faz a comparação dele
 ### Os testes de tempo, onde os números enganam
 
 ```
+ana@vm:~/work$ touch logs/today.log
 ana@vm:~/work$ find . -mtime -1
 ./logs
 ./logs/today.log
@@ -92,6 +93,7 @@ uma:
 ana@vm:~/work$ find logs -type f -newermt '2025-03-20'
 logs/empty.log
 logs/error.log
+logs/today.log
 logs/app.log
 ```
 

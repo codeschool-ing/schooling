@@ -1,18 +1,26 @@
 ---
 title: Inodes, hard links e links simbólicos
-version: 1
+version: 2
 ---
 
 Um nome de arquivo não é um arquivo. **O arquivo é uma coisa numerada no disco, e o nome é uma
 entrada num diretório que aponta para aquele número.** Quando essa frase fica real para você, tudo
 nesta seção fica óbvio — e várias coisas que você já viu param de ser estranhas.
 
-O número se chama **inode**, e `ls -i` imprime:
+O número se chama **inode**, e `ls -i` imprime. Dois diretórios para esta seção, cada um com um
+arquivo de treze bytes dentro:
+
+```sh
+mkdir -p ~/hard ~/soft
+printf 'the original\n' > ~/hard/report.txt
+printf 'the original\n' > ~/soft/report.txt
+cd ~/hard
+```
 
 ```
 ana@vm:~/hard$ ls -li
 total 4
-573516 -rw-r--r-- 1 ana ana 13 Sep 14 22:20 report.txt
+722950 -rw-r--r-- 1 ana ana 13 Oct  7 11:09 report.txt
 ```
 
 `573516` é como o sistema de arquivos chama estes dados. `report.txt` é como o diretório os chama.
@@ -25,8 +33,8 @@ bytes. **O nome não está no inode.** O nome está no diretório.
 ana@vm:~/hard$ ln report.txt hardlink.txt
 ana@vm:~/hard$ ls -li
 total 8
-573516 -rw-r--r-- 2 ana ana 13 Sep 14 22:20 hardlink.txt
-573516 -rw-r--r-- 2 ana ana 13 Sep 14 22:20 report.txt
+722950 -rw-r--r-- 2 ana ana 13 Oct  7 11:09 hardlink.txt
+722950 -rw-r--r-- 2 ana ana 13 Oct  7 11:09 report.txt
 ```
 
 Dois nomes. **Um inode.** E a contagem de links — o campo 3 da seção 06 — foi de `1` para `2`,
@@ -48,7 +56,7 @@ E agora a parte que surpreende as pessoas:
 ana@vm:~/hard$ rm report.txt
 ana@vm:~/hard$ ls -li
 total 4
-573516 -rw-r--r-- 1 ana ana 8 Sep 14 22:20 hardlink.txt
+722950 -rw-r--r-- 1 ana ana 8 Oct  7 11:09 hardlink.txt
 ana@vm:~/hard$ cat hardlink.txt
 changed
 ```
@@ -63,14 +71,14 @@ nome dela é honesto.
 
 ## Um link simbólico é um nome que contém um caminho
 
-Um diretório novo, um arquivo, e um link feito com `-s`:
+O outro diretório, o seu único arquivo, e um link feito com `-s`:
 
 ```
 ana@vm:~/soft$ ln -s report.txt softlink.txt
 ana@vm:~/soft$ ls -li
 total 4
-573518 -rw-r--r-- 1 ana ana 13 Sep 14 22:20 report.txt
-573519 lrwxrwxrwx 1 ana ana 10 Sep 14 22:20 softlink.txt -> report.txt
+722951 -rw-r--r-- 1 ana ana 13 Oct  7 11:09 report.txt
+722952 lrwxrwxrwx 1 ana ana 10 Oct  7 11:09 softlink.txt -> report.txt
 ```
 
 Três diferenças em relação a um hard link, e cada uma importa:
@@ -94,7 +102,7 @@ ana@vm:~/soft$ rm report.txt
 ana@vm:~/soft$ cat softlink.txt
 cat: softlink.txt: No such file or directory
 ana@vm:~/soft$ ls -l softlink.txt
-lrwxrwxrwx 1 ana ana 10 Sep 14 22:20 softlink.txt -> report.txt
+lrwxrwxrwx 1 ana ana 10 Oct  7 11:09 softlink.txt -> report.txt
 ```
 
 **O link está inteiro. O que ele aponta sumiu.** O `ls` mostra sem problema — é um arquivo real,
@@ -106,7 +114,7 @@ Dá para fazer um apontando para nada, e ninguém reclama:
 ```
 ana@vm:~/soft$ ln -s /etc/nothing-here broken.txt
 ana@vm:~/soft$ ls -l broken.txt
-lrwxrwxrwx 1 ana ana 17 Sep 14 22:20 broken.txt -> /etc/nothing-here
+lrwxrwxrwx 1 ana ana 17 Oct  7 11:09 broken.txt -> /etc/nothing-here
 ```
 
 O `ln -s` não confere, porque o alvo tem o direito de chegar depois — isso é uma funcionalidade, e
@@ -139,9 +147,10 @@ backup que deduplicam, e na resposta para "por que apagar o log não liberou esp
 Um link simbólico guarda o caminho que você deu, sem alterar:
 
 ```
+ana@vm:~/soft$ printf 'back again\n' > report.txt
 ana@vm:~/soft$ ln -s ../soft/report.txt rel.txt
 ana@vm:~/soft$ ls -l rel.txt
-lrwxrwxrwx 1 ana ana 18 Sep 14 22:20 rel.txt -> ../soft/report.txt
+lrwxrwxrwx 1 ana ana 18 Oct  7 11:09 rel.txt -> ../soft/report.txt
 ana@vm:~/soft$ cat rel.txt
 back again
 ```

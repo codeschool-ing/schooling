@@ -1,6 +1,6 @@
 ---
 title: Dotfiles, e os arquivos que não são arquivos
-version: 1
+version: 2
 ---
 
 Dois tipos de coisa na árvore não são o que parecem. O primeiro fica oculto por uma convenção tão
@@ -8,11 +8,38 @@ fina que é quase uma piada. O segundo não está em disco nenhum.
 
 ## Um ponto na frente, e o mecanismo é esse
 
+Um diretório pessoal com alguma história é o melhor lugar para ver isso, e o seu ainda é novo.
+Então crie uma segunda conta, com alguns dos arquivos escondidos que uma conta em uso acumula. A
+aula 5 é sobre contas; por ora, o `useradd` cria uma, `sudo -iu bruno` seguido de um comando roda
+esse comando como ele, no diretório dele, e `sudo -iu bruno` sozinho abre um shell como ele, com um
+prompt que diz isso:
+
+```sh
+sudo useradd -m -s /bin/bash bruno
+sudo -iu bruno mkdir -p projects .ssh .config .local .cache
+sudo -iu bruno git config --global user.name Bruno
+sudo -iu bruno git config --global user.email bruno@example.com
+printf 'Host web\n    HostName 192.0.2.10\n    User bruno\n' | sudo -iu bruno tee .ssh/config > /dev/null
+sudo -iu bruno chmod 700 .ssh
+sudo -iu bruno chmod 600 .ssh/config
 ```
+
+```
+ana@vm:~$ sudo -iu bruno
 bruno@vm:~$ ls
 projects
 bruno@vm:~$ ls -a
-.  ..  .bash_logout  .bashrc  .cache  .config  .gitconfig  .local  .profile  .ssh  projects
+.
+..
+.bash_logout
+.bashrc
+.cache
+.config
+.gitconfig
+.local
+.profile
+.ssh
+projects
 ```
 
 Um diretório, duas respostas. **Não existe atributo de "oculto".** O `ls` pula nomes que começam
@@ -48,12 +75,12 @@ configurações são arquivos que você pode ler, comparar e copiar para outra m
 
 ```
 bruno@vm:~$ ls -ld .ssh
-drwx------ 2 bruno bruno 4096 Sep 14 22:27 .ssh
+drwx------ 2 bruno bruno 4096 Oct  7 11:10 .ssh
 bruno@vm:~$ ls -la .ssh
 total 12
-drwx------ 2 bruno bruno 4096 Sep 14 22:27 .
-drwxr-x--- 7 bruno bruno 4096 Sep 14 22:27 ..
--rw------- 1 bruno bruno   42 Sep 14 22:27 config
+drwx------ 2 bruno bruno 4096 Oct  7 11:10 .
+drwxr-x--- 7 bruno bruno 4096 Oct  7 11:10 ..
+-rw------- 1 bruno bruno   48 Oct  7 11:10 config
 ```
 
 `drwx------` no diretório, `-rw-------` no que está dentro: ninguém além do dono, de jeito nenhum.
@@ -68,9 +95,11 @@ bruno@vm:~$ du -sh .cache
 8.0K    .cache
 ```
 
-Oito kilobytes numa conta nova, e gigabytes numa conta em uso. Quando a caçada da seção 13 leva a
+Quase nada numa conta nova, e gigabytes numa conta em uso. Quando a caçada da seção 13 leva a
 um diretório pessoal, o `~/.cache` costuma ser a resposta, e apagá-lo custa só o tempo de
 reconstruir o que estava lá.
+
+`exit` fecha o shell do bruno e você volta a ser a `ana`. Ele fica, e a aula 4 o usa.
 
 ## `/proc` é o kernel, fingindo ser arquivos
 
