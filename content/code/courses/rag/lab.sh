@@ -1,78 +1,39 @@
 #!/usr/bin/env bash
-# The machine every transcript in rag was recorded on.
+# The machine every transcript in rag was recorded on. THE AUTHOR'S, NOT THE
+# STUDENT'S: the student never receives this file. Lesson 1 teaches them to
+# build the same machine with the same commands, and everything this script
+# installs or writes is either one of those commands or a file a lesson shows.
 #
-# IT IS embeddings-vectors' MACHINE WITH ONE MORE ROOM. ana is still a developer
-# at Marginalia, the online bookshop that does not exist, and that course left
-# her with an embedding model, a stand-in provider and PostgreSQL with
-# pgvector. This course builds on top of all three rather than beside them:
-# `up` runs ../embeddings-vectors/lab.sh up first, and everything below it is
-# what retrieval-augmented generation needs that embeddings did not.
+# WHAT IT IS. An Ubuntu 24.04 machine with:
+#   Ollama, serving llama3.2:3b (the generator) and all-minilm (the embedding
+#     model, all-MiniLM-L6-v2) on 127.0.0.1:11434, which speaks OpenAI's and
+#     Anthropic's wire formats as well as its own
+#   PostgreSQL 16 with pgvector 0.6.0, from Ubuntu's own packages, and a
+#     database called rag
+#   ~/rag, the student's working directory: a Python 3.12 virtual environment
+#     in ~/rag/.venv with the libraries of lesson 1's requirements.txt, and
+#     env.sh, which lesson 1 shows
 #
-#   /home/ana/rag          the working directory, rebuilt by `reset`
-#   /home/ana/rag/data     what the lessons retrieve from and test against:
-#     docs/*.md            thirteen of Marginalia's documents, 6,843 words:
-#                          policies, terms, an API reference, and three that
-#                          only some staff may read (lessons 1 to 17)
-#     help.jsonl           embeddings-vectors' 40 help-centre articles,
-#                          copied as they are
-#     eval.jsonl           30 questions with the passages that answer them and
-#                          the words a right answer contains, 4 of them with
-#                          no answer in the documents (lessons 4 to 8)
-#     identifiers.jsonl    6 questions whose answers turn on an exact code or
-#                          number, where lexical search earns its place
-#                          (lesson 6)
-#     chat-a.jsonl         twelve messages from one customer, and
-#     chat-b.jsonl         four from another (lessons 13, 15 and 16)
-#     listings.jsonl       six marketplace listings written by sellers, one of
-#                          them carrying an instruction (lesson 16)
-#     querylog.jsonl       500 questions over a week, drawn by lab/querylog.py
-#                          (lesson 17)
-#   lab/code/*.py          the programs the lessons build and later ones
-#                          reuse (chunking, ingest, search, answer, verify,
-#                          evaluate, rag), copied into ~/rag by each lesson's
-#                          captures.sh rather than installed here
-#   /opt/rag               Python 3.11 in a virtual environment with the
-#                          frameworks and SDKs the lessons import, pinned in
-#                          RAGLIBS, and minilm.py from embeddings-vectors
-#   /run/emb-pg            embeddings-vectors' PostgreSQL 16 with pgvector
-#                          0.6.0; this course uses its own database, `rag`
-#   127.0.0.1:8500         labembed, embeddings-vectors' stand-in provider
-#   127.0.0.1:8600         labgen, this course's stand-in generator
-#                          (lab/labgen.py), which also passes embedding
-#                          requests on to labembed
-#   /var/log/labgen        every request labgen received, one JSON line each
+# THE STUDENT IS ana, on a machine called vm, and the prompt every capture
+# prints says so. This script runs as root and runs ana's commands as root
+# with HOME=/home/ana: the capture machine had no account to give her.
 #
-# WHAT IS REAL AND WHAT WAS WRITTEN FOR THE COURSE.
+# NOTHING THE LESSONS USE IS COPIED IN FROM HERE. lab/shown.py prints a file
+# exactly as the lessons show it, and both `reset` and every captures.sh take
+# their programs and their data from it. If a lesson changes a program, the
+# next capture runs the changed one.
 #
-#   real       all-MiniLM-L6-v2, the embedding model, run on this machine;
-#              pgvector; tiktoken's cl100k_base encoding; and every library
-#              the lessons import: the openai and anthropic SDKs, LangChain,
-#              LlamaIndex, Haystack and rank-bm25, at the versions in RAGLIBS.
-#              Every number a lesson prints from them was computed here.
-#   the lab's  labgen. NO LANGUAGE MODEL WAS REACHABLE from this machine, and
-#              an API key is a bill a course cannot hand out, so the SDKs talk
-#              to labgen instead. It speaks OpenAI's and Anthropic's wire
-#              formats, and the model behind it, extract-1, is not a language
-#              model: it copies whole sentences out of the sources it is given,
-#              chosen by their embedding similarity to the question, by rules
-#              written at the top of lab/labgen.py. Every lesson that shows a
-#              reply says it came from extract-1.
-#   written    every file in data/, and lab/memory.json, the sentences
-#              extract-1 answers from when it is given no sources. Marginalia
-#              does not exist; marginalia.example is under the domain reserved
-#              for examples, and every person and order number is invented.
+# TIKTOKEN. tiktoken downloads cl100k_base on first use from
+# openaipublic.blob.core.windows.net, which the capture machine's network
+# refused. The npm package js-tiktoken ships the same table; build_tokenizer
+# writes it back out and tiktoken checks it against the SHA-256 it ships with,
+# so the file is the one a student's machine downloads.
 #
-# NOT REACHABLE, AND THEREFORE NOT RUN: any provider's real API, Hugging Face
-# (so no cross-encoder reranker: lesson 6 builds its reranker from the
-# embedding model's own token vectors and says so), and RAGFlow, which is a
-# server application of its own that lesson 11 describes and does not run.
+#   sudo bash lab.sh up                 build it (idempotent)
+#   sudo bash lab.sh reset LESSON_ID    ~/rag as it stands before that lesson
+#   sudo bash lab.sh exec 'COMMAND'     run COMMAND as ana, in ~/rag
 #
-#   sudo bash lab.sh up              build it (idempotent)
-#   sudo bash lab.sh reset           rebuild ~/rag, empty the database, restart
-#   sudo bash lab.sh down
-#   sudo bash lab.sh exec 'COMMAND'  run COMMAND as ana, in ~/rag
-#
-# Recorded on Ubuntu 24.04 with Python 3.11 and PostgreSQL 16,
+# Recorded on Ubuntu 24.04 with Python 3.12, PostgreSQL 16, Ollama 0.40.0,
 # TZ=America/Sao_Paulo.
 set -euo pipefail
 # The capture scripts hold a lock on fd 9 while they run. The daemon started
@@ -80,109 +41,100 @@ set -euo pipefail
 exec 9>&-
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-EMB_LAB=$HERE/../embeddings-vectors/lab.sh
-EMB_SHARE=/opt/emb/share
-VENV=/opt/rag
+SHOWN="python3 $HERE/lab/shown.py $HERE"
 RAG=/home/ana/rag
-PGSOCK=/run/emb-pg
-LOGDIR=/var/log/labgen
-RAGLIBS="numpy==2.4.6 onnxruntime==1.30.0 tokenizers==0.23.2 tiktoken==0.14.0
-  psycopg[binary]==3.3.6 pgvector==0.3.6 openai==2.54.0 anthropic==1.11.0 rank-bm25==0.2.2
-  langchain-core==1.6.6 langchain-text-splitters==1.1.3 langchain-openai==1.6.7
-  langchain-postgres==0.0.18 llama-index-core==0.14.25 llama-index-embeddings-openai==0.7.0
-  llama-index-llms-openai==0.8.2 llama-index-llms-openai-like==0.8.1 haystack-ai==3.3.0"
+SHARE=/opt/rag-share
+# Data a lesson gives the student as a script, in the order the lessons give it.
+DATA="docs.sh help.sh questions.sh chats.sh listings.sh querylog.py"
 
-# The environment every command of ana's runs in. The keys are the lab's and
-# open nothing anywhere else; both base URLs point at labgen.
-ENVFILE=/etc/rag.env
-write_env() {
-  cat > "$ENVFILE" <<EOF
-PATH=$VENV/bin:/usr/local/bin:/usr/bin:/bin
-TZ=America/Sao_Paulo
-LANG=C.UTF-8
-LC_ALL=C.UTF-8
-PYTHONDONTWRITEBYTECODE=1
-TIKTOKEN_CACHE_DIR=$EMB_SHARE/tiktoken
-MINILM_DIR=$EMB_SHARE/all-MiniLM-L6-v2
-OPENAI_BASE_URL=http://127.0.0.1:8600/v1
-OPENAI_API_KEY=lab-openai-key-0001
-ANTHROPIC_BASE_URL=http://127.0.0.1:8600
-ANTHROPIC_API_KEY=lab-anthropic-key-0001
-HAYSTACK_TELEMETRY_ENABLED=False
-ANONYMIZED_TELEMETRY=False
-PGHOST=$PGSOCK
-PGDATABASE=rag
-EOF
-}
-
-build_venv() {
-  [ -x $VENV/bin/python ] || python3 -m venv $VENV
-  # shellcheck disable=SC2086
-  $VENV/bin/pip install -q $RAGLIBS
-  local site
-  site=$($VENV/bin/python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
-  install -m 0644 "$HERE/../embeddings-vectors/lab/minilm.py" "$HERE/lab/labgen.py" "$site/"
-  install -d $VENV/share
-  install -m 0644 "$HERE/lab/memory.json" $VENV/share/
-  id labgen >/dev/null 2>&1 || useradd -r -s /usr/sbin/nologin labgen
-  mkdir -p $LOGDIR && chown labgen:labgen $LOGDIR && chmod 0755 $LOGDIR
-}
-
-start_labgen() {
-  stop_labgen
-  : > $LOGDIR/requests.jsonl; chown labgen:labgen $LOGDIR/requests.jsonl; chmod 0644 $LOGDIR/requests.jsonl
-  setsid runuser -u labgen -- env -i PATH=$VENV/bin:/usr/bin:/bin TZ=America/Sao_Paulo HOME=/tmp \
-    MINILM_DIR=$EMB_SHARE/all-MiniLM-L6-v2 TIKTOKEN_CACHE_DIR=$EMB_SHARE/tiktoken \
-    LABGEN_LOG=$LOGDIR LABGEN_MEMORY=$VENV/share/memory.json \
-    $VENV/bin/python -m labgen > /run/labgen.out 2>&1 < /dev/null &
-  echo $! > /run/labgen.pid
+ollama_up() {
+  curl -s -o /dev/null http://127.0.0.1:11434/ && return 0
+  # No systemd on the capture machine, so nothing started the service the
+  # installer created. On the student's machine systemd does.
+  setsid nohup ollama serve > /var/log/ollama.log 2>&1 < /dev/null &
   for _ in $(seq 100); do
-    curl -s -o /dev/null http://127.0.0.1:8600/ 2>/dev/null && return 0
+    curl -s -o /dev/null http://127.0.0.1:11434/ && return 0
     sleep 0.2
   done
-  echo "labgen did not start; see /run/labgen.out" >&2; return 1
+  echo "ollama did not start; see /var/log/ollama.log" >&2; return 1
 }
 
-stop_labgen() {
-  if [ -f /run/labgen.pid ]; then
-    kill "$(cat /run/labgen.pid)" 2>/dev/null || true
-    rm -f /run/labgen.pid
-    sleep 0.3
-  fi
+pg_up() {
+  pg_lsclusters -h | grep -q '^16 main .* online' || pg_ctlcluster 16 main start
+  # ana has no account on the capture machine, so peer authentication cannot
+  # recognise her; the student's own login is her role, and peer works.
+  local hba=/etc/postgresql/16/main/pg_hba.conf
+  grep -q '^local all ana trust' $hba || { sed -i '1i local all ana trust' $hba; pg_ctlcluster 16 main reload; }
 }
 
-# ~/rag as it stands before lesson 1: the data and nothing else.
-build_rag() {
-  rm -rf $RAG
-  install -d -o ana -g ana $RAG $RAG/data $RAG/data/docs
-  install -o ana -g ana -m 0644 "$HERE"/lab/data/docs/*.md $RAG/data/docs/
-  install -o ana -g ana -m 0644 "$HERE"/lab/data/*.jsonl $RAG/data/
-  install -o ana -g ana -m 0644 "$HERE"/../embeddings-vectors/lab/data/help.jsonl $RAG/data/
-  runuser -u ana -- python3 "$HERE/lab/querylog.py" $RAG/data/querylog.jsonl
+build_tokenizer() {
+  local node=$SHARE/node
+  mkdir -p $node $SHARE/tiktoken
+  ( cd $node && { [ -f package.json ] || npm init -y >/dev/null; } && npm install --silent js-tiktoken@1.0.21 )
+  ( cd $node && node -e '
+    const fs = require("fs"), crypto = require("crypto");
+    const r = require("js-tiktoken/ranks/cl100k_base"), rows = [];
+    for (const line of r.bpe_ranks.split("\n").filter(Boolean)) {
+      const [, offset, ...tokens] = line.split(" ");
+      tokens.forEach((t, i) => rows.push([parseInt(offset, 10) + i, t]));
+    }
+    rows.sort((a, b) => a[0] - b[0]);
+    const url = "https://openaipublic.blob.core.windows.net/encodings/cl100k_base.tiktoken";
+    const name = crypto.createHash("sha1").update(url).digest("hex");
+    fs.writeFileSync(process.argv[1] + "/" + name, rows.map(([k, t]) => t + " " + k).join("\n") + "\n");
+    ' $SHARE/tiktoken )
+  # tiktoken refuses a file whose hash is not the one it ships with, so this
+  # line is the check that the reconstruction is exact.
+  TIKTOKEN_CACHE_DIR=$SHARE/tiktoken $RAG/.venv/bin/python -c 'import tiktoken; tiktoken.get_encoding("cl100k_base")'
 }
 
-reset_db() {
-  runuser -u ana -- psql -h $PGSOCK -d postgres -qX -c 'SET client_min_messages = warning' -c 'DROP DATABASE IF EXISTS rag' -c 'CREATE DATABASE rag'
-  runuser -u ana -- psql -h $PGSOCK -d rag -qX -c 'CREATE EXTENSION vector'
+up() {
+  DEBIAN_FRONTEND=noninteractive apt-get install -y -q zstd python3-venv postgresql-16 postgresql-16-pgvector >/dev/null
+  command -v ollama >/dev/null || curl -fsSL https://ollama.com/install.sh | sh
+  ollama_up
+  ollama pull llama3.2:3b >/dev/null
+  ollama pull all-minilm >/dev/null
+  pg_up
+  su postgres -c "psql -qXtc \"SELECT 1 FROM pg_roles WHERE rolname = 'ana'\"" | grep -q 1 \
+    || su postgres -c 'createuser --superuser ana'
+  mkdir -p $RAG
+  [ -x $RAG/.venv/bin/python ] || python3.12 -m venv $RAG/.venv
+  $SHOWN requirements.txt > $RAG/requirements.txt
+  $RAG/.venv/bin/pip install -q -r $RAG/requirements.txt
+  $SHOWN env.sh > $RAG/env.sh
+  build_tokenizer
 }
 
-exec_as() {  # exec_as COMMAND: as ana, in ~/rag, with the lab's environment and nothing else
-  # shellcheck disable=SC2046
-  runuser -u ana -- env -i HOME=/home/ana USER=ana $(grep -v '^#' $ENVFILE | xargs) \
-    bash -c "cd $RAG || exit 1; $*"
+# ~/rag before LESSON: the setup of lesson 1, and the data every earlier lesson
+# gave the student. The lesson that gives a data script runs it in its own
+# captures, where the student sees it run.
+reset() {
+  local lesson=$1 l name
+  ollama_up; pg_up
+  find $RAG -mindepth 1 -maxdepth 1 ! -name .venv ! -name env.sh ! -name requirements.txt -exec rm -rf {} +
+  psql -U ana -d postgres -qX -c 'SET client_min_messages = warning' -c 'DROP DATABASE IF EXISTS rag' -c 'CREATE DATABASE rag'
+  psql -U ana -d rag -qX -c 'CREATE EXTENSION vector'
+  for l in $(python3 -c "import json; print(' '.join(json.load(open('$HERE/course.json'))['lessons']))"); do
+    [ "$l" = "$lesson" ] && break
+    for name in $DATA; do
+      $SHOWN "$name" "$l" > /tmp/rag-data.$$ 2>/dev/null || continue
+      install -m 0644 /tmp/rag-data.$$ "$RAG/$name"
+      exec_as "$( [ "${name##*.}" = py ] && echo python || echo sh ) $name" >/dev/null
+    done
+  done
+  rm -f /tmp/rag-data.$$
+}
+
+exec_as() {  # exec_as COMMAND: as ana, in ~/rag, with env.sh and nothing else
+  env -i HOME=/home/ana USER=ana LOGNAME=ana PATH=/usr/local/bin:/usr/bin:/bin \
+    TZ=America/Sao_Paulo LANG=C.UTF-8 LC_ALL=C.UTF-8 PYTHONDONTWRITEBYTECODE=1 \
+    TIKTOKEN_CACHE_DIR=$SHARE/tiktoken PGUSER=ana HAYSTACK_TELEMETRY_ENABLED=False \
+    bash -c "cd $RAG || exit 1; . ./env.sh; $*"
 }
 
 case ${1:-} in
-  up)
-    bash "$EMB_LAB" up
-    write_env; build_venv; build_rag; reset_db; start_labgen ;;
-  reset)
-    bash "$EMB_LAB" reset >/dev/null
-    build_rag; reset_db; start_labgen ;;
-  down)
-    stop_labgen; bash "$EMB_LAB" down ;;
-  exec)
-    shift; exec_as "$@" ;;
-  *)
-    echo "usage: sudo bash lab.sh up|reset|down|exec 'COMMAND'" >&2; exit 2 ;;
+  up) up ;;
+  reset) reset "${2:?which lesson}" ;;
+  exec) shift; exec_as "$@" ;;
+  *) echo "usage: sudo bash lab.sh up|reset LESSON_ID|exec 'COMMAND'" >&2; exit 2 ;;
 esac

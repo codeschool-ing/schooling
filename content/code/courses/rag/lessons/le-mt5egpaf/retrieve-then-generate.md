@@ -1,6 +1,6 @@
 ---
 title: Retrieve, then generate
-version: 1
+version: 2
 ---
 
 **Retrieval-augmented generation**, RAG, is the name for the arrangement the last section arrived at:
@@ -43,8 +43,8 @@ best three by cosine similarity, and a prompt.
   "file": "tiny_rag.py",
   "parts": [
     {
-      "code": "import glob\nimport re\nimport sys\n\nfrom minilm import embed\nfrom openai import OpenAI",
-      "note": "Three imports: `embed` from minilm.py, the embedding model `embeddings-vectors` ran, and the OpenAI client."
+      "code": "import glob\nimport re\nimport sys\n\nfrom vectors import embed\nfrom openai import OpenAI",
+      "note": "Three imports: `embed` from the `vectors.py` of the setup, and the OpenAI client."
     },
     {
       "code": "# 1. Cut every document into its sections, at each \"## \" heading.\nsections = []\nfor path in sorted(glob.glob(\"data/docs/*.md\")):\n    doc = path.split(\"/\")[-1][:-3]\n    for part in re.split(r\"\\n(?=## )\", open(path).read())[1:]:\n        heading = part.splitlines()[0][3:]\n        sections.append((f\"{doc} > {heading}\", part))",
@@ -52,18 +52,18 @@ best three by cosine similarity, and a prompt.
     },
     {
       "code": "# 2. Embed them once, and the question every time.\nvectors = embed([text for _, text in sections])\nquestion = sys.argv[1]\nscores = vectors @ embed(question)[0]",
-      "note": "Every section becomes a vector once. The question becomes one each time it is asked, and one matrix product gives its cosine similarity to all of them, because minilm's vectors have length 1."
+      "note": "Every section becomes a vector once. The question becomes one each time it is asked, and one matrix product gives its cosine similarity to all of them, because `embed` returns vectors of length 1."
     },
     {
       "code": "# 3. Keep the best three.\nbest = scores.argsort()[::-1][:3]\nfor rank, i in enumerate(best, 1):\n    print(f\"[{rank}] {scores[i]:.3f}  {sections[i][0]}\")",
       "note": "The three most similar sections, printed with their scores so the choice can be seen."
     },
     {
-      "code": "# 4. Put only those in the prompt, numbered, and ask.\nsources = \"\".join(f\"[{rank}] {sections[i][0]}\\n{sections[i][1]}\\n\" for rank, i in enumerate(best, 1))\nreply = OpenAI().chat.completions.create(\n    model=\"extract-1\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"Answer from the sources and cite them by number.\"},\n        {\"role\": \"user\", \"content\": f\"{sources}Question: {question}\"},\n    ],\n)\nprint(reply.choices[0].message.content)",
+      "code": "# 4. Put only those in the prompt, numbered, and ask.\nsources = \"\".join(f\"[{rank}] {sections[i][0]}\\n{sections[i][1]}\\n\" for rank, i in enumerate(best, 1))\nreply = OpenAI().chat.completions.create(\n    model=\"llama3.2:3b\",\n    temperature=0,\n    messages=[\n        {\"role\": \"system\", \"content\": \"Answer from the sources and cite them by number.\"},\n        {\"role\": \"user\", \"content\": f\"{sources}Question: {question}\"},\n    ],\n)\nprint(reply.choices[0].message.content)",
       "note": "Only those three go into the prompt, numbered `[1]` to `[3]`, followed by the question. Everything else in the corpus stays out."
     }
   ],
-  "output": "ana@lab:~/rag$ python tiny_rag.py \"How many days do I have to return a printed book?\"\n[1] 0.810  returns-policy > The return window\n[2] 0.807  returns-policy-2025 > Returning a book\n[3] 0.744  returns-policy > Damaged, faulty and wrong items\nYou have 30 days from delivery to return a printed book in the condition you received it. [1] You may return a printed book within 14 days of delivery if it is unread and in the condition in which you received it. [2] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [3]\nana@lab:~/rag$ python tiny_rag.py \"How much is express delivery?\"\n[1] 0.698  shipping-and-delivery > Delivery options and costs\n[2] 0.544  shipping-and-delivery > Addresses\n[3] 0.463  shipping-and-delivery > Parcels that are late or lost\nExpress delivery is not free at any order value. [1] Express delivery is not available to post office boxes, because the carrier cannot deliver to them on the next day. [2]"
+  "output": "ana@vm:~/rag$ python tiny_rag.py \"How many days do I have to return a printed book?\"\n[1] 0.810  returns-policy > The return window\n[2] 0.807  returns-policy-2025 > Returning a book\n[3] 0.744  returns-policy > Damaged, faulty and wrong items\nAccording to the provided sources, you have 30 days from delivery to return a printed book.\nana@vm:~/rag$ python tiny_rag.py \"How much is express delivery?\"\n[1] 0.698  shipping-and-delivery > Delivery options and costs\n[2] 0.544  shipping-and-delivery > Addresses\n[3] 0.463  shipping-and-delivery > Parcels that are late or lost\nAccording to [1], the cost of express delivery is 9.90."
 }
 ```
 
@@ -72,25 +72,24 @@ against 0.544 for the next. That is retrieval working: out of all the sections i
 with the price table came first, without the question needing to match the section word for word.
 
 ```
-ana@lab:~/rag$ cat data/docs/*.md | grep -c "^## "
+ana@vm:~/rag$ cat data/docs/*.md | grep -c "^## "
 92
 ```
 
 Ninety-two sections, one heading each, and the search put the right one on top.
 
-The answers are a different matter, and they are worth reading slowly, because they are the subject
-of the rest of the course.
+Both answers are right this time, and that is worth reading slowly too, because of what made them
+right.
 
-The return question got the right sentence first, thirty days with the citation `[1]`. Then it got a
-second sentence that contradicts it, fourteen days, from `[2]`, which the score line says is
-`returns-policy-2025`: the replaced policy, retrieved because it is about exactly the same thing and
-scored 0.807 against 0.810. Nothing in the pipeline knows one of them is out of date.
+The express question got the price, `9.90`, out of the section's table, with the citation `[1]`.
+The return question got thirty days. **Look at what the search put second for it**: the 2025 policy's
+*Returning a book*, the rule that was replaced, at 0.807 against 0.810. It is about exactly the same
+thing, so it scores almost exactly the same, and nothing in the pipeline knows that one of the two
+is out of date. The model happened to take its answer from the first source. Given the two the other
+way round, or a question worded slightly differently, nothing would have stopped it taking the
+fourteen days of the second, and the next section shows a question where that is what happens.
 
-The express question got the right section and the wrong sentence. The section's table says `9.90`;
-the reply says express "is not free at any order value", which is true and does not answer the
-question. The retrieval did its job and the generation did not.
-
-Those are two of the four failures the next section collects. The point here is the shape: **a
-retrieval system is a search engine and a writer, and each can fail while the other succeeds.**
-Telling the two apart is most of the work of making one good, and it is why lesson 8 measures them
-separately.
+The point here is the shape: **a retrieval system is a search engine and a writer, and each can fail
+while the other succeeds.** A right answer built on a search that also returned the wrong policy is a
+right answer by luck. Telling the two halves apart is most of the work of making one good, and it is
+why lesson 8 measures them separately.
