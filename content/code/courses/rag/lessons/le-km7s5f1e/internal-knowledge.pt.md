@@ -1,6 +1,6 @@
 ---
 title: Bases de conhecimento internas
-version: 1
+version: 2
 ---
 
 O quarto uso é o que as empresas pedem primeiro e implantam por último: um assistente sobre tudo o que
@@ -15,7 +15,7 @@ fronteira com que os documentos contavam.
 Cada documento deste corpus diz para quem foi escrito, no cabeçalho:
 
 ```
-ana@lab:~/rag$ grep -h "^audience:" data/docs/*.md | sort | uniq -c
+ana@vm:~/rag$ grep -h "^audience:" data/docs/*.md | sort | uniq -c
       1 audience: developers
       1 audience: finance
       8 audience: public
@@ -32,16 +32,16 @@ working around them.*
 Agora pergunte à busca da mesa de um atendente:
 
 ```
-ana@lab:~/rag$ python sections.py "When does an order get held for manual fraud review?"
+ana@vm:~/rag$ python sections.py "When does an order get held for manual fraud review?"
 [1] 0.720  finance-refund-controls > Automatic holds
 [2] 0.573  support-handbook > Suspected fraud
 [3] 0.514  finance-refund-controls > Finance reviews
-An order with a score of 0.82 or more is held before dispatch and goes to manual review. [1] The payment provider gives every order a fraud score from 0 to 1. [1]
+According to [1] finance-refund-controls > Automatic holds, an order gets held for manual fraud review when its fraud score is 0.82 or more.
 ```
 
 **O limiar exato que a equipe financeira pediu para esconder dos atendentes, entregue a um atendente,
 com citação.** Nada deu errado no pipeline. A pergunta era uma boa pergunta, a busca achou a melhor
-seção, o gerador a citou fielmente. O vazamento é uma propriedade do projeto: um índice só sobre
+seção, o gerador respondeu a partir dela fielmente. O vazamento é uma propriedade do projeto: um índice só sobre
 documentos com leitores diferentes, e uma busca que não sabe quem está perguntando.
 
 A seção certa para esse atendente era a segunda, *Suspected fraud* do manual, que diz para abrir uma
