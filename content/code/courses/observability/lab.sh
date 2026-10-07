@@ -65,6 +65,7 @@ FILES_FROM=(
   le-7fgac3dc/the-shop.md
   le-7fgac3dc/what-watches-it.md
   le-aamwg2qb/shipping.md
+  le-68t063mj/tail-sampling.md
 )
 
 extract() {
@@ -92,7 +93,7 @@ write_files() {
   mkdir -p "$SHOP/faults" "$SHOP/scratch" "$SHOP/grafana/dashboards"
   touch "$SHOP/services/common/__init__.py" 2>/dev/null || { mkdir -p "$SHOP/services/common"; touch "$SHOP/services/common/__init__.py"; }
   n=$(extract "${FILES_FROM[@]/#/$here/lessons/}")
-  [ "$n" -ge 23 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
+  [ "$n" -ge 24 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
   mkdir -p "$SHOP/envoy"
   cat > "$SHOP/envoy/envoy.yaml" <<'LABFILE'
 # Envoy for lesson 19: one proxy, two listeners, playing the part a mesh's
@@ -258,113 +259,6 @@ service:
       receivers: [otlp]
       processors: [memory_limiter, batch]
       exporters: [otlp_grpc/jaeger, zipkin, otlp_http/vendor]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki]
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector-sampling.yaml" <<'LABFILE'
-# The Collector of collector.yaml, deciding which traces to keep (lesson 12).
-# Every span still feeds the span metrics; only the traces worth reading go
-# on to Jaeger and Zipkin.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-connectors:
-  # Rate, errors and duration per service and span name, computed from every
-  # span before any of them is dropped.
-  spanmetrics:
-    metrics_flush_interval: 15s
-    histogram:
-      explicit:
-        buckets: [10ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s]
-
-processors:
-  # Wait until a trace has had time to finish, then keep it if any policy says so.
-  tail_sampling:
-    decision_wait: 10s
-    num_traces: 20000
-    policies:
-      - name: errors
-        type: status_code
-        status_code: {status_codes: [ERROR]}
-      - name: slow
-        type: latency
-        latency: {threshold_ms: 1000}
-      - name: a-few-of-the-rest
-        type: probabilistic
-        probabilistic: {sampling_percentage: 5}
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-  otlp_http/prometheus:
-    endpoint: http://prometheus:9090/api/v1/otlp
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces/all:
-      receivers: [otlp]
-      processors: [memory_limiter]
-      exporters: [spanmetrics]
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, tail_sampling, batch]
-      exporters: [otlp_grpc/jaeger, zipkin]
-    metrics/spans:
-      receivers: [spanmetrics]
-      processors: [batch]
-      exporters: [otlp_http/prometheus]
     logs:
       receivers: [fluent_forward]
       processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]

@@ -1,12 +1,123 @@
 ---
 title: Decidindo na cauda
-version: 1
+version: 2
 ---
 
 **A amostragem na cauda decide depois de o rastro terminar**, então pode decidir pelo que aconteceu. Os
 serviços voltam a registrar todo rastro, e o Collector segura cada um até ele ficar completo, e então o
-guarda se alguma das políticas dele mandar. A configuração de amostragem do laboratório,
-`otel/collector-sampling.yaml`, tem três:
+guarda se alguma das políticas dele mandar. A configuração que faz isso é um terceiro arquivo do Collector. Salve-o
+inteiro:
+
+`~/shop/otel/collector-sampling.yaml`
+
+```yaml
+# The Collector of collector.yaml, deciding which traces to keep (lesson 12).
+# Every span still feeds the span metrics; only the traces worth reading go
+# on to Jaeger and Zipkin.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  fluent_forward:
+    endpoint: 0.0.0.0:24224
+
+connectors:
+  # Rate, errors and duration per service and span name, computed from every
+  # span before any of them is dropped.
+  spanmetrics:
+    metrics_flush_interval: 15s
+    histogram:
+      explicit:
+        buckets: [10ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s]
+
+processors:
+  # Wait until a trace has had time to finish, then keep it if any policy says so.
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 20000
+    policies:
+      - name: errors
+        type: status_code
+        status_code: {status_codes: [ERROR]}
+      - name: slow
+        type: latency
+        latency: {threshold_ms: 1000}
+      - name: a-few-of-the-rest
+        type: probabilistic
+        probabilistic: {sampling_percentage: 5}
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 400
+  batch: {}
+  # A batch from Docker mixes every container's lines under one resource, so
+  # the lines are regrouped by their own "service" field, one resource each,
+  # before that field becomes the resource's service.name.
+  groupbyattrs/service:
+    keys: [service]
+  transform/service:
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
+  transform/logs:
+    error_mode: ignore
+    log_statements:
+      - context: log
+        conditions:
+          - IsMatch(body, "^\\{")
+        statements:
+          - merge_maps(attributes, ParseJSON(body), "upsert")
+          - set(severity_text, attributes["level"])
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
+
+exporters:
+  debug:
+    verbosity: basic
+  otlp_grpc/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+  otlp_http/prometheus:
+    endpoint: http://prometheus:9090/api/v1/otlp
+
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces/all:
+      receivers: [otlp]
+      processors: [memory_limiter]
+      exporters: [spanmetrics]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, tail_sampling, batch]
+      exporters: [otlp_grpc/jaeger, zipkin]
+    metrics/spans:
+      receivers: [spanmetrics]
+      processors: [batch]
+      exporters: [otlp_http/prometheus]
+    logs:
+      receivers: [fluent_forward]
+      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
+      exporters: [otlp_http/loki]
+```
+
+O processor `tail_sampling` dele tem três políticas:
 
 ```
 ana@obs:~/shop$ sed -n '/^  tail_sampling:/,/^  memory_limiter:/p' otel/collector-sampling.yaml
@@ -33,8 +144,29 @@ ana@obs:~/shop$ sed -n '/^  tail_sampling:/,/^  memory_limiter:/p' otel/collecto
 
 O `decision_wait` é quanto o Collector espera depois do primeiro span de um rastro antes de decidir.
 Para as políticas terem o que achar, o payments recebe a ordem de somar 1500 ms a cada vigésima quinta
-cobrança e de falhar a cada quadragésima. Depois de dois minutos, as métricas do próprio Collector
-dizem o que cada política guardou:
+cobrança e de falhar a cada quadragésima. Os serviços voltam aos próprios amostradores, o Collector ao arquivo novo, e o Prometheus ganha duas
+flags: uma guarda exemplares, como na aula 11, e a outra deixa o Collector mandar a ele as métricas
+da seção sobre métricas de spans. É tudo um override só, no lugar do anterior:
+
+`~/shop/compose.override.yaml`
+
+```yaml
+services:
+  otel-collector:
+    volumes: ["./otel/collector-sampling.yaml:/etc/otelcol/config.yaml:ro"]
+  prometheus:
+    command: [--config.file=/etc/prometheus/prometheus.yml, --web.enable-lifecycle,
+              --storage.tsdb.path=/prometheus, --enable-feature=exemplar-storage,
+              --web.enable-otlp-receiver]
+```
+
+```sh
+echo '{"latency_ms": 50, "slow_every": 25, "slow_ms": 1500, "fail_every": 40}' > faults/payments.json
+docker compose up -d storefront orders otel-collector prometheus
+sleep 150
+```
+
+Depois de dois minutos, as métricas do próprio Collector dizem o que cada política guardou:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (policy) (increase(otelcol_processor_tail_sampling_count_traces_sampled{decision="sampled"}[2m]))'
