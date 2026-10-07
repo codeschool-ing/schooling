@@ -32,7 +32,7 @@ marketing consent stops the second purpose and leaves the first, which is why th
 is recorded per purpose.
 
 **Consent is not the default.** It is the most visible basis and often the weakest: it can be
-withdrawn at any moment, it has to be proven, and it cannot be the basis for anything the service
+withdrawn at any moment, and it has to be proven. Nor can it be the basis for anything the service
 needs anyway — a customer cannot meaningfully "consent" to Ipê knowing their address when it is
 delivering to it. Contract, legal obligation and legitimate interest cover most of what a business
 does; consent covers what it does *beyond* that.

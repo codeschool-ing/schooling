@@ -14,12 +14,12 @@ site do controlador (§1º). As atividades dele (§2º):
 - orientar funcionários e contratados sobre as práticas a seguir;
 - as demais atribuições que o controlador determinar ou que as normas da ANPD estabelecerem.
 
-A **Resolução CD/ANPD nº 18/2024** regulamenta a função. O encarregado pode ser um funcionário ou uma
-pessoa ou empresa de fora; precisa conseguir se comunicar com clareza, em português, com os titulares
-e com a ANPD; o controlador deve lhe dar os meios para fazer o trabalho; e **a responsabilidade por
-cumprir a lei continua do controlador** — indicar um encarregado não a transfere. Agentes de pequeno
-porte, pela Resolução 2/2022, podem dispensar a indicação, mas ainda têm de oferecer um canal aos
-titulares.
+A **Resolução CD/ANPD nº 18/2024** regulamenta a função. O encarregado pode ser um funcionário ou
+uma pessoa ou empresa de fora. Precisa conseguir se comunicar com clareza, em português, com os
+titulares e com a ANPD, e o controlador deve lhe dar os meios para fazer o trabalho. E **a
+responsabilidade por cumprir a lei continua do controlador**: indicar um encarregado não a
+transfere. Agentes de pequeno porte, pela Resolução 2/2022, podem dispensar a indicação, mas ainda
+têm de oferecer um canal aos titulares.
 
 Na Ipê o encarregado é o Davi, e a seção 9 lhe deu exatamente o que o trabalho pede e nada mais:
 leitura de tudo sobre um cliente, um token de curta duração para decifrar um CPF, e a tabela de

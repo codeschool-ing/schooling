@@ -82,10 +82,10 @@ ana@lab:~/gov$ psql service=bruno -c "SELECT ticket_id, body FROM support.ticket
 (4 rows)
 ```
 
-A view troca os três padrões e mais nada; o assunto de cada chamado sobrevive. É uma view padrão, que
-roda como o dono, então os analistas leem o texto redigido e nunca a tabela — e um chamado cujo
-remédio foi escrito de um jeito que o padrão não conhece ainda o mostra, e é por isso que a concessão
-é para os analistas e não para o mundo.
+A view troca os três padrões e mais nada; o assunto de cada chamado sobrevive. É uma view padrão,
+que roda como o dono, então os analistas leem o texto redigido e nunca a tabela. Um chamado cujo
+remédio foi escrito de um jeito que o padrão não conhece ainda o mostra, e é por isso que a
+concessão é para os analistas e não para o mundo.
 
 **Pedir menos no formulário.** Um campo chamado "descreva o seu problema" convida a tudo; uma escolha
 de motivos mais um número de pedido cobre a maioria dos chamados e não convida a nada. A

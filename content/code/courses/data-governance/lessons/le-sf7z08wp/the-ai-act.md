@@ -46,11 +46,12 @@ General-purpose models — the large language models the others are built on —
 ## The data governance article
 
 For a data team, **article 10** is where the Act meets this course. A high-risk system's training,
-validation and test data must be subject to data governance practices: the design choices, the
-collection process and the **origin** of the data, the purpose for which personal data was originally
-collected, the preparation (labelling, cleaning, enrichment), the assumptions, an assessment of
-whether the data is **sufficient and representative**, an examination of **possible biases**, and the
-gaps found. That list is lessons 6 and 9 written as a legal obligation, for one kind of system.
+validation and test data must be subject to data governance practices. The article lists what they
+cover: the design choices, the collection process and the **origin** of the data, the purpose for
+which personal data was originally collected, the preparation (labelling, cleaning, enrichment), the
+assumptions, an assessment of whether the data is **sufficient and representative**, an examination
+of **possible biases**, and the gaps found. That list is lessons 6 and 9 written as a legal
+obligation, for one kind of system.
 
 ## Fines
 

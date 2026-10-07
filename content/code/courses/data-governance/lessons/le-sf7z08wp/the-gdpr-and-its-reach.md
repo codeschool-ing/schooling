@@ -39,7 +39,7 @@ The Brazilian customers of the São Paulo company are not under the GDPR because
 table with Portuguese ones. The GDPR applies to the processing done in the context of the Lisbon
 establishment and to the people it targets. But a table that holds both is a table where **both laws
 apply to different rows**, and the difference has to be visible in the data: a column saying which
-company, and so which law, each customer belongs to — and a column that decides that has to be
+company, and so which law, each customer belongs to. A column that decides that has to be
 trustworthy (lesson 9).
 
 ## Who supervises

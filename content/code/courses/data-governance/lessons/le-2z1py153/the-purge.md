@@ -156,9 +156,9 @@ right one — the first is a report of what the schedule says, the second is wha
 ## Running it every day
 
 A purge that somebody remembers to run once a year is a purge that is a year late most of the time.
-The function is written to be **run on a schedule** — a nightly job, with the date passed in — and
-to be **safe to run twice**: on the same date there is nothing left to find, so a second run
-deletes nothing and adds nothing to the totals, by construction. The log's key goes one step further
-and refuses a second entry for the same date, so a job retried by mistake fails loudly instead of
+The function is written to be **run on a schedule**, as a nightly job with the date passed in. It is
+also **safe to run twice**: on the same date there is nothing left to find, so a second run deletes
+nothing and adds nothing to the totals, by construction. The log's key goes one step further and
+refuses a second entry for the same date, so a job retried by mistake fails loudly instead of
 writing a second line. The log then shows, every night, how much the schedule removed; a night with
 zero rows is fine, and a month of nights with no log at all is the alarm.

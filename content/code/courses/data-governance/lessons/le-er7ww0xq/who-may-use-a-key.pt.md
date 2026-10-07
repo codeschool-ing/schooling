@@ -37,7 +37,7 @@ ana@lab:~/gov$ bao token create -policy=support -ttl=1h -field=token > support.t
 ```
 
 Cada política vai junto com um **token** que expira em uma hora. No laboratório os tokens vão para
-arquivos, contados com `wc` em vez de impressos; em produção cada programa receberia seu token
+arquivos, contados com `wc` em vez de impressos. Em produção cada programa receberia seu token
 fazendo login no OpenBao com uma identidade própria — uma service account do Kubernetes, a
 identidade de uma instância na nuvem, um certificado como o do `etl_loader` — e o token nunca seria
 gravado em disco.

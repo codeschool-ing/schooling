@@ -15,9 +15,9 @@ website (§1). Their activities (§2):
 - the other duties the controller assigns or the ANPD's rules establish.
 
 **Resolução CD/ANPD nº 18/2024** regulates the role. The encarregado may be an employee or an
-outside person or company; they must be able to communicate clearly in Portuguese with data subjects
-and the ANPD; the controller must give them the means to do the job; and **the responsibility for
-complying with the law stays with the controller** — appointing an encarregado does not move it.
+outside person or company. They must be able to communicate clearly in Portuguese with data subjects
+and the ANPD, and the controller must give them the means to do the job. And **the responsibility
+for complying with the law stays with the controller**: appointing an encarregado does not move it.
 Small agents, under Resolução 2/2022, may skip the appointment, but must still offer a channel for
 data subjects.
 

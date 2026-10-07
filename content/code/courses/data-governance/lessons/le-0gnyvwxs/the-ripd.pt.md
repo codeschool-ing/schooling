@@ -3,10 +3,10 @@ title: O relatório de impacto (RIPD)
 version: 1
 ---
 
-O **relatório de impacto à proteção de dados pessoais** — RIPD, o nome brasileiro do que o GDPR chama
-de DPIA — é definido no **artigo 5º, XVII**: a documentação do controlador que descreve os processos
-de tratamento que **podem gerar riscos às liberdades civis e aos direitos fundamentais**, e as
-medidas, salvaguardas e mecanismos de mitigação desses riscos.
+O **relatório de impacto à proteção de dados pessoais**, ou RIPD, é o nome brasileiro do que o GDPR
+chama de DPIA. O **artigo 5º, XVII** o define como a documentação do controlador que descreve os
+processos de tratamento que **podem gerar riscos às liberdades civis e aos direitos fundamentais**,
+e as medidas, salvaguardas e mecanismos de mitigação desses riscos.
 
 A LGPD não o torna obrigatório para todo tratamento. O **artigo 38** deixa a ANPD exigi-lo,
 "inclusive de dados sensíveis"; o artigo 10, §3º deixa que ela o peça quando a base for o legítimo

@@ -76,10 +76,10 @@ Three decisions are in it, and each one is lesson material from earlier:
 ```
 
 Next to the schema, the contract records **who** the consumer is and in what capacity, **why** the
-data is sent and on which basis, **how long** the consumer keeps it, and **where** it stays — the same
-facts lesson 7's record of processing needs and lesson 8's transfer rules ask for. Each field names its
-**source** column and **class**, and the class is not a fresh opinion: it has to match
-`gov.column_class`, which the checker verifies.
+data is sent and on which basis, **how long** the consumer keeps it, and **where** it stays. These
+are the facts lesson 7's record of processing needs and lesson 8's transfer rules ask for. Each
+field names its **source** column and **class**, and the class is not a fresh opinion: it has to
+match `gov.column_class`, which the checker verifies.
 
 ```
 ana@lab:~/gov$ sudo -u postgres psql -c "CREATE SCHEMA share AUTHORIZATION ipe_owner"

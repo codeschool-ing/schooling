@@ -156,9 +156,10 @@ A consulta de vencidos não sabe dos bloqueios; o expurgo sabe. Essa diferença 
 ## Rodando todo dia
 
 Um expurgo que alguém se lembra de rodar uma vez por ano é um expurgo atrasado um ano na maior parte
-do tempo. A função é escrita para **rodar num agendamento** — um job noturno, com a data passada como
-parâmetro — e para ser **segura de rodar duas vezes**: na mesma data não sobra nada a achar, então uma
-segunda execução não apaga nada e não acrescenta nada aos totais, por construção. A chave do log vai
-um passo além e recusa uma segunda entrada para a mesma data, então um job repetido por engano falha
-de forma visível em vez de escrever uma segunda linha. O log então mostra, toda noite, quanto o
-cronograma removeu; uma noite com zero linhas está bem, e um mês de noites sem log nenhum é o alarme.
+do tempo. A função é escrita para **rodar num agendamento**, como um job noturno com a data passada
+como parâmetro. Ela também é **segura de rodar duas vezes**: na mesma data não sobra nada a achar,
+então uma segunda execução não apaga nada e não acrescenta nada aos totais, por construção. A chave
+do log vai um passo além e recusa uma segunda entrada para a mesma data, então um job repetido por
+engano falha de forma visível em vez de escrever uma segunda linha. O log então mostra, toda noite,
+quanto o cronograma removeu; uma noite com zero linhas está bem, e um mês de noites sem log nenhum é
+o alarme.

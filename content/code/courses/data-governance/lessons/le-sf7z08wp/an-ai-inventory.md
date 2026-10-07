@@ -85,11 +85,11 @@ Each row is a small argument, and the `why` column is where it is made:
 ## What the inventory found
 
 One high-risk system with no owner. Its obligations as a deployer (article 26) apply from 2 December
-2027, and what they require takes longer than that to set up: use according to the provider's
+2027, and they take longer than that to set up. They are: use according to the provider's
 instructions; **human oversight by people with the competence and authority** to overrule it;
-monitoring; keeping the logs it produces for at least six months; telling the workers' representatives
-before using it; and telling the candidates it is used on them. Ipê also needs a GDPR DPIA for it
-(section 6), and that applies already.
+monitoring; keeping the logs it produces for at least six months; telling the workers'
+representatives before using it; and telling the candidates it is used on them. Ipê also needs a
+GDPR DPIA for it (section 6), and that applies already.
 
 The query sorts by class and makes the empty owner impossible to miss. Turned into a check that runs
 with the migrations — the way lesson 6's `unclassified.sql` does — **a system with no class, or a

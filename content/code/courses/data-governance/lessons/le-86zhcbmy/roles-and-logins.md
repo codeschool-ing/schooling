@@ -85,9 +85,9 @@ CREATE ROLE
 
 Six roles, and each one stands for exactly one person or one program. **That is the decision that
 makes everything else in this course possible.** An audit trail can only say what `bruno` did if
-`bruno` is Bruno; a grant can only be revoked from the intern who left if she had a login of her
-own; and lesson 10's question — who read the prescriptions table in May — only has an answer if
-the answer is a name.
+`bruno` is Bruno. A grant can only be revoked from the intern who left if she had a login of her
+own. And lesson 10's question — who read the prescriptions table in May — only has an answer if the
+answer is a name.
 
 Two of them carry attributes the others do not, and section 9 uses both: `lia`'s password stops
 working on 30 June, and `site_app` can never hold more than three connections at once.

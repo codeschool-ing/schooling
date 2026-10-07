@@ -24,10 +24,10 @@ contra ameaças que ninguém consegue descartar, e o custo de errar é uma notif
 decisão de projeto.
 
 **Cifre valores individuais só onde a ameaça é quem está dentro.** Criptografia de uma coluna na
-aplicação significa que o banco não consegue buscar, ordenar, fazer join nem agregar essa coluna —
-um CPF cifrado assim deixa de achar um cliente pelo CPF sem uma segunda coluna, com chave,
-construída para isso (os tokens da aula 5 são essa coluna). É certo para os poucos valores cuja
-exposição a um administrador de banco já seria um incidente, e errado como padrão.
+aplicação significa que o banco não consegue buscar, ordenar, fazer join nem agregar essa coluna. Um
+CPF cifrado assim deixa de achar um cliente pelo CPF sem uma segunda coluna, com chave, construída
+para isso (os tokens da aula 5 são essa coluna). É certo para os poucos valores cuja exposição a um
+administrador de banco já seria um incidente, e errado como padrão.
 
 **Toda camada termina numa chave, e a chave decide contra quem a camada realmente protege.** Um
 volume cifrado com uma chave guardada no mesmo disco não protege de ninguém; um backup cifrado com

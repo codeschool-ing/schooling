@@ -76,7 +76,7 @@ Há três decisões nela, e cada uma é matéria de uma aula anterior:
 ```
 
 Ao lado do esquema, o contrato registra **quem** é o consumidor e em que papel, **por que** o dado é
-mandado e com que base, **por quanto tempo** o consumidor o guarda, e **onde** ele fica — os mesmos
+mandado e com que base, **por quanto tempo** o consumidor o guarda, e **onde** ele fica. São os
 fatos de que o registro das operações da aula 7 precisa e que as regras de transferência da aula 8
 pedem. Cada campo nomeia a sua coluna de **origem** e a sua **classe**, e a classe não é uma opinião
 nova: ela tem de bater com o `gov.column_class`, o que o verificador confere.

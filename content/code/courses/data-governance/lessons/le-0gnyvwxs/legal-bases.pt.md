@@ -32,8 +32,8 @@ marketing (consentimento). Revogar o consentimento de marketing encerra a segund
 primeira, e é por isso que o consentimento da seção 6 é registrado por finalidade.
 
 **Consentimento não é o padrão.** É a base mais visível e muitas vezes a mais fraca: pode ser
-revogado a qualquer momento, tem de ser provado, e não pode ser a base de nada de que o serviço
-precisa de qualquer jeito — um cliente não tem como "consentir" de verdade que a Ipê saiba o
+revogado a qualquer momento, e tem de ser provado. Também não pode ser a base de nada de que o
+serviço precisa de qualquer jeito — um cliente não tem como "consentir" de verdade que a Ipê saiba o
 endereço dele quando ela está entregando lá. Contrato, obrigação legal e legítimo interesse cobrem
 quase tudo o que uma empresa faz; o consentimento cobre o que ela faz *além* disso.
 

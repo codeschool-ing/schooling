@@ -83,7 +83,7 @@ ana@lab:~/gov$ psql service=bruno -c "SELECT ticket_id, body FROM support.ticket
 ```
 
 The view replaces the three patterns and nothing else; the topic of each ticket survives. It is a
-default view, running as its owner, so analysts read redacted text and never the table — and a ticket
+default view, running as its owner, so analysts read redacted text and never the table. A ticket
 whose medicine was spelt in a way the pattern does not know will still show it, which is why the
 grant is to analysts and not to the world.
 

@@ -84,11 +84,11 @@ CREATE ROLE
 CREATE ROLE
 ```
 
-Seis papéis, e cada um representa exatamente uma pessoa ou um programa. **Essa é a decisão que
-torna possível todo o resto do curso.** Uma trilha de auditoria só diz o que `bruno` fez se
-`bruno` for o Bruno; uma permissão só pode ser revogada da estagiária que saiu se ela tinha
-login próprio; e a pergunta da aula 10 — quem leu a tabela de receitas em maio — só tem resposta
-se a resposta for um nome.
+Seis papéis, e cada um representa exatamente uma pessoa ou um programa. **Essa é a decisão que torna
+possível todo o resto do curso.** Uma trilha de auditoria só diz o que `bruno` fez se `bruno` for o
+Bruno. Uma permissão só pode ser revogada da estagiária que saiu se ela tinha login próprio. E a
+pergunta da aula 10 — quem leu a tabela de receitas em maio — só tem resposta se a resposta for um
+nome.
 
 Dois deles têm atributos que os outros não têm, e a seção 9 usa os dois: a senha de `lia` para de
 funcionar em 30 de junho, e `site_app` nunca segura mais de três conexões ao mesmo tempo.

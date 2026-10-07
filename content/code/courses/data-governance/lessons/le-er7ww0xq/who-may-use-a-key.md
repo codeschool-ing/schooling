@@ -37,9 +37,9 @@ ana@lab:~/gov$ bao token create -policy=support -ttl=1h -field=token > support.t
 ```
 
 Each policy is attached to a **token** that expires in an hour. In the lab the tokens go in files,
-counted with `wc` rather than printed; in production each program would get its token by logging
-in to OpenBao with an identity of its own — a Kubernetes service account, a cloud instance's
-identity, a certificate like `etl_loader`'s — and the token would never be written to a disk.
+counted with `wc` rather than printed. In production each program would get its token by logging in
+to OpenBao with an identity of its own — a Kubernetes service account, a cloud instance's identity,
+a certificate like `etl_loader`'s — and the token would never be written to a disk.
 
 ## The policies, tested
 

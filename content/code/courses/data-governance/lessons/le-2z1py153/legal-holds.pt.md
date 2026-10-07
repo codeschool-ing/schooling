@@ -46,6 +46,6 @@ Três propriedades fazem um bloqueio funcionar:
 ## O que o bloqueio cobre
 
 Aqui, tudo sobre um cliente: os pedidos antigos, as receitas e os chamados dele. Bloqueios podem ser
-mais estreitos — um pedido — ou mais amplos — todo registro de uma linha de produtos sob investigação
-da autoridade sanitária. O formato da tabela segue o que os bloqueios precisam nomear; a regra de que o
-expurgo a lê não muda.
+mais estreitos, como um pedido, ou mais amplos, como todo registro de uma linha de produtos sob
+investigação da autoridade sanitária. O formato da tabela segue o que os bloqueios precisam nomear;
+a regra de que o expurgo a lê não muda.

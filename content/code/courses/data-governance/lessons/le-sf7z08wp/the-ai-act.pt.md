@@ -51,12 +51,12 @@ desde 2 de agosto de 2025.
 ## O artigo de governança de dados
 
 Para um time de dados, o **artigo 10** é onde o AI Act encontra este curso. Os dados de treino,
-validação e teste de um sistema de alto risco devem estar sujeitos a práticas de governança de dados:
-as escolhas de projeto, o processo de coleta e a **origem** dos dados, a finalidade para a qual o
-dado pessoal foi coletado originalmente, a preparação (rotulagem, limpeza, enriquecimento), as
-premissas, uma avaliação de se os dados são **suficientes e representativos**, um exame de
-**possíveis vieses**, e as lacunas encontradas. Essa lista é a aula 6 e a aula 9 escritas como
-obrigação legal, para um tipo de sistema.
+validação e teste de um sistema de alto risco devem estar sujeitos a práticas de governança de
+dados. O artigo lista o que elas cobrem: as escolhas de projeto, o processo de coleta e a **origem**
+dos dados, a finalidade para a qual o dado pessoal foi coletado originalmente, a preparação
+(rotulagem, limpeza, enriquecimento), as premissas, uma avaliação de se os dados são **suficientes e
+representativos**, um exame de **possíveis vieses**, e as lacunas encontradas. Essa lista é a aula 6
+e a aula 9 escritas como obrigação legal, para um tipo de sistema.
 
 ## Multas
 

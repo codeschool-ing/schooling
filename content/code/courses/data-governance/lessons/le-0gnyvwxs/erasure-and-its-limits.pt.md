@@ -4,7 +4,7 @@ version: 1
 ---
 
 "Apaguem meus dados" parece uma frase só. No banco de uma empresa é uma decisão por coluna, porque o
-**artigo 16** permite — e outras leis exigem — guardar alguns dados depois que a finalidade acaba:
+**artigo 16** permite guardar alguns dados depois que a finalidade acaba, e outras leis o exigem:
 
 | | o dado pode ser conservado para | na Ipê |
 |---|---|---|

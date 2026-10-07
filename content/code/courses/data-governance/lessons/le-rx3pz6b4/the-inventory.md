@@ -3,9 +3,9 @@ title: The inventory
 version: 1
 ---
 
-Everything in this lesson — and most of what the law asks in lesson 7 — assumes Ipê can answer
-**"what personal data do you hold, where, and why?"** A company that cannot answer that cannot
-answer a customer asking for their data, cannot assess a risk, and cannot say what a breach exposed.
+Everything in this lesson, and most of what the law asks in lesson 7, assumes Ipê can answer **"what
+personal data do you hold, where, and why?"** A company that cannot answer that cannot answer a
+customer asking for their data, cannot assess a risk, and cannot say what a breach exposed.
 
 The LGPD makes the answer an obligation. **Article 37**: the controller and the processor must keep a
 **record of the processing operations** they carry out — especially when the legal basis is

@@ -82,11 +82,11 @@ precisa projetar para ela, e ela só faz sentido para dado que realmente precisa
 pessoa enquanto cópias dele vivem onde um `DELETE` não alcança.
 
 **É irreversível, e esse é o objetivo e o perigo.** Uma chave apagada por engano destrói dado que
-ninguém queria perder, em todo backup. É por isso que `deletion_allowed` existe, por que o passo
-deve ser uma operação revisada e não o efeito colateral de um script, e por que os backups do
-próprio OpenBao — que guardam as chaves — precisam de uma política de retenção que combine com a
-promessa: um backup do serviço de chaves guardado por um ano quer dizer que uma chave destruída é
-recuperável por um ano.
+ninguém queria perder, em todo backup. É por isso que `deletion_allowed` existe, e por que o passo
+deve ser uma operação revisada e não o efeito colateral de um script. É também por isso que os
+backups do próprio OpenBao, que guardam as chaves, precisam de uma política de retenção que combine
+com a promessa: um backup do serviço de chaves guardado por um ano quer dizer que uma chave
+destruída é recuperável por um ano.
 
 **Ele apaga só o que foi cifrado só com aquela chave.** As anotações de um cliente cifradas com a
 chave dele somem; as mesmas anotações copiadas em claro num chamado de suporte, não. A destruição

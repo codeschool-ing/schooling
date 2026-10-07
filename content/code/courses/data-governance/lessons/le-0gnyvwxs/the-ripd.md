@@ -3,10 +3,10 @@ title: The impact assessment (RIPD)
 version: 1
 ---
 
-The **relatório de impacto à proteção de dados pessoais** — RIPD, the Brazilian name for what the
-GDPR calls a DPIA — is defined in **article 5, XVII**: the controller's documentation describing the
-processing that **may create risks to civil liberties and fundamental rights**, and the measures,
-safeguards and mechanisms that mitigate those risks.
+The **relatório de impacto à proteção de dados pessoais**, or RIPD, is the Brazilian name for what
+the GDPR calls a DPIA. **Article 5, XVII** defines it as the controller's documentation describing
+the processing that **may create risks to civil liberties and fundamental rights**, and the
+measures, safeguards and mechanisms that mitigate those risks.
 
 The LGPD does not make it compulsory for every processing. **Article 38** lets the ANPD require one,
 "including of sensitive data"; article 10, §3 lets it ask for one when the basis is legitimate

@@ -19,10 +19,10 @@ quem era o cliente 112.
 
 A plataforma em que você estuda é construída exatamente sobre isso. O fluxo de eventos e o log de
 prática dela guardam identificadores, nunca nomes. Eliminar uma pessoa apaga as linhas que dão
-significado a esses identificadores, o que deixa o histórico apontando para ninguém: **as estatísticas
-sobrevivem e a pessoa não está nelas**. É também por isso que essas tabelas não têm chave estrangeira
-para a tabela de contas — uma chave com `ON DELETE SET NULL` tentaria atualizar uma linha só de
-inserção, e aí as duas obrigações colidiriam de verdade.
+significado a esses identificadores, o que deixa o histórico apontando para ninguém: **as
+estatísticas sobrevivem e a pessoa não está nelas**. É também por isso que essas tabelas não têm
+chave estrangeira para a tabela de contas: uma chave com `ON DELETE SET NULL` tentaria atualizar uma
+linha só de inserção, e aí as duas obrigações colidiriam de verdade.
 
 ## A regra que faz funcionar
 

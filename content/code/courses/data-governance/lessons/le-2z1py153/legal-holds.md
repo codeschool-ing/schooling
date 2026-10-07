@@ -43,6 +43,6 @@ Three properties make a hold work:
 ## What the hold covers
 
 Here, everything about one customer: their old orders, prescriptions and tickets. Holds can be
-narrower — one order — or wider — every record of a product line under investigation by the health
-authority. The shape of the table follows what the holds need to name; the rule that the purge reads
-it does not change.
+narrower, such as one order, or wider, such as every record of a product line under investigation by
+the health authority. The shape of the table follows what the holds need to name; the rule that the
+purge reads it does not change.

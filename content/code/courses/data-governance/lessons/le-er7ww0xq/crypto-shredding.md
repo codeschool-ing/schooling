@@ -82,10 +82,10 @@ only makes sense for data that genuinely has to be erasable per person while cop
 where a `DELETE` cannot reach.
 
 **It is irreversible, which is the point and the danger.** A key deleted by mistake destroys data
-nobody meant to lose, in every backup. That is why `deletion_allowed` exists, why the step should
-be a reviewed operation rather than a script's side effect, and why OpenBao's own backups — which
-hold the keys — need a retention policy that matches the promise: a backup of the key service
-kept for a year means a shredded key is recoverable for a year.
+nobody meant to lose, in every backup. That is why `deletion_allowed` exists, and why the step
+should be a reviewed operation rather than a script's side effect. It is also why OpenBao's own
+backups, which hold the keys, need a retention policy that matches the promise: a backup of the key
+service kept for a year means a shredded key is recoverable for a year.
 
 **It erases only what was encrypted with that key alone.** A customer's notes encrypted with
 their own key are gone; the same notes copied in clear into a support ticket are not. Shredding is

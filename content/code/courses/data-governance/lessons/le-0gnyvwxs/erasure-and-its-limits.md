@@ -4,7 +4,7 @@ version: 1
 ---
 
 "Delete my data" sounds like one statement. In a company's database it is a decision per column,
-because **article 16** allows — and other laws require — keeping some data after its purpose ends:
+because **article 16** allows keeping some data after its purpose ends, and other laws require it:
 
 | | data may be kept for | at Ipê |
 |---|---|---|

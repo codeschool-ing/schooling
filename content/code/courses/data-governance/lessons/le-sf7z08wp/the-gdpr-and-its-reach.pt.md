@@ -39,7 +39,7 @@ Os clientes brasileiros da empresa de São Paulo não ficam sob o GDPR por divid
 portugueses. O GDPR se aplica ao tratamento feito no contexto do estabelecimento de Lisboa e às
 pessoas a quem ele se dirige. Mas uma tabela que guarda os dois é uma tabela em que **as duas leis
 valem para linhas diferentes**, e a diferença tem de estar visível no dado: uma coluna dizendo a que
-empresa, e portanto a que lei, cada cliente pertence — e uma coluna que decide isso precisa ser
+empresa, e portanto a que lei, cada cliente pertence. Uma coluna que decide isso precisa ser
 confiável (aula 9).
 
 ## Quem fiscaliza

@@ -86,8 +86,8 @@ Cada linha é um pequeno argumento, e a coluna `why` é onde ele é feito:
 
 ## O que o inventário achou
 
-Um sistema de alto risco sem dono. As obrigações da Ipê como responsável pela implantação (artigo 26)
-valem a partir de 2 de dezembro de 2027, e o que elas exigem leva mais tempo do que isso para montar:
+Um sistema de alto risco sem dono. As obrigações da Ipê como responsável pela implantação (artigo
+26) valem a partir de 2 de dezembro de 2027, e levam mais tempo do que isso para montar. São elas:
 usar conforme as instruções do fornecedor; **supervisão humana por pessoas com a competência e a
 autoridade** para contrariá-lo; monitoramento; guardar os logs que ele produz por pelo menos seis
 meses; avisar os representantes dos trabalhadores antes de usá-lo; e avisar os candidatos de que ele
