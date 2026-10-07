@@ -2003,6 +2003,128 @@ def l12_goodhart(lang):
                 'Mudar a promessa de dois para três dias leva a taxa no prazo de 82,7% para 95,8% sem mexer '
                 'numa única caixa. A medida melhora; o cliente espera o mesmo tanto.')
 
+# ------------------------------------------------------------------ lesson 13
+
+def grid_axes(f, x0, y0, x1, y1, labels=True, lang='en'):
+    mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+    f.line(x0, y1, x1, y1, stroke='--paper-dim', width=1.4, arrow=True)
+    f.line(x0, y1, x0, y0, stroke='--paper-dim', width=1.4, arrow=True)
+    f.line(mx, y0, mx, y1, stroke='--wire', width=1, dash='4 4')
+    f.line(x0, my, x1, my, stroke='--wire', width=1, dash='4 4')
+    return mx, my
+
+
+@figure('l13-grid', 13)
+def l13_grid(lang):
+    f = Fig('l13-grid', 680, 340, T(
+        lang,
+        'A grid with interest increasing to the right and power increasing upwards. Top right, manage '
+        'closely: Paulo and Sandra. Top left, keep satisfied: the board and Renata. Bottom right, keep '
+        'informed: Diego and the warehouse staff. Bottom left, monitor: other departments. Ligeiro sits '
+        'near the middle, with an arrow showing it moved up and right when the pilot needed its help.',
+        'Uma matriz com o interesse crescendo para a direita e o poder crescendo para cima. No alto à '
+        'direita, gerenciar de perto: Paulo e Sandra. No alto à esquerda, manter satisfeito: o conselho '
+        'e a Renata. Embaixo à direita, manter informado: o Diego e o pessoal do depósito. Embaixo à '
+        'esquerda, acompanhar: os outros departamentos. A Ligeiro fica perto do meio, com uma seta '
+        'mostrando que subiu e foi para a direita quando o piloto precisou dela.'))
+    x0, y0, x1, y1 = 70, 20, 650, 300
+    mx, my = grid_axes(f, x0, y0, x1, y1)
+    f.text(x1, y1 + 18, T(lang, 'interest', 'interesse'), size=10, anchor='end', weight='600')
+    f.text(x0 - 10, y0 + 6, T(lang, 'power', 'poder'), size=10, anchor='end', weight='600')
+    quads = [((x0 + mx) / 2, y0 + 22, T(lang, 'keep satisfied', 'manter satisfeito')),
+             ((mx + x1) / 2, y0 + 22, T(lang, 'manage closely', 'gerenciar de perto')),
+             ((x0 + mx) / 2, my + 22, T(lang, 'monitor', 'acompanhar')),
+             ((mx + x1) / 2, my + 22, T(lang, 'keep informed', 'manter informado'))]
+    for x, y, t in quads:
+        f.text(x, y, t, size=10.5, weight='600', fill='--paper-dim')
+    people = [(0.88, 0.85, 'Paulo', '--phosphor'), (0.80, 0.70, 'Sandra', '--phosphor'),
+              (0.12, 0.80, T(lang, 'board', 'conselho'), '--paper'), (0.40, 0.70, 'Renata', '--paper'),
+              (0.80, 0.30, 'Diego', '--paper'), (0.66, 0.16, T(lang, 'warehouse staff', 'pessoal do depósito'), '--paper'),
+              (0.20, 0.22, T(lang, 'other departments', 'outros departamentos'), '--paper-dim')]
+
+    def at(ix, iy):
+        return x0 + ix * (x1 - x0), y1 - iy * (y1 - y0)
+    for ix, iy, name, col in people:
+        x, y = at(ix, iy)
+        f.circle(x, y, 5, fill=col)
+        f.text(x + 9, y, name, size=10, anchor='start')
+    a, b = at(0.30, 0.30), at(0.54, 0.55)
+    f.circle(*a, 5, fill=None, stroke='--amber', width=1.4)
+    f.line(a[0] + 6, a[1] - 6, b[0] - 6, b[1] + 6, stroke='--amber', width=1.4, arrow=True, dash='4 3')
+    f.circle(*b, 5, fill='--amber')
+    f.text(b[0] + 9, b[1], 'Ligeiro', size=10, anchor='start', fill='--amber')
+    f.text(a[0] + 9, a[1] + 12, T(lang, 'before the pilot', 'antes do piloto'), size=9, anchor='start',
+           fill='--amber')
+    return f, T(lang,
+                'Where each person sits decides how to treat them. The map moves: Ligeiro rose when the '
+                'pilot started needing its help.',
+                'Onde cada pessoa fica decide como tratá-la. O mapa se mexe: a Ligeiro subiu quando o piloto '
+                'passou a precisar da ajuda dela.')
+
+
+@figure('l13-sequence', 13)
+def l13_sequence(lang):
+    f = Fig('l13-sequence', 680, 200, T(
+        lang,
+        'A timeline of the eight days before the operations meeting of 15 August. On 7 August Marina '
+        'meets Sandra alone. On 8 August Diego checks the numbers. On 11 August Renata gets the '
+        'arithmetic. On 13 August Paulo reads the one-page summary. On 15 August the meeting confirms '
+        'the pilot in nine minutes.',
+        'Uma linha do tempo dos oito dias antes da reunião de operações de 15 de agosto. Em 7 de agosto a '
+        'Marina encontra a Sandra a sós. Em 8 de agosto o Diego confere os números. Em 11 de agosto a '
+        'Renata recebe a conta. Em 13 de agosto o Paulo lê o sumário de uma página. Em 15 de agosto a '
+        'reunião confirma o piloto em nove minutos.'))
+    x0, x1 = 40, 640
+    days = list(range(7, 16))
+
+    def sx(d):
+        return x0 + (d - 7) / 8 * (x1 - x0)
+    f.line(x0, 110, x1, 110, stroke='--paper-dim', width=1.2)
+    for d in days:
+        f.line(sx(d), 106, sx(d), 114, stroke='--paper-dim', width=1)
+        f.text(sx(d), 128, T(lang, f'{d} Aug', f'{d}/ago'), size=9, fill='--paper-dim')
+    events = [(7, 'Sandra', T(lang, 'alone, first', 'a sós, primeiro'), 52),
+              (8, 'Diego', T(lang, 'checks every number', 'confere cada número'), 82),
+              (11, 'Renata', T(lang, 'the arithmetic', 'a conta'), 52),
+              (13, 'Paulo', T(lang, 'the one-page summary', 'o sumário de uma página'), 82),
+              (15, T(lang, 'meeting', 'reunião'), T(lang, 'nine minutes', 'nove minutos'), 52)]
+    for d, who, what, y in events:
+        x = sx(d)
+        col = '--amber' if d == 15 else '--phosphor'
+        f.line(x, y + 12, x, 104, stroke=col, width=1.2)
+        f.circle(x, 110, 5, fill=col)
+        anchor = 'end' if d == 15 else 'start'
+        f.text(x + (-4 if d == 15 else 4), y - 6, who, size=10.5, weight='600', anchor=anchor, fill=col)
+        f.text(x + (-4 if d == 15 else 4), y + 8, what, size=9.5, anchor=anchor)
+    f.text(340, 170, T(lang, 'by the meeting, everybody who mattered had already seen the finding',
+                       'quando a reunião começou, todo mundo que importava já tinha visto o achado'),
+           size=10, fill='--paper-dim')
+    return f, T(lang,
+                'Four private conversations in eight days. The meeting confirmed a decision they had '
+                'prepared, which is why it took nine minutes.',
+                'Quatro conversas a sós em oito dias. A reunião confirmou uma decisão que elas tinham '
+                'preparado, e por isso levou nove minutos.')
+
+
+@picture('l13-grid-blank')
+def p_l13_grid_blank():
+    """Marks, in label order: manage closely, keep satisfied, keep informed, monitor."""
+    f = Fig('l13-grid-blank', 720, 405,
+            'A grid with no words. An arrow along the bottom points right and an arrow up the left side '
+            'points up. Dashed lines divide the space into four equal quarters, each holding a few dots.')
+    x0, y0, x1, y1 = 80, 30, 680, 370
+    mx, my = grid_axes(f, x0, y0, x1, y1)
+    import random
+    rnd = random.Random(13)
+    for qx, qy in [(0, 0), (1, 0), (0, 1), (1, 1)]:
+        for _ in range(3):
+            x = (x0 if qx == 0 else mx) + 40 + rnd.random() * (mx - x0 - 80)
+            y = (y0 if qy == 0 else my) + 40 + rnd.random() * (my - y0 - 80)
+            f.circle(x, y, 6, fill='--paper-dim')
+    marks = [((mx + x1) / 2, (y0 + my) / 2), ((x0 + mx) / 2, (y0 + my) / 2),
+             ((mx + x1) / 2, (my + y1) / 2), ((x0 + mx) / 2, (my + y1) / 2)]
+    return f, marks
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
