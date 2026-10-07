@@ -1287,6 +1287,57 @@ def l15_sugar(lang):
     return fig, cap[lang]
 
 
+# ----------------------------------------------------------------- lesson 17
+
+@figure('l17-pipeline', 17)
+def l17_pipeline(lang):
+    T = {'en': dict(raw='raw files', ro='read-only', man='fingerprints', run='one command',
+                    lessons='the lessons\' modules', out='clean tables', ch='change record',
+                    chk='checks', git='under version control', disp='rebuilt on every run'),
+         'pt': dict(raw='arquivos brutos', ro='só leitura', man='impressões digitais', run='um comando',
+                    lessons='os módulos das aulas', out='tabelas limpas', ch='registro de mudanças',
+                    chk='verificações', git='sob controle de versão', disp='refeito a cada execução')}[lang]
+    fig = Fig('l17-pipeline', 720, 300, {
+        'en': 'A diagram of the pipeline. On the left, the raw files, read-only, with their fingerprints in '
+              'raw.sha256. An arrow leads to run.py, one command that imports the lessons\' modules. From it, '
+              'arrows lead to two outputs in out/: the clean tables and the change record, and checks.py reads the outputs. '
+              'A dashed outline around the code, the maps and raw.sha256 marks what is under version control; '
+              'the raw files and out/ are outside it.',
+        'pt': 'Um diagrama do pipeline. À esquerda, os arquivos brutos, só de leitura, com as suas impressões '
+              'digitais em raw.sha256. Uma seta leva ao run.py, um comando que importa os módulos das aulas. '
+              'Dele, setas levam a duas saídas em out/: as tabelas limpas e o registro de mudanças, e o checks.py '
+              'lê as saídas. Um contorno tracejado em volta do código, dos mapas e do raw.sha256 marca o '
+              'que está sob controle de versão; os arquivos brutos e out/ ficam fora dele.'}[lang])
+
+    def box(x, y, w, h, title, sub, mono_title=True, stroke='--wire', fill='--panel'):
+        fig.rect(x, y, w, h, stroke=stroke, fill=fill)
+        fig.text(x + w / 2, y + h / 2 - 8, title, size=11, mono=mono_title, weight='600')
+        fig.text(x + w / 2, y + h / 2 + 10, sub, size=10, fill='--paper-dim')
+
+    fig.path('M188 20 L532 20 Q540 20 540 28 L540 262 Q540 270 532 270 L188 270 Q180 270 180 262 L180 28 '
+             'Q180 20 188 20 Z', stroke='--phosphor', dash='5 4')
+    fig.text(360, 36, T['git'], size=10.5, fill='--phosphor')
+    box(20, 60, 140, 56, 'raw/', T['ro'], stroke='--amber')
+    box(200, 60, 140, 56, 'raw.sha256', T['man'])
+    box(200, 160, 140, 56, 'run.py', T['run'], stroke='--phosphor')
+    box(380, 160, 140, 56, '*.py, *.csv', T['lessons'])
+    box(570, 60, 130, 56, 'out/*.csv', T['out'])
+    box(570, 160, 130, 56, 'changes.csv', T['ch'])
+    box(380, 60, 140, 56, 'checks.py', T['chk'])
+    fig.line(160, 88, 198, 88, stroke='--paper-dim', arrow=True)
+    fig.path('M90 116 L90 188 L198 188', stroke='--paper-dim', arrow=True)
+    fig.line(378, 188, 342, 188, stroke='--paper-dim', arrow=True)
+    fig.path('M270 216 L270 245 L635 245 L635 218', stroke='--phosphor', arrow=True)
+    fig.path('M300 160 L300 138 L635 138 L635 118', stroke='--phosphor', arrow=True)
+    fig.line(568, 88, 522, 88, stroke='--paper-dim', arrow=True)
+    fig.text(635, 285, T['disp'], size=10, fill='--paper-dim')
+    cap = {'en': 'What is kept and what is rebuilt. Everything inside the dashed line is versioned; the raw files '
+                 'are fingerprinted instead, and out/ is thrown away and made again.',
+           'pt': 'O que se guarda e o que se reconstrói. Tudo dentro da linha tracejada é versionado; os arquivos '
+                 'brutos recebem impressões digitais em vez disso, e o out/ é jogado fora e feito de novo.'}
+    return fig, cap[lang]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
