@@ -694,6 +694,139 @@ def l04_tdd(lang):
 # ---- end of lesson 4
 
 
+# ------------------------------------------------------------------ lesson 5
+
+def _ring(f, cx, cy, r, n, stroke):
+    pts = [(cx + r * math.cos(2 * math.pi * k / n - math.pi / 2), cy + r * math.sin(2 * math.pi * k / n - math.pi / 2))
+           for k in range(n)]
+    for i in range(n):
+        for j in range(i + 1, n):
+            f.line(pts[i][0], pts[i][1], pts[j][0], pts[j][1], stroke=stroke, width=0.9)
+    for x, y in pts:
+        f.circle(x, y, 6, fill='--panel', stroke='--paper', width=1.4)
+
+
+@figure('l05-paths', 5)
+def l05_paths(lang):
+    t = {
+        'en': dict(a='6 people', b='12 people', pa='15 paths', pb='66 paths',
+                   label='Two groups drawn as dots with a line between every pair. Six people have 15 lines '
+                         'between them; twelve people have 66.',
+                   cap='Doubling a team from six to twelve more than quadruples the pairs of people who may need to '
+                       'talk. The formula is n(n−1)/2, and at the 125 people of a large release train it gives '
+                       '7,750.'),
+        'pt': dict(a='6 pessoas', b='12 pessoas', pa='15 caminhos', pb='66 caminhos',
+                   label='Dois grupos desenhados como pontos com uma linha entre cada par. Seis pessoas têm 15 '
+                         'linhas entre si; doze pessoas têm 66.',
+                   cap='Dobrar um time de seis para doze mais que quadruplica os pares de pessoas que podem precisar '
+                       'conversar. A fórmula é n(n−1)/2, e nas 125 pessoas de um release train grande ela dá '
+                       '7.750.'),
+    }[lang]
+    f = Fig('l05-paths', 600, 260, t['label'])
+    _ring(f, 150, 120, 80, 6, '--phosphor')
+    _ring(f, 440, 120, 90, 12, '--amber')
+    f.text(150, 230, t['a'], size=11, weight='600')
+    f.text(150, 248, t['pa'], size=10, fill='--paper-dim')
+    f.text(440, 230, t['b'], size=11, weight='600')
+    f.text(440, 248, t['pb'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l05-pi', 5)
+def l05_pi(lang):
+    t = {
+        'en': dict(plan='PI Planning', planw='two days, everybody', it='iteration', ip='IP iteration',
+                   ipw='innovation and planning', demo='system demo', ia='Inspect and Adapt',
+                   span='one Planning Interval: 8 to 12 weeks, commonly 10',
+                   label='A Planning Interval drawn as a timeline. It opens with PI Planning, two days with the '
+                         'whole release train. Four development iterations of two weeks follow, each ending in a '
+                         'system demo. The fifth is the innovation and planning iteration, which holds the '
+                         'Inspect and Adapt event and the next PI Planning.',
+                   cap='One Planning Interval of SAFe, in its most common shape: ten weeks, five iterations, the last '
+                       'reserved for innovation, planning and the slack a plan needs.'),
+        'pt': dict(plan='PI Planning', planw='dois dias, todo mundo', it='iteração', ip='iteração IP',
+                   ipw='inovação e planejamento', demo='demo do sistema', ia='Inspect and Adapt',
+                   span='um Planning Interval: de 8 a 12 semanas, muitas vezes 10',
+                   label='Um Planning Interval desenhado como linha do tempo. Ele abre com o PI Planning, dois dias '
+                         'com o release train inteiro. Seguem quatro iterações de desenvolvimento de duas semanas, '
+                         'cada uma terminando numa demo do sistema. A quinta é a iteração de inovação e '
+                         'planejamento, que abriga o evento Inspect and Adapt e o próximo PI Planning.',
+                   cap='Um Planning Interval do SAFe, no formato mais comum: dez semanas, cinco iterações, a última '
+                       'reservada para inovação, planejamento e a folga de que um plano precisa.'),
+    }[lang]
+    f = Fig('l05-pi', 680, 210, t['label'])
+    box(f, 14, 60, 110, 54, [t['plan'], t['planw']], stroke='--phosphor', fills=['--paper', '--paper-dim'],
+        weights=['600', None], size=10)
+    x = 134
+    for k in range(4):
+        box(f, x, 60, 96, 54, [f"{t['it']} {k + 1}"], size=10, weights=['600'])
+        f.text(x + 48, 130, t['demo'], size=9, fill='--paper-dim')
+        x += 102
+    box(f, x, 60, 128, 54, [t['ip'], t['ipw']], stroke='--amber', fills=['--paper', '--paper-dim'],
+        weights=['600', None], size=10)
+    f.text(x + 64, 130, t['ia'], size=9, fill='--amber')
+    f.line(14, 40, x + 128, 40, stroke='--paper-dim', width=1.2)
+    f.line(14, 34, 14, 46, stroke='--paper-dim', width=1.2)
+    f.line(x + 128, 34, x + 128, 46, stroke='--paper-dim', width=1.2)
+    f.text((14 + x + 128) / 2, 26, t['span'], size=10, fill='--paper-dim')
+    f.path(f'M{x + 100:.0f} 116 C{x + 100:.0f} 190 70 190 70 118', stroke='--paper-dim', width=1.2,
+           dash='4 3', arrow=True)
+    return f, t['cap']
+
+
+@figure('l05-feature-teams', 5)
+def l05_feature_teams(lang):
+    t = {
+        'en': dict(comp='component teams', feat='feature teams',
+                   layers=['screens', 'API', 'database'],
+                   cteam=['screens team', 'API team', 'database team'],
+                   fteam=['team 1', 'team 2', 'team 3'],
+                   feature='one feature', note1='one feature crosses three teams: three backlogs, three queues',
+                   note2='one feature, one team, every layer',
+                   label='Two arrangements side by side. On the left, three component teams each own one layer: '
+                         'screens, API and database; a single feature, drawn as a vertical arrow, crosses all three '
+                         'teams. On the right, three feature teams each own a vertical slice through all three '
+                         'layers, and the same feature sits inside one team.',
+                   cap='A feature is a vertical slice; a component team owns a horizontal one. Every feature then '
+                       'needs several teams to finish it, and the coordination becomes the work.'),
+        'pt': dict(comp='times de componente', feat='times de funcionalidade',
+                   layers=['telas', 'API', 'banco de dados'],
+                   cteam=['time de telas', 'time de API', 'time de banco'],
+                   fteam=['time 1', 'time 2', 'time 3'],
+                   feature='uma funcionalidade', note1='uma funcionalidade cruza três times: três backlogs, três filas',
+                   note2='uma funcionalidade, um time, todas as camadas',
+                   label='Dois arranjos lado a lado. À esquerda, três times de componente, cada um dono de uma '
+                         'camada: telas, API e banco de dados; uma única funcionalidade, desenhada como uma seta '
+                         'vertical, cruza os três times. À direita, três times de funcionalidade, cada um dono de '
+                         'uma fatia vertical pelas três camadas, e a mesma funcionalidade fica dentro de um time.',
+                   cap='Uma funcionalidade é uma fatia vertical; um time de componente é dono de uma horizontal. Aí '
+                       'toda funcionalidade precisa de vários times para terminar, e a coordenação vira o trabalho.'),
+    }[lang]
+    f = Fig('l05-feature-teams', 680, 280, t['label'])
+    f.text(145, 22, t['comp'], size=11, weight='600')
+    for i, name in enumerate(t['cteam']):
+        y = 40 + i * 58
+        box(f, 20, y, 250, 46, [name], size=10)
+    arrow(f, 205, 34, 205, 220, stroke='--amber', width=2)
+    f.text(215, 232, t['feature'], size=9.5, anchor='start', fill='--amber')
+    f.text(145, 260, t['note1'], size=9.5, fill='--paper-dim')
+    f.text(493, 22, t['feat'], size=11, weight='600')
+    for j, name in enumerate(t['fteam']):
+        x = 320 + j * 118
+        f.rect(x, 40, 110, 162, stroke='--phosphor' if j == 1 else '--wire', fill='--panel', rx=4,
+               width=1.8 if j == 1 else 1.2)
+        f.text(x + 44, 56, name, size=10, weight='600')
+        for i, lay in enumerate(t['layers']):
+            f.rect(x + 6, 70 + i * 42, 76, 34, stroke='--wire', fill='--scan', rx=3)
+            f.text(x + 44, 87 + i * 42, lay, size=9)
+    arrow(f, 534, 62, 534, 200, stroke='--amber', width=2)
+    f.text(534, 232, t['feature'], size=9.5, anchor='middle', fill='--amber')
+    f.text(493, 260, t['note2'], size=9.5, fill='--paper-dim')
+    return f, t['cap']
+
+# ---- end of lesson 5
+
+
 # ------------------------------------------------------------------ the figures
 
 
