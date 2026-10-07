@@ -20,9 +20,10 @@
 # What it adds, and a person does not need: the user `ana` the transcripts
 # print (`ana@lab`); /home/ana as HOME unless LAB_HOME says otherwise; the
 # stock Python 3.12 of Ubuntu 24.04 as `python3`, because the recording
-# machine had a 3.13 beside it; and it skips `sudo apt-get`, because the
-# recording machine already has the packages and a capture must not depend on
-# the network for them. The pip install in lesson 1 does use the network.
+# machine had a 3.13 beside it; it runs `sudo X` as X, being root already;
+# and it skips `sudo apt-get`, because the recording machine already has the
+# packages and a capture must not depend on the network for them. The pip
+# install in lesson 1 does use the network.
 #
 # THE STORY. Vereda Fisioterapia is a small chain of physiotherapy clinics in
 # Sao Paulo, with a patient portal at portal.vereda.example. Vereda is
@@ -122,8 +123,12 @@ elif mode == "steps":
     if not blocks:
         sys.exit(f"{lesson}/{slug} has no sh fence that starts in ~/lab")
     for b in blocks:
-        sys.stdout.write("".join(l + "\n" for l in b.split("\n")
-                                 if l and not l.startswith("sudo apt-get ")))
+        for l in b.split("\n"):
+            if not l or l.startswith("sudo apt-get "):
+                continue
+            # this runs as root already, and sudo would reset PATH to one
+            # whose python3 is not the stock 3.12
+            sys.stdout.write((l[5:] if l.startswith("sudo ") else l) + "\n")
 PY
 }
 
