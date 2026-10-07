@@ -12,14 +12,16 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; the tag v1.0 on
-# where it ends; Bruno's task (#21, pull request #22) merged the day before;
-# the two pull requests' merges made with `git merge --no-ff` and the message
-# GitHub's merge button writes, because the button is a website and this is a
-# terminal; the pull and the review happen on the platform and are not shown
-# here, so `git pull` has no remote to ask; colour switched off.
+# The shared copy, Bruno's task #21 and pull request #22, Ana's two commits and
+# the merges of both pull requests are the ```bash blocks the lesson prints,
+# run by `given`. The hosting service's merge button is merge-button.sh, which
+# the-ticket prints whole: a clone of the shared copy in ~/platform that merges
+# with `--no-ff` and the message GitHub's button writes, because the button is
+# a website and this is a terminal. The review happens on the platform and is
+# not shown.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids in
+# the prose are reproducible; colour switched off.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -83,10 +85,8 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
 
-cd ~ && rm -rf ~/remotes ~/platform
 git config --global color.ui never
 git config --global color.advice never
 git config --global color.remote never
@@ -94,26 +94,14 @@ tty() {
   printf 'ana@vm:%s$ %s\n' "$(pwd | sed "s|^$HOME|~|")" "$*"
   script -qec "$*" /dev/null || true
 }
-cd ~/site && git tag -a v1.0 -m 'The site as it went live' HEAD
-git init -q --bare ~/remotes/site.git
-git remote add origin ~/remotes/site.git
-git push -q -u origin main v1.0 2>/dev/null
 
-# The platform's merge button, played by a clone that merges and pushes.
-git clone -q ~/remotes/site.git ~/platform/site 2>/dev/null
-merge() {  # merge BRANCH NUMBER AUTHOR TITLE
-  ( cd ~/platform/site && as 'GitHub' 'noreply@github.com' && git fetch -q origin &&
-    git merge -q --ff-only origin/main && git merge -q --no-ff "origin/$1" -m "Merge pull request #$2 from $3/$1" -m "$4" &&
-    git push -q origin main && git push -q origin --delete "$1" )
-}
-
-# Bruno's task, #21, done on his own machine the day before and merged as #22.
-bruno; at '2026-09-21T10:00:00-03:00'
-git switch -q -c 21-rye-bread-back
-printf '<p>Rye bread, 1.35</p>\n' >> menu.html; git commit -qam 'Put rye bread back on the menu' -m 'Refs #21'
-git push -q origin 21-rye-bread-back 2>/dev/null
-git switch -q main && git branch -q -D 21-rye-bread-back && git reset -q --hard v1.0
-at '2026-09-21T15:00:00-03:00'; merge 21-rye-bread-back 22 bruno 'Put rye bread back on the menu'
+# The shared copy with v1.0 on it, the merge button, and Bruno's task #21,
+# done the day before and merged as #22: the-ticket's four blocks, in order.
+cd ~ && given the-ticket 1 '2026-09-18T15:30:00-03:00'
+fence "$lessons/$self/the-ticket.md" 2 > ~/merge-button.sh
+given the-ticket 3 '2026-09-21T10:00:00-03:00'
+at '2026-09-21T15:00:00-03:00'
+given the-ticket 4
 me
 
 block branch
@@ -123,16 +111,12 @@ tty 'git pull'
 show 'git switch -c 23-holiday-notice'
 
 block commits
-at '2026-09-22T09:40:00-03:00'
-printf '<p>Closed on public holidays.</p>\n' >> index.html; git commit -qam 'Say the bakery closes on public holidays' -m 'Refs #23'
-at '2026-09-22T10:05:00-03:00'
-printf '.closed { font-weight: bold; }\n' >> style.css
-sed -i 's|<p>Closed on public holidays.</p>|<p class="closed">Closed on public holidays.</p>|' index.html
-git commit -qam 'Make the holiday notice stand out' -m 'Refs #23'
+given branch-to-pull-request 1 '2026-09-22T09:40:00-03:00' '2026-09-22T10:05:00-03:00'
 show 'git log --oneline main..'
 tty 'git push -u origin 23-holiday-notice'
 
-at '2026-09-22T16:30:00-03:00'; merge 23-holiday-notice 24 ana 'Say the bakery closes on public holidays'
+at '2026-09-22T16:30:00-03:00'
+given review-merge-release 1
 me
 block merged
 show 'git switch main'
