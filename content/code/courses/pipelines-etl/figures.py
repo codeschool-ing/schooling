@@ -786,6 +786,88 @@ def l07_scd2(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 8
+
+@figure('l08-components', 8)
+def l08_components(lang):
+    t = {'en': dict(
+            label='Airflow\'s parts. The DAG folder is read by the DAG processor, which stores each '
+                  'DAG in the metadata database. The scheduler reads the database, decides what is '
+                  'due, and hands tasks to the executor, which runs them as processes. The '
+                  'triggerer waits on behalf of waiting tasks. The API server serves the web '
+                  'interface and the API, and also reads and writes the metadata database.',
+            folder='DAG folder', files='~/etl/dags/*.py', proc='DAG processor', sched='scheduler',
+            exe='executor', tasks='task processes', trig='triggerer', api='API server',
+            ui='web interface and API', db='metadata database', dbname='PostgreSQL: airflow',
+            cap='Four processes and a database. The files are only read; everything Airflow knows '
+                'about runs and states is in the database.'),
+         'pt': dict(
+            label='As partes do Airflow. A pasta de DAGs é lida pelo processador de DAGs, que guarda '
+                  'cada DAG no banco de metadados. O agendador lê o banco, decide o que está na hora '
+                  'e entrega as tarefas ao executor, que as roda como processos. O triggerer espera '
+                  'em nome das tarefas que esperam. O servidor da API serve a interface web e a API, '
+                  'e também lê e escreve no banco de metadados.',
+            folder='pasta de DAGs', files='~/etl/dags/*.py', proc='processador de DAGs',
+            sched='agendador', exe='executor', tasks='processos das tarefas', trig='triggerer',
+            api='servidor da API', ui='interface web e API', db='banco de metadados',
+            dbname='PostgreSQL: airflow',
+            cap='Quatro processos e um banco. Os arquivos são só lidos; tudo o que o Airflow sabe '
+                'sobre execuções e estados está no banco.')}[lang]
+    f = Fig('l08-components', 720, 300, t['label'])
+    box(f, 20, 30, 150, 50, t['folder'], t['files'], mono_sub=True)
+    box(f, 220, 30, 150, 50, t['proc'])
+    box(f, 220, 130, 150, 50, t['sched'])
+    box(f, 420, 130, 120, 50, t['exe'])
+    box(f, 580, 130, 120, 50, t['tasks'])
+    box(f, 220, 230, 150, 50, t['trig'])
+    box(f, 410, 30, 120, 50, t['api'])
+    box(f, 560, 30, 150, 50, t['ui'])
+    f.rect(20, 120, 150, 70, stroke='--phosphor', fill='--scan', rx=8)
+    f.text(95, 145, t['db'], size=11, weight='600')
+    f.text(95, 166, t['dbname'], size=9.5, fill='--paper-dim', mono=True)
+    f.line(170, 55, 218, 55, stroke='--phosphor', width=1.4, arrow=True)
+    f.line(245, 82, 160, 118, stroke='--phosphor', width=1.4, arrow=True)
+    f.line(218, 155, 172, 155, stroke='--paper-dim', width=1.4, arrow=True)
+    f.line(370, 155, 418, 155, stroke='--phosphor', width=1.4, arrow=True)
+    f.line(540, 155, 578, 155, stroke='--phosphor', width=1.4, arrow=True)
+    f.line(218, 250, 150, 192, stroke='--paper-dim', width=1.2, arrow=True)
+    f.line(530, 55, 558, 55, stroke='--phosphor', width=1.4, arrow=True)
+    f.path('M410 70 C 330 110, 230 100, 172 130', stroke='--paper-dim', width=1.2, arrow=True)
+    return f, t['cap']
+
+
+@figure('l08-dag', 8)
+def l08_dag(lang):
+    t = {'en': dict(
+            label='The six tasks of shop_nightly as a graph, left to right. extract leads to '
+                  'transform, which leads to dim_customer and dim_book. day_to_load and '
+                  'dim_customer both lead to fact_sales. dim_book leads nowhere further.',
+            cap='Arrows are the only order. dim_book and dim_customer have none between them, so '
+                'they may run at the same time; fact_sales waits for both of its arrows.'),
+         'pt': dict(
+            label='As seis tarefas do shop_nightly como grafo, da esquerda para a direita. extract '
+                  'leva a transform, que leva a dim_customer e dim_book. day_to_load e dim_customer '
+                  'levam ambos a fact_sales. dim_book não leva a mais nada.',
+            cap='As setas são a única ordem. dim_book e dim_customer não têm nenhuma entre si, '
+                'então podem rodar ao mesmo tempo; fact_sales espera as suas duas setas.')}[lang]
+    f = Fig('l08-dag', 720, 220, t['label'])
+    nodes = {'extract': (20, 40), 'transform': (180, 40), 'dim_customer': (360, 40),
+             'dim_book': (360, 100), 'day_to_load': (360, 160), 'fact_sales': (560, 70)}
+    w, h = 140, 40
+    for name, (x, y) in nodes.items():
+        f.rect(x, y, w, h, stroke='--phosphor' if name == 'fact_sales' else '--wire', fill='--panel')
+        f.text(x + w / 2, y + h / 2, name, size=11, mono=True)
+    def edge(a, b):
+        (x0, y0), (x1, y1) = nodes[a], nodes[b]
+        f.line(x0 + w, y0 + h / 2, x1 - 2, y1 + h / 2, stroke='--paper-dim', width=1.4, arrow=True)
+    edge('extract', 'transform')
+    edge('transform', 'dim_customer')
+    f.path(f'M{180 + w} {60} C 340 60, 330 120, 358 120', stroke='--paper-dim', width=1.4, arrow=True)
+    edge('dim_customer', 'fact_sales')
+    edge('day_to_load', 'fact_sales')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

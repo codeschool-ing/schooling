@@ -83,6 +83,12 @@ TABLES="shops books customers orders order_lines payments"
 
 ENVFILE=/etc/etl.env
 write_env() {
+  # Airflow's processes sign the tokens tasks use to talk to its API with one
+  # shared secret. Left unset, each process invents its own and every task
+  # fails with "Invalid auth token". It is made once, here, and kept.
+  local jwt
+  jwt=$(grep -s '^AIRFLOW__API_AUTH__JWT_SECRET=' "$ENVFILE" | cut -d= -f2- || true)
+  [ -n "$jwt" ] || jwt=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
   cat > "$ENVFILE" <<EOF
 PATH=$OPT/bin:$PGBIN:/usr/local/bin:/usr/bin:/bin
 TZ=America/Sao_Paulo
@@ -103,6 +109,8 @@ AIRFLOW__DAG_PROCESSOR__REFRESH_INTERVAL=10
 AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK=False
 AIRFLOW__API__PORT=8080
 AIRFLOW__API__HOST=127.0.0.1
+AIRFLOW__API_AUTH__JWT_SECRET=$jwt
+
 AIRFLOW__LOGGING__COLORED_CONSOLE_LOG=False
 AIRFLOW_CONN_SHOP=postgresql://ana@%2Frun%2Fetl-pg/shop
 AIRFLOW_CONN_WH=postgresql://ana@%2Frun%2Fetl-pg/wh
@@ -137,7 +145,7 @@ build_tools() {
   venv py $PY_LIBS
   # Airflow is installed against its own constraints file, as its documentation
   # asks: without it pip resolves today's libraries, which Airflow never tested.
-  venv airflow "apache-airflow[postgres]==$AIRFLOW" \
+  venv airflow "apache-airflow[postgres]==$AIRFLOW" graphviz \
     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-$AIRFLOW/constraints-$PYV.txt"
   # shellcheck disable=SC2086
   venv dbt $DBT_LIBS
@@ -194,12 +202,13 @@ load_shop() {
   as_ana "psql -q -c 'VACUUM ANALYZE'"
 }
 
-stop_pid() {  # stop_pid NAME — the process lab.sh started under that name
-  local f=$RUN/$1.pid
-  if [ -f "$f" ]; then
-    kill "$(cat "$f")" 2>/dev/null || true
-    for _ in $(seq 50); do kill -0 "$(cat "$f")" 2>/dev/null || break; sleep 0.2; done
-    kill -9 "$(cat "$f")" 2>/dev/null || true
+stop_pid() {  # stop_pid NAME — the process lab.sh started under that name, and
+  local f=$RUN/$1.pid p      # everything it started: setsid made it the leader
+  if [ -f "$f" ]; then       # of its own process group, and the group is killed
+    p=$(cat "$f")
+    kill -TERM -- "-$p" 2>/dev/null || true
+    for _ in $(seq 50); do kill -0 -- "-$p" 2>/dev/null || break; sleep 0.2; done
+    kill -KILL -- "-$p" 2>/dev/null || true
     rm -f "$f"
   fi
 }
@@ -245,7 +254,7 @@ reset() {
   mkdir -p $ETL/dags $ETL/landing $ETL/inbox $AFHOME
   chown -R ana:ana $ETL $AFHOME
   load_shop
-    as_ana "psql -q -d postgres -c 'DROP ROLE IF EXISTS etl_reader'"
+    as_ana "psql -q -d postgres -c 'SET client_min_messages = warning' -c 'DROP ROLE IF EXISTS etl_reader'"
   as_ana "dropdb --force --if-exists wh 2>/dev/null; createdb wh; dropdb --force --if-exists airflow 2>/dev/null; createdb airflow"
   echo 2026-02-28 > $RUN/clock
 }
