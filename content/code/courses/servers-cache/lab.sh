@@ -415,8 +415,9 @@ up() {
 stage() { # where each lesson starts: what the lessons before it left behind
   local n=${1:-1}
   [ "$n" -ge 2 ] || return 0
-  # Lesson 1's static site, on port 80, as that lesson wrote it.
-  in_vm tee /etc/nginx/sites-available/ipelivros >/dev/null <<'LABFILE'
+  if [ "$n" -eq 2 ]; then
+    # Lesson 1's static site, on port 80, as that lesson wrote it.
+    in_vm tee /etc/nginx/sites-available/ipelivros >/dev/null <<'LABFILE'
 server {
     listen 80;
     server_name ipelivros.example www.ipelivros.example;
@@ -428,6 +429,49 @@ server {
     error_log  /var/log/nginx/ipelivros.error.log;
 }
 LABFILE
+  else
+    # Lesson 2's site: the static front, and the API behind it, compressed.
+    in_vm tee /etc/nginx/sites-available/ipelivros >/dev/null <<'LABFILE'
+upstream shop {
+    zone shop 64k;
+    least_conn;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    keepalive 16;
+}
+
+server {
+    listen 80;
+    server_name ipelivros.example www.ipelivros.example;
+
+    root /var/www/ipe;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://shop;
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 10s;
+    }
+
+    access_log /var/log/nginx/ipelivros.access.log;
+    error_log  /var/log/nginx/ipelivros.error.log;
+}
+LABFILE
+    in_vm tee /etc/nginx/conf.d/gzip.conf >/dev/null <<'LABFILE'
+gzip_types text/css application/javascript application/json image/svg+xml;
+gzip_min_length 256;
+gzip_vary on;
+LABFILE
+  fi
   in_vm ln -sf ../sites-available/ipelivros /etc/nginx/sites-enabled/ipelivros
   in_vm systemctl enable --now nginx >/dev/null 2>&1
 }
