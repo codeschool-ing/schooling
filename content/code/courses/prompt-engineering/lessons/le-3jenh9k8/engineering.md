@@ -1,6 +1,6 @@
 ---
 title: What makes it engineering
-version: 1
+version: 2
 ---
 
 "Prompt engineering" is often heard as a collection of magic phrases: the wording that unlocks a
@@ -76,23 +76,58 @@ against a set of labelled tests.
 ## A vague prompt and a specific one
 
 The first draft of a prompt is usually the request as you would say it to a colleague who already
-knows the context. The model knows none of it. Two prompts for the same job, written by the course
-as an illustration:
+knows the context. The model knows none of it. Two prompts for the same job:
 
-```localised
-Vague:
-  Write something about our opening hours.
+```
+ana@lab:~/pe$ cat prompts/vague.txt
+Write something about our opening hours.
+ana@lab:~/pe$ ask - --temperature 0 < prompts/vague.txt
+**Our Opening Hours**
 
-Specific:
-  You are writing the notice for the door of Café Aurora.
-  Opening hours: Monday to Saturday 07:00 to 18:00; Sunday 08:00 to 12:00.
-  The kitchen stops taking hot food orders 30 minutes before closing.
-  Write the notice in English, at most four lines, one line per rule.
-  Do not add any information that is not in these hours.
+We are committed to providing our customers with convenient and accessible shopping experiences. Our opening hours are as follows:
+
+Monday to Saturday: 9:00 AM - 6:00 PM
+Sunday: 10:00 AM - 5:00 PM
+
+Please note that these hours may be subject to change, especially on public holidays or during special events. We recommend checking our website or social media channels for any updates before visiting us.
+
+We are also open on the following public holidays:
+
+* New Year's Day: 12:00 PM - 5:00 PM
+* Good Friday: 9:00 AM - 5:00 PM
+* Easter Monday: 10:00 AM - 5:00 PM
+* Christmas Day: 12:00 PM - 4:00 PM
+* Boxing Day: 10:00 AM - 5:00 PM
+
+We look forward to welcoming you to our store during our opening hours. If you have any questions or concerns, please don't hesitate to contact us.
+-- llama3.2:3b, finish: stop, prompt 32 tokens, output 215 tokens
 ```
 
-The vague one can be answered in a thousand ways and all of them pass, because nothing says what a
-good answer is. **The specific one is longer because it carries the four parts a prompt can have**,
+```
+ana@lab:~/pe$ cat prompts/specific.txt
+You are writing the notice for the door of Café Aurora.
+Opening hours: Monday to Saturday 07:00 to 18:00; Sunday 08:00 to 12:00.
+The kitchen stops taking hot food orders 30 minutes before closing.
+Write the notice in English, at most four lines, one line per rule.
+Do not add any information that is not in these hours.
+ana@lab:~/pe$ ask - --temperature 0 < prompts/specific.txt
+Here is the notice:
+
+Café Aurora is open from Monday to Saturday from 07:00 to 18:00 and on Sunday from 08:00 to 12:00.
+
+Please note that our kitchen stops taking hot food orders 30 minutes before closing.
+-- llama3.2:3b, finish: stop, prompt 105 tokens, output 56 tokens
+```
+
+**The vague one got a confident page of opening hours, and not one of them is the café's.** Nothing
+in the prompt said what the hours were, so the model wrote typical ones, Sunday and public holidays
+included, and a notice for a shop rather than a café. Nothing in the prompt said what a good answer
+is either, so nothing in it is wrong by its own standard. The specific one got the hours and the
+kitchen rule right, and still missed two of its instructions: it opened with `Here is the notice:`,
+and it put two rules in one line. A longer prompt fixed what it said, and the test is what finds
+what it did not.
+
+**The specific one is longer because it carries the four parts a prompt can have**,
 and each one closes a way the reply could go wrong:
 
 | part | in the example | what goes wrong without it |

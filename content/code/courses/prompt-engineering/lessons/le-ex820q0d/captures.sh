@@ -8,10 +8,13 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# Staged with put, and shown in the lesson: review.schema.json (what a reply
-# has to look like), reply.json (a reply of that shape, written by the course,
-# not by a model) and request.txt (the text of one request). cut.json is
-# reply.json cut short by head -c, standing in for a token limit.
+# Staged with put, and shown in the lesson with cat: review.schema.json (what a
+# reply has to look like) and request.txt (the text of one request). reply.json
+# and cut.json are the model's replies to it, the second cut by --max-tokens.
+# validate is read out of the-limit.md.
+#
+# THE MODEL'S REPLIES in ask-json and save are llama3.2:3b served by Ollama
+# 0.40.0, at temperature 0, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -38,9 +41,6 @@ put review.schema.json <<'PE_FILE'
   }
 }
 PE_FILE
-put reply.json <<'PE_FILE'
-{"sentiment": "negative", "topic": "waiting time", "summary": "Waited fifteen minutes for a tea at noon; the staff were kind about it."}
-PE_FILE
 put request.txt <<'PE_FILE'
 You read customer reviews of Café Aurora. For the review below, reply with
 one JSON object with three fields: "sentiment" (positive, neutral or
@@ -55,9 +55,15 @@ block the-limit
 on 'toylm generate "the menu has" --temperature 0'
 on 'toylm generate "the menu has" --temperature 0 --max-tokens 3'
 on 'toylm generate "the cat" --temperature 0 --max-tokens 20'
-on 'cat reply.json'
-on 'tok count reply.json'
-on 'head -c 70 reply.json > cut.json; cat cut.json; echo'
+block files
+on 'cat request.txt review.schema.json'
+block ask-json
+on 'ask - --json --temperature 0 < request.txt'
+on 'ask - --json --temperature 0 --max-tokens 20 < request.txt'
+block save
+on 'ask - --json --temperature 0 --plain < request.txt > reply.json'
+on 'ask - --json --temperature 0 --max-tokens 20 --plain < request.txt > cut.json'
+block validate
 on 'validate review.schema.json reply.json'
 on 'validate review.schema.json cut.json'
 

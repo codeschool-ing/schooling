@@ -9,9 +9,11 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # Nothing is staged beyond the workbench lab.sh builds: retrieve and the
-# café's handbook/ are printed in full in lab.sh. No model is called; the
-# replies a model might give to the assembled prompts are illustrations the
-# lesson wrote, and it says so where they appear.
+# café's handbook/ are shown whole in the lessons that introduce them, and
+# lab.sh takes them from those fences.
+#
+# THE MODEL'S REPLIES (every `ask` below) are llama3.2:3b served by Ollama
+# 0.40.0, at temperature 0, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -34,11 +36,24 @@ on 'retrieve "when does the café open on sundays"'
 
 block the-grounded-prompt
 on 'retrieve --prompt "when does the café open on sundays"'
+block ask-sunday
+on 'retrieve --prompt "when does the café open on sundays" | ask - --temperature 0'
+block dog
 on 'retrieve --prompt "can I bring my dog"'
+block ask-dog
+on 'retrieve --prompt "can I bring my dog" | ask - --temperature 0'
 
 block where-it-fails
 on 'retrieve "is there wireless internet for customers"'
 on 'retrieve "what is the wifi password"'
+block ask-wifi
+on 'retrieve --prompt "is there wireless internet for customers" | ask - --temperature 0'
+block holiday
 on 'retrieve "what time does the café open on public holidays"'
+block ask-holiday
+on 'retrieve --prompt "what time does the café open on public holidays" | ask - --temperature 0'
+block refund
 on 'retrieve "can I get a refund for a cold coffee"'
 on 'retrieve "my drink was wrong, can I get my money back"'
+block ask-cold
+on 'retrieve --prompt "can I get a refund for a cold coffee" | ask - --temperature 0'

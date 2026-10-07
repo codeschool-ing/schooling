@@ -1,6 +1,6 @@
 ---
 title: What each one changes
-version: 1
+version: 2
 ---
 
 Fine-tuning has a reputation as the grown-up version of prompting: when a prompt is not good
@@ -28,13 +28,15 @@ messages into categories:
 ```
 ana@lab:~/pe$ wc -l train.jsonl
 3 train.jsonl
-ana@lab:~/pe$ head -1 train.jsonl
+ana@lab:~/pe$ cat train.jsonl
 {"messages": [{"role": "user", "content": "Are you open on Sunday afternoon?"}, {"role": "assistant", "content": "hours"}]}
+{"messages": [{"role": "user", "content": "Does the carrot cake have nuts in it?"}, {"role": "assistant", "content": "allergens"}]}
+{"messages": [{"role": "user", "content": "My latte was cold and I want my money back."}, {"role": "assistant", "content": "refunds"}]}
 ```
 
 Three is far too few; a real job wants hundreds or thousands, each one checked by somebody who
-knows the right answer. Nothing was trained here. The workbench has no model to train, and the
-point of the file is its shape: **every line is a question with the answer you have decided is
+knows the right answer. Nothing was trained here: Ollama runs models and does not train them, and
+the point of the file is its shape. **Every line is a question with the answer you have decided is
 right.**
 
 ## What fine-tuning is good at

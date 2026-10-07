@@ -1,6 +1,6 @@
 ---
 title: O limite como orçamento
-version: 1
+version: 2
 ---
 
 O limite de saída costuma ser visto como uma rede de segurança contra texto desgovernado. **Ele
@@ -32,8 +32,7 @@ tokens  words  chars  file
     79     55    335  request.txt
 ```
 
-Se a resposta tiver mais ou menos o tamanho do objeto de 36 tokens da seção anterior, digamos 40
-tokens:
+A resposta da seção anterior teve 39 tokens, então digamos 40:
 
 ```
 ana@lab:~/pe$ tok cost request.txt -o 40 -i 2 -p 8

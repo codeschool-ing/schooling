@@ -1,6 +1,6 @@
 ---
 title: O que o ajuste fino custa, e a ordem em que tentar as coisas
-version: 1
+version: 2
 ---
 
 O argumento que costuma aparecer a favor do ajuste fino é a conta: um prompt com instruções e
@@ -74,6 +74,36 @@ O prompt curto tem 13 tokens contra 165, e 10.000 pedidos custam 0,53 contra 4,3
 de pedidos a diferença é 3800 nas mesmas unidades. **Se isso paga o ajuste fino depende do quanto o
 ajuste fino custa**. A economia também fica menor que essa se o provedor cobrar mais caro pelo modelo
 ajustado do que pelo modelo base, o que é comum o bastante para conferir antes de planejar em cima.
+
+Os dois prompts podem ser mandados ao modelo local como estão, e o resultado merece ser visto antes
+de qualquer parte dessa conta ganhar confiança:
+
+```
+ana@lab:~/pe$ ask - --temperature 0 < few-shot.txt
+Here are the categories:
+
+1. hours
+2. allergens
+3. refunds
+4. loyalty
+5. wifi
+6. deliveries
+7. other
+8. hours
+9. other
+-- llama3.2:3b, finish: stop, prompt 193 tokens, output 42 tokens
+ana@lab:~/pe$ ask - --temperature 0 < short.txt
+Yes, we can make a flat white with oat milk. Would you like to try it?
+-- llama3.2:3b, finish: stop, prompt 38 tokens, output 20 tokens
+```
+
+O prompt longo não fez o que diz. Ele pedia só a categoria e recebeu uma lista numerada, que
+classifica os oito exemplos além da mensagem, e pôs a pergunta do leite de aveia em `other`. O curto,
+mandado a um modelo que ninguém ajustou, nem foi classificado: duas linhas terminadas em `Category:`
+soam, para este modelo, como um cliente perguntando sobre leite de aveia, e ele respondeu ao cliente.
+**O prompt curto só funciona num modelo treinado para esperá-lo**, e é esse todo o argumento a favor
+do ajuste fino; e o longo ainda não funciona, o que põe este trabalho no primeiro degrau da escada
+abaixo, não no último.
 
 ## Os custos que não aparecem na fatura
 

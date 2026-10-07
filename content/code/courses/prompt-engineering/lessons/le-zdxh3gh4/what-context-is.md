@@ -1,6 +1,6 @@
 ---
 title: What counts as context
-version: 1
+version: 2
 ---
 
 A common belief about a good model is that it will work out what you meant: that a short request
@@ -13,50 +13,63 @@ those facts in the prompt instead of leaving the model to guess them.
 
 Café Aurora, the café this course's handbook belongs to, gets an e-mail. Somebody paid R$ 140 by
 card for a lemon cake, was handed a chocolate one, and wants the money back, in cash if possible.
-The bare request is one line and the message under it:
+The bare request is one line and the message under it. Save it as `~/pe/bare.txt` and send it:
 
 ```
+ana@lab:~/pe$ cat bare.txt
 Reply to this customer:
 
 I ordered a lemon cake for a party and was given a chocolate one. I paid R$ 140 by card. I'd like my money back, in cash if possible.
+ana@lab:~/pe$ ask - --temperature 0 < bare.txt
+Dear valued customer,
+
+I apologize for the inconvenience and disappointment caused by the incorrect cake order. I can imagine how frustrating it must be to receive a different cake than what you had ordered.
+
+I'm happy to help resolve this issue for you. I'd like to offer you a full refund of R$ 140, which will be processed back to your original payment method as soon as possible. Unfortunately, I won't be able to provide a cash refund, as our refund policy only allows for credit to the original payment method.
+
+Please allow me a few minutes to process the refund. You should receive the credit back to your account within the next 24-48 hours, depending on your bank's processing time.
+
+If you have any further questions or concerns, please don't hesitate to contact me directly. I apologize again for the mistake and appreciate your patience and understanding.
+
+Thank you for your business, and I hope you have a wonderful party with your guests.
+
+Best regards,
+[Your Name]
+-- llama3.2:3b, finish: stop, prompt 66 tokens, output 199 tokens
 ```
 
-The reply below was written by this course as an illustration of what a capable model plausibly
-returns to that prompt. It is not a capture:
+It reads well, and it is worth checking line by line against the handbook. It refuses the cash,
+which is the café's rule, and it gives a reason, "our refund policy only allows for credit to the
+original payment method", that it did not read anywhere: **it guessed the policy, and the guess
+happened to be right**. It promises the money in 24 to 48 hours, which nobody decided. It says
+nothing about the shift manager, whose approval the handbook requires above R$ 100. And it is
+signed `[Your Name]`. That is lesson 5's hallucination in its most ordinary form: no invented fact
+about the world, only a plausible policy, right by luck in one place and silent in another.
 
-```localised
-Dear customer,
+With the refunds page and four lines about the job in the prompt, `with-context.txt`, which the
+next section shows whole:
 
-We're so sorry about the mix-up with your cake! Of course we'll refund
-you in full. Just pop into the café with your receipt and we'll give you
-R$ 140 in cash at the counter. We hope to see you again soon!
-
-Best wishes,
-The team
 ```
+ana@lab:~/pe$ ask - --temperature 0 < with-context.txt
+Subject: Refund for Incorrect Order
 
-It reads well, and **two of its promises break Café Aurora's rules**: the handbook says a refund
-goes back to the card that paid, never in cash, and anything above R$ 100 needs the shift
-manager's approval. The model did not know either rule. It wrote what refund replies usually say,
-which is lesson 5's hallucination in its most ordinary form: no invented fact about the world,
-only a plausible policy that happens to be somebody else's.
+Dear [Customer],
 
-With the refunds page and four lines about the job in the prompt (the next section shows the whole
-prompt), the course's illustration of the reply becomes:
+We apologize for the mistake with your order. We will process a refund for the incorrect lemon cake. The refund amount is R$ 140, which will be returned to your original payment method. Please note that we cannot provide cash refunds for card payments.
 
-```localised
-Hello,
+Thank you for bringing this to our attention, and we hope you can enjoy the rest of your party.
 
-We're sorry you were given the wrong cake. You're entitled to a refund,
-and it will go back to the card you paid with: we can't refund a card
-payment in cash. Because the amount is over R$ 100, our shift manager
-approves it first; we'll confirm by e-mail once that's done.
-
+Best regards,
 Café Aurora
+-- llama3.2:3b, finish: stop, prompt 244 tokens, output 92 tokens
 ```
 
-The model is the same and so is the request. **The difference is four kinds of fact that the
-first prompt did not carry.**
+The model is the same and so is the request. The card rule now comes from the handbook, the timeline
+is gone, and it is signed by the café. **And the manager's approval is still missing**, though it is
+one of the four lines of the refunds page in the prompt: the context made the right answer possible,
+and did not make the model use all of it. The reply also says the refund is for "the incorrect lemon
+cake", the one the customer never got. A member of staff reads every draft before it is sent, and
+the prompt says so, which is exactly why.
 
 ## Four kinds of context
 

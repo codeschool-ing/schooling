@@ -1,6 +1,6 @@
 ---
 title: Cortar uma conversa para caber
-version: 1
+version: 2
 ---
 
 Quando uma conversa passa do orçamento, a maioria das pessoas supõe que o modelo perde os detalhes
@@ -9,7 +9,7 @@ antes de o modelo ver qualquer coisa, e a regra comum é descartar primeiro as v
 Se isso perde algo importante ou não depende de onde a coisa importante foi dita.
 
 Eis uma conversa curta com o assistente do café, como a lista de mensagens que uma aplicação
-enviaria:
+enviaria. Para acompanhar, salve-a como `~/pe/chat.json`:
 
 ```
 ana@lab:~/pe$ cat chat.json
@@ -44,10 +44,11 @@ budget 200, system prompt 53
 sent: 173 tokens, 7 of 7 turns
 ```
 
-A conversa inteira tem 173 tokens. Agora dê 120 a ela:
+A conversa inteira tem 173 tokens. Agora dê 120 a ela, e com `-w` grave o que ficou num arquivo
+que pode ser enviado:
 
 ```
-ana@lab:~/pe$ tok fit chat.json -b 120
+ana@lab:~/pe$ tok fit chat.json -b 120 -w sent.json
 budget 120, system prompt 53
   dropped  1 user        21  Hi, I'm Bruno. I'm allergic to nuts, s
   dropped  2 assistant   20  Thanks, Bruno. I'll keep your nut alle
@@ -65,22 +66,26 @@ sent: 98 tokens, 3 of 7 turns
 
 Quatro vezes se foram, e **a primeira delas era a que importava**: o Bruno tem alergia a nozes. O
 que o modelo recebe agora são as instruções do café, uma pergunta sobre feriados e "Which cake would
-you recommend for me?". Nada do que ele vê diz quem é esse "me". Eis o que um modelo poderia
-responder em cada caso, escrito pelo curso como ilustração:
+you recommend for me?". Nada do que ele vê diz quem é esse "me". Mande as duas versões ao modelo, a
+conversa inteira e a cortada:
 
-```localised
-Com as sete vezes:
-  Nossa cozinha usa nozes, então não posso garantir que algum bolo seja
-  seguro para a sua alergia. Pergunte à equipe no balcão antes de pedir.
-
-Só com as três últimas vezes:
-  O bolo de cenoura com nozes é o nosso favorito. Combina muito bem com
-  um flat white.
+```
+ana@lab:~/pe$ ask --chat chat.json --temperature 0
+Our lemon cake is a popular choice, and it's nut-free. Would you like to try a slice?
+-- llama3.2:3b, finish: stop, prompt 199 tokens, output 23 tokens
+ana@lab:~/pe$ ask --chat sent.json --temperature 0
+Our most popular cake is the Cinnamon Swirl, made with a rich cinnamon-spiced batter and topped with a crumbly oat and nut mixture.
+-- llama3.2:3b, finish: stop, prompt 117 tokens, output 32 tokens
 ```
 
-A segunda resposta é educada, fluente e responde à pergunta que recebeu. **Nada falhou de um jeito
-que um log mostraria**: o pedido era válido, o modelo respondeu, a aplicação ficou dentro do
-orçamento. O único sintoma está no conteúdo, e só quem se lembra da primeira mensagem o veria.
+Com o corte, ele recomendou um bolo coberto de nozes. **Nada falhou de um jeito que um log
+mostraria**: o pedido era válido, o modelo respondeu, a aplicação ficou dentro do orçamento. O único
+sintoma está no conteúdo, e só quem se lembra da primeira mensagem o veria.
+
+A resposta com todas as vezes também não é segura, e vale ler duas vezes. Ela se lembrou da alergia
+e prometeu um bolo de limão sem nozes: um bolo que as instruções do café nunca mencionam, de uma
+cozinha que elas dizem usar nozes. Manter a alergia na janela era necessário, e não bastou. A lição
+5 trata do bolo inventado, e a lição 22 da regra que teria impedido a promessa.
 
 Aperte mais e só a pergunta sobrevive:
 

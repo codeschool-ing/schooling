@@ -13,6 +13,8 @@
 # four numbers in quant.py were made up to stand in for weights; no real
 # model's weights are involved.
 #
+# show reads the model lesson 1 pulled: llama3.2:3b, Ollama 0.40.0.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -55,3 +57,7 @@ for bits in (8, 4):
     print("%d bits:  " % bits, " ".join("%+.4f" % x for x in back), " largest error %.4f" % err)
 PY
 on 'python3 quant.py'
+block show
+on 'ollama show llama3.2:3b | head -7'
+block size-3b
+on 'python3 size.py 3.2e9'

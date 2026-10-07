@@ -1,6 +1,6 @@
 ---
 title: Where it fails
-version: 1
+version: 2
 ---
 
 A grounded prompt makes an answer only as good as the passages in it. Most RAG failures are not
@@ -23,9 +23,19 @@ query words: wifi password
 ```
 
 `wireless internet` and `Wi-Fi` mean the same thing to a person. To a keyword search they share no
-word, so the first question scores zero against every line. **The answer existed,
-and retrieval reported that nothing did.** With the grounded prompt from the last section, the
-model would do as it was told and say the handbook does not say, which is false.
+word, so the first question scores zero against every line. **The answer existed, and retrieval
+reported that nothing did.** With the grounded prompt from the last section, the model does as it
+was told:
+
+```
+ana@lab:~/pe$ retrieve --prompt "is there wireless internet for customers" | ask - --temperature 0
+I couldn't find any information on the availability of wireless internet for customers in the provided sources.
+
+Handbook does not say.
+-- llama3.2:3b, finish: stop, prompt 83 tokens, output 26 tokens
+```
+
+"Handbook does not say", which is false: a whole file of it is about the guest network.
 
 ## A passage cut in the wrong place
 
@@ -40,8 +50,24 @@ query words: time caf open public holidays
 
 The first passage is exactly right and says nothing about times: the hours are on another line,
 `On Sundays it opens at 08:00`, which shares no word with the question and was not retrieved. The
-only times in the sources are the weekday ones. **A model answering from these two passages has
-every reason to say 07:00**, and it would be citing real sources while doing it.
+only times in the sources are the weekday ones. **A model answering from these two passages has a
+real source pointing at the wrong hours.** This one did not take the bait:
+
+```
+ana@lab:~/pe$ retrieve --prompt "what time does the café open on public holidays" | ask - --temperature 0
+According to the provided sources, the café's hours on public holidays are the same as on Sundays, which is not explicitly stated in the sources. However, the source [1] states that the café follows the Sunday hours on public holidays.
+
+Since the source [2] only provides the hours for Monday to Saturday, it does not provide information on public holidays.
+
+Therefore, the answer is: The handbook does not say.
+-- llama3.2:3b, finish: stop, prompt 130 tokens, output 85 tokens
+```
+
+It read source 1 correctly, that holidays follow Sunday hours, found no Sunday hours in front of it,
+and said the handbook does not say. That is the honest reply to what it was given, and it is wrong
+about the handbook, which says exactly when the café opens on a holiday, on a line nobody
+retrieved. Another model, or this one on another day, could just as well have written 07:00 and
+cited source 2.
 
 Where text is cut into passages, called chunking, decides what can be found together. A cut that
 separates a rule from the detail it points to is the commonest version of this failure, and the
@@ -68,7 +94,18 @@ three passages that each share one word and answer something else. The second qu
 handbook's own words in it, puts the right rule first.
 
 The search has no way to know the difference. **There is no score that means "not relevant"**: the
-top three are returned whatever they are, and a model told to answer from them will.
+top three are returned whatever they are. Given the first question's three, the model judged them
+correctly:
+
+```
+ana@lab:~/pe$ retrieve --prompt "can I get a refund for a cold coffee" | ask - --temperature 0
+The handbook does not say.
+-- llama3.2:3b, finish: stop, prompt 161 tokens, output 7 tokens
+```
+
+And that is false too, for the same reason as the Wi-Fi: the handbook says a drink that is not as
+described is refunded on the spot, and the search did not bring that line. The model was right
+about its sources and wrong about the café, and nothing in the reply shows the difference.
 
 ## Keyword search and meaning search
 

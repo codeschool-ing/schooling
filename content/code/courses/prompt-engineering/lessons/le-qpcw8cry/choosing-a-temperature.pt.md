@@ -1,6 +1,6 @@
 ---
 title: Escolher a temperatura para a tarefa
-version: 1
+version: 2
 ---
 
 Uma temperatura baixa não é a escolha segura, e uma alta não é a escolha criativa. **A temperatura
@@ -48,8 +48,26 @@ modelo de trigramas confere, e em 1,5 as continuações improváveis saíram com
 para aparecer.
 
 O `toylm` só consegue recombinar pares que já viu. Um modelo grande numa temperatura alta tem o
-vocabulário inteiro para sortear, então o desvio vai mais longe: um nome errado, um detalhe
-inventado, uma frase que muda de assunto no meio.
+vocabulário inteiro para sortear, então o desvio vai mais longe. O `ask` aceita o mesmo ajuste, e
+uma semente para cada sorteio. Quatro nomes para um bolo novo, a 0.2 e a 1.5:
+
+```
+ana@lab:~/pe$ ask "Suggest a name for a new cake at Café Aurora. Reply with the name only." --temperature 0.2 --seed 1 --samples 4
+[seed 1] "Cosmic Sunrise"
+[seed 2] Aurora Bloom
+[seed 3] Aurora Bloom
+[seed 4] "Sunrise in Bloom"
+ana@lab:~/pe$ ask "Suggest a name for a new cake at Café Aurora. Reply with the name only." --temperature 1.5 --seed 1 --samples 4
+[seed 1] Blucora Twilight
+[seed 2] "Harlequin Dreams"
+[seed 3] Aurora Sunset Bliss
+[seed 4] Starlight Spectacle
+```
+
+A 0.2, dois dos quatro sorteios dão o mesmo nome, e os quatro ficam perto do nome do próprio café e
+da palavra sunrise. A 1.5, cada sorteio é diferente, e o primeiro é `Blucora`, uma palavra que não
+existe, montada com pedaços que eram, cada um, prováveis em algum lugar. Para nomes entre os quais
+escolher, essa dispersão é o que você pediu; numa resposta a um cliente, é um detalhe inventado.
 
 ## Um ponto de partida por tarefa
 

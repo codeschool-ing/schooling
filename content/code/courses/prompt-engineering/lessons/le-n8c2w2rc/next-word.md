@@ -1,6 +1,6 @@
 ---
 title: A score for every possible next word
-version: 1
+version: 2
 ---
 
 The common picture of a chat assistant is a program that looks the answer up, or one that
@@ -9,8 +9,9 @@ understands the question the way a person does and then explains. Neither is wha
 probability.** Everything it appears to do, from answering to translating to writing code, is that
 one step, repeated.
 
-The workbench this course runs on has a language model small enough to read. It is called
-`toylm`, it learnt from a file of 761 words about a café, and you can ask it what comes next:
+This course has a language model small enough to read. It is called `toylm`, it learnt from a file
+of 761 words about a café, and you can ask it what comes next. You build it yourself at the end of
+this lesson, so for now read what it printed; the commands will work the same for you then:
 
 ```
 ana@lab:~/pe$ toylm next "the coffee is"

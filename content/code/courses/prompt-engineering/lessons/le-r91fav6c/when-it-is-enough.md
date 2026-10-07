@@ -1,6 +1,6 @@
 ---
 title: A test set decides, not a feeling
-version: 1
+version: 2
 ---
 
 The usual way to judge a prompt is to try it on one or two inputs, read the replies, and decide it
@@ -51,42 +51,58 @@ print("%d of %d right" % (right, len(tests)))
 
 ## Scoring the weak prompt and the strong one
 
-No model was called for this lesson, so the replies below are **written by the course as stand-ins**
-for what a model might send back to each prompt. The scoring of them is real. First, the replies to
-the weak prompt:
+`label.py` runs a template over the test set: it puts each message where `{message}` is, asks the
+model at temperature 0, and writes each reply on one line, in the same order as the tests:
 
 ```
+ana@lab:~/pe$ cat label.py
+import subprocess, sys
+
+template = open(sys.argv[1], encoding="utf-8").read()
+for line in open(sys.argv[2], encoding="utf-8"):
+    tid, want, text = line.rstrip("\n").split("\t")
+    prompt = template.replace("{message}", text)
+    reply = subprocess.run(["ask", prompt, "--temperature", "0", "--plain"],
+                           capture_output=True, text=True).stdout
+    print(" ".join(reply.split()))
+ana@lab:~/pe$ python3 label.py prompts/weak.txt tests.tsv > replies-weak.txt
 ana@lab:~/pe$ cat replies-weak.txt
-Positive!
-Mixed: the wait was long, but the staff were kind.
-negative
-positive
-positive
-On public holidays the café follows the Sunday hours.
-mixed
-Positivo
+This review is positive. The reviewer mentions that the cinnamon bun and oat flat white were "perfect", which suggests a high level of satisfaction with their experience. They also express a desire to return, indicating that they will likely be a repeat customer.
+This review is mixed, but leaning towards being slightly negative. The reviewer waited a long time for their tea, which is a inconvenience, but they mention that the staff were "kind about it", which suggests that the staff's attitude made up for the wait. However, the wait itself is still a negative experience.
+This review is negative. The reviewer mentions that the soup was cold, which is a significant flaw in the food, and that no one came to take it back, implying poor customer service.
+This review is positive. The reviewer is expressing their satisfaction with the bread, stating that it is the "best" in the neighborhood and that it is still warm at 8, implying that it is freshly baked and of high quality.
+This review is positive. The reviewer mentions "Great" and "Wonderful service", which indicate a high level of satisfaction with their experience.
+This review is neutral. It's a question being asked, rather than a statement or opinion, so it doesn't convey a positive or negative sentiment.
+This review is mixed, but leaning towards being slightly negative. The reviewer mentions that the cake was "dry", which is a negative characteristic. However, they also mention that the coffee was a redeeming factor, which suggests that the reviewer was able to find some positive aspect of their experience. Overall, the tone is somewhat lukewarm and disappointed, but not entirely negative.
+Essa review é positiva. Embora o texto seja em português e não contenha muitas palavras, a presença de "estava ótimo" e "também" indica que o reviewer gostou do pão de queijo e do café.
 ana@lab:~/pe$ python3 score.py tests.tsv replies-weak.txt
-r1  wanted positive      got Positive!
-r2  wanted mixed         got Mixed: the wait was long, but the staff were kind.
-r5  wanted negative      got positive
-r6  wanted not_a_review  got On public holidays the café follows the Sunday hours.
-r8  wanted positive      got Positivo
-3 of 8 right
+r1  wanted positive      got This review is positive. The reviewer mentions that the cinnamon bun and oat flat white were "perfect", which suggests a high level of satisfaction with their experience. They also express a desire to return, indicating that they will likely be a repeat customer.
+r2  wanted mixed         got This review is mixed, but leaning towards being slightly negative. The reviewer waited a long time for their tea, which is a inconvenience, but they mention that the staff were "kind about it", which suggests that the staff's attitude made up for the wait. However, the wait itself is still a negative experience.
+r3  wanted negative      got This review is negative. The reviewer mentions that the soup was cold, which is a significant flaw in the food, and that no one came to take it back, implying poor customer service.
+r4  wanted positive      got This review is positive. The reviewer is expressing their satisfaction with the bread, stating that it is the "best" in the neighborhood and that it is still warm at 8, implying that it is freshly baked and of high quality.
+r5  wanted negative      got This review is positive. The reviewer mentions "Great" and "Wonderful service", which indicate a high level of satisfaction with their experience.
+r6  wanted not_a_review  got This review is neutral. It's a question being asked, rather than a statement or opinion, so it doesn't convey a positive or negative sentiment.
+r7  wanted mixed         got This review is mixed, but leaning towards being slightly negative. The reviewer mentions that the cake was "dry", which is a negative characteristic. However, they also mention that the coffee was a redeeming factor, which suggests that the reviewer was able to find some positive aspect of their experience. Overall, the tone is somewhat lukewarm and disappointed, but not entirely negative.
+r8  wanted positive      got Essa review é positiva. Embora o texto seja em português e não contenha muitas palavras, a presença de "estava ótimo" e "também" indica que o reviewer gostou do pão de queijo e do café.
+0 of 8 right
 ```
 
-Three of eight. Read the five failures by kind, because they are not the same problem:
+**None of eight.** Every reply is a paragraph, and `score.py` compares a paragraph with one word.
+Read past the form, and the failures are still not all the same problem:
 
-- `r1` and `r2` are the right label in the wrong form. `Positive!` is not `positive` to a program.
-  The prompt never said what form the answer takes.
-- `r6` is the model answering the customer's question instead of labelling it. The prompt never
-  said a message could be something other than a review.
-- `r8` is a label in the wrong language. The prompt never said which language the labels are in.
-- `r5` is the sarcasm, read literally.
+- `r1` to `r4` and `r7` hold the right label, inside a sentence. **The right answer in the wrong
+  form** is a wrong answer to a program. The prompt never said what form the answer takes.
+- `r6` is the question, and the model did not answer it this time: it invented a label, `neutral`,
+  that the café does not use. The prompt never said a message could be something other than a
+  review, or what to call it.
+- `r8` is a label in the wrong language. The message was in Portuguese and so was the reply; the
+  prompt never said which language the labels are in.
+- `r5` is the sarcasm, read literally: "Great" and "Wonderful service" are positive words.
 
-The strong prompt says all five out loud: the form, the questions, the language and the sarcasm.
-Its replies:
+The strong prompt says all four out loud: the form, the questions, the language and the sarcasm:
 
 ```
+ana@lab:~/pe$ python3 label.py prompts/strong.txt tests.tsv > replies-strong.txt
 ana@lab:~/pe$ cat replies-strong.txt
 positive
 mixed
@@ -122,7 +138,7 @@ What to try next depends on the kind of failure:
 
 The third row is where `r5` sits. A description of sarcasm did not move the model; an example of a
 sarcastic message with its label often shows the boundary better than a sentence describing it.
-That is lesson 21.
+Lesson 21 tries it on this test set, and counts.
 
 **Two warnings about the test set itself.** Eight messages is enough to find the kinds of failure
 above and far too few to measure an error rate: one more miss moves the score by twelve and a half points. A test

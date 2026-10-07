@@ -1,6 +1,6 @@
 ---
 title: Provável não é o mesmo que verdadeiro
-version: 1
+version: 2
 ---
 
 A palavra "alucinação" faz parecer um defeito: algo no modelo dá errado de vez em quando, e ele
@@ -75,23 +75,25 @@ O mesmo mecanismo produz várias falhas conhecidas:
 | uma fonte, um link, um número de página | **uma que tem o formato certo e não existe** | citações seguem um padrão, e o padrão é fácil de continuar |
 
 A última linha é a que já envergonhou gente em público, porque uma citação inventada parece
-exatamente uma de verdade. Eis o tipo de resposta que a produz. **O curso escreveu isto como
-ilustração, e cada nome, título e número nela foi inventado**, do mesmo jeito que um modelo
-inventa:
+exatamente uma de verdade. Peça uma ao modelo local:
 
-```localised
-Pergunta: Existe pesquisa mostrando que café melhora a memória?
+```
+ana@lab:~/pe$ ask "Is there research showing that coffee improves memory? Cite one study: authors, year, title, journal, volume and pages." --temperature 0
+Yes, there is research showing that coffee can improve memory. Here's a study that supports this claim:
 
-Resposta: Sim. Um estudo de 2019 de Hartley e Moreau, "Caffeine Intake
-and Long-Term Memory Consolidation in Adults", publicado no Journal of
-Applied Café Science (vol. 14, pp. 211-228), concluiu que 200 mg de
-cafeína depois do aprendizado melhoraram a lembrança no dia seguinte.
+Cote, K. A., et al. (2012). "Caffeine and caffeine analogs: effects on cognition and mood." Journal of Psychopharmacology, 26(1), 15-25.
+
+This study found that caffeine, a key component of coffee, improved alertness and cognitive performance, including memory, in a group of healthy adults. The researchers used a double-blind, placebo-controlled design to investigate the effects of caffeine on cognitive function, and found that caffeine improved performance on a memory task, particularly in the short-term memory domain.
+
+Please note that individual results may vary, and more research is needed to fully understand the relationship between coffee consumption and memory.
+-- llama3.2:3b, finish: stop, prompt 51 tokens, output 160 tokens
 ```
 
-Nada na resposta indica que ela é inventada. Os autores têm nomes comuns, o título tem o vocabulário
-de um artigo de verdade, e o intervalo de páginas tem o tamanho certo. É justamente isso: **um
-modelo produz a forma de uma citação com a mesma fluência com que produz a forma de uma frase**, e a
-forma é tudo o que você vê.
+O Journal of Psychopharmacology existe. Uma busca por esse título, no dia em que esta lição foi
+gravada, não achou artigo nenhum, e os autores, o volume e as páginas têm a cara comum de qualquer
+referência ao lado deles. **Nada na resposta diz se ela foi inventada.** É esse o ponto: um modelo
+produz a forma de uma citação com a mesma fluência com que produz a forma de uma frase, e a forma é
+tudo o que você vê. O único jeito de saber é procurar, e é isso que a próxima seção manda fazer.
 
 ## Por que é difícil eliminar com treino
 
