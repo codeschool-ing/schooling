@@ -1466,6 +1466,53 @@ def l17_pyramid(lang):
     f.text(602, 128, t['data_s'], size=10, fill='--paper-dim')
     return f, t['cap']
 
+@figure('l18-environments', 18)
+def l18_environments(lang):
+    t = {'en': dict(
+            label='One repository, two environments. In the repository, main has two tagged '
+                  'commits, v1.0.0 and v1.1.0, and a branch where the change was made. Ana works in '
+                  '~/etl, on main, and builds with the dev target into the dbt_ana schemas. '
+                  'Production is ~/etl-prod, checked out at a tag, built with the prod target into '
+                  'the dbt schemas the reports read. Both read the same raw schema.',
+            repo='the repository', branch='branch', work='~/etl · main · dev target',
+            prod='~/etl-prod · a tag · prod target', dev_s='dbt_ana_staging · dbt_ana_marts',
+            prod_s='dbt_staging · dbt_marts', raw='raw, shared, read only', reports='the reports',
+            cap='Production is a tag and a target; development is everything else.'),
+         'pt': dict(
+            label='Um repositório, dois ambientes. No repositório, a main tem dois commits com tag, '
+                  'v1.0.0 e v1.1.0, e uma branch onde a mudança foi feita. A Ana trabalha em '
+                  '~/etl, na main, e constrói com o target dev nos schemas dbt_ana. A produção é o '
+                  '~/etl-prod, num checkout de uma tag, construído com o target prod nos schemas '
+                  'dbt que os relatórios leem. Os dois leem o mesmo schema raw.',
+            repo='o repositório', branch='branch', work='~/etl · main · target dev',
+            prod='~/etl-prod · uma tag · target prod', dev_s='dbt_ana_staging · dbt_ana_marts',
+            prod_s='dbt_staging · dbt_marts', raw='raw, compartilhado, só leitura',
+            reports='os relatórios',
+            cap='A produção é uma tag e um target; o desenvolvimento é todo o resto.')}[lang]
+    f = Fig('l18-environments', 720, 260, t['label'])
+    f.text(110, 22, t['repo'], size=11, weight='600')
+    f.line(30, 90, 200, 90, stroke='--paper-dim')
+    for x, tag in [(60, 'v1.0.0'), (170, 'v1.1.0')]:
+        f.circle(x, 90, 7, fill='--phosphor')
+        f.text(x, 112, tag, size=10, mono=True)
+    f.path('M60 90 C 90 58, 140 58, 170 90', stroke='--amber', dash='3 3')
+    f.text(115, 54, t['branch'], size=9.5, fill='--amber')
+    f.rect(250, 30, 220, 50, stroke='--wire', fill='--panel')
+    f.text(360, 55, t['work'], size=10.5, mono=False)
+    f.rect(250, 150, 220, 50, stroke='--phosphor', fill='--panel')
+    f.text(360, 175, t['prod'], size=10.5)
+    f.line(200, 90, 248, 60, arrow=True)
+    f.line(176, 98, 248, 170, arrow=True)
+    f.rect(510, 30, 190, 50, stroke='--wire', fill='--scan')
+    f.text(605, 55, t['dev_s'], size=9.5, mono=True)
+    f.rect(510, 150, 190, 50, stroke='--phosphor', fill='--scan')
+    f.text(605, 175, t['prod_s'], size=9.5, mono=True)
+    f.line(470, 55, 508, 55, arrow=True)
+    f.line(470, 175, 508, 175, arrow=True)
+    f.text(605, 220, t['reports'], size=10, fill='--paper-dim')
+    f.text(605, 115, t['raw'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:

@@ -130,6 +130,7 @@ as_ana() {
 need() {
   command -v python3 >/dev/null || { echo "python3 is required" >&2; exit 1; }
   command -v make >/dev/null || { echo "make is required: apt-get install make" >&2; exit 1; }
+  command -v git >/dev/null || { echo "git is required: apt-get install git" >&2; exit 1; }
   [ -x $PGBIN/initdb ] || {
     echo "PostgreSQL 16 is required: apt-get install postgresql-16" >&2; exit 1; }
 }
