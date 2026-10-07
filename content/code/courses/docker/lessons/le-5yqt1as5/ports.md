@@ -1,6 +1,6 @@
 ---
 title: Publishing ports
-version: 1
+version: 2
 ---
 
 **A container has a network of its own, so a program listening inside it is listening on that
@@ -18,6 +18,9 @@ ana@vm:~$ docker port web
 `docker port` printed nothing because nothing was published. Lesson 4 showed the network namespace
 that makes this so; lesson 23 opens it up properly. Here the question is narrower: how a request
 from outside gets in.
+
+`shelf:1.0.0` here is the image lesson 15 built. If your machine no longer has it, the build that
+lesson shows makes it again.
 
 ## `-p host:container`
 

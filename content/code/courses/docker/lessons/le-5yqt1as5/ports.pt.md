@@ -1,6 +1,6 @@
 ---
 title: Publicando portas
-version: 1
+version: 2
 ---
 
 **Um container tem uma rede própria, então um programa escutando dentro dele escuta nessa rede, e não
@@ -17,6 +17,9 @@ ana@vm:~$ docker port web
 O `docker port` não imprimiu nada porque nada foi publicado. A aula 4 mostrou o namespace de rede que
 faz isso acontecer; a aula 23 abre esse assunto de verdade. Aqui a pergunta é mais estreita: como uma
 requisição de fora entra.
+
+A `shelf:1.0.0` aqui é a imagem que a aula 15 construiu. Se a sua máquina não a tem mais, o build
+que aquela aula mostra a refaz.
 
 ## `-p host:container`
 

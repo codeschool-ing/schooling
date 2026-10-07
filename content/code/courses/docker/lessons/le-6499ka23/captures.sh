@@ -8,9 +8,15 @@
 #   sudo bash ../../lab.sh tools     # once
 #   bash captures.sh
 #
-# Staged rather than typed: golang:1.25 is pulled before the first command;
-# ~/shelf is lab/shelf with its one dependency vendored (lab.sh), so `go build`
-# needs no network. The Dockerfiles, the .dockerignore and the .env are
+# Staged rather than typed: golang:1.25 is pulled before the first command.
+# ~/shelf is rebuilt here from the-project.md, every file read out of the
+# lesson's own fences, so what the student pastes is what was built; vendor/
+# is copied from the lab's (lab.sh made it with `go mod vendor` from the same
+# go.mod and go.sum), because a container here cannot download it. The commit
+# is ana's, unsigned, and the transcript shows its author and subject rather
+# than its hash: the ~/shelf every other lesson starts from is lab.sh's commit,
+# made by root with the recording machine's own git configuration, and its
+# hash is not one a student's commit could ever have. The Dockerfiles, the .dockerignore and the .env are
 # written by `put` and shown in full. The 300 MB dump is random bytes made by
 # `head`, standing in for a database export somebody left in the project.
 # Build timings, ids and log timestamps are this run's.
@@ -18,7 +24,17 @@
 # Recorded on Ubuntu 24.04, Docker Engine 29.8, BuildKit, TZ=America/Sao_Paulo.
 export LAB_IMAGES="golang:1.25"
 . "$(dirname "$0")/../../capture.sh"
+MD="$COURSE/lessons/le-6499ka23/the-project.md"
+quiet 'rm -rf ~/shelf && mkdir ~/shelf'
 cd shelf
+for f in main.go postgres.go main_test.go postgres_test.go; do
+  python3 "$COURSE/lab/fences.py" example "$MD" "$f" > "$f" || exit 1
+done
+python3 "$COURSE/lab/fences.py" block "$MD" 'module example.com/shelf' > go.mod || exit 1
+python3 "$COURSE/lab/fences.py" block "$MD" "$(head -1 /opt/docker-lab/shelf/go.sum)" > go.sum || exit 1
+cp -r /opt/docker-lab/shelf/vendor vendor || exit 1
+block commit
+run 'git init -q -b main && git add -A && git -c user.name=Ana -c user.email=ana@example.com commit -qm "shelf: the catalogue over HTTP" && git log --format="%an <%ae>: %s"'
 
 block project
 run 'ls -A'

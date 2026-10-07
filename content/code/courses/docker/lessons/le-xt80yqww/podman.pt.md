@@ -1,11 +1,18 @@
 ---
 title: Podman
-version: 1
+version: 2
 ---
 
 **O Podman roda as mesmas imagens com os mesmos comandos, e duas diferenças de arquitetura: não há
 daemon, e ele roda sem root por padrão.** Cada comando `podman` faz o próprio trabalho e sai, e os
 containers que ele inicia pertencem ao usuário que os iniciou.
+
+O Podman está no arquivo do próprio Ubuntu, e no Ubuntu 24.04 isso é a versão 4.9.3, a de baixo. Ele
+se instala ao lado do Docker sem mexer nele:
+
+```sh
+sudo apt-get install podman
+```
 
 ## Uma configuração de registry própria
 

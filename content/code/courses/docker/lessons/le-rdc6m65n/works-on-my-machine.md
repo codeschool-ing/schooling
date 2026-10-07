@@ -1,6 +1,6 @@
 ---
 title: It works on my machine
-version: 1
+version: 2
 ---
 
 **A program never runs on its own.** It runs on top of a compiler or an interpreter at some
@@ -38,7 +38,9 @@ compiler or interpreter, the libraries, the configuration files, at the exact ve
 chose. The machine underneath only needs a container engine, and that is the last thing anybody
 has to install by hand.
 
-Ana's machine shows it. There is no Go on it at all:
+Ana's machine shows it. **The transcripts in lessons 1 to 4 are there to be read**: you build a
+machine like hers in lesson 5, and from then on every command can be typed. Come back to these then
+if you want to see them happen on your own. There is no Go on her machine at all:
 
 ```
 ana@vm:~$ env go version

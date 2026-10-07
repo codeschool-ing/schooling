@@ -1,6 +1,6 @@
 ---
 title: Reading the findings
-version: 1
+version: 2
 ---
 
 **A list of findings is not a list of tasks.** What makes one urgent is whether a fix exists, how
@@ -76,9 +76,16 @@ UNKNOWN=1
 
 **`go get` raised `x/text` to the fixed version**, and `golang.org/x/sync` with it, because the new
 version needs it. `go mod tidy` and `go mod vendor` brought `go.sum` and `vendor/` along, and the
-rebuilt image scans clean of the high finding. In the lab, `GOPROXY=off` makes Go use modules that
-were downloaded before the lab started, verified against the checksum database's saved answers;
-on a normal machine, the same command downloads them.
+rebuilt image scans clean of the high finding. In the lab, `-v ~/gopkg:/go/pkg` and `GOPROXY=off`
+make Go use modules that were downloaded before the lab started, verified against the checksum
+database's saved answers, because its containers cannot reach the internet. On your machine those
+two go, and Go downloads the modules itself:
+
+```sh
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/src -w /src -e GOCACHE=/tmp/gocache -e GOFLAGS=-mod=mod golang:1.25 sh -c "go get golang.org/x/text@v0.39.0 && go mod tidy && go mod vendor"
+```
+
+That form was not run here, for the same reason.
 
 **What is left is `tzdata` in the base**, fixed upstream in Debian, not yet in the distroless image.
 That fix arrives when Google rebuilds distroless and Ana rebuilds `shelf` on it. With the base pinned

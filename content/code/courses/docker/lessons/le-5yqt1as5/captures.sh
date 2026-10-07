@@ -9,7 +9,7 @@
 #   bash captures.sh
 #
 # Staged rather than typed: the images below are pulled before the first
-# command, and shelf:1.0.0 is built quietly from the lesson 14 Dockerfile.
+# command, and shelf:1.0.0 is built quietly from the Dockerfile lesson 15 shows.
 # The `sleep` between starting a container and reading its state is the
 # script's, so that there is something to read; the lesson's prose says how
 # long each one was. The password in `shelf.env` is a lab value for a database
@@ -19,14 +19,14 @@
 export LAB_IMAGES="golang:1.25 gcr.io/distroless/static-debian12:nonroot alpine:3.22"
 . "$(dirname "$0")/../../capture.sh"
 cd shelf
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .env
 testdata/
 Dockerfile*
 .dockerignore
 IGN
-cat > Dockerfile <<'DF'
+staged Dockerfile <<'DF'
 FROM golang:1.25 AS build
 WORKDIR /src
 COPY go.mod go.sum ./

@@ -1,6 +1,6 @@
 ---
 title: Um registry só seu
-version: 1
+version: 2
 ---
 
 **Um registry é um programa como outro qualquer, e o de referência é uma imagem: `registry:3`, o
@@ -28,6 +28,35 @@ ana@vm:~$ docker run -d --name registry -p 127.0.0.1:5000:5000 -v registry-data:
 ```
 
 ## Dando à imagem um nome para ele
+
+A imagem a enviar é a `shelf:1.0.0`. Ela vem do Dockerfile da aula 14 com o `ARG VERSION` da aula
+11 no estágio de build, para que a versão fique gravada no programa e o `/version` responda com ela.
+Este é o Dockerfile a partir do qual as próximas aulas constroem:
+
+```dockerfile
+FROM golang:1.25 AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+COPY vendor/ vendor/
+RUN go build net/http github.com/jackc/pgx/v5/pgxpool
+COPY *.go ./
+ARG VERSION=dev
+RUN CGO_ENABLED=0 go build -ldflags "-X main.version=${VERSION}" -o /out/shelf .
+
+FROM gcr.io/distroless/static-debian12:nonroot
+COPY --from=build /out/shelf /shelf
+USER 65532:65532
+CMD ["/shelf"]
+```
+
+A Ana a construiu antes da primeira transcrição desta aula; o `-q` faz o build imprimir só o id da
+imagem nova:
+
+```sh
+cd ~/shelf
+docker build -q --build-arg VERSION=1.0.0 -t shelf:1.0.0 .
+cd ~
+```
 
 **Uma imagem vai para o registry que o nome dela diz.** Para enviar `shelf:1.0.0` ao registry da Ana,
 ela precisa de um nome que comece com o endereço do registry. O `docker tag` acrescenta um segundo
