@@ -58,7 +58,7 @@ the model cannot type it by accident.
 ```
 ana@dev:~/shop$ git diff
 diff --git a/retry.py b/retry.py
-index 66dd52d..51b6787 100644
+index 66dd52d..e4f4636 100644
 --- a/retry.py
 +++ b/retry.py
 @@ -3,4 +3,4 @@ from shop_tools import create_return
@@ -66,7 +66,7 @@ index 66dd52d..51b6787 100644
  args = {"order_id": "1042", "sku": "MUG-01", "quantity": 1, "reason": "changed_mind"}
  for attempt in (1, 2):
 -    print(attempt, create_return(**args))
-+    print(attempt, create_return(**args, key="toolu_lab_0007_1"))
++    print(attempt, create_return(**args, key="call_0007"))
 diff --git a/shop_tools.py b/shop_tools.py
 index 5cc5b96..3bd50e4 100644
 --- a/shop_tools.py
@@ -100,8 +100,8 @@ index 5cc5b96..3bd50e4 100644
 
 ```
 ana@dev:~/shop$ rm data/returns.json; python retry.py
-1 {'id': 'R-1042-1', 'order_id': '1042', 'sku': 'MUG-01', 'quantity': 1, 'reason': 'changed_mind', 'key': 'toolu_lab_0007_1'}
-2 {'id': 'R-1042-1', 'order_id': '1042', 'sku': 'MUG-01', 'quantity': 1, 'reason': 'changed_mind', 'key': 'toolu_lab_0007_1'}
+1 {'id': 'R-1042-1', 'order_id': '1042', 'sku': 'MUG-01', 'quantity': 1, 'reason': 'changed_mind', 'key': 'call_0007'}
+2 {'id': 'R-1042-1', 'order_id': '1042', 'sku': 'MUG-01', 'quantity': 1, 'reason': 'changed_mind', 'key': 'call_0007'}
 ana@dev:~/shop$ cat data/returns.json
 [
  {
@@ -110,7 +110,7 @@ ana@dev:~/shop$ cat data/returns.json
   "sku": "MUG-01",
   "quantity": 1,
   "reason": "changed_mind",
-  "key": "toolu_lab_0007_1"
+  "key": "call_0007"
  }
 ]
 ```

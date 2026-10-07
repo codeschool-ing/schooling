@@ -1,6 +1,6 @@
 ---
 title: A mesma ideia em outra API
-version: 1
+version: 2
 ---
 
 Todo provedor com que este curso fala tem chamada de funções, e a ideia é a mesma em todo lugar:
@@ -9,7 +9,7 @@ id**. Os formatos mudam, e as diferenças são onde o código escrito para uma A
 
 ## As chat completions da OpenAI
 
-As mesmas ferramentas, embrulhadas no formato da OpenAI, contra o endpoint OpenAI do labllm:
+As mesmas ferramentas, embrulhadas no formato da OpenAI, contra o endpoint OpenAI do Ollama:
 
 ```schooling-example
 {
@@ -24,11 +24,11 @@ As mesmas ferramentas, embrulhadas no formato da OpenAI, contra o endpoint OpenA
       "note": "**Os mesmos `TOOLS`, embrulhados** no formato que esta API espera."
     },
     {
-      "code": "while True:\n    r = client.chat.completions.create(model=\"scripted-1\", messages=messages, tools=tools)\n    choice = r.choices[0]\n    print(\"<- finish_reason:\", choice.finish_reason)\n    messages.append(choice.message.model_dump(exclude_none=True))\n    if not choice.message.tool_calls:\n        print(\"  \", choice.message.content)\n        break\n",
+      "code": "while True:\n    r = client.chat.completions.create(model=\"llama3.2:3b\", messages=messages, tools=tools, temperature=0)\n    choice = r.choices[0]\n    print(\"<- finish_reason:\", choice.finish_reason)\n    messages.append(choice.message.model_dump(exclude_none=True))\n    if not choice.message.tool_calls:\n        print(\"  \", choice.message.content)\n        break\n",
       "note": "**`finish_reason` diz por que a resposta parou**; `tool_calls` quer dizer que o modelo quer uma função."
     },
     {
-      "code": "    for call in choice.message.tool_calls:\n        print(\"   arguments:\", repr(call.function.arguments))\n        out = FUNCTIONS[call.function.name](**json.loads(call.function.arguments))\n        messages.append({\"role\": \"tool\", \"tool_call_id\": call.id, \"content\": json.dumps(out)})",
+      "code": "    for call in choice.message.tool_calls:\n        print(\"   arguments:\", repr(call.function.arguments))\n        out = FUNCTIONS[call.function.name](**json.loads(call.function.arguments))\n        messages.append({\"role\": \"tool\", \"tool_call_id\": call.id, \"content\": json.dumps(out)})\n",
       "note": "**Os argumentos são uma string.** O `json.loads` é trabalho do seu código, e o resultado volta como mensagem `tool` ligada pelo `tool_call_id`."
     }
   ]
@@ -38,12 +38,12 @@ As mesmas ferramentas, embrulhadas no formato da OpenAI, contra o endpoint OpenA
 ```
 ana@dev:~/shop$ python openai_stock.py "Is LAMP-02 in stock?"
 <- finish_reason: tool_calls
-   arguments: '{"sku": "LAMP-02"}'
+   arguments: '{"sku":"LAMP-02"}'
 <- finish_reason: stop
-   Yes. LAMP-02 is in stock, 4 units, at 210.00.
+   The LAMP-02 is currently in stock. It has 4 units available, and the unit price is $21,000.
 ```
 
-Mesma pergunta, mesma ferramenta, mesma resposta. **Os argumentos são a diferença**: o `repr` mostra
+Mesma pergunta, mesma ferramenta, mesma resposta, $21,000 incluídos. **Os argumentos são a diferença**: o `repr` mostra
 aspas em volta deles porque chegam como uma string de JSON, não como um objeto. O código precisa
 chamar `json.loads` ele mesmo, e uma string pode falhar na leitura de um jeito que um objeto já
 lido não falha. Sem o modo estrito, uma string malformada é uma possibilidade real, e ela pertence
@@ -61,8 +61,9 @@ ao mesmo caminho de erro que uma falha de esquema.
 | a ligação | `tool_use_id` | `tool_call_id` |
 
 A API Gemini do Google segue o mesmo desenho com nomes próprios: uma declaração de função com um
-esquema, uma parte `functionCall` na resposta, uma parte `functionResponse` devolvida. O laboratório
-não serve a chamada de funções do Gemini, então esta aula não mostra captura dela.
+esquema, uma parte `functionCall` na resposta, uma parte `functionResponse` devolvida. A máquina
+da gravação não tem chave do Gemini e o Ollama não serve endpoint do Gemini, então esta aula não
+mostra captura dela.
 
 ## Mantenha suas ferramentas num formato só
 

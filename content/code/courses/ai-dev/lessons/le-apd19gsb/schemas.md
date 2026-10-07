@@ -1,6 +1,6 @@
 ---
 title: The schema is a contract
-version: 1
+version: 2
 ---
 
 The model fills in the arguments by writing JSON. Nothing about that writing is checked by the model
@@ -50,15 +50,32 @@ customer has asked" is aimed at the model, which reads it on every request.
 The schema is plain JSON Schema, so an ordinary validator reads it. `check_args.py` lists every
 problem, not only the first:
 
-```python
-def problems(name, args):
-    v = Draft202012Validator(SCHEMAS[name])
-    return [f"{'.'.join(map(str, e.path)) or '(top)'}: {e.message}"
-            for e in sorted(v.iter_errors(args), key=lambda e: list(map(str, e.path)))]
+```schooling-example
+{
+  "language": "python",
+  "file": "check_args.py",
+  "parts": [
+    {
+      "code": "\"\"\"Check a tool call's arguments against the tool's own schema, and list every problem.\"\"\"\nimport json\nimport sys\n\nfrom jsonschema import Draft202012Validator\n\nfrom shop_tools import TOOLS\n\n"
+    },
+    {
+      "code": "SCHEMAS = {t[\"name\"]: t[\"input_schema\"] for t in TOOLS}\n\n\n",
+      "note": "**The schemas are the ones the model is sent**, read from `TOOLS`, so the check and the request cannot drift apart."
+    },
+    {
+      "code": "def problems(name, args):\n    v = Draft202012Validator(SCHEMAS[name])\n    return [f\"{'.'.join(map(str, e.path)) or '(top)'}: {e.message}\"\n            for e in sorted(v.iter_errors(args), key=lambda e: list(map(str, e.path)))]\n\n\n",
+      "note": "**Every problem, not only the first**, each with the path of the field it is about."
+    },
+    {
+      "code": "if __name__ == \"__main__\":\n    for p in problems(sys.argv[1], json.loads(sys.argv[2])) or [\"ok\"]:\n        print(p)\n",
+      "note": "**From the command line**, a tool name and the arguments as JSON."
+    }
+  ]
+}
 ```
 
-Three sets of arguments. The first is what `scripted-1` sends in lesson 8 section 04, written the
-way a model plausibly would:
+Three sets of arguments, written by hand so that each shows a different kind of failure. The first
+is written the way a model plausibly would:
 
 ```
 ana@dev:~/shop$ python check_args.py create_return '{"order_id": 1042, "sku": "MUG-01", "quantity": 1, "reason": "customer changed their mind"}'

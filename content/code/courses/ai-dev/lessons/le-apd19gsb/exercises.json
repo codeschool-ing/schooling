@@ -240,33 +240,33 @@
   },
   {
     "id": "ex-a09x1gzr",
-    "version": 1,
+    "version": 2,
     "section": "validating-arguments",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did the model's second call succeed?",
-    "hint": "What did it have the second time that it lacked the first?",
+    "prompt": "The model's call to `create_return` passed both layers the first time. Had its `reason` been \"customer changed their mind\", what would the host have done?",
+    "hint": "Section 03 ran that call through the checker.",
     "choices": [
       {
-        "text": "The host relaxed the schema",
+        "text": "Run it, and let the warehouse sort the reason out",
         "correct": false,
-        "why": "The schema did not change between calls."
+        "why": "The schema check comes before anything runs."
       },
       {
-        "text": "The model was asked to try harder",
+        "text": "Stopped the program with a traceback",
         "correct": false,
-        "why": "No such message was sent."
+        "why": "A failed check is a result, not a crash."
       },
       {
-        "text": "The error named both problems",
+        "text": "Sent back an error naming it, with the four reasons",
         "correct": true,
-        "why": "Right: the order number's type and the four allowed reasons."
+        "why": "Right: the model could then correct the call."
       },
       {
-        "text": "The shop's rules were skipped",
+        "text": "Replaced the reason with `changed_mind` itself",
         "correct": false,
-        "why": "They ran, and passed."
+        "why": "The host never rewrites a call; it says what is wrong."
       }
     ]
   },
@@ -472,65 +472,65 @@
   },
   {
     "id": "ex-qde3h68s",
-    "version": 1,
+    "version": 2,
     "section": "structured-output",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What did labllm do with `output_config`?",
-    "hint": "Read the last line of the capture.",
+    "prompt": "What did Ollama's Anthropic endpoint do with `output_config`?",
+    "hint": "Read what the model replied to \"Name a colour.\"",
     "choices": [
       {
-        "text": "Accepted and ignored it",
+        "text": "Refused the request with an error",
         "correct": false,
-        "why": "That is what it avoids doing."
+        "why": "There was no error; there was a reply."
       },
       {
-        "text": "Constrained its output",
+        "text": "Constrained the reply to the schema",
         "correct": false,
-        "why": "It has no decoder to constrain."
+        "why": "`Blue.` is not an object with a `colour`."
       },
       {
-        "text": "Forwarded it to a real model",
-        "correct": false,
-        "why": "The lab reaches no real model."
-      },
-      {
-        "text": "Refused it with a 400",
+        "text": "Accepted it and did nothing with it",
         "correct": true,
-        "why": "Right, and the message says why."
+        "why": "Right: silently, the worst way for a constraint to be missing."
+      },
+      {
+        "text": "Forwarded it to Anthropic's servers",
+        "correct": false,
+        "why": "Nothing here talks to Anthropic."
       }
     ]
   },
   {
     "id": "ex-65hnqmmf",
-    "version": 1,
+    "version": 2,
     "section": "repair",
-    "type": "multiple-choice",
+    "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Which problems did attempt 1 have? Choose all that apply.",
+    "prompt": "What was wrong with attempt 1 on João's email?",
     "hint": "Read the stderr line.",
     "choices": [
       {
-        "text": "`shipping` is not an allowed category",
-        "correct": true,
-        "why": "Yes."
-      },
-      {
-        "text": "`urgent` is not a boolean",
+        "text": "A category the schema does not have",
         "correct": false,
-        "why": "It was `true`, a boolean."
+        "why": "The parser never got as far as the fields."
       },
       {
-        "text": "`order_id` is missing",
+        "text": "It was not JSON at all",
         "correct": true,
-        "why": "Yes."
+        "why": "Right: the parser stopped where it expected a comma."
       },
       {
-        "text": "The reply was not JSON",
+        "text": "`order_id` was missing",
         "correct": false,
-        "why": "It parsed; the schema failed."
+        "why": "The parser never got as far as the fields."
+      },
+      {
+        "text": "The summary was over 120 characters",
+        "correct": false,
+        "why": "No field was read."
       }
     ]
   },
@@ -780,6 +780,38 @@
       "Parse and validate the reply",
       "Send the reasons back and ask again",
       "Give up and send the email to a person"
+    ]
+  },
+  {
+    "id": "ex-pzgg24hw",
+    "version": 1,
+    "section": "the-round-trip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The tool returned `\"unit_price\": 21000` and the model said the lamp costs $21,000. What does the lamp cost?",
+    "hint": "Read the tool's description.",
+    "choices": [
+      {
+        "text": "21,000.00",
+        "correct": false,
+        "why": "That is the model's reading, not the shop's."
+      },
+      {
+        "text": "2,100.00",
+        "correct": false,
+        "why": "That divides by ten."
+      },
+      {
+        "text": "210.00",
+        "correct": true,
+        "why": "Right: the description says the price is in cents."
+      },
+      {
+        "text": "21.00",
+        "correct": false,
+        "why": "That divides by a thousand."
+      }
     ]
   }
 ]
