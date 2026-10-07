@@ -916,6 +916,91 @@ def l11_fan_out(lang):
     return fig, cap[lang]
 
 
+# ----------------------------------------------------------------- lesson 12
+
+@figure('l12-bin-edges', 12)
+def l12_bin_edges(lang):
+    fig = Fig('l12-bin-edges', 720, 250, {
+        'en': 'Two ways of cutting ages at 18, 25 and 35. With pandas\' default, the bands are (18, 25] and '
+              '(25, 35], so an age of exactly 25 falls in the first band. With right=False they are [18, 25) and '
+              '[25, 35), so 25 starts the second band, which matches labels such as 18-24 and 25-34.',
+        'pt': 'Dois jeitos de cortar idades em 18, 25 e 35. Com o padrão do pandas, as faixas são (18, 25] e '
+              '(25, 35], então uma idade de exatamente 25 cai na primeira faixa. Com right=False elas são [18, 25) '
+              'e [25, 35), então o 25 abre a segunda faixa, o que combina com rótulos como 18-24 e 25-34.'}[lang])
+    sx = lambda v: 170 + (v - 18) / 17 * 350
+    rows = [({'en': 'default', 'pt': 'padrão'}[lang], False, 70,
+             {'en': '25 falls in the first band', 'pt': 'o 25 cai na primeira faixa'}[lang]),
+            ('right=False', True, 160,
+             {'en': '25 starts the second band', 'pt': 'o 25 abre a segunda faixa'}[lang])]
+    fig.line(sx(25), 30, sx(25), 205, stroke='--paper-dim', dash='4 3', width=1)
+    fig.text(sx(25), 22, '25', size=10, mono=True, fill='--paper-dim')
+    for label, left_closed, y, note in rows:
+        fig.text(20, y, label, size=11, anchor='start', mono=label.startswith('right'), weight='600')
+        for k, (a, b) in enumerate([(18, 25), (25, 35)]):
+            yy = y - 13 if k == 0 else y + 13
+            hit = (k == 1) == left_closed
+            col = '--amber' if hit else '--phosphor'
+            fig.line(sx(a), yy, sx(b), yy, stroke=col, width=3)
+            for v, closed in [(a, left_closed), (b, not left_closed)]:
+                fig.circle(sx(v), yy, 5, fill=col if closed else '--panel', stroke=col, width=1.6)
+            txt = ('[' if left_closed else '(') + f'{a}, {b}' + (')' if left_closed else ']')
+            fig.text((sx(a) + sx(b)) / 2, yy - 12 if k == 0 else yy + 14, txt, size=10, mono=True,
+                     fill=col)
+        fig.text(545, y, note, size=10.5, anchor='start', fill='--amber')
+    fig.line(sx(16), 222, sx(37), 222, stroke='--paper-dim', width=1.2)
+    for v in (18, 25, 35):
+        fig.line(sx(v), 222, sx(v), 226, stroke='--paper-dim', width=1)
+        fig.text(sx(v), 236, str(v), size=9.5, mono=True, fill='--paper-dim')
+    cap = {'en': 'A filled end is included and a hollow end is not. The edges are the same; one argument decides '
+                 'which side of 25 the 35 customers born in 2000 land on.',
+           'pt': 'Uma ponta cheia está incluída e uma vazia não. As bordas são as mesmas; um argumento decide de '
+                 'que lado do 25 caem os 35 clientes nascidos em 2000.'}
+    return fig, cap[lang]
+
+
+@figure('l12-log-scale', 12)
+def l12_log_scale(lang):
+    seen, totals = set(), []
+    for r in rows('raw/orders.csv'):
+        key = tuple(r.values())
+        if key in seen:
+            continue
+        seen.add(key)
+        v = float(r['total'])
+        if v > 0:
+            totals.append(v)
+    fig = Fig('l12-log-scale', 720, 300, {
+        'en': f'Two histograms of the {len(totals):,} order totals above zero. In reais, almost every order sits '
+              'in the first few bars below R$ 150 and a long thin tail runs to the right. On a base-10 logarithmic '
+              'scale the same orders form one roughly symmetrical hump centred near 1.8, about R$ 60.',
+        'pt': f'Dois histogramas dos {len(totals):,} totais de pedido acima de zero'.replace(',', '.') +
+              '. Em reais, quase todo pedido fica nas primeiras barras abaixo de R$ 150 e uma cauda longa e fina '
+              'corre para a direita. Numa escala logarítmica de base 10 os mesmos pedidos formam um só morro, quase '
+              'simétrico, centrado perto de 1,8, uns R$ 60.'}[lang])
+    e1 = [20 * i for i in range(21)]
+    c1 = histogram(totals, e1)
+    over = sum(1 for v in totals if v > 400)
+    p1 = Plot(fig, 70, 50, 340, 240, 0, 400, 0, max(c1) * 1.1)
+    p1.bars(e1, c1)
+    p1.xaxis([0, 100, 200, 300, 400], fmt=lambda v: str(v), label={'en': 'total, R$', 'pt': 'total, R$'}[lang])
+    p1.yaxis([0, 2000, 4000, 6000], fmt=lambda v: num(lang, v, 0),
+             label={'en': 'orders', 'pt': 'pedidos'}[lang])
+    fig.text(335, 70, {'en': f'+ {num(lang, over, 0)} above 400', 'pt': f'+ {num(lang, over, 0)} acima de 400'}[lang],
+             size=10, anchor='end', fill='--amber')
+    e2 = [-0.8 + 0.2 * i for i in range(28)]
+    c2 = histogram([math.log10(v) for v in totals], e2)
+    p2 = Plot(fig, 420, 50, 690, 240, -0.8, 4.6, 0, max(c2) * 1.1)
+    p2.bars(e2, c2)
+    p2.xaxis([0, 1, 2, 3, 4], fmt=lambda v: str(v),
+             label={'en': 'log10 of total', 'pt': 'log10 do total'}[lang])
+    p2.yaxis([0, 2000, 4000, 6000], fmt=lambda v: num(lang, v, 0))
+    cap = {'en': 'The same orders, twice. On the right, 1 is R$ 10, 2 is R$ 100 and 3 is R$ 1,000: equal steps '
+                 'are equal ratios, and the tail on the left folds into a shape a mean can describe.',
+           'pt': 'Os mesmos pedidos, duas vezes. À direita, 1 é R$ 10, 2 é R$ 100 e 3 é R$ 1.000: passos iguais são '
+                 'razões iguais, e a cauda da esquerda se dobra num formato que uma média consegue descrever.'}
+    return fig, cap[lang]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
