@@ -22,7 +22,7 @@ Two things about the list. **Some of it should never be undone.** The egress rul
 were containment on Thursday and are simply better configuration afterwards; lesson 15 is where that kind of
 finding becomes a change to the standard build, so the next server starts with it. And **some of it has a
 date on it**: closer monitoring that never ends is a queue nobody reads after the first month, which is
-lesson 7's alert fatigue arriving through a different door.
+lesson 6's alert fatigue arriving through a different door.
 
 Long-term containment also has a precondition that is easy to skip: **the backups are checked before
 eradication starts.** Rebuilding `gw` assumes there is a known-good copy of its configuration from before

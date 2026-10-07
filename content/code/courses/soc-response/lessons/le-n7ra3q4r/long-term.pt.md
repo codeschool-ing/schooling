@@ -23,7 +23,7 @@ Duas coisas sobre a lista. **Parte dela nunca deveria ser desfeita.** A regra de
 foram contenção na quinta e passam a ser simplesmente uma configuração melhor; a aula 15 é onde esse tipo de
 achado vira mudança no padrão de instalação, para o próximo servidor já nascer assim. E **parte dela tem data
 marcada**: uma vigilância reforçada que nunca termina é uma fila que ninguém lê depois do primeiro mês, que é
-a fadiga de alertas da aula 7 chegando por outra porta.
+a fadiga de alertas da aula 6 chegando por outra porta.
 
 A contenção de longo prazo também tem uma pré-condição fácil de pular: **os backups são conferidos antes de a
 erradicação começar.** Reconstruir o `gw` supõe que existe uma cópia confiável da configuração dele de antes da
