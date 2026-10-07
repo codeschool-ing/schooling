@@ -534,6 +534,142 @@ def l02_evidence(lang):
                 'Cada apoio responde a uma pergunta que um cético razoável faria. Evidência que não '
                 'responde a nenhuma pergunta assim vai para o apêndice.')
 
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-pyramid', 3)
+def l03_pyramid(lang):
+    f = Fig('l03-pyramid', 680, 250, T(
+        lang,
+        'An inverted triangle in three bands. The widest band, at the top, holds the finding and the '
+        'request, and everybody reads it. The middle band holds the reasons, most important first, '
+        'and most people read it. The narrow tip at the bottom holds the method, the caveats and the '
+        'detail, read by few, and in a deck it is the appendix.',
+        'Um triângulo invertido em três faixas. A faixa mais larga, no alto, tem o achado e o pedido, '
+        'e todo mundo lê. A do meio tem as razões, da mais importante para a menos, e a maioria lê. '
+        'A ponta estreita embaixo tem o método, as ressalvas e o detalhe, lida por poucos, e num deck '
+        'é o apêndice.'))
+    top, bottom, left, right, cx = 20, 236, 30, 450, 240
+    ys = [top, 92, 164, bottom]
+
+    def edge(y):
+        k = (y - top) / (bottom - top)
+        return left + k * (cx - left), right - k * (right - cx)
+
+    fills = [('--phosphor-dim', '--phosphor'), ('--panel', '--wire'), ('--ink', '--wire')]
+    texts = [(T(lang, 'the finding and the request', 'o achado e o pedido'), 12, '600'),
+             (T(lang, 'the reasons, best first', 'as razões, a melhor primeiro'), 11, None),
+             (T(lang, 'method', 'método'), 10, None)]
+    notes = [T(lang, 'everybody reads this', 'todo mundo lê'),
+             T(lang, 'most people read this', 'a maioria lê'),
+             T(lang, 'few read this: the appendix', 'poucos leem: o apêndice')]
+    for i in range(3):
+        a0, b0 = edge(ys[i])
+        a1, b1 = edge(ys[i + 1])
+        fill, stroke = fills[i]
+        f.path(f'M{a0:.1f} {ys[i]:.1f} L{b0:.1f} {ys[i]:.1f} L{b1:.1f} {ys[i + 1]:.1f} '
+               f'L{a1:.1f} {ys[i + 1]:.1f} Z', stroke=stroke, width=1.2, fill=fill)
+        mid = (ys[i] + ys[i + 1]) / 2 - (8 if i == 2 else 0)
+        t, size, weight = texts[i]
+        f.text(cx, mid, t, size=size, weight=weight)
+        f.line(b0 - (b0 - b1) / 2 + 12, mid, 470, mid, stroke='--paper-dim', width=1, dash='2 3')
+        f.text(478, mid, notes[i], size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Widest where the weight is. A reader who stops after the top band has the news; '
+                'every band below it is for somebody who wants more.',
+                'Mais larga onde está o peso. Quem para depois da faixa de cima já tem a notícia; cada '
+                'faixa abaixo é para quem quer mais.')
+
+
+@figure('l03-two-orders', 3)
+def l03_two_orders(lang):
+    f = Fig('l03-two-orders', 680, 220, T(
+        lang,
+        'Two strips of slides from 1 to 37. In the order of the work, the data takes slides 2 to 4, '
+        'exploration slides 5 to 12, the finding first appears on slide 14 and the recommendation on '
+        'slide 37. In the order of the story, the answer is slide 1, context and conflict slides 2 and '
+        '3, evidence slides 4 to 6, the recommendation slide 7, and everything else is appendix.',
+        'Duas faixas de slides de 1 a 37. Na ordem do trabalho, os dados ocupam os slides 2 a 4, a '
+        'exploração os slides 5 a 12, o achado aparece pela primeira vez no slide 14 e a recomendação '
+        'no slide 37. Na ordem da história, a resposta é o slide 1, contexto e conflito os slides 2 e '
+        '3, a evidência os slides 4 a 6, a recomendação o slide 7, e todo o resto é apêndice.'))
+    x0, x1 = 150, 664
+    n = 37
+    w = (x1 - x0) / n
+
+    def strip(y, spans, title):
+        f.text(14, y + 11, title, size=10.5, anchor='start', weight='600')
+        for i in range(n):
+            f.bar(x0 + i * w + 1, y, w - 2, 22, fill='--ink', stroke='--wire', width=0.8)
+        for a, b, fill, stroke in spans:
+            f.bar(x0 + (a - 1) * w + 1, y, (b - a + 1) * w - 2, 22, fill=fill, stroke=stroke, width=1)
+
+    strip(40, [(2, 4, '--panel', '--paper-dim'), (5, 12, '--panel', '--paper-dim'),
+               (14, 14, '--scan', '--amber'), (37, 37, '--phosphor-dim', '--phosphor')],
+          T(lang, 'order of the work', 'ordem do trabalho'))
+    f.text(x0 + 1.5 * w, 76, T(lang, 'data', 'dados'), size=9.5, fill='--paper-dim')
+    f.text(x0 + 8 * w, 76, T(lang, 'exploration', 'exploração'), size=9.5, fill='--paper-dim')
+    f.text(x0 + 13.5 * w, 96, T(lang, 'finding, slide 14', 'achado, slide 14'), size=9.5,
+           fill='--amber')
+    f.text(x1, 96, T(lang, 'request, slide 37', 'pedido, slide 37'), size=9.5, anchor='end',
+           fill='--phosphor')
+    strip(130, [(1, 1, '--scan', '--amber'), (2, 3, '--panel', '--paper-dim'),
+                (4, 6, '--panel', '--paper-dim'), (7, 7, '--phosphor-dim', '--phosphor')],
+          T(lang, 'order of the story', 'ordem da história'))
+    f.text(x0, 166, T(lang, 'answer, slide 1', 'resposta, slide 1'), size=9.5, anchor='start',
+           fill='--amber')
+    f.text(x0 + 6.5 * w, 186, T(lang, 'request, slide 7', 'pedido, slide 7'), size=9.5,
+           fill='--phosphor')
+    f.text(x0 + 22 * w, 166, T(lang, 'appendix, shown only when asked',
+                               'apêndice, mostrado só se perguntarem'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'The same thirty-seven slides in two orders. In the first, the room meets the finding '
+                'two-thirds of the way through; in the second, in the first minute.',
+                'Os mesmos trinta e sete slides em duas ordens. Na primeira, a sala encontra o achado a '
+                'dois terços do caminho; na segunda, no primeiro minuto.')
+
+
+@figure('l03-minto', 3)
+def l03_minto(lang):
+    f = Fig('l03-minto', 680, 270, T(
+        lang,
+        'A tree. At the top, the governing thought: fix first deliveries, starting with a pilot. Under '
+        'it, three reasons: the gap is real, it is not the region, it is big enough. Under each '
+        'reason, the evidence: 41.5% against 17.4%; the gap holds in the capital and in the interior; '
+        'margin lost per year. A bracket marks the three reasons as mutually exclusive and '
+        'collectively exhaustive.',
+        'Uma árvore. No alto, a ideia governante: consertar as primeiras entregas, começando por um '
+        'piloto. Abaixo, três razões: a distância é real, não é a região, é grande o bastante. Sob '
+        'cada razão, a evidência: 41,5% contra 17,4%; a distância se mantém na capital e no interior; '
+        'margem perdida por ano. Uma chave marca as três razões como mutuamente exclusivas e '
+        'coletivamente exaustivas.'))
+    f.rect(170, 12, 340, 38, stroke='--amber', width=1.5)
+    f.text(340, 31, T(lang, 'fix first deliveries, starting with a pilot',
+                      'consertar a 1ª entrega, começando por um piloto'), size=11.5, weight='600')
+    reasons = [T(lang, 'the gap is real', 'a distância é real'),
+               T(lang, 'it is not the region', 'não é a região'),
+               T(lang, 'it is big enough', 'é grande o bastante')]
+    leaves = [T(lang, ['41.5% cancel', 'against 17.4%'], ['41,5% cancelam', 'contra 17,4%']),
+              T(lang, ['the gap holds in', 'capital and interior'], ['a distância se mantém', 'na capital e no interior']),
+              T(lang, ['margin lost', 'per year'], ['margem perdida', 'por ano'])]
+    for i in range(3):
+        x = 40 + i * 210
+        f.line(340, 50, x + 90, 96, stroke='--paper-dim', width=1)
+        f.rect(x, 96, 180, 36, stroke='--phosphor', width=1.3)
+        f.text(x + 90, 114, reasons[i], size=11, weight='600')
+        f.line(x + 90, 132, x + 90, 170, stroke='--paper-dim', width=1)
+        f.rect(x + 15, 170, 150, 50, stroke='--wire', width=1.1)
+        f.lines(x + 90, 186, leaves[i], size=9.5, gap=15)
+    f.path('M40 236 L40 244 L610 244 L610 236', stroke='--paper-dim', width=1)
+    f.text(325, 258, T(lang, 'no overlaps, no gaps: mutually exclusive, collectively exhaustive',
+                       'sem sobreposição, sem lacuna: mutuamente exclusivas, coletivamente exaustivas'),
+           size=10, fill='--paper-dim')
+    return f, T(lang,
+                'Each level summarises the one below. If a piece of the analysis fits nowhere in the '
+                'tree, it is not part of this presentation.',
+                'Cada nível resume o de baixo. Se uma parte da análise não cabe em lugar nenhum da '
+                'árvore, ela não faz parte desta apresentação.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
