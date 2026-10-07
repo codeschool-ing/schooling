@@ -87,9 +87,9 @@ shop=# SELECT paid_at FROM payments ORDER BY paid_at;
 (2 rows)
 ```
 
-Não recusou e não avisou. Dos dois momentos que aquela string podia significar, ficou com o segundo
-— `01:30` em UTC, que é o `01:30` depois que os relógios voltaram —, e o único sinal é uma distância
-de vinte e cinco horas entre duas linhas escritas com um dia de diferença. Diga o deslocamento e a
+Não recusou e não avisou. Dos dois momentos que aquela string podia significar, ficou com o segundo:
+`01:30` UTC, o `01:30` que vem depois que os relógios voltam. O único sinal é uma distância de vinte
+e cinco horas entre duas linhas escritas com um dia de diferença. Diga o deslocamento e a
 ambiguidade some:
 
 ```sql

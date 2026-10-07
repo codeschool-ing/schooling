@@ -20,8 +20,8 @@ What changes is what a mistake costs. That is why these arrive in this lesson an
 the next section is about the mistake, and the rest of this one is about the statements.
 
 **Every session in this lesson starts from the shop as lesson 1 loads it.** A write changes what
-the next one finds, so to see the same rows as the page, put the shop back between them with the
-three lines from the end of lesson 1: `dropdb shop`, `createdb shop`, `psql shop -f shop.sql`.
+the next one finds. To see the same rows as the page, put the shop back between them with the three
+lines from the end of lesson 1: `dropdb shop`, `createdb shop`, `psql shop -f shop.sql`.
 
 ## `INSERT`
 

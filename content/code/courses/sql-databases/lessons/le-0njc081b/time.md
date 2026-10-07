@@ -87,8 +87,8 @@ shop=# SELECT paid_at FROM payments ORDER BY paid_at;
 ```
 
 It did not refuse and it did not warn. Of the two moments that string could mean, it took the
-second — `01:30` in UTC, which is `01:30` after the clocks went back — and the only sign is a gap
-of twenty-five hours between two rows written one day apart. Say the offset and the ambiguity
+second: `01:30` UTC, the `01:30` that comes after the clocks go back. The only sign is a gap of
+twenty-five hours between two rows written one day apart. Say the offset and the ambiguity
 disappears:
 
 ```sql

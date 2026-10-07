@@ -60,8 +60,8 @@ shop=# EXPLAIN ANALYZE SELECT count(*) FROM orders o JOIN order_lines l ON l.ord
 (12 rows)
 ```
 
-`loops=2923` on the inner `Index Only Scan`, with `rows=2`: two rows **per loop** — an average,
-rounded to a whole row — and 2923 loops, which is the 7261 the join returned. The `actual time`
+`loops=2923` on the inner `Index Only Scan`, with `rows=2`: two rows **per loop**, an average
+rounded to a whole row, and 2923 loops, which is the 7261 the join returned. The `actual time`
 on that node is per loop too — seven thousandths of a millisecond each, which adds up to twenty of
 the 31 ms. A per-loop number
 looks harmless on its own, and it is the multiplication that decides whether the plan is good.

@@ -56,9 +56,9 @@ commands work on it exactly as printed. This is the cheapest path there is.
 On **macOS**, Postgres.app (postgresapp.com) and Homebrew (`brew install postgresql@16`) both
 install PostgreSQL 16. On **Windows**, the installer linked from postgresql.org does. All three
 cost a few hundred megabytes and a server running in the background. What they do not give you
-is the same setup steps: each of them creates the first user its own way — the Windows one asks
-you for a password for a user called `postgres`, and you connect with `psql -U postgres` — so
-the next two sections will not match what you see. Everything from the end of this lesson on,
+is the same setup steps. Each creates the first user its own way: the Windows one asks you for a
+password for a user called `postgres`, and you connect with `psql -U postgres`. So the next two
+sections will not match what you see. Everything from the end of this lesson on,
 which is SQL, will.
 
 ## Online, on somebody else's server

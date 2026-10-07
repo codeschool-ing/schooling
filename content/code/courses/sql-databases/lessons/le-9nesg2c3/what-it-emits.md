@@ -35,8 +35,8 @@ done
 ```
 
 Save it as `page.sh` in the large shop from lesson 9, with the index lesson 10 built on
-`customer_id`. Empty the statistics, turn the log up to everything — with
-`log_min_duration_statement` at zero every statement is written to it with its literals — and
+`customer_id`. Empty the statistics and turn the log up to everything: with
+`log_min_duration_statement` at zero, every statement is written to it with its literals. Then
 render the page once:
 
 ```

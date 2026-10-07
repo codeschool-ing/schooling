@@ -20,7 +20,7 @@ O que muda é quanto custa um engano. É por isso que elas chegam nesta aula e n
 seção é sobre o engano, e o resto desta é sobre as instruções.
 
 **Toda sessão desta aula começa da loja como a aula 1 a carrega.** Uma escrita muda o que a próxima
-encontra, então, para ver as mesmas linhas que a página, ponha a loja de volta entre elas com as três
+encontra. Para ver as mesmas linhas que a página, ponha a loja de volta entre elas com as três
 linhas do fim da aula 1: `dropdb shop`, `createdb shop`, `psql shop -f shop.sql`.
 
 ## `INSERT`

@@ -57,9 +57,9 @@ etapa funcionam nele exatamente como estão impressos. É o caminho mais barato 
 No **macOS**, o Postgres.app (postgresapp.com) e o Homebrew (`brew install postgresql@16`)
 instalam o PostgreSQL 16. No **Windows**, o instalador indicado em postgresql.org faz isso. Os três
 custam algumas centenas de megabytes e um servidor rodando em segundo plano. O que eles não dão
-são os mesmos passos de configuração: cada um cria o primeiro usuário do seu jeito — o do Windows
-pede uma senha para um usuário chamado `postgres`, e você se conecta com `psql -U postgres` —,
-então as duas próximas etapas não vão bater com o que você vê. Tudo do fim desta aula em diante,
+são os mesmos passos de configuração. Cada um cria o primeiro usuário do seu jeito: o do Windows
+pede uma senha para um usuário chamado `postgres`, e você se conecta com `psql -U postgres`. Então
+as duas próximas etapas não vão bater com o que você vê. Tudo do fim desta aula em diante,
 que é SQL, vai.
 
 ## Online, no servidor de outra pessoa

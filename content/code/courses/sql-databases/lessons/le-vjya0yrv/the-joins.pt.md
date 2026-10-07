@@ -60,8 +60,8 @@ shop=# EXPLAIN ANALYZE SELECT count(*) FROM orders o JOIN order_lines l ON l.ord
 (12 rows)
 ```
 
-`loops=2923` no `Index Only Scan` interno, com `rows=2`: duas linhas **por volta** — uma média,
-arredondada para uma linha inteira — e 2923 voltas, que são as 7261 que a junção devolveu. O
+`loops=2923` no `Index Only Scan` interno, com `rows=2`: duas linhas **por volta**, uma média
+arredondada para uma linha inteira, e 2923 voltas, que são as 7261 que a junção devolveu. O
 `actual time` desse nó também é por volta — sete milésimos de milissegundo cada, que somados dão
 vinte dos 31 ms. Um número por volta
 parece inofensivo sozinho, e é a multiplicação que decide se o plano é bom.

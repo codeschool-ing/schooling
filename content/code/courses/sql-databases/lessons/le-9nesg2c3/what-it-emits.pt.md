@@ -36,8 +36,8 @@ done
 ```
 
 Salve como `page.sh` na loja grande da aula 9, com o índice que a aula 10 criou em `customer_id`.
-Esvazie as estatísticas, ponha o log para registrar tudo — com `log_min_duration_statement` em zero
-toda instrução é escrita nele com seus literais — e monte a página uma vez:
+Esvazie as estatísticas e ponha o log para registrar tudo: com `log_min_duration_statement` em
+zero, toda instrução é escrita nele com seus literais. Depois monte a página uma vez:
 
 ```
 shop=# SELECT pg_stat_statements_reset();

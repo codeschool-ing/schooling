@@ -77,9 +77,9 @@ dele dizem qual acrescentar.
 
 ## Por baixo de tudo isso: a própria máquina virtual
 
-Se o hipervisor se recusar a ligar a máquina com uma mensagem sobre **VT-x**, **AMD-V** ou
-**virtualização desativada**, o processador é capaz e o firmware do computador está com o recurso
-desligado. É uma opção no menu da BIOS ou UEFI, aberto com uma tecla apertada enquanto o computador
+Se o hipervisor se recusar a ligar a máquina com uma mensagem sobre `VT-x`, `AMD-V` ou
+virtualização desativada, **o processador é capaz e o firmware do computador está com o recurso
+desligado.** É uma opção no menu da BIOS ou UEFI, aberto com uma tecla apertada enquanto o computador
 liga, e o site do fabricante diz qual. Se você não puder mudá-la, o caminho instalado ou o online da
 primeira etapa não precisam de virtualização nenhuma.
 

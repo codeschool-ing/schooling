@@ -77,9 +77,9 @@ instructions say which one to add.
 
 ## Below all of these: the virtual machine itself
 
-If the hypervisor refuses to start the machine with a message about **VT-x**, **AMD-V** or
-**virtualisation being disabled**, the processor can do it and the computer's firmware has the
-feature switched off. It is a setting in the BIOS or UEFI menu, reached by a key pressed while
+If the hypervisor refuses to start the machine with a message about `VT-x`, `AMD-V` or
+virtualisation being disabled, **the processor can do it and the computer's firmware has the
+feature switched off.** It is a setting in the BIOS or UEFI menu, reached by a key pressed while
 the computer starts, and the manufacturer's site says which key. If you cannot change it, the
 installed path or the online one in the first section needs no virtualisation at all.
 
