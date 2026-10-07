@@ -4,9 +4,9 @@ version: 1
 ---
 
 A maioria das pessoas que desiste de um curso como este desiste aqui, diante de uma mensagem de erro
-sobre uma máquina que ainda não terminou de montar. Estas são as falhas encontradas enquanto este curso
-era gravado, na ordem em que você as encontraria, com o que cada uma quer dizer. Toda mensagem abaixo
-foi impressa pelo script ou pelo sistema, numa máquina de verdade.
+sobre uma máquina que ainda não terminou de montar. Estas são as falhas que você tem mais chance de encontrar, na
+ordem em que as encontraria, com o que cada uma quer dizer. Toda mensagem nos blocos abaixo foi
+impressa pelo script ou pelo sistema, numa máquina de verdade, enquanto este curso era gravado.
 
 **A máquina virtual não liga, e a mensagem fala em virtualização, VT-x, AMD-V ou SVM.** O suporte do
 processador à virtualização está desligado no firmware do computador. É uma opção no menu da BIOS ou

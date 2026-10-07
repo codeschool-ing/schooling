@@ -24,7 +24,7 @@ escolher.
 cria e apaga dezenas de interfaces, e uma máquina que você apaga e refaz em meia hora é o lugar certo
 para isso. Os números da tabela são folgados: na máquina em que este curso foi gravado, a rede mais
 movimentada do curso usou cerca de 60 MB de memória a mais que o sistema parado, e os pacotes
-ocuparam cerca de 250 MB de disco.
+ocuparam menos de 300 MB de disco.
 
 O hipervisor depende do computador que você tem. O **Multipass**, ferramenta da Canonical, cria uma
 máquina virtual Ubuntu com um comando no Windows, no macOS e no Linux, e é o caminho mais curto:

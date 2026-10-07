@@ -223,7 +223,7 @@ and lesson 7 reads it line by line. `addr` and `gw` give an interface an address
 route. **`switch` makes a switch** out of a bridge called `br0` with the ports it is given. `frr`
 starts the routing daemons on one router, and `daemon` leaves any other program running on a device,
 such as a web server or a DHCP server. The `mac` function gives every interface the same MAC address
-each time a network is built, which is what keeps the addresses in the lessons equal to yours. `on`
+each time a network is built, which is what keeps the MAC addresses in the lessons equal to yours. `on`
 opens a shell on one device, and `down` removes everything the script made.
 
 The first network is the office this lesson runs on. Open `nano ~/netlab/office.sh` and paste:

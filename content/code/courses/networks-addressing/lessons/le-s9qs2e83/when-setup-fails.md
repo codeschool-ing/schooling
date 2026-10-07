@@ -4,9 +4,9 @@ version: 1
 ---
 
 Most people who give up on a course like this one give up here, on an error message about a machine
-they have not finished building. These are the failures met while this course was recorded, in the
-order you would meet them, with what each one means. Every message below was printed by the script
-or by the system, on a real machine.
+they have not finished building. These are the failures you are most likely to meet, in the order you
+would meet them, with what each one means. Every message in a block below was printed by the script
+or by the system, on a real machine, while this course was recorded.
 
 **The virtual machine will not start, and the message mentions virtualisation, VT-x, AMD-V or SVM.**
 The processor's virtualisation support is switched off in the computer's firmware. It is a setting in

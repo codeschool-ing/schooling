@@ -223,8 +223,8 @@ lança um cabo**, e a aula 7 o lê linha por linha. `addr` e `gw` dão um endere
 rota padrão a um dispositivo. **`switch` cria um switch** a partir de uma bridge chamada `br0`, com as
 portas que receber. `frr` sobe os daemons de roteamento num roteador, e `daemon` deixa qualquer outro
 programa rodando num dispositivo, como um servidor web ou um servidor DHCP. A função `mac` dá a cada
-interface o mesmo endereço MAC toda vez que uma rede é montada, e é isso que mantém os endereços das
-aulas iguais aos seus. `on` abre um shell num dispositivo, e `down` remove tudo o que o script criou.
+interface o mesmo endereço MAC toda vez que uma rede é montada, e é isso que mantém os endereços MAC
+das aulas iguais aos seus. `on` abre um shell num dispositivo, e `down` remove tudo o que o script criou.
 
 A primeira rede é o escritório em que esta aula roda. Abra `nano ~/netlab/office.sh` e cole:
 

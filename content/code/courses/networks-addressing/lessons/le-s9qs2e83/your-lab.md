@@ -23,7 +23,7 @@ There are three ways to get that machine. Pick the virtual machine unless you ha
 creates and deletes dozens of interfaces, and a machine you can delete and make again in half an hour
 is the right place for that. The figures in the table are generous: on the machine this course was
 recorded on, the busiest network of the course used about 60 MB of memory more than the idle system,
-and the packages took about 250 MB of disk.
+and the packages took under 300 MB of disk.
 
 The hypervisor depends on the computer you have. **Multipass**, Canonical's tool, makes an Ubuntu
 virtual machine with one command on Windows, macOS and Linux, and it is the shortest path:
