@@ -18,9 +18,13 @@
 # hello-world is NOT pulled beforehand, so its download is in the transcript.
 # The broken DOCKER_HOST is deliberate: it is the error a student sees when
 # Docker Desktop is installed and not running.
+# alpine:3.22 is pulled before the first command, for the two failures the
+# last section shows. The TLS one is this machine's own: its traffic leaves
+# through a proxy that re-signs TLS, which a container does not trust, and
+# that is exactly what a student on a company or school network meets.
 #
 # Recorded on Ubuntu 24.04, Docker Engine 29.8, TZ=America/Sao_Paulo.
-export LAB_IMAGES=""
+export LAB_IMAGES="alpine:3.22"
 . "$(dirname "$0")/../../capture.sh"
 
 block version
@@ -33,3 +37,15 @@ block info
 run 'docker info --format "{{.OperatingSystem}} | {{.OSType}}/{{.Architecture}} | {{.NCPU}} CPUs | {{.MemTotal}} bytes"'
 block no-daemon
 run 'DOCKER_HOST=unix:///run/not-running.sock docker ps'
+
+block tools
+run 'jq --version && psql --version && git --version'
+run 'id -nG'
+block tls
+run 'docker run --rm alpine:3.22 wget -q -O /dev/null https://dl-cdn.alpinelinux.org/alpine/'
+block port
+quiet 'docker container prune -f'
+run 'docker run -d --name one -p 127.0.0.1:8080:8080 alpine:3.22 sleep 600'
+run 'docker run -d --name two -p 127.0.0.1:8080:8080 alpine:3.22 sleep 600'
+run 'docker ps -a --format "{{.Names}}  {{.Status}}  {{.Ports}}"'
+run 'docker rm -f one two'
