@@ -1,11 +1,12 @@
 ---
 title: Versões, cache e plataformas
-version: 1
+version: 2
 ---
 
 **Uma versão é uma tag Git, e o pipeline a transforma nas tags da aula 16.** A Ana marca o commit e roda
 o pipeline como a CI faria para aquela tag. Antes, ela esvazia o cache de build, para o build ter só o
-que um runner de CI novo teria:
+que um runner de CI novo teria. Na sua máquina, a linha do pipeline é a mais curta que a seção
+anterior deu, com `REF_NAME=v1.8.0` na frente:
 
 ```
 ana@vm:~/shelf$ git tag v1.8.0

@@ -1,6 +1,6 @@
 ---
 title: O pipeline é um script
-version: 1
+version: 2
 ---
 
 **Um sistema de CI roda comandos numa máquina que não é sua, toda vez que alguém faz push.** Os
@@ -41,6 +41,25 @@ arquitetura da própria máquina, seja qual for a imagem sendo feita, e **`GOOS`
 do `TARGETOS` e do `TARGETARCH` do BuildKit, fazem o Go compilar para o alvo. Uma imagem `arm64` é
 então construída num runner `amd64` em velocidade total, sem emulação: só o estágio final, que não roda
 comando nenhum, é a imagem distroless `arm64`. A aula 13 apresentou esses argumentos.
+
+O pipeline deixa arquivos no projeto enquanto roda, uma imagem salva, um log e um registro do
+build, e a configuração da CI mora ao lado do código. Nenhum deles pertence a uma imagem, então o
+`.dockerignore` cresce de novo:
+
+```
+.git
+.github
+.env
+*.env
+*.log
+*.tar
+build.json
+ci/
+compose*.yaml
+testdata/
+Dockerfile*
+.dockerignore
+```
 
 ## O script
 
@@ -100,6 +119,16 @@ está o banco offline do Trivy.
 
 ## A primeira execução
 
+O registry da máquina dela é um em `127.0.0.1:5000` sem senha, do tipo que a aula 15 iniciou;
+`docker run -d --name registry -p 127.0.0.1:5000:5000 registry:3` inicia um se o seu tiver sumido. O
+`TRIVY_FLAGS` no comando dela é do laboratório: diz ao Trivy para usar o banco que a aula 20 buscou
+em vez de pedir um novo, o que os containers do laboratório não conseguem. Na sua máquina, deixe-o de
+fora, e o próprio Trivy mantém o `~/trivy-cache` em dia:
+
+```sh
+REGISTRY=localhost:5000 TRIVY_CACHE=~/trivy-cache sh ci/pipeline.sh; echo "exit $?"
+```
+
 A Ana faz commit dos arquivos e roda o script, enviando para o registry da máquina dela:
 
 ```
@@ -148,7 +177,8 @@ que deixa uma execução de CI vermelha.
 {"svg": "<svg viewBox=\"0 0 720 210\" role=\"img\" aria-label=\"O pipeline como quatro passos em fila, cada um só roda se o anterior passou. Testes de unidade: docker build --target test. Testes de integração: Compose com um Postgres descartável. Varredura: Trivy na imagem, falhando em achados altos ou críticos corrigíveis. Build e push: amd64 e arm64, com o cache no registry, SBOM e proveniência, com tag do commit e, numa tag de versão, da versão. A saída é o digest enviado, que um deploy usa. Na primeira execução da Ana, a varredura parou o pipeline no golang.org/x/text; depois da correção, os quatro passaram.\"><defs><marker id=\"l26flow-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l26flow-ah-wire\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--wire)\"></path></marker></defs><rect x=\"20\" y=\"50\" width=\"125\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"82\" y=\"72\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\" font-weight=\"600\">testes de unidade</text><text x=\"82\" y=\"94\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">--target test</text><path d=\"M145 80 L170 80\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l26flow-ah-wire)\"></path><rect x=\"170\" y=\"50\" width=\"125\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"232\" y=\"72\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\" font-weight=\"600\">integração</text><text x=\"232\" y=\"94\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">compose run</text><path d=\"M295 80 L320 80\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l26flow-ah-wire)\"></path><rect x=\"320\" y=\"50\" width=\"125\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></rect><text x=\"382\" y=\"72\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\" font-weight=\"600\">varredura</text><text x=\"382\" y=\"94\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">trivy</text><path d=\"M445 80 L470 80\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l26flow-ah-wire)\"></path><rect x=\"470\" y=\"50\" width=\"125\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"532\" y=\"72\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\" font-weight=\"600\">build e push</text><text x=\"532\" y=\"94\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">amd64 + arm64</text><path d=\"M595 80 L620 80\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l26flow-ah-wire)\"></path><rect x=\"620\" y=\"55\" width=\"80\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"660\" y=\"76\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">digest</text><text x=\"660\" y=\"94\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">para o deploy</text><path d=\"M382 110 L382 150\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l26flow-ah-amber)\"></path><text x=\"382\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">primeira execução: parou aqui, x/text v0.29.0</text><text x=\"360\" y=\"194\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">um passo que falha encerra a execução com o status dele; os seguintes nem começam</text></svg>", "caption": "Cada passo é uma barreira. Nada chega ao registry sem passar por todas as barreiras antes."}
 ```
 
-Ela aplica a correção da aula 20 e faz commit:
+Ela aplica a correção da aula 20 e faz commit. Na sua máquina, o `go get` é a forma que a aula 20 dá,
+sem `-v ~/gopkg:/go/pkg` e `-e GOPROXY=off`:
 
 ```
 ana@vm:~/shelf$ docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/src -w /src -v ~/gopkg:/go/pkg -e GOCACHE=/tmp/gocache -e GOPROXY=off -e GOFLAGS=-mod=mod golang:1.25 sh -c "go get golang.org/x/text@v0.39.0 && go mod tidy && go mod vendor"

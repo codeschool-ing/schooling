@@ -1,6 +1,6 @@
 ---
 title: What Compose does not do
-version: 1
+version: 2
 ---
 
 **Compose runs an application on one machine, and when that machine goes, so does the application.**
@@ -25,6 +25,10 @@ vm         Ready     Leader
 **Ana's machine is now a swarm with one node, which is both its manager and its only worker.** A real
 swarm adds machines with `docker swarm join` and the token `init` prints; everything below works the
 same with more nodes, and spreads the containers across them.
+
+`shelf:1.0.0` and `shelf:1.0.1` here are built from lesson 18's Dockerfile, the one with the health
+check: in `~/shelf`, `docker build -q --build-arg VERSION=1.0.0 -t shelf:1.0.0 .`, and the same
+again with `1.0.1`.
 
 ## A service, not a container
 

@@ -1,6 +1,6 @@
 ---
 title: SBOMs e proveniência
-version: 1
+version: 2
 ---
 
 **Um scanner reconstrói a lista do que há dentro de uma imagem depois do fato. Um build pode escrever
@@ -12,6 +12,10 @@ essa lista enquanto acontece, e dizer como foi feito.** O BuildKit faz as duas c
   builder.
 
 ## Construindo com atestações
+
+Os envios vão para um registry em `127.0.0.1:5000` sem senha, do tipo que a aula 15 iniciou. Se a
+sua máquina não tem um rodando, `docker run -d --name registry -p 127.0.0.1:5000:5000 registry:3`
+inicia um.
 
 ```
 ana@vm:~$ cd shelf && docker build --sbom=true --provenance=mode=min --build-arg VERSION=1.6.0 -t localhost:5000/shelf:1.6.0 --push . 2>&1 | grep -E "attestation|manifest list|pushing manifest" | sort -u; cd ..

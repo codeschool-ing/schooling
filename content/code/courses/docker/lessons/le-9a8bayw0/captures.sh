@@ -60,7 +60,7 @@ quiet 'cp -r /opt/docker-lab/gopath/pkg ~/gopkg'
 quiet 'docker run -d --name registry -p 127.0.0.1:5000:5000 registry:3'
 cd shelf
 mkdir -p probe
-cat > probe/main.go <<'GO'
+staged probe/main.go <<'GO'
 // probe exits 0 when a GET of its one argument answers 200, and 1 otherwise.
 // It is the health check for an image that has no shell and no curl.
 package main
@@ -79,7 +79,7 @@ func main() {
 	}
 }
 GO
-cat > Dockerfile <<'DF'
+staged Dockerfile <<'DF'
 FROM golang:1.25 AS build
 WORKDIR /src
 COPY go.mod go.sum ./
@@ -98,7 +98,7 @@ HEALTHCHECK --interval=5s --timeout=2s --start-period=5s --retries=3 \
   CMD ["/probe", "http://127.0.0.1:8080/health"]
 CMD ["/shelf"]
 DF
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .env
 testdata/

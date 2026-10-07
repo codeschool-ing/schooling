@@ -1,11 +1,14 @@
 ---
 title: What is under Docker
-version: 1
+version: 2
 ---
 
 **Lesson 3 named the three specifications every container tool follows: the image format, the
 distribution API and the runtime.** This lesson looks at the tools on the other side of them, starting
 with the ones Docker itself is built from, which are on Ana's machine already.
+
+`shelf:1.0.0` here is the image lesson 15 built. If your machine no longer has it, the build that
+lesson shows makes it again.
 
 ## containerd and runc, found running
 

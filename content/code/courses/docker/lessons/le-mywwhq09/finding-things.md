@@ -1,11 +1,28 @@
 ---
 title: Finding things
-version: 1
+version: 2
 ---
 
 **A machine that has run Docker for a week has more containers, images and volumes than anyone
 remembers starting.** Three habits keep that manageable: filter instead of scrolling, format instead
 of reading whole tables, and ask the right command for the field you want.
+
+The transcripts in this lesson read a machine with a little history on it: two versions of `shelf`,
+built from lesson 15's Dockerfile, a few containers, one of them exited, a volume nobody uses and
+some build cache. To give yours the same, run these first:
+
+```sh
+cd ~/shelf
+docker build -q --build-arg VERSION=1.0.0 -t shelf:1.0.0 .
+docker build -q --build-arg VERSION=1.0.1 -t shelf:1.0.1 .
+cd ~
+docker run -d --name web -p 127.0.0.1:8080:8080 shelf:1.0.1
+docker run -d --name web-old shelf:1.0.0
+docker run --name once alpine:3.22 echo done
+docker run -d --name db -e POSTGRES_PASSWORD=lab-only -v pgdata:/var/lib/postgresql/data postgres:17
+docker volume create scratch
+sleep 4; docker rm -f db
+```
 
 ## `ps` with filters and a format
 
