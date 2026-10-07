@@ -394,7 +394,7 @@ ana@lab:~/emb$ python first.py
 list 384 [-0.0865, -0.0142, -0.0045, 0.0386]
 Usage(prompt_tokens=5, total_tokens=5)
 ana@lab:~/emb$ tail -n 1 labembed.jsonl
-{"at": "2026-10-05T14:19:26-03:00", "path": "/v1/embeddings", "provider": "openai", "model": "lab-minilm", "inputs": 1, "tokens": 5, "dims": 384, "encoding_format": "base64", "status": 200}
+{"at": "2026-10-07T12:42:34-03:00", "path": "/v1/embeddings", "provider": "openai", "model": "lab-minilm", "inputs": 1, "tokens": 5, "dims": 384, "encoding_format": "base64", "status": 200}
 ```
 
 The first four numbers are the ones lesson 1 printed for the same title from the same model,
