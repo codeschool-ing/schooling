@@ -1,6 +1,6 @@
 ---
 title: When the setup fails
-version: 1
+version: 2
 ---
 
 Most people who give up on a course like this one give up here, on an error message about a machine
@@ -84,6 +84,14 @@ check to run after every paste. Here it says the file ended at line 40 while sti
 `NFT` that closes the block opened at line 28. Run without the check, the same file reaches `nft`, which
 complains about a line that is perfectly correct; the missing part is the one after it. Compare the end
 of your file with the end of the block in the lesson.
+
+**A DHCP server that never answers.** While this course was recorded, lesson 10's server started and
+exited at once, and every PC's request went unanswered. Its log, `/run/lab/srv/dhcpd.pid.log`, said
+why: `Can't open /run/lab/srv/dhcpd.conf: Permission denied`, as root. On Ubuntu, AppArmor confines
+`dhcpd` to the paths a DHCP server normally uses, and `/run/lab` is not one of them. That is why
+`dhcpd_on` in `netlab.sh` adds one line to `/etc/apparmor.d/local/usr.sbin.dhcpd`, the file Ubuntu
+keeps for local exceptions, the first time it starts a server. When a program fails with permission
+denied although it runs as root, `sudo dmesg | grep DENIED` names what refused it.
 
 **And when the network looks wrong**, build it again. `sudo bash ~/netlab/netlab.sh up office` takes
 down everything the script made and builds the office from nothing, in under a minute. When even that

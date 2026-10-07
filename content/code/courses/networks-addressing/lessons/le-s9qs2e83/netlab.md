@@ -1,6 +1,6 @@
 ---
 title: The lab script
-version: 1
+version: 2
 ---
 
 Everything in this section is typed inside the machine from the previous section. First the
@@ -159,6 +159,12 @@ web() {  # web NODE ADDRESS : a web server whose page names its machine
 }
 
 dhcpd_on() {  # dhcpd_on NODE IFACE CONFIG-FILE : a DHCP server
+  # Ubuntu's AppArmor profile for dhcpd allows only its usual paths, so it is
+  # told once that it may read and write under /run/lab too.
+  if [ -d /etc/apparmor.d/local ] && ! grep -qs "$LAB/" /etc/apparmor.d/local/usr.sbin.dhcpd; then
+    echo "$LAB/** rw," >> /etc/apparmor.d/local/usr.sbin.dhcpd
+    apparmor_parser -r /etc/apparmor.d/usr.sbin.dhcpd
+  fi
   touch "$LAB/$1/dhcp/dhcpd.leases"
   daemon "$1" dhcpd unshare --mount sh -c \
     "mount --bind $LAB/$1/dhcp /var/lib/dhcp; exec dhcpd -4 -f -d -cf $3 -pf $LAB/$1/dhcpd.pidfile $2"

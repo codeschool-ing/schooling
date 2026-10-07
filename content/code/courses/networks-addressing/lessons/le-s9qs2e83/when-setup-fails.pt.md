@@ -1,6 +1,6 @@
 ---
 title: Quando a montagem falha
-version: 1
+version: 2
 ---
 
 A maioria das pessoas que desiste de um curso como este desiste aqui, diante de uma mensagem de erro
@@ -85,6 +85,15 @@ conferência a fazer depois de cada colagem. Aqui ele diz que o arquivo acabou n
 esperando a palavra `NFT`, que fecha o bloco aberto na linha 28. Sem a conferência, o mesmo arquivo
 chega ao `nft`, que reclama de uma linha perfeitamente correta; a parte que falta é a seguinte.
 Compare o fim do seu arquivo com o fim do bloco na aula.
+
+**Um servidor DHCP que nunca responde.** Enquanto este curso era gravado, o servidor da aula 10 subiu e
+saiu na hora, e nenhum pedido dos PCs teve resposta. O log dele, `/run/lab/srv/dhcpd.pid.log`, disse o
+motivo: `Can't open /run/lab/srv/dhcpd.conf: Permission denied`, rodando como root. No Ubuntu, o
+AppArmor confina o `dhcpd` aos caminhos que um servidor DHCP costuma usar, e `/run/lab` não é um deles.
+É por isso que o `dhcpd_on` do `netlab.sh` acrescenta uma linha a `/etc/apparmor.d/local/usr.sbin.dhcpd`,
+o arquivo que o Ubuntu reserva para exceções locais, na primeira vez que sobe um servidor. Quando um
+programa falha com permissão negada mesmo rodando como root, `sudo dmesg | grep DENIED` diz o que o
+recusou.
 
 **E quando a rede parece errada**, monte de novo. `sudo bash ~/netlab/netlab.sh up office` derruba
 tudo o que o script criou e monta o escritório do zero, em menos de um minuto. Quando nem isso ajuda,
