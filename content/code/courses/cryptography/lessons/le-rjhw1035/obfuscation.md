@@ -10,15 +10,17 @@ trick. Whoever has the program, or its manual, or one example, has the trick too
 ## A vendor's "protected" password
 
 Vereda's appointment scheduler is a product bought from a vendor. Its configuration file keeps the
-database password "protected":
+database password "protected", and this writes the file into the lab:
 
-```
-ana@lab:~/lab$ cat data/scheduler.ini
+```sh
+cd ~/lab
+cat > data/scheduler.ini <<'EOF'
 [database]
 host = db.vereda.example
 user = scheduler
 ; password is protected (ROT13 then Base64, see the vendor's manual)
 password = SS1xby1mM3BlcmctMjAyNg==
+EOF
 ```
 
 The comment says what the protection is, because the vendor's own manual does. Undoing the second

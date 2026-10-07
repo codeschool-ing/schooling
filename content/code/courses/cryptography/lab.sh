@@ -65,6 +65,8 @@ le-zkqzqc2n unsalted
 le-11dndz3h integrity
 le-11dndz3h signatures
 le-0pfv6eh8 third-party
+le-rjhw1035 encoding
+le-rjhw1035 obfuscation
 "
 
 STOCK=/usr/local/lib/cryptography-stock
