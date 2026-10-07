@@ -880,6 +880,85 @@ def _l10_copies(f):
         f.arrow(150, 110, 228, y + 19, stroke='--paper-dim')
 
 
+# ===================================================================== lesson 11
+L11 = 'le-ch17hnnq'
+
+
+@figure('l11-contract', L11, 720, 230,
+        ('A data contract between a producer and a consumer. Ipê produces the view '
+         'share.delivery_feed; Rota Certa consumes the file built from it. The contract sits '
+         'between them in a repository. A check runs on Ipê\'s side whenever the view or the '
+         'contract changes, and can run on the consumer\'s side against the file it receives.',
+         'Um contrato de dados entre um produtor e um consumidor. A Ipê produz a view '
+         'share.delivery_feed; a Rota Certa consome o arquivo feito a partir dela. O contrato '
+         'fica entre os dois, num repositório. Uma verificação roda do lado da Ipê sempre que a '
+         'view ou o contrato mudam, e pode rodar do lado do consumidor contra o arquivo que ele '
+         'recebe.'),
+        ('Two checks against one document turn a description into an agreement.',
+         'Duas verificações contra um documento transformam uma descrição num acordo.'))
+def _l11_contract(f):
+    f.box(20, 70, 180, 70, [('Ipê, producer', 'Ipê, produtora'),
+                            {'s': 'share.delivery_feed', 'mono': True, 'size': 10,
+                             'fill': '--paper-dim'}], fill='--ink')
+    f.box(270, 60, 180, 90, [('the contract', 'o contrato'),
+                             {'s': 'delivery-feed.v1.json', 'mono': True, 'size': 10,
+                              'fill': '--paper-dim'},
+                             {'s': ('schema · meaning · quality', 'esquema · sentido · qualidade'),
+                              'size': 9.5, 'fill': '--paper-dim'},
+                             {'s': ('owner · privacy · version', 'dono · privacidade · versão'),
+                              'size': 9.5, 'fill': '--paper-dim'}], stroke='--phosphor')
+    f.box(520, 70, 180, 70, [('Rota Certa, consumer', 'Rota Certa, consumidora'),
+                             {'s': ('a CSV every morning', 'um CSV toda manhã'), 'size': 10,
+                              'fill': '--paper-dim'}], fill='--ink')
+    f.arrow(200, 105, 268, 105, stroke='--paper-dim')
+    f.arrow(450, 105, 518, 105, stroke='--paper-dim')
+    f.box(30, 170, 160, 36, {'s': 'check_contract.py', 'mono': True, 'size': 10.5},
+          stroke='--amber')
+    f.box(530, 170, 160, 36, ('their own check', 'a verificação dela'), stroke='--amber', size=10.5)
+    f.line(110, 168, 110, 142, stroke='--amber', dash='3 3')
+    f.line(190, 188, 300, 152, stroke='--amber', dash='3 3')
+    f.line(610, 168, 610, 142, stroke='--amber', dash='3 3')
+    f.line(530, 188, 420, 152, stroke='--amber', dash='3 3')
+    f.text(360, 30, ('in a repository, reviewed like code', 'num repositório, revisado como código'),
+           size=10.5, fill='--paper-dim')
+
+
+@figure('l11-map', L11, 720, 300,
+        ('The course as layers. At the bottom, access: who may connect and who may read what, '
+         'lessons 1 and 2. Above it, protection: encryption, keys and pseudonyms, lessons 3 to 5. '
+         'Above that, knowledge: what is held and how sensitive it is, lesson 6. Then the law, '
+         'lessons 7 and 8. Then governance: owners, quality, lineage, retention and audit, '
+         'lessons 9 and 10. At the top, contracts with others, lesson 11. Every layer keeps its '
+         'decisions as data and checks them.',
+         'O curso em camadas. Embaixo, o acesso: quem pode conectar e quem pode ler o quê, aulas '
+         '1 e 2. Acima, a proteção: cifragem, chaves e pseudônimos, aulas 3 a 5. Acima disso, o '
+         'conhecimento: o que se guarda e quão sensível é, aula 6. Depois a lei, aulas 7 e 8. '
+         'Depois a governança: donos, qualidade, linhagem, retenção e auditoria, aulas 9 e 10. '
+         'No topo, os contratos com os outros, aula 11. Toda camada guarda as suas decisões como '
+         'dado e as verifica.'),
+        ('Each layer leans on the ones below it.', 'Cada camada se apoia nas de baixo.'))
+def _l11_map(f):
+    layers = [(('contracts with others', 'contratos com os outros'), ('lesson 11', 'aula 11'),
+               '--phosphor'),
+              (('owners, quality, lineage, retention, audit',
+                'donos, qualidade, linhagem, retenção, auditoria'), ('lessons 9 and 10', 'aulas 9 e 10'),
+               '--phosphor'),
+              (('the law: LGPD, GDPR, AI Act', 'a lei: LGPD, GDPR, AI Act'), ('lessons 7 and 8', 'aulas 7 e 8'),
+               '--amber'),
+              (('what we hold, and how sensitive', 'o que guardamos, e quão sensível'), ('lesson 6', 'aula 6'),
+               '--amber'),
+              (('encryption, keys, pseudonyms', 'cifragem, chaves, pseudônimos'), ('lessons 3 to 5', 'aulas 3 a 5'),
+               '--wire'),
+              (('who may connect, who may read', 'quem conecta, quem lê'), ('lessons 1 and 2', 'aulas 1 e 2'),
+               '--wire')]
+    for k, (what, which, c) in enumerate(layers):
+        y = 18 + k * 44
+        inset = 90 - k * 16
+        f.rect(20 + inset, y, 520 - 2 * inset, 38, stroke=c, fill='--panel')
+        f.text(280, y + 19, what, size=11)
+        f.text(560, y + 19, which, size=10.5, anchor='start', fill='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():
