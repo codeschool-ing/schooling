@@ -1,24 +1,41 @@
 ---
 title: Annotations: marking what people did
-version: 1
+version: 2
 ---
 
 A graph shows what the system did. **An annotation marks what people did**: a deploy, a
 configuration change, the start of an incident. Without them, the first question about any bump in
 any graph is *did somebody change something?*, and the answer lives in a chat log. The deploy
-pipeline's robot, with its token, marks a release of payments:
+pipeline's robot, with its token, marks a release of payments. Note the time first, because the
+end of this section asks for the minutes around it:
+
+```sh
+T0=$(date +%s)
+```
 
 ```
 ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Content-Type: application/json' -d '{"dashboardUID": "shop", "tags": ["deploy"], "text": "payments 1.4.1"}' localhost:3000/api/annotations | jq -c .
 {"id":1,"message":"Annotation added"}
 ```
 
-The release makes every charge 600 milliseconds slower, the lab's fault file standing in for a bad
+The release makes every charge 600 milliseconds slower, the fault file standing in for a bad
 version. Two minutes later it is rolled back, and the rollback is marked too:
+
+```sh
+echo '{"latency_ms": 600}' > faults/payments.json
+sleep 120
+```
 
 ```
 ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Content-Type: application/json' -d '{"dashboardUID": "shop", "tags": ["deploy", "rollback"], "text": "payments back to 1.4.0"}' localhost:3000/api/annotations | jq -c .
 {"id":2,"message":"Annotation added"}
+```
+
+Then the rollback itself, and two more minutes for the graph to come back down:
+
+```sh
+rm faults/payments.json
+sleep 120
 ```
 
 Both are stored with their time and tags, and any dashboard that draws `deploy` annotations, as the
@@ -31,7 +48,11 @@ ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" 'localh
 ```
 
 The checkout's 99th percentile over the same minutes was then asked of Prometheus as a **range
-query**, one value every fifteen seconds, from two minutes before the deploy to four after it:
+query**, one value every fifteen seconds, from two minutes before the deploy to four after it, which these two marks give:
+
+```sh
+START=$((T0 - 120)) END=$(date +%s)
+```
 
 ```sh
 curl -sG localhost:9090/api/v1/query_range \

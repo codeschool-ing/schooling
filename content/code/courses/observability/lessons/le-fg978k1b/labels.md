@@ -43,7 +43,6 @@ metrics, and the experiment. Keep a copy of `prometheus.yml`, then add at its en
 cp prometheus/prometheus.yml /tmp/prometheus.yml.orig
 ```
 
-
 ```
 ana@obs:~/shop$ tail -6 prometheus/prometheus.yml
   - job_name: prometheus

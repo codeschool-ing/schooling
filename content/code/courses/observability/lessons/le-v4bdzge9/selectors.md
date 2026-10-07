@@ -12,7 +12,6 @@ every lesson after this one uses it too:
 chmod +x promq
 ```
 
-
 ```
 ana@obs:~/shop$ cat promq
 #!/bin/sh

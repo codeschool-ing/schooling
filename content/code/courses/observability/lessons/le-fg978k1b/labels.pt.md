@@ -44,7 +44,6 @@ as seis linhas que o `tail` abaixo imprime, e salve o `logins.py` em `~/shop/scr
 cp prometheus/prometheus.yml /tmp/prometheus.yml.orig
 ```
 
-
 ```
 ana@obs:~/shop$ tail -6 prometheus/prometheus.yml
   - job_name: prometheus

@@ -19,7 +19,6 @@ more make twenty-two, and then the report is run by hand:
 for i in $(seq 1 19); do checkout; done
 ```
 
-
 ```
 ana@obs:~/shop$ docker compose run --rm report 2>&1 | grep -v Container | jq -c '{message, orders, paid, trace_id}'
 {"message":"report written","orders":22,"paid":22,"trace_id":"2463827ff26f4bee6e7636585987181f"}

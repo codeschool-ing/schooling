@@ -11,7 +11,6 @@ Keep a copy of the one lesson 1 wrote, and then replace `~/shop/prometheus/rules
 cp prometheus/rules/shop.yml /tmp/shop.yml.orig
 ```
 
-
 ```yaml
 groups:
   - name: shop

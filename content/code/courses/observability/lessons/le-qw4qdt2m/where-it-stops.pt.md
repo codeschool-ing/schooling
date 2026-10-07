@@ -34,7 +34,6 @@ Guarde uma cópia antes, para devolvê-la depois:
 cp services/orders/app.py /tmp/orders.app.py
 ```
 
-
 ```
 ana@obs:~/shop$ grep -n 'propagate' services/orders/app.py
 15:from opentelemetry import propagate

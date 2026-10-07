@@ -12,7 +12,6 @@ este arquivo de regras tem os dois. Guarde uma cópia do que a aula 1 escreveu, 
 cp prometheus/rules/shop.yml /tmp/shop.yml.orig
 ```
 
-
 ```yaml
 groups:
   - name: shop

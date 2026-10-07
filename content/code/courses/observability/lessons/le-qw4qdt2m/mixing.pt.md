@@ -14,7 +14,6 @@ seção anterior:
 cp services/orders/app.py /tmp/orders.app.py
 ```
 
-
 ```
 ana@obs:~/shop$ sed -i 's/^    traceparent = request.headers.get("traceparent")/&\n    trace.get_current_span().set_attribute("shop.sku", body["sku"])/; s/^from opentelemetry import propagate/from opentelemetry import propagate, trace/' services/orders/app.py
 ana@obs:~/shop$ grep -n 'trace' services/orders/app.py | head -4

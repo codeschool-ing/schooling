@@ -12,7 +12,6 @@ torne-o executável; toda aula depois desta também o usa:
 chmod +x promq
 ```
 
-
 ```
 ana@obs:~/shop$ cat promq
 #!/bin/sh

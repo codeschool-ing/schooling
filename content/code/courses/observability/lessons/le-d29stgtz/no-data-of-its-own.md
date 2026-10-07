@@ -1,6 +1,6 @@
 ---
 title: A front end with no data of its own
-version: 1
+version: 2
 ---
 
 The common picture of Grafana is *the monitoring system*. **It stores none of the data it draws.**
@@ -9,7 +9,14 @@ how to ask. Prometheus holds the metrics, Loki the logs, Jaeger the traces, and 
 dashboards, the users and the list of where to ask. Losing Grafana loses the drawings, not a single
 data point.
 
-The lab's Grafana answers on port 3000:
+This lesson draws a shop under load, so start from a lab started again from nothing and set the
+simulated customers going for half an hour:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1800
+```
+
+Grafana answers on port 3000:
 
 ```
 ana@obs:~/shop$ curl -s localhost:3000/api/health | jq -c .
@@ -50,5 +57,5 @@ Prometheus	prometheus	prometheus	http://prometheus:9090
 **The `uid` is what everything else refers to**, and the file chose it on purpose. A dashboard that
 names its data source by a `uid` written in the file works the same on every Grafana that loaded the
 same file. One that names it by an id Grafana generated works only on the Grafana that generated it.
-The admin password comes from a file the lab wrote, `.grafana-password`, read by `$(cat ...)` so it
+The admin password comes from the file you wrote in lesson 1, `.grafana-password`, read by `$(cat ...)` so it
 never appears on the screen. The next section stops needing it at all.

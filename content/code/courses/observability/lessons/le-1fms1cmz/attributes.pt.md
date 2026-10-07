@@ -42,7 +42,6 @@ curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @
 docker compose logs --no-log-prefix storefront | grep 'checkout finished' | tail -1 | jq -r .trace_id
 ```
 
-
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/7649c3dfb988a9ca71e4bec16bfca43f | jq -c '.data[0].spans[] | select(.operationName == "POST /checkout") | .tags[] | {key, value}'
 {"key":"otel.scope.name","value":"storefront"}
