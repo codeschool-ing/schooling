@@ -1,6 +1,6 @@
 ---
 title: Animating something that appears
-version: 1
+version: 2
 ---
 
 Section 05 said `display` cannot be transitioned: there is no value between `none` and `block`. That used to make it impossible to fade in something that appears by changing its `display`, a toast, a dropdown, a dialog, and it is the case that matters most. Two recent features fix it:
@@ -34,7 +34,7 @@ Section 05 said `display` cannot be transitioned: there is no value between `non
 
 **`@starting-style`** says what an element's styles were **before it was displayed**. Without it, an element that goes from `display: none` to `block` has no previous style to transition from, so it just appears at its final opacity. With it, the browser transitions from `opacity: 0` to 1. **`transition-behavior: allow-discrete`**, written here as `display 400ms allow-discrete` inside the shorthand, lets `display` take part in the transition: on the way out it waits until the opacity has finished before switching to `none`, so the fade-out is seen too.
 
-The button toggles the class `open` with one line of JavaScript, which the `javascript` course explains. 200 ms after a click, with and without the `@starting-style` block:
+The button toggles the class `open` with one line of JavaScript, which the `javascript` course explains. 200 ms after a click, with the `@starting-style` block and then in `nostart.html`, a copy with that whole block deleted:
 
 ```
 ana@laptop:~/site$ probe starting.html click button at 200 style .toast display,opacity

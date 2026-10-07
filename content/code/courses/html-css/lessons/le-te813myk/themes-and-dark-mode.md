@@ -1,9 +1,9 @@
 ---
 title: Themes, and the reader's dark mode
-version: 1
+version: 2
 ---
 
-Because a variable can be redefined, a whole colour scheme can be swapped by redefining a handful of them. That is how **dark mode** is built. The reader sets a preference in their operating system, and the media feature **`prefers-color-scheme`** lets a stylesheet answer it:
+Because a variable can be redefined, a whole colour scheme can be swapped by redefining a handful of them. That is how **dark mode** is built. The reader sets a preference in their operating system, and the media feature **`prefers-color-scheme`** lets a stylesheet answer it. Here is `theme.css`:
 
 ```css
 :root {
@@ -27,7 +27,28 @@ body {
 a { color: var(--color-accent); }
 ```
 
-Every rule in the page uses `--color-page`, `--color-text` and `--color-accent`, and none of them mentions a colour. One `@media` block redefines the three on `:root` when the reader prefers dark. `probe --dark` starts Chromium with its scheme set to dark, as the reader's system setting would:
+Every rule in the page uses `--color-page`, `--color-text` and `--color-accent`, and none of them mentions a colour. One `@media` block redefines the three on `:root` when the reader prefers dark. `probe --dark` starts Chromium with its scheme set to dark, as the reader's system setting would.
+
+The page, `theme.html`, says in its head that it can be drawn either way, with `<meta name="color-scheme">`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark">
+    <title>Themes · Andorinha Books</title>
+    <link rel="stylesheet" href="theme.css">
+  </head>
+  <body>
+    <main>
+      <h1>Events</h1>
+      <p>Everything here is free unless it says otherwise.</p>
+      <a href="swap.html">How the swap works</a>
+    </main>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe theme.html style body background-color,color style a color axe

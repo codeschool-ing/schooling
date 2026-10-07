@@ -73,6 +73,6 @@ package.json
 
 ## How a page reaches your screen
 
-Every page a lesson measures is shown whole in the section that measures it, or is described as a change to a page shown before it: "the same file with its first line deleted". **Type or paste it into a new file in your editor, save it in `site` under the name the section gives, and double-click it.** It opens in your browser. When you change the file, save it and reload the tab, because the browser shows the file as it was when it last read it.
+Every page a lesson measures is shown whole in the section that measures it, or is described as a change to a page shown before it: "the same file with its first line deleted". **Type or paste it into a new file in your editor, save it in `site` under the name the section gives, and double-click it.** It opens in your browser. When you change the file, save it and reload the tab, because the browser shows the file as it was when it last read it. A few names, such as `order.html` and `fixed.html`, come back in a later lesson as a different page; save the new one over the old.
 
 To see what the browser did with the page, right-click on any element and choose **Inspect**. The panel that opens is DevTools, from `web-fundamentals` lesson 11, and it is where you check every number the lessons quote.

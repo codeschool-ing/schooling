@@ -1,13 +1,40 @@
 ---
 title: Duas coisas que um transform também faz
-version: 1
+version: 2
 ---
 
 Um transform faz mais duas coisas que surpreendem as pessoas, e a aula 7 apontou para as duas.
 
 ## Vira o bloco de contenção dos descendentes fixos
 
-A seção 06 da aula 7 disse que um elemento `position: fixed` é posicionado em relação à janela. **A não ser que um ancestral tenha um transform**: aí esse ancestral vira o bloco de contenção, e o elemento "fixo" se move com ele. Aqui estão dois avisos idênticos, `position: fixed; bottom: 16px; right: 16px`, um na página e um dentro de um painel com `transform: translateX(0)`, um transform que não move nada:
+A seção 06 da aula 7 disse que um elemento `position: fixed` é posicionado em relação à janela. **A não ser que um ancestral tenha um transform**: aí esse ancestral vira o bloco de contenção, e o elemento "fixo" se move com ele. Aqui estão dois avisos idênticos, `position: fixed; bottom: 16px; right: 16px`, um na página e um dentro de um painel com `transform: translateX(0)`, um transform que não move nada. A página é o `fixed.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 0; }
+      .page { height: 2000px; }
+      .panel { transform: translateX(0); height: 300px; }
+      .toast { position: fixed; bottom: 16px; right: 16px; width: 200px; height: 40px; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <p class="toast outside">Saved</p>
+      <div class="panel">
+        <p class="toast inside">Saved</p>
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+Medidos antes e depois de rolar 600:
 
 ```
 ana@laptop:~/site$ probe fixed.html box .toast scroll 600 box .toast
@@ -21,7 +48,34 @@ Antes da rolagem, o aviso de fora está em y **696**, no pé da janela, e o de d
 
 ## Cria um contexto de empilhamento
 
-A seção 08 da aula 7 mostrou que um contexto de empilhamento prende o `z-index` de tudo dentro dele. Um transform cria um. Um cartão tem um menu com `z-index: 100`, e o cartão seguinte tem `z-index: 1`. Com o primeiro cartão levantado por um `translateY` de 4 pixels, e sem:
+A seção 08 da aula 7 mostrou que um contexto de empilhamento prende o `z-index` de tudo dentro dele. Um transform cria um. Um cartão tem um menu com `z-index: 100`, e o cartão seguinte tem `z-index: 1`. Aqui estão eles no `stack.html`, com o primeiro cartão levantado por um `translateY` de 4 pixels:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 0; }
+      .card { position: relative; width: 300px; height: 120px; background: #f4f1ea; }
+      .lifted { transform: translateY(-4px); }
+      .menu { position: absolute; top: 80px; left: 20px; z-index: 100; width: 200px; height: 100px; background: #ffffff; }
+      .next { position: relative; z-index: 1; width: 300px; height: 120px; background: #e6dfd0; }
+    </style>
+  </head>
+  <body>
+    <div class="card lifted">
+      <p>Poetry reading</p>
+      <div class="menu">Share · Save · Report</div>
+    </div>
+    <div class="next">Book swap</div>
+  </body>
+</html>
+```
+
+O `flat.html` é uma cópia com o `lifted` retirado do `class` do primeiro cartão. Com o levantamento, e sem:
 
 ```
 ana@laptop:~/site$ probe stack.html top 100 140

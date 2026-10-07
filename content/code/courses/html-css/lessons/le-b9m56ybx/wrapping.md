@@ -1,6 +1,6 @@
 ---
 title: When the items do not fit: wrapping
-version: 1
+version: 2
 ---
 
 By default a flex container keeps all its items on **one line**, however many there are, and shrinks them to fit if it can. That is right for a menu of four links and wrong for a grid of thirty book covers, which should flow onto as many lines as they need. **`flex-wrap: wrap`** lets them:
@@ -31,7 +31,7 @@ By default a flex container keeps all its items on **one line**, however many th
 </html>
 ```
 
-Eight covers 120 pixels wide, with 16 pixels between them, on a window 1024 wide and then on one 390 wide:
+Any small picture saved as `cover.png` serves for the covers, since the attributes fix their size. Eight covers 120 pixels wide, with 16 pixels between them, on a window 1024 wide and then on one 390 wide:
 
 ```
 ana@laptop:~/site$ probe covers.html box img

@@ -3,7 +3,7 @@ title: Mobile first: the narrow layout is the default
 version: 2
 ---
 
-**Mobile first** is an order for writing CSS: the rules outside any media query are the layout for the **narrowest** screen, and each media query adds to it for screens that have more room. Here is the bookshop's menu written that way:
+**Mobile first** is an order for writing CSS: the rules outside any media query are the layout for the **narrowest** screen, and each media query adds to it for screens that have more room. Here is the bookshop's menu written that way, in `first.css`:
 
 ```css
 *, *::before, *::after { box-sizing: border-box; }
@@ -19,7 +19,30 @@ body { margin: 0; font-family: system-ui, sans-serif; }
 }
 ```
 
-Outside the query, each link is a block with padding: one per line, the whole width of the screen, easy to hit with a thumb. The media query, which section 03 takes apart, says "from 40rem wide upwards", and only there does the list become a flex row:
+Outside the query, each link is a block with padding: one per line, the whole width of the screen, easy to hit with a thumb. The media query, which section 03 takes apart, says "from 40rem wide upwards", and only there does the list become a flex row.
+
+The page that links it, `first.html`, is the menu and nothing else:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="first.css">
+  </head>
+  <body>
+    <nav aria-label="Main">
+      <ul class="menu">
+        <li><a href="events.html">Events</a></li>
+        <li><a href="order.html">Order a book</a></li>
+        <li><a href="hours.html">Opening hours</a></li>
+      </ul>
+    </nav>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe --width 390 first.html box ".menu a"

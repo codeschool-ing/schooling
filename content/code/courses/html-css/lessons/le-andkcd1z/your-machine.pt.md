@@ -73,6 +73,6 @@ package.json
 
 ## Como uma página chega à sua tela
 
-Toda página que uma aula mede aparece inteira na seção que a mede, ou é descrita como uma mudança numa página mostrada antes: "o mesmo arquivo sem a primeira linha". **Digite ou cole a página num arquivo novo no seu editor, salve-a em `site` com o nome que a seção dá e dê um clique duplo nela.** Ela abre no seu navegador. Quando você mudar o arquivo, salve e recarregue a aba, porque o navegador mostra o arquivo como estava da última vez que o leu.
+Toda página que uma aula mede aparece inteira na seção que a mede, ou é descrita como uma mudança numa página mostrada antes: "o mesmo arquivo sem a primeira linha". **Digite ou cole a página num arquivo novo no seu editor, salve-a em `site` com o nome que a seção dá e dê um clique duplo nela.** Ela abre no seu navegador. Quando você mudar o arquivo, salve e recarregue a aba, porque o navegador mostra o arquivo como estava da última vez que o leu. Alguns nomes, como `order.html` e `fixed.html`, voltam numa aula posterior como outra página; salve a nova por cima da antiga.
 
 Para ver o que o navegador fez com a página, clique com o botão direito em qualquer elemento e escolha **Inspecionar**. O painel que se abre é o DevTools, da aula 11 de `web-fundamentals`, e é nele que você confere cada número que as aulas citam.

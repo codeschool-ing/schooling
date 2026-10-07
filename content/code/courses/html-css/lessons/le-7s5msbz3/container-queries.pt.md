@@ -1,9 +1,9 @@
 ---
 title: Container queries: um componente que mede o próprio espaço
-version: 1
+version: 2
 ---
 
-Uma media query pergunta sobre a **janela**. Um componente muitas vezes precisa perguntar outra coisa: quanto espaço **ele** recebeu? O mesmo cartão de evento pode estar na coluna principal, larga, ou numa barra lateral estreita, na mesma página, na mesma largura de janela. Uma media query não distingue os dois. Uma **container query** distingue:
+Uma media query pergunta sobre a **janela**. Um componente muitas vezes precisa perguntar outra coisa: quanto espaço **ele** recebeu? O mesmo cartão de evento pode estar na coluna principal, larga, ou numa barra lateral estreita, na mesma página, na mesma largura de janela. Uma media query não distingue os dois. Uma **container query** distingue. Aqui está uma, em `container.css`:
 
 ```css
 *, *::before, *::after { box-sizing: border-box; }
@@ -29,7 +29,46 @@ body {
 }
 ```
 
-Dois passos. **`container-type: inline-size`** num elemento faz dele um **contêiner de consulta**: os descendentes podem perguntar a largura dele. Depois, **`@container (width >= 28rem)`** funciona como uma media query, só que `width` é a largura do contêiner ancestral mais próximo, aqui o `.slot` em volta de cada cartão. O cartão é uma coluna só por padrão, e põe a data ao lado do texto quando o contêiner tem pelo menos 28rem de largura:
+Dois passos. **`container-type: inline-size`** num elemento faz dele um **contêiner de consulta**: os descendentes podem perguntar a largura dele. Depois, **`@container (width >= 28rem)`** funciona como uma media query, só que `width` é a largura do contêiner ancestral mais próximo, aqui o `.slot` em volta de cada cartão. O cartão é uma coluna só por padrão, e põe a data ao lado do texto quando o contêiner tem pelo menos 28rem de largura.
+
+A página, `container.html`, põe um cartão no `main` e outro no `aside`, cada um no seu `.slot`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="container.css">
+  </head>
+  <body>
+    <main>
+      <h1>This week</h1>
+      <div class="slot">
+        <article class="event-card">
+          <p class="event-card__date">Thu 9</p>
+          <div class="event-card__body">
+            <h2 class="event-card__title">Poetry reading</h2>
+            <p>Five poets read from their first books. Free, and there is tea.</p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <aside>
+      <div class="slot">
+        <article class="event-card">
+          <p class="event-card__date">Sat 11</p>
+          <div class="event-card__body">
+            <h2 class="event-card__title">Bookbinding</h2>
+            <p>Bind a notebook by hand. Places for twelve.</p>
+          </div>
+        </article>
+      </div>
+    </aside>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe container.html box .slot box .event-card__date box .event-card__body style .event-card__title font-size

@@ -1,6 +1,6 @@
 ---
 title: Quando os itens não cabem: quebra de linha
-version: 1
+version: 2
 ---
 
 Por padrão um contêiner flex mantém todos os itens numa **linha só**, quantos forem, e os encolhe para caber se puder. Isso está certo para um menu de quatro links e errado para uma grade de trinta capas de livro, que deviam correr por quantas linhas precisarem. **`flex-wrap: wrap`** deixa:
@@ -31,7 +31,7 @@ Por padrão um contêiner flex mantém todos os itens numa **linha só**, quanto
 </html>
 ```
 
-Oito capas de 120 pixels de largura, com 16 pixels entre elas, numa janela de 1024 de largura e depois numa de 390:
+Qualquer imagem pequena salva como `cover.png` serve para as capas, já que os atributos fixam o tamanho delas. Oito capas de 120 pixels de largura, com 16 pixels entre elas, numa janela de 1024 de largura e depois numa de 390:
 
 ```
 ana@laptop:~/site$ probe covers.html box img
