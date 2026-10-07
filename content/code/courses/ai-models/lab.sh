@@ -42,6 +42,7 @@ set -euo pipefail
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 L1=$HERE/lessons/le-gwptbb4h
+L2=$HERE/lessons/le-jpys8tc0
 AUTHOR=/opt/aimodels-author
 SHARE=/opt/aimodels-author/share
 TZ_LAB=America/Sao_Paulo
@@ -85,6 +86,13 @@ build_desk() {
   x $L1/desk.md json 1 | runuser -u ana -- tee $DESK/cases/triage.jsonl >/dev/null
   x $L1/desk.md sh 1 | runuser -u ana -- tee $DESK/desk.env >/dev/null
   x $L1/desk.md after '`check.py` sends' | runuser -u ana -- tee $DESK/check.py >/dev/null
+  # lesson 2 adds sheet.py, which every later lesson uses; its sheet is fetched
+  # once into the author's share and copied, as the program's first run would
+  x $L2/cost.md python 1 | runuser -u ana -- tee $DESK/sheet.py >/dev/null
+  local sheet=litellm-21881c57.json
+  [ -f $SHARE/$sheet ] || curl -fsSL -o $SHARE/$sheet \
+    https://raw.githubusercontent.com/BerriAI/litellm/21881c571181fc0e409dd717b8a277e5b43152a7/model_prices_and_context_window.json
+  install -o ana -m 0644 $SHARE/$sheet $DESK/$sheet
   runuser -u ana -- python3 -m venv $DESK/.venv
   # the pip line, exactly as the section's transcript has ana type it
   local pip; pip=$(grep -m1 '^ana@desk:~/desk\$ pip install ' $L1/desk.md | sed 's/^ana@desk:~\/desk\$ //')
