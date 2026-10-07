@@ -9,11 +9,11 @@ depois que elas acontecem. Toda vez, o remédio foi uma recarga completa à mão
 mesmo:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-18
+ana@vm:~/etl$ sudo shop until 2026-03-18
 ana@vm:~/etl$ python load_raw.py >/dev/null
 ana@vm:~/etl/shop$ dbt build --quiet 2>&1 | grep -E "FAIL|Got"
-06:56:25  14 of 14 FAIL 8 fact_sales_has_not_drifted ..................................... [FAIL 8 in 0.05s]
-06:56:25    Got 8 results, configured to fail if != 0
+08:51:47  13 of 14 FAIL 8 fact_sales_has_not_drifted ..................................... [FAIL 8 in 0.06s]
+08:51:47    Got 8 results, configured to fail if != 0
 ana@vm:~/etl$ cat shop/models/marts/fact_sales.sql
 -- One row per order line sold. Each run replaces the last thirty days the table
 -- already has, and every day after them: the shop changes a sale for weeks after
@@ -27,9 +27,9 @@ select order_date, order_id, line_no, shop_id, customer_id, book_id, quantity, l
  where order_date >= (select max(order_date) - 30 from {{ this }})
 {% endif %}
 ana@vm:~/etl/shop$ dbt build -s fact_sales+ 2>&1 | grep -E " OK | PASS | FAIL |Done"
-06:56:28  1 of 2 OK created sql incremental model dbt_marts.fact_sales ................... [INSERT 0 13475 in 0.19s]
-06:56:28  2 of 2 PASS fact_sales_has_not_drifted ......................................... [PASS in 0.06s]
-06:56:28  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
+08:51:51  1 of 2 OK created sql incremental model dbt_marts.fact_sales ................... [INSERT 0 13475 in 0.21s]
+08:51:51  2 of 2 PASS fact_sales_has_not_drifted ......................................... [PASS in 0.07s]
+08:51:51  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
 ```
 
 Oito dias derivaram. O `where` do modelo é o problema: uma execução incremental que troca só o dia
@@ -40,13 +40,12 @@ edição, e a primeira execução dele. O `INSERT 0 13475` é um mês de
 linhas apagado e escrito de novo, e o teste de deriva passa sem recarga completa. Três dias depois:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-21
+ana@vm:~/etl$ sudo shop until 2026-03-21
 ana@vm:~/etl$ python load_raw.py >/dev/null
 ana@vm:~/etl/shop$ dbt build -s fact_sales+ 2>&1 | grep -E " OK | PASS | FAIL |Done"
-06:56:33  1 of 2 OK created sql incremental model dbt_marts.fact_sales ................... [INSERT 0 14895 in 0.21s]
-06:56:33  2 of 2 PASS fact_sales_has_not_drifted ......................................... [PASS in 0.07s]
-06:56:33  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
-done
+08:51:55  1 of 2 OK created sql incremental model dbt_marts.fact_sales ................... [INSERT 0 14895 in 0.21s]
+08:51:55  2 of 2 PASS fact_sales_has_not_drifted ......................................... [PASS in 0.07s]
+08:51:55  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
 ```
 
 Continua passando. **Reprocessar uma janela é a forma apagar-e-inserir aplicada a mais de uma

@@ -16,23 +16,22 @@ beside `Poetry`.
 ana@vm:~/etl$ rm -rf prod-state && cp -r shop/target prod-state
 ana@vm:~/etl$ sed -i 's/select book_id, isbn, title, category, publisher, list_price_cents/select book_id, isbn, title, initcap(category) as category, publisher, list_price_cents/' shop/models/staging/stg_books.sql
 ana@vm:~/etl/shop$ dbt ls -s state:modified --state ../prod-state
-06:49:16  Running with dbt=1.12.5
-06:49:16  Registered adapter: postgres=1.11.0
-06:49:17  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
+08:51:12  Running with dbt=1.12.5
+08:51:13  Registered adapter: postgres=1.11.0
+08:51:14  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
 shop.staging.stg_books
 ana@vm:~/etl/shop$ dbt ls -s state:modified+ --state ../prod-state --resource-type model --resource-type exposure
-06:49:19  Running with dbt=1.12.5
-06:49:19  Registered adapter: postgres=1.11.0
-06:49:20  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
+08:51:16  Running with dbt=1.12.5
+08:51:16  Registered adapter: postgres=1.11.0
+08:51:16  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
 exposure:shop.morning_report
 shop.marts.daily_sales
 shop.staging.stg_books
 ana@vm:~/etl/shop$ dbt build -s state:modified+ --state ../prod-state 2>&1 | grep -E " OK | PASS | FAIL | WARN |Done"
-06:49:23  1 of 4 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.10s]
-06:49:23  2 of 4 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6837 in 0.11s]
-06:49:23  4 of 4 PASS not_null_daily_sales_order_date .................................... [PASS in 0.05s]
-06:49:23  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=1 REUSED=0 TOTAL=4
-done
+08:51:19  1 of 4 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.13s]
+08:51:20  2 of 4 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6837 in 0.13s]
+08:51:20  4 of 4 PASS not_null_daily_sales_order_date .................................... [PASS in 0.05s]
+08:51:20  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=1 REUSED=0 TOTAL=4
 ```
 
 `state:modified` is the models whose definition differs from the saved manifest: only

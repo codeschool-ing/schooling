@@ -56,28 +56,28 @@ select order_date, order_id, line_no, shop_id, customer_id, book_id, quantity, l
 
 ```
 ana@vm:~/etl/shop$ dbt run
-06:27:03  Running with dbt=1.12.5
-06:27:03  Registered adapter: postgres=1.11.0
-06:27:04  Found 6 models, 3 sources, 477 macros
-06:27:04  
-06:27:04  Concurrency: 4 threads (target='dev')
-06:27:04  
-06:27:04  3 of 5 START sql view model dbt_staging.stg_orders ............................. [RUN]
-06:27:04  2 of 5 START sql view model dbt_staging.stg_order_lines ........................ [RUN]
-06:27:04  1 of 5 START sql view model dbt_staging.stg_books .............................. [RUN]
-06:27:04  3 of 5 OK created sql view model dbt_staging.stg_orders ........................ [CREATE VIEW in 0.18s]
-06:27:04  2 of 5 OK created sql view model dbt_staging.stg_order_lines ................... [CREATE VIEW in 0.18s]
-06:27:04  1 of 5 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.17s]
-06:27:04  4 of 5 START sql table model dbt_marts.daily_sales ............................. [RUN]
-06:27:04  5 of 5 START sql incremental model dbt_marts.fact_sales ........................ [RUN]
-06:27:04  5 of 5 OK created sql incremental model dbt_marts.fact_sales ................... [SELECT 29947 in 0.13s]
-06:27:04  4 of 5 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6195 in 0.14s]
-06:27:04  
-06:27:04  Finished running 1 incremental model, 1 table model, 3 view models in 0 hours 0 minutes and 0.43 seconds (0.43s).
-06:27:04  
-06:27:04  Completed successfully
-06:27:04  
-06:27:04  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=5
+08:48:23  Running with dbt=1.12.5
+08:48:23  Registered adapter: postgres=1.11.0
+08:48:24  Found 6 models, 3 sources, 477 macros
+08:48:24  
+08:48:24  Concurrency: 4 threads (target='dev')
+08:48:24  
+08:48:24  3 of 5 START sql view model dbt_staging.stg_orders ............................. [RUN]
+08:48:24  2 of 5 START sql view model dbt_staging.stg_order_lines ........................ [RUN]
+08:48:24  1 of 5 START sql view model dbt_staging.stg_books .............................. [RUN]
+08:48:24  1 of 5 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.21s]
+08:48:24  2 of 5 OK created sql view model dbt_staging.stg_order_lines ................... [CREATE VIEW in 0.22s]
+08:48:24  3 of 5 OK created sql view model dbt_staging.stg_orders ........................ [CREATE VIEW in 0.23s]
+08:48:24  4 of 5 START sql table model dbt_marts.daily_sales ............................. [RUN]
+08:48:24  5 of 5 START sql incremental model dbt_marts.fact_sales ........................ [RUN]
+08:48:24  5 of 5 OK created sql incremental model dbt_marts.fact_sales ................... [SELECT 29947 in 0.13s]
+08:48:24  4 of 5 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6195 in 0.16s]
+08:48:24  
+08:48:24  Finished running 1 incremental model, 1 table model, 3 view models in 0 hours 0 minutes and 0.50 seconds (0.50s).
+08:48:24  
+08:48:24  Completed successfully
+08:48:24  
+08:48:24  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=5
 ```
 
 Five models in the run, though the project has six: `int_sales` is not in the list, because there

@@ -24,25 +24,25 @@ build` runs it there. Today it passes. Then four more days of the shop arrive:
 
 ```
 ana@vm:~/etl/shop$ dbt build 2>&1 | grep -E "drift|Done"
-06:31:20  12 of 12 START test fact_sales_has_not_drifted ................................. [RUN]
-06:31:20  12 of 12 PASS fact_sales_has_not_drifted ....................................... [PASS in 0.04s]
-06:31:20  Done. PASS=11 WARN=1 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=12
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-14
+08:49:03  12 of 12 START test fact_sales_has_not_drifted ................................. [RUN]
+08:49:03  12 of 12 PASS fact_sales_has_not_drifted ....................................... [PASS in 0.05s]
+08:49:03  Done. PASS=11 WARN=1 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=12
+ana@vm:~/etl$ sudo shop until 2026-03-14
 ana@vm:~/etl$ python load_raw.py >/dev/null
 ana@vm:~/etl/shop$ dbt build 2>&1 | grep -E "fact_sales|drift|Done"
-06:31:25  11 of 12 START sql incremental model dbt_marts.fact_sales ...................... [RUN]
-06:31:25  11 of 12 OK created sql incremental model dbt_marts.fact_sales ................. [INSERT 0 2238 in 0.20s]
-06:31:25  12 of 12 START test fact_sales_has_not_drifted ................................. [RUN]
-06:31:25  12 of 12 FAIL 11 fact_sales_has_not_drifted .................................... [FAIL 11 in 0.04s]
-06:31:25  [ERROR]: in test fact_sales_has_not_drifted (tests/fact_sales_has_not_drifted.sql)
-06:31:25    compiled code at target/compiled/shop/tests/fact_sales_has_not_drifted.sql
-06:31:25  Done. PASS=10 WARN=1 ERROR=1 SKIP=0 NO-OP=0 REUSED=0 TOTAL=12
+08:49:08  11 of 12 START sql incremental model dbt_marts.fact_sales ...................... [RUN]
+08:49:08  11 of 12 OK created sql incremental model dbt_marts.fact_sales ................. [INSERT 0 2238 in 0.20s]
+08:49:08  12 of 12 START test fact_sales_has_not_drifted ................................. [RUN]
+08:49:08  12 of 12 FAIL 11 fact_sales_has_not_drifted .................................... [FAIL 11 in 0.07s]
+08:49:09  [ERROR]: in test fact_sales_has_not_drifted (tests/fact_sales_has_not_drifted.sql)
+08:49:09    compiled code at target/compiled/shop/tests/fact_sales_has_not_drifted.sql
+08:49:09  Done. PASS=10 WARN=1 ERROR=1 SKIP=0 NO-OP=0 REUSED=0 TOTAL=12
 ana@vm:~/etl/shop$ dbt build -s fact_sales+ --full-refresh 2>&1 | grep -E "fact_sales|drift|Done"
-06:31:28  1 of 2 START sql incremental model dbt_marts.fact_sales ........................ [RUN]
-06:31:28  1 of 2 OK created sql incremental model dbt_marts.fact_sales ................... [SELECT 32139 in 0.21s]
-06:31:28  2 of 2 START test fact_sales_has_not_drifted ................................... [RUN]
-06:31:28  2 of 2 PASS fact_sales_has_not_drifted ......................................... [PASS in 0.07s]
-06:31:28  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
+08:49:12  1 of 2 START sql incremental model dbt_marts.fact_sales ........................ [RUN]
+08:49:12  1 of 2 OK created sql incremental model dbt_marts.fact_sales ................... [SELECT 32139 in 0.21s]
+08:49:12  2 of 2 START test fact_sales_has_not_drifted ................................... [RUN]
+08:49:12  2 of 2 PASS fact_sales_has_not_drifted ......................................... [PASS in 0.09s]
+08:49:12  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
 ```
 
 The nightly build added four days to `fact_sales` and then **failed, because eleven older days no

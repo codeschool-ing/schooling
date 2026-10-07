@@ -17,20 +17,19 @@ in a DAG with many tasks: clearing the whole run would redo work that was fine.
 ana@vm:~/etl$ airflow tasks clear prices_daily -t fetch -s 2026-03-10T03:00:00-03:00 -e 2026-03-10T03:00:00-03:00 --only-failed -y 2>&1 | tail -n 3 | cut -c1-118
 ana@vm:~/etl$ airflow dags list-runs prices_daily -o plain | cut -c1-118
 dag_id        run_id                                    state    run_after                         logical_date       
-prices_daily  manual__2026-10-07T06:09:51.640565+00:00  success  2026-10-07T06:09:51.640565+00:00  2026-03-10T06:00:00
+prices_daily  manual__2026-10-07T08:41:45.770719+00:00  success  2026-10-07T08:41:45.770719+00:00  2026-03-10T06:00:00
 prices_daily  scheduled__2026-10-07T06:00:00+00:00      success  2026-10-07T06:00:00+00:00         2026-10-07T06:00:00
 ana@vm:~/etl$ RUN=$(airflow dags list-runs prices_daily -o plain | grep -o "manual__[^ ]*"); sh tries.sh prices_daily $RUN fetch
-try 1 failed 06:09:52 to 06:09:52
-try 2 failed 06:10:15 to 06:10:15
-try 3 failed 06:11:06 to 06:11:06
-try 4 failed 06:12:41 to 06:12:41
-try 5 failed 06:15:37 to 06:15:37
-try 6 success 06:15:57 to 06:15:58
+try 1 failed 08:41:46 to 08:41:46
+try 2 failed 08:42:09 to 08:42:09
+try 3 failed 08:43:00 to 08:43:00
+try 4 failed 08:44:35 to 08:44:35
+try 5 failed 08:47:31 to 08:47:31
+try 6 success 08:47:51 to 08:47:52
 ana@vm:~/etl$ wc -l < landing/prices.jsonl; cat alerts.log
 932
-2026-10-07 03:11:53 LATE prices_daily run=manual__2026-10-07T06:09:51.640565+00:00 state=running
-2026-10-07 03:15:37 FAILED prices_daily.fetch run=manual__2026-10-07T06:09:51.640565+00:00 try=5 error=HTTPError('503 Server Error: Service Unavailable for url: http://127.0.0.1:8081/v1/prices?page_size=200')
-done
+2026-10-07 05:43:47 LATE prices_daily run=manual__2026-10-07T08:41:45.770719+00:00 state=running
+2026-10-07 05:47:31 FAILED prices_daily.fetch run=manual__2026-10-07T08:41:45.770719+00:00 try=5 error=HTTPError('503 Server Error: Service Unavailable for url: http://127.0.0.1:8081/v1/prices?page_size=200')
 ```
 
 With `-y` and nothing to ask, the command prints nothing. The run is `success` now, and it is still **the same run**: the same id, the same logical date,

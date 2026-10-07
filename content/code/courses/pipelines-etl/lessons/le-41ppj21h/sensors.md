@@ -14,7 +14,7 @@ metadata database:
 
 ```
 ana@vm:~/etl$ airflow connections add fs_inbox --conn-type fs --conn-extra '{"path": "/home/ana/etl/inbox"}'
-2026-10-07T05:21:32.889266Z [warning  ] ProvidersManager.hooks is deprecated. Use ProvidersManagerTaskRuntime.hooks from task-sdk instead. [py.warnings] category=DeprecatedImportWarning filename=/opt/etl/airflow/lib/python3.13/site-packages/airflow/cli/commands/connection_command.py lineno=240
+2026-10-07T08:34:14.523735Z [warning  ] ProvidersManager.hooks is deprecated. Use ProvidersManagerTaskRuntime.hooks from task-sdk instead. [py.warnings] category=DeprecatedImportWarning filename=/opt/etl/airflow/lib/python3.13/site-packages/airflow/cli/commands/connection_command.py lineno=240
 Successfully added `conn_id`=fs_inbox
 conn_id  | conn_type | host | login | port | extra                          
 =========+===========+======+=======+======+================================
@@ -58,14 +58,14 @@ later `sudo shop day 2026-03-08`, from a second terminal, plays the day, and the
 
 ```
 ana@vm:~/etl$ airflow dags test stock_file 2026-03-08 2>&1 | grep -oE "Poking for file [^ ]*|Success criteria met|[0-9]+ rows loaded|[A-Za-z]*(Error|NotFound): .*|state=[a-z]+, run_type=[a-z]+" | uniq -c
-      3 Poking for file /home/ana/etl/inbox/stock_2026-03-08.csv
+      2 Poking for file /home/ana/etl/inbox/stock_2026-03-08.csv
       1 Success criteria met
       1 Poking for file /home/ana/etl/inbox/stock_2026-03-08.csv
       1 1200 rows loaded
       1 state=success, run_type=manual
 ```
 
-Three pokes, five seconds apart, found nothing. Then the file was there, the sensor succeeded, and
+Two pokes, five seconds apart, found nothing. Then the file was there, the sensor succeeded, and
 the load ran: 1,200 rows. Nothing was scheduled at a lucky moment. **The DAG runs at 06:00 and the
 data arrives when it arrives**, and the sensor is what joins the two.
 

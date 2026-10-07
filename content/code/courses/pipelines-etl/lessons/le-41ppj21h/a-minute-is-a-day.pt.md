@@ -30,7 +30,7 @@ PSQL = "psql -q -v ON_ERROR_STOP=1 -d wh"
      catchup=False, max_active_runs=1)
 def shop_minute():
     play = BashOperator(task_id="play_a_day",
-                        bash_command="bash ~/lab/lab.sh until $(date -d \"$(cat /var/lib/etl-run/clock) + 1 day\" +%F) && cat /var/lib/etl-run/clock")
+                        bash_command="shop until $(date -d \"$(cat /var/lib/etl-run/clock) + 1 day\" +%F) && cat /var/lib/etl-run/clock")
     load = BashOperator(task_id="nightly",
                         bash_command="sh nightly.sh {{ ti.xcom_pull(task_ids='play_a_day') }} ",
                         cwd=ETL)
@@ -40,8 +40,9 @@ def shop_minute():
 shop_minute()
 ```
 
-A cada minuto, o próprio relógio do Airflow agenda uma execução. A execução pergunta ao laboratório
-até que dia a loja viveu, toca o próximo e o carrega com o `nightly.sh` da lição 7. **Um minuto do
+A cada minuto, o próprio relógio do Airflow agenda uma execução. A execução lê o arquivo do relógio para saber
+até que dia a loja viveu, toca o próximo com o `shop until`, que a `ana` pode rodar sem `sudo`, e o
+carrega com o `nightly.sh` da lição 7. **Um minuto do
 tempo da máquina é um dia do tempo da loja**, e quem marca o tempo é o agendador.
 
 A Ana tira a pausa e espera um pouco mais de três minutos:
@@ -61,10 +62,10 @@ shop_minute | False
 2026-03-13
 ana@vm:~/etl$ airflow dags list-runs shop_minute -o plain | cut -c1-118
 dag_id       run_id                                state    run_after                  logical_date               star
-shop_minute  scheduled__2026-10-07T05:25:00+00:00  success  2026-10-07T05:25:00+00:00  2026-10-07T05:25:00+00:00  2026
-shop_minute  scheduled__2026-10-07T05:24:00+00:00  success  2026-10-07T05:24:00+00:00  2026-10-07T05:24:00+00:00  2026
-shop_minute  scheduled__2026-10-07T05:23:00+00:00  success  2026-10-07T05:23:00+00:00  2026-10-07T05:23:00+00:00  2026
-shop_minute  scheduled__2026-10-07T05:22:00+00:00  success  2026-10-07T05:22:00+00:00  2026-10-07T05:22:00+00:00  2026
+shop_minute  scheduled__2026-10-07T08:38:00+00:00  success  2026-10-07T08:38:00+00:00  2026-10-07T08:38:00+00:00  2026
+shop_minute  scheduled__2026-10-07T08:37:00+00:00  success  2026-10-07T08:37:00+00:00  2026-10-07T08:37:00+00:00  2026
+shop_minute  scheduled__2026-10-07T08:36:00+00:00  success  2026-10-07T08:36:00+00:00  2026-10-07T08:36:00+00:00  2026
+shop_minute  scheduled__2026-10-07T08:35:00+00:00  success  2026-10-07T08:35:00+00:00  2026-10-07T08:35:00+00:00  2026
 ana@vm:~/etl$ psql -d wh -c "SELECT order_date, count(*) FROM marts.fact_sales WHERE order_date > '2026-03-08' GROUP BY 1 ORDER BY 1"
  order_date | count 
 ------------+-------

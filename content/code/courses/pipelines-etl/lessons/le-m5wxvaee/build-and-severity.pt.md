@@ -30,10 +30,10 @@ ana@vm:~/etl/shop$ grep -n -A4 "not_null:" models/staging/schema.yml
 13-                severity: warn                  # 7 erased customers: known, and lawful
 14-      - name: status
 ana@vm:~/etl/shop$ dbt build 2>&1 | grep -E "WARN|FAIL|SKIP|ERROR|Done"
-06:31:16  5 of 11 WARN 7 not_null_stg_orders_customer_id ................................. [WARN 7 in 0.10s]
-06:31:16  [WARNING]: in test not_null_stg_orders_customer_id (models/staging/schema.yml)
-06:31:16  [WARNING]: Got 7 results, configured to warn if != 0
-06:31:16  Done. PASS=10 WARN=1 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=11
+08:48:59  6 of 11 WARN 7 not_null_stg_orders_customer_id ................................. [WARN 7 in 0.10s]
+08:48:59  [WARNING]: in test not_null_stg_orders_customer_id (models/staging/schema.yml)
+08:48:59  [WARNING]: Got 7 results, configured to warn if != 0
+08:48:59  Done. PASS=10 WARN=1 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=11
 ```
 
 `WARN 7`, tudo construído, `ERROR=0`. O aviso continua na saída de todo build, e vale a pena vigiar

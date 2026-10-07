@@ -20,9 +20,9 @@ de que ele depende*; depois, *tudo o que depende dele*:
 
 ```
 ana@vm:~/etl/shop$ dbt ls -s +daily_sales
-06:27:13  Running with dbt=1.12.5
-06:27:13  Registered adapter: postgres=1.11.0
-06:27:14  Found 6 models, 3 sources, 477 macros
+08:48:33  Running with dbt=1.12.5
+08:48:34  Registered adapter: postgres=1.11.0
+08:48:34  Found 6 models, 3 sources, 477 macros
 shop.marts.daily_sales
 shop.staging.int_sales
 shop.staging.stg_books
@@ -32,18 +32,17 @@ source:shop.raw.books
 source:shop.raw.order_lines
 source:shop.raw.orders
 ana@vm:~/etl/shop$ dbt ls -s stg_orders+ --resource-type model
-06:27:16  Running with dbt=1.12.5
-06:27:16  Registered adapter: postgres=1.11.0
-06:27:16  Found 6 models, 3 sources, 477 macros
+08:48:36  Running with dbt=1.12.5
+08:48:36  Registered adapter: postgres=1.11.0
+08:48:36  Found 6 models, 3 sources, 477 macros
 shop.marts.daily_sales
 shop.marts.fact_sales
 shop.staging.int_sales
 shop.staging.stg_orders
 ana@vm:~/etl/shop$ dbt run -s stg_books+ 2>&1 | grep -E " OK |ERROR"
-06:27:19  1 of 2 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.10s]
-06:27:19  2 of 2 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6285 in 0.10s]
-06:27:19  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
-done
+08:48:39  1 of 2 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.11s]
+08:48:39  2 of 2 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6285 in 0.10s]
+08:48:39  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
 ```
 
 O `+daily_sales` é o que o `daily_sales` precisa, fontes incluídas: a lista a refazer quando os

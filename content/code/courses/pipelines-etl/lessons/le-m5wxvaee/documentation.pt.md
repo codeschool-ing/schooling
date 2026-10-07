@@ -55,8 +55,8 @@ print("used by:   ", ", ".join(manifest["child_map"][model]))
 
 ```
 ana@vm:~/etl/shop$ dbt docs generate 2>&1 | tail -n 2
-06:31:32  Building catalog
-06:31:32  Catalog written to /home/ana/etl/shop/target/catalog.json
+08:49:16  Building catalog
+08:49:16  Catalog written to /home/ana/etl/shop/target/catalog.json
 ana@vm:~/etl/shop$ ls target
 catalog.json
 compiled

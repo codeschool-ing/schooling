@@ -62,9 +62,9 @@ ana@vm:~/etl$ prefect config set PREFECT_SERVER_ANALYTICS_ENABLED=false
 Set 'PREFECT_SERVER_ANALYTICS_ENABLED' to 'false'.
 Updated profile 'ephemeral'.
 ana@vm:~/etl$ /opt/etl/prefect/bin/python nightly_prefect.py 2026-03-15
-03:41:45.061 | INFO    | prefect - Starting temporary server on http://127.0.0.1:8147
+05:49:57.107 | INFO    | prefect - Starting temporary server on http://127.0.0.1:8146
 See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
-03:41:54.655 | INFO    | Flow run 'burgundy-jackrabbit' - Beginning flow run 'burgundy-jackrabbit' for flow 'nightly'
+05:50:07.106 | INFO    | Flow run 'fiery-sloth' - Beginning flow run 'fiery-sloth' for flow 'nightly'
 raw.shops: 7 rows
 raw.books: 1200 rows
 raw.customers: 5366 rows
@@ -73,12 +73,12 @@ raw.order_lines: 33047 rows
 raw.payments: 21128 rows
 raw.prices: 0 documents
 raw.events: 38837 documents
-03:41:55.273 | INFO    | Task run 'load_raw-626' - Finished in state Completed()
-03:41:58.636 | INFO    | Task run 'build_models-8ec' - Finished in state Completed()
-03:41:58.654 | INFO    | Task run 'daily_report-da6' - Finished in state Completed()
-03:41:58.655 | INFO    | Flow run 'burgundy-jackrabbit' - report written to reports/daily_2026-03-15.csv
-03:41:59.687 | INFO    | Flow run 'burgundy-jackrabbit' - Finished in state Completed()
-03:41:59.700 | INFO    | prefect - Stopping temporary server on http://127.0.0.1:8147
+05:50:07.636 | INFO    | Task run 'load_raw-851' - Finished in state Completed()
+05:50:10.976 | INFO    | Task run 'build_models-1e7' - Finished in state Completed()
+05:50:10.993 | INFO    | Task run 'daily_report-c31' - Finished in state Completed()
+05:50:10.994 | INFO    | Flow run 'fiery-sloth' - report written to reports/daily_2026-03-15.csv
+05:50:11.135 | INFO    | Flow run 'fiery-sloth' - Finished in state Completed()
+05:50:11.149 | INFO    | prefect - Stopping temporary server on http://127.0.0.1:8146
 ```
 
 O estado de cada task é registrado quando ela termina, com um nome que o Prefect inventou para a
@@ -87,12 +87,12 @@ flow, mesmo dia, de novo:
 
 ```
 ana@vm:~/etl$ /opt/etl/prefect/bin/python nightly_prefect.py 2026-03-15 2>&1 | grep -E "Task run|Flow run"
-03:42:07.274 | INFO    | Flow run 'voracious-pug' - Beginning flow run 'voracious-pug' for flow 'nightly'
-03:42:07.839 | INFO    | Task run 'load_raw-1ab' - Finished in state Completed()
-03:42:11.178 | INFO    | Task run 'build_models-a5d' - Finished in state Completed()
-03:42:11.196 | INFO    | Task run 'daily_report-7f1' - Finished in state Completed()
-03:42:11.197 | INFO    | Flow run 'voracious-pug' - report written to reports/daily_2026-03-15.csv
-03:42:11.303 | INFO    | Flow run 'voracious-pug' - Finished in state Completed()
+05:50:18.995 | INFO    | Flow run 'spry-coati' - Beginning flow run 'spry-coati' for flow 'nightly'
+05:50:19.520 | INFO    | Task run 'load_raw-64a' - Finished in state Completed()
+05:50:23.043 | INFO    | Task run 'build_models-6b4' - Finished in state Completed()
+05:50:23.059 | INFO    | Task run 'daily_report-195' - Finished in state Completed()
+05:50:23.060 | INFO    | Flow run 'spry-coati' - report written to reports/daily_2026-03-15.csv
+05:50:24.023 | INFO    | Flow run 'spry-coati' - Finished in state Completed()
 ```
 
 **Tudo rodou de novo.** O Prefect não pergunta se o trabalho de uma task já está lá; a execução de um

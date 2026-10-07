@@ -46,9 +46,9 @@ ana@vm:~/etl$ airflow dags list-runs prices_daily -o plain | cut -c1-118
 dag_id        run_id                                state    run_after                  logical_date               sta
 prices_daily  scheduled__2026-10-07T06:00:00+00:00  success  2026-10-07T06:00:00+00:00  2026-10-07T06:00:00+00:00  202
 ana@vm:~/etl$ sh tries.sh prices_daily $(airflow dags list-runs prices_daily -o plain | grep -o "scheduled__[^ ]*") fetch
-try 1 failed 06:08:39 to 06:08:43
-try 2 failed 06:09:01 to 06:09:01
-try 3 success 06:09:36 to 06:09:36
+try 1 failed 08:40:34 to 08:40:38
+try 2 failed 08:40:56 to 08:40:56
+try 3 success 08:41:31 to 08:41:31
 ana@vm:~/etl$ cat alerts.log
 cat: alerts.log: No such file or directory
 ```

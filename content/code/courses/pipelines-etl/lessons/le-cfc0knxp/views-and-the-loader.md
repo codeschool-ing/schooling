@@ -6,7 +6,7 @@ version: 1
 The next day of trade arrives, and Ana loads `raw` as she has every day since lesson 6:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-10
+ana@vm:~/etl$ sudo shop day 2026-03-10
 ana@vm:~/etl$ python load_raw.py
 raw.shops: 7 rows
 Traceback (most recent call last):

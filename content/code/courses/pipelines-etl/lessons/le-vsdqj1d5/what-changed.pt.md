@@ -34,7 +34,7 @@ Um dia novo da loja mexe no arquivo de relógio, e a cadeia inteira fica desatua
 baixo:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-16
+ana@vm:~/etl$ sudo shop day 2026-03-16
 ana@vm:~/etl$ make -n
 mkdir -p .made
 python load_raw.py > /dev/null

@@ -18,7 +18,7 @@ shop_nightly | True
                         
 ana@vm:~/etl$ airflow dags list-runs shop_nightly -o plain
 dag_id        run_id                                state    run_after                  logical_date               start_date                        end_date
-shop_nightly  scheduled__2026-10-07T05:00:00+00:00  success  2026-10-07T05:00:00+00:00  2026-10-07T05:00:00+00:00  2026-10-07T05:17:06.862828+00:00  2026-10-07T05:17:15.159934+00:00
+shop_nightly  scheduled__2026-10-07T05:00:00+00:00  success  2026-10-07T05:00:00+00:00  2026-10-07T05:00:00+00:00  2026-10-07T08:29:41.460931+00:00  2026-10-07T08:29:49.704652+00:00
 ana@vm:~/etl$ psql -d wh -c "SELECT order_date, count(*) FROM marts.fact_sales GROUP BY 1 ORDER BY 1"
  order_date | count 
 ------------+-------

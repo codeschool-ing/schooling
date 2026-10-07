@@ -57,8 +57,8 @@ everything, giving the report its day:
 ```
 ana@vm:~/etl$ mkdir -p ~/dagster && printf "telemetry:\n  enabled: false\n" > ~/dagster/dagster.yaml
 ana@vm:~/etl$ export DAGSTER_HOME=~/dagster; dagster asset materialize -m nightly_dagster --select "*" --config-json "{\"ops\": {\"daily_report\": {\"config\": {\"day\": \"2026-03-15\"}}}}" 2>&1 | grep -oE "(STEP_SUCCESS|STEP_FAILURE|RUN_SUCCESS|RUN_FAILURE) - .*"
-STEP_SUCCESS - Finished execution of step "raw_tables" in 559ms.
-STEP_SUCCESS - Finished execution of step "dbt_models" in 3.43s.
+STEP_SUCCESS - Finished execution of step "raw_tables" in 641ms.
+STEP_SUCCESS - Finished execution of step "dbt_models" in 3.45s.
 STEP_SUCCESS - Finished execution of step "daily_report" in 70ms.
 RUN_SUCCESS - Finished execution of run for "__ASSET_JOB".
 ```
@@ -81,10 +81,9 @@ for name in ["raw_tables", "dbt_models", "daily_report"]:
     meta = event.asset_materialization.metadata
     print(f"{name:<13}{when}  " + "  ".join(f"{k}={v.value}" for k, v in meta.items()))
 ana@vm:~/etl$ DAGSTER_HOME=~/dagster /opt/etl/dagster/bin/python latest.py
-raw_tables   03:42:15  
-dbt_models   03:42:20  
-daily_report 03:42:22  path=reports/daily_2026-03-15.csv  rows=86
-done
+raw_tables   05:50:28  
+dbt_models   05:50:33  
+daily_report 05:50:35  path=reports/daily_2026-03-15.csv  rows=86
 ```
 
 The answer is the state of the data, not of a run: when each thing was last made, and what it said

@@ -5,27 +5,27 @@ version: 1
 
 ```
 ana@vm:~/etl/shop$ dbt run
-06:26:58  Running with dbt=1.12.5
-06:26:59  Registered adapter: postgres=1.11.0
-06:26:59  Unable to do partial parsing because saved manifest not found. Starting full parse.
-06:27:00  Found 4 models, 3 sources, 477 macros
-06:27:00  
-06:27:00  Concurrency: 4 threads (target='dev')
-06:27:00  
-06:27:00  2 of 4 START sql view model dbt_staging.stg_order_lines ........................ [RUN]
-06:27:00  3 of 4 START sql view model dbt_staging.stg_orders ............................. [RUN]
-06:27:00  1 of 4 START sql view model dbt_staging.stg_books .............................. [RUN]
-06:27:00  1 of 4 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.16s]
-06:27:00  2 of 4 OK created sql view model dbt_staging.stg_order_lines ................... [CREATE VIEW in 0.17s]
-06:27:00  3 of 4 OK created sql view model dbt_staging.stg_orders ........................ [CREATE VIEW in 0.18s]
-06:27:00  4 of 4 START sql table model dbt_marts.daily_sales ............................. [RUN]
-06:27:00  4 of 4 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6195 in 0.09s]
-06:27:00  
-06:27:00  Finished running 1 table model, 3 view models in 0 hours 0 minutes and 0.38 seconds (0.38s).
-06:27:00  
-06:27:00  Completed successfully
-06:27:00  
-06:27:00  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4
+08:48:19  Running with dbt=1.12.5
+08:48:19  Registered adapter: postgres=1.11.0
+08:48:19  Unable to do partial parsing because saved manifest not found. Starting full parse.
+08:48:20  Found 4 models, 3 sources, 477 macros
+08:48:20  
+08:48:20  Concurrency: 4 threads (target='dev')
+08:48:20  
+08:48:21  2 of 4 START sql view model dbt_staging.stg_order_lines ........................ [RUN]
+08:48:21  1 of 4 START sql view model dbt_staging.stg_books .............................. [RUN]
+08:48:21  3 of 4 START sql view model dbt_staging.stg_orders ............................. [RUN]
+08:48:21  3 of 4 OK created sql view model dbt_staging.stg_orders ........................ [CREATE VIEW in 0.16s]
+08:48:21  1 of 4 OK created sql view model dbt_staging.stg_books ......................... [CREATE VIEW in 0.16s]
+08:48:21  2 of 4 OK created sql view model dbt_staging.stg_order_lines ................... [CREATE VIEW in 0.17s]
+08:48:21  4 of 4 START sql table model dbt_marts.daily_sales ............................. [RUN]
+08:48:21  4 of 4 OK created sql table model dbt_marts.daily_sales ........................ [SELECT 6195 in 0.08s]
+08:48:21  
+08:48:21  Finished running 1 table model, 3 view models in 0 hours 0 minutes and 0.38 seconds (0.38s).
+08:48:21  
+08:48:21  Completed successfully
+08:48:21  
+08:48:21  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4
 ```
 
 Four models, and the order is the one the `ref`s imply: the three views first, at the same time —

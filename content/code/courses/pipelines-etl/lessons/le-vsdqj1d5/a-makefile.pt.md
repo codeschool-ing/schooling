@@ -59,11 +59,11 @@ psql -d wh -c "COPY (SELECT shop_id, category, books, revenue_cents \
 mv reports/daily_2026-03-15.csv.part reports/daily_2026-03-15.csv
 ana@vm:~/etl$ ls -l --time-style=+%T .made reports | grep -v total
 .made:
--rw-r--r-- 1 ana ana 0 03:48:56 models
--rw-r--r-- 1 ana ana 0 03:48:52 raw
+-rw-r--r-- 1 ana ana 0 05:50:52 models
+-rw-r--r-- 1 ana ana 0 05:50:49 raw
 
 reports:
--rw-r--r-- 1 ana ana 1794 03:48:56 daily_2026-03-15.csv
+-rw-r--r-- 1 ana ana 1794 05:50:52 daily_2026-03-15.csv
 ```
 
 Os três rodaram, na ordem das dependências, e os horários se alinham: o raw primeiro, depois os

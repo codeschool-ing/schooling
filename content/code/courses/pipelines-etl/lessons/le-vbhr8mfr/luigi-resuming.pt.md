@@ -6,7 +6,7 @@ version: 1
 Chega o dia 15, e a Ana pede o relatório dele:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-15
+ana@vm:~/etl$ sudo shop day 2026-03-15
 ana@vm:~/etl$ PYTHONPATH=. luigi --module nightly_luigi DailyReport --day 2026-03-15 --local-scheduler 2>&1 | sed -n "/Execution Summary/,/Execution Summary/p"
 ===== Luigi Execution Summary =====
 
@@ -34,10 +34,10 @@ A carga crua rodou e deixou a sua marca. O `BuildModels` falhou, então não dei
 
 ```
 ana@vm:~/etl$ dbt build --project-dir shop 2>&1 | grep -E "FAIL|Done"
-06:41:33  14 of 14 FAIL 2 fact_sales_has_not_drifted ..................................... [FAIL 2 in 0.05s]
-06:41:33  Done. PASS=11 WARN=1 ERROR=1 SKIP=0 NO-OP=1 REUSED=0 TOTAL=14
+08:49:45  12 of 14 FAIL 2 fact_sales_has_not_drifted ..................................... [FAIL 2 in 0.06s]
+08:49:45  Done. PASS=11 WARN=1 ERROR=1 SKIP=0 NO-OP=1 REUSED=0 TOTAL=14
 ana@vm:~/etl$ dbt build --project-dir shop -s fact_sales+ --full-refresh 2>&1 | grep -E "Done"
-06:41:36  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
+08:49:48  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=2
 ```
 
 O teste de deriva da lição 12, fazendo o seu trabalho: dois dias mais antigos do `fact_sales` não

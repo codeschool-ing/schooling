@@ -43,16 +43,16 @@ Desta vez a Ana roda `dbt build`, que é o assunto da próxima seção:
 
 ```
 ana@vm:~/etl/shop$ dbt build 2>&1 | grep -E "PASS|FAIL|WARN|SKIP|ERROR|Done"
-06:31:12  4 of 11 PASS accepted_values_stg_orders_status__completed__cancelled__refunded . [PASS in 0.09s]
-06:31:12  5 of 11 FAIL 7 not_null_stg_orders_customer_id ................................. [FAIL 7 in 0.11s]
-06:31:12  6 of 11 PASS not_null_stg_orders_order_id ...................................... [PASS in 0.10s]
-06:31:12  7 of 11 PASS relationships_stg_order_lines_order_id__order_id__ref_stg_orders_ . [PASS in 0.11s]
-06:31:12  9 of 11 PASS unique_stg_orders_order_id ........................................ [PASS in 0.03s]
-06:31:12  8 of 11 PASS unique_stg_order_lines_order_id_line_no ........................... [PASS in 0.07s]
-06:31:12  10 of 11 SKIP relation dbt_marts.daily_sales due to ephemeral model status 'skipped'  [ERROR SKIP]
-06:31:12  11 of 11 SKIP relation dbt_marts.fact_sales due to ephemeral model status 'skipped'  [ERROR SKIP]
-06:31:12  [ERROR]: in test not_null_stg_orders_customer_id (models/staging/schema.yml)
-06:31:12  Done. PASS=8 WARN=0 ERROR=1 SKIP=2 NO-OP=0 REUSED=0 TOTAL=11
+08:48:55  5 of 11 FAIL 7 not_null_stg_orders_customer_id ................................. [FAIL 7 in 0.10s]
+08:48:55  4 of 11 PASS accepted_values_stg_orders_status__completed__cancelled__refunded . [PASS in 0.11s]
+08:48:55  7 of 11 PASS relationships_stg_order_lines_order_id__order_id__ref_stg_orders_ . [PASS in 0.10s]
+08:48:55  6 of 11 PASS not_null_stg_orders_order_id ...................................... [PASS in 0.10s]
+08:48:55  9 of 11 PASS unique_stg_orders_order_id ........................................ [PASS in 0.04s]
+08:48:55  8 of 11 PASS unique_stg_order_lines_order_id_line_no ........................... [PASS in 0.08s]
+08:48:55  11 of 11 SKIP relation dbt_marts.fact_sales due to ephemeral model status 'skipped'  [ERROR SKIP]
+08:48:55  10 of 11 SKIP relation dbt_marts.daily_sales due to ephemeral model status 'skipped'  [ERROR SKIP]
+08:48:56  [ERROR]: in test not_null_stg_orders_customer_id (models/staging/schema.yml)
+08:48:56  Done. PASS=8 WARN=0 ERROR=1 SKIP=2 NO-OP=0 REUSED=0 TOTAL=11
 ```
 
 O `unique_stg_order_lines_order_id_line_no` passa: o grão se sustenta. O teste do cliente continua

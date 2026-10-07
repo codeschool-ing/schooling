@@ -41,40 +41,40 @@ todos:
 
 ```
 ana@vm:~/etl/shop$ dbt test
-06:31:06  Running with dbt=1.12.5
-06:31:07  Registered adapter: postgres=1.11.0
-06:31:08  Found 6 models, 6 data tests, 3 sources, 477 macros
-06:31:08  
-06:31:08  Concurrency: 4 threads (target='dev')
-06:31:08  
-06:31:08  3 of 6 START test not_null_stg_orders_order_id ................................. [RUN]
-06:31:08  1 of 6 START test accepted_values_stg_orders_status__completed__cancelled__refunded  [RUN]
-06:31:08  4 of 6 START test relationships_stg_order_lines_order_id__order_id__ref_stg_orders_  [RUN]
-06:31:08  2 of 6 START test not_null_stg_orders_customer_id .............................. [RUN]
-06:31:08  1 of 6 PASS accepted_values_stg_orders_status__completed__cancelled__refunded .. [PASS in 0.13s]
-06:31:08  2 of 6 FAIL 5809 not_null_stg_orders_customer_id ............................... [FAIL 5809 in 0.13s]
-06:31:08  3 of 6 PASS not_null_stg_orders_order_id ....................................... [PASS in 0.14s]
-06:31:08  6 of 6 START test unique_stg_orders_order_id ................................... [RUN]
-06:31:08  5 of 6 START test unique_stg_order_lines_order_id .............................. [RUN]
-06:31:08  4 of 6 PASS relationships_stg_order_lines_order_id__order_id__ref_stg_orders_ .. [PASS in 0.15s]
-06:31:08  6 of 6 PASS unique_stg_orders_order_id ......................................... [PASS in 0.04s]
-06:31:08  5 of 6 FAIL 7974 unique_stg_order_lines_order_id ............................... [FAIL 7974 in 0.05s]
-06:31:08  
-06:31:08  Finished running 6 data tests in 0 hours 0 minutes and 0.28 seconds (0.28s).
-06:31:08  
-06:31:08  Completed with 2 errors, 0 partial successes, and 0 warnings:
-06:31:08  
-06:31:08  [ERROR]: in test not_null_stg_orders_customer_id (models/staging/schema.yml)
-06:31:08    Got 5809 results, configured to fail if != 0
-06:31:08  
-06:31:08    compiled code at target/compiled/shop/models/staging/schema.yml/not_null_stg_orders_customer_id.sql
-06:31:08  
-06:31:08  [ERROR]: in test unique_stg_order_lines_order_id (models/staging/schema.yml)
-06:31:08    Got 7974 results, configured to fail if != 0
-06:31:08  
-06:31:08    compiled code at target/compiled/shop/models/staging/schema.yml/unique_stg_order_lines_order_id.sql
-06:31:08  
-06:31:08  Done. PASS=4 WARN=0 ERROR=2 SKIP=0 NO-OP=0 REUSED=0 TOTAL=6
+08:48:50  Running with dbt=1.12.5
+08:48:50  Registered adapter: postgres=1.11.0
+08:48:51  Found 6 models, 6 data tests, 3 sources, 477 macros
+08:48:51  
+08:48:51  Concurrency: 4 threads (target='dev')
+08:48:51  
+08:48:51  1 of 6 START test accepted_values_stg_orders_status__completed__cancelled__refunded  [RUN]
+08:48:51  3 of 6 START test not_null_stg_orders_order_id ................................. [RUN]
+08:48:51  4 of 6 START test relationships_stg_order_lines_order_id__order_id__ref_stg_orders_  [RUN]
+08:48:51  2 of 6 START test not_null_stg_orders_customer_id .............................. [RUN]
+08:48:51  3 of 6 PASS not_null_stg_orders_order_id ....................................... [PASS in 0.11s]
+08:48:51  1 of 6 PASS accepted_values_stg_orders_status__completed__cancelled__refunded .. [PASS in 0.12s]
+08:48:52  5 of 6 START test unique_stg_order_lines_order_id .............................. [RUN]
+08:48:52  6 of 6 START test unique_stg_orders_order_id ................................... [RUN]
+08:48:52  2 of 6 FAIL 5809 not_null_stg_orders_customer_id ............................... [FAIL 5809 in 0.11s]
+08:48:52  4 of 6 PASS relationships_stg_order_lines_order_id__order_id__ref_stg_orders_ .. [PASS in 0.14s]
+08:48:52  5 of 6 FAIL 7974 unique_stg_order_lines_order_id ............................... [FAIL 7974 in 0.05s]
+08:48:52  6 of 6 PASS unique_stg_orders_order_id ......................................... [PASS in 0.05s]
+08:48:52  
+08:48:52  Finished running 6 data tests in 0 hours 0 minutes and 0.26 seconds (0.26s).
+08:48:52  
+08:48:52  Completed with 2 errors, 0 partial successes, and 0 warnings:
+08:48:52  
+08:48:52  [ERROR]: in test not_null_stg_orders_customer_id (models/staging/schema.yml)
+08:48:52    Got 5809 results, configured to fail if != 0
+08:48:52  
+08:48:52    compiled code at target/compiled/shop/models/staging/schema.yml/not_null_stg_orders_customer_id.sql
+08:48:52  
+08:48:52  [ERROR]: in test unique_stg_order_lines_order_id (models/staging/schema.yml)
+08:48:52    Got 7974 results, configured to fail if != 0
+08:48:52  
+08:48:52    compiled code at target/compiled/shop/models/staging/schema.yml/unique_stg_order_lines_order_id.sql
+08:48:52  
+08:48:52  Done. PASS=4 WARN=0 ERROR=2 SKIP=0 NO-OP=0 REUSED=0 TOTAL=6
 ```
 
 Quatro crenças se sustentaram. Duas não, e por milhares.

@@ -39,18 +39,18 @@ dag_id       | is_paused
 =============+==========
 catchup_demo | False    
                         
-2026-10-07T05:19:19.493505Z [info     ] Deleting Dag: catchup_demo     [airflow.api.common.delete_dag] loc=delete_dag.py:55
+2026-10-07T08:31:56.949638Z [info     ] Deleting Dag: catchup_demo     [airflow.api.common.delete_dag] loc=delete_dag.py:55
 Removed 442 record(s)
 ```
 
-**Two hundred and nineteen runs**, one for every 02:00 from 2 March to the morning of the
+**Two hundred and twenty runs**, one for every 02:00 from 2 March to the morning of the
 recording, created and run in the twenty seconds after the DAG was unpaused. The second command
 counts them by state, and every one of them is `success`: each was one `echo`, and the scheduler ran
 them many at a time, sixteen runs of a DAG by default. Ana pauses the DAG and deletes it, with its
 runs.
 
-For this DAG the cost was two hundred and nineteen `echo`s. For a real load it is two hundred and
-nineteen loads of days with no data, competing for the same tables at the same time, and every one
+For this DAG the cost was two hundred and twenty `echo`s. For a real load it is two hundred and
+twenty loads of days with no data, competing for the same tables at the same time, and every one
 that survives the competition a success.
 
 ## When catch-up is right

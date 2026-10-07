@@ -39,17 +39,17 @@ dag_id       | is_paused
 =============+==========
 catchup_demo | False    
                         
-2026-10-07T05:19:19.493505Z [info     ] Deleting Dag: catchup_demo     [airflow.api.common.delete_dag] loc=delete_dag.py:55
+2026-10-07T08:31:56.949638Z [info     ] Deleting Dag: catchup_demo     [airflow.api.common.delete_dag] loc=delete_dag.py:55
 Removed 442 record(s)
 ```
 
-**Duzentas e dezenove execuções**, uma para cada 02:00 de 2 de março até a manhã da gravação,
+**Duzentas e vinte execuções**, uma para cada 02:00 de 2 de março até a manhã da gravação,
 criadas e rodadas nos vinte segundos depois de o DAG sair da pausa. O segundo comando as conta por
 estado, e todas são `success`: cada uma era um `echo`, e o agendador as rodou muitas de uma vez,
 dezesseis execuções de um DAG por padrão. A Ana pausa o DAG e o apaga, com as execuções dele.
 
-Para este DAG o custo foram duzentos e dezenove `echo`s. Para uma carga de verdade são duzentas e
-dezenove cargas de dias sem dados, disputando as mesmas tabelas ao mesmo tempo, e cada uma que
+Para este DAG o custo foram duzentos e vinte `echo`s. Para uma carga de verdade são duzentas e
+vinte cargas de dias sem dados, disputando as mesmas tabelas ao mesmo tempo, e cada uma que
 sobreviver à disputa um sucesso.
 
 ## Quando o catch-up é o certo

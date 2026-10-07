@@ -33,7 +33,7 @@ whose inputs had not moved, and redid the two whose inputs had**, without being 
 A new day of the shop moves the clock file, and the whole chain falls out of date from the bottom:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-16
+ana@vm:~/etl$ sudo shop day 2026-03-16
 ana@vm:~/etl$ make -n
 mkdir -p .made
 python load_raw.py > /dev/null

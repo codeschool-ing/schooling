@@ -25,9 +25,9 @@ que o grafo vá até as pessoas que usam os dados:
 
 ```
 ana@vm:~/etl/shop$ dbt ls -s +exposure:morning_report --resource-type model --resource-type source --resource-type exposure
-06:31:34  Running with dbt=1.12.5
-06:31:34  Registered adapter: postgres=1.11.0
-06:31:35  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
+08:49:18  Running with dbt=1.12.5
+08:49:18  Registered adapter: postgres=1.11.0
+08:49:18  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
 exposure:shop.morning_report
 shop.marts.daily_sales
 shop.staging.int_sales
@@ -38,15 +38,14 @@ source:shop.raw.books
 source:shop.raw.order_lines
 source:shop.raw.orders
 ana@vm:~/etl/shop$ dbt ls -s source:raw.orders+ --resource-type model --resource-type exposure
-06:31:37  Running with dbt=1.12.5
-06:31:37  Registered adapter: postgres=1.11.0
-06:31:38  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
+08:49:20  Running with dbt=1.12.5
+08:49:21  Registered adapter: postgres=1.11.0
+08:49:21  Found 6 models, 8 data tests, 3 sources, 1 exposure, 477 macros
 exposure:shop.morning_report
 shop.marts.daily_sales
 shop.marts.fact_sales
 shop.staging.int_sales
 shop.staging.stg_orders
-done
 ```
 
 O primeiro comando lê o grafo para cima a partir do relatório: todo modelo e toda fonte em que o

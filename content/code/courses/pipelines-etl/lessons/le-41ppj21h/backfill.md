@@ -8,7 +8,7 @@ bug was in production, the month before a DAG existed, or, in the lab, the days 
 that no run has loaded yet. Ana plays the first week of March and asks for the runs that load it:
 
 ```
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh until 2026-03-07
+ana@vm:~/etl$ sudo shop until 2026-03-07
 ana@vm:~/etl$ airflow backfill create --dag-id shop_nightly --from-date 2026-03-03 --to-date 2026-03-08 2>&1 | grep -c "Created backfill Dag run"
 5
 ana@vm:~/etl$ airflow dags unpause shop_nightly
@@ -19,18 +19,16 @@ shop_nightly | True
 ana@vm:~/etl$ airflow dags list-runs shop_nightly -o plain | cut -c1-118
 dag_id        run_id                                state    run_after                  logical_date               sta
 shop_nightly  scheduled__2026-10-07T05:00:00+00:00  success  2026-10-07T05:00:00+00:00  2026-10-07T05:00:00+00:00  202
-shop_nightly  backfill__2026-03-07T05:00:00+00:00   success  2026-03-07T05:00:00+00:00  2026-03-07T05:00:00+00:00  202
-shop_nightly  backfill__2026-03-06T05:00:00+00:00   failed   2026-03-06T05:00:00+00:00  2026-03-06T05:00:00+00:00  202
-shop_nightly  backfill__2026-03-05T05:00:00+00:00   success  2026-03-05T05:00:00+00:00  2026-03-05T05:00:00+00:00  202
+shop_nightly  backfill__2026-03-07T05:00:00+00:00   failed   2026-03-07T05:00:00+00:00  2026-03-07T05:00:00+00:00  202
+shop_nightly  backfill__2026-03-06T05:00:00+00:00   success  2026-03-06T05:00:00+00:00  2026-03-06T05:00:00+00:00  202
+shop_nightly  backfill__2026-03-05T05:00:00+00:00   failed   2026-03-05T05:00:00+00:00  2026-03-05T05:00:00+00:00  202
 shop_nightly  backfill__2026-03-04T05:00:00+00:00   failed   2026-03-04T05:00:00+00:00  2026-03-04T05:00:00+00:00  202
 shop_nightly  backfill__2026-03-03T05:00:00+00:00   failed   2026-03-03T05:00:00+00:00  2026-03-03T05:00:00+00:00  202
 ana@vm:~/etl$ psql -d wh -c "SELECT order_date, count(*) FROM marts.fact_sales GROUP BY 1 ORDER BY 1"
  order_date | count 
 ------------+-------
- 2026-03-02 |   412
- 2026-03-04 |   441
- 2026-03-06 |   439
-(3 rows)
+ 2026-03-05 |   464
+(1 row)
 ```
 
 Two surprises in one transcript.
@@ -45,8 +43,8 @@ The reason is in the task logs:
 
 ```
 ana@vm:~/etl$ grep -ho "ERROR: [^\\]*" ~/airflow/logs/dag_id=shop_nightly/run_id=backfill__*/task_id=*/attempt=1.log | sort | uniq -c
-      2 ERROR:  duplicate key value violates unique constraint 
-      1 ERROR:  relation
+      3 ERROR:  duplicate key value violates unique constraint 
+      2 ERROR:  relation
 ```
 
 The backfill started its runs at the same time, and every run of this DAG rebuilds the same `raw`

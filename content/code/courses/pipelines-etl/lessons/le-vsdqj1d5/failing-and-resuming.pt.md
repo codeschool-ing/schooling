@@ -11,9 +11,9 @@ mkdir -p .made
 python load_raw.py > /dev/null
 touch .made/raw
 dbt build --project-dir shop --quiet
-06:49:06  14 of 14 FAIL 5 fact_sales_has_not_drifted ..................................... [FAIL 5 in 0.04s]
-06:49:06  [ERROR]: in test fact_sales_has_not_drifted (tests/fact_sales_has_not_drifted.sql)
-06:49:06    Got 5 results, configured to fail if != 0
+08:51:02  12 of 14 FAIL 5 fact_sales_has_not_drifted ..................................... [FAIL 5 in 0.06s]
+08:51:02  [ERROR]: in test fact_sales_has_not_drifted (tests/fact_sales_has_not_drifted.sql)
+08:51:02    Got 5 results, configured to fail if != 0
 make: *** [Makefile:16: .made/models] Error 1
 ana@vm:~/etl$ ls .made
 models

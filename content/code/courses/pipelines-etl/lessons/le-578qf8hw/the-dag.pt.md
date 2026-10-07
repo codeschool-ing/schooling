@@ -105,8 +105,8 @@ Ela salvou os dois arquivos com o Airflow já rodando, e perguntou se o DAG tinh
 ```
 ana@vm:~/etl$ airflow dags list-import-errors -o plain | grep -oE "Error: .*"
 Error: No module named 'oncall'
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh airflow-down
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh airflow
+ana@vm:~/etl$ sudo shop airflow-down
+ana@vm:~/etl$ sudo shop airflow
 ana@vm:~/etl$ airflow dags reserialize >/dev/null 2>&1; airflow dags list-import-errors
 No data found
 ```

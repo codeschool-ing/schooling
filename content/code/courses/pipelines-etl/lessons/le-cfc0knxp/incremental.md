@@ -37,20 +37,20 @@ With the 10th in `raw`, Ana runs only that model — `-s` selects which models t
 
 ```
 ana@vm:~/etl/shop$ dbt run -s fact_sales
-06:27:07  Running with dbt=1.12.5
-06:27:07  Registered adapter: postgres=1.11.0
-06:27:08  Found 6 models, 3 sources, 477 macros
-06:27:08  
-06:27:08  Concurrency: 4 threads (target='dev')
-06:27:08  
-06:27:08  1 of 1 START sql incremental model dbt_marts.fact_sales ........................ [RUN]
-06:27:08  1 of 1 OK created sql incremental model dbt_marts.fact_sales ................... [INSERT 0 797 in 0.17s]
-06:27:08  
-06:27:08  Finished running 1 incremental model in 0 hours 0 minutes and 0.27 seconds (0.27s).
-06:27:08  
-06:27:08  Completed successfully
-06:27:08  
-06:27:08  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
+08:48:28  Running with dbt=1.12.5
+08:48:28  Registered adapter: postgres=1.11.0
+08:48:28  Found 6 models, 3 sources, 477 macros
+08:48:28  
+08:48:28  Concurrency: 4 threads (target='dev')
+08:48:28  
+08:48:28  1 of 1 START sql incremental model dbt_marts.fact_sales ........................ [RUN]
+08:48:28  1 of 1 OK created sql incremental model dbt_marts.fact_sales ................... [INSERT 0 797 in 0.18s]
+08:48:28  
+08:48:28  Finished running 1 incremental model in 0 hours 0 minutes and 0.28 seconds (0.28s).
+08:48:29  
+08:48:29  Completed successfully
+08:48:29  
+08:48:29  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
 ana@vm:~/etl$ psql -d wh -c "SELECT order_date, count(*) FROM dbt_marts.fact_sales WHERE order_date >= '2026-03-08' GROUP BY 1 ORDER BY 1"
  order_date | count 
 ------------+-------
@@ -67,7 +67,7 @@ ana@vm:~/etl/shop$ cat target/run/shop/models/marts/fact_sales.sql; echo
         delete from "wh"."dbt_marts"."fact_sales" as DBT_INTERNAL_DEST
         where (order_date) in (
             select distinct order_date
-            from "fact_sales__dbt_tmp032708435400" as DBT_INTERNAL_SOURCE
+            from "fact_sales__dbt_tmp054828825710" as DBT_INTERNAL_SOURCE
         );
 
     
@@ -75,7 +75,7 @@ ana@vm:~/etl/shop$ cat target/run/shop/models/marts/fact_sales.sql; echo
     insert into "wh"."dbt_marts"."fact_sales" ("order_date", "order_id", "line_no", "shop_id", "customer_id", "book_id", "quantity", "line_cents")
     (
         select "order_date", "order_id", "line_no", "shop_id", "customer_id", "book_id", "quantity", "line_cents"
-        from "fact_sales__dbt_tmp032708435400"
+        from "fact_sales__dbt_tmp054828825710"
     )
 ```
 
@@ -123,8 +123,8 @@ throws the table away and builds it as the first run did:
 
 ```
 ana@vm:~/etl/shop$ dbt run -s fact_sales --full-refresh 2>&1 | grep -E " OK |ERROR"
-06:27:11  1 of 1 OK created sql incremental model dbt_marts.fact_sales ................... [SELECT 30302 in 0.18s]
-06:27:11  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
+08:48:31  1 of 1 OK created sql incremental model dbt_marts.fact_sales ................... [SELECT 30302 in 0.20s]
+08:48:31  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
 ana@vm:~/etl$ psql -d wh -f drift.sql
  order_date | in_table | in_source 
 ------------+----------+-----------

@@ -84,9 +84,9 @@ sentido, que o `git` está lá para os pacotes e que a conexão funciona:
 
 ```
 ana@vm:~/etl/shop$ dbt debug 2>&1 | grep -E "OK|ERROR|checks"
-06:26:56    profiles.yml file [OK found and valid]
-06:26:56    dbt_project.yml file [OK found and valid]
-06:26:56   - git [OK found]
-06:26:57    Connection test: [OK connection ok]
-06:26:57  All checks passed!
+08:48:17    profiles.yml file [OK found and valid]
+08:48:17    dbt_project.yml file [OK found and valid]
+08:48:17   - git [OK found]
+08:48:17    Connection test: [OK connection ok]
+08:48:17  All checks passed!
 ```

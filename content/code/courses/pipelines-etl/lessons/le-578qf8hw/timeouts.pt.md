@@ -32,10 +32,10 @@ timeout_demo()
 
 ```
 ana@vm:~/etl$ airflow dags reserialize >/dev/null 2>&1; airflow dags test timeout_demo 2>&1 | grep -oE "[0-9:]{8}\.[0-9]+Z.*(connected|Process timed out|Sending SIGTERM[^[]*)|AirflowTaskTimeout: .*|new_state=[a-z_]+" | grep -v "Running command" | sed -E "s/^([0-9:]{8})\.[0-9]+Z *\[[a-z ]*\] */\1 UTC /; s/ +$//"
-06:08:11 UTC connected
-06:08:31 UTC Process timed out
-06:08:31 UTC Sending SIGTERM signal to process group
-AirflowTaskTimeout: Timeout, PID: 2637
+08:40:07 UTC connected
+08:40:27 UTC Process timed out
+08:40:27 UTC Sending SIGTERM signal to process group
+AirflowTaskTimeout: Timeout, PID: 13654
 new_state=failed
 ana@vm:~/etl$ rm dags/timeout_demo.py; airflow dags delete -y timeout_demo >/dev/null 2>&1
 ```

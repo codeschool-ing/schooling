@@ -54,12 +54,12 @@ name                                          | uri                             
 ==============================================+===============================================+=======+======
 postgres://localhost:5432/wh/marts/fact_sales | postgres://localhost:5432/wh/marts/fact_sales | asset | {}   
                                                                                                              
-ana@vm:~/etl$ sudo bash ~/lab/lab.sh day 2026-03-09
+ana@vm:~/etl$ sudo shop day 2026-03-09
 ana@vm:~/etl$ airflow backfill create --dag-id shop_nightly --from-date 2026-03-10 --to-date 2026-03-10T12:00:00-03:00 2>&1 | grep -c "Created backfill Dag run"
 1
 ana@vm:~/etl$ airflow dags list-runs sales_report -o plain | cut -c1-118
 dag_id        run_id                                                      state    run_after                         l
-sales_report  asset_triggered__2026-10-07T05:22:11.720065+00:00_gDgSDCof  success  2026-10-07T05:22:11.720065+00:00   
+sales_report  asset_triggered__2026-10-07T08:34:50.666554+00:00_Hc3BvPDZ  success  2026-10-07T08:34:50.666554+00:00   
 ana@vm:~/etl$ f=$(ls -d ~/airflow/logs/dag_id=sales_report/run_id=*/task_id=report | head -1); grep -oE "\"event\":\"[0-9-]+\|[0-9]+\"" $f/attempt=1.log
 "event":"2026-03-09|23133780"
 ```
