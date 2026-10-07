@@ -23,7 +23,7 @@ licença da versão que ela roda: uma resposta lida no acordo antigo da Qwen est
 Os nomes da Qwen trazem a arquitetura, e depois de lidos dizem muito:
 
 ```
-ana@desk:~/desk$ sheet where qwen3-235b-a22b
+ana@desk:~/desk$ python sheet.py where qwen3-235b-a22b
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 qwen.qwen3-235b-a22b-2507-v1:0                       bedrock_converse               0.22     0.88
@@ -52,7 +52,7 @@ Os preços cobrem um fator de mais de oito na entrada, de US$ 0,0875 a US$ 0,75,
 ## O modelo que não é aberto
 
 ```
-ana@desk:~/desk$ sheet where qwen3-max | head -4
+ana@desk:~/desk$ python sheet.py where qwen3-max | head -4
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 dashscope/qwen3-max                                  dashscope                         -        -

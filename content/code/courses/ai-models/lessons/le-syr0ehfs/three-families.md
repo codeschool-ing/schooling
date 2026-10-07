@@ -11,7 +11,7 @@ differently. Side by side, from what this course could read:
 | Llama | Meta, USA | its own, with a user threshold and *Built with Llama* (lesson 2) | not covered here | `instruct`, `17Bx128E` |
 | DeepSeek | DeepSeek, China | MIT for R1; a model licence with use restrictions for V3 (lesson 2) | yes, aliases retired July 2026 | `flash`, `pro`, `r1` |
 | Qwen | Alibaba, China | Apache 2.0 for the open-weight models of Qwen 3 | yes, with Max not open | `235b-a22b`, `instruct`, `thinking` |
-| Gemma | Google, USA | Google's own terms, not reachable from the lab | through hosts and Google's platforms | `-it`, `A4B`, `E4B` |
+| Gemma | Google, USA | Google's own terms, not reachable from the machine this course was recorded on | through hosts and Google's platforms | `-it`, `A4B`, `E4B` |
 
 Three things this table says that a price list does not.
 

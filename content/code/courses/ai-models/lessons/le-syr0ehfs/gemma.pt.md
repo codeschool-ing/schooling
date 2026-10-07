@@ -24,7 +24,7 @@ repositório acima é o código, e o arquivo de licença dele é o do código.
 As entradas Gemma 4 de um host, como a tabela as tem:
 
 ```
-ana@desk:~/desk$ sheet where google/gemma-4 | grep deepinfra
+ana@desk:~/desk$ python sheet.py where google/gemma-4 | grep deepinfra
 deepinfra/google/gemma-4-26B-A4B-it                  deepinfra                      0.07     0.34
 deepinfra/google/gemma-4-31B-it                      deepinfra                      0.13     0.38
 deepinfra/google/gemma-4-31B-it-Ultra                deepinfra                      0.27     0.76
