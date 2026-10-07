@@ -1,21 +1,8 @@
-// The lab's web server: ana's ~/js as static files, and a small API under
-// /api/ that lesson 16 fetches from. Same origin for both, so no request in
-// this course needs CORS (that is front-quality lesson 7).
+// api.mjs: the addresses under /api/ that this lesson fetches from. serve.mjs
+// loads it when it sits in the same folder.
 //
-//   node serve.mjs [ROOT] [PORT]      default ROOT=., PORT=8080
-//
-// Every response is deterministic except /api/slow, which waits for real.
-import http from "node:http";
-import fs from "node:fs";
-import path from "node:path";
-
-const TYPES = {
-  ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
-  ".mjs": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8",
-  ".json": "application/json; charset=utf-8", ".svg": "image/svg+xml",
-  ".txt": "text/plain; charset=utf-8",
-};
-
+// Every answer is the same every time, except /api/slow, which really waits,
+// and /api/flaky, which fails on purpose until it has been asked enough.
 const BOOKS = [
   { id: 1, title: "Dom Casmurro", author: "Machado de Assis", year: 1899 },
   { id: 2, title: "Grande Sertão: Veredas", author: "João Guimarães Rosa", year: 1956 },
@@ -60,7 +47,7 @@ export function api(req, res, url, state) {
     return;
   }
   if (p === "/api/flaky") {
-    // Fails the first N requests of this server's life, then answers.
+    // Fails the first N requests since the server started, then answers.
     state.flaky = (state.flaky || 0) + 1;
     const fails = Number(url.searchParams.get("fails") || 2);
     return state.flaky <= fails
@@ -68,25 +55,4 @@ export function api(req, res, url, state) {
       : json(res, 200, { ok: true, attempt: state.flaky });
   }
   json(res, 404, { error: "no such endpoint" });
-}
-
-export function createServer(root) {
-  const state = {};
-  return http.createServer((req, res) => {
-    const url = new URL(req.url, "http://127.0.0.1");
-    if (url.pathname.startsWith("/api/")) return api(req, res, url, state);
-    const file = path.join(root, decodeURIComponent(url.pathname));
-    if (!file.startsWith(path.resolve(root))) { res.writeHead(403); return res.end(); }
-    fs.readFile(file, (err, data) => {
-      if (err) { res.writeHead(404, { "content-type": "text/plain" }); return res.end("not found\n"); }
-      res.writeHead(200, { "content-type": TYPES[path.extname(file)] || "application/octet-stream" });
-      res.end(data);
-    });
-  });
-}
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const root = path.resolve(process.argv[2] || ".");
-  const port = Number(process.argv[3] || 8080);
-  createServer(root).listen(port, "127.0.0.1", () => console.log(`serving ${root} on http://127.0.0.1:${port}`));
 }

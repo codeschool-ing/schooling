@@ -7,13 +7,14 @@
 #
 #   node                 Node.js 22, for the language itself: lessons 1 to 10
 #                        and 13 to 22 run most of their programs here
-#   page FILE.html       Chromium, headless, driven by Playwright (lab/page.mjs):
+#   page FILE.html       Chromium, headless, driven by Playwright (page.mjs, which
+#                        lesson 1 shows and install_lab takes out of it):
 #                        it serves ~/js at http://127.0.0.1:8080, opens the
 #                        page, and prints what its console said. Lessons 11,
 #                        12, 15, 16, 18 and 22 use it. The FORMAT of its lines
-#                        is the lab's and is described in lab/page.mjs; what
+#                        is the program's and is described in page.mjs; what
 #                        they say is what the browser said.
-#   serve                the same web server on its own (lab/serve.mjs), for a
+#   serve                the same web server on its own (serve.mjs, lesson 1), for a
 #                        program in node to fetch from: lesson 16
 #   npm, pnpm, yarn      the three package managers of lesson 21: npm as it
 #                        ships with Node.js 22.22.0 (10.9.4), pnpm 10.28.0 and
@@ -72,9 +73,18 @@ build_opt() {
   install_lab
 }
 
-# The lab's own programs, and the two commands ana types.
+# The lab's own programs, and the two commands ana types. The programs are the
+# ones the lessons show, taken out of the lessons by lab/extract.mjs, so a
+# transcript is always what the student's copy prints.
+shown() {  # shown LESSON SECTION NAME
+  node "$HERE/lab/extract.mjs" "$HERE/lessons/$1/$2.md" "$3" > "$OPT/lab/$3.new" &&
+    mv "$OPT/lab/$3.new" "$OPT/lab/$3"
+}
 install_lab() {
-  install -m 0644 "$HERE/lab/serve.mjs" "$HERE/lab/page.mjs" $OPT/lab/
+  mkdir -p $OPT/lab
+  shown le-twhd2nyk your-computer page.mjs
+  shown le-twhd2nyk your-computer serve.mjs
+  install -m 0644 "$HERE"/lab/api.mjs "$HERE"/lab/devtools.mjs $OPT/lab/
   ln -sfn $OPT/node_modules $OPT/lab/node_modules
   printf '#!/bin/sh\nexec node %s/lab/page.mjs "$@"\n' $OPT > $OPT/bin/page
   printf '#!/bin/sh\nexec node %s/lab/serve.mjs "$@"\n' $OPT > $OPT/bin/serve
