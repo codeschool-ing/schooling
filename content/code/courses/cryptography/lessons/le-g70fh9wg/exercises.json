@@ -1,0 +1,506 @@
+[
+  {
+    "id": "ex-23w23ecq",
+    "version": 1,
+    "section": "encrypt-to",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana wants only the records service to read a letter. Which key does she encrypt it with?",
+    "hint": "Ana holds nothing secret of the service's.",
+    "choices": [
+      {
+        "text": "Her own private key",
+        "correct": false,
+        "why": "That would be a signature, and it hides nothing."
+      },
+      {
+        "text": "The public key the service has published",
+        "correct": true,
+        "why": "Right: only the service's private key opens it."
+      },
+      {
+        "text": "The service's private key, sent to her for the purpose",
+        "correct": false,
+        "why": "A private key that travels is no longer private."
+      },
+      {
+        "text": "Her own public key",
+        "correct": false,
+        "why": "Then only Ana could read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ramjcen",
+    "version": 1,
+    "section": "encrypt-to",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same letter, encrypted twice with RSA-OAEP to the same public key, gave two different ciphertexts. Why?",
+    "hint": "Compare with the raw RSA of lesson 2.",
+    "choices": [
+      {
+        "text": "OpenSSL picked a different key each time",
+        "correct": false,
+        "why": "The key file was the same both times."
+      },
+      {
+        "text": "OAEP adds fresh random bytes to each encryption",
+        "correct": true,
+        "why": "Right: so equal letters cannot be spotted."
+      },
+      {
+        "text": "The letter's timestamp changed between the two runs",
+        "correct": false,
+        "why": "The file did not change."
+      },
+      {
+        "text": "RSA is randomised by nature, without padding",
+        "correct": false,
+        "why": "Raw RSA is deterministic; the padding adds the randomness."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtr40jpg",
+    "version": 1,
+    "section": "encrypt-to",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a 3072-bit RSA key and OAEP over SHA-256, what is the largest number of bytes one encryption can carry?",
+    "hint": "384, minus what the padding needs.",
+    "value": 318,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-y0x1hy7d",
+    "version": 1,
+    "section": "encrypt-to",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The records service decrypted a request with its private key. What does that prove about the sender?",
+    "hint": "Who can encrypt to a public key?",
+    "choices": [
+      {
+        "text": "That the sender is a Vereda clinic",
+        "correct": false,
+        "why": "Any sender at all could have encrypted it."
+      },
+      {
+        "text": "That the sender holds the matching private key",
+        "correct": false,
+        "why": "The sender needs only the public key."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: decryption shows content, not authorship."
+      },
+      {
+        "text": "That the message was not altered",
+        "correct": false,
+        "why": "Not even that: RSA encryption alone has no tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-zag20q5k",
+    "version": 1,
+    "section": "sign-with",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which key does Vereda use to check Ana's signature?",
+    "hint": "Vereda does not hold Ana's secret.",
+    "choices": [
+      {
+        "text": "Vereda's own private key, the one that decrypts",
+        "correct": false,
+        "why": "Vereda's keys play no part in Ana's signature."
+      },
+      {
+        "text": "Ana's private key",
+        "correct": false,
+        "why": "Only Ana holds that."
+      },
+      {
+        "text": "Ana's public key, obtained through a trusted channel",
+        "correct": true,
+        "why": "Right: signed with the private, verified with the public."
+      },
+      {
+        "text": "The shared session key",
+        "correct": false,
+        "why": "Signatures use no shared key."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv2wv513",
+    "version": 1,
+    "section": "sign-with",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After \"Eight sessions\" became \"Twelve sessions\", Ana's signature failed to verify. Which guarantee did that exercise?",
+    "hint": "The key was right; the letter was not.",
+    "choices": [
+      {
+        "text": "Integrity",
+        "correct": true,
+        "why": "Right: the signature covers every byte."
+      },
+      {
+        "text": "Confidentiality of the letter's content",
+        "correct": false,
+        "why": "The letter was readable throughout."
+      },
+      {
+        "text": "Forward secrecy of the signing key",
+        "correct": false,
+        "why": "Forward secrecy is about key exchange, lesson 7."
+      },
+      {
+        "text": "Availability",
+        "correct": false,
+        "why": "Nothing became unavailable."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k0e1mfx",
+    "version": 1,
+    "section": "sign-with",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Vereda and a laboratory share one secret key and both use it to check messages. Why is that weaker than Ana's signature for settling a later dispute?",
+    "hint": "Who else could have produced the check?",
+    "choices": [
+      {
+        "text": "Because a shared key is always shorter than a private key",
+        "correct": false,
+        "why": "Length is not the issue."
+      },
+      {
+        "text": "Because shared keys cannot detect a change",
+        "correct": false,
+        "why": "They can; lesson 6 builds one."
+      },
+      {
+        "text": "Both sides hold the key, so it binds neither of them",
+        "correct": true,
+        "why": "Right: no non-repudiation."
+      },
+      {
+        "text": "Because the laboratory might not keep logs",
+        "correct": false,
+        "why": "Logs are not the cryptographic point."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzv1ww1v",
+    "version": 1,
+    "section": "sign-with",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Because only Ana holds her private key, she cannot later deny having signed. This property is called non-___.",
+    "hint": "A long word for denying.",
+    "blanks": [
+      {
+        "accept": [
+          "repudiation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0mpywecy",
+    "version": 1,
+    "section": "hybrid",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the hybrid scheme, what does RSA encrypt?",
+    "hint": "384 bytes travelled beside the data.",
+    "choices": [
+      {
+        "text": "The appointment file",
+        "correct": false,
+        "why": "Too large for RSA, and AES did that."
+      },
+      {
+        "text": "The GCM tag only",
+        "correct": false,
+        "why": "The tag is inside slots.gcm."
+      },
+      {
+        "text": "Both the file and the key, one after the other",
+        "correct": false,
+        "why": "RSA never touches the data."
+      },
+      {
+        "text": "The 32-byte session key",
+        "correct": true,
+        "why": "Right: AES carries the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3edjemy",
+    "version": 1,
+    "section": "hybrid",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 5 GB file is sent with the lab's hybrid scheme to one recipient with a 3072-bit RSA key. How many bytes of RSA ciphertext travel with it?",
+    "hint": "RSA protects only the key.",
+    "value": 384,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-75q3vfcr",
+    "version": 1,
+    "section": "hybrid",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of sending a file with hybrid encryption in order.",
+    "hint": "Generate before you encrypt.",
+    "items": [
+      "generate a fresh session key",
+      "encrypt the file with the session key",
+      "encrypt the session key with the recipient's public key",
+      "the recipient unwraps the session key with their private key",
+      "the recipient decrypts the file"
+    ]
+  },
+  {
+    "id": "ex-gjv3t56f",
+    "version": 1,
+    "section": "hybrid",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An e-mail is encrypted with S/MIME to three recipients. How does the format avoid encrypting the whole message three times?",
+    "hint": "What is cheap to repeat?",
+    "choices": [
+      {
+        "text": "It encrypts once with a key the three recipients share in advance",
+        "correct": false,
+        "why": "No key is shared in advance; that is the point of public keys."
+      },
+      {
+        "text": "One session key, wrapped once per recipient",
+        "correct": true,
+        "why": "Right: the message is encrypted once."
+      },
+      {
+        "text": "It encrypts with the sender's private key, which all three can undo",
+        "correct": false,
+        "why": "That would be a signature, readable by anybody."
+      },
+      {
+        "text": "It sends the message in the clear and signs it",
+        "correct": false,
+        "why": "Signing hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-57g7danv",
+    "version": 1,
+    "section": "mixups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team signs its configuration files with Ed25519 and concludes the database passwords in them are now protected from being read. What is wrong?",
+    "hint": "Look at the signed letter again.",
+    "choices": [
+      {
+        "text": "Ed25519 is too weak for passwords",
+        "correct": false,
+        "why": "Strength is not the question."
+      },
+      {
+        "text": "A signature hides nothing",
+        "correct": true,
+        "why": "Right: the files are as readable as before."
+      },
+      {
+        "text": "They should have signed with the public key instead",
+        "correct": false,
+        "why": "Signing uses the private key."
+      },
+      {
+        "text": "Configuration files cannot be signed, only binaries",
+        "correct": false,
+        "why": "Any file can be signed."
+      }
+    ]
+  },
+  {
+    "id": "ex-507rhr1f",
+    "version": 1,
+    "section": "mixups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should an organisation keep an escrowed copy of an employee's encryption key but never of their signing key?",
+    "hint": "What does each key's loss, or copy, cost?",
+    "choices": [
+      {
+        "text": "Losing one loses data; copying the other ends non-repudiation",
+        "correct": true,
+        "why": "Right: two keys, two lives."
+      },
+      {
+        "text": "Signing keys are larger and costly to store",
+        "correct": false,
+        "why": "Size has nothing to do with it."
+      },
+      {
+        "text": "Encryption keys expire sooner",
+        "correct": false,
+        "why": "Expiry is not the reason."
+      },
+      {
+        "text": "Escrow is illegal for signing keys",
+        "correct": false,
+        "why": "It is a design decision, not a law."
+      }
+    ]
+  },
+  {
+    "id": "ex-48s1j75n",
+    "version": 1,
+    "section": "mixups",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each goal to the key the sender uses.",
+    "hint": "One key on the right is never the sender's to use.",
+    "pairs": [
+      {
+        "left": "send a secret to the records service",
+        "right": "the service's public key"
+      },
+      {
+        "left": "prove Ana wrote a referral",
+        "right": "Ana's private key"
+      },
+      {
+        "left": "a backup only Ana can restore",
+        "right": "Ana's public key"
+      }
+    ],
+    "right_distractors": [
+      "the service's private key"
+    ]
+  },
+  {
+    "id": "ex-r8f064dd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana signs a referral and then encrypts it to the records service. What does the service get? Choose all that apply.",
+    "hint": "Both jobs were done.",
+    "choices": [
+      {
+        "text": "Confidentiality: only the service can read it",
+        "correct": true,
+        "why": "Yes: encrypted to its public key."
+      },
+      {
+        "text": "Authenticity: Ana signed it",
+        "correct": true,
+        "why": "Yes: checked with Ana's public key after decrypting."
+      },
+      {
+        "text": "Integrity: any change breaks the signature",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Proof that Ana's public key really is Ana's",
+        "correct": false,
+        "why": "That needs a certificate, lessons 8 and 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tsk3b9c",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each lab command to the job it did.",
+    "hint": "Look at the key each one names.",
+    "pairs": [
+      {
+        "left": "pkeyutl -encrypt -inkey rsa-3072.pub",
+        "right": "kept a letter secret"
+      },
+      {
+        "left": "pkeyutl -sign -inkey ed25519-ana.key",
+        "right": "proved who wrote it"
+      },
+      {
+        "left": "pkeyutl -verify -inkey ed25519-bruno.pub",
+        "right": "rejected the wrong signer"
+      },
+      {
+        "left": "vcrypt seal --key aes-256-b.hex",
+        "right": "encrypted the bulk data"
+      }
+    ],
+    "right_distractors": [
+      "exchanged a key with Diffie-Hellman"
+    ]
+  },
+  {
+    "id": "ex-n22xm7fw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A login API decrypts each request with its private key and treats any request that decrypts as coming from a registered client. What should it do instead?",
+    "hint": "Decrypting proves nothing about the sender.",
+    "choices": [
+      {
+        "text": "Use a larger RSA key",
+        "correct": false,
+        "why": "Anybody can still encrypt to it."
+      },
+      {
+        "text": "Encrypt the responses with the client's private key",
+        "correct": false,
+        "why": "The API should never hold a client's private key."
+      },
+      {
+        "text": "Accept only messages signed by a known key",
+        "correct": true,
+        "why": "Right: a signature proves who sent it."
+      },
+      {
+        "text": "Keep it as it is, since only clients know the public key",
+        "correct": false,
+        "why": "A public key is public by definition."
+      }
+    ]
+  }
+]

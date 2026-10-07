@@ -1,0 +1,504 @@
+[
+  {
+    "id": "ex-r1wk121e",
+    "version": 1,
+    "section": "unsalted",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the plain SHA-256 store, what did `vcrypt audit` reveal without reversing anything?",
+    "hint": "Count the different values.",
+    "choices": [
+      {
+        "text": "Ana's password",
+        "correct": false,
+        "why": "Nothing was reversed."
+      },
+      {
+        "text": "Which accounts share a password",
+        "correct": true,
+        "why": "Right: equal passwords, equal values."
+      },
+      {
+        "text": "The length of every password in the store",
+        "correct": false,
+        "why": "Digests are 64 digits whatever the password."
+      },
+      {
+        "text": "The key used to hash them",
+        "correct": false,
+        "why": "SHA-256 has no key."
+      }
+    ]
+  },
+  {
+    "id": "ex-jh621nnk",
+    "version": 1,
+    "section": "unsalted",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`printf 'Vereda@2026' | sha256sum` printed exactly Ana's stored value. Why does that matter for a store that leaks?",
+    "hint": "Who else gets this same value?",
+    "choices": [
+      {
+        "text": "It shows the store was not encrypted at rest",
+        "correct": false,
+        "why": "Encryption at rest is a different question."
+      },
+      {
+        "text": "Precomputed lists work against it",
+        "correct": true,
+        "why": "Right: the digest is the same in every system."
+      },
+      {
+        "text": "It proves SHA-256 has been broken",
+        "correct": false,
+        "why": "SHA-256 worked exactly as designed."
+      },
+      {
+        "text": "It reveals the server's pepper",
+        "correct": false,
+        "why": "There is no pepper in this store."
+      }
+    ]
+  },
+  {
+    "id": "ex-nn9dxf52",
+    "version": 1,
+    "section": "unsalted",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many different stored values does the plain SHA-256 store of the eight accounts contain?",
+    "hint": "The first line of the audit.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bj8113sj",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Is a salt secret?",
+    "hint": "Where is it stored?",
+    "choices": [
+      {
+        "text": "Yes, it must be kept apart from the hashes",
+        "correct": false,
+        "why": "That describes a pepper."
+      },
+      {
+        "text": "No, it is stored beside the hash",
+        "correct": true,
+        "why": "Right: it is needed to verify."
+      },
+      {
+        "text": "Only in bcrypt",
+        "correct": false,
+        "why": "No scheme keeps the salt secret."
+      },
+      {
+        "text": "Yes, it is the encryption key of the password",
+        "correct": false,
+        "why": "Nothing is encrypted; it is mixed in before hashing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhgyfnvp",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Salted SHA-256 removed the shared values. Which problem of the plain store does it leave untouched?",
+    "hint": "How fast is each guess?",
+    "choices": [
+      {
+        "text": "Precomputed lists",
+        "correct": false,
+        "why": "A list would need computing per salt; that is solved."
+      },
+      {
+        "text": "Equal passwords being visible",
+        "correct": false,
+        "why": "The audit found none."
+      },
+      {
+        "text": "The billions of guesses a second",
+        "correct": true,
+        "why": "Right: a salted fast hash is still fast."
+      },
+      {
+        "text": "The length of the stored line",
+        "correct": false,
+        "why": "Length was never a problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-66rhyfe3",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A system gives each user one salt at registration and keeps it for every later password. What does an observer of successive stores learn?",
+    "hint": "Same salt, same password, same value.",
+    "choices": [
+      {
+        "text": "Each user's password, from two stores",
+        "correct": false,
+        "why": "Two values do not reveal a password."
+      },
+      {
+        "text": "When a user goes back to an earlier password",
+        "correct": true,
+        "why": "Right: a salt is new on every change."
+      },
+      {
+        "text": "Which users share a password",
+        "correct": false,
+        "why": "Different users still have different salts."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Reuse is visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd1e163z",
+    "version": 1,
+    "section": "slow",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each stored prefix to its algorithm.",
+    "hint": "From the three lines of the capture.",
+    "pairs": [
+      {
+        "left": "$argon2id$v=19$",
+        "right": "Argon2id"
+      },
+      {
+        "left": "$2b$12$",
+        "right": "bcrypt"
+      },
+      {
+        "left": "pbkdf2-sha256$600000$",
+        "right": "PBKDF2"
+      }
+    ],
+    "right_distractors": [
+      "SHA-3"
+    ]
+  },
+  {
+    "id": "ex-g6qfz3vw",
+    "version": 1,
+    "section": "slow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes Argon2id harder for GPUs and custom chips than PBKDF2?",
+    "hint": "The m in m=19456.",
+    "choices": [
+      {
+        "text": "It needs memory per guess",
+        "correct": true,
+        "why": "Right: memory is what they cannot cheaply multiply."
+      },
+      {
+        "text": "It uses a longer salt",
+        "correct": false,
+        "why": "Both use 16-byte salts here."
+      },
+      {
+        "text": "It is a secret algorithm",
+        "correct": false,
+        "why": "It is RFC 9106."
+      },
+      {
+        "text": "It uses SHA-512 instead of SHA-256",
+        "correct": false,
+        "why": "Argon2 uses BLAKE2 internally; that is not why."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9wdfnjh",
+    "version": 1,
+    "section": "slow",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Beyond how many bytes of a password does bcrypt ignore the rest?",
+    "hint": "One of bcrypt's two limits.",
+    "value": 72,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-faqe8g9e",
+    "version": 1,
+    "section": "slow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are the cost parameters written into each stored string rather than only in the application's configuration?",
+    "hint": "What happens the day the cost is raised?",
+    "choices": [
+      {
+        "text": "So an attacker knows how hard each guess will be",
+        "correct": false,
+        "why": "That is a side effect, not the reason."
+      },
+      {
+        "text": "Because the standards forbid configuration files",
+        "correct": false,
+        "why": "No standard says that."
+      },
+      {
+        "text": "To make the stored line longer and harder to read",
+        "correct": false,
+        "why": "Length adds nothing."
+      },
+      {
+        "text": "Old hashes still say how to verify them",
+        "correct": true,
+        "why": "Right: raising the cost does not break them."
+      }
+    ]
+  },
+  {
+    "id": "ex-nsv2ejy7",
+    "version": 1,
+    "section": "pepper",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where should Vereda keep its pepper?",
+    "hint": "Not where the store is.",
+    "choices": [
+      {
+        "text": "In a column of the users table",
+        "correct": false,
+        "why": "Then a leak of the table includes it."
+      },
+      {
+        "text": "In a secrets manager or an HSM",
+        "correct": true,
+        "why": "Right: apart from the database."
+      },
+      {
+        "text": "In the application's repository",
+        "correct": false,
+        "why": "Lesson 17 says why not."
+      },
+      {
+        "text": "Beside each hash, like a salt",
+        "correct": false,
+        "why": "That would make it a salt."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph3c92mp",
+    "version": 1,
+    "section": "pepper",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An attacker obtains `store-peppered.txt` through a database injection, but not the pepper. What can they do with the right password for Ana?",
+    "hint": "The third command of the pepper capture.",
+    "choices": [
+      {
+        "text": "Confirm it, slowly",
+        "correct": false,
+        "why": "Without the pepper it does not even verify."
+      },
+      {
+        "text": "Recover the pepper from Ana's line",
+        "correct": false,
+        "why": "The pepper is not in the line."
+      },
+      {
+        "text": "Nothing: even a correct guess fails",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sign in as Ana directly",
+        "correct": false,
+        "why": "The store holds no session."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nse5n44",
+    "version": 1,
+    "section": "pepper",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pepper is one secret for the whole system, while a ___ is different for every account and not secret.",
+    "hint": "Lesson 5, section 03.",
+    "blanks": [
+      {
+        "accept": [
+          "salt"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c9pt9y5q",
+    "version": 1,
+    "section": "upgrade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Verification said `rehash now: stored m=7168,t=1 is below the policy`. When can the application compute the new hash?",
+    "hint": "It needs the password.",
+    "choices": [
+      {
+        "text": "In a nightly batch job over the whole store",
+        "correct": false,
+        "why": "Nobody knows the passwords to recompute them."
+      },
+      {
+        "text": "Right now, during this sign-in",
+        "correct": true,
+        "why": "Right: the only moment it holds the password."
+      },
+      {
+        "text": "Only after the user resets the password",
+        "correct": false,
+        "why": "No reset is needed."
+      },
+      {
+        "text": "Never: old hashes stay as they are",
+        "correct": false,
+        "why": "Leaving them is how weak hashes accumulate."
+      }
+    ]
+  },
+  {
+    "id": "ex-sy3pcaz3",
+    "version": 1,
+    "section": "upgrade",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did `vcrypt verify` answer a missing account, `ana.lim`, with the same words as a wrong password?",
+    "hint": "What would a different answer tell a stranger?",
+    "choices": [
+      {
+        "text": "Because the tool does not check whether accounts exist",
+        "correct": false,
+        "why": "It does: it looked the user up first."
+      },
+      {
+        "text": "To save one Argon2id computation",
+        "correct": false,
+        "why": "Saving it would make the paths differ in time."
+      },
+      {
+        "text": "To keep membership private",
+        "correct": true,
+        "why": "Right: on a clinic's portal that is a health fact."
+      },
+      {
+        "text": "Because ana.lim is close to ana.lima",
+        "correct": false,
+        "why": "The answer is the same for any missing name."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzpbkj6q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these ways of storing a password from weakest to strongest.",
+    "hint": "Each step fixes one more problem.",
+    "items": [
+      "plain SHA-256",
+      "salted SHA-256",
+      "Argon2id with a salt",
+      "Argon2id with a salt and a pepper in an HSM"
+    ]
+  },
+  {
+    "id": "ex-e1ardntw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Vereda moves from bcrypt to Argon2id. Which steps belong to the migration? Choose all that apply.",
+    "hint": "Both accepted on the way in.",
+    "choices": [
+      {
+        "text": "Accept bcrypt and Argon2id hashes when verifying",
+        "correct": true,
+        "why": "Yes: old accounts still sign in."
+      },
+      {
+        "text": "Write Argon2id whenever a bcrypt hash verifies",
+        "correct": true,
+        "why": "Yes: the upgrade on sign-in."
+      },
+      {
+        "text": "After a deadline, require a reset for accounts still on bcrypt",
+        "correct": true,
+        "why": "Yes: no weak hash stays forever."
+      },
+      {
+        "text": "Convert every bcrypt hash to Argon2id in one batch",
+        "correct": false,
+        "why": "Impossible without the passwords."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wyqhhh1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each defence to the problem it answers.",
+    "hint": "Section 02's table.",
+    "pairs": [
+      {
+        "left": "a salt per account",
+        "right": "precomputed lists"
+      },
+      {
+        "left": "Argon2id's cost",
+        "right": "billions of guesses a second"
+      },
+      {
+        "left": "a pepper",
+        "right": "a leaked store with nothing else"
+      },
+      {
+        "left": "the same answer for a missing account",
+        "right": "learning who has an account"
+      }
+    ],
+    "right_distractors": [
+      "a weak password"
+    ]
+  }
+]

@@ -1,0 +1,463 @@
+[
+  {
+    "id": "ex-d8bdw7gk",
+    "version": 1,
+    "section": "plaintext",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the FTP capture, how did the password travel?",
+    "hint": "Read the line after USER.",
+    "choices": [
+      {
+        "text": "Hashed with MD5, as FTP servers expect",
+        "correct": false,
+        "why": "FTP sends no hash."
+      },
+      {
+        "text": "As typed, after PASS",
+        "correct": true,
+        "why": "Right: readable by anybody on the path."
+      },
+      {
+        "text": "Encrypted with the server's certificate",
+        "correct": false,
+        "why": "This FTP server has no TLS at all."
+      },
+      {
+        "text": "Encoded in Base64 inside the USER command",
+        "correct": false,
+        "why": "It was plain text in its own command."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xdpsja8",
+    "version": 1,
+    "section": "plaintext",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `curl --ssl-reqd` stop before sending USER and PASS?",
+    "hint": "The server answered 500 to AUTH.",
+    "choices": [
+      {
+        "text": "Because the password was wrong",
+        "correct": false,
+        "why": "It never got as far as the password."
+      },
+      {
+        "text": "Because port 2121 is reserved for FTPS",
+        "correct": false,
+        "why": "Ports do not decide this."
+      },
+      {
+        "text": "TLS was required but unavailable",
+        "correct": true,
+        "why": "Right: a client that only preferred TLS would have sent the password."
+      },
+      {
+        "text": "Because curl does not support FTP",
+        "correct": false,
+        "why": "The first command used FTP successfully."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jk90zps",
+    "version": 1,
+    "section": "plaintext",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each plain protocol to its encrypted replacement.",
+    "hint": "The table of section 02.",
+    "pairs": [
+      {
+        "left": "Telnet",
+        "right": "SSH"
+      },
+      {
+        "left": "FTP",
+        "right": "SFTP"
+      },
+      {
+        "left": "LDAP",
+        "right": "LDAPS"
+      },
+      {
+        "left": "HTTP",
+        "right": "HTTPS"
+      }
+    ],
+    "right_distractors": [
+      "SNMPv1"
+    ]
+  },
+  {
+    "id": "ex-txjmq1v1",
+    "version": 1,
+    "section": "plaintext",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which port does LDAPS listen by default?",
+    "hint": "Plain LDAP is 389.",
+    "value": 636,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-q9bqqh7a",
+    "version": 1,
+    "section": "sftp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana compare the fingerprint from `ssh-keyscan` with the one the administrator published, before saving the key?",
+    "hint": "SSH has no CA by default.",
+    "choices": [
+      {
+        "text": "To make the connection faster next time",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Because sftp refuses ed25519 keys otherwise",
+        "correct": false,
+        "why": "It accepts them."
+      },
+      {
+        "text": "To encrypt the fingerprint before storing it",
+        "correct": false,
+        "why": "Nothing is encrypted in known_hosts."
+      },
+      {
+        "text": "To be sure the key is the server's",
+        "correct": true,
+        "why": "Right: the first connection is when an impostor could slip in."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvnv63f7",
+    "version": 1,
+    "section": "sftp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the SSH connection use as its key exchange?",
+    "hint": "The first line of the verbose output.",
+    "choices": [
+      {
+        "text": "A post-quantum hybrid",
+        "correct": true,
+        "why": "Right: sntrup761x25519-sha512."
+      },
+      {
+        "text": "RSA key transport with the host key",
+        "correct": false,
+        "why": "SSH never transports keys that way."
+      },
+      {
+        "text": "ChaCha20-Poly1305",
+        "correct": false,
+        "why": "That is the cipher, chosen after the exchange."
+      },
+      {
+        "text": "Ana's Ed25519 key",
+        "correct": false,
+        "why": "That authenticated Ana; it did not agree the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-2t251sbh",
+    "version": 1,
+    "section": "sftp",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs 300 servers and users keep answering yes to new host keys without checking. Which change removes the question rather than asking people to be careful?",
+    "hint": "Trust one thing instead of 300.",
+    "choices": [
+      {
+        "text": "Disable StrictHostKeyChecking everywhere",
+        "correct": false,
+        "why": "That accepts every key without asking, which is worse."
+      },
+      {
+        "text": "SSH certificates signed by an internal CA",
+        "correct": true,
+        "why": "Right: clients trust the CA, not each key."
+      },
+      {
+        "text": "Use RSA host keys instead of Ed25519",
+        "correct": false,
+        "why": "The algorithm is not the problem."
+      },
+      {
+        "text": "Rotate all host keys every month",
+        "correct": false,
+        "why": "That would make people answer yes more often."
+      }
+    ]
+  },
+  {
+    "id": "ex-btr7s9q5",
+    "version": 1,
+    "section": "sftp",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "SFTP runs inside an ___ connection, while FTPS is FTP wrapped in TLS.",
+    "hint": "Three letters, port 22.",
+    "blanks": [
+      {
+        "accept": [
+          "SSH"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7v6z85bq",
+    "version": 1,
+    "section": "starttls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an \"SSL certificate\" today?",
+    "hint": "SSL is the old name of what?",
+    "choices": [
+      {
+        "text": "A certificate that only works with SSL 3.0",
+        "correct": false,
+        "why": "SSL 3.0 is prohibited and unused."
+      },
+      {
+        "text": "A weaker kind of certificate than a TLS one",
+        "correct": false,
+        "why": "They are the same thing."
+      },
+      {
+        "text": "A TLS certificate under its old name",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A certificate signed by Netscape",
+        "correct": false,
+        "why": "Netscape designed SSL; it signs nothing now."
+      }
+    ]
+  },
+  {
+    "id": "ex-1twmd3w9",
+    "version": 1,
+    "section": "starttls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can STARTTLS be stripped while implicit TLS cannot?",
+    "hint": "Look at the figure.",
+    "choices": [
+      {
+        "text": "STARTTLS uses an older version of TLS",
+        "correct": false,
+        "why": "It negotiated TLS 1.3 in the lab."
+      },
+      {
+        "text": "Its upgrade request travels in clear text first",
+        "correct": true,
+        "why": "Right: an attacker is able to remove the offer."
+      },
+      {
+        "text": "Implicit TLS uses longer keys",
+        "correct": false,
+        "why": "Key length is unrelated."
+      },
+      {
+        "text": "STARTTLS skips certificate verification",
+        "correct": false,
+        "why": "The lab's STARTTLS verified the certificate."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk20v5dz",
+    "version": 1,
+    "section": "starttls",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these defend against STARTTLS stripping? Choose all that apply.",
+    "hint": "Make the upgrade mandatory.",
+    "choices": [
+      {
+        "text": "A client option that refuses to continue without TLS",
+        "correct": true,
+        "why": "Yes: -ZZ, --ssl-reqd."
+      },
+      {
+        "text": "MTA-STS for mail between domains",
+        "correct": true,
+        "why": "Yes: it publishes that TLS is required."
+      },
+      {
+        "text": "Using implicit TLS where available",
+        "correct": true,
+        "why": "Yes: nothing to strip."
+      },
+      {
+        "text": "Listing STARTTLS first among the server's capabilities",
+        "correct": false,
+        "why": "The attacker removes it wherever it is listed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rgt5k2t",
+    "version": 1,
+    "section": "ldap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The directory answered `confidentiality required` to a plain bind. What did that refusal protect?",
+    "hint": "When was the password sent?",
+    "choices": [
+      {
+        "text": "That password, which never left the client",
+        "correct": false,
+        "why": "The client sent it before the server objected."
+      },
+      {
+        "text": "The directory's TLS certificate",
+        "correct": false,
+        "why": "The certificate was not involved."
+      },
+      {
+        "text": "Clients that send it fail loudly",
+        "correct": true,
+        "why": "Right: the client-side rule stops the password leaving."
+      },
+      {
+        "text": "Nothing: the bind succeeded anyway",
+        "correct": false,
+        "why": "It did not succeed."
+      }
+    ]
+  },
+  {
+    "id": "ex-mv6f8mxg",
+    "version": 1,
+    "section": "ldap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An LDAPS client prints `Can't contact LDAP server`, but the server is running. What should be checked first?",
+    "hint": "The lab's last capture.",
+    "choices": [
+      {
+        "text": "The firewall on port 389",
+        "correct": false,
+        "why": "LDAPS uses 636, and the server was reachable."
+      },
+      {
+        "text": "Whether TLS_REQCERT is set to never",
+        "correct": false,
+        "why": "Setting it to never would hide the problem, not solve it."
+      },
+      {
+        "text": "The admin password",
+        "correct": false,
+        "why": "A wrong password gives a different error."
+      },
+      {
+        "text": "Trust in Vereda's CA on that machine",
+        "correct": true,
+        "why": "Right: -d 1 shows the TLS error."
+      }
+    ]
+  },
+  {
+    "id": "ex-9144v70v",
+    "version": 1,
+    "section": "ldap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-ZZ` add to `ldapwhoami`?",
+    "hint": "One Z asks; two insist.",
+    "choices": [
+      {
+        "text": "Compression of the LDAP traffic",
+        "correct": false,
+        "why": "It has nothing to do with compression."
+      },
+      {
+        "text": "StartTLS, required",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A connection to port 636 instead of 389",
+        "correct": false,
+        "why": "That would be ldaps://."
+      },
+      {
+        "text": "Anonymous binding",
+        "correct": false,
+        "why": "The bind still used the admin name."
+      }
+    ]
+  },
+  {
+    "id": "ex-phrnjg9e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lab command to what it showed.",
+    "hint": "Sections 02 to 05.",
+    "pairs": [
+      {
+        "left": "curl -v ftp://",
+        "right": "the password sent as typed"
+      },
+      {
+        "left": "ssh-keyscan | ssh-keygen -lf -",
+        "right": "the host key's fingerprint"
+      },
+      {
+        "left": "openssl s_client -starttls ldap",
+        "right": "a TLS 1.3 upgrade on port 3389"
+      },
+      {
+        "left": "ldapwhoami -x -H ldap://",
+        "right": "confidentiality required"
+      }
+    ],
+    "right_distractors": [
+      "a revoked certificate"
+    ]
+  },
+  {
+    "id": "ex-1qpacf1w",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an LDAP StartTLS bind in order.",
+    "hint": "Clear text first, password last.",
+    "items": [
+      "connect to port 389",
+      "send the StartTLS request",
+      "TLS handshake and certificate check",
+      "send the bind with the password"
+    ]
+  }
+]

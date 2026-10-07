@@ -1,0 +1,430 @@
+[
+  {
+    "id": "ex-nt5rd04d",
+    "version": 1,
+    "section": "8021x",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each 802.1X role to what plays it at Vereda.",
+    "hint": "Three roles.",
+    "pairs": [
+      {
+        "left": "supplicant",
+        "right": "the physiotherapist's laptop"
+      },
+      {
+        "left": "authenticator",
+        "right": "the access point"
+      },
+      {
+        "left": "authentication server",
+        "right": "FreeRADIUS"
+      }
+    ],
+    "right_distractors": [
+      "the DNS resolver"
+    ]
+  },
+  {
+    "id": "ex-kj6dhpya",
+    "version": 1,
+    "section": "8021x",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the PMK of an 802.1X session come from?",
+    "hint": "Not from a passphrase.",
+    "choices": [
+      {
+        "text": "From PBKDF2 over the SSID and the user's password",
+        "correct": false,
+        "why": "That is WPA2-Personal."
+      },
+      {
+        "text": "The RADIUS server sends it on accept",
+        "correct": true,
+        "why": "Right: fresh for each session."
+      },
+      {
+        "text": "The access point picks it and shows it to the server",
+        "correct": false,
+        "why": "The server makes it."
+      },
+      {
+        "text": "It is the same for the whole staff VLAN",
+        "correct": false,
+        "why": "Each session has its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-92nta9r0",
+    "version": 1,
+    "section": "8021x",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A receptionist leaves Vereda. With 802.1X, what locks her out of the staff network?",
+    "hint": "Revocation is one account.",
+    "choices": [
+      {
+        "text": "A new passphrase typed into every device",
+        "correct": false,
+        "why": "That was lesson 15's problem."
+      },
+      {
+        "text": "Rebooting the access points",
+        "correct": false,
+        "why": "They hold no accounts."
+      },
+      {
+        "text": "Disabling her directory account",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Changing the RADIUS shared secret",
+        "correct": false,
+        "why": "That is between the access point and the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1p6f3hz",
+    "version": 1,
+    "section": "8021x",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did Blast-RADIUS (2024) leave EAP traffic largely unaffected?",
+    "hint": "An attribute EAP always sends.",
+    "choices": [
+      {
+        "text": "EAP packets always carry a Message-Authenticator",
+        "correct": true,
+        "why": "Right: an HMAC over the packet."
+      },
+      {
+        "text": "EAP uses SHA-256 instead of MD5 in RADIUS",
+        "correct": false,
+        "why": "RADIUS's own layer is still MD5."
+      },
+      {
+        "text": "Access points encrypt RADIUS with WPA3",
+        "correct": false,
+        "why": "WPA3 is the radio side only."
+      },
+      {
+        "text": "MD5 collisions are impossible for short packets",
+        "correct": false,
+        "why": "The research produced one."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7kwrq96",
+    "version": 1,
+    "section": "methods",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each EAP method to how the client proves itself.",
+    "hint": "The table at the top of the section.",
+    "pairs": [
+      {
+        "left": "EAP-TLS",
+        "right": "its own certificate"
+      },
+      {
+        "left": "PEAP",
+        "right": "MSCHAPv2 inside a TLS tunnel"
+      },
+      {
+        "left": "EAP-TTLS",
+        "right": "a password or another method in a tunnel"
+      }
+    ],
+    "right_distractors": [
+      "the SSID and a passphrase"
+    ]
+  },
+  {
+    "id": "ex-hdmyhybe",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab's PEAP run, which name could every access point and RADIUS proxy on the way read?",
+    "hint": "Sent before the tunnel exists.",
+    "choices": [
+      {
+        "text": "ana",
+        "correct": false,
+        "why": "That one went only inside the tunnel."
+      },
+      {
+        "text": "anonymous@vereda.example",
+        "correct": true,
+        "why": "Right: the outer identity."
+      },
+      {
+        "text": "radius.vereda.example",
+        "correct": false,
+        "why": "That is the server's certificate name."
+      },
+      {
+        "text": "Vereda-Equipe",
+        "correct": false,
+        "why": "That is the SSID, broadcast by the access point."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1ynvrtg",
+    "version": 1,
+    "section": "methods",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two PEAP sessions ran in a row with the same profile. How many different PMKs did they produce?",
+    "hint": "`sort -u | wc -l`.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "PMKs"
+  },
+  {
+    "id": "ex-w649tsfp",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is MSCHAPv2 acceptable inside PEAP but not on its own?",
+    "hint": "2012, and one DES key.",
+    "choices": [
+      {
+        "text": "PEAP replaces MSCHAPv2's DES with AES",
+        "correct": false,
+        "why": "MSCHAPv2 runs unchanged inside."
+      },
+      {
+        "text": "MSCHAPv2 is only weak over cables",
+        "correct": false,
+        "why": "The medium is not the issue."
+      },
+      {
+        "text": "PEAP hashes the password with Argon2id first",
+        "correct": false,
+        "why": "It does not touch the password."
+      },
+      {
+        "text": "A recorded exchange is crackable; the tunnel hides it",
+        "correct": true,
+        "why": "Right, if the server was verified."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rjr8qjk",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vereda manages every laptop and tablet with a device-management tool. Which method should the staff network use?",
+    "hint": "No password on the wire.",
+    "choices": [
+      {
+        "text": "PEAP with MSCHAPv2, the Windows default",
+        "correct": false,
+        "why": "Works, but keeps a password to protect."
+      },
+      {
+        "text": "EAP-TLS",
+        "correct": true,
+        "why": "Right: certificates issued automatically."
+      },
+      {
+        "text": "WPA2-Personal with a long passphrase",
+        "correct": false,
+        "why": "One shared key again."
+      },
+      {
+        "text": "EAP-TTLS with PAP and no server certificate",
+        "correct": false,
+        "why": "Every tunnel needs the server checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-077td68m",
+    "version": 1,
+    "section": "validate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The impostor's certificate claimed every name Vereda's did. What made the careful profile refuse it?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Its validity dates had expired",
+        "correct": false,
+        "why": "Its dates were fine."
+      },
+      {
+        "text": "No chain reached pki/root.pem",
+        "correct": true,
+        "why": "Right: the signature, not the names."
+      },
+      {
+        "text": "Its CN did not match domain_suffix_match",
+        "correct": false,
+        "why": "The CN matched."
+      },
+      {
+        "text": "It used P-256 instead of RSA",
+        "correct": false,
+        "why": "Vereda's leaf is P-256 too."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t82f4x3",
+    "version": 1,
+    "section": "validate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The careless profile's run ended in FAILURE. Why is that still a bad outcome?",
+    "hint": "What did the laptop send before the failure?",
+    "choices": [
+      {
+        "text": "The impostor learned ana's password in clear",
+        "correct": false,
+        "why": "It got a challenge-response, not the password."
+      },
+      {
+        "text": "The failure locked ana's account in the directory",
+        "correct": false,
+        "why": "The impostor never reached the directory."
+      },
+      {
+        "text": "It now holds a response computed from her password",
+        "correct": true,
+        "why": "Right: testable offline against guesses."
+      },
+      {
+        "text": "Vereda's real server logged an intrusion",
+        "correct": false,
+        "why": "The real server was never contacted."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgf4q220",
+    "version": 1,
+    "section": "validate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A profile sets `domain_suffix_match` but no `ca_cert`. What does it accept?",
+    "hint": "A name with no chain behind it.",
+    "choices": [
+      {
+        "text": "Anybody's certificate bearing that name",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only certificates from public CAs",
+        "correct": false,
+        "why": "Without ca_cert no chain is checked."
+      },
+      {
+        "text": "Nothing: wpa_supplicant refuses to start",
+        "correct": false,
+        "why": "It starts and connects."
+      },
+      {
+        "text": "Only Vereda's server, since the name is unique",
+        "correct": false,
+        "why": "Anyone can write any name."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdmzbggg",
+    "version": 1,
+    "section": "validate",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The careful profile refused the impostor with a TLS alert called `unknown ___`.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "CA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zcqncwpt",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which measures protect Vereda's staff from a fake `Vereda-Equipe` access point? Choose all that apply.",
+    "hint": "Sections 03 and 04.",
+    "choices": [
+      {
+        "text": "Profiles pushed with the CA and server name set",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The prompt to trust new servers switched off",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A longer RADIUS shared secret",
+        "correct": false,
+        "why": "That protects the AP-to-server link, not clients."
+      },
+      {
+        "text": "EAP-TLS on managed devices",
+        "correct": true,
+        "why": "Yes: nothing to guess."
+      },
+      {
+        "text": "Hiding the SSID",
+        "correct": false,
+        "why": "Clients then announce it while searching."
+      }
+    ]
+  },
+  {
+    "id": "ex-45103jsb",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a PEAP sign-in in order.",
+    "hint": "Outside in.",
+    "items": [
+      "the laptop sends its outer identity",
+      "the server presents its certificate",
+      "the laptop checks the chain and the name",
+      "MSCHAPv2 runs inside the tunnel",
+      "the server sends the access point the PMK"
+    ]
+  }
+]

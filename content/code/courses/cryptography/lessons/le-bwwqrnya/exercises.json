@@ -1,0 +1,512 @@
+[
+  {
+    "id": "ex-y22w7517",
+    "version": 1,
+    "section": "hello",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the TLS 1.3 capture, what does the client send in its very first message that a TLS 1.2 client does not?",
+    "hint": "It is what saves a round trip.",
+    "choices": [
+      {
+        "text": "A key share",
+        "correct": true,
+        "why": "Right: its X25519 public key, sent before being asked."
+      },
+      {
+        "text": "The certificate the client expects the server to present",
+        "correct": false,
+        "why": "Clients do not send the server's certificate."
+      },
+      {
+        "text": "The session key, encrypted with the server's public key",
+        "correct": false,
+        "why": "That is RSA key transport, which TLS 1.3 removed."
+      },
+      {
+        "text": "The first page of application data, in clear text",
+        "correct": false,
+        "why": "Data is never sent in clear."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcjejeyn",
+    "version": 1,
+    "section": "hello",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of a TLS 1.3 handshake can an observer on the network still read?",
+    "hint": "Before the ServerHello, nothing is encrypted.",
+    "choices": [
+      {
+        "text": "The server's certificate chain",
+        "correct": false,
+        "why": "In TLS 1.3 it is encrypted; in TLS 1.2 it was not."
+      },
+      {
+        "text": "The Finished messages",
+        "correct": false,
+        "why": "They are encrypted."
+      },
+      {
+        "text": "The application data, if it is HTTP/1.1",
+        "correct": false,
+        "why": "Application data is always encrypted."
+      },
+      {
+        "text": "The two hellos, including the SNI name",
+        "correct": true,
+        "why": "Right: portal.vereda.example is visible, until ECH hides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3143f15e",
+    "version": 1,
+    "section": "hello",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many cipher suites did the lab's client offer in its TLS 1.3 ClientHello?",
+    "hint": "The second line of the capture.",
+    "value": 31,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vgb3gfj9",
+    "version": 1,
+    "section": "server-proves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the server sign the transcript in CertificateVerify when it has already sent a valid certificate chain?",
+    "hint": "A certificate is public.",
+    "choices": [
+      {
+        "text": "To renew the certificate during the handshake",
+        "correct": false,
+        "why": "Nothing is renewed there."
+      },
+      {
+        "text": "To prove it holds the certificate's private key",
+        "correct": true,
+        "why": "Right: and to bind its identity to this exchange."
+      },
+      {
+        "text": "To encrypt the session key for the client",
+        "correct": false,
+        "why": "The key comes from the X25519 exchange."
+      },
+      {
+        "text": "Because the chain does not include the root",
+        "correct": false,
+        "why": "The root is never sent; that is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3zrtma5",
+    "version": 1,
+    "section": "server-proves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody in the middle removes the strongest cipher suites from the ClientHello. Which message makes the handshake fail?",
+    "hint": "A MAC over everything said.",
+    "choices": [
+      {
+        "text": "EncryptedExtensions",
+        "correct": false,
+        "why": "It carries extension answers, not a check."
+      },
+      {
+        "text": "ServerHello, which would refuse the trimmed list",
+        "correct": false,
+        "why": "The server cannot tell the list was trimmed."
+      },
+      {
+        "text": "Finished",
+        "correct": true,
+        "why": "Right: the transcripts differ, so the MACs disagree."
+      },
+      {
+        "text": "Certificate",
+        "correct": false,
+        "why": "The certificate is unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-97xvvsnm",
+    "version": 1,
+    "section": "server-proves",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the messages of the TLS 1.3 handshake in the order they were sent.",
+    "hint": "Follow the figure.",
+    "items": [
+      "ClientHello",
+      "ServerHello",
+      "Certificate",
+      "CertificateVerify",
+      "the server's Finished",
+      "the client's Finished"
+    ]
+  },
+  {
+    "id": "ex-yhejye8q",
+    "version": 1,
+    "section": "server-proves",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the server not send Vereda's root certificate in the chain?",
+    "hint": "Where must trust come from?",
+    "choices": [
+      {
+        "text": "Because the root is too large for one record",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "Because sending it would reveal the root's private key",
+        "correct": false,
+        "why": "A certificate holds no private key."
+      },
+      {
+        "text": "It proves nothing: the client must already trust it",
+        "correct": true,
+        "why": "Right: anybody can send a root."
+      },
+      {
+        "text": "Because TLS 1.3 forbids chains longer than two",
+        "correct": false,
+        "why": "No such limit exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0fqtqm6",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why must `SSLKEYLOGFILE` never be set on a production server?",
+    "hint": "What does a recording plus the log give?",
+    "choices": [
+      {
+        "text": "It slows every handshake down noticeably",
+        "correct": false,
+        "why": "Speed is not the concern."
+      },
+      {
+        "text": "It writes every session's secrets to disk",
+        "correct": true,
+        "why": "Right: forward secrecy is undone."
+      },
+      {
+        "text": "It disables certificate verification",
+        "correct": false,
+        "why": "It does not affect verification."
+      },
+      {
+        "text": "It forces TLS 1.2",
+        "correct": false,
+        "why": "It works with both versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw26s8k7",
+    "version": 1,
+    "section": "keys",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes long is CLIENT_TRAFFIC_SECRET_0 in the lab's connection, which used TLS_AES_256_GCM_SHA384?",
+    "hint": "The length of the suite's hash.",
+    "value": 48,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-s7y81m8y",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does TLS 1.3 derive separate traffic secrets for the client-to-server and server-to-client directions?",
+    "hint": "Think of a record sent back the way it came.",
+    "choices": [
+      {
+        "text": "Because the server and the client use different ciphers",
+        "correct": false,
+        "why": "They use the same suite."
+      },
+      {
+        "text": "To double the amount of data the connection can carry",
+        "correct": false,
+        "why": "The limit is handled by key updates."
+      },
+      {
+        "text": "So the client can read data the server has not sent yet",
+        "correct": false,
+        "why": "That makes no sense."
+      },
+      {
+        "text": "No record can be reflected back",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-62e563wa",
+    "version": 1,
+    "section": "failures",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lab server to the error the client gave.",
+    "hint": "Section 05.",
+    "pairs": [
+      {
+        "left": "8444, portal without the issuing CA",
+        "right": "unable to get local issuer certificate"
+      },
+      {
+        "left": "8445, agenda",
+        "right": "certificate has expired"
+      },
+      {
+        "left": "8446, intranet",
+        "right": "self-signed certificate"
+      },
+      {
+        "left": "8443, asked as www.vereda.example",
+        "right": "hostname mismatch"
+      }
+    ],
+    "right_distractors": [
+      "certificate revoked"
+    ]
+  },
+  {
+    "id": "ex-5t0rm0q2",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When the agenda's certificate failed, what did the client send before closing?",
+    "hint": "The end of the trace.",
+    "choices": [
+      {
+        "text": "Its own Finished, so the server could log it",
+        "correct": false,
+        "why": "It never got that far."
+      },
+      {
+        "text": "A fatal alert: certificate expired",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the connection timed out",
+        "correct": false,
+        "why": "It closed deliberately, with a reason."
+      },
+      {
+        "text": "A request for a newer certificate",
+        "correct": false,
+        "why": "TLS has no such message."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd2zjzvw",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer's script fails with `self-signed certificate` against a new internal service. Which fix keeps the protection the error exists for?",
+    "hint": "Who should vouch for the service's key?",
+    "choices": [
+      {
+        "text": "Pass -k to curl for that host only",
+        "correct": false,
+        "why": "Then any server answering at that host is accepted."
+      },
+      {
+        "text": "Add the service's certificate to an exceptions list",
+        "correct": false,
+        "why": "An exception per host is unchecked trust."
+      },
+      {
+        "text": "Issue its certificate from the internal CA the clients trust",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Switch the service to TLS 1.2",
+        "correct": false,
+        "why": "The version has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbmhef04",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which versions of TLS should a server accept today?",
+    "hint": "RFC 8996.",
+    "choices": [
+      {
+        "text": "TLS 1.0 and above, for old clients",
+        "correct": false,
+        "why": "1.0 and 1.1 are deprecated."
+      },
+      {
+        "text": "TLS 1.2 and 1.3",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "TLS 1.3 together with SSL 3.0, as a fallback",
+        "correct": false,
+        "why": "SSL 3.0 is prohibited."
+      },
+      {
+        "text": "Whatever the operating system enables by default, unchanged",
+        "correct": false,
+        "why": "Defaults vary; the decision is yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4t9bpqw",
+    "version": 1,
+    "section": "versions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384` to what it names.",
+    "hint": "Left to right: exchange, certificate, cipher, hash.",
+    "pairs": [
+      {
+        "left": "ECDHE",
+        "right": "an ephemeral key exchange"
+      },
+      {
+        "left": "ECDSA",
+        "right": "the certificate's key type"
+      },
+      {
+        "left": "AES_256_GCM",
+        "right": "the authenticated cipher"
+      },
+      {
+        "left": "SHA384",
+        "right": "the hash for HKDF and the transcript"
+      }
+    ],
+    "right_distractors": [
+      "the server's host name"
+    ]
+  },
+  {
+    "id": "ex-6fr8bgpj",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the client forcing `AES256-GCM-SHA384` over TLS 1.2 get a handshake failure from the portal?",
+    "hint": "What key does that suite need the certificate to have?",
+    "choices": [
+      {
+        "text": "Because AES-256-GCM is disabled in OpenSSL 3",
+        "correct": false,
+        "why": "It is the suite the TLS 1.3 handshake used."
+      },
+      {
+        "text": "Because the server only speaks TLS 1.3",
+        "correct": false,
+        "why": "The previous capture negotiated TLS 1.2."
+      },
+      {
+        "text": "The portal's certificate key is ECDSA",
+        "correct": true,
+        "why": "Right: the suite needs RSA key transport, so no suite fits both sides."
+      },
+      {
+        "text": "Because the certificate had expired",
+        "correct": false,
+        "why": "The portal's certificate is valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqph7dpd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does a TLS 1.3 client check before it sends its Finished? Choose all that apply.",
+    "hint": "Everything about the server's identity.",
+    "choices": [
+      {
+        "text": "That the chain leads to a trusted root",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "That the requested name is in the SAN",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "That CertificateVerify verifies over the transcript",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "That the server's private key is at least 4096 bits",
+        "correct": false,
+        "why": "P-256 is fine, and no such rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjv4vcnh",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The extension in which the client names the host it wants, sent in clear text in the ClientHello, is called ___.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "SNI",
+          "server_name",
+          "server name indication"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

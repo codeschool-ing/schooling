@@ -1,0 +1,388 @@
+[
+  {
+    "id": "ex-67se7w2k",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A colleague says the database password is safe because the Kubernetes Secret stores it in Base64. What is Base64?",
+    "hint": "Does it have a key?",
+    "choices": [
+      {
+        "text": "A light form of encryption, enough for internal use",
+        "correct": false,
+        "why": "It has no key, so it is not encryption at any strength."
+      },
+      {
+        "text": "An encoding that anybody reverses",
+        "correct": true,
+        "why": "Right: base64 -d returned the password."
+      },
+      {
+        "text": "A hash, so the password cannot be recovered",
+        "correct": false,
+        "why": "Base64 decodes back exactly."
+      },
+      {
+        "text": "Encryption with a key held by the cluster",
+        "correct": false,
+        "why": "Encryption at rest is a separate cluster setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8j5kfvx",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is HTTP Basic authentication acceptable only inside TLS?",
+    "hint": "Decode the header.",
+    "choices": [
+      {
+        "text": "Because the Base64 in the header is too weak without TLS",
+        "correct": false,
+        "why": "Base64 has no strength to be weak in."
+      },
+      {
+        "text": "Because TLS hashes the password before it is sent",
+        "correct": false,
+        "why": "TLS encrypts the whole request; it does not hash fields."
+      },
+      {
+        "text": "The header is the password, merely encoded",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because servers refuse Basic authentication on port 80",
+        "correct": false,
+        "why": "Many do not; that is not why."
+      }
+    ]
+  },
+  {
+    "id": "ex-rt90b7p2",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The third line of the side-by-side capture also looks like Base64. What separates it from the second?",
+    "hint": "What reverses each one?",
+    "choices": [
+      {
+        "text": "It is longer",
+        "correct": false,
+        "why": "Length says nothing about secrecy."
+      },
+      {
+        "text": "It ends in ==",
+        "correct": false,
+        "why": "That is padding of the encoding."
+      },
+      {
+        "text": "It uses a different alphabet",
+        "correct": false,
+        "why": "Both use the Base64 alphabet."
+      },
+      {
+        "text": "Reversing it also needs the key",
+        "correct": true,
+        "why": "Right: underneath is AES ciphertext."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rj2dwc9",
+    "version": 1,
+    "section": "encoding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Base64 turns every 3 bytes into ___ characters.",
+    "hint": "Hexadecimal turns 1 byte into 2.",
+    "blanks": [
+      {
+        "accept": [
+          "4",
+          "four"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5hb4rgh9",
+    "version": 1,
+    "section": "obfuscation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many keys did it take to recover the scheduler's \"protected\" password?",
+    "hint": "Count the inputs of the two commands.",
+    "choices": [
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: Base64 and ROT13, both public rules."
+      },
+      {
+        "text": "One, written in the vendor's manual",
+        "correct": false,
+        "why": "The manual names the method; there is no key."
+      },
+      {
+        "text": "Two, one per layer",
+        "correct": false,
+        "why": "Neither layer has a key."
+      },
+      {
+        "text": "The scheduler's licence key",
+        "correct": false,
+        "why": "No licence was involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkcpws3j",
+    "version": 1,
+    "section": "obfuscation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A vendor encrypts passwords in its configuration with AES, using a key compiled into the product. How should an auditor classify it?",
+    "hint": "Who holds that key?",
+    "choices": [
+      {
+        "text": "Encrypted at rest, compliant",
+        "correct": false,
+        "why": "Every copy of the product holds the key."
+      },
+      {
+        "text": "Plaintext password in configuration",
+        "correct": true,
+        "why": "Right: obfuscation with better mathematics."
+      },
+      {
+        "text": "Hashed, so unrecoverable",
+        "correct": false,
+        "why": "AES is reversible with the key."
+      },
+      {
+        "text": "Encoded, but safe while the file is private",
+        "correct": false,
+        "why": "It is a finding whoever reads the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv9ynqd8",
+    "version": 1,
+    "section": "obfuscation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A mobile app hides an API key inside its compiled code with several layers of obfuscation. What should the team assume?",
+    "hint": "Who has a copy of the app?",
+    "choices": [
+      {
+        "text": "The key is safe while the layers are not documented",
+        "correct": false,
+        "why": "Undocumented is not secret; a decompiler reads it."
+      },
+      {
+        "text": "The key is safe if it is also rotated yearly",
+        "correct": false,
+        "why": "Rotation shortens exposure; it does not make it secret."
+      },
+      {
+        "text": "The key is public, so limit its permissions",
+        "correct": true,
+        "why": "Right: scope it server-side, as if published."
+      },
+      {
+        "text": "Only rooted phones can extract it",
+        "correct": false,
+        "why": "Any copy of the app can be decompiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3rd5x5p",
+    "version": 1,
+    "section": "the-test",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each example to what it is.",
+    "hint": "Apply the key question to each.",
+    "pairs": [
+      {
+        "left": "Base64 in a Kubernetes Secret",
+        "right": "encoding"
+      },
+      {
+        "left": "ROT13 in the scheduler's configuration",
+        "right": "obfuscation"
+      },
+      {
+        "left": "Argon2id in the users table",
+        "right": "hashing"
+      },
+      {
+        "left": "AES-GCM with a key in a secrets manager",
+        "right": "encryption"
+      }
+    ],
+    "right_distractors": [
+      "compression"
+    ]
+  },
+  {
+    "id": "ex-p8tnpx6d",
+    "version": 1,
+    "section": "the-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The password is sealed with AES-GCM, and `aes-256.hex` is committed beside it in the same repository. What is it now?",
+    "hint": "Where does the key live?",
+    "choices": [
+      {
+        "text": "Encrypted, because AES-256-GCM is unbroken",
+        "correct": false,
+        "why": "The cipher is fine; the key is beside the data."
+      },
+      {
+        "text": "Obfuscation with better mathematics",
+        "correct": true,
+        "why": "Right: whoever reads the repository reads the password."
+      },
+      {
+        "text": "Encoded, since it is stored in Base64",
+        "correct": false,
+        "why": "The Base64 is just how the bytes are written."
+      },
+      {
+        "text": "Hashed, since GCM has a tag",
+        "correct": false,
+        "why": "The tag is a MAC, not a password hash."
+      }
+    ]
+  },
+  {
+    "id": "ex-td2vkmkb",
+    "version": 1,
+    "section": "the-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A vendor's document says customer data is \"encrypted with SHA-256\". What is the most useful response?",
+    "hint": "SHA-256 has no key.",
+    "choices": [
+      {
+        "text": "Accept it: SHA-256 is a current algorithm",
+        "correct": false,
+        "why": "Current, but it is a hash, not encryption."
+      },
+      {
+        "text": "Ask them to use SHA-512 instead",
+        "correct": false,
+        "why": "A bigger hash is still not encryption."
+      },
+      {
+        "text": "Ask whether the data reads back, and with which key",
+        "correct": true,
+        "why": "Right: if it reads back, it is not SHA-256; if not, it is not encryption."
+      },
+      {
+        "text": "Conclude the data is unreadable by anybody",
+        "correct": false,
+        "why": "Short or predictable values can be found by trying candidates."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2q7abzc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statement about encoding, obfuscation and encryption is correct?",
+    "hint": "The test is about the key, not the look.",
+    "choices": [
+      {
+        "text": "Ciphertext can be told from encoded data by looking at it",
+        "correct": false,
+        "why": "Ciphertext is often written in Base64 too."
+      },
+      {
+        "text": "Two layers of encoding are as strong as one of encryption",
+        "correct": false,
+        "why": "Zero plus zero is zero."
+      },
+      {
+        "text": "Encryption is as secret as the place its key is kept",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Obfuscation is fine for passwords if the method is proprietary",
+        "correct": false,
+        "why": "Proprietary methods leak with every copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrp9heqh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these from least to most protection for a stored database password.",
+    "hint": "Who can recover it in each case?",
+    "items": [
+      "Base64 in the configuration file",
+      "AES with a key compiled into the product",
+      "AES-GCM with the key in a secrets manager"
+    ]
+  },
+  {
+    "id": "ex-70g6tjey",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are encodings? Choose all that apply.",
+    "hint": "No key, public rule, anybody reverses.",
+    "choices": [
+      {
+        "text": "PEM",
+        "correct": true,
+        "why": "Yes: Base64 between marker lines."
+      },
+      {
+        "text": "Hexadecimal",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "URL encoding (%20 for a space)",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "AES-GCM",
+        "correct": false,
+        "why": "No: it needs a key."
+      }
+    ]
+  }
+]

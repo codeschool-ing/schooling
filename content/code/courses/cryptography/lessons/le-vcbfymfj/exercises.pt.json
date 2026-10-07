@@ -1,0 +1,343 @@
+{
+  "ex-hh8840yt": {
+    "prompt": "A maquininha de cartão da recepção da Vereda só suporta WEP. O que a clínica deve fazer com ela?",
+    "hint": "O WEP não é uma configuração de segurança.",
+    "choices": [
+      {
+        "text": "Colocá-la na rede da equipe com uma chave WEP longa",
+        "why": "O tamanho da chave não conserta o WEP."
+      },
+      {
+        "text": "Isolá-la como se não cifrasse, e trocá-la",
+        "why": "Certo."
+      },
+      {
+        "text": "Trocar a chave WEP toda semana",
+        "why": "A chave sai do tráfego em minutos."
+      },
+      {
+        "text": "Mantê-la, já que o WEP usa RC4 como o WPA usava",
+        "why": "O TKIP do WPA também está obsoleto."
+      }
+    ]
+  },
+  "ex-dwdtsz7a": {
+    "prompt": "Por que o IV de 24 bits condenou o WEP, dado o que a aula 1 diz sobre cifras de fluxo?",
+    "hint": "Uns 16,7 milhões de valores.",
+    "choices": [
+      {
+        "text": "Um IV de 24 bits deixava a chave curta demais contra força bruta",
+        "why": "O IV é público; não acrescenta sigilo."
+      },
+      {
+        "text": "O IV era cifrado com o CRC-32 fraco",
+        "why": "O IV ia às claras."
+      },
+      {
+        "text": "Os valores logo se repetiam, reusando fluxos de chave",
+        "why": "Certo."
+      },
+      {
+        "text": "O RC4 recusa IVs menores que 64 bits",
+        "why": "O RC4 não tem IV próprio."
+      }
+    ]
+  },
+  "ex-q1m85kgb": {
+    "prompt": "O que tornava o CRC-32 do WEP inútil como verificação de integridade?",
+    "hint": "Uma soma de verificação, não um MAC.",
+    "choices": [
+      {
+        "text": "Seus 32 bits eram poucos para detectar ruído de linha",
+        "why": "Ele detecta ruído bem."
+      },
+      {
+        "text": "É linear e sem chave: qualquer um o acerta depois de editar",
+        "why": "Certo."
+      },
+      {
+        "text": "Era calculado depois da cifragem, só sobre o IV",
+        "why": "Cobria o conteúdo."
+      },
+      {
+        "text": "Usava MD5, que a aula 4 mostra quebrado",
+        "why": "Um CRC não é função de hash."
+      }
+    ]
+  },
+  "ex-hgmk1ra0": {
+    "prompt": "Associe cada geração à sua cifra.",
+    "hint": "A tabela do fim da seção.",
+    "pairs": [
+      {
+        "left": "WEP",
+        "right": "RC4 com IV de 24 bits"
+      },
+      {
+        "left": "WPA",
+        "right": "RC4 com TKIP"
+      },
+      {
+        "left": "WPA2",
+        "right": "AES-CCMP"
+      }
+    ],
+    "right_distractors": [
+      "3DES-CBC"
+    ]
+  },
+  "ex-zjps183c": {
+    "prompt": "O `wpa_passphrase` deu valores de `psk` diferentes para Vereda-Recepcao e Vereda-Equipe com uma mesma frase. Por quê?",
+    "hint": "O sal do PBKDF2.",
+    "choices": [
+      {
+        "text": "Cada ponto de acesso soma um valor aleatório à frase",
+        "why": "Não havia ponto de acesso; a saída é determinística."
+      },
+      {
+        "text": "A ferramenta sorteia um sal novo a cada execução",
+        "why": "Rodar duas vezes dá a mesma linha."
+      },
+      {
+        "text": "O nome de cada rede entra no PBKDF2 como sal",
+        "why": "Certo."
+      },
+      {
+        "text": "O WPA2 usa Argon2id com custo ligado ao SSID",
+        "why": "É PBKDF2 com SHA-1, 4096 rodadas."
+      }
+    ]
+  },
+  "ex-rw9jqd9t": {
+    "prompt": "Quantas iterações de PBKDF2 o WPA2-Personal usa para derivar a PMK?",
+    "hint": "O quarto argumento em wifi_pmk.py.",
+    "unit": "iterações"
+  },
+  "ex-0k2bwwmn": {
+    "prompt": "O wpa_supplicant.conf de um notebook guarda só a linha `psk` de 64 hexadecimais, nunca a frase. Alguém copia esse arquivo. O que essa pessoa tem?",
+    "hint": "O que a rede confere?",
+    "choices": [
+      {
+        "text": "Acesso à rede, tão bom quanto a frase",
+        "why": "Certo: é a PMK que entra."
+      },
+      {
+        "text": "Nada, porque a PMK é um hash de mão única",
+        "why": "Mão única, mas é a própria chave."
+      },
+      {
+        "text": "Só o SSID, que já era público",
+        "why": "A linha psk é a chave."
+      },
+      {
+        "text": "Uma chave só daquele notebook, revogada quando ele sai",
+        "why": "Todo aparelho divide a PMK."
+      }
+    ]
+  },
+  "ex-yem1t4fh": {
+    "prompt": "Por que um roteador que ficou com o SSID de fábrica, como `linksys`, sai pior mesmo com uma frase razoável?",
+    "hint": "O argumento da aula 5 por sais únicos.",
+    "choices": [
+      {
+        "text": "Nomes de fábrica desligam o CCMP e voltam ao TKIP",
+        "why": "O nome não escolhe a cifra."
+      },
+      {
+        "text": "Um SSID comum faz o four-way handshake pular os nonces",
+        "why": "Os nonces sempre estão lá."
+      },
+      {
+        "text": "Há tabelas pré-calculadas para esse sal",
+        "why": "Certo."
+      },
+      {
+        "text": "Todo aparelho linksys tem a mesma frase de fábrica",
+        "why": "A frase foi trocada neste caso."
+      }
+    ]
+  },
+  "ex-h05b0dqg": {
+    "prompt": "Ponha o four-way handshake em ordem.",
+    "hint": "O ponto de acesso fala primeiro.",
+    "items": [
+      "o ponto de acesso manda o ANonce",
+      "o aparelho manda o SNonce com um MIC",
+      "o ponto de acesso manda o MIC dele e a chave de grupo cifrada",
+      "o aparelho confirma e os dois instalam as chaves"
+    ]
+  },
+  "ex-rky5r0ee": {
+    "prompt": "O monitoramento da Vereda alertaria para 20 logins de Wi-Fi falhos em um minuto. Por que isso não protege uma frase WPA2 fraca?",
+    "hint": "Onde os palpites são testados?",
+    "choices": [
+      {
+        "text": "Pontos de acesso WPA2 não guardam log nenhum",
+        "why": "Guardam; só não há o que registrar."
+      },
+      {
+        "text": "Uma entrada gravada é testada offline, sem tocar nele",
+        "why": "Certo."
+      },
+      {
+        "text": "Logins falhos são cifrados, então o monitoramento não os lê",
+        "why": "Nenhum login é tentado."
+      },
+      {
+        "text": "Vinte por minuto é um limite baixo demais",
+        "why": "Os palpites nunca chegam à rede."
+      }
+    ]
+  },
+  "ex-gpq5kewd": {
+    "prompt": "A dois milhões de palpites por segundo, cerca de quantas horas leva tentar toda frase de 8 letras minúsculas (26⁸ delas)?",
+    "hint": "26⁸ ≈ 2,1 × 10¹¹; divida, e depois divida por 3600.",
+    "unit": "horas"
+  },
+  "ex-tmp1kjtj": {
+    "prompt": "Na rede da equipe da Vereda, em WPA2-Personal, por que um fisioterapeuta consegue ler o tráfego de outro?",
+    "hint": "O que entra na PTK?",
+    "choices": [
+      {
+        "text": "Porque o CCMP cifra só os quadros de difusão",
+        "why": "O CCMP cifra todo quadro de dados."
+      },
+      {
+        "text": "Porque a chave de grupo é a mesma para todos",
+        "why": "É verdade, mas o unicast usa a PTK."
+      },
+      {
+        "text": "Porque o WPA2 manda a PTK na mensagem 3",
+        "why": "A mensagem 3 leva a GTK, cifrada."
+      },
+      {
+        "text": "Mesma PMK, nonces públicos: a PTK dele sai na conta",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-9w5mqgta": {
+    "prompt": "O que foi o KRACK, em 2017?",
+    "hint": "Uma chave instalada duas vezes.",
+    "choices": [
+      {
+        "text": "Um jeito de calcular a chave AES do WPA2 a partir do texto cifrado",
+        "why": "O CCMP em si não foi quebrado."
+      },
+      {
+        "text": "Clientes zerando um nonce numa mensagem 3 repetida",
+        "why": "Certo: um reuso de nonce, corrigido."
+      },
+      {
+        "text": "Uma falha no SAE que tornava o WPA3 testável offline",
+        "why": "O KRACK é anterior ao WPA3."
+      },
+      {
+        "text": "O fim dos IVs de 24 bits do WEP",
+        "why": "Isso foi em 2001."
+      }
+    ]
+  },
+  "ex-h81b8pm0": {
+    "prompt": "O que o SAE muda nos palpites contra uma frase WPA3-Personal?",
+    "hint": "Onde cada palpite precisa acontecer?",
+    "choices": [
+      {
+        "text": "Sobe o PBKDF2 de 4096 rodadas para um milhão",
+        "why": "O SAE substitui a derivação inteira."
+      },
+      {
+        "text": "Esconde o SSID, então o sal fica desconhecido",
+        "why": "O SSID continua sendo anunciado."
+      },
+      {
+        "text": "Nada: só acrescenta quadros de gerenciamento protegidos",
+        "why": "O PMF é separado do SAE."
+      },
+      {
+        "text": "Cada tentativa exige uma troca ao vivo com o ponto de acesso",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-ejf2b6k0": {
+    "prompt": "Por que o Enhanced Open (OWE) serve para a rede da sala de espera e não para a da equipe?",
+    "hint": "O que ele autentica?",
+    "choices": [
+      {
+        "text": "Cifra, mas não autentica ninguém",
+        "why": "Certo: bom para pacientes, não para prontuários."
+      },
+      {
+        "text": "Só funciona em celulares, nunca em notebooks",
+        "why": "É um protocolo, não um tipo de aparelho."
+      },
+      {
+        "text": "Usa por baixo o RC4 do WEP",
+        "why": "Usa as cifras do WPA3."
+      },
+      {
+        "text": "Precisa de uma frase impressa na parede",
+        "why": "Não tem frase nenhuma."
+      }
+    ]
+  },
+  "ex-b38zap64": {
+    "prompt": "No hostapd, `ieee80211w=___` torna os quadros de gerenciamento protegidos obrigatórios para todo aparelho.",
+    "hint": "O 1 só os oferece.",
+    "blanks": [
+      {
+        "accept": [
+          "2"
+        ]
+      }
+    ]
+  },
+  "ex-72p4p3a7": {
+    "prompt": "Quais ajustes cabem na rede de aparelhos da Vereda enquanto ela está em transição? Marque todos os que se aplicam.",
+    "hint": "O arquivo do hostapd da seção 05.",
+    "choices": [
+      {
+        "text": "`wpa_key_mgmt=SAE WPA-PSK`",
+        "why": "Sim."
+      },
+      {
+        "text": "`rsn_pairwise=CCMP`",
+        "why": "Sim: sem TKIP."
+      },
+      {
+        "text": "`wpa_pairwise=TKIP`",
+        "why": "O TKIP está obsoleto."
+      },
+      {
+        "text": "`sae_require_mfp=1`",
+        "why": "Sim."
+      },
+      {
+        "text": "WPS ligado para as impressoras",
+        "why": "Desligue o WPS."
+      }
+    ]
+  },
+  "ex-0m53fm73": {
+    "prompt": "Associe cada rede da Vereda à sua segurança.",
+    "hint": "A tabela da seção 05.",
+    "pairs": [
+      {
+        "left": "notebooks da equipe",
+        "right": "802.1X Enterprise"
+      },
+      {
+        "left": "celulares dos pacientes",
+        "right": "Enhanced Open"
+      },
+      {
+        "left": "maquininha e impressoras",
+        "right": "transição WPA2/WPA3"
+      }
+    ],
+    "right_distractors": [
+      "WEP com chave de 104 bits"
+    ]
+  }
+}

@@ -1,0 +1,518 @@
+[
+  {
+    "id": "ex-tgd1mtmq",
+    "version": 1,
+    "section": "keys-in-code",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Bruno's 10 June commit replaced the hard-coded webhook key with an environment variable. What did that commit revoke?",
+    "hint": "Where else is the key?",
+    "choices": [
+      {
+        "text": "The key, since the current file no longer holds it",
+        "correct": false,
+        "why": "Every clone still has the old commit."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: only a new key at the provider does."
+      },
+      {
+        "text": "Every clone made after 4 May",
+        "correct": false,
+        "why": "Clones are copies; a commit does not reach them."
+      },
+      {
+        "text": "The key in the CI runners, but not on laptops",
+        "correct": false,
+        "why": "Neither is touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9v0cstk",
+    "version": 1,
+    "section": "keys-in-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which git command answers \"which commits added or removed this exact string?\"",
+    "hint": "A pickaxe.",
+    "choices": [
+      {
+        "text": "`git grep`",
+        "correct": false,
+        "why": "That searches one tree, not history."
+      },
+      {
+        "text": "`git blame`",
+        "correct": false,
+        "why": "That shows the last change per line of today's file."
+      },
+      {
+        "text": "`git log -S`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git status`",
+        "correct": false,
+        "why": "That shows uncommitted changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-2k9gd082",
+    "version": 1,
+    "section": "keys-in-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `os.environ.get(\"VEREDA_WEBHOOK_KEY\", \"dev-key\")` worse than `os.environ[\"VEREDA_WEBHOOK_KEY\"]`?",
+    "hint": "What happens when the variable is missing?",
+    "choices": [
+      {
+        "text": "`get` is slower on every request",
+        "correct": false,
+        "why": "Speed is not the concern."
+      },
+      {
+        "text": "It runs on with a key in the code, silently",
+        "correct": true,
+        "why": "Right: the loud failure is the point."
+      },
+      {
+        "text": "`get` returns the key as text, not bytes",
+        "correct": false,
+        "why": "Both return text; bytes.fromhex follows."
+      },
+      {
+        "text": "`get` logs the variable's value",
+        "correct": false,
+        "why": "Neither logs anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-akqnbpp7",
+    "version": 1,
+    "section": "keys-in-code",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a key count as published? Choose all that apply.",
+    "hint": "Anything delivered to people who can read it.",
+    "choices": [
+      {
+        "text": "A private repository's history",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "JavaScript served to the browser",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A container image pushed to a registry",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A KMS that wraps it under a master key",
+        "correct": false,
+        "why": "That is where it belongs."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9d467dv",
+    "version": 1,
+    "section": "own-algorithm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The contractor's function passed every encrypt-decrypt test. Why does that say little about its security?",
+    "hint": "Working and being secure are unrelated.",
+    "choices": [
+      {
+        "text": "The tests used AES-128 rather than AES-256",
+        "correct": false,
+        "why": "The key size was 256."
+      },
+      {
+        "text": "Python's tests never check encryption",
+        "correct": false,
+        "why": "They checked the round trip."
+      },
+      {
+        "text": "AES itself has been broken since 2020",
+        "correct": false,
+        "why": "AES is not broken."
+      },
+      {
+        "text": "Its flaws show across many calls, not in one",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev6cwz8f",
+    "version": 1,
+    "section": "own-algorithm",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of the homemade function to the lesson that names its flaw.",
+    "hint": "Three flaws, three earlier lessons.",
+    "pairs": [
+      {
+        "left": "`hashlib.sha256(password)` as the key",
+        "right": "lesson 5: a fast, unsalted hash"
+      },
+      {
+        "left": "`modes.CBC(bytes(16))`",
+        "right": "lesson 1: a fixed IV"
+      },
+      {
+        "left": "no tag anywhere",
+        "right": "lesson 1: no integrity"
+      }
+    ],
+    "right_distractors": [
+      "lesson 4: MD5 collisions"
+    ]
+  },
+  {
+    "id": "ex-y2std7mw",
+    "version": 1,
+    "section": "own-algorithm",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `homemade.py` print for the same record encrypted twice by the homemade function?",
+    "hint": "The fixed IV.",
+    "choices": [
+      {
+        "text": "identical",
+        "correct": true,
+        "why": "Right: deterministic encryption."
+      },
+      {
+        "text": "different",
+        "correct": false,
+        "why": "That was the AES-GCM half."
+      },
+      {
+        "text": "refused",
+        "correct": false,
+        "why": "Nothing in the homemade half refuses."
+      },
+      {
+        "text": "an error about padding",
+        "correct": false,
+        "why": "The space padding never errs."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk75ang9",
+    "version": 1,
+    "section": "own-algorithm",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "___'s principle: a system must stay secure when everything about it except the key is public.",
+    "hint": "1883.",
+    "blanks": [
+      {
+        "accept": [
+          "Kerckhoffs",
+          "Kerckhoff"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k0wd9e2s",
+    "version": 1,
+    "section": "nonce-reuse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an AES-GCM nonce have to be?",
+    "hint": "One requirement.",
+    "choices": [
+      {
+        "text": "Secret, like the key",
+        "correct": false,
+        "why": "It is stored in clear."
+      },
+      {
+        "text": "Random, drawn from the operating system",
+        "correct": false,
+        "why": "A counter is fine if it never repeats."
+      },
+      {
+        "text": "Never repeated under one key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "At least 256 bits long",
+        "correct": false,
+        "why": "GCM's standard nonce is 96 bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-78bj7xr5",
+    "version": 1,
+    "section": "nonce-reuse",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many nonces did `vcrypt nonce-audit` find repeated in the export?",
+    "hint": "Days 8 to 10.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "nonces"
+  },
+  {
+    "id": "ex-79gc2c6c",
+    "version": 1,
+    "section": "nonce-reuse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why could the audit find the repeats without the key?",
+    "hint": "Where does seal put the nonce?",
+    "choices": [
+      {
+        "text": "Because AES-GCM ciphertexts with equal nonces look identical",
+        "correct": false,
+        "why": "The days' contents differ."
+      },
+      {
+        "text": "It sits in clear in each file's first 12 bytes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The audit derives the key from the file names",
+        "correct": false,
+        "why": "No key is involved."
+      },
+      {
+        "text": "The tags of repeated files fail to verify",
+        "correct": false,
+        "why": "Every file opens correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-tta12shp",
+    "version": 1,
+    "section": "nonce-reuse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the audit, why is the old key retired rather than kept for the files that did not collide?",
+    "hint": "What else does a repeat expose in GCM?",
+    "choices": [
+      {
+        "text": "Because vcrypt cannot open files with two keys",
+        "correct": false,
+        "why": "It opens with whichever key it is given."
+      },
+      {
+        "text": "Only the three repeated days are at risk, so it is optional",
+        "correct": false,
+        "why": "The tag's key is exposed for all of them."
+      },
+      {
+        "text": "Its tag computation is exposed; forgeries pass",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because NIST forbids more than ten files per key",
+        "correct": false,
+        "why": "The limit is billions."
+      }
+    ]
+  },
+  {
+    "id": "ex-kytaf0mq",
+    "version": 1,
+    "section": "nonce-reuse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vereda seals a few files a day. Which nonce choice avoids the restore problem?",
+    "hint": "Nothing a backup can rewind.",
+    "choices": [
+      {
+        "text": "A counter in a file on the same server",
+        "correct": false,
+        "why": "That is what the restore rewound."
+      },
+      {
+        "text": "Random, 96 bits, per message",
+        "correct": true,
+        "why": "Right: safe far below the limit."
+      },
+      {
+        "text": "The date of the export, as 12 bytes",
+        "correct": false,
+        "why": "Two runs on one day would collide."
+      },
+      {
+        "text": "A hash of the file name",
+        "correct": false,
+        "why": "A re-export reuses the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ae6091f",
+    "version": 1,
+    "section": "response",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the response to a leaked key in order.",
+    "hint": "Scope first, cause last.",
+    "items": [
+      "establish what it protects and since when",
+      "issue and deploy a new key",
+      "revoke the old key everywhere",
+      "re-encrypt what the old key protected",
+      "check the logs for use of the old key",
+      "fix the cause"
+    ]
+  },
+  {
+    "id": "ex-vse2q451",
+    "version": 1,
+    "section": "response",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each key to what revoking it means.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "an SSH key",
+        "right": "remove it from authorized_keys"
+      },
+      {
+        "left": "a TLS certificate's key",
+        "right": "revoke the certificate at the CA"
+      },
+      {
+        "left": "a Wi-Fi passphrase",
+        "right": "change it on the AP and every device"
+      }
+    ],
+    "right_distractors": [
+      "re-hash it with Argon2id"
+    ]
+  },
+  {
+    "id": "ex-0gkexar9",
+    "version": 1,
+    "section": "response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why rotate keys on a schedule even when nothing has leaked?",
+    "hint": "The last column of the inventory.",
+    "choices": [
+      {
+        "text": "Keys wear out with use",
+        "correct": false,
+        "why": "A key does not degrade."
+      },
+      {
+        "text": "The LGPD demands a monthly rotation",
+        "correct": false,
+        "why": "It sets no such interval."
+      },
+      {
+        "text": "To practise the procedure before an incident",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "So that leaked keys decrypt nothing",
+        "correct": false,
+        "why": "Old data stays under the old key until re-encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-9nyjtnhg",
+    "version": 1,
+    "section": "review",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each review question to the answer that should reassure you.",
+    "hint": "The table of the section.",
+    "pairs": [
+      {
+        "left": "How are passwords stored?",
+        "right": "Argon2id, a salt per password"
+      },
+      {
+        "left": "Which TLS?",
+        "right": "1.3, or 1.2 with forward secrecy"
+      },
+      {
+        "left": "Which Wi-Fi security?",
+        "right": "WPA3 or 802.1X"
+      }
+    ],
+    "right_distractors": [
+      "MD5, with a pepper"
+    ]
+  },
+  {
+    "id": "ex-xpkr4k5z",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are the mistake of lesson 17 under another name? Choose all that apply.",
+    "hint": "Keys in code, homemade schemes, repeated nonces.",
+    "choices": [
+      {
+        "text": "An API key in a mobile app's resources",
+        "correct": true,
+        "why": "Yes: a key in shipped code."
+      },
+      {
+        "text": "AES-ECB chosen because \"it is still AES\"",
+        "correct": true,
+        "why": "Yes: assembling primitives."
+      },
+      {
+        "text": "A VM snapshot restored with its GCM counter",
+        "correct": true,
+        "why": "Yes: a nonce that goes back."
+      },
+      {
+        "text": "Ed25519 for signing releases",
+        "correct": false,
+        "why": "That is a sound choice."
+      }
+    ]
+  }
+]

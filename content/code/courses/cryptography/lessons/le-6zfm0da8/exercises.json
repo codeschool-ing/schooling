@@ -1,0 +1,495 @@
+[
+  {
+    "id": "ex-a8ya23h2",
+    "version": 1,
+    "section": "at-rest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A physiotherapist's laptop with full-disk encryption is left unlocked on a café table, and somebody copies files from it. What did the disk encryption do?",
+    "hint": "When is the disk decrypted?",
+    "choices": [
+      {
+        "text": "Nothing: an unlocked disk reads like any other",
+        "correct": true,
+        "why": "Right: it protects the powered-off device."
+      },
+      {
+        "text": "It encrypted the copies, which the thief cannot open",
+        "correct": false,
+        "why": "Copies of decrypted files are plain files."
+      },
+      {
+        "text": "It locked the disk as soon as files were copied",
+        "correct": false,
+        "why": "Nothing watches for copying."
+      },
+      {
+        "text": "It logged the copy for the IT team",
+        "correct": false,
+        "why": "Disk encryption logs nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfybca02",
+    "version": 1,
+    "section": "at-rest",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer to the moment it is decrypted.",
+    "hint": "The table of section 02.",
+    "pairs": [
+      {
+        "left": "full-disk encryption",
+        "right": "when the machine is unlocked"
+      },
+      {
+        "left": "TDE",
+        "right": "when the database starts"
+      },
+      {
+        "left": "application-level column encryption",
+        "right": "only in the application holding the key"
+      }
+    ],
+    "right_distractors": [
+      "never, not even with the key"
+    ]
+  },
+  {
+    "id": "ex-r1sfe33b",
+    "version": 1,
+    "section": "luks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does changing a LUKS passphrase take a second instead of re-encrypting the whole disk?",
+    "hint": "What does a passphrase actually encrypt?",
+    "choices": [
+      {
+        "text": "Because LUKS encrypts only the files that changed",
+        "correct": false,
+        "why": "LUKS encrypts every sector."
+      },
+      {
+        "text": "It only re-wraps the volume key in one keyslot",
+        "correct": true,
+        "why": "Right: the data key never changes."
+      },
+      {
+        "text": "Because the passphrase is the AES key itself",
+        "correct": false,
+        "why": "Then a change would mean re-encrypting everything."
+      },
+      {
+        "text": "Because XTS mode allows changing keys in place",
+        "correct": false,
+        "why": "The mode is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pxcrfqh",
+    "version": 1,
+    "section": "luks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many keyslots did the lab's volume have in use after `luksAddKey`?",
+    "hint": "0 and ...",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "keyslots"
+  },
+  {
+    "id": "ex-a86q4wam",
+    "version": 1,
+    "section": "luks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A thief has a stolen laptop's LUKS disk and all the time they want. What decides whether they read it?",
+    "hint": "What does the header say about keyslots?",
+    "choices": [
+      {
+        "text": "The size of the volume key, 512 bits",
+        "correct": false,
+        "why": "Nobody attacks the 512-bit key; they guess the passphrase."
+      },
+      {
+        "text": "Whether XTS is used instead of CBC",
+        "correct": false,
+        "why": "Both resist a thief who has no key."
+      },
+      {
+        "text": "How guessable the passphrases are, at Argon2id's speed",
+        "correct": true,
+        "why": "Right: and both slots count, recovery included."
+      },
+      {
+        "text": "Whether the laptop has a TPM",
+        "correct": false,
+        "why": "A TPM matters when booting the laptop, not for a removed disk with passphrase slots."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb0n2vkn",
+    "version": 1,
+    "section": "luks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Destroying a LUKS header, and with it every copy of the volume key, makes the disk unreadable at once; this is called crypto-___.",
+    "hint": "Wiping without overwriting.",
+    "blanks": [
+      {
+        "accept": [
+          "erase",
+          "erasure",
+          "shredding"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m0dfjcns",
+    "version": 1,
+    "section": "database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What could `strings` read from the patients table's file without logging in to PostgreSQL?",
+    "hint": "The capture of section 04.",
+    "choices": [
+      {
+        "text": "Nothing: PostgreSQL encrypts its files",
+        "correct": false,
+        "why": "Community PostgreSQL has no built-in TDE."
+      },
+      {
+        "text": "The names, but not the encrypted CPF",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every column, the CPF included",
+        "correct": false,
+        "why": "The CPF column was encrypted."
+      },
+      {
+        "text": "Only the table's name",
+        "correct": false,
+        "why": "The rows themselves were there."
+      }
+    ]
+  },
+  {
+    "id": "ex-19kmyftk",
+    "version": 1,
+    "section": "database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team enables TDE and concludes that SQL injection can no longer expose customer data. What is wrong?",
+    "hint": "Who does the database decrypt for?",
+    "choices": [
+      {
+        "text": "TDE is only for backups, not live data",
+        "correct": false,
+        "why": "It covers the live files too."
+      },
+      {
+        "text": "SQL injection breaks AES",
+        "correct": false,
+        "why": "Injection never touches the cipher."
+      },
+      {
+        "text": "The database decrypts for every session, the injected one too",
+        "correct": true,
+        "why": "Right: TDE protects files, not queries."
+      },
+      {
+        "text": "TDE disables query logging",
+        "correct": false,
+        "why": "It does not, and logging is beside the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z59710v",
+    "version": 1,
+    "section": "database",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The database is encrypted at rest; the nightly `pg_dump` goes to a cloud bucket as a plain .sql file. What is the real exposure?",
+    "hint": "What does a dump contain?",
+    "choices": [
+      {
+        "text": "None: the dump inherits the database's encryption",
+        "correct": false,
+        "why": "A dump is produced through a query, decrypted."
+      },
+      {
+        "text": "Anybody who reads the bucket reads every table",
+        "correct": true,
+        "why": "Right: encrypt the dump as a file of its own."
+      },
+      {
+        "text": "Only the schema, since data is excluded by default",
+        "correct": false,
+        "why": "pg_dump includes data by default."
+      },
+      {
+        "text": "Only the encrypted columns' ciphertext",
+        "correct": false,
+        "why": "Every unencrypted column is in it as text."
+      }
+    ]
+  },
+  {
+    "id": "ex-5sbpa9p7",
+    "version": 1,
+    "section": "column",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both patients' CPFs encrypted with `encrypt(…, 'aes')` gave identical hex. Which lesson-1 problem is that?",
+    "hint": "What vector did it use?",
+    "choices": [
+      {
+        "text": "A key that is too short",
+        "correct": false,
+        "why": "The key length was fine."
+      },
+      {
+        "text": "Missing padding",
+        "correct": false,
+        "why": "Padding was applied."
+      },
+      {
+        "text": "A fixed IV",
+        "correct": true,
+        "why": "Right: all zeros, so equal values give equal bytes."
+      },
+      {
+        "text": "Nonce reuse in GCM",
+        "correct": false,
+        "why": "This was CBC, not GCM."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5n0jr42",
+    "version": 1,
+    "section": "column",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is encrypting a column inside SQL, with the key in the query, weak against the database's own administrators?",
+    "hint": "Where does query text end up?",
+    "choices": [
+      {
+        "text": "The key appears in logs and query statistics they can read",
+        "correct": true,
+        "why": "Right: encrypt in the application instead."
+      },
+      {
+        "text": "pgcrypto's algorithms are outdated",
+        "correct": false,
+        "why": "pgp_sym_encrypt with AES-256 is sound."
+      },
+      {
+        "text": "Administrators can disable pgcrypto",
+        "correct": false,
+        "why": "Disabling it would not reveal past keys."
+      },
+      {
+        "text": "Encrypted columns are stored unencrypted in indexes",
+        "correct": false,
+        "why": "Indexes hold the same ciphertext."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrwe3n0r",
+    "version": 1,
+    "section": "column",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vereda must look patients up by CPF, which is now encrypted with random IVs. What is the usual answer?",
+    "hint": "Equality only, with its own key.",
+    "choices": [
+      {
+        "text": "Go back to a fixed IV for that column",
+        "correct": false,
+        "why": "That leaks equality to everybody."
+      },
+      {
+        "text": "Decrypt every row on each search",
+        "correct": false,
+        "why": "Correct but impossibly slow at scale."
+      },
+      {
+        "text": "Store an unsalted SHA-256 of the CPF beside it",
+        "correct": false,
+        "why": "There are only a billion CPFs; lesson 4."
+      },
+      {
+        "text": "A blind index: a keyed HMAC of the CPF",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhccqdww",
+    "version": 1,
+    "section": "key-management",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In envelope encryption, what is stored beside the data?",
+    "hint": "The master key stays in the KMS.",
+    "choices": [
+      {
+        "text": "The master key, in a separate file",
+        "correct": false,
+        "why": "The master key never leaves the KMS."
+      },
+      {
+        "text": "The data key, wrapped",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The data key, in clear text",
+        "correct": false,
+        "why": "Then anybody with the data has the key."
+      },
+      {
+        "text": "Nothing: the KMS stores the data",
+        "correct": false,
+        "why": "The KMS stores keys, not data."
+      }
+    ]
+  },
+  {
+    "id": "ex-tphtxgdm",
+    "version": 1,
+    "section": "key-management",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of reading envelope-encrypted data in order.",
+    "hint": "Unwrap before decrypting.",
+    "items": [
+      "read the wrapped DEK stored with the data",
+      "ask the KMS to unwrap it",
+      "the KMS checks permission and logs the call",
+      "decrypt the data locally with the DEK",
+      "forget the DEK"
+    ]
+  },
+  {
+    "id": "ex-h95zcvb3",
+    "version": 1,
+    "section": "key-management",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should backups be encrypted under keys that production systems cannot delete?",
+    "hint": "Think of ransomware that owns production.",
+    "choices": [
+      {
+        "text": "Because deleting keys is slow",
+        "correct": false,
+        "why": "Speed is not the concern."
+      },
+      {
+        "text": "To allow the backups to be decrypted without a KMS",
+        "correct": false,
+        "why": "They still need the KMS."
+      },
+      {
+        "text": "So an intruder on the servers cannot wipe those as well",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because compliance forbids deleting any key",
+        "correct": false,
+        "why": "Keys are deleted deliberately, with a waiting period."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfr02nt3",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of Vereda's risks does full-disk encryption on staff laptops cover? Choose all that apply.",
+    "hint": "The powered-off device.",
+    "choices": [
+      {
+        "text": "A laptop left in a taxi, switched off",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A laptop's disk sent away for repair",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Malware running while the user is logged in",
+        "correct": false,
+        "why": "The disk is unlocked then."
+      },
+      {
+        "text": "The nightly database dump in a cloud bucket",
+        "correct": false,
+        "why": "That is another system, and another layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-phse9xh0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each threat to the layer that stops it.",
+    "hint": "Sections 02 to 06.",
+    "pairs": [
+      {
+        "left": "a stolen, powered-off laptop",
+        "right": "full-disk encryption"
+      },
+      {
+        "left": "copied database data files",
+        "right": "TDE"
+      },
+      {
+        "left": "a DBA reading CPFs",
+        "right": "application-level column encryption"
+      },
+      {
+        "left": "a leaked backup without KMS access",
+        "right": "envelope encryption with a KMS"
+      }
+    ],
+    "right_distractors": [
+      "a weak user password on the portal"
+    ]
+  }
+]

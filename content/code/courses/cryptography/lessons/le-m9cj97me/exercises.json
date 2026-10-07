@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-d2vv1nv9",
+    "version": 1,
+    "section": "one-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In symmetric cryptography, which key decrypts a file that was encrypted with key K?",
+    "hint": "The name says it.",
+    "choices": [
+      {
+        "text": "A second key derived from K by the cipher",
+        "correct": false,
+        "why": "No second key exists in a symmetric scheme."
+      },
+      {
+        "text": "K itself",
+        "correct": true,
+        "why": "Right: one key, both directions."
+      },
+      {
+        "text": "The public half of K's key pair",
+        "correct": false,
+        "why": "Key pairs belong to asymmetric cryptography, lesson 2."
+      },
+      {
+        "text": "Any key of the same length as K",
+        "correct": false,
+        "why": "A key of the right length is still the wrong key; the lab's aes-256-b failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5p3axjw",
+    "version": 1,
+    "section": "one-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Decrypting `referral.enc` with `aes-256-b.hex` printed `bad decrypt`. What did OpenSSL actually detect?",
+    "hint": "It is not the key that is checked.",
+    "choices": [
+      {
+        "text": "That the key was not the one used to encrypt",
+        "correct": false,
+        "why": "AES has no way to recognise its own key."
+      },
+      {
+        "text": "That the IV did not match the ciphertext",
+        "correct": false,
+        "why": "The IV was the right one; only the key changed."
+      },
+      {
+        "text": "That the padding was invalid",
+        "correct": true,
+        "why": "Right: a check on the padding, which some wrong keys pass by chance."
+      },
+      {
+        "text": "That the file had been altered after encryption",
+        "correct": false,
+        "why": "Nothing was altered; and plain CBC cannot tell anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-fabd08g9",
+    "version": 1,
+    "section": "one-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vereda's developer wants to keep the AES algorithm secret as an extra layer. What does Kerckhoffs's principle say?",
+    "hint": "What is the only secret?",
+    "choices": [
+      {
+        "text": "Security must not depend on hiding the algorithm",
+        "correct": true,
+        "why": "Right: a secret algorithm leaks and has not been examined."
+      },
+      {
+        "text": "Algorithms should be kept secret and keys made public",
+        "correct": false,
+        "why": "It is the reverse."
+      },
+      {
+        "text": "Keep both secret, as defence in depth",
+        "correct": false,
+        "why": "A secret algorithm adds no strength and hides flaws from reviewers."
+      },
+      {
+        "text": "Use a 512-bit key instead of hiding it",
+        "correct": false,
+        "why": "AES has no 512-bit key, and the principle is not about length."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnz2pfpt",
+    "version": 1,
+    "section": "one-key",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab's `aes-256.hex` holds how many hexadecimal digits?",
+    "hint": "Two digits per byte.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "digits"
+  },
+  {
+    "id": "ex-j6wnm9ab",
+    "version": 1,
+    "section": "blocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the block size of AES-256?",
+    "hint": "The key size does not change it.",
+    "choices": [
+      {
+        "text": "256 bits",
+        "correct": false,
+        "why": "That is the key, not the block."
+      },
+      {
+        "text": "128 bits",
+        "correct": true,
+        "why": "Right: every AES variant uses 16-byte blocks."
+      },
+      {
+        "text": "64 bits",
+        "correct": false,
+        "why": "That was DES's block."
+      },
+      {
+        "text": "It depends on the mode",
+        "correct": false,
+        "why": "The mode decides how blocks are chained, not their size."
+      }
+    ]
+  },
+  {
+    "id": "ex-w77nxkw2",
+    "version": 1,
+    "section": "blocks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 300-byte file is encrypted with AES-CBC and PKCS#7 padding. How long is the ciphertext, not counting the IV?",
+    "hint": "300 = 18 × 16 + 12.",
+    "value": 304,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ypa186ps",
+    "version": 1,
+    "section": "blocks",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 4,096-byte file is encrypted with AES-CBC and PKCS#7 padding. How long is the ciphertext, not counting the IV?",
+    "hint": "4,096 is already a multiple of 16.",
+    "value": 4112,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-eqj8af8c",
+    "version": 1,
+    "section": "blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does PKCS#7 add a whole block when the data already fills the last one?",
+    "hint": "Think of a file that ends in the byte 01.",
+    "choices": [
+      {
+        "text": "To make the ciphertext longer and harder to guess",
+        "correct": false,
+        "why": "Length adds no secrecy."
+      },
+      {
+        "text": "Because AES refuses a block that is all data",
+        "correct": false,
+        "why": "AES encrypts any 16 bytes."
+      },
+      {
+        "text": "So that removing padding is never ambiguous",
+        "correct": true,
+        "why": "Right: otherwise data ending in 01 would look padded."
+      },
+      {
+        "text": "To hold the IV for the next message",
+        "correct": false,
+        "why": "The IV travels separately, at the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-v91zcpr8",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Encrypted with ECB, the appointment file still showed which slots were booked. Why?",
+    "hint": "Compare the plaintext letters with the ciphertext letters.",
+    "choices": [
+      {
+        "text": "The key was too short for the file",
+        "correct": false,
+        "why": "The key was 256 bits; length was not the problem."
+      },
+      {
+        "text": "Equal blocks stayed equal",
+        "correct": true,
+        "why": "Right: ECB encrypts each block alone."
+      },
+      {
+        "text": "AES leaks the first bytes of each block",
+        "correct": false,
+        "why": "AES leaks nothing about a single block."
+      },
+      {
+        "text": "The padding block revealed the record size",
+        "correct": false,
+        "why": "The pattern was in all 32 blocks, not the last."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kjyqbwr",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Encrypted with CTR, the 512-byte appointment file gave 32 blocks, while CBC gave 33. Why the difference?",
+    "hint": "What does CTR actually pass through AES?",
+    "choices": [
+      {
+        "text": "CTR compresses repeated blocks",
+        "correct": false,
+        "why": "No mode compresses anything."
+      },
+      {
+        "text": "CTR stores the IV inside the last block",
+        "correct": false,
+        "why": "The IV is not in the ciphertext count here."
+      },
+      {
+        "text": "CTR turns AES into a stream, so it needs no padding",
+        "correct": true,
+        "why": "Right: the stream is cut to the data's length."
+      },
+      {
+        "text": "CBC adds a block for its integrity check",
+        "correct": false,
+        "why": "Plain CBC has no integrity check; the extra block is padding."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqtkr2zw",
+    "version": 1,
+    "section": "modes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mode to what describes it.",
+    "hint": "One description fits no mode of this section.",
+    "pairs": [
+      {
+        "left": "ECB",
+        "right": "each block encrypted on its own"
+      },
+      {
+        "left": "CBC",
+        "right": "each block mixed with the previous ciphertext block"
+      },
+      {
+        "left": "CTR",
+        "right": "a counter encrypted into a keystream"
+      },
+      {
+        "left": "GCM",
+        "right": "counter mode plus a tag"
+      }
+    ],
+    "right_distractors": [
+      "a key that changes every block"
+    ]
+  },
+  {
+    "id": "ex-meej91w1",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database stores each patient's blood type, encrypted on its own with AES in ECB under one key. What can somebody with read access and no key learn?",
+    "hint": "Each value is less than one block.",
+    "choices": [
+      {
+        "text": "Nothing, because each value fits in one block",
+        "correct": false,
+        "why": "One block per value is exactly where ECB's equality shows."
+      },
+      {
+        "text": "Which patients share a blood type",
+        "correct": true,
+        "why": "Right: equal values give equal ciphertexts, and the most common one is easy to name."
+      },
+      {
+        "text": "The key, given enough rows",
+        "correct": false,
+        "why": "Equality leaks; the key does not."
+      },
+      {
+        "text": "Every blood type, since AES is reversible",
+        "correct": false,
+        "why": "Reversible only with the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfbbjkmp",
+    "version": 1,
+    "section": "the-iv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Is an initialisation vector a secret?",
+    "hint": "Decryption needs it.",
+    "choices": [
+      {
+        "text": "Yes, it is as secret as the key and stored apart from it",
+        "correct": false,
+        "why": "It travels in the open beside the ciphertext."
+      },
+      {
+        "text": "No, but it must be fresh each time",
+        "correct": true,
+        "why": "Right: public, fresh for each message."
+      },
+      {
+        "text": "No, so one constant IV for every message is fine",
+        "correct": false,
+        "why": "A constant IV gave two identical ciphertexts in the lab."
+      },
+      {
+        "text": "Only in GCM, where it doubles as the key",
+        "correct": false,
+        "why": "In no mode is it secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-03z062ah",
+    "version": 1,
+    "section": "the-iv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The letter was encrypted twice with `iv-a` and the two SHA-256 fingerprints matched. What does that let an observer learn?",
+    "hint": "They have no key.",
+    "choices": [
+      {
+        "text": "The full text of the referral letter",
+        "correct": false,
+        "why": "Without the key, the text stays hidden."
+      },
+      {
+        "text": "The key, by comparing the two ciphertexts",
+        "correct": false,
+        "why": "Two equal ciphertexts reveal nothing about the key."
+      },
+      {
+        "text": "That both messages were identical",
+        "correct": true,
+        "why": "Right: equality is the leak."
+      },
+      {
+        "text": "Nothing that matters",
+        "correct": false,
+        "why": "Equality of messages is information."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kfamw7m",
+    "version": 1,
+    "section": "the-iv",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A GCM nonce does not have to be random, but under one key it must be ___.",
+    "hint": "A counter satisfies it.",
+    "blanks": [
+      {
+        "accept": [
+          "unique",
+          "never repeated"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xsyr2gkg",
+    "version": 1,
+    "section": "the-iv",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service encrypts with AES-GCM, using a counter kept in memory as the nonce. After each restart the counter starts at 1 again. What is wrong?",
+    "hint": "Same key, before and after the restart.",
+    "choices": [
+      {
+        "text": "Nothing: a counter is an acceptable nonce",
+        "correct": false,
+        "why": "A counter is acceptable only while it never repeats."
+      },
+      {
+        "text": "The nonce must be secret, and a counter is guessable",
+        "correct": false,
+        "why": "Guessable is fine for GCM; repeated is not."
+      },
+      {
+        "text": "After a restart, nonces 1, 2, 3 recur under the same key",
+        "correct": true,
+        "why": "Right: the counter must survive restarts, or the key must change."
+      },
+      {
+        "text": "GCM needs a 16-byte nonce, not a counter",
+        "correct": false,
+        "why": "GCM uses 12-byte nonces, and a counter fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8zhcyh4",
+    "version": 1,
+    "section": "authenticated",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "One bit of `slots.gcm` was changed and `vcrypt open` ran with the right key. What did it return?",
+    "hint": "Look at the exit status.",
+    "choices": [
+      {
+        "text": "The file with one slot garbled",
+        "correct": false,
+        "why": "That is what an unauthenticated mode would do."
+      },
+      {
+        "text": "The first slots, then an error",
+        "correct": false,
+        "why": "GCM checks before it returns anything."
+      },
+      {
+        "text": "Nothing, and an authentication failure",
+        "correct": true,
+        "why": "Right: the tag did not match."
+      },
+      {
+        "text": "The original file, repaired by the tag",
+        "correct": false,
+        "why": "A tag detects; it does not repair."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqfpkh3z",
+    "version": 1,
+    "section": "authenticated",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Vereda pass `--aad patient=4471` when sealing the referral letter?",
+    "hint": "The id is not encrypted.",
+    "choices": [
+      {
+        "text": "To encrypt the patient id along with the letter",
+        "correct": false,
+        "why": "Associated data is checked, not encrypted."
+      },
+      {
+        "text": "So it cannot be moved to another patient",
+        "correct": true,
+        "why": "Right: opened with patient=5120, it failed."
+      },
+      {
+        "text": "Because GCM needs extra entropy",
+        "correct": false,
+        "why": "The nonce and key supply what GCM needs."
+      },
+      {
+        "text": "To make the tag shorter",
+        "correct": false,
+        "why": "The tag is 16 bytes either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a713s1s",
+    "version": 1,
+    "section": "authenticated",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program decrypts a record and gets an authentication failure. Which reactions are correct? Choose all that apply.",
+    "hint": "The data is to be treated as absent.",
+    "choices": [
+      {
+        "text": "Refuse the record and show none of it",
+        "correct": true,
+        "why": "Yes: nothing that failed the tag is trusted."
+      },
+      {
+        "text": "Log the failure as an event worth looking at",
+        "correct": true,
+        "why": "Yes: a failure may be an attack or a fault."
+      },
+      {
+        "text": "Try the older keys until one decrypts",
+        "correct": false,
+        "why": "Trying keys until one passes turns the check into a guessing game."
+      },
+      {
+        "text": "Show the part that decrypted before the error",
+        "correct": false,
+        "why": "GCM returns no part, and none should be shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcx9fpw7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the decisions of this lesson in the order a developer makes them when encrypting a file.",
+    "hint": "The key first, the check last.",
+    "items": [
+      "generate a random 256-bit key",
+      "choose an authenticated mode, GCM",
+      "draw a fresh nonce for this file",
+      "encrypt and store the nonce and tag with it",
+      "on reading, refuse it if the tag fails"
+    ]
+  },
+  {
+    "id": "ex-rx1w4tja",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each failure to the decision that would have prevented it.",
+    "hint": "Each one is a section of this lesson.",
+    "pairs": [
+      {
+        "left": "booked slots readable through the ciphertext",
+        "right": "not using ECB"
+      },
+      {
+        "left": "two equal letters giving equal ciphertexts",
+        "right": "a fresh IV per message"
+      },
+      {
+        "left": "an altered record decrypted without complaint",
+        "right": "an authenticated mode"
+      },
+      {
+        "left": "a ciphertext copied into another patient's row",
+        "right": "the patient id as associated data"
+      }
+    ],
+    "right_distractors": [
+      "a longer key"
+    ]
+  },
+  {
+    "id": "ex-x3sdtqf9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes AES-256-CBC with a random IV for a new backup format, with no other check. What is the strongest objection?",
+    "hint": "Confidentiality is covered.",
+    "choices": [
+      {
+        "text": "256-bit keys are too slow for backups",
+        "correct": false,
+        "why": "Speed is not the problem with this design."
+      },
+      {
+        "text": "A random IV leaks the date the backup was taken",
+        "correct": false,
+        "why": "An IV is random bytes and carries no date."
+      },
+      {
+        "text": "CBC shows the pattern of repeated blocks",
+        "correct": false,
+        "why": "That is ECB; CBC hides repetition."
+      },
+      {
+        "text": "Nothing would detect a backup altered on disk",
+        "correct": true,
+        "why": "Right: use GCM, or add a MAC over the ciphertext."
+      }
+    ]
+  }
+]

@@ -1,0 +1,506 @@
+[
+  {
+    "id": "ex-hh8840yt",
+    "version": 1,
+    "section": "wep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The card machine at Vereda's front desk only supports WEP. What should the clinic do with it?",
+    "hint": "WEP is not a security setting.",
+    "choices": [
+      {
+        "text": "Put it on the staff network with a long WEP key",
+        "correct": false,
+        "why": "Key length does not repair WEP."
+      },
+      {
+        "text": "Isolate it as if unencrypted, then replace it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Change the WEP key every week",
+        "correct": false,
+        "why": "Its key is recoverable in minutes from traffic."
+      },
+      {
+        "text": "Keep it, since WEP still uses RC4 like WPA did",
+        "correct": false,
+        "why": "WPA's TKIP is deprecated too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwdtsz7a",
+    "version": 1,
+    "section": "wep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did WEP's 24-bit IV doom it, given what lesson 1 says about stream ciphers?",
+    "hint": "About 16.7 million values.",
+    "choices": [
+      {
+        "text": "A 24-bit IV made the key too short to resist brute force",
+        "correct": false,
+        "why": "The IV is public; it adds no secrecy."
+      },
+      {
+        "text": "The IV was encrypted with the weak CRC-32",
+        "correct": false,
+        "why": "The IV was sent in clear."
+      },
+      {
+        "text": "Values repeated soon, reusing keystreams",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "RC4 refuses IVs shorter than 64 bits",
+        "correct": false,
+        "why": "RC4 has no IV of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1m85kgb",
+    "version": 1,
+    "section": "wep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made WEP's CRC-32 useless as an integrity check?",
+    "hint": "A checksum, not a MAC.",
+    "choices": [
+      {
+        "text": "Its 32 bits were too few to detect line noise",
+        "correct": false,
+        "why": "It detects noise fine."
+      },
+      {
+        "text": "It is linear and keyless: anyone fixes it after an edit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It was computed after encryption, over the IV only",
+        "correct": false,
+        "why": "It covered the payload."
+      },
+      {
+        "text": "It used MD5, which lesson 4 shows to be broken",
+        "correct": false,
+        "why": "A CRC is not a hash function."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgmk1ra0",
+    "version": 1,
+    "section": "wep",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each generation to its cipher.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "WEP",
+        "right": "RC4 with a 24-bit IV"
+      },
+      {
+        "left": "WPA",
+        "right": "RC4 with TKIP"
+      },
+      {
+        "left": "WPA2",
+        "right": "AES-CCMP"
+      }
+    ],
+    "right_distractors": [
+      "3DES-CBC"
+    ]
+  },
+  {
+    "id": "ex-zjps183c",
+    "version": 1,
+    "section": "psk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`wpa_passphrase` gave different `psk` values for Vereda-Recepcao and Vereda-Equipe with one passphrase. Why?",
+    "hint": "PBKDF2's salt.",
+    "choices": [
+      {
+        "text": "Each access point adds a random value to the passphrase",
+        "correct": false,
+        "why": "There was no access point; the output is deterministic."
+      },
+      {
+        "text": "The tool picks a new random salt every run",
+        "correct": false,
+        "why": "Running it twice gives the same line."
+      },
+      {
+        "text": "Each network's own name enters PBKDF2 as its salt",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "WPA2 uses Argon2id with a cost tied to the SSID",
+        "correct": false,
+        "why": "It is PBKDF2 with SHA-1, 4096 rounds."
+      }
+    ]
+  },
+  {
+    "id": "ex-rw9jqd9t",
+    "version": 1,
+    "section": "psk",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many PBKDF2 iterations does WPA2-Personal use to derive the PMK?",
+    "hint": "The fourth argument in wifi_pmk.py.",
+    "value": 4096,
+    "tolerance": 0,
+    "unit": "iterations"
+  },
+  {
+    "id": "ex-0k2bwwmn",
+    "version": 1,
+    "section": "psk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A laptop's wpa_supplicant.conf holds only the 64-hex `psk` line, never the passphrase. Somebody copies that file. What do they have?",
+    "hint": "What does the network check?",
+    "choices": [
+      {
+        "text": "Access to the network, as good as the passphrase",
+        "correct": true,
+        "why": "Right: the PMK is what joins."
+      },
+      {
+        "text": "Nothing, because the PMK is a one-way hash",
+        "correct": false,
+        "why": "One-way, but it is the key itself."
+      },
+      {
+        "text": "Only the SSID, which was already public",
+        "correct": false,
+        "why": "The psk line is the key."
+      },
+      {
+        "text": "A key for that laptop only, revoked when it leaves",
+        "correct": false,
+        "why": "Every device shares the PMK."
+      }
+    ]
+  },
+  {
+    "id": "ex-yem1t4fh",
+    "version": 1,
+    "section": "psk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a router left with its factory SSID, such as `linksys`, worse off even with a decent passphrase?",
+    "hint": "Lesson 5's argument for unique salts.",
+    "choices": [
+      {
+        "text": "Factory names disable CCMP and fall back to TKIP",
+        "correct": false,
+        "why": "The name does not choose the cipher."
+      },
+      {
+        "text": "A common SSID makes the four-way handshake skip the nonces",
+        "correct": false,
+        "why": "The nonces are always there."
+      },
+      {
+        "text": "Precomputed tables exist for that salt",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every linksys device has the same default passphrase",
+        "correct": false,
+        "why": "The passphrase was changed in this case."
+      }
+    ]
+  },
+  {
+    "id": "ex-h05b0dqg",
+    "version": 1,
+    "section": "handshake",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four-way handshake in order.",
+    "hint": "The access point speaks first.",
+    "items": [
+      "the access point sends the ANonce",
+      "the device sends the SNonce with a MIC",
+      "the access point sends its MIC and the encrypted group key",
+      "the device confirms and both install the keys"
+    ]
+  },
+  {
+    "id": "ex-rky5r0ee",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Vereda's monitoring would alert on 20 failed Wi-Fi logins in a minute. Why does it not protect a weak WPA2 passphrase?",
+    "hint": "Where are the guesses tested?",
+    "choices": [
+      {
+        "text": "WPA2 access points keep no logs at all",
+        "correct": false,
+        "why": "They do log; there is nothing to log."
+      },
+      {
+        "text": "A recorded join is tested offline, never touching it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Failed logins are encrypted, so monitoring cannot read them",
+        "correct": false,
+        "why": "No login is attempted at all."
+      },
+      {
+        "text": "Twenty a minute is too low a threshold",
+        "correct": false,
+        "why": "The guesses never reach the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpq5kewd",
+    "version": 1,
+    "section": "handshake",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At two million guesses a second, about how many hours does it take to try every passphrase of 8 lowercase letters (26⁸ of them)?",
+    "hint": "26⁸ ≈ 2.1 × 10¹¹; divide, then divide by 3600.",
+    "value": 29,
+    "tolerance": 2,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-tmp1kjtj",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Vereda's WPA2-Personal staff network, why can one physiotherapist read another's traffic?",
+    "hint": "What goes into the PTK?",
+    "choices": [
+      {
+        "text": "Because CCMP encrypts only broadcast frames",
+        "correct": false,
+        "why": "CCMP encrypts every data frame."
+      },
+      {
+        "text": "Because the group key is the same for everyone",
+        "correct": false,
+        "why": "True, but unicast uses the PTK."
+      },
+      {
+        "text": "Because WPA2 sends the PTK in message 3",
+        "correct": false,
+        "why": "Message 3 carries the GTK, encrypted."
+      },
+      {
+        "text": "Same PMK, public nonces: their PTK is derivable",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w5mqgta",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What was KRACK, in 2017?",
+    "hint": "A key installed twice.",
+    "choices": [
+      {
+        "text": "A way to compute WPA2's AES key from its ciphertext",
+        "correct": false,
+        "why": "CCMP itself was not broken."
+      },
+      {
+        "text": "Clients resetting a nonce on a repeated message 3",
+        "correct": true,
+        "why": "Right: a nonce reuse, patched."
+      },
+      {
+        "text": "A flaw in SAE that made WPA3 testable offline",
+        "correct": false,
+        "why": "KRACK predates WPA3."
+      },
+      {
+        "text": "The end of 24-bit IVs in WEP",
+        "correct": false,
+        "why": "That was 2001."
+      }
+    ]
+  },
+  {
+    "id": "ex-h81b8pm0",
+    "version": 1,
+    "section": "wpa3",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does SAE change about guessing a WPA3-Personal passphrase?",
+    "hint": "Where must each guess happen?",
+    "choices": [
+      {
+        "text": "It raises PBKDF2 from 4096 rounds to a million",
+        "correct": false,
+        "why": "SAE replaces the derivation altogether."
+      },
+      {
+        "text": "It hides the SSID, so the salt is unknown",
+        "correct": false,
+        "why": "The SSID is still broadcast."
+      },
+      {
+        "text": "Nothing: it only adds protected management frames",
+        "correct": false,
+        "why": "PMF is separate from SAE."
+      },
+      {
+        "text": "Each attempt needs a live exchange with the access point",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejf2b6k0",
+    "version": 1,
+    "section": "wpa3",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Enhanced Open (OWE) suit the waiting-room network but not the staff one?",
+    "hint": "What does it authenticate?",
+    "choices": [
+      {
+        "text": "It encrypts but authenticates nobody",
+        "correct": true,
+        "why": "Right: fine for patients, not for records."
+      },
+      {
+        "text": "It only works on phones, never on laptops",
+        "correct": false,
+        "why": "It is a protocol, not a device class."
+      },
+      {
+        "text": "It uses WEP's RC4 underneath",
+        "correct": false,
+        "why": "It uses the WPA3 ciphers."
+      },
+      {
+        "text": "It needs a printed passphrase on the wall",
+        "correct": false,
+        "why": "It has no passphrase at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-b38zap64",
+    "version": 1,
+    "section": "wpa3",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In hostapd, `ieee80211w=___` makes protected management frames compulsory for every device.",
+    "hint": "1 only offers them.",
+    "blanks": [
+      {
+        "accept": [
+          "2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-72p4p3a7",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which settings belong on Vereda's devices network while it is in transition? Choose all that apply.",
+    "hint": "The hostapd file of section 05.",
+    "choices": [
+      {
+        "text": "`wpa_key_mgmt=SAE WPA-PSK`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`rsn_pairwise=CCMP`",
+        "correct": true,
+        "why": "Yes: no TKIP."
+      },
+      {
+        "text": "`wpa_pairwise=TKIP`",
+        "correct": false,
+        "why": "TKIP is deprecated."
+      },
+      {
+        "text": "`sae_require_mfp=1`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "WPS left on for the printers",
+        "correct": false,
+        "why": "Turn WPS off."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m53fm73",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of Vereda's networks to its security.",
+    "hint": "The table in section 05.",
+    "pairs": [
+      {
+        "left": "staff laptops",
+        "right": "802.1X Enterprise"
+      },
+      {
+        "left": "patients' phones",
+        "right": "Enhanced Open"
+      },
+      {
+        "left": "card machine and printers",
+        "right": "WPA2/WPA3 transition"
+      }
+    ],
+    "right_distractors": [
+      "WEP with a 104-bit key"
+    ]
+  }
+]

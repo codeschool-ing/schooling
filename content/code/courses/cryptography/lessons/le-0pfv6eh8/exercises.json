@@ -1,0 +1,460 @@
+[
+  {
+    "id": "ex-9b8tachd",
+    "version": 1,
+    "section": "third-party",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What three things does a certificate bind together?",
+    "hint": "Look at the first two captures.",
+    "choices": [
+      {
+        "text": "A name, a key and a signature",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A name, a private key and a password",
+        "correct": false,
+        "why": "A certificate never holds a private key."
+      },
+      {
+        "text": "A domain, an IP address and a session key",
+        "correct": false,
+        "why": "No session key is in a certificate."
+      },
+      {
+        "text": "The server's hostname, its operating system and its owner's tax id",
+        "correct": false,
+        "why": "Those are not in a TLS certificate."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez282aqs",
+    "version": 1,
+    "section": "third-party",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Anybody can download Vereda's portal certificate. Why can't an impostor simply serve that copy?",
+    "hint": "What does the handshake test?",
+    "choices": [
+      {
+        "text": "Browsers detect copied certificates by their serial number",
+        "correct": false,
+        "why": "The serial is public too."
+      },
+      {
+        "text": "The certificate is encrypted to the real server",
+        "correct": false,
+        "why": "Certificates are public and unencrypted."
+      },
+      {
+        "text": "Only the real server holds the private key",
+        "correct": true,
+        "why": "Right: holding the private key is what is proved."
+      },
+      {
+        "text": "The CA is contacted on every connection",
+        "correct": false,
+        "why": "No CA takes part in each connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dfygjp5",
+    "version": 1,
+    "section": "third-party",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a domain-validated (DV) certificate for `portal.vereda.example` assert?",
+    "hint": "What did the CA check?",
+    "choices": [
+      {
+        "text": "That Vereda is a licensed clinic",
+        "correct": false,
+        "why": "No check on the business was made."
+      },
+      {
+        "text": "That the site is free of malware",
+        "correct": false,
+        "why": "CAs check control of names, not content."
+      },
+      {
+        "text": "Whoever requested it controlled that domain",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That the portal's code was audited",
+        "correct": false,
+        "why": "Not a CA's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzn9653d",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a root certificate's issuer the same as its subject?",
+    "hint": "Who is above a root?",
+    "choices": [
+      {
+        "text": "Because the lab built it carelessly",
+        "correct": false,
+        "why": "Every root looks like this."
+      },
+      {
+        "text": "It is self-signed: nobody is above it",
+        "correct": true,
+        "why": "Right: its trust comes from the trust store."
+      },
+      {
+        "text": "Because roots are signed by the browser",
+        "correct": false,
+        "why": "Browsers sign nothing; they hold lists."
+      },
+      {
+        "text": "So that it can be revoked by itself",
+        "correct": false,
+        "why": "That is not the reason, and revoking a root is not how removal works."
+      }
+    ]
+  },
+  {
+    "id": "ex-82y5k657",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each certificate to its basic constraints.",
+    "hint": "From the hierarchy captures.",
+    "pairs": [
+      {
+        "left": "Vereda Root CA",
+        "right": "CA:TRUE, pathlen:1"
+      },
+      {
+        "left": "Vereda Issuing CA 1",
+        "right": "CA:TRUE, pathlen:0"
+      },
+      {
+        "left": "portal.vereda.example",
+        "right": "CA:FALSE"
+      }
+    ],
+    "right_distractors": [
+      "CA:TRUE, pathlen:5"
+    ]
+  },
+  {
+    "id": "ex-b3nzpdfn",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Vereda keep its root offline and sign servers with an issuing CA instead?",
+    "hint": "What is slow to replace?",
+    "choices": [
+      {
+        "text": "Because a root key cannot sign server certificates",
+        "correct": false,
+        "why": "It technically can; it should not."
+      },
+      {
+        "text": "Because issuing CAs use stronger algorithms",
+        "correct": false,
+        "why": "Strength is not the reason."
+      },
+      {
+        "text": "A leaked issuing CA is replaced in an afternoon; a root takes years",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To make the chain longer and harder to forge",
+        "correct": false,
+        "why": "Length adds no strength."
+      }
+    ]
+  },
+  {
+    "id": "ex-njm1bsev",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `openssl verify -show_chain`, at what depth is the root?",
+    "hint": "The portal is depth 0.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zfj2w0dv",
+    "version": 1,
+    "section": "trust-stores",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Verified against the system's trust store, the portal's chain fails. What is the right fix on Vereda's staff laptops?",
+    "hint": "It is an internal CA.",
+    "choices": [
+      {
+        "text": "Turn verification off for internal hosts",
+        "correct": false,
+        "why": "That accepts anybody who answers."
+      },
+      {
+        "text": "Install Vereda's root on them",
+        "correct": true,
+        "why": "Right: by configuration management or device policy."
+      },
+      {
+        "text": "Buy a public certificate for the root",
+        "correct": false,
+        "why": "A root is not something a public CA sells."
+      },
+      {
+        "text": "Add the portal certificate to the browser's exceptions",
+        "correct": false,
+        "why": "An exception per site is the same as not checking."
+      }
+    ]
+  },
+  {
+    "id": "ex-1g243ngy",
+    "version": 1,
+    "section": "trust-stores",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server works in Chrome on one laptop but `curl` reports `unable to get local issuer certificate`. Most likely cause?",
+    "hint": "Some browsers fetch what is missing.",
+    "choices": [
+      {
+        "text": "curl does not support elliptic-curve certificates",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "The certificate has expired",
+        "correct": false,
+        "why": "That error would say expired."
+      },
+      {
+        "text": "The server does not send the intermediate",
+        "correct": true,
+        "why": "Right: serve the full chain."
+      },
+      {
+        "text": "Chrome is less secure than curl",
+        "correct": false,
+        "why": "Both check; Chrome papered over the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-04yj1nkt",
+    "version": 1,
+    "section": "trust-stores",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The impostor root has exactly Vereda's root's name. Why did the forged portal certificate fail against the real root?",
+    "hint": "What does verification check with?",
+    "choices": [
+      {
+        "text": "The impostor's certificate had expired",
+        "correct": false,
+        "why": "It is valid until 2041."
+      },
+      {
+        "text": "Signatures are checked against keys",
+        "correct": true,
+        "why": "Right: the fingerprints differ."
+      },
+      {
+        "text": "The names differed in an invisible character",
+        "correct": false,
+        "why": "They are identical."
+      },
+      {
+        "text": "OpenSSL keeps a list of impostors",
+        "correct": false,
+        "why": "No such list exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez76kq49",
+    "version": 1,
+    "section": "trust-stores",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many root certificates did the recording machine's Mozilla bundle hold?",
+    "hint": "The first command of the section.",
+    "value": 121,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jecv4vpf",
+    "version": 1,
+    "section": "when-cas-fail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Certificate Transparency give a domain owner?",
+    "hint": "Public, append-only logs.",
+    "choices": [
+      {
+        "text": "A guarantee that no CA can issue for the domain",
+        "correct": false,
+        "why": "CAs still can; they cannot do it unseen."
+      },
+      {
+        "text": "Visibility of every certificate any public CA issued for it",
+        "correct": true,
+        "why": "Right: and to be alerted to one nobody requested."
+      },
+      {
+        "text": "Encryption of the certificate's contents",
+        "correct": false,
+        "why": "Certificates stay public."
+      },
+      {
+        "text": "Free certificates",
+        "correct": false,
+        "why": "That is Let's Encrypt, a CA."
+      }
+    ]
+  },
+  {
+    "id": "ex-fk749afa",
+    "version": 1,
+    "section": "when-cas-fail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a CAA record `0 issue \"letsencrypt.org\"` on `vereda.example` do?",
+    "hint": "Honest CAs must check it.",
+    "choices": [
+      {
+        "text": "Tells other CAs to refuse to issue for the domain",
+        "correct": true,
+        "why": "Right: it stops honest CAs from being tricked."
+      },
+      {
+        "text": "Forces browsers to accept only Let's Encrypt for the domain",
+        "correct": false,
+        "why": "Browsers do not read CAA."
+      },
+      {
+        "text": "Revokes certificates from other CAs",
+        "correct": false,
+        "why": "CAA does not revoke anything."
+      },
+      {
+        "text": "Encrypts DNS answers for the domain",
+        "correct": false,
+        "why": "That is not what it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-txj6n93y",
+    "version": 1,
+    "section": "when-cas-fail",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the maximum lifetime of a public TLS certificate from March 2027, in days?",
+    "hint": "200 in 2026, then halved.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-f6vg1znf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the certificates of Vereda's chain from the one a client trusts first to the one it checks last.",
+    "hint": "Trust starts at the root.",
+    "items": [
+      "Vereda Root CA",
+      "Vereda Issuing CA 1",
+      "portal.vereda.example"
+    ]
+  },
+  {
+    "id": "ex-qq8dq454",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would let somebody impersonate `portal.vereda.example` to Vereda's staff laptops? Choose all that apply.",
+    "hint": "Whoever can make a chain end in a trusted root.",
+    "choices": [
+      {
+        "text": "Installing their own root on the laptops",
+        "correct": true,
+        "why": "Yes: the impostor root verified in the lab."
+      },
+      {
+        "text": "Stealing the issuing CA's private key",
+        "correct": true,
+        "why": "Yes: they could sign any name."
+      },
+      {
+        "text": "Downloading the portal's public certificate",
+        "correct": false,
+        "why": "Without its private key it proves nothing."
+      },
+      {
+        "text": "Creating a root with the same name as Vereda's",
+        "correct": false,
+        "why": "The name alone fails against the real key."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pww813s",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each defence to the failure it addresses.",
+    "hint": "Section 05.",
+    "pairs": [
+      {
+        "left": "Certificate Transparency",
+        "right": "a certificate issued in secret"
+      },
+      {
+        "left": "CAA records",
+        "right": "an honest CA tricked into issuing"
+      },
+      {
+        "left": "short lifetimes",
+        "right": "a leaked certificate staying valid"
+      }
+    ],
+    "right_distractors": [
+      "a weak password on the portal"
+    ]
+  }
+]
