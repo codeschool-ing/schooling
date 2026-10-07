@@ -1305,6 +1305,82 @@ def l14_two_ways(lang):
     f.text(530, 238, '? ' + t['ask'], size=10, fill='--paper-dim')
     return f, t['cap']
 
+@figure('l15-shapes', 15)
+def l15_shapes(lang):
+    t = {'en': dict(
+            label='Three shapes of idempotent load, each run twice. Delete then insert: the slice '
+                  'the run owns is removed and written again, so the second run leaves the same '
+                  'slice. Upsert: each row is written by its key, so the second run updates rows '
+                  'to the values they already have. Rebuild and swap: the whole result is built '
+                  'beside the old one and put in its place, so the second run builds the same '
+                  'result again.',
+            names=['delete, then insert', 'upsert by key', 'rebuild and swap'],
+            subs=['by the slice the run owns', 'INSERT … ON CONFLICT', 'build beside, then rename'],
+            eg=['fact_sales.sql · delete+insert', 'dim_book', "dbt's table"],
+            run2=['the same slice again', 'every key already there', 'the same table again'],
+            second='second run:', cap='Each shape answers the same question: why would a second '
+                                     'run write the same rows rather than more?'),
+         'pt': dict(
+            label='Três formas de carga idempotente, cada uma rodada duas vezes. Apagar e depois '
+                  'inserir: a fatia de que a execução é dona é tirada e escrita de novo, então a '
+                  'segunda execução deixa a mesma fatia. Upsert: cada linha é escrita pela chave, '
+                  'então a segunda execução atualiza as linhas para os valores que elas já têm. '
+                  'Reconstruir e trocar: o resultado inteiro é construído ao lado do antigo e posto '
+                  'no lugar dele, então a segunda execução constrói o mesmo resultado de novo.',
+            names=['apagar, depois inserir', 'upsert pela chave', 'reconstruir e trocar'],
+            subs=['pela fatia de que a execução é dona', 'INSERT … ON CONFLICT',
+                  'construir ao lado, depois renomear'],
+            eg=['fact_sales.sql · delete+insert', 'dim_book', 'a table do dbt'],
+            run2=['a mesma fatia de novo', 'cada chave já está lá', 'a mesma tabela de novo'],
+            second='segunda execução:', cap='Cada forma responde à mesma pergunta: por que uma '
+                                           'segunda execução escreveria as mesmas linhas, e não '
+                                           'mais?')}[lang]
+    f = Fig('l15-shapes', 720, 230, t['label'])
+    for i in range(3):
+        x = 20 + i * 232
+        f.rect(x, 20, 216, 120, stroke='--phosphor', fill='--panel')
+        f.text(x + 108, 44, t['names'][i], size=12, weight='600')
+        mono = i == 1
+        f.text(x + 108, 72, t['subs'][i], size=10, fill='--paper-dim', mono=mono)
+        f.text(x + 108, 108, t['eg'][i], size=10, mono=i != 2,
+               fill='--paper-dim')
+        f.text(x + 108, 168, t['second'], size=10, fill='--paper-dim')
+        f.text(x + 108, 190, t['run2'][i], size=11)
+    return f, t['cap']
+
+
+@figure('l15-once', 15)
+def l15_once(lang):
+    t = {'en': dict(
+            label='At least once plus idempotent writes. A sender retries until it hears an answer, '
+                  'so a record can arrive twice. The receiver writes by key, so the second copy '
+                  'changes nothing. The result is the same as if it had arrived once.',
+            send='sender', recv='receiver', retry='retry: no answer heard',
+            first='record 42', dup='record 42, again', write='written by key',
+            same='the same row, once', cap='Nothing is lost, and a duplicate costs nothing.'),
+         'pt': dict(
+            label='Pelo menos uma vez mais escritas idempotentes. Quem envia tenta de novo até ouvir '
+                  'uma resposta, então um registro pode chegar duas vezes. Quem recebe escreve pela '
+                  'chave, então a segunda cópia não muda nada. O resultado é o mesmo que se ele '
+                  'tivesse chegado uma vez.',
+            send='quem envia', recv='quem recebe', retry='retry: nenhuma resposta ouvida',
+            first='registro 42', dup='registro 42, de novo', write='escrito pela chave',
+            same='a mesma linha, uma vez', cap='Nada se perde, e uma duplicata não custa nada.')}[lang]
+    f = Fig('l15-once', 720, 210, t['label'])
+    box(f, 20, 70, 130, 50, t['send'])
+    box(f, 400, 70, 150, 50, t['recv'])
+    f.line(150, 84, 398, 84, arrow=True)
+    f.text(275, 72, t['first'], size=10.5)
+    f.line(150, 108, 398, 108, arrow=True, stroke='--amber')
+    f.text(275, 124, t['dup'], size=10.5, fill='--amber')
+    f.text(275, 158, t['retry'], size=10, fill='--paper-dim')
+    f.line(550, 95, 588, 95, arrow=True)
+    f.rect(590, 70, 116, 50, stroke='--phosphor', fill='--panel')
+    f.text(648, 88, t['same'].split(',')[0], size=10.5)
+    f.text(648, 104, t['same'].split(',')[1].strip(), size=10, fill='--paper-dim')
+    f.text(475, 140, t['write'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:

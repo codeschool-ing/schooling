@@ -1,0 +1,406 @@
+{
+  "ex-9a4qtt6x": {
+    "prompt": "O que torna um passo idempotente?",
+    "hint": "Uma vez, ou duas.",
+    "choices": [
+      {
+        "text": "Ele nunca falha",
+        "why": "Falhar não tem nada a ver."
+      },
+      {
+        "text": "Rodá-lo duas vezes deixa o que rodá-lo uma vez deixou",
+        "why": "Isso. As mesmas linhas, os mesmos valores."
+      },
+      {
+        "text": "Ele roda numa transação do primeiro ao último comando",
+        "why": "Uma transação ainda pode inserir as mesmas linhas duas vezes."
+      },
+      {
+        "text": "Ele é rápido o bastante para rodar toda noite",
+        "why": "Velocidade não tem relação."
+      }
+    ]
+  },
+  "ex-4meftv7x": {
+    "prompt": "Quais destas coisas rodam um passo mais de uma vez? Escolha todas as que se aplicam.",
+    "hint": "O curso encontrou todas.",
+    "choices": [
+      {
+        "text": "Um retry depois de um timeout",
+        "why": "Isso. Lição 10."
+      },
+      {
+        "text": "Limpar uma tarefa dias depois",
+        "why": "Isso. Lição 10."
+      },
+      {
+        "text": "Um backfill sobre dias já carregados",
+        "why": "Isso. Lição 9."
+      },
+      {
+        "text": "Um sensor que nunca confere",
+        "why": "Um sensor que nunca confere não roda nada."
+      }
+    ]
+  },
+  "ex-shjhqpvm": {
+    "prompt": "Depois de o insert ingênuo rodar duas vezes por cima da carga noturna, quantas linhas o dia 16 tinha?",
+    "hint": "448 três vezes."
+  },
+  "ex-4y09c0td": {
+    "prompt": "Por que uma impressão digital é melhor que uma contagem de linhas para comparar duas execuções?",
+    "hint": "O que uma contagem deixaria escapar?",
+    "choices": [
+      {
+        "text": "É mais rápida de calcular",
+        "why": "É mais lenta; lê todas as colunas."
+      },
+      {
+        "text": "Ignora linhas duplicadas",
+        "why": "Duplicatas a mudam."
+      },
+      {
+        "text": "Qualquer valor mudado a muda",
+        "why": "Isso. Uma contagem só vê quantas."
+      },
+      {
+        "text": "O PostgreSQL a guarda com a tabela",
+        "why": "Ela é calculada pela consulta."
+      }
+    ]
+  },
+  "ex-1y7wwvpa": {
+    "prompt": "Por que a consulta de impressão digital ordena as linhas com `ORDER BY order_id, line_no`?",
+    "hint": "Mesmas linhas, mesmo texto.",
+    "choices": [
+      {
+        "text": "Para as mesmas linhas sempre darem o mesmo md5",
+        "why": "Isso. Sem ordem, as linhas podem voltar em qualquer ordem."
+      },
+      {
+        "text": "Para o md5 ficar mais rápido de calcular num dia grande",
+        "why": "A ordem não muda a velocidade."
+      },
+      {
+        "text": "Para tirar as duplicatas",
+        "why": "O ORDER BY não tira nada."
+      },
+      {
+        "text": "Porque o string_agg se recusa a rodar sem um ORDER BY",
+        "why": "É opcional; deixar de fora torna o resultado instável."
+      }
+    ]
+  },
+  "ex-ma7d7g58": {
+    "prompt": "O que tornou o `load/fact_sales.sql` idempotente?",
+    "hint": "Uma linha que a carga ingênua não tinha.",
+    "choices": [
+      {
+        "text": "CREATE TABLE IF NOT EXISTS",
+        "why": "Isso só cria a tabela uma vez."
+      },
+      {
+        "text": "A opção -q do psql",
+        "why": "Isso só o deixa calado."
+      },
+      {
+        "text": "Um índice único no order_date",
+        "why": "Não há, e um dia tem muitas linhas."
+      },
+      {
+        "text": "Apaga o dia antes",
+        "why": "Isso. Ela troca a fatia de que é dona."
+      }
+    ]
+  },
+  "ex-kec1mteb": {
+    "prompt": "Ligue cada carga à forma idempotente que ela toma.",
+    "hint": "Fatia, chave, ou inteiro.",
+    "pairs": [
+      {
+        "left": "load/fact_sales.sql",
+        "right": "Apagar, depois inserir"
+      },
+      {
+        "left": "load/dim_book.sql",
+        "right": "Upsert pela chave"
+      },
+      {
+        "left": "Um modelo table do dbt",
+        "right": "Reconstruir e trocar"
+      }
+    ],
+    "right_distractors": [
+      "INSERT puro"
+    ]
+  },
+  "ex-1wz3enjn": {
+    "prompt": "Quando o upsert é a forma certa?",
+    "hint": "Linhas com identidade.",
+    "choices": [
+      {
+        "text": "Quando as linhas chegam uma a uma, cada uma com a sua chave",
+        "why": "Isso. Uma segunda execução acha cada chave e não muda nada."
+      },
+      {
+        "text": "Quando uma execução é dona de um dia inteiro",
+        "why": "Isso é apagar e depois inserir."
+      },
+      {
+        "text": "Quando a tabela não tem chave",
+        "why": "Upsert precisa de chave."
+      },
+      {
+        "text": "Quando o resultado é pequeno o bastante para refazer inteiro",
+        "why": "Isso é reconstruir e trocar."
+      }
+    ]
+  },
+  "ex-nrc1jr22": {
+    "prompt": "O que o `twice.sh` compara?",
+    "hint": "Depois de uma execução, depois de duas.",
+    "choices": [
+      {
+        "text": "O código do passo como era antes e depois da última edição",
+        "why": "Ele nunca lê o código."
+      },
+      {
+        "text": "Os códigos de saída",
+        "why": "O set -e para numa falha; a comparação é da consulta."
+      },
+      {
+        "text": "O tempo de cada execução, para ver se a segunda foi mais rápida",
+        "why": "O tempo não é comparado."
+      },
+      {
+        "text": "O que o passo deixou, depois de uma e de duas execuções",
+        "why": "Isso. Ele testa a propriedade, não o código."
+      }
+    ]
+  },
+  "ex-wpb6pzzg": {
+    "prompt": "Um passo insere preços novos, e o `twice.sh` diz que ele é idempotente num dia em que a API não devolveu nada novo. O que foi mostrado?",
+    "hint": "Ele tinha algo para escrever?",
+    "choices": [
+      {
+        "text": "Que o passo é idempotente",
+        "why": "Só que ele não escreveu nada duas vezes."
+      },
+      {
+        "text": "Que a API é idempotente",
+        "why": "A API não foi testada."
+      },
+      {
+        "text": "Nada útil: o teste precisa de linhas a escrever",
+        "why": "Isso. Idempotente por sorte não é idempotente."
+      },
+      {
+        "text": "Que o passo está quebrado",
+        "why": "Ele não fez nada de errado naquele dia."
+      }
+    ]
+  },
+  "ex-8rc0vq5k": {
+    "prompt": "Por que o `load_log` não é idempotente, e por que isso está certo?",
+    "hint": "O que ele registra?",
+    "choices": [
+      {
+        "text": "É um bug; deveria ser corrigido com um upsert",
+        "why": "Duas cargas aconteceram, e ele diz isso."
+      },
+      {
+        "text": "Ele registra execuções, e duas aconteceram",
+        "why": "Isso. Um registro é onde acrescentar é o objetivo."
+      },
+      {
+        "text": "O now() não é permitido no PostgreSQL",
+        "why": "É permitido; muda a cada execução."
+      },
+      {
+        "text": "Ele não tem chave primária, então o PostgreSQL não distingue as linhas",
+        "why": "Uma chave não mudaria o que ele registra."
+      }
+    ]
+  },
+  "ex-swdent5t": {
+    "prompt": "Quais destas coisas quebram a idempotência de uma tabela de fatos sobre a loja? Escolha todas as que se aplicam.",
+    "hint": "O que muda de execução para execução?",
+    "choices": [
+      {
+        "text": "Uma coluna preenchida com now()",
+        "why": "Isso. Toda execução escreve um valor diferente."
+      },
+      {
+        "text": "Um número de identidade usado como chave em outro lugar",
+        "why": "Isso. Distribuído na ordem de chegada."
+      },
+      {
+        "text": "random()",
+        "why": "Isso. Diferente toda vez."
+      },
+      {
+        "text": "Um WHERE na data lógica",
+        "why": "A mesma execução dá a mesma data."
+      }
+    ]
+  },
+  "ex-qeq8d7zk": {
+    "prompt": "Como um e-mail para os gerentes deve ser tornado seguro para rodar duas vezes?",
+    "hint": "É um ato, não uma tabela.",
+    "choices": [
+      {
+        "text": "Torná-lo um upsert",
+        "why": "Um e-mail não tem linha para upsert."
+      },
+      {
+        "text": "Tentar de novo até o servidor de e-mail responder e confirmar a entrega",
+        "why": "É assim que ele é enviado duas vezes."
+      },
+      {
+        "text": "Enviá-lo primeiro, antes de a carga rodar, para uma falha não o enviar duas vezes",
+        "why": "Ele fica no fim."
+      },
+      {
+        "text": "Registrar que foi enviado, e conferir esse registro antes de enviar",
+        "why": "Isso. Uma proteção escrita de propósito."
+      }
+    ]
+  },
+  "ex-exdt2vz6": {
+    "prompt": "O modelo incremental trocava só o seu dia mais novo. Ele era idempotente?",
+    "hint": "Idempotente não é o mesmo que completo.",
+    "choices": [
+      {
+        "text": "Sim, mas dias mais antigos ainda podiam mudar sem ser vistos",
+        "why": "Isso. Idempotente, e incompleto."
+      },
+      {
+        "text": "Não, porque derivava",
+        "why": "Rodá-lo duas vezes deixava a mesma tabela."
+      },
+      {
+        "text": "Não, porque usava delete+insert",
+        "why": "Foi isso que o tornou idempotente."
+      },
+      {
+        "text": "Sim, e era completo",
+        "why": "O teste de deriva mostrou o contrário."
+      }
+    ]
+  },
+  "ex-669bqv18": {
+    "prompt": "Quantos dias para trás o novo `fact_sales` troca a cada execução?",
+    "hint": "max(order_date) menos…"
+  },
+  "ex-9k57s58x": {
+    "prompt": "O que a janela de trinta dias custa?",
+    "hint": "Olhe a contagem do INSERT.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Cada execução escreve um mês de linhas."
+      },
+      {
+        "text": "Cada execução escreve cerca de um mês de linhas em vez de um dia",
+        "why": "Isso. Barato aqui; dinheiro de verdade num warehouse grande."
+      },
+      {
+        "text": "O teste de deriva não pode mais rodar, já que a janela esconde dele os dias antigos",
+        "why": "Ele roda e passa."
+      },
+      {
+        "text": "Dias antigos são apagados de vez",
+        "why": "Eles são escritos de novo."
+      }
+    ]
+  },
+  "ex-r5bke6vy": {
+    "prompt": "Uma janela que cada execução apaga e escreve de novo, para pegar mudanças atrasadas, é chamada de janela de ___.",
+    "hint": "A palavra da lição 4; quão para trás ela olha.",
+    "blanks": [
+      {
+        "accept": [
+          "volta",
+          "lookback"
+        ]
+      }
+    ]
+  },
+  "ex-5t9z1kfs": {
+    "prompt": "O que *exatamente uma vez* quer dizer na prática?",
+    "hint": "Duas metades.",
+    "choices": [
+      {
+        "text": "Uma rede que nunca perde nem repete uma única mensagem",
+        "why": "Nenhuma rede promete isso."
+      },
+      {
+        "text": "Nunca tentar de novo um passo",
+        "why": "Aí as coisas se perdem."
+      },
+      {
+        "text": "Pelo menos uma vez, com escritas idempotentes",
+        "why": "Isso. Nada se perde, duplicatas inofensivas."
+      },
+      {
+        "text": "Rodar tudo uma vez por dia",
+        "why": "Frequência não é a questão."
+      }
+    ]
+  },
+  "ex-agg85qfv": {
+    "prompt": "Como o staging torna inofensivo um evento do site duplicado?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "O coletor para de mandar duplicatas",
+        "why": "Ele continua mandando."
+      },
+      {
+        "text": "Guarda uma linha por event_id",
+        "why": "Isso. Uma segunda cópia não muda nada."
+      },
+      {
+        "text": "Apaga o arquivo do dia",
+        "why": "Os arquivos são mantidos."
+      },
+      {
+        "text": "Conta eventos por sessão e descarta as sessões com eventos demais para serem reais",
+        "why": "Nada é descartado por contagem."
+      }
+    ]
+  },
+  "ex-dtd03fe4": {
+    "prompt": "Ordene os passos do `twice.sh`.",
+    "hint": "Rodar, descrever, rodar, descrever, comparar.",
+    "items": [
+      "Rodar o passo",
+      "Descrever o que ele deixou",
+      "Rodar o passo de novo",
+      "Descrever de novo o que ele deixou",
+      "Comparar as duas descrições"
+    ]
+  },
+  "ex-7kzrsf5r": {
+    "prompt": "Um backfill roda o `load/fact_sales_append.sql` para março inteiro sobre dias que a carga noturna já carregou. O que o warehouse diz sobre março depois?",
+    "hint": "Acrescentar, sobre dias carregados.",
+    "choices": [
+      {
+        "text": "Os números certos, já que o backfill os recarregou",
+        "why": "Ele acrescentou, não trocou."
+      },
+      {
+        "text": "O backfill falha com chaves duplicadas",
+        "why": "O fact_sales não tem chave única que o impeça."
+      },
+      {
+        "text": "O dobro das vendas, sem erro em lugar nenhum",
+        "why": "Isso. A falha silenciosa mais comum."
+      },
+      {
+        "text": "Só o dia mais novo dobra",
+        "why": "Todo dia do intervalo dobra."
+      }
+    ]
+  }
+}
