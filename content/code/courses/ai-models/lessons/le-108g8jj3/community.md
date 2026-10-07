@@ -36,7 +36,8 @@ Lantern Books' e-mail:
 
 1. **Who owns it.** An organisation with a history, or an account created last week.
 2. **What it says it is.** `base_model` and `base_model_relation`, and whether they match the name.
-3. **What licence it can actually have.** The base's licence wins over the YAML (lesson 2 section 04).
+3. **What licence it can actually have.** The base's licence wins over the YAML (lesson 2 section
+   04).
 4. **What format the weights are in.** `safetensors`, as section 03 said, not a pickle.
 5. **Whether it passes the cases.** Lesson 5, pinned to the commit hash of the revision she tested.
 

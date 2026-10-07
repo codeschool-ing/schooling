@@ -4,9 +4,9 @@ version: 1
 ---
 
 Every family in lessons 6 to 11 was a chat model: text in, text out, any task you can describe.
-Hugging Face is where most open models are published, by their makers and by everybody else, and
-it organises them by **task**. The list of tasks lives in Hugging Face's own source code, which the
-lab reads at a pinned commit; the comment above it says what the list is for:
+Hugging Face is where most open models are published, by their makers and by everybody else, and it
+organises them by **task**. The list of tasks lives in Hugging Face's own source code, quoted here
+at a pinned commit; the comment above it says what the list is for:
 
 ```
 # huggingface/huggingface.js@3064743f packages/tasks/src/pipelines.ts
@@ -15,16 +15,17 @@ lab reads at a pinned commit; the comment above it says what the list is for:
   62: ///  - As filters at the left of models and datasets page.
 ```
 
-`lab/tasks.py` pulls each task's key, name and modality out of that file:
+`tasks.py` pulls each task's key, name and modality out of that file:
 
 ```python
 import re
-import subprocess
 import sys
+import urllib.request
 from collections import Counter
 
-src = subprocess.run(["sources", "lines", "hf-tasks", "1", "664"], capture_output=True, text=True).stdout
-text = "\n".join(line.split("| ", 1)[1] if "| " in line else "" for line in src.splitlines()[1:])
+URL = ("https://raw.githubusercontent.com/huggingface/huggingface.js/"
+       "3064743fce9a4b29b4d9c4ab4c38217526de2c2f/packages/tasks/src/pipelines.ts")
+text = urllib.request.urlopen(URL).read().decode()
 # one entry per task: its key, its display name, and the modality it belongs to
 tasks = re.findall(r'\n\t"([a-z0-9-]+)": \{\n\t\tname: "([^"]+)",.*?\n\t\tmodality: "(\w+)"', text, re.S)
 print(len(tasks), "tasks:", dict(Counter(m for _, _, m in tasks).most_common()))
@@ -34,7 +35,7 @@ for key, name, modality in tasks:
 ```
 
 ```
-ana@desk:~/desk$ python lab/tasks.py nlp
+ana@desk:~/desk$ python tasks.py nlp
 53 tasks: {'cv': 19, 'nlp': 13, 'multimodal': 9, 'audio': 6, 'tabular': 4, 'rl': 1, 'other': 1}
   text-classification              Text Classification
   token-classification             Token Classification
@@ -51,8 +52,8 @@ ana@desk:~/desk$ python lab/tasks.py nlp
   text-retrieval                   Text Retrieval
 ```
 
-**Fifty-three tasks**, the largest group about images, and thirteen about text. `text-generation` is the
-one every chat model belongs to. The others are what the list exists to make visible: **models
+**Fifty-three tasks**, the largest group about images, and thirteen about text. `text-generation` is
+the one every chat model belongs to. The others are what the list exists to make visible: **models
 built for one job**, usually far smaller than a chat model, often faster and cheaper to run.
 
 ## Why that matters for ana

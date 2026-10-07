@@ -3,9 +3,9 @@ title: Modelos da comunidade
 version: 1
 ---
 
-A maioria dos repositórios do Hub não foi feita pelos autores de um modelo. Foi feita a partir de um:
-ajustada com os dados de alguém, quantizada para caber num notebook, mesclada a partir de outros dois. A
-documentação do Hub dá nome às relações e ao campo que as registra:
+A maioria dos repositórios do Hub não foi feita pelos autores de um modelo. Foi feita a partir de
+um: ajustada com os dados de alguém, quantizada para caber num notebook, mesclada a partir de outros
+dois. A documentação do Hub dá nome às relações e ao campo que as registra:
 
 ```
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
@@ -21,17 +21,19 @@ documentação do Hub dá nome às relações e ao campo que as registra:
 
 Quatro relações, cada uma mudando algo de que as aulas 2 a 5 cuidam:
 
-- **finetune**: pesos diferentes, treinados um pouco mais; o comportamento, e a avaliação, são novos.
+- **finetune**: pesos diferentes, treinados um pouco mais; o comportamento, e a avaliação, são
+  novos.
 - **adapter**: um pequeno conjunto de pesos extras (LoRA é o tipo comum) carregado por cima da base;
   inútil sem a base exata com que foi treinado.
-- **quantized**: o mesmo modelo com precisão menor, a troca da aula 3 seção 04, feita por quem subiu.
+- **quantized**: o mesmo modelo com precisão menor, a troca da aula 3 seção 04, feita por quem
+  subiu.
 - **merge**: pesos combinados de dois ou mais modelos. A licença dele é a de cada um dos pais.
 
 ## Antes de confiar num deles
 
 Um repositório da comunidade pode ser excelente; muitas das quantizações mais usadas são uploads da
-comunidade. Também pode estar abandonado, mal rotulado ou coisa pior. Cinco verificações, nesta ordem,
-antes de a ana deixar um chegar perto dos e-mails da Lantern Books:
+comunidade. Também pode estar abandonado, mal rotulado ou coisa pior. Cinco verificações, nesta
+ordem, antes de a ana deixar um chegar perto dos e-mails da Lantern Books:
 
 1. **De quem é.** Uma organização com histórico, ou uma conta criada semana passada.
 2. **O que diz ser.** `base_model` e `base_model_relation`, e se batem com o nome.

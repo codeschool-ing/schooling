@@ -19,7 +19,7 @@ documentation says how:
 ```
 
 The YAML at the top is what the Hub filters and links by: the licence, the languages, the task, the
-model it was built from. `lab/cards.py` writes the metadata a fine-tune of ana's would carry, if she
+model it was built from. `cards.py` writes the metadata a fine-tune of ana's would carry, if she
 ever published one, with `huggingface_hub`'s own classes, and reads it back:
 
 ```python
@@ -35,7 +35,7 @@ print("read back:", card.data.license, card.data.base_model, card.data.language)
 ```
 
 ```
-ana@desk:~/desk$ python lab/cards.py
+ana@desk:~/desk$ python cards.py
 ---
 base_model: Qwen/Qwen3-8B
 language:
