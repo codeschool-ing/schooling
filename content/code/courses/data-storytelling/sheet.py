@@ -147,6 +147,30 @@ assert abs(sum(v for d, v in FIRST_ARRIVAL_DAYS if d > 2) - round(LATE_SHARE_ALL
 ON_TIME_IF_THREE_DAYS = sum(v for d, v in FIRST_ARRIVAL_DAYS if d <= 3)
 MEAN_DAYS = sum(d * v for d, v in FIRST_ARRIVAL_DAYS)
 
+# ---------------------------------------------------------------- the pilot
+# Eight weeks from 1 September 2025: the interior skips the manual check for
+# addresses the postcode lookup confirms, the capital keeps it. Invented like the
+# rest, drawn from the seed: the interior settles over the first weeks while the
+# warehouse adapts, and the capital wanders around its first-half level.
+
+PILOT_WEEK_STARTS = ['01/09', '08/09', '15/09', '22/09', '29/09', '06/10', '13/10', '20/10']
+
+
+def pilot():
+    rnd = random.Random(SEED + 23)
+    interior, capital, returns = [], [], []
+    base_i = BY_REGION['interior']['late_share']
+    base_c = BY_REGION['capital']['late_share']
+    for w in range(8):
+        settle = 0.072 + (base_i - 0.072) * 0.5 ** (w + 1)
+        interior.append(round(100 * settle * (1 + 0.08 * (2 * rnd.random() - 1)), 1))
+        capital.append(round(100 * base_c * (1 + 0.10 * (2 * rnd.random() - 1)), 1))
+        returns.append(round(0.55 + 0.3 * rnd.random(), 2))
+    return interior, capital, returns
+
+
+PILOT_INTERIOR, PILOT_CAPITAL, PILOT_RETURNS = pilot()
+
 # ---------------------------------------------------------- the exit survey
 
 EARLY_CANCELLERS = CANCELLED
@@ -215,6 +239,9 @@ def main():
     p(f'pilot: avoided per year       {AVOIDED_PER_YEAR}  gain {brl(GAIN_LOW)} to {brl(GAIN_HIGH)}')
     p(f'express for every first box, a year: {brl(EXPRESS_PER_YEAR)}')
     p(f'first boxes on time if the promise were 3 days: {pct(ON_TIME_IF_THREE_DAYS)}%  mean days {MEAN_DAYS:.2f}')
+    p(f'pilot interior late %  {PILOT_INTERIOR}')
+    p(f'pilot capital late %   {PILOT_CAPITAL}')
+    p(f'pilot returns % first  {PILOT_RETURNS}')
     p(f'survey: cancellers {EARLY_CANCELLERS}  answers {SURVEY_ANSWERS}')
     for r, n in SURVEY_REASONS:
         p(f'  {r:26} {n:4}  {pct(n / SURVEY_ANSWERS)}%')

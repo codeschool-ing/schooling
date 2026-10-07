@@ -2125,6 +2125,81 @@ def p_l13_grid_blank():
              ((mx + x1) / 2, (my + y1) / 2), ((x0 + mx) / 2, (my + y1) / 2)]
     return f, marks
 
+# ------------------------------------------------------------------ lesson 14
+
+@figure('l14-adkar', 14)
+def l14_adkar(lang):
+    f = Fig('l14-adkar', 680, 250, T(
+        lang,
+        'Five steps in order, each with what Faro did for the warehouse team. Awareness: Sandra sees '
+        'why first boxes matter, with her own number. Desire: her team owns the pilot. Knowledge: the '
+        'new rule, skip the check for addresses the lookup confirms. Ability: eight weeks of practice, '
+        'with Diego’s weekly numbers. Reinforcement: the rate stays on the dashboard and in the '
+        'team’s targets.',
+        'Cinco degraus em ordem, cada um com o que a Faro fez para a equipe do depósito. Consciência: a '
+        'Sandra vê por que a primeira caixa importa, com o próprio número. Desejo: a equipe dela é dona '
+        'do piloto. Conhecimento: a regra nova, pular a conferência para endereços que a consulta '
+        'confirma. Habilidade: oito semanas de prática, com os números semanais do Diego. Reforço: a '
+        'taxa fica no painel e nas metas da equipe.'))
+    steps = [('A', T(lang, 'awareness', 'consciência'), T(lang, ['why first boxes', 'matter, in her', 'own number'], ['por que a 1ª caixa', 'importa, no', 'número dela'])),
+             ('D', T(lang, 'desire', 'desejo'), T(lang, ['her team', 'owns the', 'pilot'], ['a equipe', 'dela é dona', 'do piloto'])),
+             ('K', T(lang, 'knowledge', 'conhecimento'), T(lang, ['skip the check', 'when the lookup', 'confirms'], ['pular a conferência', 'quando a consulta', 'confirma'])),
+             ('A', T(lang, 'ability', 'habilidade'), T(lang, ['eight weeks,', 'Diego’s weekly', 'numbers'], ['oito semanas,', 'números semanais', 'do Diego'])),
+             ('R', T(lang, 'reinforcement', 'reforço'), T(lang, ['on the dashboard', 'and in the', 'team’s targets'], ['no painel', 'e nas metas', 'da equipe']))]
+    for i, (letter, name, body) in enumerate(steps):
+        x, y = 14 + i * 132, 150 - i * 30
+        f.rect(x, y, 122, 236 - y, stroke='--phosphor' if i == 4 else '--wire', fill='--panel')
+        f.text(x + 14, y + 22, letter, size=18, weight='600', anchor='start', fill='--phosphor')
+        f.text(x + 34, y + 22, name, size=10.5, weight='600', anchor='start')
+        f.lines(x + 12, y + 46, body, size=9.5, anchor='start', gap=14)
+    return f, T(lang,
+                'Each step needs the one before it. When a change stalls, the question is which step '
+                'the people are stuck on.',
+                'Cada degrau precisa do anterior. Quando uma mudança empaca, a pergunta é em que degrau as '
+                'pessoas estão presas.')
+
+
+@figure('l14-pilot', 14)
+def l14_pilot(lang):
+    f = Fig('l14-pilot', 680, 290, T(
+        lang,
+        'Weekly share of late first deliveries over the eight pilot weeks, from 1 September to 20 '
+        'October 2025. The interior, without the manual check, starts at 23.6% before the pilot, falls '
+        'to 16.5%, 10.8% and 9.5%, and then stays at or under the 8% target from the fourth week, '
+        'ending at 7.1%. The capital, which kept the check, stays between 12.2% and 14.0%.',
+        'Fatia semanal de primeiras entregas atrasadas nas oito semanas do piloto, de 1º de setembro a '
+        '20 de outubro de 2025. O interior, sem a conferência manual, começa em 23,6% antes do piloto, '
+        'cai para 16,5%, 10,8% e 9,5% e depois fica em 8% ou menos a partir da quarta semana, terminando '
+        'em 7,1%. A capital, que manteve a conferência, fica entre 12,2% e 14,0%.'))
+    p = Plot(f, 70, 30, 610, 220, -1, 7, 0, 26)
+    p.yaxis([5, 10, 15, 20, 25], fmt=lambda v: f'{v}%', size=9)
+    labels = [T(lang, 'before', 'antes')] + [T(lang, d, d) for d in S.PILOT_WEEK_STARTS]
+    for i, lab in enumerate(labels):
+        f.text(p.sx(i - 1), p.y1 + 14, lab, size=8.5, fill='--paper-dim')
+    p.baseline()
+    f.line(p.sx(-1), p.sy(8), p.sx(7), p.sy(8), stroke='--paper-dim', width=1.2, dash='5 3')
+    f.text(p.sx(7) + 6, p.sy(8), T(lang, 'target 8%', 'meta 8%'), size=9.5, anchor='start', fill='--paper-dim')
+    before_i = round(100 * S.BY_REGION['interior']['late_share'], 1)
+    before_c = round(100 * S.BY_REGION['capital']['late_share'], 1)
+    p.polyline(range(-1, 8), [before_i] + S.PILOT_INTERIOR, stroke='--phosphor', width=2.2)
+    p.polyline(range(-1, 8), [before_c] + S.PILOT_CAPITAL, stroke='--amber', width=1.8, dash='4 3')
+    for i, v in enumerate([before_i] + S.PILOT_INTERIOR):
+        f.circle(p.sx(i - 1), p.sy(v), 3, fill='--phosphor')
+    f.text(p.sx(-1) + 6, p.sy(before_i) - 10, f'{num(lang, before_i)}%', size=9.5, anchor='start', fill='--phosphor')
+    f.text(p.sx(7) + 6, p.sy(S.PILOT_INTERIOR[-1]) + 12, f'{num(lang, S.PILOT_INTERIOR[-1])}%', size=9.5,
+           anchor='start', fill='--phosphor')
+    f.text(p.sx(7) + 6, p.sy(S.PILOT_CAPITAL[-1]), T(lang, 'capital', 'capital'), size=10, anchor='start',
+           fill='--amber')
+    f.text(p.sx(1.2), p.sy(16), T(lang, 'interior, no manual check', 'interior, sem conferência'), size=10,
+           anchor='start', fill='--phosphor')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 34, T(lang, 'week of the pilot, 2025', 'semana do piloto, 2025'), size=10,
+           weight='600')
+    return f, T(lang,
+                'The interior fell to the target by the fourth week and stayed there; the capital, which '
+                'kept the check, did not move. That comparison is what let Paulo decide in ten minutes.',
+                'O interior chegou à meta na quarta semana e ficou lá; a capital, que manteve a conferência, '
+                'não se mexeu. Essa comparação é o que deixou o Paulo decidir em dez minutos.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
