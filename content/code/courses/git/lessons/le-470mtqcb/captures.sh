@@ -12,13 +12,13 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; a bare
-# repository standing in for the hosting service; lesson 13's pull request
-# #31, committed in a second clone that plays Bruno's machine, whose prompt
-# the helpers print; the edits made with sed where Bruno would use an editor;
-# colour switched off.
+# Lesson 13's pull request #31, committed in a second clone that plays Bruno's
+# machine, is the ```bash block answering-every-comment prints, run by `given`;
+# the helpers print his prompt, which the prose explains. Bruno's edits are
+# typed in the transcripts, with sed where he would use an editor.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids in
+# the prose are reproducible; colour switched off.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -82,31 +82,14 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
 
-cd ~ && rm -rf ~/remotes ~/bruno
 git config --global color.ui never
 git config --global color.advice never
 git config --global color.remote never
-cd ~/site
-git init -q --bare ~/remotes/site.git
-git remote add origin ~/remotes/site.git
-git push -q -u origin main 2>/dev/null
-
-# Lesson 13's pull request #31, as Bruno pushed it.
-git clone -q ~/remotes/site.git ~/bruno/site 2>/dev/null
-cd ~/bruno/site && bruno
-git config user.name 'Bruno Lima' && git config user.email 'bruno@example.com'
-git switch -q -c 30-pickup-times
-at '2026-09-24T10:10:00-03:00'
-printf '<h1>Order ahead</h1>\n<form class="order">\n  <label>Pickup time <input name="pickup" type="time"></label>\n  <button>Order</button>\n</form>\n' > order.html
-printf '<p><a href="order.html">Order ahead</a></p>\n' >> index.html
-git add -A && git commit -qm 'Let customers choose a pickup time' -m 'Refs #30'
-at '2026-09-24T10:40:00-03:00'
-sed -i 's/darkorange/saddlebrown/' style.css && printf '.order label { display: block; }\n' >> style.css
-git commit -qam 'Style the order form' -m 'Refs #30'
-git push -q -u origin 30-pickup-times 2>/dev/null
+# Lesson 13's pull request #31, as Bruno pushed it: the block this lesson prints.
+cd ~ && given answering-every-comment 1 '2026-09-24T10:10:00-03:00' '2026-09-24T10:40:00-03:00'
+bruno
 
 # From here the terminal is Bruno's, in his own clone.
 where() { pwd | sed "s|^$HOME/bruno|~|"; }
@@ -115,13 +98,13 @@ tty() { printf 'bruno@vm:%s$ %s\n' "$(where)" "$*"; script -qec "$*" /dev/null |
 
 block fix
 at '2026-09-25T09:20:00-03:00'
-sed -i 's|type="time">|type="time" min="06:00" max="19:00" required>|' order.html
+show "sed -i 's|type=\"time\">|type=\"time\" min=\"06:00\" max=\"19:00\" required>|' order.html"
 show 'git diff'
 show "git commit -qam 'Require a pickup time within opening hours' -m 'Refs #30'"
 
 block scope
 at '2026-09-25T09:35:00-03:00'
-sed -i 's/saddlebrown/darkorange/' style.css
+show "sed -i 's/saddlebrown/darkorange/' style.css"
 show "git commit -qam 'Leave the heading colour for its own pull request' -m 'Refs #30'"
 show 'git diff main... -- style.css'
 
@@ -132,6 +115,6 @@ tty 'git push'
 block colour
 at '2026-09-25T09:50:00-03:00'
 show 'git switch -c 32-heading-colour main'
-sed -i 's/darkorange/saddlebrown/' style.css
+show "sed -i 's/darkorange/saddlebrown/' style.css"
 show "git commit -qam 'Darken the heading colour' -m 'Refs #32'"
 tty 'git push -u origin 32-heading-colour'
