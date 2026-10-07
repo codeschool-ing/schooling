@@ -1,6 +1,6 @@
 ---
 title: The one that waits and the one that asks
-version: 1
+version: 2
 ---
 
 The usual picture of a server is a machine: a big box in a rack, more powerful than a desk PC. **A
@@ -9,8 +9,8 @@ system it will accept connections there, and does nothing until somebody arrives
 program that arrives: it knows the server's address and port in advance, and it starts the
 conversation.
 
-In the office lab from lesson 1, `srv` is a namespace on the same computer as every PC, with the same
-kind of virtual card. What makes it a server is one program, a small web server the lab starts on it.
+In lesson 1's office, built with `sudo bash ~/netlab/netlab.sh up office`, `srv` is a namespace on the same computer as every PC, with the same
+kind of virtual card. What makes it a server is one program, a small web server that `office.sh` starts on it.
 `ss -tln` lists the TCP sockets that are listening (`-t` for TCP, `-l` for listening, `-n` for numbers
 instead of names):
 
@@ -34,8 +34,9 @@ served by srv
 `/etc/hosts`, connected to port 80, sent a request, and printed what the server wrote back: `served
 by srv`.
 
-**One listener serves many clients at once.** Three PCs connect and keep their connections open, and
-the server lists its TCP connections with `ss -tn`, which leaves the listener out:
+**One listener serves many clients at once.** Three PCs connect and keep their connections open, each
+with `sleep 4 | timeout 6 nc -N srv 80`, because a web page's own connection closes in milliseconds and
+would never be caught. Meanwhile the server lists its TCP connections with `ss -tn`, which leaves the listener out:
 
 ```
 root@srv:~# ss -tn
