@@ -453,6 +453,69 @@ def _l4_envelope(f):
     f.arrow(600, 90, 600, 138)
 
 
+# ===================================================================== lesson 5
+L5 = 'le-b17k3pwx'
+
+
+@figure('l5-spectrum', L5, 720, 230,
+        ('Four techniques placed along one line, from the original value on the left to data '
+         'nobody can be found in on the right: masking, tokenisation, pseudonymisation, '
+         'anonymisation. The first three are still personal data under the LGPD; only the '
+         'fourth is not, and only while it holds.',
+         'Quatro técnicas numa linha, do valor original à esquerda até o dado em que ninguém '
+         'pode ser achado à direita: mascaramento, tokenização, pseudonimização, '
+         'anonimização. As três primeiras ainda são dado pessoal pela LGPD; só a quarta não é, '
+         'e só enquanto se sustenta.'),
+        ('The law draws its line at the right-hand end, not in the middle.',
+         'A lei traça a linha na ponta direita, não no meio.'))
+def _l5_spectrum(f):
+    f.arrow(30, 70, 690, 70, stroke='--paper-dim')
+    f.text(30, 48, ('the original value', 'o valor original'), size=11, anchor='start',
+           fill='--paper-dim')
+    f.text(690, 48, ('nobody can be found', 'ninguém pode ser achado'), size=11, anchor='end',
+           fill='--paper-dim')
+    items = [(30, ('masking', 'mascaramento'), {'s': '***.874.168-**', 'mono': True, 'size': 9.5}),
+             (195, ('tokenisation', 'tokenização'), {'s': 'tok_bbc2f3fe…', 'mono': True, 'size': 9.5}),
+             (360, ('pseudonymisation', 'pseudonimização'), {'s': 'vault:v1:5Vv5…', 'mono': True, 'size': 9.5}),
+             (525, ('anonymisation', 'anonimização'), ('counts, k ≥ 5', 'contagens, k ≥ 5'))]
+    for i, (x, name, ex) in enumerate(items):
+        last = i == 3
+        f.box(x, 92, 160, 60, [name, ex if isinstance(ex, dict) else {'s': ex, 'size': 9.5}],
+              stroke='--phosphor' if last else '--amber', fill='--ink')
+    f.rect(30, 170, 490, 40, stroke='--amber', fill='--panel', dash='4 3')
+    f.text(275, 190, ('personal data: every obligation applies', 'dado pessoal: toda obrigação vale'),
+           size=11)
+    f.rect(525, 170, 160, 40, stroke='--phosphor', fill='--panel', dash='4 3')
+    f.text(605, 190, ('not personal data', 'não é dado pessoal'), size=11)
+
+
+@figure('l5-kanon', L5, 720, 230,
+        ('Three releases of the same 6,012 customers and how many are alone in their group. '
+         'Birth date, sex and CEP: 5,988 alone. Birth year, sex and city: 670. Decade of birth, '
+         'sex and state: 22.',
+         'Três divulgações dos mesmos 6.012 clientes e quantos ficam sozinhos no grupo. Data de '
+         'nascimento, sexo e CEP: 5.988 sozinhos. Ano de nascimento, sexo e cidade: 670. Década '
+         'de nascimento, sexo e estado: 22.'),
+        ('Coarser quasi-identifiers, fewer people alone, and still not none.',
+         'Quase-identificadores mais grossos, menos gente sozinha, e ainda não nenhuma.'))
+def _l5_kanon(f):
+    rows = [(('birth date, sex, CEP', 'nascimento, sexo, CEP'), 5988, '5,988', '5.988'),
+            (('birth year, sex, city', 'ano, sexo, cidade'), 670, '670', '670'),
+            (('decade, sex, state', 'década, sexo, estado'), 22, '22', '22')]
+    x0, x1 = 230, 640
+    for i, (label, n, en, pt) in enumerate(rows):
+        y = 40 + i * 58
+        f.text(x0 - 12, y + 16, label, size=11, anchor='end')
+        f.rect(x0, y, x1 - x0, 32, stroke='--wire', fill='--ink', rx=2)
+        w = max(2, (x1 - x0) * n / 6012)
+        f.rect(x0, y, w, 32, stroke='--amber', fill='--amber', rx=2)
+        f.text(x0 + w + 8 if w < 300 else x0 + w - 8, y + 16, en if f.lang == 'en' else pt,
+               size=11, anchor='start' if w < 300 else 'end',
+               fill='--paper' if w < 300 else '--ink', mono=True)
+    f.text(x1, 215, ('of 6,012 customers, alone in their group', 'de 6.012 clientes, sozinhos no grupo'),
+           size=10.5, anchor='end', fill='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():
