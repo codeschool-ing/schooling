@@ -993,6 +993,199 @@ def p_l05_two_messages():
     marks = [(510, 230), (648, 356), (250, 373), (664, 50), (300, 54)]
     return f, marks
 
+# ------------------------------------------------------------------ lesson 6
+
+def two_bars(f, x0, y0, x1, y1, lang, late=('--scan', '--amber'), on=('--scan', '--paper-dim'),
+             values=True, size=10):
+    p = Plot(f, x0, y0, x1, y1, 0, 2, 0, 0.5)
+    for i, (lab, v, (fill, stroke)) in enumerate([(T(lang, 'late', 'atrasada'), S.RATE_LATE, late),
+                                                  (T(lang, 'on time', 'no prazo'), S.RATE_ON, on)]):
+        xa, xb = p.sx(i + 0.22), p.sx(i + 0.78)
+        f.bar(xa, p.sy(v), xb - xa, p.sy(0) - p.sy(v), fill=fill, stroke=stroke, width=1.4)
+        if values:
+            f.text((xa + xb) / 2, p.sy(v) - 9, pct(lang, v), size=size, fill='--paper')
+        f.text((xa + xb) / 2, p.y1 + 12, lab, size=size)
+    p.baseline()
+    return p
+
+
+@figure('l06-contrast', 6)
+def l06_contrast(lang):
+    f = Fig('l06-contrast', 680, 260, T(
+        lang,
+        'Two versions of one slide. Weak contrast: the title, the labels and the source note are all '
+        'about the same size and weight, and the two bars are two shades of one colour. Strong '
+        'contrast: a large heavy title, the late bar the only coloured mark, and a small grey source '
+        'note.',
+        'Duas versões de um slide. Contraste fraco: o título, os rótulos e a nota de fonte têm quase o '
+        'mesmo tamanho e peso, e as duas barras são dois tons de uma cor. Contraste forte: um título '
+        'grande e pesado, a barra de atraso como única marca colorida e uma nota de fonte pequena e '
+        'cinza.'))
+    f.text(170, 12, T(lang, 'weak contrast', 'contraste fraco'), size=10, fill='--paper-dim')
+    f.text(510, 12, T(lang, 'strong contrast', 'contraste forte'), size=10, fill='--paper-dim')
+    f.rect(10, 24, 320, 228, stroke='--wire', fill='--ink', rx=3)
+    f.lines(24, 44, T(lang, ['Late first deliveries and', 'early cancellations'],
+                      ['Primeiras entregas atrasadas', 'e cancelamento precoce']),
+            size=11, anchor='start', gap=15)
+    two_bars(f, 50, 92, 300, 206, lang, late=('--phosphor-dim', '--phosphor'),
+             on=('--phosphor-dim', '--phosphor'), size=11)
+    f.text(24, 238, T(lang, 'Source: orders, deliveries, cancellations', 'Fonte: pedidos, entregas, cancelamentos'),
+           size=10.5, anchor='start')
+    f.rect(350, 24, 320, 228, stroke='--phosphor', fill='--ink', rx=3)
+    f.lines(364, 46, T(lang, ['Late first boxes more than', 'double early cancellations'],
+                       ['A 1ª caixa atrasada mais que', 'dobra o cancelamento precoce']),
+            size=14, anchor='start', weight='600', gap=19)
+    two_bars(f, 390, 100, 640, 206, lang)
+    f.text(364, 238, T(lang, 'Source: orders, deliveries, cancellations', 'Fonte: pedidos, entregas, cancelamentos'),
+           size=8.5, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'On the left everything is about equally loud, so the eye wanders. On the right the '
+                'reading order is claim, evidence, source, because the differences are large.',
+                'À esquerda tudo tem mais ou menos o mesmo volume, então o olho vagueia. À direita a '
+                'ordem de leitura é afirmação, evidência, fonte, porque as diferenças são grandes.')
+
+
+@figure('l06-alignment', 6)
+def l06_alignment(lang):
+    f = Fig('l06-alignment', 680, 260, T(
+        lang,
+        'Two versions of one slide. Unaligned: the title, the chart and the source note each start '
+        'at a different distance from the left edge, and the note beside the chart floats at its own '
+        'height. Aligned: a dashed guide shows the title, the chart axis and the source note starting '
+        'on one vertical line, and the note sharing the top edge of the chart.',
+        'Duas versões de um slide. Desalinhado: o título, o gráfico e a nota de fonte começam cada '
+        'um a uma distância diferente da borda esquerda, e a nota ao lado do gráfico flutua na própria '
+        'altura. Alinhado: uma guia tracejada mostra o título, o eixo do gráfico e a nota de fonte '
+        'começando na mesma linha vertical, e a nota compartilhando a borda de cima do gráfico.'))
+    f.text(170, 12, T(lang, 'unaligned', 'desalinhado'), size=10, fill='--paper-dim')
+    f.text(510, 12, T(lang, 'aligned', 'alinhado'), size=10, fill='--paper-dim')
+    title = T(lang, ['Late first boxes more than', 'double early cancellations'],
+              ['A 1ª caixa atrasada mais que', 'dobra o cancelamento precoce'])
+    note = T(lang, ['more than', 'double'], ['mais que', 'o dobro'])
+    src = T(lang, 'Source: Faro, H1 2025', 'Fonte: Faro, 1º sem. 2025')
+    f.rect(10, 24, 320, 228, stroke='--wire', fill='--ink', rx=3)
+    f.lines(40, 46, title, size=12, anchor='start', weight='600', gap=16)
+    two_bars(f, 30, 104, 230, 206, lang)
+    f.lines(252, 150, note, size=10, anchor='start', fill='--amber', gap=14)
+    f.text(56, 238, src, size=9, anchor='start', fill='--paper-dim')
+    f.rect(350, 24, 320, 228, stroke='--phosphor', fill='--ink', rx=3)
+    f.line(366, 32, 366, 244, stroke='--paper-dim', width=1, dash='3 4')
+    f.lines(366, 46, title, size=12, anchor='start', weight='600', gap=16)
+    two_bars(f, 366, 104, 566, 206, lang)
+    f.lines(590, 104, note, size=10, anchor='start', fill='--amber', gap=14)
+    f.text(366, 238, src, size=9, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Nothing was added on the right; three things moved a few millimetres onto one line. '
+                'The slide now looks put together on purpose.',
+                'Nada foi acrescentado à direita; três coisas se moveram alguns milímetros para a mesma '
+                'linha. O slide agora parece montado de propósito.')
+
+
+@figure('l06-repetition', 6)
+def l06_repetition(lang):
+    f = Fig('l06-repetition', 680, 270, T(
+        lang,
+        'Two rows of three small slides. In the top row the colour of late deliveries changes from '
+        'slide to slide, and on the third slide the first colour stands for the capital instead. In '
+        'the bottom row late deliveries are the same colour on every slide and everything else is '
+        'grey.',
+        'Duas linhas de três slides pequenos. Na linha de cima a cor dos atrasos muda de slide para '
+        'slide, e no terceiro a primeira cor representa a capital. Na linha de baixo os atrasos têm a '
+        'mesma cor em todo slide e todo o resto é cinza.'))
+    f.text(14, 16, T(lang, 'each slide chooses its own colours', 'cada slide escolhe as próprias cores'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(14, 146, T(lang, 'one colour means late, everywhere', 'uma cor quer dizer atraso, em todo lugar'),
+           size=10, anchor='start', fill='--paper-dim')
+    late, other, grey = ('--scan', '--amber'), ('--scan', '--phosphor'), ('--panel', '--paper-dim')
+    rows = [[(late, grey, T(lang, 'late', 'atraso')), (other, grey, T(lang, 'late', 'atraso')),
+             (grey, late, T(lang, 'capital', 'capital'))],
+            [(late, grey, T(lang, 'late', 'atraso')), (late, grey, T(lang, 'late', 'atraso')),
+             (late, grey, T(lang, 'late', 'atraso'))]]
+    for r, row in enumerate(rows):
+        for c, (a, b, lab) in enumerate(row):
+            x, y = 14 + c * 224, 26 + r * 130
+            f.rect(x, y, 204, 108, stroke='--wire', fill='--ink', rx=3)
+            f.bar(x + 14, y + 12, 120, 8, fill='--paper-dim', stroke='--paper-dim')
+            for k, (h, col) in enumerate([(60, a), (30, b), (52, a), (24, b)]):
+                xx = x + 22 + k * 34
+                f.bar(xx, y + 92 - h, 24, h, fill=col[0], stroke=col[1], width=1.4)
+            f.line(x + 14, y + 92, x + 160, y + 92, stroke='--paper-dim', width=1)
+            f.text(x + 196, y + 40, lab, size=9.5, anchor='end',
+                   fill=a[1] if a[1] != '--paper-dim' else b[1])
+    return f, T(lang,
+                'A reader carries the meaning of a colour from one slide to the next. In the top row '
+                'that habit misleads them on the third slide; in the bottom row it saves them reading '
+                'a legend.',
+                'O leitor leva o significado de uma cor de um slide para o outro. Na linha de cima esse '
+                'hábito o engana no terceiro slide; na de baixo, poupa a leitura de uma legenda.')
+
+
+@figure('l06-whitespace', 6)
+def l06_whitespace(lang):
+    f = Fig('l06-whitespace', 680, 250, T(
+        lang,
+        'Two versions of a slide with three numbers and their labels. Evenly spread: numbers and '
+        'labels sit at equal distances from one another, so it is unclear which label belongs to which '
+        'number. Grouped: each label sits right under its number, and wide gaps separate the three '
+        'pairs.',
+        'Duas versões de um slide com três números e seus rótulos. Espalhado por igual: números e '
+        'rótulos ficam à mesma distância uns dos outros, então não fica claro qual rótulo é de qual '
+        'número. Agrupado: cada rótulo fica logo abaixo do seu número, e espaços largos separam os '
+        'três pares.'))
+    f.text(170, 12, T(lang, 'evenly spread', 'espalhado por igual'), size=10, fill='--paper-dim')
+    f.text(510, 12, T(lang, 'grouped by space', 'agrupado pelo espaço'), size=10, fill='--paper-dim')
+    nums = [pct(lang, S.LATE_SHARE_ALL), pct(lang, S.RATE_LATE), pct(lang, S.RATE_ON)]
+    labs = [T(lang, 'first boxes late', '1ªs caixas atrasadas'),
+            T(lang, 'cancel if late', 'cancelam se atrasou'),
+            T(lang, 'cancel if on time', 'cancelam se no prazo')]
+    head = T(lang, 'The first box, in three numbers', 'A primeira caixa em três números')
+    f.rect(10, 24, 320, 218, stroke='--wire', fill='--ink', rx=3)
+    f.text(24, 42, head, size=11.5, anchor='start', weight='600')
+    for k in range(3):
+        f.text(24, 74 + k * 50, nums[k], size=15, anchor='start', weight='600')
+        f.text(24, 99 + k * 50, labs[k], size=10, anchor='start', fill='--paper-dim')
+    f.rect(350, 24, 320, 218, stroke='--phosphor', fill='--ink', rx=3)
+    f.text(364, 42, head, size=11.5, anchor='start', weight='600')
+    for k in range(3):
+        cx = 405 + k * 104
+        f.text(cx, 130, nums[k], size=17, weight='600', fill='--amber' if k == 1 else '--paper')
+        f.text(cx, 150, labs[k], size=9, fill='--paper-dim')
+    return f, T(lang,
+                'Nothing frames the groups on the right. The space between pairs is wider than the '
+                'space inside them, and that alone says which label belongs to which number.',
+                'Nada emoldura os grupos à direita. O espaço entre os pares é maior que o espaço dentro '
+                'deles, e só isso diz qual rótulo é de qual número.')
+
+
+@picture('l06-layout')
+def p_l06_layout():
+    """Marks, in label order: off the grid, no margin, caption far from its chart,
+    text too faint, competing sizes (no hierarchy)."""
+    f = Fig('l06-layout', 720, 405,
+            'A slide drawn with no words. Grey bars stand for a title near the top left. Below it, a '
+            'block of text bars starts noticeably further right than the title. A bar chart sits on the '
+            'left; a short caption for it is placed far away on the right-hand side. At the very right '
+            'edge, a column of text bars touches the frame. Near the bottom, a line of text bars is '
+            'drawn so faint it almost disappears. Two large numbers of exactly the same size stand side '
+            'by side at the top right.')
+    f.rect(10, 10, 700, 385, stroke='--paper-dim', fill='--ink', rx=4)
+    f.bar(40, 34, 300, 14, fill='--paper-dim', stroke='--paper-dim')
+    for k, w in enumerate([240, 220, 180]):
+        f.bar(84, 74 + k * 16, w, 7, fill='--paper-dim', stroke='--paper-dim')
+    f.line(40, 320, 300, 320, stroke='--paper-dim', width=1.4)
+    for k, h in enumerate([80, 120, 60, 140]):
+        f.bar(56 + k * 60, 320 - h, 40, h, fill='--panel', stroke='--paper-dim')
+    for k, w in enumerate([110, 90]):
+        f.bar(470, 250 + k * 14, w, 6, fill='--paper-dim', stroke='--paper-dim')
+    for k in range(5):
+        f.bar(664, 150 + k * 16, 44, 6, fill='--paper-dim', stroke='--paper-dim')
+    for k in range(4):
+        f.bar(40 + k * 110, 362, 96, 5, fill='--panel', stroke='--wire', width=0.6)
+    f.text(470, 50, '17', size=34, weight='600', fill='--paper')
+    f.text(560, 50, '41', size=34, weight='600', fill='--paper')
+    marks = [(190, 90), (686, 182), (520, 260), (230, 364), (515, 50)]
+    return f, marks
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
