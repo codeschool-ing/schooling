@@ -100,9 +100,9 @@ gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 ```
 
 Last, the dependency's own source goes into the project, in `vendor/`, so that a build needs no
-network. The command runs Go from the `golang:1.25` image, the way lesson 10 runs any tool, as your
-user so that the files are yours, with Go's cache in `/tmp` because that user has no home in the
-container:
+network. The command runs Go from the `golang:1.25` image, the way lesson 10 runs any tool. It runs
+as your user, so that the files are yours, and keeps Go's cache in `/tmp`, because that user has no
+home in the container:
 
 ```sh
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/src -w /src -e GOCACHE=/tmp/gocache golang:1.25 go mod vendor

@@ -101,8 +101,8 @@ gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 
 Por último, o código da própria dependência entra no projeto, em `vendor/`, para que um build não
 precise de rede. O comando roda o Go da imagem `golang:1.25`, do jeito que a aula 10 roda qualquer
-ferramenta, como o seu usuário para que os arquivos sejam seus, com o cache do Go em `/tmp` porque
-esse usuário não tem home no container:
+ferramenta. Ele roda como o seu usuário, para que os arquivos sejam seus, e guarda o cache do Go em
+`/tmp`, porque esse usuário não tem home no container:
 
 ```sh
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/src -w /src -e GOCACHE=/tmp/gocache golang:1.25 go mod vendor

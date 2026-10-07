@@ -23,8 +23,8 @@ It also costs nothing to lose. A lesson that breaks the daemon is a lesson you c
 machine, and Ubuntu, Docker and the tools are all that is on it.
 
 **Installed works for nearly every lesson.** With Docker Desktop, the daemon, its configuration file
-and `/var/lib/docker` live inside Desktop's own VM, which you never log into, so the parts of
-lessons 3, 4, 6 and 28 that look at them from the host are to be read rather than repeated. Engine
+and `/var/lib/docker` live inside Desktop's own VM, which you never log into. The parts of lessons
+3, 4, 6 and 28 that look at them from the host are then to be read rather than repeated. Engine
 on your own Ubuntu computer is exactly the lab, minus the freedom to throw it away.
 
 **Online is named so that you know it exists, not recommended.** From lesson 11 on you build one

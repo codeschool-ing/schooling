@@ -26,8 +26,8 @@ na internet, e é assim que um banco de pacotes se corrompe.
 **`permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`.**
 O motor está rodando e recusou você. Ou o seu usuário não está no grupo `docker`, ou está e você não
 entrou de novo desde então; um `id -nG` sem `docker` diz qual dos dois. Saia do shell e abra de novo.
-Duas correções que vão lhe oferecer estão ambas erradas: `sudo chmod 666` no socket dá a toda conta
-da máquina o que a aula 6 mostra que o grupo vale, e `sudo` antes de todo `docker` deixa arquivos
+Duas correções que vão lhe oferecer estão ambas erradas. `sudo chmod 666` no socket dá a toda conta
+da máquina o que a aula 6 mostra que o grupo vale. E `sudo` antes de todo `docker` deixa arquivos
 de root nos seus próprios diretórios.
 
 **`failed to connect to the docker API`.** Não há nada escutando no socket: o motor está parado, ou o
@@ -35,8 +35,8 @@ de root nos seus próprios diretórios.
 na VM, `sudo systemctl start docker` inicia o motor.
 
 **`429 Too Many Requests` do Docker Hub.** O Docker Hub limita quantas imagens um endereço pode
-baixar sem login, e uma escola, um escritório ou um café dividem um endereço entre todo mundo que
-está atrás dele, então o limite chega antes lá do que em casa. O laboratório bateu nele enquanto
+baixar sem login. Uma escola, um escritório ou um café dividem um endereço entre todo mundo que está
+atrás dele, então o limite chega antes lá do que em casa. O laboratório bateu nele enquanto
 esta aula era escrita: o mesmo `docker buildx imagetools inspect` respondeu 429 num minuto e
 funcionou no seguinte. Um `docker login` com uma conta grátis do Docker aumenta o limite, esperar
 devolve o limite, e um espelho de registry, que a aula 6 mostra na configuração do daemon, manda os

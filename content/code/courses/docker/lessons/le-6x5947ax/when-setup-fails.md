@@ -26,8 +26,8 @@ package database gets corrupted.
 **`permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`.**
 The engine is running and refused you. Either your user is not in the `docker` group, or it is and
 you have not logged in again since; `id -nG` without `docker` in it says which. Leave the shell and
-open it again. Two fixes you will be offered are both wrong: `sudo chmod 666` on the socket gives
-every account on the machine what lesson 6 shows the group amounts to, and `sudo` before every
+open it again. Two fixes you will be offered are both wrong. `sudo chmod 666` on the socket gives
+every account on the machine what lesson 6 shows the group amounts to. And `sudo` before every
 `docker` leaves files owned by root in your own directories.
 
 **`failed to connect to the docker API`.** Nothing is listening on the socket at all: the engine is
@@ -35,8 +35,8 @@ stopped, or `docker` is pointed at another engine. The previous section ends on 
 what it means; on the VM, `sudo systemctl start docker` starts the engine.
 
 **`429 Too Many Requests` from Docker Hub.** Docker Hub limits how many images an address may pull
-without logging in, and a school, an office or a café shares one address between everybody behind
-it, so the limit arrives sooner there than at home. The lab met it while this lesson was being
+without logging in. A school, an office or a café shares one address between everybody behind it,
+so the limit arrives sooner there than at home. The lab met it while this lesson was being
 written: the same `docker buildx imagetools inspect` answered 429 one minute and worked the next.
 `docker login` with a free Docker account raises the limit, waiting brings it back, and a registry
 mirror, which lesson 6 shows in the daemon's configuration, sends the pulls somewhere else.

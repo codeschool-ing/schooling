@@ -26,7 +26,7 @@ máquina nova, e nela só há o Ubuntu, o Docker e as ferramentas.
 
 **Instalado serve para quase todas as aulas.** Com o Docker Desktop, o daemon, o arquivo de
 configuração dele e o `/var/lib/docker` ficam dentro da VM do próprio Desktop, em que você nunca
-entra, então os trechos das aulas 3, 4, 6 e 28 que olham para eles a partir do host são para ler, e
+entra. Os trechos das aulas 3, 4, 6 e 28 que olham para eles a partir do host ficam então para ler, e
 não para repetir. O Engine no seu próprio computador Ubuntu é exatamente o laboratório, menos a
 liberdade de jogá-lo fora.
 
