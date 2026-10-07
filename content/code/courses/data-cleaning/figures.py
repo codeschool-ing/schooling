@@ -857,6 +857,65 @@ def l09_rules(lang):
 
 # ------------------------------------------------------------------ main
 
+# ----------------------------------------------------------------- lesson 11
+
+@figure('l11-fan-out', 11)
+def l11_fan_out(lang):
+    cat = {}
+    for r in rows('raw/products.csv'):
+        cat.setdefault(r['product_code'], []).append(r['price'])
+    names = {'en': {'00467': 'banana', '00325': 'rocket', '00641': 'cucumber'},
+             'pt': {'00467': 'banana', '00325': 'rúcula', '00641': 'pepino'}}[lang]
+    picks = [('00467', '2 kg'), ('00325', '1 un'), ('00641', '1 kg')]
+    head = {'en': ['order lines', 'catalogue', 'after the join'],
+            'pt': ['itens do pedido', 'catálogo', 'depois da junção']}[lang]
+    fig = Fig('l11-fan-out', 720, 310, {
+        'en': 'Three order lines joined to a catalogue that lists banana and rocket twice, at two prices each. '
+              'The banana line and the rocket line each meet two catalogue rows and come out twice; the cucumber '
+              'line meets one and comes out once. Three lines go in and five come out.',
+        'pt': 'Três itens de pedido juntados a um catálogo que lista banana e rúcula duas vezes, com dois preços '
+              'cada. O item de banana e o de rúcula encontram duas linhas do catálogo cada e saem duas vezes; o de '
+              'pepino encontra uma e sai uma vez. Entram três itens e saem cinco.'}[lang])
+    X = [30, 275, 520]
+    W, H, GAP, TOP = 170, 26, 36, 58
+    for x, h in zip(X, head):
+        fig.text(x + W / 2, 32, h, size=12, weight='600')
+    row = 0
+    for code, qty in picks:
+        prices = sorted(cat[code], key=float)
+        ys = [TOP + GAP * (row + i) for i in range(len(prices))]
+        mid = (ys[0] + ys[-1]) / 2
+        two = len(prices) > 1
+        fig.rect(X[0], mid, W, H)
+        fig.text(X[0] + 12, mid + H / 2, names[code], size=11, anchor='start')
+        fig.text(X[0] + W - 12, mid + H / 2, f'{code} · {qty}', size=10, anchor='end', mono=True,
+                 fill='--paper-dim')
+        for y, price in zip(ys, prices):
+            fig.path(f'M{X[0] + W:.1f} {mid + H / 2:.1f} C{X[0] + W + 40:.1f} {mid + H / 2:.1f} '
+                     f'{X[1] - 40:.1f} {y + H / 2:.1f} {X[1] - 2:.1f} {y + H / 2:.1f}',
+                     stroke='--amber' if two else '--paper-dim', arrow=True)
+            fig.rect(X[1], y, W, H)
+            fig.text(X[1] + 12, y + H / 2, code, size=10, anchor='start', mono=True, fill='--paper-dim')
+            fig.text(X[1] + W - 12, y + H / 2, num(lang, float(price), 2), size=11, anchor='end', mono=True)
+            fig.line(X[1] + W, y + H / 2, X[2] - 2, y + H / 2, stroke='--paper-dim', arrow=True)
+            fig.rect(X[2], y, W, H, stroke='--amber' if two else '--wire',
+                     fill='--panel')
+            fig.text(X[2] + 12, y + H / 2, names[code], size=11, anchor='start')
+            fig.text(X[2] + W - 12, y + H / 2, qty, size=10, anchor='end', mono=True, fill='--paper-dim')
+        row += len(prices)
+    ly = TOP + GAP * row + 22
+    fig.rect(X[2], ly - 7, 14, 14, stroke='--amber', fill='--panel', rx=2)
+    fig.text(X[2] + 22, ly, {'en': 'one line, counted twice', 'pt': 'um item, contado duas vezes'}[lang],
+             size=11, anchor='start')
+    fig.text(X[0], ly, {'en': '3 lines in, 5 out', 'pt': 'entram 3 itens, saem 5'}[lang], size=11,
+             anchor='start', weight='600')
+    cap = {'en': 'A key that repeats on the right copies every line that meets it. Across the year: 99,161 lines '
+                 'in, 103,578 out, and R$ 167,603.55 of revenue nobody sold.',
+           'pt': 'Uma chave que se repete do lado direito copia todo item que a encontra. No ano: entram 99.161 '
+                 'itens, saem 103.578, e R$ 167.603,55 de receita que ninguém vendeu.'}
+    return fig, cap[lang]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
