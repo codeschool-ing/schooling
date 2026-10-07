@@ -1,6 +1,6 @@
 ---
 title: Muitas conexões, um endereço, separadas pela porta
-version: 1
+version: 2
 ---
 
 Reescrever só o endereço deixaria sair uma conversa por destino de cada vez: com todo pacote saindo
@@ -12,7 +12,9 @@ e no dia a dia se chama simplesmente NAT; a Cisco chama de NAT overload.
 A aula 5 deu a regra que o PAT precisa manter: uma conexão são quatro números, e duas conexões não
 podem ter os quatro iguais. Para ver o r1 mantê-la, três PCs conectam ao mesmo tempo em `192.0.2.80`
 porta 80, e dois deles insistem na mesma porta de origem: o pc1 e o pc2 pedem a 40000, o pc3 a 51000.
-A tabela do r1, esvaziada logo antes, fica assim:
+Cada um usa `sleep 4 | timeout 6 nc -N -p 40000 192.0.2.80 80`, com a sua porta, o que segura a
+conexão aberta por alguns segundos. A tabela do r1, esvaziada logo antes com `conntrack -F`, fica
+assim:
 
 ```
 root@r1:~# conntrack -L -p tcp

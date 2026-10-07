@@ -1,6 +1,6 @@
 ---
 title: Private inside, one public address outside
-version: 1
+version: 2
 ---
 
 IPv4 has 2 to the power of 32 addresses, about 4.3 billion, and there are more devices than that.
@@ -10,7 +10,8 @@ public address outside.** The private ranges are set aside by RFC 1918 — `10.0
 address exists in thousands of offices at once, and no router on the internet carries a route to any
 of them.
 
-The office lab is built that way. pc1 has a private address:
+Lesson 1's office is built that way, and this lesson runs on it: `sudo bash ~/netlab/netlab.sh up office`.
+pc1 has a private address:
 
 ```
 ana@pc1:~$ ip -br addr show eth0
