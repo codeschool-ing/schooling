@@ -1,0 +1,563 @@
+[
+  {
+    "id": "ex-0z2g4c0j",
+    "version": 1,
+    "section": "three-steps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What separates ETL from ELT?",
+    "hint": "Same three letters.",
+    "choices": [
+      {
+        "text": "Where the transformation runs",
+        "correct": true,
+        "why": "Right. Before loading, outside the warehouse; or after, inside it."
+      },
+      {
+        "text": "Whether the data is transformed at all",
+        "correct": false,
+        "why": "Both transform; they differ in where."
+      },
+      {
+        "text": "Which programming language the pipeline is written in",
+        "correct": false,
+        "why": "Either can be Python or SQL; this lesson's ETL is Python and its ELT is both."
+      },
+      {
+        "text": "How often the pipeline runs",
+        "correct": false,
+        "why": "Frequency is batch against streaming, lesson 1's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkhm91hd",
+    "version": 1,
+    "section": "three-steps",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each step to what it does in Ana's pipelines.",
+    "hint": "One reads, one reshapes, one writes.",
+    "pairs": [
+      {
+        "left": "Extract",
+        "right": "Read the week's orders out of the shop"
+      },
+      {
+        "left": "Transform",
+        "right": "Drop cancelled orders and sum by category"
+      },
+      {
+        "left": "Load",
+        "right": "Write the result into the warehouse"
+      }
+    ],
+    "right_distractors": [
+      "Schedule the run for 2 a.m."
+    ]
+  },
+  {
+    "id": "ex-2w1y3499",
+    "version": 1,
+    "section": "etl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `etl.py`, where are cancelled orders removed?",
+    "hint": "Look at what the query selects.",
+    "choices": [
+      {
+        "text": "In the SQL query sent to the shop",
+        "correct": false,
+        "why": "The query reads every status; it filters only by date."
+      },
+      {
+        "text": "In Python, in the loop",
+        "correct": true,
+        "why": "Right. The `if status != \"completed\"` line skips them in memory."
+      },
+      {
+        "text": "In the warehouse, after the load has finished",
+        "correct": false,
+        "why": "Nothing but the answer reaches the warehouse in ETL."
+      },
+      {
+        "text": "By the `DELETE` before the insert",
+        "correct": false,
+        "why": "That `DELETE` clears the same days in the warehouse, not cancelled orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-0trnjj8n",
+    "version": 1,
+    "section": "etl",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`etl.py` read 3,048 rows from the shop. How many rows did it write to the warehouse?",
+    "hint": "Fourteen categories on seven days.",
+    "value": 98,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zwj2n1yv",
+    "version": 1,
+    "section": "etl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is ETL the stronger choice for a customer's e-mail address that the warehouse does not need?",
+    "hint": "Compare \"never held it\" with \"deleted it later\".",
+    "choices": [
+      {
+        "text": "ETL encrypts every column it loads",
+        "correct": false,
+        "why": "ETL encrypts nothing by itself; it decides what is loaded."
+      },
+      {
+        "text": "A dropped column was never there to protect",
+        "correct": true,
+        "why": "Right. That is a stronger claim than deleting it afterwards."
+      },
+      {
+        "text": "ELT warehouses do not allow text columns",
+        "correct": false,
+        "why": "They do; the raw layer holds every column the source has."
+      },
+      {
+        "text": "ETL runs faster than ELT whenever the rows hold text",
+        "correct": false,
+        "why": "Speed is not the argument for this column."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6wdwpwz",
+    "version": 1,
+    "section": "elt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the `raw` tables have no primary or foreign keys?",
+    "hint": "What is the raw layer's job?",
+    "choices": [
+      {
+        "text": "Keys would make `COPY` fail on large tables",
+        "correct": false,
+        "why": "`COPY` works with keys; the reason is what a key would refuse."
+      },
+      {
+        "text": "They hold what the source said, even what it got wrong",
+        "correct": true,
+        "why": "Right. A refusal there would make the warehouse disagree with the source silently."
+      },
+      {
+        "text": "PostgreSQL forbids primary and foreign keys in a schema named `raw`",
+        "correct": false,
+        "why": "The schema's name means nothing to PostgreSQL."
+      },
+      {
+        "text": "The keys were left out to save time and will be added in lesson 6",
+        "correct": false,
+        "why": "They are left out on purpose; staging checks, raw does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-x920hf30",
+    "version": 1,
+    "section": "elt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two `EXCEPT` queries, one in each direction, both return a count of 0. What does that establish?",
+    "hint": "`EXCEPT` returns rows of the first that are absent from the second.",
+    "choices": [
+      {
+        "text": "The two tables hold the same set of rows",
+        "correct": true,
+        "why": "Right. Nothing in either is missing from the other."
+      },
+      {
+        "text": "Both tables are empty",
+        "correct": false,
+        "why": "Empty tables would also give 0, but these hold 98 rows each."
+      },
+      {
+        "text": "The two programs took the same time to run",
+        "correct": false,
+        "why": "`EXCEPT` compares rows, not timings."
+      },
+      {
+        "text": "The ETL table was copied from the ELT table",
+        "correct": false,
+        "why": "They were built independently; that is why agreeing means something."
+      }
+    ]
+  },
+  {
+    "id": "ex-nth05ds5",
+    "version": 1,
+    "section": "elt",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To compare two tables row by row, Ana runs `SELECT * FROM a ___ SELECT * FROM b` in both directions.",
+    "hint": "The set operator that subtracts.",
+    "blanks": [
+      {
+        "accept": [
+          "EXCEPT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xn9psjnt",
+    "version": 1,
+    "section": "elt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague replaces `AT TIME ZONE 'America/Sao_Paulo'` with `::date` in `sales_by_category.sql`, and the database's time zone is UTC. What happens to the comparison with `etl.py`?",
+    "hint": "A day is a time zone's opinion.",
+    "choices": [
+      {
+        "text": "Nothing: a date is a date",
+        "correct": false,
+        "why": "A timestamp's date depends on the zone it is read in."
+      },
+      {
+        "text": "The query fails with a type error",
+        "correct": false,
+        "why": "`::date` on a timestamptz is valid; it silently uses the session's zone."
+      },
+      {
+        "text": "Orders placed after 21:00 in São Paulo move to the next day, and `EXCEPT` finds rows",
+        "correct": true,
+        "why": "Right. 21:00 at UTC-3 is midnight UTC, so those orders change day."
+      },
+      {
+        "text": "Only the totals change, not the days",
+        "correct": false,
+        "why": "The totals change because orders change day."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n3qjmbg",
+    "version": 1,
+    "section": "where-the-cost-moves",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ELT version copied 1,933 orders, 3,048 order lines and 1,200 books. How many rows crossed from the shop to the warehouse?",
+    "hint": "Add the three.",
+    "value": 6181,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gpkzafvn",
+    "version": 1,
+    "section": "where-the-cost-moves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Thursday the buyer asks which publishers sold most in the first week. Why can the ELT warehouse answer without touching the shop?",
+    "hint": "Where is the publisher column?",
+    "choices": [
+      {
+        "text": "Its summary table has a publisher column",
+        "correct": false,
+        "why": "The summary is by category, like the ETL one."
+      },
+      {
+        "text": "`raw.books` was copied whole, publisher included",
+        "correct": true,
+        "why": "Right. The raw layer holds what the ETL threw away."
+      },
+      {
+        "text": "The warehouse keeps a live connection to the shop's database",
+        "correct": false,
+        "why": "The query reads only `raw` tables."
+      },
+      {
+        "text": "dbt rebuilt the publisher column overnight",
+        "correct": false,
+        "why": "No dbt has run yet; it arrives in lesson 11."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3b6x808",
+    "version": 1,
+    "section": "where-the-cost-moves",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does ETL still save compared with ELT? Choose all that apply.",
+    "hint": "Think of the source, the warehouse and what it must protect.",
+    "choices": [
+      {
+        "text": "Warehouse processing while people are reading it",
+        "correct": true,
+        "why": "Yes. ELT's transformation competes with readers on the warehouse."
+      },
+      {
+        "text": "Columns the warehouse has to protect and erase",
+        "correct": true,
+        "why": "Yes. What is never loaded is never exposed there."
+      },
+      {
+        "text": "Visits to the source for questions nobody planned",
+        "correct": false,
+        "why": "The opposite: each new question in ETL means reading the source again."
+      },
+      {
+        "text": "The ability to reproduce an old report",
+        "correct": false,
+        "why": "That is what the raw layer gives ELT, and ETL lacks."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyhgsh3z",
+    "version": 1,
+    "section": "keep-the-raw",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rerun on Thursday for the first week, `etl.py` reported 26 fewer books than Sunday's report. Why?",
+    "hint": "The shop's past is not fixed.",
+    "choices": [
+      {
+        "text": "Some were refunded since then",
+        "correct": true,
+        "why": "Right. `etl.py` reads what the shop says now."
+      },
+      {
+        "text": "`etl.py` has a bug that drops rows when it reads the same week twice",
+        "correct": false,
+        "why": "The same code gave Sunday's number on Sunday."
+      },
+      {
+        "text": "The lab deletes orders older than a week when it plays a new day",
+        "correct": false,
+        "why": "The days played update statuses; orders stay."
+      },
+      {
+        "text": "The warehouse lost rows",
+        "correct": false,
+        "why": "`etl.py` read the shop again; the warehouse lost nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxw5ev6a",
+    "version": 1,
+    "section": "keep-the-raw",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two people want the first week's revenue. One wants every later refund counted; the other wants exactly what was reported at the time. Which source serves which?",
+    "hint": "Two legitimate questions, two different answers.",
+    "choices": [
+      {
+        "text": "Both from the raw layer",
+        "correct": false,
+        "why": "The raw rows froze Sunday; they do not know Thursday's refunds."
+      },
+      {
+        "text": "The first from the shop; the second from the raw rows",
+        "correct": true,
+        "why": "Right. One asks what is true now, the other what was seen then."
+      },
+      {
+        "text": "Both from the shop, which is the source of truth",
+        "correct": false,
+        "why": "The shop no longer says what it said on Sunday, so it cannot reproduce the report."
+      },
+      {
+        "text": "The first from the raw rows; the second from the shop",
+        "correct": false,
+        "why": "That is the right pair, swapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-mec94zcn",
+    "version": 1,
+    "section": "keep-the-raw",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A summary table has been wrong for a week because of a bug, and every row extracted that week was kept. What does the lesson say to do?",
+    "hint": "Which half is wrong?",
+    "choices": [
+      {
+        "text": "Correct the raw rows by hand, then rerun",
+        "correct": false,
+        "why": "Raw rows record what the source said; fixing them destroys that record."
+      },
+      {
+        "text": "Extract again from the source",
+        "correct": false,
+        "why": "The source may have moved on; the raw rows hold what was read."
+      },
+      {
+        "text": "Fix the bug and rebuild from the kept rows",
+        "correct": true,
+        "why": "Right. That is what keeping them is for."
+      },
+      {
+        "text": "Delete the marts and every raw table, and start the warehouse again from the source",
+        "correct": false,
+        "why": "Rebuilding is right, but from the raw rows you already have."
+      }
+    ]
+  },
+  {
+    "id": "ex-06nkvrzj",
+    "version": 1,
+    "section": "layers",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the layers from where the source's rows land to what a report reads.",
+    "hint": "Each reads only the one below it.",
+    "items": [
+      "raw",
+      "staging",
+      "marts"
+    ]
+  },
+  {
+    "id": "ex-6vvye824",
+    "version": 1,
+    "section": "layers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard reads `raw.orders` directly because staging is slow to change. What goes wrong first?",
+    "hint": "Staging already cleans these rows.",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses to let a dashboard read the raw schema",
+        "correct": false,
+        "why": "Nothing technical stops it; that is why the rule has to be kept."
+      },
+      {
+        "text": "It cleans the rows its own way",
+        "correct": true,
+        "why": "Right. Two cleanings of one table drift apart the day one is fixed."
+      },
+      {
+        "text": "The raw rows change under it",
+        "correct": false,
+        "why": "Raw rows change only when extraction writes; they are not the problem."
+      },
+      {
+        "text": "Nothing: raw is just staging without names",
+        "correct": false,
+        "why": "Staging also fixes types, removes garbage and works out the date."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q5zs5vw",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ponto Final needs the city of each customer in the warehouse but not their e-mail address. What does the lesson recommend for the `customers` extraction?",
+    "hint": "Most pipelines are both.",
+    "choices": [
+      {
+        "text": "Load it raw and delete the e-mails once a month",
+        "correct": false,
+        "why": "For a month they sit in a second place that must be protected."
+      },
+      {
+        "text": "Skip `customers` entirely and lose the city",
+        "correct": false,
+        "why": "The city is needed; only one column is the problem."
+      },
+      {
+        "text": "Drop or hash the e-mail on the way in, then load the rest raw",
+        "correct": true,
+        "why": "Right. A light ETL step for that column, ELT for everything else."
+      },
+      {
+        "text": "Load it raw; the warehouse is protected anyway",
+        "correct": false,
+        "why": "A second copy is a second place the person can ask to be erased from."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qdf6c9s",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the reason it points towards transforming before loading.",
+    "hint": "Four reasons, by name.",
+    "pairs": [
+      {
+        "left": "Card numbers in a payments export",
+        "right": "The data must not land"
+      },
+      {
+        "left": "Supplier invoices arriving as PDFs",
+        "right": "The transform is not SQL"
+      },
+      {
+        "left": "The destination is a small operational database",
+        "right": "The destination is weak"
+      },
+      {
+        "left": "A sensor reading every millisecond",
+        "right": "The volume is absurd"
+      }
+    ]
+  },
+  {
+    "id": "ex-833pxt7w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs ELT. Their transformation SQL has had a bug for a month, and they have kept every raw row. A second team runs ETL with the same bug. Who can produce last month's correct numbers, and how?",
+    "hint": "Where does each team's history live?",
+    "choices": [
+      {
+        "text": "Both, by rerunning against the source",
+        "correct": false,
+        "why": "The source has moved on; it gives today's view of last month, not what was there."
+      },
+      {
+        "text": "The ELT team, by fixing the SQL and rebuilding from raw",
+        "correct": true,
+        "why": "Right. The ETL team kept only the wrong answers."
+      },
+      {
+        "text": "The ETL team, because its smaller warehouse is quicker to rebuild from scratch",
+        "correct": false,
+        "why": "Small is what it has left: the wrong answers and nothing to recompute them from."
+      },
+      {
+        "text": "Neither: a month of wrong numbers is lost",
+        "correct": false,
+        "why": "The ELT team still has every row it read."
+      }
+    ]
+  }
+]

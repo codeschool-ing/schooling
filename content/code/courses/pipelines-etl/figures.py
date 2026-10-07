@@ -283,6 +283,114 @@ def l01_freshness(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 2
+
+def box(f, x, y, w, h, title, sub=None, stroke='--wire', fill='--panel', mono_sub=False, size=11.5):
+    f.rect(x, y, w, h, stroke=stroke, fill=fill)
+    if sub:
+        f.text(x + w / 2, y + h / 2 - 8, title, size=size, weight='600')
+        f.text(x + w / 2, y + h / 2 + 9, sub, size=10, fill='--paper-dim', mono=mono_sub)
+    else:
+        f.text(x + w / 2, y + h / 2, title, size=size, weight='600')
+
+
+@figure('l02-etl-elt', 2)
+def l02_etl_elt(lang):
+    t = {'en': dict(
+            label='Two lanes from the shop to the warehouse. In ETL, rows are extracted, '
+                  'transformed in a program between the two systems, and only the answer is '
+                  'loaded. In ELT, rows are extracted and loaded unchanged into a raw layer, and '
+                  'the transformation runs as SQL inside the warehouse.',
+            shop='the shop', wh='the warehouse', prog='a program',
+            etl=['extract', 'transform', 'load'], elt=['extract', 'load', 'transform'],
+            moved_etl='98 rows cross', moved_elt='6,181 rows cross',
+            raw='raw rows', answer='the answer', sql='SQL, in here',
+            cap='The same three steps in a different order. What changes is which machine does '
+                'the transformation, and how much of the source crosses to the warehouse.'),
+         'pt': dict(
+            label='Duas faixas da loja ao warehouse. No ETL, as linhas são extraídas, '
+                  'transformadas num programa entre os dois sistemas, e só a resposta é '
+                  'carregada. No ELT, as linhas são extraídas e carregadas sem mudança numa camada '
+                  'crua, e a transformação roda como SQL dentro do warehouse.',
+            shop='a loja', wh='o warehouse', prog='um programa',
+            etl=['extrair', 'transformar', 'carregar'], elt=['extrair', 'carregar', 'transformar'],
+            moved_etl='98 linhas atravessam', moved_elt='6.181 linhas atravessam',
+            raw='linhas cruas', answer='a resposta', sql='SQL, aqui dentro',
+            cap='Os mesmos três passos em outra ordem. O que muda é qual máquina faz a '
+                'transformação, e quanto da origem atravessa até o warehouse.')}[lang]
+    f = Fig('l02-etl-elt', 720, 330, t['label'])
+    for row, (name, steps, moved) in enumerate([('ETL', t['etl'], t['moved_etl']),
+                                                ('ELT', t['elt'], t['moved_elt'])]):
+        y = 30 + row * 150
+        f.text(30, y + 35, name, size=13, weight='700', fill='--amber', mono=True)
+        box(f, 70, y + 10, 120, 50, t['shop'], 'PostgreSQL', mono_sub=True)
+        f.rect(530, y + 10, 160, 100, stroke='--wire', fill='--panel')
+        f.text(610, y + 30, t['wh'], size=11.5, weight='600')
+        if row == 0:
+            box(f, 290, y + 10, 140, 50, t['prog'], 'Python', mono_sub=True)
+            f.line(190, y + 35, 288, y + 35, stroke='--phosphor', width=1.6, arrow=True)
+            f.text(239, y + 25, steps[0], size=10, fill='--paper-dim')
+            f.text(360, y + 76, steps[1], size=10.5, fill='--amber', weight='600')
+            f.line(430, y + 35, 528, y + 35, stroke='--phosphor', width=1.6, arrow=True)
+            f.text(479, y + 25, steps[2], size=10, fill='--paper-dim')
+            f.text(479, y + 50, moved, size=9.5, fill='--paper-dim')
+            f.rect(545, y + 64, 130, 22, stroke='--amber', fill='--scan', rx=4)
+            f.text(610, y + 75, t['answer'], size=10)
+        else:
+            f.line(190, y + 35, 528, y + 35, stroke='--phosphor', width=1.6, arrow=True)
+            f.text(359, y + 25, steps[0] + ' + ' + steps[1], size=10, fill='--paper-dim')
+            f.text(359, y + 50, moved, size=9.5, fill='--paper-dim')
+            f.rect(545, y + 48, 130, 22, stroke='--wire', fill='--scan', rx=4)
+            f.text(610, y + 59, t['raw'], size=10)
+            f.rect(545, y + 80, 130, 22, stroke='--amber', fill='--scan', rx=4)
+            f.text(610, y + 91, t['answer'], size=10)
+            f.path(f'M676 {y + 59} C 700 {y + 62}, 700 {y + 88}, 677 {y + 91}', stroke='--amber',
+                   width=1.4, arrow=True)
+            f.text(610, y + 128, steps[2] + ': ' + t['sql'], size=10.5, fill='--amber', weight='600')
+    return f, t['cap']
+
+
+@figure('l02-layers', 2)
+def l02_layers(lang):
+    t = {'en': dict(
+            label='Three layers stacked inside the warehouse. At the bottom, raw: the source\'s '
+                  'tables as they arrived, written only by the extraction. In the middle, staging: '
+                  'one cleaned table per raw table. At the top, marts: facts, dimensions and '
+                  'summaries, the only layer reports read. Arrows go upwards only.',
+            layers=[('marts', 'facts, dimensions, summaries', 'read by reports'),
+                    ('staging', 'one cleaned table per source table', 'read by marts'),
+                    ('raw', 'the source, as it arrived', 'written by the extraction')],
+            src='sources', reports='reports',
+            cap='Each layer is a schema, and each reads only the one below it. A report that '
+                'reaches past staging into raw repeats the cleaning, a little differently.'),
+         'pt': dict(
+            label='Três camadas empilhadas dentro do warehouse. Embaixo, raw: as tabelas da origem '
+                  'como chegaram, escritas só pela extração. No meio, staging: uma tabela limpa por '
+                  'tabela crua. No topo, marts: fatos, dimensões e resumos, a única camada que os '
+                  'relatórios leem. As setas só sobem.',
+            layers=[('marts', 'fatos, dimensões, resumos', 'lida pelos relatórios'),
+                    ('staging', 'uma tabela limpa por tabela de origem', 'lida pelos marts'),
+                    ('raw', 'a origem, como chegou', 'escrita pela extração')],
+            src='origens', reports='relatórios',
+            cap='Cada camada é um schema, e cada uma lê só a de baixo. Um relatório que passa por '
+                'cima do staging até o raw repete a limpeza, um pouco diferente.')}[lang]
+    f = Fig('l02-layers', 720, 300, t['label'])
+    for i, (name, what, who) in enumerate(t['layers']):
+        y = 40 + i * 80
+        f.rect(170, y, 380, 54, stroke='--phosphor' if i == 0 else '--wire', fill='--panel')
+        f.text(190, y + 18, name, size=12.5, weight='700', anchor='start', mono=True,
+               fill='--amber' if i == 0 else '--paper')
+        f.text(190, y + 38, what, size=10.5, anchor='start', fill='--paper')
+        f.text(570, y + 27, who, size=10, anchor='start', fill='--paper-dim')
+        if i < 2:
+            f.line(360, y + 78, 360, y + 56, stroke='--phosphor', width=1.4, arrow=True)
+    f.text(90, 287, t['src'], size=10.5, fill='--paper-dim')
+    f.line(90, 277, 168, 230, stroke='--paper-dim', width=1.2, arrow=True)
+    f.text(90, 22, t['reports'], size=10.5, fill='--paper-dim')
+    f.line(168, 62, 110, 30, stroke='--paper-dim', width=1.2, arrow=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
