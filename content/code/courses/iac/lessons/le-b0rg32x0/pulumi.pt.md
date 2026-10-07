@@ -1,11 +1,13 @@
 ---
 title: Pulumi, um programa com um motor próprio
-version: 1
+version: 2
 ---
 
-**O Pulumi não pode ser instalado neste laboratório**, que não tem rede para baixá-lo. Tudo nesta
+**O Pulumi não foi instalado para esta aula.** O programa de linha de comando dele é baixado do site
+do próprio Pulumi, que a máquina em que estas aulas foram gravadas não alcançava. Então tudo nesta
 seção é ilustrativo: os arquivos abaixo foram escritos para ela e não foram executados, e nenhuma saída
-é mostrada, porque nenhuma foi produzida.
+é mostrada, porque nenhuma foi produzida. Você lê este código; não há nada aqui para instalar ou
+digitar.
 
 O Pulumi fica entre as duas últimas seções e o Terraform. Como no CDK, você escreve um programa numa
 linguagem de uso geral: TypeScript, JavaScript, Python, Go, C#, Java, ou YAML para casos pequenos.

@@ -1,6 +1,6 @@
 ---
 title: O AWS CDK, um programa que escreve o template
-version: 1
+version: 2
 ---
 
 O AWS Cloud Development Kit permite descrever infraestrutura em TypeScript, JavaScript, Python, Java,
@@ -8,6 +8,31 @@ C# ou Go, e por isso é fácil imaginá-lo chamando a API da AWS como o Terrafor
 chama.** Um app do CDK é um programa cuja saída é um template do CloudFormation, e o CloudFormation
 faz o resto. O CDK é um jeito melhor de escrever o YAML da seção anterior, com a stack, o change set e
 o rollback todos inalterados por baixo.
+
+## Instalando o Node.js e o CDK
+
+O CDK é um programa Node.js, e a biblioteca para a qual o app desta seção foi escrito precisa do
+Node.js 20 ou mais novo, enquanto o pacote do próprio Ubuntu 24.04 é a versão 18. Então o Node.js vem
+da build do próprio projeto, desempacotada em `/usr/local`, e o comando `cdk` é instalado com o
+gerenciador de pacotes do Node, o `npm`:
+
+```sh
+curl -fsSL https://nodejs.org/dist/v22.22.0/node-v22.22.0-linux-x64.tar.xz | sudo tar -xJ -C /usr/local --strip-components=1
+sudo npm install -g aws-cdk@2.1144.0
+```
+
+Num computador ARM o arquivo é `node-v22.22.0-linux-arm64.tar.xz`. A biblioteca que o app importa
+pertence ao projeto e não ao sistema, então ela é instalada no próprio diretório do app, onde o
+`require` a procura:
+
+```sh
+mkdir -p ~/shop/cdk && cd ~/shop/cdk
+npm init -y
+npm install aws-cdk-lib@2.272.0 constructs@10
+```
+
+O `npm init -y` escreve um `package.json` com as respostas padrão, e o `npm install` põe os dois
+pacotes em `node_modules`. As versões são aquelas com que as transcrições foram gravadas.
 
 ## Síntese
 
@@ -133,8 +158,8 @@ Depois o `cdk deploy` sintetiza, entrega o template ao CloudFormation por um cha
 ```
 ana@laptop:~/shop/cdk$ cdk bootstrap --app "node app.js" 2>&1 | grep "^CDKToolkit"
 CDKToolkit: creating CloudFormation changeset...
-CDKToolkit |  0/15 | 7:41:40 AM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack | CDKToolkit User Initiated
-CDKToolkit |  1/15 | 7:41:40 AM | CREATE_COMPLETE         | AWS::CloudFormation::Stack | CDKToolkit 
+CDKToolkit |  0/15 | 8:28:12 AM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack | CDKToolkit User Initiated
+CDKToolkit |  1/15 | 8:28:12 AM | CREATE_COMPLETE         | AWS::CloudFormation::Stack | CDKToolkit 
 ana@laptop:~/shop/cdk$ cdk deploy --app "node app.js" --require-approval never 2>&1 | grep "^ShopNetwork"
 ShopNetwork: start: Building ShopNetwork Template
 ShopNetwork: success: Built ShopNetwork Template
@@ -142,8 +167,8 @@ ShopNetwork: start: Publishing ShopNetwork Template (current_account-current_reg
 ShopNetwork: success: Published ShopNetwork Template (current_account-current_region-c4015989)
 ShopNetwork: creating CloudFormation changeset...
 ShopNetwork: deploying... [1/1]
-ShopNetwork |  0/13 | 7:41:46 AM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack            | ShopNetwork User Initiated
-ShopNetwork |  1/13 | 7:41:46 AM | CREATE_COMPLETE         | AWS::CloudFormation::Stack            | ShopNetwork 
+ShopNetwork |  0/13 | 8:28:16 AM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack            | ShopNetwork User Initiated
+ShopNetwork |  1/13 | 8:28:16 AM | CREATE_COMPLETE         | AWS::CloudFormation::Stack            | ShopNetwork 
 ana@laptop:~/shop/cdk$ aws ec2 describe-subnets --filters Name=tag:Project,Values=shop --query "Subnets[].CidrBlock" --output text
 10.20.0.0/24	10.20.1.0/24
 ```
@@ -151,8 +176,30 @@ ana@laptop:~/shop/cdk$ aws ec2 describe-subnets --filters Name=tag:Project,Value
 As linhas de evento são do moto, que informa a stack e não cada recurso dentro dela; numa conta real
 há uma linha por recurso. As duas sub-redes são as `/24` que o app pediu.
 
-A Ana acrescenta uma linha no fim do app, `Tags.of(stack).add("Owner", "ana");`, e pergunta o que
-mudaria. O `cdk diff` compara o template que o app sintetiza agora com aquele a partir do qual a stack
+A Ana acrescenta uma linha no fim do app, uma segunda tag, e pergunta o que mudaria. O `app.js`
+inteiro agora é:
+
+```js
+const { App, Stack, Tags } = require("aws-cdk-lib");
+const ec2 = require("aws-cdk-lib/aws-ec2");
+
+const app = new App();
+const stack = new Stack(app, "ShopNetwork");
+
+new ec2.Vpc(stack, "Shop", {
+  ipAddresses: ec2.IpAddresses.cidr("10.20.0.0/16"),
+  maxAzs: 2,
+  natGateways: 0,
+  subnetConfiguration: [
+    { name: "web", subnetType: ec2.SubnetType.PUBLIC, cidrMask: 24 },
+  ],
+});
+
+Tags.of(stack).add("Project", "shop");
+Tags.of(stack).add("Owner", "ana");
+```
+
+O `cdk diff` compara o template que o app sintetiza agora com aquele a partir do qual a stack
 foi implantada:
 
 ```
@@ -186,9 +233,9 @@ ana@laptop:~/shop/cdk$ cdk diff --app "node app.js" --method=template 2>&1 | gre
 
 Uma linha no programa alcança seis recursos, porque `Tags.of(stack)` vale para tudo na stack que
 aceita tag. Por padrão o `cdk diff` também pede um change set ao CloudFormation, para saber quais
-mudanças exigem substituição; o moto não consegue criar um para uma stack existente, então o
-laboratório passa `--method=template` e compara só os templates.
+mudanças exigem substituição; o moto não consegue criar um para uma stack existente, então estes
+comandos passam `--method=template` e comparam só os templates.
 
 O state é a stack, como na seção anterior. O `cdk.out` é saída de build que o próximo synth reescreve,
-e fica fora do controle de versão. O que vai para o git é o programa, que é a razão de ser do CDK:
+e fica fora do controle de versão, como o `node_modules`. O que vai para o git é o programa, que é a razão de ser do CDK:
 **laços, funções e classes para a descrição, com o CloudFormation ainda fazendo o deploy.**

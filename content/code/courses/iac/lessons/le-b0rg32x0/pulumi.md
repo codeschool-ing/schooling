@@ -1,11 +1,12 @@
 ---
 title: Pulumi, a program with an engine of its own
-version: 1
+version: 2
 ---
 
-**Pulumi cannot be installed in this lab**, which has no network to download it from. Everything in
-this section is illustrative: the files below were written for it and were not run, and no output is
-shown, because none was produced.
+**Pulumi was not installed for this lesson.** Its command-line program is downloaded from Pulumi's
+own site, which the machine these lessons were recorded on could not reach. So everything in this
+section is illustrative: the files below were written for it and were not run, and no output is
+shown, because none was produced. You read this code; there is nothing here to install or type.
 
 Pulumi sits between the last two sections and Terraform. Like the CDK, you write a program in a
 general-purpose language: TypeScript, JavaScript, Python, Go, C#, Java, or YAML for small cases.
