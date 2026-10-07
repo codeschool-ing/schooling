@@ -207,14 +207,17 @@ stop_pid() {  # stop_pid NAME — the process lab.sh started under that name
 start_bg() {  # start_bg NAME LOG 'COMMAND' — as ana, in its own session
   mkdir -p $RUN && chown ana $RUN
   stop_pid "$1"
-  as_ana "cd $ETL && setsid $3 </dev/null >>$2 2>&1 & echo \$! > $RUN/$1.pid"
+    as_ana "cd $ETL; setsid $3 </dev/null >>$2 2>&1 & echo \$! > $RUN/$1.pid"
 }
 
 api_up() {
   mkdir -p /var/lib/etl-api && chown ana /var/lib/etl-api
-  start_bg api /var/lib/etl-api/access.log "python3 $HERE/lab/api.py $DATA/prices.json 8081"
-  for _ in $(seq 50); do
+  start_bg api /var/lib/etl-api/access.log "python3 $HERE/lab/api.py $DATA/prices.json 8081 $RUN/clock"
+    for _ in $(seq 50); do
+    kill -0 "$(cat $RUN/api.pid)" 2>/dev/null || break
     curl -s -o /dev/null http://127.0.0.1:8081/ && return 0; sleep 0.1; done
+  echo "the price API did not start: see /var/lib/etl-api/access.log" >&2
+  return 1
 }
 
 airflow_up() {
@@ -242,6 +245,7 @@ reset() {
   mkdir -p $ETL/dags $ETL/landing $ETL/inbox $AFHOME
   chown -R ana:ana $ETL $AFHOME
   load_shop
+    as_ana "psql -q -d postgres -c 'DROP ROLE IF EXISTS etl_reader'"
   as_ana "dropdb --force --if-exists wh 2>/dev/null; createdb wh; dropdb --force --if-exists airflow 2>/dev/null; createdb airflow"
   echo 2026-02-28 > $RUN/clock
 }

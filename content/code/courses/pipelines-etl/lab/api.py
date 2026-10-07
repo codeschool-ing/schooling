@@ -6,13 +6,14 @@ on purpose and nothing more:
   GET /v1/prices?updated_since=<ISO time>&page_size=<1..200>&cursor=<token>
 
 answers one page of list prices, oldest change first, and a `next_cursor` to
-ask for the next one, or null on the last page. It wants the header
+ask for the next one, or null on the last page. It knows the lab's clock: a
+price changed on a day the shop has not lived yet is not served. It wants the header
 `X-Api-Key: ponto-final-lab` and answers 401 without it. More than five
 requests inside one second get 429 with a Retry-After. While the file
 /var/lib/etl-api/outage exists it answers 503 to everything, which is how
 lesson 10 has a source go down at three in the morning.
 
-    python3 api.py PRICES.json [PORT]
+        python3 api.py PRICES.json PORT CLOCK
 
 Standard library only.
 """
@@ -27,7 +28,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 PRICES = json.load(open(sys.argv[1], encoding="utf-8"))
-PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8081
+PORT = int(sys.argv[2])
+CLOCK = sys.argv[3]  # the file lab.sh keeps the last day played in
 KEY = "ponto-final-lab"
 OUTAGE = "/var/lib/etl-api/outage"
 LIMIT = 5
@@ -87,7 +89,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.answer(400, {"error": "bad page_size or cursor"})
         if not 1 <= size <= 200:
             return self.answer(400, {"error": "page_size must be between 1 and 200"})
-        rows = [p for p in PRICES if p["updated_at"] > since] if since else PRICES
+        today = open(CLOCK).read().strip()
+        rows = [p for p in PRICES if p["updated_at"] > since and p["updated_at"][:10] <= today]
         page = rows[start:start + size]
         nxt = cursor_for(start + size) if start + size < len(rows) else None
         self.answer(200, {"data": page, "next_cursor": nxt})

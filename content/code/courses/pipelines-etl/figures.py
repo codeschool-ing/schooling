@@ -391,6 +391,99 @@ def l02_layers(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-torn', 3)
+def l03_torn(lang):
+    t = {'en': dict(
+            label='A timeline of four seconds. At the start, the extraction counts orders and gets '
+                  '17,453. A second later a day of trade commits 296 new orders and their lines. '
+                  'At four seconds the extraction reads the lines, and they belong to 17,749 '
+                  'orders. Below, the same reads inside one REPEATABLE READ transaction both see '
+                  'the moment of the first query.',
+            two='two statements', one='one REPEATABLE READ transaction',
+            q1='count orders', q2='read lines',
+            commit='a day of trade commits', n1='17,453', n2='17,749', n3='17,749', n4='17,749',
+            sec='seconds',
+            cap='Each read is correct for its own moment. The snapshot makes both reads describe '
+                'the same one.'),
+         'pt': dict(
+            label='Uma linha do tempo de quatro segundos. No início, a extração conta os pedidos e '
+                  'obtém 17.453. Um segundo depois, um dia de vendas confirma 296 pedidos novos e '
+                  'as suas linhas. Aos quatro segundos a extração lê as linhas, e elas pertencem a '
+                  '17.749 pedidos. Embaixo, as mesmas leituras dentro de uma transação REPEATABLE '
+                  'READ veem as duas o momento da primeira consulta.',
+            two='dois comandos', one='uma transação REPEATABLE READ',
+            q1='contar pedidos', q2='ler linhas',
+            commit='um dia de vendas é confirmado', n1='17.453', n2='17.749', n3='17.749',
+            n4='17.749', sec='segundos',
+            cap='Cada leitura está certa para o seu próprio momento. O snapshot faz as duas '
+                'descreverem o mesmo.')}[lang]
+    f = Fig('l03-torn', 720, 290, t['label'])
+    x0, x1 = 140, 610
+    sx = lambda s: x0 + (x1 - x0) * s / 4
+    f.line(x0, 250, x1 + 15, 250, stroke='--paper-dim', arrow=True)
+    for s_ in range(5):
+        f.line(sx(s_), 246, sx(s_), 254, stroke='--paper-dim')
+        f.text(sx(s_), 266, str(s_), size=10, fill='--paper-dim')
+    f.text(x1 + 22, 250, t['sec'], size=10, fill='--paper-dim', anchor='start')
+    for xx in (sx(1), sx(1.6)):
+        f.line(xx, 30, xx, 232, stroke='--amber', dash='4 3')
+    f.text(sx(1.3), 20, t['commit'], size=10.5, fill='--amber', weight='600')
+    for row, (name, a, b) in enumerate([(t['two'], t['n1'], t['n2']), (t['one'], t['n3'], t['n4'])]):
+        y = 80 + row * 95
+        f.text(20, y - 30, name, size=11, weight='600', anchor='start')
+        f.line(sx(0), y, sx(4), y, stroke='--wire', width=1.2, dash='2 3')
+        for s_, q, n in [(0, t['q1'], a), (4, t['q2'], b)]:
+            f.circle(sx(s_), y, 6, fill='--phosphor')
+            f.text(sx(s_), y + 18, q, size=10, fill='--paper-dim')
+            f.text(sx(s_), y - 14, n, size=11, weight='600', mono=True,
+                   fill='--amber' if (row == 0 and s_ == 4) else '--paper')
+        if row == 1:
+            f.path(f'M{sx(4) - 8:.1f} {y - 4} C {sx(3):.1f} {y - 40}, {sx(1):.1f} {y - 40}, '
+                   f'{sx(0) + 8:.1f} {y - 6}', stroke='--phosphor', dash='3 3', arrow=True)
+    return f, t['cap']
+
+
+@figure('l03-late', 3)
+def l03_late(lang):
+    t = {'en': dict(
+            label='Two time lines, one above the other. The top one is when events happened, '
+                  'the bottom one is which file they landed in. Most events drop straight down into '
+                  'the file of their own day. One event that happened at 23:01 on 4 March slants '
+                  'across midnight and lands in the file for 5 March.',
+            top='event time: when it happened', bottom='processing time: the file it landed in',
+            d4='4 March', d5='5 March', late='23:01, sent from a train',
+            cap='Group by when it happened, not by where it landed, or a late event counts on the '
+                'wrong day.'),
+         'pt': dict(
+            label='Duas linhas do tempo, uma acima da outra. A de cima é quando os eventos '
+                  'aconteceram, a de baixo é em que arquivo eles caíram. A maioria dos eventos desce '
+                  'reto para o arquivo do próprio dia. Um evento que aconteceu às 23:01 de 4 de '
+                  'março cruza a meia-noite na diagonal e cai no arquivo de 5 de março.',
+            top='horário do evento: quando aconteceu',
+            bottom='horário de processamento: o arquivo onde caiu',
+            d4='4 de março', d5='5 de março', late='23:01, mandado de um trem',
+            cap='Agrupe por quando aconteceu, não por onde caiu, ou um evento atrasado conta no '
+                'dia errado.')}[lang]
+    f = Fig('l03-late', 720, 250, t['label'])
+    x0, xm, x1 = 60, 380, 690
+    for y, name in [(60, t['top']), (190, t['bottom'])]:
+        f.line(x0, y, x1, y, stroke='--paper-dim', width=1.3)
+        f.text(x0, y - 18 if y == 60 else y + 22, name, size=10.5, anchor='start',
+               fill='--paper-dim')
+    f.line(xm, 40, xm, 210, stroke='--wire', dash='4 4')
+    f.text((x0 + xm) / 2, 125, t['d4'], size=11, weight='600')
+    f.text((xm + x1) / 2, 125, t['d5'], size=11, weight='600')
+    for x in [110, 170, 240, 300, 430, 500, 560, 630]:
+        f.line(x, 66, x, 182, stroke='--phosphor-dim', width=1, arrow=True)
+        f.circle(x, 60, 4, fill='--phosphor')
+    f.circle(350, 60, 5, fill='--amber')
+    f.line(350, 66, 455, 182, stroke='--amber', width=1.8, arrow=True)
+    f.text(350, 34, t['late'], size=10, fill='--amber', anchor='middle')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

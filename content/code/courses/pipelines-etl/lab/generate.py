@@ -353,11 +353,17 @@ level = {b: rs.randrange(0, 40) for b in books}
 for d in days(dt.date(2026, 3, 1), LAST):
     for b in level:
         level[b] = max(0, level[b] + rs.randrange(-3, 4))
-    with open(os.path.join(OUT, "stock", f"{d}.csv"), "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f, lineterminator="\n")
-        w.writerow(["isbn", "available", "as_of"])
+        # On 5 March the distributor moved to a new system, and its export changed
+    # without warning: Latin-1, semicolons, Portuguese headers. From the 6th it
+    # is back to what it was. Lesson 3 meets the file.
+    changed = d == dt.date(2026, 3, 5)
+    with open(os.path.join(OUT, "stock", f"{d}.csv"), "w", newline="",
+              encoding="latin-1" if changed else "utf-8") as f:
+        w = csv.writer(f, lineterminator="\n", delimiter=";" if changed else ",")
+        w.writerow(["isbn", "disponível", "data"] if changed else ["isbn", "available", "as_of"])
         for b in sorted(level):
-            w.writerow([books[b]["isbn"], level[b], f"{d}T06:00:00-03:00"])
+            w.writerow([books[b]["isbn"], level[b],
+                        f"{d.strftime('%d/%m/%Y')} 06:00" if changed else f"{d}T06:00:00-03:00"])
 
 # ------------------------------------------------------ publishers' prices
 rp = random.Random(606)
