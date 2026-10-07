@@ -22,7 +22,7 @@
 # loaded on fw; the rule file on each machine written before it is shown with
 # cat; a page named admin-guide.html added to the application's pages, as a
 # help page a shop might publish; the recording of a sensor's alerts read after
-# a few seconds, since Suricata writes them as they happen; lab.sh inline,
+# a few seconds, since Suricata writes them as they happen; inline.sh,
 # which rewires fw's DMZ cable through ips and writes inline.yaml, Suricata's
 # settings for joining its two interfaces.
 # Every line after a prompt is what the command printed.

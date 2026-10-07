@@ -17,7 +17,7 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson:
 # the lab itself, built by lab.sh reset, with the baseline rule set of lesson 4
-# loaded on fw; three certificates issued by the lab's issuing CA with fixed
+# loaded on fw; three certificates issued by identities.sh, shown in the lesson, with fixed
 # dates, as lesson 12 issued one: app.corp.example.com for the application's
 # TLS listener, www-client for the proxy to prove who it is, and an old
 # client certificate for the proxy that expired on 31 August 2026; each copied

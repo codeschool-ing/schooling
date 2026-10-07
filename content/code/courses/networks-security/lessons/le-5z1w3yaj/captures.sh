@@ -22,7 +22,7 @@
 # (an address of the company's server range), and laptop with 198.51.100.7
 # (an address that belongs to nobody in the lab); a recording on www with
 # tcpdump in the background, read afterwards; the DNSSEC half of the lab, which
-# lab.sh builds: BIND on dns serving example.com signed, on port 5300, and a
+# dnssec.sh builds (lab dnssec): BIND on dns serving example.com signed, on port 5300, and a
 # validating Unbound on laptop's loopback that trusts the zone's key.
 # Every line after a prompt is what the command printed.
 #
