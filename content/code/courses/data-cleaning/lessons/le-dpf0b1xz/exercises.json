@@ -1,0 +1,570 @@
+[
+  {
+    "id": "ex-22vrbec1",
+    "version": 1,
+    "section": "whitespace",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The city column had 28 distinct values, and 25 once trimmed. How many spellings existed only because of whitespace at the ends?",
+    "hint": "Subtract.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rqhm52d4",
+    "version": 1,
+    "section": "whitespace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson print the São Paulo spellings with `ascii()`?",
+    "hint": "What does the screen hide?",
+    "choices": [
+      {
+        "text": "It removes the accents before printing",
+        "correct": false,
+        "why": "It shows them as escapes, which is the opposite of removing them."
+      },
+      {
+        "text": "It writes invisible characters as escapes",
+        "correct": true,
+        "why": "Right: the trailing space shows inside the quotes, and the combining tilde as `\\u0303`."
+      },
+      {
+        "text": "It sorts the values the way PostgreSQL would",
+        "correct": false,
+        "why": "`sorted` did the sorting; `ascii` only changes how each value is written."
+      },
+      {
+        "text": "It converts the text to Latin-1 so it fits the terminal",
+        "correct": false,
+        "why": "The terminal handles UTF-8; nothing was converted."
+      }
+    ]
+  },
+  {
+    "id": "ex-0c1hwf7k",
+    "version": 1,
+    "section": "whitespace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the collapse step replace `\\s+` instead of two literal spaces?",
+    "hint": "Not every blank character is the space bar.",
+    "choices": [
+      {
+        "text": "It also catches tabs, line breaks and odd spaces",
+        "correct": true,
+        "why": "Right, and `+` takes any run of them at once."
+      },
+      {
+        "text": "Literal spaces cannot appear in a regular expression",
+        "correct": false,
+        "why": "They can; they just match only the ordinary space."
+      },
+      {
+        "text": "`\\s+` also removes accents",
+        "correct": false,
+        "why": "It touches whitespace only."
+      },
+      {
+        "text": "It is faster on long columns",
+        "correct": false,
+        "why": "Speed is not the reason; coverage is."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcwyrfvb",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which function is meant for building a key that will be compared?",
+    "hint": "Think of `Straße`.",
+    "choices": [
+      {
+        "text": "`title()`",
+        "correct": false,
+        "why": "That writes `Da Silva` and `Mcdonald`; it is for display, and badly."
+      },
+      {
+        "text": "`upper()`",
+        "correct": false,
+        "why": "It works for most text but is not the function designed for comparison."
+      },
+      {
+        "text": "`strip()`",
+        "correct": false,
+        "why": "That trims spaces; case is untouched."
+      },
+      {
+        "text": "`casefold()`",
+        "correct": true,
+        "why": "Right: it folds `ß` to `ss`, which `lower()` leaves alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-eemz6npt",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the cleaning keep the original name beside the key instead of lower-casing the name itself?",
+    "hint": "Who reads which column?",
+    "choices": [
+      {
+        "text": "Lower-cased names take more space in the database",
+        "correct": false,
+        "why": "They take the same space."
+      },
+      {
+        "text": "pandas cannot lower-case a column in place",
+        "correct": false,
+        "why": "It can; the reason is the reader."
+      },
+      {
+        "text": "Keys compare; names are shown to people",
+        "correct": true,
+        "why": "Right. A lower-cased name would go out on the next invoice."
+      },
+      {
+        "text": "Keys must never contain capital letters by law",
+        "correct": false,
+        "why": "No law is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex54nca7",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `'DA SILVA'.title()` return?",
+    "hint": "It capitalises each word.",
+    "choices": [
+      {
+        "text": "`'Da Silva'`",
+        "correct": true,
+        "why": "Right, where Portuguese writes `da Silva`."
+      },
+      {
+        "text": "`'da Silva'`",
+        "correct": false,
+        "why": "That would need a rule about particles, which `title()` lacks."
+      },
+      {
+        "text": "`'DA SILVA'`",
+        "correct": false,
+        "why": "`title()` changes the case."
+      },
+      {
+        "text": "`'da silva'`",
+        "correct": false,
+        "why": "That is `lower()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxh0gjgk",
+    "version": 1,
+    "section": "unicode-forms",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`'São'` in NFC is 3 characters long. How long is it in NFD?",
+    "hint": "The tilde becomes its own character.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ttedhcws",
+    "version": 1,
+    "section": "unicode-forms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is normalising every text column to NFC safe to do on the way in?",
+    "hint": "What does a reader see change?",
+    "choices": [
+      {
+        "text": "It removes every accent, which keys need anyway",
+        "correct": false,
+        "why": "NFC keeps the accents, composed."
+      },
+      {
+        "text": "It converts the text from UTF-8 to Latin-1",
+        "correct": false,
+        "why": "It stays UTF-8; only the form of the characters changes."
+      },
+      {
+        "text": "It turns `²` into `2` and `ﬁ` into `fi` everywhere",
+        "correct": false,
+        "why": "That is NFKC, which loses information and is meant for keys."
+      },
+      {
+        "text": "It changes nothing visible",
+        "correct": true,
+        "why": "Right, and it makes equal what should be equal."
+      }
+    ]
+  },
+  {
+    "id": "ex-450f41wc",
+    "version": 1,
+    "section": "unicode-forms",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of Quitanda Verde's systems sent names and cities in NFD?",
+    "hint": "Lesson 1 found 213 São Paulos that looked like the others.",
+    "choices": [
+      {
+        "text": "The website",
+        "correct": false,
+        "why": "The website writes NFC."
+      },
+      {
+        "text": "The shops' till",
+        "correct": false,
+        "why": "The till writes Latin-1, a different matter."
+      },
+      {
+        "text": "The app",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The 2023 migration",
+        "correct": false,
+        "why": "That produced mojibake."
+      }
+    ]
+  },
+  {
+    "id": "ex-8j6yn643",
+    "version": 1,
+    "section": "accents",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Removing accents makes `país` and `pais` the same key. Why is that acceptable for a city key and not for stored text?",
+    "hint": "The key is for the machine.",
+    "choices": [
+      {
+        "text": "Keys merge spellings; stored text must stay right",
+        "correct": true,
+        "why": "Right. Merging two spellings of one name costs less than splitting it."
+      },
+      {
+        "text": "Cities never have accents",
+        "correct": false,
+        "why": "São Paulo does."
+      },
+      {
+        "text": "Stored text is kept in NFD while keys are kept in NFC",
+        "correct": false,
+        "why": "Both are stored in NFC here."
+      },
+      {
+        "text": "Removing accents is irreversible only for keys",
+        "correct": false,
+        "why": "It is irreversible for both; that is why stored text keeps them."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtwdz3n9",
+    "version": 1,
+    "section": "accents",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In PostgreSQL, the extension that removes accents is called ___.",
+    "hint": "It is named after what it does.",
+    "blanks": [
+      {
+        "accept": [
+          "unaccent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fxmxzsx9",
+    "version": 1,
+    "section": "mojibake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did `São Paulo` become `SÃ£o Paulo`?",
+    "hint": "`ã` is two bytes in UTF-8.",
+    "choices": [
+      {
+        "text": "Somebody typed it on a keyboard set to another language",
+        "correct": false,
+        "why": "No keyboard produces `Ã£` for `ã`; it is a decoding error."
+      },
+      {
+        "text": "Its UTF-8 bytes were read as Latin-1",
+        "correct": true,
+        "why": "Right: `0xC3` became `Ã` and `0xA3` became `£`."
+      },
+      {
+        "text": "The app wrote it in NFD",
+        "correct": false,
+        "why": "NFD looks identical on screen; this does not."
+      },
+      {
+        "text": "The CSV export added a pound sign as a separator",
+        "correct": false,
+        "why": "The separator is the comma."
+      }
+    ]
+  },
+  {
+    "id": "ex-9prwx2mk",
+    "version": 1,
+    "section": "mojibake",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the repair of a mangled value in order.",
+    "hint": "Run the mistake backwards.",
+    "items": [
+      "Check the value carries the signature `Ã`",
+      "Encode the text as Latin-1 to get the original bytes",
+      "Decode those bytes as UTF-8"
+    ],
+    "trap": "Skipping the check breaks clean text: `São` as Latin-1 is not valid UTF-8."
+  },
+  {
+    "id": "ex-9hxwz1jm",
+    "version": 1,
+    "section": "mojibake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What happens if the mojibake repair runs on a clean `São`?",
+    "hint": "`ã` in Latin-1 is a single byte.",
+    "choices": [
+      {
+        "text": "Nothing: clean text passes through unchanged",
+        "correct": false,
+        "why": "`0xE3` alone is not valid UTF-8."
+      },
+      {
+        "text": "It becomes `SÃ£o`, the original damage",
+        "correct": false,
+        "why": "That is the original damage, made the other way round."
+      },
+      {
+        "text": "It is converted to NFD",
+        "correct": false,
+        "why": "Encodings and normal forms are different things."
+      },
+      {
+        "text": "It fails, or loses the letter",
+        "correct": true,
+        "why": "Right; that is why the repair is applied only where `Ã` appears."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3gvade8",
+    "version": 1,
+    "section": "mojibake",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many customers' names carry the 2023 migration's damage?",
+    "hint": "The count printed above the three examples.",
+    "value": 43,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-abbzwjm7",
+    "version": 1,
+    "section": "abbreviations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the last step from eleven spellings to five cities need a list somebody wrote?",
+    "hint": "What does `bh` mean?",
+    "choices": [
+      {
+        "text": "Fuzzy matching is not available in pandas",
+        "correct": false,
+        "why": "RapidFuzz works with pandas, and `bh` is nothing like `belo horizonte` anyway."
+      },
+      {
+        "text": "The remaining spellings are all typos",
+        "correct": false,
+        "why": "`bh` and `rj` are deliberate abbreviations."
+      },
+      {
+        "text": "No rule knows that `bh` is Belo Horizonte",
+        "correct": true,
+        "why": "Right: what is left is knowledge, not mechanics."
+      },
+      {
+        "text": "Lists are faster than functions",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh6w7e9v",
+    "version": 1,
+    "section": "abbreviations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Next month a customer types `Sampa`. What should the mapping step do, and why?",
+    "hint": "A spelling not in the list should be visible.",
+    "choices": [
+      {
+        "text": "Keep `sampa` as a sixth city in the report",
+        "correct": false,
+        "why": "That is the defect the list exists to prevent."
+      },
+      {
+        "text": "Leave it blank, so the gap gets counted",
+        "correct": true,
+        "why": "Right. Then somebody adds `sampa` to the list on purpose."
+      },
+      {
+        "text": "Assign it to the most common city",
+        "correct": false,
+        "why": "Right this time by luck, and wrong for the next unknown spelling."
+      },
+      {
+        "text": "Drop the customer from the file",
+        "correct": false,
+        "why": "The customer exists; only the spelling is unknown."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vb46dz4",
+    "version": 1,
+    "section": "in-sql",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each step to its PostgreSQL function.",
+    "hint": "The table in the last section.",
+    "pairs": [
+      {
+        "left": "Remove accents",
+        "right": "`unaccent()`"
+      },
+      {
+        "left": "Compose decomposed accents",
+        "right": "`normalize(…, NFC)`"
+      },
+      {
+        "left": "Trim the ends",
+        "right": "`trim()`"
+      },
+      {
+        "left": "Repair mojibake",
+        "right": "`convert_from(convert_to(…, 'LATIN1'), 'UTF8')`"
+      }
+    ],
+    "right_distractors": [
+      "`initcap()`"
+    ]
+  },
+  {
+    "id": "ex-wgxn59ex",
+    "version": 1,
+    "section": "in-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the SQL mojibake repair applied only to rows with `Ã`?",
+    "hint": "What does Latin-1 not hold?",
+    "choices": [
+      {
+        "text": "Latin-1 cannot hold every character",
+        "correct": true,
+        "why": "Right, and clean rows do not need it anyway."
+      },
+      {
+        "text": "`unaccent` must run before it",
+        "correct": false,
+        "why": "Order matters, but not that way: the repair comes before removing accents."
+      },
+      {
+        "text": "PostgreSQL limits functions to ten rows",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "Only those rows are in UTF-8",
+        "correct": false,
+        "why": "Every row is UTF-8; these hold the wrong characters in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjeww9ta",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the general steps of the cascade in order.",
+    "hint": "Repair before you fold.",
+    "items": [
+      "Trim and collapse whitespace",
+      "Normalise to NFC",
+      "Repair mojibake",
+      "Lower-case",
+      "Remove accents"
+    ],
+    "trap": "Removing accents before the repair turns `Ã£` into `A£`, which no longer encodes back to the original bytes."
+  },
+  {
+    "id": "ex-410pz4kk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes replacing every customer name with its plain key to \"clean the file\". What is wrong with that?",
+    "hint": "The key is for the machine.",
+    "choices": [
+      {
+        "text": "Keys are slower to compare",
+        "correct": false,
+        "why": "They are faster, if anything."
+      },
+      {
+        "text": "Plain keys cannot be stored in CSV",
+        "correct": false,
+        "why": "They are ordinary text."
+      },
+      {
+        "text": "Nothing; plain keys are the cleaned names",
+        "correct": false,
+        "why": "`joao` on an invoice to João is not clean."
+      },
+      {
+        "text": "It loses accents and capitals",
+        "correct": true,
+        "why": "Right: keep the name, add the key."
+      }
+    ]
+  }
+]

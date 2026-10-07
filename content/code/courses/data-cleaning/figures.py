@@ -609,6 +609,63 @@ def l05_blocking(lang):
                  'não compartilha.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 6
+
+def city_steps():
+    seen, vals = set(), []
+    for r in rows('raw/customers.csv'):
+        k = tuple(r.values())
+        if k not in seen:
+            seen.add(k)
+            vals.append(r['city'])
+    fixes = [
+        lambda v: ' '.join(v.split()),
+        lambda v: unicodedata.normalize('NFC', v),
+        lambda v: v.encode('latin-1').decode('utf-8') if 'Ã' in v else v,
+        lambda v: v.lower(),
+        lambda v: ''.join(c for c in unicodedata.normalize('NFKD', v) if not unicodedata.combining(c)),
+    ]
+    out = [len(set(vals))]
+    for f in fixes:
+        vals = [f(v) for v in vals]
+        out.append(len(set(vals)))
+    return out
+
+
+ABBREV = {'s. paulo': 'São Paulo', 'sao paulo': 'São Paulo', 'campinas': 'Campinas', 'rio de janeiro': 'Rio de Janeiro',
+          'rio': 'Rio de Janeiro', 'rj': 'Rio de Janeiro', 'belo horizonte': 'Belo Horizonte',
+          'b. horizonte': 'Belo Horizonte', 'bh': 'Belo Horizonte', 'curitiba': 'Curitiba',
+          'curitiba - pr': 'Curitiba'}
+
+
+@figure('l06-cascade', 6)
+def l06_cascade(lang):
+    counts = city_steps() + [len(set(ABBREV.values()))]
+    labels = {'en': ['as exported', 'spaces trimmed', 'Unicode to NFC', 'mojibake repaired', 'lower case',
+                     'accents removed', 'abbreviations mapped'],
+              'pt': ['como exportado', 'espaços aparados', 'Unicode em NFC', 'mojibake reparado', 'minúsculas',
+                     'sem acentos', 'abreviações mapeadas']}[lang]
+    fig = Fig('l06-cascade', 720, 330, {
+        'en': 'A bar chart of how many distinct values the city column holds after each cleaning step: '
+              + ', '.join(f'{l} {c}' for l, c in zip(labels, counts)) + '. The largest single drop is lower case.',
+        'pt': 'Um gráfico de barras de quantos valores distintos a coluna de cidade tem depois de cada passo da '
+              'limpeza: ' + ', '.join(f'{l} {c}' for l, c in zip(labels, counts)) + '. A maior queda isolada é a das minúsculas.'}[lang])
+    top, mx = 30, counts[0]
+    for i, (l, c) in enumerate(zip(labels, counts)):
+        y = top + 40 * i
+        fig.text(190, y + 12, l, size=11, anchor='end')
+        w = 420 * c / mx
+        last = i == len(counts) - 1
+        fig.rect(200, y, w, 24, stroke='--phosphor' if last else '--wire',
+                 fill='--phosphor-dim' if last else '--scan', rx=2)
+        fig.text(206 + w, y + 12, str(c), size=11, anchor='start', mono=True)
+    cap = {'en': 'Twenty-eight spellings, five cities. The steps are cheap and general; only the last one needs a '
+                 'list somebody wrote.',
+           'pt': 'Vinte e oito grafias, cinco cidades. Os passos são baratos e gerais; só o último precisa de uma lista '
+                 'que alguém escreveu.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
