@@ -55,6 +55,17 @@ home 'ask "Say hello in three words." --temperature 0 --plain'
 home 'ollama ps'
 home 'du -sh /usr/local/lib/ollama'
 
+# The smaller model the section offers for a weak computer. `ollama list`
+# gives its size on disk and `ollama ps`, after one question, its size in
+# memory: the two numbers the prose quotes. Pulled quietly first and removed
+# after, so the other blocks see only the recommended model.
+block your-machine-small
+lab exec 'ollama pull llama3.2:1b' >/dev/null 2>&1
+home 'ollama list'
+home 'ASK_MODEL=llama3.2:1b ask "Say hello in three words." --temperature 0 --plain'
+home 'ollama ps'
+lab exec 'ollama stop llama3.2:1b; ollama rm llama3.2:1b' >/dev/null 2>&1
+
 block workbench-toylm
 on 'toylm info'
 on 'head -4 corpus.txt'
