@@ -51,8 +51,8 @@ variáveis que a aula 5 exportou, se o terminal que você usou então ainda esti
 env -i HOME="$(mktemp -d)" PATH="$HOME/.local/bin:/usr/bin:/bin" TERM="$TERM" bash
 ```
 
-O shell novo fica no diretório em que você estava, mas o `~` dele é um diretório novo e vazio, o
-caminho dele tem a AWS CLI e o sistema e nada mais seu, e `exit` leva você de volta ao terminal de
+O shell novo fica no diretório em que você estava, mas o `~` dele é um diretório novo e vazio, e o
+caminho dele tem a AWS CLI e o sistema e nada mais seu. `exit` leva você de volta ao terminal de
 onde veio.
 
 ```

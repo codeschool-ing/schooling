@@ -11,7 +11,7 @@ respostas, o que são uma chave e um prefixo. **Ele não diz nada sobre latênci
 preço do S3.** Nada do que ele guarda sai do notebook, e ele aceita credenciais que a AWS recusaria.
 
 A aula 1 instalou o moto no ambiente virtual do curso. Suba-o em segundo plano, com o log indo para
-um arquivo que esta seção lê mais adiante, e faça dois arquivos pequenos para enviar: uma "foto" de
+um arquivo que esta seção lê mais adiante. Depois faça dois arquivos pequenos para enviar: uma "foto" de
 cem bytes, todos `x`, sobre a qual o S3 não tem opinião, e um relatório de uma linha:
 
 ```

@@ -51,8 +51,8 @@ variables lesson 5 exported, if the terminal you used then is still open:
 env -i HOME="$(mktemp -d)" PATH="$HOME/.local/bin:/usr/bin:/bin" TERM="$TERM" bash
 ```
 
-The new shell stays in the directory you were in, but its `~` is a new, empty directory, its path
-holds the AWS CLI and the system and nothing else of yours, and `exit` takes you back to the
+The new shell stays in the directory you were in, but its `~` is a new, empty directory, and its
+path holds the AWS CLI and the system and nothing else of yours. `exit` takes you back to the
 terminal you came from.
 
 ```

@@ -11,7 +11,7 @@ it, which shows the shape of the interface: the requests, the answers, what a ke
 it accepts credentials AWS would refuse.
 
 Lesson 1 installed moto in the course's virtual environment. Start it in the background, with its
-log going to a file this section reads later, and make two small files to upload: a "photo" of a
+log going to a file this section reads later. Then make two small files to upload: a "photo" of a
 hundred bytes, all of them `x`, which S3 has no opinion about, and a report of one line:
 
 ```

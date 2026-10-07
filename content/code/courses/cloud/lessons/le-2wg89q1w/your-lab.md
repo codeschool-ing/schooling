@@ -5,10 +5,9 @@ version: 1
 
 This course needs no cloud account, but it does need a terminal. **Every command in the lessons is
 one you type on your own computer**, and the platform runs nothing for you: no machine, no shell in
-the browser, no sandbox. What you need is small. Python 3 and two everyday tools, `curl` and `jq`;
-the AWS command line, which is used only for what it does with no credentials; and two Python
-programs, **moto** and **cloud-init**, which lessons 4 and 5 use to check a file and imitate a
-service on your own machine. The next two sections install all of it and give you the one program
+the browser, no sandbox. What you need is small: Python 3, two everyday tools in `curl` and `jq`,
+and the AWS command line, which never gets a key. Lessons 4 and 5 add two Python programs, **moto**
+and **cloud-init**, to imitate a service and check a file on your own machine. The next two sections install all of it and give you the one program
 the course is built on, the price sheet. None of it costs money, and none of it needs a card.
 
 The lessons were recorded on Ubuntu 24.04, and there are three ways to have a terminal on it.

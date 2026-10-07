@@ -5,10 +5,10 @@ version: 1
 
 Este curso não precisa de conta de nuvem, mas precisa de um terminal. **Cada comando das aulas é um
 que você digita no seu próprio computador**, e a plataforma não roda nada por você: nenhuma máquina,
-nenhum shell no navegador, nenhuma caixa de areia. O que você precisa é pouco. Python 3 e duas
-ferramentas do dia a dia, `curl` e `jq`; a linha de comando da AWS, usada só no que ela faz sem
-credenciais; e dois programas em Python, o **moto** e o **cloud-init**, que as aulas 4 e 5 usam para
-conferir um arquivo e imitar um serviço na sua própria máquina. As duas seções seguintes instalam
+nenhum shell no navegador, nenhuma caixa de areia. O que você precisa é pouco: Python 3, duas
+ferramentas do dia a dia, `curl` e `jq`, e a linha de comando da AWS, que nunca recebe uma chave. As
+aulas 4 e 5 acrescentam dois programas em Python, o **moto** e o **cloud-init**, para imitar um
+serviço e conferir um arquivo na sua própria máquina. As duas seções seguintes instalam
 tudo isso e entregam o único programa sobre o qual o curso se apoia, a tabela de preços. Nada disso
 custa dinheiro, e nada pede cartão.
 
