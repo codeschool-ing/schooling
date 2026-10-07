@@ -22,8 +22,9 @@
 #                        Yarn 4.10.3, the last two installed here at those
 #                        versions so that no other copy on the machine answers
 #   127.0.0.1:4873       a private npm registry, Verdaccio, holding only the
-#                        packages the lab publishes into it: lesson 21. It
-#                        reaches nothing outside the machine.
+#                        packages lesson 21's publish-shelf.sh publishes into
+#                        it, with the config.yaml that lesson shows. It reaches
+#                        nothing outside the machine.
 #
 # WHAT IS STAGED rather than typed is said in each lesson's captures.sh: the
 # files ana "wrote" are put there by the script, and the lesson shows them in
@@ -105,27 +106,15 @@ reset_home() {
   runuser -u ana -- mkdir -p /home/ana/js
 }
 
-# The registry. Its packages are written by lab/registry.sh, published as the
-# user "lab", and nothing in it was downloaded from anywhere.
+# The registry, as lesson 21 has the student build it: its config.yaml and the
+# publish-shelf.sh that fills it are taken out of the lesson, so the packages
+# behind every transcript are the ones the lesson shows.
+L21=le-8cyzvj3y
 start_registry() {
   stop_registry
-  rm -rf $REG/storage $REG/htpasswd   # every run starts with no packages and no users
-  mkdir -p $REG/storage
-  cat > $REG/config.yaml <<YAML
-storage: $REG/storage
-auth:
-  htpasswd:
-    file: $REG/htpasswd
-    max_users: 100
-packages:
-  '**':
-    access: \$all
-    publish: \$authenticated
-    unpublish: \$authenticated
-uplinks: {}
-listen: 127.0.0.1:4873
-log: { type: stdout, format: pretty, level: warn }
-YAML
+  rm -rf $REG   # every run starts with no packages and no users
+  mkdir -p $REG
+  node "$HERE/lab/extract.mjs" "$HERE/lessons/$L21/your-registry.md" config.yaml > $REG/config.yaml
   setsid env -i PATH=$NODE_DIR:/usr/bin:/bin TZ=$TZ_LAB \
     node $OPT/node_modules/verdaccio/bin/verdaccio -c $REG/config.yaml > /run/jslab-registry.out 2>&1 < /dev/null &
   echo $! > /run/jslab-registry.pid
@@ -134,6 +123,21 @@ YAML
     sleep 0.2
   done
   echo "the registry did not start; see /run/jslab-registry.out" >&2; return 1
+}
+
+fill_registry() {
+  node "$HERE/lab/extract.mjs" "$HERE/lessons/$L21/your-registry.md" publish-shelf.sh > $REG/publish-shelf.sh
+  bash $REG/publish-shelf.sh > /dev/null
+  # STAGED: ana's account. The lesson creates it with npm adduser, which asks
+  # its questions on a terminal; here the same request is sent with curl, and
+  # her token is written where npm adduser writes it.
+  curl -fsS -X PUT -H 'content-type: application/json' \
+    -d '{"name": "ana", "password": "ana-registry-password"}' \
+    http://127.0.0.1:4873/-/user/org.couchdb.user:ana |
+    node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log("//127.0.0.1:4873/:_authToken="+JSON.parse(s).token))' \
+    > /home/ana/.npmrc
+  chown ana: /home/ana/.npmrc
+  chmod 0600 /home/ana/.npmrc
 }
 
 stop_registry() {
@@ -159,7 +163,7 @@ case ${1:-} in
   reset)
     write_env; install_lab; reset_home ;;
   registry)
-    start_registry; bash "$HERE/lab/registry.sh" ;;
+    start_registry; fill_registry ;;
   down)
     stop_registry ;;
   exec)

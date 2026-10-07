@@ -1,6 +1,6 @@
 ---
 title: pnpm and Yarn
-version: 1
+version: 2
 ---
 
 **pnpm and Yarn read the same `package.json` and the same registry as npm, and lay the result out
@@ -49,7 +49,7 @@ Progress: resolved 2, reused 0, downloaded 2, added 2, done
 dependencies:
 + shelf-format 1.0.0
 
-Done in 886ms using pnpm v10.28.0
+Done in 773ms using pnpm v10.28.0
 ana@dev:~/js/pnpm$ ls -A node_modules
 .modules.yaml
 .pnpm
@@ -93,7 +93,7 @@ pnpm writes `pnpm-lock.yaml` instead of `package-lock.json`. Its commands mirror
 
 ## Yarn
 
-Yarn reads its settings from `.yarnrc.yml`. This one points it at the lab's registry and allows
+Yarn reads its settings from `.yarnrc.yml`. This one points it at your registry and allows
 plain HTTP for that one address, because Yarn refuses an unencrypted registry unless its host is
 on this list:
 
@@ -115,7 +115,7 @@ YN0000: └ Completed
 YN0000: ┌ Link step
 YN0000: │ ESM support for PnP uses the experimental loader API and is therefore experimental
 YN0000: └ Completed
-YN0000: · Done with warnings in 0s 165ms
+YN0000: · Done with warnings in 0s 258ms
 ana@dev:~/js/yarn$ ls -A
 .pnp.cjs
 .pnp.loader.mjs
