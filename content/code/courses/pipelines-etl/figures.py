@@ -1513,6 +1513,69 @@ def l18_environments(lang):
     f.text(605, 115, t['raw'], size=10, fill='--paper-dim')
     return f, t['cap']
 
+@figure('l19-speeds', 19)
+def l19_speeds(lang):
+    import math
+    t = {'en': dict(
+            label='Rows written per second by three methods, on a logarithmic scale, in one '
+                  'recording: one INSERT per row about 12 thousand, executemany about 63 thousand, '
+                  'COPY about 712 thousand.',
+            names=['one INSERT per row', 'executemany', 'COPY'], unit='rows a second (log scale)',
+            cap='Each step to the right of the scale is ten times faster. The rows were the same.'),
+         'pt': dict(
+            label='Linhas escritas por segundo por três métodos, em escala logarítmica, numa '
+                  'gravação: um INSERT por linha cerca de 12 mil, executemany cerca de 63 mil, COPY '
+                  'cerca de 712 mil.',
+            names=['um INSERT por linha', 'executemany', 'COPY'], unit='linhas por segundo (escala log)',
+            cap='Cada passo para a direita da escala é dez vezes mais rápido. As linhas eram as mesmas.')}[lang]
+    vals = [12437, 63095, 711766]
+    f = Fig('l19-speeds', 720, 210, t['label'])
+    x0, x1 = 200, 650
+    lo, hi = 4, 6
+    sx = lambda v: x0 + (math.log10(v) - lo) / (hi - lo) * (x1 - x0)
+    for i, (n, v) in enumerate(zip(t['names'], vals)):
+        y = 30 + i * 44
+        f.text(x0 - 12, y + 12, n, size=11, anchor='end', mono=(n in ('executemany', 'COPY')))
+        f.rect(x0, y, sx(v) - x0, 24, stroke='--phosphor' if i == 2 else '--wire',
+               fill='--scan', rx=2)
+        f.text(sx(v) + 8 if i < 2 else sx(v) - 8, y + 12, num(lang, v, 0), size=10.5,
+               anchor='start' if i < 2 else 'end', mono=True)
+    yb = 168
+    f.line(x0, yb, x1, yb, stroke='--paper-dim')
+    for e in range(lo, hi + 1):
+        x = sx(10 ** e)
+        f.line(x, yb, x, yb + 4, stroke='--paper-dim')
+        f.text(x, yb + 14, num(lang, 10 ** e, 0), size=9.5, fill='--paper-dim', mono=True)
+    f.text((x0 + x1) / 2, 196, t['unit'], size=9.5, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l19-pages', 19)
+def l19_pages(lang):
+    t = {'en': dict(
+            label='Pages read to answer for one month against six years of the large table. One '
+                  'month through the index: 220 pages, about 1.7 MB. All six years: 25,956 pages, '
+                  'about 200 MB, the whole table.',
+            month='March, by the index', all='six years, the whole table', pages='pages',
+            cap='The cheapest page is the one the query never reads.'),
+         'pt': dict(
+            label='Páginas lidas para responder por um mês contra seis anos da tabela grande. Um '
+                  'mês pelo índice: 220 páginas, cerca de 1,7 MB. Os seis anos: 25.956 páginas, '
+                  'cerca de 200 MB, a tabela inteira.',
+            month='março, pelo índice', all='seis anos, a tabela inteira', pages='páginas',
+            cap='A página mais barata é a que a consulta nunca lê.')}[lang]
+    f = Fig('l19-pages', 720, 150, t['label'])
+    x0, x1 = 220, 640
+    sx = lambda v: x0 + v / 25956 * (x1 - x0)
+    for i, (lab, v) in enumerate([(t['month'], 220), (t['all'], 25956)]):
+        y = 30 + i * 50
+        f.text(x0 - 12, y + 13, lab, size=11, anchor='end')
+        f.rect(x0, y, max(sx(v) - x0, 2), 26, stroke='--amber' if i else '--phosphor',
+               fill='--scan', rx=2)
+        f.text(sx(v) + 8 if i == 0 else sx(v) - 8, y + 13, num(lang, v, 0) + ' ' + t['pages'],
+               size=10.5, anchor='start' if i == 0 else 'end')
+    return f, t['cap']
+
 
 def main():
     if '--list' in sys.argv:

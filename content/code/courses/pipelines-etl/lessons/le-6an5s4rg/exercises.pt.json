@@ -1,0 +1,317 @@
+{
+  "ex-snmb0wrd": {
+    "prompt": "Qual é a primeira coisa a fazer com um pipeline lento?",
+    "hint": "Antes de mudar qualquer coisa.",
+    "choices": [
+      {
+        "text": "Comprar uma máquina mais rápida",
+        "why": "Isso vem por último, se vier."
+      },
+      {
+        "text": "Descobrir para onde vai o tempo",
+        "why": "Isso. Medir, depois mudar."
+      },
+      {
+        "text": "Pôr um índice em toda coluna",
+        "why": "Índices custam a cada carga."
+      },
+      {
+        "text": "Reescrevê-lo em outra ferramenta, já que a atual deve ser o motivo da lentidão",
+        "why": "Um palpite, não uma medição."
+      }
+    ]
+  },
+  "ex-q6142xy4": {
+    "prompt": "Ligue cada instrumento ao que ele relata.",
+    "hint": "Tempo, caminho, páginas.",
+    "pairs": [
+      {
+        "left": "\\timing on",
+        "right": "Quanto cada comando levou"
+      },
+      {
+        "left": "EXPLAIN ANALYZE",
+        "right": "O caminho que o banco tomou, e as linhas"
+      },
+      {
+        "left": "EXPLAIN (ANALYZE, BUFFERS)",
+        "right": "As páginas que leu"
+      }
+    ]
+  },
+  "ex-fb5qsrvj": {
+    "prompt": "Por que um INSERT por linha é tão mais lento que COPY para as mesmas linhas?",
+    "hint": "Conte as conversas.",
+    "choices": [
+      {
+        "text": "O INSERT confere cada restrição da tabela e o COPY as pula",
+        "why": "Os dois conferem."
+      },
+      {
+        "text": "O INSERT comprime os dados antes de chegarem à tabela",
+        "why": "Nada foi comprimido."
+      },
+      {
+        "text": "O COPY pula a transação",
+        "why": "Os três rodaram numa transação."
+      },
+      {
+        "text": "Cada linha é uma ida e volta entre cliente e servidor",
+        "why": "Isso. Trinta mil conversas."
+      }
+    ]
+  },
+  "ex-dsb3ragf": {
+    "prompt": "Quantas vezes, aproximadamente, o COPY foi mais rápido que um INSERT por linha, na gravação? Arredonde para a dezena mais próxima.",
+    "hint": "2,41 s contra 0,04 s."
+  },
+  "ex-4kcmheg6": {
+    "prompt": "Por que o script de tempo pôs os três métodos dentro de uma transação?",
+    "hint": "Uma comparação justa.",
+    "choices": [
+      {
+        "text": "O COPY exige",
+        "why": "Não exige."
+      },
+      {
+        "text": "Para desfazer as linhas depois, deixando a tabela como estava",
+        "why": "Cada um teve commit."
+      },
+      {
+        "text": "Para o método lento não ficar mais lento com um commit por linha",
+        "why": "Isso. A comparação é sobre idas e voltas."
+      },
+      {
+        "text": "Tabelas temporárias precisam de uma transação em volta de cada escrita",
+        "why": "Não precisam."
+      }
+    ]
+  },
+  "ex-32w2va8a": {
+    "prompt": "O que a tabela grande inventada guarda dos dados reais?",
+    "hint": "Não as vendas em si.",
+    "choices": [
+      {
+        "text": "A forma: dias, lojas e livros na mesma mistura",
+        "why": "Isso. Então o que vale para lê-la vale para uma real."
+      },
+      {
+        "text": "Vendas reais de seis anos",
+        "why": "As cópias não são vendas reais."
+      },
+      {
+        "text": "Nada; é aleatória",
+        "why": "Ela é copiada da tabela real."
+      },
+      {
+        "text": "Só as linhas de março",
+        "why": "Ela tem seis anos."
+      }
+    ]
+  },
+  "ex-jzpxpyqj": {
+    "prompt": "Quantas linhas o dia 16 tinha na tabela grande?",
+    "hint": "actual rows="
+  },
+  "ex-pqehas0z": {
+    "prompt": "Sem índice, por que achar um dia demora mais à medida que a tabela cresce?",
+    "hint": "Seq Scan.",
+    "choices": [
+      {
+        "text": "Toda linha da tabela é lida para achá-lo",
+        "why": "Isso. Rows Removed by Filter."
+      },
+      {
+        "text": "O dia tem mais linhas a cada ano, conforme a loja cresce",
+        "why": "Ele tinha 446 de qualquer jeito."
+      },
+      {
+        "text": "O planejador fica mais lento",
+        "why": "O planejamento levou menos de um milissegundo."
+      },
+      {
+        "text": "O DELETE trava a tabela inteira enquanto procura as linhas",
+        "why": "O lock não foi o que levou o tempo."
+      }
+    ]
+  },
+  "ex-z8f8tk00": {
+    "prompt": "O que um índice no `order_date` custa à carga noturna?",
+    "hint": "Todo insert…",
+    "choices": [
+      {
+        "text": "Nada; índices só ajudam",
+        "why": "Todo insert também escreve no índice."
+      },
+      {
+        "text": "Ele proíbe deletes na tabela",
+        "why": "Os deletes ficaram mais rápidos."
+      },
+      {
+        "text": "Todo insert também escreve no índice",
+        "why": "Isso. Espaço, e tempo durante a carga."
+      },
+      {
+        "text": "Precisa ser refeito à mão toda noite",
+        "why": "O PostgreSQL o mantém atualizado."
+      }
+    ]
+  },
+  "ex-r00qqkwk": {
+    "prompt": "No plano sem índice, o PostgreSQL leu toda linha: um `___ Scan`.",
+    "hint": "Abreviação de sequencial.",
+    "blanks": [
+      {
+        "accept": [
+          "Seq"
+        ]
+      }
+    ]
+  },
+  "ex-cxrktw5b": {
+    "prompt": "Por que a distância entre refazer tudo e uma janela de 30 dias cresce a cada ano?",
+    "hint": "Qual dos dois cresce com a tabela?",
+    "choices": [
+      {
+        "text": "A janela fica mais lenta a cada ano",
+        "why": "Ela continua com trinta dias."
+      },
+      {
+        "text": "O PostgreSQL fica mais lento com o tempo",
+        "why": "Não fica."
+      },
+      {
+        "text": "Índices param de funcionar em dados antigos",
+        "why": "Continuam funcionando."
+      },
+      {
+        "text": "Um cresce com a tabela; o outro fica em trinta dias",
+        "why": "Isso. O histórico só soma de um lado."
+      }
+    ]
+  },
+  "ex-zsqs34jm": {
+    "prompt": "Do que a janela abre mão em troca da velocidade?",
+    "hint": "Lições 11 e 15.",
+    "choices": [
+      {
+        "text": "Idempotência, porque uma segunda execução agora escreve o mês duas vezes",
+        "why": "Ela continua idempotente."
+      },
+      {
+        "text": "Mudanças mais antigas que a janela, que pedem uma reconstrução completa",
+        "why": "Isso. O teste de deriva diz quando."
+      },
+      {
+        "text": "O índice",
+        "why": "O índice é o que a deixa rápida."
+      },
+      {
+        "text": "Transações",
+        "why": "Ela roda numa."
+      }
+    ]
+  },
+  "ex-jtb72mrx": {
+    "prompt": "Quantas páginas a consulta de março leu pelo índice?",
+    "hint": "Buffers: shared hit="
+  },
+  "ex-pd01m59m": {
+    "prompt": "Por que pedir menos colunas economiza pouco no PostgreSQL e muito num warehouse colunar?",
+    "hint": "Como as linhas são guardadas?",
+    "choices": [
+      {
+        "text": "O PostgreSQL comprime colunas",
+        "why": "Não é a questão."
+      },
+      {
+        "text": "Warehouses colunares não têm índices, então toda consulta lê cada coluna inteira",
+        "why": "Não é por isso."
+      },
+      {
+        "text": "O PostgreSQL guarda linhas juntas; um colunar, cada coluna à parte",
+        "why": "Isso. Ler uma coluna ali pula o resto."
+      },
+      {
+        "text": "O PostgreSQL ignora a lista do select e lê todas as colunas de cada linha",
+        "why": "Não ignora."
+      }
+    ]
+  },
+  "ex-286r4r2c": {
+    "prompt": "Por que o relatório da manhã deve ler o `daily_sales` em vez do `fact_sales`?",
+    "hint": "Para que serve um mart?",
+    "choices": [
+      {
+        "text": "É um resumo pequeno; o relatório lê muito menos",
+        "why": "Isso. Essa proporção é a razão de ser de um mart."
+      },
+      {
+        "text": "O fact_sales está errado",
+        "why": "Os dois estão certos."
+      },
+      {
+        "text": "O daily_sales tem índice",
+        "why": "Ele é pequeno; esse é o motivo."
+      },
+      {
+        "text": "Relatórios não leem modelos incrementais",
+        "why": "Leem."
+      }
+    ]
+  },
+  "ex-vxrwdc43": {
+    "prompt": "Ordene os passos para um pipeline lento demais.",
+    "hint": "Medir primeiro; hardware por último.",
+    "items": [
+      "Medir para onde vai o tempo",
+      "Mudar a coisa mais cara que a medição achou",
+      "Medir de novo",
+      "Considerar hardware maior"
+    ]
+  },
+  "ex-e7bje9c5": {
+    "prompt": "Quais destas economias têm um preço em outro lugar? Escolha todas as que se aplicam.",
+    "hint": "Todas.",
+    "choices": [
+      {
+        "text": "Um índice na data",
+        "why": "Isso. Cargas mais lentas, mais espaço."
+      },
+      {
+        "text": "Uma janela de 30 dias",
+        "why": "Isso. Perde mudanças mais antigas."
+      },
+      {
+        "text": "Um mart para os relatórios",
+        "why": "Isso. Mais uma coisa para manter certa."
+      },
+      {
+        "text": "Medir primeiro",
+        "why": "Isso custa alguns minutos e economiza o resto."
+      }
+    ]
+  },
+  "ex-bxjdrsr1": {
+    "prompt": "Um carregador escreve um milhão de linhas por noite com um INSERT por linha e leva duas horas. Qual é a primeira mudança a tentar?",
+    "hint": "O ganho medido mais barato.",
+    "choices": [
+      {
+        "text": "Um servidor maior",
+        "why": "O tempo está nas idas e voltas, não no servidor."
+      },
+      {
+        "text": "Carregar noite sim, noite não",
+        "why": "Isso corta a atualização pela metade, não o trabalho por linha."
+      },
+      {
+        "text": "Pôr mais índices na tabela de destino",
+        "why": "Isso deixa a escrita mais lenta."
+      },
+      {
+        "text": "Escrever com COPY",
+        "why": "Isso. Um fluxo em vez de um milhão de conversas."
+      }
+    ]
+  }
+}
