@@ -1,6 +1,6 @@
 ---
 title: Temperatura 0 e a mesma resposta duas vezes
-version: 1
+version: 2
 ---
 
 Na temperatura 0 não há sorteio. **A palavra de nota mais alta é escolhida todas as vezes**, e essa
@@ -74,9 +74,18 @@ vezes não. Os motivos estão na maquinaria em volta do modelo, não na ideia de
 
 Algumas APIs também aceitam uma semente, que torna a saída sorteada repetível mais vezes. Leia o
 que a documentação do provedor diz garantir, e a data daquela página, antes de construir em cima
-disso. Este curso não tem modelo hospedado para medir, então não dá a você nenhuma taxa de quantas
-vezes duas execuções diferem. Meça no seu: mande o mesmo prompt várias vezes na temperatura 0 e
-compare.
+disso. Meça no seu: mande o mesmo prompt várias vezes na temperatura 0 e compare. No modelo local, dez
+vezes:
+
+```
+ana@lab:~/pe$ for i in 1 2 3 4 5 6 7 8 9 10; do ask "In one sentence, describe the coffee at a small café." --temperature 0 --plain; done | sort | uniq -c
+     10 The café's coffee is a specialty blend of expertly roasted beans, carefully selected to bring out a rich, smooth flavor with hints of chocolate and a subtle acidity that complements the cozy, intimate atmosphere of the small café.
+```
+
+Dez respostas, um texto só. Isso é um prompt curto numa máquina, e não é uma taxa. Enquanto este
+curso era gravado, o mesmo modelo na temperatura 0 deu, sim, duas respostas diferentes ao mesmo
+prompt mais longo em duas execuções, nas lições 4, 6 e 7: cada transcrição ali é uma execução, e a
+frase embaixo dela descreve aquela execução.
 
 **A regra prática: a temperatura 0 torna a variação rara, e o seu código ainda precisa lidar com
 ela.** Um programa que quebra quando duas respostas diferem numa palavra ia quebrar de qualquer
