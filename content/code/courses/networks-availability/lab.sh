@@ -15,6 +15,7 @@
 #   sudo bash lab.sh up|down|reset           install, then netlab.sh VERB
 #   sudo bash lab.sh exec|kill|span|shell …  netlab.sh VERB … (installed copy)
 #   bash lab.sh example FILE.md NAME [N]     print a lesson's example NAME
+#   bash lab.sh fence FILE.md N              print a lesson's Nth sh fence
 #
 # Run it with sudo from the account the captures are recorded as (ana): that
 # account's home gets netlab.sh, as the student's does.
@@ -53,7 +54,21 @@ sys.exit(f"{sys.argv[1]}: no schooling-example number {sys.argv[3]} for {name}")
 PY
 }
 
+# fence FILE.md N: the Nth (from 1) fence labelled sh, the commands a lesson
+# gives the student to type when their output is not the point.
+fence() {
+  python3 - "$1" "$2" <<'PY'
+import re, sys
+md, n = open(sys.argv[1], encoding="utf-8").read(), int(sys.argv[2])
+blocks = re.findall(r"^```sh\n(.*?)\n```$", md, re.S | re.M)
+if len(blocks) < n:
+    sys.exit(f"{sys.argv[1]}: no sh fence number {n}")
+sys.stdout.write(blocks[n - 1] + "\n")
+PY
+}
+
 [ "${1:-}" = example ] && { shift; extract "$@"; exit; }
+[ "${1:-}" = fence ] && { shift; fence "$@"; exit; }
 ME=${SUDO_USER:?run it with sudo from the account the captures are recorded as}
 NETLAB="/home/$ME/netlab.sh"
 

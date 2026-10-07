@@ -11,7 +11,8 @@ other by MAC address as if they shared a switch.
 VXLAN, Virtual eXtensible LAN, does it by carrying whole Ethernet frames inside UDP, port 4789, with an
 8-byte header whose main field is a 24-bit network identifier, the **VNI**. Where a VLAN tag,
 lesson 19 of `networks-addressing`, has 12 bits and about four thousand values, a VNI has about sixteen
-million. Unlike GRE, this lab's kernel has it, so the tunnel is the kernel's own. On `hq`:
+million. Unlike GRE, the kernel these transcripts were recorded on has it, so the tunnel is the kernel's own, as it
+is on yours. On `hq`:
 
 ```
 ana@hq:~$ sudo ip link add vx0 type vxlan id 100 local 203.0.113.2 remote 198.51.100.2 dstport 4789 dev eth1
@@ -22,9 +23,16 @@ ana@hq:~$ ip link show vx0
 ```
 
 `vx0` is an Ethernet interface, with a MAC address of its own and `BROADCAST` among its flags, which
-no tunnel in the earlier lessons had. `branch` got the mirror image, with `172.16.0.2`, as root and not
-shown. **Its MTU is 1450, and the figure below says where the other 50 bytes go.** Then `hq` pinged
-the far end, and the ISP's router captured the tunnel with `-e`, which prints the Ethernet addresses:
+no tunnel in the earlier lessons had. `branch` gets the mirror image, with `172.16.0.2`, in its own
+shell:
+
+```sh
+sudo ip link add vx0 type vxlan id 100 local 198.51.100.2 remote 203.0.113.2 dstport 4789 dev eth1
+sudo ip addr add 172.16.0.2/24 dev vx0 && sudo ip link set vx0 up
+```
+
+**`vx0`'s MTU is 1450, and the figure below says where the other 50 bytes go.** Then `hq` pinged the
+far end, and the ISP's router captured the tunnel with `-e`, which prints the Ethernet addresses:
 
 ```
 ana@hq:~$ ping -c 1 172.16.0.2

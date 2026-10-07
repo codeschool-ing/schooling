@@ -14,17 +14,18 @@
 # pages and installs them where that lesson tells the student to; the captures
 # run the student's own copy.
 #
-# EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
-# office (hq), a branch, a home behind its own NAT, an ISP and a small data
-# centre, as network namespaces on one Linux computer.
+# EVERY MACHINE IN THE LESSON IS PART OF ONE NETWORK, the one netlab.sh builds
+# (lesson 1), as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; the certificates, made by lab.sh from the
-# lab's own certificate authority and copied into /etc/openvpn on hq and on
-# remote; the two OpenVPN configuration files, written below as root (the
-# lesson shows them with cat); the OpenVPN server on hq, started as root and
-# restarted when its configuration changes; the home router's firewall rule
-# that lets only TCP 443 out, added as root before the tcp block.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it. The two OpenVPN files are EXTRACTED from the lesson's examples
+# with `lab.sh example`, and every command the lesson gives in an sh fence is
+# extracted with `lab.sh fence` and run as ana with sudo, as the student types
+# it: the certificates copied and the server started (tls-vpn), the client
+# started and left running (handshake), the home router's firewall and the two
+# files moved to TCP 443 (port-443), and branch's end of VXLAN (vxlan). The
+# commands given inline in the prose are the `prose` lines below, word for
+# word: stopping a program with netlab.sh kill, typed on the computer itself.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -53,44 +54,21 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-server() {  # server PROTO PORT
-  lab kill hq 'openvpn --config' ; sleep 0.5
-  lab exec hq root "cat > /etc/openvpn/server.conf" <<C
-dev tun
-proto $1
-port $2
-server 10.8.0.0 255.255.255.0
-topology subnet
-ca ca.crt
-cert vpn-server.crt
-key vpn-server.key
-dh none
-push "route 192.168.10.0 255.255.255.0"
-keepalive 10 60
-C
-  quiet hq 'cd /etc/openvpn && setsid openvpn --config server.conf </dev/null >/run/openvpn.log 2>&1 &'
-  sleep 1
-}
-client() {  # client PROTO PORT
-  lab exec remote root "cat > /etc/openvpn/client.conf" <<C
-client
-dev tun
-proto $1
-remote vpn.example.com $2
-ca ca.crt
-cert vpn-ana.crt
-key vpn-ana.key
-remote-cert-tls server
-verify-x509-name vpn.example.com name
-verb 3
-C
-}
+HERE=$(cd "$(dirname "$0")" && pwd)
+# prose HOST 'command': a command the lesson gives in its text; its output is
+# not quoted there.
+prose() { local h=$1; shift; lab exec "$h" ana "$*" >/dev/null 2>&1 || true; }
+# fence HOST FILE N: the Nth sh fence of FILE, typed on HOST.
+fence() { prose "$1" "$(bash "$LAB_SH" fence "$HERE/$2" "$3")"; }
+# vm 'command': typed on the computer itself, in ana's home.
+vm() { ( cd ~ && bash -c "$*" ) >/dev/null 2>&1 || true; }
 
 lab reset
-quiet hq 'cp /lab/tls/ca.crt /lab/tls/vpn-server.crt /lab/tls/vpn-server.key /etc/openvpn/; chmod 600 /etc/openvpn/vpn-server.key'
-quiet remote 'cp /lab/tls/ca.crt /lab/tls/vpn-ana.crt /lab/tls/vpn-ana.key /etc/openvpn/; chmod 600 /etc/openvpn/vpn-ana.key'
-server udp 1194
-client udp 1194
+bash "$LAB_SH" example "$HERE/tls-vpn.md" server.conf | lab exec hq root 'cat > /etc/openvpn/server.conf'
+bash "$LAB_SH" example "$HERE/tls-vpn.md" client.conf | lab exec remote root 'cat > /etc/openvpn/client.conf'
+fence hq tls-vpn.md 1
+fence remote tls-vpn.md 2
+sleep 1
 
 block configs
 on hq 'cat /etc/openvpn/server.conf'
@@ -102,26 +80,28 @@ on remote 'cd /etc/openvpn && sudo timeout 6 openvpn --config client.conf | grep
 fg
 
 block tunnel-up
-quiet remote 'cd /etc/openvpn && setsid openvpn --config client.conf </dev/null >/run/openvpn.log 2>&1 &'
+fence remote handshake.md 1
 sleep 4
 on remote 'ip -br addr show tun0; ip route | grep tun0'
 on remote 'curl -s http://192.168.10.10/'
-lab kill remote 'openvpn --config'; sleep 0.5
+vm 'sudo bash netlab.sh kill remote openvpn'; sleep 0.5
 
 block blocked
-quiet homegw 'nft add table ip filter; nft add chain ip filter forward "{ type filter hook forward priority 0; policy drop; }"; nft add rule ip filter forward ct state established,related accept; nft add rule ip filter forward iifname eth0 tcp dport 443 accept; nft add rule ip filter forward iifname eth0 udp dport 53 accept'
+fence homegw port-443.md 1
 on homegw 'sudo nft list chain ip filter forward'
 on remote 'cd /etc/openvpn && sudo timeout 8 openvpn --config client.conf | grep -E "link remote|Initialization"'
 
 block tcp443
-server tcp-server 443
-client tcp-client 443
+vm 'sudo bash netlab.sh kill hq openvpn'; sleep 0.5
+fence hq port-443.md 2
+fence remote port-443.md 3
+sleep 1
 on remote 'cd /etc/openvpn && sudo timeout 6 openvpn --config client.conf | grep -E "TCP connection|Peer Connection|Initialization"'
 
 block vxlan
 on hq 'sudo ip link add vx0 type vxlan id 100 local 203.0.113.2 remote 198.51.100.2 dstport 4789 dev eth1'
 on hq 'sudo ip addr add 172.16.0.1/24 dev vx0 && sudo ip link set vx0 up'
-quiet branch 'ip link add vx0 type vxlan id 100 local 198.51.100.2 remote 203.0.113.2 dstport 4789 dev eth1; ip addr add 172.16.0.2/24 dev vx0; ip link set vx0 up'
+fence branch vxlan.md 1
 on hq 'ip link show vx0'
 bg isp 'sudo tcpdump -n -t -e -i eth0 -c 4 udp port 4789'
 on hq 'ping -c 1 172.16.0.2'

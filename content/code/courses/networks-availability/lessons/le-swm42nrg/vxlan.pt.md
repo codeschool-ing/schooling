@@ -11,8 +11,8 @@ alcançam pelo endereço MAC como se dividissem um switch.
 O VXLAN, Virtual eXtensible LAN, faz isso levando quadros Ethernet inteiros dentro de UDP, porta 4789,
 com um cabeçalho de 8 bytes cujo campo principal é um identificador de rede de 24 bits, o **VNI**.
 Enquanto uma tag de VLAN, a aula 19 de `networks-addressing`, tem 12 bits e uns quatro mil valores, um VNI
-tem uns dezesseis milhões. Diferente do GRE, o kernel deste laboratório o tem, então o túnel é o do
-próprio kernel. Em `hq`:
+tem uns dezesseis milhões. Diferente do GRE, o kernel em que estas transcrições foram gravadas o tem,
+então o túnel é o do próprio kernel, como no seu. Em `hq`:
 
 ```
 ana@hq:~$ sudo ip link add vx0 type vxlan id 100 local 203.0.113.2 remote 198.51.100.2 dstport 4789 dev eth1
@@ -23,8 +23,14 @@ ana@hq:~$ ip link show vx0
 ```
 
 `vx0` é uma interface Ethernet, com endereço MAC próprio e `BROADCAST` entre as flags, coisa que nenhum
-túnel das aulas anteriores tinha. `branch` recebeu a imagem espelhada, com `172.16.0.2`, como root e sem
-mostrar. **O MTU dele é 1450, e a figura abaixo diz para onde vão os outros 50 bytes.** Depois `hq`
+túnel das aulas anteriores tinha. `branch` recebe a imagem espelhada, com `172.16.0.2`, no shell dele:
+
+```sh
+sudo ip link add vx0 type vxlan id 100 local 198.51.100.2 remote 203.0.113.2 dstport 4789 dev eth1
+sudo ip addr add 172.16.0.2/24 dev vx0 && sudo ip link set vx0 up
+```
+
+**O MTU de `vx0` é 1450, e a figura abaixo diz para onde vão os outros 50 bytes.** Depois `hq`
 pingou a outra ponta, e o roteador do provedor capturou o túnel com `-e`, que imprime os endereços
 Ethernet:
 
