@@ -143,7 +143,7 @@ block fail-vector
 DEBIAN_FRONTEND=noninteractive apt-get remove -y -q postgresql-16-pgvector >/dev/null 2>&1
 on 'psql -c "CREATE EXTENSION vector"'
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q postgresql-16-pgvector >/dev/null 2>&1
-on 'psql -c "CREATE EXTENSION vector"'
+on "psql -c \"SELECT name, default_version FROM pg_available_extensions WHERE name = 'vector'\""
 
 block fail-module
 at '~' 'python -c "from minilm import embed"'

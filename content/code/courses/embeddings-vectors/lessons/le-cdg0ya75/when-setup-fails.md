@@ -93,7 +93,18 @@ package, and the database only finds it once it is on disk:
 sudo apt install -y postgresql-16-pgvector
 ```
 
-Nothing needs restarting. The same `CREATE EXTENSION` works straight afterwards.
+Nothing needs restarting. Asked straight afterwards which version of the extension it can find, it
+answers:
+
+```
+ana@lab:~/emb$ psql -c "SELECT name, default_version FROM pg_available_extensions WHERE name = 'vector'"
+  name  | default_version 
+--------+-----------------
+ vector | 0.6.0
+(1 row)
+```
+
+Lesson 2 is where `CREATE EXTENSION` runs for real.
 
 ## `No module named 'minilm'`
 

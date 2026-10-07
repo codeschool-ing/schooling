@@ -95,7 +95,18 @@ pacote separado, e o banco só a encontra depois que ela está no disco:
 sudo apt install -y postgresql-16-pgvector
 ```
 
-Nada precisa ser reiniciado. O mesmo `CREATE EXTENSION` funciona logo em seguida.
+Nada precisa ser reiniciado. Perguntado logo em seguida que versão da extensão ele encontra, ele
+responde:
+
+```
+ana@lab:~/emb$ psql -c "SELECT name, default_version FROM pg_available_extensions WHERE name = 'vector'"
+  name  | default_version 
+--------+-----------------
+ vector | 0.6.0
+(1 row)
+```
+
+É na aula 2 que o `CREATE EXTENSION` roda de verdade.
 
 ## `No module named 'minilm'`
 
