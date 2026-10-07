@@ -1,6 +1,6 @@
 ---
 title: The layers of a test, and what each one costs
-version: 1
+version: 2
 ---
 
 Most people arrive believing that infrastructure code cannot really be tested: the only way to
@@ -38,7 +38,8 @@ a real account it is the only rung that costs money.
 
 The module this lesson tests is small on purpose. Lesson 10 is about writing modules; this one
 needs only something with inputs, a rule or two and resources whose shape depends on the values.
-Ana's `network` module takes a name, a range and a map of subnets:
+Ana's `network` module lives in `~/shop/modules/network`, and takes a name, a range and a map of
+subnets, in `variables.tf`:
 
 ```hcl
 variable "name" {
@@ -64,6 +65,8 @@ variable "subnets" {
   description = "One subnet per key: its range and its availability zone."
 }
 ```
+
+`main.tf`:
 
 ```hcl
 data "aws_availability_zones" "here" {
@@ -96,8 +99,33 @@ resource "aws_subnet" "this" {
 The `precondition` reads the zones the region actually offers from a data source, so a subnet in
 a zone that does not exist is refused before anything is created. Lesson 3 introduced both
 kinds of rule; here they matter because they are things a test can aim at. `versions.tf` requires
-Terraform 1.9 or newer and the AWS provider, and `outputs.tf` returns the VPC's id and a map of
-subnet ids.
+Terraform 1.9 or newer and the AWS provider:
+
+```hcl
+terraform {
+  required_version = ">= 1.9"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+```
+
+And `outputs.tf` returns the VPC's id and a map of subnet ids. Ana typed it in a hurry, and the next
+section is about what that looks like, so copy it as it is here, indentation and all:
+
+```hcl
+output "vpc_id" {
+    value = aws_vpc.this.id
+}
+
+output "subnet_ids" {
+  value = {for k, s in aws_subnet.this: k => s.id}
+}
+```
 
 By the end of the lesson the module carries four test files and a helper module, all under
 `tests/`, which is where `terraform test` looks by default:

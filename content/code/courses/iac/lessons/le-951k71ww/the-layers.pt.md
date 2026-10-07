@@ -1,6 +1,6 @@
 ---
 title: As camadas de um teste, e quanto custa cada uma
-version: 1
+version: 2
 ---
 
 A maioria das pessoas chega acreditando que código de infraestrutura não dá para testar de
@@ -40,7 +40,8 @@ destrói. É o único degrau que descobre se a AWS aceita o que o plano propôs,
 
 O módulo que esta aula testa é pequeno de propósito. A aula 10 é sobre escrever módulos; esta
 precisa só de algo com entradas, uma ou duas regras e recursos cuja forma depende dos valores. O
-módulo `network` da Ana recebe um nome, uma faixa e um mapa de sub-redes:
+módulo `network` da Ana fica em `~/shop/modules/network` e recebe um nome, uma faixa e um mapa de
+sub-redes, no `variables.tf`:
 
 ```hcl
 variable "name" {
@@ -66,6 +67,8 @@ variable "subnets" {
   description = "One subnet per key: its range and its availability zone."
 }
 ```
+
+O `main.tf`:
 
 ```hcl
 data "aws_availability_zones" "here" {
@@ -98,8 +101,33 @@ resource "aws_subnet" "this" {
 A `precondition` lê de um data source as zonas que a região de fato oferece, então uma sub-rede
 numa zona que não existe é recusada antes de qualquer coisa ser criada. A aula 3 apresentou os dois
 tipos de regra; aqui eles importam porque são coisas em que um teste pode mirar. O `versions.tf`
-exige Terraform 1.9 ou mais novo e o provider da AWS, e o `outputs.tf` devolve o id da VPC e um
-mapa com os ids das sub-redes.
+exige Terraform 1.9 ou mais novo e o provider da AWS:
+
+```hcl
+terraform {
+  required_version = ">= 1.9"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+```
+
+E o `outputs.tf` devolve o id da VPC e um mapa com os ids das sub-redes. A Ana o digitou com pressa,
+e a próxima seção trata de como isso aparece, então copie-o como está aqui, com a indentação e tudo:
+
+```hcl
+output "vpc_id" {
+    value = aws_vpc.this.id
+}
+
+output "subnet_ids" {
+  value = {for k, s in aws_subnet.this: k => s.id}
+}
+```
 
 No fim da aula o módulo tem quatro arquivos de teste e um módulo auxiliar, todos em `tests/`, que é
 onde o `terraform test` procura por padrão:
