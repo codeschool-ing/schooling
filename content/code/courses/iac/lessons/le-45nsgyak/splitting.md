@@ -1,6 +1,6 @@
 ---
 title: Splitting the shop into network and app
-version: 1
+version: 2
 ---
 
 A split has two halves, and people tend to do only the first. **The files move easily; the state is
@@ -11,8 +11,9 @@ state entries into them, and prove with a plan in each that nothing will change.
 
 ## The two configurations
 
-The network gets a directory of its own with the VPC and the two subnets, copied from `main.tf`
-without a character changed, since the addresses have to stay the same:
+The network gets a directory of its own, `~/shop/network`, and its `main.tf` holds the VPC and
+the two subnets, copied from the old `main.tf` without a character changed, since the addresses
+have to stay the same:
 
 ```hcl
 terraform {
@@ -48,8 +49,8 @@ resource "aws_subnet" "public_c" {
 }
 ```
 
-Its outputs are new. They are what the network offers to the rest of the company, and the next
-section is about them:
+Its outputs are new, in `network/outputs.tf`. They are what the network offers to the rest of the
+company, and the next section is about them:
 
 ```hcl
 output "vpc_id" {
@@ -68,7 +69,7 @@ output "public_subnet_ids" {
 }
 ```
 
-Its backend is lesson 7's bucket under a **new key**:
+Its backend, `network/backend.tf`, is lesson 7's bucket under a **new key**:
 
 ```hcl
 terraform {
@@ -82,8 +83,14 @@ terraform {
 }
 ```
 
-The old `main.tf` and `backend.tf` move into `app/`, with git keeping their history. The network's
-blocks come out of `main.tf`, and the security group finds the VPC with a data source by its tag,
+The old `main.tf` and `backend.tf` move into `app/`, with git keeping their history:
+
+```sh
+mkdir network app
+git mv main.tf backend.tf app/
+```
+
+The network's blocks come out of `app/main.tf`, and the security group finds the VPC with a data source by its tag,
 lesson 5's tool, as a first bridge:
 
 ```hcl
@@ -194,8 +201,8 @@ aws_subnet.public_c
 aws_vpc.shop
 ```
 
-Each half is pushed to its new key with `terraform state push` from its own directory, and each is
-checked with a plan before anything else happens. The network first:
+Each half is pushed to its new key with `terraform state push` from its own directory, after a
+`terraform init` there, and each is checked with a plan before anything else happens. The network first:
 
 ```
 ana@laptop:~/shop/network$ terraform state push ../split/network.tfstate
@@ -251,7 +258,17 @@ The `split` directory held two complete copies of the state on Ana's disk, so it
 
 There is one way left to undo all of this, and it is sitting on a colleague's laptop. A checkout
 from before the split still has the big `main.tf` and still points at `shop/terraform.tfstate`,
-which is now gone:
+which is now gone. Ana commits the split, and plays the colleague with `git worktree`, which checks
+the commit before it out into a second directory, `~/shop-old`:
+
+```sh
+git add . && git commit -qm "split the network from the app"
+git worktree add -q ~/shop-old HEAD~1
+cd ~/shop-old
+terraform init
+```
+
+There:
 
 ```
 ana@laptop:~/shop-old$ git log --oneline -1
@@ -264,7 +281,8 @@ Plan: 6 to add, 0 to change, 0 to destroy.
 that key, so to the old configuration nothing exists. The bucket's versioning still holds the
 deleted object, which is how you would recover from the mistake, but the defence is to prevent it.
 Do the split when nobody else is applying, merge it as one change, and tell everybody who runs
-Terraform on the shop to pull before they plan.
+Terraform on the shop to pull before they plan. Ana removes the second directory with
+`git worktree remove --force ~/shop-old`, from `~/shop`.
 
 This was the fast way, and it has a cost: nobody reviewed the `state mv` commands, and nothing in
 the repository records that they ran. Two sections on, the same kind of move is done from inside the

@@ -1,6 +1,6 @@
 ---
 title: Ler os outputs de outra configuração
-version: 1
+version: 2
 ---
 
 Depois da divisão, a aplicação encontra a VPC com um data source que procura a tag `Name = shop`.
@@ -27,7 +27,8 @@ vpc_id = "vpc-644904a24046c8bab"
 
 Um data source de um tipo especial lê esses valores. Ele não faz parte do provider da AWS; vem
 embutido no Terraform, e recebe as mesmas configurações de um bloco de backend, porque o que ele faz
-é ler o estado de outra configuração de onde quer que esse estado esteja guardado:
+é ler o estado de outra configuração de onde quer que esse estado esteja guardado. A Ana o põe num
+arquivo só dele na aplicação, `app/network.tf`:
 
 ```hcl
 data "terraform_remote_state" "network" {
@@ -101,6 +102,8 @@ ana@laptop:~/shop/app$ echo "data.terraform_remote_state.network.outputs" | terr
 }
 ```
 
+A Ana faz commit da aplicação como ela está agora.
+
 Os recursos do estado da rede não estão nesse objeto. Os ids deles, as tabelas de rotas, cada
 atributo das sub-redes: nada disso pode ser referenciado, só os três valores que a rede escolheu
 publicar.
@@ -159,7 +162,8 @@ Planning failed. Terraform encountered an error while generating this plan.
 O plan falha antes de causar estrago, e essa é a metade boa. A metade ruim é que ele falha para o
 time errado, talvez semanas depois. Por isso um output é tratado como a assinatura de uma função:
 acrescentar um é de graça, enquanto renomear ou remover um é uma mudança a anunciar, mantendo o nome
-antigo ao lado do novo até que todo leitor tenha migrado. O time de rede pôs o `vpc_id` de volta.
+antigo ao lado do novo até que todo leitor tenha migrado. O time de rede pôs o `vpc_id` de volta,
+com `git checkout outputs.tf` e um apply em `~/shop/network`.
 
 ## O que custa ler um estado
 
