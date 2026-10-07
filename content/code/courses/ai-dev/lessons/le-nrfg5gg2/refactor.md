@@ -137,7 +137,11 @@ def test_free_shipping_threshold_is_checked_after_the_discount():
 
 ```
 ana@dev:~/shop$ python -m pytest -q tests/test_threshold.py | tail -n 1
+1 passed in 0.71s
 ana@dev:~/shop$ git checkout shop/cart.py && python -m pytest -q
+Updated 1 path from the index
+.........                                                                [100%]
+9 passed in 0.71s
 ```
 
 The pinned test passes on the assistant's code, and on the original, which `git checkout` puts

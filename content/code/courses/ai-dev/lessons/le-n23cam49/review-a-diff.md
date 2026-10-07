@@ -63,7 +63,23 @@ short list, and keeps the reply in a file so she can number its lines:
 ```
 ana@dev:~/shop$ git diff main > review.diff
 ana@dev:~/shop$ python scratch/assist.py ask "Review this diff. List the three most serious real problems, one short paragraph each." --open review.diff > review.txt
+context sent (328 of 3000 tokens):
+    328  review.diff
+---
 ana@dev:~/shop$ cat -n review.txt
+     1	### Review of `review.diff`
+     2	
+     3	#### 1. Missing input validation for `today` parameter
+     4	
+     5	The `apply_coupon` function now accepts an optional `today` parameter, which defaults to `None` if not provided. However, this default behavior can lead to unexpected behavior when the function is called without specifying the date. Specifically, when `today` is `None`, the function will use the current date, which may not be the intended behavior. To address this, the function should explicitly require the `today` parameter to be a `date` object.
+     6	
+     7	#### 2. Inconsistent handling of coupon expiration
+     8	
+     9	The `apply_coupon` function raises an `ExpiredCoupon` exception when the coupon has expired, but it does not provide any information about the date of expiration. This makes it difficult for the caller to determine when the coupon was last valid. To improve this, the function should include the date of expiration in the exception, or provide an additional parameter to return the expiration date.
+    10	
+    11	#### 3. Lack of type hinting for `cart` parameter
+    12	
+    13	The `apply_coupon` function has a type hint `cart: Cart`, but it does not specify the type of `Cart`. Without this information, it is unclear what type of object `cart` represents, which can make it difficult for other developers to understand and work with the code. To address this, the function should include a more specific type hint for `cart`, such as `Cart = object` or `Cart = shop.Cart`.
 ```
 
 Three findings, numbered, confident and specific. Now read each against the diff. The first wants

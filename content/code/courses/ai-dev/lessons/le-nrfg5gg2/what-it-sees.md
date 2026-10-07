@@ -66,6 +66,7 @@ insertion:
 
 ```
 ana@dev:~/shop$ curl -s http://127.0.0.1:11434/api/generate -d '{"model": "llama3.2:3b", "prompt": "def add(a, b):\n", "suffix": "\n\nprint(add(1, 2))\n", "stream": false}'; echo
+{"error":"registry.ollama.ai/library/llama3.2:3b does not support insert"}
 ```
 
 `qwen2.5-coder:1.5b` is a model of the first kind, from Alibaba's Qwen family, about 1 GB:
@@ -141,6 +142,22 @@ print("\n".join(after[:3] + ["(...)"]))
 
 ```
 ana@dev:~/shop$ python scratch/sent.py
+model: qwen2.5-coder:1.5b  stop: ['\n\n']
+# Path: shop/coupons.py
+# from shop.cart import Cart
+(...)
+    def remove(self, sku: str, quantity: int = 1) -> None:
+        """Take `quantity` units of `sku` out of the cart.
+
+        A line that reaches zero is removed. Removing more than the cart
+        holds, or a sku it does not hold, raises ValueError.
+        """
+
+<the gap the model fills>
+
+    def subtotal(self) -> int:
+        return sum(line.unit_price * line.quantity for line in self.lines)
+(...)
 ```
 
 Three things to notice, because every completion tool has a version of each:

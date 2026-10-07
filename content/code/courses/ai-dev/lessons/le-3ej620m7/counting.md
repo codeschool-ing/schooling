@@ -46,6 +46,10 @@ for label, extra in cases:
 
 ```
 ana@dev:~/shop$ python scratch/count.py
+tiktoken on the question alone: 15
+   40  question only
+  418  with the conventions as system prompt
+  168  with one tool definition
 ```
 
 `tiktoken` says 15 and the model read 40 for the same question. Part of the gap is the
@@ -56,6 +60,18 @@ continues.
 
 ```
 ana@dev:~/shop$ ollama show llama3.2:3b --template | head -n 12
+<|start_header_id|>system<|end_header_id|>
+
+Cutting Knowledge Date: December 2023
+
+{{ if .System }}{{ .System }}
+{{- end }}
+{{- if .Tools }}When you receive a tool call response, use the output to format an answer to the orginal user question.
+
+You are a helpful assistant with tool calling capabilities.
+{{- end }}<|eot_id|>
+{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1 }}
 ```
 
 The headers that mark who is speaking are tokens. So is a line nobody asked for, `Cutting

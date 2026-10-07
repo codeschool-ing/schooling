@@ -43,6 +43,9 @@ question:
 
 ```
 ana@dev:~/shop$ python scratch/budget.py
+ana: ok, 299 in, 141 out; spent today 299
+ana: refused before sending: about 3590 input tokens + 300 out is over 3000 per request
+bea: ok, 299 in, 139 out; spent today 299
 ```
 
 **The large request was refused before it was sent**: about 3,590 tokens by the estimate, against

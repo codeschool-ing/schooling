@@ -31,7 +31,20 @@ if r.stop_reason == "max_tokens":
 
 ```
 ana@dev:~/shop$ python scratch/cutoff.py 40
+stop_reason=max_tokens output_tokens=40
+The shop's shipping rule is as follows:
+
+* Free shipping is available for orders with a subtotal of 20,000 cents (approximately $2 USD) or more.
+* If the order's subtotal
+!! the reply was cut off; do not use it as if it were complete
 ana@dev:~/shop$ python scratch/cutoff.py 400
+stop_reason=end_turn output_tokens=137
+The shop's shipping rule is as follows:
+
+1. If the total value of the cart's subtotal (excluding discounts) is greater than or equal to $20, the shipping cost is **FREE**.
+2. If the total value of the cart's subtotal is less than $20, the shipping cost is $1.50 per unit (cents).
+
+In the code provided, `FREE_SHIPPING_FROM` is set to 20000 cents, which represents the minimum subtotal required for free shipping. If the subtotal meets this threshold, the `shipping()` method returns 0. Otherwise, it returns $1.50 per unit, or `$1500` in this case.
 ```
 
 Quarenta tokens terminam no meio de uma frase: *If the order's subtotal*. Aqui o corte é óbvio
@@ -66,6 +79,8 @@ o pedido de uma lista de cinco e parou no número do terceiro item:
 
 ```
 ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=80, stop_sequences=["3."], messages=[{"role": "user", "content": "Write a numbered list of five fruits."}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'
+end_turn None
+'Here is a numbered list of five fruits:\n\n1. Apple\n2. Banana\n'
 ```
 
 O texto parou onde devia, e a própria sequência não está nele. **Mas o `stop_reason` diz

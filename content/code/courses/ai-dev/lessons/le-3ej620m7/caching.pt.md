@@ -51,6 +51,10 @@ for question in ["Explain the shop's shipping rule.", "Explain the shipping rule
 
 ```
 ana@dev:~/shop$ python scratch/cache.py
+input 1417  cache read    0  output 107  47.9 s
+    at Sonnet's prices: input $0.002834, against $0.002834 with no cache
+input   11  cache read 1407  output  59   8.9 s
+    at Sonnet's prices: input $0.000303, against $0.002836 with no cache
 ```
 
 O `ollama stop` descarrega o modelo antes, o que esvazia o cache do Ollama, então a execução começa

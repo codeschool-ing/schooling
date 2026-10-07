@@ -43,8 +43,11 @@ Two copies, ten, and twelve:
 
 ```
 ana@dev:~/shop$ python scratch/window.py 2
+sent about 772, read 805: end_turn, 'PINEAPPLE'
 ana@dev:~/shop$ python scratch/window.py 10
+sent about 3764, read 3829: end_turn, 'PINEAPPLE'
 ana@dev:~/shop$ python scratch/window.py 12
+sent about 4512, read 2050: end_turn, 'shop'
 ```
 
 Read the three lines as three situations:

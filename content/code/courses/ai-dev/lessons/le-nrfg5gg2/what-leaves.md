@@ -36,6 +36,11 @@ PAYMENTS_KEY = "pk_test_4f9a8c7e1d2b3a6f"  # made up for the course; a real key 
 
 ```
 ana@dev:~/shop$ git status --short --ignored
+ M shop/cart.py
+?? .gitignore
+?? settings.py
+!! .env
+!! scratch/
 ```
 
 `!! .env` means git ignores the file. **The editor does not care.** An ignored file is still a file
@@ -43,6 +48,23 @@ on disk, and a tab is a tab. ana asks a question with both open:
 
 ```
 ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open shop/cart.py .env settings.py
+context sent (386 of 3000 tokens):
+    332  shop/cart.py
+     54  settings.py
+  refused .env: it holds something shaped like a secret
+---
+Payment failures can occur due to various reasons, such as:
+
+*   Insufficient funds in the customer's account
+*   Invalid payment token or key
+*   Network connectivity issues
+*   Server-side errors or timeouts
+*   Expiration of the payment token or key
+*   Card expiration or invalid card information
+
+In the context of the provided code, a payment might fail if the `PAYMENTS_KEY` or `PAYMENTS_URL` are incorrect, if the payment token or response is invalid, or if the request to the payment gateway is blocked or timed out. 
+
+It's essential to handle these potential failures by implementing error handling mechanisms, such as try-except blocks, retries, and validation checks, to ensure a smooth and secure payment experience for users.
 ```
 
 `assist` refused `.env`, because its content matched the pattern of a secret, and sent
@@ -50,6 +72,7 @@ ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open 
 
 ```
 ana@dev:~/shop$ grep -c pk_test_4f9a8c7e1d2b3a6f scratch/sent.json
+1
 ```
 
 The reply itself is the list of reasons any payment fails, and its second paragraph names
@@ -70,6 +93,11 @@ different things (a setting, or a file at the root of the project) and it does t
 ```
 ana@dev:~/shop$ printf "settings.py\n*.pem\nsecrets/\n" > .assistignore
 ana@dev:~/shop$ python scratch/assist.py ask "Why might a payment fail?" --open shop/cart.py .env settings.py 2>&1 >/dev/null
+context sent (332 of 3000 tokens):
+    332  shop/cart.py
+  refused .env: it holds something shaped like a secret
+  skipped settings.py: listed in .assistignore
+---
 ```
 
 `skipped settings.py: listed in .assistignore`. **The list is written by a person who knows where

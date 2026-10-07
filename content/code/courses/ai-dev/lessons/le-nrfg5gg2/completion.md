@@ -53,6 +53,7 @@ tests fail:
 ```
 ana@dev:~/shop$ git add shop/cart.py tests/test_remove.py && git commit -q -m "Cart.remove: what it must do"
 ana@dev:~/shop$ python -m pytest -q tests/test_remove.py | tail -n 1
+4 failed in 0.71s
 ```
 
 ## Accept, test, undo
@@ -87,7 +88,29 @@ only if a test says so.
 
 ```
 ana@dev:~/shop$ git diff
+diff --git a/shop/cart.py b/shop/cart.py
+index 2e3e557..c74e8cd 100644
+--- a/shop/cart.py
++++ b/shop/cart.py
+@@ -31,7 +31,14 @@ class Cart:
+         A line that reaches zero is removed. Removing more than the cart
+         holds, or a sku it does not hold, raises ValueError.
+         """
+-
++        line = next((line for line in self.lines if line.sku == sku), None)
++        if not line:
++            raise ValueError(f"cannot remove {sku}: it's not in the cart")
++        if line.quantity < quantity:
++            raise ValueError(f"cannot remove {sku}: {quantity} exceeds quantity in the cart")
++        line.quantity -= quantity
++        if line.quantity == 0:
++            self.lines.remove(line)
+     def subtotal(self) -> int:
+         return sum(line.unit_price * line.quantity for line in self.lines)
+ 
 ana@dev:~/shop$ python -m pytest -q
+............                                                             [100%]
+12 passed in 0.79s
 ```
 
 Twelve tests pass: the eight the project had and the four new ones. The diff shows one more thing

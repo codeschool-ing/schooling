@@ -49,6 +49,35 @@ def test_a_lower_case_code_is_accepted():
 
 ```
 ana@dev:~/shop$ python -m pytest -q tests/test_review.py
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+___________________ test_friends15_is_valid_on_its_last_day ____________________
+
+    def test_friends15_is_valid_on_its_last_day():
+        cart = Cart()
+>       apply_coupon(cart, "FRIENDS15", today=date(2026, 10, 31))
+
+tests/test_review.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cart = Cart(lines=[], discount_percent=0), code = 'FRIENDS15'
+today = datetime.date(2026, 10, 31)
+
+    def apply_coupon(cart: Cart, code: str, today: date | None = None) -> None:
+        """Set the cart's discount from a coupon code, typed in any case."""
+        today = today or date.today()
+        code = code.strip().upper()
+        if code not in COUPONS:
+            raise UnknownCoupon(code)
+        percent, until = COUPONS[code]
+        if until is not None and today >= until:
+>           raise ExpiredCoupon(code)
+E           shop.coupons.ExpiredCoupon: FRIENDS15
+
+shop/coupons.py:25: ExpiredCoupon
+=========================== short test summary info ============================
+FAILED tests/test_review.py::test_friends15_is_valid_on_its_last_day - shop.c...
+1 failed, 1 passed in 0.67s
 ```
 
 **O último dia é recusado.** O teste falha com `ExpiredCoupon: FRIENDS15` em 31 de outubro, e o

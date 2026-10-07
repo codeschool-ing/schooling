@@ -96,8 +96,27 @@ they say the 31st is included, and the code refuses it.
 
 ```
 ana@dev:~/shop$ sed -i "s/today >= until/today > until/" shop/coupons.py && git diff --stat
+ shop/coupons.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 ana@dev:~/shop$ python -m pytest -q tests/test_coupon_terms.py tests/test_review.py
+........                                                                 [100%]
+8 passed in 0.71s
 ana@dev:~/shop$ python -m pytest -q tests/test_generated.py | tail -n 15
+_________________ test_apply_coupon_code_with_end_date_expired _________________
+
+    def test_apply_coupon_code_with_end_date_expired():
+        cart = CartClass()
+        today = date(2026, 10, 31)
+>       with pytest.raises(shop.coupons.ExpiredCoupon):
+                           ^^^^
+E       NameError: name 'shop' is not defined
+
+tests/test_generated.py:33: NameError
+=========================== short test summary info ============================
+FAILED tests/test_generated.py::test_apply_coupon_unknown_code - NameError: n...
+FAILED tests/test_generated.py::test_apply_coupon_expired_code - NameError: n...
+FAILED tests/test_generated.py::test_apply_coupon_code_with_end_date_expired
+3 failed, 3 passed in 0.78s
 ```
 
 One character in `shop/coupons.py`, and every test written from the terms or from what the change
@@ -111,6 +130,8 @@ goes with it, since its expected values came from nowhere anybody can point to:
 
 ```
 ana@dev:~/shop$ rm tests/test_generated.py && python -m pytest -q
+................                                                         [100%]
+16 passed in 0.71s
 ```
 
 ## Using an assistant here at all

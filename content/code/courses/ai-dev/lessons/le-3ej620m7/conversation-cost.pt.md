@@ -33,6 +33,12 @@ for turn in range(1, 21):
 
 ```
 ana@dev:~/shop$ python scratch/conversation.py
+turn  1: this request    40 tokens, all requests so far     40
+turn  2: this request   166 tokens, all requests so far    206
+turn  5: this request   544 tokens, all requests so far   1460
+turn 10: this request  1174 tokens, all requests so far   6070
+turn 15: this request  1804 tokens, all requests so far  13830
+turn 20: this request  2434 tokens, all requests so far  24740
 ```
 
 ```schooling-figure
