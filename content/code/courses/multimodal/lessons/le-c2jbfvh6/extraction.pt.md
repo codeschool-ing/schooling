@@ -1,6 +1,6 @@
 ---
 title: Do texto aos campos, e a nota conferindo a si mesma
-version: 1
+version: 2
 ---
 
 Texto ainda não é dado. O sistema de estoque quer cada linha da nota como título, quantidade, preço unitário e valor, e os três totais como números. A **extração** é esse passo, e num documento de layout fixo são algumas expressões regulares sobre as linhas que o OCR produziu.

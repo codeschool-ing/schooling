@@ -1,6 +1,6 @@
 ---
 title: A picture inside a request is a third bigger
-version: 1
+version: 2
 ---
 
 Lesson 8 sent pictures as data URLs: base64 inside the JSON. Base64 spends four characters on every three bytes, so the request is bigger than the file it carries:

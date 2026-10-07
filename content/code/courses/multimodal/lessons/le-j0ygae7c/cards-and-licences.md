@@ -1,6 +1,6 @@
 ---
 title: Model cards, and the licence that lives somewhere else
-version: 1
+version: 2
 ---
 
 A **model card** is the document published with a model: what it was trained on, what it is for, its known limits, and its licence. It is the first thing to read before a model goes into a product, and the lab's own models show why reading it is not a formality. The three Piper voices carry their cards with them:

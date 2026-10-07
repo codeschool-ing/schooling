@@ -1,6 +1,6 @@
 ---
 title: A nota como dado, num formato que você declara
-version: 1
+version: 2
 ---
 
 Uma descrição é para uma pessoa. O sistema de estoque quer campos, e um modelo de visão pode ser pedido a devolvê-los num **formato declarado**: um JSON Schema em que a resposta precisa caber, e que a API garante quando o modelo suporta **saídas estruturadas** (structured outputs). O SDK da OpenAI monta o schema a partir de modelos Pydantic e transforma a resposta de volta neles:

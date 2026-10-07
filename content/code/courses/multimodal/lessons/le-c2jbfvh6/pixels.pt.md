@@ -1,6 +1,6 @@
 ---
 title: O que uma imagem é para um modelo
-version: 1
+version: 2
 ---
 
 **Uma imagem é uma grade de números, e um modelo só lê a grade.** Uma fotografia de 640 por 416 pixels em cores são 640 × 416 × 3 = 798.720 números entre 0 e 255, um para vermelho, verde e azul em cada ponto. Não há "texto" nem "gato" no arquivo. O que há no arquivo é o padrão de números que uma pessoa lê como texto ou gato, e um modelo é algo treinado para transformar esses padrões em respostas.

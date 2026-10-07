@@ -1,6 +1,6 @@
 ---
 title: Um modelo maior, e o que ele compra
-version: 1
+version: 2
 ---
 
 O Whisper vem em tamanhos, do *tiny* (39 milhões de parâmetros) passando por *base*, *small*, *medium* e *large*, e o laboratório tem os dois menores. Os dois, nas três gravações da ligação da aula 5:

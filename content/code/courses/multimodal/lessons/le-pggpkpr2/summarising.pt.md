@@ -1,6 +1,6 @@
 ---
 title: Resumindo: o que entregar ao modelo
-version: 1
+version: 2
 ---
 
 O resumo de um vídeo é escrito por um modelo de linguagem, e a decisão que importa é **o que você dá a ele para ler**. Há três opções, e os custos não são parecidos:

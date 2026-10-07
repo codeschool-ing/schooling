@@ -1,6 +1,6 @@
 ---
 title: Legendas a partir do reconhecimento, com três regras
-version: 1
+version: 2
 ---
 
 O vídeo de devoluções da aula 4 tem narração, e a aula 10 mostrou o Whisper devolvendo `vtt` direto. O reconhecimento desta aula passa pelo mesmo `audio_server.py`, então inicie-o num segundo terminal antes de rodar os programas. Um arquivo de legendas é mais que uma transcrição com tempos, porém: quem assiste precisa ler cada trecho antes que ele suma. Os guias de estilo de legendagem concordam no formato das regras, e estes números são os que o guia de inglês da Netflix usa para programas adultos: no máximo 42 caracteres por linha, no máximo 2 linhas por trecho, e no máximo 20 caracteres por segundo de leitura.

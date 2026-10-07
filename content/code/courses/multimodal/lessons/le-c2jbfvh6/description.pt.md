@@ -1,6 +1,6 @@
 ---
 title: Descrevendo uma imagem em palavras
-version: 1
+version: 2
 ---
 
 Um **modelo de visão e linguagem** (VLM, na sigla em inglês) lê uma imagem e um prompt de texto juntos e responde em texto. Ele não tem lista fixa: foi treinado com quantidades enormes de imagens acompanhadas de legendas e documentos, e responde no vocabulário aberto de um modelo de linguagem. O GPT-4o, o Gemini e o Claude recebem imagens assim, e também modelos abertos como o Qwen2.5-VL e o Llama 3.2 Vision (aula 11).

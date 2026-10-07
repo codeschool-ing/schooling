@@ -1,6 +1,6 @@
 ---
 title: Cleaning a recording, and measuring whether it helped
-version: 1
+version: 2
 ---
 
 Three ways to clean the noisy call, from the bluntest to the cleverest, each one handed to Whisper and scored against the script with the word error rate (WER) from `measure.py`:

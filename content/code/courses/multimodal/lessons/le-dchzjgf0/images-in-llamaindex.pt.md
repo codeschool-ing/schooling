@@ -1,6 +1,6 @@
 ---
 title: Uma imagem numa mensagem do LlamaIndex
-version: 1
+version: 2
 ---
 
 O LlamaIndex diz a mesma coisa com outros substantivos. Uma `ChatMessage` é feita de **blocos**, e o `ImageBlock` aceita um caminho, uma URL ou bytes e faz o base64 sozinho:

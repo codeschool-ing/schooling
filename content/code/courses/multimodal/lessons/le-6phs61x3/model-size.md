@@ -1,6 +1,6 @@
 ---
 title: A bigger model, and what it buys
-version: 1
+version: 2
 ---
 
 Whisper comes in sizes, from *tiny* (39 million parameters) through *base*, *small*, *medium* and *large*, and the lab has the two smallest. Both, on the three recordings of the call from lesson 5:

@@ -1,6 +1,6 @@
 ---
 title: Como um modelo de difusão faz uma imagem
-version: 1
+version: 2
 ---
 
 **Um modelo de difusão não pinta. Ele tira ruído.** Essa é a ideia sobre a qual todo gerador de imagens dos últimos anos é construído, e ela explica quase tudo do comportamento deles: por que um prompt é uma sugestão, por que duas execuções diferem e por que algumas coisas saem erradas toda vez.

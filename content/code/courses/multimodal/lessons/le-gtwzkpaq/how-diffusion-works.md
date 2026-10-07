@@ -1,6 +1,6 @@
 ---
 title: How a diffusion model makes a picture
-version: 1
+version: 2
 ---
 
 **A diffusion model does not paint. It removes noise.** That is the idea every image generator of the last few years is built on, and it explains most of how they behave: why a prompt is a suggestion, why two runs differ, and why some things come out wrong every time.

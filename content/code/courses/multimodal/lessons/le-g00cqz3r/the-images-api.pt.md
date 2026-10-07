@@ -1,6 +1,6 @@
 ---
 title: A Images API da OpenAI
-version: 1
+version: 2
 ---
 
 A **Images API** da OpenAI tem três rotas: `generations` (uma imagem a partir de um prompt), `edits` (uma imagem alterada, opcionalmente dentro de uma máscara) e, para o modelo mais antigo, `variations`. Cada uma recebe um nome de modelo, um prompt e algumas configurações, e devolve a imagem na resposta em base64. Como na aula 3, os pedidos daqui vão para o substituto do curso, então inicie `python images_server.py` num segundo terminal antes; com uma chave sua, a linha do `base_url` é a que muda. O banner da aula 3, em código:

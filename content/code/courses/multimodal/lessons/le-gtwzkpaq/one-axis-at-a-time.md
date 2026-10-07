@@ -1,6 +1,6 @@
 ---
 title: Change one thing, then look
-version: 1
+version: 2
 ---
 
 **Prompting an image model is an experiment, and it has the rules of one.** Change one thing at a time, keep everything else fixed, look at the result, and write down what you changed. Change the medium and the light together, and when the picture improves you will not know which change did it.

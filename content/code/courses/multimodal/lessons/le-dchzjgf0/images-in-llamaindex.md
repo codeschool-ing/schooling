@@ -1,6 +1,6 @@
 ---
 title: An image in a LlamaIndex message
-version: 1
+version: 2
 ---
 
 LlamaIndex says the same thing with different nouns. A `ChatMessage` is made of **blocks**, and `ImageBlock` takes a path, a URL or bytes and does the base64 itself:

@@ -1,6 +1,6 @@
 ---
 title: Reading printed text with Tesseract
-version: 1
+version: 2
 ---
 
 **Optical character recognition (OCR) turns a picture of printed text into text.** Tesseract is the open-source OCR engine most programs that read text from images are built on, and version 5 uses a small neural network trained per language. It does one job and does not pretend to do others: it will not tell you that a page is an invoice or that the total looks wrong.

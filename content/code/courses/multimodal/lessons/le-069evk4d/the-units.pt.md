@@ -1,6 +1,6 @@
 ---
 title: Quatro unidades, e nenhuma delas é byte
-version: 1
+version: 2
 ---
 
 A aula 6 de `ai-models` leu a planilha do LiteLLM para modelos de texto, em que tudo tem preço por token. As entradas multimodais usam mais unidades que isso. A mesma planilha, no commit que o `prices.py` da aula 3 fixa:

@@ -1,6 +1,6 @@
 ---
 title: Transcrições com falantes, e texto alternativo que uma máquina confere
-version: 1
+version: 2
 ---
 
 Uma gravação sem vídeo, como uma ligação de suporte guardada para treinamento, precisa de uma **transcrição** pelo critério 1.2.1. Numa ligação, uma transcrição que não diz quem está falando é difícil de acompanhar, então esta junta a separação de falantes da aula 5 aos segmentos do Whisper: cada segmento vai para o falante que mais se sobrepõe a ele.

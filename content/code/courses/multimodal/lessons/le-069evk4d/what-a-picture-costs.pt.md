@@ -1,6 +1,6 @@
 ---
 title: Quanto custa uma imagem
-version: 1
+version: 2
 ---
 
 A aula 8 mediu a regra de blocos do GPT-4o numa capa. Este programa aplica essa regra, e a do Google para o Gemini, a três imagens de tamanhos muito diferentes. A terceira é o `cat_and_dog.jpg` ampliado para 4032 por 3024 pixels, o tamanho que uma câmera de celular de 12 megapixels salva, para uma foto de celular ter um substituto. Uma linha a faz:

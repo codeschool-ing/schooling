@@ -1,6 +1,6 @@
 ---
 title: Captions from recognition, held to three rules
-version: 1
+version: 2
 ---
 
 Lesson 4's returns video has a narration, and lesson 10 showed Whisper returning `vtt` directly. The recognition in this lesson goes through the same `audio_server.py`, so start it in a second terminal before running the programs. A caption file is more than a transcript with times, though: a viewer has to read each cue before it goes. Subtitle style guides agree on the shape of the rules, and these numbers are the ones Netflix's English guide uses for adult programmes: at most 42 characters per line, at most 2 lines per cue, and at most 20 characters per second of reading.

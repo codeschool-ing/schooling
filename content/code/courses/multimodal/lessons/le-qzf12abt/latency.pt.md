@@ -1,6 +1,6 @@
 ---
 title: O silêncio antes da primeira palavra
-version: 1
+version: 2
 ---
 
 Numa linha telefônica, uma resposta que leva dois segundos para começar soa como ligação caída. **Latência em fala é o tempo até o primeiro som**, não o tempo para fazer tudo, e os dois são números muito diferentes:

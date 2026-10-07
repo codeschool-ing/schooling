@@ -1,6 +1,6 @@
 ---
 title: Uma imagem numa mensagem do LangChain
-version: 1
+version: 2
 ---
 
 A aula 10 de `rag` conheceu o LangChain como um conjunto de peças para recuperação: carregadores, divisores, um depósito de vetores, uma cadeia. Os modelos de chat dele também aceitam **blocos de conteúdo**: o `content` de uma mensagem pode ser uma lista, e cada item é texto, imagem, áudio ou arquivo. O LangChain aceita duas grafias de um bloco de imagem, e este programa manda a capa da aula 8 uma vez em cada:

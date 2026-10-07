@@ -1,6 +1,6 @@
 ---
 title: What a framework adds, and what it hides
-version: 1
+version: 2
 ---
 
 Four programs in this lesson, two frameworks, and one cover sent three times. What each side of the trade looked like, in this lesson:

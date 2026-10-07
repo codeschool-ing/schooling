@@ -1,6 +1,6 @@
 ---
 title: Editing with a mask
-version: 1
+version: 2
 ---
 
 Lesson 3 argued that a nearly-right picture should be **edited, not regenerated**. In the Images API an edit is the original picture, a **mask**, and a prompt for what goes in the masked part. The mask is a PNG the same size as the picture, with an alpha channel: **transparent pixels mark where the model may draw, and opaque ones are kept**.

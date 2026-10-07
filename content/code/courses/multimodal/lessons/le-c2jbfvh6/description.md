@@ -1,6 +1,6 @@
 ---
 title: Describing a picture in words
-version: 1
+version: 2
 ---
 
 A **vision-language model** (VLM) reads an image and a text prompt together and answers in text. It has no fixed list: it was trained on enormous numbers of pictures paired with captions and documents, and it answers in the open vocabulary of a language model. GPT-4o, Gemini and Claude all take images this way, and so do open models such as Qwen2.5-VL and Llama 3.2 Vision (lesson 11).

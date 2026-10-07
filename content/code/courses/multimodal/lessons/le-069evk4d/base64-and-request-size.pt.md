@@ -1,6 +1,6 @@
 ---
 title: Uma imagem dentro de um pedido fica um terço maior
-version: 1
+version: 2
 ---
 
 A aula 8 mandou imagens como URLs de dados: base64 dentro do JSON. O base64 gasta quatro caracteres a cada três bytes, então o pedido é maior que o arquivo que carrega:

@@ -1,6 +1,6 @@
 ---
 title: Lendo texto impresso com o Tesseract
-version: 1
+version: 2
 ---
 
 **O reconhecimento óptico de caracteres (OCR) transforma a imagem de um texto impresso em texto.** O Tesseract é o motor de OCR de código aberto sobre o qual a maioria dos programas que leem texto de imagens é construída, e a versão 5 usa uma pequena rede neural treinada por idioma. Ele faz um trabalho e não finge fazer outros: não vai dizer que uma página é uma nota fiscal nem que o total parece errado.

@@ -1,6 +1,6 @@
 ---
 title: Dizendo que uma imagem foi gerada
-version: 1
+version: 2
 ---
 
 Uma imagem gerada publicada sem aviso pode enganar quem a vê, e cada vez mais lugares exigem um rótulo por lei. O AI Act da União Europeia exige que provedores de sistemas generativos marquem a saída de forma legível por máquina, e que deepfakes sejam declarados. Dois mecanismos técnicos fazem a marcação, e uma equipe de produto deveria saber ao que cada um sobrevive.

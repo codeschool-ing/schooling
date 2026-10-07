@@ -1,6 +1,6 @@
 ---
 title: Audio is billed by the second and limited by the byte
-version: 1
+version: 2
 ---
 
 A transcription is billed by its seconds, so the encoding cannot change the price. It can change two other things: whether the file fits under the upload limit, and what the model hears. This program encodes the call four ways, sends each to Whisper base through lesson 10's `audio_server.py` (start it first, in a second terminal), and scores what came back against the call's script:

@@ -1,6 +1,6 @@
 ---
 title: Limpando uma gravação, e medindo se ajudou
-version: 1
+version: 2
 ---
 
 Três jeitos de limpar a ligação ruidosa, do mais bruto ao mais esperto, cada um entregue ao Whisper e pontuado contra o roteiro com a taxa de erro de palavras (WER, na sigla em inglês) do `measure.py`:

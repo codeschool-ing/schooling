@@ -1,6 +1,6 @@
 ---
 title: Gemini's image model, called Nano Banana
-version: 1
+version: 2
 ---
 
 **Nano Banana** is the nickname that stuck to Google's Gemini 2.5 Flash Image, the image model it released in 2025, and later to its successors. It is not a separate API. It is a Gemini model called through the same `generate_content` as text, asked to answer with an image as well:

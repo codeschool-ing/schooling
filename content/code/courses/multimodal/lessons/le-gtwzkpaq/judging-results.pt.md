@@ -1,6 +1,6 @@
 ---
 title: Julgando as imagens, e quanto custa uma aceita
-version: 1
+version: 2
 ---
 
 Uma grade de imagens não decide nada sozinha. Alguém olha para ela, e o olhar funciona melhor com uma lista escrita antes de chegar a primeira imagem, porque uma imagem impressionante que não atende à exigência continua sendo um erro.

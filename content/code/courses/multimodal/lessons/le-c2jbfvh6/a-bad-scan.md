@@ -1,6 +1,6 @@
 ---
 title: A bad scan, and what helps
-version: 1
+version: 2
 ---
 
 The second copy of the invoice is the first one after a cheap scanner: turned 1.8 degrees, blurred, sprinkled with noise, reduced to 100 dots per inch and saved as a JPEG at low quality. Every one of those steps is written in `make_media.py` from lesson 1, so the damage is known exactly. Read with the default mode, the table comes apart:

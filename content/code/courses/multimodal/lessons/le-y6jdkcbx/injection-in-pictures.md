@@ -1,6 +1,6 @@
 ---
 title: When the picture gives the orders
-version: 1
+version: 2
 ---
 
 A vision model reads text in pictures. That is what makes it useful on an invoice, and it is also a way in: **text inside a picture reaches the model with the same standing as the text in the prompt**, unless something stops it. A customer photo, a screenshot, a scanned letter or a product label can all carry a sentence written for the model rather than for a person. This is **prompt injection**, and `prompt-engineering` lesson 7 introduced it for text; pictures are a channel where nobody reviewing the request would see it, because it is in the pixels.

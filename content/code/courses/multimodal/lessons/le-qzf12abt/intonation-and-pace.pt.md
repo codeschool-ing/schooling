@@ -1,6 +1,6 @@
 ---
 title: Entonação, ritmo e dizer do mesmo jeito duas vezes
-version: 1
+version: 2
 ---
 
 **Entonação é como a altura da voz se move por uma frase**, e em inglês ela carrega sentido: uma afirmação cai no fim, uma pergunta sobe. O Piper se guia pela pontuação, que o espeak-ng repassa como uma marca do tipo de oração. As mesmas quatro palavras com ponto final e com ponto de interrogação:

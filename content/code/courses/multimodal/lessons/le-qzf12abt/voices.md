@@ -1,6 +1,6 @@
 ---
 title: Choosing a voice
-version: 1
+version: 2
 ---
 
 The lab has three Piper voices: **lessac**, American English; **alan**, British English; and **faber**, Brazilian Portuguese. The same short message in each:

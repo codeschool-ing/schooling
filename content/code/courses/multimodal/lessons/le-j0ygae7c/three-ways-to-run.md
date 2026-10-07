@@ -1,6 +1,6 @@
 ---
 title: One model, three ways to run it
-version: 1
+version: 2
 ---
 
 A model published on the Hub can be run in three broad ways, and the choice decides what you install, where the data goes and how fast it runs.

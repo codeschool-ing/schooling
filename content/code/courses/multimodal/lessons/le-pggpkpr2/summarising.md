@@ -1,6 +1,6 @@
 ---
 title: Summarising: what to hand the model
-version: 1
+version: 2
 ---
 
 A summary of a video is written by a language model, and the decision that matters is **what you give it to read**. There are three options, and their costs are not close:

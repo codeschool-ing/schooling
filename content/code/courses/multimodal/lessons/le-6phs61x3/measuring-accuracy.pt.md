@@ -1,6 +1,6 @@
 ---
 title: Medindo uma transcrição: a taxa de erro de palavras
-version: 1
+version: 2
 ---
 
 A **taxa de erro de palavras (WER)** conta o menor número de edições de uma palavra que transformam uma transcrição na verdade, e divide pelo número de palavras da verdade. Três tipos de edição:

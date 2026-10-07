@@ -1,6 +1,6 @@
 ---
 title: Which tool for which picture
-version: 1
+version: 2
 ---
 
 The three tools in this lesson are not rungs on one ladder, where the VLM is simply better. Each answers a different question at a different cost, and the right choice is usually the cheapest one that answers yours.

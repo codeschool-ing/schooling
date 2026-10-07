@@ -1,6 +1,6 @@
 ---
 title: Fazendo a voz ler números, datas e nomes direito
-version: 1
+version: 2
 ---
 
 **O teste mais barato de uma voz é deixar um transcritor ouvi-la.** Fale uma frase com o Piper, transcreva o áudio com o Whisper e compare. O que voltar diferente é um ponto em que quem ouve também pode entender outra coisa:

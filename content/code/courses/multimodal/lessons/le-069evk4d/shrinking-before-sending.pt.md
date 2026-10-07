@@ -1,6 +1,6 @@
 ---
 title: Encolhendo uma imagem antes de enviar
-version: 1
+version: 2
 ---
 
 Se um provedor conta tokens pela largura e pela altura, a economia óbvia é mandar uma imagem menor. Este programa faz três cópias menores da nota e pergunta duas coisas a cada uma: quanto custaria, e **ainda dá para ler**? O Tesseract faz o papel do leitor, e duas medidas fazem o papel da resposta: a parte das palavras da página que ele achou, em qualquer ordem, e quantos dos 11 valores em dinheiro da página ele leu exatamente.

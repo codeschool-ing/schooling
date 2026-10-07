@@ -1,6 +1,6 @@
 ---
 title: Judging the pictures, and what an accepted one costs
-version: 1
+version: 2
 ---
 
 A grid of pictures does not decide anything by itself. Somebody looks at it, and the looking goes better with a list written before the first picture arrives, because a striking picture that misses the requirement is still a miss.

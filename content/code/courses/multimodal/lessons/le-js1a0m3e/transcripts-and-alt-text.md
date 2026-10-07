@@ -1,6 +1,6 @@
 ---
 title: Transcripts with speakers, and alt text a machine can check
-version: 1
+version: 2
 ---
 
 A recording with no video, such as a support call kept for training, needs a **transcript** under criterion 1.2.1. For a call, a transcript that does not say who is speaking is hard to follow, so this one joins lesson 5's diarization to Whisper's segments: each segment goes to the speaker who overlaps it most.

@@ -1,6 +1,6 @@
 ---
 title: DALL-E, and the names that replaced it
-version: 1
+version: 2
 ---
 
 This lesson's title names **DALL-E**, and the course was designed when that was the name of OpenAI's image model. It is no longer the name to write in code. LiteLLM's sheet, read with lesson 3's `prices.py`, lists the image models it files under OpenAI like this:

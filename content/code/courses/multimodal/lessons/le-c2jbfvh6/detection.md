@@ -1,6 +1,6 @@
 ---
 title: Finding objects: boxes, classes and scores
-version: 1
+version: 2
 ---
 
 An **object detector** answers a different question from OCR: *what is in this picture, and where?* For each thing it finds it returns a box, a label and a score. MediaPipe's detector with the EfficientDet-Lite0 model is small (14 MB in the lab) and fast enough for a phone:

@@ -1,6 +1,6 @@
 ---
 title: Uma mensagem com uma imagem dentro
-version: 1
+version: 2
 ---
 
 Nas APIs da OpenAI uma imagem é **uma parte de uma mensagem do usuário**, ao lado do texto que pergunta sobre ela. O modelo lê as duas juntas. No Chat Completions, a parte tem o tipo `image_url`.

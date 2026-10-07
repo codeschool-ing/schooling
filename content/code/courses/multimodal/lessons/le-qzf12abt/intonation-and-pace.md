@@ -1,6 +1,6 @@
 ---
 title: Intonation, pace and saying it the same way twice
-version: 1
+version: 2
 ---
 
 **Intonation is how pitch moves through a sentence**, and in English it carries meaning: a statement falls at the end, a question rises. Piper takes its cue from punctuation, which espeak-ng passes on as a mark of what kind of clause it is. The same four words with a full stop and with a question mark:

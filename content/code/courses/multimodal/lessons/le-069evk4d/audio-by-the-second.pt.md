@@ -1,6 +1,6 @@
 ---
 title: Áudio é cobrado por segundo e limitado por byte
-version: 1
+version: 2
 ---
 
 Uma transcrição é cobrada pelos segundos, então a codificação não muda o preço. Ela muda duas outras coisas: se o arquivo cabe no limite de envio, e o que o modelo ouve. Este programa codifica a ligação de quatro jeitos, manda cada uma ao Whisper base pelo `audio_server.py` da aula 10 (inicie-o antes, num segundo terminal), e compara o que voltou com o roteiro da ligação:

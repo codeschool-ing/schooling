@@ -1,6 +1,6 @@
 ---
 title: Audio description in the pauses
-version: 1
+version: 2
 ---
 
 Standard audio description, criterion 1.2.5, speaks in the pauses of the soundtrack without changing the video's length. So it is three questions: what to say, where the pauses are, and whether the words fit.

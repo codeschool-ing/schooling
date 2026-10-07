@@ -1,6 +1,6 @@
 ---
 title: What changes when the model can see and hear
-version: 1
+version: 2
 ---
 
 **A multimodal model is not a different kind of intelligence. It is a model whose inputs and outputs are not only text.** That is the whole definition, and it is worth holding on to, because most of what goes wrong in multimodal products comes from forgetting it. The model still predicts; it still has a window; it still charges by what it reads and writes. What changes is the size and the shape of what goes in.

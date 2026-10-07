@@ -1,6 +1,6 @@
 ---
 title: Measuring a transcript: the word error rate
-version: 1
+version: 2
 ---
 
 **The word error rate (WER)** counts the smallest number of single-word edits that turn a transcript into the truth, and divides by the number of words in the truth. Three kinds of edit:

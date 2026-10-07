@@ -1,6 +1,6 @@
 ---
 title: O que muda quando o modelo enxerga e ouve
-version: 1
+version: 2
 ---
 
 **Um modelo multimodal não é outro tipo de inteligência. É um modelo cujas entradas e saídas não são só texto.** Essa é a definição inteira, e vale guardá-la, porque quase tudo o que dá errado em produtos multimodais vem de esquecê-la. O modelo continua prevendo; continua tendo uma janela; continua cobrando pelo que lê e escreve. O que muda é o tamanho e o formato do que entra.

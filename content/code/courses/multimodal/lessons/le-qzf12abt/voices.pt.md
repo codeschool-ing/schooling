@@ -1,6 +1,6 @@
 ---
 title: Escolhendo uma voz
-version: 1
+version: 2
 ---
 
 O laboratório tem três vozes Piper: **lessac**, inglês americano; **alan**, inglês britânico; e **faber**, português do Brasil. A mesma mensagem curta em cada uma:

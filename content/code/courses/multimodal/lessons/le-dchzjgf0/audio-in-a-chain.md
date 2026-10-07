@@ -1,6 +1,6 @@
 ---
 title: A recorded call, in one chain
-version: 1
+version: 2
 ---
 
 A chain is worth having when several steps run in order and each needs the last one's output. Turning a recorded call into a support ticket is that shape: transcribe, ask for fields, check them.

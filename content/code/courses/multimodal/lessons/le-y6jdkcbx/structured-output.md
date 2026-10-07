@@ -1,6 +1,6 @@
 ---
 title: The invoice as data, in a shape you declare
-version: 1
+version: 2
 ---
 
 A description is for a person. The stock system wants fields, and a vision model can be asked for them in a **declared shape**: a JSON Schema the reply must fit, which the API enforces when the model supports **structured outputs**. The openai SDK builds the schema from Pydantic models and parses the reply back into them:

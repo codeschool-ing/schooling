@@ -1,6 +1,6 @@
 ---
 title: An image in a LangChain message
-version: 1
+version: 2
 ---
 
 `rag` lesson 10 met LangChain as a set of pieces for retrieval: loaders, splitters, a vector store, a chain. Its chat models also take **content blocks**: a message's `content` can be a list, and each item is text, an image, audio or a file. LangChain accepts two spellings of an image block, and this program sends the cover of lesson 8 once in each:

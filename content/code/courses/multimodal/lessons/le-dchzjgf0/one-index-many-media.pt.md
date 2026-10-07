@@ -1,6 +1,6 @@
 ---
 title: Um índice sobre uma imagem e duas gravações
-version: 1
+version: 2
 ---
 
 O curso `rag` construiu recuperação sobre texto. O conhecimento de uma loja não é todo texto: notas fiscais chegam como digitalizações, reclamações como ligações, e a resposta a "quanto pagamos pelo Bleak House" está numa imagem. O jeito comum de buscar tudo junto é **transformar cada coisa em texto antes, e guardar um ponteiro para o lugar de onde cada pedaço veio**.

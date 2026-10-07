@@ -1,6 +1,6 @@
 ---
 title: What a picture costs
-version: 1
+version: 2
 ---
 
 Lesson 8 measured the GPT-4o tile rule on one cover. This program applies it, and Google's rule for Gemini, to three pictures of very different sizes. The third is `cat_and_dog.jpg` scaled up to 4032 by 3024 pixels, the size a 12-megapixel phone camera saves, so that a phone photo has a stand-in. One line makes it:

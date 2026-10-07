@@ -1,6 +1,6 @@
 ---
 title: One index over an image and two recordings
-version: 1
+version: 2
 ---
 
 The `rag` course built retrieval over text. A shop's knowledge is not all text: invoices arrive as scans, complaints as calls, and the answer to "what did we pay for Bleak House" is in a picture. The usual way to search them together is to **turn each one into text first, and keep a pointer back to where every piece came from**.

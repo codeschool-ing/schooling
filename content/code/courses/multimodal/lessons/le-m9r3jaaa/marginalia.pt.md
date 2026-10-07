@@ -1,6 +1,6 @@
 ---
 title: Cinco tarefas na Marginalia
-version: 1
+version: 2
 ---
 
 A loja para a qual este curso trabalha é a Marginalia, a livraria online cuja central de ajuda foi buscada por significado em `embeddings-vectors`, usada para responder em `rag` e entregue a um agente em `agents-mcp`. Ela não existe, e a mídia dela é feita por um programa desta aula. Ela tem cinco tarefas que uma pessoa faz hoje e que um modelo multimodal poderia assumir, e elas são o fio do curso.

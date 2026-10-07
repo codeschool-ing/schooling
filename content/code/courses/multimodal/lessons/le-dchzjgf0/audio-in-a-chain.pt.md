@@ -1,6 +1,6 @@
 ---
 title: Uma ligação gravada, numa só cadeia
-version: 1
+version: 2
 ---
 
 Uma cadeia vale a pena quando vários passos rodam em ordem e cada um precisa da saída do anterior. Transformar uma ligação gravada num chamado de suporte tem esse formato: transcrever, pedir os campos, conferi-los.

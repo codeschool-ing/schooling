@@ -1,6 +1,6 @@
 ---
 title: Cartões de modelo, e a licença que mora em outro lugar
-version: 1
+version: 2
 ---
 
 Um **cartão do modelo** (model card) é o documento publicado com um modelo: com o que ele foi treinado, para que serve, os limites conhecidos e a licença. É a primeira coisa a ler antes de um modelo entrar num produto, e os próprios modelos do laboratório mostram por que essa leitura não é formalidade. As três vozes Piper carregam os cartões consigo:

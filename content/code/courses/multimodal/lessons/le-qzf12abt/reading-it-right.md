@@ -1,6 +1,6 @@
 ---
 title: Making it read numbers, dates and names right
-version: 1
+version: 2
 ---
 
 **The cheapest test of a voice is to let a transcriber listen to it.** Speak a sentence with Piper, transcribe the audio with Whisper, and compare. Whatever comes back different is a place where a listener might hear something else too:

@@ -1,6 +1,6 @@
 ---
 title: As tarefas multimodais do Hub
-version: 1
+version: 2
 ---
 
 A aula 12 de `ai-models` apresentou o Hugging Face Hub: modelos, conjuntos de dados, a taxonomia de tarefas, e modelos da comunidade ao lado dos que os grandes laboratórios publicam. Esta seção só acrescenta a metade multimodal dessa taxonomia, porque o rótulo de **tarefa** do Hub é o jeito mais rápido de achar um modelo para um trabalho deste curso.

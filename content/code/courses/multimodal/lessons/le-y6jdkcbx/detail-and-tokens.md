@@ -1,6 +1,6 @@
 ---
 title: Detail, tiles and what a picture costs
-version: 1
+version: 2
 ---
 
 A vision model does not charge by the byte. It charges by how much of the picture it reads, and OpenAI published the rule for GPT-4o: **85 tokens for the picture as a whole, plus 170 for every tile of 512 by 512 pixels** that covers it, after two resizes. Lesson 4's `tokens.py` counts by that rule, so the numbers below are what the rule gives; nothing is sent to compute them.

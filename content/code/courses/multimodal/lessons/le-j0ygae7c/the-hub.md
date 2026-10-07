@@ -1,6 +1,6 @@
 ---
 title: The Hub's multimodal tasks
-version: 1
+version: 2
 ---
 
 `ai-models` lesson 12 introduced the Hugging Face Hub: models, datasets, the task taxonomy, and community models next to the ones the big labs publish. This section only adds the multimodal half of that taxonomy, because the Hub's **task** label is the fastest way to find a model for a job in this course.

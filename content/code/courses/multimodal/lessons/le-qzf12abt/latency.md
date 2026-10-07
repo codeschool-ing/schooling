@@ -1,6 +1,6 @@
 ---
 title: The silence before the first word
-version: 1
+version: 2
 ---
 
 On a phone line, a reply that takes two seconds to start sounds like a dropped call. **Latency in speech is the time to the first sound**, not the time to make all of it, and the two are very different numbers:

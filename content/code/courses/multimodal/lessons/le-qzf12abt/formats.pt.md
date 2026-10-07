@@ -1,6 +1,6 @@
 ---
 title: O formato em que o áudio viaja
-version: 1
+version: 2
 ---
 
 Uma voz produz números; o que chega a quem ouve é um arquivo ou um fluxo em algum formato, e o formato decide o tamanho e onde ele toca. O endpoint de fala da OpenAI oferece cinco, com os nomes do campo `response_format`, e outros provedores oferecem quase a mesma lista. O ffmpeg faz cada um deles a partir da mesma voz Piper, nas taxas de bits que um serviço de fala usa:

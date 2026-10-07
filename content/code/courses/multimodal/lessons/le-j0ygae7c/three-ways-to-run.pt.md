@@ -1,6 +1,6 @@
 ---
 title: Um modelo, três jeitos de rodá-lo
-version: 1
+version: 2
 ---
 
 Um modelo publicado no Hub pode ser rodado de três jeitos amplos, e a escolha decide o que você instala, para onde vão os dados e quão rápido ele roda.

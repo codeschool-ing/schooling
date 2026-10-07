@@ -1,6 +1,6 @@
 ---
 title: Mude uma coisa, depois olhe
-version: 1
+version: 2
 ---
 
 **Fazer prompt para um modelo de imagem é um experimento, e tem as regras de um.** Mude uma coisa por vez, mantenha todo o resto fixo, olhe o resultado e anote o que mudou. Mude o meio e a luz juntos e, quando a imagem melhorar, você não vai saber qual mudança fez isso.

@@ -1,6 +1,6 @@
 ---
 title: Detalhe, blocos e quanto custa uma imagem
-version: 1
+version: 2
 ---
 
 Um modelo de visão não cobra por byte. Cobra pelo quanto da imagem ele lê, e a OpenAI publicou a regra para o GPT-4o: **85 tokens pela imagem como um todo, mais 170 para cada bloco de 512 por 512 pixels** que a cobre, depois de dois redimensionamentos. O `tokens.py` da aula 4 conta por essa regra, então os números abaixo são o que a regra dá; nada é enviado para calculá-los.

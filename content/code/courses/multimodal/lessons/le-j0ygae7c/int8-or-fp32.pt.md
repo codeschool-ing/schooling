@@ -1,6 +1,6 @@
 ---
 title: Uma cópia menor do mesmo modelo
-version: 1
+version: 2
 ---
 
 A **quantização** guarda os pesos de um modelo com menos bits. Um modelo em precisão completa guarda cada peso como número de ponto flutuante de 32 bits (**fp32**); uma cópia **int8** guarda a maioria deles como inteiros de 8 bits mais uma escala, mais ou menos um quarto do espaço nas partes quantizadas. A pergunta é sempre a mesma: quanto a cópia menor custa em precisão?

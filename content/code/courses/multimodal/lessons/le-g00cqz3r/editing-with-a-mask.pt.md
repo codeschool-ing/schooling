@@ -1,6 +1,6 @@
 ---
 title: Editando com uma máscara
-version: 1
+version: 2
 ---
 
 A aula 3 argumentou que uma imagem quase certa deve ser **editada, não gerada de novo**. Na Images API uma edição é a imagem original, uma **máscara** e um prompt para o que vai na parte mascarada. A máscara é um PNG do mesmo tamanho da imagem, com canal alfa: **pixels transparentes marcam onde o modelo pode desenhar, e os opacos ficam**.

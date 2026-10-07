@@ -1,6 +1,6 @@
 ---
 title: Never pay twice, and check before the call
-version: 1
+version: 2
 ---
 
 The cheapest request is the one never sent. A shop asks the same questions of the same pictures more often than it expects: a retry after a timeout, two people opening one invoice, a batch run again after a fix elsewhere. A cache keyed by **everything that shapes the reply** answers those from disk:

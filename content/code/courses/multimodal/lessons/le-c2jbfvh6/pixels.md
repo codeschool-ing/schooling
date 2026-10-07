@@ -1,6 +1,6 @@
 ---
 title: What an image is to a model
-version: 1
+version: 2
 ---
 
 **An image is a grid of numbers, and a model only ever reads the grid.** A photograph of 640 by 416 pixels in colour is 640 × 416 × 3 = 798,720 numbers between 0 and 255, one each for red, green and blue at every point. There is no "text" or "cat" in the file. What there is in the file is the pattern of numbers that a person reads as text or a cat, and a model is something trained to map those patterns to answers.

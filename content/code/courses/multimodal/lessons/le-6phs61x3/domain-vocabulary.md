@@ -1,6 +1,6 @@
 ---
 title: The shop's own words
-version: 1
+version: 2
 ---
 
 A speech model is trained on general speech, and every business has words that general speech does not: product names, people's names, codes, jargon. They are also the words that matter most in its transcripts. In the call, the words Whisper got wrong are almost all of that kind: *Kau* and *Kyo* for Caio, *Dom Kazmuro* and *Dom Casmorrow* for Dom Casmurro, *Machado Desiss* for Machado de Assis, *M1042* for M-1042.

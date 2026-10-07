@@ -1,6 +1,6 @@
 ---
 title: Nunca pagar duas vezes, e conferir antes da chamada
-version: 1
+version: 2
 ---
 
 O pedido mais barato é o que nunca é enviado. Uma loja faz as mesmas perguntas às mesmas imagens mais vezes do que espera: uma nova tentativa depois de um tempo esgotado, duas pessoas abrindo a mesma nota, um lote rodado de novo depois de uma correção em outro lugar. Um cache com chave em **tudo o que molda a resposta** responde isso do disco:

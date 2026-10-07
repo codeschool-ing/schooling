@@ -1,6 +1,6 @@
 ---
 title: OpenAI's Images API
-version: 1
+version: 2
 ---
 
 OpenAI's **Images API** has three routes: `generations` (a picture from a prompt), `edits` (a picture changed, optionally inside a mask) and, for the oldest model, `variations`. Each takes a model name, a prompt and a handful of settings, and returns the picture in the response as base64. As in lesson 3, the requests here go to the course's stand-in, so start `python images_server.py` in a second terminal first; with a key of your own, the `base_url` line is the one to change. The banner from lesson 3, as code:

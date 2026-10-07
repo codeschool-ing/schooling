@@ -1,6 +1,6 @@
 ---
 title: Qual ferramenta para qual imagem
-version: 1
+version: 2
 ---
 
 As três ferramentas desta aula não são degraus de uma escada em que o VLM é simplesmente melhor. Cada uma responde a uma pergunta diferente a um custo diferente, e a escolha certa costuma ser a mais barata que responde à sua.

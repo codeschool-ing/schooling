@@ -1,6 +1,6 @@
 ---
 title: O que um framework acrescenta, e o que esconde
-version: 1
+version: 2
 ---
 
 Quatro programas nesta aula, dois frameworks, e uma capa enviada três vezes. Como ficou cada lado da troca, nesta aula:

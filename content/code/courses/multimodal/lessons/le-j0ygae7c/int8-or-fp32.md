@@ -1,6 +1,6 @@
 ---
 title: A smaller copy of the same model
-version: 1
+version: 2
 ---
 
 **Quantisation** stores a model's weights with fewer bits. A full-precision model keeps each weight as a 32-bit floating-point number (**fp32**); an **int8** copy keeps most of them as 8-bit integers plus a scale, roughly a quarter of the space for the quantised parts. The question is always the same: what does the smaller copy cost in accuracy?

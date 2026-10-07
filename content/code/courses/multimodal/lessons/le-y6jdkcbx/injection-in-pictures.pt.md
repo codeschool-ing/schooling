@@ -1,6 +1,6 @@
 ---
 title: Quando a imagem dá as ordens
-version: 1
+version: 2
 ---
 
 Um modelo de visão lê texto em imagens. É isso que o torna útil numa nota fiscal, e é também uma porta de entrada: **o texto dentro de uma imagem chega ao modelo com o mesmo peso do texto do prompt**, a menos que algo impeça. Uma foto de cliente, uma captura de tela, uma carta escaneada ou o rótulo de um produto podem carregar uma frase escrita para o modelo e não para uma pessoa. Isso é **injeção de prompt** (prompt injection), que a aula 7 de `prompt-engineering` apresentou para texto; imagens são um canal onde ninguém que revisasse o pedido a veria, porque ela está nos pixels.

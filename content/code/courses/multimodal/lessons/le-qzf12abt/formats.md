@@ -1,6 +1,6 @@
 ---
 title: The format the audio travels in
-version: 1
+version: 2
 ---
 
 A voice produces numbers; what reaches the listener is a file or a stream in some format, and the format decides its size and where it can play. OpenAI's speech endpoint offers five, named by its `response_format` field, and other providers offer much the same list. ffmpeg can make every one of them from the same Piper voice, at the bit rates a speech service uses:

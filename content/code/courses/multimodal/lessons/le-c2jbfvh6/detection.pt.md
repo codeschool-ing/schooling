@@ -1,6 +1,6 @@
 ---
 title: Achando objetos: caixas, classes e notas
-version: 1
+version: 2
 ---
 
 Um **detector de objetos** responde a uma pergunta diferente da do OCR: *o que há nesta imagem, e onde?* Para cada coisa que acha, ele devolve uma caixa, um rótulo e uma nota. O detector do MediaPipe com o modelo EfficientDet-Lite0 é pequeno (14 MB no laboratório) e rápido o bastante para um celular:

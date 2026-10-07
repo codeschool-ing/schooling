@@ -1,6 +1,6 @@
 ---
 title: Audiodescrição nas pausas
-version: 1
+version: 2
 ---
 
 A audiodescrição padrão, o critério 1.2.5, fala nas pausas da trilha sonora sem mudar a duração do vídeo. Então são três perguntas: o que dizer, onde estão as pausas, e se as palavras cabem.

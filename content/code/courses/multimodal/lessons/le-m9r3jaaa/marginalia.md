@@ -1,6 +1,6 @@
 ---
 title: Five jobs at Marginalia
-version: 1
+version: 2
 ---
 
 The shop this course works for is Marginalia, the online bookshop whose help centre was searched by meaning in `embeddings-vectors`, answered from in `rag` and handed to an agent in `agents-mcp`. It does not exist, and its media is made by a program in this lesson. It has five jobs that a person does today and that a multimodal model could take over, and they are the course's thread.

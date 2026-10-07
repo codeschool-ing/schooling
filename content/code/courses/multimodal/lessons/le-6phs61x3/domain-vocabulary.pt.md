@@ -1,6 +1,6 @@
 ---
 title: As palavras da própria loja
-version: 1
+version: 2
 ---
 
 Um modelo de fala é treinado com fala em geral, e todo negócio tem palavras que a fala em geral não tem: nomes de produtos, nomes de pessoas, códigos, jargão. São também as palavras que mais importam nas transcrições dele. Na ligação, as palavras que o Whisper errou são quase todas desse tipo: *Kau* e *Kyo* por Caio, *Dom Kazmuro* e *Dom Casmorrow* por Dom Casmurro, *Machado Desiss* por Machado de Assis, *M1042* por M-1042.

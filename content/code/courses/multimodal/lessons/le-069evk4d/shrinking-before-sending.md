@@ -1,6 +1,6 @@
 ---
 title: Shrinking a picture before sending it
-version: 1
+version: 2
 ---
 
 If a provider counts tokens from width and height, the obvious saving is to send a smaller picture. This program makes three smaller copies of the invoice and asks two questions of each: what would it cost, and **can it still be read**? Tesseract stands in for the reader, and two measures stand in for the answer: the share of the page's words it found, in any order, and how many of the page's 11 money values it read exactly.

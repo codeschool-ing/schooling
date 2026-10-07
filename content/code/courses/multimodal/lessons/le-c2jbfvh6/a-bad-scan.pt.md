@@ -1,6 +1,6 @@
 ---
 title: Um escaneado ruim, e o que ajuda
-version: 1
+version: 2
 ---
 
 A segunda cópia da nota é a primeira depois de um scanner barato: girada 1,8 grau, borrada, salpicada de ruído, reduzida a 100 pontos por polegada e salva como JPEG de baixa qualidade. Cada um desses passos está escrito no `make_media.py` da aula 1, então o estrago é conhecido com exatidão. Lida no modo padrão, a tabela se desmancha:

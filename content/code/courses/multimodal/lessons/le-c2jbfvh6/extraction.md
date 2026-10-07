@@ -1,6 +1,6 @@
 ---
 title: From text to fields, and the invoice checking itself
-version: 1
+version: 2
 ---
 
 Text is not yet data. The stock system wants each line of the invoice as a title, a quantity, a unit price and an amount, and the three totals as numbers. **Extraction** is that step, and on a document with a fixed layout it is a few regular expressions over the rows OCR produced.

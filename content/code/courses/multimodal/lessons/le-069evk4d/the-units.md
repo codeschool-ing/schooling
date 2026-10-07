@@ -1,6 +1,6 @@
 ---
 title: Four units, and none of them is bytes
-version: 1
+version: 2
 ---
 
 `ai-models` lesson 6 read LiteLLM's sheet for text models, where everything is priced per token. The multimodal entries use more units than that. The same sheet, at the commit lesson 3's `prices.py` pins:

@@ -1,6 +1,6 @@
 ---
 title: Saying that a picture was generated
-version: 1
+version: 2
 ---
 
 A generated picture published without saying so can mislead the people who see it, and in more and more places the law asks for a label. The European Union's AI Act requires providers of generative systems to mark their output in a machine-readable way, and to disclose deepfakes. Two technical mechanisms do the marking, and a product team should know what each one survives.
