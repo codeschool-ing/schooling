@@ -317,7 +317,7 @@ esac
 ```
 
 **Todo verbo que ele conhece está listado no topo do arquivo.** Os que você vai usar mais são `day`
-e `until`, que a seção sobre um dia de vendas mostra; `reset`, sempre que uma lição começa de uma
-loja limpa; `api`, a partir da lição 3, que inicia a API de preços que aquela lição escreve; e
-`airflow`, a partir da lição 8. O `shop down` para tudo, o PostgreSQL inclusive. Depois de
+e `until`, que a seção sobre um dia de vendas mostra, e `reset`, sempre que uma lição começa de uma
+loja limpa. A partir da lição 3 existe o `api`, que inicia a API de preços que aquela lição escreve,
+e a partir da lição 8 o `airflow`. O `shop down` para tudo, o PostgreSQL inclusive. Depois de
 reiniciar a máquina nada está rodando, e `sudo shop start` traz o banco de volta.

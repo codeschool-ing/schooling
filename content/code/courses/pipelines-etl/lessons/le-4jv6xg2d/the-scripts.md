@@ -317,7 +317,7 @@ esac
 ```
 
 **Every verb it knows is listed at the top of the file.** The ones you will use most are `day` and
-`until`, which the section on a day of trade shows; `reset`, whenever a lesson starts from a clean
-shop; `api`, from lesson 3, which starts the price API that lesson writes; and `airflow`, from
-lesson 8. `shop down` stops everything, PostgreSQL included. After a reboot nothing is running, and
+`until`, which the section on a day of trade shows, and `reset`, whenever a lesson starts from a
+clean shop. From lesson 3 there is `api`, which starts the price API that lesson writes, and from
+lesson 8 `airflow`. `shop down` stops everything, PostgreSQL included. After a reboot nothing is running, and
 `sudo shop start` brings the database back.
