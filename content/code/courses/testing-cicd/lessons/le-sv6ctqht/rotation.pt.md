@@ -1,6 +1,6 @@
 ---
 title: Troca de segredos, e a primeira hora depois de um vazamento
-version: 1
+version: 2
 ---
 
 **Trocar** (*rotacionar*) um segredo quer dizer substituí-lo por um valor novo e fazer o antigo parar
@@ -9,7 +9,20 @@ depois de um vazamento, é o passo que mais importa, e feita na ordem errada cau
 provocada por você mesmo.
 
 Aqui a transportadora troca o token da produção: a simulação é reiniciada aceitando só
-`lab-live-token-2`, e o `shipquote` ainda apresenta o antigo.
+`lab-live-token-2`, e o `shipquote` ainda apresenta o antigo. Pare a transportadora da 9092 com
+Ctrl-C e suba-a de novo com o token novo:
+
+```sh
+CARRIER_TOKEN=lab-live-token-2 CARRIER_PORT=9092 python3 ~/carrier/server.py
+```
+
+Peça uma cotação e leia o log. Depois ponha o token novo na configuração da produção,
+
+```sh
+sed -i 's/=lab-live-token$/=lab-live-token-2/' ~/envs/production/config.env
+```
+
+e reinicie a produção, que é o último comando abaixo:
 
 ```
 ana@laptop:~/shipquote$ curl -s "http://127.0.0.1:8300/quote?cep=01310-100&weight=1200&subtotal=5000"; echo

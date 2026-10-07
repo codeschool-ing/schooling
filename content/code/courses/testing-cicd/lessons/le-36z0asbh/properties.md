@@ -1,16 +1,16 @@
 ---
 title: Letting the machine choose the inputs
-version: 1
+version: 2
 ---
 
 Every test so far checks examples somebody chose: 1205 cents, 501 g, 19,900. Choosing well is the
-skill lesson 1 section 10 taught, and it has a limit: you only test the cases you thought of.
+skill lesson 1 section 13 taught, and it has a limit: you only test the cases you thought of.
 **Property-based testing** turns it round. You state a rule that must hold for every input, and a
 library generates inputs, hundreds of them, looking for one that breaks it.
 
 `split` has two such rules. Whatever the total and however many instalments, the instalments add
-back up to the total, and no two differ by more than one cent. In `tests/test_money_properties.py`,
-written with the Hypothesis library:
+back up to the total, and no two differ by more than one cent. Written with the Hypothesis library,
+which lesson 1 already installed, they are a new file. Save it as `tests/test_money_properties.py`:
 
 ```python
 """Properties of split that hold for every total and every number of parts."""
@@ -98,6 +98,10 @@ property needed no insight about where rounding goes wrong; it needed the rule.
 `--hypothesis-seed=0` fixed the seed for this capture so the run can be repeated. Without it,
 Hypothesis still remembers failing examples in a local database, `.hypothesis/`, and tries them
 first on the next run, so a failure found once keeps failing until it is fixed.
+
+Put `split` back with `git checkout shipquote/money.py`. This is the last file the lesson adds to
+the project, so commit the factory, the CSV, the two new test files and the rewritten store tests
+together: `git add tests && git commit -m "Build test data with a factory, a table and a property"`.
 
 ## Where properties fit
 

@@ -1,6 +1,6 @@
 ---
 title: O que um teste deve mostrar, e o que deve esconder
-version: 1
+version: 2
 ---
 
 Fábricas escondem dados. Esse é o propósito delas, e dá para exagerar. Um teste é lido muito mais
@@ -34,7 +34,7 @@ def test_a_saved_quote_comes_back_by_id(store):
     assert store.get(quote_id)["cents"] == 2190
 ```
 
-Esse é o teste do store como era antes do passo 7, e não está errado. Mas quem lê precisa descobrir
+Esse é o teste do store como a aula 1 o escreveu, e não está errado. Mas quem lê precisa descobrir
 qual dos quatro valores importa. Só o `2190` importa: aparece na chamada e na verificação. A versão
 com fábrica, `a_quote(cents=2190)`, diz isso diretamente.
 

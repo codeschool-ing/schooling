@@ -14,7 +14,13 @@
 # environment on 8300 again, as in lesson 7, because rollback.sh works on one
 # environment's `current` and `previous` links.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# Every state staged below is one the lesson gives the student the commands
+# for: the deploys and weights of "canary-abort" in "automated-abort", the
+# single production of "rollback", the staging of "no-previous". The lab
+# starts each one from empty directories where a student continues from
+# lesson 10, which leaves the same links and the same answers.
+#
+# What is STAGED rather than typed:
 #   - the project at step 12 (tag v1.6.1) in /home/ana/shipquote, by
 #     ../../lab.sh, with its virtual environment; the three artifacts of
 #     lesson 10, built by checking out each tag in turn and running
@@ -46,8 +52,8 @@ cd "$HOME/shipquote" || exit 1
 for t in v1.5.0 v1.6.0 v1.6.1; do git checkout -q "$t" && ops/build.sh > /dev/null; done
 git checkout -q main
 mkdir -p "$HOME/envs/production-blue" "$HOME/envs/production-green"
-printf 'SHIPQUOTE_PORT=8301\n' > "$HOME/envs/production-blue/config.env"
-printf 'SHIPQUOTE_PORT=8302\n' > "$HOME/envs/production-green/config.env"
+echo SHIPQUOTE_PORT=8301 > "$HOME/envs/production-blue/config.env"
+echo SHIPQUOTE_PORT=8302 > "$HOME/envs/production-green/config.env"
 run() { printf 'ana@laptop:~/shipquote$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
@@ -71,7 +77,7 @@ block rollback
 stop_all; R=
 rm -rf "$HOME/envs"
 mkdir -p "$HOME/envs/production"
-printf 'SHIPQUOTE_PORT=8300\n' > "$HOME/envs/production/config.env"
+echo SHIPQUOTE_PORT=8300 > "$HOME/envs/production/config.env"
 ops/deploy.sh production dist/shipquote-1.5.0.tar.gz > /dev/null
 ops/deploy.sh production dist/shipquote-1.6.0.tar.gz > /dev/null
 run 'readlink ~/envs/production/current ~/envs/production/previous'
@@ -87,7 +93,7 @@ run 'ops/rollback.sh production'
 
 block no-previous
 mkdir -p "$HOME/envs/staging"
-printf 'SHIPQUOTE_PORT=8200\n' > "$HOME/envs/staging/config.env"
+echo SHIPQUOTE_PORT=8200 > "$HOME/envs/staging/config.env"
 run 'ops/deploy.sh staging dist/shipquote-1.6.1.tar.gz'
 run 'ops/rollback.sh staging; echo "exit $?"'
 run 'ls ~/envs/staging/releases'

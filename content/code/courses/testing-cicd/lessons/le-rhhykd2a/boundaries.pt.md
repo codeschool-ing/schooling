@@ -57,7 +57,7 @@ FAILED tests/test_quote.py::test_an_order_of_199_reais_or_more_ships_free[19900-
 Uma linha de três falha, e é a linha **na** borda: um pedido de exatamente R$ 199,00 agora paga
 R$ 12,90. A linha `where 1290 = freight('01310-100', 300, 19900)` mostra a chamada e o que ela
 devolveu. Um teste que usasse R$ 250,00 como exemplo de "grátis" continuaria passando, e o teste de
-aceitação da seção 08 também, se tivesse usado R$ 200,00 redondos. O cliente que gasta exatamente o
+aceitação da seção 11 também, se tivesse usado R$ 200,00 redondos. O cliente que gasta exatamente o
 valor anunciado descobriria primeiro.
 
 ## Um checklist que pega quase tudo

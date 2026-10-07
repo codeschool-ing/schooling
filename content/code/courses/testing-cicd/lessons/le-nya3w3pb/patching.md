@@ -1,6 +1,6 @@
 ---
 title: Patching, and where a name is looked up
-version: 1
+version: 2
 ---
 
 When code has no seam, a test can still replace a collaborator by **patching**: swapping the object
@@ -8,8 +8,9 @@ a name refers to, for the duration of the test, and putting it back afterwards. 
 `unittest.mock.patch`, or pytest's `monkeypatch`. It is the tool for code you cannot change. It also
 has a trap that catches almost everybody once, and `shipquote` falls into it on purpose.
 
-Here is a test file written for this section. Both tests want `CarrierClient.rate` to receive a
-canned answer of 1999 cents without touching the network:
+Here is a test file written for this section, and only for it. Both tests want
+`CarrierClient.rate` to receive a canned answer of 1999 cents without touching the network. Save it
+as `tests/test_patch_trap.py`:
 
 ```python
 import io
@@ -36,7 +37,8 @@ def test_handing_the_double_in_through_the_seam():
 
 The first patches `urllib.request.urlopen`, the function the client uses by default. The second
 passes the double through the `opener` parameter. Port 9 on 127.0.0.1 has nothing listening, so any
-request that really leaves would be refused.
+request that really leaves would be refused. Delete the file once you have run it: it exists to
+fail.
 
 ```
 ana@laptop:~/shipquote$ python -m pytest tests/test_patch_trap.py -q --tb=line

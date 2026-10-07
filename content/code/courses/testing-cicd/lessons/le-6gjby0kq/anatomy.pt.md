@@ -1,11 +1,12 @@
 ---
 title: Um arquivo de workflow, linha por linha
-version: 1
+version: 2
 ---
 
 O GitHub Actions lê pipelines de arquivos YAML em `.github/workflows/` do repositório. Cada arquivo é
-um **workflow**: os eventos que o disparam e os jobs que ele roda. O passo 8 do `shipquote` acrescentou
-um que faz o mesmo que o hook da aula 5, mais a cobertura da aula 4, nas máquinas do GitHub:
+um **workflow**: os eventos que o disparam e os jobs que ele roda. Este faz o mesmo que o hook da
+aula 5, mais a cobertura da aula 4, nas máquinas do GitHub. O diretório é novo,
+`mkdir -p .github/workflows`, e o arquivo vai nele. Salve como `.github/workflows/ci.yml`:
 
 ```schooling-example
 {
@@ -43,8 +44,19 @@ um que faz o mesmo que o hook da aula 5, mais a cobertura da aula 4, nas máquin
 ## Conferido, não rodado
 
 Este workflow **não rodou no GitHub**: o laboratório não tem repositório lá, e nada neste curso faz
-push para um. O que o laboratório consegue é conferir o arquivo com o **actionlint**, um verificador
-estático de código aberto para workflows do GitHub Actions:
+push para um. Se você tem uma conta no GitHub, pode enviar o `shipquote` para um repositório seu e
+vê-lo rodar, mas nenhuma aula depende disso. O que o laboratório consegue é conferir o arquivo com o
+**actionlint**, um verificador estático de código aberto para workflows do GitHub Actions. Ele é
+escrito em Go e se instala com o Go do próprio Ubuntu, em `~/go/bin`:
+
+```sh
+sudo apt-get install -y golang-go
+go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+export PATH="$PATH:$HOME/go/bin"
+```
+
+O `export` dura enquanto o terminal durar; a mesma linha no fim do `~/.bashrc` o torna permanente.
+Rodado do diretório do projeto, o actionlint acha os workflows sozinho:
 
 ```
 ana@laptop:~/shipquote$ actionlint; echo "exit status $?"
@@ -54,7 +66,9 @@ exit status 0
 Silêncio e código de saída 0 querem dizer que o actionlint não achou nada a relatar: o YAML é
 válido, toda chave é uma que o GitHub conhece, e toda expressão `${{ }}` aponta para algo que existe.
 (O actionlint também pode passar cada script `run:` pelo ShellCheck, que este laboratório não tem
-instalado.) A próxima seção mostra o que ele relata, e o que não tem como saber.
+instalado.) A próxima seção mostra o que ele relata, e o que não tem como saber, então faça antes o
+commit do arquivo, com `git add .github && git commit -m "Run the checks on GitHub Actions"`, e a
+próxima seção pode quebrá-lo e pô-lo de volta.
 
 ## De onde vieram as partes
 

@@ -1,6 +1,6 @@
 ---
 title: What continuous integration is
-version: 1
+version: 2
 ---
 
 **Continuous integration** is a practice before it is a tool: everybody merges their work into the
@@ -17,8 +17,15 @@ minutes after every push.
 
 Hosted services, GitHub Actions and GitLab CI among them, are the subject of lesson 6. To see what
 they do without any of their vocabulary, this lesson uses a CI that fits in one file: a git
-**post-receive hook**, a script git runs on the receiving repository after every push. `lab.sh ci`
-writes it into a bare repository at `~/ci/shipquote.git`:
+**post-receive hook**, a script git runs on the receiving repository after every push. It lives in
+a **bare repository**, one with no working files, which is what a server keeps. Make one beside the
+project:
+
+```sh
+git init --bare -b main ~/ci/shipquote.git
+```
+
+and put the hook in its `hooks` directory. Save it as `~/ci/shipquote.git/hooks/post-receive`:
 
 ```schooling-example
 {
@@ -54,6 +61,13 @@ writes it into a bare repository at `~/ci/shipquote.git`:
 ```
 
 ## The first push
+
+git runs a hook only if it is executable, so `chmod +x ~/ci/shipquote.git/hooks/post-receive` first.
+The hook builds an environment with `uv` for each Python version, and uv downloads any of 3.11,
+3.12 and 3.13 the machine does not have, which makes the first push slower than the ones after it.
+On a network that refuses those downloads, give the hook the versions you have, for instance
+`CI_PYTHONS="3.12" git push`: every push in this lesson then shows two cells where these show six,
+and nothing else changes.
 
 Ana connects her clone to that repository and pushes `main`:
 

@@ -1,6 +1,6 @@
 ---
 title: What starts a run
-version: 1
+version: 2
 ---
 
 A **trigger** is the event that makes the CI start a run. The lab's hook has exactly one: a push to
@@ -12,7 +12,8 @@ remote: ci: try-new-rounding is not main, nothing to run
  * [new branch]      try-new-rounding -> try-new-rounding
 ```
 
-The branch reached the remote, and the hook said it had nothing to run. Whether that is right
+The branch reached the remote, and the hook said it had nothing to run. `git switch main` brings
+you back, which the rest of the lesson assumes. Whether that is right
 depends on the team: some want every branch checked, so a problem shows up before anybody opens a
 pull request; others save the runners for the branches that are about to merge.
 
