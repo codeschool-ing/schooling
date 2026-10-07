@@ -36,7 +36,7 @@ ana@lab:~/lab$ od -An -tx1 -N48 referral.enc
  12 3c 90 4e 55 85 2f 1f 1e a8 43 4b 7e b7 0d b4
 ```
 
-Decifrar exige as mesmas duas entradas, a chave e o vetor (`-iv`, assunto da seção 05 desta aula).
+Decifrar exige as mesmas duas entradas, a chave e o vetor (`-iv`, assunto da seção 07 desta aula).
 Com as duas, a carta volta exatamente igual:
 
 ```

@@ -14,7 +14,40 @@ is filled up to sixteen. The rest of this lesson follows from the first one.
 
 Vereda's appointment file was built for this lesson. Each slot of Monday's agenda in room 1 is one
 fixed-width record of exactly sixteen bytes, so that each record is one AES block. `vcrypt blocks`
-prints a file sixteen bytes at a time, in hexadecimal, and marks a block it has already seen:
+prints a file sixteen bytes at a time, in hexadecimal, and marks a block it has already seen. It is
+the lab's first tool, and this is all of it:
+
+```py
+# ~/lab/tools/blocks.py
+"""vcrypt blocks FILE: the file sixteen bytes at a time, in hex, marking a
+block already seen. With --letters, one letter per block instead, the same
+letter for the same block. FILE may be -, to read what a pipe sends."""
+import sys
+
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+args = sys.argv[1:]
+letters = "--letters" in args
+path = [a for a in args if a != "--letters"][0]
+data = sys.stdin.buffer.read() if path == "-" else open(path, "rb").read()
+blocks = [data[i:i + 16] for i in range(0, len(data), 16)]
+
+seen = {}
+if letters:
+    row = []
+    for b in blocks:
+        seen.setdefault(b, LETTERS[len(seen)] if len(seen) < len(LETTERS) else "?")
+        row.append(seen[b])
+    print(" ".join("".join(row[i:i + 4]) for i in range(0, len(row), 4)))
+    sys.exit()
+for n, b in enumerate(blocks, 1):
+    mark = f"  same as block {seen[b]}" if b in seen else ""
+    seen.setdefault(b, n)
+    print(f"{n:3}  {b.hex()}{mark}")
+print(f"{len(data)} bytes, {len(blocks)} blocks, {len(seen)} different")
+```
+
+Saved as `~/lab/tools/blocks.py`, it runs as `vcrypt blocks`:
 
 ```
 ana@lab:~/lab$ vcrypt blocks data/slots.dat | head -6
@@ -73,6 +106,6 @@ decrypts anything.
 
 AES encrypts sixteen bytes at a time, and the ciphertext is never shorter than the plaintext. CBC
 adds up to sixteen bytes of padding, and every mode needs its vector or nonce stored beside the
-ciphertext, which section 05 of this lesson explains. GCM adds a sixteen-byte tag. For a database
+ciphertext, which section 07 of this lesson explains. GCM adds a sixteen-byte tag. For a database
 column holding a CPF, that overhead is larger than the data, and lesson 14 comes back to what it
 costs to encrypt a column rather than a disk.

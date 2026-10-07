@@ -21,8 +21,118 @@ openssl genpkey -algorithm ED25519 -out signer.key
 ```
 
 Each run gives a different key, which is the point, so the lab does not use these. Its pairs are
-derived from fixed labels by `vlab/keys.py`, so that the transcripts below come out the same on
-your machine. Here they are:
+derived from fixed labels, through lesson 1's `drbg.py`, so that the transcripts below come out the
+same on your machine. The file that does it is the longest in the lab, and you do not need to
+follow it yet: the RSA part is the next section's subject, and the rest is a library call per
+algorithm. What matters now is that it does the same arithmetic as `genpkey`, starting from bytes
+anybody can rebuild rather than from random ones.
+
+```py
+# ~/lab/tools/keys.py
+"""The lab's key pairs, rebuilt from labels through drbg.py, so that yours are
+the ones in the lessons. A real pair comes from `openssl genpkey`, which
+draws fresh random bytes every time; this file does the same arithmetic
+with bytes anybody can rebuild, which is only acceptable in a lab."""
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa, x25519
+
+import drbg
+
+SMALL_PRIMES = [p for p in range(3, 2000) if all(p % d for d in range(2, int(p ** 0.5) + 1))]
+
+
+def probable_prime(n: int, label: str) -> bool:
+    """Miller-Rabin with 40 rounds, the test every RSA library runs."""
+    for p in SMALL_PRIMES:
+        if n % p == 0:
+            return n == p
+    d, s = n - 1, 0
+    while d % 2 == 0:
+        d, s = d // 2, s + 1
+    for i in range(40):
+        a = 2 + drbg.integer(f"{label}/witness/{i}", n.bit_length()) % (n - 3)
+        x = pow(a, d, n)
+        if x in (1, n - 1):
+            continue
+        for _ in range(s - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+    return True
+
+
+def prime(label: str, bits: int, e: int = 65537) -> int:
+    i = 0
+    while True:
+        # the top two bits set, so that p*q has all its bits; odd, of course
+        c = drbg.integer(f"{label}/{i}", bits) | (3 << (bits - 2)) | 1
+        if (c - 1) % e and probable_prime(c, f"{label}/{i}"):
+            return c
+        i += 1
+
+
+def rsa_key(label: str, bits: int) -> rsa.RSAPrivateKey:
+    e = 65537
+    p, q = prime(label + "/p", bits // 2), prime(label + "/q", bits // 2)
+    if p < q:
+        p, q = q, p
+    d = pow(e, -1, (p - 1) * (q - 1))
+    return rsa.RSAPrivateNumbers(
+        p=p, q=q, d=d, dmp1=d % (p - 1), dmq1=d % (q - 1), iqmp=pow(q, -1, p),
+        public_numbers=rsa.RSAPublicNumbers(e, p * q)).private_key()
+
+
+P256_ORDER = 0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551
+
+
+def ec_key(label: str) -> ec.EllipticCurvePrivateKey:
+    return ec.derive_private_key(1 + drbg.integer(label, 256) % (P256_ORDER - 1), ec.SECP256R1())
+
+
+def ed25519_key(label: str) -> ed25519.Ed25519PrivateKey:
+    return ed25519.Ed25519PrivateKey.from_private_bytes(drbg.stream(label, 32))
+
+
+def x25519_key(label: str) -> x25519.X25519PrivateKey:
+    return x25519.X25519PrivateKey.from_private_bytes(drbg.stream(label, 32))
+
+
+def write_pair(key, path):
+    """path.key, the private half in PKCS#8; path.pub, the public half."""
+    with open(path + ".key", "wb") as f:
+        f.write(key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                                  serialization.NoEncryption()))
+    with open(path + ".pub", "wb") as f:
+        f.write(key.public_key().public_bytes(serialization.Encoding.PEM,
+                                              serialization.PublicFormat.SubjectPublicKeyInfo))
+```
+
+A second, short file writes this lesson's pairs into `keys/`:
+
+```py
+# ~/lab/tools/pairs.py
+"""vcrypt pairs: write lesson 2's key pairs into keys/."""
+import keys
+
+keys.write_pair(keys.rsa_key("keys/rsa-2048", 2048), "keys/rsa-2048")
+keys.write_pair(keys.rsa_key("keys/rsa-3072", 3072), "keys/rsa-3072")
+keys.write_pair(keys.ec_key("keys/p256"), "keys/p256")
+for who in ("ana", "bruno"):
+    keys.write_pair(keys.ed25519_key("keys/ed25519-" + who), "keys/ed25519-" + who)
+    keys.write_pair(keys.x25519_key("keys/x25519-" + who), "keys/x25519-" + who)
+```
+
+Save both, then run it once. RSA takes a few seconds, because finding a prime of 1,536 bits means
+testing candidates until one passes:
+
+```sh
+cd ~/lab
+vcrypt pairs
+```
+
+Here they are:
 
 ```
 ana@lab:~/lab$ ls keys/rsa-2048.* keys/p256.* keys/ed25519-ana.*
