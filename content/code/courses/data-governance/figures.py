@@ -729,6 +729,84 @@ def _l8_ai_timeline(f):
             fill='--paper-dim')
 
 
+# ===================================================================== lesson 9
+L9 = 'le-4415g4vk'
+
+
+@figure('l9-loop', L9, 720, 200,
+        ('The life of a data quality finding. A query measures it. The finding is a question, '
+         'taken to the owner of the table. The owner decides. The fix happens at the source '
+         'that made the data. A rule that runs every day keeps it fixed, and its results feed '
+         'the next measurement.',
+         'A vida de um achado de qualidade de dados. Uma consulta o mede. O achado é uma '
+         'pergunta, levada ao dono da tabela. O dono decide. A correção acontece na origem que '
+         'produziu o dado. Uma regra que roda todo dia o mantém corrigido, e os resultados dela '
+         'alimentam a próxima medição.'),
+        ('Nobody changes data between measuring it and the owner deciding.',
+         'Ninguém muda o dado entre medi-lo e o dono decidir.'))
+def _l9_loop(f):
+    steps = [(('measure', 'medir'), ('a query, a count', 'consulta e contagem'), '--wire'),
+             (('ask', 'perguntar'), ('the rows, the evidence', 'as linhas, a evidência'), '--wire'),
+             (('decide', 'decidir'), ('the owner', 'o dono'), '--amber'),
+             (('fix at the source', 'corrigir na origem'), ('the form, the import', 'formulário, importação'), '--phosphor'),
+             (('keep a rule', 'manter uma regra'), ('every day, recorded', 'todo dia, registrada'), '--phosphor')]
+    w, gap, x = 124, 16, 20
+    for k, (name, what, c) in enumerate(steps):
+        f.box(x, 50, w, 64, [{'s': name, 'weight': '600'}, {'s': what, 'size': 9.5,
+                                                         'fill': '--paper-dim'}],
+              stroke=c, size=11)
+        if k < len(steps) - 1:
+            f.arrow(x + w, 82, x + w + gap - 2, 82)
+        x += w + gap
+    f.path('M 642 114 L 642 160 L 82 160 L 82 116', stroke='--paper-dim', dash='5 4', arrow=True)
+    f.text(360, 176, ('the history of every run is the next measurement',
+                      'o histórico de cada execução é a próxima medição'), size=10.5,
+           fill='--paper-dim')
+
+
+@figure('l9-lineage', L9, 720, 300,
+        ('A lineage map of Ipê\'s customer data. The shop\'s loader writes sales.customers, '
+         'sales.orders and the other tables. Views read them: customer_profile and '
+         'customer_card read customers, tickets_redacted reads tickets, consent_now reads '
+         'consent_events. Outside the database, export_subject.py, the RIPD facts query, '
+         'the analysts, the AI systems and the backups read them too. The database records the '
+         'edges to the views; the edges outside it are recorded only if somebody declares them.',
+         'Um mapa de linhagem dos dados de clientes da Ipê. O carregador da loja escreve '
+         'sales.customers, sales.orders e as outras tabelas. Views as leem: customer_profile e '
+         'customer_card leem customers, tickets_redacted lê tickets, consent_now lê '
+         'consent_events. Fora do banco, o export_subject.py, a consulta de fatos do RIPD, os '
+         'analistas, os sistemas de IA e os backups também as leem. O banco registra as arestas '
+         'até as views; as de fora só ficam registradas se alguém as declarar.'),
+        ('Solid lines PostgreSQL knows about; dashed lines only somebody can write down.',
+         'Linhas cheias o PostgreSQL conhece; linhas tracejadas só alguém pode anotar.'))
+def _l9_lineage(f):
+    f.rect(170, 20, 380, 220, stroke='--wire', fill='--ink', dash='5 4')
+    f.text(360, 36, ('inside PostgreSQL', 'dentro do PostgreSQL'), size=10.5, fill='--paper-dim')
+    f.box(20, 110, 120, 50, [('shop loader', 'carregador'), {'s': ('upstream', 'origem'),
+                                                            'size': 9.5, 'fill': '--paper-dim'}])
+    tables = [(60, 'sales.customers'), (110, 'sales.orders'), (160, 'support.tickets'),
+              (210, 'consent_events')]
+    for y, t in tables:
+        f.box(190, y - 16, 150, 32, {'s': t, 'mono': True, 'size': 10}, fill='--panel')
+        f.arrow(140, 135, 188, y, dash='4 3')
+    views = [(60, 'customer_profile', 60), (110, 'customer_card', 60),
+             (160, 'tickets_redacted', 160), (210, 'consent_now', 210)]
+    for y, v, src in views:
+        f.box(385, y - 16, 150, 32, {'s': v, 'mono': True, 'size': 10}, stroke='--phosphor',
+              fill='--panel')
+        f.arrow(340, src, 383, y, stroke='--phosphor')
+    outside = [(50, 'export_subject.py', True), (95, ('RIPD facts', 'fatos do RIPD'), False),
+               (140, ('analysts', 'analistas'), False), (185, ('AI systems', 'sistemas de IA'),
+                                                         False),
+               (230, ('backups', 'backups'), False)]
+    for y, label, mono in outside:
+        f.box(590, y - 16, 115, 32, {'s': label, 'mono': mono, 'size': 10}, stroke='--amber')
+        f.line(550, 135, 588, y, stroke='--amber', dash='4 3')
+    f.text(360, 270, ('solid: recorded by the database · dashed: declared, or nowhere',
+                      'cheia: registrada pelo banco · tracejada: declarada, ou em lugar nenhum'),
+           size=10.5, fill='--paper-dim')
+
+
 # ===================================================================== driver
 
 def main():
