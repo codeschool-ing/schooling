@@ -4,8 +4,7 @@ version: 1
 ---
 
 In cache-aside the application does the cache's work: it checks, it loads, it stores. **Read-through**
-moves that work into one place, a cache layer the application calls instead of the database, and
-**write-through** does the same for writes: every write goes through the layer, which writes the
+moves that work into one place, a cache layer the application calls instead of the database. **Write-through** does the same for writes: every write goes through the layer, which writes the
 database and then the cache.
 
 ```python

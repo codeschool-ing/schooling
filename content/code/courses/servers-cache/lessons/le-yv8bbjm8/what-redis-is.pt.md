@@ -11,7 +11,7 @@ feito para isso. O armazenamento que a maioria das aplicações usa é o Redis.
 **O Redis é um servidor que guarda tudo na memória e responde a comandos sobre isso por um socket de
 rede.** É um processo separado, então toda cópia da aplicação o compartilha: as duas lojas da aula 2
 veem o mesmo Redis, que é exatamente o que elas não conseguem com um dicionário na própria memória. E é
-um **servidor de estruturas de dados**, não só uma caixa de strings: um valor pode ser uma string, um
+um **servidor de estruturas de dados**: um valor pode ser uma string, um
 hash, uma lista, um conjunto ou um conjunto ordenado, cada um com comandos que o mudam no lugar, um
 comando por vez, sem o comando de mais ninguém entrar no meio.
 

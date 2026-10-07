@@ -4,8 +4,7 @@ version: 1
 ---
 
 No cache-aside a aplicação faz o trabalho do cache: confere, carrega, guarda. O **read-through** leva
-esse trabalho para um lugar só, uma camada de cache que a aplicação chama no lugar do banco, e o
-**write-through** faz o mesmo com as gravações: toda gravação passa pela camada, que grava o banco e
+esse trabalho para um lugar só, uma camada de cache que a aplicação chama no lugar do banco. O **write-through** faz o mesmo com as gravações: toda gravação passa pela camada, que grava o banco e
 depois o cache.
 
 ```python

@@ -5,7 +5,7 @@ version: 1
 
 Nothing in this course runs on a machine we host. **You build the server yourself, on your own
 computer, and every command in every lesson is typed there.** It is one Ubuntu 24.04 machine with
-the web servers, the caches and a small bookshop installed on it, and you can throw it away and
+the web servers, the caches and a small bookshop installed on it. You can throw it away and
 build it again in about ten minutes, which is the property that matters most: a lesson that breaks
 something is a lesson you can repeat.
 

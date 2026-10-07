@@ -35,7 +35,7 @@ for anybody to empty the cache.
 The price of book 2 appears on its own page and on the listing. Purging by URL needs both URLs, and
 whoever changes the price has to know every page that shows it. **Tags turn that around: each response
 says what it contains, and a purge names the thing that changed.** The origin labels the book's page
-`book-2` and the listing `listing`, the `BAN` handler turns a header into a **ban**, a rule that every
+`book-2` and the listing `listing`. The `BAN` handler turns a header into a **ban**, a rule that every
 stored object is checked against, and a price change becomes one request:
 
 ```

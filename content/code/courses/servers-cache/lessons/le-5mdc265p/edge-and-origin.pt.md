@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um servidor em São Paulo responde a um visitante em São Paulo em poucos milissegundos e a um visitante
-em Lisboa em bem mais de cem, porque a luz na fibra leva esse tempo para cruzar um oceano e voltar, e
+em Lisboa em bem mais de cem. A luz na fibra leva esse tempo para cruzar um oceano e voltar, e
 uma página precisa de várias idas e voltas antes de qualquer coisa aparecer. **Nenhuma configuração do
 servidor muda essa distância.** O que muda é responder de algum lugar mais perto.
 

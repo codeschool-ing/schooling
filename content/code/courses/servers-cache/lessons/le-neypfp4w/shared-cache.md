@@ -92,7 +92,7 @@ ana@web:~$ for p in 8001 8002; do curl -s localhost:$p/api/stats; done
 `MISS` stores it, `HIT` serves it, and six seconds later `EXPIRED`: the copy was stale, so Nginx went to
 the shop for a new one and stored that. Two database queries for four requests. Nginx could also have
 **revalidated** the stale copy with a conditional request, sending the shop the `ETag` it held, by
-adding `proxy_cache_revalidate on`; with the shop's `304` costing as much as a `200`, that would save
+adding `proxy_cache_revalidate on`. With the shop's `304` costing as much as a `200`, that would save
 nothing here, and lesson 6 has a better use for a stale copy.
 
 ## What it does not store

@@ -11,7 +11,7 @@ applications reach for is Redis.
 **Redis is a server that keeps everything in memory and answers commands about it over a network
 socket.** It is a separate process, so every copy of the application shares it: the two shops of
 lesson 2 see the same Redis, which is exactly what they cannot do with a dictionary in their own
-memory. And it is a **data structure server**, not just a box of strings: a value can be a string, a
+memory. And it is a **data structure server**: a value can be a string, a
 hash, a list, a set or a sorted set, each with commands that change it in place, one command at a time,
 without anybody else's command getting in between.
 

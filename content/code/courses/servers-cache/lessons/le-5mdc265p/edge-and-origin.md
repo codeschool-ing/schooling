@@ -4,7 +4,7 @@ version: 1
 ---
 
 A server in São Paulo answers a visitor in São Paulo in a few milliseconds and a visitor in Lisbon in
-well over a hundred, because light in fibre takes that long to cross an ocean and back, and a page
+well over a hundred. Light in fibre takes that long to cross an ocean and back, and a page
 needs several round trips before anything is drawn. **No configuration of the server changes that
 distance.** What changes it is answering from somewhere closer.
 

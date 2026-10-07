@@ -13,7 +13,7 @@ close that door, and they are worth knowing so that nobody opens it:
 - `protected-mode yes`: if somebody does bind it to every address and sets no password, Redis refuses
   connections from anywhere but loopback anyway.
 
-The third layer is **who may do what**, and Redis 6 and later answer that with **ACLs**. Out of the box
+The third layer is **who may do what**, and Redis 6 and later answer that with ACLs. Out of the box
 there is one user, `default`, with no password and every permission:
 
 ```

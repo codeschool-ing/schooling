@@ -13,7 +13,7 @@ Ubuntu fecham essa porta, e vale conhecê-los para ninguém abri-la:
 - `protected-mode yes`: se alguém o prender a todos os endereços e não definir senha, o Redis recusa
   conexões de qualquer lugar que não seja o loopback mesmo assim.
 
-A terceira camada é **quem pode fazer o quê**, e o Redis 6 em diante responde isso com **ACLs**. De
+A terceira camada é **quem pode fazer o quê**, e o Redis 6 em diante responde isso com ACLs. De
 fábrica há um usuário, `default`, sem senha e com toda permissão:
 
 ```

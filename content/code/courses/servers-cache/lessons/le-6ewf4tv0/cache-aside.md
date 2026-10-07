@@ -3,8 +3,7 @@ title: Cache-aside, the pattern you already wrote
 version: 1
 ---
 
-Lessons 8 and 9 stored values and read them back. What turns that into a cache is a rule about **who
-fills it and when**, and the rule most applications use is called **cache-aside**: the application asks
+Lessons 8 and 9 stored values and read them back. What turns that into a cache is a rule about **who fills it and when**. The rule most applications use is called **cache-aside**: the application asks
 the cache first, and on a miss reads the database itself and leaves a copy for the next reader. The cache
 sits beside the application's path rather than in it, which is where the name comes from.
 

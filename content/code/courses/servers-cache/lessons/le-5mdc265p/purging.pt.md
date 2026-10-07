@@ -35,7 +35,7 @@ jeito de qualquer um esvaziar o cache.
 O preço do livro 2 aparece na página dele e na listagem. Limpar por URL precisa das duas URLs, e quem
 muda o preço precisa saber toda página que o mostra. **As etiquetas invertem isso: cada resposta diz o
 que contém, e uma limpeza nomeia a coisa que mudou.** A origem etiqueta a página do livro como `book-2` e
-a listagem como `listing`, o tratamento de `BAN` transforma um cabeçalho num **ban**, uma regra contra a
+a listagem como `listing`. O tratamento de `BAN` transforma um cabeçalho num **ban**, uma regra contra a
 qual todo objeto guardado é conferido, e uma mudança de preço vira uma requisição:
 
 ```

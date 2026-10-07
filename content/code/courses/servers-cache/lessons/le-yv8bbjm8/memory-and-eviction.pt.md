@@ -54,7 +54,7 @@ ana@web:~/work$ redis-cli EXISTS bestsellers book:2
 0
 ```
 
-Com **`allkeys-lru`**, o Redis abre espaço despejando as chaves **usadas há mais tempo**, entre todas as
+Com **`allkeys-lru`**, o Redis abre espaço despejando as chaves usadas há mais tempo, entre todas as
 chaves, e cada uma das cinco mil gravações deu certo. 4.608 chaves foram despejadas para abrir espaço, a
 memória está no limite, e os mais vendidos e o hash do livro das seções anteriores também sumiram,
 porque ninguém os tinha lido recentemente. É o que um cache pode fazer e um banco não pode.

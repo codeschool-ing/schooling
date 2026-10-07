@@ -39,7 +39,7 @@ depois cinquenta leitores encontraram o livro 2 esperando e o banco não respond
 a questão: doze consultas em sequência são uma carga que o banco mal nota, e as mesmas doze como um
 estouro de visitantes de verdade são a carga que esta aula vem evitando.
 
-O que aquecer é a pergunta de verdade, e a própria história da loja responde:
+Quais páginas aquecer é uma pergunta que a própria história da loja responde:
 
 - **As páginas mais lidas**, pelo log de acesso: os logs da aula 1 já nomeiam toda URL e quantas vezes
   ela foi pedida.

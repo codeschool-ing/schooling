@@ -4,7 +4,7 @@ version: 1
 ---
 
 As aulas 8 e 9 guardaram valores e os leram de volta. O que transforma isso num cache é uma regra sobre
-**quem o enche e quando**, e a regra que a maioria das aplicações usa se chama **cache-aside**: a
+**quem o enche e quando**. A regra que a maioria das aplicações usa se chama **cache-aside**: a
 aplicação pergunta primeiro ao cache e, num erro de cache, lê ela mesma o banco e deixa uma cópia para o
 próximo leitor. O cache fica ao lado do caminho da aplicação, e não dentro dele, que é de onde vem o
 nome.

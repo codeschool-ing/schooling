@@ -92,7 +92,7 @@ ana@web:~$ for p in 8001 8002; do curl -s localhost:$p/api/stats; done
 `MISS` guarda, `HIT` entrega, e seis segundos depois `EXPIRED`: a cópia estava velha, então o Nginx foi
 à loja buscar uma nova e a guardou. Duas consultas ao banco para quatro requisições. O Nginx também
 poderia ter **revalidado** a cópia velha com uma requisição condicional, mandando à loja o `ETag` que
-tinha, acrescentando `proxy_cache_revalidate on`; com o `304` da loja custando o mesmo que um `200`,
+tinha, acrescentando `proxy_cache_revalidate on`. Com o `304` da loja custando o mesmo que um `200`,
 isso não pouparia nada aqui, e a aula 6 tem um uso melhor para uma cópia velha.
 
 ## O que ele não guarda

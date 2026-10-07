@@ -41,8 +41,7 @@ ana@web:~$ sudo ss -ltn | awk 'NR>1 {print $4}' | sort
 Só o Nginx escuta em todos os endereços. A loja, o Pebble e o resolvedor de DNS local escutam só no
 loopback, então o único jeito de alcançar a loja de outra máquina é pelo Nginx e pelas regras dele.
 **Um firewall acrescenta uma segunda camada, independente** (no Ubuntu, `sudo ufw allow 22,80,443/tcp`
-e depois `sudo ufw enable`), e ele não foi rodado na máquina em que este curso foi gravado, cuja rede
-já é privada; num servidor com endereço público, é a primeira coisa a configurar, antes de subir os
+e depois `sudo ufw enable`). Ele não foi rodado na máquina em que este curso foi gravado, cuja rede já é privada. Num servidor com endereço público, é a primeira coisa a configurar, antes de subir os
 servidores da aula 1.
 
 ## Cercando a aplicação com o systemd

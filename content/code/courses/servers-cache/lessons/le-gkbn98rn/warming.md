@@ -38,7 +38,7 @@ half; then fifty readers found book 2 waiting and the database answered none of 
 the point: twelve queries in sequence is a load the database barely notices, and the same twelve as a
 stampede of real visitors is the load this lesson has been preventing.
 
-What to warm is the real question, and the shop's own history answers it:
+Which pages to warm is a question the shop's own history answers:
 
 - **The most read pages**, from the access log: lesson 1's logs already name every URL and how often it
   was asked for.

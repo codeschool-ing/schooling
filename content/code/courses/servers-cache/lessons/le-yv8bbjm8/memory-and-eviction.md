@@ -53,7 +53,7 @@ ana@web:~/work$ redis-cli EXISTS bestsellers book:2
 0
 ```
 
-With **`allkeys-lru`**, Redis makes room by evicting the keys **least recently used**, from all keys, and
+With **`allkeys-lru`**, Redis makes room by evicting the keys least recently used, from all keys, and
 every one of the five thousand writes succeeded. 4,608 keys were evicted to make room, memory sits at
 its limit, and the bestsellers and the book hash from earlier sections are gone too, because nothing had
 read them recently. That is what a cache is allowed to do and a database is not.

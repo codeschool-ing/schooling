@@ -40,8 +40,7 @@ ana@web:~$ sudo ss -ltn | awk 'NR>1 {print $4}' | sort
 Only Nginx listens on every address. The shop, Pebble and the local DNS resolver listen on loopback
 alone, so the only way to reach the shop from another machine is through Nginx and its rules. **A
 firewall adds a second, independent layer** (on Ubuntu, `sudo ufw allow 22,80,443/tcp` and then
-`sudo ufw enable`), and it was not run on the machine this course was recorded on, whose network is
-private to it already; on a server with a public address it is the first thing to set up, before
+`sudo ufw enable`). It was not run on the machine this course was recorded on, whose network is private to it already. On a server with a public address it is the first thing to set up, before
 lesson 1's servers are started.
 
 ## Fencing the application in with systemd
