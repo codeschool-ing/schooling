@@ -21,7 +21,7 @@ a reason not to.
 
 | | what it is | what it costs |
 |---|---|---|
-| installed | Ubuntu 24.04 on a computer of its own, or as the system of the one you use | nothing to buy, and twenty-five packages on that computer for good, a DNS server and a VPN server among them |
+| installed | Ubuntu 24.04 on a computer of its own, or as the system of the one you use | nothing to buy, and twenty-six packages on that computer for good, a DNS server and a VPN server among them |
 | **a virtual machine with Multipass** (recommended) | Canonical's tool that creates an Ubuntu Server 24.04 machine with one command, on Windows, macOS and Linux | 2 processors, 2 GB of memory and 10 GB of disk while it runs |
 | online | a small Linux server rented by the hour from a cloud provider | money for every hour it exists, and a machine on the internet from its first minute |
 
@@ -63,7 +63,7 @@ sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2 nftables bind9 bind9-dnsutils \
     nginx openssl tcpdump tshark traceroute mtr-tiny iperf3 netcat-openbsd curl iputils-ping \
     ethtool wireguard-tools wireguard-go openvpn strongswan-swanctl strongswan-charon \
-    libcharon-extra-plugins keepalived haproxy python3
+    libcharon-extra-plugins keepalived haproxy python3 socat
 ```
 
 `DEBIAN_FRONTEND=noninteractive` stops the installer from asking whether ordinary users may capture

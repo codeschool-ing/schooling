@@ -6,7 +6,8 @@ version: 1
 To see what the site's users see, the laptop asks for the page thirty times in a row, printing the time
 to the millisecond before each request. `curl -m 1` gives each request one second at most, and a request
 that fails prints `(no answer)`. A little over two seconds in, HAProxy on `lb1` was killed outright, the way a crash
-or an out-of-memory kill would end it:
+or an out-of-memory kill would end it: `sudo bash netlab.sh kill lb1 haproxy KILL` on the virtual
+machine. Start the loop on `laptop` first:
 
 ```
 ana@laptop:~$ for i in $(seq 1 30); do printf "%s " $(date +%T.%N | cut -c1-12); curl -s -m 1 http://www.example.com/ || echo "(no answer)"; sleep 0.2; done

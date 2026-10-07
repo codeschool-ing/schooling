@@ -8,7 +8,8 @@ morto, e faz isso do mesmo jeito, com um check que roda haja ou não algo errado
 configuração termina em `check inter 1s fall 2 rise 2`, e `option httpchk GET /` faz do check uma
 requisição HTTP de verdade pela página inicial, e não um teste de que a porta está aberta.
 
-Com o HAProxy de `lb1` iniciado de novo, o que não aparece aqui, o nginx de `web2` foi parado. Cada
+Com o HAProxy de `lb1` iniciado de novo, com o mesmo comando da primeira seção, o nginx de `web2` foi
+parado: `sudo bash netlab.sh kill web2 nginx` na máquina virtual. Cada
 balanceador verifica os servidores por conta própria; esta é a visão de `lb2`:
 
 ```
@@ -39,8 +40,9 @@ vezes, uma como aviso do próprio HAProxy e outra como mensagem do log, e termin
 O `show stat` no socket de administração imprime uma linha de campos separados por vírgula por servidor, e
 o `cut` guarda três deles: o backend, o servidor e o status. **`web2` está `DOWN` e o backend como um todo
 continua `UP`**, porque dois dos três servidores estão. As seis requisições seguintes foram para `web1` e
-`web3` em rodízio, e nenhuma falhou nem percebeu nada. Quando o nginx foi iniciado de novo, dois checks
-bem-sucedidos trouxeram `web2` de volta, e desta vez o motivo é `Layer7 check passed, code: 200`: a
+`web3` em rodízio, e nenhuma falhou nem percebeu nada. Quando o nginx foi iniciado de novo, com
+`sudo nginx -c /lab/web2/www/nginx.conf` em `web2`, a configuração que o `netlab.sh` escreveu, dois
+checks bem-sucedidos trouxeram `web2` de volta, e desta vez o motivo é `Layer7 check passed, code: 200`: a
 própria página inicial respondeu.
 
 ## Dois checks, duas camadas

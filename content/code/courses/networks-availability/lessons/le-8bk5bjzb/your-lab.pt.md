@@ -22,7 +22,7 @@ que tenha um motivo para não escolher.
 
 | | o que é | quanto custa |
 |---|---|---|
-| instalado | Ubuntu 24.04 num computador só para isso, ou como sistema do computador que você usa | nada a comprar, e vinte e cinco pacotes nesse computador para sempre, entre eles um servidor DNS e um servidor de VPN |
+| instalado | Ubuntu 24.04 num computador só para isso, ou como sistema do computador que você usa | nada a comprar, e vinte e seis pacotes nesse computador para sempre, entre eles um servidor DNS e um servidor de VPN |
 | **uma máquina virtual com o Multipass** (recomendado) | a ferramenta da Canonical que cria uma máquina Ubuntu Server 24.04 com um comando, no Windows, no macOS e no Linux | 2 processadores, 2 GB de memória e 10 GB de disco enquanto ela roda |
 | online | um servidor Linux pequeno alugado por hora de um provedor de nuvem | dinheiro por cada hora que ele existir, e uma máquina na internet desde o primeiro minuto |
 
@@ -65,7 +65,7 @@ sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2 nftables bind9 bind9-dnsutils \
     nginx openssl tcpdump tshark traceroute mtr-tiny iperf3 netcat-openbsd curl iputils-ping \
     ethtool wireguard-tools wireguard-go openvpn strongswan-swanctl strongswan-charon \
-    libcharon-extra-plugins keepalived haproxy python3
+    libcharon-extra-plugins keepalived haproxy python3 socat
 ```
 
 O `DEBIAN_FRONTEND=noninteractive` impede o instalador de perguntar se usuários comuns podem capturar

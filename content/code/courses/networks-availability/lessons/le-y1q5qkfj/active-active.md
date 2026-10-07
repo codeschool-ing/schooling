@@ -3,11 +3,21 @@ title: Active-active, and the rule that keeps it honest
 version: 1
 ---
 
-Active-active needs nothing new, only a second VRRP instance. keepalived on both balancers was
+Active-active needs nothing new, only a second VRRP instance. keepalived on both balancers is
 reconfigured with two: `www_a` for `192.0.2.80`, where `lb1` has priority 150 and `lb2` 100, and `www_b`
 for `192.0.2.81`, VRID 81, with the priorities the other way round. Both track the same `haproxy_alive`
-script. That configuration was written while the lab was set up and is not shown; the HAProxy file did
-not change, since it was already listening on both addresses.
+script. The HAProxy file does not change, since it was already listening on both addresses.
+
+Stop keepalived on both balancers first, on the virtual machine: `sudo bash netlab.sh kill lb1 keepalived`
+and `sudo bash netlab.sh kill lb2 keepalived`; each gives up its address as it goes. Then add this at the
+end of each balancer's `keepalived.conf`, `lb1`'s as it is here, and on `lb2` with the two priorities
+swapped:
+
+```schooling-example
+{"language": "conf", "file": "keepalived.conf", "parts": [{"code": "vrrp_instance www_b {\n    state BACKUP\n    interface eth0\n    virtual_router_id 81\n    priority 100\n    advert_int 1", "note": "A second instance, with its own VRID, 81. On `lb1` it gets the lower priority, 100; on `lb2` the two are swapped, `www_a` at 100 and `www_b` at 150."}, {"code": "    virtual_ipaddress {\n        192.0.2.81/24\n    }", "note": "The second public address, which HAProxy already listens on."}, {"code": "    track_script {\n        haproxy_alive\n    }\n}", "note": "The same check as `www_a`: if HAProxy dies, this balancer gives up both of its addresses."}]}
+```
+
+Start keepalived on both with the command of the first section, and a few seconds later:
 
 ```
 ana@lb1:~$ ip -br addr show eth0
@@ -27,10 +37,10 @@ ana@lb2:~$ tail -n 1 /run/haproxy.log
 to `.81` through `lb2`, and each log has its own. Each balancer also keeps its own round robin, which is
 why the two answers came from `web1` and `web3`: each balancer was at its own place in its own rotation.
 Clients would normally be spread over the two addresses by DNS: the name returning both, in a different
-order to different askers. The lab's DNS returns only `192.0.2.80` for `www.example.com`, as `dig`
+order to different askers. The network's DNS returns only `192.0.2.80` for `www.example.com`, as `dig`
 showed in the active-passive section, so here the two addresses were asked for by hand.
 
-Then HAProxy on `lb2` was killed, and five seconds later:
+Then HAProxy on `lb2` was killed, `sudo bash netlab.sh kill lb2 haproxy KILL`, and five seconds later:
 
 ```
 ana@lb1:~$ ip -br addr show eth0
