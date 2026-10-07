@@ -1,6 +1,6 @@
 ---
 title: Sub-redes iguais, necessidades desiguais
-version: 1
+version: 2
 ---
 
 A aula 12 cortou um bloco em sub-redes com uma máscara só, então todo pedaço saiu do mesmo tamanho.
@@ -18,8 +18,9 @@ A empresa do laboratório desta aula tem um bloco, 10.20.32.0/24, e quatro redes
 | o enlace entre os roteadores r1 e r2 | 2 |
 
 O primeiro impulso é o que a aula 12 ensinou: quatro redes, então corte o /24 em quatro pedaços
-iguais. Dois bits da parte de host vão para o número da sub-rede, o que deixa um /26. Isto é o que
-cabe num desses pedaços:
+iguais. Dois bits da parte de host vão para o número da sub-rede, o que deixa um /26. Esta aula roda na rede
+da aula 12, o `plan.sh`, montada com `sudo bash ~/netlab/netlab.sh up plan`, e no hq1 o `ipcalc`
+mostra o que cabe num desses pedaços:
 
 ```
 ana@hq1:~$ ipcalc -b 10.20.32.0/26

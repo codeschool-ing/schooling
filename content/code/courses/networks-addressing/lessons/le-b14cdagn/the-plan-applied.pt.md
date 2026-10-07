@@ -1,10 +1,10 @@
 ---
 title: O plano, montado
-version: 1
+version: 2
 ---
 
 Um plano no papel vira rede em poucas linhas: um endereço, com a sua máscara, em cada interface do
-roteador. O laboratório desta aula é o plano montado. O r1 tem um cabo para cada uma das três LANs e
+roteador. O laboratório desta aula é o plano montado, e é o `plan.sh` da aula 12. O r1 tem um cabo para cada uma das três LANs e
 um para o r2, e atrás do r2 fica o hq1, um PC na matriz de onde parte cada teste desta aula:
 
 ```schooling-figure
