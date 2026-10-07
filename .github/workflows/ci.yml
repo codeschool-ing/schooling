@@ -473,13 +473,26 @@ jobs:
           if ! command -v terraform >/dev/null; then
             # The branch for the day the image stops carrying it, so this
             # reports on the configuration rather than on the machine.
-            wget -qO- https://apt.releases.hashicorp.com/gpg \
+            #
+            # THAT DAY HAS COME, and this branch now runs on every push. Twice
+            # on 7 October 2026 it hung in `apt-get update` until the job's
+            # five minutes ran out — 12 seconds on every other run — and a
+            # cancelled job says nothing about which mirror stopped answering.
+            # So the update reads ONLY HashiCorp's list (this step needs no
+            # other source: the package has no dependencies), and every fetch
+            # has a timeout and retries, so a slow server fails in under a
+            # minute with its own name in the log instead of taking the job.
+            wget -q --timeout=30 --tries=3 -O- https://apt.releases.hashicorp.com/gpg \
               | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp.gpg
             echo "deb [signed-by=/usr/share/keyrings/hashicorp.gpg]" \
               "https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
               | sudo tee /etc/apt/sources.list.d/hashicorp.list
-            sudo apt-get update -qq
-            sudo apt-get install -y terraform
+            apt_opts=(-o Acquire::Retries=3 -o Acquire::http::Timeout=30
+                      -o Acquire::https::Timeout=30)
+            sudo apt-get update -qq "${apt_opts[@]}" \
+              -o Dir::Etc::sourcelist=sources.list.d/hashicorp.list \
+              -o Dir::Etc::sourceparts=- -o APT::Get::List-Cleanup=0
+            sudo apt-get install -y "${apt_opts[@]}" terraform
           fi
           terraform version
 
