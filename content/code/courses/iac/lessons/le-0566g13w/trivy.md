@@ -1,12 +1,24 @@
 ---
 title: Trivy, and where its checks come from
-version: 1
+version: 2
 ---
 
 Trivy, from Aqua Security, is a scanner for container images, file systems and repositories, and
 `trivy config` is the part of it that reads infrastructure code. Its checks are written in Rego, the
 policy language of Open Policy Agent, and **the release you install carries a copy of them inside
-the binary**. The lab has this one:
+the binary**.
+
+**Installing Trivy.** It comes from Aqua Security's own package repository. The first command fetches
+the key its packages are signed with, the second adds the repository, and the third installs the
+newest release:
+
+```sh
+curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee /etc/apt/sources.list.d/trivy.list
+sudo apt-get update && sudo apt-get install -y trivy
+```
+
+These transcripts were recorded with 0.75.0, and a newer release may word a line differently:
 
 ```
 ana@laptop:~/shop$ trivy --version
@@ -16,8 +28,8 @@ Version: 0.75.0
 ## A newer set of checks, if it can reach one
 
 Trivy does not trust its built-in copy by default. On each run it looks for a newer *checks bundle*
-on a container registry, and downloads it if the one in its cache is out of date. In the lab the
-download fails and Trivy says what it does instead:
+on a container registry, and downloads it if the one in its cache is out of date. The machine these
+lessons were recorded on had no internet, so the download failed and Trivy said what it did instead:
 
 ```
 ana@laptop:~/shop$ trivy config . 2>&1 | head -n 5
@@ -28,8 +40,10 @@ ana@laptop:~/shop$ trivy config . 2>&1 | head -n 5
 2026-10-02T07:41:09-03:00	INFO	[terraform scanner] Scanning root module	file_path="."
 ```
 
-`Falling back to embedded checks` is the line that matters. The scan goes ahead with the checks
-compiled into 0.75.0. `--skip-check-update` stops the attempt altogether:
+`Falling back to embedded checks` is the line that matters. The scan went ahead with the checks
+compiled into 0.75.0. On your computer the download succeeds, there is no `ERROR` line, and the
+bundle is kept in Trivy's cache under `~/.cache/trivy`. `--skip-check-update` stops the attempt
+altogether:
 
 ```
 ana@laptop:~/shop$ trivy config --skip-check-update . 2>&1 | head -n 4
@@ -39,12 +53,15 @@ ana@laptop:~/shop$ trivy config --skip-check-update . 2>&1 | head -n 4
 2026-10-02T07:41:11-03:00	INFO	[terraform scanner] Scanning root module	file_path="."
 ```
 
-The `ERROR` is still there, now because the cache is empty, and the fallback is the same. Both runs
-use the embedded checks, so every Trivy result in this lesson is what those checks say. On a machine
-with a network the bundle is fetched and can be newer than the binary, **so the same binary on the
-same code can report something different next week** because the checks moved. In a pipeline that
-fails on findings, decide whether you want that. `--skip-check-update` pins the checks to the
-release you chose, and updating Trivy becomes the moment new rules arrive.
+On the recording machine the `ERROR` is still there, now because the cache is empty, and the fallback
+is the same, so every Trivy result on these pages is what the embedded checks say. On yours the
+cache holds the bundle the first run downloaded, Trivy loads it, and there is no `ERROR`. That bundle
+can be newer than the checks in the binary, so your counts may differ slightly from the page's.
+
+That is the general point: **the same binary on the same code can report something different next
+week** because the checks moved. In a pipeline that fails on findings, decide whether you want that.
+`--skip-check-update` stops the checks moving on their own: it uses the cache, or the release's own
+checks when there is none, and new rules arrive when you decide.
 
 ## Severity comes with every finding
 

@@ -1,12 +1,24 @@
 ---
 title: Checkov, and how to read a finding
-version: 1
+version: 2
 ---
 
 Checkov is a Python program, published by Prisma Cloud (part of Palo Alto Networks), and it reads
 far more than Terraform: CloudFormation, Kubernetes manifests, Dockerfiles, GitHub Actions
 workflows. You point it at a directory with `-d` and it works out which of its frameworks apply.
-The lab has this version:
+
+**Installing Checkov.** It is installed with pipx, which gives a Python program an environment of its
+own, the way `~/iac-venv` holds moto. `pipx ensurepath` puts the directory pipx installs into on
+your `PATH`, and a terminal reads its `PATH` only when it opens, so open a new terminal after these
+three commands and read `~/iac-env.sh` into it again:
+
+```sh
+sudo apt-get install -y pipx
+pipx ensurepath
+pipx install checkov==3.3.22
+```
+
+The version is the one these transcripts were recorded with:
 
 ```
 ana@laptop:~/shop$ checkov --version
@@ -16,8 +28,9 @@ ana@laptop:~/shop$ checkov --version
 ## It wants the network, and works without it
 
 The first thing Checkov does on every run is ask Prisma Cloud's API for its *guidelines*, a mapping
-from each check to a severity and a page of documentation. The lab has no network, so the request
-fails, and Checkov says so with a warning and then a long Python traceback:
+from each check to a page of documentation. The machine these lessons were recorded on had no
+internet, so the request failed, and Checkov said so with a warning and then a long Python
+traceback:
 
 ```
 ana@laptop:~/shop$ checkov -d . 2>&1 | head -n 2
@@ -25,12 +38,17 @@ ana@laptop:~/shop$ checkov -d . 2>&1 | head -n 2
 Traceback (most recent call last):
 ```
 
-**The scan carries on after the traceback**, and its results are the same. What is lost is the
-download itself, and `--skip-download` is Checkov's own switch for not trying. Every run in this
-lesson from here on passes it. Two things go missing with the download, and both matter later:
-**severities**, because Checkov's checks carry none of their own, and the `Guide:` line that a
-connected run prints under each finding with a link to the rule's documentation page. Keep the
-first one in mind for the triage section.
+On your computer the request reaches the API, so neither line appears: the same command prints
+Checkov's banner and goes on to the report. **The scan carries on after the traceback**, and its
+results are the same either way. What the download adds is the `Guide:` line that a connected run
+prints under each finding, with a link to the rule's documentation page. `--skip-download` is
+Checkov's own switch for not asking, an offline run wherever it happens, and every run in this
+lesson from here on passes it, so your reports match the page.
+
+**Severities are another matter.** Checkov's checks carry none of their own, and the public download
+does not add them: Prisma Cloud sends a severity for each check only to a run that signs in with an
+account's API key. Without one, connected or not, no finding has a severity. Keep that in mind for
+the triage section.
 
 ## The whole report
 
@@ -129,7 +147,8 @@ bucket and found none.
 
 The catalogue knows nothing about the shop. Ana's company allows SSH only from the office, whose
 range is `203.0.113.0/24`, and no built-in rule can know that number. Checkov reads extra checks from
-a directory, and a check can be a few lines of YAML:
+a directory, and a check can be a few lines of YAML. Ana saves this one as `~/policies/ssh_office.yaml`,
+in a directory of its own outside the configuration:
 
 ```yaml
 metadata:

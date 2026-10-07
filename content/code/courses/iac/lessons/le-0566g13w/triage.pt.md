@@ -1,10 +1,11 @@
 ---
 title: Triagem, e o que deve quebrar o build
-version: 1
+version: 2
 ---
 
-O relatório de um scanner é uma lista de fatos sobre o texto, e a lista é longa. Depois das supressões
-e da variável, é assim que os três estão:
+O relatório de um scanner é uma lista de fatos sobre o texto, e a lista é longa. Antes, a Ana apaga os
+arquivos de plan da seção 07, `rm -f tfplan tfplan.json`, para que uma varredura do diretório leia a
+configuração e não um plan esquecido. Depois das supressões e da variável, é assim que os três estão:
 
 ```
 ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact | sed -n 3p
@@ -76,7 +77,7 @@ exit 1
 
 Um portão em `CRITICAL` aprova esta configuração, com as falhas do bucket e tudo, porque o Trivy não
 classifica nada aqui como `CRITICAL`. Um portão em `HIGH,CRITICAL` reprova. O Checkov tem a mesma
-ideia em `--hard-fail-on`, e offline ela tem uma armadilha:
+ideia em `--hard-fail-on`, e sem uma conta da Prisma Cloud ela tem uma armadilha:
 
 ```
 ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact --hard-fail-on HIGH > /dev/null; echo "exit $?"
@@ -85,8 +86,9 @@ ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact --hard-fail-on
 exit 1
 ```
 
-**`--hard-fail-on HIGH` sai com 0.** As severidades do Checkov vêm do download que `--skip-download`
-desliga, então nenhum achado é `HIGH`, nada casa, e o portão aprova tudo, em silêncio. Uma lista de ids
+**`--hard-fail-on HIGH` sai com 0.** As severidades do Checkov só chegam a uma execução autenticada com
+uma chave de API da Prisma Cloud (seção 03), então aqui nenhum achado é `HIGH`, nada casa, e o portão
+aprova tudo, em silêncio. Uma lista de ids
 de check não tem essa dependência e falha como deve. Se o seu Checkov roda sem a plataforma, use ids no
 portão.
 
@@ -101,7 +103,8 @@ ana@laptop:~/shop$ checkov -d . --skip-download --quiet --compact --create-basel
 Created a checkov baseline file at /home/ana/shop/.checkov.baseline
 ```
 
-Então alguém acrescenta um bucket de backups, com todas as lacunas que o bucket de fotos tinha:
+Então alguém acrescenta um bucket de backups no `backups.tf`, com todas as lacunas que o bucket de
+fotos tinha:
 
 ```hcl
 resource "aws_s3_bucket" "backups" {

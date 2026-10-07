@@ -1,12 +1,25 @@
 ---
 title: Trivy, e de onde vêm os checks dele
-version: 1
+version: 2
 ---
 
 O Trivy, da Aqua Security, é um scanner para imagens de contêiner, sistemas de arquivos e
 repositórios, e `trivy config` é a parte dele que lê código de infraestrutura. Os checks são escritos
 em Rego, a linguagem de políticas do Open Policy Agent, e **a versão que você instala carrega uma cópia
-deles dentro do binário**. O laboratório tem esta:
+deles dentro do binário**.
+
+**Instalando o Trivy.** Ele vem do repositório de pacotes da própria Aqua Security. O primeiro comando
+baixa a chave com que os pacotes são assinados, o segundo acrescenta o repositório, e o terceiro
+instala a versão mais nova:
+
+```sh
+curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee /etc/apt/sources.list.d/trivy.list
+sudo apt-get update && sudo apt-get install -y trivy
+```
+
+Estas transcrições foram gravadas com a 0.75.0, e uma versão mais nova pode escrever alguma linha de
+outro jeito:
 
 ```
 ana@laptop:~/shop$ trivy --version
@@ -16,8 +29,9 @@ Version: 0.75.0
 ## Um conjunto de checks mais novo, se ele alcançar um
 
 Por padrão, o Trivy não confia na cópia embutida. A cada execução ele procura um *checks bundle* mais
-novo num registro de contêineres e o baixa se o que está no cache estiver desatualizado. No
-laboratório o download falha e o Trivy diz o que faz no lugar:
+novo num registro de contêineres e o baixa se o que está no cache estiver desatualizado. A máquina em
+que estas aulas foram gravadas não tinha internet, então o download falhou e o Trivy disse o que fez
+no lugar:
 
 ```
 ana@laptop:~/shop$ trivy config . 2>&1 | head -n 5
@@ -28,8 +42,9 @@ ana@laptop:~/shop$ trivy config . 2>&1 | head -n 5
 2026-10-02T07:41:09-03:00	INFO	[terraform scanner] Scanning root module	file_path="."
 ```
 
-`Falling back to embedded checks` é a linha que importa. A varredura segue com os checks compilados na
-0.75.0. `--skip-check-update` impede a tentativa de vez:
+`Falling back to embedded checks` é a linha que importa. A varredura seguiu com os checks compilados
+na 0.75.0. No seu computador o download dá certo, não há linha de `ERROR`, e o bundle fica no cache do
+Trivy, em `~/.cache/trivy`. `--skip-check-update` impede a tentativa de vez:
 
 ```
 ana@laptop:~/shop$ trivy config --skip-check-update . 2>&1 | head -n 4
@@ -39,12 +54,16 @@ ana@laptop:~/shop$ trivy config --skip-check-update . 2>&1 | head -n 4
 2026-10-02T07:41:11-03:00	INFO	[terraform scanner] Scanning root module	file_path="."
 ```
 
-O `ERROR` continua lá, agora porque o cache está vazio, e o recurso de reserva é o mesmo. As duas
-execuções usam os checks embutidos, então todo resultado do Trivy nesta aula é o que esses checks
-dizem. Numa máquina com rede o bundle é baixado e pode ser mais novo que o binário, **então o mesmo
-binário sobre o mesmo código pode relatar outra coisa na semana que vem**, porque os checks mudaram.
-Num pipeline que falha por achados, decida se você quer isso. `--skip-check-update` prende os checks à
-versão que você escolheu, e atualizar o Trivy vira o momento em que regras novas chegam.
+Na máquina de gravação o `ERROR` continua lá, agora porque o cache está vazio, e o recurso de reserva
+é o mesmo, então todo resultado do Trivy nestas páginas é o que os checks embutidos dizem. Na sua, o
+cache guarda o bundle que a primeira execução baixou, o Trivy o carrega, e não há `ERROR`. Esse bundle
+pode ser mais novo que os checks do binário, então as suas contagens podem diferir um pouco das da
+página.
+
+Esse é o ponto geral: **o mesmo binário sobre o mesmo código pode relatar outra coisa na semana que
+vem**, porque os checks mudaram. Num pipeline que falha por achados, decida se você quer isso.
+`--skip-check-update` impede que os checks mudem sozinhos: ele usa o cache, ou os checks da própria
+versão quando não há cache, e as regras novas chegam quando você decide.
 
 ## A severidade vem com todo achado
 

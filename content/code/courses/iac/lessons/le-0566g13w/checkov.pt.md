@@ -1,12 +1,24 @@
 ---
 title: Checkov, e como ler um achado
-version: 1
+version: 2
 ---
 
 O Checkov é um programa em Python, publicado pela Prisma Cloud (parte da Palo Alto Networks), e lê
 muito mais do que Terraform: CloudFormation, manifestos do Kubernetes, Dockerfiles, workflows do
 GitHub Actions. Você aponta um diretório com `-d` e ele descobre quais dos seus frameworks se aplicam.
-O laboratório tem esta versão:
+
+**Instalando o Checkov.** Ele é instalado com o pipx, que dá a um programa Python um ambiente só dele,
+do jeito que o `~/iac-venv` guarda o moto. O `pipx ensurepath` põe no seu `PATH` o diretório onde o
+pipx instala, e um terminal só lê o `PATH` quando abre; então abra um terminal novo depois destes três
+comandos e leia o `~/iac-env.sh` nele de novo:
+
+```sh
+sudo apt-get install -y pipx
+pipx ensurepath
+pipx install checkov==3.3.22
+```
+
+A versão é a mesma com que estas transcrições foram gravadas:
 
 ```
 ana@laptop:~/shop$ checkov --version
@@ -16,9 +28,9 @@ ana@laptop:~/shop$ checkov --version
 ## Ele quer a rede, e funciona sem ela
 
 A primeira coisa que o Checkov faz em toda execução é pedir à API da Prisma Cloud as suas
-*guidelines*, um mapa de cada check para uma severidade e uma página de documentação. O laboratório
-não tem rede, então o pedido falha, e o Checkov avisa com um warning e depois um traceback longo de
-Python:
+*guidelines*, um mapa de cada check para uma página de documentação. A máquina em que estas aulas
+foram gravadas não tinha internet, então o pedido falhou, e o Checkov avisou com um warning e depois
+um traceback longo de Python:
 
 ```
 ana@laptop:~/shop$ checkov -d . 2>&1 | head -n 2
@@ -26,12 +38,18 @@ ana@laptop:~/shop$ checkov -d . 2>&1 | head -n 2
 Traceback (most recent call last):
 ```
 
-**A varredura continua depois do traceback**, e os resultados são os mesmos. O que se perde é o
-download em si, e `--skip-download` é a chave do próprio Checkov para nem tentar. Toda execução desta
-aula daqui em diante passa essa opção. Duas coisas somem junto com o download, e as duas importam
-depois: as **severidades**, porque os checks do Checkov não trazem nenhuma própria, e a linha `Guide:`
-que uma execução conectada imprime embaixo de cada achado, com um link para a página da regra. Guarde
-a primeira para a seção de triagem.
+No seu computador o pedido chega à API, então nenhuma das duas linhas aparece: o mesmo comando
+imprime o banner do Checkov e segue para o relatório. **A varredura continua depois do traceback**, e
+os resultados são os mesmos nos dois casos. O que o download acrescenta é a linha `Guide:` que uma
+execução conectada imprime embaixo de cada achado, com um link para a página da regra.
+`--skip-download` é a chave do próprio Checkov para não pedir, uma execução offline onde quer que
+aconteça, e toda execução desta aula daqui em diante passa essa opção, para que os seus relatórios
+batam com a página.
+
+**Severidades são outra história.** Os checks do Checkov não trazem nenhuma própria, e o download
+público não as acrescenta: a Prisma Cloud só manda uma severidade para cada check a uma execução que
+se autentica com a chave de API de uma conta. Sem ela, conectada ou não, nenhum achado tem
+severidade. Guarde isso para a seção de triagem.
 
 ## O relatório inteiro
 
@@ -132,7 +150,8 @@ bucket e não achou nenhum.
 
 O catálogo não sabe nada da loja. A empresa da Ana só permite SSH a partir do escritório, cuja faixa é
 `203.0.113.0/24`, e nenhuma regra embutida tem como saber esse número. O Checkov lê checks extras de um
-diretório, e um check pode ser umas poucas linhas de YAML:
+diretório, e um check pode ser umas poucas linhas de YAML. A Ana salva este como
+`~/policies/ssh_office.yaml`, num diretório próprio, fora da configuração:
 
 ```yaml
 metadata:
