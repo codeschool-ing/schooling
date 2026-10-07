@@ -26,8 +26,10 @@ ana@laptop:~/cloud$ wc -c cat.jpg report.txt
 
 O `&` no fim da primeira linha roda o moto em segundo plano, então o mesmo terminal fica livre para o
 resto da sessão; um shell interativo responde com um número de tarefa e um id de processo. Dê um
-segundo para ele subir antes do próximo comando. Quando terminar, `kill %1` o para, e os objetos vão
-junto, porque ele os guardava na memória.
+segundo para ele subir antes do próximo comando. Quando terminar esta aula, `kill %1` o para, e os
+objetos vão junto, porque ele os guardava na memória. Depois feche o terminal, ou faça `unset` das
+quatro variáveis que o próximo bloco exporta: as aulas seguintes esperam uma CLI sem credenciais, e
+estas mandariam as requisições dela para um moto que já não está lá.
 
 
 A CLI precisa saber para onde mandar as requisições e precisa de alguma credencial para assiná-las.

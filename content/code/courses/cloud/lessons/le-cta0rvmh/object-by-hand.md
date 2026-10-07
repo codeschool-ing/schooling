@@ -26,8 +26,10 @@ ana@laptop:~/cloud$ wc -c cat.jpg report.txt
 
 The `&` at the end of the first line runs moto in the background, so the same terminal stays free
 for the rest of the session; an interactive shell answers it with a job number and a process id.
-Give it a second to start before the next command. When you finish, `kill %1` stops it, and its
-objects go with it, because it kept them in memory.
+Give it a second to start before the next command. When you finish with this lesson, `kill %1`
+stops it, and its objects go with it, because it kept them in memory. Then close the terminal, or
+`unset` the four variables the next block exports: the later lessons expect a CLI with no
+credentials, and these would send its requests to a moto that is no longer there.
 
 The CLI has to be told where to send its requests and needs some credentials to sign them with.
 Four variables do both: the word `test` as the key pair, a region, and moto's address instead of
