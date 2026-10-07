@@ -25,7 +25,7 @@ e nada mais, e ele faz quatro promessas que o CLI não faz:
 ```
 
 O **RESTCONF**, RFC 8040, põe os mesmos dados e os mesmos modelos atrás de HTTPS. É o REST da aula
-2 com os recursos definidos pelo YANG em vez de por quem escreveu a API. A seção 09 usa ele.
+2 com os recursos definidos pelo YANG em vez de por quem escreveu a API. A seção 10 usa ele.
 
 O equipamento desta aula é o **`nc1`**. O plano de gerência dele é o Clixon, software livre sobre
 o qual produtos reais são construídos: ele guarda uma configuração no formato dos modelos padrão

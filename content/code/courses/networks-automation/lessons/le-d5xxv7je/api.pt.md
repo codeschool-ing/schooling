@@ -60,4 +60,4 @@ lo	203.0.113.252/32
 ```
 
 O `jq` transformou o JSON em duas colunas. Tudo o que a aula 10 precisava para o edge1, as
-interfaces e seus endereços, já está no NetBox; uma coisa não está, e a seção 05 descobre qual.
+interfaces e seus endereços, já está no NetBox; uma coisa não está, e a seção 06 descobre qual.

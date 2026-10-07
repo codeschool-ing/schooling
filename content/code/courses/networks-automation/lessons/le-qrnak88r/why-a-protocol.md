@@ -24,7 +24,7 @@ configuration and nothing else, and it makes four promises the CLI does not:
 ```
 
 **RESTCONF**, RFC 8040, puts the same data and the same models behind HTTPS. It is lesson 2's REST
-with the resources defined by YANG instead of by whoever wrote the API. Section 09 uses it.
+with the resources defined by YANG instead of by whoever wrote the API. Section 10 uses it.
 
 The device for this lesson is **`nc1`**. Its management plane is Clixon, open-source software that
 real products build on: it holds a configuration shaped by the standard models `ietf-interfaces`

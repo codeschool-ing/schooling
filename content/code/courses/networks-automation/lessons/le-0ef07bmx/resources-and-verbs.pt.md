@@ -57,4 +57,4 @@ O código de status é a primeira coisa que um programa deve ler, agrupado pelo 
 
 **Um 4xx é problema seu de resolver, um 5xx é do servidor.** Essa única distinção decide se um
 script deve tentar de novo, e `429 Too Many Requests` é o único 4xx em que tentar de novo, depois
-de esperar, é exatamente o certo. A seção 07 é sobre ele.
+de esperar, é exatamente o certo. A seção 08 é sobre ele.

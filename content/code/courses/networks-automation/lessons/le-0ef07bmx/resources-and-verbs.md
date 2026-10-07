@@ -57,4 +57,4 @@ The status code is the first thing a program should read, grouped by its first d
 
 **A 4xx is your problem to fix, a 5xx is the server's.** That one distinction decides whether a
 script should retry, and `429 Too Many Requests` is the one 4xx where retrying, after a wait, is
-exactly right. Section 07 is about it.
+exactly right. Section 08 is about it.

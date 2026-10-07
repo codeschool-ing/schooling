@@ -74,7 +74,7 @@ edge2  site=branch-2  platform=frr  mgmt=192.0.2.13/24
 Duas coisas nessa saída são o modelo do NetBox em ação. `device.site.slug` seguiu um link do
 dispositivo para o site dele sem outra linha de código; o pynetbox buscou o que era preciso. E
 `primary_ip4` é a resposta do NetBox à pergunta "qual endereço eu uso para alcançar este dispositivo",
-que é o endereço de gerência na `eth0`. A seção 07 usa exatamente isso para montar um inventário.
+que é o endereço de gerência na `eth0`. A seção 08 usa exatamente isso para montar um inventário.
 
 **Cada laço é uma requisição por dispositivo**, e vale a pena notar isso antes de serem três mil
 devices. Os filtros do NetBox aceitam listas, `device_id=[1, 2, 3]`, então os endereços de todos
