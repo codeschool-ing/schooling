@@ -29,7 +29,8 @@
 #   - The files come from lab/ beside this script. The lessons print each one
 #     in full; what is here is what they print. model.py is the one file a
 #     later lesson changes, and that change is console.patch, applied as its
-#     own commit, so model.py itself stays as lesson 2 prints it.
+#     own commit, so model.py itself stays as lesson 2 prints it. threats.csv
+#     grows the same way: lesson 7 appends threats-from-abuse-cases.csv.
 
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
@@ -76,6 +77,8 @@ reset() {
   commit '2026-09-10 09:40' 'List the entry and exit points'
   git apply "$here/lab/console.patch" && git add model.py
   commit '2026-09-10 10:15' 'Draw the console as it is: reachable from the internet'
+  cat "$here/lab/threats-from-abuse-cases.csv" >> threats.csv && git add threats.csv
+  commit '2026-09-14 16:00' 'Add the threats the abuse cases found'
 }
 
 case ${1:-} in
