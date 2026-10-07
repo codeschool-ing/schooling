@@ -34,7 +34,7 @@ past it, credits are bought. And there are two ways for the money to flow:
 **Routed by Hugging Face**, the provider is paid through ana's Hugging Face account, one bill for
 every provider, with the monthly credits applied first. **With a custom provider key**, the request
 still goes through Hugging Face, but the provider bills ana directly, under the account and the
-terms she has with it, and the credits do not apply.
+terms ana has with that provider, and the credits do not apply.
 
 Set beside lesson 15, the two routers make the same offer with different defaults:
 

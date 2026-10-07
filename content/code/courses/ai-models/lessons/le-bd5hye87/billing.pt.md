@@ -34,7 +34,7 @@ para rodar uma mesa: daí em diante, compram-se créditos. E há dois caminhos p
 **Roteado pelo Hugging Face**, o provedor é pago pela conta da ana no Hugging Face, uma conta para
 todos os provedores, com os créditos mensais aplicados primeiro. **Com uma chave própria do
 provedor**, a requisição continua passando pelo Hugging Face, mas o provedor cobra a ana direto, na
-conta e nos termos que ela tem com ele, e os créditos não valem.
+conta e nos termos que a ana tem com esse provedor, e os créditos não valem.
 
 Lado a lado com a aula 15, os dois roteadores fazem a mesma oferta com padrões diferentes:
 
