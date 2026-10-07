@@ -738,6 +738,261 @@ def l04_openings(lang):
                 'O mesmo achado, quatro primeiros slides. Cada um abre com o que aquela sala decide e a '
                 'unidade em que ela pensa; nenhum funcionaria em outra sala.')
 
+# ------------------------------------------------------------------ lesson 5
+
+def region_rates():
+    out = []
+    for r in S.REGIONS:
+        b = S.BY_REGION[r]
+        out.append((r, b['late'], b['on time']))
+    return out
+
+
+def grouped_bars(f, x0, y0, x1, y1, lang, grey=False, labels=True, legend=False, size=9.5):
+    """Cancellation rate by region, late against on time."""
+    p = Plot(f, x0, y0, x1, y1, 0, 2, 0, 0.5)
+    names = {'capital': T(lang, 'capital', 'capital'), 'interior': T(lang, 'interior', 'interior')}
+    for i, (r, late, on) in enumerate(region_rates()):
+        for j, (v, kind) in enumerate([(late, 'late'), (on, 'on')]):
+            xa = p.sx(i + 0.18 + j * 0.33)
+            xb = xa + (p.sx(0.3) - p.sx(0))
+            if grey:
+                stroke = '--amber' if kind == 'late' else '--paper-dim'
+                fill = '--scan' if kind == 'late' else '--panel'
+            else:
+                stroke = '--amber' if kind == 'late' else '--phosphor'
+                fill = '--scan'
+            f.bar(xa, p.sy(v), xb - xa, p.sy(0) - p.sy(v), fill=fill, stroke=stroke, width=1.4)
+            if labels:
+                f.text((xa + xb) / 2, p.sy(v) - 8, pct(lang, v, 0), size=size,
+                       fill='--amber' if kind == 'late' else '--paper')
+        f.text(p.sx(i + 0.5), p.y1 + 12, names[r], size=size)
+    p.baseline()
+    return p
+
+
+@figure('l05-topic-vs-assertion', 5)
+def l05_topic_vs_assertion(lang):
+    f = Fig('l05-topic-vs-assertion', 680, 270, T(
+        lang,
+        'The same grouped bar chart on two slides. On the left the title is a topic: cancellations by '
+        'region and first delivery. On the right it is a sentence: the gap holds in the capital and in '
+        'the interior. The bars show 39% against 16% in the capital and 44% against 20% in the '
+        'interior, late first delivery against on time.',
+        'O mesmo gráfico de barras agrupadas em dois slides. À esquerda o título é um assunto: '
+        'cancelamentos por região e primeira entrega. À direita é uma frase: a distância se mantém na '
+        'capital e no interior. As barras mostram 39% contra 16% na capital e 44% contra 20% no '
+        'interior, primeira entrega atrasada contra no prazo.'))
+    f.text(170, 12, T(lang, 'a topic', 'um assunto'), size=10, fill='--paper-dim')
+    f.text(510, 12, T(lang, 'a sentence', 'uma frase'), size=10, fill='--paper-dim')
+    for k, title in enumerate([T(lang, ['Cancellations by region', 'and first delivery'],
+                                 ['Cancelamentos por região', 'e primeira entrega']),
+                               T(lang, ['The gap holds in the capital', 'and in the interior'],
+                                 ['A distância se mantém na', 'capital e no interior'])]):
+        x = 10 + k * 340
+        f.rect(x, 24, 320, 236, stroke='--phosphor' if k else '--wire', fill='--ink', rx=3)
+        f.lines(x + 14, 44, title, size=12, anchor='start', weight='600', gap=17)
+        grouped_bars(f, x + 30, 100, x + 300, 222, lang)
+        f.text(x + 14, 248, T(lang, 'late first delivery', 'primeira entrega atrasada'), size=9,
+               anchor='start', fill='--amber')
+        f.text(x + 306, 248, T(lang, 'on time', 'no prazo'), size=9, anchor='end', fill='--phosphor')
+    return f, T(lang,
+                'Nothing in the chart changed. On the left the reader has to find the point; on the '
+                'right the title says it and the chart is there to check it.',
+                'Nada no gráfico mudou. À esquerda o leitor precisa achar o ponto; à direita o título o '
+                'diz e o gráfico está lá para conferir.')
+
+
+GHOST = [
+    (['Late first boxes more than', 'double early cancellations;', 'we propose a pilot'],
+     ['A 1ª caixa atrasada mais', 'que dobra o cancelamento;', 'propomos um piloto']),
+    (['Deliveries are on time', '94.5% of the time'], ['As entregas saem no', 'prazo 94,5% das vezes']),
+    (['But first deliveries are', 'on time only 82.7%'], ['Mas as primeiras saem', 'no prazo só 82,7%']),
+    (['Late first box: 41.5%', 'cancel, against 17.4%'], ['1ª caixa atrasada: 41,5%', 'cancelam, contra 17,4%']),
+    (['The gap holds in the', 'capital and the interior'], ['A distância se mantém na', 'capital e no interior']),
+    (['It costs about R$ 793', 'thousand a year in margin'], ['Custa cerca de R$ 793 mil', 'por ano em margem']),
+    (['Pilot: no address check', 'in the interior, 8 weeks'], ['Piloto: sem conferência', 'no interior, 8 semanas']),
+]
+
+
+@figure('l05-ghost-deck', 5)
+def l05_ghost_deck(lang):
+    f = Fig('l05-ghost-deck', 680, 250, T(
+        lang,
+        'Seven empty slides with only their titles. One: late first boxes more than double early '
+        'cancellations; we propose a pilot. Two: deliveries are on time 94.5% of the time. Three: but '
+        'first deliveries are on time only 82.7%. Four: late first box, 41.5% cancel against 17.4%. '
+        'Five: the gap holds in the capital and the interior. Six: it costs about R$ 793 thousand a '
+        'year in margin. Seven: pilot, no address check in the interior for eight weeks.',
+        'Sete slides vazios, só com os títulos. Um: a primeira caixa atrasada mais que dobra o '
+        'cancelamento; propomos um piloto. Dois: as entregas saem no prazo 94,5% das vezes. Três: mas '
+        'as primeiras saem no prazo só 82,7%. Quatro: primeira caixa atrasada, 41,5% cancelam contra '
+        '17,4%. Cinco: a distância se mantém na capital e no interior. Seis: custa cerca de R$ 793 mil '
+        'por ano em margem. Sete: piloto sem conferência no interior por oito semanas.'))
+    for i, (en, pt) in enumerate(GHOST):
+        row, col = (0, i) if i < 4 else (1, i - 4)
+        x = 10 + col * 168 + (84 if row else 0)
+        y = 14 + row * 118
+        f.rect(x, y, 156, 100, stroke='--amber' if i in (0, 6) else '--wire', fill='--ink', rx=3)
+        f.text(x + 8, y + 12, str(i + 1), size=9, anchor='start', fill='--paper-dim', mono=True)
+        f.lines(x + 8, y + 32, T(lang, en, pt), size=9.5, anchor='start', weight='600', gap=14)
+    return f, T(lang,
+                'Faro’s presentation as a ghost deck: titles only, before any chart is drawn. Read '
+                'in order, they are the whole story.',
+                'A apresentação da Faro como deck fantasma: só títulos, antes de qualquer gráfico. '
+                'Lidos em ordem, são a história inteira.')
+
+
+def monthly_rates():
+    out = {}
+    for r in S.REGIONS:
+        for st in ('late', 'on time'):
+            out[(r, st)] = [next(row['cancelled_90d'] / row['subscribers'] for row in S.ROWS
+                                 if row['cohort'] == m and row['region'] == r
+                                 and row['first_delivery'] == st) for m in S.MONTHS]
+    return out
+
+
+@figure('l05-wrong-chart', 5)
+def l05_wrong_chart(lang):
+    f = Fig('l05-wrong-chart', 680, 270, T(
+        lang,
+        'Two charts under the same title, late first deliveries more than double cancellations. On '
+        'the left, four lines of the monthly cancellation rate from January to June, one per region '
+        'and first-delivery status, tangled between 15% and 50%. On the right, two bars: 41.5% for '
+        'late first deliveries and 17.4% for on-time ones.',
+        'Dois gráficos sob o mesmo título, a primeira entrega atrasada mais que dobra o '
+        'cancelamento. À esquerda, quatro linhas da taxa mensal de cancelamento de janeiro a junho, '
+        'uma por região e situação da primeira entrega, emaranhadas entre 15% e 50%. À direita, duas '
+        'barras: 41,5% para a primeira entrega atrasada e 17,4% para a no prazo.'))
+    f.text(340, 14, T(lang, 'Late first deliveries more than double cancellations',
+                      'A primeira entrega atrasada mais que dobra o cancelamento'),
+           size=12, weight='600')
+    f.rect(10, 30, 400, 230, stroke='--wire', fill='--ink', rx=3)
+    f.rect(430, 30, 240, 230, stroke='--phosphor', fill='--ink', rx=3)
+    p = Plot(f, 60, 56, 330, 220, 0, 5, 0.1, 0.55)
+    p.yaxis([0.2, 0.3, 0.4, 0.5], fmt=lambda v: pct(lang, v, 0), size=8.5)
+    mr = monthly_rates()
+    styles = {('capital', 'late'): ('--amber', None), ('interior', 'late'): ('--amber', '4 3'),
+              ('capital', 'on time'): ('--phosphor', None), ('interior', 'on time'): ('--phosphor', '4 3')}
+    months = T(lang, ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], ['jan', 'fev', 'mar', 'abr', 'mai', 'jun'])
+    for i, m in enumerate(months):
+        f.text(p.sx(i), p.y1 + 12, m, size=8.5, fill='--paper-dim')
+    p.baseline()
+    for key, ys in mr.items():
+        stroke, dash = styles[key]
+        p.polyline(range(6), ys, stroke=stroke, width=1.6, dash=dash)
+    lab = {('capital', 'late'): T(lang, 'capital, late', 'capital, atrasada'),
+           ('interior', 'late'): T(lang, 'interior, late', 'interior, atrasada'),
+           ('capital', 'on time'): T(lang, 'capital, on time', 'capital, no prazo'),
+           ('interior', 'on time'): T(lang, 'interior, on time', 'interior, no prazo')}
+    order = sorted(mr, key=lambda k: -mr[k][-1])
+    for n, key in enumerate(order):
+        y = p.sy(mr[key][-1])
+        y = [y - 6, y + 6][n % 2] if n < 2 else [y - 6, y + 6][n % 2]
+        f.text(p.x1 + 6, y, lab[key], size=8.5, anchor='start', fill=styles[key][0])
+    f.text(24, 250, T(lang, 'four lines to compare and average in your head',
+                      'quatro linhas para comparar e somar de cabeça'), size=9.5, anchor='start',
+           fill='--paper-dim')
+    q = Plot(f, 470, 70, 640, 220, 0, 2, 0, 0.5)
+    for i, (lab2, v, col) in enumerate([(T(lang, 'late', 'atrasada'), S.RATE_LATE, '--amber'),
+                                        (T(lang, 'on time', 'no prazo'), S.RATE_ON, '--phosphor')]):
+        xa, xb = q.sx(i + 0.2), q.sx(i + 0.8)
+        f.bar(xa, q.sy(v), xb - xa, q.sy(0) - q.sy(v), fill='--scan', stroke=col, width=1.6)
+        f.text((xa + xb) / 2, q.sy(v) - 10, pct(lang, v), size=11, weight='600', fill=col)
+        f.text((xa + xb) / 2, q.y1 + 12, lab2, size=9.5)
+    q.baseline()
+    f.text(550, 250, T(lang, 'the comparison the title makes', 'a comparação que o título faz'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Both charts are correct. Only the one on the right draws the sentence above it; the '
+                'monthly lines answer another question and belong in the appendix.',
+                'Os dois gráficos estão certos. Só o da direita desenha a frase de cima; as linhas '
+                'mensais respondem a outra pergunta e vão para o apêndice.')
+
+
+@figure('l05-emphasis', 5)
+def l05_emphasis(lang):
+    f = Fig('l05-emphasis', 680, 270, T(
+        lang,
+        'The regional chart twice. Before: four bars in two colours, a legend box in the corner, '
+        'heavy gridlines and no values. After: the on-time bars are grey, the late bars are the only '
+        'coloured marks, each bar carries its value, the legend is gone and a note beside the late '
+        'bars says more than double, in both regions.',
+        'O gráfico por região duas vezes. Antes: quatro barras em duas cores, uma caixa de legenda '
+        'no canto, linhas de grade pesadas e nenhum valor. Depois: as barras no prazo são cinza, as '
+        'de atraso são as únicas marcas coloridas, cada barra traz o valor, a legenda sumiu e uma '
+        'nota ao lado das barras de atraso diz mais que o dobro, nas duas regiões.'))
+    f.text(170, 12, T(lang, 'before', 'antes'), size=10, fill='--paper-dim')
+    f.text(510, 12, T(lang, 'after', 'depois'), size=10, fill='--paper-dim')
+    f.rect(10, 24, 320, 236, stroke='--wire', fill='--ink', rx=3)
+    p = Plot(f, 60, 50, 230, 222, 0, 2, 0, 0.5)
+    for t in [0.1, 0.2, 0.3, 0.4, 0.5]:
+        f.line(p.x0, p.sy(t), p.x1, p.sy(t), stroke='--paper-dim', width=1)
+        f.text(p.x0 - 6, p.sy(t), pct(lang, t, 0), size=8.5, anchor='end', fill='--paper-dim')
+    grouped_bars(f, 60, 50, 230, 222, lang, labels=False)
+    f.rect(240, 70, 82, 50, stroke='--paper-dim', fill='--panel', rx=2)
+    f.bar(248, 80, 10, 10, fill='--scan', stroke='--amber')
+    f.text(262, 85, T(lang, 'late', 'atraso'), size=9, anchor='start')
+    f.bar(248, 100, 10, 10, fill='--scan', stroke='--phosphor')
+    f.text(262, 105, T(lang, 'on time', 'prazo'), size=9, anchor='start')
+    f.rect(350, 24, 320, 236, stroke='--phosphor', fill='--ink', rx=3)
+    grouped_bars(f, 380, 60, 600, 222, lang, grey=True)
+    f.lines(612, 92, T(lang, ['more', 'than', 'double,', 'in both', 'regions'],
+                       ['mais', 'que o', 'dobro,', 'nas duas', 'regiões']),
+            size=9.5, anchor='start', fill='--amber', gap=13)
+    f.text(364, 248, T(lang, 'in colour: late first delivery; grey: on time',
+                       'em cor: primeira entrega atrasada; cinza: no prazo'), size=9, anchor='start',
+           fill='--paper-dim')
+    return f, T(lang,
+                'Same data, same chart type. The version on the right decides what the eye sees '
+                'first, and puts the point where the eye already is.',
+                'Mesmos dados, mesmo tipo de gráfico. A versão da direita decide o que o olho vê '
+                'primeiro e põe o ponto onde o olho já está.')
+
+
+@picture('l05-two-messages')
+def p_l05_two_messages():
+    """A slide with no words. Marks, in label order: second chart, distant legend,
+    tiny footnote, decoration, title running to three lines."""
+    f = Fig('l05-two-messages', 720, 405,
+            'A slide drawn with no words. Three grey bars stand for a title running to three lines. '
+            'Below on the left is a bar chart of five bars, one of them coloured; on the right a second '
+            'chart, a line rising across six points. In the bottom right corner is a legend box with two '
+            'colour squares, far from both charts. Along the bottom edge runs a row of tiny bars like '
+            'small print. In the top right corner is a decorative round emblem.')
+    f.rect(10, 10, 700, 385, stroke='--paper-dim', fill='--ink', rx=4)
+    for k, w in enumerate([520, 560, 300]):
+        f.bar(36, 32 + k * 22, w, 12, fill='--paper-dim', stroke='--paper-dim')
+    f.circle(664, 50, 22, fill='--panel', stroke='--paper-dim', width=2)
+    f.circle(664, 50, 10, fill='--paper-dim')
+    # left chart
+    f.line(40, 320, 330, 320, stroke='--paper-dim', width=1.4)
+    for k, h in enumerate([90, 130, 70, 160, 110]):
+        x = 56 + k * 54
+        hl = k == 3
+        f.bar(x, 320 - h, 36, h, fill='--amber' if hl else '--panel',
+              stroke='--amber' if hl else '--paper-dim')
+    # right chart
+    f.line(380, 320, 640, 320, stroke='--paper-dim', width=1.4)
+    f.line(380, 140, 380, 320, stroke='--paper-dim', width=1.4)
+    ys = [290, 270, 276, 240, 210, 180]
+    f.path('M' + ' L'.join(f'{400 + k * 44} {y}' for k, y in enumerate(ys)), stroke='--phosphor',
+           width=2.4)
+    for k, y in enumerate(ys):
+        f.circle(400 + k * 44, y, 4, fill='--phosphor')
+    # legend far away
+    f.rect(600, 335, 96, 42, stroke='--paper-dim', fill='--panel', rx=2)
+    f.bar(610, 343, 10, 10, fill='--amber', stroke='--amber')
+    f.bar(626, 345, 50, 6, fill='--paper-dim', stroke='--paper-dim')
+    f.bar(610, 360, 10, 10, fill='--phosphor', stroke='--phosphor')
+    f.bar(626, 362, 50, 6, fill='--paper-dim', stroke='--paper-dim')
+    # footnote
+    for k in range(6):
+        f.bar(36 + k * 88, 372, 76, 3, fill='--paper-dim', stroke='--paper-dim', width=0.5)
+    marks = [(510, 230), (648, 356), (250, 373), (664, 50), (300, 54)]
+    return f, marks
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

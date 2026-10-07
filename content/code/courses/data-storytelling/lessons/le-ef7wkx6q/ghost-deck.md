@@ -1,0 +1,40 @@
+---
+title: Write the titles first
+version: 1
+---
+
+If every slide has an assertion title, **the titles read in order are the presentation**. That suggests a
+way of building it: write the titles first, on their own, before making a single chart. Consultancies call
+the result a **ghost deck**: a deck of empty slides with only their titles, which is circulated and argued
+over before anybody draws anything.
+
+## Faro's ghost deck
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 680 250\" role=\"img\" data-fig=\"l05-ghost-deck\" aria-label=\"Seven empty slides with only their titles. One: late first boxes more than double early cancellations; we propose a pilot. Two: deliveries are on time 94.5% of the time. Three: but first deliveries are on time only 82.7%. Four: late first box, 41.5% cancel against 17.4%. Five: the gap holds in the capital and the interior. Six: it costs about R$ 793 thousand a year in margin. Seven: pilot, no address check in the interior for eight weeks.\"><rect x=\"10.0\" y=\"14.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"18.0\" y=\"26.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">1</text><text x=\"18.0\" y=\"46.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Late first boxes more than</text><text x=\"18.0\" y=\"60.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">double early cancellations;</text><text x=\"18.0\" y=\"74.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">we propose a pilot</text><rect x=\"178.0\" y=\"14.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"186.0\" y=\"26.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">2</text><text x=\"186.0\" y=\"46.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Deliveries are on time</text><text x=\"186.0\" y=\"60.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">94.5% of the time</text><rect x=\"346.0\" y=\"14.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"354.0\" y=\"26.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">3</text><text x=\"354.0\" y=\"46.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">But first deliveries are</text><text x=\"354.0\" y=\"60.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">on time only 82.7%</text><rect x=\"514.0\" y=\"14.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"522.0\" y=\"26.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">4</text><text x=\"522.0\" y=\"46.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Late first box: 41.5%</text><text x=\"522.0\" y=\"60.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">cancel, against 17.4%</text><rect x=\"94.0\" y=\"132.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"102.0\" y=\"144.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">5</text><text x=\"102.0\" y=\"164.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">The gap holds in the</text><text x=\"102.0\" y=\"178.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">capital and the interior</text><rect x=\"262.0\" y=\"132.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"270.0\" y=\"144.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">6</text><text x=\"270.0\" y=\"164.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">It costs about R$ 793</text><text x=\"270.0\" y=\"178.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">thousand a year in margin</text><rect x=\"430.0\" y=\"132.0\" width=\"156.0\" height=\"100.0\" rx=\"3\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"438.0\" y=\"144.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">7</text><text x=\"438.0\" y=\"164.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Pilot: no address check</text><text x=\"438.0\" y=\"178.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">in the interior, 8 weeks</text></svg>", "caption": "Faro’s presentation as a ghost deck: titles only, before any chart is drawn. Read in order, they are the whole story."}
+```
+
+Read the seven titles in the figure aloud, one after the other. They tell the whole story of lessons 2
+and 3: the answer, the context, the conflict, three pieces of evidence and the request. **If the titles
+alone do not make sense as a story, no chart will rescue them.**
+
+## Why titles before charts
+
+Charts are expensive and seductive. An analyst who starts by making charts ends up with thirty of them
+and then tries to find a story that uses as many as possible, which is the order of the work from lesson
+3 dressed in better graphics. Writing the titles first reverses it: the story decides which charts are
+needed, and **a chart that no title asks for is never made**.
+
+The ghost deck is also cheap to change. Moving a title, merging two or cutting one takes seconds when the
+slide is empty. Once the chart is drawn and formatted, every change feels like waste, and the analyst
+starts defending slides because of the work in them rather than because of what they say.
+
+## The skim test
+
+When the deck is finished, run the test the ghost deck makes possible. **Read only the titles, in order,
+and ask a colleague who has not seen the analysis to tell you the story back.** If they can, the deck
+works. If they cannot, the problem is almost always one of three: a topic title that slipped through, a
+slide that carries two messages, or a missing step between two titles that you know and they do not.
+
+Do it now for your own analysis: write the titles of the deck you would present, in `my-analysis.txt`,
+before you open a slide tool. Seven to ten is plenty.
